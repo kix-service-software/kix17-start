@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="PostmasterX-Header" Required="1" Valid="1">
+        <Description Translatable="1">Defines all the X-headers that should be scanned.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::PostMaster</SubGroup>
+        <Setting>
+            <Array>
+                <Item>From</Item>
+                <Item>To</Item>
+                <Item>Cc</Item>
+                <Item>Reply-To</Item>
+                <Item>ReplyTo</Item>
+                <Item>Subject</Item>
+                <Item>Message-ID</Item>
+                <Item>Message-Id</Item>
+                <Item>Resent-To</Item>
+                <Item>Resent-From</Item>
+                <Item>Precedence</Item>
+                <Item>Mailing-List</Item>
+                <Item>List-Id</Item>
+                <Item>List-Archive</Item>
+                <Item>Errors-To</Item>
+                <Item>References</Item>
+                <Item>In-Reply-To</Item>
+                <Item>Auto-Submitted</Item>
+                <Item>X-Loop</Item>
+                <Item>X-Spam-Flag</Item>
+                <Item>X-Spam-Level</Item>
+                <Item>X-Spam-Score</Item>
+                <Item>X-Spam-Status</Item>
+                <Item>X-No-Loop</Item>
+                <Item>X-Priority</Item>
+                <Item>Importance</Item>
+                <Item>X-Mailer</Item>
+                <Item>User-Agent</Item>
+                <Item>Organization</Item>
+                <Item>X-Original-To</Item>
+                <Item>Delivered-To</Item>
+                <Item>Envelope-To</Item>
+                <Item>Return-Path</Item>
+                <Item>X-OTRS-Owner</Item>
+                <Item>X-OTRS-OwnerID</Item>
+                <Item>X-OTRS-Responsible</Item>
+                <Item>X-OTRS-ResponsibleID</Item>
+                <Item>X-OTRS-Loop</Item>
+                <Item>X-OTRS-Priority</Item>
+                <Item>X-OTRS-Queue</Item>
+                <Item>X-OTRS-Lock</Item>
+                <Item>X-OTRS-Ignore</Item>
+                <Item>X-OTRS-State</Item>
+                <Item>X-OTRS-State-PendingTime</Item>
+                <Item>X-OTRS-Type</Item>
+                <Item>X-OTRS-Service</Item>
+                <Item>X-OTRS-SLA</Item>
+                <Item>X-OTRS-CustomerNo</Item>
+                <Item>X-OTRS-CustomerUser</Item>
+                <Item>X-OTRS-SenderType</Item>
+                <Item>X-OTRS-ArticleType</Item>
+                <Item>X-OTRS-FollowUp-Priority</Item>
+                <Item>X-OTRS-FollowUp-Queue</Item>
+                <Item>X-OTRS-FollowUp-Lock</Item>
+                <Item>X-OTRS-FollowUp-State</Item>
+                <Item>X-OTRS-FollowUp-State-PendingTime</Item>
+                <Item>X-OTRS-FollowUp-Type</Item>
+                <Item>X-OTRS-FollowUp-Service</Item>
+                <Item>X-OTRS-FollowUp-SLA</Item>
+                <Item>X-OTRS-FollowUp-SenderType</Item>
+                <Item>X-OTRS-FollowUp-ArticleType</Item>
+                <Item>X-OTRS-TicketTemplate</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

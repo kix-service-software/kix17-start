@@ -1,0 +1,117 @@
+# --
+# AgentITSMConfigItemZoomTabImages.tt - provides HTML form for AgentITSMConfigItemZoom images tab
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("TabContent") %]
+
+<div id="CIImageDialog" class="Hidden">
+    <form action="[% Env("CGIHandle") %]" method="post" id="CIImageDialog" name="CIImageDialog">
+        <input type="hidden" value="[% Env("Action") %]" name="Action"/>
+        <input type="hidden" value="SetImageText" name="Subaction" />
+        <input type="hidden" value="[% Data.ConfigItemID | html %]" name="ConfigItemID"/>
+        <input type="hidden" value="" name="ImageID" />
+        <fieldset class="TableLike">
+            <label for="ArticleFlagNote">[% Translate("Notes") | html %]:</label>
+            <div class="Field">
+                <textarea cols="40" rows="20" id="ImageNote" name="ImageNote">[% Data.ImageNote %]</textarea>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<div id="CIImageDialogDelete" class="Hidden">
+    <form action="[% Env("CGIHandle") %]" method="post" id="CIImageDialogDelete" name="CIImageDialogDelete">
+        <input type="hidden" value="[% Env("Action") %]" name="Action"/>
+        <input type="hidden" value="ImageDelete" name="Subaction" />
+        <input type="hidden" value="[% Data.ConfigItemID | html %]" name="ConfigItemID"/>
+        <input type="hidden" value="" name="ImageID" />
+        <input type="hidden" value="" name="ImageType" />
+        [% Translate("Delete image") | html %]?
+    </form>
+</div>
+<div id="CIImageDialogWrongType" class="Hidden">
+    [% Translate("File is no image or image type not supported. Please contact your admin.") | html %]
+</div>
+<div id="CIImageDialogPreview" class="Hidden">
+    <form action="[% Env("CGIHandle") %]" method="post" id="CIImageDialogPreview" name="CIImageDialogPreview">
+        <input type="hidden" value="" name="ImageID" />
+        <input type="hidden" value="" name="ImageType" />
+        <div id="CIImageDialogPreviewImage">
+        </div>
+        <div id="CIImageDialogPreviewText">
+        </div>
+        <div id="ImageTextPreviewDialog">
+        </div>
+    </form>
+</div>
+<div class="MainBox ARIARoleMain">
+    <div class="LayoutFixedSidebar SidebarLast">
+        <div class="SidebarColumn">
+           [% Data.KIXSidebarContent %]
+       </div>
+        <div class="ContentColumn">
+            <div class="SpacingTopSmall AddQuickLink">
+                <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="CIImageFileUpload" class="Validate PreventMultipleSubmits">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="StoreNew" />
+                    <input type="hidden" name="ConfigItemID" value="[% Data.ConfigItemID %]"/>
+                    <input type="hidden" name="ImageID" value="[% Data.Test %]"/>
+                    <input type="hidden" name="FileUploaded" value="[% Data.FileUploaded | html %]"/>
+                    [% Translate("Load image") | html %]:
+                    <input id="FileUpload" name="FileUpload" type="file" size="40" />
+                    <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
+                </form>
+            </div>
+            <div>
+[% RenderBlockStart("Image") %]
+                <div class="CIImage id="CIImage_[% Data.CurrentImageID | html %]">
+                    <div class="CIImagePreview" id="CIImagePreview_[% Data.CurrentImageID | html %]">
+                        <div class="ActionMenu">
+                            <div class="WidgetAction Settings">
+                                <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoomTabImages;Subaction=Edit;ImageID=[% Data.CurrentImageID | html %];ImageType=[% Data.CurrentImageType | html %];ConfigItemID=[% Data.ConfigItemID %]">
+                                    <i class="fa fa-gear"></i>
+                                </a>
+                            </div>
+                            <div class="WidgetAction Close">
+                                <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoomTabImages;Subaction=DeleteImage;ImageID=[% Data.CurrentImageID | html %];ImageType=[% Data.CurrentImageType | html %];ConfigItemID=[% Data.ConfigItemID %]">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </div>
+                            <div class="Clear"></div>
+                        </div>
+                        <span class="CIImageImage" id="CIImageImage_[% Data.CurrentImageID | html %]">
+                            <img src="[% Env("Baselink") %]Action=AgentITSMConfigItemZoomTabImages;Subaction=ViewImage;ImageID=[% Data.CurrentImageID | html %];ImageType=[% Data.CurrentImageType | html %];ConfigItemID=[% Data.ConfigItemID %]">
+                        </span>
+                    </div>
+                    <p class="CIImageText" id="TextPreview_[% Data.CurrentImageID | html %]">[% Data.Text | truncate(50) | html %]</p>
+                </div>
+                <div class="Hidden" id="Text_[% Data.CurrentImageID | html %]">[% Data.Text | html %]</div>
+[% RenderBlockEnd("Image") %]
+                <div class="Clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+Core.Config.Set('Yes',[% Translate("Yes") | JSON %]);
+Core.Config.Set('No',[% Translate("No") | JSON %]);
+Core.Config.Set('DeleteImage',[% Translate("Delete image") | JSON %]);
+Core.Config.Set('SetImageText',[% Translate("Set image text") | JSON %]);
+Core.Config.Set('Submit',[% Translate("submit") | JSON %]);
+Core.Config.Set('ImageDetails',[% Translate("Image details") | JSON %]);
+Core.KIX4OTRS.ConfigItemZoomTabs.Init();
+//]]></script>
+[% END %]
+[% RenderBlockEnd("TabContent") %]

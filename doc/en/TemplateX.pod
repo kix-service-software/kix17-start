@@ -1,0 +1,33 @@
+# $Id$
+
+=head1 NAME
+
+TemplateX - allow to set additional fields in templates.
+
+=head1 DESCRIPTION
+
+A standard OTRS template allows to define the content of an article, but no additional fields. This extension allows to define email receipients (To, Cc, Bcc) as well as tickte states (and pending time if required by state) to be set when selecting a template. Currently setting the ticket state is limited to AgentTicketCompose and AgentTicketForward. 
+
+=head1 AUTHOR AND LICENSE
+
+This package was written by c.a.p.e. IT GmbH E<lt>sales@cape-it.deE<gt>.
+
+The package is licensed unter AGPL. If you
+did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
+
+=head1 ACKNOWLEDGEMENT
+
+=head2 Horn + Cosifan
+
+HORN & COSIFAN Computersysteme GmbH (L<http://www.horn-cosifan.de>) sponsored the "state" feature.
+
+=head2 Stadt Freiburg
+
+Stadt Freiburg (L<http:www.freiburg.de/>) sponsored the initial development for email receipients, which has been reworked for this package.
+
+=cut
+
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file COPYING for license information (AGPL). If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+
+=cut

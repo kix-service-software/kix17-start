@@ -1,0 +1,32 @@
+/*
+ * @project     KIX4OTRS (http://www.cape-it.de) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/*
+ * @package     Skin "KIX4OTRS"
+ * @section     AgentTicketMergeToCustomer
+ */
+
+@media screen,projection,tv,handheld {
+  .TicketToMergeTable th, .TicketToMergeTable td {
+    padding: 2px 4px;
+  }
+  .TicketToMergeTable th {
+    vertical-align: middle;
+  }
+  .TicketToMergeTable td {
+    cursor: pointer;
+  }
+  .TicketToMergeTable td a {
+    color: #F58500;
+  }
+  .Answered span{
+    padding-right: 15px;
+    height: 12px;
+    background: url(../img/Answered.png) no-repeat left top;
+  }
+
+} /* end @media */

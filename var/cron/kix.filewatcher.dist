@@ -1,0 +1,14 @@
+# --
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de/
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+# start process FileWatcher every 30 minutes
+*/30 * * * *    $HOME/bin/otrs.Console.pl Maint::FileWatcher::Synchronize >> /dev/null
+
+

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<otrs_config version="1.0" init="Application">
+    <CVS>$Id$</CVS>
+    <ConfigItem Name="AttachmentStorage::StorageBackendModules" Required="1" Valid="1">
+        <Description Translatable="1">A list of all available CI-attachment storage backends.</Description>
+        <Group>ITSM-CIAttributeCollection</Group>
+        <SubGroup>Core::AttachmentStorage</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Kernel::System::CIAttachmentStorage::AttachmentStorageDB">1</Item>
+                <Item Key="Kernel::System::CIAttachmentStorage::AttachmentStorageFS">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AttachmentStorage::DefaultStorageBackendModule" Required="1" Valid="1">
+        <Description Translatable="1">Defines the backend module used for attachment storage.</Description>
+        <Group>ITSM-CIAttributeCollection</Group>
+        <SubGroup>Core::AttachmentStorage</SubGroup>
+        <Setting>
+            <String Regex="">Kernel::System::CIAttachmentStorage::AttachmentStorageDB</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AgentAttachmentStorage" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the CI-AgentAttachmentStorage object in the agent interface.</Description>
+        <Group>ITSM-CIAttributeCollection</Group>
+        <SubGroup>Core::AttachmentStorage</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Title></Title>
+                <NavBarName>Ticket</NavBarName>
+                <Description>To download attachments</Description>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AttachmentStorageFS::StorageDirectory" Required="1" Valid="1">
+        <Description Translatable="1">The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the OTRS-Home.</Description>
+        <Group>ITSM-CIAttributeCollection</Group>
+        <SubGroup>Core::AttachmentStorage</SubGroup>
+        <Setting>
+            <String Regex="">/var/attachments</String>
+        </Setting>
+     </ConfigItem>
+    <ConfigItem Name="ITSMCIAttributeCollection::AttachmentMD5Check" Required="1" Valid="1">
+        <Description Translatable="1">Enables md5 content check for uploaded CI-attachment content.</Description>
+        <Group>ITSM-CIAttributeCollection</Group>
+        <SubGroup>Core::AttachmentStorage</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMCIAttributeCollection::AttachmentSizeCheck" Required="1" Valid="1">
+        <Description Translatable="1">Enables size check for uploaded CI-attachments.</Description>
+        <Group>ITSM-CIAttributeCollection</Group>
+        <SubGroup>Core::AttachmentStorage</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+</otrs_config>

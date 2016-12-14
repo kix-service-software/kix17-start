@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="Framework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="Frontend::Output::FilterElementPost###RenameActivityDialogName" Required="0" Valid="1">
+        <Description Translatable="1">Activates the rename ActivityDialogName in the frontend. Key DialogLabelAttribute defines which AD attribute is uesd instead of AD name (useful values are DescriptionShort, SubmitAdviceText or SubmitButtonText).</Description>
+        <Group>BPMX</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::RenameActivityDialogName</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key="AgentTicketZoom">1</Item>
+                        <Item Key="AgentTicketZoomTabProcess">1</Item>
+                        <Item Key="CustomerTicketZoom">1</Item>
+                    </Hash>
+                </Item>
+                <Item Key="DialogLabelAttribute">DescriptionShort</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Acl::Module###ProcessProgressAfterClosedChilds" Required="0" Valid="1">
+        <Description Translatable="1">ACL module that allows progress of parent tickets only if all its children are already closed ("ActivityDialog" shows which ActivityDialogs are not available for the parent ticket until all child tickets are closed).</Description>
+        <Group>BPMX</Group>
+        <SubGroup>Core::TicketACL</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Acl::ProcessProgressAfterClosedChilds</Item>
+                <Item Key="ActivityDialog">
+                    <Array>
+                        <Item></Item>
+                    </Array>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+<!--
+    <ConfigItem Name="UpdateMultipleTickets::TicketSearchFoundThreshold" Required="1" Valid="1">
+        <Description Translatable="1">Sets threshold for tickets found in transition action module. If more tickets are found no update action is performed.</Description>
+        <Group>BPMX</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <String Regex="">25</String>
+        </Setting>
+    </ConfigItem>
+-->
+
+</otrs_config>

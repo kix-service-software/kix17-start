@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+    <ConfigItem Name="Loader::Agent::CommonCSS###9000-KIXBase" Required="1" Valid="1">
+        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
+        <Group>KIX</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIXBase.Default.css</Item>
+                <Item>KIXBase.Form.css</Item>
+                <Item>KIXBase.Header.css</Item>
+                <Item>KIXBase.JSTree.css</Item>
+                <Item>KIXBase.Table.css</Item>
+                <Item>KIXBase.TicketDetail.css</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Agent::CommonJS###9000-KIXBase" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>KIX</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.KIXBase.Agent.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Loader::Agent::Skin###100-KIX4OTRS" Required="0" Valid="0">
+        <Description Translatable="1">KIX4OTRS skin for the agents interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Agent::DefaultSelectedSkin" Required="1" Valid="1">
+        <Description Translatable="1">The agent skin's InternalName which should be used in the agent interface. Please check the available skins in Frontend::Agent::Skins.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <String Regex="">default</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Loader::Customer::CommonCSS###9000-KIXBase" Required="1" Valid="1">
+        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
+        <Group>KIX</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIXBase.Default.css</Item>
+                <Item>KIXBase.Form.css</Item>
+                <Item>KIXBase.Header.css</Item>
+                <Item>KIXBase.JSTree.css</Item>
+                <Item>KIXBase.Table.css</Item>
+                <Item>KIXBase.TicketDetail.css</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Customer::CommonJS###9000-KIXBase" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the customer  interface.</Description>
+        <Group>KIX</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.KIXBase.Customer.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Loader::Customer::Skin###100-KIX4OTRS" Required="0" Valid="0">
+        <Description Translatable="1">KIX4OTRS skin for the agents interface.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Customer::SelectedSkin" Required="1" Valid="1">
+        <Description Translatable="1">The customer skin's InternalName which should be used in the customer interface. Please check the available skins in Frontend::Customer::Skins.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+        <Setting>
+            <String Regex="">default</String>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

@@ -1,0 +1,124 @@
+# --
+# KIXSideBarAssignedConfigItemList.tt - provides HTML assigned CI list
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Frank(dot)Oberender(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Ralf(dot)Boehm(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="Clear">
+</div>
+<div id="LinkedCIPager">
+    <span class="Pagination"></span>
+</div>
+
+[% RenderBlockStart("LinkConfigItemCustomerTable") %]
+<div id="LinkedCIPageDiv[% Data.DivCount | html %]" class="LinkedCIPageDiv" style="[% Data.Style | html %]" >
+    <table id="AvailableCIItemList" class="CIDataTable">
+        <thead>
+            <tr>
+[% RenderBlockStart("LinkConfigItemRowCheckboxHeaderCustomer") %]
+                <th></th>
+[% RenderBlockEnd("LinkConfigItemRowCheckboxHeaderCustomer") %]
+[% RenderBlockStart("LinkConfigItemRowHeaderCustomer") %]
+                <th>[% Data.Head | html %]</th>
+[% RenderBlockEnd("LinkConfigItemRowHeaderCustomer") %]
+            </tr>
+        </thead>
+        <tbody>
+[% RenderBlockStart("LinkConfigItemRowCustomer") %]
+            <tr>
+[% RenderBlockStart("LinkConfigItemRowCheckboxCustomer") %]
+                <td>
+                    <input type="hidden" id="LinkedTicketID" value="[% Data.LinkedTicketID | html %]" />
+                    <input type="hidden" id="LinkMode" value="[% Data.LinkMode | html %]" />
+                    <input type="checkbox"  class="LinkConfigItemCheckBox" name="LinkAssignedConfigItems" id="LinkAssignedConfigItems[% Data.ID | html %]" value="[% Data.ID | html %]"  [% Data.IsChecked | html %]/>
+                </td>
+[% RenderBlockEnd("LinkConfigItemRowCheckboxCustomer") %]
+[% RenderBlockStart("LinkConfigItemRowDataCustomer") %]
+                <td>[% Translate(Data.Value) | html %]</td>
+[% RenderBlockEnd("LinkConfigItemRowDataCustomer") %]
+            </tr>
+[% RenderBlockEnd("LinkConfigItemRowCustomer") %]
+        </tbody>
+    </table>
+</div>
+[% RenderBlockEnd("LinkConfigItemCustomerTable") %]
+
+[% RenderBlockStart("LinkConfigItemAgentTable") %]
+<div id="LinkedCIPageDiv[% Data.DivCount | html %]" class="LinkedCIPageDiv" style="[% Data.Style | html %]" >
+    <table id="AvailableCIItemList" class="DataTable">
+        <thead>
+            <tr>
+[% RenderBlockStart("LinkConfigItemRowCheckboxHeaderAgent") %]
+                <th></th>
+[% RenderBlockEnd("LinkConfigItemRowCheckboxHeaderAgent") %]
+[% RenderBlockStart("LinkConfigItemRowHeaderAgent") %]
+                <th>[% Data.Head | html %]</th>
+[% RenderBlockEnd("LinkConfigItemRowHeaderAgent") %]
+            </tr>
+        </thead>
+        <tbody>
+[% RenderBlockStart("LinkConfigItemRowAgent") %]
+            <tr>
+[% RenderBlockStart("LinkConfigItemRowCheckboxAgent") %]
+                <td>
+                    <input type="hidden" id="LinkedTicketID" value="[% Data.LinkedTicketID | html %]" />
+                    <input type="hidden" id="LinkMode" value="[% Data.LinkMode | html %]" />
+[% RenderBlockStart("LinkConfigItemRowCheckboxAgentShow") %]
+                    <input type="checkbox" disabled class="LinkConfigItemCheckBox" name="LinkAssignedConfigItems" id="LinkAssignedConfigItems[% Data.ID | html %]" value="[% Data.ID | html %]" [% Data.IsChecked | html %]/>
+[% RenderBlockEnd("LinkConfigItemRowCheckboxAgentShow") %]
+[% RenderBlockStart("LinkConfigItemRowCheckboxAgentEdit") %]
+                    <input type="checkbox" class="LinkConfigItemCheckBox" name="LinkAssignedConfigItems" id="LinkAssignedConfigItems[% Data.ID | html %]" value="[% Data.ID | html %]" [% Data.IsChecked | html %]/>
+[% RenderBlockEnd("LinkConfigItemRowCheckboxAgentEdit") %]
+                </td>
+[% RenderBlockEnd("LinkConfigItemRowCheckboxAgent") %]
+[% RenderBlockStart("LinkConfigItemRowDataAgent") %]
+                <td>
+[% RenderBlockStart("LinkConfigItemRowDataLinkStartAgent") %]
+                    <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ID | html %]" target="_blank" title="[% Data.Number | html %] - [% Data.Name | html %]">
+[% RenderBlockEnd("LinkConfigItemRowDataLinkStartAgent") %]
+[% RenderBlockStart("LinkConfigItemRowDataLabelStartAgent") %]
+                    <label for="SelectedAssignedConfigItem[% Data.ID | html %]">
+[% RenderBlockEnd("LinkConfigItemRowDataLabelStartAgent") %]
+                        [% Translate(Data.Value) | html %]
+[% RenderBlockStart("LinkConfigItemRowDataLabelEndAgent") %]
+                    </label>
+[% RenderBlockEnd("LinkConfigItemRowDataLabelEndAgent") %]
+[% RenderBlockStart("LinkConfigItemRowDataLinkEndAgent") %]
+                    </a>
+[% RenderBlockEnd("LinkConfigItemRowDataLinkEndAgent") %]
+                </td>
+[% RenderBlockEnd("LinkConfigItemRowDataAgent") %]
+            </tr>
+[% RenderBlockEnd("LinkConfigItemRowAgent") %]
+        </tbody>
+    </table>
+</div>
+[% RenderBlockEnd("LinkConfigItemAgentTable") %]
+
+<script type="text/javascript">//<![CDATA[
+
+Core.KIX4OTRS = Core.KIX4OTRS || {};
+if ( typeof(Core.KIX4OTRS.KIXSidebar) != 'undefined' ) {
+    Core.KIX4OTRS.KIXSidebar.LinkedCIPager();
+    }
+
+//]]>
+</script>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+Core.KIX4OTRS.KIXSidebar.LinkedCIPager();
+//]]>
+</script>
+[% END %]

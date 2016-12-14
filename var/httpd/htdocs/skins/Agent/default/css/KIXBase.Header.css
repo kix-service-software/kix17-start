@@ -1,0 +1,208 @@
+/*
+ * @project     KIX4OTRS (http://www.cape-it.de) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/*
+ * @package     Skin "default"
+ * @section     Header
+ */
+
+@media screen,projection,tv,handheld {
+
+    #Header {
+        height: 80px;
+        background: url(../img/header_background_kix.jpg);
+        background-position: right bottom;
+        background-repeat: repeat-x;
+        color: #FFFFFF;
+        position: relative;
+        z-index: 10;
+        border-bottom: 0px;
+        box-shadow: none;
+        padding: 0px;
+        border-bottom: 1px solid #82C826;
+        margin-bottom: 40px;
+    }
+
+    #Header #Logo {
+        width: 64px;
+        height: 64px;
+        position: relative;
+        right: 0px;
+        left: 10px;
+        top: 10px;
+    }
+
+    .MainBox {
+        position: relative;
+        padding: 10px 16px 8px 8px;
+    }
+
+    .MainBox.Admin {
+        padding-top: 40px;
+    }
+
+    #ToolBar {
+        left: inherit;
+        right: 20px;
+        top: 85px;
+    }
+
+    #ToolBar a i {
+        text-shadow: none;
+    }
+
+    #ToolBar a span.Counter {
+        color: #0A6491;
+        font-size: 10px;
+        bottom: -10px;
+    }
+
+    #ToolBarToggle {
+        background: url(../img/toggle_side_arrow.png) no-repeat right -26px;
+        position: absolute;
+        right: 5px;
+        top: 90px;
+        width: 200px;
+        height: 12px;
+        cursor: pointer;
+        z-index: -10;
+        text-align: right;
+        font-size: 11px;
+        padding-top: 1px;
+    }
+
+    #ToolBarToggle.Show {
+        color: #0A6491;
+        white-space: nowrap;
+        padding-right: 15px;
+    }
+
+    #ToolBarToggle.Hide {
+        background-position: right 0;
+        color: transparent;
+        padding-right: 20px;
+    }
+
+    #NavigationContainer {
+        top: 47px;
+    }
+
+    #Navigation > li {
+        background: none;
+        border: 0px;
+        margin: 0 -5px 0 0;
+        font-weight: bold;
+    }
+
+    #Navigation > li > a {
+        border-bottom: 25px solid transparent;
+        border-right: 25px solid transparent;
+        float: left;
+        height: 0;
+        line-height: 25px;
+        position: relative;
+        text-decoration: none;
+        color: #0A6491;
+        padding-right: 5px;
+    }
+
+    #Navigation > li > a:hover,
+    #Navigation > li:hover > a {
+        color: #1491D2;
+    }
+
+    #Navigation > li.Selected > a:hover,
+    #Navigation > li.Selected:hover > a {
+        color: white;
+    }
+
+    #Navigation > li > ul {
+        top: 34px;
+    }
+
+    #Navigation > .Selected > a {
+        border-bottom-color: #82C826 !important;
+        z-index: 3 !important;
+    }
+
+    #Navigation > .Selected > a:hover {
+        color: #FFF;
+    }
+
+    #Navigation > li > a#GlobalSearchNav i {
+        margin-top: 10px;
+    }
+
+    #Navigation > .Active > ul {
+        background: #F0F0F0;
+        top: 34px;
+    }
+
+    #Navigation > .Active > ul > li {
+        border: 1px solid #82C826;
+    }
+
+    #Navigation > .Active > ul > li > a {
+        color: #0A6491;
+        border-bottom: 1px solid transparent;
+    }
+
+    #Navigation > .Active > ul > li:hover,
+    #Navigation > .Active > ul > li:hover > a {
+        background: none;
+        background-color: #82C826;
+        color: white;
+    }
+
+    #UserInfo {
+        top: 10px;
+        color: #0A6491;
+        padding-top: 5px;
+    }
+
+    #UserInfo a {
+        color: #0A6491;
+    }
+
+    #UserInfo a:hover {
+        color: #1491D2;
+    }
+
+    #UserInfo .fa {
+        font-size: 18px;
+    }
+
+    li.SearchProfile a.ShowTreeSelection {
+        color: #0A6491;
+    }
+
+    li.SearchProfile a.ShowTreeSelection:hover {
+        color: #1491D2;
+    }
+
+    .ResponsiveSidebarContainer #NavigationContainer {
+        background: #fff;
+    }
+
+    .ResponsiveSidebarContainer .SidebarColumn {
+        background: #fff !important;
+    }
+
+    .ResponsiveHandle {
+        top: 40px !important;
+    }
+}
+
+/**
+ * @todo: Responsive rules belong to *.Responsive.css!
+ */
+@media only screen and (min-width: 0px) and (max-width: 1024px) {
+    #Header #Logo {
+        background-size: auto 90% !important;
+        margin: 0 auto !important;
+    }
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <!--  REGISTER pre-application module for checkup for multiple customer ids before ticket creation -->
+    <ConfigItem Name="CustomerPanelPreApplicationModule###CustomerTicketCustomerIDSelection" Required="0" Valid="1">
+        <Description Translatable="1">This module and its PreRun() function will be executed, if defined, for every request. This module checks if customer user has multiple customer ids and presents selection of one of them for a new ticket creation.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+        <Setting>
+            <String Regex="">Kernel::Modules::CustomerTicketCustomerIDSelection</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="CustomerFrontend::Module###CustomerTicketCustomerIDSelection" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the customer interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Create tickets</Description>
+                <NavBarName>Ticket</NavBarName>
+                <Title>New Ticket</Title>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <!--  EO REGISTER pre-application module for checkup for multiple customer ids before ticket creation -->
+
+</otrs_config>

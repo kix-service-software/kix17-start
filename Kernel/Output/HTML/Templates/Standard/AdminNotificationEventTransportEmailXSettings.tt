@@ -1,0 +1,65 @@
+# --
+# Copyright (C) 2001-2015 OTRS AG, http://otrs.com/
+# NotificationEventX-Extensions Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<label for="RecipientEmail">[% Translate("Additional recipient email addresses") | html %]: </label>
+<div class="Field">
+    <input type="text" name="RecipientEmail" id="RecipientEmail" class="W50pc" value="[% Data.RecipientEmail | html %]"/>
+</div>
+<div class="Clear"></div>
+
+# NotificationEventX-capeIT
+[% RenderBlockStart("EmailXDynamicField") %]
+<label for="RecipientAgentDF">[% Translate("DynamicFields") | html %] [% Translate("User") | html %]: </label>
+<div class="Field">
+    [% Data.RecipientAgentDFStrg %]
+</div>
+<div class="Clear"></div>
+
+<label for="RecipientCustomerDF">[% Translate("DynamicFields") | html %] [% Translate("Customer") | html %]: </label>
+<div class="Field">
+    [% Data.RecipientCustomerDFStrg %]
+</div>
+<div class="Clear"></div>
+[% RenderBlockEnd("EmailXDynamicField") %]
+
+<label for="RecipientSubject">[% Translate("Subject") | html %]: </label>
+<div class="Field">
+    [% Data.RecipientSubjectStrg %]
+</div>
+<div class="Clear"></div>
+# EO NotificationEventX-capeIT
+
+<label for="NotificationArticleTypeID">[% Translate("Notification article type") | html %]: </label>
+<div class="Field">
+    [% Data.NotificationArticleTypesStrg %]
+    <p class="FieldExplanation">[% Translate("An article will be created if the notification is sent to the customer or an additional email address.") | html %]</p>
+</div>
+<div class="Clear"></div>
+
+<label for="TransportEmailTemplate">[% Translate("Email template") | html %]: </label>
+<div class="Field">
+    [% Data.TransportEmailTemplateStrg %]
+    <p class="FieldExplanation">[% Translate("Use this template to generate the complete email (only for HTML emails).") | html %]</p>
+</div>
+<div class="Clear"></div>
+# NotificationEventX-capeIT
+[% RenderBlockStart("EmailXCrypt") %]
+<label for="RecipientCrypt">[% Translate("Crypt") | html %]: </label>
+<div class="Field">
+    [% Data.RecipientCryptStrg %]
+</div>
+<div class="Clear"></div>
+
+<label for="RecipientSign">[% Translate("Sign") | html %]: </label>
+<div class="Field">
+    [% Data.RecipientSignStrg %]
+</div>
+<div class="Clear"></div>
+[% RenderBlockEnd("EmailXCrypt") %]
+# EO NotificationEventX-capeIT

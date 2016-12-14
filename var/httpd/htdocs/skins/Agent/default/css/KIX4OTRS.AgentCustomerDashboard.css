@@ -1,0 +1,40 @@
+/*
+ * @project     KIX4OTRS (http://www.cape-it.de) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/*
+ * @package     Skin "KIX4OTRS"
+ * @section     AgentCustomerDashboard
+ */
+
+@media screen,projection,tv,handheld {
+
+    .CustomerDashboardCustomerSearch .Column {
+        display: block;
+        vertical-align: top;
+    }
+    .CustomerDashboardCustomerSearch .ColumnLeft {
+        float: left;
+        width: 55%;
+    }
+    .CustomerDashboardCustomerSearch .ColumnRight {
+        width: 25%;
+        margin-left: 60%;
+    }
+
+    .CustomerDashboardCustomerServices {
+        max-height: 75px;
+        height: auto !important;
+        height: 75px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #CustomerDashboardFurtherInformationNotes {
+        width:  97%;
+    }
+
+} /* end @media */

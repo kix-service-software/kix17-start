@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="Framework">
+    <CVS>$Id$</CVS>
+    <ConfigItem Name="DynamicFields::Driver###ITSMConfigItemReference" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Driver::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">ITSMConfigItemReference</Item>
+                <Item Key="Module">Kernel::System::DynamicField::Driver::ITSMConfigItemReference</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldITSMConfigItem</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AdminDynamicFieldITSMConfigItem" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Group>admin</Group>
+                <Description>Admin</Description>
+                <Title Translatable="1">Dynamic Fields Reference ConfigItem Backend GUI</Title>
+                <Loader>
+                    <CSS>Core.Agent.Admin.DynamicField.css</CSS>
+                    <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
+                    <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###DynamicFieldITSMConfigItemAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Lookup ConfigItem with AJAX-request</Description>
+                <Title>ConfigItem search</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerFrontend::Module###DynamicFieldITSMConfigItemAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the customer interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Customer::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Lookup ConfigItem with AJAX-request</Description>
+                <Title>ConfigItem search</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::EventModulePost###ITSMConfigItemLinkAdd" Required="0" Valid="0">
+        <Description Translatable="1">Create link between ticket and config item on DynamicFieldUpdate (This event only create link, links can only be deleted manually).</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::ITSMConfigItemLinkAdd</Item>
+                <Item Key="Event">(TicketCreate|TicketDynamicFieldUpdate)</Item>
+                <Item Key="LinkType">RelevantTo</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

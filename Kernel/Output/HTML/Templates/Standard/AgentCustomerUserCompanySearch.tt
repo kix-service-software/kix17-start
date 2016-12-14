@@ -1,0 +1,38 @@
+# --
+# AgentCustomerUserCompanySearch.tt - provides autocomplete feature for customer user company search
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Frank(dot)Oberender(at)cape(dash)it(dot)de
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Mario(dot)Illinger(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("CustomerUserCompanySearchAutoComplete") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.Config.Set('Autocomplete.MinQueryLength', "[% Data.minQueryLength | html %]");
+    Core.Config.Set('Autocomplete.QueryDelay', "[% Data.queryDelay | html %]");
+    Core.Config.Set('Autocomplete.MaxResultsDisplayed', "[% Data.maxResultsDisplayed | html %]");
+    Core.Config.Set('Autocomplete.DynamicWidth', "[% Data.dynamicWidth | html %]");
+    Core.Config.Set('Autocomplete.SearchButtonText', [% Translate("Search CustomerUserCompany") | JSON %]);
+//]]></script>
+
+[% RenderBlockStart("CustomerUserCompanySearchInit") %]
+<script type="text/javascript">//<![CDATA[
+    var FieldID = '[% Data.ItemID | html %]';
+    FieldID = FieldID.replace(/:/g, '\\:');
+    Core.Agent.CustomerUserCompanySearch.Init($("#"+FieldID), [% Data.ActiveAutoComplete | html %]);
+//]]></script>
+[% RenderBlockEnd("CustomerUserCompanySearchInit") %]
+
+[% END %]
+[% RenderBlockEnd("CustomerUserCompanySearchAutoComplete") %]
+

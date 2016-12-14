@@ -1,0 +1,28 @@
+# --
+# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+[%- INCLUDE "HTTPHeaders.tt" -%]
+
+<!DOCTYPE html>
+<html>
+[% InsertTemplate("Copyright.tt") %]
+[% InsertTemplate("CustomerHTMLHead.tt") %]
+<body class="NoJavaScript [% Data.BodyClass | html %]">
+<!-- start CI layout -->
+    <div id="Header">
+[% RenderBlockStart("HeaderLogo") %]
+        <div id="Logo"></div>
+[% RenderBlockEnd("HeaderLogo") %]
+        <h1 class="CompanyName">
+            <a href="#">[% Config("CustomerHeadline") %]</a>
+        </h1>
+[% RenderBlockStart("DebugRTLButton") %]
+        <button onclick="Core.Debug.SimulateRTLPage();" type="button">Simulate RTL</button>
+[% RenderBlockEnd("DebugRTLButton") %]
+    </div>
+<!-- end CI layout -->
+<!-- end header -->

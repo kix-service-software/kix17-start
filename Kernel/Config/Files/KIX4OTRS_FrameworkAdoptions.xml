@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="Frontend::Module###AdminOTRSBusiness" Required="0" Valid="0">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Group>admin</Group>
+                <Description>Admin</Description>
+                <Title>OTRS Business Solution™</Title>
+                <NavBarName>Admin</NavBarName>
+                <NavBarModule>
+                    <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
+                    <Name>OTRS Business Solution™</Name>
+                    <Description Translatable="1">Deploy and manage OTRS Business Solution™.</Description>
+                    <Block>System</Block>
+                    <Prio>360</Prio>
+                </NavBarModule>
+                <Loader>
+                    <CSS>Core.Agent.Admin.OTRSBusiness.css</CSS>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Daemon::SchedulerCronTaskManager::Task###OTRSBusinessEntitlementCheck" Required="0" Valid="0" ConfigLevel="100">
+        <Description Translatable="1">Checks the entitlement status of OTRS Business Solution™.</Description>
+        <Group>Daemon</Group>
+        <SubGroup>Daemon::SchedulerCronTaskManager::Task</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="TaskName">OTRSBusinessEntitlementCheck</Item>
+                <Item Key="Schedule">40 0 * * *</Item> <!-- default: every day at 12:40 AM -->
+                <Item Key="Module">Kernel::System::Console::Command::Maint::OTRSBusiness::EntitlementCheck</Item>
+                <Item Key="Function">Execute</Item>
+                <Item Key="MaximumParallelInstances">1</Item>
+                <Item Key="Params">
+                    <Array>
+                    </Array>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Daemon::SchedulerCronTaskManager::Task###OTRSBusinessAvailabilityCheck" Required="0" Valid="0" ConfigLevel="100">
+        <Description Translatable="1">Checks the availability of OTRS Business Solution™ for this system.</Description>
+        <Group>Daemon</Group>
+        <SubGroup>Daemon::SchedulerCronTaskManager::Task</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="TaskName">OTRSBusinessAvailabilityCheck</Item>
+                <Item Key="Schedule">20 */1 * * *</Item> <!-- default: each hour in the minute 20 -->
+                <Item Key="Module">Kernel::System::Console::Command::Maint::OTRSBusiness::AvailabilityCheck</Item>
+                <Item Key="Function">Execute</Item>
+                <Item Key="MaximumParallelInstances">1</Item>
+                <Item Key="Params">
+                    <Array>
+                    </Array>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::NotifyModule###100-OTRSBusiness" Required="0" Valid="0">
+        <Description Translatable="1">Defines the module to display a notification in different interfaces on different occasions for OTRS Business Solution™.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Agent::ModuleNotify</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Notification::AgentOTRSBusiness</Item>
+                <Item Key="Group">admin</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerFrontend::NotifyModule###1-OTRSBusiness" Required="0" Valid="0">
+        <Description Translatable="1">Defines the module to display a notification in different interfaces on different occasions for OTRS Business Solution™.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Customer::ModuleNotify</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Notification::CustomerOTRSBusiness</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

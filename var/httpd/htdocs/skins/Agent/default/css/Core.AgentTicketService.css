@@ -1,0 +1,168 @@
+/**
+ * @project     KIX4OTRS (http://www.cape-it.de) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/**
+ * @package     Skin "Default"
+ * @section     Application
+ * @subsection  AgentTicketService
+ */
+
+@media screen,projection,tv,handheld {
+
+/**
+ * @subsubsection     General
+ */
+
+  .ServiceOverview {
+      font-size: 12px;
+      margin: 0 16px 0px 8px;
+      padding: 0 0 4px 0;
+      color: gray;
+  }
+
+  .RTL .ServiceOverview {
+      margin: 0 8px 10px 16px;
+  }
+
+  .ServiceOverviewSeparator {
+      height: 10px;
+      min-height: 10px;
+  }
+
+  .ServiceOverviewList {
+      clear: both;
+      float: none;
+  }
+
+  .ServiceOverviewList.Level_1 {
+      margin-left: 10px;
+  }
+
+  .ServiceOverviewList.Level_2 {
+      margin-left: 20px;
+  }
+
+  .ServiceOverviewList.Level_3 {
+      margin-left: 30px;
+  }
+
+  .ServiceOverviewList.Level_4 {
+      margin-left: 40px;
+  }
+
+  .ServiceOverviewList.Level_5 {
+      margin-left: 50px;
+  }
+
+  .ServiceOverviewList.Level_6 {
+      margin-left: 60px;
+  }
+
+  .ServiceOverviewList.Level_7 {
+      margin-left: 70px;
+  }
+
+  .ServiceOverviewList.Level_8 {
+      margin-left: 80px;
+  }
+
+  .ServiceOverviewList.Level_9 {
+      margin-left: 90px;
+  }
+
+  .ServiceOverviewList.Level_10 {
+      margin-left: 100px;
+  }
+
+  .ServiceOverviewList.Level_X {
+      margin-left: 100px;
+  }
+
+  .ServiceOverviewList li {
+      float: left;
+      list-style: none;
+      padding: 2px 5px;
+      height: 14px;
+      white-space:nowrap;
+  }
+
+  .RTL .ServiceOverviewList li {
+      float: right;
+  }
+
+  .ServiceOverview .OlderLevel1 {
+      color: orange;
+  }
+
+  .ServiceOverview .OlderLevel2 {
+      color: #ff4766;
+  }
+
+  .ServiceOverview .Oldest {
+      color: red;
+  }
+
+  .ServiceOverview .Active {
+      font-weight: bold;
+  }
+
+  #ServiceTreeToggle {
+      position:   relative;
+      float:      right;
+      width:      20px;
+      height:     13px;
+      margin:     2px 0 3px;
+      background: url(../img/toggle_side_arrow.png) no-repeat 0 -26px;
+  }
+  .Collapsed #ServiceTreeToggle {
+      background-position: 0 0;
+      left: 2px;
+  }
+  #ServiceTreeToggle a {
+      position: absolute;
+      left:     0;
+      top:      0;
+      z-index:  100;
+      width:    100%;
+      height:   100%;
+  }
+
+  #ServiceTreeControl {
+    padding: 2px 5px 3px;
+    border-bottom: 1px solid #CCC;
+    position: inherit;
+  }
+  #ServiceTreeControl a:focus{
+    color: #A40;
+  }
+  .WidgetSimple > .ServiceTreeContent, .ServiceTreeContent {
+    height: auto !important;
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: #FFFFFF;
+    border: 1px solid #ccc;
+    height: 72%;
+    margin: 10px 12px;
+    -moz-box-shadow: inset 0px 0px 6px #ccc;
+    -webkit-box-shadow: inset 0px 0px 6px #ccc;
+    box-shadow: inset 0px 0px 6px #ccc;
+    overflow: auto;
+    padding: 0px 10px 10px 10px;
+  }
+  .ServiceTreeView {
+    float: left;
+    width: 245px;
+  }
+  .Overview.FixedHeader thead tr {
+    left: auto;
+  }
+  .Overview.FixedHeader.Fixed thead tr {
+    margin: 0 16px 0 0px;
+  }
+
+} /* end @media */

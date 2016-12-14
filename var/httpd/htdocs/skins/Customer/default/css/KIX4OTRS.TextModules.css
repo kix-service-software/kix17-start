@@ -1,0 +1,79 @@
+/*
+ * @project     KIX4oTRS (http://www.cape-it.de) - Customer Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/*
+ * @package     Skin "default"
+ * @section     TextModules
+ */
+
+@media screen,projection,tv,handheld {
+
+    .Italic {
+        font-style: italic;
+    }
+
+    #TextModulesSelectionContainer {
+        height: 250px;
+        background-color: #FFFFFF;
+        border: 1px solid #ccc !important;
+        -moz-box-shadow: inset 0px 0px 6px #ccc;
+        -webkit-box-shadow: inset 0px 0px 6px #ccc;
+        box-shadow: inset 0px 0px 6px #ccc;
+        overflow: auto;
+        padding: 0px 10px 10px 10px;
+    }
+
+    .TextModuleCategory {
+        margin-left: 2px;
+        white-space: nowrap;
+    }
+    #CategorySelectionContainer .TrashCan {
+        position:           relative;
+        padding:            0px;
+        height:             16px;
+        border:             none;
+        background-color:   white;
+    }
+
+    #TextModulesSelectionContainer div.TextModule {
+        padding:            2px;
+        white-space:        nowrap;
+        line-height:        18px;
+        width:              100%;
+        -webkit-user-select: none;
+        -moz-user-select:   none;
+        -ms-user-select:    none;
+        -khtml-user-select: none;
+    }
+
+    #TextModulesSelectionContainer div.TextModule.Loading {
+        background:         url(../img/loader.gif) no-repeat left 2px;
+        padding:            2px;
+        white-space:        nowrap;
+        line-height:        18px;
+        width:              100%;
+        -webkit-user-select: none;
+        -moz-user-select:   none;
+        -ms-user-select:    none;
+        -khtml-user-select: none;
+    }
+
+    .TextModule {
+        padding-top:        3px;
+        padding-bottom:     2px;
+        white-space:        nowrap;
+    }
+
+    .TextModule .Loading {
+        background:         url(../img/loader.gif) no-repeat left -1px;
+        width:              20px;
+        height:             20px;
+        display:            inline;
+    }
+}
+
+/* end @media */

@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <!-- AGENT PREFERENCE REGISTRATION -->
+    <ConfigItem Name="PreferencesGroups###ArticleToDisplay" Required="0" Valid="1">
+        <Description Translatable="1">Select queue view layout.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
+                <Item Key="Column">Other Settings</Item>
+                <Item Key="Label" Translatable="1">Ticket Zoom - article handling</Item>
+                <Item Key="Desc" Translatable="1">Initially shown article in agent's ticket zoom mask.</Item>
+                <Item Key="Key" Translatable="1">Shown article</Item>
+                <Item Key="Data">
+                    <Hash>
+                        <Item Key="first">First article</Item>
+                        <Item Key="customer">Last customer article</Item>
+                        <Item Key="last">Last article</Item>
+                    </Hash>
+                </Item>
+                <Item Key="DataSelected">customer</Item>
+                <Item Key="PrefKey">ShownArticle</Item>
+                <Item Key="Prio">3210</Item>
+                <Item Key="Active">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO AGENT PREFERENCE REGISTRATION -->
+
+    <!-- FRONTEND MODULE REGISTRATION -->
+    <ConfigItem Name="Frontend::Module###AgentTicketZoom" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Ticket Zoom</Description>
+                <Title>Zoom</Title>
+                <NavBarName>Ticket</NavBarName>
+                <Loader>
+                    <CSS>Core.Agent.TicketProcess.css</CSS>
+                    <CSS>Core.Agent.TicketMenuModuleCluster.css</CSS>
+                    <CSS>Core.AllocationList.css</CSS>
+                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
+                    <JavaScript>Core.UI.Table.Sort.js</JavaScript>
+                    <JavaScript>Core.Agent.TicketZoom.js</JavaScript>
+                    <JavaScript>Core.KIX4OTRS.TicketZoomTabs.js</JavaScript>
+                    <JavaScript>Core.KIX4OTRS.CustomerDetails.js</JavaScript>
+                    <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
+                    <JavaScript>Core.Agent.TicketAction.js</JavaScript>
+                    <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
+                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
+                    <JavaScript>Core.Agent.TableFilters.js</JavaScript>
+                    <JavaScript>Core.Agent.LinkObject.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::Module###AgentTicketZoomTabArticle" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Ticket Zoom</Description>
+                <Title>Zoom</Title>
+                <NavBarName>Ticket</NavBarName>
+                <Loader>
+                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
+                    <JavaScript>Core.UI.Table.Sort.js</JavaScript>
+                    <JavaScript>Core.KIX4OTRS.Agent.TicketMergeLink.js</JavaScript>
+                    <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AgentTicketZoomTabProcess" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Ticket Zoom</Description>
+                <Title>Zoom</Title>
+                <NavBarName>Ticket</NavBarName>
+                <Loader>
+                    <CSS>Core.Agent.TicketProcess.css</CSS>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="CustomerFrontend::Module###CustomerTicketZoom" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the customer interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Customer::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Ticket zoom view</Description>
+                <NavBarName>Ticket</NavBarName>
+                <Title>Zoom</Title>
+                <Loader>
+                    <JavaScript>Core.Customer.TicketZoom.js</JavaScript>
+                    <JavaScript>Core.UI.Popup.js</JavaScript>
+                    <JavaScript>Core.KIX4OTRS.Customer.TicketMergeLink.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AgentTicketZoomTabLinkedObjects" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Linked Objects</Description>
+                <Title>Linked Objects</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AgentTicketZoomTabAttachments" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Ticket Attachment List</Description>
+                <Title>Attachments</Title>
+                <NavBarName>Ticket</NavBarName>
+                <Loader>
+                    <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
+                    <JavaScript>Core.UI.Table.Sort.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::Module###AgentTicketZoomTabActionCommon" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for AgentTicketZoomTabActionCommon.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>ActionCommon for use in ticket zoom tab.</Description>
+                <Title>ActionCommonTitle</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::Module###AgentArticleCopyMove" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for AgentArticleCopyMove.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Group>admin</Group>
+                <Description>Copy, move or delete selected article</Description>
+                <Title>Copy, Move or Delete Article</Title>
+                <NavBarName></NavBarName>
+                <Loader>
+                    <JavaScript>Core.Agent.TicketAction.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <!-- EO FRONTEND MODULE REGISTRATION -->
+
+    <!-- TICKET ZOOM TAB REGISTRATION -->
+    <ConfigItem Name="AgentTicketZoomBackend###0105-Process" Required="0" Valid="1">
+        <Description Translatable="1">Defines parameters for the AgentTicketZoomTab "Process".</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::AgentTicketZoomTab</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Link">Action=AgentTicketZoomTabProcess;TicketID=$Param{"TicketID"};ZoomExpand=$Param{"ZoomExpand"};CallingAction=[% Env("Action") %]</Item>
+                <Item Key="Title">Process Information</Item>
+                <Item Key="Description">Shows process information of this ticket</Item>
+                <Item Key="Block">ContentItem</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="CountMethod"></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AgentTicketZoomBackend###0110-Article" Required="0" Valid="1">
+        <Description Translatable="1">Defines parameters for the AgentTicketZoomTab "Articles".</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::AgentTicketZoomTab</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Link">Action=AgentTicketZoomTabArticle;TicketID=$Param{"TicketID"};ArticleID=$Param{"ArticleID"};ZoomExpand=$Param{"ZoomExpand"};ArticlePage=$Param{"ArticlePage"};CallingAction=[% Env("Action") %]</Item>
+                <Item Key="Title">Articles</Item>
+                <Item Key="Description">Shows all article of this ticket</Item>
+                <Item Key="Block">ContentItem</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="CountMethod">CallMethod::TicketObject::CountArticles</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AgentTicketZoomBackend###0115-Attachments" Required="0" Valid="1">
+        <Description Translatable="1">Defines parameters for the AgentTicketZoomTab "Attachments".</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::AgentTicketZoomTab</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Link">Action=AgentTicketZoomTabAttachments;TicketID=$Param{"TicketID"};CallingAction=[% Env("Action") %]</Item>
+                <Item Key="Title">Attachments</Item>
+                <Item Key="Description">Shows a list of all article attachments of this ticket</Item>
+                <Item Key="Block">ContentItem</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="CountMethod">CallMethod::TicketObject::CountAttachments</Item>
+                <Item Key="AllowAttachmentDelete">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AgentTicketZoomBackend###0120-LinkedObjects" Required="0" Valid="1">
+        <Description Translatable="1">Defines parameters for the AgentTicketZoomTab "Linked Objects".</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::AgentTicketZoomTab</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Link">Action=AgentTicketZoomTabLinkedObjects;TicketID=$Param{"TicketID"};CallingAction=[% Env("Action") %]</Item>
+                <Item Key="Title">Linked Objects</Item>
+                <Item Key="Description">Shows all objects linked with this ticket</Item>
+                <Item Key="Block">ContentItem</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="CountMethod">CallMethod::TicketObject::CountLinkedObjects</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AgentTicketZoomBackend###0250-Note" Required="0" Valid="1">
+        <Description Translatable="1">Defines parameters for the AgentTicketZoomTab "Note".</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::AgentTicketZoomTab</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Link">Action=AgentTicketZoomTabActionCommon;TicketID=$Param{"TicketID"};CallingAction=[% Env("Action") %]</Item>
+                <Item Key="Title">New Note</Item>
+                <Item Key="Description">Add a note to this ticket!</Item>
+                <Item Key="Block">ContentItem</Item>
+                <Item Key="Permission">note</Item>
+                <Item Key="CountMethod"></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AgentTicketZoomBackend###0255-CoreData" Required="0" Valid="1">
+        <Description Translatable="1">Defines parameters for the AgentTicketZoomTab "Ticket Core Data".</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::AgentTicketZoomTab</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Link">Action=AgentTicketZoomTabActionCommon;PretendAction=AgentTicketZoomTabEditCoreData;TicketID=$Param{"TicketID"};CallingAction=[% Env("Action") %]</Item>
+                <Item Key="Title">Ticket Core Data</Item>
+                <Item Key="Description">Edit this tickets core data!</Item>
+                <Item Key="Block">ContentItem</Item>
+                <Item Key="Permission">rw</Item>
+                <Item Key="CountMethod"></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AgentTicketZoomBackend###0260-DynamicFields" Required="0" Valid="1">
+        <Description Translatable="1">Defines parameters for the AgentTicketZoomTab "Dynamic Fields".</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::AgentTicketZoomTab</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Link">Action=AgentTicketZoomTabActionCommon;PretendAction=AgentTicketZoomTabEditDynamicFields;TicketID=$Param{"TicketID"};CallingAction=[% Env("Action") %]</Item>
+                <Item Key="Title">Dynamic Fields</Item>
+                <Item Key="Description">Edit this tickets dynamic fields!</Item>
+                <Item Key="Block">ContentItem</Item>
+                <Item Key="Permission">rw</Item>
+                <Item Key="CountMethod"></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO TICKET ZOOM TAB REGISTRATION -->
+
+    <!-- KIX4OTRS specific Ticket-Actions Empty mail -->
+    <ConfigItem Name="Ticket::Frontend::MenuModule###500-EmptyMail" Required="0" Valid="1">
+        <Description Translatable="1">Module to show empty mail link in menu.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::MenuModule</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::TicketMenu::Generic</Item>
+                <Item Key="Name">Empty mail</Item>
+                <Item Key="Description" Translatable="1">Write a mail, using an empty template</Item>
+                <Item Key="Action">AgentTicketCompose</Item>
+                <Item Key="Link">Action=AgentTicketCompose;TicketID=[% Data.TicketID | html %];NoResponse=1</Item>
+                <Item Key="PopupType">TicketAction</Item>
+                <Item Key="ClusterName" Translatable="1">Communication</Item>
+                <Item Key="ClusterPriority">435</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO KIX4OTRS specific Ticket-Actions Empty mail -->
+
+    <!-- Configuration for AgentTicketZoomTabAttachments -->
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabAttachments###AllowAttachmentDelete" Required="0" Valid="1">
+        <Description Translatable="1">Defines parameters for the AgentTicketZoomTab "Attachments".</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabAttachments</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <!-- EO Configuration for AgentTicketZoomTabAttachments -->
+
+    <!-- Configuration for AgentTicketZoomTabArticle -->
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleEmailActions" Required="1" Valid="1">
+        <Description Translatable="1">Defines email-actions allowed for article types.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::AgentTicketZoom</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="AgentTicketCompose">email-internal,email-external,phone,note-external,webrequest</Item>
+                <Item Key="AgentTicketForward">email-internal,email-external,note-external</Item>
+                <Item Key="AgentTicketBounce">email-internal,email-external</Item>
+                <Item Key="AgentTicketPhoneSplit">email-internal,email-external,phone,webrequest,note-external</Item>
+                <Item Key="AgentArticleCopyMove">email-internal,email-external,phone,webrequest,note-external,note-internal</Item>
+                <Item Key="AgentArticleEdit">phone,note-internal,note-external,note-report</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the article tab of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###DynamicFieldActiveFilter" Required="0" Valid="1">
+        <Description Translatable="1">DynamicFields that can be filtered in the article table of the agent interface. Possible settings: 0 = Disabled, 1 = Available.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlags" Required="0" Valid="1">
+        <Description Translatable="1">Defines article flags.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="2">ToDo</Item>
+                <Item Key="Important">Important</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagIcons" Required="0" Valid="1">
+        <Description Translatable="1">Defines icons from awesome fonts lib for article icons.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="2">check</Item>
+                <Item Key="Important">info-circle</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagCSS" Required="0" Valid="1">
+        <Description Translatable="1">Defines additional css styles for article icons. This value could be empty.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="2"></Item>
+                <Item Key="Important">color: #C10505</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagsRemoveOnTicketClose" Required="0" Valid="1">
+        <Description Translatable="1">Defines whether article flags should be removed if ticket closed. This value could be empty. Use 'UserPref' if user could choose this preference by itself and system if not.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="2">UserPref</Item>
+                <Item Key="Important">0</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleFlagsOnlyOwnerAndResponsible" Required="0" Valid="1">
+        <Description Translatable="1">Defines whether article flags can be set by every agent or just by owner and responsible.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleListFrom" Required="1" Valid="1">
+        <Description Translatable="1">Defines either realname or realname and email address should be shown in the article list.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Option SelectedID="Realname">
+                <Item Key="Realname">Realname</Item>
+                <Item Key="Value">Realname and email address</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleDetailViewFrom" Required="1" Valid="1">
+        <Description Translatable="1">Defines either realname or realname and email address should be shown in the article detail view.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Option SelectedID="Realname">
+                <Item Key="Realname">Realname</Item>
+                <Item Key="Value">Realname and email address</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <!-- EO Configuration for AgentTicketZoomTabArticle -->
+    <!-- Configuration for AgentTicketZoomTabProcess -->
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabProcess###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the process tab of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabProcess</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO Configuration for AgentTicketZoomTabProcess -->
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoom###TicketDataKeys" Required="1" Valid="1">
+        <Description Translatable="1">Defines which ticket data parameters are displayed in direct data presentation.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::AgentTicketZoom</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="1000">Type</Item>
+                <Item Key="1050Translated">Lock</Item>
+                <Item Key="1100Translated">State</Item>
+                <Item Key="1105Unquoted">PendingUntil</Item>
+                <Item Key="1200UnquotedNewLinedBy::">CallMethod::TicketObject::TicketQueueLinkGet</Item>
+                <Item Key="1500UnquotedNewLinedBy::">Service</Item>
+                <Item Key="1502">SLA</Item>
+                <Item Key="1700Unquoted">CallMethod::TicketObject::TicketOwnerName</Item>
+                <Item Key="1800Unquoted">CallMethod::TicketObject::TicketResponsibleName</Item>
+                <Item Key="1900">CallMethod::TicketObject::TicketAccountedTimeGet</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoom###TicketDataLabel" Required="1" Valid="1">
+        <Description Translatable="1">Defines labels for internal ticket attribute names.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::AgentTicketZoom</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="PendingUntil">Pending Until</Item>
+                <Item Key="Lock">Lock State</Item>
+                <Item Key="CallMethod::TicketObject::TicketAccountedTimeGet">Accounted Time</Item>
+                <Item Key="CallMethod::TicketObject::TicketQueueLinkGet">Queue</Item>
+                <Item Key="CallMethod::TicketObject::TicketOwnerName">Owner</Item>
+                <Item Key="CallMethod::TicketObject::TicketResponsibleName">Responsible</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabLinkedObjects###QuickLink" Required="0" Valid="1">
+        <Description Translatable="1">Enable quick link in linked objects tab (different backends have to be defined first)</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabLinkedObjects</SubGroup>
+        <Setting>
+            <Option SelectedID="true">
+                <Item Key="false">No</Item>
+                <Item Key="true">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Acl::Module###995_HideProcessTicketTabs" Required="0" Valid="1">
+        <Description Translatable="1">Ticket-ACLs to define shown tabs if ticket is process ticket.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::AgentTicketZoom</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Acl::HideProcessTicketTabs</Item>
+                <Item Key="ReturnType">Action</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoom###TicketDataLength" Required="0" Valid="1">
+        <Description Translatable="1">Defines how many chars should be shown for dynamic fields in ticket info sidebar. Disable this key to show all chars.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::AgentTicketZoom</SubGroup>
+        <Setting>
+            <String Regex="">25</String>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

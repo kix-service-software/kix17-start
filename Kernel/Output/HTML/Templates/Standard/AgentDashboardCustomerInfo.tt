@@ -1,0 +1,32 @@
+# --
+# AgentDashboardCustomerInfo.tt - provides HTML to search for customers in dashboard
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<span class="CustomerDetailsMagnifier">
+[% RenderBlockStart("CustomerDetailsMagnifier") %]
+    <i class="fa fa-search"></i>
+[% RenderBlockEnd("CustomerDetailsMagnifier") %]
+</span>
+[% Data.CustomerTable %]
+<div class="WidgetPopup" id="CustomerDetails[% Data.UserLogin | html %]">
+    <div class="Header">
+        <h2>[% Translate("Customer Information") | html %]</h2>
+    </div>
+    <div class="Content">
+        <div class="Spacing">
+[% RenderBlockStart("CustomerDetails") %]
+            [% Data.CustomerDetailsTable %]
+[% RenderBlockEnd("CustomerDetails") %]
+        </div>
+    </div>
+</div>

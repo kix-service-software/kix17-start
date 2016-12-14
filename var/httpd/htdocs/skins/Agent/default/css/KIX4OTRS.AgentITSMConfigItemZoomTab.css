@@ -1,0 +1,63 @@
+/**
+ * @project     KIX4OTRS (http://www.cape-it.de) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/*
+ * @package     Skin "KIX4OTRS"
+ * @section     Tables
+ */
+
+@media screen,projection,tv,handheld {
+/**
+ * @subsection  ITSM tree
+ */
+
+    .RightAligned {
+        text-align: right;
+    }
+
+    .CITabLinkGraph .Table {
+        display: table;
+        border-spacing: 10px;
+    }
+
+    .CITabLinkGraph .TableCell {
+        display: table-cell;
+    }
+
+    .CIImagePreview {
+        width:200px;
+        height:200px;
+        overflow:hidden;
+        border: 1px solid #CCC;
+        margin: 5px 5px 5px 5px;
+        position: relative;
+    }
+    .CIImageText {
+        margin: 5px 5px 5px 5px;
+        width:200px;
+        height:50px;
+    }
+    .CIImage {
+        display: block;
+        float:left;
+        margin: 10px 0px 0px 10px;
+        border: 1px solid #CCC;
+        height: 250px;
+        background: #eee url(../img/widget_bg_100.png) repeat-x;
+    }
+    .CIImagePreview:hover .ActionMenu {
+        display: block;
+    }
+    #CIImageDialog {
+        width:500px;
+    }
+
+    .CITabLinkGraph > .LayoutFixedSidebar > .ContentColumn {
+        min-height: 0px;
+    }
+
+} /* end @media */

@@ -1,0 +1,245 @@
+# --
+# AgentKIXSidebarCustomizeForm.tt - provides HTML to show TicketInfo in KIXSidebar
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Torsten(dot)Thau(at)cape(dash)it(dot)de
+# * Ulrich(dot)Boehm(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div id="CustomizeForm" class="WidgetSimple Hidden">
+    <input type="hidden" name="Action" value="[% Env("Action") %]" id="Action"/>
+    <input type="hidden" name="FieldOrderString" value="[% Data.FieldOrderString %]" id="FieldOrderString"/>
+</div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+
+/*     -----------------------------------------------------
+        Global parameters
+    ----------------------------------------------------- */
+
+var Action              = $('#Action').val();
+
+/*     -----------------------------------------------------
+        Sort Form Fields
+   ----------------------------------------------------- */
+
+var FieldOrderString    = $('#FieldOrderString').val(),
+    DefaultPriority     = new Array(),
+    FieldOrderArray     = new Array(),
+    ActionRegexpA       = /^Agent+/i,
+    ActionRegexpC       = /^Customer+/i;
+
+    // add starting default priority
+    DefaultPriority.push(1000);
+
+if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
+
+    var FieldOrder       = FieldOrderString.split(",");
+
+    /* T2016071190004943 - remove unnecessary EndOfForms for sorting functionality */
+    var EndOfForm        = $('.EndOfForm').not(':last');
+
+    if (EndOfForm.length) {
+        EndOfForm.remove();
+    }
+
+    /* Agent Frontend */
+    if ( ActionRegexpA.test(Action) ) {
+        $('.ContentColumn').find('fieldset').children('div').each( function() {
+
+            // check if this is some entry within a form, if not it might be something like TicketDetails etc
+            if ($(this).closest('form').length == 0)
+                return;
+
+            var ChildClass = $(this).attr("class"),
+                DynamicFieldRegexp = /^Row+/i,
+                FieldRegexp        = /Field$/i,
+                FileRegexp         = /FileUpload$/i,
+                ChildID;
+
+            // input (text), textarea, select, div
+            if ( FieldRegexp.test(ChildClass) ) {
+                $(this).children('input[type=text],input[type=hidden],textarea,select,div').first().each(
+                    function(){
+
+                        // some special handling for modernized form fields
+                        if ( $(this).is('div') && $(this).next().is('select') )
+                            GetSortOrder( $(this).next(),FieldOrderArray,DefaultPriority );
+                        // next if element has no ID
+                        else if ( $(this).attr('id') === undefined && !($(this).prop('tagName') == 'DIV' && $(this).hasClass('Value')) )
+                            return true;
+                        // some special handling necessary for display of service incident state
+                        else if ( $(this).prop('tagName') == 'DIV' && $(this).hasClass('Value') )
+                            GetSortOrder( $(this).parent(),FieldOrderArray,DefaultPriority );
+                        else
+                            GetSortOrder( $(this),FieldOrderArray,DefaultPriority );
+                    }
+                );
+            }
+            // dynamic fields
+            else if ( DynamicFieldRegexp.test(ChildClass) ) {
+                var DFRegExp = /.*Row_(DynamicField_[^\s]+).*/;
+                var Matches = DFRegExp.exec($(this).attr('class'));
+                if ( Matches !== null ) {
+                    var DynamicFieldID = Matches[1];
+                    if ( $('#' + DynamicFieldID).length != 0 ) {
+                        GetSortOrder( $('#' + DynamicFieldID),FieldOrderArray,DefaultPriority );
+                    }
+                    else if ( $('#' + DynamicFieldID + 'Used' ).length != 0 ) {
+                        GetSortOrder( $('#' + DynamicFieldID + 'Used'),FieldOrderArray,DefaultPriority );
+                    }
+                }
+            }
+            // attachements
+            else if ( FileRegexp.test(ChildClass) ) {
+                $(this).find('input[type=file]').each(
+                    function(){
+                        GetSortOrder( $(this),FieldOrderArray,DefaultPriority );
+                    }
+                );
+            }
+            // remove all clear (will be inserted again later)
+            else if ( ChildClass == 'Clear' ) {
+                $(this).remove();
+            }
+
+        });
+
+        FieldOrderArray.sort();
+
+        // change sort order
+        $.each(FieldOrderArray, function(Index, Value) {
+            var ValueArray             = Value.toString().split("::"),
+                DynamicFieldRegexp     = /^DynamicField_+/i,
+                CustomerRegexp         = /Customer$/i,
+                FormID                 = ValueArray[2],
+                FieldID                = ValueArray[1];
+
+            // insert some content before the selected item (CustomerTo,CustomerBcc,CustomerCc,Richtext-Options)
+            if (FieldID == 'RichText') {
+                $('#'+FormID).find("label[for=Options]").insertBefore('div.EndOfForm');
+                $('#'+FormID).find("div.Options.Field").insertBefore('div.EndOfForm');
+                $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
+            }
+            else if ( CustomerRegexp.test(FieldID) ) {
+                $('#'+FormID).find('#CustomerTicketCounter'+FieldID).parent().insertBefore('div.EndOfForm');
+                $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
+            }
+
+            // insert the selected item
+            if (FieldID == 'Day') {
+                $('#'+FormID).find("label[for=Date]").insertBefore('div.EndOfForm');
+                $('#'+FormID).find('#'+FieldID).closest('.Field,.RichTextField').insertBefore('div.EndOfForm');
+                $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
+            }
+            else if ( DynamicFieldRegexp.test(FieldID) ) {
+                $('#'+FormID).find('#'+FieldID).closest('.Row').insertBefore('div.EndOfForm');
+            }
+            else {
+                $('#'+FormID).find("label[for="+FieldID+"]").insertBefore('div.EndOfForm');
+                $('#'+FormID).find('#'+FieldID).closest('.Field,.RichTextField').insertBefore('div.EndOfForm');
+                $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
+            }
+
+            // insert some content behind the selected item (Richtext-Signature)
+            if (FieldID == 'RichText') {
+                $('#'+FormID).find("label[for=Signature]").insertBefore('div.EndOfForm');
+                $('#'+FormID).find("div.RichTextField").find('input[name=Signature]').parent().insertBefore('div.EndOfForm');
+                $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
+            }
+        });
+
+        // remove empty blocks - in note tab and note popup e.g.
+        $('.ContentColumn').find('fieldset').each( function() {
+            if ( $(this).html().trim() == "" ) {
+                $(this).parent().parent().remove();
+            }
+        })
+
+    }
+
+    /* Customer Frontend */
+    if ( ActionRegexpC.test(Action) ) {
+
+        $('.ContentColumn').find('fieldset').children('div').each( function() {
+
+            if ( $(this).hasClass('EndOfForm') ) {
+                return true;
+            }
+
+            var $Item = $(this).find('input[type=text],input[type=file],input[type=checkbox],textarea,select');
+            GetSortOrder( $Item,FieldOrderArray,DefaultPriority );
+        });
+
+        FieldOrderArray.sort();
+
+        // change sort order
+        $.each(FieldOrderArray, function(Index, Value) {
+            var ValueArray = Value.toString().split("::"),
+                FieldIDParts,
+                FieldID    = ValueArray[1];
+
+            FieldIDParts = FieldID.split("_");
+            if ( FieldIDParts[FieldIDParts.length-1] == 'Search' ) {
+                FieldID = FieldIDParts.slice(0,FieldIDParts.length-1).join("_");
+            }
+            $('label[for='+FieldID+']').closest('div').insertBefore('div.EndOfForm');
+
+        });
+    }
+}
+
+function GetSortOrder( $Child,FieldOrderArray,DefaultPriority ) {
+    var ChildID = $Child.attr("id"),
+        ChildIDParts;
+
+    ChildIDParts = ChildID.split("_");
+
+    // handle modernized form fields
+    if ( ChildIDParts[ChildIDParts.length-1] == 'Search' ) {
+        ChildID = ChildIDParts.slice(0,ChildIDParts.length-1).join("_");
+    }
+
+    var Search = $.grep(
+            FieldOrder,
+            function(Element,Index){
+                var Reg = new RegExp( '::' + ChildID + '$', 'i');
+                return Element.match(Reg) == null;
+            },
+            true
+        ),
+        Priority;
+
+    var FormElement = $Child.closest('form').attr('id');
+    if ( Search != '' ) {
+        var SearchArray = Search.toString().split("::");
+
+        // add left-hand zeros for all priorities less than 1000
+        while( SearchArray[0].length < 4 ) {
+            SearchArray[0] = '0'+SearchArray[0];
+        }
+        FieldOrderArray.push(SearchArray[0]+'::'+SearchArray[1]+'::'+FormElement);
+    }
+    else {
+        // increase priority
+        Priority = DefaultPriority.pop()+1;
+        FieldOrderArray.push(Priority+'::'+ChildID+'::'+FormElement);
+        // save used default priorities
+        DefaultPriority.push(Priority);
+    }
+}
+
+
+//]]>
+</script>
+[% END %]

@@ -1,0 +1,43 @@
+# --
+# AgentCustomerDashboardCustomerServices.tt - provides HTML for assigned services in customer dashboard
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("ServiceList") %]
+<div class="CustomerDashboardCustomerServices">
+    <table class="DataTable">
+        <tbody>
+[% RenderBlockStart("ServiceItem") %]
+            <tr>
+                <td>
+                    <div title="[% Data.Name | html %]">[% Data.Name | html %]</div>
+                </td>
+            </tr>
+[% RenderBlockEnd("ServiceItem") %]
+[% RenderBlockStart("NoServices") %]
+            <tr>
+                <td>
+                    [% Translate("No serivces assigned") | html %]
+                </td>
+            </tr>
+[% RenderBlockEnd("NoServices") %]
+        </tbody>
+    </table>
+</div>
+[% RenderBlockEnd("ServiceList") %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('.CustomerDashboardCustomerServices').css('max-height','[% Data.TableHeight | html %]px');
+//]]></script>
+[% END %]

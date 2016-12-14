@@ -1,0 +1,55 @@
+# --
+# Kernel/Output/HTML/Standard/AgentCustomerDashboardFurtherInformation.tt - provides HTML to show the Scratchpad in KIXSidebar
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="Content">
+[% RenderBlockStart("CustomerDashboardFurtherInformationRw") %]
+    <form action="[% Env("CGIHandle") %]" method="post" name="CustomerDashboardFurtherInformation" id="CustomerDashboardFurtherInformation" enctype="multipart/form-data" class="PreventMultipleSubmits Validate">
+        <input type="hidden" name="Action" value="CustomerDashboardFurtherInformationAJAXHandler" />
+        <input type="hidden" name="Subaction" value="UpdateNotes" />
+        <input type="hidden" name="CustomerUserID" value="[% Data.CustomerUserID | html %]" />
+        <input type="hidden" name="CustomerLogin" value="[% Data.CustomerLogin | html %]" />
+        <input type="hidden" id="CustomerDashboardFurtherInformationResult" name="CustomerDashboardFurtherInformationResult" value="0" />
+        <textarea id="CustomerDashboardFurtherInformationNotes" name="Notes" class="Validate_MaxLength Validate_Length_2000" rows="8">[% Data.Notes | html %]</textarea>
+        <div id="CustomerDashboardFurtherInformationError" class="TooltipErrorMessage">
+            <p>[% Translate("This field's content can not be longer than %s characters.", "2000") | html %]</p>
+        </div>
+        <button type="button" id="CustomerDashboardFurtherInformationSubmit" name="CustomerDashboardFurtherInformationSubmit" class="CallForAction"  value="[% Translate("Save") | html %]"><span><i class="fa fa-check"></i> [% Translate("Save") | html %]</span></button>
+        <span id="CustomerDashboardFurtherInformationSaved" class="Hidden">
+            <span class="ContentSaved"><i class="fa fa-check"></i> [% Translate("saved") | html %]</span>
+        </span>
+    </form>
+[% RenderBlockEnd("CustomerDashboardFurtherInformationRw") %]
+[% RenderBlockStart("CustomerDashboardFurtherInformationRo") %]
+    [% Data.Notes | html %]
+[% RenderBlockEnd("CustomerDashboardFurtherInformationRo") %]
+</div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#CustomerDashboardFurtherInformationSubmit').bind('click', function (Event) {
+        Core.AJAX.FormUpdate($('#CustomerDashboardFurtherInformation'), 'UpdateNotes', 'CustomerDashboardFurtherInformationNotes', ['CustomerDashboardFurtherInformationResult'],
+            function() {
+                if ($('#CustomerDashboardFurtherInformationResult').val() == 1)
+                    $('#CustomerDashboardFurtherInformationSaved').removeClass('Hidden');
+            },
+            'CustomerDashboardFurtherInformationAJAXHandler');
+    });
+    $('#CustomerDashboardFurtherInformationNotes').bind('keydown', function (Event) {
+        if (!$('#CustomerDashboardFurtherInformationSaved').hasClass('Hidden')) {
+            $('#CustomerDashboardFurtherInformationSaved').addClass('Hidden');
+            $('#CustomerDashboardFurtherInformationResult').val('0');
+        }
+    });
+//]]></script>
+[% END %]

@@ -1,0 +1,64 @@
+# --
+# AgentZoomTabLinkGraphAdditional.tt - provides HTML form for objects (divs)
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("Services") %]
+    <div class="Header">
+        <h2>[% Data.Name | html %]: [% Translate("Linked Services") | html %]</h2>
+    </div>
+    <div class="Content">
+        <table class="DataTable">
+            <thead>
+                <tr>
+                    <th>Service</th><th>[% Translate("Linked as") | html %]</th>
+                </tr>
+            </thead>
+            <tbody>
+                [% Data.ServiceTable %]
+            </tbody>
+        </table>
+    </div>
+[% RenderBlockEnd("Services") %]
+[% RenderBlockStart("Service") %]
+    <tr>
+        <td><a href='./index.pl?Action=AgentITSMServiceZoom;ServiceID=[% Data.ServiceID | html %]' target="_parent">[% Data.ServiceName | html %]</a></td>
+        <td>[% Data.LinkType | html %]</td>
+    </tr>
+[% RenderBlockEnd("Service") %]
+
+[% RenderBlockStart("Printing") %]
+<div id="PrintWindow" ></div>
+<script type="text/javascript">//<![CDATA[
+    function Check() {
+        if(document.readyState != "complete") {
+            window.setTimeout(Check, 200);
+            return false;
+        }
+        Core.KIX4OTRS.AgentLinkGraph.PrintPost();
+    }
+    Check();
+//]]></script>
+[% RenderBlockEnd("Printing") %]
+
+[% RenderBlockStart("ObjectSpecificSelections") %]
+<div class="WidgetSimple TableCell">
+    <div class="Header">
+        <h2>[% Translate(Data.Title) | html %]</h2>
+    </div>
+    <div class="Content">
+        [% Data.SelectionString %]
+    </div>
+</div>
+[% RenderBlockEnd("ObjectSpecificSelections") %]

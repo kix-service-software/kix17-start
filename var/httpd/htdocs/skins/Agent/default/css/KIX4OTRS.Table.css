@@ -1,0 +1,94 @@
+/**
+ * @project     KIX4OTRS (http://www.cape-it.de) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/*
+ * @package     Skin "default"
+ * @section     Tables
+ */
+@media screen , projection , tv , handheld {
+
+      .DataTable tbody tr, .TableSmall tbody tr {
+        position: relative;
+      }
+
+     span.UnreadArticles i, div.UnreadArticles i {
+         color: #ccc;
+     }
+
+     /* OTRS padding is too much */
+     .TableSmall thead a,.TableSmall thead span {
+          padding: 0 5px;
+     }
+     .TableSmall td {
+          padding: 0 5px;
+     }
+     .TableSmall thead {
+          background: linear-gradient(to bottom, #F0F0F0 0%, #EAEAEA 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+     }
+     .DataTable thead th {
+          padding: 4px 6px 3px;
+          background-color: #ddd;
+     }
+     .DataTable tbody tr td.LinkedObjects {
+          font-size: 12px;
+     }
+     .DataTable tbody tr td.LinkedObjects span {
+          font-size: 12px;
+     }
+     .DataTable tbody tr td.LinkedObjects a {
+          color: inherit;
+     }
+     .DataTable tbody td {
+          padding: 0 6px;
+     }
+     .DataTable tbody td.Top {
+          vertical-align: top;
+      }
+
+     /* allow footer lines in DataTables */
+     .DataTable tfoot tr {
+        background: #eeeeee;
+        background: -moz-linear-gradient(top, #eeeeee 0%, #e0e0e0 100%);
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#e0e0e0));
+        background: -webkit-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+        background: -o-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+        background: -ms-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+        background: linear-gradient(to bottom, #eeeeee 0%,#e0e0e0 100%);
+     }
+     .DataTable tfoot tr:nth-child(even) td {
+          background-color: transparent;
+     }
+     .DataTable tfoot tr:nth-child(uneven) td {
+          background-color: transparent;
+     }
+     .DataTable tfoot td {
+          vertical-align: bottom;
+          background: none;
+          text-transform: uppercase;
+          border-top: 1px solid #FFF;
+          border-bottom: 1px solid #BBB;
+          border-right: 1px solid #CCC;
+          padding: 4px 10px 3px;
+          color: #4B4B4B;
+          font-size: 11px;
+          line-height: 11px;
+     }
+
+     .DataTable tfoot td.Last {
+          border-right: medium none;
+          background-color: transparent;
+     }
+     .DataTable tfoot tr.Last td {
+          border-bottom: medium none;
+          background-color: transparent;
+     }
+
+     /* new classes */
+     .TableFixed {
+          table-layout: fixed;
+     }
+} /* end @media */

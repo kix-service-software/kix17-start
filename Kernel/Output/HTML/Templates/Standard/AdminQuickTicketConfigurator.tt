@@ -1,0 +1,529 @@
+# --
+# AdminQuickTicketConfigurator.tt - provides HTML form for quick ticket template configurator
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+[% RenderBlockStart("CustomerSearchAutoComplete") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.Config.Set('CustomerSearch.ShowCustomerTickets', "[% Config("Ticket::Frontend::ShowCustomerTickets") %]");
+    Core.Agent.CustomerSearch.Init($(".CustomerAutoCompleteTo"));
+    Core.Agent.CustomerSearch.Init($(".CustomerAutoCompleteCc"));
+    Core.Agent.CustomerSearch.Init($(".CustomerAutoCompleteBcc"));
+//]]></script>
+[% END %]
+[% RenderBlockEnd("CustomerSearchAutoComplete") %]
+
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+    <h1>[% Translate("Ticket Template Configurator") | html %]</h1>
+
+    <div class="SidebarColumn" style="width:350px">
+[% RenderBlockStart("ActionOverview") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Actions") | html %]</h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Back">
+                            <span>[% Translate("Go to overview") | html %]</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+[% RenderBlockEnd("ActionOverview") %]
+
+[% RenderBlockStart("ActionAdd") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Add ticket template") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="form" action="[% Env("CGIHandle") %]" method="get">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="New" />
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label class="nowrap">
+                            <button type="submit" name="New" value="[% Translate("Click here to add a ticket template") | html %]" class="CallForAction Plus">
+                                <span>[% Translate("Add ticket template") | html %]</span>
+                            </button>
+                        </label>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+[% RenderBlockEnd("ActionAdd") %]
+[% RenderBlockStart("Download") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Download all ticket templates") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="form" action="[% Env("CGIHandle") %]" method="get">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Download" />
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label>
+                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction Download">
+                                <span>
+                                    <i class="fa fa-download"></i>
+                                    [% Data.DownloadType %]-Download
+                                </span>
+                            </button>
+                        </label>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+[% RenderBlockEnd("Download") %]
+[% RenderBlockStart("Upload") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Upload ticket templates") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="UploadForm" action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" >
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Upload" />
+                    <input type="hidden" name="FormID" value="[% Data.FormID %]"/>
+                    <input name="file_upload" type="file" size="25" />
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label>
+                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction Upload">
+                                <span>
+                                    <i class="fa fa-upload"></i>
+                                    [% Data.UploadType %]-Upload
+                                </span>
+                            </button>
+                        </label>
+                    </fieldset>
+                </form>
+[% RenderBlockStart("UploadResult") %]
+                <br /><br />
+                <h2>[% Translate("Result of the upload") | html %]:</h2>
+                <div>[% Data.UploadMessage %]</div>
+                <fieldset class="TableLike FixedLabel">
+                    <label>[% Translate("entries uploaded") | html %]:</label>
+                    <p class="Value">
+                        [% Data.CountUploaded %]
+                    </p>
+                    <div class="Clear">
+                    </div>
+                    <label>[% Translate("added") | html %]:</label>
+                    <p class="Value">
+                        [% Data.CountAdded %]
+                    </p>
+                    <div class="Clear">
+                    </div>
+                    <label>[% Translate("insert failed") | html %]:</label>
+                    <p class="Value">
+                        [% Data.CountInsertFailed %]
+                    </p>
+                    <div class="Clear">
+                    </div>
+                </fieldset>
+[% RenderBlockEnd("UploadResult") %]
+            </div>
+        </div>
+[% RenderBlockEnd("Upload") %]
+
+    </div>
+    <div class="ContentColumn">
+
+[% RenderBlockStart("OverviewList") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("List") | html %]</h2>
+            </div>
+            <div class="Content">
+                <table class="DataTable">
+                    <thead>
+                        <tr>
+                            <th>[% Translate("Name") | html %]</th>
+                            <th>[% Translate("Frontend") | html %]</th>
+                            <th>[% Translate("Delete") | html %]</th>
+                            <th>[% Translate("Edit") | html %]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+[% RenderBlockStart("OverviewListRow") %]
+                        <tr>
+                            <td>
+                                <a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Change;ID=[% Data.ID | uri %]">[% Data.Name | html %]</a>
+                            </td>
+                            <td title="[% Translate("A: agent frontend; C: customer frontend") | html %]">[% Data.FrontendInfoStrg | html %]</td>
+                            <td>
+                                <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;ID=[% Data.ID | html %]">[% Translate("delete") | html %]</a>
+                            </td>
+                            <td>
+                                <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Change;ID=[% Data.ID | html %]">[% Translate("edit") | html %]</a>
+                            </td>
+                        </tr>
+[% RenderBlockEnd("OverviewListRow") %]
+[% RenderBlockStart("OverviewListEmpty") %]
+                        <tr>
+                            <td colspan="4">
+                                [% Translate("No existing or matching quick tickets") | html %]
+                            </td>
+                        </tr>
+[% RenderBlockEnd("OverviewListEmpty") %]
+                    </tbody>
+                </table>
+            </div>
+        </div>
+[% RenderBlockEnd("OverviewList") %]
+
+[% RenderBlockStart("Edit") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Ticket Template") | html %]</h2>
+            </div>
+            <div class="ContentColumn">
+                <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="TicketTemplateForm" class="PreventMultipleSubmits">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Save" />
+                    <input type="hidden" name="ExpandCustomerName" id="ExpandCustomerName" value="0" />
+                    <input type="hidden" name="OwnerAll" id="OwnerAll" value="[% Data.OwnerAll | html %]"/>
+                    <input type="hidden" name="ResponsibleAll" id="ResponsibleAll" value="[% Data.ResponsibleAll | html %]"/>
+                    <input type="hidden" name="SelectedCustomerUser" id="SelectedCustomerUser" value="[% Data.CustomerLogin | html %]" />
+                    <input type="hidden" name="CustomerLogin" id="CustomerLogin" value="[% Data.CustomerLogin | html %]"/>
+                    <input type="hidden" name="CcCustomerLogin" id="CcCustomerLogin" value="[% Data.CcCustomerLogin | html %]"/>
+                    <input type="hidden" name="BccCustomerLogin" id="BccCustomerLogin" value="[% Data.BccCustomerLogin | html %]"/>
+                    <input type="hidden" name="ID" value="[% Data.ID | html %]"/>
+                    <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
+
+                    <fieldset class="TableLike" id="DefaultDefinitionArea">
+                        <label class="Mandatory" for="Name">
+                            <span class="Marker">*</span> [% Translate("Name") | html %]:</label>
+                        <p class="Value">
+                            <input type="text" id="Name" name="Name" value="[% Data.Name | html %]" size="35" class="Validate_Required Validate_MaxLength Validate_Length_80 [% Data.NameInvalid | html %]" maxlength="80"/>
+                            <div id="NameError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
+                            </div>
+                            <div id="NameServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
+                            </div>
+                        </p>
+                        <div class="Clear"></div>
+                        <label for="Frontend">[% Translate("Available in") | html %]:</label>
+                        <p class="Value">
+                            <input type="checkbox" id="AgentFrontend"    name="Agent" value="1" [% Data.Agent | html %]/>
+                            <label for="AgentFrontend">[% Translate("Agent Frontend") | html %]</label>
+                            <br />
+                            <input type="checkbox" id="CustomerFrontend" name="Customer" value="1" [% Data.Customer | html %]/>
+                            <label for="CustomerFrontend">[% Translate("Customer Frontend") | html %]</label>
+                        </p>
+                        <div class="Clear"></div>
+                        <label for="Frontend">[% Translate("Available for user groups") | html %]:</label>
+                        <div class="Field">
+                        [% Data.UserGroupStrg %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockStart("TicketType") %]
+                        <label for="TypeID">
+                            <i class="fa fa-thumb-tack LimitTemplateSelectionIcon_[% Data.TypeIDFixedClass | html %]"></i> [% Translate("Type") | html %]:
+                            <input type="hidden" id="TypeIDFixed" name="TypeIDFixed" value="[% Data.TypeIDFixed | html %]"/>
+                        </label>
+                        <div class="Field">
+                        [% Data.TypeStrg %]
+                            <input type="Checkbox" id="TypeIDEmpty" name="TypeIDEmpty" value="1"[% Data.TypeIDEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("TicketType") %]
+
+                        <label for="QueueID">
+                            <i class="fa fa-thumb-tack LimitTemplateSelectionIcon_[% Data.QueueIDFixedClass | html %]"></i> [% Translate("Queue") | html %]:
+                            <input type="hidden" id="QueueIDFixed" name="QueueIDFixed" value="[% Data.QueueIDFixed | html %]"/>
+                        </label>
+                        <div class="Field">
+                        [% Data.QueueStrg %]
+                            <input type="Checkbox" id="QueueIDEmpty" name="QueueIDEmpty" value="1"[% Data.QueueIDEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#QueueID').bind('change', function (Event) {
+    Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'QueueID', ['OwnerID', 'ResponsibleID', 'NextStateID', 'PriorityID', 'ServiceID', 'SLAID' [% Data.DynamicFieldNamesStrg %]]);
+});
+//]]></script>
+[% END %]
+                        <label for="ToCustomer">[% Translate("Customer User") | html %]:</label>
+                        <div class="Field">
+                            <input id="ToCustomer" type="text" name="From" value="[% Data.From | html %]" class="CustomerAutoCompleteTo W75pc [% Data.ToInvalid | html %]" autocomplete="off" />
+                            <input type="Checkbox" id="FromEmpty" name="FromEmpty" value="1"[% Data.FromEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="CcCustomer">[% Translate("Cc") | html %]:</label>
+                        <div class="Field">
+                            <input id="CcCustomer" type="text" name="Cc" value="[% Data.Cc | html %]" class="CustomerAutoCompleteCc W75pc [% Data.CcInvalid | html %]" autocomplete="off" />
+                            <input type="Checkbox" id="CcEmpty" name="CcEmpty" value="1"[% Data.CcEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="BccCustomer">[% Translate("Bcc") | html %]:</label>
+                        <div class="Field">
+                            <input id="BccCustomer" type="text" name="Bcc" value="[% Data.Bcc | html %]" class="CustomerAutoCompleteBcc W75pc [% Data.BccInvalid | html %]" autocomplete="off" />
+                            <input type="Checkbox" id="BccEmpty" name="BccEmpty" value="1"[% Data.BccEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="CustomerID">[% Translate("CustomerID") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" name="CustomerID" id="CustomerID" value="[% Data.CustomerID | html %]" class="W75pc" readonly="readonly" />
+                        </div>
+                        <div class="Clear"></div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#ToCustomer, #CcCustomer, #BccCustomer').bind('change',function() {
+    var Key = $(this).attr('name');
+    if (Key == 'From' ) Key = '';
+    if ( $(this).val() == '' ) {
+        $('#'+Key+'CustomerLogin').val('');
+        if (Key == '') {
+            $('#SelectedCustomerUser').val('');
+            $('#CustomerID').val('');
+        }
+    }
+});
+//]]></script>
+[% END %]
+[% RenderBlockStart("TicketService") %]
+                        <label for="ServiceID">
+                            <i class="fa fa-thumb-tack LimitTemplateSelectionIcon_[% Data.ServiceIDFixedClass | html %]"></i> [% Translate("Service") | html %]:
+                            <input type="hidden" id="ServiceIDFixed" name="ServiceIDFixed" value="[% Data.ServiceIDFixed | html %]"/>
+                        </label>
+                        <div class="Field">
+                        [% Data.ServiceStrg %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#ServiceID').bind('change', function (Event) {
+        Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'ServiceID', [ 'SLAID' ] );
+    });
+//]]></script>
+[% END %]
+                            <input type="Checkbox" id="ServiceIDEmpty" name="ServiceIDEmpty" value="1"[% Data.ServiceIDEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("TicketService") %]
+[% RenderBlockStart("TicketSLA") %]
+                        <label for="SLAID">
+                            <i class="fa fa-thumb-tack LimitTemplateSelectionIcon_[% Data.SLAIDFixedClass | html %]"></i> [% Translate("Service Level Agreement") | html %]:
+                            <input type="hidden" id="SLAIDFixed" name="SLAIDFixed" value="[% Data.SLAIDFixed | html %]"/>
+                        </label>
+                        <div class="Field">
+                        [% Data.SLAStrg %]
+                            <input type="Checkbox" id="SLAIDEmpty" name="SLAIDEmpty" value="1"[% Data.SLAIDEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("TicketSLA") %]
+                        <label for="OwnerID">[% Translate("Owner") | html %]:</label>
+                        <div class="Field">
+                        [% Data.OwnerStrg %]
+                        <a href="#" id="OwnerSelectionGetAll" class="GetAllAJAX" title="[% Translate("Get all") | html %]">
+                            <span>[% Translate("Get all") | html %]</span>
+                            <i class="fa fa-refresh"></i>
+                        </a>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#OwnerSelectionGetAll').bind('click', function (Event) {
+    $('#OwnerAll').val('1'); // Needed? Why?
+    Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'OwnerAll', ['OwnerID'], function() {
+        $('#OwnerID').focus();
+    });
+    return false;
+});
+//]]></script>
+[% END %]
+                            <input type="Checkbox" id="OwnerIDEmpty" name="OwnerIDEmpty" value="1"[% Data.OwnerIDEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockStart("Responsible") %]
+                        <label for="ResponsibleID">[% Translate("Responsible") | html %]:</label>
+                        <div class="Field">
+                        [% Data.ResponsibleStrg %]
+                        <a href="#" id="ResponsibleSelectionGetAll" class="GetAllAJAX" title="[% Translate("Get all") | html %]">
+                            <span>[% Translate("Get all") | html %]</span>
+                            <i class="fa fa-refresh"></i>
+                        </a>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#ResponsibleSelectionGetAll').bind('click', function (Event) {
+    $('#ResponsibleAll').val('1'); // Needed? Why?
+    Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'ResponsibleAll', ['ResponsibleID'], function() {
+        $('#ResponsibleID').focus();
+    });
+    return false;
+});
+//]]></script>
+[% END %]
+                            <input type="Checkbox" id="ResponsibleIDEmpty" name="ResponsibleIDEmpty" value="1"[% Data.ResponsibleIDEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("Responsible") %]
+                        <label for="Subject">[% Translate("Subject") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" class="W75pc " name="Subject" id="Subject" value="[% Data.Subject | html %]"/>
+                            <input type="Checkbox" id="SubjectEmpty" name="SubjectEmpty" value="1"[% Data.SubjectEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="RichText">[% Translate("Text") | html %]:</label>
+                        <div id="RichTextField" class="RichTextField">
+[% RenderBlockStart("RichText") %]
+[% InsertTemplate("RichTextEditor.tt") %]
+[% RenderBlockEnd("RichText") %]
+                            <textarea id="RichText" class="RichText  [% Data.BodyInvalid | html %]" name="Body" title="Message body" rows="15" cols="[% Config("Ticket::Frontend::TextAreaEmail") %]">[% Data.Body | html %]</textarea>
+                            <input type="Checkbox" id="BodyEmpty" name="BodyEmpty" value="1"[% Data.BodyEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="StateID">
+                            <i class="fa fa-thumb-tack LimitTemplateSelectionIcon_[% Data.StateIDFixedClass | html %]"></i> [% Translate("Next ticket state") | html %]:
+                            <input type="hidden" id="StateIDFixed" name="StateIDFixed" value="[% Data.StateIDFixed | html %]"/>
+                        </label>
+                        <div class="Field">
+                        [% Data.StatesStrg %]
+                        </div>
+                        <div class="Clear"></div>
+# TODO                        <label>[% Translate("Pending Date") | html %] ([% Translate("for pending* states") | html %]):</label>
+#                        <div class="Field">
+#                        [% Data.PendingDateString %]
+#                        </div>
+#                        <div class="Clear"></div>
+                        <label for="PriorityID">
+                            <i class="fa fa-thumb-tack LimitTemplateSelectionIcon_[% Data.PriorityIDFixedClass | html %]"></i> [% Translate("Priority") | html %]:
+                            <input type="hidden" id="PriorityIDFixed" name="PriorityIDFixed" value="[% Data.PriorityIDFixed | html %]"/>
+                        </label>
+                        <div class="Field">
+                        [% Data.PriorityStrg %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockStart("DynamicField") %]
+                        <div class="Row Row_DynamicField_[% Data.Name | html %]">
+                        [% Data.Label %]
+                            <div class="Field">
+                                [% Data.Field %]
+[% RenderBlockStart("DynamicFieldEmpty") %]
+                                <input type="Checkbox" id="DynamicField_[% Data.Name | html %]Empty" name="DynamicField_[% Data.Name | html %]Empty" value="1"[% Data.Checked | html %]>[% Translate("Empty value") | html %]
+[% RenderBlockEnd("DynamicFieldEmpty") %]
+                            </div>
+                            <div class="Clear"></div>
+                        </div>
+[% RenderBlockEnd("DynamicField") %]
+[% RenderBlockStart("TimeUnits") %]
+                        <label for="TimeUnits">[% Translate("Time units") | html %] [% Translate(Config("Ticket::Frontend::TimeUnits")) | html %]:</label>
+                        <div class="Field">
+                            <input type="text" class="W50pc" name="TimeUnits" id="TimeUnits" value="[% Data.TimeUnits | html %]"/>
+                            <input type="Checkbox" id="TimeUnitsEmpty" name="TimeUnitsEmpty" value="1"[% Data.TimeUnitsEmpty | html %]>[% Translate("Empty value") | html %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("TimeUnits") %]
+[% RenderBlockStart("ArticleType") %]
+                        <label for="ArticleType">[% Translate("Article type") | html %]:</label>
+                        <div class="Field">
+                        [% Data.ArticleTypeStrg %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("ArticleType") %]
+[% RenderBlockStart("ArticleSenderType") %]
+                        <label for="ArticleSenderType">[% Translate("Article sender type") | html %]:</label>
+                        <div class="Field">
+                        [% Data.ArticleSenderTypeStrg %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("ArticleSenderType") %]
+[% RenderBlockStart("LinkType") %]
+                        <label for="LinkType">[% Translate("Link type") | html %]:</label>
+                        <div class="Field">
+                        [% Data.LinkTypeStrg %]
+                        <div id="LinkTypeServerError" class="TooltipErrorMessage">
+                            <p>[% Translate("Link type invalid.") | html %]</p>
+                        </div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#LinkType').bind('change', function (Event) {
+        Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'LinkType', ['LinkDirection']);
+    });
+//]]></script>
+[% END %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("LinkType") %]
+[% RenderBlockStart("LinkDirection") %]
+                        <label for="LinkDirection">[% Translate("Link direction") | html %]:</label>
+                        <div class="Field">
+                        [% Data.LinkDirectionStrg %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("LinkDirection") %]
+[% RenderBlockStart("KIXSidebarChecklist") %]
+                        <label for="Checklist">[% Translate("Checklist") | html %]:</label>
+                        <div class="Field">
+                            <textarea style="width:400px" name="KIXSidebarChecklistTextField" id="KIXSidebarChecklistTextField" rows="8">[% Data.KIXSidebarChecklistTextField %]</textarea>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("KIXSidebarChecklist") %]
+                        <div class="Field SpacingTop">
+                            <button class="Primary CallForAction" accesskey="g" title="[% Translate("Save changes for this quick ticket template") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check"></i> [% Translate("Submit") | html %]</span></button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+[% RenderBlockEnd("Edit") %]
+        </div>
+    </div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+Core.Agent.TicketAction.Init();
+$('input').bind('click',function(){
+    // for text input fields remove checked
+    if ( $(this).attr('type') == 'text' ) {
+        var Name = $(this).attr('name'),
+            NameEmpty = Name + 'Empty';
+
+        if ( $('#'+NameEmpty).prop('checked') ) {
+            $('#'+NameEmpty).attr('checked',false);
+        }
+    }
+    // if checkbox selected set empty value
+    if ( $(this).attr('type') == 'Checkbox' ) {
+        var NameEmpty = $(this).attr('name'),
+            Name = NameEmpty.substring(0,NameEmpty.length-5);
+        if ( $('#'+NameEmpty).prop('checked') ) {
+            $('#'+Name).val('');
+        }
+    }
+});
+$('select').bind('change',function(){
+    var Name = $(this).attr('name'),
+        NameEmpty = Name + 'Empty';
+
+    if ( $('#'+NameEmpty).prop('checked') ) {
+        $('#'+NameEmpty).attr('checked',false);
+    }
+});
+
+// set fixed values
+$(document).on('click','.LimitTemplateSelectionIcon_NotFixed',function(){
+    $(this).removeClass('LimitTemplateSelectionIcon_NotFixed').addClass('LimitTemplateSelectionIcon_Fixed');
+    var Key = $(this).closest('label').attr('for');
+    $('#'+Key+'Fixed').val(1);
+});
+$(document).on('click','.LimitTemplateSelectionIcon_Fixed',function(){
+    $(this).removeClass('LimitTemplateSelectionIcon_Fixed').addClass('LimitTemplateSelectionIcon_NotFixed');
+    var Key = $(this).closest('label').attr('for');
+    $('#'+Key+'Fixed').val(0);
+});
+//]]>
+</script>
+[% END %]

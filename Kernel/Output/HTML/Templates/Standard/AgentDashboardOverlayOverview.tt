@@ -1,0 +1,28 @@
+# --
+# Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div style="max-height:150px;overflow:auto">
+<table class="DataTable">
+    <tbody>
+[% RenderBlockStart("ContentSmallOverlayOverviewRow") %]
+        <tr>
+            <td>
+                <a href="#" title="[% Data.Subject | html %]" onclick="alert('[% Data.Message | html %]');return false;">[% Data.Subject | html %]</a>
+            </td>
+        </tr>
+[% RenderBlockEnd("ContentSmallOverlayOverviewRow") %]
+[% RenderBlockStart("ContentSmallOverlayOverviewNone") %]
+        <tr>
+            <td>
+                [% Translate("none") | html %]
+            </td>
+        </tr>
+[% RenderBlockEnd("ContentSmallOverlayOverviewNone") %]
+    </tbody>
+</table>
+</div>

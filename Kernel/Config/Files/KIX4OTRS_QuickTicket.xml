@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="Frontend::Module###AgentTicketEmailQuick" Required="0" Valid="0">
+        <Description Translatable="1">Frontend module registration for the Quickticket via AgentTicketEmail object in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Create new quick-email ticket</Description>
+                <Title>Quick-Ticket</Title>
+                <NavBarName>TicketEmailQuick</NavBarName>
+                <NavBar>
+                    <Name Translatable="1">QuickMail</Name>
+                    <Link>Action=AgentTicketEmailQuick;DefaultSet=1;Nav=Agent</Link>
+                    <LinkOption></LinkOption>
+                    <NavBar>TicketEmailQuick</NavBar>
+                    <Description Translatable="1">Create new email ticket with quick ticket template</Description>
+                    <Type>Menu</Type>
+                    <Block>ItemArea</Block>
+                    <AccessKey>q</AccessKey>
+                    <Prio>300</Prio>
+                </NavBar>
+                <NavBar>
+                    <Name Translatable="1">Default user support</Name>
+                    <Link>Action=AgentTicketEmailQuick;DefaultSet=1;Nav=Agent</Link>
+                    <LinkOption></LinkOption>
+                    <NavBar>TicketEmailQuick</NavBar>
+                    <Description Translatable="1">Create new email ticket from "default user support"-template</Description>
+                    <Type></Type>
+                    <Block></Block>
+                    <AccessKey></AccessKey>
+                    <Prio>100</Prio>
+                </NavBar>
+                <Loader>
+                    <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
+                    <JavaScript>Core.Agent.TicketAction.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketEmailQuick###ArticleType" Required="1" Valid="1">
+        <Description Translatable="1">Sets the default article type for new email quick tickets in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewEmailQuick</SubGroup>
+        <Setting>
+            <String Regex="">email-external</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AgentTicketPhoneQuick" Required="0" Valid="0">
+        <Description Translatable="1">Frontend module registration for the Quickticket via AgentTicketPhone object in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Create new quick-phone ticket</Description>
+                <Title>Quick-Ticket</Title>
+                <NavBarName>TicketPhoneQuick</NavBarName>
+                <NavBar>
+                    <Name Translatable="1">QuickPhone</Name>
+                    <Link>Action=AgentTicketPhoneQuick;DefaultSet=1;Nav=Agent</Link>
+                    <LinkOption></LinkOption>
+                    <NavBar>TicketPhoneQuick</NavBar>
+                    <Description Translatable="1">Create new phone ticket with quick ticket template</Description>
+                    <Type>Menu</Type>
+                    <Block>ItemArea</Block>
+                    <AccessKey>p</AccessKey>
+                    <Prio>301</Prio>
+                </NavBar>
+                <NavBar>
+                    <Name Translatable="1">Default user support</Name>
+                    <Link>Action=AgentTicketPhoneQuick;DefaultSet=1;Nav=Agent</Link>
+                    <LinkOption></LinkOption>
+                    <NavBar>TicketPhoneQuick</NavBar>
+                    <Description Translatable="1">Create new phone ticket from "default user support"-template</Description>
+                    <Type></Type>
+                    <Block></Block>
+                    <AccessKey></AccessKey>
+                    <Prio>100</Prio>
+                </NavBar>
+                <Loader>
+                    <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
+                    <JavaScript>Core.Agent.TicketAction.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketPhoneQuick###ArticleType" Required="1" Valid="1">
+        <Description Translatable="1">Sets the default article type for new phone quick tickets in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewPhoneQuick</SubGroup>
+        <Setting>
+            <String Regex="">phone</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Selection###AgentTicketPhone" Required="1" Valid="1">
+        <Description Translatable="1">Defines which quick ticket templates are available in AgentTicketEmail. Key is the default set, Value is used as description or label.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="IncidentSolvedAtOnce">Incident Solved At Once</Item>
+              <Item Key="ProblemCandidate">New Problem Candidate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Selection###AgentTicketPhoneQuick" Required="1" Valid="1">
+        <Description Translatable="1">Defines which quick ticket templates are available in AgentTicketEmail. Key is the default set, Value is used as description or label.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="IncidentSolvedAtOnce">Incident Solved At Once</Item>
+              <Item Key="ProblemCandidate">New Problem Candidate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Selection###AgentTicketEmail" Required="1" Valid="1">
+        <Description Translatable="1">Defines which quick ticket templates are available in AgentTicketEmail. Key is the default set, Value is used as description or label.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="IncidentSolvedAtOnce">Incident Solved At Once</Item>
+              <Item Key="ProblemCandidate">New Problem Candidate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Selection###AgentTicketEmailQuick" Required="1" Valid="1">
+        <Description Translatable="1">Defines which quick ticket templates are available in AgentTicketEmail. Key is the default set, Value is used as description or label.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="IncidentSolvedAtOnce">Incident Solved At Once</Item>
+              <Item Key="ProblemCandidate">New Problem Candidate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::Module###BaseTicketTemplateHandler" Required="0" Valid="1">
+        <Description Translatable="1">Module Registration for TicketTemplate Base Module.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>TicketTemplate Base Module</Description>
+                <Title>TicketTemplate Base Module</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::UserGroups###Permission" Required="1" Valid="1">
+        <Description Translatable="1">Defines which permissions are required to show ticket templates in selection.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::EventModulePost###230-TicketCreateChecklistFromTicketTemplate" Required="0" Valid="1">
+        <Description Translatable="1">Ticket event module to create a checklist from ticket template on ticket create.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::TicketCreateChecklistFromTicketTemplate</Item>
+                <Item Key="Event">TicketCreate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

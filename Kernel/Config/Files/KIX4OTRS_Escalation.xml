@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <!-- TICKET ESCALATION TIME EXTENSIONS -->
+    <ConfigItem Name="Ticket::EventModulePost###900-EscalationIndex" Required="0" Valid="1">
+        <Description Translatable="1">Updates the ticket escalation index after a ticket attribute got updated.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::TicketEscalationIndex</Item>
+                <Item Key="Event">(TicketSLAUpdate|TicketQueueUpdate|TicketStateUpdate|TicketCreate|ArticleCreate|TicketTypeUpdate)</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::ResponsetimeSetByPhoneTicket" Required="1" Valid="1">
+        <Description Translatable="1">Disables response time SLA, if the newly created ticket is a phone ticket.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::ResponsetimeSetByPhoneTicket::OnlyForTheseTicketTypes" Required="0" Valid="1">
+        <Description Translatable="1">Restricts the ResponsetimeSetByPhoneTicket to these ticket types.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::ResponsetimeSetByAutoReply" Required="1" Valid="1">
+        <Description Translatable="1">Disables response time SLA, if an auto reply was sent for this ticket.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::ResponsetimeSetByAutoReply::OnlyForTheseTicketTypes" Required="0" Valid="1">
+        <Description Translatable="1">Restricts the ResponsetimeSetByAutoReply to these ticket types.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::EscalationDisabled::RelevantStates" Required="0" Valid="1">
+        <Description Translatable="1">Defines state names for which the SLA time is disabled. Is a ticket set to on of these states, the SLA-destination times are set to hold. The time a ticket stays in this state is not SLA-relevant.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::EscalationDisabled::RelevantTypes" Required="0" Valid="1">
+        <Description Translatable="1">Defines ticket type names for which the SLA calulation time is disabled.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::EscalationDisabled::RelevantQueues" Required="0" Valid="1">
+        <Description Translatable="1">Defines queue names for which the SLA calulation time is disabled.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::EscalationDelayed::FreeTimeField" Required="0" Valid="0">
+        <Description Translatable="1">Defines a dynamic field of type date/time which is used as start time for solution SLA-computation rather than ticket creation time, thus allowing to start SLA-countdown with begin of customer desired times. "Index" is only fallback for old configuration upgraded from OTRS 3.1 or previous to be workable. In this case dynamic field named TicketFreeTime"Index" is used.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Index">1</Item>
+                <Item Key="DynamicField"></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO TICKET ESCALATION TIME EXTENSIONS -->
+
+    <!-- TICKET ESCALATION NOTIFY BAR -->
+    <ConfigItem Name="Frontend::NotifyModule###5-Ticket::TicketEscalation" Required="0" Valid="1">
+        <Description Translatable="1">Module to show notifications and escalations (ShownMax: max. shown escalations, EscalationInMinutes: Show ticket which will escalation in, CacheTime: Cache of calculated escalations in seconds).</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::ModuleNotify</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Notification::AgentTicketEscalation</Item>
+                <Item Key="ShownMax">25</Item>
+                <Item Key="EscalationInMinutes">120</Item>
+                <Item Key="CacheTime">40</Item>
+                <Item Key="AgentsCustomQueuesOnly">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO TICKET ESCALATION NOTIFY BAR -->
+
+</otrs_config>

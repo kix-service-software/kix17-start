@@ -1,0 +1,100 @@
+# --
+# based upon CustomerNavigationBar.tt
+# original Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<!-- start Notifications -->
+[% Data.Notification %]
+<!-- end Notifications -->
+<!-- start NavigationBar -->
+<div id="NavigationContainer">
+    <ul id="Navigation">
+[% RenderBlockStart("Item") %]
+        <li class="[% Data.Class | html %]">
+            <a href="[% Env("Baselink") %][% Data.Link %]" accesskey="[% Data.AccessKey | html %]" title="[% Translate(Data.Description || Data.Name) | html %] ([% Data.AccessKey | html %])" [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a>
+[% RenderBlockStart("ItemAreaSub") %]
+            <ul>
+[% RenderBlockStart("ItemAreaSubItem") %]
+                <li><a class="[% Data.Class | html %]" href="[% Env("Baselink") %][% Data.Link %]" accesskey="[% Data.AccessKey | html %]" title="[% Translate(Data.Description || Data.Name) | html %] ([% Data.AccessKey | html %])"  [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a></li>
+[% RenderBlockEnd("ItemAreaSubItem") %]
+            </ul>
+[% RenderBlockEnd("ItemAreaSub") %]
+        </li>
+[% RenderBlockEnd("Item") %]
+    </ul>
+    <div id="UserInfo">
+        <span>[% Translate("You are logged in as") | html %] [% Translate("%s %s", Env("UserFirstname"), Env("UserLastname")) | html %]</span>
+[% RenderBlockStart("ChatRequests") %]
+        <a class="ChatRequests [% Data.Class | html %]" href="[% Env("Baselink") %]Action=CustomerChat;Subaction=ChatOverview;Filter=IncomingChatRequests;" title="[% Translate("Incoming Chat Requests") %]"><i class="fa fa-comments-o"></i> (<span class="Counter">[% Data.Count | html %]</span>)</a>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    window.setInterval(function() {
+
+        var Data = {
+            Action: 'CustomerChat',
+            Subaction: 'ChatGetOpenRequests'
+        };
+
+        Core.AJAX.FunctionCall(
+            Core.Config.Get('Baselink'),
+            Data,
+            function(Response) {
+                if (!Response || parseInt(Response, 10) < 1) {
+                    $('.Individual .ChatRequests').fadeOut(function() {
+                        $(this).addClass('Hidden');
+                    });
+                }
+                else {
+                    $('.Individual .ChatRequests')
+                        .fadeIn(function() {
+                            $(this).removeClass('Hidden');
+                        })
+                        .find('.Counter')
+                        .text(Response);
+
+                    // show tooltip to get the users attention
+                    if (!$('.Individual .ChatRequests .ChatTooltip').length) {
+                        $('.Individual .ChatRequests')
+                            .append('<span class="ChatTooltip">' + [% Translate("You have unanswered chat requests") | JSON %] + '</span>')
+                            .find('.ChatTooltip')
+                            .bind('click', function(Event) {
+                                $(this).fadeOut();
+                                Event.stopPropagation();
+                                return false;
+                            })
+                            .fadeIn();
+                    }
+                }
+            },
+            'json'
+        );
+
+    }, 60000);
+//]]></script>
+[% END %]
+[% RenderBlockEnd("ChatRequests") %]
+[% RenderBlockStart("Preferences") %]
+        <a class="[% Data.Class | html %]" href="[% Env("Baselink") %]Action=CustomerPreferences" title="[% Translate("Edit personal preferences") | html %]">
+            <i class="fa fa-cog"></i>
+        </a>
+[% RenderBlockEnd("Preferences") %]
+# dummy for SwitchButton output filter
+        <span id="SwitchButtonDummyContainer" class="Hidden">
+            <li class="Last"><a href="Action=Logout"></a></li>
+        </span>
+[% RenderBlockStart("Logout") %]
+        <a id="LogoutButton" href="[% Env("Baselink") %]Action=Logout" title="[% Translate("Logout %s %s", Env("UserFirstname"), Env("UserLastname")) | html %]">
+            <i class="fa fa-sign-out"></i>
+        </a>
+[% RenderBlockEnd("Logout") %]
+    </div>
+</div>
+<!-- end NavigationBar -->

@@ -1,0 +1,90 @@
+# --
+# AgentCustomerTableView.tt - provides HTML customer table view
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Torsten(dot)Thau(at)cape(dash)it(dot)de
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+# * Ralf(dot)Boehm(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("ConfigItemCustomer") %]
+<fieldset class="TableLike FixedLabelSmall">
+[% RenderBlockStart("ConfigItemRowCustomer") %]
+    <label class="FixedLabelSmall">[% Data.Class | html %]:</label>
+    <div class="Value FixedValueSmall" title="[% Data.Name | html %]">
+[% RenderBlockStart("ConfigItemRowCheckboxCustomer") %]
+        <input type="checkbox" class="AssignedConfigItemCheckBox" name="SelectedAssignedConfigItems" id="SelectedAssignedConfigItem[% Data.ID | html %]" value="[% Data.ID | html %]"/>
+[% RenderBlockEnd("ConfigItemRowCheckboxCustomer") %]
+<span class="SelectedAssignedConfigItemLabel">
+[% RenderBlockStart("ConfigItemRowDataCustomer") %]
+                 [% Data.Value | html %]
+[% RenderBlockEnd("ConfigItemRowDataCustomer") %]
+</span>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('.SelectedAssignedConfigItemLabel').bind('click', function (Event) {
+        var $checkbox = $(this).prev('input');
+        $checkbox.prop('checked', !$checkbox.prop('checked'));
+    });
+//]]></script>
+[% END %]
+    </div>
+    <div class="Clear"></div>
+[% RenderBlockEnd("ConfigItemRowCustomer") %]
+</fieldset>
+[% RenderBlockEnd("ConfigItemCustomer") %]
+
+[% RenderBlockStart("ConfigItemAgent") %]
+<h3>[% Translate("Assigned CIs") | html %]:</h3>
+<table class="DataTable">
+   <thead>
+      <tr>
+[% RenderBlockStart("ConfigItemRowCheckboxHeaderAgent") %]
+         <th></th>
+[% RenderBlockEnd("ConfigItemRowCheckboxHeaderAgent") %]
+[% RenderBlockStart("ConfigItemRowHeaderAgent") %]
+         <th>[% Translate(Data.Head) | html %]</th>
+[% RenderBlockEnd("ConfigItemRowHeaderAgent") %]
+      </tr>
+   </thead>
+   <tbody>
+[% RenderBlockStart("ConfigItemRowAgent") %]
+      <tr>
+[% RenderBlockStart("ConfigItemRowCheckboxAgent") %]
+         <td>
+            <input type="checkbox" class="AssignedConfigItemCheckBox" name="SelectedAssignedConfigItems" id="SelectedAssignedConfigItem[% Data.ID | html %]" value="[% Data.ID | html %]"/>
+         </td>
+[% RenderBlockEnd("ConfigItemRowCheckboxAgent") %]
+[% RenderBlockStart("ConfigItemRowDataAgent") %]
+         <td>
+[% RenderBlockStart("ConfigItemRowDataLinkStartAgent") %]
+            <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ID | html %]" target="_blank" title="[% Translate("Open in a new window") | html %]: [% Data.Name | html %]">
+[% RenderBlockEnd("ConfigItemRowDataLinkStartAgent") %]
+[% RenderBlockStart("ConfigItemRowDataLabelStartAgent") %]
+            <label for="SelectedAssignedConfigItem[% Data.ID | html %]">
+[% RenderBlockEnd("ConfigItemRowDataLabelStartAgent") %]
+                [% Data.Value | html %]
+[% RenderBlockStart("ConfigItemRowDataLabelEndAgent") %]
+            </label>
+[% RenderBlockEnd("ConfigItemRowDataLabelEndAgent") %]
+[% RenderBlockStart("ConfigItemRowDataLinkEndAgent") %]
+            </a>
+[% RenderBlockEnd("ConfigItemRowDataLinkEndAgent") %]
+         </td>
+[% RenderBlockEnd("ConfigItemRowDataAgent") %]
+      </tr>
+[% RenderBlockEnd("ConfigItemRowAgent") %]
+   </tbody>
+</table>
+[% RenderBlockEnd("ConfigItemAgent") %]

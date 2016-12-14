@@ -1,0 +1,110 @@
+# --
+# KIXSidebarTicketLinkCISearch.tt - provides HTML to show Data in KIXSidebar
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+# * Mario(dot)Illinger(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+[% RenderBlockStart("SidebarFrame") %]
+<div id="[% Data.Identifier %]" class="KIXSidebarTools WidgetSimple CanDrag [% Data.AdditionalClasses | html %]">
+    <div class="Header">
+        <div class="WidgetAction Toggle">
+            <a href="#" title="[% Translate(Data.Description) | html %]">
+                <i class="fa fa-caret-right"></i>
+                <i class="fa fa-caret-down"></i>
+            </a>
+        </div>
+        <h2>[% Translate(Data.Title) | html %]</h2>
+    </div>
+    <div id="Content[% Data.Identifier %]" class="Content">
+        <div id="SearchResult[% Data.Identifier %]">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">//<![CDATA[
+    var KIXSidebarCallback[% Data.Identifier | html %] = function (Response) {
+        [% Data.Callback %]
+    }
+//]]>
+</script>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    KIXSidebarTools.Init('[% Data.Identifier | html %]');
+
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
+    $('#SearchResult[% Data.TicketSidebarIdentifier | html %]').bind('UpdateResultField', function () {
+        var TicketID = '';
+        var FormID = '';
+        if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+            TicketID = $('input[name=TicketID]').val();
+        }
+        else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+            FormID = $('input[name=FormID]').val();
+        }
+        var TicketIDStrg = "";
+        var ResultList = document.getElementsByName('Result[% Data.TicketSidebarIdentifier | html %]');
+        if (ResultList.length) {
+            TicketIDStrg += ResultList[0].value;
+            for (var i = 1; i < ResultList.length; i++) {
+                TicketIDStrg += "," + ResultList[i].value;
+            }
+        }
+
+        var Data = {};
+        Data.TicketID  = TicketID;
+        Data.FormID    = FormID;
+        Data.TicketIDs = encodeURIComponent(TicketIDStrg);
+
+        KIXSidebarTools.UpdateSidebar(
+            'KIXSidebarTicketLinkCISearchAJAXHandler',
+            '[% Data.Identifier | html %]',
+            Data,
+            window.KIXSidebarCallback[% Data.Identifier | html %]
+        );
+    });
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("SidebarFrame") %]
+
+[% RenderBlockStart("KIXSidebarTicketLinkCISearchResult") %]
+<div style="[% Data.Style | html %]" >
+    <table id="Result[% Data.Identifier %]" class="DataTable">
+        <thead>
+            <tr>
+                <th colspan="[% Data.NumberOfCols | html %]">[% Data.SearchResultCount | html %] [% Translate("item(s) found") | html %]</th>
+            </tr>
+        </thead>
+        <tbody>
+[% RenderBlockStart("KIXSidebarTicketLinkCISearchResultRow") %]
+            <tr>
+                <input type="hidden" name="Result[% Data.Identifier %]" value="[% Data.ConfigItemID | html %]" />
+[% RenderBlockStart("KIXSidebarTicketLinkCISearchResultColumnLink") %]
+                <td>
+                    <input type="checkbox" onclick="javascript:KIXSidebarTools.LinkObject2Ticket('ITSMConfigItem', $(this).val(), '[% Data.LinkedTicketID | html %]', '[% Data.LinkMode | html %]', '[% Data.LinkType | html %]', $(this).prop('checked'));" value="[% Data.ConfigItemID | html %]" [% Data.IsChecked | html %]/>
+                </td>
+[% RenderBlockEnd("KIXSidebarTicketLinkCISearchResultColumnLink") %]
+[% RenderBlockStart("KIXSidebarTicketLinkCISearchResultColumnValue") %]
+                <td>
+                    <a href="[% Env("Baselink") %]Action=[% Data.Frontend | uri %]ITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | html %]" target="_blank" title="[% Data.Value | html %]" class="MasterActionLink">
+                        [% Data.ValueShort | html %]
+                    </a>
+                </td>
+[% RenderBlockEnd("KIXSidebarTicketLinkCISearchResultColumnValue") %]
+            </tr>
+[% RenderBlockEnd("KIXSidebarTicketLinkCISearchResultRow") %]
+        </tbody>
+    </table>
+</div>
+[% RenderBlockEnd("KIXSidebarTicketLinkCISearchResult") %]

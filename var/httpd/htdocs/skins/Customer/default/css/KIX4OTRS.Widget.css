@@ -1,0 +1,740 @@
+/**
+ * @project     KIX4OTRS (http://www.cape-it.de) - Customer Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/**
+ * @package     Skin "KIX4OTRS"
+ * @section     Widgets
+ */
+
+@media screen,projection,tv,handheld {
+
+/**
+ * @subsection  Widget Tablelike list
+ */
+ul.Tablelike {
+    border: 1px solid #CCC;
+}
+
+ul.Tablelike:first-child {
+    margin-right: 8px;
+}
+
+.RTL .Size1of3:first-child ul.Tablelike {
+    margin-left: 8px;
+    margin-right: 0;
+}
+
+ul.Tablelike li {
+    line-height: 20px;
+    padding: 0 4px;
+    min-height: 20px;
+    background-color: #FFF;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+ul.Tablelike li.Even {
+    background-color: #F5F5F5;
+}
+
+ul.Tablelike li:nth-child(even) {
+    background-color: #F5F5F5;
+}
+
+ul.Tablelike li:hover {
+    background: url(../img/table_small_hover_bg.png) repeat-x center;
+}
+
+ul.Tablelike li:hover a {
+    color: #000;
+}
+
+ul.Tablelike li.Header {;
+    color: #4B4B4B;
+    font-size: 11px;
+    line-height: 20px;
+    text-transform: uppercase;
+    background: #eeeeee;
+    background: -moz-linear-gradient(top, #eeeeee 0%, #e0e0e0 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#e0e0e0));
+    background: -webkit-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: -o-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: -ms-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: linear-gradient(to bottom, #eeeeee 0%,#e0e0e0 100%);
+}
+
+ul.Tablelike li.Header + li {
+    border-top: 1px solid #EEE;
+}
+
+/**
+ * @subsection  WidgetSimple
+ */
+.WidgetSimple {
+    border: 1px solid #CCC;
+    margin-bottom: 10px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    background: #eee url(../img/widget_bg_100.png) repeat-x;
+    padding: 0px;
+    width: auto;
+}
+
+.WidgetSimple > .Header,
+.WidgetSimple.Collapsed.AnimationRunning > .Header {
+    padding: 2px 5px 3px;
+    border: 1px solid #FFF;
+    border-bottom: 1px solid #CCC;
+    -webkit-border-top-left-radius: 2px;
+    -webkit-border-top-right-radius: 2px;
+    -moz-border-radius-topleft: 2px;
+    -moz-border-radius-topright: 2px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    position: relative;
+}
+
+.WidgetSimple.Collapsed > .Header {
+    border-bottom: none;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+}
+
+.WidgetSimple > .Header h2 {
+    padding: 4px 3px;
+    margin: 0;
+    font-size: 14px;
+}
+
+.WidgetSimple > .Content {
+    padding: 8px 8px 10px;
+    border: 1px solid #FFF;
+    border-bottom: none;
+    -webkit-border-bottom-right-radius: 2px;
+    -webkit-border-bottom-left-radius: 2px;
+    -moz-border-radius-bottomright: 2px;
+    -moz-border-radius-bottomleft: 2px;
+    border-bottom-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    overflow:auto;
+    display: block;
+}
+
+.WidgetSimple.Collapsed > .Content {
+    display: none;
+}
+
+.WidgetSimple fieldset {
+    margin-bottom: 15px;
+}
+
+/**
+ * @subsection AJAX Loader
+ */
+
+.Loading > .Header h2 {
+    background: url("../img/loader.gif") no-repeat right center;
+}
+
+.RTL .Loading > .Header h2 {
+    background: url("../img/loader.gif") no-repeat left center;
+}
+
+/**
+ * @subsection  WidgetBox
+ */
+.WidgetBox > .Header h2 {
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.RTL .WidgetBox > .Header h2 {
+    margin-left: 0;
+    margin-right: 5px;
+}
+
+.WidgetBox > .Header .WidgetAction + h2 {
+    margin: 0;
+    padding-left: 30px;
+}
+
+.RTL .WidgetBox > .Header .WidgetAction + h2 {
+    padding-left: 0;
+    padding-right: 30px;
+}
+
+.WidgetBox > .Header h2 + h3 {
+    background-color: #EEE;
+    border-top: 1px solid #FFF;
+    border-bottom: 1px solid #BBB;
+    font-size: 16px;
+    padding: 5px 5px 5px 10px;
+    color: #333;
+}
+
+.RTL .WidgetBox > .Header h2 + h3 {
+    padding: 5px 10px 5px 5px;
+}
+
+.WidgetBox > .Content {
+    background: url(../img/gradient_lightdark.png) repeat-x;
+    min-height: 200px;
+    border-left: 1px solid #C6C5C4;
+    border-right: 1px solid #C6C5C4;
+    border-bottom: 1px solid #C6C5C4;
+}
+
+.Collapsed > .Content {
+    display: none;
+}
+
+.WidgetBox > .Content.AutoHeight {
+    min-height: 0;
+}
+
+/**
+ * @subaction   ActionMenu
+ */
+
+.ActionMenu {
+    top: 0;
+    right: 0;
+    padding-left: 3px;
+    background: #FFF;
+    border-left: 1px solid #CCC;
+    border-bottom: 1px solid #CCC;
+    -webkit-border-bottom-left-radius: 2px;
+    -moz-border-radius-bottomleft: 2px;
+    border-bottom-left-radius: 2px;
+    position: absolute;
+    display: none;
+}
+
+.RTL .ActionMenu {
+    right: auto;
+    left: 0;
+    padding: 0 2px 0 0;
+    border-left: none;
+    border-right: 1px solid #DDD;
+    -webkit-border-bottom-left-radius: 0;
+    -webkit-border-bottom-right-radius: 2px;
+    -moz-border-radius-bottomleft: 0;
+    -moz-border-radius-bottomright: 2px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 2px;
+}
+
+.Header:hover .ActionMenu {
+    display: block;
+}
+
+/**
+ * @subsection  WidgetActions
+ */
+
+.WidgetAction {
+    height: 19px;
+    width: 22px;
+    padding-right: 1px;
+    float: left;
+}
+
+.RTL .WidgetAction {
+    padding: 0 0 0 1px;
+    float: right;
+}
+
+.WidgetAction a {
+    height: 18px;
+    display: block;
+}
+
+.WidgetAction.Toggle,
+.Expanded.AnimationRunning .WidgetAction.Toggle {
+    height: 13px;
+    width: 12px;
+    margin: 5px 6px 5px 2px;
+    background: url(../img/toggle_arrow.png) no-repeat 0 0;
+    float: left;
+}
+
+.Header:active .WidgetAction.Toggle {
+    background-position: 0 -13px;
+}
+
+.Expanded .WidgetAction.Toggle,
+.Collapsed.AnimationRunning .WidgetAction.Toggle {
+    background-position: 0 -26px;
+}
+
+.RTL .WidgetAction.Toggle {
+    margin: 5px 2px 5px 6px;
+    float: right;
+}
+
+.WidgetAction.Toggle a {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+.Expanded .WidgetAction.Toggle i.fa-caret-right {
+    display: none !important;
+}
+
+.Collapsed .WidgetAction.Toggle i.fa-caret-down {
+    display: none !important;
+}
+
+.WidgetAction.Toggle i {
+  font-size: 17px;
+  position: absolute;
+  left: 7px;
+  top: 2px;
+  color: #555 !important;
+}
+
+/* Settings */
+.WidgetAction.Settings a {
+    background: url(../img/widget_settings.png) no-repeat 2px 2px;
+}
+
+/* Close */
+.WidgetAction.Close a {
+    background: url(../img/widget_close.png) no-repeat 2px 2px;
+}
+
+.WidgetAction.Settings a:hover,
+.WidgetAction.Close a:hover {
+    background-position: 2px -16px;
+}
+
+/**
+ * @subsection      Call for action buttons and search form
+ */
+
+.ActionList li {
+    margin-bottom: 16px;
+}
+
+.ActionList p {
+    margin: 0;
+    padding: 2px 2px 5px;
+    font-size: 11px;
+    color: #888;
+}
+
+.ActionList form select {
+    margin: 8px 0 2px;
+    display: block;
+}
+
+.CallForAction {
+    padding: 0;
+    background: #eeeeee;
+    background: -moz-linear-gradient(top, #eeeeee 0%, #e0e0e0 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#e0e0e0));
+    background: -webkit-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: -o-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: -ms-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: linear-gradient(to bottom, #eeeeee 0%,#e0e0e0 100%);
+    display: inline-block;
+    cursor: pointer;
+}
+
+/**
+ * @css-for     Firefox
+ * @note        bug: button containing an element has an hidden padding
+ */
+
+.CallForAction::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+.CallForAction:hover {
+    color: #000;
+    border-color: #696969;
+}
+
+.CallForAction span {
+    height: 12px;
+    padding: 3px 7px 6px;
+    line-height: 14px;
+    vertical-align: middle;
+    color: #333;
+    font-size: 11px;
+    font-weight: bold;
+    border: 1px solid #FFF;
+    border-bottom: none;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    display: block;
+    text-shadow: 0 1px 0 #FFF;
+    cursor: pointer;
+}
+
+.CallForAction:active {
+    background-color: #DDD;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.CallForAction:active span {
+    padding: 4px 7px 5px;
+    border-color: #DDD;
+    border-bottom: none;
+    text-shadow: 0 1px 0 #DDD;
+}
+
+.CallForAction.Plus span {
+    background: url("../img/icons/plus-button.png") no-repeat scroll;
+}
+
+.CallForAction.Download span {
+    background: url("../img/icons/drive-download.png") no-repeat scroll;
+    white-space: nowrap;
+}
+
+.CallForAction.Upload span {
+    background: url("../img/icons/drive-upload.png") no-repeat scroll;
+}
+
+.CallForAction.Plus span,
+.CallForAction.Download span,
+.CallForAction.Upload span {
+    padding-left: 23px;
+    background-position: 2px 2px;
+    white-space: nowrap;
+}
+
+.CallForAction.Plus:active span,
+.CallForAction.Download:active span,
+.CallForAction.Upload:active span {
+    background-position: 2px 3px;
+}
+
+.SearchBox {
+    position: relative;
+}
+
+.SearchBox input[type='text'] {
+    height: 15px;
+    margin: 0;
+    padding: 4px 5px;
+    font: normal 12px/15px "Helvetica Neue",Helvetica,Arial,sans-serif;
+    border-color: #999;
+    -moz-border-radius: 3px 0 0 3px;
+    -webkit-border-top-right-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
+    border-radius: 3px 0 0 3px;
+    border-right: none;
+    vertical-align: bottom;
+}
+
+.RTL .SearchBox input[type='text']{
+    border-left: none;
+    border-right: 1px solid #999;
+    -moz-border-radius: 0 3px 3px 0;
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -webkit-border-top-left-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    border-radius: 0 3px 3px 0;
+}
+
+.SearchBox input:focus {
+    border-color: #666;
+    border-right: none;
+}
+.RTL .SearchBox input:focus {
+    border-color: #666;
+    border-left: none;
+}
+
+.SearchBox button {
+    height: 25px;
+    margin: 0 0 0 -4px;
+    padding: 3px 3px 4px;
+    color: #333;
+    font: bold 11px/14px "Helvetica Neue",Helvetica,Arial,sans-serif;
+    background: #eeeeee;
+    background: -moz-linear-gradient(top, #eeeeee 0%, #e0e0e0 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#e0e0e0));
+    background: -webkit-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: -o-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: -ms-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: linear-gradient(to bottom, #eeeeee 0%,#e0e0e0 100%);
+    text-shadow: 0 1px 0 #FFF;
+    vertical-align: baseline;
+}
+
+.RTL .SearchBox button {
+    height: 25px;
+    margin: 0 -4px 0 0;
+    -moz-border-radius: 3px 0 0 3px;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
+    -webkit-border-bottom-left-radius: 3px;
+    border-radius: 3px 0 0 3px;
+    text-shadow: 0 1px 0 #FFF;
+    vertical-align: baseline;
+    border-right: 1px solid #888;
+}
+
+.SearchBox button:hover {
+    border-color: #696969;
+    cursor: pointer;
+}
+
+.SearchBox button:active {
+    padding: 4px 3px 3px;
+    background: #eeeeee;
+    background: -moz-linear-gradient(top, #eeeeee 0%, #e0e0e0 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#e0e0e0));
+    background: -webkit-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: -o-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: -ms-linear-gradient(top, #eeeeee 0%,#e0e0e0 100%);
+    background: linear-gradient(to bottom, #eeeeee 0%,#e0e0e0 100%);
+    outline: none;
+}
+
+/**
+ * @subsection      Drag and Drop
+ */
+.CanDrag .Header h2 {
+    cursor: move;
+}
+
+.DropPlaceholder {
+    border: 1px dashed #DDD;
+    background: #EEE url(../img/dnd_placeholder_bg.png);
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/**
+ * @subsection      ProgressBar
+ */
+#ProgressBar {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    overflow: hidden;
+    width: 950px;
+}
+
+.ProgressBarElements1 li {
+    width: 950px;
+}
+
+.ProgressBarElements2 li {
+    width: 474px;
+}
+
+.ProgressBarElements3 li {
+    width: 316px;
+}
+
+.ProgressBarElements4 li {
+    width: 237px;
+}
+
+.ProgressBarElements5 li {
+    width: 189px;
+}
+
+.ProgressBarElements6 li {
+    width: 158px;
+}
+
+.ProgressBarElements7 li {
+    width: 135px;
+}
+
+/* Because of the minimum screen resolution of 1024px more than 7 elements are not possible at the moment */
+
+#ProgressBar li {
+    float: left;
+    list-style: none;
+    border-style: solid;
+    border-width: 1px 0;
+    border-color: #CCC;
+    background-color: #EEE;
+    background: -moz-linear-gradient(#FFF, #EEE);
+    background: -webkit-gradient(#FFF, #EEE);
+    background: -o-linear-gradient(#FFF, #EEE);
+    background: linear-gradient(#FFF, #EEE);
+}
+
+#ProgressBar li > span {
+    display: block;
+    background-image: url(../img/ProgressBarArrow.png);
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
+#ProgressBar li a {
+    padding: 12px 7px 13px 12px;
+    color: #484848;
+    text-decoration: none;
+    font: 13px/18px Helvetica Neue, sans-serif;
+    text-shadow: 1px #FCFCFC;
+    display: block;
+    height: 42px;
+    border-style: solid;
+    border-width: 1px 0;
+    border-color: #F4F4F4;
+    background: url(../img/ProgressBarIsolator.png) no-repeat left 6px;
+    cursor: default;
+    text-align: left;
+}
+
+#ProgressBar li span a span {
+    color: #ABABAB;
+    font-size: 11px;
+    line-height: 12px;
+    text-shadow: inherit;
+    display: block;
+}
+
+#ProgressBar li:first-child, #ProgressBar li.First {
+    border-left-width: 1px;
+    -moz-border-radius: 4px 0 0 4px;
+    -webkit-border-radius: 4px 0 0 4px;
+    border-radius: 4px 0 0 4px;
+}
+
+#ProgressBar li:first-child a, #ProgressBar li.First a {
+    border-left-width: 1px;
+    padding-left: 14px;
+    background: none;
+    -moz-border-radius: 4px 0 0 3px;
+    -webkit-border-radius: 4px 0 0 3px;
+    border-radius: 4px 0 0 3px;
+}
+
+#ProgressBar li:last-child, #ProgressBar li.Last {
+    border-right-width: 1px;
+    -moz-border-radius: 0 4px 4px 0;
+    -webkit-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+#ProgressBar li:last-child a, #ProgressBar li.Last a {
+    border-right-width: 1px;
+    padding-right: 14px;
+    -moz-border-radius: 0 4px 4px 0;
+    -webkit-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+#ProgressBar .Highlighted {
+    background-color: #fbb42c;
+    background: -moz-linear-gradient(#ffdea3, #fbb42c 20%, #f6af1d 50%, #f3970d 50%, #e87f07 90%, #dd6a05);
+    background: -webkit-gradient(#ffdea3, #fbb42c 20%, #f6af1d 50%, #f3970d 50%, #e87f07 90%, #dd6a05);
+    background: -o-repeating-linear-gradient(#ffdea3, #fbb42c 20%, #f6af1d 50%, #f3970d 50%, #e87f07 90%, #dd6a05);
+    background: linear-gradient(#ffdea3, #fbb42c 20%, #f6af1d 50%, #f3970d 50%, #e87f07 90%, #dd6a05);
+    border-top-color: #9b6937;
+    border-bottom-color: #996634;
+}
+
+#ProgressBar li.Highlighted:first-child {
+    border-left-color: #9b6937;
+}
+
+#ProgressBar li.Highlighted > span {
+    background-image: url(../img/ProgressBarArrowActive.png);
+}
+
+#ProgressBar .Highlighted a {
+    color: #562900;
+    text-shadow: 0 1px 0 #FCD891;
+    border-top-color: #ffeec8;
+    border-bottom-color: #eaa350;
+    cursor: pointer;
+}
+
+#ProgressBar .Highlighted.NoLink a {
+    cursor: default;
+}
+
+#ProgressBar li:first-child.Highlighted a {
+    border-left-color: #f2bf5c;
+}
+
+#ProgressBar .Highlighted span a span {
+    color: #a14f00;
+    text-shadow: 0 1px 0 #f5b04e;
+}
+
+#ProgressBar .Active {
+    border-right: 1px solid #9b6937;
+    -moz-border-radius: 0 4px 4px 0;
+    -webkit-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+    position: relative;
+    z-index: 2;
+}
+
+#ProgressBar li:first-child.Active {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+#ProgressBar .Active a {
+    border-right: 1px solid #f2bf5c;
+    -moz-border-radius: 0 4px 4px 0;
+    -webkit-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+#ProgressBar li:first-child.Active a {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+#ProgressBar .Active + li {
+    margin-left: -2px;
+    padding-left: 1px;
+}
+
+#ProgressBar .Active + .Active {
+    z-index: 1;
+}
+
+#ProgressBar .Active + li a {
+    background: none;
+}
+
+#ProgressBar .Visited {
+    background-color: #DDD;
+    background: -moz-linear-gradient(#EEE, #DDD);
+    background: -webkit-gradient(#EEE, #FFF);
+    background: -o-repeating-linear-gradient(#EEE, #FFF);
+    background: linear-gradient(#EEE, #DDD);
+}
+
+#ProgressBar .Visited.Active {
+    border-right-color: #CCC;
+}
+
+#ProgressBar .Visited.Active a {
+    border-right-color: #EEE;
+}
+
+} /* end @media */

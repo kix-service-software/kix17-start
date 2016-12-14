@@ -1,0 +1,104 @@
+# $Id$
+
+=head1 General
+
+This package provides a more flexible and more general approach for extensions of extensions than the common "Custom"-folder of OTRS itself. KIXCore (as the custom folder itself) is the continued development of the previous tsunami approach to extend other OTRS-extensions. Employing "use lib" instead of "unshift @INC" provides more stability and reduced complexity. Therefore each extension requires a modification of Kernel/Config.pm and scripts/apache2-perl-startup.pl. This can be done automatically by KIXUtils::RegisterCustomPackage. Each time a new custom folder is registered, a backup of the modified file Config.pm or apache2-perl-startup.pl with a timestamp suffix is written.
+
+You can use the following OTRS console commands to list custom folders, register or unregister a custom folder but actually this should be done by the package installation process:
+
+=item * Admin::MultipleCustomPackages::List
+=item * Admin::MultipleCustomPackages::Rebuild
+=item * Admin::MultipleCustomPackages::Register
+=item * Admin::MultipleCustomPackages::Unregister
+
+IMPORTANT: if you're using mod-perl a webserver restart is required after the modification of apache2-perl-startup. Otherwise, no further custom packages in your custom modification will be found. Using a function of your custom extension upon installation (type "post") will NOT work, since @INC does not contain your custom directory yet. In order to use custom functions immediately on installation you need to install the extension via command line.
+
+The common folder "Custom" allows to overwrite an existing file of an already installed package once. If you installed another extension, you would encounter the same problem as if you had no "Custom" folder. This drawback is resolved with KIXCore. Furthermore the common Custom-folder of OTRS does not affect following files/items (yet). By extending the custom-folder approach it is possible to easily dis- and enable whole OTRS-extensions by un-/registering the corresponding custom folder.
+
+=over 4
+
+=item * Kernel::System::KIXUtils
+
+=over 8
+
+contains methods to un-/register custom packages and add/delete modifications to/from Kernel/Config.pm and scripts/apache2-perl-startup.pl
+
+=back
+
+=item * Kernel::Output::HTML::Layout
+
+=over 8
+
+contains modifications to place and access template files and to load sub layout files
+
+=back
+
+=item * Kernel::Output::HTML::LayoutLoader
+
+=over 8
+
+contains modifications to use KIX paths for skins
+
+=back
+
+=item * Kernel::System::LinkObject
+
+=over 8
+
+required modification since module searches LinkObject backends not based on @INC but on hard coded file paths - should be fexed in future OTRS releases
+
+=back
+
+=item * Kernel::System::SysConfig
+
+=over 8
+
+contains modifications to place xml-configuration files in custom folders
+
+=back
+
+=item * Kernel::System::Stats
+
+=over 8
+
+contains modifications to place and access static and dynamic stats in custom folders
+
+=back
+
+=item * Kernel::Language
+
+=over 8
+
+contains modifications to (re-)place translation files by custom packages
+
+=back
+
+=item * CustomerHeader.dtl, CustomerLogin, dtl, Login.dtl
+
+=over 8
+
+contain modifications to build correct paths in links to css ans js files (needed for tsunami approach).
+
+=back
+
+=back
+
+=head1 Copyright
+
+KIXCore written/edited by:
+
+=over 4
+
+=item * Rene(dot)Boehm(at)cape(dash)it(dot)de
+
+=item * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+
+=item * Torsten(dot)Thau(at)cape(dash)it(dot)de
+
+=item * Anna(dot)Litvinova(at)cape(dash)it(dot)de
+
+=back
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file COPYING for license information (AGPL). If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+
+=cut

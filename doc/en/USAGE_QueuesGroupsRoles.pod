@@ -1,0 +1,91 @@
+# $Id$
+
+=head1 Usage Information 
+
+This package provides additional functions for QueuesGroupsRoles. Following you'll find a short documentation on the use and features of this extension.
+
+=head2 (i) Import, export and show Queues-Groups-Roles Concept
+
+=over 4
+
+=item * provides an additional admin module to display the current Queues-Groups-Roles Concept.
+
+=item * allows the export of the current Queues-Groups-Roles Concept.
+
+=item * allows the import of an existing Queues-Groups-Roles Concept in CSV format (e.g. <OTRS_Home>/var/QueuesGroupsRoles.csv).
+
+=item * import and export can be used via admin frontend or console.
+
+=item * Console-usage for Download: QueuesGroupsRoles.pl -d 1 -o /tmp/.
+
+=item * Console-usage for Upload: QueuesGroupsRoles.pl -u 1 -f QueueGroupRoleDescription.csv
+
+=item * Mapping of Permissions: it's possible to map the permissions to shortcuts better viewable in CSV-files
+
+=back
+
+=head3 Module Registration
+
+    <ConfigItem Name="Frontend::Module###AdminQueuesGroupsRoles" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>QueuesGroupsRoles</Group>
+        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Group>admin</Group>
+                <Description Translatable="1">Import, export and show Queue-Group-Role Concept.</Description>
+                <Title>Queues Groups Roles</Title>
+                <NavBarName>Admin</NavBarName>
+                <NavBarModule>
+                    <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
+                    <Name Translatable="1">Queues Groups Roles</Name>
+                    <Block>System</Block>
+                    <Prio>720</Prio>
+                </NavBarModule>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+=head3 Permission-Shortcut-Mapping
+
+    <ConfigItem Name="QueuesGroupsRoles###ShortcutMappings" Required="0" Valid="1">
+        <Description Translatable="1">Maps the permissions of OTRS to better readable shortcuts in CSV-Files. In the key is the OTRS-Permission and the value describes the shortcut. The Mapping should include all configured System::Permissions included the 'rw'-Permission. Please be shure that there are no duble shortcuts inside.</Description>
+        <Group>QueuesGroupsRoles</Group>
+        <SubGroup>Frontend::Admin::ViewQueuesGroupsRoles</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="ro">RO</Item>
+                <Item Key="move_into">MO</Item>
+                <Item Key="create">CR</Item>
+                <Item Key="owner">OW</Item>
+                <Item Key="priority">PR</Item>
+                <Item Key="note">NO</Item>
+                <Item Key="rw">RW</Item>
+                <Item Key="forward">FO</Item>
+                <Item Key="close">CL</Item>
+                <Item Key="compose">CO</Item>
+                <Item Key="customer">CU</Item>
+                <Item Key="pending">PE</Item>
+                <Item Key="phone">PH</Item>
+                <Item Key="responsible">RE</Item>
+                <Item Key="bounce">BO</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de/
+
+The following persons have contributed to this extension:
+
+=over 4
+
+=item * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+=item * Frank(dot)Oberender(at)cape(dash)it(dot)de
+
+=back
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file COPYING for license information (AGPL). If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+
+=cut

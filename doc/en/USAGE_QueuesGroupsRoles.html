@@ -1,0 +1,135 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Usage Information</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+
+<ul>
+
+	<li><a href="#usage_information">Usage Information</a></li>
+	<ul>
+
+		<li><a href="#_i__import__export_and_show_queues_groups_roles_concept">(i) Import, export and show Queues-Groups-Roles Concept</a></li>
+		<ul>
+
+			<li><a href="#module_registration">Module Registration</a></li>
+			<li><a href="#permission_shortcut_mapping">Permission-Shortcut-Mapping</a></li>
+		</ul>
+
+	</ul>
+
+	<li><a href="#copyright">COPYRIGHT</a></li>
+</ul>
+
+<hr name="index" />
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<h1><a name="usage_information">Usage Information</a></h1>
+<p>This package provides additional functions for QueuesGroupsRoles. Following you'll find a short documentation on the use and features of this extension.</p>
+<p>
+</p>
+<h2><a name="_i__import__export_and_show_queues_groups_roles_concept">(i) Import, export and show Queues-Groups-Roles Concept</a></h2>
+<ul>
+<li><strong><a name="provides_an_additional_admin_module_to_display_the_current_queues_groups_roles_concept" class="item">provides an additional admin module to display the current Queues-Groups-Roles Concept.</a></strong>
+
+</li>
+<li><strong><a name="allows_the_export_of_the_current_queues_groups_roles_concept" class="item">allows the export of the current Queues-Groups-Roles Concept.</a></strong>
+
+</li>
+<li><strong><a name="format" class="item">allows the import of an existing Queues-Groups-Roles Concept in CSV format (e.g. &lt;OTRS_Home&gt;/var/QueuesGroupsRoles.csv).</a></strong>
+
+</li>
+<li><strong><a name="import_and_export_can_be_used_via_admin_frontend_or_console" class="item">import and export can be used via admin frontend or console.</a></strong>
+
+</li>
+<li><strong><a name="console_usage_for_download_queuesgroupsroles_pl_d_1_o_tmp" class="item">Console-usage for Download: QueuesGroupsRoles.pl -d 1 -o /tmp/.</a></strong>
+
+</li>
+<li><strong><a name="console_usage_for_upload_queuesgroupsroles_pl_u_1_f_queuegrouproledescription_csv" class="item">Console-usage for Upload: QueuesGroupsRoles.pl -u 1 -f QueueGroupRoleDescription.csv</a></strong>
+
+</li>
+<li><strong><a name="mapping_of_permissions_it_s_possible_to_map_the_permissions_to_shortcuts_better_viewable_in_csv_files" class="item">Mapping of Permissions: it's possible to map the permissions to shortcuts better viewable in CSV-files</a></strong>
+
+</li>
+</ul>
+<p>
+</p>
+<h3><a name="module_registration">Module Registration</a></h3>
+<pre>
+    &lt;ConfigItem Name=&quot;Frontend::Module###AdminQueuesGroupsRoles&quot; Required=&quot;0&quot; Valid=&quot;1&quot;&gt;
+        &lt;Description Translatable=&quot;1&quot;&gt;Frontend module registration for the agent interface.&lt;/Description&gt;
+        &lt;Group&gt;QueuesGroupsRoles&lt;/Group&gt;
+        &lt;SubGroup&gt;Frontend::Admin::ModuleRegistration&lt;/SubGroup&gt;
+        &lt;Setting&gt;
+            &lt;FrontendModuleReg&gt;
+                &lt;Group&gt;admin&lt;/Group&gt;
+                &lt;Description Translatable=&quot;1&quot;&gt;Import, export and show Queue-Group-Role Concept.&lt;/Description&gt;
+                &lt;Title&gt;Queues Groups Roles&lt;/Title&gt;
+                &lt;NavBarName&gt;Admin&lt;/NavBarName&gt;
+                &lt;NavBarModule&gt;
+                    &lt;Module&gt;Kernel::Output::HTML::NavBar::ModuleAdmin&lt;/Module&gt;
+                    &lt;Name Translatable=&quot;1&quot;&gt;Queues Groups Roles&lt;/Name&gt;
+                    &lt;Block&gt;System&lt;/Block&gt;
+                    &lt;Prio&gt;720&lt;/Prio&gt;
+                &lt;/NavBarModule&gt;
+            &lt;/FrontendModuleReg&gt;
+        &lt;/Setting&gt;
+    &lt;/ConfigItem&gt;</pre>
+<p>
+</p>
+<h3><a name="permission_shortcut_mapping">Permission-Shortcut-Mapping</a></h3>
+<pre>
+    &lt;ConfigItem Name=&quot;QueuesGroupsRoles###ShortcutMappings&quot; Required=&quot;0&quot; Valid=&quot;1&quot;&gt;
+        &lt;Description Translatable=&quot;1&quot;&gt;Maps the permissions of OTRS to better readable shortcuts in CSV-Files. In the key is the OTRS-Permission and the value describes the shortcut. The Mapping should include all configured System::Permissions included the 'rw'-Permission. Please be shure that there are no duble shortcuts inside.&lt;/Description&gt;
+        &lt;Group&gt;QueuesGroupsRoles&lt;/Group&gt;
+        &lt;SubGroup&gt;Frontend::Admin::ViewQueuesGroupsRoles&lt;/SubGroup&gt;
+        &lt;Setting&gt;
+            &lt;Hash&gt;
+                &lt;Item Key=&quot;ro&quot;&gt;RO&lt;/Item&gt;
+                &lt;Item Key=&quot;move_into&quot;&gt;MO&lt;/Item&gt;
+                &lt;Item Key=&quot;create&quot;&gt;CR&lt;/Item&gt;
+                &lt;Item Key=&quot;owner&quot;&gt;OW&lt;/Item&gt;
+                &lt;Item Key=&quot;priority&quot;&gt;PR&lt;/Item&gt;
+                &lt;Item Key=&quot;note&quot;&gt;NO&lt;/Item&gt;
+                &lt;Item Key=&quot;rw&quot;&gt;RW&lt;/Item&gt;
+                &lt;Item Key=&quot;forward&quot;&gt;FO&lt;/Item&gt;
+                &lt;Item Key=&quot;close&quot;&gt;CL&lt;/Item&gt;
+                &lt;Item Key=&quot;compose&quot;&gt;CO&lt;/Item&gt;
+                &lt;Item Key=&quot;customer&quot;&gt;CU&lt;/Item&gt;
+                &lt;Item Key=&quot;pending&quot;&gt;PE&lt;/Item&gt;
+                &lt;Item Key=&quot;phone&quot;&gt;PH&lt;/Item&gt;
+                &lt;Item Key=&quot;responsible&quot;&gt;RE&lt;/Item&gt;
+                &lt;Item Key=&quot;bounce&quot;&gt;BO&lt;/Item&gt;
+            &lt;/Hash&gt;
+        &lt;/Setting&gt;
+    &lt;/ConfigItem&gt;</pre>
+<p>
+</p>
+<hr />
+<h1><a name="copyright">COPYRIGHT</a></h1>
+<p>Copyright (C) 2006-2015 c.a.p.e. IT GmbH, <a href="http://www.cape-it.de/">http://www.cape-it.de/</a></p>
+<p>The following persons have contributed to this extension:</p>
+<ul>
+<li><strong><a name="stefan" class="item">Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+=item * Frank(dot)Oberender(at)cape(dash)it(dot)de</a></strong>
+
+</li>
+</ul>
+<p>This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file COPYING for license information (AGPL). If you did not receive this file, see <a href="http://www.gnu.org/licenses/agpl.txt.">http://www.gnu.org/licenses/agpl.txt.</a></p>
+
+</body>
+
+</html>

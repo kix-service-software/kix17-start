@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabEditDynamicFields###Permission" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to use the ticket note screen in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabDynamicFields</SubGroup>
+        <Setting>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabEditDynamicFields###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the dynamic field tab of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabDynamicFields</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabEditDynamicFields###StateType" Required="1" Valid="1">
+        <Description Translatable="1">Defines the next state of a ticket after editing a dynamic field, in the ticket dynamic field tab screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabDynamicFields</SubGroup>
+        <Setting>
+            <Array>
+                <Item>open</Item>
+                <Item>closed</Item>
+                <Item>pending reminder</Item>
+                <Item>pending auto</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

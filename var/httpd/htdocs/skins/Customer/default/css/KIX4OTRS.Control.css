@@ -1,0 +1,179 @@
+/*
+ * @project     KIX4OTRS (http://www.cape-it.de) - Customer Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/**
+ * @package     Skin "default"
+ * @section     Customer
+ */
+
+@media screen,projection,tv,handheld {
+
+/**
+ * @subsection  Navigation
+ */
+
+#Navigation {
+    width:              100%;
+    clear:              both;
+    border:             none;
+    top:                61px;
+    background:         none;
+    height:             35px;
+    position:           absolute;
+    z-index:            11;
+}
+
+#Navigation .Selected,
+#Navigation .Selected:active {
+    margin-top: 0px;
+    height:21px;
+    background: none;
+    border-bottom: 0;
+}
+
+#Navigation .Selected > a {
+    color: #000;
+    text-shadow: none;
+    padding: 5px 10px 4px 11px;
+}
+
+#Navigation .Selected, #Navigation .Selected:active {
+    height: 25px;
+}
+
+#Navigation > ul > li > ul {
+    top: 22px;
+}
+
+/**
+ * @subsection  Action Row / MessageBox (Notification)
+ */
+
+.ActionRow {
+    border:         none;
+}
+
+.MessageBox p {
+    margin: 5px 7px;
+    padding: 1px 0 1px 20px;
+    background-position: left;
+}
+
+#BottomActionRow {
+    padding: 5px 9px;
+    background: #A7AAAA url("../img/GradientSmall.png") repeat-x 0 0;
+    border: 1px solid #B8BBBB;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    margin-top:     20px;
+    text-align:     right;
+}
+
+.Tabs a:hover {
+    color: #EB9430;
+}
+
+.Tabs .Selected {
+    font-weight: bold;
+    color: #EB9430;
+}
+
+} /* end @media */
+
+
+/**
+ * @subsection Responsive Customer Navigation
+ */
+@media (max-width: 1024px) {
+    /* Navigation Sidebar */
+    .ResponsiveSidebarContainer #Navigation {
+        display:          block;
+        box-sizing:       border-box;
+        padding-top:      80px;
+        background-color: #fff;
+    }
+
+    /* Navigation Container */
+    .ResponsiveSidebarContainer #Navigation > ul.Individual,
+    .ResponsiveSidebarContainer #Navigation > ul {
+        margin: 0;
+    }
+
+    .ResponsiveSidebarContainer #Navigation > ul.Individual {
+        margin-top: 2em;
+    }
+
+    /* Navigation Items */
+    .ResponsiveSidebarContainer #Navigation li.Selected,
+    .ResponsiveSidebarContainer #Navigation li {
+        display:      block;
+        position:     static;
+        float:        none;
+        border-top:   1px solid #000;
+        border-image: none;
+        height:       auto;
+        min-height:   25px;
+        margin:       0;
+        padding:      0;
+    }
+
+    .ResponsiveSidebarContainer #Navigation li:first-of-type {
+        border-top: 0 none;
+    }
+
+    .ResponsiveSidebarContainer #Navigation li a {
+        display:      block;
+        float:        none;
+        height:       100%;
+        border:       none;
+        padding:      0;
+        z-index:      auto;
+        padding-left: 10px;
+        font-size:    16px;
+        line-height:  35px;
+        font-weight:  400;
+    }
+
+    .ResponsiveSidebarContainer #Navigation li.Selected + li a {
+        padding-left: 10px;
+    }
+
+    /* Navigation Selected Item */
+    .ResponsiveSidebarContainer #Navigation li.Selected > a {
+        background-color: #ffcc65 !important;
+    }
+
+    /* Navigation Sub Container */
+    .ResponsiveSidebarContainer #Navigation li ul {
+        display:          block;
+        position:         static;
+        top:              auto;
+        left:             auto;
+        width:            auto;
+        background-color: transparent;
+        z-index:          auto;
+    }
+
+    /* Navigation Sub Items */
+    .ResponsiveSidebarContainer #Navigation > ul > li > ul > li,
+    .ResponsiveSidebarContainer #Navigation > ul > li:hover > ul > li {
+        margin:   0;
+        position: static;
+        border:   none;
+        background-color: transparent;
+    }
+
+    .ResponsiveSidebarContainer #Navigation li li a {
+        padding-left: 20px;
+    }
+
+    /* Navigation Selected Sub Item */
+    .ResponsiveSidebarContainer #Navigation li li a.SubSelected {
+        font-weight: 700;
+    }
+}

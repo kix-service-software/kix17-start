@@ -1,0 +1,463 @@
+/**
+ * @project     OTRS (http://www.otrs.org) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   OTRS AG
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/**
+ * @package     Skin "Default"
+ * @section     Default Settings
+ */
+
+@media screen,projection,tv,handheld {
+
+
+    /* OTRS color has less contrast */
+a {
+    color: #F58500;
+}
+
+    /* OTRS colors are too pastel-coloured */
+    .Error {
+        color: #F80010;
+    }
+    .Warning {
+        color: #F80010;
+    }
+
+    /* OTRS cursor leads to irritation in AgentTicketZoom */
+    .Headline .Flag span {
+        cursor: default;
+    }
+
+    .Flag.Small {
+        margin: 5px;
+    }
+
+    /* OTRS colors are too pastel-coloured */
+    .Flag span.Escalated {
+        background-color:#F80800;
+    }
+    .Flag span.PriorityID-1 {
+        background-color:#15d100;/*24D906*/
+    }
+    .Flag span.PriorityID-2 {
+        background-color:#a6fc00;/*68D04D*/
+    }
+    .Flag span.PriorityID-3 {
+        background-color:#f2f200;
+    }
+    .Flag span.PriorityID-4 {
+        background-color:#ff9000;/*E56B68*/
+    }
+    .Flag span.PriorityID-5 {
+        background-color:#fa0700;/*F80800*/
+    }
+
+    /* @subsection Spacings */
+    .SpacingTopNo {
+        margin-top: 0 !important;
+    }
+    .SpacingBottomNo {
+        margin-bottom: 0 !important;
+    }
+    .SpacingBottomSmall {
+        margin-bottom: 8px;
+    }
+    .SpacingRight {
+        margin-right: 13px;
+    }
+    .SpacingRightNo {
+        margin-right: 0 !important;
+    }
+    .SpacingRightSmall {
+        margin-right: 8px;
+    }
+    .SpacingRightMedium {
+        margin-right: 25px;
+    }
+    .SpacingRightLarge {
+        margin-right: 89px;
+    }
+    .SpacingLeft {
+        margin-left: 13px;
+    }
+    .SpacingLeftNo {
+        margin-left: 0 !important;
+    }
+    .SpacingLeftSmall {
+        margin-left: 8px;
+    }
+    .SpacingLeftMedium {
+        margin-left: 25px;
+    }
+    .SpacingLeftLarge {
+        margin-left: 89px;
+    }
+    .SpacingTop {
+        margin-top: 15px;
+    }
+
+    /* @subsection Standards */
+    .W35px {
+        width: 35px !important;
+    }
+    .W100px {
+        width: 100px;
+    }
+    .W500px {
+        width: 500px;
+    }
+    .nowrap {
+        white-space: nowrap;
+    }
+    .breakword {
+        word-wrap: break-word;
+    }
+
+    /* @subsection Widget */
+    div.WidgetPopup {
+        display: none;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        z-index: 100;
+        width: 500px;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        border: 1px solid #CCC;
+        background: #eee url(../img/widget_bg_100.png) repeat-x;
+        -moz-box-shadow: 4px 4px 4px #666;
+        -webkit-box-shadow: 4px 4px 4px #666;
+        box-shadow: 4px 4px 4px #666;
+    }
+
+    div.WidgetPopup > .Header{
+        padding: 2px 5px 3px;
+        border: 1px solid #FFF;
+        border-bottom: 1px solid #CCC;
+        -webkit-border-top-left-radius: 2px;
+        -webkit-border-top-right-radius: 2px;
+        -moz-border-radius-topleft: 2px;
+        -moz-border-radius-topright: 2px;
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+        position: relative;
+    }
+
+    div.WidgetPopup > .Header h2 {
+        padding: 4px 3px;
+        margin: 0;
+    }
+
+    div.WidgetPopup > .Content{
+        padding: 8px 8px 10px;
+        border: 1px solid #FFF;
+        border-bottom: none;
+        -webkit-border-bottom-right-radius: 2px;
+        -webkit-border-bottom-left-radius: 2px;
+        -moz-border-radius-bottomright: 2px;
+        -moz-border-radius-bottomleft: 2px;
+        border-bottom-right-radius: 2px;
+        border-bottom-left-radius: 2px;
+        overflow: auto;
+    }
+
+    .SidebarColumn > .Fixed {
+        position: fixed;
+        top: 0px;
+    }
+
+    #SignKeyID {
+       width:400px;
+    }
+
+    /* UI Tabs */
+    .ui-widget { font-family: inherit ; font-size: 1.1em; }
+
+    /* @subsection global message format */
+    .ArticleBody{
+        font-size: 12px;
+    }
+
+    /* Sidebar */
+    .ui-resizable-w { cursor: w-resize; width: 15px; left: -5px; top: 0; height: 100%; }
+
+    .DynamicFieldSidebarSettingsContainer {
+        margin-bottom:2px;
+        padding:5px;
+    }
+
+    .DynamicFieldSidebarEditContainer {
+        margin-bottom:2px;
+    }
+
+    /* ArticleTab */
+    div.ArticleFlagInformation {
+        position: absolute;
+        top: 0px;
+        left: 50px;
+        background-color:#FFF;
+        border: 1px solid #000;
+        width: 150px;
+        height: 50px;
+    }
+
+    div.ArticleFlagOptionsDialog {
+       font-size: 12px;
+       padding: 10px;
+       width:150px;
+    }
+
+    div.ArticleFlagOptionsDialog a {
+        display:block;
+        margin: 5px 0px 5px 0px;
+    }
+
+    div.AddQuickLink {
+        margin: 5px 0px 0px 0px;
+        padding: 7px;
+        border-color: #C6C5C4 #C6C5C4 #7C7C7C;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+    div.SearchProfileAdmin {
+        background-color:#EFEFEF;
+        padding:0px 0px 0px 5px;
+    }
+
+    div.SearchProfileAdd {
+        background-color:#EFEFEF;
+        padding:5px 0px 5px 5px;
+    }
+
+    .SortMe {
+        cursor: pointer;
+        height: 20px;
+    }
+
+    ul.ColumnOrder {
+        list-style-type: none;
+        margin: 0;
+        padding: 5px;
+        border: 1px solid #E6E6E6;
+        background-color:#F7F8E0;
+        overflow:auto;
+        height:300px;
+    }
+
+    ul.ColumnOrder li {
+        margin: 5px 5px 5px 5px;
+        padding: 0.4em;
+        height: 18px;
+    }
+
+    ul.ColumnOrder li span {
+        float: right;
+    }
+
+    #SortableSelected, #SortablePossible {
+        list-style-type: none;
+        margin: 0;
+        padding: 0 0 2.5em;
+        margin-right: 10px;
+    }
+
+    .SortableColumnsDescription {
+        display:block;
+        margin: 10px 2px 5px 5px;
+        font-weight:900;
+    }
+
+    .SortableColumns {
+        float: left;
+        width: 50%;
+    }
+
+    /* workaround for an IE9 issue */
+    .CanDrag .Content div {
+        min-height: 0%
+    }
+    .CanDrag .Content {
+        min-height: 0%
+    }
+
+    .DynamicFieldAvailableInFrontend {
+        width: 500px;
+    }
+
+    .NothingAvailableMsg {
+        margin: 10px;
+    }
+
+    .LayoutPopup > .Footer .CallForAction, .CallForAction {
+        margin-right: 5px;
+    }
+
+    .LayoutPopup > .Footer .SaveAsDraftButton, .SaveAsDraftButton {
+        min-width: 280px;
+    }
+
+    .SaveAsDraftButton span i {
+        margin-right: 5px;
+    }
+
+    .CustomerDetailsMagnifier {
+        cursor: pointer;
+        position: absolute;
+        right: 25px;
+    }
+
+    .ResponsibleDetailsMagnifier {
+        cursor: pointer;
+    }
+
+    .OwnerDetailsMagnifier {
+        cursor: pointer;
+    }
+
+    .JSTreeSelectionContainer {
+        background-color:   white;
+        border:             1px solid silver;
+        padding:            5px;
+        overflow:           auto;
+    }
+
+    .ArticleFlagIconTooltip {
+        position: absolute;
+        padding: 5px;
+        border: 1px solid #000;
+        background-color: #F5F6CE;
+        border-radius: 5px;
+        width: 150px;
+        z-index: 9999;
+    }
+
+    #CustomerUserEmail {
+        font-size: 11px;
+    }
+
+    select#ConfigItemClass {
+        font-size: 11px;
+    }
+
+    .WidgetAction.Toggle a {
+        width: 20%;
+    }
+    .KIXSidebarCustomerEmailSelection {
+        margin: 10px;
+    }
+    .WidgetSimple,
+    .LayoutGrid.ColumnsWithSpacing > div > div {
+        border: 1px solid #C0C0C0;
+    }
+
+    .CallForAction.Upload {
+        width: 230px;
+    }
+
+    .CallForAction.Download {
+        width: 230px;
+    }
+
+    select {
+        background-color: #fff;
+    }
+
+    .Dialog {
+        border: 1px solid #C0C0C0;
+    }
+
+    .DatepickerIcon {
+        font-size: 14px;
+        padding-top: 1px;
+    }
+
+    /* KIXSidebarChecklist */
+
+    #ChecklistTasks {
+        width: 90%;
+        height: 250px;
+    }
+
+    #ChecklistTable {
+        width: 100%;
+    }
+
+    #ChecklistTable > tbody > tr {
+        height: 20px;
+    }
+
+    .ChecklistIcon {
+        padding: 2px;
+        cursor: pointer;
+        font-size: 12pt;
+        width: 20px;
+    }
+
+    .ChecklistIconItem {
+        display: block;
+    }
+
+    .ChecklistIconList {
+        position: absolute;
+        border: solid 1px;
+        border-color: rgb(192, 192, 192);
+        background-color: #f5f5f5;
+        font-size: 12pt;
+        z-index: 20;
+    }
+
+    .ChecklistIconList > span {
+        padding: 5px;
+    }
+
+    .ChecklistIconList > span:hover {
+        background-color: #FFCC65;
+    }
+
+    .ChecklistHint {
+        padding: 5px;
+    }
+
+    #ChecklistTaskList {
+        border: solid 1px;
+        border-color: rgb(192, 192, 192);
+        background-color: #fff;
+    }
+
+    #ChecklistTable > tbody > tr.Even {
+        background-color: #F0F0F0;
+    }
+
+    #ChecklistTable > tbody > tr:hover {
+        background-color: #FCB24B;
+    }
+
+    #ChecklistTable > tbody > tr.NoChecklist:hover {
+        background-color: #FFF;
+    }
+
+    #KIXSidebarChecklistDisplay {
+        overflow: visible;
+    }
+
+    /* Modernized Fields */
+    .ModernizeFieldIcon {
+        color: #a0a0a0;
+        position: absolute;
+        z-index: 2;
+        vertical-align: middle;
+        top: 5px !important;
+        right: 5px;
+    }
+
+    .ContentSaved {
+        color: #08810E;
+    }
+}
+/* end @media */
+

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="PreferencesGroups###ServiceViewLayout" Required="1" Valid="1">
+        <Description Translatable="1">Select service view layout.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
+                <Item Key="Column">User Profile</Item>
+                <Item Key="Label" Translatable="1">Service view - layout</Item>
+                <Item Key="Desc" Translatable="1">Select service view layout.</Item>
+                <Item Key="Key" Translatable="1">Layout style</Item>
+                <Item Key="Data">
+                    <Hash>
+                        <Item Key="Default">Standard</Item>
+                        <Item Key="Tree">Service-Tree</Item>
+                        <Item Key="DropDown">DropDown</Item>
+                    </Hash>
+                </Item>
+                <Item Key="DataSelected">Tree</Item>
+                <Item Key="PrefKey">UserServiceViewLayout</Item>
+                <Item Key="Prio">3101</Item>
+                <Item Key="Active">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="PreferencesGroups###ServiceViewAll" Required="1" Valid="1">
+        <Description Translatable="1">Choose whether all or unlocked tickets should be shown as default.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
+                <Item Key="Column">User Profile</Item>
+                <Item Key="Label" Translatable="1">Service view - show all tickets</Item>
+                <Item Key="Desc" Translatable="1">Choose whether to show all (locked and unlocked) tickets in service view.</Item>
+                <Item Key="Key" Translatable="1">Display mode</Item>
+                <Item Key="Data">
+                    <Hash>
+                        <Item Key="All">All (locked and unlocked) tickets</Item>
+                        <Item Key="Unlocked">Unlocked tickets only</Item>
+                    </Hash>
+                </Item>
+                <Item Key="DataSelected"></Item>
+                <Item Key="PrefKey">UserViewAllTicketsInServiceView</Item>
+                <Item Key="Prio">3111</Item>
+                <Item Key="Active">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

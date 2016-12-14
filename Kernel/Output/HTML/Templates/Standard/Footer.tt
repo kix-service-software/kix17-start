@@ -1,0 +1,34 @@
+# --
+# based upon Footer.tt
+# original Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+
+<div id="Footer" class="ARIARoleContentinfo">
+[% RenderBlockStart("Banner") %]
+    <span>
+        [% Config("Product") %] [% Config("Version") %]
+    </span>
+[% RenderBlockEnd("Banner") %]
+    <div class="TopOfPage">
+        <a href="#Top">[% Translate("Top of page") | html %]<i class="fa fa-arrow-circle-o-up"></i></a>
+    </div>
+    <div class="Clear">
+    </div>
+</div>
+
+[% InsertTemplate("FooterJS.tt") %]
+
+</body>
+</html>

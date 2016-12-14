@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="KIXHelpURL" Required="1" Valid="1">
+        <Description Translatable="1">The URL to the KIX online help.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <String Regex="">http://www.cape-it.de/kix-help</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::Output::FilterElementPost###OnlineHelp" Required="1" Valid="1">
+        <Description Translatable="1">Activates the Online help link. Link will be shown near to logout links.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::OnlineHelp</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key="Header">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <!-- REDEFINED FRONTEND LAYOUT AND SKIN -->
+    <ConfigItem Name="ProductIcon" Required="1" Valid="1">
+        <Description Translatable="1">The icon file to be used as favicon (relative to Frontend::ImagePath).</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <String Regex="">icons/kix4otrs.ico</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="AgentLogo" Required="0" Valid="1">
+        <Description Translatable="1">The logo shown in the header of the agent interface. The URL to the image must be a relative URL to the skin image directory.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="URL">skins/Agent/KIX4OTRS/css-cache/img/logo.png</Item>
+                <Item Key="StyleTop">10px</Item>
+                <Item Key="StyleRight">17px</Item>
+                <Item Key="StyleHeight">37px</Item>
+                <Item Key="StyleWidth">208px</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Agent::Skin###100-KIX4OTRS" Required="0" Valid="1">
+        <Description Translatable="1">KIX4OTRS skin for the agents interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="InternalName">KIX4OTRS</Item>
+                <Item Key="VisibleName" Translatable="1">KIX4OTRS</Item>
+                <Item Key="Description" Translatable="1">KIX4OTRS skin for the agents interface.</Item>
+                <Item Key="HomePage">www.cape-it.de</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Agent::DefaultSelectedSkin" Required="1" Valid="1">
+        <Description Translatable="1">The agent skin's InternalName which should be used in the agent interface. Please check the available skins in Frontend::Agent::Skins.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <String Regex="">KIX4OTRS</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerLogo" Required="0" Valid="1">
+        <Description Translatable="1">The logo shown in the header of the customer interface. The URL to the image must be a relative URL to the skin image directory.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="URL">skins/Customer/default/css-cache/img/logo.png</Item>
+                <Item Key="StyleTop">10px</Item>
+                <Item Key="StyleRight">17px</Item>
+                <Item Key="StyleHeight">37px</Item>
+                <Item Key="StyleWidth">206px</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Customer::Skin###100-KIX4OTRS" Required="0" Valid="1">
+        <Description Translatable="1">KIX4OTRS skin for the agents interface.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="InternalName">KIX4OTRS</Item>
+                <Item Key="VisibleName" Translatable="1">KIX4OTRS</Item>
+                <Item Key="Description" Translatable="1">KIX4OTRS skin for the customers interface.</Item>
+                <Item Key="HomePage">www.cape-it.de</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Customer::SelectedSkin" Required="1" Valid="1">
+        <Description Translatable="1">The customer skin's InternalName which should be used in the customer interface. Please check the available skins in Frontend::Customer::Skins.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+        <Setting>
+            <String Regex="">KIX4OTRS</String>
+        </Setting>
+    </ConfigItem>
+    <!-- EO REDEFINED FRONTEND LAYOUT AND SKIN -->
+
+    <!-- REDEFINED PDF LOGO -->
+    <ConfigItem Name="PDF::LogoFile" Required="1" Valid="1">
+        <Description Translatable="1">Specifies the path of the file for the logo in the page header (gif|jpg|png, 700 x 100 pixel).</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::PDF</SubGroup>
+        <Setting>
+            <String Regex="">&lt;OTRS_CONFIG_Home&gt;/var/logo-KIX4OTRS.png</String>
+        </Setting>
+    </ConfigItem>
+    <!-- EO REDEFINED PDF LOGO -->
+
+    <!-- COMMON KIX4OTRS JS EXTENSIONS -->
+    <ConfigItem Name="Loader::Agent::CommonJS###000-KIX4OTRS" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.KIX4OTRS.js</Item>
+                <Item>Core.KIX4OTRS.Dialog.js</Item>
+                <Item>Core.UI.DnD.js</Item>
+                <Item>Core.KIX4OTRS.KIXSidebar.js</Item>
+                <Item>Core.KIX4OTRS.Agent.DynamicFieldObjectReference.js</Item>
+                <Item>Core.KIX4OTRS.KIXSidebarCustomerInfo.js</Item>
+                <Item>Core.KIX4OTRS.KIXSidebarDynamicField.js</Item>
+                <Item>Core.KIX4OTRS.KIXSidebarChecklist.js</Item>
+                <Item>Core.UI.AllocationList.js</Item>
+                <Item>Core.Agent.TableFilters.js</Item>
+                <Item>Core.Debug.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Customer::CommonJS###000-KIX4OTRS" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the customer interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.KIX4OTRS.js</Item>
+                <Item>Core.UI.DnD.js</Item>
+                <Item>Core.KIX4OTRS.KIXSidebar.js</Item>
+                <Item>Core.KIX4OTRS.Agent.DynamicFieldObjectReference.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <!-- EO COMMON KIX4OTRS JS EXTENSIONS -->
+
+    <!-- DATE AND TIME SELECTION LAYOUT -->
+    <ConfigItem Name="Loader::Agent::CommonJS###102-KIX4OTRSTimeInput" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.KIX4OTRS.Form.Validate.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Customer::CommonJS###102-KIX4OTRSTimeInput" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the customer interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.KIX4OTRS.Form.Validate.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="DateSelection::Layout::SmartDateInput" Required="1" Valid="1">
+        <Description Translatable="1">Enable a smart style for date inputs (SysConfig-option TimeInputFormat will be ignored)</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Time</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DateSelection::Layout::SmartTimeInput" Required="1" Valid="1">
+        <Description Translatable="1">Enable a smart style for time inputs (SysConfig-option TimeInputFormat will be ignored)</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Time</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DateSelection::Layout::TimeInputIntervall" Required="1" Valid="1">
+        <Description Translatable="1">Set interval for minute in time selections. Hash key is template file regex, value is time interval from 1 to 60.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Time</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="^(?:(?!(^(AgentArticleEdit))).)*$">30</Item>
+                <Item Key="AgentArticleEdit">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO DATE AND TIME SELECTION LAYOUT -->
+
+    <!-- CUSTOMER DETAILS EXTENSIONS -->
+    <ConfigItem Name="DefaultCustomerInfoString" Required="0" Valid="1">
+        <Description Translatable="1">Infostring that will be used to show customer data if no specific infostring is defined in customer data backends.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <TextArea>$CustomerData-&gt;{UserCustomerID}&lt;br/&gt;
+                $CustomerData-&gt;{UserFirstname} $CustomerData-&gt;{UserLastname}&lt;br/&gt;&lt;br/&gt;
+                &lt;b&gt;[% Translate("Phone")  | html %]:&lt;/b&gt; $CustomerData-&gt;{UserPhone}&lt;br/&gt;
+                &lt;b&gt;[%  Translate("Mail")  | html %]:&lt;/b&gt; $CustomerData-&gt;{UserEmail}&lt;br/&gt;
+                $CustomerData-&gt;{UserComment}
+            </TextArea>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Agent::CommonJS###110-KIX4OTRSCustomerDetails" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.KIX4OTRS.CustomerDetails.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <!-- EO CUSTOMER DETAILS EXTENSIONS -->
+
+    <ConfigItem Name="Loader::Agent::CommonCSS###100-KIX4OTRS" Required="1" Valid="1">
+        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIX4OTRS.Agent.Admin.css</Item>
+                <Item>KIX4OTRS.Default.css</Item>
+                <Item>KIX4OTRS.Footer.css</Item>
+                <Item>KIX4OTRS.Form.css</Item>
+                <Item>KIX4OTRS.Header.css</Item>
+                <Item>KIX4OTRS.JSTree.css</Item>
+                <Item>KIX4OTRS.OverviewControl.css</Item>
+                <Item>KIX4OTRS.TicketDetail.css</Item>
+                <Item>KIX4OTRS.Table.css</Item>
+                <Item>KIX4OTRS.TextModules.css</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Agent::CommonCSS::IE8###100-KIX4OTRS" Required="1" Valid="1">
+        <Description Translatable="1">List of CSS files to always be loaded for the customer interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIX4OTRS.Header.IE8.css</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <!-- EO Layout for CustomTicketOverview -->
+
+    <ConfigItem Name="Frontend::Output::FilterElementPre###OverrideQDataDisplayLimits" Required="0" Valid="1">
+        <Description Translatable="1">Replaces the default Data character limits.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::OverrideQDataDisplayLimits</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key=".*">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::OverrideQDataDisplayLimits" Required="0" Valid="0">
+        <Description Translatable="1">Allows overriding of Data character limits, hard coded in TTs. The key has the following format: &lt;TemplateFilePattern&gt;::(&lt;VariableNamePattern&gt;), the value is the numeric character limit that should be used. You can use RegEx, but you MUST not use any additional grouping! PLEASE NOTE: you have to execute otrs.DeleteCache.pl after activating or changing this config option.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

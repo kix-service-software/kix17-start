@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <!-- SERVICE SELECTION EXTENSION -->
+    <ConfigItem Name="Service::DefaultServices::ForceShow" Required="0" Valid="1">
+        <Description Translatable="1">Choose if default services will be shown in addition to individually assigned services.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Service</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">Distinct (only individuell, if assigned)</Item>
+                <Item Key="1">All services (individuell and default)</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <!-- EO SERVICE SELECTION EXTENSION -->
+
+    <!-- SERVICE QUEUE ASSIGNMENT -->
+    <ConfigItem Name="ServicePreferences###AssignedQueue" Required="1" Valid="1">
+        <Description Translatable="1">Registration of service attribute AssignedQueueID which is used for automatic queue updates upon service updates.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Service::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::ServicePreferences::Selection</Item>
+                <Item Key="Label">Assigned Queue</Item>
+                <Item Key="Desc">Assign a queue to this service.</Item>
+                <Item Key="Block">Option</Item>
+                <Item Key="PrefKey">AssignedQueueID</Item>
+                <Item Key="SelectionSource">QueueList</Item>
+                <!--
+                <Item Key="SelectionSource">GeneralCatalog</Item>
+                <Item Key="GeneralCatalogClass">ITSM::ConfigItem::Class</Item>
+                -->
+                <Item Key="PossibleNone">1</Item>
+                <Item Key="ToolTip">Assign a preferred queue to this service</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Acl::Module###890-HideAgentTicketMove" Required="0" Valid="1">
+        <Description Translatable="1">Hide AgentTicketMove if service of current ticket has a configured AssignedQueue and ticket is not excluded from automatic queue assigment.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket::ServiceQueueAssignment</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Acl::HideAgentTicketMoveServiceQueueAssignment</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::EventModulePost###300-TicketServiceQueueAssignment" Required="0" Valid="1">
+        <Description Translatable="1">Performs queue update on setting service.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket::ServiceQueueAssignment</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::TicketServiceQueueAssignment</Item>
+                <Item Key="Event">(TicketCreate|TicketServiceUpdate)</Item>
+                <Item Key="Transaction">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::ServiceQueueAssignment###TypeStateExclusions" Required="1" Valid="1">
+        <Description Translatable="1">Tickets with key Type:::State and value not null will not be moved automatically upon service update.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket::ServiceQueueAssignment</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="(000):::(TypeRegexp):::(StateRegexp)">0</Item>
+                <Item Key="(000):::(.*):::(.*)">1</Item>
+             </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO SERVICE QUEUE ASSIGNMENT -->
+
+</otrs_config>

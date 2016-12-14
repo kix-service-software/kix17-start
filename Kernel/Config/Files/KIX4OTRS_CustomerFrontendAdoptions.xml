@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <!-- CUSTOMER FRAMEWORK EXTENSIONS -->
+    <ConfigItem Name="Loader::Customer::CommonCSS###100-KIX4OTRS" Required="1" Valid="1">
+        <Description Translatable="1">List of CSS files to always be loaded for the customer interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIX4OTRS.Control.css</Item>
+                <Item>KIX4OTRS.Default.css</Item>
+                <Item>KIX4OTRS.Form.css</Item>
+                <Item>KIX4OTRS.JSTree.css</Item>
+                <Item>KIX4OTRS.PageLayout.css</Item>
+                <Item>KIX4OTRS.Table.css</Item>
+                <Item>KIX4OTRS.Widget.css</Item>
+                <Item>KIX4OTRS.TextModules.css</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <!-- EO CUSTOMER FRAMEWORK EXTENSIONS -->
+
+    <!-- CUSTOMER TICKET MESSAGE EXTENSIONS -->
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###TicketType" Required="0" Valid="1">
+        <Description Translatable="1">Sets the ticket type in the customer interface (Ticket::Type needs to be activated).</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###TicketTypeDefault" Required="0" Valid="0">
+        <Description Translatable="1">Sets the default selected ticket type.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
+        <Setting>
+            <String Regex="">default</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###TicketTypeFix" Required="1" Valid="1">
+        <Description Translatable="1">Used ticket type, if ticket type selection is disabled.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
+        <Setting>
+            <String Regex="">default</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###Subject" Required="0" Valid="0">
+        <Description Translatable="1">Defines the default subject of a note in the customer interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
+        <Setting>
+            <String Regex=""></String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###Body" Required="0" Valid="1">
+        <Description Translatable="1">Defines the default body of a note in the customer interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
+        <Setting>
+            <TextArea></TextArea>
+        </Setting>
+    </ConfigItem>
+    <!-- EO CUSTOMER TICKET MESSAGE EXTENSIONS -->
+
+    <!-- CUSTOMER TICKET ZOOM EXTENSIONS -->
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketZoom###FollowUp" Required="0" Valid="1">
+        <Description Translatable="1">Dis-/Enable follow up in customer ticket zoom.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::ViewZoom</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="1">Yes</Item>
+                <Item Key="0">No</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+
+    <!-- OTRS-sysconfig option, which is not required anymore -->
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketZoom###StateDefault" Required="0" Valid="1">
+        <Description Translatable="1">Defines the default next state for a ticket after customer follow up in the customer interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Customer::Ticket::ViewZoom</SubGroup>
+        <ValidateModule>Kernel::System::SysConfig::StateValidate</ValidateModule>
+        <Setting>
+            <String Regex="">open</String>
+        </Setting>
+    </ConfigItem>
+    <!-- EO OTRS-sysconfig option, which is not required anymore -->
+
+    <!-- EO CUSTOMER TICKET ZOOM EXTENSIONS -->
+
+    <!-- CUSTOMER PREFERNCES EXTENSIONS -->
+    <ConfigItem Name="CustomerPreferencesGroups###DefaultTicketType" Required="0" Valid="1">
+        <Description Translatable="1">Defines all the parameters for this item in the customer preferences.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::DefaultTicketType</Item>
+                <Item Key="Column">User Profile</Item>
+                <Item Key="Label" Translatable="1">Default ticket type</Item>
+                <Item Key="Key" Translatable="1">Your default ticket type</Item>
+                <Item Key="PrefKey">UserDefaultTicketType</Item>
+                <Item Key="Prio">2600</Item>
+                <Item Key="Active">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerPreferencesGroups###DefaultTicketQueue" Required="0" Valid="1">
+        <Description Translatable="1">Defines all the parameters for this item in the customer preferences.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::DefaultTicketQueue</Item>
+                <Item Key="Column">User Profile</Item>
+                <Item Key="Label" Translatable="1">Default ticket queue</Item>
+                <Item Key="Key" Translatable="1">Your default ticket queue</Item>
+                <Item Key="PrefKey">UserDefaultTicketQueue</Item>
+                <Item Key="Prio">2601</Item>
+                <Item Key="Active">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerPreferencesGroups###DefaultService" Required="0" Valid="1">
+        <Description Translatable="1">Defines all the parameters for this item in the customer preferences.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::DefaultService</Item>
+                <Item Key="Column">User Profile</Item>
+                <Item Key="Label" Translatable="1">Default service</Item>
+                <Item Key="Key" Translatable="1">Your default service</Item>
+                <Item Key="PrefKey">UserDefaultService</Item>
+                <Item Key="Prio">2602</Item>
+                <Item Key="Active">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO CUSTOMER PREFERNCES EXTENSIONS -->
+
+    <!-- CUSTOMER SEARCH PREFERENCES -->
+    <ConfigItem Name="Frontend::Output::FilterElementPre###CustomerSearchResult" Required="0" Valid="1">
+        <Description Translatable="1">Defines Output filter to provide possibility to open customer ticket search result for result form "print" in new tab.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::CustomerSearchResult</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key="CustomerTicketSearch">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::CustomerTicketSearch###OpenSearchResultPrintInNewTab" Required="0" Valid="1">
+        <Description Translatable="1">Customer ticket search result for "Print" opens in new tab.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::ViewSearch</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="1">Yes</Item>
+                <Item Key="0">No</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <!-- EO CUSTOMER SEARCH PREFERENCES -->
+
+  <ConfigItem Name="Ticket::Frontend::CustomerTicketProcess###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the processmanagement interfaces of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::ViewProcess</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+</otrs_config>

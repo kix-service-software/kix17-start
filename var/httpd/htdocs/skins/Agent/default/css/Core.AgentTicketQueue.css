@@ -1,0 +1,168 @@
+/**
+ * @project     KIX4OTRS (http://www.cape-it.de) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/**
+ * @package     Skin "Default"
+ * @section     Application
+ * @subsection  AgentTicketQueue
+ */
+
+@media screen,projection,tv,handheld {
+
+/**
+ * @subsubsection     General
+ */
+
+  .QueueOverview {
+      font-size: 12px;
+      margin: 0 16px 0px 8px;
+      padding: 0 0 4px 0;
+      color: gray;
+  }
+
+  .RTL .QueueOverview {
+      margin: 0 8px 10px 16px;
+  }
+
+  .QueueOverviewSeparator {
+      height: 10px;
+      min-height: 10px;
+  }
+
+  .QueueOverviewList {
+      clear: both;
+      float: none;
+  }
+
+.QueueOverviewList.Level_1 {
+    margin-left: 10px;
+}
+
+.QueueOverviewList.Level_2 {
+    margin-left: 20px;
+}
+
+.QueueOverviewList.Level_3 {
+    margin-left: 30px;
+}
+
+.QueueOverviewList.Level_4 {
+    margin-left: 40px;
+}
+
+.QueueOverviewList.Level_5 {
+    margin-left: 50px;
+}
+
+.QueueOverviewList.Level_6 {
+    margin-left: 60px;
+}
+
+.QueueOverviewList.Level_7 {
+    margin-left: 70px;
+}
+
+.QueueOverviewList.Level_8 {
+    margin-left: 80px;
+}
+
+.QueueOverviewList.Level_9 {
+    margin-left: 90px;
+}
+
+.QueueOverviewList.Level_10 {
+    margin-left: 100px;
+}
+
+.QueueOverviewList.Level_X {
+    margin-left: 100px;
+}
+
+  .QueueOverviewList li {
+      float: left;
+      list-style: none;
+      padding: 2px 5px;
+      height: 14px;
+      white-space:nowrap;
+  }
+
+  .RTL .QueueOverviewList li {
+      float: right;
+  }
+
+  .QueueOverview .OlderLevel1 {
+      color: orange;
+  }
+
+  .QueueOverview .OlderLevel2 {
+      color: #ff4766;
+  }
+
+  .QueueOverview .Oldest {
+      color: red;
+  }
+
+  .QueueOverview .Active {
+      font-weight: bold;
+  }
+
+  #QueueTreeToggle {
+      position:   relative;
+      float:      right;
+      width:      20px;
+      height:     13px;
+      margin:     2px 0 3px;
+      background: url(../img/toggle_side_arrow.png) no-repeat 0 -26px;
+  }
+  .Collapsed #QueueTreeToggle {
+      background-position: 0 0;
+      left: 2px;
+  }
+  #QueueTreeToggle a {
+      position: absolute;
+      left:     0;
+      top:      0;
+      z-index:  100;
+      width:    100%;
+      height:   100%;
+  }
+
+  #QueueTreeControl {
+    padding: 2px 5px 3px;
+    border-bottom: 1px solid #CCC;
+    position: inherit;
+  }
+  #QueueTreeControl a:focus{
+    color: #A40;
+  }
+  .WidgetSimple > .QueueTreeContent, .QueueTreeContent {
+    height: auto !important;
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: #FFFFFF;
+    border: 1px solid #ccc;
+    height: 72%;
+    margin: 10px 12px;
+    -moz-box-shadow: inset 0px 0px 6px #ccc;
+    -webkit-box-shadow: inset 0px 0px 6px #ccc;
+    box-shadow: inset 0px 0px 6px #ccc;
+    overflow: auto;
+    padding: 0px 10px 10px 10px;
+  }
+  .QueueTreeView {
+    float: left;
+    width: 245px;
+  }
+  .Overview.FixedHeader thead tr {
+    left: auto;
+  }
+ .Overview.FixedHeader.Fixed thead tr {
+    margin: 0 16px 0 0px;
+  }
+
+} /* end @media */

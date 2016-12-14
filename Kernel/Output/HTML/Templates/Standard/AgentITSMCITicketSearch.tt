@@ -1,0 +1,39 @@
+# --
+# AgentITSMCITicketSearch.tt - provides autocomplete feature for queue search
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Frank(dot)Oberender(at)cape(dash)it(dot)de
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Torsten(dot)Thau(at)cape(dash)it(dot)de
+# * Mario(dot)Illinger(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("ITSMCITicketSearchAutoComplete") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.Config.Set('Autocomplete.MinQueryLength', "[% Data.minQueryLength | html %]");
+    Core.Config.Set('Autocomplete.QueryDelay', "[% Data.queryDelay | html %]");
+    Core.Config.Set('Autocomplete.MaxResultsDisplayed', "[% Data.maxResultsDisplayed | html %]");
+    Core.Config.Set('Autocomplete.DynamicWidth', "[% Data.dynamicWidth | html %]");
+    Core.Config.Set('Autocomplete.SearchButtonText', [% Translate("Search ITSMCITicket") | JSON %]);
+//]]></script>
+
+[% RenderBlockStart("ITSMCITicketSearchInit") %]
+<script type="text/javascript">//<![CDATA[
+    var FieldID = '[% Data.ItemID | html %]';
+    FieldID = FieldID.replace(/:/g, '\\:');
+    Core.Agent.ITSMCITicketSearch.Init($("#"+FieldID), [% Data.ActiveAutoComplete | html %]);
+//]]></script>
+[% RenderBlockEnd("ITSMCITicketSearchInit") %]
+
+[% END %]
+[% RenderBlockEnd("ITSMCITicketSearchAutoComplete") %]
+

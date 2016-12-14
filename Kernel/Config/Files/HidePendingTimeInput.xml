@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="Application">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="HidePendingTimeInput###StateTypes" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the HidePendingTimeAJAXHandler object.</Description>
+        <Group>HidePendingTimeInput</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <Array>
+                <Item>pending reminder</Item>
+                <Item>pending auto</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::Output::FilterElementPost###HidePendingTimeInput" Required="0" Valid="1">
+        <Description Translatable="1">.</Description>
+        <Group>HidePendingTimeInput</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::HidePendingTimeInput</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key="AgentTicketActionCommon">1</Item>
+                        <Item Key="AgentTicketAddtlITSMField">1</Item>
+                        <Item Key="AgentTicketBulk">1</Item>
+                        <Item Key="AgentTicketClose">1</Item>
+                        <Item Key="AgentTicketCompose">1</Item>
+                        <Item Key="AgentTicketEmail">1</Item>
+                        <Item Key="AgentTicketEmailQuick">1</Item>
+                        <Item Key="AgentTicketEmailOutbound">1</Item>
+                        <Item Key="AgentTicketForward">1</Item>
+                        <Item Key="AgentTicketFreeText">1</Item>
+                        <Item Key="AgentTicketMove">1</Item>
+                        <Item Key="AgentTicketNote">1</Item>
+                        <Item Key="AgentTicketOwner">1</Item>
+                        <Item Key="AgentTicketPending">1</Item>
+                        <Item Key="AgentTicketPhone">1</Item>
+                        <Item Key="AgentTicketPhoneCommon">1</Item>
+                        <Item Key="AgentTicketPhoneInbound">1</Item>
+                        <Item Key="AgentTicketPhoneOutbound">1</Item>
+                        <Item Key="AgentTicketPhoneQuick">1</Item>
+                        <Item Key="AgentTicketPriority">1</Item>
+                        <Item Key="AgentTicketResponsible">1</Item>
+                        <Item Key="AgentTicketZoomTabActionCommon">1</Item>
+                        <Item Key="AgentTicketZoomTabEditCoreData">1</Item>
+                        <Item Key="AgentTicketZoomTabArticle">1</Item>
+                        <Item Key="AgentTicketZoomTabProcess">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    
+    <ConfigItem Name="Loader::Agent::CommonJS###100-HidePendingTimeInput" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>HidePendingTimeInput</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.Agent.HidePendingTimeInput.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    
+</otrs_config>

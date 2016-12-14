@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###Permission" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to use the ticket note screen in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <String Regex="">note</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###RequiredLock" Required="0" Valid="1">
+        <Description Translatable="1">Defines if a ticket lock is required in the ticket note screen of the agent interface (if the ticket is not locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###Queue" Required="0" Valid="1">
+        <Description Translatable="1">Defines if ticket move is enabled in this screen.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###TicketType" Required="0" Valid="1">
+        <Description Translatable="1">Sets the ticket type in the ticket note screen of the agent interface (Ticket::Type needs to be activated).</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###Service" Required="0" Valid="1">
+        <Description Translatable="1">Sets the service in the ticket note screen of the agent interface (Ticket::Service needs to be activated).</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###Owner" Required="0" Valid="1">
+        <Description Translatable="1">Sets the ticket owner in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###OwnerMandatory" Required="0" Valid="1">
+        <Description Translatable="1">Sets if ticket owner must be selected by the agent.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###Responsible" Required="0" Valid="1">
+        <Description Translatable="1">Sets the responsible agent of the ticket in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###State" Required="0" Valid="1">
+        <Description Translatable="1">If a note is added by an agent, sets the state of a ticket in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###StateType" Required="1" Valid="1">
+        <Description Translatable="1">Defines the next state of a ticket after adding a note, in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Array>
+                <Item>open</Item>
+                <Item>closed</Item>
+                <Item>pending reminder</Item>
+                <Item>pending auto</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###StateDefault" Required="0" Valid="0">
+        <Description Translatable="1">Defines the default next state of a ticket after adding a note, in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <ValidateModule>Kernel::System::SysConfig::StateValidate</ValidateModule>
+        <Setting>
+            <String Regex="">open</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###Note" Required="0" Valid="1">
+        <Description Translatable="1">Allows adding notes in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###NoteMandatory" Required="0" Valid="1">
+        <Description Translatable="1">Sets if note must be filled in by the agent.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###Subject" Required="0" Valid="1">
+        <Description Translatable="1">Sets the default subject for notes added in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <String Regex="">[% Translate("Note") | html %]</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###Body" Required="0" Valid="1">
+        <Description Translatable="1">Sets the default body text for notes added in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <TextArea></TextArea>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###InvolvedAgent" Required="0" Valid="0">
+        <Description Translatable="1">Shows a list of all the involved agents on this ticket, in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###InformAgent" Required="0" Valid="0">
+        <Description Translatable="1">Shows a list of all the possible agents (all agents with note permissions on the queue/ticket) to determine who should be informed about this note, in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###ArticleTypeDefault" Required="0" Valid="1">
+        <Description Translatable="1">Defines the default type of the note in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <String Regex="">note-internal</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###ArticleTypes" Required="0" Valid="1">
+        <Description Translatable="1">Specifies the different note types that will be used in the system.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="note-internal">1</Item>
+                <Item Key="note-external">1</Item>
+                <Item Key="note-report">0</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###Priority" Required="0" Valid="0">
+        <Description Translatable="1">Shows the ticket priority options in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###PriorityDefault" Required="0" Valid="0">
+        <Description Translatable="1">Defines the default ticket priority in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <ValidateModule>Kernel::System::SysConfig::PriorityValidate</ValidateModule>
+        <Setting>
+            <String Regex="">3 normal</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###Title" Required="0" Valid="1">
+        <Description Translatable="1">Shows the title fields in the ticket note screen of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the ticket note screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###HistoryType" Required="0" Valid="1">
+        <Description Translatable="1">Defines the history type for the ticket note screen action, which gets used for ticket history in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <String Regex="">AddNote</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###HistoryComment" Required="0" Valid="1">
+        <Description Translatable="1">Defines the history comment for the ticket note screen action, which gets used for ticket history in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <String Regex="">%%Note</String>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

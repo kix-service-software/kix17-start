@@ -1,0 +1,114 @@
+# --
+# Kernel/Output/HTML/Standard/AdminQueuesGroupsRoles.tt - HTML for QGR-management
+# Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Stefan(dot)Mehlig(at)cape-it.de
+# * Torsten(dot)Thau(at)cape-it.de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+    <h1>[% Translate("Queues-Groups-Roles Management") | html %]</h1>
+    <div class="SidebarColumn" style="width:300px">
+[% RenderBlockStart("Show") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Show") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="ShowForm" action="[% Env("CGIHandle") %]" method="get">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Show"/>
+                        <button type="submit" name="Show" value="[% Translate("Show") | html %]" class="CallForAction"><span>[% Translate("Show") | html %]</span></button>
+                </form>
+                <br/>[% Translate("Attention: Depending on the number of queues, groups and roles, this process may take several minutes!") | html %]
+            </div>
+        </div>
+[% RenderBlockEnd("Show") %]       
+[% RenderBlockStart("Download") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Download") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="DownloadForm" action="[% Env("CGIHandle") %]" method="get">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Download"/>
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label>
+                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction Download"><span>[% Translate("Download") | html %]</span></button>
+                        </label>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+[% RenderBlockEnd("Download") %]
+[% RenderBlockStart("Upload") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Upload") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="UploadForm" action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" >
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Upload"/>
+                    <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
+                    <input name="file_upload" type="file" size="25"/>
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label>
+                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction Upload"><span>[% Translate("Upload") | html %]</span></button>
+                        </label>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+[% RenderBlockEnd("Upload") %]
+    </div>
+    <div class="ContentColumn">
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Current Queues-Groups-Roles Concept") | html %]</h2>
+            </div>
+            <div class="Content">
+                <table class="DataTable">
+                    <thead>
+                        <tr>
+[% RenderBlockStart("TableHeader") %]
+                            <th>[% Data.Header %]</th>
+[% RenderBlockEnd("TableHeader") %]
+[% RenderBlockStart("TableHeaderLink") %]
+                            <th><a href="[% Env("Baselink") %][% Data.Link | html %]" class="AsBlock">[% Data.Header %]</a></th>
+[% RenderBlockEnd("TableHeaderLink") %]
+                        </tr>
+                    </thead>
+                    <tbody>
+[% RenderBlockStart("TableBodyRow") %]
+                        <tr>
+[% RenderBlockStart("TableBodyContent") %]
+                            <td nowrap>
+[% RenderBlockStart("TableBodyContentLinkStart") %]
+                                <a href="[% Env("Baselink") %][% Data.Link | html %]" class="AsBlock">
+[% RenderBlockEnd("TableBodyContentLinkStart") %]
+                                [% Data.Content | html %]
+[% RenderBlockStart("TableBodyContentLinkEnd") %]
+                                </a>
+[% RenderBlockEnd("TableBodyContentLinkEnd") %]
+                            </td>
+[% RenderBlockEnd("TableBodyContent") %]
+                        </tr>
+[% RenderBlockEnd("TableBodyRow") %]
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>    
+</div>
+
+

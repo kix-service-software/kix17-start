@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+
+    <!-- AGENT PREFERNCES EXTENSIONS -->
+    <ConfigItem Name="PreferencesGroups###RedirectAfterTicketClose" Required="0" Valid="1">
+        <Description Translatable="1">Redirect after ticket close</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
+                <Item Key="Column">Other Settings</Item>
+                <Item Key="Label" Translatable="1">Screen after ticket closure</Item>
+                <Item Key="Desc" Translatable="1">Defines which page is shown after a ticket has been closed.</Item>
+                <Item Key="Key" Translatable="1">Redirect target</Item>
+                <Item Key="Data">
+                    <Hash>
+                        <Item Key="0">Last screen overview</Item>
+                        <Item Key="1">Ticket zoom</Item>
+                    </Hash>
+                </Item>
+                <Item Key="DataSelected">0</Item>
+                <Item Key="PrefKey">RedirectAfterTicketClose</Item>
+                <Item Key="Prio">3100</Item>
+                <Item Key="Active">1</Item>
+
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO AGENT PREFERNCES EXTENSIONS -->
+
+    <!-- TICKET CORE EXTENSIONS -->
+    <ConfigItem Name="Ticket::TypeTranslation" Required="1" Valid="1">
+        <Description Translatable="1">Defines whether the ticket type should be translated in the selection box.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::Agent::CreateOptions::ViewAllOwner" Required="1" Valid="1">
+        <Description Translatable="1">Shows all owners and responsibles in selecetions.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="1">Yes</Item>
+                <Item Key="0">No</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Agent::AutomaticBounceText" Required="1" Valid="1">
+        <Description Translatable="1">When a ticket is bounced, a note will be added automatically to this ticket. In this text area you can define this text.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewMerge</SubGroup>
+        <Setting>
+            <TextArea>Bounced Ticket &lt;OTRS_TICKET&gt; to &lt;OTRS_BOUNCE_TO&gt;.</TextArea>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketForward###DefaultTextTicketForwardBody" Required="0" Valid="0">
+        <Description Translatable="1">Default body for a forwarded email.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewForward</SubGroup>
+        <Setting>
+            <TextArea>
+
+Here you may define a default text for the forward function. You find this configuration value in the SysConfig-Area under key "Ticket::Frontend::AgentTicketForward###DefaultTextTicketForwardBody".
+
+</TextArea>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::CustomModule###001-TicketExtensionsKIX4OTRS" Required="0" Valid="1">
+        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::Ticket. Used to easily add customizations.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <String Regex="">Kernel::System::Ticket::TicketExtensionsKIX4OTRS</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::ACL-PossibleActionSubsumption" Required="1" Valid="1">
+        <Description Translatable="1">Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (OTRS-default behavior is disabled).</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::ACL-PossiblePropertiesSubsumption" Required="1" Valid="1">
+        <Description Translatable="1">Defines whether results of PossibleNot for tickets of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (OTRS-default behavior is disabled).</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <!-- EO TICKET CORE EXTENSIONS -->
+
+    <ConfigItem Name="Ticket::Frontend::MenuModule###300-Priority" Required="0" Valid="0">
+        <Description Translatable="1">Shows a link in the menu to see the priority of a ticket in the ticket zoom view of the agent interface. Additional access control to show or not show this link can be done by using Key "Group" and Content like "rw:group1;move_into:group2". To cluster menu items use for Key "ClusterName" and for the Content any name you want to see in the UI. Use "ClusterPriority" to configure the order of a certain cluster within the toolbar.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::MenuModule</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::TicketMenu::Generic</Item>
+                <Item Key="Name">Priority</Item>
+                <Item Key="Description" Translatable="1">Change the priority for this ticket</Item>
+                <Item Key="Action">AgentTicketPriority</Item>
+                <Item Key="Link">Action=AgentTicketPriority;TicketID=[% Data.TicketID | html %]</Item>
+                <Item Key="Target"></Item>
+                <Item Key="PopupType">TicketAction</Item>
+                <Item Key="ClusterName" Translatable="1"></Item>
+                <Item Key="ClusterPriority"></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::MenuModule###430-Merge" Required="0" Valid="1">
+        <Description Translatable="1">Shows a link in the menu that allows merging tickets in the ticket zoom view of the agent interface. Additional access control to show or not show this link can be done by using Key "Group" and Content like "rw:group1;move_into:group2". To cluster menu items use for Key "ClusterName" and for the Content any name you want to see in the UI. Use "ClusterPriority" to configure the order of a certain cluster within the toolbar.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::MenuModule</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::TicketMenu::Generic</Item>
+                <Item Key="Name">Merge</Item>
+                <Item Key="Description" Translatable="1">Merge this ticket and all articles into a another ticket</Item>
+                <Item Key="Action">AgentTicketMerge</Item>
+                <Item Key="Link">Action=AgentTicketMerge;TicketID=[% Data.TicketID | html %]</Item>
+                <Item Key="Target"></Item>
+                <Item Key="PopupType">TicketAction</Item>
+                <Item Key="ClusterName" Translatable="1">Merge</Item>
+                <Item Key="ClusterPriority">300</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::PreMenuModule###445-Move" Required="0" Valid="0">
+        <Description Translatable="1">Shows a link in the menu to move a ticket in every ticket overview of the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::MenuModulePre</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::TicketMenu::Move</Item>
+                <Item Key="Name">Move</Item>
+                <Item Key="Action">AgentTicketMove</Item>
+                <Item Key="Description" Translatable="1">Change queue!</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::PreMenuModule###465-Move" Required="0" Valid="1">
+        <Description Translatable="1">Shows a link in the menu to move a ticket in every ticket overview of the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::MenuModulePre</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::TicketMenu::Move</Item>
+                <Item Key="Name">Move</Item>
+                <Item Key="Action">AgentTicketMove</Item>
+                <Item Key="Description" Translatable="1">Change queue!</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::ProcessingOptions::InitialDataShown" Required="0" Valid="1">
+        <Description Translatable="1">Preselect old ticket data in chosen ticket note functions</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="AgentTicketClose">1</Item>
+                <Item Key="AgentTicketDynamicField">1</Item>
+                <Item Key="AgentTicketNote">1</Item>
+                <Item Key="AgentTicketOwner">1</Item>
+                <Item Key="AgentTicketPending">1</Item>
+                <Item Key="AgentTicketPriority">1</Item>
+                <Item Key="AgentTicketResponsible">1</Item>
+                <Item Key="AgentTicketZoomTabActionCommon">1</Item>
+                <Item Key="AgentTicketZoomTabEditCoreData">1</Item>
+                <Item Key="CustomerTicketZoom">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::SaveAsDraftAJAXHandler###Attributes" Required="1" Valid="1">
+        <Description Translatable="1">Defines the attributes to save form content as draft.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Subject</Item>
+                <Item>Body</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::SaveAsDraftAJAXHandler###Interval" Required="1" Valid="1">
+        <Description Translatable="1">Defines the interval to save form content as draft in milliseconds.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <String Regex="">5000</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::SaveAsDraftAJAXHandler###LoadMessage" Required="1" Valid="1">
+        <Description Translatable="1">Defines the message to be display when a draft exists and can be loaded.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <String Regex="">A previously saved draft (Subject and Text) exists. Load the draft or delete ?</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::ArticleSenderTypeIcon" Required="0" Valid="0">
+        <Description Translatable="1">Define the icon to be used for a article sender type.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="system"></Item>
+                <Item Key="agent"></Item>
+                <Item Key="customer"></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::ArticleDirectionIcon" Required="0" Valid="1">
+        <Description Translatable="1">Define the icon to be used for a article direction.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="incoming">direction-incoming.png</Item>
+                <Item Key="outgoing">direction-outgoing.png</Item>
+                <Item Key="internal">direction-internal.png</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::ArticleTypeIcon" Required="0" Valid="1">
+        <Description Translatable="1">Define the icon to be used for a article type.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="email-external">email-external.png</Item>
+                <Item Key="email-internal">email-internal.png</Item>
+                <Item Key="email-notification-ext">email-notification-ext.png</Item>
+                <Item Key="email-notification-int">email-notification-ext.png</Item>
+                <Item Key="phone">phone.png</Item>
+                <Item Key="fax">fax.png</Item>
+                <Item Key="sms">sms.png</Item>
+                <Item Key="webrequest">webrequest.png</Item>
+                <Item Key="note-internal">note-internal.png</Item>
+                <Item Key="note-external">note-external.png</Item>
+                <Item Key="note-report">note-report.png</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::CustomerUser::CustomerInfoTicketCount" Required="0" Valid="1">
+        <Description Translatable="1">Sets the search paramater for the ticket count in customer info block.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="1">CustomerID</Item>
+                <Item Key="0">CustomerUserID</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::CustomerUser::Item###91-AllTickets" Required="0" Valid="1">
+        <Description Translatable="1">Customer item (icon) which shows all tickets of this customer as info block.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+            <Setting>
+                <Hash>
+                    <Item Key="Module">Kernel::Output::HTML::CustomerUser::GenericTicket</Item>
+                    <Item Key="Attributes"></Item>
+                    <Item Key="CSS">Core.Agent.CustomerUser.OpenTicket.css</Item>
+                    <Item Key="CSSClassOpenTicket">OpenTicket</Item>
+                    <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
+                    <Item Key="IconNameNoOpenTicket">fa-check-circle</Item>
+                    <Item Key="IconNameOpenTicket">fa-exclamation-circle</Item>
+                    <Item Key="Target">_blank</Item>
+                    <Item Key="Text">All Tickets</Item>
+                    <Item Key="Action">AgentTicketSearch</Item>
+                    <Item Key="Subaction">Search</Item>
+                </Hash>
+            </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::CustomerUser::Item###92-OpenLinkedTickets" Required="0" Valid="1">
+        <Description Translatable="1">Customer item (icon) which shows all tickets of this customer as info block.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+            <Setting>
+                <Hash>
+                    <Item Key="Module">Kernel::Output::HTML::CustomerUser::GenericTicket</Item>
+                    <Item Key="Attributes">StateType=Open;LinkedTickets=1;</Item>
+                    <Item Key="CSS">Core.Agent.CustomerUser.OpenTicket.css</Item>
+                    <Item Key="CSSClassOpenTicket">OpenTicket</Item>
+                    <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
+                    <Item Key="IconNameNoOpenTicket">fa-check-circle</Item>
+                    <Item Key="IconNameOpenTicket">fa-exclamation-circle</Item>
+                    <Item Key="Target">_blank</Item>
+                    <Item Key="Text">Open linked Tickets</Item>
+                    <Item Key="Action">AgentTicketSearch</Item>
+                    <Item Key="Subaction">Search</Item>
+                </Hash>
+            </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::CustomerUser::Item###93-AllLinkedTickets" Required="0" Valid="1">
+        <Description Translatable="1">Customer item (icon) which shows all tickets of this customer as info block.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+            <Setting>
+                <Hash>
+                    <Item Key="Module">Kernel::Output::HTML::CustomerUser::GenericTicket</Item>
+                    <Item Key="Attributes">LinkedTickets=1;</Item>
+                    <Item Key="CSS">Core.Agent.CustomerUser.OpenTicket.css</Item>
+                    <Item Key="CSSClassOpenTicket">OpenTicket</Item>
+                    <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
+                    <Item Key="IconNameNoOpenTicket">fa-check-circle</Item>
+                    <Item Key="IconNameOpenTicket">fa-exclamation-circle</Item>
+                    <Item Key="Target">_blank</Item>
+                    <Item Key="Text">All linked Tickets</Item>
+                    <Item Key="Action">AgentTicketSearch</Item>
+                    <Item Key="Subaction">Search</Item>
+                </Hash>
+            </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::DynamicField###DisabledDynamicFields" Required="0" Valid="1">
+        <Description Translatable="1">Configures which dynamic fields were disabled depending on used frontend module, attributes like service, type, state or priority and its value. The key is composed like FrontendModule:::Attribute::Value. The key should contain the names of the disabled fields using regular expressions. If dynamic fields should be hidden on empty values, use EMPTY like FrontendModule:::Attribute::EMPTY.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+            <Setting>
+                <Hash>
+                </Hash>
+            </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::CustomerUser::Item###98-CustomerIDsSelection" Required="0" Valid="1">
+        <Description Translatable="1">A customer info block, which shows all customer IDs assigned to this customer. Depending on the calling action it allows you to select the relevant customer ID for the ticket, which will be created.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+            <Setting>
+                <Hash>
+                    <Item Key="Module">Kernel::Output::HTML::CustomerUser::CustomerIDs</Item>
+                    <Item Key="ShowSelectBoxActionRegExp">(AgentTicketPhone|AgentTicketEmail|AgentTicketCustomer)</Item>
+                </Hash>
+            </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Agent::CommonJS###120-KIX4OTRSCustomerIDsSelection" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Core.KIX4OTRS.CustomerIDsSelection.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::SearchProfileQueue" Required="1" Valid="1">
+        <Description Translatable="1">Name of search profile queue. The search profile queue is a queue selection of your preferred search profiles.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <String Regex="">My Search Profiles</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::Module###AgentTicketArticleFlagView" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Flagged Tickets</Description>
+                <Title>Flagged Tickets</Title>
+                <NavBarName>Ticket</NavBarName>
+                <Loader>
+                    <CSS>Core.AgentTicketQueue.css</CSS>
+                    <CSS>Core.AllocationList.css</CSS>
+                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
+                    <JavaScript>Core.Agent.TableFilters.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketArticleFlagView###SortBy::Default" Required="1" Valid="1">
+        <Description Translatable="1">Defines the default ticket attribute for ticket sorting in the ticket article flag view of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewArticleFlag</SubGroup>
+        <Setting>
+            <Option SelectedID="Age">
+                <Item Key="Age">Age</Item>
+                <Item Key="TicketNumber">TicketNumber</Item>
+                <Item Key="Title">Title</Item>
+                <Item Key="Queue">Queue</Item>
+                <Item Key="Priority">Priority</Item>
+                <Item Key="EscalationTime">EscalationTime</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketArticleFlagView###Order::Default" Required="1" Valid="1">
+        <Description Translatable="1">Defines the default ticket order in the ticket article flag view of the agent interface. Up: oldest on top. Down: latest on top.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewArticleFlag</SubGroup>
+        <Setting>
+            <Option SelectedID="Up">
+                <Item Key="Down">Down</Item>
+                <Item Key="Up">Up</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::ToolBarModule###11-Ticket::AgentArticleFlagToDo" Required="0" Valid="1">
+        <Description Translatable="1">Toolbar Item for a shortcut.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ToolBarModule</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="CssClass">ToDoView</Item>
+                <Item Key="CssClassNew">ToDoView New</Item>
+                <Item Key="CssClassReached">ToDoView Reached</Item>
+                <Item Key="Icon">fa fa-check</Item>
+                <Item Key="IconNew">fa fa-check</Item>
+                <Item Key="IconReached">fa fa-check</Item>
+                <Item Key="Module">Kernel::Output::HTML::ToolBar::ArticleFlag</Item>
+                <Item Key="ArticleFlagKey">2</Item>
+                <Item Key="Name">Article Flag ToDo</Item>
+                <Item Key="Description">ToDo</Item>
+                <Item Key="AccessKey"></Item>
+                <Item Key="Priority">1100000</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::ToolBarModule###12-Ticket::AgentArticleFlagImportant" Required="0" Valid="1">
+        <Description Translatable="1">Toolbar Item for a shortcut.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ToolBarModule</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="CssClass">ImportantView</Item>
+                <Item Key="CssClassNew">ImportantView New</Item>
+                <Item Key="CssClassReached">Importantiew Reached</Item>
+                <Item Key="Icon">fa fa-info-circle</Item>
+                <Item Key="IconNew">fa fa-info-circle</Item>
+                <Item Key="IconReached">fa fa-info-circle</Item>
+                <Item Key="Module">Kernel::Output::HTML::ToolBar::ArticleFlag</Item>
+                <Item Key="ArticleFlagKey">Important</Item>
+                <Item Key="Name">Article Flag Important</Item>
+                <Item Key="Description">Important</Item>
+                <Item Key="AccessKey"></Item>
+                <Item Key="Priority">1100010</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <!-- PopupSize Settings -->
+    <ConfigItem Name="Frontend::Output::FilterElementPre###AgentTicketPopupSize" Required="0" Valid="1">
+        <Description Translatable="1"></Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::AgentTicketPopupSize</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key="AgentTicketNote">1</Item>
+                        <Item Key="AgentTicketOwner">1</Item>
+                        <Item Key="AgentTicketCustomer">1</Item>
+                        <Item Key="AgentTicketHistory">1</Item>
+                        <Item Key="AgentTicketPrint">1</Item>
+                        <Item Key="AgentLinkObject">1</Item>
+                        <Item Key="AgentTicketMerge">1</Item>
+                        <Item Key="AgentTicketResponsible">1</Item>
+                        <Item Key="AgentTicketDecision">1</Item>
+                        <Item Key="AgentTicketPending">1</Item>
+                        <Item Key="AgentTicketCompose">1</Item>
+                        <Item Key="AgentTicketPhoneCommon">1</Item>
+                        <Item Key="AgentTicketAddtlITSMField">1</Item>
+                        <Item Key="AgentArticleEdit">1</Item>
+                        <Item Key="AgentArticleCopyMove">1</Item>
+                        <Item Key="AgentTicketMergeToCustomer">1</Item>
+                        <Item Key="ProcessManagement/ActivityDialogHeader">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###PopupSize" Required="0" Valid="1">
+        <Description Translatable="1">Module Registration for the PopupSize AJAXHandler.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Popup Size AJAX handle</Description>
+                <Title>Popup Size AJAX handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <!-- EO PopupSize Settings -->
+
+    <ConfigItem Name="Frontend::Output::FilterElementPost###AgentTicketSaveAsDraft" Required="0" Valid="1">
+        <Description Translatable="1">Activates the save as draft button.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::AgentTicketSaveAsDraft</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key="AgentTicketPhone">1</Item>
+                        <Item Key="AgentTicketEmail">1</Item>
+                        <Item Key="AgentTicketPhoneCommon">1</Item>
+                        <Item Key="AgentTicketCompose">1</Item>
+                        <Item Key="AgentTicketNote">1</Item>
+                        <Item Key="AgentTicketZoomTabActionCommon">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Output::FilterElementPost###AgentTicketMergeLink" Required="0" Valid="1">
+        <Description Translatable="1">Replaces the merge link.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::AgentTicketMergeLink</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key="AgentTicketZoomTabArticle">1</Item>
+                        <Item Key="CustomerTicketZoom">1</Item>
+                        <Item Key="CustomerTicketOverview">1</Item>
+                        <Item Key="CustomerTicketSearchResultShort">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Output::FilterElementPre###OutputFilterAgentTicketServiceAssignedQueueID" Required="0" Valid="1">
+        <Description Translatable="1"></Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::AgentTicketServiceAssignedQueueID</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key="AgentTicketPhone">1</Item>
+                        <Item Key="AgentTicketEmail">1</Item>
+                        <Item Key="AgentTicketNote">1</Item>
+                        <Item Key="AgentTicketClose">1</Item>
+                        <Item Key="AgentTicketOwner">1</Item>
+                        <Item Key="AgentTicketPriority">1</Item>
+                        <Item Key="AgentTicketResponsible">1</Item>
+                        <Item Key="AgentTicketZoomTabActionCommon">1</Item>
+                        <Item Key="AgentTicketZoomTabEditCoreData">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###ServiceAssignedQueueAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Module Registration for the ServiceAssignedQueue AJAXHandler.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Service Assigned Queue AJAX Handler</Description>
+                <Title>Service Assigned Queue AJAX Handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::Module###SaveAsDraftAJAXHandler" Required="1" Valid="1">
+        <Description Translatable="1">Module Registration for the SaveAsDraft AJAXHandler.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Save As Draft AJAX handle</Description>
+                <Title>Save As Draft handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Frontend::AgentTicketMerge###AutoCompleteTicketID" Required="0" Valid="1">
+        <Description Translatable="1">Autocomplete search attributes for ticket id, comma-eparated.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewMerge</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="SearchAttribute">TicketNumber,Title</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="ACLKeysLevel3::Actions###100-KIX4OTRS" Required="0" Valid="1">
+        <Description Translatable="1">Defines which items are available for 'Action' in third level of the ACL structure.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::TicketACL</SubGroup>
+        <Setting>
+            <Array>
+                <Item>AgentTicketZoomTabArticle</Item>
+                <Item>AgentTicketZoomTabProcess</Item>
+                <Item>AgentTicketZoomTabLinkedObjects</Item>
+                <Item>AgentTicketZoomTabAttachments</Item>
+                <Item>AgentTicketZoomTabActionCommon</Item>
+                <Item>AgentArticleCopyMove</Item>
+                <Item>AgentTicketAttachmentDownload</Item>
+                <Item>AgentTicketMergeToCustomer</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###LinkObjectTableOrderAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Module Registration for the LinkObjectTableOrder AJAXHandler.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Link Object Table Order AJAX handle</Description>
+                <Title>Link Object Table Order AJAX handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <!-- overwrite config items from the framework to enable the form attribute -->
+    <ConfigItem Name="ACLKeysLevel2::Possible" Required="0" Valid="1">
+        <Description Translatable="1">Defines which items are available in second level of the ACL structure.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::TicketACL</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Ticket">Ticket</Item>
+                <Item Key="Action">Action</Item>
+                <Item Key="ActivityDialog">ActivityDialog</Item>
+                <Item Key="Form">Form</Item>
+                <Item Key="Process">Process</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ACLKeysLevel2::PossibleNot" Required="0" Valid="1">
+        <Description Translatable="1">Defines which items are available in second level of the ACL structure.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::TicketACL</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Ticket">Ticket</Item>
+                <Item Key="ActivityDialog">ActivityDialog</Item>
+                <Item Key="Action">Action</Item>
+                <Item Key="Form">Form</Item>
+                <Item Key="Process">Process</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+</otrs_config>

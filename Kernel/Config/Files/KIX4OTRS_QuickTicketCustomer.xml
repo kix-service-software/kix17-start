@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="CustomerFrontend::Module###CustomerTicketMessageQuickSelection" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the customer interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Create tickets from templates</Description>
+                <NavBarName>QuickTicket</NavBarName>
+                <Title>New Template Ticket</Title>
+                <NavBar>
+                    <Name Translatable="1">Ticket Templates</Name>
+                    <Link>Action=CustomerTicketMessageQuickSelection</Link>
+                    <LinkOption></LinkOption>
+                    <NavBar></NavBar>
+                    <Description Translatable="1">Create new ticket from predefined template.</Description>
+                    <Type></Type>
+                    <Block></Block>
+                    <AccessKey></AccessKey>
+                    <Prio>101</Prio>
+                </NavBar>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###TemplateRegistration" Required="1" Valid="1">
+        <Description Translatable="1">Defines the internal name of the template (value) and it's label (key). Attention: This is only needed up to KIX4OTRS 4.0.x.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="Template">GatherTemplate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###UserAttributeRestriction" Required="1" Valid="1">
+        <Description Translatable="1">Defines restrictions for the viewability of templates for customer users. Key contains the template key followed by double colon and a customer user attribute, while value contains a regexp which must match the given user attribute in order to have access to the template.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="GatherTemplate::UserLogin">(.*)</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###Description" Required="1" Valid="1">
+        <Description Translatable="1">Defines a one-line description for each template.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="GatherTemplate">Template Description</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###TicketType" Required="1" Valid="1">
+        <Description Translatable="1">Defines the quickticket ticket type. Key must be the value of param DefaultSet in object registration. Attention: This is only needed up to KIX4OTRS 4.0.x.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="GatherTemplate">default</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###Queue" Required="1" Valid="1">
+        <Description Translatable="1">Defines the quickticket queue. Key must be the value of param DefaultSet in object registration. Attention: This is only needed up to KIX4OTRS 4.0.x.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="GatherTemplate">Junk</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###Service" Required="1" Valid="1">
+        <Description Translatable="1">Defines the quickticket service. Key must be the value of param DefaultSet in object registration. Attention: This is only needed up to KIX4OTRS 4.0.x.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="GatherTemplate">Service1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###SLA" Required="1" Valid="1">
+        <Description Translatable="1">Defines the quickticket SLA. Key must be the value of param DefaultSet in object registration. Attention: This is only needed up to KIX4OTRS 4.0.x.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="GatherTemplate">SLA1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###Subject" Required="1" Valid="1">
+        <Description Translatable="1">Defines the quickticket article subject. Key must be the value of param DefaultSet in object registration. Attention: This is only needed up to KIX4OTRS 4.0.x.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="GatherTemplate">Subject Text</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###Body" Required="1" Valid="1">
+        <Description Translatable="1">Defines the quickticket article body (only one line). Key must be the value of param DefaultSet in object registration. Attention: This is only needed up to KIX4OTRS 4.0.x.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="GatherTemplate">Body Text</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###Priority" Required="1" Valid="1">
+        <Description Translatable="1">Defines the quickticket priority. Key must be the value of param DefaultSet in object registration. Attention: This is only needed up to KIX4OTRS 4.0.x.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+              <Item Key="GatherTemplate">2 low</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::QuickTicketByDefaultSet::Customer###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the customer screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::Ticket::QuickTicketConfig</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

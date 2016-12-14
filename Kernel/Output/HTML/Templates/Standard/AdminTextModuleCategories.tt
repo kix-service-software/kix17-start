@@ -1,0 +1,313 @@
+# --
+# Kernel/Output/HTML/Standard/AdminTextModuleCategories.tt - admin frontend to manage text module categories
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+    <h1>[% Translate("Text Module Category Management") | html %]</h1>
+
+    <div class="SidebarColumn" style="width:350px">
+[% RenderBlockStart("ActionOverview") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Actions") | html %]</h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Back">
+                            <span>[% Translate("Go to overview") | html %]</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+[% RenderBlockEnd("ActionOverview") %]
+[% RenderBlockStart("TextModuleCategorySearch") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Filter Overview") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="form" action="[% Env("CGIHandle") %]" method="get">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label for="SearchName">[% Translate("Name") | html %]:</label>
+                        <p class="Value">
+                            <input type="text" id="SearchName" name="Name" value="[% Data.Name %]"/>
+                        </p>
+                        <div class="Clear">
+                        </div>
+                        <label for="SearchLimit">[% Translate("Limit Results") | html %]:</label>
+                        <p class="Value">
+                            <input type="text" id="SearchLimit" name="Limit" size="13" value="[% Data.Limit %]"/>
+                        </p>
+                        <div class="Clear">
+                        </div>
+
+                        <p class="Value">
+                            <button type="submit" name="Show" value="[% Translate("View") | html %]" class="CallForAction">
+                                <span>[% Translate("View") | html %]</span>
+                            </button>
+                        </p>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+[% RenderBlockEnd("TextModuleCategorySearch") %]
+[% RenderBlockStart("ActionAdd") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Add category") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="form" action="[% Env("CGIHandle") %]" method="get">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="New" />
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label class="nowrap">
+                            <button type="submit" name="New" value="[% Translate("Click here to add a text module category") | html %]" class="CallForAction Plus">
+                                <span>[% Translate("Add category") | html %]</span>
+                            </button>
+                        </label>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+[% RenderBlockEnd("ActionAdd") %]
+[% RenderBlockStart("Download") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Download all categories") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="form" action="[% Env("CGIHandle") %]" method="get">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="DownloadType" value="[% Data.DownloadType %]"/>
+                    <input type="hidden" name="Subaction" value="Download" />
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label>
+                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction Download">
+                                <span>
+                                    <i class="fa fa-download"></i>
+                                    [% Data.DownloadType %]-Download
+                                </span>
+                            </button>
+                        </label>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+[% RenderBlockEnd("Download") %]
+[% RenderBlockStart("Upload") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Upload categories") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="UploadForm" action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" >
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Upload" />
+                    <input type="hidden" name="UploadType" value="[% Data.UploadType %]"/>
+                    <input type="hidden" name="FormID" value="[% Data.FormID %]"/>
+                    <input name="file_upload" type="file" size="25" />
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label>
+                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction Upload">
+                                <span>
+                                    <i class="fa fa-upload"></i>
+                                    [% Data.UploadType %]-Upload
+                                </span>
+                            </button>
+                        </label>
+                    </fieldset>
+                </form>
+[% RenderBlockStart("UploadResult") %]
+                <br /><br />
+                <h2>[% Translate("Result of the upload") | html %]:</h2>
+                <div>[% Data.UploadMessage %]</div>
+                <fieldset class="TableLike FixedLabel">
+                    <label>[% Translate("entries uploaded") | html %]:</label>
+                    <p class="Value">
+                        [% Data.CountUploaded %]
+                    </p>
+                    <div class="Clear">
+                    </div>
+                    <label>[% Translate("updated") | html %]:</label>
+                    <p class="Value">
+                        [% Data.CountUpdated %]
+                    </p>
+                    <div class="Clear">
+                    </div>
+                    <label>[% Translate("update failed") | html %]:</label>
+                    <p class="Value">
+                        [% Data.CountUpdateFailed %]
+                    </p>
+                    <div class="Clear">
+                    </div>
+                    <label>[% Translate("added") | html %]:</label>
+                    <p class="Value">
+                        [% Data.CountAdded %]
+                    </p>
+                    <div class="Clear">
+                    </div>
+                    <label>[% Translate("insert failed") | html %]:</label>
+                    <p class="Value">
+                        [% Data.CountInsertFailed %]
+                    </p>
+                    <div class="Clear">
+                    </div>
+                    <br />
+                    <a class="CallForAction Download" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DownloadResult;XMLResultFileID=[% Data.XMLResultFileID | html %];FormID=[% Data.FormID | html %]" title="[% Translate("Download complete result of your upload") | html %]">
+                        <span>
+                            <i class="fa fa-download"></i>
+                            [% Translate("Download result as XML") | html %]
+                        </span>
+                    </a>
+                </fieldset>
+[% RenderBlockEnd("UploadResult") %]
+            </div>
+        </div>
+[% RenderBlockEnd("Upload") %]
+    </div>
+    <div class="ContentColumn">
+[% RenderBlockStart("OverviewList") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Categories") | html %]</h2>
+            </div>
+            <div class="Content CategoryTreeContent">
+                <form name="form" action="[% Env("CGIHandle") %]" method="get">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" id="Subaction" name="Subaction" value="Change" />
+                    <input type="hidden" id="ID" name="ID" value="" />
+                </form>
+                <div id="CategoryTreeControl" class="SpacingBottom">
+                    <a href="?#" class="Collaps">[% Translate("Collapse All") | html %]</a> | <a href="?#" class="Expand">[% Translate("Expand All") | html %]</a>
+                </div>
+                <div id="CategorySelectionContainer" class="JSTreeSelectionContainer">
+                    [% Data.CategoryTree %]
+                </div>
+            </div>
+        </div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+var StyleSheetURL = Core.Config.Get('WebPath') + 'skins/Agent/default/css-cache/css/KIX4OTRS.JSTree.css';
+
+// create tree
+$('#CategorySelectionContainer').jstree({
+    core: {
+        animation: 70,
+        expand_selected_onload: true,
+        themes: {
+            name: 'InputField',
+            variant: 'Tree',
+            icons: true,
+            dots: true,
+        }
+    },
+    types : {
+      default : {
+        icon : 'fa fa-trash-o'
+      },
+    },
+    plugins: [ 'types' ]
+});
+
+$('#CategorySelectionContainer').on('click','i.fa-trash-o',function(event) {
+    if (!confirm("[% Translate("Do you really want to delete this category and all of it's subcategories ?") | html %]"))
+        return false;
+
+    URL = $(this).parent('a').attr('href') + 'Subaction=Delete;';
+    window.location.href = URL;
+    event.preventDefault();
+});
+
+$('#CategorySelectionContainer').on('click','span',function(event){
+    var Edit = $(this).hasClass('Edit'), URL;
+    if ( Edit ) {
+        URL = $(this).parent('a').attr("href") + 'Subaction=Change;';
+        window.location.href = URL;
+    }
+    event.preventDefault();
+});
+
+// expand all
+$('.Expand').bind('click',function(event){
+    $('#CategorySelectionContainer').jstree('open_all');
+    event.preventDefault();
+});
+
+// collaps all
+$('.Collaps').bind('click',function(event){
+    $('#CategorySelectionContainer').jstree('close_all');
+    event.preventDefault();
+});
+
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("OverviewList") %]
+[% RenderBlockStart("Edit") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Text module category") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form name="form1" action="[% Env("CGIHandle") %]" method="post" class="PreventMultipleSubmits Validate">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Save" />
+                    <input type="hidden" name="ID" value="[% Data.ID | html %]"/>
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label class="Mandatory" for="Name">
+                            <span class="Marker">*</span> [% Translate("Name") | html %]:</label>
+                        <p class="Value">
+                            <input type="text" id="Name" name="Name" value="[% Data.Name | html %]" size="35" class="Validate_Required Validate_MaxLength Validate_Length_80 [% Data.NameInvalid | html %]" maxlength="80"/>
+                            <div id="NameError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
+                            </div>
+                            <div id="NameServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required and its content can not be longer than %s characters.", "80") | html %]</p>
+                            </div>
+                        </p>
+                        <label class="" for="ParentCategory">[% Translate("Parent Category") | html %]:</label>
+                        <p class="Value">
+                            [% Data.ParentCategoryStrg %]
+                        </p>
+                        <div class="Clear">
+                        </div>
+                    </fieldset>
+
+                    <table width="100%" cellspacing="0" cellpadding="4">
+                        <tr>
+                            <td colspan="2" class="contentfooter">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                                    <tr>
+                                        <td width="100%" align="right" class="contentfooter">
+                                            <button class="CallForAction" type="submit" value="[% Translate("Submit") | html %]"/>
+                                            <span>[% Translate("Submit") | html %]</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+[% RenderBlockEnd("Edit") %]
+</div>
+</div>

@@ -1,0 +1,165 @@
+# --
+# KIXSidebarRemoteDBView.tt - provides HTML to show Data in KIXSidebar
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+# * Mario(dot)Illinger(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("SidebarFrame") %]
+<div id="[% Data.Identifier %]" class="KIXSidebarTools WidgetSimple CanDrag [% Data.AdditionalClasses | html %]">
+    <div class="Header">
+        <div class="WidgetAction Toggle">
+            <a href="#" title="[% Translate(Data.Description) | html %]">
+                <i class="fa fa-caret-right"></i>
+                <i class="fa fa-caret-down"></i>
+            </a>
+        </div>
+        <h2>[% Translate(Data.Title) | html %]</h2>
+    </div>
+    <div id="Content[% Data.Identifier %]" class="Content">
+        <div id="SearchResult[% Data.Identifier | html %]">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">//<![CDATA[
+    var KIXSidebarCallback[% Data.Identifier | html %] = function (Response) {
+        KIXSidebarTools.KIXSidebarRemoteDBView.UpdatePages("[% Data.Identifier | html %]");
+        [% Data.Callback %]
+    }
+//]]>
+</script>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    KIXSidebarTools.Init('[% Data.Identifier | html %]');
+
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
+
+    var Data = {};
+
+    KIXSidebarTools.UpdateSidebar(
+        'KIXSidebarRemoteDBViewAJAXHandler',
+        '[% Data.Identifier | html %]',
+        Data,
+        window.KIXSidebarCallback[% Data.Identifier | html %]
+    );
+[% RenderBlockStart("DynamicFieldSearch") %]
+    $('#DynamicField_[% Data.DynamicField | html %]').bind('change', function () {
+        var Data = {};
+
+        KIXSidebarTools.UpdateSidebar(
+            'KIXSidebarRemoteDBViewAJAXHandler',
+            '[% Data.Identifier | html %]',
+            Data,
+            window.KIXSidebarCallback[% Data.Identifier | html %]
+        );
+    });
+
+    var Data = {};
+
+    KIXSidebarTools.UpdateSidebar(
+        'KIXSidebarRemoteDBViewAJAXHandler',
+        '[% Data.Identifier | html %]',
+        Data,
+        window.KIXSidebarCallback[% Data.Identifier | html %]
+    );
+[% RenderBlockEnd("DynamicFieldSearch") %]
+//]]></script>
+[% END %]
+[% RenderBlockEnd("SidebarFrame") %]
+
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultAgent") %]
+<div><span id="[% Data.Identifier | html %]Pagination" class="Pagination"></span></div>
+<div class="Clear">
+</div>
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultAgentPage") %]
+<div class="[% Data.Identifier | html %]Page">
+<fieldset class="TableLike FixedLabelSmall">
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultAgentEntry") %]
+    <label>[% Translate(Data.Label) | html %]:</label>
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultAgentEntryQuote") %]
+    <p class="Value" title="[% Data.Title | html %]">[% Data.Value | html %]</p>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultAgentEntryQuote") %]
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultAgentEntryLink") %]
+    <p class="Value">
+        <a href="[% Data.Link %]" title="[% Data.Title | html %]" target="_blank">[% Data.Value | html %]</a>
+    </p>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultAgentEntryLink") %]
+    <div class="Clear">
+    </div>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultAgentEntry") %]
+</fieldset>
+</div>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultAgentPage") %]
+[% RenderBlockStart("InitPages") %]
+<script type="text/javascript">//<![CDATA[
+KIXSidebarTools.KIXSidebarRemoteDBView.UpdatePages("[% Data.Identifier | html %]");
+//]]></script>
+[% RenderBlockEnd("InitPages") %]
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultAgent") %]
+
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultCustomer") %]
+<div><span class="[% Data.Identifier | html %]Pagination"></span></div>
+<div class="Clear">
+</div>
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultCustomerPage") %]
+<div class="[% Data.Identifier | html %]Page">
+<ul>
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultCustomerEntry") %]
+    <li>
+        <span class="Key">[% Translate(Data.Label) | html %]:</span>
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultCustomerEntryQuote") %]
+        <span title="[% Data.Title | html %]">[% Data.Value | html %]</span>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultCustomerEntryQuote") %]
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultCustomerEntryLink") %]
+        <span>
+            <a href="[% Data.Link %]" title="[% Data.Title | html %]" target="_blank">[% Data.Value | html %]</a>
+        </span>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultCustomerEntryLink") %]
+    </li>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultCustomerEntry") %]
+</ul>
+</div>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultCustomerPage") %]
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultCustomer") %]
+
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultPublic") %]
+<div><span class="[% Data.Identifier | html %]Pagination"></span></div>
+<div class="Clear">
+</div>
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultPublicPage") %]
+<div class="[% Data.Identifier | html %]Page">
+<ul>
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultPublicEntry") %]
+    <li>
+        <span class="Key">[% Translate(Data.Label) | html %]:</span>
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultPublicEntryQuote") %]
+        <span title="[% Data.Title | html %]">[% Data.Value | html %]</span>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultPublicEntryQuote") %]
+[% RenderBlockStart("KIXSidebarRemoteDBViewResultPublicEntryLink") %]
+        <span>
+            <a href="[% Data.Link %]" title="[% Data.Title | html %]" target="_blank">[% Data.Value | html %]</a>
+        </span>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultPublicEntryLink") %]
+    </li>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultPublicEntry") %]
+</ul>
+</div>
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultPublicPage") %]
+[% RenderBlockEnd("KIXSidebarRemoteDBViewResultPublic") %]
+
+[% RenderBlockStart("NoSearchResult") %]
+<p>[% Translate("Nothing found.") | html %]</p>
+[% RenderBlockEnd("NoSearchResult") %]

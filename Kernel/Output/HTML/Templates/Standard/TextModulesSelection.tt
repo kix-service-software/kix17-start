@@ -1,0 +1,82 @@
+# --
+# Kernel/Output/HTML/Standard/TextModulesSelection.tt - provides HTML form for text modules selection
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+#   Torsten(dot)Thau(at)cape(dash)it.de
+#   Martin(dot)Balzarek(at)cape(dash)it.de
+# * Tom(dot)Lorenz(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div id="TextModulesBlock">
+[% RenderBlockStart("TextModuleContent") %]
+    <input type="hidden" id="[% Data.ID | html %]_Text" value="[% Data.Text | html %]"/>
+    <input type="hidden" id="[% Data.ID | html %]_Keywords" value="[% Data.Keywords | html %]"/>
+    <input type="hidden" id="[% Data.ID %]_Subject" value="[% Data.Subject | html %]"/>
+[% RenderBlockEnd("TextModuleContent") %]
+    <div id="TextModulesSelection">
+        <div id="TextModulesSelectionContainer" class="JSTreeSelectionContainer">
+[% RenderBlockStart("TextModuleList") %]
+            <div class="TextModule" id="[% Data.ID %]"><span>[% Data.Name %]</span></div>
+[% RenderBlockEnd("TextModuleList") %]
+[% RenderBlockStart("TextModuleCategory") %]
+            [% Data.TextModuleSelection %]
+[% RenderBlockEnd("TextModuleCategory") %]
+        </div>
+        <div id="TextModulesButtons">
+            <button style="margin:5px" type="button" id="TextModuleInsert" value="[% Translate("Double click on the text module, which should be added to the body") | html %]">[% Translate("Paste") | html %]</button>
+            <button style="margin:5px" type="button" id="TextModulePreview" value="[% Translate("Move over the text module, which should be displayed") | html %]">[% Translate("Preview") | html %]</button>
+        </div>
+        <div id="TextModulePreviewContainer" class="WidgetPopup Hidden">
+            <div class="Header">
+                <h2>[% Translate("Preview") | html %]: <span id="TMTitle">
+                    </span>
+                </h2>
+                <div class="ActionMenu">
+                    <div class="WidgetAction Close" id="TextModulePreviewClose">
+                        <a title="[% Translate("Close") | html %]" href="">
+                            <i class="fa fa-remove">
+                            </i>
+                        </a>
+                    </div>
+                    <div class="Clear">
+                    </div>
+                </div>
+            </div>
+            <div class="Content">
+                <fieldset class="TableLike FixedLabelSmall">
+                    <label>[% Translate("Subject") | html %]:</label>
+                    <p id="TMSubject" class="Value">
+                    </p>
+                    <div class="Clear">
+                    </div>
+                    <label>[% Translate("Body") | html %]:</label>
+                    <p id="TMBody" class="Value">
+                    </p>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.Config.AddConfig({
+        // add config
+        WebPath: '[% Config("Frontend::WebPath") %]',
+        TextModulesDisplayType: '[% Data.DisplayType | html %]',
+    });
+
+    // init textmodules
+    if ($('#TextModulesTable').length)
+        Core.KIX4OTRS.TextModules.Init();
+//]]>
+</script>
+[% END %]

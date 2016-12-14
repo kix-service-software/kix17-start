@@ -1,0 +1,83 @@
+/*
+ * @project     KIX4OTRS (http://www.cape-it.de) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/*
+ * @package     Skin "default"
+ * @section     Forms
+ */
+
+@media screen,projection,tv,handheld {
+
+  /* throw Cancel&Close link into relief */
+  .CancelClosePopup {
+    font-size:   13px;
+    font-weight: bold;
+    color: #FF9922;
+  }
+
+  /* @subsection Standards */
+  input[type=checkbox] {
+    cursor: pointer;
+  }
+
+  /* layout for special email options  */
+  label.SubjectNoFwdIcon {
+    padding-left: 30px;
+    height: 12px;
+    background: url(../img/NoFwd.png) no-repeat left top;
+  }
+  label.SubjectNoReIcon {
+    padding-left: 30px;
+    height: 12px;
+    background: url(../img/NoRe.png) no-repeat left top;
+  }
+
+  /* throw tickets, which are escalated, into relief */
+  .DataTable tr td.EscTime, td.EscTime {
+      background: url(../img/Esca_bg.png) repeat-x center;
+      background-color: #E03025;
+  }
+  .DataTable tr td.EscTimeNear, .EscTimeNear {
+      background: url(../img/EscaNear_bg.png) repeat-x center;
+      background-color: #F27267;
+  }
+
+  #QuickLinkAttributeAutoComplete {
+      width: 250px;
+  }
+
+  fieldset.TableLike > label,
+  fieldset.TableLike > .Row > label {
+    line-height: 1.0em;
+  }
+
+  fieldset.TableLike > .Field,
+  fieldset.TableLike > .Row > .Field {
+    line-height: 1.0em;
+  }
+
+  fieldset.TableLike > .Value,
+  fieldset.TableLike > .Row > .Value {
+    line-height: 1.0em;
+  }
+
+  .loading {
+    position:absolute;
+    top:0px;
+    left:0px;
+    z-index:3;
+    background: url(../img/loader.gif) no-repeat center;
+    background-color: rgba(245,245,245,0.5);
+    text-align: center;
+  }
+
+  .jstree-anchor,
+  div.InputField_Selection div {
+    font-size: 12px;
+  }
+
+} /* end @media */

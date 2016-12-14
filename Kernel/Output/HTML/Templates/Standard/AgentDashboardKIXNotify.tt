@@ -1,0 +1,37 @@
+# --
+# AgentDashboardKIXNotify.tt - provides HTML for global dashboard
+# based upon AgentDashboardProductNotify.tt
+# original Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
+# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<table class="DataTable">
+    <tbody>
+[% RenderBlockStart("ContentKIXMessage") %]
+        <tr>
+            <td>
+                [% Data.Message %]
+                <hr width="100%" />
+            </td>
+        </tr>
+[% RenderBlockEnd("ContentKIXMessage") %]
+[% RenderBlockStart("ContentKIXRelease") %]
+        <tr>
+            <td>
+                [% Translate("%s %s is available!", Data.Name, Data.Version) | html %] [% Translate("Please update now.") | html %] (<a href="[% Data.Link %]" target="_blank" title="[% Translate("c.a.p.e. IT download area") | html %]">[% Translate("Release Note") | html %] - [% Translate("Level") | html %]: [% Translate(Data.Severity) | html %]</a>)
+            </td>
+        </tr>
+[% RenderBlockEnd("ContentKIXRelease") %]
+    </tbody>
+</table>

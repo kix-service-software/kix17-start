@@ -1,0 +1,198 @@
+# --
+# AgentSLASearch.tt - provides autocomplete feature for service search
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Anna(dot)Litvinova(at)cape(dash)it(dot)de
+# * Mario(dot)Illinger(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("SLASearchAutoComplete") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.Config.Set('Autocomplete.MinQueryLength', "[% Data.minQueryLength | html %]");
+    Core.Config.Set('Autocomplete.QueryDelay', "[% Data.queryDelay | html %]");
+    Core.Config.Set('Autocomplete.MaxResultsDisplayed', "[% Data.maxResultsDisplayed | html %]");
+    Core.Config.Set('Autocomplete.DynamicWidth', "[% Data.dynamicWidth | html %]");
+    Core.Config.Set('Autocomplete.SearchButtonText', [% Translate("Search SLA") | JSON %]);
+//]]></script>
+[% END %]
+[% RenderBlockEnd("SLASearchAutoComplete") %]
+
+[% RenderBlockStart("SLASearchInitAutoComplete") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+
+    var FieldID = '[% Data.ItemID | html %]',
+
+    // get definition data
+    ReferencedServiceAttrKey = "[% Data.ReferencedServiceAttrKey | html %]",
+    ReferencedCustomerLogin = "[% Data.ReferencedCustomerLogin | html %]",
+    ReferencedCustomerCompany = "[% Data.ReferencedCustomerCompany | html %]";
+
+    // first set all data to NONE
+    var ServiceData = 'NONE', CustomerLoginData = 'NONE', CustomerCompanyData = 'NONE';
+
+    // then get relevant data from the form
+    var $ParentAttributeDiv =  $(document.getElementById(FieldID)).parent('div.SubElement').parent();
+    var $ParentAttributeDiv =  $(document.getElementById(FieldID)).parent('div.SubElement').parent();
+    FieldID = FieldID.replace(/:/g, '\\:');
+
+    if (ReferencedServiceAttrKey.length){
+        ServiceData = '';
+        // get ServiceData from parent element
+        var ParentAttrInputFiedID = $ParentAttributeDiv.children('div.Field').filter(":first").children("input[name^='[% Data.ReferencedServiceAttrKey | html %]::']").filter(":first").prop('id');
+        if ($('#' + ParentAttrInputFiedID).length){
+            var ServiceID = $('#' + ParentAttrInputFiedID).val();
+            ServiceData = ServiceID;
+            $("#"+FieldID+'ServiceData').val(ServiceID);
+        }
+        // get ServiceData from relevant field(s)
+        else{
+           $("input[name^='[% Data.ReferencedServiceAttrKey | html %]::']").each(function(){
+               if ($(this).prop('name').match(/^[% Data.ReferencedServiceAttrKey | html %]::\d*$/) ){
+                   // alert('URA!!!' + $(this).val());
+                    if ($(this).val()){
+                        if (ServiceData.length){
+                            ServiceData = ServiceData + ';' + $(this).val();
+                        }
+                        else {
+                            ServiceData = $(this).val();
+                        }
+                    }
+               }
+           });
+           $("#"+FieldID+'ServiceData').val(ServiceData);
+        }
+    }
+    if (ReferencedCustomerLogin.length){
+        // get CustomerLoginData
+        CustomerLoginData = '';
+        $("input[name^='[% Data.ReferencedCustomerLogin | html %]::']").each(function(){
+           if ($(this).prop('name').match(/^[% Data.ReferencedCustomerLogin | html %]::\d*$/) ){
+                if ($(this).val()){
+                    if (CustomerLoginData.length){
+                        CustomerLoginData = CustomerLoginData + ';' + $(this).val();
+                    }
+                    else {
+                        CustomerLoginData = $(this).val();
+                    }
+                }
+           }
+        });
+        $("#"+FieldID+'CustomerLogin').val(CustomerLoginData);
+    }
+    if (ReferencedCustomerCompany.length){
+        // get ReferencedCustomerCompany
+        CustomerCompanyData = '';
+        $("input[name^='[% Data.ReferencedCustomerCompany | html %]::']").each(function(){
+           if ($(this).prop('name').match(/^[% Data.ReferencedCustomerCompany | html %]::\d*$/) ){
+                if ($(this).val()){
+                    if (CustomerCompanyData.length){
+                        CustomerCompanyData = CustomerCompanyData + ';' + $(this).val();
+                    }
+                    else {
+                        CustomerCompanyData = $(this).val();
+                    }
+                }
+           }
+        });
+        $("#"+FieldID+'CustomerCompanyData').val(CustomerCompanyData);
+    }
+    Core.Agent.SLASearch.Init($("#"+FieldID), [% Data.ActiveAutoComplete | html %], ServiceData, CustomerLoginData, CustomerCompanyData);
+//]]></script>
+[% END %]
+[% RenderBlockEnd("SLASearchInitAutoComplete") %]
+
+[% RenderBlockStart("SLASearchInitNoAutoComplete") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+
+    var FieldID = '[% Data.ItemID | html %]',
+
+    // get definition data
+    ReferencedServiceAttrKey = "[% Data.ReferencedServiceAttrKey | html %]",
+    ReferencedCustomerLogin = "[% Data.ReferencedCustomerLogin | html %]",
+    ReferencedCustomerCompany = "[% Data.ReferencedCustomerCompany | html %]";
+
+    // first set all data to NONE
+    var ServiceData = 'NONE', CustomerLoginData = 'NONE', CustomerCompanyData = 'NONE';
+
+    // then get relevant data from the form
+    var $ParentAttributeDiv =  $(document.getElementById(FieldID)).parent('div.SubElement').parent();
+    var $ParentAttributeDiv =  $(document.getElementById(FieldID)).parent('div.SubElement').parent();
+    FieldID = FieldID.replace(/:/g, '\\:');
+
+    if (ReferencedServiceAttrKey.length){
+        ServiceData = '';
+
+        // get ServiceData from parent element
+        var ParentAttrInputFiedID = $ParentAttributeDiv.children('div.Field').filter(":first").children("input[name^='[% Data.ReferencedServiceAttrKey | html %]::']").filter(":first").prop('id');
+        if ($('#' + ParentAttrInputFiedID).length){
+            var ServiceID = $('#' + ParentAttrInputFiedID).val();
+            ServiceData = ServiceID;
+            $("#"+FieldID+'ServiceData').val(ServiceID);
+        }
+        // get ServiceData from relevant field(s)
+        else{
+           $("input[name^='[% Data.ReferencedServiceAttrKey | html %]::']").each(function(){
+               if ($(this).prop('name').match(/^[% Data.ReferencedServiceAttrKey | html %]::\d*$/) ){
+                   // alert('URA!!!' + $(this).val());
+                    if ($(this).val()){
+                        if (ServiceData.length){
+                            ServiceData = ServiceData + ';' + $(this).val();
+                        }
+                        else {
+                            ServiceData = $(this).val();
+                        }
+                    }
+               }
+           });
+           $("#"+FieldID+'ServiceData').val(ServiceData);
+        }
+    }
+    if (ReferencedCustomerLogin.length){
+        // get CustomerLoginData
+        CustomerLoginData = '';
+        $("input[name^='[% Data.ReferencedCustomerLogin | html %]::']").each(function(){
+           if ($(this).prop('name').match(/^[% Data.ReferencedCustomerLogin | html %]::\d*$/) ){
+                if ($(this).val()){
+                    if (CustomerLoginData.length){
+                        CustomerLoginData = CustomerLoginData + ';' + $(this).val();
+                    }
+                    else {
+                        CustomerLoginData = $(this).val();
+                    }
+                }
+           }
+        });
+        $("#"+FieldID+'CustomerLogin').val(CustomerLoginData);
+    }
+    if (ReferencedCustomerCompany.length){
+        // get ReferencedCustomerCompany
+        CustomerCompanyData = '';
+        $("input[name^='[% Data.ReferencedCustomerCompany | html %]::']").each(function(){
+           if ($(this).prop('name').match(/^[% Data.ReferencedCustomerCompany | html %]::\d*$/) ){
+                if ($(this).val()){
+                    if (CustomerCompanyData.length){
+                        CustomerCompanyData = CustomerCompanyData + ';' + $(this).val();
+                    }
+                    else {
+                        CustomerCompanyData = $(this).val();
+                    }
+                }
+           }
+        });
+        $("#"+FieldID+'CustomerCompanyData').val(CustomerCompanyData);
+    }
+//]]></script>
+[% END %]
+[% RenderBlockEnd("SLASearchInitNoAutoComplete") %]
+

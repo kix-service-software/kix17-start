@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="LinkObject::Type###DocumentLink" Required="1" Valid="1">
+        <Description Translatable="1">This setting defines the link type 'DocumentLink'.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::LinkObject</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="SourceName">DocumentLink</Item>
+                <Item Key="TargetName">DocumentLink</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="LinkObject::PossibleLink###9902" Required="0" Valid="1">
+        <Description Translatable="1">This setting defines that a 'Ticket' object can be linked with documents using the 'DocumentLink' link type.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::LinkObject</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Object1">Ticket</Item>
+                <Item Key="Object2">Document</Item>
+                <Item Key="Type">DocumentLink</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="LinkObject::PossibleLink###9904" Required="0" Valid="1">
+        <Description Translatable="1">This setting defines that a 'Service' object can be linked with documents using the 'DocumentLink' link type.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::LinkObject</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Object1">Service</Item>
+                <Item Key="Object2">Document</Item>
+                <Item Key="Type">DocumentLink</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="LinkObject::PossibleLink###9905" Required="0" Valid="1">
+        <Description Translatable="1">This setting defines that a 'SLA' object can be linked with documents using the 'DocumentLink' link type.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::LinkObject</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Object1">SLA</Item>
+                <Item Key="Object2">Document</Item>
+                <Item Key="Type">DocumentLink</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="LinkObject::PossibleLink###9906" Required="0" Valid="1">
+        <Description Translatable="1">This setting defines that a 'ITSMConfigItem' object can be linked with documents using the 'DocumentLink' link type.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::LinkObject</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Object1">ITSMConfigItem</Item>
+                <Item Key="Object2">Document</Item>
+                <Item Key="Type">DocumentLink</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="LinkObject::PossibleLink###9907" Required="0" Valid="1">
+        <Description Translatable="1">This setting defines that a 'ITSMWorkOrder' object can be linked with documents using the 'DocumentLink' link type.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::LinkObject</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Object1">ITSMWorkOrder</Item>
+                <Item Key="Object2">Document</Item>
+                <Item Key="Type">DocumentLink</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="LinkObject::PossibleLink###9908" Required="0" Valid="1">
+        <Description Translatable="1">This setting defines that a 'ITSMChange' object can be linked with documents using the 'DocumentLink' link type.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::LinkObject</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Object1">ITSMChange</Item>
+                <Item Key="Object2">Document</Item>
+                <Item Key="Type">DocumentLink</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Document###Sources" Required="1" Valid="1">
+        <Description Translatable="1">Define the sources of documents. Use key in the following document settings. Prefer short keys.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Document</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Document###Backend" Required="1" Valid="1">
+        <Description Translatable="1">Specify the backend typ for document link source. Equals modul name in document backend folder.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Document</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Document###Parameters" Required="1" Valid="1">
+        <Description Translatable="1">Specify the parameters of the document source.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Document</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Document###Access" Required="1" Valid="1">
+        <Description Translatable="1">Specify groups that will have access the document source.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Document</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Document::DefaultColumns" Required="1" Valid="1">
+        <Description Translatable="1">Columns that can be filtered in the linked object view of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Document</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Name">1</Item>
+                <Item Key="DisplayPath">1</Item>
+                <Item Key="Path">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Document::FS###SearchType" Required="1" Valid="1">
+        <Description Translatable="1">Specify the search type in FS sources ("live" is slower but does a live search in the directory tree and updates the meta data of the resulting files in the DB, "meta" is fast but only uses the meta data stored in the DB).</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Document</SubGroup>
+        <Setting>
+            <Option SelectedID="LIVE">
+                <Item Key="META">meta</Item>
+                <Item Key="LIVE">live (all OS)</Item>
+                <Item Key="LIVESYS">live (Linux only)</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Document::FS###SyncType" Required="1" Valid="1">
+        <Description Translatable="1">Specify the sync type for the periodic full sync of filesystem document sources.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Document</SubGroup>
+        <Setting>
+            <Option SelectedID="DirectorySearch">
+                <Item Key="DirectorySearch">DirectorySearch</Item>
+                <Item Key="MetaFile">MetaFile</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Document::FS###MetaFiles" Required="0" Valid="1">
+        <Description Translatable="1">Specify the path and name of the meta data file if sync type is MetaFile.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Document</SubGroup>
+        <Setting>
+            <String Regex=""></String>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

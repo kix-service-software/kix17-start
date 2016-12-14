@@ -1,0 +1,45 @@
+# --
+# CustomerAssignedConfigItemList.tt - provides HTML for customer ID selection
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<h3>[% Translate("Assigned customer IDs") | html %]:</h3>
+<table class="DataTable">
+   <thead>
+       <tr>
+           <th></th>
+           <th>[% Translate("Customer ID") | html %]</th>
+       </tr>
+   </thead>
+   <tbody>
+[% RenderBlockStart("CustomerIDRow") %]
+       <tr title="[% Translate("Select customer ID for this ticket: %s", Data.ID) | html %]">
+           <td>
+               <input type="radio" class="SelectedCustomerIDRadio" name="SelectedCustomerIDRadio" id="SelectedCustomerIDRadio[% Data.ID | html %]" value="[% Data.ID | html %]"/>
+           </td>
+           <td>
+               <label for="SelectedCustomerIDRadio[% Data.ID | html %]">[% Data.CustomerCompanyName | truncate(25) | html %] ([% Data.ID | html %])</label>
+           </td>
+[% RenderBlockEnd("CustomerIDRow") %]
+       </tr>
+   </tbody>
+</table>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.CustomerIDsSelection.Init();
+//]]></script>
+[% END %]
+

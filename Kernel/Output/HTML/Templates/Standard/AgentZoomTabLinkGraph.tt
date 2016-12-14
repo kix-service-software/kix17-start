@@ -1,0 +1,221 @@
+# --
+# AgentZoomTabLinkGraph.tt - provides HTML form for ZoomTabs
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Torsten(dot)Thau(at)cape(dash)it(dot)de
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Frank(dot)Oberender(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("TabContent") %]
+
+<div class="MainBox ARIARoleMain CITabLinkGraph">
+    <div class="ClearLeft">
+    </div>
+    <div class="LayoutFixedSidebar SidebarLast">
+        <div class="SidebarColumn">
+        </div>
+
+        <div class="ContentColumn">
+            <div class="WidgetSimple SpacingTop SpacingLeft SpacingRight SpacingBottom">
+                <div class="LightRow Header">
+                    <div class="WidgetAction Toggle">
+                        <a href="#" id="GraphSelectionBlockOpen" title="[% Translate("Graph View Configuration") | html %]" style="width:100%;">
+                            <i class="fa fa-caret-right">
+                            </i>
+                            <i class="fa fa-caret-down">
+                            </i>
+                        </a>
+                    </div>
+                    <h2>[% Translate("Graph View Configuration") | html %]</h2>
+                </div>
+                <div class="Content">
+                    <form action="" method="" enctype="" class="" name="IFrameParam" id="IFrameParam">
+                        <input type="hidden" id="CurrentObjectType" name="CurrentType" value="[% Data.CurrentObjectType | html %]"/>
+                        <input type="hidden" id="CurrentObjectID" name="CurrentObjectID" value="[% Data.CurrentObjectID | html %]"/>
+                        <div>
+                            <p class="FieldExplanation">[% Translate("This feature requires a browser that is capable of displaying SVG-elements.") | html %]</p>
+                        </div>
+                        <div class="Clear">
+                        </div>
+                        <div class="Table">
+                            <div class="WidgetSimple TableCell">
+                                <div class="Header">
+                                    <h2>[% Translate("Max Link Depth") | html %]</h2>
+                                </div>
+                                <div class="Content">
+                                     [% Data.MaxSearchDepthStr %]
+                                </div>
+                            </div>
+                            <div class="WidgetSimple TableCell">
+                                <div class="Header">
+                                    <h2>[% Translate("Link-Types to follow") | html %]</h2>
+                                </div>
+                                <div class="Content">
+                                    [% Data.LinkTypeSelStr %]
+                                </div>
+                            </div>
+                            [% Data.ObjectSpecificSelStr %]
+                            <div class="WidgetSimple TableCell">
+                                <div class="Header">
+                                    <h2>[% Translate("Adjusting Strength") | html %]</h2>
+                                </div>
+                                <div class="Content">
+                                    [% Data.AdjustingStrengthSelStr %]
+                                </div>
+                            </div>
+                        </div>
+                        <div class="Clear">
+                        </div>
+                        <div class="Spacing Top RightAligned">
+                            <button id="UpdateDisplayedGraph" type="button" class="CallForAction" value="[% Translate("Show Graph") | html %]" title="[% Translate("Show Graph") | html %]">
+                                <span>[% Translate("Show Graph") | html %]</span>
+                            </button>
+                        </div>
+                        <div class="Clear">
+                        </div>
+                        <div class="Spacing Top RightAligned">
+                            <button id="LoadGraphStart" type="button" class="CallForAction" value="[% Translate("Load Graph") | html %]" title="[% Translate("Load Graph") | html %]">
+                                <span>[% Translate("Load Graph") | html %]</span>
+                            </button>
+                        </div>
+                        <div class="Clear">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="ContentColumn">
+            <div class="WidgetSimple SpacingTop SpacingLeft SpacingRight SpacingBottom Collapsed">
+                <div class="LightRow Header">
+                    <div class="WidgetAction Toggle">
+                        <a href="#" id="GraphDisplayBlockOpen" title="[% Translate("Graph Display") | html %]">
+                            <i class="fa fa-caret-right">
+                            </i>
+                            <i class="fa fa-caret-down">
+                            </i>
+                        </a>
+                    </div>
+                    <h2>[% Translate("Graph Display") | html %]</h2>
+                </div>
+                <div class="Content">
+                    <iframe id="displayGraphIFrame" src="" width="[% Data.Width | html %]" height="[% Data.Height | html %]" name="[% Data.Title | html %]" marginheight="[% Data.Marginheight | html %]" marginwidth="[% Data.Marginwidth | html %]" frameborder="[% Data.Frameborder | html %]" align="[% Data.Align | html %]" scrolling="no">
+                    </iframe>
+                </div>
+            </div>
+            <div class="Clear">
+            </div>
+        </div>
+        <div class="Clear">
+        </div>
+    </div>
+</div>
+<div class="Hidden">
+    <input type="hidden" id="LoadGraphTitle" value="[% Translate("Saved graphs for this object") | html %]" />
+    <div id="LoadGraphContent">
+        <div id="SavedGraphs" class="Hidden">
+            <p id="LoadGraphSelection">
+            </p>
+            <br />
+            <div>
+                <table class="DataTable">
+                    <tbody>
+                        <tr>
+                            <td>[% Translate("Max Link Depth") | html %]</td>
+                            <td id="LoadGraphDepth">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>[% Translate("Followed Link-Types") | html %]</td>
+                            <td id="LoadGraphLinkTypes">
+                            </td>
+                        </tr>
+                        [% Data.ObjectSpecificSavedGraphs %]
+                        <tr>
+                            <td>[% Translate("Adjusting Strength") | html %]</td>
+                            <td id="LoadGraphStrength">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>[% Translate("Last changed") | html %]</td>
+                            <td id="LoadGraphLastChangedTime">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>[% Translate("Last changed by") | html %]</td>
+                            <td id="LoadGraphLastChangedBy">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p id="NoSavedGraphs" class="Hidden">[% Translate("There are no saved graphs!") | html %]</p>
+    </div>
+    <input type="hidden" id="LoadGraphSubmit" value='[% Translate("Load") | html %]' />
+    <input type="hidden" id="LoadGraphCancel" value='[% Translate("Cancel") | html %]' />
+</div>
+[% RenderBlockEnd("TabContent") %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.ConfigItemZoomTabs.Init();
+
+    var GraphActive;
+
+    var UnfoldGraphBlock = function() {
+        GraphActive = 1;
+        if ( $('#GraphDisplayBlockOpen').closest('.WidgetSimple').hasClass('Collapsed') ) {
+            $('#GraphDisplayBlockOpen').trigger('click');
+        }
+        if ( !$('#GraphSelectionBlockOpen').closest('.WidgetSimple').hasClass('Collapsed') ) {
+            $('#GraphSelectionBlockOpen').trigger('click');
+        }
+    };
+
+    // bind load function
+    $('#LoadGraphStart').bind('click', function () {
+        Core.KIX4OTRS.AgentZoomTabLinkGraph.LoadIFrameContent(1, UnfoldGraphBlock);
+    });
+
+    // bind update function
+    $('#UpdateDisplayedGraph').bind('click', function () {
+        Core.KIX4OTRS.AgentZoomTabLinkGraph.LoadIFrameContent();
+        UnfoldGraphBlock();
+    });
+
+    // show graph with default settings if no button was pressed and only block was opened
+    $('#GraphDisplayBlockOpen').click( function () {
+        if ( !$(this).closest('.WidgetSimple').hasClass('Collapsed') ) {
+            if ( !GraphActive ) {
+                Core.KIX4OTRS.AgentZoomTabLinkGraph.LoadIFrameContent();
+            }
+            GraphActive = 1;
+            if ( !$('#GraphSelectionBlockOpen').closest('.WidgetSimple').hasClass('Collapsed') ) {
+                $('#GraphSelectionBlockOpen').trigger('click');
+            }
+        }
+    });
+
+    // get hash of url
+    var DoIt = window.location.hash || 0;
+    // if call comes from another graph do it instantly
+    if ( [% Data.DoGraphNow | html %] && !DoIt ) {
+        // remember, because do it not if just the tab is changed
+        window.location.hash = 1;
+        $('#GraphDisplayBlockOpen').trigger('click');
+    }
+//]]>
+</script>
+[% END %]

@@ -1,0 +1,87 @@
+# --
+# CustomerDashboardLinkedCIs.tt - show linked CIs in CIC
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("LinkConfigItemTable") %]
+<div id="LinkedConfigItemTabs">
+    <ul>
+[% RenderBlockStart("LinkConfigItemTabLink") %]
+        <li><a href="#class_[% Data.TabID | html %]">[% Data.ClassName | html %] ([% Data.Count | html %])</a> </li>
+[% RenderBlockEnd("LinkConfigItemTabLink") %]
+    <ul>
+    <div id="LinkedCIPager">
+        <span class="Pagination"></span>
+    </div>
+[% RenderBlockStart("LinkConfigItemTabContent") %]
+    <div id="class_[% Data.TabID | html %]">
+[% RenderBlockStart("LinkConfigItemPage") %]
+        <div id="LinkedCIPageDiv[% Data.DivCount | html %]class_[% Data.TabID | html %]" class="LinkedCIPageDiv" style="[% Data.Style | html %]" >
+            <table id="AvailableCIItemList" class="DataTable">
+               <thead>
+                  <tr>
+[% RenderBlockStart("LinkConfigItemRowHeader") %]
+                     <th>[% Translate(Data.Head) | html %]</th>
+[% RenderBlockEnd("LinkConfigItemRowHeader") %]
+                  </tr>
+               </thead>
+               <tbody>
+[% RenderBlockStart("LinkConfigItemRow") %]
+                  <tr>
+[% RenderBlockStart("LinkConfigItemRowData") %]
+                     <td>
+[% RenderBlockStart("LinkConfigItemRowDataLinkStart") %]
+                        <a class="MasterActionLink" href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ID | html %]" target="_blank" title="[% Data.Number | html %] - [% Data.Name | html %]">
+[% RenderBlockEnd("LinkConfigItemRowDataLinkStart") %]
+[% RenderBlockStart("LinkConfigItemRowDataLabelStart") %]
+                        <label for="SelectedAssignedConfigItem[% Data.ID | html %]">
+[% RenderBlockEnd("LinkConfigItemRowDataLabelStart") %]
+                            [% Translate(Data.Value) | html %]
+[% RenderBlockStart("LinkConfigItemRowDataLabelEnd") %]
+                        </label>
+[% RenderBlockEnd("LinkConfigItemRowDataLabelEnd") %]
+[% RenderBlockStart("LinkConfigItemRowDataLinkEnd") %]
+                        </a>
+[% RenderBlockEnd("LinkConfigItemRowDataLinkEnd") %]
+                     </td>
+[% RenderBlockEnd("LinkConfigItemRowData") %]
+                  </tr>
+[% RenderBlockEnd("LinkConfigItemRow") %]
+               </tbody>
+            </table>
+        </div>
+[% RenderBlockEnd("LinkConfigItemPage") %]
+    </div>
+[% RenderBlockEnd("LinkConfigItemTabContent") %]
+
+</div>
+[% RenderBlockEnd("LinkConfigItemTable") %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    // disable ajax/tab caching
+    $.ajaxSetup({ cache: false });
+
+    $('#LinkedConfigItemTabs').tabs({
+        activate: function(event, ui) {
+            Core.KIX4OTRS.KIXSidebar.LinkedCIPager(ui.newPanel);
+        },
+    });
+    $('#LinkedConfigItemTabs').parents('.Content').css({"overflow":"hidden"});
+
+    // init paging on first tab
+    Core.KIX4OTRS.KIXSidebar.LinkedCIPager($('#LinkedConfigItemTabs').find('ul > .ui-tabs-panel').first());
+
+//]]></script>
+[% END %]
+

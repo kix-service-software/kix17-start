@@ -1,0 +1,21 @@
+# --
+# KIXSidebarDisableSidebar.tt - provides HTML to show config items in KIXSidebar
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Mario(dot)Illinger(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.App.Subscribe('Event.AJAX.FormUpdate.Callback', KIXSidebarTools.KIXSidebarDisableSidebar.Update);
+    KIXSidebarTools.KIXSidebarDisableSidebar.Update();
+//]]>
+</script>
+[% END %]

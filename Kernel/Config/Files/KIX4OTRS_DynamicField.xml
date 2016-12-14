@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <!-- Depending Dynamic Fields -->
+    <ConfigItem Name="Frontend::Module###AdminDependingDynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the quick depending dynamic field configuration in the admin interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Group>admin</Group>
+                <Description>Admin</Description>
+                <Title>DependingDynamicFields</Title>
+                <NavBarName>Admin</NavBarName>
+                <NavBarModule>
+                    <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
+                    <Name Translatable="1">Depending Dynamic Fields</Name>
+                    <Block>Ticket</Block>
+                    <Description Translatable="1">Create new depending dynamic field or change existing.</Description>
+                    <Prio>1050</Prio>
+                </NavBarModule>
+                <Loader>
+                    <CSS>KIX4OTRS.DependingDynamicFields.css</CSS>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Acl::Module###990_DependingDynamicFieldSelection" Required="0" Valid="1">
+        <Description Translatable="1">Ticket-ACLs to define dynamic fields dependencies.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::DynamicField</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Acl::DependingDynamicFieldSelection</Item>
+                <Item Key="ReturnType">Ticket</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO Depending Dynamic Fields -->
+
+    <!-- Disabled Dynamic Fields -->
+    <ConfigItem Name="Ticket::Acl::Module###991_DisabledDynamicFields" Required="0" Valid="0">
+        <Description Translatable="1">Ticket-ACLs to define shown or hidden dynamic fields in forms.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::DynamicField</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Acl::DisabledDynamicFields</Item>
+                <Item Key="ReturnType">Ticket</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO Disabled Dynamic Fields -->
+
+    <!-- Dynamic Fields ObjectReference -->
+    <ConfigItem Name="Frontend::Module###AdminDynamicFieldObjectReference" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Group>admin</Group>
+                <Description>Admin</Description>
+                <Title Translatable="1">Dynamic Fields ObjectReference Backend GUI</Title>
+                <Loader>
+                    <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::Driver###ObjectReference" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Driver::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">ObjectReference</Item>
+                <Item Key="Module">Kernel::System::DynamicField::Driver::ObjectReference</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldObjectReference</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::Driver###CustomerUser" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Driver::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">ObjectReference</Item>
+                <Item Key="Module">Kernel::System::DynamicField::Driver::ObjectReference::CustomerUser</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldObjectReference</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::Driver###CustomerCompany" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Driver::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">ObjectReference</Item>
+                <Item Key="Module">Kernel::System::DynamicField::Driver::ObjectReference::CustomerCompany</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldObjectReference</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::Driver###User" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Driver::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">ObjectReference</Item>
+                <Item Key="Module">Kernel::System::DynamicField::Driver::ObjectReference::User</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldObjectReference</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::EventModulePost###330-DFTypeObjectReferenceAddLink" Required="0" Valid="1">
+        <Description Translatable="1"></Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::DFTypeObjectReferenceAddLink</Item>
+                <Item Key="Event">DynamicFieldUpdate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO Dynamic Fields ObjectReference -->
+
+    <!-- Dynamic Field Config Settings -->
+    <ConfigItem Name="Frontend::Output::FilterElementPre###AdminDynamicFieldSysConfigSettings" Required="0" Valid="1">
+        <Description Translatable="1">Defines Output filter to provide multiselect fields to assign dynamic fields easily to frontend modules.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Admin</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::AdminDynamicFieldSysConfigSettings</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key="AdminDynamicFieldCheckbox">1</Item>
+                        <Item Key="AdminDynamicFieldDateTime">1</Item>
+                        <Item Key="AdminDynamicFieldDropdown">1</Item>
+                        <Item Key="AdminDynamicFieldMultiselect">1</Item>
+                        <Item Key="AdminDynamicFieldText">1</Item>
+                        <Item Key="AdminDynamicFieldObjectReference">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AdminDynamicFieldSysConfigSettingsAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Module Registration for the AdminDynamicFieldSysConfigSettings AJAXHandler.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>AJAX handler</Description>
+                <Title>AJAX handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <!-- EO Dynamic Field Config Settings -->
+
+    <ConfigItem Name="DynamicFields::ObjectReferences###FieldTypes" Required="0" Valid="1">
+        <Description Translatable="1"></Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Admin::DynamicField</SubGroup>
+        <Setting>
+            <Array>
+                <Item>AutoComplete</Item>
+                <Item>Multiselect</Item>
+                <Item>Dropdown</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###DynamicFieldObjectReferenceAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the DynamicFieldObjectReferenceAJAXHandler object.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>DynamicField ObjectReference AJAX Handler</Description>
+                <Title>DynamicField ObjectReference AJAX Handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerFrontend::Module###DynamicFieldObjectReferenceAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the DynamicFieldObjectReferenceAJAXHandler object.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Customer::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>DynamicField ObjectReference AJAX Handler</Description>
+                <Title>DynamicField ObjectReference AJAX Handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

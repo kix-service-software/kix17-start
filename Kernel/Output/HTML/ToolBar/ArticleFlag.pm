@@ -1,0 +1,127 @@
+# --
+# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+package Kernel::Output::HTML::ToolBar::ArticleFlag;
+
+use strict;
+use warnings;
+
+our @ObjectDependencies = (
+    'Kernel::System::Output::HTML::Layout',
+    'Kernel::System::Log',
+    'Kernel::System::Ticket',
+);
+
+sub new {
+    my ( $Type, %Param ) = @_;
+
+    # allocate new hash for object
+    my $Self = {};
+    bless( $Self, $Type );
+
+    # get UserID param
+    $Self->{UserID} = $Param{UserID} || die "Got no UserID!";
+
+    return $Self;
+}
+
+sub Run {
+    my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
+
+    # check needed stuff
+    for (qw(Config)) {
+        if ( !$Param{$_} ) {
+            $LogObject->Log( Priority => 'error', Message => "Need $_!" );
+            return;
+        }
+    }
+
+    # get user lock data
+    my $Count = $TicketObject->TicketSearch(
+        Result      => 'COUNT',
+        UserID      => $Self->{UserID},
+        ArticleFlag => $Param{Config}->{ArticleFlagKey},
+        Permission  => 'ro',
+    );
+    my $CountReached = $TicketObject->TicketSearch(
+        Result                        => 'COUNT',
+        UserID                        => $Self->{UserID},
+        ArticleFlag                   => $Param{Config}->{ArticleFlagKey},
+        StateType                     => ['pending reminder'],
+        TicketPendingTimeOlderMinutes => 1,
+        Permission                    => 'ro',
+    );
+    my $CountNew = $TicketObject->TicketSearch(
+        Result        => 'COUNT',
+        UserID        => $Self->{UserID},
+        ArticleFlag   => $Param{Config}->{ArticleFlagKey},
+        NotTicketFlag => {
+            Seen => 1,
+        },
+        Permission => 'ro',
+    );
+
+    my $Priority = $Param{Config}->{Priority};
+    my $URL      = $LayoutObject->{Baselink}
+        . 'Action=AgentTicketArticleFlagView;ArticleFlag='
+        . $Param{Config}->{ArticleFlagKey} . ';';
+    my $Description = $LayoutObject->{LanguageObject}->Translate( $Param{Config}->{Description} );
+
+    my %Return;
+    if ($CountNew) {
+        $Return{ $Priority++ } = {
+            Block       => 'ToolBarItem',
+            Count       => $CountNew,
+            Description => $Description . ' '
+                . $LayoutObject->{LanguageObject}->Translate('Tickets New'),
+            Icon      => $Param{Config}->{IconNew},
+            Class     => $Param{Config}->{CssClassNew},
+            Link      => $URL . 'Filter=New',
+            AccessKey => $Param{Config}->{AccessKey},
+        };
+    }
+    if ($CountReached) {
+        $Return{ $Priority++ } = {
+            Block       => 'ToolBarItem',
+            Count       => $CountReached,
+            Description => $Description . ' '
+                . $LayoutObject->{LanguageObject}->Translate('Tickets Reminder Reached'),
+            Class     => $Param{Config}->{CssClassReached},
+            Icon      => $Param{Config}->{IconReached},
+            Link      => $URL . 'Filter=ReminderReached',
+            AccessKey => $Param{Config}->{AccessKey},
+        };
+    }
+    if ($Count) {
+        $Return{ $Priority++ } = {
+            Block       => 'ToolBarItem',
+            Count       => $Count,
+            Description => $Description . ' '
+                . $LayoutObject->{LanguageObject}->Translate('Tickets Total'),
+            Class     => $Param{Config}->{CssClass},
+            Icon      => $Param{Config}->{Icon},
+            Link      => $URL,
+            AccessKey => $Param{Config}->{AccessKey},
+        };
+    }
+
+    return %Return;
+}
+
+1;

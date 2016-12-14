@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_config version="1.0" init="KIXApplication">
+    <CVS>$Id$</CVS>
+
+    <!-- ITSM CMDB CORE EXTENSIONS -->
+    <ConfigItem Name="ITSMConfigItem::CustomModules###001-CustomModule" Required="0" Valid="1">
+        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Core::ITSMConfigItem</SubGroup>
+        <Setting>
+            <String Regex="">Kernel::System::ITSMConfigItem::ITSMConfigItemX</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMConfigItem::CustomModules###010-CustomModule" Required="0" Valid="1">
+        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Core::ITSMConfigItem</SubGroup>
+        <Setting>
+            <String Regex="">Kernel::System::ITSMConfigItem::DefinitionX</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMConfigItem::CustomModules###020-CustomModule" Required="0" Valid="1">
+        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Core::ITSMConfigItem</SubGroup>
+        <Setting>
+            <String Regex="">Kernel::System::ITSMConfigItem::VersionX</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMConfigItem::CustomModules###030-CustomModule" Required="0" Valid="1">
+        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Core::ITSMConfigItem</SubGroup>
+        <Setting>
+            <String Regex="">Kernel::System::PreEventHandler</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="ITSMConfigItem::CILinkDirection" Required="0" Valid="1">
+        <Description Translatable="1">ConfigItem link direction for propagating of warning/error incident states.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Core::ITSMConfigItem</SubGroup>
+        <Setting>
+            <Option SelectedID="Both">
+                <Item Key="Source">Source</Item>
+                <Item Key="Target">Target</Item>
+                <Item Key="Both">Both</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <!-- EO ITSM CMDB CORE EXTENSIONS -->
+
+    <ConfigItem Name="Frontend::Module###AgentITSMConfigItemCompare" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ViewConfigItem</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Group>itsm-configitem</Group>
+                <Description>Config Item Compare</Description>
+                <Title>Compare</Title>
+                <NavBarName>Config Item</NavBarName>
+                <Loader>
+                    <CSS>KIX4OTRS.ITSM.Agent.Detail.css</CSS>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMConfigItem::Frontend::MenuModule###700-Compare" Required="0" Valid="1">
+        <Description Translatable="1">Shows a link in the menu to compare a configuration item with an other.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ViewConfigItem</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::ITSMConfigItem::MenuGeneric</Item>
+                <Item Key="Name">Compare Versions</Item>
+                <Item Key="Description">Compare Versions</Item>
+                <Item Key="Action">AgentITSMConfigItemCompare</Item>
+                <Item Key="Link">Action=AgentITSMConfigItemCompare;ConfigItemID=[% Data.ConfigItemID | html %];ShowVersions=1</Item>
+                <Item Key="Target">PopUp</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMConfigItem::Frontend::AgentITSMConfigItemCompare###Permission" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to use the compare ITSM configuration item screen in the agent interface.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ViewConfigItem</SubGroup>
+        <Setting>
+            <String Regex="">ro</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMConfigItem::Frontend::MenuModule###750-PhoneTicket" Required="0" Valid="1">
+        <Description Translatable="1">Shows a link in the menu to create a phone ticket.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ViewConfigItem</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::ITSMConfigItem::MenuGeneric</Item>
+                <Item Key="Name">New phone ticket</Item>
+                <Item Key="Description">New phone ticket</Item>
+                <Item Key="Action">AgentTicketPhone</Item>
+                <Item Key="Link">Action=AgentTicketPhone;SelectedConfigItemIDs=[% Data.ConfigItemID %]</Item>
+                <Item Key="Target">PopUp</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMConfigItem::Frontend::MenuModule###760-EmailTicket" Required="0" Valid="1">
+        <Description Translatable="1">Shows a link in the menu to create an email ticket.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ViewConfigItem</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::ITSMConfigItem::MenuGeneric</Item>
+                <Item Key="Name">New email ticket</Item>
+                <Item Key="Description">New email ticket</Item>
+                <Item Key="Action">AgentTicketEmail</Item>
+                <Item Key="Link">Action=AgentTicketEmail;SelectedConfigItemIDs=[% Data.ConfigItemID %]</Item>
+                <Item Key="Target">PopUp</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="ITSMConfigItem::Frontend::AgentITSMConfigItemCompare###CSSHighlight" Required="1" Valid="1">
+        <Description Translatable="1">Configure an highlightning for a row in the compare table depending on compare result.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ViewConfigItem</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="added">color: green;</Item>
+                <Item Key="removed">color: red;</Item>
+                <Item Key="changed">color: orange;</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <!-- IMA EXTENSIONS FOR BEHAVIOUR OPTIONS IN CI-COMPARE -->
+    <ConfigItem Name="ITSMConfigItem::Frontend::AgentITSMConfigItemCompare###CompareBehaviour" Required="0" Valid="1">
+        <Description Translatable="1">Changes the behaviour of Config Item Version Compare. "Structure" will mark swapped items as changed</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Core::ITSMConfigItem</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">Structure</Item>
+                <Item Key="1">Sub-Attributes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <!-- EO IMA EXTENSIONS FOR BEHAVIOUR OPTIONS IN CI-COMPARE -->
+
+    <ConfigItem Name="ConfigItemOverview::HighlightMapping" Required="1" Valid="1">
+        <Description Translatable="1">Defines a css style element depending on config item deployment state.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ITSMConfigItemOverview</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Inactive">color: darkgrey;</Item>
+                <Item Key="Maintenance">color: darkblue;</Item>
+                <Item Key="Pilot">color: darkgreen;</Item>
+                <Item Key="Planned">color: green;</Item>
+                <Item Key="Repair">color: darkblue;</Item>
+                <Item Key="Retired">color: darkgrey;</Item>
+                <Item Key="Review">color: blue;</Item>
+                <Item Key="Test/QA">color: chocolate;</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="ConfigItemOverview::ShowDeploymentStatePostproductive" Required="0" Valid="1">
+        <Description Translatable="1">Defines whether config items with postproductive deployment state should be shown or not.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ITSMConfigItemOverview</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="1">Yes</Item>
+                <Item Key="0">No</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ConfigItemOverview::ExcludedDeploymentStates" Required="0" Valid="0">
+        <Description Translatable="1">Defines which deployment states should not be shown in config item overview. Separate different states by comma.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ITSMConfigItemOverview</SubGroup>
+        <Setting>
+            <String Regex="">Test/QA</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="ITSMConfigItem::Frontend::Overview###Custom" Required="0" Valid="1">
+        <Description Translatable="1">Defines an overview module to show the custom view of a configuration item list.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ITSMConfigItemOverview</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::ITSMConfigItem::OverviewCustom</Item>
+                <Item Key="Name">Custom</Item>
+                <Item Key="ModulePriority">400</Item>
+                <Item Key="NameShort">C</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="PreferencesGroups###ConfigItemOverviewCustomColumnValue" Required="0" Valid="1">
+        <Description Translatable="1">Parameters for the pages (in which the CIs are shown) of the custom config item overview. This is a list of available column values can be chosen.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::ConfigItemOverviewColumn</Item>
+                <Item Key="Column">Other Settings</Item>
+                <Item Key="Label" Translatable="1">Config Item Overview "Custom" ColumnValue</Item>
+                <Item Key="Key" Translatable="1">CI limit per page for CI Overview "Small"</Item>
+                <Item Key="PrefKey">UserCustomCILVColumnValue</Item>
+                <Item Key="Prio">8011</Item>
+                <Item Key="Active">0</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="PreferencesGroups###ConfigItemOverviewCustomPageShown" Required="0" Valid="1">
+        <Description Translatable="1">Parameters for the pages (in which the configuration items are shown).</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
+                <Item Key="Column">Other Settings</Item>
+                <Item Key="Label" Translatable="1">Configuration Item Limit</Item>
+                <Item Key="Key" Translatable="1">Configuration Item limit per page</Item>
+                <Item Key="Data">
+                    <Hash>
+                        <Item Key="10">10</Item>
+                        <Item Key="15">15</Item>
+                        <Item Key="20">20</Item>
+                        <Item Key="25">25</Item>
+                        <Item Key="30">30</Item>
+                        <Item Key="35">35</Item>
+                    </Hash>
+                </Item>
+                <Item Key="DataSelected">25</Item>
+                <Item Key="PrefKey">UserConfigItemOverviewCustomPageShown</Item>
+                <Item Key="Prio">8000</Item>
+                <Item Key="Active">0</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="PreferencesGroups###ConfigItemSearchAllBehavior" Required="0" Valid="1">
+        <Description Translatable="1">Defines parameters for user preference to set ConfigItemSearch behavior for search over all config item classes.</Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
+                <Item Key="Column">Other Settings</Item>
+                <Item Key="Label" Translatable="1">ConfigItemSearch behavior for search over all config item classes</Item>
+                <Item Key="Key" Translatable="1">ConfigItemSearch behavior for search over all config item classes</Item>
+                <Item Key="Data">
+                    <Hash>
+                        <Item Key="AllAttributes">All Attributes</Item>
+                        <Item Key="EqualAttributes">Common Attributes</Item>
+                    </Hash>
+                </Item>
+                <Item Key="DataSelected">EqualAttributes</Item>
+                <Item Key="PrefKey">UserConfigItemSearchAllBehavior</Item>
+                <Item Key="Prio">8001</Item>
+                <Item Key="Active">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::LinkObjectTargetIdentifier" Required="0" Valid="1">
+        <Description Translatable="1">Sets the default link object target identifier.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <String>ITSMConfigItem</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ToolbarSearchProfile###ConfigItem" Required="0" Valid="1">
+        <Description Translatable="1"></Description>
+        <Group>KIX4OTRS-ITSM</Group>
+        <SubGroup>Frontend::Agent::ToolBarModule</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Modules::AgentITSMConfigItemSearch</Item>
+                <Item Key="Subaction">LoadProfile</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+</otrs_config>

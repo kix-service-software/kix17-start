@@ -1,0 +1,66 @@
+# --
+# AgentCustomerDashboardCustomerSearch.tt - provides HTML to search for customers in dashboard
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="CustomerDashboardCustomerSearch">
+    <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="CustomerDashboardCustomerSearch" class="Column ColumnLeft Validate PreventMultipleSubmits">
+        <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+        <input type="hidden" name="ExpandCustomerName" id="ExpandCustomerName" value="0"/>
+        <input type="hidden" name="PreSelectedCustomerUser" id="PreSelectedCustomerUser" value=""/>
+        <input type="hidden" name="SelectedCustomerUser" id="SelectedCustomerUser" value="[% Data.CustomerUserLogin | html %]"/>
+        <fieldset class="TableLike">
+            <label class="Mandatory" for="CustomerAutoComplete"><span class="Marker">*</span> [% Translate("Search input") | html %]:</label>
+            <div class="Field">
+                <input id="CustomerAutoComplete" type="text" name="From" value="[% Data.From | html %]" class="W75pc AutocompleteOff Validate_Required [% Data.FromInvalid | html %]"/>
+                <div id="CustomerAutoCompleteError" class="TooltipErrorMessage">
+                    <p>[% Translate("This field is required.") | html %]</p>
+                </div>
+            </div>
+            <div class="Clear"></div>
+        </fieldset>
+    </form>
+    <div id="CustomerInfo" class="Column ColumnRight WidgetSimple">
+        <div class="Header">
+            <h2>[% Translate("Customer Information") | html %]</h2>
+        </div>
+        <div class="Content">
+            [% Data.CustomerTable %]
+        </div>
+[% RenderBlockStart("CustomerDetails") %]
+        <div class="WidgetPopup CustomerShowDetails" id="WidgetPopup[% Data.UserLogin | html %]">
+            <div class="Header"><h2>[% Translate("Customer Information") | html %]</h2></div>
+            <div class="Content">
+                <div class="Spacing" style="width:500px">
+                    [% Data.CustomerDetailsTable %]
+                </div>
+            </div>
+        </div>
+[% RenderBlockEnd("CustomerDetails") %]
+    </div>
+</div>
+
+[% InsertTemplate("AgentCustomerSearch.tt") %]
+[% RenderBlockStart("CustomerSearchAutoCompleteOnAJAX") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.Agent.CustomerSearch.Init($("#CustomerAutoComplete"), [% Data.ActiveAutoComplete | html %]);
+//]]></script>
+[% END %]
+[% RenderBlockEnd("CustomerSearchAutoCompleteOnAJAX") %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.Agent.CustomerDashboard.RegisterCustomerSearch($('#CustomerAutoComplete'), $('#SelectedCustomerUser'));
+//]]></script>
+[% END %]

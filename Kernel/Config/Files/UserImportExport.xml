@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="Application">
+    <CVS>$Id$</CVS>
+    <ConfigItem Name="ImportExport::ObjectBackendRegistration###User" Required="0" Valid="1">
+        <Description Lang="en">Object backend module registration for the import/export modul.</Description>
+        <Description Lang="de">Objekt-Backend Modul Registration des Import/Export Moduls.</Description>
+        <Group>ImportExport</Group>
+        <SubGroup>ObjectBackend::ModuleRegistration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::ImportExport::ObjectBackend::User</Item>
+                <Item Key="Name">User</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="UserImport::DefaultEmailAddress" Required="1" Valid="1">
+        <Description Lang="en">Defines which email address to use if not defined - strongly depends on backend configuration!!!</Description>
+        <Description Lang="de">Definiert welche Mailadresse genutzt wird, wenn nicht gegeben - stark abhaengig von Backendkonfiguration!!!</Description>
+        <Group>ImportExport</Group>
+        <SubGroup>UserImportExport</SubGroup>
+        <Setting>
+            <String Regex="">dummy@localhost.com</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="UserImport::DefaultPassword" Required="1" Valid="1">
+        <Description Lang="en">Defines which default password-suffix to use for import if not defined - strongly depends on backend configuration!!!</Description>
+        <Description Lang="de">Definiert welches Standard-Passwort-Suffix für Import genutzt wird, wenn nicht gegeben - stark abhaengig von Backendkonfiguration!!!</Description>
+        <Group>ImportExport</Group>
+        <SubGroup>UserImportExport</SubGroup>
+        <Setting>
+            <String Regex="">pass123</String>
+        </Setting>
+    </ConfigItem>
+    
+    <ConfigItem Name="UserImport::ForceCSVMappingRecreation" Required="1" Valid="1">
+        <Description Translatable="1">Defines if CSV-mappings are re-created on next package reinstallation or upgrade if already existent.</Description>
+        <Group>ImportExport</Group>
+        <SubGroup>UserImportExport</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>        
+    
+</otrs_config>

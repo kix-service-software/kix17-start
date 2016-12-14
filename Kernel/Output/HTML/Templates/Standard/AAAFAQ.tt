@@ -1,0 +1,64 @@
+# --
+# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+# Common
+[% Translate("internal") | html %]
+[% Translate("public") | html %]
+[% Translate("external") | html %]
+[% Translate("FAQ Number") | html %]
+[% Translate("Latest updated FAQ articles") | html %]
+[% Translate("Latest created FAQ articles") | html %]
+[% Translate("Top 10 FAQ articles") | html %]
+[% Translate("Subcategory of") | html %]
+[% Translate("No rate selected!") | html %]
+[% Translate("Explorer") | html %]
+
+# FAQ 'states'
+[% Translate("public (all)") | html %]
+[% Translate("external (customer)") | html %]
+[% Translate("internal (agent)") | html %]
+
+# Stats
+[% Translate("Start day") | html %]
+[% Translate("Start month") | html %]
+[% Translate("Start year") | html %]
+[% Translate("End day") | html %]
+[% Translate("End month") | html %]
+[% Translate("End year") | html %]
+
+# AgentFAQZoom Menu-Modules
+[% Translate("Thanks for your vote!") | html %]
+[% Translate("No rate selected!") | html %]
+[% Translate("You have already voted!") | html %]
+
+# FAQ Print screens
+[% Translate("FAQ Article Print") | html %]
+
+# RSS Feeds
+[% Translate("FAQ Articles (Top 10)") | html %]
+[% Translate("FAQ Articles (new created)") | html %]
+[% Translate("FAQ Articles (recently changed)") | html %]
+
+# AgentFAQCategory.pm
+[% Translate("FAQ category updated!") | html %]
+[% Translate("FAQ category added!") | html %]
+[% Translate("A category should have a name!") | html %]
+[% Translate("This category already exists") | html %]
+
+# AgentFAQLanguage.pm
+[% Translate("FAQ language added!") | html %]
+[% Translate("FAQ language updated!") | html %]
+[% Translate("The name is required!") | html %]
+[% Translate("This language already exists!") | html %]
+[% Translate("The name is required!") | html %]
+
+# Default FAQ Field captions
+[% Translate("Symptom") | html %]
+[% Translate("Problem") | html %]
+[% Translate("Solution") | html %]
+[% Translate("Comment") | html %]

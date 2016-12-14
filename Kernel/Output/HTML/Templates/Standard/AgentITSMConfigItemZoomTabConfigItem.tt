@@ -1,0 +1,163 @@
+# --
+# based upon AgentITSMConfigItemZoom.dtl
+# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("TabContent") %]
+
+<div id="ITSMTreeTab">
+[% RenderBlockStart("Tree") %]
+                <div id="ITSMTable"  class="TicketList">
+                    <div class="ControlRow">
+                        <div class="ITSMItemView Icons">
+[% RenderBlockStart("Expand") %]
+                            <a class="OneITSMItem Active" href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %];ShowVersions=0" title="[% Translate("Show one version") | html %]">
+                                <i class="fa fa-minus"></i>
+                                <span>[% Translate("Show one version") | html %]</span>
+                            </a>
+                            <a class="AllITSMItems" href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %];ShowVersions=1" title="[% Translate("Show all versions") | html %]">
+                                <i class="fa fa-reorder"></i>
+                                <span>[% Translate("Show all versions") | html %]</span>
+                            </a>
+[% RenderBlockEnd("Expand") %]
+[% RenderBlockStart("Collapse") %]
+                            <a class="OneITSMItem" href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %];ShowVersions=0" title="[% Translate("Show one version") | html %]">
+                                <i class="fa fa-minus"></i>
+                                <span>[% Translate("Show one version") | html %]</span>
+                            </a>
+                            <a class="AllITSMItems Active" href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %];ShowVersions=1" title="[% Translate("Show all versions") | html %]">
+                                <i class="fa fa-reorder"></i>
+                                <span>[% Translate("Show all versions") | html %]</span>
+                            </a>
+[% RenderBlockEnd("Collapse") %]
+                        </div>
+                    </div>
+                    <div id="ITSMTableBody" class="ActionRow">
+                        <div class="Scroller">
+                            <table class="TableSmall">
+                                <thead>
+                                    <tr>
+                                        <th><span>[% Translate("Version Incident State") | html %]</span></th>
+                                        <th><span>[% Translate("Version Deployment State") | html %]</span></th>
+                                        <th><span>[% Translate("Version Number") | html %]</span></th>
+                                        <th><span>[% Translate("Name") | html %]</span></th>
+                                        <th><span>[% Translate("Created by") | html %]</span></th>
+                                        <th><span>[% Translate("Changed") | html %]</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+[% RenderBlockStart("TreeItem") %]
+                                    <tr class="[% Data.Active | html %] MasterAction">
+                                        <td title="[% Translate(Data.InciState) | html %]">
+                                            <div class="Flag Small">
+                                                <span class="[% Data.InciSignal | html %]">[% Data.InciState | html %]</span>
+                                            </div>
+                                        </td>
+                                        <td title="[% Translate(Data.DeplState) | html %]">
+                                            <div class="Flag Small">
+                                                <span class="[% Data.DeplSignal | html %]">[% Data.DeplState | html %]</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            [% Data.Count | html %].
+                                        </td>
+                                        <td>
+                                            <a class="AsBlock MasterActionLink" href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %];VersionID=[% Data.VersionID | uri %];ShowVersions=[% Data.ShowVersions | uri %]">
+                                                [% Data.Name | html %] ([% Translate(Data.DeplState) | html %])
+                                            </a>
+                                        </td>
+                                        <td>
+                                            [% Data.CreateByUserFullName | html %]
+                                        </td>
+                                        <td>
+                                            [% Data.CreateTime | Localize("TimeLong") %]
+                                        </td>
+                                    </tr>
+[% RenderBlockEnd("TreeItem") %]
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="Handle ui-resizable-handle ui-resizable-s">
+                            <a href="#">[% Translate("Resize") | html %]</a>
+                        </div>
+                    </div>
+                </div>
+[% RenderBlockEnd("Tree") %]
+            </div>
+            <div id="ITSMItems">
+                <div class="WidgetBox SpacingTop Expanded">
+                    <div class="LightRow Header">
+                        <div class="WidgetAction Toggle"><a href="#" title="[% Translate("Show or hide the content.") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a></div>
+                        <h2>[% Translate("Configuration Item Version Details") | html %]</h2>
+                    </div>
+                    <div class="WithPadding Content NoDoubleBorders">
+                        <table class="DataTable">
+                            <thead>
+                                <tr>
+                                    <th>[% Translate("Property") | html %]</th>
+                                    <th>[% Translate("Value") | html %]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+[% RenderBlockStart("Data") %]
+                                <tr>
+                                    <td class="W25pc" style="padding-left: [% Translate(Data.Indentation) | html %]px;" title="[% Translate(Data.Description) | html %]">
+                                        [% Translate(Data.Name) | html %]:
+                                    </td>
+                                    <td style="padding-left: [% Translate(Data.Indentation) | html %]px;">
+                                        [% Data.Value %]
+                                    </td>
+                                </tr>
+[% RenderBlockEnd("Data") %]
+[% RenderBlockStart("Attachments") %]
+                                <tr>
+                                    <td class="W25pc" title="[% Translate("Attachments") | html %]">
+                                        [% Translate("Attachments") | html %]
+                                    </td>
+                                    <td>
+                                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DownloadAttachment;Filename=[% Data.Filename | uri %];ConfigItemID=[% Data.ConfigItemID | uri %]">
+                                            [% Data.Filename | html %]
+                                        </a>
+                                        ([% Data.Filesize | html %])
+                                    </td>
+                                </tr>
+[% RenderBlockEnd("Attachments") %]
+[% RenderBlockStart("AttachmentRow") %]
+                                <tr>
+                                    <td class="W25pc">
+                                    </td>
+                                    <td>
+                                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DownloadAttachment;Filename=[% Data.Filename | uri %];ConfigItemID=[% Data.ConfigItemID | uri %]">
+                                            [% Data.Filename | html %]
+                                        </a>
+                                        ([% Data.Filesize | html %])
+                                    </td>
+                                </tr>
+[% RenderBlockEnd("AttachmentRow") %]
+                            </tbody>
+                        </table>
+        </div>
+    </div>
+</div>
+
+[% RenderBlockEnd("TabContent") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+/*global ITSM: true */
+    ITSM.Agent.Zoom.Init([% Env("UserConfigItemZoomTableHeight") %]);
+    Core.KIX4OTRS.ConfigItemZoomTabs.Init();
+//]]></script>
+[% END %]

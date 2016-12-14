@@ -1,0 +1,269 @@
+# --
+# based upon CustomerLogin.tt
+# original Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+[%- INCLUDE "HTTPHeaders.tt" -%]
+
+<!DOCTYPE html>
+<html>
+[% InsertTemplate("Copyright.tt") %]
+[% InsertTemplate("CustomerHTMLHead.tt") %]
+<body class="LoginScreen NoJavaScript [% Data.BodyClass | html %]">
+<!-- end header -->
+
+<!-- start login -->
+<div id="MainBox" class="MainBox ARIARoleMain SpacingTopLarge">
+    <div class="W33pc SpacingBottomLarge CenterBox">
+
+        <div class="MessageContainer">
+[% RenderBlockStart("Message") %]
+            <div class="[% IF Data.MessageType == 'Success' %]SuccessBox[% ELSE %]ErrorBox[% END %]"><span>[% Translate(Data.Message) | html %]</span></div>
+[% RenderBlockEnd("Message") %]
+        </div>
+
+        <noscript>
+            <div id="NoJavaScript">
+                <h2 class="Center">[% Translate("JavaScript Not Available") | html %]</h2>
+                <p>
+                    [% Translate("In order to experience KIX, you'll need to enable JavaScript in your browser.") | html %]
+                </p>
+            </div>
+        </noscript>
+
+        <div class="Hidden" id="OldBrowser">
+            <h2 class="Center">[% Translate("Browser Warning") | html %]</h2>
+            <p>
+                [% Translate("The browser you are using is too old.") | html %]
+                [% Translate("KIX runs with a huge lists of browsers, please upgrade to one of these.") | html %]
+                [% Translate("Please see the documentation or ask your admin for further information.") | html %]
+            </p>
+        </div>
+
+[% RenderBlockStart("SystemMaintenance") %]
+        <div class="WarningBox WithIcon">
+            <i class="fa fa-exclamation-circle"></i> [% Translate(Data.LoginMessage) | html %]
+        </div>
+[% RenderBlockEnd("SystemMaintenance") %]
+
+[% RenderBlockStart("PreLogin") %]
+        <div id="PreLogin" class="PreLogin LoginBox">
+            <p>[% Translate("One moment please, you are being redirected...") | html %]</p>
+            <form action="[% Env("CGIHandle") %]" method="post" enctype="application/x-www-form-urlencoded" name="login">
+                <input type="hidden" name="Action" value="Login" />
+                <input type="hidden" name="RequestedURL" value="[% Data.RequestedURL | html %]"/>
+                <input type="hidden" name="Lang" value="[% Env("UserLanguage") | html %]"/>
+                <input type="hidden" name="TimeOffset" id="TimeOffset" value=""/>
+            </form>
+        </div>
+[% RenderBlockEnd("PreLogin") %]
+
+[% RenderBlockStart("LoginBox") %]
+        <div id="LoginBox" class="LoginBox">
+            <div class="LoginLogo"></div>
+            <div class="Welcome">
+                <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
+            </div>
+            <div class="WidgetSimple">
+                <div class="Header">
+                    <h2 class="Center">[% Translate("Self Service Portal") | html %]</h2>
+                </div>
+                <div class="Content">
+                    <p class="Error Center Spacing"></p>
+
+                    <form action="[% Env("CGIHandle") %]" method="post" enctype="application/x-www-form-urlencoded" name="login">
+                        <input type="hidden" name="Action" value="Login"/>
+                        <input type="hidden" name="RequestedURL" value="[% Data.RequestedURL | html %]"/>
+                        <input type="hidden" name="Lang" value="[% Env("UserLanguage") | html %]"/>
+                        <input type="hidden" name="TimeOffset" id="TimeOffset" value=""/>
+                        <fieldset class="TableLike">
+                            <label for="User" class="Mandatory">
+                                [% Translate("Username") | html %]
+                            </label>
+                            <div class="Field">
+                                <input title="[% Translate("Your user name") | html %]" type="text" name="User" id="User" maxlength="150" />
+[% RenderBlockStart("CreateAccountLink") %]
+                                <p id="SignUpLink" class="Left">
+                                    <a href="" id="SignUp">[% Translate("Not yet registered?") | html %] [% Translate("Sign up now") | html %]</a>.
+                                </p>
+[% RenderBlockEnd("CreateAccountLink") %]
+                            </div>
+                            <div class="Clear"></div>
+
+                            <label for="Password" class="Mandatory">
+                                [% Translate("Password") | html %]
+                            </label>
+
+                            <div class="Field">
+                                <input title="[% Translate("Your password") | html %]" type="password" name="Password" id="Password" />
+[% RenderBlockStart("LostPasswordLink") %]
+                                <p id="LostPasswordLink" class="Left">
+                                    <a href="" id="LostPassword">[% Translate("Lost your password?") | html %]</a>
+                                </p>
+[% RenderBlockEnd("LostPasswordLink") %]
+                            </div>
+                            <div class="Clear"></div>
+
+[% RenderBlockStart("AuthTwoFactor") %]
+                            <div>
+                                <label for="TwoFactorToken">[% Translate("2 Factor Token") | html %]</label>
+                                <input title="[% Translate("Your 2 Factor Token") | html %]" type="password" name="TwoFactorToken" id="TwoFactorToken" />
+                            </div>
+[% RenderBlockEnd("AuthTwoFactor") %]
+
+                            <div class="Field SpacingTopSmall">
+                                <button type="submit" class="Primary CallForAction" value="[% Translate("Log In") | html %]">
+                                    [% Translate("Log In") | html %]
+                                </button>
+                            </div>
+                            <div class="Clear"></div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+[% RenderBlockEnd("LoginBox") %]
+
+[% RenderBlockStart("LostPassword") %]
+        <div id="PasswordBox" class="LoginBox Hidden">
+            <div class="LoginLogo"></div>
+            <div class="Welcome">
+                <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
+            </div>
+            <div class="WidgetSimple">
+                <div class="Header">
+                    <h2>[% Translate("Request New Password") | html %]</h2>
+                </div>
+                <div class="Content">
+                    <p class="Error Center Spacing"></p>
+
+                    <form action="[% Env("CGIHandle") %]" method="post" enctype="application/x-www-form-urlencoded">
+                        <input type="hidden" name="Action" value="CustomerLostPassword" />
+                        <input type="hidden" name="Lang" value="[% Env("UserLanguage") | html %]" />
+                        <fieldset class="TableLike">
+                            <label for="ResetUser">[% Translate("Username") | html %]</label>
+                            <div class="Field">
+                                <input title="[% Translate("Your User Name") | html %]" type="text" id="ResetUser" name="User" maxlength="150" />
+                            </div>
+                            <div class="Clear"></div>
+
+                            <div class="Field SpacingTopSmall">
+                                <button type="submit" class="Primary CallForAction" value="[% Translate("Request New Password") | html %]">
+                                    [% Translate("Request New Password") | html %]
+                                </button>
+                            </div>
+                            <div class="Clear"></div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <p class="Center SpacingTop">
+                [% Translate("A new password will be sent to your email address.") | html %]
+            </p>
+        </div>
+[% RenderBlockEnd("LostPassword") %]
+
+[% RenderBlockStart("CreateAccount") %]
+        <div id="SignUpBox" class="LoginBox Hidden">
+            <div class="LoginLogo"></div>
+            <div class="Welcome">
+                <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
+            </div>
+            <div class="WidgetSimple">
+                <div class="Header">
+                    <h2>[% Translate("Create Account") | html %]</h2>
+                </div>
+                <div class="Content">
+                    <p class="Error Center Spacing"></p>
+                    <form class="Validate" action="[% Env("CGIHandle") %]" method="post" enctype="application/x-www-form-urlencoded">
+                        <input type="hidden" name="Action" value="CustomerCreateAccount"/>
+                        <input type="hidden" name="Lang" value="[% Env("UserLanguage") | html %]"/>
+                        <fieldset class="TableLike">
+                            <label for="Title">[% Translate("Title") | html %]</label>
+                            <div class="Field">
+                                <input title="[% Translate("How we should address you") | html %]" type="text" name="Title"  id="Title" maxlength="50" value="[% Data.UserTitle | html %]"/>
+                            </div>
+                            <div class="Clear"></div>
+
+                            <label class="Mandatory" for="FirstName"><span class="Marker">*</span> [% Translate("Firstname") | html %]</label>
+                            <div class="Field">
+                                <input title="[% Translate("Your First Name") | html %]" name="Firstname" type="text" id="FirstName" maxlength="100" value="[% Data.UserFirstname | html %]" class="W50pc Validate_Required"/>
+                                <div id="FirstNameError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            </div>
+                            <div class="Clear"></div>
+
+                            <label class="Mandatory" for="LastName"><span class="Marker">*</span> [% Translate("Lastname") | html %]</label>
+                            <div class="Field">
+                                <input title="[% Translate("Your Last Name") | html %]" name="Lastname" type="text" id="LastName" maxlength="100" value="[% Data.UserLastname | html %]" class="W50pc Validate_Required"/>
+                                <div id="LastNameError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            </div>
+                            <div class="Clear"></div>
+
+                            <label class="Mandatory" for="Email"><span class="Marker">*</span> [% Translate("Email") | html %]</label>
+                            <div class="Field">
+                                <input title="[% Translate("Your email address (this will become your username)") | html %]" name="Email" type="[% Env("EmailFieldType") | html %]" id="Email" maxlength="150" value="[% Data.UserEmail | html %]" class="W100pc Validate_Required Validate_Email"/>
+                                <div id="EmailError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            </div>
+                            <div class="Clear"></div>
+
+                            <div class="Field SpacingTopSmall">
+                                <button id="CreateAccount" type="submit" class="Primary CallForAction" value="[% Translate("Create Account") | html %]">
+                                    [% Translate("Create Account") | html %]
+                                </button>
+                            </div>
+                            <div class="Clear"></div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+[% RenderBlockEnd("CreateAccount") %]
+        </div>
+
+        <div class="BackToLogin Hidden">
+            <a href="" id="BackToLogin">&larr; [% Translate("Back to login") | html %]</a>
+        </div>
+
+    </div>
+</div>
+<!-- stop login -->
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    // Core.Customer.Login.Init({LastLoginFailed: '[% Data.LoginFailed %]'});
+    Core.KIXBase.Customer.CustomerLoginInit({LastLoginFailed: '[% Data.LoginFailed %]'});
+
+    $('#LostPassword').click(function () {
+        $('div.LoginBox:visible').hide();
+        $('#PasswordBox').show();
+        $('.BackToLogin').show();
+        return false;
+    });
+    $('#SignUp').click(function () {
+        $('div.LoginBox:visible').hide();
+        $('#SignUpBox').show();
+        $('.BackToLogin').show();
+        return false;
+    });
+    $('#BackToLogin').click(function () {
+        $('div.LoginBox:visible').hide();
+        $('#LoginBox').show();
+        $('.BackToLogin').hide();
+        return false;
+    });
+
+[% RenderBlockStart("SignupError") %]
+    window.location.hash = 'Signup';
+[% RenderBlockEnd("SignupError") %]
+//]]></script>
+[% END %]
+
+[% InsertTemplate("CustomerFooterJS.tt") %]

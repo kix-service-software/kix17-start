@@ -1,0 +1,362 @@
+# --
+# AgentArticleEdit.tt - provides HTML form for article edit mask
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
+# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Anna(dot)Litvinova(at)cape(dash)it(dot)de
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="Compose" class="Validate PreventMultipleSubmits">
+    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+    <input type="hidden" name="Subaction" value="ArticleEdit"/>
+    <input type="hidden" name="TicketID"  value="[% Data.TicketID | html %]"/>
+    <input type="hidden" name="ArticleID" value="[% Data.ArticleID | html %]"/>
+    <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
+
+    <div class="LayoutPopup ARIARoleMain">
+        <div class="Header">
+            <h1>[% Translate("Edit article") | html %]: #[% Data.Count | html %] - [% Data.Subject | html %] </h1>
+
+[% RenderBlockStart("TicketBack") %]
+            <p>
+                <a class="CancelClosePopup" href="#">[% Translate("Cancel & close") | html %]</a>
+            </p>
+[% RenderBlockEnd("TicketBack") %]
+[% RenderBlockStart("PropertiesLock") %]
+            <p>
+                [% Translate("The ticket has been locked") | html %].
+                <a class="UndoClosePopup" href="[% Env("Baselink") %]Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]">
+                    [% Translate("Undo & close") | html %]
+                </a>
+            </p>
+[% RenderBlockEnd("PropertiesLock") %]
+
+        </div>
+        <div class="Content">
+
+[% RenderBlockStart("ArticleEdit") %]
+            <div class="WidgetSimple Expanded ArticleEdit">
+                <div class="Header">
+                    <div class="WidgetAction Toggle">
+                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
+                    </div>
+                    <h2>[% Translate("Edit Article") | html %]</h2>
+                </div>
+                <div class="Content">
+
+                    <fieldset class="TableLike FixedLabel">
+[% RenderBlockStart("CreateDate") %]
+                        <label class="Mandatory" for="Created"><span class="Marker">*</span>[% Translate("Created") | html %]:</label>
+                        <div class="Field">
+                            [% Data.DateString %]
+                            <div id="DayServerError" class="TooltipErrorMessage"><p>[% Translate("Date invalid!") | html %]</p></div>
+                            <div id="HourServerError" class="TooltipErrorMessage"><p>[% Translate("Date invalid!") | html %]</p></div>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("CreateDate") %]
+
+[% RenderBlockStart("Note") %]
+                        <label class="Mandatory" for="Subject"><span class="Marker">*</span>[% Translate("Subject") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" id="Subject" name="Subject" value="[% Data.Subject | html %]" class="W75pc [% Data.SubjectRequired %] [% Data.SubjectInvalid %]"/>
+                            <div id="SubjectError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="SubjectServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        </div>
+                        <div class="Clear"></div>
+
+[% RenderBlockStart("TicketOptions") %]
+                        <label for="Options">[% Translate("Options") | html %]:</label>
+                        <div class="Options Field">
+<!-- OutputFilterHook_TicketOptionsBegin -->
+
+[% RenderBlockStart("SpellCheck") %]
+                            <a href="#" id="OptionSpellCheck">[ [% Translate("Spell check") | html %] ]</a>
+[% RenderBlockEnd("SpellCheck") %]
+
+<!-- OutputFilterHook_TicketOptionsEnd -->
+
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("TicketOptions") %]
+
+<!-- OutputFilterHook_NoTicketOptionsFallback -->
+
+[% RenderBlockStart("RichTextLabel") %]
+                        <label for="RichText">[% Translate("Text") | html %]:</label>
+[% RenderBlockEnd("RichTextLabel") %]
+[% RenderBlockStart("RichTextLabelMandatory") %]
+                        <label class="Mandatory" for="RichText"><span class="Marker">*</span>[% Translate("Text") | html %]:</label>
+[% RenderBlockEnd("RichTextLabelMandatory") %]
+
+                        <div class="RichTextField">
+[% RenderBlockStart("RichText") %]
+[% InsertTemplate("RichTextEditor.tt") %]
+[% RenderBlockEnd("RichText") %]
+                    <textarea id="RichText" class="RichText Validate_Required [% Data.BodyInvalid | html %]" name="Body" rows="15" cols="[% Config("Ticket::Frontend::TextAreaEmail") %]">[% Data.Body %]</textarea>
+                            <div id="RichTextError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="RichTextServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
+                        <div class="Field FileUpload">
+                            <ul>
+[% RenderBlockStart("Attachment") %]
+                                <li>
+                                    [% Data.Filename | html %] ([% Data.Filesize | html %])
+                                    <button type="button" id="AttachmentDeleteButton[% Data.FileID | html %]" name="AttachmentDeleteButton[% Data.FileID | html %]" value="[% Translate("Delete") | html %]" class="SpacingLeft">[% Translate("Delete") | html %]</button>
+                                    <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
+        var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
+        $('#AttachmentDelete[% Data.FileID | html %]').val(1);
+        Core.Form.Validate.DisableValidation($Form);
+        $Form.trigger('submit');
+    });
+//]]></script>
+[% END %]
+                                </li>
+[% RenderBlockEnd("Attachment") %]
+                                <li>
+                                    <input name="FileUpload" id="FileUpload" type="file" size="30" />
+                                    <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
+                                    <input type="hidden" id="AttachmentChanged" name="AttachmentChanged" value="$QData{"AttachmentChanged"}" />
+                                </li>
+                            </ul>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#FileUpload').bind('change', function (Event) {
+        var $Form = $('#FileUpload').closest('form');
+        Core.Form.Validate.DisableValidation($Form);
+        $Form.find('#AttachmentUpload').val('1').end().submit();
+    });
+//]]></script>
+[% END %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("Note") %]
+
+[% RenderBlockStart("ArticleType") %]
+                                <label for="ArticleTypeID">[% Translate("Note type") | html %]:</label>
+                                <div class="Field">
+                                    [% Data.ArticleTypeStrg %]
+                                </div>
+                                <div class="Clear"></div>
+[% RenderBlockEnd("ArticleType") %]
+
+[% RenderBlockStart("DynamicField") %]
+                        <div class="Row Row_DynamicField_[% Data.Name | html %]">
+                            [% Data.Label %]
+                            <div class="Field">
+                                [% Data.Field %]
+                            </div>
+                            <div class="Clear"></div>
+                        </div>
+[% RenderBlockEnd("DynamicField") %]
+
+[% RenderBlockStart("TimeUnitsLabel") %]
+                        <label for="TimeUnits">[% Translate("Time units") | html %] [% Translate(Config("Ticket::Frontend::TimeUnits")) | html %]:</label>
+[% RenderBlockEnd("TimeUnitsLabel") %]
+[% RenderBlockStart("TimeUnitsLabelMandatory") %]
+                        <label class="Mandatory" for="TimeUnits"><span class="Marker">*</span>[% Translate("Time units") | html %] [% Translate(Config("Ticket::Frontend::TimeUnits")) | html %]:</label>
+[% RenderBlockEnd("TimeUnitsLabelMandatory") %]
+[% RenderBlockStart("TimeUnits") %]
+                        <div class="Field">
+                            <input type="text" name="TimeUnits" id="TimeUnits" value="[% Data.TimeUnits | html %]" class="W50pc Validate_TimeUnits [% Data.TimeUnitsRequired | html %] [% Data.TimeUnitsInvalid | html %]"/>
+                            <div id="TimeUnitsError" class="TooltipErrorMessage"><p>[% Translate("Invalid time!") | html %]</p></div>
+                            <div id="TimeUnitsServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("TimeUnits") %]
+                    <div class="EndOfForm"></div>
+                    </fieldset>
+                </div>
+            </div>
+[% RenderBlockEnd("ArticleEdit") %]
+
+[% RenderBlockStart("ArticleCopyMove") %]
+            <div class="WidgetSimple [% Data.WidgetClass | html %]">
+                <div class="Header">
+                    <div class="WidgetAction Toggle">
+                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
+                    </div>
+                    <h2>[% Translate(Data.WidgetTitle) | html %]</h2>
+                </div>
+                <div class="Content">
+                    <fieldset class="TableLike FixedLabel">
+                        <label class="Mandatory" for="NewTicketNumber">
+                            <span class="Marker">*</span>
+                            [% Config("Ticket::Hook") %] [% Translate("of destination ticket") | html %]:
+                        </label>
+                        <div class="Value">
+# KIX4OTRS-capeIT
+#                        <input type="text" name="NewTicketNumber" value="[% Data.NewTicketNumber | html %]" class="W20pc [% Data.NewTicketNumberInvalid | html %]"/>
+                        <input id="NewTicketNumber" type="hidden" name="NewTicketNumber" value=""/>
+                        <input id="NewTicketNumberAutoComplete" type="text" name="NewTicketNumberAutoComplete" value="" class="AutocompleteOff"/>
+                            <div id="NewTicketNumberError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="NewTicketNumberServerError" class="TooltipErrorMessage"><p>[% Translate("Invalid ticket number!") | html %]</p></div>
+                        <img src="[% Config("Frontend::ImagePath") %]loader.gif" border="2" alt="[% Translate("Loading") | html %]" class="Hidden" id="QuickLinkLoading"/>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.Config.Set("GenericAutoCompleteSearch.MinQueryLength", 3);
+    Core.Config.Set("GenericAutoCompleteSearch.QueryDelay", 200);
+    Core.Config.Set("GenericAutoCompleteSearch.MaxResultsDisplayed", 20);
+    Core.KIX4OTRS.GenericAutoCompleteSearch.Init($("#NewTicketNumberAutoComplete"),$("#NewTicketNumber"));
+//]]></script>
+[% END %]
+# EO KIX4OTRS-capeIT
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockStart("TimeUnitsCopy") %]
+                        <label for="TimeUnits">
+                            [% Translate("Copied time units of the source article") | html %]
+                        </label>
+                        <div class="Field">
+                            <input type="text" name="TimeUnits" id="TimeUnits" value="[% Data.TimeUnits | html %]" class="W10pc Validate_TimeUnits Validate_Lower Validate_Lower_[% Data.TimeUnits | html %] [% Data.NeedAccountedTime | html %]"/>
+                            [% Translate(Config("Ticket::Frontend::TimeUnits")) | html %]
+                            <div id="TimeUnitsError" class="TooltipErrorMessage"><p>[% Translate("Invalid time!") | html %]<br/>[% Translate("You cannot asign more time units as in the source article!") | html %]</p></div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label>
+                            [% Translate("Handling of accounted time from source article?") | html %]
+                        </label>
+                        <div class="Field">
+                            <input type="radio" name="TimeUnitsOriginal" id="TimeUnitsOriginalKeep" class="TimeUnitsOriginal" value="Keep"/>
+                            <label for="TimeUnitsOriginalKeep">[% Translate("Leave unchanged") | html %]</label>
+                            <br/>
+
+                            <input type="radio" name="TimeUnitsOriginal" id="TimeUnitsOriginalDifference" class="TimeUnitsOriginal" value="Difference"/>
+                            <label for="TimeUnitsOriginalDifference">[% Translate("Change to residue") | html %]</label>
+                            <br/>
+
+                            <input type="radio" name="TimeUnitsOriginal" id="TimeUnitsOriginalDelete" class="TimeUnitsOriginal" value="Delete"/>
+                            <label for="TimeUnitsOriginalDelete">[% Translate("Delete") | html %]</label>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("TimeUnitsCo") %]
+                    </fieldset>
+                </div>
+            </div>
+[% RenderBlockEnd("ArticleCopyMove") %]
+
+[% RenderBlockStart("ArticleDelete") %]
+            <div class="WidgetSimple ArticleDelete">
+                <div class="Header">
+                    <div class="WidgetAction Toggle">
+                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
+                    </div>
+                    <h2>[% Translate("Delete Article") | html %]</h2>
+                </div>
+                <div class="Content">
+                    <fieldset class="TableLike FixedLabel DeleteOptions">
+                        <label for="DeletedConfirm">
+                            [% Translate("Really delete this article?") | html %]
+                        </label>
+                        <div class="Field">
+                            <input type="checkbox" name="DeletedConfirm" id="DeletedConfirm" value="Delete" class=""/>
+                            <div id="DeletedConfirmError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="DeletedConfirmServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+[% RenderBlockEnd("ArticleDelete") %]
+
+        <div class="Footer">
+            <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check-square-o"></i> [% Translate("Submit") | html %]</span></button>
+        </div>
+    </div>
+</form>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+
+    // close all expanded widgets
+    $('.WidgetSimple.Expanded').not('.ArticleEdit').removeClass('Expanded').addClass('Collapsed');
+
+    // remove default toggle
+    $(".WidgetAction.Toggle > a").unbind();
+
+    // on open another widget close and disable other
+    $('.WidgetSimple').bind('click',function(){
+        var ElementClass    = $(this).attr('class'),
+            ClassArray      = ElementClass.split(/\s/),
+            Action          = ClassArray[1];
+
+        if ( Action == "Expanded" )
+            Action = "ArticleEdit";
+
+        // set subaction
+        $('input[name="Subaction"').val(Action);
+
+        // close other widgets
+        $('.WidgetSimple.Expanded').not(ElementClass).removeClass('Expanded').addClass('Collapsed');
+        $(this).removeClass('Collapsed').addClass('Expanded');
+
+        $('input[name="NewTicketNumber"]').removeAttr('disabled');
+
+        if ( Action == 'ArticleEdit' ) {
+            $('#DeletedConfirm').removeClass('Validate_Required');
+            $('input[name="NewTicketNumberAutoComplete"]').removeClass('Validate_Required');
+        }
+        else if ( Action == 'ArticleMove' || Action == 'ArticleCopy' ) {
+            $('#DeletedConfirm').removeClass('Validate_Required');
+            $('input[name="NewTicketNumberAutoComplete"]').not('.'+Action+' input').attr('disabled','disabled');
+            $(this).find('ArticleMove#NewTicketNumberAutoComplete').addClass('Validate_Required');
+        }
+        else if ( Action == 'ArticleDelete' ) {
+            $('#DeletedConfirm').addClass('Validate_Required');
+            $('input[name="NewTicketNumberAutoComplete"]').removeClass('Validate_Required');
+        }
+    });
+
+
+[% RenderBlockStart("TimeUnitsJs") %]
+// add validation for maximum time units
+$.validator.addMethod("Validate_Lower", function (Value, Element) {
+    var Classes = $(Element).attr('class'),
+        MaxValue = 0,
+        LowerClassPrefix = 'Validate_Lower_',
+        RegExLower = new RegExp(LowerClassPrefix);
+
+    $.each(Classes.split(' '), function (Index, Value) {
+        if (RegExLower.test(Value)) {
+            MaxValue = Value.replace(LowerClassPrefix, '');
+        }
+    });
+
+    return (parseInt(Value, 10) <= MaxValue);
+});
+
+$.validator.addClassRules("Validate_Lower", {
+    Validate_Lower: true
+});
+
+// disable validation of time units, if it is not a copy action
+$('.ArticleActionRadio').bind('change', function () {
+    var $TimeUnits = $('#TimeUnits');
+    if ($(this).val() == 'Copy') $TimeUnits.addClass('Validate_Lower [% Data.NeedAccountedTime | html %]');
+    else $TimeUnits.removeClass('Validate_Lower [% Data.NeedAccountedTime | html %]');
+    return;
+});
+
+$('.TimeUnitsOriginal').filter('[value=[% Data.TimeUnitsOriginal | html %]]').prop('checked', true).trigger('change');
+
+[% RenderBlockEnd("TimeUnitsJs") %]
+
+//    Core.Agent.TicketMerge.Init();
+//]]></script>
+[% END %]

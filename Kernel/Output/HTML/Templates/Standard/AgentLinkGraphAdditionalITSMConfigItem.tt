@@ -1,0 +1,67 @@
+# --
+# AgentLinkGraphAdditionalITSMConfigItem.tt - provides addititonal HTML for LinkGraph
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+[% RenderBlockStart("ITSMConfigItem") %]
+    <div id='[% Data.CurrentObjectType | html %]-[% Data.CurrentObjectID | html %]' style='[% Data.Start | html %]' class="GraphNode" name='[% Data.Name | html %]'>
+        <img class="IncidentImage" src='[% Config("Frontend::ImagePath") %][% Data.IncidentImage | html %]' alt='[% Data.CurIncidentStateType | html %]' title='[% Translate(Data.CurIncidentState) | html %]'/>
+        <input type="hidden" name="RightsAttr" id="RightsAttr" value='[% Data.ClassID | html %]' />
+        <img class="NodeImage" src='[% Config("Frontend::ImagePath") %][% Data.Image | html %]' alt='[% Translate(Data.Class) | html %]' title='[% Translate(Data.Class) | html %]'/>
+        <p class="ExLink">
+            <a href='#' >[% Data.Name | html %]</a>
+        </p>
+        <p style='[% Data.DeplStateColor | html %] white-space: nowrap;' title='[% Translate(Data.DeplState) | html %]'>CI#: [% Data.Number | html %]</p>
+    </div>
+[% RenderBlockEnd("ITSMConfigItem") %]
+[% RenderBlockStart("SpecificPrint") %]
+<tr>
+    <td class="InfoLeft">[% Translate("Considered CI-Classes") | html %]:</td>
+    <td>[% Data.RelCIClasses | html %]</td>
+</tr>
+[% RenderBlockEnd("SpecificPrint") %]
+[% RenderBlockStart("SpecificContext") %]
+<li>
+    <a class="Context" id="Services" href="#">[% Translate("Show linked services") | html %]</a>
+</li>
+[% RenderBlockEnd("SpecificContext") %]
+[% RenderBlockStart("SpecificSavedGraphs") %]
+<tr>
+    <td>[% Translate("Considered CI-Classes") | html %]</td>
+    <td id="SaveGraphSubTypes"></td>
+</tr>
+[% RenderBlockEnd("SpecificSavedGraphs") %]
+[% RenderBlockStart("SpecificJavaScript") %]
+    var UserRights = {
+            Ro:      '[% Data.UserClassRoRights %]',
+            Service: '[% Data.UserServiceRoRight %]'
+    };
+
+    var $CIElements = {
+        Zoom:         $Elements.ContextNodeZoom,
+        Present:      $Elements.ContextPresentNode,
+        NotPresent:   $Elements.ContextNotPresentNode,
+        Service:      $Elements.Context.find('#Services'),
+        ServicePopup: $Elements.ServicePopup,
+        ChooseBox:    $Elements.ChooseBox
+    }
+    // bind for specific context menu option
+    $CIElements.Service.bind('click', function() {
+        if ( !$CIElements.Service.hasClass('ContextNoRights') ) {
+            HideContext();
+            Core.KIX4OTRS.AgentLinkGraphITSMConfigItem.ShowServices();
+        }
+    });
+
+    Core.KIX4OTRS.AgentLinkGraphITSMConfigItem.Init('[% Data.NodesString | html %]', UserRights, GraphConfig, $CIElements);
+[% RenderBlockEnd("SpecificJavaScript") %]

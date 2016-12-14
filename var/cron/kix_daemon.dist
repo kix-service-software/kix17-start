@@ -1,0 +1,3 @@
+
+# check KIX daemon status
+*/5 * * * *    $HOME/bin/kix.Daemon.pl start >> /dev/null

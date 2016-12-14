@@ -1,0 +1,89 @@
+# --
+# AgentTicketMergeToCustomer.tt - provides HTML form for customer ticket merge mask
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Martin(dot)Balzarek(at)cape(dash)it.de
+# * Ralf(dot)Boehm(at)cape(dash)it.de
+# * Torsten(dot)Thau(at)cape(dash)it.de
+# * Tom(dot)Lorenz(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<form action="[% Env("CGIHandle") %]" method="post" id="AgentTicketMergeToCustomer" name="AgentTicketMergeToCustomer" class="Validate PreventMultipleSubmits">
+    <input type="hidden" name="Action" value="[% Env("Action") %]" />
+    <input type="hidden" name="Subaction" value="Merge" />
+    <input type="hidden" name="MainTicketID" value="[% Data.MainTicketID | html %]" />
+    <input type="hidden" name="CustomerUserID" value="[% Data.CustomerUserID | html %]" />
+
+    <div class="LayoutPopup ARIARoleMain">
+
+        <div class="Header">
+            <h1>[% Env("Box0") %][% Translate("All tickets with this customerID") | html %]: [% Data.CustomerUserID | html %][% Env("Box1") %]</h1>
+
+[% RenderBlockStart("TicketBack") %]
+            <p>
+                <a class="CancelClosePopup" href="#">[% Translate("Cancel & close") | html %]</a>
+            </p>
+[% RenderBlockEnd("TicketBack") %]
+[% RenderBlockStart("PropertiesLock") %]
+            <p>
+                [% Translate("The ticket has been locked") | html %].
+                <a class="UndoClosePopup" href="[% Env("Baselink") %]Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID %];[% Env("ChallengeTokenParam") | html %]">
+                    [% Translate("Undo & close window") | html %]
+                </a>
+            </p>
+[% RenderBlockEnd("PropertiesLock") %]
+        </div>
+
+        <div class="Spacing ContentColumn">
+            <table class="TableSmall TicketToMergeTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="ToggleChecker" title="[% Translate("De-/Select all tickets") | html %]"/></th>
+                        <th>[% Translate("Ticketnumber") | html %] ([% Config("Ticket::Hook") %])</th>
+                        <th class="FixedWidth">[% Translate("Title") | html %]</th>
+                        <th>[% Translate("Createtime") | html %]</th>
+                        <th>[% Translate("Replied") | html %]</th>
+                    </tr>
+                </thead>
+                <tbody>
+[% RenderBlockStart("Row") %]
+                    <tr class="TicketToMerge" title="[% Data.Title | html %]">
+                        <td title="[% Translate("De-/Select this ticket for merging") | html %]">
+                            <input type="checkbox" name="SelectedTicketID" class="CheckTicket" value="[% Data.TicketID | html %]" [% Data.Checked %] />
+                        </td>
+                        <td>
+                            <a href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];QueueID=[% Data.QueueID | uri %]" target="_blank" title="[% Translate("View this ticket in a new window") | html %]">[% Data.TicketNumber | html %]</a>
+                        </td>
+                        <td class="FixedWidth">[% Data.Title | truncate(120) | html %]</td>
+                        <td class="nowrap">[% Data.Created | Localize("TimeLong") %]</td>
+                        <td class="Center [% Data.Image | html %]"><span></span></td>
+                    </tr>
+[% RenderBlockEnd("Row") %]
+                </tbody>
+            </table>
+# Merge Destination Selection
+            <div class="SpacingTop SpacingBottom SpacingLeftSmall">
+                [% Translate("Merge to") | html %]: [% Data.MergeDestStrg %]
+            </div>
+# EO Merge Destination Selection
+        </div>
+
+        <div class="Footer">
+            <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check-square-o"></i> [% Translate("Submit") | html %]</span></button>
+        </div>
+    </div>
+</form>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.Agent.TicketMergeToCustomer.Init();
+//]]></script>
+[% END %]

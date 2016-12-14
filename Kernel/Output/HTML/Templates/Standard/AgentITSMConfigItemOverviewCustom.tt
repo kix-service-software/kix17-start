@@ -1,0 +1,122 @@
+# --
+# AgentITSMConfigItemOverviewCustom.tt - html for configurtion item overview table
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.UI.ActionRow.Init();
+//]]></script>
+[% END %]
+
+<div id="OverviewBody" class="Overview TicketList">
+    <table class="TableSmall" summary="A generic ITSM Configuration Item table">
+        [% Data.StyleClasses %]
+        <thead>
+            <tr>
+# KIX4OTRS-capeIT
+# content removed in custom view (not needed)
+# EO KIX4OTRS-capeIT
+[% RenderBlockStart("RecordBulkActionHeader") %]
+                <th class="Checkbox Fixed">
+                    <input type="checkbox" class="Checkbox" title="[% Translate("Select all") | html %]" id="SelectAllConfigItems" autocomplete="off" />
+                </th>
+[% RenderBlockEnd("RecordBulkActionHeader") %]
+[% RenderBlockStart("RecordCustomHeader") %]
+                <th class="[% Data.CSS | html %]">
+[% RenderBlockStart("RecordCustomHeaderLinkStart") %]
+                    <a href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=[% Data.ColumnSortBy %];OrderBy=[% Data.OrderBy | uri %]">
+[% RenderBlockEnd("RecordCustomHeaderLinkStart") %]
+                        [% Translate(Data.ColumnName) | html %]
+[% RenderBlockStart("RecordCustomHeaderLinkEnd") %]
+                    </a>
+[% RenderBlockEnd("RecordCustomHeaderLinkEnd") %]
+                </th>
+[% RenderBlockEnd("RecordCustomHeader") %]
+            </tr>
+        </thead>
+        <tbody>
+[% RenderBlockStart("NoDataFoundMsg") %]
+            <tr>
+                <td colspan="[% Data.TotalColumns | html %]">
+                    [% Translate("No data found.") | html %]
+                </td>
+            </tr>
+[% RenderBlockEnd("NoDataFoundMsg") %]
+[% RenderBlockStart("Record") %]
+# KIX4OTRS-capeIT
+#            <tr id="ConfigItemID_[% Data.ConfigItemID | html %]" class="MasterAction">
+            <tr id="ConfigItemID_[% Data.ConfigItemID | html %]" class="MasterAction" style="[% Data.LineStyle | html %]">
+# more following content removed in custom view (not needed)
+# EO KIX4OTRS-capeIT
+[% RenderBlockStart("RecordBulkAction") %]
+                <td class="Checkbox Fixed NonTextContent">
+                    <input class="Checkbox" type="checkbox" name="ConfigItemID" value="[% Data.ConfigItemID | html %]"  autocomplete="off" />
+                </td>
+[% RenderBlockEnd("RecordBulkAction") %]
+[% RenderBlockStart("RecordCustom") %]
+                <td style="vertical-align:top">
+[% RenderBlockStart("RecordCustomLinkStart") %]
+                    <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %]" title="[% Data.Title %]" class="MasterActionLink" style="[% Data.LineStyle | html %]">
+[% RenderBlockEnd("RecordCustomLinkStart") %]
+                        [% Data.Value %]
+[% RenderBlockStart("RecordCustomLinkEnd") %]
+                    </a>
+[% RenderBlockEnd("RecordCustomLinkEnd") %]
+                </td>
+[% RenderBlockEnd("RecordCustom") %]
+            </tr>
+[% RenderBlockEnd("Record") %]
+        </tbody>
+    </table>
+</div>
+
+[% RenderBlockStart("DocumentReadyActionRowAdd") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    ITSM.UI.ConfigItemActionRow.AddActions($('#ConfigItemID_[% Data.ConfigItemID | html %]'), [% Data.Data %]);
+//]]></script>
+[% END %]
+[% RenderBlockEnd("DocumentReadyActionRowAdd") %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+
+    /*global ITSM: true */
+    ITSM.UI.ConfigItemActionRow.Init();
+
+    Core.UI.InitCheckboxSelection($('table td.Checkbox'));
+
+    $('.MasterAction').bind('click', function (Event) {
+        var $MasterActionLink = $(this).find('.MasterActionLink'),
+# KIX4OTRS-capeIT
+            URL,
+            Title = $(this).find('div').attr('title'),
+            ConfigItem = Title.split('::');
+
+        if ( $MasterActionLink.attr('href') === undefined ) {
+            URL = '[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID='+ConfigItem[0]+';' + Core.Config.Get('SessionName') + '=' + Core.Config.Get('SessionID');
+        }
+        else {
+            URL = $MasterActionLink.attr('href');
+        }
+# EO KIX4OTRS-capeIT
+        // only act if the link was not clicked directly
+        if (Event.target !== $MasterActionLink.get(0)) {
+# KIX4OTRS-capeIT
+            // window.location = $MasterActionLink.attr('href');
+            window.location = URL;
+# EO KIX4OTRS-capeIT
+            return false;
+        }
+    });
+//]]></script>
+[% END %]

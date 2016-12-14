@@ -1,0 +1,57 @@
+/**
+ * @project     OTRS (http://www.otrs.org) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   OTRS AG
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/**
+ * @package     Skin "Default"
+ * @section     TicketDetails
+ */
+
+@media screen,projection,tv,handheld {
+
+    /*
+    * System article types
+    */
+
+    .WidgetSimple > .Header, .WidgetSimple.Collapsed.AnimationRunning > .Header {
+        background-color: #DDD
+    }
+
+    .ControlRow {
+        background-color: #DDD;
+    }
+
+    .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+        border-bottom-color: #FFCC65 !important;
+        z-index: 3 !important;
+    }
+
+   .ui-tabs .ui-tabs-nav li a:hover {
+        border-bottom: 25px solid #FFCC65;
+        z-index: 3 !important;
+    }
+
+    div.ui-tabs {
+        border: 0px solid #000;
+    }
+
+    .ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+       border-bottom-right-radius: 0px;
+    }
+    .ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+        border-bottom-left-radius: 0px;
+    }
+
+    h2 {
+        color: #000;
+    }
+
+    .ui-datepicker-header {
+        background: #ddd !important;
+    }
+
+
+} /* end @media */

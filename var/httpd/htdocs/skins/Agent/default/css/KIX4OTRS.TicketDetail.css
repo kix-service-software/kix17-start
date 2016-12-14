@@ -1,0 +1,275 @@
+/**
+ * @project     OTRS (http://www.otrs.org) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   OTRS AG
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/**
+ * @package     Skin "Default"
+ * @section     TicketDetails
+ */
+
+@media screen,projection,tv,handheld {
+
+/**
+* @subsection  TicketInfo
+*/
+
+    #TicketInfo div.Clear {
+        line-height: 0px;
+    }
+
+/**
+ * @subsection  Article table body
+ */
+
+    #ArticleTableBody {
+        position: relative;
+        overflow: hidden;
+        border-bottom: none;
+        cursor:    pointer;
+    }
+
+    .FixedHeader .From div, .FixedHeader .Subject div, .FixedHeader .Type div, .FixedHeader td.Created a {
+        height: 20px;
+    }
+
+    .ArticleMailContent iframe {
+        border: 1px solid #CCC;
+    }
+
+/**
+ * @subsection  tabs-ui
+ */
+
+    .ui-tabs .ui-tabs-nav {
+        list-style: outside none none;
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
+        width: 100%;
+    }
+
+    .ui-tabs .ui-tabs-nav li {
+        float: left;
+        margin: 0 -15px 0 0;
+        background: #FFF !important;
+        font-size: 11px;
+    }
+
+    .ui-tabs .ui-tabs-nav li a {
+        border-bottom: 25px solid #E7E7E7;
+        border-right: 25px solid transparent;
+        float: left;
+        height: 0;
+        line-height: 25px;
+        position: relative;
+        text-decoration: none;
+        margin: 10px 0px 0px 5px;
+    }
+
+    .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+        border-bottom-color: #DDD !important;
+        z-index: 3 !important;
+    }
+
+    .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+        border: 0px;
+    }
+
+    div.ui-widget-content {
+        border:0px;
+        background:none;
+        color: #222;
+    }
+
+    div.ui-widget {
+        font-size:12px;
+        color: #000;
+    }
+
+    div.ui-datepicker, div.ui-widget {
+        font-size:12px;
+        color: #000;
+        background: #fff;
+        border: 1px solid #ddd;
+    }
+
+    #ui-datepicker-div {
+        z-index: 10 !important;
+    }
+
+    .ui-widget-header {
+        background: #fff !important;
+    }
+
+    div.ui-tabs > div {
+        border: 1px solid #c0c0c0;
+        padding: 5px;
+    }
+
+    .ui-tabs-nav li a.ui-tabs-anchor {
+        padding-left: 6px;
+    }
+
+/**
+ * @subsection  Article tree
+ */
+
+    #ArticleTree {
+        margin-top: 0px;
+    }
+
+    .FlagIcon {
+        font-size: 13px;
+        display: block;
+        width: 16px;
+        height: 16px;
+        float: left;
+        margin: -2px 0px 0px 0px;
+    }
+
+    span.ImportantArticles {
+        float: left;
+        margin: -2px 0px 0px 0px;
+    }
+
+    .ActionRow {
+        background: #fff;
+        padding: 5px 0 5px 0;
+    }
+
+    .ActionRow .Actions li, .LightRow .Actions li {
+        background: none;
+    }
+
+    .Actions li {
+        font-size:11px;
+    }
+
+    .ActionRow {
+        border-bottom: #c0c0c0;
+    }
+
+    .ActionRow .Actions li a, .LightRow .Actions li a, .Actions li.Inactive a:hover, .Actions li.Inactive:hover a {
+        background-color: #eee;
+        border: 1px solid #ccc;
+        margin: 3px;
+        border-bottom: 1px solid #bbb;
+        cursor: pointer;
+    }
+
+    .ActionRow .Actions li a:hover, .LightRow .Actions li a:hover {
+        background-color: #FFCC65;
+        border-color: #999;
+        border: 1px solid #999;
+    }
+
+    .LightRow.Bottom > .Actions label.Label {
+        position: relative;
+        color: #555;
+        line-height: 1.0em;
+        padding-bottom: 1px;
+        font-size: 12px;
+    }
+
+    .ActionRow .Actions li span, .LightRow .Actions li span, .Actions li.Inactive span:hover {
+        background-color: #eee;
+        border: 1px solid #ccc !important;
+        border-bottom: 1px solid #bbb !important;
+        cursor: pointer;
+    }
+
+    .OverviewBox.Medium .ActionRow .Actions li span {
+        border: 0px !important;
+        cursor: pointer;
+        background-color: #fff;
+    }
+
+    .ActionRow .Actions li span.MenuClusterIcon, .LightRow .Actions li span.MenuClusterIcon, .Actions li.Inactive span.MenuClusterIcon:hover {
+        border-left: none !important;
+        width: 10px;
+        text-align: center;
+        background-color: #E8E8E8;
+    }
+
+    .Cluster ul ul {
+        left: 0px !important;
+        background: none !important;
+        box-shadow: none !important;
+    }
+
+    .Cluster ul ul li {
+        border-bottom: 0px !important;
+    }
+
+    .ActionRow.Cluster > ul > li > ul > li > a {
+        margin: 0px;
+    }
+
+    .ActionRow.Cluster > ul > li > ul > li > a,.ActionRow.Cluster > ul > li > ul > li > a:hover {
+        border-bottom: none;
+    }
+
+    .ActionRow.Cluster > ul > li > ul > li:last-child > a {
+        border-bottom: 1px solid #CCC;
+    }
+
+    .ActionRow.Cluster > ul > li > ul > li:last-child > a:hover {
+        border-bottom: 1px solid #999;
+    }
+
+    .Actions li a, .Actions li span {
+        padding: 2px 2px;
+    }
+
+    .LightRow .Actions li span {
+        padding: 4px !important;
+    }
+
+    .Actions li:first-child {
+        padding: 0px;
+    }
+
+    .ProcessAction {
+        background: none;
+        border: 0px;
+        border-bottom: 1px solid #C6C5C4;
+        padding-bottom: 5px;
+    }
+
+    #CustomerInfo .ItemRow {
+        margin-left: 10px;
+    }
+
+    #ScratchPadNotes {
+        width:  97%;
+    }
+
+    .LightRow .Spacing {
+       margin: 5px;
+    }
+
+    .LightRow .Actions {
+        padding: 5px;
+    }
+
+    .Actions li span:hover {
+        border-bottom: 0px;
+    }
+
+    .ClusterLink {
+        padding: 2px 5px !important
+    }
+
+    #TicketInfo > div > fieldset > label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #ServiceIncidentStateContainer .Flag, .SidebarColumn fieldset.TableLike div.Value .Flag {
+        margin-top: 2px !important;
+    }
+
+} /* end @media */

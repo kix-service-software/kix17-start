@@ -1,0 +1,108 @@
+# --
+# CustomerTicketCustomerIDSelection.tt - provides HTML form for customer message
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("Plain") %]
+[% Data.Content %]
+[% RenderBlockEnd("Plain") %]
+[% RenderBlockStart("Label") %]
+<label for="[% Data.LabelRef | html %]" title="[% Translate(Data.Title, Data.TitleContent) | html %]" class="[% Data.Css | html %]">[% Data.Content | truncate(Data.MaxLength) | html %]</label>
+[% RenderBlockEnd("Label") %]
+[% RenderBlockStart("Text") %]
+<span title="[% Data.Content | html %]" class="[% Data.Css | html %]">[% Data.Content | truncate(Data.MaxLength) | html %]</span>
+[% RenderBlockEnd("Text") %]
+[% RenderBlockStart("TextTranslate") %]
+<span title="[% Translate(Data.Content) | html %]" class="[% Data.Css | html %]">[% Data.Content | Translate | truncate(Data.MaxLength) | html %]</span>
+[% RenderBlockEnd("TextTranslate") %]
+[% RenderBlockStart("Link") %]
+<a href="[% Data.Link %]" title="[% Translate(Data.Title) | html %]" class="[% Data.Css | html %]">[% Data.Content | truncate(Data.MaxLength) | html %]</a>
+[% RenderBlockEnd("Link") %]
+[% RenderBlockStart("TimeLong") %]
+[% Data.Content | Localize("TimeLong") %]
+[% RenderBlockEnd("TimeLong") %]
+[% RenderBlockStart("Checkbox") %]
+<input type="checkbox" name="[% Data.Name | html %]" id="[% Data.ID | html %]" value="[% Data.Content | html %]" title="[% Translate(Data.Title, Data.TitleContent) | html %]" class="[% Data.Css | html %]"/>
+&nbsp;<br/>
+[% RenderBlockEnd("Checkbox") %]
+[% RenderBlockStart("Radiobutton") %]
+<input type="radio" name="[% Data.Name | html %]" id="[% Data.ID | html %]" value="[% Data.Content | html %]" title="[% Translate(Data.Title, Data.TitleContent) | html %]" class="[% Data.Css | html %]"/>
+&nbsp;<br/>
+[% RenderBlockEnd("Radiobutton") %]
+
+[% RenderBlockStart("CustomerIDSelection") %]
+<div id="MainBox" class="TicketCompose ARIARoleMain">
+    <div class="Content">
+        <form action="[% Env("CGIHandle") %]" method="post" id="CustomerIDSelection" name="CustomerIDSelection" enctype="multipart/form-data" class="Validate PreventMultipleSubmits" >
+            <input type="hidden" name="Action" value="[% Env("Action") %]" />
+            <input type="hidden" name="Subaction" value="NewTicket" />
+            <input type="hidden" name="SelectedCustomerID" id="SelectedCustomerID" value="" />
+            <input type="hidden" name="DefaultSet" id="DefaultSet" value="[% Data.DefaultSet | html %]" />
+            <input type="hidden" name="FormID" value="[% Data.FormID | html %]" />
+            <fieldset>
+                <div>
+                    <div class="Content">
+                        [% Translate("Please select the customer ID to which your request is related") | html %]:
+                    </div>
+                    <table class="DataTable">
+                        <thead>
+                            <tr>
+[% RenderBlockStart("TableBlockColumn") %]
+                                <th>[% Translate(Data.Content) | html %]</th>
+[% RenderBlockEnd("TableBlockColumn") %]
+                            </tr>
+                        </thead>
+                        <tbody>
+[% RenderBlockStart("TableBlockRow") %]
+                            <tr>
+[% RenderBlockStart("TableBlockRowColumn") %]
+                                <td>
+                                    [% Data.Content %]
+                                </td>
+[% RenderBlockEnd("TableBlockRowColumn") %]
+                            </tr>
+[% RenderBlockEnd("TableBlockRow") %]
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+            <div id="BottomActionRow" class="ActionRow">
+                <button id="submitCustomerUserID" accesskey="g" title="[% Translate("Proceed") | html %] (g)" type="submit" value="[% Translate("Proceed") | html %]" title="[% Translate("Proceed with ticket creation for the selected customer ID") | html %]"><span>[% Translate("Proceed") | html %]</span></button>
+            </div>
+        </form>
+    </div>
+</div>
+[% RenderBlockEnd("CustomerIDSelection") %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    // update some background values
+    $('.SelectedCustomerRadio').bind('click', function () {
+        $('#SelectedCustomerID').val( $(this).val() );
+    });
+
+    // form validation
+    $('#submitCustomerUserID').bind('click', function () {
+        var AlertDialogCloseFunction = function() {Core.UI.Dialog.CloseDialog($('.Dialog:visible'));};
+
+        if( !$('#SelectedCustomerID').val() ) {
+            Core.UI.Dialog.ShowAlert( 'Note', "[% Translate("Please select the customer ID to which your request is related") | html %]!", AlertDialogCloseFunction );
+            return false;
+        }
+
+        return true;
+    });
+//]]></script>
+[% END %]

@@ -1,0 +1,241 @@
+# --
+# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+# KIX4OTRS-capeIT
+# moved content for article filter dialog into separate tab
+# EO KIX4OTRS-capeIT
+
+[% RenderBlockStart("Header") %]
+<div class="MainBox ARIARoleMain TicketZoom [% IF Data.UseArticleColors %]UseArticleColors[% END %]">
+    <div class="ClearLeft"></div>
+    <div class="Headline">
+        <div class="Flag" title="[% Translate(Data.Priority) | html %]"><span class="PriorityID-[% Data.PriorityID | html %]">[% Translate(Data.Priority) | html %]</span></div>
+        <h1>
+            [% Data.Hook %][% Config('Ticket::HookDivider') %][% Data.TicketNumber %] &mdash; [% Data.Title | html %]
+        </h1>
+    </div>
+
+# Iframe used for fixing bug#8545: Attachment download not possible if pop up of another action is open
+# All downloads (e.g. attachments) have this iframe as target. This prevents the browser from sending
+# an http request to the TicketZoom window. It sends the download request to this iframe instead.
+# Sending the download request to the main window would lead to an alert message about leaving the page
+# if at the same time a popup window (e.g. for a ticket answer) is opened.
+    <iframe src="about:blank" width="0" height="0" name="AttachmentWindow" id="AttachmentWindow"></iframe>
+
+    <div class="LayoutFixedSidebar SidebarLast">
+        <div class="SidebarColumn">
+# KIX4OTRS-capeIT
+           [% Data.KIXSidebarContent %]
+# EO KIX4OTRS-capeIT
+        </div>
+        <div class="ContentColumn OverflowVisible">
+            <div class="ControlRow">
+                <h2>[% Data.ArticleCount | html %] [% Translate("Article(s)") | html %]</h2>
+                <div class="AdditionalInformation">
+                    [% Translate("Age") | html %]: [% Data.Age %] &ndash; [% Translate("Created") | html %]: [% Data.Created | Localize("TimeShort") %]
+[% RenderBlockStart("CreatedBy") %]
+                        <label>[% Translate("Created by") | html %]:</label>
+                        <p class="Value" title="[% Data.CreatedByUser %]">[% Data.CreatedByUser %]</p>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("CreatedBy") %]
+                </div>
+            </div>
+            <div class="ActionRow Cluster">
+                <ul class="Actions">
+[% RenderBlockStart("TicketMenu") %]
+                            <li id="nav-[% Data.Name | replace(' ', '-') | html %]">
+                            [% IF Data.Type == 'Cluster' %]
+# KIX4OTRS-capeIT
+#                                <span class="[% Data.Class %]" >[% Translate(Data.Name) | html %] <i class="fa fa-caret-down"></i></span>
+                                <span class="[% Data.Class %]" title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %] </span><span class="MenuClusterIcon"><i class="fa fa-caret-down"></span></i>
+# EO KIX4OTRS-capeIT
+                            [% ELSE %]
+                                <a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>
+                            [% END %]
+[% RenderBlockStart("TicketMenuSubContainer") %]
+                                <ul id="nav-[% Data.Name | replace(' ', '-') | html %]-container">
+[% RenderBlockStart("TicketMenuSubContainerItem") %]
+                                    <li id="nav-[% Data.Name | replace(' ', '-') | html %]">
+                                        <a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class | html %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>
+                                    </li>
+[% RenderBlockEnd("TicketMenuSubContainerItem") %]
+                                </ul>
+[% RenderBlockEnd("TicketMenuSubContainer") %]
+                            </li>
+[% RenderBlockEnd("TicketMenu") %]
+[% RenderBlockStart("TicketMenuPhoneAsDropdown") %]
+                            <li>
+                                <form title="[% Translate(Data.Name) | html %]" action="[% Env("CGIHandle") %]" method="get" id="[% Data.FormID | html %]">
+                                    <input type="hidden" name="Action" value="[% Data.Action | html %]"/>
+                                    <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
+                                    <label for="[% Data.PhoneElementID | html %]" class="InvisibleText">[% Translate(Data.Name) | html %]:</label>
+                                    [% Data.StandardReplyStrg %]
+                                </form>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bind('change', function (Event) {
+    var URL;
+
+    if ($(this).val() > 0) {
+        URL = Core.Config.Get('Baselink') + $(this).parents().serialize();
+        Core.UI.Popup.OpenPopup(URL, 'TicketAction');
+        // reset the select box so that it can be used again from the same window
+        $(this).val('0');
+    }
+});
+//]]></script>
+[% END %]
+                            </li>
+[% RenderBlockEnd("TicketMenuPhoneAsDropdown") %]
+[% RenderBlockStart("MoveLink") %]
+                            <li class="[% Data.Class | html %]">
+                                <form title="[% Translate("Move ticket to a different queue") | html %]" action="[% Env("CGIHandle") %]" method="post">
+                                    <input type="hidden" name="Action" value="AgentTicketMove"/>
+                                    <input type="hidden" name="QueueID" value="[% Data.QueueID | html %]"/>
+                                    <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
+# KIX4OTRS-capeIT
+#                            <label for="DestQueueID" class="InvisibleText">[% Translate("Queue") | html %]:</label>
+                            <label for="DestQueueID" class="Text">[% Translate("Queue") | html %]:</label>
+# EO KIX4OTRS-capeIT
+                            [% Data.MoveQueuesStrg %]
+                        </form>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#DestQueueID').bind('change', function (Event) {
+        // KIX4OTRS-capeIT
+        // do not submit if no queue selected
+        if ( $(this).val() != '0' )
+        // EO KIX4OTRS-capeIT
+            $(this).closest('form').submit();
+    });
+//]]></script>
+[% END %]
+                            </li>
+[% RenderBlockEnd("MoveLink") %]
+[% RenderBlockStart("MoveForm") %]
+                            <li>
+                                <a href="[% Env("Baselink") %]Action=AgentTicketMove;TicketID=[% Data.TicketID | uri %];" class="AsPopup PopupType_TicketAction" title="[% Translate("Change Queue") | html %]">[% Translate("Queue") | html %]</a>
+                            </li>
+[% RenderBlockEnd("MoveForm") %]
+                </ul>
+                <div class="Clear"></div>
+            </div>
+
+# KIX4OTRS-capeIT
+# moved content into separate tab
+# EO KIX4OTRS-capeIT
+
+# KIX4OTRS-capeIT
+# initalize tab view
+            <div id="ContentItemTabs">
+                <ul>
+[% RenderBlockStart("DataTabDataLink") %]
+                    <li title="[% Translate(Data.Description) | html %]"><a href="[% Env("Baselink") %][% Data.Link %]" title="[% Data.Description | html %]">[% Translate(Data.Label) | html %] [% Data.LabelCount | html %]</a></li>
+[% RenderBlockEnd("DataTabDataLink") %]
+[% RenderBlockStart("DataTabDataPreloaded") %]
+                    <li title="[% Translate(Data.Description) | html %]"><a href="#[% Data.Anchor %]" title="[% Data.Description | html %]">[% Translate(Data.Label) | html %] [% Data.LabelCount | html %]</a></li>
+[% RenderBlockEnd("DataTabDataPreloaded") %]
+                </ul>
+[% RenderBlockStart("DataTabContentPreloaded") %]
+                <div id="[% Data.Anchor %]">
+                    [% Data.ContentStrg %]
+                </div>
+[% RenderBlockEnd("DataTabContentPreloaded") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+
+    var $Element = $('#ContentItemTabs'),
+        Disabled = [],
+        Index,
+        ActiveTab = [% Data.SelectedTab %],
+        RichTextEditorLoaded = 0,
+        RichTextActivated = [% Data.RichTextEditorActivated %],
+        ActiveInterval;
+
+    function GetDisabledTabs(TabSelected) {
+        Disabled = [];
+        for (Index=0;Index<6;Index++) {
+            if ( TabSelected != Index ) {
+                Disabled.push(Index);
+            }
+        }
+        return Disabled;
+    }
+
+    Disabled = GetDisabledTabs(ActiveTab);
+
+    // disable ajax/tab caching
+    $.ajaxSetup({ cache: false });
+
+    $Element.tabs({
+        beforeActivate: function(event, ui) {
+            $(this).find('div').html('<span class="AJAXLoader"></span>');
+            $(window).unbind();
+        },
+        beforeLoad: function( event, ui ) {
+            ui.ajaxSettings.cache = false,
+            ui.ajaxSettings.error = function( xhr, status, index, anchor ) {
+                $(anchor.hash)
+                    .html("Couldn't load this tab. We'll try to fix this as soon as possible.");
+            }
+        },
+        activate: function( event, ui ) {
+            $Element.tabs( "option","disabled",[0,1,2,3,4,5,6,7,8,9]);
+        },
+        create: function(event, ui) {
+            $(this).find('ul > li > a').attr('title', '');
+            $(this).find('div').html('<span class="AJAXLoader"></span>');
+            $Element.tabs( "option","disabled",Disabled);
+        },
+        active: [% Data.SelectedTab %]
+    })
+    .on( "tabsload", function( event, ui ) {
+        RichTextEditorLoaded = 0;
+        if ( $('#RichText').length && RichTextActivated == 1 ) {
+            ActiveInterval = window.setInterval(function(){
+                RichTextEditorLoaded = $('#cke_RichText').length;
+                if ( RichTextEditorLoaded != 0 ) {
+                    window.clearInterval(ActiveInterval);
+                    $Element.tabs( "option","disabled",[]);
+                }
+            }, 100);
+        }
+        else {
+            $Element.tabs( "option","disabled",[]);
+        }
+    });
+//]]></script>
+[% END %]
+# EO KIX4OTRS-capeIT
+            </div>
+        </div>
+        <div class="Clear"></div>
+    </div>
+
+</div>
+[% RenderBlockEnd("Header") %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentTicketZoomSidebarWidth") %]','[% Env("Action") %]','TicketID=[% Data.TicketID | uri %];');
+    Core.Agent.TicketZoom.Init({ ArticleTableHeight: parseInt('[% Env("UserTicketZoomArticleTableHeight") %]', 10)});
+    Core.Config.Set('Ticket::Frontend::HTMLArticleHeightDefault', parseInt("[% Config("Ticket::Frontend::HTMLArticleHeightDefault") %]" || 0, 10));
+    Core.Config.Set('Ticket::Frontend::HTMLArticleHeightMax', parseInt("[% Config("Ticket::Frontend::HTMLArticleHeightMax") %]" || 0, 10));
+//]]></script>
+[% END %]
+
+# needed for AgentTicketZoomTabActionCommon
+<script src="[% Config("Frontend::RichTextPath") %]ckeditor.js" type="text/javascript"></script>

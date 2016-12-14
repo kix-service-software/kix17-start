@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="Application">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="FwdLinkedObjectData::ExcludedCIAttributeKeys" Required="1" Valid="1">
+        <Description Translatable="1">Defines CI-attributes for CI-Classes which are not forwarded.</Description>
+        <Group>ExternalSupplierForwarding</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Computer"></Item>
+                <Item Key="Hardware"></Item>
+                <Item Key="Network"></Item>
+                <Item Key="Software"></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="FwdLinkedObjectData::OnlyCIAttributeKeys" Required="1" Valid="1">
+        <Description Translatable="1">Defines only CI-attributes for CI-Classes which are forwarded.</Description>
+        <Group>ExternalSupplierForwarding</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Location">Address,Phone1,Phone2,E-Mail</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

@@ -1,0 +1,103 @@
+# --
+# PreferencesLinkObject.tt - provides HTML elements for link object preferences
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("FilterColumnSettings") %]
+<div id="ContextSettingsDialogContainer-[% Data.PreferencesID %]" class="Hidden">
+    <form action="[% Env("CGIHandle") %]" method="post" id="ContextSettingsDialogOverview-[% Data.PreferencesID %]" class="WidgetSettingsForm">
+        <input type="hidden" name="Action" value="AgentPreferences"/>
+        <input type="hidden" name="Subaction" value="Update"/>
+        <input type="hidden" name="FilterAction" value="[% Data.Name | html %]"/>
+        <input type="hidden" name="Group" value="[% Data.GroupName | html %]"/>
+        <input type="hidden" name="RedirectURL" value="[% Data.RequestedURL | html %]"/>
+        <input type="hidden" class="ColumnsEnabledJSON" value="[% Data.ColumnsEnabled | html %]" />
+        <input type="hidden" class="ColumnsAvailableJSON" value="[% Data.ColumnsAvailable | html %]" />
+        <fieldset class="TableLike FixedLabelSmall">
+            <label class="DontPrint" for="[% Data.NamePref | html %]">[% Translate(Data.Desc) | html %]:</label>
+            <div class="Field DontPrint LayoutGrid AllocationListContainer">
+                <div class="Size1of2">
+                    <ul class="Tablelike">
+                        <li class="Header">[% Translate("Available Columns") | html %]</li>
+                    </ul>
+                    <div class="FilterInputContainer">
+                        <input type="text" class="FilterAvailableFields" name="FilterAvailableFields" value="" title="[% Translate("Filter available fields") | html %]" placeholder="[% Translate("Filter available fields") | html %]..." />
+                    </div>
+                    <ul class="AllocationList Tablelike AvailableFields SettingsOverview" id="AvailableField-Dashboard[% Data.Name | html %]"></ul>
+                </div>
+                <div class="Size1of2">
+                    <ul class="Tablelike">
+                        <li class="Header">[% Translate("Visible Columns (order by drag & drop)") | html %]</li>
+                    </ul>
+                    <ul class="AllocationList Tablelike AssignedFields OrderNumbers SettingsOverview" id="AssignedFields-Dashboard[% Data.Name | html %]"></ul>
+                </div>
+            </div>
+            <div class="Clear"></div>
+        </fieldset>
+    </form>
+</div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$("#SetColumnPreferences_[% Data.PreferencesID %]").bind('click', function (Event) {
+    var Action = '[% Env("Action") %]';
+
+    Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainer-[% Data.PreferencesID %]'), [% Translate("Settings") | JSON %], '15%', 'Center', true,
+        [
+            {
+                Label: [% Translate("Submit") | JSON %],
+                Type: 'Submit',
+                Class: 'Primary',
+                Function: function () {
+                    var $ListContainer = $('.AllocationListContainer').find('.AssignedFields'),
+                        $FieldObj,
+                        Container = '[% Data.PreferencesID %]$',
+                        Regexp   = new RegExp(Container.replace('_','-'), 'g');
+
+                    if (isJQueryObject($ListContainer) && $ListContainer.length) {
+                        var SelectedElements = new Array();
+                        $.each($ListContainer.find('li'), function() {
+
+
+                            var Found = 0;
+                            $.each( $(this).closest('form').find('input[name="FilterAction"]'), function()  {
+                                if ( $(this).val().match(Regexp) ) {
+                                    Found = 1;
+                                }
+                            });
+
+                            if ( Found == 1 && SelectedElements.indexOf($(this).attr('data-fieldname')) == -1 ) {
+                                $FieldObj = $('<input />').attr('name', 'UserFilterColumnsEnabled').attr('type', 'hidden').attr('value', $(this).attr('data-fieldname'));
+                                $ListContainer.append($FieldObj);
+                                SelectedElements.push($(this).attr('data-fieldname'));
+                            }
+                        });
+                    }
+                    return true;
+                }
+            }
+        ], true);
+    Event.preventDefault();
+    Event.stopPropagation();
+    Core.Agent.TableFilters.SetAllocationList('[% Data.PreferencesID %]$');
+    return false;
+});
+
+Core.Config.AddConfig({
+[% RenderBlockStart("ColumnTranslation") %]
+    'Column[% Data.ColumnName | html %]': [% Translate(Data.TranslateString) | JSON %][% RenderBlockStart("ColumnTranslationSeparator") %],[% RenderBlockEnd("ColumnTranslationSeparator") %]
+[% RenderBlockEnd("ColumnTranslation") %]
+});
+
+//]]></script>
+[% END %]
+[% RenderBlockEnd("FilterColumnSettings") %]

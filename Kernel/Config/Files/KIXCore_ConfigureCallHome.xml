@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.1.0" init="Application">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="Package::ConfigureCallHomeVerificationPath" Required="0" Valid="0">
+        <Description Translatable="1">Enables the unrequested automatic communication of installed packages and other system details to the path.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Package</SubGroup>
+        <Setting>
+            <String Regex="">https://pav.otrs.com/otrs/public.pl</String>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

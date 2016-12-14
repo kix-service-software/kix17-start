@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_config version="1.0" init="KIXApplication">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="Ticket::CustomModule###010-TicketExtensionsKIX4OTRSITSMIncidentProblem" Required="0" Valid="1">
+        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::Ticket. Used to easily add customizations.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <String Regex="">Kernel::System::Ticket::TicketExtensionsKIX4OTRSITSMIncidentProblem</String>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Frontend::ITSMIncidentProblem###DynamicField" Required="0" Valid="1">
+        <Description Translatable="1">Dynamic fields shown in the article tab of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ITSMIncidentProblem</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabActionCommon###ShowIncidentState" Required="1" Valid="1">
+        <Description Translatable="1">Defines if the service incident state should be shown during service selection in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabActionCommon</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

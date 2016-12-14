@@ -1,0 +1,152 @@
+# --
+# AgentTicketZoomTabProcess.tt - provides HTML for AgentTicketZoomTabProcess.pm
+# based upon AgentTicketZoom.tt
+# original Copyright (C) 2001-2014 OTRS AG, http://otrs.com/
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("Header") %]
+        <div id="AgentTicketZoomTab">
+[% RenderBlockStart("ProcessWidget") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+var WidgetWidth   = parseInt($('#DynamicFieldsWidget').innerWidth() - 15, 10),
+    FieldsPerRow  = 4,
+    FieldMargin   = parseInt($('.DynamicFieldAutoResize').css('margin-right'), 10) + 2,
+    FieldWidth    = 0;
+
+// define amount of fields per row depending on display resolution
+if ( WidgetWidth < 1000 ) {
+    FieldsPerRow = 3;
+}
+if ( WidgetWidth < 600 ) {
+    FieldsPerRow = 2;
+}
+if ( WidgetWidth < 400 ) {
+    FieldsPerRow = 1;
+}
+
+// determine the needed field width and resize the fields
+
+if (FieldsPerRow === 1) {
+    FieldWidth = '100%';
+}
+else {
+    FieldWidth = parseInt(WidgetWidth / FieldsPerRow - FieldMargin - 1, 10);
+}
+
+$('.DynamicFieldAutoResize').width(FieldWidth);
+
+$('.ShowFieldInfoOverlay').bind('click', function() {
+
+    var OverlayTitle  = $(this).closest('label').attr('title'),
+        OverlayHTML   = $(this).closest('.FieldContainer').find('.Value').html();
+
+    OverlayHTML = '<div class="FieldOverlay">' + OverlayHTML + '</div>';
+
+    Core.UI.Dialog.ShowDialog({
+        Modal: true,
+        Title: OverlayTitle,
+        HTML: OverlayHTML,
+        PositionTop: '100px',
+        PositionLeft: 'Center',
+        CloseOnEscape: true,
+        Buttons: [
+            {
+                Type: 'Close',
+                Label: [% Translate("Close") | JSON %],
+                Function: function() {
+                    Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
+                    Core.Form.EnableForm($('form[name="compose"]'));
+                    return false;
+                }
+            }
+        ]
+    });
+});
+//]]></script>
+[% END %]
+            <div class="WidgetSimple Expanded" id="DynamicFieldsWidget">
+                <div class="Header">
+                    <div class="WidgetAction Toggle"><a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a></div>
+                    <h2>[% Translate(Data.WidgetTitle) | html %]</h2>
+                </div>
+[% RenderBlockStart("NextActivityDialogs") %]
+                <div class="LightRow Bottom">
+                    <ul class="Actions">
+                        <li><strong>[% Translate(Data.ActivityName) | html %]:</strong></li>
+[% RenderBlockStart("ActivityDialog") %]
+                        <li>
+# KIX4OTRS-capeIT
+#                            <a title="[% Data.Name | html %]" class="AsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=AgentTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | html %];ProcessEntityID=[% Data.ProcessEntityID | html %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | html %]">[% Translate(Data.Name) | html %]</a>
+                            <a title="[% Data.Name | html %]" class="TabAsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=AgentTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | html %];ProcessEntityID=[% Data.ProcessEntityID | html %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | html %]">[% Translate(Data.Name) | html %]</a>
+# EO KIX4OTRS-capeIT
+                        </li>
+[% RenderBlockEnd("ActivityDialog") %]
+                    </ul>
+[% RenderBlockStart("NoActivityDialogs") %]
+                    <span class="ActionMessage">[% Translate("There are no dialogs available at this point in the process.") | html %]</span>
+[% RenderBlockEnd("NoActivityDialogs") %]
+                    <div class="Clear"></div>
+                </div>
+[% RenderBlockEnd("NextActivityDialogs") %]
+                <div class="Content ProcessInfo">
+                    <div class="ProcessInformation">
+                        <fieldset>
+[% RenderBlockStart("ProcessWidgetDynamicFieldGroups") %]
+[% RenderBlockStart("ProcessWidgetDynamicFieldGroupSeparator") %]
+                            <h2 class="FieldSetSeparator">[% Data.Name %]</h2>
+[% RenderBlockEnd("ProcessWidgetDynamicFieldGroupSeparator") %]
+[% RenderBlockStart("ProcessWidgetDynamicField") %]
+                            <div class="FieldContainer DynamicFieldAutoResize">
+                                <label title="[% Data.Label | html %]">
+                                    [% Data.Label | html %]
+[% RenderBlockStart("ProcessWidgetDynamicFieldValueOverlayTrigger") %]
+                                    <a href="#" class="ShowFieldInfoOverlay">+</a>
+[% RenderBlockEnd("ProcessWidgetDynamicFieldValueOverlayTrigger") %]
+                                </label>
+                                <p class="Value CutValue DynamicField_[% Data.Name %]">
+<!-- OutputFilterHook_WidgetDynamicFieldBegin -->
+[% RenderBlockStart("ProcessWidgetDynamicFieldLink") %]
+                                    <span title="[% Data.Title %]"><a href="[% Data.Link | Interpolate %]"[% IF Data.LinkPreview %] data-trigger="floater" data-floater-url="[% Data.LinkPreview | Interpolate %]"[% END %] target="_blank" class="DynamicFieldLink">[% Data.Value %]</a></span>
+[% RenderBlockEnd("ProcessWidgetDynamicFieldLink") %]
+[% RenderBlockStart("ProcessWidgetDynamicFieldPlain") %]
+                                    [% Data.Value %]
+[% RenderBlockEnd("ProcessWidgetDynamicFieldPlain") %]
+<!-- OutputFilterHook_WidgetDynamicFieldEnd -->
+                                </p>
+                                <p class="ValueLong">
+[% RenderBlockStart("ProcessWidgetDynamicFieldValueLong") %]
+                                    [% Data.Value %]
+[% RenderBlockEnd("ProcessWidgetDynamicFieldValueLong") %]
+                                </p>
+                                <div class="Clear"></div>
+                            </div>
+[% RenderBlockEnd("ProcessWidgetDynamicField") %]
+[% RenderBlockEnd("ProcessWidgetDynamicFieldGroups") %]
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+[% RenderBlockEnd("ProcessWidget") %]
+        </div>
+        <div class="Clear"></div>
+[% RenderBlockEnd("Header") %]
+
+# KIX4OTRS-capeIT
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.TicketZoomTabs.PopUpInit();
+//]]></script>
+[% END %]
+# EO KIX4OTRS-capeIT

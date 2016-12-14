@@ -1,0 +1,28 @@
+# --
+# Kernel/Output/HTML/Standard/AgentKIXSidebarChecklistTable.tt - provides HTML to show a Checklist in KIXSidebar
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<tbody>
+[% RenderBlockStart("Task") %]
+    <tr class="[% Data.Class | html %]" style="[% Data.Style | html %]">
+        <td id="ChecklistIcon_[% Data.ID %]" class="ChecklistIcon"><i class="fa [% Data.StateIcon | html %]" style="[% Data.StateStyle | html %]"></i><div class="ChecklistIconList Hidden" id="ChecklistIconList_[% Data.ID %]"></div></td>
+        <td>[% Data.Content | html %]</td>
+    </tr>
+[% RenderBlockEnd("Task") %]
+[% RenderBlockStart("NoTasks") %]
+    <tr class="NoChecklist">
+        <td colspan="2">[% Translate("None") | html %]</td>
+    </tr>
+[% RenderBlockEnd("NoTasks") %]
+</tbody>

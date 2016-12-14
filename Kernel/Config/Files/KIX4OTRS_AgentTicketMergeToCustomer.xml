@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="Frontend::Module###AgentTicketMergeToCustomer" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the AgentTicketMergeToCustomer object in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Merge tickets from this customer (user)</Description>
+                <Title>AgentTicketMergeToCustomer</Title>
+                <NavBarName>Ticket</NavBarName>
+                <Loader>
+                    <CSS>KIX4OTRS.AgentTicketMergeToCustomer.css</CSS>
+                    <JavaScript>Core.KIX4OTRS.Agent.TicketMergeToCustomer.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Frontend::MenuModule###470-AgentTicketMergeToCustomer" Required="0" Valid="1">
+        <Description Translatable="1">Shows a link in the menu that allows to merge all tickets from the ticket customer in the ticket zoom view of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::MenuModule</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::TicketMenu::Generic</Item>
+                <Item Key="Name">Merge customer tickets</Item>
+                <Item Key="Description" Translatable="1">Merge all tickets from this customer</Item>
+                <Item Key="Action">AgentTicketMergeToCustomer</Item>
+                <Item Key="Link">Action=AgentTicketMergeToCustomer;CustomerUserID=[% Data.CustomerUserID | uri %];MainTicketID=[% Data.TicketID | uri %]</Item>
+                <Item Key="Target"></Item>
+                <Item Key="PopupType">TicketAction</Item>
+                <Item Key="ClusterName" Translatable="1">Merge</Item>
+                <Item Key="ClusterPriority">300</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Frontend::PreMenuModule###470-AgentTicketMergeToCustomer" Required="0" Valid="0">
+        <Description Translatable="1">Shows a link in the menu that allows to merge all tickets from the ticket customer in the ticket overview view of the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::MenuModulePre</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::TicketMenu::Generic</Item>
+                <Item Key="Name">Merge customer tickets</Item>
+                <Item Key="Action">AgentTicketMergeToCustomer</Item>
+                <Item Key="Description" Translatable="1">merge all tickets to this customer</Item>
+                <Item Key="Link">Action=AgentTicketMergeToCustomer;CustomerUserID=[% Data.CustomerUserID | uri %];MainTicketID=[% Data.TicketID | uri %]</Item>
+                <Item Key="Target"></Item>
+                <Item Key="PopupType">TicketAction</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::Frontend::AgentTicketMergeToCustomer###Permission" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to use the customer merge ticket screen in the agent interface.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewAgentTicketMergeToCustomer</SubGroup>
+        <Setting>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketMergeToCustomer###RequiredLock" Required="0" Valid="1">
+        <Description Translatable="1">Defines if a ticket lock is required in the customer merge ticket screen of the agent interface (if the ticket isn't locked yet, the ticket gets locked and the current agent will be set automatically as its owner).</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewAgentTicketMergeToCustomer</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketMergeToCustomer###AnsweredHistoryType" Required="0" Valid="1">
+        <Description Translatable="1">Selected history types to classify a ticket to be answered.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewAgentTicketMergeToCustomer</SubGroup>
+        <Setting>
+            <Array>
+                <Item>SendAnswer</Item>
+                <Item>PhoneCallAgent</Item>
+                <Item>EmailAgent</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketMergeToCustomer###StateTypes" Required="0" Valid="1">
+        <Description Translatable="1">Selected state types to restrict shown customer tickets.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewAgentTicketMergeToCustomer</SubGroup>
+        <Setting>
+            <Array>
+                <Item>open</Item>
+                <Item>new</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

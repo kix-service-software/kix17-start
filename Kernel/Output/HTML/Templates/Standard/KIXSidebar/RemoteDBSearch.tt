@@ -1,0 +1,308 @@
+# --
+# KIXSidebarRemoteDBSearch.tt - provides HTML for KIXSidebar database table integration
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+# * Torsten(dot)Thau(at)cape(dash)it(dot)de
+# * Mario(dot)Illinger(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+
+[% RenderBlockStart("SidebarFrame") %]
+<div id="[% Data.Identifier %]" class="KIXSidebarTools WidgetSimple CanDrag [% Data.AdditionalClasses | html %]">
+    <div class="Header">
+        <div class="WidgetAction Toggle">
+            <a href="#" title="[% Translate(Data.Description) | html %]">
+                <i class="fa fa-caret-right"></i>
+                <i class="fa fa-caret-down"></i>
+            </a>
+        </div>
+        <h2>[% Translate(Data.Title) | html %]</h2>
+    </div>
+    <div id="Content[% Data.Identifier %]" class="Content">
+[% RenderBlockStart("SearchBox") %]
+        <div class="SearchBox">
+            <fieldset class="TableLike FixedLabelSmall">
+                <input class="Search" title="Search" id="SearchString[% Data.Identifier | html %]" name="SearchString" type="Text" size="15" value=""/>
+                <button title="[% Translate("Search") | html %]" type="button" id="SearchButton[% Data.Identifier | html %]" value="[% Translate("Search") | html %]">
+                    <i class="fa fa-search"></i>
+                </button>
+            </fieldset>
+        </div>
+[% RenderBlockEnd("SearchBox") %]
+        <div id="SearchResult[% Data.Identifier | html %]">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">//<![CDATA[
+    var KIXSidebarCallback[% Data.Identifier | html %] = function (Response) {
+        var $SortableColumns = $('#Result[% Data.Identifier | html %] th.SortColumn'),
+            Headers = {},
+            ColumnCount = 0;
+
+        if($('#[% Data.Identifier %] .KIXSBRDBPopupContainer').length){
+        	if($('body > #[% Data.Identifier %]PopupContainer').length){
+        		$('body > #[% Data.Identifier %]PopupContainer').remove();
+        	}
+        	$('#[% Data.Identifier %] .KIXSBRDBPopupContainer').appendTo($('body'));
+        }
+        $('.KIXSBRDBPopupInfo').click(function(){
+            var Identifier = $(this).data('identifier');
+            var ID = $(this).data('id');
+
+            $('#'+Identifier+'Popup'+ID).show();
+            
+            var PopUpHeight  = $('#'+Identifier+'Popup'+ID+' .KIXSBRDBPopupBox').height();
+            var PopUpWidth   = $('#'+Identifier+'Popup'+ID+' .KIXSBRDBPopupBox').width();
+            var WindowHeight = $('#'+Identifier+'Popup'+ID).height();
+            var WindowWidth  = $('#'+Identifier+'Popup'+ID).width();
+            
+            $('#'+Identifier+'Popup'+ID+' .KIXSBRDBPopupBox').css({
+            	top: (WindowHeight-PopUpHeight)*0.5,
+            	left: (WindowWidth-PopUpWidth)*0.5
+            });
+        });
+
+        $('.KIXSBRDBPopupBoxHead > i').click(function(){
+            $(this).parents('.KIXSBRDBPopupBlock').hide();
+        });
+
+        // Only start, if there are columns that allow sorting
+        if ($SortableColumns.length) {
+            // Get all columns which should not be sorted
+            $('#Result[% Data.Identifier | html %] th').each(function () {
+                if (!$(this).hasClass('SortColumn')) {
+                    Headers[ColumnCount] = { sorter: false };
+                }
+                ColumnCount++;
+            });
+
+            $('#Result[% Data.Identifier | html %]').tablesorter({
+                headers: Headers,
+                textExtraction: function(node) {
+                    return $(node).find('.SortData').val() || '';
+                }
+            });
+        }
+        [% Data.Callback %]
+    }
+//]]>
+</script>
+[% RenderBlockStart("SearchJS") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
+    $('#SearchString[% Data.Identifier | html %]').bind('keyup', function (Event) {
+        if ( (Event.keyCode !== 13) && ($('#SearchString[% Data.Identifier | html %]').val().length >= [% Data.QueryMinLength | html %]) ) {
+            var Data = {};
+            Data.SearchString   = encodeURIComponent($('#SearchString[% Data.Identifier | html %]').val());
+            Data.CustomerUserID = encodeURIComponent($('#SelectedCustomerUser').val());
+
+            KIXSidebarTools.DelayUpdateSidebar(
+                'KIXSidebarRemoteDBSearchAJAXHandler',
+                '[% Data.Identifier | html %]',
+                Data,
+                window.KIXSidebarCallback[% Data.Identifier | html %],
+                [% Data.QueryDelay | html %]
+            );
+         } else {
+            KIXSidebarTools.StopDelayUpdateSidebar('[% Data.Identifier | html %]');
+         }
+    });
+
+    function KIXSidebarRemoteDBSearch[% Data.Identifier | html %]() {
+        KIXSidebarTools.StopDelayUpdateSidebar('[% Data.Identifier | html %]');
+
+        var Data = {};
+        Data.SearchString   = encodeURIComponent($('#SearchString[% Data.Identifier | html %]').val());
+        Data.CustomerUserID = encodeURIComponent($('#SelectedCustomerUser').val());
+
+        KIXSidebarTools.UpdateSidebar(
+            'KIXSidebarRemoteDBSearchAJAXHandler',
+            '[% Data.Identifier | html %]',
+            Data,
+            window.KIXSidebarCallback[% Data.Identifier | html %]
+        );
+    };
+    $('#SearchButton[% Data.Identifier | html %]').bind('click', function (Event) {
+        KIXSidebarRemoteDBSearch[% Data.Identifier | html %]();
+    });
+    $('#SearchString[% Data.Identifier | html %]').keydown(function (Event) {
+         if (Event.keyCode === 13) {
+             KIXSidebarRemoteDBSearch[% Data.Identifier | html %]();
+         }
+    });
+//]]></script>
+[% END %]
+[% RenderBlockEnd("SearchJS") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    KIXSidebarTools.Init('[% Data.Identifier | html %]');
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("SidebarFrame") %]
+
+[% RenderBlockStart("AutoSearch") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
+
+    var Data = {};
+    Data.SearchString   = '*';
+    Data.CustomerUserID = encodeURIComponent($('#SelectedCustomerUser').val());
+
+    KIXSidebarTools.UpdateSidebar(
+        'KIXSidebarRemoteDBSearchAJAXHandler',
+        '[% Data.Identifier | html %]',
+        Data,
+        window.KIXSidebarCallback[% Data.Identifier | html %]
+    );
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("AutoSearch") %]
+
+[% RenderBlockStart("CustomerDependend") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
+    $('#SelectedCustomerUser').bind('change',
+        function(){
+            KIXSidebarTools.UpdateDynamicField('[% Data.DynamicFields | html %]', '', '[% Data.TicketID | html %]');
+
+            var SearchString = '*';
+            if ( $('#SearchString[% Data.Identifier | html %]').length == 1 ) {
+                SearchString = encodeURIComponent($('#SearchString[% Data.Identifier | html %]').val());
+            }
+
+            var Data = {};
+            Data.SearchString   = SearchString;
+            Data.CustomerUserID = encodeURIComponent($('#SelectedCustomerUser').val());
+
+            KIXSidebarTools.UpdateSidebar(
+                'KIXSidebarRemoteDBSearchAJAXHandler',
+                '[% Data.Identifier | html %]',
+                Data,
+                window.KIXSidebarCallback[% Data.Identifier | html %]
+            );
+        }
+    );
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("CustomerDependend") %]
+
+[% RenderBlockStart("AutoSelectOne") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#SearchResult[% Data.Identifier | html %]').bind('UpdateResultField',
+        function(){
+            if ($('.ResultCheckbox[% Data.Identifier | html %]').length == 1) {
+                var Element = $('.ResultCheckbox[% Data.Identifier | html %]').first();
+                if ( !Element.prop('checked') ) {
+                    Element.prop('checked', true);
+                    KIXSidebarTools.KIXSidebarRemoteDB.ChangeCheckbox(Element, '[% Data.Identifier | html %]', '[% Data.DynamicFields | html %]', '[% Data.TicketID | html %]');
+                }
+            }
+        }
+    );
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("AutoSelectOne") %]
+
+[% RenderBlockStart("KIXSidebarRemoteDBSearchResult") %]
+<div style="[% Data.Style | html %]">
+    <table id="Result[% Data.Identifier | html %]" class="DataTable">
+[% RenderBlockStart("KIXSidebarRemoteDBSearchResultHead") %]
+        <thead>
+            <tr>
+[% RenderBlockStart("KIXSidebarRemoteDBSearchResultHeadColumnCheck") %]
+                <th>&nbsp;</th>
+[% RenderBlockEnd("KIXSidebarRemoteDBSearchResultHeadColumnCheck") %]
+[% RenderBlockStart("KIXSidebarRemoteDBSearchResultHeadColumnValue") %]
+                <th class="SortColumn"><a href="#">[% Translate(Data.Head) | html %]</a></th>
+[% RenderBlockEnd("KIXSidebarRemoteDBSearchResultHeadColumnValue") %]
+            </tr>
+        </thead>
+[% RenderBlockEnd("KIXSidebarRemoteDBSearchResultHead") %]
+        <tbody>
+[% RenderBlockStart("KIXSidebarRemoteDBSearchResultRow") %]
+            <tr>
+                <input type="hidden" name="Result[% Data.Identifier | html %]" value="[% Data.Value | html %]" />
+[% RenderBlockStart("KIXSidebarRemoteDBSearchResultRowColumnCheck") %]
+                <td>
+                    <input type="checkbox" class="ResultCheckbox[% Data.Identifier | html %]" onclick="javascript:KIXSidebarTools.KIXSidebarRemoteDB.ChangeCheckbox($(this), '[% Data.Identifier | html %]', '[% Data.DynamicFields | html %]', '[% Data.TicketID | html %]');" value="[% Data.Value | html %]" [% Data.IsChecked | html %]/>
+                </td>
+[% RenderBlockEnd("KIXSidebarRemoteDBSearchResultRowColumnCheck") %]
+[% RenderBlockStart("KIXSidebarRemoteDBInfoRowColumn") %]
+                <td>
+                    <span class="KIXSBRDBPopupInfo" data-identifier="[% Data.Identifier | html %]" data-id="[% Data.TicketID | html %]" ><i class="fa fa-info-circle"></i></span>
+                </td>
+[% RenderBlockEnd("KIXSidebarRemoteDBInfoRowColumn") %]
+[% RenderBlockStart("KIXSidebarRemoteDBSearchResultRowColumn") %]
+                <td>
+[% RenderBlockStart("KIXSidebarRemoteDBSearchResultRowColumnLink") %]
+                    <a href="[% Env("Baselink") %]Action=[% Data.Frontend | uri %]TicketZoom;TicketNumber=[% Data.Result | uri %]" title="[% Data.Result | html %]" class="MasterActionLink">[% Data.ResultShort | html %]</a>
+[% RenderBlockEnd("KIXSidebarRemoteDBSearchResultRowColumnLink") %]
+[% RenderBlockStart("KIXSidebarRemoteDBSearchResultRowColumnValue") %]
+                    <span title="[% Data.Result | html %]">[% Data.ResultShort | html %]</span>
+[% RenderBlockEnd("KIXSidebarRemoteDBSearchResultRowColumnValue") %]
+                    <input type="hidden" class="SortData" value="[% Data.Result | html %]" />
+                </td>
+[% RenderBlockEnd("KIXSidebarRemoteDBSearchResultRowColumn") %]
+            </tr>
+[% RenderBlockEnd("KIXSidebarRemoteDBSearchResultRow") %]
+        </tbody>
+    </table>
+[% RenderBlockStart("KIXSidebarRemoteDBPopupContainer") %]
+    <div id="[% Data.Identifier | html %]PopupContainer" class="KIXSBRDBPopupContainer">
+[% RenderBlockStart("KIXSidebarRemoteDBPopupBlock") %]
+        <div id="[% Data.Identifier | html %]Popup[% Data.TicketID | html %]" class="KIXSBRDBPopupBlock">
+            <div class="KIXSBRDBPopupBox">
+                <div class="KIXSBRDBPopupBoxHead">
+                    <h3>[% Translate("Informations") %]</h3>
+                    <i class="fa fa-times fa-lg"></i>
+                </div>
+                <div class="Spacing">
+                    <fieldset class="TableLike FixedLabelSmall">
+[% RenderBlockStart("KIXSidebarRemoteDBPopupRow") %]
+                        <label>[% Data.Label | html %]</label>
+                        <p class="Value">[% Data.Value | html %]</p>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("KIXSidebarRemoteDBPopupRow") %]
+                    </fieldset>
+                </div>
+                <div class="KIXSBRDBPopupBoxFooter"></div>
+            </div>
+        </div>
+[% RenderBlockEnd("KIXSidebarRemoteDBPopupBlock") %]
+    </div>
+[% RenderBlockEnd("KIXSidebarRemoteDBPopupContainer") %]
+</div>
+[% RenderBlockEnd("KIXSidebarRemoteDBSearchResult") %]
+
+[% RenderBlockStart("NoSearchResult") %]
+[% Translate("Nothing found.") | html %]
+[% RenderBlockEnd("NoSearchResult") %]

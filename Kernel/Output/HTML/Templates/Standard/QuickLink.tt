@@ -1,0 +1,109 @@
+# --
+# Kernel/Output/HTML/Standard/QuickLink.tt - provides HTML to show QuickLink
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="SpacingTopSmall AddQuickLink">
+    <form id="QuickLink" title="[% Translate("Link ticket") | html %]" action="[% Env("CGIHandle") %]" method="post">
+[% RenderBlockStart("TicketLabel") %]
+        <label>[% Translate("Link ticket with:") | html %]   </label>
+[% RenderBlockEnd("TicketLabel") %]
+[% RenderBlockStart("ConfigItemLabel") %]
+        <label>[% Translate("Link Configuration Item with:") | html %]   </label>
+[% RenderBlockEnd("ConfigItemLabel") %]
+[% RenderBlockStart("ChangeLabel") %]
+        <label>[% Translate("Link Change with:") | html %]   </label>
+[% RenderBlockEnd("ChangeLabel") %]
+[% RenderBlockStart("WorkOrderLabel") %]
+        <label>[% Translate("Link Workorder with:") | html %]   </label>
+[% RenderBlockEnd("WorkOrderLabel") %]
+        <input type="hidden" name="Action" value="QuickLinkAJAXHandler" />
+        <input type="hidden" name="RefreshURL" value="[% Data.RefreshURL %]" id="RefreshURL"/>
+        <input type="hidden" name="Subaction" value="AddLink" />
+        <input type="hidden" name="SourceKey" value="[% Data.Key %]" id="SourceKey"/>
+        <input type="hidden" name="SourceObject" value="[% Data.Object %]" id="SourceObject"/>
+        <input type="hidden" name="TargetObject" value="" id="TargetObject" />
+        [% Data.QuickLinkObjectStrg %]
+        <input id="QuickLinkAttribute" type="hidden" name="QuickLinkAttribute" value="" />
+        <input id="QuickLinkAttributeAutoComplete" type="text" name="QuickLinkAttributeAutoComplete" value="" class="AutocompleteOff Validate_Required Hidden" />
+        <label id="QuickLinkLinkTypeLabel" class="Hidden">[% Translate("with link type") | html %]: </label>
+        <span id="QuickLinkLinkType">
+        </span>
+        <button type="submit" name="" value="[% Translate("Submit") | html %]" id="QuickLinkSubmit" class="Hidden CallForAction"><span>[% Translate("Submit") | html %]</span></button>
+        <img src="[% Config("Frontend::ImagePath") %]loader.gif" border="2" alt="[% Translate("Loading") | html %]" class="Hidden" id="QuickLinkLoading"/>
+    </form>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#TargetIdentifier').bind('change',function(){
+    var TargetObject = $(this).find('option:selected').val();
+    $('#TargetObject').val(TargetObject);
+
+    if ( TargetObject != '' ) {
+        var URL = Core.Config.Get('CGIHandle') + '?Action=QuickLinkAJAXHandler;Subaction=CreateLinkTypeList;SourceObject=[% Data.Object %];TargetObject='+TargetObject;
+        Core.AJAX.ContentUpdate($('#QuickLinkLinkType'), URL , function () {
+            // show autocomplete field and submit button
+            $('#QuickLinkAttributeAutoComplete').removeClass('Hidden');
+            $('#QuickLinkSubmit').removeClass('Hidden');
+            // empty autocomplete field
+            $('#QuickLinkAttributeAutoComplete').val('');
+            $('#QuickLinkAttribute').val('');
+            $('#QuickLinkLinkTypeLabel').removeClass('Hidden');
+        });
+    }
+    else {
+        $('#QuickLinkAttributeAutoComplete').addClass('Hidden');
+        $('#LinkedObjectSubmit').addClass('Hidden');
+        $('#QuickLinkLinkType').html('');
+        $('#QuickLinkLinkTypeLabel').addClass('Hidden');
+    }
+});
+
+$('#QuickLinkSubmit').bind('click',function(){
+
+    $('#QuickLinkLoading').removeClass('Hidden');
+    $('#Shows_all_objects_linked_with_this_ticket').find('form').each(function() {
+        Core.Form.DisableForm($(this));
+    });
+
+    var Data = Core.AJAX.SerializeForm($('#QuickLink'));
+    Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), Data, function () {
+        var URL = Core.Config.Get('CGIHandle') + '?' + $('#RefreshURL').val(),
+            TabIndex = 'ui-tabs-1';
+
+        $(window).unbind();
+
+        // get linked objects tab
+        $('li[role="tab"]').each(function(){
+            var TabUrl = $(this).children(":first").attr('href');
+            if ( TabUrl.match(/ZoomTabLinkedObjects\;/g) ) {
+                TabIndex = $(this).attr('aria-controls');
+            }
+        })
+
+        // reload tab content
+        Core.AJAX.ContentUpdate($('#'+TabIndex), URL , function () {});
+
+    }, 'text');
+
+    return false;
+});
+
+Core.Config.Set("GenericAutoCompleteSearch.MinQueryLength", 3);
+Core.Config.Set("GenericAutoCompleteSearch.QueryDelay", 200);
+Core.Config.Set("GenericAutoCompleteSearch.MaxResultsDisplayed", 20);
+Core.KIX4OTRS.GenericAutoCompleteSearch.Init($("#QuickLinkAttributeAutoComplete"),$("#QuickLinkAttribute"));
+//]]>
+</script>
+[% END %]
+</div>

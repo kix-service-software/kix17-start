@@ -1,0 +1,60 @@
+# --
+# ArticleAttachmentList.tt - provit
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="Clear"></div>
+<div class="SpacingBottom">
+  [% Translate("Select all the existing article attachments which should be attached too.") | html %]
+</div>
+<div id="ArticleAttachmentPager"><span class="Pagination" ></span></div>
+
+[% RenderBlockStart("ArticleAttachmentTable") %]
+<div id="ArticleAttachmentPageDiv[% Data.DivCount | html %]" class="ArticleAttachmentPageDiv" style="[% Data.Style | html %]" >
+    <table id="ArticleAttachmentList" class="DataTable">
+       <thead>
+          <tr>
+             <th></th>
+             <th>
+                 [% Translate("Name") | html %]
+             </th>
+             <th>
+                 [% Translate("Size") | html %]
+             </th>
+          </tr>
+       </thead>
+       <tbody>
+[% RenderBlockStart("ArticleAttachmentRow") %]
+          <tr>
+             <td>
+                <input type="checkbox" class="ArticleAttachmentCheckBox" name="ReuseArticleAttachmentID" id="ReuseArticleAttachmentID[% Data.ID | html %]" value="[% Data.ArticleAttachmentID | html %]" [% Data.IsChecked | html %]/>
+             </td>
+             <td class="Name" nowrap>
+                [% Data.Filename | html %]
+             </td>
+             <td class="Size Right" nowrap>
+                [% Data.Filesize | html %]
+             </td>
+          </tr>
+[% RenderBlockEnd("ArticleAttachmentRow") %]
+       </tbody>
+    </table>
+</div>
+[% RenderBlockEnd("ArticleAttachmentTable") %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+Core.KIX4OTRS.KIXSidebar.ArticleAttachmentPager();
+//]]></script>
+[% END %]
+

@@ -1,0 +1,290 @@
+# --
+# AdminDependingDynamicField.tt - provides HTML form for Depending DynamicFields
+# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("Main") %]
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+    <h1>[% Translate("Depending Dynamic Fields Management") | html %] - [% Translate(Data.Action) | html %]</h1>
+
+    <div class="Clear"></div>
+
+    <div class="SidebarColumn">
+
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Actions") | html %]</h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+
+[% RenderBlockStart("ActionOverview") %]
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Back">
+                            <span>[% Translate("Go to overview") | html %]</span>
+                        </a>
+                    </li>
+[% RenderBlockEnd("ActionOverview") %]
+
+[% RenderBlockStart("DependingFieldList") %]
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Add" class="CallForAction Back">
+                            <span>[% Translate("Add Depending Field") | html %]</span>
+                        </a>
+                    </li>
+[% RenderBlockEnd("DependingFieldList") %]
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="ContentColumn">
+[% RenderBlockStart("OverviewList") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Depending Dynamic Fields - Tree View") | html %]</h2>
+            </div>
+            <div class="Content DependingFieldTreeContent">
+                <form name="form" action="[% Env("CGIHandle") %]" method="get">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" id="Subaction" name="Subaction" value="Edit"/>
+                    <input type="hidden" id="DependingFieldID" name="DependingFieldID" value=""/>
+                </form>
+                <div id="DependingFieldTreeControl" class="SpacingBottom"><a href="?#" class="Collaps">[% Translate("Collapse All") | html %]</a> | <a href="?#" class="Expand">[% Translate("Expand All") | html %]</a></div>
+                <div id="DependingFieldContainer" class="JSTreeSelectionContainer">
+                    [% Data.DependingFieldTree %]
+                </div>
+            </div>
+        </div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+
+var StyleSheetURL = Core.Config.Get('WebPath') + 'skins/Agent/default/css-cache/css/KIX4OTRS.JSTree.css';
+
+// create tree
+$('#DependingFieldContainer').jstree({
+    core: {
+        animation: 70,
+        expand_selected_onload: true,
+        themes: {
+            name: 'InputField',
+            variant: 'Tree',
+            icons: true,
+            dots: true,
+        }
+    },
+    types : {
+      default : {
+        icon : 'fa fa-trash-o'
+      },
+    },
+    plugins: [ 'types' ]
+});
+
+$('#DependingFieldContainer').on('click','i.fa-trash-o',function(event) {
+    if (!confirm("[% Translate("Do you really want to delete this depending field and all of its other depending fields ?") | html %]"))
+        return false;
+
+    URL = $(this).parent('a').attr('href') + 'Subaction=Delete;';
+    window.location.href = URL;
+});
+
+$('#DependingFieldContainer').on('click','span',function(event){
+    URL = $(this).parent('a').attr("href");
+    window.location.href = URL;
+    event.preventDefault();
+});
+
+// expand all
+$('.Expand').bind('click',function(event){
+    $('#DependingFieldContainer').jstree('open_all');
+    event.preventDefault();
+});
+
+// collaps all
+$('.Collaps').bind('click',function(event){
+    $('#DependingFieldContainer').jstree('close_all');
+    event.preventDefault();
+});
+
+//]]></script>
+[% END %]
+[% RenderBlockEnd("OverviewList") %]
+
+[% RenderBlockStart("DependingFieldEdit") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Depending Dynamic Field Edit") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form action="[% Env("CGIHandle") %]" method="post" id="EditDependingFieldForm" name="EditDependingFieldForm" class="Validate PreventMultipleSubmits">
+                    <input type="hidden" value="AdminDependingDynamicField" name="Action"/>
+                    <input type="hidden" value="Store" name="Subaction"/>
+                    <input type="hidden" value="[% Data.DynamicFieldID %]" name="DynamicFieldID"/>
+                    <input type="hidden" value="[% Data.DependingFieldID %]" name="DependingFieldID"/>
+                    <input type="hidden" value="" name="CurrentCounter" id="CurrentCounter" />
+                    <fieldset class="TableLike">
+                        <label for="DynamicFieldSource">[% Translate("Selected Field From Source Field") | html %]:</label>
+                        <div class="Field">
+                            [% Data.DynamicFieldSourceString %]
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+[% RenderBlockStart("DependingFieldEditItem") %]
+                    <fieldset class="TableLike">
+                        <label for="DynamicFieldTarget_[% Data.Counter %]">[% Translate("Available Target Fields") | html %]:</label>
+                        <div class="Field">
+                            [% Data.DynamicFieldTargetString %]
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="DynamicFieldTargetValue_[% Data.Counter %]">[% Translate("Available Target Values") | html %]:</label>
+                        <div class="Field">
+                            [% Data.DynamicFieldTargetValueString %]
+                            <button id="RemoveDynamicField_[% Data.Counter %]" class="Remove" value="" title="[% Translate("Remove Dynamic Field") | html %]" name="" type="submit">[% Translate("Remove Dynamic Field") | html %]</button>
+                        </div>
+                        <div class="Clear"></div>
+                    <input type="hidden" value="[% Data.OldTargetKey %]" name="OldTargetKey_[% Data.Counter %]"/>
+                    </fieldset>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#DynamicFieldTarget_[% Data.Counter %]').bind('change', function (Event) {
+        var Counter = '[% Data.Counter %]';
+
+        $('#CurrentCounter').val(Counter);
+        Core.AJAX.FormUpdate($('#EditDependingFieldForm'), 'AJAXUpdate', 'DynamicFieldTarget_'+Counter, ['DynamicFieldTargetValue_'+Counter]);
+    });
+
+$('#RemoveDynamicField_[% Data.Counter %]').bind('click',function(){
+    var CountMax = $('#CountMax').val(),
+        Counter = [% Data.Counter %];
+
+    if ( Counter < CountMax ) {
+        $('#DynamicFieldTarget_'+Counter+' option[value=""]').attr('selected',true);
+        $('#DynamicFieldTargetValue_'+Counter).empty();
+        $('input[name=Subaction]').val('StoreDelete');
+    }
+    else {
+        $('#CountMax').val(CountMax-1);
+        $('input[name=Subaction]').val('StoreDelete');
+    }
+    $('#EditDependingFieldForm').submit();
+
+});
+//]]></script>
+[% END %]
+[% RenderBlockEnd("DependingFieldEditItem") %]
+[% RenderBlockStart("DependingFieldEditAdd") %]
+                    <fieldset class="TableLike">
+                        <label for="FieldAdd">[% Translate("Add Dynamic Field") | html %]:</label>
+                        <div class="Field">
+                            <button id="AddDynamicField" class="Add" value="" title="Add Dynamic Field" name="" type="submit">Add Dynamic Field</button>
+                        </div>
+                        <div class="Clear"></div>
+                    <input type="hidden" value="[% Data.CountMax %]" name="CountMax" id="CountMax" />
+                    <input type="hidden" value="" name="AddField" id="AddField" />
+                    </fieldset>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#AddDynamicField').bind('click',function(){
+    var CountMax = $('#CountMax').val();
+
+    CountMax++;
+    $('#CountMax').val(CountMax);
+    $('#AddField').val(1);
+    $('#EditDependingFieldForm').submit();
+});
+//]]></script>
+[% END %]
+[% RenderBlockEnd("DependingFieldEditAdd") %]
+                    <table width="100%" cellspacing="0" cellpadding="4">
+                        <tr>
+                            <td colspan="2" class="contentfooter">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                                    <tr>
+                                        <td width="100%" align="right" class="contentfooter">
+                                            <button class="CallForAction" type="submit" value="[% Translate("Submit") | html %]"/><span>[% Translate("Submit") | html %]</span></button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+[% RenderBlockEnd("DependingFieldEdit") %]
+
+[% RenderBlockStart("DependingFieldAdd") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Depending Dynamic Field Add") | html %]</h2>
+            </div>
+            <div class="Content">
+                <form action="[% Env("CGIHandle") %]" method="post" id="AddDependingFieldForm" name="AddDependingFieldForm" class="Validate PreventMultipleSubmits">
+                    <input type="hidden" value="AdminDependingDynamicField" name="Action"/>
+                    <input type="hidden" value="StoreNew" name="Subaction"/>
+                    <input type="hidden" value="[% Data.DynamicFieldID %]" name="DynamicFieldID"/>
+                    <fieldset class="TableLike">
+                        <label  class="Mandatory" for="DynamicField"><span class="Marker">*</span> [% Translate("Tree Name") | html %]:</label>
+                        <div class="Field">
+                            [% Data.TreeNameString %]
+                            <div id="TreeNameError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="TreeNameServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="DynamicField">[% Translate("Valid") | html %]:</label>
+                        <div class="Field">
+                            [% Data.ValidityStrg %]
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="DynamicField">[% Translate("Selected Dynamic Field") | html %]:</label>
+                        <div class="Field">
+                            [% Data.DynamicFieldString %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#DynamicField').bind('change', function (Event) {
+        Core.AJAX.FormUpdate($('#AddDependingFieldForm'), 'AJAXUpdateNew', 'DynamicField', ['DynamicFieldValue']);
+    });
+//]]></script>
+[% END %]
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="DynamicFieldValues">[% Translate("Possible Values") | html %]:</label>
+                        <div class="Field">
+                            [% Data.DynamicFieldValueString %]
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+                    <table width="100%" cellspacing="0" cellpadding="4">
+                        <tr>
+                            <td colspan="2" class="contentfooter">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                                    <tr>
+                                        <td width="100%" align="right" class="contentfooter">
+                                            <button class="CallForAction" type="submit" value="[% Translate("Submit") | html %]"/><span>[% Translate("Submit") | html %]</span></button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+[% RenderBlockEnd("DependingFieldAdd") %]
+
+        <div class="Clear"></div>
+    </div>
+</div>
+[% RenderBlockEnd("Main") %]

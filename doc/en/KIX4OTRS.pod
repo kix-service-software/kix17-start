@@ -1,0 +1,314 @@
+# $Id$
+
+=head1 General
+
+This extensions package provides several new and many improved functions for OTRS and OTRS::ITSM. If you have no OTRS::ITSM installed you can also use this installation package. It requires KIXCore to be already installed.
+
+The detailed description of all extensions can be found in the documentation for this pacakge. You may download it in the package manager after installation of KIX4OTRS or from our website. Below you find the table of contents for this documentation.
+
+=head1 Installation
+
+The installation of KIX4OTRS requires that the user which installs the packer (i.e. webserver user) has got write permissions on file Config.pm and apache2-perl-startup.pl. If this is not the case, the installation will fail. You should then try to run following commands (under the correspondig user) in order to get this extension running:
+
+    "bin/kix.ManageMultipleCustomPackages.pl -a Register -n KIX4OTRS -p 0100"
+    "bin/kix.ManageMultipleCustomPackages.pl -a Register -n KIX4OTRSITSMCore -p 0110"
+    "bin/kix.ManageMultipleCustomPackages.pl -a Register -n KIX4OTRSITSMConfigManagement -p 0120"
+    "bin/kix.ManageMultipleCustomPackages.pl -a Register -n KIX4OTRSITSMIncidentProblem -p 0130"
+
+After the installation you should delete your OTRS-cache and rebuild your configuration before you continue the use of this OTRS installation.
+
+    "bin/otrs.DeleteCache.pl"
+    "bin/otrs.RebuildConfig.pl"
+
+If you are using OTRS with modperl, the webserver must be restarted as well. Please ensure that the apache2-perl-startup.pl script has been modifed and is in use.
+
+
+=head1 Documentation Table of Contents
+
+This section shows the table of contents for the KIX4OTRS documentation. It gives a short overview over the contents of KIX4OTRS. You may download this document after package installation or from http://www.cape-it.de.
+
+=over 4
+
+=item * 1 General Remarks
+
+=over 8
+
+=item * 1.1 Document Information
+
+=back
+
+=item * 2 Requirements and Recommendations
+
+=over 8
+
+=item * 2.1 Requirements
+
+=item * 2.2 Recommendations
+
+=back
+
+=item * 3 Installation and Upgrading
+
+=over 8
+
+=item * 3.1 Installation KIX4OTRS
+
+=item * 3.2 Upgrading from OTRS::CiCS 3.x to KIX4OTRS 4.x.
+
+=back
+
+=item * 4 Extended Custom Folders - KIXCore
+
+=item * 5 Customer User Extensions
+
+=over 8
+
+=item * 5.1 Customer Events
+
+=item * 5.2 Multiple CustomerIDs
+
+=item * 5.3 Use of customer user attributes as type "array"
+
+=item * 5.4 Use of default values for customer user attributes
+
+=item * 5.5 Further search fields as parameters in CustomerSearch
+
+=item * 5.6 Map LDAP group memberships to attributes
+
+=item * 5.7 Customer info block
+
+=item * 5.8 Customer Information Board
+
+=back
+
+=item * 6 Agent User Extensions
+
+=over 8
+
+=item * 6.1 Search Template Sharing
+
+=item * 6.2 Search Options For Pending And Escalation Times
+
+=item * 6.3 Redirect Target After Ticket Close
+
+=item * 6.4 Notification Forwarding In Agents Absence
+
+=item * 6.5 Textarea For Agents Preferences
+
+=item * 6.6 Multiple Selections For Agents Preferences
+
+=item * 6.7 Dashboard FAQ
+
+=back
+
+=item * 7 Administrative Extensions
+
+=over 8
+
+=item * 7.1 SysConfig Change Log
+
+=item * 7.2 Statistics Extensions
+
+=item * 7.3 Filter for SLA and Services
+
+=item * 7.4 Switch Button Agent - Customer Frontend
+
+=item * 7.5 Dashboard KIXNotify
+
+=item * 7.6 Dashboard User Offline
+
+=back
+
+=item * 8 Layout extensions
+
+=over 8
+
+=item * 8.1 Date Input - Eligible smart format
+
+=item * 8.2 Deactivate form during AJAX requests
+
+=back
+
+=item * 9 Link Object Extensions
+
+=over 8
+
+=item * 9.1 Linked Object Type "Ticket"
+
+=item * 9.2 Linked Object Type "Document"
+
+=item * 9.3 Linked Object Type "Person"
+
+=back
+
+=item * 10 Ticket Extensions
+
+=over 8
+
+=item * 10.1 Dashboard Ticket Generic Extensions
+
+=item * 10.2 Dashboard Ticket Stats Extensions
+
+=item * 10.3 Arbitrary Number of TicketFreeText fields
+
+=item * 10.4 TicketFreeTime fields - Support for seconds
+
+=item * 10.5 Ticket-ACL - extended filter conditions
+
+=item * 10.6 Ticket-ACL - depending freetext selections
+
+=item * 10.7 Ticket-ACL - multi purpose match-restriction
+
+=item * 10.8 Ticket-ACL - processing for merged tickets
+
+=item * 10.9 Ticket State Workflow
+
+=item * 10.10 Automatic Queue Assignment by Service Selection
+
+=item * 10.11 Service Selection - Always offer default services
+
+=item * 10.12 SLA-Disabling Ticket Properties
+
+=item * 10.13 Type-Depending Responsible User
+
+=item * 10.14 FAQ-Workflow
+
+=item * 10.15 Quick-Ticket Templates for Agent Users
+
+=item * 10.16 Quick-Ticket Templates for Customer Users
+
+=item * 10.17 Extended Template Generator
+
+=item * 10.18 Extended notifications for ticket escalations
+
+=item * 10.19 Text Modules
+
+=item * 10.20 KIXSideBar - Tools for Ticket Processing
+
+=item * 10.21 KIXSideBar - Text Module Selection
+
+=item * 10.22 KIXSideBar - Linked Person Selection
+
+=item * 10.23 KIXSideBar - Customer Info
+
+=item * 10.24 Queue View - Display as Tree/Drop Down
+
+=item * 10.25 Queue View - Virtual Queues
+
+=item * 10.26 Queue View - Shown Columns/Data
+
+=item * 10.27 Queue View - Ticket Highlighting
+
+=item * 10.28 Queue View - Show Locked on Default
+
+=item * 10.29 Tabbed Ticket Detail Mask
+
+=item * 10.30 TicketZoom - Article Tree View
+
+=item * 10.31 TicketZoom - Flexible use of Article Actions
+
+=item * 10.32 Ticket Scratch Pad Notes
+
+=item * 10.33 Ticket processing - Show all owner and responsibles
+
+=item * 10.34 Ticket processing - link tickets while ticket creation
+
+=item * 10.35 Ticket processing - Preselect current Ticket data
+
+=item * 10.36 Ticket processing - Eligible Ticket Owner mandatory
+
+=item * 10.37 Ticket processing - Offer to change ticket queue
+
+=item * 10.38 Ticket processing - PretendAction
+
+=item * 10.39 Ticket processing - Initial Data Selection
+
+=item * 10.40 Ticket processing - AJAX-updates in AgentTicketActionCommom
+
+=item * 10.41 Ticket processing - automatic bounce information
+
+=item * 10.42 Ticket processing - selectable Re:/Fwd:-Addition
+
+=item * 10.43 Ticket processing - empty emails
+
+=item * 10.44 Ticket processing - predefined body for forwarding
+
+=item * 10.45 Ticket processing - merge tickets based on customer users
+
+=item * 10.46 Ticket processing - copy, move or delete article
+
+=item * 10.47 Ticket processing - edit article
+
+=item * 10.48 Ticket processing - configurable CustomerTicketMessage
+
+=item * 10.49 Translations for free fields and other
+
+=item * 10.50 Configurable favorite icon
+
+=back
+
+=item * 11 ITSM-Core Extensions
+
+=over 8
+
+=item * 11.1 Display Service List
+
+=back
+
+=item * 12 ITSM-Incident-Problem-Man Extensions
+
+=over 8
+
+=item * 12.1 Modified AgentTicketZoom Configuration
+
+=back
+
+=item * 13 ITSM-CMDB Extensions
+
+=over 8
+
+=item * 13.1 Customer Assigned Config Items
+
+=item * 13.2 Config Item Pre-Events
+
+=item * 13.3 Tabbed Config Item Detail Mask
+
+=item * 13.4 Link Graph Visualization
+
+=item * 13.5 Configurable propagation of warning and error CI-states
+
+=item * 13.6 CI-Pre-Event for unique CI-Attribute values
+
+=back
+
+=item * 14 Modified Default SysConfig-Keys
+
+=back
+
+=head1 Credits and Copyright
+
+Thanks to all OTRS-community members which provided valuable feedback, responses, bug fixes or even patches to OTRS::CiCS/KIX4OTRS. Special thanks to Martin Edenhofer who founded the OTRS-Project!
+
+KIX4OTRS written/edited by:
+
+=over 4
+
+=item * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+
+=item * Rene(dot)Boehm(at)cape(dash)it(dot)de
+
+=item * Anna(dot)Litvinova(at)cape(dash)it(dot)de
+
+=item * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+
+=item * Frank(dot)Oberender(at)cape(dash)it(dot)de
+
+=item * Torsten(dot)Thau(at)cape(dash)it(dot)de
+
+=back
+
+Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the OTRS enclosed file COPYING for license information (AGPL). If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+
+=cut

@@ -1,0 +1,388 @@
+/*
+ * @project     KIX (http://www.cape-it.de) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   c.a.p.e. IT GmbH
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/*
+ * @package     Skin "default"
+ * @section     Ticket Details
+ */
+
+@media screen,projection,tv,handheld {
+
+    .ArticleMailContent iframe {
+        border: 1px solid #e0e0e0;
+    }
+
+    .ui-tabs .ui-tabs-nav li {
+        margin: 0 -5px 0 0;
+    }
+
+    .ui-tabs .ui-tabs-nav li a {
+        border-bottom: 25px solid #fff;
+    }
+
+    .ui-tabs .ui-tabs-nav li a:hover {
+        color: #1491D2;
+    }
+
+    .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+        border-bottom-color: #82C826 !important;
+    }
+
+    .ui-tabs .ui-tabs-nav li.ui-tabs-active a {
+        color: white;
+        font-weight: bold;
+    }
+
+    .ui-widget-content {
+        border: 1px solid #82C826;
+        color: #0A6491;
+    }
+
+    div.ui-tabs > div {
+        border: 1px solid #82C826;
+    }
+
+    .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited, .ui-widget-header a, .ui-widget-content a {
+        color: #0A6491;
+    }
+
+    .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+        border-top-right-radius: 0px !important;
+    }
+    .ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+        border-top-left-radius: 0px !important;
+    }
+    .ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+        border-bottom-right-radius: 0px !important;
+    }
+    .ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+        border-bottom-left-radius: 0px !important;
+    }
+
+    .ui-state-active, .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-default, .ui-widget-header .ui-state-active {
+       color: #0A6491;
+       background: none;
+       border: 0px solid transparent;
+    }
+
+    ul.ColumnOrder {
+        border: 1px solid #82C826;
+    }
+
+    .ActionRow {
+        border-bottom: #82C826;
+    }
+
+    .ActionRow .Actions li a, .LightRow .Actions li a, .Actions li.Inactive a:hover, .Actions li.Inactive:hover a {
+        background-color: #f0f0f0;
+        border: 1px solid #82C826;
+        border-bottom: 1px solid #82C826;
+        cursor: pointer;
+    }
+
+    .ActionRow .Actions li a:hover, .LightRow .Actions li a:hover {
+        background-color: #82C826;
+        border-color: #82C826;
+        border: 1px solid #82C826;
+        color: white;
+    }
+
+    .LightRow.Bottom {
+        border-bottom: 0px;
+        background: #F0F0F0;
+    }
+
+    .LightRow.Bottom > .Actions label.Label {
+        position: relative;
+        line-height: 1.0em;
+        padding-bottom: 1px;
+        font-size: 12px;
+    }
+
+    .ActionRow .Actions li span, .LightRow .Actions li span, .Actions li.Inactive span:hover {
+        background-color: #eee;
+        border: 1px solid #82C826 !important;
+        border-bottom: 1px solid #82C826 !important;
+        cursor: pointer;
+    }
+
+    .ActionRow .Actions li.AlwaysPresent span {
+        background-color: white;
+        border: 0px solid transparent !important;
+        border-bottom: 0px solid transparent !important;
+    }
+
+    .ActionRow .Actions li span.MenuClusterIcon, .LightRow .Actions li span.MenuClusterIcon, .Actions li.Inactive span.MenuClusterIcon:hover {
+        border-left: none !important;
+        width: 10px;
+        text-align: center;
+        background-color: #E8E8E8;
+    }
+
+    .Cluster ul ul {
+        left: 0px !important;
+        background: none !important;
+        box-shadow: none !important;
+    }
+
+    .Cluster ul ul li {
+        border-bottom: 0px !important;
+    }
+
+    .Cluster > ul > li:hover .ClusterLink {
+        background-color: #82C826;
+        color: white;
+    }
+
+    .ActionRow.Cluster > ul > li > ul > li > a {
+        margin: 0px;
+    }
+
+    .ActionRow.Cluster > ul > li > ul > li > a,.ActionRow.Cluster > ul > li > ul > li > a:hover {
+        border-bottom: none;
+    }
+
+    .ActionRow.Cluster > ul > li > ul > li:last-child > a {
+        border-bottom: 1px solid #CCC;
+    }
+
+    .ActionRow.Cluster > ul > li > ul > li:last-child > a:hover {
+        border-bottom: 1px solid #999;
+    }
+
+    .WidgetSimple .Content .LightRow .Actions li span, .WidgetSimple .Content .Actions li.Inactive span:hover {
+        background: none !important;
+        border: 0px solid #82C826 !important;
+        border-bottom: 0px solid #82C826 !important;
+    }
+
+    .Actions li a, .Actions li span {
+        padding: 2px 2px;
+        color: #0A6491;
+        border-bottom: 0px solid transparent;
+    }
+
+    .Actions li.Inactive a {
+        text-shadow: none;
+    }
+
+    .Tab.Actions li a {
+        color: #0A6491;
+    }
+
+    .Tab.Actions li a:hover {
+        color: #1491D2;
+        text-decoration: none;
+    }
+
+    .Tab.Actions li.Selected a {
+        color: #0A6491;
+        font-weight: bold;
+    }
+
+    .LightRow .Actions li span {
+        padding: 4px !important;
+    }
+
+    .ClusterLink {
+        padding: 2px 5px !important
+    }
+
+    #DestQueueID {
+        border-color: #82c826;
+        padding: 3px;
+        color: #0a6491;
+    }
+
+    .ItemRow a {
+        color:  #0a6491;
+    }
+
+    .ItemRow a:hover {
+        color: #1491D2;
+    }
+
+    div.ui-widget-content {
+        color: #0a6491;
+    }
+
+    div.ui-datepicker, div.ui-widget {
+        border: 0px;
+    }
+
+    .UseArticleColors #ArticleTable th a {
+        color: #0A6491;
+    }
+
+    #ArticleTable thead {
+        background: #f0f0f0;
+    }
+
+    .ArticleMailHeader {
+        border-bottom: 1px solid #82C826;
+    }
+
+    #ArticleItems .Header h2 {
+        float: none;
+    }
+
+    #ArticleItems .WidgetSimple .Header {
+        background: none !important;
+    }
+
+    #ArticleItems .WidgetSimple .LightRow.Bottom {
+       border-bottom: 1px solid #82C826;
+    }
+
+    #ArticleItems .WidgetSimple .Content {
+        background-color: #f7f7f7;
+    }
+
+    .AdditionalInformation,
+    #ArticleItems .WidgetSimple .Header .AdditionalInformation {
+        font-size: 12px;
+        color: #0A6491;
+    }
+
+    #ArticleItems .WidgetSimple .Header .AdditionalInformation.SpacingLoader {
+        margin-right: 7px;
+    }
+
+    #ArticleItems .ArticleMailHeader {
+        border-bottom: 0px solid transparent;
+        padding-top: 10px;
+        padding-bottom: 0px;
+    }
+
+    #ArticleTree {
+       margin-top: 10px;
+    }
+
+    .Headline .Flag {
+       border: 1px solid #82C826;
+    }
+
+    .KIXSidebarCustomerEmailSelection {
+        background-color: #f0f0f0;
+        border-left: 1px solid #82C826;
+        border-right: 1px solid #82C826;
+        margin: 0px;
+        padding: 10px;
+    }
+
+    .SidebarColumn .WidgetSimple.Expanded .KIXSidebarCustomerEmailSelection {
+        border-top: 1px solid #82c826;
+    }
+
+    .SidebarColumn .WidgetSimple.Collapsed .KIXSidebarCustomerEmailSelection {
+        display: none;
+    }
+
+    div.DynamicFieldSidebarSettingsContainer {
+        background-color: #f0f0f0;
+    }
+
+    .DynamicFieldSidebarSettingsContainer > div {
+        color: #0A6491;
+    }
+
+    .OverviewMedium > li ul.InlineActions,
+    .OverviewLarge > li ul.InlineActions {
+        background-color: transparent;
+        height: auto;
+    }
+
+    .OverviewMedium > li:hover ul.InlineActions,
+    .OverviewLarge > li:hover ul.InlineActions {
+        top: 3px;
+    }
+
+    .OverviewMedium > li ul.InlineActions.Actions li:after,
+    .OverviewLarge > li ul.InlineActions.Actions li:after {
+        margin: 0 3px;
+    }
+
+    .OverviewMedium > li ul.InlineActions li form,
+    .OverviewLarge > li ul.InlineActions li form {
+        padding: 0;
+        margin-right: 5px;
+    }
+
+    .OverviewMedium > li ul.InlineActions li a,
+    .OverviewLarge > li ul.InlineActions li a {
+        padding: 1px 5px;
+        color: #0A6491;
+        border: 1px solid #82C826;
+        background-color: #f0f0f0;
+    }
+
+    .OverviewMedium > li ul.InlineActions li a:hover,
+    .OverviewLarge > li ul.InlineActions li a:hover {
+        color: white;
+        border: 1px solid #82C826;
+        background-color: #82C826;
+    }
+
+    #QueueTreeControl,
+    #ServiceTreeControl {
+        border-bottom: 1px solid #82C826 !important;
+    }
+
+    .SidebarColumn .WidgetSimple .Content.QueueTreeContent,
+    .SidebarColumn .WidgetSimple .Content.ServiceTreeContent {
+        border: 1px solid #82C826;
+        border-top: 0px solid transparent;
+        margin: 0px;
+        padding: 0px 12px 5px 12px;
+        box-shadow: none !important;
+    }
+
+    #ScratchPadNotes {
+        border-color: #c0c0c0;
+        width: 96%;
+    }
+
+    #KIXSidebarLinkedConfigItemSetClassFilter {
+        color: #0A6491 !important;
+    }
+
+    #AvailableCIItemList tr td {
+        padding-top: 1px;
+        padding-bottom: 1px;
+    }
+
+    #AvailableCIItemList tr td input[type=checkbox] {
+        margin-top: 2px;
+    }
+
+    #CIClassSelection.Content {
+        border-bottom: 0px solid #82C826 !important;
+    }
+
+    #CustomerInfo.Expanded .Content {
+        border-top: 1px solid #82c826;
+    }
+
+    #DynamicFieldsTable .DynamicFieldSidebarEditContainer .Content {
+        border-top: 0px solid #82c826;
+    }
+
+    .ProcessInfo > .Bottom >.Actions li a {
+        background-color: #eee;
+        border: 1px solid #82C826 !important;
+        border-bottom: 1px solid #82C826 !important;
+        cursor: pointer;
+    }
+
+    .ProcessInfo > .Bottom >.Actions li a:hover {
+        background-color: #82C826;
+        border-color: #82C826;
+        border: 1px solid #82C826;
+        color: white;
+    }
+
+} /* end @media */

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="DynamicFields::Driver###DropdownGeneralCatalog" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Driver::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">DropdownGeneralCatalog</Item>
+                <Item Key="Module">Kernel::System::DynamicField::Driver::DropdownGeneralCatalog</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldDropdownGeneralCatalog</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AdminDynamicFieldDropdownGeneralCatalog" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Group>admin</Group>
+                <Description>Admin</Description>
+                <Title Translatable="1">Dynamic Fields Dropdown General Catalog Backend GUI</Title>
+                <Loader>
+                    <CSS>Core.Agent.Admin.DynamicField.css</CSS>
+                    <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
+                    <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFields::Driver###MultiselectGeneralCatalog" Required="0" Valid="1">
+        <Description Translatable="1">DynamicField backend registration.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>DynamicFields::Driver::Registration</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="DisplayName" Translatable="1">MultiselectGeneralCatalog</Item>
+                <Item Key="Module">Kernel::System::DynamicField::Driver::MultiselectGeneralCatalog</Item>
+                <Item Key="ConfigDialog">AdminDynamicFieldMultiselectGeneralCatalog</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AdminDynamicFieldMultiselectGeneralCatalog" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>DynamicFields</Group>
+        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Group>admin</Group>
+                <Description>Admin</Description>
+                <Title Translatable="1">Dynamic Fields Multiselect General Catalog Backend GUI</Title>
+                <Loader>
+                    <CSS>Core.Agent.Admin.DynamicField.css</CSS>
+                    <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
+                    <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Output::FilterElementPre###AdminDynamicFieldSysConfigSettings" Required="0" Valid="1">
+        <Description Translatable="1">Defines Output filter to provide multiselect fields to assign dynamic fields easily to frontend modules.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Frontend::Admin</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::OutputFilter::AdminDynamicFieldSysConfigSettings</Item>
+                <Item Key="Templates">
+                    <Hash>
+                        <Item Key="AdminDynamicFieldCheckbox">1</Item>
+                        <Item Key="AdminDynamicFieldDateTime">1</Item>
+                        <Item Key="AdminDynamicFieldDropdown">1</Item>
+                        <Item Key="AdminDynamicFieldMultiselect">1</Item>
+                        <Item Key="AdminDynamicFieldText">1</Item>
+                        <Item Key="AdminDynamicFieldObjectReference">1</Item>
+                        <Item Key="AdminDynamicFieldDropdownGeneralCatalog">1</Item>
+                        <Item Key="AdminDynamicFieldMultiselectGeneralCatalog">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+</otrs_config>

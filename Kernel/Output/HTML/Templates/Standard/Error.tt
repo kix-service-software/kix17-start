@@ -1,0 +1,125 @@
+# --
+# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="MainBox ARIARoleMain SpacingTopLarge ErrorScreen">
+
+    <div class="W50pc CenterBox SpacingBottomLarge">
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("An error occurred.") | html %]</h2>
+            </div>
+            <div class="Content">
+                <p>[% Translate(Data.Message) | truncate(200) | html %]</p>
+                <p class="SpacingTop">
+                    [% Translate(Data.Comment) | html %].
+                </p>
+
+                [% IF Data.ShowOTRSBusinessHint %]
+                <div class="MessageBox Info">
+                    <p class="SpacingTop">
+                        [% Translate("Really a bug? 5 out of 10 bug reports result from a wrong or incomplete installation of OTRS.") | html %]
+                        [% Translate("With %s, our experts take care of correct installation and cover your back with support and periodic security updates.", '<b>OTRS Business Solution™</b>') %]
+                        <br /><br />
+                        <a class="Button" href="https://www.otrs.com/contact/" target="_blank">
+                            [% Translate("Contact our service team now.") | html %]
+                        </a>
+                    </p>
+                </div>
+                [% END %]
+
+# KIX4OTRS-capeIT
+#                <form action="http://bugs.otrs.org/enter_bug.cgi">
+#
+#                    <textarea class="Hidden" name="comment" rows="1" cols="1"><![CDATA[
+#Message:
+#[% Data.Message | html %]
+#
+#Comment:
+#[% Data.Comment | html %]
+#
+#Traceback:
+#[% Data.BackendTraceback | html %]"
+#                    ]]></textarea>
+#                    <input type="hidden" name="bug_file_loc" value="[% Env("SERVER_NAME") | html %][% Env("REQUEST_URI") | html %]"/>
+                <form action="https://support.cape-it.de/helpdesk/customer.pl">
+                    <input type="hidden" name="Action" value="CustomerTicketMessage"/>
+                    <input type="hidden" name="Subaction" value="StoreNew"/>
+                    <input type="hidden" name="Dest" value="7||Thema: OTRS"/>
+                    <input type="hidden" name="TypeID" value="1"/>
+                    <input type="hidden" name="PriorityID" value="3"/>
+                    <textarea class="Hidden" name="Body" rows="1" cols="1"><![CDATA[
+Traceback:
+[% Data.BackendTraceback | html %]
+
+System Information:
+[% Config("Product") %] [% Config("Version") %]
+                    ]]></textarea>
+# EO KIX4OTRS-capeIT
+
+                    <p class="SpacingTop">
+                        <button type="submit" class="Primary CallForAction" value="[% Translate("Send a bugreport") | html %]"><span>[% Translate("Send a bugreport") | html %]</span></button>
+                        &nbsp;[% Translate("or") | html %]&nbsp;
+                        <a href="#" id="GoBack" class="CallForAction"><span>[% Translate("go back to the previous page") | html %]</span></a>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#GoBack').bind('click', function (Event) {
+    // check if an older history entry is available
+    if (history.length > 1) {
+        history.back();
+        return false;
+    }
+
+    // if we're in a popup window, close it
+    if (Core.UI.Popup.CurrentIsPopupWindow()) {
+        Core.UI.Popup.ClosePopup();
+        return false;
+    }
+
+    // normal window, no history: no action possible
+    return false;
+});
+//]]></script>
+[% END %]
+                    </p>
+                </form>
+
+                <div id="Traceback" class="SpacingTop Notice Hidden">
+                    <h4>[% Translate("Error Details") | html %]:</h4>
+
+                </div>
+            </div>
+        </div>
+[% RenderBlockStart("ShowBackendTraceback") %]
+        <div class="WidgetSimple Collapsed SpacingTop">
+            <div class="Header ErrorMessage">
+                <div class="WidgetAction Toggle">
+                    <a href="#" title="[% Translate("Expand") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
+                </div>
+                <h2>[% Translate("Error Details") | html %]</h2>
+            </div>
+            <div class="Content">
+# KIX4OTRS-capeIT
+#                <code>Backend [% Data.BackendTraceback | html %]</code>
+                <code>Backend [% Data.BackendTraceback | html %]
+System information:
+[% Config("Product") %] [% Config("Version") %]
+</code>
+# EO KIX4OTRS-capeIT
+            </div>
+        </div>
+[% RenderBlockEnd("ShowBackendTraceback") %]
+    </div>
+</div>

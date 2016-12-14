@@ -1,0 +1,15 @@
+"Queue";"Gruppe";"SalutationID";"SignatureID";"FollowUpID";"FollowUpLock";"UnlockTimeout";"FirstResponseTime";"FirstResponseNotify";"UpdateTime";"UpdateNotify";"SolutionTime";"SolutionNotify";"Calendar";"Validity";"SystemAddress";"OTRS-Admin";"FAQ-Redaktion";"MA_Support";"MA_Beschaffung";"MA_CMDB-Pflege";"Problemmanager"
+;"admin";;;;;;;;;;;;;;;"RO,MO,CR,OW,PR,NO,RW";;;;;
+;"faq";;;;;;;;;;;;;;;"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW";"RO, ";"RO, ";"RO, ";
+;"faq_admin";;;;;;;;;;;;;;;"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW";"RO, ";"RO, ";;
+;"itsm-configitem";;;;;;;;;;;;;;;"RO,MO,CR,OW,PR,NO,RW";;"RO, ";"RO, ";"RO,MO,CR,OW,PR,NO,RW";
+;"itsm-service";;;;;;;;;;;;;;;"RO,MO,CR,OW,PR,NO,RW";;"RO, ";"RO, ";"RO, ";
+;"stats";;;;;;;;;;;;;;;"RO,MO,CR,OW,PR,NO,RW";;;;;
+"Junk";"users";1;1;1;0;5;0;0;0;0;0;0;;"valid";"noreply@expample.org";"RO,MO,CR,OW,PR,NO,RW";;;;;
+"IT Beschaffung";"ITBeschaffung";1;1;1;0;30;0;0;0;0;0;0;;"valid";"admin@example.org";;;"RO,MO,CR,-";"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,-"
+"IT Betrieb (Server und Infrastruktur)";"ITBetrieb_ServerundInfrastruktur";1;1;3;0;30;0;0;0;0;0;0;;"valid";"helpdesk@example";;;"RO,MO,CR,OW,PR,NO,RW";;"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW"
+"IT Endgeräte";"ITEndgeraete";1;1;3;0;30;0;0;0;0;0;0;;"valid";"helpdesk@example";;;"RO,MO,CR,OW,PR,NO,RW";;"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW"
+"IT Helpdesk";"ITHelpdesk";1;1;1;0;5;60;50;0;0;480;90;;"valid";"helpdesk@example";;;"RO,MO,CR,OW,PR,NO,RW";;"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW"
+"IT Service Management";"ITServiceManagement";1;1;1;0;30;0;0;0;0;0;0;;"valid";"helpdesk@example";;;"RO,MO,CR,OW,PR,NO,RW";;"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW"
+"IT Standard Software";"ITStandardSoftware";1;1;1;0;30;0;0;0;0;0;0;;"valid";"helpdesk@example";;;"RO,MO,CR,OW,PR,NO,RW";;"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW"
+"IT Systemadministration";"ITSystemadministration";1;1;3;0;30;0;0;0;0;0;0;;"valid";"helpdesk@example";;;"RO,MO,CR,OW,PR,NO,RW";;"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW"

@@ -1,0 +1,59 @@
+# --
+# AgentITSMConfigItemZoomTabLinkedObjects.tt - provides HTML form for AgentITSMConfigItemZoom linked objects tab
+# based upon AgentITSMConfigItemZoom.pm
+# original Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
+# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Stefam(dot)Mehlig(at)cape(dash)it(dot)de
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("QuickLink") %]
+[% Data.QuickLinkContent %]
+[% RenderBlockEnd("QuickLink") %]
+[% RenderBlockStart("TabContent") %]
+<div class="MainBox ARIARoleMain">
+[% RenderBlockStart("LinkTable") %]
+    <div class="SpacingTopSmall AddQuickLink">
+        [% Translate("There could be more linked objects than displayed due to lack of permissions.") | html %]
+    </div>
+    <div class="Content">
+        [% Data.LinkTableStrg %]
+    </div>
+[% RenderBlockEnd("LinkTable") %]
+</div>
+[% RenderBlockEnd("TabContent") %]
+[% Data.PreferencesLinkTableStrg %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.SelectLinkedObjects('AgentITSMConfigItemZoom','[% Data.UserLanguage %]');
+    Core.KIX4OTRS.ConfigItemZoomTabs.Init();
+
+    // drag and drop
+    Core.UI.DnD.Sortable($('.Content'), {
+        Handle : '.Header h2',
+        Items : '.CanDrag',
+        Placeholder : 'DropPlaceholder',
+        Tolerance : 'pointer',
+        Distance : 15,
+        Opacity : 0.6,
+        Update : function(event, ui) {
+            var url = 'Action=LinkObjectTableOrderAJAXHandler;Subaction=UpdatePosition;CallingAction=AgentITSMConfigItemZoomTabLinkedObjects';
+            $('.WidgetBox.CanDrag').each(function(i) {
+                url = url + ';Backend=' + $(this).attr('id');
+            });
+            Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), url, function() {}, 'text');
+        }
+    });
+//]]></script>
+[% END %]

@@ -1,0 +1,245 @@
+# --
+# AgentITSMConfigItemCompare.dtl - provides HTML form for AgentITSMConfigItemCompare
+# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
+# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Ralf(dot)Boehm(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="LayoutPopup ARIARoleMain">
+
+[% RenderBlockStart("ConfigItemData") %]
+[% RenderBlockStart("Header") %]
+    <div class="Header">
+        <h1>
+            [% Translate("Compare different versions of") | html %]: #[% Data.Number | html %] - [% Data.Name | html %]
+        </h1>
+        <p>
+                <a class="CancelClosePopup" href="#">[% Translate("Cancel & close") | html %]</a>
+        </p>
+    </div>
+[% RenderBlockEnd("Header") %]
+
+    <div class="Content">
+    <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="ConfigItemCompare" class="Validate PreventMultipleSubmits">
+        <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+        <input type="hidden" name="Subaction" value="Compare"/>
+        <input type="hidden" name="ConfigItemID" value="[% Data.ConfigItemID | html %]"/>
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>
+                    [% Translate("Select two versions to compare") | html %]
+                </h2>
+            </div>
+            <div class="Content">
+
+                <div id="ITMSConfigItemCompareLeft">
+                    <table id="CompareLeft" class="DataTable">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th title="[% Translate("Version Number") | html %]"><span>#</span></th>
+                                <th title="[% Translate("Created By") | html %]"><span>[% Translate("Cancel & close") | html %]</span></th>
+                                <th title="[% Translate("Changed On") | html %]"><span>[% Translate("Changed On") | html %]</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+[% RenderBlockStart("TreeItemLeft") %]
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="LeftItem" id="Checkbox_Left_[% Data.Count | html %]" value="[% Data.VersionID | html %]" alt="[% Data.Name | html %]" title="[% Data.Name | html %] [% Data.Number | html %] Version [% Data.Count | html %]" [% Data.SelectedLeft | html %] />
+                                </td>
+                                <td>
+                                    [% Data.Count | html %].
+                                </td>
+                                <td>
+                                    [% Data.UserLogin | truncate(30) | html %] ([% Data.UserFirstname | truncate(30) | html %] [% Data.UserLastname | truncate(30) | html %])
+
+                                </td>
+                                <td>
+                                    [% Data.CreateTime | Localize("TimeLong") %]
+                                </td>
+                            </tr>
+[% RenderBlockEnd("TreeItemLeft") %]
+                        </tbody>
+                    </table>
+                </div>
+                <div id="ITMSConfigItemCompareRight">
+                    <table id="CompareRight" class="DataTable">
+                        <thead>
+                            <tr>
+                                <th>&nbsp;</th>
+                                <th title="[% Translate("Version Number") | html %]"><span>#</span></th>
+                                <th title="[% Translate("Created By") | html %]"><span>[% Translate("Cancel & close") | html %]</span></th>
+                                <th title="[% Translate("Changed On") | html %]"><span>[% Translate("Changed On") | html %]</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+[% RenderBlockStart("TreeItemRight") %]
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="RightItem" id="Checkbox_Right_[% Data.Count | html %]" value="[% Data.VersionID | html %]" alt="[% Data.Name | html %]" title="[% Data.Name | html %] [% Data.Number | html %] Version [% Data.Count | html %]" [% Data.SelectedRight | html %] />
+                                </td>
+                                <td>
+                                    [% Data.Count | html %].
+                                </td>
+                                <td>
+                                    [% Data.UserLogin | truncate(30) | html %] ([% Data.UserFirstname | truncate(30) | html %] [% Data.UserLastname | truncate(30) | html %])
+
+                                </td>
+                                <td>
+                                    [% Data.CreateTime | Localize("TimeLong") %]
+                                </td>
+                            </tr>
+[% RenderBlockEnd("TreeItemRight") %]
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="ITSMConfigItemCompareProblem">
+        </div>
+        <div class="Footer">
+            <button class="Primary CallForAction" id="submitButton" accesskey="g" title="[% Translate("Compare") | html %] (g)" type="submit" value="[% Translate("Compare") | html %]"><span><i class="fa fa-play"></i> [% Translate("Compare") | html %]</span></button>
+        </div>
+        </form>
+[% RenderBlockStart("ConfigItemCompare") %]
+        <div class="WidgetSimple" style="margin-top:20px;">
+            <div class="Header">
+                <h2>
+                    [% Translate("Compare of") | html %] ConfigItem:[% Data.Number | html %] [% Translate("Version") | html %] [% Data.Version1 | html %] [% Translate("with version") | html %] [% Data.Version2 | html %]
+                </h2>
+            </div>
+            <div class="Content">
+                <div style="float:left;width:450px">
+                    <div style="font-size:10pt;padding:5px;">[% Translate("Version") | html %] [% Data.Version1 | html %]</div>
+                    <table id="CompareLeft" class="DataTable">
+                        <thead>
+                            <tr>
+                                <th>[% Translate("Property") | html %]</th>
+                                <th>[% Translate("Value") | html %]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+[% RenderBlockStart("CompareItemLeft") %]
+                            <tr style="[% Data.Css %]">
+                                <td class="W25pc" style="padding-left: [% Data.Indentation %]px;" title="[% Translate(Data.Description) | html %]">
+                                    [% Translate(Data.Name) | html %]:
+                                </td>
+                                <td style="padding-left: [% Data.Indentation %]px;">
+                                    [% Data.Value %]
+                                </td>
+                            </tr>
+[% RenderBlockEnd("CompareItemLeft") %]
+                        </tbody>
+                    </table>
+                </div>
+                <div style="float:right;width:450px">
+                    <div style="font-size:10pt;padding:5px;">[% Translate("Version") | html %] [% Data.Version2 | html %]</div>
+                    <table id="CompareRight" class="DataTable">
+                        <thead>
+                            <tr>
+                                <th>[% Translate("Property") | html %]</th>
+                                <th>[% Translate("Value") | html %]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+[% RenderBlockStart("CompareItemRight") %]
+                            <tr style="[% Data.Css %]">
+                                    <td class="W25pc" style="padding-left: [% Data.Indentation %]px;" title="[% Translate(Data.Description) | html %]">
+                                        [% Translate(Data.Name) | html %]:
+                                    </td>
+                                    <td style="padding-left: [% Data.Indentation %]px;">
+                                        [% Data.Value %]
+                                    </td>
+                            </tr>
+[% RenderBlockEnd("CompareItemRight") %]
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+[% RenderBlockEnd("ConfigItemCompare") %]
+    </div>
+    <div style="margin:20px;">
+[% RenderBlockStart("CompareLegend") %]
+        [% Translate("Legend") | html %]:
+        <span style="[% Data.css_changed %]">[% Translate("Changed") | html %]</span>
+        <span style="[% Data.css_added %]">[% Translate("Added") | html %]</span>
+        <span style="[% Data.css_removed %]">[% Translate("Removed") | html %]</span>
+[% RenderBlockEnd("CompareLegend") %]
+    </div>
+[% RenderBlockEnd("ConfigItemData") %]
+</div>
+
+[% WRAPPER JSOnDocumentComplete %]
+    <script type="text/javascript">//<![CDATA[
+        var value_right = 0, value_left = 0;
+        $('table#CompareRight tbody tr input:checkbox').each( function () {
+            if ( $(this).prop('checked') ) {
+                value_right = $(this).val();
+            }
+        });
+        $('table#CompareLeft tbody tr input:checkbox').each( function () {
+            if ($(this).prop('checked')) {
+                value_left = $(this).val();
+            }
+        });
+
+        if (value_left == value_right) {
+            $('#submitButton').attr('disabled','disabled');
+        }
+
+        $("table tbody tr").find('input[id^="Checkbox"]').click( function() {
+            var $Element = $(this),
+                IdArray = $(this).attr('id').split(/_/),
+                RightOrLeft = IdArray[1];
+
+            // remove old selections
+            $('input[id^="Checkbox_'+RightOrLeft+'"]').each( function() {
+                if ( $(this).attr('id') != $Element.attr('id') ) {
+                    $(this).removeAttr('checked');
+                }
+            })
+            // set new selection
+            $('input:checkbox', this).attr('checked','checked');
+
+            // dont compare to similar versions
+            var $CompareTable;
+            if ($(this).parent().parent().is('table#CompareRight')) {
+                $CompareTable = $('table#CompareLeft tbody tr input:checkbox');
+            }
+            else {
+                $CompareTable = $('table#CompareRight tbody tr input:checkbox');
+            }
+
+            var wert = ($('input:checkbox', this).val());
+
+            if ($CompareTable.length) {
+                $CompareTable.each( function () {
+                    if ($(this).prop('checked')) {
+                        if (wert == $(this).val()) {
+                            $('#ITSMConfigItemCompareProblem').css({
+                                "display":"block",
+                                })
+                            .html('[% Translate("Do not compare two similar versions!") | JSON %]');
+                            $('#submitButton').prop('disabled','true');
+                            }
+                        else {
+                            $('#ITSMConfigItemCompareProblem').css({"display":"none"});
+                            $('#submitButton').removeAttr('disabled');
+                        }
+                    }
+                });
+            }
+        });
+    //]]></script>
+[% END %]

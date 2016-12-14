@@ -1,0 +1,22 @@
+Return-Path: <nagios@example.com>
+To: otrs@example.com
+Subject: ** PROBLEM alert 1 - ANDROMEDA host is DOWN **
+Message-Id: <20070317231546.0DFD55DC00F@h53795.example.com>
+Date: Sun, 18 Mar 2007 00:15:46 +0100 (CET)
+From: nagios@example.com
+Mime-Version: 1.0
+
+***** Nagios  *****
+
+Notification Type: PROBLEM
+Host: ANDROMEDA
+State: DOWN for 0d 0h 0m 0s
+Address: 127.1.1.1
+Info:
+
+CRITICAL - Time to live exceeded (127.1.1.1)
+
+Date/Time: Sun Mar 18 00:18:30 CET 2007
+
+ACK by: 
+Comment:

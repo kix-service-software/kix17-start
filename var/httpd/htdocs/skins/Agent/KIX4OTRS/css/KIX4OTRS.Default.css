@@ -1,0 +1,118 @@
+/**
+ * @project     OTRS (http://www.otrs.org) - Agent Frontend
+ * @version     $Revision$
+ * @copyright   OTRS AG
+ * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
+ */
+
+/**
+ * @package     Skin "KIX4OTRS"
+ * @section     Default Settings
+ */
+
+@media screen,projection,tv,handheld {
+
+/**
+ * @subsection  Fonts
+ */
+
+    body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 12px;
+        text-align: left;
+        padding: 0px;
+        margin: 0px;
+    }
+
+/**
+ * @subsection  Links
+ */
+
+    a {
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    a:hover,
+    a:focus {
+        color: #EB9430;
+    }
+
+/**
+ * @subsection  Headings
+ */
+
+    h1 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+/**
+ * @subsection  MessageBox
+ */
+
+    .MessageBox a.Close {
+        float: right;
+        display: inline-block;
+        margin: 8px;
+        color: #5D5D5D;
+    }
+
+    .MessageBox a.Close:hover {
+        float: right;
+        display: inline-block;
+        margin: 8px;
+        color: black;
+    }
+
+    .MessageBox a:hover {
+        color: #000000;
+    }
+
+    .MessageBox {
+        z-index:19;
+        border:none;
+        margin: 0;
+    }
+
+    .MessageBox p {
+        display: inline-block;
+        width: 95%;
+        padding: 7px 12px 6px;
+    }
+
+/**
+ * @subsection  Flag
+ */
+
+    li > form > select {
+        background-color: #FFFFFF;
+    }
+
+/**
+ * @subsection  JSTree
+ */
+
+    .CallForAction:active, .CallForAction:hover {
+        background-color: #FFCC65;
+        border-color: #999;
+    }
+
+    .ui-state-hover,
+    .ui-widget-content .ui-state-hover,
+    .ui-widget-header .ui-state-hover,
+    .ui-state-focus,
+    .ui-widget-content .ui-state-focus,
+    .ui-widget-header .ui-state-focus {
+        background: #FFCC65 !important;
+    }
+
+    .jstree-anchor.jstree-clicked {
+        background-color: #FCB24B !important;
+    }
+    .jstree-anchor.jstree-clicked:focus {
+        background-color: #FCB24B !important;
+    }
+
+} /* end @media */

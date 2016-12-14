@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXFramework">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="Ticket::EventModulePost###800-ResponsibleAutoSetPerTickettype" Required="0" Valid="0">
+        <Description Translatable="1">Workflowmodule which sets the ticket responsible based on ticket type if not given.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::ResponsibleAutoSetPerTickettype</Item>
+                <Item Key="Event">(TicketCreate|TicketStateUpdate|TicketOwnerUpdate)</Item>
+                <Item Key="TicketType:::"></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Ticket::ResponsibleAutoSetPerTickettype" Required="0" Valid="1">
+        <Description Translatable="1">If ticket responsible feature is enabled, set responsible on ticket creation or state update.</Description>
+        <Group>KIX4OTRS</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Option SelectedID="ForceTTResponsible">
+                <Item Key="ForceTTResponsible">Force ticket type responsible</Item>
+                <Item Key="TTResponsible">Set ticket type responsible if not specified</Item>
+                <Item Key="Owner">Set owner, if reponsible not specified</Item>
+                <Item Key="0">Disabled</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

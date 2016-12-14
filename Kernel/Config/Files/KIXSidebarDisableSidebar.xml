@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<otrs_config version="1.0" init="KIXApplication">
+    <CVS>$Id$</CVS>
+
+    <ConfigItem Name="Frontend::KIXSidebarBackend###KIXSBDisableSidebar001" Required="0" Valid="0">
+        <Description Translatable="1">Sidebar module registration for the agent interface.</Description>
+        <Group>KIXSidebarTools</Group>
+        <SubGroup>Frontend::Agent::KIXSidebarDisableSidebar</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::KIXSidebar::DisableSidebar</Item>
+                <Item Key="Title">Disable Sidebars</Item>
+                <Item Key="Description">Disable Sidebars</Item>
+                <Item Key="Prio">0500</Item>
+                <Item Key="Actions">AgentTicket(Phone|Email|Zoom)</Item>
+                <Item Key="Identifier">KIXSBDisableSidebar</Item>
+                <Item Key="Group"></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::KIXSidebarBackend::DisabledSidebars" Required="0" Valid="0">
+        <Description Translatable="1">Configures which sidebars were disabled depending on used frontend module, attributes like service, type, state or priority and its value. The key is composed like FronendModule###Attribute::Value. The value should contain the names of the disabled sidebars comma separated.</Description>
+        <Group>KIXSidebarTools</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+            <Setting>
+                <Hash>
+                    <Item Key="AgentTicketPhone###Type:::Incident|||Queue:::Junk">KIXSBSimilarTickets</Item>
+                    <Item Key="AgentTicketPhone###Type:::Problem|||Queue:::Raw;Misc">CustomerInfo</Item>
+                    <Item Key="AgentTicketEmail###Type:::Problem|||Queue:::Raw;Misc">KIXSBSimilarTickets</Item>
+                </Hash>
+            </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Frontend::Module###KIXSidebarDisableSidebarAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>KIXSidebarTools</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>KIXSidebar DisabledSidebar AJAX Handler</Description>
+                <Title>KIXSidebar DisabledSidebar AJAX Handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerFrontend::Module###KIXSidebarDisableSidebarAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>KIXSidebarTools</Group>
+        <SubGroup>Frontend::Customer::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>KIXSidebar DisabledSidebar AJAX Handler</Description>
+                <Title>KIXSidebar DisabledSidebar AJAX Handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Loader::Agent::CommonJS###108-KIXSidebarDisableSidebar" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIXSidebarTools.KIXSidebarDisableSidebar.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Customer::CommonJS###108-KIXSidebarDisableSidebar" Required="1" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the customer interface.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIXSidebarTools.KIXSidebarDisableSidebar.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+    <ConfigItem Name="Loader::Agent::CommonCSS###108-KIXSidebarDisableSidebar" Required="1" Valid="1">
+        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIXSidebarTools.KIXSidebarDisableSidebar.css</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Customer::CommonCSS###108-KIXSidebarDisableSidebar" Required="1" Valid="1">
+        <Description Translatable="1">List of CSS files to always be loaded for the customer interface.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIXSidebarTools.KIXSidebarDisableSidebar.css</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+
+</otrs_config>

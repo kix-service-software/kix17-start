@@ -1,0 +1,80 @@
+# --
+# AgentCustomerDashboardRemoteDB.tt - provides HTML for KIXSidebar database table integration
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
+# * Torsten(dot)Thau(at)cape(dash)it(dot)de
+# * Mario(dot)Illinger(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("ContentFrame") %]
+    <div id="Content[% Data.Identifier %]" class="Content">
+        <div id="SearchResult[% Data.Identifier | html %]">
+        </div>
+    </div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.KIX4OTRS.Agent.CustomerDashboard.UpdateRemoteDBSidebar(
+        'CustomerDashboardRemoteDBAJAXHandler',
+        '[% Data.Identifier | html %]',
+        'SearchString=*;CustomerUserID=[% Data.CustomerUserID %];CustomerLogin=[% Data.CustomerLogin | html %]'
+    );
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("ContentFrame") %]
+
+[% RenderBlockStart("CustomerDashboardRemoteDBResult") %]
+<div style="[% Data.Style | html %]">
+    <table id="Result[% Data.Identifier | html %]" class="DataTable">
+[% RenderBlockStart("CustomerDashboardRemoteDBResultHead") %]
+        <thead>
+            <tr>
+[% RenderBlockStart("CustomerDashboardRemoteDBResultHeadColumnCheck") %]
+                <th>&nbsp;</th>
+[% RenderBlockEnd("CustomerDashboardRemoteDBResultHeadColumnCheck") %]
+[% RenderBlockStart("CustomerDashboardRemoteDBResultHeadColumnValue") %]
+                <th class="SortColumn"><a href="#">[% Translate(Data.Head) | html %]</a></th>
+[% RenderBlockEnd("CustomerDashboardRemoteDBResultHeadColumnValue") %]
+            </tr>
+        </thead>
+[% RenderBlockEnd("CustomerDashboardRemoteDBResultHead") %]
+        <tbody>
+[% RenderBlockStart("CustomerDashboardRemoteDBResultRow") %]
+            <tr>
+                <input type="hidden" name="Result[% Data.Identifier | html %]" value="[% Data.Value | html %]" />
+[% RenderBlockStart("CustomerDashboardRemoteDBResultRowColumnCheck") %]
+                <td>
+                    <input type="checkbox" class="ResultCheckbox[% Data.Identifier | html %]" onclick="javascript:KIXSidebarTools.KIXSidebarRemoteDB.ChangeCheckbox($(this), '[% Data.Identifier | html %]', '[% Data.DynamicFields | html %]', '[% Data.TicketID | html %]');" value="[% Data.Value | html %]" [% Data.IsChecked | html %]/>
+                </td>
+[% RenderBlockEnd("CustomerDashboardRemoteDBResultRowColumnCheck") %]
+[% RenderBlockStart("CustomerDashboardRemoteDBResultRowColumn") %]
+                <td>
+[% RenderBlockStart("CustomerDashboardRemoteDBResultRowColumnLink") %]
+                    <a href="[% Env("Baselink") %]Action=[% Data.Frontend | uri %]TicketZoom;TicketNumber=[% Data.Result | uri %]" title="[% Data.Result | html %]" class="MasterActionLink">[% Data.ResultShort | html %]</a>
+[% RenderBlockEnd("CustomerDashboardRemoteDBResultRowColumnLink") %]
+[% RenderBlockStart("CustomerDashboardRemoteDBResultRowColumnValue") %]
+                    <span title="[% Data.Result | html %]">[% Data.ResultShort | html %]</span>
+[% RenderBlockEnd("CustomerDashboardRemoteDBResultRowColumnValue") %]
+                    <input type="hidden" class="SortData" value="[% Data.Result | html %]" />
+                </td>
+[% RenderBlockEnd("CustomerDashboardRemoteDBResultRowColumn") %]
+            </tr>
+[% RenderBlockEnd("CustomerDashboardRemoteDBResultRow") %]
+        </tbody>
+    </table>
+</div>
+[% RenderBlockEnd("CustomerDashboardRemoteDBResult") %]
+
+[% RenderBlockStart("NoSearchResult") %]
+[% Translate("Nothing found.") | html %]
+[% RenderBlockEnd("NoSearchResult") %]

@@ -1,0 +1,2 @@
+# Who gets the cron emails?
+MAILTO="root@localhost"

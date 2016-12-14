@@ -1,0 +1,313 @@
+# --
+# AgentKIXSidebarSearchCIs.tt - provides HTML to show config items in KIXSidebar
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Frank(dot)Oberender(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Anna(dot)Litvinova(at)cape(dash)it(dot)de
+# * Mario(dot)Illinger(at)cape(dash)it(dot)de
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("SidebarFrame") %]
+<div id="[% Data.Identifier %]" class="KIXSidebarTools WidgetSimple CanDrag [% Data.AdditionalClasses | html %]">
+    <div class="Header">
+        <div class="WidgetAction Toggle">
+            <a href="#" title="[% Translate(Data.Description) | html %]">
+                <i class="fa fa-caret-right"></i>
+                <i class="fa fa-caret-down"></i>
+            </a>
+        </div>
+        <h2>[% Translate(Data.Title) | html %]</h2>
+    </div>
+    <div id="Content[% Data.Identifier %]" class="Content">
+[% RenderBlockStart("SearchBox") %]
+        <div class="SearchBox">
+            <fieldset class="TableLike FixedLabelSmall">
+                <input class="Search" title="Search" id="SearchString[% Data.Identifier | html %]" name="SearchString" type="Text" size="15" value=""/>
+                <button title="[% Translate("Search") | html %]" type="button" id="SearchButton[% Data.Identifier | html %]" value="[% Translate("Search") | html %]">
+                    <i class="fa fa-search"></i>
+                </button>
+            </fieldset>
+        </div>
+[% RenderBlockEnd("SearchBox") %]
+        <div id="SearchResult[% Data.Identifier | html %]">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">//<![CDATA[
+    var KIXSidebarCallback[% Data.Identifier | html %] = function (Response) {
+        var $SortableColumns = $('#Result[% Data.Identifier | html %] th.SortColumn'),
+            Headers = {},
+            ColumnCount = 0;
+
+        // Only start, if there are columns that allow sorting
+        if ($SortableColumns.length) {
+            // Get all columns which should not be sorted
+            $('#Result[% Data.Identifier | html %] th').each(function () {
+                if (!$(this).hasClass('SortColumn')) {
+                    Headers[ColumnCount] = { sorter: false };
+                }
+                ColumnCount++;
+            });
+
+            $('#Result[% Data.Identifier | html %]').tablesorter({
+                headers: Headers,
+                textExtraction: function(node) {
+                    return $(node).find('.SortData').val() || '';
+                }
+            });
+        }
+        [% Data.Callback %]
+    }
+//]]>
+</script>
+[% RenderBlockStart("SearchJS") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
+    $('#SearchString[% Data.Identifier | html %]').bind('keyup', function (Event) {
+        if ( (Event.keyCode !== 13) && ($('#SearchString[% Data.Identifier | html %]').val().length >= [% Data.QueryMinLength | html %]) ) {
+            var TicketID = '';
+            var FormID = '';
+            if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+                TicketID = $('input[name=TicketID]').val();
+            }
+            else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+                FormID = $('input[name=FormID]').val();
+            }
+
+            var Data = {};
+            Data.TicketID       = TicketID;
+            Data.FormID         = FormID;
+            Data.SearchString   = $('#SearchString[% Data.Identifier | html %]').val();
+            Data.CustomerUserID = $('#SelectedCustomerUser').val();
+
+            KIXSidebarTools.DelayUpdateSidebar(
+                'KIXSidebarCISearchAJAXHandler',
+                '[% Data.Identifier | html %]',
+                Data,
+                window.KIXSidebarCallback[% Data.Identifier | html %],
+                [% Data.QueryDelay | html %]
+            );
+         } else {
+            KIXSidebarTools.StopDelayUpdateSidebar('[% Data.Identifier | html %]');
+         }
+    });
+
+    function KIXSidebarCISearch[% Data.Identifier | html %]() {
+        var TicketID = '';
+        var FormID = '';
+        if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+            TicketID = $('input[name=TicketID]').val();
+        }
+        else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+            FormID = $('input[name=FormID]').val();
+        }
+
+        KIXSidebarTools.StopDelayUpdateSidebar('[% Data.Identifier | html %]');
+
+        var Data = {};
+        Data.TicketID       = TicketID;
+        Data.FormID         = FormID;
+        Data.SearchString   = $('#SearchString[% Data.Identifier | html %]').val();
+        Data.CustomerUserID = $('#SelectedCustomerUser').val();
+
+        KIXSidebarTools.UpdateSidebar(
+            'KIXSidebarCISearchAJAXHandler',
+            '[% Data.Identifier | html %]',
+            Data,
+            window.KIXSidebarCallback[% Data.Identifier | html %]
+        );
+    };
+    $('#SearchButton[% Data.Identifier | html %]').bind('click', function (Event) {
+        KIXSidebarCISearch[% Data.Identifier | html %]();
+    });
+    $('#SearchString[% Data.Identifier | html %]').keydown(function (Event) {
+         if (Event.keyCode === 13) {
+             KIXSidebarCISearch[% Data.Identifier | html %]();
+         }
+    });
+//]]></script>
+[% END %]
+[% RenderBlockEnd("SearchJS") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    KIXSidebarTools.Init('[% Data.Identifier | html %]');
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("SidebarFrame") %]
+
+[% RenderBlockStart("AutoSearch") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    var TicketID = '';
+    var FormID = '';
+    if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+        TicketID = $('input[name=TicketID]').val();
+    }
+    else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+        FormID = $('input[name=FormID]').val();
+    }
+
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
+
+    var Data = {};
+    Data.TicketID       = TicketID;
+    Data.FormID         = FormID;
+    Data.SearchString   = '*';
+    Data.CustomerUserID = $('#SelectedCustomerUser').val();
+
+    KIXSidebarTools.UpdateSidebar(
+        'KIXSidebarCISearchAJAXHandler',
+        '[% Data.Identifier | html %]',
+        Data,
+        window.KIXSidebarCallback[% Data.Identifier | html %]
+    );
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("AutoSearch") %]
+
+[% RenderBlockStart("CustomerDependend") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
+    $('#SelectedCustomerUser').bind('change',
+        function() {
+            var ObjectID = '';
+            var TicketID = '';
+            var FormID = '';
+            if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+                TicketID = $('input[name=TicketID]').val();
+                ObjectID = TicketID;
+            }
+            else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+                FormID   = $('input[name=FormID]').val();
+                ObjectID = FormID;
+            }
+
+            $('input[type=checkbox]:checked.ResultCheckbox[% Data.Identifier | html %]').each(
+                function() {
+                    $(this).prop('checked', false);
+                    KIXSidebarTools.LinkObject2Ticket('ITSMConfigItem', $(this).val(), ObjectID, '[% Data.LinkMode | html %]', '[% Data.LinkType | html %]', $(this).prop('checked'));
+                }
+            );
+
+            var SearchString = '*';
+            if ( $('#SearchString[% Data.Identifier | html %]').length == 1 ) {
+                SearchString = $('#SearchString[% Data.Identifier | html %]').val();
+            }
+
+    var Data = {};
+    Data.TicketID       = TicketID;
+    Data.FormID         = FormID;
+    Data.SearchString   = SearchString;
+    Data.CustomerUserID = $('#SelectedCustomerUser').val();
+
+            KIXSidebarTools.UpdateSidebar(
+                'KIXSidebarCISearchAJAXHandler',
+                '[% Data.Identifier | html %]',
+                Data,
+                window.KIXSidebarCallback[% Data.Identifier | html %]
+            );
+        }
+    );
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("CustomerDependend") %]
+
+[% RenderBlockStart("AutoSelectOne") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#SearchResult[% Data.Identifier | html %]').bind('UpdateResultField',
+        function(){
+            var ObjectID = '';
+            var LinkMode = '';
+            if ($('input[name=TicketID]').length && $('input[name=TicketID]').val() != '') {
+                ObjectID = $('input[name=TicketID]').val();
+                LinkMode = 'Valid';
+            }
+            else if ($('input[name=FormID]').length && $('input[name=FormID]').val() != '') {
+                ObjectID = $('input[name=FormID]').val();
+                LinkMode = 'Temporary';
+            }
+
+            if ($('.ResultCheckbox[% Data.Identifier | html %]').length == 1) {
+                var Element = $('.ResultCheckbox[% Data.Identifier | html %]').first();
+                if ( !Element.prop('checked') ) {
+                    Element.prop('checked', true);
+                    KIXSidebarTools.KIXSidebarCI.ChangeCheckbox(Element, ObjectID, LinkMode, '[% Data.LinkType | html %]');
+                }
+            }
+        }
+    );
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("AutoSelectOne") %]
+
+[% RenderBlockStart("KIXSidebarCISearchResult") %]
+<div style="[% Data.Style | html %]">
+    [% Translate("Result") | html %]: [% Data.ResultString | html %]
+<table id="Result[% Data.Identifier | html %]" class="DataTable">
+        <thead>
+            <tr>
+[% RenderBlockStart("KIXSidebarCISearchResultHeadColumnCheck") %]
+                <th>&nbsp;</th>
+[% RenderBlockEnd("KIXSidebarCISearchResultHeadColumnCheck") %]
+[% RenderBlockStart("KIXSidebarCISearchResultHeadColumnValue") %]
+                <th class="SortColumn"><a href="#">[% Translate(Data.Head) | html %]</a></th>
+[% RenderBlockEnd("KIXSidebarCISearchResultHeadColumnValue") %]
+            </tr>
+        </thead>
+        <tbody>
+[% RenderBlockStart("KIXSidebarCISearchResultRow") %]
+            <tr>
+                <input type="hidden" name="Result[% Data.Identifier | html %]" value="[% Data.Value | html %]" />
+[% RenderBlockStart("KIXSidebarCISearchResultRowColumnCheck") %]
+                <td>
+                    <input type="checkbox" class="ResultCheckbox[% Data.Identifier | html %]" onclick="javascript:KIXSidebarTools.KIXSidebarCI.ChangeCheckbox($(this), '[% Data.LinkedTicketID | html %]', '[% Data.LinkMode | html %]', '[% Data.LinkType | html %]');" title="[% Data.Number | html %] - [% Data.Name | html %]" value="[% Data.Value | html %]" [% Data.IsChecked | html %]/>
+                </td>
+[% RenderBlockEnd("KIXSidebarCISearchResultRowColumnCheck") %]
+[% RenderBlockStart("KIXSidebarCISearchResultRowColumn") %]
+                <td>
+[% RenderBlockStart("KIXSidebarCISearchResultRowColumnLink") %]
+                    <a href="[% Env("Baselink") %]Action=[% Data.Frontend | uri %]ITSMConfigItemZoom;ConfigItemID=[% Data.Value | uri %]" target="_blank" title="[% Data.Result | html %]" class="MasterActionLink">[% Data.ResultShort | html %]</a>
+[% RenderBlockEnd("KIXSidebarCISearchResultRowColumnLink") %]
+[% RenderBlockStart("KIXSidebarCISearchResultRowColumnValue") %]
+                    <span title="[% Data.Result | html %]">[% Data.ResultShort | html %]</span>
+[% RenderBlockEnd("KIXSidebarCISearchResultRowColumnValue") %]
+                    <input type="hidden" class="SortData" value="[% Data.Result | html %]" />
+                </td>
+[% RenderBlockEnd("KIXSidebarCISearchResultRowColumn") %]
+            </tr>
+[% RenderBlockEnd("KIXSidebarCISearchResultRow") %]
+        </tbody>
+    </table>
+</div>
+[% RenderBlockEnd("KIXSidebarCISearchResult") %]
+
+[% RenderBlockStart("NoSearchResult") %]
+[% Translate("Nothing found.") | html %]
+[% RenderBlockEnd("NoSearchResult") %]

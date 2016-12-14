@@ -1,0 +1,87 @@
+# --
+# AgentTicketQueueTree.tt - provides HTML tree layout for AgentTicketQueue
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+<div class="LayoutFixedSidebar SidebarFirst">
+    <div class="SidebarColumn">
+        <div class="WidgetSimple SpacingTop SpacingLeft">
+            <div id="QueueTreeToggle">
+                <a title="[% Translate("Hide or show queue selection") | html %]" href="#">
+                </a>
+            </div>
+            <div id="QueueTreeControl" class="Header">
+                <a href="?#" class="Collaps">[% Translate("Collapse All") | html %]</a> | <a href="?#" class="Expand">[% Translate("Expand All") | html %]</a>
+            </div>
+            <div class="Content QueueTreeContent">
+              [% Data.MainContent %]
+          </div>
+            <div class="Clear">
+            </div>
+        </div>
+    </div>
+
+    <div class="ContentColumn">
+       [% Data.TicketList %]
+    </div>
+</div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+var StyleSheetURL = Core.Config.Get('WebPath') + 'skins/Agent/default/css-cache/css/KIX4OTRS.JSTree.css',
+    SelectedQueueID = '[% Data.SelectedQueueID | html %]';
+
+// create tree
+$(".QueueTreeContent").jstree({
+    core: {
+        animation: 70,
+        expand_selected_onload: true,
+        themes: {
+            name: 'InputField',
+            variant: 'Tree',
+            icons: false,
+            dots: true,
+        }
+    },
+    plugins: [ 'types' ]
+});
+
+$('#QueueTreeToggle').bind('click', function (Event) {
+    $('#QueueTreeControl, .QueueTreeContent').toggleClass('Hidden');
+    $(this).closest('.SidebarColumn').toggleClass('Collapsed W35px');
+ });
+
+$(".QueueTreeContent").on("click",'a',function(e) {
+    var NoReload = $(this).hasClass('NoReload');
+    if ( !NoReload ) {
+        $(this).addClass('Loading');
+        window.location.href = $(this).attr("href");
+    }
+});
+
+// expand all
+$('.Expand').bind('click',function(event){
+    $(".QueueTreeContent").jstree('open_all');
+    event.preventDefault();
+});
+
+// collaps all
+$('.Collaps').bind('click',function(event){
+    $(".QueueTreeContent").jstree('close_all');
+    event.preventDefault();
+});
+
+//]]>
+</script>
+[% END %]

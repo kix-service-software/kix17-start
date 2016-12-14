@@ -1,0 +1,105 @@
+# $Id$
+
+=head1 General
+
+This package provides an CSV-based import/export backend for items described in following sections.
+
+Of course, you may created your own import-/export mappings. To ease the use and in order to provide an initial functionality mappings are automatically created upon re-/installation of this package. Therefore it's checked if mappings with the given default names are already available. If so, no new mapping will be created. If not, a default mapping will be created. Before actually using these default mappings, please check their configurations.
+
+=over 4 
+
+=back
+
+=head2 Service-Import/Export
+
+=over 4 
+
+=item * default mapping name "Service (auto-created map)"
+
+=back
+
+=item * Default Validity
+
+=over 8
+
+If no valid information is provided in import data, this valid information is used
+
+=back
+
+=item * Default Servicetype
+
+=over 8
+
+Depending on availability of GeneralCatalog class "ITSM::Service::Type" you may define an default Service-Type for a service to be imported (if not specified in provided data)
+
+=back
+
+=item * Default Criticality
+
+=over 8
+
+Depending on availability of GeneralCatalog class "ITSM::Core::Criticality" you may define an default criticality for a service to be imported (if not specified in provided data)
+
+=back
+
+=item * CSV-Row with Service-ID
+
+=over 8
+
+The field "ServiceID" is used as identifier for existing entries. If a Service with the given ID already exists it will be updated. Otherwise a new Service will be created. 
+You can change the default mapping configuration and choose the "Full service name" as identifier.
+Note: Only "ServiceID" or "Full service name" can be used as identifier, because other fields don't have unique values. So, please do not set the check box "Identifier" for other fields - it will have no effect.
+
+=back
+
+=back
+
+=head2 SLA-Import/Export
+
+=over 4 
+
+=item * default mapping name "SLA (auto-created map)"
+
+=back
+
+=item * Default Validity
+
+=over 8
+
+If no valid information is provided in import data, this valid information is used
+
+=back
+
+=item * Default-SLA-Type
+
+=over 8 
+
+Depending on availability of GeneralCatalog class "ITSM::SLA::Type" you may define an default SLA-Type for a service to be imported (if not specified in provided data)
+
+=back
+
+=item * Number of assigned services: 
+
+=over 8 
+
+An SLA may be assigned to many services, for a start it is assumed that 50 services is enough. if you require more AssignedServices you can increase this number in the mapping configuration. It limits the number of "AssignedService" selection in step 4 of the mapping configuration.
+
+The field "SLA Name" is used as identifier for existing entries. If an SLA with the given Name already exists it will be updated. Otherwise a new SLA will be created. 
+You can change the default mapping configuration and choose the "SLA ID" as identifier.
+Note: Only "SLA Name" or "SLA ID" can be used as identifier, because other fields don't have unique values. So, please do not set the check box "Identifier" for other fields - it will have no effect.
+
+=back
+
+=back
+
+=head2 Service2CustomerUser-Import/Export
+
+=over 4
+
+=item * default mapping name "Service2CustomerUser (auto-created map)"
+
+=back
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file COPYING for license information (AGPL). If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+
+=cut
