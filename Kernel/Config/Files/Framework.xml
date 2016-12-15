@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_config version="1.0" init="KIXFramework">
     <ConfigItem Name="ImportExport::ObjectBackendRegistration###FAQ" Required="0" Valid="1">
         <Description Translatable="1">Object backend module registration for the import/export module.</Description>
         <Group>Framework</Group>
@@ -1949,7 +1951,7 @@
     </ConfigItem>
     <ConfigItem Name="UserImport::DefaultPassword" Required="1" Valid="1">
         <Description Lang="en">Defines which default password-suffix to use for import if not defined - strongly depends on backend configuration!!!</Description>
-        <Description Lang="de">Definiert welches Standard-Passwort-Suffix für Import genutzt wird, wenn nicht gegeben - stark abhaengig von Backendkonfiguration!!!</Description>
+        <Description Lang="de">Definiert welches Standard-Passwort-Suffix fï¿½r Import genutzt wird, wenn nicht gegeben - stark abhaengig von Backendkonfiguration!!!</Description>
         <Group>Framework</Group>
         <SubGroup>UserImportExport</SubGroup>
         <Setting>
@@ -14008,3 +14010,4 @@ via the Preferences button after logging in.
             </Option>
         </Setting>
     </ConfigItem>
+</otrs_config>

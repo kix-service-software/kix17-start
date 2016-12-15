@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_config version="1.0" init="KIXFramework">
     <ConfigItem Name="FAQ::Agent::StateTypes" Required="1" Valid="1">
         <Description Translatable="1">List of state types which can be used in the agent interface.</Description>
         <Group>FAQ</Group>
@@ -2189,3 +2191,5 @@ Your OTRS Notification Master
             </Hash>
         </Setting>
     </ConfigItem>
+</otrs_config>
+    

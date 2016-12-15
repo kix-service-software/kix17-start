@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_config version="1.0" init="KIXFramework">
     <ConfigItem Name="CustomerFrontend::Module###CustomerTicketMessageQuickSelection" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the customer interface.</Description>
         <Group>Ticket</Group>
@@ -1010,7 +1012,7 @@
                 <Item>daher</Item>
                 <Item>darum</Item>
                 <Item>das</Item>
-                <Item>daß</Item>
+                <Item>daï¿½</Item>
                 <Item>dass</Item>
                 <Item>dein</Item>
                 <Item>deine</Item>
@@ -1038,7 +1040,7 @@
                 <Item>es</Item>
                 <Item>euer</Item>
                 <Item>eure</Item>
-                <Item>für</Item>
+                <Item>fï¿½r</Item>
                 <Item>hatte</Item>
                 <Item>hatten</Item>
                 <Item>hattest</Item>
@@ -1062,17 +1064,17 @@
                 <Item>jetzt</Item>
                 <Item>kann</Item>
                 <Item>kannst</Item>
-                <Item>können</Item>
-                <Item>könnt</Item>
+                <Item>kï¿½nnen</Item>
+                <Item>kï¿½nnt</Item>
                 <Item>machen</Item>
                 <Item>mein</Item>
                 <Item>meine</Item>
                 <Item>mit</Item>
-                <Item>muß</Item>
-                <Item>mußt</Item>
+                <Item>muï¿½</Item>
+                <Item>muï¿½t</Item>
                 <Item>musst</Item>
-                <Item>müssen</Item>
-                <Item>müßt</Item>
+                <Item>mï¿½ssen</Item>
+                <Item>mï¿½ï¿½t</Item>
                 <Item>nach</Item>
                 <Item>nachdem</Item>
                 <Item>nein</Item>
@@ -1122,7 +1124,7 @@
                 <Item>zu</Item>
                 <Item>zum</Item>
                 <Item>zur</Item>
-                <Item>über</Item>
+                <Item>ï¿½ber</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -1291,10 +1293,10 @@
                 <Item>uno</Item>
                 <Item>sobre</Item>
                 <Item>todo</Item>
-                <Item>también</Item>
+                <Item>tambiï¿½n</Item>
                 <Item>tras</Item>
                 <Item>otro</Item>
-                <Item>algún</Item>
+                <Item>algï¿½n</Item>
                 <Item>alguno</Item>
                 <Item>alguna</Item>
                 <Item>algunos</Item>
@@ -1315,7 +1317,7 @@
                 <Item>para</Item>
                 <Item>atras</Item>
                 <Item>porque</Item>
-                <Item>por qué</Item>
+                <Item>por quï¿½</Item>
                 <Item>estado</Item>
                 <Item>estaba</Item>
                 <Item>ante</Item>
@@ -1501,7 +1503,7 @@
                 <Item>donc</Item>
                 <Item>dos</Item>
                 <Item>droite</Item>
-                <Item>début</Item>
+                <Item>dï¿½but</Item>
                 <Item>elle</Item>
                 <Item>elles</Item>
                 <Item>en</Item>
@@ -1526,7 +1528,7 @@
                 <Item>le</Item>
                 <Item>les</Item>
                 <Item>leur</Item>
-                <Item>là</Item>
+                <Item>lï¿½</Item>
                 <Item>ma</Item>
                 <Item>maintenant</Item>
                 <Item>mais</Item>
@@ -1535,14 +1537,14 @@
                 <Item>moins</Item>
                 <Item>mon</Item>
                 <Item>mot</Item>
-                <Item>même</Item>
+                <Item>mï¿½me</Item>
                 <Item>ni</Item>
-                <Item>nommés</Item>
+                <Item>nommï¿½s</Item>
                 <Item>notre</Item>
                 <Item>nous</Item>
                 <Item>nouveaux</Item>
                 <Item>ou</Item>
-                <Item>où</Item>
+                <Item>oï¿½</Item>
                 <Item>par</Item>
                 <Item>parce</Item>
                 <Item>parole</Item>
@@ -1550,7 +1552,7 @@
                 <Item>personnes</Item>
                 <Item>peut</Item>
                 <Item>peu</Item>
-                <Item>pièce</Item>
+                <Item>piï¿½ce</Item>
                 <Item>plupart</Item>
                 <Item>pour</Item>
                 <Item>pourquoi</Item>
@@ -1582,7 +1584,7 @@
                 <Item>tous</Item>
                 <Item>tout</Item>
                 <Item>trop</Item>
-                <Item>très</Item>
+                <Item>trï¿½s</Item>
                 <Item>tu</Item>
                 <Item>valeur</Item>
                 <Item>voie</Item>
@@ -1591,12 +1593,12 @@
                 <Item>votre</Item>
                 <Item>vous</Item>
                 <Item>vu</Item>
-                <Item>ça</Item>
-                <Item>étaient</Item>
-                <Item>état</Item>
-                <Item>étions</Item>
-                <Item>été</Item>
-                <Item>être</Item>
+                <Item>ï¿½a</Item>
+                <Item>ï¿½taient</Item>
+                <Item>ï¿½tat</Item>
+                <Item>ï¿½tions</Item>
+                <Item>ï¿½tï¿½</Item>
+                <Item>ï¿½tre</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -16658,3 +16660,5 @@ Here you may define a default text for the forward function. You find this confi
             </Hash>
         </Setting>
     </ConfigItem>
+</otrs_config>
+    
