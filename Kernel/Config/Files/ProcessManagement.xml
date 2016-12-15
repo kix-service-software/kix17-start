@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-<otrs_config version="1.0" init="Application">
     <ConfigItem Name="Frontend::Module###AdminProcessManagement" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>ProcessManagement</Group>
@@ -116,7 +114,6 @@
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
-
     <ConfigItem Name="Frontend::NavBarModule###1-TicketProcesses" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration (disable ticket processes screen if no process available).</Description>
         <Group>ProcessManagement</Group>
@@ -127,8 +124,6 @@
             </Hash>
         </Setting>
     </ConfigItem>
-
-    <!-- OTRSTicketProcesses Merged Settings Start -->
     <ConfigItem Name="Frontend::Module###AgentTicketProcess" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>ProcessManagement</Group>
@@ -303,8 +298,6 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <!-- OTRSTicketProcesses Merged Settings End -->
-
     <ConfigItem Name="Process::Entity::Prefix" Required="1" Valid="1">
         <Description Translatable="1">Default ProcessManagement entity prefixes for entity IDs that are automatically generated.</Description>
         <Group>ProcessManagement</Group>
@@ -480,5 +473,3 @@
             </Hash>
         </Setting>
     </ConfigItem>
-
-</otrs_config>
