@@ -530,21 +530,6 @@ sub Run {
     }
 
     # ------------------------------------------------------------------------ #
-    # migrate
-    # ------------------------------------------------------------------------ #
-    elsif ( $Self->{Subaction} eq 'Migrate' ) {
-        my $MigrateResult = $TicketObject->_MigrateTemplateData();
-        if ($MigrateResult) {
-            return $LayoutObject->Redirect(
-                OP => "Action=AdminQuickTicketConfigurator;Subaction=MigrationComplete"
-            );
-        }
-        else {
-            return $LayoutObject->ErrorScreen();
-        }
-    }
-
-    # ------------------------------------------------------------------------ #
     # AJAXUpdate
     # ------------------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'AJAXUpdate' ) {

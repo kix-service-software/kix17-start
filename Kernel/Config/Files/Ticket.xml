@@ -255,17 +255,6 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::AdminQuickTicketConfigurator###MigrateButton" Required="1" Valid="1">
-        <Description Translatable="1">Enables or disable the migrate button in admin frontend interface.</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Frontend::Admin::ViewQuickTicketConfigurator</SubGroup>
-        <Setting>
-            <Option SelectedID="0">
-                <Item Key="0">No</Item>
-                <Item Key="1">Yes</Item>
-            </Option>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Ticket::Acl::Module###850-LimitTemplateSelections" Required="0" Valid="1">
         <Description Translatable="1">Ticket-ACL to restrict selection values if ticket templates are used.</Description>
         <Group>Ticket</Group>
@@ -10073,7 +10062,17 @@
                 <Item>AgentTicketWatcher</Item>
                 <Item>AgentTicketZoom</Item>
                 <Item>AgentLinkObject</Item>
+                <Item>CustomerTicketMessage</Item>
+                <Item>CustomerTicketPrint</Item>
                 <Item>CustomerTicketProcess</Item>
+                <Item>CustomerTicketZoom</Item>
+                <Item>AgentTicketZoom###0260-DynamicFields</Item>
+                <Item>AgentTicketZoom###0120-LinkedObjects</Item>
+                <Item>AgentTicketZoom###0110-Article</Item>
+                <Item>AgentTicketZoom###0115-Attachments</Item>
+                <Item>AgentTicketZoom###0255-CoreData</Item>
+                <Item>AgentTicketZoom###0250-Note</Item>
+                <Item>AgentTicketZoom###0105-Process</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -16553,6 +16552,8 @@ Here you may define a default text for the forward function. You find this confi
                 <Item Key="note-internal">note-internal.png</Item>
                 <Item Key="note-external">note-external.png</Item>
                 <Item Key="note-report">note-report.png</Item>
+                <Item Key="note-supplier-internal">note-supplier-internal.png</Item>
+                <Item Key="note-supplier-external">note-supplier-external.png</Item>
             </Hash>
         </Setting>
     </ConfigItem>
