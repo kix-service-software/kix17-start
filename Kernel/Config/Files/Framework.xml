@@ -4839,7 +4839,7 @@
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
-                <Item>ITSM.Agent.ConfigItem.Search.js</Item>
+                <Item>ITSM.Agent.ConfigItem.Search.CIAttrColl.js</Item>
                 <Item>ITSM.UI.ConfigItemActionRow.js</Item>
             </Array>
         </Setting>
