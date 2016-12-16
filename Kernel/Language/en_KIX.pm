@@ -11,7 +11,7 @@
 # the enclosed file COPYING for license information (GPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/gpl-2.0.txt.
 # --
-package Kernel::Language::en_KIXBase;
+package Kernel::Language::en_KIX;
 
 use strict;
 use warnings;

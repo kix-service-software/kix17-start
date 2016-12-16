@@ -23,7 +23,7 @@
 #
 ##########################################
 
-package Kernel::Language::de_KIX4OTRS;
+package Kernel::Language::de_KIX;
 
 use strict;
 use warnings;
