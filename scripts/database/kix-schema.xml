@@ -810,7 +810,7 @@
         <IndexColumn Name="history_type_id"/>
         <IndexColumn Name="ticket_id"/>
         <IndexColumn Name="state_id"/>
-        <IndexColumn Name="_time"/>
+        <IndexColumn Name="create_time"/>
     </Index>
     <ForeignKey ForeignTable="ticket">
         <Reference Local="ticket_id" Foreign="id"/>
