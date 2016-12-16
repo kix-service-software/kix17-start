@@ -992,7 +992,8 @@ sub Data {
         = 'Verhalten der Kontaktauswahl in der KIXSidebar "Kontaktinformation"';
     $Lang->{'Article Contacts'} = 'Artikelkontakte';
     $Lang->{
-        'Defines parameters for user preference to set behavior of KIXSidebar contact selection.'}
+        'Defines parameters for user preference to set behavior of KIXSidebar contact selection.'
+        }
         = 'Legt Parameter für die Nutzereinstellung fest, welche das Verhalten der Kontaktauswahl in der KIXSidebar "Kontaktinformation" festlegt.';
     $Lang->{'Select all dynamic fields that should be displayed.'}
         = 'Wählen Sie alle dynamischen Felder, die angezeigt werden sollen.';
@@ -1172,7 +1173,8 @@ sub Data {
     $Lang->{'Ticket-ACLs to define dynamic fields dependencies.'}
         = 'Ticket-ACLs, um Abhängigkeiten bei dynamischen Feldern festzulegen.';
     $Lang->{
-        'Do you really want to delete this depending field and all of its other depending fields ?'}
+        'Do you really want to delete this depending field and all of its other depending fields ?'
+        }
         = 'Möchten Sie wirklich das abhängige Feld und alle von diesem abhängigen Felder löschen?';
 
     $Lang->{'Select a General Catalog Class.'} = 'Wählen Sie eine General Catalog Klasse.';
@@ -2142,56 +2144,56 @@ sub Data {
     $Lang->{'Partially changed - see log for details'}         = 'Teilweise geändert - siehe Log';
 
     # Template: AAAITSMIncidentProblemManagement
-    $Self->{Translation}->{'Add decision to ticket'} = 'Entscheidung an Ticket hängen';
-    $Self->{Translation}->{'Decision Date'}          = 'Entscheidung';
-    $Self->{Translation}->{'Decision Result'}        = 'Entscheidung';
-    $Self->{Translation}->{'Due Date'}               = 'Fälligkeitsdatum';
-    $Self->{Translation}->{'Reason'}                 = 'Begründung';
-    $Self->{Translation}->{'Recovery Start Time'}    = 'Wiederherstellung Startzeit';
-    $Self->{Translation}->{'Repair Start Time'}      = 'Reparatur Startzeit';
-    $Self->{Translation}->{'Review Required'}        = 'Nachbearbeitung erforderlich';
-    $Self->{Translation}->{'closed with workaround'} = 'provisorisch geschlossen';
+    $Lang->{'Add decision to ticket'} = 'Entscheidung an Ticket hängen';
+    $Lang->{'Decision Date'}          = 'Entscheidung';
+    $Lang->{'Decision Result'}        = 'Entscheidung';
+    $Lang->{'Due Date'}               = 'Fälligkeitsdatum';
+    $Lang->{'Reason'}                 = 'Begründung';
+    $Lang->{'Recovery Start Time'}    = 'Wiederherstellung Startzeit';
+    $Lang->{'Repair Start Time'}      = 'Reparatur Startzeit';
+    $Lang->{'Review Required'}        = 'Nachbearbeitung erforderlich';
+    $Lang->{'closed with workaround'} = 'provisorisch geschlossen';
 
     # Template: AgentTicketActionCommon
-    $Self->{Translation}->{'Change Decision of Ticket'}    = 'Die Entscheidung des Tickets ändern';
-    $Self->{Translation}->{'Change ITSM fields of ticket'} = 'Ändern der ITSM Felder des Tickets';
-    $Self->{Translation}->{'Service Incident State'}       = 'Service Vorfallsstatus';
+    $Lang->{'Change Decision of Ticket'}    = 'Die Entscheidung des Tickets ändern';
+    $Lang->{'Change ITSM fields of ticket'} = 'Ändern der ITSM Felder des Tickets';
+    $Lang->{'Service Incident State'}       = 'Service Vorfallsstatus';
 
     # Template: AgentTicketEmail
-    $Self->{Translation}->{'Link ticket'} = 'Ticket verknüpfen';
+    $Lang->{'Link ticket'} = 'Ticket verknüpfen';
 
     # Template: AgentTicketOverviewPreview
-    $Self->{Translation}->{'Criticality'} = 'Kritikalität';
-    $Self->{Translation}->{'Impact'}      = 'Auswirkung';
+    $Lang->{'Criticality'} = 'Kritikalität';
+    $Lang->{'Impact'}      = 'Auswirkung';
 
     # SysConfig
-    $Self->{Translation}->{'Add a decision!'}                = 'Hinzufügen einer Entscheidung!';
-    $Self->{Translation}->{'Additional ITSM Fields'}         = 'Zusätzliche ITSM Felder';
-    $Self->{Translation}->{'Additional ITSM ticket fields.'} = '';
+    $Lang->{'Add a decision!'}                = 'Hinzufügen einer Entscheidung!';
+    $Lang->{'Additional ITSM Fields'}         = 'Zusätzliche ITSM Felder';
+    $Lang->{'Additional ITSM ticket fields.'} = '';
     $Self->{Translation}
         ->{'Allows adding notes in the additional ITSM field screen of the agent interface.'}
         =
         'Erlaubt das Hinzufügen von Notizen in der zusätzlichen ITSM-Oberfläche im Agenten-Interface.';
-    $Self->{Translation}->{'Allows adding notes in the decision screen of the agent interface.'} =
+    $Lang->{'Allows adding notes in the decision screen of the agent interface.'} =
         'Erlaubt das Hinzufügen von Notizen im Entscheidungs-Bildschirm im Agenten-Interface.';
-    $Self->{Translation}->{'Change the ITSM fields!'} = 'Ändern der ITSM-Felder!';
-    $Self->{Translation}->{'Decision'}                = 'Entscheidung';
-    $Self->{Translation}->{
+    $Lang->{'Change the ITSM fields!'} = 'Ändern der ITSM-Felder!';
+    $Lang->{'Decision'}                = 'Entscheidung';
+    $Lang->{
         'Defines if a ticket lock is required in the additional ITSM field screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).'
         }
         =
         'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Besitzer gesetzt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines if a ticket lock is required in the decision screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).'
         }
         =
         'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Besitzer gesetzt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines if the service incident state should be shown during service selection in the agent interface.'
         }
         =
         'Bestimmt, ob der Service Incident Status während der Service-Auswahl im Agenten-Interface angezeigt werden soll.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default body of a note in the additional ITSM field screen of the agent interface.'
         }
         =
@@ -2200,17 +2202,17 @@ sub Data {
         ->{'Defines the default body of a note in the decision screen of the agent interface.'}
         =
         'Definiert den Standard-Inhalt einer Notiz in der Entscheidungs-Oberfläche im Agenten-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default next state of a ticket after adding a note, in the additional ITSM field screen of the agent interface.'
         }
         =
         'Bestimmt den Folgestatus für Tickets, für die über die zusätzlichen ITSM Felder im Agenten-Interface eine Notiz hinzugefügt wurde.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default next state of a ticket after adding a note, in the decision screen of the agent interface.'
         }
         =
         'Bestimmt den Folgestatus für Tickets, für die in der Entscheiduns-Oberfläche im Agenten-Interface eine Notiz hinzugefügt wurde.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default subject of a note in the additional ITSM field screen of the agent interface.'
         }
         =
@@ -2219,7 +2221,7 @@ sub Data {
         ->{'Defines the default subject of a note in the decision screen of the agent interface.'}
         =
         'Definiert den Standard-Betreff einer Notiz in der Entscheidungs-Oberfläche im Agenten-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default ticket priority in the additional ITSM field screen of the agent interface.'
         }
         =
@@ -2228,7 +2230,7 @@ sub Data {
         ->{'Defines the default ticket priority in the decision screen of the agent interface.'}
         =
         'Definiert die Standard-Priorität in der Entscheidungs-Oberfläche im Agenten-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default type of the note in the additional ITSM field screen of the agent interface.'
         }
         =
@@ -2237,72 +2239,72 @@ sub Data {
         ->{'Defines the default type of the note in the decision screen of the agent interface.'}
         =
         'Definiert den Standard-Typ einer Notiz in der Entscheidungs-Oberfläche im Agenten-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the history comment for the additional ITSM field screen action, which gets used for ticket history.'
         }
         =
         'Steuert den Historien-Kommentar für die Aktionen in der Oberfläche zusätzliche ITSM-Felder im Agentenbereich.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the history comment for the decision screen action, which gets used for ticket history.'
         }
         =
         'Steuert den Historien-Kommentar für die Entscheidungs-Aktion im Agentenbereich.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the history type for the additional ITSM field screen action, which gets used for ticket history.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the history type for the decision screen action, which gets used for ticket history.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the next state of a ticket after adding a note, in the additional ITSM field screen of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the next state of a ticket after adding a note, in the decision screen of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the additional ITSM field screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the decision screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the ticket search screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the ticket zoom screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Enables the stats module to generate statistics about the average of ITSM ticket first level solution rate.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Enables the stats module to generate statistics about the average of ITSM ticket solution.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'If a note is added by an agent, sets the state of a ticket in the additional ITSM field screen of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'If a note is added by an agent, sets the state of a ticket in the decision screen of the agent interface.'
         }
         =
@@ -2315,12 +2317,12 @@ sub Data {
         ->{'Required permissions to use the decision screen in the agent interface.'}
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Sets the service in the additional ITSM field screen of the agent interface (Ticket::Service needs to be activated).'
         }
         =
         'Setzt den Service in der zusätzliche ITSM-Felder-Oberfläche für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).';
-    $Self->{Translation}->{
+    $Lang->{
         'Sets the service in the decision screen of the agent interface (Ticket::Service needs to be activated).'
         }
         =
@@ -2329,57 +2331,58 @@ sub Data {
         ->{'Sets the ticket owner in the additional ITSM field screen of the agent interface.'}
         =
         'Setzt den Ticket-Besitzer in der zusätzliche ITSM Felder-Oberfläche im Agenten-Interface.';
-    $Self->{Translation}->{'Sets the ticket owner in the decision screen of the agent interface.'} =
+    $Lang->{'Sets the ticket owner in the decision screen of the agent interface.'} =
         'Setzt den Besitzer in der Entscheidungs-Oberfläche für Tickets im Agentenbereich.';
-    $Self->{Translation}->{
-        'Sets the ticket responsible in the additional ITSM field screen of the agent interface.'}
+    $Lang->{
+        'Sets the ticket responsible in the additional ITSM field screen of the agent interface.'
+        }
         =
         'Setzt den Ticket-Verantwortlichen in der zusätzliche ITSM Felder-Oberfläche im Agenten-Interface.';
     $Self->{Translation}
         ->{'Sets the ticket responsible in the decision screen of the agent interface.'}
         =
         'Setzt den Ticket-Verantwortlichen in der Entscheidungs-Oberfläche für Tickets im Agentenbereich.';
-    $Self->{Translation}->{
+    $Lang->{
         'Sets the ticket type in the additional ITSM field screen of the agent interface (Ticket::Type needs to be activated).'
         }
         =
         'Setzt den Ticket-Typ in der zusätzliche ITSM-Felder-Oberfläche für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).';
-    $Self->{Translation}->{
+    $Lang->{
         'Sets the ticket type in the decision screen of the agent interface (Ticket::Type needs to be activated).'
         }
         =
         'Setzt den Ticket-Typ in der Entscheidungs-Oberfläche für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to change the decision of a ticket in its zoom view of the agent interface.'
         }
         =
         'Zeigt in der Agenten-Oberfläche imTicket-Menü einen Link an um die Entscheidung an einem Ticket zu ändern';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to modify additional ITSM fields in the ticket zoom view of the agent interface.'
         }
         =
         'Zeigt einen Link in der Menu-Leiste in der Zoom-Ansicht im Agenten-Interface an, der es ermöglicht die zusätzlichen ITSM-Felder zu bearbeiten.';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a list of all the involved agents on this ticket, in the additional ITSM field screen of the agent interface.'
         }
         =
         'Zeigt in der Oberfläche zusätzliche ITSM-Felder der Agenten-Oberfläche eine Liste aller am Ticket beteiligten Agenten.';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a list of all the involved agents on this ticket, in the decision screen of the agent interface.'
         }
         =
         'Zeigt in der Oberfläche Entscheidung der Agenten-Oberfläche eine Liste aller am Ticket beteiligten Agenten.';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a list of all the possible agents (all agents with note permissions on the queue/ticket) to determine who should be informed about this note, in the additional ITSM field screen of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a list of all the possible agents (all agents with note permissions on the queue/ticket) to determine who should be informed about this note, in the decision screen of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows the ticket priority options in the additional ITSM field screen of the agent interface.'
         }
         =
@@ -2392,254 +2395,255 @@ sub Data {
         ->{'Shows the title fields in the additional ITSM field screen of the agent interface.'}
         =
         'Zeigt den Ticket-Titel in der zusätzliche ITSM-Felder-Oberfläche für Tickets im Agentenbereich.';
-    $Self->{Translation}->{'Shows the title fields in the decision screen of the agent interface.'}
+    $Lang->{'Shows the title fields in the decision screen of the agent interface.'}
         =
         'Zeigt den Ticket-Titel in der Entscheidungs-Oberfläche für Tickets im Agentenbereich.';
-    $Self->{Translation}->{'Ticket decision.'} = '';
+    $Lang->{'Ticket decision.'} = '';
 
     # Template: AAAITSMConfigItem
-    $Self->{Translation}->{'Address'}                     = 'Adresse';
-    $Self->{Translation}->{'Admin Tool'}                  = 'Admin Tool';
-    $Self->{Translation}->{'Backup Device'}               = 'Backup Gerät';
-    $Self->{Translation}->{'Beamer'}                      = 'Beamer';
-    $Self->{Translation}->{'Building'}                    = 'Gebäude';
-    $Self->{Translation}->{'CIHistory::ConfigItemCreate'} = 'Neues ConfigItem (ID=%s)';
-    $Self->{Translation}->{'CIHistory::ConfigItemDelete'} = 'ConfigItem (ID=%s) gelöscht';
-    $Self->{Translation}->{'CIHistory::DefinitionUpdate'}
+    $Lang->{'Address'}                     = 'Adresse';
+    $Lang->{'Admin Tool'}                  = 'Admin Tool';
+    $Lang->{'Backup Device'}               = 'Backup Gerät';
+    $Lang->{'Beamer'}                      = 'Beamer';
+    $Lang->{'Building'}                    = 'Gebäude';
+    $Lang->{'CIHistory::ConfigItemCreate'} = 'Neues ConfigItem (ID=%s)';
+    $Lang->{'CIHistory::ConfigItemDelete'} = 'ConfigItem (ID=%s) gelöscht';
+    $Lang->{'CIHistory::DefinitionUpdate'}
         = 'Definition des ConfigItems aktualisiert (ID=%s)';
-    $Self->{Translation}->{'CIHistory::DeploymentStateUpdate'}
+    $Lang->{'CIHistory::DeploymentStateUpdate'}
         = 'Verwendungsstatus geändert (neu=%s; alt=%s)';
-    $Self->{Translation}->{'CIHistory::IncidentStateUpdate'}
+    $Lang->{'CIHistory::IncidentStateUpdate'}
         = 'Vorfallsstatus geändert (neu=%s; alt=%s)';
-    $Self->{Translation}->{'CIHistory::LinkAdd'}       = 'Link auf %s (Typ=%s) hinzugefügt';
-    $Self->{Translation}->{'CIHistory::LinkDelete'}    = 'Link auf %s (Typ=%s) gelöscht';
-    $Self->{Translation}->{'CIHistory::NameUpdate'}    = 'Name geändert (neu=%s; alt=%s)';
-    $Self->{Translation}->{'CIHistory::ValueUpdate'}   = 'Attribut %s von "%s" auf "%s" geändert';
-    $Self->{Translation}->{'CIHistory::VersionCreate'} = 'Neue Version erzeugt (ID=%s)';
-    $Self->{Translation}->{'CIHistory::VersionDelete'} = 'Version %s gelöscht';
-    $Self->{Translation}->{'CIHistory::AttachmentAdd'} = 'Anhang (%s) hinzugefügt';
-    $Self->{Translation}->{'CIHistory::AttachmentDelete'} = 'Anhang (%s) gelöscht';
-    $Self->{Translation}->{'CPU'}                         = 'CPU';
-    $Self->{Translation}->{'Camera'}                      = 'Kamera';
-    $Self->{Translation}->{'Capacity'}                    = 'Kapazität';
-    $Self->{Translation}->{'Change Definition'}           = 'Definition ändern';
-    $Self->{Translation}->{'Change of definition failed! See System Log for details.'}
+    $Lang->{'CIHistory::LinkAdd'}       = 'Link auf %s (Typ=%s) hinzugefügt';
+    $Lang->{'CIHistory::LinkDelete'}    = 'Link auf %s (Typ=%s) gelöscht';
+    $Lang->{'CIHistory::NameUpdate'}    = 'Name geändert (neu=%s; alt=%s)';
+    $Lang->{'CIHistory::ValueUpdate'}   = 'Attribut %s von "%s" auf "%s" geändert';
+    $Lang->{'CIHistory::VersionCreate'} = 'Neue Version erzeugt (ID=%s)';
+    $Lang->{'CIHistory::VersionDelete'} = 'Version %s gelöscht';
+    $Lang->{'CIHistory::AttachmentAdd'} = 'Anhang (%s) hinzugefügt';
+    $Lang->{'CIHistory::AttachmentDelete'} = 'Anhang (%s) gelöscht';
+    $Lang->{'CPU'}                         = 'CPU';
+    $Lang->{'Camera'}                      = 'Kamera';
+    $Lang->{'Capacity'}                    = 'Kapazität';
+    $Lang->{'Change Definition'}           = 'Definition ändern';
+    $Lang->{'Change of definition failed! See System Log for details.'}
         = 'Ändern der Definition fehlgeschlagen! Im System Log finden Sie weitere Informationen.';
-    $Self->{Translation}->{'Client Application'}     = 'Client Anwendung';
-    $Self->{Translation}->{'Client OS'}              = 'Client Betriebssystem';
-    $Self->{Translation}->{'Concurrent Users'}       = 'Gleichzeitige User';
-    $Self->{Translation}->{'Config Item-Area'}       = 'Config Item-Bereich';
-    $Self->{Translation}->{'Config Items available'} = 'Config Items verfügbar';
-    $Self->{Translation}->{'Config Items shown'}     = 'Config Items angezeigt';
-    $Self->{Translation}->{'CMDB'}                   = 'CMDB';
-    $Self->{Translation}->{'Demo'}                   = 'Demo';
-    $Self->{Translation}->{'Desktop'}                = 'Desktop';
-    $Self->{Translation}->{'Developer Licence'}      = 'Entwickler Lizenz';
-    $Self->{Translation}->{'Docking Station'}        = 'Docking Station';
-    $Self->{Translation}->{'Duplicate'}              = 'Duplizieren';
-    $Self->{Translation}->{'Embedded'}               = 'Embedded';
-    $Self->{Translation}->{'Empty fields indicate that the current values are kept'}
+    $Lang->{'Client Application'}     = 'Client Anwendung';
+    $Lang->{'Client OS'}              = 'Client Betriebssystem';
+    $Lang->{'Concurrent Users'}       = 'Gleichzeitige User';
+    $Lang->{'Config Item-Area'}       = 'Config Item-Bereich';
+    $Lang->{'Config Items available'} = 'Config Items verfügbar';
+    $Lang->{'Config Items shown'}     = 'Config Items angezeigt';
+    $Lang->{'CMDB'}                   = 'CMDB';
+    $Lang->{'Demo'}                   = 'Demo';
+    $Lang->{'Desktop'}                = 'Desktop';
+    $Lang->{'Developer Licence'}      = 'Entwickler Lizenz';
+    $Lang->{'Docking Station'}        = 'Docking Station';
+    $Lang->{'Duplicate'}              = 'Duplizieren';
+    $Lang->{'Embedded'}               = 'Embedded';
+    $Lang->{'Empty fields indicate that the current values are kept'}
         = 'Leere Felder belassen den aktuellen Wert';
-    $Self->{Translation}->{'Enterprise Licence'}            = 'Enterprise Lizenz';
-    $Self->{Translation}->{'Expiration Date'}               = 'Ablaufdatum';
-    $Self->{Translation}->{'Expired'}                       = 'Abgelaufen';
-    $Self->{Translation}->{'Floor'}                         = 'Etage';
-    $Self->{Translation}->{'Freeware'}                      = 'Freeware';
-    $Self->{Translation}->{'GSM'}                           = 'GSM';
-    $Self->{Translation}->{'Gateway'}                       = 'Gateway';
-    $Self->{Translation}->{'Graphic Adapter'}               = 'Grafik Adapter';
-    $Self->{Translation}->{'Hard Disk'}                     = 'Festplatte';
-    $Self->{Translation}->{'Hard Disk::Capacity'}           = 'Festplatte::Kapazität';
-    $Self->{Translation}->{'Hide Versions'}                 = 'Versionen ausblenden';
-    $Self->{Translation}->{'IP Address'}                    = 'IP Addresse';
-    $Self->{Translation}->{'IP over DHCP'}                  = 'IP über DHCP';
-    $Self->{Translation}->{'IT Facility'}                   = 'IT Einrichtung';
-    $Self->{Translation}->{'Inactive'}                      = 'Inaktiv';
-    $Self->{Translation}->{'Incident'}                      = 'Vorfall';
-    $Self->{Translation}->{'Install Date'}                  = 'Installationsdatum';
-    $Self->{Translation}->{'Keyboard'}                      = 'Tastatur';
-    $Self->{Translation}->{'LAN'}                           = 'LAN';
-    $Self->{Translation}->{'Laptop'}                        = 'Laptop';
-    $Self->{Translation}->{'Last Change'}                   = 'Letzte Änderung';
-    $Self->{Translation}->{'Licence Key'}                   = 'Lizenzschlüssel';
-    $Self->{Translation}->{'Licence Key::Expiration Date'}  = 'Lizenzschlüssel::Ablaufdatum';
-    $Self->{Translation}->{'Licence Key::Quantity'}         = 'Lizenzschlüssel::Menge';
-    $Self->{Translation}->{'Licence Type'}                  = 'Lizenztyp';
-    $Self->{Translation}->{'Maintenance'}                   = 'In Wartung';
-    $Self->{Translation}->{'Maximum number of one element'} = 'Maximale Anzahl eines Elements';
-    $Self->{Translation}->{'Media'}                         = 'Medium';
-    $Self->{Translation}->{'Middleware'}                    = 'Middleware';
-    $Self->{Translation}->{'Model'}                         = 'Model';
-    $Self->{Translation}->{'Modem'}                         = 'Modem';
-    $Self->{Translation}->{'Monitor'}                       = 'Monitor';
-    $Self->{Translation}->{'Mouse'}                         = 'Maus';
-    $Self->{Translation}->{'Network Adapter'}               = 'Netzwerk Adapter';
-    $Self->{Translation}->{'Network Adapter::IP Address'}   = 'Netzwerk Adapter::IP Addresse';
-    $Self->{Translation}->{'Network Adapter::IP over DHCP'} = 'Netzwerk Adapter::IP über DHCP';
-    $Self->{Translation}->{'Network Address'}               = 'Netzwerk Addresse';
-    $Self->{Translation}->{'Network Address::Gateway'}      = 'Netzwerk Addresse::Gateway';
-    $Self->{Translation}->{'Network Address::Subnet Mask'}  = 'Netzwerk Addresse::Subnetz Maske';
-    $Self->{Translation}->{'Open Source'}                   = 'Open Source';
-    $Self->{Translation}->{'Operational'}                   = 'Operativ';
-    $Self->{Translation}->{'Other'}                         = 'Sonstiges';
-    $Self->{Translation}->{'Other Equipment'}               = 'Sonstige Ausstattung';
-    $Self->{Translation}->{'Outlet'}                        = 'Anschlussdose';
-    $Self->{Translation}->{'PCMCIA Card'}                   = 'PCMCIA Karte';
-    $Self->{Translation}->{'PDA'}                           = 'PDA';
-    $Self->{Translation}->{'Per Node'}                      = 'Pro Knoten';
-    $Self->{Translation}->{'Per Processor'}                 = 'Pro Prozessor';
-    $Self->{Translation}->{'Per Server'}                    = 'Pro Server';
-    $Self->{Translation}->{'Per User'}                      = 'Pro Benutzer';
-    $Self->{Translation}->{'Phone 1'}                       = 'Telefon 1';
-    $Self->{Translation}->{'Phone 2'}                       = 'Telefon 2';
-    $Self->{Translation}->{'Pilot'}                         = 'Pilotbetrieb';
-    $Self->{Translation}->{'Planned'}                       = 'Geplant';
-    $Self->{Translation}->{'Printer'}                       = 'Drucker';
-    $Self->{Translation}->{'Production'}                    = 'Produktiv';
-    $Self->{Translation}->{'Quantity'}                      = 'Menge';
-    $Self->{Translation}->{'Rack'}                          = 'Rack';
-    $Self->{Translation}->{'Ram'}                           = 'Arbeitsspeicher';
-    $Self->{Translation}->{'Repair'}                        = 'In Reparatur';
-    $Self->{Translation}->{'Retired'}                       = 'Außer Dienst';
-    $Self->{Translation}->{'Review'}                        = 'Unter Review';
-    $Self->{Translation}->{'Room'}                          = 'Raum';
-    $Self->{Translation}->{'Router'}                        = 'Router';
-    $Self->{Translation}->{'Scanner'}                       = 'Scanner';
-    $Self->{Translation}->{'Search Config Items'}           = 'Config Item Suche';
-    $Self->{Translation}->{'Security Device'}               = 'Sichertheitsgerät';
-    $Self->{Translation}->{'Serial Number'}                 = 'Seriennummer';
-    $Self->{Translation}->{'Server'}                        = 'Server';
-    $Self->{Translation}->{'Server Application'}            = 'Server Anwendung';
-    $Self->{Translation}->{'Server OS'}                     = 'Server Betriebssystem';
-    $Self->{Translation}->{'Show Versions'}                 = 'Versionen einblenden';
-    $Self->{Translation}->{'Single Licence'}                = 'Einzellizenz';
-    $Self->{Translation}->{'Subnet Mask'}                   = 'Subnetz Maske';
-    $Self->{Translation}->{'Switch'}                        = 'Switch';
-    $Self->{Translation}->{'Telco'}                         = 'Telko';
-    $Self->{Translation}->{'Test/QA'}                       = 'Test/QS';
-    $Self->{Translation}->{'The deployment state of this config item'}
+    $Lang->{'Enterprise Licence'}            = 'Enterprise Lizenz';
+    $Lang->{'Expiration Date'}               = 'Ablaufdatum';
+    $Lang->{'Expired'}                       = 'Abgelaufen';
+    $Lang->{'Floor'}                         = 'Etage';
+    $Lang->{'Freeware'}                      = 'Freeware';
+    $Lang->{'GSM'}                           = 'GSM';
+    $Lang->{'Gateway'}                       = 'Gateway';
+    $Lang->{'Graphic Adapter'}               = 'Grafik Adapter';
+    $Lang->{'Hard Disk'}                     = 'Festplatte';
+    $Lang->{'Hard Disk::Capacity'}           = 'Festplatte::Kapazität';
+    $Lang->{'Hide Versions'}                 = 'Versionen ausblenden';
+    $Lang->{'IP Address'}                    = 'IP Addresse';
+    $Lang->{'IP over DHCP'}                  = 'IP über DHCP';
+    $Lang->{'IT Facility'}                   = 'IT Einrichtung';
+    $Lang->{'Inactive'}                      = 'Inaktiv';
+    $Lang->{'Incident'}                      = 'Vorfall';
+    $Lang->{'Install Date'}                  = 'Installationsdatum';
+    $Lang->{'Keyboard'}                      = 'Tastatur';
+    $Lang->{'LAN'}                           = 'LAN';
+    $Lang->{'Laptop'}                        = 'Laptop';
+    $Lang->{'Last Change'}                   = 'Letzte Änderung';
+    $Lang->{'Licence Key'}                   = 'Lizenzschlüssel';
+    $Lang->{'Licence Key::Expiration Date'}  = 'Lizenzschlüssel::Ablaufdatum';
+    $Lang->{'Licence Key::Quantity'}         = 'Lizenzschlüssel::Menge';
+    $Lang->{'Licence Type'}                  = 'Lizenztyp';
+    $Lang->{'Maintenance'}                   = 'In Wartung';
+    $Lang->{'Maximum number of one element'} = 'Maximale Anzahl eines Elements';
+    $Lang->{'Media'}                         = 'Medium';
+    $Lang->{'Middleware'}                    = 'Middleware';
+    $Lang->{'Model'}                         = 'Model';
+    $Lang->{'Modem'}                         = 'Modem';
+    $Lang->{'Monitor'}                       = 'Monitor';
+    $Lang->{'Mouse'}                         = 'Maus';
+    $Lang->{'Network Adapter'}               = 'Netzwerk Adapter';
+    $Lang->{'Network Adapter::IP Address'}   = 'Netzwerk Adapter::IP Addresse';
+    $Lang->{'Network Adapter::IP over DHCP'} = 'Netzwerk Adapter::IP über DHCP';
+    $Lang->{'Network Address'}               = 'Netzwerk Addresse';
+    $Lang->{'Network Address::Gateway'}      = 'Netzwerk Addresse::Gateway';
+    $Lang->{'Network Address::Subnet Mask'}  = 'Netzwerk Addresse::Subnetz Maske';
+    $Lang->{'Open Source'}                   = 'Open Source';
+    $Lang->{'Operational'}                   = 'Operativ';
+    $Lang->{'Other'}                         = 'Sonstiges';
+    $Lang->{'Other Equipment'}               = 'Sonstige Ausstattung';
+    $Lang->{'Outlet'}                        = 'Anschlussdose';
+    $Lang->{'PCMCIA Card'}                   = 'PCMCIA Karte';
+    $Lang->{'PDA'}                           = 'PDA';
+    $Lang->{'Per Node'}                      = 'Pro Knoten';
+    $Lang->{'Per Processor'}                 = 'Pro Prozessor';
+    $Lang->{'Per Server'}                    = 'Pro Server';
+    $Lang->{'Per User'}                      = 'Pro Benutzer';
+    $Lang->{'Phone 1'}                       = 'Telefon 1';
+    $Lang->{'Phone 2'}                       = 'Telefon 2';
+    $Lang->{'Pilot'}                         = 'Pilotbetrieb';
+    $Lang->{'Planned'}                       = 'Geplant';
+    $Lang->{'Printer'}                       = 'Drucker';
+    $Lang->{'Production'}                    = 'Produktiv';
+    $Lang->{'Quantity'}                      = 'Menge';
+    $Lang->{'Rack'}                          = 'Rack';
+    $Lang->{'Ram'}                           = 'Arbeitsspeicher';
+    $Lang->{'Repair'}                        = 'In Reparatur';
+    $Lang->{'Retired'}                       = 'Außer Dienst';
+    $Lang->{'Review'}                        = 'Unter Review';
+    $Lang->{'Room'}                          = 'Raum';
+    $Lang->{'Router'}                        = 'Router';
+    $Lang->{'Scanner'}                       = 'Scanner';
+    $Lang->{'Search Config Items'}           = 'Config Item Suche';
+    $Lang->{'Security Device'}               = 'Sichertheitsgerät';
+    $Lang->{'Serial Number'}                 = 'Seriennummer';
+    $Lang->{'Server'}                        = 'Server';
+    $Lang->{'Server Application'}            = 'Server Anwendung';
+    $Lang->{'Server OS'}                     = 'Server Betriebssystem';
+    $Lang->{'Show Versions'}                 = 'Versionen einblenden';
+    $Lang->{'Single Licence'}                = 'Einzellizenz';
+    $Lang->{'Subnet Mask'}                   = 'Subnetz Maske';
+    $Lang->{'Switch'}                        = 'Switch';
+    $Lang->{'Telco'}                         = 'Telko';
+    $Lang->{'Test/QA'}                       = 'Test/QS';
+    $Lang->{'The deployment state of this config item'}
         = 'Der Verwendungsstatus dieses Config Items';
-    $Self->{Translation}->{'The incident state of this config item'}
+    $Lang->{'The incident state of this config item'}
         = 'Der Vorfallsstatus dieses Config Items';
-    $Self->{Translation}->{'Time Restricted'}          = 'Zeitlich begrenzt';
-    $Self->{Translation}->{'USB Device'}               = 'USB Gerät';
-    $Self->{Translation}->{'Unlimited'}                = 'Unlimitiert';
-    $Self->{Translation}->{'User Tool'}                = 'User Tool';
-    $Self->{Translation}->{'Volume Licence'}           = 'Volumen Lizenz';
-    $Self->{Translation}->{'WLAN'}                     = 'WLAN';
-    $Self->{Translation}->{'WLAN Access Point'}        = 'WLAN Access Point';
-    $Self->{Translation}->{'Warranty Expiration Date'} = 'Garantie Ablaufdatum';
-    $Self->{Translation}->{'Workplace'}                = 'Arbeitsplatz';
+    $Lang->{'Time Restricted'}          = 'Zeitlich begrenzt';
+    $Lang->{'USB Device'}               = 'USB Gerät';
+    $Lang->{'Unlimited'}                = 'Unlimitiert';
+    $Lang->{'User Tool'}                = 'User Tool';
+    $Lang->{'Volume Licence'}           = 'Volumen Lizenz';
+    $Lang->{'WLAN'}                     = 'WLAN';
+    $Lang->{'WLAN Access Point'}        = 'WLAN Access Point';
+    $Lang->{'Warranty Expiration Date'} = 'Garantie Ablaufdatum';
+    $Lang->{'Workplace'}                = 'Arbeitsplatz';
 
     # Template: AdminITSMConfigItem
-    $Self->{Translation}->{'Config Item Management'}  = 'Config Item Verwaltung';
-    $Self->{Translation}->{'Change class definition'} = 'Klassen-Definition ändern';
-    $Self->{Translation}->{'Config Item'}             = 'Config Item';
-    $Self->{Translation}->{'Class'}                   = 'Klasse';
-    $Self->{Translation}->{'Definition'}              = 'Definition';
+    $Lang->{'Config Item Management'}  = 'Config Item Verwaltung';
+    $Lang->{'Change class definition'} = 'Klassen-Definition ändern';
+    $Lang->{'Config Item'}             = 'Config Item';
+    $Lang->{'Class'}                   = 'Klasse';
+    $Lang->{'Definition'}              = 'Definition';
 
     # Template: AgentITSMConfigItemAdd
-    $Self->{Translation}->{'Filter for Classes'} = 'Filter für Klassen';
-    $Self->{Translation}->{'Select a Class from the list to create a new Config Item.'}
+    $Lang->{'Filter for Classes'} = 'Filter für Klassen';
+    $Lang->{'Select a Class from the list to create a new Config Item.'}
         = 'Wählen Sie eine Klasse aus der Liste aus um ein neues Config Item zu erstellen.';
 
     # Template: AgentITSMConfigItemBulk
-    $Self->{Translation}->{'ITSM ConfigItem Bulk Action'} = 'ITSM ConfigItem Sammel-Aktion';
-    $Self->{Translation}->{'Deployment state'}            = 'Verwendungsstatus';
-    $Self->{Translation}->{'Incident state'}              = 'Vorfallsstatus';
-    $Self->{Translation}->{'Link to another'}             = 'Zu einem anderen verlinken';
-    $Self->{Translation}->{'Invalid Configuration Item number!'}
+    $Lang->{'ITSM ConfigItem Bulk Action'} = 'ITSM ConfigItem Sammel-Aktion';
+    $Lang->{'Deployment state'}            = 'Verwendungsstatus';
+    $Lang->{'Incident state'}              = 'Vorfallsstatus';
+    $Lang->{'Link to another'}             = 'Zu einem anderen verlinken';
+    $Lang->{'Invalid Configuration Item number!'}
         = 'Ungültige Configuration Item Nummer!';
-    $Self->{Translation}->{'The number of another Configuration Item to link with.'} = '';
+    $Lang->{'The number of another Configuration Item to link with.'} = '';
 
     # Template: AgentITSMConfigItemEdit
-    $Self->{Translation}->{'The name of this config item'} = 'Der Name dieses Config Items';
+    $Lang->{'The name of this config item'} = 'Der Name dieses Config Items';
     $Self->{Translation}
         ->{'Name is already in use by the ConfigItems with the following Number(s): %s'}
         =
         'Name wird bereits von den ConfigItems mit den folgenden Nummern verwendet: %s';
-    $Self->{Translation}->{'Deployment State'} = 'Verwendungsstatus';
-    $Self->{Translation}->{'Incident State'}   = 'Vorfallsstatus';
+    $Lang->{'Deployment State'} = 'Verwendungsstatus';
+    $Lang->{'Incident State'}   = 'Vorfallsstatus';
 
     # Template: AgentITSMConfigItemHistory
-    $Self->{Translation}->{'History of'} = 'Änderungsverlauf von';
+    $Lang->{'History of'} = 'Änderungsverlauf von';
 
     # Template: AgentITSMConfigItemOverviewNavBar
-    $Self->{Translation}->{'Context Settings'}      = 'Kontext-Eintstellungen';
-    $Self->{Translation}->{'Config Items per page'} = 'Config Items pro Seite';
+    $Lang->{'Context Settings'}      = 'Kontext-Eintstellungen';
+    $Lang->{'Config Items per page'} = 'Config Items pro Seite';
 
     # Template: AgentITSMConfigItemOverviewSmall
-    $Self->{Translation}->{'Deployment State Type'}       = 'Verwendungsstatus-Typ';
-    $Self->{Translation}->{'Current Incident State'}      = 'Aktueller Vorfallsstatus';
-    $Self->{Translation}->{'Current Incident State Type'} = 'Aktueller Vorfallsstatus-Typ';
-    $Self->{Translation}->{'Last changed'}                = 'Zuletzt geändert';
+    $Lang->{'Deployment State Type'}       = 'Verwendungsstatus-Typ';
+    $Lang->{'Current Incident State'}      = 'Aktueller Vorfallsstatus';
+    $Lang->{'Current Incident State Type'} = 'Aktueller Vorfallsstatus-Typ';
+    $Lang->{'Last changed'}                = 'Zuletzt geändert';
 
     # Template: AgentITSMConfigItemSearch
-    $Self->{Translation}->{'Create New Template'} = 'Neue Vorlage erstellen';
-    $Self->{Translation}->{'Run Search'}          = 'Suche ausführen';
-    $Self->{Translation}->{'Also search in previous versions?'}
+    $Lang->{'Create New Template'} = 'Neue Vorlage erstellen';
+    $Lang->{'Run Search'}          = 'Suche ausführen';
+    $Lang->{'Also search in previous versions?'}
         = 'Auch in früheren Versionen suchen?';
 
     # Template: AgentITSMConfigItemZoom
-    $Self->{Translation}->{'Configuration Item'}             = 'Configuration Item';
-    $Self->{Translation}->{'Configuration Item Information'} = 'Configuration Item Information';
-    $Self->{Translation}->{'Current Deployment State'}       = 'Aktueller Verwendungsstatus';
-    $Self->{Translation}->{'Last changed by'}                = 'Zuletzt geändert von';
-    $Self->{Translation}->{'Ok'}                             = 'Ok';
-    $Self->{Translation}->{'Show one version'}               = 'Zeige nur eine Version';
-    $Self->{Translation}->{'Show all versions'}              = 'Zeige alle Versionen';
-    $Self->{Translation}->{'Version Incident State'}         = 'Versions-Vorfallstatus';
-    $Self->{Translation}->{'Version Deployment State'}       = '';
-    $Self->{Translation}->{'Version Number'}                 = 'Versionsnummer';
-    $Self->{Translation}->{'Configuration Item Version Details'}
+    $Lang->{'Configuration Item'}             = 'Configuration Item';
+    $Lang->{'Configuration Item Information'} = 'Configuration Item Information';
+    $Lang->{'Current Deployment State'}       = 'Aktueller Verwendungsstatus';
+    $Lang->{'Last changed by'}                = 'Zuletzt geändert von';
+    $Lang->{'Ok'}                             = 'Ok';
+    $Lang->{'Show one version'}               = 'Zeige nur eine Version';
+    $Lang->{'Show all versions'}              = 'Zeige alle Versionen';
+    $Lang->{'Version Incident State'}         = 'Versions-Vorfallstatus';
+    $Lang->{'Version Deployment State'}       = '';
+    $Lang->{'Version Number'}                 = 'Versionsnummer';
+    $Lang->{'Configuration Item Version Details'}
         = 'Configuration Item Versions-Details';
-    $Self->{Translation}->{'Property'} = 'Eigenschaft';
+    $Lang->{'Property'} = 'Eigenschaft';
 
     # Perl Module: Kernel/Modules/AgentITSMConfigItem.pm
-    $Self->{Translation}->{'ITSM ConfigItem'} = '';
+    $Lang->{'ITSM ConfigItem'} = '';
 
     # Perl Module: Kernel/Modules/AgentITSMConfigItemHistory.pm
-    $Self->{Translation}->{'CIHistory::'} = '';
+    $Lang->{'CIHistory::'} = '';
 
     # Perl Module: Kernel/Modules/AgentITSMConfigItemPrint.pm
-    $Self->{Translation}->{'ConfigItem'} = 'ConfigItem';
+    $Lang->{'ConfigItem'} = 'ConfigItem';
 
     # Perl Module: Kernel/Modules/AgentITSMConfigItemSearch.pm
-    $Self->{Translation}->{'No Result!'}                 = 'Kein Ergebnis!';
-    $Self->{Translation}->{'Config Item Search Results'} = '';
+    $Lang->{'No Result!'}                 = 'Kein Ergebnis!';
+    $Lang->{'Config Item Search Results'} = '';
 
     # SysConfig
-    $Self->{Translation}->{
+    $Lang->{
         'Check for a unique name only within the same ConfigItem class (\'class\') or globally (\'global\'), which means every existing ConfigItem is taken into account when looking for duplicates.'
         }
         =
         'Prüfe Namen auf Eindeutigkeit innerhalb der selben ConfigItem-Klasse oder global, d.h. es werden alle ConfigItems jeglicher ConfigItem-Klasse bei der Prüfung auf einen eindeutigen Namen berücksichtigt.';
-    $Self->{Translation}->{'Config Items'} = 'Config Items';
+    $Lang->{'Config Items'} = 'Config Items';
     $Self->{Translation}
         ->{'Config item event module that enables logging to history in the agent interface.'}
         =
         '';
-    $Self->{Translation}->{'Configuration Item Limit'} = 'Configuration Item Limit';
-    $Self->{Translation}->{'Configuration Item limit per page'}
+    $Lang->{'Configuration Item Limit'} = 'Configuration Item Limit';
+    $Lang->{'Configuration Item limit per page'}
         = 'Configuration Item Limit pro Seite';
-    $Self->{Translation}->{'Configuration item search backend router of the agent interface.'} =
+    $Lang->{'Configuration item search backend router of the agent interface.'} =
         '';
-    $Self->{Translation}->{'Create and manage the definitions for Configuration Items.'} = '';
-    $Self->{Translation}->{
+    $Lang->{'Create and manage the definitions for Configuration Items.'} = '';
+    $Lang->{
         'Defines Required permissions to create ITSM configuration items using the Generic Interface.'
         }
         =
         '';
-    $Self->{Translation}->{
-        'Defines Required permissions to get ITSM configuration items using the Generic Interface.'}
+    $Lang->{
+        'Defines Required permissions to get ITSM configuration items using the Generic Interface.'
+        }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines Required permissions to search ITSM configuration items using the Generic Interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines Required permissions to update ITSM configuration items using the Generic Interface.'
         }
         =
@@ -2648,47 +2652,47 @@ sub Data {
         ->{'Defines an overview module to show the small view of a configuration item list.'}
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines regular expressions individually for each ConfigItem class to check the ConfigItem name and to show corresponding error messages.'
         }
         =
         '';
-    $Self->{Translation}->{'Defines the default subobject of the class \'ITSMConfigItem\'.'} =
+    $Lang->{'Defines the default subobject of the class \'ITSMConfigItem\'.'} =
         'Definiert das Standard-Subobject der Klasse';
     $Self->{Translation}
         ->{'Defines the number of rows for the CI definition editor in the admin interface.'}
         =
         '';
-    $Self->{Translation}->{'Defines the search limit for the AgentITSMConfigItem screen.'} =
+    $Lang->{'Defines the search limit for the AgentITSMConfigItem screen.'} =
         '';
-    $Self->{Translation}->{'Defines the search limit for the AgentITSMConfigItemSearch screen.'} =
+    $Lang->{'Defines the search limit for the AgentITSMConfigItemSearch screen.'} =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the shown columns in the config item overview. This option has no effect on the position of the column. Note: Class column is always available if filter \'All\' is selected.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the shown columns in the config item search. This option has no effect on the position of the column.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the shown columns of CIs in the config item overview depending on the CI class. Each entry must be prefixed with the class name and double colons (i.e. Computer::). There are a few CI-Attributes that are common to all CIs (example for the class Computer: Computer::Name, Computer::CurDeplState, Computer::CreateTime). To show individual CI-Attributes as defined in the CI-Definition, the following scheme must be used (example for the class Computer): Computer::HardDisk::1, Computer::HardDisk::1::Capacity::1, Computer::HardDisk::2, Computer::HardDisk::2::Capacity::1. If there is no entry for a CI class, then the default columns are shown as defined in the setting ITSMConfigItem::Frontend::AgentITSMConfigItem###ShowColumns.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the shown columns of CIs in the config item search depending on the CI class. Each entry must be prefixed with the class name and double colons (i.e. Computer::). There are a few CI-Attributes that are common to all CIs (example for the class Computer: Computer::Name, Computer::CurDeplState, Computer::CreateTime). To show individual CI-Attributes as defined in the CI-Definition, the following scheme must be used (example for the class Computer): Computer::HardDisk::1, Computer::HardDisk::1::Capacity::1, Computer::HardDisk::2, Computer::HardDisk::2::Capacity::1. If there is no entry for a CI class, then the default columns are shown as defined in the setting ITSMConfigItem::Frontend::AgentITSMConfigItem###ShowColumns.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the shown columns of CIs in the link table complex view, depending on the CI class. Each entry must be prefixed with the class name and double colons (i.e. Computer::). There are a few CI-Attributes that common to all CIs (example for the class Computer: Computer::Name, Computer::CurDeplState, Computer::CreateTime). To show individual CI-Attributes as defined in the CI-Definition, the following scheme must be used (example for the class Computer): Computer::HardDisk::1, Computer::HardDisk::1::Capacity::1, Computer::HardDisk::2, Computer::HardDisk::2::Capacity::1. If there is no entry for a CI class, then the default columns are shown.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Enables configuration item bulk action feature for the agent frontend to work on more than one configuration item at a time.'
         }
         =
@@ -2697,18 +2701,18 @@ sub Data {
         ->{'Enables configuration item bulk action feature only for the listed groups.'}
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Enables/disables the functionality to check ConfigItems for unique names. Before enabling this option you should check your system for already existing config items with duplicate names. You can do this with the script bin/otrs.ITSMConfigItemListDuplicates.pl.'
         }
         =
         '(De-)Aktiviert die Funktionalität um ConfigItems auf eindeutige Namen zu überprüfen. Bevor Sie diese Option aktivieren, sollten Sie Ihr System auf bereits vorhandene ConfigItems mit gleichem Namen überprüfen. Sie können dies mit Hilfe des scripts bin/otrs.ITSMConfigItemListDuplicates.pl tun.';
-    $Self->{Translation}->{'Module to check the group responsible for a class.'} = '';
-    $Self->{Translation}->{'Module to check the group responsible for a configuration item.'} =
+    $Lang->{'Module to check the group responsible for a class.'} = '';
+    $Lang->{'Module to check the group responsible for a configuration item.'} =
         '';
-    $Self->{Translation}->{'Module to generate ITSM config item statistics.'} = '';
-    $Self->{Translation}->{'Object backend module registration for the import/export module.'} =
+    $Lang->{'Module to generate ITSM config item statistics.'} = '';
+    $Lang->{'Object backend module registration for the import/export module.'} =
         'Objekt-Backend Modul Registration des Import/Export Moduls.';
-    $Self->{Translation}->{
+    $Lang->{
         'Parameters for the deployment states color in the preferences view of the agent interface.'
         }
         =
@@ -2721,97 +2725,98 @@ sub Data {
         ->{'Parameters for the example permission groups of the general catalog attributes.'}
         =
         'Parameter für die zugriffsberechtigte Gruppe der General-Katalog-Attribute.';
-    $Self->{Translation}->{'Parameters for the pages (in which the configuration items are shown).'}
+    $Lang->{'Parameters for the pages (in which the configuration items are shown).'}
         =
         '';
     $Self->{Translation}
         ->{'Required permissions to use the ITSM configuration item screen in the agent interface.'}
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Required permissions to use the ITSM configuration item search screen in the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Required permissions to use the ITSM configuration item zoom screen in the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Required permissions to use the add ITSM configuration item screen in the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Required permissions to use the edit ITSM configuration item screen in the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Required permissions to use the history ITSM configuration item screen in the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Required permissions to use the print ITSM configuration item screen in the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Selects the configuration item number generator module. "AutoIncrement" increments the configuration item number, the SystemID, the ConfigItemClassID and the counter are used. The format is "SystemID.ConfigItemClassID.Counter", e.g. 1205000004, 1205000005.'
         }
         =
         '';
-    $Self->{Translation}->{
-        'Sets the deployment state in the configuration item bulk screen of the agent interface.'}
+    $Lang->{
+        'Sets the deployment state in the configuration item bulk screen of the agent interface.'
+        }
         =
         '';
     $Self->{Translation}
         ->{'Sets the incident state in the configuration item bulk screen of the agent interface.'}
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu that allows linking a configuration item with another object in the config item zoom view of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to access the history of a configuration item in the configuration item overview of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to access the history of a configuration item in the its zoom view of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to duplicate a configuration item in the configuration item overview of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to duplicate a configuration item in the its zoom view of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to edit a configuration item in the its zoom view of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to go back in the configuration item zoom view of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to print a configuration item in the its zoom view of the agent interface.'
         }
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to zoom into a configuration item in the configuration item overview of the agent interface.'
         }
         =
@@ -2820,117 +2825,118 @@ sub Data {
         ->{'Shows the config item history (reverse ordered) in the agent interface.'}
         =
         '';
-    $Self->{Translation}->{
+    $Lang->{
         'The identifier for a configuration item, e.g. ConfigItem#, MyConfigItem#. The default is ConfigItem#.'
         }
         =
         '';
 
-    $Self->{Translation}->{'Open link in new window'} = 'Öffnet den Link in einem neuem Fenster';
-    $Self->{Translation}->{'Defines values shown for agent user attributes.'} =
+    $Lang->{'Open link in new window'} = 'Öffnet den Link in einem neuem Fenster';
+    $Lang->{'Defines values shown for agent user attributes.'} =
         'Definiert Werte die fuer Attribut Agentennutzer angezeigt werden.';
-    $Self->{Translation}->{'Defines information shown for company attributes.'} =
+    $Lang->{'Defines information shown for company attributes.'} =
         'Definiert die zu einem Companyattribut angezeigten Werte.';
-    $Self->{Translation}->{'Defines information imported/exported as CustomerCompany attribute.'} =
+    $Lang->{'Defines information imported/exported as CustomerCompany attribute.'} =
         'Definiert die bei einem CustomerCompany-Attribut importierten/exportierten Werte.';
-    $Self->{Translation}->{
+    $Lang->{
         'Searches for attributes of type CIClassReference in the new CIs version data and refreshes all links to that class. It deletes links to this class if the value is not existent in the CIs version data.'
         }
         =
         'Sucht nach Attributen vom Typ CIClassReference in der neuen Version des CIs und aktualisiert alle Verknuepfungen zu CIs dieser Klasse. Alle Verknuepfungen zu dieser Klasse zu denen kein Wert in der CI-Version existiert werden geloescht.';
-    $Self->{Translation}->{
+    $Lang->{
         'Searches for attributes of type ServiceReference in the new CIs version data and refreshes all links to that class. It deletes links to this class if the value is not existent in the CIs version data.'
         }
         =
         'Sucht nach Attributen vom Typ ServiceReference in der neuen Version des CIs und aktualisiert alle Verknuepfungen zu CIs dieser Klasse. Alle Verknuepfungen zu dieser Klasse zu denen kein Wert in der CI-Version existiert werden geloescht.';
 
-    $Self->{Translation}->{'Assigned Queue'}   = 'Zugewiesene Queue';
-    $Self->{Translation}->{'Assigned Service'} = 'Zugeordneter Service';
+    $Lang->{'Assigned Queue'}   = 'Zugewiesene Queue';
+    $Lang->{'Assigned Service'} = 'Zugeordneter Service';
 
     # Template: AAAImportExport
-    $Self->{Translation}->{'Add mapping template'}   = 'Mapping-Template hinzufügen';
-    $Self->{Translation}->{'Charset'}                = 'Zeichensatz';
-    $Self->{Translation}->{'Colon (:)'}              = 'Doppelpunkt (:)';
-    $Self->{Translation}->{'Column'}                 = 'Spalte';
-    $Self->{Translation}->{'Column Separator'}       = 'Spaltentrenner';
-    $Self->{Translation}->{'Dot (.)'}                = 'Punkt (.)';
-    $Self->{Translation}->{'Semicolon (;)'}          = 'Semicolon (;)';
-    $Self->{Translation}->{'Tabulator (TAB)'}        = 'Tabulator (TAB)';
-    $Self->{Translation}->{'Include Column Headers'} = 'Mit Spaltenüberschriften';
-    $Self->{Translation}->{'Import summary for'}     = 'Import-Bericht für';
-    $Self->{Translation}->{'Imported records'}       = 'Importierte Datensätze';
-    $Self->{Translation}->{'Exported records'}       = 'Exportierte Datensätze';
-    $Self->{Translation}->{'Records'}                = 'Datensätze';
-    $Self->{Translation}->{'Skipped'}                = 'Übersprungen';
+    $Lang->{'Add mapping template'}   = 'Mapping-Template hinzufügen';
+    $Lang->{'Charset'}                = 'Zeichensatz';
+    $Lang->{'Colon (:)'}              = 'Doppelpunkt (:)';
+    $Lang->{'Column'}                 = 'Spalte';
+    $Lang->{'Column Separator'}       = 'Spaltentrenner';
+    $Lang->{'Dot (.)'}                = 'Punkt (.)';
+    $Lang->{'Semicolon (;)'}          = 'Semicolon (;)';
+    $Lang->{'Tabulator (TAB)'}        = 'Tabulator (TAB)';
+    $Lang->{'Include Column Headers'} = 'Mit Spaltenüberschriften';
+    $Lang->{'Import summary for'}     = 'Import-Bericht für';
+    $Lang->{'Imported records'}       = 'Importierte Datensätze';
+    $Lang->{'Exported records'}       = 'Exportierte Datensätze';
+    $Lang->{'Records'}                = 'Datensätze';
+    $Lang->{'Skipped'}                = 'Übersprungen';
 
     # Template: AdminImportExport
-    $Self->{Translation}->{'Import/Export Management'} = 'Import/Export-Verwaltung';
-    $Self->{Translation}->{'Create a template to import and export object information.'}
+    $Lang->{'Import/Export Management'} = 'Import/Export-Verwaltung';
+    $Lang->{'Create a template to import and export object information.'}
         = 'Erstellen einer Vorlage zum Importieren und Exportieren von Objekt-Informationen.';
-    $Self->{Translation}->{'Start Import'}                           = 'Import starten';
-    $Self->{Translation}->{'Start Export'}                           = 'Export starten';
-    $Self->{Translation}->{'Step 1 of 5 - Edit common information'}  = '';
-    $Self->{Translation}->{'Name is required!'}                      = 'Name wird benötigt!';
-    $Self->{Translation}->{'Object is required!'}                    = 'Objekt ist erforderlich!';
-    $Self->{Translation}->{'Format is required!'}                    = 'Format ist erforderlich!';
-    $Self->{Translation}->{'Step 2 of 5 - Edit object information'}  = '';
-    $Self->{Translation}->{'Step 3 of 5'}                            = '';
-    $Self->{Translation}->{'is required!'}                           = 'wird benötigt!';
-    $Self->{Translation}->{'Step 4 of 5 - Edit mapping information'} = '';
-    $Self->{Translation}->{'No map elements found.'} = 'Keine Mapping-Elemente gefunden.';
-    $Self->{Translation}->{'Add Mapping Element'}    = 'Mapping-Element hinzufügen';
-    $Self->{Translation}->{'Step 5 of 5 - Edit search information'} = '';
-    $Self->{Translation}->{'Restrict export per search'} = 'Export per Suche einschränken';
-    $Self->{Translation}->{'Import information'}         = 'Import-Informationen';
-    $Self->{Translation}->{'Source File'}                = 'Quell-Datei';
-    $Self->{Translation}->{'Success'}                    = 'Erfolgreich';
-    $Self->{Translation}->{'Failed'}                     = 'Nicht erfolgreich';
-    $Self->{Translation}->{'Duplicate names'}            = 'Doppelte Namen';
-    $Self->{Translation}->{'Last processed line number of import file'}
+    $Lang->{'Start Import'}                           = 'Import starten';
+    $Lang->{'Start Export'}                           = 'Export starten';
+    $Lang->{'Step 1 of 5 - Edit common information'}  = '';
+    $Lang->{'Name is required!'}                      = 'Name wird benötigt!';
+    $Lang->{'Object is required!'}                    = 'Objekt ist erforderlich!';
+    $Lang->{'Format is required!'}                    = 'Format ist erforderlich!';
+    $Lang->{'Step 2 of 5 - Edit object information'}  = '';
+    $Lang->{'Step 3 of 5'}                            = '';
+    $Lang->{'is required!'}                           = 'wird benötigt!';
+    $Lang->{'Step 4 of 5 - Edit mapping information'} = '';
+    $Lang->{'No map elements found.'} = 'Keine Mapping-Elemente gefunden.';
+    $Lang->{'Add Mapping Element'}    = 'Mapping-Element hinzufügen';
+    $Lang->{'Step 5 of 5 - Edit search information'} = '';
+    $Lang->{'Restrict export per search'} = 'Export per Suche einschränken';
+    $Lang->{'Import information'}         = 'Import-Informationen';
+    $Lang->{'Source File'}                = 'Quell-Datei';
+    $Lang->{'Success'}                    = 'Erfolgreich';
+    $Lang->{'Failed'}                     = 'Nicht erfolgreich';
+    $Lang->{'Duplicate names'}            = 'Doppelte Namen';
+    $Lang->{'Last processed line number of import file'}
         = 'Zuletzt verarbeitete Zeile der Import-Datei';
-    $Self->{Translation}->{'Ok'} = 'Ok';
+    $Lang->{'Ok'} = 'Ok';
 
     # Perl Module: Kernel/Modules/AdminImportExport.pm
-    $Self->{Translation}->{'No object backend found!'}                                   = '';
-    $Self->{Translation}->{'No format backend found!'}                                   = '';
-    $Self->{Translation}->{'Template not found!'}                                        = '';
-    $Self->{Translation}->{'Can\'t insert/update template!'}                             = '';
-    $Self->{Translation}->{'Needed TemplateID!'}                                         = '';
-    $Self->{Translation}->{'Error occurred. Import impossible! See Syslog for details.'} = '';
-    $Self->{Translation}->{'Error occurred. Export impossible! See Syslog for details.'} = '';
-    $Self->{Translation}->{'number'}                                                     = '';
-    $Self->{Translation}->{'number bigger than zero'}                                    = '';
-    $Self->{Translation}->{'integer'}                                                    = '';
-    $Self->{Translation}->{'integer bigger than zero'}                                   = '';
-    $Self->{Translation}->{'Element required, please insert data'}                       = '';
-    $Self->{Translation}->{'Invalid data, please insert a valid %s'}                     = '';
-    $Self->{Translation}->{'Format not found!'}                                          = '';
+    $Lang->{'No object backend found!'}                                   = '';
+    $Lang->{'No format backend found!'}                                   = '';
+    $Lang->{'Template not found!'}                                        = '';
+    $Lang->{'Can\'t insert/update template!'}                             = '';
+    $Lang->{'Needed TemplateID!'}                                         = '';
+    $Lang->{'Error occurred. Import impossible! See Syslog for details.'} = '';
+    $Lang->{'Error occurred. Export impossible! See Syslog for details.'} = '';
+    $Lang->{'number'}                                                     = '';
+    $Lang->{'number bigger than zero'}                                    = '';
+    $Lang->{'integer'}                                                    = '';
+    $Lang->{'integer bigger than zero'}                                   = '';
+    $Lang->{'Element required, please insert data'}                       = '';
+    $Lang->{'Invalid data, please insert a valid %s'}                     = '';
+    $Lang->{'Format not found!'}                                          = '';
 
     # SysConfig
-    $Self->{Translation}->{'Format backend module registration for the import/export module.'} =
+    $Lang->{'Format backend module registration for the import/export module.'} =
         'Format-Backend Modul-Registration des Import/Export Moduls.';
-    $Self->{Translation}->{'Import and export object information.'}
+    $Lang->{'Import and export object information.'}
         = 'Importieren und Exportieren von Objekt-Informationen.';
-    $Self->{Translation}->{'Import/Export'} = 'Import/Export';
+    $Lang->{'Import/Export'} = 'Import/Export';
 
     # Template: AAAGeneralCatalog
-    $Self->{Translation}->{'Functionality'} = 'Funktionalität';
+    $Lang->{'Functionality'} = 'Funktionalität';
 
     # Template: AdminGeneralCatalog
-    $Self->{Translation}->{'General Catalog Management'} = 'General-Katalog-Verwaltung';
-    $Self->{Translation}->{'Add Catalog Item'}           = 'Katalog-Eintrag hinzufügen';
-    $Self->{Translation}->{'Add Catalog Class'}          = 'Katalog-Klasse hinzufügen';
-    $Self->{Translation}->{'Catalog Class'}              = 'Katalog-Klasse';
+    $Lang->{'General Catalog Management'} = 'General-Katalog-Verwaltung';
+    $Lang->{'Add Catalog Item'}           = 'Katalog-Eintrag hinzufügen';
+    $Lang->{'Add Catalog Class'}          = 'Katalog-Klasse hinzufügen';
+    $Lang->{'Catalog Class'}              = 'Katalog-Klasse';
 
     # SysConfig
-    $Self->{Translation}->{'Admin.'} = 'Admin.';
-    $Self->{Translation}->{'Create and manage the General Catalog.'}
+    $Lang->{'Admin.'} = 'Admin.';
+    $Lang->{'Create and manage the General Catalog.'}
         = 'General-Katalog erstellen und verwalten.';
-    $Self->{Translation}->{
-        'Frontend module registration for the AdminGeneralCatalog configuration in the admin area.'}
+    $Lang->{
+        'Frontend module registration for the AdminGeneralCatalog configuration in the admin area.'
+        }
         =
         'Frontendmodul-Registration der AdminGeneralCatalog Konfiguration im Admin-Bereich.';
-    $Self->{Translation}->{'General Catalog'} = 'General-Katalog';
+    $Lang->{'General Catalog'} = 'General-Katalog';
     $Self->{Translation}
         ->{'Parameters for the example comment 2 of the general catalog attributes.'}
         =
@@ -2959,575 +2965,578 @@ sub Data {
         'Objekt-Backend Modul Registration des Import/Export Moduls.';
 
     # Template: AAAFAQ
-    $Self->{Translation}->{'internal'}                        = 'intern';
-    $Self->{Translation}->{'public'}                          = 'öffentlich';
-    $Self->{Translation}->{'external'}                        = 'extern';
-    $Self->{Translation}->{'FAQ Number'}                      = 'FAQ-Nummer';
-    $Self->{Translation}->{'Latest updated FAQ articles'}     = 'Zuletzt geänderte FAQ-Artikel';
-    $Self->{Translation}->{'Latest created FAQ articles'}     = 'Zuletzt erstellte FAQ-Artikel';
-    $Self->{Translation}->{'Top 10 FAQ articles'}             = 'Top 10 FAQ-Artikel';
-    $Self->{Translation}->{'Subcategory of'}                  = 'Unterkategorie von';
-    $Self->{Translation}->{'No rate selected!'}               = 'Keine Bewertung ausgewählt!';
-    $Self->{Translation}->{'Explorer'}                        = 'Ansicht nach Kategorien';
-    $Self->{Translation}->{'public (all)'}                    = 'öffentlich (Alle)';
-    $Self->{Translation}->{'external (customer)'}             = 'extern (Kunde)';
-    $Self->{Translation}->{'internal (agent)'}                = 'intern (Agent)';
-    $Self->{Translation}->{'Start day'}                       = 'Start Tag';
-    $Self->{Translation}->{'Start month'}                     = 'Start Monat';
-    $Self->{Translation}->{'Start year'}                      = 'Start Jahr';
-    $Self->{Translation}->{'End day'}                         = 'End Tag';
-    $Self->{Translation}->{'End month'}                       = 'End Monat';
-    $Self->{Translation}->{'End year'}                        = 'End Jahr';
-    $Self->{Translation}->{'Thanks for your vote!'}           = 'Vielen Dank für Ihre Bewertung!';
-    $Self->{Translation}->{'You have already voted!'}         = 'Sie haben bereits abgestimmt!';
-    $Self->{Translation}->{'FAQ Article Print'}               = 'FAQ-Artikel-Ausdruck';
-    $Self->{Translation}->{'FAQ Articles (Top 10)'}           = 'FAQ-Artikel (Top 10)';
-    $Self->{Translation}->{'FAQ Articles (new created)'}      = 'FAQ-Artikel (neu erstellte)';
-    $Self->{Translation}->{'FAQ Articles (recently changed)'} = 'FAQ-Artikel (aktualisierte)';
-    $Self->{Translation}->{'FAQ category updated!'}           = 'FAQ-Kategorie aktualisiert!';
-    $Self->{Translation}->{'FAQ category added!'}             = 'FAQ-Kategorie hinzugefügt!';
-    $Self->{Translation}->{'A category should have a name!'}
+    $Lang->{'internal'}                        = 'intern';
+    $Lang->{'public'}                          = 'öffentlich';
+    $Lang->{'external'}                        = 'extern';
+    $Lang->{'FAQ Number'}                      = 'FAQ-Nummer';
+    $Lang->{'Latest updated FAQ articles'}     = 'Zuletzt geänderte FAQ-Artikel';
+    $Lang->{'Latest created FAQ articles'}     = 'Zuletzt erstellte FAQ-Artikel';
+    $Lang->{'Top 10 FAQ articles'}             = 'Top 10 FAQ-Artikel';
+    $Lang->{'Subcategory of'}                  = 'Unterkategorie von';
+    $Lang->{'No rate selected!'}               = 'Keine Bewertung ausgewählt!';
+    $Lang->{'Explorer'}                        = 'Ansicht nach Kategorien';
+    $Lang->{'public (all)'}                    = 'öffentlich (Alle)';
+    $Lang->{'external (customer)'}             = 'extern (Kunde)';
+    $Lang->{'internal (agent)'}                = 'intern (Agent)';
+    $Lang->{'Start day'}                       = 'Start Tag';
+    $Lang->{'Start month'}                     = 'Start Monat';
+    $Lang->{'Start year'}                      = 'Start Jahr';
+    $Lang->{'End day'}                         = 'End Tag';
+    $Lang->{'End month'}                       = 'End Monat';
+    $Lang->{'End year'}                        = 'End Jahr';
+    $Lang->{'Thanks for your vote!'}           = 'Vielen Dank für Ihre Bewertung!';
+    $Lang->{'You have already voted!'}         = 'Sie haben bereits abgestimmt!';
+    $Lang->{'FAQ Article Print'}               = 'FAQ-Artikel-Ausdruck';
+    $Lang->{'FAQ Articles (Top 10)'}           = 'FAQ-Artikel (Top 10)';
+    $Lang->{'FAQ Articles (new created)'}      = 'FAQ-Artikel (neu erstellte)';
+    $Lang->{'FAQ Articles (recently changed)'} = 'FAQ-Artikel (aktualisierte)';
+    $Lang->{'FAQ category updated!'}           = 'FAQ-Kategorie aktualisiert!';
+    $Lang->{'FAQ category added!'}             = 'FAQ-Kategorie hinzugefügt!';
+    $Lang->{'A category should have a name!'}
         = 'Eine Kategorie benötigt einen Namen!';
-    $Self->{Translation}->{'This category already exists'}  = 'Diese Kategorie existiert bereits!';
-    $Self->{Translation}->{'FAQ language added!'}           = 'FAQ-Sprache hinzugefügt!';
-    $Self->{Translation}->{'FAQ language updated!'}         = 'FAQ-Sprache aktualisiert!';
-    $Self->{Translation}->{'The name is required!'}         = 'Der Name ist erforderlich!';
-    $Self->{Translation}->{'This language already exists!'} = 'Diese Sprache existiert bereits!';
-    $Self->{Translation}->{'Symptom'}                       = 'Symptom';
-    $Self->{Translation}->{'Solution'}                      = 'Lösung';
+    $Lang->{'This category already exists'}  = 'Diese Kategorie existiert bereits!';
+    $Lang->{'FAQ language added!'}           = 'FAQ-Sprache hinzugefügt!';
+    $Lang->{'FAQ language updated!'}         = 'FAQ-Sprache aktualisiert!';
+    $Lang->{'The name is required!'}         = 'Der Name ist erforderlich!';
+    $Lang->{'This language already exists!'} = 'Diese Sprache existiert bereits!';
+    $Lang->{'Symptom'}                       = 'Symptom';
+    $Lang->{'Solution'}                      = 'Lösung';
 
     # Template: AgentFAQAdd
-    $Self->{Translation}->{'Add FAQ Article'}         = 'FAQ-Artikel hinzufügen';
-    $Self->{Translation}->{'Keywords'}                = 'Schlüsselwörter';
-    $Self->{Translation}->{'A category is required.'} = 'Eine Kategorie ist erforderlich.';
-    $Self->{Translation}->{'Approval'}                = 'Freigabe';
+    $Lang->{'Add FAQ Article'}         = 'FAQ-Artikel hinzufügen';
+    $Lang->{'Keywords'}                = 'Schlüsselwörter';
+    $Lang->{'A category is required.'} = 'Eine Kategorie ist erforderlich.';
+    $Lang->{'Approval'}                = 'Freigabe';
 
     # Template: AgentFAQCategory
-    $Self->{Translation}->{'FAQ Category Management'} = 'FAQ-Kategorien-Verwaltung';
-    $Self->{Translation}->{'Add category'}            = 'Kategorie hinzufügen';
-    $Self->{Translation}->{'Delete Category'}         = 'Kategorie löschen';
-    $Self->{Translation}->{'Ok'}                      = 'Ok';
-    $Self->{Translation}->{'Add Category'}            = 'Kategorie hinzufügen';
-    $Self->{Translation}->{'Edit Category'}           = 'Kategorie bearbeiten';
-    $Self->{Translation}->{'Please select at least one permission group.'}
+    $Lang->{'FAQ Category Management'} = 'FAQ-Kategorien-Verwaltung';
+    $Lang->{'Add category'}            = 'Kategorie hinzufügen';
+    $Lang->{'Delete Category'}         = 'Kategorie löschen';
+    $Lang->{'Ok'}                      = 'Ok';
+    $Lang->{'Add Category'}            = 'Kategorie hinzufügen';
+    $Lang->{'Edit Category'}           = 'Kategorie bearbeiten';
+    $Lang->{'Please select at least one permission group.'}
         = 'Wählen Sie mindestens eine Berechtigungsgruppe.';
-    $Self->{Translation}->{'Agent groups that can access articles in this category.'}
+    $Lang->{'Agent groups that can access articles in this category.'}
         = 'Agenten-Gruppen, die berechtigt sind, auf FAQ-Artikel in dieser Kategorie zuzugreifen.';
-    $Self->{Translation}->{'Will be shown as comment in Explorer.'}
+    $Lang->{'Will be shown as comment in Explorer.'}
         = 'Wird im Explorer als Kommentar angezeigt.';
-    $Self->{Translation}->{'Do you really want to delete this category?'}
+    $Lang->{'Do you really want to delete this category?'}
         = 'Wollen Sie diese Kategorie wirklich löschen?';
-    $Self->{Translation}->{
+    $Lang->{
         'You can not delete this category. It is used in at least one FAQ article and/or is parent of at least one other category'
         }
         =
         'Sie können diese Kategorie nicht löschen. Sie wird in mindestens einem FAQ-Artikel verwendet!';
-    $Self->{Translation}->{'This category is used in the following FAQ article(s)'}
+    $Lang->{'This category is used in the following FAQ article(s)'}
         = 'Diese Kategorie wird in den folgenden FAQ-Artikeln verwendet';
-    $Self->{Translation}->{'This category is parent of the following subcategories'}
+    $Lang->{'This category is parent of the following subcategories'}
         = 'Diese Kategorie ist eine Eltern-Kategorie für folgende Kategorien';
 
     # Template: AgentFAQDelete
-    $Self->{Translation}->{'Do you really want to delete this FAQ article?'}
+    $Lang->{'Do you really want to delete this FAQ article?'}
         = 'Wollen Sie diesen FAQ-Artikel wirklich löschen?';
 
     # Template: AgentFAQEdit
-    $Self->{Translation}->{'FAQ'} = 'FAQ';
+    $Lang->{'FAQ'} = 'FAQ';
 
     # Template: AgentFAQExplorer
-    $Self->{Translation}->{'FAQ Explorer'}            = 'FAQ-Explorer';
-    $Self->{Translation}->{'Quick Search'}            = 'Schnellsuche';
-    $Self->{Translation}->{'Wildcards are allowed.'}  = 'Wildcards sind erlaubt.';
-    $Self->{Translation}->{'Advanced Search'}         = 'Erweiterte Suche';
-    $Self->{Translation}->{'Subcategories'}           = 'Unterkategorien';
-    $Self->{Translation}->{'FAQ Articles'}            = 'FAQ-Artikel';
-    $Self->{Translation}->{'No subcategories found.'} = 'Keine Unterkategorien gefunden.';
+    $Lang->{'FAQ Explorer'}            = 'FAQ-Explorer';
+    $Lang->{'Quick Search'}            = 'Schnellsuche';
+    $Lang->{'Wildcards are allowed.'}  = 'Wildcards sind erlaubt.';
+    $Lang->{'Advanced Search'}         = 'Erweiterte Suche';
+    $Lang->{'Subcategories'}           = 'Unterkategorien';
+    $Lang->{'FAQ Articles'}            = 'FAQ-Artikel';
+    $Lang->{'No subcategories found.'} = 'Keine Unterkategorien gefunden.';
 
     # Template: AgentFAQHistory
-    $Self->{Translation}->{'History of'} = 'Änderungsverlauf von';
+    $Lang->{'History of'} = 'Änderungsverlauf von';
 
     # Template: AgentFAQJournalOverviewSmall
-    $Self->{Translation}->{'No FAQ Journal data found.'} = 'Keine FAQ-Journaldaten gefunden.';
+    $Lang->{'No FAQ Journal data found.'} = 'Keine FAQ-Journaldaten gefunden.';
 
     # Template: AgentFAQLanguage
-    $Self->{Translation}->{'FAQ Language Management'} = 'FAQ-Sprachen-Verwaltung';
-    $Self->{Translation}->{'Use this feature if you want to work with multiple languages.'} =
+    $Lang->{'FAQ Language Management'} = 'FAQ-Sprachen-Verwaltung';
+    $Lang->{'Use this feature if you want to work with multiple languages.'} =
         'Verwenden Sie diese Funktion, wenn Sie mit mehreren Sprachen arbeiten wollen.';
-    $Self->{Translation}->{'Add language'}       = 'Sprache hinzufügen';
-    $Self->{Translation}->{'Delete Language %s'} = 'Sprache Löschen %s';
-    $Self->{Translation}->{'Add Language'}       = 'Sprache hinzufügen';
-    $Self->{Translation}->{'Edit Language'}      = 'Sprache Bearbeiten';
-    $Self->{Translation}->{'Do you really want to delete this language?'}
+    $Lang->{'Add language'}       = 'Sprache hinzufügen';
+    $Lang->{'Delete Language %s'} = 'Sprache Löschen %s';
+    $Lang->{'Add Language'}       = 'Sprache hinzufügen';
+    $Lang->{'Edit Language'}      = 'Sprache Bearbeiten';
+    $Lang->{'Do you really want to delete this language?'}
         = 'Wollen Sie diese Sprache wirklich löschen?';
     $Self->{Translation}
         ->{'You can not delete this language. It is used in at least one FAQ article!'}
         =
         'Sie können diese Sprache nicht löschen. Sie wird in mindestens einem FAQ-Artikel verwendet!';
-    $Self->{Translation}->{'This language is used in the following FAQ Article(s)'}
+    $Lang->{'This language is used in the following FAQ Article(s)'}
         = 'Diese Sprache wird in den folgenden FAQ-Artikeln verwendet';
 
     # Template: AgentFAQOverviewNavBar
-    $Self->{Translation}->{'Context Settings'}      = 'Kontext-Einstellungen';
-    $Self->{Translation}->{'FAQ articles per page'} = 'FAQ-Artikel pro Seite';
+    $Lang->{'Context Settings'}      = 'Kontext-Einstellungen';
+    $Lang->{'FAQ articles per page'} = 'FAQ-Artikel pro Seite';
 
     # Template: AgentFAQOverviewSmall
-    $Self->{Translation}->{'No FAQ data found.'} = 'Keine FAQ-Daten gefunden.';
+    $Lang->{'No FAQ data found.'} = 'Keine FAQ-Daten gefunden.';
 
     # Template: AgentFAQSearch
-    $Self->{Translation}->{'Keyword'} = 'Schlüsselwort';
-    $Self->{Translation}->{'Vote (e. g. Equals 10 or GreaterThan 60)'}
+    $Lang->{'Keyword'} = 'Schlüsselwort';
+    $Lang->{'Vote (e. g. Equals 10 or GreaterThan 60)'}
         = 'Abstimmung (Zum Beispiel: =10 oder >60)';
-    $Self->{Translation}->{'Rate (e. g. Equals 25% or GreaterThan 75%)'}
+    $Lang->{'Rate (e. g. Equals 25% or GreaterThan 75%)'}
         = 'Anteil (Zum Beispiel: =25% oder >75%)';
-    $Self->{Translation}->{'Approved'}        = 'Genehmigt';
-    $Self->{Translation}->{'Last changed by'} = 'Letzte Änderung von:';
-    $Self->{Translation}->{'FAQ Article Create Time (before/after)'}
+    $Lang->{'Approved'}        = 'Genehmigt';
+    $Lang->{'Last changed by'} = 'Letzte Änderung von:';
+    $Lang->{'FAQ Article Create Time (before/after)'}
         = 'Erstellzeit des FAQ-Artikel (davor/danach)';
-    $Self->{Translation}->{'FAQ Article Create Time (between)'}
+    $Lang->{'FAQ Article Create Time (between)'}
         = 'Erstellzeit des FAQ-Artikel (zwischen)';
-    $Self->{Translation}->{'FAQ Article Change Time (before/after)'}
+    $Lang->{'FAQ Article Change Time (before/after)'}
         = 'Letzte Änderung des FAQ-Artikel (davor/danach)';
-    $Self->{Translation}->{'FAQ Article Change Time (between)'}
+    $Lang->{'FAQ Article Change Time (between)'}
         = 'Letzte Änderung des FAQ-Artikel (zwischen)';
 
     # Template: AgentFAQSearchOpenSearchDescriptionFulltext
-    $Self->{Translation}->{'FAQFulltext'} = 'FAQ-Volltext';
+    $Lang->{'FAQFulltext'} = 'FAQ-Volltext';
 
     # Template: AgentFAQSearchSmall
-    $Self->{Translation}->{'FAQ Search'}                          = 'FAQ Suche';
-    $Self->{Translation}->{'Profile Selection'}                   = 'Profilauswahl';
-    $Self->{Translation}->{'Vote'}                                = 'Abstimmen';
-    $Self->{Translation}->{'No vote settings'}                    = 'Keine Abstimmungseinstellung';
-    $Self->{Translation}->{'Specific votes'}                      = 'spezifische Abstimmung';
-    $Self->{Translation}->{'e. g. Equals 10 or GreaterThan 60'}   = 'Zum Beispiel: =10 oder >60';
-    $Self->{Translation}->{'Rate'}                                = 'Anteil';
-    $Self->{Translation}->{'No rate settings'}                    = 'Keine Anteil-Einstellungen';
-    $Self->{Translation}->{'Specific rate'}                       = 'bestimmter Anteil';
-    $Self->{Translation}->{'e. g. Equals 25% or GreaterThan 75%'} = 'Zum Beispiel: =25% oder >75%';
-    $Self->{Translation}->{'FAQ Article Create Time'}             = 'Erstellzeit des FAQ-Artikel';
-    $Self->{Translation}->{'FAQ Article Change Time'} = 'letzte Änderung des FAQ-Artikel';
+    $Lang->{'FAQ Search'}                          = 'FAQ Suche';
+    $Lang->{'Profile Selection'}                   = 'Profilauswahl';
+    $Lang->{'Vote'}                                = 'Abstimmen';
+    $Lang->{'No vote settings'}                    = 'Keine Abstimmungseinstellung';
+    $Lang->{'Specific votes'}                      = 'spezifische Abstimmung';
+    $Lang->{'e. g. Equals 10 or GreaterThan 60'}   = 'Zum Beispiel: =10 oder >60';
+    $Lang->{'Rate'}                                = 'Anteil';
+    $Lang->{'No rate settings'}                    = 'Keine Anteil-Einstellungen';
+    $Lang->{'Specific rate'}                       = 'bestimmter Anteil';
+    $Lang->{'e. g. Equals 25% or GreaterThan 75%'} = 'Zum Beispiel: =25% oder >75%';
+    $Lang->{'FAQ Article Create Time'}             = 'Erstellzeit des FAQ-Artikel';
+    $Lang->{'FAQ Article Change Time'} = 'letzte Änderung des FAQ-Artikel';
 
     # Template: AgentFAQZoom
-    $Self->{Translation}->{'FAQ Information'} = 'FAQ-Information';
-    $Self->{Translation}->{'Rating'}          = 'Bewertung';
-    $Self->{Translation}->{'out of 5'}        = 'von 5';
-    $Self->{Translation}->{'Votes'}           = 'Bewertungen';
-    $Self->{Translation}->{'No votes found!'} = 'Keine Bewertungen gefunden!';
-    $Self->{Translation}->{'No votes found! Be the first one to rate this FAQ article.'}
+    $Lang->{'FAQ Information'} = 'FAQ-Information';
+    $Lang->{'Rating'}          = 'Bewertung';
+    $Lang->{'out of 5'}        = 'von 5';
+    $Lang->{'Votes'}           = 'Bewertungen';
+    $Lang->{'No votes found!'} = 'Keine Bewertungen gefunden!';
+    $Lang->{'No votes found! Be the first one to rate this FAQ article.'}
         = 'Keine Bewertungen gefunden! Seien Sie der erste der diesen FAQ-Artikel bewertet.';
-    $Self->{Translation}->{'Download Attachment'} = 'Attachment Herunterladen';
-    $Self->{Translation}->{
+    $Lang->{'Download Attachment'} = 'Attachment Herunterladen';
+    $Lang->{
         'To open links in the following description blocks, you might need to press Ctrl or Cmd or Shift key while clicking the link (depending on your browser and OS).'
         }
         =
         'Um die Links im folgenden Beitrag zu öffnen, kann es notwendig sein Strg oder Shift zu drücken, während auf den Link geklickt wird (abhängig vom verwendeten Browser und Betriebssystem).';
-    $Self->{Translation}->{
+    $Lang->{
         'How helpful was this article? Please give us your rating and help to improve the FAQ Database. Thank You!'
         }
         =
         'Wie hilfreich war dieser Artikel? Bitte geben Sie Ihre Bewertung ab und helfen Sie mit die Qualität der FAQ-Datenbank zu verbessern. Vielen Dank!';
-    $Self->{Translation}->{'not helpful'}  = 'nicht hilfreich';
-    $Self->{Translation}->{'very helpful'} = 'sehr hilfreich';
+    $Lang->{'not helpful'}  = 'nicht hilfreich';
+    $Lang->{'very helpful'} = 'sehr hilfreich';
 
     # Template: AgentFAQZoomSmall
-    $Self->{Translation}->{'Add FAQ title to article subject'}
+    $Lang->{'Add FAQ title to article subject'}
         = 'Füge den FAQ-Titel als Artikelbetreff hinzu.';
-    $Self->{Translation}->{'Insert FAQ Text'}        = 'FAQ-Text einfügen';
-    $Self->{Translation}->{'Insert Full FAQ'}        = 'Vollständige FAQ einfügen';
-    $Self->{Translation}->{'Insert FAQ Link'}        = 'FAQ-Link einfügen';
-    $Self->{Translation}->{'Insert FAQ Text & Link'} = 'FAQ-Text & Link einfügen';
-    $Self->{Translation}->{'Insert Full FAQ & Link'} = 'Vollständige FAQ & Link einfügen';
+    $Lang->{'Insert FAQ Text'}        = 'FAQ-Text einfügen';
+    $Lang->{'Insert Full FAQ'}        = 'Vollständige FAQ einfügen';
+    $Lang->{'Insert FAQ Link'}        = 'FAQ-Link einfügen';
+    $Lang->{'Insert FAQ Text & Link'} = 'FAQ-Text & Link einfügen';
+    $Lang->{'Insert Full FAQ & Link'} = 'Vollständige FAQ & Link einfügen';
 
     # Template: CustomerFAQExplorer
-    $Self->{Translation}->{'No FAQ articles found.'} = 'Keine FAQ-Artikel gefunden.';
+    $Lang->{'No FAQ articles found.'} = 'Keine FAQ-Artikel gefunden.';
 
     # Template: CustomerFAQSearch
-    $Self->{Translation}->{'Fulltext search in FAQ articles (e. g. "John*n" or "Will*")'}
+    $Lang->{'Fulltext search in FAQ articles (e. g. "John*n" or "Will*")'}
         = 'Volltext-Suche in FAQ-Artikeln (z. B. "John*n" or "Will*")';
-    $Self->{Translation}->{'Vote restrictions'}               = 'Wahleinschränkungen';
-    $Self->{Translation}->{'Only FAQ articles with votes...'} = 'Nur FAQ-Artikel mit Abstimmungen';
-    $Self->{Translation}->{'Rate restrictions'}               = 'Anteilsbeschränkungen';
-    $Self->{Translation}->{'Only FAQ articles with rate...'}
+    $Lang->{'Vote restrictions'}               = 'Wahleinschränkungen';
+    $Lang->{'Only FAQ articles with votes...'} = 'Nur FAQ-Artikel mit Abstimmungen';
+    $Lang->{'Rate restrictions'}               = 'Anteilsbeschränkungen';
+    $Lang->{'Only FAQ articles with rate...'}
         = 'Nur FAQ-Artikel mit einem Anteil von...';
-    $Self->{Translation}->{'Only FAQ articles created'} = 'Nur FAQ-Artikel erstellt';
-    $Self->{Translation}->{'Only FAQ articles created between'}
+    $Lang->{'Only FAQ articles created'} = 'Nur FAQ-Artikel erstellt';
+    $Lang->{'Only FAQ articles created between'}
         = 'Nur Tickets, die erstellt wurden zwischen';
-    $Self->{Translation}->{'Search-Profile as Template?'} = 'Suchprofil als Vorlage?';
+    $Lang->{'Search-Profile as Template?'} = 'Suchprofil als Vorlage?';
 
     # Template: CustomerFAQZoom
-    $Self->{Translation}->{'Article Number'} = 'Artikelnummer';
-    $Self->{Translation}->{'Search for articles with keyword'}
+    $Lang->{'Article Number'} = 'Artikelnummer';
+    $Lang->{'Search for articles with keyword'}
         = 'Suche nach Artikeln mit Schlüsselwörtern';
 
     # Template: PublicFAQSearchOpenSearchDescriptionFAQNumber
-    $Self->{Translation}->{'Public'} = 'Öffentlich';
+    $Lang->{'Public'} = 'Öffentlich';
 
     # Template: PublicFAQSearchResultShort
-    $Self->{Translation}->{'Back to FAQ Explorer'} = 'Zurück zum FAQ-Explorer';
+    $Lang->{'Back to FAQ Explorer'} = 'Zurück zum FAQ-Explorer';
 
     # Perl Module: Kernel/Modules/AgentFAQJournal.pm
-    $Self->{Translation}->{'FAQ Journal'} = 'FAQ Journal';
+    $Lang->{'FAQ Journal'} = 'FAQ Journal';
 
     # Perl Module: Kernel/Modules/AgentFAQPrint.pm
-    $Self->{Translation}->{'Last update'}        = 'Letzte Aktualisierung';
-    $Self->{Translation}->{'FAQ Dynamic Fields'} = 'FAQ Dynamische Felder';
+    $Lang->{'Last update'}        = 'Letzte Aktualisierung';
+    $Lang->{'FAQ Dynamic Fields'} = 'FAQ Dynamische Felder';
 
     # Perl Module: Kernel/Modules/AgentFAQSearch.pm
-    $Self->{Translation}->{'No Result!'} = 'Kein Ergebnis!';
+    $Lang->{'No Result!'} = 'Kein Ergebnis!';
 
     # Perl Module: Kernel/Output/HTML/HeaderMeta/AgentFAQSearch.pm
-    $Self->{Translation}->{'%s (FAQFulltext)'} = '';
+    $Lang->{'%s (FAQFulltext)'} = '';
 
     # Perl Module: Kernel/Output/HTML/HeaderMeta/CustomerFAQSearch.pm
-    $Self->{Translation}->{'%s - Customer (%s)'}          = '%s - Kunde (%s)';
-    $Self->{Translation}->{'%s - Customer (FAQFulltext)'} = '';
+    $Lang->{'%s - Customer (%s)'}          = '%s - Kunde (%s)';
+    $Lang->{'%s - Customer (FAQFulltext)'} = '';
 
     # Perl Module: Kernel/Output/HTML/HeaderMeta/PublicFAQSearch.pm
-    $Self->{Translation}->{'%s - Public (%s)'}          = '%s - Öffentlich (%s)';
-    $Self->{Translation}->{'%s - Public (FAQFulltext)'} = '';
+    $Lang->{'%s - Public (%s)'}          = '%s - Öffentlich (%s)';
+    $Lang->{'%s - Public (FAQFulltext)'} = '';
 
     # Perl Module: Kernel/Output/HTML/Layout/FAQ.pm
-    $Self->{Translation}->{'This article is empty!'} = 'Dieser Artikel ist leer!';
+    $Lang->{'This article is empty!'} = 'Dieser Artikel ist leer!';
 
     # SysConfig
-    $Self->{Translation}->{
+    $Lang->{
         'A filter for HTML output to add links behind a defined string. The element Image allows two input kinds. First the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possibility is to insert the link to the image.'
         }
         =
         'Ein Filter zur automatischen Generierung von FAQ-Links, wenn ein Hinweis auf einen FAQ-Artikel identifiziert wird. Das Element Image erlaubt zwei Eingabeformen: Erstens der Name eines Icons (z. B. faq.png). In diesem Fall wird auf das Grafik-Verzeichnis des OTRS zugegriffen. Als zweite Möglichkeit kann man aber auch den direkten Link zur Grafik angeben (z. B. http://otrs.org/faq.png).';
-    $Self->{Translation}->{'Add FAQ article'} = 'FAQ-Artikel hinzufügen';
-    $Self->{Translation}->{'CSS color for the voting result.'}
+    $Lang->{'Add FAQ article'} = 'FAQ-Artikel hinzufügen';
+    $Lang->{'CSS color for the voting result.'}
         = 'CSS-Farbe für das Bewertungs-Ergebnis.';
-    $Self->{Translation}->{'Cache Time To Leave for FAQ items.'} = 'Cachezeit für FAQ-Artikel.';
-    $Self->{Translation}->{'Category Management'}                = 'Kategorien-Verwaltung';
-    $Self->{Translation}->{'Customer FAQ Print.'}                = 'Kunden-FAQ Drucken.';
-    $Self->{Translation}->{'Customer FAQ Zoom.'}                 = '';
-    $Self->{Translation}->{'Customer FAQ search.'}               = 'Kunden-FAQ Suchen.';
-    $Self->{Translation}->{'Customer FAQ.'}                      = 'Kunden-FAQ.';
-    $Self->{Translation}->{'Decimal places of the voting result.'}
+    $Lang->{'Cache Time To Leave for FAQ items.'} = 'Cachezeit für FAQ-Artikel.';
+    $Lang->{'Category Management'}                = 'Kategorien-Verwaltung';
+    $Lang->{'Customer FAQ Print.'}                = 'Kunden-FAQ Drucken.';
+    $Lang->{'Customer FAQ Zoom.'}                 = '';
+    $Lang->{'Customer FAQ search.'}               = 'Kunden-FAQ Suchen.';
+    $Lang->{'Customer FAQ.'}                      = 'Kunden-FAQ.';
+    $Lang->{'Decimal places of the voting result.'}
         = 'Dezimalstellen des Ergebnisses der Artikelbewertung.';
-    $Self->{Translation}->{'Default category name.'} = 'Root-Kategorie-Name.';
-    $Self->{Translation}->{'Default language for FAQ articles on single language mode.'}
+    $Lang->{'Default category name.'} = 'Root-Kategorie-Name.';
+    $Lang->{'Default language for FAQ articles on single language mode.'}
         = 'Standard-Sprache für FAQ-Artikel im Einzel-Sprach-Modus.';
-    $Self->{Translation}->{'Default maximum size of the titles in a FAQ article to be shown.'} =
+    $Lang->{'Default maximum size of the titles in a FAQ article to be shown.'} =
         'Standardmäßig maximal angezeigte Zeichen in den Titeln der FAQ-Artikel.';
-    $Self->{Translation}->{'Default priority of tickets for the approval of FAQ articles.'} =
+    $Lang->{'Default priority of tickets for the approval of FAQ articles.'} =
         'Standard-Priorität von Tickets für die Freigabe von FAQ-Artikeln.';
-    $Self->{Translation}->{'Default state for FAQ entry.'} = 'Standard Status eines FAQ-Eintrags.';
-    $Self->{Translation}->{'Default state of tickets for the approval of FAQ articles.'}
+    $Lang->{'Default state for FAQ entry.'} = 'Standard Status eines FAQ-Eintrags.';
+    $Lang->{'Default state of tickets for the approval of FAQ articles.'}
         = 'Standard-Status von Tickets für die Freigabe von FAQ-Artikeln.';
-    $Self->{Translation}->{'Default type of tickets for the approval of FAQ articles.'}
+    $Lang->{'Default type of tickets for the approval of FAQ articles.'}
         = 'Standard Tickettyp für die Genehmigung von FAQ-Artikeln';
-    $Self->{Translation}->{
+    $Lang->{
         'Default value for the Action parameter for the public frontend. The Action parameter is used in the scripts of the system.'
         }
         =
         'Standardwert des Action-Parameters für den öffentlichen FAQ-Bereich. Der Action-Parameter wird von den Skripten des Systems benutzt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Define Actions where a settings button is available in the linked objects widget (LinkObject::ViewMode = "complex"). Please note that these Actions must have registered the following JS and CSS files: Core.AllocationList.css, Core.UI.AllocationList.js, Core.UI.Table.Sort.js, Core.Agent.TableFilters.js and Core.Agent.LinkObject.js.'
         }
         =
         '';
-    $Self->{Translation}->{'Define if the FAQ title should be concatenated to article subject.'} =
+    $Lang->{'Define if the FAQ title should be concatenated to article subject.'} =
         'Definiert ob der FAQ-Titel mit dem Artikelbetreff verkettet werden soll.';
-    $Self->{Translation}->{
+    $Lang->{
         'Define which columns are shown in the linked FAQs widget (LinkObject::ViewMode = "complex"). Note: Only FAQ attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.'
         }
         =
         '';
-    $Self->{Translation}->{'Defines an overview module to show the small view of a FAQ journal.'} =
+    $Lang->{'Defines an overview module to show the small view of a FAQ journal.'} =
         'Definiert ein Übersichts-Modul um die Small-Ansicht im FAQ-Journal anzuzeigen.';
-    $Self->{Translation}->{'Defines an overview module to show the small view of a FAQ list.'} =
+    $Lang->{'Defines an overview module to show the small view of a FAQ list.'} =
         'Definiert ein Übersichts-Modul um die Small-Ansicht einer FAQ-Liste anzuzeigen.';
-    $Self->{Translation}->{
-        'Defines the default FAQ attribute for FAQ sorting in a FAQ search of the agent interface.'}
+    $Lang->{
+        'Defines the default FAQ attribute for FAQ sorting in a FAQ search of the agent interface.'
+        }
         =
         'Definiert das Standard-FAQ-Attribut für die Sortierung der FAQ-Suche im Agenten-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ attribute for FAQ sorting in a FAQ search of the customer interface.'
         }
         =
         'Definiert das Standard-FAQ-Attribut für die Sortierung des FAQ-Suche im Kunden-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ attribute for FAQ sorting in a FAQ search of the public interface.'
         }
         =
         'Definiert das Standard-FAQ-Attribut für die Sortierung des FAQ-Suche im Public-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ attribute for FAQ sorting in the FAQ Explorer of the agent interface.'
         }
         =
         'Definiert das Standard-FAQ-Attribut für die Sortierung des FAQ-Explorer im Agenten-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ attribute for FAQ sorting in the FAQ Explorer of the customer interface.'
         }
         =
         'Definiert das Standard-FAQ-Attribut für die Sortierung des FAQ-Explorer im Kunden-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ attribute for FAQ sorting in the FAQ Explorer of the public interface.'
         }
         =
         'Definiert das Standard-FAQ-Attribut für die Sortierung des FAQ-Explorer im Public-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ order in the FAQ Explorer result of the agent interface. Up: oldest on top. Down: latest on top.'
         }
         =
         'Definiert die Standard-Sortierung des FAQ-Explorer im Agenten-Interface. Auf: Ältester FAQ-Artikel oben. Ab: Neuester FAQ-Artikel oben.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ order in the FAQ Explorer result of the customer interface. Up: oldest on top. Down: latest on top.'
         }
         =
         'Definiert die Standard-Sortierung des FAQ-Explorer im Kunden-Interface. Auf: Ältester FAQ-Artikel oben. Ab: Neuester FAQ-Artikel oben.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ order in the FAQ Explorer result of the public interface. Up: oldest on top. Down: latest on top.'
         }
         =
         'Definiert die Standard-Sortierung des FAQ-Explorers im Public-Interface. Auf: Ältester FAQ-Artikel oben. Ab: Neuester FAQ-Artikel oben.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ order of a search result in the agent interface. Up: oldest on top. Down: latest on top.'
         }
         =
         'Definiert die Standard-Sortierung der FAQ-Suche im Agenten-Interface. Auf: Ältester FAQ-Artikel oben. Ab: Neuester FAQ-Artikel oben.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ order of a search result in the customer interface. Up: oldest on top. Down: latest on top.'
         }
         =
         'Definiert die Standard-Sortierung der FAQ-Suche im Kunden-Interface. Auf: Ältester FAQ-Artikel oben. Ab: Neuester FAQ-Artikel oben.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the default FAQ order of a search result in the public interface. Up: oldest on top. Down: latest on top.'
         }
         =
         'Definiert die Standard-Sortierung der FAQ-Suche im Public-Interface. Auf: Ältester FAQ-Artikel oben. Ab: Neuester FAQ-Artikel oben.';
-    $Self->{Translation}->{'Defines the default shown FAQ search attribute for FAQ search screen.'}
+    $Lang->{'Defines the default shown FAQ search attribute for FAQ search screen.'}
         =
         'Definiert die Standardattribute für die Suche in den Häufig-gestellten-Fragen im Häufig-gestellte-Fragen Suchdialog.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the information to be inserted in a FAQ based Ticket. "Full FAQ" includes text, attachments and inline images.'
         }
         =
         'Definiert die Informationen, welche in ein FAQ-basierendes Ticket eingegeben werden. "Komplette FAQ" beinhaltet den Text, Anhänge und Inline-Bilder.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the parameters for the dashboard backend. "Limit" defines the number of entries displayed by default. "Group" is used to restrict access to the plugin (e. g. Group: admin;group1;group2;). "Default" indicates if the plugin is enabled by default or if the user needs to enable it manually.'
         }
         =
         'Definiert die Parameter für das Übersichtsseiten-Backend. "Limit" definiert die Anzahl der Einträge, die standardmäßig angezeigt werden. "Group" wird verwendet, um den Zugriff auf das Plugin zu begrenzen (bspw. Group: admin;group1;group2;). "Default" steuert, ob das Plugin standardmäßig aktiviert ist oder ob der User es manuell aktivieren muss.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the shown columns in the FAQ Explorer. This option has no effect on the position of the column.'
         }
         =
         'Definert die angezeigten Spalten im FAQ-Explorer. Diese Option hat keine Auswirkung auf die Position der Spalten.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the shown columns in the FAQ journal. This option has no effect on the position of the column.'
         }
         =
         'Definert die angezeigten Spalten im FAQ-Journal. Diese Option hat keine Auswirkung auf die Position der Spalten.';
-    $Self->{Translation}->{
+    $Lang->{
         'Defines the shown columns in the FAQ search. This option has no effect on the position of the column.'
         }
         =
         'Definert die angezeigten Spalten in der FAQ-Suche. Diese Option hat keine Auswirkung auf die Position der Spalten.';
-    $Self->{Translation}->{'Defines where the \'Insert FAQ\' link will be displayed.'}
+    $Lang->{'Defines where the \'Insert FAQ\' link will be displayed.'}
         = 'Definiert wo der Link aus \'FAQ einfügen\' angezeigt wird.';
-    $Self->{Translation}->{'Definition of FAQ item free text field.'}
+    $Lang->{'Definition of FAQ item free text field.'}
         = 'Definition der freien Textfelder.';
-    $Self->{Translation}->{'Delete this FAQ'} = 'Diese FAQ löschen!';
-    $Self->{Translation}->{
+    $Lang->{'Delete this FAQ'} = 'Diese FAQ löschen!';
+    $Lang->{
         'Dynamic fields shown in the FAQ add screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "FAQ hinzufügen" im Agenten-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ edit screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "FAQ bearbeiten" im Agenten-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ overview screen of the customer interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "FAQ Übersicht" im Kunden-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ overview screen of the public interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "FAQ Übersicht" im Public-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ print screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "FAQ drucken" im Agenten-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ print screen of the customer interface. Possible settings: 0 = Disabled, 1 = Enabled.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "FAQ drucken" im Kunden-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ print screen of the public interface. Possible settings: 0 = Disabled, 1 = Enabled.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "FAQ drucken" im Public-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ search screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and shown by default.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "FAQ durchsuchen" im Agenten-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ search screen of the customer interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and shown by default.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "FAQ durchsuchen" im Kunden-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ search screen of the public interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and shown by default.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "FAQ durchsuchen" im Public-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ small format overview screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled.'
         }
         =
         'Anzeige von dynamischen Felder in der Öberfläche "small FAQ Übersicht" im Agenten-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ zoom screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled.'
         }
         =
         'Anzeige von dynamischen Feldern in der Oberfläche "FAQ Zoom" im Agenten-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ zoom screen of the customer interface. Possible settings: 0 = Disabled, 1 = Enabled.'
         }
         =
         'Anzeige von dynamischen Feldern in der Oberfläche "FAQ Zoom" im Kunden-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{
+    $Lang->{
         'Dynamic fields shown in the FAQ zoom screen of the public interface. Possible settings: 0 = Disabled, 1 = Enabled.'
         }
         =
         'Anzeige von dynamischen Feldern in der Oberfläche "FAQ Zoom" im Public-Interface. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.';
-    $Self->{Translation}->{'Edit this FAQ'} = 'FAQ bearbeiten';
-    $Self->{Translation}->{'Enable multiple languages on FAQ module.'}
+    $Lang->{'Edit this FAQ'} = 'FAQ bearbeiten';
+    $Lang->{'Enable multiple languages on FAQ module.'}
         = 'Multiple Sprachen im FAQ-Modul aktivieren.';
-    $Self->{Translation}->{'Enable voting mechanism on FAQ module.'}
+    $Lang->{'Enable voting mechanism on FAQ module.'}
         = 'Bewertungs-Mechanismus im FAQ-Modul aktivieren.';
-    $Self->{Translation}->{'FAQ AJAX Responder'}               = '';
-    $Self->{Translation}->{'FAQ AJAX Responder for Richtext.'} = '';
-    $Self->{Translation}->{'FAQ Area'}                         = 'FAQ-Bereich';
-    $Self->{Translation}->{'FAQ Area.'}                        = 'FAQ-Bereich.';
-    $Self->{Translation}->{'FAQ Delete.'}                      = 'FAQ Löschen.';
-    $Self->{Translation}->{'FAQ Edit.'}                        = 'FAQ Bearbeiten.';
-    $Self->{Translation}->{'FAQ Journal Overview "Small" Limit'}
+    $Lang->{'FAQ AJAX Responder'}               = '';
+    $Lang->{'FAQ AJAX Responder for Richtext.'} = '';
+    $Lang->{'FAQ Area'}                         = 'FAQ-Bereich';
+    $Lang->{'FAQ Area.'}                        = 'FAQ-Bereich.';
+    $Lang->{'FAQ Delete.'}                      = 'FAQ Löschen.';
+    $Lang->{'FAQ Edit.'}                        = 'FAQ Bearbeiten.';
+    $Lang->{'FAQ Journal Overview "Small" Limit'}
         = 'FAQ-Journal Anzeige-Limit für die Small-Ansicht';
-    $Self->{Translation}->{'FAQ Overview "Small" Limit'} = 'FAQ-Übersicht "kleines" Limit';
-    $Self->{Translation}->{'FAQ Print.'}                 = 'FAQ Drucken.';
-    $Self->{Translation}->{'FAQ limit per page for FAQ Journal Overview "Small"'}
+    $Lang->{'FAQ Overview "Small" Limit'} = 'FAQ-Übersicht "kleines" Limit';
+    $Lang->{'FAQ Print.'}                 = 'FAQ Drucken.';
+    $Lang->{'FAQ limit per page for FAQ Journal Overview "Small"'}
         = 'FAQ limit pro Seite für das FAQ-Journal in der Small-Ansicht.';
-    $Self->{Translation}->{'FAQ limit per page for FAQ Overview "Small"'}
+    $Lang->{'FAQ limit per page for FAQ Overview "Small"'}
         = 'FAQ limit pro Seite für die Small-Ansicht.';
-    $Self->{Translation}->{'FAQ search backend router of the agent interface.'}
+    $Lang->{'FAQ search backend router of the agent interface.'}
         = 'Such-Backend-Router für die FAQ-Suche im Agenten-Interface.';
-    $Self->{Translation}->{'Field4'} = 'Feld4';
-    $Self->{Translation}->{'Field5'} = 'Feld5';
-    $Self->{Translation}->{'Frontend module registration for the public interface.'}
+    $Lang->{'Field4'} = 'Feld4';
+    $Lang->{'Field5'} = 'Feld5';
+    $Lang->{'Frontend module registration for the public interface.'}
         = 'Frontend-Modul-Registrierung für das Public-Interface';
-    $Self->{Translation}->{'Full FAQ'} = 'Vollständiges FAQ';
-    $Self->{Translation}->{'Group for the approval of FAQ articles.'}
+    $Lang->{'Full FAQ'} = 'Vollständiges FAQ';
+    $Lang->{'Group for the approval of FAQ articles.'}
         = 'Gruppe für die Freigabe von FAQ-Artikeln.';
-    $Self->{Translation}->{'History of this FAQ'} = 'FAQ-Historie';
-    $Self->{Translation}->{'Include internal fields on a FAQ based Ticket.'}
+    $Lang->{'History of this FAQ'} = 'FAQ-Historie';
+    $Lang->{'Include internal fields on a FAQ based Ticket.'}
         = 'Interne FAQ-Felder in einem FAQ-basiertenTicket verwenden.';
-    $Self->{Translation}->{'Include the name of each field in a FAQ based Ticket.'}
+    $Lang->{'Include the name of each field in a FAQ based Ticket.'}
         = 'Den Namen jedes FAQ-Feldes einem FAQ-basierten Ticket verwenden.';
-    $Self->{Translation}->{'Interfaces where the quick search should be shown.'}
+    $Lang->{'Interfaces where the quick search should be shown.'}
         = 'Oberfläche auf der die Schnellsuche angezeigt werden soll';
-    $Self->{Translation}->{'Journal'}             = 'Journal';
-    $Self->{Translation}->{'Language Management'} = 'Sprachen-Verwaltung';
-    $Self->{Translation}->{'Link another object to this FAQ item'}
+    $Lang->{'Journal'}             = 'Journal';
+    $Lang->{'Language Management'} = 'Sprachen-Verwaltung';
+    $Lang->{'Link another object to this FAQ item'}
         = 'Diese FAQ mit einem anderen Objekt verknüpfen';
-    $Self->{Translation}->{'List of state types which can be used in the agent interface.'} =
+    $Lang->{'List of state types which can be used in the agent interface.'} =
         'Liste der Statustypen, die in der Agentenoberfläche genutzt werden können.';
-    $Self->{Translation}->{'List of state types which can be used in the customer interface.'} =
+    $Lang->{'List of state types which can be used in the customer interface.'} =
         'Liste der Statustypen, die in der Kundenoberfläche genutzt werden können.';
-    $Self->{Translation}->{'List of state types which can be used in the public interface.'} =
+    $Lang->{'List of state types which can be used in the public interface.'} =
         'Liste der Statustypen, die in der öffentlichen Oberfläche genutzt werden können.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum number of FAQ articles to be displayed in the FAQ Explorer result of the agent interface.'
         }
         =
         'Maximale Anzahl von FAQ-Artikeln die im FAQ-Explorerl im Agenten-Interface angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum number of FAQ articles to be displayed in the FAQ Explorer result of the customer interface.'
         }
         =
         'Maximale Anzahl von FAQ-Artikeln die in der FAQ-Explorer im Kunden-Interface angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum number of FAQ articles to be displayed in the FAQ Explorer result of the public interface.'
         }
         =
         'Maximale Anzahl von FAQ-Artikeln die in der FAQ-Explorer im Public-Interface angezeigt werden.';
-    $Self->{Translation}->{
-        'Maximum number of FAQ articles to be displayed in the FAQ journal in the agent interface.'}
+    $Lang->{
+        'Maximum number of FAQ articles to be displayed in the FAQ journal in the agent interface.'
+        }
         =
         'Maximale Anzahl von FAQ-Artikeln die im FAQ-Journal im Agenten-Interface angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum number of FAQ articles to be displayed in the result of a search in the agent interface.'
         }
         =
         'Maximale Anzahl von FAQ-Artikeln die in der FAQ-Suche im Agenten-Interface angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum number of FAQ articles to be displayed in the result of a search in the customer interface.'
         }
         =
         'Maximale Anzahl von FAQ-Artikeln die in der FAQ-Suche im Kunden-Interface angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum number of FAQ articles to be displayed in the result of a search in the public interface.'
         }
         =
         'Maximale Anzahl von FAQ-Artikeln die in der FAQ-Suche im Public-Interface angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum size of the titles in a FAQ article to be shown in the FAQ Explorer in the agent interface.'
         }
         =
         'Maximale Größe von Titeln in Häufig-gestellten-Fragen-Beiträgen welche im Häufig-gestellte-Fragen-Explorer der Agentenübersicht angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum size of the titles in a FAQ article to be shown in the FAQ Explorer in the customer interface.'
         }
         =
         'Maximale Größe von Titeln in Häufig-gestellten-Fragen-Beiträgen welche im Häufig-gestellte-Fragen-Explorer der Kundenübersicht angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum size of the titles in a FAQ article to be shown in the FAQ Explorer in the public interface.'
         }
         =
         'Maximale Größe von Titeln in Häufig-gestellten-Fragen-Beiträgen welche im Häufig-gestellte-Fragen-Explorer der öffentlichen Übersicht angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum size of the titles in a FAQ article to be shown in the FAQ Search in the agent interface.'
         }
         =
         'Maximale Größe von Titeln in Häufig-gestellten-Fragen-Beiträgen welche in der Häufig-gestellte-Fragen-Suche der Agentenübersicht angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum size of the titles in a FAQ article to be shown in the FAQ Search in the customer interface.'
         }
         =
         'Maximale Größe von Titeln in Häufig-gestellten-Fragen-Beiträgen welche in der Häufig-gestellte-Fragen-Suche der Kundenübersicht angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum size of the titles in a FAQ article to be shown in the FAQ Search in the public interface.'
         }
         =
         'Maximale Größe von Titeln in Häufig-gestellten-Fragen-Beiträgen welche in der Häufig-gestellte-Fragen-Suche der öffentlichen Übersicht angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Maximum size of the titles in a FAQ article to be shown in the FAQ journal in the agent interface.'
         }
         =
         'Maximale Größe von Titeln in Häufig-gestellten-Fragen-Beiträgen welche in FAQ-Berichten in der Agentenübersicht angezeigt werden.';
-    $Self->{Translation}->{
-        'Module to generate HTML OpenSearch profile for short FAQ search in the public interface.'}
+    $Lang->{
+        'Module to generate HTML OpenSearch profile for short FAQ search in the public interface.'
+        }
         =
         'Modul zum Generieren des HTML "OpenSearch" Profils zur FAQ-Suche in der öffentlichen Oberfläche.';
-    $Self->{Translation}->{
+    $Lang->{
         'Module to generate HTML OpenSearch profile for short faq search in the customer interface.'
         }
         =
         'Modul zum Generieren des HTML "OpenSearch" Profils zur FAQ-Suche in der Kundenoberfläche.';
-    $Self->{Translation}->{'Module to generate html OpenSearch profile for short faq search.'} =
+    $Lang->{'Module to generate html OpenSearch profile for short faq search.'} =
         'Modul zum Generieren des HTML "OpenSearch" Profils zur FAQ-Suche über das Browser-Suchfeld.';
-    $Self->{Translation}->{'New FAQ Article'} = 'Neuer FAQ-Artikel';
-    $Self->{Translation}->{'New FAQ articles need approval before they get published.'}
+    $Lang->{'New FAQ Article'} = 'Neuer FAQ-Artikel';
+    $Lang->{'New FAQ articles need approval before they get published.'}
         = 'Neue FAQ-Artikel benötigen eine Freigabe vor der Veröffentlichung.';
     $Self->{Translation}
         ->{'Number of FAQ articles to be displayed in the FAQ Explorer of the customer interface.'}
@@ -3537,23 +3546,23 @@ sub Data {
         ->{'Number of FAQ articles to be displayed in the FAQ Explorer of the public interface.'}
         =
         'Maximale Anzahl von FAQ-Artikeln die im FAQ-Explorer in der öffentlichen Oberfläche angezeigt werden.';
-    $Self->{Translation}->{
+    $Lang->{
         'Number of FAQ articles to be displayed on each page of a search result in the customer interface.'
         }
         =
         'Setzt in Suchergebnissen die Anzahl von FAQ-Artikeln pro Seite in der Kundenoberfläche.';
-    $Self->{Translation}->{
+    $Lang->{
         'Number of FAQ articles to be displayed on each page of a search result in the public interface.'
         }
         =
         'Setzt in Suchergebnissen die Anzahl von FAQ-Artikeln pro Seite in der öffentlichen Oberfläche.';
-    $Self->{Translation}->{'Number of shown items in last changes.'}
+    $Lang->{'Number of shown items in last changes.'}
         = 'Anzahl der zu anzeigenden Artikel in letzten Änderungen.';
-    $Self->{Translation}->{'Number of shown items in last created.'}
+    $Lang->{'Number of shown items in last created.'}
         = 'Anzahl der anzuzeigenden Artikel in zuletzt erstellte Artikel.';
-    $Self->{Translation}->{'Number of shown items in the top 10 feature.'}
+    $Lang->{'Number of shown items in the top 10 feature.'}
         = 'Anzahl der anzuzeigenden Artikel im Top 10 Feature.';
-    $Self->{Translation}->{
+    $Lang->{
         'Parameters for the pages (in which the FAQ items are shown) of the small FAQ journal overview.'
         }
         =
@@ -3562,22 +3571,22 @@ sub Data {
         ->{'Parameters for the pages (in which the FAQ items are shown) of the small FAQ overview.'}
         =
         'Parameter für die Seiten (in denen FAQ-Artikel angezeigt werden) für die Small-Ansicht des FAQ-Overiews.';
-    $Self->{Translation}->{'Print this FAQ'}     = 'FAQ drucken';
-    $Self->{Translation}->{'Public FAQ Print.'}  = 'Öffentliches FAQ Drucken.';
-    $Self->{Translation}->{'Public FAQ Zoom.'}   = '';
-    $Self->{Translation}->{'Public FAQ search.'} = 'Öffentliches FAQ Suchen.';
-    $Self->{Translation}->{'Public FAQ.'}        = 'Öffentliches FAQ.';
-    $Self->{Translation}->{'Queue for the approval of FAQ articles.'}
+    $Lang->{'Print this FAQ'}     = 'FAQ drucken';
+    $Lang->{'Public FAQ Print.'}  = 'Öffentliches FAQ Drucken.';
+    $Lang->{'Public FAQ Zoom.'}   = '';
+    $Lang->{'Public FAQ search.'} = 'Öffentliches FAQ Suchen.';
+    $Lang->{'Public FAQ.'}        = 'Öffentliches FAQ.';
+    $Lang->{'Queue for the approval of FAQ articles.'}
         = 'Queue für die Freigabe von FAQ-Artikeln.';
-    $Self->{Translation}->{'Rates for voting. Key must be in percent.'}
+    $Lang->{'Rates for voting. Key must be in percent.'}
         = 'Gewichtung für die Bewertung. Der Key muss in Prozent angegeben werden.';
-    $Self->{Translation}->{'S'}          = 'S';
-    $Self->{Translation}->{'Search FAQ'} = 'FAQ durchsuchen';
+    $Lang->{'S'}          = 'S';
+    $Lang->{'Search FAQ'} = 'FAQ durchsuchen';
     $Self->{Translation}
         ->{'Set the default height (in pixels) of inline HTML fields in AgentFAQZoom.'}
         =
         'Setzt die maximale Höhe (in Pixeln) von Inline-HTML-Felder in AgentFAQZoom.';
-    $Self->{Translation}->{
+    $Lang->{
         'Set the default height (in pixels) of inline HTML fields in CustomerFAQZoom (and PublicFAQZoom).'
         }
         =
@@ -3586,7 +3595,7 @@ sub Data {
         ->{'Set the maximum height (in pixels) of inline HTML fields in AgentFAQZoom.'}
         =
         'Setzt die maximale Höhe (in Pixeln) von Inline-HTML-Felder in AgentFAQZoom.';
-    $Self->{Translation}->{
+    $Lang->{
         'Set the maximum height (in pixels) of inline HTML fields in CustomerFAQZoom (and PublicFAQZoom).'
         }
         =
@@ -3595,7 +3604,7 @@ sub Data {
         ->{'Show "Insert FAQ Link" Button in AgentFAQZoomSmall for public FAQ Articles.'}
         =
         'Zeigt die Schaltfläche "FAQ-Link einfügen" in AgentFAQZoomSmall für öffentliche FAQ-Artikel an.';
-    $Self->{Translation}->{
+    $Lang->{
         'Show "Insert FAQ Text & Link" / "Insert Full FAQ & Link" Button in AgentFAQZoomSmall for public FAQ Articles.'
         }
         =
@@ -3604,33 +3613,33 @@ sub Data {
         ->{'Show "Insert FAQ Text" / "Insert Full FAQ" Button in AgentFAQZoomSmall.'}
         =
         'Zeigt die Schaltfläche "FAQ-Text einfügen / Komplette FAQ einfügen" in AgentFAQZoomSmall an.';
-    $Self->{Translation}->{'Show FAQ Article with HTML.'}
+    $Lang->{'Show FAQ Article with HTML.'}
         = 'HTML Darstellung der FAQ-Artikel einschalten.';
-    $Self->{Translation}->{'Show FAQ path yes/no.'} = 'FAQ Pfad anzeigen ja/nein.';
-    $Self->{Translation}->{'Show invalid items in the FAQ Explorer result of the agent interface.'}
+    $Lang->{'Show FAQ path yes/no.'} = 'FAQ Pfad anzeigen ja/nein.';
+    $Lang->{'Show invalid items in the FAQ Explorer result of the agent interface.'}
         =
         '';
-    $Self->{Translation}->{'Show items of subcategories.'}
+    $Lang->{'Show items of subcategories.'}
         = 'Artikel aus Subkategorien anzeigen ja/nein.';
-    $Self->{Translation}->{'Show last change items in defined interfaces.'}
+    $Lang->{'Show last change items in defined interfaces.'}
         = 'Interfaces in denen das LastChange Feature angezeigt werden soll.';
-    $Self->{Translation}->{'Show last created items in defined interfaces.'}
+    $Lang->{'Show last created items in defined interfaces.'}
         = 'Interfaces in denen das LastCreate Feature angezeigt werden soll.';
-    $Self->{Translation}->{'Show top 10 items in defined interfaces.'}
+    $Lang->{'Show top 10 items in defined interfaces.'}
         = 'Interfaces in denen das Top 10 Feature angezeigt werden soll.';
-    $Self->{Translation}->{'Show voting in defined interfaces.'}
+    $Lang->{'Show voting in defined interfaces.'}
         = 'Interfaces in denen das Voting Feature angezeigt werden soll.';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu that allows linking a FAQ with another object in the zoom view of such FAQ of the agent interface.'
         }
         =
         'Zeigt einen Link in der Menu-Leiste in der Zoom-Ansicht im Agenten-Interface an, der es ermöglicht einen FAQ-Artikel mit anderen Objekten zu verknüpfen.';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu that allows to delete a FAQ in its zoom view in the agent interface.'
         }
         =
         'Zeigt einen Link in der Menu-Leiste in der Zoom-Ansicht im Agenten-Interface an, der es ermöglicht einen FAQ-Artikel zu löschen.';
-    $Self->{Translation}->{
+    $Lang->{
         'Shows a link in the menu to access the history of a FAQ in its zoom view of the agent interface.'
         }
         =
@@ -3647,37 +3656,37 @@ sub Data {
         ->{'Shows a link in the menu to print a FAQ in the its zoom view of the agent interface.'}
         =
         'Zeigt einen Link in der Menu-Leiste in der Zoom-Ansicht im Agenten-Interface an, der es ermöglicht einen FAQ-Artikel zu drucken.';
-    $Self->{Translation}->{'Text Only'} = 'Nur Text';
-    $Self->{Translation}->{'The identifier for a FAQ, e.g. FAQ#, KB#, MyFAQ#. The default is FAQ#.'}
+    $Lang->{'Text Only'} = 'Nur Text';
+    $Lang->{'The identifier for a FAQ, e.g. FAQ#, KB#, MyFAQ#. The default is FAQ#.'}
         =
         'Der Identifikator für einen FAQ-Artikel, z. B. FAQ#, KB#, MyFAQ#. Der Standardwert ist FAQ#.';
-    $Self->{Translation}->{
+    $Lang->{
         'This setting defines that a \'FAQ\' object can be linked with other \'FAQ\' objects using the \'Normal\' link type.'
         }
         =
         'Definiert, dass ein \'FAQ\'-Objekte mit dem Linktyp \'Normal\' mit anderen \'FAQ\'-Objekten verlinkt werden kann.';
-    $Self->{Translation}->{
+    $Lang->{
         'This setting defines that a \'FAQ\' object can be linked with other \'FAQ\' objects using the \'ParentChild\' link type.'
         }
         =
         'Definiert, dass ein \'FAQ\'-Objekte mit dem Linktyp \'ParentChild\' mit anderen \'FAQ\'-Objekten verlinkt werden kann.';
-    $Self->{Translation}->{
+    $Lang->{
         'This setting defines that a \'FAQ\' object can be linked with other \'Ticket\' objects using the \'Normal\' link type.'
         }
         =
         'Definiert, dass ein \'FAQ\'-Objekte mit dem Linktyp \'Normal\' mit anderen \'Ticket\'-Objekten verlinkt werden kann.';
-    $Self->{Translation}->{
+    $Lang->{
         'This setting defines that a \'FAQ\' object can be linked with other \'Ticket\' objects using the \'ParentChild\' link type.'
         }
         =
         'Definiert, dass ein \'FAQ\'-Objekte mit dem Linktyp \'ParentChild\' mit anderen \'Ticket\'-Objekten verlinkt werden kann.';
-    $Self->{Translation}->{'Ticket body for approval of FAQ article.'}
+    $Lang->{'Ticket body for approval of FAQ article.'}
         = 'Body des Tickets zur Freigabe eines FAQ-Artikels.';
-    $Self->{Translation}->{'Ticket subject for approval of FAQ article.'}
+    $Lang->{'Ticket subject for approval of FAQ article.'}
         = 'Betreff des Tickets zur Freigabe eines FAQ-Artikels.';
-    $Self->{Translation}->{'Toolbar Item for a shortcut.'}
+    $Lang->{'Toolbar Item for a shortcut.'}
         = 'Werkzeugleisteneintrag für den Schnellzugriff.';
-    $Self->{Translation}->{'public (public)'} = 'öffentlich (öffentlich)';
+    $Lang->{'public (public)'} = 'öffentlich (öffentlich)';
 
     $Lang->{'First Customer Article'}        = 'Erste Kundenmeldung';
     $Lang->{'General Ticket Data'}           = 'Allgemeine Vorgangsinformationen';
@@ -3809,7 +3818,8 @@ sub Data {
     $Lang->{'Cache all possible values.'} = 'Mögliche Werte der Datenbank werden gecached.';
     $Lang->{'0 deactivates caching.'}     = '0 deaktiviert den Cache.';
     $Lang->{
-        'If active, the usage of values which recently added to the database may cause an error.'}
+        'If active, the usage of values which recently added to the database may cause an error.'
+        }
         = 'Wenn aktiv, kann die Verwendung von Werten, welche kürzlich zur Datenbank hinzugefügt wurden, Fehler verursachen.';
     $Lang->{'Specify if key is added to HTML-attribute title.'}
         = 'Gibt an, ob der Schlüssel im HTML-Attribut title angefügt wird.';
@@ -3891,10 +3901,10 @@ sub Data {
         = 'Gibt die maximale Anzahl möglicher Einträge an.';
 
     # Other
-    $Lang->{'ITSMConfigItemReference'} = 'ITSM-CMDB Auswahl';
-    $Lang->{'Config Item ID'}          = 'Config Item ID';
-    $Lang->{'Config Item Name'}        = 'Config Item Name';
-    $Lang->{'Config Item Number'}      = 'Config Item Nummer';
+    $Lang->{'ITSMConfigItemReference'}               = 'ITSM-CMDB Auswahl';
+    $Lang->{'Config Item ID'}                        = 'Config Item ID';
+    $Lang->{'Config Item Name'}                      = 'Config Item Name';
+    $Lang->{'Config Item Number'}                    = 'Config Item Nummer';
     $Lang->{'Config Item Name (Config Item Number)'} = 'Config Item Name (Config Item Nummer)';
     $Lang->{'Config Item Number (Config Item Name)'} = 'Config Item Nummer (Config Item Name)';
 
@@ -4026,23 +4036,23 @@ sub Data {
     $Lang->{'Semicolon (;)'} = 'Semikolon (;)';
     $Lang->{'Comma (,)'}     = 'Komma (,)';
 
-    $Self->{Translation}->{'Remove attachment'} = 'Anlage entfernen';
-    $Self->{Translation}->{'Select a file to replace current attachment'} =
+    $Lang->{'Remove attachment'} = 'Anlage entfernen';
+    $Lang->{'Select a file to replace current attachment'} =
         'Dateiauswahl um akt. Anlage zu ersetzen';
-    $Self->{Translation}->{'Invalid content - file size on disk has been changed'} =
+    $Lang->{'Invalid content - file size on disk has been changed'} =
         'Ungültiger Inhalt - tatsächliche Dateigröße hat sich geändert';
-    $Self->{Translation}->{'Invalid md5sum - The file might have been changed'} =
+    $Lang->{'Invalid md5sum - The file might have been changed'} =
         'Ungültige MD5-Summe - Der Dateiinhalt wurde wahrscheinlich geändert';
-    $Self->{Translation}->{'Defines the backend module used for attachment storage.'} =
+    $Lang->{'Defines the backend module used for attachment storage.'} =
         'Definiert das Backend-Modul für die Speicherung von Anhängen.';
-    $Self->{Translation}->{'A list of all available CI-attachment storage backends.'} =
+    $Lang->{'A list of all available CI-attachment storage backends.'} =
         'Eine Liste aller verfügbarer Backends für die Speicherung von CI-Anhängen.';
-    $Self->{Translation}->{
+    $Lang->{
         'Frontend module registration for the CI-AgentAttachmentStorage object in the agent interface.'
         }
         =
         'Frontendmodul-Registration des CI-AgentAttachmentStorage-Objekts im Agent-Interface.';
-    $Self->{Translation}->{
+    $Lang->{
         'The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the OTRS-Home.'
         }
         =
@@ -4077,6 +4087,254 @@ sub Data {
         = 'Legt fest, ob der Service in Auswahlfeldern übersetzt werden soll.';
     $Lang->{'Defines whether the sla should be translated in the selection box.'}
         = 'Legt fest, ob die SLA in Auswahlfeldern übersetzt werden soll.';
+
+    $Lang->{'Alternative to'}        = 'Alternativ zu';
+    $Lang->{'Availability'}          = 'Verfügbarkeit';
+    $Lang->{'Back End'}              = 'Backend';
+    $Lang->{'Connected to'}          = 'Verbunden mit';
+    $Lang->{'Current State'}         = 'Aktueller Status';
+    $Lang->{'Demonstration'}         = 'Demonstration';
+    $Lang->{'Depends on'}            = 'Hängt ab von';
+    $Lang->{'End User Service'}      = 'Anwender-Service';
+    $Lang->{'Errors'}                = 'Fehler';
+    $Lang->{'Front End'}             = 'Frontend';
+    $Lang->{'IT Management'}         = 'IT Management';
+    $Lang->{'IT Operational'}        = 'IT Betrieb';
+    $Lang->{'Impact'}                = 'Auswirkung';
+    $Lang->{'Incident State'}        = 'Vorfallsstatus';
+    $Lang->{'Includes'}              = 'Beinhaltet';
+    $Lang->{'Other'}                 = 'Sonstiges';
+    $Lang->{'Part of'}               = 'Teil von';
+    $Lang->{'Project'}               = 'Projekt';
+    $Lang->{'Recovery Time'}         = 'Wiederherstellungszeit';
+    $Lang->{'Relevant to'}           = 'Relevant für';
+    $Lang->{'Reporting'}             = 'Reporting';
+    $Lang->{'Required for'}          = 'Benötigt für';
+    $Lang->{'Resolution Rate'}       = 'Lösungszeit';
+    $Lang->{'Response Time'}         = 'Reaktionszeit';
+    $Lang->{'SLA Overview'}          = 'SLA-Übersicht';
+    $Lang->{'Service Overview'}      = 'Dienstübersicht';
+    $Lang->{'Service-Area'}          = 'Service-Bereich';
+    $Lang->{'Training'}              = 'Training';
+    $Lang->{'Transactions'}          = 'Transaktionen';
+    $Lang->{'Underpinning Contract'} = 'Underpinning Contract';
+    $Lang->{'allocation'}            = 'zuordnen';
+
+    # Template: AdminITSMCIPAllocate
+    $Lang->{'Criticality <-> Impact <-> Priority'} = 'Kritikalität <-> Auswirkung <-> Priorität';
+    $Lang->{'Manage the priority result of combinating Criticality <-> Impact.'} =
+        'Verwaltung der Priorität aus der Kombination von Kritikalität <-> Impact.';
+    $Lang->{'Priority allocation'} = 'Priorität zuordnen';
+
+    # Template: AdminSLA
+    $Lang->{'Minimum Time Between Incidents'} = 'Mindestzeit zwischen Incidents';
+
+    # Template: AdminService
+    $Lang->{'Criticality'} = 'Kritikalität';
+
+    # Template: AgentITSMSLAZoom
+    $Lang->{'SLA Information'}     = 'SLA-Informationen';
+    $Lang->{'Last changed'}        = 'Zuletzt geändert';
+    $Lang->{'Last changed by'}     = 'Zuletzt geändert von';
+    $Lang->{'Associated Services'} = 'Zugehörige Services';
+
+    # Template: AgentITSMServiceZoom
+    $Lang->{'Service Information'}    = 'Service-Informationen';
+    $Lang->{'Current incident state'} = 'Aktueller Vorfallstatus';
+    $Lang->{'Associated SLAs'}        = 'Zugehörige SLAs';
+
+    # Perl Module: Kernel/Modules/AgentITSMServicePrint.pm
+    $Lang->{'Current Incident State'} = 'Aktueller Vorfallsstatus';
+
+    # SysConfig
+    $Lang->{'Both'} = '';
+    $Lang->{
+        'Frontend module registration for the AdminITSMCIPAllocate configuration in the admin area.'
+        }
+        =
+        '';
+    $Lang->{'Frontend module registration for the AgentITSMSLA object in the agent interface.'} =
+        '';
+    $Lang->{'Frontend module registration for the AgentITSMSLAPrint object in the agent interface.'}
+        =
+        '';
+    $Lang->{'Frontend module registration for the AgentITSMSLAZoom object in the agent interface.'}
+        =
+        '';
+    $Lang->{'Frontend module registration for the AgentITSMService object in the agent interface.'}
+        =
+        '';
+    $Lang->{
+        'Frontend module registration for the AgentITSMServicePrint object in the agent interface.'}
+        =
+        '';
+    $Lang->{
+        'Frontend module registration for the AgentITSMServiceZoom object in the agent interface.'}
+        =
+        '';
+    $Lang->{'ITSM SLA Overview.'}                                         = '';
+    $Lang->{'ITSM Service Overview.'}                                     = '';
+    $Lang->{'Incident'}                                                   = '';
+    $Lang->{'Incident State Type'}                                        = '';
+    $Lang->{'Incident State Type.'}                                       = '';
+    $Lang->{'Manage priority matrix.'}                                    = '';
+    $Lang->{'Module to show back link in service menu.'}                  = '';
+    $Lang->{'Module to show back link in sla menu.'}                      = '';
+    $Lang->{'Module to show print link in service menu.'}                 = '';
+    $Lang->{'Module to show print link in sla menu.'}                     = '';
+    $Lang->{'Module to show the link link in service menu.'}              = '';
+    $Lang->{'Operational'}                                                = '';
+    $Lang->{'Parameters for the incident states in the preference view.'} = '';
+    $Lang->{'SLA Print.'}                                                 = '';
+    $Lang->{'SLA Zoom.'}                                                  = '';
+    $Lang->{'Service Print.'}                                             = '';
+    $Lang->{'Service Zoom.'}                                              = '';
+    $Lang->{
+        'Set the type and direction of links to be used to calculate the incident state. The key is the name of the link type (as defined in LinkObject::Type), and the value is the direction of the IncidentLinkType that should be followed to calculate the incident state. For example if the IncidentLinkType is set to \'DependsOn\', and the Direction is \'Source\', only \'Depends on\' links will be followed (and not the opposite link \'Required for\') to calculate the incident state. You can add more link types ad directions as you like, e.g. \'Includes\' with the direction \'Target\'. All link types defined in the sysconfig options LinkObject::Type are possible and the direction can be \'Source\', \'Target\', or \'Both\'. IMPORTANT: AFTER YOU MAKE CHANGES TO THIS SYSCONFIG OPTION YOU NEED TO RUN THE SCRIPT bin/otrs.ITSMConfigItemIncidentStateRecalculate.pl SO THAT ALL INCIDENT STATES WILL BE RECALCULATED BASED ON THE NEW SETTINGS!'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMChange\' object can be linked with \'Ticket\' objects using the \'Normal\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with \'FAQ\' objects using the \'Normal\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with \'FAQ\' objects using the \'ParentChild\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with \'FAQ\' objects using the \'RelevantTo\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with \'Service\' objects using the \'AlternativeTo\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with \'Service\' objects using the \'DependsOn\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with \'Service\' objects using the \'RelevantTo\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with \'Ticket\' objects using the \'AlternativeTo\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with \'Ticket\' objects using the \'DependsOn\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with \'Ticket\' objects using the \'RelevantTo\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with other \'ITSMConfigItem\' objects using the \'AlternativeTo\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with other \'ITSMConfigItem\' objects using the \'ConnectedTo\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with other \'ITSMConfigItem\' objects using the \'DependsOn\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with other \'ITSMConfigItem\' objects using the \'Includes\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMConfigItem\' object can be linked with other \'ITSMConfigItem\' objects using the \'RelevantTo\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMWorkOrder\' object can be linked with \'ITSMConfigItem\' objects using the \'DependsOn\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMWorkOrder\' object can be linked with \'ITSMConfigItem\' objects using the \'Normal\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMWorkOrder\' object can be linked with \'Service\' objects using the \'DependsOn\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMWorkOrder\' object can be linked with \'Service\' objects using the \'Normal\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'ITSMWorkOrder\' object can be linked with \'Ticket\' objects using the \'Normal\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'Service\' object can be linked with \'FAQ\' objects using the \'Normal\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'Service\' object can be linked with \'FAQ\' objects using the \'ParentChild\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines that a \'Service\' object can be linked with \'FAQ\' objects using the \'RelevantTo\' link type.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines the link type \'AlternativeTo\'. If the source name and the target name contain the same value, the resulting link is a non-directional one. If the values are different, the resulting link is a directional link.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines the link type \'ConnectedTo\'. If the source name and the target name contain the same value, the resulting link is a non-directional one. If the values are different, the resulting link is a directional link.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines the link type \'DependsOn\'. If the source name and the target name contain the same value, the resulting link is a non-directional one. If the values are different, the resulting link is a directional link.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines the link type \'Includes\'. If the source name and the target name contain the same value, the resulting link is a non-directional one. If the values are different, the resulting link is a directional link.'
+        }
+        =
+        '';
+    $Lang->{
+        'This setting defines the link type \'RelevantTo\'. If the source name and the target name contain the same value, the resulting link is a non-directional one. If the values are different, the resulting link is a directional link.'
+        }
+        =
+        '';
+    $Lang->{'Width of ITSM textareas.'} = '';
 
     # $$STOP$$
 

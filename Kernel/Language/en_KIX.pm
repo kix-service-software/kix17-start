@@ -1,23 +1,37 @@
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# the enclosed file COPYING for license information (GPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/gpl-2.0.txt.
 # --
-
-package Kernel::Language::en_ITSMConfigurationManagement;
+package Kernel::Language::en_KIXBase;
 
 use strict;
 use warnings;
 use utf8;
 
+use vars qw($VERSION);
+$VERSION = qw($Revision$) [1];
+
+# --
 sub Data {
     my $Self = shift;
 
     my $Lang = $Self->{Translation};
 
     return if ref $Lang ne 'HASH';
+
+    # $$START$$
+
+    $Lang->{'Print Richtext'} = 'HTML Print';
+    $Lang->{'Print Standard'} = 'PDF Print';
 
     $Lang->{'CIHistory::ConfigItemCreate'}            = 'New ConfigItem (ID=%s)';
     $Lang->{'CIHistory::VersionCreate'}               = 'New version (ID=%s)';
@@ -40,7 +54,9 @@ sub Data {
     $Lang->{'Licence Key::Quantity'}                  = 'License Key::Quantity';
     $Lang->{'Licence Key::Expiration Date'}           = 'License Key::Expiration Date';
 
-    return 1;
+    # $$STOP$$
+
+    return 0;
 }
 
 1;
