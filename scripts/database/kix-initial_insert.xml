@@ -2114,87 +2114,87 @@ Your OTRS Team
         <Data Key="change_by">1</Data>
         <Data Key="change_time">current_timestamp</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">AgentEnabledByDefault</Data>
         <Data Key="event_value" Type="Quote">Email</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">ArticleAttachmentInclude</Data>
         <Data Key="event_value" Type="Quote">0</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">ArticleSenderTypeID</Data>
         <Data Key="event_value" Type="Quote">1</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">ArticleSenderTypeID</Data>
         <Data Key="event_value" Type="Quote">3</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">1</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">2</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">3</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">4</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">5</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">9</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">10</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">Events</Data>
         <Data Key="event_value" Type="Quote">ArticleCreate</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">NotificationArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">3</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">Recipients</Data>
         <Data Key="event_value" Type="Quote">LinkedPerson</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">TransportEmailTemplate</Data>
         <Data Key="event_value" Type="Quote">Default</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">Transports</Data>
         <Data Key="event_value" Type="Quote">Email</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">VisibleForAgent</Data>
         <Data Key="event_value" Type="Quote">0</Data>
@@ -2210,72 +2210,72 @@ Your OTRS Team
         <Data Key="change_by">1</Data>
         <Data Key="change_time">current_timestamp</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">AgentEnabledByDefault</Data>
         <Data Key="event_value" Type="Quote">Email</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">ArticleAttachmentInclude</Data>
         <Data Key="event_value" Type="Quote">0</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">ArticleSenderTypeID</Data>
         <Data Key="event_value" Type="Quote">1</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">ArticleSenderTypeID</Data>
         <Data Key="event_value" Type="Quote">3</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">1</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">3</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">5</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">10</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">Events</Data>
         <Data Key="event_value" Type="Quote">ArticleCreate</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">NotificationArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">3</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">Recipients</Data>
         <Data Key="event_value" Type="Quote">LinkedPersonCustomer</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">TransportEmailTemplate</Data>
         <Data Key="event_value" Type="Quote">Default</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">Transports</Data>
         <Data Key="event_value" Type="Quote">Email</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">15</Data>
         <Data Key="event_key" Type="Quote">VisibleForAgent</Data>
         <Data Key="event_value" Type="Quote">0</Data>
@@ -2291,72 +2291,72 @@ Your OTRS Team
         <Data Key="change_by">1</Data>
         <Data Key="change_time">current_timestamp</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">AgentEnabledByDefault</Data>
         <Data Key="event_value" Type="Quote">Email</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">ArticleAttachmentInclude</Data>
         <Data Key="event_value" Type="Quote">0</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">ArticleSenderTypeID</Data>
         <Data Key="event_value" Type="Quote">1</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">ArticleSenderTypeID</Data>
         <Data Key="event_value" Type="Quote">3</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">1</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">3</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">5</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">ArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">10</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">Events</Data>
         <Data Key="event_value" Type="Quote">ArticleCreate</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">NotificationArticleTypeID</Data>
         <Data Key="event_value" Type="Quote">3</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">Recipients</Data>
         <Data Key="event_value" Type="Quote">LinkedPerson3rdPerson</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">TransportEmailTemplate</Data>
         <Data Key="event_value" Type="Quote">Default</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">Transports</Data>
         <Data Key="event_value" Type="Quote">Email</Data>
     </Insert>
-    <Insert Table="imexport_format">
+    <Insert Table="notification_event_item">
         <Data Key="notification_id">16</Data>
         <Data Key="event_key" Type="Quote">VisibleForAgent</Data>
         <Data Key="event_value" Type="Quote">0</Data>
@@ -5950,7 +5950,7 @@ TreeView: '0'
     </Insert>
     <Insert Table="imexport_object">
         <Data Key="id" Type="AutoIncrement">4</Data>
-        <Data Key="template_id">DefaultUserEmail</Data>
+        <Data Key="template_id">3</Data>
         <Data Key="data_key" Type="Quote"></Data>
         <Data Key="data_value" Type="Quote"></Data>
     </Insert>
