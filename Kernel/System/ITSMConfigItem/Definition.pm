@@ -263,6 +263,35 @@ sub DefinitionAdd {
         return;
     }
 
+    #---------------------------------------------------------------------------
+    # KIX4OTRS-capeIT
+    # trigger Pre-DefinitionCreate event
+    my $Result = $Self->PreEventHandler(
+        Event => 'DefinitionCreate',
+        Data  => {
+            ClassID          => $Param{ClassID},
+            DefinitionID     => $Param{Definition},
+            LastDefinitionID => $LastDefinition,
+            UserID           => $Param{UserID},
+        },
+        UserID => $Param{UserID},
+    );
+    if ( ( ref($Result) eq 'HASH' ) && ( $Result->{Error} ) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'notice',
+            Message  => "Pre-DefinitionCreate refused DefinitionAdd.",
+        );
+        return $Result;
+    }
+    elsif ( ref($Result) eq 'HASH' ) {
+        for my $ResultKey ( keys %{$Result} ) {
+            $Param{$ResultKey} = $Result->{$ResultKey};
+        }
+    }
+
+    # EO KIX4OTRS-capeIT
+    #---------------------------------------------------------------------------
+
     # set version
     my $Version = 1;
     if ( $LastDefinition->{Version} ) {

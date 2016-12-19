@@ -36,6 +36,9 @@ our @ObjectDependencies = (
     'Kernel::System::Web::Request',
     'Kernel::System::Crypt::PGP',
     'Kernel::System::Crypt::SMIME',
+# NotificationEventX-capeIT
+    'Kernel::System::DynamicField',
+# EO NotificationEventX-capeIT
 );
 
 =head1 NAME
@@ -97,8 +100,96 @@ sub SendNotification {
     # get recipient data
     my %Recipient = %{ $Param{Recipient} };
 
-    # Verify a customer have an email
-    if ( $Recipient{Type} eq 'Customer' && $Recipient{UserID} && !$Recipient{UserEmail} ) {
+# NotificationEventX-capeIT
+    # check if recipient hash has DynamicField
+    if (
+        $Recipient{DynamicFieldName}
+        && $Recipient{DynamicFieldType}
+    ) {
+        # get objects
+        my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
+        my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+        my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+
+        # get ticket
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 1,
+        );
+
+        return 1 if ( !$Ticket{'DynamicField_' . $Recipient{DynamicFieldName}} );
+
+        # get recipients from df
+        my @DFRecipients = ();
+
+        # process values from ticket data
+        my @FieldRecipients = ();
+        if (ref($Ticket{'DynamicField_' . $Recipient{DynamicFieldName}}) eq 'ARRAY') {
+            @FieldRecipients = @{ $Ticket{'DynamicField_' . $Recipient{DynamicFieldName}} };
+        } else {
+            push(@FieldRecipients, $Ticket{'DynamicField_' . $Recipient{DynamicFieldName}});
+        }
+        FIELDRECIPIENT:
+        for my $FieldRecipient (@FieldRecipients) {
+            next FIELDRECIPIENT if !$FieldRecipient;
+
+            my $AddressLine = '';
+            # handle dynamic field by type
+            if ($Recipient{DynamicFieldType} eq 'User') {
+                my %UserData = $UserObject->GetUserData(
+                    User  => $FieldRecipient,
+                    Valid => 1
+                );
+                next FIELDRECIPIENT if !$UserData{UserEmail};
+                $AddressLine = $UserData{UserEmail};
+            } elsif ($Recipient{DynamicFieldType} eq 'CustomerUser') {
+                my %CustomerUser = $CustomerUserObject->CustomerUserDataGet(
+                    User => $FieldRecipient,
+                );
+                next FIELDRECIPIENT if !$CustomerUser{UserEmail};
+                $AddressLine = $CustomerUser{UserEmail};
+            } else {
+                $AddressLine = $FieldRecipient;
+            }
+
+            # generate recipient
+            my %DFRecipient = (
+                Realname  => '',
+                UserEmail => $AddressLine,
+                Type      => $Recipient{Type},
+            );
+
+            # check recipients
+            if ( $DFRecipient{UserEmail} && $DFRecipient{UserEmail} =~ /@/ ) {
+                push (@DFRecipients, \%DFRecipient);
+            }
+        }
+
+        # handle recipients
+        for my $DFRecipient (@DFRecipients) {
+            $Self->SendNotification(
+                TicketID              => $Param{TicketID},
+                UserID                => $Param{UserID},
+                Notification          => $Param{Notification},
+                CustomerMessageParams => $Param{CustomerMessageParams},
+                Recipient             => $DFRecipient,
+                Event                 => $Param{Event},
+                Attachments           => $Param{Attachments},
+            );
+        }
+
+        # done
+        return 1;
+    }
+# EO NotificationEventX-capeIT
+
+    if (
+        $Recipient{Type} eq 'Customer'
+        && $ConfigObject->Get('CustomerNotifyJustToRealCustomer')
+        )
+    {
+        # return if not customer user ID
+        return if !$Recipient{CustomerUserID};
 
         my %CustomerUser = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
             User => $Recipient{UserID},
@@ -158,6 +249,25 @@ sub SendNotification {
             },
         );
     }
+
+# NotificationEventX-capeIT
+    # prepare subject
+    if (
+        defined( $Notification{Data}->{RecipientSubject} )
+        && defined( $Notification{Data}->{RecipientSubject}->[0] )
+        && !$Notification{Data}->{RecipientSubject}->[0]
+    ) {
+        my $TicketNumber = $TicketObject->TicketNumberLookup(
+            TicketID => $Param{TicketID},
+        );
+
+        $Notification{Subject} = $TicketObject->TicketSubjectClean(
+            TicketNumber => $TicketNumber,
+            Subject      => $Notification{Subject},
+            Size         => 0,
+        );
+    }
+# EO NotificationEventX-capeIT
 
     # send notification
     if ( $Recipient{Type} eq 'Agent' ) {
@@ -355,6 +465,61 @@ sub GetTransportRecipients {
         }
     }
 
+# NotificationEventX-capeIT
+    # get object
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+
+    # get dynamic fields
+    my $DynamicFieldList = $DynamicFieldObject->DynamicFieldListGet(
+        Valid      => 1,
+        ObjectType => ['Ticket'],
+    );
+
+    # get dynamic fields config
+    my %DynamicFieldConfig;
+    for my $DynamicField (@{$DynamicFieldList}) {
+        $DynamicFieldConfig{ $DynamicField->{ID} } = \%{$DynamicField};
+    }
+
+    # get recipients by RecipientAgentDF
+    if (
+        $Param{Notification}->{Data}->{RecipientAgentDF}
+        && ref($Param{Notification}->{Data}->{RecipientAgentDF}) eq 'ARRAY'
+    ) {
+        FIELD:
+        for my $ID ( sort( @{ $Param{Notification}->{Data}->{RecipientAgentDF} } ) ) {
+            next FIELD if !$DynamicFieldConfig{$ID};
+
+            # generate recipient
+            my %Recipient = (
+                DynamicFieldName => $DynamicFieldConfig{$ID}->{Name},
+                DynamicFieldType => $DynamicFieldConfig{$ID}->{FieldType},
+                Type             => 'Agent',
+            );
+            push (@Recipients, \%Recipient);
+        }
+    }
+
+    # get recipients by RecipientCustomerDF
+    if (
+        $Param{Notification}->{Data}->{RecipientCustomerDF}
+        && ref($Param{Notification}->{Data}->{RecipientCustomerDF}) eq 'ARRAY'
+    ) {
+        FIELD:
+        for my $ID ( sort( @{ $Param{Notification}->{Data}->{RecipientCustomerDF} } ) ) {
+            next FIELD if !$DynamicFieldConfig{$ID};
+
+            # generate recipient
+            my %Recipient = (
+                DynamicFieldName => $DynamicFieldConfig{$ID}->{Name},
+                DynamicFieldType => $DynamicFieldConfig{$ID}->{FieldType},
+                Type             => 'Customer',
+            );
+            push (@Recipients, \%Recipient);
+        }
+    }
+# EO NotificationEventX-capeIT
+
     return @Recipients;
 }
 
@@ -502,9 +667,79 @@ sub TransportSettingsDisplayGet {
         Disabled    => $Param{SecurityDisabled},
     );
 
+# NotificationEventX-capeIT
+    # get objects
+    my $DynamicFieldObject  = $Kernel::OM->Get('Kernel::System::DynamicField');
+
+    # get DynamicFields
+    my $DynamicFieldList = $DynamicFieldObject->DynamicFieldListGet(
+        ObjectType => ['Ticket'],
+        Valid      => 1,
+    );
+
+    if (
+        $DynamicFieldList
+        && ref($DynamicFieldList) eq 'ARRAY'
+        && @{$DynamicFieldList}
+    ) {
+
+        my %AgentDynamicFieldHash = ();
+        my %CustomerDynamicFieldHash = ();
+        for my $DynamicField (@{$DynamicFieldList}) {
+            next if (
+                !$DynamicField
+                || ref($DynamicField) ne 'HASH'
+                || !%{$DynamicField}
+            );
+
+            $AgentDynamicFieldHash{$DynamicField->{ID}} = $DynamicField->{Name};
+            $CustomerDynamicFieldHash{$DynamicField->{ID}} = $DynamicField->{Name};
+        }
+
+        my %BlockData;
+        $BlockData{RecipientAgentDFStrg} .= $LayoutObject->BuildSelection(
+            Data        => \%AgentDynamicFieldHash,
+            Name        => 'RecipientAgentDF',
+            Translation => 0,
+            Multiple    => 1,
+            Size        => 5,
+            SelectedID  => $Param{Data}->{RecipientAgentDF},
+            Sort        => 'AlphanumericID',
+        );
+        $BlockData{RecipientCustomerDFStrg} .= $LayoutObject->BuildSelection(
+            Data        => \%CustomerDynamicFieldHash,
+            Name        => 'RecipientCustomerDF',
+            Translation => 0,
+            Multiple    => 1,
+            Size        => 5,
+            SelectedID  => $Param{Data}->{RecipientCustomerDF},
+            Sort        => 'AlphanumericID',
+        );
+        $LayoutObject->Block(
+            Name => 'EmailXDynamicField',
+            Data => \%BlockData,
+        );
+    }
+
+    my %SubjectSelection = (
+        0 => 'Without Ticketnumber',
+        1 => 'With Ticketnumber',
+    );
+    $Param{RecipientSubjectStrg} .= $LayoutObject->BuildSelection(
+        Data        => \%SubjectSelection,
+        Name        => 'RecipientSubject',
+        Translation => 1,
+        SelectedID  => $Param{Data}->{RecipientSubject} || '1',
+        Sort        => 'AlphanumericID',
+    );
+# EO NotificationEventX-capeIT
+
     # generate HTML
     my $Output = $LayoutObject->Output(
-        TemplateFile => 'AdminNotificationEventTransportEmailSettings',
+# NotificationEventX-capeIT
+#        TemplateFile => 'AdminNotificationEventTransportEmailSettings',
+        TemplateFile => 'AdminNotificationEventTransportEmailXSettings',
+# EO NotificationEventX-capeIT
         Data         => \%Param,
     );
 
@@ -528,9 +763,16 @@ sub TransportParamSettingsGet {
 
     PARAMETER:
     for my $Parameter (
+# NotificationEventX-capeIT
+#        qw(RecipientEmail NotificationArticleTypeID TransportEmailTemplate
+#        EmailSigningCrypting EmailMissingSigningKeys EmailMissingCryptingKeys
+#        EmailSecuritySettings)
         qw(RecipientEmail NotificationArticleTypeID TransportEmailTemplate
         EmailSigningCrypting EmailMissingSigningKeys EmailMissingCryptingKeys
-        EmailSecuritySettings)
+        EmailSecuritySettings
+        RecipientAgentDF RecipientCustomerDF
+        RecipientSubject)
+# EO NotificationEventX-capeIT
         )
     {
         my @Data = $ParamObject->GetArray( Param => $Parameter );

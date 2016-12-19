@@ -798,6 +798,186 @@ sub VersionAdd {
     my $ReturnVersionID = scalar @{$VersionList} ? $VersionList->[-1] : 0;
     return $ReturnVersionID if !( $Events && keys %{$Events} );
 
+    # KIX4OTRS-capeIT
+    my $Result = 0;
+
+    # trigger Pre-VersionCreate event
+    $Result = $Self->PreEventHandler(
+        Event => 'VersionCreate',
+        Data  => {
+            ConfigItemID => $Param{ConfigItemID},
+            Name         => $Param{Name},
+            DefinitionID => $Param{DefinitionID},
+            DeplStateID  => $Param{DeplStateID},
+            InciStateID  => $Param{InciStateID},
+            XMLData      => $Param{XMLData},
+            SkipPreEvent => $Param{SkipPreEvent},
+            Comment      => '',
+        },
+        UserID => $Param{UserID},
+    );
+    if ( ( ref($Result) eq 'HASH' ) && ( $Result->{Error} ) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'notice',
+            Message  => "Pre-VersionCreate refused version update.",
+        );
+        return $Result;
+    }
+    elsif ( ref($Result) eq 'HASH' ) {
+        for my $ResultKey ( keys %{$Result} ) {
+            $Param{$ResultKey} = $Result->{$ResultKey};
+        }
+    }
+
+    # trigger Pre-ValudeUpdate event
+    if ( $Events->{ValueUpdate} ) {
+        $Result = $Self->_PreEventHandlerForChangedXMLValues(
+            ConfigItemID => $Param{ConfigItemID},
+            Name         => $Param{Name},
+            DefinitionID => $Param{DefinitionID},
+            DeplStateID  => $Param{DeplStateID},
+            InciStateID  => $Param{InciStateID},
+            XMLData      => $Param{XMLData},
+            SkipPreEvent => $Param{SkipPreEvent},
+            UpdateValues => $Events->{ValueUpdate},
+            UserID       => $Param{UserID},
+        );
+        if ( ( ref($Result) eq 'HASH' ) && ( $Result->{Error} ) ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "Pre-ValueUpdate refused version update.",
+            );
+            return $Result;
+        }
+        elsif ( ref($Result) eq 'HASH' ) {
+            for my $ResultKey ( keys %{$Result} ) {
+                $Param{$ResultKey} = $Result->{$ResultKey};
+            }
+        }
+    }
+
+    # trigger Pre-definition update event
+    if ( $Events->{DefinitionUpdate} ) {
+        $Result = $Self->PreEventHandler(
+            Event => 'DefinitionUpdate',
+            Data  => {
+                ConfigItemID => $Param{ConfigItemID},
+                Name         => $Param{Name},
+                DefinitionID => $Param{DefinitionID},
+                DeplStateID  => $Param{DeplStateID},
+                InciStateID  => $Param{InciStateID},
+                XMLData      => $Param{XMLData},
+                SkipPreEvent => $Param{SkipPreEvent},
+                Comment      => $Events->{DefinitionUpdate},
+            },
+            UserID => $Param{UserID},
+        );
+        if ( ( ref($Result) eq 'HASH' ) && ( $Result->{Error} ) ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "Pre-DefinitionUpdate refused version update.",
+            );
+            return $Result;
+        }
+        elsif ( ref($Result) eq 'HASH' ) {
+            for my $ResultKey ( keys %{$Result} ) {
+                $Param{$ResultKey} = $Result->{$ResultKey};
+            }
+        }
+    }
+
+    # check old and new name
+    if ( $Events->{NameUpdate} ) {
+        $Result = $Self->PreEventHandler(
+            Event => 'NameUpdate',
+            Data  => {
+                ConfigItemID => $Param{ConfigItemID},
+                Name         => $Param{Name},
+                DefinitionID => $Param{DefinitionID},
+                DeplStateID  => $Param{DeplStateID},
+                InciStateID  => $Param{InciStateID},
+                XMLData      => $Param{XMLData},
+                SkipPreEvent => $Param{SkipPreEvent},
+                Comment      => $Events->{NameUpdate},
+            },
+            UserID => $Param{UserID},
+        );
+        if ( ( ref($Result) eq 'HASH' ) && ( $Result->{Error} ) ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "Pre-NameUpdate refused version update.",
+            );
+            return $Result;
+        }
+        elsif ( ref($Result) eq 'HASH' ) {
+            for my $ResultKey ( keys %{$Result} ) {
+                $Param{$ResultKey} = $Result->{$ResultKey};
+            }
+        }
+    }
+
+    # trigger incident state update event
+    if ( $Events->{IncidentStateUpdate} ) {
+        $Result = $Self->PreEventHandler(
+            Event => 'IncidentStateUpdate',
+            Data  => {
+                ConfigItemID => $Param{ConfigItemID},
+                Name         => $Param{Name},
+                DefinitionID => $Param{DefinitionID},
+                DeplStateID  => $Param{DeplStateID},
+                InciStateID  => $Param{InciStateID},
+                XMLData      => $Param{XMLData},
+                SkipPreEvent => $Param{SkipPreEvent},
+                Comment      => $Events->{IncidentStateUpdate},
+            },
+            UserID => $Param{UserID},
+        );
+        if ( ( ref($Result) eq 'HASH' ) && ( $Result->{Error} ) ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "Pre-IncidentStateUpdate refused version update.",
+            );
+            return $Result;
+        }
+        elsif ( ref($Result) eq 'HASH' ) {
+            for my $ResultKey ( keys %{$Result} ) {
+                $Param{$ResultKey} = $Result->{$ResultKey};
+            }
+        }
+    }
+
+    # trigger deployment state update event
+    if ( $Events->{DeploymentStateUpdate} ) {
+        $Result = $Self->PreEventHandler(
+            Event => 'DeploymentStateUpdate',
+            Data  => {
+                ConfigItemID => $Param{ConfigItemID},
+                UserID       => $Param{UserID},
+                DefinitionID => $Param{DefinitionID},
+                DeplStateID  => $Param{DeplStateID},
+                InciStateID  => $Param{InciStateID},
+                XMLData      => $Param{XMLData},
+                SkipPreEvent => $Param{SkipPreEvent},
+                Comment      => $Events->{DeploymentStateUpdate},
+            },
+            UserID => $Param{UserID},
+        );
+        if ( ( ref($Result) eq 'HASH' ) && ( $Result->{Error} ) ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "Pre-DeploymentStateUpdate refused version update.",
+            );
+            return $Result;
+        }
+        elsif ( ref($Result) eq 'HASH' ) {
+            for my $ResultKey ( keys %{$Result} ) {
+                $Param{$ResultKey} = $Result->{$ResultKey};
+            }
+        }
+    }
+
+    # EO KIX4OTRS-capeIT
+
     # insert new version
     my $Success = $Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL => 'INSERT INTO configitem_version '
@@ -1022,6 +1202,30 @@ sub VersionDelete {
 
     return 1 if !scalar @{$VersionList};
 
+    # KIX4OTRS-capeIT
+    my $Result = $Self->PreEventHandler(
+        Event => 'VersionDelete',
+        Data  => {
+            ConfigItemID => $Param{ConfigItemID} || '',
+            VersionID    => $Param{VersionID}    || '',
+        },
+        UserID => $Param{UserID},
+    );
+    if ( ( ref($Result) eq 'HASH' ) && ( $Result->{Error} ) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'notice',
+            Message  => "Pre-VersionDelete refused version delete.",
+        );
+        return $Result;
+    }
+    elsif ( ref($Result) eq 'HASH' ) {
+        for my $ResultKey ( keys %{$Result} ) {
+            $Param{$ResultKey} = $Result->{$ResultKey};
+        }
+    }
+
+    # EO KIX4OTRS-capeIT
+
     # get config item id for version (needed for event handling)
     my $ConfigItemID = $Param{ConfigItemID};
 
@@ -1102,6 +1306,8 @@ sub VersionDelete {
 
     return $Success;
 }
+
+# REPLACE ORIGINAL METHODS DUE TO OTRS-BUG 7830
 
 =item VersionSearch()
 
@@ -1193,22 +1399,43 @@ sub VersionSearch {
 
     # check if OrderBy contains only unique valid values
     my %OrderBySeen;
+
+    # KIX4OTRS-capeIT
+    my @TempArray = ();
+
+    # EO KIX4OTRS-capeIT
+
     for my $OrderBy ( @{ $Param{OrderBy} } ) {
 
-        if ( !$OrderBy || !$OrderByTable{$OrderBy} || $OrderBySeen{$OrderBy} ) {
+        # KIX4OTRS-capeIT
+        # if ( !$OrderBy || !$OrderByTable{$OrderBy} || $OrderBySeen{$OrderBy} ) {
+        #
+        # # found an error
+        #     $Kernel::OM->Get('Kernel::System::Log')->Log(
+        #         Priority => 'error',
+        #         Message  => "OrderBy contains invalid value '$OrderBy' "
+        #             . 'or the value is used more than once!',
+        #     );
+        #     return;
+        # }
 
-            # found an error
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "OrderBy contains invalid value '$OrderBy' "
-                    . 'or the value is used more than once!',
-            );
-            return;
+        if ( $OrderBy && $OrderByTable{$OrderBy} && !$OrderBySeen{$OrderBy} ) {
+            push @TempArray, $OrderBy;
         }
+
+        # EO KIX4OTRS-capeIT
 
         # remember the value to check if it appears more than once
         $OrderBySeen{$OrderBy} = 1;
     }
+
+    # KIX4OTRS-capeIT
+    if ( !scalar @TempArray ) {
+        push @TempArray, 'Number';
+    }
+    $Param{OrderBy} = \@TempArray;
+
+    # EO KIX4OTRS-capeIT
 
     # check if OrderByDirection array contains only 'Up' or 'Down'
     DIRECTION:
@@ -1333,9 +1560,21 @@ sub VersionSearch {
     }
 
     # build SQL
-    my $SQL = "SELECT DISTINCT vr.configitem_id $OrderBySelectString "
-        . 'FROM configitem ci, configitem_version vr '
+    # KIX4OTRS-capeIT
+    # my $SQL = 'SELECT DISTINCT(vr.configitem_id) '
+    #     . 'FROM configitem ci, configitem_version vr '
+    #     . $WhereString;
+    my $SQL = 'SELECT DISTINCT(vr.configitem_id) ';
+    if (@SQLOrderBy) {
+        my $SQLOrderBy = join ', ', @SQLOrderBy;
+        $SQLOrderBy =~ s/DESC//;
+        $SQLOrderBy =~ s/ASC//;
+        $SQL .= ', ' . $SQLOrderBy . ' ';
+    }
+    $SQL .= 'FROM configitem ci, configitem_version vr '
         . $WhereString;
+
+    # EO KIX4OTRS-capeIT
 
     # add the ORDER BY clause
     if (@SQLOrderBy) {
@@ -1631,6 +1870,63 @@ sub _GrabTagKeys {
     return @TagKeys;
 }
 
+# KIX4OTRS-capeIT
+
+=item _PreEventHandlerForChangedXMLValues()
+
+    my $Events = $CIObject->_PreEventHandlerForChangedXMLValues(
+        UpdateValues => HASHRef,
+        ConfigItemID => 123,
+        UserID => 123,
+    );
+
+    print keys %{$Events}; # prints "DeploymentStateUpdate"
+
+=cut
+
+sub _PreEventHandlerForChangedXMLValues {
+    my ( $Self, %Param ) = @_;
+    my $Result = 0;
+
+    # check needed stuff
+    for my $Needed (qw(UpdateValues ConfigItemID UserID)) {
+        if ( !$Param{$Needed} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!",
+            );
+            return;
+        }
+    }
+
+    # trigger Pre-ValueUpdate event for each changed value
+    for my $Key ( keys %{ $Param{UpdateValues} } ) {
+        $Result = $Self->PreEventHandler(
+            Event => 'ValueUpdate',
+            Data  => {
+                ConfigItemID => $Param{ConfigItemID},
+                Comment      => $Key . '%%' . $Param{UpdateValues}->{$Key},
+            },
+            UserID => $Param{UserID},
+        );
+        if ( ( ref($Result) eq 'HASH' ) && ( $Result->{Error} ) ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "Pre-ValueUpdate refused version update.",
+            );
+            return $Result;
+        }
+        elsif ( ref($Result) eq 'HASH' ) {
+            for my $ResultKey ( keys %{$Result} ) {
+                $Param{$ResultKey} = $Result->{$ResultKey};
+            }
+        }
+    }
+
+    return 1;
+}
+
+# EO KIX4OTRS-capeIT
 1;
 
 =end Internal:
