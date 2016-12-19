@@ -40,7 +40,6 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
 
-print STDERR "Subaction: ".$Self->{Subaction}."\n";
     # create needed objects
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
