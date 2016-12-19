@@ -1133,26 +1133,58 @@ sub MaskAgentZoom {
         $Pages = ceil( $ArticleCount / $Limit );
     }
 
+    my $Count;
+    if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
+        $Count = scalar @ArticleBox + 1;
+    }
+    else {
+        $Count = 0;
+    }
     # add counter
-    my $Count = ( $Page - 1 ) * $Limit;
 
+    my @ArticleContentArgsAll = (
+        TicketID                   => $Self->{TicketID},
+        StripPlainBodyAsAttachment => $Self->{StripPlainBodyAsAttachment},
+        UserID                     => $Self->{UserID},
+        Order                      => $Order,
+        DynamicFields => 0,    # fetch later only for the article(s) to display
+    );
+    my @ArticleBoxAll = $TicketObject->ArticleContentIndex(@ArticleContentArgsAll);
+
+    if ( scalar @ArticleBox != scalar @ArticleBoxAll ) {
     # in case of reverse sorting, count top-down
     if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
-        $Count = $ArticleCount - ( ( $Page - 1 ) * $Limit ) + 1;
+            $Count = scalar @ArticleBoxAll + 1;
+        }
+
+        for my $Article (@ArticleBoxAll) {
+            if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
+                $Count--;
+            }
+            else {
+                $Count++;
+            }
+            $Article->{Count} = $Count;
+        }
     }
 
     my $ArticleIDFound = 0;
     ARTICLE:
     for my $Article (@ArticleBox) {
 
+        if ( scalar @ArticleBox != scalar @ArticleBoxAll ) {
+            my @ArticleOnPage = grep { $_->{ArticleID} =~ $Article->{ArticleID} } @ArticleBoxAll;
+            $Article->{Count} = $ArticleOnPage[0]->{Count};
+        }
+        else {
         if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
             $Count--;
         }
         else {
             $Count++;
         }
-
         $Article->{Count} = $Count;
+        }
 
         next ARTICLE if !$Self->{ArticleID};
         next ARTICLE if !$Article->{ArticleID};
@@ -1470,12 +1502,18 @@ sub MaskAgentZoom {
 
         my $Pagination;
 
-        if ($NeedPagination) {
+        if ( $NeedPagination ) {
             $Pagination = {
                 Pages       => $Pages,
                 CurrentPage => $Page,
                 TicketID    => $Ticket{TicketID},
             };
+        }
+
+        # get current article count
+        my $CurrentArticleCount = $Count;
+        if ( $NeedPagination && $Pagination->{CurrentPage} != $Pages ) {
+            $CurrentArticleCount = scalar @ArticleBox
         }
 
         # show article tree
@@ -1489,7 +1527,7 @@ sub MaskAgentZoom {
             Page              => $Page,
             # KIX4OTRS-capeIT
             # ArticleCount      => scalar @ArticleBox,
-            ArticleCount      => $Count,
+            ArticleCount      => $CurrentArticleCount,
             # EO KIX4OTRS-capeIT
             AclAction         => \%AclAction,
             StandardResponses => $StandardTemplates{Answer},
@@ -1804,6 +1842,15 @@ sub _ArticleTree {
         );
     }
 
+    # check if ticket is normal or process ticket to decide which tab to load
+    my $IsProcessTicket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketCheckForProcessType(
+        'TicketID' => $Self->{TicketID}
+    );
+    my  $SelectedTab = 0;
+    if ( $IsProcessTicket ) {
+        $SelectedTab = 1;
+    }
+
     # check if expand/collapse view is usable (not available for too many
     # articles)
     if ( $Self->{ZoomExpand} && $#ArticleBox < $ArticleMaxLimit ) {
@@ -1815,6 +1862,7 @@ sub _ArticleTree {
                 ZoomExpand     => $Self->{ZoomExpand},
                 ZoomExpandSort => $Self->{ZoomExpandSort},
                 Page           => $Param{Page},
+                SelectedTab    => $SelectedTab,
             },
         );
     }
@@ -1829,6 +1877,7 @@ sub _ArticleTree {
                 ZoomExpand     => $Self->{ZoomExpand},
                 ZoomExpandSort => $Self->{ZoomExpandSort},
                 Page           => $Param{Page},
+                SelectedTab    => $SelectedTab,
             },
         );
     }
@@ -1841,6 +1890,7 @@ sub _ArticleTree {
                 ZoomExpand     => $Self->{ZoomExpand},
                 ZoomExpandSort => $Self->{ZoomExpandSort},
                 Page           => $Param{Page},
+                SelectedTab    => $SelectedTab,
             },
         );
     }
