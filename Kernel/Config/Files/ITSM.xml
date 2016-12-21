@@ -1731,30 +1731,6 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="ITSMConfigItem::CustomModules###001-CustomModule" Required="0" Valid="1">
-        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
-        <Group>ITSM</Group>
-        <SubGroup>Core::ITSMConfigItem</SubGroup>
-        <Setting>
-            <String Regex="">Kernel::System::ITSMConfigItem::ITSMConfigItemX</String>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="ITSMConfigItem::CustomModules###010-CustomModule" Required="0" Valid="1">
-        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
-        <Group>ITSM</Group>
-        <SubGroup>Core::ITSMConfigItem</SubGroup>
-        <Setting>
-            <String Regex="">Kernel::System::ITSMConfigItem::DefinitionX</String>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="ITSMConfigItem::CustomModules###020-CustomModule" Required="0" Valid="1">
-        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
-        <Group>ITSM</Group>
-        <SubGroup>Core::ITSMConfigItem</SubGroup>
-        <Setting>
-            <String Regex="">Kernel::System::ITSMConfigItem::VersionX</String>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="ITSMConfigItem::CustomModules###030-CustomModule" Required="0" Valid="1">
         <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
         <Group>ITSM</Group>
