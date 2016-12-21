@@ -38,9 +38,9 @@ sub Load {
     # ---------------------------------------------------- #
     # fs root directory
     # ---------------------------------------------------- #
-    $Self->{Home} = '/opt/kix2017';
-    $Self->{'Frontend::WebPath'} = '/kix2017-web/';
-    $Self->{ScriptAlias} = 'kix2017/';
+    $Self->{Home} = '/opt/kix';
+    $Self->{'Frontend::WebPath'} = '/kix-web/';
+    $Self->{ScriptAlias} = 'kix/';
     
     # --------------------------------------------------- #
     # LogModule                                           #
