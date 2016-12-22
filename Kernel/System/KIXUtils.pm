@@ -182,7 +182,7 @@ sub GetRegisteredCustomPackages {
     if ( $Home !~ m{^.*\/$}x ) {
         $Home .= '/';
     }
-    my $KIXPackageFile = $Home . 'KIXCore/CustomPackages.cfg';
+    my $KIXPackageFile = $Home . 'var/CustomPackages.cfg';
 
     if ( open( my $FH, '<', $KIXPackageFile ) ) {
         while (<$FH>) {
@@ -237,7 +237,7 @@ sub SetRegisteredCustomPackages {
     if ( $Home !~ m{^.*\/$}x ) {
         $Home .= '/';
     }
-    my $KIXPackageFile = $Home . 'KIXCore/CustomPackages.cfg';
+    my $KIXPackageFile = $Home . 'var/CustomPackages.cfg';
 
     # backup old config
     if ( !$Param{Rebuild} ) {
@@ -253,10 +253,7 @@ sub SetRegisteredCustomPackages {
     }
 
     #---------------------------------------------------------------------------
-    # update storage for custom packages in <OTRS_HOME>/KIXCore/CustomPackages...
-
-    # enforce "KIXCore" custom package...
-    $Param{CustomPackages}->{'0000::KIXCore'} = 'KIXCore';
+    # update storage for custom packages in <KIX_HOME>/var/CustomPackages...
 
     if ( open( my $FH, '>', $KIXPackageFile ) ) {
         my $FileContent = '';
@@ -317,10 +314,10 @@ sub CleanUpConfigPm {
     if ( $Home !~ m{^.*\/$}x ) {
         $Home .= '/';
     }
-    my $KIXPackageFile = $Home . 'KIXCore/CustomPackages.cfg';
+    my $KIXPackageFile = $Home . 'var/CustomPackages.cfg';
 
     #---------------------------------------------------------------------------
-    # delete storage for custom packages in <OTRS_HOME>/KIXCore/CustomPackages...
+    # delete storage for custom packages in <KIX_HOME>/var/CustomPackages...
     if ( unlink($KIXPackageFile) ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'notice',
