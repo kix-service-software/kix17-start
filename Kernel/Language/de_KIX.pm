@@ -62,6 +62,14 @@ sub Data {
     $Lang->{'fax'}                      = 'Fax (sichtbar für Kunde)';
 
     # other translations...
+    $Lang->{'Address Book'}                    = 'Adressbuch';
+    $Lang->{'Manage address book.'}            = 'Adressbuch verwalten.';
+    $Lang->{'Address Book Management'}         = 'Adressbuchverwaltung';
+    $Lang->{'Please enter a search term to look for address book entries.'} = 'Bitte geben Sie einen Suchbegriff ein, um nach Einträgen im Adressbuch zu suchen.';
+    $Lang->{'Creates a new address book entry if necessary.'} = 'Erstellt einen neuen Eintrag im Adressbuch, falls notwendig.';
+    $Lang->{'Delete selected entries'}         = 'Ausgewählte Einträge löschen';
+    $Lang->{'Empty address book'}              = 'Adressbuch leeren';
+    $Lang->{'Do you really want to empty the whole address book ? All entries will be deleted!'} = 'Wollen Sie das Adressbuch wirklich komplett leeren ? Alle Einträge werden gelöscht!';
     $Lang->{'KIX Online Help'}                 = 'Onlinehilfe für KIX';
     $Lang->{'pending auto reopen'}             = 'warten zur Wiedervorlage';
     $Lang->{'Ticketnumber'}                    = 'Ticket-Nummer';
@@ -103,6 +111,8 @@ sub Data {
         'Der Inhalt dieses Felds kann max. %s Zeichen betragen.';
     $Lang->{"This field is required and its content can not be longer than %s characters."} =
         'Dieses Feld wird benötigt und der Inhalt kann max. %s Zeichen betragen.';
+    $Lang->{'Do you really want to delete the selected entries?'}
+        = 'Möchten Sie die ausgewählten Einträge wirklich löschen ?';
     $Lang->{'Do you really want to delete the selected links?'}
         = 'Möchten Sie die ausgewählten Verlinkungen wirklich löschen ?';
     $Lang->{'Search Template'}         = 'Suchvorlage';
