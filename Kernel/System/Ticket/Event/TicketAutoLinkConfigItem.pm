@@ -45,13 +45,13 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{ConfigObject} = $Kernel::OM->Get('Kernel::Config');
-    $Self->{LogObject} = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{TicketObject} = $Kernel::OM->Get('Kernel::System::Ticket');
-    $Self->{UserObject} = $Kernel::OM->Get('Kernel::System::User');
+    $Self->{ConfigObject}         = $Kernel::OM->Get('Kernel::Config');
+    $Self->{LogObject}            = $Kernel::OM->Get('Kernel::System::Log');
+    $Self->{TicketObject}         = $Kernel::OM->Get('Kernel::System::Ticket');
+    $Self->{UserObject}           = $Kernel::OM->Get('Kernel::System::User');
     $Self->{GeneralCatalogObject} = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
-    $Self->{ConfigItemObject} = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
-    $Self->{LinkObject} = $Kernel::OM->Get('Kernel::System::LinkObject');
+    $Self->{ConfigItemObject}     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    $Self->{LinkObject}           = $Kernel::OM->Get('Kernel::System::LinkObject');
 
     return $Self;
 }
@@ -74,7 +74,7 @@ sub Run {
         );
         return;
     }
-    
+
     my $CISearchPatternRef =
         $Self->{ConfigObject}->Get('TicketAutoLinkConfigItem::CISearchPattern');
 
@@ -84,8 +84,8 @@ sub Run {
     my $OnlyFirstArticle =
         $Self->{ConfigObject}->Get('TicketAutoLinkConfigItem::FirstArticleOnly');
 
-#    my $SearchInClassesRef =
-#        $Self->{ConfigObject}->Get('TicketAutoLinkConfigItem::CISearchInClasses');
+    #    my $SearchInClassesRef =
+    #        $Self->{ConfigObject}->Get('TicketAutoLinkConfigItem::CISearchInClasses');
     my $SearchInClassesRefTemp =
         $Self->{ConfigObject}->Get('TicketAutoLinkConfigItem::CISearchInClasses');
 
@@ -196,8 +196,8 @@ sub Run {
         $EventTrigger =~ s/TicketDynamicFieldUpdate_//g;
 
         my %TicketData = $Self->{TicketObject}->TicketGet(
-            TicketID => $Param{Data}->{TicketID},
-            UserID   => 1,
+            TicketID      => $Param{Data}->{TicketID},
+            UserID        => 1,
             DynamicFields => 1,
         );
 
@@ -309,16 +309,16 @@ sub Run {
                         if (@SearchParamsWhat) {
                             $SearchParams{What} = \@SearchParamsWhat;
                         }
-                        
+
                         # only search if something to search for...
-                        if( scalar( keys ( %SearchParams) ) ) {
+                        if ( scalar( keys(%SearchParams) ) ) {
                             my $ConfigItemList =
                                 $Self->{ConfigItemObject}->ConfigItemSearchExtended(
                                 %SearchParams,
                                 ClassIDs => [ $ClassItemRef->{ItemID} ],
                                 UserID   => 1,
                                 );
-                            
+
                             # link found ITSMConfigItem with current ticket
                             for my $ConfigItemID ( @{$ConfigItemList} ) {
                                 $Self->{LinkObject}->LinkAdd(

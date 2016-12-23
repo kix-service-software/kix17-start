@@ -31,7 +31,7 @@ sub new {
     # allocate new hash for object
     my $Self = {};
     bless( $Self, $Type );
-       
+
     # get needed objects
     $Self->{ConfigObject}       = $Kernel::OM->Get('Kernel::Config');
     $Self->{DynamicFieldObject} = $Kernel::OM->Get('Kernel::System::DynamicField');
@@ -49,7 +49,7 @@ sub Run {
         if ( !$Param{$_} ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
-                Message => "Need $_!",
+                Message  => "Need $_!",
             );
             return;
         }
@@ -58,7 +58,7 @@ sub Run {
         if ( !$Param{Data}->{$_} ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
-                Message => "Need $_ in Data!",
+                Message  => "Need $_ in Data!",
             );
             return;
         }
@@ -91,6 +91,7 @@ sub Run {
             }
         }
         else {
+
             # add links to database
             my $Success = $Self->{LinkObject}->LinkAdd(
                 SourceObject => 'Ticket',

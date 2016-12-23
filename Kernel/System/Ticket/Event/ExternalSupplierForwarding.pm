@@ -42,18 +42,21 @@ sub new {
 
 sub Run {
     my ( $Self, %Param ) = @_;
-    
+
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     #check required params...
     foreach (qw( Data Event Config)) {
         if ( !$Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "Need $_!" );
+            $Kernel::OM->Get('Kernel::System::Log')
+                ->Log( Priority => 'error', Message => "Need $_!" );
             return;
         }
     }
     for (qw(TicketID)) {
         if ( !$Param{Data}->{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "Need $_ in Data!" );
+            $Kernel::OM->Get('Kernel::System::Log')
+                ->Log( Priority => 'error', Message => "Need $_ in Data!" );
             return;
         }
     }
@@ -63,7 +66,8 @@ sub Run {
         $Kernel::OM->Get('Kernel::Config')->Get('ExternalSupplierForwarding::ForwardQueues');
     my $FwdQueueNames = keys( %{$FwdQueueRef} );
     my $RelevantFwdArticleTypesRef =
-        $Kernel::OM->Get('Kernel::Config')->Get('ExternalSupplierForwarding::RelevantFwdArticleTypes');
+        $Kernel::OM->Get('Kernel::Config')
+        ->Get('ExternalSupplierForwarding::RelevantFwdArticleTypes');
 
     #get ticket data...
     my %Ticket = $TicketObject->TicketGet(
@@ -137,13 +141,15 @@ sub Run {
             FromMailAddress  => $FromAddress{Email},
             FirstArticleFlag => $FirstArticleFlag || '',
         );
-        my $Success = $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::ExternalSupplierForwarding')->AsyncCall(
-            ObjectName               => 'Kernel::System::AsynchronousExecutor::ExternalSupplierForwarding',
-            FunctionName             => 'Run',
-            FunctionParams           => \%JobParam,
-            Attempts                 => 1,
+        my $Success
+            = $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::ExternalSupplierForwarding')
+            ->AsyncCall(
+            ObjectName     => 'Kernel::System::AsynchronousExecutor::ExternalSupplierForwarding',
+            FunctionName   => 'Run',
+            FunctionParams => \%JobParam,
+            Attempts       => 1,
             MaximumParallelInstances => 1,
-        );
+            );
         if ( !$Success ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',

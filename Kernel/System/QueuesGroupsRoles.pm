@@ -15,7 +15,6 @@
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-
 package Kernel::System::QueuesGroupsRoles;
 
 use strict;
@@ -39,11 +38,11 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    #$Self->{EmailParserObject}   ||= Kernel::System::EmailParser->new( 
-        #%{$Self}, 
-        #Mode => 'Standalone', 
+    #$Self->{EmailParserObject}   ||= Kernel::System::EmailParser->new(
+    #%{$Self},
+    #Mode => 'Standalone',
     #);
-    
+
     return $Self;
 }
 
@@ -51,21 +50,21 @@ sub Upload {
     my ( $Self, %Param ) = @_;
     my @Content = $Param{Content};
 
-    my $QGRConfig   = $Kernel::OM->Get('Kernel::Config')->Get("QueuesGroupsRoles");
-    my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
-    my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
-    my $LogObject   = $Kernel::OM->Get('Kernel::System::Log');
-    my $EmailParserObject  = Kernel::System::EmailParser->new( 
-        %{$Self}, 
-        Mode => 'Standalone', 
+    my $QGRConfig         = $Kernel::OM->Get('Kernel::Config')->Get("QueuesGroupsRoles");
+    my $GroupObject       = $Kernel::OM->Get('Kernel::System::Group');
+    my $QueueObject       = $Kernel::OM->Get('Kernel::System::Queue');
+    my $LogObject         = $Kernel::OM->Get('Kernel::System::Log');
+    my $EmailParserObject = Kernel::System::EmailParser->new(
+        %{$Self},
+        Mode => 'Standalone',
     );
-    
+
     my %Queues = $QueueObject->QueueList( Valid => 0 );
     my %Groups = $GroupObject->GroupList( Valid => 0 );
-    my %Roles  = $GroupObject->RoleList( Valid => 0 );
-    my %RevRoleList = reverse (%Roles);
-    my %RevGroupList = reverse (%Groups);
-    my %RevQueueList = reverse (%Queues);
+    my %Roles        = $GroupObject->RoleList( Valid => 0 );
+    my %RevRoleList  = reverse(%Roles);
+    my %RevGroupList = reverse(%Groups);
+    my %RevQueueList = reverse(%Queues);
 
     my $lineCounter  = 0;
     my @currLine     = ();
@@ -103,6 +102,7 @@ sub Upload {
 
             # create roles if not already there...
             for my $Role (@RoleNames) {
+
                 # using rev-list because there is no Silent option...
                 my $RoleID = $RevRoleList{$Role};
                 if ( !$RoleID ) {
@@ -142,6 +142,7 @@ sub Upload {
             # handle group....
             my $GroupID = 0;
             if ($currGroup) {
+
                 # using rev-list because there is no Silent option...
                 $GroupID = $RevGroupList{$currGroup};
             }
@@ -168,6 +169,7 @@ sub Upload {
             #-----------------------------------------------------------------------
             # handle queue...
             if ($currQueue) {
+
                 # using rev-list because there is no Silent option...
                 my $QueueID = $RevQueueList{$currQueue};
 
@@ -192,8 +194,9 @@ sub Upload {
                     $SystemAddressRealName = $EmailParserObject->GetRealname(
                         Email => $SystemAddress,
                     );
+
                     # if no real name given create one out of email (cut at @)...
-                    if( !$SystemAddressRealName ) {
+                    if ( !$SystemAddressRealName ) {
                         $SystemAddressRealName = $SystemAddress;
                         $SystemAddressRealName =~ s/\@.*//g;
                     }
@@ -201,7 +204,8 @@ sub Upload {
 
                 # create or lookup new SystemAddress...
                 if ( $SystemAddress && $SystemAddress !~ /^\d+$/ ) {
-                    my %List    = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressList();
+                    my %List
+                        = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressList();
                     my $FoundID = 0;
                     for my $CurrKey ( keys(%List) ) {
                         if ( $List{$CurrKey} =~ /$SystemAddressEmail$/ ) {
@@ -210,24 +214,26 @@ sub Upload {
                         }
                     }
                     if ( !$FoundID ) {
-                        $SystemAddressID = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressAdd(
+                        $SystemAddressID
+                            = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressAdd(
                             Name     => $SystemAddressEmail,
                             Realname => $SystemAddressRealName,
                             ValidID  => 1,
+
                             # NOTE: the queue does not exist yet, so we use QueueID 1...
-                            QueueID  => 1,
-                            Comment  => '',
-                            UserID   => 1,
-                        );
+                            QueueID => 1,
+                            Comment => '',
+                            UserID  => 1,
+                            );
                     }
                     else {
                         $SystemAddressID = $FoundID;
                     }
                 }
-                
+
                 # update/create queue...
                 if ( !$QueueID && $currQueue ) {
-                    
+
                     $Message = "QGR-Import: Creating QUEUE <$currQueue> ...";
                     if ( $Param{MessageToSTDERR} ) {
                         print STDERR "\n" . $Message;
@@ -238,7 +244,7 @@ sub Upload {
                             Message  => $Message,
                         );
                     }
-                    
+
                     $QueueObject->QueueAdd(
                         Name    => $currQueue,
                         Comment => '',
@@ -248,7 +254,7 @@ sub Upload {
                         ValidID         => $ValidID,
                         SystemAddressID => $SystemAddressID,
                     );
-                    
+
                     $QueueID = $QueueObject->QueueLookup( Queue => $currQueue );
                     $RevQueueList{$currQueue} = $QueueID;
                 }
@@ -307,21 +313,23 @@ sub Upload {
                     if ( $RoleIDs[$currRoleIndex] ) {
                         my %ShortcutMappings;
                         my %Permission = ();
-                        if ( $QGRConfig
-                             && ref($QGRConfig) eq 'HASH'
-                             && $QGRConfig->{ShortcutMappings}
-                             && ref($QGRConfig->{ShortcutMappings}) eq 'HASH'
-                             && $QGRConfig->{ShortcutMappings}->{'rw'}
-                        ) {
-                            %ShortcutMappings = %{$QGRConfig->{ShortcutMappings}};
-                            for my $SystemPermission (keys %ShortcutMappings) {
-                                $Permission{$SystemPermission} = 
-                                          $currRoleRights =~ /rw/ 
-                                          || $currRoleRights =~ /$ShortcutMappings{$SystemPermission}/ 
-                                          || $currRoleRights =~ /$SystemPermission/ 
-                                          || 0; 
+                        if (
+                            $QGRConfig
+                            && ref($QGRConfig) eq 'HASH'
+                            && $QGRConfig->{ShortcutMappings}
+                            && ref( $QGRConfig->{ShortcutMappings} ) eq 'HASH'
+                            && $QGRConfig->{ShortcutMappings}->{'rw'}
+                            )
+                        {
+                            %ShortcutMappings = %{ $QGRConfig->{ShortcutMappings} };
+                            for my $SystemPermission ( keys %ShortcutMappings ) {
+                                $Permission{$SystemPermission} =
+                                    $currRoleRights    =~ /rw/
+                                    || $currRoleRights =~ /$ShortcutMappings{$SystemPermission}/
+                                    || $currRoleRights =~ /$SystemPermission/
+                                    || 0;
                             }
-                        } 
+                        }
                         else {
                             %Permission = (
                                 ro => ( $currRoleRights =~ /RW/ )
@@ -387,7 +395,7 @@ sub Download {
 
 sub QGRShow {
     my ( $Self, %Param ) = @_;
-    
+
     my $QGRConfig   = $Kernel::OM->Get('Kernel::Config')->Get("QueuesGroupsRoles");
     my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
     my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
@@ -400,14 +408,16 @@ sub QGRShow {
     my @RoleNames;
 
     my %ShortcutMappings;
-    if ( $QGRConfig
-         && ref($QGRConfig) eq 'HASH'
-         && $QGRConfig->{ShortcutMappings}
-         && ref($QGRConfig->{ShortcutMappings}) eq 'HASH'
-         && $QGRConfig->{ShortcutMappings}->{'rw'}
-    ) {
-        %ShortcutMappings = %{$QGRConfig->{ShortcutMappings}};
-    } 
+    if (
+        $QGRConfig
+        && ref($QGRConfig) eq 'HASH'
+        && $QGRConfig->{ShortcutMappings}
+        && ref( $QGRConfig->{ShortcutMappings} ) eq 'HASH'
+        && $QGRConfig->{ShortcutMappings}->{'rw'}
+        )
+    {
+        %ShortcutMappings = %{ $QGRConfig->{ShortcutMappings} };
+    }
 
     my @QueueParams = (
         'SalutationID',  'SignatureID',       'FollowUpID',          'FollowUpLock',
@@ -440,12 +450,12 @@ sub QGRShow {
         my %Queue = $QueueObject->QueueGet(
             ID => $QueueID,
         );
-        
+
         # prepare SystemAddress...
         my %SystemAddress = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
             ID => $Queue{SystemAddressID},
         );
-        $Queue{SystemAddress} = '"'.$SystemAddress{Realname}.'" <'.$SystemAddress{Name}.'>';
+        $Queue{SystemAddress} = '"' . $SystemAddress{Realname} . '" <' . $SystemAddress{Name} . '>';
 
         for my $QueueParam (@QueueParams) {
             if ( $QueueParam eq 'ValidID' ) {
@@ -470,7 +480,7 @@ sub QGRShow {
             for my $RoleID ( keys(%GroupRoles) ) {
 
                 my $Role = $GroupObject->RoleLookup( RoleID => $RoleID );
-                if (%ShortcutMappings && $ShortcutMappings{$Type}) {
+                if ( %ShortcutMappings && $ShortcutMappings{$Type} ) {
                     $RolePermissions{$Role} .= $ShortcutMappings{$Type} . ",";
                 }
                 else {
@@ -516,7 +526,7 @@ sub QGRShow {
             for my $RoleID ( keys(%GroupRoles) ) {
 
                 my $Role = $GroupObject->RoleLookup( RoleID => $RoleID );
-                if (%ShortcutMappings && $ShortcutMappings{$Type}) {
+                if ( %ShortcutMappings && $ShortcutMappings{$Type} ) {
                     $RolePermissions{$Role} .= $ShortcutMappings{$Type} . ",";
                 }
                 else {

@@ -50,14 +50,13 @@ sub Run {
     # get needed params
     my $Search = $Self->{ParamObject}->GetParam( Param => 'Term' ) || '';
 
-
     # get queue list
     # search for name....
     my @ServiceIDs = $Self->{ServiceObject}->ServiceSearch(
         Name   => '*' . $Search . '*',
         UserID => 1,
     );
-    
+
     # build data
     my @Data;
     for my $CurrKey (@ServiceIDs) {

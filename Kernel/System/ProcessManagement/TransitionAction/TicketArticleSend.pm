@@ -1,6 +1,6 @@
 #TODO Test => consultation tto => ReleaseTicket => sopm
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/ 
+# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
 # BPMX Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # Depends: OTRS, Kernel/System/ProcessManagement/TransitionAction/TicketArticleCreate.pm, 5.0.12
@@ -22,7 +22,6 @@ package Kernel::System::ProcessManagement::TransitionAction::TicketArticleSend;
 use strict;
 use warnings;
 use utf8;
-
 use Kernel::System::VariableCheck qw(:all);
 
 use base qw(Kernel::System::ProcessManagement::TransitionAction::Base);
@@ -171,11 +170,12 @@ sub Run {
     }
 
     # check ArticleType
-# BPMX-capeIT
-#    TODO Test => consultation tto => ReleaseTicket => sopm
-#    if ( $Param{Config}->{ArticleType} =~ m{\A email }msxi ) {
-    if ( !($Param{Config}->{ArticleType} =~ m{\A email }msxi ) ) {
-# EO BPMX-capeIT
+    # BPMX-capeIT
+    #    TODO Test => consultation tto => ReleaseTicket => sopm
+    #    if ( $Param{Config}->{ArticleType} =~ m{\A email }msxi ) {
+    if ( !( $Param{Config}->{ArticleType} =~ m{\A email }msxi ) ) {
+
+        # EO BPMX-capeIT
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => $CommonMessage
@@ -199,10 +199,11 @@ sub Run {
         $Param{Config}->{From} = $User{UserFullname} . ' <' . $User{UserEmail} . '>';
     }
 
-# BPMX-capeIT
-#    my $ArticleID = $TicketObject->ArticleCreate(
+    # BPMX-capeIT
+    #    my $ArticleID = $TicketObject->ArticleCreate(
     my $ArticleID = $TicketObject->ArticleSend(
-# EO BPMX-capeIT
+
+        # EO BPMX-capeIT
         %{ $Param{Config} },
         TicketID => $Param{Ticket}->{TicketID},
         UserID   => $Param{UserID},

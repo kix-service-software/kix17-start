@@ -36,7 +36,7 @@ sub new {
     bless( $Self, $Type );
 
     $Self->{LogObject} = $Kernel::OM->Get('Kernel::System::Log');
-    
+
     if ( !$Self->{CryptObject} ) {
         $Self->{CryptObject} = $Kernel::OM->Get('Kernel::System::Crypt::PGP');
     }

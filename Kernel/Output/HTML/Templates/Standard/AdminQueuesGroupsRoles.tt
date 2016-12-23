@@ -31,7 +31,7 @@
                 <br/>[% Translate("Attention: Depending on the number of queues, groups and roles, this process may take several minutes!") | html %]
             </div>
         </div>
-[% RenderBlockEnd("Show") %]       
+[% RenderBlockEnd("Show") %]
 [% RenderBlockStart("Download") %]
         <div class="WidgetSimple">
             <div class="Header">
@@ -108,7 +108,7 @@
                 </table>
             </div>
         </div>
-    </div>    
+    </div>
 </div>
 
 

@@ -151,14 +151,14 @@ sub ObjectAttributesGet {
                 Type => 'Checkbox',
             },
         },
-                {
+        {
             Key   => 'ArrayFormatAs',
             Name  => 'Array convert to',
             Input => {
                 Type => 'Selection',
                 Data => {
-                    String      => 'String',
-                    Splitting   => 'Split',
+                    String    => 'String',
+                    Splitting => 'Split',
                 },
                 Translation  => 1,
                 PossibleNone => 1,
@@ -239,30 +239,33 @@ sub MappingObjectAttributesGet {
         push( @ElementList, $CurrAttribute );
     }
 
-    my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
-    my $DynamicFieldList = $DynamicFieldObject->DynamicFieldListGet(ObjectType => 'CustomerCompany');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $DynamicFieldList
+        = $DynamicFieldObject->DynamicFieldListGet( ObjectType => 'CustomerCompany' );
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{$DynamicFieldList} ) {
-            # validate each dynamic field
-            next DYNAMICFIELD if !$DynamicFieldConfig;
-            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-            next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
-            
-            if( $DynamicFieldConfig->{FieldType} eq 'Multiselect' ){
-                for my $Count ( 1 .. $ObjectData->{CountMax}){
-                    my $CurrAttribute = {
-                        Key   => "DynamicField_".$DynamicFieldConfig->{'Name'}.'::'.$Count,
-                        Value => $DynamicFieldConfig->{'Label'}.'::'.$Count,
-                    };
-                    push( @ElementList, $CurrAttribute );
-                }
-            }else{
+
+        # validate each dynamic field
+        next DYNAMICFIELD if !$DynamicFieldConfig;
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+        next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
+
+        if ( $DynamicFieldConfig->{FieldType} eq 'Multiselect' ) {
+            for my $Count ( 1 .. $ObjectData->{CountMax} ) {
                 my $CurrAttribute = {
-                    Key   => "DynamicField_".$DynamicFieldConfig->{'Name'},
-                    Value => $DynamicFieldConfig->{'Label'},
+                    Key   => "DynamicField_" . $DynamicFieldConfig->{'Name'} . '::' . $Count,
+                    Value => $DynamicFieldConfig->{'Label'} . '::' . $Count,
                 };
                 push( @ElementList, $CurrAttribute );
             }
+        }
+        else {
+            my $CurrAttribute = {
+                Key   => "DynamicField_" . $DynamicFieldConfig->{'Name'},
+                Value => $DynamicFieldConfig->{'Label'},
+            };
+            push( @ElementList, $CurrAttribute );
+        }
     }
 
     my $Attributes = [
@@ -408,18 +411,20 @@ sub ExportDataGet {
     # list customer companys...
     my %CustomerCompanyList
         = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyList(
-            Valid => 0,
+        Valid => 0,
         );
     my @ExportData;
 
     for my $CurrCompany (%CustomerCompanyList) {
 
         my %CustomerCompanyData =
-            $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet( 
-                CustomerID => $CurrCompany, 
-                # KIXContact - add dynamic fields
-                DynamicFields => 1,
-                # EO KIXContact - add dynamic fields
+            $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
+            CustomerID => $CurrCompany,
+
+            # KIXContact - add dynamic fields
+            DynamicFields => 1,
+
+            # EO KIXContact - add dynamic fields
             );
 
         if (%CustomerCompanyData) {
@@ -434,33 +439,44 @@ sub ExportDataGet {
             }
 
             for my $MappingObject (@MappingObjectList) {
-                my @Keys = split('::', $MappingObject->{Key});
+                my @Keys = split( '::', $MappingObject->{Key} );
                 my $CCData = '';
                 if ( !$Keys[0] ) {
                     push @CurrRow, '';
                 }
                 else {
-                    if($Keys[0] =~ m/DynamicField_/){
-                        if(defined $Keys[1]){
+                    if ( $Keys[0] =~ m/DynamicField_/ ) {
+                        if ( defined $Keys[1] ) {
+
                             # If used array format string
-                            if( $ObjectData->{ArrayFormatAs} eq 'String' ){
-                                if(ref($CustomerCompanyData{$Keys[0]}) eq 'ARRAY'){
+                            if ( $ObjectData->{ArrayFormatAs} eq 'String' ) {
+                                if ( ref( $CustomerCompanyData{ $Keys[0] } ) eq 'ARRAY' ) {
+
                                     # convert array to string with selected separator
-                                    $CCData = join ("$Self->{AvailableSeparators}->{$ObjectData->{ArraySeparator}}", @{$CustomerCompanyData{$Keys[0]}} );
-                                }else{
-                                    $CCData = $CustomerCompanyData{$Keys[0]};
+                                    $CCData
+                                        = join(
+                                        "$Self->{AvailableSeparators}->{$ObjectData->{ArraySeparator}}",
+                                        @{ $CustomerCompanyData{ $Keys[0] } } );
                                 }
-                            # if used array format split
-                            }elsif ( $ObjectData->{ArrayFormatAs} eq 'Split' ){
-                                # splited array to single elements
-                                $CCData = $CustomerCompanyData{$Keys[0]}->[($Keys[1]-1)];
+                                else {
+                                    $CCData = $CustomerCompanyData{ $Keys[0] };
+                                }
+
+                                # if used array format split
                             }
-                        }else{
-                            $CCData = $CustomerCompanyData{$Keys[0]};
+                            elsif ( $ObjectData->{ArrayFormatAs} eq 'Split' ) {
+
+                                # splited array to single elements
+                                $CCData = $CustomerCompanyData{ $Keys[0] }->[ ( $Keys[1] - 1 ) ];
+                            }
+                        }
+                        else {
+                            $CCData = $CustomerCompanyData{ $Keys[0] };
                         }
                         push( @CurrRow, $CCData || '' );
-                    }else{
-                        push( @CurrRow, $CustomerCompanyData{$Keys[0]} || '' );
+                    }
+                    else {
+                        push( @CurrRow, $CustomerCompanyData{ $Keys[0] } || '' );
                     }
                 }
             }
@@ -595,63 +611,86 @@ sub ImportDataSave {
         #        }
 
         if ( $MappingObjectData->{Key} ne "CustomerCompanyCountry" ) {
-            my @Keys = split('::',$MappingObjectData->{Key});
+            my @Keys = split( '::', $MappingObjectData->{Key} );
 
             # Check if key dynamic field
-            if($Keys[0] =~ m/DynamicField_/){
-                if(defined $Keys[1]){
+            if ( $Keys[0] =~ m/DynamicField_/ ) {
+                if ( defined $Keys[1] ) {
 
                     # if used convert array to string
-                    if( $ObjectData->{ArrayFormatAs} eq 'String' ){
-                        my @StringToArray = split ("$Self->{AvailableSeparators}->{$ObjectData->{ArraySeparator}}", $Param{ImportDataRow}->[$Counter] );
+                    if ( $ObjectData->{ArrayFormatAs} eq 'String' ) {
+                        my @StringToArray
+                            = split(
+                            "$Self->{AvailableSeparators}->{$ObjectData->{ArraySeparator}}",
+                            $Param{ImportDataRow}->[$Counter] );
 
                         # Check is Array defined
-                        if( @StringToArray ){
-                            if( ref($NewCustomerCompanyData{ $Keys[0] }) eq 'ARRAY'){
+                        if (@StringToArray) {
+                            if ( ref( $NewCustomerCompanyData{ $Keys[0] } ) eq 'ARRAY' ) {
 
                                 # Check exists element in main array
                                 ITEM:
-                                for my $Item ( @StringToArray ){
-                                    next ITEM if grep { $_ eq $Item; } @{ $NewCustomerCompanyData{ $Keys[0] } };
-                                    push( @{ $NewCustomerCompanyData{ $Keys[0] } }, $Item);
+                                for my $Item (@StringToArray) {
+                                    next ITEM
+                                        if grep { $_ eq $Item; }
+                                            @{ $NewCustomerCompanyData{ $Keys[0] } };
+                                    push( @{ $NewCustomerCompanyData{ $Keys[0] } }, $Item );
                                 }
-                            }else{
-                                push( @{ $NewCustomerCompanyData{ $Keys[0] } }, @StringToArray);
                             }
-                        }else{
-                            if( ref($NewCustomerCompanyData{ $Keys[0] }) ne 'ARRAY'){
-                                if( !$ObjectData->{EmptyFieldsLeaveTheOldValues} ) {
+                            else {
+                                push( @{ $NewCustomerCompanyData{ $Keys[0] } }, @StringToArray );
+                            }
+                        }
+                        else {
+                            if ( ref( $NewCustomerCompanyData{ $Keys[0] } ) ne 'ARRAY' ) {
+                                if ( !$ObjectData->{EmptyFieldsLeaveTheOldValues} ) {
                                     $NewCustomerCompanyData{ $Keys[0] } = '';
                                 }
                             }
                         }
 
-                    # if used convert array to single elements
-                    }elsif ( $ObjectData->{ArrayFormatAs} eq 'Split' ){
-                        if($Param{ImportDataRow}->[$Counter]){
-                            push( @{ $NewCustomerCompanyData{ $Keys[0] } }, $Param{ImportDataRow}->[$Counter]);
-                        }else{
+                        # if used convert array to single elements
+                    }
+                    elsif ( $ObjectData->{ArrayFormatAs} eq 'Split' ) {
+                        if ( $Param{ImportDataRow}->[$Counter] ) {
+                            push(
+                                @{ $NewCustomerCompanyData{ $Keys[0] } },
+                                $Param{ImportDataRow}->[$Counter]
+                            );
+                        }
+                        else {
+
                             # if checked ignore empty value
-                            if( !$ObjectData->{EmptyFieldsLeaveTheOldValues}
-                                && !$NewCustomerCompanyData{ $Keys[0] } )
+                            if (
+                                !$ObjectData->{EmptyFieldsLeaveTheOldValues}
+                                && !$NewCustomerCompanyData{ $Keys[0] }
+                                )
                             {
                                 $NewCustomerCompanyData{ $Keys[0] } = '';
                             }
                         }
                     }
-                }else{
+                }
+                else {
+
                     # if checked ignore empty value
-                    if( !$ObjectData->{EmptyFieldsLeaveTheOldValues}
-                        || IsStringWithData($Param{ImportDataRow}->[$Counter]))
+                    if (
+                        !$ObjectData->{EmptyFieldsLeaveTheOldValues}
+                        || IsStringWithData( $Param{ImportDataRow}->[$Counter] )
+                        )
                     {
                         $NewCustomerCompanyData{ $MappingObjectData->{Key} } =
                             $Param{ImportDataRow}->[$Counter];
                     }
                 }
-            }else{
+            }
+            else {
+
                 # if checked ignore empty value
-                if( !$ObjectData->{EmptyFieldsLeaveTheOldValues}
-                    || IsStringWithData($Param{ImportDataRow}->[$Counter]))
+                if (
+                    !$ObjectData->{EmptyFieldsLeaveTheOldValues}
+                    || IsStringWithData( $Param{ImportDataRow}->[$Counter] )
+                    )
                 {
                     $NewCustomerCompanyData{ $MappingObjectData->{Key} } =
                         $Param{ImportDataRow}->[$Counter];
@@ -659,6 +698,7 @@ sub ImportDataSave {
             }
         }
         else {
+
             # Sanitize country if it isn't found in OTRS to increase the chance it will
             # Note that standardizing against the ISO 3166-1 list might be a better approach...
             my $CountryList = $Kernel::OM->Get('Kernel::System::ReferenceData')->CountryList();

@@ -48,7 +48,7 @@ Core.Agent.SLASearch = (function (TargetNS) {
             $Element.autocomplete({
                 minLength: ActiveAutoComplete ? Core.Config.Get('Autocomplete.MinQueryLength') : 500,
                 delay: Core.Config.Get('Autocomplete.QueryDelay'),
-                source: function (Request, Response) {              
+                source: function (Request, Response) {
                     var URL = Core.Config.Get('Baselink'), Data = {
                         Action: 'AgentSLASearch',
                         Term: Request.term,

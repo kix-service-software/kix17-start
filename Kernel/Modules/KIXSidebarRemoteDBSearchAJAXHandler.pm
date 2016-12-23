@@ -45,24 +45,27 @@ sub new {
     $Self->{TicketObject}             = $Kernel::OM->Get('Kernel::System::Ticket');
     $Self->{ParamObject}              = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    $Self->{Identifier} = $Self->{ParamObject}->GetParam( Param => 'Identifier' ) || 'KIXSidebarRemoteDB';
+    $Self->{Identifier} = $Self->{ParamObject}->GetParam( Param => 'Identifier' )
+        || 'KIXSidebarRemoteDB';
     my $KIXSidebarToolsConfig = $Self->{ConfigObject}->Get('KIXSidebarTools');
     for my $Data ( keys %{ $KIXSidebarToolsConfig->{Data} } ) {
         my ( $DataIdentifier, $DataAttribute ) = split( ':::', $Data, 2 );
         next if $Self->{Identifier} ne $DataIdentifier;
         $Self->{SidebarConfig}->{$DataAttribute} =
-            $KIXSidebarToolsConfig->{Data}->{ $Data } || '';
+            $KIXSidebarToolsConfig->{Data}->{$Data} || '';
     }
 
-    if( !$Self->{SidebarConfig} ) {
+    if ( !$Self->{SidebarConfig} ) {
         my $ConfigPrefix = '';
         if ( $Self->{UserType} eq 'Customer' ) {
             $ConfigPrefix = 'Customer';
-        } elsif ( $Self->{UserType} ne 'User' ) {
+        }
+        elsif ( $Self->{UserType} ne 'User' ) {
             $ConfigPrefix = 'Public';
         }
-        my $CompleteConfig = $Self->{ConfigObject}->Get($ConfigPrefix . 'Frontend::KIXSidebarBackend');
-        if( $CompleteConfig && ref($CompleteConfig) eq 'HASH' ) {
+        my $CompleteConfig
+            = $Self->{ConfigObject}->Get( $ConfigPrefix . 'Frontend::KIXSidebarBackend' );
+        if ( $CompleteConfig && ref($CompleteConfig) eq 'HASH' ) {
             $Self->{SidebarConfig} = $CompleteConfig->{ $Self->{Identifier} };
         }
     }
@@ -78,12 +81,13 @@ sub Run {
     my $TicketID       = $Self->{ParamObject}->GetParam( Param => 'TicketID' )       || '';
     my $CustomerUserID = $Self->{ParamObject}->GetParam( Param => 'CustomerUserID' ) || '';
 
-    my $Identifier   = $Self->{SidebarConfig}->{Identifier}   || '';
+    my $Identifier = $Self->{SidebarConfig}->{Identifier} || '';
 
     my $Frontend = 'Public';
     if ( $Self->{UserType} eq 'User' ) {
         $Frontend = 'Agent';
-    } elsif ( $Self->{UserType} eq 'Customer' ) {
+    }
+    elsif ( $Self->{UserType} eq 'Customer' ) {
         $Frontend       = 'Customer';
         $CustomerUserID = $Self->{UserID};
     }
@@ -91,11 +95,12 @@ sub Run {
     my %TicketData;
     my $TIDSearchMaskRegexp = $Self->{SidebarConfig}->{'TicketIDSearchMaskRegExp'} || '';
     if (
-           $TIDSearchMaskRegexp
+        $TIDSearchMaskRegexp
         && $CallingAction
         && $CallingAction =~ /$TIDSearchMaskRegexp/
-        && $TicketID =~ /^\d+$/
-    ) {
+        && $TicketID      =~ /^\d+$/
+        )
+    {
         %TicketData = $Self->{TicketObject}->TicketGet(
             TicketID      => $TicketID,
             DynamicFields => 1,
@@ -107,27 +112,28 @@ sub Run {
     }
 
     my %CustomerUserData;
-    if ( $CustomerUserID ) {
+    if ($CustomerUserID) {
         %CustomerUserData = $Self->{CustomerUserObject}->CustomerUserDataGet(
             User => $CustomerUserID,
         );
     }
 
     my @RestrictedDBAttributes = ();
-    if ( defined($Self->{SidebarConfig}->{RestrictedDBAttributes}) ) {
+    if ( defined( $Self->{SidebarConfig}->{RestrictedDBAttributes} ) ) {
         @RestrictedDBAttributes = split( ",", $Self->{SidebarConfig}->{RestrictedDBAttributes} );
     }
     my @RestrictedMandatory = ();
-    if ( defined($Self->{SidebarConfig}->{RestrictedMandatory}) ) {
+    if ( defined( $Self->{SidebarConfig}->{RestrictedMandatory} ) ) {
         @RestrictedMandatory = split( ",", $Self->{SidebarConfig}->{RestrictedMandatory} );
     }
     my @RestrictedOTRSObjects = ();
-    if ( defined($Self->{SidebarConfig}->{RestrictedOTRSObjects}) ) {
+    if ( defined( $Self->{SidebarConfig}->{RestrictedOTRSObjects} ) ) {
         @RestrictedOTRSObjects = split( ",", $Self->{SidebarConfig}->{RestrictedOTRSObjects} );
     }
     my @RestrictedOTRSAttributes = ();
-    if ( defined($Self->{SidebarConfig}->{RestrictedOTRSAttributes}) ) {
-        @RestrictedOTRSAttributes = split( ",", $Self->{SidebarConfig}->{RestrictedOTRSAttributes} );
+    if ( defined( $Self->{SidebarConfig}->{RestrictedOTRSAttributes} ) ) {
+        @RestrictedOTRSAttributes
+            = split( ",", $Self->{SidebarConfig}->{RestrictedOTRSAttributes} );
     }
 
     my @RestrictedValues = ();
@@ -139,13 +145,15 @@ sub Run {
         && scalar(@RestrictedOTRSAttributes) == scalar(@RestrictedOTRSObjects)
         && scalar(@RestrictedOTRSAttributes) == scalar(@RestrictedDBAttributes)
         && scalar(@RestrictedOTRSAttributes) == scalar(@RestrictedMandatory)
-    ) {
-        for (my $Index = 0; $Index < scalar(@RestrictedOTRSObjects); $Index++) {
+        )
+    {
+        for ( my $Index = 0; $Index < scalar(@RestrictedOTRSObjects); $Index++ ) {
             my $RestrictedValue = '';
             if (
                 $RestrictedOTRSObjects[$Index] eq 'Configuration'
                 && $RestrictedOTRSAttributes[$Index]
-            ) {
+                )
+            {
                 my @RestrictedValueArray = split( ";", $RestrictedOTRSAttributes[$Index] );
                 if (@RestrictedValueArray) {
                     $RestrictedValue = \@RestrictedValueArray;
@@ -153,36 +161,43 @@ sub Run {
             }
             elsif (
                 $RestrictedOTRSObjects[$Index] eq 'Ticket'
-            ) {
+                )
+            {
                 $RestrictedValue = '';
-                my @RestrictedValueArray = $Self->{ParamObject}->GetArray( Param => $RestrictedOTRSAttributes[$Index]);
+                my @RestrictedValueArray
+                    = $Self->{ParamObject}->GetArray( Param => $RestrictedOTRSAttributes[$Index] );
                 if (@RestrictedValueArray) {
                     $RestrictedValue = \@RestrictedValueArray;
                 }
-                if ($TicketData{ $RestrictedOTRSAttributes[$Index] }) {
+                if ( $TicketData{ $RestrictedOTRSAttributes[$Index] } ) {
                     $RestrictedValue = $TicketData{ $RestrictedOTRSAttributes[$Index] };
                 }
             }
             elsif (
                 $RestrictedOTRSObjects[$Index] eq 'CustomerUser'
                 && $CustomerUserData{ $RestrictedOTRSAttributes[$Index] }
-            ) {
+                )
+            {
                 $RestrictedValue = $CustomerUserData{ $RestrictedOTRSAttributes[$Index] };
             }
 
-            if( !$RestrictedValue && $RestrictedMandatory[$Index] ) {
+            if ( !$RestrictedValue && $RestrictedMandatory[$Index] ) {
                 $SearchString = "";
             }
             push( @RestrictedValues, $RestrictedValue );
         }
-    } elsif (
+    }
+    elsif (
         !@RestrictedDBAttributes
         && !@RestrictedOTRSObjects
         && !@RestrictedOTRSAttributes
         && !@RestrictedMandatory
-    ) {
+        )
+    {
+
         # do nothing
-    } else {
+    }
+    else {
         $SearchString = "";
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'Error',
@@ -193,7 +208,7 @@ sub Run {
     }
 
     my $ResultArray;
-    if( $SearchString) {
+    if ($SearchString) {
         $ResultArray = $Self->{KIXSidebarRemoteDBObject}->KIXSidebarRemoteDBSearch(
             DatabaseDSN             => $Self->{SidebarConfig}->{DatabaseDSN},
             DatabaseUser            => $Self->{SidebarConfig}->{DatabaseUser},
@@ -204,7 +219,7 @@ sub Run {
             DatabaseType            => $Self->{SidebarConfig}->{DatabaseType},
             IdentifierAttribute     => $Self->{SidebarConfig}->{IdentifierAttribute},
             DynamicFieldAttributes  => $Self->{SidebarConfig}->{DynamicFieldAttributes},
-            PopupAttributes        => $Self->{SidebarConfig}->{PopupAttributes},
+            PopupAttributes         => $Self->{SidebarConfig}->{PopupAttributes},
             ShowAttributes          => $Self->{SidebarConfig}->{ShowAttributes},
             RestrictedMandatory     => \@RestrictedMandatory,
             RestrictedAttributes    => \@RestrictedDBAttributes,
@@ -217,22 +232,22 @@ sub Run {
     }
 
     if ( $ResultArray && ref($ResultArray) eq 'ARRAY' && scalar( @{$ResultArray} > 0 ) ) {
-        my $Style            = '';
+        my $Style = '';
         my $MaxResultDisplay = $Self->{SidebarConfig}->{'MaxResultDisplay'} || 10;
 
         my $SearchResultCount = scalar( @{$ResultArray} );
 
         my $DynamicFieldString = $Self->{SidebarConfig}->{DynamicFields} || '';
-        my @DynamicFields      = split( ",", $DynamicFieldString );
-        my $PopupHeadString    = $Self->{SidebarConfig}->{PopupAttributesHead} || '';
-        my @PopupHead          = split( ",", $PopupHeadString );
-        my $DFOffset           = 0;
-        my $PopupOffset        = 0;
-        my $ResultOffset       = 0;
+        my @DynamicFields = split( ",", $DynamicFieldString );
+        my $PopupHeadString = $Self->{SidebarConfig}->{PopupAttributesHead} || '';
+        my @PopupHead    = split( ",", $PopupHeadString );
+        my $DFOffset     = 0;
+        my $PopupOffset  = 0;
+        my $ResultOffset = 0;
 
-        if ($Self->{SidebarConfig}->{DynamicFieldAttributes}) {
+        if ( $Self->{SidebarConfig}->{DynamicFieldAttributes} ) {
             my @TempDFAttrs = split( ",", $Self->{SidebarConfig}->{DynamicFieldAttributes} );
-            if (scalar(@TempDFAttrs) != scalar(@DynamicFields)) {
+            if ( scalar(@TempDFAttrs) != scalar(@DynamicFields) ) {
                 $DynamicFieldString = '';
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'Error',
@@ -241,12 +256,12 @@ sub Run {
                         . '.',
                 );
             }
-            $ResultOffset   = scalar( @TempDFAttrs );
-            $PopupOffset    = scalar( @TempDFAttrs );
+            $ResultOffset = scalar(@TempDFAttrs);
+            $PopupOffset  = scalar(@TempDFAttrs);
         }
-        if ($Self->{SidebarConfig}->{PopupAttributes}) {
+        if ( $Self->{SidebarConfig}->{PopupAttributes} ) {
             my @TempPopupAttrs = split( ",", $Self->{SidebarConfig}->{PopupAttributes} );
-            if (scalar(@TempPopupAttrs) != scalar(@PopupHead)) {
+            if ( scalar(@TempPopupAttrs) != scalar(@PopupHead) ) {
                 $PopupHeadString = '';
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'Error',
@@ -255,33 +270,34 @@ sub Run {
                         . '.',
                 );
             }
-            $ResultOffset  += scalar( @TempPopupAttrs );
+            $ResultOffset += scalar(@TempPopupAttrs);
         }
-        if ($Self->{SidebarConfig}->{IdentifierAttribute}) {
+        if ( $Self->{SidebarConfig}->{IdentifierAttribute} ) {
             $DFOffset++;
             $PopupOffset++;
             $ResultOffset++;
         }
 
         my @HeadCols   = split( ",", $Self->{SidebarConfig}->{ShowAttributesHead} || '' );
-        my @ResultCols = split( ",", $Self->{SidebarConfig}->{ShowAttributes} || '' );
-        my $HeadRow    = ( scalar( @HeadCols ) == scalar( @ResultCols ) ) ? 1 : 0;
+        my @ResultCols = split( ",", $Self->{SidebarConfig}->{ShowAttributes}     || '' );
+        my $HeadRow = ( scalar(@HeadCols) == scalar(@ResultCols) ) ? 1 : 0;
 
         if ( $SearchResultCount > $MaxResultDisplay ) {
-            $Style = 'overflow-x:hidden;overflow-y:scroll;height:' . ( ( $MaxResultDisplay + $HeadRow ) * 20 ) . 'px;';
+            $Style = 'overflow-x:hidden;overflow-y:scroll;height:'
+                . ( ( $MaxResultDisplay + $HeadRow ) * 20 ) . 'px;';
         }
 
         $Self->{LayoutObject}->Block(
             Name => 'KIXSidebarRemoteDBSearchResult',
             Data => {
                 %Param,
-                Identifier   => $Identifier,
-                TicketID     => $Param{TicketID},
-                Style        => $Style,
+                Identifier => $Identifier,
+                TicketID   => $Param{TicketID},
+                Style      => $Style,
             },
         );
 
-        if ( $HeadRow ) {
+        if ($HeadRow) {
             $Self->{LayoutObject}->Block(
                 Name => 'KIXSidebarRemoteDBSearchResultHead',
             );
@@ -298,10 +314,10 @@ sub Run {
                     Name => 'KIXSidebarRemoteDBPopupContainer',
                     Data => {
                         Identifier => $Identifier,
-                    }
+                        }
                 );
             }
-            for my $Head ( @HeadCols ) {
+            for my $Head (@HeadCols) {
                 $Self->{LayoutObject}->Block(
                     Name => 'KIXSidebarRemoteDBSearchResultHeadColumnValue',
                     Data => {
@@ -325,29 +341,38 @@ sub Run {
             if ( $Self->{SidebarConfig}->{DynamicFieldAttributes} ) {
                 my $DFValueString = '';
                 if ($DynamicFieldString) {
-                    for (my $DFCounter = $DFOffset; $DFCounter < $PopupOffset; $DFCounter++) {
+                    for ( my $DFCounter = $DFOffset; $DFCounter < $PopupOffset; $DFCounter++ ) {
                         if ($DFValueString) {
-                                $DFValueString .= ','
-                            }
-                            $DFValueString .= $Self->{LayoutObject}->LinkEncode($ResultRow->[$DFCounter]);
+                            $DFValueString .= ','
+                        }
+                        $DFValueString
+                            .= $Self->{LayoutObject}->LinkEncode( $ResultRow->[$DFCounter] );
                     }
                 }
                 my $IsChecked = '';
                 if (
                     $DynamicFieldString
                     && @DynamicFields
-                ) {
+                    )
+                {
                     my $DFTicketValueString = '';
-                    for my $DynamicField ( @DynamicFields ) {
+                    for my $DynamicField (@DynamicFields) {
                         if ($DFTicketValueString) {
                             $DFTicketValueString .= ','
                         }
-                        if ( ref ($TicketData{'DynamicField_' . $DynamicField}) eq 'ARRAY' ) {
-                            $DFTicketValueString .= $Self->{LayoutObject}->LinkEncode($TicketData{'DynamicField_' . $DynamicField}->[0] || '');
-                        } else {
-                            $DFTicketValueString .= $Self->{LayoutObject}->LinkEncode($TicketData{'DynamicField_' . $DynamicField} 
-                            ||  $Self->{ParamObject}->GetParam( Param => 'DynamicField_' . $DynamicField) 
-                            || '');
+                        if ( ref( $TicketData{ 'DynamicField_' . $DynamicField } ) eq 'ARRAY' ) {
+                            $DFTicketValueString
+                                .= $Self->{LayoutObject}
+                                ->LinkEncode( $TicketData{ 'DynamicField_' . $DynamicField }->[0]
+                                    || '' );
+                        }
+                        else {
+                            $DFTicketValueString .= $Self->{LayoutObject}->LinkEncode(
+                                $TicketData{ 'DynamicField_' . $DynamicField }
+                                    || $Self->{ParamObject}
+                                    ->GetParam( Param => 'DynamicField_' . $DynamicField )
+                                    || ''
+                            );
                         }
                     }
 
@@ -373,37 +398,42 @@ sub Run {
                 $TicketIDPopup =~ s/[^A-Za-z0-9-_]/_/gxmsi;
 
                 $Self->{LayoutObject}->Block(
-                    Name    => 'KIXSidebarRemoteDBInfoRowColumn',
-                    Data    => {
-                        TicketID => $TicketIDPopup,
+                    Name => 'KIXSidebarRemoteDBInfoRowColumn',
+                    Data => {
+                        TicketID   => $TicketIDPopup,
                         Identifier => $Identifier,
-                    }
+                        }
                 );
                 $Self->{LayoutObject}->Block(
-                    Name    => 'KIXSidebarRemoteDBPopupBlock',
-                    Data    => {
-                        TicketID => $TicketIDPopup,
+                    Name => 'KIXSidebarRemoteDBPopupBlock',
+                    Data => {
+                        TicketID   => $TicketIDPopup,
                         Identifier => $Identifier,
-                    }
+                        }
                 );
                 if ($PopupHeadString) {
-                    my @PopupAttributes = split( ",", $Self->{SidebarConfig}->{PopupAttributes});
+                    my @PopupAttributes = split( ",", $Self->{SidebarConfig}->{PopupAttributes} );
                     my $MinusIndex = $PopupOffset;
-                    for (my $PopupCnt = $PopupOffset; $PopupCnt < $ResultOffset; $PopupCnt++) {
+                    for ( my $PopupCnt = $PopupOffset; $PopupCnt < $ResultOffset; $PopupCnt++ ) {
                         $Self->{LayoutObject}->Block(
-                            Name    => 'KIXSidebarRemoteDBPopupRow',
-                            Data    => {
-                                Label => $PopupHead[$PopupCnt-$MinusIndex],
+                            Name => 'KIXSidebarRemoteDBPopupRow',
+                            Data => {
+                                Label => $PopupHead[ $PopupCnt - $MinusIndex ],
                                 Value => $ResultRow->[$PopupCnt],
-                            }
+                                }
                         );
                     }
                 }
             }
 
-            for (my $ResultIndex = $ResultOffset; $ResultIndex < scalar( @{$ResultRow} ); $ResultIndex++) {
+            for (
+                my $ResultIndex = $ResultOffset;
+                $ResultIndex < scalar( @{$ResultRow} );
+                $ResultIndex++
+                )
+            {
 
-                my $Result      = $ResultRow->[$ResultIndex] || '';
+                my $Result = $ResultRow->[$ResultIndex] || '';
                 my $ResultShort = $Result;
 
                 if ( $MaxResultSize > 0 ) {
@@ -422,7 +452,7 @@ sub Run {
                     Name => 'KIXSidebarRemoteDBSearchResultRowColumn',
                     Data => {
                         Result => $Result,
-                    }
+                        }
                 );
 
                 if ( $LinkTicketID && ( $Frontend eq 'Agent' || $Frontend eq 'Customer' ) ) {
@@ -432,20 +462,22 @@ sub Run {
                             Result      => $Result,
                             ResultShort => $ResultShort,
                             Frontend    => $Frontend
-                        }
+                            }
                     );
-                } else {
+                }
+                else {
                     $Self->{LayoutObject}->Block(
                         Name => 'KIXSidebarRemoteDBSearchResultRowColumnValue',
                         Data => {
-                            Result       => $Result,
-                            ResultShort  => $ResultShort,
-                        }
+                            Result      => $Result,
+                            ResultShort => $ResultShort,
+                            }
                     );
                 }
             }
         }
-    } else {
+    }
+    else {
         $Self->{LayoutObject}->Block(
             Name => 'NoSearchResult',
         );

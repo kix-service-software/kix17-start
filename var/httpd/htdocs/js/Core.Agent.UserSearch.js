@@ -69,7 +69,7 @@ Core.Agent.UserSearch = (function (TargetNS) {
                 },
                 select: function (Event, UI) {
                     var UserKey = UI.item.label.replace(/.*\((.*)\)$/, '$1');
-                    
+
                     $Element.val(UI.item.value);
 
                     // set hidden field SelectedCustomerUser

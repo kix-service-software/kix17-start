@@ -27,7 +27,7 @@ use File::Basename;
 
 our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
-    'Kernel::System::QueuesGroupsRoles',    
+    'Kernel::System::QueuesGroupsRoles',
     'Kernel::System::Group',
     'Kernel::System::Config',
     'Kernel::System::Web::UploadCache',
@@ -56,17 +56,16 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $QGRObject    = $Kernel::OM->Get('Kernel::System::QueuesGroupsRoles');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
-    
+
     my $Config = $Kernel::OM->Get('Kernel::Config')->Get("QueuesGroupsRoles");
- 
+
     # create form id
     my $FormID = $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDCreate();
 
-
     # get params
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my @Frontends = $ParamObject->GetArray( Param => 'Frontend' );
-    my %GetParam = map { $_ => 1 } @Frontends;
+    my @Frontends   = $ParamObject->GetArray( Param => 'Frontend' );
+    my %GetParam    = map { $_ => 1 } @Frontends;
     for (
         qw(ID Name Keywords Comment Comment1 Comment2 Subject TextModule
         Language LanguageEdit ValidID FormID Limit Show Download
@@ -75,6 +74,7 @@ sub Run {
     {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
     }
+
     # build queue selection
     $Param{FormID} = $FormID;
 
@@ -90,13 +90,13 @@ sub Run {
         );
 
         #my @Content = ();
-        if ($UploadStuff{Content}) {
+        if ( $UploadStuff{Content} ) {
             my @Content = split( /\n/, $UploadStuff{Content} );
             $QGRObject->Upload( Content => \@Content );
         }
 
         #if (@Content) {
-            #$QGRObject->Upload( Content => \@Content );
+        #$QGRObject->Upload( Content => \@Content );
         #}
     }
 
@@ -110,14 +110,16 @@ sub Run {
     my @Data = @{ $Result[1] };
 
     my %ShortcutMappings;
-    if ( $Config
-         && ref($Config) eq 'HASH'
-         && $Config->{ShortcutMappings}
-         && ref($Config->{ShortcutMappings}) eq 'HASH'
-         && $Config->{ShortcutMappings}->{'rw'}
-    ) {
-        %ShortcutMappings = %{$Config->{ShortcutMappings}};
-    } 
+    if (
+        $Config
+        && ref($Config) eq 'HASH'
+        && $Config->{ShortcutMappings}
+        && ref( $Config->{ShortcutMappings} ) eq 'HASH'
+        && $Config->{ShortcutMappings}->{'rw'}
+        )
+    {
+        %ShortcutMappings = %{ $Config->{ShortcutMappings} };
+    }
 
     if ( $Self->{Subaction} eq 'Show' ) {
 
@@ -172,7 +174,8 @@ sub Run {
                 if ( !$Data ) {
                 }
                 elsif ( $Data eq ${$DataRow}[0] ) {
-                    $ID = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup( Queue => ${$DataRow}[0] );
+                    $ID = $Kernel::OM->Get('Kernel::System::Queue')
+                        ->QueueLookup( Queue => ${$DataRow}[0] );
                     $Link = 'Action=AdminQueue;Subaction=Change;QueueID=' . $ID;
                 }
                 elsif ( $Data eq ${$DataRow}[1] ) {
@@ -180,7 +183,8 @@ sub Run {
                     $Link = 'Action=AdminUserGroup;Subaction=Group;ID=' . $ID;
                 }
                 elsif ( $Data eq ${$DataRow}[15] ) {
-                    my %List    = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressList();
+                    my %List
+                        = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressList();
                     for my $CurrKey ( keys(%List) ) {
                         if ( $Data =~ /.*<?$List{$CurrKey}>?/ ) {
                             $ID = $CurrKey;
@@ -189,11 +193,11 @@ sub Run {
                     }
                     $Link = 'Action=AdminSystemAddress;Subaction=Change;ID=' . $ID;
                 }
-                elsif ( %ShortcutMappings )
+                elsif (%ShortcutMappings)
                 {
                     my $ExistingPermission = 0;
-                    for my $ShortCutMaping (keys %ShortcutMappings) {
-                        if ($Data !~ /\d/ && $Data !~ /valid/) {
+                    for my $ShortCutMaping ( keys %ShortcutMappings ) {
+                        if ( $Data !~ /\d/ && $Data !~ /valid/ ) {
                             $Data =~ s/$ShortCutMaping/$ShortcutMappings{$ShortCutMaping}/g;
                             $ExistingPermission++;
                         }
@@ -212,7 +216,7 @@ sub Run {
                     || $Data =~ /create/
                     || $Data =~ /note/
                     || $Data =~ /owner/
-                    || $Data =~ /priority/ 
+                    || $Data =~ /priority/
                     || $Data =~ /rw/
                     )
                 {

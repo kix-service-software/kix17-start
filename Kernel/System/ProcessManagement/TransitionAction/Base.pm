@@ -31,7 +31,8 @@ use utf8;
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
-# BPMX-capeIT
+
+    # BPMX-capeIT
     'Kernel::Config',
     'Kernel::System::Encode',
     'Kernel::System::HTMLUtils',
@@ -39,7 +40,8 @@ our @ObjectDependencies = (
     'Kernel::System::Queue',
     'Kernel::System::TemplateGenerator',
     'Kernel::System::Ticket',
-# EO BPMX-capeIT
+
+    # EO BPMX-capeIT
     'Kernel::System::Log',
 );
 
@@ -234,6 +236,7 @@ sub ReplaceExtended {
     }
     else
     {
+
         # using TemplateGenerator from KIX4OTRS
         $Param{Text} = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->ReplacePlaceHolder(
             RichText => $Param{RichText},
@@ -248,6 +251,7 @@ sub ReplaceExtended {
     return $Param{Text};
 
 }
+
 # EO BPMX-capeIT
 
 sub _CheckParams {
@@ -305,7 +309,7 @@ sub _OverrideUserID {
 sub _ReplaceTicketAttributes {
     my ( $Self, %Param ) = @_;
 
-# BPMX-capeIT 
+# BPMX-capeIT
 #    include more Placeholder
 #
 #   # get needed objects
@@ -323,17 +327,19 @@ sub _ReplaceTicketAttributes {
             UserID   => $Param{UserID} || 1,
         );
     }
-# EO BPMX-capeIT
+
+    # EO BPMX-capeIT
     return 1;
 }
 
 sub _ConvertScalar2ArrayRef {
     my ( $Self, %Param ) = @_;
 
-# BPMX-capeIT
-#    my @Data = split /,/, $Param{Data};
+    # BPMX-capeIT
+    #    my @Data = split /,/, $Param{Data};
     my @Data = split( '/,/,', $Param{Data} );
-# EO BPMX-capeIT
+
+    # EO BPMX-capeIT
 
     # remove any possible heading and tailing white spaces
     for my $Item (@Data) {

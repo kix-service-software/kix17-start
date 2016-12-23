@@ -13,9 +13,9 @@
 # --
 # $Id$
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see 
-# the enclosed file COPYING for license information (AGPL). If you 
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt. 
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::ImportExport::ObjectBackend::Service;
@@ -30,7 +30,7 @@ our @ObjectDependencies = (
     'Kernel::System::Queue',
     'Kernel::System::Service',
     'Kernel::System::Type',
-    'Kernel::System::Valid',    
+    'Kernel::System::Valid',
     'Kernel::System::Log',
     'Kernel::System::Main',
     'Kernel::System::User',
@@ -89,12 +89,13 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    if ($Kernel::OM->Get('Kernel::System::Package')->PackageIsInstalled( Name => 'ITSMCore' ) ) {
+    if ( $Kernel::OM->Get('Kernel::System::Package')->PackageIsInstalled( Name => 'ITSMCore' ) ) {
         if ( $Kernel::OM->Get('Kernel::System::Main')->Require('Kernel::System::GeneralCatalog') ) {
 
             if ( !$Self->{GeneralCatalogObject} ) {
                 $Self->{GeneralCatalogObject} = Kernel::System::GeneralCatalog->new( %{$Self} );
             }
+
             # get service type list
             $Self->{ServiceTypeList} = $Self->{GeneralCatalogObject}->ItemList(
                 Class => 'ITSM::Service::Type',
@@ -106,7 +107,10 @@ sub new {
             my $ITSMCriticality = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
                 Name => 'ITSMCriticality',
             );
-            if ( $ITSMCriticality && $ITSMCriticality->{'FieldType'} eq 'Dropdown' && $ITSMCriticality->{'ObjectType'} eq 'Ticket' ) {
+            if (   $ITSMCriticality
+                && $ITSMCriticality->{'FieldType'}  eq 'Dropdown'
+                && $ITSMCriticality->{'ObjectType'} eq 'Ticket' )
+            {
                 $Self->{CriticalityList} = $ITSMCriticality->{'Config'}->{'PossibleValues'};
                 my %TmpHash2 = reverse( %{ $Self->{CriticalityList} } );
                 $Self->{ReverseCriticalityList} = \%TmpHash2;
@@ -315,7 +319,7 @@ sub MappingObjectAttributesGet {
         },
     ];
 
-    return $Attributes;    
+    return $Attributes;
 }
 
 =item SearchAttributesGet()
@@ -472,7 +476,6 @@ sub ExportDataGet {
         }
     }
 
-
     for my $ServiceID (@ServiceList) {
         my %ServiceData = $Kernel::OM->Get('Kernel::System::Service')->ServiceGet(
             ServiceID => $ServiceID,
@@ -484,8 +487,8 @@ sub ExportDataGet {
             ValidID => $ServiceData{ValidID},
         );
 
-        if ($ServiceData{TypeID}){
-            $ServiceData{Type} = $Self->{ServiceTypeList}->{$ServiceData{TypeID}};
+        if ( $ServiceData{TypeID} ) {
+            $ServiceData{Type} = $Self->{ServiceTypeList}->{ $ServiceData{TypeID} };
         }
 
         PREFERENCECHECK:
@@ -510,12 +513,13 @@ sub ExportDataGet {
             {
                 %SelectionList = $Kernel::OM->Get('Kernel::System::Queue')->QueueList();
             }
-            elsif ( 
-                    $Preferences{$CurrKey}->{SelectionSource}
-                    && $Preferences{$CurrKey}->{SelectionSource} eq 'UserList' 
-                    ) 
+            elsif (
+                $Preferences{$CurrKey}->{SelectionSource}
+                && $Preferences{$CurrKey}->{SelectionSource} eq 'UserList'
+                )
             {
                 %SelectionList = Kernel::OM->Get('Kernel::System::UserObject')->UserList(
+
                     #Type  => 'Long',
                     Valid => 1,
                 );
@@ -792,10 +796,10 @@ sub ImportDataSave {
             }
         }
         my %ReverseSelectionList = reverse(%SelectionList);
-        
-        # consider '-' values as empty  
-        $NewServiceData{$CurrUsedKey} = '' if ($NewServiceData{$CurrUsedKey} eq '-');
-        $NewServiceData{$NamePart} = '' if ($NewServiceData{$NamePart} eq '-');
+
+        # consider '-' values as empty
+        $NewServiceData{$CurrUsedKey} = '' if ( $NewServiceData{$CurrUsedKey} eq '-' );
+        $NewServiceData{$NamePart}    = '' if ( $NewServiceData{$NamePart}    eq '-' );
 
         # if only xxxID is given, set xxx...
         if (
@@ -822,17 +826,21 @@ sub ImportDataSave {
         }
 
         # if only xxx is given and ID can be found - get the ID...
-        elsif ( !$NewServiceData{$CurrUsedKey}
+        elsif (
+            !$NewServiceData{$CurrUsedKey}
             && $NewServiceData{$NamePart}
-            && $ReverseSelectionList{ $NewServiceData{$NamePart} } )
+            && $ReverseSelectionList{ $NewServiceData{$NamePart} }
+            )
         {
             $NewServiceData{$CurrUsedKey} = $ReverseSelectionList{ $NewServiceData{$NamePart} };
         }
 
         # if only xxx is given and no ID can be found - reject import...
-        elsif ( !$NewServiceData{$CurrUsedKey}
+        elsif (
+            !$NewServiceData{$CurrUsedKey}
             && $NewServiceData{$NamePart}
-            && !$ReverseSelectionList{ $NewServiceData{$NamePart} } )
+            && !$ReverseSelectionList{ $NewServiceData{$NamePart} }
+            )
         {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -878,32 +886,33 @@ sub ImportDataSave {
     }
 
     #(2) if service DOES NOT exist => create new...
-    my $Result = 0;
+    my $Result     = 0;
     my $ReturnCode = "";    # Created | Changed | Failed
-        
+
     if ( $NewService && $ServiceData{Name} && $ServiceData{ValidID} ) {
         if ( $ServiceData{FullName} ) {
             my @NamePartsArr = split( "::", $ServiceData{FullName} );
-            
+
             pop(@NamePartsArr);
             my $ParentServiceID = 0;
             my $ServiceFullname = '';
             for my $ServicePartName (@NamePartsArr) {
-                $ServiceFullname .= '::' if ($ServiceFullname);   
-                $ServiceFullname .= $ServicePartName;   
+                $ServiceFullname .= '::' if ($ServiceFullname);
+                $ServiceFullname .= $ServicePartName;
 
                 my $DummyServiceID = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
                     Name => $ServiceFullname,
                 );
-                if (!$DummyServiceID) {
+                if ( !$DummyServiceID ) {
                     my %ParentServiceData;
                     $ParentServiceData{'Name'} = $ServicePartName;
                     $ParentServiceData{'ParentID'} = $ParentServiceID if $ParentServiceID;
-                    
+
                     for my $ServiceKey (qw(Criticality TypeID ValidID)) {
-                        $ParentServiceData{$ServiceKey} = $ServiceData{$ServiceKey} if $ServiceData{$ServiceKey};
+                        $ParentServiceData{$ServiceKey} = $ServiceData{$ServiceKey}
+                            if $ServiceData{$ServiceKey};
                     }
-                    
+
                     $DummyServiceID = $Kernel::OM->Get('Kernel::System::Service')->ServiceAdd(
                         %ParentServiceData,
                         UserID => $Param{UserID},
@@ -914,9 +923,13 @@ sub ImportDataSave {
                     UserID    => 1,
                 );
                 if (%NewDummyServiceData) {
-                    if (($NewDummyServiceData{ParentID} && $ParentServiceID != $NewDummyServiceData{ParentID})
-                        || (!$NewDummyServiceData{ParentID} && $ParentServiceID)
-                       )
+                    if (
+                        (
+                               $NewDummyServiceData{ParentID}
+                            && $ParentServiceID != $NewDummyServiceData{ParentID}
+                        )
+                        || ( !$NewDummyServiceData{ParentID} && $ParentServiceID )
+                        )
                     {
                         $NewDummyServiceData{ParentID} = $ParentServiceID;
                         $Result = $Kernel::OM->Get('Kernel::System::Service')->ServiceUpdate(
@@ -943,8 +956,8 @@ sub ImportDataSave {
         }
         else {
             $ReturnCode = "Created";
-            $ServiceID = $Result;
-        }                
+            $ServiceID  = $Result;
+        }
     }
 
     #(3) if service DOES exist => update...
@@ -965,14 +978,14 @@ sub ImportDataSave {
         }
         else {
             $ReturnCode = "Changed";
-        }                
+        }
     }
 
     #(4) set preferences...
     if ($ServiceID) {
         for my $CurrKey ( keys(%Preferences) ) {
             next if ( !$NewServiceData{$CurrKey} );
-            next if ( $NewServiceData{$CurrKey} eq '-');
+            next if ( $NewServiceData{$CurrKey} eq '-' );
             $Kernel::OM->Get('Kernel::System::Service')->ServicePreferencesSet(
                 ServiceID => $ServiceID,
                 Key       => $CurrKey,

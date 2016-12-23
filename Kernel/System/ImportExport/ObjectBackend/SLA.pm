@@ -1,5 +1,5 @@
 # --
-# Kernel/System/ImportExport/ObjectBackend/SLA.pm 
+# Kernel/System/ImportExport/ObjectBackend/SLA.pm
 # - import/export backend for SLA definitions
 # Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
@@ -9,9 +9,9 @@
 # --
 # $Id$
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see 
-# the enclosed file COPYING for license information (AGPL). If you 
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt. 
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::ImportExport::ObjectBackend::SLA;
@@ -27,8 +27,8 @@ our @ObjectDependencies = (
     'Kernel::System::Queue',
     'Kernel::System::Type',
     'Kernel::System::Main',
-    'Kernel::System::Log',  
-    'Kernel::Config',        
+    'Kernel::System::Log',
+    'Kernel::Config',
 );
 
 =head1 NAME
@@ -85,9 +85,12 @@ sub new {
 
     my $CalendarIndex    = 1;
     my %CalendarNameList = qw{};
-    while ( $Kernel::OM->Get('Kernel::Config')->Get( "TimeZone::Calendar" . $CalendarIndex . "Name" ) ) {
+    while (
+        $Kernel::OM->Get('Kernel::Config')->Get( "TimeZone::Calendar" . $CalendarIndex . "Name" ) )
+    {
         $CalendarNameList{$CalendarIndex} =
-            $Kernel::OM->Get('Kernel::Config')->Get( "TimeZone::Calendar" . $CalendarIndex . "Name" );
+            $Kernel::OM->Get('Kernel::Config')
+            ->Get( "TimeZone::Calendar" . $CalendarIndex . "Name" );
         $CalendarIndex++;
     }
     my %TmpHash = reverse(%CalendarNameList);
@@ -102,7 +105,7 @@ sub new {
             $Self->{SLATypeList} = $Self->{GeneralCatalogObject}->ItemList(
                 Class => 'ITSM::SLA::Type',
             );
-            
+
             if ( $Self->{SLATypeList} && ( ref( $Self->{SLATypeList} ) eq 'HASH' ) )
             {
                 my %TmpHash = reverse( %{ $Self->{SLATypeList} } );
@@ -658,7 +661,7 @@ sub ImportDataSave {
                 Priority => 'error',
                 Message  => "Need $Argument!",
             );
-			return ( undef, 'Failed' );
+            return ( undef, 'Failed' );
         }
     }
 
@@ -668,7 +671,7 @@ sub ImportDataSave {
             Priority => 'error',
             Message  => 'ImportDataRow must be an array reference',
         );
-		return ( undef, 'Failed' );
+        return ( undef, 'Failed' );
     }
 
     # get object data
@@ -683,7 +686,7 @@ sub ImportDataSave {
             Priority => 'error',
             Message  => "No object data found for the template id $Param{TemplateID}",
         );
-		return ( undef, 'Failed' );
+        return ( undef, 'Failed' );
     }
 
     # get the mapping list
@@ -699,7 +702,7 @@ sub ImportDataSave {
             Priority => 'error',
             Message  => "No valid mapping list found for the template id $Param{TemplateID}",
         );
-		return ( undef, 'Failed' );
+        return ( undef, 'Failed' );
     }
 
     # create the mapping object list
@@ -727,7 +730,7 @@ sub ImportDataSave {
                 Priority => 'error',
                 Message  => "No valid mapping list found for template id $Param{TemplateID}",
             );
-			return ( undef, 'Failed' );
+            return ( undef, 'Failed' );
         }
 
         push( @MappingObjectList, $MappingObjectData );
@@ -885,7 +888,7 @@ sub ImportDataSave {
                         . " ($NamePart <$NewSLAData{$NamePart}> does not"
                         . "match $CurrUsedKey <$NewSLAData{$CurrUsedKey}>)!",
                 );
-			return ( undef, 'Failed' );
+                return ( undef, 'Failed' );
             }
         }
 
@@ -913,7 +916,7 @@ sub ImportDataSave {
                     . " ($NamePart <$NewSLAData{$NamePart}> does not"
                     . "match any existing value in selection)!",
             );
-			return ( undef, 'Failed' );
+            return ( undef, 'Failed' );
         }
 
     }
@@ -946,7 +949,7 @@ sub ImportDataSave {
             Message  => 'ImportDataSave: SLAID <' . $SLAID . '> is not a number '
                 . '(maybe label or headline).',
         );
-		return ( undef, 'Failed' );
+        return ( undef, 'Failed' );
     }
 
     if ( scalar( keys(%SLAData) ) ) {
@@ -971,9 +974,9 @@ sub ImportDataSave {
     $SLAData{ServiceIDs} = \@NewServiceIDs;
 
     #(2) if SLA DOES NOT exists => create new...
-    my $Result = 0;
+    my $Result     = 0;
     my $ReturnCode = "";    # Created | Changed | Failed
-        
+
     if ($NewSLA) {
         $Result = $Kernel::OM->Get('Kernel::System::SLA')->SLAAdd(
             %SLAData,
@@ -990,7 +993,7 @@ sub ImportDataSave {
         }
         else {
             $ReturnCode = "Created";
-        }    
+        }
     }
 
     #(3) if SLA DOES exists => update...
@@ -1012,7 +1015,7 @@ sub ImportDataSave {
         }
         else {
             $ReturnCode = "Changed";
-        }    
+        }
     }
 
     #(4) set preferences...

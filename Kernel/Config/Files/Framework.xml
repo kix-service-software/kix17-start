@@ -410,7 +410,7 @@
                 <Item Key="1">Yes</Item>
             </Option>
         </Setting>
-    </ConfigItem>   
+    </ConfigItem>
     <ConfigItem Name="CloudService::Admin::Module###100-SupportDataCollector" Required="0" Valid="1">
         <Description Translatable="1">Cloud service admin module registration for the transport layer.</Description>
         <Group>Framework</Group>
@@ -1483,7 +1483,7 @@
         <Setting>
             <Hash>
                 <Item Key="oexample.com">XMPLCustomerID</Item>
-            </Hash>            
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ImportExport::CustomerUserImportExport::ForceCSVMappingRecreation" Required="1" Valid="1">
@@ -1869,7 +1869,7 @@
                 <Item Key="1">Yes</Item>
             </Option>
         </Setting>
-    </ConfigItem>    
+    </ConfigItem>
     <ConfigItem Name="DynamicFields::Driver###DropdownGeneralCatalog" Required="0" Valid="1">
         <Description Translatable="1">DynamicField backend registration.</Description>
         <Group>Framework</Group>
@@ -1968,7 +1968,7 @@
                 <Item Key="1">Yes</Item>
             </Option>
         </Setting>
-    </ConfigItem>        
+    </ConfigItem>
     <ConfigItem Name="Loader::Agent::CommonJS###106-KIXSidebarCI" Required="1" Valid="1">
         <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
         <Group>Framework</Group>
@@ -2855,7 +2855,7 @@
                 <Item Key="DynamicField_TicketFreeText16"></Item>
                 <Item Key="Article_Body">\s*Address:\s+(\d+\.\d+\.\d+\.\d+)\s*</Item>
                 <Item Key="Article_Body_OR1">\s*Host:\s+(.+)\s*</Item>
-            </Hash>            
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="TicketAutoLinkConfigItem::LinkType" Required="1" Valid="1">
@@ -2890,7 +2890,7 @@
             <Hash>
                 <Item Key="nagios-service-mailbox@example.com">Computer</Item>
                 <Item Key="nagios-network-mailbox@example.com">Network</Item>
-            </Hash>            
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="TicketAutoLinkConfigItem::CISearchInClasses" Required="1" Valid="1">
@@ -2903,7 +2903,7 @@
                 <Item Key="Computer">NIC::IPAddress,FQDN</Item>
                 <!--<Item Key="Computer">NIC::IPAddress,FQDN,Number</Item> -->
                 <Item Key="Network">NetworkAddress</Item>
-            </Hash>            
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Module###AdminQueuesGroupsRoles" Required="0" Valid="1">
@@ -7995,7 +7995,7 @@
                 <Item Key="1" Translatable="1">Yes</Item>
             </Option>
         </Setting>
-    </ConfigItem>    
+    </ConfigItem>
     <ConfigItem Name="Package::EventModulePost###99-SupportDataSend" Required="0" Valid="0">
         <Description Translatable="1">Package event module file a scheduler task for update registration.</Description>
         <Group>Framework</Group>
@@ -10192,7 +10192,7 @@ via the Preferences button after logging in.
                 </Loader>
             </FrontendModuleReg>
         </Setting>
-    </ConfigItem>   
+    </ConfigItem>
     <ConfigItem Name="Frontend::Module###AgentOTRSBusiness" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>Framework</Group>
@@ -10253,7 +10253,7 @@ via the Preferences button after logging in.
                 </Loader>
             </FrontendModuleReg>
         </Setting>
-    </ConfigItem>       
+    </ConfigItem>
     <ConfigItem Name="Frontend::Module###AdminLog" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>Framework</Group>

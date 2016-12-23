@@ -1,6 +1,6 @@
 // --
-// Core.Agent.ExtendedPrintDialog.js - provides the special module functions 
-// Copyright (C) 2001-2015 
+// Core.Agent.ExtendedPrintDialog.js - provides the special module functions
+// Copyright (C) 2001-2015
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

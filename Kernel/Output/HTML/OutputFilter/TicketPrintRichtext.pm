@@ -49,25 +49,27 @@ sub Run {
     return if !$LayoutObject->{EnvRef}->{Action}
             || $LayoutObject->{EnvRef}->{Action} eq 'Logout';
 
-    my %AgentData = $Kernel::OM->Get('Kernel::System::User')->GetUserData( 
-        User => $Self->{UserLogin}, 
-        Valid => 1 
+    my %AgentData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
+        User  => $Self->{UserLogin},
+        Valid => 1
     );
 
     return if !%AgentData;
-    
-    if (!$AgentData{UserPrintBehaviour}) {
+
+    if ( !$AgentData{UserPrintBehaviour} ) {
         $AgentData{UserPrintBehaviour} = 'ask';
     }
-    
-    return if $AgentData{UserPrintBehaviour} eq 'standard' ;
-    
-    if ($AgentData{UserPrintBehaviour} eq 'ask') {
+
+    return if $AgentData{UserPrintBehaviour} eq 'standard';
+
+    if ( $AgentData{UserPrintBehaviour} eq 'ask' ) {
         my $AppendString = '
 <script type="text/javascript">//<![CDATA[
     function TicketPrintRichtextInit(Element) {
         var OverlayTitle  = \'' . $LayoutObject->{LanguageObject}->Translate("Print") . '\',
-            OverlayHTML   = \'' . $LayoutObject->{LanguageObject}->Translate("Please select the type of printout") . '...\',
+            OverlayHTML   = \''
+            . $LayoutObject->{LanguageObject}->Translate("Please select the type of printout")
+            . '...\',
             URL           = Element.attr(\'href\');
 
         var URLRichtext = URL.replace("Action=AgentTicketPrint", "Action=AgentTicketPrintRichtext");
@@ -106,19 +108,23 @@ sub Run {
 //]]></script>
 ';
 
-        if ($Param{Data} !~ /function TicketPrintRichtextInit/ ) {
-            ${ $Param{Data} } .= $AppendString; 
+        if ( $Param{Data} !~ /function TicketPrintRichtextInit/ ) {
+            ${ $Param{Data} } .= $AppendString;
         }
 
-        my $ReplaceString = '(<a.*?href=[^>]*?AgentTicketPrint;.*?")(.*?)AsPopup.*?PopupType_TicketAction(.*?</a>)';
-        if ($Param{Data} !~ /return TicketPrintRichtextInit/ ) {
-            ${ $Param{Data} } =~ s{ $ReplaceString }{$1 onclick="javascript:return TicketPrintRichtextInit(\$(this));"$2$3}gxism ;
+        my $ReplaceString
+            = '(<a.*?href=[^>]*?AgentTicketPrint;.*?")(.*?)AsPopup.*?PopupType_TicketAction(.*?</a>)';
+        if ( $Param{Data} !~ /return TicketPrintRichtextInit/ ) {
+            ${ $Param{Data} }
+                =~ s{ $ReplaceString }{$1 onclick="javascript:return TicketPrintRichtextInit(\$(this));"$2$3}gxism;
         }
     }
-    elsif ($AgentData{UserPrintBehaviour} eq 'printrichtext' && ${ $Param{Data} } !~ /AgentTicketPrintRichtext/) {
+    elsif ( $AgentData{UserPrintBehaviour} eq 'printrichtext'
+        && ${ $Param{Data} } !~ /AgentTicketPrintRichtext/ )
+    {
         ${ $Param{Data} } =~ s/AgentTicketPrint;/AgentTicketPrintRichtext;/g;
     }
-    
+
     return 1;
 }
 

@@ -19,7 +19,6 @@
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-
 package Kernel::Modules::AgentTicketPrintForwardFax;
 
 use strict;
@@ -166,7 +165,7 @@ sub Run {
 
     # user info
     my %UserInfo = $Self->{UserObject}->GetUserData(
-        User => $Ticket{Owner},
+        User   => $Ticket{Owner},
         Cached => 1
     );
 
@@ -174,7 +173,7 @@ sub Run {
     my %ResponsibleInfo;
     if ( $Self->{ConfigObject}->Get('Ticket::Responsible') && $Ticket{Responsible} ) {
         %ResponsibleInfo = $Self->{UserObject}->GetUserData(
-            User => $Ticket{Responsible},
+            User   => $Ticket{Responsible},
             Cached => 1
         );
     }
@@ -207,6 +206,7 @@ sub Run {
     # generate pdf output
     if ( $Self->{PDFObject} ) {
         my $PrintedBy = $Self->{LayoutObject}->{LanguageObject}->Translate('printed by');
+
         #my $Time = $Self->{LayoutObject}->Output( Template => '$Env{"Time"}' );
         my $Time = $Self->{LayoutObject}->{LanguageObject}->Time(
             Action => 'GET',
@@ -374,7 +374,7 @@ sub _PDFOutputFaxHeader {
         Align    => 'left',
         Lead     => 1,
     );
-    if ($FwdFaxQueues{ $Ticket{Queue} }) {
+    if ( $FwdFaxQueues{ $Ticket{Queue} } ) {
         $Self->{PDFObject}->PositionSet(
             Move => 'relativ',
             Y    => -15,
@@ -390,7 +390,7 @@ sub _PDFOutputFaxHeader {
             Lead     => 1,
         );
     }
-    
+
     #print the senders information...
     $Self->{PDFObject}->PositionSet(
         Move => 'absolut',
@@ -463,7 +463,7 @@ sub _PDFOutputFaxHeader {
         Format => 'DateFormat',
     );
     $Self->{PDFObject}->Text(
-        Text =>  $Time,#$Self->{LayoutObject}->Output( Template => $Time ),
+        Text     => $Time,            #$Self->{LayoutObject}->Output( Template => $Time ),
         Width    => 250,
         Type     => 'Cut',
         Font     => 'Proportional',
@@ -481,7 +481,7 @@ sub _PDFOutputFaxHeader {
         Y    => -15,
     );
     my $Result = $Self->{PDFObject}->Text(
-        Text     => $Self->{LayoutObject}->{LanguageObject}->Translate('Order for Incident Processing'),
+        Text => $Self->{LayoutObject}->{LanguageObject}->Translate('Order for Incident Processing'),
         Width    => 400,
         Type     => 'Cut',
         Font     => 'ProportionalBold',
@@ -565,12 +565,14 @@ sub _PDFOutputTicketInfos {
     # create right table
     my $TableRight = [
         {
-            Key   => $Self->{LayoutObject}->{LanguageObject}->Translate('Created') . ':',
+            Key => $Self->{LayoutObject}->{LanguageObject}->Translate('Created') . ':',
+
             #Value => $Self->{LayoutObject}->Output(
-                #Template => '$TimeLong{"$Data{"Created"}"}',
-                #Data     => \%Ticket,
+            #Template => '$TimeLong{"$Data{"Created"}"}',
+            #Data     => \%Ticket,
             #),
-            Value => $Self->{LayoutObject}->{LanguageObject}->FormatTimeString($Ticket{Created}, "DateFormatLong"),
+            Value => $Self->{LayoutObject}->{LanguageObject}
+                ->FormatTimeString( $Ticket{Created}, "DateFormatLong" ),
         },
         {
             Key   => $Self->{LayoutObject}->{LanguageObject}->Translate('Criticality') . ':',
@@ -589,12 +591,14 @@ sub _PDFOutputTicketInfos {
     # add solution time row
     if ( defined( $Ticket{SolutionTime} ) ) {
         my $Row = {
-            Key   => $Self->{LayoutObject}->{LanguageObject}->Translate('Solution Time') . ':',
+            Key => $Self->{LayoutObject}->{LanguageObject}->Translate('Solution Time') . ':',
+
             #Value => $Self->{LayoutObject}->Output(
-                #Template => '$TimeShort{"$QData{"SolutionTimeDestinationDate"}"}',
-                #Data     => \%Ticket,
+            #Template => '$TimeShort{"$QData{"SolutionTimeDestinationDate"}"}',
+            #Data     => \%Ticket,
             #),
-            Value => $Self->{LayoutObject}->{LanguageObject}->FormatTimeString($Ticket{Created}, "DateFormatShort")
+            Value => $Self->{LayoutObject}->{LanguageObject}
+                ->FormatTimeString( $Ticket{Created}, "DateFormatShort" )
         };
         push( @{$TableRight}, $Row );
     }
@@ -713,13 +717,15 @@ sub _PDFOutputTicketDynamicFields {
                     Name => $DField,
                 );
                 my $ValueStrg = $Self->{BackendObject}->DisplayValueRender(
-                    DynamicFieldConfig  => $DynamicField,
-                    LayoutObject        => $Self->{LayoutObject},
-                    HTMLOutput          => 0,
-                    Value               => $Ticket{"DynamicField_$DField"},
+                    DynamicFieldConfig => $DynamicField,
+                    LayoutObject       => $Self->{LayoutObject},
+                    HTMLOutput         => 0,
+                    Value              => $Ticket{"DynamicField_$DField"},
                 );
 
-                $TableParam{CellData}[$Row][0]{Content} = $Self->{LayoutObject}->{LanguageObject}->Translate($DynamicField->{Label}).':';
+                $TableParam{CellData}[$Row][0]{Content}
+                    = $Self->{LayoutObject}->{LanguageObject}->Translate( $DynamicField->{Label} )
+                    . ':';
                 $TableParam{CellData}[$Row][0]{Font}    = 'ProportionalBold';
                 $TableParam{CellData}[$Row][1]{Content} = $ValueStrg->{Value};
                 $Row++;
@@ -941,7 +947,8 @@ sub _PDFOutputArticles {
 
             # output headline
             $Self->{PDFObject}->Text(
-                Text     => $Self->{LayoutObject}->{LanguageObject}->Translate('First Customer Article'),
+                Text =>
+                    $Self->{LayoutObject}->{LanguageObject}->Translate('First Customer Article'),
                 Height   => 7,
                 Type     => 'Cut',
                 Font     => 'ProportionalBoldItalic',
@@ -985,11 +992,13 @@ sub _PDFOutputArticles {
         $TableParam1{CellData}[$Row][0]{Font} = 'ProportionalBold';
 
         $TableParam1{CellData}[$Row][1]{Content} =
+
             #$Self->{LayoutObject}->Output(
             #Template => '$TimeLong{"$Data{"Created"}"}',
             #Data     => \%Article,
             #);
-            $Self->{LayoutObject}->{LanguageObject}->FormatTimeString($Article{Created}, "DateFormatLong");
+            $Self->{LayoutObject}->{LanguageObject}
+            ->FormatTimeString( $Article{Created}, "DateFormatLong" );
         $TableParam1{CellData}[$Row][1]{Content} .=
             ' ' . $Self->{LayoutObject}->{LanguageObject}->Translate('by');
         $TableParam1{CellData}[$Row][1]{Content} .= ' ' . $Article{SenderType};
@@ -1119,7 +1128,8 @@ sub _PDFOutputLinkedCIData {
     # table params...
     my %TableParam2;
     $TableParam2{CellData}[0][0]{Content} =
-        $Kernel::OM->Get('Kernel::System::FwdLinkedObjectData')->BuildFwdContent( TicketID => $Param{TicketID}, ) || ' ';
+        $Kernel::OM->Get('Kernel::System::FwdLinkedObjectData')
+        ->BuildFwdContent( TicketID => $Param{TicketID}, ) || ' ';
     $TableParam2{Type}            = 'Cut';
     $TableParam2{Border}          = 0.5;
     $TableParam2{Font}            = 'Monospaced';

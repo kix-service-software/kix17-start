@@ -49,25 +49,25 @@
             ColumnCount = 0;
 
         if($('#[% Data.Identifier %] .KIXSBRDBPopupContainer').length){
-        	if($('body > #[% Data.Identifier %]PopupContainer').length){
-        		$('body > #[% Data.Identifier %]PopupContainer').remove();
-        	}
-        	$('#[% Data.Identifier %] .KIXSBRDBPopupContainer').appendTo($('body'));
+            if($('body > #[% Data.Identifier %]PopupContainer').length){
+                $('body > #[% Data.Identifier %]PopupContainer').remove();
+            }
+            $('#[% Data.Identifier %] .KIXSBRDBPopupContainer').appendTo($('body'));
         }
         $('.KIXSBRDBPopupInfo').click(function(){
             var Identifier = $(this).data('identifier');
             var ID = $(this).data('id');
 
             $('#'+Identifier+'Popup'+ID).show();
-            
+
             var PopUpHeight  = $('#'+Identifier+'Popup'+ID+' .KIXSBRDBPopupBox').height();
             var PopUpWidth   = $('#'+Identifier+'Popup'+ID+' .KIXSBRDBPopupBox').width();
             var WindowHeight = $('#'+Identifier+'Popup'+ID).height();
             var WindowWidth  = $('#'+Identifier+'Popup'+ID).width();
-            
+
             $('#'+Identifier+'Popup'+ID+' .KIXSBRDBPopupBox').css({
-            	top: (WindowHeight-PopUpHeight)*0.5,
-            	left: (WindowWidth-PopUpWidth)*0.5
+                top: (WindowHeight-PopUpHeight)*0.5,
+                left: (WindowWidth-PopUpWidth)*0.5
             });
         });
 

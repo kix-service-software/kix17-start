@@ -20,10 +20,10 @@
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-
 # TicketPrintRichtext-capeIT
 #package Kernel::Modules::AgentTicketPrint;
 package Kernel::Modules::AgentTicketPrintRichtext;
+
 # EO TicketPrintRichtext-capeIT
 
 use strict;
@@ -146,12 +146,12 @@ sub Run {
         }
     }
 
-# TicketPrintRichtext-capeIT
-#    # resort article order
-#    if ( $Self->{ZoomExpandSort} eq 'reverse' ) {
-#        @ArticleBox = reverse(@ArticleBox);
-#    }
-# EO TicketPrintRichtext-capeIT
+    # TicketPrintRichtext-capeIT
+    #    # resort article order
+    #    if ( $Self->{ZoomExpandSort} eq 'reverse' ) {
+    #        @ArticleBox = reverse(@ArticleBox);
+    #    }
+    # EO TicketPrintRichtext-capeIT
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -162,6 +162,7 @@ sub Run {
             TicketID => $Ticket{TicketID},
         );
     }
+
     # get user object
     my $UserObject = $Kernel::OM->Get('Kernel::System::User');
 
@@ -207,7 +208,8 @@ sub Run {
                 Age   => $Ticket{UntilTime},
                 Space => ' ',
             );
-                  # KIX4OTRS-capeIT
+
+            # KIX4OTRS-capeIT
         }
         else {
             $Ticket{PendingUntil} = $Kernel::OM->Get('Kernel::System::Time')->SystemTime2TimeStamp(
@@ -220,88 +222,87 @@ sub Run {
         # EO KIX4OTRS-capeIT
     }
 
-# TicketPrintRichtext-capeIT
+    # TicketPrintRichtext-capeIT
 ## REMOVED CODE FOR PDF-GENERATION ##
-#    # get PDF object
-#    my $PDFObject = $Kernel::OM->Get('Kernel::System::PDF');
+    #    # get PDF object
+    #    my $PDFObject = $Kernel::OM->Get('Kernel::System::PDF');
 
-# EO TicketPrintRichtext-capeIT
+    # EO TicketPrintRichtext-capeIT
 
-        if (%LinkData) {
+    if (%LinkData) {
 
-            # output link data
+        # output link data
+        $LayoutObject->Block(
+            Name => 'Link',
+        );
+
+        for my $LinkTypeLinkDirection ( sort { lc $a cmp lc $b } keys %LinkData ) {
+
+            # investigate link type name
+            my @LinkData = split q{::}, $LinkTypeLinkDirection;
+
+            # output link type data
             $LayoutObject->Block(
-                Name => 'Link',
+                Name => 'LinkType',
+                Data => {
+                    LinkTypeName => $LinkTypeList{ $LinkData[0] }->{ $LinkData[1] . 'Name' },
+                },
             );
 
-            for my $LinkTypeLinkDirection ( sort { lc $a cmp lc $b } keys %LinkData ) {
+            # extract object list
+            my $ObjectList = $LinkData{$LinkTypeLinkDirection};
 
-                # investigate link type name
-                my @LinkData = split q{::}, $LinkTypeLinkDirection;
+            for my $Object ( sort { lc $a cmp lc $b } keys %{$ObjectList} ) {
 
-                # output link type data
-                $LayoutObject->Block(
-                    Name => 'LinkType',
-                    Data => {
-                        LinkTypeName => $LinkTypeList{ $LinkData[0] }->{ $LinkData[1] . 'Name' },
-                    },
-                );
+                for my $Item ( @{ $ObjectList->{$Object} } ) {
 
-                # extract object list
-                my $ObjectList = $LinkData{$LinkTypeLinkDirection};
-
-                for my $Object ( sort { lc $a cmp lc $b } keys %{$ObjectList} ) {
-
-                    for my $Item ( @{ $ObjectList->{$Object} } ) {
-
-                        # output link type data
-                        $LayoutObject->Block(
-                            Name => 'LinkTypeRow',
-                            Data => {
-                                LinkStrg => $Item->{Title},
-                            },
-                        );
-                    }
+                    # output link type data
+                    $LayoutObject->Block(
+                        Name => 'LinkTypeRow',
+                        Data => {
+                            LinkStrg => $Item->{Title},
+                        },
+                    );
                 }
             }
         }
+    }
 
-        # output customer infos
-        if (%CustomerData) {
-            $Param{CustomerTable} = $LayoutObject->AgentCustomerViewTable(
-                Data => \%CustomerData,
-                Max  => 100,
-            );
-        }
-        
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'PrintHeader',
-            Data         => \%Param,
+    # output customer infos
+    if (%CustomerData) {
+        $Param{CustomerTable} = $LayoutObject->AgentCustomerViewTable(
+            Data => \%CustomerData,
+            Max  => 100,
         );
+    }
 
+    $Output = $LayoutObject->Output(
+        TemplateFile => 'PrintHeader',
+        Data         => \%Param,
+    );
 
-        # show ticket
-        $Output .= $Self->_HTMLMask(
-            TicketID        => $Self->{TicketID},
-            QueueID         => $QueueID,
-            ArticleBox      => \@ArticleBox,
-            ResponsibleData => \%ResponsibleInfo,
-            %Param,
-            %UserInfo,
-            %Ticket,
-        );
+    # show ticket
+    $Output .= $Self->_HTMLMask(
+        TicketID        => $Self->{TicketID},
+        QueueID         => $QueueID,
+        ArticleBox      => \@ArticleBox,
+        ResponsibleData => \%ResponsibleInfo,
+        %Param,
+        %UserInfo,
+        %Ticket,
+    );
 
+    $Output .= $LayoutObject->Output(
+        TemplateFile => 'PrintFooter',
+        Data         => \%Param,
+    );
 
-        $Output .= $LayoutObject->Output(
-            TemplateFile => 'PrintFooter',
-            Data         => \%Param,
-        );
+    # return output
+    return $Output;
 
-        # return output
-        return $Output;
-# TicketPrintRichtext-capeIT
-#    }
-# EO TicketPrintRichtext-capeIT
+    # TicketPrintRichtext-capeIT
+    #    }
+    # EO TicketPrintRichtext-capeIT
 }
 
 # TicketPrintRichtext-capeIT
@@ -324,6 +325,7 @@ sub _HTMLMask {
     }
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     # output responsible, if feature is enabled
     if ( $ConfigObject->Get('Ticket::Responsible') ) {
         my $Responsible = '-';
@@ -458,12 +460,13 @@ sub _HTMLMask {
 
     # build article stuff
     my $SelectedArticleID = $Param{ArticleID} || '';
-    my @ArticleBox = @{ $Param{ArticleBox} };
-    my $ArticleCounter = 1;
+    my @ArticleBox        = @{ $Param{ArticleBox} };
+    my $ArticleCounter    = 1;
 
     # get last customer article
     for my $ArticleTmp (@ArticleBox) {
         my %Article = %{$ArticleTmp};
+
         # Set Article count and increment
         $Article{ArticleCounter} = $ArticleCounter++;
 
@@ -493,26 +496,26 @@ sub _HTMLMask {
         }
         else {
 
-        # check if just a only html email
-        my $MimeTypeText = $LayoutObject->CheckMimeType(
-            %Param,
-            %Article,
-            Action => 'AgentTicketZoom',
-        );
-        if ($MimeTypeText) {
-            $Param{TextNote} = $MimeTypeText;
-            $Article{Body}   = '';
-        }
-        else {
-
-            # html quoting
-            $Article{Body} = $LayoutObject->Ascii2Html(
-                NewLine => $ConfigObject->Get('DefaultViewNewLine'),
-                Text    => $Article{Body},
-                VMax    => $ConfigObject->Get('DefaultViewLines') || 5000,
+            # check if just a only html email
+            my $MimeTypeText = $LayoutObject->CheckMimeType(
+                %Param,
+                %Article,
+                Action => 'AgentTicketZoom',
             );
+            if ($MimeTypeText) {
+                $Param{TextNote} = $MimeTypeText;
+                $Article{Body}   = '';
+            }
+            else {
 
-                if ($Article{AttachmentIDOfHTMLBody}) {
+                # html quoting
+                $Article{Body} = $LayoutObject->Ascii2Html(
+                    NewLine => $ConfigObject->Get('DefaultViewNewLine'),
+                    Text    => $Article{Body},
+                    VMax    => $ConfigObject->Get('DefaultViewLines') || 5000,
+                );
+
+                if ( $Article{AttachmentIDOfHTMLBody} ) {
                     my %AttachmentHTML = $TicketObject->ArticleAttachment(
                         ArticleID => $Article{ArticleID},
                         FileID    => $Article{AttachmentIDOfHTMLBody},
@@ -525,27 +528,31 @@ sub _HTMLMask {
                     $Charset =~ s/(.+?);.*/$1/g;
 
                     my $Body = $AttachmentHTML{Content};
+
                     # convert html body to correct charset
                     $Body = $Kernel::OM->Get('Kernel::System::Encode')->Convert(
                         Text => $Body,
                         From => $Charset,
-                        To   => $Self->{UserCharset}||'utf-8',
+                        To   => $Self->{UserCharset} || 'utf-8',
                     );
-                
+
                     my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+
                     # add url quoting
                     $Body = $HTMLUtilsObject->LinkQuote(
                         String => $Body,
                     );
+
                     # strip head, body and meta elements
                     $Body = $HTMLUtilsObject->DocumentStrip(
                         String => $Body,
                     );
-                    
+
                     my %AttachmentIndex = $TicketObject->ArticleAttachmentIndex(
                         ArticleID => $Article{ArticleID},
                         UserID    => $Self->{UserID},
                     );
+
                     # search inline documents in body and add it to upload cache
                     my $SessionID = '';
                     if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
@@ -620,17 +627,23 @@ sub _HTMLMask {
                     $Body =~ s/(<img[^>]+style="[^"]*)width:[0-9]+px([^"]*"[^>]*>)/$1$2/g;
                     $Body =~ s/(<img[^>]+style="[^"]*)height:[0-9]+px([^"]*"[^>]*>)/$1$2/g;
                     $Body =~ s/(<img[^>]+)style="[\s;]*"([^>]*>)/$1$2/g;
-                    if ($Body =~ m/<img[^>]+style="/) {
-                        $Body =~ s/(<img[^>]+style=")([^>]+>)/$1width:auto;max-width:612px;height:auto;$2/g;
-                    } else {
-                        $Body =~ s/(<img)([^>]+>)/$1 style="width:auto;max-width:612px;height:auto;" $2/g;
+                    if ( $Body =~ m/<img[^>]+style="/ ) {
+                        $Body
+                            =~ s/(<img[^>]+style=")([^>]+>)/$1width:auto;max-width:612px;height:auto;$2/g;
+                    }
+                    else {
+                        $Body
+                            =~ s/(<img)([^>]+>)/$1 style="width:auto;max-width:612px;height:auto;" $2/g;
                     }
 
                     # strip head, body and meta elements
-                    $Article{Body} = '<div class="ArticleMailContent" style="font-family:Geneva,Helvetica,Arial,sans-serif; font-size: 12px;">'.$Body.'</div>';
+                    $Article{Body}
+                        = '<div class="ArticleMailContent" style="font-family:Geneva,Helvetica,Arial,sans-serif; font-size: 12px;">'
+                        . $Body
+                        . '</div>';
                 }
                 else {
-                    $Article{Body} = '<pre>'.$Article{Body}.'</pre>';
+                    $Article{Body} = '<pre>' . $Article{Body} . '</pre>';
                 }
             }
         }
@@ -642,10 +655,10 @@ sub _HTMLMask {
 
         # do some strips && quoting
 
-            $LayoutObject->Block(
-                Name => 'ArticleCount',
-                Data => { %Param, %Article },
-            );
+        $LayoutObject->Block(
+            Name => 'ArticleCount',
+            Data => { %Param, %Article },
+        );
 
         for my $Parameter (qw(From To Cc Subject)) {
             if ( $Article{$Parameter} ) {
