@@ -101,7 +101,10 @@
                     </table>
                 </form>
             </div>
+        </div>
+    </div>
 [% RenderBlockEnd("OverviewResult") %]
+</div>
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
