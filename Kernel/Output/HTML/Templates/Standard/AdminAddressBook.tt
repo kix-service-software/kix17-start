@@ -12,7 +12,7 @@
 
 [% RenderBlockStart("Overview") %]
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
-    <h1>[% Translate("Address Book Managment") | html %]</h1>
+    <h1>[% Translate("Address Book Management") | html %]</h1>
 
     <div class="SidebarColumn">
 
