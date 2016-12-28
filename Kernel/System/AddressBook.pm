@@ -60,6 +60,7 @@ sub new {
     $Self->{ConfigObject} = $Kernel::OM->Get('Kernel::Config');
     $Self->{DBObject}     = $Kernel::OM->Get('Kernel::System::DB');
     $Self->{CacheObject}  = $Kernel::OM->Get('Kernel::System::Cache');
+    $Self->{LogObject}    = $Kernel::OM->Get('Kernel::System::Log');
 
     return $Self;
 }
