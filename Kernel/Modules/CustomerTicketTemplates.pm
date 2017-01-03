@@ -38,13 +38,21 @@ sub new {
     $Self->{Config} = $Self->{ConfigObject}->Get('Ticket::Frontend::CustomerTicketTemplates');
     
     # load all template backend modules
-    my @BackendFiles = $Self->{MainObject}->DirectoryRead(
-        Directory => $Self->{ConfigObject}->Get('TemplateDir') . '/HTML/CustomerTicketTemplates',
-        Filter    => '*.pm',
-    );
-    for my $Backend (@BackendFiles) {
-        $Backend =~ s{\A.*\/(.+?).pm\z}{$1}xms;
-        $Self->{BackendObjects}->{$Backend} = $Kernel::OM->Get("Kernel::Output::HTML::CustomerTicketTemplates::$Backend");
+    my $BackendDir = '/Kernel/Output/HTML/CustomerTicketTemplates';
+    for my $INCDir ( reverse @INC ) {
+        my $Dir = $INCDir;
+        $Dir =~ s'\s'\\s'g;
+        my $FullBackendDir = "$Dir$BackendDir";
+        if ( -e "$FullBackendDir" ) {
+            my @BackendFiles = $Self->{MainObject}->DirectoryRead(
+                Directory => $FullBackendDir,
+                Filter    => '*.pm',
+            );    
+            for my $Backend (@BackendFiles) {
+                $Backend =~ s{\A.*\/(.+?).pm\z}{$1}xms;
+                $Self->{BackendObjects}->{$Backend} = $Kernel::OM->Get("Kernel::Output::HTML::CustomerTicketTemplates::$Backend");
+            }
+        }
     }
     
     return $Self;
