@@ -1,0 +1,252 @@
+# --
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+    <h1>[% Translate("Customer Portal Group Management") | html %]</h1>
+
+[% RenderBlockStart("Overview") %]
+    <div class="SidebarColumn">
+
+[% RenderBlockStart("ActionOverview") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Actions") | html %]</h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+                    <li>
+                        <form class="SearchBox" action="[% Env("CGIHandle") %]" method="post">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value=""/>
+                            <input type="text" name="Search" value="[% Data.Search | html %]" id="Search" title="[% Translate("Search") | html %]"/>
+                            <button type="submit" value="[% Translate("Search") | html %]" title="[% Translate("Search") | html %]"><i class="fa fa-search"></i></button>
+                        </form>
+                        <p class="FieldExplanation">
+                            [% Translate("Wildcards like '*' are allowed.") | html %]
+                        </p>
+                    </li>
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post" id="EmptyForm">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value="Add"/>
+                            <button id="AddButton" class="CallForAction Fullsize Center" type="submit"><span><i class="fa fa-plus-square"></i>[% Translate("Add Customer Portal Group") | html %]</span></button>
+                        </form>
+                    </li>
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post">
+                            <button id="DeleteButton" class="CallForAction Fullsize Center Disabled" type="button" disabled="true"><span><i class="fa fa-trash"></i>[% Translate("Delete selected entries") | html %]</span></button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+[% RenderBlockEnd("ActionOverview") %]
+    </div>
+
+    <div class="ContentColumn">
+        <div class="WidgetSimple">
+[% RenderBlockStart("OverviewHeader") %]
+            <div class="Header">
+                <h2>
+                [% IF Data.ListSize && Data.Limit && Data.ListSize > Data.Limit %]
+                    [% Translate("List (only %s shown - more available)", Data.ListSize) | html %]
+                [% ELSE %]
+                    [% Translate("List (%s total)", Data.ListSize) | html %]
+                [% END %]
+                </h2>
+            </div>
+[% RenderBlockEnd("OverviewHeader") %]
+[% RenderBlockStart("OverviewResult") %]
+            <div class="Content">
+                <form action="[% Env("CGIHandle") %]" method="post" id="DeleteForm">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Delete"/>
+                    <input type="hidden" name="Search" value="[% Data.Search | html %]"/>
+                    <table class="DataTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="SelectAll"/></th>
+                                <th class="W50pc">[% Translate("Name") | html %]</th>
+                                <th>[% Translate("Icon") | html %]</th>
+                                <th>[% Translate("Validity") | html %]</th>
+                                <th>[% Translate("Created") | html %]</th>
+                                <th>[% Translate("Changed") | html %]</th>
+                                <th>[% Translate("Delete") | html %]</th>
+                                <th>[% Translate("Edit") | html %]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+[% RenderBlockStart("NoDataFoundMsg") %]
+                            <tr>
+                                <td colspan="6">
+                                    [% Translate("No data found.") | html %]
+                                </td>
+                            </tr>
+[% RenderBlockEnd("NoDataFoundMsg") %]
+[% RenderBlockStart("OverviewResultRow") %]
+                            <tr class="MasterAction">
+                                <td><input type="checkbox" name="PortalGroupID" value="[% Data.PortalGroupID | html %]"/></td>
+                                <td title="[% Data.Name | html %]"><a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Edit;PortalGroupID=[% Data.PortalGroupID | uri %]">[% Data.Name | html %]</a></td>
+                                <td>
+[% RenderBlockStart("OverviewDisplayIcon") %]
+                                    <img class="Icon32" src="data:[% Data.ContentType | html %];base64,[% Data.Content | html %]"/>
+[% RenderBlockEnd("OverviewDisplayIcon") %]
+                                </td>
+                                <td>[% Translate(Data.Valid) | html %]</td>
+                                <td>[% Data.CreateTime | Localize("TimeShort") %]</td>
+                                <td>[% Data.ChangeTime | Localize("TimeShort") %]</td>
+                                <td class="Center">
+                                    <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;PortalGroupID=[% Data.PortalGroupID | html %]">
+                                        <i class="fa fa-trash-o"></i>
+                                    </a>
+                                </td>
+                                <td class="Center">
+                                    <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Edit;PortalGroupID=[% Data.PortalGroupID | html %]">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+[% RenderBlockEnd("OverviewResultRow") %]
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+[% RenderBlockEnd("OverviewResult") %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('input[name=PortalGroupID]').bind('change', function (Event) {
+        if ($('input[name=PortalGroupID]:checked').length > 0) {
+            $('#DeleteButton').prop('disabled', false);
+            $('#DeleteButton').removeClass('Disabled');
+        }
+        else {
+            $('#DeleteButton').prop('disabled', true);
+            $('#DeleteButton').addClass('Disabled');
+        }
+    });
+
+    $('#DeleteButton').bind('click', function (Event) {
+        Core.KIX4OTRS.Dialog.ShowQuestion(
+            "[% Translate("Question") | html %]",
+            "[% Translate("Do you really want to delete the selected entries?") | html %]",
+            "[% Translate("Yes") | html %]",
+            function () {
+                // Yes - delete links
+                Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
+                $('#DeleteForm').submit();
+            },
+            "[% Translate("No") | html %]",
+            function () {
+                // No
+                Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
+            }
+        );
+    });
+
+    $('#SelectAll').bind('change', function (Event) {
+        $('input[name=PortalGroupID]').prop('checked', $(this).is(':checked')).change();
+    });
+//]]></script>
+[% END %]
+[% RenderBlockEnd("Overview") %]
+
+
+[% RenderBlockStart("AddEdit") %]
+    <div class="SidebarColumn">
+
+[% RenderBlockStart("ActionAddEdit") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2>[% Translate("Actions") | html %]</h2>
+            </div>
+            <div class="Content">
+                <ul class="ActionList">
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center"><span><i class="fa fa-caret-left"></i>[% Translate("Go to overview") | html %]</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+[% RenderBlockEnd("ActionAddEdit") %]
+    </div>
+
+    <div class="ContentColumn">
+        <div class="WidgetSimple">
+            <div class="Header">
+[% RenderBlockStart("HeaderAdd") %]
+                <h2>[% Translate("Add Customer Portal Group") | html %]</h2>
+[% RenderBlockEnd("HeaderAdd") %]
+[% RenderBlockStart("HeaderEdit") %]
+                <h2>[% Translate("Edit Customer Portal Group") | html %]</h2>
+[% RenderBlockEnd("HeaderEdit") %]
+            </div>
+            <div class="Content">
+                <form name="EditForm" action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="PreventMultipleSubmits Validate">
+                    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                    <input type="hidden" name="Subaction" value="Save"/>
+                    <input type="hidden" name="PortalGroupID" value="[% Data.PortalGroupID | html %]"/>
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label class="Mandatory" for="Name"><span class="Marker">*</span> [% Translate("Name") | html %]:</label>
+                        <p class="Value">
+                            <input type="text" id="Name" name="Name" value="[% Data.Name | html %]" size="35" class="Validate_Required Validate_MaxLength Validate_Length_255 [% Data.NameInvalid | html %]" maxlength="255"/>
+                            <div id="NameError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required and its content can not be longer than %s characters.", "255") | html %]</p>
+                            </div>
+                            <div id="NameServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required and its content can not be longer than %s characters.", "255") | html %]</p>
+                            </div>
+                        </p>
+                        <div class="Clear"></div>
+                        <label class="Mandatory" for="FileUpload"><span class="Marker">*</span>[% Translate("Icon") | html %]:</label>
+                        <div class="Field">
+[% RenderBlockStart("DisplayIcon") %]
+                            <img style="display:block" class="SpacingBottomSmall" src="data:[% Data.ContentType | html %];base64,[% Data.Content | html %]"/>
+[% RenderBlockEnd("DisplayIcon") %]
+                            <input name="FileUpload" id="FileUpload" type="file" size="30"/><br/>
+                            <span class="FieldExplanation">[% Translate("(The icon should have a size of 64x64 pixels. Otherwise it will be scaled automatically.)") | html %]</span>
+                        </div>
+                        <div class="Clear"></div>
+                        <label class="" for="ValidID">[% Translate("Valid") | html %]:</label>
+                        <p class="Value">
+                            [% Data.ValidOption %]
+                            <div id="ValidIDError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="ValidIDServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </p>
+                        <div class="Clear"></div>
+                    </fieldset>
+
+                    <table width="100%" cellspacing="0" cellpadding="4">
+                        <tr>
+                            <td colspan="2" class="contentfooter">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                                    <tr>
+                                        <td width="100%" align="right" class="contentfooter">
+                                            <button class="CallForAction" type="submit" value="[% Translate("Submit") | html %]"/><span>[% Translate("Submit") | html %]</span></button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </iv>
+    </div>
+[% RenderBlockEnd("AddEdit") %]
+</div>

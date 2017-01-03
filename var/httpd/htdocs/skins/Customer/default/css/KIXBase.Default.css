@@ -574,6 +574,88 @@
     #NoArticles {
         min-height: 350px;
     }
+
+    .CustomerTicketTemplates .TemplateSelectionArea {
+        text-align: center;
+        width: 100%;
+    }
+    
+    .CustomerTicketTemplates .TemplateSelectionArea > div {
+        margin: 0px 0px 80px 0px;
+        width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .CustomerTicketTemplates .PortalGroup {
+        margin-bottom: 50px;
+        margin-top: 20px;
+    }
+
+    .CustomerTicketTemplates .TicketTemplateElement {
+        margin-top: 10px;
+    }
+
+    .CustomerTicketTemplates .TicketTemplateElement {
+        display: inline-block;
+        text-align: center;
+        min-width: 100px;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .CustomerTicketTemplates .TicketTemplateElement img {
+        width: 64px;
+        height: 64px;
+        padding: 5px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 2px 2px 2px #a0a0a0; 
+    }
+
+    .CustomerTicketTemplates .TicketTemplateElement a:hover img {
+        border: 1px solid #a0a0a0;
+    }
+
+    .CustomerTicketTemplates .TicketTemplateElement a:hover > img {
+        -webkit-filter: none;
+        filter: none;
+    }
+    
+    .CustomerTicketTemplates .TicketTemplateElement > .Label {
+        display: block;
+        margin-top: 10px;
+        color: auto; 
+    }
+
+    .CustomerTicketTemplates .FilterArea {
+        margin: 20px 0px 30px 5px;
+    }
+    
+    .CustomerTicketTemplates .FilterArea label {
+        width: auto;
+        padding-top: 5px;
+    }
+    
+    #PortalGroupFilter,
+    #TicketTemplateFilter {
+        width: 250px;
+        margin: 0px 15px 0px 15px;
+        border-width: 0px;
+        border-bottom-width: 1px;
+        padding-left: 5px;
+        padding-right: 20px;
+        box-sizing: border-box;
+    }
+    
+    #PortalGroupFilterClear,
+    #TicketTemplateFilterClear {
+        position: relative;
+        top: 1px;
+        right: 32px;
+        color: #808080;
+        visibility: hidden;
+        display: inline-block;
+    }
 }
 /* end @media */
 

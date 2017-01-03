@@ -1,0 +1,93 @@
+# --
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+package Kernel::Output::HTML::CustomerTicketTemplates::TicketProcess;
+
+use strict;
+use warnings;
+
+use Kernel::System::VariableCheck qw(:all);
+use Kernel::Language qw(Translatable);
+
+our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::System::Log',
+    'Kernel::System::ProcessManagement::Process',
+);
+
+sub new {
+    my ( $Type, %Param ) = @_;
+
+    # allocate new hash for object
+    my $Self = {};
+    bless( $Self, $Type );
+
+    $Self->{ConfigObject}  = $Kernel::OM->Get('Kernel::Config');
+    $Self->{LogObject}     = $Kernel::OM->Get('Kernel::System::Log');
+    $Self->{ProcessObject} = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process');
+    $Self->{TicketObject}  = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    return $Self;
+}
+
+sub TicketTemplateList {
+    my ( $Self, %Param ) = @_;
+    my %Result;
+    
+    # get the list of processes that customer can start
+    my $ProcessListRef = $Self->{ProcessObject}->ProcessList(
+        ProcessState => ['Active'],
+        Interface    => ['CustomerInterface'],
+    );
+    return %Result if !IsHashRefWithData($ProcessListRef);
+
+    # filter ProcessList through ACLs 
+    my %ProcessListACL = map { $_ => $_ } sort keys %{$ProcessListRef};
+    my $ACL = $Self->{TicketObject}->TicketAcl(
+        ReturnType     => 'Process',
+        ReturnSubType  => '-',
+        Data           => \%ProcessListACL,
+        CustomerUserID => $Param{UserID},
+    );
+
+    if ( $ACL ) {
+        my %ACLData = $Self->{TicketObject}->TicketAclData();
+        %Result = map { $_ => $ProcessListRef->{$_} } sort keys %ACLData;
+    }
+    else {
+        %Result = %{$ProcessListRef};
+    }
+
+    foreach my $ProcessID (keys %Result) {
+        my $Process = $Self->{ProcessObject}->ProcessGet(
+            ProcessEntityID => $ProcessID,
+        );
+
+        # ignore all processes not starting in customer frontend
+        if (!$Process->{CustomerPortalGroupID}) {
+            delete $Result{$ProcessID};
+            next;
+        }
+        
+        my %Data = (
+            PortalGroupID   => $Process->{CustomerPortalGroupID},
+            Name            => $Result{$ProcessID},
+            Link            => "Action=CustomerTicketProcess;Subaction=DisplayActivityDialog;ProcessEntityID=$ProcessID;IsMainWindows=1",
+            LinkClass       => "AsPopup",
+        );
+        $Result{$ProcessID} = \%Data;
+    }
+    
+    return %Result;
+}
+
+1;

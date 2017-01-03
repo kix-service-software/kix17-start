@@ -74,7 +74,7 @@ sub Run {
         qw(ID  Name CustomerLogin CcCustomerLogin BccCustomerLogin ElementChanged
         PriorityID OwnerID QueueID From Subject Body StateID TimeUnits Cc Bcc FormID
         PendingOffset LinkType LinkDirection ArticleType ArticleSenderType
-        ResponsibleID ResponsibleAll OwnerAll TypeID ServiceID SLAID KIXSidebarChecklistTextField)
+        ResponsibleID ResponsibleAll OwnerAll TypeID ServiceID SLAID KIXSidebarChecklistTextField CustomerPortalGroupID)
         )
     {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key ) || '';
@@ -884,6 +884,7 @@ sub Run {
     $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
 
+
     my @Templates = $TicketObject->TicketTemplateList(
         Result => 'Name',
     );
@@ -940,6 +941,8 @@ sub Run {
     );
 
     if ( $Param{Count} ) {
+        my %PortalGroups = $Kernel::OM->Get('Kernel::System::CustomerPortalGroup')->PortalGroupList( ValidID => 1 );
+        
         for my $CurrHashID (
             sort { $TicketTemplateData{$a}->{Name} cmp $TicketTemplateData{$b}->{Name} }
             keys %TicketTemplateData
@@ -952,6 +955,11 @@ sub Run {
             push( @FrontendInfoArray, 'C' ) if ( $TicketTemplateData{$CurrHashID}->{Customer} );
             $TicketTemplateData{$CurrHashID}->{FrontendInfoStrg}
                 = join( '/', @FrontendInfoArray );
+                
+            # get customer portal group if set
+            if ($TicketTemplateData{$CurrHashID}->{CustomerPortalGroupID}) {
+                $TicketTemplateData{$CurrHashID}->{CustomerPortalGroup} = $PortalGroups{$TicketTemplateData{$CurrHashID}->{CustomerPortalGroupID}},
+            }
 
             $LayoutObject->Block(
                 Name => 'OverviewListRow',
@@ -1277,6 +1285,7 @@ sub _MaskNew {
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
     my $LinkObject   = $Kernel::OM->Get('Kernel::System::LinkObject');
+    my $CustomerPortalGroupObject = $Kernel::OM->Get('Kernel::System::CustomerPortalGroup');
 
     my @Templates = $TicketObject->TicketTemplateList(
         Result => 'Name',
@@ -1310,6 +1319,17 @@ sub _MaskNew {
             queryDelay          => $AutoCompleteConfig->{QueryDelay} || 100,
             maxResultsDisplayed => $AutoCompleteConfig->{MaxResultsDisplayed} || 20,
         },
+    );
+
+    # build customer portal group selection string
+    my %PortalGroups = $CustomerPortalGroupObject->PortalGroupList( ValidID => 1 );
+    $Param{CustomerPortalGroupStrg} = $LayoutObject->BuildSelection(
+        Data        => \%PortalGroups,
+        SelectedID  => $Param{CustomerPortalGroupID},
+        Translation => 1,
+        Name        => 'CustomerPortalGroupID',
+        PossibleNone => 1,
+        Class       => 'Modernize Validate_Required',
     );
 
     # build user group selection string

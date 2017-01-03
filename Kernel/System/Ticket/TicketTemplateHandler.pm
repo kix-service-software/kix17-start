@@ -227,12 +227,13 @@ sub TicketTemplateGet {
     # get frontend template data
     return () if !$Self->{DBObject}->Prepare(
         SQL =>
-            'SELECT f_agent, f_customer FROM kix_ticket_template WHERE id = ?',
+            'SELECT f_agent, f_customer, customer_portal_group_id FROM kix_ticket_template WHERE id = ?',
         Bind => [ \$Param{ID} ],
     );
     while ( my @Row = $Self->{DBObject}->FetchrowArray() ) {
         $Template{Agent}    = $Row[0];
         $Template{Customer} = $Row[1];
+        $Template{CustomerPortalGroupID} = $Row[2];
     }
 
     # set ticket template cache
@@ -391,9 +392,9 @@ sub TicketTemplateCreate {
         # do update meta data
         return if !$Self->{DBObject}->Do(
             SQL =>
-                'UPDATE kix_ticket_template SET name = ?, f_agent = ?, f_customer = ? ' .
+                'UPDATE kix_ticket_template SET name = ?, f_agent = ?, f_customer = ?, customer_portal_group_id = ? ' .
                 'WHERE id = ?',
-            Bind => [ \$Data{Name}, \$Data{Agent}, \$Data{Customer}, \$Param{ID} ],
+            Bind => [ \$Data{Name}, \$Data{Agent}, \$Data{Customer}, \$Data{CustomerPortalGroupID}, \$Param{ID} ],
         );
     }
 
@@ -403,10 +404,10 @@ sub TicketTemplateCreate {
             SQL => 'INSERT INTO kix_ticket_template '
                 . '(name, valid_id, '
                 . 'create_time, create_by, change_time, change_by, '
-                . 'f_agent, f_customer) '
-                . 'VALUES (?, 1, current_timestamp, ?, current_timestamp, ?, ?, ?)',
+                . 'f_agent, f_customer, customer_portal_group_id) '
+                . 'VALUES (?, 1, current_timestamp, ?, current_timestamp, ?, ?, ?, ?)',
             Bind => [
-                \$Param{Name}, \$Param{UserID}, \$Param{UserID}, \$Data{Agent}, \$Data{Customer}
+                \$Param{Name}, \$Param{UserID}, \$Param{UserID}, \$Data{Agent}, \$Data{Customer}, \$Data{CustomerPortalGroupID}
             ],
         );
 
@@ -574,9 +575,9 @@ sub TicketTemplateUpdate {
     #update meta data
     return if !$Self->{DBObject}->Do(
         SQL =>
-            'UPDATE kix_ticket_template SET name = ?, f_agent = ?, f_customer = ? ' .
+            'UPDATE kix_ticket_template SET name = ?, f_agent = ?, f_customer = ?, customer_portal_group_id = ? ' .
             'WHERE id = ?',
-        Bind => [ \$Data{Name}, \$Data{Agent}, \$Data{Customer}, \$Data{ID} ],
+        Bind => [ \$Data{Name}, \$Data{Agent}, \$Data{Customer}, \$Data{CustomerPortalGroupID}, \$Data{ID} ],
     );
 
     # clear ticket cache

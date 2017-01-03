@@ -1,0 +1,150 @@
+# --
+# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
+# --
+# $Id$
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+<div id="MainBox" class="TicketView CustomerTicketTemplates ARIARoleMain">
+
+    <div class="TemplateSelectionArea">
+        <div>
+            <div class="Header">
+                <h2>[% Translate("Filter templates and groups") | html %]</h2>
+            </div>
+            <div>
+                <fieldset class="FilterArea">
+                    <input id="PortalGroupFilter" type="text" placeholder="[% Translate("filter template groups") | html %]">
+                        <a href="" id="PortalGroupFilterClear" title="[% Translate("Clear Filter") | html %]">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                    </input>
+                    <input id="TicketTemplateFilter" type="text" placeholder="[% Translate("filter ticket templates") | html %]">
+                        <a href="" id="TicketTemplateFilterClear" title="[% Translate("Clear Filter") | html %]">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                    </input>
+                </fieldset>
+            </div>
+        </div>
+        
+        <div>
+            <p class="SpacingBottomLarge">
+                [% Translate("Please click an icon below to create a ticket from the desired template.") | html %]
+            </p>
+        
+[% RenderBlockStart("PortalGroup") %]
+            <div id="PortalGroup[% Translate(Data.PortalGroupID) | html %]" class="PortalGroup">
+                <div class="Header">
+                    <h1>[% Data.Name | html %]</h1>
+                </div>
+                <div>
+[% RenderBlockStart("TicketTemplate") %]
+                    <div class="TicketTemplateElement">
+                        <a class="[% Data.LinkClass | html %]" href="[% Env("Baselink") %][% Data.Link | html %]" title="[% Translate(Data.Name) | html %]">
+                            <img src="data:[% Data.ContentType | html %];base64,[% Data.Content | html %]"/>
+                        </a>
+                        <span class="Label">[% Translate(Data.Name) | html %]</span>
+                    </div>
+[% RenderBlockEnd("TicketTemplate") %]
+                </div>
+            </div>
+[% RenderBlockEnd("PortalGroup") %]
+        </div>
+    </div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    
+    // init popups
+    $('a.AsPopup').bind('click', function(Event) {
+        var Matches, PopupType = 'TicketAction';
+
+        Matches = $(this).attr('class').match(/PopupType_(\w+)/);
+        if (Matches) {
+            PopupType = Matches[1];
+        }
+        $(this).addClass('PopupCalled');
+        $('a.TabAsPopup.PopupCalled').removeAttr('onClick');
+        $('a.TabAsPopup.PopupCalled').bind('click', function(Event) {
+            $(this).removeClass('PopupCalled');
+            return false;
+        });
+        Core.UI.Popup.OpenPopup($(this).attr('href'), PopupType);
+        return false;
+    });
+
+    // init group filter
+    $('#PortalGroupFilter').bind('keyup', function(e) {
+        var Filter = $(this).val().trim().toLowerCase();
+        if (Filter.length > 0) {
+            $('#PortalGroupFilterClear').css('visibility', 'visible');
+            // hide all non-matching elements and show matching ones
+            $('.PortalGroup').each(function() {
+                if ($(this).find('.Header > h1').html().toLowerCase().match(Filter))
+                    $(this).show();
+                else
+                    $(this).hide();
+            });
+        }
+        else {
+            $('#PortalGroupFilterClear').css('visibility', 'hidden');
+            $('.PortalGroup').show();
+        }
+        // check if groups should be hidden because they are empty
+        $('.PortalGroup').each(function() {
+            if ($(this).find('.TicketTemplateElement:visible').length == 0)
+                $(this).hide();
+        });
+    });
+    $('#PortalGroupFilterClear').bind('click', function(e) {
+        e.preventDefault();
+        $('#PortalGroupFilter').val('').trigger('keyup');
+        $(this).css('visibility', 'hidden');
+    });
+
+    // init template filter
+    $('#TicketTemplateFilter').bind('keyup', function(e) {
+        var Filter = $(this).val().trim().toLowerCase();
+        if (Filter.length > 0) {
+            $('#TicketTemplateFilterClear').css('visibility', 'visible');
+            // hide all non-matching elements and show matching ones and their groups
+            $('.TicketTemplateElement').each(function() {
+                if ($(this).children('.Label').html().toLowerCase().match(Filter)) {
+                    $(this).show();
+                    // trigger group filter again
+                    $(this).parents('.PortalGroup').show();
+                    $('#PortalGroupFilter').trigger('keyup');
+                }
+                else
+                    $(this).hide();
+            });
+        }
+        else {
+            $('#TicketTemplateFilterClear').css('visibility', 'hidden');
+            // show all elements
+            $('.TicketTemplateElement').show();
+            // trigger group filter again
+            $('#PortalGroupFilter').trigger('keyup');
+        }
+        
+        // check if groups should be hidden because they are empty
+        $('.PortalGroup').each(function() {
+            if ($(this).find('.TicketTemplateElement:visible').length == 0)
+                $(this).hide();
+        });
+    });
+    $('#TicketTemplateFilterClear').bind('click', function(e) {
+        e.preventDefault();
+        $('#TicketTemplateFilter').val('').trigger('keyup');
+        $(this).css('visibility', 'hidden');
+    });
+    
+//]]></script>
+[% END %]
+</div>

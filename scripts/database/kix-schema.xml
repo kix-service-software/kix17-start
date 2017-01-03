@@ -2707,261 +2707,284 @@
 </Table>
         
 <!-- itsm attribute collection -->
-    <Table Name="attachment_directory">
-        <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
-        <Column Name="storage_backend" Required="true" Size="64" Type="VARCHAR"/>
-        <Column Name="file_name" Required="false" Size="255" Type="VARCHAR"/>
-        <Column Name="file_path" Required="false" Size="4000" Type="VARCHAR"/>
-        <Column Name="create_time" Required="true" Type="DATE"/>
-        <Column Name="create_by" Required="true" Type="INTEGER"/>
-        <Column Name="change_time" Required="true" Type="DATE"/>
-        <Column Name="change_by" Required="true" Type="INTEGER"/>
-        <Index Name="index_attachment_directory_backend">
-            <IndexColumn Name="storage_backend"/>
-        </Index>
-    </Table>
-    <Table Name="attachment_dir_preferences">
-        <Column Name="attachment_directory_id" Required="true" Type="INTEGER"/>
-        <Column Name="preferences_key" Required="true" Size="150" Type="VARCHAR"/>
-        <Column Name="preferences_value" Required="false" Size="350" Type="VARCHAR"/>
-        <Index Name="attachment_dir_preferences_attachment_directory_id">
-            <IndexColumn Name="attachment_directory_id"/>
-        </Index>
-        <ForeignKey ForeignTable="attachment_directory">
-            <Reference Local="attachment_directory_id" Foreign="id"/>
-        </ForeignKey>
-    </Table>
-    <Table Name="attachment_storage">
-        <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
-        <Column Name="attachment_directory_id" Required="true" Type="INTEGER"/>
-        <Column Name="data" Required="false" Type="LONGBLOB"/>
-        <Unique>
-            <UniqueColumn Name="attachment_directory_id"/>
-        </Unique>
-        <Index Name="attachment_storage_dir_id">
-            <IndexColumn Name="attachment_directory_id"/>
-        </Index>
-    </Table>
+<Table Name="attachment_directory">
+    <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
+    <Column Name="storage_backend" Required="true" Size="64" Type="VARCHAR"/>
+    <Column Name="file_name" Required="false" Size="255" Type="VARCHAR"/>
+    <Column Name="file_path" Required="false" Size="4000" Type="VARCHAR"/>
+    <Column Name="create_time" Required="true" Type="DATE"/>
+    <Column Name="create_by" Required="true" Type="INTEGER"/>
+    <Column Name="change_time" Required="true" Type="DATE"/>
+    <Column Name="change_by" Required="true" Type="INTEGER"/>
+    <Index Name="index_attachment_directory_backend">
+        <IndexColumn Name="storage_backend"/>
+    </Index>
+</Table>
+<Table Name="attachment_dir_preferences">
+    <Column Name="attachment_directory_id" Required="true" Type="INTEGER"/>
+    <Column Name="preferences_key" Required="true" Size="150" Type="VARCHAR"/>
+    <Column Name="preferences_value" Required="false" Size="350" Type="VARCHAR"/>
+    <Index Name="attachment_dir_preferences_attachment_directory_id">
+        <IndexColumn Name="attachment_directory_id"/>
+    </Index>
+    <ForeignKey ForeignTable="attachment_directory">
+        <Reference Local="attachment_directory_id" Foreign="id"/>
+    </ForeignKey>
+</Table>
+<Table Name="attachment_storage">
+    <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
+    <Column Name="attachment_directory_id" Required="true" Type="INTEGER"/>
+    <Column Name="data" Required="false" Type="LONGBLOB"/>
+    <Unique>
+        <UniqueColumn Name="attachment_directory_id"/>
+    </Unique>
+    <Index Name="attachment_storage_dir_id">
+        <IndexColumn Name="attachment_directory_id"/>
+    </Index>
+</Table>
 
 <!-- template x -->
-    <Table Name="standard_templatex">
-        <Column Name="template_id" Required="true" Type="INTEGER" PrimaryKey="true"/>
-        <Column Name="t_to" Type="VARCHAR" Size="3800"/>
-        <Column Name="t_cc" Type="VARCHAR" Size="3800"/>
-        <Column Name="t_bcc" Type="VARCHAR" Size="3800"/>
-        <Column Name="t_ticket_state_id" Type="SMALLINT"/>
-        <Column Name="t_pending_time" Type="INTEGER"/>
-        <Column Name="t_pending_type" Type="INTEGER"/>
-    </Table>
+<Table Name="standard_templatex">
+    <Column Name="template_id" Required="true" Type="INTEGER" PrimaryKey="true"/>
+    <Column Name="t_to" Type="VARCHAR" Size="3800"/>
+    <Column Name="t_cc" Type="VARCHAR" Size="3800"/>
+    <Column Name="t_bcc" Type="VARCHAR" Size="3800"/>
+    <Column Name="t_ticket_state_id" Type="SMALLINT"/>
+    <Column Name="t_pending_time" Type="INTEGER"/>
+    <Column Name="t_pending_type" Type="INTEGER"/>
+</Table>
 
 <!-- kix4otrs -->
 
-    <Table Name="kix_article_flag">
-        <Column Name="article_id"  Required="true" Type="BIGINT"/>
-        <Column Name="article_key" Required="true" Type="VARCHAR" Size="50"/>
-        <Column Name="keywords"    Required="true" Type="VARCHAR" Size="200"/>
-        <Column Name="subject"     Required="true" Type="VARCHAR" Size="250"/>
-        <Column Name="note"        Required="true" Type="VARCHAR" Size="2000"/>
-        <Column Name="create_by"   Required="true" Type="INTEGER"/>
-    </Table>
-    <Table Name="kix_customer_company_prefs">
-        <Column Name="user_id" Required="true" Type="VARCHAR" Size="250"/>
-        <Column Name="preferences_key"   Required="true"  Type="VARCHAR" Size="100"/>
-        <Column Name="preferences_value" Required="false" Type="VARCHAR" Size="10000"/>
-    </Table>
-    <Table Name="kix_dep_dynamic_field">
-        <Column Name="id"               Required="true" Type="INTEGER" PrimaryKey="true"/>
-        <Column Name="name"             Required="true" Type="VARCHAR" Size="150"/>
-        <Column Name="valid_id"         Required="true" Type="INTEGER"/>
-        <Column Name="create_time"      Required="true" Type="DATE"/>
-        <Column Name="create_by"        Required="true" Type="INTEGER"/>
-        <Column Name="change_time"      Required="true" Type="DATE"/>
-        <Column Name="change_by"        Required="true" Type="INTEGER"/>
-    </Table>
-    <Table Name="kix_dep_dynamic_field_prefs">
-        <Column Name="id"                   Required="true" Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
-        <Column Name="dependingfield_id"    Required="true" Type="INTEGER"/>
-        <Column Name="dynamicfield_id"      Required="true" Type="INTEGER"/>
-        <Column Name="value"                Required="true" Type="VARCHAR" Size="200"/>
-        <Column Name="parent_id"            Required="true" Type="INTEGER"/>
-        <ForeignKey ForeignTable="kix_dep_dynamic_field">
-            <Reference Local="dependingfield_id" Foreign="id"/>
-        </ForeignKey>
-    </Table>
-    <Table Name="kix_file_watcher">
-        <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="BIGINT"/>
-        <Column Name="parent_id" Required="false" Type="INTEGER"/>
-        <Column Name="fingerprint" Required="false" Size="32" Type="VARCHAR"/>
-        <Column Name="path" Required="false" Size="255" Type="VARCHAR"/>
-        <Column Name="path_lower" Required="false" Size="255" Type="VARCHAR"/>
-        <Column Name="name" Required="false" Size="255" Type="VARCHAR"/>
-        <Column Name="name_lower" Required="false" Size="255" Type="VARCHAR"/>
-        <Column Name="first_found" Required="false" Type="INTEGER"/>
-        <Column Name="last_found" Required="false" Type="INTEGER"/>
-        <Column Name="last_mod" Required="false" Type="INTEGER"/>
-        <Column Name="mod_type" Required="false" Type="INTEGER"/>
-        <Column Name="filesize" Required="false" Type="BIGINT"/>
-        <Column Name="outdated" Required="false" Type="INTEGER"/>
-        <Index Name="kix_file_watcher_parent_id">
-            <IndexColumn Name="parent_id"/>
-        </Index>
-        <Index Name="kix_file_watcher_fingerprint">
-            <IndexColumn Name="fingerprint"/>
-        </Index>
-        <Index Name="kix_file_watcher_path">
-            <IndexColumn Name="path"/>
-        </Index>
-        <Index Name="kix_file_watcher_name">
-            <IndexColumn Name="name"/>
-        </Index>
-        <Index Name="kix_file_watcher_name_lower">
-            <IndexColumn Name="name_lower"/>
-        </Index>
-        <Index Name="kix_file_watcher_last_mod">
-            <IndexColumn Name="last_mod"/>
-        </Index>
-        <Index Name="kix_file_watcher_filesize">
-            <IndexColumn Name="filesize"/>
-        </Index>
-    </Table>
-    <Table Name="kix_text_module">
-        <Column Name="id"          Required="true"  Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
-        <Column Name="name"        Required="true"  Type="VARCHAR" Size="80"/>
-        <Column Name="text"        Required="false" Type="VARCHAR" Size="65535"/>
-        <Column Name="language"    Required="false" Type="VARCHAR" Size="8"/>
-        <Column Name="keywords"    Required="false" Type="VARCHAR" Size="200"/>
-        <Column Name="comment1"    Required="false" Type="VARCHAR" Size="250"/>
-        <Column Name="comment2"    Required="false" Type="VARCHAR" Size="250"/>
-        <Column Name="subject"     Required="false" Type="VARCHAR" Size="250"/>
-        <Column Name="f_agent"     Required="false" Type="INTEGER" Default="0"/>
-        <Column Name="f_customer"  Required="false" Type="INTEGER" Default="0"/>
-        <Column Name="f_public"    Required="false" Type="INTEGER" Default="0"/>
-        <Column Name="valid_id"    Required="true"  Type="INTEGER"/>
-        <Column Name="create_time" Required="true"  Type="DATE"/>
-        <Column Name="create_by"   Required="true"  Type="INTEGER"/>
-        <Column Name="change_time" Required="true"  Type="DATE"/>
-        <Column Name="change_by"   Required="true"  Type="INTEGER"/>
-        <Index Name="kix_text_module_name">
-            <IndexColumn Name="name"/>
-        </Index>
-        <Index Name="kix_text_module_keywords">
-            <IndexColumn Name="keywords"/>
-        </Index>
-        <Index Name="kix_text_module_language">
-            <IndexColumn Name="language"/>
-        </Index>
-        <Index Name="kix_text_module_comment1">
-            <IndexColumn Name="comment1"/>
-        </Index>
-        <Index Name="kix_text_module_comment2">
-            <IndexColumn Name="comment2"/>
-        </Index>
-    </Table>
-    <Table Name="kix_text_module_object_link">
-        <Column Name="text_module_id" Required="true" Type="INTEGER"/>
-        <Column Name="object_type"    Required="true" Type="VARCHAR" Size="50"/>
-        <Column Name="object_id"      Required="true" Type="INTEGER"/>
-        <Column Name="create_time"    Required="true" Type="DATE"/>
-        <Column Name="create_by"      Required="true" Type="INTEGER"/>
-        <Column Name="change_time"    Required="true" Type="DATE"/>
-        <Column Name="change_by"      Required="true" Type="INTEGER"/>
-        <ForeignKey ForeignTable="kix_text_module">
-            <Reference Local="text_module_id" Foreign="id"/>
-        </ForeignKey>
-        <Index Name="kix_text_module_object_link_object_type">
-            <IndexColumn Name="object_type"/>
-        </Index>
-        <Index Name="kix_text_module_object_link_object_id">
-            <IndexColumn Name="object_id"/>
-        </Index>
-    </Table>
-    <Table Name="kix_ticket_notes">
-        <Column Name="ticket_id"   Required="true"  Type="BIGINT"/>
-        <Column Name="note"        Required="false" Type="VARCHAR" Size="2000"/>
-        <Column Name="create_time" Required="true"  Type="DATE"/>
-        <Column Name="create_by"   Required="true"  Type="INTEGER"/>
-        <Column Name="change_time" Required="true"  Type="DATE"/>
-        <Column Name="change_by"   Required="true"  Type="INTEGER"/>
-        <ForeignKey ForeignTable="ticket">
-            <Reference Local="ticket_id" Foreign="id"/>
-        </ForeignKey>
-    </Table>
-    <Table Name="kix_ticket_template">
-        <Column Name="id"          Required="true" Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
-        <Column Name="name"        Required="true" Type="VARCHAR" Size="150"/>
-        <Column Name="valid_id"    Required="true" Type="INTEGER"/>
-        <Column Name="create_time" Required="true" Type="DATE"/>
-        <Column Name="create_by"   Required="true" Type="INTEGER"/>
-        <Column Name="change_time" Required="true" Type="DATE"/>
-        <Column Name="change_by"   Required="true" Type="INTEGER"/>
-        <Column Name="f_agent"     Required="false" Type="INTEGER"/>
-        <Column Name="f_customer"  Required="false" Type="INTEGER"/>
-        <Unique Name="kix_ticket_template_name">
-            <UniqueColumn Name="name"/>
-        </Unique>
-    </Table>
-    <Table Name="kix_ticket_template_prefs">
-        <Column Name="template_id"       Required="true"  Type="INTEGER"/>
-        <Column Name="preferences_key"   Required="true"  Type="VARCHAR" Size="100"/>
-        <Column Name="preferences_value" Required="false" Type="VARCHAR" Size="10000"/>
-        <ForeignKey ForeignTable="kix_ticket_template">
-            <Reference Local="template_id" Foreign="id"/>
-        </ForeignKey>
-    </Table>
-    <Table Name="kix_text_module_category">
-        <Column Name="id"          Required="true"  Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
-        <Column Name="name"        Required="true"  Type="VARCHAR" Size="2000"/>
-        <Column Name="create_time" Required="true"  Type="DATE"/>
-        <Column Name="create_by"   Required="true"  Type="INTEGER"/>
-        <Column Name="change_time" Required="true"  Type="DATE"/>
-        <Column Name="change_by"   Required="true"  Type="INTEGER"/>
-    </Table>
-    <Table Name="kix_search_profile">
-        <Column Name="category" Required="true"  Type="VARCHAR" Size="100"/>
-        <Column Name="name"     Required="true"  Type="VARCHAR" Size="255"/>
-        <Column Name="state"    Required="true"  Type="VARCHAR" Size="32"/>
-        <Column Name="login"    Required="true"  Type="VARCHAR" Size="64"/>
-        <Index Name="kix_search_profile_nme_st_log">
-            <IndexColumn Name="name"/>
-            <IndexColumn Name="state"/>
-            <IndexColumn Name="login"/>
-        </Index>
-    </Table>
-    <Table Name="kix_link_graph">
-        <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
-        <Column Name="name" Required="true" Size="250" Type="VARCHAR"/>
-        <Column Name="object_id" Required="true" Type="INTEGER"/>
-        <Column Name="object_type" Required="true" Size="50" Type="VARCHAR"/>
-        <Column Name="layout" Required="true" Type="VARCHAR" Size="65535"/>
-        <Column Name="config" Required="true" Size="2500" Type="VARCHAR"/>
-        <Column Name="create_time" Required="true" Type="DATE"/>
-        <Column Name="create_by" Required="true" Type="INTEGER"/>
-        <Column Name="change_time" Required="true" Type="DATE"/>
-        <Column Name="change_by" Required="true" Type="INTEGER"/>
-        <Index Name="kix_link_graph_object_id_object_type">
-            <IndexColumn Name="object_id"/>
-            <IndexColumn Name="object_type"/>
-        </Index>
-    </Table>
-    <Table Name="kix_ticket_checklist">
-        <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
-        <Column Name="ticket_id" Required="true" Type="BIGINT"/>
-        <Column Name="task" Required="true" Type="VARCHAR" Size="256"/>
-        <Column Name="state" Required="true" Type="VARCHAR" Size="32"/>
-        <Column Name="position" Required="true" Type="INTEGER"/>
-        <Index Name="kix_ticket_checklist_ticket_id">
-            <IndexColumn Name="ticket_id"/>
-        </Index>
-    </Table>
+<Table Name="kix_article_flag">
+    <Column Name="article_id"  Required="true" Type="BIGINT"/>
+    <Column Name="article_key" Required="true" Type="VARCHAR" Size="50"/>
+    <Column Name="keywords"    Required="true" Type="VARCHAR" Size="200"/>
+    <Column Name="subject"     Required="true" Type="VARCHAR" Size="250"/>
+    <Column Name="note"        Required="true" Type="VARCHAR" Size="2000"/>
+    <Column Name="create_by"   Required="true" Type="INTEGER"/>
+</Table>
+<Table Name="kix_customer_company_prefs">
+    <Column Name="user_id" Required="true" Type="VARCHAR" Size="250"/>
+    <Column Name="preferences_key"   Required="true"  Type="VARCHAR" Size="100"/>
+    <Column Name="preferences_value" Required="false" Type="VARCHAR" Size="10000"/>
+</Table>
+<Table Name="kix_dep_dynamic_field">
+    <Column Name="id"               Required="true" Type="INTEGER" PrimaryKey="true"/>
+    <Column Name="name"             Required="true" Type="VARCHAR" Size="150"/>
+    <Column Name="valid_id"         Required="true" Type="INTEGER"/>
+    <Column Name="create_time"      Required="true" Type="DATE"/>
+    <Column Name="create_by"        Required="true" Type="INTEGER"/>
+    <Column Name="change_time"      Required="true" Type="DATE"/>
+    <Column Name="change_by"        Required="true" Type="INTEGER"/>
+</Table>
+<Table Name="kix_dep_dynamic_field_prefs">
+    <Column Name="id"                   Required="true" Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
+    <Column Name="dependingfield_id"    Required="true" Type="INTEGER"/>
+    <Column Name="dynamicfield_id"      Required="true" Type="INTEGER"/>
+    <Column Name="value"                Required="true" Type="VARCHAR" Size="200"/>
+    <Column Name="parent_id"            Required="true" Type="INTEGER"/>
+    <ForeignKey ForeignTable="kix_dep_dynamic_field">
+        <Reference Local="dependingfield_id" Foreign="id"/>
+    </ForeignKey>
+</Table>
+<Table Name="kix_file_watcher">
+    <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="BIGINT"/>
+    <Column Name="parent_id" Required="false" Type="INTEGER"/>
+    <Column Name="fingerprint" Required="false" Size="32" Type="VARCHAR"/>
+    <Column Name="path" Required="false" Size="255" Type="VARCHAR"/>
+    <Column Name="path_lower" Required="false" Size="255" Type="VARCHAR"/>
+    <Column Name="name" Required="false" Size="255" Type="VARCHAR"/>
+    <Column Name="name_lower" Required="false" Size="255" Type="VARCHAR"/>
+    <Column Name="first_found" Required="false" Type="INTEGER"/>
+    <Column Name="last_found" Required="false" Type="INTEGER"/>
+    <Column Name="last_mod" Required="false" Type="INTEGER"/>
+    <Column Name="mod_type" Required="false" Type="INTEGER"/>
+    <Column Name="filesize" Required="false" Type="BIGINT"/>
+    <Column Name="outdated" Required="false" Type="INTEGER"/>
+    <Index Name="kix_file_watcher_parent_id">
+        <IndexColumn Name="parent_id"/>
+    </Index>
+    <Index Name="kix_file_watcher_fingerprint">
+        <IndexColumn Name="fingerprint"/>
+    </Index>
+    <Index Name="kix_file_watcher_path">
+        <IndexColumn Name="path"/>
+    </Index>
+    <Index Name="kix_file_watcher_name">
+        <IndexColumn Name="name"/>
+    </Index>
+    <Index Name="kix_file_watcher_name_lower">
+        <IndexColumn Name="name_lower"/>
+    </Index>
+    <Index Name="kix_file_watcher_last_mod">
+        <IndexColumn Name="last_mod"/>
+    </Index>
+    <Index Name="kix_file_watcher_filesize">
+        <IndexColumn Name="filesize"/>
+    </Index>
+</Table>
+<Table Name="kix_text_module">
+    <Column Name="id"          Required="true"  Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
+    <Column Name="name"        Required="true"  Type="VARCHAR" Size="80"/>
+    <Column Name="text"        Required="false" Type="VARCHAR" Size="65535"/>
+    <Column Name="language"    Required="false" Type="VARCHAR" Size="8"/>
+    <Column Name="keywords"    Required="false" Type="VARCHAR" Size="200"/>
+    <Column Name="comment1"    Required="false" Type="VARCHAR" Size="250"/>
+    <Column Name="comment2"    Required="false" Type="VARCHAR" Size="250"/>
+    <Column Name="subject"     Required="false" Type="VARCHAR" Size="250"/>
+    <Column Name="f_agent"     Required="false" Type="INTEGER" Default="0"/>
+    <Column Name="f_customer"  Required="false" Type="INTEGER" Default="0"/>
+    <Column Name="f_public"    Required="false" Type="INTEGER" Default="0"/>
+    <Column Name="valid_id"    Required="true"  Type="INTEGER"/>
+    <Column Name="create_time" Required="true"  Type="DATE"/>
+    <Column Name="create_by"   Required="true"  Type="INTEGER"/>
+    <Column Name="change_time" Required="true"  Type="DATE"/>
+    <Column Name="change_by"   Required="true"  Type="INTEGER"/>
+    <Index Name="kix_text_module_name">
+        <IndexColumn Name="name"/>
+    </Index>
+    <Index Name="kix_text_module_keywords">
+        <IndexColumn Name="keywords"/>
+    </Index>
+    <Index Name="kix_text_module_language">
+        <IndexColumn Name="language"/>
+    </Index>
+    <Index Name="kix_text_module_comment1">
+        <IndexColumn Name="comment1"/>
+    </Index>
+    <Index Name="kix_text_module_comment2">
+        <IndexColumn Name="comment2"/>
+    </Index>
+</Table>
+<Table Name="kix_text_module_object_link">
+    <Column Name="text_module_id" Required="true" Type="INTEGER"/>
+    <Column Name="object_type"    Required="true" Type="VARCHAR" Size="50"/>
+    <Column Name="object_id"      Required="true" Type="INTEGER"/>
+    <Column Name="create_time"    Required="true" Type="DATE"/>
+    <Column Name="create_by"      Required="true" Type="INTEGER"/>
+    <Column Name="change_time"    Required="true" Type="DATE"/>
+    <Column Name="change_by"      Required="true" Type="INTEGER"/>
+    <ForeignKey ForeignTable="kix_text_module">
+        <Reference Local="text_module_id" Foreign="id"/>
+    </ForeignKey>
+    <Index Name="kix_text_module_object_link_object_type">
+        <IndexColumn Name="object_type"/>
+    </Index>
+    <Index Name="kix_text_module_object_link_object_id">
+        <IndexColumn Name="object_id"/>
+    </Index>
+</Table>
+<Table Name="kix_ticket_notes">
+    <Column Name="ticket_id"   Required="true"  Type="BIGINT"/>
+    <Column Name="note"        Required="false" Type="VARCHAR" Size="2000"/>
+    <Column Name="create_time" Required="true"  Type="DATE"/>
+    <Column Name="create_by"   Required="true"  Type="INTEGER"/>
+    <Column Name="change_time" Required="true"  Type="DATE"/>
+    <Column Name="change_by"   Required="true"  Type="INTEGER"/>
+    <ForeignKey ForeignTable="ticket">
+        <Reference Local="ticket_id" Foreign="id"/>
+    </ForeignKey>
+</Table>
+<Table Name="kix_ticket_template">
+    <Column Name="id"          Required="true" Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
+    <Column Name="name"        Required="true" Type="VARCHAR" Size="150"/>
+    <Column Name="valid_id"    Required="true" Type="INTEGER"/>
+    <Column Name="create_time" Required="true" Type="DATE"/>
+    <Column Name="create_by"   Required="true" Type="INTEGER"/>
+    <Column Name="change_time" Required="true" Type="DATE"/>
+    <Column Name="change_by"   Required="true" Type="INTEGER"/>
+    <Column Name="f_agent"     Required="false" Type="INTEGER"/>
+    <Column Name="f_customer"  Required="false" Type="INTEGER"/>
+    <Column Name="customer_portal_group_id" Required="false" Type="INTEGER"/>
+    <Unique Name="kix_ticket_template_name">
+        <UniqueColumn Name="name"/>
+    </Unique>
+</Table>
+<Table Name="kix_ticket_template_prefs">
+    <Column Name="template_id"       Required="true"  Type="INTEGER"/>
+    <Column Name="preferences_key"   Required="true"  Type="VARCHAR" Size="100"/>
+    <Column Name="preferences_value" Required="false" Type="VARCHAR" Size="10000"/>
+    <ForeignKey ForeignTable="kix_ticket_template">
+        <Reference Local="template_id" Foreign="id"/>
+    </ForeignKey>
+</Table>
+<Table Name="kix_text_module_category">
+    <Column Name="id"          Required="true"  Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
+    <Column Name="name"        Required="true"  Type="VARCHAR" Size="2000"/>
+    <Column Name="create_time" Required="true"  Type="DATE"/>
+    <Column Name="create_by"   Required="true"  Type="INTEGER"/>
+    <Column Name="change_time" Required="true"  Type="DATE"/>
+    <Column Name="change_by"   Required="true"  Type="INTEGER"/>
+</Table>
+<Table Name="kix_search_profile">
+    <Column Name="category" Required="true"  Type="VARCHAR" Size="100"/>
+    <Column Name="name"     Required="true"  Type="VARCHAR" Size="255"/>
+    <Column Name="state"    Required="true"  Type="VARCHAR" Size="32"/>
+    <Column Name="login"    Required="true"  Type="VARCHAR" Size="64"/>
+    <Index Name="kix_search_profile_nme_st_log">
+        <IndexColumn Name="name"/>
+        <IndexColumn Name="state"/>
+        <IndexColumn Name="login"/>
+    </Index>
+</Table>
+<Table Name="kix_link_graph">
+    <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
+    <Column Name="name" Required="true" Size="250" Type="VARCHAR"/>
+    <Column Name="object_id" Required="true" Type="INTEGER"/>
+    <Column Name="object_type" Required="true" Size="50" Type="VARCHAR"/>
+    <Column Name="layout" Required="true" Type="VARCHAR" Size="65535"/>
+    <Column Name="config" Required="true" Size="2500" Type="VARCHAR"/>
+    <Column Name="create_time" Required="true" Type="DATE"/>
+    <Column Name="create_by" Required="true" Type="INTEGER"/>
+    <Column Name="change_time" Required="true" Type="DATE"/>
+    <Column Name="change_by" Required="true" Type="INTEGER"/>
+    <Index Name="kix_link_graph_object_id_object_type">
+        <IndexColumn Name="object_id"/>
+        <IndexColumn Name="object_type"/>
+    </Index>
+</Table>
+<Table Name="kix_ticket_checklist">
+    <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
+    <Column Name="ticket_id" Required="true" Type="BIGINT"/>
+    <Column Name="task" Required="true" Type="VARCHAR" Size="256"/>
+    <Column Name="state" Required="true" Type="VARCHAR" Size="32"/>
+    <Column Name="position" Required="true" Type="INTEGER"/>
+    <Index Name="kix_ticket_checklist_ticket_id">
+        <IndexColumn Name="ticket_id"/>
+    </Index>
+</Table>
 
 <!-- notification event x -->
-    <Table Name="overlay_agent">
-        <Column Name="id"      Required="true" Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
-        <Column Name="subject" Required="true" Type="VARCHAR" Size="250"/>
-        <Column Name="message" Required="true" Type="VARCHAR" Size="65535"/>
-        <Column Name="decay"   Required="true" Type="INTEGER"/>
-        <Column Name="user_id" Required="true" Type="INTEGER"/>
-        <Column Name="popup"   Required="true" Type="INTEGER"/>
-    </Table>
+<Table Name="overlay_agent">
+    <Column Name="id"      Required="true" Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
+    <Column Name="subject" Required="true" Type="VARCHAR" Size="250"/>
+    <Column Name="message" Required="true" Type="VARCHAR" Size="65535"/>
+    <Column Name="decay"   Required="true" Type="INTEGER"/>
+    <Column Name="user_id" Required="true" Type="INTEGER"/>
+    <Column Name="popup"   Required="true" Type="INTEGER"/>
+</Table>
+
+<!-- customer_portal_group - all portal groups for customer frontend -->
+<Table Name="customer_portal_group">
+    <Column Name="id" Required="true" Type="INTEGER" PrimaryKey="true" AutoIncrement="true"/>
+    <Column Name="name" Required="true" Type="VARCHAR" Size="255"/>
+    <Column Name="icon_content_type" Required="false" Size="250" Type="VARCHAR"/>
+    <Column Name="icon_content" Required="true" Type="LONGBLOB"/>
+    <Column Name="valid_id" Required="true" Type="SMALLINT"/>
+    <Column Name="create_time" Required="true" Type="DATE"/>
+    <Column Name="create_by" Required="true" Type="INTEGER"/>
+    <Column Name="change_time" Required="true" Type="DATE"/>
+    <Column Name="change_by" Required="true" Type="INTEGER"/>
+    <ForeignKey ForeignTable="valid">
+        <Reference Local="valid_id" Foreign="id"/>
+    </ForeignKey>
+    <Index Name="customer_portal_group_name">
+        <IndexColumn Name="name"/>
+    </Index>
+    <Index Name="customer_portal_group_valid_id">
+        <IndexColumn Name="valid_id"/>
+    </Index>
+</Table>
 
 </database>

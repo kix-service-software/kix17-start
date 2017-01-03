@@ -851,6 +851,11 @@
         height: 120px;
         margin: 0 5px;
     }
+    
+    .Icon32 {
+        width: 32px;
+        height: 32px;
+    }
 }
 /* end @media */
 

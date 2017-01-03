@@ -70,6 +70,17 @@ sub Data {
     $Lang->{'Delete selected entries'}         = 'Ausgewählte Einträge löschen';
     $Lang->{'Empty address book'}              = 'Adressbuch leeren';
     $Lang->{'Do you really want to empty the whole address book ? All entries will be deleted!'} = 'Wollen Sie das Adressbuch wirklich komplett leeren ? Alle Einträge werden gelöscht!';
+    $Lang->{'Customer Portal Group'}           = 'Kundenportalgruppe';
+    $Lang->{'Customer Portal Groups'}          = 'Kundenportalgruppen';
+    $Lang->{'Manage customer portal groups.'}  = 'Kundenportalgruppen verwalten.';
+    $Lang->{'Customer Portal Group Management'} = 'Kundenportalgruppen-Verwaltung';
+    $Lang->{'Add Customer Portal Group'}       = 'Kundenportalgruppe hinzufügen';
+    $Lang->{'Edit Customer Portal Group'}      = 'Kundenportalgruppe bearbeiten';
+    $Lang->{'(The icon should have a size of 64x64 pixels. Otherwise it will be scaled automatically.)'} = '(Das Icon sollte eine Größe von 64x64 Pixel haben. Andernfalls wird es automatisch scaliert.)';
+    $Lang->{'Filter templates and groups'}     = 'Vorlagen und Gruppen einschränken';
+    $Lang->{'filter template groups'}          = 'Vorlagengruppen filtern';
+    $Lang->{'filter ticket templates'}         = 'Ticketvorlagen filtern';
+    $Lang->{'Go to'}                           = 'Gehe zu';
     $Lang->{'KIX Online Help'}                 = 'Onlinehilfe für KIX';
     $Lang->{'pending auto reopen'}             = 'warten zur Wiedervorlage';
     $Lang->{'Ticketnumber'}                    = 'Ticket-Nummer';
@@ -94,8 +105,8 @@ sub Data {
     $Lang->{'current'}                         = 'aktuell';
     $Lang->{'desired date'}                    = 'Wunschtermin';
     $Lang->{'Desired date'}                    = 'Wunschtermin';
-    $Lang->{'Please click the button below to create a ticket of the desired template.'} =
-        'Bitte klicken Sie auf den jeweiligen Button, um ein Ticket aus der gewünschten Vorlage zu erstellen.';
+    $Lang->{'Please click an icon below to create a ticket from the desired template.'} =
+        'Bitte klicken Sie auf ein Icon, um ein Ticket aus der gewünschten Vorlage zu erstellen.';
     $Lang->{'Don\'t write \'Fwd:\' into subject'}    = 'Kein \'Fwd:\' in den Betreff schreiben';
     $Lang->{'Don\'t write \'Re:\' into subject'}     = 'Kein \'Re:\' in den Betreff schreiben';
     $Lang->{'Write a mail, using an empty template'} = 'Leere E-Mail verfassen';

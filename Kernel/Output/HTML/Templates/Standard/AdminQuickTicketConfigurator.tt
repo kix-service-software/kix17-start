@@ -153,6 +153,7 @@
                         <tr>
                             <th>[% Translate("Name") | html %]</th>
                             <th>[% Translate("Frontend") | html %]</th>
+                            <th>[% Translate("Customer Portal Group") | html %]</th>
                             <th>[% Translate("Delete") | html %]</th>
                             <th>[% Translate("Edit") | html %]</th>
                         </tr>
@@ -164,6 +165,7 @@
                                 <a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Change;ID=[% Data.ID | uri %]">[% Data.Name | html %]</a>
                             </td>
                             <td title="[% Translate("A: agent frontend; C: customer frontend") | html %]">[% Data.FrontendInfoStrg | html %]</td>
+                            <td>[% Data.CustomerPortalGroup | html %]</td>
                             <td>
                                 <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;ID=[% Data.ID | html %]">[% Translate("delete") | html %]</a>
                             </td>
@@ -225,6 +227,11 @@
                             <input type="checkbox" id="CustomerFrontend" name="Customer" value="1" [% Data.Customer | html %]/>
                             <label for="CustomerFrontend">[% Translate("Customer Frontend") | html %]</label>
                         </p>
+                        <div class="Clear"></div>
+                        <label id="CustomerPortalGroupIDLabel" class="Mandatory" for="CustomerPortalGroupID"><span class="Marker">*</span> [% Translate("Customer Portal Group") | html %]:</label>
+                        <div class="Field">
+                            [% Data.CustomerPortalGroupStrg %]
+                        </div>
                         <div class="Clear"></div>
                         <label for="Frontend">[% Translate("Available for user groups") | html %]:</label>
                         <div class="Field">
@@ -524,6 +531,18 @@ $(document).on('click','.LimitTemplateSelectionIcon_Fixed',function(){
     var Key = $(this).closest('label').attr('for');
     $('#'+Key+'Fixed').val(0);
 });
+
+// hide CustomerPortalGroup selection if customer frontend is not active
+$('#CustomerFrontend').bind('change', function() {
+    if ($(this).is(':checked')) {
+        $('#CustomerPortalGroupID').parent('.Field').show();
+        $('#CustomerPortalGroupIDLabel').show();
+    }
+    else {
+        $('#CustomerPortalGroupID').parent('.Field').hide();
+        $('#CustomerPortalGroupIDLabel').hide();
+    }
+}).trigger('change');
 //]]>
 </script>
 [% END %]

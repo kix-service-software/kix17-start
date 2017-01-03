@@ -273,17 +273,6 @@
                 <Description Translatable="1">Process Ticket.</Description>
                 <NavBarName>Ticket</NavBarName>
                 <Title Translatable="1">Process ticket</Title>
-                <NavBar>
-                    <Description Translatable="1">Create new process ticket.</Description>
-                    <Name Translatable="1">New process ticket</Name>
-                    <Link>Action=CustomerTicketProcess</Link>
-                    <LinkOption></LinkOption>
-                    <NavBar>Ticket</NavBar>
-                    <Type>Submenu</Type>
-                    <Block></Block>
-                    <AccessKey>o</AccessKey>
-                    <Prio>220</Prio>
-                </NavBar>
                 <Loader>
                     <CSS>Core.Customer.TicketProcess.css</CSS>
                 </Loader>
