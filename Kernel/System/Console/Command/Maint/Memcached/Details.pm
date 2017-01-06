@@ -11,7 +11,7 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::Console::Command::Maint::Memcacheds::Details;
+package Kernel::System::Console::Command::Maint::Memcached::Details;
 
 use strict;
 use warnings;
