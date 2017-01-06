@@ -8065,7 +8065,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::PDF</SubGroup>
         <Setting>
-            <String Regex="">&lt;OTRS_CONFIG_Home&gt;/var/httpd/htdocs/skins/Agent/default/css-cache/img/KIX_PDF_Logo.png</String>
+            <String Regex="">&lt;OTRS_CONFIG_Home&gt;/var/KIX-printlogo.png</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PDF::PageSize" Required="1" Valid="1">
