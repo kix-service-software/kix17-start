@@ -1,5 +1,10 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -30,7 +35,7 @@ sub Run {
     my $Self = shift;
 
     # table check
-    my $File = $Kernel::OM->Get('Kernel::Config')->Get('Home') . '/scripts/database/otrs-schema.xml';
+    my $File = $Kernel::OM->Get('Kernel::Config')->Get('Home') . '/scripts/database/kix-schema.xml';
     if ( !-f $File ) {
         $Self->AddResultProblem(
             Label   => Translatable('Table Presence'),
