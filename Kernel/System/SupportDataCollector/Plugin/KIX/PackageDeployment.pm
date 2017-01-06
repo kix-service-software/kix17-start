@@ -1,12 +1,17 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::SupportDataCollector::Plugin::OTRS::PackageDeployment;
+package Kernel::System::SupportDataCollector::Plugin::KIX::PackageDeployment;
 
 use strict;
 use warnings;
@@ -21,7 +26,7 @@ our @ObjectDependencies = (
 );
 
 sub GetDisplayPath {
-    return Translatable('OTRS');
+    return Translatable('KIX');
 }
 
 sub Run {
@@ -103,7 +108,7 @@ sub Run {
                 Label      => Translatable('Package Verification Status'),
                 Value      => join( ', ', @NotVerifiedPackages ),
                 Message    => Translatable(
-                    'Some packages are not verified by the OTRS Group! It is recommended not to use this packages.'
+                    'Some packages are not verified by the KIX Group! It is recommended not to use this packages.'
                 ),
             );
         }
@@ -113,7 +118,7 @@ sub Run {
                 Label      => Translatable('Package Verification Status'),
                 Value      => join( ', ', @NotVerifiedPackages ),
                 Message    => Translatable(
-                    'Some packages are not verified by the OTRS Group! It is recommended not to use this packages.'
+                    'Some packages are not verified by the KIX Group! It is recommended not to use this packages.'
                 ),
             );
         }

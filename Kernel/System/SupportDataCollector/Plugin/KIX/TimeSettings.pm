@@ -1,13 +1,18 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::SupportDataCollector::Plugin::OTRS::TimeSettings;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Time)
+package Kernel::System::SupportDataCollector::Plugin::KIX::TimeSettings;
+## nofilter(TidyAll::Plugin::KIX::Perl::Time)
 
 use strict;
 use warnings;
@@ -25,7 +30,7 @@ our @ObjectDependencies = (
 );
 
 sub GetDisplayPath {
-    return Translatable('OTRS') . '/' . Translatable('Time Settings');
+    return Translatable('KIX') . '/' . Translatable('Time Settings');
 }
 
 sub Run {
@@ -54,41 +59,41 @@ sub Run {
         Value      => sprintf( '%s%02d%02d', $Direction, $DiffHours, $DiffMinutes ),
     );
 
-    my $OTRSTimeZone = $Kernel::OM->Get('Kernel::Config')->Get('TimeZone');
+    my $KIXTimeZone = $Kernel::OM->Get('Kernel::Config')->Get('TimeZone');
 
-    if ( $ServerTimeDiff && $OTRSTimeZone && $OTRSTimeZone ne '+0' ) {
+    if ( $ServerTimeDiff && $KIXTimeZone && $KIXTimeZone ne '+0' ) {
         $Self->AddResultProblem(
-            Identifier => 'OTRSTimeZone',
-            Label      => Translatable('OTRS TimeZone setting (global time offset)'),
-            Value      => $OTRSTimeZone,
+            Identifier => 'KIXTimeZone',
+            Label      => Translatable('KIX TimeZone setting (global time offset)'),
+            Value      => $KIXTimeZone,
             Message    => Translatable('TimeZone may only be activated for systems running in UTC.'),
         );
     }
     else {
         $Self->AddResultOk(
-            Identifier => 'OTRSTimeZone',
-            Label      => Translatable('OTRS TimeZone setting (global time offset)'),
-            Value      => $OTRSTimeZone,
+            Identifier => 'KIXTimeZone',
+            Label      => Translatable('KIX TimeZone setting (global time offset)'),
+            Value      => $KIXTimeZone,
         );
     }
 
-    my $OTRSTimeZoneUser = $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser');
+    my $KIXTimeZoneUser = $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser');
 
-    if ( $OTRSTimeZoneUser && ( $ServerTimeDiff || ( $OTRSTimeZone && $OTRSTimeZone ne '+0' ) ) ) {
+    if ( $KIXTimeZoneUser && ( $ServerTimeDiff || ( $KIXTimeZone && $KIXTimeZone ne '+0' ) ) ) {
         $Self->AddResultProblem(
-            Identifier => 'OTRSTimeZoneUser',
-            Label      => Translatable('OTRS TimeZoneUser setting (per-user time zone support)'),
-            Value      => $OTRSTimeZoneUser,
+            Identifier => 'KIXTimeZoneUser',
+            Label      => Translatable('KIX TimeZoneUser setting (per-user time zone support)'),
+            Value      => $KIXTimeZoneUser,
             Message    => Translatable(
-                'TimeZoneUser may only be activated for systems running in UTC that don\'t have an OTRS TimeZone set.'
+                'TimeZoneUser may only be activated for systems running in UTC that don\'t have an KIX TimeZone set.'
             ),
         );
     }
     else {
         $Self->AddResultOk(
-            Identifier => 'OTRSTimeZoneUser',
-            Label      => Translatable('OTRS TimeZoneUser setting (per-user time zone support)'),
-            Value      => $OTRSTimeZoneUser,
+            Identifier => 'KIXTimeZoneUser',
+            Label      => Translatable('KIX TimeZoneUser setting (per-user time zone support)'),
+            Value      => $KIXTimeZoneUser,
         );
     }
 
@@ -96,16 +101,16 @@ sub Run {
         my $CalendarTimeZone = $Kernel::OM->Get('Kernel::Config')->Get( 'TimeZone::Calendar' . $Counter );
         if ( $ServerTimeDiff && $CalendarTimeZone && $CalendarTimeZone ne '+0' ) {
             $Self->AddResultProblem(
-                Identifier => "OTRSTimeZone::Calendar$Counter",
-                Label      => Translatable('OTRS TimeZone setting for calendar ') . $Counter,
+                Identifier => "KIXTimeZone::Calendar$Counter",
+                Label      => Translatable('KIX TimeZone setting for calendar ') . $Counter,
                 Value      => $CalendarTimeZone,
                 Message    => Translatable('TimeZone may only be activated for systems running in UTC.'),
             );
         }
         else {
             $Self->AddResultOk(
-                Identifier => "OTRSTimeZone::Calendar$Counter",
-                Label      => Translatable('OTRS TimeZone setting for calendar ') . $Counter,
+                Identifier => "KIXTimeZone::Calendar$Counter",
+                Label      => Translatable('KIX TimeZone setting for calendar ') . $Counter,
                 Value      => $CalendarTimeZone,
             );
         }

@@ -1,5 +1,10 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -81,20 +86,20 @@ collect system data
         Success => 1,
         Result  => [
             {
-                Identifier  => 'Kernel::System::SupportDataCollector::OTRS::Version',
-                DisplayPath => 'OTRS',
+                Identifier  => 'Kernel::System::SupportDataCollector::KIX::Version',
+                DisplayPath => 'KIX',
                 Status      => $StatusOK,
-                Label       => 'OTRS Version'
-                Value       => '3.3.2',
+                Label       => 'KIX Version'
+                Value       => '17.0.0',
                 Message     => '',
             },
             {
                 Identifier  => 'Kernel::System::SupportDataCollector::Apache::mod_perl',
-                DisplayPath => 'OTRS',
+                DisplayPath => 'KIX',
                 Status      => $StatusProblem,
                 Label       => 'mod_perl usage'
                 Value       => '0',
-                Message     => 'Please enable mod_perl to speed up OTRS.',
+                Message     => 'Please enable mod_perl to speed up KIX.',
             },
         ],
     )

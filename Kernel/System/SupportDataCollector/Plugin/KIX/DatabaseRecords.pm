@@ -1,12 +1,17 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::SupportDataCollector::Plugin::OTRS::DatabaseRecords;
+package Kernel::System::SupportDataCollector::Plugin::KIX::DatabaseRecords;
 
 use strict;
 use warnings;
@@ -21,7 +26,7 @@ our @ObjectDependencies = (
 );
 
 sub GetDisplayPath {
-    return Translatable('OTRS') . '/' . Translatable('Database Records');
+    return Translatable('KIX') . '/' . Translatable('Database Records');
 }
 
 sub Run {
