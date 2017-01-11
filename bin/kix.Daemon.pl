@@ -1,6 +1,11 @@
 #!/usr/bin/perl -X
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -34,20 +39,21 @@ use Fcntl qw(:flock);
 
 use Kernel::System::ObjectManager;
 
-print STDOUT "otrs.Daemon.pl - the OTRS daemon\n";
-print STDOUT "Copyright (C) 2001-2016 OTRS AG, http://otrs.com/\n\n";
+print STDOUT "kix.Daemon.pl - the KIX daemon\n";
+print STDOUT "Copyright (C) 2001-2016 OTRS AG, http://otrs.com/\n";
+print STDOUT "Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de\n\n";
 
 local $Kernel::OM = Kernel::System::ObjectManager->new(
     'Kernel::System::Log' => {
-        LogPrefix => 'OTRS-otrs.Daemon.pl',
+        LogPrefix => 'kix.Daemon.pl',
     },
 );
 
 # Don't allow to run these scripts as root.
 if ( $> == 0 ) {    # $EFFECTIVE_USER_ID
     print STDERR
-        "Error: You cannot run otrs.Damon.pl as root. Please run it as the 'otrs' user or with the help of su:\n";
-    print STDERR "  su -c \"bin/otrs.Daemon.pl ...\" -s /bin/bash otrs\n";
+        "Error: You cannot run kix.Damon.pl as root. Please run it as the apache user or with the help of su:\n";
+    print STDERR "  su -c \"bin/kix.Daemon.pl ...\" -s /bin/bash <apache user>\n";
     exit 1;
 }
 
@@ -155,7 +161,7 @@ else {
 
 sub PrintUsage {
     my $UsageText = "Usage:\n";
-    $UsageText .= " otrs.Daemon.pl <ACTION> [--debug] [--force]\n";
+    $UsageText .= " kix.Daemon.pl <ACTION> [--debug] [--force]\n";
     $UsageText .= "\nActions:\n";
     $UsageText .= sprintf " %-30s - %s", 'start', 'Starts the daemon process' . "\n";
     $UsageText .= sprintf " %-30s - %s", 'stop', 'Stops the daemon process' . "\n";
@@ -165,10 +171,10 @@ sub PrintUsage {
     $UsageText
         .= " In debug mode if a daemon module is specified the debug mode will be activated only for that daemon.\n";
     $UsageText .= " Debug information is stored in the daemon log files localed under: $LogDir\n";
-    $UsageText .= "\n otrs.Daemon.pl start --debug SchedulerTaskWorker SchedulerCronTaskManager\n\n";
+    $UsageText .= "\n kix.Daemon.pl start --debug SchedulerTaskWorker SchedulerCronTaskManager\n\n";
     $UsageText
         .= "\n Forced stop reduces the time the main daemon waits other daemons to stop from normal 30 seconds to 5.\n";
-    $UsageText .= "\n otrs.Daemon.pl stop --force\n\n";
+    $UsageText .= "\n kix.Daemon.pl stop --force\n\n";
     print STDOUT "$UsageText\n";
 
     return 1;
@@ -268,7 +274,7 @@ sub Start {
 
                 local $Kernel::OM = Kernel::System::ObjectManager->new(
                     'Kernel::System::Log' => {
-                        LogPrefix => "OTRS-otrs.Daemon.pl - Daemon $Module",
+                        LogPrefix => "kix.Daemon.pl - Daemon $Module",
                     },
                 );
 

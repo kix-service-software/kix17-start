@@ -2,6 +2,11 @@
 # --
 # bin/otrs.xml2sql.pl - a xml 2 sql processor
 # Copyright (C) 2001-2011 OTRS AG, http://otrs.org/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # $Id$
 # --
@@ -46,7 +51,7 @@ $VERSION = qw($Revision$) [1];
 # create object manager
 local $Kernel::OM = Kernel::System::ObjectManager->new(
     'Kernel::System::Log' => {
-        LogPrefix => 'OTRS-otrs.PostMaster.pl',
+        LogPrefix => 'kix.PostMaster.pl',
     },
 );
 
@@ -54,9 +59,10 @@ my %Opts = ();
 getopt( 'hton', \%Opts );
 if ( $Opts{'h'} || !%Opts ) {
     print <<"EOF";
-$0 <Revision $VERSION> - tool to generate database specific SQL from the XML database definition files used by OTRS
+$0 <Revision $VERSION> - tool to generate database specific SQL from the XML database definition files used by KIX
 
 Copyright (C) 2001-2010 OTRS AG, http://otrs.org/
+Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
 
 Usage: $0 -t <DATABASE_TYPE> (or 'all') [-o <OUTPUTDIR> -n <NAME> -s <SPLIT_FILES>]
 EOF

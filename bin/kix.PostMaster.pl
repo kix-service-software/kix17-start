@@ -1,6 +1,11 @@
 #!/usr/bin/perl
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -28,7 +33,7 @@ use lib dirname($RealBin);
 use lib dirname($RealBin) . '/Kernel/cpan-lib';
 use lib dirname($RealBin) . '/Custom';
 
-# to get it readable for the web server user and writable for otrs
+# to get it readable for the web server user and writable for kix
 # group (just in case)
 
 umask 007;
@@ -40,11 +45,12 @@ use Kernel::System::ObjectManager;
 my %Opts;
 getopt( 'qtd', \%Opts );
 if ( $Opts{h} ) {
-    print "otrs.PostMaster.pl - OTRS cmd postmaster\n";
+    print "kix.PostMaster.pl - KIX cmd postmaster\n";
     print "Copyright (C) 2001-2016 OTRS AG, http://otrs.com/\n";
+    print "Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de";
     print
-        "usage: otrs.PostMaster.pl -q <QUEUE> -t <TRUSTED> (default is trusted, use '-t 0' to disable trusted mode)\n";
-    print "\notrs.PostMaster.pl is deprecated, please use console command 'Maint::PostMaster::Read' instead.\n\n";
+        "usage: kix.PostMaster.pl -q <QUEUE> -t <TRUSTED> (default is trusted, use '-t 0' to disable trusted mode)\n";
+    print "\nkix.PostMaster.pl is deprecated, please use console command 'Maint::PostMaster::Read' instead.\n\n";
     exit 1;
 }
 if ( !$Opts{d} ) {
@@ -60,14 +66,14 @@ if ( !$Opts{q} ) {
 # create object manager
 local $Kernel::OM = Kernel::System::ObjectManager->new(
     'Kernel::System::Log' => {
-        LogPrefix => 'OTRS-otrs.PostMaster.pl',
+        LogPrefix => 'kix.PostMaster.pl',
     },
 );
 
 # log the use of a deprecated script
 $Kernel::OM->Get('Kernel::System::Log')->Log(
     Priority => 'error',
-    Message  => "otrs.PostMaster.pl is deprecated, please use console command 'Maint::PostMaster::Read' instead.",
+    Message  => "kix.PostMaster.pl is deprecated, please use console command 'Maint::PostMaster::Read' instead.",
 );
 
 # convert arguments to console command format
