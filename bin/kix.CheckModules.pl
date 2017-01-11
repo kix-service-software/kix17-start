@@ -3,12 +3,13 @@
 # bin/kix.CheckModules.pl - to check needed cpan framework modules
 # based upon bin/otrs.CheckModules.pl
 # original Copyright (C) 2001-2016 OTRS AG, http://otrs.org/
-# KIX4OTRS-Extensions Copyright (C) 2001-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
+# KIX Copyright (C) 2001-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 #
 # written/edited by:
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
 # * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
 #
 # --
 # This program is free software; you can redistribute it and/or modify
@@ -119,18 +120,19 @@ GetOptions(
 
 # check needed params
 if ($Help) {
-    print "otrs.CheckModules.pl - OTRS CheckModules\n";
+    print "kix.CheckModules.pl - KIX CheckModules\n";
     print "Copyright (C) 2001-2016 OTRS AG, http://otrs.com/\n";
-    print "usage: otrs.CheckModules.pl [-list|all] \n";
+    print "Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de\n";
+    print "usage: kix.CheckModules.pl [-list|all] \n";
     print "
-   otrs.CheckModules.pl
-       Returns all required and optional packages of OTRS.\n";
+   kix.CheckModules.pl
+       Returns all required and optional packages of KIX.\n";
     print "
-   otrs.CheckModules.pl -list
+   kix.CheckModules.pl -list
        Returns a install command with all required packages.\n";
     print "
-   otrs.CheckModules.pl -all
-       Returns all required, optional and bundled packages of OTRS.\n";
+   kix.CheckModules.pl -all
+       Returns all required, optional and bundled packages of KIX.\n\n";
     exit 1;
 }
 
@@ -490,6 +492,7 @@ if ($PackageList) {
     }
 }
 else {
+
     # try to determine module version number
     my $Depends = 0;
 
