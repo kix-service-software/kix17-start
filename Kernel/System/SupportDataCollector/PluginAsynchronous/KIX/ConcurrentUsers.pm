@@ -1,12 +1,17 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::SupportDataCollector::PluginAsynchronous::OTRS::ConcurrentUsers;
+package Kernel::System::SupportDataCollector::PluginAsynchronous::KIX::ConcurrentUsers;
 
 use strict;
 use warnings;
@@ -27,7 +32,7 @@ our @ObjectDependencies = (
 
 sub GetDisplayPath {
     return
-        'OTRS@Table:TimeStamp,UserSessionUnique|Unique agents,UserSession|Agent sessions,CustomerSessionUnique|Unique customers,CustomerSession|Customer sessions';
+        'KIX@Table:TimeStamp,UserSessionUnique|Unique agents,UserSession|Agent sessions,CustomerSessionUnique|Unique customers,CustomerSession|Customer sessions';
 }
 
 sub Run {
@@ -75,7 +80,7 @@ sub Run {
         }
 
         $Self->AddResultInformation(
-            DisplayPath => Translatable('OTRS') . '/' . Translatable('Concurrent Users'),
+            DisplayPath => Translatable('KIX') . '/' . Translatable('Concurrent Users'),
             Identifier  => $Identifier,
             Label       => "Max. $Label",
             Value       => $MaxValue,
