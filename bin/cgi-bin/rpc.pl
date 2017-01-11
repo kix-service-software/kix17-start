@@ -1,6 +1,11 @@
 #!/usr/bin/perl
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -50,7 +55,7 @@ sub Dispatch {
     $Pw   ||= '';
     local $Kernel::OM = Kernel::System::ObjectManager->new(
         'Kernel::System::Log' => {
-            LogPrefix => 'OTRS-RPC',
+            LogPrefix => 'KIX-RPC',
         },
     );
 
@@ -128,7 +133,7 @@ sub DispatchMultipleTicketMethods {
     # common objects
     local $Kernel::OM = Kernel::System::ObjectManager->new(
         'Kernel::System::Log' => {
-            LogPrefix => 'OTRS-RPC',
+            LogPrefix => 'KIX-RPC',
         },
     );
 
