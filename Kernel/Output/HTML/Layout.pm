@@ -700,12 +700,12 @@ sub Redirect {
         $Param{Redirect} .= $Param{OP};
     }
 
-    # check if IIS 6 is used, add absolute url for IIS workaround
+    # check if IIS is used, add absolute url for IIS workaround
     # see also:
     #  o http://bugs.otrs.org/show_bug.cgi?id=2230
     #  o http://bugs.otrs.org/show_bug.cgi?id=9835
     #  o http://support.microsoft.com/default.aspx?scid=kb;en-us;221154
-    if ( $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis\/6/i ) {
+    if ( $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis\/8/i ) {
         my $Host = $ENV{HTTP_HOST} || $ConfigObject->Get('FQDN');
         my $HttpType = $ConfigObject->Get('HttpType');
         $Param{Redirect} = $HttpType . '://' . $Host . $Param{Redirect};
@@ -773,8 +773,8 @@ sub Login {
             # Restrict Cookie to HTTPS if it is used.
             $CookieSecureAttribute = 1;
         }
-        $Self->{SetCookies}->{OTRSBrowserHasCookie} = $Kernel::OM->Get('Kernel::System::Web::Request')->SetCookie(
-            Key      => 'OTRSBrowserHasCookie',
+        $Self->{SetCookies}->{KIXBrowserHasCookie} = $Kernel::OM->Get('Kernel::System::Web::Request')->SetCookie(
+            Key      => 'KIXBrowserHasCookie',
             Value    => 1,
             Expires  => '1y',
             Path     => $ConfigObject->Get('ScriptAlias'),
@@ -3465,8 +3465,8 @@ sub CustomerLogin {
             # Restrict Cookie to HTTPS if it is used.
             $CookieSecureAttribute = 1;
         }
-        $Self->{SetCookies}->{OTRSBrowserHasCookie} = $Kernel::OM->Get('Kernel::System::Web::Request')->SetCookie(
-            Key      => 'OTRSBrowserHasCookie',
+        $Self->{SetCookies}->{KIXBrowserHasCookie} = $Kernel::OM->Get('Kernel::System::Web::Request')->SetCookie(
+            Key      => 'KIXBrowserHasCookie',
             Value    => 1,
             Expires  => '1y',
             Path     => $ConfigObject->Get('ScriptAlias'),
