@@ -368,7 +368,12 @@ sub _Show {
 
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{TicketID},
-        DynamicFields => 0,
+# ---
+# ITSMIncidentProblemManagement
+# ---
+#        DynamicFields => 0,
+        DynamicFields => 1,
+# ---
     );
 
     # Fallback for tickets without articles: get at least basic ticket data
@@ -387,6 +392,13 @@ sub _Show {
         UserID => $Article{OwnerID},
     );
     %Article = ( %UserInfo, %Article );
+# ---
+# ITSMIncidentProblemManagement
+# ---
+    # set criticality and impact
+    $Ticket{Criticality} = $Ticket{DynamicField_ITSMCriticality} || '-';
+    $Ticket{Impact}      = $Ticket{DynamicField_ITSMImpact}      || '-';
+# ---
 
     # create human age
     $Article{Age} = $LayoutObject->CustomerAge(
@@ -548,6 +560,11 @@ sub _Show {
         Name => 'DocumentContent',
         Data => {
             %Param,
+# ---
+# ITSMIncidentProblemManagement
+# ---
+            %Ticket,
+# ---
             %Article,
             Class             => 'ArticleCount' . $ArticleCount,
             AdditionalClasses => $AdditionalClasses,

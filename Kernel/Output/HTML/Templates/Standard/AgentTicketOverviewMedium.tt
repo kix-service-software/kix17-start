@@ -157,6 +157,19 @@
                              <label>[% Translate("Age") | html %]</label>[% Data.Age | html %]
                         </td>
 # EO KIX4OTRS-capeIT
+# ---
+# ITSMIncidentProblemManagement
+# ---
+#                        <td>
+#[% RenderBlockStart("CustomerIDRW") %]
+#                            <label>[% Translate("CustomerID") | html %]</label>[% IF Data.CustomerID %]<a href="[% Config("CustomerDBLink") | Interpolate %]" class="AsPopup PopupType_TicketAction" [% Config("CustomerDBLinkTarget") %]>[% Data.CustomerID | html %]</a>[% END %]
+#[% RenderBlockEnd("CustomerIDRW") %]
+#[% RenderBlockStart("CustomerIDRO") %]
+#                            <label>[% Translate("CustomerID") | html %]</label>[% Data.CustomerID | html %]
+#[% RenderBlockEnd("CustomerIDRO") %]
+#                            <br /><div title="[% Data.CustomerName | html %]">[% Data.CustomerName | html %]</div>
+#                        </td>
+# ---
 # example of how to use fixed dynamic field blocks for customizations
 # Note: Field1 is the name of the field and had to be replaced with the actual
 # field name
@@ -221,6 +234,13 @@
                             <label>[% Translate("Created") | html %]</label>[% Data.Created | Localize("TimeLong") %]
                         </td>
 # EO KIX4OTRS-capeIT
+# ---
+# ITSMIncidentProblemManagement
+# ---
+                        <td>
+                            <label>[% Translate("Priority") | html %]</label><div title="[% Translate(Data.Priority) | html %]">[% Translate(Data.Priority) | html %]</div>
+                        </td>
+# ---
 # example of how to use fixed dynamic field blocks for customizations
 # Note: Field2 is the name of the field and had to be replaced with the actual
 # field name

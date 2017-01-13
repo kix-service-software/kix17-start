@@ -360,6 +360,13 @@ sub _Show {
 
     # show ticket create time in current view
     $Article{Created} = $Ticket{Created};
+# ---
+# ITSMIncidentProblemManagement
+# ---
+    # set criticality and impact
+    $Article{Criticality} = $Article{DynamicField_ITSMCriticality} || '-';
+    $Article{Impact}      = $Article{DynamicField_ITSMImpact}      || '-';
+# ---
 
     # user info
     my %UserInfo = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
