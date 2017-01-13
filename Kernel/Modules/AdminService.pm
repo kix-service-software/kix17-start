@@ -1,6 +1,8 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
 # --
+# $origin: otrs - d29ce846afdfb52eebed219c0671bfcc0d75e5c9 - Kernel/Modules/AdminService.pm
+# --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
@@ -12,7 +14,7 @@ use strict;
 use warnings;
 
 our $ObjectManagerDisabled = 1;
-
+# ---
 # GeneralCatalog
 # ---
 use Kernel::System::VariableCheck qw(:all);
@@ -34,9 +36,9 @@ sub Run {
     my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
     my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
-
-    # ------------------------------------------------------------ #
-    # service edit
+# ---
+# GeneralCatalog
+# ---
     my $DynamicFieldObject   = $Kernel::OM->Get('Kernel::System::DynamicField');
 
     # get the dynamic field for ITSMCriticality
