@@ -13,6 +13,11 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+# GeneralCatalog
+# ---
+use Kernel::System::VariableCheck qw(:all);
+# ---
+
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -29,6 +34,33 @@ sub Run {
     my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
     my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
+
+    # ------------------------------------------------------------ #
+    # service edit
+    my $DynamicFieldObject   = $Kernel::OM->Get('Kernel::System::DynamicField');
+
+    # get the dynamic field for ITSMCriticality
+    my $DynamicFieldConfigArrayRef = $DynamicFieldObject->DynamicFieldListGet(
+        Valid       => 1,
+        ObjectType  => [ 'Ticket' ],
+        FieldFilter => {
+            ITSMCriticality => 1,
+        },
+    );
+
+    # get the dynamic field value for ITSMCriticality
+    my %PossibleValues;
+    DYNAMICFIELD:
+    for my $DynamicFieldConfig ( @{ $DynamicFieldConfigArrayRef } ) {
+        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+
+        # get PossibleValues
+        $PossibleValues{ $DynamicFieldConfig->{Name} } = $DynamicFieldConfig->{Config}->{PossibleValues} || {};
+    }
+
+    # set the criticality list
+    $Self->{CriticalityList} = $PossibleValues{ITSMCriticality};
+# ---
 
     # ------------------------------------------------------------ #
     # service edit
@@ -60,7 +92,12 @@ sub Run {
 
         # get params
         my %GetParam;
-        for (qw(ServiceID ParentID Name ValidID Comment)) {
+# ---
+# GeneralCatalog
+# ---
+#        for (qw(ServiceID ParentID Name ValidID Comment)) {
+        for (qw(ServiceID ParentID Name ValidID Comment TypeID Criticality)) {
+# ---
             $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
         }
 
@@ -299,6 +336,30 @@ sub _MaskNew {
         Translation    => 0,
         Class          => 'Modernize',
     );
+# ---
+# GeneralCatalog
+# ---
+    # generate TypeOptionStrg
+    my $TypeList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+        Class => 'ITSM::Service::Type',
+    );
+
+    # build the type dropdown
+    $ServiceData{TypeOptionStrg} = $LayoutObject->BuildSelection(
+        Data       => $TypeList,
+        Name       => 'TypeID',
+        SelectedID => $Param{TypeID} || $ServiceData{TypeID},
+        Class      => 'Modernize',
+    );
+
+    # build the criticality dropdown
+    $ServiceData{CriticalityOptionStrg} = $LayoutObject->BuildSelection(
+        Data       => $Self->{CriticalityList},
+        Name       => 'Criticality',
+        SelectedID => $Param{Criticality} || $ServiceData{Criticality},
+        Class      => 'Modernize',
+    );
+# ---
 
     # get valid list
     my %ValidList        = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
