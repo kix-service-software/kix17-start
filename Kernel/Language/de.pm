@@ -870,36 +870,6 @@ sub Data {
         'Config options' => 'Konfigurationseinstellungen',
         'Example response' => 'Beispielantwort',
 
-        # Template: AdminCloudServiceSupportDataCollector
-        'Cloud Service Management' => 'Verwaltung von Cloud-Services',
-        'Support Data Collector' => 'Supportdaten-Analyse',
-        'Support data collector' => 'Supportdaten-Analyse',
-        'Hint' => 'Hinweis',
-        'Currently support data is only shown in this system.' => 'Supportdaten werden derzeit nur auf diesem System angezeigt.',
-        'It is highly recommended to send this data to OTRS Group in order to get better support.' =>
-            'Es wird empfohlen, diese Daten an die OTRS Gruppe zu senden, um bessere Unterstützung zu erhalten.',
-        'Configuration' => 'Konfiguration',
-        'Send support data' => 'Supportdaten senden',
-        'This will allow the system to send additional support data information to OTRS Group.' =>
-            'Diese Einstellung aktiviert das Senden zusätzlicher Support-Informationen an die OTRS Gruppe.',
-        'System Registration' => 'Systemregistrierung',
-        'To enable data sending, please register your system with OTRS Group or update your system registration information (make sure to activate the \'send support data\' option.)' =>
-            'Um das Senden der Daten zu aktivieren, registrieren Sie bitte Ihr System bei der OTRS Gruppe oder aktualisieren Sie Ihre Systemregistrierung (aktivieren Sie die Option \'Supportdaten senden\').',
-        'Register this System' => 'Registrieren Sie dieses System',
-        'System Registration is disabled for your system. Please check your configuration.' =>
-            'Die Systemregistrierung ist für Ihr System deaktiviert. Bitte überprüfen Sie die Konfiguration.',
-
-        # Template: AdminCloudServices
-        'System registration is a service of OTRS Group, which provides a lot of advantages!' =>
-            'Die Systemregistrierung ist ein Service der OTRS Gruppe, der Ihnen viele Vorteile sichert!',
-        'Please note that the use of OTRS cloud services requires the system to be registered.' =>
-            'Bitte beachten Sie, dass die Verwendung von OTRS Cloud-Services ein registriertes System voraussetzt.',
-        'Register this system' => 'Registrieren Sie dieses System',
-        'Here you can configure available cloud services that communicate securely with %s.' =>
-            'Hier können Sie verfügbare Cloud-Services konfigurieren die sicher mit %s kommunizieren.',
-        'Available Cloud Services' => 'Verfügbare Cloud-Services',
-        'Upgrade to %s' => 'Auf %s upgraden',
-
         # Template: AdminCustomerCompany
         'Customer Management' => 'Kundenverwaltung',
         'Wildcards like \'*\' are allowed.' => 'Platzhalter wie \'*\' sind erlaubt.',
@@ -1625,67 +1595,6 @@ sub Data {
         'Email security level' => 'E-Mail-Sicherheitsstufe',
         'If signing key/certificate is missing' => 'Wenn Schlüssel/Zertifikat zum Signieren fehlen',
         'If encryption key/certificate is missing' => 'Wenn Schlüssel/Zertifikat zum Verschlüsseln fehlen',
-
-        # Template: AdminOTRSBusinessInstalled
-        'Manage %s' => ' %s verwalten',
-        'Downgrade to OTRS Free' => 'Zu OTRS Free downgraden',
-        'Read documentation' => 'Dokumentation lesen',
-        '%s makes contact regularly with cloud.otrs.com to check on available updates and the validity of the underlying contract.' =>
-            '%s kontaktiert regelmäßig cloud.otrs.com, um die Verfügbarkeit von Updates und die Gültigkeit des zugrundeliegenden Vertrages zu prüfen.',
-        'Unauthorized Usage Detected' => 'Unerlaubte Nutzung festgestellt',
-        'This system uses the %s without a proper license! Please make contact with %s to renew or activate your contract!' =>
-            'Sie verwenden die %s ohne eine gültige Nutzungsvereinbarung mit der OTRS AG. Bitte kontaktieren Sie umgehend %s! ',
-        '%s not Correctly Installed' => '%s ist nicht korrekt installiert',
-        'Your %s is not correctly installed. Please reinstall it with the button below.' =>
-            'Ihre %s ist nicht korrekt installiert. Bitte re-installieren Sie sie durch Klick auf den nachfolgenden Button.',
-        'Reinstall %s' => '%s erneut installieren',
-        'Your %s is not correctly installed, and there is also an update available.' =>
-            'Ihre %s ist nicht korrekt installiert, außerdem ist ein Update verfügbar.',
-        'You can either reinstall your current version or perform an update with the buttons below (update recommended).' =>
-            'Sie können Ihre derzeitige Version entweder re-installieren, oder ein Update durchführen (empfohlen).',
-        'Update %s' => '%s aktualisieren',
-        '%s Not Yet Available' => '%s ist noch nicht verfügbar',
-        '%s will be available soon.' => '%s wird bald verfügbar sein.',
-        '%s Update Available' => '%s-Aktualisierung verfügbar',
-        'An update for your %s is available! Please update at your earliest!' =>
-            'Es ist ein Update für Ihre %s verfügbar! Um alle Vorteile nutzen zu können, führen Sie bitte die Aktualisierung zeitnah durch!  ',
-        '%s Correctly Deployed' => '%s korrekt installiert',
-        'Congratulations, your %s is correctly installed and up to date!' =>
-            'Gratulation, Ihre %s ist korrekt installiert und auf einem aktuellen Stand!',
-
-        # Template: AdminOTRSBusinessNotInstalled
-        '%s will be available soon. Please check again in a few days.' =>
-            'Die %s wird bald verfügbar sein. Bitte prüfen Sie in einigen Tagen erneut.',
-        'Please have a look at %s for more information.' => 'Weitere Informationen können Sie unter %s finden.',
-        'Your OTRS Free is the base for all future actions. Please register first before you continue with the upgrade process of %s!' =>
-            'Bitte registrieren Sie Ihr OTRS Free zunächst, wenn Sie mit dem Upgrade auf die %s fortfahren möchten!',
-        'Before you can benefit from %s, please contact %s to get your %s contract.' =>
-            'Bevor Sie von %s profitieren können, kontaktieren Sie bitte %s um ihren %s-Vertrag zu erhalten.',
-        'Connection to cloud.otrs.com via HTTPS couldn\'t be established. Please make sure that your OTRS can connect to cloud.otrs.com via port 443.' =>
-            'Es konnte keine Verbindung mit cloud.otrs.com hergestellt werden. Bitte stellen Sie sicher, dass Ihr OTRS über Port 443 mit cloud.otrs.com kommunizieren kann.',
-        'With your existing contract you can only use a small part of the %s.' =>
-            'Ihr laufender Vertrag ermöglicht Ihnen zur Zeit nur einen eingeschränkten Zugang zu unserer %s.',
-        'If you would like to take full advantage of the %s get your contract upgraded now! Contact %s.' =>
-            'Mit einem Upgrade Ihres Vertrages kommen Sie in den Genuss der kompletten %s und profitieren von allen Vorteilen! Kontaktieren Sie %s.',
-
-        # Template: AdminOTRSBusinessUninstall
-        'Cancel downgrade and go back' => 'Downgrade abbrechen und zurück',
-        'Go to OTRS Package Manager' => 'Zum OTRS Paket-Manager wechseln',
-        'Sorry, but currently you can\'t downgrade due to the following packages which depend on %s:' =>
-            'Entschuldigung, Sie können ein Downgrade derzeit aufgrund folgender, zu %s abhängiger Pakete nicht durchführen:',
-        'Vendor' => 'Anbieter',
-        'Please uninstall the packages first using the package manager and try again.' =>
-            'Bitte entfernen Sie diese Pakete zunächst und versuchen Sie es nochmals.',
-        'You are about to downgrade to OTRS Free and will lose the following features and all data related to these:' =>
-            'Wenn Sie zu OTRS Free downgraden, werden Sie die folgenden Features (und alle zugehörigen Daten) verlieren:',
-        'Chat' => 'Chat',
-        'Report Generator' => 'Berichtgenerator',
-        'Timeline view in ticket zoom' => 'Timeline-View im Ticket-Zoom',
-        'DynamicField ContactWithData' => 'DynamischesFeld KontaktMitDaten',
-        'DynamicField Database' => 'DynamischesFeld Datenbank',
-        'SLA Selection Dialog' => 'SLA-Auswahldialog',
-        'Ticket Attachment View' => 'Ticket-Anlagenansicht',
-        'The %s skin' => 'Den %s-Skin',
 
         # Template: AdminPGP
         'PGP Management' => 'PGP-Verwaltung',
@@ -2583,11 +2492,6 @@ sub Data {
         'Link object %s with' => 'Objekt %s verknüpfen mit',
         'Unlink Object: %s' => 'Verknüpfung lösen: %s',
         'go to link add screen' => 'zu "Verknüpfung hinzufügen" wechseln',
-
-        # Template: AgentOTRSBusinessBlockScreen
-        'Unauthorized usage of %s detected' => 'Unerlaubte Nutzung der %s erkannt',
-        'If you decide to downgrade to OTRS Free, you will lose all database tables and data related to %s.' =>
-            'Wenn Sie sich entscheiden, auf OTRS Free downzugraden, verlieren Sie alle zur %s gehörigen Datenbank-Tabellen und Daten. ',
 
         # Template: AgentPreferences
         'Edit your preferences' => 'Persönliche Einstellungen bearbeiten',
@@ -3939,9 +3843,6 @@ sub Data {
         # Perl Module: Kernel/Output/HTML/Layout/LinkObject.pm
         'Linked as' => 'Verknüpft als',
         'Search Result' => 'Suchergebnis',
-
-        # Perl Module: Kernel/Output/HTML/Notification/AgentOTRSBusiness.pm
-        '%s Upgrade to %s now! %s' => '%s Jetzt auf %s upgraden! %s',
 
         # Perl Module: Kernel/Output/HTML/Notification/CustomerSystemMaintenanceCheck.pm
         'A system maintenance period will start at: ' => 'Eine Systemwartungsperiode beginnt um: ',

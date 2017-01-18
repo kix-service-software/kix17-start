@@ -1,10 +1,11 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
 #
 # --
 # $Id$
@@ -26,19 +27,6 @@
                 <p class="SpacingTop">
                     [% Translate(Data.Comment) | html %].
                 </p>
-
-                [% IF Data.ShowOTRSBusinessHint %]
-                <div class="MessageBox Info">
-                    <p class="SpacingTop">
-                        [% Translate("Really a bug? 5 out of 10 bug reports result from a wrong or incomplete installation of OTRS.") | html %]
-                        [% Translate("With %s, our experts take care of correct installation and cover your back with support and periodic security updates.", '<b>OTRS Business Solution™</b>') %]
-                        <br /><br />
-                        <a class="Button" href="https://www.otrs.com/contact/" target="_blank">
-                            [% Translate("Contact our service team now.") | html %]
-                        </a>
-                    </p>
-                </div>
-                [% END %]
 
 # KIX4OTRS-capeIT
 #                <form action="http://bugs.otrs.org/enter_bug.cgi">

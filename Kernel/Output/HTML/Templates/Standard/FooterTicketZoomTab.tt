@@ -1,7 +1,7 @@
 # --
 # based upon Footer.tt
 # original Copyright (C) 2001-2015 OTRS AG, http://otrs.com/
-# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Torsten(dot)Thau(at)cape(dash)it(dot)de
@@ -17,8 +17,6 @@
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-
-[% SET OTRSBusinessLabel = '<strong>OTRS Business Solution</strong>™' %]
 
 [% RenderBlockStart("CommonJS") %]
 <script type="text/javascript" src="[% Config("Frontend::JavaScriptPath") %][% Data.JSDirectory %][% Data.Filename %]"></script>
@@ -116,7 +114,6 @@ Core.App.Ready(function () {
         TicketActionTemplateOverwrite: [% Translate("Setting a template will overwrite any text or attachment.") | JSON %],
         TicketActionTemplateOverwriteConfirm: [% Translate("Do you really want to continue?") | JSON %],
         AgentLogoURL: '[% Config("AgentLogo").URL %]',
-        OTRSBusinessIsInstalled: parseInt([% Data.OTRSBusinessIsInstalled | JSON %], 10),
         OTRSDaemonDialogTitleMsg: [% Translate('Information about the OTRS Daemon') | JSON %],
 # KIX4OTRS-capeIT
         DeleteLinksQuestion: [% Translate("Do you really want to delete the selected links?") | JSON %],
@@ -137,35 +134,6 @@ Core.App.Ready(function () {
 # EO KIXBase-capeIT
 
 [% InsertTemplate("Datepicker.tt") %]
-
-[% IF !Data.OTRSBusinessIsInstalled %]
-    $('body').on('click', 'a.OTRSBusinessRequired', function() {
-        Core.UI.Dialog.ShowContentDialog(
-            '<div class="OTRSBusinessRequiredDialog">' + [% Translate('This feature is part of the %s.  Please contact us at %s for an upgrade.', OTRSBusinessLabel, 'sales@otrs.com') | JSON %] + '<a class="Hidden" href="http://www.otrs.com/solutions/" target="_blank"><span></span></a></div>',
-            '',
-            '240px',
-            'Center',
-            true,
-            [
-               {
-                   Label: [% Translate('Close') | JSON %],
-                   Class: 'Primary',
-                   Function: function () {
-                       Core.UI.Dialog.CloseDialog($('.OTRSBusinessRequiredDialog'));
-                   }
-               },
-               {
-                   Label: [% Translate('Find out more about the %s', 'OTRS Business Solution™') | JSON %],
-                   Class: 'Primary',
-                   Function: function () {
-                       $('.OTRSBusinessRequiredDialog').find('a span').trigger('click');
-                   }
-               }
-            ]
-        );
-        return false;
-    });
-[% END %]
 
 [% RenderBlockStart("NewTicketInNewWindow") %]
     $('#nav-Tickets-Newphoneticket a').attr('target', '_blank');

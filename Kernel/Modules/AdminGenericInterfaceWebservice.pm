@@ -1,5 +1,10 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -923,16 +928,6 @@ sub _ShowEdit {
         }
 
         my %Frontend;
-
-        if ( %ExampleWebServicesData && $Kernel::OM->Get('Kernel::System::OTRSBusiness')->OTRSBusinessIsInstalled() ) {
-            $Frontend{ExampleWebServiceList} = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->BuildSelection(
-                Name         => 'ExampleWebService',
-                Data         => \%ExampleWebServicesData,
-                PossibleNone => 1,
-                Translation  => 0,
-                Class        => 'Modernize Validate_Required',
-            );
-        }
 
         # Enable Example web services
         $LayoutObject->Block(

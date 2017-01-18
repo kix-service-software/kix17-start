@@ -175,7 +175,7 @@ my @NeededModules = (
         },
     },
     {
-        Module    => 'Archive::Zip',                               # required for OTRSBusiness
+        Module    => 'Archive::Zip',
         Required  => 1,
         Comment   => 'Required for compressed file generation.',
         InstTypes => {

@@ -1,6 +1,6 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIXCore-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Rene(dot)Boehm(at)cape(dash)it(dot)de
@@ -42,7 +42,6 @@ our @ObjectDependencies = (
     'Kernel::System::JSON',
     'Kernel::System::Log',
     'Kernel::System::Main',
-    'Kernel::System::OTRSBusiness',
     'Kernel::System::SystemMaintenance',
     'Kernel::System::Time',
     'Kernel::System::User',
@@ -1102,16 +1101,6 @@ sub Error {
 
     if ( !$Param{Message} ) {
         $Param{Message} = $Param{BackendMessage};
-
-        # Don't check for business package if the database was not yet configured (in the installer).
-        if (
-            $Kernel::OM->Get('Kernel::Config')->Get('SecureMode')
-            && $Kernel::OM->Get('Kernel::Config')->Get('DatabaseDSN')
-            && !$Kernel::OM->Get('Kernel::System::OTRSBusiness')->OTRSBusinessIsInstalled()
-            )
-        {
-            $Param{ShowOTRSBusinessHint}++;
-        }
     }
 
     if ( $Param{BackendTraceback} ) {
@@ -1623,11 +1612,6 @@ sub Footer {
         $Self->Block(
             Name => 'Banner',
         );
-    }
-
-    # Don't check for business package if the database was not yet configured (in the installer)
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('SecureMode') ) {
-        $Param{OTRSBusinessIsInstalled} = $Kernel::OM->Get('Kernel::System::OTRSBusiness')->OTRSBusinessIsInstalled();
     }
 
     # Check if video chat is enabled.

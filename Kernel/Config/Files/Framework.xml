@@ -411,48 +411,6 @@
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="CloudService::Admin::Module###100-SupportDataCollector" Required="0" Valid="1">
-        <Description Translatable="1">Cloud service admin module registration for the transport layer.</Description>
-        <Group>Framework</Group>
-        <SubGroup>CloudService::Admin::ModuleRegistration</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Name" Translatable="1">Support data collector</Item>
-                <Item Key="Description" Translatable="1">Configure sending of support data to OTRS Group for improved support.</Item>
-                <Item Key="ConfigDialog">AdminCloudServiceSupportDataCollector</Item>
-                <Item Key="Icon">fa fa-compass</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Frontend::Module###AdminCloudServiceSupportDataCollector" Required="0" Valid="1">
-        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
-        <Setting>
-            <FrontendModuleReg>
-                <Group>admin</Group>
-                <Description>Admin</Description>
-                <Title Translatable="1">Support data collector</Title>
-                <Loader>
-                    <CSS>Core.Agent.Admin.CloudService.SupportDataCollector.css</CSS>
-                </Loader>
-            </FrontendModuleReg>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="CloudService::Admin::Module###200-SMS" Required="0" Valid="1">
-        <Description Translatable="1">Cloud service admin module registration for the transport layer.</Description>
-        <Group>Framework</Group>
-        <SubGroup>CloudService::Admin::ModuleRegistration</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Name" Translatable="1">SMS</Item>
-                <Item Key="Description" Translatable="1">This will allow the system to send text messages via SMS.</Item>
-                <Item Key="ConfigDialog">AdminCloudServiceSMS</Item>
-                <Item Key="IsOTRSBusiness">1</Item>
-                <Item Key="Icon">fa fa-mobile</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Loader::Agent::CommonJS###107-KIXSidebarCustomer" Required="1" Valid="1">
         <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
         <Group>Framework</Group>
@@ -1837,6 +1795,43 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Cache::Module::Redis###Server" Required="0" Valid="1">
+        <Description Translatable="1">Defines the redis server to connect.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Cache</SubGroup>
+        <Setting>
+            <String Regex="">localhost:6479</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Cache::Module::Redis###Parameters" Required="0" Valid="1">
+        <Description Translatable="1">Defines all the (additional) redis parameters.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Cache</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Cache::Module::Redis###CacheMetaInfo" Required="0" Valid="1">
+        <Description Translatable="1">Defines if meta info about the cached objects should be stored.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Cache</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Cache::Module::Redis###OverrideTTL" Required="0" Valid="1">
+        <Description Translatable="1">Allows overriding of object/cache type related TTLs.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Cache</SubGroup>
+        <Setting>
+            <Hash>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Loader::PreCreatedCaches" Required="1" Valid="1">
         <Description Lang="en">Pre-create loader cache.</Description>
         <Group>Framework</Group>
@@ -2681,42 +2676,6 @@
                 <Item Key="TaskName">SupportDataCollectAsynchronous</Item>
                 <Item Key="Schedule">1 * * * *</Item> <!-- default: every hour in minute 1 -->
                 <Item Key="Module">Kernel::System::Console::Command::Maint::SupportData::CollectAsynchronous</Item>
-                <Item Key="Function">Execute</Item>
-                <Item Key="MaximumParallelInstances">1</Item>
-                <Item Key="Params">
-                    <Array>
-                    </Array>
-                </Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Daemon::SchedulerCronTaskManager::Task###OTRSBusinessEntitlementCheck" Required="1" Valid="1" ReadOnly="1" ConfigLevel="100">
-        <Description Translatable="1">Checks the entitlement status of OTRS Business Solution™.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Daemon::SchedulerCronTaskManager::Task</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="TaskName">OTRSBusinessEntitlementCheck</Item>
-                <Item Key="Schedule">40 0 * * *</Item> <!-- default: every day at 12:40 AM -->
-                <Item Key="Module">Kernel::System::Console::Command::Maint::OTRSBusiness::EntitlementCheck</Item>
-                <Item Key="Function">Execute</Item>
-                <Item Key="MaximumParallelInstances">1</Item>
-                <Item Key="Params">
-                    <Array>
-                    </Array>
-                </Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Daemon::SchedulerCronTaskManager::Task###OTRSBusinessAvailabilityCheck" Required="1" Valid="1" ReadOnly="1" ConfigLevel="100">
-        <Description Translatable="1">Checks the availability of OTRS Business Solution™ for this system.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Daemon::SchedulerCronTaskManager::Task</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="TaskName">OTRSBusinessAvailabilityCheck</Item>
-                <Item Key="Schedule">20 */1 * * *</Item> <!-- default: each hour in the minute 20 -->
-                <Item Key="Module">Kernel::System::Console::Command::Maint::OTRSBusiness::AvailabilityCheck</Item>
                 <Item Key="Function">Execute</Item>
                 <Item Key="MaximumParallelInstances">1</Item>
                 <Item Key="Params">
@@ -5706,27 +5665,6 @@
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::HeaderMeta::Refresh</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Frontend::NotifyModule###100-OTRSBusiness" Required="0" Valid="0">
-        <Description Translatable="1">Defines the module to display a notification in different interfaces on different occasions for OTRS Business Solution™.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Frontend::Agent::ModuleNotify</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Module">Kernel::Output::HTML::Notification::AgentOTRSBusiness</Item>
-                <Item Key="Group">admin</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="CustomerFrontend::NotifyModule###1-OTRSBusiness" Required="0" Valid="0">
-        <Description Translatable="1">Defines the module to display a notification in different interfaces on different occasions for OTRS Business Solution™.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Frontend::Customer::ModuleNotify</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Module">Kernel::Output::HTML::Notification::CustomerOTRSBusiness</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -10212,44 +10150,6 @@ via the Preferences button after logging in.
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Frontend::Module###AdminOTRSBusiness" Required="0" Valid="0">
-        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
-        <Setting>
-            <FrontendModuleReg>
-                <Group>admin</Group>
-                <Description>Admin</Description>
-                <Title>OTRS Business Solution™</Title>
-                <NavBarName>Admin</NavBarName>
-                <NavBarModule>
-                    <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <Name>OTRS Business Solution™</Name>
-                    <Description Translatable="1">Deploy and manage OTRS Business Solution™.</Description>
-                    <Block>System</Block>
-                    <Prio>360</Prio>
-                </NavBarModule>
-                <Loader>
-                    <CSS>Core.Agent.Admin.OTRSBusiness.css</CSS>
-                </Loader>
-            </FrontendModuleReg>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Frontend::Module###AgentOTRSBusiness" Required="0" Valid="1">
-        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
-        <Setting>
-            <FrontendModuleReg>
-                <Description>Agent</Description>
-                <Title>OTRS Business Solution™</Title>
-                <NavBarName></NavBarName>
-                <Loader>
-                    <CSS>Core.Agent.Admin.OTRSBusiness.css</CSS>
-                </Loader>
-            </FrontendModuleReg>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Frontend::Module###AdminSupportDataCollector" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>Framework</Group>
@@ -10269,29 +10169,6 @@ via the Preferences button after logging in.
                 </NavBarModule>
                 <Loader>
                     <CSS>Core.Agent.Admin.SupportDataCollector.css</CSS>
-                </Loader>
-            </FrontendModuleReg>
-        </Setting>
-    </ConfigItem>
-     <ConfigItem Name="Frontend::Module###AdminCloudServices" Required="0" Valid="0">
-        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Frontend::Admin::ModuleRegistration</SubGroup>
-        <Setting>
-            <FrontendModuleReg>
-                <Group>admin</Group>
-                <Description>Admin</Description>
-                <Title Translatable="1">Cloud Services</Title>
-                <NavBarName>Admin</NavBarName>
-                <NavBarModule>
-                    <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <Name Translatable="1">Cloud Services</Name>
-                    <Description Translatable="1">Manage OTRS Group cloud services.</Description>
-                    <Block>System</Block>
-                    <Prio>380</Prio>
-                </NavBarModule>
-                <Loader>
-                    <CSS>Core.Agent.Admin.CloudServices.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -11783,17 +11660,6 @@ via the Preferences button after logging in.
         <SubGroup>SystemMaintenance</SubGroup>
         <Setting>
             <String Regex="" Translatable="1">We are performing scheduled maintenance. Login is temporarily not available.</String>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="OTRSBusiness::ReleaseChannel" Required="1" Valid="1" ConfigLevel="100">
-        <Description Translatable="1">Specify the channel to be used to fetch OTRS Business Solution™ updates. Warning: Development releases might not be complete, your system might experience unrecoverable errors and on extreme cases could become unresponsive!</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::OTRSBusiness</SubGroup>
-        <Setting>
-            <Option SelectedID="1">
-                <Item Key="0">Development</Item>
-                <Item Key="1">Stable</Item>
-            </Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ModernizeFormFields" Required="1" Valid="1">

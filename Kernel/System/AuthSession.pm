@@ -1,5 +1,10 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -92,75 +97,6 @@ sub CheckSessionID {
     my ( $Self, %Param ) = @_;
 
     return $Self->{Backend}->CheckSessionID(%Param);
-}
-
-=item CheckAgentSessionLimitPriorWarning()
-
-Get the agent session limit prior warning message, if the limit is reached.
-
-    my $PriorMessage = $SessionObject->CheckAgentSessionLimitPriorWarning();
-
- returns the prior warning message (AgentSessionLimitPriorWarning reached) or false (AgentSessionLimitPriorWarning not reached)
-
-=cut
-
-sub CheckAgentSessionLimitPriorWarning {
-    my ( $Self, %Param ) = @_;
-
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-    my $Cache       = $CacheObject->Get(
-        Type => 'AuthSession',
-        Key  => 'AgentSessionLimitPriorWarningMessage',
-    );
-    return $Cache if defined $Cache;
-
-    my %OTRSBusinessSystemData = $Kernel::OM->Get('Kernel::System::SystemData')->SystemDataGroupGet(
-        Group => 'OTRSBusiness',
-    );
-
-    my $SessionLimitPriorWarning = $OTRSBusinessSystemData{AgentSessionLimitPriorWarning};
-    if (
-        !$SessionLimitPriorWarning
-        || (
-            $Self->{AgentSessionLimitPriorWarning}
-            && $Self->{AgentSessionLimitPriorWarning} < $SessionLimitPriorWarning
-        )
-        )
-    {
-        $SessionLimitPriorWarning = $Self->{AgentSessionLimitPriorWarning};
-    }
-
-    my $PriorWarningMessage = '';
-    if ($SessionLimitPriorWarning) {
-
-        my %ActiveSessions = $Self->GetActiveSessions(
-            UserType => 'User',
-        );
-
-        if ( defined $ActiveSessions{Total} && $ActiveSessions{Total} > $SessionLimitPriorWarning ) {
-
-            if (
-                $OTRSBusinessSystemData{AgentSessionLimitPriorWarning}
-                && $OTRSBusinessSystemData{AgentSessionLimitPriorWarning} == $SessionLimitPriorWarning
-                )
-            {
-                $PriorWarningMessage
-                    = Translatable('You have exceeded the number of concurrent agents - contact sales@otrs.com.');
-            }
-            else {
-                $PriorWarningMessage = Translatable('Please note that the session limit is almost reached.');
-            }
-        }
-    }
-
-    $CacheObject->Set(
-        Type  => 'AuthSession',
-        TTL   => 60 * 15,
-        Key   => 'AgentSessionLimitPriorWarningMessage',
-        Value => $PriorWarningMessage,
-    );
-
-    return $PriorWarningMessage;
 }
 
 =item SessionIDErrorMessage()

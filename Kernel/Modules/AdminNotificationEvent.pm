@@ -1,9 +1,10 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
 #
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -1248,7 +1249,6 @@ sub _Edit {
     if ( IsHashRefWithData( \%RegisteredTransports ) ) {
 
         my $MainObject         = $Kernel::OM->Get('Kernel::System::Main');
-        my $OTRSBusinessObject = $Kernel::OM->Get('Kernel::System::OTRSBusiness');
 
         TRANSPORT:
         for my $Transport (
@@ -1279,24 +1279,6 @@ sub _Edit {
                         TransportName => $RegisteredTransports{$Transport}->{Name},
                     },
                 );
-
-                # if not standard transport
-                if (
-                    defined $RegisteredTransports{$Transport}->{IsOTRSBusinessTransport}
-                    && $RegisteredTransports{$Transport}->{IsOTRSBusinessTransport} eq '1'
-                    && !$OTRSBusinessObject->OTRSBusinessIsInstalled()
-                    )
-                {
-
-                    # transport
-                    $LayoutObject->Block(
-                        Name => 'TransportRowRecommendation',
-                        Data => {
-                            Transport     => $Transport,
-                            TransportName => $RegisteredTransports{$Transport}->{Name},
-                        },
-                    );
-                }
 
                 next TRANSPORT;
             }

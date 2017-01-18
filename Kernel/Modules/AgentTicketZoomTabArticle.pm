@@ -1,7 +1,7 @@
 # --
 # based upon AgentTicketZoom.pm
 # original Copyright (C) 2001-2015 OTRS AG, http://otrs.org/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
@@ -100,11 +100,6 @@ sub new {
                 Value  => $LastUsedZoomViewType,
             );
         }
-    }
-
-    # Please note: ZoomTimeline is an OTRSBusiness feature
-    if ( !$ConfigObject->Get('TimelineViewEnabled') ) {
-        $Self->{ZoomTimeline} = 0;
     }
 
     if ( !defined $Self->{DoNotShowBrowserLinkMessage} ) {
