@@ -48,7 +48,7 @@
                             <tr>
                                 <th></th>
                                 <th title="[% Translate("Version Number") | html %]"><span>#</span></th>
-                                <th title="[% Translate("Created By") | html %]"><span>[% Translate("Cancel & close") | html %]</span></th>
+                                <th title="[% Translate("Created By") | html %]"><span>[% Translate("Created By") | html %]</span></th>
                                 <th title="[% Translate("Changed On") | html %]"><span>[% Translate("Changed On") | html %]</span></th>
                             </tr>
                         </thead>
