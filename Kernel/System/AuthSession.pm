@@ -73,13 +73,6 @@ sub new {
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    for my $SessionLimitConfigKey (
-        qw(AgentSessionLimitPriorWarning AgentSessionLimit AgentSessionPerUserLimit CustomerSessionLimit CustomerSessionPerUserLimit)
-        )
-    {
-        $Self->{$SessionLimitConfigKey} = $ConfigObject->Get($SessionLimitConfigKey);
-    }
-
     return $Self;
 }
 
@@ -170,72 +163,6 @@ sub CreateSessionID {
         return;
     }
 
-    my %OTRSBusinessSystemData = $Kernel::OM->Get('Kernel::System::SystemData')->SystemDataGroupGet(
-        Group => 'OTRSBusiness',
-    );
-
-    my $SessionLimit;
-    if ( $Param{UserType} eq 'User' ) {
-
-        $SessionLimit = $OTRSBusinessSystemData{AgentSessionLimit};
-        if ( !$SessionLimit || ( $Self->{AgentSessionLimit} && $Self->{AgentSessionLimit} < $SessionLimit ) ) {
-            $SessionLimit = $Self->{AgentSessionLimit};
-        }
-    }
-    elsif ( $Param{UserType} eq 'Customer' && $Self->{CustomerSessionLimit} ) {
-        $SessionLimit = $Self->{CustomerSessionLimit};
-    }
-
-    # get session per user limit config
-    my $SessionPerUserLimit;
-    if ( $Param{UserType} eq 'User' && $Self->{AgentSessionPerUserLimit} ) {
-        $SessionPerUserLimit = $Self->{AgentSessionPerUserLimit};
-    }
-    elsif ( $Param{UserType} eq 'Customer' && $Self->{CustomerSessionPerUserLimit} ) {
-        $SessionPerUserLimit = $Self->{CustomerSessionPerUserLimit};
-    }
-
-    if ( $SessionLimit || $SessionPerUserLimit ) {
-
-        my %ActiveSessions = $Self->GetActiveSessions(%Param);
-
-        if ( $SessionLimit && defined $ActiveSessions{Total} && $ActiveSessions{Total} >= $SessionLimit ) {
-
-            if (
-                $Param{UserType} eq 'User'
-                && $OTRSBusinessSystemData{AgentSessionLimit}
-                && $OTRSBusinessSystemData{AgentSessionLimit} == $SessionLimit
-                )
-            {
-                $Self->{SessionIDErrorMessage} = Translatable(
-                    'Login rejected! You have exceeded the maximum number of concurrent Agents! Contact sales@otrs.com immediately!'
-                );
-            }
-            else {
-                $Self->{SessionIDErrorMessage} = Translatable('Session limit reached! Please try again later.');
-            }
-            return;
-        }
-
-        if (
-            $SessionPerUserLimit
-            && $Param{UserLogin}
-            && defined $ActiveSessions{PerUser}->{ $Param{UserLogin} }
-            && $ActiveSessions{PerUser}->{ $Param{UserLogin} } >= $SessionPerUserLimit
-            )
-        {
-
-            $Self->{SessionIDErrorMessage} = Translatable('Session per user limit reached!');
-
-            return;
-        }
-    }
-
-    $Kernel::OM->Get('Kernel::System::Cache')->Delete(
-        Type => 'AuthSession',
-        Key  => 'AgentSessionLimitPriorWarningMessage',
-    );
-
     return $Self->{Backend}->CreateSessionID(%Param);
 }
 
@@ -250,11 +177,6 @@ session can't get deleted)
 
 sub RemoveSessionID {
     my ( $Self, %Param ) = @_;
-
-    $Kernel::OM->Get('Kernel::System::Cache')->Delete(
-        Type => 'AuthSession',
-        Key  => 'AgentSessionLimitPriorWarningMessage',
-    );
 
     return $Self->{Backend}->RemoveSessionID(%Param);
 }
@@ -375,11 +297,6 @@ cleanup of sessions in your system
 
 sub CleanUp {
     my ( $Self, %Param ) = @_;
-
-    $Kernel::OM->Get('Kernel::System::Cache')->Delete(
-        Type => 'AuthSession',
-        Key  => 'AgentSessionLimitPriorWarningMessage',
-    );
 
     return $Self->{Backend}->CleanUp(%Param);
 }
