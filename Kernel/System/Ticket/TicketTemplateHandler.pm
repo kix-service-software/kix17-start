@@ -335,6 +335,9 @@ sub TicketTemplateCreate {
         }
     }
 
+    # prepare CustomerPortalGroupID
+    $Param{Data}->CustomerPortalGroupID} ||= 0;
+
     # create YAML object
     my $YAMLObject = $Kernel::OM->Get('Kernel::System::YAML');
 
@@ -513,6 +516,9 @@ sub TicketTemplateUpdate {
             ->Log( Priority => 'error', Message => "TicketTemplateUpdate: Need Name or ID!" );
         return;
     }
+
+    # prepare CustomerPortalGroupID
+    $Param{Data}->{CustomerPortalGroupID} ||= 0; 
 
     # create YAML object
     my $YAMLObject = $Kernel::OM->Get('Kernel::System::YAML');
