@@ -336,7 +336,7 @@ sub TicketTemplateCreate {
     }
 
     # prepare CustomerPortalGroupID
-    $Param{Data}->CustomerPortalGroupID} ||= 0;
+    $Param{Data}->{CustomerPortalGroupID} ||= 0;
 
     # create YAML object
     my $YAMLObject = $Kernel::OM->Get('Kernel::System::YAML');
