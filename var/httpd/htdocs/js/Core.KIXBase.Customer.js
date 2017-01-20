@@ -1,9 +1,10 @@
 // --
-// Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 //
 // written/edited by:
 //   Rene(dot)Boehm(at)cape(dash)it.de
 //   Dorothea(dot)Doerffel(at)cape(dash)it.de
+//   Ricky(dot)Kaiser(at)cape(dash)it.de
 // --
 // $Id$
 // --
@@ -39,8 +40,10 @@ Core.KIXBase.Customer = (function(TargetNS) {
         // move BottomActionRow into fieldset, but not in search dialog
         if ($('#BottomActionRow').parents('div#MainBox.Search').length == 0 ) {
             if ( !$('#CustomerIDSelection').length) {
-                $('#BottomActionRow > button').detach().appendTo('fieldset > div.EndOfForm');
-                $('fieldset > div.EndOfForm').addClass('Field SpacingTop');
+                var $ButtonDiv = $('<div class="Field SpacingTop" style="margin-left: ' + $('fieldset div label').width() + 'px"></div>');
+                $('#BottomActionRow > button').css('margin-left', $('fieldset div label').css('padding-right')).appendTo($ButtonDiv);
+                $ButtonDiv.appendTo('fieldset');
+                $('#BottomActionRow').remove();
             }
             else {
                 $('#BottomActionRow > button').detach().appendTo('fieldset');
