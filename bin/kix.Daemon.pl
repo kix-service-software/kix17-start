@@ -49,12 +49,14 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
     },
 );
 
-# Don't allow to run these scripts as root.
-if ( $> == 0 ) {    # $EFFECTIVE_USER_ID
-    print STDERR
-        "Error: You cannot run kix.Damon.pl as root. Please run it as the apache user or with the help of su:\n";
-    print STDERR "  su -c \"bin/kix.Daemon.pl ...\" -s /bin/bash <apache user>\n";
-    exit 1;
+if ( $^O ne 'MSWin32' ) {
+    # Don't allow to run these scripts as root.
+    if ( $> == 0 ) {    # $EFFECTIVE_USER_ID
+        print STDERR
+            "Error: You cannot run kix.Daemon.pl as root. Please run it as the apache user or with the help of su:\n";
+        print STDERR "  su -c \"bin/kix.Daemon.pl ...\" -s /bin/bash <apache user>\n";
+        exit 1;
+    }
 }
 
 # get config object

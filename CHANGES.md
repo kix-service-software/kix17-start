@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/01/24) - CR: T2016021990000594 (changes for windows installations) (rbo)
  * (2017/01/20) - Bugfix: T2017011190000625 (redundant box in new ticket view in customer frontend) (rkaiser)
  * (2017/01/18) - Bugfix: T2017011190000607 (ConfigItemDelete not possible to use from CI zoom mask) (ddoerffel)
  * (2017/01/18) - Bugfix: T2017011390000391 (wrong column title in config item compare mask) (ddoerffel)
