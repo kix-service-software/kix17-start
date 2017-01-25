@@ -37,6 +37,15 @@ use File::Path qw();
 use Time::HiRes qw(sleep);
 use Fcntl qw(:flock);
 
+our $IsWin32 = 0; 
+if ( $^O eq 'MSWin32' ) {
+    eval { 
+        require Win32; 
+        require Win32::Process; 
+    } or last;
+    $IsWin32 = 1;
+}
+
 use Kernel::System::ObjectManager;
 
 print STDOUT "kix.Daemon.pl - the KIX daemon\n";
@@ -49,7 +58,7 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
     },
 );
 
-if ( $^O ne 'MSWin32' ) {
+if ( !$IsWin32 ) {
     # Don't allow to run these scripts as root.
     if ( $> == 0 ) {    # $EFFECTIVE_USER_ID
         print STDERR
@@ -147,13 +156,15 @@ if ( lc $ARGV[0] eq 'start' ) {
     exit 0;
 }
 elsif ( lc $ARGV[0] eq 'stop' ) {
-
     exit 1 if !Stop();
     exit 0;
 }
 elsif ( lc $ARGV[0] eq 'status' ) {
-
     exit 1 if !Status();
+    exit 0;
+}
+elsif ( lc $ARGV[0] eq '--child' ) {
+    exit 1 if !_Run();
     exit 0;
 }
 else {
@@ -183,18 +194,107 @@ sub PrintUsage {
 }
 
 sub Start {
+    if (!$IsWin32) {
+        # create a fork of the current process
+        # parent gets the PID of the child
+        # child gets PID = 0
+        my $DaemonPID = fork;
 
-    # create a fork of the current process
-    # parent gets the PID of the child
-    # child gets PID = 0
-    my $DaemonPID = fork;
+        # check if fork was not possible
+        die "Can not create daemon process: $!" if !defined $DaemonPID || $DaemonPID < 0;
+    
+        # close parent gracefully
+        exit 0 if $DaemonPID;
+        
+        # run Child
+        _Run();
+    }
+    else {
+        my $ChildProcess;
+        my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
+        
+        Win32::Process::Create(
+            $ChildProcess, 
+            $ENV{COMSPEC},
+            "/c wperl $Home/bin/kix.Daemon.pl --child", 
+            0, 
+            0x00000008,    # DETACHED_PROCESS
+            "."
+        );
+        my $DaemonPID = $ChildProcess->GetProcessID();
+        
+        # check if fork was not possible
+        die "Can not create daemon process: $!" if !defined $DaemonPID || $DaemonPID < 0;
+    
+        # close parent gracefully
+        return 0;
+    }
+}
 
-    # check if fork was not possible
-    die "Can not create daemon process: $!" if !defined $DaemonPID || $DaemonPID < 0;
+sub Stop {
+    my %Param = @_;
 
-    # close parent gracefully
-    exit 0 if $DaemonPID;
+    my $RunningDaemonPID = _PIDUnlock();
 
+    if ($RunningDaemonPID) {
+
+        if ($ForceStop) {
+
+            # send TERM signal to running daemon
+            kill 15, $RunningDaemonPID;
+        }
+        else {
+
+            # send INT signal to running daemon
+            kill 2, $RunningDaemonPID;
+        }
+    }
+
+    print STDOUT "Daemon stopped\n";
+
+    return 1;
+}
+
+sub Status {
+    my %Param = @_;
+
+    if ( -e $PIDFile ) {
+
+        # read existing PID file
+        open my $FH, '<', $PIDFile;    ## no critic
+
+        # try to lock the file exclusively
+        if ( !flock( $FH, LOCK_EX | LOCK_NB ) ) {
+
+            # if no exclusive lock, daemon might be running, send signal to the PID
+            my $RegisteredPID = do { local $/; <$FH> };
+            close $FH;
+
+            if ($RegisteredPID) {
+
+                # check if process is running
+                my $RunningPID = kill 0, $RegisteredPID;
+
+                if ($RunningPID) {
+                    print STDOUT "Daemon running\n";
+                    return 1;
+                }
+            }
+        }
+        else {
+
+            # if exclusive lock is granted, then it is not running
+            close $FH;
+        }
+    }
+
+    _PIDUnlock();
+
+    print STDOUT "Daemon not running\n";
+    return;
+}
+
+sub _Run() {
     # lock PID
     my $LockSuccess = _PIDLock();
 
@@ -404,69 +504,6 @@ sub Start {
     _LogFilesCleanup();
 
     return 0;
-}
-
-sub Stop {
-    my %Param = @_;
-
-    my $RunningDaemonPID = _PIDUnlock();
-
-    if ($RunningDaemonPID) {
-
-        if ($ForceStop) {
-
-            # send TERM signal to running daemon
-            kill 15, $RunningDaemonPID;
-        }
-        else {
-
-            # send INT signal to running daemon
-            kill 2, $RunningDaemonPID;
-        }
-    }
-
-    print STDOUT "Daemon stopped\n";
-
-    return 1;
-}
-
-sub Status {
-    my %Param = @_;
-
-    if ( -e $PIDFile ) {
-
-        # read existing PID file
-        open my $FH, '<', $PIDFile;    ## no critic
-
-        # try to lock the file exclusively
-        if ( !flock( $FH, LOCK_EX | LOCK_NB ) ) {
-
-            # if no exclusive lock, daemon might be running, send signal to the PID
-            my $RegisteredPID = do { local $/; <$FH> };
-            close $FH;
-
-            if ($RegisteredPID) {
-
-                # check if process is running
-                my $RunningPID = kill 0, $RegisteredPID;
-
-                if ($RunningPID) {
-                    print STDOUT "Daemon running\n";
-                    return 1;
-                }
-            }
-        }
-        else {
-
-            # if exclusive lock is granted, then it is not running
-            close $FH;
-        }
-    }
-
-    _PIDUnlock();
-
-    print STDOUT "Daemon not running\n";
-    return;
 }
 
 sub _PIDLock {
