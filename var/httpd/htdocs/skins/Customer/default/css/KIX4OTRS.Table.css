@@ -78,5 +78,8 @@ caption, th, td {
     font-weight: normal;
     text-align: left;
 }
+.Content table.Overview {
+    line-height: 15px;
+}
 
 } /* end @media */
