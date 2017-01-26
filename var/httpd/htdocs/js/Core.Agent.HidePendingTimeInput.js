@@ -1,10 +1,6 @@
 // --
 // Copyright (C)  cape-it, http://www.cape-it.de/
-// Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-// * Andreas(dot)Hergert(at)cape(dash)it(dot)de
-// * Frank(dot)Jacquemin(at)cape(dash)it(dot)de
+// Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 //
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -34,15 +30,27 @@ Core.Agent.HidePendingTimeInput = (function (TargetNS) {
      *      This function initializes the special module functions.
      */
     TargetNS.Init = function (Data, Name) {
+        TargetNS.DisplayInput($('#' + Name).val(), Data);
 
-        $('#' + Name).change(function(){
+        $('#' + Name).change(function() {
             var Value = $(this).val();
-            if(Data[Value]){
-                $('.HidePendingTimeInput').show();
-            }else{
-                $('.HidePendingTimeInput').hide();
-            }
-        }).trigger('change');
+            TargetNS.DisplayInput(Value,Data);
+        });
+    };
+
+    /**
+     * @name DisplayInput
+     * @memberof Core.Agent.HidePendingTimeInput
+     * @function
+     * @description
+     *      This function hiding Pending-Input-Fields in the Agent Frontend depending on the next chosen TicketState
+     */
+    TargetNS.DisplayInput = function (Value, Data) {
+        if(Data[Value]){
+            $('.HidePendingTimeInput').show();
+        }else{
+            $('.HidePendingTimeInput').hide();
+        }
     };
 
     return TargetNS;
