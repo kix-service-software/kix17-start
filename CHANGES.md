@@ -1,8 +1,9 @@
 # Change log of KIX
-* Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
+* Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de/
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/01/27) - CR: T2016121190001552 (added migration scripts from OTRS and KIX 2016) (rbo)
  * (2017/01/26) - Bugfix: T2017011790001561 (customer frontend fixed formatting) (uboehm)
  * (2017/01/26) - Bugfix: T2017012490000833 (changed functionality in Core.Agent.HidePendingTimeInput) (fjacquemin)
  * (2017/01/24) - CR: T2016021990000594 (changes for windows installations) (rbo)
