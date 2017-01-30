@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/01/30) - Bugfix: T2017011090001126 (js-error in CI graph if Loader::Enabled::JS is deactivated) (rkaiser)
  * (2017/01/27) - CR: T2016121190001552 (added migration scripts from OTRS and KIX 2016) (rbo)
  * (2017/01/26) - Bugfix: T2017011790001561 (customer frontend fixed formatting) (uboehm)
  * (2017/01/26) - Bugfix: T2017012490000833 (changed functionality in Core.Agent.HidePendingTimeInput) (fjacquemin)

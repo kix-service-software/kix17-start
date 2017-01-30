@@ -31,7 +31,8 @@ Core.KIX4OTRS.AgentLinkGraphITSMConfigItem = (function(TargetNS) {
     var NodesRightAttr = {};
     var $Nodes = {};
     var CIFullID, CIID, $CINode, CIName;
-    var $Elements = {}, GraphConfig = {}, NodeNeighbors = {};
+    var $Elements = {}, GraphConfig = GraphConfig || {}, NodeNeighbors = {};
+    var $Dialog;
 
     /**
      * @function
@@ -176,7 +177,7 @@ Core.KIX4OTRS.AgentLinkGraphITSMConfigItem = (function(TargetNS) {
             $.each($Nodes, function(ID, Object) {
                 if (DestObject == ID) {
                     // set connection
-                    Conn = jsPlumb.connect({
+                    var Conn = jsPlumb.connect({
                         source: Source,
                         target: Target
                     });

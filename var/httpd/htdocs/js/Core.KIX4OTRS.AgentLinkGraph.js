@@ -25,7 +25,7 @@ Core.KIX4OTRS = Core.KIX4OTRS || {};
  */
 
 Core.KIX4OTRS.AgentLinkGraph = (function(TargetNS) {
-    var LinkColors = {}, LinkTypes = {}, Nodes = [], TwoArrows = {},
+    var LinkColors = {}, LinkTypes = {}, Nodes = [], TwoArrows = {}, GraphConfig = GraphConfig || {},
         Move = {}, NodesRightCheck = {}, SavedGraphs = {}, AlreadyLinked = {}, Curviness = [ 30, -30, -2, 60, -60 ];
     var OrgValues = {}; // for zooming and saving
     var MousePos = {
