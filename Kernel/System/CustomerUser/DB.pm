@@ -1,11 +1,12 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# KIX4OTRS-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Torsten(dot)Thau(at)cape(dash)it(dot)de
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
 # --
 # $Id$
 # --
@@ -316,17 +317,19 @@ sub CustomerSearch {
     elsif ( $Param{CustomerID} ) {
 
         my $CustomerID = $Self->{DBObject}->Quote( $Param{CustomerID}, 'Like' );
-        # KIX4OTRS-capeIT
-        # $CustomerID =~ s/\*/%/g;
-        # push @Bind, \$CustomerID;
-        # EO KIX4OTRS-capeIT
+        $CustomerID =~ s/\*/%/g;
+        push @Bind, \$CustomerID;
+
+        if ( $Self->{CaseSensitive} ) {
+            $SQL .= "$Self->{CustomerID} LIKE ? $LikeEscapeString";
+        }
+        else {
+            $SQL .= "LOWER($Self->{CustomerID}) LIKE LOWER(?) $LikeEscapeString";
+        }
 
         # KIX4OTRS-capeIT
         # if multiple customer ids used
         if ( $Param{MultipleCustomerIDs} ) {
-            $CustomerID =~ s/\*/%/g;
-            $CustomerID = '%'.$CustomerID.'%';
-            push @Bind, \$CustomerID;
 
             my @CustomerIDsMap;
             for my $Array ( @{ $Self->{CustomerUserMap}->{Map} } ) {
@@ -335,38 +338,16 @@ sub CustomerSearch {
             }
 
             # if mapping exists
-            if ( defined $CustomerIDsMap[5] && $CustomerIDsMap[5] && $CustomerIDsMap[5] eq 'array' )
+            if ( defined $CustomerIDsMap[5] && $CustomerIDsMap[5] )
             {
-                push @Bind, \$CustomerID;
+                my $MultipleCustomerID = '%'.$CustomerID.'%';
+                push @Bind, \$MultipleCustomerID;
                 if ( $Self->{CaseSensitive} ) {
-                    # $SQL .= "$Self->{CustomerID} LIKE ? $LikeEscapeString";
-                    $SQL .= " $Self->{CustomerID} LIKE ? $LikeEscapeString OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString";
+                    $SQL .= " OR $CustomerIDsMap[2] LIKE ? $LikeEscapeString";
                 }
                 else {
-                    # $SQL .= "LOWER($Self->{CustomerID}) LIKE LOWER(?) $LikeEscapeString";
-                    $SQL .= " LOWER($Self->{CustomerID}) LIKE LOWER(?) $LikeEscapeString OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
+                    $SQL .= " OR LOWER($CustomerIDsMap[2]) LIKE LOWER(?) $LikeEscapeString"
                 }
-            }
-            # no mapping exists
-            else {
-                if ( $Self->{CaseSensitive} ) {
-                    $SQL .= "$Self->{CustomerID} LIKE ? $LikeEscapeString";
-                }
-                else {
-                    $SQL .= "LOWER($Self->{CustomerID}) LIKE LOWER(?) $LikeEscapeString";
-                }
-            }
-        }
-        else {
-
-            $CustomerID =~ s/\*/%/g;
-            push @Bind, \$CustomerID;
-
-            if ( $Self->{CaseSensitive} ) {
-                $SQL .= "$Self->{CustomerID} LIKE ? $LikeEscapeString";
-            }
-            else {
-                $SQL .= "LOWER($Self->{CustomerID}) LIKE LOWER(?) $LikeEscapeString";
             }
         }
 
