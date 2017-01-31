@@ -225,6 +225,8 @@ Core.KIXBase.Agent = (function(TargetNS) {
         // move navigation left
         $('#NavigationContainer').css({"left":"100px"});
 
+        // Change text from "phone ticket" to "ticket"
+        $('#Dashboard0050-CIC-CustomerUserList table th:nth-of-type(5)').text('Ticket');
     }
 
     // hook Core.AJAX.ContentUpdate method
