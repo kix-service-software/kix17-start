@@ -1388,6 +1388,12 @@ sub _GetServices {
             %Param,
             Action         => $Self->{Action},
             CustomerUserID => $Self->{UserID},
+
+            # KIX4OTRS-capeIT
+            DefaultSet => $Self->{DefaultSet} || '',
+            CustomerID => $Param{SelectedCustomerID} || $Self->{UserCustomerID} || '',
+
+            # EO KIX4OTRS-capeIT
         );
     }
     return \%Service;

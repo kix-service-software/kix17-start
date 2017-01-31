@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/01/31) - Bugfix: T2017013190000678 (when creating tickets in customer frontend only services for primary CustomerID are available in dropdown) (rbo)
  * (2017/01/31) - Bugfix: T2017011990001057 (use of multiple customer ids could result in wrong customer user list in customer information center) (rkaiser)
  * (2017/01/30) - Bugfix: T2017011090001126 (js-error in CI graph if Loader::Enabled::JS is deactivated) (rkaiser)
  * (2017/01/27) - CR: T2016121190001552 (added migration scripts from OTRS and KIX 2016) (rbo)
