@@ -26,7 +26,9 @@ use warnings;
 use Storable;
 use URI::Escape qw();
 
+# KIX-capeIT
 use vars qw(@ISA);
+# EO KIX-capeIT
 
 use Kernel::System::Time;
 use Kernel::System::VariableCheck qw(:all);
@@ -42,7 +44,7 @@ our @ObjectDependencies = (
     'Kernel::System::JSON',
     'Kernel::System::Log',
     'Kernel::System::Main',
-    'Kernel::System::SystemMaintenance',
+	# ddoerffel - T2016121190001552 - BusinessSolution code removed    'Kernel::System::SystemMaintenance',
     'Kernel::System::Time',
     'Kernel::System::User',
     'Kernel::System::VideoChat',
@@ -563,15 +565,12 @@ sub SetEnv {
 
 =item Block()
 
-use a dtl block
+call a block and pass data to it (optional) to generate the block's output.
 
     $LayoutObject->Block(
         Name => 'Row',
         Data => {
-            Time     => $Row[0],
-            Priority => $Row[1],
-            Facility => $Row[2],
-            Message  => $Row[3],
+            Time => ...,
         },
     );
 
@@ -704,7 +703,7 @@ sub Redirect {
     #  o http://bugs.otrs.org/show_bug.cgi?id=2230
     #  o http://bugs.otrs.org/show_bug.cgi?id=9835
     #  o http://support.microsoft.com/default.aspx?scid=kb;en-us;221154
-    if ( $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis\/8/i ) {
+    if ( $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis\/6/i ) {
         my $Host = $ENV{HTTP_HOST} || $ConfigObject->Get('FQDN');
         my $HttpType = $ConfigObject->Get('HttpType');
         $Param{Redirect} = $HttpType . '://' . $Host . $Param{Redirect};
@@ -757,6 +756,7 @@ sub Login {
 
     # set Action parameter for the loader
     $Self->{Action} = 'Login';
+    $Param{IsLoginPage} = 1;
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
@@ -772,6 +772,7 @@ sub Login {
             # Restrict Cookie to HTTPS if it is used.
             $CookieSecureAttribute = 1;
         }
+        # ddoerffel - T2016121190001552 - BusinessSolution code removed
         $Self->{SetCookies}->{KIXBrowserHasCookie} = $Kernel::OM->Get('Kernel::System::Web::Request')->SetCookie(
             Key      => 'KIXBrowserHasCookie',
             Value    => 1,
@@ -1101,6 +1102,8 @@ sub Error {
 
     if ( !$Param{Message} ) {
         $Param{Message} = $Param{BackendMessage};
+
+        # ddoerffel - T2016121190001552 - BusinessSolution code removed
     }
 
     if ( $Param{BackendTraceback} ) {
@@ -1608,6 +1611,7 @@ sub Footer {
     );
 
     # Banner
+    # ddoerffel - T2016121190001552 - BusinessSolution code removed
     if ( !$ConfigObject->Get('Secure::DisableBanner') ) {
         $Self->Block(
             Name => 'Banner',
@@ -1742,7 +1746,7 @@ sub Ascii2Html {
     else {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => 'Invalid ref "' . ref $Param{Text} . '" of Text param!',
+            Message  => 'Invalid ref "' . ref( $Param{Text} ) . '" of Text param!',
         );
         return '';
     }
@@ -2552,8 +2556,14 @@ sub Attachment {
         # Disallow external and inline scripts, active content, frames, but keep allowing inline styles
         #   as this is a common use case in emails.
         # Also disallow referrer headers to prevent referrer leaks.
+        # img-src:    allow external and inline (data:) images
+        # script-src: block all scripts
+        # object-src: allow 'self' so that the browser can load plugins for PDF display
+        # Disallow external and inline scripts, active content, frames, but keep allowing inline styles
+        #   as this is a common use case in emails.
+        # Also disallow referrer headers to prevent referrer leaks.
         $Output
-            .= "Content-Security-Policy: default-src *; script-src 'none'; object-src 'none'; frame-src 'none'; style-src 'unsafe-inline'; referrer no-referrer;\n";
+            .= "Content-Security-Policy: default-src *; img-src * data:; script-src 'none'; object-src 'self'; frame-src 'none'; style-src 'unsafe-inline'; referrer no-referrer;\n";
     }
 
     if ( $Param{Charset} ) {
@@ -3204,7 +3214,7 @@ sub BuildDateSelection {
             Data        => \%Year,
             SelectedID  => int( $Param{ $Prefix . 'Year' } || $Y ),
             Translation => 0,
-            Class       => $Validate ? 'Validate_DateYear' : '',
+            Class       => $Validate ? "Validate_DateYear $Class" : $Class,
             Title       => $Self->{LanguageObject}->Translate('Year'),
             Disabled    => $Param{Disabled},
         );
@@ -3228,7 +3238,7 @@ sub BuildDateSelection {
             Data        => \%Month,
             SelectedID  => int( $Param{ $Prefix . 'Month' } || $M ),
             Translation => 0,
-            Class       => $Validate ? 'Validate_DateMonth' : '',
+            Class       => $Validate ? "Validate_DateMonth $Class" : $Class,
             Title       => $Self->{LanguageObject}->Translate('Month'),
             Disabled    => $Param{Disabled},
         );
@@ -3433,7 +3443,8 @@ sub CustomerLogin {
     $Param{TitleArea} = $Self->{LanguageObject}->Translate('Login') . ' - ';
 
     # set Action parameter for the loader
-    $Self->{Action} = 'CustomerLogin';
+    $Self->{Action}        = 'CustomerLogin';
+    $Param{IsLoginPage}    = 1;
     $Param{'XLoginHeader'} = 1;
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -3449,6 +3460,7 @@ sub CustomerLogin {
             # Restrict Cookie to HTTPS if it is used.
             $CookieSecureAttribute = 1;
         }
+        # ddoerffel - T2016121190001552 - BusinessSolution code removed
         $Self->{SetCookies}->{KIXBrowserHasCookie} = $Kernel::OM->Get('Kernel::System::Web::Request')->SetCookie(
             Key      => 'KIXBrowserHasCookie',
             Value    => 1,
@@ -3778,6 +3790,7 @@ sub CustomerFooter {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # Banner
+    # ddoerffel - T2016121190001552 - added on code merge
     if ( !$ConfigObject->Get('Secure::DisableBanner') ) {
         $Self->Block(
             Name => 'Banner',
@@ -4416,9 +4429,10 @@ sub RichTextDocumentServe {
     # convert charset
     if ($Charset) {
         $Param{Data}->{Content} = $Kernel::OM->Get('Kernel::System::Encode')->Convert(
-            Text => $Param{Data}->{Content},
-            From => $Charset,
-            To   => 'utf-8',
+            Text  => $Param{Data}->{Content},
+            From  => $Charset,
+            To    => 'utf-8',
+            Check => 1,
         );
 
         # replace charset in content
