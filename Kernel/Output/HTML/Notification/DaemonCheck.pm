@@ -77,7 +77,7 @@ sub Run {
     # if user is not admin, add 'Please contact your administrator' to error message
     else {
         $NotificationDetails{Data}
-            .= ' ' . $LayoutObject->{LanguageObject}->Translate("Please contact your administrator!");
+            .= ' ' . $LayoutObject->{LanguageObject}->Translate("Please contact the administrator.");
     }
 
     # show error notification

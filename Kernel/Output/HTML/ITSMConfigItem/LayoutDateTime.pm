@@ -270,8 +270,9 @@ sub SearchFormDataGet {
 create a search input string
 
     my $Value = $BackendObject->SearchInputCreate(
-        Key => 'Item::1::Node::3',
-        Item => $ItemRef,
+        Key      => 'Item::1::Node::3',
+        Item     => $ItemRef,
+        Optional => 1,                   # (optional) default 0 (0|1)
     );
 
 =cut
@@ -344,8 +345,12 @@ sub SearchInputCreate {
     );
 
     my $Checkbox = qq{<input type="hidden" name="$Key" value="1"/>};
-    my $Between  = $LayoutObject->{LanguageObject}->Translate('Between');
-    my $And      = $LayoutObject->{LanguageObject}->Translate('and');
+    if ( $Param{Optional} ) {
+        $Checkbox = qq{<input type="checkbox" name="$Key" value="1"/>};
+    }
+
+    my $Between = $LayoutObject->{LanguageObject}->Translate('Between');
+    my $And     = $LayoutObject->{LanguageObject}->Translate('and');
 
     return "<div> $Checkbox $Between $TimeStartSelectionString </div>"
         . "<span style=\"margin-left: 27px;\"> $And </span> $TimeStopSelectionString";

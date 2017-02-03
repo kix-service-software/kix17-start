@@ -214,27 +214,32 @@ sub AgentCustomerViewTable {
 
                     # Default status is offline.
                     my $UserState            = Translatable('Offline');
-                    my $UserStateDescription = $Self->{LanguageObject}->Translate('This user is currently offline');
+                    my $UserStateDescription = $Self->{LanguageObject}->Translate('User is currently offline.');
 
                     my $CustomerChatAvailability = $Kernel::OM->Get('Kernel::System::Chat')->CustomerAvailabilityGet(
                         UserID => $Param{Data}->{UserID},
                     );
 
-                    my %CustomerUser = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+                    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
+
+                    my %CustomerUser = $CustomerUserObject->CustomerUserDataGet(
                         User => $Param{Data}->{UserID},
+                    );
+                    $CustomerUser{UserFullname} = $CustomerUserObject->CustomerName(
+                        UserLogin => $Param{Data}->{UserID},
                     );
                     $VideoChatSupport = 1 if $CustomerUser{VideoChatHasWebRTC};
 
                     if ( $CustomerChatAvailability == 3 ) {
                         $UserState            = Translatable('Active');
                         $CustomerEnableChat   = 1;
-                        $UserStateDescription = $Self->{LanguageObject}->Translate('This user is currently active');
+                        $UserStateDescription = $Self->{LanguageObject}->Translate('User is currently active.');
                         $VideoChatAvailable   = 1;
                     }
                     elsif ( $CustomerChatAvailability == 2 ) {
                         $UserState            = Translatable('Away');
                         $CustomerEnableChat   = 1;
-                        $UserStateDescription = $Self->{LanguageObject}->Translate('This user is currently away');
+                        $UserStateDescription = $Self->{LanguageObject}->Translate('User was inactive for a while.');
                     }
 
                     $Self->Block(
@@ -250,6 +255,7 @@ sub AgentCustomerViewTable {
                         $Self->Block(
                             Name => 'CustomerRowChatIcons',
                             Data => {
+                                %{ $Param{Data} },
                                 %CustomerUser,
                                 VideoChatEnabled   => $VideoChatEnabled,
                                 VideoChatAvailable => $VideoChatAvailable,
@@ -648,9 +654,10 @@ sub ArticleQuote {
 
             # convert html body to correct charset
             $Body = $Kernel::OM->Get('Kernel::System::Encode')->Convert(
-                Text => $AttachmentHTML{Content},
-                From => $Charset,
-                To   => $Self->{UserCharset},
+                Text  => $AttachmentHTML{Content},
+                From  => $Charset,
+                To    => $Self->{UserCharset},
+                Check => 1,
             );
 
             # get HTML utils object
