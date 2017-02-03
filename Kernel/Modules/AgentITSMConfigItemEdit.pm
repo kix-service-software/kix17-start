@@ -21,6 +21,7 @@ use strict;
 use warnings;
 
 use Kernel::System::VariableCheck qw(:all);
+use Kernel::Language qw(Translatable);
 
 our $ObjectManagerDisabled = 1;
 
@@ -101,13 +102,13 @@ sub Run {
 
         # set config item id and number
         $ConfigItem->{ConfigItemID} = 'NEW';
-        $ConfigItem->{Number}       = 'NEW';
+        $ConfigItem->{Number}       = Translatable('New');
     }
     elsif ( $ConfigItem->{ClassID} ) {
 
         # set config item id and number
         $ConfigItem->{ConfigItemID} = 'NEW';
-        $ConfigItem->{Number}       = 'NEW';
+        $ConfigItem->{Number}       = Translatable('New');
 
         # check access for config item
         $HasAccess = $ConfigItemObject->Permission(

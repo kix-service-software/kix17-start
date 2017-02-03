@@ -1014,7 +1014,6 @@ sub Run {
         $ProcessData->{Config}->{Path}                = $GetParam->{Path};
         $ProcessData->{Config}->{StartActivity}       = $GetParam->{StartActivity};
         $ProcessData->{Config}->{StartActivityDialog} = $GetParam->{StartActivityDialog};
-        $ProcessData->{Config}->{CustomerPortalGroupID} = $GetParam->{CustomerPortalGroupID};
 
         # check required parameters
         my %Error;
@@ -1653,6 +1652,7 @@ sub _ShowOverview {
         Translation  => 0,
         Class        => 'Modernize Validate_Required',
     );
+    $Frontend{OTRSBusinessIsInstalled} = $Kernel::OM->Get('Kernel::System::OTRSBusiness')->OTRSBusinessIsInstalled();
 
     my $ProcessObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::DB::Process');
 
@@ -1704,7 +1704,6 @@ sub _ShowOverview {
 
 sub _ShowEdit {
     my ( $Self, %Param ) = @_;
-    my $AvailableInCustomerInterface = 0;
 
     # get process information
     my $ProcessData = $Param{ProcessData} || {};
@@ -1764,11 +1763,6 @@ sub _ShowEdit {
                         else {
                             $AvailableIn = 'A';
                         }
-
-                        # find out if our process starts in Customer Interface
-                        if ($ElementData->{EntityID} eq $ProcessData->{Config}->{StartActivityDialog} && $AvailableIn =~/C/) {
-                            $AvailableInCustomerInterface = 1;
-                        }
                     }
 
                     # print each element in the accordion
@@ -1818,27 +1812,6 @@ sub _ShowEdit {
         Translation => 1,
         Class       => 'Modernize W75pc ' . $StateError,
     );
-
-    # get a list of customer portal groups
-    if ($AvailableInCustomerInterface) {
-        my %PortalGroups = $Kernel::OM->Get('Kernel::System::CustomerPortalGroup')->PortalGroupList( ValidID => 1 );
-
-        $Param{CustomerPortalGroupSelection} = $LayoutObject->BuildSelection(
-            Data => \%PortalGroups,
-            Name => 'CustomerPortalGroupID',
-            ID   => 'CustomerPortalGroupID',
-            SelectedID => $ProcessData->{Config}->{CustomerPortalGroupID} || '',
-            Sort        => 'AlphanumericValue',
-            Translation => 1,
-            PossibleNone => 1,
-            Class       => 'Modernize W75pc Validate_Required',
-        );
-        
-        $LayoutObject->Block(
-            Name => 'CustomerPortalGroupSelection',
-            Data => \%Param,
-        );
-    }
 
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
@@ -1910,7 +1883,7 @@ sub _GetParams {
 
     # get parameters from web browser
     for my $ParamName (
-        qw( Name EntityID ProcessLayout Path StartActivity StartActivityDialog Description StateEntityID CustomerPortalGroupID )
+        qw( Name EntityID ProcessLayout Path StartActivity StartActivityDialog Description StateEntityID )
         )
     {
         $GetParam->{$ParamName} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $ParamName )

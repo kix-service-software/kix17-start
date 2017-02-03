@@ -91,7 +91,7 @@ sub Run {
                 return $LayoutObject->CustomerErrorScreen(
                     Message => $LayoutObject->{LanguageObject}
                         ->Translate( 'Couldn\'t get ActivityDialogEntityID "%s"!', $ActivityDialogEntityID ),
-                    Comment => Translatable('Please contact the admin.'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
 
@@ -200,7 +200,7 @@ sub Run {
     if ( !IsHashRefWithData($ProcessList) && !IsHashRefWithData($FollowupProcessList) ) {
         return $LayoutObject->CustomerErrorScreen(
             Message => Translatable('No Process configured!'),
-            Comment => Translatable('Please contact the admin.'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -228,6 +228,14 @@ sub Run {
         $ProcessList = \%ReducedProcessList;
     }
 
+    # get form id
+    $Self->{FormID} = $ParamObject->GetParam( Param => 'FormID' );
+
+    # create form id
+    if ( !$Self->{FormID} ) {
+        $Self->{FormID} = $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDCreate();
+    }
+
     # if we have no subaction display the process list to start a new one
     if ( !$Self->{Subaction} ) {
 
@@ -235,7 +243,7 @@ sub Run {
         if ( !IsHashRefWithData($ProcessList) ) {
             return $LayoutObject->CustomerErrorScreen(
                 Message => Translatable('No Process configured!'),
-                Comment => Translatable('Please contact the admin.'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 
@@ -283,7 +291,7 @@ sub Run {
     {
         $LayoutObject->CustomerFatalError(
             Message => $LayoutObject->{LanguageObject}->Translate( 'Process %s is invalid!', $ProcessEntityID ),
-            Comment => Translatable('Please contact the admin.'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -297,14 +305,6 @@ sub Run {
     my $GetParam = $Self->_GetParam(
         ProcessEntityID => $ProcessEntityID,
     );
-
-    # get form id
-    $Self->{FormID} = $ParamObject->GetParam( Param => 'FormID' );
-
-    # create form id
-    if ( !$Self->{FormID} ) {
-        $Self->{FormID} = $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDCreate();
-    }
 
     if ( $Self->{Subaction} eq 'StoreActivityDialog' && $ProcessEntityID ) {
         $LayoutObject->ChallengeTokenCheck( Type => 'Customer' );
@@ -349,7 +349,7 @@ sub Run {
     }
     return $LayoutObject->CustomerErrorScreen(
         Message => Translatable('Subaction is invalid!'),
-        Comment => Translatable('Please contact the admin.'),
+        Comment => Translatable('Please contact the administrator.'),
     );
 }
 
@@ -802,7 +802,7 @@ sub _GetParam {
         return $LayoutObject->CustomerErrorScreen(
             Message => $LayoutObject->{LanguageObject}
                 ->Translate( 'Couldn\'t get ActivityDialogEntityID "%s"!', $ActivityDialogEntityID ),
-            Comment => Translatable('Please contact the admin.'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -3649,7 +3649,7 @@ sub _StoreActivityDialog {
                         'Couldn\'t set ActivityEntityID "%s" on TicketID "%s"!',
                         $Param{ProcessEntityID}, $TicketID
                     ),
-                    Comment => Translatable('Please contact the admin.'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
 
@@ -3663,7 +3663,7 @@ sub _StoreActivityDialog {
                 $LayoutObject->CustomerFatalError(
                     Message => $LayoutObject->{LanguageObject}
                         ->Translate( 'Could not store ActivityDialog, invalid TicketID: %s!', $TicketID ),
-                    Comment => Translatable('Please contact the admin.'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
             for my $DynamicFieldConfig (
@@ -3723,7 +3723,7 @@ sub _StoreActivityDialog {
             return $LayoutObject->CustomerErrorScreen(
                 Message => $LayoutObject->{LanguageObject}
                     ->Translate( 'Missing ActivityEntityID in Ticket %s!', $Ticket{TicketID} ),
-                Comment => Translatable('Please contact the admin.'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 
@@ -4116,6 +4116,7 @@ sub _DisplayProcessList {
     $Output .= $LayoutObject->Output(
         TemplateFile => 'CustomerTicketProcess',
         Data         => {
+            FormID => $Self->{FormID},
             %Param,
         },
     );

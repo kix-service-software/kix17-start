@@ -929,6 +929,8 @@ sub _ShowEdit {
 
         my %Frontend;
 
+		# ddoerffel - T2016121190001552 - BusinessSolution code removed
+
         # Enable Example web services
         $LayoutObject->Block(
             Name => 'ExampleWebServices',

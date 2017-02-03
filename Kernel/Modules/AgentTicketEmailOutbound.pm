@@ -921,6 +921,50 @@ sub SendEmail {
     );
 
     # create HTML strings for all dynamic fields
+    my $IsUpload = 0;
+
+    # attachment delete
+    my @AttachmentIDs = map {
+        my ($ID) = $_ =~ m{ \A AttachmentDelete (\d+) \z }xms;
+        $ID ? $ID : ();
+    } $ParamObject->GetParamNames();
+
+    # get upload cache object
+    my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
+
+    COUNT:
+    for my $Count ( reverse sort @AttachmentIDs ) {
+        my $Delete = $ParamObject->GetParam( Param => "AttachmentDelete$Count" );
+        next COUNT if !$Delete;
+        %Error = ();
+        $Error{AttachmentDelete} = 1;
+        $UploadCacheObject->FormIDRemoveFile(
+            FormID => $GetParam{FormID},
+            FileID => $Count,
+        );
+        $IsUpload = 1;
+    }
+
+    # attachment upload
+    if ( $ParamObject->GetParam( Param => 'AttachmentUpload' ) ) {
+        $IsUpload                = 1;
+        %Error                   = ();
+        $Error{AttachmentUpload} = 1;
+        my %UploadStuff = $ParamObject->GetUploadAll(
+            Param => 'FileUpload',
+        );
+        $UploadCacheObject->FormIDAddFile(
+            FormID => $GetParam{FormID},
+            %UploadStuff,
+        );
+    }
+
+    # get all attachments meta data
+    my @Attachments = $UploadCacheObject->FormIDGetAllFilesMeta(
+        FormID => $GetParam{FormID},
+    );
+
+    # create HTML strings for all dynamic fields
     my %DynamicFieldHTML;
 
     # cycle through the activated Dynamic Fields for this screen
@@ -1015,7 +1059,7 @@ sub SendEmail {
                     Message =>
                         $LayoutObject->{LanguageObject}
                         ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
-                    Comment => Translatable('Please contact the admin.'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
 
@@ -1068,16 +1112,14 @@ sub SendEmail {
             next LINE if !$GetParam{$Line};
             for my $Email ( Mail::Address->parse( $GetParam{$Line} ) ) {
                 if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
-                    $Error{ $Line . 'ErrorType' }
-                        = $Line . $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
-                    $Error{ "$Line" . "Invalid" } = 'ServerError';
+                    $Error{ $Line . 'ErrorType' } = $Line . $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
+                    $Error{ $Line . 'Invalid' }   = 'ServerError';
                 }
-                my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')
-                    ->SystemAddressIsLocalAddress(
+                my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
                     Address => $Email->address()
-                    );
+                );
                 if ($IsLocal) {
-                    $Error{ "$Line" . "Invalid" } = 'ServerError';
+                    $Error{ $Line . 'IsLocalAddress' } = 'ServerError';
                 }
             }
         }
@@ -1286,7 +1328,7 @@ sub SendEmail {
     if ( !$ArticleID ) {
 
         return $LayoutObject->ErrorScreen(
-            Comment => Translatable('Please contact the admin.'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 

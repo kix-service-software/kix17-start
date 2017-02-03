@@ -51,7 +51,7 @@ sub Run {
         if ( !defined $Self->{$Needed} ) {
             return $LayoutObject->ErrorScreen(
                 Message => $LayoutObject->{LanguageObject}->Translate( '%s is needed!', $Needed ),
-                Comment => Translatable('Please contact your administrator'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
     }
@@ -475,7 +475,7 @@ $Param{Signature}";
         if ( !$Bounce ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('Can\'t bounce email!'),
-                Comment => Translatable('Please contact the admin.'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 
@@ -518,7 +518,7 @@ $Param{Signature}";
             if ( !$ArticleID ) {
                 return $LayoutObject->ErrorScreen(
                     Message => Translatable('Can\'t send email!'),
-                    Comment => Translatable('Please contact the admin.'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
         }
@@ -603,7 +603,7 @@ $Param{Signature}";
     }
     return $LayoutObject->ErrorScreen(
         Message => Translatable('Wrong Subaction!'),
-        Comment => Translatable('Please contact your administrator'),
+        Comment => Translatable('Please contact the administrator.'),
     );
 }
 

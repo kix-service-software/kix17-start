@@ -92,6 +92,8 @@ sub new {
         }
     }
 
+	# ddoerffel - T2016121190001552 - BusinessSolution code removed
+
     if ( !defined $Self->{DoNotShowBrowserLinkMessage} ) {
         if ( $UserPreferences{UserAgentDoNotShowBrowserLinkMessage} ) {
             $Self->{DoNotShowBrowserLinkMessage} = 1;
@@ -127,7 +129,7 @@ sub new {
     if ( !$Self->{TicketID} && $ParamObject->GetParam( Param => 'TicketNumber' ) ) {
         $Self->{TicketID} = $TicketObject->TicketIDLookup(
             TicketNumber => $ParamObject->GetParam( Param => 'TicketNumber' ),
-            UserID => $Self->{UserID},
+            UserID       => $Self->{UserID},
         );
     }
 
@@ -161,7 +163,7 @@ sub Run {
     if ( !$Self->{TicketID} ) {
         return $LayoutObject->ErrorScreen(
             Message => Translatable('No TicketID is given!'),
-            Comment => Translatable('Please contact the admin.'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -176,16 +178,12 @@ sub Run {
     );
 
     # error screen, don't show ticket
-    if ( !$Access ) {
-        my $TranslatableMessage = $LayoutObject->{LanguageObject}->Translate(
-            "We are sorry, you do not have permissions anymore to access this ticket in its current state. "
-        );
-
-        return $LayoutObject->NoPermission(
-            Message    => $TranslatableMessage,
-            WithHeader => 'yes',
-        );
-    }
+    return $LayoutObject->NoPermission(
+        Message => Translatable(
+            'We are sorry, you do not have permissions anymore to access this ticket in its current state.'
+        ),
+        WithHeader => 'yes',
+    ) if !$Access;
 
     # get ticket attributes
     my %Ticket = $TicketObject->TicketGet(
@@ -361,12 +359,11 @@ sub Run {
         $Article{Atms} = \%AtmIndex;
 
         # fetch all std. templates
-        my %StandardTemplates
-            = $Kernel::OM->Get('Kernel::System::Queue')->QueueStandardTemplateMemberList(
+        my %StandardTemplates = $Kernel::OM->Get('Kernel::System::Queue')->QueueStandardTemplateMemberList(
             QueueID       => $Ticket{QueueID},
             TemplateTypes => 1,
             Valid         => 1,
-            );
+        );
 
         $Self->_ArticleItem(
             Ticket            => \%Ticket,
@@ -378,13 +375,12 @@ sub Run {
         );
         my $Content = $LayoutObject->Output(
             TemplateFile => 'AgentTicketZoom',
-            Data => { %Ticket, %Article, %AclAction },
+            Data         => { %Ticket, %Article, %AclAction },
         );
         if ( !$Content ) {
             $LayoutObject->FatalError(
                 Message =>
-                    $LayoutObject->{LanguageObject}
-                    ->Translate( 'Can\'t get for ArticleID %s!', $Self->{ArticleID} ),
+                    $LayoutObject->{LanguageObject}->Translate( 'Can\'t get for ArticleID %s!', $Self->{ArticleID} ),
             );
         }
         return $LayoutObject->Attachment(
@@ -406,9 +402,8 @@ sub Run {
         # get params
         my $TicketID     = $ParamObject->GetParam( Param => 'TicketID' );
         my $SaveDefaults = $ParamObject->GetParam( Param => 'SaveDefaults' );
-        my @ArticleTypeFilterIDs = $ParamObject->GetArray( Param => 'ArticleTypeFilter' );
-        my @ArticleSenderTypeFilterIDs
-            = $ParamObject->GetArray( Param => 'ArticleSenderTypeFilter' );
+        my @ArticleTypeFilterIDs       = $ParamObject->GetArray( Param => 'ArticleTypeFilter' );
+        my @ArticleSenderTypeFilterIDs = $ParamObject->GetArray( Param => 'ArticleSenderTypeFilter' );
 
         # build session string
         my $SessionString = '';

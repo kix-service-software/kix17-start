@@ -92,7 +92,7 @@ sub Run {
                         'Couldn\'t get ActivityDialogEntityID "%s"!',
                         $ActivityDialogEntityID,
                     ),
-                    Comment => Translatable('Please contact the admin.'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
 
@@ -272,7 +272,7 @@ sub Run {
     if ( !IsHashRefWithData($ProcessList) && !IsHashRefWithData($FollowupProcessList) ) {
         return $LayoutObject->ErrorScreen(
             Message => Translatable('No Process configured!'),
-            Comment => Translatable('Please contact the admin.'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -315,7 +315,7 @@ sub Run {
         if ( !IsHashRefWithData($ProcessList) ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('No Process configured!'),
-                Comment => Translatable('Please contact the admin.'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 
@@ -364,7 +364,7 @@ sub Run {
     {
         $LayoutObject->FatalError(
             Message => $LayoutObject->{LanguageObject}->Translate( 'Process %s is invalid!', $ProcessEntityID ),
-            Comment => Translatable('Please contact the admin.'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -422,7 +422,7 @@ sub Run {
     }
     return $LayoutObject->ErrorScreen(
         Message => Translatable('Subaction is invalid!'),
-        Comment => Translatable('Please contact the admin.'),
+        Comment => Translatable('Please contact the administrator.'),
     );
 }
 
@@ -769,6 +769,41 @@ sub _RenderAjax {
                 %{ $Param{GetParam} },
             );
 
+# ITSMIncidentProblemManagement
+# ---
+            # check if priority needs to be recalculated
+            if (
+                ( $Param{GetParam}->{ElementChanged} eq 'ServiceID'
+                || $Param{GetParam}->{ElementChanged} eq 'DynamicField_ITSMImpact'
+                )
+                && $Param{GetParam}->{ServiceID}
+                && $Param{GetParam}->{DynamicField_ITSMImpact}
+                && $Param{GetParam}->{DynamicField_ITSMCriticality}
+            ) {
+
+                # calculate priority from the CIP matrix
+                my $PriorityIDFromImpact = $Kernel::OM->Get('Kernel::System::ITSMCIPAllocate')->PriorityAllocationGet(
+                    Criticality => $Param{GetParam}->{DynamicField_ITSMCriticality},
+                    Impact      => $Param{GetParam}->{DynamicField_ITSMImpact},
+                );
+
+                # add Priority to the JSONCollector
+                push(
+                    @JSONCollector,
+                    {
+                        Name        => $Self->{NameToID}{$CurrentField},
+                        Data        => $Data,
+                        SelectedID  => $PriorityIDFromImpact,
+                        Translation => 1,
+                        Max         => 100,
+                    },
+                );
+                $FieldsProcessed{ $Self->{NameToID}{$CurrentField} } = 1;
+
+                next DIALOGFIELD;
+            }
+# ---
+
             # add Priority to the JSONCollector
             push(
                 @JSONCollector,
@@ -1009,7 +1044,7 @@ sub _GetParam {
                 'Couldn\'t get ActivityDialogEntityID "%s"!',
                 $ActivityDialogEntityID,
             ),
-            Comment => Translatable('Please contact the admin.'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -1102,6 +1137,22 @@ sub _GetParam {
                 ParamObject        => $ParamObject,
                 LayoutObject       => $LayoutObject,
             );
+
+# ITSMIncidentProblemManagement
+# ---
+            # set the criticality from the service
+            if ( $DynamicFieldName eq 'ITSMCriticality' && $ParamObject->GetParam( Param => 'ServiceID' ) ) {
+
+                # get service
+                my %Service = $Kernel::OM->Get('Kernel::System::Service')->ServiceGet(
+                    ServiceID => $ParamObject->GetParam( Param => 'ServiceID' ),
+                    UserID    => $Self->{UserID},
+                );
+
+                # set the criticality
+                $Value = $Service{Criticality};
+            }
+# ---
 
             # If we got a submitted param, take it and next out
             if (
@@ -4567,6 +4618,14 @@ sub _StoreActivityDialog {
                 if ( $ActivityDialog->{Fields}{$CurrentField}{Display} == 0 ) {
                     $TicketParam{$CurrentField} = $ActivityDialog->{Fields}{$CurrentField}{DefaultValue}
                         || '';
+# ---
+# ITSMIncidentProblemManagement
+# ---
+                    # make sure ITSMCriticality is stored, even if this field is invisible
+                    if ( $DynamicFieldName eq 'ITSMCriticality' ) {
+                        $TicketParam{$CurrentField} = $Param{GetParam}->{DynamicField_ITSMCriticality} || $TicketParam{$CurrentField};
+                    }
+# ---
                 }
 
                 # KIX4OTRS-capeIT
@@ -4623,12 +4682,9 @@ sub _StoreActivityDialog {
                 # is not possible to a have an invisible field for this particular value
                 # on agent interface
                 if ( $ActivityDialog->{Fields}{$CurrentField}{Display} == 0 ) {
-
-                    my $InvisibleFieldMessage = Translatable(
-                        'Couldn\'t use CustomerID as an invisible field. Please contact your system administrator!'
-                    );
                     $LayoutObject->FatalError(
-                        Message => $InvisibleFieldMessage,
+                        Message => Translatable('Couldn\'t use CustomerID as an invisible field.'),
+                        Comment => Translatable('Please contact the administrator.'),
                     );
                 }
 
@@ -4872,7 +4928,7 @@ sub _StoreActivityDialog {
                         $Param{ProcessEntityID},
                         $TicketID,
                     ),
-                    Comment => Translatable('Please contact the admin.'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
 
@@ -4888,7 +4944,7 @@ sub _StoreActivityDialog {
                         'Could not store ActivityDialog, invalid TicketID: %s!',
                         $TicketID,
                     ),
-                    Comment => Translatable('Please contact the admin.'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
             }
             for my $DynamicFieldConfig (
@@ -4991,7 +5047,7 @@ sub _StoreActivityDialog {
                     $Param{ProcessEntityID},
                     $TicketID,
                 ),
-                Comment => Translatable('Please contact the admin.'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 
@@ -5035,7 +5091,7 @@ sub _StoreActivityDialog {
                     'Missing ActivityEntityID in Ticket %s!',
                     $Ticket{TicketID},
                 ),
-                Comment => Translatable('Please contact the admin.'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 

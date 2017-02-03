@@ -117,7 +117,7 @@ sub Run {
     if ( !$Self->{TicketID} ) {
         return $LayoutObject->ErrorScreen(
             Message => Translatable('No TicketID is given!'),
-            Comment => Translatable('Please contact the admin.'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -788,7 +788,7 @@ sub Run {
                         Message =>
                             $LayoutObject->{LanguageObject}
                             ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
-                        Comment => Translatable('Please contact the admin.'),
+                        Comment => Translatable('Please contact the administrator.'),
                     );
                 }
 
@@ -1270,7 +1270,7 @@ sub Run {
             # build the response
             %Response = (
                 CurInciSignal => $InciSignals{ $Service{CurInciStateType} },
-                CurInciState  => $LayoutObject->{LanguageObject}->Get($Service{CurInciState}),
+                CurInciState  => $LayoutObject->{LanguageObject}->Translate($Service{CurInciState}),
             );
         }
 

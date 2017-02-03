@@ -1486,7 +1486,7 @@ sub Run {
                         Message =>
                             $LayoutObject->{LanguageObject}
                             ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
-                        Comment => Translatable('Please contact the admin.'),
+                        Comment => Translatable('Please contact the administrator.'),
                     );
                 }
 
@@ -2473,7 +2473,7 @@ sub Run {
             # build the response
             %Response = (
                 CurInciSignal => $InciSignals{ $Service{CurInciStateType} },
-                CurInciState  => $LayoutObject->{LanguageObject}->Get($Service{CurInciState}),
+                CurInciState  => $LayoutObject->{LanguageObject}->Translate($Service{CurInciState}),
             );
         }
 
@@ -2994,7 +2994,7 @@ sub Run {
     else {
         return $LayoutObject->ErrorScreen(
             Message => Translatable('No Subaction!'),
-            Comment => Translatable('Please contact your administrator'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 }

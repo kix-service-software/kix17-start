@@ -258,7 +258,7 @@ sub Run {
                 $LayoutObject->CustomerFatalError(
                     Message => $LayoutObject->{LanguageObject}
                         ->Translate( 'Check SysConfig setting for %s::QueueDefault.', $Self->{Action} ),
-                    Comment => Translatable('Please contact your administrator'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
                 return;
             }
@@ -440,7 +440,7 @@ sub Run {
                     Message =>
                         $LayoutObject->{LanguageObject}
                         ->Translate( 'Check SysConfig setting for %s::TicketTypeDefault.', $Self->{Action} ),
-                    Comment => Translatable('Please contact your administrator'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
                 return;
             }
@@ -596,7 +596,7 @@ sub Run {
                         Message =>
                             $LayoutObject->{LanguageObject}
                             ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
-                        Comment => Translatable('Please contact your administrator'),
+                        Comment => Translatable('Please contact the administrator.'),
                     );
                     $Output .= $LayoutObject->CustomerFooter();
                     return $Output;
@@ -1333,7 +1333,7 @@ sub Run {
     else {
         return $LayoutObject->ErrorScreen(
             Message => Translatable('No Subaction!'),
-            Comment => Translatable('Please contact your administrator'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -1714,7 +1714,7 @@ sub _MaskNew {
             PossibleNone => 1,
             Sort         => 'AlphanumericValue',
             Translation  => 0,
-            Class => "Validate_Required Modernize " . ( $Param{Errors}->{TypeIDInvalid} || '' ),
+            Class        => "Validate_Required Modernize " . ( $Param{Errors}->{TypeIDInvalid} || '' ),
         );
         $LayoutObject->Block(
             Name => 'TicketType',
@@ -1754,11 +1754,10 @@ sub _MaskNew {
 
         if ( $Config->{ServiceMandatory} ) {
             $Param{ServiceStrg} = $LayoutObject->BuildSelection(
-                Data       => \%Services,
-                Name       => 'ServiceID',
-                SelectedID => $Param{ServiceID},
-                Class      => "Validate_Required Modernize "
-                    . ( $Param{Errors}->{ServiceIDInvalid} || '' ),
+                Data         => \%Services,
+                Name         => 'ServiceID',
+                SelectedID   => $Param{ServiceID},
+                Class        => "Validate_Required Modernize " . ( $Param{Errors}->{ServiceIDInvalid} || '' ),
                 PossibleNone => 1,
                 TreeView     => $TreeView,
                 Sort         => 'TreeView',
@@ -1809,11 +1808,10 @@ sub _MaskNew {
 
             if ( $Config->{SLAMandatory} ) {
                 $Param{SLAStrg} = $LayoutObject->BuildSelection(
-                    Data       => \%SLA,
-                    Name       => 'SLAID',
-                    SelectedID => $Param{SLAID},
-                    Class      => "Validate_Required Modernize "
-                        . ( $Param{Errors}->{SLAIDInvalid} || '' ),
+                    Data         => \%SLA,
+                    Name         => 'SLAID',
+                    SelectedID   => $Param{SLAID},
+                    Class        => "Validate_Required Modernize " . ( $Param{Errors}->{SLAIDInvalid} || '' ),
                     PossibleNone => 1,
                     Sort         => 'AlphanumericValue',
                     Translation  => 0,
@@ -1874,7 +1872,10 @@ sub _MaskNew {
 
         push @CustomerDynamicFields, $DynamicFieldConfig;
     }
+    # KIX4OTRS-capeIT
+    # $DynamicField = \@CustomerDynamicFields;
     $Self->{DynamicField} = \@CustomerDynamicFields;
+    # EO KIX4OTRS-capeIT
 
     # Dynamic fields
     # cycle trough the activated Dynamic Fields for this screen

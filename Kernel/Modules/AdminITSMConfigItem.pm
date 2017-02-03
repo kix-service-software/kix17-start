@@ -60,6 +60,7 @@ sub Run {
             PossibleNone => 1,
             Translation  => 0,
             SelectedID   => $ClassID,
+            Class        => 'Modernize',
         );
 
         # output overview
@@ -146,6 +147,7 @@ sub Run {
             PossibleNone => 1,
             Translation  => 0,
             SelectedID   => $Definition->{ClassID},
+            Class        => 'Modernize',
         );
 
         # output overview
@@ -216,6 +218,7 @@ sub Run {
             PossibleNone => 1,
             Translation  => 0,
             SelectedID   => $ClassID,
+            Class        => 'Modernize',
         );
 
         # output overview
@@ -299,6 +302,7 @@ sub Run {
             Name         => 'ClassID',
             PossibleNone => 1,
             Translation  => 0,
+            Class        => 'Modernize',
         );
 
         # output overview

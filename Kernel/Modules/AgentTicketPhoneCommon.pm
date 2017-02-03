@@ -304,7 +304,7 @@ sub Run {
                     if ($ACL) {
                         my %Filter = $TicketObject->TicketAclData();
 
-                    # convert Filer key => key back to key => value using map
+                        # convert Filer key => key back to key => value using map
                         # KIX4OTRS-capeIT
                         # %{$PossibleValuesFilter} = map { $_ => $PossibleValues->{$_} }
                         %{$DynamicFieldConfig->{ShownPossibleValues}} = map { $_ => $PossibleValues->{$_} }
@@ -478,20 +478,25 @@ sub Run {
         my $TimeObject  = $Kernel::OM->Get('Kernel::System::Time');
 
         # check if date is valid
-        my %StateData = $StateObject->StateGet( ID => $GetParam{NextStateID} );
-        if ( $StateData{TypeName} =~ /^pending/i ) {
-            if ( !$TimeObject->Date2SystemTime( %GetParam, Second => 0 ) ) {
-                if ( $IsUpload == 0 ) {
-                    $Error{'DateInvalid'} = ' ServerError';
+        my %StateData;
+        $GetParam{NextStateID} ||= '';
+        if ( $GetParam{NextStateID} ) {
+            %StateData = $StateObject->StateGet( ID => $GetParam{NextStateID} );
+
+            if ( $StateData{TypeName} =~ /^pending/i ) {
+                if ( !$TimeObject->Date2SystemTime( %GetParam, Second => 0 ) ) {
+                    if ( $IsUpload == 0 ) {
+                        $Error{'DateInvalid'} = ' ServerError';
+                    }
                 }
-            }
-            if (
-                $TimeObject->Date2SystemTime( %GetParam, Second => 0 )
-                < $TimeObject->SystemTime()
-                )
-            {
-                if ( $IsUpload == 0 ) {
-                    $Error{'DateInvalid'} = ' ServerError';
+                if (
+                    $TimeObject->Date2SystemTime( %GetParam, Second => 0 )
+                    < $TimeObject->SystemTime()
+                    )
+                {
+                    if ( $IsUpload == 0 ) {
+                        $Error{'DateInvalid'} = ' ServerError';
+                    }
                 }
             }
         }
@@ -590,7 +595,7 @@ sub Run {
                         Message =>
                             $LayoutObject->{LanguageObject}
                             ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
-                        Comment => Translatable('Please contact the admin.'),
+                        Comment => Translatable('Please contact the administrator.'),
                     );
                 }
 
@@ -848,15 +853,16 @@ sub Run {
             }
 
             # set state
-            $TicketObject->TicketStateSet(
-                TicketID  => $Self->{TicketID},
-                ArticleID => $ArticleID,
-                StateID   => $GetParam{NextStateID},
-                UserID    => $Self->{UserID},
-            );
+            if ( $StateData{ID} ) {
+                $TicketObject->TicketStateSet(
+                    TicketID  => $Self->{TicketID},
+                    ArticleID => $ArticleID,
+                    StateID   => $StateData{ID},
+                    UserID    => $Self->{UserID},
+                );
+            }
 
             # should i set an unlock? yes if the ticket is closed
-            my %StateData = $StateObject->StateGet( ID => $GetParam{NextStateID} );
             if ( $StateData{TypeName} =~ /^close/i ) {
 
                 # set lock
@@ -1108,11 +1114,12 @@ sub Run {
         my $JSON = $LayoutObject->BuildSelectionJSON(
             [
                 {
-                    Name        => 'NextStateID',
-                    Data        => $NextStates,
-                    SelectedID  => $GetParam{NextStateID},
-                    Translation => 1,
-                    Max         => 100,
+                    Name         => 'NextStateID',
+                    Data         => $NextStates,
+                    SelectedID   => $GetParam{NextStateID},
+                    Translation  => 1,
+                    PossibleNone => 1,
+                    Max          => 100,
                 },
                 @DynamicFieldAJAX,
                 @TemplateAJAX,
@@ -1172,7 +1179,7 @@ sub Run {
     # EO KIX4OTRS-capeIT
     return $LayoutObject->ErrorScreen(
         Message => Translatable('No Subaction!'),
-        Comment => Translatable('Please contact your administrator'),
+        Comment => Translatable('Please contact the administrator.'),
     );
 }
 
@@ -1303,24 +1310,14 @@ sub _MaskPhone {
     }
     elsif ( $Config->{State} ) {
         $Selected{SelectedValue} = $Config->{State};
-
-        # KIX4OTRS-capeIT
-        # offer empty selection if default state is not available
-        my %StateListTmp = reverse( %{ $Param{NextStates} } );
-        if ( !$StateListTmp{ $Config->{State} } ) {
-            $Param{NextStates}->{''} = '-';
-        }
-
-        # EO KIX4OTRS-capeIT
-    }
-    else {
-        $Param{NextStates}->{''} = '-';
     }
     $Param{NextStatesStrg} = $LayoutObject->BuildSelection(
-        Data => $Param{NextStates},
-        Name => 'NextStateID',
+        Data         => $Param{NextStates},
+        Name         => 'NextStateID',
+        Class        => 'Modernize',
+        Translation  => 1,
+        PossibleNone => 1,
         %Selected,
-        Class => 'Modernize',
     );
 
     # KIX4OTRS-capeIT

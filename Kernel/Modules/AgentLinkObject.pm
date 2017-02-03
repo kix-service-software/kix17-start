@@ -73,7 +73,7 @@ sub Run {
     if ( !$Form{SourceObject} || !$Form{SourceKey} ) {
         return $LayoutObject->ErrorScreen(
             Message => Translatable('Need SourceObject and SourceKey!'),
-            Comment => Translatable('Please contact the admin.'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -567,13 +567,10 @@ sub Run {
                         $Output .= $LayoutObject->Notify(
                             Priority => 'Error',
                             Data     => $LayoutObject->{LanguageObject}->Translate(
-                                "Can not create link with %s!",
+                                'Can not create link with %s! Object already linked as %s.',
                                 $TargetObjectDescription{Normal},
-                                )
-                                . $LayoutObject->{LanguageObject}->Translate(
-                                "Object already linked as %s.",
                                 $TypeName,
-                                ),
+                            ),
                         );
 
                         next TARGETKEYORG;
@@ -658,7 +655,7 @@ sub Run {
             return $LayoutObject->ErrorScreen(
                 Message => $LayoutObject->{LanguageObject}
                     ->Translate( 'The object %s cannot link with other object!', $Form{SourceObject} ),
-                Comment => Translatable('Please contact the admin.'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 

@@ -40,6 +40,7 @@ sub Run {
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     if ( $Self->{Subaction} eq 'CancelAndUnlockTickets' ) {
 
@@ -53,7 +54,7 @@ sub Run {
         if ( !@TicketIDs ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('Can\'t lock Tickets, no TicketIDs are given!'),
-                Comment => Translatable('Please contact the admin.'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 
@@ -96,8 +97,81 @@ sub Run {
 
     }
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    elsif ( $Self->{Subaction} eq 'AJAXUpdate' ) {
+        my $QueueID = $ParamObject->GetParam( Param => 'QueueID' ) || '';
+
+        # Get all users.
+        my %AllGroupsMembers = $Kernel::OM->Get('Kernel::System::User')->UserList(
+            Type  => 'Long',
+            Valid => 1
+        );
+
+        # Put only possible rw agents to owner list.
+        if ( !$ConfigObject->Get('Ticket::ChangeOwnerToEveryone') ) {
+            my %AllGroupsMembersNew;
+            my @QueueIDs;
+
+            if ($QueueID) {
+                push @QueueIDs, $QueueID;
+            }
+            else {
+                my @TicketIDs = grep {$_} $ParamObject->GetArray( Param => 'TicketID' );
+                for my $TicketID (@TicketIDs) {
+                    my %Ticket = $TicketObject->TicketGet(
+                        TicketID      => $TicketID,
+                        DynamicFields => 0,
+                    );
+                    push @QueueIDs, $Ticket{QueueID};
+                }
+            }
+
+            my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
+            my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
+
+            for my $QueueID (@QueueIDs) {
+                my $GroupID = $QueueObject->GetQueueGroupID( QueueID => $QueueID );
+                my %GroupMember = $GroupObject->PermissionGroupGet(
+                    GroupID => $GroupID,
+                    Type    => 'rw',
+                );
+                USER_ID:
+                for my $UserID ( sort keys %GroupMember ) {
+                    next USER_ID if !$AllGroupsMembers{$UserID};
+                    $AllGroupsMembersNew{$UserID} = $AllGroupsMembers{$UserID};
+                }
+                %AllGroupsMembers = %AllGroupsMembersNew;
+            }
+        }
+
+        my @JSONData = (
+            {
+                Name         => 'OwnerID',
+                Data         => \%AllGroupsMembers,
+                PossibleNone => 1,
+            }
+        );
+
+        if (
+            $ConfigObject->Get('Ticket::Responsible')
+            && $ConfigObject->Get("Ticket::Frontend::$Self->{Action}")->{Responsible}
+            )
+        {
+            push @JSONData, {
+                Name         => 'ResponsibleID',
+                Data         => \%AllGroupsMembers,
+                PossibleNone => 1,
+            };
+        }
+
+        my $JSON = $LayoutObject->BuildSelectionJSON( [@JSONData] );
+
+        return $LayoutObject->Attachment(
+            ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
+            Content     => $JSON,
+            Type        => 'inline',
+            NoCache     => 1,
+        );
+    }
 
     # check if bulk feature is enabled
     if ( !$ConfigObject->Get('Ticket::Frontend::BulkFeature') ) {
@@ -144,13 +218,13 @@ sub Run {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('No selectable TicketID is given!'),
                 Comment =>
-                    Translatable('You either selected no ticket or only tickets which are locked by other agents'),
+                    Translatable('You either selected no ticket or only tickets which are locked by other agents.'),
             );
         }
         else {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('No TicketID is given!'),
-                Comment => Translatable('You need to select at least one ticket'),
+                Comment => Translatable('You need to select at least one ticket.'),
             );
         }
     }
@@ -246,8 +320,7 @@ sub Run {
         # check some stuff
         if (
             $GetParam{Subject}
-            &&
-            $ConfigObject->Get('Ticket::Frontend::AccountTime')
+            && $ConfigObject->Get('Ticket::Frontend::AccountTime')
             && $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
             && $GetParam{TimeUnits} eq ''
             )
@@ -257,8 +330,7 @@ sub Run {
 
         if (
             $GetParam{EmailSubject}
-            &&
-            $ConfigObject->Get('Ticket::Frontend::AccountTime')
+            && $ConfigObject->Get('Ticket::Frontend::AccountTime')
             && $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
             && $GetParam{EmailTimeUnits} eq ''
             )

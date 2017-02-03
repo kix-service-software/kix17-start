@@ -1249,6 +1249,7 @@ sub _Edit {
     if ( IsHashRefWithData( \%RegisteredTransports ) ) {
 
         my $MainObject         = $Kernel::OM->Get('Kernel::System::Main');
+        my $OTRSBusinessObject = $Kernel::OM->Get('Kernel::System::OTRSBusiness');
 
         TRANSPORT:
         for my $Transport (
@@ -1279,6 +1280,24 @@ sub _Edit {
                         TransportName => $RegisteredTransports{$Transport}->{Name},
                     },
                 );
+
+                # if not standard transport
+                if (
+                    defined $RegisteredTransports{$Transport}->{IsOTRSBusinessTransport}
+                    && $RegisteredTransports{$Transport}->{IsOTRSBusinessTransport} eq '1'
+                    && !$OTRSBusinessObject->OTRSBusinessIsInstalled()
+                    )
+                {
+
+                    # transport
+                    $LayoutObject->Block(
+                        Name => 'TransportRowRecommendation',
+                        Data => {
+                            Transport     => $Transport,
+                            TransportName => $RegisteredTransports{$Transport}->{Name},
+                        },
+                    );
+                }
 
                 next TRANSPORT;
             }

@@ -182,9 +182,16 @@ sub Run {
                     return $LayoutObject->ErrorScreen();
                 }
 
+                my $BccText = $Param{Bcc};
+                $BccText =~ s{(.*?),\s$}{$1}gsmx;
+                $BccText .= ".";
+
                 $LayoutObject->Block(
                     Name => 'Sent',
-                    Data => \%Param,
+                    Data => {
+                        %Param,
+                        Bcc => $BccText,
+                    },
                 );
                 my $Output = $LayoutObject->Header();
                 $Output .= $LayoutObject->NavigationBar();
@@ -210,12 +217,17 @@ sub Run {
         );
     }
     $Param{UserOption} = $LayoutObject->BuildSelection(
-        Data        => { $UserObject->UserList( Valid => 1 ) },
+        Data => {
+            $UserObject->UserList(
+                Valid => 1,
+                Type  => 'Long',
+            ),
+        },
         Name        => 'UserIDs',
         Size        => 6,
         Multiple    => 1,
         Translation => 0,
-        Class => 'Modernize ' . ( $Errors{BccInvalid} || '' ),
+        Class       => 'Modernize ' . ( $Errors{BccInvalid} || '' ),
     );
 
     $Param{GroupOption} = $LayoutObject->BuildSelection(
