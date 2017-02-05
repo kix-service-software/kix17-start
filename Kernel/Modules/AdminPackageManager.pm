@@ -30,9 +30,8 @@ sub new {
     # allocate new hash for object
     my $Self = {%Param};
     bless( $Self, $Type );
-
-    # check if cloud services are disabled
-    $Self->{CloudServicesDisabled} = $Kernel::OM->Get('Kernel::Config')->Get('CloudServices::Disabled') || 0;
+    
+    #rbo - T2016121190001552 - removed CloudServices
 
     return $Self;
 }
@@ -1357,24 +1356,9 @@ sub Run {
         %RepositoryRoot = $PackageObject->PackageOnlineRepositories();
     }
 
-    # show cloud repo if system is registered
-    my $RepositoryCloudList;
-    my $RegistrationState = $Kernel::OM->Get('Kernel::System::SystemData')->SystemDataGet(
-        Key => 'Registration::State',
-    ) || '';
-    if ( $RegistrationState eq 'registered' && !$Self->{CloudServicesDisabled} ) {
-
-        $RepositoryCloudList =
-            $PackageObject->RepositoryCloudList( NoCache => 1 );
-    }
-
-    # in case Source is present on repository cloud list
-    # the call for retrieving data about it, should be performed
-    # using the CloudService backend
-    my $FromCloud = ( $RepositoryCloudList->{$Source} ? 1 : 0 );
-
+    #rbo - T2016121190001552 - removed CloudServices
     $Frontend{SourceList} = $LayoutObject->BuildSelection(
-        Data        => { %List, %RepositoryRoot, %{$RepositoryCloudList}, },
+        Data        => { %List, %RepositoryRoot, },
         Name        => 'Source',
         Title       => 'Repository List',
         Max         => 40,
@@ -1391,7 +1375,6 @@ sub Run {
         my @List = $PackageObject->PackageOnlineList(
             URL       => $Source,
             Lang      => $LayoutObject->{UserLanguage},
-            FromCloud => $FromCloud,
         );
         if ( !@List ) {
             $OutputNotify .= $LayoutObject->Notify(
@@ -1481,23 +1464,7 @@ sub Run {
         );
     }
 
-    # KIXCore-capeIT
-    # # verify packages if we have some
-    # my %VerificationData;
-    # if (@RepositoryList) {
-    #     %VerificationData = $PackageObject->PackageVerifyAll();
-    my %VerificationData;
-    if ($ConfigureCallHome) {
-        if (@RepositoryList) {
-            %VerificationData = $PackageObject->PackageVerifyAll();
-        }
-    }
-
-    # EO KIXCore-capeIT
-
-    my %NotVerifiedPackages;
-    my %UnknownVerficationPackages;
-
+    #rbo - T2016121190001552 - removed CloudServices and PackageVerfication	
     for my $Package (@RepositoryList) {
 
         my %Data = $Self->_MessageGet( Info => $Package->{Description} );
@@ -1514,17 +1481,8 @@ sub Run {
             },
         );
 
-        if (
-            $VerificationData{ $Package->{Name}->{Content} }
-            && $VerificationData{ $Package->{Name}->{Content} } eq 'verified'
-            && !$Self->{CloudServicesDisabled}
-            )
-        {
-            $LayoutObject->Block(
-                Name => 'ShowLocalPackageVerifyLogo',
-            );
-        }
-
+		#rbo - T2016121190001552 - removed CloudServices and PackageVerfication
+		
         # show documentation link
         my %DocFile = $Self->_DocumentationGet( Filelist => $Package->{Filelist} );
         if (%DocFile) {
@@ -1594,20 +1552,7 @@ sub Run {
             );
         }
 
-        if (
-            $VerificationData{ $Package->{Name}->{Content} }
-            && $VerificationData{ $Package->{Name}->{Content} } eq 'not_verified'
-            )
-        {
-            $NotVerifiedPackages{ $Package->{Name}->{Content} } = $Package->{Version}->{Content};
-        }
-        elsif (
-            $VerificationData{ $Package->{Name}->{Content} }
-            && $VerificationData{ $Package->{Name}->{Content} } eq 'unknown'
-            )
-        {
-            $UnknownVerficationPackages{ $Package->{Name}->{Content} } = $Package->{Version}->{Content};
-        }
+		#rbo - T2016121190001552 - removed CloudServices and PackageVerfication
 
     }
 
@@ -1650,33 +1595,7 @@ sub Run {
         }
     }
 
-    # FeatureAddons
-    if ( $ConfigObject->Get('Package::ShowFeatureAddons') ) {
-
-        my $FeatureAddonData;
-        if ( !$Self->{CloudServicesDisabled} ) {
-            $FeatureAddonData = $Self->_GetFeatureAddonData();
-        }
-
-        if ( ref $FeatureAddonData eq 'ARRAY' && scalar @{$FeatureAddonData} > 0 ) {
-            $LayoutObject->Block(
-                Name => 'FeatureAddonList',
-            );
-
-            for my $Item ( @{$FeatureAddonData} ) {
-                $LayoutObject->Block(
-                    Name => 'FeatureAddonData',
-                    Data => $Item,
-                );
-            }
-        }
-    }
-
-    if ( $Self->{CloudServicesDisabled} ) {
-        $LayoutObject->Block(
-            Name => 'CloudServicesWarning',
-        );
-    }
+	#rbo - T2016121190001552 - removed CloudServices and FeatureAddOns
 
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
@@ -1702,43 +1621,7 @@ sub Run {
         );
     }
 
-    VERIFICATION:
-    for my $Package ( sort keys %NotVerifiedPackages ) {
-
-        next VERIFICATION if !$Package;
-        next VERIFICATION if !$NotVerifiedPackages{$Package};
-
-        $Output .= $LayoutObject->Notify(
-
-# KIXCore-capeIT
-# Priority => 'Error',
-# Data     => "$Package $NotVerifiedPackages{$Package} - "
-#     . '$Text{"Package not verified by the OTRS Group! It is recommended not to use this package."}',
-            Priority => 'Information',
-            Data     => "$Package $NotVerifiedPackages{$Package} - "
-                . $LayoutObject->{LanguageObject}->Translate("This package is not certified by OTRS Group, which does not mean it is of inferior quality than products of the OTRS Group."),
-
-            # EO KIXCore-capeIT
-        );
-    }
-
-    if ( !$Self->{CloudServicesDisabled} ) {
-
-        VERIFICATION:
-        for my $Package ( sort keys %UnknownVerficationPackages ) {
-
-            next VERIFICATION if !$Package;
-            next VERIFICATION if !$UnknownVerficationPackages{$Package};
-
-            $Output .= $LayoutObject->Notify(
-                Priority => 'Error',
-                Data     => "$Package $UnknownVerficationPackages{$Package} - "
-                    . $LayoutObject->{LanguageObject}->Translate(
-                    "Package not verified due a communication issue with verification server!"
-                    ),
-            );
-        }
-    }
+	#rbo - T2016121190001552 - removed CloudServices and PackageVerfication
 
     $Output .= $LayoutObject->Output(
         TemplateFile => 'AdminPackageManager',
@@ -1961,18 +1844,7 @@ sub _InstallHandling {
         );
     }
 
-    # get cloud repositories
-    my $RepositoryCloudList;
-    if ( !$Self->{CloudServicesDisabled} ) {
-        $RepositoryCloudList = $PackageObject->RepositoryCloudList();
-    }
-
-    # in case Source is present on repository cloud list
-    # the package should be retrieved using the CloudService backend
-    my $FromCloud = 0;
-    if ( $Param{Source} && $RepositoryCloudList->{ $Param{Source} } ) {
-        $FromCloud = 1;
-    }
+	#rbo - T2016121190001552 - removed CloudServices
 
     # intro before installation
     if ( %Data && !$IntroInstallPre ) {
@@ -1989,11 +1861,7 @@ sub _InstallHandling {
             },
         );
 
-        if ( $Verified eq 'verified' && !$Self->{CloudServicesDisabled} ) {
-            $LayoutObject->Block(
-                Name => 'OTRSVerifyLogo',
-            );
-        }
+		#rbo - T2016121190001552 - removed CloudServices and PackageVerification
 
         $LayoutObject->Block(
             Name => 'IntroCancel',
@@ -2158,80 +2026,6 @@ sub _UpgradeHandling {
     return $LayoutObject->ErrorScreen();
 }
 
-sub _GetFeatureAddonData {
-    my ( $Self, %Param ) = @_;
-
-    my $Language = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserLanguage};
-
-    # cleanup main language for languages like es_MX (es in this case)
-    $Language = substr $Language, 0, 2;
-
-    my $CacheKey  = "FeatureAddonData::$Language";
-    my $CacheTTL  = 60 * 60 * 24;                    # 1 day
-    my $CacheType = 'PackageManager';
-
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-    my $CacheResult = $CacheObject->Get(
-        Type => $CacheType,
-        Key  => $CacheKey,
-    );
-
-    return $CacheResult if ref $CacheResult eq 'ARRAY';
-
-    my $CloudService = 'PublicFeeds';
-    my $Operation    = 'FAOFeed';
-
-    # prepare cloud service request
-    my %RequestParams = (
-        RequestData => {
-            $CloudService => [
-                {
-                    Operation => $Operation,
-                    Data      => {
-                        Language => $Language,
-                    },
-                },
-            ],
-        },
-    );
-
-    my $CloudServiceObject = $Kernel::OM->Get('Kernel::System::CloudService::Backend::Run');
-
-    # dispatch the cloud service request
-    my $RequestResult = $CloudServiceObject->Request(%RequestParams);
-
-    # as this is the only operation an unsuccessful request means that the operation was also
-    # unsuccessful
-    if ( !IsHashRefWithData($RequestResult) ) {
-        return Translatable('Can\'t connect to OTRS Feature Add-on list server!');
-    }
-
-    my $OperationResult = $CloudServiceObject->OperationResultGet(
-        RequestResult => $RequestResult,
-        CloudService  => $CloudService,
-        Operation     => $Operation,
-    );
-
-    if ( !IsHashRefWithData($OperationResult) ) {
-        return Translatable('Can\'t get OTRS Feature Add-on list from server!');
-    }
-    elsif ( !$OperationResult->{Success} ) {
-        return $OperationResult->{ErrorMessage} || Translatable('Can\'t get OTRS Feature Add-on from server!');
-    }
-
-    my $FAOFeed = $OperationResult->{Data}->{FAOs};
-
-    return if !IsArrayRefWithData($FAOFeed);
-
-    # set cache
-    $CacheObject->Set(
-        Type  => $CacheType,
-        Key   => $CacheKey,
-        Value => $FAOFeed,
-        TTL   => $CacheTTL,
-    );
-
-    return $FAOFeed;
-}
+#rbo - T2016121190001552 - removed CloudServices and FeatureAddOns
 
 1;

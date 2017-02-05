@@ -33,7 +33,7 @@ use base qw(Kernel::System::EventHandler);
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Cache',
-    'Kernel::System::CloudService::Backend::Run',
+#rbo - T2016121190001552 - removed CloudServices
     'Kernel::System::DB',
     'Kernel::System::Encode',
     'Kernel::System::JSON',
@@ -123,13 +123,7 @@ sub new {
         File => 'ARRAY',
     };
 
-    # KIXCore-capeIT
-    # $Self->{PackageVerifyURL}
-    #     = 'https://pav.otrs.com/otrs/public.pl';
-    $Self->{PackageVerifyURL}
-        = $Self->{ConfigObject}->Get('Package::ConfigureCallHomeVerificationPath');
-
-    # EO KIXCore-capeIT
+	#rbo - T2016121190001552 - removed CloudServices
 
     $Self->{Home} = $Self->{ConfigObject}->Get('Home');
 
@@ -141,8 +135,7 @@ sub new {
     # reserve space for merged packages
     $Self->{MergedPackages} = {};
 
-    # check if cloud services are disabled
-    $Self->{CloudServicesDisabled} = $Self->{ConfigObject}->Get('CloudServices::Disabled') || 0;
+	#rbo - T2016121190001552 - removed CloudServices
 
     return $Self;
 }
@@ -1579,42 +1572,8 @@ sub PackageOnlineGet {
         }
     }
 
-    #check if file might be retrieved from cloud
-    my $RepositoryCloudList;
-    if ( !$Self->{CloudServicesDisabled} ) {
-        $RepositoryCloudList = $Self->RepositoryCloudList();
-    }
-    if ( IsHashRefWithData($RepositoryCloudList) && $RepositoryCloudList->{ $Param{Source} } ) {
-
-        my $PackageFromCloud;
-
-        # On this case a cloud service is used, Source contains an
-        # operation name in order to match with the previous structure
-        my $Operation = $Param{Source} . 'FileGet';
-
-        # download package from cloud
-        my $PackageResult = $Self->CloudFileGet(
-            Operation => $Operation,
-            Data      => {
-                File => $Param{File},
-            },
-        );
-
-        if (
-            IsHashRefWithData($PackageResult)
-            && $PackageResult->{Package}
-            )
-        {
-            $PackageFromCloud = $PackageResult->{Package};
-        }
-        elsif ( IsStringWithData($PackageResult) ) {
-            return 'ErrorMessage:' . $PackageResult;
-
-        }
-
-        return $PackageFromCloud;
-    }
-
+	#rbo - T2016121190001552 - removed CloudServices
+	
     return $Self->_Download( URL => $Param{Source} . '/' . $Param{File} );
 }
 
@@ -1730,298 +1689,7 @@ sub DeployCheckInfo {
     return ();
 }
 
-=item PackageVerify()
-
-check if package is verified by the vendor
-
-    $PackageObject->PackageVerify(
-        Package   => $Package,
-        Structure => \%Structure,
-    );
-
-or
-
-    $PackageObject->PackageVerify(
-        Package => $Package,
-        Name    => 'FAQ',
-    );
-
-=cut
-
-sub PackageVerify {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    if ( !$Param{Package} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Need Package!",
-        );
-
-        return;
-    }
-    if ( !$Param{Structure} && !$Param{Name} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => 'Need Structure or Name!',
-        );
-
-        return;
-    }
-
-    # return package as verified if cloud services are disabled
-    if ( $Self->{CloudServicesDisabled} ) {
-        return 'verified';
-    }
-
-    # define package verification info
-    my $PackageVerifyInfo = {
-
-    # KIXCore-capeIT
-    # Description => "<br>If you continue to install this package, the following issues may occur!<br><br>&nbsp;-Security problems<br>&nbsp;-Stability problems<br>&nbsp;-Performance problems<br><br>Please note that issues that are caused by working with this package are not covered by OTRS service contracts!<br><br>",
-    # Title       => 'Package not verified by the OTRS Group! It is recommended not to use this package.',
-        Description =>
-            "<br>Please note that issues that are caused by working with this package are not covered by OTRS service contracts.",
-        Title =>
-            'This package is not certified by OTRS Group, which does not mean it is of inferior quality than products of the OTRS Group.',
-
-        # EO KIXCore-capeIT
-    };
-
-    # investigate name
-    my $Name = $Param{Structure}->{Name}->{Content} || $Param{Name};
-
-    # correct any 'dos-style' line endings - http://bugs.otrs.org/show_bug.cgi?id=9838
-    $Param{Package} =~ s{\r\n}{\n}xmsg;
-
-    # create MD5 sum
-    my $Sum = $Self->{MainObject}->MD5sum( String => $Param{Package} );
-
-    # get cache object
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-
-    # lookup cache
-    my $CachedValue = $CacheObject->Get(
-        Type => 'PackageVerification',
-        Key  => $Sum,
-    );
-    if ($CachedValue) {
-        $Self->{PackageVerifyInfo} = $PackageVerifyInfo;
-
-        return $CachedValue;
-    }
-
-    my $CloudService = 'PackageManagement';
-    my $Operation    = 'PackageVerify';
-
-    # prepare cloud service request
-    my %RequestParams = (
-        RequestData => {
-            $CloudService => [
-                {
-                    Operation => $Operation,
-                    Data      => {
-                        Package => [
-                            {
-                                Name   => $Name,
-                                MD5sum => $Sum,
-                            }
-                        ],
-                    },
-                },
-            ],
-        },
-    );
-
-    # get cloud service object
-    my $CloudServiceObject = $Kernel::OM->Get('Kernel::System::CloudService::Backend::Run');
-
-    # dispatch the cloud service request
-    my $RequestResult = $CloudServiceObject->Request(%RequestParams);
-
-    # as this is the only operation an unsuccessful request means that the operation was also
-    # unsuccessful, in such case set the package as verified
-    return 'unknown' if !IsHashRefWithData($RequestResult);
-
-    my $OperationResult = $CloudServiceObject->OperationResultGet(
-        RequestResult => $RequestResult,
-        CloudService  => $CloudService,
-        Operation     => $Operation,
-    );
-
-    # if there was no result for this specific operation or the operation was not success, then
-    # set the package as verified
-    return 'unknown' if !IsHashRefWithData($OperationResult);
-    return 'unknown' if !$OperationResult->{Success};
-
-    my $VerificationData = $OperationResult->{Data};
-
-    # extract response
-    my $PackageVerify = $VerificationData->{$Name};
-
-    return 'unknown' if !$PackageVerify;
-    return 'unknown' if $PackageVerify ne 'not_verified' && $PackageVerify ne 'verified';
-
-    # set package verification info
-    if ( $PackageVerify eq 'not_verified' ) {
-        $Self->{PackageVerifyInfo} = $PackageVerifyInfo;
-    }
-
-    # set cache
-    $CacheObject->Set(
-        Type  => 'PackageVerification',
-        Key   => $Sum,
-        Value => $PackageVerify,
-        TTL   => 30 * 24 * 60 * 60,       # 30 days
-    );
-
-    return $PackageVerify;
-}
-
-=item PackageVerifyInfo()
-
-returns the info of the latest PackageVerify()
-
-    my %Hash = $PackageObject->PackageVerifyInfo();
-
-=cut
-
-sub PackageVerifyInfo {
-    my ( $Self, %Param ) = @_;
-
-    return () if !$Self->{PackageVerifyInfo};
-    return () if ref $Self->{PackageVerifyInfo} ne 'HASH';
-    return () if !%{ $Self->{PackageVerifyInfo} };
-
-    return %{ $Self->{PackageVerifyInfo} };
-}
-
-=item PackageVerifyAll()
-
-check if all installed packages are installed by the vendor
-returns a hash with package names and verification status.
-
-    my %VerificationInfo = $PackageObject->PackageVerifyAll();
-
-returns:
-
-    %VerificationInfo = (
-        FAQ     => 'verified',
-        Support => 'verified',
-        MyHack  => 'not_verified',
-    );
-
-=cut
-
-sub PackageVerifyAll {
-    my ( $Self, %Param ) = @_;
-
-    # get installed package list
-    my @PackageList = $Self->RepositoryList(
-        Result => 'Short',
-    );
-
-    return () if !@PackageList;
-
-    # create a mapping of Package Name => md5 pairs
-    my %PackageList = map { $_->{Name} => $_->{MD5sum} } @PackageList;
-
-    # get cache object
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-
-    my %Result;
-    my @PackagesToVerify;
-
-    # first check the cache for each package
-    for my $Package (@PackageList) {
-
-        my $Verification = $CacheObject->Get(
-            Type => 'PackageVerification',
-            Key  => $Package->{MD5sum},
-        );
-
-        # add to result if we have it already
-        if ($Verification) {
-            $Result{ $Package->{Name} } = $Verification;
-        }
-        else {
-            $Result{ $Package->{Name} } = 'unknown';
-            push @PackagesToVerify, {
-                Name   => $Package->{Name},
-                MD5sum => $Package->{MD5sum},
-            };
-        }
-    }
-
-    return %Result if !@PackagesToVerify;
-    return %Result if $Self->{CloudServicesDisabled};
-
-    my $CloudService = 'PackageManagement';
-    my $Operation    = 'PackageVerify';
-
-    # prepare cloud service request
-    my %RequestParams = (
-        RequestData => {
-            $CloudService => [
-                {
-                    Operation => $Operation,
-                    Data      => {
-                        Package => \@PackagesToVerify,
-                    },
-                },
-            ],
-        },
-    );
-
-    # get cloud service object
-    my $CloudServiceObject = $Kernel::OM->Get('Kernel::System::CloudService::Backend::Run');
-
-    # dispatch the cloud service request
-    my $RequestResult = $CloudServiceObject->Request(%RequestParams);
-
-    # as this is the only operation an unsuccessful request means that the operation was also
-    # unsuccessful, then return all packages as verified (or cache)
-    return %Result if !IsHashRefWithData($RequestResult);
-
-    my $OperationResult = $CloudServiceObject->OperationResultGet(
-        RequestResult => $RequestResult,
-        CloudService  => $CloudService,
-        Operation     => $Operation,
-    );
-
-    # if no operation result found or it was not successful the return all packages as verified
-    # (or cache)
-    return %Result if !IsHashRefWithData($OperationResult);
-    return %Result if !$OperationResult->{Success};
-
-    my $VerificationData = $OperationResult->{Data};
-
-    PACKAGE:
-    for my $Package ( sort keys %Result ) {
-
-        next PACKAGE if !$Package;
-        next PACKAGE if !$VerificationData->{$Package};
-
-        # extract response
-        my $PackageVerify = $VerificationData->{$Package};
-
-        next PACKAGE if !$PackageVerify;
-        next PACKAGE if $PackageVerify ne 'not_verified' && $PackageVerify ne 'verified';
-
-        # process result
-        $Result{$Package} = $PackageVerify;
-
-        # set cache
-        $CacheObject->Set(
-            Type  => 'PackageVerification',
-            Key   => $PackageList{$Package},
-            Value => $PackageVerify,
-            TTL   => 30 * 24 * 60 * 60,        # 30 days
-        );
-    }
-
-    return %Result;
-}
+#rbo - T2016121190001552 - removed CloudServices and PackageVerify
 
 =item PackageBuild()
 
@@ -4146,101 +3814,7 @@ sub RepositoryCloudList {
     return $RepositoryResult;
 }
 
-=item CloudFileGet()
-
-returns a file from cloud
-
-    my $List = $PackageObject->CloudFileGet(
-        Operation => 'OperationName', # used as operation name by the Cloud Service API
-                                      # Possible operation names:
-                                      # - RepositoryListAvailable
-                                      # - FAOListAssigned
-                                      # - FAOListAssignedFileGet
-    );
-
-=cut
-
-sub CloudFileGet {
-    my ( $Self, %Param ) = @_;
-
-    return if $Self->{CloudServicesDisabled};
-
-    # check needed stuff
-    if ( !defined $Param{Operation} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => 'Operation not defined!',
-        );
-        return;
-    }
-
-    my %Data;
-    if ( IsHashRefWithData( $Param{Data} ) ) {
-        %Data = %{ $Param{Data} };
-    }
-
-    my $CloudService = 'PackageManagement';
-
-    # prepare cloud service request
-    my %RequestParams = (
-        RequestData => {
-            $CloudService => [
-                {
-                    Operation => $Param{Operation},
-                    Data      => \%Data,
-                },
-            ],
-        },
-    );
-
-    # get cloud service object
-    my $CloudServiceObject = $Kernel::OM->Get('Kernel::System::CloudService::Backend::Run');
-
-    # dispatch the cloud service request
-    my $RequestResult = $CloudServiceObject->Request(%RequestParams);
-
-    # as this is the only operation an unsuccessful request means that the operation was also
-    # unsuccessful
-    if ( !IsHashRefWithData($RequestResult) ) {
-        my $ErrorMessage = "Can't connect to cloud server!";
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => $ErrorMessage,
-        );
-        return $ErrorMessage;
-    }
-
-    my $OperationResult = $CloudServiceObject->OperationResultGet(
-        RequestResult => $RequestResult,
-        CloudService  => $CloudService,
-        Operation     => $Param{Operation},
-    );
-
-    if ( !IsHashRefWithData($OperationResult) ) {
-        my $ErrorMessage = "Can't get result from server";
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => $ErrorMessage,
-        );
-        return $ErrorMessage;
-    }
-    elsif ( !$OperationResult->{Success} ) {
-        my $ErrorMessage = $OperationResult->{ErrorMessage}
-            || "Can't get list from server!";
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => $ErrorMessage,
-        );
-        return $ErrorMessage;
-    }
-
-    # return if not correct structure
-    return if !IsHashRefWithData( $OperationResult->{Data} );
-
-    # return repo list
-    return $OperationResult->{Data};
-
-}
+#rbo - T2016121190001552 - removed CloudServices
 
 sub DESTROY {
     my $Self = shift;

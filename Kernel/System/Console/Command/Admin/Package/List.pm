@@ -87,13 +87,7 @@ sub Run {
     my $ShowVerificationInfoOption    = $Self->GetOption('show-verification-info');
     my $DeleteVerificationCacheOption = $Self->GetOption('delete-verification-cache');
 
-    my $CloudServicesDisabled = $Kernel::OM->Get('Kernel::Config')->Get('CloudServices::Disabled') || 0;
-
-    # Do not show verification status is cloud services are disabled.
-    if ( $CloudServicesDisabled && $ShowVerificationInfoOption ) {
-        $ShowVerificationInfoOption = 0;
-        $Self->Print("<red>Cloud Services are disabled OTRS Verify information can not be retrieved</red>\n");
-    }
+	#rbo - T2016121190001552 - removed CloudServices
 
     # Get package object
     my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');

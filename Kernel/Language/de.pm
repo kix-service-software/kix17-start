@@ -2222,11 +2222,13 @@ sub Data {
         'The email address for this user is invalid, this option has been disabled.' =>
             'Die E-Mailadresse für diesen Benutzer ist ungültig, Die Auswahl wurde deaktivert.',
         'Sending' => 'Wird gesendet',
-        'The support bundle will be sent to OTRS Group via email automatically.' =>
-            'Das Supportpaket wird automatisch per E-Mail zur OTRS Gruppe gesendet.',
+        #rbo - T2016121190001552 - replaced text
+        'The support bundle will be sent to the c.a.p.e. IT GmbH Support via email automatically' =>
+            'Das Supportpaket wird automatisch per E-Mail an den Support der c.a.p.e. IT GmbH gesendet.',
         'Download File' => 'Datei herunterladen',
-        'A file containing the support bundle will be downloaded to the local system. Please save the file and send it to the OTRS Group, using an alternate method.' =>
-            'Das Supportpaket wird als Datei ins lokale Dateisystem heruntergeladen. Bitte speichern Sie die Datei und senden Sie diese auf anderen Wegen an die OTRS Gruppe.',
+        #rbo - T2016121190001552 - replaced text
+        'A file containing the support bundle will be downloaded to the local system. Please save the file and send it to the c.a.p.e. IT GmbH Support, using an alternate method.' =>
+            'Das Supportpaket wird als Datei ins lokale Dateisystem heruntergeladen. Bitte speichern Sie die Datei und senden Sie diese auf anderen Wegen an den Support der c.a.p.e. IT GmbH.',
         'Error: Support data could not be collected (%s).' => 'Fehler: Supportdaten konnten nicht ermittelt werden (%s).',
         'Details' => 'Details',
 
@@ -2793,11 +2795,6 @@ sub Data {
 
         # Template: ChatStartForm
         'First message' => 'Erste Nachricht',
-
-        # Template: CloudServicesDisabled
-        'This feature requires cloud services.' => 'Diese Funktion setzt Cloud-Services voraus.',
-        'You can' => 'Sie können',
-        'go back to the previous page' => 'zurück zur vorhergehenden Seite',
 
         # Template: CustomerError
         'An Error Occurred' => 'Ein Fehler ist aufgetreten',

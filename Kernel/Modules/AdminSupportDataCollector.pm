@@ -30,22 +30,8 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # ------------------------------------------------------------ #
-    # Send Support Data Update
-    # ------------------------------------------------------------ #
-
-    if ( $Self->{Subaction} eq 'SendUpdate' ) {
-
-        my %Result = $Kernel::OM->Get('Kernel::System::Registration')->RegistrationUpdateSend();
-
-        return $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Attachment(
-            ContentType => 'text/html',
-            Content     => $Result{Success},
-            Type        => 'inline',
-            NoCache     => 1,
-        );
-    }
-    elsif ( $Self->{Subaction} eq 'GenerateSupportBundle' ) {
+	#rbo - T2016121190001552 - removed Registration/SupportDataSend
+    if ( $Self->{Subaction} eq 'GenerateSupportBundle' ) {
         return $Self->_GenerateSupportBundle();
     }
     elsif ( $Self->{Subaction} eq 'DownloadSupportBundle' ) {
@@ -59,14 +45,8 @@ sub Run {
 
 sub _SupportDataCollectorView {
     my ( $Self, %Param ) = @_;
-
-    my $SystemDataObject  = $Kernel::OM->Get('Kernel::System::SystemData');
-    my $RegistrationState = $SystemDataObject->SystemDataGet(
-        Key => 'Registration::State',
-    ) || '';
-    my $SupportDataSending = $SystemDataObject->SystemDataGet(
-        Key => 'Registration::SupportDataSending',
-    ) || 'No';
+    
+    #rbo - T2016121190001552 - removed Registration
 
     my %SupportData = $Kernel::OM->Get('Kernel::System::SupportDataCollector')->Collect(
         UseCache => 1,
@@ -74,8 +54,7 @@ sub _SupportDataCollectorView {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # check if cloud services are disabled
-    my $CloudServicesDisabled = $Kernel::OM->Get('Kernel::Config')->Get('CloudServices::Disabled') || 0;
+	#rbo - T2016121190001552 - removed CloudServices
 
     if ( !$SupportData{Success} ) {
         $LayoutObject->Block(
@@ -84,25 +63,7 @@ sub _SupportDataCollectorView {
         );
     }
     else {
-        if ($CloudServicesDisabled) {
-            $LayoutObject->Block(
-                Name => 'CloudServicesWarning',
-            );
-        }
-        elsif (
-            $RegistrationState ne 'registered'
-            || $SupportDataSending ne 'Yes'
-            )
-        {
-            $LayoutObject->Block(
-                Name => 'NoteNotRegisteredNotSending',
-            );
-        }
-        else {
-            $LayoutObject->Block(
-                Name => 'NoteRegisteredSending',
-            );
-        }
+		#rbo - T2016121190001552 - removed CloudServices
         $LayoutObject->Block(
             Name => 'NoteSupportBundle',
         );
@@ -435,30 +396,9 @@ sub _SendSupportBundle {
 
             rmdir $TempDir;
 
-            my %RegistrationInfo = $Kernel::OM->Get('Kernel::System::Registration')->RegistrationDataGet(
-                Extended => 1,
-            );
+			#rbo - T2016121190001552 - removed Registration
 
             my %Data;
-
-            if (%RegistrationInfo) {
-                my $State = $RegistrationInfo{State} || '';
-                if ( $State && lc $State eq 'registered' ) {
-                    $State = 'active';
-                }
-
-                %Data = (
-                    %{ $RegistrationInfo{System} },
-                    State              => $State,
-                    APIVersion         => $RegistrationInfo{APIVersion},
-                    APIKey             => $RegistrationInfo{APIKey},
-                    LastUpdateID       => $RegistrationInfo{LastUpdateID},
-                    RegistrationKey    => $RegistrationInfo{UniqueID},
-                    SupportDataSending => $RegistrationInfo{SupportDataSending},
-                    Type               => $RegistrationInfo{Type},
-                    Description        => $RegistrationInfo{Description},
-                );
-            }
 
             # get user data
             my %User = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
@@ -499,14 +439,13 @@ sub _SendSupportBundle {
 
             my ( $HeadRef, $BodyRef ) = $Kernel::OM->Get('Kernel::System::Email')->Send(
                 From          => $SenderAddress,
-                To            => 'SupportBundle@otrs.com',
+                #rbo - T2016121190001552 - changed recipient
+                To            => 'support@cape-it.de',
                 Subject       => 'Support::Bundle::Email',
                 Type          => 'text/plain',
                 Charset       => 'utf-8',
                 Body          => $Body,
-                CustomHeaders => {
-                    'X-OTRS-RegistrationKey' => $Data{'RegistrationKey'} || 'Not registered',
-                },
+                #rbo - T2016121190001552 - removed Registration
                 Attachment => [
                     {
                         Filename    => $Filename,
