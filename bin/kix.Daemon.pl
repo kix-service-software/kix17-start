@@ -422,7 +422,7 @@ sub _Run() {
         
         # in windows sleep even more, otherwise the CPU load will be too high
         if ($IsWin32) {
-            sleep 2;
+            sleep 5;
         }
     }
 
