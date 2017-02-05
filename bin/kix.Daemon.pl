@@ -167,6 +167,13 @@ elsif ( lc $ARGV[0] eq '--child' ) {
     exit 1 if !_Run();
     exit 0;
 }
+elsif ( lc $ARGV[0] eq '--module' ) {
+    exit 1 if !_RunModule(
+        Module     => $ARGV[1],
+        ModuleName => $ARGV[2]
+    );
+    exit 0;
+}
 else {
     PrintUsage();
     exit 0;
@@ -240,13 +247,22 @@ sub Stop {
 
         if ($ForceStop) {
 
-            # send TERM signal to running daemon
-            kill 15, $RunningDaemonPID;
+            if (!$IsWin32) {
+                # send TERM signal to running daemon
+                kill 15, $RunningDaemonPID;
+            }
+            else {
+                Win32::Process::KillProcess($RunningDaemonPID, 1);
+            }
         }
         else {
-
-            # send INT signal to running daemon
-            kill 2, $RunningDaemonPID;
+            if (!$IsWin32) {
+                # send INT signal to running daemon
+                kill 2, $RunningDaemonPID;
+            }
+            else {
+                Win32::Process::KillProcess($RunningDaemonPID, 1);
+            }
         }
     }
 
@@ -273,7 +289,14 @@ sub Status {
             if ($RegisteredPID) {
 
                 # check if process is running
-                my $RunningPID = kill 0, $RegisteredPID;
+                my $RunningPID;
+                if (!$IsWin32) {
+                    $RunningPID = kill 0, $RegisteredPID;
+                }
+                else {
+                    my $ProcessObj;
+                    $RunningPID = Win32::Process::Open($ProcessObj, $RegisteredPID, 1);
+                }
 
                 if ($RunningPID) {
                     print STDOUT "Daemon running\n";
@@ -340,92 +363,48 @@ sub _Run() {
             next MODULE if !$Module;
 
             # check if daemon is still alive
-            if ( $DaemonModules{$Module}->{PID} && !kill 0, $DaemonModules{$Module}->{PID} ) {
+            my $RunningPID;
+            if (!$IsWin32) {
+                $RunningPID = kill 0, $DaemonModules{$Module}->{PID};
+            }
+            else {
+                my $ProcessObj;
+                $RunningPID = Win32::Process::Open($ProcessObj, $DaemonModules{$Module}->{PID}, 1);
+            }
+            
+            if ( $DaemonModules{$Module}->{PID} && !$RunningPID ) {
                 $DaemonModules{$Module}->{PID} = 0;
             }
 
             next MODULE if $DaemonModules{$Module}->{PID};
 
-            # fork daemon process
-            my $ChildPID = fork;
+            my $ChildPID;
+
+            if (!$IsWin32) {
+                # fork daemon process
+                $ChildPID = fork;
+            }
+            else {
+                my $ChildProcess;
+                my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
+                
+                Win32::Process::Create(
+                    $ChildProcess, 
+                    $ENV{COMSPEC},
+                    "/c wperl $Home/bin/kix.Daemon.pl --module \"$Module\" \"$DaemonModules{$Module}->{Name}\"", 
+                    0, 
+                    0x00000008,    # DETACHED_PROCESS
+                    "."
+                );
+                $ChildPID = $ChildProcess->GetProcessID();
+            }
 
             if ( !$ChildPID ) {
 
-                my $ChildRun = 1;
-                local $SIG{INT}  = sub { $ChildRun = 0; };
-                local $SIG{TERM} = sub { $ChildRun = 0; };
-                local $SIG{CHLD} = "IGNORE";
-
-                # define the ZZZ files
-                my @ZZZFiles = (
-                    'ZZZAAuto.pm',
-                    'ZZZAuto.pm',
+                exit _RunModule(
+                    Module     => $Module,
+                    ModuleName => $DaemonModules{$Module}->{Name}
                 );
-
-                # reload the ZZZ files (mod_perl workaround)
-                for my $ZZZFile (@ZZZFiles) {
-
-                    PREFIX:
-                    for my $Prefix (@INC) {
-                        my $File = $Prefix . '/Kernel/Config/Files/' . $ZZZFile;
-                        next PREFIX if !-f $File;
-                        do $File;
-                        last PREFIX;
-                    }
-                }
-
-                local $Kernel::OM = Kernel::System::ObjectManager->new(
-                    'Kernel::System::Log' => {
-                        LogPrefix => "kix.Daemon.pl - Daemon $Module",
-                    },
-                );
-
-                # disable in memory cache because many processes runs at the same time
-                $Kernel::OM->Get('Kernel::System::Cache')->Configure(
-                    CacheInMemory  => 0,
-                    CacheInBackend => 1,
-                );
-
-                # set daemon log files
-                _LogFilesSet(
-                    Module => $DaemonModules{$Module}->{Name}
-                );
-
-                my $DaemonObject;
-                LOOP:
-                while ($ChildRun) {
-
-                    # create daemon object if not exists
-                    eval {
-
-                        if (
-                            !$DaemonObject
-                            && ( $DebugDaemons{All} || $DebugDaemons{ $DaemonModules{$Module}->{Name} } )
-                            )
-                        {
-                            $Kernel::OM->ObjectParamAdd(
-                                $Module => {
-                                    Debug => 1,
-                                },
-                            );
-                        }
-
-                        $DaemonObject ||= $Kernel::OM->Get($Module);
-                    };
-
-                    # wait 10 seconds if creation of object is not possible
-                    if ( !$DaemonObject ) {
-                        sleep 10;
-                        last LOOP;
-                    }
-
-                    METHOD:
-                    for my $Method ( 'PreRun', 'Run', 'PostRun' ) {
-                        last LOOP if !eval { $DaemonObject->$Method() };
-                    }
-                }
-
-                exit 0;
             }
             else {
 
@@ -440,6 +419,11 @@ sub _Run() {
         # sleep 0.1 seconds to protect the system of a 100% CPU usage if one daemon
         # module is damaged and produces hard errors
         sleep 0.1;
+        
+        # in windows sleep even more, otherwise the CPU load will be too high
+        if ($IsWin32) {
+            sleep 2;
+        }
     }
 
     # send all daemon processes a stop signal
@@ -453,7 +437,12 @@ sub _Run() {
             print STDOUT "Send stop signal to $Module with PID $DaemonModules{$Module}->{PID}\n";
         }
 
-        kill 2, $DaemonModules{$Module}->{PID};
+        if (!$IsWin32) {
+            kill 2, $DaemonModules{$Module}->{PID};
+        }
+        else {
+            Win32::Process::KillProcess($DaemonModules{$Module}->{PID}, 1);
+        }
     }
 
     # wait for active daemon processes to stop (typically 30 secs, or just 5 if forced)
@@ -468,7 +457,16 @@ sub _Run() {
             next MODULE if !$DaemonModules{$Module}->{PID};
 
             # check if PID is still alive
-            if ( !kill 0, $DaemonModules{$Module}->{PID} ) {
+            my $RunningPID;
+            if (!$IsWin32) {
+                $RunningPID = kill 0, $DaemonModules{$Module}->{PID};
+            }
+            else {
+                my $ProcessObj;
+                $RunningPID = Win32::Process::Open($ProcessObj, $DaemonModules{$Module}->{PID}, 1);
+            }
+            
+            if ( !$RunningPID ) {
 
                 # remove daemon pid from list
                 $DaemonModules{$Module}->{PID} = 0;
@@ -497,12 +495,97 @@ sub _Run() {
 
         print STDOUT "Killing $Module with PID $DaemonModules{$Module}->{PID}\n";
 
-        kill 9, $DaemonModules{$Module};
+        if (!$IsWin32) {
+           kill 9, $DaemonModules{$Module};
+        }
+        else {
+            Win32::Process::KillProcess($DaemonModules{$Module}->{PID}, 1);
+        }
     }
 
     # remove current log files without content
     _LogFilesCleanup();
 
+    return 0;
+}
+
+sub _RunModule {
+    my (%Param) = @_;
+
+    my $ChildRun = 1;
+    local $SIG{INT}  = sub { $ChildRun = 0; };
+    local $SIG{TERM} = sub { $ChildRun = 0; };
+    local $SIG{CHLD} = "IGNORE";
+
+    # define the ZZZ files
+    my @ZZZFiles = (
+        'ZZZAAuto.pm',
+        'ZZZAuto.pm',
+    );
+
+    # reload the ZZZ files (mod_perl workaround)
+    for my $ZZZFile (@ZZZFiles) {
+
+        PREFIX:
+        for my $Prefix (@INC) {
+        	my $File = $Prefix . '/Kernel/Config/Files/' . $ZZZFile;
+            next PREFIX if !-f $File;
+            do $File;
+            last PREFIX;
+        }
+    }
+
+    local $Kernel::OM = Kernel::System::ObjectManager->new(
+        'Kernel::System::Log' => {
+            LogPrefix => "kix.Daemon.pl - Daemon $Param{Module}",
+        },
+    );
+
+    # disable in memory cache because many processes runs at the same time
+    $Kernel::OM->Get('Kernel::System::Cache')->Configure(
+        CacheInMemory  => 0,
+        CacheInBackend => 1,
+    );
+
+    # set daemon log files
+    _LogFilesSet(
+        Module => $Param{ModuleName}
+    );
+
+    my $DaemonObject;
+    LOOP:
+    while ($ChildRun) {
+
+        # create daemon object if not exists
+        eval {
+
+            if (
+                !$DaemonObject
+                && ( $DebugDaemons{All} || $DebugDaemons{ $Param{ModuleName} } )
+               )
+            {
+                $Kernel::OM->ObjectParamAdd(
+                    $Param{Module} => {
+                        Debug => 1,
+                    },
+                );
+            }
+
+            $DaemonObject ||= $Kernel::OM->Get($Param{Module});
+        };
+
+        # wait 10 seconds if creation of object is not possible
+        if ( !$DaemonObject ) {
+            sleep 10;
+            last LOOP;
+        }
+
+        METHOD:
+        for my $Method ( 'PreRun', 'Run', 'PostRun' ) {
+            last LOOP if !eval { $DaemonObject->$Method() };
+        }
+    }
+    
     return 0;
 }
 
