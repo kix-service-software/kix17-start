@@ -7852,17 +7852,6 @@
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Package::ShowFeatureAddons" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">Toggles display of OTRS FeatureAddons list in PackageManager.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Package</SubGroup>
-        <Setting>
-            <Option SelectedID="0">
-                <Item Key="0" Translatable="1">No</Item>
-                <Item Key="1" Translatable="1">Yes</Item>
-            </Option>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Package::EventModulePost###99-SupportDataSend" Required="0" Valid="0">
         <Description Translatable="1">Package event module file a scheduler task for update registration.</Description>
         <Group>Framework</Group>
