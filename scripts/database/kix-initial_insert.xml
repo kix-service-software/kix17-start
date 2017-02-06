@@ -5090,6 +5090,16 @@ TreeView: '0'
         <Data Key="change_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>
     </Insert>
+    <Insert Table="general_catalog">
+        <Data Key="id" Type="AutoIncrement">99</Data>
+        <Data Key="general_catalog_class" Type="Quote">ITSM::ConfigItem::DeploymentState</Data>
+        <Data Key="name" Type="Quote">Configuration Baseline</Data>
+        <Data Key="valid_id">1</Data>
+        <Data Key="create_time">current_timestamp</Data>
+        <Data Key="create_by">1</Data>
+        <Data Key="change_time">current_timestamp</Data>
+        <Data Key="change_by">1</Data>
+    </Insert>
 
 <!-- general catalog preferences -->
     <Insert Table="general_catalog_preferences">
@@ -5181,6 +5191,11 @@ TreeView: '0'
         <Data Key="general_catalog_id">26</Data>
         <Data Key="pref_key" Type="Quote">Permission</Data>
         <Data Key="pref_value" Type="Quote">7</Data>
+    </Insert>
+    <Insert Table="general_catalog_preferences">
+        <Data Key="general_catalog_id">100</Data>
+        <Data Key="pref_key" Type="Quote">Functionality</Data>
+        <Data Key="pref_value" Type="Quote">productive</Data>
     </Insert>
 
 <!-- config item history -->
