@@ -199,9 +199,7 @@ Core.Agent.Responsive = (function (TargetNS) {
         $('#OptionCustomer').closest('.Field').show().prev('label').show();
 
         // reset navigation container position
-        // KIXBase-capeIT
         $('#NavigationContainer').css('left', '100px');
-        // EO KIXBase-capeIT
 
         // re-add toolbar to header
         $('#ToolBar').detach().prependTo('#Header');

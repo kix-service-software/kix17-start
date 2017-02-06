@@ -945,7 +945,7 @@ return a config item list as an array reference
         # config items with changed time before then ....
         ConfigItemChangeTimeOlderDate => '2006-01-19 23:59:59',  # (optional)
 
-        What => [
+        What => [                                                # (optional)
             # each array element is a and condition
             {
                 # or condition in hash
@@ -1098,16 +1098,13 @@ sub ConfigItemSearchExtended {
     my @ResultList;
     if ( $RequiredSearch{ConfigItem} && $RequiredSearch{Version} ) {
 
-        my %VersionTempList;
-        for my $ConfigItemID ( @{ $ConfigItemLists{Version} } ) {
-            $VersionTempList{$ConfigItemID} = 1;
-        }
+        # build a lookup hash of all found configitem ids in $ConfigItemLists{ConfigItem}
+        my %ConfigItemSeen = map { $_ => 1 } @{ $ConfigItemLists{ConfigItem} };
 
+        # check all config item ids, we need to keep the sorting
         CONFIGITEMID:
-        for my $ConfigItemID ( @{ $ConfigItemLists{ConfigItem} } ) {
-
-            next CONFIGITEMID if !$VersionTempList{$ConfigItemID};
-
+        for my $ConfigItemID ( @{ $ConfigItemLists{Version} } ) {
+            next CONFIGITEMID if !$ConfigItemSeen{$ConfigItemID};
             push @ResultList, $ConfigItemID;
         }
     }

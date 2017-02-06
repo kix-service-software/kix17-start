@@ -87,9 +87,11 @@ sub GetObjectAttributes {
     }
 
     # get user list
+    #   and not meaningful with a date selection.
     my %UserList = $UserObject->UserList(
-        Type  => 'Long',
-        Valid => $ValidAgent,
+        Type          => 'Long',
+        Valid         => $ValidAgent,
+        NoOutOfOffice => 1,
     );
 
     # get state list
@@ -756,7 +758,9 @@ sub GetStatElement {
         }
     }
 
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ArchiveSystem') ) {
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    if ( $ConfigObject->Get('Ticket::ArchiveSystem') ) {
         $Param{SearchInArchive} ||= '';
         if ( $Param{SearchInArchive} eq 'AllTickets' ) {
             $Param{ArchiveFlags} = [ 'y', 'n' ];
@@ -767,6 +771,12 @@ sub GetStatElement {
         else {
             $Param{ArchiveFlags} = ['n'];
         }
+    }
+
+    # Map the CustomerID search parameter to CustomerIDRaw search parameter for the
+    #   exact search match, if the 'Stats::CustomerIDAsMultiSelect' is active.
+    if ( $ConfigObject->Get('Stats::CustomerIDAsMultiSelect') ) {
+        $Param{CustomerIDRaw} = $Param{CustomerID};
     }
 
     # search tickets

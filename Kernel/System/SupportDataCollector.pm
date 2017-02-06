@@ -121,13 +121,23 @@ sub Collect {
 
     # Data must be collected in a web request context to be able to collect web server data.
     #   If called from CLI, make a web request to collect the data.
+    #   be collected the function runs normal.
     if ( !$ENV{GATEWAY_INTERFACE} ) {
-        return $Self->CollectByWebRequest(%Param);
+
+        my %ResultWebRequest = $Self->CollectByWebRequest(%Param);
+
+        return %ResultWebRequest if $ResultWebRequest{Success};
     }
 
     # Get the disabled plugins from the config to generate a lookup hash, which can be used to skip these plugins.
     my $PluginDisabled = $Kernel::OM->Get('Kernel::Config')->Get('SupportDataCollector::DisablePlugins') || [];
     my %LookupPluginDisabled = map { $_ => 1 } @{$PluginDisabled};
+
+    # Get the identifier filter blacklist from the config to generate a lookup hash, which can be used to
+    # filter these identifier.
+    my $IdentifierFilterBlacklist
+        = $Kernel::OM->Get('Kernel::Config')->Get('SupportDataCollector::IdentifierFilterBlacklist') || [];
+    my %LookupIdentifierFilterBlacklist = map { $_ => 1 } @{$IdentifierFilterBlacklist};
 
     # Look for all plug-ins in the FS
     my @PluginFiles = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
@@ -149,11 +159,14 @@ sub Collect {
     my @Result;
 
     # Execute all plug-ins
+    PLUGINFILE:
     for my $PluginFile (@PluginFilesAll) {
 
         # Convert file name => package name
         $PluginFile =~ s{^.*(Kernel/System.*)[.]pm$}{$1}xmsg;
         $PluginFile =~ s{/+}{::}xmsg;
+
+        next PLUGINFILE if $LookupPluginDisabled{$PluginFile};
 
         if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($PluginFile) ) {
             return (
@@ -167,9 +180,8 @@ sub Collect {
 
         if ( !%PluginResult || !$PluginResult{Success} ) {
             return (
-                Success => 0,
-                ErrorMessage =>
-                    "Error during execution of $PluginFile: $PluginResult{ErrorMessage}",
+                Success      => 0,
+                ErrorMessage => "Error during execution of $PluginFile: $PluginResult{ErrorMessage}",
             );
         }
 
@@ -178,7 +190,7 @@ sub Collect {
 
     # Remove the disabled plugins after the execution, because some plugins returns
     #   more information with a own identifier.
-    @Result = grep { !$LookupPluginDisabled{ $_->{Identifier} } } @Result;
+    @Result = grep { !$LookupIdentifierFilterBlacklist{ $_->{Identifier} } } @Result;
 
     # sort the results from the plug-ins by the short identifier
     @Result = sort { $a->{ShortIdentifier} cmp $b->{ShortIdentifier} } @Result;
@@ -188,12 +200,17 @@ sub Collect {
         Result  => \@Result,
     );
 
-    $Kernel::OM->Get('Kernel::System::Cache')->Set(
-        Type  => 'SupportDataCollector',
-        Key   => $CacheKey,
-        Value => \%ReturnData,
-        TTL   => 60 * 10,
-    );
+    # Cache the result only, if the support data were collected in a web request,
+    #   to have all support data in the admin view.
+    if ( $ENV{GATEWAY_INTERFACE} ) {
+
+        $Kernel::OM->Get('Kernel::System::Cache')->Set(
+            Type  => 'SupportDataCollector',
+            Key   => $CacheKey,
+            Value => \%ReturnData,
+            TTL   => 60 * 10,
+        );
+    }
 
     return %ReturnData;
 }
@@ -229,7 +246,6 @@ sub CollectByWebRequest {
     my $Host = $Param{Hostname};
     $Host ||= $Kernel::OM->Get('Kernel::Config')->Get('SupportDataCollector::HTTPHostname');
 
-    # Determine hostname
     if ( !$Host ) {
         my $FQDN = $Kernel::OM->Get('Kernel::Config')->Get('FQDN');
 
@@ -264,7 +280,6 @@ sub CollectByWebRequest {
         . $Kernel::OM->Get('Kernel::Config')->Get('ScriptAlias')
         . 'public.pl';
 
-    # create webuseragent object
     my $WebUserAgentObject = Kernel::System::WebUserAgent->new(
         Timeout => $Param{WebTimeout} || 20,
     );
@@ -272,7 +287,6 @@ sub CollectByWebRequest {
     # disable webuseragent proxy since the call is sent to self server, see bug#11680
     $WebUserAgentObject->{Proxy} = '';
 
-    # define result
     my %Result = (
         Success => 0,
     );
@@ -288,24 +302,27 @@ sub CollectByWebRequest {
         SkipSSLVerification => 1,
     );
 
-    # test if the web response was successful
     if ( $Response{Status} ne '200 OK' ) {
-        $Result{ErrorMessage} = "Can't connect to server - $Response{Status}";
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'notice',
-            Message  => "SupportDataCollector - $Result{ErrorMessage}",
-        );
+
+        if ( $Self->{Debug} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "SupportDataCollector - Can't connect to server - $Response{Status}",
+            );
+        }
 
         return %Result;
     }
 
     # check if we have content as a scalar ref
     if ( !$Response{Content} || ref $Response{Content} ne 'SCALAR' ) {
-        $Result{ErrorMessage} = 'No content received.';
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'notice',
-            Message  => "SupportDataCollector - $Result{ErrorMessage}",
-        );
+
+        if ( $Self->{Debug} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "SupportDataCollector - No content received.",
+            );
+        }
         return %Result;
     }
 
@@ -314,11 +331,14 @@ sub CollectByWebRequest {
 
     # Discard HTML responses (error pages etc.).
     if ( substr( ${ $Response{Content} }, 0, 1 ) eq '<' ) {
-        $Result{ErrorMessage} = 'Response looks like HTML instead of JSON.';
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'notice',
-            Message  => "SupportDataCollector - $Result{ErrorMessage}",
-        );
+
+        if ( $Self->{Debug} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "SupportDataCollector - Response looks like HTML instead of JSON.",
+            );
+        }
+
         return %Result;
     }
 
@@ -327,20 +347,15 @@ sub CollectByWebRequest {
         Data => ${ $Response{Content} },
     );
     if ( !$ResponseData || ref $ResponseData ne 'HASH' ) {
-        $Result{ErrorMessage} = "Can't decode JSON: '" . ${ $Response{Content} } . "'!";
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "SupportDataCollector - $Result{ErrorMessage}",
-        );
+
+        if ( $Self->{Debug} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "SupportDataCollector - Can't decode JSON: '" . ${ $Response{Content} } . "'!",
+            );
+        }
         return %Result;
     }
-
-    $Kernel::OM->Get('Kernel::System::Cache')->Set(
-        Type  => 'SupportDataCollect',
-        Key   => 'DataCollect',
-        Value => $ResponseData,
-        TTL   => 60 * 10,
-    );
 
     return %{$ResponseData};
 }

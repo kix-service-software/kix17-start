@@ -28,8 +28,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description(
-        'Process pending tickets that are past their pending time and send pending reminders.');
+    $Self->Description('Process pending tickets that are past their pending time and send pending reminders.');
 
     return;
 }
@@ -56,8 +55,6 @@ sub Run {
         @TicketIDs = $TicketObject->TicketSearch(
             Result   => 'ARRAY',
             StateIDs => [@PendingAutoStateIDs],
-            SortBy   => ['PendingTime'],
-            OrderBy  => ['Up'],
             UserID   => 1,
         );
 

@@ -323,6 +323,8 @@
                     <input type="hidden" name="Action" value="[% Env("Action") %]" />
                     <input type="hidden" name="Subaction" value="TemplateSave4" />
                     <input type="hidden" name="TemplateID" value="[% Data.TemplateID | html %]" />
+                    <input type="hidden" name="MappingAdd" value="" />
+                    <input type="hidden" name="SubmitNext" value="" />
                     <table class="DataTable SpacingTop">
                         <thead>
                             <tr>
@@ -383,12 +385,12 @@
                         </tbody>
                     </table>
                     <div class="W100pc SpacingTopSmall Left">
-                        <button class="CallForAction Plus" id="MappingAdd" type="submit" name="MappingAdd" value="[% Translate("Add") | html %]"><span> [% Translate("Add Mapping Element") | html %]</span> </button>
+                        <button class="CallForAction Plus" id="MappingAddButton" type="submit" name="MappingAddButton" value="[% Translate("Add") | html %]"><span> [% Translate("Add Mapping Element") | html %]</span> </button>
                     </div>
 
                     <div class="SpacingTop">
                         <button type="submit" name="SubmitBack" value="SubmitBack">[% Translate("Back") | html %]</button>
-                        <button class="Primary" type="submit" name="SubmitNext" value="SubmitNext">[% Translate("Next") | html %]</button>
+                        <button class="Primary" type="submit" name="SubmitNextButton" id="SubmitNextButton" value="1">[% Translate("Next") | html %]</button>
                     </div>
                 </form>
             </div>
@@ -397,7 +399,7 @@
 <script type="text/javascript">//<![CDATA[
 
     // find the next button and get the first column dropdown
-    var $NextButton = $("button.Primary[name='SubmitNext']").first(),
+    var $NextButton = $("button.Primary[name='SubmitNextButton']").first(),
         $FirstColumn = $('#Object\\:\\:0\\:\\:Key');
 
     // handle changes to the first column selector
@@ -416,10 +418,20 @@
     }).trigger('change');
 
     // set the hidden field to delete this column and submit the form
-    $('.DeleteColomn').unbind('click').bind('click', function(Event) {
+    $('.DeleteColumn').unbind('click').bind('click', function(Event) {
         $(this).closest('td').find('input[type="hidden"]').val(1);
         $(this).closest('form').submit();
         return true;
+    });
+
+    $('#MappingAddButton').bind('click', function (Event) {
+        $('input[name=MappingAdd]').val('1');
+        $('input[name=SubmitNext]').val('0');
+    });
+
+    $('#SubmitNextButton').bind('click', function (Event) {
+        $('input[name=MappingAdd]').val('0');
+        $('input[name=SubmitNext]').val('1');
     });
 
 //]]></script>

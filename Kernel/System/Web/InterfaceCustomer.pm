@@ -172,14 +172,14 @@ sub Run {
         my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
         if ( !$DBCanConnect ) {
             $LayoutObject->CustomerFatalError(
-                Comment => Translatable('Please contact your administrator'),
+                Comment => Translatable('Please contact the administrator.'),
             );
             return;
         }
         if ( $ParamObject->Error() ) {
             $LayoutObject->CustomerFatalError(
                 Message => $ParamObject->Error(),
-                Comment => Translatable('Please contact your administrator'),
+                Comment => Translatable('Please contact the administrator.'),
             );
             return;
         }
@@ -321,7 +321,7 @@ sub Run {
                 Output => \$LayoutObject->CustomerLogin(
                     Title   => 'Panic!',
                     Message => Translatable(
-                        'Authentication succeeded, but no customer record is found in the customer backend. Please contact your administrator.'
+                        'Authentication succeeded, but no customer record is found in the customer backend. Please contact the administrator.'
                     ),
                     %Param,
                 ),
@@ -514,7 +514,7 @@ sub Run {
         # remove session id
         if ( !$SessionObject->RemoveSessionID( SessionID => $Param{SessionID} ) ) {
             $LayoutObject->CustomerFatalError(
-                Comment => Translatable('Please contact your administrator')
+                Comment => Translatable('Please contact the administrator.')
             );
             return;
         }
@@ -632,7 +632,7 @@ sub Run {
             );
             if ( !$Sent ) {
                 $LayoutObject->FatalError(
-                    Comment => Translatable('Please contact your administrator'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
                 return;
             }
@@ -678,7 +678,7 @@ sub Run {
             $LayoutObject->Print(
                 Output => \$LayoutObject->CustomerLogin(
                     Title   => 'Login',
-                    Message => Translatable('Reset password unsuccessful. Please contact your administrator'),
+                    Message => Translatable('Reset password unsuccessful. Please contact the administrator.'),
                     User    => $User,
                 ),
             );
@@ -702,7 +702,7 @@ sub Run {
         );
         if ( !$Sent ) {
             $LayoutObject->CustomerFatalError(
-                Comment => Translatable('Please contact your administrator')
+                Comment => Translatable('Please contact the administrator.')
             );
             return;
         }
@@ -1062,7 +1062,7 @@ sub Run {
                     "Module Kernel::Modules::$Param{Action} not registered in Kernel/Config.pm!",
             );
             $LayoutObject->CustomerFatalError(
-                Comment => Translatable('Please contact your administrator'),
+                Comment => Translatable('Please contact the administrator.'),
             );
             return;
         }
@@ -1088,7 +1088,7 @@ sub Run {
                     Message  => 'No Permission to use this frontend action module!'
                 );
                 $LayoutObject->CustomerFatalError(
-                    Comment => Translatable('Please contact your administrator'),
+                    Comment => Translatable('Please contact the administrator.'),
                 );
                 return;
             }
@@ -1127,7 +1127,7 @@ sub Run {
                             Message  => 'No Permission to use this frontend subaction module!'
                         );
                         $LayoutObject->CustomerFatalError(
-                            Comment => Translatable('Please contact your administrator')
+                            Comment => Translatable('Please contact the administrator.')
                         );
                         return;
                     }
@@ -1148,7 +1148,11 @@ sub Run {
         my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
         # update last request time
-        if ( !$ParamObject->IsAJAXRequest() ) {
+        if (
+            !$ParamObject->IsAJAXRequest()
+            || $Param{Action} eq 'CustomerVideoChat'
+            )
+        {
             $SessionObject->UpdateSessionID(
                 SessionID => $Param{SessionID},
                 Key       => 'UserLastRequest',
@@ -1264,7 +1268,7 @@ sub Run {
     );
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     $LayoutObject->CustomerFatalError(
-        Comment => Translatable('Please contact your administrator'),
+        Comment => Translatable('Please contact the administrator.'),
     );
     return;
 }

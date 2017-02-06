@@ -71,12 +71,13 @@
 
         <div class="WidgetSimple" id="ExampleProcesses">
             <div class="Header">
-                <h2>[% Translate("Example processes") | html %]</h2>
+                <h2>[% Translate("Ready-to-run Processes") | html %]</h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
-                    [% Translate("Here you can activate best practice example processes. Please note that some additional configuration may be required." ) %]
+                    [% Translate("Here you can activate ready-to-run processes showcasing our best practices. Please note that some additional configuration may be required." ) %]
                 </p>
+#ddoerffel - T2016121190001552 - removed business code
                 <ul class="ActionList SpacingTop">
                     <li>
                         <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">
@@ -90,8 +91,8 @@
                                 <input type="checkbox" id="OverwriteExistingEntitiesExample" name="OverwriteExistingEntities" value="1" checked="checked" />
                                 <label for="OverwriteExistingEntitiesExample">[% Translate("Overwrite existing entities") | html %]</label>
                             </fieldset>
-                            <button class="CallForAction Fullsize Center SpacingTop" type="submit" value="[% Translate("Import example process") | html %]">
-                                <span><i class="fa fa-upload"></i>[% Translate("Import example process") | html %]</span>
+                            <button class="CallForAction Fullsize Center SpacingTop" type="submit" value="[% Translate("Import ready-to-run process") | html %]">
+                                <span><i class="fa fa-upload"></i>[% Translate("Import ready-to-run process") | html %]</span>
                             </button>
                         </form>
                     </li>

@@ -90,9 +90,11 @@ sub GetObjectAttributes {
     }
 
     # get user list
+    #   and not meaningful with a date selection.
     my %UserList = $UserObject->UserList(
-        Type  => 'Long',
-        Valid => $ValidAgent,
+        Type          => 'Long',
+        Valid         => $ValidAgent,
+        NoOutOfOffice => 1,
     );
 
     # get state list
@@ -984,6 +986,12 @@ sub GetStatTable {
         $UnixTimeEnd = $TimeObject->TimeStamp2SystemTime(
             String => $Param{Restrictions}->{HistoricTimeRangeTimeOlderDate}
         );
+    }
+
+    # Map the CustomerID search parameter to CustomerIDRaw search parameter for the
+    #   exact search match, if the 'Stats::CustomerIDAsMultiSelect' is active.
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('Stats::CustomerIDAsMultiSelect') ) {
+        $Param{Restrictions}->{CustomerIDRaw} = $Param{Restrictions}->{CustomerID};
     }
 
     # get the involved tickets

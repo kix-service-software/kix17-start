@@ -189,17 +189,19 @@
                                             <tbody>
                                                 <tr>
                                                     <td valign="top" class="footerContent">
+                                                    [% IF !Config("Secure::DisableBanner") %]
                                                         <table border="0" cellpadding="10" cellspacing="0" width="100%">
                                                             <tbody>
                                                                 <tr>
                                                                     <td colspan="2" valign="middle">
                                                                         <div style="color: #999; font-size: 11px; text-align: center;">
-                                                                            [% Config("Product") %] [% Config("Version") %]
+                                                                            [% Translate("Powered by") | html %] [% Config("Product") %] [% Config("Version").remove('\.0\..*') %]
                                                                         </div>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
+                                                    [% END %]
                                                     </td>
                                                 </tr>
                                             </tbody>

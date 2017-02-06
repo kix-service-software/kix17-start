@@ -577,7 +577,7 @@ sub VersionNameGet {
             Type => $Self->{CacheType},
             Key  => $CacheKey,
         );
-        return ${Cache} if $Cache;
+        return ${$Cache} if $Cache;
 
         # get version
         $Kernel::OM->Get('Kernel::System::DB')->Prepare(
@@ -1306,8 +1306,6 @@ sub VersionDelete {
 
     return $Success;
 }
-
-# REPLACE ORIGINAL METHODS DUE TO OTRS-BUG 7830
 
 =item VersionSearch()
 

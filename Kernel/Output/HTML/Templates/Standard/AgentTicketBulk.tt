@@ -173,6 +173,19 @@
                     <div class="Clear"></div>
 [% RenderBlockEnd("Type") %]
 
+                    <label for="QueueID">[% Translate("Queue") | html %]:</label>
+                    <div class="Field">
+                        [% Data.MoveQueuesStrg %]
+                    </div>
+                    <div class="Clear"></div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#QueueID').on('change', function () {
+    Core.AJAX.FormUpdate($('.Validate'), 'AJAXUpdate', 'QueueID', ['OwnerID', 'ResponsibleID']);
+});
+//]]></script>
+[% END %]
+
 [% RenderBlockStart("Owner") %]
                     <label for="OwnerID">[% Translate("Owner") | html %]:</label>
                     <div class="Field">
@@ -188,12 +201,6 @@
                     </div>
                     <div class="Clear"></div>
 [% RenderBlockEnd("Responsible") %]
-
-                    <label for="QueueID">[% Translate("Queue") | html %]:</label>
-                    <div class="Field">
-                        [% Data.MoveQueuesStrg %]
-                    </div>
-                    <div class="Clear"></div>
 
 [% RenderBlockStart("Priority") %]
                     <label for="PriorityID">[% Translate("Priority") | html %]:</label>

@@ -87,10 +87,8 @@ sub new {
     $Self->{XML}     = undef;
     $Self->{XMLUnit} = '';
 
-    open( $Self->{OriginalSTDOUT}, ">&STDOUT" );
-    open( $Self->{OriginalSTDERR}, ">&STDOUT" );
+    $Self->{OriginalSTDOUT} = *STDOUT;
     $Self->{OriginalSTDOUT}->autoflush(1);
-    $Self->{OriginalSTDERR}->autoflush(1);
 
     return $Self;
 }
@@ -100,10 +98,12 @@ sub new {
 Run all tests located in scripts/test/*.t and print result to stdout.
 
     $UnitTestObject->Run(
-        Name      => 'JSON:User:Auth',  # optional, control which tests to select
-        Directory => 'Selenium',        # optional, control which tests to select
-        SubmitURL => $URL,              # optional, send results to unit test result server
-        Verbose   => 1,                 # optional (default 0), only show result details for all tests, not just failing
+        Name                   => 'JSON:User:Auth',  # optional, control which tests to select
+        Directory              => 'Selenium',        # optional, control which tests to select
+        SubmitURL              => $URL,              # optional, send results to unit test result server
+        SubmitResultAsExitCode => $URL,              # optional, specify if exit code should not indicate if
+                                                     #   tests were ok/not ok, but if submission was successful instead.
+        Verbose                => 1,                 # optional (default 0), only show result details for all tests, not just failing
     );
 
 =cut
@@ -278,8 +278,18 @@ sub Run {
             uri   => 'http://localhost/Core',
         );
 
-        my $Key = $RPC->Submit( '', '', $XML )->result();
-        print STDERR "NOTICE: Sent to $Param{SubmitURL} with SubmitID: '$Key'.\n";
+        eval {
+            my $Key = $RPC->Submit( '', '', $XML )->result();
+        };
+        if ($@) {
+            die "Could not submit results to server: $@";
+        }
+
+        print "Sent results to $Param{SubmitURL}.\n";
+
+        if ( $Param{SubmitResultAsExitCode} ) {
+            return 1;
+        }
     }
 
     return $ResultSummary{TestNotOk} ? 0 : 1;

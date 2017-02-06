@@ -1412,8 +1412,11 @@ sub PackageOnlineList {
         my $CurrentFramework = $Kernel::OM->Get('Kernel::Config')->Get('Version');
         FRAMEWORKVERSION:
         for my $FrameworkVersion ( sort keys %{$ListResult} ) {
+            my $FrameworkVersionMatch = $FrameworkVersion;
+            $FrameworkVersionMatch =~ s/\./\\\./g;
+            $FrameworkVersionMatch =~ s/x/.+?/gi;
 
-            if ( $CurrentFramework =~ m{ \A $FrameworkVersion }xms ) {
+            if ( $CurrentFramework =~ m{ \A $FrameworkVersionMatch }xms ) {
 
                 @Packages = @{ $ListResult->{$FrameworkVersion} };
                 last FRAMEWORKVERSION;
@@ -1629,7 +1632,7 @@ sub DeployCheck {
                 );
             }
 
-            $Self->{DeployCheckInfo}->{File}->{ $File->{Location} } = 'No file installed!';
+            $Self->{DeployCheckInfo}->{File}->{ $File->{Location} } = Translatable('File is not installed!');
             $Hit = 1;
         }
         elsif ( -e $LocalFile ) {
@@ -1651,7 +1654,7 @@ sub DeployCheck {
                     }
 
                     $Hit = 1;
-                    $Self->{DeployCheckInfo}->{File}->{ $File->{Location} } = 'File is different!';
+                    $Self->{DeployCheckInfo}->{File}->{ $File->{Location} } = Translatable('File is different!');
                 }
             }
             else {
@@ -1663,7 +1666,7 @@ sub DeployCheck {
                     );
                 }
 
-                $Self->{DeployCheckInfo}->{File}->{ $File->{Location} } = 'Can\' read File!';
+                $Self->{DeployCheckInfo}->{File}->{ $File->{Location} } = Translatable('Can\'t read file!');
             }
         }
     }

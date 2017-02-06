@@ -149,9 +149,17 @@ sub Salutation {
     }
 
     # replace place holder stuff
-    my $SalutationText = $Self->_Replace(
+    my @ListOfUnSupportedTag = qw/OTRS_AGENT_SUBJECT OTRS_AGENT_BODY OTRS_CUSTOMER_BODY OTRS_CUSTOMER_SUBJECT/;
+
+    my $SalutationText = $Self->_RemoveUnSupportedTag(
+        Text => $Salutation{Text} || '',
+        ListOfUnSupportedTag => \@ListOfUnSupportedTag,
+    );
+
+    # replace place holder stuff
+    $SalutationText = $Self->_Replace(
         RichText => $Self->{RichText},
-        Text     => $Salutation{Text},
+        Text     => $SalutationText,
         TicketID => $Param{TicketID},
         Data     => $Param{Data},
         UserID   => $Param{UserID},
@@ -260,9 +268,17 @@ sub Signature {
     }
 
     # replace place holder stuff
-    my $SignatureText = $Self->_Replace(
+    my @ListOfUnSupportedTag = qw/OTRS_AGENT_SUBJECT OTRS_AGENT_BODY OTRS_CUSTOMER_BODY OTRS_CUSTOMER_SUBJECT/;
+
+    my $SignatureText = $Self->_RemoveUnSupportedTag(
+        Text => $Signature{Text} || '',
+        ListOfUnSupportedTag => \@ListOfUnSupportedTag,
+    );
+
+    # replace place holder stuff
+    $SignatureText = $Self->_Replace(
         RichText => $Self->{RichText},
-        Text     => $Signature{Text},
+        Text     => $SignatureText,
         TicketID => $Param{TicketID} || '',
         Data     => $Param{Data},
         QueueID  => $Param{QueueID},
@@ -447,9 +463,17 @@ sub Template {
     $Language //= $Kernel::OM->Get('Kernel::Config')->Get('DefaultLanguage') || 'en';
 
     # replace place holder stuff
-    my $TemplateText = $Self->_Replace(
+    my @ListOfUnSupportedTag = qw/OTRS_AGENT_SUBJECT OTRS_AGENT_BODY OTRS_CUSTOMER_BODY OTRS_CUSTOMER_SUBJECT/;
+
+    my $TemplateText = $Self->_RemoveUnSupportedTag(
+        Text => $Template{Template} || '',
+        ListOfUnSupportedTag => \@ListOfUnSupportedTag,
+    );
+
+    # replace place holder stuff
+    $TemplateText = $Self->_Replace(
         RichText => $Self->{RichText},
-        Text     => $Template{Template} || '',
+        Text     => $TemplateText || '',
         TicketID => $Param{TicketID} || '',
         Data     => $Param{Data} || {},
         UserID   => $Param{UserID},
@@ -571,11 +595,10 @@ sub AutoResponse {
     );
 
     # get auto default responses
-    my %AutoResponse
-        = $Kernel::OM->Get('Kernel::System::AutoResponse')->AutoResponseGetByTypeQueueID(
+    my %AutoResponse = $Kernel::OM->Get('Kernel::System::AutoResponse')->AutoResponseGetByTypeQueueID(
         QueueID => $Ticket{QueueID},
         Type    => $Param{AutoResponseType},
-        );
+    );
 
     return if !%AutoResponse;
 
@@ -625,10 +648,7 @@ sub AutoResponse {
     );
 
     # get user language
-    my $Language
-        = $User{UserLanguage}
-        || $Kernel::OM->Get('Kernel::Config')->Get('DefaultLanguage')
-        || 'en';
+    my $Language = $User{UserLanguage} || $Kernel::OM->Get('Kernel::Config')->Get('DefaultLanguage') || 'en';
 
     # do text/plain to text/html convert
     if ( $Self->{RichText} && $AutoResponse{ContentType} =~ /text\/plain/i ) {
@@ -894,17 +914,15 @@ sub NotificationEvent {
         $End   = '&gt;';
     }
 
-  # replace <OTRS_CUSTOMER_DATA_*> tags early from CustomerMessageParams, the rests will be replaced
-  # by ticket customer user
+    # replace <OTRS_CUSTOMER_DATA_*> tags early from CustomerMessageParams, the rests will be replaced
+    # by ticket customer user
     KEY:
     for my $Key ( sort keys %{ $Param{CustomerMessageParams} || {} } ) {
 
         next KEY if !$Param{CustomerMessageParams}->{$Key};
 
-        $Notification{Body}
-            =~ s/${Start}OTRS_CUSTOMER_DATA_$Key${End}/$Param{CustomerMessageParams}->{$Key}/gi;
-        $Notification{Subject}
-            =~ s/<OTRS_CUSTOMER_DATA_$Key>/$Param{CustomerMessageParams}->{$Key}{$_}/gi;
+        $Notification{Body} =~ s/${Start}OTRS_CUSTOMER_DATA_$Key${End}/$Param{CustomerMessageParams}->{$Key}/gi;
+        $Notification{Subject} =~ s/<OTRS_CUSTOMER_DATA_$Key>/$Param{CustomerMessageParams}->{$Key}{$_}/gi;
     }
 
     # do text/plain to text/html convert
@@ -1082,11 +1100,6 @@ sub _Replace {
     }
 
     # Bugfix for OTRS-Bug 11762
-    my %TicketRaw = %Ticket;
-
-    # EO Bugfix for OTRS-Bug 11762
-
-    # translate ticket values if needed
     if ( $Param{Language} ) {
         my $LanguageObject = Kernel::Language->new(
             UserLanguage => $Param{Language},
@@ -1103,32 +1116,21 @@ sub _Replace {
         );
     }
 
-    # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # special replace from secret config options
-    my @SecretConfigOptions = qw(
-        DatabasePw
-        SearchUserPw
-        UserPw
-        SendmailModule::AuthPassword
-        AuthModule::Radius::Password
-        PGP::Key::Password
-        Customer::AuthModule::DB::CustomerPassword
-        Customer::AuthModule::Radius::Password
-        PublicFrontend::AuthPassword
-    );
-
-    # replace the secret config options before the normal config options
-    for my $SecretConfigOption (@SecretConfigOptions) {
-
-        my $Tag = $Start . 'OTRS_CONFIG_' . $SecretConfigOption . $End;
-        $Param{Text} =~ s{$Tag}{xxx}gx;
-    }
 
     # replace config options
     my $Tag = $Start . 'OTRS_CONFIG_';
-    $Param{Text} =~ s{$Tag(.+?)$End}{$ConfigObject->Get($1) // ''}egx;
+    $Param{Text} =~ s{$Tag(.+?)$End}{
+        my $Replace = '';
+        # Mask secret config options.
+        if ($1 =~ m{(Password|Pw)\d*$}smxi) {
+            $Replace = 'xxx';
+        }
+        else {
+            $Replace = $ConfigObject->Get($1) // '';
+        }
+        $Replace;
+    }egx;
 
     # cleanup
     $Param{Text} =~ s/$Tag.+?$End/-/gi;
@@ -1499,9 +1501,7 @@ sub _Replace {
 
             # prepare body (insert old email) <OTRS_CUSTOMER_EMAIL[n]>, <OTRS_CUSTOMER_NOTE[n]>
             #   <OTRS_CUSTOMER_BODY[n]>, <OTRS_AGENT_EMAIL[n]>..., <OTRS_COMMENT>
-            if ( $Param{Text}
-                =~ /$Start(?:(?:$DataType(EMAIL|NOTE|BODY)\[(.+?)\])|(?:OTRS_COMMENT))$End/g )
-            {
+            if ( $Param{Text} =~ /$Start(?:(?:$DataType(EMAIL|NOTE|BODY)\[(.+?)\])|(?:OTRS_COMMENT))$End/g ) {
 
                 my $Line       = $2 || 2500;
                 my $NewOldBody = '';

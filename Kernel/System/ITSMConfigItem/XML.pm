@@ -629,7 +629,7 @@ sub _XMLHashSearch {
                         . "AND $XMLContentValueColumn <= '$UpperBound' )";
                 }
                 elsif ( $Op && $OpIsSupported{$Op} && !ref $Element ) {
-                    $Element = $Kernel::OM->Get('Kernel::System::DB')->Quote($Element);
+                    $Element = $Kernel::OM->Get('Kernel::System::DB')->Quote($Element) // '';
                     push @OrConditions,
                         " ( xml_content_key LIKE '$Key' $LikeEscapeString "
                         . "AND $XMLContentValueColumn $Op '$Element' )";

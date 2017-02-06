@@ -212,7 +212,7 @@ sub _XMLAttributeAdd {
 sub GetStatElementPreview {
     my ( $Self, %Param ) = @_;
 
-    return int rand 50;
+    return ( int rand 500 ) + 1;
 }
 
 sub GetStatElement {

@@ -27,7 +27,7 @@ sub Run {
     my %Environment = %ENV;
 
     # No apache webserver, skip this check
-    if ( !$ENV{SERVER_SOFTWARE} || $ENV{SERVER_SOFTWARE} !~ m{apache}i ) {
+    if ( !$ENV{GATEWAY_INTERFACE} || !$ENV{SERVER_SOFTWARE} || $ENV{SERVER_SOFTWARE} !~ m{apache}i ) {
         return $Self->GetResults();
     }
 

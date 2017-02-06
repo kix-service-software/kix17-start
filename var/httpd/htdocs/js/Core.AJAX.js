@@ -54,6 +54,48 @@ Core.AJAX = (function (TargetNS) {
 
     /**
      * @private
+     * @name HandleAJAXError
+     * @memberof Core.AJAX
+     * @function
+     * @param {Object} XHRObject - Meta data returned by the ajax request
+     * @param {String} Status - Status information of the ajax request
+     * @param {String} Error - Error information of the ajax request
+     * @description
+     *      Handles failing ajax request (only used as error callback in $.ajax calls)
+     */
+    function HandleAJAXError(XHRObject, Status, Error) {
+        var ErrorMessage = 'Error during AJAX communication. Status: ' + Status + ', Error: ' + Error;
+
+        // Check for expired sessions.
+        if (RedirectAfterSessionTimeOut(XHRObject)) {
+            return;
+        }
+
+        // Ignore aborted AJAX calls.
+        if (Status === 'abort') {
+            return;
+        }
+
+        // Collect debug information if configured.
+        if (Core.Config.Get('AjaxDebug') && typeof XHRObject === 'object') {
+            ErrorMessage += "\n\nResponse status: " + XHRObject.status + " (" + XHRObject.statusText + ")\n";
+            ErrorMessage += "Response headers: " + XHRObject.getAllResponseHeaders() + "\n";
+            ErrorMessage += "Response content: " + XHRObject.responseText;
+        }
+
+        if (!XHRObject.status) {
+
+            // If we didn't receive a status, the request didn't get any result, which is most likely a connection issue.
+            Core.Exception.HandleFinalError(new Core.Exception.ApplicationError(ErrorMessage, 'ConnectionError'));
+            return;
+        }
+
+        // We are out of the OTRS App scope, that's why an exception would not be caught. Therefore we handle the error manually.
+        Core.Exception.HandleFinalError(new Core.Exception.ApplicationError(ErrorMessage, 'CommunicationError'));
+    }
+
+    /**
+     * @private
      * @name ToggleAJAXLoader
      * @memberof Core.AJAX
      * @function
@@ -605,6 +647,9 @@ Core.AJAX = (function (TargetNS) {
             async : (typeof Async === 'undefined') ? true : Async,
             // EO KIX4OTRS-capeIT
             success: function (Response, Status, XHRObject) {
+
+                Core.App.Publish('Core.App.AjaxErrorResolved');
+
                 if (RedirectAfterSessionTimeOut(XHRObject)) {
                     return false;
                 }
@@ -681,6 +726,9 @@ Core.AJAX = (function (TargetNS) {
             async : (typeof Async === 'undefined') ? true : Async,
             // EO KIX4OTRS-capeIT
             success: function (Response, Status, XHRObject) {
+
+                Core.App.Publish('Core.App.AjaxErrorResolved');
+
                 if (RedirectAfterSessionTimeOut(XHRObject)) {
                     return false;
                 }
@@ -755,6 +803,9 @@ Core.AJAX = (function (TargetNS) {
             async : (typeof Async === 'undefined') ? true : Async,
             // EO KIX4OTRS-capeIT
             success: function (Response, Status, XHRObject) {
+
+                Core.App.Publish('Core.App.AjaxErrorResolved');
+
                 if (RedirectAfterSessionTimeOut(XHRObject)) {
                     return false;
                 }
@@ -770,21 +821,8 @@ Core.AJAX = (function (TargetNS) {
                     Core.Exception.HandleFinalError(new Core.Exception.ApplicationError("Invalid callback method: " + ((typeof Callback === 'undefined') ? 'undefined' : Callback.toString())));
                 }
             },
-            error: function (XHRObject, Status, Error) {
-
-                var ErrorMessage = "Error during AJAX communication. Status: " + Status + ", Error: " + Error;
-
-                if (RedirectAfterSessionTimeOut(XHRObject)) {
-                    return false;
-                }
-
-                ErrorMessage = AddDebugInformation(ErrorMessage, XHRObject);
-
-                // We sometimes manually abort an ajax request (e.g. in autocompletion). This should not throw a global error message
-                if (Status !== 'abort') {
-                    // We are out of the OTRS App scope, that's why an exception would not be caught. Therefore we handle the error manually.
-                    Core.Exception.HandleFinalError(new Core.Exception.ApplicationError(ErrorMessage, 'CommunicationError'));
-                }
+            error: function(XHRObject, Status, Error) {
+                HandleAJAXError(XHRObject, Status, Error)
             }
         });
     };

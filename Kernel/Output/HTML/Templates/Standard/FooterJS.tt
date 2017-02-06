@@ -27,6 +27,7 @@ Core.App.Ready(function () {
     Core.Config.AddConfig({
         // config
         Baselink: '[% Env("Baselink") %]',
+        AjaxDebug: '[% Config("Frontend::AjaxDebug") %]',
         CGIHandle: '[% Env("CGIHandle") %]',
         WebPath: '[% Config("Frontend::WebPath") %]',
         Action: '[% Env("Action") | html %]',
@@ -46,6 +47,7 @@ Core.App.Ready(function () {
         MenuDragDropEnabled: parseInt('[% Config("Frontend::MenuDragDropEnabled") %]', 10),
         OpenMainMenuOnHover: parseInt('[% Config("OpenMainMenuOnHover") %]', 10),
         CustomerInfoSet: parseInt('[% Config("Ticket::Frontend::CustomerInfoCompose") %]', 10),
+        IncludeUnknownTicketCustomers: parseInt('[% Config("Ticket::IncludeUnknownTicketCustomers") %]', 10),
 [% RenderBlockStart("AutoCompleteConfig") %]
         Autocomplete: [% Data.AutocompleteConfig %],
 [% RenderBlockEnd("AutoCompleteConfig") %]
@@ -99,8 +101,20 @@ Core.App.Ready(function () {
         NewPersonalChat: [% Translate("New personal chat request") | JSON %],
         NewCustomerChat: [% Translate("New customer chat request") | JSON %],
         NewPublicChat: [% Translate("New public chat request") | JSON %],
+        NewChatUnavailable: [% Translate("Selected user is not available for chat.") | JSON %],
+        NewChatStart: [% Translate("Start chat") | JSON %],
         NewChatActivity: [% Translate("New activity") | JSON %],
         NewChatActivityMonitored: [% Translate("New activity on one of your monitored chats.") | JSON %],
+        VideoChatEnabled: parseInt([% ( Data.VideoChatEnabled || 0 )| JSON %], 10),
+        VideoChatVideoCall: [% Translate("Video call") | JSON %],
+        VideoChatAudioCall: [% Translate("Audio call") | JSON %],
+        VideoChatBrowserUnsupported: [% Translate("Your browser does not support video and audio calling.") | JSON %],
+        VideoChatInviteUnavailable: [% Translate("Selected user is not available for video and audio call.") | JSON %],
+        VideoChatInviteUnsupported: [% Translate("Target user's browser does not support video and audio calling.") | JSON %],
+        VideoChatClose: [% Translate("Close") | JSON %],
+        VideoChatInviteAccept: [% Translate("Accept") | JSON %],
+        VideoChatInviteDecline: [% Translate("Decline") | JSON %],
+        VideoChatInternalError: [% Translate("An internal error occurred.") | JSON %],
         TicketActionTemplateOverwrite: [% Translate("Setting a template will overwrite any text or attachment.") | JSON %],
         TicketActionTemplateOverwriteConfirm: [% Translate("Do you really want to continue?") | JSON %],
         AgentLogoURL: '[% Config("AgentLogo").URL %]',

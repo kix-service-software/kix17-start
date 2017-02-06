@@ -213,6 +213,16 @@
 [% RenderBlockStart("State") %]
                     <li><span class="Key">[% Translate("State") | html %]:</span> <span title="[% Translate(Data.State) | html %]">[% Translate(Data.State) | html %]</span></li>
 [% RenderBlockEnd("State") %]
+# ---
+# ITSMIncidentProblemManagement
+# ---
+[% RenderBlockStart("TicketDynamicField") %]
+                    <li>
+                        <span class="Key">[% Translate(Data.Label) | html %]:</span>
+                        <span title="[% Data.Title | html %]">[% Data.Value %]</span>
+                    </li>
+[% RenderBlockEnd("TicketDynamicField") %]
+# ---
 [% RenderBlockStart("Priority") %]
                     <li><span class="Key">[% Translate("Priority") | html %]:</span> <span title="[% Translate(Data.Priority) | html %]">[% Translate(Data.Priority) | html %]</span></li>
 [% RenderBlockEnd("Priority") %]
@@ -231,12 +241,16 @@
 [% RenderBlockEnd("ProcessData") %]
 
 # show ticket dynamic fields
-[% RenderBlockStart("TicketDynamicField") %]
-                    <li>
-                        <span class="Key">[% Translate(Data.Label) | html %]:</span>
-                        <span title="[% Data.Title | html %]">[% Data.Value %]</span>
-                    </li>
-[% RenderBlockEnd("TicketDynamicField") %]
+# ---
+# ITSMIncidentProblemManagement
+# ---
+#[% RenderBlockStart("TicketDynamicField") %]
+#                    <li>
+#                        <span class="Key">[% Translate(Data.Label) | html %]:</span>
+#                        <span title="[% Data.Title | html %]">[% Data.Value %]</span>
+#                    </li>
+#[% RenderBlockEnd("TicketDynamicField") %]
+# ---
 # example of how to use fixed dynamic field blocks for customizations
 # Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
 # field names

@@ -42,7 +42,7 @@
 
                         <label>[% Translate("Last changed by") | html %]:</label>
                         <p class="Value">
-                            [% Data.CreateByName | html %]
+                            [% Data.ChangeByName | html %]
                         </p>
                         <div class="Clear"></div>
                     </fieldset>
