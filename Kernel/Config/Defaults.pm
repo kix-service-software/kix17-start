@@ -713,7 +713,7 @@ sub LoadDefaults {
     # agent interface notification module to check the admin user id
     # (don't work with user id 1 notification)
     $Self->{'Frontend::NotifyModule'} = {
-    	#rbo - T2016121190001552 - CloudServices and BusinessSolution removed
+        #rbo - T2016121190001552 - CloudServices and BusinessSolution removed
         '200-UID-Check' => {
           'Module' => 'Kernel::Output::HTML::Notification::UIDCheck',
         },

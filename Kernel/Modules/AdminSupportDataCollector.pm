@@ -30,7 +30,7 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-	#rbo - T2016121190001552 - removed Registration/SupportDataSend
+    #rbo - T2016121190001552 - removed Registration/SupportDataSend
     if ( $Self->{Subaction} eq 'GenerateSupportBundle' ) {
         return $Self->_GenerateSupportBundle();
     }
@@ -54,7 +54,7 @@ sub _SupportDataCollectorView {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-	#rbo - T2016121190001552 - removed CloudServices
+    #rbo - T2016121190001552 - removed CloudServices
 
     if ( !$SupportData{Success} ) {
         $LayoutObject->Block(
@@ -63,7 +63,7 @@ sub _SupportDataCollectorView {
         );
     }
     else {
-		#rbo - T2016121190001552 - removed CloudServices
+        #rbo - T2016121190001552 - removed CloudServices
         $LayoutObject->Block(
             Name => 'NoteSupportBundle',
         );
@@ -396,7 +396,7 @@ sub _SendSupportBundle {
 
             rmdir $TempDir;
 
-			#rbo - T2016121190001552 - removed Registration
+            #rbo - T2016121190001552 - removed Registration
 
             my %Data;
 

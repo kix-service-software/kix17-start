@@ -1464,7 +1464,7 @@ sub Run {
         );
     }
 
-    #rbo - T2016121190001552 - removed CloudServices and PackageVerfication	
+    #rbo - T2016121190001552 - removed CloudServices and PackageVerfication    
     for my $Package (@RepositoryList) {
 
         my %Data = $Self->_MessageGet( Info => $Package->{Description} );
@@ -1481,8 +1481,8 @@ sub Run {
             },
         );
 
-		#rbo - T2016121190001552 - removed CloudServices and PackageVerfication
-		
+        #rbo - T2016121190001552 - removed CloudServices and PackageVerfication
+        
         # show documentation link
         my %DocFile = $Self->_DocumentationGet( Filelist => $Package->{Filelist} );
         if (%DocFile) {
@@ -1552,7 +1552,7 @@ sub Run {
             );
         }
 
-		#rbo - T2016121190001552 - removed CloudServices and PackageVerfication
+        #rbo - T2016121190001552 - removed CloudServices and PackageVerfication
 
     }
 
@@ -1595,7 +1595,7 @@ sub Run {
         }
     }
 
-	#rbo - T2016121190001552 - removed CloudServices and FeatureAddOns
+    #rbo - T2016121190001552 - removed CloudServices and FeatureAddOns
 
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
@@ -1621,7 +1621,7 @@ sub Run {
         );
     }
 
-	#rbo - T2016121190001552 - removed CloudServices and PackageVerfication
+    #rbo - T2016121190001552 - removed CloudServices and PackageVerfication
 
     $Output .= $LayoutObject->Output(
         TemplateFile => 'AdminPackageManager',
@@ -1844,7 +1844,7 @@ sub _InstallHandling {
         );
     }
 
-	#rbo - T2016121190001552 - removed CloudServices
+    #rbo - T2016121190001552 - removed CloudServices
 
     # intro before installation
     if ( %Data && !$IntroInstallPre ) {
@@ -1861,7 +1861,7 @@ sub _InstallHandling {
             },
         );
 
-		#rbo - T2016121190001552 - removed CloudServices and PackageVerification
+        #rbo - T2016121190001552 - removed CloudServices and PackageVerification
 
         $LayoutObject->Block(
             Name => 'IntroCancel',

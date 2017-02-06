@@ -44,7 +44,7 @@ our @ObjectDependencies = (
     'Kernel::System::JSON',
     'Kernel::System::Log',
     'Kernel::System::Main',
-	# ddoerffel - T2016121190001552 - BusinessSolution code removed    'Kernel::System::SystemMaintenance',
+    # ddoerffel - T2016121190001552 - BusinessSolution code removed    'Kernel::System::SystemMaintenance',
     'Kernel::System::Time',
     'Kernel::System::User',
     'Kernel::System::VideoChat',

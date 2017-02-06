@@ -236,7 +236,6 @@ sub ReplaceExtended {
     }
     else
     {
-
         # using TemplateGenerator from KIX4OTRS
         $Param{Text} = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->ReplacePlaceHolder(
             RichText => $Param{RichText},
@@ -251,7 +250,6 @@ sub ReplaceExtended {
     return $Param{Text};
 
 }
-
 # EO BPMX-capeIT
 
 sub _CheckParams {

@@ -87,7 +87,7 @@ sub Run {
     my $ShowVerificationInfoOption    = $Self->GetOption('show-verification-info');
     my $DeleteVerificationCacheOption = $Self->GetOption('delete-verification-cache');
 
-	#rbo - T2016121190001552 - removed CloudServices
+    #rbo - T2016121190001552 - removed CloudServices
 
     # Get package object
     my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');

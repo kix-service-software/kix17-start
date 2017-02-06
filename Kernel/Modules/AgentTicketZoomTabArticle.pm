@@ -102,7 +102,7 @@ sub new {
         }
     }
 
-	# ddoerffel - T2016121190001552 - BusinessSolution code removed
+    # ddoerffel - T2016121190001552 - BusinessSolution code removed
 
     if ( !defined $Self->{DoNotShowBrowserLinkMessage} ) {
         if ( $UserPreferences{UserAgentDoNotShowBrowserLinkMessage} ) {

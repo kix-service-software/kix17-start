@@ -22,6 +22,7 @@ package Kernel::System::ProcessManagement::TransitionAction::TicketArticleSend;
 use strict;
 use warnings;
 use utf8;
+
 use Kernel::System::VariableCheck qw(:all);
 
 use base qw(Kernel::System::ProcessManagement::TransitionAction::Base);

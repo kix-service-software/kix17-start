@@ -316,7 +316,7 @@ sub Do {
     if ( !$Param{SQL} ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => 'Need SQL!'
+            Message  => 'Need SQL!',
         );
         return;
     }
@@ -372,6 +372,8 @@ sub Do {
 # EO capeIT
         );
     }
+
+    return if !$Self->Connect();
 
     # send sql to database
     if ( !$Self->{dbh}->do( $Param{SQL}, undef, @Array ) ) {
@@ -434,7 +436,7 @@ sub Prepare {
     if ( !$Param{SQL} ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => 'Need SQL!'
+            Message  => 'Need SQL!',
         );
         return;
     }
@@ -458,7 +460,7 @@ sub Prepare {
             $SQL .= " LIMIT $Limit";
         }
         elsif ( $Self->{Backend}->{'DB::Limit'} eq 'top' ) {
-            $SQL =~ s{ \A (SELECT ([ ]DISTINCT|)) }{$1 TOP $Limit}xmsi;
+            $SQL =~ s{ \A \s* (SELECT ([ ]DISTINCT|)) }{$1 TOP $Limit}xmsi;
         }
         else {
             $Self->{Limit} = $Limit;
@@ -509,6 +511,8 @@ sub Prepare {
         }
     }
 
+    return if !$Self->Connect();
+
     # do
     if ( !( $Self->{Cursor} = $Self->{dbh}->prepare($SQL) ) ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -539,6 +543,7 @@ sub Prepare {
             );
         }
     }
+
     return 1;
 }
 

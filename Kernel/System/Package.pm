@@ -123,7 +123,7 @@ sub new {
         File => 'ARRAY',
     };
 
-	#rbo - T2016121190001552 - removed CloudServices
+    #rbo - T2016121190001552 - removed CloudServices
 
     $Self->{Home} = $Self->{ConfigObject}->Get('Home');
 
@@ -135,7 +135,7 @@ sub new {
     # reserve space for merged packages
     $Self->{MergedPackages} = {};
 
-	#rbo - T2016121190001552 - removed CloudServices
+    #rbo - T2016121190001552 - removed CloudServices
 
     return $Self;
 }
@@ -1575,8 +1575,8 @@ sub PackageOnlineGet {
         }
     }
 
-	#rbo - T2016121190001552 - removed CloudServices
-	
+    #rbo - T2016121190001552 - removed CloudServices
+
     return $Self->_Download( URL => $Param{Source} . '/' . $Param{File} );
 }
 

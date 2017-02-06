@@ -33,7 +33,7 @@ use base qw(Kernel::System::Console::BaseCommand);
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::DB',
-	'Kernel::System::Time',
+    'Kernel::System::Time',
 );
 
 our %Jobs = (
@@ -98,7 +98,7 @@ sub Run {
 
         $Self->_Benchmark(
             Records   => $Records || 10000,
-	    Processes => $Processes || 1,
+        Processes => $Processes || 1,
         );
     }
     else {
@@ -107,7 +107,7 @@ sub Run {
         $Jobs{$Job}->(
             $Self, 
             Records => $Records,
-	    Process => $ProcessID,
+        Process => $ProcessID,
         );
     }
 
@@ -141,11 +141,11 @@ sub _Benchmark {
         Database => \@XMLArray,
     );
 
-	foreach my $SQL (@SQL) {
+    foreach my $SQL (@SQL) {
         $Self->{DBObject}->Do(
             SQL => $SQL,
         );
-	}
+    }
 
         foreach my $Job (qw(INSERT UPDATE SELECT DELETE)) {
             printf("%-9s %8s ", $Job, $TotalRecords);
@@ -163,8 +163,8 @@ sub _Benchmark {
                 $TimeTaken = $Self->_DoJobWin32( 
                      Job       => $Job,
                      Records   => $Param{Records},
-        	     Processes => $Param{Processes},
-        	);
+                 Processes => $Param{Processes},
+            );
             }
 
             $TimeTotal += $TimeTaken;
@@ -176,7 +176,7 @@ sub _Benchmark {
         SQL => 'DROP TABLE sql_benchmark',
     );
 
-	print "\nTotal Time: $TimeTotal s\n";
+    print "\nTotal Time: $TimeTotal s\n";
 
     return 1;
 }
@@ -252,8 +252,8 @@ sub _SQLInsert {
 
         # insert data
         $DBObject->Do(
-        	SQL => 'INSERT INTO sql_benchmark (name_a, name_b) values (?, ?)',
-        	Bind => [ \$Value1, \$Value2, ],
+            SQL => 'INSERT INTO sql_benchmark (name_a, name_b) values (?, ?)',
+            Bind => [ \$Value1, \$Value2, ],
         );
 
     }
@@ -274,8 +274,8 @@ sub _SQLUpdate {
 
         # update data
         $DBObject->Do(
-        	SQL => 'UPDATE sql_benchmark SET name_a = ?, name_b = ? WHERE name_a = ?',
-        	Bind => [ \$Value1, \$Value2, \$ValueOld ],
+            SQL => 'UPDATE sql_benchmark SET name_a = ?, name_b = ? WHERE name_a = ?',
+            Bind => [ \$Value1, \$Value2, \$ValueOld ],
         );
     }
 
@@ -293,8 +293,8 @@ sub _SQLSelect {
 
         # select the data
         $DBObject->Prepare(
-        	SQL  => "SELECT name_a, name_b FROM sql_benchmark WHERE name_a = ?",
-        	Bind => [ \$Value ],
+            SQL  => "SELECT name_a, name_b FROM sql_benchmark WHERE name_a = ?",
+            Bind => [ \$Value ],
         );
 
         # fetch the data
