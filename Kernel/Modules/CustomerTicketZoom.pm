@@ -564,7 +564,7 @@ sub Run {
                     $Output .= $LayoutObject->CustomerError(
                         Message => $LayoutObject->{LanguageObject}
                             ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
-                        Comment => Translatable('Please contact the administrator.'),
+                        Comment => Translatable('Please contact your administrator'),
                     );
                     $Output .= $LayoutObject->CustomerFooter();
                     return $Output;
@@ -1721,6 +1721,14 @@ sub _Mask {
                     HTMLResultMode => 1,
                     LinkFeature    => 1,
                 );
+            }
+
+            # security="restricted" may break SSO - disable this feature if requested
+            if ( $ConfigObject->Get('DisableMSIFrameSecurityRestricted') ) {
+                $Param{MSSecurityRestricted} = '';
+            }
+            else {
+                $Param{MSSecurityRestricted} = 'security="restricted"';
             }
 
             if ( !defined $Self->{DoNotShowBrowserLinkMessage} ) {

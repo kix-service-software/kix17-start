@@ -1504,7 +1504,7 @@ sub MaskAgentZoom {
 
         my $Pagination;
 
-        if ($NeedPagination) {
+        if ( $NeedPagination ) {
             $Pagination = {
                 Pages       => $Pages,
                 CurrentPage => $Page,

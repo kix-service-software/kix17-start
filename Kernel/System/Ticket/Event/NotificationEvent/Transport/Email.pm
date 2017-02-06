@@ -100,7 +100,7 @@ sub SendNotification {
     # get recipient data
     my %Recipient = %{ $Param{Recipient} };
 
-# NotificationEventX-capeIT
+    # Verify a customer have an email
     # check if recipient hash has DynamicField
     if (
         $Recipient{DynamicFieldName}
@@ -181,15 +181,10 @@ sub SendNotification {
         # done
         return 1;
     }
-# EO NotificationEventX-capeIT
+    # EO NotificationEventX-capeIT
 
-    if (
-        $Recipient{Type} eq 'Customer'
-        && $ConfigObject->Get('CustomerNotifyJustToRealCustomer')
-        )
-    {
-        # return if not customer user ID
-        return if !$Recipient{CustomerUserID};
+    # Verify a customer have an email
+    if ( $Recipient{Type} eq 'Customer' && $Recipient{UserID} && !$Recipient{UserEmail} ) {
 
         my %CustomerUser = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
             User => $Recipient{UserID},
@@ -250,7 +245,7 @@ sub SendNotification {
         );
     }
 
-# NotificationEventX-capeIT
+    # send notification
     # prepare subject
     if (
         defined( $Notification{Data}->{RecipientSubject} )
@@ -267,7 +262,7 @@ sub SendNotification {
             Size         => 0,
         );
     }
-# EO NotificationEventX-capeIT
+    # EO NotificationEventX-capeIT
 
     # send notification
     if ( $Recipient{Type} eq 'Agent' ) {
@@ -667,7 +662,7 @@ sub TransportSettingsDisplayGet {
         Disabled    => $Param{SecurityDisabled},
     );
 
-# NotificationEventX-capeIT
+    # NotificationEventX-capeIT
     # get objects
     my $DynamicFieldObject  = $Kernel::OM->Get('Kernel::System::DynamicField');
 

@@ -252,6 +252,13 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             // get customer tickets for AgentTicketCustomer
             if (Core.Config.Get('Action') === 'AgentTicketCustomer') {
                 GetCustomerTickets($('#CustomerAutoComplete').val(), $('#CustomerID').val());
+
+                $Element.blur(function () {
+                    if ($Element.val() === '') {
+                        TargetNS.ResetCustomerInfo();
+                        $('#CustomerTickets').empty();
+                    }
+                });
             }
 
             // get customer tickets for AgentTicketPhone and AgentTicketEmail
@@ -274,7 +281,11 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             }
             // KIX4OTRS-capeIT
         }
+
         // EO KIX4OTRS-capeIT
+        if ($('#CustomerInfo').length) {
+            BackupData.CustomerInfo = $('#CustomerInfo .Content').html();
+        }
 
         if (isJQueryObject($Element)) {
             // Hide tooltip in autocomplete field, if user already typed something to prevent the autocomplete list
@@ -412,6 +423,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             // KIX4OTRS-capeIT
             // if (Core.Config.Get('Action') !== 'AgentTicketPhone' && Core.Config.Get('Action') !== 'AgentTicketEmail' && Core.Config.Get('Action') !== 'AgentTicketCompose' && Core.Config.Get('Action') !== 'AgentTicketForward') {
             if ( Core.Config.Get('Action') != 'AgentBook' && $Element.attr('name') != undefined && $Element.attr('name').substr(0, 13) !== 'DynamicField_'
+                && Core.Config.Get('Action') !== 'AgentTicketCustomer'
                 && Core.Config.Get('Action') !== 'AgentTicketPhone'
                 && Core.Config.Get('Action') !== 'AgentTicketEmail'
                 && Core.Config.Get('Action') !== 'AgentTicketEmailOutbound'
@@ -561,8 +573,14 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
 
                 // bind click function to remove button
                 $(this).bind('click', function () {
+
                     // remove row
                     TargetNS.RemoveCustomerTicket($(this));
+
+                    // clear CustomerHistory table if there are no selected customer users
+                    if ($('#TicketCustomerContent' + Field + ' .CustomerTicketRadio').length === 0) {
+                        $('#CustomerTickets').empty();
+                    }
                     return false;
                 });
                 // set button value

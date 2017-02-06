@@ -119,6 +119,9 @@ Core.App.Ready(function () {
         TicketActionTemplateOverwriteConfirm: [% Translate("Do you really want to continue?") | JSON %],
         AgentLogoURL: '[% Config("AgentLogo").URL %]',
         OTRSDaemonDialogTitleMsg: [% Translate('Information about the OTRS Daemon') | JSON %],
+
+        ConnectionErrorTitle: [% Translate('Connection error') | JSON %],
+        ConnectionErrorReloadButton: [% Translate('Reload page') | JSON %],
         ShowToolBarMsg: [% Translate("show Toolbar") | JSON %],
         StatsMsg: [% Translate("Stats") | JSON %]
     });
@@ -129,6 +132,7 @@ Core.App.Ready(function () {
 # EO KIXBase-capeIT
 
 [% InsertTemplate("Datepicker.tt") %]
+# ddoerffel - business code removed
 
 [% RenderBlockStart("NewTicketInNewWindow") %]
     $('#nav-Tickets-Newphoneticket a').attr('target', '_blank');

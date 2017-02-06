@@ -39,7 +39,6 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-
     # create needed objects
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
@@ -1204,7 +1203,7 @@ sub Run {
         }
 
         # unescape URIs for inline images etc
-        $Article{Body} = URI::Escape::uri_unescape( $Article{Body} );
+        $Article{Body} =~ s/<img([^>]*)\ssrc="(.*?)"/"<img$1" . ' src="' . URI::Escape::uri_unescape( $2 ) . '"'/egi;
 
         # encode entities for preformatted code within rich text editor
         $Article{Body} = encode_entities( $Article{Body} );

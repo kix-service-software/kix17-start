@@ -222,11 +222,11 @@
                 </div>
 [% RenderBlockEnd("ChatArticlePreview") %]
 [% RenderBlockStart("Priority") %]
-                    <div>
-                        <label for="PriorityID">[% Translate("Priority") | html %]:</label>
+                <div>
+                    <label for="PriorityID">[% Translate("Priority") | html %]:</label>
                     [% Data.PriorityStrg %]
-                        <div class="Clear"></div>
-                    </div>
+                    <div class="Clear"></div>
+                </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#PriorityID').bind('change', function (Event) {

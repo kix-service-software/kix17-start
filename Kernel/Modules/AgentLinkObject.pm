@@ -46,6 +46,10 @@ sub Run {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
+    # KIX4OTRS-capeIT
+    # removed - KIX4OTRS already including preferences settings
+    # KIX4OTRS-capeIT
+
     # ------------------------------------------------------------ #
     # close
     # ------------------------------------------------------------ #

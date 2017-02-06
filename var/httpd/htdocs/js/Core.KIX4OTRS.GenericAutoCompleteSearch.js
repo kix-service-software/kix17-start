@@ -48,6 +48,7 @@ Core.KIX4OTRS.GenericAutoCompleteSearch = (function(TargetNS) {
      * @return nothing This function initializes the special module functions
      */
     TargetNS.Init = function($Element, $DestElement, ActiveAutoComplete) {
+
         if (typeof ActiveAutoComplete === 'undefined') {
             ActiveAutoComplete = true;
         } else {

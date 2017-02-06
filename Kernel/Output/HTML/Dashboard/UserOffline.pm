@@ -20,6 +20,8 @@ package Kernel::Output::HTML::Dashboard::UserOffline;
 use strict;
 use warnings;
 
+use Kernel::Language qw(Translatable);
+
 our $ObjectManagerDisabled = 1;
 
 sub new {
@@ -99,7 +101,7 @@ sub Preferences {
 
     my @Params = (
         {
-            Desc  => 'Shown',
+            Desc  => Translatable('Shown'),
             Name  => $Self->{PrefKey},
             Block => 'Option',
             Data  => {
@@ -361,8 +363,8 @@ sub Run {
 
     # Check if agent has permission to start chats with the listed users
     my $EnableChat               = 1;
-    my $ChatStartingAgentsGroup  = $ConfigObject->Get('ChatEngine::PermissionGroup::ChatStartingAgents');
-    my $ChatReceivingAgentsGroup = $ConfigObject->Get('ChatEngine::PermissionGroup::ChatReceivingAgents');
+    my $ChatStartingAgentsGroup  = $ConfigObject->Get('ChatEngine::PermissionGroup::ChatStartingAgents') || 'users';
+    my $ChatReceivingAgentsGroup = $ConfigObject->Get('ChatEngine::PermissionGroup::ChatReceivingAgents') || 'users';
 
     if (
         !$ConfigObject->Get('ChatEngine::Active')
@@ -389,6 +391,21 @@ sub Run {
         $EnableChat = 0;
     }
 
+    my $VideoChatEnabled = 0;
+    my $VideoChatAgentsGroup = $ConfigObject->Get('ChatEngine::PermissionGroup::VideoChatAgents') || 'users';
+
+    # Enable the video chat feature if system is entitled and agent is a member of configured group.
+    if (
+        $ConfigObject->Get('ChatEngine::Active')
+        && defined $LayoutObject->{"UserIsGroup[$VideoChatAgentsGroup]"}
+        && $LayoutObject->{"UserIsGroup[$VideoChatAgentsGroup]"} eq 'Yes'
+        )
+    {
+        if ( $Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::VideoChat', Silent => 1 ) ) {
+            $VideoChatEnabled = $Kernel::OM->Get('Kernel::System::VideoChat')->IsEnabled();
+        }
+    }
+
     USERID:
 
     # KIX4OTRS-capeIT
@@ -407,8 +424,11 @@ sub Run {
         # my $UserData = $OnlineData{$UserID};
         my $UserData = $OfflineData{$UserID};
         # EO KIX4OTRS-capeIT
-        my $AgentEnableChat = 0;
-        my $ChatAccess      = 0;
+        my $AgentEnableChat    = 0;
+        my $CustomerEnableChat = 0;
+        my $ChatAccess         = 0;
+        my $VideoChatAvailable = 0;
+        my $VideoChatSupport   = 0;
 
         # Default status
         # KIX4OTRS-capeIT
@@ -428,6 +448,11 @@ sub Run {
             my %UserGroupsReverse = reverse %UserGroups;
             $ChatAccess = $UserGroupsReverse{$ChatReceivingAgentsGroup} ? 1 : 0;
 
+            my %User = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
+                UserID => $UserID,
+            );
+            $VideoChatSupport = $User{VideoChatHasWebRTC};
+
             # Check agents availability
             if ($ChatAccess) {
                 my $AgentChatAvailability = $Kernel::OM->Get('Kernel::System::Chat')->AgentAvailabilityGet(
@@ -436,23 +461,48 @@ sub Run {
                 );
 
                 if ( $AgentChatAvailability == 3 ) {
-                    $UserState            = "Active";
+                    $UserState            = Translatable('Active');
                     $AgentEnableChat      = 1;
-                    $UserStateDescription = $LayoutObject->{LanguageObject}->Translate('This user is currently active');
+                    $UserStateDescription = $LayoutObject->{LanguageObject}->Translate('User is currently active.');
+                    $VideoChatAvailable   = 1;
                 }
                 elsif ( $AgentChatAvailability == 2 ) {
-                    $UserState            = "Away";
-                    $AgentEnableChat      = 1;
-                    $UserStateDescription = $LayoutObject->{LanguageObject}->Translate('This user is currently away');
+                    $UserState       = Translatable('Away');
+                    $AgentEnableChat = 1;
+                    $UserStateDescription
+                        = $LayoutObject->{LanguageObject}->Translate('User was inactive for a while.');
                 }
                 elsif ( $AgentChatAvailability == 1 ) {
-                    $UserState = "Unavailable";
+                    $UserState = Translatable('Unavailable');
                     $UserStateDescription
-                        = $LayoutObject->{LanguageObject}->Translate('This user is currently unavailable');
+                        = $LayoutObject->{LanguageObject}->Translate('User set their status to unavailable.');
                 }
             }
         }
+        elsif ($EnableChat) {
+            $ChatAccess = 1;
 
+            my $CustomerChatAvailability = $Kernel::OM->Get('Kernel::System::Chat')->CustomerAvailabilityGet(
+                UserID => $UserData->{UserID},
+            );
+
+            my %CustomerUser = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+                User => $UserID,
+            );
+            $VideoChatSupport = 1 if $CustomerUser{VideoChatHasWebRTC};
+
+            if ( $CustomerChatAvailability == 3 ) {
+                $UserState            = Translatable('Active');
+                $CustomerEnableChat   = 1;
+                $UserStateDescription = $LayoutObject->{LanguageObject}->Translate('User is currently active.');
+                $VideoChatAvailable   = 1;
+            }
+            elsif ( $CustomerChatAvailability == 2 ) {
+                $UserState            = Translatable('Away');
+                $CustomerEnableChat   = 1;
+                $UserStateDescription = $LayoutObject->{LanguageObject}->Translate('User was inactive for a while.');
+            }
+        }
         $LayoutObject->Block(
 
             # KIX4OTRS-capeIT
@@ -464,8 +514,12 @@ sub Run {
                 %{$UserData},
                 ChatAccess           => $ChatAccess,
                 AgentEnableChat      => $AgentEnableChat,
+                CustomerEnableChat   => $CustomerEnableChat,
                 UserState            => $UserState,
                 UserStateDescription => $UserStateDescription,
+                VideoChatEnabled     => $VideoChatEnabled,
+                VideoChatAvailable   => $VideoChatAvailable,
+                VideoChatSupport     => $VideoChatSupport,
             },
         );
 

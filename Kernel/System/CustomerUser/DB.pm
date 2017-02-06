@@ -1344,6 +1344,10 @@ sub _CustomerUserCacheClear {
         Type => $Self->{CacheType} . '_CustomerSearch',
     );
 
+    $Self->{CacheObject}->CleanUp(
+        Type => 'CustomerGroup',
+    );
+
     for my $Function (qw(CustomerUserList)) {
         for my $Valid ( 0 .. 1 ) {
             $Self->{CacheObject}->Delete(

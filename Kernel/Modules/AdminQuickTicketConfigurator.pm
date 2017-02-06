@@ -884,7 +884,6 @@ sub Run {
     $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
 
-
     my @Templates = $TicketObject->TicketTemplateList(
         Result => 'Name',
     );

@@ -698,12 +698,12 @@ sub SearchOptionList {
         },
         {
             Key  => 'TicketTitle',
-            Name => 'Title',
+            Name => Translatable('Title'),
             Type => 'Text',
         },
         {
             Key  => 'TicketFulltext',
-            Name => 'Fulltext',
+            Name => Translatable('Fulltext'),
             Type => 'Text',
         },
 
@@ -716,7 +716,7 @@ sub SearchOptionList {
         # EO KIX4OTRS-capeIT
         {
             Key  => 'PriorityIDs',
-            Name => 'Priority',
+            Name => Translatable('Priority'),
             Type => 'List',
         },
     );
@@ -752,7 +752,7 @@ sub SearchOptionList {
         push @SearchOptionList,
             {
             Key  => 'TypeIDs',
-            Name => 'Type',
+            Name => Translatable('Type'),
             Type => 'List',
             };
     }
@@ -761,7 +761,7 @@ sub SearchOptionList {
         push @SearchOptionList,
             {
             Key  => 'ArchiveID',
-            Name => 'Archive search',
+            Name => Translatable('Archive search'),
             Type => 'List',
             };
     }
@@ -908,7 +908,7 @@ sub SearchOptionList {
 
 =head1 TERMS AND CONDITIONS
 
-This software is part of the OTRS project (http://otrs.org/).
+This software is part of the OTRS project (L<http://otrs.org/>).
 
 This software comes with ABSOLUTELY NO WARRANTY. For details, see
 the enclosed file COPYING for license information (AGPL). If you

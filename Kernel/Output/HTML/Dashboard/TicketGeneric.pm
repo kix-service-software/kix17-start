@@ -1099,6 +1099,80 @@ sub Run {
                 }
             }
         }
+
+        # get ticket escalation time settings
+        if ( !$SearchProfileData{EscalationTimeSearchType} ) {
+
+            # do nothing on time stuff
+        }
+        elsif ( $SearchProfileData{EscalationTimeSearchType} eq 'TimeSlot' ) {
+            for (qw(Month Day)) {
+                $SearchProfileData{"TicketEscalationTimeStart$_"}
+                    = sprintf( "%02d", $SearchProfileData{"TicketEscalationTimeStart$_"} );
+            }
+            for (qw(Month Day)) {
+                $SearchProfileData{"TicketEscalationTimeStop$_"}
+                    = sprintf( "%02d", $SearchProfileData{"TicketEscalationTimeStop$_"} );
+            }
+            if (
+                $SearchProfileData{TicketEscalationTimeStartDay}
+                && $SearchProfileData{TicketEscalationTimeStartMonth}
+                && $SearchProfileData{TicketEscalationTimeStartYear}
+                )
+            {
+                $SearchProfileData{TicketEscalationTimeNewerDate}
+                    = $SearchProfileData{TicketEscalationTimeStartYear} . '-'
+                    . $SearchProfileData{TicketEscalationTimeStartMonth} . '-'
+                    . $SearchProfileData{TicketEscalationTimeStartDay}
+                    . ' 00:00:00';
+            }
+            if (
+                $SearchProfileData{TicketEscalationTimeStopDay}
+                && $SearchProfileData{TicketEscalationTimeStopMonth}
+                && $SearchProfileData{TicketEscalationTimeStopYear}
+                )
+            {
+                $SearchProfileData{TicketEscalationTimeOlderDate}
+                    = $SearchProfileData{TicketEscalationTimeStopYear} . '-'
+                    . $SearchProfileData{TicketEscalationTimeStopMonth} . '-'
+                    . $SearchProfileData{TicketEscalationTimeStopDay}
+                    . ' 23:59:59';
+            }
+        }
+        elsif ( $SearchProfileData{EscalationTimeSearchType} eq 'TimePoint' ) {
+            if (
+                $SearchProfileData{TicketEscalationTimePoint}
+                && $SearchProfileData{TicketEscalationTimePointStart}
+                && $SearchProfileData{TicketEscalationTimePointFormat}
+                )
+            {
+                my $Time = 0;
+                if ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'minute' ) {
+                    $Time = $SearchProfileData{TicketEscalationTimePoint};
+                }
+                elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'hour' ) {
+                    $Time = $SearchProfileData{TicketEscalationTimePoint} * 60;
+                }
+                elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'day' ) {
+                    $Time = $SearchProfileData{TicketEscalationTimePoint} * 60 * 24;
+                }
+                elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'week' ) {
+                    $Time = $SearchProfileData{TicketEscalationTimePoint} * 60 * 24 * 7;
+                }
+                elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'month' ) {
+                    $Time = $SearchProfileData{TicketEscalationTimePoint} * 60 * 24 * 30;
+                }
+                elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'year' ) {
+                    $Time = $SearchProfileData{TicketEscalationTimePoint} * 60 * 24 * 365;
+                }
+                if ( $SearchProfileData{TicketEscalationTimePointStart} eq 'Before' ) {
+                    $SearchProfileData{TicketEscalationTimeOlderMinutes} = $Time;
+                }
+                else {
+                    $SearchProfileData{TicketEscalationTimeNewerMinutes} = $Time;
+                }
+            }
+        }
         # EO KIX4OTRS-capeIT
 
         # get close time settings

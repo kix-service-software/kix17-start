@@ -1981,10 +1981,17 @@ sub BuildQueueView {
             }
 
             # do ticket search to get ticket count
-            $Hash{Count} = $TicketObject->TicketSearch(
-
+            $Hash{Total} = $TicketObject->TicketSearch(
                 # StateIDs => $Self->{ViewableStateIDs},
                 # LockIDs  => \@ViewableLockIDs,
+                %SearchProfileData,
+                UserID          => $Self->{UserID},
+                ConditionInline => 1,
+                FullTextIndex   => 1,
+                Result          => 'COUNT',
+            ) || 0;
+            $Hash{Count} = $TicketObject->TicketSearch(
+                LockIDs  => \@ViewableLockIDs,
                 %SearchProfileData,
                 UserID          => $Self->{UserID},
                 ConditionInline => 1,
@@ -2094,11 +2101,25 @@ sub BuildQueueView {
                     UserID     => $Self->{UserID},
                     Result     => 'COUNT',
                 ) || 0;
+                $Hash{Total} = $TicketObject->TicketSearchOR(
+                    StateIDs => \@ViewableStateIDs,
+                    %Search,
+                    Permission => $Permission,
+                    UserID     => $Self->{UserID},
+                    Result     => 'COUNT',
+                ) || 0;
             }
             else {
                 $Hash{Count} = $TicketObject->TicketSearch(
                     StateIDs => \@ViewableStateIDs,
                     LockIDs  => \@ViewableLockIDs,
+                    %Search,
+                    Permission => $Permission,
+                    UserID     => $Self->{UserID},
+                    Result     => 'COUNT',
+                ) || 0;
+                $Hash{Total} = $TicketObject->TicketSearch(
+                    StateIDs => \@ViewableStateIDs,
                     %Search,
                     Permission => $Permission,
                     UserID     => $Self->{UserID},
@@ -2454,7 +2475,8 @@ sub _MaskQueueViewTree {
         $QueueName4Sort =~ s/_/AAAc/g;
 
         $AllQueuesData{$QueueName4Sort} = {
-            Count => $Queue{Total} || $Queue{Count},
+            Count => $Queue{Count},
+            Total => $Queue{Total},
             Queue => $Queue[-1],
             QueueID    => $Queue{QueueID},
             QueueSplit => \@Queue,
@@ -2526,6 +2548,12 @@ sub _MaskQueueViewTree {
 
         # show other queues
         elsif ( defined $Queue{QueueID} ) {
+            my $QueueCountDisplay;
+            if ($Queue{Count} == $Queue{Total}) {
+                $QueueCountDisplay = "(" . $Queue{Total} . ")";
+            } else {
+                $QueueCountDisplay = "(" . $Queue{Count} . "/" . $Queue{Total} . ")";
+            }
             $QueueStrg = '<a href="' . $LayoutObject->{Baselink}
                 . 'Action=AgentTicketQueue'
                 . ';QueueID=' . $Queue{QueueID}
@@ -2534,9 +2562,8 @@ sub _MaskQueueViewTree {
                 . $LayoutObject->Ascii2Html( Text => $Param{Filter} ) . '"'
                 . ' title="'
                 . $Current . '">'
-                . $Queue{Queue} . ' ('
-                . ( $Queue{Count} || 0 ) . '/'
-                . ( $Queue{Total} || 0 ) . ')'
+                . $Queue{Queue} . ' '
+                . $QueueCountDisplay
                 . '</a>';
         }
 
@@ -2654,7 +2681,8 @@ sub _MaskQueueViewDropDown {
         my @Queue = split( /::/, $Queue{Queue} );
 
         $AllQueuesData{ $Queue{Queue} } = {
-            Count => $Queue{Total} || $Queue{Count},
+            Count => $Queue{Count},
+            Total => $Queue{Total},
             Queue => $Queue[-1],
             QueueID    => $Queue{QueueID},
             QueueSplit => \@Queue,
@@ -2731,9 +2759,14 @@ sub _MaskQueueViewDropDown {
                 }
             }
         }
-
+            my $QueueCountDisplay;
+            if ($Queue{Count} == $Queue{Total}) {
+                $QueueCountDisplay = "(" . $Queue{Total} . ")";
+            } else {
+                $QueueCountDisplay = "(" . $Queue{Count} . "/" . $Queue{Total} . ")";
+            }
         $QueueStrg{$#QueueName}->{Data}->{$Current}->{Label}
-            = "$QueueName[-1] (" . ( $Queue{Count} || 0 ) . '/' . ( $Queue{Total} || 0 ) . ")";
+            = $QueueName[-1] . " " . $QueueCountDisplay;
         $QueueStrg{$#QueueName}->{Data}->{$Current}->{Link} = $QueueStrg;
     }
 

@@ -129,6 +129,7 @@ Core.App.Ready(function () {
     Core.KIX4OTRS.TicketZoomTabs.Init();
 # EO KIX4OTRS-capeIT
 
+[% InsertTemplate("Datepicker.tt") %]
 # KIXBase-capeIT
     Core.KIXBase.Agent.Init();
 # EO KIXBase-capeIT

@@ -359,7 +359,8 @@ sub Run {
         $Article{Atms} = \%AtmIndex;
 
         # fetch all std. templates
-        my %StandardTemplates = $Kernel::OM->Get('Kernel::System::Queue')->QueueStandardTemplateMemberList(
+        my %StandardTemplates
+            = $Kernel::OM->Get('Kernel::System::Queue')->QueueStandardTemplateMemberList(
             QueueID       => $Ticket{QueueID},
             TemplateTypes => 1,
             Valid         => 1,

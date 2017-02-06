@@ -82,7 +82,6 @@ sub new {
 
     # KIX4OTRS-capeIT
     $Self->{UserLanguage} = $Param{UserLanguage};
-
     # EO KIX4OTRS-capeIT
 
     return $Self;
@@ -1009,13 +1008,12 @@ sub ReplacePlaceHolder {
     # check needed stuff
     for (qw(Text Data UserID)) {
         if ( !defined $Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')
-                ->Log( Priority => 'error', Message => "Need $_!" );
+            $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "Need $_!" );
             return;
         }
     }
 
-    if ( !defined $Param{Language} || !$Param{Language} ) {
+    if ( !defined $Param{Language} || !$Param{Language}) {
         my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
         $Param{Language}
             = $Self->{UserLanguage}
@@ -1098,6 +1096,9 @@ sub _Replace {
             DynamicFields => 1,
         );
     }
+    # Bugfix for OTRS-Bug 11762
+    my %TicketRaw = %Ticket;
+    # EO Bugfix for OTRS-Bug 11762
 
     # Bugfix for OTRS-Bug 11762
     if ( $Param{Language} ) {
@@ -1359,13 +1360,11 @@ sub _Replace {
         # get the display value for each dynamic field
         my $DisplayValue = $DynamicFieldBackendObject->ValueLookup(
             DynamicFieldConfig => $DynamicFieldConfig,
-
             # Bugfix for OTRS-Bug 11762
             # Key                => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-            Key => $TicketRaw{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-
+            Key                => $TicketRaw{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
             # EO Bugfix for OTRS-Bug 11762
-            LanguageObject => $LanguageObject,
+            LanguageObject     => $LanguageObject,
         );
 
         # get the readable value (value) for each dynamic field
@@ -1383,11 +1382,9 @@ sub _Replace {
         # get the readable value (key) for each dynamic field
         my $ValueStrg = $DynamicFieldBackendObject->ReadableValueRender(
             DynamicFieldConfig => $DynamicFieldConfig,
-
             # Bugfix for OTRS-Bug 11762
             # Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-            Value => $TicketRaw{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-
+            Value              => $TicketRaw{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
             # EO Bugfix for OTRS-Bug 11762
         );
 
@@ -1559,13 +1556,11 @@ sub _Replace {
 
                 my $SubjectChar = $1;
                 my $Subject     = $Kernel::OM->Get('Kernel::System::Ticket')->TicketSubjectClean(
-
-                    # Bugfix for OTRS-Bug 11762
-                    # TicketNumber => $Ticket{TicketNumber},
+                # Bugfix for OTRS-Bug 11762
+                # TicketNumber => $Ticket{TicketNumber},
                     TicketNumber => $TicketRaw{TicketNumber},
-
-                    # EO Bugfix for OTRS-Bug 11762
-                    Subject => $Data{Subject},
+                # EO Bugfix for OTRS-Bug 11762
+                    Subject      => $Data{Subject},
                 );
 
                 $Subject =~ s/^(.{$SubjectChar}).*$/$1 [...]/;
@@ -1610,12 +1605,10 @@ sub _Replace {
                 if ( $Ticket{CustomerUserID} ) {
 
                     $From = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerName(
-
                         # Bugfix for OTRS-Bug 11762
                         # UserLogin => $Ticket{CustomerUserID}
                         UserLogin => $TicketRaw{CustomerUserID}
-
-                            # EO Bugfix for OTRS-Bug 11762
+                        # EO Bugfix for OTRS-Bug 11762
                     );
                 }
 
@@ -1651,9 +1644,7 @@ sub _Replace {
 
     # KIX4OTRS-capeIT
     # if ( $Ticket{CustomerUserID} || $Param{Data}->{CustomerUserID} ) {
-    if (   $Ticket{CustomerUserID}
-        || $Param{Data}->{CustomerUserID}
-        || ( defined $Param{Frontend} && $Param{Frontend} eq 'Customer' ) )
+    if ( $Ticket{CustomerUserID} || $Param{Data}->{CustomerUserID} || ( defined $Param{Frontend} && $Param{Frontend} eq 'Customer' ) )
     {
 
         # EO KIX4OTRS-capeIT
@@ -1661,7 +1652,6 @@ sub _Replace {
         # Bugfix for OTRS-Bug 11762
         # my $CustomerUserID = $Param{Data}->{CustomerUserID} || $Ticket{CustomerUserID};
         my $CustomerUserID = $Param{Data}->{CustomerUserID} || $TicketRaw{CustomerUserID};
-
         # EO Bugfix for OTRS-Bug 11762
 
         my %CustomerUser = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
@@ -1839,13 +1829,11 @@ sub _Replace {
         if ( $Param{Text} =~ /$Tag2\[(.+?)\]$End/g ) {
             my $SubjectChar = $1;
             my $Subject     = $TicketObject->TicketSubjectClean(
-
                 # Bugfix for OTRS-Bug 11762
                 # TicketNumber => $Ticket{TicketNumber},
                 TicketNumber => $TicketRaw{TicketNumber},
-
                 # EO Bugfix for OTRS-Bug 11762
-                Subject => $Article{Subject},
+                Subject      => $Article{Subject},
             );
             $Subject =~ s/^(.{$SubjectChar}).*$/$1 [...]/;
             $Param{Text} =~ s/$Tag2\[.+?\]$End/$Subject/g;
@@ -1874,6 +1862,48 @@ sub _Replace {
     # EO KIX4OTRS-capeIT
 
     return $Param{Text};
+}
+
+=head2 _RemoveUnSupportedTag()
+
+cleanup all not supported tags
+
+    my $Text = $TemplateGeneratorObject->_RemoveUnSupportedTag(
+        Text => $SomeTextWithTags,
+        ListOfUnSupportedTag => \@ListOfUnSupportedTag,
+    );
+
+=cut
+
+sub _RemoveUnSupportedTag {
+
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    for (qw(Text ListOfUnSupportedTag)) {
+        if ( !defined $Param{$_} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $_!"
+            );
+            return;
+        }
+    }
+
+    my $Start = '<';
+    my $End   = '>';
+    if ( $Self->{RichText} ) {
+        $Start = '&lt;';
+        $End   = '&gt;';
+        $Param{Text} =~ s/(\n|\r)//g;
+    }
+
+    # cleanup all not supported tags
+    my $NotSupportedTag = $Start . "(?:" . join( "|", @{ $Param{ListOfUnSupportedTag} } ) . ")" . $End;
+    $Param{Text} =~ s/$NotSupportedTag/-/gi;
+
+    return $Param{Text};
+
 }
 
 1;

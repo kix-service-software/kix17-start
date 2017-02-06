@@ -1037,35 +1037,37 @@ sub SendEmail {
         # do not validate if field is disabled
         if ( !$DynamicFieldConfig->{Shown} ) {
 
-            # my $ValidationResult = $BackendObject->EditFieldValueValidate(
-            $ValidationResult = $DynamicFieldBackendObject->EditFieldValueValidate(
+            if ( !$IsUpload ) {
 
-                # EO KIX4OTRS-capeIT
-                DynamicFieldConfig => $DynamicFieldConfig,
+                $ValidationResult = $DynamicFieldBackendObject->EditFieldValueValidate(
 
-                # KIX4OTRS-capeIT
-                # PossibleValuesFilter => $PossibleValuesFilter,
-                PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
+                    # EO KIX4OTRS-capeIT
+                    DynamicFieldConfig => $DynamicFieldConfig,
 
-                # EO KIX4OTRS-capeIT
-                ParamObject => $ParamObject,
-                Mandatory =>
-                    $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-            );
+                    # KIX4OTRS-capeIT
+                    # PossibleValuesFilter => $PossibleValuesFilter,
+                    PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
 
-            if ( !IsHashRefWithData($ValidationResult) ) {
-
-                return $LayoutObject->ErrorScreen(
-                    Message =>
-                        $LayoutObject->{LanguageObject}
-                        ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
-                    Comment => Translatable('Please contact the administrator.'),
+                    # EO KIX4OTRS-capeIT
+                    ParamObject => $ParamObject,
+                    Mandatory =>
+                        $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                 );
-            }
 
-            # propagate validation error to the Error variable to be detected by the frontend
-            if ( $ValidationResult->{ServerError} ) {
-                $Error{ $DynamicFieldConfig->{Name} } = ' ServerError';
+                if ( !IsHashRefWithData($ValidationResult) ) {
+
+                    return $LayoutObject->ErrorScreen(
+                        Message =>
+                            $LayoutObject->{LanguageObject}
+                            ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
+                        Comment => Translatable('Please contact the admin.'),
+                    );
+                }
+
+                # propagate validation error to the Error variable to be detected by the frontend
+                if ( $ValidationResult->{ServerError} ) {
+                    $Error{ $DynamicFieldConfig->{Name} } = ' ServerError';
+                }
             }
 
             # get field HTML
@@ -1112,14 +1114,16 @@ sub SendEmail {
             next LINE if !$GetParam{$Line};
             for my $Email ( Mail::Address->parse( $GetParam{$Line} ) ) {
                 if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
-                    $Error{ $Line . 'ErrorType' } = $Line . $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
-                    $Error{ $Line . 'Invalid' }   = 'ServerError';
+                    $Error{ $Line . 'ErrorType' }
+                        = $Line . $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
+                    $Error{ "$Line" . "Invalid" } = 'ServerError';
                 }
-                my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
+                my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')
+                    ->SystemAddressIsLocalAddress(
                     Address => $Email->address()
-                );
+                    );
                 if ($IsLocal) {
-                    $Error{ $Line . 'IsLocalAddress' } = 'ServerError';
+                    $Error{ "$Line" . "Invalid" } = 'ServerError';
                 }
             }
         }
@@ -1162,45 +1166,6 @@ sub SendEmail {
             );
         }
     }
-
-    # attachment delete
-    my @AttachmentIDs = map {
-        my ($ID) = $_ =~ m{ \A AttachmentDelete (\d+) \z }xms;
-        $ID ? $ID : ();
-    } $ParamObject->GetParamNames();
-
-    # get upload cache object
-    my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
-
-    COUNT:
-    for my $Count ( reverse sort @AttachmentIDs ) {
-        my $Delete = $ParamObject->GetParam( Param => "AttachmentDelete$Count" );
-        next COUNT if !$Delete;
-        %Error = ();
-        $Error{AttachmentDelete} = 1;
-        $UploadCacheObject->FormIDRemoveFile(
-            FormID => $GetParam{FormID},
-            FileID => $Count,
-        );
-    }
-
-    # attachment upload
-    if ( $ParamObject->GetParam( Param => 'AttachmentUpload' ) ) {
-        %Error = ();
-        $Error{AttachmentUpload} = 1;
-        my %UploadStuff = $ParamObject->GetUploadAll(
-            Param => 'FileUpload',
-        );
-        $UploadCacheObject->FormIDAddFile(
-            FormID => $GetParam{FormID},
-            %UploadStuff,
-        );
-    }
-
-    # get all attachments meta data
-    my @Attachments = $UploadCacheObject->FormIDGetAllFilesMeta(
-        FormID => $GetParam{FormID},
-    );
 
     # check if there is an error
     if (%Error) {
