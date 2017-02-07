@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # KIX4OTRS-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
@@ -352,6 +352,17 @@ sub CustomerSearch {
         }
 
         # EO KIX4OTRS-capeIT
+    }
+    elsif ( $Param{CustomerIDRaw} ) {
+
+        push @Bind, \$Param{CustomerIDRaw};
+
+        if ( $Self->{CaseSensitive} ) {
+            $SQL .= "$Self->{CustomerID} = ? ";
+        }
+        else {
+            $SQL .= "LOWER($Self->{CustomerID}) = LOWER(?) ";
+        }
     }
 
     # KIX4OTRS-capeIT

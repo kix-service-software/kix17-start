@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/02/07) - Bugfix: T2017013190000712 (missing handling of CustomerIDRaw in Kernel::System::CustomerUser::DB::CustomerSearch) (rkaiser)
  * (2017/01/31) - Bugfix: T2017012490000913 (missing empty state value in AgentTicketPhoneCommon) (ddoerffel)
  * (2017/01/31) - Bugfix: T2017011290000276 (fixed text label in customer user list) (uboehm)
  * (2017/01/31) - Bugfix: T2017013190000678 (when creating tickets in customer frontend only services for primary CustomerID are available in dropdown) (rbo)
