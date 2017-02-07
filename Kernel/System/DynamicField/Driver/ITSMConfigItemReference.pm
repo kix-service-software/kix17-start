@@ -1,6 +1,6 @@
 # --
 # Kernel/System/DynamicField/Driver/ITSMConfigItemReference.pm - Delegate for DynamicField ITSMConfigItemReference backend
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Mario(dot)Illinger(at)cape(dash)it(dot)de
@@ -30,6 +30,7 @@ our @ObjectDependencies = (
     'Kernel::System::ITSMConfigItem',
     'Kernel::System::Log',
     'Kernel::System::Main',
+    'Kernel::System::Ticket::ColumnFilter',
 );
 
 =head1 NAME
@@ -56,11 +57,9 @@ sub new {
 
     # create additional objects
     $Self->{ConfigObject}            = $Kernel::OM->Get('Kernel::Config');
-    $Self->{DBObject}                = $Kernel::OM->Get('Kernel::System::DB');
     $Self->{DynamicFieldValueObject} = $Kernel::OM->Get('Kernel::System::DynamicFieldValue');
     $Self->{GeneralCatalogObject}    = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
     $Self->{ITSMConfigItemObject}    = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
-    $Self->{LogObject}               = $Kernel::OM->Get('Kernel::System::Log');
 
     # get the fields config
     $Self->{FieldTypeConfig} = $Self->{ConfigObject}->Get('DynamicFields::Driver') || {};
@@ -76,7 +75,7 @@ sub new {
     };
 
     # get the Dynamic Field Backend custom extensions
-    my $DynamicFieldDriverExtensions = $Kernel::OM->Get('Kernel::Config')->Get('DynamicFields::Extension::Driver::ITSMConfigItemReference');
+    my $DynamicFieldDriverExtensions = $Self->{ConfigObject}->Get('DynamicFields::Extension::Driver::ITSMConfigItemReference');
 
     EXTENSION:
     for my $ExtensionKey ( sort keys %{$DynamicFieldDriverExtensions} ) {
@@ -312,13 +311,14 @@ sub PossibleValuesGet {
         }
     }
 
-    my @ITSMConfigItemClasses;
-    if( defined $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}
-        && IsArrayRefWithData(@{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}})
+    my @ITSMConfigItemClasses = ();
+    if(
+        defined( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
+        && IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
     ) {
         @ITSMConfigItemClasses = @{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}};
     }
-    if ( !scalar(@ITSMConfigItemClasses) ) {
+    else {
         my $ClassRef = $Self->{GeneralCatalogObject}->ItemList(
             Class => 'ITSM::ConfigItem::Class',
         );
@@ -470,6 +470,39 @@ sub EditFieldRender {
 
     my $MaxArraySize          = $FieldConfig->{MaxArraySize} || 1;
 
+    # get used Constrictions
+    my $ConstrictionString = $FieldName . ';TicketID';
+    my $Constrictions      = $Param{DynamicFieldConfig}->{Config}->{Constrictions};
+    if ( $Constrictions ) {
+        my $CustomerConstriction = 0;
+        my @Constrictions = split(/[\n\r]+/, $Constrictions);
+        CONSTRICTION:
+        for my $Constriction ( @Constrictions ) {
+            my @ConstrictionRule = split(/::/, $Constriction);
+            # check for valid constriction
+            next CONSTRICTION if (
+                scalar(@ConstrictionRule) != 4
+                || $ConstrictionRule[0] eq ""
+                || $ConstrictionRule[1] eq ""
+                || $ConstrictionRule[2] eq ""
+            );
+            # only handle static constrictions in admininterface
+            if (
+                $ConstrictionRule[1] eq 'Ticket'
+            ) {
+                $ConstrictionString .= ';' . $ConstrictionRule[2];
+            }
+            elsif (
+                $ConstrictionRule[1] eq 'CustomerUser'
+            ) {
+                $CustomerConstriction = 1;
+            }
+        }
+        if ( $CustomerConstriction ) {
+            $ConstrictionString .= ';CustomerUserID;SelectedCustomerUser';
+        }
+    }
+
     my $TranslateRemoveSelection = $Param{LayoutObject}->{LanguageObject}->Translate("Remove selection");
 
     my $HTMLString = <<"END";
@@ -505,21 +538,6 @@ END
             <div class="Clear"></div>
         </div>
 END
-        $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");
-            \$('#$ValueFieldName$ValueCounter').siblings('div.Remove').find('a').bind('click', function() {
-                \$('#$ValueFieldName$ValueCounter').parent().remove();
-                if (\$('.InputField_Selection > input[name=$FieldName]').length == 0) {
-                    \$('#$ContainerFieldName').hide().append(
-                        '<input class="InputField_Dummy" type="hidden" name="$FieldName" value="" />'
-                    );
-                }
-                if (\$('.InputField_Selection > input[name=$FieldName]').length < $MaxArraySize) {
-                    \$('#$AutoCompleteFieldName').show();
-                }
-                \$('#$FieldName').trigger('change');
-                return false;
-            });
-END
     }
 
     my $ValidValue = "";
@@ -535,237 +553,19 @@ END
 END
 
     $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");
-    var $IDCounterName = $ValueCounter;
-    \$('#$AutoCompleteFieldName').autocomplete({
-        delay: $FieldConfig->{QueryDelay},
-        minLength: $FieldConfig->{MinQueryLength},
-        source: function (Request, Response) {
-            var Data = {};
-            Data.Action         = 'DynamicFieldITSMConfigItemAJAXHandler';
-            Data.Subaction      = 'Search';
-            Data.Search         = Request.term;
-            Data.DynamicFieldID = $FieldID;
-
-            var QueryString = Core.AJAX.SerializeForm(\$('#$AutoCompleteFieldName'), Data);
-            \$.each(Data, function (Key, Value) {
-                QueryString += ';' + encodeURIComponent(Key) + '=' + encodeURIComponent(Value);
-            });
-
-            if (\$('#$AutoCompleteFieldName').data('AutoCompleteXHR')) {
-                \$('#$AutoCompleteFieldName').data('AutoCompleteXHR').abort();
-                \$('#$AutoCompleteFieldName').removeData('AutoCompleteXHR');
-            }
-            \$('#$AutoCompleteFieldName').data('AutoCompleteXHR', Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), QueryString, function (Result) {
-                var Data = [];
-                \$.each(Result, function () {
-                    Data.push({
-                        key:   this.Key,
-                        value: this.Value,
-                        title: this.Title
-                    });
-                });
-                \$('#$AutoCompleteFieldName').data('AutoCompleteData', Data);
-                \$('#$AutoCompleteFieldName').removeData('AutoCompleteXHR');
-                Response(Data);
-            }).fail(function() {
-                Response(\$('#$AutoCompleteFieldName').data('AutoCompleteData'));
-            }));
-        },
-        select: function (Event, UI) {
-            $IDCounterName++;
-            \$('#$ContainerFieldName').append(
-                '<div class="InputField_Selection" style="display:block;position:inherit;top:0px;">'
-                + '<input id="$ValueFieldName'
-                + $IDCounterName
-                + '" type="hidden" name="$FieldName" value="'
-                + UI.item.key
-                + '" />'
-                + '<div class="Text" title="'
-                + UI.item.title
-                + '">'
-                + UI.item.value
-                + '</div>'
-                + '<div class="Remove"><a href="#" role="button" title="$TranslateRemoveSelection" tabindex="-1" aria-label="$TranslateRemoveSelection: '
-                + UI.item.value
-                + '">x</a></div><div class="Clear"></div>'
-                + '</div>'
-            );
-            \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').data('counter', $IDCounterName);
-            \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').bind('click', function() {
-                \$('#$ValueFieldName' + \$(this).data('counter')).parent().remove();
-                if (\$('.InputField_Selection > input[name=$FieldName]').length == 0) {
-                    \$('#$ContainerFieldName').hide().append(
-                        '<input class="InputField_Dummy" type="hidden" name="$FieldName" value="" />'
-                    );
-                }
-                if (\$('.InputField_Selection > input[name=$FieldName]').length < $MaxArraySize) {
-                    \$('#$AutoCompleteFieldName').show();
-                }
-                \$('#$FieldName').trigger('change');
-                return false;
-            });
-            \$('#$ContainerFieldName').show();
-            \$('#$ContainerFieldName > .InputField_Dummy').remove();
-            \$('#$AutoCompleteFieldName').val('');
-            if (\$('.InputField_Selection > input[name=$FieldName]').length >= $MaxArraySize) {
-                \$('#$AutoCompleteFieldName').hide();
-            }
-            \$('#$FieldName').trigger('change');
-            Event.preventDefault();
-            return false;
-        },
-    });
-    \$('#$AutoCompleteFieldName').blur(function() {
-        \$(this).val('');
-        if ( \$('#$ValidateFieldName').hasClass('Error') ) {
-            \$('label[for=$FieldName]').addClass('LabelError');
-            \$('#$AutoCompleteFieldName').addClass('Error');
-        } else {
-            \$('label[for=$FieldName]').removeClass('LabelError');
-            \$('#$AutoCompleteFieldName').removeClass('Error');
-        }
-    });
-    \$('#$FieldName').change(function() {
-        if (\$('#$FieldName').data('AJAXRequest')) {
-            \$('#$FieldName').data('AJAXRequest').abort();
-            \$('#$FieldName').removeData('AJAXRequest');
-        }
-
-        \$('#$ValidateFieldName').val('');
-        \$('.InputField_Selection > input[name=$FieldName]').each(function () {
-            if(\$(this).val()){
-                \$('#$ValidateFieldName').removeClass('Error');
-                \$('#$ValidateFieldName').val('1');
-                return false;
-            }
-        });
-
-        if (\$('#$FieldName').val().length == 0) {
-            return false;
-        }
-
-        var Data = {};
-        Data.Action         = 'DynamicFieldITSMConfigItemAJAXHandler';
-        Data.Subaction      = 'AddValue';
-        Data.Key            = \$('#$FieldName').val();
-        Data.DynamicFieldID = $FieldID;
-
-        var QueryString = Core.AJAX.SerializeForm(\$('#$AutoCompleteFieldName'), Data);
-        \$.each(Data, function (Key, Value) {
-            QueryString += ';' + encodeURIComponent(Key) + '=' + encodeURIComponent(Value);
-        });
-
-        \$('#$FieldName').data('AJAXRequest', \$.ajax({
-            type: 'POST',
-            url: Core.Config.Get('CGIHandle'),
-            data: QueryString,
-            dataType: 'html',
-            async: false,
-            success: function (Response) {
-                if (Response) {
-                    var Result = jQuery.parseJSON(Response);
-                    \$('#$FieldName').val('');
-                    while (\$('.InputField_Selection > input[name=$FieldName]').length >= $MaxArraySize) {
-                        \$('.InputField_Selection > input[name=$FieldName]').last().siblings('div.Remove').find('a').trigger('click');
-                    }
-                    $IDCounterName++;
-                    \$('#$ContainerFieldName').append(
-                        '<div class="InputField_Selection" style="display:block;position:inherit;top:0px;">'
-                        + '<input id="$ValueFieldName'
-                        + $IDCounterName
-                        + '" type="hidden" name="$FieldName" value="'
-                        + Result.Key
-                        + '" />'
-                        + '<div class="Text" title="'
-                        + Result.Title
-                        + '">'
-                        + Result.Value
-                        + '</div>'
-                        + '<div class="Remove"><a href="#" role="button" title="$TranslateRemoveSelection" tabindex="-1" aria-label="$TranslateRemoveSelection: '
-                        + Result.Value
-                        + '">x</a></div><div class="Clear"></div>'
-                        + '</div>'
-                    );
-                    \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').data('counter', $IDCounterName);
-                    \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').bind('click', function() {
-                        \$('#$ValueFieldName' + \$(this).data('counter')).parent().remove();
-                        if (\$('.InputField_Selection > input[name=$FieldName]').length == 0) {
-                            \$('#$ContainerFieldName').hide().append(
-                                '<input class="InputField_Dummy" type="hidden" name="$FieldName" value="" />'
-                            );
-                        }
-                        if (\$('.InputField_Selection > input[name=$FieldName]').length < $MaxArraySize) {
-                            \$('#$AutoCompleteFieldName').show();
-                        }
-                        \$('#$FieldName').trigger('change');
-                        return false;
-                    });
-                    \$('#$ContainerFieldName').show();
-                    \$('#$ContainerFieldName > .InputField_Dummy').remove();
-                    \$('#$AutoCompleteFieldName').val('');
-                    if (\$('.InputField_Selection > input[name=$FieldName]').length >= $MaxArraySize) {
-                        \$('#$AutoCompleteFieldName').hide();
-                    }
-                    \$('#$FieldName').trigger('change');
-                    return false;
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if (textStatus != 'abort') {
-                    alert('Error thrown by AJAX: ' + textStatus + ': ' + errorThrown);
-                }
-            }
-        }));
-    });
-
-    \$('#$ValidateFieldName').closest('form').bind('submit', function() {
-        if ( \$('#$ValidateFieldName').hasClass('Error') ) {
-            \$('label[for=$FieldName]').addClass('LabelError');
-            \$('#$AutoCompleteFieldName').addClass('Error');
-        } else {
-            \$('label[for=$FieldName]').removeClass('LabelError');
-            \$('#$AutoCompleteFieldName').removeClass('Error');
-        }
-    });
-
-    if (\$('.InputField_Selection > input[name=$FieldName]').length == 0) {
-        \$('#$ContainerFieldName').hide().append(
-            '<input class="InputField_Dummy" type="hidden" name="$FieldName" value="" />'
-        );
-    }
-    if (\$('.InputField_Selection > input[name=$FieldName]').length >= $MaxArraySize) {
-        \$('#$AutoCompleteFieldName').hide();
-    }
-    Core.App.Subscribe('Event.AJAX.FormUpdate.Callback', function (Request, Response) {
-        var Data = {};
-        Data.Action         = 'DynamicFieldITSMConfigItemAJAXHandler';
-        Data.Subaction      = 'PossibleValueCheck';
-        Data.DynamicFieldID = $FieldID;
-
-        var QueryString = Core.AJAX.SerializeForm(\$('#$AutoCompleteFieldName'), Data);
-        \$.each(Data, function (Key, Value) {
-            QueryString += ';' + encodeURIComponent(Key) + '=' + encodeURIComponent(Value);
-        });
-
-        if (\$('#$FieldName').data('PossibleValueCheck') != QueryString) {
-            \$('#$FieldName').data('PossibleValueCheck', QueryString);
-            Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), QueryString, function (Response) {
-                \$('.InputField_Selection > input[name=$FieldName]').each(function() {
-                    var Found = 0;
-                    var \$Element = \$(this);
-                    \$.each(Response, function(Key, Value) {
-                        if ( \$Element.val() == Value ) {
-                            Found = 1;
-                        }
-                    });
-                    if (Found == 0) {
-                        \$Element.last().siblings('div.Remove').find('a').trigger('click');
-                    }
-                });
-            }, undefined, false);
-        }
-    });
+Core.Config.Set('DynamicFieldITSMConfigItem.TranslateRemoveSelection', '$TranslateRemoveSelection');
+DynamicFieldITSMConfigItem.InitEditField("$FieldName", "$FieldID", "$MaxArraySize", "$ValueCounter", "$FieldConfig->{QueryDelay}", "$FieldConfig->{MinQueryLength}", "$ConstrictionString");
 END
+
+    my $JSValueCounter = 0;
+    for my $Key ( @{ $SelectedValuesArrayRef } ) {
+        next if (!$Key);
+        $JSValueCounter++;
+
+        $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");
+DynamicFieldITSMConfigItem.InitEditValue("$FieldName", "$JSValueCounter");
+END
+    }
 
     if ( $Param{Mandatory} ) {
         my $DivID = $FieldName . 'Error';
@@ -814,19 +614,7 @@ END
 
         # add js to call FormUpdate()
         $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");
-\$('$FieldSelector').bind('change', function (Event) {
-    var CurrentValue = '';
-    \$('.InputField_Selection > input[name=$FieldName]').each(function() {
-        if (CurrentValue.length > 0) {
-            CurrentValue += ';';
-        }
-        CurrentValue += encodeURIComponent(\$(this).val());
-    });
-    if (\$(this).data('CurrentValue') != CurrentValue) {
-        \$(this).data('CurrentValue', CurrentValue);
-        Core.AJAX.FormUpdate(\$(this).parents('form'), 'AJAXUpdate', '$FieldName', [ $FieldsToUpdate ], function(){}, undefined, false);
-    }
-});
+DynamicFieldITSMConfigItem.InitAJAXUpdate("$FieldName", [ $FieldsToUpdate ]);
 END
     }
 
@@ -1467,13 +1255,14 @@ sub DisplayValueRender {
 sub StatsFieldParameterBuild {
     my ( $Self, %Param ) = @_;
 
-    my @ITSMConfigItemClasses;
-    if( defined $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}
-        && IsArrayRefWithData(@{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}})
+    my @ITSMConfigItemClasses = ();
+    if(
+        defined( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
+        && IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
     ) {
         @ITSMConfigItemClasses = @{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}};
     }
-    if ( !scalar(@ITSMConfigItemClasses) ) {
+    else {
         my $ClassRef = $Self->{GeneralCatalogObject}->ItemList(
             Class => 'ITSM::ConfigItem::Class',
         );

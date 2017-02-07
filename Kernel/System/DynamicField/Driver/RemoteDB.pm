@@ -1,9 +1,10 @@
 # --
 # Kernel/System/DynamicField/Driver/RemoteDB.pm - Delegate for DynamicField RemoteDB backend
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Mario(dot)Illinger(at)cape(dash)it(dot)de
+# * Frank(dot)Jacquemin(at)cape(dash)it(dot)de
 #
 # --
 # $Id$
@@ -25,10 +26,12 @@ use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::Cache',
     'Kernel::System::DB',
     'Kernel::System::DynamicFieldValue',
     'Kernel::System::Log',
     'Kernel::System::Main',
+    'Kernel::System::Ticket::ColumnFilter',
 );
 
 =head1 NAME
@@ -55,9 +58,7 @@ sub new {
 
     # create additional objects
     $Self->{ConfigObject}            = $Kernel::OM->Get('Kernel::Config');
-    $Self->{DBObject}                = $Kernel::OM->Get('Kernel::System::DB');
     $Self->{DynamicFieldValueObject} = $Kernel::OM->Get('Kernel::System::DynamicFieldValue');
-    $Self->{LogObject}               = $Kernel::OM->Get('Kernel::System::Log');
 
     # get the fields config
     $Self->{FieldTypeConfig} = $Self->{ConfigObject}->Get('DynamicFields::Driver') || {};
@@ -73,7 +74,7 @@ sub new {
     };
 
     # get the Dynamic Field Backend custom extensions
-    my $DynamicFieldDriverExtensions = $Kernel::OM->Get('Kernel::Config')->Get('DynamicFields::Extension::Driver::RemoteDB');
+    my $DynamicFieldDriverExtensions = $Self->{ConfigObject}->Get('DynamicFields::Extension::Driver::RemoteDB');
 
     EXTENSION:
     for my $ExtensionKey ( sort keys %{$DynamicFieldDriverExtensions} ) {
@@ -180,13 +181,6 @@ sub ValueLookup {
     return if (!defined ($Param{Key}));
     return '' if ($Param{Key} eq '');
 
-    my $DFRemoteDBObject = Kernel::System::DFRemoteDB->new(
-        DatabaseDSN  => $Param{DynamicFieldConfig}->{Config}->{DatabaseDSN},
-        DatabaseUser => $Param{DynamicFieldConfig}->{Config}->{DatabaseUser},
-        DatabasePw   => $Param{DynamicFieldConfig}->{Config}->{DatabasePw},
-        %{ $Self },
-    );
-
     # return array or scalar depending on $Param{Key}
     my $Result;
     my @Keys;
@@ -201,78 +195,97 @@ sub ValueLookup {
 
     for my $Key ( @Keys ){
 
-        my $QuotedValue = $DFRemoteDBObject->Quote($Key);
-
-        # check if value is in cache
-        if ( $Param{DynamicFieldConfig}->{Config}->{CacheTTL} ) {
-            $Self->{CacheType} = 'DynamicField_RemoteDB_' . $Param{DynamicFieldConfig}->{Name};
-
-            my $Value = $Kernel::OM->Get('Kernel::System::Cache')->Get(
-                Type => $Self->{CacheType},
-                Key  => "ValueLookup::$QuotedValue",
-            );
-            if ( $Value &&  ref $Param{Key} eq 'ARRAY' ) {
-                push(@{$Result}, $Value);
-                next;
-            }
-            else{
-                return $Value if $Value;
-            }
-        }
-
-        my $QueryCondition = " WHERE";
-        if ( length($QuotedValue) ) {
-            $QueryCondition .= $DFRemoteDBObject->QueryCondition(
-                Key           => $Param{DynamicFieldConfig}->{Config}->{DatabaseFieldKey},
-                Value         => $QuotedValue,
-                CaseSensitive => 1,
-            );
-        }
-        else {
-            $QueryCondition = "";
-        }
-
-        my $SQL = 'SELECT '
-            . $Param{DynamicFieldConfig}->{Config}->{DatabaseFieldValue}
-            . ' FROM '
-            . $Param{DynamicFieldConfig}->{Config}->{DatabaseTable}
-            . $QueryCondition;
-
-        my $Success = $DFRemoteDBObject->Prepare(
-            SQL   => $SQL,
-            Limit => 1,
+        my $Value = $Self->_ValueLookup(
+            DynamicFieldConfig => $Param{DynamicFieldConfig},
+            Key                => $Key,
         );
-        if ( !$Success ) {
-            return;
-        }
 
-        my $Value;
-        while (my @Row = $DFRemoteDBObject->FetchrowArray()) {
-            $Value = $Row[0];
-            last;
-        }
+        $Value = defined $Value ? $Value : $Key;
 
-        $Value = defined $Value ? $Value : $Param{Key};
-
-        if ( ref $Result eq 'ARRAY' ) {
+        if ( ref $Param{Key} eq 'ARRAY' ) {
             push(@{$Result}, $Value);
         }
         else{
             $Result = $Value;
         }
-
-        # cache request
-        if ( $Param{DynamicFieldConfig}->{Config}->{CacheTTL} ) {
-            $Kernel::OM->Get('Kernel::System::Cache')->Set(
-                Type  => $Self->{CacheType},
-                Key   => "ValueLookup::$QuotedValue",
-                Value => $Value,
-                TTL   => $Param{DynamicFieldConfig}->{Config}->{CacheTTL},
-            );
-        }
     }
 
     return $Result;
+}
+
+sub _ValueLookup {
+    my ( $Self, %Param ) = @_;
+
+    my $DynamicFieldConfig = $Param{DynamicFieldConfig};
+    my $Key                = $Param{Key};
+
+    # check if value is in cache
+    if ( $DynamicFieldConfig->{Config}->{CacheTTL} ) {
+        $Self->{CacheType} = 'DynamicField_RemoteDB_' . $DynamicFieldConfig->{Name};
+
+        my $Value = $Kernel::OM->Get('Kernel::System::Cache')->Get(
+            Type => $Self->{CacheType},
+            Key  => "ValueLookup::$Key",
+        );
+
+        return $Value if $Value;
+    }
+
+    my $DFRemoteDBObject = Kernel::System::DFRemoteDB->new(
+        %{ $Self },
+        DatabaseDSN  => $DynamicFieldConfig->{Config}->{DatabaseDSN},
+        DatabaseUser => $DynamicFieldConfig->{Config}->{DatabaseUser},
+        DatabasePw   => $DynamicFieldConfig->{Config}->{DatabasePw},
+        Type         => $DynamicFieldConfig->{Config}->{DatabaseType},
+    );
+
+    my $QuotedValue        = $DFRemoteDBObject->Quote($Key);
+    my $QueryCondition = " WHERE";
+    if ( length($QuotedValue) ) {
+        $QueryCondition .= $DFRemoteDBObject->QueryCondition(
+            Key           => $DynamicFieldConfig->{Config}->{DatabaseFieldKey},
+            Value         => $QuotedValue,
+            # always lookup keys casesensitive
+            CaseSensitive => 1,
+            # EO always lookup keys casesensitive
+        );
+    }
+    else {
+        $QueryCondition = "";
+    }
+
+    my $SQL = 'SELECT '
+        . $DynamicFieldConfig->{Config}->{DatabaseFieldValue}
+        . ' FROM '
+        . $DynamicFieldConfig->{Config}->{DatabaseTable}
+        . $QueryCondition;
+
+    my $Success = $DFRemoteDBObject->Prepare(
+        SQL   => $SQL,
+        Limit => 1,
+    );
+    if ( !$Success ) {
+        return;
+    }
+
+    my $Value;
+    while (my @Row = $DFRemoteDBObject->FetchrowArray()) {
+        $Value = $Row[0];
+        last;
+    }
+
+    return if !$Value;
+
+    # cache request
+    if ( $DynamicFieldConfig->{Config}->{CacheTTL} ) {
+        $Kernel::OM->Get('Kernel::System::Cache')->Set(
+            Type  => $Self->{CacheType},
+            Key   => "ValueLookup::$Key",
+            Value => $Value,
+            TTL   => $DynamicFieldConfig->{Config}->{CacheTTL},
+        );
+    }
+    return $Value;
 }
 
 sub ValueIsDifferent {
@@ -442,6 +455,39 @@ sub EditFieldRender {
 
     my $MaxArraySize          = $FieldConfig->{MaxArraySize} || 1;
 
+    # get used Constrictions
+    my $ConstrictionString = $FieldName . ';TicketID';
+    my $Constrictions      = $Param{DynamicFieldConfig}->{Config}->{Constrictions};
+    if ( $Constrictions ) {
+        my $CustomerConstriction = 0;
+        my @Constrictions = split(/[\n\r]+/, $Constrictions);
+        CONSTRICTION:
+        for my $Constriction ( @Constrictions ) {
+            my @ConstrictionRule = split(/::/, $Constriction);
+            # check for valid constriction
+            next CONSTRICTION if (
+                scalar(@ConstrictionRule) != 4
+                || $ConstrictionRule[0] eq ""
+                || $ConstrictionRule[1] eq ""
+                || $ConstrictionRule[2] eq ""
+            );
+            # only handle static constrictions in admininterface
+            if (
+                $ConstrictionRule[1] eq 'Ticket'
+            ) {
+                $ConstrictionString .= ';' . $ConstrictionRule[2];
+            }
+            elsif (
+                $ConstrictionRule[1] eq 'CustomerUser'
+            ) {
+                $CustomerConstriction = 1;
+            }
+        }
+        if ( $CustomerConstriction ) {
+            $ConstrictionString .= ';CustomerUserID;SelectedCustomerUser';
+        }
+    }
+
     my $TranslateRemoveSelection = $Param{LayoutObject}->{LanguageObject}->Translate("Remove selection");
 
     my $HTMLString = <<"END";
@@ -474,21 +520,6 @@ END
             <div class="Clear"></div>
         </div>
 END
-        $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");
-            \$('#$ValueFieldName$ValueCounter').siblings('div.Remove').find('a').bind('click', function() {
-                \$('#$ValueFieldName$ValueCounter').parent().remove();
-                if (\$('.InputField_Selection > input[name=$FieldName]').length == 0) {
-                    \$('#$ContainerFieldName').hide().append(
-                        '<input class="InputField_Dummy" type="hidden" name="$FieldName" value="" />'
-                    );
-                }
-                if (\$('.InputField_Selection > input[name=$FieldName]').length < $MaxArraySize) {
-                    \$('#$AutoCompleteFieldName').show();
-                }
-                \$('#$FieldName').trigger('change');
-                return false;
-            });
-END
     }
 
     my $ValidValue = "";
@@ -504,237 +535,19 @@ END
 END
 
     $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");
-    var $IDCounterName = $ValueCounter;
-    \$('#$AutoCompleteFieldName').autocomplete({
-        delay: $FieldConfig->{QueryDelay},
-        minLength: $FieldConfig->{MinQueryLength},
-        source: function (Request, Response) {
-            var Data = {};
-            Data.Action         = 'DynamicFieldRemoteDBAJAXHandler';
-            Data.Subaction      = 'Search';
-            Data.Search         = Request.term;
-            Data.DynamicFieldID = $FieldID;
-
-            var QueryString = Core.AJAX.SerializeForm(\$('#$AutoCompleteFieldName'), Data);
-            \$.each(Data, function (Key, Value) {
-                QueryString += ';' + encodeURIComponent(Key) + '=' + encodeURIComponent(Value);
-            });
-
-            if (\$('#$AutoCompleteFieldName').data('AutoCompleteXHR')) {
-                \$('#$AutoCompleteFieldName').data('AutoCompleteXHR').abort();
-                \$('#$AutoCompleteFieldName').removeData('AutoCompleteXHR');
-            }
-            \$('#$AutoCompleteFieldName').data('AutoCompleteXHR', Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), QueryString, function (Result) {
-                var Data = [];
-                \$.each(Result, function () {
-                    Data.push({
-                        key:   this.Key,
-                        value: this.Value,
-                        title: this.Title
-                    });
-                });
-                \$('#$AutoCompleteFieldName').data('AutoCompleteData', Data);
-                \$('#$AutoCompleteFieldName').removeData('AutoCompleteXHR');
-                Response(Data);
-            }).fail(function() {
-                Response(\$('#$AutoCompleteFieldName').data('AutoCompleteData'));
-            }));
-        },
-        select: function (Event, UI) {
-            $IDCounterName++;
-            \$('#$ContainerFieldName').append(
-                '<div class="InputField_Selection" style="display:block;position:inherit;top:0px;">'
-                + '<input id="$ValueFieldName'
-                + $IDCounterName
-                + '" type="hidden" name="$FieldName" value="'
-                + UI.item.key
-                + '" />'
-                + '<div class="Text" title="'
-                + UI.item.title
-                + '">'
-                + UI.item.value
-                + '</div>'
-                + '<div class="Remove"><a href="#" role="button" title="$TranslateRemoveSelection" tabindex="-1" aria-label="$TranslateRemoveSelection: '
-                + UI.item.value
-                + '">x</a></div><div class="Clear"></div>'
-                + '</div>'
-            );
-            \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').data('counter', $IDCounterName);
-            \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').bind('click', function() {
-                \$('#$ValueFieldName' + \$(this).data('counter')).parent().remove();
-                if (\$('.InputField_Selection > input[name=$FieldName]').length == 0) {
-                    \$('#$ContainerFieldName').hide().append(
-                        '<input class="InputField_Dummy" type="hidden" name="$FieldName" value="" />'
-                    );
-                }
-                if (\$('.InputField_Selection > input[name=$FieldName]').length < $MaxArraySize) {
-                    \$('#$AutoCompleteFieldName').show();
-                }
-                \$('#$FieldName').trigger('change');
-                return false;
-            });
-            \$('#$ContainerFieldName').show();
-            \$('#$ContainerFieldName > .InputField_Dummy').remove();
-            \$('#$AutoCompleteFieldName').val('');
-            if (\$('.InputField_Selection > input[name=$FieldName]').length >= $MaxArraySize) {
-                \$('#$AutoCompleteFieldName').hide();
-            }
-            \$('#$FieldName').trigger('change');
-            Event.preventDefault();
-            return false;
-        },
-    });
-    \$('#$AutoCompleteFieldName').blur(function() {
-        \$(this).val('');
-        if ( \$('#$ValidateFieldName').hasClass('Error') ) {
-            \$('label[for=$FieldName]').addClass('LabelError');
-            \$('#$AutoCompleteFieldName').addClass('Error');
-        } else {
-            \$('label[for=$FieldName]').removeClass('LabelError');
-            \$('#$AutoCompleteFieldName').removeClass('Error');
-        }
-    });
-    \$('#$FieldName').change(function() {
-        if (\$('#$FieldName').data('AJAXRequest')) {
-            \$('#$FieldName').data('AJAXRequest').abort();
-            \$('#$FieldName').removeData('AJAXRequest');
-        }
-
-        \$('#$ValidateFieldName').val('');
-        \$('.InputField_Selection > input[name=$FieldName]').each(function () {
-            if(\$(this).val()){
-                \$('#$ValidateFieldName').removeClass('Error');
-                \$('#$ValidateFieldName').val('1');
-                return false;
-            }
-        });
-
-        if (\$('#$FieldName').val().length == 0) {
-            return false;
-        }
-
-        var Data = {};
-        Data.Action         = 'DynamicFieldRemoteDBAJAXHandler';
-        Data.Subaction      = 'AddValue';
-        Data.Key            = \$('#$FieldName').val();
-        Data.DynamicFieldID = $FieldID;
-
-        var QueryString = Core.AJAX.SerializeForm(\$('#$AutoCompleteFieldName'), Data);
-        \$.each(Data, function (Key, Value) {
-            QueryString += ';' + encodeURIComponent(Key) + '=' + encodeURIComponent(Value);
-        });
-
-        \$('#$FieldName').data('AJAXRequest', \$.ajax({
-            type: 'POST',
-            url: Core.Config.Get('CGIHandle'),
-            data: QueryString,
-            dataType: 'html',
-            async: false,
-            success: function (Response) {
-                if (Response) {
-                    var Result = jQuery.parseJSON(Response);
-                    \$('#$FieldName').val('');
-                    while (\$('.InputField_Selection > input[name=$FieldName]').length >= $MaxArraySize) {
-                        \$('.InputField_Selection > input[name=$FieldName]').last().siblings('div.Remove').find('a').trigger('click');
-                    }
-                    $IDCounterName++;
-                    \$('#$ContainerFieldName').append(
-                        '<div class="InputField_Selection" style="display:block;position:inherit;top:0px;">'
-                        + '<input id="$ValueFieldName'
-                        + $IDCounterName
-                        + '" type="hidden" name="$FieldName" value="'
-                        + Result.Key
-                        + '" />'
-                        + '<div class="Text" title="'
-                        + Result.Title
-                        + '">'
-                        + Result.Value
-                        + '</div>'
-                        + '<div class="Remove"><a href="#" role="button" title="$TranslateRemoveSelection" tabindex="-1" aria-label="$TranslateRemoveSelection: '
-                        + Result.Value
-                        + '">x</a></div><div class="Clear"></div>'
-                        + '</div>'
-                    );
-                    \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').data('counter', $IDCounterName);
-                    \$('#$ValueFieldName' + $IDCounterName).siblings('div.Remove').find('a').bind('click', function() {
-                        \$('#$ValueFieldName' + \$(this).data('counter')).parent().remove();
-                        if (\$('.InputField_Selection > input[name=$FieldName]').length == 0) {
-                            \$('#$ContainerFieldName').hide().append(
-                                '<input class="InputField_Dummy" type="hidden" name="$FieldName" value="" />'
-                            );
-                        }
-                        if (\$('.InputField_Selection > input[name=$FieldName]').length < $MaxArraySize) {
-                            \$('#$AutoCompleteFieldName').show();
-                        }
-                        \$('#$FieldName').trigger('change');
-                        return false;
-                    });
-                    \$('#$ContainerFieldName').show();
-                    \$('#$ContainerFieldName > .InputField_Dummy').remove();
-                    \$('#$AutoCompleteFieldName').val('');
-                    if (\$('.InputField_Selection > input[name=$FieldName]').length >= $MaxArraySize) {
-                        \$('#$AutoCompleteFieldName').hide();
-                    }
-                    \$('#$FieldName').trigger('change');
-                    return false;
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if (textStatus != 'abort') {
-                    alert('Error thrown by AJAX: ' + textStatus + ': ' + errorThrown);
-                }
-            }
-        }));
-    });
-
-    \$('#$ValidateFieldName').closest('form').bind('submit', function() {
-        if ( \$('#$ValidateFieldName').hasClass('Error') ) {
-            \$('label[for=$FieldName]').addClass('LabelError');
-            \$('#$AutoCompleteFieldName').addClass('Error');
-        } else {
-            \$('label[for=$FieldName]').removeClass('LabelError');
-            \$('#$AutoCompleteFieldName').removeClass('Error');
-        }
-    });
-
-    if (\$('.InputField_Selection > input[name=$FieldName]').length == 0) {
-        \$('#$ContainerFieldName').hide().append(
-            '<input class="InputField_Dummy" type="hidden" name="$FieldName" value="" />'
-        );
-    }
-    if (\$('.InputField_Selection > input[name=$FieldName]').length >= $MaxArraySize) {
-        \$('#$AutoCompleteFieldName').hide();
-    }
-    Core.App.Subscribe('Event.AJAX.FormUpdate.Callback', function (Request, Response) {
-        var Data = {};
-        Data.Action         = 'DynamicFieldRemoteDBAJAXHandler';
-        Data.Subaction      = 'PossibleValueCheck';
-        Data.DynamicFieldID = $FieldID;
-
-        var QueryString = Core.AJAX.SerializeForm(\$('#$AutoCompleteFieldName'), Data);
-        \$.each(Data, function (Key, Value) {
-            QueryString += ';' + encodeURIComponent(Key) + '=' + encodeURIComponent(Value);
-        });
-
-        if (\$('#$FieldName').data('PossibleValueCheck') != QueryString) {
-            \$('#$FieldName').data('PossibleValueCheck', QueryString);
-            Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), QueryString, function (Response) {
-                \$('.InputField_Selection > input[name=$FieldName]').each(function() {
-                    var Found = 0;
-                    var \$Element = \$(this);
-                    \$.each(Response, function(Key, Value) {
-                        if ( \$Element.val() == Value ) {
-                            Found = 1;
-                        }
-                    });
-                    if (Found == 0) {
-                        \$Element.last().siblings('div.Remove').find('a').trigger('click');
-                    }
-                });
-            }, undefined, false);
-        }
-    });
+Core.Config.Set('DynamicFieldRemoteDB.TranslateRemoveSelection', '$TranslateRemoveSelection');
+DynamicFieldRemoteDB.InitEditField("$FieldName", "$FieldID", "$MaxArraySize", "$ValueCounter", "$FieldConfig->{QueryDelay}", "$FieldConfig->{MinQueryLength}", "$ConstrictionString");
 END
+
+    my $JSValueCounter = 0;
+    for my $Key ( @{ $SelectedValuesArrayRef } ) {
+        next if (!$Key);
+        $JSValueCounter++;
+
+        $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");
+DynamicFieldRemoteDB.InitEditValue("$FieldName", "$JSValueCounter");
+END
+    }
 
     if ( $Param{Mandatory} ) {
         my $DivID = $FieldName . 'Error';
@@ -783,19 +596,7 @@ END
 
         # add js to call FormUpdate()
         $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"END");
-\$('$FieldSelector').bind('change', function (Event) {
-    var CurrentValue = '';
-    \$('.InputField_Selection > input[name=$FieldName]').each(function() {
-        if (CurrentValue.length > 0) {
-            CurrentValue += ';';
-        }
-        CurrentValue += encodeURIComponent(\$(this).val());
-    });
-    if (\$(this).data('CurrentValue') != CurrentValue) {
-        \$(this).data('CurrentValue', CurrentValue);
-        Core.AJAX.FormUpdate(\$(this).parents('form'), 'AJAXUpdate', '$FieldName', [ $FieldsToUpdate ], function(){}, undefined, false);
-    }
-});
+DynamicFieldRemoteDB.InitAJAXUpdate("$FieldName", [ $FieldsToUpdate ]);
 END
     }
 
@@ -881,12 +682,20 @@ sub EditFieldValueValidate {
         };
     }
 
-    # get possible values list
-    my $PossibleValues = $Self->_GetPossibleValues(%Param);
+     # get possible values list
+    my $PossibleValues = {};
 
     # overwrite possible values if PossibleValuesFilter
     if ( defined $Param{PossibleValuesFilter} ) {
         $PossibleValues = $Param{PossibleValuesFilter}
+    } else {
+        for my $Key ( @{$Values} ) {
+            my $Result = $Self->_ValueLookup(
+                %Param,
+                Key => $Key,
+            );
+            $PossibleValues->{$Key} = $Result;
+        }
     }
 
     CHECK:
@@ -1446,7 +1255,7 @@ sub StatsFieldParameterBuild {
     my $Values = $Self->PossibleValuesGet(%Param);
 
     # get historical values from database
-    my $HistoricalValues = $Kernel::OM->Get('Kernel::System::DynamicFieldValue')->HistoricalValueGet(
+    my $HistoricalValues = $Self->{DynamicFieldValueObject}->HistoricalValueGet(
         FieldID   => $Param{DynamicFieldConfig}->{ID},
         ValueType => 'Text,',
     );
@@ -1528,10 +1337,11 @@ sub _GetPossibleValues {
     }
 
     my $DFRemoteDBObject = Kernel::System::DFRemoteDB->new(
+        %{ $Self },
         DatabaseDSN  => $Param{DynamicFieldConfig}->{Config}->{DatabaseDSN},
         DatabaseUser => $Param{DynamicFieldConfig}->{Config}->{DatabaseUser},
         DatabasePw   => $Param{DynamicFieldConfig}->{Config}->{DatabasePw},
-        %{ $Self },
+        Type         => $Param{DynamicFieldConfig}->{Config}->{DatabaseType},
     );
 
     my %Constrictions = ();
