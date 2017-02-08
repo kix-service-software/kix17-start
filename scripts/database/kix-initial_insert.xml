@@ -518,8 +518,8 @@ Your Ticket-Team
 
     <Insert Table="system_address">
         <Data Key="id" Type="AutoIncrement">1</Data>
-        <Data Key="value0" Type="Quote">otrs@localhost</Data>
-        <Data Key="value1" Type="Quote">OTRS System</Data>
+        <Data Key="value0" Type="Quote">kix@localhost</Data>
+        <Data Key="value1" Type="Quote">KIX System</Data>
         <Data Key="comments" Type="Quote" Translatable="1">Standard Address.</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="queue_id">1</Data>
@@ -753,9 +753,9 @@ You wrote:
 
 Your email will be answered by a human ASAP
 
-Have fun with OTRS! :-)
+Have fun with KIX! :-)
 
-Your OTRS Team
+Your KIX Team
 </Data>
         <Data Key="text1" Type="Quote">RE: &lt;OTRS_CUSTOMER_SUBJECT[24]&gt;</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
@@ -777,7 +777,7 @@ Your OTRS Team
 
 Please create a new ticket.
 
-Your OTRS Team
+Your KIX Team
 </Data>
         <Data Key="text1" Type="Quote">Your email has been rejected! (RE: &lt;OTRS_CUSTOMER_SUBJECT[24]&gt;)</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
@@ -800,9 +800,9 @@ You wrote:
 
 Your email will be answered by a human ASAP.
 
-Have fun with OTRS!
+Have fun with KIX!
 
-Your OTRS Team
+Your KIX Team
 </Data>
         <Data Key="text1" Type="Quote">RE: &lt;OTRS_CUSTOMER_SUBJECT[24]&gt;</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
@@ -827,9 +827,9 @@ You wrote:
 
 Your email will be answered by a human ASAP.
 
-Have fun with OTRS!
+Have fun with KIX!
 
-Your OTRS Team
+Your KIX Team
 </Data>
         <Data Key="text1" Type="Quote">New ticket has been created! (RE: &lt;OTRS_CUSTOMER_SUBJECT[24]&gt;)</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
