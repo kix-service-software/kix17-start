@@ -64,7 +64,7 @@ $Selenium->RunTest(
 
         # create a test customer
         my $TestUserCustomer = $Helper->TestCustomerUserCreate()
-            || die "Did not get test customer user";
+            || die "Did not get test contact";
 
         # create a ticket from the just created customer
         my $TicketID = $TicketObject->TicketCreate(

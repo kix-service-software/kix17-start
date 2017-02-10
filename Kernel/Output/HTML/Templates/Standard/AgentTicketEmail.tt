@@ -164,12 +164,12 @@ $('#Dest').bind('change', function (Event) {
 [% END %]
 [% RenderBlockEnd("FromExternalCustomer") %]
 
-                    <label for="ToCustomer" class="Mandatory"><span class="Marker">*</span>[% Translate("To customer user") | html %]:</label>
+                    <label for="ToCustomer" class="Mandatory"><span class="Marker">*</span>[% Translate("To contact") | html %]:</label>
                     <div class="Field">
                         <input id="ToCustomer" type="text" name="ToCustomer" value="" class="CustomerAutoComplete W75pc [% Data.ToIsLocalAddress | html %] [% Data.ToInvalid | html %]" autocomplete="off" />
                         <div id="ToCustomerServerError" class="TooltipErrorMessage">
 [% RenderBlockStart("ToServerErrorMsg") %]
-                            <p>[% Translate("Please include at least one customer user for the ticket.") | html %]</p>
+                            <p>[% Translate("Please include at least one contact for the ticket.") | html %]</p>
 [% RenderBlockEnd("ToServerErrorMsg") %]
 
 [% RenderBlockStart("ToIsLocalAddressServerErrorMsg") %]
@@ -183,10 +183,10 @@ $('#Dest').bind('change', function (Event) {
                         <div class="CustomerTicketTemplateToCustomer Hidden">
                             <input name="CustomerSelected" title="[% Translate("Select this customer as the main customer.") | html %]" id="CustomerSelected" class="CustomerTicketRadio" type="radio" value=""/>
                             <input name="CustomerKey" id="CustomerKey" class="CustomerKey" type="hidden" value=""/>
-                            <input class="CustomerTicketText Radio" title="[% Translate("To customer user") | html %]" name="CustomerTicketText" id="CustomerTicketText" type="text" value="" readonly="readonly" />
+                            <input class="CustomerTicketText Radio" title="[% Translate("To contact") | html %]" name="CustomerTicketText" id="CustomerTicketText" type="text" value="" readonly="readonly" />
                             <a href="#" id="RemoveCustomerTicket" class="RemoveButton CustomerTicketRemove">
                                 <i class="fa fa-minus-square-o"></i>
-                                <span class="InvisibleText">[% Translate("Remove Ticket Customer User") | html %]</span>
+                                <span class="InvisibleText">[% Translate("Remove Ticket contact") | html %]</span>
                             </a>
                         </div>
 
@@ -199,7 +199,7 @@ $('#Dest').bind('change', function (Event) {
                                 <input class="CustomerTicketText Radio [% Data.CustomerError | html %]" name="CustomerTicketText_[% Data.Count %]" id="CustomerTicketText_[% Data.Count %]" type="text" value="[% Data.CustomerElement | html %]" readonly="readonly" />
                                 <a href="#" id="RemoveCustomerTicket_[% Data.Count %]" class="RemoveButton CustomerTicketRemove">
                                     <i class="fa fa-minus-square-o"></i>
-                                    <span class="InvisibleText">[% Translate("Remove Ticket Customer User") | html %]</span>
+                                    <span class="InvisibleText">[% Translate("Remove Ticket contact") | html %]</span>
                                 </a>
 
 [% RenderBlockStart("CustomerErrorExplantion") %]
@@ -590,7 +590,7 @@ $('#NewResponsibleID').bind('change', function (Event) {
                         <a href="#" id="OptionAddressBook">[ [% Translate("Address book") | html %] ]</a>
 [% RenderBlockEnd("AddressBook") %]
 [% RenderBlockStart("OptionCustomer") %]
-                        <a href="#" id="OptionCustomer">[ [% Translate("Customer user") | html %] ]</a>
+                        <a href="#" id="OptionCustomer">[ [% Translate("Contact") | html %] ]</a>
 [% RenderBlockEnd("OptionCustomer") %]
 # ---
 # ITSMIncidentProblemManagement

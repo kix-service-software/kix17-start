@@ -267,7 +267,7 @@ $('#QueueID').bind('change', function (Event) {
 });
 //]]></script>
 [% END %]
-                        <label for="ToCustomer">[% Translate("Customer User") | html %]:</label>
+                        <label for="ToCustomer">[% Translate("Contact") | html %]:</label>
                         <div class="Field">
                             <input id="ToCustomer" type="text" name="From" value="[% Data.From | html %]" class="CustomerAutoCompleteTo W75pc [% Data.ToInvalid | html %]" autocomplete="off" />
                             <input type="Checkbox" id="FromEmpty" name="FromEmpty" value="1"[% Data.FromEmpty | html %]>[% Translate("Empty value") | html %]

@@ -1,6 +1,6 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# KIX4OTRS-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
@@ -8,6 +8,7 @@
 # * Torsten(dot)Thau(at)cape(dash)it(dot)de
 # * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
 # --
 # $Id$
 # --
@@ -1720,11 +1721,11 @@ sub Run {
             },
             {
                 Key   => 'CustomerUserLogin',
-                Value => Translatable('Customer User Login (complex search)'),
+                Value => Translatable('Contact login (complex search)'),
             },
             {
                 Key   => 'CustomerUserLoginRaw',
-                Value => Translatable('Customer User Login (exact match)'),
+                Value => Translatable('Contact login (exact match)'),
             },
             {
                 Key   => 'StateIDs',

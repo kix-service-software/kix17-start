@@ -2279,7 +2279,7 @@ sub _RenderCustomer {
     my $SubmittedCustomerUserID = $Param{GetParam}{CustomerUserID};
 
     my %Data = (
-        LabelCustomerUser => $LayoutObject->{LanguageObject}->Translate("Customer user"),
+        LabelCustomerUser => $LayoutObject->{LanguageObject}->Translate("Contact"),
         LabelCustomerID   => $LayoutObject->{LanguageObject}->Translate("CustomerID"),
         FormID            => $Param{FormID},
         MandatoryClass    => '',

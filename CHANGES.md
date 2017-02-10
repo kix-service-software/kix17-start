@@ -1,8 +1,9 @@
 # Change log of KIX
-* Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de/
+* Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/02/10) - CR: T2017020290001194 (changed 'customer user' to 'contact' and only translation for 'owner') (rkaiser)
  * (2017/02/07) - Bugfix: T2017011190000661 (unnecessary requests delay form input for DynamicFieldRemoteDB and DynamicFieldITSMConfigItem) (millinger)
  * (2017/02/07) - Bugfix: T2017013190000712 (missing handling of CustomerIDRaw in Kernel::System::CustomerUser::DB::CustomerSearch) (rkaiser)
  * (2017/01/31) - Bugfix: T2017012490000913 (missing empty state value in AgentTicketPhoneCommon) (ddoerffel)

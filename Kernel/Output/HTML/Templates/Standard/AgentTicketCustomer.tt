@@ -51,7 +51,7 @@
                         <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
                         <input type="hidden" name="SelectedCustomerUser" id="SelectedCustomerUser" value="[% Data.SelectedCustomerUser | html %]"/>
                         <fieldset class="TableLike FixedLabel">
-                            <label for="CustomerAutoComplete" class="Mandatory"><span class="Marker">*</span> [% Translate("Customer user") | html %]:</label>
+                            <label for="CustomerAutoComplete" class="Mandatory"><span class="Marker">*</span> [% Translate("Contact") | html %]:</label>
                             <div class="Field">
                                 <input id="CustomerAutoComplete" type="text" name="CustomerUserID" value="[% Data.CustomerUserID | html %]" class="W75pc Validate_Required [% Data.CustomerUserIDInvalid | html %]" autocomplete="off" />
                                 <div id="CustomerAutoCompleteError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>

@@ -1,9 +1,10 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# KIX4OTRS-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
 #
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -54,7 +55,7 @@ sub Preferences {
 
     my @Params = (
         {
-            Desc  => Translatable('Shown customer users'),
+            Desc  => Translatable('Shown contacts'),
             Name  => $Self->{PrefKey},
             Block => 'Option',
 

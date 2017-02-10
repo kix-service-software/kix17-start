@@ -55,7 +55,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'generate-customer-users',
-        Description => "Specify how many customer users should be generated.",
+        Description => "Specify how many contacts should be generated.",
         Required    => 0,
         HasValue    => 1,
         ValueRegex  => qr/^\d+$/smx,

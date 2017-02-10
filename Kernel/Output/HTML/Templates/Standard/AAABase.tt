@@ -366,7 +366,7 @@
 [% Translate("more") | html %]
 [% Translate("Collapse") | html %]
 [% Translate("Shown") | html %]
-[% Translate("Shown customer users") | html %]
+[% Translate("Shown contacts") | html %]
 [% Translate("News") | html %]
 [% Translate("Product News") | html %]
 [% Translate("OTRS News") | html %]

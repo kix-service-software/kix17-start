@@ -24,7 +24,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerTicketTemplates###UserAttributeRestriction" Required="1" Valid="1">
-        <Description Translatable="1">Defines restrictions for the viewability of templates for customer users. Key contains the template key followed by double colon and a customer user attribute, while value contains a regexp which must match the given user attribute in order to have access to the template.</Description>
+        <Description Translatable="1">Defines restrictions for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp which must match the given user attribute in order to have access to the template.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Customer::TicketTemplates</SubGroup>
         <Setting>
@@ -623,7 +623,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUser::EventModulePost###120-UpdateTickets" Required="0" Valid="1">
-        <Description Translatable="1">Event module that updates tickets after an update of the Customer User.</Description>
+        <Description Translatable="1">Event module that updates tickets after an update of the Contact.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::CustomerCompany</SubGroup>
         <Setting>
@@ -635,7 +635,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DynamicFieldFromCustomerUser::Mapping" Required="0" Valid="0">
-        <Description Translatable="1">Define a mapping between variables of the customer user data (keys) and dynamic fields of a ticket (values). The purpose is to store customer user data in ticket dynamic fields. The dynamic fields must be present in the system and should be enabled for AgentTicketFreeText, so that they can be set/updated manually by the agent. They mustn't be enabled for AgentTicketPhone, AgentTicketEmail and AgentTicketCustomer. If they were, they would have precedence over the automatically set values. To use this mapping, you have to also activate the next setting below.</Description>
+        <Description Translatable="1">Define a mapping between variables of the contact data (keys) and dynamic fields of a ticket (values). The purpose is to store contact data in ticket dynamic fields. The dynamic fields must be present in the system and should be enabled for AgentTicketFreeText, so that they can be set/updated manually by the agent. They mustn't be enabled for AgentTicketPhone, AgentTicketEmail and AgentTicketCustomer. If they were, they would have precedence over the automatically set values. To use this mapping, you have to also activate the next setting below.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
@@ -2044,7 +2044,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerInfoCompose" Required="1" Valid="1">
-        <Description Translatable="1">Shows the customer user information (phone and email) in the compose screen.</Description>
+        <Description Translatable="1">Shows the contact information (phone and email) in the compose screen.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
@@ -2063,7 +2063,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerInfoZoom" Required="1" Valid="1">
-        <Description Translatable="1">Shows the customer user's info in the ticket zoom view.</Description>
+        <Description Translatable="1">Shows the contact's info in the ticket zoom view.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
@@ -2109,7 +2109,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerDisableCompanyTicketAccess" Required="1" Valid="1">
-        <Description Translatable="1">This option will deny the access to customer company tickets, which are not created by the customer user.</Description>
+        <Description Translatable="1">This option will deny the access to customer company tickets, which are not created by the contact.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
@@ -6151,8 +6151,8 @@
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::ToolBar::Generic</Item>
-                <Item Key="Description" Translatable="1">Customer user search</Item>
-                <Item Key="Name" Translatable="1">Customer user search</Item>
+                <Item Key="Description" Translatable="1">Contact search</Item>
+                <Item Key="Name" Translatable="1">Contact search</Item>
                 <Item Key="Block">ToolBarCICSearchCustomerUser</Item>
                 <Item Key="Size">10</Item>
                 <Item Key="CSS">Core.Agent.Toolbar.CICSearch.css</Item>
@@ -6219,7 +6219,7 @@
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="Target">_blank</Item>
-                    <Item Key="Text" Translatable="1">Open tickets (customer user)</Item>
+                    <Item Key="Text" Translatable="1">Open tickets (contact)</Item>
                     <Item Key="Action">AgentTicketSearch</Item>
                     <Item Key="Subaction">Search</Item>
                     <Item Key="IconNameOpenTicket">fa-exclamation-circle</Item>
@@ -6261,7 +6261,7 @@
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="Target">_blank</Item>
-                    <Item Key="Text" Translatable="1">Closed tickets (customer user)</Item>
+                    <Item Key="Text" Translatable="1">Closed tickets (contact)</Item>
                     <Item Key="Action">AgentTicketSearch</Item>
                     <Item Key="Subaction">Search</Item>
                     <Item Key="IconNameOpenTicket">fa-power-off</Item>
@@ -7383,7 +7383,7 @@
         <Setting>
             <Hash>
                 <Item Key="CustomerID" Translatable="1">Customer ID</Item>
-                <Item Key="CustomerUserID" Translatable="1">Customer user</Item>
+                <Item Key="CustomerUserID" Translatable="1">Contact</Item>
                 <Item Key="Priority" Translatable="1">Priority</Item>
                 <Item Key="Queue" Translatable="1">Queue</Item>
                 <Item Key="SLA" Translatable="1">SLA</Item>
@@ -7960,7 +7960,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###ServiceMandatory" Required="0" Valid="1">
-        <Description Translatable="1">Sets if service must be selected by the customer.</Description>
+        <Description Translatable="1">Sets if service must be selected by the contact.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
         <Setting>
@@ -7971,7 +7971,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###SLAMandatory" Required="0" Valid="1">
-        <Description Translatable="1">Sets if SLA must be selected by the customer.</Description>
+        <Description Translatable="1">Sets if SLA must be selected by the contact.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
         <Setting>
@@ -10449,7 +10449,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PostMaster::PreFilterModule###000-SMIMEFetchFromCustomer" Required="0" Valid="1">
-        <Description Translatable="1">Module to fetch customer users SMIME certificates of incoming messages.</Description>
+        <Description Translatable="1">Module to fetch contacts SMIME certificates of incoming messages.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::PostMaster</SubGroup>
         <Setting>
@@ -15729,8 +15729,8 @@ Thanks for your help!
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::ToolBar::Generic</Item>
-                <Item Key="Description" Translatable="1">Customer user search</Item>
-                <Item Key="Name" Translatable="1">Customer user search</Item>
+                <Item Key="Description" Translatable="1">Contact search</Item>
+                <Item Key="Name" Translatable="1">Contact search</Item>
                 <Item Key="Block">ToolBarCICSearchCustomerUser</Item>
                 <Item Key="Size">15</Item>
                 <Item Key="CSS">Core.Agent.Toolbar.CICSearch.css</Item>

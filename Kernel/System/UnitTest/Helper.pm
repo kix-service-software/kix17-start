@@ -289,7 +289,7 @@ sub TestCustomerUserCreate {
     $Self->{TestCustomerUsers} ||= [];
     push( @{ $Self->{TestCustomerUsers} }, $TestUser );
 
-    $Self->{UnitTestObject}->True( 1, "Created test customer user $TestUser" );
+    $Self->{UnitTestObject}->True( 1, "Created test contact $TestUser" );
 
     # set customer user language
     my $UserLanguage = $Param{Language} || 'en';
@@ -298,7 +298,7 @@ sub TestCustomerUserCreate {
         Key    => 'UserLanguage',
         Value  => $UserLanguage,
     );
-    $Self->{UnitTestObject}->True( 1, "Set customer user UserLanguage to $UserLanguage" );
+    $Self->{UnitTestObject}->True( 1, "Set contact UserLanguage to $UserLanguage" );
 
     return $TestUser;
 }
@@ -554,7 +554,7 @@ sub DESTROY {
             );
 
             $Self->{UnitTestObject}->True(
-                $Success, "Set test customer user $TestCustomerUser to invalid"
+                $Success, "Set test contact $TestCustomerUser to invalid"
             );
         }
     }

@@ -20,45 +20,45 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Add a customer user.');
+    $Self->Description('Add a contact.');
     $Self->AddOption(
         Name        => 'user-name',
-        Description => "User name for the new customer user.",
+        Description => "User name for the new contact.",
         Required    => 1,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
     );
     $Self->AddOption(
         Name        => 'first-name',
-        Description => "First name of the new customer user.",
+        Description => "First name of the new contact.",
         Required    => 1,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
     );
     $Self->AddOption(
         Name        => 'last-name',
-        Description => "Last name of the new customer user.",
+        Description => "Last name of the new contact.",
         Required    => 1,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
     );
     $Self->AddOption(
         Name        => 'email-address',
-        Description => "Email address of the new customer user.",
+        Description => "Email address of the new contact.",
         Required    => 1,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
     );
     $Self->AddOption(
         Name        => 'customer-id',
-        Description => "Customer ID for the new customer user.",
+        Description => "Customer ID for the new contact.",
         Required    => 1,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
     );
     $Self->AddOption(
         Name        => 'password',
-        Description => "Password for the new customer user. If left empty, a password will be generated automatically.",
+        Description => "Password for the new contact. If left empty, a password will be generated automatically.",
         Required    => 0,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,

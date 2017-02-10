@@ -729,7 +729,7 @@ Core.Agent.Admin.NotificationEvent.Init({
 
                     <dt><code>&lt;OTRS_CUSTOMER_REALNAME&gt;</code></dt>
                     <dd>
-                        [% Translate("To get the name of the ticket's customer user (if given).") | html %]
+                        [% Translate("To get the name of the ticket's contact (if given).") | html %]
                     </dd>
 
                     <dt><code>&lt;OTRS_CUSTOMER_*&gt;</code></dt>
@@ -741,7 +741,7 @@ Core.Agent.Admin.NotificationEvent.Init({
 
                     <dt><code>&lt;OTRS_CUSTOMER_DATA_*&gt;</code></dt>
                     <dd>
-                        [% Translate("Attributes of the current customer user data") | html %]
+                        [% Translate("Attributes of the current contact data") | html %]
                         ([% Translate(" e. g.") | html %] <code>&lt;OTRS_CUSTOMER_DATA_UserFirstname&gt;</code>).
                     </dd>
 

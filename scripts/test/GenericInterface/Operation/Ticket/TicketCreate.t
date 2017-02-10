@@ -3369,7 +3369,7 @@ my @Tests        = (
         Operation => 'TicketCreate',
     },
     {
-        Name             => 'Ticket with external customer user',
+        Name             => 'Ticket with external contact',
         SuccessRequest   => 1,
         SuccessCreate    => 1,
         ExternalCustomer => 1,

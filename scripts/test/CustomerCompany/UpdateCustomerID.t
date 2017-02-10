@@ -129,12 +129,12 @@ for my $Key ( 1 .. 1, 'ä', 'カス' ) {
 
         $Self->False(
             $OldIDList{$CustomerLogin},
-            "Customer User $CustomerLogin not in list for $CompanyData{CustomerID}",
+            "Contact $CustomerLogin not in list for $CompanyData{CustomerID}",
         );
 
         $Self->True(
             $NewIDList{$CustomerLogin},
-            "Customer User $CustomerLogin found in list for new$CompanyData{CustomerID}",
+            "Contact $CustomerLogin found in list for new$CompanyData{CustomerID}",
         );
 
         my %CustomerData = $CustomerUserObject->CustomerUserDataGet(

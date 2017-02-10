@@ -61,14 +61,14 @@ my %NewUserData = $UserObject->GetUserData(
 
 # set customer user options
 my $CustomerUserLogin = $Helper->TestCustomerUserCreate()
-    || die "Did not get test customer user";
+    || die "Did not get test contact";
 
 my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
     User => $CustomerUserLogin,
 );
 
 my $NewCustomerUserLogin = $Helper->TestCustomerUserCreate()
-    || die "Did not get test customer user";
+    || die "Did not get test contact";
 
 my %NewCustomerUserData = $CustomerUserObject->CustomerUserDataGet(
     User => $NewCustomerUserLogin,

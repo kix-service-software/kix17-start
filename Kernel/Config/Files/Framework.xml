@@ -31,14 +31,14 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0050-CIC-CustomerUserList" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the customer user list overview of the agent interface . "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the contact list overview of the agent interface . "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Dashboard::CustomerUserList</Item>
-                <Item Key="Title" Translatable="1">Customer Users</Item>
-                <Item Key="Description" Translatable="1">All customer users of a CustomerID</Item>
+                <Item Key="Title" Translatable="1">Contacts</Item>
+                <Item Key="Description" Translatable="1">All contacts of a CustomerID</Item>
                 <Item Key="Attributes"></Item>
                 <Item Key="Limit">10</Item>
                 <Item Key="Permission">ro</Item>
@@ -1195,7 +1195,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0270-CIC-FurtherInformation" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the customer dashboard backend to provide and save further information for customer user or customer company. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;).  "RwGroup" is used to restrict the writing access to the plugin. "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the customer dashboard backend to provide and save further information for contact or customer company. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;).  "RwGroup" is used to restrict the writing access to the plugin. "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
@@ -1386,7 +1386,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ExternalSupplierForwarding::CustomerUserAttrBlacklist" Required="0" Valid="1">
-        <Description Translatable="1">Defines customer user attributes which should not be shown in forwarded documents.</Description>
+        <Description Translatable="1">Defines contact attributes which should not be shown in forwarded documents.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -1419,7 +1419,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUserImport::DefaultCustomerID" Required="1" Valid="1">
-        <Description Translatable="1">Defines which customer ID to use if no company defined - only relevant for new customer users.</Description>
+        <Description Translatable="1">Defines which customer ID to use if no company defined - only relevant for new contacts.</Description>
         <Group>Framework</Group>
         <SubGroup>CustomerUserImportExport</SubGroup>
         <Setting>
@@ -1672,7 +1672,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerPanelPreApplicationModule###CustomerTicketCustomerIDSelection" Required="0" Valid="1">
-        <Description Translatable="1">This module and its PreRun() function will be executed, if defined, for every request. This module checks if customer user has multiple customer ids and presents selection of one of them for a new ticket creation.</Description>
+        <Description Translatable="1">This module and its PreRun() function will be executed, if defined, for every request. This module checks if contact has multiple customer ids and presents selection of one of them for a new ticket creation.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
@@ -7709,7 +7709,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SwitchToCustomer" Required="1" Valid="1">
-        <Description Translatable="1">Allows the administrators to login as other customers, via the customer user administration panel.</Description>
+        <Description Translatable="1">Allows the administrators to login as other customers, via the contact administration panel.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -8641,7 +8641,7 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerGroupAlwaysGroups" Required="1" Valid="1">
-        <Description Translatable="1">Defines the groups every customer user will be in (if CustomerGroupSupport is enabled and you don't want to manage every user for these groups).</Description>
+        <Description Translatable="1">Defines the groups every contact will be in (if CustomerGroupSupport is enabled and you don't want to manage every user for these groups).</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
@@ -9541,7 +9541,7 @@ via the Preferences button after logging in.
         <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
-                <Description Translatable="1">Address book of CustomerUser sources.</Description>
+                <Description Translatable="1">Address book of contact sources.</Description>
                 <Title Translatable="1">Address Book</Title>
                 <NavBarName></NavBarName>
                 <Loader>
@@ -9729,22 +9729,22 @@ via the Preferences button after logging in.
                 <GroupRo></GroupRo>
                 <Group>admin</Group>
                 <Group>users</Group>
-                <Description Translatable="1">Edit Customer Users.</Description>
-                <Title Translatable="1">Customer Users</Title>
+                <Description Translatable="1">Edit Contacts.</Description>
+                <Title Translatable="1">Contacts</Title>
                 <NavBarName>Customer Management</NavBarName>
                 <NavBar>
-                    <Name Translatable="1">Customer User Administration</Name>
+                    <Name Translatable="1">Contact Administration</Name>
                     <Link>Action=AdminCustomerUser;Nav=Agent</Link>
                     <LinkOption></LinkOption>
                     <NavBar>Customer Management</NavBar>
-                    <Description Translatable="1">Customer User Administration.</Description>
+                    <Description Translatable="1">Contact Administration.</Description>
                     <Type></Type>
                     <Block></Block>
                     <AccessKey></AccessKey>
                     <Prio>900</Prio>
                 </NavBar>
                 <NavBar>
-                    <Description Translatable="1">Customer User Administration.</Description>
+                    <Description Translatable="1">Contact Administration.</Description>
                     <Type>Menu</Type>
                     <Block>ItemArea</Block>
                     <Name Translatable="1">Customer Management</Name>
@@ -9756,9 +9756,9 @@ via the Preferences button after logging in.
                 </NavBar>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <Name Translatable="1">Customer User</Name>
+                    <Name Translatable="1">Contact</Name>
                     <Block>Customer</Block>
-                    <Description Translatable="1">Create and manage customer users.</Description>
+                    <Description Translatable="1">Create and manage contacts.</Description>
                     <Prio>300</Prio>
                 </NavBarModule>
                 <Loader>
@@ -9822,8 +9822,8 @@ via the Preferences button after logging in.
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <Name Translatable="1">Customer User &lt;-&gt; Groups</Name>
-                    <Description Translatable="1">Link customer user to groups.</Description>
+                    <Name Translatable="1">Contact &lt;-&gt; Groups</Name>
+                    <Description Translatable="1">Link contact to groups.</Description>
                     <Block>Customer</Block>
                     <Prio>400</Prio>
                 </NavBarModule>
@@ -9859,7 +9859,7 @@ via the Preferences button after logging in.
             <FrontendModuleReg>
                 <Group>admin</Group>
                 <Description>Admin</Description>
-                <Title Translatable="1">Customer User &lt;-&gt; Services</Title>
+                <Title Translatable="1">Contact &lt;-&gt; Services</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBar>
                     <Name Translatable="1">Customer Services</Name>
@@ -9874,8 +9874,8 @@ via the Preferences button after logging in.
                 </NavBar>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <Name Translatable="1">Customer User &lt;-&gt; Services</Name>
-                    <Description Translatable="1">Link customer user to services.</Description>
+                    <Name Translatable="1">Contact &lt;-&gt; Services</Name>
+                    <Description Translatable="1">Link contact to services.</Description>
                     <Block>Customer</Block>
                     <Prio>500</Prio>
                 </NavBarModule>
@@ -11355,7 +11355,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AdminCustomerUser::RunInitialWildcardSearch" Required="1" Valid="1">
-        <Description Translatable="1">Runs an initial wildcard search of the existing customer users when accessing the AdminCustomerUser module.</Description>
+        <Description Translatable="1">Runs an initial wildcard search of the existing contacts when accessing the AdminCustomerUser module.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Admin::AdminCustomerUser</SubGroup>
         <Setting>
@@ -11388,7 +11388,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Events###CustomerUser" Required="1" Valid="1">
-        <Description Translatable="1">List of all CustomerUser events to be displayed in the GUI.</Description>
+        <Description Translatable="1">List of all contact events to be displayed in the GUI.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Admin</SubGroup>
         <Setting>
@@ -11410,7 +11410,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerCompany::EventModulePost###100-UpdateCustomerUsers" Required="0" Valid="1">
-        <Description Translatable="1">Event module that updates customer users after an update of the Customer.</Description>
+        <Description Translatable="1">Event module that updates contacts after an update of the Customer.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::CustomerCompany</SubGroup>
         <Setting>
@@ -11422,7 +11422,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUser::EventModulePost###100-UpdateSearchProfiles" Required="0" Valid="1">
-        <Description Translatable="1">Event module that updates customer user search profiles if login changes.</Description>
+        <Description Translatable="1">Event module that updates contact search profiles if login changes.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::CustomerUser</SubGroup>
         <Setting>
@@ -11434,7 +11434,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUser::EventModulePost###100-UpdateServiceMembership" Required="0" Valid="1">
-        <Description Translatable="1">Event module that updates customer user service membership if login changes.</Description>
+        <Description Translatable="1">Event module that updates contact service membership if login changes.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::CustomerUser</SubGroup>
         <Setting>

@@ -156,7 +156,7 @@ sub Run {
                 Message  => $CommonMessage
                     . 'ServiceID '
                     . $Param{Config}->{ServiceID}
-                    . ' is not assigned to Customer User '
+                    . ' is not assigned to contact '
                     . $Param{Ticket}->{CustomerUserID}
             );
             return;
@@ -232,7 +232,7 @@ sub Run {
                 Message  => $CommonMessage
                     . 'Service '
                     . $Param{Config}->{Service}
-                    . ' is not assigned to Customer User '
+                    . ' is not assigned to contact '
                     . $Param{Ticket}->{CustomerUserID}
             );
             return;

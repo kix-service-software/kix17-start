@@ -140,7 +140,7 @@ sub MappingObjectAttributesGet {
     my $ElementList = [
         {
             Key   => 'CustomerUserLogin',
-            Value => 'Customer User Login',
+            Value => 'Contact login',
         },
         {
             Key   => 'ServiceName',
@@ -209,7 +209,7 @@ sub SearchAttributesGet {
     my $AttributeList = [
         {
             Key   => 'CustomerUserLogin',
-            Name  => 'Customer User Login',
+            Name  => 'Contact login',
             Input => {
                 Type      => 'Text',
                 Size      => 80,

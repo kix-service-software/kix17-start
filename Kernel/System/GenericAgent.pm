@@ -1100,7 +1100,7 @@ sub _JobRunTicket {
         if ( $Param{Config}->{New}->{CustomerUserLogin} ) {
             if ( $Self->{NoticeSTDOUT} ) {
                 print
-                    "  - set customer user id of Ticket $Ticket to '$Param{Config}->{New}->{CustomerUserLogin}'\n";
+                    "  - set contact id of Ticket $Ticket to '$Param{Config}->{New}->{CustomerUserLogin}'\n";
             }
         }
         $TicketObject->TicketCustomerSet(

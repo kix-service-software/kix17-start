@@ -57,7 +57,7 @@ for my $Key ( 1 .. 3, 'ä', 'カス', '_', '&' ) {
 
         $Self->True(
             0,
-            'Find non existing customer user login.',
+            'Find non existing contact login.',
         );
     }
 

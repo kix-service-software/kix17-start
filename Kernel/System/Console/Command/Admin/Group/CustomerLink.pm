@@ -22,24 +22,24 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Connect a customer user to a group.');
+    $Self->Description('Connect a contact to a group.');
     $Self->AddOption(
         Name        => 'customer-user-login',
-        Description => 'Login name of the customer who should be linked to the given group.',
+        Description => 'Login name of the contact who should be linked to the given group.',
         Required    => 1,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
     );
     $Self->AddOption(
         Name        => 'group-name',
-        Description => 'Group name of the group the given customer should be linked to.',
+        Description => 'Group name of the group the given customer contact should be linked to.',
         Required    => 1,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
     );
     $Self->AddOption(
         Name        => 'permission',
-        Description => 'Permission (ro|rw) the customer user should have for the group he is going to be linked to.',
+        Description => 'Permission (ro|rw) the contact should have for the group he is going to be linked to.',
         Required    => 1,
         HasValue    => 1,
         ValueRegex  => qr/(ro|rw)/smx,

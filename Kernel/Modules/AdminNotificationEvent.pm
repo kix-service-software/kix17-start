@@ -5,6 +5,7 @@
 # written/edited by:
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
 # * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
 #
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
@@ -752,7 +753,7 @@ sub _Edit {
             AgentMyQueuesMyServices => Translatable('All agents subscribed to both the ticket\'s queue and service'),
             # KIX4OTRS-capeIT
             LinkedPersonAgent       => Translatable('All agents who are linked with this ticket and have been selected (Linked Persons)'),
-            LinkedPersonCustomer    => Translatable('All customer users who are linked with this ticket and have been selected (Linked Persons)'),
+            LinkedPersonCustomer    => Translatable('All customer contacts who are linked with this ticket and have been selected (Linked Persons)'),
             LinkedPerson3rdPerson   => Translatable('All 3rd person contacts who are linked with this ticket and have been selected (Linked Persons)'),
             # EO KIX4OTRS-capeIT
             Customer                => Translatable('Customer of the ticket'),

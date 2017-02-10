@@ -434,7 +434,7 @@
 
                     <dt><code>&lt;OTRS_CUSTOMER_DATA_*&gt;</code></dt>
                     <dd>
-                        [% Translate("Options of the current customer user data") | html %] ([% Translate("e. g.") | html %]
+                        [% Translate("Options of the current contact data") | html %] ([% Translate("e. g.") | html %]
                         <code>&lt;OTRS_CUSTOMER_DATA_UserFirstname&gt;</code>).
                     </dd>
 

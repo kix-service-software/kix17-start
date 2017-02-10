@@ -850,7 +850,7 @@ sub Run {
             $LayoutObject->Print(
                 Output => \$LayoutObject->CustomerLogin(
                     Title         => 'Login',
-                    Message       => Translatable('Customer user can\'t be added!'),
+                    Message       => Translatable('Contact can\'t be added!'),
                     UserTitle     => $GetParams{UserTitle},
                     UserFirstname => $GetParams{UserFirstname},
                     UserLastname  => $GetParams{UserLastname},

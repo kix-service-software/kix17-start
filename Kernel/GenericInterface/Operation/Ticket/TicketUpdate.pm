@@ -1788,7 +1788,7 @@ sub _TicketUpdate {
             return {
                 Success => 0,
                 Errormessage =>
-                    'Ticket customer user could not be updated, please contact system administrator!',
+                    'Ticket contact could not be updated, please contact system administrator!',
                 }
         }
     }

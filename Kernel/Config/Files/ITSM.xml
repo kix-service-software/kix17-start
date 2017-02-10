@@ -782,7 +782,7 @@
         <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
-                <Description>Lookup of customer user companies, used for autocompletion</Description>
+                <Description>Lookup of customer companies, used for autocompletion</Description>
                 <Title>CustomerUserCompanySearch</Title>
 <!--
                 <NavBarName>Config Item</NavBarName>
@@ -2200,7 +2200,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="KIXSidebarConfigItemLink::KIXSidebarLinkedCIsParams" Required="1" Valid="1">
-        <Description Translatable="1">Common Parameters for the KIXSidebarLinkedCIs backend. You can use CI class specific customer user attributes (SearchAttribute:::&lt;CIClass&gt;) as well as multiple customer user attributes, separated by comma.</Description>
+        <Description Translatable="1">Common Parameters for the KIXSidebarLinkedCIs backend. You can use CI class specific contact attributes (SearchAttribute:::&lt;CIClass&gt;) as well as multiple customer user attributes, separated by comma.</Description>
         <Group>ITSM</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>

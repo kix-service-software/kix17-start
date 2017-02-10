@@ -46,7 +46,7 @@ $ExitCode = $CommandObject->Execute(
 $Self->Is(
     $ExitCode,
     1,
-    "Minimum options (but customer user doesn't exist)",
+    "Minimum options (but contact doesn't exist)",
 );
 
 my $CustomerUserLogin = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserAdd(

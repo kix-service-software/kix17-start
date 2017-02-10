@@ -77,9 +77,9 @@ $Self->True(
 );
 
 my $CustomerUser1 = $Helper->TestCustomerUserCreate()
-    || die "Did not get test customer user";
+    || die "Did not get test contact";
 my $CustomerUser2 = $Helper->TestCustomerUserCreate()
-    || die "Did not get test customer user";
+    || die "Did not get test contact";
 
 # allocation test 1
 my @Allocation1 = $ServiceObject->CustomerUserServiceMemberList(

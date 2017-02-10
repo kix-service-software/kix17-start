@@ -21,7 +21,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Updates the password for a customer user.');
+    $Self->Description('Updates the password for a contact.');
     $Self->AddArgument(
         Name        => 'user',
         Description => "Specify the user login of the agent/customer to be updated.",
@@ -49,7 +49,7 @@ sub Run {
     );
 
     if ( !scalar %CustomerUserList ) {
-        $Self->PrintError("No customer user found with login '$Login'!\n");
+        $Self->PrintError("No contact found with login '$Login'!\n");
         return $Self->ExitCodeError();
     }
 
@@ -70,7 +70,7 @@ sub Run {
         return $Self->ExitCodeError();
     }
 
-    $Self->Print("<green>Successfully set password for customer user '$Login'.</green>\n");
+    $Self->Print("<green>Successfully set password for contact '$Login'.</green>\n");
     return $Self->ExitCodeOk();
 }
 

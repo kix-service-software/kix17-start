@@ -730,7 +730,7 @@ Your Ticket-Team
     <Insert Table="auto_response_type">
         <Data Key="id" Type="AutoIncrement">5</Data>
         <Data Key="name" Type="Quote" Translatable="1">auto remove</Data>
-        <Data Key="comments" Type="Quote" Translatable="1">Auto remove will be sent out after a customer removed the request.</Data>
+        <Data Key="comments" Type="Quote" Translatable="1">Auto remove will be sent out after a contact removed the request.</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
