@@ -186,7 +186,7 @@
 [% RenderBlockEnd("Link") %]
     <tr>
         <td colspan="4" class="contentkey">
-            [% Translate("Customer Info") | html %]:
+            [% Translate("Contact info") | html %]:
             [% Data.CustomerTable %]
         </td>
     </tr>

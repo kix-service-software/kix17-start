@@ -153,8 +153,7 @@ sub Data {
         'customer' => 'Kunde',
         'agent' => 'Agent',
         'system' => 'System',
-        'Customer Info' => 'Kundeninformation',
-        'Customer Information' => 'Kundeninformation',
+        'Contact info' => 'Ansprechpartner-Info',
         'Customer Companies' => 'Kunden',
         'Company' => 'Firma',
         'go!' => 'Start!',
@@ -2423,8 +2422,7 @@ sub Data {
         'Escalated tickets' => 'Eskalierte Tickets',
 
         # Template: AgentDashboardCustomerUserList
-        'Customer login' => 'Kundenlogin',
-        'Customer information' => 'Kundeninformation',
+        'Contact information' => 'Ansprechpartner-Information',
         'Phone ticket' => 'Telefon-Ticket',
         'Email ticket' => 'E-Mail-Ticket',
         '%s open ticket(s) of %s' => '%s offene Tickets von %s',
@@ -4509,9 +4507,9 @@ Ihr Helpdesk-Team
             'Erlaubt erweiterte Suchbedingungen in der Ticketsuche im Kundenbereich. Mit diesem Feature können Sie Suchbedingungen wie "(key1&&key2)" oder "(key1||key2)" festlegen.',
         'Allows extended search conditions in ticket search of the generic agent interface. With this feature you can search e. g. ticket title with this kind of conditions like "(*key1*&&*key2*)" or "(*key1*||*key2*)".' =>
             'Erlaubt erweiterte Suchbedingungen der generischen Agenten-Schnittstelle. Mit diesem Feature kann man z.B. Ticket-Titel mit Bedingungen wie dieser "(*key1*&&*key2*)" oder "(*key1*||*key2*)" durchsuchen.',
-        'Allows having a medium format ticket overview (CustomerInfo => 1 - shows also the customer information).' =>
+        'Allows having a medium format ticket overview (CustomerInfo => 1 - shows also the contact information).' =>
             'Ermöglicht eine Ticket-Übersicht mit einigen Ticketinformationen  (Customer => 1 - zeigt auch die Kundeninformation).',
-        'Allows having a small format ticket overview (CustomerInfo => 1 - shows also the customer information).' =>
+        'Allows having a small format ticket overview (CustomerInfo => 1 - shows also the contact information).' =>
             'Ermöglicht die Benutzung der kleinenTicketübersicht (CustomerInfo => 1 - zeigt auch die Kundeninformation ).',
         'Allows invalid agents to generate individual-related stats.' => 'Erlaubt Agenten, die ungültig sind, individuelle Statistiken zu generieren.',
         'Allows the administrators to login as other customers, via the contact administration panel.' =>
@@ -4746,13 +4744,13 @@ Ihr Helpdesk-Team
         'Define the start day of the week for the date picker.' => 'Definiert den Beginn einer Woche für den Datumswähler.',
         'Define which columns are shown in the linked tickets widget (LinkObject::ViewMode = "complex"). Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.' =>
             'Definieren Sie, welche Spalten im verlinkte Tickets-Widget sichtbar sein sollen (LinkObject::ViewMode = "complex"). Hinweis: Nur Ticket-Attribute und dynamische Felder (DynamicField_NameX) sind als Standard-Spalten erlaubt. Mögliche Einstellungen: 0 = inaktiv, 1 = verfügbar, 2 = standardmäßig aktiv.',
-        'Defines a customer item, which generates a LinkedIn icon at the end of a customer info block.' =>
+        'Defines a customer item, which generates a LinkedIn icon at the end of a contact info block.' =>
             'Definiert einen Punkt, welcher ein LinedIn-Symbol am Endes der Kundeninformation hinzufügt.',
-        'Defines a customer item, which generates a XING icon at the end of a customer info block.' =>
+        'Defines a customer item, which generates a XING icon at the end of a contact info block.' =>
             'Definiert einen Punkt, welcher ein XINGSymbol am Endes der Kundeninformation hinzufügt.',
-        'Defines a customer item, which generates a google icon at the end of a customer info block.' =>
+        'Defines a customer item, which generates a google icon at the end of a contact info block.' =>
             'Definiert einen Punkt, welcher ein GoogleSymbol am Endes der Kundeninformation hinzufügt.',
-        'Defines a customer item, which generates a google maps icon at the end of a customer info block.' =>
+        'Defines a customer item, which generates a google maps icon at the end of a contact info block.' =>
             'Definiert einen Punkt, welcher ein Google-Maps-Symbol am Endes der Kundeninformation hinzufügt.',
         'Defines a default list of words, that are ignored by the spell checker.' =>
             'Definiert eine Standardliste von Wörtern, die von der Rechtschreibprüfung ignoriert werden.',
@@ -5693,7 +5691,7 @@ Ihr Helpdesk-Team
             'Wenn "HTTPBasicAuth" als Customer::AuthModule ausgewählt ist, kann hier ein regulärer Ausdruck definiert werden, um Teile von REMOTE_USER zu entfernen (z.B. für anhängende Domänen). Hinweis: $1 enthält den neuen Login-Namen.',
         'If "HTTPBasicAuth" was selected for Customer::AuthModule, you can specify to strip leading parts of user names (e. g. for domains like example_domain\user to user).' =>
             'Wenn "HTTPBasicAuth" als Customer::AuthModule ausgewählt ist, können Sie hier angeben, ob führende Teile von Benutzernamen (z.B. zur Umwandlung von Domänen wie "example_domain\user" zu "user").',
-        'If "LDAP" was selected for Customer::AuthModule and if you want to add a suffix to every customer login name, specifiy it here, e. g. you just want to write the username user but in your LDAP directory exists user@domain.' =>
+        'If "LDAP" was selected for Customer::AuthModule and if you want to add a suffix to every contact login name, specifiy it here, e. g. you just want to write the username user but in your LDAP directory exists user@domain.' =>
             'Wenn "LDAP" als Customer::AuthModule ausgewählt ist und Sie einen Suffix zu jedem Kunden-Loginnamen hinzufügen möchten, können Sie dies hier festlegen (z.B. wenn "benutzername" im LDAP als "benutzername@domain" existiert).',
         'If "LDAP" was selected for Customer::AuthModule and special paramaters are needed for the Net::LDAP perl module, you can specify them here. See "perldoc Net::LDAP" for more information about the parameters.' =>
             'Wenn "LDAP" als Customer::AuthModule ausgewählt ist und spezielle Parameter für das Perl-Modul Net::LDAP benötigt werden, können Sie diese hier angeben. Nutzen Sie "perldoc Net::LDAP" für weitere Informationen zu den Parametern.',

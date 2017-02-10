@@ -484,7 +484,7 @@ sub Data {
         'Legt die Anzeige aller Bearbeiter und Verantwortlichen als Standard fest.';
     $Lang->{'Default body for a forwarded email.'} =
         'Standardinhalt für eine weitergeleitete Email.';
-    $Lang->{'Sets the search paramater for the ticket count in customer info block.'} =
+    $Lang->{'Sets the search paramater for the ticket count in contact info block.'} =
         'Festlegung, welches Attribut für die Anzeige der Ticketanzahl in den Kundendaten genutzt werden soll.';
     $Lang->{
         'Overloads (redefines) existing functions in Kernel::System::Ticket. Used to easily add customizations.'
@@ -1213,7 +1213,7 @@ sub Data {
     $Lang->{'Assigned CIs'}                    = 'Zugewiesene CIs';
     $Lang->{'Config Item Data'}                = 'CI Daten';
     $Lang->{'Show CILinks Selection'}          = 'Anzahl der verlinkten ConfigItems pro Seite';
-    $Lang->{'Customer info CILinks selection'} = 'Kundeninfo: verlinkte ConfigItems';
+    $Lang->{'Contact info CILinks selection'}  = 'Ansprechpartner-Info: verlinkte ConfigItems';
     $Lang->{'File is no image or image type not supported. Please contact your admin.'}
         = 'Datei ist kein Bild oder Bildtyp wird nicht unterstützt.';
     $Lang->{'Shows a link in the menu to create an email ticket.'}

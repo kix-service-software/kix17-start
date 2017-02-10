@@ -27,14 +27,14 @@
 # KIX4OTRS-capeIT
 [% RenderBlockStart("OverviewResultCustomerLogin") %]
 # EO KIX4OTRS-capeIT
-            <th>[% Translate("Customer login") | html %]</th>
+            <th>[% Translate("Contact login") | html %]</th>
 # KIX4OTRS-capeIT
 [% RenderBlockEnd("OverviewResultCustomerLogin") %]
 [% RenderBlockStart("OverviewResultCustomerCompany") %]
             <th>[% Translate("Customer company") | html %]</th>
 [% RenderBlockEnd("OverviewResultCustomerCompany") %]
 # EO KIX4OTRS-capeIT
-            <th>[% Translate("Customer information") | html %]</th>
+            <th>[% Translate("Contact information") | html %]</th>
             <th>[% Translate("Open") | html %]</th>
             <th>[% Translate("Closed") | html %]</th>
 [% RenderBlockStart("OverviewResultNewAgentTicketPhone") %]

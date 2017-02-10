@@ -8710,7 +8710,7 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###1-GoogleMaps" Required="0" Valid="1">
-        <Description Translatable="1">Defines a customer item, which generates a google maps icon at the end of a customer info block.</Description>
+        <Description Translatable="1">Defines a customer item, which generates a google maps icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
@@ -8728,7 +8728,7 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###2-Google" Required="0" Valid="0">
-        <Description Translatable="1">Defines a customer item, which generates a google icon at the end of a customer info block.</Description>
+        <Description Translatable="1">Defines a customer item, which generates a google icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
@@ -8746,7 +8746,7 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###2-LinkedIn" Required="0" Valid="0">
-        <Description Translatable="1">Defines a customer item, which generates a LinkedIn icon at the end of a customer info block.</Description>
+        <Description Translatable="1">Defines a customer item, which generates a LinkedIn icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
@@ -8764,7 +8764,7 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###3-XING" Required="0" Valid="0">
-        <Description Translatable="1">Defines a customer item, which generates a XING icon at the end of a customer info block.</Description>
+        <Description Translatable="1">Defines a customer item, which generates a XING icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
@@ -9096,7 +9096,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Customer::AuthModule::LDAP::UserSuffix" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">If "LDAP" was selected for Customer::AuthModule and if you want to add a suffix to every customer login name, specifiy it here, e. g. you just want to write the username user but in your LDAP directory exists user@domain.</Description>
+        <Description Translatable="1">If "LDAP" was selected for Customer::AuthModule and if you want to add a suffix to every contact login name, specifiy it here, e. g. you just want to write the username user but in your LDAP directory exists user@domain.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer::Auth</SubGroup>
         <Setting>
@@ -13321,7 +13321,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::CustomerInfoTicketCount" Required="0" Valid="1">
-        <Description Translatable="1">Sets the search paramater for the ticket count in customer info block.</Description>
+        <Description Translatable="1">Sets the search paramater for the ticket count in contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
@@ -13392,7 +13392,7 @@ via the Preferences button after logging in.
             </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###98-CustomerIDsSelection" Required="0" Valid="1">
-        <Description Translatable="1">A customer info block, which shows all customer IDs assigned to this customer. Depending on the calling action it allows you to select the relevant customer ID for the ticket, which will be created.</Description>
+        <Description Translatable="1">A contact info block, which shows all customer IDs assigned to this customer. Depending on the calling action it allows you to select the relevant customer ID for the ticket, which will be created.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
             <Setting>

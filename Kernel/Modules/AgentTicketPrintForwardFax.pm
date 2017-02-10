@@ -881,7 +881,7 @@ sub _PDFOutputCustomerInfos {
 
         # output headline
         $Self->{PDFObject}->Text(
-            Text     => $Self->{LayoutObject}->{LanguageObject}->Translate('Customer Information'),
+            Text     => $Self->{LayoutObject}->{LanguageObject}->Translate('Contact information'),
             Height   => 7,
             Type     => 'Cut',
             Font     => 'ProportionalBoldItalic',

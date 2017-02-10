@@ -717,9 +717,6 @@ sub LoadDefaults {
         '200-UID-Check' => {
           'Module' => 'Kernel::Output::HTML::Notification::UIDCheck',
         },
-        '250-AgentSessionLimit' => {
-          'Module' => 'Kernel::Output::HTML::Notification::AgentSessionLimit',
-        },
         '500-OutofOffice-Check' => {
           'Module' => 'Kernel::Output::HTML::Notification::OutofOfficeCheck',
         },
@@ -1365,7 +1362,7 @@ via the Preferences button after logging in.
     # this option. e. g. AlwaysFilter => '(mail=*)' or AlwaysFilter => '(objectclass=user)'
 #   $Self->{'Customer::AuthModule::LDAP::AlwaysFilter'} = '';
 
-    # in case you want to add a suffix to each customer login name, then
+    # in case you want to add a suffix to each contact login name, then
     # you can use this option. e. g. user just want to use user but
     # in your ldap directory exists user@domain.
 #    $Self->{'Customer::AuthModule::LDAP::UserSuffix'} = '@domain.com';

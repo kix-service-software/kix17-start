@@ -1667,7 +1667,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::Overview###Small" Required="0" Valid="1">
-        <Description Translatable="1">Allows having a small format ticket overview (CustomerInfo =&gt; 1 - shows also the customer information).</Description>
+        <Description Translatable="1">Allows having a small format ticket overview (CustomerInfo =&gt; 1 - shows also the contact information).</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::TicketOverview</SubGroup>
         <Setting>
@@ -1692,7 +1692,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::Overview###Medium" Required="0" Valid="1">
-        <Description Translatable="1">Allows having a medium format ticket overview (CustomerInfo =&gt; 1 - shows also the customer information).</Description>
+        <Description Translatable="1">Allows having a medium format ticket overview (CustomerInfo =&gt; 1 - shows also the contact information).</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::TicketOverview</SubGroup>
         <Setting>
@@ -2055,7 +2055,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerInfoComposeMaxSize" Required="1" Valid="1">
-        <Description Translatable="1">Max size (in characters) of the customer information table (phone and email) in the compose screen.</Description>
+        <Description Translatable="1">Max size (in characters) of the contact information table (phone and email) in the compose screen.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
@@ -2074,7 +2074,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerInfoZoomMaxSize" Required="1" Valid="1">
-        <Description Translatable="1">Maximum size (in characters) of the customer information table in the ticket zoom view.</Description>
+        <Description Translatable="1">Maximum size (in characters) of the contact information table in the ticket zoom view.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
@@ -12360,14 +12360,14 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0500-CIC-CustomerInfo" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the dashboard backend of the customer login status widget of the agent interface . "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Description Translatable="1">Parameters for the dashboard backend of the contact login status widget of the agent interface . "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Dashboard::CustomerInfo</Item>
-                <Item Key="Title" Translatable="1">Customer Information</Item>
-                <Item Key="Description" Translatable="1">Customer Information</Item>
+                <Item Key="Title" Translatable="1">Contact information</Item>
+                <Item Key="Description" Translatable="1">Contact information</Item>
                 <Item Key="Attributes"></Item>
                 <Item Key="Permission">ro</Item>
                 <Item Key="Block">ContentSmall</Item>

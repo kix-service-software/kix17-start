@@ -548,7 +548,7 @@ sub ImportDataSave {
             #customer user login does not exist - drop line...
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "Service2CustomerUser: customer login <"
+                Message  => "Service2CustomerUser: contact login <"
                     . "$ImportData{CustomerUserLogin}> does not exist.",
             );
             return (0, 'Failed');   # if got no CustomerUserLogin, then exit
