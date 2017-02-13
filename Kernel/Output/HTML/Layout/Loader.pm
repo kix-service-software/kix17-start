@@ -1,11 +1,12 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIXCore-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# KIXCore-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Rene(dot)Boehm(at)cape(dash)it(dot)de
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
 # * Anna(dot)Litvinova(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
 #
 # --
 # $Id$
@@ -831,6 +832,20 @@ sub SkinValidate {
                 $Self->{SkinValidateCache}->{ $Param{SkinType} . '::' . $Param{Skin} } = 1;
                 return 1;
             }
+
+            # KIXCore-capeIT
+            # check custom packages
+            else {
+                for my $Path (@INC) {
+                    next if ( $Path !~ m/^$Home(.*)/ || $Path =~ m/^$Home\/bin/ );
+                    if ( -d $Path . "/var/httpd/htdocs/skins/$SkinType/" . $PossibleSkin->{InternalName} ) {
+                        $Self->{SkinValidateCache}->{ $Param{SkinType} . '::' . $Param{Skin} } = 1;
+                        return 1;
+                    }
+                }
+            }
+
+            # EO KIXCore-capeIT
         }
     }
 

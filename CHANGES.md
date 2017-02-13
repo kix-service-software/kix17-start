@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/02/13) - Bugfix: T2016102090001575 (skins in custom packages are ignored) (rkaiser)
  * (2017/02/10) - CR: T2017020290001194 (changed 'customer user' to 'contact' and only translation for 'owner') (rkaiser)
  * (2017/02/07) - Bugfix: T2017011190000661 (unnecessary requests delay form input for DynamicFieldRemoteDB and DynamicFieldITSMConfigItem) (millinger)
  * (2017/02/07) - Bugfix: T2017013190000712 (missing handling of CustomerIDRaw in Kernel::System::CustomerUser::DB::CustomerSearch) (rkaiser)
