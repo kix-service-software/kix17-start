@@ -421,7 +421,7 @@ sub _CustomerDashboardRemoteDBSearch {
         )
     {
         for my $RestrictedValue ( @{ $Param{RestrictedValues} } ) {
-            push( @QuotedRestrictedValues, $Self->Quote($RestrictedValue) );
+            push( @QuotedRestrictedValues, $Kernel::OM->Get('Kernel::System::DB')->Quote($RestrictedValue) );
         }
     }
 
