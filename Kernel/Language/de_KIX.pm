@@ -2648,7 +2648,6 @@ sub Data {
         = 'Configuration Item Limit pro Seite';
     $Lang->{'Configuration item search backend router of the agent interface.'} =
         '';
-    $Lang->{'Create and manage the definitions for Configuration Items.'} = '';
     $Lang->{
         'Defines Required permissions to create ITSM configuration items using the Generic Interface.'
         }
