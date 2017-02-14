@@ -1879,7 +1879,6 @@ sub _InstallHandling {
     elsif (
         $PackageObject->PackageInstall(
             String    => $Param{Package},
-            FromCloud => $FromCloud
         )
         )
     {
