@@ -1,6 +1,6 @@
 # --
 # Kernel/Output/HTML/ITSMConfigItemLayoutCIClassReference.pm - layout backend module
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/changed by:
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
@@ -397,6 +397,7 @@ sub InputCreate {
         && $AutoCompleteConfig->{Active}
         )
     {
+        my $ItemId = $Param{ItemId} || '';
 
         $Self->{LayoutObject}->Block(
             Name => 'CIClassSearchAutoComplete',
@@ -411,7 +412,7 @@ sub InputCreate {
         $Self->{LayoutObject}->Block(
             Name => 'CIClassSearchInit',
             Data => {
-                ItemID             => $Param{ItemId},
+                ItemID             => $ItemId,
                 ClassID            => $Self->{CIClassReferenceClassID},
                 ActiveAutoComplete => 'true',
             },
@@ -425,14 +426,14 @@ sub InputCreate {
             . '" value="'
             . $Value
             . '" id="'
-            . $Param{ItemId} . 'Selected'
+            . $ItemId . 'Selected'
             . '"/>'
             . '<input type="text" name="'
             . $Param{Key}
             . '::Search" class="'
             . $Class
             . '" id="'
-            . $Param{ItemId}
+            . $ItemId
             . '" classid="'
             . $Self->{CIClassReferenceClassID}
             . '" SearchClass="CIClassSearch" value="'
@@ -633,6 +634,7 @@ sub SearchInputCreate {
             %FormData,
             Key    => $Param{Key},
             Item   => $Param{Item},
+            ItemId => $Param{Key},
         );
     }
 

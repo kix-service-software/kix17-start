@@ -3,6 +3,8 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/02/14) - Bugfix: T2017021290000532 (Error log if ItemId is not provided for LayoutCIClassReference-method InputCreate) (millinger)
+ * (2017/02/14) - Bugfix: T2017021290000541 (LayoutCIClassReference doesn't provide ItemId for InputCreate on SearchInputCreate) (millinger)
  * (2017/02/07) - Bugfix: T2017020190000821 (missing object in customer remote db ajax handler) (ddoerffel)
  * (2017/02/13) - Bugfix: T2016102090001575 (skins in custom packages are ignored) (rkaiser)
  * (2017/02/10) - CR: T2017020290001194 (changed 'customer user' to 'contact' and only translation for 'owner') (rkaiser)
