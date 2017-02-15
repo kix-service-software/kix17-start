@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/02/15) - Bugfix: T2017021090000545 (missing config object in CustomerUser/DB.pm) (ddoerffel)
  * (2017/02/14) - Bugfix: T2017021290000532 (Error log if ItemId is not provided for LayoutCIClassReference-method InputCreate) (millinger)
  * (2017/02/14) - Bugfix: T2017021290000541 (LayoutCIClassReference doesn't provide ItemId for InputCreate on SearchInputCreate) (millinger)
  * (2017/02/07) - Bugfix: T2017020190000821 (missing object in customer remote db ajax handler) (ddoerffel)

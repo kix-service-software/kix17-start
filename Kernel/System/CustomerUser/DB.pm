@@ -49,6 +49,9 @@ sub new {
 
     # get database object
     $Self->{DBObject} = $Kernel::OM->Get('Kernel::System::DB');
+    # KIX4OTRS-capeIT
+    $Self->{ConfigObject} = $Kernel::OM->Get('Kernel::Config');
+    # EO KIX4OTRS-capeIT
 
     # max shown user per search list
     $Self->{UserSearchListLimit} = $Self->{CustomerUserMap}->{CustomerUserSearchListLimit} || 250;
