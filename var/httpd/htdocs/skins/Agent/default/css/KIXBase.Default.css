@@ -435,7 +435,8 @@
         color: #0A6491;
     }
 
-    .MessageBox {
+    .MessageBox,
+    .MessageBox.Info {
         background: #82C826;
         margin-right: 10px;
     }
