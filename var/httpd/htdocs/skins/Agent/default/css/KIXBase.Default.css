@@ -197,6 +197,10 @@
         font-weight: bold;
     }
 
+    .ContentColumn .WidgetSimple > .Header h2 > span {
+        padding-right: 27px;
+    }
+
     .WidgetSimple.SettingsWidget > .Header h2 > span {
         font-weight: bold;
         position: relative;
