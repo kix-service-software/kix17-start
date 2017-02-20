@@ -312,7 +312,11 @@ Core.AJAX = (function (TargetNS) {
                             $Element.addClass('Hidden');
                         }
                         else {
-                            $Element.removeClass('Hidden');
+                            $Element.removeClass('Hidden hiddenFormField');
+                            $Element.css({"display" : ""});
+                            $Element.children('.Field').children().each(function(){
+                                $(this).removeAttr("disabled");
+                            });
                         }
                     })
                 }

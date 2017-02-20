@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/02/20) - Bugfix: T2017020190001409 (hidden dynamic fields not shown again) (ddoerffel)
  * (2017/02/16) - Bugfix: T2017021390000709 (article header reformatted) (uboehm)
  * (2017/02/15) - Bugfix: T2017021490000841 (.MessageBox.Notice reformatted) (uboehm)
  * (2017/02/15) - Bugfix: T2017021090000545 (missing config object in CustomerUser/DB.pm) (ddoerffel)
