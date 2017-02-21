@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/02/21) - Bugfix: T2017021090001026 (dynamic fields not hidden on init in customer frontend) (ddoerffel)
  * (2017/02/20) - Bugfix: T2017020190001409 (hidden dynamic fields not shown again) (ddoerffel)
  * (2017/02/16) - Bugfix: T2017021390000709 (article header reformatted) (uboehm)
  * (2017/02/15) - Bugfix: T2017021490000841 (.MessageBox.Notice reformatted) (uboehm)

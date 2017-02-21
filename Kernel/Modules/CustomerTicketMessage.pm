@@ -1,6 +1,6 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# KIX4OTRS-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Torsten(dot)Thau(at)cape(dash)it(dot)de
@@ -290,6 +290,26 @@ sub Run {
             $GetParam{QueueID} = $QueueDefaultID;
         }
 
+        # store the dynamic fields default values or used specific default values to be used as
+        # ACLs info for all fields
+        my %DynamicFieldDefaults;
+
+        # cycle trough the activated Dynamic Fields for this screen
+        DYNAMICFIELD:
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
+
+            # get default value from dynamic field config (if any)
+            my $DefaultValue = $DynamicFieldConfig->{Config}->{DefaultValue} || '';
+
+            next DYNAMICFIELD if $DefaultValue eq '';
+            next DYNAMICFIELD if ref $DefaultValue eq 'ARRAY' && !IsArrayRefWithData($DefaultValue);
+
+            $DynamicFieldDefaults{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $DefaultValue;
+        }
+        $GetParam{DynamicField} = \%DynamicFieldDefaults;
         # EO KIX4OTRS-capeIT
 
         # create html strings for all dynamic fields
