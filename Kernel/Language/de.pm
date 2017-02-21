@@ -3514,7 +3514,7 @@ sub Data {
         # Perl Module: Kernel/Modules/AdminSysConfig.pm
         'Import not allowed!' => 'Import nicht erlaubt!',
         'Need File!' => 'Datei benötigt!',
-        'Can\'t write ConfigItem!' => 'Kann Konfigurations-Element nicht schreibtn!',
+        'Can\'t write ConfigItem!' => 'Kann Konfigurations-Element nicht schreiben!',
 
         # Perl Module: Kernel/Modules/AdminSystemMaintenance.pm
         'Start date shouldn\'t be defined after Stop date!' => 'Das Startdatum sollte nicht nach dem Enddatum liegen!',

@@ -1,6 +1,6 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIXCore-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# KIXCore-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Rene(dot)Boehm(at)cape(dash)it(dot)de
@@ -8,6 +8,7 @@
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
 # * Anna(dot)Litvinova(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
 # --
 # $Id$
 # --
@@ -27,6 +28,10 @@ use vars qw(@ISA);
 use Kernel::Config;
 
 use base qw(Kernel::System::EventHandler);
+
+# KIXCore-capeIT
+use Kernel::System::VariableCheck qw(:all);
+# EO KIXCore-capeIT
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -532,7 +537,7 @@ sub ConfigItemUpdate {
     my $NewValue = $Param{Value};
 
     my $ChangeType = 0;
-    if ( $Self->{ConfigObject}->Get('SysConfig::EventModulePost') )
+    if ( IsHashRefWithData($Self->{ConfigObject}->Get('SysConfig::EventModulePost')) )
     {
         if ( $Kernel::OM->Get('Kernel::System::Main')->Require('Data::Compare') ) {
             my $Comparator = Data::Compare->new();

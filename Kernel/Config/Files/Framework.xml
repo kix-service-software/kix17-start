@@ -13179,7 +13179,7 @@ via the Preferences button after logging in.
         <Group>Framework</Group>
         <SubGroup>Core::Log</SubGroup>
         <Setting>
-            <Option Location="KIX4OTRS/Kernel/System/SysConfigChangeLog/*.pm" SelectedID="KIX4OTRS::Kernel::System::SysConfigChangeLog::File"></Option>
+            <Option Location="Kernel/System/SysConfigChangeLog/*.pm" SelectedID="Kernel::System::SysConfigChangeLog::File"></Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SysConfigChangeLog::LogModule::SysLog::Facility" Required="1" Valid="1">
