@@ -9731,7 +9731,7 @@ via the Preferences button after logging in.
                 <GroupRo></GroupRo>
                 <Group>admin</Group>
                 <Group>users</Group>
-                <Description Translatable="1">Edit Contacts.</Description>
+                <Description Translatable="1">Edit contacts.</Description>
                 <Title Translatable="1">Contacts</Title>
                 <NavBarName>Customer Management</NavBarName>
                 <NavBar>
@@ -9739,14 +9739,14 @@ via the Preferences button after logging in.
                     <Link>Action=AdminCustomerUser;Nav=Agent</Link>
                     <LinkOption></LinkOption>
                     <NavBar>Customer Management</NavBar>
-                    <Description Translatable="1">Contact Administration.</Description>
+                    <Description Translatable="1">Contact Administration</Description>
                     <Type></Type>
                     <Block></Block>
                     <AccessKey></AccessKey>
                     <Prio>900</Prio>
                 </NavBar>
                 <NavBar>
-                    <Description Translatable="1">Contact Administration.</Description>
+                    <Description Translatable="1">Contact Administration</Description>
                     <Type>Menu</Type>
                     <Block>ItemArea</Block>
                     <Name Translatable="1">Customer Management</Name>
