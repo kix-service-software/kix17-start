@@ -1880,28 +1880,41 @@ sub new {
         }
     }
 
-    # load RELEASE file
+    #rbo - T2016121190001552 - extended handling of RELEASE file 
+    # load basic RELEASE file to check integrity of installation
     if ( -e ! "$Self->{Home}/RELEASE" ) {
         print STDERR "ERROR: $Self->{Home}/RELEASE does not exist! This file is needed by central system parts of KIX, the system will not work without this file.\n";
         die;
     }
-    if ( open( my $Product, '<', "$Self->{Home}/RELEASE" ) ) { ## no critic
-        while (my $Line = <$Product>) {
-
-            # filtering of comment lines
-            if ( $Line !~ /^#/ ) {
-                if ( $Line =~ /^PRODUCT\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
-                    $Self->{Product} = $1;
-                }
-                elsif ( $Line =~ /^VERSION\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
-                    $Self->{Version} = $1;
+    # load most recent RELEASE file
+    if ( opendir(my $HOME, "$Self->{HOME}") ) {
+        my @ReleaseFiles = grep { /^RELEASE\.*?/ && -f "$Self->{HOME}/$_" } readdir($HOME);
+        closedir $HOME;
+        @ReleaseFiles = reverse sort @ReleaseFiles;
+        my $MostRecentReleaseFile = $ReleaseFiles[0];
+        
+        if ( open( my $Product, '<', "$Self->{Home}/$MostRecentReleaseFile" ) ) { ## no critic
+            while (my $Line = <$Product>) {
+    
+                # filtering of comment lines
+                if ( $Line !~ /^#/ ) {
+                    if ( $Line =~ /^PRODUCT\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
+                        $Self->{Product} = $1;
+                    }
+                    elsif ( $Line =~ /^VERSION\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
+                        $Self->{Version} = $1;
+                    }
                 }
             }
+            close($Product);
         }
-        close($Product);
+        else {
+            print STDERR "ERROR: Can't read $Self->{Home}/$MostRecentReleaseFile: $! This file is needed by central system parts of KIX, the system will not work without this file.\n";
+            die;
+        }
     }
     else {
-        print STDERR "ERROR: Can't read $Self->{Home}/RELEASE: $! This file is needed by central system parts of KIX, the system will not work without this file.\n";
+        print STDERR "ERROR: Can't read $Self->{Home}: $!\n";
         die;
     }
 
