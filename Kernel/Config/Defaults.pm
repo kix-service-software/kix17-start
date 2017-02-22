@@ -1,5 +1,10 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+#
+# written/edited by:
+# * Rene(dot)Boehm(at)cape(dash)it(dot)de
+#
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -17,7 +22,7 @@ use strict;
 use warnings;
 use utf8;
 
-# Perl 5.10.0 is the required minimum version to use OTRS.
+# Perl 5.10.0 is the required minimum version to use KIX.
 use 5.010_000;
 
 # prepend '../Custom', '../Kernel/cpan-lib' and '../' to the module search path @INC
@@ -49,7 +54,7 @@ of L<Kernel::Config>, even though they are actually implemented here.
 
 =head2 LoadDefaults()
 
-loads the default values of settings that are required to run OTRS even
+loads the default values of settings that are required to run KIX even
 when it was not fully configured yet.
 
 =cut
@@ -105,7 +110,7 @@ sub LoadDefaults {
 
     # ProductName
     # (Application name displayed in frontend.)
-    $Self->{ProductName} = 'OTRS 5s';
+    $Self->{ProductName} = 'KIX';
 
     # --------------------------------------------------- #
     # database settings                                   #
@@ -116,11 +121,11 @@ sub LoadDefaults {
 
     # Database
     # (The database name.)
-    $Self->{Database} = 'otrs';
+    $Self->{Database} = 'kix17';
 
     # DatabaseUser
     # (The database user.)
-    $Self->{DatabaseUser} = 'otrs';
+    $Self->{DatabaseUser} = 'kix';
 
     # DatabasePw
     # (The password of database user.)
@@ -174,103 +179,13 @@ sub LoadDefaults {
     # used languages
     # (short name = long name and file)
     $Self->{DefaultUsedLanguages} = {
-        'ar_SA' => 'Arabic (Saudi Arabia)',
-        'bg' => 'Bulgarian',
-        'ca' => 'Catalan',
-        'cs' => 'Czech',
-        'da' => 'Danish',
         'de' => 'German',
         'en' => 'English (United States)',
-        'en_CA' => 'English (Canada)',
-        'en_GB' => 'English (United Kingdom)',
-        'es' => 'Spanish',
-        'es_CO' => 'Spanish (Colombia)',
-        'es_MX' => 'Spanish (Mexico)',
-        'et' => 'Estonian',
-        'el' => 'Greek',
-        'fa' => 'Persian',
-        'fi' => 'Finnish',
-        'fr' => 'French',
-        'fr_CA' => 'French (Canada)',
-        'gl' => 'Galician',
-        'he' => 'Hebrew',
-        'hi' => 'Hindi',
-        'hr' => 'Croatian',
-        'hu' => 'Hungarian',
-        'id' => 'Indonesian',
-        'it' => 'Italian',
-        'ja' => 'Japanese',
-        'lt' => 'Lithuanian',
-        'lv' => 'Latvian',
-        'ms' => 'Malay',
-        'nl' => 'Nederlands',
-        'nb_NO' => 'Norwegian',
-        'pt_BR' => 'Portuguese (Brasil)',
-        'pt' => 'Portuguese',
-        'pl' => 'Polish',
-        'ru' => 'Russian',
-        'sl' => 'Slovenian',
-        'sr_Latn' => 'Serbian Latin',
-        'sr_Cyrl' => 'Serbian Cyrillic',
-        'sk_SK' => 'Slovak',
-        'sv' => 'Swedish',
-        'sw' => 'Swahili',
-        'th_TH' => 'Thai',
-        'tr' => 'Turkish',
-        'uk' => 'Ukrainian',
-        'vi_VN' => 'Vietnam',
-        'zh_CN' => 'Chinese (Simplified)',
-        'zh_TW' => 'Chinese (Traditional)',
     };
 
     $Self->{DefaultUsedLanguagesNative} = {
-        'ar_SA' => 'Ø§Ù„Ø¹ÙŽØ±ÙŽØ¨Ù�ÙŠØ©â€Ž',
-        'bg' => 'Ð‘ÑŠÐ»Ð³Ð°Ñ€Ñ�ÐºÐ¸',
-        'ca' => 'CatalÃ ',
-        'cs' => 'ÄŒesky',
-        'da' => 'Dansk',
         'de' => 'Deutsch',
         'en' => 'English (United States)',
-        'en_CA' => 'English (Canada)',
-        'en_GB' => 'English (United Kingdom)',
-        'es' => 'EspaÃ±ol',
-        'es_CO' => 'EspaÃ±ol (Colombia)',
-        'es_MX' => 'EspaÃ±ol (MÃ©xico)',
-        'et' => 'Eesti',
-        'el' => 'Î•Î»Î»Î·Î½Î¹ÎºÎ¬',
-        'fa' => 'Ù�Ø§Ø±Ø³Ù‰',
-        'fi' => 'Suomi',
-        'fr' => 'FranÃ§ais',
-        'fr_CA' => 'FranÃ§ais (Canada)',
-        'gl' => 'Galego',
-        'he' => '×¢×‘×¨×™×ª',
-        'hi' => 'à¤¹à¤¿à¤¨à¥�à¤¦à¥€',
-        'hr' => 'Hrvatski',
-        'hu' => 'Magyar',
-        'id' => 'Bahasa Indonesia',
-        'it' => 'Italiano',
-        'ja' => 'æ—¥æœ¬èªž',
-        'lt' => 'LietuviÅ³ kalba',
-        'lv' => 'Latvijas',
-        'ms' => 'Melayu',
-        'nl' => 'Nederlandse',
-        'nb_NO' => 'Norsk bokmÃ¥l',
-        'pt_BR' => 'PortuguÃªs Brasileiro',
-        'pt' => 'PortuguÃªs',
-        'pl' => 'Polski',
-        'ru' => 'Ð ÑƒÑ�Ñ�ÐºÐ¸Ð¹',
-        'sl' => 'SlovenÅ¡Ä�ina',
-        'sr_Latn' => 'Srpski',
-        'sr_Cyrl' => 'Ð¡Ñ€Ð¿Ñ�ÐºÐ¸',
-        'sk_SK' => 'SlovenÄ�ina',
-        'sv' => 'Svenska',
-        'sw' => 'Kiswahili',
-        'th_TH' => 'à¸ à¸²à¸©à¸²à¹„à¸—à¸¢',
-        'tr' => 'TÃ¼rkÃ§e',
-        'uk' => 'Ð£ÐºÑ€Ð°Ñ—Ð½Ñ�ÑŒÐºÐ°',
-        'vi_VN' => 'ViÉ†t Nam',
-        'zh_CN' => 'ç®€ä½“ä¸­æ–‡',
-        'zh_TW' => 'æ­£é«”ä¸­æ–‡',
     };
 
     # default theme
@@ -747,8 +662,8 @@ sub LoadDefaults {
 #    $Self->{SessionModule} = 'Kernel::System::AuthSession::FS';
 
     # SessionName
-    # (Name of the session key. E. g. Session, SessionID, OTRS)
-    $Self->{SessionName} = 'OTRSAgentInterface';
+    # (Name of the session key. E. g. Session, SessionID, KIX)
+    $Self->{SessionName} = 'KIXAgentInterface';
 
     # SessionCheckRemoteIP
     # (If the application is used via a proxy-farm then the
@@ -851,7 +766,7 @@ sub LoadDefaults {
 #    $Self->{WebUploadCacheModule} = 'Kernel::System::Web::UploadCache::FS';
 
     # CGILogPrefix
-    $Self->{CGILogPrefix} = 'OTRS-CGI';
+    $Self->{CGILogPrefix} = 'KIX-CGI';
 
     # --------------------------------------------------- #
     # Agent Web Interface
@@ -1195,21 +1110,21 @@ sub LoadDefaults {
     # --------------------------------------------------- #
 
     # notification sender
-    $Self->{NotificationSenderName}  = 'OTRS Notifications';
-    $Self->{NotificationSenderEmail} = 'otrs@<OTRS_CONFIG_FQDN>';
+    $Self->{NotificationSenderName}  = 'KIX Notifications';
+    $Self->{NotificationSenderEmail} = 'kix@<KIX_CONFIG_FQDN>';
 
     # notification email for new password
-    $Self->{NotificationSubjectLostPassword} = 'New OTRS password';
-    $Self->{NotificationBodyLostPassword}    = 'Hi <OTRS_USERFIRSTNAME>,
+    $Self->{NotificationSubjectLostPassword} = 'New KIX password';
+    $Self->{NotificationBodyLostPassword}    = 'Hi <KIX_USERFIRSTNAME>,
 
 
-Here\'s your new OTRS password.
+Here\'s your new KIX password.
 
-New password: <OTRS_NEWPW>
+New password: <KIX_NEWPW>
 
 You can log in via the following URL:
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl
             ';
 
     # --------------------------------------------------- #
@@ -1220,8 +1135,8 @@ You can log in via the following URL:
     # --------------------------------------------------- #
 
     # SessionName
-    # (Name of the session key. E. g. Session, SessionID, OTRS)
-    $Self->{CustomerPanelSessionName} = 'OTRSCustomerInterface';
+    # (Name of the session key. E. g. Session, SessionID, KIX)
+    $Self->{CustomerPanelSessionName} = 'KIXCustomerInterface';
 
     # CustomerPanelUserID
     # (The customer panel db-uid.) [default: 1]
@@ -1286,32 +1201,32 @@ You can log in via the following URL:
     # --------------------------------------------------- #
     # notification email about new password               #
     # --------------------------------------------------- #
-    $Self->{CustomerPanelSubjectLostPassword} = 'New OTRS password';
-    $Self->{CustomerPanelBodyLostPassword}    = 'Hi <OTRS_USERFIRSTNAME>,
+    $Self->{CustomerPanelSubjectLostPassword} = 'New KIX password';
+    $Self->{CustomerPanelBodyLostPassword}    = 'Hi <KIX_USERFIRSTNAME>,
 
 
-New password: <OTRS_NEWPW>
+New password: <KIX_NEWPW>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>customer.pl
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>customer.pl
             ';
 
     # --------------------------------------------------- #
     # notification email about new account                #
     # --------------------------------------------------- #
-    $Self->{CustomerPanelSubjectNewAccount} = 'New OTRS Account!';
-    $Self->{CustomerPanelBodyNewAccount}    = 'Hi <OTRS_USERFIRSTNAME>,
+    $Self->{CustomerPanelSubjectNewAccount} = 'New KIX Account!';
+    $Self->{CustomerPanelBodyNewAccount}    = 'Hi <KIX_USERFIRSTNAME>,
 
-You or someone impersonating you has created a new OTRS account for
+You or someone impersonating you has created a new KIX account for
 you.
 
-Full name: <OTRS_USERFIRSTNAME> <OTRS_USERLASTNAME>
-User name: <OTRS_USERLOGIN>
-Password : <OTRS_USERPASSWORD>
+Full name: <KIX_USERFIRSTNAME> <KIX_USERLASTNAME>
+User name: <KIX_USERLOGIN>
+Password : <KIX_USERPASSWORD>
 
 You can log in via the following URL. We encourage you to change your password
 via the Preferences button after logging in.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>customer.pl
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>customer.pl
             ';
 
     # --------------------------------------------------- #
@@ -1967,7 +1882,7 @@ sub new {
 
     # load RELEASE file
     if ( -e ! "$Self->{Home}/RELEASE" ) {
-        print STDERR "ERROR: $Self->{Home}/RELEASE does not exist! This file is needed by central system parts of OTRS, the system will not work without this file.\n";
+        print STDERR "ERROR: $Self->{Home}/RELEASE does not exist! This file is needed by central system parts of KIX, the system will not work without this file.\n";
         die;
     }
     if ( open( my $Product, '<', "$Self->{Home}/RELEASE" ) ) { ## no critic
@@ -1986,7 +1901,7 @@ sub new {
         close($Product);
     }
     else {
-        print STDERR "ERROR: Can't read $Self->{Home}/RELEASE: $! This file is needed by central system parts of OTRS, the system will not work without this file.\n";
+        print STDERR "ERROR: Can't read $Self->{Home}/RELEASE: $! This file is needed by central system parts of KIX, the system will not work without this file.\n";
         die;
     }
 
