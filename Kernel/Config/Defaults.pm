@@ -1887,8 +1887,8 @@ sub new {
         die;
     }
     # load most recent RELEASE file
-    if ( opendir(my $HOME, "$Self->{HOME}") ) {
-        my @ReleaseFiles = grep { /^RELEASE\.*?/ && -f "$Self->{HOME}/$_" } readdir($HOME);
+    if ( opendir(my $HOME, "$Self->{Home}") ) {
+        my @ReleaseFiles = grep { /^RELEASE\.*?/ && -f "$Self->{Home}/$_" } readdir($HOME);
         closedir $HOME;
         @ReleaseFiles = reverse sort @ReleaseFiles;
         my $MostRecentReleaseFile = $ReleaseFiles[0];
