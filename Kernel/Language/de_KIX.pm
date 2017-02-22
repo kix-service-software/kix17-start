@@ -1401,6 +1401,8 @@ sub Data {
     $Lang->{'Only attributes of the following types are shown in the list'}
         = 'Nur Attribute folgender Typen werden in der Liste angezeigt';
 
+    $Lang->{'Assigned owner'} = 'Zugewiesener Besitzer';
+
     # KIX4OTRS_AgentLinkGraph.xml
     $Lang->{'Link Graph'} = 'Verknüpfungsgraph';
     $Lang->{'Shows this object in its relation to other linked objects'}

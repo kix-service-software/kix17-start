@@ -5337,7 +5337,7 @@ TreeView: '0'
     },
     {
         Key => 'Owner',
-        Name => 'Owner',
+        Name => 'Assigned owner',
         Searchable => 1,
         Input => {
             Type => 'Customer',
@@ -5553,7 +5553,7 @@ TreeView: '0'
     },
     {
         Key => 'Owner',
-        Name => 'Owner',
+        Name => 'Assigned owner',
         Searchable => 1,
         Input => {
             Type => 'Customer',
@@ -5811,7 +5811,7 @@ TreeView: '0'
     },
     {
         Key => 'Owner',
-        Name => 'Owner',
+        Name => 'Assigned owner',
         Searchable => 1,
         Input => {
             Type => 'Customer',
