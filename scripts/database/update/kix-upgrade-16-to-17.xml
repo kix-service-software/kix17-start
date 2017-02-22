@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<database Name="kix">
+    <TableAlter Name="kix_ticket_template">
+        <ColumnAdd Name="customer_portal_group_id" Required="false" Type="INTEGER"/>
+    </TableAlter>
+    <Table Name="customer_portal_group">
+        <Column Name="id" Required="true" Type="INTEGER" PrimaryKey="true" AutoIncrement="true"/>
+        <Column Name="name" Required="true" Type="VARCHAR" Size="255"/>
+        <Column Name="icon_content_type" Required="false" Size="250" Type="VARCHAR"/>
+        <Column Name="icon_content" Required="true" Type="LONGBLOB"/>
+        <Column Name="valid_id" Required="true" Type="SMALLINT"/>
+        <Column Name="create_time" Required="true" Type="DATE"/>
+        <Column Name="create_by" Required="true" Type="INTEGER"/>
+        <Column Name="change_time" Required="true" Type="DATE"/>
+        <Column Name="change_by" Required="true" Type="INTEGER"/>
+        <ForeignKey ForeignTable="valid">
+            <Reference Local="valid_id" Foreign="id"/>
+        </ForeignKey>
+        <Index Name="customer_portal_group_name">
+            <IndexColumn Name="name"/>
+        </Index>
+        <Index Name="customer_portal_group_valid_id">
+            <IndexColumn Name="valid_id"/>
+        </Index>
+    </Table>
+    <Table Name="addressbook">
+        <Column Name="id" Required="true" Type="INTEGER" PrimaryKey="true" AutoIncrement="true"/>
+        <Column Name="email" Required="true" Type="VARCHAR" Size="255"/>
+        <Column Name="email_lower" Required="true" Type="VARCHAR" Size="255"/>
+        <Index Name="addressbook_email">
+            <IndexColumn Name="email"/>
+        </Index>
+        <Index Name="addressbook_email_lower">
+            <IndexColumn Name="email_lower"/>
+        </Index>
+    </Table>
+</database>

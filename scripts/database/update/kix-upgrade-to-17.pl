@@ -30,8 +30,10 @@ use warnings;
 
 use File::Basename;
 use FindBin qw($RealBin);
-use lib dirname($RealBin).'/../../../';
-use lib dirname($RealBin).'/../../../Kernel/cpan-lib';
+use lib dirname($RealBin).'/../../';
+use lib dirname($RealBin).'/../../Kernel/cpan-lib';
+
+use Getopt::Std;
 
 use Kernel::System::ObjectManager;
 
@@ -44,8 +46,11 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 
 use vars qw(%INC);
 
+my %Opts;
+getopt( 'f', \%Opts );
+
 # create database tables and insert initial values
-my $XMLFile = $Param{Home}.'/scripts/database/update/kix-upgrade-to-17.xml';
+my $XMLFile = $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update/kix-upgrade-'.$Opts{f}.'-to-17.xml';
 if ( ! -f "$XMLFile" ) {
     print STDERR "File \"$XMLFile\" doesn't exist!"; 
     exit -1;
@@ -126,7 +131,7 @@ my @ObsoletePackages = (
     'GeneralCatalog',
     'FAQ',
 );
-foreach my $Package (@Packages) {
+foreach my $Package (@ObsoletePackages) {
     my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
         SQL  => "DELETE FROM package_repository WHERE name = ?",
         Bind => [
