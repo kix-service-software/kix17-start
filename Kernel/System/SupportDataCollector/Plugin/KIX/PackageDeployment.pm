@@ -55,14 +55,7 @@ sub Run {
             Result  => 'SCALAR',
         );
 
-        my $Verified = $PackageObject->PackageVerify(
-            Package => $PackageContent,
-            Name    => $Package->{Name}->{Content},
-        ) || 'unknown';
-
-        if ( $Verified ne 'verified' ) {
-            push @NotVerifiedPackages, "$Package->{Name}->{Content} $Package->{Version}->{Content}";
-        }
+        #rbo - T2016121190001552 - removed package verification
 
         my %PackageStructure = $PackageObject->PackageParse(
             String => $PackageContent,
