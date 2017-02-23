@@ -241,8 +241,6 @@ sub PortalGroupUpdate {
         }
     }
 
-use Data::Dumper;
-print STDERR Dumper(\%Param);
     # do the db update...
     my $DBResult = $Self->{DBObject}->Do(
         SQL  => "UPDATE customer_portal_group SET name = ?, valid_id = ?, change_by = ?, change_time = current_timestamp WHERE id = ?",
