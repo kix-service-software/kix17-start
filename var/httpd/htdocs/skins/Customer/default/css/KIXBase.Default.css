@@ -624,7 +624,7 @@
     .CustomerTicketTemplates .TicketTemplateElement > .Label {
         display: block;
         margin-top: 10px;
-        color: auto; 
+        margin-left: 1px;
     }
 
     .CustomerTicketTemplates .FilterArea {
