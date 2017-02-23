@@ -51,6 +51,7 @@ my @Tests = (
     },
     {
         Name        => 'GET - http - invalid proxy - Test ' . $TestNumber++,
+#rbo - T2016121190001552 - replaced URL
         URL         => "http://packages.kixdesk.com/repository/debian/PublicKey",
         Timeout     => $TimeOut,
         Proxy       => 'http://NoProxy',
@@ -59,6 +60,7 @@ my @Tests = (
     },
     {
         Name        => 'GET - http - ftp proxy - Test ' . $TestNumber++,
+#rbo - T2016121190001552 - replaced URL
         URL         => "http://packages.kixdesk.com/repository/debian/PublicKey",
         Timeout     => $TimeOut,
         Proxy       => 'ftp://NoProxy',
@@ -67,6 +69,7 @@ my @Tests = (
     },
     {
         Name    => 'GET - http - long timeout - Test ' . $TestNumber++,
+#rbo - T2016121190001552 - replaced URL
         URL     => "http://packages.kixdesk.com/repository/debian/PublicKey",
         Timeout => 100,
         Proxy   => $Proxy,
@@ -74,6 +77,7 @@ my @Tests = (
     },
     {
         Name    => 'GET - http - Test ' . $TestNumber++,
+#rbo - T2016121190001552 - replaced URL
         URL     => "http://packages.kixdesk.com/repository/debian/PublicKey",
         Timeout => $TimeOut,
         Proxy   => $Proxy,
@@ -81,6 +85,7 @@ my @Tests = (
     },
     {
         Name    => 'GET - https - Test ' . $TestNumber++,
+#rbo - T2016121190001552 - replaced URL
         URL     => "https://www.kixdesk.com/",
         Timeout => $TimeOut,
         Proxy   => $Proxy,
@@ -88,6 +93,7 @@ my @Tests = (
     },
     {
         Name    => 'GET - http - Header ' . $TestNumber++,
+#rbo - T2016121190001552 - replaced URL
         URL     => "http://packages.kixdesk.com/repository/debian/PublicKey",
         Timeout => 100,
         Proxy   => $Proxy,
@@ -100,6 +106,7 @@ my @Tests = (
     },
     {
         Name        => 'GET - http - Credentials ' . $TestNumber++,
+#rbo - T2016121190001552 - replaced URL and credentials
         URL         => "https://testit.kixdesk.com/unittest/HTTPBasicAuth/",
         Timeout     => 100,
         Proxy       => $Proxy,
@@ -113,6 +120,7 @@ my @Tests = (
     },
     {
         Name        => 'GET - http - MissingCredentials ' . $TestNumber++,
+#rbo - T2016121190001552 - replaced URL
         URL         => "https://testit.kixdesk.com/unittest/HTTPBasicAuth/",
         Timeout     => 100,
         Proxy       => $Proxy,
@@ -121,6 +129,7 @@ my @Tests = (
     },
     {
         Name        => 'GET - http - IncompleteCredentials ' . $TestNumber++,
+#rbo - T2016121190001552 - replaced URL and credentials
         URL         => "https://testit.kixdesk.com/unittest/HTTPBasicAuth/",
         Timeout     => 100,
         Proxy       => $Proxy,
