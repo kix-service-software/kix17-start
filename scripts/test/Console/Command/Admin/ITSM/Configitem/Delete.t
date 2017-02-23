@@ -129,7 +129,7 @@ for ( 1 .. 10 ) {
         # insert new version
         my $Success = $Kernel::OM->Get('Kernel::System::DB')->Do(
             SQL => 'UPDATE configitem_version
-                SET create_time = "2010-01-01 00:00:00"
+                SET create_time = \'2010-01-01 00:00:00\'
                 WHERE id = ?',
             Bind => [
                 \$VersionID,
