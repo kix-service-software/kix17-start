@@ -536,10 +536,12 @@ $(document).on('click','.LimitTemplateSelectionIcon_Fixed',function(){
 $('#CustomerFrontend').bind('change', function() {
     if ($(this).is(':checked')) {
         $('#CustomerPortalGroupID').parent('.Field').show();
+        $('#CustomerPortalGroupID').addClass('Validate_Required');
         $('#CustomerPortalGroupIDLabel').show();
     }
     else {
         $('#CustomerPortalGroupID').parent('.Field').hide();
+        $('#CustomerPortalGroupID').removeClass('Validate_Required');
         $('#CustomerPortalGroupIDLabel').hide();
     }
 }).trigger('change');
