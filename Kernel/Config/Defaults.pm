@@ -78,7 +78,7 @@ sub LoadDefaults {
     # SystemID
     # (The identify of the system. Each ticket number and
     # each HTTP session id starts with this number)
-    $Self->{SystemID} = 10;
+    $Self->{SystemID} = 17;
 
     # NodeID
     # (The identify of the node. In a clustered environment
@@ -97,7 +97,7 @@ sub LoadDefaults {
     # ScriptAlias
     # Prefix to index.pl used as ScriptAlias in web config
     # (Used when emailing links to agents).
-    $Self->{ScriptAlias} = 'otrs/';
+    $Self->{ScriptAlias} = 'kix/';
 
     # AdminEmail
     # (Email of the system admin.)
@@ -268,7 +268,7 @@ sub LoadDefaults {
     # LogModule                                           #
     # --------------------------------------------------- #
     # (log backend module)
-    $Self->{LogModule} = 'Kernel::System::Log::SysLog';
+    $Self->{LogModule} = 'Kernel::System::Log::File';
 
 #    $Self->{'LogModule'} = 'Kernel::System::Log::File';
 
@@ -289,11 +289,11 @@ sub LoadDefaults {
 #    $Self->{'LogModule::SysLog::Charset'} = 'utf-8';
 
     # param for LogModule Kernel::System::Log::File (required!)
-    $Self->{'LogModule::LogFile'} = '/tmp/otrs.log';
+    $Self->{'LogModule::LogFile'} = $Self->{Home}.'/var/log/kix.log';
 
     # param if the date (yyyy-mm) should be added as suffix to
     # logfile [0|1]
-#    $Self->{'LogModule::LogFile::Date'} = 0;
+    $Self->{'LogModule::LogFile::Date'} = 1;
 
     # system log cache size for admin system log (default 32k)
     # $Self->{'LogSystemCacheSize'} = 32 * 1024;

@@ -36,26 +36,11 @@ sub Load {
     $Self->{DatabaseDSN} = "DBI:__DBD__:__DBATTR__=$Self->{Database};host=$Self->{DatabaseHost};";
 
     # ---------------------------------------------------- #
-    # fs root directory
-    # ---------------------------------------------------- #
-    $Self->{Home} = '/opt/kix';
-    $Self->{'Frontend::WebPath'} = '/kix-web/';
-    $Self->{ScriptAlias} = 'kix/';
-    
-    # --------------------------------------------------- #
-    # LogModule                                           #
-    # --------------------------------------------------- #
-    $Self->{'LogModule'} = 'Kernel::System::Log::File';
-    $Self->{'LogModule::LogFile'} = $Self->{Home}.'/var/log/kix.log';
-    $Self->{'LogModule::LogFile::Date'} = 1;    
-
-    # ---------------------------------------------------- #
     # insert your own config settings "here"               #
     # config settings taken from Kernel/Config/Defaults.pm #
     # ---------------------------------------------------- #
     $Self->{CheckMXRecord} = 0;
     $Self->{SecureMode} = 1;
-    $Self->{SystemID} = 17;
     $Self->{FQDN} = '__FQDN__';
         
     # ---------------------------------------------------- #
