@@ -5972,7 +5972,7 @@ TreeView: '0'
         <Data Key="id" Type="AutoIncrement">6</Data>
         <Data Key="imexport_object" Type="Quote">SLA</Data>
         <Data Key="imexport_format" Type="Quote">CSV</Data>
-        <Data Key="name" Type="Quote">FAQ (auto-created map)</Data>
+        <Data Key="name" Type="Quote">SLA (auto-created map)</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="comments" Type="Quote">Automatically created during ServiceImportExport installation</Data>
         <Data Key="create_by">1</Data>
