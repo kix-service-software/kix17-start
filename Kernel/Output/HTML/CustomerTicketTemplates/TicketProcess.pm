@@ -47,6 +47,7 @@ sub TicketTemplateList {
     my $ProcessListRef = $Self->{ProcessObject}->ProcessList(
         ProcessState => ['Active'],
         Interface    => ['CustomerInterface'],
+        Silent       => 1,
     );
     return %Result if !IsHashRefWithData($ProcessListRef);
 
