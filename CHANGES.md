@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/02/21) - Bugfix: T2017013190001542 (dynamic fields not shown in AgentTicketMove) (ddoerffel)
  * (2017/02/21) - Bugfix: T2017020190001472 (log error if an option in a specific sysconfig group is changed) (rkaiser)
  * (2017/02/21) - Bugfix: T2017021090001026 (dynamic fields not hidden on init in customer frontend) (ddoerffel)
  * (2017/02/20) - Bugfix: T2017020190001409 (hidden dynamic fields not shown again) (ddoerffel)
