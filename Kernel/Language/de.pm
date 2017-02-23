@@ -692,8 +692,8 @@ sub Data {
         'My Queues' => 'Meine Queues',
         'Shown Tickets' => 'Gezeigte Tickets',
         'Shown Columns' => 'Gezeigte Spalten',
-        'Your email with ticket number "<OTRS_TICKET>" is merged to "<OTRS_MERGE_TO_TICKET>".' =>
-            'Ihre E-Mail mit Ticket-Nummer "<OTRS_TICKET>" wurde zu Ticket-Nummer "<OTRS_MERGE_TO_TICKET>" zusammengefasst!',
+        'Your email with ticket number "<KIX_TICKET>" is merged to "<KIX_MERGE_TO_TICKET>".' =>
+            'Ihre E-Mail mit Ticket-Nummer "<KIX_TICKET>" wurde zu Ticket-Nummer "<KIX_MERGE_TO_TICKET>" zusammengefasst!',
         'Ticket %s: first response time is over (%s)!' => 'Ticket %s: Reaktionszeit ist abgelaufen (%s)!',
         'Ticket %s: first response time will be over in %s!' => 'Ticket %s: Reaktionszeit wird ablaufen in %s!',
         'Ticket %s: update time is over (%s)!' => 'Ticket %s: Aktualisierungszeit ist abgelaufen (%s)!',
@@ -5087,8 +5087,8 @@ Ihr Helpdesk-Team
             'Definiert den Filter, der Text in Artikeln verarbeitet, um URLs zu highlighten.',
         'Defines the format of responses in the ticket compose screen of the agent interface ([% Data.OrigFrom | html %] is From 1:1, [% Data.OrigFromName | html %] is only realname of From).' =>
             'Steuert das Format von Antworten im Ticket erstellen-Bildschirm im Agentenbereich ([% Data.OrigFrom | html %] entspricht genau dem Absender, [% Data.OrigFromName | html %] enthält nur den realen Namen des Absenders).',
-        'Defines the fully qualified domain name of the system. This setting is used as a variable, OTRS_CONFIG_FQDN which is found in all forms of messaging used by the application, to build links to the tickets within your system.' =>
-            'Definiert den Full Qualified Domain Name des OTRS Systems. Diese Einstellung wird als Variable OTRS_CONFIG_FQDN genutzt, welche in allen Nachrichten-Formularen zu finden ist oder um Links zu Tickets in Ihrem OTRS System zu generieren.',
+        'Defines the fully qualified domain name of the system. This setting is used as a variable, KIX_CONFIG_FQDN which is found in all forms of messaging used by the application, to build links to the tickets within your system.' =>
+            'Definiert den Full Qualified Domain Name des OTRS Systems. Diese Einstellung wird als Variable KIX_CONFIG_FQDN genutzt, welche in allen Nachrichten-Formularen zu finden ist oder um Links zu Tickets in Ihrem OTRS System zu generieren.',
         'Defines the groups every contact will be in (if CustomerGroupSupport is enabled and you don\'t want to manage every user for these groups).' =>
             'Steuert die Gruppen, in denen sich ein Ansprechpartner standardmäßig befinden soll (wenn CustomerGroupSupport aktiviert ist und Sie nicht jede Gruppenbeziehung für die Nutzer einzeln steuern möchten).',
         'Defines the height for the rich text editor component for this screen. Enter number (pixels) or percent value (relative).' =>
@@ -5337,7 +5337,7 @@ Ihr Helpdesk-Team
             '',
         'Defines the two-factor module to authenticate agents.' => 'Definiert das Modul für die Zwei-Faktor-Authentifizierung von Agenten.',
         'Defines the two-factor module to authenticate customers.' => 'Definiert das Modul für die Zwei-Faktor-Authentifizierung von Kunden.',
-        'Defines the type of protocol, used by the web server, to serve the application. If https protocol will be used instead of plain http, it must be specified here. Since this has no affect on the web server\'s settings or behavior, it will not change the method of access to the application and, if it is wrong, it will not prevent you from logging into the application. This setting is only used as a variable, OTRS_CONFIG_HttpType which is found in all forms of messaging used by the application, to build links to the tickets within your system.' =>
+        'Defines the type of protocol, used by the web server, to serve the application. If https protocol will be used instead of plain http, it must be specified here. Since this has no affect on the web server\'s settings or behavior, it will not change the method of access to the application and, if it is wrong, it will not prevent you from logging into the application. This setting is only used as a variable, KIX_CONFIG_HttpType which is found in all forms of messaging used by the application, to build links to the tickets within your system.' =>
             '',
         'Defines the used character for plaintext email quotes in the ticket compose screen of the agent interface. If this is empty or inactive, original emails will not be quoted but appended to the response.' =>
             '',
@@ -5588,10 +5588,10 @@ Ihr Helpdesk-Team
             'Lädt Pakete über einen Proxy herunter. Überschreibt "WebUserAgent::Proxy".',
         'File that is displayed in the Kernel::Modules::AgentInfo module, if located under Kernel/Output/HTML/Templates/Standard/AgentInfo.tt.' =>
             'Datei, die im Modul Kernel::Modules::AgentInfo genutzt wird, wenn sie in Kernel/Output/HTML/Templates/Standard liegt.',
-        'Filter for debugging ACLs. Note: More ticket attributes can be added in the format <OTRS_TICKET_Attribute> e.g. <OTRS_TICKET_Priority>.' =>
-            'Filter zum Debuggen von ACLs. Hinweis: Weitere Ticket-Attribute können im Format <OTRS_TICKET_Attribute> (z. B. <OTRS_TICKET_Priority>) hinzugefügt werden.',
-        'Filter for debugging Transitions. Note: More filters can be added in the format <OTRS_TICKET_Attribute> e.g. <OTRS_TICKET_Priority>.' =>
-            'Filter zum Debuggen von Transitions. Hinweis: Weitere Filter können im Format <OTRS_TICKET_Attribute> (z. B. <OTRS_TICKET_Priority>) hinzugefügt werden.',
+        'Filter for debugging ACLs. Note: More ticket attributes can be added in the format <KIX_TICKET_Attribute> e.g. <KIX_TICKET_Priority>.' =>
+            'Filter zum Debuggen von ACLs. Hinweis: Weitere Ticket-Attribute können im Format <KIX_TICKET_Attribute> (z. B. <KIX_TICKET_Priority>) hinzugefügt werden.',
+        'Filter for debugging Transitions. Note: More filters can be added in the format <KIX_TICKET_Attribute> e.g. <KIX_TICKET_Priority>.' =>
+            'Filter zum Debuggen von Transitions. Hinweis: Weitere Filter können im Format <KIX_TICKET_Attribute> (z. B. <KIX_TICKET_Priority>) hinzugefügt werden.',
         'Filter incoming emails.' => 'Eingehende E-Mails filtern.',
         'Finnish' => 'Finnisch',
         'First Queue' => 'Erste Queue',
@@ -5911,7 +5911,7 @@ Ihr Helpdesk-Team
         'Maximum size (in characters) of the customer information table in the ticket zoom view.' =>
             'Maximale Zeichenanzahl für die Tabelle mit Kundeninformationen in der TicketZoom-Ansicht.',
         'Merge this ticket and all articles into a another ticket' => 'Dieses Ticket und alle Artikel in ein anderes Ticket zusammenfassen.',
-        'Merged Ticket <OTRS_TICKET> to <OTRS_MERGE_TO_TICKET>.' => 'Ticket <OTRS_TICKET> wurde mit <OTRS_MERGE_TO_TICKET> zusammengefasst.',
+        'Merged Ticket <KIX_TICKET> to <KIX_MERGE_TO_TICKET>.' => 'Ticket <KIX_TICKET> wurde mit <KIX_MERGE_TO_TICKET> zusammengefasst.',
         'Miscellaneous' => 'Verschiedenes',
         'Module for To-selection in new ticket screen in the customer interface.' =>
             'Modul für die "An"-Auswahl im Ticket Erstellen-Bildschirm im Kundenbereich.',
@@ -6303,7 +6303,7 @@ Ihr Helpdesk-Team
         'Sets the password for private PGP key.' => 'Legt das Passwort für den privaten PGP-Schlüssel fest.',
         'Sets the prefered time units (e.g. work units, hours, minutes).' =>
             'Legt die bevorzugten Zeiteinheiten fest (z.B. Arbeitseinheiten, Stunden, Minuten).',
-        'Sets the prefix to the scripts folder on the server, as configured on the web server. This setting is used as a variable, OTRS_CONFIG_ScriptAlias which is found in all forms of messaging used by the application, to build links to the tickets within the system.' =>
+        'Sets the prefix to the scripts folder on the server, as configured on the web server. This setting is used as a variable, KIX_CONFIG_ScriptAlias which is found in all forms of messaging used by the application, to build links to the tickets within the system.' =>
             '',
         'Sets the queue in the ticket close screen of a zoomed ticket in the agent interface.' =>
             'Setzt die Queue im Schließen-Bildschirm von Tickets im Agentenbereich.',
@@ -6608,13 +6608,13 @@ Ihr Helpdesk-Team
         'Specifies the directory where SSL certificates are stored.' => 'Legt das Verzeichnis, wo SSL-Zertifikate gespeichert sind, fest.',
         'Specifies the directory where private SSL certificates are stored.' =>
             'Legt das Verzeichnis fest, in welchem die privaten SSL Zertifikate gespeichert sind. ',
-        'Specifies the email address that should be used by the application when sending notifications. The email address is used to build the complete display name for the notification master (i.e. "OTRS Notifications" otrs@your.example.com). You can use the OTRS_CONFIG_FQDN variable as set in your configuation, or choose another email address.' =>
+        'Specifies the email address that should be used by the application when sending notifications. The email address is used to build the complete display name for the notification master (i.e. "KIX Notifications" kix@your.example.com). You can use the KIX_CONFIG_FQDN variable as set in your configuation, or choose another email address.' =>
             '',
         'Specifies the email addresses to get notification messages from scheduler tasks.' =>
             'Legt die Email-Adresse für Benachrichtigungen von Scheduler Tasks fest.',
         'Specifies the group where the user needs rw permissions so that he can access the "SwitchToCustomer" feature.' =>
             '',
-        'Specifies the name that should be used by the application when sending notifications. The sender name is used to build the complete display name for the notification master (i.e. "OTRS Notifications" otrs@your.example.com).' =>
+        'Specifies the name that should be used by the application when sending notifications. The sender name is used to build the complete display name for the notification master (i.e. "KIX Notifications" kix@your.example.com).' =>
             '',
         'Specifies the order in which the firstname and the lastname of agents will be displayed.' =>
             'Legt die Reihenfolge fest, in der Vorname und Nachname von Agenten angezeigt wird.',
@@ -6826,8 +6826,8 @@ Ihr Helpdesk-Team
         'Whether or not to collect meta information from articles using filters configured in Ticket::Frontend::ZoomCollectMetaFilters.' =>
             '',
         'Yes, but hide archived tickets' => 'Ja, aber archivierte Tickets verstecken',
-        'Your email with ticket number "<OTRS_TICKET>" is bounced to "<OTRS_BOUNCE_TO>". Contact this address for further information.' =>
-            'Ihre E-Mail mit Ticket-Nummer "<OTRS_TICKET>" wurde an "<OTRS_BOUNCE_TO>" umgeleitet. Kontaktieren Sie diese Adresse für weitere Informationen.',
+        'Your email with ticket number "<KIX_TICKET>" is bounced to "<KIX_BOUNCE_TO>". Contact this address for further information.' =>
+            'Ihre E-Mail mit Ticket-Nummer "<KIX_TICKET>" wurde an "<KIX_BOUNCE_TO>" umgeleitet. Kontaktieren Sie diese Adresse für weitere Informationen.',
         'Your queue selection of your preferred queues. You also get notified about those queues via email if enabled.' =>
             '',
         'Your service selection of your preferred services. You also get notified about those services via email if enabled.' =>

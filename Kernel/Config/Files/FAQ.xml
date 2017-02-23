@@ -264,7 +264,7 @@
         <Group>FAQ</Group>
         <SubGroup>Core::Approval</SubGroup>
         <Setting>
-            <String>FAQ approval required for FAQ# &lt;OTRS_FAQ_NUMBER&gt;</String>
+            <String>FAQ approval required for FAQ# &lt;KIX_FAQ_NUMBER&gt;</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="FAQ::ApprovalTicketBody" Required="1" Valid="1">
@@ -276,14 +276,14 @@
 
 a new FAQ article needs your approval before it can be published.
 
-  FAQ#   : &lt;OTRS_FAQ_NUMBER&gt;
-  Title  : &lt;OTRS_FAQ_TITLE&gt;
-  Author : &lt;OTRS_FAQ_AUTHOR&gt;
-  State  : &lt;OTRS_FAQ_STATE&gt;
+  FAQ#   : &lt;KIX_FAQ_NUMBER&gt;
+  Title  : &lt;KIX_FAQ_TITLE&gt;
+  Author : &lt;KIX_FAQ_AUTHOR&gt;
+  State  : &lt;KIX_FAQ_STATE&gt;
 
 If you want to do this, click on this link:
 
-&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;index.pl?Action=AgentFAQEdit;ItemID=&lt;OTRS_FAQ_ITEMID&gt;
+&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentFAQEdit;ItemID=&lt;KIX_FAQ_ITEMID&gt;
 
 Your OTRS Notification Master
             </TextArea>

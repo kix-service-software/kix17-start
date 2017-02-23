@@ -351,9 +351,10 @@ sub Run {
                     );
                 }
                 my %Ticket = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
-                $GetParam{Body} =~ s/(&lt;|<)OTRS_TICKET(&gt;|>)/$Ticket{TicketNumber}/g;
+#rbo - T2016121190001552 - added KIX placeholders
+                $GetParam{Body} =~ s/(&lt;|<)KIX_TICKET(&gt;|>)/$Ticket{TicketNumber}/g;
                 $GetParam{Body}
-                    =~ s/(&lt;|<)OTRS_MERGE_TO_TICKET(&gt;|>)/$GetParam{'MainTicketNumber'}/g;
+                    =~ s/(&lt;|<)KIX_MERGE_TO_TICKET(&gt;|>)/$GetParam{'MainTicketNumber'}/g;
                 my $ArticleID = $TicketObject->ArticleSend(
                     ArticleType    => 'email-external',
                     SenderType     => 'agent',

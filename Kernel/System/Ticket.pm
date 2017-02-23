@@ -6368,13 +6368,14 @@ sub TicketMerge {
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
+#rbo - T2016121190001552 - added KIX placeholders
     my $Body = $ConfigObject->Get('Ticket::Frontend::AutomaticMergeText');
-    $Body =~ s{<OTRS_TICKET>}{$MergeTicket{TicketNumber}}xms;
+    $Body =~ s{<(KIX|OTRS)_TICKET>}{$MergeTicket{TicketNumber}}xms;
 
     # KIX4OTRS-capeIT
-    # $Body =~ s{<OTRS_MERGE_TO_TICKET>}{$MainTicket{TicketNumber}}xms;
+    # $Body =~ s{<KIX_MERGE_TO_TICKET>}{$MainTicket{TicketNumber}}xms;
     $Body =~
-        s{<OTRS_MERGE_TO_TICKET>}{<!-- KIX4OTRS MergeTargetLinkStart ::$Param{MainTicketID}:: -->$MainTicket{TicketNumber}<!-- KIX4OTRS MergeTargetLinkEnd -->}xms;
+        s{<(KIX|OTRS)_MERGE_TO_TICKET>}{<!-- KIX4OTRS MergeTargetLinkStart ::$Param{MainTicketID}:: -->$MainTicket{TicketNumber}<!-- KIX4OTRS MergeTargetLinkEnd -->}xms;
 
     # EO KIX4OTRS-capeIT
 

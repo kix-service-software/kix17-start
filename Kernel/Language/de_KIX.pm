@@ -782,9 +782,9 @@ sub Data {
         }
         = 'Definition welche Status automatisch gesetzt werden soll (Inhalt) nach dem erreichen des "Warten Zeit" (Schlüssel).';
     $Lang->{
-        'Automatically moves ticket to configured queue if state is set - use of wildcards possible (e.g. &lt;OTRS_TicketDynamicField1&gt;).'
+        'Automatically moves ticket to configured queue if state is set - use of wildcards possible (e.g. &lt;KIX_TicketDynamicField1&gt;).'
         }
-        = 'Verschiebt Ticket automat. in konfigurierte Queue sobald der Status gesetzt wird - Verwendung von Platzhaltern möglich (z.B. &lt;OTRS_TicketDynamicField1&gt;).';
+        = 'Verschiebt Ticket automat. in konfigurierte Queue sobald der Status gesetzt wird - Verwendung von Platzhaltern möglich (z.B. &lt;KIX_TicketDynamicField1&gt;).';
     $Lang->{
         'Choose to add a failure article to ticket, if target queue for automatic queue move does not exists.'
         }

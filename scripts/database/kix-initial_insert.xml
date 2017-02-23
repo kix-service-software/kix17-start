@@ -480,7 +480,7 @@
     <Insert Table="salutation">
         <Data Key="id" Type="AutoIncrement">1</Data>
         <Data Key="name" Type="Quote" Translatable="1">system standard salutation (en)</Data>
-        <Data Key="text" Type="Quote">Dear &lt;OTRS_CUSTOMER_REALNAME&gt;,
+        <Data Key="text" Type="Quote">Dear &lt;KIX_CUSTOMER_REALNAME&gt;,
 
 Thank you for your request.
 
@@ -500,7 +500,7 @@ Thank you for your request.
         <Data Key="text" Type="Quote">
 Your Ticket-Team
 
- &lt;OTRS_Agent_UserFirstname&gt; &lt;OTRS_Agent_UserLastname&gt;
+ &lt;KIX_Agent_UserFirstname&gt; &lt;KIX_Agent_UserLastname&gt;
 
 --
  Super Support - Waterford Business Park
@@ -730,7 +730,7 @@ Your Ticket-Team
     <Insert Table="auto_response_type">
         <Data Key="id" Type="AutoIncrement">5</Data>
         <Data Key="name" Type="Quote" Translatable="1">auto remove</Data>
-        <Data Key="comments" Type="Quote" Translatable="1">Auto remove will be sent out after a contact removed the request.</Data>
+        <Data Key="comments" Type="Quote" Translatable="1">Auto remove will be sent out after a customer removed the request.</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
@@ -749,7 +749,7 @@ It could contain something like:
 Thanks for your email. A new ticket has been created.
 
 You wrote:
-&lt;OTRS_CUSTOMER_EMAIL[6]&gt;
+&lt;KIX_CUSTOMER_EMAIL[6]&gt;
 
 Your email will be answered by a human ASAP
 
@@ -757,7 +757,7 @@ Have fun with KIX! :-)
 
 Your KIX Team
 </Data>
-        <Data Key="text1" Type="Quote">RE: &lt;OTRS_CUSTOMER_SUBJECT[24]&gt;</Data>
+        <Data Key="text1" Type="Quote">RE: &lt;KIX_CUSTOMER_SUBJECT[24]&gt;</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="comments" Type="Quote"></Data>
         <Data Key="valid_id">1</Data>
@@ -779,7 +779,7 @@ Please create a new ticket.
 
 Your KIX Team
 </Data>
-        <Data Key="text1" Type="Quote">Your email has been rejected! (RE: &lt;OTRS_CUSTOMER_SUBJECT[24]&gt;)</Data>
+        <Data Key="text1" Type="Quote">Your email has been rejected! (RE: &lt;KIX_CUSTOMER_SUBJECT[24]&gt;)</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="comments" Type="Quote"></Data>
         <Data Key="valid_id">1</Data>
@@ -796,7 +796,7 @@ Your KIX Team
         <Data Key="text0" Type="Quote">Thanks for your follow-up email
 
 You wrote:
-&lt;OTRS_CUSTOMER_EMAIL[6]&gt;
+&lt;KIX_CUSTOMER_EMAIL[6]&gt;
 
 Your email will be answered by a human ASAP.
 
@@ -804,7 +804,7 @@ Have fun with KIX!
 
 Your KIX Team
 </Data>
-        <Data Key="text1" Type="Quote">RE: &lt;OTRS_CUSTOMER_SUBJECT[24]&gt;</Data>
+        <Data Key="text1" Type="Quote">RE: &lt;KIX_CUSTOMER_SUBJECT[24]&gt;</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="comments" Type="Quote"></Data>
         <Data Key="valid_id">1</Data>
@@ -823,7 +823,7 @@ Your KIX Team
 -- A new ticket has been created for you. --
 
 You wrote:
-&lt;OTRS_CUSTOMER_EMAIL[6]&gt;
+&lt;KIX_CUSTOMER_EMAIL[6]&gt;
 
 Your email will be answered by a human ASAP.
 
@@ -831,7 +831,7 @@ Have fun with KIX!
 
 Your KIX Team
 </Data>
-        <Data Key="text1" Type="Quote">New ticket has been created! (RE: &lt;OTRS_CUSTOMER_SUBJECT[24]&gt;)</Data>
+        <Data Key="text1" Type="Quote">New ticket has been created! (RE: &lt;KIX_CUSTOMER_SUBJECT[24]&gt;)</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="comments" Type="Quote"></Data>
         <Data Key="valid_id">1</Data>
@@ -2432,199 +2432,199 @@ Your KIX Team
         <Data Key="notification_id">1</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket Created: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket Created: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] has been created in queue <OTRS_TICKET_Queue>.
+ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] has been created in queue <KIX_TICKET_Queue>.
 
-<OTRS_CUSTOMER_REALNAME> wrote:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> wrote:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">2</Data>
         <Data Key="notification_id">2</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Unlocked Ticket Follow-Up: <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Unlocked Ticket Follow-Up: <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-the unlocked ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] received a follow-up.
+the unlocked ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] received a follow-up.
 
-<OTRS_CUSTOMER_REALNAME> wrote:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> wrote:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">3</Data>
         <Data Key="notification_id">3</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Locked Ticket Follow-Up: <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Locked Ticket Follow-Up: <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-the locked ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] received a follow-up.
+the locked ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] received a follow-up.
 
-<OTRS_CUSTOMER_REALNAME> wrote:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> wrote:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">4</Data>
         <Data Key="notification_id">4</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket Lock Timeout: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket Lock Timeout: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] has reached its lock timeout period and is now unlocked.
+ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] has reached its lock timeout period and is now unlocked.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">5</Data>
         <Data Key="notification_id">5</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket Owner Update to <OTRS_OWNER_UserFullname>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket Owner Update to <KIX_OWNER_UserFullname>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-the owner of ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] has been updated to <OTRS_TICKET_OWNER_UserFullname> by <OTRS_CURRENT_UserFullname>.
+the owner of ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] has been updated to <KIX_TICKET_OWNER_UserFullname> by <KIX_CURRENT_UserFullname>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">6</Data>
         <Data Key="notification_id">6</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket Responsible Update to <OTRS_RESPONSIBLE_UserFullname>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket Responsible Update to <KIX_RESPONSIBLE_UserFullname>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-the responsible agent of ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] has been updated to <OTRS_TICKET_RESPONSIBLE_UserFullname> by <OTRS_CURRENT_UserFullname>.
+the responsible agent of ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] has been updated to <KIX_TICKET_RESPONSIBLE_UserFullname> by <KIX_CURRENT_UserFullname>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">7</Data>
         <Data Key="notification_id">7</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket Note: <OTRS_AGENT_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket Note: <KIX_AGENT_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-<OTRS_CURRENT_UserFullname> wrote:
-<OTRS_AGENT_BODY[30]>
+<KIX_CURRENT_UserFullname> wrote:
+<KIX_AGENT_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">8</Data>
         <Data Key="notification_id">8</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket Queue Update to <OTRS_TICKET_Queue>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket Queue Update to <KIX_TICKET_Queue>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] has been updated to queue <OTRS_TICKET_Queue>.
+ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] has been updated to queue <KIX_TICKET_Queue>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">9</Data>
         <Data Key="notification_id">9</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Locked Ticket Pending Reminder Time Reached: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Locked Ticket Pending Reminder Time Reached: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-the pending reminder time of the locked ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] has been reached.
+the pending reminder time of the locked ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] has been reached.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">10</Data>
         <Data Key="notification_id">10</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Unlocked Ticket Pending Reminder Time Reached: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Unlocked Ticket Pending Reminder Time Reached: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-the pending reminder time of the unlocked ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] has been reached.
+the pending reminder time of the unlocked ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] has been reached.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">11</Data>
         <Data Key="notification_id">11</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket Escalation! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket Escalation! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] is escalated!
+ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] is escalated!
 
-Escalated at: <OTRS_TICKET_EscalationDestinationDate>
-Escalated since: <OTRS_TICKET_EscalationDestinationIn>
+Escalated at: <KIX_TICKET_EscalationDestinationDate>
+Escalated since: <KIX_TICKET_EscalationDestinationIn>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">12</Data>
         <Data Key="notification_id">12</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket Escalation Warning! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket Escalation Warning! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] will escalate!
+ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] will escalate!
 
-Escalation at: <OTRS_TICKET_EscalationDestinationDate>
-Escalation in: <OTRS_TICKET_EscalationDestinationIn>
+Escalation at: <KIX_TICKET_EscalationDestinationDate>
+Escalation in: <KIX_TICKET_EscalationDestinationIn>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">13</Data>
         <Data Key="notification_id">13</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket Service Update to <OTRS_TICKET_Service>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket Service Update to <KIX_TICKET_Service>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-the service of ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] has been updated to <OTRS_TICKET_Service>.
+the service of ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] has been updated to <KIX_TICKET_Service>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
 
     <!-- notification_event_message - de -->
@@ -2633,199 +2633,199 @@ the service of ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivide
         <Data Key="notification_id">1</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket erstellt: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket erstellt: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-das Ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] wurde in der Queue <OTRS_TICKET_Queue> erstellt.
+das Ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] wurde in der Queue <KIX_TICKET_Queue> erstellt.
 
-<OTRS_CUSTOMER_REALNAME> schrieb:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> schrieb:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">15</Data>
         <Data Key="notification_id">2</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Nachfrage zum freigegebenen Ticket: <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Nachfrage zum freigegebenen Ticket: <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-zum freigegebenen Ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] gibt es eine Nachfrage.
+zum freigegebenen Ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] gibt es eine Nachfrage.
 
-<OTRS_CUSTOMER_REALNAME> schrieb:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> schrieb:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">16</Data>
         <Data Key="notification_id">3</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Nachfrage zum gesperrten Ticket: <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Nachfrage zum gesperrten Ticket: <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-zum gesperrten Ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] gibt es eine Nachfrage.
+zum gesperrten Ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] gibt es eine Nachfrage.
 
-<OTRS_CUSTOMER_REALNAME> schrieb:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> schrieb:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">17</Data>
         <Data Key="notification_id">4</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticketsperre aufgehoben: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticketsperre aufgehoben: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-die Sperrzeit des Tickets [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] ist abgelaufen. Es ist jetzt freigegeben.
+die Sperrzeit des Tickets [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] ist abgelaufen. Es ist jetzt freigegeben.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">18</Data>
         <Data Key="notification_id">5</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Änderung des Ticket-Besitzers auf <OTRS_OWNER_UserFullname>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Änderung des Ticket-Besitzers auf <KIX_OWNER_UserFullname>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-der Besitzer des Tickets [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] wurde von <OTRS_CURRENT_UserFullname> geändert auf <OTRS_TICKET_OWNER_UserFullname>.
+der Besitzer des Tickets [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] wurde von <KIX_CURRENT_UserFullname> geändert auf <KIX_TICKET_OWNER_UserFullname>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">19</Data>
         <Data Key="notification_id">6</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Änderung des Ticket-Verantwortlichen auf <OTRS_RESPONSIBLE_UserFullname>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Änderung des Ticket-Verantwortlichen auf <KIX_RESPONSIBLE_UserFullname>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-der Verantwortliche für das Ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] wurde von <OTRS_CURRENT_UserFullname> geändert auf <OTRS_TICKET_RESPONSIBLE_UserFullname>.
+der Verantwortliche für das Ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] wurde von <KIX_CURRENT_UserFullname> geändert auf <KIX_TICKET_RESPONSIBLE_UserFullname>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">20</Data>
         <Data Key="notification_id">7</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket-Notiz: <OTRS_AGENT_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket-Notiz: <KIX_AGENT_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-<OTRS_CURRENT_UserFullname> schrieb:
-<OTRS_AGENT_BODY[30]>
+<KIX_CURRENT_UserFullname> schrieb:
+<KIX_AGENT_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">21</Data>
         <Data Key="notification_id">8</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket-Queue geändert zu <OTRS_TICKET_Queue>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket-Queue geändert zu <KIX_TICKET_Queue>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-das Ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] wurde in die Queue <OTRS_TICKET_Queue> verschoben.
+das Ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] wurde in die Queue <KIX_TICKET_Queue> verschoben.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">22</Data>
         <Data Key="notification_id">9</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Erinnerungszeit des gesperrten Tickets erreicht: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Erinnerungszeit des gesperrten Tickets erreicht: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-die Erinnerungszeit für das gesperrte Ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] wurde erreicht.
+die Erinnerungszeit für das gesperrte Ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] wurde erreicht.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">23</Data>
         <Data Key="notification_id">10</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Erinnerungszeit des freigegebenen Tickets erreicht: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Erinnerungszeit des freigegebenen Tickets erreicht: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-die Erinnerungszeit für das freigegebene Ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] wurde erreicht.
+die Erinnerungszeit für das freigegebene Ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] wurde erreicht.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">24</Data>
         <Data Key="notification_id">11</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket-Eskalation! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket-Eskalation! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-das Ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] ist eskaliert!
+das Ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] ist eskaliert!
 
-Eskaliert am: <OTRS_TICKET_EscalationDestinationDate>
-Eskaliert seit: <OTRS_TICKET_EscalationDestinationIn>
+Eskaliert am: <KIX_TICKET_EscalationDestinationDate>
+Eskaliert seit: <KIX_TICKET_EscalationDestinationIn>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">25</Data>
         <Data Key="notification_id">12</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket-Eskalations-Warnung! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket-Eskalations-Warnung! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-das Ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] wird bald eskalieren!
+das Ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] wird bald eskalieren!
 
-Eskalation um: <OTRS_TICKET_EscalationDestinationDate>
-Eskalation in: <OTRS_TICKET_EscalationDestinationIn>
+Eskalation um: <KIX_TICKET_EscalationDestinationDate>
+Eskalation in: <KIX_TICKET_EscalationDestinationIn>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">26</Data>
         <Data Key="notification_id">13</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket-Service aktualisiert zu <OTRS_TICKET_Service>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo <OTRS_NOTIFICATION_RECIPIENT_UserFirstname> <OTRS_NOTIFICATION_RECIPIENT_UserLastname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket-Service aktualisiert zu <KIX_TICKET_Service>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo <KIX_NOTIFICATION_RECIPIENT_UserFirstname> <KIX_NOTIFICATION_RECIPIENT_UserLastname>,
 
-der Service des Tickets [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] wurde geändert zu <OTRS_TICKET_Service>.
+der Service des Tickets [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] wurde geändert zu <KIX_TICKET_Service>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
 
 
@@ -2835,199 +2835,199 @@ der Service des Tickets [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivi
         <Data Key="notification_id">1</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Se ha creado un ticket: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Se ha creado un ticket: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] se ha creado en la fila <OTRS_TICKET_Queue>.
+el ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] se ha creado en la fila <KIX_TICKET_Queue>.
 
-<OTRS_CUSTOMER_REALNAME> escribió:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> escribió:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">28</Data>
         <Data Key="notification_id">2</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Seguimiento a ticket desbloqueado: <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Seguimiento a ticket desbloqueado: <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el ticket desbloqueado [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] recibió un seguimiento.
+el ticket desbloqueado [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] recibió un seguimiento.
 
-<OTRS_CUSTOMER_REALNAME> escribió:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> escribió:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">29</Data>
         <Data Key="notification_id">3</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Seguimiento a ticket bloqueado: <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Seguimiento a ticket bloqueado: <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el ticket bloqueado [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] recibió un seguimiento.
+el ticket bloqueado [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] recibió un seguimiento.
 
-<OTRS_CUSTOMER_REALNAME> escribió:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> escribió:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">30</Data>
         <Data Key="notification_id">4</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Terminó tiempo de bloqueo: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Terminó tiempo de bloqueo: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>]  ha alcanzado su tiempo de espera como bloqueado y ahora se encuentra desbloqueado.
+el ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>]  ha alcanzado su tiempo de espera como bloqueado y ahora se encuentra desbloqueado.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">31</Data>
         <Data Key="notification_id">5</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Actualización del propietario de ticket a <OTRS_OWNER_UserFullname>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Actualización del propietario de ticket a <KIX_OWNER_UserFullname>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el propietario del ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] se ha modificado  a <OTRS_TICKET_OWNER_UserFullname> por <OTRS_CURRENT_UserFullname>.
+el propietario del ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] se ha modificado  a <KIX_TICKET_OWNER_UserFullname> por <KIX_CURRENT_UserFullname>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">32</Data>
         <Data Key="notification_id">6</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Actualización del responsable de ticket a <OTRS_RESPONSIBLE_UserFullname>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Actualización del responsable de ticket a <KIX_RESPONSIBLE_UserFullname>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el agente responsable del ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] se ha modificado a <OTRS_TICKET_RESPONSIBLE_UserFullname> por <OTRS_CURRENT_UserFullname>.
+el agente responsable del ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] se ha modificado a <KIX_TICKET_RESPONSIBLE_UserFullname> por <KIX_CURRENT_UserFullname>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">33</Data>
         <Data Key="notification_id">7</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Nota de ticket: <OTRS_AGENT_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Nota de ticket: <KIX_AGENT_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-<OTRS_CURRENT_UserFullname> escribió:
-<OTRS_AGENT_BODY[30]>
+<KIX_CURRENT_UserFullname> escribió:
+<KIX_AGENT_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">34</Data>
         <Data Key="notification_id">8</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[La fila del ticket ha cambiado a <OTRS_TICKET_Queue>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[La fila del ticket ha cambiado a <KIX_TICKET_Queue>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] ha cambiado de fila a <OTRS_TICKET_Queue>.
+el ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] ha cambiado de fila a <KIX_TICKET_Queue>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">35</Data>
         <Data Key="notification_id">9</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Recordatorio pendiente en ticket bloqueado se ha alcanzado: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Recordatorio pendiente en ticket bloqueado se ha alcanzado: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el tiempo del recordatorio pendiente para el ticket bloqueado [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] se ha alcanzado.
+el tiempo del recordatorio pendiente para el ticket bloqueado [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] se ha alcanzado.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">36</Data>
         <Data Key="notification_id">10</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Recordatorio pendiente en ticket desbloqueado se ha alcanzado: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Recordatorio pendiente en ticket desbloqueado se ha alcanzado: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el tiempo del recordatorio pendiente para el ticket desbloqueado [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] se ha alcanzado.
+el tiempo del recordatorio pendiente para el ticket desbloqueado [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] se ha alcanzado.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">37</Data>
         <Data Key="notification_id">11</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[¡Escalación de ticket! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[¡Escalación de ticket! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] se ha escalado!
+el ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] se ha escalado!
 
-Escaló: <OTRS_TICKET_EscalationDestinationDate>
-Escalado desde: <OTRS_TICKET_EscalationDestinationIn>
+Escaló: <KIX_TICKET_EscalationDestinationDate>
+Escalado desde: <KIX_TICKET_EscalationDestinationIn>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">38</Data>
         <Data Key="notification_id">12</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Aviso de escalación de ticket! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Aviso de escalación de ticket! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] se encuentra proximo a escalar!
+el ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] se encuentra proximo a escalar!
 
-Escalará: <OTRS_TICKET_EscalationDestinationDate>
-Escalará en: <OTRS_TICKET_EscalationDestinationIn>
+Escalará: <KIX_TICKET_EscalationDestinationDate>
+Escalará en: <KIX_TICKET_EscalationDestinationIn>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">39</Data>
         <Data Key="notification_id">13</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">es_MX</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[El servicio del ticket ha cambiado a <OTRS_TICKET_Service>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hola <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[El servicio del ticket ha cambiado a <KIX_TICKET_Service>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hola <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-el servicio del ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] se ha cambiado a <OTRS_TICKET_Service>.
+el servicio del ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] se ha cambiado a <KIX_TICKET_Service>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
 
     <!-- notification_event_message - zh_CN -->
@@ -3036,199 +3036,199 @@ el servicio del ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivid
         <Data Key="notification_id">1</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[票据编制 工单已创建：<OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[票据编制 工单已创建：<KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-票据工单 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已在等待队列 已在队列<OTRS_TICKET_Queue> 中被编制完成。中被创建完成
+票据工单 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已在等待队列 已在队列<KIX_TICKET_Queue> 中被编制完成。中被创建完成
 
-<OTRS_CUSTOMER_REALNAME> 写道：
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> 写道：
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">41</Data>
         <Data Key="notification_id">2</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[解锁票据的后续作业解锁工单的后续： <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好<OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[解锁票据的后续作业解锁工单的后续： <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好<KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-解锁票据解锁工单[<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已获得一项后续作业。
+解锁票据解锁工单[<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已获得一项后续作业。
 
-<OTRS_CUSTOMER_REALNAME> 写道:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> 写道:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">42</Data>
         <Data Key="notification_id">3</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[加锁票据的后续作业 锁定工单后续：<OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[加锁票据的后续作业 锁定工单后续：<KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-加锁票据锁定工单 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已获得一项后续作业。
+加锁票据锁定工单 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已获得一项后续作业。
 
-<OTRS_CUSTOMER_REALNAME> 写道：
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> 写道：
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">43</Data>
         <Data Key="notification_id">4</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[票据加锁超时工单锁定超时：<OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[票据加锁超时工单锁定超时：<KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-票据工单 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已达到其锁定时限，现在解锁。
+票据工单 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已达到其锁定时限，现在解锁。
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">44</Data>
         <Data Key="notification_id">5</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[票据的拥有人升级为工单所有者更新为 <OTRS_OWNER_UserFullname>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[票据的拥有人升级为工单所有者更新为 <KIX_OWNER_UserFullname>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-票据的所有人工单的所有者 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已被该信为 <OTRS_TICKET_OWNER_UserFullname> 的 <OTRS_CURRENT_UserFullname>。
+票据的所有人工单的所有者 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已被该信为 <KIX_TICKET_OWNER_UserFullname> 的 <KIX_CURRENT_UserFullname>。
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">45</Data>
         <Data Key="notification_id">6</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[票据的负责人 工单负责人更新为<OTRS_RESPONSIBLE_UserFullname>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[票据的负责人 工单负责人更新为<KIX_RESPONSIBLE_UserFullname>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-工单的负责人 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已被升级为 已被更新为 <OTRS_TICKET_RESPONSIBLE_UserFullname> 的 <OTRS_CURRENT_UserFullname>.
+工单的负责人 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已被升级为 已被更新为 <KIX_TICKET_RESPONSIBLE_UserFullname> 的 <KIX_CURRENT_UserFullname>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">46</Data>
         <Data Key="notification_id">7</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[票据备注工单备注：<OTRS_AGENT_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[票据备注工单备注：<KIX_AGENT_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-<OTRS_CURRENT_UserFullname> 写道：
-<OTRS_AGENT_BODY[30]>
+<KIX_CURRENT_UserFullname> 写道：
+<KIX_AGENT_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">47</Data>
         <Data Key="notification_id">8</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[票据序列已升级为工单队列更新为<OTRS_TICKET_Queue>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[票据序列已升级为工单队列更新为<KIX_TICKET_Queue>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-票据工单 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已被升级为序列已被更新为队列 <OTRS_TICKET_Queue>。
+票据工单 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已被升级为序列已被更新为队列 <KIX_TICKET_Queue>。
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">48</Data>
         <Data Key="notification_id">9</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[已达到锁定票据即将到期的提醒时间已到达锁定工单挂起提醒时间：<OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[已达到锁定票据即将到期的提醒时间已到达锁定工单挂起提醒时间：<KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-锁定票据即将到期的提醒时间锁定工单挂起提醒时间 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已到达。
+锁定票据即将到期的提醒时间锁定工单挂起提醒时间 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已到达。
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">49</Data>
         <Data Key="notification_id">10</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[未锁定票据即将到期的提醒时间已到已到未锁定工单的挂起提醒时间：<OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[未锁定票据即将到期的提醒时间已到已到未锁定工单的挂起提醒时间：<KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-未锁定票据即将到期的提醒时间未锁定工单的挂起提醒时间 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已到已到达。
+未锁定票据即将到期的提醒时间未锁定工单的挂起提醒时间 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已到已到达。
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">50</Data>
         <Data Key="notification_id">11</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[票据升级！工单升级！<OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[票据升级！工单升级！<KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-票据工单 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已被升级！
+票据工单 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已被升级！
 
-升级地点升级开始时间：<OTRS_TICKET_EscalationDestinationDate>
-升级开始时间升级在：<OTRS_TICKET_EscalationDestinationIn>内
+升级地点升级开始时间：<KIX_TICKET_EscalationDestinationDate>
+升级开始时间升级在：<KIX_TICKET_EscalationDestinationIn>内
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">51</Data>
         <Data Key="notification_id">12</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[工单升级警告Ticket Escalation Warning! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好  <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[工单升级警告Ticket Escalation Warning! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好  <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-票据工单 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 将升级！
+票据工单 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 将升级！
 
-升级地点升级开始时间：<OTRS_TICKET_EscalationDestinationDate>
-升级开始时间升级在：<OTRS_TICKET_EscalationDestinationIn>内
+升级地点升级开始时间：<KIX_TICKET_EscalationDestinationDate>
+升级开始时间升级在：<KIX_TICKET_EscalationDestinationIn>内
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">52</Data>
         <Data Key="notification_id">13</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">zh_CN</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[票据服务升级为工单服务更新为<OTRS_TICKET_Service>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[您好 <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[票据服务升级为工单服务更新为<KIX_TICKET_Service>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[您好 <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-票据服务工单服务 [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] 已被升级为已被更新为 <OTRS_TICKET_Service>。
+票据服务工单服务 [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] 已被升级为已被更新为 <KIX_TICKET_Service>。
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
 
     <!-- notification_event_message - pt_BR -->
@@ -3237,199 +3237,199 @@ el servicio del ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivid
         <Data Key="notification_id">1</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Ticket criado: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Ticket criado: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] foi criado na fila <OTRS_TICKET_Queue>.
+o ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] foi criado na fila <KIX_TICKET_Queue>.
 
-<OTRS_CUSTOMER_REALNAME> escreveu:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> escreveu:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">54</Data>
         <Data Key="notification_id">2</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Acompanhamento do ticket desbloqueado: <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Acompanhamento do ticket desbloqueado: <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o ticket desbloqueado [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] recebeu uma resposta.
+o ticket desbloqueado [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] recebeu uma resposta.
 
-<OTRS_CUSTOMER_REALNAME> escreveu:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> escreveu:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">55</Data>
         <Data Key="notification_id">3</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Acompanhamento do ticket bloqueado: <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Acompanhamento do ticket bloqueado: <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o ticket bloqueado [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] recebeu uma resposta.
+o ticket bloqueado [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] recebeu uma resposta.
 
-<OTRS_CUSTOMER_REALNAME> escreveu:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> escreveu:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">56</Data>
         <Data Key="notification_id">4</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Tempo limite de bloqueio do ticket: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Tempo limite de bloqueio do ticket: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] atingiu o seu período de tempo limite de bloqueio e agora está desbloqueado.
+o ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] atingiu o seu período de tempo limite de bloqueio e agora está desbloqueado.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">57</Data>
         <Data Key="notification_id">5</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Atualização de proprietário de ticket para <OTRS_OWNER_UserFullname>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Atualização de proprietário de ticket para <KIX_OWNER_UserFullname>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o proprietário do ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] foi atualizado para <OTRS_TICKET_OWNER_UserFullname> por <OTRS_CURRENT_UserFullname>.
+o proprietário do ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] foi atualizado para <KIX_TICKET_OWNER_UserFullname> por <KIX_CURRENT_UserFullname>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">58</Data>
         <Data Key="notification_id">6</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Atualização de responsável de ticket para <OTRS_RESPONSIBLE_UserFullname>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Atualização de responsável de ticket para <KIX_RESPONSIBLE_UserFullname>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o agente responsável do ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] foi atualizado para <OTRS_TICKET_RESPONSIBLE_UserFullname> por <OTRS_CURRENT_UserFullname>.
+o agente responsável do ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] foi atualizado para <KIX_TICKET_RESPONSIBLE_UserFullname> por <KIX_CURRENT_UserFullname>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">59</Data>
         <Data Key="notification_id">7</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Observação sobre o ticket: <OTRS_AGENT_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Observação sobre o ticket: <KIX_AGENT_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-<OTRS_CURRENT_UserFullname> escreveu:
-<OTRS_AGENT_BODY[30]>
+<KIX_CURRENT_UserFullname> escreveu:
+<KIX_AGENT_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">60</Data>
         <Data Key="notification_id">8</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Atualização da fila do ticket para <OTRS_TICKET_Queue>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Atualização da fila do ticket para <KIX_TICKET_Queue>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] foi atualizado na fila <OTRS_TICKET_Queue>.
+o ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] foi atualizado na fila <KIX_TICKET_Queue>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">61</Data>
         <Data Key="notification_id">9</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Tempo de Lembrete de Pendência do Ticket Bloqueado Atingido: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Tempo de Lembrete de Pendência do Ticket Bloqueado Atingido: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o tempo de lembrete pendente do ticket bloqueado [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] foi atingido.
+o tempo de lembrete pendente do ticket bloqueado [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] foi atingido.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">62</Data>
         <Data Key="notification_id">10</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Tempo de Lembrete Pendente do Ticket Desbloqueado Atingido: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Tempo de Lembrete Pendente do Ticket Desbloqueado Atingido: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o tempo de lembrete pendente do ticket desbloqueado [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] foi atingido.
+o tempo de lembrete pendente do ticket desbloqueado [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] foi atingido.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">63</Data>
         <Data Key="notification_id">11</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Escalonamento do ticket! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Escalonamento do ticket! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] foi escalonado!
+o ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] foi escalonado!
 
-Escalonado em: <OTRS_TICKET_EscalationDestinationDate>
-Escalonado desde: <OTRS_TICKET_EscalationDestinationIn>
+Escalonado em: <KIX_TICKET_EscalationDestinationDate>
+Escalonado desde: <KIX_TICKET_EscalationDestinationIn>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">64</Data>
         <Data Key="notification_id">12</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Aviso de escalonamento do ticket! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Aviso de escalonamento do ticket! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] será escalonado!
+o ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] será escalonado!
 
-Escalonamento em: <OTRS_TICKET_EscalationDestinationDate>
-Escalonamento em: <OTRS_TICKET_EscalationDestinationIn>
+Escalonamento em: <KIX_TICKET_EscalationDestinationDate>
+Escalonamento em: <KIX_TICKET_EscalationDestinationIn>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">65</Data>
         <Data Key="notification_id">13</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">pt_BR</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Atualização do serviço do ticket para <OTRS_TICKET_Service>: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Oi <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>,
+        <Data Key="subject" Type="Quote"><![CDATA[Atualização do serviço do ticket para <KIX_TICKET_Service>: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Oi <KIX_NOTIFICATION_RECIPIENT_UserFirstname>,
 
-o serviço do ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] foi atualizado para <OTRS_TICKET_Service>.
+o serviço do ticket [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] foi atualizado para <KIX_TICKET_Service>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
 
     <!-- notification_event_message - hu -->
@@ -3438,199 +3438,199 @@ o serviço do ticket [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider
         <Data Key="notification_id">1</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Jegy létrehozva: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Jegy létrehozva: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A(z) [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy létrejött a következő várólistában: <OTRS_TICKET_Queue>.
+A(z) [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy létrejött a következő várólistában: <KIX_TICKET_Queue>.
 
-<OTRS_CUSTOMER_REALNAME> ezt írta:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> ezt írta:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">67</Data>
         <Data Key="notification_id">2</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Feloldott jegy követése: <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Feloldott jegy követése: <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A feloldott [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy egy követő üzenetet kapott.
+A feloldott [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy egy követő üzenetet kapott.
 
-<OTRS_CUSTOMER_REALNAME> ezt írta:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> ezt írta:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">68</Data>
         <Data Key="notification_id">3</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Zárolt jegy követése: <OTRS_CUSTOMER_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Zárolt jegy követése: <KIX_CUSTOMER_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A zárolt [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy egy követő üzenetet kapott.
+A zárolt [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy egy követő üzenetet kapott.
 
-<OTRS_CUSTOMER_REALNAME> ezt írta:
-<OTRS_CUSTOMER_BODY[30]>
+<KIX_CUSTOMER_REALNAME> ezt írta:
+<KIX_CUSTOMER_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">69</Data>
         <Data Key="notification_id">4</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Jegyzár időkorlát: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Jegyzár időkorlát: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A(z) [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy elérte a zárolás időkorlátjának időtartamát, és most feloldásra került.
+A(z) [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy elérte a zárolás időkorlátjának időtartamát, és most feloldásra került.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">70</Data>
         <Data Key="notification_id">5</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Jegytulajdonos frissítés <OTRS_OWNER_UserLastname> <OTRS_OWNER_UserFirstname> ügyintézőre: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Jegytulajdonos frissítés <KIX_OWNER_UserLastname> <KIX_OWNER_UserFirstname> ügyintézőre: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A(z) [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy tulajdonosát <OTRS_CURRENT_UserLastname> <OTRS_CURRENT_UserFirstname> frissítette <OTRS_OWNER_UserLastname> <OTRS_OWNER_UserFirstname> ügyintézőre.
+A(z) [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy tulajdonosát <KIX_CURRENT_UserLastname> <KIX_CURRENT_UserFirstname> frissítette <KIX_OWNER_UserLastname> <KIX_OWNER_UserFirstname> ügyintézőre.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">71</Data>
         <Data Key="notification_id">6</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Jegyfelelős frissítés <OTRS_RESPONSIBLE_UserLastname> <OTRS_RESPONSIBLE_UserFirstname> ügyintézőre: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Jegyfelelős frissítés <KIX_RESPONSIBLE_UserLastname> <KIX_RESPONSIBLE_UserFirstname> ügyintézőre: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A(z) [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy felelős ügyintézőjét <OTRS_CURRENT_UserLastname> <OTRS_CURRENT_UserFirstname> frissítette <OTRS_RESPONSIBLE_UserLastname> <OTRS_RESPONSIBLE_UserFirstname> ügyintézőre.
+A(z) [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy felelős ügyintézőjét <KIX_CURRENT_UserLastname> <KIX_CURRENT_UserFirstname> frissítette <KIX_RESPONSIBLE_UserLastname> <KIX_RESPONSIBLE_UserFirstname> ügyintézőre.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">72</Data>
         <Data Key="notification_id">7</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Új jegyzet: <OTRS_AGENT_SUBJECT[24]>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Új jegyzet: <KIX_AGENT_SUBJECT[24]>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-<OTRS_CURRENT_UserLastname> <OTRS_CURRENT_UserFirstname> ezt írta:
-<OTRS_AGENT_BODY[30]>
+<KIX_CURRENT_UserLastname> <KIX_CURRENT_UserFirstname> ezt írta:
+<KIX_AGENT_BODY[30]>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">73</Data>
         <Data Key="notification_id">8</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Jegy várólista frissítés <OTRS_TICKET_Queue> várólistára: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Jegy várólista frissítés <KIX_TICKET_Queue> várólistára: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A(z) [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegyet áthelyezték a következő várólistába: <OTRS_TICKET_Queue>.
+A(z) [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegyet áthelyezték a következő várólistába: <KIX_TICKET_Queue>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">74</Data>
         <Data Key="notification_id">9</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Zárolt jegy „emlékeztető függőben” ideje elérve: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Zárolt jegy „emlékeztető függőben” ideje elérve: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A zárolt [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy elérte az „emlékeztető függőben” idejét.
+A zárolt [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy elérte az „emlékeztető függőben” idejét.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">75</Data>
         <Data Key="notification_id">10</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Feloldott jegy „emlékeztető függőben” ideje elérve: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Feloldott jegy „emlékeztető függőben” ideje elérve: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A feloldott [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy elérte az „emlékeztető függőben” idejét.
+A feloldott [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy elérte az „emlékeztető függőben” idejét.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">76</Data>
         <Data Key="notification_id">11</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Jegyeszkaláció! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Jegyeszkaláció! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A(z) [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy eszkalálódott!
+A(z) [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy eszkalálódott!
 
-Eszkaláció időpontja: <OTRS_TICKET_EscalationDestinationDate>
-Eszkaláció óta eltelt idő: <OTRS_TICKET_EscalationDestinationIn>
+Eszkaláció időpontja: <KIX_TICKET_EscalationDestinationDate>
+Eszkaláció óta eltelt idő: <KIX_TICKET_EscalationDestinationIn>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">77</Data>
         <Data Key="notification_id">12</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Jegyeszkaláció figyelmeztetés! <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Jegyeszkaláció figyelmeztetés! <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A(z) [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy eszkalálódni fog!
+A(z) [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy eszkalálódni fog!
 
-Eszkaláció időpontja: <OTRS_TICKET_EscalationDestinationDate>
-Eszkalációig fennmaradó idő: <OTRS_TICKET_EscalationDestinationIn>
+Eszkaláció időpontja: <KIX_TICKET_EscalationDestinationDate>
+Eszkalációig fennmaradó idő: <KIX_TICKET_EscalationDestinationIn>
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">78</Data>
         <Data Key="notification_id">13</Data>
         <Data Key="content_type" Type="Quote">text/plain</Data>
         <Data Key="language" Type="Quote">hu</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[Jegyszolgáltatás frissítve <OTRS_TICKET_Service> szolgáltatásra: <OTRS_TICKET_Title>]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Kedves <OTRS_NOTIFICATION_RECIPIENT_UserFirstname>!
+        <Data Key="subject" Type="Quote"><![CDATA[Jegyszolgáltatás frissítve <KIX_TICKET_Service> szolgáltatásra: <KIX_TICKET_Title>]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Kedves <KIX_NOTIFICATION_RECIPIENT_UserFirstname>!
 
-A(z) [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_TicketNumber>] jegy szolgáltatása frissítve lett a következőre: <OTRS_TICKET_Service>.
+A(z) [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_TicketNumber>] jegy szolgáltatása frissítve lett a következőre: <KIX_TICKET_Service>.
 
-<OTRS_CONFIG_HttpType>://<OTRS_CONFIG_FQDN>/<OTRS_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<OTRS_TICKET_TicketID>
+<KIX_CONFIG_HttpType>://<KIX_CONFIG_FQDN>/<KIX_CONFIG_ScriptAlias>index.pl?Action=AgentTicketZoom;TicketID=<KIX_TICKET_TicketID>
 
--- <OTRS_CONFIG_NotificationSenderName>]]></Data>
+-- <KIX_CONFIG_NotificationSenderName>]]></Data>
     </Insert>
 
     <Insert Table="notification_event_message">
@@ -3638,48 +3638,48 @@ A(z) [<OTRS_CONFIG_Ticket::Hook><OTRS_CONFIG_Ticket::HookDivider><OTRS_TICKET_Ti
         <Data Key="notification_id">14</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <OTRS_CUSTOMER_SUBJECT[24]> [<OTRS_CONFIG_Ticket::Hook><OTRS_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;OTRS_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;OTRS_CUSTOMER_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;OTRS_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;KIX_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">80</Data>
         <Data Key="notification_id">14</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <OTRS_CUSTOMER_SUBJECT[24]> [<OTRS_CONFIG_Ticket::Hook><OTRS_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;OTRS_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;OTRS_CUSTOMER_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;OTRS_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;KIX_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">81</Data>
         <Data Key="notification_id">15</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <OTRS_CUSTOMER_SUBJECT[24]> [<OTRS_CONFIG_Ticket::Hook><OTRS_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;OTRS_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;OTRS_CUSTOMER_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;OTRS_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;KIX_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">82</Data>
         <Data Key="notification_id">15</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <OTRS_CUSTOMER_SUBJECT[24]> [<OTRS_CONFIG_Ticket::Hook><OTRS_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;OTRS_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;OTRS_CUSTOMER_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;OTRS_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;KIX_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">83</Data>
         <Data Key="notification_id">16</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <OTRS_CUSTOMER_SUBJECT[24]> [<OTRS_CONFIG_Ticket::Hook><OTRS_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;OTRS_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;OTRS_CUSTOMER_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;OTRS_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;KIX_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">84</Data>
         <Data Key="notification_id">16</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <OTRS_CUSTOMER_SUBJECT[24]> [<OTRS_CONFIG_Ticket::Hook><OTRS_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;OTRS_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;OTRS_CUSTOMER_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;OTRS_CURRENT_UserFirstname&gt; &lt;OTRS_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;OTRS_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;KIX_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
 
     <!-- dynamic fields -->

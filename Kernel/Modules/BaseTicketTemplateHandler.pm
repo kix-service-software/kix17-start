@@ -128,8 +128,9 @@ sub TicketTemplateReplace {
                         $Item->{CustomerSelected} = '';
                     }
 
+#rbo - T2016121190001552 - added KIX placeholders
                     # get current user
-                    if ( $TicketTemplate{$Key} eq '<OTRS_CURRENT_USER>' ) {
+                    if ( $TicketTemplate{$Key} eq '<KIX_CURRENT_USER>' ) {
 
                         # replace possible placeholder for agents
                         # get user preferences

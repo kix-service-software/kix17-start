@@ -231,9 +231,10 @@ sub Run {
         # make sure body is rich text
         if ( $LayoutObject->{BrowserRichText} ) {
 
+#rbo - T2016121190001552 - added KIX placeholders
             # prepare bounce tags
-            $Param{BounceText} =~ s/<OTRS_TICKET>/&lt;OTRS_TICKET&gt;/g;
-            $Param{BounceText} =~ s/<OTRS_BOUNCE_TO>/&lt;OTRS_BOUNCE_TO&gt;/g;
+            $Param{BounceText} =~ s/<KIX_TICKET>/&lt;KIX_TICKET&gt;/g;
+            $Param{BounceText} =~ s/<KIX_BOUNCE_TO>/&lt;KIX_BOUNCE_TO&gt;/g;
 
             $Param{BounceText} = $LayoutObject->Ascii2RichText(
                 String => $Param{BounceText},
@@ -434,9 +435,10 @@ $Param{Signature}";
             # prepare bounce tags if body is rich text
             if ( $LayoutObject->{BrowserRichText} ) {
 
+#rbo - T2016121190001552 - added KIX placeholders
                 # prepare bounce tags
-                $Param{Body} =~ s/&lt;OTRS_TICKET&gt;/&amp;lt;OTRS_TICKET&amp;gt;/gi;
-                $Param{Body} =~ s/&lt;OTRS_BOUNCE_TO&gt;/&amp;lt;OTRS_BOUNCE_TO&amp;gt;/gi;
+                $Param{Body} =~ s/&lt;KIX_TICKET&gt;/&amp;lt;KIX_TICKET&amp;gt;/gi;
+                $Param{Body} =~ s/&lt;KIX_BOUNCE_TO&gt;/&amp;lt;KIX_BOUNCE_TO&amp;gt;/gi;
             }
 
             $Param{InformationFormat} = $Param{Body};
@@ -493,9 +495,10 @@ $Param{Signature}";
                 );
             }
 
+#rbo - T2016121190001552 - added KIX placeholders
             # replace placeholders
-            $Param{Body} =~ s/(&lt;|<)OTRS_TICKET(&gt;|>)/$Ticket{TicketNumber}/g;
-            $Param{Body} =~ s/(&lt;|<)OTRS_BOUNCE_TO(&gt;|>)/$Param{BounceTo}/g;
+            $Param{Body} =~ s/(&lt;|<)KIX_TICKET(&gt;|>)/$Ticket{TicketNumber}/g;
+            $Param{Body} =~ s/(&lt;|<)KIX_BOUNCE_TO(&gt;|>)/$Param{BounceTo}/g;
 
             # send
             my $ArticleID = $TicketObject->ArticleSend(
@@ -528,8 +531,9 @@ $Param{Signature}";
         else {
             my $Body = $ConfigObject->Get('Frontend::Agent::AutomaticBounceText')
                 || 'Bounced';
-            $Body =~ s/(&lt;|<)OTRS_TICKET(&gt;|>)/$Ticket{TicketNumber}/g;
-            $Body =~ s/(&lt;|<)OTRS_BOUNCE_TO(&gt;|>)/$Param{BounceTo}/g;
+#rbo - T2016121190001552 - added KIX placeholders
+            $Body =~ s/(&lt;|<)KIX_TICKET(&gt;|>)/$Ticket{TicketNumber}/g;
+            $Body =~ s/(&lt;|<)KIX_BOUNCE_TO(&gt;|>)/$Param{BounceTo}/g;
 
             # set mime type
             my $MimeType = 'text/plain';

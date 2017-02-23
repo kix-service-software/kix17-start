@@ -2403,9 +2403,10 @@ sub _FAQApprovalTicketCreate {
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
+#rbo - T2016121190001552 - added KIX placeholders
     # get subject
     my $Subject = $ConfigObject->Get('FAQ::ApprovalTicketSubject');
-    $Subject =~ s{ <OTRS_FAQ_NUMBER> }{$Param{FAQNumber}}xms;
+    $Subject =~ s{ <(KIX|OTRS)_FAQ_NUMBER> }{$Param{FAQNumber}}xms;
 
     # check if we can find existing open approval tickets for this FAQ article
     my @TicketIDs = $TicketObject->TicketSearch(
@@ -2487,16 +2488,17 @@ sub _FAQApprovalTicketCreate {
             $Language = '-';
         }
 
+#rbo - T2016121190001552 - added KIX placeholders
         # get body from config
         my $Body = $ConfigObject->Get('FAQ::ApprovalTicketBody');
-        $Body =~ s{ <OTRS_FAQ_CATEGORYID> }{$Param{CategoryID}}xms;
-        $Body =~ s{ <OTRS_FAQ_CATEGORY>   }{$Category}xms;
-        $Body =~ s{ <OTRS_FAQ_LANGUAGE>   }{$Language}xms;
-        $Body =~ s{ <OTRS_FAQ_ITEMID>     }{$Param{ItemID}}xms;
-        $Body =~ s{ <OTRS_FAQ_NUMBER>     }{$Param{FAQNumber}}xms;
-        $Body =~ s{ <OTRS_FAQ_TITLE>      }{$Param{Title}}xms;
-        $Body =~ s{ <OTRS_FAQ_AUTHOR>     }{$UserName}xms;
-        $Body =~ s{ <OTRS_FAQ_STATE>      }{$State{Name}}xms;
+        $Body =~ s{ <(KIX|OTRS)_FAQ_CATEGORYID> }{$Param{CategoryID}}xms;
+        $Body =~ s{ <(KIX|OTRS)_FAQ_CATEGORY>   }{$Category}xms;
+        $Body =~ s{ <(KIX|OTRS)_FAQ_LANGUAGE>   }{$Language}xms;
+        $Body =~ s{ <(KIX|OTRS)_FAQ_ITEMID>     }{$Param{ItemID}}xms;
+        $Body =~ s{ <(KIX|OTRS)_FAQ_NUMBER>     }{$Param{FAQNumber}}xms;
+        $Body =~ s{ <(KIX|OTRS)_FAQ_TITLE>      }{$Param{Title}}xms;
+        $Body =~ s{ <(KIX|OTRS)_FAQ_AUTHOR>     }{$UserName}xms;
+        $Body =~ s{ <(KIX|OTRS)_FAQ_STATE>      }{$State{Name}}xms;
 
         #  gather user data
         my %User = $UserObject->GetUserData(

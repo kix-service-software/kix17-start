@@ -1198,9 +1198,10 @@ sub SendEmail {
         return $Output;
     }
 
-    # replace <OTRS_TICKET_STATE> with next ticket state name
+#rbo - T2016121190001552 - added KIX placeholders
+    # replace <KIX_TICKET_STATE> with next ticket state name
     if ($NextState) {
-        $GetParam{Body} =~ s/(&lt;|<)OTRS_TICKET_STATE(&gt;|>)/$NextState/g;
+        $GetParam{Body} =~ s/(&lt;|<)KIX_TICKET_STATE(&gt;|>)/$NextState/g;
     }
 
     # get pre loaded attachments

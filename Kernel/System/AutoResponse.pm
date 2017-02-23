@@ -261,7 +261,7 @@ Return example:
     %QueueAddressData(
         #Auto Response Data
         'Text'            => 'Your OTRS TeamOTRS! answered by a human asap.',
-        'Subject'         => 'New ticket has been created! (RE: <OTRS_CUSTOMER_SUBJECT[24]>)',
+        'Subject'         => 'New ticket has been created! (RE: <KIX_CUSTOMER_SUBJECT[24]>)',
         'ContentType'     => 'text/plain',
         'SystemAddressID' => '1',
 

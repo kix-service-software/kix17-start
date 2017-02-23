@@ -131,14 +131,15 @@ sub LoadDefaults {
     # (The password of database user.)
     $Self->{DatabasePw} = 'some-pass';
 
+    #rbo - T2016121190001552 - added KIX placeholders
     # DatabaseDSN
     # The database DSN for MySQL ==> more: "perldoc DBD::mysql"
-    $Self->{DatabaseDSN} = "DBI:mysql:database=<OTRS_CONFIG_Database>;host=<OTRS_CONFIG_DatabaseHost>;";
+    $Self->{DatabaseDSN} = "DBI:mysql:database=<KIX_CONFIG_Database>;host=<KIX_CONFIG_DatabaseHost>;";
 
     # The database DSN for PostgreSQL ==> more: "perldoc DBD::Pg"
-#    $Self->{DatabaseDSN} = "DBI:Pg:dbname=<OTRS_CONFIG_Database>;host=<OTRS_CONFIG_DatabaseHost>;";
+#    $Self->{DatabaseDSN} = "DBI:Pg:dbname=<KIX_CONFIG_Database>;host=<KIX_CONFIG_DatabaseHost>;";
 
-    # The database DSN for Microsoft SQL Server - only supported if OTRS is
+    # The database DSN for Microsoft SQL Server - only supported if KIX is
     # installed on Windows as well
     #    $Self->{DatabaseDSN} = "DBI:ODBC:$Self->{Database}";
     # If you use ODBC, no database auto detection is possible,
@@ -201,19 +202,22 @@ sub LoadDefaults {
 
     # Frontend::WebPath
     # (URL base path of icons, CSS and Java Script.)
-    $Self->{'Frontend::WebPath'} = '/otrs-web/';
+    $Self->{'Frontend::WebPath'} = '/kix-web/';
 
+    #rbo - T2016121190001552 - added KIX placeholders
     # Frontend::JavaScriptPath
     # (URL JavaScript path.)
-    $Self->{'Frontend::JavaScriptPath'} =  '<OTRS_CONFIG_Frontend::WebPath>js/';
+    $Self->{'Frontend::JavaScriptPath'} =  '<KIX_CONFIG_Frontend::WebPath>js/';
 
+    #rbo - T2016121190001552 - added KIX placeholders
     # Frontend::CSSPath
     # (URL CSS path.)
-    $Self->{'Frontend::CSSPath'} =  '<OTRS_CONFIG_Frontend::WebPath>css/';
+    $Self->{'Frontend::CSSPath'} =  '<KIX_CONFIG_Frontend::WebPath>css/';
 
+    #rbo - T2016121190001552 - added KIX placeholders
     # Frontend::ImagePath
     # (URL image path of icons for navigation.)
-    $Self->{'Frontend::ImagePath'} = '<OTRS_CONFIG_Frontend::WebPath>skins/Agent/default/img/';
+    $Self->{'Frontend::ImagePath'} = '<KIX_CONFIG_Frontend::WebPath>skins/Agent/default/img/';
 
     # DefaultViewNewLine
     # (insert new line in text messages after max x chars and
@@ -701,10 +705,11 @@ sub LoadDefaults {
     # (store cookies in browser after closing a browser) [0|1]
     $Self->{SessionUseCookieAfterBrowserClose} = 0;
 
+    #rbo - T2016121190001552 - added KIX placeholders
     # SessionDir
     # directory for all sessen id information (just needed if
     # $Self->{SessionModule}='Kernel::System::AuthSession::FS)
-    $Self->{SessionDir} = '<OTRS_CONFIG_Home>/var/sessions';
+    $Self->{SessionDir} = '<KIX_CONFIG_Home>/var/sessions';
 
     # SessionTable*
     # (just needed if $Self->{SessionModule}='Kernel::System::AuthSession::DB)
@@ -820,16 +825,17 @@ sub LoadDefaults {
     # directories                                         #
     # --------------------------------------------------- #
     # root directory
-    $Self->{Home} = '/opt/otrs';
+    $Self->{Home} = '/opt/kix';
 
+    #rbo - T2016121190001552 - added KIX placeholders
     # tmp dir
-    $Self->{TempDir} = '<OTRS_CONFIG_Home>/var/tmp';
+    $Self->{TempDir} = '<KIX_CONFIG_Home>/var/tmp';
     # article dir
-    $Self->{ArticleDir} = '<OTRS_CONFIG_Home>/var/article';
+    $Self->{ArticleDir} = '<KIX_CONFIG_Home>/var/article';
 
     # html template dirs
-    $Self->{TemplateDir}       = '<OTRS_CONFIG_Home>/Kernel/Output';
-    $Self->{CustomTemplateDir} = '<OTRS_CONFIG_Home>/Custom/Kernel/Output';
+    $Self->{TemplateDir}       = '<KIX_CONFIG_Home>/Kernel/Output';
+    $Self->{CustomTemplateDir} = '<KIX_CONFIG_Home>/Custom/Kernel/Output';
 
     # --------------------------------------------------- #
     # CommonCSS                                           #
@@ -1929,7 +1935,8 @@ sub new {
         for my $Key ( sort keys %{$Self} ) {
             next KEY if !defined $Key;
             if ( defined $Self->{$Key} ) {
-                $Self->{$Key} =~ s/\<OTRS_CONFIG_(.+?)\>/$Self->{$1}/g;
+                #rbo - T2016121190001552 - added KIX placeholders
+                $Self->{$Key} =~ s/\<KIX_CONFIG_(.+?)\>/$Self->{$1}/g;
             }
             else {
                 print STDERR "ERROR: $Key not defined!\n";

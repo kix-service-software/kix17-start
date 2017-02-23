@@ -3559,7 +3559,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="TicketStateWorkflowAutomaticStateAction###QueueMove" Required="0" Valid="1">
-        <Description Translatable="1">Automatically moves ticket to configured queue if state is set - use of wildcards possible (e.g. &lt;OTRS_TicketDynamicField1&gt;).</Description>
+        <Description Translatable="1">Automatically moves ticket to configured queue if state is set - use of wildcards possible (e.g. &lt;KIX_TicketDynamicField1&gt;).</Description>
         <Group>Framework</Group>
         <SubGroup>Core::TicketStateWorkflow</SubGroup>
         <Setting>
@@ -4979,7 +4979,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="FQDN" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Defines the fully qualified domain name of the system. This setting is used as a variable, OTRS_CONFIG_FQDN which is found in all forms of messaging used by the application, to build links to the tickets within your system.</Description>
+        <Description Translatable="1">Defines the fully qualified domain name of the system. This setting is used as a variable, KIX_CONFIG_FQDN which is found in all forms of messaging used by the application, to build links to the tickets within your system.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -5003,7 +5003,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="HttpType" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Defines the type of protocol, used by the web server, to serve the application. If https protocol will be used instead of plain http, it must be specified here. Since this has no affect on the web server's settings or behavior, it will not change the method of access to the application and, if it is wrong, it will not prevent you from logging into the application. This setting is only used as a variable, OTRS_CONFIG_HttpType which is found in all forms of messaging used by the application, to build links to the tickets within your system.</Description>
+        <Description Translatable="1">Defines the type of protocol, used by the web server, to serve the application. If https protocol will be used instead of plain http, it must be specified here. Since this has no affect on the web server's settings or behavior, it will not change the method of access to the application and, if it is wrong, it will not prevent you from logging into the application. This setting is only used as a variable, KIX_CONFIG_HttpType which is found in all forms of messaging used by the application, to build links to the tickets within your system.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -5014,7 +5014,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ScriptAlias" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Sets the prefix to the scripts folder on the server, as configured on the web server. This setting is used as a variable, OTRS_CONFIG_ScriptAlias which is found in all forms of messaging used by the application, to build links to the tickets within the system.</Description>
+        <Description Translatable="1">Sets the prefix to the scripts folder on the server, as configured on the web server. This setting is used as a variable, KIX_CONFIG_ScriptAlias which is found in all forms of messaging used by the application, to build links to the tickets within the system.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -5202,7 +5202,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
-            <String Regex="">&lt;OTRS_CONFIG_Frontend::WebPath&gt;skins/Agent/default/img/</String>
+            <String Regex="">&lt;KIX_CONFIG_Frontend::WebPath&gt;skins/Agent/default/img/</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CSSPath" Required="1" Valid="1" ConfigLevel="200">
@@ -5210,7 +5210,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
-            <String Regex="">&lt;OTRS_CONFIG_Frontend::WebPath&gt;css/</String>
+            <String Regex="">&lt;KIX_CONFIG_Frontend::WebPath&gt;css/</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::JavaScriptPath" Required="1" Valid="1" ConfigLevel="200">
@@ -5218,7 +5218,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
-            <String Regex="">&lt;OTRS_CONFIG_Frontend::WebPath&gt;js/</String>
+            <String Regex="">&lt;KIX_CONFIG_Frontend::WebPath&gt;js/</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::RichText" Required="1" Valid="1" ConfigLevel="200">
@@ -5237,7 +5237,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
-            <String Regex="">&lt;OTRS_CONFIG_Frontend::WebPath&gt;js/thirdparty/ckeditor-4.5.6/</String>
+            <String Regex="">&lt;KIX_CONFIG_Frontend::WebPath&gt;js/thirdparty/ckeditor-4.5.6/</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::RichTextWidth" Required="1" Valid="1">
@@ -5751,8 +5751,8 @@
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Notification::Generic</Item>
                 <Item Key="Priority">Warning</Item>
-                <Item Key="Text">The OTRS Website</Item>
-                <Item Key="File">&lt;OTRS_CONFIG_Home&gt;/var/notify.txt</Item>
+                <Item Key="Text">The KIX Website</Item>
+                <Item Key="File">&lt;KIX_CONFIG_Home&gt;/var/notify.txt</Item>
                 <Item Key="Link">http://www.otrs.com</Item>
             </Hash>
         </Setting>
@@ -5876,7 +5876,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Session</SubGroup>
         <Setting>
-            <String Regex="">&lt;OTRS_CONFIG_Home&gt;/var/sessions</String>
+            <String Regex="">&lt;KIX_CONFIG_Home&gt;/var/sessions</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SessionTable" Required="1" Valid="1">

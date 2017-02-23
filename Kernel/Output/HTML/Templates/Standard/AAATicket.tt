@@ -212,7 +212,8 @@
 [% Translate("My Queues") | html %]
 [% Translate("Shown Tickets") | html %]
 [% Translate("Shown Columns") | html %]
-[% Translate("Your email with ticket number \"<OTRS_TICKET>\" is merged to \"<OTRS_MERGE_TO_TICKET>\".") | html %]
+#rbo - T2016121190001552 - added KIX placeholders
+[% Translate("Your email with ticket number \"<KIX_TICKET>\" is merged to \"<KIX_MERGE_TO_TICKET>\".") | html %]
 [% Translate("Ticket %s: first response time is over (%s)!") | html %]
 [% Translate("Ticket %s: first response time will be over in %s!") | html %]
 [% Translate("Ticket %s: update time is over (%s)!") | html %]

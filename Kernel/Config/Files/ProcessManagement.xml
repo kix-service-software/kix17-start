@@ -380,13 +380,13 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ProcessManagement::Transition::Debug::Filter###00-Default" Required="0" Valid="0">
-        <Description Translatable="1">Filter for debugging Transitions. Note: More filters can be added in the format &lt;OTRS_TICKET_Attribute&gt; e.g. &lt;OTRS_TICKET_Priority&gt;.</Description>
+        <Description Translatable="1">Filter for debugging Transitions. Note: More filters can be added in the format &lt;KIX_TICKET_Attribute&gt; e.g. &lt;KIX_TICKET_Priority&gt;.</Description>
         <Group>ProcessManagement</Group>
         <SubGroup>Core::Transition</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="TransitionEntityID"></Item>
-                <Item Key="&lt;OTRS_TICKET_TicketNumber&gt;"></Item>
+                <Item Key="&lt;KIX_TICKET_TicketNumber&gt;"></Item>
             </Hash>
         </Setting>
     </ConfigItem>

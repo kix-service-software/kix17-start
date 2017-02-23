@@ -178,7 +178,8 @@ sub Run {
 
         #check and replace placeholders...
         for my $QueueNamePart (@SingleQueueNames) {
-            $QueueNamePart =~ s/<OTRS_Ticket_(.+)>/$Ticket{$1}/e;
+#rbo - T2016121190001552 - added KIX placeholders
+            $QueueNamePart =~ s/<(KIX|OTRS)_Ticket_(.+)>/$Ticket{$2}/e;
             $SingleQueueNames[$Index] = $QueueNamePart;
             $Index++;
         }

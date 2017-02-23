@@ -331,12 +331,13 @@ sub Run {
         $SLA = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup( SLAID => $TicketTemplate{SLAID} );
     }
 
+#rbo - T2016121190001552 - added KIX placeholders
     # get subject
     my $Subject = $GetParam{Subject};
     if ( defined $TicketTemplate{Subject}
-        && $TicketTemplate{Subject} =~ m/(.*?)<OTRS_EMAIL_SUBJECT>(.*)/g )
+        && $TicketTemplate{Subject} =~ m/(.*?)<(KIX|OTRS)_EMAIL_SUBJECT>(.*)/g )
     {
-        $Subject = $1 . $Subject . $2;
+        $Subject = $1 . $Subject . $3;
     }
 
     # EO KIX4OTRS-capeIT
@@ -563,12 +564,13 @@ sub Run {
     my $Body = $GetParam{Body};
     my $RichTextUsed = $ConfigObject->Get('Frontend::RichText');
     if ( defined $TicketTemplate{Body} ) {
-        if ( $RichTextUsed && $TicketTemplate{Body} =~ m/(.*?)&lt;OTRS_EMAIL_BODY&gt;(.*)/msg ) {
-            $Body = $1 . $Body . $2;
+#rbo - T2016121190001552 - added KIX placeholders
+        if ( $RichTextUsed && $TicketTemplate{Body} =~ m/(.*?)&lt;(KIX|OTRS)_EMAIL_BODY&gt;(.*)/msg ) {
+            $Body = $1 . $Body . $3;
             $GetParam{'Content-Type'} = 'text/html';
         }
-        elsif ( !$RichTextUsed && $TicketTemplate{Body} =~ m/(.*?)<OTRS_EMAIL_BODY>(.*)/msg ) {
-            $Body = $1 . $Body . $2;
+        elsif ( !$RichTextUsed && $TicketTemplate{Body} =~ m/(.*?)<(KIX|OTRS)_EMAIL_BODY>(.*)/msg ) {
+            $Body = $1 . $Body . $3;
         }
     }
 

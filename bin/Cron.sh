@@ -25,7 +25,8 @@ CRON_USER="$2"
 # check if a common user try to use -u
 if test -n "$CRON_USER"; then
     if test $CURRENTUSER != root; then
-        echo "Run this script just as OTRS user! Or use 'Cron.sh {start|stop|restart} OTRS_USER' as root!"
+#rbo - T2016121190001552 - replaced OTRS wording
+        echo "Run this script just as webserver user! Or use 'Cron.sh {start|stop|restart} <webserver user>' as root!"
         exit 5
     fi
 fi
@@ -33,30 +34,33 @@ fi
 # check if the cron user is specified
 if test -z "$CRON_USER"; then
     if test $CURRENTUSER = root; then
-        echo "Run this script just as OTRS user! Or use 'Cron.sh {start|stop|restart} OTRS_USER' as root!"
+#rbo - T2016121190001552 - replaced OTRS wording
+        echo "Run this script just as webserver user! Or use 'Cron.sh {start|stop|restart} <webserver user>' as root!"
         exit 5
     fi
 fi
 
 # find otrs root
 cd "`dirname $0`/../"
-OTRS_HOME="`pwd`"
+#rbo - T2016121190001552 - replaced OTRS wording
+KIX_HOME="`pwd`"
 cd -
 
-#OTRS_ROOT=/opt/otrs
-if test -e $OTRS_HOME/var/cron; then
-    OTRS_ROOT=$OTRS_HOME
+#rbo - T2016121190001552 - replaced OTRS wording
+if test -e $KIX_HOME/var/cron; then
+    KIX_ROOT=$KIX_HOME
 else
-    echo "No cronjobs in $OTRS_HOME/var/cron found!";
+    echo "No cronjobs in $KIX_HOME/var/cron found!";
     echo " * Check the \$HOME (/etc/passwd) of the OTRS user. It must be the root dir of your OTRS system (e. g. /opt/otrs). ";
     exit 5;
 fi
 
-CRON_DIR=$OTRS_ROOT/var/cron
-CRON_TMP_FILE=$OTRS_ROOT/var/tmp/otrs-cron-tmp.$$
+#rbo - T2016121190001552 - replaced OTRS wording
+CRON_DIR=$KIX_ROOT/var/cron
+CRON_TMP_FILE=$KIX_ROOT/var/tmp/otrs-cron-tmp.$$
 
-echo "Cron.sh - start/stop OTRS cronjobs"
-echo "Copyright (C) 2001-2012 OTRS AG, http://otrs.org/"
+#rbo - T2016121190001552 - replaced OTRS wording
+echo "Cron.sh - start/stop KIX cronjobs"
 
 #
 # main part
@@ -74,7 +78,7 @@ case "$1" in
         if mkdir -p $CRON_DIR; cd $CRON_DIR && ls -d * | grep -Ev "(\.(dist|rpm|bak|backup|custom_backup|save|swp)|\~)$" | xargs cat > $CRON_TMP_FILE && crontab $CRON_USER $CRON_TMP_FILE; then
 
             rm -rf $CRON_TMP_FILE
-            echo "(using $OTRS_ROOT) done";
+            echo "(using $KIX_ROOT) done";
             exit 0;
         else
             echo "failed";

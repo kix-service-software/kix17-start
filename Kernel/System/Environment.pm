@@ -332,33 +332,35 @@ sub DBInfoGet {
     return %EnvDB;
 }
 
-=item OTRSInfoGet()
+#rbo - T2016121190001552 - renamed OTRS to KIX
 
-collect OTRS information
+=item KIXInfoGet()
 
-    my %OTRSInfo = $EnvironmentObject->OTRSInfoGet();
+collect information about KIX installation
+
+    my %OTRSInfo = $EnvironmentObject->KIXInfoGet();
 
 returns:
 
-    %OTRSInfo = (
-        Product         => "OTRS",
-        Version         => "3.3.1",
+    %KIXInfo = (
+        Product         => "KIX",
+        Version         => "17.0.0",
         DefaultLanguage => "en",
-        Home            => "/opt/otrs",
-        Host            => "prod.otrs.com",
+        Home            => "/opt/kix",
+        Host            => "prod.kix.com",
         SystemID        => 70,
     );
 
 =cut
 
-sub OTRSInfoGet {
+sub KIXInfoGet {
     my ( $Self, %Param ) = @_;
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    # collect OTRS data
-    my %EnvOTRS = (
+    # collect KIX data
+    my %EnvData = (
         Version         => $ConfigObject->Get('Version'),
         Home            => $ConfigObject->Get('Home'),
         Host            => $ConfigObject->Get('FQDN'),
@@ -367,7 +369,7 @@ sub OTRSInfoGet {
         DefaultLanguage => $ConfigObject->Get('DefaultLanguage'),
     );
 
-    return %EnvOTRS;
+    return %EnvData;
 }
 
 1;

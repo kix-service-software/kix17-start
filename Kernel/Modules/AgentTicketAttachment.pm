@@ -99,7 +99,8 @@ sub Run {
         for ( sort keys %{ $ConfigObject->Get('MIME-Viewer') } ) {
             if ( $Data{ContentType} =~ /^$_/i ) {
                 $Viewer = $ConfigObject->Get('MIME-Viewer')->{$_};
-                $Viewer =~ s/\<OTRS_CONFIG_(.+?)\>/$ConfigObject->{$1}/g;
+#rbo - T2016121190001552 - added KIX placeholders
+                $Viewer =~ s/\<KIX_CONFIG_(.+?)\>/$ConfigObject->{$1}/g;
             }
         }
     }

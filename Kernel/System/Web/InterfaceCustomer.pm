@@ -621,7 +621,8 @@ sub Run {
             my $Subject = $ConfigObject->Get('CustomerPanelSubjectLostPasswordToken')
                 || 'ERROR: CustomerPanelSubjectLostPasswordToken is missing!';
             for ( sort keys %UserData ) {
-                $Body =~ s/<OTRS_$_>/$UserData{$_}/gi;
+#rbo - T2016121190001552 - added KIX placeholders
+                $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
             }
             my $Sent = $EmailObject->Send(
                 To       => $UserData{UserEmail},
@@ -685,13 +686,14 @@ sub Run {
             return;
         }
 
+#rbo - T2016121190001552 - added KIX placeholders
         # send notify email
         my $Body = $ConfigObject->Get('CustomerPanelBodyLostPassword')
-            || 'New Password is: <OTRS_NEWPW>';
+            || 'New Password is: <KIX_NEWPW>';
         my $Subject = $ConfigObject->Get('CustomerPanelSubjectLostPassword')
             || 'New Password!';
         for ( sort keys %UserData ) {
-            $Body =~ s/<OTRS_$_>/$UserData{$_}/gi;
+            $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
         }
         my $Sent = $EmailObject->Send(
             To       => $UserData{UserEmail},
@@ -867,7 +869,8 @@ sub Run {
         my $Subject = $ConfigObject->Get('CustomerPanelSubjectNewAccount')
             || 'New OTRS Account!';
         for ( sort keys %GetParams ) {
-            $Body =~ s/<OTRS_$_>/$GetParams{$_}/gi;
+#rbo - T2016121190001552 - added KIX placeholders
+            $Body =~ s/<(KIX|OTRS)_$_>/$GetParams{$_}/gi;
         }
 
         # send account info

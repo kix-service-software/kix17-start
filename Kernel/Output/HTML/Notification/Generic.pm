@@ -51,7 +51,8 @@ sub Run {
     }
     elsif ( $Param{Config}->{File} ) {
 
-        $Param{Config}->{File} =~ s{<OTRS_CONFIG_(.+?)>}{$Kernel::OM->Get('Kernel::Config')->Get($1)}egx;
+#rbo - T2016121190001552 - added KIX placeholders
+        $Param{Config}->{File} =~ s{<KIX_CONFIG_(.+?)>}{$Kernel::OM->Get('Kernel::Config')->Get($1)}egx;
 
         return '' if !-e $Param{Config}->{File};
 

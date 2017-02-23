@@ -120,9 +120,10 @@ sub Run {
         }
     }
 
-    # replace OTRS_CONFIG tags
+#rbo - T2016121190001552 - added KIX placeholders
+    # replace KIX_CONFIG tags
     for my $Key ( keys %{ $Self->{Config} } ) {
-        $Self->{Config}->{$Key} =~ s{<OTRS_CONFIG_(.+?)>}{$Self->{Config}->Get($1)}egx;
+        $Self->{Config}->{$Key} =~ s{<(KIX|OTRS)_CONFIG_(.+?)>}{$Self->{Config}->Get($2)}egx;
     }
 
     # see, whether to-address is of interest regarding system-monitoring

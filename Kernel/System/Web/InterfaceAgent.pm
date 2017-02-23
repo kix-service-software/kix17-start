@@ -684,7 +684,8 @@ sub Run {
             my $Subject = $ConfigObject->Get('NotificationSubjectLostPasswordToken')
                 || 'ERROR: NotificationSubjectLostPasswordToken is missing!';
             for ( sort keys %UserData ) {
-                $Body =~ s/<OTRS_$_>/$UserData{$_}/gi;
+#rbo - T2016121190001552 - added KIX placeholders
+                $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
             }
             my $Sent = $EmailObject->Send(
                 To       => $UserData{UserEmail},
@@ -737,13 +738,14 @@ sub Run {
             PW        => $UserData{NewPW}
         );
 
+#rbo - T2016121190001552 - added KIX placeholders
         # send notify email
         my $Body = $ConfigObject->Get('NotificationBodyLostPassword')
-            || 'New Password is: <OTRS_NEWPW>';
+            || 'New Password is: <KIX_NEWPW>';
         my $Subject = $ConfigObject->Get('NotificationSubjectLostPassword')
             || 'New Password!';
         for ( sort keys %UserData ) {
-            $Body =~ s/<OTRS_$_>/$UserData{$_}/gi;
+            $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
         }
         my $Sent = $EmailObject->Send(
             To       => $UserData{UserEmail},

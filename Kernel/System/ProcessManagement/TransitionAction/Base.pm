@@ -80,7 +80,7 @@ sub ArticleLastArticle {
 sub ReplaceExtended {
 
     # Extension Placeholder
-    # additionel Placeholder OTRS_LAST_...
+    # additionel Placeholder KIX_LAST_...
     # PriorityID, To, ArticleType, AgeTimeUnix, Body, MimeType, InReplyTo, TicketNumber,
     # SenderTypeID, ContentCharset, ResponsibleID, ReplyTo, EscalationSolutionTime,
     # SLA, EscalationUpdateTime, CreateTimeUnix, EscalationResponseTime, UntilTime,
@@ -138,16 +138,18 @@ sub ReplaceExtended {
         %Queue = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet( ID => $Param{QueueID} );
     }
 
-    my $Tag = $Start . 'OTRS_LAST_';
+#rbo - T2016121190001552 - added KIX placeholders
+    my $Tag = $Start . '(KIX|OTRS)_LAST_';
     if ( $Param{Text} =~ /$Tag.+$End/i ) {
 
-        # get last article data and replace it with <OTRS_LAST_...
+        # get last article data and replace it with <KIX_LAST_...
         my %Article = $Self->ArticleLastArticle(
             TicketID => $Param{TicketID},
         );
 
-        # replace <OTRS_LAST_BODY> and <OTRS_LAST_COMMENT> tags
-        for my $Key (qw(OTRS_LAST_BODY OTRS_LAST_COMMENT)) {
+#rbo - T2016121190001552 - added KIX placeholders
+        # replace <KIX_LAST_BODY> and <KIX_LAST_COMMENT> tags
+        for my $Key (qw(KIX_LAST_BODY KIX_LAST_COMMENT OTRS_LAST_BODY OTRS_LAST_COMMENT)) {
             my $Tag2 = $Start . $Key;
             if ( $Param{Text} =~ /$Tag2$End(\n|\r|)/g ) {
                 my $Line       = 2500;
@@ -199,17 +201,18 @@ sub ReplaceExtended {
             }
         }
 
-        # replace <OTRS_LAST_SUBJECT[]> tags
-        my $Tag2 = $Start . 'OTRS_LAST_SUBJECT';
+#rbo - T2016121190001552 - added KIX placeholders
+        # replace <KIX_LAST_SUBJECT[]> tags
+        my $Tag2 = $Start . '(KIX|OTRS)_LAST_SUBJECT';
         if ( $Param{Text} =~ /$Tag2\[(.+?)\]$End/g ) {
-            my $SubjectChar = $1;
+            my $SubjectChar = $2;
 
             # my $Subject     = $TicketObject->TicketSubjectClean(
             my $Subject = $Kernel::OM->Get('Kernel::System::Ticket')->TicketSubjectClean(
                 TicketNumber => $Ticket{TicketNumber},
                 Subject      => $Article{Subject},
             );
-            $Subject =~ s/^(.{$SubjectChar}).*$/$1 [...]/;
+            $Subject =~ s/^(.{$SubjectChar}).*$/$2 [...]/;
             $Param{Text} =~ s/$Tag2\[.+?\]$End/$Subject/g;
         }
 
@@ -230,7 +233,7 @@ sub ReplaceExtended {
             $Param{Text} =~ s/$Tag$Key$End/$Article{$Key}/gi;
         }
 
-        # cleanup all not needed <OTRS_LAST_ tags
+        # cleanup all not needed <KIX_LAST_ tags
         $Param{Text} =~ s/$Tag.+?$End/-/gi;
 
     }

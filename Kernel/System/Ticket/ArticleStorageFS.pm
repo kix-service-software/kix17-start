@@ -47,11 +47,12 @@ sub ArticleStorageInit {
     }
     else {
         my $Error = $!;
+#rbo - T2016121190001552 - replaced OTRS wording
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'notice',
-            Message  => "Can't create $Path: $Error, try: \$OTRS_HOME/bin/otrs.SetPermissions.pl!",
+            Message  => "Can't create $Path: $Error!",
         );
-        die "Can't create $Path: $Error, try: \$OTRS_HOME/bin/otrs.SetPermissions.pl!";
+        die "Can't create $Path: $Error!";
     }
 
     # get config object
