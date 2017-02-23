@@ -390,58 +390,7 @@ for my $Test (@Tests) {
     }
 }
 
-# GenerateRegistrationInfo tests
-my %RegistrationInfo = $RegistrationObject->RegistrationDataGet();
-
-# execute function
-my ( $Content, $Filename ) = $SupportBundleGeneratorObject->GenerateRegistrationInfo();
-
-if (%RegistrationInfo) {
-    $Self->IsNot(
-        bytes::length( ${$Content} ) / ( 1024 * 1024 ),
-        0,
-        "GenerateRegistrationInfo() - The size of the RegistrationInfo.json is not 0",
-    );
-}
-
-# by encoding an empty string into JSON it will produce '{}' which is exactly 2 bytes
-else {
-    $Self->Is(
-        bytes::length( ${$Content} ),
-        2,
-        "GenerateRegistrationInfo() - The size of the  RegistrationInfo.json is 2",
-    );
-}
-$Self->Is(
-    $Filename,
-    'RegistrationInfo.json',
-    "GenerateRegistrationInfo() - Filename"
-);
-
-my $PerlStructureScalar = $JSONObject->Decode(
-    Data => ${$Content},
-);
-
-if (%RegistrationInfo) {
-    for my $Attribute (
-        qw(
-        FQDN OTRSVersion OSType OSVersion DatabaseVersion PerlVersion
-        Description SupportDataSending RegistrationKey APIKey State Type
-        )
-        )
-    {
-        $Self->IsNot(
-            $PerlStructureScalar->{$Attribute},
-            undef,
-            "GenerateRegistrationInfo() - $Attribute should not be undef",
-        );
-        $Self->IsNot(
-            $PerlStructureScalar->{$Attribute},
-            '',
-            "GenerateRegistrationInfo() - $Attribute should not be empty",
-        );
-    }
-}
+#rbo - T2016121190001552 - removed Registration tests
 
 # GenerateSupportData tests
 my %OriginalResult = $SupportDataCollectorObject->Collect(
