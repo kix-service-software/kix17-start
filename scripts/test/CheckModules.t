@@ -18,7 +18,8 @@ my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 my $Home = $ConfigObject->Get('Home');
 my $TmpSumString;
 
-if ( open( $TmpSumString, '-|', "$^X $Home/bin/otrs.CheckModules.pl --all NoColors" ) )
+#rbo - T2016121190001552 - renamed OTRS to KIX
+if ( open( $TmpSumString, '-|', "$^X $Home/bin/kix.CheckModules.pl --all NoColors" ) )
 {    ## no critic
 
     LINE:
