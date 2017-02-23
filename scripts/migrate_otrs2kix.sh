@@ -98,6 +98,10 @@ case $response in
         ;;
 esac
 
+# create temporary directory
+mkdir -p $TMP_PATH/kix_migration
+chmod 777 $TMP_PATH/kix_migration
+
 # create upgrade log
 touch $LOGFILE
 chmod 777 $LOGFILE
@@ -167,6 +171,12 @@ case $KIX_DBMS in
 
 esac
 
+# disable hard error handling
+set +e
+
+# upgrade database and cleanup obsolete packages
+sudo -u $APACHEUSER bash -c "/opt/kix/scripts/database/update/kix-upgrade-to-17.pl -f otrs >> $LOGFILE 2>&1"
+
 # migrate config
 echo migrating OTRS config
 for FILE in ZZZAuto.pm ZZZACL.pm ZZZProcessManagement.pm; do
@@ -174,12 +184,6 @@ for FILE in ZZZAuto.pm ZZZACL.pm ZZZProcessManagement.pm; do
         cp -vpf $OTRS_PATH/Kernel/Config/Files/$FILE /opt/kix/Kernel/Config/Files 2>&1 >> $LOGFILE
     fi
 done
-
-# disable hard error handling
-set +e
-
-# upgrade database and cleanup obsolete packages
-sudo -u $APACHEUSER bash -c "/opt/kix/scripts/database/update/kix-upgrade-to-17.pl >> $LOGFILE 2>&1"
 
 # clear user skins
 sudo -u $APACHEUSER bash -c "/opt/kix/bin/kix.Console.pl Admin::User::ClearPreferences --key UserSkin >> $LOGFILE 2>&1"

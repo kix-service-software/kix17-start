@@ -156,6 +156,9 @@ case $KIX17_DBMS in
 
 esac
 
+# disable hard error handling
+set +e
+
 # upgrade database and cleanup obsolete packages
 echo upgrading database
 sudo -u $APACHEUSER bash -c "/opt/kix/scripts/database/update/kix-upgrade-to-17.pl -f 16 >> $LOGFILE 2>&1"
@@ -167,9 +170,6 @@ for FILE in ZZZAuto.pm ZZZACL.pm ZZZProcessManagement.pm; do
         cp -vpf $KIX16_PATH/Kernel/Config/Files/$FILE /opt/kix/Kernel/Config/Files 2>&1 >> $LOGFILE
     fi
 done
-
-# disable hard error handling
-set +e
 
 # clear user skins
 echo removing skin setting from user preferences
@@ -190,7 +190,7 @@ echo "**************************************************************************
 echo "The migration has been finished. Cronjobs, the daemon and the webserver are still stopped."
 echo
 echo "Now copy your changes in $KIX16_PATH/Kernel/Config.pm to /opt/kix/Kernel/Config.pm."
-echo "Also please copy your old OTRS SystemID setting to the KIX Config.pm."
+echo "Also please copy your old SystemID setting to the KIX Config.pm."
 echo "(Do not change the other settings that are already contained in the KIX Config.pm!!!)"
 echo
 echo "Afterwards please re-install the remaining installed packages using the package manager"
