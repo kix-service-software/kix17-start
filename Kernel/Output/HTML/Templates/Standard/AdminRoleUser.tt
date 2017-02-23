@@ -13,7 +13,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -29,7 +29,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterUsers">[% Translate("Filter for Agents") | html %]</label></h2>
+                 <h2><span><label for="FilterUsers">[% Translate("Filter for Agents") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="FilterUsers" class="FilterBox" placeholder="[% Translate("Just start typing to filter...") | html %]" name="FilterUsers" value=""  title="[% Translate("Filter for Agents") | html %]"/>
@@ -37,7 +37,7 @@
         </div>
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterRoles">[% Translate("Filter for Roles") | html %]</label></h2>
+                 <h2><span><label for="FilterRoles">[% Translate("Filter for Roles") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="FilterRoles" class="FilterBox" placeholder="[% Translate("Just start typing to filter...") | html %]" name="FilterRoles" value=""  title="[% Translate("Filter for Roles") | html %]"/>
@@ -48,7 +48,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Overview") | html %]</h2>
+                 <h2><span>[% Translate("Overview") | html %]</span></h2>
             </div>
             <div class="Content LayoutGrid ColumnsWithSpacing">
                 <div class="Size1of2">
@@ -92,7 +92,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -104,9 +104,9 @@
         </div>
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>
+                <h2><span>
                     <label for="Filter">[% Translate("Filter") | html %]</label>
-                </h2>
+                </span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="Filter" class="FilterBox" placeholder="[% Translate("Just start typing to filter...") | html %]" name="Filter" value="" title="[% Translate("Filter") | html %]" />
@@ -117,7 +117,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>
+                <h2><span>
 [% RenderBlockStart("ChangeHeaderRole") %]
                     [% Translate("Change Role Relations for Agent") | html %]
 [% RenderBlockEnd("ChangeHeaderRole") %]
@@ -125,7 +125,7 @@
                     [% Translate("Change Agent Relations for Role") | html %]
 [% RenderBlockEnd("ChangeHeaderAgent") %]
                     <a href="[% Env("Baselink") %]Action=[% Data.ActionHome | uri %];Subaction=Change;ID=[% Data.ID | uri %]">[% Data.Name | html %]</a>
-                </h2>
+                </span></h2>
             </div>
             <div class="Content ">
                 <form action="[% Env("CGIHandle") %]" method="post" name="matrix">

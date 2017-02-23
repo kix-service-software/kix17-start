@@ -17,7 +17,7 @@
             <div class="WidgetAction Toggle">
                 <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
             </div>
-            <h2>[% Translate("Settings") | html %]</h2>
+            <h2 class="PaddingLeft15px"><span>[% Translate("Settings") | html %]</span></h2>
         </div>
         <div class="Content">
             <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data">
@@ -91,7 +91,7 @@ $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + '_toggle').
                 </div>
                 <div class="Clear"></div>
             </div>
-            <h2 title="[% Translate(Data.Description) | html %]">[% Translate(Data.Title) | html %]</h2>
+            <h2 title="[% Translate(Data.Description) | html %]"><span>[% Translate(Data.Title) | html %]</span></h2>
         </div>
         <div class="Content">
             <div id="Dashboard[% Data.Name | html %]-setting" class="Hidden">
@@ -194,7 +194,7 @@ Core.UI.RegisterToggleTwoContainer($('#Dashboard' + Core.App.EscapeSelector('[% 
                 </div>
                 <div class="Clear"></div>
             </div>
-            <h2 title="[% Translate(Data.Description) | html %]">[% Translate(Data.Title) | html %]</h2>
+            <h2 title="[% Translate(Data.Description) | html %]"><span>[% Translate(Data.Title) | html %]</span></h2>
         </div>
 
         <div class="Content">

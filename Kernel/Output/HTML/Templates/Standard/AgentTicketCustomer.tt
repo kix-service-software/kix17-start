@@ -31,7 +31,7 @@
 # KIX4OTRS-capeIT
 #            <div id="CustomerInfo" class="SidebarColumn WidgetSimple">
 #                <div class="Header">
-#                    <h2>[% Translate("Customer Data") | html %]: [% Data.CustomerID | html %]</h2>
+#                     <h2><span>[% Translate("Customer Data") | html %]: [% Data.CustomerID | html %]</span></h2>
 #                </div>
 #                <div class="Content">
 #                    [% Data.Table %]

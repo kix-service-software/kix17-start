@@ -33,7 +33,7 @@
 [% RenderBlockStart("QuickSearch") %]
                 <div class="WidgetSimple">
                     <div class="Header">
-                        <h3>[% Translate("Search") | html %]</h3>
+                         <h2><span>[% Translate("Search") | html %]</span></h2>
                         <div class="Clear"></div>
                     </div>
                     <div class="Content">
@@ -63,7 +63,7 @@
                 <div class="WidgetSimple">
 
                     <div class="Header">
-                        <h3>[% Translate(Data.Header) | html %]</h3>
+                         <h2><span>[% Translate(Data.Header) | html %]</span></h2>
 [% RenderBlockStart("InfoBoxFAQMiniListNewsRSS") %]
                         <a target="_blank" href="[% Env("Baselink") %]Action=PublicFAQRSS;Type=[% Data.Type | uri %]" title="[% Translate(Data.Title) | html %]" class="RSSIcon AsBlock"><i class="fa fa-rss"></i></a>
 [% RenderBlockEnd("InfoBoxFAQMiniListNewsRSS") %]
@@ -99,7 +99,7 @@
                 <div class="WidgetSimple">
 [% RenderBlockStart("OverviewResult") %]
                     <div class="Header">
-                        <h3>[% Translate("Subcategories") | html %]</h3>
+                         <h2><span>[% Translate("Subcategories") | html %]</span></h2>
                         <div class="Clear"></div>
                     </div>
 
@@ -142,7 +142,7 @@
                 <div class="WidgetSimple">
 
                     <div class="Header">
-                        <h3>[% Translate("FAQ Articles") | html %]</h3>
+                         <h2><span>[% Translate("FAQ Articles") | html %]</span></h2>
 [% RenderBlockStart("Pagination") %]
                         <div class="Pagination">
                             <strong>[% Data.Result | html %]</strong> [% Translate("of") | html %] <strong>[% Data.TotalHits | html %]</strong> - [% Translate("Page") | html %]: [% Data.SiteNavBar %]

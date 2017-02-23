@@ -13,7 +13,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterClasses">[% Translate("Filter for Classes") | html %]</label></h2>
+                 <h2><span><label for="FilterClasses">[% Translate("Filter for Classes") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="FilterClasses" class="FilterBox" name="FilterClasses" value="" title="[% Translate("Filter for Classes") | html %]" placeholder="Just start typing to filter..." />
@@ -22,7 +22,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -36,7 +36,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("List") | html %]</h2>
+                 <h2><span>[% Translate("List") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable" id="Classes">

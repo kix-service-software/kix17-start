@@ -43,7 +43,7 @@
         </div>
         <div class="ContentColumn OverflowVisible">
             <div class="ControlRow">
-                <h2>[% Data.ArticleCount | html %] [% Translate("Article(s)") | html %]</h2>
+                 <h2><span>[% Data.ArticleCount | html %] [% Translate("Article(s)") | html %]</span></h2>
                 <div class="AdditionalInformation">
                     [% Translate("Age") | html %]: [% Data.Age %] &ndash; [% Translate("Created") | html %]: [% Data.Created | Localize("TimeShort") %]
 [% RenderBlockStart("CreatedBy") %]

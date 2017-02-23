@@ -15,7 +15,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -28,7 +28,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Create Administrative Message") | html %]</h2>
+                 <h2><span>[% Translate("Create Administrative Message") | html %]</span></h2>
             </div>
             <div class="Content">
 

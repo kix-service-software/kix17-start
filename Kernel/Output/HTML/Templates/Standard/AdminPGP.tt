@@ -13,7 +13,7 @@
 [% RenderBlockStart("Notice") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Notice") | html %]</h2>
+                 <h2><span>[% Translate("Notice") | html %]</span></h2>
             </div>
             <div class="Content ActionList">
                 <form action="[% Env("CGIHandle") %]" method="post">
@@ -53,7 +53,7 @@
 [% RenderBlockEnd("Notice") %]
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
-            <div class="Header"><h2>[% Translate("Actions") | html %]</h2></div>
+            <div class="Header"> <h2><span>[% Translate("Actions") | html %]</span></h2></div>
             <div class="Content">
                 <ul class="ActionList">
 [% RenderBlockStart("ActionOverview") %]
@@ -88,7 +88,7 @@
 [% RenderBlockStart("Hint") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -109,7 +109,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Result") | html %]</h2>
+                 <h2><span>[% Translate("Result") | html %]</span></h2>
             </div>
             <div class="Content">
 
@@ -168,7 +168,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Add PGP Key") | html %]</h2>
+                 <h2><span>[% Translate("Add PGP Key") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">

@@ -14,7 +14,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -39,7 +39,7 @@
 [% RenderBlockStart("OverviewResult") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("List") | html %]</h2>
+                 <h2><span>[% Translate("List") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable">
@@ -86,10 +86,10 @@
             <div class="Header">
 
 [% RenderBlockStart("HeaderAdd") %]
-                <h2>[% Translate("Add Auto Response") | html %]</h2>
+                 <h2><span>[% Translate("Add Auto Response") | html %]</span></h2>
 [% RenderBlockEnd("HeaderAdd") %]
 [% RenderBlockStart("HeaderEdit") %]
-                <h2>[% Translate("Edit Auto Response") | html %]</h2>
+                 <h2><span>[% Translate("Edit Auto Response") | html %]</span></h2>
 [% RenderBlockEnd("HeaderEdit") %]
 
             </div>
@@ -185,7 +185,7 @@
 
         <div class="WidgetSimple SpacingTop">
             <div class="Header">
-                <h2>[% Translate("Reference") | html %]</h2>
+                 <h2><span>[% Translate("Reference") | html %]</span></h2>
             </div>
             <div class="Content">
 

@@ -32,14 +32,14 @@
     </form>
     <div id="CustomerInfo" class="Column ColumnRight WidgetSimple">
         <div class="Header">
-            <h2>[% Translate("Contact information") | html %]</h2>
+             <h2><span>[% Translate("Contact information") | html %]</span></h2>
         </div>
         <div class="Content">
             [% Data.CustomerTable %]
         </div>
 [% RenderBlockStart("CustomerDetails") %]
         <div class="WidgetPopup CustomerShowDetails" id="WidgetPopup[% Data.UserLogin | html %]">
-            <div class="Header"><h2>[% Translate("Contact information") | html %]</h2></div>
+            <div class="Header"> <h2><span>[% Translate("Contact information") | html %]</span></h2></div>
             <div class="Content">
                 <div class="Spacing" style="width:500px">
                     [% Data.CustomerDetailsTable %]

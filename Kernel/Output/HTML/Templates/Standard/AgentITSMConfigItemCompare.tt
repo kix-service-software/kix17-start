@@ -36,9 +36,9 @@
         <input type="hidden" name="ConfigItemID" value="[% Data.ConfigItemID | html %]"/>
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>
+                <h2><span>
                     [% Translate("Select two versions to compare") | html %]
-                </h2>
+                </span></h2>
             </div>
             <div class="Content">
 
@@ -115,9 +115,9 @@
 [% RenderBlockStart("ConfigItemCompare") %]
         <div class="WidgetSimple" style="margin-top:20px;">
             <div class="Header">
-                <h2>
+                <h2><span>
                     [% Translate("Compare of") | html %] ConfigItem:[% Data.Number | html %] [% Translate("Version") | html %] [% Data.Version1 | html %] [% Translate("with version") | html %] [% Data.Version2 | html %]
-                </h2>
+                </span></h2>
             </div>
             <div class="Content">
                 <div style="float:left;width:450px">

@@ -16,7 +16,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -58,7 +58,7 @@
 [% RenderBlockStart("Filter") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterServices">[% Translate("Filter for Services") | html %]</label></h2>
+                 <h2><span><label for="FilterServices">[% Translate("Filter for Services") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <ul>
@@ -78,7 +78,7 @@
         <div class="WidgetSimple">
 [% RenderBlockStart("Result") %]
             <div class="Header">
-                <h2>[% Translate("Search Results") | html %]:</h2>
+                <h2><span>[% Translate("Search Results") | html %]:</span></h2>
             </div>
             <div class="Content LayoutGrid ColumnsWithSpacing">
                 <div class="Size1of2">
@@ -118,7 +118,7 @@
 
 [% RenderBlockStart("AllocateItem") %]
             <div class="Header">
-                <h2>
+                <h2><span>
 [% RenderBlockStart("AllocateItemHeaderService") %]
                     [% Translate("Allocate Services to Customer") | html %]
 [% RenderBlockEnd("AllocateItemHeaderService") %]
@@ -126,7 +126,7 @@
                     [% Translate("Allocate Customers to Service") | html %]
 [% RenderBlockEnd("AllocateItemHeaderCustomer") %]
                     <a href="[% Env("Baselink") %]Action=[% Data.ActionHome | uri %];Subaction=[% Data.SubactionHeader | uri %];[% Data.IDHeaderStrg | uri %]=[% Data.ID | uri %]">[% Data.Name | html %]</a>
-                </h2>
+                </span></h2>
             </div>
             <div class="Content LayoutGrid ColumnsWithSpacing">
                 <form action="[% Env("CGIHandle") %]" method="post" name="matrix">

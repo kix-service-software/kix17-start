@@ -9,7 +9,7 @@
 <!-- start form -->
 <div id="MainBox" class="Login">
     <div class="Content">
-        <h2>[% Translate("Info") | html %]</h2>
+         <h2><span>[% Translate("Info") | html %]</span></h2>
         <p>
             Dear Customer,<br/>
             thank you for using our services.

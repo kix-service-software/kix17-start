@@ -24,7 +24,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -39,7 +39,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -52,9 +52,9 @@
 
         <div class="WidgetSimple WebserviceListWidget">
             <div class="Header">
-                <h2>
+                <h2><span>
                     [% Translate("Configuration History List") | html %]
-                </h2>
+                </span></h2>
             </div>
             <div class="Content">
                 <div class="ColumnsWithSpacing">
@@ -83,7 +83,7 @@
 
         <div class="WidgetSimple Hidden" id="WebserviceHistoryDetails">
             <div class="ControlRow"></div>
-            <div class="LightRow Bottom">
+            <div class="Bottom">
                 <ul class="Actions">
                     <li id="ExportButton">
                         <span>[% Translate("Export web service configuration") | html %]</span>

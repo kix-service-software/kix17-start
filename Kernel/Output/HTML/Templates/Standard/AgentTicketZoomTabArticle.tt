@@ -278,13 +278,13 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                 <i class="fa fa-caret-down"></i>
             </a>
         </div>
-        <h2>
+        <h2 class="PaddingLeft15px"><span>
         [% IF Data.ZoomTimeline %]
             [% Translate("Ticket Timeline View") | html %]
         [% ELSE %]
             [% Translate("Article Overview") | html %] - [% Data.ArticleCount | html %] [% Translate("Article(s)") | html %]
         [% END %]
-        </h2>
+        </span></h2>
         <div class="AdditionalInformation ControlRow">
 
 [% RenderBlockStart("ArticlePages") %]
@@ -671,7 +671,7 @@ Core.Agent.TicketZoom.TimelineView.Init(TicketID, ListObjects, ArticleID);
             <div class="WidgetAction Toggle">
                 <a href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %]" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
             </div>
-            <h2>[% Translate("Article") | html %] #[% Data.Count | html %] &ndash; [% Data.Subject | html %]</h2>
+            <h2 class="PaddingLeft15px"><span>[% Translate("Article") | html %] #[% Data.Count | html %] &ndash; [% Data.Subject | html %]</span></h2>
             <div class="AdditionalInformation SpacingLoader">
                 [% Translate("Created") | html %]: [% Data.Created | Localize("TimeShort") %]
 [% RenderBlockStart("ArticleCreatedBy") %]
@@ -836,7 +836,7 @@ function CheckIFrameHeight(IFrameID) {
             [% IF Data.ArticleMetaData && Data.ArticleMetaData.size() %]
                 <div class="ArticleMeta">
                 [% FOREACH Entry IN Data.ArticleMetaData %]
-                    <h2>[% Entry.Name | html %]</h2>
+                     <h2><span>[% Entry.Name | html %]</span></h2>
                     <ul>
                     [% FOREACH Item IN Entry.Matches %]
                         <li><a href="[% Item.URL | html %]"[% IF Item.URLPreview %] data-trigger="floater" data-floater-url="[% Item.URLPreview | html %]"[% END %] target="[% Item.Target | html %]">[% Item.Text | truncate(100) | html %]</a></li>

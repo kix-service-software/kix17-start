@@ -22,7 +22,7 @@
 [% RenderBlockEnd("Pagination") %]
         <div class="Clear"></div>
         <div class="SearchTerms">
-            <h2>[% Translate("Search Results for") | html %]:</h2>
+             <h2><span>[% Translate("Search Results for") | html %]:</span></h2>
 [% RenderBlockStart("SearchTerms") %]
             <span>
                 [% Data.Attribute | html %]: [% Data.Value | html %]

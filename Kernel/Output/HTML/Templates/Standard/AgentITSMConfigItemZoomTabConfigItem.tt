@@ -98,12 +98,11 @@
 [% RenderBlockEnd("Tree") %]
             </div>
             <div id="ITSMItems">
-                <div class="WidgetBox SpacingTop Expanded">
-                    <div class="LightRow Header">
-                        <div class="WidgetAction Toggle"><a href="#" title="[% Translate("Show or hide the content.") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a></div>
-                        <h2>[% Translate("Configuration Item Version Details") | html %]</h2>
+                <div class="WidgetSimple SpacingTop Expanded">
+                    <div class="Header">
+                         <h2><span>[% Translate("Configuration Item Version Details") | html %]</span></h2>
                     </div>
-                    <div class="WithPadding Content NoDoubleBorders">
+                    <div class="Content">
                         <table class="DataTable">
                             <thead>
                                 <tr>

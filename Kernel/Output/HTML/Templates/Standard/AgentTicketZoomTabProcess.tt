@@ -79,28 +79,28 @@ $('.ShowFieldInfoOverlay').bind('click', function() {
             <div class="WidgetSimple Expanded" id="DynamicFieldsWidget">
                 <div class="Header">
                     <div class="WidgetAction Toggle"><a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a></div>
-                    <h2>[% Translate(Data.WidgetTitle) | html %]</h2>
+                    <h2><span>[% Translate(Data.WidgetTitle) | html %]</span></h2>
                 </div>
-[% RenderBlockStart("NextActivityDialogs") %]
-                <div class="LightRow Bottom">
-                    <ul class="Actions">
-                        <li><strong>[% Translate(Data.ActivityName) | html %]:</strong></li>
-[% RenderBlockStart("ActivityDialog") %]
-                        <li>
-# KIX4OTRS-capeIT
-#                            <a title="[% Data.Name | html %]" class="AsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=AgentTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | html %];ProcessEntityID=[% Data.ProcessEntityID | html %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | html %]">[% Translate(Data.Name) | html %]</a>
-                            <a title="[% Data.Name | html %]" class="TabAsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=AgentTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | html %];ProcessEntityID=[% Data.ProcessEntityID | html %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | html %]">[% Translate(Data.Name) | html %]</a>
-# EO KIX4OTRS-capeIT
-                        </li>
-[% RenderBlockEnd("ActivityDialog") %]
-                    </ul>
-[% RenderBlockStart("NoActivityDialogs") %]
-                    <span class="ActionMessage">[% Translate("There are no dialogs available at this point in the process.") | html %]</span>
-[% RenderBlockEnd("NoActivityDialogs") %]
-                    <div class="Clear"></div>
-                </div>
-[% RenderBlockEnd("NextActivityDialogs") %]
                 <div class="Content ProcessInfo">
+[% RenderBlockStart("NextActivityDialogs") %]
+                    <div class="Bottom">
+                        <ul class="Actions">
+                            <li><strong>[% Translate(Data.ActivityName) | html %]:</strong></li>
+[% RenderBlockStart("ActivityDialog") %]
+                            <li>
+# KIX4OTRS-capeIT
+#                               <a title="[% Data.Name | html %]" class="AsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=AgentTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | html %];ProcessEntityID=[% Data.ProcessEntityID | html %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | html %]">[% Translate(Data.Name) | html %]</a>
+                                <a title="[% Data.Name | html %]" class="TabAsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=AgentTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | html %];ProcessEntityID=[% Data.ProcessEntityID | html %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | html %]">[% Translate(Data.Name) | html %]</a>
+# EO KIX4OTRS-capeIT
+                            </li>
+[% RenderBlockEnd("ActivityDialog") %]
+                        </ul>
+[% RenderBlockStart("NoActivityDialogs") %]
+                        <span class="ActionMessage">[% Translate("There are no dialogs available at this point in the process.") | html %]</span>
+[% RenderBlockEnd("NoActivityDialogs") %]
+                        <div class="Clear"></div>
+                    </div>
+[% RenderBlockEnd("NextActivityDialogs") %]
                     <div class="ProcessInformation">
                         <fieldset>
 [% RenderBlockStart("ProcessWidgetDynamicFieldGroups") %]

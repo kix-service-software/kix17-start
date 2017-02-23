@@ -16,7 +16,7 @@
 
 [% RenderBlockStart("Services") %]
     <div class="Header">
-        <h2>[% Data.Name | html %]: [% Translate("Linked Services") | html %]</h2>
+         <h2><span>[% Data.Name | html %]: [% Translate("Linked Services") | html %]</span></h2>
     </div>
     <div class="Content">
         <table class="DataTable">
@@ -55,7 +55,7 @@
 [% RenderBlockStart("ObjectSpecificSelections") %]
 <div class="WidgetSimple TableCell">
     <div class="Header">
-        <h2>[% Translate(Data.Title) | html %]</h2>
+         <h2><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
     <div class="Content">
         [% Data.SelectionString %]

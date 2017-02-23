@@ -12,7 +12,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -32,7 +32,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Edit System Maintenance information") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Edit System Maintenance information") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
@@ -113,7 +113,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Manage Sessions") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Manage Sessions") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike SpacingTop">

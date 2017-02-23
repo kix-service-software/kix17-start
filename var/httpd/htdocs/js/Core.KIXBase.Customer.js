@@ -117,7 +117,6 @@ Core.KIXBase.Customer = (function(TargetNS) {
         });
 
         $('#ZoomSidebar').remove();
-        $('.ErrorScreen .MessageBox').remove();
     }
 
     /**

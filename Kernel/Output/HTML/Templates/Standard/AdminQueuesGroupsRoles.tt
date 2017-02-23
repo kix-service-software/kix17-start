@@ -20,7 +20,7 @@
 [% RenderBlockStart("Show") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Show") | html %]</h2>
+                 <h2><span>[% Translate("Show") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="ShowForm" action="[% Env("CGIHandle") %]" method="get">
@@ -35,7 +35,7 @@
 [% RenderBlockStart("Download") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Download") | html %]</h2>
+                 <h2><span>[% Translate("Download") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="DownloadForm" action="[% Env("CGIHandle") %]" method="get">
@@ -53,7 +53,7 @@
 [% RenderBlockStart("Upload") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Upload") | html %]</h2>
+                 <h2><span>[% Translate("Upload") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="UploadForm" action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" >
@@ -74,7 +74,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Current Queues-Groups-Roles Concept") | html %]</h2>
+                 <h2><span>[% Translate("Current Queues-Groups-Roles Concept") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable">

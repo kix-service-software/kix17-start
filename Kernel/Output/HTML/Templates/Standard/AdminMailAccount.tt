@@ -14,7 +14,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -34,7 +34,7 @@
 [% RenderBlockEnd("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -51,7 +51,7 @@
         <div class="WidgetSimple">
 [% RenderBlockStart("OverviewResult") %]
             <div class="Header">
-                <h2>[% Translate("List") | html %]</h2>
+                 <h2><span>[% Translate("List") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable">
@@ -100,7 +100,7 @@
 
 [% RenderBlockStart("OverviewAdd") %]
             <div class="Header">
-                <h2>[% Translate("Add Mail Account") | html %]</h2>
+                 <h2><span>[% Translate("Add Mail Account") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" class="Validate PreventMultipleSubmits">
@@ -216,7 +216,7 @@
 
 [% RenderBlockStart("OverviewUpdate") %]
             <div class="Header">
-                <h2>[% Translate("Edit Mail Account") | html %]</h2>
+                 <h2><span>[% Translate("Edit Mail Account") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" class="Validate PreventMultipleSubmits">

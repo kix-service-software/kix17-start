@@ -120,7 +120,7 @@ function CheckIFrameHeight(IFrameID) {
 //]]></script>
 [% END %]
 [% RenderBlockStart("FAQContentPlain") %]
-                <div class="ArticleFAQContent">
+                <div class="Content">
                     <div class="message">
                         [% Data.Content %]
                     </div>

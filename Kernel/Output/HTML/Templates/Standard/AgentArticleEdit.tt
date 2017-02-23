@@ -50,7 +50,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Edit Article") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Edit Article") | html %]</span></h2>
                 </div>
                 <div class="Content">
 
@@ -191,7 +191,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate(Data.WidgetTitle) | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate(Data.WidgetTitle) | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabel">
@@ -257,7 +257,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Delete Article") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Delete Article") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabel DeleteOptions">

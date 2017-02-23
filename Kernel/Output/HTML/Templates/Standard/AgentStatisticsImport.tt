@@ -13,7 +13,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -28,7 +28,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Import Statistic Configuration") | html %]</h2>
+                 <h2><span>[% Translate("Import Statistic Configuration") | html %]</span></h2>
             </div>
             <div class="Content">
 

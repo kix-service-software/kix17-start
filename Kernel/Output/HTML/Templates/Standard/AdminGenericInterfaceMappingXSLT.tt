@@ -27,7 +27,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -44,7 +44,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Mapping XML") | html %]</h2>
+                 <h2><span>[% Translate("Mapping XML") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" class="Validate PreventMultipleSubmits">

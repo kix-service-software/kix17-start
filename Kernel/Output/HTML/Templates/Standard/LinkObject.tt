@@ -121,7 +121,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
                 </i>
             </a>
         </div>
-        <h2>[% Translate(Data.BlockDescription) | html %]: [% Translate(Data.Blockname) | html %]</h2>
+        <h2 class="PaddingLeft15px"><span>[% Translate(Data.BlockDescription) | html %]: [% Translate(Data.Blockname) | html %]</span></h2>
     </div>
 [% RenderBlockStart("TableComplexBlockActionRow") %]
     <div class="LightRow Bottom">

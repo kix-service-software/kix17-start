@@ -20,7 +20,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("SLA Information") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("SLA Information") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabelSmall Tight">
@@ -64,10 +64,10 @@
                 </ul>
             </div>
 
-            <div class="WidgetBox SpacingTop Expanded">
-                <div class="LightRow Header">
+            <div class="WidgetSimple SpacingTop Expanded">
+                <div class="Header">
                     <div class="WidgetAction Toggle"><a href="#" title="[% Translate("Show or hide the content.") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a></div>
-                    <h2>[% Translate("SLA") | html %]: [% Data.Name | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("SLA") | html %]: [% Data.Name | html %]</span></h2>
                 </div>
                 <div class="Content AutoHeight">
                     <fieldset class="TableLike FixedLabel">
@@ -123,7 +123,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Associated Services") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Associated Services") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <table class="DataTable">

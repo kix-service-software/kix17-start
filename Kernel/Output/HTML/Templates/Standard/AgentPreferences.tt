@@ -28,7 +28,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate(Data.Header) | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate(Data.Header) | html %]</span></h2>
                 </div>
                 <div class="Content">
 
@@ -39,7 +39,7 @@
                         <input type="hidden" name="Group" value="[% Data.Group | html %]"/>
 
                         <div class="WidgetSimple">
-                            <div class="Header"><h2>[% Translate(Data.Label) | html %]</h2></div>
+                            <div class="Header"> <h2><span>[% Translate(Data.Label) | html %]</span></h2></div>
                             <div class="Content">
                             [% IF Data.Desc %]
                                 <p class="FieldExplanation">
@@ -92,11 +92,6 @@
                                         [% Data.Option %]
                                     </div>
                                     <div class="Clear"></div>
-                                [% IF Data.Label == 'Language' %]
-                                    <div class="FieldExplanation Language Center">
-                                        [% Translate("Did you know? You can help translating OTRS at %s.", '<a href="https://www.transifex.com/otrs/OTRS/" target="_blank">Transifex</a>') %]
-                                    </div>
-                                [% END %]
 [% RenderBlockStart("OptionSingleBlock") %]
                                     <div class="Field ButtonOnly">
                                         <button type="submit" id="[% Data.Name | html %]Update" value="[% Translate("Update") | html %]" class="CallForAction"><span>[% Translate("Update") | html %]</span></button>

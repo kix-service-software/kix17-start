@@ -13,7 +13,7 @@
     <div class="SidebarColumn">
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
-            <div class="Header"><h2>[% Translate("Actions") | html %]</h2></div>
+            <div class="Header"> <h2><span>[% Translate("Actions") | html %]</span></h2></div>
             <div class="Content">
                 <ul class="ActionList">
 [% RenderBlockStart("ActionOverview") %]
@@ -32,7 +32,7 @@
 [% RenderBlockStart("Filter") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="Filter">[% Translate("Filter") | html %]</label></h2>
+                 <h2><span><label for="Filter">[% Translate("Filter") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="Filter" class="FilterBox" placeholder="[% Translate("Just start typing to filter...") | html %]" name="Filter" value="" title="[% Translate("Filter") | html %]" />
@@ -43,7 +43,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
 
@@ -62,7 +62,7 @@
 [% RenderBlockStart("OverviewResult") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("List") | html %]</h2>
+                 <h2><span>[% Translate("List") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable" id="Templates">
@@ -139,10 +139,10 @@
         <div class="WidgetSimple">
             <div class="Header">
 [% RenderBlockStart("HeaderAdd") %]
-                <h2>[% Translate("Add Template") | html %]</h2>
+                 <h2><span>[% Translate("Add Template") | html %]</span></h2>
 [% RenderBlockEnd("HeaderAdd") %]
 [% RenderBlockStart("HeaderEdit") %]
-                <h2>[% Translate("Edit Template") | html %]</h2>
+                 <h2><span>[% Translate("Edit Template") | html %]</span></h2>
 [% RenderBlockEnd("HeaderEdit") %]
             </div>
             <div class="Content">
@@ -220,7 +220,7 @@
         </div>
         <div class="WidgetSimple SpacingTop">
             <div class="Header">
-                <h2>[% Translate("Reference") | html %]</h2>
+                 <h2><span>[% Translate("Reference") | html %]</span></h2>
             </div>
             <div class="Content">
 

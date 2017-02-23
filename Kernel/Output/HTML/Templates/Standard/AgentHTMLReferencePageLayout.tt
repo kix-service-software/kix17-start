@@ -53,7 +53,7 @@
         <div class="SidebarColumn">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>Actions</h2>
+                    <h2><span>Actions</span></h2>
                 </div>
                 <div class="Content">
                     <ul class="ActionList">
@@ -67,7 +67,7 @@
         <div class="ContentColumn">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>List</h2>
+                    <h2><span>List</span></h2>
                 </div>
                 <div class="Content">
                     <table class="DataTable">
@@ -137,7 +137,7 @@
         <div class="Size1of3">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>Preference1</h2>
+                    <h2><span>Preference1</span></h2>
                 </div>
                 <div class="Content">
                     <p>
@@ -155,7 +155,7 @@
         <div class="Size1of3">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>Preference2-0</h2>
+                    <h2><span>Preference2-0</span></h2>
                 </div>
                 <div class="Content">
                     Form Content
@@ -163,7 +163,7 @@
             </div>
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>Preference2-1</h2>
+                    <h2><span>Preference2-1</span></h2>
                 </div>
                 <div class="Content">
                     Form Content
@@ -173,7 +173,7 @@
         <div class="Size1of3">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>Preference3</h2>
+                    <h2><span>Preference3</span></h2>
                 </div>
                 <div class="Content">
                     Form Content

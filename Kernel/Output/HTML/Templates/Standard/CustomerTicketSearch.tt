@@ -13,7 +13,7 @@
             <input type="hidden" name="Action" value="[% Env("Action") %]"/>
             <input type="hidden" name="Subaction" value="LoadProfile"/>
             <fieldset>
-                <h2>[% Translate("Profile") | html %]</h2>
+                 <h2><span>[% Translate("Profile") | html %]</span></h2>
                 <div>
                     <label for="Profile">[% Translate("Search template") | html %]</label>
                     [% Data.ProfilesStrg %]
@@ -30,7 +30,7 @@
             <input type="hidden" name="Action" value="[% Env("Action") %]"/>
             <input type="hidden" name="Subaction" value="Search"/>
             <fieldset>
-                <h2>[% Config("Ticket::Hook") %]</h2>
+                 <h2><span>[% Config("Ticket::Hook") %]</span></h2>
                 <div>
                     <label for="TicketNumber">[% Config("Ticket::Hook") %]</label>
                     <input title="[% Config("Ticket::Hook") | html %]" type="text" name="TicketNumber"id="TicketNumber" size="30" value="[% Data.TicketNumber | html %]"/>
@@ -42,7 +42,7 @@
                 </div>
             </fieldset>
             <fieldset>
-                <h2>[% Translate("Fulltext search in tickets (e. g. \"John*n\" or \"Will*\")") | html %]</h2>
+                 <h2><span>[% Translate("Fulltext search in tickets (e. g. \"John*n\" or \"Will*\")") | html %]</span></h2>
                 <div>
                     <label for="From">[% Translate("From") | html %]</label>
                     <input title="[% Translate("Sender") | html %]" type="text" id="From" name="From" value="[% Data.From | html %]" size="20" class="[% Data.FromInvalid | html %]" />
@@ -89,7 +89,7 @@
 
 [% RenderBlockStart("Attachment") %]
             <fieldset>
-                <h2>[% Translate("Attachments") | html %]</h2>
+                 <h2><span>[% Translate("Attachments") | html %]</span></h2>
                 <div>
                     <label for="AttachmentName">[% Translate("Attachment Name") | html %]:</label>
                     <input title="[% Translate("Attachment Name") | html %]" type="text" name="AttachmentName" value="[% Data.AttachmentName | html %]" size="20" />
@@ -102,7 +102,7 @@
             <fieldset class="Columns">
 [% IF Config('Ticket::Service') %]
                 <div class="Column">
-                    <h2><label for="ServiceIDs">[% Translate("Services") | html %]:</label></h2>
+                     <h2><span><label for="ServiceIDs">[% Translate("Services") | html %]:</label></span></h2>
                     <div>
                         [% Data.ServicesStrg %]
                     </div>
@@ -110,7 +110,7 @@
 [% END %]
 [% IF Config('Ticket::Type') %]
                 <div class="Column">
-                    <h2><label for="TypeIDs">[% Translate("Types") | html %]:</label></h2>
+                     <h2><span><label for="TypeIDs">[% Translate("Types") | html %]:</label></span></h2>
                     <div>
                         [% Data.TypesStrg %]
                     </div>
@@ -122,13 +122,13 @@
 
             <fieldset class="Columns">
                 <div class="Column">
-                    <h2><label for="PriorityIDs">[% Translate("Priority") | html %]:</label></h2>
+                     <h2><span><label for="PriorityIDs">[% Translate("Priority") | html %]:</label></span></h2>
                     <div>
                         [% Data.PrioritiesStrg %]
                     </div>
                 </div>
                 <div class="Column">
-                    <h2><label for="StateIDs">[% Translate("State") | html %]:</label></h2>
+                     <h2><span><label for="StateIDs">[% Translate("State") | html %]:</label></span></h2>
                     <div>
                         [% Data.StatesStrg %]
                     </div>
@@ -136,7 +136,7 @@
                 <div class="Clear"></div>
             </fieldset>
             <fieldset class="TimeSearchType">
-                <h2>[% Translate("Time restrictions") | html %]</h2>
+                 <h2><span>[% Translate("Time restrictions") | html %]</span></h2>
                 <div>
                     <input title="[% Translate("No time settings") | html %]" type="radio"  id="NoTimeSet" name="TimeSearchType" value="" [% Data.item("TimeSearchType::None") %] />
                     <label for="NoTimeSet">[% Translate("All") | html %]</label>
@@ -154,7 +154,7 @@
             </fieldset>
 [% RenderBlockStart("SearchInArchive") %]
             <fieldset>
-                <h2>[% Translate("Ticket archive system") | html %]</h2>
+                 <h2><span>[% Translate("Ticket archive system") | html %]</span></h2>
                 <div>
                     <label for="SearchInArchive">[% Translate("Archive Search") | html %]:</label>
                     [% Data.SearchInArchiveStrg %]
@@ -162,7 +162,7 @@
             </fieldset>
 [% RenderBlockEnd("SearchInArchive") %]
             <fieldset>
-                <h2>[% Translate("Save search as template?") | html %]</h2>
+                 <h2><span>[% Translate("Save search as template?") | html %]</span></h2>
                 <div>
                     <label for="SaveProfile">[% Translate("Save as Template?") | html %]</label>
                     <input title="[% Translate("Save as Template") | html %]" type="checkbox" id="SaveProfile" name="SaveProfile" />

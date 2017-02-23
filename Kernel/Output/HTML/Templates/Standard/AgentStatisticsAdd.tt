@@ -12,7 +12,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -31,7 +31,7 @@
 
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Add New Statistic") | html %]</h2>
+                     <h2><span>[% Translate("Add New Statistic") | html %]</span></h2>
                 </div>
                 <div class="Content BigButtonsContainer">
                     <div class="BigButtons">
@@ -56,7 +56,7 @@
 
             <div class="WidgetSimple" id="GeneralSpecifications" [% IF !Data.ShowFormInitially %]style="display: none;"[% END %]>
                 <div class="Header">
-                    <h2>[% Translate("General Specification") | html %]</h2>
+                     <h2><span>[% Translate("General Specification") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     [% IF Data.GeneralSpecificationsWidget %][% Data.GeneralSpecificationsWidget %][% END %]
@@ -65,7 +65,7 @@
 
             <div class="WidgetSimple" id="SaveWidget" [% IF !Data.ShowFormInitially %]style="display: none;"[% END %]>
                 <div class="Header">
-                    <h2>[% Translate("Create Statistic") | html %]</h2>
+                     <h2><span>[% Translate("Create Statistic") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">

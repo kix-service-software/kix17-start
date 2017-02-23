@@ -11,7 +11,7 @@
     <div class="W33pc CenterBox SpacingBottomLarge">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Warning") | html %]</h2>
+                 <h2><span>[% Translate("Warning") | html %]</span></h2>
             </div>
             <div class="Content">
                 <h4>

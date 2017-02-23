@@ -11,7 +11,7 @@
     <div class="W75pc SpacingBottom CenterBox">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Overview") | html %]: [% Translate("SLA") | html %]</h2>
+                 <h2><span>[% Translate("Overview") | html %]: [% Translate("SLA") | html %]</span></h2>
             </div>
             <div class="Content SpacingBottom">
                 <table class="DataTable SpacingTop">

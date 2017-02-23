@@ -79,7 +79,6 @@ $Selenium->RunTest(
             AdminLog
             AdminMailAccount
             AdminNotificationEvent
-            AdminOTRSBusiness
             AdminPGP
             AdminPackageManager
             AdminPerformanceLog

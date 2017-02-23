@@ -31,7 +31,7 @@
         <div class="SidebarColumn">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("FAQ Information") | html %]</h2>
+                     <h2><span>[% Translate("FAQ Information") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabelSmall">
@@ -151,7 +151,7 @@
 [% RenderBlockStart("LinkTableSimple") %]
             <div class="WidgetSimple DontPrint">
                 <div class="Header">
-                    <h2>[% Translate("Linked Objects") | html %]</h2>
+                     <h2><span>[% Translate("Linked Objects") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     [% Data.LinkTableStrg %]
@@ -204,10 +204,10 @@
 [% RenderBlockStart("AttachmentHeader") %]
                 <div class="WidgetSimple">
                     <div class="Header">
-                        <h2>[% Translate("Attachments") | html %]:</h2>
+                         <h2><span>[% Translate("Attachments") | html %]:</span></h2>
                         <div class="Clear"></div>
                     </div>
-                    <div class="ArticleFAQContent">
+                    <div class="Content">
                         <div class="message">
 
 [% RenderBlockStart("AttachmentRow") %]
@@ -242,7 +242,7 @@
                         <div class="WidgetAction Toggle">
                             <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                         </div>
-                        <h2>
+                        <h2 class="PaddingLeft15px">
                             [% Translate(Data.Caption) | html %]
                             <span class="FAQStateName">([% Translate(Data.StateName) | html %])</span>
                         </h2>
@@ -278,7 +278,7 @@ function CheckIFrameHeight(IFrameID) {
 //]]></script>
 [% END %]
 [% RenderBlockStart("FAQContentPlain") %]
-                        <div class="ArticleFAQContent">
+                        <div class="Content">
                             <div class="message">
                                 [% Data.Content %]
                             </div>
@@ -294,10 +294,10 @@ function CheckIFrameHeight(IFrameID) {
                         <div class="WidgetAction Toggle">
                             <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                         </div>
-                        <h2>[% Translate("Rating") | html %]</h2>
+                        <h2 class="PaddingLeft15px"><span>[% Translate("Rating") | html %]</span></h2>
                     </div>
                     <div class="FAQVoting Content" id="FAQVoting">
-                        <div class="ArticleFAQContent">
+                        <div class="Content">
                             <p class="Center">[% Translate("How helpful was this article? Please give us your rating and help to improve the FAQ Database. Thank You!") | html %]</p>
 
                             <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="FAQVote" class="FAQVoteForm">

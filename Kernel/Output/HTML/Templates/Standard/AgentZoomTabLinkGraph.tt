@@ -37,7 +37,7 @@
                             </i>
                         </a>
                     </div>
-                    <h2>[% Translate("Graph View Configuration") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Graph View Configuration") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <form action="" method="" enctype="" class="" name="IFrameParam" id="IFrameParam">
@@ -51,7 +51,7 @@
                         <div class="Table">
                             <div class="WidgetSimple TableCell">
                                 <div class="Header">
-                                    <h2>[% Translate("Max Link Depth") | html %]</h2>
+                                     <h2><span>[% Translate("Max Link Depth") | html %]</span></h2>
                                 </div>
                                 <div class="Content">
                                      [% Data.MaxSearchDepthStr %]
@@ -59,7 +59,7 @@
                             </div>
                             <div class="WidgetSimple TableCell">
                                 <div class="Header">
-                                    <h2>[% Translate("Link-Types to follow") | html %]</h2>
+                                     <h2><span>[% Translate("Link-Types to follow") | html %]</span></h2>
                                 </div>
                                 <div class="Content">
                                     [% Data.LinkTypeSelStr %]
@@ -68,7 +68,7 @@
                             [% Data.ObjectSpecificSelStr %]
                             <div class="WidgetSimple TableCell">
                                 <div class="Header">
-                                    <h2>[% Translate("Adjusting Strength") | html %]</h2>
+                                     <h2><span>[% Translate("Adjusting Strength") | html %]</span></h2>
                                 </div>
                                 <div class="Content">
                                     [% Data.AdjustingStrengthSelStr %]
@@ -107,7 +107,7 @@
                             </i>
                         </a>
                     </div>
-                    <h2>[% Translate("Graph Display") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Graph Display") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <iframe id="displayGraphIFrame" src="" width="[% Data.Width | html %]" height="[% Data.Height | html %]" name="[% Data.Title | html %]" marginheight="[% Data.Marginheight | html %]" marginwidth="[% Data.Marginwidth | html %]" frameborder="[% Data.Frameborder | html %]" align="[% Data.Align | html %]" scrolling="no">

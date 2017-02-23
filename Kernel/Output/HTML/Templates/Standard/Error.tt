@@ -20,7 +20,7 @@
     <div class="W50pc CenterBox SpacingBottomLarge">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("An error occurred.") | html %]</h2>
+                 <h2><span>[% Translate("An error occurred.") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p>[% Translate(Data.Message) | truncate(200) | html %]</p>
@@ -96,7 +96,7 @@ $('#GoBack').bind('click', function (Event) {
                 <div class="WidgetAction Toggle">
                     <a href="#" title="[% Translate("Expand") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                 </div>
-                <h2>[% Translate("Error Details") | html %]</h2>
+                <h2 class="PaddingLeft15px"><span>[% Translate("Error Details") | html %]</span></h2>
             </div>
             <div class="Content">
 # KIX4OTRS-capeIT

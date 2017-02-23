@@ -41,7 +41,7 @@
 [% RenderBlockStart("LinkTableSimple") %]
             <div class="WidgetSimple DontPrint">
                 <div class="Header">
-                    <h2>[% Translate("Linked Objects") | html %]</h2>
+                     <h2><span>[% Translate("Linked Objects") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     [% Data.LinkTableStrg %]

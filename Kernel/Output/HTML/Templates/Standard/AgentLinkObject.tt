@@ -57,7 +57,7 @@
 
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Select Target Object") | html %]</h2>
+                     <h2><span>[% Translate("Select Target Object") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">
@@ -118,7 +118,7 @@
 
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Search") | html %] [% Data.TargetRealname | html %]</h2>
+                     <h2><span>[% Translate("Search") | html %] [% Data.TargetRealname | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabel">
@@ -176,7 +176,7 @@
         </p>
     </div>
     <div class="Content">
-        <h2>[% Translate("Select Target Object") | html %]</h2>
+         <h2><span>[% Translate("Select Target Object") | html %]</span></h2>
         <form action="[% Env("CGIHandle") %]" method="get">
             <input type="hidden" name="Action" value="[% Env("Action") %]" />
             <input type="hidden" name="Subaction" value="LinkDelete" />

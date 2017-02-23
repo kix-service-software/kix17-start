@@ -19,7 +19,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -33,9 +33,9 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>
+                <h2><span>
                     [% Translate("Uninstall package") | html %]
-                </h2>
+                </span></h2>
             </div>
             <div class="Content">
 
@@ -81,7 +81,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -95,9 +95,9 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>
+                <h2><span>
                     [% Translate("Reinstall package") | html %]
-                </h2>
+                </span></h2>
             </div>
             <div class="Content">
 
@@ -142,7 +142,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h3>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <ul class="ActionList">
@@ -157,7 +157,7 @@
 
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate(Data.Title) | html %]</h2>
+                     <h2><span>[% Translate(Data.Title) | html %]</span></h2>
                 </div>
                 <div class="Content">
 [% RenderBlockStart("OTRSVerifyLogo") %]
@@ -197,7 +197,7 @@
         <div class="SidebarColumn">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Actions") | html %]</h2>
+                    <h2><span>[% Translate("Actions") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <ul class="ActionList">
@@ -243,7 +243,7 @@
             <div class="WidgetSimple">
 
                 <div class="Header">
-                    <h2>[% Translate("Online Repository") | html %]</h2>
+                     <h2><span>[% Translate("Online Repository") | html %]</span></h2>
                 </div>
                 <div class="Content ">
                     <table class="DataTable">
@@ -298,7 +298,7 @@
             <div class="WidgetSimple">
 
                 <div class="Header">
-                    <h2>[% Translate("Local Repository") | html %]</h2>
+                     <h2><span>[% Translate("Local Repository") | html %]</span></h2>
                 </div>
                 <div class="Content ">
                     <table class="DataTable">
@@ -374,7 +374,7 @@
         <div class="SidebarColumn">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Actions") | html %]</h2>
+                    <h2><span>[% Translate("Actions") | html %]</span></h2>
                 </div>
                 <div class="Content">
 
@@ -420,7 +420,7 @@
         <div class="ContentColumn">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Metadata") | html %]</h2>
+                     <h2><span>[% Translate("Metadata") | html %]</span></h2>
                 </div>
                 <div class="Content ">
                     <fieldset class="TableLike Fixed Label">
@@ -439,7 +439,7 @@
             </div>
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Change Log") | html %]</h2>
+                     <h2><span>[% Translate("Change Log") | html %]</span></h2>
                 </div>
                 <div class="Content ">
                     <table class="DataTable">
@@ -464,7 +464,7 @@
             </div>
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("List of Files") | html %]</h2>
+                     <h2><span>[% Translate("List of Files") | html %]</span></h2>
                 </div>
                 <div class="Content ">
                     <table class="DataTable">
@@ -509,7 +509,7 @@
 [% RenderBlockStart("PackageItemDatabase") %]
             <div class="WidgetSimple SpacingTop">
                 <div class="Header">
-                    <h2>[% Data.TagName | html %] ([% Data.Type | html %])</h2>
+                     <h2><span>[% Data.TagName | html %] ([% Data.Type | html %])</span></h2>
                 </div>
                 <div class="Content">
                     <h3 class="SpacingTop">[% Data.Tag | html %]: [% Data.Name | html %] ([% Data.Version | html %])</h3>
@@ -551,7 +551,7 @@
 [% RenderBlockStart("PackageItemCode") %]
             <div class="WidgetSimple SpacingTop">
                 <div class="Header">
-                    <h2>[% Translate(Data.Tag) | html %] ([% Data.Type | html %])</h2>
+                     <h2><span>[% Translate(Data.Tag) | html %] ([% Data.Type | html %])</span></h2>
                 </div>
                 <div class="Content">
                     <code>[% Data.Content %]</code>
@@ -561,7 +561,7 @@
 [% RenderBlockStart("PackageItemIntro") %]
             <div class="WidgetSimple SpacingTop">
                 <div class="Header">
-                    <h2>[% Translate(Data.Tag) | html %] ([% Data.Type | html %]/[% Data.Lang | html %])</h2>
+                     <h2><span>[% Translate(Data.Tag) | html %] ([% Data.Type | html %]/[% Data.Lang | html %])</span></h2>
                 </div>
                 <div class="Content">
                     [% Data.Content %]
@@ -580,7 +580,7 @@
 
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Actions") | html %]</h2>
+                    <h2><span>[% Translate("Actions") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <ul class="ActionList">
@@ -596,9 +596,9 @@
         <div class="ContentColumn">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>
+                    <h2><span>
                         [% Data.Name | html %]: [% Translate("File differences for file %s", Data.Location) | html %]
-                    </h2>
+                    </span></h2>
                 </div>
                 <div class="Content">
                     <pre><code>[% Data.Diff | html %]</code></pre>

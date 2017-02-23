@@ -65,7 +65,7 @@
     <div class="W950px SpacingTop SpacingBottom CenterBox">
         <div class="WidgetSimple SpacingTop" id="WebInstallerBox">
             <div class="Header">
-                <h2>[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
+                 <h2><span>[% Translate("Welcome to %s", Config("ProductName")) | html %]</span></h2>
             </div>
             <div class="LayoutGrid Content">
                 <div class="Size1of2">

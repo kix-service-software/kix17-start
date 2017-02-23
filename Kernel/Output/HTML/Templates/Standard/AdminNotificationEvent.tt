@@ -19,7 +19,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -43,7 +43,7 @@
 [% RenderBlockStart("ActionImport") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Configuration Import") | html %]</h2>
+                 <h2><span>[% Translate("Configuration Import") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -79,7 +79,7 @@
 [% RenderBlockStart("OverviewResult") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("List") | html %]</h2>
+                 <h2><span>[% Translate("List") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable">
@@ -150,10 +150,10 @@ $('.NotificationDelete').bind('click', function (Event) {
             <div class="WidgetSimple">
                 <div class="Header">
 [% RenderBlockStart("HeaderAdd") %]
-                    <h2>[% Translate("Add Notification") | html %]</h2>
+                     <h2><span>[% Translate("Add Notification") | html %]</span></h2>
 [% RenderBlockEnd("HeaderAdd") %]
 [% RenderBlockStart("HeaderEdit") %]
-                    <h2>[% Translate("Edit Notification") | html %]</h2>
+                     <h2><span>[% Translate("Edit Notification") | html %]</span></h2>
 [% RenderBlockEnd("HeaderEdit") %]
                 </div>
                 <div class="Content">
@@ -210,7 +210,7 @@ $('.NotificationDelete').bind('click', function (Event) {
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Events") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Events") | html %]</span></h2>
                 </div>
 
                 <div class="Content">
@@ -241,7 +241,7 @@ $('.NotificationDelete').bind('click', function (Event) {
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Ticket Filter") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Ticket Filter") | html %]</span></h2>
                 </div>
 
                 <div class="Content">
@@ -329,7 +329,7 @@ $('.NotificationDelete').bind('click', function (Event) {
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Article Filter") | html %] <span class="FieldExplanation">([% Translate("Only for ArticleCreate and ArticleSend event") | html %])</span></h2>
+                    <h2 class="PaddingLeft15px">[% Translate("Article Filter") | html %] <span class="FieldExplanation">([% Translate("Only for ArticleCreate and ArticleSend event") | html %])</span></h2>
                 </div>
 
                 <div class="Content">
@@ -393,7 +393,7 @@ $('.NotificationDelete').bind('click', function (Event) {
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Recipients") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Recipients") | html %]</span></h2>
                 </div>
 
                 <div class="Content">
@@ -446,7 +446,7 @@ $('.NotificationDelete').bind('click', function (Event) {
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Notification Methods") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Notification Methods") | html %]</span></h2>
                 </div>
 
                 <div class="Content TransportsContent">
@@ -525,7 +525,7 @@ $('.NotificationDelete').bind('click', function (Event) {
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2>[% Translate("Notification Text") | html %]</h2>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Notification Text") | html %]</span></h2>
                 </div>
 
                 <div class="Content">
@@ -536,19 +536,14 @@ $('.NotificationDelete').bind('click', function (Event) {
 [% RenderBlockEnd("RichText") %]
 
 [% RenderBlockStart("NotificationLanguage") %]
+                    [% IF Data.Language %]
                         <div class="NotificationLanguage">
                             <div class="WidgetSimple SpacingTop [% IF !Data.Language %] Collapsed [% END %] ">
                                 <div class="Header">
                                     <div class="WidgetAction Toggle">
                                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                                     </div>
-                                    <h2 class="Title">
-                                        [% IF Data.Language %]
-                                          [% Translate(Data.Language) %]
-                                        [% ELSE %]
-                                           <span class="Warning">'[% Data.LanguageID | html %]' &mdash; [% Translate("This language is not present or enabled on the system. This notification text could be deleted if it is not needed anymore.") | html %]</span>
-                                        [% END %]
-                                    </h2>
+                                    <h2 class="Title PaddingLeft15px">[% Translate(Data.Language) %]</h2>
 [% RenderBlockStart("NotificationLanguageRemoveButton") %]
                                     <div class="AdditionalInformation">
                                         <a value="Remove Language" class="RemoveButton LanguageRemove" id="[% Data.LanguageID | html %]_Language_Remove" href="" name="Data.LanguageID_Language_Remove"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove Notification Language") | html %]</span></a>
@@ -597,6 +592,7 @@ $('.NotificationDelete').bind('click', function (Event) {
                                 </div>
                             </div>
                         </div>
+                    [% END %]
 [% RenderBlockEnd("NotificationLanguage") %]
 
                         <div class="Hidden Template NotificationLanguage">
@@ -605,7 +601,7 @@ $('.NotificationDelete').bind('click', function (Event) {
                                     <div class="WidgetAction Toggle">
                                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                                     </div>
-                                    <h2 class="Title"></h2>
+                                    <h2 class="Title PaddingLeft15px"><span></span></h2>
                                     <div class="AdditionalInformation">
                                         <a value="Remove Language" class="RemoveButton LanguageRemove" id="Template_Language_Remove" href="" name="Template_Language_Remove"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove Notification Language") | html %]</span></a>
                                     </div>
@@ -667,7 +663,7 @@ Core.Agent.Admin.NotificationEvent.Init({
 
             <div class="WidgetSimple SpacingTop">
                 <div class="Header">
-                    <h2>[% Translate("Save Changes") | html %]</h2>
+                     <h2><span>[% Translate("Save Changes") | html %]</span></h2>
                 </div>
 
                 <div class="Content">
@@ -691,7 +687,7 @@ Core.Agent.Admin.NotificationEvent.Init({
                 <div class="WidgetAction Toggle">
                     <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                 </div>
-                <h2>[% Translate("Tag Reference") | html %]</h2>
+                <h2 class="PaddingLeft15px"><span>[% Translate("Tag Reference") | html %]</span></h2>
             </div>
 
             <div class="Content">

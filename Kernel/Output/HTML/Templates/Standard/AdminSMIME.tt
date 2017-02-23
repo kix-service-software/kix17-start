@@ -13,7 +13,7 @@
 [% RenderBlockStart("Notice") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Notice") | html %]</h2>
+                 <h2><span>[% Translate("Notice") | html %]</span></h2>
             </div>
             <div class="Content ActionList">
                 <form action="[% Env("CGIHandle") %]" method="post">
@@ -54,7 +54,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -80,7 +80,7 @@
 [% RenderBlockStart("SMIMEFilter") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterSMIME">[% Translate("Filter for certificates") | html %]</label></h2>
+                 <h2><span><label for="FilterSMIME">[% Translate("Filter for certificates") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <ul>
@@ -106,7 +106,7 @@
 [% RenderBlockStart("OverviewHint") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -121,7 +121,7 @@
 [% RenderBlockStart("SignerCertHint") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -136,7 +136,7 @@
 [% RenderBlockStart("Hint") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -154,7 +154,7 @@
 [% RenderBlockStart("OverviewResult") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Results") | html %]</h2>
+                 <h2><span>[% Translate("Results") | html %]</span></h2>
             </div>
             <div class="Content ">
                 <table class="DataTable" id="SMIME">
@@ -230,7 +230,7 @@
 [% RenderBlockStart("OverviewAddCertificate") %]
     <div class="WidgetSimple">
         <div class="Header">
-            <h2>[% Translate("Add Certificate") | html %]</h2>
+             <h2><span>[% Translate("Add Certificate") | html %]</span></h2>
         </div>
         <div class="Content">
             <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data">
@@ -259,7 +259,7 @@
 [% RenderBlockStart("OverviewAddPrivate") %]
     <div class="WidgetSimple">
         <div class="Header">
-            <h2>[% Translate("Add Private Key") | html %]</h2>
+             <h2><span>[% Translate("Add Private Key") | html %]</span></h2>
         </div>
         <div class="Content">
             <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">
@@ -293,7 +293,7 @@
 [% RenderBlockStart("SignerCertificates") %]
     <div class="WidgetSimple">
         <div class="Header">
-            <h2>[% Translate("Related Certificates for") | html %]: [% Data.CertFingerprint | html %] </h2>
+            <h2><span>[% Translate("Related Certificates for") | html %]: [% Data.CertFingerprint | html %] </span></h2>
         </div>
         <div class="Content ">
             <table class="DataTable" id="RelatedCerts">
@@ -343,7 +343,7 @@
 
     <div class="WidgetSimple">
         <div class="Header">
-            <h2>[% Translate("Available Certificates") | html %]</h2>
+             <h2><span>[% Translate("Available Certificates") | html %]</span></h2>
         </div>
         <div class="Content">
             <fieldset>

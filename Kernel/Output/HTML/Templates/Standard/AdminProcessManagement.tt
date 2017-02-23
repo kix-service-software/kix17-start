@@ -17,7 +17,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="Filter">[% Translate("Filter for Processes") | html %]</label></h2>
+                 <h2><span><label for="Filter">[% Translate("Filter for Processes") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="Filter" class="W95pc" name="Filter" value="" title="[% Translate("Filter") | html %]" placeholder="[% Translate("Just start typing to filter...") | html %]" />
@@ -25,7 +25,7 @@
         </div>
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -41,7 +41,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Configuration Import") | html %]</h2>
+                 <h2><span>[% Translate("Configuration Import") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -71,7 +71,7 @@
 
         <div class="WidgetSimple" id="ExampleProcesses">
             <div class="Header">
-                <h2>[% Translate("Ready-to-run Processes") | html %]</h2>
+                 <h2><span>[% Translate("Ready-to-run Processes") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -101,7 +101,7 @@
         </div>
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Description") | html %]</h2>
+                 <h2><span>[% Translate("Description") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -118,7 +118,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Processes") | html %]</h2>
+                 <h2><span>[% Translate("Processes") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable" id="Processes">

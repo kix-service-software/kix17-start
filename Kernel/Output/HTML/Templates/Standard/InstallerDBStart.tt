@@ -14,7 +14,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate(Data.Item) | html %] ([% Data.Step %])</h2>
+                <h2><span>[% Translate(Data.Item) | html %] ([% Data.Step %])</span></h2>
             </div>
 
             <div class="Content">

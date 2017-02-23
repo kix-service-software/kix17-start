@@ -243,7 +243,7 @@ END
 
         my $SwitchLink = $LayoutObject->{Baselink} . 'Action=SwitchButton&Type=Customer';
         my $Replace    = <<"END";
-          <a href=\"$SwitchLink\" id=\"SwitchButton\" class=\"SwitchButton\" title=\"$SwitchButtonDesc\"><i class="fa fa-refresh"></i></a>
+          <a href=\"$SwitchLink\" id=\"SwitchButton\" class=\"SwitchButton\" title=\"$SwitchButtonDesc\"><i class="fa fa-exchange"></i></a>
 END
         $Replace = $LayoutObject->Output(
             Template => $Replace,

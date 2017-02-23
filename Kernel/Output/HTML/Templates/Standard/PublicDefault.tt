@@ -7,7 +7,7 @@
 # --
 <div id="MainBox" class="Login">
     <div class="Content">
-        <h2>[% Translate("Welcome") | html %]</h2>
+         <h2><span>[% Translate("Welcome") | html %]</span></h2>
         <p>
             [% Translate("This is the default public interface of OTRS! There was no action parameter given.") | html %] <br />
             [% Translate("You could install a custom public module (via the package manager), for example the FAQ module, which has a public interface.") | html %]

@@ -23,7 +23,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -52,7 +52,7 @@
 [% RenderBlockStart("OverviewList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Depending Dynamic Fields - Tree View") | html %]</h2>
+                 <h2><span>[% Translate("Depending Dynamic Fields - Tree View") | html %]</span></h2>
             </div>
             <div class="Content DependingFieldTreeContent">
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
@@ -125,7 +125,7 @@ $('.Collaps').bind('click',function(event){
 [% RenderBlockStart("DependingFieldEdit") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Depending Dynamic Field Edit") | html %]</h2>
+                 <h2><span>[% Translate("Depending Dynamic Field Edit") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" id="EditDependingFieldForm" name="EditDependingFieldForm" class="Validate PreventMultipleSubmits">
@@ -228,7 +228,7 @@ $('#AddDynamicField').bind('click',function(){
 [% RenderBlockStart("DependingFieldAdd") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Depending Dynamic Field Add") | html %]</h2>
+                 <h2><span>[% Translate("Depending Dynamic Field Add") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" id="AddDependingFieldForm" name="AddDependingFieldForm" class="Validate PreventMultipleSubmits">

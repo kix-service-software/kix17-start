@@ -19,7 +19,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -56,13 +56,13 @@
         <div class="WidgetSimple">
 [% RenderBlockStart("OverviewHeader") %]
             <div class="Header">
-                <h2>
+                <h2><span>
                 [% IF Data.ListSize && Data.Limit && Data.ListSize > Data.Limit %]
                     [% Translate("List (only %s shown - more available)", Data.ListSize) | html %]
                 [% ELSE %]
                     [% Translate("List (%s total)", Data.ListSize) | html %]
                 [% END %]
-                </h2>
+                </span></h2>
             </div>
 [% RenderBlockEnd("OverviewHeader") %]
 [% RenderBlockStart("NoSearchTerms") %]

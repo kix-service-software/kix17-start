@@ -14,7 +14,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -98,7 +98,7 @@ $('#SysConfigGroup').bind('change', function(){
 [% RenderBlockStart("Import") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Import Settings") | html %]</h2>
+                 <h2><span>[% Translate("Import Settings") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data">
@@ -125,7 +125,7 @@ $('#SysConfigGroup').bind('change', function(){
 [% RenderBlockStart("ContentOverview") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Result") | html %]</h2>
+                 <h2><span>[% Translate("Result") | html %]</span></h2>
             </div>
             <div class="Content">
 [% RenderBlockStart("NoSearchTerms") %]

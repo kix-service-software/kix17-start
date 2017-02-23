@@ -22,7 +22,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -44,7 +44,7 @@
 
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("General") | html %]</h2>
+                     <h2><span>[% Translate("General") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <div class="LayoutGrid ColumnsWithSpacing">
@@ -107,7 +107,7 @@
             </div>
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate(Data.FieldTypeName) | html %] [% Translate("Field Settings") | html %]</h2>
+                     <h2><span>[% Translate(Data.FieldTypeName) | html %] [% Translate("Field Settings") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">

@@ -82,9 +82,9 @@ sub Run {
         = '<fieldset\sclass\=\"TableLike\">\s*<div\sclass\=\"Field\sSpacingTop\">\s*<button';
     my $ReplacementString = '<div class="WidgetSimple">'
         . '<div class="Header">'
-        . '<h2>'
+        . '<h2><span>'
         . $LayoutObject->{LanguageObject}->Translate('DynamicField SysConfig Settings')
-        . '</h2>'
+        . '</span></h2>'
         . '</div>'
         . '<div class="Content">'
         . '<fieldset class="TableLike">'

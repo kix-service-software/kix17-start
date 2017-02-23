@@ -103,7 +103,7 @@
                     </td>
                     <td class="Title">
                         <div>
-                            <h2>[% Data.Subject | truncate(60) | html %]</h2>
+                             <h2><span>[% Data.Subject | truncate(60) | html %]</span></h2>
                             &nbsp;-&nbsp; [% Data.Body | truncate(200) | html %]
                         </div>
                     </td>
@@ -194,7 +194,7 @@
 [% RenderBlockStart("Empty") %]
     <div class="Placeholder">
 [% RenderBlockStart("EmptyDefault") %]
-        <h2>[% Translate("Welcome!") | html %]</h2>
+         <h2><span>[% Translate("Welcome!") | html %]</span></h2>
         <p>
             [% Translate("Please click the button below to create your first ticket.") | html %]
         </p>
@@ -203,7 +203,7 @@
 [% RenderBlockEnd("EmptyDefaultButton") %]
 [% RenderBlockEnd("EmptyDefault") %]
 [% RenderBlockStart("EmptyCustom") %]
-        <h2>[% Translate(Data.Title) | html %]</h2>
+         <h2><span>[% Translate(Data.Title) | html %]</span></h2>
         <p>
             [% Translate(Data.Text) | html %]
         </p>

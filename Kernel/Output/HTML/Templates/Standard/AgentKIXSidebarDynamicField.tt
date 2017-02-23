@@ -28,7 +28,7 @@
             </div>
         </div>
 
-        <h2>[% Translate(Data.Title) | html %]</h2>
+        <h2 class="PaddingLeft15px"><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
     <div id="DynamicFieldsTable" class="Content">
 

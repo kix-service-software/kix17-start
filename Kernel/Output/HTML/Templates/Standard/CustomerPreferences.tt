@@ -19,7 +19,7 @@
                 <input type="hidden" name="Subaction" value="Update"/>
                 <input type="hidden" name="Group" value="[% Data.Group | html %]"/>
                 <fieldset>
-                    <h2>[% Translate(Data.Label) | html %]</h2>
+                     <h2><span>[% Translate(Data.Label) | html %]</span></h2>
 [% RenderBlockStart("Block") %]
 [% RenderBlockStart("InputKey") %]
                     <div>

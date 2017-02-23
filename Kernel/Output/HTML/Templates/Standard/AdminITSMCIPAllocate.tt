@@ -11,7 +11,7 @@
 
     <div class="SidebarColumn">
         <div class="WidgetSimple">
-            <div class="Header"><h2>[% Translate("Note") | html %]</h2></div>
+            <div class="Header"> <h2><span>[% Translate("Note") | html %]</span></h2></div>
             <div class="Content">
                 <p class="FieldExplanation">
                     [% Translate("Manage the priority result of combinating Criticality <-> Impact.") | html %]
@@ -23,7 +23,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Priority allocation") | html %]</h2>
+                 <h2><span>[% Translate("Priority allocation") | html %]</span></h2>
             </div>
 
             <div class="Content">

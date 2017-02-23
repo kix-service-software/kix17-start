@@ -16,7 +16,7 @@
 [% RenderBlockStart("Disabled") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Notice") | html %]</h2>
+                 <h2><span>[% Translate("Notice") | html %]</span></h2>
             </div>
             <div class="Content ActionList">
                 <form action="[% Env("CGIHandle") %]" method="post">
@@ -45,7 +45,7 @@
         <div class="WidgetSimple">
 
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -73,7 +73,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("List") | html %]</h2>
+                 <h2><span>[% Translate("List") | html %]</span></h2>
             </div>
             <div class="Content">
 
@@ -126,14 +126,14 @@
 [% RenderBlockEnd("OverviewResult") %]
 
 [% RenderBlockStart("OverviewUpdate") %]
-            <div class="ContentColumn">
+            <div class="Content">
                 <div class="WidgetSimple">
                     <div class="Header">
 [% RenderBlockStart("HeaderAdd") %]
-                        <h2>[% Translate("Add Language") | html %]</h2>
+                         <h2><span>[% Translate("Add Language") | html %]</span></h2>
 [% RenderBlockEnd("HeaderAdd") %]
 [% RenderBlockStart("HeaderEdit") %]
-                        <h2>[% Translate("Edit Language") | html %]</h2>
+                         <h2><span>[% Translate("Edit Language") | html %]</span></h2>
 [% RenderBlockEnd("HeaderEdit") %]
                     </div>
                     <div class="Content">

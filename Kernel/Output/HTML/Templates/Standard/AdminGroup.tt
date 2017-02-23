@@ -56,7 +56,7 @@ Core.Agent.Admin.Group = (function (TargetNS) {
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class='Content'>
                 <ul class="ActionList">
@@ -85,7 +85,7 @@ Core.Agent.Admin.Group = (function (TargetNS) {
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -105,7 +105,7 @@ Core.Agent.Admin.Group = (function (TargetNS) {
         <div class="WidgetSimple">
 [% RenderBlockStart("OverviewResult") %]
             <div class="Header">
-                <h2>[% Translate("List") | html %] ([% Data.AllItemsCount | html %] [% Translate("total") | html %])</h2>
+                <h2><span>[% Translate("List") | html %] ([% Data.AllItemsCount | html %] [% Translate("total") | html %])</span></h2>
             </div>
             <div class="Content">
 
@@ -137,10 +137,10 @@ Core.Agent.Admin.Group = (function (TargetNS) {
 [% RenderBlockStart("OverviewUpdate") %]
             <div class="Header">
 [% RenderBlockStart("HeaderAdd") %]
-                <h2>[% Translate("Add Group") | html %]</h2>
+                 <h2><span>[% Translate("Add Group") | html %]</span></h2>
 [% RenderBlockEnd("HeaderAdd") %]
 [% RenderBlockStart("HeaderEdit") %]
-                <h2>[% Translate("Edit Group") | html %]</h2>
+                 <h2><span>[% Translate("Edit Group") | html %]</span></h2>
 [% RenderBlockEnd("HeaderEdit") %]
             </div>
             <div class="Content">

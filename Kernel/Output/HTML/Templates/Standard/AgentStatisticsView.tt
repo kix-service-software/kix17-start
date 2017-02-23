@@ -14,7 +14,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -32,7 +32,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Statistic Information") | html %]</h2>
+                 <h2><span>[% Translate("Statistic Information") | html %]</span></h2>
             </div>
             <div class="Content">
                 <fieldset class="TableLike FixedLabelSmall">
@@ -84,7 +84,7 @@
 
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Settings") | html %]</h2>
+                     <h2><span>[% Translate("Settings") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     [% FOR Error IN Data.Errors %]

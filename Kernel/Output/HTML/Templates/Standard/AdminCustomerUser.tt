@@ -20,7 +20,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -85,7 +85,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p>
@@ -98,13 +98,13 @@
         <div class="WidgetSimple">
 [% RenderBlockStart("OverviewHeader") %]
             <div class="Header">
-                <h2>
+                <h2><span>
                     [% IF Data.ListAll && Data.Limit && Data.ListAll > Data.Limit %]
                         [% Translate("List (only %s shown - more available)", Data.SearchListSize) | html %]
                     [% ELSE %]
                         [% Translate("List (%s total)", Data.ListAll) | html %]
                     [% END %]
-                </h2>
+                </span></h2>
             </div>
 [% RenderBlockEnd("OverviewHeader") %]
 [% RenderBlockStart("NoSearchTerms") %]
@@ -166,10 +166,10 @@
 [% RenderBlockStart("OverviewUpdate") %]
             <div class="Header">
 [% RenderBlockStart("HeaderAdd") %]
-                <h2>[% Translate("Add contact") | html %]</h2>
+                 <h2><span>[% Translate("Add contact") | html %]</span></h2>
 [% RenderBlockEnd("HeaderAdd") %]
 [% RenderBlockStart("HeaderEdit") %]
-                <h2>[% Translate("Edit contact") | html %]</h2>
+                 <h2><span>[% Translate("Edit contact") | html %]</span></h2>
 [% RenderBlockEnd("HeaderEdit") %]
             </div>
 

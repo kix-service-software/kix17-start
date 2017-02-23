@@ -12,7 +12,7 @@
         <div class="Size1of3">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Agent Management") | html %]</h2>
+                     <h2><span>[% Translate("Agent Management") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <ul class="LayoutGrid ColumnsWithSpacing">
@@ -34,7 +34,7 @@
             <div class="Size1of3">
                 <div class="WidgetSimple">
                     <div class="Header">
-                        <h2>[% Translate("Customer Management") | html %]</h2>
+                         <h2><span>[% Translate("Customer Management") | html %]</span></h2>
                     </div>
                     <div class="Content">
 
@@ -56,7 +56,7 @@
             <div class="Size1of3">
                 <div class="WidgetSimple">
                     <div class="Header">
-                        <h2>[% Translate("Email Settings") | html %]</h2>
+                         <h2><span>[% Translate("Email Settings") | html %]</span></h2>
                     </div>
                     <div class="Content">
 
@@ -81,7 +81,7 @@
             <div class="Size1of3">
                 <div class="WidgetSimple">
                     <div class="Header">
-                        <h2>[% Translate("Queue Settings") | html %]</h2>
+                         <h2><span>[% Translate("Queue Settings") | html %]</span></h2>
                     </div>
                     <div class="Content">
 
@@ -103,7 +103,7 @@
             <div class="Size1of3">
                 <div class="WidgetSimple">
                     <div class="Header">
-                        <h2>[% Translate("Ticket Settings") | html %]</h2>
+                         <h2><span>[% Translate("Ticket Settings") | html %]</span></h2>
                     </div>
                     <div class="Content">
 
@@ -125,12 +125,12 @@
             <div class="Size1of3">
                 <div class="WidgetSimple">
                     <div class="Header">
-                        <h2>
+                        <h2><span>
                             [% Translate("System Administration") | html %]
                             <a href="http://otrs.github.io/doc/manual/admin/[% Data.ManualVersion | uri %].0/en/html/index.html" class="Small" target="_blank">
                                 [% Translate("Online Admin Manual") | html %] <i class="fa fa-external-link"></i>
                             </a>
-                        </h2>
+                        </span></h2>
                     </div>
                     <div class="Content">
                         <ul class="LayoutGrid ColumnsWithSpacing">

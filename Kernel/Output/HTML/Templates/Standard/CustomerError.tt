@@ -19,7 +19,7 @@
     </div>
     [% IF Data.BackendTraceback %]
     <div class="Content Error Hidden ErrorDetails">
-        <h2>[% Translate("Traceback") | html %]</h2>
+         <h2><span>[% Translate("Traceback") | html %]</span></h2>
         <pre>[% Data.BackendTraceback | html %]</pre>
     </div>
     [% END %]

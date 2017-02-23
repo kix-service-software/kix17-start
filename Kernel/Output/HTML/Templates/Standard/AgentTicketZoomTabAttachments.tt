@@ -28,7 +28,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterAttachmentTable">[% Translate("Filter for attachments") | html %]</label></h2>
+                 <h2><span><label for="FilterAttachmentTable">[% Translate("Filter for attachments") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="FilterAttachmentTable" class="W75pc" name="FilterAttachmentTable" value="" title="[% Translate("Filter for attachments") | html %]" />
@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="ContentColumn">
-        <div class="LightRow Bottom">
+        <div class="Bottom">
             <input type="checkbox" name="SelectAll" id="SelectAll"/>[% Translate("All") | html %]
         </div>
         <form action="[% Env("CGIHandle") %]" method="post" id="AttachmentForm">

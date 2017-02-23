@@ -48,7 +48,7 @@
         Opacity : 0.6,
         Update : function(event, ui) {
             var url = 'Action=LinkObjectTableOrderAJAXHandler;Subaction=UpdatePosition;CallingAction=AgentTicketZoomTabLinkedObjects;TicketID=[% Data.TicketID %]';
-            $('.WidgetBox.CanDrag').each(function(i) {
+            $('.WidgetSimple.CanDrag').each(function(i) {
                 url = url + ';Backend=' + $(this).attr('id');
             });
             Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), url, function() {}, 'text');

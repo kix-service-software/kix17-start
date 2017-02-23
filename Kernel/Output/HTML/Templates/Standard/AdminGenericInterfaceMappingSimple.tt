@@ -27,7 +27,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -44,7 +44,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Mapping Simple") | html %]</h2>
+                 <h2><span>[% Translate("Mapping Simple") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" class="Validate PreventMultipleSubmits">
@@ -115,7 +115,7 @@
                                 <div class="WidgetAction Toggle">
                                     <a href="#" title=[% Translate("Show or hide the content") | JSON %]><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                                 </div>
-                                <h3 class="Title">[% Translate("Mapping for Key ") | html %] [% Data.KeyMapNew | html %]</h3>
+                                <h2 class="PaddingLeft15px Title"><span>[% Translate("Mapping for Key ") | html %] [% Data.KeyMapNew | html %]</span></h2>
                                 <div class="AdditionalInformation">
                                     <a href="" id="RemoveKeyMapping[% Data.KeyIndex | html %]" class="RemoveButton KeyMapRemove" value="Remove key mapping"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove key mapping") | html %]</span></a>
                                 </div>

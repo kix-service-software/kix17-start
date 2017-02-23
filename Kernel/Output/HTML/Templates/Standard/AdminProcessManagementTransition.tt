@@ -44,7 +44,7 @@
                         <div class="WidgetAction Toggle">
                             <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                         </div>
-                        <h2>[% Translate("Transition") | html %]</h2>
+                        <h2 class="PaddingLeft15px"><span>[% Translate("Transition") | html %]</span></h2>
                     </div>
                     <div class="Content">
                         <fieldset class="TableLike">
@@ -68,7 +68,7 @@
                         <div class="WidgetAction Toggle">
                             <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                         </div>
-                        <h2>[% Translate("Conditions") | html %]</h2>
+                        <h2 class="PaddingLeft15px"><span>[% Translate("Conditions") | html %]</span></h2>
                     </div>
                     <div class="Content LayoutGrid">
                         <fieldset class="TableLike FixedLabel" id="PresentConditionsContainer">
@@ -105,7 +105,7 @@
                                                 <div class="Clear"></div>
                                                 <div class="WidgetSimple FieldWidget">
                                                     <div class="Header">
-                                                        <h2>[% Translate("Fields") | html %]</h2>
+                                                         <h2><span>[% Translate("Fields") | html %]</span></h2>
                                                         <div class="AdditionalInformation">
                                                             <a class="AddButton ConditionFieldAdd" href="#" title="[% Translate("Add a new Field") | html %]">
                                                                 <i class="fa fa-plus-square-o"></i>
@@ -147,7 +147,7 @@
 [% RenderBlockStart("ConditionItemInitRow") %]
                             <div class="WidgetSimple ParentWidget" id="Condition[1]">
                                 <div class="Header">
-                                    <h2>[% Translate("Condition") | html %] 1</h2>
+                                    <h2><span>[% Translate("Condition") | html %] 1</span></h2>
                                 </div>
                                 <div class="Content">
                                     <div class="Field ConditionField">
@@ -161,7 +161,7 @@
 
                                                 <div class="WidgetSimple FieldWidget">
                                                     <div class="Header">
-                                                        <h2>[% Translate("Fields") | html %]</h2>
+                                                         <h2><span>[% Translate("Fields") | html %]</span></h2>
                                                         <div class="AdditionalInformation">
                                                             <a class="ConditionFieldAdd AddButton" href="#" title="[% Translate("Add a new Field") | html %]">
                                                                 <i class="fa fa-plus-square-o"></i>
@@ -208,7 +208,7 @@
             <div id="ConditionContainer" style="display:none;">
                 <div class="WidgetSimple ParentWidget" id="Condition[_INDEX_]">
                     <div class="Header">
-                        <h2>[% Translate("Condition") | html %] _INDEX_</h2>
+                        <h2><span>[% Translate("Condition") | html %] _INDEX_</span></h2>
                         <div class="AdditionalInformation">
                             <a href="#" name="ConditionRemove[_INDEX_]" class="RemoveButton" title="[% Translate("Remove this Condition") | html %]">
                                 <i class="fa fa-minus-square-o"></i>
@@ -228,7 +228,7 @@
 
                                     <div class="WidgetSimple FieldWidget">
                                         <div class="Header">
-                                            <h2>[% Translate("Fields") | html %]</h2>
+                                             <h2><span>[% Translate("Fields") | html %]</span></h2>
                                             <div class="AdditionalInformation">
                                                 <a class="ConditionFieldAdd AddButton" href="#" title="[% Translate("Add a new Field") | html %]">
                                                     <i class="fa fa-plus-square-o"></i>

@@ -21,7 +21,7 @@
                 <i class="fa fa-caret-down"></i>
             </a>
         </div>
-        <h2>[% Translate(Data.Title) | html %]</h2>
+        <h2 class="PaddingLeft15px"><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
 [% RenderBlockStart("CustomerEmailSelection") %]
     <div class="KIXSidebarCustomerEmailSelection">
@@ -37,7 +37,7 @@
         [% Data.CustomerTable %]
     </div>
     <div class="WidgetPopup" id="CustomerDetails[% Data.UserLogin | html %]">
-        <div class="Header"><h2>[% Translate("Contact Information") | html %]</h2></div>
+        <div class="Header"> <h2><span>[% Translate("Contact Information") | html %]</span></h2></div>
         <div class="Content">
             <div class="Spacing">
 [% RenderBlockStart("CustomerDetails") %]

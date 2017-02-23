@@ -15,7 +15,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -42,7 +42,7 @@
 [% RenderBlockStart("FilterQueues") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterQueues">[% Translate("Filter for Queues") | html %]</label></h2>
+                 <h2><span><label for="FilterQueues">[% Translate("Filter for Queues") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="FilterQueues" class="FilterBox" placeholder="[% Translate("Just start typing to filter...") | html %]" name="FilterQueues" value="" title="[% Translate("Filter for Queues") | html %]" />
@@ -52,7 +52,7 @@
 [% RenderBlockStart("FilterAutoResponses") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterAutoResponses">[% Translate("Filter for Auto Responses") | html %]</label></h2>
+                 <h2><span><label for="FilterAutoResponses">[% Translate("Filter for Auto Responses") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="FilterAutoResponses" class="FilterBox" placeholder="[% Translate("Just start typing to filter...") | html %]" name="FilterAutoResponses" value="" title="[% Translate("Filter for Auto Responses") | html %]" />
@@ -67,7 +67,7 @@
 
 [% RenderBlockStart("OverviewResult") %]
             <div class="Header">
-                <h2>[% Translate("Overview") | html %]</h2>
+                 <h2><span>[% Translate("Overview") | html %]</span></h2>
             </div>
             <div class="Content LayoutGrid ColumnsWithSpacing">
                 <div class="Size1of3">
@@ -108,10 +108,10 @@
 
 [% RenderBlockStart("Selection") %]
             <div class="Header">
-                <h2>
+                <h2><span>
                     [% Translate("Change Auto Response Relations for Queue") | html %]
                     <a href="[% Env("Baselink") %]Action=[% Data.ActionHome | uri %];Subaction=Change;QueueID=[% Data.ID | uri %]">[% Data.Name | html %]</a>
-                </h2>
+                </span></h2>
             </div>
             <div class="Content ">
                 <form action="[% Env("CGIHandle") %]" method="post">

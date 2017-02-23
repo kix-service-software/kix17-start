@@ -20,9 +20,9 @@
     <div class="Content">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>
+                <h2><span>
                     [% Translate("History Content") | html %]
-                </h2>
+                </span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable" summary="FAQ history data table">

@@ -214,9 +214,7 @@ Core.Agent = (function (TargetNS) {
                     return true;
                 }
 
-                if (!Core.Config.Get('OTRSBusinessIsInstalled') && $Target.hasClass('OTRSBusinessRequired')) {
-                    return true;
-                }
+                // ddoerffel - business code removed
 
                 // Workaround for Windows Phone IE
                 // In Windows Phone IE the event does not bubble up like in other browsers

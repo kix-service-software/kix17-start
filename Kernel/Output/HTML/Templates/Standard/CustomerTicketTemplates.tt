@@ -16,7 +16,7 @@
     <div class="TemplateSelectionArea">
         <div>
             <div class="Header">
-                <h2>[% Translate("Filter templates and groups") | html %]</h2>
+                 <h2><span>[% Translate("Filter templates and groups") | html %]</span></h2>
             </div>
             <div>
                 <fieldset class="FilterArea">

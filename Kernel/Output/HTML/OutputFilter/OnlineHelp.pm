@@ -45,7 +45,7 @@ sub Run {
         my $Replace
             = "<a href=\"$URL\" target=\"_blank\" id=\"KIXHelp\" class=\"KIXHelp\" title=\""
             . $LayoutObject->{LanguageObject}->Translate('KIX Online Help')
-            . "\"><i class=\"fa fa-medkit\"></i></a>";
+            . "\"><i class=\"fa fa-question\"></i></a>";
         ${ $Param{Data} } =~ s/($AgentPattern)/$Replace$1/g;
     }
     return 1;

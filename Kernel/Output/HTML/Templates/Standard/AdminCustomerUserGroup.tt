@@ -16,7 +16,7 @@
 [% RenderBlockStart("Disabled") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Notice") | html %]</h2>
+                 <h2><span>[% Translate("Notice") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -47,7 +47,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -91,7 +91,7 @@
 [% RenderBlockStart("Filter") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterGroups">[% Translate("Filter for Groups") | html %]</label></h2>
+                 <h2><span><label for="FilterGroups">[% Translate("Filter for Groups") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <ul>
@@ -109,7 +109,7 @@
 [% RenderBlockStart("Note") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -127,7 +127,7 @@
         <div class="WidgetSimple">
 [% RenderBlockStart("Result") %]
             <div class="Header">
-                <h2>[% Translate("Search Results") | html %]:</h2>
+                <h2><span>[% Translate("Search Results") | html %]:</span></h2>
             </div>
             <div class="Content LayoutGrid ColumnsWithSpacing">
                 <div class="Size1of2">
@@ -167,7 +167,7 @@
 
 [% RenderBlockStart("Change") %]
             <div class="Header">
-                <h2>
+                <h2><span>
 [% RenderBlockStart("ChangeHeadingGroup") %]
                     [% Translate("Change Group Relations for Customer") | html %]
 [% RenderBlockEnd("ChangeHeadingGroup") %]
@@ -175,7 +175,7 @@
                     [% Translate("Change Customer Relations for Group") | html %]
 [% RenderBlockEnd("ChangeHeadingCustomer") %]
                     <a href="[% Env("Baselink") %]Action=[% Data.ActionHome | uri %];Subaction=Change;ID=[% Data.ID | uri %]">[% Data.Name | html %]</a>
-                </h2>
+                </span></h2>
             </div>
             <div class="Content ">
                 <form action="[% Env("CGIHandle") %]" method="post" name="matrix">
@@ -252,7 +252,7 @@
 [% RenderBlockStart("AlwaysGroups") %]
         <div class="WidgetSimple SpacingTop">
             <div class="Header">
-                <h2>[% Translate("Customer Default Groups:") | html %]</h2>
+                 <h2><span>[% Translate("Customer Default Groups:") | html %]</span></h2>
             </div>
             <div class="Content LayoutGrid ColumnsWithSpacing">
                 <div class="Size1of2">
@@ -273,7 +273,7 @@
 [% RenderBlockStart("Reference") %]
         <div class="WidgetSimple SpacingTop">
             <div class="Header">
-                <h2>[% Translate("Reference") | html %]</h2>
+                 <h2><span>[% Translate("Reference") | html %]</span></h2>
             </div>
             <div class="Content">
 

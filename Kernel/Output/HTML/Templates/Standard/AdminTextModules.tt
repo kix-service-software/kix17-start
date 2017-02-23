@@ -24,7 +24,7 @@
 [% RenderBlockStart("ActionOverview") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -41,7 +41,7 @@
 [% RenderBlockStart("TextModuleSearch") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Filter Overview") | html %]</h2>
+                 <h2><span>[% Translate("Filter Overview") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
@@ -80,7 +80,7 @@
 [% RenderBlockStart("ActionAdd") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Add text module") | html %]</h2>
+                 <h2><span>[% Translate("Add text module") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
@@ -98,7 +98,7 @@
 [% RenderBlockStart("TextModuleCategoryTree") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Category Selection") | html %]</h2>
+                 <h2><span>[% Translate("Category Selection") | html %]</span></h2>
             </div>
             <div class="Content CategoryTreeContent">
                 <div id="CategoryTreeControl" class="SpacingBottom"><a href="?#" class="Collaps">[% Translate("Collapse All") | html %]</a> | <a href="?#" class="Expand">[% Translate("Expand All") | html %]</a></div>
@@ -111,7 +111,7 @@
 [% RenderBlockStart("Download") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Download all text modules") | html %]</h2>
+                 <h2><span>[% Translate("Download all text modules") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
@@ -135,7 +135,7 @@
 [% RenderBlockStart("Upload") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Upload text modules") | html %]</h2>
+                 <h2><span>[% Translate("Upload text modules") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="UploadForm" action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" >
@@ -157,7 +157,7 @@
                 </form>
 [% RenderBlockStart("UploadResult") %]
                 <br /><br />
-                <h2>[% Translate("Result of the upload") | html %]:</h2>
+                 <h2><span>[% Translate("Result of the upload") | html %]:</span></h2>
                 <div>[% Data.UploadMessage %]</div>
                 <fieldset class="TableLike FixedLabel">
                     <label>[% Translate("entries uploaded") | html %]:</label>
@@ -201,7 +201,7 @@
 [% RenderBlockStart("Hint") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -220,7 +220,7 @@
 [% RenderBlockStart("OverviewList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("List for category") | html %]: [% Data.SelectedCategoryName %]</h2>
+                 <h2><span>[% Translate("List for category") | html %]: [% Data.SelectedCategoryName %]</span></h2>
             </div>
             <div class="Content">
                 <table id="TextModuleTable" class="DataTable">
@@ -277,7 +277,7 @@
 [% RenderBlockStart("Edit") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Text module") | html %]</h2>
+                 <h2><span>[% Translate("Text module") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="form1" action="[% Env("CGIHandle") %]" method="post" class="PreventMultipleSubmits Validate">
@@ -402,7 +402,7 @@
 [% RenderBlockStart("EditNote") %]
         <div class="WidgetSimple SpacingTop">
             <div class="Header">
-                <h2>[% Translate("Reference") | html %]</h2>
+                 <h2><span>[% Translate("Reference") | html %]</span></h2>
             </div>
             <div class="Content">
 

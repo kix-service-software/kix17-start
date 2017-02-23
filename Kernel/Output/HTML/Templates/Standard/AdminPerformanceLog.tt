@@ -13,7 +13,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -28,7 +28,7 @@
 [% RenderBlockEnd("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
 [% RenderBlockStart("Enabled") %]
@@ -106,7 +106,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Overview") | html %]</h2>
+                 <h2><span>[% Translate("Overview") | html %]</span></h2>
             </div>
 
 [% RenderBlockStart("OverviewTable") %]
@@ -164,7 +164,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Range") | html %] ([% Translate("last") | html %] [% Data.Age | html %])</h2>
+                <h2><span>[% Translate("Range") | html %] ([% Translate("last") | html %] [% Data.Age | html %])</span></h2>
             </div>
             <div class="Content">
                 <p>

@@ -30,7 +30,7 @@
 [% RenderBlockStart("ActionOverview") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -47,7 +47,7 @@
 [% RenderBlockStart("ActionAdd") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Add ticket template") | html %]</h2>
+                 <h2><span>[% Translate("Add ticket template") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
@@ -67,7 +67,7 @@
 [% RenderBlockStart("Download") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Download all ticket templates") | html %]</h2>
+                 <h2><span>[% Translate("Download all ticket templates") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
@@ -91,7 +91,7 @@
 [% RenderBlockStart("Upload") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Upload ticket templates") | html %]</h2>
+                 <h2><span>[% Translate("Upload ticket templates") | html %]</span></h2>
             </div>
             <div class="Content">
                 <form name="UploadForm" action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" >
@@ -112,7 +112,7 @@
                 </form>
 [% RenderBlockStart("UploadResult") %]
                 <br /><br />
-                <h2>[% Translate("Result of the upload") | html %]:</h2>
+                 <h2><span>[% Translate("Result of the upload") | html %]:</span></h2>
                 <div>[% Data.UploadMessage %]</div>
                 <fieldset class="TableLike FixedLabel">
                     <label>[% Translate("entries uploaded") | html %]:</label>
@@ -145,7 +145,7 @@
 [% RenderBlockStart("OverviewList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("List") | html %]</h2>
+                 <h2><span>[% Translate("List") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable">
@@ -190,9 +190,9 @@
 [% RenderBlockStart("Edit") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Ticket Template") | html %]</h2>
+                 <h2><span>[% Translate("Ticket Template") | html %]</span></h2>
             </div>
-            <div class="ContentColumn">
+            <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="TicketTemplateForm" class="PreventMultipleSubmits">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="Save" />

@@ -27,65 +27,6 @@ Core.KIXBase.Agent = (function(TargetNS) {
     var SUPERAdminNotificationEventAddLanguage;
 
     TargetNS.Init = function() {
-        // fix some Widgets
-        $('.WidgetSimple > .ContentColumn').removeClass('ContentColumn').addClass('Content');
-
-        // replace header icons
-        $('#UserInfo .SwitchButton > i').removeClass('fa-refresh').addClass('fa-exchange');
-        $('#UserInfo .KIXHelp > i').removeClass('fa-medkit').addClass('fa-question');
-        $('#UserInfo .LogoutButton > i').removeClass('fa-power-off').addClass('fa-sign-out');
-
-        // fix widgets in WidgetBox
-        $('.WidgetBox').each(function() {
-            // remove WidgetAction element in ConfigItemZoom
-            if ($(this).parents('#ITSMItems').length > 0) {
-                $(this).find('.Header > .WidgetAction').remove();
-            }
-        });
-        $('.WidgetBox > .Header.LightRow').removeClass('LightRow');
-        $('.WidgetBox > .Content').removeClass('WithPadding NoDoubleBorders');
-        $('.WidgetBox').removeClass('WidgetBox').addClass('WidgetSimple');
-
-        // fix WidgetSimple
-        $('.WidgetSimple > .LightRow').each(function() {
-            if ($(this).parents('#ArticleItems').length == 0) {
-                $(this).removeClass('LightRow');
-            }
-
-            if (!$(this).hasClass('Header') && $(this).parents('.CITabLinkGraph').length != 1) {
-                $(this).parent('.WidgetSimple').children('.Content').prepend($(this).detach());
-            }
-        });
-
-        // fix Widgets in FAQ
-        $('.ArticleFAQContent').removeClass('ArticleFAQContent').addClass('Content');
-
-        // special handling for h3 in WidgetSimple
-        $('.WidgetSimple > .Header > h3').each(function() {
-            $(this).parent().append('<h2>' + $(this).html() + '</h2>');
-            $(this).remove();
-        });
-
-        // add padding to WidgetSimple Header h2 if Toggle element exists before
-        $('.WidgetSimple > .Header > h2').each(function () {
-            if ($(this).parent('.Header').children().index($(this)) > 0 && $(this).parent('.Header').children('.Toggle').length == 1) {
-                $(this).addClass('PaddingLeft15px');
-            }
-
-            // enclose text into span element for positioning (we have to check html() here, because otherwise it won't work in FAQ)
-            if ($(this).html().length > 0 && !$(this).html().indexOf('<span') == 0) {
-                $(this).html('<span>' + $(this).html() + '</span>');
-            }
-        });
-
-        // hide some elements
-        $('.PreferencesScreen .FieldExplanation.Language').hide();
-        $('.NotificationLanguage .Header h2 span.Warning').parents('.NotificationLanguage').hide();
-        $('.AdminSupportDataCollector .SidebarColumn').hide();
-
-        // remove some elements
-        $('.FieldExplanation .OTRSBusinessRequired').parents('.WidgetSimple').remove();
-        $('.ErrorScreen .MessageBox').remove();
 
         // hide Toolbar
         if ($('#ToolBarToggle').length == 0 && $('#ToolBar').length > 0) {

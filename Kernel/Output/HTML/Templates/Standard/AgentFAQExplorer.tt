@@ -32,7 +32,7 @@
 [% RenderBlockStart("QuickSearch") %]
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h3>[% Translate("Search") | html %]</h3>
+                     <h2><span>[% Translate("Search") | html %]</span></h2>
                     <div class="Clear"></div>
                 </div>
                 <div class="Content">
@@ -72,7 +72,7 @@
 [% RenderBlockStart("InfoBoxFAQMiniList") %]
                 <div class="WidgetSimple">
                     <div class="Header">
-                        <h2>[% Translate(Data.Header) | html %]</h2>
+                         <h2><span>[% Translate(Data.Header) | html %]</span></h2>
                     </div>
                     <div class="Content">
                         <ul class="Tablelike FAQMiniList">
@@ -102,7 +102,7 @@
 [% RenderBlockStart("OverviewResult") %]
 
                     <div class="Header">
-                        <h2>[% Translate("Subcategories") | html %]</h2>
+                         <h2><span>[% Translate("Subcategories") | html %]</span></h2>
                     </div>
 
                     <div class="Content">

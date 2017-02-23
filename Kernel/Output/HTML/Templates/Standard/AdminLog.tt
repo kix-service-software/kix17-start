@@ -11,7 +11,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -34,7 +34,7 @@ $('#HideHint').bind('click', function(){
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Recent Log Entries") | html %]</h2>
+                 <h2><span>[% Translate("Recent Log Entries") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable">

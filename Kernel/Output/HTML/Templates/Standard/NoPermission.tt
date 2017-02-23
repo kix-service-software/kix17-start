@@ -11,7 +11,7 @@
     <div class="W33pc CenterBox SpacingTopLarge SpacingBottomLarge">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Insufficient Rights") | html %]</h2>
+                 <h2><span>[% Translate("Insufficient Rights") | html %]</span></h2>
             </div>
             <div class="Content">
                 <h4>

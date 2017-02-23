@@ -15,7 +15,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -35,7 +35,7 @@
 [% RenderBlockEnd("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Note") | html %]</h2>
+                 <h2><span>[% Translate("Note") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -49,7 +49,7 @@
         <div class="WidgetSimple">
 [% RenderBlockStart("OverviewList") %]
             <div class="Header">
-                <h2>[% Translate(Data.ObjectName) | html %]</h2>
+                 <h2><span>[% Translate(Data.ObjectName) | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable">
@@ -108,7 +108,7 @@
 
 [% RenderBlockStart("TemplateEdit1") %]
             <div class="Header">
-                <h2>[% Translate("Step 1 of 5 - Edit common information") | html %]:</h2>
+                 <h2><span>[% Translate("Step 1 of 5 - Edit common information") | html %]:</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" class="Validate PreventMultipleSubmits">
@@ -202,7 +202,7 @@
 
 [% RenderBlockStart("TemplateEdit2") %]
             <div class="Header">
-                <h2>[% Translate("Step 2 of 5 - Edit object information") | html %]:</h2>
+                 <h2><span>[% Translate("Step 2 of 5 - Edit object information") | html %]:</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" class="Validate PreventMultipleSubmits">
@@ -247,7 +247,7 @@
 
 [% RenderBlockStart("TemplateEdit3") %]
             <div class="Header">
-                <h2>[% Translate("Step 3 of 5 - Edit format information") | html %]:</h2>
+                 <h2><span>[% Translate("Step 3 of 5 - Edit format information") | html %]:</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" class="Validate PreventMultipleSubmits">
@@ -294,7 +294,7 @@
 
 [% RenderBlockStart("TemplateEdit4") %]
             <div class="Header">
-                <h2>[% Translate("Step 4 of 5 - Edit mapping information") | html %]:</h2>
+                 <h2><span>[% Translate("Step 4 of 5 - Edit mapping information") | html %]:</span></h2>
             </div>
             <div class="Content">
                 <div class="MapHeaderRow SpacingTop">
@@ -441,7 +441,7 @@
 
 [% RenderBlockStart("TemplateEdit5") %]
             <div class="Header">
-                <h2>[% Translate("Step 5 of 5 - Edit search information") | html %]:</h2>
+                 <h2><span>[% Translate("Step 5 of 5 - Edit search information") | html %]:</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" class="Validate PreventMultipleSubmits">
@@ -479,7 +479,7 @@
 
 [% RenderBlockStart("ImportInformation") %]
             <div class="Header">
-                <h2>[% Translate("Import information") | html %]:</h2>
+                 <h2><span>[% Translate("Import information") | html %]:</span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">
@@ -556,7 +556,7 @@
     <div class="W50pc SpacingTopLarge SpacingBottomLarge CenterBox">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Import summary for") | html %] [% Data.Object | html %]</h2>
+                 <h2><span>[% Translate("Import summary for") | html %] [% Data.Object | html %]</span></h2>
             </div>
             <div class="Content">
 

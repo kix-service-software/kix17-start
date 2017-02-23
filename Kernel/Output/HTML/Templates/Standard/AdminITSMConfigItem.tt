@@ -13,7 +13,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class='Content'>
                 <ul class="ActionList">
@@ -42,7 +42,7 @@
         <div class="WidgetSimple">
 [% RenderBlockStart("OverviewList") %]
             <div class="Header">
-                <h2>[% Translate("List") | html %]</h2>
+                 <h2><span>[% Translate("List") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable">
@@ -65,7 +65,7 @@
 [% RenderBlockEnd("OverviewList") %]
 [% RenderBlockStart("DefinitionList") %]
             <div class="Header">
-                <h2>[% Translate("List") | html %]</h2>
+                 <h2><span>[% Translate("List") | html %]</span></h2>
             </div>
             <div class="Content">
                 <table class="DataTable">
@@ -94,7 +94,7 @@
 [% RenderBlockEnd("DefinitionList") %]
 [% RenderBlockStart("DefinitionView") %]
             <div class="Header">
-                <h2>[% Translate("View") | html %]: </h2>
+                 <h2><span>[% Translate("View") | html %]: </span></h2>
             </div>
             <div class="Content">
                 <fieldset class="TableLike">
@@ -134,7 +134,7 @@
 [% RenderBlockEnd("DefinitionView") %]
 [% RenderBlockStart("DefinitionChange") %]
             <div class="Header">
-                <h2>[% Translate("Change") | html %]: </h2>
+                 <h2><span>[% Translate("Change") | html %]: </span></h2>
             </div>
             <div class="Content">
                 <form action="[% Env("CGIHandle") %]" method="post">

@@ -24,7 +24,7 @@
         <div class="WidgetSimple">
 [% RenderBlockStart("ActionList") %]
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -45,7 +45,7 @@
 # KIX4OTRS-capeIT
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterServices">[% Translate("Filter for Services") | html %]</label></h2>
+                 <h2><span><label for="FilterServices">[% Translate("Filter for Services") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="FilterServices" class="W50pc" name="FilterServices" value="" title="[% Translate("Filter for Services") | html %]" />
@@ -58,7 +58,7 @@
         <div class="WidgetSimple">
 [% RenderBlockStart("OverviewList") %]
             <div class="Header">
-                <h2>[% Translate("List") | html %]</h2>
+                 <h2><span>[% Translate("List") | html %]</span></h2>
             </div>
             <div class="Content">
 
@@ -104,10 +104,10 @@
 [% RenderBlockStart("ServiceEdit") %]
             <div class="Header">
 [% RenderBlockStart("HeaderAdd") %]
-                <h2>[% Translate("Add Service") | html %]</h2>
+                 <h2><span>[% Translate("Add Service") | html %]</span></h2>
 [% RenderBlockEnd("HeaderAdd") %]
 [% RenderBlockStart("HeaderEdit") %]
-                <h2>[% Translate("Edit Service") | html %] : [% Data.Name | html %]</h2>
+                 <h2><span>[% Translate("Edit Service") | html %] : [% Data.Name | html %]</span></h2>
 [% RenderBlockEnd("HeaderEdit") %]
             </div>
             <div class="Content">

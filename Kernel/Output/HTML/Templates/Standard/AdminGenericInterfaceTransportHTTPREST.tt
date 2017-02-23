@@ -25,7 +25,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -40,7 +40,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Network transport") | html %]</h2>
+                 <h2><span>[% Translate("Network transport") | html %]</span></h2>
             </div>
             <div class="Content">
                 <h3>[% Translate("Properties") | html %]</h3>

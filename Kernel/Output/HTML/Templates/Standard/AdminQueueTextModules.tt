@@ -23,7 +23,7 @@
 [% RenderBlockStart("ActionList") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label>[% Translate("Actions") | html %]</label></h2>
+                 <h2><span><label>[% Translate("Actions") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -40,7 +40,7 @@
 [% RenderBlockStart("FilterTextModule") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterTextModules">[% Translate("Filter for text modules") | html %]</label></h2>
+                 <h2><span><label for="FilterTextModules">[% Translate("Filter for text modules") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="FilterTextModules" class="W50pc" name="FilterTextModules" value="" title="[% Translate("Filter for text modules") | html %]" />
@@ -50,7 +50,7 @@
 [% RenderBlockStart("FilterQueue") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="FilterQueues">[% Translate("Filter for queues") | html %]</label></h2>
+                 <h2><span><label for="FilterQueues">[% Translate("Filter for queues") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="FilterQueues" class="W50pc" name="FilterQueues" value="" title="[% Translate("Filter for queues") | html %]" />
@@ -65,7 +65,7 @@
 
 [% RenderBlockStart("OverviewResult") %]
             <div class="Header">
-                <h2>[% Translate("Overview") | html %]</h2>
+                 <h2><span>[% Translate("Overview") | html %]</span></h2>
             </div>
             <div class="Content LayoutGrid ColumnsWithSpacing">
                 <div class="Size1of2">
@@ -104,7 +104,7 @@
 [% RenderBlockEnd("OverviewResult") %]
 [% RenderBlockStart("Change") %]
             <div class="Header">
-                <h2>
+                <h2><span>
 [% RenderBlockStart("ChangeHeaderQueue") %]
                     [% Translate("Change Queue relations for text modules") | html %]
 [% RenderBlockEnd("ChangeHeaderQueue") %]
@@ -112,7 +112,7 @@
                     [% Translate("Change text module relations for Queue") | html %]
 [% RenderBlockEnd("ChangeHeaderTextModule") %]
                     <a href="[% Env("Baselink") %]Action=[% Data.ActionHome | uri %];Subaction=Change;[% Data.Queue | uri %]ID=[% Data.ID | uri %]">[% Data.Name | html %]</a>
-                </h2>
+                </span></h2>
             </div>
             <div class="Content ">
                 <form action="[% Env("CGIHandle") %]" method="post" name="matrix">

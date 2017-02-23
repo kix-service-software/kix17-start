@@ -29,7 +29,7 @@
         <div class="ContentColumn">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("FAQ Information") | html %]</h2>
+                     <h2><span>[% Translate("FAQ Information") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabelSmall">
@@ -111,7 +111,7 @@
 [% RenderBlockStart("FAQContent") %]
                 <div class="WidgetSimple">
                     <div class="Header">
-                        <h2>[% Translate(Data.Caption) | html %]</h2>
+                         <h2><span>[% Translate(Data.Caption) | html %]</span></h2>
                     </div>
                     <div class="Content">
 [% RenderBlockStart("FAQContentHTML") %]
@@ -144,7 +144,7 @@ function CheckIFrameHeight(IFrameID) {
 //]]></script>
 [% END %]
 [% RenderBlockStart("FAQContentPlain") %]
-                        <div class="ArticleFAQContent">
+                        <div class="Content">
                             <div class="message">
                                 [% Data.Content %]
                             </div>

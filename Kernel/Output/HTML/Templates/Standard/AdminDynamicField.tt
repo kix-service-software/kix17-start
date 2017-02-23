@@ -15,7 +15,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -55,7 +55,7 @@ $('#[% Data.SelectName %]').bind('change', function() {
 [% RenderBlockStart("Hint") %]
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Hint") | html %]</h2>
+                <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <div class="FieldExplanation">
@@ -70,7 +70,7 @@ $('#[% Data.SelectName %]').bind('change', function() {
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Dynamic Fields List") | html %]</h2>
+                <h2><span>[% Translate("Dynamic Fields List") | html %]</span></h2>
 
 [% RenderBlockStart("ContextSettings") %]
                 <ul class="ContextFunctions">

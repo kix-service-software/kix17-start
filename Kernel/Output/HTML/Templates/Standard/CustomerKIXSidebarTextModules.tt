@@ -15,7 +15,7 @@
 
 <div class="WidgetSimple">
     <div class="Header">
-        <h2>[% Translate(Data.Title) | html %]</h2>
+         <h2><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
     <div id="TextModulesTable" class="Content">[% Data.TextModulesTable %]</div>
 </div>

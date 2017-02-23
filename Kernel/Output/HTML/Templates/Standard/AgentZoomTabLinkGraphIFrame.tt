@@ -131,7 +131,7 @@
 
     <div class="Hidden" id="SaveOverwriteGraph">
         <div class="Header">
-            <h2>[% Translate("Save graph for") | html %] [% Data.StartName | html %]</h2>
+             <h2><span>[% Translate("Save graph for") | html %] [% Data.StartName | html %]</span></h2>
         </div>
         <div class="Content">
             <p>[% Translate("What should be done?") | html %]</p>

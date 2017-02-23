@@ -34,7 +34,7 @@
         <div class="Content">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Available articles") | html %]</h2>
+                     <h2><span>[% Translate("Available articles") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <table class="DataTable">

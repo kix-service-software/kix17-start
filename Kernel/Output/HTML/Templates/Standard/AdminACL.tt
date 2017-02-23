@@ -12,7 +12,7 @@
     <div class="SidebarColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2><label for="Filter">[% Translate("Filter for ACLs") | html %]</label></h2>
+                 <h2><span><label for="Filter">[% Translate("Filter for ACLs") | html %]</label></span></h2>
             </div>
             <div class="Content">
                 <input type="text" id="Filter" class="W95pc" name="Filter" value="" title="[% Translate("Filter") | html %]" placeholder="[% Translate("ACL Name") | html %]" />
@@ -20,7 +20,7 @@
         </div>
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Actions") | html %]</h2>
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
             </div>
             <div class="Content">
                 <ul class="ActionList">
@@ -39,7 +39,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Configuration import") | html %]</h2>
+                 <h2><span>[% Translate("Configuration import") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -69,7 +69,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("Description") | html %]</h2>
+                 <h2><span>[% Translate("Description") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="FieldExplanation">
@@ -85,7 +85,7 @@
     <div class="ContentColumn">
         <div class="WidgetSimple">
             <div class="Header">
-                <h2>[% Translate("ACLs") | html %]</h2>
+                 <h2><span>[% Translate("ACLs") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p class="ACLNote">[% Translate("Please note: This table represents the execution order of the ACLs. If you need to change the order in which ACLs are executed, please change the names of the affected ACLs.") | html %]</p>

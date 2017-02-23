@@ -141,7 +141,7 @@
             </div>
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Request New Password") | html %]</h2>
+                     <h2><span>[% Translate("Request New Password") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <p class="Error Center Spacing"></p>
@@ -180,7 +180,7 @@
             </div>
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2>[% Translate("Create Account") | html %]</h2>
+                     <h2><span>[% Translate("Create Account") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <p class="Error Center Spacing"></p>
