@@ -7640,7 +7640,7 @@
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
-            <String Regex="">OTRS-CGI</String>
+            <String Regex="">KIX-CGI</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::FilterText###AAAURL" Required="0" Valid="1">
@@ -7758,7 +7758,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::MIME-Viewer</SubGroup>
         <Setting>
-            <String Regex="">&lt;OTRS_CONFIG_Home&gt;/scripts/tools/xml2html.pl</String>
+            <String Regex="">&lt;KIX_CONFIG_Home&gt;/scripts/tools/xml2html.pl</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SpellChecker" Required="1" Valid="1">
@@ -7963,7 +7963,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::PDF</SubGroup>
         <Setting>
-            <String Regex="">&lt;OTRS_CONFIG_Home&gt;/var/KIX-printlogo.png</String>
+            <String Regex="">&lt;KIX_CONFIG_Home&gt;/var/KIX-printlogo.png</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PDF::PageSize" Required="1" Valid="1">
@@ -8217,19 +8217,19 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="NotificationSenderName" Required="1" Valid="1">
-        <Description Translatable="1">Specifies the name that should be used by the application when sending notifications. The sender name is used to build the complete display name for the notification master (i.e. "OTRS Notifications" otrs@your.example.com).</Description>
+        <Description Translatable="1">Specifies the name that should be used by the application when sending notifications. The sender name is used to build the complete display name for the notification master (i.e. "KIX Notifications" kix@your.example.com).</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
-            <String Regex="">OTRS Notifications</String>
+            <String Regex="">KIX Notifications</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="NotificationSenderEmail" Required="1" Valid="1">
-        <Description Translatable="1">Specifies the email address that should be used by the application when sending notifications. The email address is used to build the complete display name for the notification master (i.e. "OTRS Notifications" otrs@your.example.com). You can use the OTRS_CONFIG_FQDN variable as set in your configuation, or choose another email address.</Description>
+        <Description Translatable="1">Specifies the email address that should be used by the application when sending notifications. The email address is used to build the complete display name for the notification master (i.e. "KIX Notifications" kix@your.example.com). You can use the KIX_CONFIG_FQDN variable as set in your configuation, or choose another email address.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
-            <String Regex="">otrs@&lt;OTRS_CONFIG_FQDN&gt;</String>
+            <String Regex="">kix@&lt;KIX_CONFIG_FQDN&gt;</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="NotificationSubjectLostPasswordToken" Required="1" Valid="1">
@@ -8237,7 +8237,7 @@
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
-            <String Regex="">New OTRS password request</String>
+            <String Regex="">New KIX password request</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="NotificationBodyLostPasswordToken" Required="1" Valid="1">
@@ -8245,14 +8245,14 @@
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
-            <TextArea>Hi &lt;OTRS_USERFIRSTNAME&gt;,
+            <TextArea>Hi &lt;KIX_USERFIRSTNAME&gt;,
 
-You or someone impersonating you has requested to change your OTRS
+You or someone impersonating you has requested to change your KIX
 password.
 
 If you want to do this, click on the link below. You will receive another email containing the password.
 
-&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;index.pl?Action=LostPassword;Token=&lt;OTRS_TOKEN&gt;
+&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=LostPassword;Token=&lt;KIX_TOKEN&gt;
 
 If you did not request a new password, please ignore this email.
             </TextArea>
@@ -8271,16 +8271,16 @@ If you did not request a new password, please ignore this email.
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
-            <TextArea>Hi &lt;OTRS_USERFIRSTNAME&gt;,
+            <TextArea>Hi &lt;KIX_USERFIRSTNAME&gt;,
 
 
-Here's your new OTRS password.
+Here's your new KIX password.
 
-New password: &lt;OTRS_NEWPW&gt;
+New password: &lt;KIX_NEWPW&gt;
 
 You can log in via the following URL:
 
-&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;index.pl
+&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl
             </TextArea>
         </Setting>
     </ConfigItem>
@@ -8323,7 +8323,7 @@ You can log in via the following URL:
         <Group>Framework</Group>
         <SubGroup>Core::PerformanceLog</SubGroup>
         <Setting>
-            <String Regex="">&lt;OTRS_CONFIG_Home&gt;/var/log/Performance.log</String>
+            <String Regex="">&lt;KIX_CONFIG_Home&gt;/var/log/Performance.log</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PerformanceLog::FileMax" Required="1" Valid="1" ConfigLevel="200">
@@ -8862,14 +8862,14 @@ You can log in via the following URL:
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
-            <TextArea>Hi &lt;OTRS_USERFIRSTNAME&gt;,
+            <TextArea>Hi &lt;KIX_USERFIRSTNAME&gt;,
 
 You or someone impersonating you has requested to change your OTRS
 password.
 
 If you want to do this, click on this link. You will receive another email containing the password.
 
-&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;customer.pl?Action=CustomerLostPassword;Token=&lt;OTRS_TOKEN&gt;
+&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;customer.pl?Action=CustomerLostPassword;Token=&lt;KIX_TOKEN&gt;
 
 If you did not request a new password, please ignore this email.
             </TextArea>
@@ -8880,7 +8880,7 @@ If you did not request a new password, please ignore this email.
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
-            <String Regex="">New OTRS password</String>
+            <String Regex="">New KIX password</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerPanelBodyLostPassword" Required="1" Valid="1">
@@ -8888,12 +8888,12 @@ If you did not request a new password, please ignore this email.
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
-            <TextArea>Hi &lt;OTRS_USERFIRSTNAME&gt;,
+            <TextArea>Hi &lt;KIX_USERFIRSTNAME&gt;,
 
 
-New password: &lt;OTRS_NEWPW&gt;
+New password: &lt;KIX_NEWPW&gt;
 
-&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;customer.pl
+&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;customer.pl
             </TextArea>
         </Setting>
     </ConfigItem>
@@ -8910,19 +8910,19 @@ New password: &lt;OTRS_NEWPW&gt;
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
-            <TextArea>Hi &lt;OTRS_USERFIRSTNAME&gt;,
+            <TextArea>Hi &lt;KIX_USERFIRSTNAME&gt;,
 
-You or someone impersonating you has created a new OTRS account for
+You or someone impersonating you has created a new KIX account for
 you.
 
-Full name: &lt;OTRS_USERFIRSTNAME&gt; &lt;OTRS_USERLASTNAME&gt;
-User name: &lt;OTRS_USERLOGIN&gt;
-Password : &lt;OTRS_USERPASSWORD&gt;
+Full name: &lt;KIX_USERFIRSTNAME&gt; &lt;KIX_USERLASTNAME&gt;
+User name: &lt;KIX_USERLOGIN&gt;
+Password : &lt;KIX_USERPASSWORD&gt;
 
 You can log in via the following URL. We encourage you to change your password
 via the Preferences button after logging in.
 
-&lt;OTRS_CONFIG_HttpType&gt;://&lt;OTRS_CONFIG_FQDN&gt;/&lt;OTRS_CONFIG_ScriptAlias&gt;customer.pl
+&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;customer.pl
             </TextArea>
         </Setting>
     </ConfigItem>
@@ -10726,11 +10726,11 @@ via the Preferences button after logging in.
                 <Item Key="Title" Translatable="1">A picture</Item>
                 <Item Key="Description" Translatable="1">Some picture description!</Item>
                 <Item Key="Block">ContentLarge</Item>
-                <Item Key="URL">http://www.otrs.com/wp-uploads//2013/10/OTRS_Logo-300x170.png</Item>
+                <Item Key="URL">http://www.kixdesk.com/de/files/layout/logo.png</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
-                <Item Key="Link">http://otrs.org/</Item>
-                <Item Key="LinkTitle">http://otrs.org/</Item>
+                <Item Key="Link">http://www.kixdesk.com/</Item>
+                <Item Key="LinkTitle">http://www.kixdesk.com/</Item>
                 <Item Key="Width">198</Item>
                 <Item Key="Height">140</Item>
             </Hash>
@@ -10760,11 +10760,11 @@ via the Preferences button after logging in.
                 <Item Key="Title" Translatable="1">A Website</Item>
                 <Item Key="Description" Translatable="1">Some description!</Item>
                 <Item Key="Block">ContentLarge</Item>
-                <Item Key="URL">http://www.otrs.org/</Item>
+                <Item Key="URL">http://www.kixdesk.com/</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Default">1</Item>
-                <Item Key="Link">http://otrs.org/</Item>
-                <Item Key="LinkTitle">OTRS.org/</Item>
+                <Item Key="Link">http://www.kixdesk.com/</Item>
+                <Item Key="LinkTitle">http://www.kixdesk.com/</Item>
                 <Item Key="Width">1024</Item>
                 <Item Key="Height">800</Item>
                 <Item Key="Marginheight">5</Item>
@@ -13215,7 +13215,7 @@ via the Preferences button after logging in.
         <Group>Framework</Group>
         <SubGroup>Core::Log</SubGroup>
         <Setting>
-            <String Regex="">&lt;OTRS_CONFIG_Home&gt;/var/log/sysconfig.log</String>
+            <String Regex="">&lt;KIX_CONFIG_Home&gt;/var/log/sysconfig.log</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SysConfigChangeLog::LogModule::LogFile::Date" Required="1" Valid="1">
@@ -13319,7 +13319,7 @@ via the Preferences button after logging in.
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewMerge</SubGroup>
         <Setting>
-            <TextArea>Bounced Ticket &lt;OTRS_TICKET&gt; to &lt;OTRS_BOUNCE_TO&gt;.</TextArea>
+            <TextArea>Bounced Ticket &lt;KIX_TICKET&gt; to &lt;KIX_BOUNCE_TO&gt;.</TextArea>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::CustomerInfoTicketCount" Required="0" Valid="1">
