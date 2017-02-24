@@ -4313,8 +4313,8 @@ sub Data {
             'Automatische Bestätigung, die gesendet wird, nachdem eine Rückantwort für ein Ticket empfangen wurde (falls die Rückantworts-Einstellung der Queue "Möglich" ist).',
         'Automatic response which will be sent out after a follow-up has been rejected and a new ticket has been created (in case queue follow-up option is "new ticket").' =>
             'Automatische Antwort, die gesendet wird, nachdem eine Rückantwort abgelehnt und ein neues Ticket erstellt wurde (falls die Rückantworts-Einstellung der Queue "Neues Ticket" ist).',
-        'Auto remove will be sent out after a contact removed the request.' =>
-            'Auto Remove wird versendet, nachdem der Ansprechpartner die Anfrage entfernt hat.',
+        'Auto remove will be sent out after a customer contact removed the request.' =>
+            'Auto Remove wird versendet, nachdem ein Kunden-Ansprechpartner die Anfrage entfernt hat.',
         'default reply (after new ticket has been created)' => 'Standardantwort (nachdem ein neues Ticket erstellt wurde)',
         'default reject (after follow-up and rejected of a closed ticket)' =>
             'Standardablehnung (nachdem eine Antwort auf ein geschlossenes Ticket eingegangen und diese abgelehnt wurde)',
