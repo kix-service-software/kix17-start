@@ -22,7 +22,7 @@ $Selenium->RunTest(
         my $Helper = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
 
         # create test customer user
-        my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate() || die "Did not get test contact";
+        my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate() || die "Did not get test customer user";
 
         my $ScriptAlias = $Kernel::OM->Get('Kernel::Config')->Get('ScriptAlias');
 
@@ -31,7 +31,34 @@ $Selenium->RunTest(
         $Selenium->delete_all_cookies();
 
         # now load it again to login
-        $Selenium->VerifiedGet("${ScriptAlias}customer.pl");
+        my $Product = $Kernel::OM->Get('Kernel::Config')->Get('Product');
+        my $Version = $Kernel::OM->Get('Kernel::Config')->Get('Version');
+        for my $Disabled ( reverse 0 .. 1 ) {
+            $Helper->ConfigSettingChange(
+                Key   => 'Secure::DisableBanner',
+                Value => $Disabled,
+            );
+            $Selenium->VerifiedRefresh();
+
+            if ($Disabled) {
+                $Self->False(
+                    index( $Selenium->get_page_source(), 'Powered' ) > -1,
+                    'Footer banner hidden',
+                );
+            }
+            else {
+                $Self->True(
+                    index( $Selenium->get_page_source(), 'Powered' ) > -1,
+                    'Footer banner shown',
+                );
+
+                # Prevent version information disclosure on login page.
+                $Self->False(
+                    index( $Selenium->get_page_source(), "$Product $Version" ) > -1,
+                    "No version information disclosure ($Product $Version)",
+                );
+            }
+        }
 
         my $Element = $Selenium->find_element( 'input#User', 'css' );
         $Element->is_displayed();
@@ -48,6 +75,12 @@ $Selenium->RunTest(
 
         # check if login is successful
         $Element = $Selenium->find_element( 'a#LogoutButton', 'css' );
+
+        # Check for version tag in the footer.
+        $Self->True(
+            index( $Selenium->get_page_source(), "$Product $Version" ) > -1,
+            "Version information present ($Product $Version)",
+        );
 
         # logout again
         $Element->VerifiedClick();

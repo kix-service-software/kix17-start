@@ -65,7 +65,7 @@ $Selenium->RunTest(
 
         # create test customer user
         my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate(
-        ) || die "Did not get test contact";
+        ) || die "Did not get test customer user";
 
         # get test customer user ID
         my @CustomerIDs = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerIDs(

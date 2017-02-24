@@ -105,7 +105,7 @@ $Selenium->RunTest(
         # create and log in test customer user
         my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate(
             Groups => [ 'admin', 'users' ],
-        ) || die "Did not get test contact";
+        ) || die "Did not get test customer user";
 
         $Selenium->Login(
             Type     => 'Customer',

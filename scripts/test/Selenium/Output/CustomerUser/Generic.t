@@ -88,7 +88,7 @@ $Selenium->RunTest(
 
         $Self->True(
             $TestCustomerUser,
-            "Created contact - $TestCustomerUser",
+            "Created customer user - $TestCustomerUser",
         );
 
         # get ticket object

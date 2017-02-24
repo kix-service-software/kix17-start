@@ -64,6 +64,12 @@ $Selenium->RunTest(
             Comment => 'Some Comment',
             ValidID => 1,
             UserID  => 1,
+# ---
+# ITSMCore
+# ---
+            TypeID      => 1,
+            Criticality => '3 normal',
+# ---
         );
         $Self->True(
             $ServiceID,

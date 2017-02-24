@@ -24,7 +24,7 @@ $Selenium->RunTest(
 
         # get 'Computer' and 'Hardware' ConfigItem ID
         my @ConfigItemClassIDs;
-        for my $ConfigItemClass (qw(Computer Hardware)) {
+        for my $ConfigItemClass (qw(Hardware)) {
             my $ConfigItemDataRef = $GeneralCatalogObject->ItemGet(
                 Class => 'ITSM::ConfigItem::Class',
                 Name  => $ConfigItemClass,
@@ -44,39 +44,55 @@ $Selenium->RunTest(
         my $ConfigObject     = $Kernel::OM->Get('Kernel::Config');
 
         # create ConfigItem number
-        my $ConfigItemNumber = $ConfigItemObject->ConfigItemNumberCreate(
-            Type    => $ConfigObject->Get('ITSMConfigItem::NumberGenerator'),
-            ClassID => $ConfigItemClassIDs[1],
-        );
-        $Self->True(
-            $ConfigItemNumber,
-            "ConfigItem number is created - $ConfigItemNumber"
-        );
+        my @ConfigItemNumbers;
+        for my $ConfigNumberCreate ( 1 .. 2 ) {
+            my $ConfigItemNumber = $ConfigItemObject->ConfigItemNumberCreate(
+                Type    => $ConfigObject->Get('ITSMConfigItem::NumberGenerator'),
+                ClassID => $ConfigItemClassIDs[0],
+            );
+            $Self->True(
+                $ConfigItemNumber,
+                "ConfigItem number is created - $ConfigItemNumber"
+            );
+            push @ConfigItemNumbers, $ConfigItemNumber;
+        }
 
         # add the new ConfigItem
-        my $ConfigItemID = $ConfigItemObject->ConfigItemAdd(
-            Number  => $ConfigItemNumber,
-            ClassID => $ConfigItemClassIDs[1],
-            UserID  => 1,
-        );
-        $Self->True(
-            $ConfigItemID,
-            "ConfigItem is created - ID $ConfigItemID"
-        );
+        my @ConfigItemIDs;
+        for my $ConfigItemCreateNumber (@ConfigItemNumbers) {
+            my $ConfigItemID = $ConfigItemObject->ConfigItemAdd(
+                Number  => $ConfigItemCreateNumber,
+                ClassID => $ConfigItemClassIDs[0],
+                UserID  => 1,
+            );
+            $Self->True(
+                $ConfigItemID,
+                "ConfigItem is created - ID $ConfigItemID"
+            );
+            push @ConfigItemIDs, $ConfigItemID;
+        }
 
         # add a new version
-        my $VersionID = $ConfigItemObject->VersionAdd(
-            Name         => 'SeleniumTest',
-            DefinitionID => 1,
-            DeplStateID  => $ProductionDeplStateID,
-            InciStateID  => 1,
-            UserID       => 1,
-            ConfigItemID => $ConfigItemID,
-        );
-        $Self->True(
-            $VersionID,
-            "Version is created - ID $VersionID"
-        );
+        my @VersionIDs;
+        my $Count    = 2;
+        my $RandomID = $Helper->GetRandomID();
+        for my $ConfigItemVersion (@ConfigItemIDs) {
+            my $VersionID = $ConfigItemObject->VersionAdd(
+                Name         => $Count . $RandomID,
+                DefinitionID => 1,
+                DeplStateID  => $ProductionDeplStateID,
+                InciStateID  => 1,
+                UserID       => 1,
+                ConfigItemID => $ConfigItemVersion,
+            );
+            $Self->True(
+                $VersionID,
+                "Version is created - ID $VersionID"
+            );
+            push @VersionIDs, $VersionID;
+
+            $Count--;
+        }
 
         # create test user and login
         my $TestUserLogin = $Helper->TestUserCreate(
@@ -127,13 +143,69 @@ $Selenium->RunTest(
         }
 
         # search ConfigItems by test ConfigItem number
+        $Selenium->execute_script("\$('#Attribute').val('Name').trigger('redraw.InputField').trigger('change');");
+        $Selenium->find_element( ".AddButton", 'css' )->click();
+        $Selenium->find_element("//input[\@name='Number']")->send_keys('*');
         $Selenium->find_element("//input[\@name='Number']")->send_keys($ConfigItemNumber);
         $Selenium->find_element( "#SearchFormSubmit", 'css' )->VerifiedClick();
 
         # check for expected result
-        $Self->True(
-            index( $Selenium->get_page_source(), $ConfigItemNumber ) > -1,
-            "ConfigItem number $ConfigItemNumber - found",
+        for my $CheckConfigItem (@ConfigItemNumbers) {
+            $Self->True(
+                index( $Selenium->get_page_source(), $CheckConfigItem ) > -1,
+                "ConfigItem number $CheckConfigItem - found",
+            );
+        }
+
+        # verify sorting in table, by default sorting is done by ConfigItemNumber - sort ascending
+        # lower ID will on the top of table
+        $Self->Is(
+            $Selenium->execute_script("return \$('tbody tr:eq(0)').attr('id')"),
+            'ConfigItemID_' . $ConfigItemIDs[1],
+            "ConfigItemID $ConfigItemIDs[1] is on top of table sort by Number ascending"
+        );
+        $Self->Is(
+            $Selenium->execute_script("return \$('tbody tr:eq(1)').attr('id')"),
+            'ConfigItemID_' . $ConfigItemIDs[0],
+            "ConfigItemID $ConfigItemIDs[0] is on bottom of table sort by Number ascending"
+        );
+
+        # click to sort by Name
+        $Selenium->find_element( ".Name", 'css' )->VerifiedClick();
+
+        # check for expected result
+        for my $CheckConfigItem (@ConfigItemNumbers) {
+            $Self->True(
+                index( $Selenium->get_page_source(), $CheckConfigItem ) > -1,
+                "ConfigItem number $CheckConfigItem - found",
+            );
+        }
+
+        # sort is by Name descending
+        $Self->Is(
+            $Selenium->execute_script("return \$('tbody tr:eq(0)').attr('id')"),
+            'ConfigItemID_' . $ConfigItemIDs[1],
+            "ConfigItemID $ConfigItemIDs[1] is on top of table sort by Name descending"
+        );
+        $Self->Is(
+            $Selenium->execute_script("return \$('tbody tr:eq(1)').attr('id')"),
+            'ConfigItemID_' . $ConfigItemIDs[0],
+            "ConfigItemID $ConfigItemIDs[0] is on bottom of table sort by Name descending"
+        );
+
+        # click to sort by Name again
+        $Selenium->find_element( ".Name", 'css' )->VerifiedClick();
+
+        # verify order is changed, sort by Name ascending
+        $Self->Is(
+            $Selenium->execute_script("return \$('tbody tr:eq(0)').attr('id')"),
+            'ConfigItemID_' . $ConfigItemIDs[0],
+            "ConfigItemID $ConfigItemIDs[0] is on top of table sort by Name ascending"
+        );
+        $Self->Is(
+            $Selenium->execute_script("return \$('tbody tr:eq(1)').attr('id')"),
+            'ConfigItemID_' . $ConfigItemIDs[1],
+            "ConfigItemID $ConfigItemIDs[1] is on bottom of table sort by Name ascending"
         );
 
         # change search option
@@ -143,9 +215,7 @@ $Selenium->RunTest(
         $Selenium->WaitFor( JavaScript => "return \$('#Attribute').length" );
 
         # input wrong search parameters, result should be 'No data found'
-        $Selenium->execute_script("\$('#Attribute').val('Name').trigger('redraw.InputField').trigger('change');");
-
-        $Selenium->find_element( "a.AddButton", 'css' )->click();
+        $Selenium->find_element("//input[\@name='Name']")->clear();
         $Selenium->find_element("//input[\@name='Name']")->send_keys('asdfg');
         $Selenium->find_element( "#SearchFormSubmit", 'css' )->VerifiedClick();
 
@@ -156,14 +226,16 @@ $Selenium->RunTest(
         );
 
         # delete created test ConfigItem
-        my $Success = $ConfigItemObject->ConfigItemDelete(
-            ConfigItemID => $ConfigItemID,
-            UserID       => 1,
-        );
-        $Self->True(
-            $Success,
-            "ConfigItem is deleted - ID $ConfigItemID",
-        );
+        for my $ConfigItemDeleteID (@ConfigItemIDs) {
+            my $Success = $ConfigItemObject->ConfigItemDelete(
+                ConfigItemID => $ConfigItemDeleteID,
+                UserID       => 1,
+            );
+            $Self->True(
+                $Success,
+                "ConfigItem is deleted - ID $ConfigItemDeleteID",
+            );
+        }
     }
 );
 

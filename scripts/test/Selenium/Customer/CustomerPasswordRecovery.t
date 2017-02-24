@@ -50,7 +50,7 @@ $Selenium->RunTest(
 
         # create test customer user
         my $TestCustomerUser = $Helper->TestCustomerUserCreate(
-        ) || die "Did not get test contact";
+        ) || die "Did not get test customer user";
 
         # get script alias
         my $ScriptAlias = $ConfigObject->Get('ScriptAlias');
@@ -78,7 +78,7 @@ $Selenium->RunTest(
         $Self->Is(
             scalar @{$Emails},
             1,
-            "Password recovery email sent for valid contact $TestCustomerUser",
+            "Password recovery email sent for valid customer user $TestCustomerUser",
         );
 
         # clean up test email again
@@ -131,7 +131,7 @@ $Selenium->RunTest(
         $Self->Is(
             scalar @{$Emails},
             0,
-            "Password recovery email NOT sent for invalid contact $TestCustomerUser",
+            "Password recovery email NOT sent for invalid customer user $TestCustomerUser",
         );
     }
 );

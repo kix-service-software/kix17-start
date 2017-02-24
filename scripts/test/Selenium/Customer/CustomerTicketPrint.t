@@ -23,7 +23,7 @@ $Selenium->RunTest(
 
         # create test customer user and login
         my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate(
-        ) || die "Did not get test contact";
+        ) || die "Did not get test customer user";
 
         $Selenium->Login(
             Type     => 'Customer',

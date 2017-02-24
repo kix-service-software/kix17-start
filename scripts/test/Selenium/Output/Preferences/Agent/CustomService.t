@@ -63,6 +63,12 @@ $Selenium->RunTest(
                 Name    => $ServiceName,
                 ValidID => 2,                 # invalid
                 Comment => 'Selenium Test',
+# ---
+# ITSMCore
+# ---
+                TypeID      => 1,
+                Criticality => '3 normal',
+# ---
                 UserID  => 1,
             );
             $Self->True(
@@ -79,6 +85,12 @@ $Selenium->RunTest(
             Name      => $ServiceNames[1],
             ParentID  => $ServiceIDs[0],
             ValidID   => 1,
+# ---
+# ITSMCore
+# ---
+            TypeID      => 1,
+            Criticality => '3 normal',
+# ---
             UserID    => 1,
         );
         $Self->True(

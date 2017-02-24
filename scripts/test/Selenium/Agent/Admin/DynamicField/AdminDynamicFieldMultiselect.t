@@ -110,12 +110,51 @@ $Selenium->RunTest(
             $Selenium->find_element( "#Value_2",  'css' )->send_keys("Value2");
 
             # check default value
+            $Selenium->find_element( "#AddValue", 'css' )->VerifiedClick();
+
+            # submit form, expecting validation check
+            $Selenium->find_element("//button[\@type='submit']")->VerifiedClick();
+
             $Self->Is(
-                $Selenium->find_element( "#DefaultValue option[value='Key2']", 'css' )->get_value(),
-                'Key2',
-                "Key2 is possible #DefaultValue",
+                $Selenium->execute_script(
+                    "return \$('#Key_3').hasClass('Error')"
+                ),
+                '1',
+                'Client side validation correctly detected missing input value for added possible value',
             );
 
+            # input possible value
+            $Selenium->find_element( "#Key_3",   'css' )->send_keys("Key3");
+            $Selenium->find_element( "#Value_3", 'css' )->send_keys("Value3");
+
+            # select default value
+            $Selenium->execute_script(
+                "\$('#DefaultValue').val('Key3').trigger('redraw.InputField').trigger('change');"
+            );
+
+            # verify default value
+            $Self->Is(
+                $Selenium->find_element( "#DefaultValue option[value='Key2']", 'css' )->get_value(),
+                'Key3',
+                "Key3 is possible #DefaultValue",
+            );
+
+            # remove added possible value
+            $Selenium->find_element( "#RemoveValue__3", 'css' )->VerifiedClick();
+
+            # verify default value is changed
+            $Self->Is(
+                $Selenium->find_element( "#DefaultValue", 'css' )->get_value(),
+                '',
+                "DefaultValue is removed",
+            );
+
+            # Select both possible values as default values to make sure that more than one can be selected.
+            $Selenium->execute_script(
+                "\$('#DefaultValue').val(['Key1', 'Key2']).trigger('redraw.InputField').trigger('change');"
+            );
+
+            # submit form
             $Selenium->find_element( "#Name", 'css' )->VerifiedSubmit();
 
             # check for test DynamicFieldMultiselect on AdminDynamicField screen
@@ -127,9 +166,16 @@ $Selenium->RunTest(
             # edit test DynamicFieldMultiselect possible none, default value, treeview and set it to invalid
             $Selenium->find_element( $RandomID, 'link_text' )->VerifiedClick();
 
-            $Selenium->execute_script(
-                "\$('#DefaultValue').val('Key1').trigger('redraw.InputField').trigger('change');"
+            # check for saved 'defaul values' on creation, expecting both values to be present
+            $Self->IsDeeply(
+                $Selenium->execute_script(
+                    "return \$('#DefaultValue').val();"
+                ),
+                [ 'Key1', 'Key2' ],
+                'Found default values after creation',
             );
+
+            # edit test DynamicFieldMultiselect possible none, default value, treeview and set it to invalid
             $Selenium->execute_script("\$('#PossibleNone').val('1').trigger('redraw.InputField').trigger('change');");
             $Selenium->execute_script("\$('#TreeView').val('1').trigger('redraw.InputField').trigger('change');");
             $Selenium->execute_script("\$('#ValidID').val('2').trigger('redraw.InputField').trigger('change');");
@@ -166,11 +212,6 @@ $Selenium->RunTest(
             $Self->Is(
                 $Selenium->find_element( '#Value_2', 'css' )->get_value(),
                 "Value2",
-                "#Value_2 possible updated value",
-            );
-            $Self->Is(
-                $Selenium->find_element( '#DefaultValue', 'css' )->get_value(),
-                "Key1",
                 "#DefaultValue updated value",
             );
             $Self->Is(

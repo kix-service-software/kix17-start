@@ -158,6 +158,14 @@ $Selenium->RunTest(
 
         $Selenium->find_element("//a[contains(\@href, \'Subaction=Delete;ID=$TemplateID' )]")->VerifiedClick();
 
+        # Accept delete confirmation dialog
+        $Selenium->accept_alert();
+
+        # check overview page
+        $Self->True(
+            index( $Selenium->get_page_source(), $TemplateRandomID ) == -1,
+            'Template is deleted - $TemplateRandomID'
+        );
     }
 );
 

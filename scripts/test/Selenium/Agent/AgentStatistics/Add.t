@@ -71,6 +71,12 @@ $Selenium->RunTest(
             # add test Services
             my $ServiceID = $ServiceObject->ServiceAdd(
                 Name    => "TestService - " . $Helper->GetRandomID(),
+# ---
+# ITSMCore
+# ---
+                TypeID      => 1,
+                Criticality => '3 normal',
+# ---
                 ValidID => 1,
                 UserID  => 1,
             );
@@ -93,6 +99,11 @@ $Selenium->RunTest(
             # add test SLAs
             my $SLAID = $SLAObject->SLAAdd(
                 Name    => "TestSLA - " . $Helper->GetRandomID(),
+# ---
+# ITSMCore
+# ---
+                TypeID => 1,
+# ---
                 ValidID => 1,
                 UserID  => 1,
             );
@@ -144,6 +155,16 @@ $Selenium->RunTest(
                 Restrictionvalue => 3,
             },
             {
+                Title             => 'Statistic DynamicMatrix' . $Helper->GetRandomID(),
+                Object            => 'Kernel::System::Stats::Dynamic::Ticket',
+                Type              => 'DynamicMatrix',
+                XAxis             => 'XAxisCreateTime',
+                YAxis             => 'YAxisSLAIDs',
+                RestrictionID     => 'RestrictionsQueueIDs',
+                Restrictionvalue  => 3,
+                SelectedTimeField => 1,
+            },
+            {
                 Title            => 'Statistic - TicketAccountedTime' . $Helper->GetRandomID(),
                 Object           => 'Kernel::System::Stats::Dynamic::TicketAccountedTime',
                 Type             => 'DynamicList',
@@ -170,7 +191,6 @@ $Selenium->RunTest(
                 RestrictionID    => 'RestrictionsServiceIDs',
                 Restrictionvalue => $ServiceIDs[0],
             },
-
         );
 
         my @StatsFormatDynamicMatrix = (

@@ -73,6 +73,12 @@ $Selenium->RunTest(
         my $ServiceName = 'Selenium' . $Helper->GetRandomID();
         my $ServiceID   = $Kernel::OM->Get('Kernel::System::Service')->ServiceAdd(
             Name    => $ServiceName,
+# ---
+# ITSMCore
+# ---
+            TypeID      => 1,
+            Criticality => '3 normal',
+# ---
             ValidID => 1,
             UserID  => 1,
         );

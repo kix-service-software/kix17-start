@@ -71,6 +71,12 @@ $Selenium->RunTest(
 
             my $ServiceID = $ServiceObject->ServiceAdd(
                 %{$Service},
+# ---
+# ITSMCore
+# ---
+                TypeID      => 1,
+                Criticality => '3 normal',
+# ---
                 ValidID => 1,
                 UserID  => 1,
             );
@@ -104,6 +110,11 @@ $Selenium->RunTest(
 
             my $SLAID = $SLAObject->SLAAdd(
                 %{$SLA},
+# ---
+# ITSMCore
+# ---
+                TypeID => 1,
+# ---
                 ValidID => 1,
                 UserID  => 1,
             );

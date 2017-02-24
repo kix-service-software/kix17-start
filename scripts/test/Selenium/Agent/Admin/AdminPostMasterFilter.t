@@ -99,6 +99,25 @@ $Selenium->RunTest(
         $Selenium->execute_script(
             "\$('#SetHeader1').val('X-OTRS-Priority').trigger('redraw.InputField').trigger('change');"
         );
+
+        # make sure that "Body" is disabled on other condition selects
+        my $BodyDisabled
+            = $Selenium->execute_script("return \$('#MatchHeader2 option[Value=\"Body\"]').attr('disabled');");
+        $Self->Is(
+            $BodyDisabled,
+            "disabled",
+            "Body is disabled in #MatchHeader2."
+        );
+
+        # make sure that "X-OTRS-Priority" is disabled on other selects
+        my $XOTRSPriorityDisabled
+            = $Selenium->execute_script("return \$('#SetHeader2 option[Value=\"X-OTRS-Priority\"]').attr('disabled');");
+        $Self->Is(
+            $XOTRSPriorityDisabled,
+            "disabled",
+            "X-OTRS-Priority is disabled in #SetHeader2."
+        );
+
         $Selenium->find_element( "#SetValue1", 'css' )->send_keys($PostMasterPriority);
         $Selenium->find_element( "#EditName",  'css' )->VerifiedSubmit();
 
@@ -197,8 +216,15 @@ $Selenium->RunTest(
 
         # delete test PostMasterFilter with delete button
         $Selenium->find_element("//a[contains(\@href, \'Subaction=Delete;Name=$PostMasterRandomID' )]")
-            ->VerifiedClick();
 
+        # Accept delete confirmation dialog
+        $Selenium->accept_alert();
+
+        # check overview page
+        $Self->True(
+            index( $Selenium->get_page_source(), $PostMasterRandomID ) == -1,
+            'Postmaster filter is deleted - $PostMasterRandomID'
+        );
     }
 
 );
