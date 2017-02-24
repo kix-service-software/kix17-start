@@ -1,9 +1,10 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Rene(dot)Boehm(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
 #
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
