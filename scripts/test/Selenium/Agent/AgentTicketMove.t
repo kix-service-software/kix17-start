@@ -183,6 +183,13 @@ $Selenium->RunTest(
         $Selenium->switch_to_window( $Handles->[0] );
 
         # force sub menus to be visible in order to be able to click one of the links
+        sleep 0.5;
+        $Selenium->WaitFor(
+            JavaScript =>
+                'return typeof(Core) == "object" && typeof(Core.App) == "object" && Core.App.PageLoadComplete'
+        );
+
+        # force sub menus to be visible in order to be able to click one of the links
         $Selenium->execute_script("\$('.Cluster ul ul').addClass('ForceVisible');");
 
         $Selenium->find_element("//*[text()='History']")->VerifiedClick();

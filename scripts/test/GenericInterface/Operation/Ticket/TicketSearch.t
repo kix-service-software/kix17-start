@@ -99,6 +99,12 @@ my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
 # create new service
 my $ServiceID = $ServiceObject->ServiceAdd(
     Name    => 'TestService' . $RandomID,
+# ---
+# ITSMCore
+# ---
+    TypeID      => 1,
+    Criticality => '3 normal',
+# ---
     ValidID => 1,
     UserID  => 1,
 );

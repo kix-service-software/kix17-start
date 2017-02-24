@@ -123,7 +123,7 @@ for my $Test (@Tests) {
             SortBy        => ['TicketNumber'],
         ),
         1,
-        "$Test->{Name} - found tickets was updated with new CustomerID $Test->{CustomerIDUpdate}"
+        "$Test->{Name} - ticket was updated with new CustomerID $Test->{CustomerIDUpdate}"
     );
 
     $Self->Is(
@@ -135,7 +135,7 @@ for my $Test (@Tests) {
             SortBy               => ['TicketNumber'],
         ),
         1,
-        "$Test->{Name} - found tickets was updated with new CustomerID $Test->{CustomerUserLoginUpdate}"
+        "$Test->{Name} - ticket was updated with new CustomerID $Test->{CustomerUserLoginUpdate}"
     );
 
 }

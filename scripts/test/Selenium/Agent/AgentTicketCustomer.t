@@ -79,7 +79,7 @@ $Selenium->RunTest(
 
             $Self->True(
                 $UserLogin,
-                "Test contact is created - $UserLogin",
+                "Test customer user is created - $UserLogin",
             );
 
             push @TestCustomers, $TestCustomer;
@@ -184,7 +184,7 @@ $Selenium->RunTest(
             );
             $Self->True(
                 $Success,
-                "Delete contact - $TestCustomer",
+                "Delete customer user - $TestCustomer",
             );
         }
 

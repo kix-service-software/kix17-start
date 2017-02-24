@@ -42,7 +42,8 @@ $Helper->ConfigSettingChange(
     Key   => 'Ticket::Type',
     Value => '1',
 );
-$ConfigObject->Set(
+$Helper->ConfigSettingChange(
+    Valid => 1,
     Key   => 'Ticket::Type',
     Value => 1,
 );
@@ -51,7 +52,8 @@ $Helper->ConfigSettingChange(
     Key   => 'Ticket::Frontend::AccountTime',
     Value => '1',
 );
-$ConfigObject->Set(
+$Helper->ConfigSettingChange(
+    Valid => 1,
     Key   => 'Ticket::Frontend::AccountTime',
     Value => 1,
 );
@@ -60,7 +62,8 @@ $Helper->ConfigSettingChange(
     Key   => 'Ticket::Frontend::NeedAccountedTime',
     Value => '1',
 );
-$ConfigObject->Set(
+$Helper->ConfigSettingChange(
+    Valid => 1,
     Key   => 'Ticket::Frontend::NeedAccountedTime',
     Value => 1,
 );
@@ -71,7 +74,8 @@ $Helper->ConfigSettingChange(
     Key   => 'CheckMXRecord',
     Value => '0',
 );
-$ConfigObject->Set(
+$Helper->ConfigSettingChange(
+    Valid => 1,
     Key   => 'CheckMXRecord',
     Value => 0,
 );
@@ -80,19 +84,22 @@ $Helper->ConfigSettingChange(
     Key   => 'CheckEmailAddresses',
     Value => '1',
 );
-$ConfigObject->Set(
+$Helper->ConfigSettingChange(
+    Valid => 1,
     Key   => 'CheckEmailAddresses',
     Value => 1,
 );
 
 # disable SessionCheckRemoteIP setting
-$ConfigObject->Set(
+$Helper->ConfigSettingChange(
+    Valid => 1,
     Key   => 'SessionCheckRemoteIP',
     Value => 0,
 );
 
 # enable customer groups support
-$ConfigObject->Set(
+$Helper->ConfigSettingChange(
+    Valid => 1,
     Key   => 'CustomerGroupSupport',
     Value => 1,
 );
@@ -216,6 +223,12 @@ my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
 # create new service
 my $ServiceID = $ServiceObject->ServiceAdd(
     Name    => 'TestService' . $RandomID,
+# ---
+# ITSMCore
+# ---
+    TypeID      => 1,
+    Criticality => '3 normal',
+# ---
     ValidID => 1,
     UserID  => 1,
 );
@@ -252,6 +265,11 @@ my $SLAObject = $Kernel::OM->Get('Kernel::System::SLA');
 my $SLAID = $SLAObject->SLAAdd(
     Name       => 'TestSLA' . $RandomID,
     ServiceIDs => [$ServiceID],
+# ---
+# ITSMCore
+# ---
+    TypeID      => 1,
+# ---
     ValidID    => 1,
     UserID     => 1,
 );
@@ -3369,7 +3387,7 @@ my @Tests        = (
         Operation => 'TicketCreate',
     },
     {
-        Name             => 'Ticket with external contact',
+        Name             => 'Ticket with external customer user',
         SuccessRequest   => 1,
         SuccessCreate    => 1,
         ExternalCustomer => 1,

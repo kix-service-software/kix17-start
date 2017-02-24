@@ -47,16 +47,34 @@ my $TestUserID    = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
 my @Services = (
     {
         Name    => 'Service0' . $RandomID,
+# ---
+# ITSMCore
+# ---
+        TypeID      => 1,
+        Criticality => '3 normal',
+# ---
         ValidID => 1,
         UserID  => 1,
     },
     {
         Name    => 'Service1' . $RandomID,
+# ---
+# ITSMCore
+# ---
+        TypeID      => 1,
+        Criticality => '3 normal',
+# ---
         ValidID => 1,
         UserID  => 1,
     },
     {
         Name    => 'Service2' . $RandomID,
+# ---
+# ITSMCore
+# ---
+        TypeID      => 1,
+        Criticality => '3 normal',
+# ---
         ValidID => 1,
         UserID  => 1,
     },
@@ -76,11 +94,9 @@ for my $ServiceData (@Services) {
     $ServiceData->{ServiceID} = $ServiceID;
 }
 
-# ----------------------------------------
-
-# ----------------------------------------
+#
 # Assign services to customer (0 and 1)
-# ----------------------------------------
+#
 my $Success = $ServiceObject->CustomerUserServiceMemberAdd(
     CustomerUserLogin => $TestCustomerUserLogin,
     ServiceID         => $Services[0]->{ServiceID},
@@ -109,11 +125,9 @@ $Self->True(
         . " with true",
 );
 
-# ----------------------------------------
-
-# ----------------------------------------
+#
 # Create a test tickets
-# ----------------------------------------
+#
 my @TicketData;
 for my $Item ( 0 .. 1 ) {
     my $TicketID = $TicketObject->TicketCreate(

@@ -86,8 +86,6 @@ my $UserLogin = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
     UserID => 1,
 );
 
-# ----------------------------------------
-
 # create dynamic fields
 my $DynamicFieldID1 = $DynamicFieldObject->DynamicFieldAdd(
     InternalField => 0,

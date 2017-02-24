@@ -132,7 +132,7 @@ $Selenium->RunTest(
         );
         $Self->True(
             $Success,
-            "Contact language is set.",
+            "Customer user language is set.",
         );
 
         # get ticket object
@@ -304,7 +304,7 @@ $Selenium->RunTest(
         );
         $Self->True(
             $Success,
-            "Delete contact - $TestCustomer",
+            "Delete customer user - $TestCustomer",
         );
 
         # make sure the cache is correct

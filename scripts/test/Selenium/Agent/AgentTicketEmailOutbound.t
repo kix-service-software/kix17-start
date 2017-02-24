@@ -156,7 +156,7 @@ $Selenium->RunTest(
         );
         $Self->True(
             $Success,
-            "Delete contact - $TestCustomer",
+            "Delete customer user - $TestCustomer",
         );
 
         # make sure the cache is correct

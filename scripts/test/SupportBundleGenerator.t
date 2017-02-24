@@ -35,6 +35,15 @@ $Kernel::OM->ObjectParamAdd(
 my $Helper = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
 
 # cleanup the Home variable (remove tailing "/")
+$Helper->ConfigSettingChange(
+    Valid => 1,
+    Key   => 'SupportDataCollector::DisablePlugins',
+    Value => [
+        'Kernel::System::SupportDataCollector::Plugin::OTRS::PackageDeployment',
+    ],
+);
+
+# cleanup the Home variable (remove tailing "/")
 my $Home = $ConfigObject->Get('Home');
 $Home =~ s{\/\z}{};
 

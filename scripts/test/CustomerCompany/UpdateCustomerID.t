@@ -29,10 +29,12 @@ $Kernel::OM->Get('Kernel::Config')->Set(
     Value => 0,
 );
 
-my @CustomerIDs;
-for my $Key ( 1 .. 1, 'ä', 'カス' ) {
+my $RandomID = $Helper->GetRandomID();
 
-    my $CompanyRand = 'CustomerCompany' . $Key . $Helper->GetRandomID();
+my @CustomerIDs;
+for my $Key ( 1 .. 3, 'ä', 'カス', '*' ) {
+
+    my $CompanyRand = $Key . $RandomID;
 
     push @CustomerIDs, $CompanyRand;
 
@@ -71,9 +73,10 @@ for my $Key ( 1 .. 1, 'ä', 'カス' ) {
     );
 
     my @CustomerLogins;
-    for my $CustomerUserKey ( 1 .. 3, 'ä', 'カス' ) {
+    my $CustomerUserRandomID = $Helper->GetRandomID();
+    for my $CustomerUserKey ( 1 .. 3, 'ä', 'カス', '*' ) {
 
-        my $UserRand = 'CustomerUser' . $CustomerUserKey . $Helper->GetRandomID();
+        my $UserRand = $CustomerUserKey . $CustomerUserRandomID;
 
         push @CustomerLogins, $UserRand;
 
@@ -118,23 +121,34 @@ for my $Key ( 1 .. 1, 'ä', 'カス' ) {
     );
 
     my %OldIDList = $CustomerUserObject->CustomerSearch(
-        CustomerID => $CompanyData{CustomerID},
+        CustomerIDRaw => $CompanyData{CustomerID},
     );
 
     my %NewIDList = $CustomerUserObject->CustomerSearch(
-        CustomerID => 'new' . $CompanyData{CustomerID},
+        CustomerIDRaw => 'new' . $CompanyData{CustomerID},
+    );
+
+    $Self->Is(
+        scalar keys %OldIDList,
+        0,
+        "All CustomerUser entries were changed away from old CustomerID",
+    );
+    $Self->Is(
+        scalar keys %NewIDList,
+        scalar @CustomerLogins,
+        "All CustomerUser entries were changed to the new CustomerID",
     );
 
     for my $CustomerLogin (@CustomerLogins) {
 
         $Self->False(
             $OldIDList{$CustomerLogin},
-            "Contact $CustomerLogin not in list for $CompanyData{CustomerID}",
+            "Customer User $CustomerLogin not in list for $CompanyData{CustomerID}",
         );
 
         $Self->True(
             $NewIDList{$CustomerLogin},
-            "Contact $CustomerLogin found in list for new$CompanyData{CustomerID}",
+            "Customer User $CustomerLogin found in list for new$CompanyData{CustomerID}",
         );
 
         my %CustomerData = $CustomerUserObject->CustomerUserDataGet(

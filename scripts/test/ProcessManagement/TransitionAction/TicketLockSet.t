@@ -67,8 +67,6 @@ $Self->True(
     "TicketGet() - Get Ticket with ID $TicketID.",
 );
 
-# ----------------------------------------
-
 # Run() tests
 my @Tests = (
     {

@@ -55,6 +55,12 @@ my $ServiceID1   = $ServiceObject->ServiceAdd(
     Comment => 'Some Comment',
     ValidID => 1,
     UserID  => 1,
+# ---
+# ITSMCore
+# ---
+    TypeID      => 1,
+    Criticality => '3 normal',
+# ---
 );
 
 $Self->True(
@@ -69,6 +75,12 @@ my $ServiceID2   = $ServiceObject->ServiceAdd(
     Comment => 'Some Comment',
     ValidID => 1,
     UserID  => 1,
+# ---
+# ITSMCore
+# ---
+    TypeID      => 1,
+    Criticality => '3 normal',
+# ---
 );
 
 $Self->True(
@@ -77,9 +89,9 @@ $Self->True(
 );
 
 my $CustomerUser1 = $Helper->TestCustomerUserCreate()
-    || die "Did not get test contact";
+    || die "Did not get test customer user";
 my $CustomerUser2 = $Helper->TestCustomerUserCreate()
-    || die "Did not get test contact";
+    || die "Did not get test customer user";
 
 # allocation test 1
 my @Allocation1 = $ServiceObject->CustomerUserServiceMemberList(

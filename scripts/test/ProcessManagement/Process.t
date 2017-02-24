@@ -106,6 +106,12 @@ my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
 
 my $ServiceID = $ServiceObject->ServiceAdd(
     Name    => $RandomID,
+# ---
+# ITSMCore
+# ---
+    TypeID      => 1,
+    Criticality => '3 normal',
+# ---
     ValidID => 1,
     UserID  => 1,
 );
@@ -119,6 +125,11 @@ $ServiceObject->CustomerUserServiceMemberAdd(
 
 my $SLAID = $Kernel::OM->Get('Kernel::System::SLA')->SLAAdd(
     ServiceIDs => [$ServiceID],
+# ---
+# ITSMCore
+# ---
+    TypeID => 1,
+# ---
     Name       => $RandomID,
     ValidID    => 1,
     UserID     => 1,

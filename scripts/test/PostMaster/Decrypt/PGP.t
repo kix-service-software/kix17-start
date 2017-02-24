@@ -252,6 +252,12 @@ $Self->Is(
 );
 
 # Part where StoreDecryptedBody is disabled
+$Email = $MainObject->FileRead(
+    Location => $ConfigObject->Get('Home') . '/scripts/test/sample/PGP/PGP_Test_2013-07-02-1977-2.eml',
+    Result   => 'ARRAY',
+);
+
+# Part where StoreDecryptedBody is disabled
 $PostMasterObject = Kernel::System::PostMaster->new(
     Email   => $Email,
     Trusted => 1,
@@ -308,8 +314,8 @@ $Self->Is(
 my $GetBodyEncrypted = $ArticleIndexEncrypted[0]{Body};
 
 $Self->True(
-    $GetBodyEncrypted =~ m{This is an OpenPGP/MIME},
-    "Found PGP",
+    scalar $GetBodyEncrypted =~ m{no text message => see attachment},
+    "Body was not decrypted",
 );
 
 # Delete PGP keys.

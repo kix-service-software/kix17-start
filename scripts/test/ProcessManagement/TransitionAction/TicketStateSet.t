@@ -61,8 +61,6 @@ $Self->True(
     "TicketGet() - Get Ticket with ID $TicketID.",
 );
 
-# ----------------------------------------
-
 # Run() tests
 my @Tests = (
     {
@@ -346,7 +344,5 @@ $Self->True(
 
 # cleanUp casche
 $Kernel::OM->Get('Kernel::System::Cache')->CleanUp();
-
-# ----------------------------------------
 
 1;

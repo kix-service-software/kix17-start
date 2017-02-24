@@ -154,7 +154,7 @@ EOF
 
             $Self->True(
                 $ServiceID,
-                "Test service $Count ($ServiceID) created and assigned to contact",
+                "Test service $Count ($ServiceID) created and assigned to customer user",
             );
         }
 

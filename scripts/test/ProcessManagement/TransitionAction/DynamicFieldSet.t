@@ -87,8 +87,6 @@ for my $DynamicFieldConfig (@NewDynamicFieldConfig) {
     );
 }
 
-# ----------------------------------------
-
 # get ticket object
 my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
@@ -121,8 +119,6 @@ $Self->True(
     IsHashRefWithData( \%Ticket ),
     "TicketGet() - Get Ticket with ID $TicketID.",
 );
-
-# ----------------------------------------
 
 # Run() tests
 my @Tests = (

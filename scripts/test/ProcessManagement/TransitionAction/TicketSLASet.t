@@ -48,6 +48,12 @@ my $TestUserID    = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
 my @Services = (
     {
         Name    => 'Service0' . $RandomID,
+# ---
+# ITSMCore
+# ---
+        TypeID      => 1,
+        Criticality => '3 normal',
+# ---
         ValidID => 1,
         UserID  => 1,
     },
@@ -74,18 +80,33 @@ my @SLAs = (
     {
         Name       => 'SLA0' . $RandomID,
         ServiceIDs => [ $Services[0]->{ServiceID} ],
+# ---
+# ITSMCore
+# ---
+        TypeID => 1,
+# ---
         ValidID    => 1,
         UserID     => 1,
     },
     {
         Name       => 'SLA1' . $RandomID,
         ServiceIDs => [ $Services[0]->{ServiceID} ],
+# ---
+# ITSMCore
+# ---
+        TypeID => 1,
+# ---
         ValidID    => 1,
         UserID     => 1,
     },
     {
         Name       => 'SLA2' . $RandomID,
         ServiceIDs => [],
+# ---
+# ITSMCore
+# ---
+        TypeID => 1,
+# ---
         ValidID    => 1,
         UserID     => 1,
     },
@@ -105,11 +126,9 @@ for my $SLAData (@SLAs) {
     $SLAData->{SLAID} = $SLAID;
 }
 
-# ----------------------------------------
-
-# ----------------------------------------
+#
 # Assign services to customer (0 and 1)
-# ----------------------------------------
+#
 my $Success = $ServiceObject->CustomerUserServiceMemberAdd(
     CustomerUserLogin => $TestCustomerUserLogin,
     ServiceID         => $Services[0]->{ServiceID},
@@ -124,11 +143,9 @@ $Self->True(
         . " with true",
 );
 
-# ----------------------------------------
-
-# ----------------------------------------
+#
 # Create a test tickets
-# ----------------------------------------
+#
 my @TicketData;
 for my $Item ( 0 .. 1 ) {
     my $TicketID = $TicketObject->TicketCreate(

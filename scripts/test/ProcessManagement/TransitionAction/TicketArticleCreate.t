@@ -197,8 +197,6 @@ $Self->True(
     "TicketGet() - Get Ticket with ID $TicketID.",
 );
 
-# ----------------------------------------
-
 # Run() tests
 my @Tests = (
     {
@@ -407,7 +405,7 @@ my @Tests = (
                 SenderType  => 'agent',
                 ContentType => 'text/plain; charset=ISO-8859-15',
                 Subject =>
-                    '<OTRS_TICKET_NotExisting>',
+                    '<OTRS_TICKET_NotExisting> - tag not found',
                 Body =>
                     'äöüßÄÖÜ€исáéíúóúÁÉÍÓÚñÑ-カスタ-用迎使用-Язык',
                 HistoryType    => 'OwnerUpdate',
@@ -438,7 +436,7 @@ my @Tests = (
                 SenderType  => 'agent',
                 ContentType => 'text/plain; charset=ISO-8859-15',
                 Subject =>
-                    '<OTRS_TICKET_NotExisting>',
+                    '<OTRS_TICKET_NotExisting> - tag not found',
                 Body =>
                     'äöüßÄÖÜ€исáéíúóúÁÉÍÓÚñÑ-カスタ-用迎使用-Язык',
                 HistoryType    => 'OwnerUpdate',
