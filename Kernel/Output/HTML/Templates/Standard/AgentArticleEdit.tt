@@ -33,7 +33,8 @@
             </p>
 [% RenderBlockEnd("TicketBack") %]
 [% RenderBlockStart("PropertiesLock") %]
-            <p>
+#rbo - T2017022490001394 - optimized visualization
+            <p class="TicketLockMessage">
                 [% Translate("The ticket has been locked") | html %].
                 <a class="UndoClosePopup" href="[% Env("Baselink") %]Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID %];[% Env("ChallengeTokenParam") | html %]">
                     [% Translate("Undo & close window") | html %]

@@ -861,6 +861,27 @@
         width: 32px;
         height: 32px;
     }
+
+    .TicketLockMessage {
+        display: inline-block;
+        font-size: inherit;
+        color: #000000;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        transform: translate(0,0);
+        margin: 5px 0 0 0 ;
+        padding: 5px !important;
+        border: 1px solid black;
+        background-color: #F7AE40;
+        width: 100%;
+    }
+    .TicketLockMessage:before {
+        content: "\f071";
+        font: normal normal normal 14px/1 FontAwesome;
+        padding-right: 5px;
+        color: red;
+    }
 }
 /* end @media */
 

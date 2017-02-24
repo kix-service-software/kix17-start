@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/02/24) - CR: T2017022490001394 (better visualization of ticket locked message in case of RequiredLock) (rbo)
  * (2017/02/23) - CR: T2016121190001552 (added KIX_ placeholders) (rbo)
  * (2017/02/21) - Bugfix: T2017013190001542 (dynamic fields not shown in AgentTicketMove) (ddoerffel)
  * (2017/02/21) - Bugfix: T2017020190001472 (log error if an option in a specific sysconfig group is changed) (rkaiser)
