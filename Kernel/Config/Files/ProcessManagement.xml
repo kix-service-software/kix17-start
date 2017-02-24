@@ -18,7 +18,6 @@
                     <JavaScript>thirdparty/jsplumb-labelspacer/label-spacer.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.ProcessManagement.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.ProcessManagement.Canvas.js</JavaScript>
-                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
                 </Loader>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
@@ -43,7 +42,6 @@
                     <CSS>Core.Agent.Admin.ProcessManagement.css</CSS>
                     <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.Agent.Admin.ProcessManagement.js</JavaScript>
-                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -61,7 +59,6 @@
                     <CSS>Core.Agent.Admin.ProcessManagement.css</CSS>
                     <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.Agent.Admin.ProcessManagement.js</JavaScript>
-                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -111,7 +108,6 @@
                     <CSS>Core.Agent.Admin.ProcessManagement.css</CSS>
                     <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.Agent.Admin.ProcessManagement.js</JavaScript>
-                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
         </Setting>

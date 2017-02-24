@@ -479,9 +479,7 @@
                 <NavBarName>Service</NavBarName>
                 <Loader>
                     <CSS>Core.AllocationList.css</CSS>
-                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
-                    <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                     <JavaScript>Core.Agent.LinkObject.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -938,9 +936,7 @@
                     <JavaScript>Core.KIX4OTRS.AgentZoomTabLinkGraph.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.TicketZoomTabs.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.ConfigItemZoomTabs.js</JavaScript>
-                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
-                    <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                     <JavaScript>Core.Agent.LinkObject.js</JavaScript>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
                     <JavaScript>ITSM.Agent.ConfirmDialog.js</JavaScript>

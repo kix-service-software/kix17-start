@@ -1058,9 +1058,7 @@ Your OTRS Notification Master
                     <JavaScript>FAQ.Agent.ConfirmationDialog.js</JavaScript>
                     <JavaScript>FAQ.Agent.TicketCompose.js</JavaScript>
                     <JavaScript>FAQ.Agent.FAQZoom.js</JavaScript>
-                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
-                    <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                     <JavaScript>Core.Agent.LinkObject.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
