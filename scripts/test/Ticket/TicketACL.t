@@ -61,14 +61,14 @@ my %NewUserData = $UserObject->GetUserData(
 
 # set customer user options
 my $CustomerUserLogin = $Helper->TestCustomerUserCreate()
-    || die "Did not get test customer user";
+    || die "Did not get test contact";
 
 my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
     User => $CustomerUserLogin,
 );
 
 my $NewCustomerUserLogin = $Helper->TestCustomerUserCreate()
-    || die "Did not get test customer user";
+    || die "Did not get test contact";
 
 my %NewCustomerUserData = $CustomerUserObject->CustomerUserDataGet(
     User => $NewCustomerUserLogin,
@@ -117,12 +117,6 @@ $Self->True(
 my $ServiceName = 'Service_' . $RandomID;
 my $ServiceID   = $ServiceObject->ServiceAdd(
     Name    => $ServiceName,
-# ---
-# ITSMCore
-# ---
-    TypeID      => 1,
-    Criticality => '3 normal',
-# ---
     ValidID => $ValidList{'valid'},
     UserID  => 1,
 );
@@ -136,12 +130,6 @@ $Self->True(
 my $NewServiceName = 'NewService_' . $RandomID;
 my $NewServiceID   = $ServiceObject->ServiceAdd(
     Name    => $NewServiceName,
-# ---
-# ITSMCore
-# ---
-    TypeID      => 1,
-    Criticality => '3 normal',
-# ---
     ValidID => $ValidList{'valid'},
     UserID  => 1,
 );
@@ -210,11 +198,6 @@ $Self->True(
 my $SLAName = 'SLA_' . $RandomID;
 my $SLAID   = $SLAObject->SLAAdd(
     Name    => $SLAName,
-# ---
-# ITSMCore
-# ---
-    TypeID => 1,
-# ---
     ValidID => $ValidList{'valid'},
     UserID  => 1,
 );
@@ -228,11 +211,6 @@ $Self->True(
 my $NewSLAName = 'NewSLA_' . $RandomID;
 my $NewSLAID   = $SLAObject->SLAAdd(
     Name    => $NewSLAName,
-# ---
-# ITSMCore
-# ---
-    TypeID => 1,
-# ---
     ValidID => $ValidList{'valid'},
     UserID  => 1,
 );

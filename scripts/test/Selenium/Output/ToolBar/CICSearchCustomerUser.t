@@ -30,9 +30,9 @@ $Selenium->RunTest(
         my %CICSearchCustomerUser = (
             Block       => 'ToolBarCICSearchCustomerUser',
             CSS         => 'Core.Agent.Toolbar.CICSearch.css',
-            Description => 'Customer user search',
+            Description => 'Contact search',
             Module      => 'Kernel::Output::HTML::ToolBar::Generic',
-            Name        => 'Customer user search',
+            Name        => 'Contact search',
             Priority    => '1990040',
             Size        => '10',
         );
@@ -113,7 +113,7 @@ $Selenium->RunTest(
         # verify search
         $Self->True(
             index( $Selenium->get_page_source(), $TestCustomerLogin ) > -1,
-            "Search by Customer User success - found $TestCustomerLogin",
+            "Search by contact success - found $TestCustomerLogin",
         );
 
         # get DB object

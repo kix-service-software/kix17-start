@@ -50,7 +50,7 @@ $Selenium->RunTest(
 
         # create a test customer
         my $TestCustomerUser1 = $Helper->TestCustomerUserCreate()
-            || die "Did not get test customer user";
+            || die "Did not get test contact";
 
         my $CustomerUser = $Helper->GetRandomID();
 
@@ -73,7 +73,7 @@ $Selenium->RunTest(
         );
 
         my $TestCustomerUser2 = $Helper->TestCustomerUserCreate()
-            || die "Did not get test customer user";
+            || die "Did not get test contact";
 
         $Success = $CustomerUserObject->CustomerUserUpdate(
             Source         => 'CustomerUser',
@@ -94,7 +94,7 @@ $Selenium->RunTest(
         );
 
         my $TestCustomerUser3 = $Helper->TestCustomerUserCreate()
-            || die "Did not get test customer user";
+            || die "Did not get test contact";
 
         # update customer user 3 with very similar data as customer user 2
         # disable customer user email uniqueness check temporarily
@@ -185,7 +185,7 @@ $Selenium->RunTest(
                 $Self->Is(
                     $Selenium->find_element( "#CustomerTicketText_1", 'css' )->get_value(),
                     $AutoCompleteExpected{$AutocompleteInput}{CustomerUser},
-                    "Customer user is selected",
+                    "Contact is selected",
                 );
             }
 

@@ -218,7 +218,7 @@ $Selenium->RunTest(
         # check class of invalid customer user in the overview table
         $Self->True(
             $Selenium->find_element( "tr.Invalid", 'css' ),
-            "There is a class 'Invalid' for test Customer User",
+            "There is a class 'Invalid' for test contact",
         );
 
         # get DB object
