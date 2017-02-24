@@ -113,6 +113,22 @@ sub LoadDefaults {
     $Self->{ProductName} = 'KIX';
 
     # --------------------------------------------------- #
+    # directories                                         #
+    # --------------------------------------------------- #
+    # root directory
+    $Self->{Home} = '/opt/kix';
+
+    #rbo - T2016121190001552 - added KIX placeholders
+    # tmp dir
+    $Self->{TempDir} = '<KIX_CONFIG_Home>/var/tmp';
+    # article dir
+    $Self->{ArticleDir} = '<KIX_CONFIG_Home>/var/article';
+
+    # html template dirs
+    $Self->{TemplateDir}       = '<KIX_CONFIG_Home>/Kernel/Output';
+    $Self->{CustomTemplateDir} = '<KIX_CONFIG_Home>/Custom/Kernel/Output';
+
+    # --------------------------------------------------- #
     # database settings                                   #
     # --------------------------------------------------- #
     # DatabaseHost
@@ -820,22 +836,6 @@ sub LoadDefaults {
     # SpellCheckerIgnore
     # (A list of ignored words.)
     $Self->{SpellCheckerIgnore} = [ 'www', 'webmail', 'https', 'http', 'html', 'rfc' ];
-
-    # --------------------------------------------------- #
-    # directories                                         #
-    # --------------------------------------------------- #
-    # root directory
-    $Self->{Home} = '/opt/kix';
-
-    #rbo - T2016121190001552 - added KIX placeholders
-    # tmp dir
-    $Self->{TempDir} = '<KIX_CONFIG_Home>/var/tmp';
-    # article dir
-    $Self->{ArticleDir} = '<KIX_CONFIG_Home>/var/article';
-
-    # html template dirs
-    $Self->{TemplateDir}       = '<KIX_CONFIG_Home>/Kernel/Output';
-    $Self->{CustomTemplateDir} = '<KIX_CONFIG_Home>/Custom/Kernel/Output';
 
     # --------------------------------------------------- #
     # CommonCSS                                           #
