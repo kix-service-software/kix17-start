@@ -1937,7 +1937,7 @@ sub new {
             next KEY if !defined $Key;
             if ( defined $Self->{$Key} ) {
                 #rbo - T2016121190001552 - added KIX placeholders
-                $Self->{$Key} =~ s/\<KIX_CONFIG_(.+?)\>/$Self->{$1}/g;
+                $Self->{$Key} =~ s/\<(KIX|OTRS)_CONFIG_(.+?)\>/$Self->{$2}/g;
             }
             else {
                 print STDERR "ERROR: $Key not defined!\n";
