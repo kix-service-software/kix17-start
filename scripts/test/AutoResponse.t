@@ -73,7 +73,8 @@ my $CustomerUserID = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerU
 );
 $Self->True(
     $CustomerUserID,
-    "Customer created."
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    "Customer contact created."
 );
 
 # add system address

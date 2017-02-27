@@ -3387,7 +3387,8 @@ my @Tests        = (
         Operation => 'TicketCreate',
     },
     {
-        Name             => 'Ticket with external customer user',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
+        Name             => 'Ticket with external contact',
         SuccessRequest   => 1,
         SuccessCreate    => 1,
         ExternalCustomer => 1,
