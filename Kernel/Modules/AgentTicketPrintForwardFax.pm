@@ -881,6 +881,7 @@ sub _PDFOutputCustomerInfos {
 
         # output headline
         $Self->{PDFObject}->Text(
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             Text     => $Self->{LayoutObject}->{LanguageObject}->Translate('Contact information'),
             Height   => 7,
             Type     => 'Cut',

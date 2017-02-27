@@ -208,6 +208,7 @@ sub GetObjectAttributes {
             Block            => 'InputField',
         },
         {
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             Name             => Translatable('Contact login (complex search)'),
             UseAsXvalue      => 0,
             UseAsValueSeries => 0,
@@ -216,6 +217,7 @@ sub GetObjectAttributes {
             Block            => 'InputField',
         },
         {
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             Name             => Translatable('Contact login (exact match)'),
             UseAsXvalue      => 0,
             UseAsValueSeries => 0,

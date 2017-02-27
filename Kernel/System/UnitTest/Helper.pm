@@ -289,6 +289,7 @@ sub TestCustomerUserCreate {
     $Self->{TestCustomerUsers} ||= [];
     push( @{ $Self->{TestCustomerUsers} }, $TestUser );
 
+    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Self->{UnitTestObject}->True( 1, "Created test contact $TestUser" );
 
     # set customer user language
@@ -298,6 +299,7 @@ sub TestCustomerUserCreate {
         Key    => 'UserLanguage',
         Value  => $UserLanguage,
     );
+    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Self->{UnitTestObject}->True( 1, "Set contact UserLanguage to $UserLanguage" );
 
     return $TestUser;
@@ -554,6 +556,7 @@ sub DESTROY {
             );
 
             $Self->{UnitTestObject}->True(
+                # rkaiser - T#2017020290001194 - changed customer user to contact
                 $Success, "Set test contact $TestCustomerUser to invalid"
             );
         }

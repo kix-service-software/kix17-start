@@ -31,7 +31,8 @@ $Selenium->RunTest(
 
         # create test customer
         my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate(
-        ) || die "Did not get test customer user";
+        # rkaiser - T#2017020290001194 - changed customer user to contact
+        ) || die "Did not get test contact";
 
         # create test tickets
         my @TicketIDs;
@@ -102,7 +103,7 @@ $Selenium->RunTest(
         $Selenium->VerifiedGet("${ScriptAlias}customer.pl?Action=CustomerTicketOverview;Subaction=CompanyTickets");
 
         # check for customer user fatal error
-        my $ExpectedMsg = 'Please contact the administrator';
+        my $ExpectedMsg = 'Please contact your administrator';
         $Self->True(
             index( $Selenium->get_page_source(), $ExpectedMsg ) > -1,
             "Customer fatal error message - found",

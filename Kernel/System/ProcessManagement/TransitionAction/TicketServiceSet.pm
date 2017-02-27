@@ -156,6 +156,7 @@ sub Run {
                 Message  => $CommonMessage
                     . 'ServiceID '
                     . $Param{Config}->{ServiceID}
+                    # rkaiser - T#2017020290001194 - changed customer user to contact
                     . ' is not assigned to contact '
                     . $Param{Ticket}->{CustomerUserID}
             );
@@ -232,6 +233,7 @@ sub Run {
                 Message  => $CommonMessage
                     . 'Service '
                     . $Param{Config}->{Service}
+                    # rkaiser - T#2017020290001194 - changed customer user to contact
                     . ' is not assigned to contact '
                     . $Param{Ticket}->{CustomerUserID}
             );

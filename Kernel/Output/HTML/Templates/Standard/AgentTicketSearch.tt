@@ -135,12 +135,14 @@
             <a class="RemoveButton" href="#" title="[% Translate("Remove this entry") | html %]"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove") | html %]</span></a>
         </div>
         <div class="Clear"></div>
+# rkaiser - T#2017020290001194 - changed customer user to contact
         <label for="CustomerUserLogin" id="LabelCustomerUserLogin">[% Translate("Contact login (complex search)") | html %]:</label>
         <div class="Field">
             <input type="text" name="CustomerUserLogin" placeholder="[% Translate("(e. g. U5150)") | html %]" value="[% Data.CustomerUserLogin | html %]" class="W50pc"/>
             <a class="RemoveButton" href="#" title="[% Translate("Remove this entry") | html %]"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove") | html %]</span></a>
         </div>
         <div class="Clear"></div>
+# rkaiser - T#2017020290001194 - changed customer user to contact
         <label for="CustomerUserLoginRaw" id="LabelCustomerUserLoginRaw">[% Translate("Contact login (exact match)") | html %]:</label>
         <div class="Field">
             <input type="text" name="CustomerUserLoginRaw" placeholder="[% Translate("(e. g. U5150)") | html %]" value="[% Data.CustomerUserLoginRaw | html %]" class="W50pc"/>

@@ -154,7 +154,8 @@ EOF
 
             $Self->True(
                 $ServiceID,
-                "Test service $Count ($ServiceID) created and assigned to customer user",
+                # rkaiser - T#2017020290001194 - changed customer user to contact
+                "Test service $Count ($ServiceID) created and assigned to contact",
             );
         }
 

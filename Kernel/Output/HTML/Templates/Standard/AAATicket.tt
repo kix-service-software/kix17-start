@@ -170,6 +170,7 @@
 [% Translate("Customer") | html %]
 [% Translate("Customer Realname") | html %]
 [% Translate("Customer History") | html %]
+# rkaiser - T#2017020290001194 - changed customer user to contact
 [% Translate("Edit contacts") | html %]
 [% Translate("Edit Customer") | html %]
 [% Translate("Bulk Action") | html %]

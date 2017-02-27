@@ -1721,10 +1721,12 @@ sub Run {
             },
             {
                 Key   => 'CustomerUserLogin',
+                # rkaiser - T#2017020290001194 - changed customer user to contact
                 Value => Translatable('Contact login (complex search)'),
             },
             {
                 Key   => 'CustomerUserLoginRaw',
+                # rkaiser - T#2017020290001194 - changed customer user to contact
                 Value => Translatable('Contact login (exact match)'),
             },
             {

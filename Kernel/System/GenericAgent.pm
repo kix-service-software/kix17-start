@@ -1100,6 +1100,7 @@ sub _JobRunTicket {
         if ( $Param{Config}->{New}->{CustomerUserLogin} ) {
             if ( $Self->{NoticeSTDOUT} ) {
                 print
+                    # rkaiser - T#2017020290001194 - changed customer user to contact
                     "  - set contact id of Ticket $Ticket to '$Param{Config}->{New}->{CustomerUserLogin}'\n";
             }
         }

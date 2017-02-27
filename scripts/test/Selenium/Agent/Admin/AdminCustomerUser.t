@@ -218,6 +218,7 @@ $Selenium->RunTest(
         # check class of invalid customer user in the overview table
         $Self->True(
             $Selenium->find_element( "tr.Invalid", 'css' ),
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             "There is a class 'Invalid' for test contact",
         );
 

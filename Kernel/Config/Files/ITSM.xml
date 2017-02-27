@@ -936,7 +936,9 @@
                     <JavaScript>Core.KIX4OTRS.AgentZoomTabLinkGraph.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.TicketZoomTabs.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.ConfigItemZoomTabs.js</JavaScript>
+                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
+                    <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                     <JavaScript>Core.Agent.LinkObject.js</JavaScript>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
                     <JavaScript>ITSM.Agent.ConfirmDialog.js</JavaScript>
@@ -2196,6 +2198,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="KIXSidebarConfigItemLink::KIXSidebarLinkedCIsParams" Required="1" Valid="1">
+        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Common Parameters for the KIXSidebarLinkedCIs backend. You can use CI class specific contact attributes (SearchAttribute:::&lt;CIClass&gt;) as well as multiple customer user attributes, separated by comma.</Description>
         <Group>ITSM</Group>
         <SubGroup>Frontend::Customer</SubGroup>

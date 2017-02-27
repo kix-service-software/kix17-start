@@ -1551,6 +1551,7 @@ sub _TicketAttributes {
         Created    => 'Created',
 
         #CreateTimeUnix => 'CreateTimeUnix',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         CustomerUserID => 'Contact',
         Lock           => 'lock',
 

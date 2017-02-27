@@ -30,7 +30,8 @@ $Selenium->RunTest(
 
         # create test customer user
         my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate(
-        ) || die "Did not get test customer user";
+        # rkaiser - T#2017020290001194 - changed customer user to contact
+        ) || die "Did not get test contact";
 
         # get ticket object
         my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');

@@ -64,6 +64,7 @@ $Selenium->RunTest(
 
         # create a test customer
         my $TestUserCustomer = $Helper->TestCustomerUserCreate()
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             || die "Did not get test contact";
 
         # create a ticket from the just created customer

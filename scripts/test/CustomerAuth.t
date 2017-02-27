@@ -54,7 +54,8 @@ my $TestUserID = $GlobalUserObject->CustomerUserAdd(
 
 $Self->True(
     $TestUserID,
-    "Creating test customer user",
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    "Creating test contact",
 );
 
 # set pw
@@ -188,7 +189,8 @@ my $Success = $GlobalUserObject->CustomerUserUpdate(
 
 $Self->True(
     $Success,
-    "Invalidating test customer user",
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    "Invalidating test contact",
 );
 
 # cleanup is done by RestoreDatabase

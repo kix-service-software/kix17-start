@@ -48,7 +48,8 @@ $Selenium->RunTest(
 
         # create test customer user and login
         my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate(
-        ) || die "Did not get test customer user";
+        # rkaiser - T#2017020290001194 - changed customer user to contact
+        ) || die "Did not get test contact";
 
         $Selenium->Login(
             Type     => 'Customer',

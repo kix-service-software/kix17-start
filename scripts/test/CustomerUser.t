@@ -57,7 +57,8 @@ for my $Key ( 1 .. 3, 'ä', 'カス', '_', '&' ) {
 
         $Self->True(
             0,
-            'Find non existing customer user login.',
+            # rkaiser - T#2017020290001194 - changed customer user to contact
+            'Find non existing contact login.',
         );
     }
 

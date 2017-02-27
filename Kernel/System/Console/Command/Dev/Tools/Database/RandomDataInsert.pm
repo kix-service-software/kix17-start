@@ -55,6 +55,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'generate-customer-users',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         Description => "Specify how many contacts should be generated.",
         Required    => 0,
         HasValue    => 1,

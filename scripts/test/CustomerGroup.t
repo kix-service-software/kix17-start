@@ -138,6 +138,7 @@ my @Tests = (
         },
         Success => 1,
     },
+
 );
 
 for my $Test (@Tests) {
@@ -891,7 +892,8 @@ my $CustomerUser1 = $CustomerUserObject->CustomerUserAdd(
 );
 $Self->True(
     $CustomerUser1,
-    "Customer user #1 created."
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    "Contact #1 created."
 );
 my $CustomerUser2 = $CustomerUserObject->CustomerUserAdd(
     Source         => 'CustomerUser',
@@ -905,7 +907,8 @@ my $CustomerUser2 = $CustomerUserObject->CustomerUserAdd(
 );
 $Self->True(
     $CustomerUser2,
-    "Customer user #2 created."
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    "Contact #2 created."
 );
 my $GroupID2 = $GroupObject->GroupAdd(
     Name    => 'Test_customer_group_#1',
@@ -931,7 +934,8 @@ my $SuccessGroupMemberAdd1 = $CustomerGroupObject->GroupMemberAdd(
 );
 $Self->True(
     $SuccessGroupMemberAdd1,
-    "Customer #1 added to the group."
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    "Contact #1 added to the group."
 );
 my $SuccessGroupMemberAdd2 = $CustomerGroupObject->GroupMemberAdd(
     GID        => $GroupID2,
@@ -948,7 +952,8 @@ my $SuccessGroupMemberAdd2 = $CustomerGroupObject->GroupMemberAdd(
 );
 $Self->True(
     $SuccessGroupMemberAdd2,
-    "Customer #2 added to the group."
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    "Contact #2 added to the group."
 );
 
 # First get members while both users are Valid
@@ -966,7 +971,8 @@ $Self->IsDeeply(
         'jdoe1',
         'jdoe2'
     ],
-    "GroupMemberList() - 2 Customer users."
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    "GroupMemberList() - 2 contacts."
 );
 
 # set 2nd user to invalid state
@@ -983,7 +989,8 @@ my $CustomerUserInvalid = $CustomerUserObject->CustomerUserUpdate(
 );
 $Self->True(
     $CustomerUserInvalid,
-    "Set 2nd Customer user to invalid",
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    "Set 2nd contact to invalid",
 );
 
 # Get group members again
@@ -998,7 +1005,8 @@ $Self->IsDeeply(
     [
         'jdoe1',
     ],
-    "GroupMemberList() - 2 Customer users."
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    "GroupMemberList() - 2 contacts."
 );
 
 # cleanup is done by RestoreDatabase

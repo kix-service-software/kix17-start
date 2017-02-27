@@ -753,6 +753,7 @@ sub _Edit {
             AgentMyQueuesMyServices => Translatable('All agents subscribed to both the ticket\'s queue and service'),
             # KIX4OTRS-capeIT
             LinkedPersonAgent       => Translatable('All agents who are linked with this ticket and have been selected (Linked Persons)'),
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             LinkedPersonCustomer    => Translatable('All customer contacts who are linked with this ticket and have been selected (Linked Persons)'),
             LinkedPerson3rdPerson   => Translatable('All 3rd person contacts who are linked with this ticket and have been selected (Linked Persons)'),
             # EO KIX4OTRS-capeIT

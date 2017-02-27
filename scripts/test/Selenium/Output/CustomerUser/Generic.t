@@ -88,6 +88,7 @@ $Selenium->RunTest(
 
         $Self->True(
             $TestCustomerUser,
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             "Created contact - $TestCustomerUser",
         );
 

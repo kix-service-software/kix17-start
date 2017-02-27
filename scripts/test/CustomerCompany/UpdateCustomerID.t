@@ -143,12 +143,14 @@ for my $Key ( 1 .. 3, 'ä', 'カス', '*' ) {
 
         $Self->False(
             $OldIDList{$CustomerLogin},
-            "Customer User $CustomerLogin not in list for $CompanyData{CustomerID}",
+            # rkaiser - T#2017020290001194 - changed customer user to contact
+            "Contact $CustomerLogin not in list for $CompanyData{CustomerID}",
         );
 
         $Self->True(
             $NewIDList{$CustomerLogin},
-            "Customer User $CustomerLogin found in list for new$CompanyData{CustomerID}",
+            # rkaiser - T#2017020290001194 - changed customer user to contact
+            "Contact $CustomerLogin found in list for new$CompanyData{CustomerID}",
         );
 
         my %CustomerData = $CustomerUserObject->CustomerUserDataGet(

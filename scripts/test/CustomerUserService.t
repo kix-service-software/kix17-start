@@ -89,9 +89,11 @@ $Self->True(
 );
 
 my $CustomerUser1 = $Helper->TestCustomerUserCreate()
-    || die "Did not get test customer user";
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    || die "Did not get test contact";
 my $CustomerUser2 = $Helper->TestCustomerUserCreate()
-    || die "Did not get test customer user";
+    # rkaiser - T#2017020290001194 - changed customer user to contact
+    || die "Did not get test contact";
 
 # allocation test 1
 my @Allocation1 = $ServiceObject->CustomerUserServiceMemberList(

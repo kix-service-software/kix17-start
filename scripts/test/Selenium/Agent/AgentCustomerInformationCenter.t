@@ -39,7 +39,8 @@ $Selenium->RunTest(
 
         # create test customer user
         my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate(
-        ) || die "Did not get test customer user";
+        # rkaiser - T#2017020290001194 - changed customer user to contact
+        ) || die "Did not get test contact";
 
         # get test customer user ID
         my @CustomerIDs = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerIDs(
@@ -122,8 +123,10 @@ $Selenium->RunTest(
             "Found looked value on page",
         );
         $Self->True(
-            index( $Selenium->get_page_source(), "Customer Users" ) > -1,
-            "Customer Users widget found on page",
+            # rkaiser - T#2017020290001194 - changed customer user to contact
+            index( $Selenium->get_page_source(), "Contacts" ) > -1,
+            # rkaiser - T#2017020290001194 - changed customer user to contact
+            "Contacts widget found on page",
         );
         $Self->True(
             index( $Selenium->get_page_source(), "Reminder Tickets" ) > -1,

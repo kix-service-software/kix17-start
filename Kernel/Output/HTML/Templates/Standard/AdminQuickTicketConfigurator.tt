@@ -267,6 +267,7 @@ $('#QueueID').bind('change', function (Event) {
 });
 //]]></script>
 [% END %]
+# rkaiser - T#2017020290001194 - changed customer user to contact
                         <label for="ToCustomer">[% Translate("Contact") | html %]:</label>
                         <div class="Field">
                             <input id="ToCustomer" type="text" name="From" value="[% Data.From | html %]" class="CustomerAutoCompleteTo W75pc [% Data.ToInvalid | html %]" autocomplete="off" />

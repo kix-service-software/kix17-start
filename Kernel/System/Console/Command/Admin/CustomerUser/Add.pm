@@ -20,9 +20,11 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
+    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Self->Description('Add a contact.');
     $Self->AddOption(
         Name        => 'user-name',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         Description => "User name for the new contact.",
         Required    => 1,
         HasValue    => 1,
@@ -30,6 +32,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'first-name',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         Description => "First name of the new contact.",
         Required    => 1,
         HasValue    => 1,
@@ -37,6 +40,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'last-name',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         Description => "Last name of the new contact.",
         Required    => 1,
         HasValue    => 1,
@@ -44,6 +48,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'email-address',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         Description => "Email address of the new contact.",
         Required    => 1,
         HasValue    => 1,
@@ -51,6 +56,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'customer-id',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         Description => "Customer ID for the new contact.",
         Required    => 1,
         HasValue    => 1,
@@ -58,6 +64,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'password',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         Description => "Password for the new contact. If left empty, a password will be generated automatically.",
         Required    => 0,
         HasValue    => 1,

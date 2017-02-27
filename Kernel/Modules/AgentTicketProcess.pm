@@ -2964,6 +2964,7 @@ sub _RenderCustomer {
     my $SubmittedCustomerUserID = $Param{GetParam}{CustomerUserID};
 
     my %Data = (
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         LabelCustomerUser => $LayoutObject->{LanguageObject}->Translate("Contact"),
         LabelCustomerID   => $LayoutObject->{LanguageObject}->Translate("CustomerID"),
         FormID            => $Param{FormID},

@@ -50,6 +50,7 @@ $Selenium->RunTest(
 
         # create a test customer
         my $TestCustomerUser1 = $Helper->TestCustomerUserCreate()
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             || die "Did not get test contact";
 
         my $CustomerUser = $Helper->GetRandomID();
@@ -73,6 +74,7 @@ $Selenium->RunTest(
         );
 
         my $TestCustomerUser2 = $Helper->TestCustomerUserCreate()
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             || die "Did not get test contact";
 
         $Success = $CustomerUserObject->CustomerUserUpdate(
@@ -94,6 +96,7 @@ $Selenium->RunTest(
         );
 
         my $TestCustomerUser3 = $Helper->TestCustomerUserCreate()
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             || die "Did not get test contact";
 
         # update customer user 3 with very similar data as customer user 2
@@ -185,6 +188,7 @@ $Selenium->RunTest(
                 $Self->Is(
                     $Selenium->find_element( "#CustomerTicketText_1", 'css' )->get_value(),
                     $AutoCompleteExpected{$AutocompleteInput}{CustomerUser},
+                    # rkaiser - T#2017020290001194 - changed customer user to contact
                     "Contact is selected",
                 );
             }

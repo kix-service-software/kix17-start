@@ -153,6 +153,7 @@ sub Data {
         'customer' => 'Kunde',
         'agent' => 'Agent',
         'system' => 'System',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact info' => 'Ansprechpartner-Info',
         'Customer Companies' => 'Kunden',
         'Company' => 'Firma',
@@ -199,8 +200,6 @@ sub Data {
         'View' => 'Ansehen',
         'Number' => 'Nummer',
         'System' => 'System',
-        'Contact' => 'Kontakt',
-        'Contacts' => 'Kontakte',
         'Export' => 'Export',
         'Up' => 'Auf',
         'Down' => 'Ab',
@@ -374,6 +373,7 @@ sub Data {
         'more' => 'mehr',
         'Collapse' => 'Zuklappen',
         'Shown' => 'Angezeigt',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Shown contacts' => 'Angezeigte Ansprechpartner',
         'News' => 'Neues',
         'Product News' => 'Produkt-Neuigkeiten',
@@ -541,7 +541,9 @@ sub Data {
         'Ticket Types' => 'Ticket-Typen',
         'Compose' => 'Verfassen',
         'Pending' => 'Warten',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Owner' => 'Bearbeiter',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Owner Update' => 'Bearbeiter aktualisiert',
         'Responsible' => 'Verantwortlicher',
         'Responsible Update' => 'Verantwortlichen aktualisiert',
@@ -634,7 +636,9 @@ sub Data {
         'No such Ticket Number "%s"! Can\'t link it!' => 'Ticketnummer "%s" nicht gefunden! Ticket konnte nicht verknüpft werden!',
         'You don\'t have write access to this ticket.' => 'Sie haben keinen Schreibzugriff auf dieses Ticket.',
         'Sorry, you need to be the ticket owner to perform this action.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Entschuldigung, Sie müssen Ticket-Bearbeiter sein, um diese Aktion ausführen zu können.',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Please change the owner first.' => 'Bitte ändern Sie zunächst den Bearbeiter.',
         'Ticket selected.' => 'Ticket ausgewählt.',
         'Ticket is locked by another agent.' => 'Das Ticket ist für einen anderen Agenten gesperrt.',
@@ -651,6 +655,7 @@ sub Data {
         'Search Tickets' => 'Ticket-Suche',
         'Customer Realname' => 'Kundenname',
         'Customer History' => 'Kundenhistorie',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Edit contacts' => 'Ansprechpartner bearbeiten',
         'Edit Customer' => 'Kunde bearbeiten',
         'Bulk Action' => 'Sammel-Aktion',
@@ -659,6 +664,7 @@ sub Data {
         'Create new Email Ticket and send this out (Outbound)' => 'Neues Ticket wird erstellt und E-Mail versendet',
         'Create new Phone Ticket (Inbound)' => 'Neues Ticket wird über einkommenden Anruf erstellt',
         'Address %s replaced with registered customer address.' => 'Adresse %s wurde durch die Adresse des eingetragenen Kunden ersetzt.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact automatically added in Cc.' => 'Ansprechpartner wurde automatisch ins Cc eingetragen.',
         'Overview of all open Tickets' => 'Übersicht über alle offenen Tickets',
         'Locked Tickets' => 'Gesperrte Tickets',
@@ -680,6 +686,7 @@ sub Data {
         'Change the ticket priority' => 'Ticket-Priorität ändern',
         'Change the ticket free fields!' => 'Ändern der freien Felder des Tickets.',
         'Link this ticket to other objects' => 'Dieses Ticket mit anderen Objekten verknüpfen',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Change the owner for this ticket' => 'Bearbeiter dieses Tickets ändern',
         'Change the  customer for this ticket' => 'Kunden dieses Tickets ändern',
         'Add a note to this ticket' => 'Eine Notiz zu diesem Ticket hinzufügen',
@@ -710,6 +717,7 @@ sub Data {
         'Send new ticket notifications' => 'Benachrichtigung über neue Tickets senden',
         'Ticket follow up notification' => 'Benachrichtigung über Folgeaktionen',
         'Send me a notification if a customer sends a follow up and I\'m the owner of the ticket or the ticket is unlocked and is in one of my subscribed queues.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Sende mir eine Benachrichtigung, wenn ein Kunde eine Rückmeldung gibt und ich der Bearbeiter des Tickets bin, oder das Ticket nicht gesperrt ist und in einer meiner Queues liegt.',
         'Send ticket follow up notifications' => 'Benachrichtigung bei Rückmeldung verschicken',
         'Ticket lock timeout notification' => 'Mitteilung bei Überschreiten der Sperrzeit',
@@ -740,6 +748,7 @@ sub Data {
         'Ticket limit per page for Ticket Overview "Preview"' => 'Maximale Anzahl Tickets pro Seite für Ticketübersicht "Vorschau"',
         'Ticket watch notification' => 'Benachrichtigung über Ticket-Überwachungen',
         'Send me the same notifications for my watched tickets that the ticket owners will get.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Für meine überwachten Tickets die gleiche Nachricht, die die Bearbeiter eines Tickets erhalten, an mich senden.',
         'Send ticket watch notifications' => 'Benachrichtigung über Ticket-Überwachungen senden',
         'Out Of Office Time' => 'Abwesenheitszeit',
@@ -854,11 +863,14 @@ sub Data {
         'You can use the following tags' => 'Die folgenden Tags können benutzt werden',
         'To get the first 20 character of the subject.' => 'Die ersten 20 Zeichen des Betreffs',
         'To get the first 5 lines of the email.' => 'Die ersten fünf Zeilen der Nachricht',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'To get the realname of the ticket\'s contact (if given).' =>
             'Der Name des Ticket-Ansprechpartners (wenn angegeben).',
         'To get the article attribute' => 'Die Artikel-Attribute',
         ' e. g.' => 'z. B.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Options of the current contact data' => 'Attribute des aktuellen Ansprechpartner',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Ticket owner options' => 'Attribute des Ticket-Bearbeiters',
         'Ticket responsible options' => 'Attribute des Ticket-Verantwortlichen',
         'Options of the current user who requested this action' => 'Attribute des aktuellen Benutzers, der die Aktion angefordert hat',
@@ -880,10 +892,14 @@ sub Data {
         'Add Customer' => 'Kunden hinzufügen',
 
         # Template: AdminCustomerUser
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact Management' => 'Ansprechpartnerverwaltung',
         'Back to search results' => 'Zurück zum Suchergebnis',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Add contact'  => 'Ansprechpartner hinzufügen',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Edit contact' => 'Ansprechpartner bearbeiten',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact are needed to have a customer history and to login via customer panel.' =>
             'Ansprechpartner werden für die Bereitstellung einer Kundenhistorie und für die Anmeldung über den Kundenzugang benötigt.',
         'Last Login' => 'Letzte Anmeldung',
@@ -1090,6 +1106,7 @@ sub Data {
         'Select Tickets' => 'Tickets selektieren',
         '(e. g. 10*5155 or 105658*)' => '(z .B. 10*5155 oder 105658*)',
         '(e. g. 234321)' => '(z. B. 234321)',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact' => 'Ansprechpartner',
         '(e. g. U5150)' => '(z. B. U5150)',
         'Fulltext-search in article (e. g. "Mar*in" or "Baue*").' => 'Volltextsuche in Artikeln (z. B. "Mar*in" oder "Baue*").',
@@ -1137,9 +1154,11 @@ sub Data {
         'Set new state' => 'Neuen Status setzen',
         'Pending date' => 'Warten bis',
         'Set new agent' => 'Neuen Agenten setzen',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'new owner' => 'Neuer Bearbeiter',
         'new responsible' => 'Neuer Verantwortlicher',
         'Set new ticket lock' => 'Neue Ticketsperre setzen',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'New contact' => 'Neuer Ansprechpartner',
         'New customer ID' => 'Neue Kundennummer',
         'New title' => 'Neuer Titel',
@@ -1569,7 +1588,9 @@ sub Data {
             'Die ersten 20 Zeichen des Betreffs (des letzten Kunden-Artikels)',
         'To get the first 5 lines of the body (of the latest customer article).' =>
             'Die ersten fünf Zeilen der Nachricht (des letzten Kunden-Artikels).',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Attributes of the current contact data' => 'Attribute des aktuellen Ansprechpartner-Datensatzes',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Attributes of the current ticket owner user data' => 'Attribute der Nutzerdaten des aktuellen Ticket-Bearbeiters',
         'Attributes of the current ticket responsible user data' => 'Attribute der Nutzerdaten des aktuellen Ticket-Verantwortlichem',
         'Attributes of the current agent user who requested this action' =>
@@ -1760,7 +1781,9 @@ sub Data {
         # Template: AdminProcessManagementActivityDialog
         'Please note that changing this activity dialog will affect the following activities' =>
             'Veränderungen an diesem Aktivitäts-Dialog werden sich auf folgende Aktivitäten auswirken',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Please note that contacts will not be able to see or use the following fields: Owner, Responsible, Lock, PendingTime and CustomerID.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bitte beachten Sie, dass Ansprechpartner die folgenden Felder nicht sehen oder benutzen können: Bearbeiter (Owner), Verantwortlicher (Responsible), Sperre (Lock), Warten bis (PendingTime) und Kundennummer (CustomerID).',
         'The Queue field can only be used by customers when creating a new ticket.' =>
             'Das Queue-Feld kann nur von Kunden ausgewählt werden, wenn diese ein neues Ticket erstellen.',
@@ -1930,6 +1953,7 @@ sub Data {
             'Gibt an, ob eine Rückmeldung zu einem geschlossenen Ticket diese Ticket erneut öffnet, abgelehnt wird oder zu einem neuen Ticket führt.',
         'Ticket lock after a follow up' => 'Ticket sperren nach einer Rückmeldung',
         'If a ticket is closed and the customer sends a follow up the ticket will be locked to the old owner.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Wenn ein Ticket geschlossen wird und der Kunde eine Rückmeldung schickt, wird es für den letzten Bearbeiter gesperrt.',
         'System address' => 'Systemadresse',
         'Will be the sender address of this queue for email answers.' => 'Absenderadresse für E-Mails aus dieser Queue.',
@@ -2066,8 +2090,10 @@ sub Data {
         'Permissions to create tickets in this group/queue.' => 'Rechte, um in einer Gruppe/Queue Tickets zu erstellen.',
         'note' => 'Notiz',
         'Permissions to add notes to tickets in this group/queue.' => 'Berechtigung zum Hinzufügen von Notizen zu Tickets dieser Gruppe/Queue.',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'owner' => 'Bearbeiter',
         'Permissions to change the owner of tickets in this group/queue.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Berechtigung zum Ändern des Bearbeiters von Tickets dieser Gruppe/Queue.',
         'priority' => 'Priorität',
         'Permissions to change the ticket priority in this group/queue.' =>
@@ -2381,6 +2407,7 @@ sub Data {
         'Customer Information Center' => 'Kunden-Informationszentrum',
 
         # Template: AgentCustomerInformationCenterSearch
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact' => 'Ansprechpartner',
 
         # Template: AgentCustomerSearch
@@ -2422,6 +2449,7 @@ sub Data {
         'Escalated tickets' => 'Eskalierte Tickets',
 
         # Template: AgentDashboardCustomerUserList
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact information' => 'Ansprechpartner-Information',
         'Phone ticket' => 'Telefon-Ticket',
         'Email ticket' => 'E-Mail-Ticket',
@@ -2549,6 +2577,7 @@ sub Data {
 
         # Template: AgentTicketActionCommon
         'Change Free Text of %s%s%s' => 'Den Freitext von %s%s%s ändern',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Change Owner of %s%s%s' => 'Bearbeiter von %s%s%s wechseln',
         'Close %s%s%s' => '%s%s%s schließen',
         'Add Note to %s%s%s' => 'Notiz zu %s%s%s hinzufügen',
@@ -2557,7 +2586,9 @@ sub Data {
         'Change Responsible of %s%s%s' => 'Verantwortlichen von %s%s%s ändern',
         'All fields marked with an asterisk (*) are mandatory.' => 'Alle mit * gekennzeichneten Felder sind Pflichtfelder.',
         'Service invalid.' => 'Ungültiger Service',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'New Owner' => 'Neuer Bearbeiter',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Please set a new owner!' => 'Bitte einen neuen Bearbeiter angeben',
         'New Responsible' => 'Wechsel des Verantwortlichen',
         'Next state' => 'Nächster Status',
@@ -2615,9 +2646,12 @@ sub Data {
         'Create New Email Ticket' => 'Neues E-Mail-Ticket anlegen',
         'Example Template' => 'Beispielvorlage',
         'From queue' => 'Aus Queue',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'To contact' => 'An Ansprechpartner',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Please include at least one contact for the ticket.' => 'Bitte tragen Sie wenigstens einen Ansprechpartner für das Ticket ein',
         'Select this customer as the main customer.' => 'Diesen Kunden als Hauptkunden auswählen.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Remove Ticket contact' => 'Ansprechpartner des Tickets entfernen',
         'Get all' => 'Alles holen',
 
@@ -2711,7 +2745,9 @@ sub Data {
             'Sucht in den Attributen Von, Cc, Betreff, Artikelinhalt und überschreibt Attribute mit dem selben Namen.',
         'CustomerID (complex search)' => 'Kundennummer (komplexe Suche)',
         'CustomerID (exact match)' => 'Kundennummer (genaue Übereinstimmung)',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact login (complex search)' => 'Ansprechpartner (komplexe Suche)',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact login (exact match)' => 'Ansprechpartner (genaue Übereinstimmung)',
         'Attachment Name' => 'Name der Anlage',
         '(e. g. m*file or myfi*)' => '(z.B. m*file oder myfi*)',
@@ -3570,6 +3606,7 @@ sub Data {
         'You need %s permissions!' => 'Sie benötigen die %s-Berechtigung!',
         'Could not perform validation on field %s!' => 'Konnte Validierung auf Feld %s nicht ausführen!',
         'No subject' => 'Kein Betreff',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Previous Owner' => 'Vorheriger Bearbeiter',
 
         # Perl Module: Kernel/Modules/AgentTicketBounce.pm
@@ -3608,9 +3645,12 @@ sub Data {
 
         # Perl Module: Kernel/Modules/AgentTicketLock.pm
         'Can\'t lock Ticket, no TicketID is given!' => 'Kann Ticket nicht sperren, keine TicketID empfangen!',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Sorry, the current owner is %s!' => 'Entschuldigung, der aktuelle Bearbeiter ist %s!',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Please become the owner first.' => 'Bitte werden Sie zuerst der Bearbeiter.',
         'Ticket (ID=%s) is locked by %s!' => 'Ticket (ID=%s) ist durch %s gesperrt!',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Change the owner!' => 'Ändern Sie den Bearbeiter!',
 
         # Perl Module: Kernel/Modules/AgentTicketMerge.pm
@@ -3915,14 +3955,14 @@ sub Data {
         'State Type' => 'Statustyp',
         'Created Priority' => 'Erstellt mit der Priorität',
         'Created State' => 'Erstellt mit dem Status',
-        'Contact login (complex search)' => 'Ansprechpartner (komplexe Suche)',
-        'Contact login (exact match)' => 'Ansprechpartner (genaue Übereinstimmung)',
         'Create Time' => 'Erstellzeit',
         'Close Time' => 'Schließzeit',
         'Escalation - First Response Time' => 'Eskalation - Zeit für die erste Reaktion',
         'Escalation - Update Time' => 'Eskalation - Aktualisierungszeit',
         'Escalation - Solution Time' => 'Eskalation - Lösungszeit',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Agent/Owner' => 'Agent/Bearbeiter',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Created by Agent/Owner' => 'Erstellt von Agent/Bearbeiter',
 
         # Perl Module: Kernel/System/Stats/Dynamic/TicketAccountedTime.pm
@@ -4261,6 +4301,7 @@ sub Data {
         'Reset password unsuccessful. Please contact your administrator' =>
             'Passwort zurücksetzen fehlgeschlagen. Bitte kontaktieren Sie Ihren Administrator.',
         'Added via Customer Panel (%s)' => 'Mittels Kundenbereich hinzugefügt (%s)',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact can\'t be added!' => 'Ansprechpartner kann nicht angelegt werden!',
         'Can\'t send account info!' => 'Kann Zugangsinformation nicht senden!',
 
@@ -4313,6 +4354,7 @@ sub Data {
             'Automatische Bestätigung, die gesendet wird, nachdem eine Rückantwort für ein Ticket empfangen wurde (falls die Rückantworts-Einstellung der Queue "Möglich" ist).',
         'Automatic response which will be sent out after a follow-up has been rejected and a new ticket has been created (in case queue follow-up option is "new ticket").' =>
             'Automatische Antwort, die gesendet wird, nachdem eine Rückantwort abgelehnt und ein neues Ticket erstellt wurde (falls die Rückantworts-Einstellung der Queue "Neues Ticket" ist).',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Auto remove will be sent out after a customer contact removed the request.' =>
             'Auto Remove wird versendet, nachdem ein Kunden-Ansprechpartner die Anfrage entfernt hat.',
         'default reply (after new ticket has been created)' => 'Standardantwort (nachdem ein neues Ticket erstellt wurde)',
@@ -4333,9 +4375,12 @@ sub Data {
             'Sie erhalten eine Benachrichtigung, wenn ein Kunde eine Rückmeldung zu einem Ticket sendet, das in Ihren unter "Meine Queues" oder "Meine Services" ausgewählten Queues oder Services erstellt wurde.',
         'Ticket follow-up notification (locked)' => 'Benachrichtigung über Folgeaktionen (gesperrtes Ticket)',
         'You will receive a notification if a customer sends a follow-up to a locked ticket of which you are the ticket owner or responsible.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Sie erhalten eine Benachrichtigung, wenn ein Kunde eine Rückmeldung zu einem Ticket sendet, dessen Bearbeiter oder Verantwortlicher Sie sind.',
         'You will receive a notification as soon as a ticket owned by you is automatically unlocked.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Sie erhalten eine Benachrichtigung, wenn ein Ticket, dessen Bearbeiter Sie sind, automatisch entsperrt wurde.',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Ticket owner update notification' => 'Benachrichtigung über Änderung des Ticket-Bearbeiters',
         'Ticket responsible update notification' => 'Benachrichtigung über Änderung des  Ticket Verantwortlichen',
         'Ticket new note notification' => 'Benachrichtigung über neue Notiz',
@@ -4417,6 +4462,7 @@ Ihr Helpdesk-Team
         'Added link to ticket "%s".' => 'Verknüpfung zu "%s" hergestellt.',
         'Added note (%s)' => 'Notiz hinzugefügt (%s)',
         'Added subscription for user "%s".' => 'Abo für Benutzer "%s" eingetragen.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Address book of contact sources.' => 'Adressbuch für Ansprechpartner-Quellen.',
         'Adds a suffix with the actual year and month to the OTRS log file. A logfile for every month will be created.' =>
             'Fügt einen Suffix mit dem aktuellen Jahr und Monat in die OTRS-Protokolldatei hinzu. Für jeden Monat wir eine eigen Log-Datei erstellt.',
@@ -4461,6 +4507,7 @@ Ihr Helpdesk-Team
         'AgentUserSearch.' => 'AgentUserSearch.',
         'Agents <-> Groups' => 'Agent <-> Gruppen',
         'Agents <-> Roles' => 'Agent <-> Rollen',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'All contacts of a CustomerID' => 'Alle Ansprechpartner einer Kundennummer',
         'Allows adding notes in the close ticket screen of the agent interface. Can be overwritten by Ticket::Frontend::NeedAccountedTime.' =>
             'Erlaubt in der Agentenoberfläche das Hinzufügen von Notizen im  \'Schließen\'-Bildschirm. Kann durch Ticket::Frontend::NeedAccountedTime überschrieben werden.',
@@ -4469,6 +4516,7 @@ Ihr Helpdesk-Team
         'Allows adding notes in the ticket note screen of the agent interface. Can be overwritten by Ticket::Frontend::NeedAccountedTime.' =>
             'Erlaubt in der Agentenoberfläche das Hinzufügen von Notizen im \'Notiz\'-Bildschirm. Kann durch Ticket::Frontend::NeedAccountedTime überschrieben werden.',
         'Allows adding notes in the ticket owner screen of a zoomed ticket in the agent interface. Can be overwritten by Ticket::Frontend::NeedAccountedTime.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Erlaubt in der Agentenoberfläche in einem geöffneten Ticket das Hinzufügen von Notizen im \'Bearbeiter\'-Bildschirm. Kann durch Ticket::Frontend::NeedAccountedTime überschrieben werden.',
         'Allows adding notes in the ticket pending screen of a zoomed ticket in the agent interface. Can be overwritten by Ticket::Frontend::NeedAccountedTime.' =>
             'Erlaubt in der Agentenoberfläche in einem geöffneten Ticket das Hinzufügen von Notizen im \'Warten\'-Bildschirm. Kann durch Ticket::Frontend::NeedAccountedTime überschrieben werden.',
@@ -4530,12 +4578,16 @@ Ihr Helpdesk-Team
         'Automated line break in text messages after x number of chars.' =>
             'Automatischer Zeilenumbruch in Textnachrichten nach x-Zeichen.',
         'Automatically lock and set owner to current Agent after opening the move ticket screen of the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Automatisches Sperren und setzen des aktuellen Agenten als Bearbeiter nachdem der Verschieben-Bildschirm im Agenten-Interface geöffnet wurde.',
         'Automatically lock and set owner to current Agent after selecting for an Bulk Action.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Automatisches Sperren und setzen des aktuellen Agenten als Bearbeiter nachdem der Sammelaktion-Bildschirm gewählt wurde.',
         'Automatically sets the owner of a ticket as the responsible for it (if ticket responsible feature is enabled). This will only work by manually actions of the logged in user. It does not work for automated actions e.g. GenericAgent, Postmaster and GenericInterface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter eines Tickets automatisch auch als Verantwortlichen (wenn das Verantwortlicher-Feature aktiviert ist). Dies wird nur durch manuelle Aktionen des eingeloggten Benutzers ausgelöst, nicht durch automatische wie GenericAgent, Postmaster oder GenericInterface.',
         'Automatically sets the responsible of a ticket (if it is not set yet) after the first owner update.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Automatisches setzen eines Ticket-Verantwortlichen (wenn er noch nicht gesetzt wurde) nach dem ersten Bearbeiter-Update.',
         'Balanced white skin by Felix Niklas (slim version).' => 'Balanced White-Skin von Felix Niklas (slim)',
         'Balanced white skin by Felix Niklas.' => 'Balanced White Skin von Felix Niklas.',
@@ -4569,6 +4621,7 @@ Ihr Helpdesk-Team
         'Change the responsible for this ticket' => 'Verantwortlichen für dieses Tickets ändern',
         'Changed priority from "%s" (%s) to "%s" (%s).' => 'Priorität aktualisiert von "%s" (%s) nach "%s" (%s).',
         'Changes the owner of tickets to everyone (useful for ASP). Normally only agent with rw permissions in the queue of the ticket will be shown.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Ändert den Bearbeiter der Tickets auf Alle (nützlich für ASP). In der Regel werden nur Agenten mit rw-Berechtigungen auf die Queue angezeigt.',
         'Checkbox' => 'Kontrollkästchen',
         'Checks if an E-Mail is a followup to an existing ticket by searching the subject for a valid ticket number.' =>
@@ -4582,6 +4635,7 @@ Ihr Helpdesk-Team
         'Chinese (Traditional)' => 'Chinesisch (traditionell)',
         'Choose for which kind of ticket changes you want to receive notifications.' =>
             'Für welche Veränderungen an Tickets möchten Sie Benachrichtigungen erhalten?',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Closed tickets (contact)' => 'Geschlossene Tickets (Ansprechpartner)',
         'Closed tickets (customer)' => 'Geschlossene Tickets (Kunden)',
         'Cloud Services' => 'Cloud-Service',
@@ -4643,6 +4697,7 @@ Ihr Helpdesk-Team
         'Create and manage Service Level Agreements (SLAs).' => 'Service-Level-Abkommen (SLAs) erzeugen und verwalten.',
         'Create and manage agents.' => 'Agents erzeugen und verwalten.',
         'Create and manage attachments.' => 'Anlagen erzeugen und verwalten.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Create and manage contacts.' => 'Ansprechpartner erzeugen und verwalten.',
         'Create and manage customers.' => 'Kunden erzeugen und verwalten.',
         'Create and manage dynamic fields.' => 'Dynamische Felder erzeugen und verwalten.',
@@ -4674,9 +4729,13 @@ Ihr Helpdesk-Team
         'Customer Information Center Search.' => 'Kunden-Informationszentrum-Suche.',
         'Customer Information Center.' => 'Kunden-Informationszentrum.',
         'Customer Ticket Print Module.' => 'Kunden-Ticketdruck-Modul.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact <-> Groups' => 'Ansprechpartner <-> Gruppen',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact <-> Services' => 'Ansprechpartner <-> Services',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact Administration' => 'Ansprechpartnerverwaltung',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contacts' => 'Ansprechpartner',
         'Customer called us.' => 'Kunde hat angerufen.',
         'Customer item (icon) which shows the closed tickets of this customer as info block. Setting CustomerUserLogin to 1 searches for tickets based on login name rather than CustomerID.' =>
@@ -4688,6 +4747,7 @@ Ihr Helpdesk-Team
         'Customer ticket overview' => 'Kunden-Ticket-Übersicht',
         'Customer ticket search.' => 'Kunden-Ticketsuche.',
         'Customer ticket zoom' => 'Ticketansicht für Kunden',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact search' => 'Ansprechpartner-Suche',
         'CustomerID search' => 'Kundennummernsuche',
         'CustomerName' => 'Kundenname',
@@ -4729,6 +4789,7 @@ Ihr Helpdesk-Team
             'Definieren Sie Actions, in denen im Verknüpfte-Objekte-Widget ein Einstellungen-Knopf verfügbar sein soll (LinkObject::ViewMode = "complex"). Bitte beachten Sie, dass für diese Actions die folgenden JS- und CSS-Dateien registriert sein müssen: Core.AllocationList.css, Core.UI.AllocationList.js, Core.UI.Table.Sort.js, Core.Agent.TableFilters.js.',
         'Define a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.' =>
             'Definiert einen Filter für die HTML-Ausgabe um Links hinter einer bestimmten Zeichenfolge hinzufügen. Dieses Element erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der OTRS-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Define a mapping between variables of the contact data (keys) and dynamic fields of a ticket (values). The purpose is to store contact data in ticket dynamic fields. The dynamic fields must be present in the system and should be enabled for AgentTicketFreeText, so that they can be set/updated manually by the agent. They mustn\'t be enabled for AgentTicketPhone, AgentTicketEmail and AgentTicketCustomer. If they were, they would have precedence over the automatically set values. To use this mapping, you have to also activate the next setting below.' =>
             'Definiert eine Zuordnung zwischen Variablen der Ansprechpartner-Daten (Schlüssel) und dynamischen Feldern eines Ticket (Werte). Somit können Sie Ansprechpartner-Daten eines Tickets in dynamische Felder speichern. Die dynamischen Felder müssen im System vorhanden sein und sollten für AgentTicketFreeText aktiviert werden, damit sie eingestellt / manuell durch den Agenten aktualisiert werden können. Sie dürfen nicht für AgentTicketPhone, AgentTicketEmail und AgentTicketCustomer aktiviert werden. Wenn sie in diesen Masken aktiviert werden, werden später automatisch gesetzte Werte überschrieben werden. Um dieses Mapping zu verwenden, müssen Sie auch Sie die nächste Einstellung aktivieren.',
         'Define dynamic field name for end time. This field has to be manually added to the system as Ticket: "Date / Time" and must be activated in ticket creation screens and/or in any other ticket action screens.' =>
@@ -4804,34 +4865,49 @@ Ihr Helpdesk-Team
         'Defines if a pre-sorting by priority should be done in the service view.' =>
             'Bestimmt, ob in der Service-Ansicht eine Vorsortierung anhand der Priorität vorgenommen werden soll.',
         'Defines if a ticket lock is required in the close ticket screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the email outbound screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket bounce screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket compose screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket forward screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket free text screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket merge screen of a zoomed ticket in the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket note screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket owner screen of a zoomed ticket in the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket pending screen of a zoomed ticket in the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket phone inbound screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket phone outbound screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket priority screen of a zoomed ticket in the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket responsible screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required to change the customer of a ticket in the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if agents should be allowed to login if they have no shared secret stored in their preferences and therefore are not using two-factor authentication.' =>
             'Steuert, ob Agenten, die die Zweifaktor-Authentifizierung nicht nutzen, sich im System einloggen dürfen.',
@@ -4921,6 +4997,7 @@ Ihr Helpdesk-Team
         'Defines the default next state of a ticket after adding a note, in the ticket note screen of the agent interface.' =>
             'Bestimmt den Folgestatus für Tickets, für die im Notiz-Bildschirm im Agenten-Interface eine Notiz hinzugefügt wurde.',
         'Defines the default next state of a ticket after adding a note, in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt den Folgestatus für Tickets, für die im Bearbeiter-Bildschirm im Agenten-Interface eine Notiz hinzugefügt wurde.',
         'Defines the default next state of a ticket after adding a note, in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Bestimmt den Folgestatus für Tickets, für die im Warten bis-Bildschirm im Agenten-Interface eine Notiz hinzugefügt wurde.',
@@ -5032,6 +5109,7 @@ Ihr Helpdesk-Team
         'Defines the default ticket priority in the ticket note screen of the agent interface.' =>
             'Definiert die Standard-Ticketpriorität in der \'Notiz\'-Oberfläche im Agenten-Interface.',
         'Defines the default ticket priority in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert die Standard-Ticketpriorität in der \'Bearbeiter\'-Oberfläche im TicketZoom im Agenten-Interface.',
         'Defines the default ticket priority in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Definiert die Standard-Ticketpriorität in der \'Warten\'-Oberfläche im TicketZoom im Agenten-Interface.',
@@ -5058,6 +5136,7 @@ Ihr Helpdesk-Team
         'Defines the default type of the note in the ticket note screen of the agent interface.' =>
             'Definiert den Standard-Notiztyp in der \'Notiz\'-Oberfläche im Agenten-Interface.',
         'Defines the default type of the note in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert den Standard-Notiztyp in der \'Bearbeiter\'-Oberfläche im TicketZoom im Agenten-Interface.',
         'Defines the default type of the note in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Definiert den Standard-Notiztyp in der \'Warten\'-Oberfläche im TicketZoom im Agenten-Interface.',
@@ -5089,6 +5168,7 @@ Ihr Helpdesk-Team
             'Steuert das Format von Antworten im Ticket erstellen-Bildschirm im Agentenbereich ([% Data.OrigFrom | html %] entspricht genau dem Absender, [% Data.OrigFromName | html %] enthält nur den realen Namen des Absenders).',
         'Defines the fully qualified domain name of the system. This setting is used as a variable, KIX_CONFIG_FQDN which is found in all forms of messaging used by the application, to build links to the tickets within your system.' =>
             'Definiert den Full Qualified Domain Name des OTRS Systems. Diese Einstellung wird als Variable KIX_CONFIG_FQDN genutzt, welche in allen Nachrichten-Formularen zu finden ist oder um Links zu Tickets in Ihrem OTRS System zu generieren.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Defines the groups every contact will be in (if CustomerGroupSupport is enabled and you don\'t want to manage every user for these groups).' =>
             'Steuert die Gruppen, in denen sich ein Ansprechpartner standardmäßig befinden soll (wenn CustomerGroupSupport aktiviert ist und Sie nicht jede Gruppenbeziehung für die Nutzer einzeln steuern möchten).',
         'Defines the height for the rich text editor component for this screen. Enter number (pixels) or percent value (relative).' =>
@@ -5106,6 +5186,7 @@ Ihr Helpdesk-Team
         'Defines the history comment for the ticket note screen action, which gets used for ticket history in the agent interface.' =>
             'Steuert den Historien-Kommentar für die Ticketnotiz-Aktion im Agentenbereich.',
         'Defines the history comment for the ticket owner screen action, which gets used for ticket history in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert den Historien-Kommentar für die Aktion "Ticket-Bearbeiter" welcher in der Ticket-Historie in der Agenten-Oberfläche angezeigt wird.',
         'Defines the history comment for the ticket pending screen action, which gets used for ticket history in the agent interface.' =>
             'Definiert den Historien-Kommentar für die Aktion "Warten auf Erinnerung" welcher in der Ticket-Historie in der Agenten-Oberfläche angezeigt wird.',
@@ -5132,6 +5213,7 @@ Ihr Helpdesk-Team
         'Defines the history type for the ticket note screen action, which gets used for ticket history in the agent interface.' =>
             'Definiert den Historien-Typ für die Aktion "Ticket Notiz" welcher für die Ticket-Historie in der Agenten-Oberfläche benutzt wird.',
         'Defines the history type for the ticket owner screen action, which gets used for ticket history in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert den Historien-Typ für die Aktion "Ticket-Bearbeiter" welcher für die Ticket-Historie in der Agenten-Oberfläche benutzt wird.',
         'Defines the history type for the ticket pending screen action, which gets used for ticket history in the agent interface.' =>
             'Definiert den Historien-Typ für die Aktion "Warten auf Erinnerung" welcher für die Ticket-Historie in der Agenten-Oberfläche benutzt wird.',
@@ -5242,6 +5324,7 @@ Ihr Helpdesk-Team
         'Defines the next state of a ticket after adding a note, in the ticket note screen of the agent interface.' =>
             'Definiert den nächsten Ticket Status nach dem hinzufügen einer Notiz im "Ticket Notiz" Ansicht der Agenten-Oberfläche.',
         'Defines the next state of a ticket after adding a note, in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert den nächsten Ticket Status nach dem hinzufügen einer Notiz im "Ticket-Bearbeiter" Ansicht der Agenten-Oberfläche.',
         'Defines the next state of a ticket after adding a note, in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Definiert den nächsten Ticket Status nach dem hinzufügen einer Notiz in der "Warten auf Erinnerung" Ansicht der Agenten-Oberfläche.',
@@ -5466,6 +5549,7 @@ Ihr Helpdesk-Team
         'Dynamic fields shown in the ticket overview screen of the customer interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.' =>
             'Dynamische Felder die in der Ticket Übersicht in der Kunden-Oberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.',
         'Dynamic fields shown in the ticket owner screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Dynamische Felder die in der "Ticket-Bearbeiter" Ansicht in der Agenten-Oberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.',
         'Dynamic fields shown in the ticket pending screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.' =>
             'Dynamische Felder die in der "Warten auf Erinnerung" Ansicht in der Agenten-Oberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.',
@@ -5500,6 +5584,7 @@ Ihr Helpdesk-Team
         'DynamicField object registration.' => 'DynamischesFeld Objektregistrierung.',
         'E-Mail Outbound' => 'Ausgehende E-Mail',
         'Edit Customer Companies.' => 'Kundenfirmen bearbeiten.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Edit contacts.' => 'Ansprechpartner bearbeiten.',
         'Edit customer company' => 'Kundenunternehmen bearbeiten',
         'Email Addresses' => 'E-Mail-Adressen',
@@ -5518,6 +5603,7 @@ Ihr Helpdesk-Team
             'Schaltet das Caching von Templates an oder aus. Warnung: Schalten Sie auf Produktivsystemen das Template-Caching nicht ab, da hierdurch massive Performance-Beeinträchtigungen auftreten werden. Diese Einstellung sollte nur zur Fehlerbehebung abgeschaltet werden.',
         'Enables or disables the debug mode over frontend interface.' => 'Aktiviert oder deaktiviert den Debug-Modus für das Frontend.',
         'Enables or disables the ticket watcher feature, to keep track of tickets without being the owner nor the responsible.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Aktiviert oder deaktiviert das Ticket beobachten-Feature, das das beobachten von Tickets erlaubt, ohne der Bearbeiter oder Verantwortliche zu sein.',
         'Enables performance log (to log the page response time). It will affect the system performance. Frontend::Module###AdminPerformanceLog must be enabled.' =>
             'Aktiviert den Performance-Log zum erfassen der Seiten-Antwortzeiten. Diese Einstellung beeinflusst die Gesamtperformance des Systems. Frontend::Module###AdminPerformanceLog muss aktiviert sein.',
@@ -5557,12 +5643,16 @@ Ihr Helpdesk-Team
             'Eventmodul-Registierung. Für höhere Performancen können Sie ein Trigger-Event definieren (z.B. Event => TicketCreate). Dies ist nur möglich, wenn alle dynamischen Ticketfelder das gleiche Event benötigen.',
         'Event module that performs an update statement on TicketIndex to rename the queue name there if needed and if StaticDB is actually used.' =>
             'Ereignismodul, das ein Update-Statement auf TicketIndex ausführt, um die Queue umzubenennen (wenn nötig und wenn StaticDB genutzt wird).',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Event module that updates contact search profiles if login changes.' =>
             'Eventmodul, das Suchprofile von Ansprechpartner aktualisiert, wenn sich Loginnamen ändern.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Event module that updates contact service membership if login changes.' =>
             'Eventmodul, das Service-Zuordnungen von Ansprechpartner aktualisiert, wenn sich Loginnamen ändern.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Event module that updates contacts after an update of the Customer.' =>
             'Ereignis-Modul, das Ansprechpartner aktualisiert nach einem Update des Kunden.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Event module that updates tickets after an update of the contact.' =>
             'Ereignis-Modul, das ein Ticket aktualisiert nach einem Update des Ansprechpartner.',
         'Event module that updates tickets after an update of the Customer.' =>
@@ -5742,6 +5832,7 @@ Ihr Helpdesk-Team
         'If a note is added by an agent, sets the state of a ticket in the ticket responsible screen of the agent interface.' =>
             'Ermöglicht das Ändern des Ticket-Status beim Hinzufügen einer Notiz innerhalb des Verantwortlicher-Bildschirms.',
         'If a note is added by an agent, sets the state of the ticket in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Ermöglicht das Ändern des Ticket-Status beim Hinzufügen einer Notiz innerhalb des Bearbeiter-Bildschirms.',
         'If a note is added by an agent, sets the state of the ticket in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Ermöglicht das Ändern des Ticket-Status beim Hinzufügen einer Notiz innerhalb des Wartezeit-Bildschirms.',
@@ -5831,7 +5922,9 @@ Ihr Helpdesk-Team
         'Link agents to groups.' => 'Agenten zu Gruppen zuordnen.',
         'Link agents to roles.' => 'Agenten zu Rollen zuordnen.',
         'Link attachments to templates.' => 'Anhänge zu Vorlagen zuordnen.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Link contact to groups.' => 'Ansprechpartner zu Gruppen zuordnen.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Link contact to services.' => 'Ansprechpartner zu Services zuordnen.',
         'Link queues to auto responses.' => 'Automatische Antworten zu Queues zuordnen.',
         'Link roles to groups.' => 'Rollen zu Gruppen zuordnen.',
@@ -5848,6 +5941,7 @@ Ihr Helpdesk-Team
             'Liste der JavaScript-Dateien, die immer im Kunden-Interface geladen werden sollen.',
         'List of all CustomerCompany events to be displayed in the GUI.' =>
             'Liste aller Kundenereignisse, welche in der grafischen Benutzeroberfläche angezeigt werden sollen.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'List of all contact events to be displayed in the GUI.' => 'Liste aller Ansprechpartner-Ereignisse, welche in der grafischen Benutzeroberfläche angezeigt werden sollen.',
         'List of all DynamicField events to be displayed in the GUI.' => 'Liste aller DynamischesFeld-Ereignisse, welche in der grafischen Benutzeroberfläche angezeigt werden sollen.',
         'List of all Package events to be displayed in the GUI.' => 'Liste aller Paket-Ereignisse, welche in der grafischen Benutzeroberfläche angezeigt werden sollen.',
@@ -5923,6 +6017,7 @@ Ihr Helpdesk-Team
             'Modul zur Prüfung von Gruppen-Berechtigungen für den Zugriff auf Tickets.',
         'Module to compose signed messages (PGP or S/MIME).' => 'Modul um signierte Nachrichten zu verfassen (PGP oder S/MIME).',
         'Module to crypt composed messages (PGP or S/MIME).' => 'Modul um verschlüsselte Nachrichten zu verassen (PGP oder S/MIME).',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Module to fetch contacts SMIME certificates of incoming messages.' =>
             'Modul zum Ermitteln von SMIME-Zertifikaten des Ansprechpartner bei eingehenden Nachrichten.',
         'Module to filter and manipulate incoming messages. Block/ignore all spam email with From: noreply@ address.' =>
@@ -5947,6 +6042,7 @@ Ihr Helpdesk-Team
         'Module to grant access to the agent responsible of a ticket.' =>
             'Modul zum Gestatten des Zugriffs auf ein Ticket durch den verantwortlichen Agenten.',
         'Module to grant access to the creator of a ticket.' => 'Modul zum Gestatten des Zugriffs auf ein Ticket durch den Agenten, der das Ticket ursprünglich erstellt hat.',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Module to grant access to the owner of a ticket.' => 'Modul zum Gestatten des Zugriffs auf ein Ticket durch den Agenten, der Bearbeiter des Tickets ist.',
         'Module to grant access to the watcher agents of a ticket.' => 'Modul zum Gestatten des Zugriffs auf ein Ticket durch Agenten, die das Ticket beobachten.',
         'Module to show notifications and escalations (ShownMax: max. shown escalations, EscalationInMinutes: Show ticket which will escalation in, CacheTime: Cache of calculated escalations in seconds).' =>
@@ -5963,6 +6059,7 @@ Ihr Helpdesk-Team
         'Nederlands' => 'Niederländisch',
         'New Ticket [%s] created (Q=%s;P=%s;S=%s).' => 'Neues Ticket [%s] erstellt (Q=%s;P=%s;S=%s).',
         'New Window' => 'Neues Fenster',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'New owner is "%s" (ID=%s).' => 'Neuer Bearbeiter ist "%s" (ID=%s).',
         'New process ticket' => 'Neues Prozess-Ticket',
         'New responsible is "%s" (ID=%s).' => 'Neuer Verantwortlicher ist "%s" (ID=%s).',
@@ -5984,6 +6081,7 @@ Ihr Helpdesk-Team
             'OTRS kann eine oder mehrere Spiegeldatenbanken für aufwändige Operationen wie Volltextsuchen oder Statistikgenerierungen nutzen. Hier können Sie die DSN für die erste Spiegeldatenbank hinterlegen.',
         'Old: "%s" New: "%s"' => 'Alt: "%s" Neu: "%s"',
         'Online' => 'Online',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Open tickets (contact)' => 'Offene Tickets (Ansprechpartner)',
         'Open tickets (customer)' => 'Offene Tickets (Kunde)',
         'Option' => 'Option',
@@ -6022,6 +6120,7 @@ Ihr Helpdesk-Team
             'Parameter für das Dashboard-Backend des Kunden-Informations-Widgets im Agentenbereich. Über "Group" kann der Zugriff auf das Plugin beschränkt werden (z. B. Group: admin;group1;group2;). "Default" gibt an, ob das Plugin standardmäßig aktiviert sein soll oder ob der Nutzer es manuell aktivieren muss. "CacheTTLLocal" bestimmt die Laufzeit des Plugin-Caches in Minuten.',
         'Parameters for the dashboard backend of the customer id status widget of the agent interface . "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.' =>
             'Parameter für das Dashboard-Backend des Kundennummer-Status-Widgets im Agentenbereich. Über "Group" kann der Zugriff auf das Plugin beschränkt werden (z. B. Group: admin;group1;group2;). "Default" gibt an, ob das Plugin standardmäßig aktiviert sein soll oder ob der Nutzer es manuell aktivieren muss. "CacheTTLLocal" bestimmt die Laufzeit des Plugin-Caches in Minuten.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Parameters for the dashboard backend of the contact list overview of the agent interface . "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.' =>
             'Parameter für das Dashboard-Backend des Ansprechpartner-Listen-Widgets im Agentenbereich. "Limit" bestimmt die Anzahl der standardmäßig angezeigten Einträge. Über "Group" kann der Zugriff auf das Plugin beschränkt werden (z. B. Group: admin;group1;group2;). "Default" gibt an, ob das Plugin standardmäßig aktiviert sein soll oder ob der Nutzer es manuell aktivieren muss. "CacheTTLLocal" bestimmt die Laufzeit des Plugin-Caches in Minuten.',
         'Parameters for the dashboard backend of the new tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.' =>
@@ -6119,6 +6218,7 @@ Ihr Helpdesk-Team
         'Required permissions to use the ticket note screen in the agent interface.' =>
             'Benötigte Rechte um den "Notiz"-Dialog eines Tickets im Agenten-Interface aufzurufen.',
         'Required permissions to use the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Benötigte Rechte um den "Bearbeiter"-Dialog eines Tickets im Agenten-Interface aufzurufen.',
         'Required permissions to use the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Benötigte Rechte um den "Warten"-Dialog eines Tickets im Agenten-Interface aufzurufen.',
@@ -6131,6 +6231,7 @@ Ihr Helpdesk-Team
         'Required permissions to use the ticket responsible screen in the agent interface.' =>
             'Benötigte Rechte um den "Verantwortlicher"-Dialog eines Tickets im Agenten-Interface aufzurufen.',
         'Resets and unlocks the owner of a ticket if it was moved to another queue.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter eines TIckets zurück und entsperrt es, wenn das Ticket in eine andere Queue verschoben wird.',
         'Responsible Tickets' => '',
         'Responsible Tickets.' => '',
@@ -6145,6 +6246,7 @@ Ihr Helpdesk-Team
         'Running Process Tickets' => 'Aktive Prozesstickets',
         'Runs an initial wildcard search of the existing customer company when accessing the AdminCustomerCompany module.' =>
             'Führt eine initiale Wildcard-Suche für bestehende Kundenfirmen aus, wenn auf AdminCustomerCompany zugegriffen wird.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Runs an initial wildcard search of the existing contacts when accessing the AdminCustomerUser module.' =>
             'Führt eine initiale Wildcard-Suche für bestehende Ansprechpartner aus, wenn auf AdminCustomerUser zugegriffen wird.',
         'Runs the system in "Demo" mode. If set to "Yes", agents can change preferences, such as selection of language and theme via the agent web interface. These changes are only valid for the current session. It will not be possible for agents to change their passwords.' =>
@@ -6176,6 +6278,7 @@ Ihr Helpdesk-Team
         'Send notifications to users.' => 'Benachrichtigungen an Agenten verschicken.',
         'Sender type for new tickets from the customer inteface.' => 'Absender Typ für neue Tickets aus der Kunden-Oberfläche.',
         'Sends agent follow-up notification only to the owner, if a ticket is unlocked (the default is to send the notification to all agents).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Sendet Rückfrage Benachrichtigungen für Agenten nur an den Ticket-Bearbeiter, wenn das Ticket entsperrt ist (standardmäßig werden die Benachrichtigungen an alle Agenten gesendet).',
         'Sends all outgoing email via bcc to the specified address. Please use this only for backup reasons.' =>
             'Versendet alle ausgehenden E-Mails via BCC zu der angegebenen Adresse. Bitte nutzen Sie dies ausschließlich für Backups.',
@@ -6201,11 +6304,14 @@ Ihr Helpdesk-Team
         'Set this to yes if you trust in all your public and private pgp keys, even if they are not certified with a trusted signature.' =>
             'Setzen Sie diese Einstellung auf "Ja", wenn Sie allen öffentlichen und privaten PGP-Schlüsseln auch dann vertrauen möchten, wenn diese nicht mit einer vertrauenswürdigen Signatur zertifiziert sind.',
         'Sets if SLA must be selected by the agent.' => 'Gibt an, ob ein SLA durch einen Agenten ausgewählt sein muss.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Sets if SLA must be selected by the contact.' => 'Gibt an, ob ein SLA durch einen Ansprechpartner ausgewählt sein muss.',
         'Sets if note must be filled in by the agent. Can be overwritten by Ticket::Frontend::NeedAccountedTime.' =>
             'Setzt ob eine Notiz vom Agenten ausgefüllt werden muss. Kann durch Ticket::Frontend::NeedAccountedTime überschrieben werden.',
         'Sets if service must be selected by the agent.' => 'Gibt an, ob ein Service durch einen Agenten ausgewählt sein muss.',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Sets if service must be selected by the contact.' => 'Gibt an, ob ein Service durch einen Ansprechpartner ausgewählt sein muss.',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Sets if ticket owner must be selected by the agent.' => 'Gibt an, ob ein Ticket-Bearbeiter durch einen Agenten ausgewählt sein muss.',
         'Sets the PendingTime of a ticket to 0 if the state is changed to a non-pending state.' =>
             'Setzt die Wartezeit eines Tickets auf 0, wenn der Status auf einen nicht warten-Status gesetzt wird.',
@@ -6228,6 +6334,7 @@ Ihr Helpdesk-Team
         'Sets the default body text for notes added in the ticket note screen of the agent interface.' =>
             'Definiert den Standard Body-Text für Notizen in der "Ticket Notiz" Ansicht in der Agenten-Oberfläche.',
         'Sets the default body text for notes added in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert den Standard Body-Text für Notizen in der "Ticket-Bearbeiter" Ansicht in der Agenten-Oberfläche.',
         'Sets the default body text for notes added in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Definiert den Standard Body-Text für Notizen in der "Warten auf Erinnerung" Ansicht in der Agenten-Oberfläche.',
@@ -6268,6 +6375,7 @@ Ihr Helpdesk-Team
         'Sets the default subject for notes added in the ticket note screen of the agent interface.' =>
             'Bestimmt den Standard-Betreff für Notizen, die im Ticketnotiz-Bildschirm im Agentenbereich hinzugefügt werden.',
         'Sets the default subject for notes added in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt den Standard-Betreff für Notizen, die im Ticket-Bearbeiter-Bildschirm im Agentenbereich hinzugefügt werden.',
         'Sets the default subject for notes added in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Bestimmt den Standard-Betreff für Notizen, die im Wartezeit für Ticket setzen-Bildschirm im Agentenbereich hinzugefügt werden.',
@@ -6312,6 +6420,7 @@ Ihr Helpdesk-Team
         'Sets the queue in the ticket note screen of a zoomed ticket in the agent interface.' =>
             'Setzt die Queue im Notiz-Bildschirm von Tickets im Agentenbereich.',
         'Sets the queue in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt die Queue im Bearbeiter-Bildschirm von Tickets im Agentenbereich.',
         'Sets the queue in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Setzt die Queue im Wartezeit setzen-Bildschirm von Tickets im Agentenbereich.',
@@ -6328,6 +6437,7 @@ Ihr Helpdesk-Team
         'Sets the responsible agent of the ticket in the ticket note screen of the agent interface.' =>
             'Setzt den verantwortlichen Agenten im Notiz-Bildschirm für Tickets im Agentenbereich.',
         'Sets the responsible agent of the ticket in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den verantwortlichen Agenten im Bearbeiter-Bildschirm für Tickets im Agentenbereich.',
         'Sets the responsible agent of the ticket in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Setzt den verantwortlichen Agenten im Wartezeit setzen-Bildschirm für Tickets im Agentenbereich.',
@@ -6342,6 +6452,7 @@ Ihr Helpdesk-Team
         'Sets the service in the ticket note screen of the agent interface (Ticket::Service needs to be activated).' =>
             'Setzt den Service im Notiz-Bildschirm für Tickets im Agentenbereich (Ticket::Service muss aktiviert sein).',
         'Sets the service in the ticket owner screen of a zoomed ticket in the agent interface (Ticket::Service needs to be activated).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Service im Bearbeiter-Bildschirm für Tickets im Agentenbereich (Ticket::Service muss aktiviert sein).',
         'Sets the service in the ticket pending screen of a zoomed ticket in the agent interface (Ticket::Service needs to be activated).' =>
             'Setzt den Service im Wartezeit setzen-Bildschirm für Tickets im Agentenbereich (Ticket::Service muss aktiviert sein).',
@@ -6353,20 +6464,28 @@ Ihr Helpdesk-Team
         'Sets the system time zone (required a system with UTC as system time). Otherwise this is a diff time to the local time.' =>
             'Legt die Zeitzone des Systems fest (benötigt ein System mit UTC als Systemzeit). Andernfalls ist dies die Differenzzeit zur lokalen Zeit.',
         'Sets the ticket owner in the close ticket screen of the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Schließen-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket bulk screen of the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Stapelverarbeitungs-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket free text screen of the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Freitext-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket note screen of the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Notiz-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Bearbeiter-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket pending screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Wartezeit setzen-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket priority screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Priorität-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket responsible screen of the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Verantwortlicher-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket type in the close ticket screen of the agent interface (Ticket::Type needs to be activated).' =>
             'Setzt den Ticket-Typ im Schließen-Bildschirm für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).',
@@ -6377,6 +6496,7 @@ Ihr Helpdesk-Team
         'Sets the ticket type in the ticket note screen of the agent interface (Ticket::Type needs to be activated).' =>
             'Setzt den Ticket-Typ im Notiz-Bildschirm für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).',
         'Sets the ticket type in the ticket owner screen of a zoomed ticket in the agent interface (Ticket::Type needs to be activated).' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Ticket-Typ im Bearbeiter-Bildschirm für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).',
         'Sets the ticket type in the ticket pending screen of a zoomed ticket in the agent interface (Ticket::Type needs to be activated).' =>
             'Setzt den Ticket-Typ im Wartezeit setzen-Bildschirm für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).',
@@ -6402,6 +6522,7 @@ Ihr Helpdesk-Team
         'Show article as rich text even if rich text writing is disabled.' =>
             'Steuert, ob der Artikel als Richtext angezeigt werden soll, auch wenn das Schreiben von Richtext abgeschaltet ist.',
         'Show queues even when only locked tickets are in.' => 'Queues auch dann anzeigen, wenn sich darin nur gesperrte Tickets befinden.',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Show the current owner in the customer interface.' => 'Steuert, ob der aktuelle Bearbeiter im Kundenbereich angezeigt werden soll.',
         'Show the current queue in the customer interface.' => 'Steuert, ob die aktuelle Queue im Kundenbereich angezeigt werden soll.',
         'Show the history for this ticket' => 'Zeige die Historie für dieses Ticket an',
@@ -6446,6 +6567,7 @@ Ihr Helpdesk-Team
         'Shows a link in the menu to see the history of a ticket in every ticket overview of the agent interface.' =>
             'Zeigt einen Link zum Anzeigen der Historie von Tickets in den Ticketübersichten im Agentenbereich an.',
         'Shows a link in the menu to see the owner of a ticket in the ticket zoom view of the agent interface. Additional access control to show or not show this link can be done by using Key "Group" and Content like "rw:group1;move_into:group2". To cluster menu items use for Key "ClusterName" and for the Content any name you want to see in the UI. Use "ClusterPriority" to configure the order of a certain cluster within the toolbar.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Zeigt einen Link zum Anzeigen des Bearbeiters eines Tickets im Ticket-Zoom des Agentenbereichs an. Zusätzliche Zugriffskontrolle auf diesen Link kann durch Angabe von "Group" als Schlüssel und Inhalten wie "rw:group1;move_into:group2" als Wert konfiguriert werden. Um Elemente des Ticketmenüs zu gruppieren, kann "ClusterName" als Schlüssel und ein beliebiger Name als Wert verwendet werden, unter dem diese Gruppe im Benutzer interface angezeigt werden soll. Verwenden Sie "ClusterPriority", um die Anzeigereihenfolge der verschiedenen Gruppen innerhalb des Ticketmenüs zu steuern.',
         'Shows a link in the menu to see the priority of a ticket in the ticket zoom view of the agent interface. Additional access control to show or not show this link can be done by using Key "Group" and Content like "rw:group1;move_into:group2". To cluster menu items use for Key "ClusterName" and for the Content any name you want to see in the UI. Use "ClusterPriority" to configure the order of a certain cluster within the toolbar.' =>
             'Zeigt einen Link zum Anzeigen der Priorität eines Tickets im Ticket-Zoom des Agentenbereichs an. Zusätzliche Zugriffskontrolle auf diesen Link kann durch Angabe von "Group" als Schlüssel und Inhalten wie "rw:group1;move_into:group2" als Wert konfiguriert werden. Um Elemente des Ticketmenüs zu gruppieren, kann "ClusterName" als Schlüssel und ein beliebiger Name als Wert verwendet werden, unter dem diese Gruppe im Benutzer interface angezeigt werden soll. Verwenden Sie "ClusterPriority", um die Anzeigereihenfolge der verschiedenen Gruppen innerhalb des Ticketmenüs zu steuern.',
@@ -6475,6 +6597,7 @@ Ihr Helpdesk-Team
         'Shows a list of all the involved agents on this ticket, in the ticket note screen of the agent interface.' =>
             'Zeigt in der "Ticket Notiz" Ansicht der Agenten-Oberfläche eine Liste aller am Ticket beteiligten Agenten.',
         'Shows a list of all the involved agents on this ticket, in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Zeigt in der "Ticket-Bearbeiter" Ansicht der Agenten-Oberfläche eine Liste aller am Ticket beteiligten Agenten.',
         'Shows a list of all the involved agents on this ticket, in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Zeigt in der "Warten auf Erinnerung" Ansicht der Agenten-Oberfläche eine Liste aller am Ticket beteiligten Agenten.',
@@ -6489,6 +6612,7 @@ Ihr Helpdesk-Team
         'Shows a list of all the possible agents (all agents with note permissions on the queue/ticket) to determine who should be informed about this note, in the ticket note screen of the agent interface.' =>
             'Zeigt in der "Ticket Notiz" Ansicht der Agenten-Oberfläche eine Liste aller möglichen Agenten (alle Agenten mit Berechtigung für Notizen in diesem Ticket/ dieser Queue) die informiert werden sollen.',
         'Shows a list of all the possible agents (all agents with note permissions on the queue/ticket) to determine who should be informed about this note, in the ticket owner screen of a zoomed ticket in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Zeigt in der "Ticket-Bearbeiter" Ansicht der Agenten-Oberfläche eine Liste aller möglichen Agenten (alle Agenten mit Berechtigung für Notizen in diesem Ticket/ dieser Queue) die informiert werden sollen.',
         'Shows a list of all the possible agents (all agents with note permissions on the queue/ticket) to determine who should be informed about this note, in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Zeigt in der "Warten auf Erinnerung" Ansicht der Agenten-Oberfläche eine Liste aller möglichen Agenten (alle Agenten mit Berechtigung für Notizen in diesem Ticket/ dieser Queue) die informiert werden sollen.',
@@ -6511,6 +6635,7 @@ Ihr Helpdesk-Team
         'Shows all the customer identifiers in a multi-select field (not useful if you have a lot of customer identifiers).' =>
             '',
         'Shows an owner selection in phone and email tickets in the agent interface.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Zeigt eine Bearbeiterauswahl in Telefon- und E-Mail-Tickets im Agentenbereich an.',
         'Shows colors for different article types in the article table.' =>
             'Zeigt die Farben für die verschiedenen Artikeltypen in der Artikeltabelle an.',
@@ -6525,8 +6650,10 @@ Ihr Helpdesk-Team
             '',
         'Shows the articles sorted normally or in reverse, under ticket zoom in the agent interface.' =>
             '',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Shows the contact information (phone and email) in the compose screen.' =>
             '',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Shows the contact\'s info in the ticket zoom view.' => 'Zeigt die Ansprechpartner-Informationen im Ticket-Inhalt',
         'Shows the message of the day (MOTD) in the agent dashboard. "Group" is used to restrict access to the plugin (e. g. Group: admin;group1;group2;). "Default" indicates if the plugin is enabled by default or if the user needs to enable it manually.' =>
             '',
@@ -6724,6 +6851,7 @@ Ihr Helpdesk-Team
         'This option defines the process tickets default priority.' => 'Diese Option setzt die Prozess-Ticket Standardpriorität',
         'This option defines the process tickets default queue.' => 'Diese Option setzt die Prozess-Ticket Standard-Queue.',
         'This option defines the process tickets default state.' => 'Diese Option setzt den Prozess-Ticket Standardstatus',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         'This option will deny the access to customer company tickets, which are not created by the contact.' =>
             'Diese Option verweigert den Zugriff auf Tickets von anderen Ansprechpartner mit der selben Kundenfirma.',
         'This setting allows you to override the built-in country list with your own list of countries. This is particularly handy if you just want to use a small select group of countries.' =>
@@ -6742,6 +6870,7 @@ Ihr Helpdesk-Team
         'Ticket Note.' => 'Ticket-Notiz.',
         'Ticket Notifications' => 'Ticket-Benachrichtigungen',
         'Ticket Outbound Email.' => 'Ausgehende Ticket-E-Mail.',
+        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Ticket Owner.' => 'Ticket-Bearbeiter.',
         'Ticket Pending.' => 'Ticket in Wartestatus versetzen.',
         'Ticket Print.' => 'Ticket drucken.',
@@ -6784,6 +6913,7 @@ Ihr Helpdesk-Team
         'Ukrainian' => 'Ukrainisch',
         'Unlock tickets that are past their unlock timeout.' => 'Geben Sie Tickets frei, deren Freigabe-Timeout abgelaufen ist.',
         'Unlock tickets whenever a note is added and the owner is out of office.' =>
+            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Geben Sie tickets frei, wenn eine Notiz hinzugefügt wurde und der Bearbeiter nicht im Büro ist.',
         'Unlocked ticket.' => 'Ticketsperre aufgehoben.',
         'Update Ticket "Seen" flag if every article got seen or a new Article got created.' =>

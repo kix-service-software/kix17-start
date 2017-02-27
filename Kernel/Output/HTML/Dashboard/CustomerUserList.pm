@@ -55,6 +55,7 @@ sub Preferences {
 
     my @Params = (
         {
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             Desc  => Translatable('Shown contacts'),
             Name  => $Self->{PrefKey},
             Block => 'Option',

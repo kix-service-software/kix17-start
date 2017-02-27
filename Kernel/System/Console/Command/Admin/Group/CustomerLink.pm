@@ -22,9 +22,11 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
+    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Self->Description('Connect a contact to a group.');
     $Self->AddOption(
         Name        => 'customer-user-login',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         Description => 'Login name of the contact who should be linked to the given group.',
         Required    => 1,
         HasValue    => 1,
@@ -32,6 +34,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'group-name',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         Description => 'Group name of the group the given customer contact should be linked to.',
         Required    => 1,
         HasValue    => 1,
@@ -39,6 +42,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'permission',
+        # rkaiser - T#2017020290001194 - changed customer user to contact
         Description => 'Permission (ro|rw) the contact should have for the group he is going to be linked to.',
         Required    => 1,
         HasValue    => 1,

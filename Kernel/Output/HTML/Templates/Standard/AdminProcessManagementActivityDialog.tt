@@ -44,6 +44,7 @@
                 <div class="WidgetSimple Expanded WidgetNotice">
 
                     <div class="Content">
+# rkaiser - T#2017020290001194 - changed customer user to contact
                         [% Translate("Please note that contacts will not be able to see or use the following fields: Owner, Responsible, Lock, PendingTime and CustomerID.") | html %]
                         [% Translate("The Queue field can only be used by customers when creating a new ticket.") | html %]
                     </div>

@@ -633,6 +633,7 @@ sub _PDFOutputCustomerInfos {
 
         # output headline
         $PDFObject->Text(
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             Text     => $LayoutObject->{LanguageObject}->Translate('Contact information'),
             Height   => 10,
             Type     => 'Cut',

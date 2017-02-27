@@ -140,6 +140,7 @@ sub MappingObjectAttributesGet {
     my $ElementList = [
         {
             Key   => 'CustomerUserLogin',
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             Value => 'Contact login',
         },
         {
@@ -209,6 +210,7 @@ sub SearchAttributesGet {
     my $AttributeList = [
         {
             Key   => 'CustomerUserLogin',
+            # rkaiser - T#2017020290001194 - changed customer user to contact
             Name  => 'Contact login',
             Input => {
                 Type      => 'Text',
@@ -548,6 +550,7 @@ sub ImportDataSave {
             #customer user login does not exist - drop line...
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
+                # rkaiser - T#2017020290001194 - changed customer user to contact
                 Message  => "Service2CustomerUser: contact login <"
                     . "$ImportData{CustomerUserLogin}> does not exist.",
             );

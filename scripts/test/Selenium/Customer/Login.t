@@ -22,7 +22,8 @@ $Selenium->RunTest(
         my $Helper = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
 
         # create test customer user
-        my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate() || die "Did not get test customer user";
+        # rkaiser - T#2017020290001194 - changed customer user to contact
+        my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate() || die "Did not get test contact";
 
         my $ScriptAlias = $Kernel::OM->Get('Kernel::Config')->Get('ScriptAlias');
 

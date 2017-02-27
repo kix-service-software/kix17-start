@@ -186,6 +186,7 @@
 [% RenderBlockEnd("Link") %]
     <tr>
         <td colspan="4" class="contentkey">
+# rkaiser - T#2017020290001194 - changed customer user to contact
             [% Translate("Contact info") | html %]:
             [% Data.CustomerTable %]
         </td>

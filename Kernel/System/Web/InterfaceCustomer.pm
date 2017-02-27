@@ -852,6 +852,7 @@ sub Run {
             $LayoutObject->Print(
                 Output => \$LayoutObject->CustomerLogin(
                     Title         => 'Login',
+                    # rkaiser - T#2017020290001194 - changed customer user to contact
                     Message       => Translatable('Contact can\'t be added!'),
                     UserTitle     => $GetParams{UserTitle},
                     UserFirstname => $GetParams{UserFirstname},

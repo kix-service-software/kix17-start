@@ -61,6 +61,7 @@ my %NewUserData = $UserObject->GetUserData(
 
 # set customer user options
 my $CustomerUserLogin = $Helper->TestCustomerUserCreate()
+    # rkaiser - T#2017020290001194 - changed customer user to contact
     || die "Did not get test contact";
 
 my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
@@ -68,6 +69,7 @@ my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
 );
 
 my $NewCustomerUserLogin = $Helper->TestCustomerUserCreate()
+    # rkaiser - T#2017020290001194 - changed customer user to contact
     || die "Did not get test contact";
 
 my %NewCustomerUserData = $CustomerUserObject->CustomerUserDataGet(
