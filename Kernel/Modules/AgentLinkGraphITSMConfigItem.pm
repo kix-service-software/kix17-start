@@ -323,11 +323,12 @@ sub _PrepareITSMConfigItem {
         Class        => 'Modernize',
     );
 
-    # remember selectet CI classes for print header
+    # remember selected CI classes for print header
     my @RelCIClasses;
     for my $SubTypeName ( keys %{ $Param{RelevantObjectSubTypeNames} } ) {
         push( @RelCIClasses, $Self->{LayoutObject}->{LanguageObject}->Translate($SubTypeName) );
     }
+    $Param{RelSubTypesString} ||= '';
     for my $CIClass ( sort @RelCIClasses ) {
         $Param{RelSubTypesString} .= $CIClass . ", ";
     }
