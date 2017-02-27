@@ -29,14 +29,14 @@ $HelperObject->ConfigSettingChange(
     Valid => 1,
     Key   => 'SupportDataCollector::DisablePlugins',
     Value => [
-        'Kernel::System::SupportDataCollector::Plugin::OTRS::PackageDeployment',
+        'Kernel::System::SupportDataCollector::Plugin::KIX::PackageDeployment',
     ],
 );
 $HelperObject->ConfigSettingChange(
     Valid => 1,
     Key   => 'SupportDataCollector::IdentifierFilterBlacklist',
     Value => [
-        'Kernel::System::SupportDataCollector::Plugin::OTRS::TimeSettings::UserDefaultTimeZone',
+        'Kernel::System::SupportDataCollector::Plugin::KIX::TimeSettings::UserDefaultTimeZone',
     ],
 );
 
