@@ -3,7 +3,7 @@
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
 # BPMX Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
-# Depends: OTRS, Kernel/System/ProcessManagement/TransitionAction/Base.pm, 5.0.12
+# Depends: OTRS, Kernel/System/ProcessManagement/TransitionAction/Base.pm, 5.0.14
 #
 # written/edited by:
 # * Sebastian(dot)Reiss(at)cape(dash)it(dot)de

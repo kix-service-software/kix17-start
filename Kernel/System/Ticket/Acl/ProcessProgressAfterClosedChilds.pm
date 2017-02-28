@@ -5,12 +5,7 @@
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
 # BPMX Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
-# Depends: OTRS, Kernel/System/Ticket/Acl/CloseParentAfterClosedChilds.pm, 5.0.12
-#
-# written/edited by:
-# * Stefan(dot)Mehlig(at)cape-it(dot)de
-# * Sebastian(dot)Reiss(at)cape(dash)it(dot)de
-# * Frank(dot)Jacquemin(at)cape(dash)it(dot)de
+# Depends: OTRS, Kernel/System/Ticket/Acl/CloseParentAfterClosedChilds.pm, 5.0.14
 #
 # --
 # $Id$
@@ -24,9 +19,11 @@ package Kernel::System::Ticket::Acl::ProcessProgressAfterClosedChilds;
 
 use strict;
 use warnings;
+
 # BPMX-capeIT
 use utf8;
 # EO BPMX-capeIT
+
 our @ObjectDependencies = (
     'Kernel::System::LinkObject',
     'Kernel::System::Log',
