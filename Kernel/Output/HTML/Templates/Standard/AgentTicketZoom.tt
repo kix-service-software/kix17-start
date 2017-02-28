@@ -160,7 +160,7 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
     var $Element = $('#ContentItemTabs'),
         Disabled = [],
         Index,
-        ActiveTab = [% Data.SelectedTab %],
+        ActiveTab = '[% Data.SelectedTab | uri %]',
         RichTextEditorLoaded = 0,
         RichTextActivated = [% Data.RichTextEditorActivated %],
         ActiveInterval;
@@ -200,7 +200,7 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
             $(this).find('div').html('<span class="AJAXLoader"></span>');
             $Element.tabs( "option","disabled",Disabled);
         },
-        active: [% Data.SelectedTab %]
+        active: '[% Data.SelectedTab | uri %]'
     })
     .on( "tabsload", function( event, ui ) {
         RichTextEditorLoaded = 0;

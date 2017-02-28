@@ -153,7 +153,7 @@
             $(window).unbind();
             $(this).find('div').html('<span class="AJAXLoader"></span>');
         },
-        active: [% Data.SelectedTab %],
+        active: '[% Data.SelectedTab | uri %]',
         beforeLoad: function( event, ui ) {
             ui.ajaxSettings.cache = false,
             ui.ajaxSettings.error = function( xhr, status, index, anchor ) {
