@@ -28,7 +28,7 @@
 
         <div class="ContentColumn">
             <div class="WidgetSimple SpacingTop SpacingLeft SpacingRight SpacingBottom">
-                <div class="LightRow Header">
+                <div class="Header">
                     <div class="WidgetAction Toggle">
                         <a href="#" id="GraphSelectionBlockOpen" title="[% Translate("Graph View Configuration") | html %]" style="width:100%;">
                             <i class="fa fa-caret-right">
@@ -98,7 +98,7 @@
 
         <div class="ContentColumn">
             <div class="WidgetSimple SpacingTop SpacingLeft SpacingRight SpacingBottom Collapsed">
-                <div class="LightRow Header">
+                <div class="Header">
                     <div class="WidgetAction Toggle">
                         <a href="#" id="GraphDisplayBlockOpen" title="[% Translate("Graph Display") | html %]">
                             <i class="fa fa-caret-right">

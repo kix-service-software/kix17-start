@@ -30,17 +30,6 @@ Core.KIXBase.Agent = (function(TargetNS) {
 
     TargetNS.Init = function() {
 
-        // fix WidgetSimple
-        $('.WidgetSimple > .LightRow').each(function() {
-            if ($(this).parents('#ArticleItems').length == 0) {
-                $(this).removeClass('LightRow');
-            }
-
-            if (!$(this).hasClass('Header') && $(this).parents('.CITabLinkGraph').length != 1) {
-                $(this).parent('.WidgetSimple').children('.Content').prepend($(this).detach());
-            }
-        });
-
         // hide Toolbar
         if ($('#ToolBarToggle').length == 0 && $('#ToolBar').length > 0) {
 

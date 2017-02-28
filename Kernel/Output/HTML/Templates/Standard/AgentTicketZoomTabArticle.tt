@@ -1,13 +1,14 @@
 # --
 # based upon AgentTicketZoom.dtl
 # original Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# KIX4OTRS-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
 # * Torsten(dot)Thau(at)cape(dash)it(dot)de
 # * Rene(dot)Boehm(at)cape(dash)it(dot)de
 # * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
 # --
 # $Id$
 # --
@@ -680,9 +681,13 @@ Core.Agent.TicketZoom.TimelineView.Init(TicketID, ListObjects, ArticleID);
             </div>
         </div>
 
-[% PROCESS ArticleActionMenu.tt %]
+# rkaiser - T2016121190001552 - ArticleActionMenu moved down because some js in Core.KIXBase.Agent.js was removed
 
         <div class="Content">
+
+# rkaiser - T2016121190001552 - moved from above
+[% PROCESS ArticleActionMenu.tt %]
+
             <div class="ArticleMailHeader">
                 <fieldset class="TableLike FixedLabelSmall">
 [% RenderBlockStart("RowRecipient") %]
