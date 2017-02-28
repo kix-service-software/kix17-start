@@ -1,8 +1,10 @@
 // --
-// Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 //
 // written/edited by:
 //   Rene(dot)Boehm(at)cape(dash)it.de
+//   Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
+//   Ricky(dot)Kaiser(at)cape(dash)it.de
 // --
 // $Id$
 // --
@@ -27,6 +29,17 @@ Core.KIXBase.Agent = (function(TargetNS) {
     var SUPERAdminNotificationEventAddLanguage;
 
     TargetNS.Init = function() {
+
+        // fix WidgetSimple
+        $('.WidgetSimple > .LightRow').each(function() {
+            if ($(this).parents('#ArticleItems').length == 0) {
+                $(this).removeClass('LightRow');
+            }
+
+            if (!$(this).hasClass('Header') && $(this).parents('.CITabLinkGraph').length != 1) {
+                $(this).parent('.WidgetSimple').children('.Content').prepend($(this).detach());
+            }
+        });
 
         // hide Toolbar
         if ($('#ToolBarToggle').length == 0 && $('#ToolBar').length > 0) {
