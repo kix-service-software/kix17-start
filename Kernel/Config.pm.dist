@@ -28,7 +28,7 @@ sub Load {
     # The database user
     $Self->{DatabaseUser} = '__DBUSER__';
 
-    # The password of database user. You also can use bin/otrs.
+    # The password of database user. You also can use bin/kix.Console.pm
     # for crypted passwords
     $Self->{DatabasePw} = '__DBPASSWORD__';
 
