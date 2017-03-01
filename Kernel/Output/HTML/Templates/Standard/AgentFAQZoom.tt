@@ -242,10 +242,10 @@
                         <div class="WidgetAction Toggle">
                             <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                         </div>
-                        <h2 class="PaddingLeft15px">
+                        <h2 class="PaddingLeft15px"><span>
                             [% Translate(Data.Caption) | html %]
                             <span class="FAQStateName">([% Translate(Data.StateName) | html %])</span>
-                        </h2>
+                        </span></h2>
                     </div>
                     <div class="Content">
 [% RenderBlockStart("FAQContentHTML") %]
