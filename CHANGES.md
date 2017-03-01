@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/03/01) - Bugfix: T2016122190003148 (fix responsive layout) (uboehm)
  * (2017/02/28) - Bugfix: T2017022790001227 (fixed vulnerability "possible cross-site scripting in parameter SelectedTab") (rbo)
  * (2017/02/28) - CR: T2016102690000501 (Updated BPMX files in KIX to the released version 5.0.3) (fjacquemin)
  * (2017/02/24) - CR: T2017022490001394 (better visualization of ticket locked message in case of RequiredLock) (rbo)

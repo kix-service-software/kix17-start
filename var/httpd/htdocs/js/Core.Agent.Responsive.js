@@ -52,26 +52,29 @@ Core.Agent.Responsive = (function (TargetNS) {
 
         // expand toolbar on click on the header
         $('#Header').off().on('click', function() {
+        	$('#ToolBar').toggleClass('toggle');
+            // KIXBase-capeIT
+            // deactivated with ticket 2016122190003148
+//               var TargetHeight = '70px',
+//                   TargetFade = 'out';
+   //
+//               if (parseInt($('#ToolBar').height(), 10) > 0) {
+//                   TargetHeight = '0px';
+//                   TargetFade = 'in';
+//               }
+//               $('#ToolBar').animate({
+//                   height: TargetHeight,
+//                   easing: 'easeOutQuart'
+//               }, 'fast');
 
-            var TargetHeight = '70px',
-                TargetFade = 'out';
-
-            if (parseInt($('#ToolBar').height(), 10) > 0) {
-                TargetHeight = '0px';
-                TargetFade = 'in';
-            }
-            $('#ToolBar').animate({
-                height: TargetHeight,
-                easing: 'easeOutQuart'
-            }, 'fast');
-
-            // fade sidebar handles in/out
-            if (TargetFade === 'in') {
-                $('.ResponsiveHandle').fadeIn();
-            }
-            else {
-                $('.ResponsiveHandle').fadeOut();
-            }
+               // fade sidebar handles in/out
+//               if (TargetFade === 'in') {
+//                   $('.ResponsiveHandle').fadeIn();
+//               }
+//               else {
+//                   $('.ResponsiveHandle').fadeOut();
+//               }
+            // EO KIXBase-capeIT
         });
 
         // wrap sidebar modules with an additional container
