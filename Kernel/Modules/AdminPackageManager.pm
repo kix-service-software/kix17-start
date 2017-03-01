@@ -1499,7 +1499,7 @@ sub Run {
         if ( $Package->{Status} eq 'installed' ) {
 
             if (
-                !defined $Package->{PackageIsRemovableInGUI} && 
+                !defined $Package->{PackageIsRemovableInGUI}
                 || (
                     defined $Package->{PackageIsRemovableInGUI}->{Content}
                     && $Package->{PackageIsRemovableInGUI}->{Content} eq '1'
