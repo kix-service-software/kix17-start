@@ -123,8 +123,9 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
         </div>
         <h2 class="PaddingLeft15px"><span>[% Translate(Data.BlockDescription) | html %]: [% Translate(Data.Blockname) | html %]</span></h2>
     </div>
+    <div class="Content AutoHeight ">
 [% RenderBlockStart("TableComplexBlockActionRow") %]
-    <div class="LightRow Bottom">
+    <div class="Bottom">
         <ul class="Actions">
 [% RenderBlockStart("TableComplexBlockActionRowBulk") %]
             <li class="Bulk">
@@ -141,7 +142,6 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
         <div class="ClearLeft"></div>
     </div>
 [% RenderBlockEnd("TableComplexBlockActionRow") %]
-    <div class="Content AutoHeight ">
         <table class="DataTable">
             <thead>
                 <tr>
