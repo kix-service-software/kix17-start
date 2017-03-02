@@ -122,7 +122,6 @@ Core.App.Ready(function () {
 
         ConnectionErrorTitle: [% Translate('Connection error') | JSON %],
         ConnectionErrorReloadButton: [% Translate('Reload page') | JSON %],
-        ShowToolBarMsg: [% Translate("show Toolbar") | JSON %],
         StatsMsg: [% Translate("Stats") | JSON %]
     });
 

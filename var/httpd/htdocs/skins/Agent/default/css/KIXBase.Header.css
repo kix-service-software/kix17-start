@@ -45,10 +45,20 @@
         padding-top: 40px;
     }
 
-    #ToolBar {
+    #ToolBar.ToolbarRight {
         left: inherit;
         right: 20px;
         top: 85px;
+    }
+
+    #ToolBar.ToolbarLeft {
+        left: 20px;
+        top: 85px;
+    }
+
+    #ToolBar.ToolbarTop {
+        left: 100px;
+        top: 10px;
     }
 
     #ToolBar a i {
@@ -62,15 +72,9 @@
     }
 
     #ToolBarToggle {
-        background: url(../img/toggle_side_arrow.png) no-repeat right -26px;
-        position: absolute;
-        right: 5px;
-        top: 90px;
-        width: 200px;
-        height: 12px;
         cursor: pointer;
         z-index: -10;
-        text-align: right;
+        position: absolute;
         font-size: 11px;
         padding-top: 1px;
     }
@@ -78,13 +82,57 @@
     #ToolBarToggle.Show {
         color: #0A6491;
         white-space: nowrap;
-        padding-right: 15px;
     }
 
     #ToolBarToggle.Hide {
-        background-position: right 0;
         color: transparent;
+    }
+    
+    #ToolBarToggle.ToolbarRight {
+        background: url(../img/toggle_side_arrow.png) no-repeat right -26px;
+        right: 10px;
+        top: 90px;
+        width: 200px;
+        height: 12px;
+        text-align: right;
+    }
+
+    #ToolBarToggle.ToolbarRight.Show {
+        padding-right: 15px;
+    }
+
+    #ToolBarToggle.ToolbarRight.Hide {
+        background-position: right 0;
         padding-right: 20px;
+    }
+
+    #ToolBarToggle.ToolbarLeft {
+        background: url(../img/toggle_side_arrow.png) no-repeat left 0px;
+        left: 10px;
+        top: 90px;
+        width: 200px;
+        height: 12px;
+        text-align: left;
+    }
+
+    #ToolBarToggle.ToolbarLeft.Show,
+    #ToolBarToggle.ToolbarTop.Show {
+        padding-left: 15px;
+    }
+
+    #ToolBarToggle.ToolbarLeft.Hide,
+    #ToolBarToggle.ToolbarTop.Hide {
+        background-position: left -26px;
+        padding-left: 20px;
+    }
+
+    #ToolBarToggle.ToolbarTop {
+        background: url(../img/toggle_side_arrow.png) no-repeat left 0px;
+        left: 90px;
+        top: 15px;
+        width: 200px;
+        height: 12px;
+        text-align: left;
     }
 
     #NavigationContainer {

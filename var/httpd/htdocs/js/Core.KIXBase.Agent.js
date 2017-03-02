@@ -31,7 +31,7 @@ Core.KIXBase.Agent = (function(TargetNS) {
     TargetNS.Init = function() {
 
         // hide Toolbar
-        if ($('#ToolBarToggle').length == 0 && $('#ToolBar').length > 0) {
+        if ($('#ToolBarToggle').length > 0 && $('#ToolBar').length > 0) {
 
             var Class = 'Show';
 
@@ -46,7 +46,7 @@ Core.KIXBase.Agent = (function(TargetNS) {
             },
             'text', false);
 
-            $('#Header').append('<div id="ToolBarToggle" class="' + Class + '">' + Core.Config.Get('ShowToolBarMsg') + '</div>');
+            $('#ToolBarToggle').addClass(Class);
 
             $('#ToolBarToggle').click(function() {
                 if ($('#ToolBarToggle').hasClass('Show')) {

@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/03/02) - CR: T2017030290000755 (user preference for position of toolbar - right, left, top) (rbo)
  * (2017/03/02) - Bugfix: T2016102790000714 (fixed color for oldest queue in queue tree) (uboehm)
  * (2017/03/02) - Bugfix: T2017020890000746 (wrong search profile evaluation for virtual queues and dashboard search templates) (ddoerffel)
  * (2017/03/02) - Bugfix: T2017022190001078 (linked object tables not dragable) (ddoerffel)

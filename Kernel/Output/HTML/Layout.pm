@@ -1489,6 +1489,12 @@ sub Header {
                     },
                 );
             }
+            
+            # set toolbar position from UserPreferences
+            my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
+                UserID => $Self->{UserID},
+            );
+            $Param{UserToolbarPosition} = $UserPreferences{UserToolbarPosition} || 'ToolbarRight';
         }
 
         # show logged in notice

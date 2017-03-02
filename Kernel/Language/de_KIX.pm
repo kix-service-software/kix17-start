@@ -4103,6 +4103,11 @@ sub Data {
 
     $Lang->{'Welcome to KIX'}     = 'Willkommen bei KIX';
     $Lang->{'show Toolbar'}       = 'Toolbar anzeigen';
+    $Lang->{'Toolbar Position'}   = 'Toolbar-Position';
+    $Lang->{'Select the position of the toolbar.'} = 'Position der Toolbar auswählen.';
+    $Lang->{'Right'}              = 'Rechts';
+    $Lang->{'Left'}               = 'Links';
+    $Lang->{'Above Menu'}         = 'Oberhalb des Menüs';
     $Lang->{'Search Template 01'} = 'Suchvorlage 01';
     $Lang->{'Search Template 02'} = 'Suchvorlage 02';
     $Lang->{'Search Template 03'} = 'Suchvorlage 03';

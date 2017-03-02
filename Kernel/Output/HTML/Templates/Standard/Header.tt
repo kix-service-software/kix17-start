@@ -21,7 +21,8 @@
     <div id="AppWrapper">
     <div id="Header" class="ARIARoleBanner">
         <div id="Logo"></div>
-        <ul id="ToolBar">
+        <div id="ToolBarToggle" class="[% Data.UserToolbarPosition | html %]">[% Translate("show Toolbar") | html %]</div>
+        <ul id="ToolBar" class="[% Data.UserToolbarPosition | html %]">
 [% RenderBlockStart("ToolBar") %]
 [% RenderBlockStart("ToolBarItem") %]
             <li class="[% Data.Class | html %]"><a href="[% Data.Link %]" target="[% Data.Target | html %]" accesskey="[% Data.AccessKey | html %]" title="[% Translate(Data.Description) | html %]: [% Data.Count | html %][% Data.AccessKeyReference | html %]">[% Translate(Data.Description) | html %] <i class="icon-small fa fa-clock-o icon-show-reached"></i> <i class="icon-small fa fa-star icon-show-new"></i><i class="[% Data.Icon | html %]"></i> <span class="Counter">[% Data.Count | html %]</span> </a></li>
