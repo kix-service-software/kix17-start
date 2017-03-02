@@ -108,7 +108,7 @@ if ($Kernel::OM->Get('Kernel::System::DB')->Prepare(
 );
 
 my $IsPro = 0;
-while ( my @Row = $DBObject->FetchrowArray() ) {
+while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
     $IsPro = ($Row[0] > 0);
 }
 
