@@ -101,6 +101,18 @@ for my $SQL (@SQLPost) {
     }
 }
 
+# check for Pro packages
+if ($Kernel::OM->Get('Kernel::System::DB')->Prepare(
+    SQL => 'SELECT count(*) FROM package_repository where name = \'KIXBasePro\'',
+    Limit => 1,
+);
+
+my $IsPro = 0;
+while ( my @Row = $DBObject->FetchrowArray() ) {
+    $IsPro = ($Row[0] > 0);
+}
+
+
 # delete all obsolete packages
 my @ObsoletePackages = (
     'KIXBase',
@@ -131,6 +143,34 @@ my @ObsoletePackages = (
     'GeneralCatalog',
     'FAQ',
 );
+
+if ($IsPro) {
+    @ObsoletePackages = (
+        @ObsoletePackages,
+        'KIXWidespreadIncident',
+        'KIXTemplateWorkflows',
+        'KIXServiceCatalog',
+        'KIXOptimizedCMDB',
+        'ITSM-CIAdminModules',
+        'InventorySync',
+        'FileExchange',
+        'KIXCMDBExplorer',
+        'CMDB4Customer',
+        'KIXCalendar',
+    );
+
+    # create "fake" KIXPro package entry for update installation
+    my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
+        SQL  => "UPDATE package_repository SET name = 'KIXPro', version = '16.1.0' WHERE name = ?",
+        Bind => [
+            \'KIXBasePro',
+        ],
+    );
+    if (!$Result) {
+        print STDERR "Unable to create package entry \"KIXPro\" in package repository!"; 
+    }
+}
+
 foreach my $Package (@ObsoletePackages) {
     my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
         SQL  => "DELETE FROM package_repository WHERE name = ?",
@@ -142,5 +182,5 @@ foreach my $Package (@ObsoletePackages) {
         print STDERR "Unable to remove package \"$Package\" from package repository!"; 
     }
 }
- 
+
 exit 1;
