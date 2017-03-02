@@ -166,8 +166,10 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
         ActiveInterval;
 
     function GetDisabledTabs(TabSelected) {
+        var TabCount = $('#ContentItemTabs > ul > li').length;
+
         Disabled = [];
-        for (Index=0;Index<6;Index++) {
+        for (Index=0;Index<TabCount;Index++) {
             if ( TabSelected != Index ) {
                 Disabled.push(Index);
             }
