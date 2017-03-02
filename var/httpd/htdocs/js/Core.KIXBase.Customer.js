@@ -42,7 +42,7 @@ Core.KIXBase.Customer = (function(TargetNS) {
             if ( !$('#CustomerIDSelection').length) {
                 var $ButtonDiv = $('<div class="Field SpacingTop" style="margin-left: ' + $('fieldset div label').width() + 'px"></div>');
                 $('#BottomActionRow > button').css('margin-left', $('fieldset div label').css('padding-right')).appendTo($ButtonDiv);
-                $ButtonDiv.appendTo('fieldset');
+                $('fieldset').parent().append($ButtonDiv);
                 $('#BottomActionRow').remove();
             }
             else {

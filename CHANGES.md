@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/03/02) - Bugfix: T2017022190000739 (ticket creation in customer frontend not working if customize form is used) (rkaiser)
  * (2017/03/02) - Bugfix: T2017030290000577 (hard coded tab count removed in AgentTicketZoom) (ddoerffel)
  * (2017/03/01) - Bugfix: T2016122190003148 (fix responsive layout) (uboehm)
  * (2017/02/28) - Bugfix: T2017022790001227 (fixed vulnerability "possible cross-site scripting in parameter SelectedTab") (rbo)
