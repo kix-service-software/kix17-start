@@ -100,7 +100,10 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 [% RenderBlockStart("TableComplex") %]
 [% RenderBlockStart("TableComplexBlock") %]
 [% IF !Data.AJAX.defined %]
-<div class="WidgetSimple SpacingTop Expanded" id="Widget[% Data.Name | html %]">
+# KIX4OTRS-capeIT
+# <div class="WidgetSimple SpacingTop Expanded" id="Widget[% Data.Name | html %]">
+<div class="WidgetSimple SpacingTop Expanded CanDrag" id="Widget[% Data.Name | html %]">
+# EO KIX4OTRS-capeIT
 [% END %]
     <div class="Header">
 # KIX4OTRS-capeIT
