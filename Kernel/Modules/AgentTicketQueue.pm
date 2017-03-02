@@ -1,6 +1,6 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# KIX4OTRS-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
@@ -383,8 +383,10 @@ sub Run {
     );
 
     my $Filter = $ParamObject->GetParam( Param => 'Filter' )
+
         # KIX4OTRS-capeIT
         || $Self->{UserPreferences}->{UserViewAllTickets}
+
         # EO KIX4OTRS-capeIT
         || 'Unlocked';
 
@@ -1242,14 +1244,17 @@ sub Run {
                 );
             }
             else {
+
             # EO KIX4OTRS-capeIT
                 $Count = $TicketObject->TicketSearch(
                     %{ $Filters{$FilterColumn}->{Search} },
                     %ColumnFilter,
                     Result => 'COUNT',
                 );
+
             # KIX4OTRS-capeIT
             }
+
             # EO KIX4OTRS-capeIT
         }
 
@@ -1327,6 +1332,7 @@ sub Run {
         # KIX4OTRS-capeIT
         ViewableLockIDs  => \@ViewableLockIDs,
         ViewableStateIDs => \@ViewableStateIDs,
+
         # EO KIX4OTRS-capeIT
     );
 
@@ -1414,8 +1420,8 @@ sub BuildQueueView {
     # KIX4OTRS-capeIT
     $Param{SelectedQueueID} = $Self->{QueueID};
 
-    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-    my @ViewableLockIDs = @{ $Param{ViewableLockIDs} };
+    my $DBObject         = $Kernel::OM->Get('Kernel::System::DB');
+    my @ViewableLockIDs  = @{ $Param{ViewableLockIDs} };
     my @ViewableStateIDs = @{ $Param{ViewableStateIDs} };
 
     if ( $Param{Filter} eq 'All' ) {
@@ -1427,6 +1433,7 @@ sub BuildQueueView {
 
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
     # EO KIX4OTRS-capeIT
 
     my %Data = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcceleratorIndex(
@@ -1444,7 +1451,7 @@ sub BuildQueueView {
     # KIX4OTRS-capeIT
     # build individual queue views (search profiles and virtual queues)
     my $SearchProfileObject = $Kernel::OM->Get('Kernel::System::SearchProfile');
-    my %Profiles = $SearchProfileObject->SearchProfileList(
+    my %Profiles            = $SearchProfileObject->SearchProfileList(
         Base             => 'TicketSearch',
         UserLogin        => $Self->{UserLogin},
         WithSubscription => 1,
@@ -1468,6 +1475,7 @@ sub BuildQueueView {
                 UserLogin => $SearchProfileUser || $Self->{UserLogin},
             );
 
+            # get create time settings
             if ( !$SearchProfileData{ArticleTimeSearchType} ) {
 
                 # do nothing with time stuff
@@ -1576,6 +1584,7 @@ sub BuildQueueView {
                         . ' 23:59:59';
                 }
             }
+
             elsif ( $SearchProfileData{TimeSearchType} eq 'TimePoint' ) {
                 if (
                     $SearchProfileData{TicketCreateTimePoint}
@@ -1755,6 +1764,79 @@ sub BuildQueueView {
                 }
             }
 
+            # KIX4OTRS-capeIT
+            # get last change time settings
+            if ( !$SearchProfileData{LastChangeTimeSearchType} ) {
+
+                # do nothing on time stuff
+            }
+            elsif ( $SearchProfileData{LastChangeTimeSearchType} eq 'TimeSlot' ) {
+                for my $Key (qw(Month Day)) {
+                    $SearchProfileData{"TicketLastChangeTimeStart$Key"}
+                        = sprintf( "%02d", $SearchProfileData{"TicketLastChangeTimeStart$Key"} );
+                    $SearchProfileData{"TicketLastChangeTimeStop$Key"}
+                        = sprintf( "%02d", $SearchProfileData{"TicketLastChangeTimeStop$Key"} );
+                }
+                if (
+                    $SearchProfileData{TicketLastChangeTimeStartDay}
+                    && $SearchProfileData{TicketLastChangeTimeStartMonth}
+                    && $SearchProfileData{TicketLastChangeTimeStartYear}
+                    )
+                {
+                    $SearchProfileData{TicketLastChangeTimeNewerDate}
+                        = $SearchProfileData{TicketLastChangeTimeStartYear} . '-'
+                        . $SearchProfileData{TicketLastChangeTimeStartMonth} . '-'
+                        . $SearchProfileData{TicketLastChangeTimeStartDay}
+                        . ' 00:00:00';
+                }
+                if (
+                    $SearchProfileData{TicketLastChangeTimeStopDay}
+                    && $SearchProfileData{TicketLastChangeTimeStopMonth}
+                    && $SearchProfileData{TicketLastChangeTimeStopYear}
+                    )
+                {
+                    $SearchProfileData{TicketLastChangeTimeOlderDate}
+                        = $SearchProfileData{TicketLastChangeTimeStopYear} . '-'
+                        . $SearchProfileData{TicketLastChangeTimeStopMonth} . '-'
+                        . $SearchProfileData{TicketLastChangeTimeStopDay}
+                        . ' 23:59:59';
+                }
+            }
+            elsif ( $SearchProfileData{LastChangeTimeSearchType} eq 'TimePoint' ) {
+                if (
+                    $SearchProfileData{TicketLastChangeTimePoint}
+                    && $SearchProfileData{TicketLastChangeTimePointStart}
+                    && $SearchProfileData{TicketLastChangeTimePointFormat}
+                    )
+                {
+                    my $Time = 0;
+                    if ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'minute' ) {
+                        $Time = $SearchProfileData{TicketLastChangeTimePoint};
+                    }
+                    elsif ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'hour' ) {
+                        $Time = $SearchProfileData{TicketLastChangeTimePoint} * 60;
+                    }
+                    elsif ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'day' ) {
+                        $Time = $SearchProfileData{TicketLastChangeTimePoint} * 60 * 24;
+                    }
+                    elsif ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'week' ) {
+                        $Time = $SearchProfileData{TicketLastChangeTimePoint} * 60 * 24 * 7;
+                    }
+                    elsif ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'month' ) {
+                        $Time = $SearchProfileData{TicketLastChangeTimePoint} * 60 * 24 * 30;
+                    }
+                    elsif ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'year' ) {
+                        $Time = $SearchProfileData{TicketLastChangeTimePoint} * 60 * 24 * 365;
+                    }
+                    if ( $SearchProfileData{TicketLastChangeTimePointStart} eq 'Before' ) {
+                        $SearchProfileData{TicketLastChangeTimeOlderMinutes} = $Time;
+                    }
+                    else {
+                        $SearchProfileData{TicketLastChangeTimeNewerMinutes} = $Time;
+                    }
+                }
+            }
+
             # get pending time settings
             if ( !$SearchProfileData{PendingTimeSearchType} ) {
 
@@ -1892,10 +1974,16 @@ sub BuildQueueView {
                     elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'year' ) {
                         $Time = $SearchProfileData{TicketEscalationTimePoint} * 60 * 24 * 365;
                     }
+
                     if ( $SearchProfileData{TicketEscalationTimePointStart} eq 'Before' ) {
                         $SearchProfileData{TicketEscalationTimeOlderMinutes} = $Time;
                     }
+                    elsif ( $SearchProfileData{TicketEscalationTimePointStart} eq 'Next' ) {
+                        $SearchProfileData{TicketEscalationTimeOlderMinutes} = (-1) * $Time;
+                        $SearchProfileData{TicketEscalationTimeNewerMinutes} = 0;
+                    }
                     else {
+                        $SearchProfileData{TicketEscalationTimeOlderMinutes} = 0;
                         $SearchProfileData{TicketEscalationTimeNewerMinutes} = $Time;
                     }
                 }
@@ -1904,7 +1992,8 @@ sub BuildQueueView {
             # dynamic fields search parameters for ticket search
             my %DynamicFieldSearchParameters;
             my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-            my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+            my $DynamicFieldBackendObject
+                = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
             my $DynamicFields = $DynamicFieldObject->DynamicFieldListGet(
                 Valid => 1,
                 ObjectType => [ 'Ticket', 'Article' ],
@@ -1982,6 +2071,7 @@ sub BuildQueueView {
 
             # do ticket search to get ticket count
             $Hash{Total} = $TicketObject->TicketSearch(
+
                 # StateIDs => $Self->{ViewableStateIDs},
                 # LockIDs  => \@ViewableLockIDs,
                 %SearchProfileData,
@@ -1991,7 +2081,7 @@ sub BuildQueueView {
                 Result          => 'COUNT',
             ) || 0;
             $Hash{Count} = $TicketObject->TicketSearch(
-                LockIDs  => \@ViewableLockIDs,
+                LockIDs => \@ViewableLockIDs,
                 %SearchProfileData,
                 UserID          => $Self->{UserID},
                 ConditionInline => 1,
@@ -2016,7 +2106,7 @@ sub BuildQueueView {
     }
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
+    my $Config       = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     # show individual views
     if (
@@ -2052,7 +2142,7 @@ sub BuildQueueView {
 
             my %Hash;
             $Hash{QueueID} = $View;
-            $Hash{Queue}   = $LayoutObject->{LanguageObject}->Get($QueueViewName->{$View}) || '';
+            $Hash{Queue}   = $LayoutObject->{LanguageObject}->Get( $QueueViewName->{$View} ) || '';
             $Hash{MaxAge}  = 0;
 
             # prepare search parameter
@@ -2145,6 +2235,7 @@ sub BuildQueueView {
 
     # KIX4OTRS-capeIT
     my $ViewLayoutFunction = '_MaskQueueView' . $Self->{UserPreferences}->{UserQueueViewLayout};
+
     # return $Self->_MaskQueueView(
     return $Self->$ViewLayoutFunction(
 
@@ -2161,7 +2252,7 @@ sub BuildQueueView {
 
         # EO KIX4OTRS-capeIT
 
-        UseSubQueues    => $Param{UseSubQueues},
+        UseSubQueues => $Param{UseSubQueues},
     );
 }
 
@@ -2231,6 +2322,7 @@ sub _MaskQueueView {
                 && !$UsedQueue{$QueueName}
                 )
             {
+
                 # IMHO, this is purely pathological--TicketAcceleratorIndex
                 # sorts queues by name, so we should never stumble across one
                 # that we have not seen before!
@@ -2269,6 +2361,7 @@ sub _MaskQueueView {
 
         # skip empty Queues (or only locked tickets)
         if (
+
             # only check when setting is set
             $Config->{HideEmptyQueues}
 
@@ -2403,10 +2496,10 @@ sub _MaskQueueViewTree {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    my $Config       = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
+    my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     my $CustomQueues = $ConfigObject->Get('Ticket::CustomQueue') || '???';
-    my $CustomQueue  = $LayoutObject->{LanguageObject}->Translate($CustomQueues);
+    my $CustomQueue = $LayoutObject->{LanguageObject}->Translate($CustomQueues);
 
     my $QueueID = $Param{QueueID} || 0;
     my @QueuesNew = @{ $Param{Queues} };
@@ -2461,9 +2554,11 @@ sub _MaskQueueViewTree {
             $Queue{Queue}   = $Self->{SearchProfileQueue} . '::' . $1;
             $Queue{QueueID} = 'SearchProfile_' . $Encrypted;
 
-            if ( defined $Param{SelectedSearchProfileQueue} && $Param{SelectedSearchProfileQueue} eq $Encrypted ) {
+            if ( defined $Param{SelectedSearchProfileQueue}
+                && $Param{SelectedSearchProfileQueue} eq $Encrypted )
+            {
                 $Param{SelectedSearchProfileQueueName} = $1;
-                $Param{SelectedQueue} = $Self->{SearchProfileQueue}.' - '.$1;
+                $Param{SelectedQueue}                  = $Self->{SearchProfileQueue} . ' - ' . $1;
             }
         }
 
@@ -2475,9 +2570,9 @@ sub _MaskQueueViewTree {
         $QueueName4Sort =~ s/_/AAAc/g;
 
         $AllQueuesData{$QueueName4Sort} = {
-            Count => $Queue{Count},
-            Total => $Queue{Total},
-            Queue => $Queue[-1],
+            Count      => $Queue{Count},
+            Total      => $Queue{Total},
+            Queue      => $Queue[-1],
             QueueID    => $Queue{QueueID},
             QueueSplit => \@Queue,
             MaxAge     => ( $Queue{MaxAge} / 60 ) || 0,
@@ -2521,7 +2616,7 @@ sub _MaskQueueViewTree {
         QueueRealStrg => 0,
     );
     for my $SortName ( sort { lc($a) cmp lc($b) } keys %AllQueuesData ) {
-        my %Queue     = %{ $AllQueuesData{$SortName} };
+        my %Queue = %{ $AllQueuesData{$SortName} };
 
         my $Current   = $Queue{Name};
         my @QueueName = @{ $Queue{QueueSplit} };
@@ -2549,9 +2644,10 @@ sub _MaskQueueViewTree {
         # show other queues
         elsif ( defined $Queue{QueueID} ) {
             my $QueueCountDisplay;
-            if ($Queue{Count} == $Queue{Total}) {
+            if ( $Queue{Count} == $Queue{Total} ) {
                 $QueueCountDisplay = "(" . $Queue{Total} . ")";
-            } else {
+            }
+            else {
                 $QueueCountDisplay = "(" . $Queue{Count} . "/" . $Queue{Total} . ")";
             }
             $QueueStrg = '<a href="' . $LayoutObject->{Baselink}
@@ -2567,7 +2663,7 @@ sub _MaskQueueViewTree {
                 . '</a>';
         }
 
-        my $ListClass = '';
+        my $ListClass  = '';
         my $DataJSTree = '';
 
         # should i highlight this queue
@@ -2594,7 +2690,10 @@ sub _MaskQueueViewTree {
                 }
             }
         }
-        elsif ( $QueueName[0] eq $Self->{SearchProfileQueue} && $#QueueName == 1 && $QueueName[1] eq $Param{SelectedSearchProfileQueueName} ) {
+        elsif ($QueueName[0] eq $Self->{SearchProfileQueue}
+            && $#QueueName == 1
+            && $QueueName[1] eq $Param{SelectedSearchProfileQueueName} )
+        {
             $DataJSTree = '{"opened":true,"selected":true}';
         }
 
@@ -2616,7 +2715,8 @@ sub _MaskQueueViewTree {
         }
 
         $Param{$QueuePlace}
-            .= "<li class='Node $ListClass' data-jstree='$DataJSTree' id='QueueID_$Queue{QueueID}'>" . $QueueStrg;
+            .= "<li class='Node $ListClass' data-jstree='$DataJSTree' id='QueueID_$Queue{QueueID}'>"
+            . $QueueStrg;
 
         # keep current queue level for next queue
         $QueueBuildLastLevel{$QueuePlace} = $#QueueName;
@@ -2649,10 +2749,10 @@ sub _MaskQueueViewDropDown {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    my $Config       = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
+    my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     my $CustomQueues = $ConfigObject->Get('Ticket::CustomQueue') || '???';
-    my $CustomQueue  = $LayoutObject->{LanguageObject}->Translate($CustomQueues);
+    my $CustomQueue = $LayoutObject->{LanguageObject}->Translate($CustomQueues);
 
     my $QueueID         = $Param{QueueID} || 0;
     my @QueuesNew       = @{ $Param{Queues} };
@@ -2681,9 +2781,9 @@ sub _MaskQueueViewDropDown {
         my @Queue = split( /::/, $Queue{Queue} );
 
         $AllQueuesData{ $Queue{Queue} } = {
-            Count => $Queue{Count},
-            Total => $Queue{Total},
-            Queue => $Queue[-1],
+            Count      => $Queue{Count},
+            Total      => $Queue{Total},
+            Queue      => $Queue[-1],
             QueueID    => $Queue{QueueID},
             QueueSplit => \@Queue,
             MaxAge     => ( $Queue{MaxAge} / 60 ) || 0,
@@ -2760,9 +2860,10 @@ sub _MaskQueueViewDropDown {
             }
         }
             my $QueueCountDisplay;
-            if ($Queue{Count} == $Queue{Total}) {
+        if ( $Queue{Count} == $Queue{Total} ) {
                 $QueueCountDisplay = "(" . $Queue{Total} . ")";
-            } else {
+        }
+        else {
                 $QueueCountDisplay = "(" . $Queue{Count} . "/" . $Queue{Total} . ")";
             }
         $QueueStrg{$#QueueName}->{Data}->{$Current}->{Label}

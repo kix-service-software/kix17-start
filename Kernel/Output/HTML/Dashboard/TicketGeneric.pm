@@ -1,6 +1,6 @@
 # --
 # Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
+# KIX4OTRS-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
 # written/edited by:
 # * Martin(dot)Balzarek(at)cape(dash)it(dot)de
@@ -951,7 +951,7 @@ sub Run {
             }
         }
 
-        # get close time settings
+        # get change time settings
         if ( !$SearchProfileData{ChangeTimeSearchType} ) {
 
             # do nothing on time stuff
@@ -1026,7 +1026,81 @@ sub Run {
         }
 
         # get close time settings
+        if ( !$SearchProfileData{CloseTimeSearchType} ) {
+
+            # do nothing on time stuff
+        }
+        elsif ( $SearchProfileData{CloseTimeSearchType} eq 'TimeSlot' ) {
+            for (qw(Month Day)) {
+                $SearchProfileData{"TicketCloseTimeStart$_"}
+                    = sprintf( "%02d", $SearchProfileData{"TicketCloseTimeStart$_"} );
+            }
+            for (qw(Month Day)) {
+                $SearchProfileData{"TicketCloseTimeStop$_"}
+                    = sprintf( "%02d", $SearchProfileData{"TicketCloseTimeStop$_"} );
+            }
+            if (
+                $SearchProfileData{TicketCloseTimeStartDay}
+                && $SearchProfileData{TicketCloseTimeStartMonth}
+                && $SearchProfileData{TicketCloseTimeStartYear}
+                )
+            {
+                $SearchProfileData{TicketCloseTimeNewerDate}
+                    = $SearchProfileData{TicketCloseTimeStartYear} . '-'
+                    . $SearchProfileData{TicketCloseTimeStartMonth} . '-'
+                    . $SearchProfileData{TicketCloseTimeStartDay}
+                    . ' 00:00:00';
+            }
+            if (
+                $SearchProfileData{TicketCloseTimeStopDay}
+                && $SearchProfileData{TicketCloseTimeStopMonth}
+                && $SearchProfileData{TicketCloseTimeStopYear}
+                )
+            {
+                $SearchProfileData{TicketCloseTimeOlderDate}
+                    = $SearchProfileData{TicketCloseTimeStopYear} . '-'
+                    . $SearchProfileData{TicketCloseTimeStopMonth} . '-'
+                    . $SearchProfileData{TicketCloseTimeStopDay}
+                    . ' 23:59:59';
+            }
+        }
+        elsif ( $SearchProfileData{CloseTimeSearchType} eq 'TimePoint' ) {
+            if (
+                $SearchProfileData{TicketCloseTimePoint}
+                && $SearchProfileData{TicketCloseTimePointStart}
+                && $SearchProfileData{TicketCloseTimePointFormat}
+                )
+            {
+                my $Time = 0;
+                if ( $SearchProfileData{TicketCloseTimePointFormat} eq 'minute' ) {
+                    $Time = $SearchProfileData{TicketCloseTimePoint};
+                }
+                elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'hour' ) {
+                    $Time = $SearchProfileData{TicketCloseTimePoint} * 60;
+                }
+                elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'day' ) {
+                    $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24;
+                }
+                elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'week' ) {
+                    $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24 * 7;
+                }
+                elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'month' ) {
+                    $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24 * 30;
+                }
+                elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'year' ) {
+                    $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24 * 365;
+                }
+                if ( $SearchProfileData{TicketCloseTimePointStart} eq 'Before' ) {
+                    $SearchProfileData{TicketCloseTimeOlderMinutes} = $Time;
+                }
+                else {
+                    $SearchProfileData{TicketCloseTimeNewerMinutes} = $Time;
+                }
+            }
+        }
+
         # KIX4OTRS-capeIT
+        # get last change time settings
         if ( !$SearchProfileData{LastChangeTimeSearchType} ) {
 
             # do nothing on time stuff
@@ -1100,7 +1174,81 @@ sub Run {
             }
         }
 
-        # get ticket escalation time settings
+        # get pending time settings
+        if ( !$SearchProfileData{PendingTimeSearchType} ) {
+
+            # do nothing on time stuff
+        }
+        elsif ( $SearchProfileData{PendingTimeSearchType} eq 'TimeSlot' ) {
+            for (qw(Month Day)) {
+                $SearchProfileData{"TicketPendingTimeStart$_"}
+                    = sprintf( "%02d", $SearchProfileData{"TicketPendingTimeStart$_"} );
+            }
+            for (qw(Month Day)) {
+                $SearchProfileData{"TicketPendingTimeStop$_"}
+                    = sprintf( "%02d", $SearchProfileData{"TicketPendingTimeStop$_"} );
+            }
+            if (
+                $SearchProfileData{TicketPendingTimeStartDay}
+                && $SearchProfileData{TicketPendingTimeStartMonth}
+                && $SearchProfileData{TicketPendingTimeStartYear}
+                )
+            {
+                $SearchProfileData{TicketPendingTimeNewerDate}
+                    = $SearchProfileData{TicketPendingTimeStartYear} . '-'
+                    . $SearchProfileData{TicketPendingTimeStartMonth} . '-'
+                    . $SearchProfileData{TicketPendingTimeStartDay}
+                    . ' 00:00:00';
+            }
+            if (
+                $SearchProfileData{TicketPendingTimeStopDay}
+                && $SearchProfileData{TicketPendingTimeStopMonth}
+                && $SearchProfileData{TicketPendingTimeStopYear}
+                )
+            {
+                $SearchProfileData{TicketPendingTimeOlderDate}
+                    = $SearchProfileData{TicketPendingTimeStopYear} . '-'
+                    . $SearchProfileData{TicketPendingTimeStopMonth} . '-'
+                    . $SearchProfileData{TicketPendingTimeStopDay}
+                    . ' 23:59:59';
+            }
+        }
+        elsif ( $SearchProfileData{PendingTimeSearchType} eq 'TimePoint' ) {
+            if (
+                $SearchProfileData{TicketPendingTimePoint}
+                && $SearchProfileData{TicketPendingTimePointStart}
+                && $SearchProfileData{TicketPendingTimePointFormat}
+                )
+            {
+                my $Time = 0;
+                if ( $SearchProfileData{TicketPendingTimePointFormat} eq 'minute' ) {
+                    $Time = $SearchProfileData{TicketPendingTimePoint};
+                }
+                elsif ( $SearchProfileData{TicketPendingTimePointFormat} eq 'hour' ) {
+                    $Time = $SearchProfileData{TicketPendingTimePoint} * 60;
+                }
+                elsif ( $SearchProfileData{TicketPendingTimePointFormat} eq 'day' ) {
+                    $Time = $SearchProfileData{TicketPendingTimePoint} * 60 * 24;
+                }
+                elsif ( $SearchProfileData{TicketPendingTimePointFormat} eq 'week' ) {
+                    $Time = $SearchProfileData{TicketPendingTimePoint} * 60 * 24 * 7;
+                }
+                elsif ( $SearchProfileData{TicketPendingTimePointFormat} eq 'month' ) {
+                    $Time = $SearchProfileData{TicketPendingTimePoint} * 60 * 24 * 30;
+                }
+                elsif ( $SearchProfileData{TicketPendingTimePointFormat} eq 'year' ) {
+                    $Time = $SearchProfileData{TicketPendingTimePoint} * 60 * 24 * 365;
+                }
+                if ( $SearchProfileData{TicketPendingTimePointStart} eq 'Before' ) {
+                    $SearchProfileData{TicketPendingTimeOlderMinutes} = $Time;
+                }
+                else {
+                    $SearchProfileData{TicketPendingTimeNewerMinutes} = $Time;
+                }
+            }
+        }
+
+        # get escalation time settings
         if ( !$SearchProfileData{EscalationTimeSearchType} ) {
 
             # do nothing on time stuff
@@ -1165,89 +1313,21 @@ sub Run {
                 elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'year' ) {
                     $Time = $SearchProfileData{TicketEscalationTimePoint} * 60 * 24 * 365;
                 }
+
                 if ( $SearchProfileData{TicketEscalationTimePointStart} eq 'Before' ) {
                     $SearchProfileData{TicketEscalationTimeOlderMinutes} = $Time;
                 }
+                elsif ( $SearchProfileData{TicketEscalationTimePointStart} eq 'Next' ) {
+                    $SearchProfileData{TicketEscalationTimeOlderMinutes} = (-1) * $Time;
+                    $SearchProfileData{TicketEscalationTimeNewerMinutes} = 0;
+                }
                 else {
+                    $SearchProfileData{TicketEscalationTimeOlderMinutes} = 0;
                     $SearchProfileData{TicketEscalationTimeNewerMinutes} = $Time;
                 }
             }
         }
         # EO KIX4OTRS-capeIT
-
-        # get close time settings
-        if ( !$SearchProfileData{CloseTimeSearchType} ) {
-
-            # do nothing on time stuff
-        }
-        elsif ( $SearchProfileData{CloseTimeSearchType} eq 'TimeSlot' ) {
-            for (qw(Month Day)) {
-                $SearchProfileData{"TicketCloseTimeStart$_"}
-                    = sprintf( "%02d", $SearchProfileData{"TicketCloseTimeStart$_"} );
-            }
-            for (qw(Month Day)) {
-                $SearchProfileData{"TicketCloseTimeStop$_"}
-                    = sprintf( "%02d", $SearchProfileData{"TicketCloseTimeStop$_"} );
-            }
-            if (
-                $SearchProfileData{TicketCloseTimeStartDay}
-                && $SearchProfileData{TicketCloseTimeStartMonth}
-                && $SearchProfileData{TicketCloseTimeStartYear}
-                )
-            {
-                $SearchProfileData{TicketCloseTimeNewerDate}
-                    = $SearchProfileData{TicketCloseTimeStartYear} . '-'
-                    . $SearchProfileData{TicketCloseTimeStartMonth} . '-'
-                    . $SearchProfileData{TicketCloseTimeStartDay}
-                    . ' 00:00:00';
-            }
-            if (
-                $SearchProfileData{TicketCloseTimeStopDay}
-                && $SearchProfileData{TicketCloseTimeStopMonth}
-                && $SearchProfileData{TicketCloseTimeStopYear}
-                )
-            {
-                $SearchProfileData{TicketCloseTimeOlderDate}
-                    = $SearchProfileData{TicketCloseTimeStopYear} . '-'
-                    . $SearchProfileData{TicketCloseTimeStopMonth} . '-'
-                    . $SearchProfileData{TicketCloseTimeStopDay}
-                    . ' 23:59:59';
-            }
-        }
-        elsif ( $SearchProfileData{CloseTimeSearchType} eq 'TimePoint' ) {
-            if (
-                $SearchProfileData{TicketCloseTimePoint}
-                && $SearchProfileData{TicketCloseTimePointStart}
-                && $SearchProfileData{TicketCloseTimePointFormat}
-                )
-            {
-                my $Time = 0;
-                if ( $SearchProfileData{TicketCloseTimePointFormat} eq 'minute' ) {
-                    $Time = $SearchProfileData{TicketCloseTimePoint};
-                }
-                elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'hour' ) {
-                    $Time = $SearchProfileData{TicketCloseTimePoint} * 60;
-                }
-                elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'day' ) {
-                    $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24;
-                }
-                elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'week' ) {
-                    $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24 * 7;
-                }
-                elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'month' ) {
-                    $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24 * 30;
-                }
-                elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'year' ) {
-                    $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24 * 365;
-                }
-                if ( $SearchProfileData{TicketCloseTimePointStart} eq 'Before' ) {
-                    $SearchProfileData{TicketCloseTimeOlderMinutes} = $Time;
-                }
-                else {
-                    $SearchProfileData{TicketCloseTimeNewerMinutes} = $Time;
-                }
-            }
-        }
 
         # prepare fulltext search
         if ( $SearchProfileData{Fulltext} ) {
