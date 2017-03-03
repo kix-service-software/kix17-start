@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/03/03) - Bugfix: T2017030290001076 (wrong text for ticket pending time search form) (ddoerffel)
  * (2017/03/03) - Bugfix: T2017021790000783 (activate the modernized feature for hidden form elements) (ddoerffel)
  * (2017/03/02) - CR: T2017030290000755 (user preference for position of toolbar - right, left, top) (rbo)
  * (2017/03/02) - Bugfix: T2016102790000714 (fixed color for oldest queue in queue tree) (uboehm)

@@ -2508,20 +2508,20 @@ sub Run {
         );
         $Param{TicketPendingTimePointStart} = $LayoutObject->BuildSelection(
             Data => {
-                'Last'   => 'last',
-                'Before' => 'before',
+                'Last'   => Translatable('within the last ...'),
+                'Before' => Translatable('more than ... ago'),
             },
             Name => 'TicketPendingTimePointStart',
             SelectedID => $GetParam{TicketPendingTimePointStart} || 'Last',
         );
         $Param{TicketPendingTimePointFormat} = $LayoutObject->BuildSelection(
             Data => {
-                minute => 'minute(s)',
-                hour   => 'hour(s)',
-                day    => 'day(s)',
-                week   => 'week(s)',
-                month  => 'month(s)',
-                year   => 'year(s)',
+                minute => Translatable('minute(s)'),
+                hour   => Translatable('hour(s)'),
+                day    => Translatable('day(s)'),
+                week   => Translatable('week(s)'),
+                month  => Translatable('month(s)'),
+                year   => Translatable('year(s)'),
             },
             Name       => 'TicketPendingTimePointFormat',
             SelectedID => $GetParam{TicketPendingTimePointFormat},
