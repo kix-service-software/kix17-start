@@ -5183,7 +5183,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
-            <String Regex="">/otrs-web/</String>
+            <String Regex="">/kix-web/</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::ImagePath" Required="1" Valid="1" ConfigLevel="200">
