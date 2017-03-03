@@ -34,6 +34,7 @@ use lib dirname($RealBin).'/../../';
 use lib dirname($RealBin).'/../../Kernel/cpan-lib';
 
 use Getopt::Std;
+use File::Path qw(mkpath);
 
 use Kernel::System::ObjectManager;
 
@@ -102,16 +103,19 @@ for my $SQL (@SQLPost) {
 }
 
 # check for Pro packages
-if ($Kernel::OM->Get('Kernel::System::DB')->Prepare(
+my $IsPro = 0;
+my $Result = $Kernel::OM->Get('Kernel::System::DB')->Prepare(
     SQL => 'SELECT count(*) FROM package_repository where name = \'KIXBasePro\'',
     Limit => 1,
 );
-
-my $IsPro = 0;
-while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
-    $IsPro = ($Row[0] > 0);
+if (!$Result) {
+    print STDERR "Unable to execute SQL to check for KIX Professional!"; 
 }
-
+else {
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+        $IsPro = ($Row[0] > 0);
+    }
+}
 
 # delete all obsolete packages
 my @ObsoletePackages = (
@@ -139,6 +143,7 @@ my @ObsoletePackages = (
     'ITSMServiceLevelManagement',
     'ITSMConfigurationManagement',
     'ITSMCore',
+    'ITSM-CIAttributeCollection',
     'ImportExport',
     'GeneralCatalog',
     'FAQ',
@@ -159,15 +164,32 @@ if ($IsPro) {
         'KIXCalendar',
     );
 
+    my $XMLPackageContent = <<'EOT';
+<?xml version="1.0" encoding="utf-8" ?>
+<kix_package version="1.1">
+    <Name>KIXPro</Name>
+    <Version>16.1.0</Version>
+</kix_package>
+EOT
+    
     # create "fake" KIXPro package entry for update installation
     my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
-        SQL  => "UPDATE package_repository SET name = 'KIXPro', version = '16.1.0' WHERE name = ?",
+        SQL  => "UPDATE package_repository SET name = 'KIXPro', version = '16.1.0', content = ? WHERE name = ?",
         Bind => [
+            \$XMLPackageContent,
             \'KIXBasePro',
         ],
     );
     if (!$Result) {
         print STDERR "Unable to create package entry \"KIXPro\" in package repository!"; 
+    }
+    
+    # create "fake" directory for update installation
+    my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
+    if ( !( -e $Home.'/KIXPro' ) ) {
+        if ( !mkpath( $Home.'/KIXPro', 0, 0755 ) ) {
+            print STDERR "Can't create directory '$Home/KIXpro'!";
+        }
     }
 }
 
