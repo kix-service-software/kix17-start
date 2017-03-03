@@ -287,8 +287,6 @@ sub LoadDefaults {
     # (log backend module)
     $Self->{LogModule} = 'Kernel::System::Log::File';
 
-#    $Self->{'LogModule'} = 'Kernel::System::Log::File';
-
     # param for LogModule Kernel::System::Log::SysLog
     $Self->{'LogModule::SysLog::Facility'} = 'user';
 
