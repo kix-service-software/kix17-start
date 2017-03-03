@@ -166,10 +166,10 @@ if ($IsPro) {
 
     my $XMLPackageContent = <<'EOT';
 <?xml version="1.0" encoding="utf-8" ?>
-<kix_package version="1.1">
+<otrs_package version="1.1">
     <Name>KIXPro</Name>
     <Version>16.1.0</Version>
-</kix_package>
+</otrs_package>
 EOT
     
     # create "fake" KIXPro package entry for update installation
@@ -184,7 +184,7 @@ EOT
         print STDERR "Unable to create package entry \"KIXPro\" in package repository!"; 
     }
     
-    # create "fake" directory for update installation
+    # create "fake" KIXPro directory for update installation
     my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
     if ( !( -e $Home.'/KIXPro' ) ) {
         if ( !mkpath( $Home.'/KIXPro', 0, 0755 ) ) {
