@@ -45,7 +45,8 @@ sub Run {
     my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
-
+    my $AddressBookObject  = $Kernel::OM->Get('Kernel::System::AddressBook');
+    
     # get config for frontend
     $Self->{Config} = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
@@ -73,6 +74,12 @@ sub Run {
             Search => $Search,
         );
         map { $CustomerUserList{$_} = $UnknownTicketCustomerList->{$_} } keys %{$UnknownTicketCustomerList};
+
+        # search address book
+        my %AddressList = $AddressBookObject->AddressList(
+            Search => '*'.$Search.'*',
+        );
+        map { $CustomerUserList{$_} = $_ } values %AddressList;
 
         # build data
         my @Data;
