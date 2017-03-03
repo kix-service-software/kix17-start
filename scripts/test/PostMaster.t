@@ -107,35 +107,36 @@ for my $FieldName ( sort keys %NeededDynamicfields ) {
     }
 }
 
+#rbo - T2016121190001552 - renamed X-OTRS headers
 my %NeededXHeaders = (
-    'X-OTRS-DynamicField-TicketFreeKey1'  => 1,
-    'X-OTRS-DynamicField-TicketFreeText1' => 1,
-    'X-OTRS-DynamicField-TicketFreeKey2'  => 1,
-    'X-OTRS-DynamicField-TicketFreeText2' => 1,
-    'X-OTRS-DynamicField-TicketFreeKey3'  => 1,
-    'X-OTRS-DynamicField-TicketFreeText3' => 1,
-    'X-OTRS-DynamicField-TicketFreeTime1' => 1,
-    'X-OTRS-DynamicField-TicketFreeTime2' => 1,
-    'X-OTRS-DynamicField-TicketFreeTime3' => 1,
-    'X-OTRS-DynamicField-TicketFreeTime4' => 1,
-    'X-OTRS-DynamicField-TicketFreeTime5' => 1,
-    'X-OTRS-DynamicField-TicketFreeTime6' => 1,
-    'X-OTRS-TicketKey1'                   => 1,
-    'X-OTRS-TicketValue1'                 => 1,
-    'X-OTRS-TicketKey2'                   => 1,
-    'X-OTRS-TicketValue2'                 => 1,
-    'X-OTRS-TicketKey3'                   => 1,
-    'X-OTRS-TicketValue3'                 => 1,
-    'X-OTRS-TicketTime1'                  => 1,
-    'X-OTRS-TicketTime2'                  => 1,
-    'X-OTRS-TicketTime3'                  => 1,
-    'X-OTRS-TicketTime4'                  => 1,
-    'X-OTRS-TicketTime5'                  => 1,
-    'X-OTRS-TicketTime6'                  => 1,
-    'X-OTRS-Owner'                        => 1,
-    'X-OTRS-OwnerID'                      => 1,
-    'X-OTRS-Responsible'                  => 1,
-    'X-OTRS-ResponsibleID'                => 1,
+    'X-KIX-DynamicField-TicketFreeKey1'  => 1,
+    'X-KIX-DynamicField-TicketFreeText1' => 1,
+    'X-KIX-DynamicField-TicketFreeKey2'  => 1,
+    'X-KIX-DynamicField-TicketFreeText2' => 1,
+    'X-KIX-DynamicField-TicketFreeKey3'  => 1,
+    'X-KIX-DynamicField-TicketFreeText3' => 1,
+    'X-KIX-DynamicField-TicketFreeTime1' => 1,
+    'X-KIX-DynamicField-TicketFreeTime2' => 1,
+    'X-KIX-DynamicField-TicketFreeTime3' => 1,
+    'X-KIX-DynamicField-TicketFreeTime4' => 1,
+    'X-KIX-DynamicField-TicketFreeTime5' => 1,
+    'X-KIX-DynamicField-TicketFreeTime6' => 1,
+    'X-KIX-TicketKey1'                   => 1,
+    'X-KIX-TicketValue1'                 => 1,
+    'X-KIX-TicketKey2'                   => 1,
+    'X-KIX-TicketValue2'                 => 1,
+    'X-KIX-TicketKey3'                   => 1,
+    'X-KIX-TicketValue3'                 => 1,
+    'X-KIX-TicketTime1'                  => 1,
+    'X-KIX-TicketTime2'                  => 1,
+    'X-KIX-TicketTime3'                  => 1,
+    'X-KIX-TicketTime4'                  => 1,
+    'X-KIX-TicketTime5'                  => 1,
+    'X-KIX-TicketTime6'                  => 1,
+    'X-KIX-Owner'                        => 1,
+    'X-KIX-OwnerID'                      => 1,
+    'X-KIX-Responsible'                  => 1,
+    'X-KIX-ResponsibleID'                => 1,
 );
 
 my $XHeaders          = $ConfigObject->Get('PostmasterX-Header');
@@ -197,9 +198,10 @@ for my $TicketSubjectConfig ( 'Right', 'Left' ) {
                     To      => 'EMAILADDRESS:darthvader@otrs.org',
                 },
                 Set => {
-                    'X-OTRS-Queue'        => 'Misc',
-                    'X-OTRS-TicketKey1'   => 'Key1',
-                    'X-OTRS-TicketValue1' => 'Text1',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+                    'X-KIX-Queue'        => 'Misc',
+                    'X-KIX-TicketKey1'   => 'Key1',
+                    'X-KIX-TicketValue1' => 'Text1',
                 },
             );
             $PostMasterFilter->FilterAdd(
@@ -210,8 +212,9 @@ for my $TicketSubjectConfig ( 'Right', 'Left' ) {
                     To      => 'EMAILADDRESS:darthvader2@otrs.org',
                 },
                 Set => {
-                    'X-OTRS-TicketKey2'   => 'Key2',
-                    'X-OTRS-TicketValue2' => 'Text2',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+                    'X-KIX-TicketKey2'   => 'Key2',
+                    'X-KIX-TicketValue2' => 'Text2',
                 },
             );
             $PostMasterFilter->FilterAdd(
@@ -222,8 +225,9 @@ for my $TicketSubjectConfig ( 'Right', 'Left' ) {
                     To      => 'otrs.org',
                 },
                 Set => {
-                    'X-OTRS-TicketKey3'   => 'Key3',
-                    'X-OTRS-TicketValue3' => 'Text3',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+                    'X-KIX-TicketKey3'   => 'Key3',
+                    'X-KIX-TicketValue3' => 'Text3',
                 },
             );
             $PostMasterFilter->FilterAdd(
@@ -237,7 +241,8 @@ for my $TicketSubjectConfig ( 'Right', 'Left' ) {
                     To => 1,
                 },
                 Set => {
-                    'X-OTRS-Ignore' => 'yes',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+                    'X-KIX-Ignore' => 'yes',
                 },
             );
 
@@ -761,11 +766,12 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-Queue'        => 'Misc',
-            'X-OTRS-TicketKey1'   => 'Key1',
-            'X-OTRS-TicketValue1' => 'Text1',
-            'X-OTRS-TicketKey3'   => 'Key3',
-            'X-OTRS-TicketValue3' => 'Text3',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            'X-KIX-Queue'        => 'Misc',
+            'X-KIX-TicketKey1'   => 'Key1',
+            'X-KIX-TicketValue1' => 'Text1',
+            'X-KIX-TicketKey3'   => 'Key3',
+            'X-KIX-TicketValue3' => 'Text3',
         },
         Check => {
             Queue                        => 'Misc',
@@ -779,11 +785,12 @@ my @Tests = (
             From => 'EMAILADDRESS:sender@example.com',
         },
         Set => {
-            'X-OTRS-Queue'        => 'Misc',
-            'X-OTRS-TicketKey1'   => 'Key1#2',
-            'X-OTRS-TicketValue1' => 'Text1#2',
-            'X-OTRS-TicketKey4'   => 'Key4#2',
-            'X-OTRS-TicketValue4' => 'Text4#2',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            'X-KIX-Queue'        => 'Misc',
+            'X-KIX-TicketKey1'   => 'Key1#2',
+            'X-KIX-TicketValue1' => 'Text1#2',
+            'X-KIX-TicketKey4'   => 'Key4#2',
+            'X-KIX-TicketValue4' => 'Text4#2',
         },
         Check => {
             Queue                        => 'Misc',
@@ -797,11 +804,12 @@ my @Tests = (
             From => 'EMAILADDRESS:not_this_sender@example.com',
         },
         Set => {
-            'X-OTRS-Queue'        => 'Misc',
-            'X-OTRS-TicketKey1'   => 'Key1#3',
-            'X-OTRS-TicketValue1' => 'Text1#3',
-            'X-OTRS-TicketKey3'   => 'Key3#3',
-            'X-OTRS-TicketValue3' => 'Text3#3',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            'X-KIX-Queue'        => 'Misc',
+            'X-KIX-TicketKey1'   => 'Key1#3',
+            'X-KIX-TicketValue1' => 'Text1#3',
+            'X-KIX-TicketKey3'   => 'Key3#3',
+            'X-KIX-TicketValue3' => 'Text3#3',
         },
     },
     {
@@ -810,7 +818,8 @@ my @Tests = (
             From => '(\w+)@example.com',
         },
         Set => {
-            'X-OTRS-TicketKey4' => '[***]',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            'X-KIX-TicketKey4' => '[***]',
         },
         Check => {
             DynamicField_TicketFreeKey4 => 'sender',
@@ -822,7 +831,8 @@ my @Tests = (
             From => 'sender([f][o][o])?@example.com',
         },
         Set => {
-            'X-OTRS-TicketKey5' => '[***]',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            'X-KIX-TicketKey5' => '[***]',
         },
         Check => {
             DynamicField_TicketFreeKey5 => undef,
@@ -938,9 +948,10 @@ Some Content in Body
             'Envelope-To' => 'envelopeto@example.com',
         },
         Set => {
-            'X-OTRS-Queue'        => 'Junk',
-            'X-OTRS-TicketKey5'   => 'Key5#1',
-            'X-OTRS-TicketValue5' => 'Text5#1',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            'X-KIX-Queue'        => 'Junk',
+            'X-KIX-TicketKey5'   => 'Key5#1',
+            'X-KIX-TicketValue5' => 'Text5#1',
         },
         Check => {
             Queue                        => 'Junk',
@@ -961,9 +972,10 @@ Some Content in Body
             'X-Envelope-To' => 'xenvelopeto@example.com',
         },
         Set => {
-            'X-OTRS-Queue'        => 'Misc',
-            'X-OTRS-TicketKey6'   => 'Key6#1',
-            'X-OTRS-TicketValue6' => 'Text6#1',
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            'X-KIX-Queue'        => 'Misc',
+            'X-KIX-TicketKey6'   => 'Key6#1',
+            'X-KIX-TicketValue6' => 'Text6#1',
         },
         Check => {
             Queue                        => 'Misc',
@@ -1086,7 +1098,7 @@ for my $DynamicFieldID (@DynamicfieldIDs) {
     );
 }
 
-# test X-OTRS-(Owner|Responsible)
+# test X-KIX-(Owner|Responsible)
 my $Login = $Helper->TestUserCreate();
 my $UserID = $Kernel::OM->Get('Kernel::System::User')->UserLookup( UserLogin => $Login );
 
@@ -1130,8 +1142,9 @@ for my $Test ( sort keys %OwnerResponsibleTests ) {
     );
 
     for my $Line ( @{$ContentRef} ) {
-        $Line =~ s{ ^ (X-OTRS-(?:Owner|Responsible):) .*? $ }{$1$Login}x;
-        $Line =~ s{ ^ (X-OTRS-(?:Owner|Responsible)ID:) .*? $ }{$1$UserID}x;
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        $Line =~ s{ ^ (X-KIX-(?:Owner|Responsible):) .*? $ }{$1$Login}x;
+        $Line =~ s{ ^ (X-KIX-(?:Owner|Responsible)ID:) .*? $ }{$1$UserID}x;
     }
 
     my $PostMasterObject = Kernel::System::PostMaster->new(

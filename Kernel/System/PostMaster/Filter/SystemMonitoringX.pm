@@ -536,9 +536,10 @@ sub _TicketUpdate {
         Subject      => $Param->{GetParam}->{Subject},
     );
 
+#rbo - T2016121190001552 - renamed X-OTRS headers
     # set sender type and article type
-    $Param->{GetParam}->{'X-OTRS-FollowUp-SenderType'}  = $Self->{Config}->{OTRSCreateSenderType};
-    $Param->{GetParam}->{'X-OTRS-FollowUp-ArticleType'} = $Self->{Config}->{OTRSCreateArticleType};
+    $Param->{GetParam}->{'X-KIX-FollowUp-SenderType'}  = $Self->{Config}->{OTRSCreateSenderType};
+    $Param->{GetParam}->{'X-KIX-FollowUp-ArticleType'} = $Self->{Config}->{OTRSCreateArticleType};
 
     # Set Article Free Field for State
     my $ArticleDFNumber = $Self->{Config}->{'DynamicFieldState'};
@@ -546,12 +547,13 @@ sub _TicketUpdate {
     # ArticleDFNumber is a number
     if ( $ArticleDFNumber =~ /^\d+$/ ) {
 
-        $Param->{GetParam}->{ 'X-OTRS-FollowUp-ArticleKey' . $ArticleDFNumber } = 'State';
-        $Param->{GetParam}->{ 'X-OTRS-FollowUp-ArticleValue' . $ArticleDFNumber }
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        $Param->{GetParam}->{ 'X-KIX-FollowUp-ArticleKey' . $ArticleDFNumber } = 'State';
+        $Param->{GetParam}->{ 'X-KIX-FollowUp-ArticleValue' . $ArticleDFNumber }
             = $Self->{State};
     }
     else {
-        $Param->{GetParam}->{ 'X-OTRS-FollowUp-DynamicField-' . $ArticleDFNumber }
+        $Param->{GetParam}->{ 'X-KIX-FollowUp-DynamicField-' . $ArticleDFNumber }
             = $Self->{State};
     }
 
@@ -566,7 +568,8 @@ sub _TicketUpdate {
             )
         {
 
-            $Param->{GetParam}->{'X-OTRS-FollowUp-State'} = $Self->{Config}->{CloseActionState};
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            $Param->{GetParam}->{'X-KIX-FollowUp-State'} = $Self->{Config}->{CloseActionState};
 
             # get time object
             my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
@@ -575,7 +578,8 @@ sub _TicketUpdate {
                 SystemTime => $TimeObject->SystemTime()
                     + $Self->{Config}->{ClosePendingTime},
             );
-            $Param->{GetParam}->{'X-OTRS-State-PendingTime'} = $TimeStamp;
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            $Param->{GetParam}->{'X-KIX-State-PendingTime'} = $TimeStamp;
         }
 
         # set log message
@@ -642,7 +646,8 @@ sub _TicketCreate {
                     . " does not exists or missnamed.",
             );
         }
-        $Param->{GetParam}->{ 'X-OTRS-DynamicField-' . $TicketDFNumber }
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        $Param->{GetParam}->{ 'X-KIX-DynamicField-' . $TicketDFNumber }
             = $Self->{$ConfiguredDynamicField};
     }
 
@@ -652,30 +657,32 @@ sub _TicketCreate {
     # ArticleDFNumber is a number
     if ( $ArticleDFNumber =~ /^\d+$/ ) {
 
-        $Param->{GetParam}->{ 'X-OTRS-ArticleKey' . $ArticleDFNumber }   = 'State';
-        $Param->{GetParam}->{ 'X-OTRS-ArticleValue' . $ArticleDFNumber } = $Self->{State};
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        $Param->{GetParam}->{ 'X-KIX-ArticleKey' . $ArticleDFNumber }   = 'State';
+        $Param->{GetParam}->{ 'X-KIX-ArticleValue' . $ArticleDFNumber } = $Self->{State};
     }
     else {
-        $Param->{GetParam}->{ 'X-OTRS-FollowUp-DynamicField-' . $ArticleDFNumber }
+        $Param->{GetParam}->{ 'X-KIX-FollowUp-DynamicField-' . $ArticleDFNumber }
             = $Self->{State};
     }
 
+#rbo - T2016121190001552 - renamed X-OTRS headers
     # set sender type and article type
-    $Param->{GetParam}->{'X-OTRS-SenderType'} = $Self->{Config}->{OTRSCreateSenderType}
-        || $Param->{GetParam}->{'X-OTRS-SenderType'};
-    $Param->{GetParam}->{'X-OTRS-ArticleType'} = $Self->{Config}->{OTRSCreateArticleType}
-        || $Param->{GetParam}->{'X-OTRS-ArticleType'};
+    $Param->{GetParam}->{'X-KIX-SenderType'} = $Self->{Config}->{OTRSCreateSenderType}
+        || $Param->{GetParam}->{'X-KIX-SenderType'};
+    $Param->{GetParam}->{'X-KIX-ArticleType'} = $Self->{Config}->{OTRSCreateArticleType}
+        || $Param->{GetParam}->{'X-KIX-ArticleType'};
 
-    $Param->{GetParam}->{'X-OTRS-Queue'} = $Self->{Config}->{OTRSCreateTicketQueue}
-        || $Param->{GetParam}->{'X-OTRS-Queue'};
-    $Param->{GetParam}->{'X-OTRS-State'} = $Self->{Config}->{OTRSCreateTicketState}
-        || $Param->{GetParam}->{'X-OTRS-State'};
-    $Param->{GetParam}->{'X-OTRS-Type'} = $Self->{Config}->{OTRSCreateTicketType}
-        || $Param->{GetParam}->{'X-OTRS-Type'};
-    $Param->{GetParam}->{'X-OTRS-Service'} = $Self->{Config}->{OTRSCreateTicketService}
-        || $Param->{GetParam}->{'X-OTRS-Service'};
-    $Param->{GetParam}->{'X-OTRS-SLA'} = $Self->{Config}->{OTRSCreateTicketSLA}
-        || $Param->{GetParam}->{'X-OTRS-SLA'};
+    $Param->{GetParam}->{'X-KIX-Queue'} = $Self->{Config}->{OTRSCreateTicketQueue}
+        || $Param->{GetParam}->{'X-KIX-Queue'};
+    $Param->{GetParam}->{'X-KIX-State'} = $Self->{Config}->{OTRSCreateTicketState}
+        || $Param->{GetParam}->{'X-KIX-State'};
+    $Param->{GetParam}->{'X-KIX-Type'} = $Self->{Config}->{OTRSCreateTicketType}
+        || $Param->{GetParam}->{'X-KIX-Type'};
+    $Param->{GetParam}->{'X-KIX-Service'} = $Self->{Config}->{OTRSCreateTicketService}
+        || $Param->{GetParam}->{'X-KIX-Service'};
+    $Param->{GetParam}->{'X-KIX-SLA'} = $Self->{Config}->{OTRSCreateTicketSLA}
+        || $Param->{GetParam}->{'X-KIX-SLA'};
 
     # AcknowledgeNameField
     if ( $Self->{Config}->{AcknowledgeName} ) {
@@ -698,7 +705,8 @@ sub _TicketCreate {
                 );
             }
             else {
-                $Param->{GetParam}->{ 'X-OTRS-DynamicField-' . $AcknowledgeNameField }
+#rbo - T2016121190001552 - renamed X-OTRS headers
+                $Param->{GetParam}->{ 'X-KIX-DynamicField-' . $AcknowledgeNameField }
                     = $Self->{Config}->{AcknowledgeName} || 'Nagios';
             }
         }
@@ -721,7 +729,8 @@ sub _TicketDrop {
     my ( $Self, $Param ) = @_;
 
     # No existing ticket and no open condition -> drop silently
-    $Param->{GetParam}->{'X-OTRS-Ignore'} = 'yes';
+#rbo - T2016121190001552 - renamed X-OTRS headers
+    $Param->{GetParam}->{'X-KIX-Ignore'} = 'yes';
     $Self->_LogMessage(
         MessageText => 'Mail Dropped, no matching ticket found, no open on this state ',
     );

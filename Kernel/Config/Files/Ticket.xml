@@ -10178,36 +10178,36 @@
                 <Item>Envelope-To</Item>
                 <Item>X-Envelope-To</Item>
                 <Item>Return-Path</Item>
-                <Item>X-OTRS-Owner</Item>
-                <Item>X-OTRS-OwnerID</Item>
-                <Item>X-OTRS-Responsible</Item>
-                <Item>X-OTRS-ResponsibleID</Item>
-                <Item>X-OTRS-Loop</Item>
-                <Item>X-OTRS-Priority</Item>
-                <Item>X-OTRS-Queue</Item>
-                <Item>X-OTRS-Lock</Item>
-                <Item>X-OTRS-Ignore</Item>
-                <Item>X-OTRS-State</Item>
-                <Item>X-OTRS-State-PendingTime</Item>
-                <Item>X-OTRS-Type</Item>
-                <Item>X-OTRS-Service</Item>
-                <Item>X-OTRS-SLA</Item>
-                <Item>X-OTRS-CustomerNo</Item>
-                <Item>X-OTRS-CustomerUser</Item>
-                <Item>X-OTRS-SenderType</Item>
-                <Item>X-OTRS-ArticleType</Item>
-                <Item>X-OTRS-FollowUp-Priority</Item>
-                <Item>X-OTRS-FollowUp-Queue</Item>
-                <Item>X-OTRS-FollowUp-Lock</Item>
-                <Item>X-OTRS-FollowUp-State</Item>
-                <Item>X-OTRS-FollowUp-State-PendingTime</Item>
-                <Item>X-OTRS-FollowUp-Type</Item>
-                <Item>X-OTRS-FollowUp-Service</Item>
-                <Item>X-OTRS-FollowUp-SLA</Item>
-                <Item>X-OTRS-FollowUp-SenderType</Item>
-                <Item>X-OTRS-FollowUp-ArticleType</Item>
-                <Item>X-OTRS-BodyDecrypted</Item>
-                <Item>X-OTRS-TicketTemplate</Item>
+                <Item>X-KIX-Owner</Item>
+                <Item>X-KIX-OwnerID</Item>
+                <Item>X-KIX-Responsible</Item>
+                <Item>X-KIX-ResponsibleID</Item>
+                <Item>X-KIX-Loop</Item>
+                <Item>X-KIX-Priority</Item>
+                <Item>X-KIX-Queue</Item>
+                <Item>X-KIX-Lock</Item>
+                <Item>X-KIX-Ignore</Item>
+                <Item>X-KIX-State</Item>
+                <Item>X-KIX-State-PendingTime</Item>
+                <Item>X-KIX-Type</Item>
+                <Item>X-KIX-Service</Item>
+                <Item>X-KIX-SLA</Item>
+                <Item>X-KIX-CustomerNo</Item>
+                <Item>X-KIX-CustomerUser</Item>
+                <Item>X-KIX-SenderType</Item>
+                <Item>X-KIX-ArticleType</Item>
+                <Item>X-KIX-FollowUp-Priority</Item>
+                <Item>X-KIX-FollowUp-Queue</Item>
+                <Item>X-KIX-FollowUp-Lock</Item>
+                <Item>X-KIX-FollowUp-State</Item>
+                <Item>X-KIX-FollowUp-State-PendingTime</Item>
+                <Item>X-KIX-FollowUp-Type</Item>
+                <Item>X-KIX-FollowUp-Service</Item>
+                <Item>X-KIX-FollowUp-SLA</Item>
+                <Item>X-KIX-FollowUp-SenderType</Item>
+                <Item>X-KIX-FollowUp-ArticleType</Item>
+                <Item>X-KIX-BodyDecrypted</Item>
+                <Item>X-KIX-TicketTemplate</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -10225,7 +10225,7 @@
                 </Item>
                 <Item Key="Set">
                     <Hash>
-                        <Item Key="X-OTRS-Ignore">yes</Item>
+                        <Item Key="X-KIX-Ignore">yes</Item>
                     </Hash>
                 </Item>
             </Hash>
@@ -10245,8 +10245,8 @@
                 </Item>
                 <Item Key="Set">
                     <Hash>
-                        <Item Key="X-OTRS-DynamicField-TicketFreeKey1">SomeNumber</Item>
-                        <Item Key="X-OTRS-DynamicField-TicketFreeText1">[***]</Item>
+                        <Item Key="X-KIX-DynamicField-TicketFreeKey1">SomeNumber</Item>
+                        <Item Key="X-KIX-DynamicField-TicketFreeText1">[***]</Item>
                     </Hash>
                 </Item>
             </Hash>
@@ -10266,7 +10266,7 @@
                 </Item>
                 <Item Key="Set">
                     <Hash>
-                        <Item Key="X-OTRS-Ignore">yes</Item>
+                        <Item Key="X-KIX-Ignore">yes</Item>
                     </Hash>
                 </Item>
             </Hash>
@@ -10317,7 +10317,7 @@ Thanks for your help!
                 <Item Key="CMD">/usr/bin/some.bin</Item>
                 <Item Key="Set">
                     <Hash>
-                        <Item Key="X-OTRS-Ignore">yes</Item>
+                        <Item Key="X-KIX-Ignore">yes</Item>
                     </Hash>
                 </Item>
             </Hash>
@@ -10333,7 +10333,7 @@ Thanks for your help!
                 <Item Key="CMD">/usr/bin/spamassassin | grep -i "X-Spam-Status: yes"</Item>
                 <Item Key="Set">
                     <Hash>
-                        <Item Key="X-OTRS-Ignore">yes</Item>
+                        <Item Key="X-KIX-Ignore">yes</Item>
                     </Hash>
                 </Item>
             </Hash>
@@ -10349,7 +10349,7 @@ Thanks for your help!
                 <Item Key="CMD">/usr/bin/spamassassin | grep -i "X-Spam-Status: yes"</Item>
                 <Item Key="Set">
                     <Hash>
-                        <Item Key="X-OTRS-Queue">spam</Item>
+                        <Item Key="X-KIX-Queue">spam</Item>
                     </Hash>
                 </Item>
             </Hash>

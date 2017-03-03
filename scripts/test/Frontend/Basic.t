@@ -139,9 +139,10 @@ for my $BaseURL ( sort keys %Frontends ) {
             "Module $Frontend content type ($URL)",
         );
 
+#rbo - T2016121190001552 - renamed X-KIX headers
         $Self->False(
-            scalar $Response->header('X-OTRS-Login'),
-            "Module $Frontend is no OTRS login screen ($URL)",
+            scalar $Response->header('X-KIX-Login'),
+            "Module $Frontend is no KIX login screen ($URL)",
         );
 
         # check response contents

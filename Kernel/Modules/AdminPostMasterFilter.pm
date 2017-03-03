@@ -256,8 +256,9 @@ sub _MaskUpdate {
         ResultType => 'HASH',
     );
     for my $DynamicField ( values %$DynamicFields ) {
-        push @Headers, 'X-OTRS-DynamicField-' . $DynamicField;
-        push @Headers, 'X-OTRS-FollowUp-DynamicField-' . $DynamicField;
+        #rbo - T2016121190001552 - renamed X-OTRS headers
+        push @Headers, 'X-KIX-DynamicField-' . $DynamicField;
+        push @Headers, 'X-KIX-FollowUp-DynamicField-' . $DynamicField;
     }
 
     my %Header = map { $_ => $_ } @Headers;

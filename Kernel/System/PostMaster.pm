@@ -109,7 +109,10 @@ sub new {
         my %HeaderLookup = map { $_ => 1 } @{ $Self->{'PostmasterX-Header'} };
 
         for my $DynamicField ( values %$DynamicFields ) {
+#rbo - T2016121190001552 - renamed X-KIX headers
             for my $Header (
+                'X-KIX-DynamicField-' . $DynamicField,
+                'X-KIX-FollowUp-DynamicField-' . $DynamicField,
                 'X-OTRS-DynamicField-' . $DynamicField,
                 'X-OTRS-FollowUp-DynamicField-' . $DynamicField,
                 )
@@ -142,7 +145,7 @@ return params
     2 = follow up / open/reopen
     3 = follow up / close -> new ticket
     4 = follow up / close -> reject
-    5 = ignored (because of X-OTRS-Ignore header)
+    5 = ignored (because of X-KIX-Ignore header)
 
 =cut
 
@@ -202,12 +205,14 @@ sub Run {
     }
 
     # should I ignore the incoming mail?
-    if ( $GetParam->{'X-OTRS-Ignore'} && $GetParam->{'X-OTRS-Ignore'} =~ /(yes|true)/i ) {
+#rbo - T2016121190001552 - renamed X-KIX headers
+    $GetParam{'X-KIX-Ignore'} = $GetParam{'X-KIX-Ignore'} || $GetParam{'X-OTRS-Ignore'}; 
+    if ( $GetParam->{'X-KIX-Ignore'} && $GetParam->{'X-KIX-Ignore'} =~ /(yes|true)/i ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'info',
             Message =>
                 "Ignored Email (From: $GetParam->{'From'}, Message-ID: $GetParam->{'Message-ID'}) "
-                . "because the X-OTRS-Ignore is set (X-OTRS-Ignore: $GetParam->{'X-OTRS-Ignore'})."
+                . "because the X-KIX-Ignore is set (X-KIX-Ignore: $GetParam->{'X-KIX-Ignore'})."
         );
         return (5);
     }
@@ -560,10 +565,12 @@ sub GetEmailParams {
         $GetParam{'ReplyTo'} = $GetParam{'Reply-To'};
     }
     if (
+#rbo - T2016121190001552 - renamed X-KIX headers
         $GetParam{'Mailing-List'}
         || $GetParam{'Precedence'}
         || $GetParam{'X-Loop'}
         || $GetParam{'X-No-Loop'}
+        || $GetParam{'X-KIX-Loop'}
         || $GetParam{'X-OTRS-Loop'}
         || (
             $GetParam{'Auto-Submitted'}
@@ -571,7 +578,7 @@ sub GetEmailParams {
         )
         )
     {
-        $GetParam{'X-OTRS-Loop'} = 'yes';
+        $GetParam{'X-KIX-Loop'} = 'yes';
     }
     if ( !$GetParam{'X-Sender'} ) {
 
@@ -589,14 +596,15 @@ sub GetEmailParams {
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
+#rbo - T2016121190001552 - renamed X-KIX headers
     # set sender type if not given
-    for my $Key (qw(X-OTRS-SenderType X-OTRS-FollowUp-SenderType)) {
+    for my $Key (qw(X-KIX-SenderType X-KIX-FollowUp-SenderType X-OTRS-SenderType X-OTRS-FollowUp-SenderType)) {
 
         if ( !$GetParam{$Key} ) {
             $GetParam{$Key} = 'customer';
         }
 
-        # check if X-OTRS-SenderType exists, if not, set customer
+        # check if X-KIX-SenderType exists, if not, set customer
         if ( !$TicketObject->ArticleSenderTypeLookup( SenderType => $GetParam{$Key} ) ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -606,13 +614,14 @@ sub GetEmailParams {
         }
     }
 
+#rbo - T2016121190001552 - renamed X-KIX headers
     # set article type if not given
-    for my $Key (qw(X-OTRS-ArticleType X-OTRS-FollowUp-ArticleType)) {
+    for my $Key (qw(X-KIX-ArticleType X-KIX-FollowUp-ArticleType X-OTRS-ArticleType X-OTRS-FollowUp-ArticleType)) {
         if ( !$GetParam{$Key} ) {
             $GetParam{$Key} = 'email-external';
         }
 
-        # check if X-OTRS-ArticleType exists, if not, set 'email'
+        # check if X-KIX-ArticleType exists, if not, set 'email'
         if ( !$TicketObject->ArticleTypeLookup( ArticleType => $GetParam{$Key} ) ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',

@@ -1,6 +1,6 @@
 // --
 // Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-// KIX4OTRS-Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+// KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
 //
 // written/edited by:
 //   Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
@@ -548,7 +548,8 @@ Core.AJAX = (function (TargetNS) {
             OldUrl = location.href,
             NewUrl = Core.Config.Get('Baselink') + "RequestedURL=" + encodeURIComponent(OldUrl);
 
-        if (Headers.match(/X-OTRS-Login: /)) {
+        /* #rbo - T2016121190001552 - renamed X-OTRS headers */
+        if (Headers.match(/X-KIX-Login: /)) {
             location.href = NewUrl;
             return true;
         }

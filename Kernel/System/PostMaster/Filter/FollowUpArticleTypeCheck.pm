@@ -52,8 +52,9 @@ sub Run {
     #   automatic notifications. In these cases there is no need to hide them.
     #   See also bug#10182 for details.
     if (
-        !$Param{GetParam}->{'X-OTRS-FollowUp-SenderType'}
-        || $Param{GetParam}->{'X-OTRS-FollowUp-SenderType'} ne 'customer'
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        !$Param{GetParam}->{'X-KIX-FollowUp-SenderType'}
+        || $Param{GetParam}->{'X-KIX-FollowUp-SenderType'} ne 'customer'
         )
     {
         return 1;
@@ -142,11 +143,12 @@ sub Run {
 
     return 1 if !$InternalForward;
 
+#rbo - T2016121190001552 - renamed X-OTRS headers
     # get latest customer article (current arrival)
-    $Param{GetParam}->{'X-OTRS-FollowUp-ArticleType'} = $Param{JobConfig}->{ArticleType} || 'email-internal';
+    $Param{GetParam}->{'X-KIX-FollowUp-ArticleType'} = $Param{JobConfig}->{ArticleType} || 'email-internal';
 
     # set article type to email-internal
-    $Param{GetParam}->{'X-OTRS-FollowUp-SenderType'} = $Param{JobConfig}->{SenderType} || 'customer';
+    $Param{GetParam}->{'X-KIX-FollowUp-SenderType'} = $Param{JobConfig}->{SenderType} || 'customer';
 
     return 1;
 }

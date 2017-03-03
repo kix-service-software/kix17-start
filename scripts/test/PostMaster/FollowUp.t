@@ -62,7 +62,7 @@ my @Tests = (
                                     # 2 = follow up / open/reopen
                                     # 3 = follow up / close -> new ticket
                                     # 4 = follow up / close -> reject
-                                    # 5 = ignored (because of X-OTRS-Ignore header)
+                                    # 5 = ignored (because of X-KIX-Ignore header)
     },
     {
         TicketState     => 'open',

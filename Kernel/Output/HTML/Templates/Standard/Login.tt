@@ -16,7 +16,8 @@
 # --
 [%- INCLUDE "HTTPHeaders.tt" -%]
 # With this X-Header, Core.AJAX can recognize that the AJAX request returned the login page (session timeout) and perform a redirect.
-X-OTRS-Login: [% Env("Baselink") %]
+#rbo - T2016121190001552 - renamed X-OTRS headers
+X-KIX-Login: [% Env("Baselink") %]
 
 <!DOCTYPE html>
 <html>

@@ -211,10 +211,11 @@ Some Content in Body",
     # this must be unchanged, and previous articles as well (see bug#10182)
     {
         Name  => 'Provider notification',
+#rbo - T2016121190001552 - renamed X-KIX headers
         Email => "From: Provider <$InternalAddress>
 To: Agent <$AgentAddress>
-X-OTRS-FollowUp-ArticleType: note-report
-X-OTRS-FollowUp-SenderType: system
+X-KIX-FollowUp-ArticleType: note-report
+X-KIX-FollowUp-SenderType: system
 Subject: $Subject
 
 Some Content in Body",

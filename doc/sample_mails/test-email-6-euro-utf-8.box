@@ -17,9 +17,9 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-OTRS-CustomerNo: example6
-X-OTRS-ArticleKey1: animal
-X-OTRS-ArticleValue1: dog
+X-KIX-CustomerNo: example6
+X-KIX-ArticleKey1: animal
+X-KIX-ArticleValue1: dog
 
 Hi Skywalker,
 

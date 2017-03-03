@@ -96,8 +96,9 @@ $Selenium->RunTest(
         $Selenium->execute_script("\$('#MatchHeader1').val('Body').trigger('redraw.InputField').trigger('change');");
         $Selenium->find_element( "#MatchNot1",   'css' )->VerifiedClick();
         $Selenium->find_element( "#MatchValue1", 'css' )->send_keys($PostMasterBody);
+#rbo - T2016121190001552 - renamed X-OTRS headers
         $Selenium->execute_script(
-            "\$('#SetHeader1').val('X-OTRS-Priority').trigger('redraw.InputField').trigger('change');"
+            "\$('#SetHeader1').val('X-KIX-Priority').trigger('redraw.InputField').trigger('change');"
         );
 
         # make sure that "Body" is disabled on other condition selects
@@ -109,13 +110,14 @@ $Selenium->RunTest(
             "Body is disabled in #MatchHeader2."
         );
 
-        # make sure that "X-OTRS-Priority" is disabled on other selects
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        # make sure that "X-KIX-Priority" is disabled on other selects
         my $XOTRSPriorityDisabled
-            = $Selenium->execute_script("return \$('#SetHeader2 option[Value=\"X-OTRS-Priority\"]').attr('disabled');");
+            = $Selenium->execute_script("return \$('#SetHeader2 option[Value=\"X-KIX-Priority\"]').attr('disabled');");
         $Self->Is(
             $XOTRSPriorityDisabled,
             "disabled",
-            "X-OTRS-Priority is disabled in #SetHeader2."
+            "X-KIX-Priority is disabled in #SetHeader2."
         );
 
         $Selenium->find_element( "#SetValue1", 'css' )->send_keys($PostMasterPriority);
@@ -150,9 +152,10 @@ $Selenium->RunTest(
             $PostMasterBody,
             "#MatchValue1 stored value",
         );
+#rbo - T2016121190001552 - renamed X-OTRS headers
         $Self->Is(
             $Selenium->find_element( '#SetHeader1', 'css' )->get_value(),
-            "X-OTRS-Priority",
+            "X-KIX-Priority",
             "#SetHeader1 stored value",
         );
         $Self->Is(

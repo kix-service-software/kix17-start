@@ -64,8 +64,9 @@ sub Run {
     # do db insert
     my $ArticleID = $TicketObject->ArticleCreate(
         TicketID         => $Param{TicketID},
-        ArticleType      => $GetParam{'X-OTRS-ArticleType'},
-        SenderType       => $GetParam{'X-OTRS-SenderType'},
+#rbo - T2016121190001552 - renamed X-KIX headers
+        ArticleType      => $GetParam{'X-KIX-ArticleType'} || $GetParam{'X-OTRS-ArticleType'},
+        SenderType       => $GetParam{'X-KIX-SenderType'} || $GetParam{'X-OTRS-SenderType'},
         From             => $GetParam{From},
         ReplyTo          => $GetParam{ReplyTo},
         To               => $GetParam{To},
@@ -134,7 +135,13 @@ sub Run {
     for my $DynamicFieldID ( sort keys %{$DynamicFieldList} ) {
         next DYNAMICFIELDID if !$DynamicFieldID;
         next DYNAMICFIELDID if !$DynamicFieldList->{$DynamicFieldID};
-        my $Key = 'X-OTRS-FollowUp-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
+#rbo - T2016121190001552 - renamed X-KIX headers
+        my $Key = 'X-KIX-FollowUp-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
+        if ( !defined $GetParam{$Key} || !length $GetParam{$Key} ) {
+            # fallback
+            $Key = 'X-OTRS-FollowUp-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
+        }
+        
         if ( defined $GetParam{$Key} && length $GetParam{$Key} ) {
 
             # get dynamic field config
@@ -161,6 +168,9 @@ sub Run {
     # set free article text
     my %Values =
         (
+#rbo - T2016121190001552 - renamed X-KIX headers
+        'X-KIX-FollowUp-ArticleKey'   => 'ArticleFreeKey',
+        'X-KIX-FollowUp-ArticleValue' => 'ArticleFreeText',
         'X-OTRS-FollowUp-ArticleKey'   => 'ArticleFreeKey',
         'X-OTRS-FollowUp-ArticleValue' => 'ArticleFreeText',
         );

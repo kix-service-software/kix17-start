@@ -90,7 +90,7 @@ To send an email without already created header:
         References    => '<somemessageid-1@example.com> <somemessageid-2@example.com>',
         Loop          => 1, # not required, removes smtp from
         CustomHeaders => {
-            X-OTRS-MyHeader => 'Some Value',
+            X-KIX-MyHeader => 'Some Value',
         },
         Attachment   => [
             {

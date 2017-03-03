@@ -51,8 +51,9 @@ $Self->True(
 
 # ensure that the appropriate X-Headers are available in the config
 my %NeededXHeaders = (
-    "X-OTRS-$FieldName"          => 1,
-    "X-OTRS-FollowUp-$FieldName" => 1,
+#rbo - T2016121190001552 - renamed X-KIX headers
+    "X-KIX-$FieldName"          => 1,
+    "X-KIX-FollowUp-$FieldName" => 1,
 );
 
 my $XHeaders          = $ConfigObject->Get('PostmasterX-Header');
@@ -76,7 +77,7 @@ my @Tests = (
         Email => "From: Sender <sender\@example.com>
 To: Some Name <recipient\@example.com>
 Subject: A simple question
-X-OTRS-DynamicField-$FieldName: 1
+X-KIX-DynamicField-$FieldName: 1
 
 This is a multiline
 email for server: example.tld
@@ -93,7 +94,7 @@ The IP address: 192.168.0.1
         Email => "From: Sender <sender\@example.com>
 To: Some Name <recipient\@example.com>
 Subject: [#1] Another question
-X-OTRS-FollowUp-DynamicField-$FieldName: 0
+X-KIX-FollowUp-DynamicField-$FieldName: 0
 
 This is a multiline
 email for server: example.tld
@@ -110,7 +111,7 @@ The IP address: 192.168.0.1
         Email => "From: Sender <sender\@example.com>
 To: Some Name <recipient\@example.com>
 Subject: A simple question
-X-OTRS-DynamicField-$FieldName: 0
+X-KIX-DynamicField-$FieldName: 0
 
 This is a multiline
 email for server: example.tld

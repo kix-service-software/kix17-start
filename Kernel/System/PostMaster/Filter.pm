@@ -88,7 +88,7 @@ add a filter
             Subject => '^ADV: 123',
         },
         Set {
-            'X-OTRS-Queue' => 'Some::Queue',
+            'X-KIX-Queue' => 'Some::Queue',
         },
     );
 

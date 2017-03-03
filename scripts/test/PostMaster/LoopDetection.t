@@ -35,7 +35,8 @@ Body
 ',
         EmailParams => {
             From          => 'test@home.com',
-            'X-OTRS-Loop' => '',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-Loop' => '',
         },
     },
     {
@@ -50,7 +51,8 @@ Body
 ',
         EmailParams => {
             From          => 'test@home.com',
-            'X-OTRS-Loop' => 'yes',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-Loop' => 'yes',
         },
     },
     {
@@ -65,7 +67,8 @@ Body
 ',
         EmailParams => {
             From          => 'test@home.com',
-            'X-OTRS-Loop' => 'yes',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-Loop' => 'yes',
         },
     },
     {
@@ -80,22 +83,24 @@ Body
 ',
         EmailParams => {
             From          => 'test@home.com',
-            'X-OTRS-Loop' => 'yes',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-Loop' => 'yes',
         },
     },
     {
-        Name => 'X-OTRS-Loop',
+        Name => 'X-KIX-Loop',
         Email =>
             'From: test@home.com
 To: test@home.com
-X-OTRS-Loop: yes
+X-KIX-Loop: yes
 Subject: Testmail
 
 Body
 ',
         EmailParams => {
             From          => 'test@home.com',
-            'X-OTRS-Loop' => 'yes',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-Loop' => 'yes',
         },
     },
     {
@@ -110,7 +115,8 @@ Body
 ',
         EmailParams => {
             From          => 'test@home.com',
-            'X-OTRS-Loop' => 'yes',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-Loop' => 'yes',
         },
     },
     {
@@ -125,7 +131,8 @@ Body
 ',
         EmailParams => {
             From          => 'test@home.com',
-            'X-OTRS-Loop' => 'yes',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-Loop' => 'yes',
         },
     },
     {
@@ -140,7 +147,8 @@ Body
 ',
         EmailParams => {
             From          => 'test@home.com',
-            'X-OTRS-Loop' => '',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-Loop' => '',
         },
     },
 );

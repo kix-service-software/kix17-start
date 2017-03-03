@@ -2484,8 +2484,9 @@ sub SendAutoResponse {
         return;
     }
 
+#rbo - T2016121190001552 - renamed X-KIX headers
     # log that no auto response was sent!
-    if ( $OrigHeader{'X-OTRS-Loop'} ) {
+    if ( $OrigHeader{'X-KIX-Loop'} || $OrigHeader{'X-OTRS-Loop'} ) {
 
         # add history row
         $Self->HistoryAdd(

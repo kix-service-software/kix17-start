@@ -30,8 +30,9 @@ my $Helper = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
 $Helper->FixedTimeSet();
 
 my %NeededXHeaders = (
-    'X-OTRS-PendingTime'          => 1,
-    'X-OTRS-FollowUp-PendingTime' => 1,
+#rbo - T2016121190001552 - renamed X-KIX headers
+    'X-KIX-PendingTime'          => 1,
+    'X-KIX-FollowUp-PendingTime' => 1,
 );
 
 my $XHeaders          = $ConfigObject->Get('PostmasterX-Header');
@@ -54,10 +55,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '2021-01-01 00:00:00',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '2022-01-01 00:00:00',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '2021-01-01 00:00:00',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '2022-01-01 00:00:00',
         },
         CheckNewTicket => {
             RealTillTimeNotUsed => $TimeObject->TimeStamp2SystemTime(
@@ -76,10 +78,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '2022-01- 00:00:00',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '2022-01- 00:00:00',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '2022-01- 00:00:00',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '2022-01- 00:00:00',
         },
         CheckNewTicket => {
             RealTillTimeNotUsed => 0,
@@ -94,10 +97,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '+60s',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '+30s',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '+60s',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '+30s',
         },
         CheckNewTicket => {
             UntilTime => 60,
@@ -112,10 +116,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '+60',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '+30',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '+60',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '+30',
         },
         CheckNewTicket => {
             UntilTime => 60,
@@ -130,10 +135,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '60',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '30',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '60',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '30',
         },
         CheckNewTicket => {
             UntilTime => 60,
@@ -148,10 +154,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '+60m',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '+30m',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '+60m',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '+30m',
         },
         CheckNewTicket => {
             UntilTime => 60 * 60,
@@ -166,10 +173,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '+60h',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '+30h',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '+60h',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '+30h',
         },
         CheckNewTicket => {
             UntilTime => 60 * 60 * 60,
@@ -184,10 +192,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '+60d',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '+30d',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '+60d',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '+30d',
         },
         CheckNewTicket => {
             UntilTime => 60 * 60 * 60 * 24,
@@ -202,10 +211,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '+30y',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '+30y',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '+30y',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '+30y',
         },
         CheckNewTicket => {
             UntilTime => 0,
@@ -220,10 +230,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '+30y',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '+30y',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '+30y',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '+30y',
         },
         CheckNewTicket => {
             UntilTime => 0,
@@ -238,10 +249,11 @@ my @Tests = (
             From => 'sender@example.com',
         },
         Set => {
-            'X-OTRS-State'                      => 'pending reminder',
-            'X-OTRS-State-PendingTime'          => '+30s +30m',
-            'X-OTRS-FollowUp-State'             => 'pending reminder',
-            'X-OTRS-FollowUp-State-PendingTime' => '+30s +30m',
+#rbo - T2016121190001552 - renamed X-KIX headers
+            'X-KIX-State'                      => 'pending reminder',
+            'X-KIX-State-PendingTime'          => '+30s +30m',
+            'X-KIX-FollowUp-State'             => 'pending reminder',
+            'X-KIX-FollowUp-State-PendingTime' => '+30s +30m',
         },
         CheckNewTicket => {
             UntilTime => 0,

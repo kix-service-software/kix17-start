@@ -206,14 +206,15 @@ sub Run {
         my $TicketHookDivider = $ConfigObject->Get('Ticket::HookDivider');
         $Param{GetParam}->{Subject} .= " [$TicketHook$TicketHookDivider$TicketNumber]";
 
+#rbo - T2016121190001552 - renamed X-OTRS headers
         # set sender type and article type.
-        $Param{GetParam}->{'X-OTRS-FollowUp-SenderType'}  = $Param{JobConfig}->{SenderType};
-        $Param{GetParam}->{'X-OTRS-FollowUp-ArticleType'} = $Param{JobConfig}->{ArticleType};
+        $Param{GetParam}->{'X-KIX-FollowUp-SenderType'}  = $Param{JobConfig}->{SenderType};
+        $Param{GetParam}->{'X-KIX-FollowUp-ArticleType'} = $Param{JobConfig}->{ArticleType};
 
         # also set these parameters. It could be that the follow up is rejected by Reject.pm
         #   (follow-ups not allowed), but the original article will still be attached to the ticket.
-        $Param{GetParam}->{'X-OTRS-SenderType'}  = $Param{JobConfig}->{SenderType};
-        $Param{GetParam}->{'X-OTRS-ArticleType'} = $Param{JobConfig}->{ArticleType};
+        $Param{GetParam}->{'X-KIX-SenderType'}  = $Param{JobConfig}->{SenderType};
+        $Param{GetParam}->{'X-KIX-ArticleType'} = $Param{JobConfig}->{ArticleType};
 
     }
     else {
@@ -224,13 +225,14 @@ sub Run {
             );
         }
 
+#rbo - T2016121190001552 - renamed X-OTRS headers
         # get the dynamic field name and description from JobConfig, set as headers
         my $TicketDynamicFieldName = $Param{JobConfig}->{'DynamicFieldName'};
-        $Param{GetParam}->{ 'X-OTRS-DynamicField-' . $TicketDynamicFieldName } = $Self->{Number};
+        $Param{GetParam}->{ 'X-KIX-DynamicField-' . $TicketDynamicFieldName } = $Self->{Number};
 
         # set sender type and article type
-        $Param{GetParam}->{'X-OTRS-SenderType'}  = $Param{JobConfig}->{SenderType};
-        $Param{GetParam}->{'X-OTRS-ArticleType'} = $Param{JobConfig}->{ArticleType};
+        $Param{GetParam}->{'X-KIX-SenderType'}  = $Param{JobConfig}->{SenderType};
+        $Param{GetParam}->{'X-KIX-ArticleType'} = $Param{JobConfig}->{ArticleType};
     }
 
     return 1;

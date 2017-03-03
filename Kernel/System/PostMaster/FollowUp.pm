@@ -155,19 +155,20 @@ sub Run {
 
     # EO KIX4OTRS-capeIT
 
-    if ( $GetParam{'X-OTRS-FollowUp-State'} ) {
-        $State = $GetParam{'X-OTRS-FollowUp-State'};
+#rbo - T2016121190001552 - renamed X-OTRS headers
+    if ( $GetParam{'X-KIX-FollowUp-State'} || $GetParam{'X-OTRS-FollowUp-State'} ) {
+        $State = $GetParam{'X-KIX-FollowUp-State'} || $GetParam{'X-OTRS-FollowUp-State'};
     }
 
     # KIX4OTRS-capeIT
-    # if ( $Ticket{StateType} !~ /^new/ || $GetParam{'X-OTRS-FollowUp-State'} ) {
+    # if ( $Ticket{StateType} !~ /^new/ || $GetParam{'X-KIX-FollowUp-State'} ) {
     if ($State) {
 
         # EO KIX4OTRS-capeIT
         $TicketObject->TicketStateSet(
 
             # KIX4OTRS-capeIT
-            # State => $GetParam{'X-OTRS-FollowUp-State'} || $State,
+            # State => $GetParam{'X-KIX-FollowUp-State'} || $State,
             State => $State,
 
             # EO KIX4OTRS-capeIT
@@ -179,15 +180,16 @@ sub Run {
         }
     }
 
+#rbo - T2016121190001552 - renamed X-OTRS headers
     # set pending time
-    if ( $GetParam{'X-OTRS-FollowUp-State-PendingTime'} ) {
+    if ( $GetParam{'X-KIX-FollowUp-State-PendingTime'} || $GetParam{'X-OTRS-FollowUp-State-PendingTime'} ) {
 
   # You can specify absolute dates like "2010-11-20 00:00:00" or relative dates, based on the arrival time of the email.
   # Use the form "+ $Number $Unit", where $Unit can be 's' (seconds), 'm' (minutes), 'h' (hours) or 'd' (days).
   # Only one unit can be specified. Examples of valid settings: "+50s" (pending in 50 seconds), "+30m" (30 minutes),
   # "+12d" (12 days). Note that settings like "+1d 12h" are not possible. You can specify "+36h" instead.
 
-        my $TargetTimeStamp = $GetParam{'X-OTRS-FollowUp-State-PendingTime'};
+        my $TargetTimeStamp = $GetParam{'X-KIX-FollowUp-State-PendingTime'} || $GetParam{'X-OTRS-FollowUp-State-PendingTime'};
 
         my ( $Sign, $Number, $Unit ) = $TargetTimeStamp =~ m{^\s*([+-]?)\s*(\d+)\s*([smhd]?)\s*$}smx;
 
@@ -223,80 +225,82 @@ sub Run {
         # debug
         if ($Updated) {
             if ( $Self->{Debug} > 0 ) {
-                print "State-PendingTime: $GetParam{'X-OTRS-FollowUp-State-PendingTime'}\n";
+#rbo - T2016121190001552 - renamed X-OTRS headers
+                print "State-PendingTime: ".($GetParam{'X-OTRS-FollowUp-State-PendingTime'} || $GetParam{'X-OTRS-FollowUp-State-PendingTime'})."\n";
             }
         }
     }
 
+#rbo - T2016121190001552 - renamed X-OTRS headers
     # set priority
-    if ( $GetParam{'X-OTRS-FollowUp-Priority'} ) {
+    if ( $GetParam{'X-KIX-FollowUp-Priority'} || $GetParam{'X-OTRS-FollowUp-Priority'} ) {
         $TicketObject->TicketPrioritySet(
             TicketID => $Param{TicketID},
-            Priority => $GetParam{'X-OTRS-FollowUp-Priority'},
+            Priority => $GetParam{'X-KIX-FollowUp-Priority'} || $GetParam{'X-OTRS-FollowUp-Priority'},
             UserID   => $Param{InmailUserID},
         );
         if ( $Self->{Debug} > 0 ) {
-            print "PriorityUpdate: $GetParam{'X-OTRS-FollowUp-Priority'}\n";
+            print "PriorityUpdate: ".($GetParam{'X-KIX-FollowUp-Priority'} || $GetParam{'X-OTRS-FollowUp-Priority'})."\n";
         }
     }
 
     # set queue
-    if ( $GetParam{'X-OTRS-FollowUp-Queue'} ) {
+    if ( $GetParam{'X-KIX-FollowUp-Queue'} || $GetParam{'X-OTRS-FollowUp-Queue'} ) {
         $TicketObject->TicketQueueSet(
-            Queue    => $GetParam{'X-OTRS-FollowUp-Queue'},
+            Queue    => $GetParam{'X-KIX-FollowUp-Queue'} || $GetParam{'X-OTRS-FollowUp-Queue'},
             TicketID => $Param{TicketID},
             UserID   => $Param{InmailUserID},
         );
         if ( $Self->{Debug} > 0 ) {
-            print "QueueUpdate: $GetParam{'X-OTRS-FollowUp-Queue'}\n";
+            print "QueueUpdate: ".($GetParam{'X-KIX-FollowUp-Queue'} || $GetParam{'X-OTRS-FollowUp-Queue'})."\n";
         }
     }
 
     # set lock
-    if ( $GetParam{'X-OTRS-FollowUp-Lock'} ) {
+    if ( $GetParam{'X-KIX-FollowUp-Lock'} || $GetParam{'X-OTRS-FollowUp-Lock'} ) {
         $TicketObject->TicketLockSet(
-            Lock     => $GetParam{'X-OTRS-FollowUp-Lock'},
+            Lock     => $GetParam{'X-KIX-FollowUp-Lock'} || $GetParam{'X-OTRS-FollowUp-Lock'},
             TicketID => $Param{TicketID},
             UserID   => $Param{InmailUserID},
         );
         if ( $Self->{Debug} > 0 ) {
-            print "Lock: $GetParam{'X-OTRS-FollowUp-Lock'}\n";
+            print "Lock: ".($GetParam{'X-KIX-FollowUp-Lock'} || $GetParam{'X-OTRS-FollowUp-Lock'})."\n";
         }
     }
 
     # set ticket type
-    if ( $GetParam{'X-OTRS-FollowUp-Type'} ) {
+    if ( $GetParam{'X-KIX-FollowUp-Type'} || $GetParam{'X-OTRS-FollowUp-Type'} ) {
         $TicketObject->TicketTypeSet(
-            Type     => $GetParam{'X-OTRS-FollowUp-Type'},
+            Type     => $GetParam{'X-KIX-FollowUp-Type'} || $GetParam{'X-OTRS-FollowUp-Type'},
             TicketID => $Param{TicketID},
             UserID   => $Param{InmailUserID},
         );
         if ( $Self->{Debug} > 0 ) {
-            print "Type: $GetParam{'X-OTRS-FollowUp-Type'}\n";
+            print "Type: ".($GetParam{'X-KIX-FollowUp-Type'} || $GetParam{'X-OTRS-FollowUp-Type'})."\n";
         }
     }
 
     # set ticket service
-    if ( $GetParam{'X-OTRS-FollowUp-Service'} ) {
+    if ( $GetParam{'X-KIX-FollowUp-Service'} || $GetParam{'X-OTRS-FollowUp-Service'} ) {
         $TicketObject->TicketServiceSet(
-            Service  => $GetParam{'X-OTRS-FollowUp-Service'},
+            Service  => $GetParam{'X-KIX-FollowUp-Service'} || $GetParam{'X-OTRS-FollowUp-Service'},
             TicketID => $Param{TicketID},
             UserID   => $Param{InmailUserID},
         );
         if ( $Self->{Debug} > 0 ) {
-            print "Service: $GetParam{'X-OTRS-FollowUp-Service'}\n";
+            print "Service: ".($GetParam{'X-KIX-FollowUp-Service'} || $GetParam{'X-OTRS-FollowUp-Service'})."\n";
         }
     }
 
     # set ticket sla
-    if ( $GetParam{'X-OTRS-FollowUp-SLA'} ) {
+    if ( $GetParam{'X-KIX-FollowUp-SLA'} || $GetParam{'X-OTRS-FollowUp-SLA'} ) {
         $TicketObject->TicketSLASet(
-            SLA      => $GetParam{'X-OTRS-FollowUp-SLA'},
+            SLA      => $GetParam{'X-KIX-FollowUp-SLA'} || $GetParam{'X-OTRS-FollowUp-SLA'},
             TicketID => $Param{TicketID},
             UserID   => $Param{InmailUserID},
         );
         if ( $Self->{Debug} > 0 ) {
-            print "SLA: $GetParam{'X-OTRS-FollowUp-SLA'}\n";
+            print "SLA: ".($GetParam{'X-KIX-FollowUp-SLA'} || $GetParam{'X-OTRS-FollowUp-SLA'})."\n";
         }
     }
 
@@ -317,9 +321,14 @@ sub Run {
     for my $DynamicFieldID ( sort keys %{$DynamicFieldList} ) {
         next DYNAMICFIELDID if !$DynamicFieldID;
         next DYNAMICFIELDID if !$DynamicFieldList->{$DynamicFieldID};
-        my $Key = 'X-OTRS-FollowUp-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
-        if ( defined $GetParam{$Key} && length $GetParam{$Key} ) {
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        my $Key = 'X-KIX-FollowUp-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
+        if ( !defined $GetParam{$Key} || !length $GetParam{$Key} ) {
+            # fallback
+            $Key = 'X-OTRS-FollowUp-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
+        }
 
+        if (defined $GetParam{$Key} && length $GetParam{$Key}) {
             # get dynamic field config
             my $DynamicFieldGet = $DynamicFieldObject->DynamicFieldGet(
                 ID => $DynamicFieldID,
@@ -344,6 +353,9 @@ sub Run {
     # set ticket free text
     my %Values =
         (
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        'X-KIX-FollowUp-TicketKey'   => 'TicketFreeKey',
+        'X-KIX-FollowUp-TicketValue' => 'TicketFreeText',
         'X-OTRS-FollowUp-TicketKey'   => 'TicketFreeKey',
         'X-OTRS-FollowUp-TicketValue' => 'TicketFreeText',
         );
@@ -379,7 +391,12 @@ sub Run {
     # set ticket free time
     for my $Count ( 1 .. 6 ) {
 
-        my $Key = 'X-OTRS-FollowUp-TicketTime' . $Count;
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        my $Key = 'X-KIX-FollowUp-TicketTime' . $Count;
+        if ( !defined $GetParam{$Key} || !length $GetParam{$Key} ) {
+            # fallback
+            $Key = 'X-OTRS-FollowUp-TicketTime' . $Count;
+        }
 
         if ( defined $GetParam{$Key} && length $GetParam{$Key} ) {
 
@@ -427,19 +444,22 @@ sub Run {
 
             for my $CurrUserID ( keys(%UserData) ) {
                 if ( $UserData{$CurrUserID} =~ /^$FromAddress$/i ) {
-                    $GetParam{'X-OTRS-FollowUp-SenderType'} = 'agent';
+#rbo - T2016121190001552 - renamed X-OTRS headers
+                    $GetParam{'X-KIX-FollowUp-SenderType'} = 'agent';
                     last;
                 }
             }
 
-            last if ( $GetParam{'X-OTRS-FollowUp-SenderType'} eq 'agent' );
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            last if ( $GetParam{'X-KIX-FollowUp-SenderType'} eq 'agent' );
         }
     }
 
     # check if from is known customer AND has the same customerID as in Ticket
     if ( $ConfigObject->Get('TicketStateWorkflow::PostmasterFollowUpCheckCustomerIDFrom') )
     {
-        $GetParam{'X-OTRS-FollowUp-ArticleType'} = 'email-internal';
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        $GetParam{'X-KIX-FollowUp-ArticleType'} = 'email-internal';
         for my $FromAddress (@SplitFrom) {
             my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
             my %UserListCustomer = $CustomerUserObject->CustomerSearch(
@@ -456,18 +476,21 @@ sub Run {
                         && $Ticket{CustomerID} eq $CustomerUserData{UserCustomerID}
                         )
                     {
-                        $GetParam{'X-OTRS-FollowUp-ArticleType'} = 'email-external';
+#rbo - T2016121190001552 - renamed X-OTRS headers
+                        $GetParam{'X-KIX-FollowUp-ArticleType'} = 'email-external';
                         last;
                     }
                 }
             }
             # seems to be a customer user not existing in the database -> check if this one is identical to Ticket{CustomerUserID}
             elsif ($FromAddress && $Ticket{CustomerUserID} && $Ticket{CustomerUserID} eq $FromAddress) {
-                $GetParam{'X-OTRS-FollowUp-ArticleType'} = 'email-external';
+#rbo - T2016121190001552 - renamed X-OTRS headers
+                $GetParam{'X-KIX-FollowUp-ArticleType'} = 'email-external';
                 last;
             }
 
-            last if ( $GetParam{'X-OTRS-FollowUp-ArticleType'} eq 'email-external' );
+#rbo - T2016121190001552 - renamed X-OTRS headers
+            last if ( $GetParam{'X-KIX-FollowUp-ArticleType'} eq 'email-external' );
         }
     }
 
@@ -476,8 +499,9 @@ sub Run {
     # do db insert
     my $ArticleID = $TicketObject->ArticleCreate(
         TicketID         => $Param{TicketID},
-        ArticleType      => $GetParam{'X-OTRS-FollowUp-ArticleType'},
-        SenderType       => $GetParam{'X-OTRS-FollowUp-SenderType'},
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        ArticleType      => $GetParam{'X-KIX-FollowUp-ArticleType'} || $GetParam{'X-OTRS-FollowUp-ArticleType'},
+        SenderType       => $GetParam{'X-KIX-FollowUp-SenderType'} || $GetParam{'X-OTRS-FollowUp-SenderType'},
         From             => $GetParam{From},
         ReplyTo          => $GetParam{ReplyTo},
         To               => $GetParam{To},
@@ -540,9 +564,14 @@ sub Run {
     for my $DynamicFieldID ( sort keys %{$DynamicFieldList} ) {
         next DYNAMICFIELDID if !$DynamicFieldID;
         next DYNAMICFIELDID if !$DynamicFieldList->{$DynamicFieldID};
-        my $Key = 'X-OTRS-FollowUp-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
-        if ( defined $GetParam{$Key} && length $GetParam{$Key} ) {
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        my $Key = 'X-KIX-FollowUp-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
+        if ( !defined $GetParam{$Key} || !length $GetParam{$Key} ) {
+            # fallback
+            $Key = 'X-OTRS-FollowUp-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
+        }
 
+        if ( defined $GetParam{$Key} && length $GetParam{$Key} ) {
             # get dynamic field config
             my $DynamicFieldGet = $DynamicFieldObject->DynamicFieldGet(
                 ID => $DynamicFieldID,
@@ -567,6 +596,9 @@ sub Run {
     # set free article text
     %Values =
         (
+#rbo - T2016121190001552 - renamed X-OTRS headers
+        'X-KIX-FollowUp-ArticleKey'   => 'ArticleFreeKey',
+        'X-KIX-FollowUp-ArticleValue' => 'ArticleFreeText',
         'X-OTRS-FollowUp-ArticleKey'   => 'ArticleFreeKey',
         'X-OTRS-FollowUp-ArticleValue' => 'ArticleFreeText',
         );

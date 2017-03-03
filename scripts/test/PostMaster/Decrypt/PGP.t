@@ -171,11 +171,12 @@ my $FilterRand1      = 'filter' . $Helper->GetRandomID();
 $PostMasterFilter->FilterAdd(
     Name           => $FilterRand1,
     StopAfterMatch => 0,
+#rbo - T2016121190001552 - renamed X-KIX headers
     Match          => {
-        'X-OTRS-BodyDecrypted' => 'test',
+        'X-KIX-BodyDecrypted' => 'test',
     },
     Set => {
-        'X-OTRS-Queue' => 'Junk',
+        'X-KIX-Queue' => 'Junk',
     },
 );
 

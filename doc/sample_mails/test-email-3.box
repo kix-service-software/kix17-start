@@ -1,7 +1,7 @@
 From skywalker@otrs.org Sat Jun  8 21:30:55 2002
 Date: Sat, 8 Jun 2002 21:30:55 +0200
-From: Skywalker Attachment <skywalker@otrs.org>
-To: darthvader@otrs.org
+From: Skywalker Attachment <skywalker@kixdesk.com>
+To: darthvader@kixdesk.com
 Subject: Attachment Test
 Message-ID: <20020608193055.GA4593@sex-on-the-beach.my123.de>
 Mime-Version: 1.0
@@ -10,13 +10,13 @@ Content-Disposition: inline
 X-Operating-System: SuSE Linux 2.4.18-4GB i686
 X-Uptime: 9:28pm  up 11:07,  6 users,  load average: 0.07, 0.05, 0.07
 X-Mailer: Muttis Mailer / Mutt 1.3.27i (2002-01-22)
-NotUsedX-OTRS-State: closed successful
-X-OTRS-ArticleKey1: Key1
-X-OTRS-ArticleValue1: Value1
-X-OTRS-ArticleKey2: Key2
-X-OTRS-ArticleValue2: Value2
-X-OTRS-ArticleKey3: Key3
-X-OTRS-ArticleValue3: Value3
+NotUsedX-KIX-State: closed successful
+X-KIX-ArticleKey1: Key1
+X-KIX-ArticleValue1: Value1
+X-KIX-ArticleKey2: Key2
+X-KIX-ArticleValue2: Value2
+X-KIX-ArticleKey3: Key3
+X-KIX-ArticleValue3: Value3
 Content-Length: 160750
 Lines: 2217
 
@@ -29,21 +29,21 @@ Hi!
 
 just a email with an attachment and an very long http link in this body.
 
- o http://otrs.org/?Example=ThisIsAVeryShortLink
+ o http://kixdesk.com/?Example=ThisIsAVeryShortLink
 
- o http://otrs.org/?Example=ThisIsAVeryShortLink And a following text over 80 chars.
+ o http://kixdesk.com/?Example=ThisIsAVeryShortLink And a following text over 80 chars.
 
- o A leading text http://otrs.org/?Example=ThisIsAVeryShortLink and a following text over 80 chars.
+ o A leading text http://kixdesk.com/?Example=ThisIsAVeryShortLink and a following text over 80 chars.
 
- o A leading text following by a link http://otrs.org/?Example=ThisIsAVeryShortLink and a following text over 80 chars.
+ o A leading text following by a link http://kixdesk.com/?Example=ThisIsAVeryShortLink and a following text over 80 chars.
 
- o http://otrs.org/?Example=First http://otrs.org/?Example=Second http://otrs.org/?Example=Third
+ o http://kixdesk.com/?Example=First http://kixdesk.com/?Example=Second http://kixdesk.com/?Example=Third
 
- o http://otrs.org/?Example=ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication1ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication2ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication3 And a following text.
+ o http://kixdesk.com/?Example=ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication1ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication2ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication3 And a following text.
 
- o http://otrs.org/?Example=ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication1ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication2ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication3
+ o http://kixdesk.com/?Example=ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication1ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication2ThisIsAVeryLongLinkWhichShouldBeShownInShortFormInTheApplication3
 
-  Martin
+  Lucky Luke
 
 
 --OgqxwSJOaUobr8KG
