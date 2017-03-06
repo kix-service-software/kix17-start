@@ -1,8 +1,9 @@
 # Change log of KIX
-* Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de/
+* Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/03/03) - Bugfix: T2017022790000648 (possible value checks fails without constrictions in search) (millinger)
  * (2017/03/03) - CR: T2016121190001552 (replaced X-OTRS-Headers with X-KIX-Headers with fallback) (rbo)
  * (2017/03/03) - Bugfix: T2017030290001076 (wrong text for ticket pending time search form) (ddoerffel)
  * (2017/03/03) - Bugfix: T2017021790000783 (activate the modernized feature for hidden form elements) (ddoerffel)

@@ -16,12 +16,12 @@ use strict;
 use warnings;
 
 use URI::Escape;
+use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
     'Kernel::System::CustomerUser',
     'Kernel::System::DynamicField',
-    'Kernel::System::DynamicField::Driver::ITSMConfigItemReference',
     'Kernel::System::Encode',
     'Kernel::System::GeneralCatalog',
     'Kernel::System::ITSMConfigItem',
@@ -47,7 +47,6 @@ sub Run {
     $Self->{LayoutObject}                  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     $Self->{CustomerUserObject}            = $Kernel::OM->Get('Kernel::System::CustomerUser');
     $Self->{DynamicFieldObject}            = $Kernel::OM->Get('Kernel::System::DynamicField');
-    $Self->{ITSMConfigItemReferenceObject} = $Kernel::OM->Get('Kernel::System::DynamicField::Driver::ITSMConfigItemReference');
     $Self->{EncodeObject}                  = $Kernel::OM->Get('Kernel::System::Encode');
     $Self->{GeneralCatalogObject}          = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
     $Self->{ITSMConfigItemObject}          = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
@@ -207,13 +206,14 @@ sub Run {
 
                 if ($ConstrictionsCheck) {
 
-                    my @ITSMConfigItemClasses;
-                    if( defined $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}
-                        && IsArrayRefWithData(@{$DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}})
+                    my @ITSMConfigItemClasses = ();
+                    if(
+                        defined( $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses} )
+                        && IsArrayRefWithData( $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses} )
                     ) {
                         @ITSMConfigItemClasses = @{$DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}};
                     }
-                    if ( !scalar(@ITSMConfigItemClasses) ) {
+                    else {
                         my $ClassRef = $Self->{GeneralCatalogObject}->ItemList(
                             Class => 'ITSM::ConfigItem::Class',
                         );
@@ -407,13 +407,14 @@ sub Run {
 
             if ($ConstrictionsCheck) {
 
-                my @ITSMConfigItemClasses;
-                if( defined $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}
-                    && IsArrayRefWithData(@{$DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}})
+                my @ITSMConfigItemClasses = ();
+                if(
+                    defined( $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses} )
+                    && IsArrayRefWithData( $DynamicFieldConfig->{Config}->{ITSMConfigItemClasses} )
                 ) {
                     @ITSMConfigItemClasses = @{$DynamicFieldConfig->{Config}->{ITSMConfigItemClasses}};
                 }
-                if ( !scalar(@ITSMConfigItemClasses) ) {
+                else {
                     my $ClassRef = $Self->{GeneralCatalogObject}->ItemList(
                         Class => 'ITSM::ConfigItem::Class',
                     );
@@ -436,6 +437,10 @@ sub Run {
                             %Constrictions,
                         },
                     );
+                }
+
+                if ( !scalar( @SearchParamsWhat ) ) {
+                    @SearchParamsWhat = undef;
                 }
 
                 my $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
