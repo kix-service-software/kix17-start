@@ -1494,7 +1494,16 @@ sub Header {
             my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
                 UserID => $Self->{UserID},
             );
-            $Param{UserToolbarPosition} = $UserPreferences{UserToolbarPosition} || 'ToolbarRight';
+            # enforce default if empty
+            if (!$UserPreferences{UserToolbarPosition}) {
+                $UserPreferences{UserToolbarPosition} = 'ToolbarRight';
+                my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
+                    Key    => 'UserToolbarPosition'
+                    Valud  => $UserPreferences{UserToolbarPosition},
+                    UserID => $Self->{UserID},
+                );
+            }
+            $Param{UserToolbarPosition} = $UserPreferences{UserToolbarPosition};
         }
 
         # show logged in notice
