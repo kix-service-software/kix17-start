@@ -2603,7 +2603,7 @@ sub Data {
     $Lang->{'Link to another'}             = 'Zu einem anderen verlinken';
     $Lang->{'Invalid Configuration Item number!'}
         = 'Ungültige Configuration Item Nummer!';
-    $Lang->{'The number of another Configuration Item to link with.'} = '';
+    $Lang->{'The number of another Configuration Item to link with.'} = 'Die Nummer eines anderen ConfigItems mit dem verlinkt werden soll.';
 
     # Template: AgentITSMConfigItemEdit
     $Lang->{'The name of this config item'} = 'Der Name dieses Config Items';
