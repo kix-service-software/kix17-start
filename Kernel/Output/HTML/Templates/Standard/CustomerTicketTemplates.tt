@@ -42,7 +42,7 @@
 [% RenderBlockStart("PortalGroup") %]
             <div id="PortalGroup[% Translate(Data.PortalGroupID) | html %]" class="PortalGroup">
                 <div class="Header">
-                    <h1>[% Data.Name | html %]</h1>
+                    <h1>[% Translate(Data.Name) | html %]</h1>
                 </div>
                 <div>
 [% RenderBlockStart("TicketTemplate") %]

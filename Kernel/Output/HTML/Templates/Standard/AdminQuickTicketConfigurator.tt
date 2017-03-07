@@ -165,7 +165,7 @@
                                 <a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Change;ID=[% Data.ID | uri %]">[% Data.Name | html %]</a>
                             </td>
                             <td title="[% Translate("A: agent frontend; C: customer frontend") | html %]">[% Data.FrontendInfoStrg | html %]</td>
-                            <td>[% Data.CustomerPortalGroup | html %]</td>
+                            <td>[% Translate(Data.CustomerPortalGroup) | html %]</td>
                             <td>
                                 <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;ID=[% Data.ID | html %]">[% Translate("delete") | html %]</a>
                             </td>

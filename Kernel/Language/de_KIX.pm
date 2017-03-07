@@ -81,6 +81,9 @@ sub Data {
     $Lang->{'Filter templates and groups'}     = 'Vorlagen und Gruppen einschränken';
     $Lang->{'filter template groups'}          = 'Vorlagengruppen filtern';
     $Lang->{'filter ticket templates'}         = 'Ticketvorlagen filtern';
+    $Lang->{'Requisitions'}                    = 'Bedarfsanforderungen';
+    $Lang->{'Incident Reports'}                = 'Störungsmeldungen';
+    $Lang->{'Change Requests'}                 = 'Änderungsanforderungen';
     $Lang->{'Go to'}                           = 'Gehe zu';
     $Lang->{'KIX Online Help'}                 = 'Onlinehilfe für KIX';
     $Lang->{'pending auto reopen'}             = 'warten zur Wiedervorlage';
