@@ -5474,7 +5474,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Log</SubGroup>
         <Setting>
-            <Option Location="Kernel/System/Log/*.pm" SelectedID="Kernel::System::Log::SysLog"></Option>
+            <Option Location="Kernel/System/Log/*.pm" SelectedID="Kernel::System::Log::File"></Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="LogModule::SysLog::Facility" Required="1" Valid="1">
@@ -5510,7 +5510,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Log</SubGroup>
         <Setting>
-            <String Regex="">/tmp/otrs.log</String>
+            <String Regex="">&lt;KIX_CONFIG_Home&gt;/var/log/kix.log</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="LogModule::LogFile::Date" Required="1" Valid="1">
@@ -5518,7 +5518,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Log</SubGroup>
         <Setting>
-            <Option SelectedID="0">
+            <Option SelectedID="1">
                 <Item Key="0" Translatable="1">No</Item>
                 <Item Key="1" Translatable="1">Yes</Item>
             </Option>
@@ -13260,7 +13260,7 @@ via the Preferences button after logging in.
         <Group>Framework</Group>
         <SubGroup>Core::Log</SubGroup>
         <Setting>
-            <Option SelectedID="0">
+            <Option SelectedID="1">
                 <Item Key="0">No</Item>
                 <Item Key="1">Yes</Item>
             </Option>
