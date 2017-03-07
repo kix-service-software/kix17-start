@@ -1499,7 +1499,7 @@ sub Header {
                 $UserPreferences{UserToolbarPosition} = 'ToolbarRight';
                 my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
                     Key    => 'UserToolbarPosition'
-                    Valud  => $UserPreferences{UserToolbarPosition},
+                    Value  => $UserPreferences{UserToolbarPosition},
                     UserID => $Self->{UserID},
                 );
             }
