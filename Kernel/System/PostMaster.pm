@@ -206,7 +206,7 @@ sub Run {
 
     # should I ignore the incoming mail?
 #rbo - T2016121190001552 - renamed X-KIX headers
-    $GetParam{'X-KIX-Ignore'} = $GetParam{'X-KIX-Ignore'} || $GetParam{'X-OTRS-Ignore'}; 
+    $GetParam->{'X-KIX-Ignore'} = $GetParam->{'X-KIX-Ignore'} || $GetParam->{'X-OTRS-Ignore'}; 
     if ( $GetParam->{'X-KIX-Ignore'} && $GetParam->{'X-KIX-Ignore'} =~ /(yes|true)/i ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'info',
