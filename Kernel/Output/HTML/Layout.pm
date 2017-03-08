@@ -1498,7 +1498,7 @@ sub Header {
             if (!$UserPreferences{UserToolbarPosition}) {
                 $UserPreferences{UserToolbarPosition} = 'ToolbarRight';
                 my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
-                    Key    => 'UserToolbarPosition'
+                    Key    => 'UserToolbarPosition',
                     Value  => $UserPreferences{UserToolbarPosition},
                     UserID => $Self->{UserID},
                 );
