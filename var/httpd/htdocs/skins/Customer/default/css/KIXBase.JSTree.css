@@ -18,3 +18,33 @@
 .jstree-default .jstree-clicked.jstree-hovered {
     border: 1px solid #B9B9B9;
 }
+
+.jstree-wholerow.jstree-wholerow-hovered {
+    background-color: white !important;
+}
+
+.jstree-InputField .jstree-wholerow-ul .jstree-wholerow:hover,
+.jstree-InputField .jstree-wholerow-ul .jstree-wholerow-hovered,
+.jstree-InputField .jstree-focused > .jstree-wholerow {
+    background-color: #82C826 !important;
+}
+
+.jstree-node.Active > .jstree-anchor,
+.jstree-anchor.jstree-clicked,
+.jstree-anchor.jstree-clicked:focus {
+    background-color: #82C826 !important;
+    color: white !important;
+    font-weight: bold;
+    padding-left: 3px;
+}
+
+.jstree-anchor:active,
+.jstree-anchor:focus {
+    color: #0A6491 !important;
+}
+
+.jstree-wholerow-clicked {
+    background-color: #82C826 !important;
+    color: white !important;
+    font-weight: normal;
+}
