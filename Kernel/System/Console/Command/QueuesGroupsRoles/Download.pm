@@ -1,13 +1,8 @@
 #!/usr/bin/perl -w
 # --
-# Download.pm - script to download queues, groups and roles (rights to groups) from an OTRS-instance
+# Download.pm - script to download queues, groups and roles (rights to groups) from an KIX-instance
 # this file is part of the package QueuesGroupsRoles
-# Copyright (C) 2006-2015, c.a.p.e. IT GmbH, http://www.cape-it.de/
-#
-# written/edited by
-# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
-# * Frank(dot)Oberender(at)cape(dash)it(dot)de
-# * Thomas(dot)Lange(at)cape(dash)it(dot)de
+# Copyright (C) 2006-2017, c.a.p.e. IT GmbH, http://www.cape-it.de/
 # --
 # $Id$
 # --
@@ -42,7 +37,7 @@ use utf8;
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Download of OTRS queues-groups-roles schema into CSV-file');
+    $Self->Description('Download of KIX queues-groups-roles schema into CSV-file');
     my @HeadlineKeys = qw{
         SalutationID SignatureID FollowUpID FollowUpLock UnlockTimeout
         FirstResponseTime FirstResponseNotify UpdateTime UpdateNotify
