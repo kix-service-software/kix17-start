@@ -41,9 +41,7 @@ use utf8;
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description(
-        'Upload of OTRS queues-groups-roles schema from CSV-file, Copyright (c) 2006-2015 c.a.p.e. IT GmbH, http//www.cape-it.de/'
-    );
+    $Self->Description('Upload of OTRS queues-groups-roles schema from CSV-file');
     my @HeadlineKeys = qw{
         SalutationID SignatureID FollowUpID FollowUpLock UnlockTimeout
         FirstResponseTime FirstResponseNotify UpdateTime UpdateNotify

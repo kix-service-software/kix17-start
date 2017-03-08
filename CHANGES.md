@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/03/08) - Bugfix: T2017011790000614 (removed copyrights from console command description) (millinger)
  * (2017/03/03) - Bugfix: T2017022790000648 (possible value checks fails without constrictions in search) (millinger)
  * (2017/03/03) - CR: T2016121190001552 (replaced X-OTRS-Headers with X-KIX-Headers with fallback) (rbo)
  * (2017/03/03) - Bugfix: T2017030290001076 (wrong text for ticket pending time search form) (ddoerffel)
