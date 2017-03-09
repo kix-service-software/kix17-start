@@ -3132,11 +3132,6 @@ sub _GetResponsibles {
     # workflow
     my $ACL = $TicketObject->TicketAcl(
         %Param,
-
-        # KIX4OTRS-capeIT
-        Action => $Self->{Action},
-
-        # EO KIX4OTRS-capeIT
         Action        => $Self->{Action},
         ReturnType    => 'Ticket',
         ReturnSubType => 'Responsible',
