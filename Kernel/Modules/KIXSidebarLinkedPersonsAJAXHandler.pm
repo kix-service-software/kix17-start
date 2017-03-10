@@ -107,7 +107,7 @@ sub Run {
                     Name => $PersonInformTypes,
                     Data => {
                         %PersonData,
-                        UserType => ( $LinkType eq 'Agent' ) ? 'Agent' : 'Customer',
+                        UserType => $LinkType,
                         PersonRecipientTypeStrg => $PersonRecipientTypeStrg,
                     },
                 );

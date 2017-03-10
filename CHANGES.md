@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/03/10) - Bugfix: T2017021690000589 (if 3rdParty contact should be notified, customer receives linked person notification too) (rbo)
  * (2017/03/10) - Bugfix: T2016052690001761 (virtual queues only working in treeview) (millinger)
  * (2017/03/08) - Bugfix: T2017030290000559 (fixed customer frontend dropdown, hover and focus color) (uboehm)
  * (2017/03/08) - Bugfix: T2017011790000614 (removed copyrights from console command description) (millinger)

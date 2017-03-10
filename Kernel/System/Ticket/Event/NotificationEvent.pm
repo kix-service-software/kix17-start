@@ -635,8 +635,12 @@ sub _RecipientsGet {
                 if ( $RecipientParts[0] eq 'Agent' && $SelectedRecipientTypes{LinkedPersonAgent} && $RecipientParts[1] && !grep { $_ eq $RecipientParts[1] } @LinkedAgents ) {
                     push @LinkedAgents, $RecipientParts[1];
                 }
-                elsif ( $RecipientParts[0] eq 'Customer' && ($SelectedRecipientTypes{LinkedPersonCustomer} || $SelectedRecipientTypes{LinkedPerson3rdPerson}) && $RecipientParts[1] && !grep { $_ eq $RecipientParts[1] } @LinkedCustomers ) {
-                    push @LinkedCustomers, $RecipientParts[1]
+                elsif ( $RecipientParts[0] eq 'Customer' && $SelectedRecipientTypes{LinkedPersonCustomer} && $RecipientParts[1] && !grep { $_ eq $RecipientParts[1] } @LinkedCustomers ) {
+                    push @LinkedCustomers, $RecipientParts[1];
+                }
+                elsif ( $RecipientParts[0] eq '3rdParty' && $SelectedRecipientTypes{LinkedPerson3rdPerson} && $RecipientParts[1] && !grep { $_ eq $RecipientParts[1] } @LinkedCustomers ) {
+                    push @LinkedCustomers, $RecipientParts[1];
+                    $RecipientParts[0] = 'Customer';
                 }
                 else {
                     # not possible to add recipient
