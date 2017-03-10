@@ -479,7 +479,7 @@ sub Run {
             next if $Encrypted ne $Self->{ViewSearchProfile};
             $ViewSearchProfilePlain = $Profile;
             last;
-    }
+        }
 
         if ( $ViewSearchProfilePlain =~ m/^(.*?)::(.*?)$/ ) {
             $SearchProfileUser = $2;
@@ -1245,14 +1245,14 @@ sub Run {
             }
             else {
 
-            # EO KIX4OTRS-capeIT
+                # EO KIX4OTRS-capeIT
                 $Count = $TicketObject->TicketSearch(
                     %{ $Filters{$FilterColumn}->{Search} },
                     %ColumnFilter,
                     Result => 'COUNT',
                 );
 
-            # KIX4OTRS-capeIT
+                # KIX4OTRS-capeIT
             }
 
             # EO KIX4OTRS-capeIT
@@ -2089,7 +2089,8 @@ sub BuildQueueView {
                 Result          => 'COUNT',
             ) || 0;
 
-            $Hash{QueueID}           = 'SearchProfile_' . $Profiles{$SearchProfileName};
+            my $Encrypted            = Digest::MD5::md5_hex($Profiles{$SearchProfileName});
+            $Hash{QueueID}           = 'SearchProfile_' . $Encrypted;
             $Hash{SearchProfileName} = $SearchProfileName;
             $Hash{Queue}             = $Profiles{$SearchProfileName};
             $Hash{MaxAge}            = 0;
@@ -2281,7 +2282,7 @@ sub _MaskQueueView {
     # KIX4OTRS-capeIT
     #    $Param{SelectedQueue} = $AllQueues{$QueueID} || $CustomQueue;
     if ( !$Param{SelectedQueue} ) {
-    $Param{SelectedQueue} = $AllQueues{$QueueID} || $CustomQueue;
+        $Param{SelectedQueue} = $AllQueues{$QueueID} || $CustomQueue;
     }
 
     # EO KIX4OTRS-capeIT
@@ -2530,13 +2531,10 @@ sub _MaskQueueViewTree {
     my %AllQueuesData;
 
     $Param{SelectedSearchProfileQueueName} = '';
-    if ( !$Param{SelectedQueue} ) {
-        if ( $QueueID =~ m/^SearchProfile_(.*)/ ) {
+    if ( $QueueID =~ m/^SearchProfile_(.*)/ ) {
             $Param{SelectedSearchProfileQueue} = $1;
-        }
-        else {
-            $Param{SelectedQueue} = $AllQueues{$QueueID} || $CustomQueue;
-        }
+    } elsif ( !$Param{SelectedQueue} ) {
+        $Param{SelectedQueue} = $AllQueues{$QueueID} || $CustomQueue;
     }
 
     my @MetaQueue = split( /::/, $Param{SelectedQueue} );
@@ -2550,16 +2548,16 @@ sub _MaskQueueViewTree {
             && $Queue{QueueID} =~ m/^SearchProfile_(.*)/
             )
         {
-            my $Encrypted = Digest::MD5::md5_hex($1);
-            $Queue{Queue}   = $Self->{SearchProfileQueue} . '::' . $1;
-            $Queue{QueueID} = 'SearchProfile_' . $Encrypted;
-
             if ( defined $Param{SelectedSearchProfileQueue}
-                && $Param{SelectedSearchProfileQueue} eq $Encrypted )
+                && $Param{SelectedSearchProfileQueue} eq $1 )
             {
-                $Param{SelectedSearchProfileQueueName} = $1;
-                $Param{SelectedQueue}                  = $Self->{SearchProfileQueue} . ' - ' . $1;
+                $Param{SelectedSearchProfileQueueName} = $Queue{Queue};
+                $Param{SelectedQueue}                  = $Self->{SearchProfileQueue} . ' - ' . $Queue{Queue};
+
+                @MetaQueue = split( /::/, $Self->{SearchProfileQueue} . '::' . $Queue{Queue} );
+                $Level = $#MetaQueue + 2;
             }
+            $Queue{Queue}   = $Self->{SearchProfileQueue} . '::' . $Queue{Queue};
         }
 
         if ( $Queue{Queue} eq 'CustomQueue' ) { $Queue{Queue} = $CustomQueue; }
@@ -2859,13 +2857,13 @@ sub _MaskQueueViewDropDown {
                 }
             }
         }
-            my $QueueCountDisplay;
+        my $QueueCountDisplay;
         if ( $Queue{Count} == $Queue{Total} ) {
-                $QueueCountDisplay = "(" . $Queue{Total} . ")";
+            $QueueCountDisplay = "(" . $Queue{Total} . ")";
         }
         else {
-                $QueueCountDisplay = "(" . $Queue{Count} . "/" . $Queue{Total} . ")";
-            }
+            $QueueCountDisplay = "(" . $Queue{Count} . "/" . $Queue{Total} . ")";
+        }
         $QueueStrg{$#QueueName}->{Data}->{$Current}->{Label}
             = $QueueName[-1] . " " . $QueueCountDisplay;
         $QueueStrg{$#QueueName}->{Data}->{$Current}->{Link} = $QueueStrg;
