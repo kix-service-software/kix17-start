@@ -703,7 +703,7 @@ sub Redirect {
     #  o http://bugs.otrs.org/show_bug.cgi?id=2230
     #  o http://bugs.otrs.org/show_bug.cgi?id=9835
     #  o http://support.microsoft.com/default.aspx?scid=kb;en-us;221154
-    if ( $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis\/6/i ) {
+    if ( $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis\/8/i ) {
         my $Host = $ENV{HTTP_HOST} || $ConfigObject->Get('FQDN');
         my $HttpType = $ConfigObject->Get('HttpType');
         $Param{Redirect} = $HttpType . '://' . $Host . $Param{Redirect};
