@@ -8319,7 +8319,7 @@ TreeView: '0'
     <Insert Table="customer_portal_group">
         <Data Key="id" Type="AutoIncrement">1</Data>
         <Data Key="name" Type="Quote">Change Requests</Data>
-        <Data Key="icon_content" Type="Quote">iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAKN2lDQ1BzUkdCIElFQzYxOTY2LTIu
+        <Data Key="icon_content" Type="Quote"><![CDATA[iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAKN2lDQ1BzUkdCIElFQzYxOTY2LTIu
 MQAAeJydlndUU9kWh8+9N71QkhCKlNBraFICSA29SJEuKjEJEErAkAAiNkRUcERRkaYIMijggKND
 kbEiioUBUbHrBBlE1HFwFBuWSWStGd+8ee/Nm98f935rn73P3Wfvfda6AJD8gwXCTFgJgAyhWBTh
 58WIjYtnYAcBDPAAA2wA4HCzs0IW+EYCmQJ82IxsmRP4F726DiD5+yrTP4zBAP+flLlZIjEAUJiM
@@ -8410,19 +8410,19 @@ dLttMvjjtRa7oElFDen6K+vS7DrCt9tN8E5Jq0+MJ0gmgJoWyw9VsUfVGzPC4QfTwtjDE+rxO6IU
 o/v2S02Qh0LocEUnzvs2OOPmkxxPw2MLJGixw9azDZB3vpE90el1sViRFjzsKm4Fgzd63GOAx5fI
 kGwVkq7+YjzBL9YI+RJEgBnGLxFmDmVcDcq4ZF+PxCdA2zmQWY6z10nHI9B2DszmHcApcmH8vT3a
 QbZzls1z9PQiMb1LC+OHhA6svl4g21nwo7eoZflXZ4zH1+f/DwDorVn5fsuyAAAAAElFTkSuQmCC
-</Data>
+>]]></Data>
         <Data Key="icon_content_type" Type="Quote">image/png</Data>
         <Data Key="valid_id" Type="Quote">1</Data>
-        <Data Key="create_time" Type="Quote">current_timestamp</Data>
+        <Data Key="create_time">current_timestamp</Data>
         <Data Key="create_by" Type="Quote">1</Data>
-        <Data Key="change_time" Type="Quote">current_timestamp</Data>
+        <Data Key="change_time">current_timestamp</Data>
         <Data Key="change_by" Type="Quote">1</Data>
     </Insert>
 
     <Insert Table="customer_portal_group">
         <Data Key="id" Type="AutoIncrement">2</Data>
         <Data Key="name" Type="Quote">Incident Reports</Data>
-        <Data Key="icon_content" Type="Quote">iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAKN2lDQ1BzUkdCIElFQzYxOTY2LTIu
+        <Data Key="icon_content" Type="Quote"><![CDATA[iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAKN2lDQ1BzUkdCIElFQzYxOTY2LTIu
 MQAAeJydlndUU9kWh8+9N71QkhCKlNBraFICSA29SJEuKjEJEErAkAAiNkRUcERRkaYIMijggKND
 kbEiioUBUbHrBBlE1HFwFBuWSWStGd+8ee/Nm98f935rn73P3Wfvfda6AJD8gwXCTFgJgAyhWBTh
 58WIjYtnYAcBDPAAA2wA4HCzs0IW+EYCmQJ82IxsmRP4F726DiD5+yrTP4zBAP+flLlZIjEAUJiM
@@ -8492,19 +8492,19 @@ RwP4140bYGSzIi/viDAD5EDArgIUq1gE7QtxXV43hBnQ0tMDkqra+/QrD13TRF3aFWEGFJ4/Bz0e
 t0tC/PJlUZfdE2EG0Hn9lffet/dZRoxFIbQRPEiBl6EGGNC464YMBSyIgQTdXivxBBK7ApJ1G0C6
 5LUWTyCxK8WC9KmiwlgjLZ2lkNZo3aCxn4v98YwuJKZraRvFBBq8aZYunItFn9mNH11FPRcKhRtl
 +by+Y/n8vxG2jvDsDE/xAAAAAElFTkSuQmCC
-</Data>
+>]]></Data>
         <Data Key="icon_content_type" Type="Quote">image/png</Data>
         <Data Key="valid_id" Type="Quote">1</Data>
-        <Data Key="create_time" Type="Quote">current_timestamp</Data>
+        <Data Key="create_time">current_timestamp</Data>
         <Data Key="create_by" Type="Quote">1</Data>
-        <Data Key="change_time" Type="Quote">current_timestamp</Data>
+        <Data Key="change_time">current_timestamp</Data>
         <Data Key="change_by" Type="Quote">1</Data>
     </Insert>
 
     <Insert Table="customer_portal_group">
         <Data Key="id" Type="AutoIncrement">3</Data>
         <Data Key="name" Type="Quote">Requisitions</Data>
-        <Data Key="icon_content" Type="Quote">iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAKN2lDQ1BzUkdCIElFQzYxOTY2LTIu
+        <Data Key="icon_content" Type="Quote"><![CDATA[iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAKN2lDQ1BzUkdCIElFQzYxOTY2LTIu
 MQAAeJydlndUU9kWh8+9N71QkhCKlNBraFICSA29SJEuKjEJEErAkAAiNkRUcERRkaYIMijggKND
 kbEiioUBUbHrBBlE1HFwFBuWSWStGd+8ee/Nm98f935rn73P3Wfvfda6AJD8gwXCTFgJgAyhWBTh
 58WIjYtnYAcBDPAAA2wA4HCzs0IW+EYCmQJ82IxsmRP4F726DiD5+yrTP4zBAP+flLlZIjEAUJiM
@@ -8587,12 +8587,12 @@ L2BnBqQK9NRJvY7gePaHs6LQJHopRR3fffoY89+0I2wVPK+jQ48j6P6o0EapDUPisfohhqbhG4vh
 BYW3R6/Vqul49rjvs8GxxiQBek9Ab0wSoPcE9MYkAVisMHGJsNJrc+WYXc3QeyZ6gGSn1+ZoT3uH
 3pPRAyS7CcPOXWaDactEenWWgEFrS5/Nusv0wws7S+lFYnqXdqKQQMLj8s8k2Znxo7eoN+/bnTJR
 Xp+39Q2/Pv8fMKT3adZ3BfMAAAAASUVORK5CYII=
-</Data>
+>]]></Data>
         <Data Key="icon_content_type" Type="Quote">image/png</Data>
         <Data Key="valid_id" Type="Quote">1</Data>
-        <Data Key="create_time" Type="Quote">current_timestamp</Data>
+        <Data Key="create_time">current_timestamp</Data>
         <Data Key="create_by" Type="Quote">1</Data>
-        <Data Key="change_time" Type="Quote">current_timestamp</Data>
+        <Data Key="change_time">current_timestamp</Data>
         <Data Key="change_by" Type="Quote">1</Data>
     </Insert>
 
