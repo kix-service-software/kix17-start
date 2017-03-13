@@ -711,6 +711,7 @@ sub Run {
     my $SearchProfileObject = $Kernel::OM->Get('Kernel::System::SearchProfile');
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my %SearchProfileData;
+    my $SearchParamsAvailable = 0;
     if ( $Self->{SearchTemplateName} ) {
         my $SearchProfileUser;
         my $SearchProfile;
@@ -782,14 +783,6 @@ sub Run {
                     $SearchParameter->{Parameter};
             }
         }
-
-        # update TicketSearch
-        %TicketSearch = (
-            %DynamicFieldSearchParameters,
-            %TicketSearch,
-            Permission => $Self->{Config}->{Permission} || 'ro',
-            UserID => $Self->{UserID},
-        );
 
         # convert attributes
         if (
@@ -1365,14 +1358,18 @@ sub Run {
         {
             $SearchProfileData{ArchiveFlags} = ['y'];
         }
+
+        if ( scalar( keys( %AttributeLookup ) ) > 0 ) {
+            $SearchParamsAvailable = 1;
+
+            # update TicketSearch
+            %TicketSearch = (
+                %TicketSearch,
+                %DynamicFieldSearchParameters,
+                %SearchProfileData,
+            );
+        }
     }
-
-    %TicketSearch = (
-        %TicketSearch,
-        %SearchProfileData
-    );
-    my $SearchParamsAvailable = ( scalar( keys %TicketSearch ) > 2 );
-
     # EO KIX4OTRS-capeIT
 
     # check cache
@@ -1495,13 +1492,6 @@ sub Run {
                 Result => 'ARRAY',
                 %TicketSearch,
                 %{ $TicketSearchSummary{ $Self->{Filter} } },
-
-                # KIX4OTRS-capeIT
-                %SearchProfileData,
-                %DynamicFieldSearchParameters,
-
-                # EO KIX4OTRS-capeIT
-
                 %{ $Self->{ColumnFilter} },
                 Limit => $Self->{PageShown} + $Self->{StartHit} - 1,
             );
@@ -1619,7 +1609,6 @@ sub Run {
                     %{ $TicketSearchSummary{$Type} },
                     %{ $Self->{ColumnFilter} },
                     %ColumnFilter,
-                    %DynamicFieldSearchParameters,
                 );
             }
         }
