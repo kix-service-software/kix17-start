@@ -6740,7 +6740,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::PreMenuModule###100-Lock" Required="0" Valid="1">
+    <ConfigItem Name="Ticket::Frontend::PreMenuModule###100-Lock" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to lock / unlock a ticket in the ticket overviews of the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::MenuModulePre</SubGroup>
@@ -6754,7 +6754,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::PreMenuModule###200-Zoom" Required="0" Valid="1">
+    <ConfigItem Name="Ticket::Frontend::PreMenuModule###200-Zoom" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to zoom a ticket in the ticket overviews of the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::MenuModulePre</SubGroup>
@@ -6770,7 +6770,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::PreMenuModule###210-History" Required="0" Valid="1">
+    <ConfigItem Name="Ticket::Frontend::PreMenuModule###210-History" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to see the history of a ticket in every ticket overview of the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::MenuModulePre</SubGroup>
@@ -6786,7 +6786,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::PreMenuModule###300-Priority" Required="0" Valid="1">
+    <ConfigItem Name="Ticket::Frontend::PreMenuModule###300-Priority" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to set the priority of a ticket in every ticket overview of the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::MenuModulePre</SubGroup>
@@ -6802,7 +6802,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::PreMenuModule###420-Note" Required="0" Valid="1">
+    <ConfigItem Name="Ticket::Frontend::PreMenuModule###420-Note" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to add a note to a ticket in every ticket overview of the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::MenuModulePre</SubGroup>
@@ -6818,7 +6818,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::PreMenuModule###440-Close" Required="0" Valid="1">
+    <ConfigItem Name="Ticket::Frontend::PreMenuModule###440-Close" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to close a ticket in every ticket overview of the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::MenuModulePre</SubGroup>

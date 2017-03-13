@@ -1646,7 +1646,7 @@
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="ITSMConfigItem::Frontend::PreMenuModule###100-Zoom" Required="0" Valid="1">
+    <ConfigItem Name="ITSMConfigItem::Frontend::PreMenuModule###100-Zoom" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to zoom into a configuration item in the configuration item overview of the agent interface.</Description>
         <Group>ITSM</Group>
         <SubGroup>Frontend::Agent::ITSMConfigItem::MenuModulePre</SubGroup>
@@ -1661,7 +1661,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="ITSMConfigItem::Frontend::PreMenuModule###200-History" Required="0" Valid="1">
+    <ConfigItem Name="ITSMConfigItem::Frontend::PreMenuModule###200-History" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to access the history of a configuration item in the configuration item overview of the agent interface.</Description>
         <Group>ITSM</Group>
         <SubGroup>Frontend::Agent::ITSMConfigItem::MenuModulePre</SubGroup>
@@ -1676,7 +1676,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="ITSMConfigItem::Frontend::PreMenuModule###300-Duplicate" Required="0" Valid="1">
+    <ConfigItem Name="ITSMConfigItem::Frontend::PreMenuModule###300-Duplicate" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to duplicate a configuration item in the configuration item overview of the agent interface.</Description>
         <Group>ITSM</Group>
         <SubGroup>Frontend::Agent::ITSMConfigItem::MenuModulePre</SubGroup>
