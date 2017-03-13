@@ -1,12 +1,5 @@
 // --
-// DynamicFieldITSMConfigItem.js - provides the functionality for AJAX calls of DynamicFieldITSMConfigItem
 // Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-//   Mario(dot)Illinger(at)cape(dash)it(dot)de
-//
-// --
-// $Id$
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

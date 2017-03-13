@@ -1,10 +1,5 @@
 // --
-// Core.KIX4OTRS.Agent.DynamicFieldObjectReference.js - provides the special module functions for the customer search
-// Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-//   Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-//
+// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

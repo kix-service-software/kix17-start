@@ -1,12 +1,5 @@
 // --
-// Core.KIX4OTRS.AgentLinkGraph.js- generates the graph
-// Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-//   Ricky(dot)Kaiser(at)cape(dash)it(dot)de
-//
-// --
-// $Id$
+// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

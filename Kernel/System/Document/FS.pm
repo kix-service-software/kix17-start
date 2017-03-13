@@ -1,20 +1,9 @@
 # --
-# Kernel/System/Document/FS.pm - document link backend filesystem
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# written/edited by:
-# * Torsten(dot)Thau(at)cape(dash)it(dot)de
-# * Rene(dot)Boehm(at)cape(dash)it(dot)de
-# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
-# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
-# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-#
-# --
-# $Id$
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (GPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/gpl-2.0.txt.
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::Document::FS;
@@ -1098,3 +1087,17 @@ sub _CalcStringDistance {
 }
 
 1;
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
+
+=cut

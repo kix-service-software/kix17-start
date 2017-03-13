@@ -1,14 +1,7 @@
 // --
-// Core.KIX4OTRS.Agent.CustomerDashboard.js - provides the javascript for the customer dashboard
-// based on Core.Agent.Dashboard.js,v 1.4.2.1: Copyright (C) 2001-2011 OTRS AG, http://otrs.org/
-// Extensions Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-// * Martin(dot)Balzarek(at)cape(dash)it(dot)de
-// * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-//
-// --
-// $Id$
+// Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+// based on the original work of:
+// Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

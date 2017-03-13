@@ -1,12 +1,5 @@
 // --
-// Core.KIX4OTRS.js - provides the special common functions for KIX4OTRS
-// Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-//   Rene(dot)Boehm(at)cape(dash)it.de
-//   Dorothea(dot)Doerffel(at)cape(dash)it.de
-// --
-// $Id$
+// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

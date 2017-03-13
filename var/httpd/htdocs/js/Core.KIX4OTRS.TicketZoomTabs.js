@@ -1,17 +1,7 @@
 // --
-// Core.KIX4OTRS.TicketZoomTabs.js - provides the special module functions for TicketZoom
-// based on Core.Agent.TicketZoom.js: Copyright (C) 2001-2016 OTRS AG, http://otrs.org/
-// Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-//   Torsten(dot)Thau(at)cape(dash)it(dot)de
-//   Rene(dot)Boehm(at)cape(dash)it(dot)de
-//   Martin(dot)Balzarek(at)cape(dash)it(dot)de
-//   Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-//   Ricky(dot)Kaiser(at)cape(dash)it(dot)de
-//
-// --
-// $Id$
+// Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+// based on the original work of:
+// Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

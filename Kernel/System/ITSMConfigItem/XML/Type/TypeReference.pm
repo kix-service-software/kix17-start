@@ -1,13 +1,5 @@
 # --
-# Kernel/System/ITSMConfigItem/XML/Type/TypeReference.pm - xml backend module
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# written/edited by:
-# * Anna(dot)Litvinova(at)cape(dash)it(dot)de
-# * Mario(dot)Illinger(at)cape(dash)it(dot)de
-#
-# --
-# $Id$
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -218,20 +210,23 @@ sub ImportValuePrepare {
 
 1;
 
-=back
-
-=head1 TERMS AND CONDITIONS
-
-This software is part of the OTRS project (http://otrs.org/).
-
-This software comes with ABSOLUTELY NO WARRANTY. For details, see
-the enclosed file COPYING for license information (AGPL). If you
-did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
-
-=cut
 
 =head1 VERSION
 
 $Revision$ $Date$
+
+=cut
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
 
 =cut

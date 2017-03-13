@@ -1,27 +1,13 @@
 # --
-# Kernel/Modules/AgentTicketPrintRichtext.pm - print layout for agent interface
-# Copyright (C) 2001-2015 OTRS AG, http://otrs.com/
-# KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-# TicketPrintRichtext-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# Depends: KIX/KIX4OTRS, KIX4OTRS/Kernel/Modules/AgentTicketPrint.pm, 1.17
-#
-# written/edited by:
-# * Rene(dot)Boehm(at)cape(dash)it(dot)de
-# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
-# * Ralf(dot)Boehm(at)cape(dash)it(dot)de
-# * Anna(dot)Litvinova(at)cape(dash)it(dot)de
-# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-# * Frank(dot)Oberender(at)cape(dash)it(dot)de
-# * Mario(dot)Illinger(at)cape(dash)it(dot)de
-#
+# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# based on the original work of:
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-# TicketPrintRichtext-capeIT
-#package Kernel::Modules::AgentTicketPrint;
+
 package Kernel::Modules::AgentTicketPrintRichtext;
 
 # EO TicketPrintRichtext-capeIT
@@ -739,3 +725,17 @@ sub _HTMLMask {
 # EO TicketPrintRichtext-capeIT
 
 1;
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
+
+=cut

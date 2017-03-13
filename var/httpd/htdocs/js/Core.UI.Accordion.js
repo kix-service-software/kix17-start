@@ -1,11 +1,7 @@
 // --
-// Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-// KIX4OTRS-Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-// * Martin(dot)Balzarek(at)cape(dash)it(dot)de
-// * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-//
+// Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+// based on the original work of:
+// Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

@@ -1,13 +1,15 @@
-/*
- * @project     KIX (http://www.cape-it.de) - Agent Frontend
- * @version     $Revision$
- * @copyright   c.a.p.e. IT GmbH
- * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
- */
-
-/*
- * @package     Skin "default"
- * @section     Default Settings
+/**
+ * This software is part of the KIX project, http://www.kixdesk.com/
+ * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+ * --
+ * @project KIX (http://www.kixdesk.com) <http://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (http://www.gnu.org/licenses/agpl.txt) <http://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file COPYING for license information (AGPL). If you
+ * did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+ *
  */
 
 @media screen,projection,tv,handheld {

@@ -1,21 +1,9 @@
 # --
-# Kernel/System/ImportExport/ObjectBackend/CustomerCompany.pm
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# import/export backend for CustomerCompany
-# written/edited by:
-# * Anna(dot)Litvinova(at)cape(dash)it(dot)de
-# * Torsten(dot)Thau(at)cape(dash)it(dot)de
-# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
-# * Ralf(dot)Boehm(at)cape(dash)it(dot)de
-# * Thomas(dot)Lange(at)cape(dash)it(dot)de
-# * Frank(dot)Jacquemin(at)cape(dash)it(dot)de
-# --
-# $Id$
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/gpl-2.0.txt.
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::ImportExport::ObjectBackend::CustomerCompany;
@@ -801,3 +789,17 @@ sub ImportDataSave {
 }
 
 1;
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
+
+=cut

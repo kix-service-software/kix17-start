@@ -1,28 +1,10 @@
 # --
-# Kernel/Language/de_KIX4OTRS.pm - provides de translation for KIX4OTRS
 # Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# written/edited by:
-# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
-# * Frank(dot)Oberender(at)cape(dash)it(dot)de
-# * Torsten(dot)Thau(at)cape(dash)it(dot)de
-# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
-# * Rene(dot)Boehm(at)cape(dash)it(dot)de
-# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-
-##########################################
-#
-# Zeilen die auskommentiert sind,
-# muessen noch übersetzt werden
-# Nicht ohne weiteres rauslöschen!
-#
-##########################################
 
 package Kernel::Language::de_KIX;
 
@@ -4393,3 +4375,17 @@ sub Data {
 }
 
 1;
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
+
+=cut

@@ -1,13 +1,5 @@
 // --
-// Core.KIX4OTRS.LinkedPersons.js - provides JavaScript for linked person support
-// Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-//   Rene(dot)Boehm(at)cape(dash)it(dot)de
-//   Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-//
-// --
-// $Id$
+// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

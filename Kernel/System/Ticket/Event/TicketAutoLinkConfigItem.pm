@@ -1,19 +1,5 @@
 # --
-# Kernel/System/Ticket/Event/TicketAutoLinkConfigItem.pm
-# Automatically links tickets to config items based on values in ArticleBody or
-# TicketDynamicFields.
-# Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# written/edited by:
-# * Rene(dot)Boehm(at)cape(dash)it(dot)de
-# * Torsten(dot)Thau(at)cape(dash)it(dot)de
-# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
-# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
-# * Ralf(dot)Boehm(at)cape(dash)it(dot)de
-# * Frank(dot)Oberender(at)cape(dash)it(dot)de
-#
-# --
-# $Id$
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -407,3 +393,17 @@ sub _ExportXMLSearchDataPrepare {
 }
 
 1;
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
+
+=cut

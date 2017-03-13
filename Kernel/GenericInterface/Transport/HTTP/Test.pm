@@ -1,5 +1,7 @@
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# based on the original work of:
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -218,62 +220,17 @@ sub RequesterPerformRequest {
     };
 }
 
+
 =back
-
-=begin Internal:
-
-=cut
-
-=head1 NAME
-
-Kernel::GenericInterface::Transport::HTTP::Test::CustomHTTPProtocol
-
-=head1 SYNOPSIS
-
-This package is used to handle the custom HTTP requests of
-Kernel::GenericInterface::Transport::HTTP::Test.
-The requests are immediately answered with a response, without
-sending them out to the network.
-
-=cut
-
-package Kernel::GenericInterface::Transport::HTTP::Test::CustomHTTPProtocol;
-
-use base qw(LWP::Protocol);
-
-sub new {
-    my $Class = shift;
-
-    return $Class->SUPER::new(@_);
-}
-
-sub request {    ## no critic
-    my $Self = shift;
-
-    my ( $Request, $Proxy, $Arg, $Size, $Timeout ) = @_;
-
-    my $Response = HTTP::Response->new( 200 => "OK" );
-    $Response->protocol('HTTP/1.0');
-    $Response->content_type("text/plain; charset=UTF-8");
-    $Response->add_content_utf8( $Request->content() );
-    $Response->date(time);
-
-    #print $Request->as_string();
-    #print $Response->as_string();
-
-    return $Response;
-}
-
-1;
-
-=end Internal:
 
 =head1 TERMS AND CONDITIONS
 
-This software is part of the OTRS project (L<http://otrs.org/>).
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see
-the enclosed file COPYING for license information (AGPL). If you
-did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
 
 =cut

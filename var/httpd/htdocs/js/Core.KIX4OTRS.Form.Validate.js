@@ -1,15 +1,5 @@
 // --
-// Core.KIX4OTRS.Form.Validate.js - provides additional functions for validating form inputs
-// Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-//   Torsten(dot)Thau(at)cape(dash)it.de
-//   Martin(dot)Balzarek(at)cape(dash)it.de
-//   Stefan(dot)Mehlig(at)cape(dash)it.de
-//   Rene(dot)Boehm(at)cape(dash)it.de
-//
-// --
-// $Id$
+// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

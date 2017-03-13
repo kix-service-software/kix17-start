@@ -1,10 +1,17 @@
-/*
- * jsTree default theme 1.0
- * Supported features: dots/no-dots, icons/no-icons, focused, loading
- * Supported plugins: ui (hovered, clicked), checkbox, contextmenu, search
+/**
+ * This software is part of the KIX project, http://www.kixdesk.com/
+ * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+ * --
+ * @project KIX (http://www.kixdesk.com) <http://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (http://www.gnu.org/licenses/agpl.txt) <http://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file COPYING for license information (AGPL). If you
+ * did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+ *
  */
 
-/* KIX4OTRS-capeIT */
 .jstree-default .jstree-hovered {
     background-color: #eee;
     border: 1px solid #ddd;

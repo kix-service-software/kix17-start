@@ -1,13 +1,5 @@
 // --
-// Core.KIX4OTRS.ConfigItemZoomTabs.js - provides the special module functions for ConfigItemZoom
-// Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-//   Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-//   Ricky(dot)Kaiser(at)cape(dash)it(dot)de
-//
-// --
-// $Id$
+// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

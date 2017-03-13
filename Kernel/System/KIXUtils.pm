@@ -1,22 +1,5 @@
 # --
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# Provides methods required for registration of KIX-modules and other usefull
-# methods which are hard to assign to some specific object.
-#
-# written/edited by:
-# * Torsten(dot)Thau(at)cape(dash)it(dot)de
-# * Rene(dot)Boehm(at)cape(dash)it(dot)de
-# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
-# * Martin(dot)Balzarek(at)cape(dash)it(dot)de
-# * Frank(dot)Oberender(at)cape(dash)it(dot)de
-# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-# * Anna(dot)Litvinova(at)cape(dash)it(dot)de
-#
-# --
-# $Id$
-# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-#
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -825,3 +808,17 @@ sub _UpdateCGIScripts {
 }
 
 1;
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
+
+=cut

@@ -1,22 +1,5 @@
 # --
-# Kernel/System/ITSMConfigItem/Event/TicketReference_RefreshLinks.pm
-#
-# Searches for attributes of type TicketReference in the new CIs version data
-# and refreshes all links to that class, if configured in CI-class definition.
-# It deletes links to any objects of the referenced CI-class if the value does
-# not exis in the CIs version data.
-#
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# written/changed by:
-# * Torsten(dot)Thau(at)cape(dash)it(dot)de
-# * Stefan(dot)Mehlig(at)cape(dash)it(dot)de
-# * Frank(dot)Oberender(at)cape(dash)it(dot)de
-# * Anna(dot)Litvinova(at)cape-it(dot)de
-# * Mario(dot)Illinger(at)cape-it(dot)de
-#
-# --
-# $Id$
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -584,3 +567,17 @@ sub GetLinkedObjects {
 #-------------------------------------------------------------------------------
 
 1;
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
+
+=cut

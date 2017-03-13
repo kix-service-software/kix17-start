@@ -1,12 +1,5 @@
 // --
-// Core.KIX4OTRS.KIXSidebar.js - provides the special module functions for the KIXSidebar
-// Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-//   Rene(dot)Boehm(at)cape(dash)it.de
-//   Dorothea(dot)Doerffel(at)cape(dash)it.de
-// --
-// $Id$
+// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you

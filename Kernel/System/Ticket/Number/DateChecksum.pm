@@ -1,22 +1,12 @@
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# based on the original work of:
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-
-#
-# The algorithm to calculate the checksum is derived from the one
-# Deutsche Bundesbahn (german railway company) uses for calculation
-# of the check digit of their vehikel numbering.
-# The checksum is calculated by alternately multiplying the digits
-# with 1 and 2 and adding the resulsts from left to right of the
-# vehikel number. The modulus to 10 of this sum is substracted from
-# 10. See: http://www.pruefziffernberechnung.de/F/Fahrzeugnummer.shtml
-# (german)
-#
-# Generates ticket numbers like yyyymmddssID#####C (e. g. 2002062310100011)
 
 package Kernel::System::Ticket::Number::DateChecksum;
 
@@ -194,3 +184,17 @@ sub GetTNByString {
 }
 
 1;
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
+
+=cut

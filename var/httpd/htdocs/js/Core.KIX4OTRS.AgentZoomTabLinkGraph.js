@@ -1,14 +1,5 @@
 // --
-// Core.KIX4OTRS.AgentZoomTabLinkGraph.js- provides custom functions for Tab LinkGraph
-// Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-//
-// written/edited by:
-//   Torsten(dot)Thau(at)cape(dash)it(dot)de
-//   Martin(dot)Balzarek(at)cape(dash)it(dot)de
-//   Ricky(dot)Kaiser(at)cape(dash)it(dot)de
-//
-// --
-// $Id$
+// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you
