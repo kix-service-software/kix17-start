@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/03/13) - Bugfix: T2016113090000921 (methods TicketCriticalityStringGet and TicketImpactStringGet used obsolete field names) (millinger)
  * (2017/03/13) - Bugfix: T2016020490001227 (generic ticket dashlet shows wrong ticket count for filters with search templates) (millinger)
  * (2017/03/13) - Bugfix: T2016100790000538 (fixed priority colors in customer frontend) (uboehm)
  * (2017/03/10) - Bugfix: T2017021690000589 (if 3rdParty contact should be notified, customer receives linked person notification too) (rbo)

@@ -1,12 +1,6 @@
 # --
 # Kernel/System/Ticket/TicketExtensionsKIX4OTRSITSMIncidentProblem.pm - KIX4OTRS ticket changes
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# written/edited by:
-# * Torsten(dot)Thau(at)cape(dash)it(dot)de
-# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-# * Ralf(dot)Boehm(at)cape(dash)it(dot)de
-#
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # $Id$
 # --
@@ -19,8 +13,6 @@ package Kernel::System::Ticket::TicketExtensionsKIX4OTRSITSMIncidentProblem;
 
 use strict;
 use warnings;
-
-use Kernel::System::GeneralCatalog;
 
 =item TicketCriticalityStringGet()
 
@@ -36,28 +28,33 @@ Returns the tickets criticality string value.
 
 sub TicketCriticalityStringGet {
     my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
+    # init return value
     my $RetVal = "-";
 
-    if ( !$Self->{GeneralCatalogObject} ) {
-        $Self->{GeneralCatalogObject} = Kernel::System::GeneralCatalog->new( %{$Self} );
-    }
-
-    foreach (qw(TicketID UserID)) {
-        if ( !defined( $Param{$_} ) ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $_!" );
-            return;
-        }
-    }
-
-    if ( $Param{DynamicField_TicketFreeText13} ) {
-        my $CriticalityList = $Self->{GeneralCatalogObject}->ItemList(
-            Class => 'ITSM::Core::Criticality',
+    # check if value is given
+    if ( $Param{'DynamicField_ITSMCriticality'} ) {
+        # get configuration of dynamicfield
+        my $DynamicFieldConfig = $DynamicFieldObject->DynamicFieldGet(
+            Name => 'ITSMCriticality',
         );
-        $RetVal = $CriticalityList->{ $Param{DynamicField_TicketFreeText13} };
+
+        # get display value
+        my $ValueStrg = $BackendObject->DisplayValueRender(
+            LayoutObject       => $LayoutObject,
+            DynamicFieldConfig => $DynamicFieldConfig,
+            Value              => $Param{'DynamicField_ITSMCriticality'},
+            HTMLOutput         => 0,
+        );
+        $RetVal = $ValueStrg->{Value};
     }
 
     return $RetVal;
-
 }
 
 =item TicketImpactStringGet()
@@ -74,30 +71,33 @@ Returns the tickets impact string value.
 
 sub TicketImpactStringGet {
     my ( $Self, %Param ) = @_;
+
+    # get needed objects
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
+    # init return value
     my $RetVal = "-";
 
-    if ( !$Self->{GeneralCatalogObject} ) {
-        $Self->{GeneralCatalogObject} = Kernel::System::GeneralCatalog->new( %{$Self} );
-    }
-
-    foreach (qw(TicketID UserID)) {
-        if ( !defined( $Param{$_} ) ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $_!" );
-            return;
-        }
-    }
-
-    if ( $Param{DynamicField_TicketFreeText14} ) {
-
-        # get impact list
-        my $ImpactList = $Self->{GeneralCatalogObject}->ItemList(
-            Class => 'ITSM::Core::Impact',
+    # check if value is given
+    if ( $Param{'DynamicField_ITSMImpact'} ) {
+        # get configuration of dynamicfield
+        my $DynamicFieldConfig = $DynamicFieldObject->DynamicFieldGet(
+            Name => 'ITSMImpact',
         );
-        $RetVal = $ImpactList->{ $Param{DynamicField_TicketFreeText14} };
+
+        # get display value
+        my $ValueStrg = $BackendObject->DisplayValueRender(
+            LayoutObject       => $LayoutObject,
+            DynamicFieldConfig => $DynamicFieldConfig,
+            Value              => $Param{'DynamicField_ITSMImpact'},
+            HTMLOutput         => 0,
+        );
+        $RetVal = $ValueStrg->{Value};
     }
 
     return $RetVal;
-
 }
 
 # disable redefine warnings in this scope
