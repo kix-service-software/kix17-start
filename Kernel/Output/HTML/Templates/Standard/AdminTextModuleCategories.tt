@@ -230,7 +230,7 @@ $('#CategorySelectionContainer').on('click','i.fa-trash-o',function(event) {
     if (!confirm("[% Translate("Do you really want to delete this category and all of it's subcategories ?") | html %]"))
         return false;
 
-    URL = $(this).parent('a').attr('href') + 'Subaction=Delete;';
+    URL = $(this).parent('a').attr('href') + ';Subaction=Delete';
     window.location.href = URL;
     event.preventDefault();
 });
@@ -238,7 +238,7 @@ $('#CategorySelectionContainer').on('click','i.fa-trash-o',function(event) {
 $('#CategorySelectionContainer').on('click','span',function(event){
     var Edit = $(this).hasClass('Edit'), URL;
     if ( Edit ) {
-        URL = $(this).parent('a').attr("href") + 'Subaction=Change;';
+        URL = $(this).parent('a').attr("href") + ';Subaction=Change';
         window.location.href = URL;
     }
     event.preventDefault();
