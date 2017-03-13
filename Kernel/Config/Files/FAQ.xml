@@ -1658,7 +1658,7 @@ Your OTRS Notification Master
                 <Item Key="Type">LastChange</Item>
                 <Item Key="Block">ContentSmall</Item>
                 <Item Key="Group">faq</Item>
-                <Item Key="Default">1</Item>
+                <Item Key="Default">0</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -1674,7 +1674,7 @@ Your OTRS Notification Master
                 <Item Key="Type">LastCreate</Item>
                 <Item Key="Block">ContentSmall</Item>
                 <Item Key="Group">faq</Item>
-                <Item Key="Default">1</Item>
+                <Item Key="Default">0</Item>
             </Hash>
         </Setting>
     </ConfigItem>

@@ -7294,7 +7294,7 @@
                 <Item Key="Block">ContentSmall</Item>
                 <Item Key="Limit">6</Item>
                 <Item Key="Group"></Item>
-                <Item Key="Default">1</Item>
+                <Item Key="Default">0</Item>
                 <Item Key="CacheTTL">2</Item>
             </Hash>
         </Setting>
@@ -15528,7 +15528,7 @@ Thanks for your help!
                 <Item Key="OwnerOnly"></Item>
                 <Item Key="Block">ContentSmall</Item>
                 <Item Key="Group"></Item>
-                <Item Key="Default">1</Item>
+                <Item Key="Default">0</Item>
             </Hash>
         </Setting>
     </ConfigItem>
