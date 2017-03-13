@@ -40,23 +40,23 @@
 }
 
 .Flag span.PriorityID-1 {
-    background-color:#03c4f0;
+    background-color:#15d100;
 }
 
 .Flag span.PriorityID-2 {
-    background-color:#83bfc8;
+    background-color:#a6fc00;
 }
 
 .Flag span.PriorityID-3 {
-    background-color:#cdcdcd;
+    background-color:#f2f200;
 }
 
 .Flag span.PriorityID-4 {
-    background-color:#ffaaaa;
+    background-color:#ff9000;
 }
 
 .Flag span.PriorityID-5 {
-    background-color:#ff505e;
+    background-color:#fa0700;
 }
 
 .Flag {
