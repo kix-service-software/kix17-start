@@ -12200,7 +12200,7 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::KIXSidebarDynamicField###DynamicField" Required="0" Valid="1">
+    <ConfigItem Name="Ticket::Frontend::KIXSidebarDynamicField###DynamicField" Required="0" Valid="0">
         <Description Translatable="1">Dynamic fields shown in the quick ticket configurator screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
