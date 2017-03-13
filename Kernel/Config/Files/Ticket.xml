@@ -12466,6 +12466,7 @@ Thanks for your help!
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Ticket::Acl::RestrictTicketActionsOnMerged</Item>
+                <Item Key="ReturnType">Action</Item>
             </Hash>
         </Setting>
      </ConfigItem>
