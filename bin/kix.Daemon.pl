@@ -303,7 +303,7 @@ sub Status {
     return;
 }
 
-sub _Run() {
+sub _Run {
     # lock PID
     my $LockSuccess = _PIDLock();
 
