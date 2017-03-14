@@ -385,6 +385,7 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
             .jstree({
                 core: {
                     animation: 70,
+                    dblclick_toggle: false,
                     expand_selected_onload: true,
                     themes: {
                         name: 'InputField',
@@ -437,12 +438,7 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
             }
         }).on("click", 'a', function(e) {
             if ($(this).children('span').hasClass('TextModuleCategory')) {
-                if ($(this).parent('li').hasClass('jstree-closed')) {
-                    $(this).parent('li').removeClass('jstree-closed').addClass('jstree-open');
-                }
-                else if ($(this).parent('li').hasClass('jstree-open')) {
-                    $(this).parent('li').removeClass('jstree-open').addClass('jstree-closed');
-                }
+                $('#TextModulesSelectionContainer').jstree(true).toggle_node(e.target);
             }
         }).on("mousemove", 'a', function(e) {
             if ($(this).children('span').hasClass('TextModule')) {

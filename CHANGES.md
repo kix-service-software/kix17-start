@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/03/14) - Bugfix: T2016102890001319 (fixed behaviour of text module tree in sidebar) (millinger)
  * (2017/03/13) - Bugfix: T2017013090001044 (malformed url for deleting text module categories and dependings dynamic fields) (millinger)
  * (2017/03/13) - Bugfix: T2016113090000921 (methods TicketCriticalityStringGet and TicketImpactStringGet used obsolete field names) (millinger)
  * (2017/03/13) - Bugfix: T2016020490001227 (generic ticket dashlet shows wrong ticket count for filters with search templates) (millinger)
