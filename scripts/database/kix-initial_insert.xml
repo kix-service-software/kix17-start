@@ -8494,11 +8494,11 @@ t0tC/PJlUZfdE2EG0Hn9lffet/dZRoxFIbQRPEiBl6EGGNC464YMBSyIgQTdXivxBBK7ApJ1G0C6
 +by+Y/n8vxG2jvDsDE/xAAAAAElFTkSuQmCC
 >]]></Data>
         <Data Key="icon_content_type" Type="Quote">image/png</Data>
-        <Data Key="valid_id" Type="Quote">1</Data>
+        <Data Key="valid_id">1</Data>
         <Data Key="create_time">current_timestamp</Data>
-        <Data Key="create_by" Type="Quote">1</Data>
+        <Data Key="create_by">1</Data>
         <Data Key="change_time">current_timestamp</Data>
-        <Data Key="change_by" Type="Quote">1</Data>
+        <Data Key="change_by">1</Data>
     </Insert>
 
     <Insert Table="customer_portal_group">
@@ -8589,11 +8589,11 @@ BYW3R6/Vqul49rjvs8GxxiQBek9Ab0wSoPcE9MYkAVisMHGJsNJrc+WYXc3QeyZ6gGSn1+ZoT3uH
 Xp+39Q2/Pv8fMKT3adZ3BfMAAAAASUVORK5CYII=
 >]]></Data>
         <Data Key="icon_content_type" Type="Quote">image/png</Data>
-        <Data Key="valid_id" Type="Quote">1</Data>
+        <Data Key="valid_id">1</Data>
         <Data Key="create_time">current_timestamp</Data>
-        <Data Key="create_by" Type="Quote">1</Data>
+        <Data Key="create_by">1</Data>
         <Data Key="change_time">current_timestamp</Data>
-        <Data Key="change_by" Type="Quote">1</Data>
+        <Data Key="change_by">1</Data>
     </Insert>
 
 </database>
