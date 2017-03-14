@@ -31,8 +31,6 @@ my %Opts;
 getopt( 'qtd', \%Opts );
 if ( $Opts{h} ) {
     print "kix.PostMaster.pl - KIX cmd postmaster\n";
-    print "Copyright (C) 2001-2016 OTRS AG, http://otrs.com/\n";
-    print "Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de\n";
     print
         "usage: kix.PostMaster.pl -q <QUEUE> -t <TRUSTED> (default is trusted, use '-t 0' to disable trusted mode)\n";
     print "\nkix.PostMaster.pl is deprecated, please use console command 'Maint::PostMaster::Read' instead.\n\n";

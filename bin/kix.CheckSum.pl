@@ -33,10 +33,9 @@ my %Compare;
 my %Opts;
 getopt( 'abd', \%Opts );
 if ( exists $Opts{h} || !keys %Opts ) {
-    print "otrs.CheckSum.pl - OTRS check sum\n";
-    print "Copyright (C) 2001-2016 OTRS AG, http://otrs.com/\n";
+    print "kix.CheckSum.pl - OTRS check sum\n";
     print
-        "usage: otrs.CheckSum.pl -a create|compare [-b /path/to/ARCHIVE] [-d /path/to/framework]\n";
+        "usage: kix.CheckSum.pl -a create|compare [-b /path/to/ARCHIVE] [-d /path/to/framework]\n";
     exit 1;
 }
 

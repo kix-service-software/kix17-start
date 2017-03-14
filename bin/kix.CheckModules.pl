@@ -102,8 +102,6 @@ GetOptions(
 # check needed params
 if ($Help) {
     print "kix.CheckModules.pl - KIX CheckModules\n";
-    print "Copyright (C) 2001-2016 OTRS AG, http://otrs.com/\n";
-    print "Extensions Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de\n";
     print "usage: kix.CheckModules.pl [-list|all] \n";
     print "
    kix.CheckModules.pl

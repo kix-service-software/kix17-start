@@ -35,8 +35,6 @@ if ( $^O eq 'MSWin32' ) {
 use Kernel::System::ObjectManager;
 
 print STDOUT "kix.Daemon.pl - the KIX daemon\n";
-print STDOUT "Copyright (C) 2001-2016 OTRS AG, http://otrs.com/\n";
-print STDOUT "Extensions Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de\n\n";
 
 local $Kernel::OM = Kernel::System::ObjectManager->new(
     'Kernel::System::Log' => {
