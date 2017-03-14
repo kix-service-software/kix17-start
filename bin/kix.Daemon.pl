@@ -94,9 +94,8 @@ my $ForceStop;
 my %DebugDaemons;
 my $Debug;
 if (
-    lc $ARGV[0] eq 'start'
-    && $ARGV[1]
-    && lc $ARGV[1] eq '--debug'
+    ((lc $ARGV[0] eq 'start') || (lc $ARGV[0] eq '--child') || (lc $ARGV[0] eq '--module'))
+    && (($ARGV[1] && lc $ARGV[1] eq '--debug') || ($ARGV[3] && lc $ARGV[3] eq '--debug')) 
     )
 {
     $Debug = 1;
@@ -128,7 +127,7 @@ elsif (
 {
     $ForceStop = 1;
 }
-elsif ( $ARGV[1] ) {
+elsif ( $ARGV[0] ne '--module' && $ARGV[1] ) {
     print STDERR "Invalid option: $ARGV[1]\n\n";
     PrintUsage();
     exit 0;
@@ -203,11 +202,12 @@ sub Start {
     else {
         my $ChildProcess;
         my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
+        my $Debug = join(' ', keys %DebugDaemons);
         
         Win32::Process::Create(
             $ChildProcess, 
             $ENV{COMSPEC},
-            "/c wperl $Home/bin/kix.Daemon.pl --child", 
+            "/c wperl $Home/bin/kix.Daemon.pl --child --debug ".$Debug, 
             0, 
             0x00000008,    # DETACHED_PROCESS
             "."
@@ -371,11 +371,12 @@ sub _Run {
             else {
                 my $ChildProcess;
                 my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
-                
+                my $Debug = join(' ', keys %DebugDaemons);
+                                
                 Win32::Process::Create(
                     $ChildProcess, 
                     $ENV{COMSPEC},
-                    "/c wperl $Home/bin/kix.Daemon.pl --module \"$Module\" \"$DaemonModules{$Module}->{Name}\"", 
+                    "/c wperl $Home/bin/kix.Daemon.pl --module \"$Module\" \"$DaemonModules{$Module}->{Name}\" --debug ".$Debug, 
                     0, 
                     0x00000008,    # DETACHED_PROCESS
                     "."
@@ -512,7 +513,7 @@ sub _RunModule {
 
         PREFIX:
         for my $Prefix (@INC) {
-        	my $File = $Prefix . '/Kernel/Config/Files/' . $ZZZFile;
+            my $File = $Prefix . '/Kernel/Config/Files/' . $ZZZFile;
             next PREFIX if !-f $File;
             do $File;
             last PREFIX;
@@ -535,7 +536,7 @@ sub _RunModule {
     _LogFilesSet(
         Module => $Param{ModuleName}
     );
-
+    
     my $DaemonObject;
     LOOP:
     while ($ChildRun) {
@@ -543,6 +544,7 @@ sub _RunModule {
         # create daemon object if not exists
         eval {
 
+        
             if (
                 !$DaemonObject
                 && ( $DebugDaemons{All} || $DebugDaemons{ $Param{ModuleName} } )
@@ -568,6 +570,10 @@ sub _RunModule {
         for my $Method ( 'PreRun', 'Run', 'PostRun' ) {
             last LOOP if !eval { $DaemonObject->$Method() };
         }
+        
+        # in Win32 exit this loop to restart the whole process
+        # otherwise zombies will remain when parent gets stopped
+        last LOOP if ($IsWin32);
     }
     
     return 0;

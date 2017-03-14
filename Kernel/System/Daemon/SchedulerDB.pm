@@ -470,7 +470,8 @@ sub TaskLock {
     # create the lock key
     my $LockKeyNodeID = sprintf "%03d", $Param{NodeID};
     my $LockKeyPID    = sprintf "%08d", $Param{PID};
-    my $LockKey       = '1' . $LockKeyNodeID . $LockKeyPID;
+    #rbo - T2016021990000594 - special handling due to negative windows PIDs
+    my $LockKey       = '1' . $LockKeyNodeID . abs($LockKeyPID);
 
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
