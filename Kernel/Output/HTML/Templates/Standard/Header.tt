@@ -19,10 +19,10 @@
 <body class="[% Data.BodyClass | html %]">
     <a name="Top"></a>
     <div id="AppWrapper">
-    <div id="Header" class="ARIARoleBanner">
+    <div id="Header" class="ARIARoleBanner [% Data.UserToolbarPosition | html %]">
         <div id="Logo"></div>
-        <div id="ToolBarToggle" class="[% Data.UserToolbarPosition | html %]">[% Translate("show Toolbar") | html %]</div>
-        <ul id="ToolBar" class="[% Data.UserToolbarPosition | html %]">
+        <div id="ToolBarToggle">[% Translate("show Toolbar") | html %]</div>
+        <ul id="ToolBar">
 [% RenderBlockStart("ToolBar") %]
 [% RenderBlockStart("ToolBarItem") %]
             <li class="[% Data.Class | html %]"><a href="[% Data.Link %]" target="[% Data.Target | html %]" accesskey="[% Data.AccessKey | html %]" title="[% Translate(Data.Description) | html %]: [% Data.Count | html %][% Data.AccessKeyReference | html %]">[% Translate(Data.Description) | html %] <i class="icon-small fa fa-clock-o icon-show-reached"></i> <i class="icon-small fa fa-star icon-show-new"></i><i class="[% Data.Icon | html %]"></i> <span class="Counter">[% Data.Count | html %]</span> </a></li>
@@ -134,4 +134,3 @@ if ($('#ToolBar li.Extended.SearchFulltext').length) {
 [% RenderBlockEnd("Logout") %]
     </div>
 # EO KIX4OTRS-capeIT
-    

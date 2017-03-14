@@ -47,20 +47,24 @@
         padding-top: 40px;
     }
 
-    #ToolBar.ToolbarRight {
+    #Header.ToolbarRight > #ToolBar {
         left: inherit;
         right: 20px;
         top: 85px;
     }
 
-    #ToolBar.ToolbarLeft {
+    #Header.ToolbarLeft > #ToolBar {
         left: 20px;
         top: 85px;
     }
 
-    #ToolBar.ToolbarTop {
+    #Header.ToolbarTop > #ToolBar {
         left: 100px;
         top: 10px;
+    }
+
+    #Header.ToolbarTop {
+        margin-bottom: 0;
     }
 
     #ToolBar a i {
@@ -89,8 +93,8 @@
     #ToolBarToggle.Hide {
         color: transparent;
     }
-    
-    #ToolBarToggle.ToolbarRight {
+
+    #Header.ToolbarRight > #ToolBarToggle {
         background: url(../img/toggle_side_arrow.png) no-repeat right -26px;
         right: 10px;
         top: 90px;
@@ -99,16 +103,16 @@
         text-align: right;
     }
 
-    #ToolBarToggle.ToolbarRight.Show {
+    #Header.ToolbarRight > #ToolBarToggle.Show {
         padding-right: 15px;
     }
 
-    #ToolBarToggle.ToolbarRight.Hide {
+    #Header.ToolbarRight > #ToolBarToggle.Hide {
         background-position: right 0;
         padding-right: 20px;
     }
 
-    #ToolBarToggle.ToolbarLeft {
+    #Header.ToolbarLeft > #ToolBarToggle {
         background: url(../img/toggle_side_arrow.png) no-repeat left 0px;
         left: 10px;
         top: 90px;
@@ -117,18 +121,18 @@
         text-align: left;
     }
 
-    #ToolBarToggle.ToolbarLeft.Show,
-    #ToolBarToggle.ToolbarTop.Show {
+    #Header.ToolbarLeft > #ToolBarToggle.Show,
+    #Header.ToolbarTop > #ToolBarToggle.Show {
         padding-left: 15px;
     }
 
-    #ToolBarToggle.ToolbarLeft.Hide,
-    #ToolBarToggle.ToolbarTop.Hide {
+    #Header.ToolbarLeft > #ToolBarToggle.Hide,
+    #Header.ToolbarTop > #ToolBarToggle.Hide {
         background-position: left -26px;
         padding-left: 20px;
     }
 
-    #ToolBarToggle.ToolbarTop {
+    #Header.ToolbarTop > #ToolBarToggle {
         background: url(../img/toggle_side_arrow.png) no-repeat left 0px;
         left: 90px;
         top: 15px;
@@ -245,7 +249,7 @@
     .ResponsiveHandle {
         top: 40px !important;
     }
-    
+
     #AppWrapper {
         position: relative !important;
         transition: margin-top .5s;
@@ -259,27 +263,27 @@
     #AppWrapper {
         margin-top: 60px;
     }
-    
+
     a {
         color: #82C826;
     }
-    
+
     #Header {
         position: fixed;
         width: 100%;
         top: 0;
     }
-    
+
     #Header #Logo {
         background-size: auto 90% !important;
         margin: 0 auto !important;
     }
-    
+
     #UserInfo {
         top: 0 !important;
         z-index: 0;
     }
-    
+
     .ResponsiveHandle {
         top: 10px !important;
         color: #0A6491 !important;
@@ -289,20 +293,20 @@
         opacity: 1;
         visibility: visible;
     }
-    
+
     #Header.toggle ~ .ResponsiveHandle {
         opacity: 0;
         visibility: hidden;
     }
-    
+
     #ResponsiveNavigationHandle {
         left: 15px !important;
     }
-    
+
     #ResponsiveSidebarHandle {
         right: 15px !important;
     }
-    
+
     #ToolBar, .RTL #ToolBar {
         top: 60px !important;
         margin-top: 0 !important;
@@ -314,43 +318,43 @@
         right: 0 !important;
         left: 0 !important;
     }
-    
+
     #ToolBar.toggle, .RTL #ToolBar.toggle {
         height: 70px;
         background-color: #fff !important;
         margin-top: 0 !important;
     }
-    
+
     #ToolBar li, .RTL #ToolBar li {
         background-color: transparent !important;
     }
-    
+
     #ToolBar li i {
         color: #82C826 !important;
     }
-    
+
     #ToolBar li.Extended .InputField_InputContainer input {
         padding: 2px !important;
     }
-    
+
     #ToolBar li input[type=text] {
         min-width: 150px;
         width: auto;
     }
-    
+
     #ToolBar li.Extended {
         min-width: 150px;
         margin-right: 10px !important;
     }
-    
+
     #ToolBar.toggle ~ #AppWrapper, .RTL #ToolBar.toggle ~ #AppWrapper {
         margin-top: 130px;
     }
-     
+
     #Navigation>.Selected>a {
         color: #0A6491;
     }
-    
+
     .MainBox, .RTL .MainBox {
         padding-top: 20px !important;
     }
