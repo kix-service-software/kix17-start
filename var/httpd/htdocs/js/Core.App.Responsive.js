@@ -188,7 +188,8 @@ Core.App.Responsive = (function (TargetNS) {
         // Check DesktopMode
         /*eslint-disable no-window*/
         try {
-            if ((top.location.href !== location.href && window.name.search(/^OTRSPopup_/) === -1) || parseInt(localStorage.getItem("DesktopMode"), 10) > 0) {
+            // #rbo - T2016121190001552 - renamed OTRS to KIX
+            if ((top.location.href !== location.href && window.name.search(/^(OTRS|KIX)Popup_/) === -1) || parseInt(localStorage.getItem("DesktopMode"), 10) > 0) {
                 /*eslint-enable no-window*/
 
                 // if the DesktopMode has been triggered manually, we add a switch to the footer

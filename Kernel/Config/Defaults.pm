@@ -1411,7 +1411,8 @@ via the Preferences button after logging in.
             [ 'UserLogin',      Translatable('Username'),   'login',      1, 1, 'var', '', 0 ],
             [ 'UserPassword',   Translatable('Password'),   'pw',         0, 0, 'var', '', 0 ],
             [ 'UserEmail',      Translatable('Email'),      'email',      1, 1, 'var', '', 0 ],
-#            [ 'UserEmail',      Translatable('Email'), 'email',           1, 1, 'var', '[% Env("CGIHandle") %]?Action=AgentTicketCompose;ResponseID=1;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %]', 0, '', 'AsPopup OTRSPopup_TicketAction' ],
+#rbo - T2016121190001552 - renamed OTRS to KIX
+#            [ 'UserEmail',      Translatable('Email'), 'email',           1, 1, 'var', '[% Env("CGIHandle") %]?Action=AgentTicketCompose;ResponseID=1;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %]', 0, '', 'AsPopup KIXPopup_TicketAction' ],
             [ 'UserCustomerID', Translatable('CustomerID'), 'customer_id', 0, 1, 'var', '', 0 ],
 #            [ 'UserCustomerIDs', Translatable('CustomerIDs'), 'customer_ids', 1, 0, 'var', '', 0 ],
             [ 'UserPhone',        Translatable('Phone'),       'phone',        1, 0, 'var', '', 0 ],

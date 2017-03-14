@@ -162,7 +162,8 @@ Core.UI.Popup = (function (TargetNS) {
     function CurrentIsPopupWindow() {
         var PopupType;
 
-        if (window.name.match(/OTRSPopup_([^_]+)_.+/)) {
+        // #rbo - T2016121190001552 - renamed OTRS to KIX
+        if (window.name.match(/(OTRS|KIX)Popup_([^_]+)_.+/)) {
             PopupType = RegExp.$1;
         }
 
@@ -265,7 +266,9 @@ Core.UI.Popup = (function (TargetNS) {
             // Therefore we check if the popup is a real OTRS popup.
             // IE9 can't read the WindowType property from the window object,
             // so we check for the correct popup window name now.
-            if (Value.name.match(/OTRSPopup_.+/)) {
+            
+            // #rbo - T2016121190001552 - renamed OTRS to KIX
+            if (Value.name.match(/(OTRS|KIX)Popup_.+/)) {
                 Size++;
             }
         });
@@ -288,7 +291,9 @@ Core.UI.Popup = (function (TargetNS) {
             // Therefore we check if the popup is a real OTRS popup.
             // IE9 can't read the WindowType property from the window object,
             // so we check for the correct popup window name now.
-            if (Value.name.match(/OTRSPopup_.+/)) {
+            
+            // #rbo - T2016121190001552 - renamed OTRS to KIX
+            if (Value.name.match(/(OTRS|KIX)Popup_.+/)) {
                 TargetNS.ClosePopup(Value);
             }
         });
@@ -306,7 +311,8 @@ Core.UI.Popup = (function (TargetNS) {
     TargetNS.RegisterPopupAtParentWindow = function (WindowObject) {
         var Type;
 
-        /OTRSPopup_([^_]+)_.*/.exec(WindowObject.name);
+        // #rbo - T2016121190001552 - renamed OTRS to KIX
+        /(OTRS|KIX)Popup_([^_]+)_.*/.exec(WindowObject.name);
         Type = RegExp.$1;
 
         if (typeof OpenPopups[Type] === 'undefined') {
@@ -483,11 +489,12 @@ Core.UI.Popup = (function (TargetNS) {
                  /* if Unlined is passed and eq 1 add, diferent name of the popup
                  * it will ensure that popup is nor linked with the parent window
                  */
+                // #rbo - T2016121190001552 - renamed OTRS to KIX
                 if (Unlinked && Unlinked === 1) {
-                    WindowName = 'PopupOTRS_' + Type + '_' + Date.parse(new Date());
+                    WindowName = 'PopupKIX_' + Type + '_' + Date.parse(new Date());
                 }
                 else {
-                    WindowName = 'OTRSPopup_' + Type + '_' + Date.parse(new Date());
+                    WindowName = 'KIXPopup_' + Type + '_' + Date.parse(new Date());
                 }
 
                 if (WindowMode === 'Popup') {
@@ -613,7 +620,8 @@ Core.UI.Popup = (function (TargetNS) {
                 PopupObject = PopupType;
 
                 // we can now find out the type of the popup based on the popup object
-                if (PopupObject && typeof PopupObject.name !== 'undefined' && PopupObject.name.match(/OTRSPopup_([^_]+)_.+/)) {
+                // #rbo - T2016121190001552 - renamed OTRS to KIX
+                if (PopupObject && typeof PopupObject.name !== 'undefined' && PopupObject.name.match(/(OTRS|KIX)Popup_([^_]+)_.+/)) {
                     PopupType = RegExp.$1;
                 }
 

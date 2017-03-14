@@ -112,7 +112,8 @@ Core.KIX4OTRS = (function(TargetNS) {
             ResizeDone = 0,
             URL = Core.Config.Get('Baselink');
 
-        if (window.name.match(/OTRSPopup_.+/) && window.opener !== null) {
+        // #rbo - T2016121190001552 - renamed OTRS to KIX
+        if (window.name.match(/(OTRS|KIX)Popup_.+/) && window.opener !== null) {
             if (Start) {
                 // get data
                 var Data = {
