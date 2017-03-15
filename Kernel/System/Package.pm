@@ -95,9 +95,11 @@ sub new {
         PackageMerge    => 'ARRAY',
 
         # package flags
-        PackageIsVisible      => 'SCALAR',
-        PackageIsDownloadable => 'SCALAR',
-        PackageIsRemovable    => 'SCALAR',
+        PackageIsVisible        => 'SCALAR',
+        PackageIsDownloadable   => 'SCALAR',
+        PackageIsRemovable      => 'SCALAR',
+        #rbo - T2016121190001552 - added separate package attribute
+        PackageIsRemovableInGUI => 'SCALAR',
 
         # *(Pre|Post) - just for compat. to 2.2
         IntroInstallPre    => 'ARRAY',
