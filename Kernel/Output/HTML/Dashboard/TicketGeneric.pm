@@ -221,7 +221,7 @@ sub new {
         || $Self->{Config}->{Limit};
     $Self->{StartHit} = int( $ParamObject->GetParam( Param => 'StartHit' ) || 1 );
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     $Self->{PrefKeySearchTemplate} = 'UserDashboardPref' . $Self->{Name};
     $Self->{SearchTemplateName} = $LayoutObject->{ $Self->{PrefKeySearchTemplate} } || '';
@@ -229,6 +229,7 @@ sub new {
     for my $Item ( keys %{ $Kernel::OM->Get('Kernel::Output::HTML::Layout') } ) {
         next if $Item !~ m/^UserDashboard(.*)Template(.*)/i;
     }
+# EO KIX4OTRS-capeIT
 
     # define filterable columns
     $Self->{ValidFilterableColumns} = {
@@ -302,6 +303,7 @@ sub new {
         @{ $Self->{ProcessList} } = sort keys %{$ProcessListHash};
     }
 
+# KIX4OTRS-capeIT
     # load and save SortBy and OrderBy
     if ( !$Self->{OrderBy} ) {
         my %SearchParams = $Self->_SearchParamsGet(%Param);
@@ -333,8 +335,7 @@ sub new {
             Value  => $Self->{SortBy},
         );
     }
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     return $Self;
 }
@@ -368,7 +369,7 @@ sub Preferences {
     my $JSONObject = $Kernel::OM->Get('Kernel::System::JSON');
 
     # if preference settings are available, take them
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     if ( defined $Preferences{ $Self->{PrefKeyColumns} }
         && $Preferences{ $Self->{PrefKeyColumns} } )
     {
@@ -404,8 +405,7 @@ sub Preferences {
                 push( @{ $ColumnsEnabled->{Order} }, $Column );
             }
         }
-
-        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
         @ColumnsEnabled = grep { $ColumnsEnabled->{Columns}->{$_} == 1 }
             keys %{ $ColumnsEnabled->{Columns} };
@@ -437,7 +437,7 @@ sub Preferences {
         }
     }
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     # sort available columns depending on selected language
     my %ColumnsAvailableTranslated;
     for my $Column (@ColumnsAvailableNotEnabled) {
@@ -460,8 +460,7 @@ sub Preferences {
         ( $ColumnsAvailableTranslated{$a} || '' ) cmp( $ColumnsAvailableTranslated{$b} || '' )
         }
         keys %ColumnsAvailableTranslated;
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     # remove CustomerID if Customer Information Center
     if ( $Self->{Action} eq 'AgentCustomerInformationCenter' ) {
@@ -470,7 +469,7 @@ sub Preferences {
         @ColumnsAvailableNotEnabled = grep { $_ ne 'CustomerID' } @ColumnsAvailableNotEnabled;
     }
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     my $UserObject = $Kernel::OM->Get('Kernel::System::User');
     my %User       = $UserObject->GetUserData(
         UserID => $Self->{UserID},
@@ -503,8 +502,7 @@ sub Preferences {
             Translation => 0,
             );
     }
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     my @Params = (
         {
@@ -532,12 +530,11 @@ sub Preferences {
         },
     );
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     if ( $Self->{Name} =~ /SearchTemplate/ ) {
         push( @Params, \%SearchProfileParams );
     }
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     return @Params;
 }
@@ -662,49 +659,12 @@ sub Run {
     my %TicketSearch        = %{ $SearchParams{TicketSearch} };
     my %TicketSearchSummary = %{ $SearchParams{TicketSearchSummary} };
 
-    my $CacheKey = join '-', $Self->{Name},
-        $Self->{Action},
-        $Self->{PageShown},
-        $Self->{StartHit},
-        $Self->{UserID};
-    my $CacheColumns = join(
-        ',',
-        map {
-            $_ . '=>' . $Self->{GetColumnFilterSelect}->{$_}
-            }
-            sort keys %{ $Self->{GetColumnFilterSelect} }
-    );
-    $CacheKey .= '-' . $CacheColumns if $CacheColumns;
-
-    $CacheKey .= '-' . $Self->{SortBy}  if defined $Self->{SortBy};
-    $CacheKey .= '-' . $Self->{OrderBy} if defined $Self->{OrderBy};
-
-    # CustomerInformationCenter shows data per CustomerID
-    if ( $Param{CustomerID} ) {
-
-        # KIX4OTRS-capeIT
-        $TicketSearch{CustomerID} = $Param{CustomerID};
-
-        # EO KIX4OTRS-capeIT
-        $CacheKey .= '-' . $Param{CustomerID};
-    }
-
-    # KIX4OTRS-capeIT
-    elsif ( $Param{CustomerUserLogin} ) {
-        $TicketSearch{CustomerUserLogin} = $Param{CustomerUserLogin};
-    }
-
-    # EO KIX4OTRS-capeIT
-
-    # get cache object
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
     my $SearchProfileObject = $Kernel::OM->Get('Kernel::System::SearchProfile');
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my %SearchProfileData;
-    my $SearchParamsAvailable = 0;
+
     if ( $Self->{SearchTemplateName} ) {
         my $SearchProfileUser;
         my $SearchProfile;
@@ -1085,7 +1045,6 @@ sub Run {
             }
         }
 
-        # KIX4OTRS-capeIT
         # get last change time settings
         if ( !$SearchProfileData{LastChangeTimeSearchType} ) {
 
@@ -1313,7 +1272,6 @@ sub Run {
                 }
             }
         }
-        # EO KIX4OTRS-capeIT
 
         # prepare fulltext search
         if ( $SearchProfileData{Fulltext} ) {
@@ -1353,8 +1311,6 @@ sub Run {
         }
 
         if ( scalar( keys( %AttributeLookup ) ) > 0 ) {
-            $SearchParamsAvailable = 1;
-
             # update TicketSearch
             %TicketSearch = (
                 %TicketSearch,
@@ -1363,7 +1319,42 @@ sub Run {
             );
         }
     }
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
+
+    my $CacheKey = join '-', $Self->{Name},
+        $Self->{Action},
+        $Self->{PageShown},
+        $Self->{StartHit},
+        $Self->{UserID};
+    my $CacheColumns = join(
+        ',',
+        map {
+            $_ . '=>' . $Self->{GetColumnFilterSelect}->{$_}
+            }
+            sort keys %{ $Self->{GetColumnFilterSelect} }
+    );
+    $CacheKey .= '-' . $CacheColumns if $CacheColumns;
+
+    $CacheKey .= '-' . $Self->{SortBy}  if defined $Self->{SortBy};
+    $CacheKey .= '-' . $Self->{OrderBy} if defined $Self->{OrderBy};
+
+    # CustomerInformationCenter shows data per CustomerID
+    if ( $Param{CustomerID} ) {
+
+# KIX4OTRS-capeIT
+        $TicketSearch{CustomerID} = $Param{CustomerID};
+# EO KIX4OTRS-capeIT
+        $CacheKey .= '-' . $Param{CustomerID};
+    }
+
+# KIX4OTRS-capeIT
+    elsif ( $Param{CustomerUserLogin} ) {
+        $TicketSearch{CustomerUserLogin} = $Param{CustomerUserLogin};
+    }
+# EO KIX4OTRS-capeIT
+
+    # get cache object
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
 
     # check cache
     my $TicketIDs = $CacheObject->Get(
@@ -1377,12 +1368,17 @@ sub Run {
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-    # KIX4OTRS-capeIT
-    #    if ( !$TicketIDs ) {
-    if ( $SearchParamsAvailable && !$TicketIDs ) {
-
-        # EO KIX4OTRS-capeIT
-
+# KIX4OTRS-capeIT
+#    if ( !$TicketIDs ) {
+    my $PerformSearch = 1;
+    if ( $Self->{Name} =~ /SearchTemplate/ && !$Self->{SearchTemplateName} ) {
+        $PerformSearch = 0;
+    }
+    if (
+        $PerformSearch
+        && !$TicketIDs
+    ) {
+# EO KIX4OTRS-capeIT
         # quote all CustomerIDs
         if ( $TicketSearch{CustomerID} ) {
             $TicketSearch{CustomerID} = $Kernel::OM->Get('Kernel::System::DB')->QueryStringEscape(
@@ -1416,64 +1412,6 @@ sub Run {
             };
         }
 
-        # KIX4OTRS-capeIT
-        my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-        my %AttributeLookup;
-        $SearchProfileData{ShownAttributes} = $SearchProfileData{ShownAttributes} || '';
-        my @ShownAttributes = split( /;/, $SearchProfileData{ShownAttributes} );
-
-        # create attibute lookup table
-        for my $Attribute (@ShownAttributes) {
-            $AttributeLookup{$Attribute} = 1;
-        }
-
-        # dynamic fields search parameters for ticket search
-        my %DynamicFieldSearchParameters;
-
-        # cycle trough the activated Dynamic Fields for this screen
-        DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-
-            # get search field preferences
-            my $SearchFieldPreferences = $BackendObject->SearchFieldPreferences(
-                DynamicFieldConfig => $DynamicFieldConfig,
-            );
-
-            next DYNAMICFIELD if !IsArrayRefWithData($SearchFieldPreferences);
-
-            PREFERENCE:
-            for my $Preference ( @{$SearchFieldPreferences} ) {
-
-                if (
-                    !$AttributeLookup{
-                        'LabelSearch_DynamicField_'
-                            . $DynamicFieldConfig->{Name}
-                            . $Preference->{Type}
-                    }
-                    )
-                {
-                    next PREFERENCE;
-                }
-
-                # extract the dynamic field value from the profile
-                my $SearchParameter = $BackendObject->SearchFieldParameterBuild(
-                    DynamicFieldConfig => $DynamicFieldConfig,
-                    Profile            => \%SearchProfileData,
-                    LayoutObject       => $LayoutObject,
-                    Type               => $Preference->{Type},
-                );
-
-                # set search parameter
-                if ( defined $SearchParameter ) {
-                    $DynamicFieldSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
-                        = $SearchParameter->{Parameter};
-                }
-            }
-        }
-
-        # EO KIX4OTRS-capeIT
-
         $CacheUsed = 0;
         my @TicketIDsArray;
         if (
@@ -1499,11 +1437,12 @@ sub Run {
     );
 
     # if no cache or new list result, do count lookup
-    # KIX4OTRS-capeIT
-    #    if ( !$Summary || !$CacheUsed ) {
-    if ( $SearchParamsAvailable && ( !$Summary || !$CacheUsed ) ) {
-
-        # EO KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
+#    if ( !$Summary || !$CacheUsed ) {
+    if ( $PerformSearch
+        && (!$Summary || !$CacheUsed)
+    ) {
+# EO KIX4OTRS-capeIT
         for my $Type ( sort keys %TicketSearchSummary ) {
             next TYPE if !$TicketSearchSummary{$Type};
 
@@ -1535,67 +1474,6 @@ sub Run {
                 )
             {
 
-                # KIX4OTRS-capeIT
-                my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-                my %AttributeLookup;
-                $SearchProfileData{ShownAttributes} = $SearchProfileData{ShownAttributes} || '';
-                my @ShownAttributes = split( /;/, $SearchProfileData{ShownAttributes} );
-
-                # create attibute lookup table
-                for my $Attribute (@ShownAttributes) {
-                    $AttributeLookup{$Attribute} = 1;
-                }
-
-                # dynamic fields search parameters for ticket search
-                my %DynamicFieldSearchParameters;
-
-                # cycle trough the activated Dynamic Fields for this screen
-                DYNAMICFIELD:
-                for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-                    next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-
-                    # get search field preferences
-                    my $SearchFieldPreferences = $BackendObject->SearchFieldPreferences(
-                        DynamicFieldConfig => $DynamicFieldConfig,
-                    );
-
-                    next DYNAMICFIELD if !IsArrayRefWithData($SearchFieldPreferences);
-
-                    PREFERENCE:
-                    for my $Preference ( @{$SearchFieldPreferences} ) {
-
-                        if (
-                            !$AttributeLookup{
-                                'LabelSearch_DynamicField_'
-                                    . $DynamicFieldConfig->{Name}
-                                    . $Preference->{Type}
-                            }
-                            )
-                        {
-                            next PREFERENCE;
-                        }
-
-                        # extract the dynamic field value from the profile
-                        my $SearchParameter = $BackendObject->SearchFieldParameterBuild(
-                            DynamicFieldConfig => $DynamicFieldConfig,
-                            Profile            => \%SearchProfileData,
-                            LayoutObject       => $LayoutObject,
-                            Type               => $Preference->{Type},
-                        );
-
-                        # set search parameter
-                        if ( defined $SearchParameter ) {
-                            $DynamicFieldSearchParameters{
-                                'DynamicField_'
-                                    . $DynamicFieldConfig->{Name}
-                                }
-                                = $SearchParameter->{Parameter};
-                        }
-                    }
-                }
-
-                # EO KIX4OTRS-capeIT
-
                 $Summary->{$Type} = $TicketObject->TicketSearch(
                     Result => 'COUNT',
                     %TicketSearch,
@@ -1626,10 +1504,10 @@ sub Run {
     # set css class
     $Summary->{ $Self->{Filter} . '::Selected' } = 'Selected';
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     # get layout object - moved upwards
     # my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     # get filter ticket counts
     $LayoutObject->Block(
@@ -1773,24 +1651,24 @@ sub Run {
         if ( $Self->{SortBy} && ( $Self->{SortBy} eq $Item ) ) {
             if ( $Self->{OrderBy} && ( $Self->{OrderBy} eq 'Up' ) ) {
                 $OrderBy = 'Down';
-                # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                 # $CSS .= ' SortAscendingLarge';
                 $CSS .= ' SortDescendingLarge';
-                # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
             }
             else {
                 $OrderBy = 'Up';
-                # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                 # $CSS .= ' SortDescendingLarge';
                 $CSS .= ' SortAscendingLarge';
-                # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
             }
 
             # set title description
-            # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
             # my $TitleDesc = $OrderBy eq 'Down' ? Translatable('sorted ascending') : Translatable('sorted descending');
             my $TitleDesc = $OrderBy eq 'Down' ? Translatable('sorted descending') : Translatable('sorted ascending');
-            # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
             $TitleDesc = $LayoutObject->{LanguageObject}->Translate($TitleDesc);
             $Title .= ', ' . $TitleDesc;
         }
@@ -1850,24 +1728,24 @@ sub Run {
             if ( $Self->{SortBy} && ( $Self->{SortBy} eq $HeaderColumn ) ) {
                 if ( $Self->{OrderBy} && ( $Self->{OrderBy} eq 'Up' ) ) {
                     $OrderBy = 'Down';
-                    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                     # $CSS .= ' SortAscendingLarge';
                     $CSS .= ' SortDescendingLarge';
-                    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                 }
                 else {
                     $OrderBy = 'Up';
-                    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                     # $CSS .= ' SortDescendingLarge';
                     $CSS .= ' SortAscendingLarge';
-                    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                 }
 
                 # add title description
-                # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                 # my $TitleDesc = $OrderBy eq 'Down' ? Translatable('sorted ascending') : Translatable('sorted descending');
                 my $TitleDesc = $OrderBy eq 'Down' ? Translatable('sorted descending') : Translatable('sorted ascending');
-                # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                 $TitleDesc = $LayoutObject->{LanguageObject}->Translate($TitleDesc);
                 $Title .= ', ' . $TitleDesc;
             }
@@ -2132,24 +2010,24 @@ sub Run {
                 {
                     if ( $Self->{OrderBy} && ( $Self->{OrderBy} eq 'Up' ) ) {
                         $OrderBy = 'Down';
-                        # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                         # $CSS .= ' SortAscendingLarge';
                         $CSS .= ' SortDescendingLarge';
-                        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                     }
                     else {
                         $OrderBy = 'Up';
-                        # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                         # $CSS .= ' SortDescendingLarge';
                         $CSS .= ' SortAscendingLarge';
-                        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                     }
 
                     # add title description
-                    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                     # my $TitleDesc = $OrderBy eq 'Down' ? 'sorted ascending' : 'sorted descending';
                     my $TitleDesc = $OrderBy eq 'Down' ? 'sorted descending' : 'sorted ascending';
-                    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                     $TitleDesc = $LayoutObject->{LanguageObject}->Translate($TitleDesc);
                     $Title .= ', ' . $TitleDesc;
                 }
@@ -2271,13 +2149,9 @@ sub Run {
         }
     }
 
-    # KIX4OTRS-capeIT
-    if ( $Self->{Name} =~ /SearchTemplate/ && !$Self->{SearchTemplateName} ) {
-        $TicketIDs = [];
-    }
+# KIX4OTRS-capeIT
     my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     # show tickets
     my $Count = 0;
@@ -2321,7 +2195,7 @@ sub Run {
             );
         }
 
-        # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
         my $StateHighlighting
             = $Kernel::OM->Get('Kernel::Config')
             ->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
@@ -2333,8 +2207,7 @@ sub Run {
         {
             $Ticket{LineStyle} = $StateHighlighting->{ $Ticket{State} };
         }
-
-        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
         # show ticket
         $LayoutObject->Block(
@@ -2342,14 +2215,13 @@ sub Run {
             Data => \%Ticket,
         );
 
-        # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
         # highlight tickets, which are escalated
         my $EscHighlightClass = '';
         if ( $Ticket{SolutionTimeEscalation} || $Ticket{FirstResponseTimeEscalation} ) {
             $EscHighlightClass = 'EscTime';
         }
-
-        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
         # show ticket flags
         my @TicketMetaItems = $LayoutObject->TicketMetaItems(
@@ -2363,13 +2235,12 @@ sub Run {
             $LayoutObject->Block(
                 Name => 'ContentLargeTicketGenericRowMeta',
 
-                # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                 # Data => {},
                 Data => {
                     ClassTable => $EscHighlightClass,
                 },
-
-                # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
             );
             if ($Item) {
                 $LayoutObject->Block(
@@ -2708,10 +2579,9 @@ sub Run {
                 RefreshTime => $Refresh,
                 CustomerID  => $Param{CustomerID},
 
-                # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                 CustomerUserLogin => $Param{CustomerUserLogin},
-
-                # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                 %{$Summary},
             },
         );
@@ -2742,11 +2612,12 @@ sub Run {
             %{ $Self->{Config} },
             Name => $Self->{Name},
             %{$Summary},
-            FilterValue       => $Self->{Filter},
-            CustomerID        => $Self->{CustomerID},
-            # KIX4OTRS-capeIT
+            FilterValue => $Self->{Filter},
+            CustomerID  => $Self->{CustomerID},
+
+# KIX4OTRS-capeIT
             CustomerUserLogin => $Param{CustomerUserLogin},
-            # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
         },
         KeepScriptTags => $Param{AJAX},
     );
@@ -2974,7 +2845,7 @@ sub _SearchParamsGet {
         UserID => $Self->{UserID},
     );
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     # fallback to use old configuration
     # my $PreferencesColumn = $JSONObject->Decode(
     #     Data => $Preferences{ $Self->{PrefKeyColumns} },
@@ -3010,8 +2881,7 @@ sub _SearchParamsGet {
             }
         }
     }
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     # check for default settings
     my @Columns;
