@@ -139,6 +139,16 @@ sub Run {
     if ($PendingTime) {
         # Convert to milliseconds;
         $PendingTime *= 1000;
+
+        # get DateInputFormat
+        my $DateFormat = $Self->{LayoutObject}->{LanguageObject}->{DateInputFormat};
+        $DateFormat =~ s/\%A/DD/g;
+        $DateFormat =~ s/\%B/MM/g;
+        $DateFormat =~ s/\%D/dd/g;
+        $DateFormat =~ s/\%M/mm/g;
+        $DateFormat =~ s/\%Y/yy/g;
+        $DateFormat =~ s/\%T//g;
+
         $Self->{LayoutObject}->AddJSOnDocumentComplete(
             Code =>   "if (document.getElementById('Year')) {\n"
                     . "    var PendingDate = new Date();\n"
@@ -148,6 +158,9 @@ sub Run {
                     . "    document.getElementById('Day').value = PendingDate.getDate();\n"
                     . "    document.getElementById('Hour').value = PendingDate.getHours();\n"
                     . "    document.getElementById('Minute').value = PendingDate.getMinutes();\n"
+                    . "    if (document.getElementById('Date')) {\n"
+                    . "        document.getElementById('Date').value = \$.datepicker.formatDate(\"$DateFormat\", PendingDate);\n"
+                    . "    }\n"
                     . "}",
         );
     }
