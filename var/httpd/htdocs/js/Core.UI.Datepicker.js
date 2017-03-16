@@ -333,7 +333,14 @@ Core.UI.Datepicker = (function (TargetNS) {
                 return false;
             });
         }
+        // EO KIX4OTRS-capeIT
 
+        $('#' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').unbind('click.Datepicker').bind('click.Datepicker', function () {
+            $DatepickerElement.datepicker('show');
+            return false;
+        });
+
+        // KIX4OTRS-capeIT
         // special handling for AgentStatistics
         if (Core.Config.Get('Action') === 'AgentStatistics') {
             $('#EditDialog #' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').unbind('click.Datepicker').bind('click.Datepicker', function () {
@@ -341,14 +348,6 @@ Core.UI.Datepicker = (function (TargetNS) {
                 $('#ui-datepicker-div').prop('style', $('#ui-datepicker-div').attr('style') + '; z-index: 5000 !important');
                 return false;
             });
-        } else {
-
-            // EO KIX4OTRS-capeIT
-            $('#' + Core.App.EscapeSelector(Element.Day.attr('id')) + 'DatepickerIcon').unbind('click.Datepicker').bind('click.Datepicker', function () {
-                $DatepickerElement.datepicker('show');
-                return false;
-            });
-            // KIX4OTRS-capeIT
         }
         // EO KIX4OTRS-capeIT
 
