@@ -26,8 +26,7 @@ sub new {
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
 
-    $Self->{DynamicFieldFilter}
-        = $ConfigObject->Get("Ticket::Frontend::KIXSidebarDynamicField")->{DynamicField};
+    $Self->{DynamicFieldFilter} = $ConfigObject->Get("Ticket::Frontend::KIXSidebarDynamicField")->{DynamicField} || {};
 
     # get the dynamic fields for this screen
     $Self->{DynamicField} = $DynamicFieldObject->DynamicFieldListGet(

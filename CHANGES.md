@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.0 (2017/xx/xx)
+ * (2017/03/17) - Bugfix: T2017031790001119 (dynamic field filter hash could be undefined) (ddoerffel)
  * (2017/03/16) - Bugfix: T2017021790000729 (fixed initial date for pending time) (millinger)
  * (2017/03/16) - Bugfix: T2017031690001166 (moved output filter to correct folder) (millinger)
  * (2017/03/16) - Bugfix: T2017031490001179 (fixed datepicker for AgentStatistics) (millinger)
