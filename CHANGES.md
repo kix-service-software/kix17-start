@@ -1,8 +1,8 @@
 # Change log of KIX
-* Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de/
+* Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 * $Id$
 
-#17.0.0 (2017/xx/xx)
+#16.99.80 (2017/03/19)
  * (2017/03/17) - Bugfix: T2017031790001119 (dynamic field filter hash could be undefined) (ddoerffel)
  * (2017/03/16) - Bugfix: T2017021790000729 (fixed initial date for pending time) (millinger)
  * (2017/03/16) - Bugfix: T2017031690001166 (moved output filter to correct folder) (millinger)
