@@ -3,11 +3,12 @@
 * $Id$
 
 #16.99.81 (2017/03/xx)
+ * (2017/03/20) - Bugfix: T2017032090001309 (article flag search form field not modernized) (ddoerffel)
+ * (2017/03/20) - Bugfix: T2017032090001452 (missing object in customer remote db ajax handler) (ddoerffel)
  * (2017/03/20) - CR: T2016121190001552 (code merge of all packages and changes for KIX 2017) (millinger)
  * (2017/03/20) - CR: T2016121190001552 (added KIX_ placeholders with fallback - missing fallback in ticket templates) (rbo)
 
 #16.99.80 (2017/03/19)
- * (2017/03/20) - Bugfix: T2017032090001452 (missing object in customer remote db ajax handler) (ddoerffel)
  * (2017/03/17) - Bugfix: T2017031790001119 (dynamic field filter hash could be undefined) (ddoerffel)
  * (2017/03/16) - Bugfix: T2017021790000729 (fixed initial date for pending time) (millinger)
  * (2017/03/16) - Bugfix: T2017031690001166 (moved output filter to correct folder) (millinger)

@@ -2578,6 +2578,7 @@ sub Run {
         $Param{ArticleFlagStrg} = $LayoutObject->BuildSelection(
             Data => \%ArticleFlagList,
             Name => 'ArticleFlag',
+            Class    => 'Modernize',
         );
         $Param{ShowProfileAsQueueChecked} = '';
         if ( $GetParam{ShowProfileAsQueue} ) {
