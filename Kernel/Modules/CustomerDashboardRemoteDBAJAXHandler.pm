@@ -437,7 +437,7 @@ sub _CustomerDashboardRemoteDBSearch {
         }
     }
 
-    my $QuotedValue = $Self->Quote( $Param{SearchValue} );
+    my $QuotedValue = $Kernel::OM->Get('Kernel::System::DB')->Quote( $Param{SearchValue} );
 
     # check cache
     if ( $Param{DatabaseCacheTTL} ) {
@@ -473,7 +473,7 @@ sub _CustomerDashboardRemoteDBSearch {
         );
         return \@{$List} if $List;
     }
-    my $QueryCondition = $Self->QueryCondition(
+    my $QueryCondition = $Kernel::OM->Get('Kernel::System::DB')->QueryCondition(
         Key          => $Param{SearchAttribute},
         Value        => $QuotedValue,
         SearchPrefix => '*',
@@ -525,7 +525,7 @@ sub _CustomerDashboardRemoteDBSearch {
     }
 
     # fetch result
-    while ( my @Row = $Self->FetchrowArray() ) {
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
         push( @List, \@Row );
 
         # Check if limit is reached
