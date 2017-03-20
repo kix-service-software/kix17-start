@@ -12,26 +12,27 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
-    'Kernel::System::ImportExport',
+    'Kernel::Config',
     'Kernel::System::DynamicField',
+    'Kernel::System::GeneralCatalog',
+    'Kernel::System::ImportExport',
+    'Kernel::System::Log',
+    'Kernel::System::Main',
     'Kernel::System::Package',
     'Kernel::System::Queue',
     'Kernel::System::Service',
     'Kernel::System::Type',
-    'Kernel::System::Valid',
-    'Kernel::System::Log',
-    'Kernel::System::Main',
     'Kernel::System::User',
-    'Kernel::Config'
+    'Kernel::System::Valid',
 );
 
 =head1 NAME
 
-Kernel::System::ImportExport::ObjectBackend::CustomerUser - import/export backend for CustomerUser
+Kernel::System::ImportExport::ObjectBackend::Service - import/export backend for Service
 
 =head1 SYNOPSIS
 
-All functions to import and export CustomerUser entries
+All functions to import and export Service entries
 
 =over 4
 
@@ -41,32 +42,9 @@ All functions to import and export CustomerUser entries
 
 create an object
 
-    use Kernel::Config;
-    use Kernel::System::DB;
-    use Kernel::System::Log;
-    use Kernel::System::Main;
-    use Kernel::System::ImportExport::ObjectBackend::CustomerUser;
-
-    my $ConfigObject = Kernel::Config->new();
-    my $LogObject = Kernel::System::Log->new(
-        ConfigObject => $ConfigObject,
-    );
-    my $MainObject = Kernel::System::Main->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-    );
-    my $DBObject = Kernel::System::DB->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        MainObject   => $MainObject,
-    );
-    my $BackendObject = Kernel::System::ImportExport::ObjectBackend::CustomerUser->new(
-        ConfigObject       => $ConfigObject,
-        LogObject          => $LogObject,
-        DBObject           => $DBObject,
-        MainObject         => $MainObject,
-        ImportExportObject => $ImportExportObject,
-    );
+    use Kernel::System::ObjectManager;
+    local $Kernel::OM = Kernel::System::ObjectManager->new();
+    my $BackendObject = $Kernel::OM->Get('Kernel::System::ImportExport::ObjectBackend::Service');
 
 =cut
 
@@ -77,34 +55,26 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    if ( $Kernel::OM->Get('Kernel::System::Package')->PackageIsInstalled( Name => 'ITSMCore' ) ) {
-        if ( $Kernel::OM->Get('Kernel::System::Main')->Require('Kernel::System::GeneralCatalog') ) {
+    # get service type list
+    $Self->{ServiceTypeList} = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+        Class => 'ITSM::Service::Type',
+    );
+    my %TmpHash = reverse( %{ $Self->{ServiceTypeList} } );
+    $Self->{ReverseServiceTypeList} = \%TmpHash;
 
-            if ( !$Self->{GeneralCatalogObject} ) {
-                $Self->{GeneralCatalogObject} = Kernel::System::GeneralCatalog->new( %{$Self} );
-            }
-
-            # get service type list
-            $Self->{ServiceTypeList} = $Self->{GeneralCatalogObject}->ItemList(
-                Class => 'ITSM::Service::Type',
-            );
-            my %TmpHash = reverse( %{ $Self->{ServiceTypeList} } );
-            $Self->{ReverseServiceTypeList} = \%TmpHash;
-
-            # get criticality list
-            my $ITSMCriticality = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
-                Name => 'ITSMCriticality',
-            );
-            if (   $ITSMCriticality
-                && $ITSMCriticality->{'FieldType'}  eq 'Dropdown'
-                && $ITSMCriticality->{'ObjectType'} eq 'Ticket' )
-            {
-                $Self->{CriticalityList} = $ITSMCriticality->{'Config'}->{'PossibleValues'};
-                my %TmpHash2 = reverse( %{ $Self->{CriticalityList} } );
-                $Self->{ReverseCriticalityList} = \%TmpHash2;
-            }
-        }
+    # get criticality list
+    my $ITSMCriticality = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
+        Name => 'ITSMCriticality',
+    );
+    if (   $ITSMCriticality
+        && $ITSMCriticality->{'FieldType'}  eq 'Dropdown'
+        && $ITSMCriticality->{'ObjectType'} eq 'Ticket' )
+    {
+        $Self->{CriticalityList} = $ITSMCriticality->{'Config'}->{'PossibleValues'};
+        my %TmpHash2 = reverse( %{ $Self->{CriticalityList} } );
+        $Self->{ReverseCriticalityList} = \%TmpHash2;
     }
+
     return $Self;
 }
 
@@ -265,24 +235,24 @@ sub MappingObjectAttributesGet {
     }
 
     #---------------------------------------------------------------------------
-    # using ciritcality/servicetype-list as indicator for ITSM-installation...
+    # using ciritcality/servicetype-list as indicator
     if ( $Self->{CriticalityList} && $Self->{ServiceTypeList} ) {
         my $ElementListITSM = [
             {
                 Key   => 'Type',
-                Value => 'Service Type (ITSM only)',
+                Value => 'Service Type',
             },
             {
                 Key   => 'Criticality',
-                Value => 'Criticality (ITSM only)',
+                Value => 'Criticality',
             },
             {
                 Key   => 'CurInciState',
-                Value => 'Current Incident State (ITSM only)',
+                Value => 'Current Incident State',
             },
             {
                 Key   => 'CurInciStateType',
-                Value => 'Current Incident State Type (ITSM only)',
+                Value => 'Current Incident State Type',
             },
         ];
         my @TmpArray = ( @{$ElementList}, @{$ElementListITSM} );
@@ -520,15 +490,11 @@ sub ExportDataGet {
                 %SelectionList = $Kernel::OM->Get('Kernel::System::Type')->TypeList();
             }
             elsif (
-                ( $Preferences{$CurrKey}->{SelectionSource} )
-                &&
-                ( $Preferences{$CurrKey}->{SelectionSource} eq 'GeneralCatalog' )
-                &&
-                ( $Preferences{$CurrKey}->{GeneralCatalogClass} ) &&
-                $Self->{GeneralCatalogObject}
-                )
-            {
-                my $ItemListRef = $Self->{GeneralCatalogObject}->ItemList(
+                $Preferences{$CurrKey}->{SelectionSource}
+                &&$Preferences{$CurrKey}->{SelectionSource} eq 'GeneralCatalog'
+                &&$Preferences{$CurrKey}->{GeneralCatalogClass}
+            ) {
+                my $ItemListRef = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
                     Class => $Preferences{$CurrKey}->{GeneralCatalogClass},
                 );
                 if ( $ItemListRef && ref($ItemListRef) eq 'HASH' ) {
@@ -770,13 +736,10 @@ sub ImportDataSave {
             %SelectionList = $Kernel::OM->Get('Kernel::System::Type')->TypeList();
         }
         elsif (
-            ( $Preferences{$CurrUsedKey}->{SelectionSource} eq 'GeneralCatalog' )
-            &&
-            ( $Preferences{$CurrUsedKey}->{GeneralCatalogClass} ) &&
-            $Self->{GeneralCatalogObject}
-            )
-        {
-            my $ItemListRef = $Self->{GeneralCatalogObject}->ItemList(
+            $Preferences{$CurrUsedKey}->{SelectionSource} eq 'GeneralCatalog'
+            &&$Preferences{$CurrUsedKey}->{GeneralCatalogClass}
+        ) {
+            my $ItemListRef = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
                 Class => $Preferences{$CurrUsedKey}->{GeneralCatalogClass},
             );
             if ( $ItemListRef && ref($ItemListRef) eq 'HASH' ) {
