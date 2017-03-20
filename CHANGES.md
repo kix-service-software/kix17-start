@@ -2,6 +2,9 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 * $Id$
 
+#16.99.81 (2017/03/xx)
+ * (2017/03/20) - CR: T2016121190001552 (added KIX_ placeholders with fallback - missing fallback in ticket templates) (rbo)
+
 #16.99.80 (2017/03/19)
  * (2017/03/17) - Bugfix: T2017031790001119 (dynamic field filter hash could be undefined) (ddoerffel)
  * (2017/03/16) - Bugfix: T2017021790000729 (fixed initial date for pending time) (millinger)

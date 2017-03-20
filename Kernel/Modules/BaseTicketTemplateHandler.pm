@@ -116,6 +116,9 @@ sub TicketTemplateReplace {
                 $TempArrayCount = scalar @{ $Param{MultipleCustomerBcc} } if $Key eq 'Bcc';
 
                 if ( $TicketTemplate{$Key} ) {
+                    
+#rbo - T2016121190001552 - added KIX placeholders
+                    $TicketTemplate{$Key} =~ s/OTRS_/KIX_/g;
 
                     # deselect already selected customer users to prevent double selected users
                     for my $Item ( @TempArray ) {
