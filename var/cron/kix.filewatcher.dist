@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de/
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 # --
 # $Id$
 # --
@@ -9,6 +9,6 @@
 # --
 
 # start process FileWatcher every 30 minutes
-*/30 * * * *    $HOME/bin/otrs.Console.pl Maint::FileWatcher::Synchronize >> /dev/null
+*/30 * * * *    $HOME/bin/kix.Console.pl Maint::FileWatcher::Synchronize >> /dev/null
 
 

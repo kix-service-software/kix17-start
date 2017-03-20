@@ -36,7 +36,7 @@ sub Run {
 
     my $UsageText = "<green>$ProductName</green> (<yellow>$ProductVersion</yellow>)\n\n";
     $UsageText .= "<yellow>Usage:</yellow>\n";
-    $UsageText .= " otrs.Console.pl command [options] [arguments]\n";
+    $UsageText .= " kix.Console.pl command [options] [arguments]\n";
     $UsageText .= "\n<yellow>Options:</yellow>\n";
     GLOBALOPTION:
     for my $Option ( @{ $Self->{_GlobalOptions} // [] } ) {

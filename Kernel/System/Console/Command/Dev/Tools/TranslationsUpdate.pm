@@ -65,13 +65,13 @@ sub Configure {
 
 Make sure that you have a clean system with a current configuration. No modules may be installed or linked into the system!
 
-    <green>otrs.Console.pl $Name --language ...</green>
+    <green>kix.Console.pl $Name --language ...</green>
 
 <yellow>Translating Extension Modules</yellow>
 
 Make sure that you have a clean system with a current configuration. The module that needs to be translated has to be installed or linked into the system, but only this one!
 
-    <green>otrs.Console.pl $Name --language ... --module-directory ...</green>
+    <green>kix.Console.pl $Name --language ... --module-directory ...</green>
 EOF
 
     return;

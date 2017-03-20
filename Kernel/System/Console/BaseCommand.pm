@@ -393,7 +393,7 @@ sub Execute {
         $Self->PrintError(
             "You cannot run kix.Console.pl as root. Please run it as the apache user or with the help of su:"
         );
-        $Self->Print("  <yellow>su -c \"bin/otrs.Console.pl MyCommand\" -s /bin/bash <apache user> </yellow>\n");
+        $Self->Print("  <yellow>su -c \"bin/kix.Console.pl MyCommand\" -s /bin/bash <apache user> </yellow>\n");
         return $Self->ExitCodeError();
     }
 

@@ -31,7 +31,7 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
  * this is only necessary if you want to work in both systems
 * start apache
 * re-install the remaining installed packages using the console package manager
- * ```sudo -u <apache user> /opt/kix/bin/otrs.Console.pl Admin::Package::Reinstall --force <package name>```
+ * ```sudo -u <apache user> /opt/kix/bin/kix.Console.pl Admin::Package::Reinstall --force <package name>```
 * copy article attachments in the filesystem from old OTRS installation to KIX
  * ```cp -rvp <OTRS-Home>/var/article /opt/kix/var```
 * if exists, copy CI images in the filesystem from old OTRS installation to KIX
@@ -46,7 +46,7 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
 * start cronjobs in KIX system
  * ```/opt/kix/bin/Cron.sh start <apache user>```
 * start daemon in KIX system
- * ```sudo -u www-data /opt/kix/bin/otrs.Daemon.pl start```
+ * ```sudo -u www-data /opt/kix/bin/kix.Daemon.pl start```
 
 # Deutsche Version
 
@@ -80,7 +80,7 @@ Im Folgenden wird das Vorgehen für die Migration einer OTRS-Instanz auf KIX bes
  * nur notwendig, falls man parallel in OTRS und KIX arbeiten will
 * Apache starten 
 * abschließend die übrigen installierten Pakete im Paket-Manager auf der Console re-installieren
- * ```sudo -u <apache user> /opt/kix/bin/otrs.Console.pl Admin::Package::Reinstall --force <package name>```
+ * ```sudo -u <apache user> /opt/kix/bin/kix.Console.pl Admin::Package::Reinstall --force <package name>```
 * die Artikel-Attachments im Dateisystem von der alten OTRS-Installation nach KIX kopieren
  * ```cp -rvp <OTRS-Home>/var/article /opt/kix/var```
 * falls vorhanden, die CI-Bilder im Dateisystem von der alten OTRS-Installation nach KIX kopieren
@@ -95,5 +95,5 @@ Im Folgenden wird das Vorgehen für die Migration einer OTRS-Instanz auf KIX bes
 * Cronjobs in KIX-Instanz starten
  * ```/opt/kix/bin/Cron.sh start <Apache-Nutzer>```
 * Daemon in KIX-Instanz starten
- * ```sudo -u www-data /opt/kix/bin/otrs.Daemon.pl start```
+ * ```sudo -u www-data /opt/kix/bin/kix.Daemon.pl start```
 

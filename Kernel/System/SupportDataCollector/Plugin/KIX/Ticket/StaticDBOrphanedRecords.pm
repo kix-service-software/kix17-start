@@ -50,7 +50,7 @@ sub Run {
                 Value      => $OrphanedTicketLockIndex,
                 Message =>
                     Translatable(
-                    'Table ticket_lock_index contains orphaned records. Please run bin/otrs.Console.pl "Maint::Ticket::QueueIndexCleanup" to clean the StaticDB index.'
+                    'Table ticket_lock_index contains orphaned records. Please run bin/kix.Console.pl "Maint::Ticket::QueueIndexCleanup" to clean the StaticDB index.'
                     ),
             );
         }
@@ -74,7 +74,7 @@ sub Run {
                 Value      => $OrphanedTicketIndex,
                 Message =>
                     Translatable(
-                    'Table ticket_index contains orphaned records. Please run bin/otrs.Console.pl "Maint::Ticket::QueueIndexCleanup" to clean the StaticDB index.'
+                    'Table ticket_index contains orphaned records. Please run bin/kix.Console.pl "Maint::Ticket::QueueIndexCleanup" to clean the StaticDB index.'
                     ),
             );
         }

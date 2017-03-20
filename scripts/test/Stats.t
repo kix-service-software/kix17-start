@@ -445,7 +445,7 @@ $Self->Is(
     "Export-Importcheck - check if import file content equal export file content.\n Be careful, if it gives errors if you run OTRS with default charset utf-8,\n because the examplefile is iso-8859-1, but at my test there a no problems to compare a utf-8 string with an iso string?!\n",
 );
 
-# try to use otrs.Console.pl Maint::Stats::Generate
+# try to use kix.Console.pl Maint::Stats::Generate
 
 # check the imported stat
 my $Stat4 = $StatsObject->StatsGet( StatID => $StatID );

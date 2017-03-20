@@ -3411,8 +3411,8 @@ sub Data {
         'Need param Key to download!' => 'Benötige Parameter "Key" zum herunterladen!',
 
         # Perl Module: Kernel/Modules/AdminPackageManager.pm
-        'Sorry, Apache::Reload is needed as PerlModule and PerlInitHandler in Apache config file. See also scripts/apache2-httpd.include.conf. Alternatively, you can use the command line tool bin/otrs.Console.pl to install packages!' =>
-            'Entschuldigung, Apache::Reload wird als Perl-Modul und PerlInitHandler in der Apache-Konfiguration benötigt (siehe auch scripts/apache2-httpd.include.conf). Alternativ können Sie Pakete auch mithilfe des Kommandozeilen-Tools bin/otrs.Console.pl installieren.',
+        'Sorry, Apache::Reload is needed as PerlModule and PerlInitHandler in Apache config file. See also scripts/apache2-httpd.include.conf. Alternatively, you can use the command line tool bin/kix.Console.pl to install packages!' =>
+            'Entschuldigung, Apache::Reload wird als Perl-Modul und PerlInitHandler in der Apache-Konfiguration benötigt (siehe auch scripts/apache2-httpd.include.conf). Alternativ können Sie Pakete auch mithilfe des Kommandozeilen-Tools bin/kix.Console.pl installieren.',
         'No such package!' => 'Kein solches Paket!',
         'No such file %s in package!' => 'Keine solche Datei %s im Paket!',
         'No such file %s in local file system!' => 'Datei %s existiert nicht im Dateisystem!',
@@ -4217,10 +4217,10 @@ sub Data {
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/Ticket/StaticDBOrphanedRecords.pm
         'Orphaned Records In ticket_lock_index Table' => 'Verwaiste Einträge in der Tabelle ticket_lock_index',
-        'Table ticket_lock_index contains orphaned records. Please run bin/otrs.Console.pl "Maint::Ticket::QueueIndexCleanup" to clean the StaticDB index.' =>
-            'Die Tabelle ticket_lock_index enthält verwaiste Einträge. Bitte führen Sie bin/otrs.Console.pl "Maint::Ticket::QueueIndexCleanup" aus, um den StaticDB-Index zu bereinigen.',
+        'Table ticket_lock_index contains orphaned records. Please run bin/kix.Console.pl "Maint::Ticket::QueueIndexCleanup" to clean the StaticDB index.' =>
+            'Die Tabelle ticket_lock_index enthält verwaiste Einträge. Bitte führen Sie bin/kix.Console.pl "Maint::Ticket::QueueIndexCleanup" aus, um den StaticDB-Index zu bereinigen.',
         'Orphaned Records In ticket_index Table' => 'Verwaiste Einträge in der Tabelle ticket_index.',
-        'Table ticket_index contains orphaned records. Please run bin/otrs.Console.pl "Maint::Ticket::QueueIndexCleanup" to clean the StaticDB index.' =>
+        'Table ticket_index contains orphaned records. Please run bin/kix.Console.pl "Maint::Ticket::QueueIndexCleanup" to clean the StaticDB index.' =>
             'Die Tabelle ticket_index enthält verwaiste Einträge. Bitte führen Sie "Maint::Ticket::QueueIndexCleanup" aus, um sie zu entfernen.',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/TimeSettings.pm
@@ -4594,8 +4594,8 @@ Ihr Helpdesk-Team
         'Balanced white skin by Felix Niklas (slim version).' => 'Balanced White-Skin von Felix Niklas (slim)',
         'Balanced white skin by Felix Niklas.' => 'Balanced White Skin von Felix Niklas.',
         'Based on global RichText setting' => 'Basierend auf der globalen Richtext-Einstellung',
-        'Basic fulltext index settings. Execute "bin/otrs.Console.pl Maint::Ticket::FulltextIndexRebuild" in order to generate a new index.' =>
-            'Basis-Einstellungen für den Volltext-Index. Führen Sie "bin/otrs.Console.pl Maint::Ticket::FulltextIndexRebuild" aus, um den Index neu zu erstellen.',
+        'Basic fulltext index settings. Execute "bin/kix.Console.pl Maint::Ticket::FulltextIndexRebuild" in order to generate a new index.' =>
+            'Basis-Einstellungen für den Volltext-Index. Führen Sie "bin/kix.Console.pl Maint::Ticket::FulltextIndexRebuild" aus, um den Index neu zu erstellen.',
         'Blocks all the incoming emails that do not have a valid ticket number in subject with From: @example.com address.' =>
             'Blockiert alle eingehenden E-Mails, die keine gültige Ticketnummer im Betreff mit Absenderadresse: @ example.com besitzen.',
         'Bounced to "%s".' => 'Bounced an "%s".',
@@ -5430,7 +5430,7 @@ Ihr Helpdesk-Team
         'Defines the username to access the SOAP handle (bin/cgi-bin/rpc.pl).' =>
             'Definiert den Benutzernamen um auf die SOAP-Schnittstelle zuzugreifen (bin/cgi-bin/rpc.pl).',
         'Defines the valid state types for a ticket.' => 'Definiert die gültigen Statustypen für ein Ticket.',
-        'Defines the valid states for unlocked tickets. To unlock tickets the script "bin/otrs.Console.pl Maint::Ticket::UnlockTimeout" can be used.' =>
+        'Defines the valid states for unlocked tickets. To unlock tickets the script "bin/kix.Console.pl Maint::Ticket::UnlockTimeout" can be used.' =>
             '',
         'Defines the viewable locks of a ticket. NOTE: When you change this setting, make sure to delete the cache in order to use the new value. Default: unlock, tmp_lock.' =>
             '',
@@ -5755,8 +5755,8 @@ Ihr Helpdesk-Team
         'HTML Reference' => 'HTML-Referenz',
         'HTML Reference.' => 'HTML-Referenz.',
         'Hebrew' => 'Hebräisch',
-        'Helps to extend your articles full-text search (From, To, Cc, Subject and Body search). Runtime will do full-text searches on live data (it works fine for up to 50.000 tickets). StaticDB will strip all articles and will build an index after article creation, increasing fulltext searches about 50%. To create an initial index use "bin/otrs.Console.pl Maint::Ticket::FulltextIndexRebuild".' =>
-            'Hilft beim Erweitern Ihres Artikel-Volltext-Indexes (Von-, An-, Cc-, Betreffs- und Text-Suche). Runtime führt Volltext-Suchen auf Livedaten aus (performant bis 50.000 Tickets). StaticDB erstellt nach der Artikelerstellung einen Index aus den Artikeldaten, wodurch die Geschwindigkeit von Volltextsuchen um rund 50% steigt. Nutzen Sie "bin/otrs.Console.pl Maint::Ticket::FulltextIndexRebuild", um einen initialen Index zu erstellen.',
+        'Helps to extend your articles full-text search (From, To, Cc, Subject and Body search). Runtime will do full-text searches on live data (it works fine for up to 50.000 tickets). StaticDB will strip all articles and will build an index after article creation, increasing fulltext searches about 50%. To create an initial index use "bin/kix.Console.pl Maint::Ticket::FulltextIndexRebuild".' =>
+            'Hilft beim Erweitern Ihres Artikel-Volltext-Indexes (Von-, An-, Cc-, Betreffs- und Text-Suche). Runtime führt Volltext-Suchen auf Livedaten aus (performant bis 50.000 Tickets). StaticDB erstellt nach der Artikelerstellung einen Index aus den Artikeldaten, wodurch die Geschwindigkeit von Volltextsuchen um rund 50% steigt. Nutzen Sie "bin/kix.Console.pl Maint::Ticket::FulltextIndexRebuild", um einen initialen Index zu erstellen.',
         'Hindi' => 'Hindi',
         'Hungarian' => 'Ungarisch',
         'If "DB" was selected for Customer::AuthModule, a database driver (normally autodetection is used) can be specified.' =>
@@ -5892,7 +5892,7 @@ Ihr Helpdesk-Team
         'Includes article create times in the ticket search of the agent interface.' =>
             'Schließt Artikel-Erstellzeiten in die Ticketsuche im Agentenbereich mit ein.',
         'Incoming Phone Call.' => 'Eingehender Telefonanruf.',
-        'IndexAccelerator: to choose your backend TicketViewAccelerator module. "RuntimeDB" generates each queue view on the fly from ticket table (no performance problems up to approx. 60.000 tickets in total and 6.000 open tickets in the system). "StaticDB" is the most powerful module, it uses an extra ticket-index table that works like a view (recommended if more than 80.000 and 6.000 open tickets are stored in the system). Use the command "bin/otrs.Console.pl Maint::Ticket::QueueIndexRebuild" for initial index creation.' =>
+        'IndexAccelerator: to choose your backend TicketViewAccelerator module. "RuntimeDB" generates each queue view on the fly from ticket table (no performance problems up to approx. 60.000 tickets in total and 6.000 open tickets in the system). "StaticDB" is the most powerful module, it uses an extra ticket-index table that works like a view (recommended if more than 80.000 and 6.000 open tickets are stored in the system). Use the command "bin/kix.Console.pl Maint::Ticket::QueueIndexRebuild" for initial index creation.' =>
             '',
         'Indonesian' => 'Indonesisch',
         'Input' => 'Eingabe',

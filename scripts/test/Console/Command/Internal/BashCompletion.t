@@ -15,14 +15,14 @@ use vars (qw($Self));
 my @Tests = (
     {
         Name      => 'Command completion',
-        COMP_LINE => 'bin/otrs.Console.pl Hel',
-        Arguments => [ 'bin/otrs.Console.pl', 'Hel', 'bin/otrs.Console.pl' ],
+        COMP_LINE => 'bin/kix.Console.pl Hel',
+        Arguments => [ 'bin/kix.Console.pl', 'Hel', 'bin/kix.Console.pl' ],
         Result    => "Help",
     },
     {
         Name      => 'Argument list',
-        COMP_LINE => 'bin/otrs.Console.pl Admin::Article::StorageSwitch ',
-        Arguments => [ 'bin/otrs.Console.pl', '', 'Admin::Article::SwitchStorage' ],
+        COMP_LINE => 'bin/kix.Console.pl Admin::Article::StorageSwitch ',
+        Arguments => [ 'bin/kix.Console.pl', '', 'Admin::Article::SwitchStorage' ],
         Result    => "--target
 --tickets-closed-before-date
 --tickets-closed-before-days
@@ -32,8 +32,8 @@ my @Tests = (
     },
     {
         Name      => 'Argument list limitted',
-        COMP_LINE => 'bin/otrs.Console.pl Admin::Article::StorageSwitch --to',
-        Arguments => [ 'bin/otrs.Console.pl', '--to', 'Admin::Article::SwitchStorage' ],
+        COMP_LINE => 'bin/kix.Console.pl Admin::Article::StorageSwitch --to',
+        Arguments => [ 'bin/kix.Console.pl', '--to', 'Admin::Article::SwitchStorage' ],
         Result    => "--tolerant",
     },
 );

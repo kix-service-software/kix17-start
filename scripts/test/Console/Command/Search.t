@@ -38,7 +38,7 @@ $Self->Is(
 );
 
 $Self->False(
-    index( $Result, 'otrs.Console.pl Help command' ) > -1,
+    index( $Result, 'kix.Console.pl Help command' ) > -1,
     "Help for 'Help' command not found",
 );
 
@@ -62,7 +62,7 @@ $Self->Is(
 );
 
 $Self->False(
-    index( $Result, 'otrs.Console.pl Help command' ) > -1,
+    index( $Result, 'kix.Console.pl Help command' ) > -1,
     "Help for 'Help' command not found",
 );
 
