@@ -317,7 +317,8 @@ sub CreateConfig {
     # read all config files and only save the changed config options
     if ( !$Param{EmptyFile} ) {
 
-        for my $ConfigItem ( @{ $Self->{XMLConfig} } ) {
+        #rbo - T2016121190001552 - added sorted output of keys
+        for my $ConfigItem ( sort { $a->{Name} cmp $b->{Name} } @{ $Self->{XMLConfig} } ) {
 
             if ( $ConfigItem->{Name} && !$UsedKeys{ $ConfigItem->{Name} } ) {
 
