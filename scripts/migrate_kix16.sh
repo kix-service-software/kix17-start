@@ -166,8 +166,8 @@ sudo -u $APACHEUSER bash -c "/opt/kix/scripts/database/update/kix-upgrade-to-17.
 # migrate config
 echo migrating config
 for FILE in ZZZAuto.pm ZZZACL.pm ZZZProcessManagement.pm; do
-    if [ -f $KIX16_PATH/Kernel/Config/Files/$FILE ]; then
-        cp -vpf $KIX16_PATH/Kernel/Config/Files/$FILE /opt/kix/Kernel/Config/Files 2>&1 >> $LOGFILE
+    if [ -f /opt/kix16/Kernel/Config/Files/$FILE ]; then
+        cp -vpf /opt/kix16/Kernel/Config/Files/$FILE /opt/kix/Kernel/Config/Files 2>&1 >> $LOGFILE
     fi
 done
 
