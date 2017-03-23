@@ -290,7 +290,8 @@ sub Send {
     }
     else {
         $Header{'X-Mailer'}     = "$Product Mail Service ($Version)";
-        $Header{'X-Powered-By'} = 'OTRS (https://otrs.com/)';
+#rbo - T2016121190001552 - renamed OTRS to KIX
+        $Header{'X-Powered-By'} = 'KIX (https://www.kixdesk.com/)';
     }
     $Header{Type} = $Param{MimeType} || 'text/plain';
 
