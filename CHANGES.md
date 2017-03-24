@@ -3,6 +3,7 @@
 * $Id$
 
 #16.99.81 (2017/03/xx)
+ * (2017/03/02) - Bugfix: T2017032190000782 (missing translation for "Edit|Copy|Move|Delete Article") (rkaiser)
  * (2017/03/20) - Bugfix: T2017032090001309 (article flag search form field not modernized) (ddoerffel)
  * (2017/03/20) - Bugfix: T2017032090001452 (missing object in customer remote db ajax handler) (ddoerffel)
  * (2017/03/20) - CR: T2016121190001552 (code merge of all packages and changes for KIX 2017) (millinger)

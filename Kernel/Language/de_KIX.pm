@@ -103,7 +103,7 @@ sub Data {
     $Lang->{'Open linked Tickets'}                   = 'Offene verknüpfte Tickets';
     $Lang->{'All linked Tickets'}                    = 'Alle verknüpften Tickets';
     $Lang->{'The icon file to be used as favicon (relative to Frontend::ImagePath).'} =
-        'Die Icondatei welche als Favicon genutzt werden soll (relativ zu Frontend::ImagePath).';
+        'Die Icondatei, welche als Favicon genutzt werden soll (relativ zu Frontend::ImagePath).';
     $Lang->{"This field's content can not be longer than %s characters."} =
         'Der Inhalt dieses Felds kann max. %s Zeichen betragen.';
     $Lang->{"This field is required and its content can not be longer than %s characters."} =
@@ -820,18 +820,14 @@ sub Data {
     # EO KIX4OTRS_TicketStateWorkflow.xml
 
     # AgentArticleCopyMove
+    $Lang->{'Edit Article'}                 = 'Artikel ändern';
+    $Lang->{'Copy Article'}                 = 'Artikel kopieren';
+    $Lang->{'Move Article'}                 = 'Artikel verschieben';
+    $Lang->{'Delete Article'}               = 'Artikel löschen';
     $Lang->{'Copy/Move/Delete'}             = 'Kopieren/Verschieben/löschen';
     $Lang->{'of destination ticket'}        = 'des Zieltickets';
-    $Lang->{'Copy, Move or Delete Article'} = 'Kopieren, Verschieben oder löschen eines Artikels';
-    $Lang->{'Copy, move or delete selected article'} =
-        'Kopieren, Verschieben oder löschen des ausgewählten Artikels';
-    $Lang->{'Action to be performed'} = 'Auszuführende Aktion';
-    $Lang->{'Copy'}                   = 'Kopieren';
     $Lang->{'You cannot asign more time units as in the source article!'} =
         'Sie können nicht mehr Zeiteinheiten zuweisen, als im Original-Artikel!';
-    $Lang->{'Options for Copy'}            = 'Optionen zum Kopieren';
-    $Lang->{'Options for Delete'}          = 'Optionen zum löschen';
-    $Lang->{'Options for Move'}            = 'Optionen zum Verschieben';
     $Lang->{'Really delete this article?'} = 'Diesen Artikel wirklich löschen?';
     $Lang->{'Copied time units of the source article'} =
         'Zu übernehmende Zeiteinheiten des Original-Artikels';
