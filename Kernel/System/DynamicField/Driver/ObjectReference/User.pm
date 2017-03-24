@@ -1139,17 +1139,68 @@ sub HistoricalValuesGet {
 sub ValueLookup {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
-    # possible value handling not needed, content removed
-    my $Value = defined $Param{Key} ? $Param{Key} : '';
+    my @Keys;
+    if ( ref $Param{Key} eq 'ARRAY' ) {
+        @Keys = @{ $Param{Key} };
+    }
+    else {
+        @Keys = ( $Param{Key} );
+    }
 
-    return $Value;
+# KIX4OTRS-capeIT
+#    # get real values
+#    my $PossibleValues = $Param{DynamicFieldConfig}->{Config}->{PossibleValues};
+# EO KIX4OTRS-capeIT
 
-    # EO KIX4OTRS-capeIT
+    # to store final values
+    my @Values;
+
+    KEYITEM:
+    for my $Item (@Keys) {
+        next KEYITEM if !$Item;
+
+        # set the value as the key by default
+        my $Value = $Item;
+
+# KIX4OTRS-capeIT
+#        # try to convert key to real value
+#        if ( $PossibleValues->{$Item} ) {
+#            $Value = $PossibleValues->{$Item};
+#
+#            # check if translation is possible
+#            if (
+#                defined $Param{LanguageObject}
+#                && $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
+#                )
+#            {
+#
+#                # translate value
+#                $Value = $Param{LanguageObject}->Translate($Value);
+#            }
+#        }
+        my %UserData = $Self->{UserObject}->GetUserData(
+            User => $Value,
+        );
+        $Value = $UserData{UserFirstname}
+               . " "
+               . $UserData{UserLastname}
+               . " <"
+               . $UserData{UserEmail}
+               . ">";
+
+        # alternative display string defined ?
+        if ( $Param{DynamicFieldConfig}->{Config}->{AlternativeDisplay} ) {
+            $Value = $Param{DynamicFieldConfig}->{Config}->{AlternativeDisplay};
+            $Value =~ s{<(.+?)>}{$UserData{$1}}egx;
+        }
+# EO KIX4OTRS-capeIT
+        push @Values, $Value;
+    }
+
+    return \@Values;
 }
 
 1;
-
 
 =back
 
