@@ -93,10 +93,10 @@ $('#DependingFieldContainer').jstree({
 });
 
 $('#DependingFieldContainer').on('click','i.fa-trash-o',function(event) {
-    if (!confirm("[% Translate("Do you really want to delete this depending field and all of its other depending fields ?") | html %]"))
+    if (!confirm("[% Translate("Do you really want to delete this depending field and all of its other depending fields?") | html %]"))
         return false;
 
-    URL = $(this).parent('a').attr('href') + ';Subaction=Delete';
+    URL = $(this).parent('a').attr('href').replace("Edit","Delete");
     window.location.href = URL;
 });
 

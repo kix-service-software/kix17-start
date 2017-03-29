@@ -1188,7 +1188,7 @@ sub Data {
     $Lang->{'Ticket-ACLs to define dynamic fields dependencies.'}
         = 'Ticket-ACLs, um Abhängigkeiten bei dynamischen Feldern festzulegen.';
     $Lang->{
-        'Do you really want to delete this depending field and all of its other depending fields ?'
+        'Do you really want to delete this depending field and all of its other depending fields?'
         }
         = 'Möchten Sie wirklich das abhängige Feld und alle von diesem abhängigen Felder löschen?';
 
