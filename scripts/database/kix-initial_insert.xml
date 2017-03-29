@@ -73,7 +73,7 @@
     <Insert Table="groups">
         <Data Key="id" Type="AutoIncrement">4</Data>
         <Data Key="name" Type="Quote">faq</Data>
-        <Data Key="comments" Type="Quote" Translatable="1">faq database users</Data>
+        <Data Key="comments" Type="Quote" Translatable="1">Group for general FAQ access.</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
@@ -83,7 +83,7 @@
     <Insert Table="groups">
         <Data Key="id" Type="AutoIncrement">5</Data>
         <Data Key="name" Type="Quote">faq_admin</Data>
-        <Data Key="comments" Type="Quote" Translatable="1">faq admin users</Data>
+        <Data Key="comments" Type="Quote" Translatable="1">Group for FAQ administrators.</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
@@ -93,7 +93,7 @@
     <Insert Table="groups">
         <Data Key="id" Type="AutoIncrement">6</Data>
         <Data Key="name" Type="Quote">faq_approval</Data>
-        <Data Key="comments" Type="Quote" Translatable="1">faq approval users</Data>
+        <Data Key="comments" Type="Quote" Translatable="1">Group for FAQ approval users.</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
@@ -103,7 +103,7 @@
     <Insert Table="groups">
         <Data Key="id" Type="AutoIncrement">7</Data>
         <Data Key="name" Type="Quote">itsm-configitem</Data>
-        <Data Key="comments" Type="Quote" Translatable="1">Group for ITSM ConfigItem mask access in the agent interface.</Data>
+        <Data Key="comments" Type="Quote" Translatable="1">Group for ITSM ConfigItem mask access.</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
@@ -113,7 +113,7 @@
     <Insert Table="groups">
         <Data Key="id" Type="AutoIncrement">8</Data>
         <Data Key="name" Type="Quote">itsm-service</Data>
-        <Data Key="comments" Type="Quote" Translatable="1">Group for ITSM Service mask access in the agent interface.</Data>
+        <Data Key="comments" Type="Quote" Translatable="1">Group for ITSM Service mask access.</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
@@ -123,7 +123,7 @@
     <Insert Table="groups">
         <Data Key="id" Type="AutoIncrement">9</Data>
         <Data Key="name" Type="Quote">SwitchButton</Data>
-        <Data Key="comments" Type="Quote" Translatable="1">created by SwitchButton installer</Data>
+        <Data Key="comments" Type="Quote" Translatable="1">Group for SwitchButton access.</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
@@ -457,7 +457,7 @@
     <Insert Table="ticket_state">
         <Data Key="id" Type="AutoIncrement">10</Data>
         <Data Key="name" Type="Quote">closed with workaround</Data>
-        <Data Key="comments" Type="Quote">ticket is closed with workaround</Data>
+        <Data Key="comments" Type="Quote">Ticket is closed with workaround</Data>
         <Data Key="type_id">3</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_time">current_timestamp</Data>
@@ -1514,7 +1514,6 @@ Your KIX Team
     <Insert Table="article_type">
         <Data Key="id" Type="AutoIncrement">12</Data>
         <Data Key="name" Type="Quote">note-supplier-external</Data>
-        <Data Key="comments" Type="Quote">created by ExternalSupplierForwarding installation</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_time">current_timestamp</Data>
         <Data Key="create_by">1</Data>
@@ -1524,7 +1523,6 @@ Your KIX Team
     <Insert Table="article_type">
         <Data Key="id" Type="AutoIncrement">13</Data>
         <Data Key="name" Type="Quote">note-supplier-internal</Data>
-        <Data Key="comments" Type="Quote">created by ExternalSupplierForwarding installation</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_time">current_timestamp</Data>
         <Data Key="create_by">1</Data>
@@ -5917,7 +5915,6 @@ TreeView: '0'
         <Data Key="imexport_format" Type="Quote">CSV</Data>
         <Data Key="name" Type="Quote">User - ImportExport (auto-created map)</Data>
         <Data Key="valid_id">1</Data>
-        <Data Key="comments" Type="Quote">Automatically created during UserImportExport installation</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>
@@ -5929,7 +5926,6 @@ TreeView: '0'
         <Data Key="imexport_format" Type="Quote">CSV</Data>
         <Data Key="name" Type="Quote">CustomerCompany (auto-created map)</Data>
         <Data Key="valid_id">1</Data>
-        <Data Key="comments" Type="Quote">Automatically created during CustomerUserImportExport installation</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>
@@ -5941,7 +5937,6 @@ TreeView: '0'
         <Data Key="imexport_format" Type="Quote">CSV</Data>
         <Data Key="name" Type="Quote">CustomerUser - Database Backend (auto-created map)</Data>
         <Data Key="valid_id">1</Data>
-        <Data Key="comments" Type="Quote">Automatically created during CustomerUserImportExport installation</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>
@@ -5953,7 +5948,6 @@ TreeView: '0'
         <Data Key="imexport_format" Type="Quote">CSV</Data>
         <Data Key="name" Type="Quote">FAQ (auto-created map)</Data>
         <Data Key="valid_id">1</Data>
-        <Data Key="comments" Type="Quote">Automatically created during FAQImportExport installation</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>
@@ -5965,7 +5959,6 @@ TreeView: '0'
         <Data Key="imexport_format" Type="Quote">CSV</Data>
         <Data Key="name" Type="Quote">Service2CustomerUser (auto-created map)</Data>
         <Data Key="valid_id">1</Data>
-        <Data Key="comments" Type="Quote">Automatically created during ServiceImportExport installation</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>
@@ -5977,7 +5970,6 @@ TreeView: '0'
         <Data Key="imexport_format" Type="Quote">CSV</Data>
         <Data Key="name" Type="Quote">SLA (auto-created map)</Data>
         <Data Key="valid_id">1</Data>
-        <Data Key="comments" Type="Quote">Automatically created during ServiceImportExport installation</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>
@@ -5989,7 +5981,6 @@ TreeView: '0'
         <Data Key="imexport_format" Type="Quote">CSV</Data>
         <Data Key="name" Type="Quote">Service (auto-created map)</Data>
         <Data Key="valid_id">1</Data>
-        <Data Key="comments" Type="Quote">Automatically created during ServiceImportExport installation</Data>
         <Data Key="create_by">1</Data>
         <Data Key="create_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>

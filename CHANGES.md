@@ -3,6 +3,7 @@
 * $Id$
 
 #16.99.81 (2017/03/xx)
+ * (2017/03/29) - CR: T2016121190001552 (code merge of all packages and changes for KIX 2017 - normalized comments in database insert) (millinger)
  * (2017/03/29) - Bugfix: T2017030390001234 (depending dynamic fields could not be deleted) (ddoerffel)
  * (2017/03/24) - Bugfix: T2017030690001014 (placeholder for dynamic field values provided key for object references) (millinger)
  * (2017/03/02) - Bugfix: T2017032190000782 (missing translation for "Edit|Copy|Move|Delete Article") (rkaiser)
