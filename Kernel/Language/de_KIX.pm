@@ -1493,7 +1493,7 @@ sub Data {
     $Lang->{'as source'}                  = 'als Quelle';
     $Lang->{'as target'}                  = 'als Ziel';
     $Lang->{'Print'}                      = 'Drucken';
-    $Lang->{'Followed Link-Types'}        = 'Verfolgte Verknüpungstypen';
+    $Lang->{'Followed Link-Types'}        = 'Verfolgte Verknüpfungstypen';
     $Lang->{'Link not created!'}          = 'Verknüpfung nicht angelegt!';
     $Lang->{'Link could not be removed!'} = 'Verknüpfung konnte nicht entfernt werden!';
     $Lang->{'Please look into the error-log for more information.'} =
