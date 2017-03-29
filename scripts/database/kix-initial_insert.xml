@@ -886,7 +886,7 @@ Your KIX Team
         <Data Key="change_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>
     </Insert>
-        
+
     <Insert Table="ticket_priority">
         <Data Key="id" Type="AutoIncrement">1</Data>
         <Data Key="name" Type="Quote" Translatable="1">1 very low</Data>
@@ -1531,7 +1531,7 @@ Your KIX Team
         <Data Key="change_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>
     </Insert>
-        
+
     <Insert Table="article_sender_type">
         <Data Key="id" Type="AutoIncrement">1</Data>
         <Data Key="name" Type="Quote" Translatable="1">agent</Data>
@@ -4108,7 +4108,7 @@ TreeView: '0'
         <Data Key="changed">current_timestamp</Data>
         <Data Key="changed_by">1</Data>
     </Insert>
-    
+
 <!-- general catalog -->
     <Insert Table="general_catalog">
         <Data Key="id" Type="AutoIncrement">1</Data>
@@ -5995,94 +5995,106 @@ TreeView: '0'
         <Data Key="change_by">1</Data>
         <Data Key="change_time">current_timestamp</Data>
     </Insert>
-    
+
 <!-- import export object -->
     <Insert Table="imexport_object">
         <Data Key="id" Type="AutoIncrement">1</Data>
+        <Data Key="template_id">2</Data>
+        <Data Key="data_key" Type="Quote">CustomerBackend</Data>
+        <Data Key="data_value" Type="Quote">CustomerCompany</Data>
+    </Insert>
+    <Insert Table="imexport_object">
+        <Data Key="id" Type="AutoIncrement">2</Data>
         <Data Key="template_id">2</Data>
         <Data Key="data_key" Type="Quote">DefaultValid</Data>
         <Data Key="data_value" Type="Quote">1</Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">2</Data>
+        <Data Key="id" Type="AutoIncrement">3</Data>
+        <Data Key="template_id">2</Data>
+        <Data Key="data_key" Type="Quote">ForceImportInConfiguredCustomerCompanyBackend</Data>
+        <Data Key="data_value" Type="Quote">0</Data>
+    </Insert>
+    <Insert Table="imexport_object">
+        <Data Key="id" Type="AutoIncrement">4</Data>
         <Data Key="template_id">3</Data>
         <Data Key="data_key" Type="Quote">CustomerBackend</Data>
         <Data Key="data_value" Type="Quote">CustomerUser</Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">3</Data>
+        <Data Key="id" Type="AutoIncrement">5</Data>
         <Data Key="template_id">3</Data>
         <Data Key="data_key" Type="Quote">DefaultUserCustomerID</Data>
         <Data Key="data_value" Type="Quote"></Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">4</Data>
+        <Data Key="id" Type="AutoIncrement">6</Data>
         <Data Key="template_id">3</Data>
         <Data Key="data_key" Type="Quote"></Data>
         <Data Key="data_value" Type="Quote"></Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">5</Data>
+        <Data Key="id" Type="AutoIncrement">7</Data>
         <Data Key="template_id">3</Data>
         <Data Key="data_key" Type="Quote">DefaultValid</Data>
         <Data Key="data_value" Type="Quote">1</Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">6</Data>
+        <Data Key="id" Type="AutoIncrement">8</Data>
         <Data Key="template_id">3</Data>
         <Data Key="data_key" Type="Quote">EnableMailDomainCustomerIDMapping</Data>
         <Data Key="data_value" Type="Quote"></Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">7</Data>
+        <Data Key="id" Type="AutoIncrement">9</Data>
         <Data Key="template_id">3</Data>
         <Data Key="data_key" Type="Quote">ForceImportInConfiguredCustomerBackend</Data>
-        <Data Key="data_value" Type="Quote"></Data>
+        <Data Key="data_value" Type="Quote">0</Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">8</Data>
+        <Data Key="id" Type="AutoIncrement">10</Data>
         <Data Key="template_id">3</Data>
         <Data Key="data_key" Type="Quote">ResetPassword</Data>
         <Data Key="data_value" Type="Quote"></Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">9</Data>
+        <Data Key="id" Type="AutoIncrement">11</Data>
         <Data Key="template_id">3</Data>
         <Data Key="data_key" Type="Quote">ResetPasswordSuffix</Data>
         <Data Key="data_value" Type="Quote"></Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">10</Data>
+        <Data Key="id" Type="AutoIncrement">12</Data>
         <Data Key="template_id">6</Data>
         <Data Key="data_key" Type="Quote">DefaultSLATypeID</Data>
         <Data Key="data_value" Type="Quote">21</Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">11</Data>
+        <Data Key="id" Type="AutoIncrement">13</Data>
         <Data Key="template_id">6</Data>
         <Data Key="data_key" Type="Quote">DefaultValid</Data>
         <Data Key="data_value" Type="Quote">1</Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">12</Data>
+        <Data Key="id" Type="AutoIncrement">14</Data>
         <Data Key="template_id">6</Data>
         <Data Key="data_key" Type="Quote">NumberOfAssignableServices</Data>
         <Data Key="data_value" Type="Quote">50</Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">13</Data>
+        <Data Key="id" Type="AutoIncrement">15</Data>
         <Data Key="template_id">7</Data>
         <Data Key="data_key" Type="Quote">DefaultCriticalityID</Data>
         <Data Key="data_value" Type="Quote">3 normal</Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">14</Data>
+        <Data Key="id" Type="AutoIncrement">16</Data>
         <Data Key="template_id">7</Data>
         <Data Key="data_key" Type="Quote">DefaultServiceTypeID</Data>
         <Data Key="data_value" Type="Quote">14</Data>
     </Insert>
     <Insert Table="imexport_object">
-        <Data Key="id" Type="AutoIncrement">15</Data>
+        <Data Key="id" Type="AutoIncrement">17</Data>
         <Data Key="template_id">7</Data>
         <Data Key="data_key" Type="Quote">DefaultValid</Data>
         <Data Key="data_value" Type="Quote">1</Data>

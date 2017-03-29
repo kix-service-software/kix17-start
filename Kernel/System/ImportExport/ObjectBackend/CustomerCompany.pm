@@ -13,10 +13,10 @@ use warnings;
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
-    'Kernel::System::ImportExport',
+    'Kernel::Config',
     'Kernel::System::CustomerCompany',
+    'Kernel::System::ImportExport',
     'Kernel::System::Log',
-    'Kernel::Config'
 );
 
 =head1 NAME
@@ -71,15 +71,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    # define available separators
-    $Self->{AvailableSeparators} = {
-        Tabulator => "\t",
-        Semicolon => ';',
-        Colon     => ':',
-        Dot       => '.',
-        Comma     => ',',
-    };
-
     return $Self;
 }
 
@@ -103,9 +94,36 @@ sub ObjectAttributesGet {
         return;
     }
 
+    my %CSList    = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanySourceList( ReadOnly => 0 );
     my %Validlist = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
 
     my $Attributes = [
+        {
+            Key   => 'CustomerCompanyBackend',
+            Name  => 'Customer Company Backend',
+            Input => {
+                Type         => 'Selection',
+                Data         => \%CSList,
+                Required     => 1,
+                Translation  => 0,
+                PossibleNone => 0,
+            },
+        },
+        {
+            Key   => 'ForceImportInConfiguredCustomerCompanyBackend',
+            Name  => 'Force import in configured customer company backend',
+            Input => {
+                Type => 'Selection',
+                Data => {
+                    '0' => 'No',
+                    '1' => 'Yes',
+                },
+                Required     => 0,
+                Translation  => 1,
+                PossibleNone => 0,
+                ValueDefault => 0,
+            },
+        },
         {
             Key   => 'DefaultValid',
             Name  => 'Default Validity',
@@ -119,54 +137,10 @@ sub ObjectAttributesGet {
             },
         },
         {
-            Key   => 'CountMax',
-            Name  => 'Maximum number of one element',
-            Input => {
-                Type         => 'Text',
-                ValueDefault => '10',
-                Required     => 1,
-                Regex        => qr{ \A \d+ \z }xms,
-                Translation  => 0,
-                Size         => 5,
-                MaxLength    => 5,
-                DataType     => 'IntegerBiggerThanZero',
-            },
-        },
-        {
             Key   => 'EmptyFieldsLeaveTheOldValues',
             Name  => 'Empty fields indicate that the current values are kept',
             Input => {
                 Type => 'Checkbox',
-            },
-        },
-        {
-            Key   => 'ArrayFormatAs',
-            Name  => 'Array convert to',
-            Input => {
-                Type => 'Selection',
-                Data => {
-                    String    => 'String',
-                    Splitting => 'Split',
-                },
-                Translation  => 1,
-                PossibleNone => 1,
-                ValueDefault => 'String',
-            },
-        },
-        {
-            Key   => 'ArraySeparator',
-            Name  => 'Array Separator by useing format string',
-            Input => {
-                Type => 'Selection',
-                Data => {
-                    Semicolon => 'Semicolon (;)',
-                    Colon     => 'Colon (:)',
-                    Dot       => 'Dot (.)',
-                    Comma     => 'Comma (,)',
-                },
-                Translation  => 1,
-                PossibleNone => 1,
-                ValueDefault => 'Comma',
             },
         },
     ];
@@ -206,14 +180,9 @@ sub MappingObjectAttributesGet {
     );
 
     my @ElementList = qw{};
-    $Self->{CustomerCompanyKey}
-        = $Kernel::OM->Get('Kernel::Config')->Get('CustomerCompany')->{CustomerCompanyKey}
-        || $Kernel::OM->Get('Kernel::Config')->Get('CustomerCompany')->{Key}
-        || die "Need CustomerCompany->CustomerCompanyKey in Kernel/Config.pm!";
-    $Self->{CustomerCompanyMap} = $Kernel::OM->Get('Kernel::Config')->Get('CustomerCompany')->{Map}
-        || die "Need CustomerCompany->Map in Kernel/Config.pm!";
+    my @Map = @{ $Kernel::OM->Get('Kernel::Config')->{ $ObjectData->{CustomerCompanyBackend} }->{'Map'} };
 
-    for my $CurrAttributeMapping ( @{ $Self->{CustomerCompanyMap} } ) {
+    for my $CurrAttributeMapping (@Map) {
         my $CurrAttribute = {
             Key   => $CurrAttributeMapping->[0],
             Value => $CurrAttributeMapping->[0],
@@ -221,39 +190,17 @@ sub MappingObjectAttributesGet {
 
         # if ValidID is available - offer Valid instead..
         if ( $CurrAttributeMapping->[0] eq 'ValidID' ) {
+            $CurrAttribute = {
+                Key   => 'ValidID',
+                Value => 'ValidID (not used in import anymore, use Validity instead)',
+            };
+            push( @ElementList, $CurrAttribute );
+
             $CurrAttribute = { Key => 'Valid', Value => 'Validity', };
         }
 
         push( @ElementList, $CurrAttribute );
-    }
 
-    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-    my $DynamicFieldList
-        = $DynamicFieldObject->DynamicFieldListGet( ObjectType => 'CustomerCompany' );
-    DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicFieldList} ) {
-
-        # validate each dynamic field
-        next DYNAMICFIELD if !$DynamicFieldConfig;
-        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-        next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
-
-        if ( $DynamicFieldConfig->{FieldType} eq 'Multiselect' ) {
-            for my $Count ( 1 .. $ObjectData->{CountMax} ) {
-                my $CurrAttribute = {
-                    Key   => "DynamicField_" . $DynamicFieldConfig->{'Name'} . '::' . $Count,
-                    Value => $DynamicFieldConfig->{'Label'} . '::' . $Count,
-                };
-                push( @ElementList, $CurrAttribute );
-            }
-        }
-        else {
-            my $CurrAttribute = {
-                Key   => "DynamicField_" . $DynamicFieldConfig->{'Name'},
-                Value => $DynamicFieldConfig->{'Label'},
-            };
-            push( @ElementList, $CurrAttribute );
-        }
     }
 
     my $Attributes = [
@@ -397,75 +344,37 @@ sub ExportDataGet {
     }
 
     # list customer companys...
-    my %CustomerCompanyList
-        = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyList(
-        Valid => 0,
+    my %CustomerCompanyList = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyList(
+            Valid => 0,
         );
     my @ExportData;
 
     for my $CurrCompany (%CustomerCompanyList) {
 
-        my %CustomerCompanyData =
-            $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
-            CustomerID => $CurrCompany,
+        my %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
+            CustomerID => $CurrCompany
+        );
 
-            # KIXContact - add dynamic fields
-            DynamicFields => 1,
-
-            # EO KIXContact - add dynamic fields
-            );
-
-        if (%CustomerCompanyData) {
+        if (
+            $CustomerCompanyData{Source}
+            && ( $CustomerCompanyData{Source} eq $ObjectData->{CustomerCompanyBackend} )
+        ) {
             my @CurrRow;
 
             # prepare validity...
             if ( $CustomerCompanyData{ValidID} ) {
-                $CustomerCompanyData{Valid}
-                    = $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup(
+                $CustomerCompanyData{Valid} = $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup(
                     ValidID => $CustomerCompanyData{ValidID},
-                    );
+                );
             }
 
             for my $MappingObject (@MappingObjectList) {
-                my @Keys = split( '::', $MappingObject->{Key} );
-                my $CCData = '';
-                if ( !$Keys[0] ) {
+                my $Key = $MappingObject->{Key};
+                if ( !$Key ) {
                     push @CurrRow, '';
                 }
                 else {
-                    if ( $Keys[0] =~ m/DynamicField_/ ) {
-                        if ( defined $Keys[1] ) {
-
-                            # If used array format string
-                            if ( $ObjectData->{ArrayFormatAs} eq 'String' ) {
-                                if ( ref( $CustomerCompanyData{ $Keys[0] } ) eq 'ARRAY' ) {
-
-                                    # convert array to string with selected separator
-                                    $CCData
-                                        = join(
-                                        "$Self->{AvailableSeparators}->{$ObjectData->{ArraySeparator}}",
-                                        @{ $CustomerCompanyData{ $Keys[0] } } );
-                                }
-                                else {
-                                    $CCData = $CustomerCompanyData{ $Keys[0] };
-                                }
-
-                                # if used array format split
-                            }
-                            elsif ( $ObjectData->{ArrayFormatAs} eq 'Split' ) {
-
-                                # splited array to single elements
-                                $CCData = $CustomerCompanyData{ $Keys[0] }->[ ( $Keys[1] - 1 ) ];
-                            }
-                        }
-                        else {
-                            $CCData = $CustomerCompanyData{ $Keys[0] };
-                        }
-                        push( @CurrRow, $CCData || '' );
-                    }
-                    else {
-                        push( @CurrRow, $CustomerCompanyData{ $Keys[0] } || '' );
-                    }
+                    push( @CurrRow, $CustomerCompanyData{$Key} || '' );
                 }
             }
             push @ExportData, \@CurrRow;
@@ -481,7 +390,7 @@ import one row of the import data
 
     my $ConfigItemID = $ObjectBackend->ImportDataSave(
         TemplateID    => 123,
-        ImportDataRow => $ArrayReConfigf,
+        ImportDataRow => $ArrayRef,
         UserID        => 1,
     );
 
@@ -544,8 +453,6 @@ sub ImportDataSave {
     # create the mapping object list
     #    my @MappingObjectList;
     #    my %Identifier;
-    #    my $CustomerCompanyKey     = "";
-
     my $Counter                = 0;
     my %NewCustomerCompanyData = qw{};
 
@@ -599,100 +506,15 @@ sub ImportDataSave {
         #        }
 
         if ( $MappingObjectData->{Key} ne "CustomerCompanyCountry" ) {
-            my @Keys = split( '::', $MappingObjectData->{Key} );
-
-            # Check if key dynamic field
-            if ( $Keys[0] =~ m/DynamicField_/ ) {
-                if ( defined $Keys[1] ) {
-
-                    # if used convert array to string
-                    if ( $ObjectData->{ArrayFormatAs} eq 'String' ) {
-                        my @StringToArray
-                            = split(
-                            "$Self->{AvailableSeparators}->{$ObjectData->{ArraySeparator}}",
-                            $Param{ImportDataRow}->[$Counter] );
-
-                        # Check is Array defined
-                        if (@StringToArray) {
-                            if ( ref( $NewCustomerCompanyData{ $Keys[0] } ) eq 'ARRAY' ) {
-
-                                # Check exists element in main array
-                                ITEM:
-                                for my $Item (@StringToArray) {
-                                    next ITEM
-                                        if grep { $_ eq $Item; }
-                                            @{ $NewCustomerCompanyData{ $Keys[0] } };
-                                    push( @{ $NewCustomerCompanyData{ $Keys[0] } }, $Item );
-                                }
-                            }
-                            else {
-                                push( @{ $NewCustomerCompanyData{ $Keys[0] } }, @StringToArray );
-                            }
-                        }
-                        else {
-                            if ( ref( $NewCustomerCompanyData{ $Keys[0] } ) ne 'ARRAY' ) {
-                                if ( !$ObjectData->{EmptyFieldsLeaveTheOldValues} ) {
-                                    $NewCustomerCompanyData{ $Keys[0] } = '';
-                                }
-                            }
-                        }
-
-                        # if used convert array to single elements
-                    }
-                    elsif ( $ObjectData->{ArrayFormatAs} eq 'Split' ) {
-                        if ( $Param{ImportDataRow}->[$Counter] ) {
-                            push(
-                                @{ $NewCustomerCompanyData{ $Keys[0] } },
-                                $Param{ImportDataRow}->[$Counter]
-                            );
-                        }
-                        else {
-
-                            # if checked ignore empty value
-                            if (
-                                !$ObjectData->{EmptyFieldsLeaveTheOldValues}
-                                && !$NewCustomerCompanyData{ $Keys[0] }
-                                )
-                            {
-                                $NewCustomerCompanyData{ $Keys[0] } = '';
-                            }
-                        }
-                    }
-                }
-                else {
-
-                    # if checked ignore empty value
-                    if (
-                        !$ObjectData->{EmptyFieldsLeaveTheOldValues}
-                        || IsStringWithData( $Param{ImportDataRow}->[$Counter] )
-                        )
-                    {
-                        $NewCustomerCompanyData{ $MappingObjectData->{Key} } =
-                            $Param{ImportDataRow}->[$Counter];
-                    }
-                }
-            }
-            else {
-
-                # if checked ignore empty value
-                if (
-                    !$ObjectData->{EmptyFieldsLeaveTheOldValues}
-                    || IsStringWithData( $Param{ImportDataRow}->[$Counter] )
-                    )
-                {
-                    $NewCustomerCompanyData{ $MappingObjectData->{Key} } =
-                        $Param{ImportDataRow}->[$Counter];
-                }
-            }
+            $NewCustomerCompanyData{ $MappingObjectData->{Key} } =
+                $Param{ImportDataRow}->[$Counter];
         }
         else {
-
             # Sanitize country if it isn't found in OTRS to increase the chance it will
             # Note that standardizing against the ISO 3166-1 list might be a better approach...
             my $CountryList = $Kernel::OM->Get('Kernel::System::ReferenceData')->CountryList();
             if ( exists $CountryList->{ $Param{ImportDataRow}->[$Counter] } ) {
-                $NewCustomerCompanyData{ $MappingObjectData->{Key} }
-                    = $Param{ImportDataRow}->[$Counter];
+                $NewCustomerCompanyData{ $MappingObjectData->{Key} } = $Param{ImportDataRow}->[$Counter];
             }
             else {
                 $NewCustomerCompanyData{ $MappingObjectData->{Key} } =
@@ -704,12 +526,48 @@ sub ImportDataSave {
                 );
             }
         }
+
+
+        # WORKAROUND - for FEFF-character in _some_ texts (remove it)...
+        if ( $NewCustomerCompanyData{ $MappingObjectData->{Key} } ) {
+            $NewCustomerCompanyData{ $MappingObjectData->{Key} } =~ s/(\x{feff})//g;
+        }
+        #EO WORKAROUND
+
         $Counter++;
 
     }
 
     #--------------------------------------------------------------------------
     #DO THE IMPORT...
+
+    #(0) lookup company entry
+    my %CustomerCompanyData = ();
+
+    my $CustomerCompanyKey;
+    my $CustomerCompanyBackend = $Kernel::OM->Get('Kernel::Config')->Get($ObjectData->{CustomerCompanyBackend});
+    if ( $CustomerCompanyBackend && $CustomerCompanyBackend->{CustomerCompanyKey} && $CustomerCompanyBackend->{Map} ) {
+        for my $Entry ( @{ $CustomerCompanyBackend->{Map} } ) {
+            next if ( $Entry->[1] ne $CustomerCompanyBackend->{CustomerCompanyKey} );
+
+            $CustomerCompanyKey = $Entry->[0];
+            last;
+        }
+        if ( !$CustomerCompanyKey ) {
+            $CustomerCompanyKey = "CustomerID";
+        }
+    }
+
+    if ( $NewCustomerCompanyData{$CustomerCompanyKey} ) {
+        %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
+            CustomerID => $NewCustomerCompanyData{$CustomerCompanyKey}
+        );
+    }
+
+    my $NewCompany = 1;
+    if (%CustomerCompanyData) {
+        $NewCompany = 0;
+    }
 
     #(1) Preprocess data...
 
@@ -723,27 +581,27 @@ sub ImportDataSave {
         $NewCustomerCompanyData{ValidID} = $ObjectData->{DefaultValid} || 1;
     }
 
-    #(1) lookup company entry...
-    my %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')
-        ->CustomerCompanyGet( CustomerID => $NewCustomerCompanyData{CustomerID} );
-
-    my $NewCompany = 1;
-    if (%CustomerCompanyData) {
-        $NewCompany = 0;
-    }
-
+    #---------------------------------------------------------------------------
+    # (2) overwrite existing values with new values...
     for my $Key ( keys(%NewCustomerCompanyData) ) {
-        next if ( !$NewCustomerCompanyData{$Key} );
-        $CustomerCompanyData{$Key} = $NewCustomerCompanyData{$Key};
+        if( $ObjectData->{EmptyFieldsLeaveTheOldValues}
+            && $NewCustomerCompanyData{$Key}
+        ) {
+            $CustomerCompanyData{$Key} = $NewCustomerCompanyData{$Key};
+
+        } elsif ( !$ObjectData->{EmptyFieldsLeaveTheOldValues} ) {
+            $CustomerCompanyData{$Key} = $NewCustomerCompanyData{$Key};
+        }
     }
 
-    #(2) if company DOES NOT exist => create new entry...
+    #(3) if company DOES NOT exist => create in specified backend
     my $Result     = 0;
     my $ReturnCode = "";    # Created | Changed | Failed
 
     if ($NewCompany) {
         $Result = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyAdd(
             %CustomerCompanyData,
+            Source => $ObjectData->{CustomerCompanyBackend},
             UserID => $Param{UserID},
         );
 
@@ -751,8 +609,8 @@ sub ImportDataSave {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "ImportDataSave: adding CustomerCompany ("
-                    . "CustomerID "
-                    . $CustomerCompanyData{CustomerID}
+                    . "CustomerCompany "
+                    . $CustomerCompanyData{$CustomerCompanyKey}
                     . ") failed (line $Param{Counter}).",
             );
         }
@@ -761,24 +619,118 @@ sub ImportDataSave {
         }
     }
 
-    #(3) if company DOES exist => check update...
+    #(4) if company DOES exist => check backend and update...
     else {
-        $Result = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyUpdate(
-            %CustomerCompanyData,
-            UserID => $Param{UserID},
-        );
+        $CustomerCompanyData{ID} = $NewCustomerCompanyData{$CustomerCompanyKey};
 
-        if ( !$Result ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "ImportDataSave: updating CustomerCompany ("
-                    . "CustomerID "
-                    . $CustomerCompanyData{CustomerID}
-                    . ") failed (line $Param{Counter}).",
+        if (
+            $CustomerCompanyData{Source}
+            && $CustomerCompanyData{Source} eq $ObjectData->{CustomerCompanyBackend}
+            )
+        {
+            $Result = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyUpdate(
+                %CustomerCompanyData,
+                Source => $ObjectData->{CustomerCompanyBackend},
+                UserID => $Param{UserID},
             );
+
+            if ( !$Result ) {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "ImportDataSave: updating CustomerCompany "
+                        . $CustomerCompanyData{ID}
+                        . " failed (line $Param{Counter}).",
+                );
+            }
+            else {
+                $ReturnCode = "Changed";
+            }
+        }
+        elsif ( $ObjectData->{ForceImportInConfiguredCustomerCompanyBackend} ) {
+
+            # NOTE: this is a somewhat dirty hack to force the import of the
+            # customer company data in the backend which is assigned in the current
+            # mapping. Actually a customer company data set can not be added under the
+            # same key (CustomerID).
+
+            my %BackendRef = ();
+            my $ResultNote = "";
+
+            # find backend and backup customer company data backend refs...
+            while (
+                $CustomerCompanyData{Source}
+                && $CustomerCompanyData{Source} ne $ObjectData->{CustomerCompanyBackend}
+                )
+            {
+                $BackendRef{ $CustomerCompanyData{Source} } =
+                    $Kernel::OM->Get('Kernel::System::CustomerCompany')->{ $CustomerCompanyData{Source} };
+                delete( $Kernel::OM->Get('Kernel::System::CustomerCompany')->{ $CustomerCompanyData{Source} } );
+
+                %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
+                    CustomerID => $NewCustomerCompanyData{$CustomerCompanyKey}
+                );
+            }
+
+            # overwrite existing values with new values...
+            for my $Key ( keys(%NewCustomerCompanyData) ) {
+                $CustomerCompanyData{$Key} = $NewCustomerCompanyData{$Key};
+            }
+
+            # update existing entry...
+            if (
+                $CustomerCompanyData{Source}
+                && $CustomerCompanyData{Source} eq $ObjectData->{CustomerCompanyBackend}
+                )
+            {
+                $CustomerCompanyData{ID} = $NewCustomerCompanyData{$CustomerCompanyKey};
+                $Result = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyUpdate(
+                    %CustomerCompanyData,
+                    Source => $ObjectData->{CustomerCompanyBackend},
+                    UserID => $Param{UserID},
+                );
+                $ResultNote = "update";
+                $ReturnCode = "Changed";
+            }
+
+            # create new entry...
+            else {
+                $Result = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyAdd(
+                    %CustomerCompanyData,
+                    Source => $ObjectData->{CustomerCompanyBackend},
+                    UserID => $Param{UserID},
+                );
+                $ResultNote = "add";
+                $ReturnCode = "Created";
+            }
+
+            # check for errors...
+            if ( !$Result ) {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "ImportDataSave: forcing CustomerCompany "
+                        . $CustomerCompanyData{ID}
+                        . " in "
+                        . $ObjectData->{CustomerCompanyBackend}
+                        . " ($ResultNote) "
+                        . " failed (line $Param{Counter}).",
+                );
+                $ReturnCode = "";
+            }
+
+            # restore customer company data backend refs...
+            for my $CurrKey ( keys(%BackendRef) ) {
+                $Kernel::OM->Get('Kernel::System::CustomerCompany')->{$CurrKey} = $BackendRef{$CurrKey};
+            }
+
         }
         else {
-            $ReturnCode = "Changed";
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "ImportDataSave: updating CustomerCompany "
+                    . $CustomerCompanyData{ID}
+                    . " failed - CustomerCompany exists in other backend.",
+
+            );
         }
     }
 
