@@ -32,8 +32,45 @@ use vars qw(%INC);
 my %Opts;
 getopt( 'f', \%Opts );
 
+# get installed packages
+my %InstalledPackages;
+my $Result = $Kernel::OM->Get('Kernel::System::DB')->Prepare(
+    SQL => 'SELECT name FROM package_repository',
+);
+if (!$Result) {
+    print STDERR "Unable to execute SQL to get installed packages!"; 
+}
+else {
+    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+        $InstalledPackages{$Row[0]} = 1;
+    }
+}
+
+# define possibly existing DB tables
+my %PackageTables = (
+    kix_article_flag => 'KIX4OTRS',
+    kix_customer_company_prefs => 'KIX4OTRS',
+    kix_dep_dynamic_field => 'KIX4OTRS',
+    kix_dep_dynamic_field_prefs => 'KIX4OTRS',
+    kix_file_watcher => 'KIX4OTRS',
+    kix_text_module => 'KIX4OTRS',
+    kix_text_module_object_link => 'KIX4OTRS',
+    kix_ticket_notes => 'KIX4OTRS',
+    kix_ticket_template => 'KIX4OTRS',
+    kix_ticket_template_prefs => 'KIX4OTRS',
+    kix_text_module_category => 'KIX4OTRS',
+    kix_search_profile => 'KIX4OTRS',
+    kix_link_graph => 'KIX4OTRS',
+    kix_ticket_checklist => 'KIX4OTRS',
+    overlay_agent => 'NotificationEventX',
+    standard_templatex => 'TemplateX',
+    attachment_directory =>  'ITSM-CIAttributeCollection',
+    attachment_dir_preferences => 'ITSM-CIAttributeCollection',
+    attachment_storage => 'ITSM-CIAttributeCollection',
+);
+
 # create database tables and insert initial values
-my $XMLFile = $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update/kix-upgrade-'.$Opts{f}.'-to-17.xml';
+my $XMLFile = $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update/kix-upgrade-to-17.xml';
 if ( ! -f "$XMLFile" ) {
     print STDERR "File \"$XMLFile\" doesn't exist!"; 
     exit -1;
@@ -63,6 +100,10 @@ if (!@SQL) {
 }
 
 for my $SQL (@SQL) {
+    if ($SQL =~ /CREATE TABLE (.*?)\s+/g) {
+        # ignore create statement if table already exists
+        next if ($PackageTables{$1} && $InstalledPackages{$PackageTables{$1}});
+    }
     my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
         SQL => $SQL 
     );
@@ -80,22 +121,6 @@ for my $SQL (@SQLPost) {
     );
     if (!$Result) {
         print STDERR "Unable to execute POST SQL!"; 
-        exit -1;
-    }
-}
-
-# check for Pro packages
-my $IsPro = 0;
-my $Result = $Kernel::OM->Get('Kernel::System::DB')->Prepare(
-    SQL => 'SELECT count(*) FROM package_repository where name = \'KIXBasePro\'',
-    Limit => 1,
-);
-if (!$Result) {
-    print STDERR "Unable to execute SQL to check for KIX Professional!"; 
-}
-else {
-    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
-        $IsPro = ($Row[0] > 0);
     }
 }
 
@@ -131,7 +156,7 @@ my @ObsoletePackages = (
     'FAQ',
 );
 
-if ($IsPro) {
+if ($InstalledPackages{KIXBasePro}) {
     @ObsoletePackages = (
         @ObsoletePackages,
         'KIXWidespreadIncident',
