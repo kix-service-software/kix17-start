@@ -243,7 +243,7 @@ sub Connect {
     }
 
     if ( $Self->{Backend}->{'DB::Connect'} ) {
-        $Self->Do( SQL => $Self->{Backend}->{'DB::Connect'} );
+        $Self->Do( SQL => $Self->{Backend}->{'DB::Connect'}, SkipConnectCheck => 1 );
     }
 
     # set utf-8 on for PostgreSQL
@@ -369,7 +369,9 @@ sub Do {
         );
     }
 
-    return if !$Self->Connect();
+    if ( !$Param{SkipConnectCheck} ) {
+        return if !$Self->Connect();
+    }
 
     # send sql to database
     if ( !$Self->{dbh}->do( $Param{SQL}, undef, @Array ) ) {

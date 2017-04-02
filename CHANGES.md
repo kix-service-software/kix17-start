@@ -3,7 +3,8 @@
 * $Id$
 
 #16.99.81 (2017/03/xx)
- * (2017/01/31) - CR: T2016121190001552 (optimized migration scripts from OTRS and KIX 2016) (rbo)
+ * (2017/04/02) - Bug: T2017033190000852 (deep recursion on subroutine if db-connect fails) (ddoerffel)
+ * (2017/03/31) - CR: T2016121190001552 (optimized migration scripts from OTRS and KIX 2016) (rbo)
  * (2017/03/30) - Bugfix: T2017033090000738 (dashlet for offline users shows online users too) (ddoerffel)
  * (2017/03/29) - Bugfix: T2017032890001465 (wrong spelled German translation for 'Followed Link-Types') (rkaiser)
  * (2017/03/29) - CR: T2016121190001552 (code merge of all packages and changes for KIX 2017 - normalized comments in database insert) (millinger)
