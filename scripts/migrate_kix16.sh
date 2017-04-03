@@ -2,8 +2,6 @@
 # --
 # Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
-# written/edited by:
-# * Rene(dot)Boehm(at)cape(dash)it(dot)de
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
