@@ -278,7 +278,7 @@ sub Run {
         %{ $Filters{ $Self->{Filter} }->{Search} },
     );
 
-    # check for specific item rigths (attribute 'CIGroupAccess')
+    # check for specific item rights (attribute 'CIGroupAccess')
     my @ItemClassGroupCheck;
     for my $ConfigItemID ( @{ $ConfigItemIDs } ) {
 
