@@ -278,6 +278,22 @@ sub Run {
         %{ $Filters{ $Self->{Filter} }->{Search} },
     );
 
+    # check for specific item rigths (attribute 'CIGroupAccess')
+    my @ItemClassGroupCheck;
+    for my $ConfigItemID ( @{ $ConfigItemIDs } ) {
+
+            # check for access rights
+            my $HasAccess = $ConfigItemObject->Permission(
+                Scope  => 'Item',
+                ItemID => $ConfigItemID,
+                UserID => $Self->{UserID},
+                Type   => $Self->{Config}->{Permission},
+            );
+
+            push(@ItemClassGroupCheck, $ConfigItemID) if $HasAccess;
+    }
+    $ConfigItemIDs = \@ItemClassGroupCheck;
+
     # find out which columns should be shown
     my @ShowColumns;
 
