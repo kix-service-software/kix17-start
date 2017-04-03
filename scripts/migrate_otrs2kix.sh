@@ -2,8 +2,6 @@
 # --
 # Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 #
-# written/edited by:
-# * Rene(dot)Boehm(at)cape(dash)it(dot)de
 # --
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU AFFERO General Public License as published by
@@ -40,7 +38,6 @@ fi
 
 # determine OTRS parameters
 cd $OTRS_PATH
-OTRS_VERSION=`cat RELEASE | grep VERSION | cut -d' ' -f3 | sed -e "s/\s*//g"`
 OTRS_DBMS=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseDSN=" | cut -d= -f2 | cut -d: -f2`
 OTRS_DB=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "Database=" | cut -d= -f2 | cut -d: -f2`
 OTRS_DBUSER=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseUser=" | cut -d= -f2 | cut -d: -f2`
@@ -50,7 +47,6 @@ OTRS_DBPW=`perl -e 'use Kernel::System::DB; if ( "$ARGV[0]" =~ /^\{(.*)\}$/ ) { 
 
 # determine KIX DBMS and DB
 cd /opt/kix
-KIX_FRAMEWORK=`cat RELEASE | grep FRAMEWORK | cut -d' ' -f3 | sed -e "s/\s*//g"`
 KIX_DBMS=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseDSN=" | cut -d= -f2 | cut -d: -f2`
 KIX_DB=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "Database=" | cut -d= -f2 | cut -d: -f2`
 KIX_DBUSER=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseUser=" | cut -d= -f2 | cut -d: -f2`
@@ -59,14 +55,6 @@ KIX_DBPW=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);fore
 KIX_DBPW=`perl -e 'use Kernel::System::DB; if ( "$ARGV[0]" =~ /^\{(.*)\}$/ ) { my $Result = Kernel::System::DB::_Decrypt({}, "$ARGV[0]");chop($Result);print $Result;} else { print "$ARGV[0]" }' $KIX_DBPW`;
 
 echo
-
-# check frameworks
-if [ "$OTRS_VERSION" != "$KIX_FRAMEWORK" ]; then
-    echo "ERROR: version mismatch ($OTRS_VERSION vs. $KIX_FRAMEWORK)! Migration not possible!"
-    exit 0
-else
-    echo "framework version...OK ($OTRS_VERSION)"
-fi
 
 # check DBMS
 if [ "$OTRS_DBMS" != "$KIX_DBMS" ]; then
