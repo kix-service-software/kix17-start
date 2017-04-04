@@ -38,6 +38,7 @@ fi
 
 # determine OTRS parameters
 cd $OTRS_PATH
+OTRS_VERSION=`cat RELEASE | grep VERSION | cut -d' ' -f3 | sed -e "s/\s*//g"`
 OTRS_DBMS=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseDSN=" | cut -d= -f2 | cut -d: -f2`
 OTRS_DB=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "Database=" | cut -d= -f2 | cut -d: -f2`
 OTRS_DBUSER=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseUser=" | cut -d= -f2 | cut -d: -f2`
@@ -55,6 +56,14 @@ KIX_DBPW=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);fore
 KIX_DBPW=`perl -e 'use Kernel::System::DB; if ( "$ARGV[0]" =~ /^\{(.*)\}$/ ) { my $Result = Kernel::System::DB::_Decrypt({}, "$ARGV[0]");chop($Result);print $Result;} else { print "$ARGV[0]" }' $KIX_DBPW`;
 
 echo
+
+# check frameworks
+if [[ "$OTRS_VERSION" =~ ^5\.0\. ]]; then
+    echo "framework version...OK ($OTRS_VERSION)"
+else
+    echo "ERROR: wrong OTRS version ($OTRS_VERSION)! Migration not possible!"
+    exit 0
+fi
 
 # check DBMS
 if [ "$OTRS_DBMS" != "$KIX_DBMS" ]; then
