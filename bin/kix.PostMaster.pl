@@ -78,6 +78,7 @@ my $ExitCode = $Kernel::OM->Get('Kernel::System::Console::Command::Maint::PostMa
 
 exit $ExitCode;
 
+
 =back
 
 =head1 TERMS AND CONDITIONS

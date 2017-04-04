@@ -15,6 +15,7 @@ use base qw( Kernel::Modules::AgentTicketEmail );
 
 1;
 
+
 =back
 
 =head1 TERMS AND CONDITIONS

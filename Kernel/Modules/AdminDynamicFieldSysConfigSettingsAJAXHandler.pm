@@ -225,6 +225,7 @@ sub _GetAllAvailableFrontendModules {
 
 1;
 
+
 =back
 
 =head1 TERMS AND CONDITIONS

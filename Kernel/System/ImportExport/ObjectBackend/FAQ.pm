@@ -863,6 +863,7 @@ sub _CheckCategory {
 }
 
 1;
+
 =back
 
 =head1 TERMS AND CONDITIONS

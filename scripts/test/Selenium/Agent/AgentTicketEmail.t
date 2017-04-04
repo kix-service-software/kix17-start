@@ -1,7 +1,7 @@
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
-# --
-# $origin: https://github.com/OTRS/otrs/blob/5373c91dd5c8e2481191392626de7a92ec1e9ca0/scripts/test/Selenium/Agent/AgentTicketEmail.t
+# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# based on the original work of:
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -352,3 +352,17 @@ $Selenium->RunTest(
 );
 
 1;
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
+
+=cut

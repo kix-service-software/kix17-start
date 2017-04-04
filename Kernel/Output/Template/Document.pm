@@ -292,6 +292,7 @@ sub _PrecalculateBlockHookSubscriptions {
 1;
 
 
+
 =back
 
 =head1 TERMS AND CONDITIONS

@@ -178,6 +178,7 @@ sub _ArticleIndexQuerySQLExt {
 
 1;
 
+
 =back
 
 =head1 TERMS AND CONDITIONS

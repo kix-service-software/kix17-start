@@ -17,6 +17,7 @@ use base qw( Kernel::Modules::AgentDashboardCommon );
 
 1;
 
+
 =back
 
 =head1 TERMS AND CONDITIONS

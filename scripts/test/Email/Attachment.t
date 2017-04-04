@@ -1,32 +1,12 @@
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# based on the original work of:
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
-
-# Email Attachments test purpose:
-# 1) Create email
-# 2) Add attachments
-# 3) Verify Content-Type
-# This UT referrer to Bug #7879, perldoc MIME::Entity, rfc2045.
-#
-# Correct:
-# ----------------------------------------------------------------------------------------
-# Content-Type: application/octet-stream; name="TESTBUILD-OTRSAdminTypeServices-1.1.1.opm"
-# Content-Disposition: inline; filename="TESTBUILD-OTRSAdminTypeServices-1.1.1.opm"
-# Content-Transfer-Encoding: base64
-# ----------------------------------------------------------------------------------------
-#
-# Incorrect:
-# ----------------------------------------------------------------------------------------
-# Content-Type: application/octet-stream;
-# name="TESTBUILD-OTRSAdminTypeServices-1.1.1.opm"
-# name="TESTBUILD-OTRSAdminTypeServices-1.1.1.opm";
-# Content-Disposition: inline; filename="TESTBUILD-OTRSAdminTypeServices-1.1.1.opm"
-# Content-Transfer-Encoding: base64
-# ----------------------------------------------------------------------------------------
 
 use strict;
 use warnings;
@@ -315,3 +295,17 @@ for my $Test (@Tests) {
 }
 
 1;
+
+=back
+
+=head1 TERMS AND CONDITIONS
+
+This software is part of the KIX project
+(L<http://www.kixdesk.com/>).
+
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+COPYING for license information (AGPL). If you did not receive this file, see
+
+<http://www.gnu.org/licenses/agpl.txt>.
+
+=cut

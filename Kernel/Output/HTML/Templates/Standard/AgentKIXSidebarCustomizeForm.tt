@@ -1,19 +1,11 @@
 # --
-# AgentKIXSidebarCustomizeForm.tt - provides HTML to show TicketInfo in KIXSidebar
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# written/edited by:
-# * Rene(dot)Boehm(at)cape(dash)it(dot)de
-# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-# * Torsten(dot)Thau(at)cape(dash)it(dot)de
-# * Ulrich(dot)Boehm(at)cape(dash)it(dot)de
-# --
-# $Id$
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
+
 
 <div id="CustomizeForm" class="WidgetSimple Hidden">
     <input type="hidden" name="Action" value="[% Env("Action") %]" id="Action"/>

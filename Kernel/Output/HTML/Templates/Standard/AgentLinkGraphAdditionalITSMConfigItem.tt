@@ -1,18 +1,12 @@
 # --
-# AgentLinkGraphAdditionalITSMConfigItem.tt - provides addititonal HTML for LinkGraph
-# Copyright (C) 2006-2016 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# written/edited by:
-# * Ricky(dot)Kaiser(at)cape(dash)it(dot)de
-# * Dorothea(dot)Doerffel(at)cape(dash)it(dot)de
-#
-# --
-# $Id$
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
+
+
 [% RenderBlockStart("ITSMConfigItem") %]
     <div id='[% Data.CurrentObjectType | html %]-[% Data.CurrentObjectID | html %]' style='[% Data.Start | html %]' class="GraphNode" name='[% Data.Name | html %]'>
         <img class="IncidentImage" src='[% Config("Frontend::ImagePath") %][% Data.IncidentImage | html %]' alt='[% Data.CurIncidentStateType | html %]' title='[% Translate(Data.CurIncidentState) | html %]'/>

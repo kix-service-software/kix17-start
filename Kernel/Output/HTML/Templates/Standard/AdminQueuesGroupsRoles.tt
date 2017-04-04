@@ -1,18 +1,11 @@
 # --
-# Kernel/Output/HTML/Standard/AdminQueuesGroupsRoles.tt - HTML for QGR-management
-# Copyright (C) 2006-2015 c.a.p.e. IT GmbH, http://www.cape-it.de
-#
-# written/edited by:
-# * Stefan(dot)Mehlig(at)cape-it.de
-# * Torsten(dot)Thau(at)cape-it.de
-#
-# --
-# $Id$
+# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
+
 
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
     <h1>[% Translate("Queues-Groups-Roles Management") | html %]</h1>

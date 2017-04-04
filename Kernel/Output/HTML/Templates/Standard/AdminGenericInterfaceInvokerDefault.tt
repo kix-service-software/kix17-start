@@ -1,10 +1,14 @@
 # --
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# based on the original work of:
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
+
+
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst AdminGenericInterfaceInvokerDefault">
 [% RenderBlockStart("TitleAdd") %]
     <h1>[% Translate("Add new Invoker to Web Service %s", Data.WebserviceName) | html %]</h1>

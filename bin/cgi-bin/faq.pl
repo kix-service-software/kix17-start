@@ -25,6 +25,7 @@ print "location: public.pl?Action=PublicFAQExplorer\n";
 print "\n";
 print "<a href='public.pl?Action=PublicFAQExplorer'>moved</a>\n";
 
+
 =back
 
 =head1 TERMS AND CONDITIONS
