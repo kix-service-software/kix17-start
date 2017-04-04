@@ -453,6 +453,7 @@ my $CleanUp = $Kernel::OM->Get('Kernel::System::AuthSession')->CleanUp();
 
 1;
 
+
 =back
 
 =head1 TERMS AND CONDITIONS

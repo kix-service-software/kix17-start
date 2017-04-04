@@ -29,6 +29,7 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 exit $Kernel::OM->Get('Kernel::System::Console::InterfaceConsole')->Run(@ARGV);
 
 
+
 =back
 
 =head1 TERMS AND CONDITIONS

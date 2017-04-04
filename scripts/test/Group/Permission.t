@@ -941,6 +941,7 @@ for my $PermissionTest (@UserRoleGroupPermissionTests) {
 
 1;
 
+
 =back
 
 =head1 TERMS AND CONDITIONS

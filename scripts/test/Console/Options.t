@@ -18,6 +18,7 @@ my $Output = qx{"$^X" bin/kix.Console.pl Maint::Ticket::PendingCheck --quiet};
 
 $Self->False( scalar( $Output =~ /\S/ ), "No output with --quiet" );
 
+
 =back
 
 =head1 TERMS AND CONDITIONS

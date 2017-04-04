@@ -171,6 +171,7 @@ for my $Encoding ( '', qw(base64 quoted-printable 8bit) ) {
 
 1;
 
+
 =back
 
 =head1 TERMS AND CONDITIONS
