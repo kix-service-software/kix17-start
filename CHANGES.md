@@ -2,7 +2,8 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 * $Id$
 
-#16.99.82 (2017/04/??)
+#17.0.0 (2017/04/04)
+ * first productive release
  * (2017/04/03) - Bugfix: T2017011190000509 (fragmentary lists in config item overview if CI attribute 'CIGroupAccess' is used) (rkaiser)
 
 #16.99.81 (2017/04/03)
