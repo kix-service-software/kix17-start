@@ -4,9 +4,8 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
 
 ## Requirements
 
-* the OTRS system is on the same framework version like KIX
- * i.e. 5.0.8, see /opt/kix/RELEASE after the installation of KIX
- * please make sure you have a consistent package stack (corresponding versions)
+* the OTRS system has to be framework version 5.0.x 
+* please make sure you have a consistent package stack (corresponding versions)
 * the OTRS system uses the same DBMS like KIX (PostgreSQL, MariaDB or MySQL)
 * the KIX database must be local
 
@@ -53,9 +52,8 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
 Im Folgenden wird das Vorgehen für die Migration einer OTRS-Instanz auf KIX beschrieben. Es ist zwingend notwendig, die Voraussetzungen zu erfüllen und die Schritte einzuhalten. 
 
 ## Voraussetzungen
-* das OTRS-System ist auf gleichem Framework-Stand wie KIX 
- * z.B. 5.0.8, siehe /opt/kix/RELEASE nach Installation von KIX
- * bitte sicherstellen, dass ein konsistenter Paketstack vorliegt (zusammenpassende Paketversionen)
+* das OTRS-System ist auf dem Framework-Stand 5.0.x 
+* bitte sicherstellen, dass ein konsistenter Paketstack vorliegt (zusammenpassende Paketversionen)
 * das OTRS-System verwendet das gleiche DBMS wie KIX (PostgreSQL, MariaDB oder MySQL) 
 * die KIX-Datenbank muss lokal installiert sein
 
