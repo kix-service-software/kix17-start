@@ -100,9 +100,13 @@ if (!@SQL) {
 }
 
 for my $SQL (@SQL) {
+    # ignore create statement if table already exists, because a specific package is already installed
     if ($SQL =~ /CREATE TABLE (.*?)\s+/g) {
-        # ignore create statement if table already exists
         next if ($PackageTables{$1} && $InstalledPackages{$PackageTables{$1}});
+    }
+    # ignore alter table statement if table doesn't exist, because a specific package isn't installed 
+    if ($SQL =~ /ALTER TABLE (.*?)\s+/g) {
+        next if ($PackageTables{$1} && !$InstalledPackages{$PackageTables{$1}});
     }
     my $Result = $Kernel::OM->Get('Kernel::System::DB')->Do( 
         SQL => $SQL 
