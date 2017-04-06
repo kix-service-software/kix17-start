@@ -4,6 +4,7 @@
 
 #17.0.0 (2017/04/04)
  * first productive release
+ * (2017/04/06) - CR: T2016121190001552 (code merge of all packages and changes for KIX 2017 - copyright header) (ddoerffel)
  * (2017/04/03) - Bugfix: T2017011190000509 (fragmentary lists in config item overview if CI attribute 'CIGroupAccess' is used) (rkaiser)
 
 #16.99.81 (2017/04/03)
