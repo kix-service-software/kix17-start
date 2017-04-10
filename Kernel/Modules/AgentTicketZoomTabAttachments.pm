@@ -335,22 +335,12 @@ sub _ArticleDownloadAttachments {
 
     my @Articles;
     my @Attachments;
-    my $Idx        = 0;
     my $ArticleIdx = $Param{ArticleIdxs};
 
     # create zip object
     my $ZipResult;
     my $ZipFilename = "Ticket_" . $Param{TicketNumber} . ".zip";
-    my $ZipObject   = new IO::Compress::Zip \$ZipResult,
-        BinModeIn => 1;
-
-    if ( !$ZipObject ) {
-        $LogObject->Log(
-            Priority => 'error',
-            Message  => "Unable to create Zip object.",
-        );
-        return;
-    }
+    my $ZipObject;
 
     for my $AttachmentID ( @{ $Param{AttachmentIDs} } ) {
         my ( $ArticleID, $Filename ) = split( /::/, $AttachmentID );
@@ -378,17 +368,29 @@ sub _ArticleDownloadAttachments {
 
             next if ( $Attachment{Filename} eq 'file-2' );
 
-            foreach my $IDNum ( @{ $Param{ArticleIdxs} } ) {
-                my @Array = split( /::/, $IDNum );
-                if ( $Array[0] == $ArticleID ) {
-                    $Idx = $Array[1];
-                }
-            }
-
             if ( $Attachment{Filename} eq $Filename ) {
-                $ZipObject->newStream( Name => $Attachment{Filename} );
-                $ZipObject->print( $Attachment{Content} );
-                $ZipObject->flush();
+                if ( !$ZipObject ) {
+                    $ZipObject   = new IO::Compress::Zip(
+                        \$ZipResult,
+                        BinModeIn => 1,
+                        Name      => $Attachment{Filename},
+                    );
+
+                    if ( !$ZipObject ) {
+                        $LogObject->Log(
+                            Priority => 'error',
+                            Message  => "Unable to create Zip object.",
+                        );
+                        return;
+                    }
+
+                    $ZipObject->print( $Attachment{Content} );
+                    $ZipObject->flush();
+                } else {
+                    $ZipObject->newStream( Name => $Attachment{Filename} );
+                    $ZipObject->print( $Attachment{Content} );
+                    $ZipObject->flush();
+                }
             }
         }
     }

@@ -57,16 +57,7 @@ sub Run {
     # create zip object
     my $ZipResult;
     my $ZipFilename = "Ticket_" . $TicketNumber . "_Article_" . $Self->{ArticleID} . ".zip";
-    my $ZipObject   = new IO::Compress::Zip \$ZipResult,
-        BinModeIn => 1;
-
-    if ( !$ZipObject ) {
-        $LogObject->Log(
-            Priority => 'error',
-            Message  => "Unable to create Zip object.",
-        );
-        return;
-    }
+    my $ZipObject;
 
     # get all attachments from article
     my %ArticleAttachments = $TicketObject->ArticleAttachmentIndex(
@@ -91,9 +82,28 @@ sub Run {
 
         next if ( $Attachment{Filename} eq 'file-2' );
 
-        $ZipObject->newStream( Name => $Attachment{Filename} );
-        $ZipObject->print( $Attachment{Content} );
-        $ZipObject->flush();
+        if ( !$ZipObject ) {
+            $ZipObject   = new IO::Compress::Zip(
+                \$ZipResult,
+                BinModeIn => 1,
+                Name      => $Attachment{Filename},
+            );
+
+            if ( !$ZipObject ) {
+                $LogObject->Log(
+                    Priority => 'error',
+                    Message  => "Unable to create Zip object.",
+                );
+                return;
+            }
+
+            $ZipObject->print( $Attachment{Content} );
+            $ZipObject->flush();
+        } else {
+            $ZipObject->newStream( Name => $Attachment{Filename} );
+            $ZipObject->print( $Attachment{Content} );
+            $ZipObject->flush();
+        }
     }
     $ZipObject->close();
 

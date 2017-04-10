@@ -2,6 +2,9 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 * $Id$
 
+#17.0.1 (2017/??/??)
+ * (2017/04/10) - Bugfix: T2017040390000573 (fixed zero-length name for entry on unpack a downloaded zip) (fjacquemin)
+
 #17.0.0 (2017/04/04)
  * first productive release
  * (2017/04/06) - CR: T2016121190001552 (code merge of all packages and changes for KIX 2017 - copyright header) (ddoerffel)
