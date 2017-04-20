@@ -603,7 +603,7 @@ sub FilterContent {
         # get the dynamic fields for this screen
         $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
             Valid      => 0,
-            ObjectType => ['Ticket'],
+            ObjectType => ['Ticket','Article'],
         );
     }
 
@@ -691,7 +691,7 @@ sub Run {
         $Self->{DynamicField} =
             $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
             Valid      => 1,
-            ObjectType => ['Ticket'],
+            ObjectType => ['Ticket','Article'],
             );
 
         # create attibute lookup table
@@ -2961,7 +2961,7 @@ sub _SearchParamsGet {
     # get the dynamic fields for this screen
     $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
-        ObjectType  => ['Ticket'],
+        ObjectType  => ['Ticket','Article'],
         FieldFilter => $Self->{DynamicFieldFilter} || {},
     );
 
