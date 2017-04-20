@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
+ * (2017/04/20) - Bugfix: T2017030690001051 (graph - show notice if too many nodes (>100) are involved to prevent a timeout) (rkaiser)
  * (2017/04/10) - Bugfix: T2017040390000573 (fixed zero-length name for entry on unpack a downloaded zip) (fjacquemin)
 
 #17.0.0 (2017/04/04)
