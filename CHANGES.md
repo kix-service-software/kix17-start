@@ -3,8 +3,10 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
+<<<<<<< CHANGES.md
  * (2017/04/20) - Bugfix: T2017031090000909 (article dynamic fields not considered in search template dashlets) (ddoerffel)
  * (2017/04/12) - Bugfix: T2015112390000507 (datepicker doesnt open after second tab load in agent ticket zoom) (millinger)
+ * (2017/04/20) - Bugfix: T2017030690001051 (graph - show notice if too many nodes (>100) are involved to prevent a timeout) (rkaiser)
  * (2017/04/10) - Bugfix: T2017040390000573 (fixed zero-length name for entry on unpack a downloaded zip) (fjacquemin)
 
 #17.0.0 (2017/04/04)
