@@ -109,7 +109,6 @@ sub Run {
         # KIX4OTRS-capeIT
         my $CallingAction = $ParamObject->GetParam( Param => 'CallingAction' ) || '';
         my $TicketID      = $ParamObject->GetParam( Param => 'TicketID' ) || '';
-        my $ArticleID     = $ParamObject->GetParam( Param => 'ArticleID' ) || '';
         my %TicketData;
         if ( $TicketID ) {
             %TicketData = $TicketObject->TicketGet(
