@@ -41,7 +41,7 @@ sub Run {
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
     my $AddressBookObject  = $Kernel::OM->Get('Kernel::System::AddressBook');
-    
+
     # get config for frontend
     $Self->{Config} = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
