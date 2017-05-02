@@ -1439,10 +1439,10 @@ sub Data {
         'Provider transport' => 'Provider-Transport',
         'Requester transport' => 'Requester-Transport',
         'Debug threshold' => 'Debug-Level',
-        'In provider mode, OTRS offers web services which are used by remote systems.' =>
-            'Im Modus "Provider" bietet OTRS Webservices an, die von entfernten Systemen genutzt werden.',
-        'In requester mode, OTRS uses web services of remote systems.' =>
-            'Im Modus "Requester" nutzt OTRS selbst Webservices von entfernten Systemen.',
+        'In provider mode, KIX offers web services which are used by remote systems.' =>
+            'Im Modus "Provider" bietet KIX Webservices an, die von entfernten Systemen genutzt werden.',
+        'In requester mode, KIX uses web services of remote systems.' =>
+            'Im Modus "Requester" nutzt KIX selbst Webservices von entfernten Systemen.',
         'Operations are individual system functions which remote systems can request.' =>
             'Operations sind einzelne Systemfunktionen, die entfernte Systeme aufrufen können.',
         'Invokers prepare data for a request to a remote web service, and process its response data.' =>
