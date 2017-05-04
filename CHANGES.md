@@ -3,6 +3,12 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
+ * (2017/05/04) - Bugfix: T2016121690000688 (default preferences for ticket view not set) (ddoerffel)
+ * (2017/05/04) - Bugfix: T2017032890001287 (added testing the documents on readability at linking) (fjacquemin) 
+ * (2017/05/04) - Bugfix: T2017032490000857 (added pipe after last actions menu element to prevent sub menu glitches) (uboehm) 
+ * (2017/05/02) - Bugfix: T2017042790000804 (some KIX --> OTRS replacements missing in generic interface) (rkaiser) 
+ * (2017/05/02) - Bugfix: T2017041990000963 (added testing of X-KIX-Queue and X-OTRS-Queue placeholders) (fjacquemin) 
+ * (2017/04/27) - Bugfix: T2017042090001085 (placeholder in customer attributes are not replaced with ticket data in customer info sidebar) (rkaiser) 
  * (2017/04/24) - Bugfix: T2017041290001457 (state not shown in preview ticket lists) (ddoerffel)
  * (2017/04/20) - Bugfix: T2017031090000909 (article dynamic fields not considered in search template dashlets) (ddoerffel)
  * (2017/04/12) - Bugfix: T2015112390000507 (datepicker doesnt open after second tab load in agent ticket zoom) (millinger)

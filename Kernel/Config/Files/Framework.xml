@@ -1652,7 +1652,7 @@
                         <Item Key="Unlocked">Unlocked tickets only</Item>
                     </Hash>
                 </Item>
-                <Item Key="DataSelected"></Item>
+                <Item Key="DataSelected">Unlocked</Item>
                 <Item Key="PrefKey">UserViewAllTicketsInServiceView</Item>
                 <Item Key="Prio">3111</Item>
                 <Item Key="Active">1</Item>
