@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
+ * (2017/05/05) - Bugfix: T2017041390000661 (log error on customer preferences change) (ddoerffel)
  * (2017/05/05) - Bugfix: T2017041190000683 (dashboard ticket overview without refresh) (ddoerffel)
  * (2017/05/04) - Bugfix: T2016121690000688 (default preferences for ticket view not set) (ddoerffel)
  * (2017/05/04) - Bugfix: T2017032890001287 (added testing the documents on readability at linking) (fjacquemin) 
