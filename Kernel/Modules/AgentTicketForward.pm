@@ -900,6 +900,11 @@ sub SendEmail {
             );
     }
 
+    # KIX4OTRS-capeIT
+    # get shown or hidden fields
+    $Self->_GetShownDynamicFields();
+    # EO KIX4OTRS-capeIT
+
     # transform pending time, time stamp based on user time zone
     if (
         defined $GetParam{Year}
