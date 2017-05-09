@@ -3,7 +3,7 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
- * (2017/05/08) - Bugfix: T2017041390000661 (AgentTicketForward with attachment rejects dynamic fields) (ddoerffel)
+ * (2017/05/08) - Bugfix: T2017041890001197 (AgentTicketForward with attachment rejects dynamic fields) (ddoerffel)
  * (2017/05/08) - Bugfix: T2017042090001085 (fixed a resulting bug because CallingAction was moved) (rkaiser) 
  * (2017/05/08) - Bugfix: T2017042590001487 (added FormID as TargetKey for customer LinkedCI) (fjacquemin) 
  * (2017/05/08) - CR: T2017011290000418 (article widget expanded even without mandatory note field) (uboehm)
