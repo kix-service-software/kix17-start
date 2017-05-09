@@ -1141,6 +1141,11 @@ sub Run {
             CustomerUserID => $CustomerUser || '',
             QueueID        => $QueueID      || 1,
             Services       => $Services,
+
+            # KIX4OTRS-capeIT
+            CustomerID => $GetParam{SelectedCustomerID},
+
+            # EO KIX4OTRS-capeIT
         );
         my $Types = $Self->_GetTypes(
             %GetParam,
