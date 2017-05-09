@@ -300,7 +300,6 @@ sub InputCreate {
             Data => {
                 minQueryLength      => $AutoCompleteConfig->{MinQueryLength}      || 2,
                 queryDelay          => $AutoCompleteConfig->{QueryDelay}          || 0.1,
-                typeAhead           => $AutoCompleteConfig->{TypeAhead}           || 'false',
                 maxResultsDisplayed => $AutoCompleteConfig->{MaxResultsDisplayed} || 20,
                 dynamicWidth        => $AutoCompleteConfig->{DynamicWidth}        || 1,
             },
