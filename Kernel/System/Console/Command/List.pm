@@ -105,9 +105,9 @@ sub ListAllCommands {
     my @KIXFolders = ( $Home . '/Kernel/System/Console/Command' );
     foreach my $TmpDir (@INC) {
         last if $TmpDir =~ /\/Custom$/;
-        $TmpDir .= "/Kernel/System/Console/Command";
-        next if !( -e $TmpDir );
-        push @KIXFolders, $TmpDir;
+        my $NewDir = $TmpDir."/Kernel/System/Console/Command";
+        next if !( -e $NewDir );
+        push @KIXFolders, $NewDir;
     }
 
     my @CommandFiles = ();
