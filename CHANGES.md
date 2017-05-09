@@ -3,6 +3,11 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
+ * (2017/05/09) - Bugfix: T2016121690000661 (filter not submitted on queue change in queue tree) (ddoerffel)
+ * (2017/05/08) - Bugfix: T2017041890001197 (AgentTicketForward with attachment rejects dynamic fields) (ddoerffel)
+ * (2017/05/08) - Bugfix: T2017042090001085 (fixed a resulting bug because CallingAction was moved) (rkaiser) 
+ * (2017/05/08) - Bugfix: T2017042590001487 (added FormID as TargetKey for customer LinkedCI) (fjacquemin) 
+ * (2017/05/08) - CR: T2017011290000418 (article widget expanded even without mandatory note field) (uboehm)
  * (2017/05/05) - Bugfix: T2017041390000661 (log error on customer preferences change) (ddoerffel)
  * (2017/05/05) - Bugfix: T2017041190000683 (dashboard ticket overview without refresh) (ddoerffel)
  * (2017/05/04) - Bugfix: T2016121690000688 (default preferences for ticket view not set) (ddoerffel)
