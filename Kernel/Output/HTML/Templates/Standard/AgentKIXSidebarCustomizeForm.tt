@@ -108,7 +108,7 @@ if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
         });
 
         FieldOrderArray.sort();
-        console.log(FieldOrderArray);
+
         // change sort order
         $.each(FieldOrderArray, function(Index, Value) {
             var ValueArray             = Value.toString().split("::"),
