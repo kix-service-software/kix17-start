@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
+ * (2017/05/10) - Bugfix: T2016110390000623 (customize form not working with date and time fields) (ddoerffel)
  * (2017/05/10) - Bugfix: T2017032190001512 (autosearch does not work in CustomerSearch) (ddoerffel)
  * (2017/05/09) - Bugfix: T2017042590001067 (article seen flag not removed on process ticket) (ddoerffel)
  * (2017/05/09) - Bugfix: T2016121690000661 (filter not submitted on queue change in queue tree) (ddoerffel)
