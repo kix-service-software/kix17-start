@@ -1600,6 +1600,7 @@ sub MaskForm {
         Size       => 5,
         SelectedID => $Param{TypeIDs},
         Class      => 'Modernize',
+        Translation => 0,
     );
     $Param{StatesStrg} = $LayoutObject->BuildSelection(
         Data => {
