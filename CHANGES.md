@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
+ * (2017/05/11) - Bugfix: T2016121990002448 (article content always shown as html code in faq view) (ddoerffel)
  * (2017/05/10) - Bugfix: T2017050590000488 (TypeTranslation not working in customer frontend ticket search) (ddoerffel)
  * (2017/05/10) - Bugfix: T2017032190000728 (outout filter for faq options destroys customized form layout) (ddoerffel)
  * (2017/05/10) - Bugfix: T2016110390000623 (customize form not working with date and time fields) (ddoerffel)

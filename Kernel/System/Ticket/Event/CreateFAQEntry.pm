@@ -172,6 +172,7 @@ sub Run {
         );
 
         # convert article body to HTML, if used in FAQ
+        my $ContentType = 'text/plain';
         if ( $Self->{ConfigObject}->Get('FAQ::Item::HTML') ) {
 
             # get HTML-body for ThisArticle...
@@ -179,6 +180,9 @@ sub Run {
                 ArticleID => $Param{Data}->{ArticleID},
                 UserID    => 1,
             );
+
+            $ContentType = 'text/html';
+
             for my $Index ( keys %ArticleIndex0 ) {
                 if (
                     $ArticleIndex0{$Index}->{'Filename'} =~ /^file/
@@ -254,7 +258,7 @@ sub Run {
         $NewFAQItemData{LanguageID}  = $NewFAQItemData{LanguageID} || 1;
         $NewFAQItemData{StateID}     = $NewFAQItemData{StateID} || 1;
         $NewFAQItemData{Approved}    = $FAQWFConfig{DefaultApproved} || 0;
-        $NewFAQItemData{ContentType} = 'text/plain';
+        $NewFAQItemData{ContentType} = $ContentType;
 
         my $ItemID = $Self->{FAQObject}->FAQAdd(
             %NewFAQItemData,
