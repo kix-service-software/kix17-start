@@ -3789,7 +3789,7 @@ sub Data {
         'Need ArticleID!' => 'Benötige ArticleID!',
         'Invalid ArticleID!' => 'Ungültige ArticleID!',
         'Offline' => 'Offline',
-        'This user is currently offline' => 'Dieser Benutzer ist aktuell online',
+        'This user is currently offline' => 'Dieser Benutzer ist aktuell offline',
         'This user is currently active' => 'Dieser Benutzer ist aktuell aktiv',
         'Away' => 'Abwesend',
         'This user is currently away' => 'Dieser Benutzer ist aktuell abwesend',
