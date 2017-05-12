@@ -123,6 +123,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 // update services (trigger ServiceID change event)
                 Core.AJAX.FormUpdate($('#CustomerID').closest('form'), 'AJAXUpdate', 'ServiceID', Core.Config.Get('ProcessManagement.UpdatableFields'));
             }
+            
+            Core.KIXBase.Agent.AutoToggleSidebars();
         },'',Async);
     }
 
