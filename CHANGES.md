@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
+ * (2017/05/11) - Bugfix: T2016121990002448 (article content always shown as html code in faq view) (ddoerffel)
  * (2017/05/11) - Bugfix: T2016040790000559 (translation error "This user is currently offline" removed) (ddoerffel)
  * (2017/05/10) - Bugfix: T2017021590001081 (added AutoToggleSidebars() to GetCustomerInfo()) (uboehm)
  * (2017/05/10) - Bugfix: T2017042490001391 (removed configuration RegistrationUpdateSend) (fjacquemin)
