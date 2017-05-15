@@ -3,6 +3,9 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
+ * (2017/05/15) - Bugfix: T2017051590000709 (layout adaptations for process management) (ddoerffel)
+ * (2017/05/12) - Bugfix: T2017040590001407 (added missing check for MaxArraySize is reached, then input field hide) (fjacquemin)
+ * (2017/05/11) - Bugfix: T2017041290001475 (fixed layout glitch in ticket link dialog) (uboehm)
  * (2017/05/11) - Bugfix: T2016121990002448 (article content always shown as html code in faq view) (ddoerffel)
  * (2017/05/11) - Bugfix: T2016040790000559 (translation error "This user is currently offline" removed) (ddoerffel)
  * (2017/05/10) - Bugfix: T2017021590001081 (added AutoToggleSidebars() to GetCustomerInfo()) (uboehm)
