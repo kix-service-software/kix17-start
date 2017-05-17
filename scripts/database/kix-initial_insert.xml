@@ -2244,7 +2244,7 @@ Your KIX Team
     <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
         <Data Key="event_key" Type="Quote">Recipients</Data>
-        <Data Key="event_value" Type="Quote">LinkedPerson</Data>
+        <Data Key="event_value" Type="Quote">LinkedPersonAgent</Data>
     </Insert>
     <Insert Table="notification_event_item">
         <Data Key="notification_id">14</Data>
