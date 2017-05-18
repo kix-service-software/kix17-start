@@ -197,7 +197,9 @@ sub Run {
             $LayoutObject->Block(
                 Name => 'CustomerDashboardRemoteDBResultHead',
             );
-            if ( !$Self->{DashletConfig}->{SelectionDisabled} ) {
+            if ( defined $Self->{DashletConfig}->{SelectionDisabled}
+                && !$Self->{DashletConfig}->{SelectionDisabled}
+            ) {
                 $LayoutObject->Block(
                     Name => 'CustomerDashboardRemoteDBResultHeadColumnCheck',
                 );
@@ -304,6 +306,9 @@ sub Run {
 sub _CustomerDashboardRemoteDBSearch {
     my ( $Self, %Param ) = @_;
 
+    # get needed db object
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
     # check needed params
     foreach (
         qw(
@@ -357,10 +362,10 @@ sub _CustomerDashboardRemoteDBSearch {
     if ( $Self->{'DB::Type'} ) {
         my $GenericModule = 'Kernel::System::DB::' . $Self->{'DB::Type'};
         return if !$Kernel::OM->Get('Kernel::System::Main')->Require($GenericModule);
-        $Self->{Backend} = $GenericModule->new( %{$Self} );
+        $DBObject->{Backend} = $GenericModule->new( %{$Self} );
 
         # set database functions
-        $Self->{Backend}->LoadPreferences();
+        $DBObject->{Backend}->LoadPreferences();
     }
     else {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -380,7 +385,7 @@ sub _CustomerDashboardRemoteDBSearch {
         )
     {
         if ( defined $Param{$Setting} ) {
-            $Self->{Backend}->{"DB::$Setting"} = $Param{$Setting};
+            $DBObject->{Backend}->{"DB::$Setting"} = $Param{$Setting};
         }
     }
 
@@ -413,7 +418,7 @@ sub _CustomerDashboardRemoteDBSearch {
         )
     {
         for my $RestrictedValue ( @{ $Param{RestrictedValues} } ) {
-            push( @QuotedRestrictedValues, $Kernel::OM->Get('Kernel::System::DB')->Quote($RestrictedValue) );
+            push( @QuotedRestrictedValues, $DBObject->Quote($RestrictedValue) );
         }
     }
 
@@ -437,7 +442,7 @@ sub _CustomerDashboardRemoteDBSearch {
         }
     }
 
-    my $QuotedValue = $Kernel::OM->Get('Kernel::System::DB')->Quote( $Param{SearchValue} );
+    my $QuotedValue = $DBObject->Quote( $Param{SearchValue} );
 
     # check cache
     if ( $Param{DatabaseCacheTTL} ) {
@@ -473,7 +478,7 @@ sub _CustomerDashboardRemoteDBSearch {
         );
         return \@{$List} if $List;
     }
-    my $QueryCondition = $Kernel::OM->Get('Kernel::System::DB')->QueryCondition(
+    my $QueryCondition = $DBObject->QueryCondition(
         Key          => $Param{SearchAttribute},
         Value        => $QuotedValue,
         SearchPrefix => '*',
@@ -525,7 +530,7 @@ sub _CustomerDashboardRemoteDBSearch {
     }
 
     # fetch result
-    while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+    while ( my @Row = $DBObject->FetchrowArray() ) {
         push( @List, \@Row );
 
         # Check if limit is reached
@@ -556,6 +561,9 @@ to connect to a database
 sub _Connect {
     my $Self = shift;
 
+    # get needed db object
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
     # debug
     if ( $Self->{Debug} > 2 ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -571,7 +579,7 @@ sub _Connect {
         $Self->{DSN},
         $Self->{USER},
         $Self->{PW},
-        $Self->{Backend}->{'DB::Attribute'},
+        $DBObject->{Backend}->{'DB::Attribute'},
     );
 
     if ( !$Self->{dbh} ) {
@@ -583,12 +591,12 @@ sub _Connect {
         return;
     }
 
-    if ( $Self->{Backend}->{'DB::Connect'} ) {
-        $Self->_Do( SQL => $Self->{Backend}->{'DB::Connect'} );
+    if ( $DBObject->{Backend}->{'DB::Connect'} ) {
+        $Self->_Do( SQL => $DBObject->{Backend}->{'DB::Connect'} );
     }
 
     # set utf-8 on for PostgreSQL
-    if ( $Self->{Backend}->{'DB::Type'} eq 'postgresql' ) {
+    if ( $DBObject->{Backend}->{'DB::Type'} eq 'postgresql' ) {
         $Self->{dbh}->{pg_enable_utf8} = 1;
     }
 
@@ -646,6 +654,9 @@ to insert, update or delete values
 sub _Do {
     my ( $Self, %Param ) = @_;
 
+    # get needed db object
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
     # check needed stuff
     if ( !$Param{SQL} ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -655,8 +666,8 @@ sub _Do {
         return;
     }
 
-    if ( $Self->{Backend}->{'DB::PreProcessSQL'} ) {
-        $Self->{Backend}->PreProcessSQL( \$Param{SQL} );
+    if ( $DBObject->{Backend}->{'DB::PreProcessSQL'} ) {
+        $DBObject->{Backend}->PreProcessSQL( \$Param{SQL} );
     }
 
     # check bind params
@@ -675,8 +686,8 @@ sub _Do {
                 return;
             }
         }
-        if ( @Array && $Self->{Backend}->{'DB::PreProcessBindData'} ) {
-            $Self->{Backend}->PreProcessBindData( \@Array );
+        if ( @Array && $DBObject->{Backend}->{'DB::PreProcessBindData'} ) {
+            $DBObject->{Backend}->PreProcessBindData( \@Array );
         }
     }
 
@@ -762,6 +773,9 @@ you also can use DBI bind values, required for large strings:
 sub _Prepare {
     my ( $Self, %Param ) = @_;
 
+    # get needed db object
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
     my $SQL   = $Param{SQL};
     my $Limit = $Param{Limit} || '';
     my $Start = $Param{Start} || '';
@@ -790,10 +804,10 @@ sub _Prepare {
             $Limit = $Limit + $Start;
             $Self->{LimitStart} = $Start;
         }
-        if ( $Self->{Backend}->{'DB::Limit'} eq 'limit' ) {
+        if ( $DBObject->{Backend}->{'DB::Limit'} eq 'limit' ) {
             $SQL .= " LIMIT $Limit";
         }
-        elsif ( $Self->{Backend}->{'DB::Limit'} eq 'top' ) {
+        elsif ( $DBObject->{Backend}->{'DB::Limit'} eq 'top' ) {
             $SQL =~ s{ \A (SELECT ([ ]DISTINCT|)) }{$1 TOP $Limit}xmsi;
         }
         else {
@@ -824,8 +838,8 @@ sub _Prepare {
         $LogTime = time();
     }
 
-    if ( $Self->{Backend}->{'DB::PreProcessSQL'} ) {
-        $Self->{Backend}->PreProcessSQL( \$SQL );
+    if ( $DBObject->{Backend}->{'DB::PreProcessSQL'} ) {
+        $DBObject->{Backend}->PreProcessSQL( \$SQL );
     }
 
     # check bind params
@@ -844,13 +858,13 @@ sub _Prepare {
                 return;
             }
         }
-        if ( @Array && $Self->{Backend}->{'DB::PreProcessBindData'} ) {
-            $Self->{Backend}->PreProcessBindData( \@Array );
+        if ( @Array && $DBObject->{Backend}->{'DB::PreProcessBindData'} ) {
+            $DBObject->{Backend}->PreProcessBindData( \@Array );
         }
     }
 
     # do
-    if ( !( $Self->{Cursor} = $Self->{dbh}->prepare($SQL) ) ) {
+    if ( !( $DBObject->{Cursor} = $Self->{dbh}->prepare($SQL) ) ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Caller   => 1,
             Priority => 'Error',
@@ -859,7 +873,7 @@ sub _Prepare {
         return;
     }
 
-    if ( !$Self->{Cursor}->execute(@Array) ) {
+    if ( !$DBObject->{Cursor}->execute(@Array) ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Caller   => 1,
             Priority => 'Error',
@@ -882,8 +896,6 @@ sub _Prepare {
     return 1;
 }
 1;
-
-
 
 =back
 

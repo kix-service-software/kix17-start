@@ -986,21 +986,22 @@ sub DependingDynamicFieldTree {
         }
 
         # KIX4OTRS-capeIT
-        my ( $CallerPackage, $CallerFilename, $CallerLine ) = caller;
-        my %UserPreferences
-            = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
-
-        my $CallerInfo= ( $CallerPackage || '' ) . '_' . ( $CallerLine || '' ) . '_' . ( $Param{Info} || '');
-        $CallerInfo = Digest::MD5::md5_hex(utf8::is_utf8($CallerInfo) ? Encode::encode_utf8($CallerInfo) : $CallerInfo);
-
-        $Param{NotifyID} = md5_hex($CallerInfo);
-        return ""
-            if (
-            $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
-            && $Self->{SessionID} eq
-            $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
-            );
-
+        if ( $Self->{Baselink} =~ /\/index.pl/ ) {
+            my ( $CallerPackage, $CallerFilename, $CallerLine ) = caller;
+            my %UserPreferences
+                = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
+    
+            my $CallerInfo= ( $CallerPackage || '' ) . '_' . ( $CallerLine || '' ) . '_' . ( $Param{Info} || '');
+            $CallerInfo = Digest::MD5::md5_hex(utf8::is_utf8($CallerInfo) ? Encode::encode_utf8($CallerInfo) : $CallerInfo);
+    
+            $Param{NotifyID} = md5_hex($CallerInfo);
+            return ""
+                if (
+                $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
+                && $Self->{SessionID} eq
+                $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
+                );
+        }
         # EO KIX4OTRS-capeIT
 
         if ( $Param{Link} ) {

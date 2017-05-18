@@ -53,6 +53,10 @@ var DynamicFieldRemoteDB = (function (TargetNS) {
             Identifiers[Identifier]['Constriction'][ConstrictionArray[i]] = 1;
         }
 
+        if ($('.InputField_Selection > input[name=' + Identifier + ']').length >= Identifiers[Identifier]['MaxArraySize']) {
+            $(Identifiers[Identifier]['AutoCompleteFieldID']).hide();
+        }
+
         $(Identifiers[Identifier]['AutoCompleteFieldID']).autocomplete({
             delay: Identifiers[Identifier]['QueryDelay'],
             minLength: Identifiers[Identifier]['MinQueryLength'],

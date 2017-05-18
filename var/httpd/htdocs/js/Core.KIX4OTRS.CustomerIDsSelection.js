@@ -25,7 +25,7 @@ Core.KIX4OTRS.CustomerIDsSelection = (function(TargetNS) {
     TargetNS.Init = function() {
         var $CustomerIDs = $('.SelectedCustomerIDRadio'),
             $CustomerID = $('#CustomerID'),
-            $Form = $('#FormID').closest('form');
+            $Form = $('input[name="FormID"]').closest('form');
 
         if (!$CustomerIDs.length || !$CustomerID.length)
             return;

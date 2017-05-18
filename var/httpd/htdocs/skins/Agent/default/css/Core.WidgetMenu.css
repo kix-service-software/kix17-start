@@ -279,11 +279,6 @@ ul.ContextFunctions li:last-child:hover > a {
     margin: 5px 3px;
 }
 
-.Actions li:last-child:after {
-    content: "";
-    display: none;
-}
-
 .RTL .Actions li {
     margin-right: 0;
     margin-left: -3px;

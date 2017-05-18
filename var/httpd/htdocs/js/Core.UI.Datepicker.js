@@ -241,6 +241,10 @@ Core.UI.Datepicker = (function (TargetNS) {
             };
         };
 
+// KIX-capeIT
+        $('#ui-datepicker-div').remove();
+// EO KIX-capeIT
+
         $DatepickerElement.datepicker(Options);
 
         // Add some DOM notes to the datepicker, but only if it was not initialized previously.

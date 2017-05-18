@@ -65,12 +65,16 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             CustomerUserID: CustomerUserID,
             // KIX4OTRS-capeIT
             CallingAction : CallingAction || ''
-        // EO KIX4OTRS-capeIT
+            // EO KIX4OTRS-capeIT
         };
 
         // KIX4OTRS-capeIT
         if ( CallingAction == 'AgentTicketZoomTabArticle' ) {
             Async = false;
+        }
+        // get ticket ID for customer info sidebar (for possible links in customer attributes)
+        if ( CallingAction == 'AgentKIXSidebarCustomerInfo' ) {
+            Data.TicketID = $('input[name="TicketID"]').val();
         }
         // EO KIX4OTRS-capeIT
 
@@ -119,6 +123,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 // update services (trigger ServiceID change event)
                 Core.AJAX.FormUpdate($('#CustomerID').closest('form'), 'AJAXUpdate', 'ServiceID', Core.Config.Get('ProcessManagement.UpdatableFields'));
             }
+            
+            Core.KIXBase.Agent.AutoToggleSidebars();
         },'',Async);
     }
 

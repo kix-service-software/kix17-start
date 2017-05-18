@@ -270,7 +270,7 @@ sub _MaskUpdate {
     # otrs header
     my %SetHeader = ();
     for my $HeaderKey ( sort keys %Header ) {
-        if ( $HeaderKey =~ /^x-otrs/i ) {
+        if ( $HeaderKey =~ /^x-(otrs|kix)/i ) {
             $SetHeader{$HeaderKey} = $HeaderKey;
         }
     }

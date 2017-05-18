@@ -321,7 +321,10 @@ sub _DirectorySearch {
             ? ( $_ =~ /^$Param{SearchPattern}$/i )
             : ( $_ =~ /^$Param{SearchPattern}$/ );
         if (
-            ( -f $_ || ( $Param{FileName} && -f $Param{FileName} ) )
+            (
+                ( -f $_ && -r $_ )
+                || ( $Param{FileName} && -f $Param{FileName} && -r $Param{FileName} )
+            )
             && $NameMatch
             && ( !$Param{SearchLimit} || $Counter <= $Param{SearchLimit} )
             )

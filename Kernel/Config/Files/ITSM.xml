@@ -848,17 +848,6 @@
             <String Regex="^[1-9][0-9]*$">100</String>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="ITSMCIAttributeCollection::Frontend::CommonSearchAutoComplete###TypeAhead" Required="1" Valid="1">
-        <Description Translatable="1">Enables or disables TypeAhead for the autocomplete feature.</Description>
-        <Group>ITSM</Group>
-        <SubGroup>Frontend::Agent::CommonSearch</SubGroup>
-        <Setting>
-            <Option SelectedID="false">
-                <Item Key="false">No</Item>
-                <Item Key="true">Yes</Item>
-            </Option>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Frontend::Module###AdminITSMConfigItem" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>ITSM</Group>

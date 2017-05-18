@@ -41,7 +41,7 @@ sub Run {
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
     my $AddressBookObject  = $Kernel::OM->Get('Kernel::System::AddressBook');
-    
+
     # get config for frontend
     $Self->{Config} = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
@@ -108,7 +108,15 @@ sub Run {
 
         # KIX4OTRS-capeIT
         my $CallingAction = $ParamObject->GetParam( Param => 'CallingAction' ) || '';
-
+        my $TicketID      = $ParamObject->GetParam( Param => 'TicketID' ) || '';
+        my %TicketData;
+        if ( $TicketID ) {
+            %TicketData = $TicketObject->TicketGet(
+                TicketID      => $TicketID,
+                DynamicFields => 1,
+                UserID        => $Self->{UserID} || 1,
+            );
+        }
         # EO KIX4OTRS-capeIT
 
         # get params
@@ -130,6 +138,13 @@ sub Run {
         # get customer id
         if ( $CustomerData{UserCustomerID} ) {
             $CustomerID = $CustomerData{UserCustomerID};
+
+            # KIX4OTRS-capeIT
+            # use data from customer (see 'AgentCustomer(Details)ViewTable'), else it will be overwritten
+            delete $TicketData{CustomerID};
+            delete $TicketData{CustomerUserID};
+
+            # EO KIX4OTRS-capeIT
         }
 
         # build html for customer info table
@@ -138,12 +153,13 @@ sub Run {
         if ( %CustomerData && $ConfigObject->Get('Ticket::Frontend::CustomerInfoCompose') ) {
 
             # EO KIX4OTRS-capeIT
-
             $CustomerTableHTMLString = $LayoutObject->AgentCustomerViewTable(
 
                 # KIX4OTRS-capeIT
                 # Data => {%CustomerData},
-                Data => { %CustomerData, CallingAction => $CallingAction, AJAX => 1 },
+                Data          => { %CustomerData, AJAX => 1 },
+                Ticket        => \%TicketData,
+                CallingAction => $CallingAction,
 
                 # EO KIX4OTRS-capeIT
                 Max => $ConfigObject->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),
@@ -151,8 +167,10 @@ sub Run {
 
             # KIX4OTRS-capeIT
             $CustomerDetailsTableHTMLString = $LayoutObject->AgentCustomerDetailsViewTable(
-                Data => { %CustomerData, CallingAction => $CallingAction, AJAX => 1 },
-                Max => $ConfigObject->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),
+                Data          => { %CustomerData, AJAX => 1 },
+                Ticket        => \%TicketData,
+                CallingAction => $CallingAction,
+                Max           => $ConfigObject->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),
             );
 
             # EO KIX4OTRS-capeIT
@@ -264,8 +282,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 
