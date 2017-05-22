@@ -40,7 +40,7 @@ Core.KIXBase.Agent = (function(TargetNS) {
             'text', false);
 
             var Action = Core.Config.Get('Action');
-            if ( !Action.match(/^AgentTicketZoom(.+)/) ) {
+            if ( !Action.match(/^AgentTicketZoom(.+)/) && !Action.match(/^AgentITSM(.*?)Zoom(.+)/) ) {
                 $('#ToolBarToggle').addClass(Class);
                 $('#ToolBarToggle').click(function() {
                     if ($('#ToolBarToggle').hasClass('Show')) {
