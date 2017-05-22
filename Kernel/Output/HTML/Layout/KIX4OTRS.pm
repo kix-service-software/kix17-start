@@ -1472,7 +1472,7 @@ sub DependingDynamicFieldTree {
                 Translation => 0,
                 Class       => $Validate ? 'Validate_DateYear' : '',
                 Title       => $Self->{LanguageObject}->Translate('Year'),
-                Disabled    => $Param{Disabled},
+                Disabled    =>  $Param{Disabled} || 0,
             );
         }
         else {
