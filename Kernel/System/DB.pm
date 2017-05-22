@@ -218,7 +218,13 @@ sub Connect {
     }
 
     if ( $Self->{Backend}->{'DB::Connect'} ) {
-        $Self->Do( SQL => $Self->{Backend}->{'DB::Connect'} );
+# capeIT
+#        $Self->Do( SQL => $Self->{Backend}->{'DB::Connect'} );
+        $Self->Do(
+            SQL              => $Self->{Backend}->{'DB::Connect'},
+            SkipConnectCheck => 1,
+        );
+# EO capeIT
     }
 
     # set utf-8 on for PostgreSQL
@@ -457,7 +463,13 @@ sub Do {
         );
     }
 
+# capeIT
+    if ( !$Param{SkipConnectCheck} ) {
+# EO capeIT
     return if !$Self->Connect();
+# capeIT
+    }
+# EO capeIT
 
     # send sql to database
     if ( !$Self->{dbh}->do( $Param{SQL}, undef, @Array ) ) {

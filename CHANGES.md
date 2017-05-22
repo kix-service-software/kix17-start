@@ -4,6 +4,10 @@
 
 #17.0.1 (2017/??/??)
  * (2017/05/22) - Bugfix: T2017051990001121 (customer portal group changes sort order every time on reload) (ddoerffel)
+ * (2017/05/22) - Bugfix: T2017030190001265 (param 'disabled' sometimes ignored in BuildDateSelection) (ddoerffel)
+ * (2017/05/18) - Bugfix: T2017032790000824 (added SessionParam to queue link in AgentTicketZoom) (uboehm)
+ * (2017/05/18) - Bugfix: T2017051590000978 (fixed optical glitch in widget header) (uboehm)
+ * (2017/05/17) - Bugfix: T2016052790000626 (corrected recipient 'LinkedPerson' to 'LinkedPersonAgent') (millinger)
  * (2017/05/15) - Bugfix: T2017051590000709 (layout adaptations for process management) (ddoerffel)
  * (2017/05/12) - Bugfix: T2017040590001407 (added missing check for MaxArraySize is reached, then input field hide) (fjacquemin)
  * (2017/05/11) - Bugfix: T2017041290001475 (fixed layout glitch in ticket link dialog) (uboehm)

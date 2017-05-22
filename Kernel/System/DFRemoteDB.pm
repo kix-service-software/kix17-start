@@ -1,5 +1,7 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# based on the original work of:
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -25,9 +27,8 @@ our @ObjectDependencies = (
     'Kernel::System::Time',
 );
 
-our $UseSlaveDB = 0;
-
 # capeIT
+#our $UseSlaveDB = 0;
 use base qw(Kernel::System::DB);
 # EO capeIT
 
@@ -79,19 +80,19 @@ sub new {
     # 0=off; 1=updates; 2=+selects; 3=+Connects;
     $Self->{Debug} = $Param{Debug} || 0;
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+# capeIT
+#    # get config object
+#    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+# EO capeIT
 
     # get config data
 # capeIT
 #    $Self->{DSN}  = $Param{DatabaseDSN}  || $ConfigObject->Get('DatabaseDSN');
 #    $Self->{USER} = $Param{DatabaseUser} || $ConfigObject->Get('DatabaseUser');
 #    $Self->{PW}   = $Param{DatabasePw}   || $ConfigObject->Get('DatabasePw');
-# EO capeIT
-
-    $Self->{IsSlaveDB} = $Param{IsSlaveDB};
-
-# capeIT
+#
+#    $Self->{IsSlaveDB} = $Param{IsSlaveDB};
+#
 #    $Self->{SlowLog} = $Param{'Database::SlowLog'}
 #        || $ConfigObject->Get('Database::SlowLog');
     # check needed params
@@ -159,7 +160,7 @@ sub new {
         return;
     }
 
-# capeIT    # check/get extra database configuration options
+    # check/get extra database configuration options
     # (overwrite auto-detection with config options)
     for my $Setting (
         qw(
@@ -197,8 +198,20 @@ sub Connect {
     # check database handle
     if ( $Self->{dbh} ) {
 
-        return $Self->{dbh} if $Self->{dbh}->ping();
+        my $PingTimeout = 10;        # Only ping every 10 seconds (see bug#12383).
+        my $CurrentTime = time();    ## no critic
 
+        if ( $CurrentTime - ( $Self->{LastPingTime} // 0 ) < $PingTimeout ) {
+            return $Self->{dbh};
+        }
+
+        # Ping to see if the connection is still alive.
+        if ( $Self->{dbh}->ping() ) {
+            $Self->{LastPingTime} = $CurrentTime;
+            return $Self->{dbh};
+        }
+
+        # Ping failed: cause a reconnect.
         delete $Self->{dbh};
     }
 
@@ -233,7 +246,13 @@ sub Connect {
     }
 
     if ( $Self->{Backend}->{'DB::Connect'} ) {
-        $Self->Do( SQL => $Self->{Backend}->{'DB::Connect'} );
+# capeIT
+#        $Self->Do( SQL => $Self->{Backend}->{'DB::Connect'} );
+        $Self->Do(
+            SQL              => $Self->{Backend}->{'DB::Connect'},
+            SkipConnectCheck => 1,
+        );
+# EO capeIT
     }
 
     # set utf-8 on for PostgreSQL
@@ -241,9 +260,11 @@ sub Connect {
         $Self->{dbh}->{pg_enable_utf8} = 1;
     }
 
-    if ( $Self->{SlaveDBObject} ) {
-        $Self->{SlaveDBObject}->Connect();
-    }
+# capeIT
+#    if ( $Self->{SlaveDBObject} ) {
+#        $Self->{SlaveDBObject}->Connect();
+#    }
+# EO capeIT
 
     return $Self->{dbh};
 }
@@ -277,9 +298,11 @@ sub Disconnect {
         delete $Self->{dbh};
     }
 
-    if ( $Self->{SlaveDBObject} ) {
-        $Self->{SlaveDBObject}->Disconnect();
-    }
+# capeIT
+#    if ( $Self->{SlaveDBObject} ) {
+#        $Self->{SlaveDBObject}->Disconnect();
+#    }
+# EO capeIT
 
     return 1;
 }
@@ -368,7 +391,13 @@ sub Do {
         );
     }
 
+# capeIT
+    if ( !$Param{SkipConnectCheck} ) {
+# EO capeIT
     return if !$Self->Connect();
+# capeIT
+    }
+# EO capeIT
 
     # send sql to database
     if ( !$Self->{dbh}->do( $Param{SQL}, undef, @Array ) ) {
@@ -436,19 +465,21 @@ sub Prepare {
         return;
     }
 
-    $Self->{_PreparedOnSlaveDB} = 0;
-
-    # Route SELECT statements to the DB slave if requested and a slave is configured.
-    if (
-        $UseSlaveDB
-        && !$Self->{IsSlaveDB}
-        && $Self->_InitSlaveDB()    # this is very cheap after the first call (cached)
-        && $SQL =~ m{\A\s*SELECT}xms
-        )
-    {
-        $Self->{_PreparedOnSlaveDB} = 1;
-        return $Self->{SlaveDBObject}->Prepare(%Param);
-    }
+# capeIT
+#    $Self->{_PreparedOnSlaveDB} = 0;
+#
+#    # Route SELECT statements to the DB slave if requested and a slave is configured.
+#    if (
+#        $UseSlaveDB
+#        && !$Self->{IsSlaveDB}
+#        && $Self->_InitSlaveDB()    # this is very cheap after the first call (cached)
+#        && $SQL =~ m{\A\s*SELECT}xms
+#        )
+#    {
+#        $Self->{_PreparedOnSlaveDB} = 1;
+#        return $Self->{SlaveDBObject}->Prepare(%Param);
+#    }
+# EO capeIT
 
     if ( defined $Param{Encode} ) {
         $Self->{Encode} = $Param{Encode};
@@ -558,8 +589,6 @@ sub Prepare {
 }
 
 1;
-
-
 
 =back
 
