@@ -1433,7 +1433,7 @@ sub DependingDynamicFieldTree {
                 . "title=\""
                 . $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->Get('Date')
                 . "\" value=\""
-                . ( $Param{ $Prefix . 'Date' } || $Date ) . "\"/>";
+                . ( $Param{ $Prefix . 'Date' } || $Date ) . "\" " . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) ."/>";
             $Param{DateStr} .= "<input type=\"hidden\" "
                 . "class=\"$Class\" "
                 . "name=\"${Prefix}Year\" id=\"${Prefix}Year\" size=\"4\" maxlength=\"4\" "
@@ -1472,7 +1472,7 @@ sub DependingDynamicFieldTree {
                 Translation => 0,
                 Class       => $Validate ? 'Validate_DateYear' : '',
                 Title       => $Self->{LanguageObject}->Translate('Year'),
-                Disabled    => $Param{Disabled},
+                Disabled    =>  $Param{Disabled} || 0,
             );
         }
         else {
