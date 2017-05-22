@@ -3,6 +3,7 @@
 * $Id$
 
 #17.0.1 (2017/??/??)
+ * (2017/05/22) - Bugfix: T2017051990001111 (uninitialized value on selecting value in multiselect input fields using process ticket) (ddoerffel)
  * (2017/05/22) - Bugfix: T2017030190001265 (param 'disabled' sometimes ignored in BuildDateSelection) (ddoerffel)
  * (2017/05/18) - Bugfix: T2017032790000824 (added SessionParam to queue link in AgentTicketZoom) (uboehm)
  * (2017/05/18) - Bugfix: T2017051590000978 (fixed optical glitch in widget header) (uboehm)
