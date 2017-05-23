@@ -200,29 +200,29 @@ sub Run {
 
                 if ($Link) {
 
-                    if ( $Link =~ /\$Data{"Key"}/ ) {
+                    if ( $Link =~ /\$Data\{"Key"\}/ ) {
                         my $Replace = $Key;
-                        $Link =~ s/\$Data{"Key"}/$Replace/g;
+                        $Link =~ s/\$Data\{"Key"\}/$Replace/g;
                     }
-                    if ( $Link =~ /\$QData{"Key"}/ ) {
+                    if ( $Link =~ /\$QData\{"Key"\}/ ) {
                         my $Replace = $Self->{LayoutObject}->Ascii2Html( Text => $Key );
-                        $Link =~ s/\$QData{"Key"}/$Replace/g;
+                        $Link =~ s/\$QData\{"Key"\}/$Replace/g;
                     }
-                    if ( $Link =~ /\$LQData{"Key"}/ ) {
+                    if ( $Link =~ /\$LQData\{"Key"\}/ ) {
                         my $Replace = $Self->{LayoutObject}->LinkEncode($Key);
-                        $Link =~ s/\$LQData{"Key"}/$Replace/g;
+                        $Link =~ s/\$LQData\{"Key"\}/$Replace/g;
                     }
-                    if ( $Link =~ /\$Data{"Value"}/ ) {
+                    if ( $Link =~ /\$Data\{"Value"\}/ ) {
                         my $Replace = $Result;
-                        $Link =~ s/\$Data{"Value"}/$Replace/g;
+                        $Link =~ s/\$Data\{"Value"\}/$Replace/g;
                     }
-                    if ( $Link =~ /\$QData{"Value"}/ ) {
+                    if ( $Link =~ /\$QData\{"Value"\}/ ) {
                         my $Replace = $Self->{LayoutObject}->Ascii2Html( Text => $Result );
-                        $Link =~ s/\$QData{"Value"}/$Replace/g;
+                        $Link =~ s/\$QData\{"Value"\}/$Replace/g;
                     }
-                    if ( $Link =~ /\$LQData{"Value"}/ ) {
+                    if ( $Link =~ /\$LQData\{"Value"\}/ ) {
                         my $Replace = $Self->{LayoutObject}->LinkEncode($Result);
-                        $Link =~ s/\$LQData{"Value"}/$Replace/g;
+                        $Link =~ s/\$LQData\{"Value"\}/$Replace/g;
                     }
 
                     $Self->{LayoutObject}->Block(
