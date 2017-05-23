@@ -243,6 +243,59 @@ sub SendNotification {
         );
     }
 
+    if (
+        $Notification{Data}->{RecipientAttachmentDF}
+        && ref($Notification{Data}->{RecipientAttachmentDF}) eq 'ARRAY'
+    ) {
+        # get objects
+        my $DFAttachmentObject = $Kernel::OM->Get('Kernel::System::DFAttachment');
+        my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+
+        # get ticket
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 1,
+        );
+
+        my @FieldAttachments = ();
+        for my $ID ( sort( @{ $Notification{Data}->{RecipientAttachmentDF} } ) ) {
+            my $DynamicField = $DynamicFieldObject->DynamicFieldGet(
+                ID => $ID,
+            );
+            # gather values from ticket data
+            if (ref($Ticket{'DynamicField_' . $DynamicField->{Name}}) eq 'ARRAY') {
+                push(@FieldAttachments, @{ $Ticket{'DynamicField_' . $DynamicField->{Name}} });
+            } else {
+                push(@FieldAttachments, $Ticket{'DynamicField_' . $DynamicField->{Name}});
+            }
+        }
+        ATTACHMENT:
+        for my $Attachment ( @FieldAttachments ) {
+            # read file from virtual fs
+            my %File = $Kernel::OM->Get('Kernel::System::DFAttachment')->Read(
+                Filename        => $Attachment,
+                Mode            => 'binary',
+                DisableWarnings => 1,
+            );
+            next ATTACHMENT if ( !%File );
+
+            # prepare attachment data
+            my %Data = (
+                'Filename'           => $File{Preferences}->{Filename},
+                'Content'            => ${$File{Content}},
+                'ContentType'        => $File{Preferences}->{ContentType},
+                'ContentID'          => '',
+                'ContentAlternative' => '',
+                'Filesize'           => $File{Preferences}->{Filesize},
+                'FilesizeRaw'        => $File{Preferences}->{FilesizeRaw},
+                'Disposition'        => 'attachment',
+            );
+            # add attachment
+            push( @{ $Param{Attachments} }, \%Data );
+        }
+
+    }
+
     # send notification
     # prepare subject
     if (
@@ -678,6 +731,7 @@ sub TransportSettingsDisplayGet {
 
         my %AgentDynamicFieldHash = ();
         my %CustomerDynamicFieldHash = ();
+        my %AttachmentDynamicFieldHash = ();
         for my $DynamicField (@{$DynamicFieldList}) {
             next if (
                 !$DynamicField
@@ -687,6 +741,10 @@ sub TransportSettingsDisplayGet {
 
             $AgentDynamicFieldHash{$DynamicField->{ID}} = $DynamicField->{Name};
             $CustomerDynamicFieldHash{$DynamicField->{ID}} = $DynamicField->{Name};
+
+            if ($DynamicField->{'FieldType'} eq 'Attachment') {
+                $AttachmentDynamicFieldHash{$DynamicField->{ID}} = $DynamicField->{Name};
+            }
         }
 
         my %BlockData;
@@ -712,6 +770,23 @@ sub TransportSettingsDisplayGet {
             Name => 'EmailXDynamicField',
             Data => \%BlockData,
         );
+
+        if ( scalar( keys( %AttachmentDynamicFieldHash ) ) ) {
+            my %BlockData;
+            $BlockData{RecipientAttachmentDFStrg} .= $LayoutObject->BuildSelection(
+                Data        => \%AttachmentDynamicFieldHash,
+                Name        => 'RecipientAttachmentDF',
+                Translation => 0,
+                Multiple    => 1,
+                Size        => 5,
+                SelectedID  => $Param{Data}->{RecipientAttachmentDF},
+                Sort        => 'AlphanumericID',
+            );
+            $LayoutObject->Block(
+                Name => 'EmailDFAttachmentDynamicField',
+                Data => \%BlockData,
+            );
+        }
     }
 
     my %SubjectSelection = (
@@ -764,7 +839,9 @@ sub TransportParamSettingsGet {
         EmailSigningCrypting EmailMissingSigningKeys EmailMissingCryptingKeys
         EmailSecuritySettings
         RecipientAgentDF RecipientCustomerDF
-        RecipientSubject)
+        RecipientSubject
+        RecipientAttachmentDF
+        )
 # EO NotificationEventX-capeIT
         )
     {
