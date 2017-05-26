@@ -13,5 +13,5 @@ Test_PerlCritic:
   - PerlCritic
   stage: test
   script:
-  - perlcritic --quiet --statistics -4 $CI_PROJECT_DIR
+  - perlcritic --quiet --statistics -5 $CI_PROJECT_DIR
   allow_failure: true
