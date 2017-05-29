@@ -995,6 +995,21 @@ sub MaskAgentZoom {
         'TicketID' => $Ticket{TicketID}
     );
 
+    # mark ticket as seen if no article given and ticket is a process ticket
+    if ( $IsProcessTicket ) {
+        my $ArticleCount = $TicketObject->ArticleCount(
+            TicketID => $Self->{TicketID},
+        );
+        if (!$ArticleCount) {
+            $TicketObject->TicketFlagSet(
+                TicketID => $Self->{TicketID},
+                Key      => 'Seen',
+                Value    => 1,
+                UserID   => $Self->{UserID},
+            );
+        }
+    }
+
     # generate content of ticket zoom tabs
     my $TicketZoomBackendRef = $ConfigObject->Get('AgentTicketZoomBackend');
     if ( $TicketZoomBackendRef && ref($TicketZoomBackendRef) eq 'HASH' ) {

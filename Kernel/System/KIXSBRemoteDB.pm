@@ -1,5 +1,7 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# based on the original work of:
+# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -7,15 +9,18 @@
 # --
 
 package Kernel::System::KIXSBRemoteDB;
+## nofilter(TidyAll::Plugin::OTRS::Perl::PODSpelling)
 
 use strict;
 use warnings;
 
 use DBI;
+use List::Util();
 
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
+    'Kernel::Config',
     'Kernel::System::Encode',
     'Kernel::System::Log',
     'Kernel::System::Main',
@@ -23,6 +28,7 @@ our @ObjectDependencies = (
 );
 
 # capeIT
+#our $UseSlaveDB = 0;
 use base qw(Kernel::System::DB);
 # EO capeIT
 
@@ -42,44 +48,25 @@ All database functions to connect/insert/update/delete/... to a database.
 
 =item new()
 
-create database object with database connect
+create database object, with database connect..
+Usually you do not use it directly, instead use:
 
-    use Kernel::Config;
-    use Kernel::System::Encode;
-    use Kernel::System::Log;
-    use Kernel::System::Main;
-    use Kernel::System::DB;
-
-    my $ConfigObject = Kernel::Config->new();
-    my $EncodeObject = Kernel::System::Encode->new(
-        ConfigObject => $ConfigObject,
-    );
-    my $LogObject = Kernel::System::Log->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $MainObject = Kernel::System::Main->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-    );
-    my $DBObject = Kernel::System::DB->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-        MainObject   => $MainObject,
-        # if you don't supply the following parameters, the ones found in
-        # Kernel/Config.pm are used instead:
-        DatabaseDSN  => 'DBI:odbc:database=123;host=localhost;',
-        DatabaseUser => 'user',
-        DatabasePw   => 'somepass',
-        Type         => 'mysql',
-        Attribute => {
-            LongTruncOk => 1,
-            LongReadLen => 100*1024,
+    use Kernel::System::ObjectManager;
+    local $Kernel::OM = Kernel::System::ObjectManager->new(
+        'Kernel::System::DB' => {
+            # if you don't supply the following parameters, the ones found in
+            # Kernel/Config.pm are used instead:
+            DatabaseDSN  => 'DBI:odbc:database=123;host=localhost;',
+            DatabaseUser => 'user',
+            DatabasePw   => 'somepass',
+            Type         => 'mysql',
+            Attribute => {
+                LongTruncOk => 1,
+                LongReadLen => 100*1024,
+            },
         },
-        AutoConnectNo => 0, # 0|1 disable auto-connect to database in constructor
     );
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
 =cut
 
@@ -103,6 +90,8 @@ sub new {
 #    $Self->{DSN}  = $Param{DatabaseDSN}  || $ConfigObject->Get('DatabaseDSN');
 #    $Self->{USER} = $Param{DatabaseUser} || $ConfigObject->Get('DatabaseUser');
 #    $Self->{PW}   = $Param{DatabasePw}   || $ConfigObject->Get('DatabasePw');
+#
+#    $Self->{IsSlaveDB} = $Param{IsSlaveDB};
 #
 #    $Self->{SlowLog} = $Param{'Database::SlowLog'}
 #        || $ConfigObject->Get('Database::SlowLog');
@@ -172,11 +161,8 @@ sub new {
     }
 
     # check/get extra database configuration options
-# capeIT
-#    # (overwrite auto-detection with config options)
-    # (overwrite with params)
-# EO capeIT
-     for my $Setting (
+    # (overwrite auto-detection with config options)
+    for my $Setting (
         qw(
         Type Limit DirectBlob Attribute QuoteSingle QuoteBack
         Connect Encode CaseSensitive LcaseLikeInLargeText
@@ -185,17 +171,14 @@ sub new {
     {
 # capeIT
 #        if ( defined $Param{$Setting} || defined $ConfigObject->Get("Database::$Setting") )
+#        {
 #            $Self->{Backend}->{"DB::$Setting"} = $Param{$Setting}
 #                // $ConfigObject->Get("Database::$Setting");
-        if ( defined $Param{$Setting} ) {
+        if ( defined $Param{$Setting})
+        {
             $Self->{Backend}->{"DB::$Setting"} = $Param{$Setting};
-        }
-    }
 # EO capeIT
-
-    # do database connect
-    if ( !$Param{AutoConnectNo} ) {
-        return if !$Self->Connect();
+        }
     }
 
     return $Self;
@@ -211,6 +194,26 @@ to connect to a database
 
 sub Connect {
     my $Self = shift;
+
+    # check database handle
+    if ( $Self->{dbh} ) {
+
+        my $PingTimeout = 10;        # Only ping every 10 seconds (see bug#12383).
+        my $CurrentTime = time();    ## no critic
+
+        if ( $CurrentTime - ( $Self->{LastPingTime} // 0 ) < $PingTimeout ) {
+            return $Self->{dbh};
+        }
+
+        # Ping to see if the connection is still alive.
+        if ( $Self->{dbh}->ping() ) {
+            $Self->{LastPingTime} = $CurrentTime;
+            return $Self->{dbh};
+        }
+
+        # Ping failed: cause a reconnect.
+        delete $Self->{dbh};
+    }
 
     # debug
     if ( $Self->{Debug} > 2 ) {
@@ -243,13 +246,25 @@ sub Connect {
     }
 
     if ( $Self->{Backend}->{'DB::Connect'} ) {
-        $Self->Do( SQL => $Self->{Backend}->{'DB::Connect'}, SkipConnectCheck => 1 );
+# capeIT
+#        $Self->Do( SQL => $Self->{Backend}->{'DB::Connect'} );
+        $Self->Do(
+            SQL              => $Self->{Backend}->{'DB::Connect'},
+            SkipConnectCheck => 1,
+        );
+# EO capeIT
     }
 
     # set utf-8 on for PostgreSQL
     if ( $Self->{Backend}->{'DB::Type'} eq 'postgresql' ) {
         $Self->{dbh}->{pg_enable_utf8} = 1;
     }
+
+# capeIT
+#    if ( $Self->{SlaveDBObject} ) {
+#        $Self->{SlaveDBObject}->Connect();
+#    }
+# EO capeIT
 
     return $Self->{dbh};
 }
@@ -280,7 +295,14 @@ sub Disconnect {
     # do disconnect
     if ( $Self->{dbh} ) {
         $Self->{dbh}->disconnect();
+        delete $Self->{dbh};
     }
+
+# capeIT
+#    if ( $Self->{SlaveDBObject} ) {
+#        $Self->{SlaveDBObject}->Disconnect();
+#    }
+# EO capeIT
 
     return 1;
 }
@@ -369,9 +391,13 @@ sub Do {
         );
     }
 
+# capeIT
     if ( !$Param{SkipConnectCheck} ) {
-        return if !$Self->Connect();
+# EO capeIT
+    return if !$Self->Connect();
+# capeIT
     }
+# EO capeIT
 
     # send sql to database
     if ( !$Self->{dbh}->do( $Param{SQL}, undef, @Array ) ) {
@@ -438,6 +464,23 @@ sub Prepare {
         );
         return;
     }
+
+# capeIT
+#    $Self->{_PreparedOnSlaveDB} = 0;
+#
+#    # Route SELECT statements to the DB slave if requested and a slave is configured.
+#    if (
+#        $UseSlaveDB
+#        && !$Self->{IsSlaveDB}
+#        && $Self->_InitSlaveDB()    # this is very cheap after the first call (cached)
+#        && $SQL =~ m{\A\s*SELECT}xms
+#        )
+#    {
+#        $Self->{_PreparedOnSlaveDB} = 1;
+#        return $Self->{SlaveDBObject}->Prepare(%Param);
+#    }
+# EO capeIT
+
     if ( defined $Param{Encode} ) {
         $Self->{Encode} = $Param{Encode};
     }
@@ -546,8 +589,6 @@ sub Prepare {
 }
 
 1;
-
-
 
 =back
 

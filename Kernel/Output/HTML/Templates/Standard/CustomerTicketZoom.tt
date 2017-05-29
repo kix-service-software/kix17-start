@@ -225,10 +225,16 @@
                     <li><span class="Key">[% Translate("Queue") | html %]:</span> <span title="[% Data.Queue | html %]">[% Data.Queue | html | replace('::', '<wbr>::<wbr>') %]</span></li>
 [% RenderBlockEnd("Queue") %]
 [% RenderBlockStart("Owner") %]
-                    <li><span class="Key">[% Translate("Owner") | html %]:</span> [% Data.OwnerName | html %]</li>
+# KIX4OTRS-capeIT
+#                     <li><span class="Key">[% Translate("Owner") | html %]:</span> [% Data.OwnerName | html %]</li>
+                    <li><span class="Key">[% Translate("Owner") | html %]:</span> <span title="[% Data.OwnerName | html %]">[% Data.OwnerName | html %]</span></li>
+# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("Owner") %]
 [% RenderBlockStart("Responsible") %]
-                    <li><span class="Key">[% Translate("Responsible") | html %]:</span> [% Data.ResponsibleName | html %]</li>
+# KIX4OTRS-capeIT
+#                     <li><span class="Key">[% Translate("Responsible") | html %]:</span> [% Data.ResponsibleName | html %]</li>
+                    <li><span class="Key">[% Translate("Responsible") | html %]:</span>  <span title="[% Data.ResponsibleName | html %]">[% Data.ResponsibleName | html %]</span></li>
+# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("Responsible") %]
 [% RenderBlockStart("ProcessData") %]
                     <li><span class="Key">[% Translate("Process") | html %]:</span> <span title="[% Data.Process | html %]">[% Data.Process | html %]</span></li>

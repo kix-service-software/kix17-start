@@ -38,120 +38,126 @@ sub FinishGraph {
 
     my $Output = $LayoutObject->Header( Type => 'Small' );
 
-    # do preparations for graph
-    for my $Edge ( keys %{ $Param{DiscoveredEdges} } ) {
-        $Param{Links} .= $Edge . "_-_";
-    }
-    if ( $Param{Links} ) {
-        $Param{Links} =~ s/(.*)_-_$/$1/;
-    }
+    if ( scalar keys %{$Param{Nodes}} > 100 ) {
+        $Param{TooManyNodes} = (scalar keys %{$Param{Nodes}}) ;
+    } else {
+        $Param{TooManyNodes} = 0;
 
-    my $LinkColors = $Self->{Config}->{LinkColors};
-    if ( $LinkColors && ref($LinkColors) eq 'HASH' ) {
-        for my $LinkColor ( keys %{$LinkColors} ) {
-            $Param{LinkColors} .=
-                $LinkColor . "=>" . $Self->{Config}->{LinkColors}->{$LinkColor} . "_-_";
+        # do preparations for graph
+        for my $Edge ( keys %{ $Param{DiscoveredEdges} } ) {
+            $Param{Links} .= $Edge . "_-_";
         }
-    }
-
-    if ( $Param{LinkColors} ) {
-        $Param{LinkColors} =~ s/(.*)_-_$/$1/;
-    }
-
-    for my $Node ( keys %{ $Param{Nodes} } ) {
-        $Param{NodesString} .= $Node . "_-_";
-        $Param{HTMLString}  .= $Param{Nodes}{$Node};
-    }
-    if ( $Param{NodesString} ) {
-        $Param{NodesString} =~ s/(.*)_-_$/$1/;
-    }
-
-    # get possible link-types of object type with same object type
-    my %PossibleLinkTypesList = $LinkObject->PossibleTypesList(
-        Object1 => $Param{ObjectType},
-        Object2 => $Param{ObjectType},
-        UserID  => $Self->{UserID},
-    );
-
-    my @PossibleLinkTypesList;
-    my $RelLinkTypesString = '';
-    for my $PosLinkType ( keys %PossibleLinkTypesList ) {
-
-        # look up wich linktype has same source and target name
-        my $STName = $ConfigObject->Get('LinkObject::Type')->{$PosLinkType};
-        my $Equal  = 0;
-
-        # if equal, let graph know it so that two arrows will be on link
-        if ( $STName->{SourceName} eq $STName->{TargetName} ) {
-            $Equal = 1;
+        if ( $Param{Links} ) {
+            $Param{Links} =~ s/(.*)_-_$/$1/;
         }
 
-        # lookup real name for link-types (translatable)
-        my %LinkType = $LinkObject->TypeGet(
-            TypeID => $LinkObject->TypeLookup(
-                Name   => $PosLinkType,
-                UserID => $Self->{UserID},
-            ),
-            UserID => $Self->{UserID},
+        my $LinkColors = $Self->{Config}->{LinkColors};
+        if ( $LinkColors && ref($LinkColors) eq 'HASH' ) {
+            for my $LinkColor ( keys %{$LinkColors} ) {
+                $Param{LinkColors} .=
+                    $LinkColor . "=>" . $Self->{Config}->{LinkColors}->{$LinkColor} . "_-_";
+            }
+        }
+
+        if ( $Param{LinkColors} ) {
+            $Param{LinkColors} =~ s/(.*)_-_$/$1/;
+        }
+
+        for my $Node ( keys %{ $Param{Nodes} } ) {
+            $Param{NodesString} .= $Node . "_-_";
+            $Param{HTMLString}  .= $Param{Nodes}->{$Node};
+        }
+        if ( $Param{NodesString} ) {
+            $Param{NodesString} =~ s/(.*)_-_$/$1/;
+        }
+
+        # get possible link-types of object type with same object type
+        my %PossibleLinkTypesList = $LinkObject->PossibleTypesList(
+            Object1 => $Param{ObjectType},
+            Object2 => $Param{ObjectType},
+            UserID  => $Self->{UserID},
         );
 
-        my $Translated = $LayoutObject->{LanguageObject}->Translate( $LinkType{SourceName} );
+        my @PossibleLinkTypesList;
+        my $RelLinkTypesString = '';
+        for my $PosLinkType ( keys %PossibleLinkTypesList ) {
 
-        # remebmer link-types with translation for graph
-        $Param{LinkTypes} .= $PosLinkType . "=>" . $Translated . "=>" . $Equal . "_-_";
-        push( @PossibleLinkTypesList, $Translated );
+            # look up wich linktype has same source and target name
+            my $STName = $ConfigObject->Get('LinkObject::Type')->{$PosLinkType};
+            my $Equal  = 0;
 
-        # remember used link-types in graph-config for print-screen
-        if ( $Param{RelevantLinkTypeNames}->{$PosLinkType} ) {
-            $RelLinkTypesString .= $Translated . ", ";
+            # if equal, let graph know it so that two arrows will be on link
+            if ( $STName->{SourceName} eq $STName->{TargetName} ) {
+                $Equal = 1;
+            }
+
+            # lookup real name for link-types (translatable)
+            my %LinkType = $LinkObject->TypeGet(
+                TypeID => $LinkObject->TypeLookup(
+                    Name   => $PosLinkType,
+                    UserID => $Self->{UserID},
+                ),
+                UserID => $Self->{UserID},
+            );
+
+            my $Translated = $LayoutObject->{LanguageObject}->Translate( $LinkType{SourceName} );
+
+            # remebmer link-types with translation for graph
+            $Param{LinkTypes} .= $PosLinkType . "=>" . $Translated . "=>" . $Equal . "_-_";
+            push( @PossibleLinkTypesList, $Translated );
+
+            # remember used link-types in graph-config for print-screen
+            if ( $Param{RelevantLinkTypeNames}->{$PosLinkType} ) {
+                $RelLinkTypesString .= $Translated . ", ";
+            }
         }
-    }
-    $Param{PossibleLinkTypesList} = \@PossibleLinkTypesList;
+        $Param{PossibleLinkTypesList} = \@PossibleLinkTypesList;
 
-    if ( $Param{LinkTypes} ) {
-        $Param{LinkTypes} =~ s/(.*)_-_$/$1/;
-    }
-    $RelLinkTypesString =~ s/, $//;
-
-    # check for service read rights
-    my %Groups = $GroupObject->GroupMemberList(
-        UserID => $Self->{UserID},
-        Type   => 'ro',
-        Result => 'HASH',
-    );
-    $Param{UserServiceRoRight} = 0;
-    for my $Group ( values %Groups ) {
-        if ( $Group eq 'itsm-service' ) {
-            $Param{UserServiceRoRight} = 1;
-            last;
+        if ( $Param{LinkTypes} ) {
+            $Param{LinkTypes} =~ s/(.*)_-_$/$1/;
         }
+        $RelLinkTypesString =~ s/, $//;
+
+        # check for service read rights
+        my %Groups = $GroupObject->GroupMemberList(
+            UserID => $Self->{UserID},
+            Type   => 'ro',
+            Result => 'HASH',
+        );
+        $Param{UserServiceRoRight} = 0;
+        for my $Group ( values %Groups ) {
+            if ( $Group eq 'itsm-service' ) {
+                $Param{UserServiceRoRight} = 1;
+                last;
+            }
+        }
+
+        $Param{StartID} = $Param{ObjectType} . '-' . $Param{StartObjectID};
+
+        # get object-specific layout-content
+        if ( $Param{ObjectType} eq 'ITSMConfigItem' ) {
+            $LayoutObject->GetConfigItemSpecificLayoutContentForGraph( \%Param );
+        }
+
+        #    if ( $Param{ObjectType} eq 'Ticket' ) {
+        #        $LayoutObject->GetTicketSpecificLayoutContentForGraph(\%Param);
+        #    }
+
+        # give divs,links and dropboxes to dtl
+        $LayoutObject->Block(
+            Name => 'Graph',
+            Data => {
+                DropBoxLinkTypes => $LayoutObject->BuildSelection(
+                    Data        => $Param{PossibleLinkTypesList},
+                    Name        => 'LinkTypes',
+                    Translation => 0,
+                    Class       => 'Modernize'
+                ),
+                RelLinkTypes => $RelLinkTypesString,
+                %Param,
+            },
+        );
     }
-
-    $Param{StartID} = $Param{ObjectType} . '-' . $Param{StartObjectID};
-
-    # get object-specific layout-content
-    if ( $Param{ObjectType} eq 'ITSMConfigItem' ) {
-        $LayoutObject->GetConfigItemSpecificLayoutContentForGraph( \%Param );
-    }
-
-    #    if ( $Param{ObjectType} eq 'Ticket' ) {
-    #        $LayoutObject->GetTicketSpecificLayoutContentForGraph(\%Param);
-    #    }
-
-    # give divs,links and dropboxes to dtl
-    $LayoutObject->Block(
-        Name => 'Graph',
-        Data => {
-            DropBoxLinkTypes => $LayoutObject->BuildSelection(
-                Data        => $Param{PossibleLinkTypesList},
-                Name        => 'LinkTypes',
-                Translation => 0,
-                Class       => 'Modernize'
-            ),
-            RelLinkTypes => $RelLinkTypesString,
-            %Param,
-        },
-    );
 
     $Output .= $LayoutObject->Output(
         TemplateFile => 'AgentZoomTabLinkGraphIFrame',

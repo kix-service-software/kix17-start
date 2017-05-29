@@ -89,7 +89,7 @@
 [% RenderBlockStart("ConditionItemEditRow") %]
                             <div class="WidgetSimple ParentWidget" id="Condition[[% Data.Index | html %]]">
                                 <div class="Header">
-                                    <h2 for="Condition[[% Data.Index | html %]]">[% Translate("Condition") | html %] [% Data.Index | html %]</h2>
+                                    <h2 for="Condition[[% Data.Index | html %]]"><span>[% Translate("Condition") | html %] [% Data.Index | html %]</span></h2>
                                     <div class="AdditionalInformation">
                                         <a class="RemoveButton" href="#" name="ConditionRemove[[% Data.Index | html %]]" title="[% Translate("Remove this Condition") | html %]">
                                             <i class="fa fa-minus-square-o"></i>

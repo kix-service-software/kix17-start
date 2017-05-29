@@ -117,10 +117,17 @@ sub TicketQueueLinkGet {
         return;
     }
 
+    my $SessionID = '';
+    if ( !$Kernel::OM->Get('Kernel::Config')->Get('SessionUseCookie') && $Param{SessionID} ) {
+        $SessionID = ';' . $Param{SessionName} . '=' . $Param{SessionID};
+    }
+
     my $Output =
         '<a href="?Action=AgentTicketQueue;QueueID='
-        . $Param{'QueueID'} . '">'
+        . $Param{'QueueID'}
+        . $SessionID . '">'
         . $Param{'Queue'} . '</a>';
+
 
     return $Output;
 }

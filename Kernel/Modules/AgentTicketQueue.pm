@@ -2244,6 +2244,7 @@ sub BuildQueueView {
         # KIX4OTRS-capeIT
         SelectedQueue => $Param{SelectedQueue} || '',
         SelectedQueueID => $Param{SelectedQueueID},
+        Filter          => $Param{Filter},
 
         # EO KIX4OTRS-capeIT
 

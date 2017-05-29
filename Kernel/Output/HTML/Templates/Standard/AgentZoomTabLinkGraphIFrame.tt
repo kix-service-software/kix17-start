@@ -224,104 +224,124 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    var $Elements = {
-        Body:          $('body'),
-        GraphBody:     $('#GraphBody'),
-        Options:       $('#Options'),
-        Scale:         $('#Scale'),
-        PrintBox:      $('#PrintBox'),
-        PrintGraphBody:$('#PrintGraphBody'),
-        PrintScale:    $('#PrintScale'),
-        ZoomValue:     $('#ZoomValue'),
-        Context:       $('#Context'),
-        Shield:        $('#Shield'),
-        Dummy:         $('#ConnectionDummy'),
-        DummyShow:     $('#ConnectionDummyShow'),
-        ChooseBox:     $('#ChooseBox'),
-        SetTODL:       $('#SetTypeOrDeleteLink'),
-        ServicePopup:  $('#ServicePopup'),
-        ZoomArea:      $('#ZoomArea'),
-        MagnifierZoom: $('#MagnifierZoom'),
-        SOGraph:       $('#SaveOverwriteGraph'),
-        Notice:        $('#Notice'),
-        GraphLoaded:   $('#GraphLoadedPopup')
-    };
 
-    // GraphConfig
-    var GraphConfig = {
-        ObjectType:        '[% Data.ObjectType | html %]',
-        SubTypes:          '[% Data.RelevantObjectSubTypes | html %]',
-        LinkTypes:         '[% Data.RelevantLinkTypes | html %]',
-        SearchDepth:       '[% Data.MaxSearchDepth | html %]',
-        StartID:           '[% Data.StartID | html %]',
-        AdjustingStrength: '[% Data.UsedStrength | html %]'
-    };
+    // check if there are too many nodes - just show notice
+    if ( '[% Data.TooManyNodes | html %]' != 0 ) {
+        $('body').html('<div style="margin:5px">'
+            + '[% Translate("Too many nodes") | html %]' + ' - '
+            + '[% Translate("More than 100 nodes not possible (currently number: %s)!", Data.TooManyNodes) | html %]'
+            + '</div>');
+        Core.UI.Dialog.ShowDialog({
+            Modal: false,
+            Title: '[% Translate("Too many nodes") | html %]',
+            HTML: '[% Translate("More than 100 nodes not possible (currently number: %s)!", Data.TooManyNodes) | html %]',
+            PositionTop: '10%',
+            PositionLeft: 'Center',
+            Buttons: [ {
+                Label: 'OK',
+                Type: 'Close'
+            } ]
+        });
+    } else {
+        var $Elements = {
+            Body:          $('body'),
+            GraphBody:     $('#GraphBody'),
+            Options:       $('#Options'),
+            Scale:         $('#Scale'),
+            PrintBox:      $('#PrintBox'),
+            PrintGraphBody:$('#PrintGraphBody'),
+            PrintScale:    $('#PrintScale'),
+            ZoomValue:     $('#ZoomValue'),
+            Context:       $('#Context'),
+            Shield:        $('#Shield'),
+            Dummy:         $('#ConnectionDummy'),
+            DummyShow:     $('#ConnectionDummyShow'),
+            ChooseBox:     $('#ChooseBox'),
+            SetTODL:       $('#SetTypeOrDeleteLink'),
+            ServicePopup:  $('#ServicePopup'),
+            ZoomArea:      $('#ZoomArea'),
+            MagnifierZoom: $('#MagnifierZoom'),
+            SOGraph:       $('#SaveOverwriteGraph'),
+            Notice:        $('#Notice'),
+            GraphLoaded:   $('#GraphLoadedPopup')
+        };
 
-    // general context elements
-    $Elements.ContextNodeZoom = $Elements.Context.find('#NodeZoom');
-    $Elements.ContextPresentNode = $Elements.Context.find('#PresentNode');
-    $Elements.ContextNotPresentNode = $Elements.Context.find('#NotPresentNode');
+        // GraphConfig
+        var GraphConfig = {
+            ObjectType:        '[% Data.ObjectType | html %]',
+            SubTypes:          '[% Data.RelevantObjectSubTypes | html %]',
+            LinkTypes:         '[% Data.RelevantLinkTypes | html %]',
+            SearchDepth:       '[% Data.MaxSearchDepth | html %]',
+            StartID:           '[% Data.StartID | html %]',
+            AdjustingStrength: '[% Data.UsedStrength | html %]'
+        };
 
-    // init graph
-    Core.KIX4OTRS.AgentLinkGraph.InitGraph('[% Data.NodesString | html %]', '[% Data.Links | html %]', '[% Data.LinkColors %]', '[% Data.LinkTypes %]', $Elements, '[% Data.Layout | html %]', GraphConfig);
+        // general context elements
+        $Elements.ContextNodeZoom = $Elements.Context.find('#NodeZoom');
+        $Elements.ContextPresentNode = $Elements.Context.find('#PresentNode');
+        $Elements.ContextNotPresentNode = $Elements.Context.find('#NotPresentNode');
+ 
+        // init graph
+        Core.KIX4OTRS.AgentLinkGraph.InitGraph('[% Data.NodesString | html %]', '[% Data.Links | html %]', '[% Data.LinkColors %]', '[% Data.LinkTypes %]', $Elements, '[% Data.Layout | html %]', GraphConfig);
 
-    // options left
-    $('#FitIn').bind('click', function() {
-        Core.KIX4OTRS.AgentLinkGraph.FitIn();
-    });
-    $('#ZoomNeg').bind('click', function() {
-        Core.KIX4OTRS.AgentLinkGraph.Zoom(1);
-    });
-    $('#ZoomPlus').bind('click', function() {
-        Core.KIX4OTRS.AgentLinkGraph.Zoom(2);
-    });
-    $('#ZoomDefault').bind('click', function() {
-        Core.KIX4OTRS.AgentLinkGraph.Zoom(3);
-    });
-    // options right
-    $('#Adjust').bind('click', function() {
-        Core.KIX4OTRS.AgentLinkGraph.Adjust();
-    });
-    $('#SaveGraph').bind('click', function() {
-        Core.KIX4OTRS.AgentLinkGraph.SaveGraph();
-    });
-    $('#PrintGraph').bind('click', function() {
-        Core.KIX4OTRS.AgentLinkGraph.PrintPre();
-    });
+        // options left
+        $('#FitIn').bind('click', function() {
+            Core.KIX4OTRS.AgentLinkGraph.FitIn();
+        });
+        $('#ZoomNeg').bind('click', function() {
+            Core.KIX4OTRS.AgentLinkGraph.Zoom(1);
+        });
+        $('#ZoomPlus').bind('click', function() {
+            Core.KIX4OTRS.AgentLinkGraph.Zoom(2);
+        });
+        $('#ZoomDefault').bind('click', function() {
+            Core.KIX4OTRS.AgentLinkGraph.Zoom(3);
+        });
+        // options right
+        $('#Adjust').bind('click', function() {
+            Core.KIX4OTRS.AgentLinkGraph.Adjust();
+        });
+        $('#SaveGraph').bind('click', function() {
+            Core.KIX4OTRS.AgentLinkGraph.SaveGraph();
+        });
+        $('#PrintGraph').bind('click', function() {
+            Core.KIX4OTRS.AgentLinkGraph.PrintPre();
+        });
 
-    // context menu options
-    $Elements.ContextNodeZoom.bind('mouseup', function(e) {
-        if (!e) {
-            e = window.event;
-        }
-        if ( e.which == 3 ) { return; }
-        if ( !$Elements.ContextNodeZoom.hasClass('ContextNoRights') ) {
-            HideContext();
-            Core.KIX4OTRS.AgentLinkGraph[% Data.ObjectType | html %].OpenObject();
-        }
-    });
-    $Elements.ContextPresentNode.bind('click', function(e) {
-        if ( !$Elements.ContextPresentNode.hasClass('ContextNoRights') ) {
-            HideContext();
-            Core.KIX4OTRS.AgentLinkGraph[% Data.ObjectType | html %].PresentNode();
-        }
-    });
-    $Elements.ContextNotPresentNode.bind('click', function(e) {
-        if ( !$Elements.ContextNotPresentNode.hasClass('ContextNoRights') ) {
+        // context menu options
+        $Elements.ContextNodeZoom.bind('mouseup', function(e) {
             if (!e) {
                 e = window.event;
             }
-            HideContext();
-            Core.KIX4OTRS.AgentLinkGraph[% Data.ObjectType | html %].NotPresentNode(e);
+            if ( e.which == 3 ) { return; }
+            if ( !$Elements.ContextNodeZoom.hasClass('ContextNoRights') ) {
+                HideContext();
+                Core.KIX4OTRS.AgentLinkGraph[% Data.ObjectType | html %].OpenObject();
+            }
+        });
+        $Elements.ContextPresentNode.bind('click', function(e) {
+            if ( !$Elements.ContextPresentNode.hasClass('ContextNoRights') ) {
+                HideContext();
+                Core.KIX4OTRS.AgentLinkGraph[% Data.ObjectType | html %].PresentNode();
+            }
+        });
+        $Elements.ContextNotPresentNode.bind('click', function(e) {
+            if ( !$Elements.ContextNotPresentNode.hasClass('ContextNoRights') ) {
+                if (!e) {
+                    e = window.event;
+                }
+                HideContext();
+                Core.KIX4OTRS.AgentLinkGraph[% Data.ObjectType | html %].NotPresentNode(e);
+            }
+        });
+
+        function HideContext() {
+            $Elements.Context.addClass('Hidden');
         }
-    });
 
-    function HideContext() {
-        $Elements.Context.addClass('Hidden');
+        // object-specific
+        [% Data.ObjectSpecificJavaScript | html %]
     }
-
-    // object-specific
-    [% Data.ObjectSpecificJavaScript | html %]
 
 
 //]]></script>

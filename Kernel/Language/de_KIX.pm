@@ -1313,6 +1313,8 @@ sub Data {
     $Lang->{'No linked Services'}       = 'Keine verknüpften Services vorhanden.';
     $Lang->{'Considered CI-Classes'}    = 'Betrachtete CI-Klassen';
     $Lang->{'Saved graphs for this CI'} = 'Gespeicherte Graphen für dieses CI';
+    $Lang->{'Too many nodes'}           = 'Zu viele Knoten';
+    $Lang->{'More than 100 nodes not possible (currently number: %s)!'} = 'Mehr als 100 Knoten sind nicht möglich (aktuelle Anzahl: %s)!';
 
     $Lang->{''} = '';
 
