@@ -641,8 +641,11 @@ sub _RenderAjax {
                 Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             ) || $PossibleValues;
 
-
             # KIX4OTRS-capeIT
+            my $AJAXUpdatableFields = $Self->_GetAJAXUpdatableFields(
+                ActivityDialogFields => $ActivityDialog->{Fields},
+            );
+
             $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
                 $DynamicFieldBackendObject->EditFieldRender(
                     DynamicFieldConfig   => $DynamicFieldConfig,
@@ -650,6 +653,7 @@ sub _RenderAjax {
                     ParamObject     => $ParamObject,
                     AJAXUpdate      => 1,
                     UseDefaultValue => 1,
+                    UpdatableFields => $AJAXUpdatableFields,
                 );
             # EO KIX4OTRS-capeIT
 
