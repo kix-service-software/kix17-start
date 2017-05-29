@@ -1,0 +1,10 @@
+stages:
+- test
+
+Test_PerlCritic:
+  tags:
+  - PerlCritic
+  stage: test
+  script:
+  - perlcritic --quiet --statistics -4 $CI_PROJECT_DIR
+  allow_failure: true
