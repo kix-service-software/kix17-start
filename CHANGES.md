@@ -4,6 +4,7 @@
 
 #17.0.1 (2017/??/??)
  * (2017/05/23) - Bugfix: T2017051990000685 (<span> added to customer ticket zoom sidebar info for responsible and owner) (ddoerffel)
+ * (2017/05/22) - Bugfix: T2017051990001121 (customer portal group changes sort order every time on reload) (ddoerffel)
  * (2017/05/22) - Bugfix: T2017052290001043 (toolbar toggle multiple registered on ticket or config item zoom (using tabs)) (ddoerffel)
  * (2017/05/22) - Bugfix: T2017051990001111 (uninitialized value on selecting value in multiselect input fields using process ticket) (ddoerffel)
  * (2017/05/22) - Bugfix: T2017030190001265 (param 'disabled' sometimes ignored in BuildDateSelection) (ddoerffel)
