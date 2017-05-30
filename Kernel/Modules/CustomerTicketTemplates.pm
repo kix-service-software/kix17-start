@@ -139,7 +139,7 @@ sub Run {
             Data => $PortalGroups{$PortalGroupID},
         );
     
-        foreach my $TemplateKey (sort { $TemplateList{$PortalGroupID}->{$a}->{Name} cmp $TemplateList{$PortalGroupID}->{$a}->{Name} } keys %{$TemplateList{$PortalGroupID}}) {
+        foreach my $TemplateKey (sort { $TemplateList{$PortalGroupID}->{$a}->{Name} cmp $TemplateList{$PortalGroupID}->{$b}->{Name} } keys %{$TemplateList{$PortalGroupID}}) {
             $Self->{LayoutObject}->Block(
                 Name => 'TicketTemplate',
                 Data => {
