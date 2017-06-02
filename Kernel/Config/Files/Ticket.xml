@@ -13036,7 +13036,39 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
-            <String Regex="">note</String>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionEdit" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionCopy" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionMove" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionDelete" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <String Regex="">rw</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###RequiredLock" Required="1" Valid="1">
@@ -13072,7 +13104,7 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
-            <String Regex="">note-internal,note-external,note-report,phone,email-internal,email-external</String>
+            <String Regex="">note-internal,note-external,note-report,phone</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###OnlyResponsible" Required="0" Valid="1">
