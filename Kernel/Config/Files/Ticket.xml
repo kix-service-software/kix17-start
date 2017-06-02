@@ -13891,7 +13891,7 @@ Thanks for your help!
                 <Item Key="AgentTicketForward">email-internal,email-external,note-external</Item>
                 <Item Key="AgentTicketBounce">email-internal,email-external</Item>
                 <Item Key="AgentTicketPhoneSplit">email-internal,email-external,phone,webrequest,note-external</Item>
-                <Item Key="AgentArticleEdit">phone,note-internal,note-external,note-report,>email-internal,email-external</Item>
+                <Item Key="AgentArticleEdit">phone,note-internal,note-external,note-report,email-internal,email-external</Item>
             </Hash>
         </Setting>
     </ConfigItem>

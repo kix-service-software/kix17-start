@@ -4,6 +4,7 @@
 
 
 #17.0.2 (2017/08/??)
+ * (2017/06/02) - Bugfix: T2017060290000741 (typo in Ticket::Frontend::AgentTicketZoomTabArticle###ArticleEmailActions) (ddoerffel) 
  * (2017/06/02) - Bugfix: T2017060190000742 (old AgentArticleCopyMove content removed) (ddoerffel) 
  * (2017/05/29) - Bugfix: T2017051890000696 (corrected quoting in SidebarTools) (millinger) 
 
