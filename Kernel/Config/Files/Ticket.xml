@@ -13037,6 +13037,7 @@ Thanks for your help!
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
             <String Regex="">rw</String>
+<<<<<<< HEAD
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionEdit" Required="1" Valid="1">
@@ -13069,6 +13070,8 @@ Thanks for your help!
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
             <String Regex="">rw</String>
+=======
+>>>>>>> refs/remotes/origin/rel-17_FEATURE
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###RequiredLock" Required="1" Valid="1">
