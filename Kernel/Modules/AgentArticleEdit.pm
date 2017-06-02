@@ -6,7 +6,6 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-
 package Kernel::Modules::AgentArticleEdit;
 
 use strict;
@@ -65,7 +64,8 @@ sub Run {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
         if ( !$GetParam{$_} ) {
             return $LayoutObject->ErrorScreen(
-                Message => $LayoutObject->{LanguageObject}->Translate('Need %s in AgentArticleEdit!', $_ ),
+                Message => $LayoutObject->{LanguageObject}
+                    ->Translate( 'Need %s in AgentArticleEdit!', $_ ),
                 Comment => Translatable('Please contact your admin.'),
             );
         }
@@ -214,15 +214,22 @@ sub Run {
     }
 
     # show different blocks
-    $LayoutObject->Block(
-        Name => 'ArticleEdit',
-        Data => {
-            %Param,
-            %Ticket,
-            %Article,
-            FormID    => $Self->{FormID},
-        },
-    );
+    if (
+        $Self->{Config}->{EditableArticleTypes}
+        && $Self->{Config}->{EditableArticleTypes} =~
+        /(^|.*,)$Article{ArticleType}(,.*|$)/
+        )
+    {
+        $LayoutObject->Block(
+            Name => 'ArticleEdit',
+            Data => {
+                %Param,
+                %Ticket,
+                %Article,
+                FormID => $Self->{FormID},
+            },
+        );
+    }
 
     $LayoutObject->Block(
         Name => 'ArticleCopyMove',
@@ -232,7 +239,7 @@ sub Run {
             %Article,
             WidgetClass => 'ArticleCopy',
             WidgetTitle => 'Copy Article',
-            FormID    => $Self->{FormID},
+            FormID      => $Self->{FormID},
         },
     );
 
@@ -251,7 +258,7 @@ sub Run {
                 %Param,
                 %Ticket,
                 %Article,
-            }
+                }
         );
     }
 
@@ -270,7 +277,7 @@ sub Run {
                 %Article,
                 WidgetClass => 'ArticleMove',
                 WidgetTitle => 'Move Article',
-                FormID    => $Self->{FormID},
+                FormID      => $Self->{FormID},
             },
         );
         $LayoutObject->Block(
@@ -279,7 +286,7 @@ sub Run {
                 %Param,
                 %Ticket,
                 %Article,
-                FormID    => $Self->{FormID},
+                FormID => $Self->{FormID},
             },
         );
     }
@@ -646,7 +653,7 @@ sub Run {
                         # ignore attachment if not linked in body
                         next
                             if $GetParam{Body} !~
-                                /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
+                            /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
                     }
                 }
 
@@ -908,7 +915,8 @@ sub Run {
             }
             elsif ( $CopyResult eq 'UpdateFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => $LayoutObject->{LanguageObject}->Translate('Can\'t update times for article %s!', $GetParam{ArticleID} ),
+                    Message => $LayoutObject->{LanguageObject}
+                        ->Translate( 'Can\'t update times for article %s!', $GetParam{ArticleID} ),
                     Comment => Translatable('Please contact your admin.'),
                 );
             }
@@ -968,7 +976,10 @@ sub Run {
             }
             if ( $MoveResult eq 'AccountFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => $LayoutObject->{LanguageObject}->Translate('Can\'t update ticket id in time accounting data for article %s!', $GetParam{ArticleID} ),
+                    Message => $LayoutObject->{LanguageObject}->Translate(
+                        'Can\'t update ticket id in time accounting data for article %s!',
+                        $GetParam{ArticleID}
+                    ),
                     Comment => Translatable('Please contact your admin.'),
                 );
             }
@@ -1041,8 +1052,12 @@ sub Run {
 
         # get params
         for (qw(Term MaxResults)) {
-            if ($Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ ) ne 'undefined' ) {
-                $Param{$_} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ ) || '';
+            if ( $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ ) ne
+                'undefined' )
+            {
+                $Param{$_}
+                    = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ )
+                    || '';
             }
             else {
                 $Param{$_} = '';
@@ -1195,7 +1210,8 @@ sub Run {
         }
 
         # unescape URIs for inline images etc
-        $Article{Body} =~ s/<img([^>]*)\ssrc="(.*?)"/"<img$1" . ' src="' . URI::Escape::uri_unescape( $2 ) . '"'/egi;
+        $Article{Body}
+            =~ s/<img([^>]*)\ssrc="(.*?)"/"<img$1" . ' src="' . URI::Escape::uri_unescape( $2 ) . '"'/egi;
 
         # encode entities for preformatted code within rich text editor
         $Article{Body} = encode_entities( $Article{Body} );
@@ -1278,11 +1294,11 @@ sub _Mask {
     my ( $Self, %Param ) = @_;
 
     # create needed objects
-    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
-    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
-    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
+    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TimeObject    = $Kernel::OM->Get('Kernel::System::Time');
+    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # edit of content and date/time only possible for note and phone articles
     if ( $Param{ArticleType} =~ /^(note-|phone)/ ) {
@@ -1290,9 +1306,9 @@ sub _Mask {
         # create date
         my $DiffTime = $TimeObject->SystemTime() - $Param{IncomingTime};
         $Param{DateString} = $LayoutObject->BuildDateSelection(
-            Format             => 'DateInputFormatLong',
-            DiffTime           => -$DiffTime,
-            NoCheckbox         => 1,
+            Format     => 'DateInputFormatLong',
+            DiffTime   => -$DiffTime,
+            NoCheckbox => 1,
         );
 
         # article date
@@ -1412,7 +1428,7 @@ sub _Mask {
                 Data       => \%ArticleTypes,
                 SelectedID => $Param{ArticleTypeID},
                 Name       => 'ArticleTypeID',
-                Class        => 'Modernize',
+                Class      => 'Modernize',
             );
             $LayoutObject->Block(
                 Name => 'ArticleType',
@@ -1451,7 +1467,7 @@ sub _Mask {
 sub _GetFieldsToUpdate {
     my ( $Self, %Param ) = @_;
 
-    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
     my @UpdatableFields;
 
     # set the fields that can be updateable via AJAXUpdate
@@ -1481,8 +1497,6 @@ sub _GetFieldsToUpdate {
 }
 
 1;
-
-
 
 =back
 
