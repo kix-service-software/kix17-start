@@ -12479,7 +12479,6 @@ Thanks for your help!
                 <Item Key="AgentTicketZoom">1</Item>
                 <Item Key="AgentTicketHistory">1</Item>
                 <Item Key="AgentTicketPrint">1</Item>
-                <Item Key="AgentArticleCopyMove">0</Item>
                 <Item Key="AgentArticleEdit">0</Item>
                 <Item Key="AgentArticleManipulate">0</Item>
                 <Item Key="AgentLinkObject">0</Item>
@@ -13892,8 +13891,7 @@ Thanks for your help!
                 <Item Key="AgentTicketForward">email-internal,email-external,note-external</Item>
                 <Item Key="AgentTicketBounce">email-internal,email-external</Item>
                 <Item Key="AgentTicketPhoneSplit">email-internal,email-external,phone,webrequest,note-external</Item>
-                <Item Key="AgentArticleCopyMove">email-internal,email-external,phone,webrequest,note-external,note-internal</Item>
-                <Item Key="AgentArticleEdit">phone,note-internal,note-external,note-report</Item>
+                <Item Key="AgentArticleEdit">phone,note-internal,note-external,note-report,>email-internal,email-external</Item>
             </Hash>
         </Setting>
     </ConfigItem>

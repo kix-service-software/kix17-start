@@ -3674,44 +3674,6 @@ sub _ArticleMenu {
     }
 
     # KIX4OTRS-capeIT
-    # display article copy/move link...
-    if (
-        $ConfigObject->Get('Frontend::Module')->{AgentArticleCopyMove}
-        && $AclActionLookup{AgentArticleCopyMove}
-        && $Self->{Config}->{ArticleEmailActions}->{AgentArticleCopyMove}
-        && $Self->{Config}->{ArticleEmailActions}->{AgentArticleCopyMove} =~
-        /(^|.*,)$Article{ArticleType}(,.*|$)/
-
-        #        && $Ok{rw}
-        )
-    {
-        my $Access = 1;
-        my $Groups = $ConfigObject->Get('Frontend::Module')->{AgentArticleCopyMove}->{Group}
-            || '';
-        if ( $Groups && ref($Groups) eq 'ARRAY' ) {
-            $Access = 0;
-            for my $Group ( @{$Groups} ) {
-                next if !$LayoutObject->{"UserIsGroup[$Group]"};
-                if ( $LayoutObject->{"UserIsGroup[$Group]"} eq 'Yes' ) {
-                    $Access = 1;
-                    last;
-                }
-            }
-        }
-        if ($Access) {
-            push @MenuItems, {
-                ItemType => 'Link',
-                Description =>
-                    $ConfigObject->Get('Frontend::Module')->{AgentArticleCopyMove}
-                    ->{Description},
-                Name  => Translatable('Copy/Move/Delete'),
-                Class => 'TabAsPopup PopupType_TicketAction',
-                Link =>
-                    "Action=AgentArticleCopyMove;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID}",
-            };
-        }
-    }
-
     # check if edit link should be shown
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentArticleEdit}
