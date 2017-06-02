@@ -2,6 +2,11 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 * $Id$
 
+
+#17.0.2 (2017/08/??)
+ * (2017/06/02) - Bugfix: T2017060190000742 (old AgentArticleCopyMove content removed) (ddoerffel) 
+ * (2017/05/29) - Bugfix: T2017051890000696 (corrected quoting in SidebarTools) (millinger) 
+
 #17.0.1 (2017/05/29)
  * (2017/05/23) - Bugfix: T2017051990000685 (<span> added to customer ticket zoom sidebar info for responsible and owner) (ddoerffel)
  * (2017/05/22) - Bugfix: T2017051990001121 (customer portal group changes sort order every time on reload) (ddoerffel)
