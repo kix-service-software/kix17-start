@@ -125,7 +125,7 @@
     var Data = {};
     Data.TicketID       = TicketID;
     Data.FormID         = FormID;
-    Data.SearchString   = '';
+    Data.SearchString   = '*';
 
     KIXSidebarTools.UpdateSidebar(
         'KIXSidebarCustomerSearchAJAXHandler',

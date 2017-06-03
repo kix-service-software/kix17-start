@@ -153,8 +153,7 @@ ul.Tablelike li.Header + li {
     font-size: 12px;
 }
 
-.WidgetSimple > .Header,
-.WidgetSimple.Collapsed.AnimationRunning > .Header {
+.WidgetSimple > .Header {
     padding: 2px 5px 2px 5px;
     position: relative;
     background-color: #e8e8e8;

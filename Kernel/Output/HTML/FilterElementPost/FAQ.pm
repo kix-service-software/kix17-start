@@ -95,8 +95,8 @@ EOF
     my $OptionsTranslatable = $LayoutObject->{LanguageObject}->Translate('Options');
     my $Replace             = <<"END";
 <!-- OutputFilterHook_NoTicketOptionsFallback -->
-                    <label>$OptionsTranslatable:</label>
-                    <div class="Field">
+                    <label for=\"Options\">$OptionsTranslatable:</label>
+                    <div class="Options Field">
                         <a  href=\"#\" id=\"OptionFAQ\">[ $FAQTranslatable ]</a>
                     </div>
                     <div class=\"Clear\"></div>

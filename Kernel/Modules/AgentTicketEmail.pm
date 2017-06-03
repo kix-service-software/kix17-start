@@ -520,6 +520,30 @@ sub Run {
         for my $Key ( keys %TemplateData ) {
             next if $Key =~ m/^MultipleCustomer(Bc|C)?c?$/;
             $GetParam{$Key} = $TemplateData{$Key};
+
+            if( $Key eq 'QuickTicketBody' ) {
+                my %FormIDSeen;
+                my @FormIDs  = $GetParam{$Key} =~ m/FormID=(\d+.\d+.\d+)/g;
+                if( scalar @FormIDs ) {
+                    $UploadCacheObject->FormIDRemove(
+                        FormID => $Self->{FormID},
+                    );
+
+                    my @UFormIDs = grep { ! $FormIDSeen{$_} ++ } @FormIDs;
+                    for my $ID ( @UFormIDs ) {
+                        my @TemplateAttachment = $UploadCacheObject->FormIDGetAllFilesData(
+                            FormID => $ID,
+                        );
+                        for my $TAttachment ( @TemplateAttachment ) {
+                            $UploadCacheObject->FormIDAddFile(
+                                %{$TAttachment},
+                                FormID => $Self->{FormID},
+                            );
+                        }
+                        $GetParam{$Key} =~ s/(FormID=)($ID)/$1$Self->{FormID}/g;
+                    }
+                }
+            }
         }
         @MultipleCustomer       = @{ $TemplateData{MultipleCustomer} } if defined $TemplateData{MultipleCustomer} && ref $TemplateData{MultipleCustomer}  eq 'ARRAY';
         @MultipleCustomerCc     = @{ $TemplateData{MultipleCustomerCc} } if defined $TemplateData{MultipleCustomerCc} && ref $TemplateData{MultipleCustomerCc}  eq 'ARRAY';

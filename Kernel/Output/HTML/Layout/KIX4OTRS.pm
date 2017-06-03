@@ -986,21 +986,22 @@ sub DependingDynamicFieldTree {
         }
 
         # KIX4OTRS-capeIT
-        my ( $CallerPackage, $CallerFilename, $CallerLine ) = caller;
-        my %UserPreferences
-            = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
-
-        my $CallerInfo= ( $CallerPackage || '' ) . '_' . ( $CallerLine || '' ) . '_' . ( $Param{Info} || '');
-        $CallerInfo = Digest::MD5::md5_hex(utf8::is_utf8($CallerInfo) ? Encode::encode_utf8($CallerInfo) : $CallerInfo);
-
-        $Param{NotifyID} = md5_hex($CallerInfo);
-        return ""
-            if (
-            $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
-            && $Self->{SessionID} eq
-            $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
-            );
-
+        if ( $Self->{Baselink} =~ /\/index.pl/ ) {
+            my ( $CallerPackage, $CallerFilename, $CallerLine ) = caller;
+            my %UserPreferences
+                = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
+    
+            my $CallerInfo= ( $CallerPackage || '' ) . '_' . ( $CallerLine || '' ) . '_' . ( $Param{Info} || '');
+            $CallerInfo = Digest::MD5::md5_hex(utf8::is_utf8($CallerInfo) ? Encode::encode_utf8($CallerInfo) : $CallerInfo);
+    
+            $Param{NotifyID} = md5_hex($CallerInfo);
+            return ""
+                if (
+                $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
+                && $Self->{SessionID} eq
+                $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
+                );
+        }
         # EO KIX4OTRS-capeIT
 
         if ( $Param{Link} ) {
@@ -1432,7 +1433,7 @@ sub DependingDynamicFieldTree {
                 . "title=\""
                 . $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->Get('Date')
                 . "\" value=\""
-                . ( $Param{ $Prefix . 'Date' } || $Date ) . "\"/>";
+                . ( $Param{ $Prefix . 'Date' } || $Date ) . "\" " . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) ."/>";
             $Param{DateStr} .= "<input type=\"hidden\" "
                 . "class=\"$Class\" "
                 . "name=\"${Prefix}Year\" id=\"${Prefix}Year\" size=\"4\" maxlength=\"4\" "
@@ -1471,7 +1472,7 @@ sub DependingDynamicFieldTree {
                 Translation => 0,
                 Class       => $Validate ? 'Validate_DateYear' : '',
                 Title       => $Self->{LanguageObject}->Translate('Year'),
-                Disabled    => $Param{Disabled},
+                Disabled    =>  $Param{Disabled} || 0,
             );
         }
         else {

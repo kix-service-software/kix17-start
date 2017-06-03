@@ -178,6 +178,9 @@
 [% RenderBlockEnd("CustomerName") %]
 [% RenderBlockEnd("CustomerID") %]
                             </td>
+                            <td>
+                                <label>[% Translate("State") | html %]</label><div title="[% Translate(Data.State) | html %]">[% Translate(Data.State) | html %]</div>
+                            </td>
 # EO KIX4OTRS-capeIT
                         </tr>
                         <tr class="Middle">
