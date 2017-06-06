@@ -13044,7 +13044,8 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
-            <String Regex="">rw</String>
+            <Array>
+            </Array>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupCopy" Required="1" Valid="1">
@@ -13052,7 +13053,8 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
-            <String Regex="">rw</String>
+            <Array>
+            </Array>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupMove" Required="1" Valid="1">
@@ -13060,7 +13062,8 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
-            <String Regex="">rw</String>
+            <Array>
+            </Array>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupDelete" Required="1" Valid="1">
@@ -13068,7 +13071,8 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
-            <String Regex="">rw</String>
+            <Array>
+            </Array>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###RequiredLock" Required="1" Valid="1">
