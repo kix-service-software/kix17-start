@@ -40,9 +40,7 @@ sub Run {
     my $UploadCacheObject  = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
     my $GroupObject        = $Kernel::OM->Get('Kernel::System::Group');
-    my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
 
     # get module config
     $Self->{Config} = $ConfigObject->Get('Ticket::Frontend::AgentArticleEdit');
