@@ -4,6 +4,7 @@
 
 
 #17.1.0 (2017/06/??)
+ * (2017/06/02) - CR: T2017031090000543 (add separated rights management for edit options) (ddoerffel) 
  * (2017/06/02) - CR: T2017042090000648 (article edit for all tickets) (ddoerffel) 
  * (2017/06/02) - Bugfix: T2017060290000741 (typo in Ticket::Frontend::AgentTicketZoomTabArticle###ArticleEmailActions) (ddoerffel) 
  * (2017/06/02) - Bugfix: T2017060190000742 (old AgentArticleCopyMove content removed) (ddoerffel) 
