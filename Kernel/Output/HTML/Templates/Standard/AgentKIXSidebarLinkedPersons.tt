@@ -36,7 +36,10 @@
         <table class="DataTable">
             <thead>
                 <tr>
-                    <th></th>
+                    <th><span title='[% Translate("As article recipient") | html %]'><i class="fa fa-envelope"></i></span></th>
+[% RenderBlockStart("AsCallContactTitle") %]
+                    <th><span title='[% Translate("As call contact") | html %]'><i class="fa fa-phone"></i></span></th>
+[% RenderBlockEnd("AsCallContactTitle") %]
                     <th>[% Translate("Name") | html %]</th>
                     <th>[% Translate("Type") | html %]</th>
                 </tr>
@@ -53,6 +56,13 @@
                         <input title="[% Translate("Select this person to receive a copy of the new article via email") | html %]" name="LinkedPersonToInform" type="checkbox" value="[% Data.UserType | html %]:::[% Data.UserID | html %]"/>
 [% RenderBlockEnd("InformPersonByEvent") %]
                     </td>
+[% RenderBlockStart("AsCallContact") %]
+                    <td>
+[% IF Data.IsAgent != 1 %]
+                        <input class='LinkedPersonToCallContact' title='[% Translate("Set this person as call contact.") | html %]' name="LinkedPersonToCallContact_[% Data.UserID | html %]" type="checkbox" value='"[% Data.UserFirstname | html %] [% Data.UserLastname | html %]" <[% Data.UserEmail | html %]>:::[% Data.UserID | html %]'/>
+[% END %]
+                    </td>
+[% RenderBlockEnd("AsCallContact") %]
                     <td class="PersonDetails" title="[% Translate("Click to view detailed informations for this persons") | html %]">
                         [% Data.UserFirstname | html %] [% Data.UserLastname | html %]
                         <input class="LinkedPersonID" name="LinkedPersonID" type="hidden" value="[% Data.UserLogin | html %]"/>

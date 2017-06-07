@@ -247,6 +247,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      *      Initializes the module.
      */
     TargetNS.Init = function ($Element) {
+
         // KIX4OTRS-capeIT
         if (Core.Config.Get('Action') != 'AgentBook' && $Element.attr('name') != undefined && $Element.attr('name').substr(0, 13) !== 'DynamicField_') {
             // EO KIX4OTRS-capeIT
@@ -270,6 +271,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                  || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
                  || Core.Config.Get('Action') === 'AgentTicketForward'
                  || Core.Config.Get('Action') === 'AgentTicketPhoneQuick'
+                 || Core.Config.Get('Action') === 'AgentTicketPhoneOutbound'
+                 || Core.Config.Get('Action') === 'AgentTicketPhoneInbound'
                  || Core.Config.Get('Action') === 'AgentTicketPhone' )
                && $('#SelectedCustomerUser').val() !== '') {
                 GetCustomerTickets($('#SelectedCustomerUser').val());
@@ -354,6 +357,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                     // if (Core.Config.Get('Action') !== 'AgentTicketPhone' && Core.Config.Get('Action') !== 'AgentTicketEmail' && Core.Config.Get('Action') !== 'AgentTicketCompose' && Core.Config.Get('Action') !== 'AgentTicketForward') {
                     if (Core.Config.Get('Action') !== 'AgentTicketPhone'
                        && Core.Config.Get('Action') !== 'AgentTicketPhoneQuick'
+                       && Core.Config.Get('Action') !== 'AgentTicketPhoneOutbound'
+                       && Core.Config.Get('Action') !== 'AgentTicketPhoneInbound'
                        && Core.Config.Get('Action') !== 'AgentTicketEmailQuick'
                        && Core.Config.Get('Action') !== 'AgentTicketEmail'
                        && Core.Config.Get('Action') !== 'AgentTicketEmailOutbound'
@@ -429,6 +434,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 && Core.Config.Get('Action') !== 'AgentTicketEmail'
                 && Core.Config.Get('Action') !== 'AgentTicketEmailOutbound'
                 && Core.Config.Get('Action') !== 'AgentTicketPhoneQuick'
+                && Core.Config.Get('Action') !== 'AgentTicketPhoneOutbound'
+                && Core.Config.Get('Action') !== 'AgentTicketPhoneInbound'
                 && Core.Config.Get('Action') !== 'AgentTicketEmailQuick'
                 && Core.Config.Get('Action') !== 'AgentTicketCompose'
                 && Core.Config.Get('Action') !== 'AgentTicketForward'
@@ -501,16 +508,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
 
         if (CustomerValue === '') {
             return false;
+            Core.App.Publish('Core.Agent.CustomerSearch.AddTicketCustomer', [false, CustomerValue, CustomerKey]);
         }
-
-        // KIX4OTRS-capeIT
-        // clone customer entry
-        var $Clone = $('.CustomerTicketTemplate' + Field).clone(),
-            CustomerTicketCounter = $('#CustomerTicketCounter' + Field).val(),
-            TicketCustomerIDs = 0,
-            IsDuplicated = false,
-            Suffix;
-        // EO KIX4OTRS-capeIT
 
         // check for duplicated entries
         $('[class*=CustomerTicketText]').each(function() {
@@ -520,6 +519,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
         });
         if (IsDuplicated) {
             TargetNS.ShowDuplicatedDialog(Field);
+            Core.App.Publish('Core.Agent.CustomerSearch.AddTicketCustomer', [false, CustomerValue, CustomerKey]);
             return false;
         }
 
@@ -632,6 +632,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             .removeClass('LabelError');
         Core.Form.ErrorTooltips.HideTooltip();
 
+        Core.App.Publish('Core.Agent.CustomerSearch.AddTicketCustomer', [true, CustomerValue, CustomerKey]);
+
         return false;
     };
 
@@ -662,7 +664,9 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
         TicketCustomerIDs = $('.CustomerContainer input[type="radio"]').length;
         // KIX4OTRS-capeIT
         // if (TicketCustomerIDs === 0) {
-        if (TicketCustomerIDs === 0 && Core.Config.Get('Action') !== 'AgentTicketCompose') {
+        if (TicketCustomerIDs === 0 && Core.Config.Get('Action') !== 'AgentTicketCompose'
+            && Core.Config.Get('Action') !== 'AgentTicketPhoneOutbound' && Core.Config.Get('Action') !== 'AgentTicketPhoneInbound'
+        ) {
         // EO KIX4OTRS-capeIT
             TargetNS.ResetCustomerInfo();
         }
@@ -688,6 +692,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
         if ($Field.find('.CustomerTicketText:visible').length === 0) {
             $Field.addClass('Hidden');
         }
+
+        Core.App.Publish('Core.Agent.CustomerSearch.RemoveTicketCustomer', [Object]);
 
         CheckPhoneCustomerCountLimit();
     };
@@ -820,13 +826,13 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                         return false;
                     }
 
-                    Core.Agent.CustomerSearch.AddTicketCustomer(ObjectId, $('#' + ObjectId).val());
+                    Core.Agent.CustomerSearch.AddTicketCustomer(ObjectId, $('#' + ObjectId).val(), $('#' + ObjectId).prev('.CustomerKey').val());
                     return false;
                 });
 
                 $('#' + ObjectId).bind('keypress', function (e) {
                     if (e.which === 13){
-                        Core.Agent.CustomerSearch.AddTicketCustomer(ObjectId, $('#' + ObjectId).val());
+                        Core.Agent.CustomerSearch.AddTicketCustomer(ObjectId, $('#' + ObjectId).val(), $('#' + ObjectId).prev('.CustomerKey').val());
                         return false;
                     }
                 });
