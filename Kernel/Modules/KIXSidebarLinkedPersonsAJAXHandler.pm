@@ -56,6 +56,15 @@ sub Run {
 
         my $PersonRecipientTypes = $ConfigObject->Get('LinkedPerson::EmailRecipientTypes');
         my $InformPersonByMail   = $ConfigObject->Get('LinkedPerson::InformPersonByMail');
+        my $SetAsCallContact     = $ConfigObject->Get('LinkedPerson::SetAsCallContact');
+
+        my $CallContactActive = 0;
+        if ( $Param{CallingAction} =~ /$SetAsCallContact/ && $ParamObject->GetParam( Param => 'CallContactActive' ) ) {
+            $CallContactActive = 1;
+            $LayoutObject->Block(
+                Name => 'AsCallContactTitle',
+            );
+        }
 
         my $PersonInformTypes = 'InformPersonBy';
         $PersonInformTypes
@@ -105,6 +114,21 @@ sub Run {
                         PersonRecipientTypeStrg => $PersonRecipientTypeStrg,
                     },
                 );
+
+                # show 'as call contact' checkbox
+                if ( $CallContactActive ) {
+                    if ( $LinkType ne 'Agent' ) {
+                        $LayoutObject->Block(
+                            Name => 'AsCallContact',
+                            Data => \%PersonData,
+                        );
+                    } else {
+                        $LayoutObject->Block(
+                            Name => 'AsCallContact',
+                            Data => { IsAgent => 1 },
+                        );
+                    }
+                }
 
                 # keep person data for person details
                 $PersonDetails{$UserID} = \%PersonData;
@@ -157,8 +181,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 

@@ -2414,7 +2414,7 @@ sub Data {
 
         # Template: AgentCustomerSearch
         'Duplicated entry' => 'Doppelter Eintrag',
-        'This address already exists on the address list.' => 'Dieser Eintrag existiert bereits in der Adressliste',
+        'This address already exists on the address list.' => 'Dieser Eintrag existiert bereits in der Adressliste.',
         'It is going to be deleted from the field, please try again.' => 'Er wird aus dem Feld entfernt, bitte versuchen Sie es erneut.',
 
         # Template: AgentCustomerTableView

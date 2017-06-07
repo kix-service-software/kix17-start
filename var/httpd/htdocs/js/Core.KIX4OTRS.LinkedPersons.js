@@ -49,6 +49,41 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
         return true;
     }
 
+    function InitCallContacts() {
+        $('input.LinkedPersonToCallContact').on('change', function() {
+            var Customer = $(this).val().split(':::');
+            if ( $(this).is(':checked') ) {
+                Core.Agent.CustomerSearch.AddTicketCustomer( 'FromCustomer', Customer[0], Customer[1] );
+            } else {
+                $('#TicketCustomerContentFromCustomer input.CustomerKey').each(function() {
+                    if ( $(this).val() == Customer[1] ) {
+                        Core.Agent.CustomerSearch.RemoveCustomerTicket( $(this) );
+                    }
+                });
+            }
+        });
+
+        // check existing contacts in list
+        $('#TicketCustomerContentFromCustomer input.CustomerKey').each(function() {
+            if ( $(this).val() ) {
+                $('#LinkedPersons input[name="LinkedPersonToCallContact_' + $(this).val() + '"]').prop( "checked", true );
+            }
+        });
+
+        // listen to add/remove of call contacts from list and check/uncheck the corresponding checkbox
+        Core.App.Subscribe('Core.Agent.CustomerSearch.AddTicketCustomer', function (Result, CustomerValue, CustomerKey) {
+            if ( CustomerKey && !$('#LinkedPersons input[name="LinkedPersonToCallContact_' + CustomerKey + '"]').is(':checked') ) {
+                $('#LinkedPersons input[name="LinkedPersonToCallContact_' + CustomerKey + '"]').prop( "checked", true );
+            }
+        });
+        Core.App.Subscribe('Core.Agent.CustomerSearch.RemoveTicketCustomer', function ($RemoveObject) {
+            var CustomerKey = $RemoveObject.siblings('.CustomerKey').val();
+            if ( CustomerKey && $('#LinkedPersons input[name="LinkedPersonToCallContact_' + CustomerKey + '"]').is(':checked') ) {
+                $('#LinkedPersons input[name="LinkedPersonToCallContact_' + CustomerKey + '"]').prop( "checked", false );
+            }
+        });
+    }
+
     function RefreshLinkedPersons() {
         var TicketID,
             URL,
@@ -70,6 +105,11 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
         // do linked persons update
         $('#LinkedPersonsTable').html('<center><img style="margin-top:5px" src="' + Core.Config.Get('Images') + 'loader.gif"></center>');
         URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedPersonsAJAXHandler;CallingAction=' + $('input[name=Action]').val() + ';Subaction=LoadLinkedPersons;TicketID=' + TicketID + ';Frontend=' + Frontend;
+
+        // check if call contact is active
+        if ( $('#CallContactActive').val() ) {
+            URL += ';CallContactActive=1';
+        }
         Core.AJAX.ContentUpdate($('#LinkedPersonsTable'), URL, function() {
             Core.KIX4OTRS.LinkedPersons.InitList();
         });
@@ -95,6 +135,11 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
         $('.EmailRecipientType').bind('change', function(Event) {
             AddAddress($(this).val(), $(this).next('.LinkedPersonMail').val());
         });
+
+        // add or remove contact from call contact list if checkbox is changed
+        if ( $('input.LinkedPersonToCallContact').length ) {
+            InitCallContacts();
+        }
 
         return true;
     }

@@ -182,6 +182,100 @@ sub Run {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
     }
 
+    # MultipleCustomer From-field
+    my @MultipleCustomer;
+    if ( $Config->{CallContact} ) {
+
+        # build customer search autocomplete field
+        $LayoutObject->Block(
+            Name => 'CustomerSearchAutoComplete',
+        );
+
+        my $CustomersNumber = $ParamObject->GetParam( Param => 'CustomerTicketCounterFromCustomer' ) || 0;
+
+        # hash for check duplicated entries
+        my %AddressesList;
+
+        # get check item object
+        my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
+
+        if ( $CustomersNumber) {
+
+            # check if attachment handling
+            my $IsUpload = 0;
+            if ( $Self->{Subaction} eq 'Store' ) {
+                my @AttachmentIDs = map {
+                    my ($ID) = $_ =~ m{ \A AttachmentDelete (\d+) \z }xms;
+                    $ID ? $ID : ();
+                } $ParamObject->GetParamNames();
+
+                COUNT:
+                for my $Count ( reverse sort @AttachmentIDs ) {
+                    my $Delete = $ParamObject->GetParam( Param => "AttachmentDelete$Count" );
+                    next COUNT if !$Delete;
+                    $IsUpload = 1;
+                }
+                if ( $ParamObject->GetParam( Param => 'AttachmentUpload' ) ) {
+                    $IsUpload = 1;
+                }
+            }
+
+            my $CustomerCounter = 1;
+            my @Contacts;
+            for my $Count ( 1 ... $CustomersNumber ) {
+                my $CustomerElement = $ParamObject->GetParam( Param => 'CustomerTicketText_' . $Count );
+                my $CustomerKey = $ParamObject->GetParam( Param => 'CustomerKey_' . $Count )
+                    || '';
+
+                if ($CustomerElement) {
+
+                    my $CountAux         = $CustomerCounter++;
+                    my $CustomerError    = '';
+                    my $CustomerErrorMsg = 'CustomerGenericServerErrorMsg';
+                    my $CustomerDisabled = '';
+
+                    if ( !$IsUpload ) {
+                        push( @Contacts, $CustomerElement );
+
+                        # check email address
+                        for my $Email ( Mail::Address->parse($CustomerElement) ) {
+                            if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) )
+                            {
+                                $CustomerErrorMsg = $CheckItemObject->CheckErrorType()
+                                    . 'ServerErrorMsg';
+                                $CustomerError = 'ServerError';
+                            }
+                        }
+
+                        # check for duplicated entries
+                        if ( defined $AddressesList{$CustomerElement} && $CustomerError eq '' ) {
+                            $CustomerErrorMsg = 'IsDuplicatedServerErrorMsg';
+                            $CustomerError    = 'ServerError';
+                        }
+
+                        if ( $CustomerError ne '' ) {
+                            $CustomerDisabled = 'disabled="disabled"';
+                            $CountAux         = $Count . 'Error';
+                        }
+                    }
+
+                    push @MultipleCustomer, {
+                        Count            => $CountAux,
+                        CustomerElement  => $CustomerElement,
+                        CustomerKey      => $CustomerKey,
+                        CustomerError    => $CustomerError,
+                        CustomerErrorMsg => $CustomerErrorMsg,
+                        CustomerDisabled => $CustomerDisabled,
+                    };
+                    $AddressesList{$CustomerElement} = 1;
+                }
+            }
+
+            # remember call contacts
+            $GetParam{Contacts} = join(', ', sort @Contacts);
+        }
+    }
+
     # get dynamic field values form http request
     my %DynamicFieldValues;
 
@@ -367,6 +461,17 @@ sub Run {
             $Output .= $OutputNotify;
         }
 
+        # set ticket customer as default call contact
+        my %PrepopulatedCallContact;
+        if ( %CustomerData && $Config->{CallContact} ) {
+            %PrepopulatedCallContact = (
+                Customer  => $CustomerData{UserID},
+                Email     => $CustomerData{UserEmail} || '',
+                Firstname => $CustomerData{UserFirstname},
+                Lastname  => $CustomerData{UserLastname},
+            );
+        }
+
         # EO KIX4OTRS-capeIT
         $Output .= $Self->_MaskPhone(
             TicketID     => $Self->{TicketID},
@@ -388,6 +493,9 @@ sub Run {
             Subject           => $Subject,
             Body              => $Body,
             DynamicFieldHTML  => \%DynamicFieldHTML,
+
+            MultipleCustomer        => \@MultipleCustomer,
+            PrepopulatedCallContact => \%PrepopulatedCallContact,
         );
         $Output .= $LayoutObject->Footer(
             Type => 'Small',
@@ -619,6 +727,11 @@ sub Run {
                 );
         }
 
+        # show error if no call contact is given
+        if ( $Config->{CallContact} && !$GetParam{Contacts} && !$IsUpload ) {
+            $Error{'FromInvalid'} = ' ServerError';
+        }
+
         if (%Error) {
 
             # get ticket info if ticket id is given
@@ -681,6 +794,8 @@ sub Run {
                 %GetParam,
                 DynamicFieldHTML => \%DynamicFieldHTML,
                 Errors           => \%Error,
+
+                MultipleCustomer => \@MultipleCustomer,
 
                 # KIX4OTRS-capeIT
                 TicketTypeID => $Ticket{TypeID},
@@ -749,11 +864,14 @@ sub Run {
             }
 
             my $From;
+            my $To = '';
 
             if ( lc $Config->{SenderType} eq 'customer' ) {
 
                 # get customer email address
-                if ( $Ticket{CustomerUserID} ) {
+                if ( $Config->{CallContact} && $GetParam{Contacts} ) {
+                    $From = $GetParam{Contacts};
+                } elsif ( $Ticket{CustomerUserID} ) {
                     my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
                         User => $Ticket{CustomerUserID}
                     );
@@ -774,6 +892,10 @@ sub Run {
                     );
                     $From = $LastCustomerArticle{From};
                 }
+            } else {
+                if ( $Config->{CallContact} && $GetParam{Contacts} ) {
+                    $To = $GetParam{Contacts};
+                }
             }
 
             # If we don't have a customer article, or if SenderType is "agent", use the agent as From.
@@ -790,6 +912,7 @@ sub Run {
                 ArticleType    => $Config->{ArticleType},
                 SenderType     => $Config->{SenderType},
                 From           => $From,
+                To             => $To,
                 Subject        => $GetParam{Subject},
                 Body           => $GetParam{Body},
                 MimeType       => $MimeType,
@@ -1298,6 +1421,70 @@ sub _MaskPhone {
     # get config of frontend module
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
+    if ( $Config->{CallContact} ) {
+        $LayoutObject->Block(
+            Name => 'CallContact',
+            Data => \%Param,
+        );
+
+        # prepopulate call contact
+        my $ShowErrors = 1;
+        if ( IsHashRefWithData($Param{PrepopulatedCallContact}) ) {
+            $ShowErrors = 0;
+            $LayoutObject->Block(
+                Name => 'PrepopulatedCallContact',
+                Data => $Param{PrepopulatedCallContact},
+            );
+        }
+
+        # show call contacts
+        my $CustomerCounter = 0;
+        if ( $Param{MultipleCustomer} ) {
+            for my $Item ( @{ $Param{MultipleCustomer} } ) {
+                if ( !$ShowErrors ) {
+
+                    # set empty values for errors
+                    $Item->{CustomerError}    = '';
+                    $Item->{CustomerDisabled} = '';
+                    $Item->{CustomerErrorMsg} = 'CustomerGenericServerErrorMsg';
+                }
+                $LayoutObject->Block(
+                    Name => 'MultipleCustomer',
+                    Data => $Item,
+                );
+                $LayoutObject->Block(
+                    Name => $Item->{CustomerErrorMsg},
+                    Data => $Item,
+                );
+                if ( $Item->{CustomerError} ) {
+                    $LayoutObject->Block(
+                        Name => 'CustomerErrorExplantion',
+                    );
+                }
+                $CustomerCounter++;
+            }
+        }
+
+        if ( !$CustomerCounter ) {
+            $Param{CustomerHiddenContainer} = 'Hidden';
+        }
+
+        # set customer counter
+        $LayoutObject->Block(
+            Name => 'MultipleCustomerCounter',
+            Data => {
+                CustomerCounter => $CustomerCounter++,
+            },
+        );
+
+        if ( $Param{Errors}->{FromInvalid} ) {
+            $LayoutObject->Block( Name => 'FromServerErrorMsg' );
+        }
+        if ( !$ShowErrors ) {
+            $Param{Errors}->{FromInvalid} = '';
+        }
+    }
+
     # build next states string
     my %Selected;
     if ( $Param{NextStateID} ) {
@@ -1600,10 +1787,7 @@ sub _GetShownDynamicFields {
 }
 # EO KIX4OTRS-capeIT
 
-
 1;
-
-
 
 =back
 

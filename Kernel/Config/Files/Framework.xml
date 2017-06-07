@@ -1551,6 +1551,14 @@
             <String>(AgentTicketCompose|AgentTicketForward|AgentTicketEmailOutbound)</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="LinkedPerson::SetAsCallContact" Required="0" Valid="1">
+        <Description Translatable="1">Defines for which actions the linked persons could be set as call contacts.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <String>(AgentTicketPhoneOutbound|AgentTicketPhoneInbound)</String>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="LinkedPerson::AllowNonAgentNotifyForInternalArticles" Required="1" Valid="1">
         <Description Translatable="1">Defines if linked persons of types "Customer" and "3rd Party" can be selected for notification of internal articles.</Description>
         <Group>Framework</Group>
