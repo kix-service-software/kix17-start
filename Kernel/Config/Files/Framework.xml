@@ -13509,7 +13509,6 @@ via the Preferences button after logging in.
                         <Item Key="AgentTicketPhoneCommon">1</Item>
                         <Item Key="AgentTicketAddtlITSMField">1</Item>
                         <Item Key="AgentArticleEdit">1</Item>
-                        <Item Key="AgentArticleCopyMove">1</Item>
                         <Item Key="AgentTicketMergeToCustomer">1</Item>
                         <Item Key="ProcessManagement/ActivityDialogHeader">1</Item>
                     </Hash>
@@ -13625,7 +13624,7 @@ via the Preferences button after logging in.
                 <Item>AgentTicketZoomTabLinkedObjects</Item>
                 <Item>AgentTicketZoomTabAttachments</Item>
                 <Item>AgentTicketZoomTabActionCommon</Item>
-                <Item>AgentArticleCopyMove</Item>
+                <Item>AgentArticleEdit</Item>
                 <Item>AgentTicketAttachmentDownload</Item>
                 <Item>AgentTicketMergeToCustomer</Item>
             </Array>

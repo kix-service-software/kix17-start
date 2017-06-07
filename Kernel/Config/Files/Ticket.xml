@@ -12503,7 +12503,6 @@ Thanks for your help!
                 <Item Key="AgentTicketZoom">1</Item>
                 <Item Key="AgentTicketHistory">1</Item>
                 <Item Key="AgentTicketPrint">1</Item>
-                <Item Key="AgentArticleCopyMove">0</Item>
                 <Item Key="AgentArticleEdit">0</Item>
                 <Item Key="AgentArticleManipulate">0</Item>
                 <Item Key="AgentLinkObject">0</Item>
@@ -13061,7 +13060,43 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
-            <String Regex="">note</String>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupEdit" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupCopy" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupMove" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupDelete" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###RequiredLock" Required="1" Valid="1">
@@ -13097,7 +13132,7 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
-            <String Regex="">note-internal,note-external,note-report,phone,email-internal,email-external</String>
+            <String Regex="">note-internal,note-external,note-report,phone</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###OnlyResponsible" Required="0" Valid="1">
@@ -13916,8 +13951,7 @@ Thanks for your help!
                 <Item Key="AgentTicketForward">email-internal,email-external,note-external</Item>
                 <Item Key="AgentTicketBounce">email-internal,email-external</Item>
                 <Item Key="AgentTicketPhoneSplit">email-internal,email-external,phone,webrequest,note-external</Item>
-                <Item Key="AgentArticleCopyMove">email-internal,email-external,phone,webrequest,note-external,note-internal</Item>
-                <Item Key="AgentArticleEdit">phone,note-internal,note-external,note-report</Item>
+                <Item Key="AgentArticleEdit">phone,note-internal,note-external,note-report,email-internal,email-external</Item>
             </Hash>
         </Setting>
     </ConfigItem>

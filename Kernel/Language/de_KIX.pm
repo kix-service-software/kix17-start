@@ -819,12 +819,11 @@ sub Data {
 
     # EO KIX4OTRS_TicketStateWorkflow.xml
 
-    # AgentArticleCopyMove
+    # AgentArticleEdit
     $Lang->{'Edit Article'}                 = 'Artikel ändern';
     $Lang->{'Copy Article'}                 = 'Artikel kopieren';
     $Lang->{'Move Article'}                 = 'Artikel verschieben';
     $Lang->{'Delete Article'}               = 'Artikel löschen';
-    $Lang->{'Copy/Move/Delete'}             = 'Kopieren/Verschieben/löschen';
     $Lang->{'of destination ticket'}        = 'des Zieltickets';
     $Lang->{'You cannot asign more time units as in the source article!'} =
         'Sie können nicht mehr Zeiteinheiten zuweisen, als im Original-Artikel!';
@@ -856,7 +855,7 @@ sub Data {
     $Lang->{'Sorry, you are not a member of allowed groups!'} =
         'Bitte entschuldigen Sie, aber Sie nicht Mitglied der berechtigten Gruppen!';
 
-    # EO AgentArticleCopyMove
+    # EO AgentArticleEdit
 
     # Link person
     $Lang->{'Persons login'}                   = 'Personen-Login';
@@ -916,8 +915,6 @@ sub Data {
     $Lang->{'Last customer article'} = 'Letzter Kunden-Artikel';
     $Lang->{'Defines which ticket data parameters are displayed in direct data presentation.'} =
         'Definiert welche Daten in der Direktdatenanzeige dargestellt werden.';
-    $Lang->{'Frontend module registration for AgentArticleCopyMove.'} =
-        'Frontendmodul-Registrierung von AgentArticleCopyMove.';
     $Lang->{'Defines email-actions allowed for article types.'} =
         'Definiert E-Mail-Aktionen für Artikeltypen.';
 
