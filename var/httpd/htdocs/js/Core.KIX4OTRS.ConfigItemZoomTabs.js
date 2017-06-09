@@ -73,33 +73,22 @@ Core.KIX4OTRS.ConfigItemZoomTabs = (function(TargetNS) {
 
         // show preview
         $('.CIImageImage').bind('click', function() {
-            var ImageID = $(this).attr('id').split("_")[1], AvScreenWidth = $(document).width(), AvScreenHeight = $(document).height(), Width, Height, NewWidth, NewHeight, $Element = $(this), $Image = $(this).find('img');
+            var that         = $(this);
+            var imgContainer = $('#CIImageDialogPreviewImage');
+            imgContainer.html('');
+            that.find('img').clone().css('width', '').css('height', '').appendTo(imgContainer);
+            var dialogImg = imgContainer.find('img');
+            var width     = parseInt(window.innerWidth/100 * 90) + 'px';
+            var height    = 'auto';
 
-            $("<img/>").attr("src", $Image.attr("src")).load(function() {
-                Width = this.width;
-                Height = this.height;
+            if (dialogImg[0].width < dialogImg[0].height) {
+                width  = 'auto';
+                height = parseInt(window.innerHeight/100 * 80) + 'px';
+            }
+            imgContainer.find('img').css('width', width).css('height', height);
+            $('#CIImageDialogPreviewText').html($('#Text_' + that.attr('id').split("_")[1]).html());
 
-                $Image.width(Width).height(Height);
-                $('#CIImageDialogPreviewImage').html($Element.html());
-                $('#CIImageDialogPreviewText').html($('#Text_' + ImageID).html());
-                Core.UI.Dialog.ShowContentDialog($('#CIImageDialogPreview'), Core.Config.Get('ImageDetails'), '20px', 'Center', true, []);
-
-                var Minimum = 200;
-                if (Width < Height && Height > 200) {
-                    NewWidth = Minimum;
-                    NewHeight = NewWidth * Height / Width;
-                } else if (Width > 200) {
-                    NewHeight = Minimum;
-                    NewWidth = NewHeight * Width / Height;
-                } else {
-                    NewHeight = Height;
-                    NewWidth = Width;
-                }
-
-                // reset image
-                $Image.width(Width).height(Height);
-            });
-
+            Core.UI.Dialog.ShowContentDialog($('#CIImageDialogPreview'), Core.Config.Get('ImageDetails'), '20px', 'Center', true, []);
         });
 
         // resize images
