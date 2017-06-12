@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.0 (2017/06/??)
+ * (2017/06/12) - CR: T2017051690000949 (Agent-, Customer-, PublicTicketZoom changed html header title) (uboehm)
  * (2017/06/07) - CR: T2017032490000491 (possibility to set caller/callee in AgentTicketPhone(Out/In)bound) (rkaiser)
  * (2017/06/02) - CR: T2017031090000543 (add separated rights management for edit options) (ddoerffel) 
  * (2017/06/02) - CR: T2017042090000648 (article edit for all tickets) (ddoerffel) 
