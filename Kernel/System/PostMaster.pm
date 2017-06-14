@@ -29,6 +29,7 @@ our @ObjectDependencies = (
     'Kernel::System::Queue',
     'Kernel::System::State',
     'Kernel::System::Ticket',
+    'Kernel::System::SystemAddress',
 );
 
 =head1 NAME
@@ -154,16 +155,29 @@ return params
 sub Run {
     my ( $Self, %Param ) = @_;
 
+    # get needed object
+    my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
+    my $QueueObject         = $Kernel::OM->Get('Kernel::System::Queue');
+    my $StateObject         = $Kernel::OM->Get('Kernel::System::State');
+    my $SystemAddressObject = $Kernel::OM->Get('Kernel::System::SystemAddress');
+    my $TicketObject        = $Kernel::OM->Get('Kernel::System::Ticket');
+
     my @Return;
 
     # ConfigObject section / get params
     my $GetParam = $Self->GetEmailParams();
 
-    # check if follow up
-    my ( $Tn, $TicketID ) = $Self->CheckFollowUp( GetParam => $GetParam );
+    # get tickets containing this message
+    my @SkipTicketIDs = $TicketObject->ArticleGetTicketIDsOfMessageID(
+        MessageID => $GetParam->{'Message-ID'},
+    );
+    my %SkipTicketIDHash = ();
+    for my $TicketID ( @SkipTicketIDs ) {
+        $SkipTicketIDHash{$TicketID} = 1;
+    }
 
-    # get config objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    # check if follow up
+    my %FollowUps = $Self->CheckFollowUp( GetParam => $GetParam );
 
     # run all PreFilterModules (modify email params)
     if ( ref $ConfigObject->Get('PostMaster::PreFilterModule') eq 'HASH' ) {
@@ -191,24 +205,45 @@ sub Run {
             }
 
             # modify params
-            my $Run = $FilterObject->Run(
-                GetParam  => $GetParam,
-                JobConfig => $Jobs{$Job},
-                TicketID  => $TicketID,
-            );
-            if ( !$Run ) {
-                $Kernel::OM->Get('Kernel::System::Log')->Log(
-                    Priority => 'error',
-                    Message =>
-                        "Execute Run() of PreFilterModule $Jobs{$Job}->{Module} not successfully!",
+            if( scalar( keys %FollowUps ) ) {
+                for my $TN (keys %FollowUps) {
+                    my $TicketID = $FollowUps{$TN};
+
+                    my $Run = $FilterObject->Run(
+                        GetParam  => $GetParam,
+                        JobConfig => $Jobs{$Job},
+                        TicketID  => $TicketID,
+                    );
+                    if ( !$Run ) {
+                        $Kernel::OM->Get('Kernel::System::Log')->Log(
+                            Priority => 'error',
+                            Message => "Execute Run() of PreFilterModule "
+                                . "$Jobs{$Job}->{Module} with TID $TicketID "
+                                . "not successfully!",
+                        );
+                    }
+                }
+            }
+            else {
+                my $Run = $FilterObject->Run(
+                    GetParam  => $GetParam,
+                    JobConfig => $Jobs{$Job},
+                    TicketID  => undef,
                 );
+                if ( !$Run ) {
+                    $Self->{LogObject}->Log(
+                        Priority => 'error',
+                        Message => "Execute Run() of PreFilterModule "
+                            . "$Jobs{$Job}->{Module} not successfully!",
+                    );
+                }
             }
         }
     }
 
     # should I ignore the incoming mail?
 #rbo - T2016121190001552 - renamed X-KIX headers
-    $GetParam->{'X-KIX-Ignore'} = $GetParam->{'X-KIX-Ignore'} || $GetParam->{'X-OTRS-Ignore'}; 
+    $GetParam->{'X-KIX-Ignore'} = $GetParam->{'X-KIX-Ignore'} || $GetParam->{'X-OTRS-Ignore'};
     if ( $GetParam->{'X-KIX-Ignore'} && $GetParam->{'X-KIX-Ignore'} =~ /(yes|true)/i ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'info',
@@ -224,95 +259,143 @@ sub Run {
     # ----------------------
 
     # check if follow up (again, with new GetParam)
-    ( $Tn, $TicketID ) = $Self->CheckFollowUp( GetParam => $GetParam );
+    %FollowUps = $Self->CheckFollowUp( GetParam => $GetParam );
 
-    # check if it's a follow up ...
-    if ( ref $ConfigObject->Get('PostMaster::PreCreateFilterModule') eq 'HASH' ) {
-
-        my %Jobs = %{ $ConfigObject->Get('PostMaster::PreCreateFilterModule') };
-
-        my $LogObject  = $Kernel::OM->Get('Kernel::System::Log');
-        my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
-
-        JOB:
-        for my $Job ( sort keys %Jobs ) {
-
-            return if !$MainObject->Require( $Jobs{$Job}->{Module} );
-
-            my $FilterObject = $Jobs{$Job}->{Module}->new(
-                %{$Self},
-            );
-
-            if ( !$FilterObject ) {
-                $LogObject->Log(
-                    Priority => 'error',
-                    Message  => "new() of PreCreateFilterModule $Jobs{$Job}->{Module} not successfully!",
-                );
-                next JOB;
+    if ( $ConfigObject->Get('PostMaster::StrictFollowUp') ) {
+        # get recipients
+        my $Recipient = '';
+        for my $Key (qw(Resent-To Envelope-To To Cc Bcc Delivered-To X-Original-To)) {
+            next if !$GetParam->{$Key};
+            if ($Recipient) {
+                $Recipient .= ', ';
             }
-
-            # modify params
-            my $Run = $FilterObject->Run(
-                GetParam  => $GetParam,
-                JobConfig => $Jobs{$Job},
-                TicketID  => $TicketID,
-            );
-            if ( !$Run ) {
-                $LogObject->Log(
-                    Priority => 'error',
-                    Message =>
-                        "Execute Run() of PreCreateFilterModule $Jobs{$Job}->{Module} not successfully!",
-                );
-            }
+            $Recipient .= $GetParam->{$Key};
         }
-    }
 
-    # check if it's a follow up ...
-    if ( $Tn && $TicketID ) {
-
-        # get ticket object
-        my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
-        # get ticket data
-        my %Ticket = $TicketObject->TicketGet(
-            TicketID      => $TicketID,
-            DynamicFields => 0,
+        # get addresses
+        my @EmailAddresses = $Self->{ParserObject}->SplitAddressLine(
+            Line => $Recipient
         );
 
-        # get queue object
-        my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
-
-        # check if it is possible to do the follow up
-        # get follow up option (possible or not)
-        my $FollowUpPossible = $QueueObject->GetFollowUpOption(
-            QueueID => $Ticket{QueueID},
-        );
-
-        # get lock option (should be the ticket locked - if closed - after the follow up)
-        my $Lock = $QueueObject->GetFollowUpLockOption(
-            QueueID => $Ticket{QueueID},
-        );
-
-        # get state details
-        my %State = $Kernel::OM->Get('Kernel::System::State')->StateGet(
-            ID => $Ticket{StateID},
-        );
-
-        # create a new ticket
-        if ( $FollowUpPossible =~ /new ticket/i && $State{TypeName} =~ /^(removed|close)/i ) {
-
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'info',
-                Message  => "Follow up for [$Tn] but follow up not possible ($Ticket{State})."
-                    . " Create new ticket."
+        # filter email addresses avoiding repeated and save in a hash
+        my %EmailsHash = ();
+        for my $EmailAddress (@EmailAddresses) {
+            my $MailAddress = $Self->{ParserObject}->GetEmailAddress(
+                Email => $EmailAddress
             );
+            next if ( !$MailAddress );
+            $EmailsHash{$MailAddress} = '1';
+        }
 
-            # send mail && create new article
-            # get queue if of From: and To:
-            if ( !$Param{QueueID} ) {
-                $Param{QueueID} = $Self->{DestQueueObject}->GetQueueID(
+        # check addresses
+        my %SystemAddressList = $SystemAddressObject->SystemAddressList();
+        EMAIL:
+        for my $Address ( keys( %EmailsHash ) ) {
+            next EMAIL if !$Address;
+
+            # get system address ID
+            my $SystemAddressID = '';
+            for my $ID ( keys( %SystemAddressList ) ) {
+                $SystemAddressID = $ID if ( lc( $Address ) eq lc( $SystemAddressList{$ID} ) );
+            }
+            my %Queues;
+            my $QueueID = $Param{QueueID};
+            if ($SystemAddressID) {
+                # get all queues that have this address as sender
+                %Queues = $QueueObject->GetQueuesForEmailAddress(
+                    AddressID => $SystemAddressID
+                );
+
+                $QueueID = $SystemAddressObject->SystemAddressQueueID(
+                    Address => $Address,
+                );
+            }
+            else {
+                # get PostmasterDefaultQueue, cause a FollowUp Ticket can also be in this Queue
+                my $QueueName = $ConfigObject->Get('PostmasterDefaultQueue');
+                $QueueID = $QueueObject->QueueLookup( Queue => $QueueName );
+                if ($QueueID) {
+                    $Queues{$QueueID} = $QueueName;
+                }
+            }
+
+            # check if the message should be added as FollowUp
+            my $FollowUpAdded = 0;
+            for my $Tn ( keys( %FollowUps ) ) {
+                my @Result = $Self->_HandlePossibleFollowUp(
+                    GetParam      => $GetParam,
+                    TicketNumber  => $Tn,
+                    TicketID      => $FollowUps{$Tn},
+                    Queues        => \%Queues,
+                    QueueID       => $QueueID,
+                    SkipTicketIDs => \%SkipTicketIDHash
+                );
+                if ( @Result ) {
+                    $FollowUpAdded = 1;
+                    push (@Return, \@Result);
+                }
+            }
+            # create new ticket if no FollowUp added
+            if ( !$FollowUpAdded && $SystemAddressID ) {
+
+                # check if trusted returns a new queue id
+                my $TQueueID = $Self->{DestQueueObject}->GetTrustedQueueID(
                     Params => $GetParam,
                 );
+                if ($TQueueID) {
+                    $QueueID = $TQueueID;
+                }
+
+                # create new ticket
+                if ($QueueID) {
+                    my $TicketID = $Self->{NewTicketObject}->Run(
+                        InmailUserID     => $Self->{PostmasterUserID},
+                        GetParam         => $GetParam,
+                        QueueID          => $QueueID,
+                        AutoResponseType => 'auto reply',
+                    );
+
+                    if ( !$TicketID ) {
+                        next;
+                    }
+
+                    my @Ret = ( 1, $TicketID );
+                    push( @Return, \@Ret );
+                }
+            }
+        }
+    } else {
+        my %Queues = $QueueObject->QueueList( Valid => 1 );
+
+        # check if the message should be added as FollowUp
+        for my $Tn ( keys( %FollowUps ) ) {
+            my @Result = $Self->_HandlePossibleFollowUp(
+                GetParam      => $GetParam,
+                TicketNumber  => $Tn,
+                TicketID      => $FollowUps{$Tn},
+                Queues        => \%Queues,
+                QueueID       => $Param{QueueID},
+                SkipTicketIDs => \%SkipTicketIDHash
+            );
+            if ( @Result ) {
+                push (@Return, \@Result);
+            }
+        }
+
+        # create ticket in PostmasterDefaultQueue no new ticket created, no follow up added
+        if ( !scalar(@Return) ) {
+
+            if ( $Param{Queue} && !$Param{QueueID} ) {
+
+                # queue lookup if queue name is given
+                $Param{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                    Queue => $Param{Queue},
+                );
+            }
+
+            # get queue if of From: and To:
+            if ( !$Param{QueueID} ) {
+                $Param{QueueID} = $Self->{DestQueueObject}->GetQueueID( Params => $GetParam );
             }
 
             # check if trusted returns a new queue id
@@ -323,110 +406,20 @@ sub Run {
                 $Param{QueueID} = $TQueueID;
             }
 
-            # Clean out the old TicketNumber from the subject (see bug#9108).
-            # This avoids false ticket number detection on customer replies.
-            if ( $GetParam->{Subject} ) {
-                $GetParam->{Subject} = $TicketObject->TicketSubjectClean(
-                    TicketNumber => $Tn,
-                    Subject      => $GetParam->{Subject},
+            # create new ticket
+            if ($Param{QueueID}) {
+                my $TicketID = $Self->{NewTicketObject}->Run(
+                    InmailUserID     => $Self->{PostmasterUserID},
+                    GetParam         => $GetParam,
+                    QueueID          => $Param{QueueID},
+                    AutoResponseType => 'auto reply',
                 );
+                return if !$TicketID;
+
+                my @Ret = ( 1, $TicketID );
+                push( @Return, \@Ret );
             }
-
-            $TicketID = $Self->{NewTicketObject}->Run(
-                InmailUserID     => $Self->{PostmasterUserID},
-                GetParam         => $GetParam,
-                QueueID          => $Param{QueueID},
-                Comment          => "Because the old ticket [$Tn] is '$State{Name}'",
-                AutoResponseType => 'auto reply/new ticket',
-                LinkToTicketID   => $TicketID,
-            );
-
-            if ( !$TicketID ) {
-                return;
-            }
-
-            @Return = ( 3, $TicketID );
         }
-
-        # reject follow up
-        elsif ( $FollowUpPossible =~ /reject/i && $State{TypeName} =~ /^(removed|close)/i ) {
-
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'info',
-                Message  => "Follow up for [$Tn] but follow up not possible. Follow up rejected."
-            );
-
-            # send reject mail && and add article to ticket
-            my $Run = $Self->{RejectObject}->Run(
-                TicketID         => $TicketID,
-                InmailUserID     => $Self->{PostmasterUserID},
-                GetParam         => $GetParam,
-                Lock             => $Lock,
-                Tn               => $Tn,
-                Comment          => 'Follow up rejected.',
-                AutoResponseType => 'auto reject',
-            );
-
-            if ( !$Run ) {
-                return;
-            }
-
-            @Return = ( 4, $TicketID );
-        }
-
-        # create normal follow up
-        else {
-
-            my $Run = $Self->{FollowUpObject}->Run(
-                TicketID         => $TicketID,
-                InmailUserID     => $Self->{PostmasterUserID},
-                GetParam         => $GetParam,
-                Lock             => $Lock,
-                Tn               => $Tn,
-                AutoResponseType => 'auto follow up',
-            );
-
-            if ( !$Run ) {
-                return;
-            }
-
-            @Return = ( 2, $TicketID );
-        }
-    }
-
-    # create new ticket
-    else {
-
-        if ( $Param{Queue} && !$Param{QueueID} ) {
-
-            # queue lookup if queue name is given
-            $Param{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
-                Queue => $Param{Queue},
-            );
-        }
-
-        # get queue if of From: and To:
-        if ( !$Param{QueueID} ) {
-            $Param{QueueID} = $Self->{DestQueueObject}->GetQueueID( Params => $GetParam );
-        }
-
-        # check if trusted returns a new queue id
-        my $TQueueID = $Self->{DestQueueObject}->GetTrustedQueueID(
-            Params => $GetParam,
-        );
-        if ($TQueueID) {
-            $Param{QueueID} = $TQueueID;
-        }
-        $TicketID = $Self->{NewTicketObject}->Run(
-            InmailUserID     => $Self->{PostmasterUserID},
-            GetParam         => $GetParam,
-            QueueID          => $Param{QueueID},
-            AutoResponseType => 'auto reply',
-        );
-
-        return if !$TicketID;
-
-        @Return = ( 1, $TicketID );
     }
 
     # run all PostFilterModules (modify email params)
@@ -454,19 +447,24 @@ sub Run {
                 next JOB;
             }
 
-            # modify params
-            my $Run = $FilterObject->Run(
-                TicketID  => $TicketID,
-                GetParam  => $GetParam,
-                JobConfig => $Jobs{$Job},
-            );
+            for my $ReturnVal (@Return) {
+                next if !$ReturnVal || ref($ReturnVal) ne 'ARRAY' || scalar( @{$ReturnVal} ) != 2;
+                my $TicketID = $ReturnVal->[1];
 
-            if ( !$Run ) {
-                $Kernel::OM->Get('Kernel::System::Log')->Log(
-                    Priority => 'error',
-                    Message =>
-                        "Execute Run() of PostFilterModule $Jobs{$Job}->{Module} not successfully!",
+                # modify params
+                my $Run = $FilterObject->Run(
+                    TicketID  => $TicketID,
+                    GetParam  => $GetParam,
+                    JobConfig => $Jobs{$Job},
                 );
+
+                if ( !$Run ) {
+                    $Kernel::OM->Get('Kernel::System::Log')->Log(
+                        Priority => 'error',
+                        Message =>
+                            "Execute Run() of PostFilterModule $Jobs{$Job}->{Module} not successfully!",
+                    );
+                }
             }
         }
     }
@@ -493,6 +491,9 @@ sub CheckFollowUp {
     # get config objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
+    # build Result hash with TicketNumber => TicketID pairs
+    my %Result = ();
+
     # Load CheckFollowUp Modules
     my $Jobs = $ConfigObject->Get('PostMaster::CheckFollowUpModule');
 
@@ -515,20 +516,37 @@ sub CheckFollowUp {
                 );
                 next JOB;
             }
-            my $TicketID = $CheckObject->Run(%Param);
-            if ($TicketID) {
-                my %Ticket = $TicketObject->TicketGet(
-                    TicketID      => $TicketID,
-                    DynamicFields => 0,
-                );
-                if (%Ticket) {
-                    return ( $Ticket{TicketNumber}, $TicketID );
+            my $Match = 0;
+            my @TnArray = $CheckObject->Run(%Param);
+            if (@TnArray) {
+                TN:
+                for my $TicketNumber (@TnArray) {
+                    # check if it's a valid ticket number
+                    my $TicketID = $TicketObject->TicketCheckNumber( Tn => $TicketNumber );
+                    next TN if ( !$TicketID );
+
+                    # remember match
+                    $Match = 1;
+
+                    # add ticket to the Result if still not there
+                    if ( !$Result{ $TicketNumber } ) {
+                        $Result{ $TicketNumber } = $TicketID;
+                    }
+                    if ($Jobs->{$Job}->{OnlyFirstMatch}) {
+                        last TN;
+                    }
                 }
+            }
+            if (
+                $Match
+                && $Jobs->{$Job}->{StopAfterMatch}
+            ) {
+                return %Result;
             }
         }
     }
 
-    return;
+    return %Result;
 }
 
 =item GetEmailParams()
@@ -557,6 +575,13 @@ sub GetEmailParams {
             );
         }
         $GetParam{$Param} = $Self->{ParserObject}->GetParam( WHAT => $Param );
+    }
+
+    my $Received = $Self->{ParserObject}->GetParam( WHAT => 'Received' );
+    if ( $Received =~ /.*for\s*<([^>]+)>.*/i ) {
+        $GetParam{'Bcc'} = $Self->{ParserObject}->GetEmailAddress(
+            Email => $1,
+        );
     }
 
     # set compat. headers
@@ -647,10 +672,189 @@ sub GetEmailParams {
     return \%GetParam;
 }
 
+sub _HandlePossibleFollowUp {
+    my ( $Self, %Param ) = @_;
+
+    # get needed object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # skip followup if ticket already has message
+    if (
+        $Param{SkipTicketIDs}
+        && ref( $Param{SkipTicketIDs} ) eq 'HASH'
+        && $Param{SkipTicketIDs}->{ $Param{TicketID} }
+    ) {
+        return (6, $Param{TicketID});
+    }
+
+    # check if it's a follow up ...
+    if ( ref $ConfigObject->Get('PostMaster::PreCreateFilterModule') eq 'HASH' ) {
+
+        my %Jobs = %{ $ConfigObject->Get('PostMaster::PreCreateFilterModule') };
+
+        my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
+
+        JOB:
+        for my $Job ( sort keys %Jobs ) {
+
+            return if !$MainObject->Require( $Jobs{$Job}->{Module} );
+
+            my $FilterObject = $Jobs{$Job}->{Module}->new(
+                %{$Self},
+            );
+
+            if ( !$FilterObject ) {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "new() of PreCreateFilterModule $Jobs{$Job}->{Module} not successfully!",
+                );
+                next JOB;
+            }
+
+            # modify params
+            my $Run = $FilterObject->Run(
+                GetParam  => $Param{GetParam},
+                JobConfig => $Jobs{$Job},
+                TicketID  => $Param{TicketID},
+            );
+            if ( !$Run ) {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message =>
+                        "Execute Run() of PreCreateFilterModule $Jobs{$Job}->{Module} not successfully!",
+                );
+            }
+        }
+    }
+
+    # check if it's a follow up ...
+    if ( $Param{TicketNumber} && $Param{TicketID} ) {
+
+        # get ticket data
+        my %Ticket = $TicketObject->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 0,
+        );
+
+        if ( !$Param{Queues}->{ $Ticket{QueueID} } ) {
+            return;
+        }
+
+        # check if it is possible to do the follow up
+        # get follow up option (possible or not)
+        my $FollowUpPossible = $QueueObject->GetFollowUpOption(
+            QueueID => $Ticket{QueueID},
+        );
+
+        # get lock option (should be the ticket locked - if closed - after the follow up)
+        my $Lock = $QueueObject->GetFollowUpLockOption(
+            QueueID => $Ticket{QueueID},
+        );
+
+        # get state details
+        my %State = $Kernel::OM->Get('Kernel::System::State')->StateGet(
+            ID => $Ticket{StateID},
+        );
+
+        # create a new ticket
+        if ( $FollowUpPossible =~ /new ticket/i && $State{TypeName} =~ /^(removed|close)/i ) {
+
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'info',
+                Message  => "Follow up for [$Param{TicketNumber}] but follow up not possible ($Ticket{State})."
+                    . " Create new ticket."
+            );
+
+            # send mail && create new article
+            # get queue if of From: and To:
+            if ( !$Param{QueueID} ) {
+                $Param{QueueID} = $Self->{DestQueueObject}->GetQueueID(
+                    Params => $Param{GetParam},
+                );
+            }
+
+            # check if trusted returns a new queue id
+            my $TQueueID = $Self->{DestQueueObject}->GetTrustedQueueID(
+                Params => $Param{GetParam},
+            );
+            if ($TQueueID) {
+                $Param{QueueID} = $TQueueID;
+            }
+
+            # Clean out the old TicketNumber from the subject (see bug#9108).
+            # This avoids false ticket number detection on customer replies.
+            if ( $Param{GetParam}->{Subject} ) {
+                $Param{GetParam}->{Subject} = $TicketObject->TicketSubjectClean(
+                    TicketNumber => $Param{TicketNumber},
+                    Subject      => $Param{GetParam}->{Subject},
+                );
+            }
+
+            $Param{TicketID} = $Self->{NewTicketObject}->Run(
+                InmailUserID     => $Self->{PostmasterUserID},
+                GetParam         => $Param{GetParam},
+                QueueID          => $Param{QueueID},
+                Comment          => "Because the old ticket [$Param{TicketNumber}] is '$State{Name}'",
+                AutoResponseType => 'auto reply/new ticket',
+                LinkToTicketID   => $Param{TicketID},
+            );
+
+            if ( !$Param{TicketID} ) {
+                return;
+            }
+
+            return ( 3, $Param{TicketID} );
+        }
+
+        # reject follow up
+        elsif ( $FollowUpPossible =~ /reject/i && $State{TypeName} =~ /^(removed|close)/i ) {
+
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'info',
+                Message  => "Follow up for [$Param{TicketNumber}] but follow up not possible. Follow up rejected."
+            );
+
+            # send reject mail && and add article to ticket
+            my $Run = $Self->{RejectObject}->Run(
+                TicketID         => $Param{TicketID},
+                InmailUserID     => $Self->{PostmasterUserID},
+                GetParam         => $Param{GetParam},
+                Lock             => $Lock,
+                Tn               => $Param{TicketNumber},
+                Comment          => 'Follow up rejected.',
+                AutoResponseType => 'auto reject',
+            );
+
+            if ( !$Run ) {
+                return;
+            }
+
+            return ( 4, $Param{TicketID} );
+        } else  {
+
+            my $Run = $Self->{FollowUpObject}->Run(
+                TicketID         => $Param{TicketID},
+                InmailUserID     => $Self->{PostmasterUserID},
+                GetParam         => $Param{GetParam},
+                Lock             => $Lock,
+                Tn               => $Param{TicketNumber},
+                AutoResponseType => 'auto follow up',
+            );
+
+            if ( !$Run ) {
+                return;
+            }
+
+            return ( 2, $Param{TicketID} );
+        }
+    }
+
+    return;
+}
+
 1;
-
-
-
 
 =back
 

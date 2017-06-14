@@ -35,21 +35,12 @@ sub Run {
 
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-    my $Tn = $TicketObject->GetTNByString( $Self->{ParserObject}->GetPlainEmail() );
-    return if !$Tn;
+    my @Result = $TicketObject->GetTNByString( $Self->{ParserObject}->GetPlainEmail() );
 
-    my $TicketID = $TicketObject->TicketCheckNumber( Tn => $Tn );
-
-    if ($TicketID) {
-        return $TicketID;
-    }
-
-    return;
+    return @Result;
 }
 
 1;
-
-
 
 =back
 

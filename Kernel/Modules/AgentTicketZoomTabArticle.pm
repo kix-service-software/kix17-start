@@ -3393,14 +3393,20 @@ sub _ArticleMenu {
                     Mode => 'Standalone',
                 );
                 my @Addresses = $EmailParser->SplitAddressLine( Line => $Recipients );
+                my %SystemAddress = $Kernel::OM->Get('Kernel::System::Queue')->GetSystemAddress(
+                    QueueID => $Ticket{QueueID},
+                );
                 ADDRESS:
                 for my $Address (@Addresses) {
                     my $Email = $EmailParser->GetEmailAddress( Email => $Address );
                     next ADDRESS if !$Email;
+                    next ADDRESS if ( lc( $Email ) eq lc( $SystemAddress{Email} ) );
+                    if ($ConfigObject->Get('CheckEmailInternalAddress')) {
                         my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
-                        Address => $Email,
-                    );
-                    next ADDRESS if $IsLocal;
+                            Address => $Email,
+                        );
+                        next ADDRESS if $IsLocal;
+                    }
                     $RecipientCount++;
                 }
             }

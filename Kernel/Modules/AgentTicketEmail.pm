@@ -1594,11 +1594,13 @@ sub Run {
                     $Error{ $Parameter . 'Invalid' } = 'ServerError';
                 }
 
-                my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
-                    Address => $Email->address()
-                );
-                if ($IsLocal) {
-                    $Error{ $Parameter . 'IsLocalAddress' } = 'ServerError';
+                if ($ConfigObject->Get('CheckEmailInternalAddress')) {
+                    my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
+                        Address => $Email->address()
+                    );
+                    if ($IsLocal) {
+                        $Error{ $Parameter . 'IsLocalAddress' } = 'ServerError';
+                    }
                 }
             }
         }
