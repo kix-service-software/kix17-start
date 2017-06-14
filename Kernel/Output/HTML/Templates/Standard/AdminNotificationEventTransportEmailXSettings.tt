@@ -30,6 +30,14 @@
 <div class="Clear"></div>
 [% RenderBlockEnd("EmailXDynamicField") %]
 
+[% RenderBlockStart("EmailDFAttachmentDynamicField") %]
+<label for="RecipientAttachmentDF">[% Translate("DynamicFields") | html %] [% Translate("Attachments") | html %]: </label>
+<div class="Field">
+    [% Data.RecipientAttachmentDFStrg %]
+</div>
+<div class="Clear"></div>
+[% RenderBlockEnd("EmailDFAttachmentDynamicField") %]
+
 <label for="RecipientSubject">[% Translate("Subject") | html %]: </label>
 <div class="Field">
     [% Data.RecipientSubjectStrg %]

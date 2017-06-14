@@ -3189,6 +3189,17 @@
             <String Regex="" Translatable="1">agent</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketPhoneOutbound###CallContact" Required="0" Valid="1">
+        <Description Translatable="1">Defines if the call contact could be set in the ticket phone outbound screen of the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewPhoneOutbound</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketPhoneOutbound###Subject" Required="1" Valid="1">
         <Description Translatable="1">Defines the default subject for phone tickets in the ticket phone outbound screen of the agent interface.</Description>
         <Group>Ticket</Group>
@@ -3276,6 +3287,17 @@
         <SubGroup>Frontend::Agent::Ticket::ViewPhoneInbound</SubGroup>
         <Setting>
             <String Regex="">customer</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketPhoneInbound###CallContact" Required="0" Valid="1">
+        <Description Translatable="1">Defines if the call contact could be set in the ticket phone inbound screen of the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewPhoneInbound</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketPhoneInbound###Subject" Required="1" Valid="1">
@@ -8483,6 +8505,7 @@
                 <Title Translatable="1">Phone-Ticket</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
+                    <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
                     <JavaScript>Core.Agent.TicketAction.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -8498,6 +8521,7 @@
                 <Title Translatable="1">Phone-Ticket</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
+                    <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
                     <JavaScript>Core.Agent.TicketAction.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -13036,7 +13060,43 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
-            <String Regex="">note</String>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupEdit" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupCopy" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupMove" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###PermissionGroupDelete" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to edit articles.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
+        <Setting>
+            <Array>
+            </Array>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###RequiredLock" Required="1" Valid="1">
@@ -13072,7 +13132,7 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ArticleEdit</SubGroup>
         <Setting>
-            <String Regex="">note-internal,note-external,note-report,phone,email-internal,email-external</String>
+            <String Regex="">note-internal,note-external,note-report,phone</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentArticleEdit###OnlyResponsible" Required="0" Valid="1">
