@@ -3,16 +3,17 @@
 * $Id$
 
 #17.1.0 (2017/06/??)
+ * (2017/06/14) - CR: T2017032490000482 (Implemented handling of internal emails and multiple ticket followups) (millinger)
  * (2017/06/14) - Bugfix: T2017061490000727 (AgentTicketEmailOutbound did not check local email without dynamic field) (millinger)
  * (2017/06/12) - CR: T2017051690000949 (Agent-, Customer-, PublicTicketZoom changed html header title) (uboehm)
  * (2017/06/08) - Bugfix: T2014112690000629 (fixed ci image scaling and size) (uboehm)
  * (2017/06/07) - CR: T2017032490000491 (possibility to set caller/callee in AgentTicketPhone(Out/In)bound) (rkaiser)
- * (2017/06/02) - CR: T2017031090000543 (add separated rights management for edit options) (ddoerffel) 
- * (2017/06/02) - CR: T2017042090000648 (article edit for all tickets) (ddoerffel) 
- * (2017/06/02) - Bugfix: T2017060290000741 (typo in Ticket::Frontend::AgentTicketZoomTabArticle###ArticleEmailActions) (ddoerffel) 
- * (2017/06/02) - Bugfix: T2017060190000742 (old AgentArticleCopyMove content removed) (ddoerffel) 
- * (2017/05/29) - Bugfix: T2017051890000696 (corrected quoting in SidebarTools) (millinger) 
- * (2017/05/23) - CR: T2017013190000883 (Implemented handling of DynamicField Attachment for NotificationEvent) (millinger) 
+ * (2017/06/02) - CR: T2017031090000543 (add separated rights management for edit options) (ddoerffel)
+ * (2017/06/02) - CR: T2017042090000648 (article edit for all tickets) (ddoerffel)
+ * (2017/06/02) - Bugfix: T2017060290000741 (typo in Ticket::Frontend::AgentTicketZoomTabArticle###ArticleEmailActions) (ddoerffel)
+ * (2017/06/02) - Bugfix: T2017060190000742 (old AgentArticleCopyMove content removed) (ddoerffel)
+ * (2017/05/29) - Bugfix: T2017051890000696 (corrected quoting in SidebarTools) (millinger)
+ * (2017/05/23) - CR: T2017013190000883 (Implemented handling of DynamicField Attachment for NotificationEvent) (millinger)
 
 #17.0.1 (2017/05/29)
  * (2017/05/23) - Bugfix: T2017051990000685 (<span> added to customer ticket zoom sidebar info for responsible and owner) (ddoerffel)

@@ -472,11 +472,13 @@ sub Run {
                     $Error{ $Line . 'ErrorType' } = $Line . $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
                     $Error{ $Line . 'Invalid' }   = 'ServerError';
                 }
-                my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
-                    Address => $Email->address()
-                );
-                if ($IsLocal) {
-                    $Error{ $Line . 'IsLocalAddress' } = 'ServerError';
+                if ($ConfigObject->Get('CheckEmailInternalAddress')) {
+                    my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
+                        Address => $Email->address()
+                    );
+                    if ($IsLocal) {
+                        $Error{ $Line . 'IsLocalAddress' } = 'ServerError';
+                    }
                 }
             }
         }
@@ -1383,7 +1385,10 @@ sub Run {
                 my $IsLocal = $SystemAddress->SystemAddressIsLocalAddress(
                     Address => $Email->address(),
                 );
-                if ( !$IsLocal ) {
+                if (
+                    !$ConfigObject->Get('CheckEmailInternalAddress')
+                    || !$IsLocal
+                ) {
                     my $To = $Data{To};
                     $Data{From}    = $To;
                     $Data{To}      = $Data{From};
@@ -1542,16 +1547,37 @@ sub Run {
         # my $SystemAddress = $Kernel::OM->Get('Kernel::System::SystemAddress');
         # EO KIX4OTRS
 
+        my %SystemAddress = $Kernel::OM->Get('Kernel::System::Queue')->GetSystemAddress(
+            QueueID => $Ticket{QueueID},
+        );
+        # remove queue address from Cc and Bcc
+        for my $Entry ( qw( Cc Bcc ) ) {
+            my $NewData = '';
+            for my $Email ( Mail::Address->parse( $Data{ $Entry } ) ) {
+                next if ( lc( $Email->address() ) eq lc( $SystemAddress{Email} ) );
+                if ( $NewData ) {
+                    $NewData .= ', ';
+                }
+                $NewData .= $Email->format();
+            }
+            $Data{ $Entry } = $NewData;
+        }
+
         # add not local To addresses to Cc
         for my $Email ( Mail::Address->parse( $Data{To} ) ) {
-            my $IsLocal = $SystemAddress->SystemAddressIsLocalAddress(
-                Address => $Email->address(),
-            );
-            if ( !$IsLocal ) {
-                if ( $Data{Cc} ) {
-                    $Data{Cc} .= ', ';
+            if ( lc( $Email->address() ) ne lc( $SystemAddress{Email} ) ) {
+                my $IsLocal = $SystemAddress->SystemAddressIsLocalAddress(
+                    Address => $Email->address(),
+                );
+                if (
+                    !$ConfigObject->Get('CheckEmailInternalAddress')
+                    || !$IsLocal
+                ) {
+                    if ( $Data{Cc} ) {
+                        $Data{Cc} .= ', ';
+                    }
+                    $Data{Cc} .= $Email->format();
                 }
-                $Data{Cc} .= $Email->format();
             }
         }
 
@@ -1657,7 +1683,10 @@ sub Run {
                         my $IsLocal = $SystemAddress->SystemAddressIsLocalAddress(
                             Address => $Address,
                         );
-                        if ( !$IsLocal ) {
+                        if (
+                            !$ConfigObject->Get('CheckEmailInternalAddress')
+                            || !$IsLocal
+                        ) {
                             if ($NewLine) {
                                 $NewLine .= ', ';
                             }

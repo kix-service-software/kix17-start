@@ -33,16 +33,12 @@ sub Run {
 
     my $Subject = $Param{GetParam}->{Subject} || '';
 
-    my $Tn = $TicketObject->GetTNByString($Subject);
-    return if !$Tn;
+    my @Result = $TicketObject->GetTNArrayByString( $Subject );
 
-    my $TicketID = $TicketObject->TicketCheckNumber( Tn => $Tn );
-    return $TicketID;
+    return @Result;
 }
 
 1;
-
-
 
 =back
 

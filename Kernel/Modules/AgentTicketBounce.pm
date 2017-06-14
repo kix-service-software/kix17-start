@@ -347,8 +347,12 @@ $Param{Signature}";
 
         for my $Email ( Mail::Address->parse( $Param{BounceTo} ) ) {
             my $Address = $Email->address();
-            if ( $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress( Address => $Address ) )
-            {
+            if (
+                $ConfigObject->Get('CheckEmailInternalAddress')
+                && $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
+                    Address => $Address
+                )
+            ) {
                 $LayoutObject->Block( Name => 'BounceToCustomerGenericServerErrorMsg' );
                 $Error{'BounceToInvalid'} = 'ServerError';
             }
