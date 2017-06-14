@@ -364,6 +364,42 @@ sub Run {
                 }
             }
         }
+
+        # create ticket in PostmasterDefaultQueue no new ticket created, no follow up added
+        if ( !scalar(@Return) ) {
+
+            if ( $Param{Queue} && !$Param{QueueID} ) {
+
+                # queue lookup if queue name is given
+                $Param{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+                    Queue => $Param{Queue},
+                );
+            }
+
+            # get queue if of From: and To:
+            if ( !$Param{QueueID} ) {
+                $Param{QueueID} = $Self->{DestQueueObject}->GetQueueID( Params => $GetParam );
+            }
+
+            # check if trusted returns a new queue id
+            my $TQueueID = $Self->{DestQueueObject}->GetTrustedQueueID(
+                Params => $GetParam,
+            );
+            if ($TQueueID) {
+                $Param{QueueID} = $TQueueID;
+            }
+            my $TicketID = $Self->{NewTicketObject}->Run(
+                InmailUserID     => $Self->{PostmasterUserID},
+                GetParam         => $GetParam,
+                QueueID          => $Param{QueueID},
+                AutoResponseType => 'auto reply',
+            );
+
+            return if !$TicketID;
+
+            my @Ret = ( 1, $TicketID );
+            push( @Return, \@Ret );
+        }
     } else {
         my %Queues = $QueueObject->QueueList( Valid => 1 );
 
@@ -680,15 +716,6 @@ sub _HandlePossibleFollowUp {
     my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-    # skip followup if ticket already has message
-    if (
-        $Param{SkipTicketIDs}
-        && ref( $Param{SkipTicketIDs} ) eq 'HASH'
-        && $Param{SkipTicketIDs}->{ $Param{TicketID} }
-    ) {
-        return (6, $Param{TicketID});
-    }
-
     # check if it's a follow up ...
     if ( ref $ConfigObject->Get('PostMaster::PreCreateFilterModule') eq 'HASH' ) {
 
@@ -740,6 +767,15 @@ sub _HandlePossibleFollowUp {
 
         if ( !$Param{Queues}->{ $Ticket{QueueID} } ) {
             return;
+        }
+
+        # skip followup if ticket already has message
+        if (
+            $Param{SkipTicketIDs}
+            && ref( $Param{SkipTicketIDs} ) eq 'HASH'
+            && $Param{SkipTicketIDs}->{ $Param{TicketID} }
+        ) {
+            return (6, $Param{TicketID});
         }
 
         # check if it is possible to do the follow up
