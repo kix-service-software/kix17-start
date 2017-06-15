@@ -419,6 +419,7 @@ sub _NotificationFilter {
         next KEY if $Key eq 'NotificationArticleTypeID';
         next KEY if $Key eq 'Transports';
         next KEY if $Key eq 'OncePerDay';
+        next KEY if $Key eq 'MarkAsSeenForAgents';
         next KEY if $Key eq 'VisibleForAgent';
         next KEY if $Key eq 'VisibleForAgentTooltip';
         next KEY if $Key eq 'LanguageID';
@@ -1184,8 +1185,6 @@ sub _ArticleToUpdate {
 }
 
 1;
-
-
 
 =back
 
