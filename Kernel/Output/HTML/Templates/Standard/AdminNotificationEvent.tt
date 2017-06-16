@@ -435,6 +435,13 @@ $('.NotificationDelete').bind('click', function (Event) {
                         </div>
                         <div class="Clear"></div>
 
+                        <label for="MarkAsSeenForAgents">[% Translate("Mark notification as seen") | html %]: </label>
+                        <div class="Field">
+                            <input type="checkbox" name="MarkAsSeenForAgents" id="MarkAsSeenForAgents" value="1" [% Data.MarkAsSeenForAgentsChecked %] />
+                            [% Translate("The new email notification article to customers will already be marked as seen for agents.") | html %]
+                        </div>
+                        <div class="Clear"></div>
+
                     </fieldset>
                 </div>
             </div>

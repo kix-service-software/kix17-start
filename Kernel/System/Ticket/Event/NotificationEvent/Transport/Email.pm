@@ -455,6 +455,19 @@ sub SendNotification {
             return;
         }
 
+        # if required mark new article as seen for all users
+        if ( $Param{Notification}->{Data}->{MarkAsSeenForAgents} ) {
+            my %UserList = $Kernel::OM->Get('Kernel::System::User')->UserList();
+            for my $UserID ( keys %UserList ) {
+                $TicketObject->ArticleFlagSet(
+                    ArticleID => $ArticleID,
+                    Key       => 'Seen',
+                    Value     => 1,
+                    UserID    => $UserID,
+                );
+            }
+        }
+
         # log event
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'info',

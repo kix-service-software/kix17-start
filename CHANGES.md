@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.0 (2017/06/??)
+ * (2017/06/15) - CR: T2017011290000436 (new article for customer notification events can be marked as seen for all agents by default) (rkaiser)
  * (2017/06/14) - CR: T2017032490000482 (Implemented handling of internal emails and multiple ticket followups) (millinger)
  * (2017/06/14) - Bugfix: T2017061490000727 (AgentTicketEmailOutbound did not check local email without dynamic field) (millinger)
  * (2017/06/12) - CR: T2017051690000949 (Agent-, Customer-, PublicTicketZoom changed html header title) (uboehm)
