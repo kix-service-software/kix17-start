@@ -58,7 +58,10 @@ sub Run {
 
     my %ExistingTicket;
     if ( $Param{TicketID} ) {
-        %ExistingTicket = $Self->{TicketObject}->TicketGet( TicketID => $Param{TicketID} )
+        %ExistingTicket = $Self->{TicketObject}->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 1
+        )
     }
 
     my %FilterKeys = %{ $Self->{Config}->{Identifier} };
