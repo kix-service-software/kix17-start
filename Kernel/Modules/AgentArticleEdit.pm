@@ -912,8 +912,15 @@ sub Run {
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'ArticleCopy' || $Self->{Subaction} eq 'ArticleMove' ) {
 
-        for (qw(NewTicketNumber TimeUnits TimeUnitsOriginal)) {
+        for (qw(NewTicketNumber NewTicketNumberArticleMove NewTicketNumberArticleCopy TimeUnits TimeUnitsOriginal)) {
             $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
+        }
+
+        if ( $GetParam{NewTicketNumberArticleMove} ) {
+            $GetParam{NewTicketNumber} = $GetParam{NewTicketNumberArticleMove};
+        }
+        elsif ( $GetParam{NewTicketNumberArticleCopy} ) {
+            $GetParam{NewTicketNumber} = $GetParam{NewTicketNumberArticleCopy};
         }
 
         my $NewTicketID = $GetParam{TicketID};

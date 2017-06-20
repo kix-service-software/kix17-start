@@ -196,17 +196,17 @@
                         <div class="Value">
 # KIX4OTRS-capeIT
 #                        <input type="text" name="NewTicketNumber" value="[% Data.NewTicketNumber | html %]" class="W20pc [% Data.NewTicketNumberInvalid | html %]"/>
-                        <input id="NewTicketNumber" type="hidden" name="NewTicketNumber" value=""/>
-                        <input id="NewTicketNumberAutoComplete" type="text" name="NewTicketNumberAutoComplete" value="" class="AutocompleteOff"/>
-                            <div id="NewTicketNumberError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
-                            <div id="NewTicketNumberServerError" class="TooltipErrorMessage"><p>[% Translate("Invalid ticket number!") | html %]</p></div>
+                        <input id="NewTicketNumber[% Data.WidgetClass | html %]" type="hidden" name="NewTicketNumber" value=""/>
+                        <input id="NewTicketNumber[% Data.WidgetClass | html %]AutoComplete" type="text" name="NewTicketNumberAutoComplete" value="" class="AutocompleteOff"/>
+                            <div id="NewTicketNumber[% Data.WidgetClass | html %]Error" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="NewTicketNumber[% Data.WidgetClass | html %]ServerError" class="TooltipErrorMessage"><p>[% Translate("Invalid ticket number!") | html %]</p></div>
                         <img src="[% Config("Frontend::ImagePath") %]loader.gif" border="2" alt="[% Translate("Loading") | html %]" class="Hidden" id="QuickLinkLoading"/>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Config.Set("GenericAutoCompleteSearch.MinQueryLength", 3);
     Core.Config.Set("GenericAutoCompleteSearch.QueryDelay", 200);
     Core.Config.Set("GenericAutoCompleteSearch.MaxResultsDisplayed", 20);
-    Core.KIX4OTRS.GenericAutoCompleteSearch.Init($("#NewTicketNumberAutoComplete"),$("#NewTicketNumber"));
+    Core.KIX4OTRS.GenericAutoCompleteSearch.Init($("#NewTicketNumber[% Data.WidgetClass | html %]AutoComplete"),$("#NewTicketNumber[% Data.WidgetClass | html %]"));
 //]]></script>
 [% END %]
 # EO KIX4OTRS-capeIT
@@ -308,7 +308,8 @@
         }
         else if ( Action == 'ArticleMove' || Action == 'ArticleCopy' ) {
             $('#DeletedConfirm').removeClass('Validate_Required');
-            $('input[name="NewTicketNumberAutoComplete"]').not('.'+Action+' input').attr('disabled','disabled');
+            $('input[name^="NewTicketNumber"]').removeAttr('disabled');
+            $('input[name^="NewTicketNumber"]').not('.'+Action+' input').attr('disabled','disabled');
             $(this).find('ArticleMove#NewTicketNumberAutoComplete').addClass('Validate_Required');
         }
         else if ( Action == 'ArticleDelete' ) {
