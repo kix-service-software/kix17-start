@@ -79,7 +79,7 @@ Core.KIX4OTRS.GenericAutoCompleteSearch = (function(TargetNS) {
                         Subaction = 'SearchTicketID';
                     }
 
-                    else if (ElementID === 'NewTicketNumber') {
+                    else if (ElementID === 'NewTicketNumberArticleCopy' || ElementID === 'NewTicketNumberArticleMove') {
                         Action = 'AgentArticleEdit';
                         Subaction = 'SearchTicketID';
                     }
