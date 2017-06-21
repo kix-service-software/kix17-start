@@ -4381,6 +4381,11 @@ sub Data {
     $Lang->{'Defines if the call contact could be set in the ticket phone inbound screen of the agent interface.'}
         = 'Bestimmt, ob Telefonanruf-Kontakte im Dialog "Eingehender Telefonanruf" im Agenten-Frontend gesetzt werden können.';
 
+    $Lang->{'Mark notification as seen'}
+        = 'Benachrichtigung als gesehen markieren';
+    $Lang->{'The new email notification article to customers will already be marked as seen for agents.'}
+        = 'Der neue E-Mail-Benachrichtigungs-Artikel an Kunden wird für Agenten schon als gesehen markiert.';
+
     return 0;
 }
 

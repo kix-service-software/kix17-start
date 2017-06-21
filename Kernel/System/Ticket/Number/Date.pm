@@ -154,9 +154,43 @@ sub GetTNByString {
     return;
 }
 
+sub GetTNArrayByString {
+    my ( $Self, $String ) = @_;
+
+    if ( !$String ) {
+        return;
+    }
+
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    # get needed config options
+    my $CheckSystemID = $ConfigObject->Get('Ticket::NumberGenerator::CheckSystemID');
+    my $SystemID      = '';
+
+    if ($CheckSystemID) {
+        $SystemID = $ConfigObject->Get('SystemID');
+    }
+
+    my $TicketHook        = $ConfigObject->Get('Ticket::Hook');
+    my $TicketHookDivider = $ConfigObject->Get('Ticket::HookDivider');
+
+    # check current setting
+    if ( $String =~ /\Q$TicketHook$TicketHookDivider\E(\d{8}$SystemID\d{1,40})/i ) {
+        my @Result = ( $String =~ /\Q$TicketHook$TicketHookDivider\E(\d{8}$SystemID\d{1,40})/ig );
+        return @Result;
+    }
+
+    # check default setting
+    if ( $String =~ /\Q$TicketHook\E:\s{0,2}(\d{8}$SystemID\d{1,40})/i ) {
+        my @Result = ( $String =~ /\Q$TicketHook\E:\s{0,2}(\d{8}$SystemID\d{1,40})/ig );
+        return @Result;
+    }
+
+    return;
+}
+
 1;
-
-
 
 =back
 

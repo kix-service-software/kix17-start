@@ -1117,12 +1117,14 @@ sub SendEmail {
                     = $Line . $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
                 $Error{ "$Line" . "Invalid" } = 'ServerError';
             }
-            my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')
-                ->SystemAddressIsLocalAddress(
-                Address => $Email->address()
+
+            if ($ConfigObject->Get('CheckEmailInternalAddress')) {
+                my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
+                    Address => $Email->address()
                 );
-            if ($IsLocal) {
-                $Error{ "$Line" . 'IsLocalAddress' } = 'ServerError';
+                if ($IsLocal) {
+                    $Error{ "$Line" . 'IsLocalAddress' } = 'ServerError';
+                }
             }
         }
     }

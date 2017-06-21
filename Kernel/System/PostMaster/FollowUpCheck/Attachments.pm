@@ -39,25 +39,21 @@ sub Run {
     my @Attachments = $Self->{ParserObject}->GetAttachments();
     @Attachments = grep { defined $_->{ContentDisposition} && $_->{ContentDisposition} ne 'inline' } @Attachments;
 
+    my @Result = ();
+
     ATTACHMENT:
     for my $Attachment (@Attachments) {
 
-        my $Tn = $TicketObject->GetTNByString( $Attachment->{Content} );
-        next ATTACHMENT if !$Tn;
-
-        my $TicketID = $TicketObject->TicketCheckNumber( Tn => $Tn );
-
-        if ($TicketID) {
-            return $TicketID;
+        my @TnArray = $TicketObject->GetTNArrayByString( $Attachment->{Content} );
+        if (@TnArray) {
+            push (@Result, @TnArray);
         }
     }
 
-    return;
+    return @Result;
 }
 
 1;
-
-
 
 =back
 
