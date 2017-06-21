@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.0 (2017/06/??)
+ * (2017/06/21) - Bugfix: T2017052990003305 (show pin for fixed value only on selections or multiselections) (ddoerffel)
  * (2017/06/14) - Bugfix: T2017061490000727 (AgentTicketEmailOutbound did not check local email without dynamic field) (millinger)
  * (2017/06/12) - CR: T2017051690000949 (Agent-, Customer-, PublicTicketZoom changed html header title) (uboehm)
  * (2017/06/08) - Bugfix: T2014112690000629 (fixed ci image scaling and size) (uboehm)
