@@ -229,4 +229,11 @@ textarea {
     opacity: 0.8;
 }
 
+h2.HorizontalLine {
+    border-bottom: 1px solid #82c826;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 8px 4px;
+}
+
 } /* end @media */
