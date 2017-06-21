@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.0 (2017/06/??)
+ * (2017/06/21) - Bugfix: T2017052990003305 (show pin for fixed value only on selections or multiselections) (ddoerffel)
  * (2017/06/20) - Bugfix: T2017060890000793 (PostMaster ExtendedFollowUp overwrites existing reference) (millinger)
  * (2017/06/20) - Bugfix: T2017061290000892 (article move does not work) (ddoerffel)
  * (2017/06/14) - Bugfix: T2017061490000727 (AgentTicketEmailOutbound did not check local email without dynamic field) (millinger)
