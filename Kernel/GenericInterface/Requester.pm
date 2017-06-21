@@ -295,6 +295,10 @@ sub Run {
         my $Response = $InvokerObject->HandleResponse(
             ResponseSuccess      => 0,
             ResponseErrorMessage => $FunctionResult->{ErrorMessage},
+            
+            # KIXPro-capeIT  
+            ResponseOriginal => $Param{Data} || '',
+            # EO KIXPro-capeIT        
         );
 
         if ($IsAsynchronousCall) {
@@ -427,9 +431,6 @@ sub Run {
 }
 
 1;
-
-
-
 
 =back
 
