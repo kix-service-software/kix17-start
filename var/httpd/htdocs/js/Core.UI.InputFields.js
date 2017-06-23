@@ -1262,6 +1262,8 @@ Core.UI.InputFields = (function (TargetNS) {
                             .css({
                                 left: $InputContainerObj.offset().left
                             });
+                        
+                        var HeaderHeight = $('#Header').height();
 
                         // decide wether list should be positioned on top or at the bottom of the input field
                         if (AvailableHeightTop > AvailableHeightBottom) {
@@ -1272,12 +1274,17 @@ Core.UI.InputFields = (function (TargetNS) {
                             $SearchObj.removeClass('ExpandToBottom')
                                 .addClass('ExpandToTop');
 
+                            var bottomPos = parseInt($('body').height() - $InputContainerObj.offset().top, 10);
+                            if (!$('body').hasClass('Visible-ScreenXL') && HeaderHeight) {
+                                bottomPos += HeaderHeight;
+                            }
+
                             $ListContainerObj
                                 .removeClass('ExpandToBottom')
                                 .addClass('ExpandToTop')
                                 .css({
                                     top: 'auto',
-                                    bottom: parseInt($('body').height() - $InputContainerObj.offset().top, 10)
+                                    bottom: bottomPos
                                 });
                         }
                         else {
@@ -1286,11 +1293,16 @@ Core.UI.InputFields = (function (TargetNS) {
                             $SearchObj.removeClass('ExpandToTop')
                                 .addClass('ExpandToBottom');
 
+                            var topPos = parseInt($InputContainerObj.offset().top + $InputContainerObj.outerHeight(), 10);
+                            if (!$('body').hasClass('Visible-ScreenXL') && HeaderHeight) {
+                                topPos -= HeaderHeight;
+                            }
+
                             $ListContainerObj
                                 .removeClass('ExpandToTop')
                                 .addClass('ExpandToBottom')
                                 .css({
-                                    top: parseInt($InputContainerObj.offset().top + $InputContainerObj.outerHeight(), 10),
+                                    top: topPos,
                                     bottom: 'auto'
                                 });
                         }
