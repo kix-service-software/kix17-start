@@ -1539,7 +1539,11 @@ sub _MaskNew {
             . 'Fixed" value="'
             . $Param{ 'DynamicField_' . $DynamicFieldConfig->{Name} . 'Fixed' }
             . '"/>';
-        $DynamicFieldHTML->{Label} =~ s/(<label(.*?)>)/$1$Pin/gi;
+
+        # set pin only on selections
+        if ( $DynamicFieldConfig->{FieldType} =~ /Multiselect|Dropdown/ || $DynamicFieldConfig->{Config}->{DisplayFieldType} =~ /Multiselect|Dropdown/) {
+            $DynamicFieldHTML->{Label} =~ s/(<label(.*?)>)/$1$Pin/gi;
+        }
 
         $LayoutObject->Block(
             Name => 'DynamicField',

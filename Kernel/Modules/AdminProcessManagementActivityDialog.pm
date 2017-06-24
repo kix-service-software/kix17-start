@@ -55,15 +55,25 @@ sub Run {
 
     # create available Fields list
     my $AvailableFieldsList = {
-        Article     => 'Article',
-        State       => 'StateID',
-        Priority    => 'PriorityID',
-        Lock        => 'LockID',
-        Queue       => 'QueueID',
-        CustomerID  => 'CustomerID',
-        Owner       => 'OwnerID',
-        PendingTime => 'PendingTime',
-        Title       => 'Title',
+        Article         => 'Article',
+        State           => 'StateID',
+        Priority        => 'PriorityID',
+        Lock            => 'LockID',
+        Queue           => 'QueueID',
+        CustomerID      => 'CustomerID',
+        Owner           => 'OwnerID',
+        PendingTime     => 'PendingTime',
+        Title           => 'Title',
+        HorizontalLine  => 'horizontalline',
+        HorizontalLine1 => 'horizontalline',
+        HorizontalLine2 => 'horizontalline',
+        HorizontalLine3 => 'horizontalline',
+        HorizontalLine4 => 'horizontalline',
+        HorizontalLine5 => 'horizontalline',
+        HorizontalLine6 => 'horizontalline',
+        HorizontalLine7 => 'horizontalline',
+        HorizontalLine8 => 'horizontalline',
+        HorizontalLine9 => 'horizontalline',
     };
 
     # add service and SLA fields, if option is activated in sysconfig.
@@ -652,15 +662,25 @@ sub _ShowEdit {
 
     # create available Fields list
     my $AvailableFieldsList = {
-        Article     => 'Article',
-        State       => 'StateID',
-        Priority    => 'PriorityID',
-        Lock        => 'LockID',
-        Queue       => 'QueueID',
-        CustomerID  => 'CustomerID',
-        Owner       => 'OwnerID',
-        PendingTime => 'PendingTime',
-        Title       => 'Title',
+        Article         => 'Article',
+        State           => 'StateID',
+        Priority        => 'PriorityID',
+        Lock            => 'LockID',
+        Queue           => 'QueueID',
+        CustomerID      => 'CustomerID',
+        Owner           => 'OwnerID',
+        PendingTime     => 'PendingTime',
+        Title           => 'Title',
+        HorizontalLine  => 'horizontalline',
+        HorizontalLine1 => 'horizontalline',
+        HorizontalLine2 => 'horizontalline',
+        HorizontalLine3 => 'horizontalline',
+        HorizontalLine4 => 'horizontalline',
+        HorizontalLine5 => 'horizontalline',
+        HorizontalLine6 => 'horizontalline',
+        HorizontalLine7 => 'horizontalline',
+        HorizontalLine8 => 'horizontalline',
+        HorizontalLine9 => 'horizontalline',
     };
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -718,7 +738,7 @@ sub _ShowEdit {
 
         # remove used fields from available list
         for my $Field ( sort keys %AssignedFields ) {
-            delete $AvailableFields{$Field};
+            delete $AvailableFields{$Field} if $Field ne 'HorizontalLine';
         }
 
         # sort by translated field names

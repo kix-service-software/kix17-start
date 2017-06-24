@@ -819,12 +819,11 @@ sub Data {
 
     # EO KIX4OTRS_TicketStateWorkflow.xml
 
-    # AgentArticleCopyMove
+    # AgentArticleEdit
     $Lang->{'Edit Article'}                 = 'Artikel ändern';
     $Lang->{'Copy Article'}                 = 'Artikel kopieren';
     $Lang->{'Move Article'}                 = 'Artikel verschieben';
     $Lang->{'Delete Article'}               = 'Artikel löschen';
-    $Lang->{'Copy/Move/Delete'}             = 'Kopieren/Verschieben/löschen';
     $Lang->{'of destination ticket'}        = 'des Zieltickets';
     $Lang->{'You cannot asign more time units as in the source article!'} =
         'Sie können nicht mehr Zeiteinheiten zuweisen, als im Original-Artikel!';
@@ -856,7 +855,7 @@ sub Data {
     $Lang->{'Sorry, you are not a member of allowed groups!'} =
         'Bitte entschuldigen Sie, aber Sie nicht Mitglied der berechtigten Gruppen!';
 
-    # EO AgentArticleCopyMove
+    # EO AgentArticleEdit
 
     # Link person
     $Lang->{'Persons login'}                   = 'Personen-Login';
@@ -916,8 +915,6 @@ sub Data {
     $Lang->{'Last customer article'} = 'Letzter Kunden-Artikel';
     $Lang->{'Defines which ticket data parameters are displayed in direct data presentation.'} =
         'Definiert welche Daten in der Direktdatenanzeige dargestellt werden.';
-    $Lang->{'Frontend module registration for AgentArticleCopyMove.'} =
-        'Frontendmodul-Registrierung von AgentArticleCopyMove.';
     $Lang->{'Defines email-actions allowed for article types.'} =
         'Definiert E-Mail-Aktionen für Artikeltypen.';
 
@@ -4369,12 +4366,30 @@ sub Data {
 
     # $$STOP$$
 
+    $Lang->{'Call contact'}         = 'Telefonanruf-Kontakt';
+    $Lang->{'Call contacts'}        = 'Telefonanruf-Kontakte';
+    $Lang->{'As call contact'}      = 'Als Telefonanrufs-Kontakt festlegen';
+    $Lang->{'As article recipient'} = 'Als Artikel-Empfänger festlegen';
+    $Lang->{'Remove call contact'}  = 'Telefonanruf-Kontakt entfernen';
+    $Lang->{'Set this person as call contact.'} = 'Diese Person als Telefonanruf-Kontakt festlegen.';
+    $Lang->{'Defines for which actions the linked persons could be set as call contacts.'}
+        = 'Legt fest, für welche Actions die verlinkten Personen als Telefonanruf-Kontakte festlegbar sind.';
+    $Lang->{'Dynamic field which is used to save the call contact information.'}
+        = 'Dynamisches Feld, welches verwendet wird, um die Telefonanruf-Kontakte zu sichern.';
+    $Lang->{'Defines if the call contact could be set in the ticket phone outbound screen of the agent interface.'}
+        = 'Bestimmt, ob Telefonanruf-Kontakte im Dialog "Ausgehender Telefonanruf" im Agenten-Frontend gesetzt werden können.';
+    $Lang->{'Defines if the call contact could be set in the ticket phone inbound screen of the agent interface.'}
+        = 'Bestimmt, ob Telefonanruf-Kontakte im Dialog "Eingehender Telefonanruf" im Agenten-Frontend gesetzt werden können.';
+
+    $Lang->{'Mark notification as seen'}
+        = 'Benachrichtigung als gesehen markieren';
+    $Lang->{'The new email notification article to customers will already be marked as seen for agents.'}
+        = 'Der neue E-Mail-Benachrichtigungs-Artikel an Kunden wird für Agenten schon als gesehen markiert.';
+
     return 0;
 }
 
 1;
-
-
 
 =back
 
