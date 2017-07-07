@@ -5335,7 +5335,6 @@ TreeView: '0'
     },
     {
         Key => 'Owner',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbieter'
         Name => 'Assigned owner',
         Searchable => 1,
         Input => {
@@ -5552,7 +5551,6 @@ TreeView: '0'
     },
     {
         Key => 'Owner',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbieter'
         Name => 'Assigned owner',
         Searchable => 1,
         Input => {
@@ -5811,7 +5809,6 @@ TreeView: '0'
     },
     {
         Key => 'Owner',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbieter'
         Name => 'Assigned owner',
         Searchable => 1,
         Input => {
