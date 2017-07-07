@@ -135,7 +135,8 @@ sub new {
 count all records of a config item class
 
     my $Count = $ConfigItemObject->ConfigItemCount(
-        ClassID => 123,
+        ClassID               => 123,
+        IncludePostproductive => 1     # optional, 0 is default
     );
 
 =cut
@@ -153,10 +154,12 @@ sub ConfigItemCount {
     }
 
     # get state list
+    my @Functionality = ( 'preproductive', 'productive' );
+    push( @Functionality, 'postproductive' ) if ( $Param{IncludePostproductive} );
     my $StateList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
         Class       => 'ITSM::ConfigItem::DeploymentState',
         Preferences => {
-            Functionality => [ 'preproductive', 'productive' ],
+            Functionality => \@Functionality,
         },
     );
 
