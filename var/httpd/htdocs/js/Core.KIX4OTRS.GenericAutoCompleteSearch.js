@@ -103,6 +103,7 @@ Core.KIX4OTRS.GenericAutoCompleteSearch = (function(TargetNS) {
                         var Data = [];
                         $.each(Result, function() {
                             Data.push({
+                                key   : this.SearchObjectKey,
                                 label : this.SearchObjectValue + " (" + this.SearchObjectKey + ")",
                                 value : this.SearchObjectValue
                             });
@@ -111,7 +112,7 @@ Core.KIX4OTRS.GenericAutoCompleteSearch = (function(TargetNS) {
                     });
                 },
                 select : function(Event, UI) {
-                    var Key = UI.item.label.replace(/.*\((.*)\)$/, '$1');
+                    var Key = UI.item.key;
                     BackupData.SearchObjectKey = Key;
                     BackupData.SearchObjectName = UI.item.value;
                     $Element.val(UI.item.value);
