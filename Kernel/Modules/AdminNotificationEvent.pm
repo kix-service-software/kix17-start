@@ -108,7 +108,7 @@ sub Run {
             Events StateID QueueID PriorityID LockID TypeID ServiceID SLAID
             CustomerID CustomerUserID
             ArticleTypeID ArticleSubjectMatch ArticleBodyMatch ArticleAttachmentInclude
-            ArticleSenderTypeID Transports OncePerDay SendOnOutOfOffice
+            ArticleSenderTypeID Transports OncePerDay MarkAsSeenForAgents SendOnOutOfOffice
             VisibleForAgent VisibleForAgentTooltip LanguageID AgentEnabledByDefault)
             )
         {
@@ -319,7 +319,7 @@ sub Run {
             qw(Recipients RecipientAgents RecipientRoles RecipientGroups Events StateID QueueID
             PriorityID LockID TypeID ServiceID SLAID CustomerID CustomerUserID
             ArticleTypeID ArticleSubjectMatch ArticleBodyMatch ArticleAttachmentInclude
-            ArticleSenderTypeID Transports OncePerDay SendOnOutOfOffice
+            ArticleSenderTypeID Transports OncePerDay MarkAsSeenForAgents SendOnOutOfOffice
             VisibleForAgent VisibleForAgentTooltip LanguageID AgentEnabledByDefault)
             )
         {
@@ -1222,6 +1222,9 @@ sub _Edit {
     # set once per day checked value
     $Param{OncePerDayChecked} = ( $Param{Data}->{OncePerDay} ? 'checked="checked"' : '' );
 
+    # set mark as seen checked value
+    $Param{MarkAsSeenForAgentsChecked} = ( $Param{Data}->{MarkAsSeenForAgents} ? 'checked="checked"' : '' );
+
     $Param{VisibleForAgentStrg} = $LayoutObject->BuildSelection(
         Data => {
             0 => Translatable('No'),
@@ -1390,8 +1393,6 @@ sub _Overview {
 }
 
 1;
-
-
 
 =back
 

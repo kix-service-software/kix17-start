@@ -1366,6 +1366,22 @@ sub Header {
         }
     }
 
+    if ( $Self->{Action} eq 'AgentTicketZoom') {
+        my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+        my %Ticket       = $TicketObject->TicketGet(
+            TicketID => $Self->{TicketID},
+        );
+        my $Access = $TicketObject->TicketPermission(
+            Type     => 'ro',
+            TicketID => $Self->{TicketID},
+            UserID   => $Self->{UserID}
+        );
+
+        if ($Access) {
+            $Param{TitleArea} = $Ticket{Title};
+        }
+    }
+
     my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
 
     # run header meta modules
@@ -3682,6 +3698,57 @@ sub CustomerHeader {
         if ( $Param{$Word} ) {
             $Param{TitleArea} .= $Self->{LanguageObject}->Translate( $Param{$Word} ) . ' - ';
         }
+    }
+
+    if ( $Self->{Action} eq 'CustomerTicketZoom'
+        || $Self->{Action} eq 'PublicTicketZoom'
+    ) {
+        my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+        my $TicketNumber = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'TicketNumber' ) || '';
+        my $TicketToken  = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'TicketToken' ) || '';
+
+        if ( !$Self->{TicketID} && $TicketNumber ) {
+            $Self->{TicketID} = $TicketObject->TicketIDLookup(
+                TicketNumber => $TicketNumber,
+                UserID       => $Self->{UserID},
+            );
+        } elsif ( !$Self->{TicketID} && $TicketToken ) {
+            my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+            my $TokenField         = $ConfigObject->Get("Ticket::PublicFrontend::TokenField");
+            if ($TokenField) {
+                $Self->{TokenField} = $DynamicFieldObject->DynamicFieldGet(
+                    Name => $TokenField,
+                );
+                if (!$Self->{TokenField}
+                    || ref ( $Self->{TokenField} ) ne 'HASH'
+                    || $Self->{TokenField}->{'ValidID'} != 1
+                    || $Self->{TokenField}->{'FieldType'} ne 'Token'
+                    || $Self->{TokenField}->{'ObjectType'} ne 'Ticket'
+                ) {
+                    delete ( $Self->{TokenField} );
+                }
+            }
+            $Self->{UserID}    = $ConfigObject->Get('PublicPanelUserID');
+            my $TokenFieldName = 'DynamicField_' . $Self->{TokenField}->{Name};
+            my @TicketIDs      = $TicketObject->TicketSearch(
+                Result          => 'ARRAY',
+                $TokenFieldName => {
+                    Equals => $TicketToken,
+                },
+                UserID          => $Self->{UserID},
+            );
+
+            # check for unique result
+            if ( scalar( @TicketIDs ) == 1 ) {
+                $Self->{TicketID} = $TicketIDs[0];
+            }
+        }
+
+        my %Ticket       = $TicketObject->TicketGet(
+            TicketID => $Self->{TicketID},
+        );
+
+        $Param{TitleArea} = $Ticket{Title};
     }
 
     my $Frontend;

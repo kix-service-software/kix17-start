@@ -222,10 +222,11 @@ sub Run {
                 for my $Email ( Mail::Address->parse( $GetParam{To} ) ) {
                     my $Address = $Email->address();
                     if (
-                        $Kernel::OM->Get('Kernel::System::SystemAddress')
-                        ->SystemAddressIsLocalAddress( Address => $Address )
+                        $ConfigObject->Get('CheckEmailInternalAddress')
+                        && $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
+                            Address => $Address
                         )
-                    {
+                    ) {
                         $LayoutObject->Block( Name => 'ToCustomerGenericServerErrorMsg' );
                         $Error{'ToInvalid'} = 'ServerError';
                     }

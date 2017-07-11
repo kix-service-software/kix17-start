@@ -198,6 +198,10 @@ table tr.MasterAction {
     top: 3px;
 }
 
+.DataTable thead th span i {
+    transform: none;
+}
+
 .DataTable tbody tr.Invalid {
     color: #CCC;
 }
@@ -252,7 +256,8 @@ table tr.MasterAction {
     color: #000;
 }
 
-.DataTable td:first-child input {
+.DataTable td:first-child input,
+.DataTable td input.LinkedPersonToCallContact {
     margin: 0;
 }
 

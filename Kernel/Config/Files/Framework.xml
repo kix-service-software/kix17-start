@@ -1551,6 +1551,14 @@
             <String>(AgentTicketCompose|AgentTicketForward|AgentTicketEmailOutbound)</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="LinkedPerson::SetAsCallContact" Required="0" Valid="1">
+        <Description Translatable="1">Defines for which actions the linked persons could be set as call contacts.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <String>(AgentTicketPhoneOutbound|AgentTicketPhoneInbound)</String>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="LinkedPerson::AllowNonAgentNotifyForInternalArticles" Required="1" Valid="1">
         <Description Translatable="1">Defines if linked persons of types "Customer" and "3rd Party" can be selected for notification of internal articles.</Description>
         <Group>Framework</Group>
@@ -5405,6 +5413,17 @@
         <SubGroup>Core</SubGroup>
         <Setting>
             <String Regex="">@(example)\.(..|...)$</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CheckEmailInternalAddress" Required="1" Valid="1">
+        <Description Translatable="1">Makes the application check if a recipient is an internal address.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="LinkObject::ViewMode" Required="1" Valid="1">
@@ -13501,7 +13520,6 @@ via the Preferences button after logging in.
                         <Item Key="AgentTicketPhoneCommon">1</Item>
                         <Item Key="AgentTicketAddtlITSMField">1</Item>
                         <Item Key="AgentArticleEdit">1</Item>
-                        <Item Key="AgentArticleCopyMove">1</Item>
                         <Item Key="AgentTicketMergeToCustomer">1</Item>
                         <Item Key="ProcessManagement/ActivityDialogHeader">1</Item>
                     </Hash>
@@ -13617,7 +13635,7 @@ via the Preferences button after logging in.
                 <Item>AgentTicketZoomTabLinkedObjects</Item>
                 <Item>AgentTicketZoomTabAttachments</Item>
                 <Item>AgentTicketZoomTabActionCommon</Item>
-                <Item>AgentArticleCopyMove</Item>
+                <Item>AgentArticleEdit</Item>
                 <Item>AgentTicketAttachmentDownload</Item>
                 <Item>AgentTicketMergeToCustomer</Item>
             </Array>
