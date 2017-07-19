@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/07/18) - Bugfix: T2017071090001384 (fixed double encoding of sidebar search parameters) (millinger)
  * (2017/07/11) - Bugfix: T2017052290000615 (ticket merge possible if full ticketnumber is used although corresponding ticket should not be merged with) (rkaiser)
  * (2017/07/07) - Bugfix: T2017063090000741 (wrong numbers in config item overview if also postproductive CIs should be shown) (rkaiser)
  * (2017/07/07) - Bugfix: T2017032890001429 (fixed modernized offset for responsive view) (uboehm)
