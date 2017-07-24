@@ -58,7 +58,6 @@ sub Run {
             ActiveAutoComplete  => $AutoCompleteConfig->{Active},
             minQueryLength      => $AutoCompleteConfig->{MinQueryLength} || 2,
             queryDelay          => $AutoCompleteConfig->{QueryDelay} || 0.1,
-            typeAhead           => $AutoCompleteConfig->{TypeAhead} || 'false',
             maxResultsDisplayed => $AutoCompleteConfig->{MaxResultsDisplayed} || 20,
         },
     );

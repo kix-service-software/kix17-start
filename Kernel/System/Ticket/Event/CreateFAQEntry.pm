@@ -172,6 +172,7 @@ sub Run {
         );
 
         # convert article body to HTML, if used in FAQ
+        my $ContentType = 'text/plain';
         if ( $Self->{ConfigObject}->Get('FAQ::Item::HTML') ) {
 
             # get HTML-body for ThisArticle...
@@ -179,6 +180,9 @@ sub Run {
                 ArticleID => $Param{Data}->{ArticleID},
                 UserID    => 1,
             );
+
+            $ContentType = 'text/html';
+
             for my $Index ( keys %ArticleIndex0 ) {
                 if (
                     $ArticleIndex0{$Index}->{'Filename'} =~ /^file/
@@ -254,7 +258,7 @@ sub Run {
         $NewFAQItemData{LanguageID}  = $NewFAQItemData{LanguageID} || 1;
         $NewFAQItemData{StateID}     = $NewFAQItemData{StateID} || 1;
         $NewFAQItemData{Approved}    = $FAQWFConfig{DefaultApproved} || 0;
-        $NewFAQItemData{ContentType} = 'text/plain';
+        $NewFAQItemData{ContentType} = $ContentType;
 
         my $ItemID = $Self->{FAQObject}->FAQAdd(
             %NewFAQItemData,
@@ -279,16 +283,61 @@ sub Run {
             );
             for my $Index ( keys %ArticleIndex ) {
                 next if ( $ArticleIndex{$Index}->{'Filename'} =~ /^file/ );
+                my $Inline     = 0;
                 my %Attachment = $Self->{TicketObject}->ArticleAttachment(
                     ArticleID => $Param{Data}->{ArticleID},
                     FileID    => $Index,
                     UserID    => 1,
                 );
+
+                if( $Attachment{Disposition} eq 'inline' ) {
+                    $Inline = 1;
+                }
+
                 my $AttachmentID = $Self->{FAQObject}->AttachmentAdd(
                     %Attachment,
                     ItemID => $ItemID,
                     UserID => $ThisArticle{CreatedBy},
                 );
+
+                if ( $AttachmentID
+                    && $Inline
+                ) {
+                    my $ContentID = $Attachment{ContentID};
+                    $ContentID =~ s{ > }{}xms;
+                    $ContentID =~ s{ < }{}xms;
+
+                    # picture URL in upload cache
+                    my $Search =  '(src=")(cid:'.$ContentID.')(")';
+
+                    # picture URL in FAQ attachment
+                    my $Replace = $Self->{LayoutObject}->{Baselink}
+                        . "Action=AgentFAQZoom;Subaction=DownloadAttachment;"
+                        . "ItemID=$ItemID;FileID=$AttachmentID";
+
+                    # rewrite picture URLs
+                    FIELD:
+                    for my $Number ( 1 .. 6 ) {
+
+                        # check if field contains something
+                        next FIELD if !$NewFAQItemData{"Field$Number"};
+
+                        # remove newlines
+                        $NewFAQItemData{"Field$Number"} =~ s{ [\n\r]+ }{}gxms;
+
+                        # replace URL
+                        $NewFAQItemData{"Field$Number"} =~ s{$Search}{$1$Replace$3}xms;
+                    }
+
+                    # update FAQ article without writing a history entry
+                    my $Success = $Self->{FAQObject}->FAQUpdate(
+                        %NewFAQItemData,
+                        ItemID      => $ItemID,
+                        HistoryOff  => 1,
+                        ApprovalOff => 1,
+                        UserID      => $ThisArticle{CreatedBy},
+                    );
+                }
             }
 
             # create link between ticket and FAQ-entry...

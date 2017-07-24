@@ -79,6 +79,7 @@ sub Run {
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
     my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
     my $UserObject    = $Kernel::OM->Get('Kernel::System::User');
+
     # EO KIX4OTRS-capeIT
 
     # get ACL restrictions
@@ -622,12 +623,14 @@ sub Form {
         # get field html
         $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
             $DynamicFieldBackendObject->EditFieldRender(
-            DynamicFieldConfig   => $DynamicFieldConfig,
+            DynamicFieldConfig => $DynamicFieldConfig,
+
             # KIX4OTRS-capeIT
             # PossibleValuesFilter => $PossibleValuesFilter,
             PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
+
             # EO KIX4OTRS-capeIT
-            Value                => $Value,
+            Value => $Value,
             Mandatory =>
                 $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
             LayoutObject    => $LayoutObject,
@@ -640,6 +643,7 @@ sub Form {
     # KIX4OTRS-capeIT
     # get shown or hidden fields
     $Self->_GetShownDynamicFields();
+
     # EO KIX4OTRS-capeIT
 
     # build view ...
@@ -874,7 +878,10 @@ sub SendEmail {
             return $LayoutObject->ErrorScreen(
                 Message =>
                     $LayoutObject->{LanguageObject}
-                    ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
+                    ->Translate(
+                    'Could not perform validation on field %s!',
+                    $DynamicFieldConfig->{Label}
+                    ),
                 Comment => Translatable('Please contact the administrator.'),
             );
         }
@@ -899,6 +906,12 @@ sub SendEmail {
             UpdatableFields => $Self->_GetFieldsToUpdate(),
             );
     }
+
+    # KIX4OTRS-capeIT
+    # get shown or hidden fields
+    $Self->_GetShownDynamicFields();
+
+    # EO KIX4OTRS-capeIT
 
     # transform pending time, time stamp based on user time zone
     if (
@@ -926,12 +939,13 @@ sub SendEmail {
                 $Error{ $Line . 'ErrorType' } = $Line . $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
                 $Error{ $Line . 'Invalid' }   = 'ServerError';
             }
-            my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
-                Address => $Email->address()
-            );
-
-            if ($IsLocal) {
-                $Error{ $Line . 'IsLocalAddress' } = 'ServerError';
+            if ($ConfigObject->Get('CheckEmailInternalAddress')) {
+                my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
+                    Address => $Email->address()
+                );
+                if ($IsLocal) {
+                    $Error{ $Line . 'IsLocalAddress' } = 'ServerError';
+                }
             }
         }
     }
@@ -1016,9 +1030,9 @@ sub SendEmail {
     # check if there is an error
     if (%Error) {
 
-       # KIX4OTRS-capeIT
+        # KIX4OTRS-capeIT
         my %GetParamExtended = $Self->_GetExtendedParams();
-        my %GetParam            = %{ $GetParamExtended{GetParam} };
+        my %GetParam         = %{ $GetParamExtended{GetParam} };
 
         # get last customer article or selected article
         my %Data;
@@ -1191,6 +1205,7 @@ sub SendEmail {
                     . $Data{Body};
             }
         }
+
         # EO KIX4OTRS-capeIT
 
         my $QueueID = $TicketObject->TicketQueueID( TicketID => $Self->{TicketID} );
@@ -1214,6 +1229,7 @@ sub SendEmail {
             MultipleCustomerBcc => \@MultipleCustomerBcc,
             Attachments         => \@Attachments,
             DynamicFieldHTML    => \%DynamicFieldHTML,
+
             # KIX4OTRS-capeIT
             %Data,
 
@@ -1226,7 +1242,7 @@ sub SendEmail {
         return $Output;
     }
 
-#rbo - T2016121190001552 - added KIX placeholders
+    #rbo - T2016121190001552 - added KIX placeholders
     # replace <KIX_TICKET_STATE> with next ticket state name
     if ($NextState) {
         $GetParam{Body} =~ s/(&lt;|<)KIX_TICKET_STATE(&gt;|>)/$NextState/g;
@@ -1891,6 +1907,7 @@ sub _Mask {
             $Class = " Hidden";
             $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
         }
+
         # EO KIX4OTRS-capeIT
 
         $LayoutObject->Block(
@@ -1899,8 +1916,10 @@ sub _Mask {
                 Name  => $DynamicFieldConfig->{Name},
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},
+
                 # KIX4OTRS-capeIT
                 Class => $Class,
+
                 # EO KIX4OTRS-capeIT
             },
         );
@@ -2315,11 +2334,10 @@ sub _GetShownDynamicFields {
 
     return 1;
 }
+
 # EO KIX4OTRS-capeIT
 
 1;
-
-
 
 =back
 

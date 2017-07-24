@@ -594,6 +594,48 @@ sub ArticleGetTicketIDOfMessageID {
         );
         return;
     }
+
+    my @TicketIDs = $Self->ArticleGetTicketIDsOfMessageID(
+        MessageID => $Param{MessageID},
+    );
+    my $Count = scalar(@TicketIDs) || 0;
+
+    # no reference found
+    return if $Count == 0;
+
+    # one found
+    return $TicketIDs[0] if $Count == 1;
+
+    # more than one found! that should not be, a message_id should be unique!
+    $Kernel::OM->Get('Kernel::System::Log')->Log(
+        Priority => 'notice',
+        Message  => "The MessageID '$Param{MessageID}' is in your database "
+            . "more than one time! That should not be, a message_id should be unique!",
+    );
+    return;
+}
+
+=item ArticleGetTicketIDsOfMessageID()
+
+get ticket ids of given message id
+
+    my @TicketIDs = $TicketObject->ArticleGetTicketIDsOfMessageID(
+        MessageID => '<13231231.1231231.32131231@example.com>',
+    );
+
+=cut
+
+sub ArticleGetTicketIDsOfMessageID {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    if ( !$Param{MessageID} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Need MessageID!'
+        );
+        return;
+    }
     my $MD5 = $Kernel::OM->Get('Kernel::System::Main')->MD5sum( String => $Param{MessageID} );
 
     # get database object
@@ -603,29 +645,14 @@ sub ArticleGetTicketIDOfMessageID {
     return if !$DBObject->Prepare(
         SQL   => 'SELECT ticket_id FROM article WHERE a_message_id_md5 = ?',
         Bind  => [ \$MD5 ],
-        Limit => 10,
     );
 
-    my $TicketID;
-    my $Count = 0;
+    my @TicketIDs = ();
     while ( my @Row = $DBObject->FetchrowArray() ) {
-        $Count++;
-        $TicketID = $Row[0];
+        push (@TicketIDs, $Row[0]);
     }
 
-    # no reference found
-    return if $Count == 0;
-
-    # one found
-    return $TicketID if $Count == 1;
-
-    # more than one found! that should not be, a message_id should be unique!
-    $Kernel::OM->Get('Kernel::System::Log')->Log(
-        Priority => 'notice',
-        Message  => "The MessageID '$Param{MessageID}' is in your database "
-            . "more than one time! That should not be, a message_id should be unique!",
-    );
-    return;
+    return @TicketIDs;
 }
 
 =item ArticleGetContentPath()

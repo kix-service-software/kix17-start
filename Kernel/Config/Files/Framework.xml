@@ -1551,6 +1551,14 @@
             <String>(AgentTicketCompose|AgentTicketForward|AgentTicketEmailOutbound)</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="LinkedPerson::SetAsCallContact" Required="0" Valid="1">
+        <Description Translatable="1">Defines for which actions the linked persons could be set as call contacts.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Agent</SubGroup>
+        <Setting>
+            <String>(AgentTicketPhoneOutbound|AgentTicketPhoneInbound)</String>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="LinkedPerson::AllowNonAgentNotifyForInternalArticles" Required="1" Valid="1">
         <Description Translatable="1">Defines if linked persons of types "Customer" and "3rd Party" can be selected for notification of internal articles.</Description>
         <Group>Framework</Group>
@@ -1652,7 +1660,7 @@
                         <Item Key="Unlocked">Unlocked tickets only</Item>
                     </Hash>
                 </Item>
-                <Item Key="DataSelected"></Item>
+                <Item Key="DataSelected">Unlocked</Item>
                 <Item Key="PrefKey">UserViewAllTicketsInServiceView</Item>
                 <Item Key="Prio">3111</Item>
                 <Item Key="Active">1</Item>
@@ -2673,24 +2681,6 @@
                     <Array>
                         <Item>--configuration-module</Item>
                         <Item>&lt;ModuleName&gt;</Item>
-                    </Array>
-                </Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Daemon::SchedulerCronTaskManager::Task###RegistrationUpdateSend" Required="1" Valid="1" ReadOnly="1" ConfigLevel="100">
-        <Description Translatable="1">Sends registration information to OTRS group.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Daemon::SchedulerCronTaskManager::Task</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="TaskName">RegistrationUpdateSend</Item>
-                <Item Key="Schedule">30 * * * *</Item> <!-- default: every hour in minute 30 -->
-                <Item Key="Module">Kernel::System::Console::Command::Maint::Registration::UpdateSend</Item>
-                <Item Key="Function">Execute</Item>
-                <Item Key="MaximumParallelInstances">1</Item>
-                <Item Key="Params">
-                    <Array>
                     </Array>
                 </Item>
             </Hash>
@@ -5423,6 +5413,17 @@
         <SubGroup>Core</SubGroup>
         <Setting>
             <String Regex="">@(example)\.(..|...)$</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CheckEmailInternalAddress" Required="1" Valid="1">
+        <Description Translatable="1">Makes the application check if a recipient is an internal address.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="LinkObject::ViewMode" Required="1" Valid="1">
@@ -13519,7 +13520,6 @@ via the Preferences button after logging in.
                         <Item Key="AgentTicketPhoneCommon">1</Item>
                         <Item Key="AgentTicketAddtlITSMField">1</Item>
                         <Item Key="AgentArticleEdit">1</Item>
-                        <Item Key="AgentArticleCopyMove">1</Item>
                         <Item Key="AgentTicketMergeToCustomer">1</Item>
                         <Item Key="ProcessManagement/ActivityDialogHeader">1</Item>
                     </Hash>
@@ -13635,7 +13635,7 @@ via the Preferences button after logging in.
                 <Item>AgentTicketZoomTabLinkedObjects</Item>
                 <Item>AgentTicketZoomTabAttachments</Item>
                 <Item>AgentTicketZoomTabActionCommon</Item>
-                <Item>AgentArticleCopyMove</Item>
+                <Item>AgentArticleEdit</Item>
                 <Item>AgentTicketAttachmentDownload</Item>
                 <Item>AgentTicketMergeToCustomer</Item>
             </Array>

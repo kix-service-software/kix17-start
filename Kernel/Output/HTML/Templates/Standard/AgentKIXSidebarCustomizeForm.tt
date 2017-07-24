@@ -112,7 +112,7 @@ if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
         // change sort order
         $.each(FieldOrderArray, function(Index, Value) {
             var ValueArray             = Value.toString().split("::"),
-                DynamicFieldRegexp     = /^DynamicField_+/i,
+                DynamicFieldRegexpPre  = /^DynamicField_+/i,
                 CustomerRegexp         = /Customer$/i,
                 FormID                 = ValueArray[2],
                 FieldID                = ValueArray[1];
@@ -134,7 +134,7 @@ if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
                 $('#'+FormID).find('#'+FieldID).closest('.Field,.RichTextField').insertBefore('div.EndOfForm');
                 $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
             }
-            else if ( DynamicFieldRegexp.test(FieldID) ) {
+            else if ( DynamicFieldRegexpPre.test(FieldID) ) {
                 $('#'+FormID).find('#'+FieldID).closest('.Row').insertBefore('div.EndOfForm');
             }
             else {
@@ -193,7 +193,10 @@ if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
 
 function GetSortOrder( $Child,FieldOrderArray,DefaultPriority ) {
     var ChildID = $Child.attr("id"),
-        ChildIDParts;
+        ChildIDSearch,
+        ChildIDParts,
+        DynamicFieldRegexpPre  = /^DynamicField+/i,
+        DynamicFieldRegexpPost = /Used$/i;
 
     ChildIDParts = ChildID.split("_");
 
@@ -202,10 +205,16 @@ function GetSortOrder( $Child,FieldOrderArray,DefaultPriority ) {
         ChildID = ChildIDParts.slice(0,ChildIDParts.length-1).join("_");
     }
 
+    // handle date and date/time fields
+    ChildIDSearch = ChildID;
+    if ( DynamicFieldRegexpPre.test(ChildID) && DynamicFieldRegexpPost.test(ChildID) ) {
+        ChildIDSearch = ChildID.substring(0,ChildID.length-4);
+    }
+
     var Search = $.grep(
             FieldOrder,
             function(Element,Index){
-                var Reg = new RegExp( '::' + ChildID + '$', 'i');
+                var Reg = new RegExp( '::' + ChildIDSearch + '$', 'i');
                 return Element.match(Reg) == null;
             },
             true
@@ -220,7 +229,7 @@ function GetSortOrder( $Child,FieldOrderArray,DefaultPriority ) {
         while( SearchArray[0].length < 4 ) {
             SearchArray[0] = '0'+SearchArray[0];
         }
-        FieldOrderArray.push(SearchArray[0]+'::'+SearchArray[1]+'::'+FormElement);
+        FieldOrderArray.push(SearchArray[0]+'::'+ChildID+'::'+FormElement);
     }
     else {
         // increase priority

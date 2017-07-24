@@ -1088,40 +1088,42 @@ sub SendEmail {
                 UpdatableFields => $Self->_GetFieldsToUpdate(),
                 );
         }
+    }
 
-        # transform pending time, time stamp based on user time zone
-        if (
-            defined $GetParam{Year}
-            && defined $GetParam{Month}
-            && defined $GetParam{Day}
-            && defined $GetParam{Hour}
-            && defined $GetParam{Minute}
-            )
-        {
-            %GetParam = $LayoutObject->TransformDateSelection(
-                %GetParam,
-            );
-        }
+    # transform pending time, time stamp based on user time zone
+    if (
+        defined $GetParam{Year}
+        && defined $GetParam{Month}
+        && defined $GetParam{Day}
+        && defined $GetParam{Hour}
+        && defined $GetParam{Minute}
+        )
+    {
+        %GetParam = $LayoutObject->TransformDateSelection(
+            %GetParam,
+        );
+    }
 
-        # get check item object
-        my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
+    # get check item object
+    my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
 
-        # check some values
-        LINE:
-        for my $Line (qw(To Cc Bcc)) {
-            next LINE if !$GetParam{$Line};
-            for my $Email ( Mail::Address->parse( $GetParam{$Line} ) ) {
-                if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
-                    $Error{ $Line . 'ErrorType' }
-                        = $Line . $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
-                    $Error{ "$Line" . "Invalid" } = 'ServerError';
-                }
-                my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')
-                    ->SystemAddressIsLocalAddress(
+    # check some values
+    LINE:
+    for my $Line (qw(To Cc Bcc)) {
+        next LINE if !$GetParam{$Line};
+        for my $Email ( Mail::Address->parse( $GetParam{$Line} ) ) {
+            if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
+                $Error{ $Line . 'ErrorType' }
+                    = $Line . $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
+                $Error{ "$Line" . "Invalid" } = 'ServerError';
+            }
+
+            if ($ConfigObject->Get('CheckEmailInternalAddress')) {
+                my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
                     Address => $Email->address()
-                    );
+                );
                 if ($IsLocal) {
-                    $Error{ "$Line" . "Invalid" } = 'ServerError';
+                    $Error{ "$Line" . 'IsLocalAddress' } = 'ServerError';
                 }
             }
         }

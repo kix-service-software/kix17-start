@@ -99,6 +99,46 @@ sub new {
     return $Self;
 }
 
+=item GetQueuesForEmailAddress()
+
+get all queues where the given Email address is used as "sender address" as hash (id, RealName)
+
+    my %QueueIDs = $QueueObject->GetQueuesForEmailAddress(
+        AddressID  => 2,
+    );
+
+=cut
+
+sub GetQueuesForEmailAddress {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    if ( !$Param{AddressID} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Need AddressID!',
+        );
+        return;
+    }
+
+    # get database object
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    return if !$DBObject->Prepare(
+        SQL => 'SELECT id, name FROM queue '
+            . 'WHERE system_address_id = ? ',
+        Bind  => [ \$Param{AddressID} ],
+    );
+
+    # fetch the result
+    my %Queues;
+    while ( my @Row = $DBObject->FetchrowArray() ) {
+        $Queues{$Row[0]} = $Row[1];
+    }
+
+    return %Queues;
+}
+
 =item GetSystemAddress()
 
 get a queue system email address as hash (Email, RealName)

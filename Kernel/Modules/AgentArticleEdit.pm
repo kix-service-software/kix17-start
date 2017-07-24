@@ -6,7 +6,6 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-
 package Kernel::Modules::AgentArticleEdit;
 
 use strict;
@@ -41,6 +40,7 @@ sub Run {
     my $UploadCacheObject  = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $GroupObject        = $Kernel::OM->Get('Kernel::System::Group');
 
     # get module config
     $Self->{Config} = $ConfigObject->Get('Ticket::Frontend::AgentArticleEdit');
@@ -65,7 +65,8 @@ sub Run {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
         if ( !$GetParam{$_} ) {
             return $LayoutObject->ErrorScreen(
-                Message => $LayoutObject->{LanguageObject}->Translate('Need %s in AgentArticleEdit!', $_ ),
+                Message => $LayoutObject->{LanguageObject}
+                    ->Translate( 'Need %s in AgentArticleEdit!', $_ ),
                 Comment => Translatable('Please contact your admin.'),
             );
         }
@@ -213,48 +214,132 @@ sub Run {
         );
     }
 
+    # get current user groups as array
+    my %GroupList = $GroupObject->PermissionUserGroupGet(
+        UserID => $Self->{UserID},
+        Type   => $Self->{Config}->{Permission}
+    );
+    my %ReverseGroupList = reverse %GroupList;
+    my @GroupListArray   = keys %ReverseGroupList;
+
+    # get access for single options
+    # get access for edit
+    my $AccessGroupEditOk = 0;
+    if ( defined $Self->{Config}->{PermissionGroupEdit}
+        && ( ref $Self->{Config}->{PermissionGroupEdit} ) eq 'ARRAY' )
+    {
+        if ( scalar @{ $Self->{Config}->{PermissionGroupEdit} } ) {
+            for my $Group ( @{ $Self->{Config}->{PermissionGroupEdit} } ) {
+                $AccessGroupEditOk = grep { $_ eq $Group } @GroupListArray;
+                last if $AccessGroupEditOk;
+            }
+        }
+        else {
+            $AccessGroupEditOk = 1;
+        }
+    }
+
+    # get access for copy
+    my $AccessGroupCopyOk = 0;
+    if ( defined $Self->{Config}->{PermissionGroupCopy}
+        && ( ref $Self->{Config}->{PermissionGroupCopy} ) eq 'ARRAY' )
+    {
+        if ( scalar @{ $Self->{Config}->{PermissionGroupCopy} } ) {
+            for my $Group ( @{ $Self->{Config}->{PermissionGroupCopy} } ) {
+                $AccessGroupCopyOk = grep { $_ eq $Group } @GroupListArray;
+                last if $AccessGroupCopyOk;
+            }
+        }
+        else {
+            $AccessGroupCopyOk = 1;
+        }
+    }
+
+    # get access for move
+    my $AccessGroupMoveOk = 0;
+    if ( defined $Self->{Config}->{PermissionGroupMove}
+        && ( ref $Self->{Config}->{PermissionGroupMove} ) eq 'ARRAY' )
+    {
+        if ( scalar @{ $Self->{Config}->{PermissionGroupMove} } ) {
+            for my $Group ( @{ $Self->{Config}->{PermissionGroupMove} } ) {
+                $AccessGroupMoveOk = grep { $_ eq $Group } @GroupListArray;
+                last if $AccessGroupMoveOk;
+            }
+        }
+        else {
+            $AccessGroupMoveOk = 1;
+        }
+    }
+
+    # get access for delete
+    my $AccessGroupDeleteOk = 0;
+    if ( defined $Self->{Config}->{PermissionGroupDelete}
+        && ( ref $Self->{Config}->{PermissionGroupDelete} ) eq 'ARRAY' )
+    {
+        if ( scalar @{ $Self->{Config}->{PermissionGroupDelete} } ) {
+            for my $Group ( @{ $Self->{Config}->{PermissionGroupDelete} } ) {
+                $AccessGroupDeleteOk = grep { $_ eq $Group } @GroupListArray;
+                last if $AccessGroupDeleteOk;
+            }
+        }
+        else {
+            $AccessGroupDeleteOk = 1;
+        }
+    }
+
     # show different blocks
-    $LayoutObject->Block(
-        Name => 'ArticleEdit',
-        Data => {
-            %Param,
-            %Ticket,
-            %Article,
-            FormID    => $Self->{FormID},
-        },
-    );
-
-    $LayoutObject->Block(
-        Name => 'ArticleCopyMove',
-        Data => {
-            %Param,
-            %Ticket,
-            %Article,
-            WidgetClass => 'ArticleCopy',
-            WidgetTitle => 'Copy Article',
-            FormID    => $Self->{FormID},
-        },
-    );
-
-    # get accounting time
-    if ( $Article{TimeUnits} ) {
+    if (
+        $AccessGroupEditOk
+        && $Self->{Config}->{EditableArticleTypes}
+        && $Self->{Config}->{EditableArticleTypes} =~
+        /(^|.*,)$Article{ArticleType}(,.*|$)/
+        )
+    {
         $LayoutObject->Block(
-            Name => 'TimeUnitsJs',
-            Data => {
-                %Param,
-                TimeUnitsOriginal => $GetParam{TimeUnitsOriginal} || 'Difference',
-            },
-        );
-        $LayoutObject->Block(
-            Name => 'TimeUnitsCopy',
+            Name => 'ArticleEdit',
             Data => {
                 %Param,
                 %Ticket,
                 %Article,
-            }
+                FormID => $Self->{FormID},
+            },
         );
     }
 
+    if ($AccessGroupCopyOk) {
+        $LayoutObject->Block(
+            Name => 'ArticleCopyMove',
+            Data => {
+                %Param,
+                %Ticket,
+                %Article,
+                WidgetClass => 'ArticleCopy',
+                WidgetTitle => 'Copy Article',
+                FormID      => $Self->{FormID},
+            },
+        );
+
+        # get accounting time
+        if ( $Article{TimeUnits} ) {
+            $LayoutObject->Block(
+                Name => 'TimeUnitsJs',
+                Data => {
+                    %Param,
+                    TimeUnitsOriginal => $GetParam{TimeUnitsOriginal} || 'Difference',
+                },
+            );
+            $LayoutObject->Block(
+                Name => 'TimeUnitsCopy',
+                Data => {
+                    %Param,
+                    %Ticket,
+                    %Article,
+                    }
+            );
+        }
+    }
+    
+    
     # get first article
     my %FirstArticle = $TicketObject->ArticleFirstArticle(
         TicketID => $GetParam{TicketID},
@@ -262,26 +347,30 @@ sub Run {
 
     # check copy or move first article
     if ( $GetParam{ArticleID} != $FirstArticle{ArticleID} ) {
-        $LayoutObject->Block(
-            Name => 'ArticleCopyMove',
-            Data => {
-                %Param,
-                %Ticket,
-                %Article,
-                WidgetClass => 'ArticleMove',
-                WidgetTitle => 'Move Article',
-                FormID    => $Self->{FormID},
-            },
-        );
-        $LayoutObject->Block(
-            Name => 'ArticleDelete',
-            Data => {
-                %Param,
-                %Ticket,
-                %Article,
-                FormID    => $Self->{FormID},
-            },
-        );
+        if ($AccessGroupMoveOk) {
+            $LayoutObject->Block(
+                Name => 'ArticleCopyMove',
+                Data => {
+                    %Param,
+                    %Ticket,
+                    %Article,
+                    WidgetClass => 'ArticleMove',
+                    WidgetTitle => 'Move Article',
+                    FormID      => $Self->{FormID},
+                },
+            );
+        }
+        if ($AccessGroupDeleteOk) {
+            $LayoutObject->Block(
+                Name => 'ArticleDelete',
+                Data => {
+                    %Param,
+                    %Ticket,
+                    %Article,
+                    FormID => $Self->{FormID},
+                },
+            );
+        }
     }
 
     # get dynamic field values from http request
@@ -646,7 +735,7 @@ sub Run {
                         # ignore attachment if not linked in body
                         next
                             if $GetParam{Body} !~
-                                /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
+                            /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
                     }
                 }
 
@@ -823,8 +912,15 @@ sub Run {
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'ArticleCopy' || $Self->{Subaction} eq 'ArticleMove' ) {
 
-        for (qw(NewTicketNumber TimeUnits TimeUnitsOriginal)) {
+        for (qw(NewTicketNumber NewTicketNumberArticleMove NewTicketNumberArticleCopy TimeUnits TimeUnitsOriginal)) {
             $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
+        }
+
+        if ( $GetParam{NewTicketNumberArticleMove} ) {
+            $GetParam{NewTicketNumber} = $GetParam{NewTicketNumberArticleMove};
+        }
+        elsif ( $GetParam{NewTicketNumberArticleCopy} ) {
+            $GetParam{NewTicketNumber} = $GetParam{NewTicketNumberArticleCopy};
         }
 
         my $NewTicketID = $GetParam{TicketID};
@@ -908,7 +1004,8 @@ sub Run {
             }
             elsif ( $CopyResult eq 'UpdateFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => $LayoutObject->{LanguageObject}->Translate('Can\'t update times for article %s!', $GetParam{ArticleID} ),
+                    Message => $LayoutObject->{LanguageObject}
+                        ->Translate( 'Can\'t update times for article %s!', $GetParam{ArticleID} ),
                     Comment => Translatable('Please contact your admin.'),
                 );
             }
@@ -968,7 +1065,10 @@ sub Run {
             }
             if ( $MoveResult eq 'AccountFailed' ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => $LayoutObject->{LanguageObject}->Translate('Can\'t update ticket id in time accounting data for article %s!', $GetParam{ArticleID} ),
+                    Message => $LayoutObject->{LanguageObject}->Translate(
+                        'Can\'t update ticket id in time accounting data for article %s!',
+                        $GetParam{ArticleID}
+                    ),
                     Comment => Translatable('Please contact your admin.'),
                 );
             }
@@ -1041,8 +1141,14 @@ sub Run {
 
         # get params
         for (qw(Term MaxResults)) {
-            if ($Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ ) ne 'undefined' ) {
-                $Param{$_} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ ) || '';
+            if (
+                $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ ) ne
+                'undefined'
+                )
+            {
+                $Param{$_}
+                    = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ )
+                    || '';
             }
             else {
                 $Param{$_} = '';
@@ -1195,7 +1301,8 @@ sub Run {
         }
 
         # unescape URIs for inline images etc
-        $Article{Body} =~ s/<img([^>]*)\ssrc="(.*?)"/"<img$1" . ' src="' . URI::Escape::uri_unescape( $2 ) . '"'/egi;
+        $Article{Body}
+            =~ s/<img([^>]*)\ssrc="(.*?)"/"<img$1" . ' src="' . URI::Escape::uri_unescape( $2 ) . '"'/egi;
 
         # encode entities for preformatted code within rich text editor
         $Article{Body} = encode_entities( $Article{Body} );
@@ -1278,11 +1385,11 @@ sub _Mask {
     my ( $Self, %Param ) = @_;
 
     # create needed objects
-    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
-    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
-    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
+    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TimeObject    = $Kernel::OM->Get('Kernel::System::Time');
+    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # edit of content and date/time only possible for note and phone articles
     if ( $Param{ArticleType} =~ /^(note-|phone)/ ) {
@@ -1290,9 +1397,9 @@ sub _Mask {
         # create date
         my $DiffTime = $TimeObject->SystemTime() - $Param{IncomingTime};
         $Param{DateString} = $LayoutObject->BuildDateSelection(
-            Format             => 'DateInputFormatLong',
-            DiffTime           => -$DiffTime,
-            NoCheckbox         => 1,
+            Format     => 'DateInputFormatLong',
+            DiffTime   => -$DiffTime,
+            NoCheckbox => 1,
         );
 
         # article date
@@ -1412,7 +1519,7 @@ sub _Mask {
                 Data       => \%ArticleTypes,
                 SelectedID => $Param{ArticleTypeID},
                 Name       => 'ArticleTypeID',
-                Class        => 'Modernize',
+                Class      => 'Modernize',
             );
             $LayoutObject->Block(
                 Name => 'ArticleType',
@@ -1451,7 +1558,7 @@ sub _Mask {
 sub _GetFieldsToUpdate {
     my ( $Self, %Param ) = @_;
 
-    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
     my @UpdatableFields;
 
     # set the fields that can be updateable via AJAXUpdate
@@ -1481,8 +1588,6 @@ sub _GetFieldsToUpdate {
 }
 
 1;
-
-
 
 =back
 

@@ -38,24 +38,30 @@ sub Run {
 
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
+    my @Result = ();
+
+    REFERENCE:
     for my $Reference (@References) {
 
         # get ticket id of message id
-        my $TicketID = $TicketObject->ArticleGetTicketIDOfMessageID(
+        my @TicketIDs = $TicketObject->ArticleGetTicketIDsOfMessageID(
             MessageID => "<$Reference>",
         );
+        next REFERENCE if ( !@TicketIDs );
 
-        if ($TicketID) {
-            return $TicketID;
+        TICKETID:
+        for my $TicketID ( @TicketIDs ) {
+            my $TicketNumber = $TicketObject->TicketNumberLookup( TicketID => $TicketID, );
+            next TICKETID if ( !$TicketNumber );
+
+            push (@Result, $TicketNumber);
         }
     }
 
-    return;
+    return @Result;
 }
 
 1;
-
-
 
 =back
 

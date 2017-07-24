@@ -527,22 +527,6 @@ sub Run {
         }
     }
 
-    $Content = $LayoutObject->Output(
-        TemplateFile => 'AgentDashboardTicketQueueOverview',
-        Data         => {
-            %{ $Self->{Config} },
-            Name    => $Self->{Name},
-            TableID => $Self->{Name},
-            ColumnLabel =>
-                $Self->{SearchAttributes}->{
-                $LayoutObject->{ $Self->{PrefKey} . '-Row' }
-                },
-        },
-        KeepScriptTags => $Param{AJAX},
-    );
-
-    return $Content;
-
     # check for refresh time
     my $Refresh = '';
     if ( $Self->{UserRefreshTime} ) {
@@ -567,7 +551,7 @@ sub Run {
             Name    => $Self->{Name},
             TableID => $Self->{Name},
             ColumnLabel =>
-                $$Self->{SearchAttributes}->{
+                $Self->{SearchAttributes}->{
                 $LayoutObject->{ $Self->{PrefKey} . '-Row' }
                 },
         },

@@ -30,7 +30,7 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # return if nothing should be shown...
-    my $CallingAction = $Param{Data}->{CallingAction} || '';
+    my $CallingAction = $Param{CallingAction} || '';
     my $ShowSelectBox = ( $CallingAction =~ /$Param{Config}->{ShowSelectBoxActionRegExp}/ ) ? 1 : 0;
     return 1 if !$ShowSelectBox;
 

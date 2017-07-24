@@ -39,22 +39,24 @@ Core.KIXBase.Agent = (function(TargetNS) {
             },
             'text', false);
 
-            $('#ToolBarToggle').addClass(Class);
-
-            $('#ToolBarToggle').click(function() {
-                if ($('#ToolBarToggle').hasClass('Show')) {
-                    $('#ToolBar').show('fast');
-                    $('#ToolBarToggle').removeClass('Show').addClass('Hide');
-
-                    Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=1', null, 'text');
-                }
-                else {
-                    $('#ToolBar').hide('fast');
-                    $('#ToolBarToggle').removeClass('Hide').addClass('Show');
-
-                    Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=0', null, 'text');
-                }
-            });
+            var Action = Core.Config.Get('Action');
+            if ( !Action.match(/^AgentTicketZoom(.+)/) && !Action.match(/^AgentITSM(.*?)Zoom(.+)/) ) {
+                $('#ToolBarToggle').addClass(Class);
+                $('#ToolBarToggle').click(function() {
+                    if ($('#ToolBarToggle').hasClass('Show')) {
+                        $('#ToolBar').show('fast');
+                        $('#ToolBarToggle').removeClass('Show').addClass('Hide');
+    
+                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=1', null, 'text');
+                    }
+                    else {
+                        $('#ToolBar').hide('fast');
+                        $('#ToolBarToggle').removeClass('Hide').addClass('Show');
+    
+                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=0', null, 'text');
+                    }
+                });
+            }
         }
 
         // combine dashboard stats
