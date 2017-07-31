@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/07/28) - Bugfix: T2017032090001176 (fixed glitch in maximized ckeditor) (uboehm)
  * (2017/07/20) - Bugfix: T2017072090003471 (missing functionality to update DB structures and data during updates) (rbo)
  * (2017/07/18) - Bugfix: T2017071090001384 (fixed double encoding of sidebar search parameters) (millinger)
  * (2017/07/11) - Bugfix: T2017052290000615 (ticket merge possible if full ticketnumber is used although corresponding ticket should not be merged with) (rkaiser)
