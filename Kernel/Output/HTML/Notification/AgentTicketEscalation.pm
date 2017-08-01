@@ -87,7 +87,7 @@ sub Run {
 
     # KIX4OTRS-capeIT
     my @TicketIDs;
-    if ( $SearchAdd{QueueIDs} ) {
+    if ( @{ $SearchAdd{QueueIDs} } ) {
         @TicketIDs = $TicketObject->TicketSearch(
             Result                           => 'ARRAY',
             Limit                            => $ShownMax,

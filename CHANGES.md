@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/08/01) - Bugfix: T2016053090000647 (log error if no queues selected in myQueues) (ddoerffel)
  * (2017/08/01) - Bugfix: T2017042590000899 (double items in link object dialog) (ddoerffel)
  * (2017/07/28) - Bugfix: T2017032090001176 (fixed glitch in maximized ckeditor) (uboehm)
  * (2017/07/27) - Bugfix: T2017071290001031 (fixed userinfo styling error in mobile frontend) (uboehm)
