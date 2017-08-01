@@ -1096,17 +1096,32 @@ sub _Replace {
             DynamicFields => 1,
         );
     }
-    # Bugfix for OTRS-Bug 11762
-    my %TicketRaw = %Ticket;
-    # EO Bugfix for OTRS-Bug 11762
 
-    # Bugfix for OTRS-Bug 11762
+    # translate ticket values if needed
     if ( $Param{Language} ) {
+
         my $LanguageObject = Kernel::Language->new(
             UserLanguage => $Param{Language},
         );
+
+        # Translate the diffrent values.
         for my $Field (qw(Type State StateType Lock Priority)) {
             $Ticket{$Field} = $LanguageObject->Translate( $Ticket{$Field} );
+        }
+
+        # Transform the date values from the ticket data (but not the dynamic field values).
+        ATTRIBUTE:
+        for my $Attribute ( sort keys %Ticket ) {
+            next ATTRIBUTE if $Attribute =~ m{ \A DynamicField_ }xms;
+            next ATTRIBUTE if !$Ticket{$Attribute};
+
+            if ( $Ticket{$Attribute} =~ m{\A(\d\d\d\d)-(\d\d)-(\d\d)\s(\d\d):(\d\d):(\d\d)\z}xi ) {
+                $Ticket{$Attribute} = $LanguageObject->FormatTimeString(
+                    $Ticket{$Attribute},
+                    'DateFormat',
+                    'NoSeconds',
+                );
+            }
         }
     }
 
@@ -1370,10 +1385,7 @@ sub _Replace {
         # get the display value for each dynamic field
         my $DisplayValue = $DynamicFieldBackendObject->ValueLookup(
             DynamicFieldConfig => $DynamicFieldConfig,
-            # Bugfix for OTRS-Bug 11762
-            # Key                => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-            Key                => $TicketRaw{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-            # EO Bugfix for OTRS-Bug 11762
+            Key                => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
             LanguageObject     => $LanguageObject,
         );
 
@@ -1392,10 +1404,7 @@ sub _Replace {
         # get the readable value (key) for each dynamic field
         my $ValueStrg = $DynamicFieldBackendObject->ReadableValueRender(
             DynamicFieldConfig => $DynamicFieldConfig,
-            # Bugfix for OTRS-Bug 11762
-            # Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-            Value              => $TicketRaw{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-            # EO Bugfix for OTRS-Bug 11762
+            Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
         );
 
         # replace ticket content with the value from ReadableValueRender (if any)
@@ -1572,10 +1581,7 @@ sub _Replace {
 
                 my $SubjectChar = $1;
                 my $Subject     = $Kernel::OM->Get('Kernel::System::Ticket')->TicketSubjectClean(
-                # Bugfix for OTRS-Bug 11762
-                # TicketNumber => $Ticket{TicketNumber},
-                    TicketNumber => $TicketRaw{TicketNumber},
-                # EO Bugfix for OTRS-Bug 11762
+                    TicketNumber => $Ticket{TicketNumber},
                     Subject      => $Data{Subject},
                 );
 
@@ -1625,25 +1631,50 @@ sub _Replace {
 
                 if ( $Ticket{CustomerUserID} ) {
 
-                    $From = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerName(
-                        # Bugfix for OTRS-Bug 11762
-                        # UserLogin => $Ticket{CustomerUserID}
-                        UserLogin => $TicketRaw{CustomerUserID}
-                        # EO Bugfix for OTRS-Bug 11762
-                    );
+                    my %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')
+                        ->CustomerUserDataGet( User => $Ticket{CustomerUserID} );
+
+                    if (
+
+                        # Check if Customer 'UserEmail' match article data 'From'.
+                        # Or check if this is auto response replacement.
+                        # Take ticket customer as 'From'.
+                        (
+                            $CustomerUserData{UserEmail}
+                            && $Data{From}
+                            && $CustomerUserData{UserEmail} =~ /$Data{From}/
+                        )
+                        || $Param{AutoResponse}
+                        )
+                    {
+                        $From = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerName(
+                            UserLogin => $Ticket{CustomerUserID}
+                        );
+                    }
+                    else {
+                        $From = $Data{From};
+                    }
+
                 }
 
                 # try to get the real name directly from the data
-                $From //= $Recipient{RealName};
+                $From //= $Recipient{Realname};
 
                 # get real name based on reply-to
                 if ( $Data{ReplyTo} ) {
-                    $From = $Data{ReplyTo} || '';
+                    $From = $Data{ReplyTo};
+
+                    # remove email addresses
+                    $From =~ s/&lt;.*&gt;|<.*>|\(.*\)|\"|&quot;|;|,//g;
+
+                    # remove leading/trailing spaces
+                    $From =~ s/^\s+//g;
+                    $From =~ s/\s+$//g;
                 }
 
                 # generate real name based on sender line
                 if ( !$From ) {
-                    $From = $Data{From} || '';
+                    $From = $Data{To} || '';
 
                     # remove email addresses
                     $From =~ s/&lt;.*&gt;|<.*>|\(.*\)|\"|&quot;|;|,//g;
@@ -1908,11 +1939,11 @@ sub _RemoveUnSupportedTag {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    for (qw(Text ListOfUnSupportedTag)) {
-        if ( !defined $Param{$_} ) {
+    for my $Item (qw(Text ListOfUnSupportedTag)) {
+        if ( !defined $Param{$Item} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "Need $_!"
+                Message  => "Need $Item!"
             );
             return;
         }
@@ -1937,9 +1968,6 @@ sub _RemoveUnSupportedTag {
 1;
 
 =end Internal:
-
-
-
 
 =back
 
