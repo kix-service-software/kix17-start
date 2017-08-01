@@ -2239,7 +2239,8 @@ sub Run {
 
             # EO KIX4OTRS-capeIT
 
-            # Do not modernize this field as this causes problems with the automatic focussing of the first element.
+            Class        => 'Modernize',
+            PossibleNone => 1,
         );
 
         $Param{StatesStrg} = $LayoutObject->BuildSelection(
