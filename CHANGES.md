@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/08/01) - Bugfix: T2016121290000597 (OTRS-Bug: Moving ticket to disabled queue causes corrupted layout) (ddoerffel)
  * (2017/08/01) - Bugfix: T2016120590000511 (misspelling in config item attribute) (ddoerffel)
  * (2017/08/01) - Bugfix: T2015111290000653 (pending time should be shown below ticket state in ticket info sidebar) (ddoerffel)
  * (2017/08/01) - Bugfix: T2017071290001022 (SysConfigLog causes internal server error) (ddoerffel)
