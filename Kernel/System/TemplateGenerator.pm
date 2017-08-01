@@ -1700,12 +1700,7 @@ sub _Replace {
     if ( $Ticket{CustomerUserID} || $Param{Data}->{CustomerUserID} || ( defined $Param{Frontend} && $Param{Frontend} eq 'Customer' ) )
     {
 
-        # EO KIX4OTRS-capeIT
-
-        # Bugfix for OTRS-Bug 11762
-        # my $CustomerUserID = $Param{Data}->{CustomerUserID} || $Ticket{CustomerUserID};
-        my $CustomerUserID = $Param{Data}->{CustomerUserID} || $TicketRaw{CustomerUserID};
-        # EO Bugfix for OTRS-Bug 11762
+        my $CustomerUserID = $Param{Data}->{CustomerUserID} || $Ticket{CustomerUserID};
 
         my %CustomerUser = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
             User => $CustomerUserID,
@@ -1888,10 +1883,7 @@ sub _Replace {
         if ( $Param{Text} =~ /$Tag2\[(.+?)\]$End/g ) {
             my $SubjectChar = $1;
             my $Subject     = $TicketObject->TicketSubjectClean(
-                # Bugfix for OTRS-Bug 11762
-                # TicketNumber => $Ticket{TicketNumber},
-                TicketNumber => $TicketRaw{TicketNumber},
-                # EO Bugfix for OTRS-Bug 11762
+                TicketNumber => $Ticket{TicketNumber},
                 Subject      => $Article{Subject},
             );
             $Subject =~ s/^(.{$SubjectChar}).*$/$1 [...]/;
