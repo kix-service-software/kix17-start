@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/08/01) - Bugfix: T2017042590000899 (double items in link object dialog) (ddoerffel)
  * (2017/07/28) - Bugfix: T2017032090001176 (fixed glitch in maximized ckeditor) (uboehm)
  * (2017/07/27) - Bugfix: T2017071290001031 (fixed userinfo styling error in mobile frontend) (uboehm)
  * (2017/07/20) - Bugfix: T2017072090003471 (missing functionality to update DB structures and data during updates) (rbo)
