@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/08/02) - Bugfix: T2017071390000718 (UserIsGroup array not filled if swicht button used) (ddoerffel)
  * (2017/08/02) - Bugfix: T2016122190003121 (OTRS-Bug: Missing header and footer after file upload in CustomerTicketProcess) (ddoerffel)
  * (2017/08/01) - Bugfix: T2016121290000597 (OTRS-Bug: Moving ticket to disabled queue causes corrupted layout) (ddoerffel)
  * (2017/08/01) - Bugfix: T2016120590000511 (misspelling in config item attribute) (ddoerffel)
