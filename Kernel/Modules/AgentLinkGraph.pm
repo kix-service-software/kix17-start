@@ -151,7 +151,7 @@ sub FinishGraph {
                     Data        => $Param{PossibleLinkTypesList},
                     Name        => 'LinkTypes',
                     Translation => 0,
-                    Class       => 'Modernize'
+                    # Class       => 'Modernize' # bugfix: T#2017062990000842
                 ),
                 RelLinkTypes => $RelLinkTypesString,
                 %Param,

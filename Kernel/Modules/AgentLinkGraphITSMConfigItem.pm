@@ -311,7 +311,7 @@ sub _PrepareITSMConfigItem {
         Name         => 'CIClasses',
         Multiple     => 0,
         PossibleNone => 0,
-        Class        => 'Modernize',
+        # Class        => 'Modernize', # bugfix: T#2017062990000842
     );
 
     # remember selected CI classes for print header
