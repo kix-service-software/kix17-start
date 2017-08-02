@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/08/02) - Bugfix: T2017071390000718 (UserIsGroup array not filled if swicht button used) (ddoerffel)
  * (2017/08/02) - Bugfix: T2017051890000561 (database tables missing after migrating from plain OTRS - added more information to MIGRATING_OTRS.md) (rbo)
  * (2017/08/02) - Bugfix: T2017062990000842 ('modernize' causes unwanted focus on first select in CI link graph linking dialogs) (rkaiser)
  * (2017/08/02) - Bugfix: T2016122190003121 (OTRS-Bug: Missing header and footer after file upload in CustomerTicketProcess) (ddoerffel)
