@@ -151,7 +151,7 @@ case $KIX_DBMS in
         echo migrating database
         # create dump of old database
         echo "  creating database dump"
-        sudo -u postgres bash -c "pg_dump $USE_OTRS_DBHOST $OTRS_DB -f $TMP_PATH/kix_migration/kix_db.dmp 2>&1 >> $LOGFILE"
+        sudo -u postgres bash -c "pg_dump -O $USE_OTRS_DBHOST $OTRS_DB -f $TMP_PATH/kix_migration/kix_db.dmp 2>&1 >> $LOGFILE"
 
         # drop database
         echo "  dropping database"
