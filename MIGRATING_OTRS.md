@@ -8,8 +8,15 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
 * please make sure you have a consistent package stack (corresponding versions)
 * the OTRS system uses the same DBMS like KIX (PostgreSQL, MariaDB or MySQL)
 * the KIX database must be local
+* make sure the following packages are installed in your OTRS before your start the migration
+ * FAQ
+ * GeneralCatalog
+ * ImportExport
+ * ITSMCore
+ * ITSMConfigurationManagement
+ * ITSMIncidentProblemManagement
 
-# Steps
+## Steps
 
 * stop the daemon in the OTRS system
  * ```sudo -u www-data <OTRS-Home>/bin/otrs.Daemon.pl stop```
@@ -52,10 +59,18 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
 Im Folgenden wird das Vorgehen für die Migration einer OTRS-Instanz auf KIX beschrieben. Es ist zwingend notwendig, die Voraussetzungen zu erfüllen und die Schritte einzuhalten. 
 
 ## Voraussetzungen
+
 * das OTRS-System ist auf dem Framework-Stand 5.0.x 
 * bitte sicherstellen, dass ein konsistenter Paketstack vorliegt (zusammenpassende Paketversionen)
 * das OTRS-System verwendet das gleiche DBMS wie KIX (PostgreSQL, MariaDB oder MySQL) 
 * die KIX-Datenbank muss lokal installiert sein
+* stellen Sie sicher, dass die folgenden Pakete in Ihrem OTRS installiert sind, bevor Sie mit der Migration beginnen
+ * FAQ
+ * GeneralCatalog
+ * ImportExport
+ * ITSMCore
+ * ITSMConfigurationManagement
+ * ITSMIncidentProblemManagement
 
 ## Vorgehen
 
