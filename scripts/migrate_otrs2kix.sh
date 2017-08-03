@@ -201,6 +201,7 @@ sudo -u $APACHEUSER bash -c "/opt/kix/bin/kix.Console.pl Maint::Loader::CacheCle
 echo
 echo "*****************************************************************************************"
 echo "The migration has been finished. Cronjobs, the daemon and the webserver are still stopped."
+echo "Please check the migration log $LOGFILE for errors."
 echo
 echo "Now copy your changes in $OTRS_PATH/Kernel/Config.pm to /opt/kix/Kernel/Config.pm."
 echo "Also please copy your old OTRS SystemID setting to the KIX Config.pm."
