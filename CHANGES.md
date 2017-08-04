@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/08/04) - Bugfix: T2017062790001069 (DB migration script exits with error if some object already exists) (rbo)
  * (2017/08/02) - Bugfix: T2017062690000802 (some log messages when migrating from OTRS to KIX and using PostgreSQL) (rbo)
  * (2017/08/02) - Bugfix: T2017071390000718 (UserIsGroup array not filled if swicht button used) (ddoerffel)
  * (2017/08/02) - Bugfix: T2017051890000561 (database tables missing after migrating from plain OTRS - added more information to MIGRATING_OTRS.md) (rbo)
