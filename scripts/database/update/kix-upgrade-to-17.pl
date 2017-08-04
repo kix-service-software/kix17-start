@@ -113,7 +113,6 @@ for my $SQL (@SQL) {
     );
     if (!$Result) {
         print STDERR "Unable to execute SQL from file \"$XMLFile\"!"; 
-        exit -1;
     }
 }
 
