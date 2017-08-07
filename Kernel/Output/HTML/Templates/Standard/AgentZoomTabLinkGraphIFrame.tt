@@ -225,6 +225,10 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 
+    function HideContext() {
+        $Elements.Context.addClass('Hidden');
+    }
+
     // check if there are too many nodes - just show notice
     if ( '[% Data.TooManyNodes | html %]' != 0 ) {
         $('body').html('<div style="margin:5px">'
@@ -334,10 +338,6 @@
                 Core.KIX4OTRS.AgentLinkGraph[% Data.ObjectType | html %].NotPresentNode(e);
             }
         });
-
-        function HideContext() {
-            $Elements.Context.addClass('Hidden');
-        }
 
         // object-specific
         [% Data.ObjectSpecificJavaScript | html %]
