@@ -3,7 +3,6 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
-<<<<<<< CHANGES.md
  * (2017/08/07) - Bugfix: T2017071090000894 (small javascript syntax error in CI graph and CMDBExplorer) (rkaiser)
  * (2017/08/04) - Bugfix: T2017062790001069 (DB migration script exits with error if some object already exists) (rbo)
  * (2017/08/03) - Bugfix: T2017050890000482 (hint to check migration log and Support Data Collector missing when migration is finished) (rbo)
