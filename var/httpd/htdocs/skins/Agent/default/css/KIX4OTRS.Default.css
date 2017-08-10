@@ -264,6 +264,10 @@ a {
         margin: 5px 0px 5px 0px;
     }
 
+    div.ArticleFlagOptionsDialog a:focus {
+        font-weight: normal;
+    }
+
     div.AddQuickLink {
         margin: 5px 0px 0px 0px;
         padding: 7px;
