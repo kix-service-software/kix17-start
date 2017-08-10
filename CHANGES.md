@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/08/10) - Bugfix: T2017062290001023 (fixed console QueuesGroupsRoles download command) (uboehm)
  * (2017/08/10) - Bugfix: T2017041990000758 (fixed article flag dialog glitch) (uboehm)
  * (2017/08/08) - Bugfix: T2016060790001107 (customization of logo in customer login screen not working) (ddoerffel)
  * (2017/08/07) - Bugfix: T2017071090000894 (small javascript syntax error in CI graph and CMDBExplorer) (rkaiser)

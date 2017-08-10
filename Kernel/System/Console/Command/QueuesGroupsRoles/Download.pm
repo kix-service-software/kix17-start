@@ -62,7 +62,7 @@ sub Run {
 
     #-------------------------------------------------------------------------------
     # check CSV...
-    if ( !open( $CSV, "<", $FileName ) ) {
+    if ( !open( $CSV, ">", $FileName ) ) {
         die "\nCould not open file: <$FileName> ($!).\n";
     }
 
