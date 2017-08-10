@@ -603,7 +603,7 @@ sub GetEmailParams {
     for my $Param ( @{ $Self->{'PostmasterX-Header'} } ) {
 
         # do not scan x-otrs headers if mailbox is not marked as trusted
-        next HEADER if ( !$Self->{Trusted} && $Param =~ /^x-otrs/i );
+        next HEADER if ( !$Self->{Trusted} && $Param =~ /^(x-otrs|x-kix)/i );
         if ( $Self->{Debug} > 2 ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'debug',
