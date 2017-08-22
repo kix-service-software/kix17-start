@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/08/22) - Bugfix: T2017051590000898 (kix help link changed) (ddoerffel)
  * (2017/08/14) - Bugfix: T2017073190001111 (missing data in table cip_allocation) (ddoerffel)
  * (2017/08/10) - Bugfix: T2017060790001196 (fixed postmaster kix-header acceptance rules) (uboehm)
  * (2017/08/10) - Bugfix: T2017062290001023 (fixed console QueuesGroupsRoles download command) (uboehm)
