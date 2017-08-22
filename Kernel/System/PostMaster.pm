@@ -168,9 +168,13 @@ sub Run {
     my $GetParam = $Self->GetEmailParams();
 
     # get tickets containing this message
-    my @SkipTicketIDs = $TicketObject->ArticleGetTicketIDsOfMessageID(
-        MessageID => $GetParam->{'Message-ID'},
-    );
+    my @SkipTicketIDs = qw{};
+    if( $GetParam->{'Message-ID'} ) {
+        @SkipTicketIDs = $TicketObject->ArticleGetTicketIDsOfMessageID(
+            MessageID => $GetParam->{'Message-ID'},
+        );
+    }
+
     my %SkipTicketIDHash = ();
     for my $TicketID ( @SkipTicketIDs ) {
         $SkipTicketIDHash{$TicketID} = 1;
