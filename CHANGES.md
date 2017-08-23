@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/23)
+ * (2017/08/23) - Bugfix: T2017081590001097 (email addresses contained in description part of email address will be stored in addressbook) (rbo)
  * (2017/08/23) - Bugfix: T2017062790000766 (special characters displayed wrong in ci search sidebar) (ddoerffel)
  * (2017/08/23) - Bugfix: T2017072190001274 (special characters displayed wrong in faq sidebar) (ddoerffel)
  * (2017/08/23) - Bugfix: T2017040390000939 (not mandatory article field not working in ticket action common) (ddoerffel)
