@@ -3,6 +3,7 @@
 * $Id$
 
 #17.1.1 (2017/08/??)
+ * (2017/08/23) - Bugfix: T2017072190001274 (special characters displayed wrong in faq sidebar) (ddoerffel)
  * (2017/08/23) - Bugfix: T2017040390000939 (not mandatory article field not working in ticket action common) (ddoerffel)
  * (2017/08/22) - Bugfix: T2017081790000923 (post master log error if message without Message-ID received) (ddoerffel)
  * (2017/08/22) - Bugfix: T2017051590000898 (kix help link changed) (ddoerffel)
