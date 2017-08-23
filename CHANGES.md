@@ -2,7 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 * $Id$
 
-#17.1.1 (2017/08/??)
+#17.1.1 (2017/08/23)
  * (2017/08/23) - Bugfix: T2017062790000766 (special characters displayed wrong in ci search sidebar) (ddoerffel)
  * (2017/08/23) - Bugfix: T2017072190001274 (special characters displayed wrong in faq sidebar) (ddoerffel)
  * (2017/08/23) - Bugfix: T2017040390000939 (not mandatory article field not working in ticket action common) (ddoerffel)
