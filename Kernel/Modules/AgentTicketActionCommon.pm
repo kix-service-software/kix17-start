@@ -2712,7 +2712,7 @@ sub _Mask {
 
         if (
             $Config->{NoteMandatory}
-            || !$Config->{NoteMandatory}
+#            || !$Config->{NoteMandatory}
             || $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
             || $Param{IsUpload}
             || $Self->{ReplyToArticle}
