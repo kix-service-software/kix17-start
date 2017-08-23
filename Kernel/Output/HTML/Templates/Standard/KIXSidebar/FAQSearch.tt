@@ -202,12 +202,12 @@
 [% RenderBlockStart("KIXSidebarFAQSearchResultColumnView") %]
                 <td>
                     <a href="[% Env("Baselink") %]Action=[% Data.Frontend | uri %]FAQZoom;ItemID=[% Data.FAQID | uri %]" target="_blank" title="[% Data.Result | html %]" class="MasterActionLink">
-                        [% Data.ResultShort | html %]
+                        [% Data.ResultShort  %]
                     </a>
 [% RenderBlockEnd("KIXSidebarFAQSearchResultColumnView") %]
 [% RenderBlockStart("KIXSidebarFAQSearchResultColumnCompose") %]
                 <td onclick="javascript:KIXSidebarTools.KIXSidebarFAQ.ShowContent('[% Data.FAQID | html %]');" title="[% Data.Result | html %]" style="cursor:pointer;">
-                    [% Data.ResultShort | html %]
+                    [% Data.ResultShort  %]
 [% RenderBlockEnd("KIXSidebarFAQSearchResultColumnCompose") %]
                 </td>
             </tr>
