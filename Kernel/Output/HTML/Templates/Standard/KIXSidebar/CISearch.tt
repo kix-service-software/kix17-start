@@ -285,10 +285,10 @@
 [% RenderBlockStart("KIXSidebarCISearchResultRowColumn") %]
                 <td>
 [% RenderBlockStart("KIXSidebarCISearchResultRowColumnLink") %]
-                    <a href="[% Env("Baselink") %]Action=[% Data.Frontend | uri %]ITSMConfigItemZoom;ConfigItemID=[% Data.Value | uri %]" target="_blank" title="[% Data.Result | html %]" class="MasterActionLink">[% Data.ResultShort | html %]</a>
+                    <a href="[% Env("Baselink") %]Action=[% Data.Frontend | uri %]ITSMConfigItemZoom;ConfigItemID=[% Data.Value | uri %]" target="_blank" title="[% Data.Result | html %]" class="MasterActionLink">[% Data.ResultShort %]</a>
 [% RenderBlockEnd("KIXSidebarCISearchResultRowColumnLink") %]
 [% RenderBlockStart("KIXSidebarCISearchResultRowColumnValue") %]
-                    <span title="[% Data.Result | html %]">[% Data.ResultShort | html %]</span>
+                    <span title="[% Data.Result | html %]">[% Data.ResultShort %]</span>
 [% RenderBlockEnd("KIXSidebarCISearchResultRowColumnValue") %]
                     <input type="hidden" class="SortData" value="[% Data.Result | html %]" />
                 </td>
