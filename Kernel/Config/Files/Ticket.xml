@@ -14088,14 +14088,13 @@ Thanks for your help!
             <Hash>
                 <Item Key="1000">Type</Item>
                 <Item Key="1050Translated">Lock</Item>
-                <Item Key="1100Translated">State</Item>
-                <Item Key="1105Unquoted">PendingUntil</Item>
                 <Item Key="1200UnquotedNewLinedBy::">CallMethod::TicketObject::TicketQueueLinkGet</Item>
                 <Item Key="1500UnquotedNewLinedBy::">Service</Item>
                 <Item Key="1502">SLA</Item>
                 <Item Key="1700Unquoted">CallMethod::TicketObject::TicketOwnerName</Item>
                 <Item Key="1800Unquoted">CallMethod::TicketObject::TicketResponsibleName</Item>
                 <Item Key="1900">CallMethod::TicketObject::TicketAccountedTimeGet</Item>
+                <Item Key="2000Translated">State</Item>
             </Hash>
         </Setting>
     </ConfigItem>

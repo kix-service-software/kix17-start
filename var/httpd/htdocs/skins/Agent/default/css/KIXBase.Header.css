@@ -251,7 +251,7 @@
     }
 
     #AppWrapper {
-        position: relative !important;
+        position: relative;
         transition: margin-top .5s;
     }
 }
@@ -281,7 +281,7 @@
 
     #UserInfo {
         top: 0 !important;
-        z-index: 0;
+        z-index: 10;
     }
 
     .ResponsiveHandle {

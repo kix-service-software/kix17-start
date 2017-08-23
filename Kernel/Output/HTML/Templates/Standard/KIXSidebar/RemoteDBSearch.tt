@@ -98,8 +98,8 @@
     $('#SearchString[% Data.Identifier | html %]').bind('keyup', function (Event) {
         if ( (Event.keyCode !== 13) && ($('#SearchString[% Data.Identifier | html %]').val().length >= [% Data.QueryMinLength | html %]) ) {
             var Data = {};
-            Data.SearchString   = encodeURIComponent($('#SearchString[% Data.Identifier | html %]').val());
-            Data.CustomerUserID = encodeURIComponent($('#SelectedCustomerUser').val());
+            Data.SearchString   = $('#SearchString[% Data.Identifier | html %]').val();
+            Data.CustomerUserID = $('#SelectedCustomerUser').val();
 
             KIXSidebarTools.DelayUpdateSidebar(
                 'KIXSidebarRemoteDBSearchAJAXHandler',
@@ -117,8 +117,8 @@
         KIXSidebarTools.StopDelayUpdateSidebar('[% Data.Identifier | html %]');
 
         var Data = {};
-        Data.SearchString   = encodeURIComponent($('#SearchString[% Data.Identifier | html %]').val());
-        Data.CustomerUserID = encodeURIComponent($('#SelectedCustomerUser').val());
+        Data.SearchString   = $('#SearchString[% Data.Identifier | html %]').val();
+        Data.CustomerUserID = $('#SelectedCustomerUser').val();
 
         KIXSidebarTools.UpdateSidebar(
             'KIXSidebarRemoteDBSearchAJAXHandler',
@@ -157,7 +157,7 @@
 
     var Data = {};
     Data.SearchString   = '*';
-    Data.CustomerUserID = encodeURIComponent($('#SelectedCustomerUser').val());
+    Data.CustomerUserID = $('#SelectedCustomerUser').val();
 
     KIXSidebarTools.UpdateSidebar(
         'KIXSidebarRemoteDBSearchAJAXHandler',
@@ -184,12 +184,12 @@
 
             var SearchString = '*';
             if ( $('#SearchString[% Data.Identifier | html %]').length == 1 ) {
-                SearchString = encodeURIComponent($('#SearchString[% Data.Identifier | html %]').val());
+                SearchString = $('#SearchString[% Data.Identifier | html %]').val();
             }
 
             var Data = {};
             Data.SearchString   = SearchString;
-            Data.CustomerUserID = encodeURIComponent($('#SelectedCustomerUser').val());
+            Data.CustomerUserID = $('#SelectedCustomerUser').val();
 
             KIXSidebarTools.UpdateSidebar(
                 'KIXSidebarRemoteDBSearchAJAXHandler',

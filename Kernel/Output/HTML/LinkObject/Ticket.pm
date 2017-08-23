@@ -738,16 +738,17 @@ sub SearchOptionList {
         }
     }
 
+    # if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Type') ) {
+    #     push @SearchOptionList,
+    #         {
+    #         Key  => 'TypeIDs',
+    #         Name => Translatable('Type'),
+    #         Type => 'List',
+    #         };
+    # }
+
     # EO KIX4OTRS-capeIT
 
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Type') ) {
-        push @SearchOptionList,
-            {
-            Key  => 'TypeIDs',
-            Name => Translatable('Type'),
-            Type => 'List',
-            };
-    }
 
     if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ArchiveSystem') ) {
         push @SearchOptionList,
@@ -895,9 +896,6 @@ sub SearchOptionList {
 }
 
 1;
-
-
-
 
 =back
 

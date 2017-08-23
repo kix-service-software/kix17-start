@@ -79,6 +79,24 @@ sub Run {
             Value  => $TimeObject->SystemTime(),
         );
 
+        # get groups rw/ro
+        for my $Type (qw(rw ro)) {
+            my %GroupData = $Kernel::OM->Get('Kernel::System::CustomerGroup')->GroupMemberList(
+                Result => 'HASH',
+                Type   => $Type,
+                UserID => $CustomerData{UserID},
+            );
+
+            for ( sort keys %GroupData ) {
+                if ( $Type eq 'rw' ) {
+                    $CustomerData{"UserIsGroup[$GroupData{$_}]"} = 'Yes';
+                }
+                else {
+                    $CustomerData{"UserIsGroupRo[$GroupData{$_}]"} = 'Yes';
+                }
+            }
+        }
+
         # create new session id
         my $NewSessionID = $SessionObject->CreateSessionID(
             %CustomerData,
