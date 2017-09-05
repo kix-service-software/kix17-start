@@ -2573,7 +2573,7 @@ sub Run {
                         Data => {
                             Title => "$DataValue " || '',
                             WholeTitle => $WholeTitle,
-                            Class => $CSSClass || '',
+                            Class      => $CSSClass || '',
                         },
                     );
 
