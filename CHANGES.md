@@ -2,6 +2,9 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 * $Id$
 
+#17.2.0 (2017/10/??)
+ * (2017/09/05) - Bugfix: T2017090190001003 (disabled dynamic fields shown in dashlet preferences) (ddoerffel)
+
 #17.1.1 (2017/08/23)
  * (2017/08/23) - Bugfix: T2017081590001097 (email addresses contained in description part of email address will be stored in addressbook) (rbo)
  * (2017/08/23) - Bugfix: T2017062790000766 (special characters displayed wrong in ci search sidebar) (ddoerffel)
