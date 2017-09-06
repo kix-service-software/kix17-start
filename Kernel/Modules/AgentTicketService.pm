@@ -920,12 +920,13 @@ sub _MaskServiceViewTree {
 
         # should I focus and expand this queue
         my $ListClass = '';
+        my $DataJSTree = '';
         if ( $Param{SelectedService} =~ /^\Q$ServiceName[0]\E/ && $Level - 1 >= $#ServiceName ) {
             if ( $#MetaService >= $#ServiceName ) {
                 my $CompareString = $MetaService[0];
                 for ( 1 .. $#ServiceName ) { $CompareString .= "::" . $MetaService[$_]; }
                 if ( $Service{Service} =~ /^\Q$CompareString\E$/ ) {
-                    $ListClass .= ' Active';
+                    $DataJSTree = '{"opened":true,"selected":true}';
                 }
             }
         }
@@ -948,7 +949,7 @@ sub _MaskServiceViewTree {
         }
 
         $Param{ServiceStrg}
-            .= "<li class='Node $ListClass' id='ServiceID_$Service{ServiceID}'>" . $ServiceStrg;
+            .= "<li class='Node $ListClass' data-jstree='$DataJSTree' id='ServiceID_$Service{ServiceID}'>" . $ServiceStrg;
 
         # keep current Service level for next Service
         $ServiceBuildLastLevel = $#ServiceName;
