@@ -4,6 +4,7 @@
 
 #17.2.0 (2017/10/??)
  * (2017/09/06) - Bugfix: T2017090590000659 (sysconfig group changed for dashboard search templates) (ddoerffel)
+ * (2017/09/05) - Bugfix: T2017090190001003 (disabled dynamic fields shown in dashlet preferences) (ddoerffel)
 
 #17.1.1 (2017/08/23)
  * (2017/08/23) - Bugfix: T2017090590000739 (valid_id not needed in cip_allocation table) (ddoerffel)
