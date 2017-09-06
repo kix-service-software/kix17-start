@@ -89,6 +89,9 @@ Core.Form = (function (TargetNS) {
         $Form
             .find("input:not([type=hidden]), textarea, select")
             .removeAttr('readonly')
+            // KIX4OTRS-capeIT
+            .removeAttr('disabled')
+            // EO KIX4OTRS-capeIT
             .end()
             .find('button')
             .removeAttr('disabled');
@@ -107,7 +110,7 @@ Core.Form = (function (TargetNS) {
                 if (ReadonlyValue === 'readonly') {
                     $(this).attr('readonly', 'readonly');
                 }
-// KIX4OTRS-capeIT
+                // KIX4OTRS-capeIT
                 // re-activate RichTextEditor
                 else if (typeof CKEDITOR != 'undefined' && $(this).hasClass('RichText') && CKEDITOR.instances[$(this).attr('id')] != 'undefined') {
                     var EditorID = $(this).attr('id');
@@ -115,7 +118,7 @@ Core.Form = (function (TargetNS) {
                         Core.Form._DeactivateEditorReadonly(EditorID, 0);
                     }, 50);
                 }
-// EO KIX4OTRS-capeIT
+                // EO KIX4OTRS-capeIT
             }
         });
 
@@ -197,7 +200,7 @@ Core.Form = (function (TargetNS) {
         }
     };
 
-// KIX4OTRS-capeIT
+    // KIX4OTRS-capeIT
     // we have to wait for the editor to be completely initialized, otherwise the form will be unusable due to a JS error
     TargetNS._DeactivateEditorReadonly = function(EditorID, RetryCount) {
         if (CKEDITOR.instances[EditorID].editable() == undefined && RetryCount++ < 10) {
@@ -208,7 +211,7 @@ Core.Form = (function (TargetNS) {
             CKEDITOR.instances[EditorID].setReadOnly(false);
         }
     }
-// EO KIX4OTRS-capeIT
+    // EO KIX4OTRS-capeIT
 
     return TargetNS;
 }(Core.Form || {}));
