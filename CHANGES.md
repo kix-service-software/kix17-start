@@ -3,6 +3,7 @@
 * $Id$
 
 #17.2.0 (2017/10/??)
+ * (2017/09/06) - Bugfix: T2017090590000659 (sysconfig group changed for dashboard search templates) (ddoerffel)
  * (2017/09/05) - Bugfix: T2017090190001003 (disabled dynamic fields shown in dashlet preferences) (ddoerffel)
 
 #17.1.1 (2017/08/23)
