@@ -4540,6 +4540,12 @@ sub _StoreActivityDialog {
     my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # KIX4OTRS-capeIT
+
+    # All Ticket DynamicFields
+    # used for ACL checking
+    my %DynamicFieldCheckParam = map { $_ => $Param{GetParam}{$_} }
+        grep {m{^DynamicField_}xms} ( keys %{ $Param{GetParam} } );
+
     # get acl data to decide if dynamic field is hidden or not
     # cycle through the activated Dynamic Fields for this screen and check acl use
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
@@ -4563,6 +4569,7 @@ sub _StoreActivityDialog {
         # set possible values filter from ACLs
         my $ACL = $TicketObject->TicketAcl(
             %{ $Param{GetParam} },
+            DynamicField  => \%DynamicFieldCheckParam,
             ReturnType    => 'Ticket',
             ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
             Data          => \%AclData,
