@@ -2595,11 +2595,6 @@ sub _RenderDynamicField {
         }
     }
 
-    # KIX4OTRS-capeIT
-    if ( $DynamicFieldConfig->{Shown} ) {
-
-        # EO KIX4OTRS-capeIT
-
         my $DynamicFieldHTML = $DynamicFieldBackendObject->EditFieldRender(
             DynamicFieldConfig   => $DynamicFieldConfig,
             PossibleValuesFilter => $PossibleValuesFilter,
@@ -2613,10 +2608,18 @@ sub _RenderDynamicField {
             ErrorMessage         => $ErrorMessage,
         );
 
+        # set class for dynamic field depending on shown or not
+        my $Class = "";
+        if ( !$DynamicFieldConfig->{Shown} ) {
+            $Class = " Hidden";
+            $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
+        }
+
         my %Data = (
             Name    => $DynamicFieldConfig->{Name},
             Label   => $DynamicFieldHTML->{Label},
             Content => $DynamicFieldHTML->{Field},
+            Class => $Class,
         );
 
         $LayoutObject->Block(
@@ -2640,10 +2643,6 @@ sub _RenderDynamicField {
                     DescriptionLong => $Param{DescriptionLong},
                 },
             );
-
-        # KIX4OTRS-capeIT
-        }
-        # EO KIX4OTRS-capeIT
     }
 
     return {
