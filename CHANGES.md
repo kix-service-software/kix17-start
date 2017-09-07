@@ -3,6 +3,7 @@
 * $Id$
 
 #17.2.0 (2017/10/??)
+ * (2017/09/07) - Bugfix: T2017081190001121 (process dialog not submitted using hidden mandatory fields) (ddoerffel)
  * (2017/09/07) - Bugfix: T2017021590001222 (enabling dynamic fields not working on first process managent dialog) (ddoerffel)
  * (2017/09/06) - Bugfix: T2017090690000808 (wrong logo in customer frontend) (ddoerffel)
  * (2017/09/06) - Bugfix: T2017052490000961 (disabled fields after attachment upload) (ddoerffel)
