@@ -8,7 +8,6 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-
 [% RenderBlockStart("rw:DynamicField") %]
 <div class="Row Row_DynamicField_[% Data.Name %] [% Data.Class | html %]">
 [% RenderBlockStart("rw:DynamicField:DescriptionLong") %]
