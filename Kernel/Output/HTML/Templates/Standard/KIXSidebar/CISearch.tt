@@ -206,7 +206,7 @@
             );
 
             var SearchString = '*';
-            if ( $('#SearchString[% Data.Identifier | html %]').length == 1 ) {
+            if ( $('#SearchString[% Data.Identifier | html %]').length == 1 && $('#SearchString[% Data.Identifier | html %]').val() != "" ) {
                 SearchString = $('#SearchString[% Data.Identifier | html %]').val();
             }
 

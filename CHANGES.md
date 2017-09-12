@@ -3,6 +3,8 @@
 * $Id$
 
 #17.2.0 (2017/10/??)
+ * (2017/09/12) - Bugfix: T2017091190000791 (internal server error if QueueIDs no array) (ddoerffel)
+ * (2017/09/08) - Bugfix: T2017033190000656 (no autosearch on changed selected customer user) (ddoerffel)
  * (2017/09/07) - Bugfix: T2017081190001121 (process dialog not submitted using hidden mandatory fields) (ddoerffel)
  * (2017/09/07) - Bugfix: T2017021590001222 (enabling dynamic fields not working on first process managent dialog) (ddoerffel)
  * (2017/09/06) - Bugfix: T2017090690000808 (wrong logo in customer frontend) (ddoerffel)

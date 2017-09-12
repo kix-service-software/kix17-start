@@ -48,7 +48,7 @@ sub Run {
     # only show the escalations on ticket overviews
     return ''
         if $LayoutObject->{Action}
-        !~ /^AgentTicket(Queue|(Status|Locked|Watch|Responsible)View)/;
+        !~ /^AgentTicket(Queue|Service|(Status|Locked|Watch|Responsible)View)/;
 
     # get cache object
     my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
@@ -87,7 +87,7 @@ sub Run {
 
     # KIX4OTRS-capeIT
     my @TicketIDs;
-    if ( @{ $SearchAdd{QueueIDs} } ) {
+    if ( ref $SearchAdd{QueueIDs} eq 'ARRAY' && @{ $SearchAdd{QueueIDs} } ) {
         @TicketIDs = $TicketObject->TicketSearch(
             Result                           => 'ARRAY',
             Limit                            => $ShownMax,
@@ -211,12 +211,7 @@ sub Run {
             }
             elsif ( $Ticket{SolutionTimeNotification} ) {
                 $LayoutObject->Block(
-
-                    # KIX4OTRS-capeIT (OTRS-Bug)
-                    # Name => 'TicketEscalationSolutionTimeOver',
                     Name => 'TicketEscalationSolutionTimeWillBeOver',
-
-                    # EO KIX4OTRS-capeIT
                     Data => \%Ticket,
                 );
                 my $Data = $LayoutObject->Output(
