@@ -180,10 +180,11 @@
     }
     $('#SelectedCustomerUser').bind('change',
         function(){
+
             KIXSidebarTools.UpdateDynamicField('[% Data.DynamicFields | html %]', '', '[% Data.TicketID | html %]');
 
             var SearchString = '*';
-            if ( $('#SearchString[% Data.Identifier | html %]').length == 1 ) {
+            if ( $('#SearchString[% Data.Identifier | html %]').length == 1 && $('#SearchString[% Data.Identifier | html %]').val() != "" ) {
                 SearchString = $('#SearchString[% Data.Identifier | html %]').val();
             }
 
