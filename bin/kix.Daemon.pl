@@ -32,6 +32,7 @@ if ( $^O eq 'MSWin32' ) {
     $IsWin32 = 1;
 }
 
+use Kernel::Config;
 use Kernel::System::ObjectManager;
 
 print STDOUT "kix.Daemon.pl - the KIX daemon\n";
