@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.0 (2017/10/??)
+ * (2017/09/13) - Bugfix: T2017091290001153 (textmodules with same name not shown both) (ddoerffel)
  * (2017/09/12) - Bugfix: T2017033190000656 (no autosearch on customer user change in remote db and ci search sidebars) (ddoerffel)
  * (2017/09/12) - Bugfix: T2017091190000791 (internal server error if QueueIDs no array) (ddoerffel)
  * (2017/09/08) - Bugfix: T2017033190000656 (no autosearch on changed selected customer user) (ddoerffel)
