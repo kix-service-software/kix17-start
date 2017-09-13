@@ -4055,7 +4055,12 @@ sub _StoreActivityDialog {
             URL => "Action=CustomerTicketZoom;TicketID=$UpdateTicketID",
         );
     }
-
+    elsif ($NewTicketID) {
+        return $LayoutObject->PopupClose(
+            URL => "Action=CustomerTicketZoom;TicketID=$NewTicketID",
+        );
+    }
+    
     return $LayoutObject->Redirect(
         OP => "Action=CustomerTicketZoom;TicketID=$TicketID",
     );
