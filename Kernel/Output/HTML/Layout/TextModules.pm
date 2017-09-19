@@ -139,7 +139,7 @@ sub TextModuleCategoryTree {
                     . $Param{CategoryTextModules}->{$CategoryID}->{$CurrHashID}->{Name};
                 my @Split = split( /::/, $TextModuleName );
 
-                $AllCategoriesData{$TextModuleName} = {
+                $AllCategoriesData{$TextModuleName ."::" .$Param{CategoryTextModules}->{$CategoryID}->{$CurrHashID}->{Language}} = {
                     Name => $Param{CategoryTextModules}->{$CategoryID}->{$CurrHashID}->{Name},
                     ID   => $CurrHashID,
                     Language =>

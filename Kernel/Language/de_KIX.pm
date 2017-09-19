@@ -2536,7 +2536,7 @@ sub Data {
     $Lang->{'Router'}                        = 'Router';
     $Lang->{'Scanner'}                       = 'Scanner';
     $Lang->{'Search Config Items'}           = 'Config Item Suche';
-    $Lang->{'Security Device'}               = 'Sichertheitsgerät';
+    $Lang->{'Security Device'}               = 'Sicherheitsgerät';
     $Lang->{'Serial Number'}                 = 'Seriennummer';
     $Lang->{'Server'}                        = 'Server';
     $Lang->{'Server Application'}            = 'Server Anwendung';

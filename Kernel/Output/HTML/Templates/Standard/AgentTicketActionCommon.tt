@@ -666,6 +666,10 @@ $('#TypeID').bind('change', function (Event) {
     if ( Core.UI && Core.KIX4OTRS.KIXSidebar ) {
         Core.KIX4OTRS.KIXSidebar.Init('[% Data.SidebarWidthString %]','[% Env("Action") %]','TicketID=[% Data.TicketID | uri %]');
     }
+    // count blocks and open collapsed block if it is the only one
+    if ( $(".ContentColumn .WidgetSimple").length == 1 ) {
+        $(".ContentColumn .WidgetSimple").removeClass('Collapsed').addClass('Expanded');
+    }
 # EO KIX4OTRS-capeIT
     Core.Agent.TicketAction.Init();
 # ---

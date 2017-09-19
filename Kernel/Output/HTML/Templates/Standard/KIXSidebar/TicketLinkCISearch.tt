@@ -59,7 +59,7 @@
         var Data = {};
         Data.TicketID  = TicketID;
         Data.FormID    = FormID;
-        Data.TicketIDs = encodeURIComponent(TicketIDStrg);
+        Data.TicketIDs = TicketIDStrg;
 
         KIXSidebarTools.UpdateSidebar(
             'KIXSidebarTicketLinkCISearchAJAXHandler',

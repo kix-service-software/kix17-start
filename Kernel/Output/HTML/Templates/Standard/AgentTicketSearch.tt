@@ -21,10 +21,7 @@
 # EO KIX4OTRS-capeIT
         <fieldset class="TableLike">
             <legend><span>[% Translate("Templates") | html %]</span></legend>
-# KIX4OTRS-capeIT
-#            <label>[% Translate("Search template") | html %]:</label>
             <label for="SearchProfile">[% Translate("Search template") | html %]:</label>
-# EO KIX4OTRS-capeIT
             <div class="Field">
                 [% Data.ProfilesStrg %]
 

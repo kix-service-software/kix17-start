@@ -8,7 +8,7 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package KIX4OTRS::Kernel::System::SysConfigChangeLog::SysLog;
+package Kernel::System::SysConfigChangeLog::SysLog;
 
 use strict;
 use warnings;

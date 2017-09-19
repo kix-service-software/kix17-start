@@ -106,11 +106,9 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#DestQueueID').bind('change', function (Event) {
-        // KIX4OTRS-capeIT
-        // do not submit if no queue selected
-        if ( $(this).val() != '0' )
-        // EO KIX4OTRS-capeIT
+        if ($('#DestQueueID option:selected').val()) {
             $(this).closest('form').submit();
+        }
     });
 //]]></script>
 [% END %]

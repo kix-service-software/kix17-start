@@ -1,0 +1,304 @@
+/**
+ * This software is part of the KIX project, http://www.kixdesk.com/
+ * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+ * --
+ * @project KIX (http://www.kixdesk.com) <http://www.kixdesk.com> - Customer Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (http://www.gnu.org/licenses/agpl.txt) <http://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file COPYING for license information (AGPL). If you
+ * did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+
+/**
+ * @subsection  Header
+ */
+
+.KIXSidebarTools.Request .Header {
+    background-image: url('../img/loader.gif');
+    background-position: right center;
+    background-repeat: no-repeat;
+}
+
+/**
+ * @subsection  Navigation
+ */
+
+div.SearchBox input[type=Text] {
+    margin: 0;
+    width: 150px;
+    font-size: 14px;
+}
+
+.DataTable tbody tr,
+.TableSmall tbody tr {
+    position: relative;
+}
+
+.DataTable tbody tr:hover,
+.TableSmall tbody tr:hover {
+    z-index: 10;
+}
+
+.DataTable tbody td:first-child,
+.TableSmall tbody td:first-child {
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.DataTable tbody td.Last,
+.TableSmall tbody td.Last {
+    border-right: none;
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    -moz-border-radius-bottomright: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.DataTable tbody tr:hover td,
+.TableSmall tbody tr:hover td {
+    background: url(../img/table_small_hover_bg.png) repeat-x center;
+    background: -moz-linear-gradient(center top, #FFE7BD, #FBBA49 20%, #F6AD3E 51%, #F3960D 51%, #E98207 95%, #E07006);
+    background: -webkit-gradient(linear, left top, left bottom, from(#FFE7BD), to(#E07006), color-stop(20%, #FBBA49), color-stop(51%, #F6AD3E), color-stop(51%, #F3960D), color-stop(95%, #E98207));
+    -moz-box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+}
+
+.DataTable tbody tr.Last:hover td,
+.TableSmall tbody tr.Last:hover td {
+    -moz-box-shadow: 0 0 0;
+    -webkit-box-shadow: 0 0 0;
+    box-shadow: 0 0 0;
+}
+
+.DataTable tbody tr:active td.Clickable,
+.TableSmall tbody tr:active td.Clickable {
+    background: url(../img/table_small_hover_bg.png) repeat-x center;
+    background: -moz-linear-gradient(center top, #FFE4B5, #FAA91C 20%, #EB8C0B 95%, #E37B09);
+    background: -webkit-gradient(linear, left top, left bottom, from(#FFE4B5), to(#E37B09), color-stop(20%, #FBB93D), color-stop(51%, #F6AB2D), color-stop(51%, #F49F13), color-stop(95%, #EB8C0B));
+    -moz-box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+}
+
+/**
+ * @subsection  Generic table elements
+ */
+
+.DataTable td,
+.TableSmall td {
+    line-height: 15px;
+    vertical-align: middle;
+}
+
+.DataTable tr:hover,
+.TableSmall tr:hover {
+    color: #000;
+}
+
+/**
+ * @subsection  Standard DataTable
+ */
+.DataTable {
+    width: 100%;
+    background-color: #FDFDFD;
+    border: 1px solid #C9C9C9;
+    border-top-color: #C0C0C0;
+    clear: both;
+    border-collapse: separate;
+    -moz-box-shadow: 0 1px 0 #FFF;
+    -webkit-box-shadow: 0 1px 0 #FFF;
+    box-shadow: 0 1px 0 #FFF;
+}
+
+.DataTable.VariableWidth {
+    width: auto;
+}
+
+.DataTable thead {
+    background-color: #EEE;
+}
+
+.DataTable thead th {
+    padding: 4px 10px 3px;
+    color: #4B4B4B;
+    font-size: 11px;
+    text-transform: uppercase;
+    background: none;
+    border-top: 1px solid #FFF;
+    border-bottom: 1px solid #BBB;
+    border-right: 1px solid #CCC;
+    vertical-align: bottom;
+    white-space: nowrap;
+    cursor: default;
+}
+
+.RTL .DataTable thead th {
+    border-left: 1px solid #CCC;
+    border-right:none;
+}
+
+.DataTable thead th.SortColumn {
+    cursor: pointer;
+}
+
+.DataTable thead th.headerSortDown:after {
+    content: "\25BC";
+    text-shadow: 1px 1px 0px #fff;
+}
+
+.DataTable thead th.headerSortUp:after {
+    content: "\25B2";
+    text-shadow: 1px 1px 0px #fff;
+}
+
+.DataTable thead th.Last {
+    background: none;
+    border-right: none;
+}
+
+.RTL .DataTable thead th.Last {
+    border-left: none;
+}
+
+.DataTable tbody {
+    -moz-box-shadow: 0 1px 2px #E8E8E8 inset;
+    -webkit-box-shadow: 0 1px 2px #E8E8E8 inset;
+    box-shadow: 0 1px 2px #E8E8E8 inset;
+}
+
+.DataTable tbody tr.Invalid {
+    color: #CCC;
+}
+
+.DataTable tbody td {
+    padding: 0 10px;
+    border-right: 1px dotted #CCC;
+}
+
+.RTL .DataTable tbody td {
+    border-left: 1px dotted #CCC;
+    border-right: none;
+}
+
+.DataTable tbody td.Last {
+    border-right: none;
+}
+
+.DataTable tbody td:last-child {
+    border-right: none;
+}
+
+.RTL .DataTable tbody td.Last {
+    border-left: none;
+}
+
+.RTL .DataTable tbody td:last-child {
+    border-left: none;
+}
+
+.DataTable tr td {
+    line-height: 20px;
+}
+
+.DataTable tr:first-child td {
+    border-top: 1px solid #EEE;
+}
+
+.DataTable tr td.Highlight {
+    background-color: #EEE;
+}
+
+.DataTable tr.Even td {
+    background-color: #F5F5F5;
+}
+
+.DataTable tr:nth-child(even) td {
+    background-color: #F5F5F5;
+}
+
+.DataTable tr.Even td.Highlight {
+    background-color: #E5E5E5;
+}
+
+.DataTable tr:nth-child(even) td.Highlight {
+    background-color: #E5E5E5;
+}
+
+.DataTable tr:hover td a {
+    color: #000;
+}
+
+.DataTable td:first-child input {
+    margin: 0;
+}
+
+iframe.TextOption {
+    min-height: 600px;
+    width: 900px;
+}
+
+/**
+ *  Remote Popup
+ */
+.KIXSBRDBPopupBlock {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(45, 45, 45, 0.46);
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display:none;
+}
+.KIXSBRDBPopupBox {
+  min-width: 300px;
+  min-height: 70px;
+  border: 1px solid #c0c0c0;
+  position: fixed;
+  left: 42%;
+  top: 30%;
+  background-color: #fff;
+}
+.KIXSBRDBPopupBox > .Spacing{
+    max-width: 700px;
+    max-height: 500px;
+    overflow: auto;
+}
+.KIXSBRDBPopupBoxHead {
+    background-color: #eee;
+    position: relative;
+    border-bottom: 1px solid #c0c0c0;
+}
+.KIXSBRDBPopupBoxHead h3 {
+  padding: 5px;
+  margin: 0;
+  font-weight: bold;
+  line-height: 24px;
+}
+.KIXSBRDBPopupBoxHead i {
+  position: absolute;
+  color: #111;
+  top: 0;
+  right: 0;
+  padding: 11px;
+  cursor: pointer;
+}
+.KIXSBRDBPopupBoxFooter {
+    height: 20px;
+    background-color: #eee;
+    border-top: 1px solid #c0c0c0;
+}
+
+} /* end @media */

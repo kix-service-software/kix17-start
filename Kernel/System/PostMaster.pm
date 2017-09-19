@@ -168,9 +168,13 @@ sub Run {
     my $GetParam = $Self->GetEmailParams();
 
     # get tickets containing this message
-    my @SkipTicketIDs = $TicketObject->ArticleGetTicketIDsOfMessageID(
-        MessageID => $GetParam->{'Message-ID'},
-    );
+    my @SkipTicketIDs = qw{};
+    if( $GetParam->{'Message-ID'} ) {
+        @SkipTicketIDs = $TicketObject->ArticleGetTicketIDsOfMessageID(
+            MessageID => $GetParam->{'Message-ID'},
+        );
+    }
+
     my %SkipTicketIDHash = ();
     for my $TicketID ( @SkipTicketIDs ) {
         $SkipTicketIDHash{$TicketID} = 1;
@@ -603,7 +607,7 @@ sub GetEmailParams {
     for my $Param ( @{ $Self->{'PostmasterX-Header'} } ) {
 
         # do not scan x-otrs headers if mailbox is not marked as trusted
-        next HEADER if ( !$Self->{Trusted} && $Param =~ /^x-otrs/i );
+        next HEADER if ( !$Self->{Trusted} && $Param =~ /^(x-otrs|x-kix)/i );
         if ( $Self->{Debug} > 2 ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'debug',

@@ -52,6 +52,13 @@
 
 [% RenderBlockStart("HeaderLogoCSS") %]
     <style type="text/css">
+        .LoginLogo {
+            background-image: [% Data.URL | html %];
+            top: [% Data.StyleTop | html %];
+            right: [% Data.StyleRight | html %];
+            width: [% Data.StyleWidth | html %];
+            height: [% Data.StyleHeight | html %];
+        }
         #Header #Logo {
             background-image: [% Data.URL | html %];
             top: [% Data.StyleTop | html %];

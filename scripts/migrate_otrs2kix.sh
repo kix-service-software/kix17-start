@@ -151,7 +151,7 @@ case $KIX_DBMS in
         echo migrating database
         # create dump of old database
         echo "  creating database dump"
-        sudo -u postgres bash -c "pg_dump $USE_OTRS_DBHOST $OTRS_DB -f $TMP_PATH/kix_migration/kix_db.dmp 2>&1 >> $LOGFILE"
+        sudo -u postgres bash -c "pg_dump -O $USE_OTRS_DBHOST $OTRS_DB -f $TMP_PATH/kix_migration/kix_db.dmp 2>&1 >> $LOGFILE"
 
         # drop database
         echo "  dropping database"
@@ -201,6 +201,8 @@ sudo -u $APACHEUSER bash -c "/opt/kix/bin/kix.Console.pl Maint::Loader::CacheCle
 echo
 echo "*****************************************************************************************"
 echo "The migration has been finished. Cronjobs, the daemon and the webserver are still stopped."
+echo "Please check the migration log and Support Data Collector for errors."
+echo "You can find the migration log file here: $LOGFILE"
 echo
 echo "Now copy your changes in $OTRS_PATH/Kernel/Config.pm to /opt/kix/Kernel/Config.pm."
 echo "Also please copy your old OTRS SystemID setting to the KIX Config.pm."

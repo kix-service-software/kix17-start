@@ -160,6 +160,8 @@ sub Run {
     # my config item object
     my $ConfigItemObject = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
 
+    my $IncludePostproductive = $Kernel::OM->Get('Kernel::Config')->Get('ConfigItemOverview::ShowDeploymentStatePostproductive') || '';
+
     CLASSID:
     for my $ClassID ( sort { ${$ClassList}{$a} cmp ${$ClassList}{$b} } keys %{$ClassList} ) {
 
@@ -178,7 +180,8 @@ sub Run {
 
         # count all records of this class
         my $ClassCount = $ConfigItemObject->ConfigItemCount(
-            ClassID => $ClassID,
+            ClassID               => $ClassID,
+            IncludePostproductive => $IncludePostproductive,
         );
 
         # add the config items number in this class to the total
