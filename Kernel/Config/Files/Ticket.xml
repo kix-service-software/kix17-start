@@ -10367,6 +10367,7 @@
                 <Item Key="Ticket">Ticket</Item>
                 <Item Key="Action">Action</Item>
                 <Item Key="ActivityDialog">ActivityDialog</Item>
+                <Item Key="Form">Form</Item>
                 <Item Key="Process">Process</Item>
             </Hash>
         </Setting>
