@@ -162,12 +162,7 @@ sub Run {
     }
 
     # check ArticleType
-    # BPMX-capeIT
-    #    TODO Test => consultation tto => ReleaseTicket => sopm
-    #    if ( $Param{Config}->{ArticleType} =~ m{\A email }msxi ) {
     if ( !( $Param{Config}->{ArticleType} =~ m{\A email }msxi ) ) {
-
-        # EO BPMX-capeIT
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => $CommonMessage
@@ -191,11 +186,7 @@ sub Run {
         $Param{Config}->{From} = $User{UserFullname} . ' <' . $User{UserEmail} . '>';
     }
 
-    # BPMX-capeIT
-    #    my $ArticleID = $TicketObject->ArticleCreate(
     my $ArticleID = $TicketObject->ArticleSend(
-
-        # EO BPMX-capeIT
         %{ $Param{Config} },
         TicketID => $Param{Ticket}->{TicketID},
         UserID   => $Param{UserID},
@@ -225,9 +216,6 @@ sub Run {
 }
 
 1;
-
-
-
 
 =back
 
