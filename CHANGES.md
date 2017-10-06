@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.0 (2017/10/??)
+ * (2017/10/05) - CR: T2016061790000705 (added export name of object from CIClassReference) (fjacquemin)
  * (2017/10/05) - CR: T2017012390000541 (added TicketArticleSend TransitionAction) (ddoerffel)
  * (2017/10/04) - CR: T2017012390000568 (added TicketPrioritySet TransitionAction) (ddoerffel)
  * (2017/09/21) - CR: T2016081890000585 (hide dynamic fields for CustomerTicketProcess) (ddoerffel)
