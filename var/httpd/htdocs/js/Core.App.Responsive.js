@@ -78,7 +78,11 @@ Core.App.Responsive = (function (TargetNS) {
      *      Checks which is the active screen size and fires the matching events.
      *      Additionally sets the screen size body class.
      */
-    function CheckScreenResolution() {
+    function CheckScreenResolution(waitForResponsiveCss) {
+        if (waitForResponsiveCss && $('#ResponsiveCssLoaded').is(':visible')) {
+            window.setTimeout(function() { CheckScreenResolution(true); }, 250);
+            return;
+        }
         var $ResponsiveFooter = $('#ResponsiveFooter'),
             AllClasses = GetAllScreenClasses().join(' '),
             Key, i;
@@ -252,7 +256,7 @@ Core.App.Responsive = (function (TargetNS) {
         Core.App.Subscribe('Event.App.Responsive.SmallerOrEqualScreenXL', function () {
         });
 
-        CheckScreenResolution();
+        CheckScreenResolution(true);
     };
 
     return TargetNS;

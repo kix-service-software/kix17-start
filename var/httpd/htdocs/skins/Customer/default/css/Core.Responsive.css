@@ -424,3 +424,7 @@
 @media only screen and (max-width: 319px) {
 
 }
+
+#ResponsiveCssLoaded {
+    display: none;
+}
