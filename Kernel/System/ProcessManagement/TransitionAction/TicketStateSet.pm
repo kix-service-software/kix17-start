@@ -211,7 +211,6 @@ sub Run {
         $Success
         && IsHashRefWithData( \%StateData )
         && $StateData{TypeName} =~ m{\A pending}msxi
-        && IsNumber( $Param{Config}->{PendingTimeDiff} )
         )
     {
 
@@ -221,29 +220,75 @@ sub Run {
         # get current time
         my $PendingTime = $TimeObject->SystemTime();
 
-        # add PendingTimeDiff
-        $PendingTime += $Param{Config}->{PendingTimeDiff};
+        if (
+            IsNumber( $Param{Config}->{PendingTimeDiff} )
+            )
+        {
 
-        # convert pending time to time stamp
-        my $PendingTimeString = $TimeObject->SystemTime2TimeStamp(
-            SystemTime => $PendingTime,
-        );
+            # add PendingTimeDiff
+            $PendingTime += $Param{Config}->{PendingTimeDiff};
 
-        # set pending time
-        $Kernel::OM->Get('Kernel::System::Ticket')->TicketPendingTimeSet(
-            UserID   => $Param{UserID},
-            TicketID => $Param{Ticket}->{TicketID},
-            String   => $PendingTimeString,
-        );
+            # convert pending time to time stamp
+            my $PendingTimeString = $TimeObject->SystemTime2TimeStamp(
+                SystemTime => $PendingTime,
+            );
+
+            # set pending time
+            $Kernel::OM->Get('Kernel::System::Ticket')->TicketPendingTimeSet(
+                UserID   => $Param{UserID},
+                TicketID => $Param{Ticket}->{TicketID},
+                String   => $PendingTimeString,
+            );
+
+        }
+        elsif ( $Param{Config}->{PendingDateTime} && ref $Param{Config}->{Placeholder} eq 'HASH' ) {
+            if (
+                defined $Param{Config}->{Placeholder}->{PendingDateTime}
+                && $Param{Config}->{Placeholder}->{PendingDateTime}
+                =~ /\<(KIX|OTRS)_TICKET_DynamicField_(.*?)\>/i
+                )
+            {
+                my $DynamicField
+                    = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
+                    Name => $2,
+                    );
+                if ( $DynamicField->{FieldType} eq 'DateTime' ) {
+
+                    # set pending time
+                    $Kernel::OM->Get('Kernel::System::Ticket')->TicketPendingTimeSet(
+                        UserID   => $Param{UserID},
+                        TicketID => $Param{Ticket}->{TicketID},
+                        String   => $Param{Config}->{PendingDateTime},
+                    );
+
+                }
+                elsif ( $DynamicField->{FieldType} eq 'Date' ) {
+
+                    # set pending time
+                    $Kernel::OM->Get('Kernel::System::Ticket')->TicketPendingTimeSet(
+                        UserID   => $Param{UserID},
+                        TicketID => $Param{Ticket}->{TicketID},
+                        String   => $Param{Config}->{PendingDateTime}.' 00:00:00',
+                    );
+
+                }
+                else {
+                    $Kernel::OM->Get('Kernel::System::Log')->Log(
+                        Priority => 'error',
+                        Message  => $CommonMessage
+                            . "Couldn't set pending time - no valid date or datetime dynamic field!",
+                    );
+
+                }
+            }
+        }
+
     }
 
     return $Success;
 }
 
 1;
-
-
-
 
 =back
 

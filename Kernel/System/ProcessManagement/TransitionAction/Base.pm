@@ -307,6 +307,13 @@ sub _ReplaceTicketAttributes {
 # ...
 
     for my $Attribute ( sort keys %{ $Param{Config} } ) {
+        
+        # save placeholder
+        if ( $Param{Config}->{$Attribute} =~ /<(KIX|OTRS)_(.*?)>/i ) {
+            $Param{Config}->{Placeholder}->{$Attribute} = $Param{Config}->{$Attribute};
+        }
+    
+        # replace
         $Param{Config}->{$Attribute} = $Self->ReplaceExtended(
             RichText => '0',
             Text     => $Param{Config}->{$Attribute},
