@@ -119,4 +119,5 @@ Core.App.Ready(function () {
     <div class="Visible-ScreenM"></div>
     <div class="Visible-ScreenS"></div>
     <div class="Visible-ScreenXS"></div>
+    <div id="ResponsiveCssLoaded" data-status="if-visible-responsive-css-is-not-loaded-or-finished"></div>
 </div>
