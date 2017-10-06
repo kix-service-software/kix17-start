@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.0 (2017/10/??)
+ * (2017/10/06) - Bugfix: T2017071090001339 (solved problem with faq sidebar) (ddoerffel)
  * (2017/10/05) - Bugfix: T2017100590000996 (bpm should know custom dirs for transition actions) (fjacquemin)
  * (2017/09/27) - Bugfix: T2014040990000497 (draft not deleted after form submit) (millinger)
  * (2017/09/13) - Bugfix: T2016021190000911 (kix.Daemon.pl should know customer paths) (ddoerffel)
