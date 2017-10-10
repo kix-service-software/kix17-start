@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.0 (2017/10/??)
+ * (2017/10/10) - Bugfix: T2017090890000644 (upgrade of KIXPro package fails in case of minor version change) (rbo)
  * (2017/10/06) - Bugfix: T2017092690000931 (sidebar layout broken due to false mobile device/resolution detection) (uboehm)
  * (2017/10/06) - Bugfix: T2017071090001339 (solved problem with faq sidebar) (ddoerffel)
  * (2017/10/05) - Bugfix: T2017100590000996 (bpm should know custom dirs for transition actions) (fjacquemin)
