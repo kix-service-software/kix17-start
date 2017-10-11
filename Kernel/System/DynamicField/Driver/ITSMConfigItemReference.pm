@@ -809,6 +809,15 @@ END
             ) {
                 Init$ValueFieldName$ValueCounter();
             }
+            if (
+                \$('form[name=compose] input[name=Action]').first().val() == 'AdminNotificationEvent'
+                && (
+                    \$('form[name=compose] input[name=Subaction]').first().val() == 'ChangeAction'
+                    || \$('form[name=compose] input[name=Subaction]').first().val() == 'AddAction'
+                )
+            ) {
+                Init$ValueFieldName$ValueCounter();
+            }
         } else {
             window.setTimeout(Wait$ValueFieldName$ValueCounter, 1);
         }
@@ -911,6 +920,15 @@ END
             if (
                 \$('form[name=compose] input[name=Action]').first().val() == 'AdminGenericAgent'
                 && \$('form[name=compose] input[name=Subaction]').first().val() == 'UpdateAction'
+            ) {
+                Init$AutoCompleteFieldName();
+            }
+            if (
+                \$('form[name=compose] input[name=Action]').first().val() == 'AdminNotificationEvent'
+                && (
+                    \$('form[name=compose] input[name=Subaction]').first().val() == 'ChangeAction'
+                    || \$('form[name=compose] input[name=Subaction]').first().val() == 'AddAction'
+                )
             ) {
                 Init$AutoCompleteFieldName();
             }
@@ -1359,6 +1377,32 @@ sub ColumnFilterValuesGet {
     return $ColumnFilterValues;
 }
 
+sub ObjectMatch {
+    my ( $Self, %Param ) = @_;
+
+    my $FieldName = 'DynamicField_' . $Param{DynamicFieldConfig}->{Name};
+
+    # the attribute must be an array
+    return 0 if !IsArrayRefWithData( $Param{ObjectAttributes}->{$FieldName} );
+
+    my $Match;
+
+    # search in all values for this attribute
+    VALUE:
+    for my $AttributeValue ( @{ $Param{ObjectAttributes}->{$FieldName} } ) {
+
+        next VALUE if !defined $AttributeValue;
+
+        # only need to match one
+        if ( $Param{Value} eq $AttributeValue ) {
+            $Match = 1;
+            last VALUE;
+        }
+    }
+
+    return $Match;
+}
+
 sub _ExportXMLSearchDataPrepare {
     my ( $Self, %Param ) = @_;
 
@@ -1405,9 +1449,6 @@ sub _ExportXMLSearchDataPrepare {
 }
 
 1;
-
-
-
 
 =back
 
