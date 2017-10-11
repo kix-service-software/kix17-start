@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.0 (2017/10/??)
+ * (2017/10/10) - Bugfix: T2017101090000379 (fixed missing SLAReference autocomplete event in CI search) (fjacquemin)
  * (2017/10/10) - Bugfix: T2017100990000603 (fixed sql-statemant in ConfigItemSearchExtended) (fjacquemin)
  * (2017/10/11) - Bugfix: T2017060790000928 (fixed column content in ci-linked-objects list with custom sorted columns) (uboehm)
  * (2017/10/10) - Bugfix: T2017090890000644 (upgrade of KIXPro package fails in case of minor version change) (rbo)
