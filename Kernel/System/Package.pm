@@ -2641,7 +2641,7 @@ sub _CheckFramework {
     }
 
     my $FWCheck           = 0;
-    my $CurrentFramework  = $Self->{ConfigObject}->Get('Version');
+    my $CurrentFramework  = $Self->{ConfigObject}->Get('FrameworkVersion');
     my $PossibleFramework = '';
 
     if ( ref $Param{Framework} eq 'ARRAY' ) {
