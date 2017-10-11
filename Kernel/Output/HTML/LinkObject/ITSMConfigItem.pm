@@ -518,7 +518,9 @@ sub TableCreateComplex {
                         $TmpHashContent{MaxLength} = 50;
                     }
 
-                    $TmpHashContent{Content} = $Version->{$Col} || '';
+                    $TmpHashContent{Content} = $Version->{$Col} || $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
+                        String => $ExtendedVersionData->{$Col}->{Value},
+                    ) ||'';
                     $TmpHashContent{Type}    = 'Text';
                     $TmpHashContent{Key}     = $ConfigItemID;
 
