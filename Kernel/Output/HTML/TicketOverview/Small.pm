@@ -494,6 +494,18 @@ sub Run {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
+    # get needed un-/selected tickets for bulk feature
+    my @SelectedItems     = split(',', $Param{SelectedItems});
+    my @UnselectedItems   = split(',', $Param{UnselectedItems});
+
+    for my $TicketID ( @{$Param{TicketIDs}} ) {
+        if ( !grep(/^$TicketID$/, @UnselectedItems)
+            && !grep(/^$TicketID$/, @SelectedItems)
+        ) {
+            push(@UnselectedItems, $TicketID);
+        }
+    }
+
     # check if bulk feature is enabled
     my $BulkFeature = 0;
     if ( $Param{Bulk} && $ConfigObject->Get('Ticket::Frontend::BulkFeature') ) {
@@ -824,12 +836,27 @@ sub Run {
         $LayoutObject->Block( Name => 'TableHeader' );
 
         if ($BulkFeature) {
+            my $ItemALLChecked = '';
+            my $SelectedAll      = '';
+
+            if ( !scalar @UnselectedItems ) {
+                $ItemALLChecked = ' checked="checked"';
+            }
+
+            if ( $Param{AllHits} > $Param{PageShown} ) {
+                $SelectedAll = 'SelectAllItemsPages';
+            }
+
             $LayoutObject->Block(
                 Name => 'GeneralOverviewHeader',
             );
             $LayoutObject->Block(
                 Name => 'BulkNavBar',
-                Data => \%Param,
+                Data => {
+                    %Param,
+                    ItemALLChecked  => $ItemALLChecked,
+                    SelectedAll     => $SelectedAll
+                }
             );
         }
 
@@ -1551,6 +1578,7 @@ sub Run {
         $LayoutObject->Block( Name => 'NoTicketFound' );
     }
 
+    my $BulkActivate = 0;
     for my $ArticleRef (@ArticleBox) {
 
         # get last customer article
@@ -1608,13 +1636,32 @@ sub Run {
 
         # check if bulk feature is enabled
         if ($BulkFeature) {
+            my $ItemChecked = '';
+
+            if ( grep( /^$Article{TicketID}$/, @SelectedItems ) ) {
+                $ItemChecked = ' checked="checked"';
+            }
+
             $LayoutObject->Block(
                 Name => 'GeneralOverviewRow',
             );
             $LayoutObject->Block(
-                Name => Translatable('Bulk'),
-                Data => { %Article, %UserInfo },
+                Name => 'Bulk',
+                Data => {
+                    ItemChecked => $ItemChecked,
+                    %Article,
+                    %UserInfo,
+                },
             );
+
+            if ( !$BulkActivate
+                && $ItemChecked
+            ) {
+                $BulkActivate = 1;
+                $LayoutObject->Block(
+                    Name => 'BulkActivate',
+                );
+            }
         }
 
         # show ticket flags

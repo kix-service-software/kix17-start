@@ -2,6 +2,10 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.0 (2017/10/??)
+ * (2017/10/16) - CR: T2017040290000557 (added layout function ProgressBar) (fjacquemin)
+ * (2017/10/16) - CR: T2017040290000557 (migration extendet layout function to standard) (fjacquemin)
+ * (2017/10/16) - CR: T2017040290000557 (updated BulkActions with progress bar) (fjacquemin)
+ * (2017/10/16) - CR: T2017040290000557 (added markers across multiple pages for BulkActions) (fjacquemin)
  * (2017/10/12) - Bugfix: T2017081190001111 (searching for DFs no longer possible if KIX Professional is installed) (rbo)
  * (2017/10/11) - Bugfix: T2017081690001095 (autocomplete of DF RemoteDB and ITSMConfigItem not working in AdminNotificationEvent. Thanks to samueldc!) (millinger)
  * (2017/10/11) - Bugfix: T2017060790000928 (fixed column content in ci-linked-objects list with custom sorted columns) (uboehm)

@@ -178,36 +178,163 @@ ITSM.UI.ConfigItemActionRow = (function (TargetNS) {
             ConfigItemView = 'Small';
         }
 
-        $('#SelectAllConfigItems').bind('click', function () {
-            var Status = $(this).prop('checked');
-            $(ConfigItemElementSelectors[ConfigItemView]).prop('checked', Status).triggerHandler('click');
-        });
-
         $(ConfigItemElementSelectors[ConfigItemView]).bind('click', function (Event) {
             Event.stopPropagation();
-            ITSM.UI.ConfigItemActionRow.UpdateActionRow($(this), $(ConfigItemElementSelectors[ConfigItemView]), $('div.OverviewActions ul.Actions'));
+            TargetNS.UpdateActionRow($(this), $(ConfigItemElementSelectors[ConfigItemView]), $('div.OverviewActions ul.Actions'));
         });
 
         $('#ConfigItemBulkAction a').bind('click', function () {
-            var $Element = $(this),
-                $SelectedConfigItems,
-                ConfigItemIDParameter = "ConfigItemID=",
-                ConfigItemIDs = "",
-                URL;
+            var $Element = $(this);
+
             if ($Element.parent('li').hasClass('Inactive')) {
                 return false;
             }
             else {
-                $SelectedConfigItems = $(ConfigItemElementSelectors[ConfigItemView] + ':checked');
-                $SelectedConfigItems.each(function () {
-                    ConfigItemIDs += ConfigItemIDParameter + $(this).val() + ";";
-                });
-                URL = Core.Config.Get('Baselink') + "Action=AgentITSMConfigItemBulk;" + ConfigItemIDs;
-                URL += SerializeData(Core.App.GetSessionInformation());
-                Core.UI.Popup.OpenPopup(URL, 'ConfigItemAction');
+                var SelectedItems = $('input[name="SelectedItems"]').val().split(','),
+                    FormID        = $('#OverviewControl input[name="FormID"]').val();
+                if ( SelectedItems.length > 30 ) {
+                    TargetNS.InitShowContentDialog(
+                        {
+                            SelectedItems: SelectedItems,
+                            Action: 'AgentITSMConfigItemBulk',
+                            Subaction: '',
+                            FormID: FormID,
+                            Title: Core.Config.Get('ITSMBulkDialogTitle'),
+                            ID: 'ITSMBulkActionSettingsDialogContainer',
+                            Label: [
+                                Core.Config.Get('ITSMBulkDialogButtonYes'),
+                                Core.Config.Get('ITSMBulkDialogButtonNo')
+                            ],
+                            Content: Core.Config.Get('ITSMBulkDialog')
+                        }, 'BulkDialog');
+                } else {
+                    var ItemIDs,
+                        Data;
+
+                    $.each(SelectedItems, function (index, value) {
+                        ItemIDs += value + (SelectedItems.length == (index + 1) ? "" : ",");
+                    });
+
+                    Data = {
+                            ItemIDs: ItemIDs,
+                            Action: 'AgentPaginationAJAXHandler',
+                            Subaction: 'UploadContentIDs',
+                            CallAction: 'AgentITSMConfigItemBulk',
+                            FormID: FormID,
+                    };
+
+                    Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function(response) {
+                        var URL = Core.Config.Get('Baselink') + "Action=AgentITSMConfigItemBulk;FormID=" + FormID;
+                        URL += SerializeData(Core.App.GetSessionInformation());
+                        Core.UI.Popup.OpenPopup(URL, 'ConfigItemAction');
+                    });
+                }
             }
             return false;
         });
+    };
+
+    TargetNS.UpdateSelectItems = function($Element, SelectALL) {
+        var Status = $Element.prop('checked');
+        $.each($(ConfigItemElementSelectors[ConfigItemView]), function(){
+            if ( $(this).prop('checked') !== Status ) {
+                $(this).prop('checked', Status).triggerHandler('click');
+            }
+        });
+
+        if ( SelectALL ) {
+            var SelectedItems     = $('input[name="SelectedItems"]').val().split(','),
+                UnselectedItems   = $('input[name="UnselectedItems"]').val().split(','),
+                ItemMerge         = $.merge(SelectedItems,UnselectedItems).filter(function(v){return v!==''});
+
+            if ( Status ) {
+                $('input[name="SelectedItems"]').val(ItemMerge);
+                $('input[name="UnselectedItems"]').val('');
+            } else {
+                $('input[name="UnselectedItems"]').val(ItemMerge);
+                $('input[name="SelectedItems"]').val('');
+            }
+        }
+        return true;
+    };
+
+    TargetNS.TriggerUpdateActionRow = function($Element) {
+        TargetNS.UpdateActionRow($('.SelectItems'), $(ConfigItemElementSelectors[ConfigItemView]), $('div.OverviewActions ul.Actions'));
+    };
+
+    TargetNS.InitShowContentDialog = function(Params, Dialog){
+        var Div         = $('<div/>', { id: Params.ID, class: Params.Class}),
+            Fieldset    = $('<fieldset/>', {class: 'TableLike FixedLabelSmall'}),
+            Content     = Params.Content,
+            Buttons;
+
+        if ( Dialog === 'BulkDialog' ) {
+            Content = Content.replace('###', Params.SelectedItems.length);
+            Buttons = [
+                {
+                    Label: Params.Label[0],
+                    Type: 'Close',
+                    Class: 'Primary',
+                    Function: function () {
+                        var ItemIDs = '';
+
+                        $.each(Params.SelectedItems, function (index, value) {
+                            ItemIDs += value + (Params.SelectedItems.length == (index + 1) ? "" : ",");
+                        });
+
+                        if ( !Params.SpecialParam ) {
+                            Params.SpecialParam = '';
+                        }
+                        var Data = {
+                                ItemIDs: ItemIDs,
+                                Action: 'AgentPaginationAJAXHandler',
+                                Subaction: 'UploadContentIDs',
+                                CallAction: Params.Action,
+                                FormID: Params.FormID,
+                        };
+                        Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function(response) {
+                            var URL = Core.Config.Get('Baselink') + "Action=" + Params.Action + ";Subaction=" + Params.Subaction + ";FormID=" + Params.FormID + Params.SpecialParam;
+                            URL += SerializeData(Core.App.GetSessionInformation());
+                            Core.UI.Popup.OpenPopup(URL, 'ConfigItemAction');
+                        })
+                        return true;
+                    }
+                },
+                {
+                    Label: Params.Label[1],
+                    Type: 'Close',
+                    Class: 'Primary',
+                    Function: function () {
+                        return true;
+                    }
+                }
+            ];
+        } else {
+            Buttons = [
+                {
+                    Label: Params.Label[0],
+                    Type: 'Close',
+                    Class: 'Primary',
+                    Function: function () {
+                        TargetNS.UpdateSelectItems($(Params.Element), false);
+                        return true;
+                    }
+                },
+                {
+                    Label: Params.Label[1],
+                    Type: 'Close',
+                    Class: 'Primary',
+                    Function: function () {
+                        TargetNS.UpdateSelectItems($(Params.Element), true);
+                        return true;
+                    }
+                }
+            ];
+        }
+        Fieldset.append(Content);
+        Div.append(Fieldset);
+
+        Core.UI.Dialog.ShowContentDialog(Div, Params.Title, '15%', 'Center', true, Buttons, true);
     };
 
     return TargetNS;

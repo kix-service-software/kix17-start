@@ -195,7 +195,7 @@ sub Run {
         }
     }
 
-    # get needed object
+    # get needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
@@ -242,23 +242,68 @@ sub Run {
     my $CounterOnSite = 0;
     my @TicketIDsShown;
 
+    # get needed un-/selected tickets for bulk feature
+    my @SelectedItems     = split(',', $Param{SelectedItems});
+    my @UnselectedItems   = split(',', $Param{UnselectedItems});
+
     # check if there are tickets to show
     if ( scalar @{ $Param{TicketIDs} } ) {
 
+        my $BulkActivate    = 0;
+        my $ItemALLChecked  = 0;
+        my $SelectedAll     = 0;
+
         for my $TicketID ( @{ $Param{TicketIDs} } ) {
+            if ( !grep(/^$TicketID$/, @UnselectedItems)
+                && !grep(/^$TicketID$/, @SelectedItems)
+            ) {
+                push(@UnselectedItems, $TicketID);
+            }
+        }
+
+        for my $TicketID ( @{ $Param{TicketIDs} } ) {
+            my $ItemChecked = '';
             $Counter++;
+
             if (
                 $Counter >= $Param{StartHit}
                 && $Counter < ( $Param{PageShown} + $Param{StartHit} )
                 )
             {
+                if ( grep( /^$TicketID$/, @SelectedItems ) ) {
+                    $ItemChecked = ' checked="checked"';
+                }
+
+                if ( !scalar @UnselectedItems
+                    && !$ItemALLChecked
+                ) {
+                    $ItemALLChecked = 1;
+                }
+
+                if ( $Param{AllHits} > $Param{PageShown}
+                    && !$SelectedAll
+                ) {
+                    $SelectedAll = 1;
+                }
+
                 push @TicketIDsShown, $TicketID;
                 my $Output = $Self->_Show(
-                    TicketID => $TicketID,
-                    Counter  => $CounterOnSite,
-                    Bulk     => $BulkFeature,
-                    Config   => $Param{Config},
+                    TicketID        => $TicketID,
+                    Counter         => $CounterOnSite,
+                    Bulk            => $BulkFeature,
+                    Config          => $Param{Config},
+                    ItemChecked     => $ItemChecked,
+                    BulkActivate    => $BulkActivate,
+                    SelectedAll     => $SelectedAll,
+                    ItemALLChecked  => $ItemALLChecked,
                 );
+
+                if ( !$BulkActivate
+                && $ItemChecked
+                ) {
+                    $BulkActivate = 1;
+                }
+
                 $CounterOnSite++;
                 if ( !$Param{Output} ) {
                     $LayoutObject->Print( Output => $Output );
@@ -317,6 +362,23 @@ sub _Show {
     # get needed objects
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # check if bulk feature is enabled
+    if ( $Param{Bulk} ) {
+        $LayoutObject->Block(
+            Name => 'Bulk',
+            Data => \%Param,
+        );
+
+        if ( !$Param{BulkActivate}
+            && $Param{ItemChecked}
+        ) {
+            $LayoutObject->Block(
+                Name => 'BulkActivate',
+                Data => \%Param,
+            );
+        }
+    }
 
     # get move queues
     my %MoveQueues = $TicketObject->MoveList(
@@ -579,9 +641,18 @@ sub _Show {
     # check if bulk feature is enabled
     if ( $Param{Bulk} ) {
         $LayoutObject->Block(
-            Name => Translatable('Bulk'),
+            Name => 'Bulk',
             Data => \%Param,
         );
+
+        if ( !$Param{BulkActivate}
+            && $Param{ItemChecked}
+        ) {
+            $LayoutObject->Block(
+                Name => 'BulkActivate',
+                Data => \%Param,
+            );
+        }
     }
 
     # show ticket flags

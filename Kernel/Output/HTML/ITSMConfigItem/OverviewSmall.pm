@@ -124,6 +124,18 @@ sub Run {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
+    # get needed un-/selected Config Items for bulk feature
+    my @SelectedItems     = split(',', $Param{SelectedItems} || '' );
+    my @UnselectedItems   = split(',', $Param{UnselectedItems} || '' );
+
+    for my $ConfigItem ( @ConfigItemIDs ) {
+        if ( !grep(/^$ConfigItem$/, @UnselectedItems)
+            && !grep(/^$ConfigItem$/, @SelectedItems)
+        ) {
+            push(@UnselectedItems, $ConfigItem);
+        }
+    }
+
     # check if bulk feature is enabled
     my $BulkFeature = 0;
     if ( $ConfigObject->Get('ITSMConfigItem::Frontend::BulkFeature') ) {
@@ -307,14 +319,37 @@ END
                 $OrderBy = 'Up';
             }
 
-            $LayoutObject->Block(
-                Name => 'Record' . $Column . 'Header',
-                Data => {
-                    %Param,
-                    CSS     => $CSS,
-                    OrderBy => $OrderBy,
-                },
-            );
+            if ($Column eq 'BulkAction') {
+                my $ItemALLChecked = '';
+                my $SelectedAll      = '';
+
+                if ( !scalar @UnselectedItems ) {
+                    $ItemALLChecked = ' checked="checked"';
+                }
+
+                if ( $Param{AllHits} > $Param{PageShown} ) {
+                    $SelectedAll = 'SelectAllItemsPages';
+                }
+                $LayoutObject->Block(
+                    Name => 'Record' . $Column . 'Header',
+                    Data => {
+                        %Param,
+                        CSS     => $CSS,
+                        OrderBy => $OrderBy,
+                        ItemALLChecked  => $ItemALLChecked,
+                        SelectedAll     => $SelectedAll
+                    },
+                );
+            } else {
+                $LayoutObject->Block(
+                    Name => 'Record' . $Column . 'Header',
+                    Data => {
+                        %Param,
+                        CSS     => $CSS,
+                        OrderBy => $OrderBy,
+                    },
+                );
+            }
         }
 
         # get the XML column headers only if the filter is not set to 'all'
@@ -363,6 +398,7 @@ END
 
         # to store all data
         my %Data;
+        my $BulkActivate = 0;
 
         CONFIGITEMID:
         for my $ConfigItemID (@ConfigItemIDs) {
@@ -427,16 +463,42 @@ END
 
                     COLUMN:
                     for my $Column (@ShowColumns) {
-                        $LayoutObject->Block(
-                            Name => 'Record' . $Column,
-                            Data => {
-                                %Param,
-                                %Data,
-                                CurInciSignal => $InciSignals{ $Data{CurInciStateType} },
-                                CurDeplSignal => $DeplSignals{ $Data{CurDeplState} },
-                            },
-                        );
+                        if ( $Column eq 'BulkAction') {
+                            my $ItemChecked = '';
 
+                            if ( grep( /^$ConfigItemID$/, @SelectedItems ) ) {
+                                $ItemChecked = ' checked="checked"';
+                            }
+                            $LayoutObject->Block(
+                                Name => 'Record' . $Column,
+                                Data => {
+                                    %Param,
+                                    %Data,
+                                    CurInciSignal => $InciSignals{ $Data{CurInciStateType} },
+                                    CurDeplSignal => $DeplSignals{ $Data{CurDeplState} },
+                                    ItemChecked   => $ItemChecked,
+                                },
+                            );
+
+                            if ( !$BulkActivate
+                                && $ItemChecked
+                            ) {
+                                $BulkActivate = 1;
+                                $LayoutObject->Block(
+                                    Name => 'BulkActivate',
+                                );
+                            }
+                        } else {
+                            $LayoutObject->Block(
+                                Name => 'Record' . $Column,
+                                Data => {
+                                    %Param,
+                                    %Data,
+                                    CurInciSignal => $InciSignals{ $Data{CurInciStateType} },
+                                    CurDeplSignal => $DeplSignals{ $Data{CurDeplState} },
+                                },
+                            );
+                        }
                         # show links if available
                         $LayoutObject->Block(
                             Name => 'Record' . $Column . 'LinkStart',

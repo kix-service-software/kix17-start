@@ -46,7 +46,7 @@ sub new {
 sub ActionRow {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
+    # get needed object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
@@ -178,6 +178,7 @@ sub ActionRow {
 
 sub SortOrderBar {
     my ( $Self, %Param ) = @_;
+
     return '';
 }
 
@@ -242,24 +243,69 @@ sub Run {
     my $CounterOnSite = 0;
     my @TicketIDsShown;
 
+    # get needed un-/selected tickets for bulk feature
+    my @SelectedItems     = split(',', $Param{SelectedItems});
+    my @UnselectedItems   = split(',', $Param{UnselectedItems});
+
     # check if there are tickets to show
     if ( scalar @{ $Param{TicketIDs} } ) {
 
+        my $BulkActivate    = 0;
+        my $ItemALLChecked  = 0;
+        my $SelectedAll     = 0;
+
         for my $TicketID ( @{ $Param{TicketIDs} } ) {
+            if ( !grep(/^$TicketID$/, @UnselectedItems)
+                && !grep(/^$TicketID$/, @SelectedItems)
+            ) {
+                push(@UnselectedItems, $TicketID);
+            }
+        }
+
+        for my $TicketID ( @{ $Param{TicketIDs} } ) {
+            my $ItemChecked = '';
             $Counter++;
+
             if (
                 $Counter >= $Param{StartHit}
                 && $Counter < ( $Param{PageShown} + $Param{StartHit} )
                 )
             {
+                if ( grep( /^$TicketID$/, @SelectedItems ) ) {
+                    $ItemChecked = ' checked="checked"';
+                }
+
+                if ( !scalar @UnselectedItems
+                    && !$ItemALLChecked
+                ) {
+                    $ItemALLChecked = 1;
+                }
+
+                if ( $Param{AllHits} > $Param{PageShown}
+                    && !$SelectedAll
+                ) {
+                    $SelectedAll = 1;
+                }
+
                 push @TicketIDsShown, $TicketID;
                 my $Output = $Self->_Show(
-                    TicketID => $TicketID,
-                    Counter  => $CounterOnSite,
-                    Bulk     => $BulkFeature,
-                    Config   => $Param{Config},
-                    Output   => $Param{Output} || '',
+                    TicketID        => $TicketID,
+                    Counter         => $CounterOnSite,
+                    Bulk            => $BulkFeature,
+                    Config          => $Param{Config},
+                    Output          => $Param{Output} || '',
+                    ItemChecked     => $ItemChecked,
+                    BulkActivate    => $BulkActivate,
+                    SelectedAll     => $SelectedAll,
+                    ItemALLChecked  => $ItemALLChecked,
                 );
+
+                if ( !$BulkActivate
+                && $ItemChecked
+                ) {
+                    $BulkActivate = 1;
+                }
+
                 $CounterOnSite++;
                 if ( !$Param{Output} ) {
                     $LayoutObject->Print( Output => $Output );
@@ -274,6 +320,7 @@ sub Run {
         $LayoutObject->Block( Name => 'NoTicketFound' );
     }
 
+    # check if bulk feature is enabled
     if ($BulkFeature) {
         $LayoutObject->Block(
             Name => 'DocumentFooter',
@@ -296,6 +343,7 @@ sub Run {
             $OutputRaw .= $OutputMeta;
         }
     }
+
     return $OutputRaw;
 }
 
@@ -317,9 +365,18 @@ sub _Show {
     # check if bulk feature is enabled
     if ( $Param{Bulk} ) {
         $LayoutObject->Block(
-            Name => Translatable('Bulk'),
+            Name => 'Bulk',
             Data => \%Param,
         );
+
+        if ( !$Param{BulkActivate}
+            && $Param{ItemChecked}
+        ) {
+            $LayoutObject->Block(
+                Name => 'BulkActivate',
+                Data => \%Param,
+            );
+        }
     }
 
     # get config object
@@ -613,9 +670,18 @@ sub _Show {
     # check if bulk feature is enabled
     if ( $Param{Bulk} ) {
         $LayoutObject->Block(
-            Name => Translatable('Bulk'),
+            Name => 'Bulk',
             Data => \%Param,
         );
+
+        if ( !$Param{BulkActivate}
+            && $Param{ItemChecked}
+        ) {
+            $LayoutObject->Block(
+                Name => 'BulkActivate',
+                Data => \%Param,
+            );
+        }
     }
 
     # show ticket flags

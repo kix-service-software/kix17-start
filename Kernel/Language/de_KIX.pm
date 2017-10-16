@@ -2189,6 +2189,25 @@ sub Data {
     $Lang->{'Criticality'} = 'Kritikalität';
     $Lang->{'Impact'}      = 'Auswirkung';
 
+    # Template: AgentTicketOverview...
+    $Lang->{'From which page should be selected the tickets.'}
+        = 'Von welchen Seiten sollen die Tickets ausgewählt werden';
+    $Lang->{'Do you really want ### tickets merge? There may be a loss of performance.'}
+        = 'Wollen Sie wirklich ### Tickets Zusammenfassen? Es können dabei Performenz einbussen auftreten.';
+    $Lang->{'Current Page'}     = 'aktuelle Seite';
+    $Lang->{'All Pages'}        = 'alle Seiten';
+    $Lang->{'Ticket selection'} = 'Ticketauswahl';
+    $Lang->{'You have selected a larger number (###) of objects. Please note that this can lead to a loss of performance! Do you want to continue?'}
+        = 'Sie haben eine größere Anzahl (###) an Objekten selektiert. Bitte beachten Sie, dass dies zu Performanceeinbußen führen kann! Möchten Sie fortfahren?';
+    $Lang->{'Locking the tickets, please wait a moment...'}
+        = 'Die Tickets werden gesperrt, bitte warten Sie einen Moment...';
+    $Lang->{'Tickets will be saved, please wait a moment...'}
+        = 'Tickets werden gespeichert, bitte warten Sie einen Moment...';
+    $Lang->{'Unlocking the tickets, please wait a moment...'}
+        = 'Die Tickets werden entsperrt, bitte warten Sie einen Moment...';
+    $Lang->{'Config items will be saved, please wait a moment...'}
+        = 'ConfigItems werden gespeichert, bitte warten Sie einen Moment...';
+
     # SysConfig
     $Lang->{'Add a decision!'}                = 'Hinzufügen einer Entscheidung!';
     $Lang->{'Additional ITSM Fields'}         = 'Zusätzliche ITSM Felder';
