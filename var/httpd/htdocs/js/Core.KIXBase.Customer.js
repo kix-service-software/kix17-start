@@ -93,9 +93,17 @@ Core.KIXBase.Customer = (function(TargetNS) {
 
             if ( Counter == 0 ) {
                 $(this).find('li').each(function(){
-                    var Key = $(this).find('span.Key').html(),
-                        Value = $(this).find('span.Key').next().html();
-                    $('#MetadataFieldset_'+Counter).append('<label>'+Key+'</label><p class="Value" title="'+Value+'"><span>'+Value+'</span></p><div class="Clear">&nbsp;</div>');
+                    if ($(this).hasClass('KeywordsContainer')) {
+                        $('#MetadataFieldset_'+Counter).append('<label>'+$(this).find('span.Key').html()+'</label>');
+                        $(this).find('span.Keyword').each(function(){
+                           $('#MetadataFieldset_'+Counter).append('<p class="Value" title="'+$(this).text().trim()+'"><span>'+$(this).html()+'</span></p>');
+                        });
+                        $('#MetadataFieldset_'+Counter).append('<div class="Clear">&nbsp;</div>');
+                    } else {
+                        var Key = $(this).find('span.Key').html(),
+                            Value = $(this).find('span.Key').next().html();
+                        $('#MetadataFieldset_'+Counter).append('<label>'+Key+'</label><p class="Value" title="'+Value+'"><span>'+Value+'</span></p><div class="Clear">&nbsp;</div>');
+                    }
                     $(this).remove();
                 });
             }

@@ -611,6 +611,17 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::EventModulePost###990-DeleteDraft" Required="0" Valid="1">
+        <Description Translatable="1">Delete draft of used action if a new Article got created.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::DeleteDraft</Item>
+                <Item Key="Event">ArticleCreate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="CustomerCompany::EventModulePost###110-UpdateTickets" Required="0" Valid="1">
         <Description Translatable="1">Event module that updates tickets after an update of the Customer.</Description>
         <Group>Ticket</Group>
