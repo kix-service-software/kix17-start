@@ -14,6 +14,7 @@
  * (2017/10/10) - Bugfix: T2017090890000644 (upgrade of KIXPro package fails in case of minor version change) (rbo)
  * (2017/10/06) - Bugfix: T2017092690000931 (sidebar layout broken due to false mobile device/resolution detection) (uboehm)
  * (2017/10/06) - Bugfix: T2017071090001339 (solved problem with faq sidebar) (ddoerffel)
+ * (2017/10/05) - CR: T2017032090001283 (added placeholder for pending time for TicketStateSet TransitionAction) (ddoerffel)
  * (2017/10/05) - Bugfix: T2017100590000996 (bpm should know custom dirs for transition actions) (fjacquemin)
  * (2017/10/05) - CR: T2016061790000705 (added export name of object from CIClassReference) (fjacquemin)
  * (2017/10/05) - CR: T2017012390000541 (added TicketArticleSend TransitionAction) (ddoerffel)

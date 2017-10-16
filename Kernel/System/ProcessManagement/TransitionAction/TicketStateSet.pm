@@ -13,6 +13,7 @@ package Kernel::System::ProcessManagement::TransitionAction::TicketStateSet;
 use strict;
 use warnings;
 use utf8;
+use Date::Calc qw(Day_of_Week Day_of_Week_to_Text);
 
 use Kernel::System::VariableCheck qw(:all);
 
@@ -211,7 +212,6 @@ sub Run {
         $Success
         && IsHashRefWithData( \%StateData )
         && $StateData{TypeName} =~ m{\A pending}msxi
-        && IsNumber( $Param{Config}->{PendingTimeDiff} )
         )
     {
 
@@ -221,29 +221,131 @@ sub Run {
         # get current time
         my $PendingTime = $TimeObject->SystemTime();
 
-        # add PendingTimeDiff
-        $PendingTime += $Param{Config}->{PendingTimeDiff};
+        if (
+            IsNumber( $Param{Config}->{PendingTimeDiff} )
+            )
+        {
 
-        # convert pending time to time stamp
-        my $PendingTimeString = $TimeObject->SystemTime2TimeStamp(
-            SystemTime => $PendingTime,
-        );
+            # add PendingTimeDiff
+            $PendingTime += $Param{Config}->{PendingTimeDiff};
 
-        # set pending time
-        $Kernel::OM->Get('Kernel::System::Ticket')->TicketPendingTimeSet(
-            UserID   => $Param{UserID},
-            TicketID => $Param{Ticket}->{TicketID},
-            String   => $PendingTimeString,
-        );
+            # convert pending time to time stamp
+            my $PendingTimeString = $TimeObject->SystemTime2TimeStamp(
+                SystemTime => $PendingTime,
+            );
+
+            # set pending time
+            $Kernel::OM->Get('Kernel::System::Ticket')->TicketPendingTimeSet(
+                UserID   => $Param{UserID},
+                TicketID => $Param{Ticket}->{TicketID},
+                String   => $PendingTimeString,
+            );
+
+        }
+        elsif ( $Param{Config}->{PendingDateTime} && ref $Param{Config}->{Placeholder} eq 'HASH' ) {
+            if (
+                defined $Param{Config}->{Placeholder}->{PendingDateTime}
+                && $Param{Config}->{Placeholder}->{PendingDateTime}
+                =~ /\<(KIX|OTRS)_TICKET_DynamicField_(.*?)\>/i
+                )
+            {
+                my $DynamicField
+                    = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
+                    Name => $2,
+                    );
+
+                my $PendingTime;
+
+                if ( $DynamicField->{FieldType} eq 'DateTime' ) {
+                    $PendingTime = $Param{Config}->{PendingDateTime};
+                }
+                elsif ( $DynamicField->{FieldType} eq 'Date' ) {
+                    $PendingTime = $Param{Config}->{PendingDateTime} . ' 00:00:00';
+                }
+                else {
+                    $Kernel::OM->Get('Kernel::System::Log')->Log(
+                        Priority => 'error',
+                        Message  => $CommonMessage
+                            . "Couldn't set pending time - no valid date or datetime dynamic field!",
+                    );
+                    return;
+                }
+
+                # handle BOB and EOB
+                if ( $Param{Config}->{TimeTarget} =~ /^(BOB|EOB)$/g ) {
+                    my $Calendar;
+                    if ( $Param{Ticket}->{SLAID} ) {
+
+                        # get calendar from SLA
+                        my %SLA = $Kernel::OM->Get('Kernel::System::SLA')->SLAGet(
+                            SLAID  => $Param{Ticket}->{SLAID},
+                            UserID => 1,
+                        );
+                        $Calendar = $SLA{Calendar};
+                    }
+                    else {
+                        # otherwise get calendar from Queue
+                        my %Queue = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet(
+                            ID     => $Param{Ticket}->{QueueID},
+                            UserID => 1,
+                        );
+                        $Calendar = $Queue{Calendar};
+                    }
+                    my $PendingTimeUnix = $TimeObject->DestinationTime(
+                        StartTime => $TimeObject->TimeStamp2SystemTime(
+                            String => $PendingTime,
+                        ),
+                        Time     => 2,
+                        Calendar => $Calendar
+                    );
+                    $PendingTime = $TimeObject->SystemTime2TimeStamp(
+                        SystemTime => $PendingTimeUnix - 2,
+                    );
+
+                    # speacial handling for EOB
+                    if ( $Param{Config}->{TimeTarget} eq 'EOB' ) {
+                        my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WeekDay )
+                            = $TimeObject->SystemTime2Date(
+                            SystemTime => $TimeObject->TimeStamp2SystemTime(
+                                String => $PendingTime,
+                                )
+                            );
+                        my %WeekDays = (
+                            0 => 'Sun',
+                            1 => 'Mon',
+                            2 => 'Tue',
+                            3 => 'Wed',
+                            4 => 'Thu',
+                            5 => 'Fri',
+                            6 => 'Sat',
+                        );
+
+                        # get last element = end hour of working time
+                        if ($Calendar) {
+                            $Calendar = '::Calendar' . $Calendar;
+                        }
+                        my $WorkingHours = $Kernel::OM->Get('Kernel::Config')
+                            ->Get( 'TimeWorkingHours' . $Calendar );
+                        my $EOB = pop @{ $WorkingHours->{ $WeekDays{$WeekDay} } };
+                        $PendingTime =~ s/^(.*?)\s(.*?)$/"$1 $EOB:59:59"/g;
+                    }
+                }
+
+                # set pending time
+                $Kernel::OM->Get('Kernel::System::Ticket')->TicketPendingTimeSet(
+                    UserID   => $Param{UserID},
+                    TicketID => $Param{Ticket}->{TicketID},
+                    String   => $PendingTime,
+                );
+            }
+        }
+
     }
 
     return $Success;
 }
 
 1;
-
-
-
 
 =back
 
