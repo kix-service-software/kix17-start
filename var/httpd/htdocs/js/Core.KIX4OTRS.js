@@ -304,11 +304,9 @@ Core.KIX4OTRS = (function(TargetNS) {
             AttributeString = '',
             TicketID = $Form.find('input[name="TicketID"]').val() || '';
 
-        // on submit delete saved form content and stop timer
+        // on submit stop timer
         $Form.submit(function() {
             clearInterval(ActiveInterval);
-            URL = 'Action=SaveAsDraftAJAXHandler;Subaction=DeleteFormContent;CallingAction=' + Action + ';TicketID=' + TicketID;
-            Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function() {}, 'json');
         });
 
         // delete draft when clicking on Cancel link
@@ -370,11 +368,9 @@ Core.KIX4OTRS = (function(TargetNS) {
             AttributeString = '',
             TicketID = $Form.find('input[name="TicketID"]').val() || '';
 
-        // on submit delete saved form content and stop timer
+        // on submit stop timer
         $Form.submit(function() {
             clearInterval(ActiveInterval);
-            URL = 'Action=SaveAsDraftAJAXHandler;Subaction=DeleteFormContent;CallingAction=' + Action + ';TicketID=' + TicketID;
-            Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function() {}, 'json');
         });
 
         // delete draft when clicking on Cancel link

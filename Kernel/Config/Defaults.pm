@@ -1883,6 +1883,19 @@ sub new {
         print STDERR "ERROR: $Self->{Home}/RELEASE does not exist! This file is needed by central system parts of KIX, the system will not work without this file.\n";
         die;
     }
+    else {
+        # load VERSION from RELEASE file into FrameworkVersion for framework check in package management
+        if ( open( my $File, '<', "$Self->{Home}/RELEASE" ) ) { ## no critic
+            while (my $Line = <$File>) {
+    
+                # filtering of comment lines
+                if ( $Line =~ /^VERSION\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
+                    $Self->{FrameworkVersion} = $1;
+                }
+            }
+            close($File);
+        }        
+    }
     # load most recent RELEASE file
     if ( opendir(my $HOME, "$Self->{Home}") ) {
         my @ReleaseFiles = grep { /^RELEASE\.*?/ && -f "$Self->{Home}/$_" } readdir($HOME);
