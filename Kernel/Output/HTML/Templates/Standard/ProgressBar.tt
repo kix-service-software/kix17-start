@@ -1,0 +1,55 @@
+<div class="LayoutPopup ARIARoleMain">
+    <div class="Header">
+        <h1>[% Translate(Data.Title) %]</h1>
+    </div>
+    <div class="Content">
+        <div class="TaskBox">
+            <div class="TaskBarBox">
+                <div class="TaskBarCountBox">
+                    <span id="TaskBarCount" class="TaskBarCount">0</span>
+                    <span class="TaskBarCount">/[% Data.MaxCount %]</span>
+                </div>
+                <div class="TaskBar">
+                    <div class="TaskBarColor"></div>
+                </div>
+            </div>
+             <div class="TaskSpin">
+                <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
+                <span id="TaskText">[% Translate(Data.LoaderText) %]</span>
+            </div>
+        </div>
+    </div>
+[% WRAPPER JSOnDocumentComplete %]
+    <script type="text/javascript">//<![CDATA[
+        var ProgressID = setInterval (function(){
+            ProgressInformations();
+        }, '[% Data.RefreshCycle %]' );
+
+        function ProgressInformations(){
+            var URL         = "Action=ProgressBarAJAXHandler;Subaction=AJAXUpdate;TaskName=[% Data.TaskName %];TaskType=[% Data.TaskType %]",
+                MaxCount    = '[% Data.MaxCount %]',
+                ParamData   = '[% Data.EndParam %]',
+                Data;
+
+            Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function (Result) {
+                Data = $.parseJSON(Result);
+            }, 'text', false);
+
+            $('#TaskBarCount').html(MaxCount-Data.Count);
+            $('.TaskBarColor').css('width', (((MaxCount-Data.Count)/MaxCount)*100) + '%');
+
+            if ( Data.Count == 0) {
+                clearInterval(ProgressID);
+                var URLOP = "?Action=[% Data.Action %]";
+
+                if ( ParamData ) {
+                    $.each($.parseJSON(ParamData), function(Key, Value){
+                        URLOP += ";" + Key + "=" + Value;
+                    });
+                }
+                window.location.href = URLOP;
+            }
+        }
+    //]]></script>
+[% END %]
+</div>

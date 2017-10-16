@@ -593,5 +593,86 @@ span.Pagination span.PaginationLimit {
     text-align: right;
 }
 
+span.Pagination form {
+    display: inline;
+}
 
+/**
+ * @subsection  Control Row SelectAllItems
+ */
+.TaskBox {
+    position: relative;
+    width: auto;
+    height: 400px;
+}
+.TaskSpin {
+    position: absolute;
+    top: 41%;
+    text-align: center;
+    width: 100%;
+}
+.TaskBarBox {
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    top: 49%;
+    left: 0;
+}
+
+.TaskBarCountBox {
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;
+    position: absolute;
+    top: 25%;
+    left: 40%;
+    width: 200px;
+}
+.TaskBar {
+    height: 30px;
+    border: 1px solid;
+}
+.TaskBarColor {
+    height: 100%;
+    width: 0;
+    background-color: #82C826;
+}
+.TaskNotify {
+    position: absolute;
+    top: 60%;
+    border: 1px solid;
+    width: 100%;
+    max-height: 160px;
+    overflow: auto;
+}
+.TaskNotify > p {
+    height: 22px;
+    line-height: 22px;
+    display: block;
+    padding: 2px 10px;
+}
+.TaskNotify > p:nth-child(2n) {
+    background-color: #eee;
+}
+
+.BulkNotify, .WINotify {
+    width: 100%;
+    overflow: auto;
+    height: 100px;
+    border: 1px solid #82C826;
+    padding: 5px;
+}
+.BulkNotify p, .WINotify p {
+    padding: 2px 5px;
+    margin-bottom: 1px;
+    display: block;
+}
+.BulkNotify p.Error, .WINotify p.Error {
+    background-color: #F25C5C;
+    color: #fff;
+}
+.BulkNotify p.Info, .BulkNotify p.Notice, .WINotify p.Info, .WINotify p.Notice {
+    background-color: #82C826;
+    color: #fff;
+}
 } /* end @media */
