@@ -28,31 +28,41 @@ sub new {
 
     # global config hash for id dissolution
     $Self->{NameToID} = {
-        Title          => 'Title',
-        State          => 'StateID',
-        StateID        => 'StateID',
-        Priority       => 'PriorityID',
-        PriorityID     => 'PriorityID',
-        Lock           => 'LockID',
-        LockID         => 'LockID',
-        Queue          => 'QueueID',
-        QueueID        => 'QueueID',
-        Customer       => 'CustomerID',
-        CustomerID     => 'CustomerID',
-        CustomerNo     => 'CustomerID',
-        CustomerUserID => 'CustomerUserID',
-        Owner          => 'OwnerID',
-        OwnerID        => 'OwnerID',
-        Type           => 'TypeID',
-        TypeID         => 'TypeID',
-        SLA            => 'SLAID',
-        SLAID          => 'SLAID',
-        Service        => 'ServiceID',
-        ServiceID      => 'ServiceID',
-        Responsible    => 'ResponsibleID',
-        ResponsibleID  => 'ResponsibleID',
-        PendingTime    => 'PendingTime',
-        Article        => 'Article',
+        Title           => 'Title',
+        State           => 'StateID',
+        StateID         => 'StateID',
+        Priority        => 'PriorityID',
+        PriorityID      => 'PriorityID',
+        Lock            => 'LockID',
+        LockID          => 'LockID',
+        Queue           => 'QueueID',
+        QueueID         => 'QueueID',
+        Customer        => 'CustomerID',
+        CustomerID      => 'CustomerID',
+        CustomerNo      => 'CustomerID',
+        CustomerUserID  => 'CustomerUserID',
+        Owner           => 'OwnerID',
+        OwnerID         => 'OwnerID',
+        Type            => 'TypeID',
+        TypeID          => 'TypeID',
+        SLA             => 'SLAID',
+        SLAID           => 'SLAID',
+        Service         => 'ServiceID',
+        ServiceID       => 'ServiceID',
+        Responsible     => 'ResponsibleID',
+        ResponsibleID   => 'ResponsibleID',
+        PendingTime     => 'PendingTime',
+        Article         => 'Article',
+        HorizontalLine  => 'horizontalline',
+        HorizontalLine1 => 'horizontalline',
+        HorizontalLine2 => 'horizontalline',
+        HorizontalLine3 => 'horizontalline',
+        HorizontalLine4 => 'horizontalline',
+        HorizontalLine5 => 'horizontalline',
+        HorizontalLine6 => 'horizontalline',
+        HorizontalLine7 => 'horizontalline',
+        HorizontalLine8 => 'horizontalline',
+        HorizontalLine9 => 'horizontalline',
     };
 
     return $Self;
@@ -1928,6 +1938,38 @@ sub _OutputActivityDialog {
 
             $RenderedFields{ $Self->{NameToID}->{$CurrentField} } = 1;
         }
+        
+        # render HorizontalLine
+        elsif ( $Self->{NameToID}->{$CurrentField} eq 'horizontalline' )
+        {
+            my $Response = $Self->_RenderHorizontalLine(
+                ActivityDialogField => $ActivityDialog->{Fields}{$CurrentField},
+                FieldName           => $CurrentField,
+                DescriptionShort    => $ActivityDialog->{Fields}{$CurrentField}{DescriptionShort},
+                DescriptionLong     => $ActivityDialog->{Fields}{$CurrentField}{DescriptionLong},
+                Ticket              => \%Ticket || {},
+                Error               => \%Error || {},
+                FormID              => $Self->{FormID},
+                GetParam            => $Param{GetParam},
+                AJAXUpdatableFields => $AJAXUpdatableFields,
+            );
+
+            if ( !$Response->{Success} ) {
+
+                # does not show header and footer again
+                if ( $Self->{IsMainWindow} ) {
+                    return $LayoutObject->Error(
+                        Message => $Response->{Message},
+                    );
+                }
+
+                $LayoutObject->FatalError(
+                    Message => $Response->{Message},
+                );
+            }
+
+            $Output .= $Response->{HTML};
+        }
 
         # render Lock
         elsif ( $Self->{NameToID}->{$CurrentField} eq 'LockID' ) {
@@ -2648,6 +2690,76 @@ sub _RenderDynamicField {
     return {
         Success => 1,
         HTML    => $LayoutObject->Output( TemplateFile => 'ProcessManagement/DynamicField' ),
+    };
+}
+
+sub _RenderHorizontalLine {
+    my ( $Self, %Param ) = @_;
+
+    # get layout object
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    for my $Needed (qw(FormID)) {
+        if ( !$Param{$Needed} ) {
+            return {
+                Success => 0,
+                Message => $LayoutObject->{LanguageObject}
+                    ->Translate( 'Parameter %s is missing in %s.', $Needed, '_RenderHorizontalLine' ),
+            };
+        }
+    }
+    if ( !IsHashRefWithData( $Param{ActivityDialogField} ) ) {
+        return {
+            Success => 0,
+            Message => $LayoutObject->{LanguageObject}
+                ->Translate( 'Parameter %s is missing in %s.', 'ActivityDialogField', '_RenderHorizontalLine' ),
+        };
+    }
+
+    my %Data = (
+        Label            => $LayoutObject->{LanguageObject}->Translate(""),
+        FieldID          => 'HorizontalLine',
+        FormID           => $Param{FormID},
+        Value            => '',
+        Name             => 'HorizontalLine',
+        MandatoryClass   => '',
+        ValidateRequired => '',
+    );
+
+    $LayoutObject->Block(
+        Name => $Param{ActivityDialogField}->{LayoutBlock} || 'HorizontalLine',
+        Data => \%Data,
+    );
+
+    # set mandatory label marker
+    if ( $Data{MandatoryClass} && $Data{MandatoryClass} ne '' ) {
+        $LayoutObject->Block(
+            Name => 'LabelSpan',
+            Data => {},
+        );
+    }
+
+    if ( $Param{DescriptionShort} ) {
+        $LayoutObject->Block(
+            Name => $Param{ActivityDialogField}->{LayoutBlock} || 'HorizontalLine:DescriptionShort',
+            Data => {
+                DescriptionShort => $Param{DescriptionShort},
+            },
+        );
+    }
+
+    if ( $Param{DescriptionLong} ) {
+        $LayoutObject->Block(
+            Name => $Param{ActivityDialogField}->{LayoutBlock} || 'HorizontalLine:DescriptionLong',
+            Data => {
+                DescriptionLong => $Param{DescriptionLong},
+            },
+        );
+    }
+
+    return {
+        Success => 1,
+        HTML    => $LayoutObject->Output( TemplateFile => 'ProcessManagement/HorizontalLine' ),
     };
 }
 
@@ -5152,6 +5264,8 @@ sub _StoreActivityDialog {
                 ),
             );
         }
+
+        next DIALOGFIELD if defined $Self->{NameToID}{$CurrentField} && $Self->{NameToID}{$CurrentField} eq 'horizontalline';
 
         if ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
             my $DynamicFieldName = $1;

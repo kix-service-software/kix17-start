@@ -158,11 +158,16 @@ Core.UI.Autocomplete = (function (TargetNS) {
         }
 
         AutocompleteConfig = InitConfig(Type, Options);
+        var posDefault = { my : "right top", at: "right bottom" };
+        if (!AutocompleteConfig.hasOwnProperty('position')) {
+            AutocompleteConfig.position = posDefault;
+        }
 
         $Element.each(function () {
             var $SingleElement = $(this);
             $SingleElement.autocomplete({
                 minLength: AutocompleteConfig.MinQueryLength,
+                position: AutocompleteConfig.position,
                 delay: AutocompleteConfig.QueryDelay,
                 search: function() {
                     var FieldID = $SingleElement.attr('id'),

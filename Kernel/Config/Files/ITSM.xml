@@ -1514,12 +1514,12 @@
         <Setting>
             <Array>
                 <Item>Class</Item>
-                <Item>Incident State</Item>
+                <Item>CurInciState</Item>
                 <Item>Name</Item>
-                <Item>ConfigItemNumber</Item>
-                <Item>ChangeState</Item>
-                <Item>Version</Item>
-                <Item>Create Time</Item>
+                <Item>Number</Item>
+                <Item>CurDeplState</Item>
+                <Item>VersionID</Item>
+                <Item>CreateTime</Item>
             </Array>
         </Setting>
     </ConfigItem>
