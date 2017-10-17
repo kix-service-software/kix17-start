@@ -446,7 +446,7 @@ sub Run {
             @ViewableTickets = $TicketObject->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 %ColumnFilter,
-                Limit  => $Start + $PageShown - 1,
+                Limit  => $Limit,
                 Result => 'ARRAY',
             );
         }

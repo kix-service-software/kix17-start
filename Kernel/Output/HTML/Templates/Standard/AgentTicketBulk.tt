@@ -13,20 +13,21 @@
 <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" class="Validate">
     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
     <input type="hidden" name="Subaction" value="Do"/>
+    <input type="hidden" name="FormID" value="[% Data.FormID %]"/>
 
     <div class="LayoutPopup ARIARoleMain">
         <div class="Header">
             <h1>[% Translate("Ticket Bulk Action") | html %]</h1>
 [% RenderBlockStart("CancelClosePopup") %]
             <p>
-                <a class="CancelClosePopup" href="#">[% Translate("Cancel & close") | html %]</a>
+                <a class="" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=[% Data.FormID %];>[% Translate("Cancel & close") | html %]</a>
             </p>
 [% RenderBlockEnd("CancelClosePopup") %]
 [% RenderBlockStart("UndoClosePopup") %]
 #rbo - T2017022490001394 - optimized visualization
             <p class="TicketLockMessage">
                 [% Translate("The ticket has been locked") | html %].
-                <a class="UndoClosePopup" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelAndUnlockTickets;[% Data.LockedTickets | html %] ;[% Env("ChallengeTokenParam") | html %]">
+                <a class="" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelandUnlock;FormID=[% Data.FormID %];[% Env("ChallengeTokenParam") | html %]">
                     [% Translate("Undo & close") | html %]
                 </a>
             </p>
@@ -34,7 +35,14 @@
         </div>
         <div class="Content">
 
-            <div class="Content">
+[% RenderBlockStart("BulkNotify") %]
+            <div class="BulkNotify">
+[% RenderBlockStart("BulkNotifyRow")%]
+                <p class="[% Data.Priority %]">[% Data.Notify | html %]</p>
+[% RenderBlockEnd("BulkNotifyRow")%]
+            </div>
+[% RenderBlockEnd("BulkNotify") %]
+
 [% RenderBlockStart("UsedTicketID") %]
                 <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]" />
 [% RenderBlockEnd("UsedTicketID") %]
@@ -262,7 +270,6 @@ $('#MergeTo').bind('blur', function() {
                     [% CONTENT %]
 [% END %]
                 </fieldset>
-            </div>
         </div>
         <div class="Footer">
             <button class="Primary CallForAction" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Execute Bulk Action") | html %]"><span>[% Translate("Execute Bulk Action") | html %]</span></button>

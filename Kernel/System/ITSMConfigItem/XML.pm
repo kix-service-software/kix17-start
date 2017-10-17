@@ -583,9 +583,13 @@ sub _XMLHashSearch {
         # the key/value pairs are 'or' combined
         my @OrConditions;
         for my $Key ( sort keys %{$And} ) {
-            my $Value = $And->{$Key};
+            my $Value       = $And->{$Key};
+            my $NotLikeKey  = $Key;
+
+            $NotLikeKey =~ s/(%]\{\'Content\'\})/%]{%}[$1}/i;
 
             $Self->_PrepareLikeString( \$Key );
+            $Self->_PrepareLikeString( \$NotLikeKey );
 
             if ( $Value && ref $Value eq 'ARRAY' ) {
 
@@ -597,6 +601,7 @@ sub _XMLHashSearch {
 
                     push @OrConditions,
                         " (xml_content_key LIKE '$Key' $LikeEscapeString "
+                        . "AND xml_content_key NOT LIKE '$NotLikeKey' $LikeEscapeString "
                         . "AND xml_content_value LIKE '$Element' $LikeEscapeString)";
                 }
             }
@@ -627,6 +632,7 @@ sub _XMLHashSearch {
                     my $UpperBound = $Kernel::OM->Get('Kernel::System::DB')->Quote( $Element->[1] );
                     push @OrConditions,
                         " ( xml_content_key LIKE '$Key' $LikeEscapeString "
+                        . "AND xml_content_key NOT LIKE '$NotLikeKey' $LikeEscapeString "
                         . "AND $XMLContentValueColumn >= '$LowerBound' "
                         . "AND $XMLContentValueColumn <= '$UpperBound' )";
                 }
@@ -634,6 +640,7 @@ sub _XMLHashSearch {
                     $Element = $Kernel::OM->Get('Kernel::System::DB')->Quote($Element) // '';
                     push @OrConditions,
                         " ( xml_content_key LIKE '$Key' $LikeEscapeString "
+                        . "AND xml_content_key NOT LIKE '$NotLikeKey' $LikeEscapeString "
                         . "AND $XMLContentValueColumn $Op '$Element' )";
                 }
                 else {
@@ -652,6 +659,7 @@ sub _XMLHashSearch {
 
                 push @OrConditions,
                     " (xml_content_key LIKE '$Key' $LikeEscapeString "
+                    . "AND xml_content_key NOT LIKE '$NotLikeKey' $LikeEscapeString "
                     . "AND xml_content_value LIKE '$Value' $LikeEscapeString)";
             }
         }
@@ -688,9 +696,6 @@ sub _XMLHashSearch {
 }
 
 1;
-
-
-
 
 =back
 

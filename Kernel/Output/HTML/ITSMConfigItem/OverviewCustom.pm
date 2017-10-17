@@ -163,6 +163,18 @@ sub Run {
     my @ConfigItemIDsSorted;
     my $Counter = 1;
 
+    # get needed un-/selected Config Items for bulk feature
+    my @SelectedItems     = split(',', $Param{SelectedItems} || '' );
+    my @UnselectedItems   = split(',', $Param{UnselectedItems} || '' );
+
+    for my $ConfigItem ( @ConfigItemIDs ) {
+        if ( !grep(/^$ConfigItem$/, @UnselectedItems)
+            && !grep(/^$ConfigItem$/, @SelectedItems)
+        ) {
+            push(@UnselectedItems, $ConfigItem);
+        }
+    }
+
     # check if bulk feature is enabled
     my $BulkFeature = 0;
     if ( $ConfigObject->Get('ITSMConfigItem::Frontend::BulkFeature') ) {
@@ -499,9 +511,22 @@ END
                 );
             }
             else {
+                my $ItemALLChecked = '';
+                my $SelectedAll    = '';
+
+                if ( !scalar @UnselectedItems ) {
+                    $ItemALLChecked = ' checked="checked"';
+                }
+
+                if ( $Param{AllHits} > $Param{PageShown} ) {
+                    $SelectedAll = 'SelectAllItemsPages';
+                }
+
                 $LayoutObject->Block(
                     Name => 'RecordBulkActionHeader',
                     Data => {
+                        ItemALLChecked  => $ItemALLChecked,
+                        SelectedAll     => $SelectedAll
                     },
                 );
             }
@@ -515,6 +540,7 @@ END
 
         # to store all data
         my %Data;
+        my $BulkActivate = 0;
 
         CONFIGITEMID:
         for my $ConfigItemID (@ConfigItemIDs) {
@@ -584,14 +610,29 @@ END
 
                     }
                     else {
+                        my $ItemChecked = '';
+
+                        if ( grep( /^$ConfigItemID$/, @SelectedItems ) ) {
+                            $ItemChecked = ' checked="checked"';
+                        }
+
                         $LayoutObject->Block(
                             Name => 'RecordBulkAction',
                             Data => {
                                 %Data,
                                 %Param,
                                 ConfigItemID => $ConfigItemID,
+                                ItemChecked  => $ItemChecked,
                             }
                         );
+                        if ( !$BulkActivate
+                            && $ItemChecked
+                        ) {
+                            $BulkActivate = 1;
+                            $LayoutObject->Block(
+                                Name => 'BulkActivate',
+                            );
+                        }
                     }
                 }
 
