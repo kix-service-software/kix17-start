@@ -39,8 +39,8 @@
  * (2017/09/05) - Bugfix: T2017090190001003 (disabled dynamic fields shown in dashlet preferences) (ddoerffel)
  * (2017/08/31) - Bugfix: T2017062890000835 (added missing css files for sidebars) (millinger)
 
-# 17.1.1 (2017/08/23)
- * (2017/08/23) - Bugfix: T2017090590000739 (valid_id not needed in cip_allocation table) (ddoerffel)
+# 17.1.1 (2017/09/05)
+ * (2017/09/05) - Bugfix: T2017090590000739 (valid_id not needed in cip_allocation table) (ddoerffel)
  * (2017/08/23) - Bugfix: T2017081590001097 (email addresses contained in description part of email address will be stored in addressbook) (rbo)
  * (2017/08/23) - Bugfix: T2017062790000766 (special characters displayed wrong in ci search sidebar) (ddoerffel)
  * (2017/08/23) - Bugfix: T2017072190001274 (special characters displayed wrong in faq sidebar) (ddoerffel)
