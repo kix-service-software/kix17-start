@@ -1,7 +1,7 @@
 # Change log of KIX
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
-#17.2.0 (2017/10/??)
+# 17.2.0 (2017/10/17)
  * (2017/10/16) - CR: T2017040290000557 (added layout function ProgressBar) (fjacquemin)
  * (2017/10/16) - CR: T2017040290000557 (migration extendet layout function to standard) (fjacquemin)
  * (2017/10/16) - CR: T2017040290000557 (updated BulkActions with progress bar) (fjacquemin)
@@ -39,7 +39,7 @@
  * (2017/09/05) - Bugfix: T2017090190001003 (disabled dynamic fields shown in dashlet preferences) (ddoerffel)
  * (2017/08/31) - Bugfix: T2017062890000835 (added missing css files for sidebars) (millinger)
 
-#17.1.1 (2017/08/23)
+# 17.1.1 (2017/08/23)
  * (2017/08/23) - Bugfix: T2017090590000739 (valid_id not needed in cip_allocation table) (ddoerffel)
  * (2017/08/23) - Bugfix: T2017081590001097 (email addresses contained in description part of email address will be stored in addressbook) (rbo)
  * (2017/08/23) - Bugfix: T2017062790000766 (special characters displayed wrong in ci search sidebar) (ddoerffel)
@@ -80,7 +80,7 @@
  * (2017/07/07) - Bugfix: T2017032890001429 (fixed modernized offset for responsive view) (uboehm)
  * (2017/07/07) - Bugfix: T2017060790000919 (removed comments from class definitions) (ddoerffel)
 
-#17.1.0 (2017/06/24)
+# 17.1.0 (2017/06/24)
  * (2017/06/21) - Bugfix: T2017052990003305 (show pin for fixed value only on selections or multiselections) (ddoerffel)
  * (2017/06/20) - Bugfix: T2017060890000793 (PostMaster ExtendedFollowUp overwrites existing reference) (millinger)
  * (2017/06/20) - Bugfix: T2017061290000892 (article move does not work) (ddoerffel)
@@ -93,12 +93,12 @@
  * (2017/06/07) - CR: T2017032490000491 (possibility to set caller/callee in AgentTicketPhone(Out/In)bound) (rkaiser)
  * (2017/06/02) - CR: T2017031090000543 (add separated rights management for edit options) (ddoerffel)
  * (2017/06/02) - CR: T2017042090000648 (article edit for all tickets) (ddoerffel)
- * (2017/06/02) - Bugfix: T2017060290000741 (typo in Ticket::Frontend::AgentTicketZoomTabArticle###ArticleEmailActions) (ddoerffel)
+ * (2017/06/02) - Bugfix: T2017060290000741 (typo in Ticket::Frontend::AgentTicketZoomTabArticle# # # ArticleEmailActions) (ddoerffel)
  * (2017/06/02) - Bugfix: T2017060190000742 (old AgentArticleCopyMove content removed) (ddoerffel)
  * (2017/05/29) - Bugfix: T2017051890000696 (corrected quoting in SidebarTools) (millinger)
  * (2017/05/23) - CR: T2017013190000883 (Implemented handling of DynamicField Attachment for NotificationEvent) (millinger)
 
-#17.0.1 (2017/05/29)
+# 17.0.1 (2017/05/29)
  * (2017/05/23) - Bugfix: T2017051990000685 (<span> added to customer ticket zoom sidebar info for responsible and owner) (ddoerffel)
  * (2017/05/22) - Bugfix: T2017051990001121 (customer portal group changes sort order every time on reload) (ddoerffel)
  * (2017/05/22) - Bugfix: T2017052290001043 (toolbar toggle multiple registered on ticket or config item zoom (using tabs)) (ddoerffel)
@@ -144,12 +144,12 @@
  * (2017/04/20) - Bugfix: T2017030690001051 (graph - show notice if too many nodes (>100) are involved to prevent a timeout) (rkaiser)
  * (2017/04/10) - Bugfix: T2017040390000573 (fixed zero-length name for entry on unpack a downloaded zip) (fjacquemin)
 
-#17.0.0 (2017/04/04)
+# 17.0.0 (2017/04/04)
  * first productive release
  * (2017/04/06) - CR: T2016121190001552 (code merge of all packages and changes for KIX 2017 - copyright header) (ddoerffel)
  * (2017/04/03) - Bugfix: T2017011190000509 (fragmentary lists in config item overview if CI attribute 'CIGroupAccess' is used) (rkaiser)
 
-#16.99.81 (2017/04/03)
+# 16.99.81 (2017/04/03)
  * (2017/04/02) - Bug: T2017033190000852 (deep recursion on subroutine if db-connect fails) (ddoerffel)
  * (2017/03/31) - CR: T2016121190001552 (optimized migration scripts from OTRS and KIX 2016) (rbo)
  * (2017/03/30) - Bugfix: T2017033090000738 (dashlet for offline users shows online users too) (ddoerffel)
@@ -163,7 +163,7 @@
  * (2017/03/20) - CR: T2016121190001552 (code merge of all packages and changes for KIX 2017) (millinger)
  * (2017/03/20) - CR: T2016121190001552 (added KIX_ placeholders with fallback - missing fallback in ticket templates) (rbo)
 
-#16.99.80 (2017/03/19)
+# 16.99.80 (2017/03/19)
  * (2017/03/17) - Bugfix: T2017031790001119 (dynamic field filter hash could be undefined) (ddoerffel)
  * (2017/03/16) - Bugfix: T2017021790000729 (fixed initial date for pending time) (millinger)
  * (2017/03/16) - Bugfix: T2017031690001166 (moved output filter to correct folder) (millinger)
