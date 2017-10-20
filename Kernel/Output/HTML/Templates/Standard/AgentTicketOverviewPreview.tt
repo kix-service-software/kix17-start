@@ -14,7 +14,7 @@
 [% RenderBlockStart("DocumentActionRowBulk") %]
     <li class="AlwaysPresent">
         <span>
-            <input type="checkbox" class="[% Data.SelectedAll %]" title="[% Translate("Select all") | html %]" id="SelectAllTickets" autocomplete="off" [% Data.ItemALLChecked %]/>
+            <input type="checkbox" title="[% Translate("Select all") | html %]" id="SelectAllTickets" autocomplete="off" [% Data.ItemALLChecked %]/>
             <label class="InvisibleText" for="SelectAllTickets">[% Translate("Select all") | html %]</label>
         </span>
     </li>
@@ -509,9 +509,11 @@
 [% IF Data.ItemALLChecked %]
     $('#SelectAllTickets').prop('checked',true);
 [% END %]
-[% IF Data.SelectedAll %]
-    $('#SelectAllTickets').addClass('SelectAllItemsPages');
-[% END %]
 //]]></script>
 [% RenderBlockEnd("BulkActivate") %]
+[% RenderBlockStart("BulkSelectedAll") %]
+<script type="text/javascript">//<![CDATA[
+    $('#SelectAllTickets').addClass('SelectAllItemsPages');
+//]]></script>
+[% RenderBlockEnd("BulkSelectedAll") %]
 [% END %]
