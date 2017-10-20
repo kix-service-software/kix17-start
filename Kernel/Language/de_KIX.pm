@@ -2192,11 +2192,12 @@ sub Data {
     # Template: AgentTicketOverview...
     $Lang->{'From which page should be selected the tickets.'}
         = 'Von welchen Seiten sollen die Tickets ausgewählt werden';
-    $Lang->{'Do you really want ### tickets merge? There may be a loss of performance.'}
-        = 'Wollen Sie wirklich ### Tickets Zusammenfassen? Es können dabei Performenz einbussen auftreten.';
+    $Lang->{'From which page should be selected the config items.'}
+        = 'Von welchen Seiten sollen die ConfigItems ausgewählt werden';
     $Lang->{'Current Page'}     = 'aktuelle Seite';
     $Lang->{'All Pages'}        = 'alle Seiten';
     $Lang->{'Ticket selection'} = 'Ticketauswahl';
+    $Lang->{'CI selection'} = 'CI-Auswahl';
     $Lang->{'You have selected a larger number (###) of objects. Please note that this can lead to a loss of performance! Do you want to continue?'}
         = 'Sie haben eine größere Anzahl (###) an Objekten selektiert. Bitte beachten Sie, dass dies zu Performanceeinbußen führen kann! Möchten Sie fortfahren?';
     $Lang->{'Locking the tickets, please wait a moment...'}

@@ -125,8 +125,8 @@
                 {
                     Element: $Element,
                     ID: 'SelectItemsSettingsDialogContainer',
-                    Title: '[% Translate("Ticket selection") %]',
-                    Content: '<p style="text-align: center;">[% Translate("From which page should be selected the tickets.")%]</p>',
+                    Title: '[% Translate("CI selection") %]',
+                    Content: '<p style="text-align: center;">[% Translate("From which page should be selected the config items.")%]</p>',
                     Label: [
                         '[% Translate("Current Page") %]',
                         '[% Translate("All Pages") %]'
