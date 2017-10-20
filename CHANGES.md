@@ -2,8 +2,9 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 # 17.2.0 (2017/10/17)
+ * (2017/10/20) - Bugfix: T2017101990000666 (fixed translation for the dialog of enhanced selection in CI lists) (fjacquemin)
  * (2017/10/16) - CR: T2017040290000557 (added layout function ProgressBar) (fjacquemin)
- * (2017/10/16) - CR: T2017040290000557 (migration extendet layout function to standard) (fjacquemin)
+ * (2017/10/16) - CR: T2017040290000557 (migration extended layout function to standard) (fjacquemin)
  * (2017/10/16) - CR: T2017040290000557 (updated BulkActions with progress bar) (fjacquemin)
  * (2017/10/16) - CR: T2017040290000557 (added markers across multiple pages for BulkActions) (fjacquemin)
  * (2017/10/12) - Bugfix: T2017081190001111 (searching for DFs no longer possible if KIX Professional is installed) (rbo)
