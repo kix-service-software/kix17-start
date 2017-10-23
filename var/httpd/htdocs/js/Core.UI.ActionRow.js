@@ -209,7 +209,7 @@ Core.UI.ActionRow = (function (TargetNS) {
                             Content: Core.Config.Get('BulkDialog')
                         }, 'BulkDialog');
                 } else {
-                    var ItemIDs,
+                    var ItemIDs = '',
                         Data;
 
                     $.each(SelectedItems, function (index, value) {
