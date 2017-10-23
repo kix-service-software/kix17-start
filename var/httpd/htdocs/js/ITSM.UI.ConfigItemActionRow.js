@@ -208,7 +208,7 @@ ITSM.UI.ConfigItemActionRow = (function (TargetNS) {
                             Content: Core.Config.Get('ITSMBulkDialog')
                         }, 'BulkDialog');
                 } else {
-                    var ItemIDs,
+                    var ItemIDs = '',
                         Data;
 
                     $.each(SelectedItems, function (index, value) {
