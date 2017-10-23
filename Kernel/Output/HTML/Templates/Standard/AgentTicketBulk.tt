@@ -20,7 +20,7 @@
             <h1>[% Translate("Ticket Bulk Action") | html %]</h1>
 [% RenderBlockStart("CancelClosePopup") %]
             <p>
-                <a class="" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=[% Data.FormID %];>[% Translate("Cancel & close") | html %]</a>
+                <a class="" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=[% Data.FormID %];">[% Translate("Cancel & close") | html %]</a>
             </p>
 [% RenderBlockEnd("CancelClosePopup") %]
 [% RenderBlockStart("UndoClosePopup") %]
