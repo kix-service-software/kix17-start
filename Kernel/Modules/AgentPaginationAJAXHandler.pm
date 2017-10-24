@@ -36,10 +36,17 @@ sub Run {
     my $UploadCacheObject   = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
     my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
 
-    for my $Needed (qw(Subaction CallAction FormID ItemIDs)) {
+    for my $Needed ( qw(Subaction CallAction FormID) ) {
         $Param{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
         if ( !$Param{$Needed} ) {
             return $LayoutObject->ErrorScreen( Message => "Need $Needed!", );
+        }
+    }
+
+    if( $Self->{Subaction} ne 'DeleteFormContent' ) {
+        $Param{ItemIDs} = $ParamObject->GetParam( Param => 'ItemIDs' ) || '';
+        if ( !$Param{ItemIDs} ) {
+            return $LayoutObject->ErrorScreen( Message => "Need ItemIDs!", );
         }
     }
 
@@ -52,6 +59,13 @@ sub Run {
     my $FileName    = '';
 
     if ( $Param{Subaction} eq 'UploadContentIDs' ) {
+        my @ContentItems = $UploadCacheObject->FormIDGetAllFilesData(
+            FormID => $FormID,
+        );
+
+        if ( scalar @ContentItems ) {
+            $UploadCacheObject->FormIDRemove( FormID => $FormID );
+        }
 
         # save file only if content given
         my $FileID = $UploadCacheObject->FormIDAddFile(
