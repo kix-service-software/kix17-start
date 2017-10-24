@@ -1,7 +1,8 @@
 # Change log of KIX
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
-# 17.2.0 (2017/10/17)
+# 17.2.0 (2017/10/??)
+ * (2017/10/23) - Bugfix: T2017102090000896 (all dynamic fields hidden if not in config) (ddoerffel)
  * (2017/10/20) - Bugfix: T2017101990000701 (fixed enhanced selection in ticket lists for medium and preview overview) (fjacquemin)
  * (2017/10/20) - Bugfix: T2017101990000666 (fixed translation for the dialog of enhanced selection in CI lists) (fjacquemin)
  * (2017/10/16) - CR: T2017040290000557 (added layout function ProgressBar) (fjacquemin)
