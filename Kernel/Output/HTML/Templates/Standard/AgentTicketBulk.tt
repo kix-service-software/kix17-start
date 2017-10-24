@@ -20,7 +20,7 @@
             <h1>[% Translate("Ticket Bulk Action") | html %]</h1>
 [% RenderBlockStart("CancelClosePopup") %]
             <p>
-                <a class="" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=[% Data.FormID %];>[% Translate("Cancel & close") | html %]</a>
+                <a class="" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=[% Data.FormID %];">[% Translate("Cancel & close") | html %]</a>
             </p>
 [% RenderBlockEnd("CancelClosePopup") %]
 [% RenderBlockStart("UndoClosePopup") %]
@@ -289,6 +289,7 @@ Core.UI.Popup.ExecuteInParentWindow(function(WindowObject) {
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Agent.TicketAction.Init();
+    Core.UI.Popup.InitClosedBulkHandler('[% Env("Action") %]', '[% Data.FormID %]', '#submitRichText');
 //]]></script>
 [% END %]
 

@@ -3,8 +3,13 @@
 
 # 17.2.0 (2017/10/??)
  * (2017/10/23) - Bugfix: T2017102090000896 (all dynamic fields hidden if not in config) (ddoerffel)
+ * (2017/10/24) - Bugfix: T2017102090001091 (added deleting remnants of the same FormID from the webcache when closing popup) (fjacquemin)
+ * (2017/10/23) - Bugfix: T2017102390000461 (fixed missing quotation mark at the link "ChancelAndClose" in AgentTicketBulk) (fjacquemin)
+ * (2017/10/23) - Bugfix: T2017102090001082 (fixed missing empty string declaration when processing the ItemIDs in ActionRow) (fjacquemin)
  * (2017/10/20) - Bugfix: T2017101990000701 (fixed enhanced selection in ticket lists for medium and preview overview) (fjacquemin)
  * (2017/10/20) - Bugfix: T2017101990000666 (fixed translation for the dialog of enhanced selection in CI lists) (fjacquemin)
+
+# 17.2.0 RC1 (2017/10/17)
  * (2017/10/16) - CR: T2017040290000557 (added layout function ProgressBar) (fjacquemin)
  * (2017/10/16) - CR: T2017040290000557 (migration extended layout function to standard) (fjacquemin)
  * (2017/10/16) - CR: T2017040290000557 (updated BulkActions with progress bar) (fjacquemin)
