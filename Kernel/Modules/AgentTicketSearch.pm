@@ -738,12 +738,6 @@ sub Run {
             local $Kernel::System::DB::UseSlaveDB = 1;
 
             # perform ticket search
-#            use Data::Dumper;
-#            for my $Key ( keys %GetParam ) {
-#                next if !defined $GetParam{$Key};
-#                print STDERR $Key . ":" . $GetParam{$Key} . "\n"; 
-#            }
-            # print STDERR  Dumper(\%GetParam);
             @ViewableTicketIDs = $TicketObject->TicketSearch(
                 Result              => 'ARRAY',
                 SortBy              => $Self->{SortBy},
@@ -780,7 +774,7 @@ sub Run {
             $GetParam{TicketNumber} = $FulltextSearchParam;
 
             local $Kernel::System::DB::UseSlaveDB = 1;
-print STDERR "2\n";
+
             my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
                 Result              => 'ARRAY',
                 SortBy              => $Self->{SortBy},
@@ -872,7 +866,6 @@ print STDERR "2\n";
                     }
 
                     # search tickets
-                    print STDERR "3\n";
                     my @ViewableTicketIDsThisDF = $TicketObject->TicketSearch(
                         Result          => 'ARRAY',
                         SortBy          => $Self->{SortBy},
