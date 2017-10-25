@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+#17.2.1 (2017/12/??)
+ * (2017/10/25) - Bugfix: T2017102090001028 (pending time search provides different search results for dashboard and ticket lists) (ddoerffel)
+
 #17.2.0 (2017/10/??)
  * (2017/10/12) - Bugfix: T2017081190001111 (searching for DFs no longer possible if KIX Professional is installed) (rbo)
  * (2017/10/11) - Bugfix: T2017081690001095 (autocomplete of DF RemoteDB and ITSMConfigItem not working in AdminNotificationEvent. Thanks to samueldc!) (millinger)
