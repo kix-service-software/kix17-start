@@ -2669,7 +2669,11 @@ sub PageNavBar {
     $WindowStart = int( ( $WindowStart / $WindowSize ) ) + 1;
     $WindowStart = ( $WindowStart * $WindowSize ) - ($WindowSize);
 
+    my $Action   = $Param{Action} || '';
+    my $Link     = $Param{Link}   || '';
+    my $Baselink = "$Self->{Baselink}$Action;$Link";
     my $i        = 0;
+
     while ( $i <= ( $Pages - 1 ) ) {
         $i++;
 
@@ -2789,6 +2793,9 @@ sub PageNavBar {
         for my $Block ( qw(PageHidden PageLink) ) {
             $Self->Block(
                 Name => $Block,
+                Data => {
+                    Baselink => $Baselink,
+                }
             );
         }
     }
