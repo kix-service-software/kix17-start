@@ -108,10 +108,15 @@ sub Run {
 
         return $LayoutObject->ProgressBar(
             MaxCount     => scalar @TicketIDs,
+            IgnoredCount => 0,
+            ItemCount    => scalar @TicketIDs,
+
             TaskName     => $Self->{Action} . '-' . $Param{FormID} . '-BulkCancel',
             TaskType     => 'AsynchronousExecutor',
+
             Action       => $Self->{Action},
             LoaderText   => 'Unlocking the tickets, please wait a moment...',
+
             Title        => 'Ticket Bulk Action',
             EndParam     => {
                 FormID       => $Param{FormID},
@@ -688,38 +693,47 @@ sub Run {
          && $Self->{Subaction} eq 'TicketLocking'
     ) {
         return $LayoutObject->ProgressBar(
-            MaxCount     => scalar @TicketIDSelected,
-            TaskName     => $Self->{Action} . '-' . $Param{FormID} . '-BulkLock',
-            TaskType     => 'AsynchronousExecutor',
-            Action       => $Self->{Action},
-            LoaderText   => 'Locking the tickets, please wait a moment...',
-            Title        => 'Ticket Bulk Action',
-            EndParam     => {
+            MaxCount        => scalar @TicketIDSelected,
+            IgnoredCount    => scalar @IgnoreLockedTicketIDs,
+            ItemCount       => scalar @TicketIDs,
+
+            TaskName        => $Self->{Action} . '-' . $Param{FormID} . '-BulkLock',
+            TaskType        => 'AsynchronousExecutor',
+
+            AbortCheck      => 1,
+            AbortSubaction  => 'CancelAndClose',
+            Action          => $Self->{Action},
+
+            LoaderText      => 'Locking the tickets, please wait a moment...',
+            Title           => 'Ticket Bulk Action',
+            EndParam        => {
                 FormID       => $Param{FormID},
                 UserID       => $Self->{UserID}
             },
-            FooterType   => 'Small',
-            HeaderType   => 'Small',
+            FooterType      => 'Small',
+            HeaderType      => 'Small',
         );
     }
 
     elsif ( $Self->{Subaction} eq 'Do' ) {
         return $LayoutObject->ProgressBar(
-            MaxCount     => scalar @TicketIDSelected,
-            TaskName     => $Self->{Action} . '-' . $Param{FormID} . '-BulkDo',
-            TaskType     => 'AsynchronousExecutor',
-            Action       => $Self->{Action},
-            LoaderText   => 'Tickets will be saved, please wait a moment...',
-            Title        => 'Ticket Bulk Action',
-            EndParam     => {
+            MaxCount        => scalar @TicketIDSelected,
+            IgnoredCount    => scalar @IgnoreLockedTicketIDs,
+            ItemCount       => scalar @TicketIDs,
+            TaskName        => $Self->{Action} . '-' . $Param{FormID} . '-BulkDo',
+            TaskType        => 'AsynchronousExecutor',
+            Action          => $Self->{Action},
+            LoaderText      => 'Tickets will be saved, please wait a moment...',
+            Title           => 'Ticket Bulk Action',
+            EndParam        => {
                 TicketID     => $MainTicketID,
                 ActionFlag   => $ActionFlag,
                 FormID       => $Param{FormID},
                 Subaction    => 'DoEnd',
                 UserID       => $Self->{UserID}
             },
-            FooterType   => 'Small',
-            HeaderType   => 'Small',
+            FooterType      => 'Small',
+            HeaderType      => 'Small',
         );
     }
 

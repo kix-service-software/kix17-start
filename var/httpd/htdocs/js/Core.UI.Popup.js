@@ -746,7 +746,7 @@ Core.UI.Popup = (function (TargetNS) {
                      function(){}
                  );
              });
-        $(Submit).on('click',function(){
+        $(Submit + ', .PopupUndoClose, .PopupCancelClose').on('click',function(){
             $(window).unbind("beforeunload.Popup");
         });
         $(document).bind('keypress keydown keyup', function(e) {

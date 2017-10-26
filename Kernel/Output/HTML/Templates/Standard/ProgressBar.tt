@@ -1,3 +1,4 @@
+[% RenderBlockStart("ProgressBar") %]
 <div class="LayoutPopup ARIARoleMain">
     <div class="Header">
         <h1>[% Translate(Data.Title) %]</h1>
@@ -15,8 +16,13 @@
             </div>
              <div class="TaskSpin">
                 <i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>
-                <span id="TaskText">[% Translate(Data.LoaderText) %]</span>
+                <span class="TaskText">[% Translate(Data.LoaderText) %]</span>
             </div>
+[% RenderBlockStart("IgnoredObjects") %]
+            <div class="TaskIgnored">
+                <span class="TaskText">[% Data.IgnoredText %]</span>
+            </div>
+[% RenderBlockEnd("IgnoredObjects") %]
         </div>
     </div>
 [% WRAPPER JSOnDocumentComplete %]
@@ -53,3 +59,25 @@
     //]]></script>
 [% END %]
 </div>
+[% RenderBlockEnd("ProgressBar") %]
+[% RenderBlockStart("ProgressStopped") %]
+<div class="LayoutPopup ARIARoleMain">
+    <div class="Header">
+        <h1>[% Translate(Data.Title) %]</h1>
+    </div>
+    <div class="Content">
+        <div class="TaskBox">
+            <div class="TaskAbort">
+                <span id="TaskText">[% Translate("The current process has been canceled because no objects to be processed are available.") %]</span>
+                <table>
+                    <tr>
+                        <td>[% Translate("passed Objects") %]</td>
+                        <td>[% Data.ItemCount %]</td>
+                    </tr>
+                </table>
+                <a class="PopupCancelClose" href="[% Env("Baselink") %]Action=[% Data.Action %];Subaction=[% Data.AbortSubaction %];[% Env("ChallengeTokenParam") | html %];[% Data.Params %]">[% Translate("Cancel & close") | html %]</a>
+            </div>
+        </div>
+    </div>
+</div>
+[% RenderBlockEnd("ProgressStopped") %]
