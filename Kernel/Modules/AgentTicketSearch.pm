@@ -524,6 +524,7 @@ sub Run {
             TicketLastChange => 'LastChangeTime',
             TicketClose      => 'CloseTime',
             TicketEscalation => 'EscalationTime',
+            TicketPending    => 'PendingTime',
         );
 
         for my $TimeType ( sort keys %TimeMap ) {
