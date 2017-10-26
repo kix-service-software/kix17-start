@@ -43,6 +43,7 @@ sub Run {
     # declare the variables for all the parameters
     my %Error;
     my %GetParam;
+    my @Notify;
 
     $Param{FormID}     = $ParamObject->GetParam( Param => 'FormID' );
     if ( !$Param{FormID} ) {
@@ -63,6 +64,8 @@ sub Run {
     }
 
     elsif ( $Self->{Subaction} eq 'DoEnd' ) {
+        my $ActionFlag = $ParamObject->GetParam( Param => 'ActionFlag' );
+
         if ( $ActionFlag ) {
             $UploadCacheObject->FormIDRemove( FormID => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID} );
 
@@ -147,6 +150,7 @@ sub Run {
 
     # process config item
     my @ConfigItemIDSelected;
+    my @IgnoredConfigItemID;
     my $ActionFlag = 0;
     my $Counter    = 1;
 
@@ -173,6 +177,7 @@ sub Run {
 
             # error screen, don't show config item
             push(@Notify, $ConfigItem->{Number} . ': $Text{"You don\'t have write access to this configuration item."}');
+            push(@IgnoredConfigItemID, $ConfigItemID);
             next CONFIGITEM_ID;
         }
 
@@ -218,6 +223,9 @@ sub Run {
 
         return $LayoutObject->ProgressBar(
             MaxCount     => scalar @ConfigItemIDSelected,
+            IgnoredCount => scalar @IgnoredConfigItemID,
+            ItemCount    => scalar @ConfigItemIDs,
+
             TaskName     => $Self->{Action} . '-' . $Param{FormID} . '-ITSMBulkDo',
             TaskType     => 'AsynchronousExecutor',
             Action       => $Self->{Action},

@@ -5563,7 +5563,11 @@ sub TransfromDateSelection {
         TaskName        => 'Kernel::System::Ticket-Run()',              # generated name of the daemon task
         TaskType        => 'AsynchronousExecutor',                      # type of daemon task
         MaxCount        => 15,                                          # max number of items that are processed.
+        IgnoreCount     => 5,                                           # max number of items that are ignored.
+        ItemCount       => 20,                                          # max number of items that are passed.
         Action          => 'AgentXXX',                                  # e. g. 'Action=' . $Self->{LayoutObject}->{Action}
+        AbortSubaction  => 'CancelAndClose',                            # e. g. 'Subaction=' . $Self->{LayoutObject}->{Subaction} subaction for abort if max count is 0
+        AbortCheck      => 1                                            # ativate (0|1) checking of abort, if max count 0
         RefreshCycle    => '1'                                          # optional: sets the time (in seconds) to which distance the progress bar should be updated, Default 1s
         EndParam        => {                                            # optional: definition of parameters as hash which are set at the end of the process to the following link.
             TicketID    => 123,
@@ -5582,8 +5586,8 @@ sub TransfromDateSelection {
 sub ProgressBar {
     my ( $Self, %Param ) = @_;
 
-    for ( qw(TaskName TaskType MaxCount Action) ) {
-        if ( !$Param{$_} ) {
+    for ( qw(TaskName TaskType Action MaxCount IgnoredCount ItemCount) ) {
+        if ( !IsStringWithData($Param{$_}) ) {
             return $Self->ErrorScreen(
                 Message => "No $_ is given!",
                 Comment => 'Please contact your administrator',
@@ -5601,6 +5605,7 @@ sub ProgressBar {
     } elsif ( $Param{EndParam}
         && ref $Param{EndParam} eq 'HASH'
     ) {
+        $Param{Params}   = $Param{EndParam};
         $Param{EndParam} = $Self->JSONEncode(
             Data => $Param{EndParam},
             NoQuotes => 1,
@@ -5621,12 +5626,54 @@ sub ProgressBar {
         $Param{Title} = 'Current progress bar';
     }
 
+    if ( !$Param{MaxCount}
+        && $Param{AbortCheck}
+    ) {
+
+        if ( !IsStringWithData($Param{AbortSubaction}) ) {
+            return $Self->ErrorScreen(
+                Message => "No AbortSubaction is given!",
+                Comment => 'Please contact your administrator',
+            );
+        }
+
+        my $ParamStrg = '';
+        for my $Key ( keys %{$Param{Params}} ) {
+            next if $Key eq 'Subaction';
+            $ParamStrg .= ';' if $ParamStrg;
+            $ParamStrg .= $Key . '=' . $Param{Params}->{$Key};
+        }
+
+        $Self->Block(
+            Name => 'ProgressStopped',
+            Data => {
+                %Param,
+                Params => $ParamStrg,
+            },
+        );
+    } else {
+        $Self->Block(
+            Name => 'ProgressBar',
+            Data => \%Param,
+        );
+
+        if ( IsStringWithData( $Param{IgnoredCount})
+             && $Param{IgnoredCount}
+        ) {
+            $Self->Block(
+                Name => 'IgnoredObjects',
+                Data => {
+                    IgnoredText => Translatable('%s objects are skipped during the process.', $Param{IgnoredCount}),
+                }
+            );
+        }
+    }
+
     my $Output = $Self->Header(
         Type => $Param{HeaderType},
     );
     $Output .= $Self->Output(
         TemplateFile => 'ProgressBar',
-        Data         => \%Param,
     );
     $Output .= $Self->Footer(
         Type => $Param{FooterType},
