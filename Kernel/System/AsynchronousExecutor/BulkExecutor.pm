@@ -19,11 +19,12 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
     'Kernel::System::Ticket',
     'Kernel::System::State',
-    'Kernel::Language',
+    'Kernel::Output::HTML::Layout',
     'Kernel::System::CustomerUser',
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Web::UploadCache',
     'Kernel::System::JSON',
+    'Kernel::System::User',
 );
 
 sub new {
@@ -37,12 +38,11 @@ sub new {
     $Self->{ConfigObject}       = $Kernel::OM->Get('Kernel::Config');
     $Self->{CustomerUserObject} = $Kernel::OM->Get('Kernel::System::CustomerUser');
     $Self->{JSONObject}         = $Kernel::OM->Get('Kernel::System::JSON');
-    $Self->{LanguageObject}     = $Kernel::OM->Get('Kernel::Language');
-    $Self->{LayoutObject}       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     $Self->{LogObject}          = $Kernel::OM->Get('Kernel::System::Log');
     $Self->{StateObject}        = $Kernel::OM->Get('Kernel::System::State');
     $Self->{TicketObject}       = $Kernel::OM->Get('Kernel::System::Ticket');
     $Self->{UploadCacheObject}  = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
+    $Self->{UserObject}         = $Kernel::OM->Get('Kernel::System::User');
 
     return $Self;
 }
@@ -52,6 +52,19 @@ sub new {
 #
 sub Run {
     my ( $Self, %Param ) = @_;
+
+    my %UserData = $Self->{UserObject}->GetUserData(
+        UserID => $Param{UserID},
+    );
+
+    $Kernel::OM->ObjectParamAdd(
+        'Kernel::Output::HTML::Layout' => {
+            UserLanguage => $UserData{UserLanguage},
+        },
+    );
+
+    $Self->{LayoutObject}   = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    $Self->{LanguageObject} = $Self->{LayoutObject}->{LanguageObject};
 
     if ( $Param{CallAction} eq 'BulkLock' ) {
         return $Self->_BulkLock(
