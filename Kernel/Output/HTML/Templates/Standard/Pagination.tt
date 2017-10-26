@@ -18,42 +18,61 @@
 [% RenderBlockEnd("PageHidden") %]
 
 [% RenderBlockStart("PageBack") %]
-    <a id="[% Data.IDPrefix %]PageAllBack" title="[% Translate("Show first page") | html %]"     class="PageLink" data-starthit="[% Data.StartHitBack %]" data-startwindow="[% Data.StartWindowBack %]">|&lt;</a>
-    <a id="[% Data.IDPrefix %]PageOneBack" title="[% Translate("Show previous pages") | html %]" class="PageLink" data-starthit="[% Data.StartHitNext %]" data-startwindow="[% Data.StartWindowNext %]">&lt;&lt;</a>
+    <a id="[% Data.IDPrefix %]PageAllBack" title="[% Translate("Show first page") | html %]"     class="PageLink" StartHit="[% Data.StartHitBack %]" StartWindow="[% Data.StartWindowBack %]">|&lt;</a>
+    <a id="[% Data.IDPrefix %]PageOneBack" title="[% Translate("Show previous pages") | html %]" class="PageLink" StartHit="[% Data.StartHitNext %]" StartWindow="[% Data.StartWindowNext %]">&lt;&lt;</a>
 [% RenderBlockEnd("PageBack") %]
 [% RenderBlockStart("PageBackAjax") %]
-    <a id="[% Data.IDPrefix %]PageAllBack" title="[% Translate("Show first page") | html %]"     class="PageLink" data-starthit="[% Data.StartHitBack %]" data-startwindow="[% Data.StartWindowBack %]">|&lt;</a>
-    <a id="[% Data.IDPrefix %]PageOneBack" title="[% Translate("Show previous pages") | html %]" class="PageLink" data-starthit="[% Data.StartHitNext %]" data-startwindow="[% Data.StartWindowNext %]">&lt;&lt;</a>
+    <a id="[% Data.IDPrefix %]PageAllBack" title="[% Translate("Show first page") | html %]"     class="PageLink PageAJAX" StartHit="[% Data.StartHitBack %]" StartWindow="[% Data.StartWindowBack %]" Identifier="[% Data.AjaxReplace %]">|&lt;</a>
+    <a id="[% Data.IDPrefix %]PageOneBack" title="[% Translate("Show previous pages") | html %]" class="PageLink PageAJAX" StartHit="[% Data.StartHitNext %]" StartWindow="[% Data.StartWindowNext %]" Identifier="[% Data.AjaxReplace %]">&lt;&lt;</a>
 [% RenderBlockEnd("PageBackAjax") %]
 
 
 [% RenderBlockStart("Page") %]
-    <a id="[% Data.IDPrefix %]Page[% Data.PageNumber %]" class="PageLink [% Data.SelectedPage %]" title="[% Translate("Show page %s", Data.PageNumber) | html %]"    data-starthit="[% Data.StartHit %]" data-startwindow="[% Data.StartWindow %]">[% Data.PageNumber %]</a>
+    <a id="[% Data.IDPrefix %]Page[% Data.PageNumber %]" class="PageLink [% Data.SelectedPage %]" title="[% Translate("Show page %s", Data.PageNumber) | html %]"    StartHit="[% Data.StartHit %]" StartWindow="[% Data.StartWindow %]">[% Data.PageNumber %]</a>
 [% RenderBlockEnd("Page") %]
 [% RenderBlockStart("PageAjax") %]
-    <a id="[% Data.IDPrefix %]Page[% Data.PageNumber %]" class="PageLink [% Data.SelectedPage %]" title="[% Translate("Show page %s", Data.PageNumber) | html %]"    data-starthit="[% Data.StartHit %]" data-startwindow="[% Data.StartWindow %]">[% Data.PageNumber %]</a>
+    <a id="[% Data.IDPrefix %]Page[% Data.PageNumber %]" class="PageLink PageAJAX [% Data.SelectedPage %]" title="[% Translate("Show page %s", Data.PageNumber) | html %]"   Identifier="[% Data.AjaxReplace %]" StartHit="[% Data.StartHit %]" StartWindow="[% Data.StartWindow %]">[% Data.PageNumber %]</a>
 [% RenderBlockEnd("PageAjax") %]
 
 
 [% RenderBlockStart("PageForward") %]
-    <a id="[% Data.IDPrefix %]PageOneForward" title="[% Translate("Show next pages") | html %]" class="PageLink" data-starthit="[% Data.StartHitBack %]" data-startwindow="[% Data.StartWindowBack %]">&gt;&gt;</a>
-    <a id="[% Data.IDPrefix %]PageAllForward" title="[% Translate("Show last page") | html %]"  class="PageLink" data-starthit="[% Data.StartHitNext %]" data-startwindow="[% Data.StartWindowNext %]">&gt;|</a>
+    <a id="[% Data.IDPrefix %]PageOneForward" title="[% Translate("Show next pages") | html %]" class="PageLink" StartHit="[% Data.StartHitBack %]" StartWindow="[% Data.StartWindowBack %]">&gt;&gt;</a>
+    <a id="[% Data.IDPrefix %]PageAllForward" title="[% Translate("Show last page") | html %]"  class="PageLink" StartHit="[% Data.StartHitNext %]" StartWindow="[% Data.StartWindowNext %]">&gt;|</a>
 [% RenderBlockEnd("PageForward") %]
 [% RenderBlockStart("PageForwardAjax") %]
-    <a id="[% Data.IDPrefix %]PageOneForward" title="[% Translate("Show next pages") | html %]" class="PageLink" data-starthit="[% Data.StartHitBack %]" data-startwindow="[% Data.StartWindowBack %]">&gt;&gt;</a>
-    <a id="[% Data.IDPrefix %]PageAllForward" title="[% Translate("Show last page") | html %]"  class="PageLink" data-starthit="[% Data.StartHitNext %]" data-startwindow="[% Data.StartWindowNext %]">&gt;|</a>
+    <a id="[% Data.IDPrefix %]PageOneForward" title="[% Translate("Show next pages") | html %]" class="PageLink PageAJAX" StartHit="[% Data.StartHitBack %]" StartWindow="[% Data.StartWindowBack %]" Identifier="[% Data.AjaxReplace %]">&gt;&gt;</a>
+    <a id="[% Data.IDPrefix %]PageAllForward" title="[% Translate("Show last page") | html %]"  class="PageLink PageAJAX" StartHit="[% Data.StartHitNext %]" StartWindow="[% Data.StartWindowNext %]" Identifier="[% Data.AjaxReplace %]">&gt;|</a>
 [% RenderBlockEnd("PageForwardAjax") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 [% RenderBlockStart("PageLink") %]
     $('.PageLink').off('click').on('click', function(){
-        var StartHit    = $(this).attr('data-starthit'),
-            StartWindow = $(this).attr('data-startwindow');
+        var StartHit    = $(this).attr('StartHit'),
+            StartWindow = $(this).attr('StartWindow');
 
-        $('input[name="StartHit"]').val(StartHit);
-        $('input[name="StartWindow"]').val(StartWindow);
+        if ( $(this).hasClass('PageAJAX') ) {
+            var $Container  = $(this).parents('.WidgetSimple'),
+                Identifier  = $(this).attr('Identifier'),
+                BaseLink    = '[% Data.Baselink %]';
 
-        $(this).closest('form').submit();
+            if ( StartHit ) {
+                BaseLink += ';StartHit=' + StartHit;
+            }
+            if ( StartWindow ) {
+                BaseLink += ';StartWindow=' + StartWindow;
+            }
+
+            $Container.addClass('Loading');
+            Core.AJAX.ContentUpdate($('#' + Identifier), BaseLink, function () {
+                $Container.removeClass('Loading');
+            });
+            return false;
+        } else {
+            $('input[name="StartHit"]').val(StartHit);
+            $('input[name="StartWindow"]').val(StartWindow);
+
+            $(this).closest('form').submit();
+        }
     });
 [% RenderBlockEnd("PageLink") %]
 
