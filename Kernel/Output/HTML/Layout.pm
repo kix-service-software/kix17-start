@@ -5670,7 +5670,7 @@ sub ProgressBar {
             $Self->Block(
                 Name => 'IgnoredObjects',
                 Data => {
-                    IgnoredText => Translatable('%s objects are skipped during the process.', $Param{IgnoredCount}),
+                    IgnoredText => $Self->{LanguageObject}->Translate('%s objects are skipped during the process.', $Param{IgnoredCount}),
                 }
             );
         }

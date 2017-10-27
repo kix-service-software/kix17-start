@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 # 17.2.0 (2017/10/??)
+ * (2017/10/27) - Bugfix: T2017102790000981 (fixed used wrong translation method in progress bar) (fjacquemin)
  * (2017/10/27) - Bugfix: T2017102790000874 (broken layout on rating stars in customer faq sidebar) (ddoerffel)
  
 # 17.2.0 RC2 (2017/10/26)
