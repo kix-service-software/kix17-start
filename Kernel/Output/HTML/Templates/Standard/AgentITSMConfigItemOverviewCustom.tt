@@ -132,6 +132,12 @@
                         '[% Translate("All Pages") %]'
                     ]
                 }, 'SelectDialog');
+
+            $('.Dialog > .Header .Close').on('click',function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                $('#SelectAllConfigItems').prop('checked',false);
+            });
         } else if ( $(this).prop('checked') ) {
             ITSM.UI.ConfigItemActionRow.UpdateSelectItems($Element, false);
         } else {

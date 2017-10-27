@@ -489,6 +489,12 @@
                         '[% Translate("All Pages") %]'
                     ]
                 }, 'SelectDialog');
+
+            $('.Dialog > .Header .Close').on('click',function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                $('#SelectAllTickets').prop('checked',false);
+            });
         } else if ( $(this).prop('checked') ) {
             Core.UI.ActionRow.UpdateSelectItems($Element, false);
         } else {
