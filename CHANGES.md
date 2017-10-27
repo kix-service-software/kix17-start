@@ -1,8 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
-# 17.2.0 (2017/10/26)
+# 17.2.0 (2017/10/??)
  * (2017/10/27) - Bugfix: T2017102790000981 (fixed used wrong translation method in progress bar) (fjacquemin)
+ * (2017/10/27) - Bugfix: T2017102790000874 (broken layout on rating stars in customer faq sidebar) (ddoerffel)
+ 
+# 17.2.0 RC2 (2017/10/26)
  * (2017/10/26) - Bugfix: T2017102090001199 (used but obsolete perl module Data::Calc cannot be found) (rbo)
  * (2017/10/26) - Bugfix: T2017101990000639 (fixed wrong ajax content returnable by clicking a page number in a list view) (fjacquemin)
  * (2017/10/26) - Bugfix: T2017102490001066 (fixed missing user language at daemon executor for translation) (fjacquemin)
