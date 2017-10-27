@@ -273,7 +273,7 @@ ITSM.UI.ConfigItemActionRow = (function (TargetNS) {
             Buttons = [
                 {
                     Label: Params.Label[0],
-                    Type: 'Close',
+                    Type: 'Submit',
                     Class: 'Primary',
                     Function: function () {
                         var ItemIDs = '';
@@ -297,6 +297,8 @@ ITSM.UI.ConfigItemActionRow = (function (TargetNS) {
                             URL += SerializeData(Core.App.GetSessionInformation());
                             Core.UI.Popup.OpenPopup(URL, 'ConfigItemAction');
                         })
+
+                        Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
                         return true;
                     }
                 },
@@ -313,19 +315,21 @@ ITSM.UI.ConfigItemActionRow = (function (TargetNS) {
             Buttons = [
                 {
                     Label: Params.Label[0],
-                    Type: 'Close',
+                    Type: 'Submit',
                     Class: 'Primary',
                     Function: function () {
                         TargetNS.UpdateSelectItems($(Params.Element), false);
+                        Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
                         return true;
                     }
                 },
                 {
                     Label: Params.Label[1],
-                    Type: 'Close',
+                    Type: 'Submit',
                     Class: 'Primary',
                     Function: function () {
                         TargetNS.UpdateSelectItems($(Params.Element), true);
+                        Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
                         return true;
                     }
                 }

@@ -15,9 +15,9 @@ use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
     'Kernel::System::Log',
-    'Kernel::System::Link',
-    'Kernel::System::Web::UploadCache',
-    'Kernel::System::Scheduler'
+    'Kernel::System::LinkObject',
+    'Kernel::System::Scheduler',
+    'Kernel::System::ITSMConfigItem'
 );
 
 sub new {
@@ -28,8 +28,8 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{LinkObject}         = $Kernel::OM->Get('Kernel::System::Link');
-    $Self->{ConfigItemObject}   = $Kernel::OM->Get('Kernel::System::ConfigItem');
+    $Self->{LinkObject}         = $Kernel::OM->Get('Kernel::System::LinkObject');
+    $Self->{ConfigItemObject}   = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
     $Self->{LogObject}          = $Kernel::OM->Get('Kernel::System::Log');
     $Self->{SchedulerObject}    = $Kernel::OM->Get('Kernel::System::Scheduler');
 

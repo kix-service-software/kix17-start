@@ -98,7 +98,7 @@ sub Run {
 
     my @ConfigItemIDs;
     for my $Item (@ContentItems) {
-        next if $Item->{Filename} ne 'ConfigItemIDs';
+        next if $Item->{Filename} ne 'ItemIDs';
         $Item->{Content} = $EncodeObject->Convert(
             Text => $Item->{Content},
             From => 'utf-8',
