@@ -4,7 +4,7 @@
 # 17.2.0 (2017/10/30)
  * (2017/10/30) - Bugfix: T2017103090000519 (fixed performance issue in ticket richtext print) (rbo)
  * (2017/10/17) - Bugfix: T2017081190001111 (searching for DFs no longer possible if KIX Professional is installed - fixed partial fix) (rbo)
- * (2017/10/27) - Bugfix: T2017102730000571 (fixed selection of objects by closing the dialogue on the X button) (fjacquemin)
+ * (2017/10/27) - Bugfix: T2017102790000571 (fixed selection of objects by closing the dialogue on the X button) (fjacquemin)
  * (2017/10/27) - Bugfix: T2017102790000981 (fixed used wrong translation method in progress bar) (fjacquemin)
  * (2017/10/27) - Bugfix: T2017102790000874 (broken layout on rating stars in customer faq sidebar) (ddoerffel)
  
