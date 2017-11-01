@@ -132,7 +132,7 @@ sub Run {
 
                 my %CustomerUserData;
                 if ( $CustomerUserID ) {
-                    %CustomerUserData = $Self->{l}->CustomerUserDataGet(
+                    %CustomerUserData = $Self->{CustomerUserObject}->CustomerUserDataGet(
                         User => $CustomerUserID,
                     );
                 }
