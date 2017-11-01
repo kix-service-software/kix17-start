@@ -101,6 +101,21 @@ sub Run {
                     $CustomerUserID = $Self->{ParamObject}->GetParam( Param => 'CustomerUserID' )
                                     || uri_unescape($Self->{ParamObject}->GetParam( Param => 'SelectedCustomerUser' ))
                                     || '';
+
+                    if ( $CustomerUserID ) {
+                        if ( $CustomerUserID =~ m/<(.*)>/){
+                            my %List = $Self->{CustomerUserObject}->CustomerSearch(
+                                PostMasterSearch => $1,
+                                Valid            => 1,
+                            );
+                            for my $Key ( keys %List ) {
+                                if ( $List{$Key} eq $CustomerUserID ) {
+                                    $CustomerUserID = $Key;
+                                    last;
+                                }
+                            }
+                        }
+                    }
                 }
 
                 my %TicketData;
@@ -117,7 +132,7 @@ sub Run {
 
                 my %CustomerUserData;
                 if ( $CustomerUserID ) {
-                    %CustomerUserData = $Self->{CustomerUserObject}->CustomerUserDataGet(
+                    %CustomerUserData = $Self->{l}->CustomerUserDataGet(
                         User => $CustomerUserID,
                     );
                 }
