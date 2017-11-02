@@ -18,7 +18,7 @@
         <div class="Header">
             <h1>[% Translate("ITSM ConfigItem Bulk Action") | html %]</h1>
             <p>
-                <a class="CancelClosePopup" href="#">[% Translate("Cancel & close") | html %]</a>
+                <a class="PopupCancelClose" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=CancelAndClose;FormID=[% Data.FormID %]">[% Translate("Cancel & close") | html %]</a>
             </p>
         </div>
         <div class="Content">
@@ -69,4 +69,10 @@
         </div>
     </div>
 </form>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.UI.Popup.InitClosedBulkHandler('[% Env("Action") %]', '[% Data.FormID %]', '#submitRichText');
+//]]></script>
+[% END %]
 [% RenderBlockEnd("BulkAction") %]

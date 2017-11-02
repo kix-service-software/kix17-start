@@ -179,37 +179,171 @@ Core.UI.ActionRow = (function (TargetNS) {
             TicketView = 'Small';
         }
 
-        $('#SelectAllTickets').bind('click', function () {
-            var Status = $(this).prop('checked');
-            $(TicketElementSelectors[TicketView]).prop('checked', Status).triggerHandler('click');
-        });
-
         $(TicketElementSelectors[TicketView]).bind('click', function (Event) {
             Event.stopPropagation();
             Core.UI.ActionRow.UpdateActionRow($(this), $(TicketElementSelectors[TicketView]), $('div.OverviewActions ul.Actions'));
         });
 
         $('#BulkAction a').bind('click', function () {
-            var $Element = $(this),
-                $SelectedTickets,
-                TicketIDParameter = "TicketID=",
-                TicketIDs = "",
-                URL;
+            var $Element = $(this);
+
             if ($Element.parent('li').hasClass('Inactive')) {
                 return false;
             }
             else {
-                $SelectedTickets = $(TicketElementSelectors[TicketView] + ':checked');
-                $SelectedTickets.each(function () {
-                    TicketIDs += TicketIDParameter + $(this).val() + ";";
-                });
-                URL = Core.Config.Get('Baselink') + "Action=AgentTicketBulk;" + TicketIDs;
-                URL += SerializeData(Core.App.GetSessionInformation());
-                Core.UI.Popup.OpenPopup(URL, 'TicketAction');
+                var SelectedItems = $('input[name="SelectedItems"]').val().split(','),
+                    FormID        = $('#OverviewControl input[name="FormID"]').val();
+                if ( SelectedItems.length > 30 ) {
+                    Core.UI.ActionRow.InitShowContentDialog(
+                        {
+                            SelectedItems: SelectedItems,
+                            Action: 'AgentTicketBulk',
+                            Subaction: 'TicketLocking',
+                            FormID: FormID,
+                            Title: Core.Config.Get('BulkDialogTitle'),
+                            ID: 'BulkActionSettingsDialogContainer',
+                            Label: [
+                                Core.Config.Get('BulkDialogButtonYes'),
+                                Core.Config.Get('BulkDialogButtonNo')
+                            ],
+                            Content: Core.Config.Get('BulkDialog')
+                        }, 'BulkDialog');
+                } else {
+                    var ItemIDs = '',
+                        Data;
+
+                    $.each(SelectedItems, function (index, value) {
+                        ItemIDs += value + (SelectedItems.length == (index + 1) ? "" : ",");
+                    });
+
+                    Data = {
+                            ItemIDs: ItemIDs,
+                            Action: 'AgentPaginationAJAXHandler',
+                            Subaction: 'UploadContentIDs',
+                            CallAction: 'AgentTicketBulk',
+                            FormID: FormID,
+                    };
+
+                    Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function(response) {
+                        var URL = Core.Config.Get('Baselink') + "Action=AgentTicketBulk;Subaction=TicketLocking;FormID=" + FormID;
+                        URL += SerializeData(Core.App.GetSessionInformation());
+                        Core.UI.Popup.OpenPopup(URL, 'TicketAction');
+                    });
+                }
             }
             return false;
         });
     };
 
+    TargetNS.UpdateSelectItems = function($Element, SelectALL) {
+        var Status = $Element.prop('checked');
+        $.each($(TicketElementSelectors[TicketView]), function(){
+            if ( $(this).prop('checked') !== Status ) {
+                $(this).prop('checked', Status).triggerHandler('click');
+            }
+        });
+
+        if ( SelectALL ) {
+            var SelectedItems     = $('input[name="SelectedItems"]').val().split(','),
+                UnselectedItems   = $('input[name="UnselectedItems"]').val().split(','),
+                ItemMerge         = $.merge(SelectedItems,UnselectedItems).filter(function(v){return v!==''});
+
+            if ( Status ) {
+                $('input[name="SelectedItems"]').val(ItemMerge);
+                $('input[name="UnselectedItems"]').val('');
+            } else {
+                $('input[name="UnselectedItems"]').val(ItemMerge);
+                $('input[name="SelectedItems"]').val('');
+            }
+        }
+        return true;
+    };
+
+    TargetNS.TriggerUpdateActionRow = function($Element) {
+        Core.UI.ActionRow.UpdateActionRow($('.SelectItem'), $(TicketElementSelectors[TicketView]), $('div.OverviewActions ul.Actions'));
+        if ( $('#CreateWidespreadIncidentAction').length ) {
+            $('#CreateWidespreadIncidentAction').attr('class',$('#BulkAction').attr('class')+' CreateWidespreadIncidentAction');
+        }
+    };
+
+    TargetNS.InitShowContentDialog = function(Params, Dialog){
+        var Div         = $('<div/>', { id: Params.ID, class: Params.Class}),
+            Fieldset    = $('<fieldset/>', {class: 'TableLike FixedLabelSmall'}),
+            Content     = Params.Content,
+            Buttons;
+
+        if ( Dialog === 'BulkDialog' ) {
+            Content = Content.replace('###', Params.SelectedItems.length);
+            Buttons = [
+                {
+                    Label: Params.Label[0],
+                    Type: 'Submit',
+                    Class: 'Primary',
+                    Function: function () {
+                        var ItemIDs = '';
+
+                        $.each(Params.SelectedItems, function (index, value) {
+                            ItemIDs += value + (Params.SelectedItems.length == (index + 1) ? "" : ",");
+                        });
+
+                        if ( !Params.SpecialParam ) {
+                            Params.SpecialParam = '';
+                        }
+                        var Data = {
+                                ItemIDs: ItemIDs,
+                                Action: 'AgentPaginationAJAXHandler',
+                                Subaction: 'UploadContentIDs',
+                                CallAction: Params.Action,
+                                FormID: Params.FormID,
+                        };
+                        Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function(response) {
+                            var URL = Core.Config.Get('Baselink') + "Action=" + Params.Action + ";Subaction=" + Params.Subaction + ";FormID=" + Params.FormID + Params.SpecialParam;
+                            URL += SerializeData(Core.App.GetSessionInformation());
+                            Core.UI.Popup.OpenPopup(URL, 'TicketAction');
+                        });
+
+                        Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
+                        return true;
+                    }
+                },
+                {
+                    Label: Params.Label[1],
+                    Type: 'Close',
+                    Class: 'Primary',
+                    Function: function () {
+                        return true;
+                    }
+                }
+            ];
+        } else {
+            Buttons = [
+                {
+                    Label: Params.Label[0],
+                    Type: 'Submit',
+                    Class: 'Primary',
+                    Function: function () {
+                        TargetNS.UpdateSelectItems(Params.Element, false);
+                        Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
+                        return true;
+                    }
+                },
+                {
+                    Label: Params.Label[1],
+                    Type: 'Submit',
+                    Class: 'Primary',
+                    Function: function () {
+                        TargetNS.UpdateSelectItems(Params.Element, true);
+                        Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
+                        return true;
+                    }
+                }
+            ];
+        }
+
+        Fieldset.append(Content);
+        Div.append(Fieldset);
+
+        Core.UI.Dialog.ShowContentDialog(Div, Params.Title, '15%', 'Center', true, Buttons, true);
+    };
     return TargetNS;
 }(Core.UI.ActionRow || {}));
