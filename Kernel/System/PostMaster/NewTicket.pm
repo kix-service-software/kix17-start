@@ -87,6 +87,26 @@ sub Run {
 
     # EO KIX4OTRS-capeIT
 
+    # skip new ticket if queue already has message
+    if (
+        $Param{SkipTicketIDs}
+        && ref( $Param{SkipTicketIDs} ) eq 'HASH'
+    ) {
+        for my $TicketID ( keys( %{ $Param{SkipTicketIDs} } ) ) {
+            my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
+                TicketID      => $TicketID,
+                DynamicFields => 0,
+                UserID        => 1,
+            );
+            if (
+                %Ticket
+                && $Ticket{QueueID} eq $QueueID
+            ) {
+                return (6, $TicketID);
+            }
+        }
+    }
+
     my $Queue = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
         QueueID => $QueueID,
     );
@@ -701,7 +721,7 @@ sub Run {
             # fallback
             $Key = 'X-OTRS-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
         }
-        
+
         if ( defined $GetParam{$Key} && length $GetParam{$Key} ) {
 
             # get dynamic field config
@@ -785,7 +805,7 @@ sub Run {
         );
     }
 
-    return $TicketID;
+    return (1, $TicketID);
 }
 
 1;

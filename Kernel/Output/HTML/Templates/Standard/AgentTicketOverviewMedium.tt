@@ -14,7 +14,7 @@
 [% RenderBlockStart("DocumentActionRowBulk") %]
     <li class="AlwaysPresent">
         <span>
-            <input type="checkbox" title="[% Translate("Select all") | html %]" id="SelectAllTickets" autocomplete="off" />
+            <input type="checkbox" title="[% Translate("Select all") | html %]" id="SelectAllTickets" autocomplete="off" [% Data.ItemALLChecked %]/>
             <label class="InvisibleText" for="SelectAllTickets">[% Translate("Select all") | html %]</label>
         </span>
     </li>
@@ -88,7 +88,7 @@
 [% RenderBlockEnd("InlineActionRow") %]
 [% RenderBlockStart("Bulk") %]
             <div class="Checkbox">
-                <input class="Checkbox" type="checkbox" name="TicketID" title="[% Translate("Select this ticket") | html %]" value="[% Data.TicketID | html %]" autocomplete="off" />
+                <input class="Checkbox SelectItem" type="checkbox" name="TicketID" title="[% Translate("Select this ticket") | html %]" value="[% Data.TicketID | html %]"  autocomplete="off" [% Data.ItemChecked %]]/>
             </div>
 [% RenderBlockEnd("Bulk") %]
 [% RenderBlockStart("Meta") %]
@@ -427,6 +427,55 @@
         $(this).toggleClass('Opened')
         return false;
     });
+
+    $('#SelectAllTickets').bind('click', function (Event) {
+        var $Element = $(this);
+
+        if ( $(this).hasClass('SelectAllItemsPages')
+             && $(this).prop('checked')
+        ) {
+            Core.UI.ActionRow.InitShowContentDialog(
+                {
+                    Element: $Element,
+                    ID: 'SelectTicketsSettingsDialogContainer',
+                    Title: '[% Translate("Ticket selection") %]',
+                    Content: '<p style="text-align: center;">[% Translate("From which page should be selected the tickets.")%]</p>',
+                    Label: [
+                        '[% Translate("Current Page") %]',
+                        '[% Translate("All Pages") %]'
+                    ]
+                }, 'SelectDialog');
+
+            $('.Dialog > .Header .Close').on('click',function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                $('#SelectAllTickets').prop('checked',false);
+            });
+        } else if ( $(this).prop('checked') ) {
+            Core.UI.ActionRow.UpdateSelectItems($Element, false);
+        } else {
+            Core.UI.ActionRow.UpdateSelectItems($Element, true);
+        }
+    });
+
+    Core.Config.Set('BulkDialogButtonYes', '[% Translate("Yes") %]');
+    Core.Config.Set('BulkDialogButtonNo', '[% Translate("No") %]');
+    Core.Config.Set('BulkDialog', '<p style="text-align: center;">[% Translate("You have selected a larger number (###) of objects. Please note that this can lead to a loss of performance! Do you want to continue?") %]</p>');
+    Core.Config.Set('BulkDialogTitle', '[% Translate("Warning") %]');
 //]]></script>
 [% RenderBlockEnd("DocumentReadyStart") %]
+
+[% RenderBlockStart("BulkActivate") %]
+<script type="text/javascript">//<![CDATA[
+    Core.UI.ActionRow.TriggerUpdateActionRow();
+[% IF Data.ItemALLChecked %]
+    $('#SelectAllTickets').prop('checked',true);
+[% END %]
+//]]></script>
+[% RenderBlockEnd("BulkActivate") %]
+[% RenderBlockStart("BulkSelectedAll") %]
+<script type="text/javascript">//<![CDATA[
+    $('#SelectAllTickets').addClass('SelectAllItemsPages');
+//]]></script>
+[% RenderBlockEnd("BulkSelectedAll") %]
 [% END %]

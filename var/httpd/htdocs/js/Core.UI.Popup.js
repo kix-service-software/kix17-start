@@ -266,7 +266,7 @@ Core.UI.Popup = (function (TargetNS) {
             // Therefore we check if the popup is a real OTRS popup.
             // IE9 can't read the WindowType property from the window object,
             // so we check for the correct popup window name now.
-            
+
             // #rbo - T2016121190001552 - renamed OTRS to KIX
             if (Value.name.match(/(OTRS|KIX)Popup_.+/)) {
                 Size++;
@@ -291,7 +291,7 @@ Core.UI.Popup = (function (TargetNS) {
             // Therefore we check if the popup is a real OTRS popup.
             // IE9 can't read the WindowType property from the window object,
             // so we check for the correct popup window name now.
-            
+
             // #rbo - T2016121190001552 - renamed OTRS to KIX
             if (Value.name.match(/(OTRS|KIX)Popup_.+/)) {
                 TargetNS.ClosePopup(Value);
@@ -720,6 +720,43 @@ Core.UI.Popup = (function (TargetNS) {
                 $('body').addClass('RealPopup');
             }
         }
+    };
+
+    /**
+     * @name InitClosedBulkHandler
+     * @memberof Core.UI.Popup
+     * @function
+     * @description
+     *      The InitClosedBulkHandler function to control popup close at the bulk action or widespread incident action.
+     */
+    TargetNS.InitClosedBulkHandler = function (CallAction, FormID, Submit) {
+        var Data = {
+                Action: 'AgentPaginationAJAXHandler',
+                Subaction: 'DeleteFormContent',
+                FormID: FormID,
+                CallAction: CallAction,
+        };
+
+        $(window)
+            .unbind("beforeunload.Popup")
+            .bind("beforeunload.Popup", function () {
+                 window.opener.Core.AJAX.FunctionCall(
+                     Core.Config.Get('Baselink'),
+                     Data,
+                     function(){}
+                 );
+             });
+        $(Submit + ', .PopupUndoClose, .PopupCancelClose').on('click',function(){
+            $(window).unbind("beforeunload.Popup");
+        });
+        $(document).bind('keypress keydown keyup', function(e) {
+            if(e.which === 116
+               || (e.which === 116 && e.ctrlKey)
+               || (e.which === 82 && e.ctrlKey)
+            ) {
+                $(window).unbind("beforeunload.Popup");
+            }
+        });
     };
 
     return TargetNS;
