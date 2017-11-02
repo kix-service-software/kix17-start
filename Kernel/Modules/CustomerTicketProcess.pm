@@ -69,7 +69,7 @@ sub Run {
     my $ActivityDialogObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog');
 
     # some fields should be skipped for the customer interface
-    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime', 'CustomerID' ];
+    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime' ];
 
     if ($TicketID) {
 
@@ -1557,13 +1557,11 @@ sub _OutputActivityDialog {
     );
 
     # some fields should be skipped for the customer interface
-    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime', 'CustomerID' ];
+    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime'];
 
     # Loop through ActivityDialogFields and render their output
     DIALOGFIELD:
     for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
-        print STDERR $CurrentField."\n";
-
         # some fields should be skipped for the customer interface
         next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{$SkipFields} );
 
@@ -1590,8 +1588,45 @@ sub _OutputActivityDialog {
         # We render just visible ActivityDialogFields
         next DIALOGFIELD if !$FieldData{Display};
 
+        # render CustomerUser
+        if ( $Self->{NameToID}->{$CurrentField} eq 'CustomerID' ) {
+
+            # We don't render Fields twice,
+            # if there was already a Config without ID, skip this field
+            # next DIALOGFIELD if $RenderedFields{ $Self->{NameToID}->{$CurrentField} };
+            my $Response = $Self->_RenderCustomer(
+                ActivityDialogField => $ActivityDialog->{Fields}{$CurrentField},
+                FieldName           => $CurrentField,
+                DescriptionShort    => $ActivityDialog->{Fields}{$CurrentField}{DescriptionShort},
+                DescriptionLong     => $ActivityDialog->{Fields}{$CurrentField}{DescriptionLong},
+                Ticket              => \%Ticket || {},
+                Error               => \%Error || {},
+                FormID              => $Self->{FormID},
+                GetParam            => $Param{GetParam},
+                AJAXUpdatableFields => $AJAXUpdatableFields,
+            );
+
+            if ( !$Response->{Success} ) {
+
+                # does not show header and footer again
+                if ( $Self->{IsMainWindow} ) {
+                    return $LayoutObject->CustomerError(
+                        Message => $Response->{Message},
+                    );
+                }
+
+                $LayoutObject->CustomerFatalError(
+                    Message => $Response->{Message},
+                );
+            }
+
+            $Output .= $Response->{HTML};
+
+            $RenderedFields{ $Self->{NameToID}->{$CurrentField} } = 1;
+        }
+
         # render DynamicFields
-        if ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
+        elsif ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
             my $DynamicFieldName = $1;
             my $Response         = $Self->_RenderDynamicField(
                 ActivityDialogField => $ActivityDialog->{Fields}{$CurrentField},
@@ -2445,95 +2480,122 @@ sub _RenderCustomer {
     }
 
     my %CustomerUserData = ();
+    my %Data             = ();
 
     my $SubmittedCustomerUserID = $Param{GetParam}{CustomerUserID};
 
-    my %Data = (
+    if ( $Param{ActivityDialogField}->{LayoutBlock} ) {
+        %Data = (
 
-        # rkaiser - T#2017020290001194 - changed customer user to contact
-        LabelCustomerUser => $LayoutObject->{LanguageObject}->Translate("Contact"),
-        LabelCustomerID   => $LayoutObject->{LanguageObject}->Translate("CustomerID"),
-        FormID            => $Param{FormID},
-        MandatoryClass    => '',
-        ValidateRequired  => '',
-    );
-
-    # If field is required put in the necessary variables for
-    # ValidateRequired class input field, Mandatory class for the label
-    if ( $Param{ActivityDialogField}->{Display} && $Param{ActivityDialogField}->{Display} == 2 ) {
-        $Data{ValidateRequired} = 'Validate_Required';
-        $Data{MandatoryClass}   = 'Mandatory';
-    }
-
-    # output server errors
-    if ( IsHashRefWithData( $Param{Error} ) && $Param{Error}->{CustomerUserID} ) {
-        $Data{CustomerUserIDServerError} = 'ServerError';
-    }
-    if ( IsHashRefWithData( $Param{Error} ) && $Param{Error}->{CustomerID} ) {
-        $Data{CustomerIDServerError} = 'ServerError';
-    }
-
-    if (
-        ( IsHashRefWithData( $Param{Ticket} ) && $Param{Ticket}->{CustomerUserID} )
-        || $SubmittedCustomerUserID
-        )
-    {
-        %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
-            User => $SubmittedCustomerUserID
-                || $Param{Ticket}{CustomerUserID},
+            # rkaiser - T#2017020290001194 - changed customer user to contact
+            LabelCustomerUser => $LayoutObject->{LanguageObject}->Translate("Contact"),
+            LabelCustomerID   => $LayoutObject->{LanguageObject}->Translate("CustomerID"),
+            FormID            => $Param{FormID},
+            MandatoryClass    => '',
+            ValidateRequired  => '',
         );
-    }
 
-    # show customer field as "FirstName Lastname" <MailAddress>
-    if ( IsHashRefWithData( \%CustomerUserData ) ) {
-        $Data{CustomerUserID} = "\"$CustomerUserData{UserFirstname} " .
-            "$CustomerUserData{UserLastname}\" <$CustomerUserData{UserEmail}>";
-        $Data{CustomerID}           = $CustomerUserData{UserCustomerID} || '';
-        $Data{SelectedCustomerUser} = $CustomerUserData{UserID}         || '';
-    }
+        # If field is required put in the necessary variables for
+        # ValidateRequired class input field, Mandatory class for the label
+        if ( $Param{ActivityDialogField}->{Display} && $Param{ActivityDialogField}->{Display} == 2 ) {
+            $Data{ValidateRequired} = 'Validate_Required';
+            $Data{MandatoryClass}   = 'Mandatory';
+        }
 
-    # set fields that will get an AJAX loader icon when this field changes
-    my $JSON = $LayoutObject->JSONEncode(
-        Data     => $Param{AJAXUpdatableFields},
-        NoQuotes => 0,
-    );
-    $Data{FieldsToUpdate} = $JSON;
+        # output server errors
+        if ( IsHashRefWithData( $Param{Error} ) && $Param{Error}->{CustomerUserID} ) {
+            $Data{CustomerUserIDServerError} = 'ServerError';
+        }
+        if ( IsHashRefWithData( $Param{Error} ) && $Param{Error}->{CustomerID} ) {
+            $Data{CustomerIDServerError} = 'ServerError';
+        }
 
-    $LayoutObject->Block(
-        Name => $Param{ActivityDialogField}->{LayoutBlock} || 'rw:Customer',
-        Data => \%Data,
-    );
+        if (
+            ( IsHashRefWithData( $Param{Ticket} ) && $Param{Ticket}->{CustomerUserID} )
+            || $SubmittedCustomerUserID
+            )
+        {
+            %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+                User => $SubmittedCustomerUserID
+                    || $Param{Ticket}{CustomerUserID},
+            );
+        }
 
-    # set mandatory label marker
-    if ( $Data{MandatoryClass} && $Data{MandatoryClass} ne '' ) {
+        # show customer field as "FirstName Lastname" <MailAddress>
+        if ( IsHashRefWithData( \%CustomerUserData ) ) {
+            $Data{CustomerUserID} = "\"$CustomerUserData{UserFirstname} " .
+                "$CustomerUserData{UserLastname}\" <$CustomerUserData{UserEmail}>";
+            $Data{CustomerID}           = $CustomerUserData{UserCustomerID} || '';
+            $Data{SelectedCustomerUser} = $CustomerUserData{UserID}         || '';
+        }
+
+        # set fields that will get an AJAX loader icon when this field changes
+        my $JSON = $LayoutObject->JSONEncode(
+            Data     => $Param{AJAXUpdatableFields},
+            NoQuotes => 0,
+        );
+        $Data{FieldsToUpdate} = $JSON;
+
         $LayoutObject->Block(
-            Name => 'LabelSpanCustomerUser',
-            Data => {},
+            Name => $Param{ActivityDialogField}->{LayoutBlock} || 'rw:Customer',
+            Data => \%Data,
         );
+
+        # set mandatory label marker
+        if ( $Data{MandatoryClass} && $Data{MandatoryClass} ne '' ) {
+            $LayoutObject->Block(
+                Name => 'LabelSpanCustomerUser',
+                Data => {},
+            );
+            $LayoutObject->Block(
+                Name => 'LabelSpanCustomerID',
+                Data => {},
+            );
+        }
+
+        if ( $Param{DescriptionShort} ) {
+            $LayoutObject->Block(
+                Name => $Param{ActivityDialogField}->{LayoutBlock} || 'rw:Customer:DescriptionShort',
+                Data => {
+                    DescriptionShort => $Param{DescriptionShort},
+                },
+            );
+        }
+
+        if ( $Param{DescriptionLong} ) {
+            $LayoutObject->Block(
+                Name => 'rw:Customer:DescriptionLong',
+                Data => {
+                    DescriptionLong => $Param{DescriptionLong},
+                },
+            );
+        }
+    } else {
+        if (
+            ( IsHashRefWithData( $Param{Ticket} ) && $Param{Ticket}->{CustomerUserID} )
+            || $SubmittedCustomerUserID
+            )
+        {
+            %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+                User => $SubmittedCustomerUserID
+                    || $Param{Ticket}{CustomerUserID},
+            );
+        }
+
+        # show customer field as "FirstName Lastname" <MailAddress>
+        if ( IsHashRefWithData( \%CustomerUserData ) ) {
+            $Data{SelectedCustomerUser} = $CustomerUserData{UserID} || '';
+        }
+
+        if ( !$Data{SelectedCustomerUser} ) {
+            $Data{SelectedCustomerUser} = $Self->{UserID};
+        }
+
         $LayoutObject->Block(
-            Name => 'LabelSpanCustomerID',
-            Data => {},
+            Name => 'SelectedCustomerUser',
+            Data => \%Data,
         );
     }
-
-    if ( $Param{DescriptionShort} ) {
-        $LayoutObject->Block(
-            Name => $Param{ActivityDialogField}->{LayoutBlock} || 'rw:Customer:DescriptionShort',
-            Data => {
-                DescriptionShort => $Param{DescriptionShort},
-            },
-        );
-    }
-
-    if ( $Param{DescriptionLong} ) {
-        $LayoutObject->Block(
-            Name => 'rw:Customer:DescriptionLong',
-            Data => {
-                DescriptionLong => $Param{DescriptionLong},
-            },
-        );
-    }
-
     return {
         Success => 1,
         HTML    => $LayoutObject->Output( TemplateFile => 'ProcessManagement/Customer' ),
