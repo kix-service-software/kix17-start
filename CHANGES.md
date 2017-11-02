@@ -3,6 +3,8 @@
 
 #17.2.1 (2017/12/??)
  * (2017/11/01) - Bugfix: T2017091990000954 (fixed missing check for containing email in CustomerUserID at DynamicFieldRemoteDB/-ITSMConfigItem) (fjacquemin)
+ * (2017/11/01) - Bugfix: T2017101790001007 (fixed missing transmission of the CustomerUser during the process ticket in the customer frontend) (fjacquemin)
+ * (2017/11/01) - Bugfix: T2017102490000852 (prevent postmaster to create multiple new tickets of same message) (millinger)
  * (2017/10/25) - Bugfix: T2017102090001028 (pending time search provides different search results for dashboard and ticket lists) (ddoerffel)
  * (2017/10/18) - Bugfix: T2017100990000765 (fixed submitting with MarkedAs columns in overview setting) (fjacquemin)
 
