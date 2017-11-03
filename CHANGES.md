@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.1 (2017/12/??)
+ * (2017/11/03) - Bugfix: T2017102090000994 (QData entry in AgentArticleEdit.tt removed - causes wrong history entries) (ddoerffel)
  * (2017/11/02) - Bugfix: T2017091490001061 (fixed missing store the external ticket number in the dynamic field when postmaster followup) (fjacquemin)
  * (2017/11/01) - Bugfix: T2017091990000954 (fixed missing check for containing email in CustomerUserID at DynamicFieldRemoteDB/-ITSMConfigItem) (fjacquemin)
  * (2017/11/01) - Bugfix: T2017101790001007 (fixed missing transmission of the CustomerUser during the process ticket in the customer frontend) (fjacquemin)
