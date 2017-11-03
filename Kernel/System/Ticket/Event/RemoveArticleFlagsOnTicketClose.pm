@@ -82,8 +82,8 @@ sub Run {
     );
 
     my %ArticleFlags = ();
-    if ( defined $Self->{Config}->{ArticleFlags} && ref %{ $Self->{Config}->{ArticleFlags} } eq 'HASH' ) {
-        %ArticleFlags = %{ $Self->{Config}->{ArticleFlags} };
+    if ( defined $Config->{ArticleFlags} && ref $Config->{ArticleFlags} eq 'HASH' ) {
+        %ArticleFlags = %{ $Config->{ArticleFlags} };
     }
 
     for my $Flag ( keys %ArticleFlags ) {
