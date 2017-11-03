@@ -125,7 +125,7 @@
                                 <li>
                                     <input name="FileUpload" id="FileUpload" type="file" size="30" />
                                     <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
-                                    <input type="hidden" id="AttachmentChanged" name="AttachmentChanged" value="$QData{"AttachmentChanged"}" />
+                                    <input type="hidden" id="AttachmentChanged" name="AttachmentChanged" value="[% Data.AttachmentChanged | html %]" />
                                 </li>
                             </ul>
 [% WRAPPER JSOnDocumentComplete %]
