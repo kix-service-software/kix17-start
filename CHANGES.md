@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.1 (2017/12/??)
+ * (2017/11/03) - Bugfix: T2017110290000829 (fixed missing quotation of curly braces in the regular expression in AgentITSMConfigItemZoom) (fjacquemin)
  * (2017/11/03) - Bugfix: T2017102090000994 (QData entry in AgentArticleEdit.tt removed - causes wrong history entries) (ddoerffel)
  * (2017/11/02) - Bugfix: T2017092290000957 (remove article flags on ticket close does not work) (ddoerffel)
  * (2017/11/02) - Bugfix: T2017103090000671 (unsorted columns in linked object document backend) (ddoerffel)
@@ -11,14 +12,14 @@
  * (2017/11/01) - Bugfix: T2017102490000852 (prevent postmaster to create multiple new tickets of same message) (millinger)
  * (2017/10/25) - Bugfix: T2017102090001028 (pending time search provides different search results for dashboard and ticket lists) (ddoerffel)
  * (2017/10/18) - Bugfix: T2017100990000765 (fixed submitting with MarkedAs columns in overview setting) (fjacquemin)
- 
+
 # 17.2.0 (2017/10/30)
  * (2017/10/30) - Bugfix: T2017103090000519 (fixed performance issue in ticket richtext print) (rbo)
  * (2017/10/27) - Bugfix: T2017081190001111 (searching for DFs no longer possible if KIX Professional is installed - fixed partial fix) (rbo)
  * (2017/10/27) - Bugfix: T2017102790000571 (fixed selection of objects by closing the dialogue on the X button) (fjacquemin)
  * (2017/10/27) - Bugfix: T2017102790000981 (fixed used wrong translation method in progress bar) (fjacquemin)
  * (2017/10/27) - Bugfix: T2017102790000874 (broken layout on rating stars in customer faq sidebar) (ddoerffel)
- 
+
 # 17.2.0 RC2 (2017/10/26)
  * (2017/10/26) - Bugfix: T2017102090001199 (used but obsolete perl module Data::Calc cannot be found) (rbo)
  * (2017/10/26) - Bugfix: T2017101990000639 (fixed wrong ajax content returnable by clicking a page number in a list view) (fjacquemin)

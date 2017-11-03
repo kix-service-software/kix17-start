@@ -251,7 +251,7 @@ sub Run {
 
             my $Link = $ConfigItemZoomBackendRef->{$CurrKey}->{Link};
             if ($Link) {
-                $Link =~ s/\$Param{"([^"]+)"}/$Param{$1}/mg;
+                $Link =~ s/\$Param\{"([^"]+)"\}/$Param{$1}/mg;
 
                 # image tab
                 if ( $Link =~ m/(.*?)ZoomTabImages(.*)/ ) {
