@@ -329,6 +329,7 @@ sub EditFieldRender {
         Name => $FieldName,
         SelectedID  => $SelectedValuesArrayRef,
         Translation => $FieldConfig->{TranslatableValues} || 0,
+        TreeView    => $FieldConfig->{TreeView} || 0,
         Class       => $FieldClass,
         HTMLQuote   => 1,
         Multiple    => 1,
@@ -726,6 +727,7 @@ sub SearchFieldRender {
         Name         => $FieldName,
         SelectedID   => $Value,
         Translation  => $FieldConfig->{TranslatableValues} || 0,
+        TreeView     => $FieldConfig->{TreeView} || 0,
         PossibleNone => 0,
         Class        => $FieldClass,
         Multiple     => 1,
@@ -1190,9 +1192,6 @@ sub BuildSelectionDataGet {
 }
 
 1;
-
-
-
 
 =back
 

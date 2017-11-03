@@ -255,6 +255,7 @@ sub EditFieldRender {
         Class       => $FieldClass,
         Size        => $Size,
         HTMLQuote   => 1,
+        TreeView    => $FieldConfig->{TreeView} || 0,
     );
 
     if ( $FieldConfig->{TreeView} ) {
@@ -568,6 +569,7 @@ sub SearchFieldRender {
         Name         => $FieldName,
         SelectedID   => $Value,
         Translation  => $FieldConfig->{TranslatableValues} || 0,
+        TreeView     => $FieldConfig->{TreeView} || 0,
         PossibleNone => 0,
         Class        => $FieldClass,
         Multiple     => 1,
@@ -796,9 +798,6 @@ sub StatsFieldParameterBuild {
 }
 
 1;
-
-
-
 
 =back
 
