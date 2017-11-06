@@ -290,11 +290,6 @@ sub EditFieldRender {
         $FieldClass .= ' ServerError';
     }
 
-    # set TreeView class
-    if ( $FieldConfig->{TreeView} ) {
-        $FieldClass .= ' DynamicFieldWithTreeView';
-    }
-
     # KIX4OTRS-capeIT
     # get general catalog class
     my $GeneralCatalogClass = $FieldConfig->{GeneralCatalogClass};
@@ -329,20 +324,10 @@ sub EditFieldRender {
         Name => $FieldName,
         SelectedID  => $SelectedValuesArrayRef,
         Translation => $FieldConfig->{TranslatableValues} || 0,
-        TreeView    => $FieldConfig->{TreeView} || 0,
         Class       => $FieldClass,
         HTMLQuote   => 1,
         Multiple    => 1,
     );
-
-    if ( $FieldConfig->{TreeView} ) {
-        my $TreeSelectionMessage = $Param{LayoutObject}->{LanguageObject}->Translate("Show Tree Selection");
-        $HTMLString
-            .= ' <a href="#" title="'
-            . $TreeSelectionMessage
-            . '" class="ShowTreeSelection"><span>'
-            . $TreeSelectionMessage . '</span><i class="fa fa-sitemap"></i></a>';
-    }
 
     if ( $Param{Mandatory} ) {
         my $DivID = $FieldName . 'Error';
@@ -395,12 +380,6 @@ EOF
         $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"EOF");
 \$('$FieldSelector').bind('change', function (Event) {
     Core.AJAX.FormUpdate(\$(this).parents('form'), 'AJAXUpdate', '$FieldName', [ $FieldsToUpdate ]);
-});
-Core.App.Subscribe('Event.AJAX.FormUpdate.Callback', function(Data) {
-    var FieldName = '$FieldName';
-    if (Data[FieldName] && \$('#' + FieldName).hasClass('DynamicFieldWithTreeView')) {
-        Core.UI.TreeSelection.RestoreDynamicFieldTreeView(\$('#' + FieldName), Data[FieldName], '' , 1);
-    }
 });
 EOF
     }
@@ -727,7 +706,6 @@ sub SearchFieldRender {
         Name         => $FieldName,
         SelectedID   => $Value,
         Translation  => $FieldConfig->{TranslatableValues} || 0,
-        TreeView     => $FieldConfig->{TreeView} || 0,
         PossibleNone => 0,
         Class        => $FieldClass,
         Multiple     => 1,
@@ -1087,106 +1065,6 @@ sub BuildSelectionDataGet {
     # get the possible values again as it might or might not contain the possible none and it could
     # also be overwritten
     my $ConfigPossibleValues = $Self->PossibleValuesGet(%Param);
-
-    # check if $PossibleValues differs from configured PossibleValues
-    # and show values which are not contained as disabled if TreeView => 1
-    if ( $FieldConfig->{TreeView} ) {
-
-        if ( keys %{$ConfigPossibleValues} != keys %{$FilteredPossibleValues} ) {
-
-            # define variables to use later in the for loop
-            my @Values;
-            my $Parents;
-            my %DisabledElements;
-            my %ProcessedElements;
-            my $PosibleNoneSet;
-
-            my %Values;
-            if ( defined $Param{Value} && IsArrayRefWithData( $Param{Value} ) ) {
-
-                # create a lookup table
-                %Values = map { $_ => 1 } @{ $Param{Value} };
-            }
-
-            # loop on all filtered possible values
-            for my $Key ( sort keys %{$FilteredPossibleValues} ) {
-
-                # special case for possible none
-                if ( !$Key && !$PosibleNoneSet && $FieldConfig->{PossibleNone} ) {
-
-                    my $Selected;
-                    if (
-                        !IsHashRefWithData( \%Values )
-                        || ( defined $Values{''} && $Values{''} )
-                        )
-                    {
-                        $Selected = 1;
-                    }
-
-                    # add possible none
-                    push @Values, {
-                        Key      => $Key,
-                        Value    => $ConfigPossibleValues->{$Key} || '-',
-                        Selected => $Selected,
-                    };
-                }
-
-                # try to split its parents GrandParent::Parent::Son
-                my @Elements = split /::/, $Key;
-
-                # reset parents
-                $Parents = '';
-
-                # get each element in the hierarchy
-                ELEMENT:
-                for my $Element (@Elements) {
-
-                    # add its own parents for the complete name
-                    my $ElementLongName = $Parents . $Element;
-
-                    # set new parent (before skip already processed)
-                    $Parents .= $Element . '::';
-
-                    # skip if already processed
-                    next ELEMENT if $ProcessedElements{$ElementLongName};
-
-                    my $Disabled;
-
-                    # check if element exists in the original data or if it is already marked
-                    if (
-                        !defined $FilteredPossibleValues->{$ElementLongName}
-                        && !$DisabledElements{$ElementLongName}
-                        )
-                    {
-
-                        # mark element as disabled
-                        $DisabledElements{$ElementLongName} = 1;
-
-                        # also set the disabled flag for current element to add
-                        $Disabled = 1;
-                    }
-
-                    # set element as already processed
-                    $ProcessedElements{$ElementLongName} = 1;
-
-                    # check if the current element is the selected one
-                    my $Selected;
-                    if ( IsHashRefWithData( \%Values ) && $Values{$ElementLongName} ) {
-                        $Selected = 1;
-                    }
-
-                    # add element to the new list of possible values (now including missing parents)
-                    push @Values, {
-                        Key      => $ElementLongName,
-                        Value    => $ConfigPossibleValues->{$ElementLongName} || $ElementLongName,
-                        Disabled => $Disabled,
-                        Selected => $Selected,
-                    };
-                }
-            }
-            $FilteredPossibleValues = \@Values;
-        }
-    }
 
     return $FilteredPossibleValues;
 }
