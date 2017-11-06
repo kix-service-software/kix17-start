@@ -41,6 +41,26 @@ sub Run {
         $AdditionalClasses .= 'Collapsed';
     }
 
+    if ( $Param{Action} =~ /^Customer/) {
+        $Self->{LayoutObject}->Block(
+            Name => 'CustomerWidgetHeader',
+            Data => {
+                %{$Param{Ticket} || {}},
+                %{$Param{Config}},
+                AdditionalClasses => $AdditionalClasses,
+            },
+        );
+    } else {
+        $Self->{LayoutObject}->Block(
+            Name => 'WidgetHeader',
+            Data => {
+                %{$Param{Ticket} || {}},
+                %{$Param{Config}},
+                AdditionalClasses => $AdditionalClasses,
+            },
+        );
+    }
+
     $Self->{LayoutObject}->Block(
         Name => 'SidebarFrame',
         Data => {
