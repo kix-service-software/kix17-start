@@ -25,7 +25,7 @@ sub new {
     # allocate new hash for object
     my $Self = {%Param};
     bless( $Self, $Type );
-    
+
     #rbo - T2016121190001552 - removed CloudServices
 
     return $Self;
@@ -549,24 +549,6 @@ sub Run {
                     . $Name
                     . ';Version='
                     . $Version,
-            );
-        }
-
-        if ( $Verified ne 'verified' ) {
-
-            # KIXCore-capeIT
-            $Output .= $LayoutObject->Notify(
-
-# KIXCore-capeIT
-# Priority => 'Error',
-# Data     => "$Name $Version - "
-#                   . $LayoutObject->{LanguageObject}->Translate(
-#                    "Package not verified by the OTRS Group! It is recommended not to use this package."
-                Priority => 'Information',
-                Data     => "$Name $Version - "
-                    . $LayoutObject->{LanguageObject}->Translate("This package is not certified by OTRS Group, which does not mean it is of inferior quality than products of the OTRS Group."),
-
-                # EO KIXCore-capeIT
             );
         }
 
@@ -1459,7 +1441,7 @@ sub Run {
         );
     }
 
-    #rbo - T2016121190001552 - removed CloudServices and PackageVerfication    
+    #rbo - T2016121190001552 - removed CloudServices and PackageVerfication
     for my $Package (@RepositoryList) {
 
         my %Data = $Self->_MessageGet( Info => $Package->{Description} );
@@ -1477,7 +1459,7 @@ sub Run {
         );
 
         #rbo - T2016121190001552 - removed CloudServices and PackageVerfication
-        
+
         # show documentation link
         my %DocFile = $Self->_DocumentationGet( Filelist => $Package->{Filelist} );
         if (%DocFile) {
