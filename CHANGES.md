@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.1 (2017/12/??)
+ * (2017/11/07) - Bugfix: T2017110790000991 (re-added missing license information files) (rbo)
  * (2017/11/07) - Bugfix: T2017020190000759 (missing link in customer management overview) (ddoerffel)
  * (2017/11/07) - Bugfix: T2017102590000985 (LoginScreen on ConfigItem-Delete if SessionUseCookies = No) (ddoerffel)
  * (2017/11/07) - Bugfix: T2014060290000522 (Service translated in AdminSLA overview screen) (ddoerffel)
