@@ -195,7 +195,7 @@ sub TableCreateComplex {
         my @ItemColumns;
         my @TempLine;
 
-        for my $Key ( keys %$Document ) {
+        for my $Key ( sort keys %$Document ) {
 
             # ignore all columns that are not defined for display
             next if !exists( $DisplayedColumns{$Key} );
@@ -585,9 +585,6 @@ sub SearchOptionList {
 }
 
 1;
-
-
-
 
 =back
 
