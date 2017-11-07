@@ -165,10 +165,6 @@ sub _AddAction {
         }
     }
 
-    # get the TreeView option and set it to '0' if it is undefined
-    $GetParam{TreeView} = $ParamObject->GetParam( Param => 'TreeView' );
-    $GetParam{TreeView} = defined $GetParam{TreeView} && $GetParam{TreeView} ? '1' : '0';
-
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
 
     if ( $GetParam{Name} ) {
@@ -240,7 +236,6 @@ sub _AddAction {
         # KIX4OTRS-capeIT
         # PossibleValues      => $GetParam{PossibleValues},
         # EO KIX4OTRS-capeIT
-        TreeView           => $GetParam{TreeView},
         DefaultValue       => $GetParam{DefaultValue},
         PossibleNone       => $GetParam{PossibleNone},
         TranslatableValues => $GetParam{TranslatableValues},
@@ -343,8 +338,6 @@ sub _Change {
         # set TranslatalbeValues
         $Config{TranslatableValues} = $DynamicFieldData->{Config}->{TranslatableValues};
 
-        # set TreeView
-        $Config{TreeView} = $DynamicFieldData->{Config}->{TreeView};
     }
 
     return $Self->_ShowScreen(
@@ -373,10 +366,6 @@ sub _ChangeAction {
             $Errors{ $Needed . 'ServerErrorMessage' } = 'This field is required.';
         }
     }
-
-    # get the TreeView option and set it to '0' if it is undefined
-    $GetParam{TreeView} = $ParamObject->GetParam( Param => 'TreeView' );
-    $GetParam{TreeView} = defined $GetParam{TreeView} && $GetParam{TreeView} ? '1' : '0';
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $FieldID = $ParamObject->GetParam( Param => 'ID' );
@@ -681,19 +670,6 @@ sub _ShowScreen {
         Class      => 'Modernize W50pc',
     );
 
-    my $TreeView = $Param{TreeView} || '0';
-
-    # create treeview option list
-    my $TreeViewStrg = $LayoutObject->BuildSelection(
-        Data => {
-            0 => 'No',
-            1 => 'Yes',
-        },
-        Name       => 'TreeView',
-        SelectedID => $TreeView,
-        Class      => 'Modernize W50pc',
-    );
-
     my $ReadonlyInternalField = '';
 
     # Internal fields can not be deleted and name should not change.
@@ -725,7 +701,6 @@ sub _ShowScreen {
             # EO KIX4OTRS-capeIT
             DefaultValueStrg       => $DefaultValueStrg,
             PossibleNoneStrg       => $PossibleNoneStrg,
-            TreeViewStrg           => $TreeViewStrg,
             TranslatableValuesStrg => $TranslatableValuesStrg,
             ReadonlyInternalField  => $ReadonlyInternalField,
             }
