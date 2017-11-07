@@ -93,10 +93,10 @@
 # KIX4OTRS-capeIT
 #                            <td><a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=SLAEdit;SLAID=[% Data.SLAID | uri %]">[% Data.Name | html %]</a></td>
                             <td class="Top"><a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=SLAEdit;SLAID=[% Data.SLAID | uri %]">[% Data.Name | html %]</a></td>
-#                            <td>[% Translate(Data.Service) | html %]</td>
+#                            <td>[% Data.Service | html %]</td>
                             <td>
 [% RenderBlockStart("OverviewListRowService") %]
-                            [% Translate(Data.Service) | html %]<br/>
+                            [% Data.Service | html %]<br/>
 [% RenderBlockEnd("OverviewListRowService") %]
                             </td>
 # EO KIX4OTRS-capeIT
