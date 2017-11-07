@@ -3,6 +3,9 @@
 
 #17.2.1 (2017/12/??)
  * (2017/11/07) - Bugfix: T2017102090001251 (missing folder /var/processes/examples) (ddoerffel)
+ * (2017/11/06) - Bugfix: T2017090690000657 (fixed layout glitch in faq sidebar box) (uboehm)
+ * (2017/11/06) - Bugfix: T2016102890001515 (removed notify for unverified packages) (fjacquemin)
+ * (2017/11/06) - Bugfix: T2017102490000647 (removed admin treeview configuration in dynamic fields GeneralCataolog) (fjacquemin)
  * (2017/11/03) - Bugfix: T2017110290000829 (fixed missing quotation of curly braces in the regular expression in AgentITSMConfigItemZoom) (fjacquemin)
  * (2017/11/03) - Bugfix: T2017102090000994 (QData entry in AgentArticleEdit.tt removed - causes wrong history entries) (ddoerffel)
  * (2017/11/02) - Bugfix: T2017092290000957 (remove article flags on ticket close does not work) (ddoerffel)
