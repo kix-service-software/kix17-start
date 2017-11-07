@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.1 (2017/12/??)
+ * (2017/11/07) - Bugfix: T2017102090001251 (missing folder /var/processes/examples) (ddoerffel)
  * (2017/11/06) - Bugfix: T2017090690000657 (fixed layout glitch in faq sidebar box) (uboehm)
  * (2017/11/06) - Bugfix: T2016102890001515 (removed notify for unverified packages) (fjacquemin)
  * (2017/11/06) - Bugfix: T2017102490000647 (removed admin treeview configuration in dynamic fields GeneralCataolog) (fjacquemin)
