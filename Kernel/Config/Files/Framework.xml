@@ -9754,7 +9754,7 @@ via the Preferences button after logging in.
                     <Type>Menu</Type>
                     <Block>ItemArea</Block>
                     <Name Translatable="1">Customer Management</Name>
-                    <Link></Link>
+                    <Link>Action=AgentCustomerInformationCenter</Link>
                     <LinkOption></LinkOption>
                     <NavBar>Customer Management</NavBar>
                     <AccessKey>c</AccessKey>
