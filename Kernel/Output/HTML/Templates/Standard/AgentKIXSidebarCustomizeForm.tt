@@ -123,10 +123,6 @@ if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
                 $('#'+FormID).find("div.Options.Field").insertBefore('div.EndOfForm');
                 $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
             }
-            else if ( CustomerRegexp.test(FieldID) ) {
-                $('#'+FormID).find('#CustomerTicketCounter'+FieldID).parent().insertBefore('div.EndOfForm');
-                $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
-            }
 
             // insert the selected item
             if (FieldID == 'Day') {
@@ -147,6 +143,10 @@ if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
             if (FieldID == 'RichText') {
                 $('#'+FormID).find("label[for=Signature]").insertBefore('div.EndOfForm');
                 $('#'+FormID).find("div.RichTextField").find('input[name=Signature]').parent().insertBefore('div.EndOfForm');
+                $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
+            }
+            else if ( CustomerRegexp.test(FieldID) ) {
+                $('#'+FormID).find('#CustomerTicketCounter'+FieldID).parent().insertBefore('div.EndOfForm');
                 $('#'+FormID).find('div.EndOfForm').before('<div class="Clear"></div>');
             }
         });

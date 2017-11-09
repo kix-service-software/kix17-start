@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.1 (2017/12/??)
+ * (2017/11/08) - Bugfix: T2017053190000787 (input field for customer users wrond sorted after changing sort order) (ddoerffel)
  * (2017/11/08) - Bugfix: T2017030390000682 (wrong class for incident state container if service mandatory) (ddoerffel)
  * (2017/11/07) - Bugfix: T2017110790000991 (re-added missing license information files) (rbo)
  * (2017/11/07) - Bugfix: T2017020190000759 (missing link in customer management overview) (ddoerffel)
