@@ -69,7 +69,7 @@ sub Run {
     my $ActivityDialogObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog');
 
     # some fields should be skipped for the customer interface
-    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime' ];
+    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime', 'CustomerID' ];
 
     if ($TicketID) {
 
@@ -447,7 +447,6 @@ sub _RenderAjax {
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
@@ -674,28 +673,24 @@ sub _RenderAjax {
             my $Data = $Self->_GetPriorities(
                 %{ $Param{GetParam} },
             );
-
-            # ---
-            # ITSMIncidentProblemManagement
-            # ---
+# ---
+# ITSMIncidentProblemManagement
+# ---
             # check if priority needs to be recalculated
             if (
-                (
-                    $Param{GetParam}->{ElementChanged} eq 'ServiceID'
-                    || $Param{GetParam}->{ElementChanged} eq 'DynamicField_ITSMImpact'
+                ( $Param{GetParam}->{ElementChanged} eq 'ServiceID'
+                || $Param{GetParam}->{ElementChanged} eq 'DynamicField_ITSMImpact'
                 )
                 && $Param{GetParam}->{ServiceID}
                 && $Param{GetParam}->{DynamicField_ITSMImpact}
                 && $Param{GetParam}->{DynamicField_ITSMCriticality}
-                )
-            {
+            ) {
 
                 # calculate priority from the CIP matrix
-                my $PriorityIDFromImpact
-                    = $Kernel::OM->Get('Kernel::System::ITSMCIPAllocate')->PriorityAllocationGet(
+                my $PriorityIDFromImpact = $Kernel::OM->Get('Kernel::System::ITSMCIPAllocate')->PriorityAllocationGet(
                     Criticality => $Param{GetParam}->{DynamicField_ITSMCriticality},
                     Impact      => $Param{GetParam}->{DynamicField_ITSMImpact},
-                    );
+                );
 
                 # add Priority to the JSONCollector
                 push(
@@ -712,8 +707,7 @@ sub _RenderAjax {
 
                 next DIALOGFIELD;
             }
-
-            # ---
+# ---
 
             # add Priority to the JSONCollector
             push(
@@ -782,6 +776,27 @@ sub _RenderAjax {
             );
             $FieldsProcessed{ $Self->{NameToID}{$CurrentField} } = 1;
         }
+        elsif ( $Self->{NameToID}{$CurrentField} eq 'TypeID' ) {
+            next DIALOGFIELD if $FieldsProcessed{ $Self->{NameToID}{$CurrentField} };
+
+            my $Data = $Self->_GetTypes(
+                %{ $Param{GetParam} },
+            );
+
+            # Add Type to the JSONCollector (Use SelectedID from web request).
+            push(
+                @JSONCollector,
+                {
+                    Name         => $Self->{NameToID}{$CurrentField},
+                    Data         => $Data,
+                    SelectedID   => $ParamObject->GetParam( Param => 'TypeID' ) || '',
+                    PossibleNone => 1,
+                    Translation  => 0,
+                    Max          => 100,
+                },
+            );
+            $FieldsProcessed{ $Self->{NameToID}{$CurrentField} } = 1;
+        }
     }
 
     # KIX4OTRS-capeIT
@@ -833,9 +848,7 @@ sub _RenderAjax {
     );
 }
 
-# =cut
-#
-# _GetParam()
+# =item _GetParam()
 #
 # returns the current data state of the submitted information
 #
@@ -1062,14 +1075,11 @@ sub _GetParam {
                 ParamObject        => $ParamObject,
                 LayoutObject       => $LayoutObject,
             );
-
-            # ---
-            # ITSMIncidentProblemManagement
-            # ---
+# ---
+# ITSMIncidentProblemManagement
+# ---
             # set the criticality from the service
-            if (   $DynamicFieldName eq 'ITSMCriticality'
-                && $ParamObject->GetParam( Param => 'ServiceID' ) )
-            {
+            if ( $DynamicFieldName eq 'ITSMCriticality' && $ParamObject->GetParam( Param => 'ServiceID' ) ) {
 
                 # get service
                 my %Service = $Kernel::OM->Get('Kernel::System::Service')->ServiceGet(
@@ -1080,8 +1090,7 @@ sub _GetParam {
                 # set the criticality
                 $Value = $Service{Criticality};
             }
-
-            # ---
+# ---
 
             # If we got a submitted param, take it and next out
             if (
@@ -1236,13 +1245,11 @@ sub _GetParam {
     # and finally we'll have the special parameters:
     $GetParam{ResponsibleAll} = $ParamObject->GetParam( Param => 'ResponsibleAll' );
     $GetParam{OwnerAll}       = $ParamObject->GetParam( Param => 'OwnerAll' );
-
-    # ---
-    # ITSMIncidentProblemManagement
-    # ---
+# ---
+# ITSMIncidentProblemManagement
+# ---
     $GetParam{ElementChanged} = $ParamObject->GetParam( Param => 'ElementChanged' );
-
-    # ---
+# ---
 
     return \%GetParam;
 }
@@ -1557,11 +1564,12 @@ sub _OutputActivityDialog {
     );
 
     # some fields should be skipped for the customer interface
-    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime'];
+    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime', 'CustomerID' ];
 
     # Loop through ActivityDialogFields and render their output
     DIALOGFIELD:
     for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
+
         # some fields should be skipped for the customer interface
         next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{$SkipFields} );
 
@@ -1588,45 +1596,8 @@ sub _OutputActivityDialog {
         # We render just visible ActivityDialogFields
         next DIALOGFIELD if !$FieldData{Display};
 
-        # render CustomerUser
-        if ( $Self->{NameToID}->{$CurrentField} eq 'CustomerID' ) {
-
-            # We don't render Fields twice,
-            # if there was already a Config without ID, skip this field
-            # next DIALOGFIELD if $RenderedFields{ $Self->{NameToID}->{$CurrentField} };
-            my $Response = $Self->_RenderCustomer(
-                ActivityDialogField => $ActivityDialog->{Fields}{$CurrentField},
-                FieldName           => $CurrentField,
-                DescriptionShort    => $ActivityDialog->{Fields}{$CurrentField}{DescriptionShort},
-                DescriptionLong     => $ActivityDialog->{Fields}{$CurrentField}{DescriptionLong},
-                Ticket              => \%Ticket || {},
-                Error               => \%Error || {},
-                FormID              => $Self->{FormID},
-                GetParam            => $Param{GetParam},
-                AJAXUpdatableFields => $AJAXUpdatableFields,
-            );
-
-            if ( !$Response->{Success} ) {
-
-                # does not show header and footer again
-                if ( $Self->{IsMainWindow} ) {
-                    return $LayoutObject->CustomerError(
-                        Message => $Response->{Message},
-                    );
-                }
-
-                $LayoutObject->CustomerFatalError(
-                    Message => $Response->{Message},
-                );
-            }
-
-            $Output .= $Response->{HTML};
-
-            $RenderedFields{ $Self->{NameToID}->{$CurrentField} } = 1;
-        }
-
         # render DynamicFields
-        elsif ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
+        if ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
             my $DynamicFieldName = $1;
             my $Response         = $Self->_RenderDynamicField(
                 ActivityDialogField => $ActivityDialog->{Fields}{$CurrentField},
@@ -2480,7 +2451,6 @@ sub _RenderCustomer {
     }
 
     my %CustomerUserData = ();
-    my %Data             = ();
 
     my $SubmittedCustomerUserID = $Param{GetParam}{CustomerUserID};
 
@@ -2596,6 +2566,7 @@ sub _RenderCustomer {
             Data => \%Data,
         );
     }
+
     return {
         Success => 1,
         HTML    => $LayoutObject->Output( TemplateFile => 'ProcessManagement/Customer' ),
@@ -3772,7 +3743,7 @@ sub _StoreActivityDialog {
                     %{ $ActivityDialog->{Fields}->{$CurrentField} },
                 );
 
-                if ( !$Result && $ActivityDialog->{Fields}->{$CurrentField}->{Display} == 2 ) {
+                if ( !$Result ) {
 
                     # special case for Article (Subject & Body)
                     if ( $CurrentField eq 'Article' ) {
@@ -3786,11 +3757,11 @@ sub _StoreActivityDialog {
                     }
 
                     # all other fields
-                    else {
+                    elsif ( $ActivityDialog->{Fields}->{$CurrentField}->{Display} == 2 ) {
                         $Error{ $Self->{NameToID}->{$CurrentField} } = 1;
                     }
                 }
-                elsif ($Result) {
+                else {
                     $TicketParam{ $Self->{NameToID}->{$CurrentField} } = $Result;
                 }
                 $CheckedFields{ $Self->{NameToID}->{$CurrentField} } = 1;
@@ -4573,6 +4544,17 @@ sub _CheckField {
 
             # in case of article fields we need to fake a value
             $Value = 1;
+
+            my ( $Body, $Subject, $AttachmentDelete1 ) = (
+                $ParamObject->GetParam( Param => 'Body' ),
+                $ParamObject->GetParam( Param => 'Subject' ),
+                $ParamObject->GetParam( Param => 'AttachmentDelete1' )
+            );
+
+            # If attachment exists and body and subject not, it is error (see bug#13081).
+            if ( defined $AttachmentDelete1 && ( !$Body && !$Subject ) ) {
+                $Value = 0;
+            }
         }
         else {
 
@@ -4918,6 +4900,7 @@ sub _GetAJAXUpdatableFields {
         StateID       => 1,
         OwnerID       => 1,
         LockID        => 1,
+        TypeID        => 1,
     );
 
     # get backend object
