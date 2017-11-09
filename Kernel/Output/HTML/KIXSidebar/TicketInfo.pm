@@ -102,6 +102,18 @@ sub Run {
         FieldFilter => $Self->{DynamicFieldFilter} || {},
     );
 
+    # get ticket data length for shown dynamic fields
+    my $TicketDataLength = '';
+    if ( $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{TicketDataLength}
+        >= $ConfigObject->Get("Ticket::Frontend::DynamicFieldsZoomMaxSizeSidebar") )
+    {
+        $TicketDataLength
+            = $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{TicketDataLength};
+    }
+    else {
+        $TicketDataLength = $ConfigObject->Get("Ticket::Frontend::DynamicFieldsZoomMaxSizeSidebar");
+    }
+
     # cycle trough the activated Dynamic Fields for ticket object
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{$DynamicField} ) {
@@ -113,10 +125,8 @@ sub Run {
         my $ValueStrg = $BackendObject->DisplayValueRender(
             DynamicFieldConfig => $DynamicFieldConfig,
             Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-            ValueMaxChars =>
-                $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{TicketDataLength}
-                || '',
-            LayoutObject => $LayoutObject,
+            ValueMaxChars      => $TicketDataLength,
+            LayoutObject       => $LayoutObject,
         );
 
         $LayoutObject->Block(
@@ -136,7 +146,7 @@ sub Run {
             );
         }
         elsif (
-            $DynamicFieldConfig->{FieldType}    eq 'Dropdown'
+            $DynamicFieldConfig->{FieldType} eq 'Dropdown'
             || $DynamicFieldConfig->{FieldType} eq 'Multiselect'
             || $DynamicFieldConfig->{FieldType} eq 'MultiselectGeneralCatalog'
             || $DynamicFieldConfig->{FieldType} eq 'DropdownGeneralCatalog'
@@ -439,7 +449,9 @@ sub _ExecCallMethod {
     my ( $Self, $Value, %Param ) = @_;
     my $Result;
 
-    if ( $Value =~ /CallMethod::(\w+)Object::(\w+)::(\w+)/ || $Value =~ /CallMethod::(\w+)Object::(\w+)/ ) {
+    if (   $Value =~ /CallMethod::(\w+)Object::(\w+)::(\w+)/
+        || $Value =~ /CallMethod::(\w+)Object::(\w+)/ )
+    {
         my $ObjectType = $1;
         my $Method     = $2;
         my $Hashresult = $3;
@@ -448,13 +460,13 @@ sub _ExecCallMethod {
         my $Object;
         if ( $Hashresult && $Hashresult ne '' ) {
             eval {
-                $Object =  $Kernel::OM->Get('Kernel::System::'.$ObjectType);
+                $Object        = $Kernel::OM->Get( 'Kernel::System::' . $ObjectType );
                 $DisplayResult = { $Object->$Method(%Param) }->{$Hashresult};
             };
         }
         else {
             eval {
-                $Object =  $Kernel::OM->Get('Kernel::System::'.$ObjectType);
+                $Object        = $Kernel::OM->Get( 'Kernel::System::' . $ObjectType );
                 $DisplayResult = $Object->$Method(%Param);
             };
         }
@@ -476,8 +488,6 @@ sub _ExecCallMethod {
 }
 
 1;
-
-
 
 =back
 
