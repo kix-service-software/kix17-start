@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.1 (2017/12/??)
+ * (2017/11/10) - Bugfix: T2017060190000886 (fixed output of the signature when an assigned queue is set by service) (fjacquemin)
  * (2017/11/09) - Bugfix: T2016032490000804 (SysConfig key DynamicFieldsZoomMaxSizeSidebar not used for ticket data length in ticket info sidebar) (ddoerffel)
  * (2017/11/09) - Bugfix: T2017053190000787 (input field for customer users wrong sorted after changing sort order) (ddoerffel)
  * (2017/11/08) - Bugfix: T2017030390000682 (wrong class for incident state container if service mandatory) (ddoerffel)
