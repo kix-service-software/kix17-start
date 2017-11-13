@@ -7,7 +7,6 @@
  * (2017/11/09) - Bugfix: T2017053190000787 (input field for customer users wrong sorted after changing sort order) (ddoerffel)
  * (2017/11/09) - Bugfix: T2017042690000601 (notification removed - This activity dialog does not belong to current activity) (ddoerffel)
  * (2017/11/08) - Bugfix: T2017030390000682 (wrong class for incident state container if service mandatory) (ddoerffel)
- * (2017/11/08) - Bugfix: T2017053190000787 (input field for customer users wrond sorted after changing sort order) (ddoerffel)
  * (2017/11/07) - Bugfix: T2017110790000991 (re-added missing license information files) (rbo)
  * (2017/11/07) - Bugfix: T2017020190000759 (missing link in customer management overview) (ddoerffel)
  * (2017/11/07) - Bugfix: T2017102590000985 (LoginScreen on ConfigItem-Delete if SessionUseCookies = No) (ddoerffel)
