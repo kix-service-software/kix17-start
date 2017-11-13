@@ -5,6 +5,7 @@
  * (2017/11/10) - Bugfix: T2017060190000886 (fixed output of the signature when an assigned queue is set by service) (fjacquemin)
  * (2017/11/09) - Bugfix: T2016032490000804 (SysConfig key DynamicFieldsZoomMaxSizeSidebar not used for ticket data length in ticket info sidebar) (ddoerffel)
  * (2017/11/09) - Bugfix: T2017053190000787 (input field for customer users wrong sorted after changing sort order) (ddoerffel)
+ * (2017/11/09) - Bugfix: T2017042690000601 (notification removed - This activity dialog does not belong to current activity) (ddoerffel)
  * (2017/11/08) - Bugfix: T2017030390000682 (wrong class for incident state container if service mandatory) (ddoerffel)
  * (2017/11/07) - Bugfix: T2017110790000991 (re-added missing license information files) (rbo)
  * (2017/11/07) - Bugfix: T2017020190000759 (missing link in customer management overview) (ddoerffel)
