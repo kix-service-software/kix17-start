@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.1 (2017/12/??)
+ * (2017/11/15) - Bugfix: T2017111090001091 (wrong loader string for article expanding) (ddoerffel)
  * (2017/11/10) - Bugfix: T2017111090000261 (missing closing bracket in SQL statement) (ddoerffel)
  * (2017/11/10) - Bugfix: T2017060190000886 (fixed output of the signature when an assigned queue is set by service) (fjacquemin)
  * (2017/11/09) - Bugfix: T2016032490000804 (SysConfig key DynamicFieldsZoomMaxSizeSidebar not used for ticket data length in ticket info sidebar) (ddoerffel)
