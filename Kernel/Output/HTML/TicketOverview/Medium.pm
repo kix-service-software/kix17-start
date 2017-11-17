@@ -252,6 +252,7 @@ sub Run {
         my $BulkActivate    = 0;
         my $ItemALLChecked  = 0;
         my $SelectedAll     = 0;
+        my $BulkSelectedAll = 0;
 
         for my $TicketID ( @{ $Param{TicketIDs} } ) {
             if ( !grep(/^$TicketID$/, @UnselectedItems)
@@ -294,14 +295,20 @@ sub Run {
                     Config          => $Param{Config},
                     ItemChecked     => $ItemChecked,
                     BulkActivate    => $BulkActivate,
-                    SelectedAll     => $SelectedAll,
+                    BulkSelectedAll => $BulkSelectedAll,
                     ItemALLChecked  => $ItemALLChecked,
                 );
 
                 if ( !$BulkActivate
-                && $ItemChecked
+                    && $ItemChecked
                 ) {
                     $BulkActivate = 1;
+                }
+
+                if ( !$BulkSelectedAll
+                    && $SelectedAll
+                ) {
+                    $BulkSelectedAll = 1;
                 }
 
                 $CounterOnSite++;
@@ -342,8 +349,6 @@ sub Run {
         }
     }
 
-    # add action row js data
-
     return $OutputRaw;
 }
 
@@ -376,6 +381,11 @@ sub _Show {
             $LayoutObject->Block(
                 Name => 'BulkActivate',
                 Data => \%Param,
+            );
+        }
+        if ( !$Param{BulkSelectedAll} ) {
+            $LayoutObject->Block(
+                Name => 'BulkSelectedAll',
             );
         }
     }
@@ -651,6 +661,11 @@ sub _Show {
             $LayoutObject->Block(
                 Name => 'BulkActivate',
                 Data => \%Param,
+            );
+        }
+        if ( !$Param{BulkSelectedAll} ) {
+            $LayoutObject->Block(
+                Name => 'BulkSelectedAll',
             );
         }
     }

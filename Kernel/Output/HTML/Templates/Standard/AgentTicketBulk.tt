@@ -20,14 +20,14 @@
             <h1>[% Translate("Ticket Bulk Action") | html %]</h1>
 [% RenderBlockStart("CancelClosePopup") %]
             <p>
-                <a class="" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=[% Data.FormID %];>[% Translate("Cancel & close") | html %]</a>
+                <a class="PopupCancelClose" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelAndClose;FormID=[% Data.FormID %];">[% Translate("Cancel & close") | html %]</a>
             </p>
 [% RenderBlockEnd("CancelClosePopup") %]
 [% RenderBlockStart("UndoClosePopup") %]
 #rbo - T2017022490001394 - optimized visualization
             <p class="TicketLockMessage">
                 [% Translate("The ticket has been locked") | html %].
-                <a class="" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelandUnlock;FormID=[% Data.FormID %];[% Env("ChallengeTokenParam") | html %]">
+                <a class="PopupUndoClose" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelandUnlock;FormID=[% Data.FormID %];[% Env("ChallengeTokenParam") | html %]">
                     [% Translate("Undo & close") | html %]
                 </a>
             </p>
@@ -289,6 +289,7 @@ Core.UI.Popup.ExecuteInParentWindow(function(WindowObject) {
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Agent.TicketAction.Init();
+    Core.UI.Popup.InitClosedBulkHandler('[% Env("Action") %]', '[% Data.FormID %]', '#submitRichText');
 //]]></script>
 [% END %]
 

@@ -15,38 +15,6 @@
  */
 
 /**
- * This software is part of the KIX project, http://www.kixdesk.com/
- *  Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
- *  based on the original work of:
- *  Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
- *  --
- * @project OTRS (http://www.otrs.org) <http://www.otrs.org> - Agent Frontend
- * @copyright OTRS AG
- * @license AGPL (http://www.gnu.org/licenses/agpl.txt) <http://www.gnu.org/licenses/agpl.txt>
- *  --
- *  This software comes with ABSOLUTELY NO WARRANTY. For details, see
- *  the enclosed file COPYING for license information (AGPL). If you
- *  did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
- *
- */
-
-/**
- * This software is part of the KIX project, http://www.kixdesk.com/
- *  Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
- *  based on the original work of:
- *  Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
- *  --
- * @project OTRS (http://www.otrs.org) <http://www.otrs.org> - Agent Frontend
- * @copyright OTRS AG
- * @license AGPL (http://www.gnu.org/licenses/agpl.txt) <http://www.gnu.org/licenses/agpl.txt>
- *  --
- *  This software comes with ABSOLUTELY NO WARRANTY. For details, see
- *  the enclosed file COPYING for license information (AGPL). If you
- *  did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
- *
- */
-
-/**
  * @project     OTRS (http://www.otrs.org) - Agent Frontend
  * @copyright   OTRS AG
  * @license     AGPL (http://www.gnu.org/licenses/agpl.txt)
@@ -521,6 +489,10 @@ ul.ContextFunctions li:last-child:hover > a {
     padding: 3px 0px 5px 0px;
 }
 
+.PageLink {
+    cursor: pointer;
+}
+
 .RTL .Pagination {
     float: left;
 }
@@ -618,7 +590,51 @@ span.Pagination form {
     top: 49%;
     left: 0;
 }
-
+.TaskAbort {
+    margin: auto;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    width: 70%;
+    left: 14%;
+    border: 1px solid #82C826;
+    padding: 5px 10px;
+    background-color: #fcfcfc;
+}
+.TaskAbort span {
+    line-height: 25px;
+    font-weight: bold;
+    font-size: 11pt;
+}
+.TaskAbort table {
+    width: 23%;
+    margin: auto;
+    line-height: 18px;
+}
+.TaskAbort a {
+    background-color: #f0f0f0;
+    border: 1px solid #82C826;
+    cursor: pointer;
+    margin: 3px;
+    padding: 2px 2px;
+    display: inline-block;
+    line-height: 18px;
+    position: absolute;
+    bottom: -40px;
+    left: 39%;
+}
+.TaskAbort a:hover {
+    background-color: #82C826;
+    border: 1px solid #82C826;
+    color: #fff;
+}
+.TaskIgnored {
+    position: absolute;
+    top: 58%;
+    text-align: center;
+    width: 100%;
+    font-size: 8pt;
+}
 .TaskBarCountBox {
     text-align: center;
     font-size: 14pt;

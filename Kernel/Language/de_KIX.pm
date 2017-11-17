@@ -2192,11 +2192,13 @@ sub Data {
     # Template: AgentTicketOverview...
     $Lang->{'From which page should be selected the tickets.'}
         = 'Von welchen Seiten sollen die Tickets ausgewählt werden';
-    $Lang->{'Do you really want ### tickets merge? There may be a loss of performance.'}
-        = 'Wollen Sie wirklich ### Tickets Zusammenfassen? Es können dabei Performenz einbussen auftreten.';
+    $Lang->{'From which page should be selected the config items.'}
+        = 'Von welchen Seiten sollen die ConfigItems ausgewählt werden';
     $Lang->{'Current Page'}     = 'aktuelle Seite';
     $Lang->{'All Pages'}        = 'alle Seiten';
     $Lang->{'Ticket selection'} = 'Ticketauswahl';
+    $Lang->{'CI selection'}     = 'CI-Auswahl';
+    $Lang->{'passed Objects'}   = 'übergebene Objekte';
     $Lang->{'You have selected a larger number (###) of objects. Please note that this can lead to a loss of performance! Do you want to continue?'}
         = 'Sie haben eine größere Anzahl (###) an Objekten selektiert. Bitte beachten Sie, dass dies zu Performanceeinbußen führen kann! Möchten Sie fortfahren?';
     $Lang->{'Locking the tickets, please wait a moment...'}
@@ -2207,6 +2209,10 @@ sub Data {
         = 'Die Tickets werden entsperrt, bitte warten Sie einen Moment...';
     $Lang->{'Config items will be saved, please wait a moment...'}
         = 'ConfigItems werden gespeichert, bitte warten Sie einen Moment...';
+    $Lang->{'The current process has been canceled because no objects to be processed are available.'}
+        = 'Der laufende Prozess wurde abgebrochen, da keine zu bearbeitenden Objekte verfügbar sind.';
+    $Lang->{'%s objects are skipped during the process.'}
+        = 'Es werden im laufendem Prozess %s Objekte übersprungen.';
 
     # SysConfig
     $Lang->{'Add a decision!'}                = 'Hinzufügen einer Entscheidung!';

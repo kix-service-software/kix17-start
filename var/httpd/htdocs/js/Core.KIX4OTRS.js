@@ -503,7 +503,14 @@ Core.KIX4OTRS = (function(TargetNS) {
 
                                 // set signature if given
                                 if ( Response.Signature != '' ) {
-                                    $("#Signature").html(Response.Signature);
+                                    var CustomerUser = $('#SelectedCustomerUser').val() || '',
+                                        SignatureURL = Core.Config.Get("Baselink") + "Action=" + Core.Config.Get("Action") + ";Subaction=Signature;Dest=" + Dest + ';SelectedCustomerUser=' + CustomerUser;
+
+                                    if (!Core.Config.Get('SessionIDCookie')) {
+                                        SignatureURL += ';' + Core.Config.Get('SessionName') + '=' + Core.Config.Get('SessionID');
+                                    }
+
+                                    $('#Signature').attr('src', SignatureURL);
                                 }
                             }
                         });

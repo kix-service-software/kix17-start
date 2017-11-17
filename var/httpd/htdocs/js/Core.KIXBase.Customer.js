@@ -100,9 +100,20 @@ Core.KIXBase.Customer = (function(TargetNS) {
                         });
                         $('#MetadataFieldset_'+Counter).append('<div class="Clear">&nbsp;</div>');
                     } else {
-                        var Key = $(this).find('span.Key').html(),
-                            Value = $(this).find('span.Key').next().html();
-                        $('#MetadataFieldset_'+Counter).append('<label>'+Key+'</label><p class="Value" title="'+Value+'"><span>'+Value+'</span></p><div class="Clear">&nbsp;</div>');
+                        var Key             = $(this).find('span.Key').html(),
+                            IsRatingLabel   = $(this).find('span.Key').hasClass('RatingLabel'),
+                            NextValue       = $(this).find('span.Key').next(), 
+                            Value           = NextValue.html(),
+                            Title           = Value;
+                        
+                        if ( IsRatingLabel ) {
+                            while ( NextValue.hasClass('RateStar') ) {
+                                NextValue = NextValue.next();
+                                Value = Value + NextValue.html();
+                                Title = NextValue.html().trim();
+                            }
+                        }
+                        $('#MetadataFieldset_'+Counter).append('<label>'+Key+'</label><p class="Value" title="'+Title+'"><span>'+Value+'</span></p><div class="Clear">&nbsp;</div>');
                     }
                     $(this).remove();
                 });
@@ -118,6 +129,7 @@ Core.KIXBase.Customer = (function(TargetNS) {
         });
 
         $('#ZoomSidebar').remove();
+        $('.ErrorScreen .MessageBox').remove();
     }
 
     /**

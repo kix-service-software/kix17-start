@@ -447,7 +447,6 @@ sub _RenderAjax {
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
@@ -674,28 +673,24 @@ sub _RenderAjax {
             my $Data = $Self->_GetPriorities(
                 %{ $Param{GetParam} },
             );
-
-            # ---
-            # ITSMIncidentProblemManagement
-            # ---
+# ---
+# ITSMIncidentProblemManagement
+# ---
             # check if priority needs to be recalculated
             if (
-                (
-                    $Param{GetParam}->{ElementChanged} eq 'ServiceID'
-                    || $Param{GetParam}->{ElementChanged} eq 'DynamicField_ITSMImpact'
+                ( $Param{GetParam}->{ElementChanged} eq 'ServiceID'
+                || $Param{GetParam}->{ElementChanged} eq 'DynamicField_ITSMImpact'
                 )
                 && $Param{GetParam}->{ServiceID}
                 && $Param{GetParam}->{DynamicField_ITSMImpact}
                 && $Param{GetParam}->{DynamicField_ITSMCriticality}
-                )
-            {
+            ) {
 
                 # calculate priority from the CIP matrix
-                my $PriorityIDFromImpact
-                    = $Kernel::OM->Get('Kernel::System::ITSMCIPAllocate')->PriorityAllocationGet(
+                my $PriorityIDFromImpact = $Kernel::OM->Get('Kernel::System::ITSMCIPAllocate')->PriorityAllocationGet(
                     Criticality => $Param{GetParam}->{DynamicField_ITSMCriticality},
                     Impact      => $Param{GetParam}->{DynamicField_ITSMImpact},
-                    );
+                );
 
                 # add Priority to the JSONCollector
                 push(
@@ -712,8 +707,7 @@ sub _RenderAjax {
 
                 next DIALOGFIELD;
             }
-
-            # ---
+# ---
 
             # add Priority to the JSONCollector
             push(
@@ -782,6 +776,27 @@ sub _RenderAjax {
             );
             $FieldsProcessed{ $Self->{NameToID}{$CurrentField} } = 1;
         }
+        elsif ( $Self->{NameToID}{$CurrentField} eq 'TypeID' ) {
+            next DIALOGFIELD if $FieldsProcessed{ $Self->{NameToID}{$CurrentField} };
+
+            my $Data = $Self->_GetTypes(
+                %{ $Param{GetParam} },
+            );
+
+            # Add Type to the JSONCollector (Use SelectedID from web request).
+            push(
+                @JSONCollector,
+                {
+                    Name         => $Self->{NameToID}{$CurrentField},
+                    Data         => $Data,
+                    SelectedID   => $ParamObject->GetParam( Param => 'TypeID' ) || '',
+                    PossibleNone => 1,
+                    Translation  => 0,
+                    Max          => 100,
+                },
+            );
+            $FieldsProcessed{ $Self->{NameToID}{$CurrentField} } = 1;
+        }
     }
 
     # KIX4OTRS-capeIT
@@ -833,9 +848,7 @@ sub _RenderAjax {
     );
 }
 
-# =cut
-#
-# _GetParam()
+# =item _GetParam()
 #
 # returns the current data state of the submitted information
 #
@@ -1062,14 +1075,11 @@ sub _GetParam {
                 ParamObject        => $ParamObject,
                 LayoutObject       => $LayoutObject,
             );
-
-            # ---
-            # ITSMIncidentProblemManagement
-            # ---
+# ---
+# ITSMIncidentProblemManagement
+# ---
             # set the criticality from the service
-            if (   $DynamicFieldName eq 'ITSMCriticality'
-                && $ParamObject->GetParam( Param => 'ServiceID' ) )
-            {
+            if ( $DynamicFieldName eq 'ITSMCriticality' && $ParamObject->GetParam( Param => 'ServiceID' ) ) {
 
                 # get service
                 my %Service = $Kernel::OM->Get('Kernel::System::Service')->ServiceGet(
@@ -1080,8 +1090,7 @@ sub _GetParam {
                 # set the criticality
                 $Value = $Service{Criticality};
             }
-
-            # ---
+# ---
 
             # If we got a submitted param, take it and next out
             if (
@@ -1236,13 +1245,11 @@ sub _GetParam {
     # and finally we'll have the special parameters:
     $GetParam{ResponsibleAll} = $ParamObject->GetParam( Param => 'ResponsibleAll' );
     $GetParam{OwnerAll}       = $ParamObject->GetParam( Param => 'OwnerAll' );
-
-    # ---
-    # ITSMIncidentProblemManagement
-    # ---
+# ---
+# ITSMIncidentProblemManagement
+# ---
     $GetParam{ElementChanged} = $ParamObject->GetParam( Param => 'ElementChanged' );
-
-    # ---
+# ---
 
     return \%GetParam;
 }
@@ -1562,7 +1569,6 @@ sub _OutputActivityDialog {
     # Loop through ActivityDialogFields and render their output
     DIALOGFIELD:
     for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
-        print STDERR $CurrentField."\n";
 
         # some fields should be skipped for the customer interface
         next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{$SkipFields} );
@@ -2448,89 +2454,116 @@ sub _RenderCustomer {
 
     my $SubmittedCustomerUserID = $Param{GetParam}{CustomerUserID};
 
-    my %Data = (
+    if ( $Param{ActivityDialogField}->{LayoutBlock} ) {
+        %Data = (
 
-        # rkaiser - T#2017020290001194 - changed customer user to contact
-        LabelCustomerUser => $LayoutObject->{LanguageObject}->Translate("Contact"),
-        LabelCustomerID   => $LayoutObject->{LanguageObject}->Translate("CustomerID"),
-        FormID            => $Param{FormID},
-        MandatoryClass    => '',
-        ValidateRequired  => '',
-    );
-
-    # If field is required put in the necessary variables for
-    # ValidateRequired class input field, Mandatory class for the label
-    if ( $Param{ActivityDialogField}->{Display} && $Param{ActivityDialogField}->{Display} == 2 ) {
-        $Data{ValidateRequired} = 'Validate_Required';
-        $Data{MandatoryClass}   = 'Mandatory';
-    }
-
-    # output server errors
-    if ( IsHashRefWithData( $Param{Error} ) && $Param{Error}->{CustomerUserID} ) {
-        $Data{CustomerUserIDServerError} = 'ServerError';
-    }
-    if ( IsHashRefWithData( $Param{Error} ) && $Param{Error}->{CustomerID} ) {
-        $Data{CustomerIDServerError} = 'ServerError';
-    }
-
-    if (
-        ( IsHashRefWithData( $Param{Ticket} ) && $Param{Ticket}->{CustomerUserID} )
-        || $SubmittedCustomerUserID
-        )
-    {
-        %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
-            User => $SubmittedCustomerUserID
-                || $Param{Ticket}{CustomerUserID},
+            # rkaiser - T#2017020290001194 - changed customer user to contact
+            LabelCustomerUser => $LayoutObject->{LanguageObject}->Translate("Contact"),
+            LabelCustomerID   => $LayoutObject->{LanguageObject}->Translate("CustomerID"),
+            FormID            => $Param{FormID},
+            MandatoryClass    => '',
+            ValidateRequired  => '',
         );
-    }
 
-    # show customer field as "FirstName Lastname" <MailAddress>
-    if ( IsHashRefWithData( \%CustomerUserData ) ) {
-        $Data{CustomerUserID} = "\"$CustomerUserData{UserFirstname} " .
-            "$CustomerUserData{UserLastname}\" <$CustomerUserData{UserEmail}>";
-        $Data{CustomerID}           = $CustomerUserData{UserCustomerID} || '';
-        $Data{SelectedCustomerUser} = $CustomerUserData{UserID}         || '';
-    }
+        # If field is required put in the necessary variables for
+        # ValidateRequired class input field, Mandatory class for the label
+        if ( $Param{ActivityDialogField}->{Display} && $Param{ActivityDialogField}->{Display} == 2 ) {
+            $Data{ValidateRequired} = 'Validate_Required';
+            $Data{MandatoryClass}   = 'Mandatory';
+        }
 
-    # set fields that will get an AJAX loader icon when this field changes
-    my $JSON = $LayoutObject->JSONEncode(
-        Data     => $Param{AJAXUpdatableFields},
-        NoQuotes => 0,
-    );
-    $Data{FieldsToUpdate} = $JSON;
+        # output server errors
+        if ( IsHashRefWithData( $Param{Error} ) && $Param{Error}->{CustomerUserID} ) {
+            $Data{CustomerUserIDServerError} = 'ServerError';
+        }
+        if ( IsHashRefWithData( $Param{Error} ) && $Param{Error}->{CustomerID} ) {
+            $Data{CustomerIDServerError} = 'ServerError';
+        }
 
-    $LayoutObject->Block(
-        Name => $Param{ActivityDialogField}->{LayoutBlock} || 'rw:Customer',
-        Data => \%Data,
-    );
+        if (
+            ( IsHashRefWithData( $Param{Ticket} ) && $Param{Ticket}->{CustomerUserID} )
+            || $SubmittedCustomerUserID
+            )
+        {
+            %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+                User => $SubmittedCustomerUserID
+                    || $Param{Ticket}{CustomerUserID},
+            );
+        }
 
-    # set mandatory label marker
-    if ( $Data{MandatoryClass} && $Data{MandatoryClass} ne '' ) {
-        $LayoutObject->Block(
-            Name => 'LabelSpanCustomerUser',
-            Data => {},
+        # show customer field as "FirstName Lastname" <MailAddress>
+        if ( IsHashRefWithData( \%CustomerUserData ) ) {
+            $Data{CustomerUserID} = "\"$CustomerUserData{UserFirstname} " .
+                "$CustomerUserData{UserLastname}\" <$CustomerUserData{UserEmail}>";
+            $Data{CustomerID}           = $CustomerUserData{UserCustomerID} || '';
+            $Data{SelectedCustomerUser} = $CustomerUserData{UserID}         || '';
+        }
+
+        # set fields that will get an AJAX loader icon when this field changes
+        my $JSON = $LayoutObject->JSONEncode(
+            Data     => $Param{AJAXUpdatableFields},
+            NoQuotes => 0,
         );
-        $LayoutObject->Block(
-            Name => 'LabelSpanCustomerID',
-            Data => {},
-        );
-    }
+        $Data{FieldsToUpdate} = $JSON;
 
-    if ( $Param{DescriptionShort} ) {
         $LayoutObject->Block(
-            Name => $Param{ActivityDialogField}->{LayoutBlock} || 'rw:Customer:DescriptionShort',
-            Data => {
-                DescriptionShort => $Param{DescriptionShort},
-            },
+            Name => $Param{ActivityDialogField}->{LayoutBlock} || 'rw:Customer',
+            Data => \%Data,
         );
-    }
 
-    if ( $Param{DescriptionLong} ) {
+        # set mandatory label marker
+        if ( $Data{MandatoryClass} && $Data{MandatoryClass} ne '' ) {
+            $LayoutObject->Block(
+                Name => 'LabelSpanCustomerUser',
+                Data => {},
+            );
+            $LayoutObject->Block(
+                Name => 'LabelSpanCustomerID',
+                Data => {},
+            );
+        }
+
+        if ( $Param{DescriptionShort} ) {
+            $LayoutObject->Block(
+                Name => $Param{ActivityDialogField}->{LayoutBlock} || 'rw:Customer:DescriptionShort',
+                Data => {
+                    DescriptionShort => $Param{DescriptionShort},
+                },
+            );
+        }
+
+        if ( $Param{DescriptionLong} ) {
+            $LayoutObject->Block(
+                Name => 'rw:Customer:DescriptionLong',
+                Data => {
+                    DescriptionLong => $Param{DescriptionLong},
+                },
+            );
+        }
+    } else {
+        if (
+            ( IsHashRefWithData( $Param{Ticket} ) && $Param{Ticket}->{CustomerUserID} )
+            || $SubmittedCustomerUserID
+            )
+        {
+            %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+                User => $SubmittedCustomerUserID
+                    || $Param{Ticket}{CustomerUserID},
+            );
+        }
+
+        # show customer field as "FirstName Lastname" <MailAddress>
+        if ( IsHashRefWithData( \%CustomerUserData ) ) {
+            $Data{SelectedCustomerUser} = $CustomerUserData{UserID} || '';
+        }
+
+        if ( !$Data{SelectedCustomerUser} ) {
+            $Data{SelectedCustomerUser} = $Self->{UserID};
+        }
+
         $LayoutObject->Block(
-            Name => 'rw:Customer:DescriptionLong',
-            Data => {
-                DescriptionLong => $Param{DescriptionLong},
-            },
+            Name => 'SelectedCustomerUser',
+            Data => \%Data,
         );
     }
 
@@ -3710,7 +3743,7 @@ sub _StoreActivityDialog {
                     %{ $ActivityDialog->{Fields}->{$CurrentField} },
                 );
 
-                if ( !$Result && $ActivityDialog->{Fields}->{$CurrentField}->{Display} == 2 ) {
+                if ( !$Result ) {
 
                     # special case for Article (Subject & Body)
                     if ( $CurrentField eq 'Article' ) {
@@ -3724,11 +3757,11 @@ sub _StoreActivityDialog {
                     }
 
                     # all other fields
-                    else {
+                    elsif ( $ActivityDialog->{Fields}->{$CurrentField}->{Display} == 2 ) {
                         $Error{ $Self->{NameToID}->{$CurrentField} } = 1;
                     }
                 }
-                elsif ($Result) {
+                else {
                     $TicketParam{ $Self->{NameToID}->{$CurrentField} } = $Result;
                 }
                 $CheckedFields{ $Self->{NameToID}->{$CurrentField} } = 1;
@@ -4511,6 +4544,17 @@ sub _CheckField {
 
             # in case of article fields we need to fake a value
             $Value = 1;
+
+            my ( $Body, $Subject, $AttachmentDelete1 ) = (
+                $ParamObject->GetParam( Param => 'Body' ),
+                $ParamObject->GetParam( Param => 'Subject' ),
+                $ParamObject->GetParam( Param => 'AttachmentDelete1' )
+            );
+
+            # If attachment exists and body and subject not, it is error (see bug#13081).
+            if ( defined $AttachmentDelete1 && ( !$Body && !$Subject ) ) {
+                $Value = 0;
+            }
         }
         else {
 
@@ -4856,6 +4900,7 @@ sub _GetAJAXUpdatableFields {
         StateID       => 1,
         OwnerID       => 1,
         LockID        => 1,
+        TypeID        => 1,
     );
 
     # get backend object

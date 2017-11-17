@@ -13,7 +13,6 @@ package Kernel::System::ProcessManagement::TransitionAction::TicketStateSet;
 use strict;
 use warnings;
 use utf8;
-use Date::Calc qw(Day_of_Week Day_of_Week_to_Text);
 
 use Kernel::System::VariableCheck qw(:all);
 
