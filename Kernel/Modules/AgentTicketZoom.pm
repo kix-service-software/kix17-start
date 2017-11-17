@@ -212,18 +212,24 @@ sub Run {
 
     # get ACL restrictions
     my %PossibleActions;
+    my %PossibleTabActions;
     my $Counter = 0;
 
     # get all registered Actions
     if ( ref $ConfigObject->Get('Frontend::Module') eq 'HASH' ) {
 
         my %Actions = %{ $ConfigObject->Get('Frontend::Module') };
+        my $TicketZoomBackendRef = $ConfigObject->Get('AgentTicketZoomBackend');
 
         # only use those Actions that stats with Agent
         %PossibleActions = map { ++$Counter => $_ }
             grep { substr( $_, 0, length 'Agent' ) eq 'Agent' }
             sort keys %Actions;
+
+        %PossibleTabActions = map { ++$Counter => 'AgentTicketZoom###'.$_ }
+            sort keys %{ $TicketZoomBackendRef };
     }
+    %PossibleActions = ( %PossibleActions, %PossibleTabActions );
 
     my $ACL = $TicketObject->TicketAcl(
         Data          => \%PossibleActions,
@@ -1029,10 +1035,7 @@ sub MaskAgentZoom {
 
                 # do not show tabs by hash key
                 next
-                    if (
-                    defined $AclAction{ $Self->{Action} . '###' . $CurrKey }
-                    && !$AclAction{ $Self->{Action} . '###' . $CurrKey }
-                    );
+                    if ( !defined $AclAllowedActions{ $Self->{Action} . '###' . $CurrKey } );
 
                 # do not show tabs by action
                 next
