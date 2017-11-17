@@ -3,6 +3,7 @@
 
 #17.2.1 (2017/12/??)
  * (2017/11/17) - Bugfix: T2017091490000874 (do not show tabs by hash key not working) (ddoerffel)
+ * (2017/11/15) - Bugfix: T2017111090001091 (wrong loader string for article expanding) (ddoerffel)
  * (2017/11/10) - Bugfix: T2017111090000261 (missing closing bracket in SQL statement) (ddoerffel)
  * (2017/11/10) - Bugfix: T2017060190000886 (fixed output of the signature when an assigned queue is set by service) (fjacquemin)
  * (2017/11/09) - Bugfix: T2016032490000804 (SysConfig key DynamicFieldsZoomMaxSizeSidebar not used for ticket data length in ticket info sidebar) (ddoerffel)
@@ -34,8 +35,6 @@
  * (2017/10/27) - Bugfix: T2017102790000571 (fixed selection of objects by closing the dialogue on the X button) (fjacquemin)
  * (2017/10/27) - Bugfix: T2017102790000981 (fixed used wrong translation method in progress bar) (fjacquemin)
  * (2017/10/27) - Bugfix: T2017102790000874 (broken layout on rating stars in customer faq sidebar) (ddoerffel)
-
-# 17.2.0 RC2 (2017/10/26)
  * (2017/10/26) - Bugfix: T2017102090001199 (used but obsolete perl module Data::Calc cannot be found) (rbo)
  * (2017/10/26) - Bugfix: T2017101990000639 (fixed wrong ajax content returnable by clicking a page number in a list view) (fjacquemin)
  * (2017/10/26) - Bugfix: T2017102490001066 (fixed missing user language at daemon executor for translation) (fjacquemin)
@@ -46,8 +45,6 @@
  * (2017/10/23) - Bugfix: T2017102090001082 (fixed missing empty string declaration when processing the ItemIDs in ActionRow) (fjacquemin)
  * (2017/10/20) - Bugfix: T2017101990000701 (fixed enhanced selection in ticket lists for medium and preview overview) (fjacquemin)
  * (2017/10/20) - Bugfix: T2017101990000666 (fixed translation for the dialog of enhanced selection in CI lists) (fjacquemin)
-
-# 17.2.0 RC1 (2017/10/17)
  * (2017/10/16) - CR: T2017040290000557 (added layout function ProgressBar) (fjacquemin)
  * (2017/10/16) - CR: T2017040290000557 (migration extended layout function to standard) (fjacquemin)
  * (2017/10/16) - CR: T2017040290000557 (updated BulkActions with progress bar) (fjacquemin)
