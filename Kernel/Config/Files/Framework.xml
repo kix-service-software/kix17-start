@@ -11118,6 +11118,7 @@ via the Preferences button after logging in.
                 <Item>Core.UI.RichTextEditor.js</Item>
                 <Item>Core.UI.Dialog.js</Item>
                 <Item>Core.UI.ActionRow.js</Item>
+                <Item>Core.UI.Pagination.js</Item>
                 <Item>Core.UI.Popup.js</Item>
                 <Item>Core.UI.TreeSelection.js</Item>
                 <Item>Core.UI.Autocomplete.js</Item>
@@ -11201,6 +11202,7 @@ via the Preferences button after logging in.
                 <Item>Core.UI.Dialog.js</Item>
                 <Item>Core.UI.RichTextEditor.js</Item>
                 <Item>Core.UI.Datepicker.js</Item>
+                <Item>Core.UI.Pagination.js</Item>
                 <Item>Core.UI.Popup.js</Item>
                 <Item>Core.UI.TreeSelection.js</Item>
                 <Item>Core.UI.Autocomplete.js</Item>
