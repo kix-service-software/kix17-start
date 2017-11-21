@@ -2795,9 +2795,16 @@ sub PageNavBar {
                 Name => $Block,
                 Data => {
                     Baselink => $Baselink,
+                    IDPrefix => $IDPrefix,
                 }
             );
         }
+    }
+
+    if ( $IDPrefix !~ /^Dashboard/ ) {
+        $Self->Block(
+            Name => 'PageSelectItem',
+        );
     }
 
     for my $Key ( qw(SelectedItems UnselectedItems FormID) ) {
