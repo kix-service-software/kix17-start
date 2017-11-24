@@ -33,7 +33,7 @@ Core.UI.Pagination = (function (TargetNS) {
      */
     TargetNS.PageLink = function(IDPrefix) {
 
-        $('[id^=' + IDPrefix + ']').off('click').on('click', function(){
+        $('[id^=' + IDPrefix + '].PageLink').off('click').on('click', function(){
             var StartHit    = $(this).attr('StartHit'),
                 StartWindow = $(this).attr('StartWindow'),
                 URL         = BaseLinks[IDPrefix];

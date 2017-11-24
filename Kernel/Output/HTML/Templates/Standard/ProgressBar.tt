@@ -23,13 +23,20 @@
                 <span class="TaskText">[% Data.IgnoredText %]</span>
             </div>
 [% RenderBlockEnd("IgnoredObjects") %]
+[% RenderBlockStart("TaskAbort") %]
+            <div class="TaskAbortBtn">
+                <button id="TaskAbort" class="Primary CallForAction" type="button">
+                    <span>[% Translate("Cancel") %]</span>
+                </button>
+            </div>
+[% RenderBlockEnd("TaskAbort") %]
         </div>
     </div>
 [% WRAPPER JSOnDocumentComplete %]
     <script type="text/javascript">//<![CDATA[
         var ProgressID = setInterval (function(){
-            ProgressInformations();
-        }, '[% Data.RefreshCycle %]' );
+                ProgressInformations();
+            }, '[% Data.RefreshCycle %]' );
 
         function ProgressInformations(){
             var URL         = "Action=ProgressBarAJAXHandler;Subaction=AJAXUpdate;TaskName=[% Data.TaskName %];TaskType=[% Data.TaskType %]",
@@ -53,9 +60,38 @@
                         URLOP += ";" + Key + "=" + Value;
                     });
                 }
+                $(window).unbind('beforeunload.Popup');
                 window.location.href = URLOP;
             }
         }
+
+        $('#TaskAbort').on('click', function() {
+            var Data = {
+                    Action: 'ProgressBarAJAXHandler',
+                    Subaction: 'ProgressAbort',
+                    TaskName: '[% Data.TaskName %]',
+                    TaskType: '[% Data.TaskType %]',
+                },
+                ParamData   = '[% Data.EndParam %]',
+                URLOP       = "?Action=[% Data.Action %];Subaction=[% Data.AbortSubaction %]";
+            clearInterval(ProgressID);
+
+            Core.AJAX.FunctionCall(
+                Core.Config.Get('Baselink'),
+                Data,
+                function(){
+                    if ( ParamData ) {
+                        $.each($.parseJSON(ParamData), function(Key, Value){
+                            if ( Key === 'FormID' || Key === 'UserID' ) {
+                                URLOP += ";" + Key + "=" + Value;
+                            }
+                        });
+                    }
+                    window.location.href = URLOP;
+                }
+            );
+        });
+        Core.UI.Popup.InitClosedBulkHandler('[% Data.Action %]', '[% Data.FormID %]', '#TaskAbort', {'Name':'[% Data.TaskName %]', 'Type': '[% Data.TaskType %]'});
     //]]></script>
 [% END %]
 </div>

@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.1 (2017/12/??)
+ * (2017/11/24) - Bugfix: T2017110990000656 (added abort function during the progress bar) (fjacquemin)
  * (2017/11/21) - Bugfix: T2017111390006893 (fixed content output, if change the page over the pagination) (fjacquemin)
  * (2017/11/21) - Bugfix: T2017041990001033 (fixed send multiple of a ticket notification to a customer or a third party where several were selected) (fjacquemin)
  * (2017/11/17) - Bugfix: T2017091490000874 (do not show tabs by hash key not working) (ddoerffel)

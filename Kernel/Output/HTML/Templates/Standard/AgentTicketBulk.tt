@@ -246,7 +246,6 @@ $('#MergeTo').bind('blur', function() {
 //]]></script>
 [% END %]
 
-
                     <label for="LinkTogether">[% Translate("Link together") | html %]:</label>
                     <div class="Field">
                         [% Data.LinkTogetherYesNoOption %]
@@ -289,7 +288,7 @@ Core.UI.Popup.ExecuteInParentWindow(function(WindowObject) {
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Agent.TicketAction.Init();
-    Core.UI.Popup.InitClosedBulkHandler('[% Env("Action") %]', '[% Data.FormID %]', '#submitRichText');
+    Core.UI.Popup.InitClosedBulkHandler('[% Env("Action") %]', '[% Data.FormID %]', '#submitRichText', null);
 //]]></script>
 [% END %]
 
