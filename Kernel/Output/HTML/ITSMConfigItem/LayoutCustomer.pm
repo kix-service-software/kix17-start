@@ -197,6 +197,12 @@ sub InputCreate {
             Search => $Value,
         );
 
+        # search address book
+        my %AddressList = $Kernel::OM->Get('Kernel::System::AddressBook')->AddressList(
+            Search => '*'.$Value.'*',
+        );
+        map { $CustomerSearchList{$_} = $_ } values %AddressList;
+
         # transform ascii to html
         $Search = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Ascii2Html(
             Text => $CustomerSearchList{$Value} || '',
