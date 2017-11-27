@@ -6410,7 +6410,7 @@ sub TicketMerge {
         CreateUserID => $Param{UserID},
     );
 
-    # tranfer watchers - only those that were not already watching the main ticket
+    # transfer watchers - only those that were not already watching the main ticket
     # delete all watchers from the merge ticket that are already watching the main ticket
     my %MainWatchers = $Self->TicketWatchGet(
         TicketID => $Param{MainTicketID},
@@ -6444,6 +6444,13 @@ sub TicketMerge {
         Bind => [ \$Param{MainTicketID}, \$Param{MergeTicketID} ],
     );
 
+    # transfer all linked objects to new ticket
+    $Self->TicketMergeLinkedObjects(
+        MergeTicketID => $Param{MergeTicketID},
+        MainTicketID  => $Param{MainTicketID},
+        UserID        => $Param{UserID},
+    );
+
     # link tickets
     $Kernel::OM->Get('Kernel::System::LinkObject')->LinkAdd(
         SourceObject => 'Ticket',
@@ -6453,6 +6460,13 @@ sub TicketMerge {
         Type         => 'ParentChild',
         State        => 'Valid',
         UserID       => $Param{UserID},
+    );
+
+    # Update change time and user ID for main ticket.
+    #   See bug#13092 for more information.
+    return if !$DBObject->Do(
+        SQL  => 'UPDATE ticket SET change_time = current_timestamp, change_by = ? WHERE id = ?',
+        Bind => [ \$Param{UserID}, \$Param{MainTicketID} ],
     );
 
     # get the list of all merged states
@@ -6485,7 +6499,7 @@ sub TicketMerge {
     );
 
     # remove seen flag for all users on the main ticket
-    my $Success = $Self->TicketFlagDelete(
+    $Self->TicketFlagDelete(
         TicketID => $Param{MainTicketID},
         Key      => 'Seen',
         AllUsers => 1,
@@ -6611,6 +6625,139 @@ sub TicketMergeDynamicFields {
             );
         }
     }
+
+    return 1;
+}
+
+=item TicketMergeLinkedObjects()
+
+merge linked objects from one ticket into another, that is, move
+them from the merge ticket to the main ticket in the link_relation table.
+
+    my $Success = $TicketObject->TicketMergeLinkedObjects(
+        MainTicketID  => 123,
+        MergeTicketID => 42,
+        UserID        => 1,
+    );
+
+=cut
+
+sub TicketMergeLinkedObjects {
+    my ( $Self, %Param ) = @_;
+
+    for my $Needed (qw(MainTicketID MergeTicketID UserID)) {
+        if ( !$Param{$Needed} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!",
+            );
+            return;
+        }
+    }
+
+# T2017062090000715/OTRS Bug 12994
+#    # lookup the object id of a ticket
+#    my $TicketObjectID = $Kernel::OM->Get('Kernel::System::LinkObject')->ObjectLookup(
+#        Name => 'Ticket',
+#    );
+#
+#    # update links from old ticket to new ticket where the old ticket is the source
+#    $Kernel::OM->Get('Kernel::System::DB')->Do(
+#        SQL => '
+#            UPDATE link_relation
+#            SET source_key = ?
+#            WHERE source_object_id = ?
+#              AND source_key = ?',
+#        Bind => [
+#            \$Param{MainTicketID},
+#            \$TicketObjectID,
+#            \$Param{MergeTicketID},
+#        ],
+#    );
+#
+#    # update links from old ticket to new ticket where the old ticket is the target
+#    $Kernel::OM->Get('Kernel::System::DB')->Do(
+#        SQL => '
+#            UPDATE link_relation
+#            SET target_key = ?
+#            WHERE target_object_id = ?
+#              AND target_key = ?',
+#        Bind => [
+#            \$Param{MainTicketID},
+#            \$TicketObjectID,
+#            \$Param{MergeTicketID},
+#        ],
+#    );
+#
+#    # delete all links between tickets where source and target object are the same
+#    $Kernel::OM->Get('Kernel::System::DB')->Do(
+#        SQL => '
+#            DELETE FROM link_relation
+#            WHERE source_object_id = ?
+#                AND target_object_id = ?
+#                AND source_key = target_key
+#        ',
+#        Bind => [
+#            \$TicketObjectID,
+#            \$TicketObjectID,
+#        ],
+#    );
+    my $LinkObject = $Kernel::OM->Get('Kernel::System::LinkObject');
+    my $LinkList   = $LinkObject->LinkList(
+        Object    => 'Ticket',
+        Key       => $Param{MergeTicketID},
+        State     => 'Valid',
+        UserID    => $Param{UserID},
+    );
+
+    if (ref($LinkList) eq 'HASH') {
+        OBJECT:
+        for my $Object ( keys( %{ $LinkList } ) ) {
+            TYPE:
+            for my $Type ( keys( %{ $LinkList->{$Object} } ) ) {
+                DIRECTION:
+                for my $Direction ( keys( %{ $LinkList->{$Object}->{$Type} } ) ) {
+                    KEY:
+                    for my $Key ( keys( %{ $LinkList->{$Object}->{$Type}->{$Direction} } ) ) {
+                        next KEY if (
+                            $Object eq 'Ticket'
+                            && $Key eq $Param{MainTicketID}
+                        );
+
+                        my $Success;
+                        if ($Direction eq 'Source') {
+                            $LinkObject->LinkAdd(
+                                SourceObject => $Object,
+                                SourceKey    => $Key,
+                                TargetObject => 'Ticket',
+                                TargetKey    => $Param{MainTicketID},
+                                Type         => $Type,
+                                State        => 'Valid',
+                                UserID       => $Param{UserID},
+                            );
+                        } else {
+                            $LinkObject->LinkAdd(
+                                SourceObject => 'Ticket',
+                                SourceKey    => $Param{MainTicketID},
+                                TargetObject => $Object,
+                                TargetKey    => $Key,
+                                Type         => $Type,
+                                State        => 'Valid',
+                                UserID       => $Param{UserID},
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    $LinkObject->LinkDeleteAll(
+        Object => 'Ticket',
+        Key    => $Param{MergeTicketID},
+        UserID => $Param{UserID},
+    );
+# EO T2017062090000715/OTRS Bug 12994
 
     return 1;
 }
