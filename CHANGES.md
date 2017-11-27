@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 #17.2.1 (2017/12/??)
+ * (2017/11/24) - Bugfix: T2017110990000656 (added abort function during the progress bar) (fjacquemin)
  * (2017/11/23) - Bugfix: T2017101790001221 (fixed missing address book search check during field creation of CI AttributeType "customer" is used) (fjacquemin)
  * (2017/11/23) - Bugfix: T2017062090000715 (implemented merge of linked objects on ticket merge) (millinger)
  * (2017/11/21) - Bugfix: T2017111390006893 (fixed content output, if change the page over the pagination) (fjacquemin)
