@@ -208,11 +208,6 @@ sub EditFieldRender {
         $FieldClass .= ' ServerError';
     }
 
-    # set TreeView class
-    if ( $FieldConfig->{TreeView} ) {
-        $FieldClass .= ' DynamicFieldWithTreeView';
-    }
-
     # KIX4OTRS-capeIT
     # get general catalog class
     my $GeneralCatalogClass = $FieldConfig->{GeneralCatalogClass};
@@ -256,15 +251,6 @@ sub EditFieldRender {
         Size        => $Size,
         HTMLQuote   => 1,
     );
-
-    if ( $FieldConfig->{TreeView} ) {
-        my $TreeSelectionMessage = $Param{LayoutObject}->{LanguageObject}->Translate("Show Tree Selection");
-        $HTMLString
-            .= ' <a href="#" title="'
-            . $TreeSelectionMessage
-            . '" class="ShowTreeSelection"><span>'
-            . $TreeSelectionMessage . '</span><i class="fa fa-sitemap"></i></a>';
-    }
 
     if ( $Param{Mandatory} ) {
         my $DivID = $FieldName . 'Error';
@@ -317,12 +303,6 @@ EOF
         $Param{LayoutObject}->AddJSOnDocumentComplete( Code => <<"EOF");
     \$('$FieldSelector').bind('change', function (Event) {
         Core.AJAX.FormUpdate(\$(this).parents('form'), 'AJAXUpdate', '$FieldName', [ $FieldsToUpdate ]);
-    });
-    Core.App.Subscribe('Event.AJAX.FormUpdate.Callback', function(Data) {
-        var FieldName = '$FieldName';
-        if (Data[FieldName] && \$('#' + FieldName).hasClass('DynamicFieldWithTreeView')) {
-            Core.UI.TreeSelection.RestoreDynamicFieldTreeView(\$('#' + FieldName), Data[FieldName], '' , 1);
-        }
     });
 EOF
     }
@@ -512,11 +492,6 @@ sub SearchFieldRender {
     # check and set class if necessary
     my $FieldClass = 'DynamicFieldMultiSelect Modernize';
 
-    # set TreeView class
-    if ( $FieldConfig->{TreeView} ) {
-        $FieldClass .= ' DynamicFieldWithTreeView';
-    }
-
     # KIX4OTRS-capeIT
     # get general catalog class
     my $GeneralCatalogClass = $FieldConfig->{GeneralCatalogClass};
@@ -544,25 +519,6 @@ sub SearchFieldRender {
     # use PossibleValuesFilter if defined
     $SelectionData = $Param{PossibleValuesFilter} // $SelectionData;
 
-    # check if $SelectionData differs from configured PossibleValues
-    # and show values which are not contained as disabled if TreeView => 1
-    if ( $FieldConfig->{TreeView} ) {
-
-        if ( keys %{ $FieldConfig->{PossibleValues} } != keys %{$SelectionData} ) {
-
-            my @Values;
-            for my $Key ( sort keys %{ $FieldConfig->{PossibleValues} } ) {
-
-                push @Values, {
-                    Key      => $Key,
-                    Value    => $FieldConfig->{PossibleValues}->{$Key},
-                    Disabled => ( defined $SelectionData->{$Key} ) ? 0 : 1,
-                };
-            }
-            $SelectionData = \@Values;
-        }
-    }
-
     my $HTMLString = $Param{LayoutObject}->BuildSelection(
         Data         => $SelectionData,
         Name         => $FieldName,
@@ -573,15 +529,6 @@ sub SearchFieldRender {
         Multiple     => 1,
         HTMLQuote    => 1,
     );
-
-    if ( $FieldConfig->{TreeView} ) {
-        my $TreeSelectionMessage = $Param{LayoutObject}->{LanguageObject}->Translate("Show Tree Selection");
-        $HTMLString
-            .= ' <a href="#" title="'
-            . $TreeSelectionMessage
-            . '" class="ShowTreeSelection"><span>'
-            . $TreeSelectionMessage . '</span><i class="fa fa-sitemap"></i></a>';
-    }
 
     # call EditLabelRender on the common Driver
     my $LabelString = $Self->EditLabelRender(
@@ -796,9 +743,6 @@ sub StatsFieldParameterBuild {
 }
 
 1;
-
-
-
 
 =back
 

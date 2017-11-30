@@ -2795,9 +2795,16 @@ sub PageNavBar {
                 Name => $Block,
                 Data => {
                     Baselink => $Baselink,
+                    IDPrefix => $IDPrefix,
                 }
             );
         }
+    }
+
+    if ( $IDPrefix !~ /^Dashboard/ ) {
+        $Self->Block(
+            Name => 'PageSelectItem',
+        );
     }
 
     for my $Key ( qw(SelectedItems UnselectedItems FormID) ) {
@@ -5562,11 +5569,13 @@ sub TransfromDateSelection {
     return $Self->TransformDateSelection(@_);
 }
 
+
 =item ProgressBar()
     This function generates a progress bar. This progress bar is to use fundamental to the daemon, since it determines on the Create Task progress.
     generates a progess bar
 
     return $LayoutObject->ProgressBar(
+        FormID          => 1508136538.3920846.40874949,
         TaskName        => 'Kernel::System::Ticket-Run()',              # generated name of the daemon task
         TaskType        => 'AsynchronousExecutor',                      # type of daemon task
         MaxCount        => 15,                                          # max number of items that are processed.
@@ -5574,12 +5583,12 @@ sub TransfromDateSelection {
         ItemCount       => 20,                                          # max number of items that are passed.
         Action          => 'AgentXXX',                                  # e. g. 'Action=' . $Self->{LayoutObject}->{Action}
         AbortSubaction  => 'CancelAndClose',                            # e. g. 'Subaction=' . $Self->{LayoutObject}->{Subaction} subaction for abort if max count is 0
-        AbortCheck      => 1                                            # ativate (0|1) checking of abort, if max count 0
+        AbortCheck      => 1,                                           # Added to the process bar a cancel option added (0: disable 1: shows Cancel button to 2: shows Cancel button and abort message at MaxCount == 0)
+                                                                        # Option 2 requires an abort subaction
         RefreshCycle    => '1'                                          # optional: sets the time (in seconds) to which distance the progress bar should be updated, Default 1s
         EndParam        => {                                            # optional: definition of parameters as hash which are set at the end of the process to the following link.
             TicketID    => 123,
             Subaction   => 'ProgressEnd'
-            FormID      => 1508136538.3920846.40874949,
         },
         LoaderText      => 'Add ticket links, please wait a moment...', # optional: Display text for the current process.
         Title           => 'Ticket Bulk Action',                        # optional: Display title for the current process window.
@@ -5593,7 +5602,7 @@ sub TransfromDateSelection {
 sub ProgressBar {
     my ( $Self, %Param ) = @_;
 
-    for ( qw(TaskName TaskType Action MaxCount IgnoredCount ItemCount) ) {
+    for ( qw(TaskName TaskType Action MaxCount IgnoredCount ItemCount FormID) ) {
         if ( !IsStringWithData($Param{$_}) ) {
             return $Self->ErrorScreen(
                 Message => "No $_ is given!",
@@ -5612,8 +5621,10 @@ sub ProgressBar {
     } elsif ( $Param{EndParam}
         && ref $Param{EndParam} eq 'HASH'
     ) {
-        $Param{Params}   = $Param{EndParam};
-        $Param{EndParam} = $Self->JSONEncode(
+
+        $Param{EndParam}->{FormID}  = $Param{FormID};
+        $Param{Params}              = $Param{EndParam};
+        $Param{EndParam}            = $Self->JSONEncode(
             Data => $Param{EndParam},
             NoQuotes => 1,
         );
@@ -5634,7 +5645,7 @@ sub ProgressBar {
     }
 
     if ( !$Param{MaxCount}
-        && $Param{AbortCheck}
+        && $Param{AbortCheck} == 2
     ) {
 
         if ( !IsStringWithData($Param{AbortSubaction}) ) {
@@ -5676,18 +5687,26 @@ sub ProgressBar {
         }
     }
 
+    if ( $Param{AbortCheck} ) {
+        $Self->Block(
+            Name => 'TaskAbort',
+        );
+    }
+
     my $Output = $Self->Header(
         Type => $Param{HeaderType},
     );
     $Output .= $Self->Output(
         TemplateFile => 'ProgressBar',
+        Data => {
+            %Param,
+        }
     );
     $Output .= $Self->Footer(
         Type => $Param{FooterType},
     );
     return $Output;
 }
-
 1;
 
 =end Internal:

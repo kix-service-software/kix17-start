@@ -115,7 +115,7 @@ Core.Customer.TicketZoom = (function (TargetNS) {
      *      immediately when the site loads. So we set the url in this function.
      */
     function LoadMessage($Message, $Status){
-        var $SubjectHolder = $('h3 span', $Message),
+        var $SubjectHolder = $('h3 span span', $Message),
             Subject = $SubjectHolder.text(),
             LoadingString = $SubjectHolder.attr('title'),
             $Iframe = $('iframe', $Message),

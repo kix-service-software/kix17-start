@@ -729,27 +729,44 @@ Core.UI.Popup = (function (TargetNS) {
      * @description
      *      The InitClosedBulkHandler function to control popup close at the bulk action or widespread incident action.
      */
-    TargetNS.InitClosedBulkHandler = function (CallAction, FormID, Submit) {
-        var Data = {
-                Action: 'AgentPaginationAJAXHandler',
-                Subaction: 'DeleteFormContent',
-                FormID: FormID,
-                CallAction: CallAction,
-        };
+    TargetNS.InitClosedBulkHandler = function (CallAction, FormID, Submit, Task) {
 
-        $(window)
-            .unbind("beforeunload.Popup")
-            .bind("beforeunload.Popup", function () {
-                 window.opener.Core.AJAX.FunctionCall(
-                     Core.Config.Get('Baselink'),
-                     Data,
-                     function(){}
-                 );
-             });
-        $(Submit + ', .PopupUndoClose, .PopupCancelClose').on('click',function(){
+        $(window).unbind('beforunload.Popup').bind('beforeunload.Popup', function() {
+            if ( Task !== null) {
+                window.opener.Core.AJAX.FunctionCall(
+                    Core.Config.Get('Baselink'),
+                    {
+                        Action: 'ProgressBarAJAXHandler',
+                        Subaction: 'ProgressAbort',
+                        TaskName: Task.Name,
+                        TaskType: Task.Type,
+                        Test: 'ProgressAbort'
+                    },
+                    function(){}
+                );
+            }
+            window.opener.Core.AJAX.FunctionCall(
+                Core.Config.Get('Baselink'),
+                {
+                    Action: 'AgentPaginationAJAXHandler',
+                    Subaction: 'DeleteFormContent',
+                    FormID: FormID,
+                    CallAction: CallAction,
+                    Test: 'DeleteFormContent'
+                },
+                function(){}
+            );
+        });
+
+        $(Submit).on('click',function(){
             $(window).unbind("beforeunload.Popup");
         });
-        $(document).bind('keypress keydown keyup', function(e) {
+
+        $('#TaskAbort, .PopupUndoClose, .PopupCancelClose').on('click',function(){
+            $(window).unbind("beforeunload.Popup");
+        });
+
+        $(document).on('keypress keydown keyup', function(e) {
             if(e.which === 116
                || (e.which === 116 && e.ctrlKey)
                || (e.which === 82 && e.ctrlKey)

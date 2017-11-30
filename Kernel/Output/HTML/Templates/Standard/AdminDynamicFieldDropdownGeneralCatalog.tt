@@ -158,14 +158,6 @@
                         </div>
                         <div class="Clear"></div>
 
-                        <div class="SpacingTop"></div>
-                        <label for="TreeView">[% Translate("Tree View") | html %]:</label>
-                        <div class="Field">
-                            [% Data.TreeViewStrg %]
-                            <p class="FieldExplanation">[% Translate("Activate this option to display values as a tree.") | html %]</p>
-                        </div>
-                        <div class="Clear"></div>
-
                         <label for="TranslatableValues">[% Translate("Translatable values") | html %]:</label>
                         <div class="Field">
                             [% Data.TranslatableValuesStrg %]

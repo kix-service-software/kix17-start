@@ -72,7 +72,7 @@
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    Core.UI.Popup.InitClosedBulkHandler('[% Env("Action") %]', '[% Data.FormID %]', '#submitRichText');
+    Core.UI.Popup.InitClosedBulkHandler('[% Env("Action") %]', '[% Data.FormID %]', '#submitRichText', null);
 //]]></script>
 [% END %]
 [% RenderBlockEnd("BulkAction") %]

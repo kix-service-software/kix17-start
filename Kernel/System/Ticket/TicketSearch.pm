@@ -2183,7 +2183,7 @@ sub TicketSearch {
                         #   for the DF which is used for sorting.
                         $SQLFrom
                             .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                            ON (CAST(st.id AS char(255) = CAST(dfv$DynamicFieldJoinCounter.object_id AS char(255))
+                            ON (CAST(st.id AS char(255)) = CAST(dfv$DynamicFieldJoinCounter.object_id AS char(255))
                                 AND dfv$DynamicFieldJoinCounter.field_id = " .
                             $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
                     }

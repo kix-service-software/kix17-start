@@ -107,6 +107,7 @@ sub Run {
         }
 
         return $LayoutObject->ProgressBar(
+            FormID       => $Param{FormID},
             MaxCount     => scalar @TicketIDs,
             IgnoredCount => 0,
             ItemCount    => scalar @TicketIDs,
@@ -119,7 +120,6 @@ sub Run {
 
             Title        => 'Ticket Bulk Action',
             EndParam     => {
-                FormID       => $Param{FormID},
                 Subaction    => 'CancelandUnlockEnd',
                 UserID       => $Self->{UserID}
             },
@@ -693,6 +693,7 @@ sub Run {
          && $Self->{Subaction} eq 'TicketLocking'
     ) {
         return $LayoutObject->ProgressBar(
+            FormID          => $Param{FormID},
             MaxCount        => scalar @TicketIDSelected,
             IgnoredCount    => scalar @IgnoreLockedTicketIDs,
             ItemCount       => scalar @TicketIDs,
@@ -700,14 +701,13 @@ sub Run {
             TaskName        => $Self->{Action} . '-' . $Param{FormID} . '-BulkLock',
             TaskType        => 'AsynchronousExecutor',
 
-            AbortCheck      => 1,
+            AbortCheck      => 2,
             AbortSubaction  => 'CancelAndClose',
             Action          => $Self->{Action},
 
             LoaderText      => 'Locking the tickets, please wait a moment...',
             Title           => 'Ticket Bulk Action',
             EndParam        => {
-                FormID       => $Param{FormID},
                 UserID       => $Self->{UserID}
             },
             FooterType      => 'Small',
@@ -717,12 +717,18 @@ sub Run {
 
     elsif ( $Self->{Subaction} eq 'Do' ) {
         return $LayoutObject->ProgressBar(
+            FormID          => $Param{FormID},
             MaxCount        => scalar @TicketIDSelected,
             IgnoredCount    => scalar @IgnoreLockedTicketIDs,
             ItemCount       => scalar @TicketIDs,
+
             TaskName        => $Self->{Action} . '-' . $Param{FormID} . '-BulkDo',
             TaskType        => 'AsynchronousExecutor',
+
+            AbortCheck      => 1,
+            AbortSubaction  => 'DoEnd',
             Action          => $Self->{Action},
+
             LoaderText      => 'Tickets will be saved, please wait a moment...',
             Title           => 'Ticket Bulk Action',
             EndParam        => {

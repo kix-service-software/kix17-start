@@ -222,23 +222,27 @@ sub Run {
         );
 
         return $LayoutObject->ProgressBar(
-            MaxCount     => scalar @ConfigItemIDSelected,
-            IgnoredCount => scalar @IgnoredConfigItemID,
-            ItemCount    => scalar @ConfigItemIDs,
+            FormID          => $Param{FormID},
+            MaxCount        => scalar @ConfigItemIDSelected,
+            IgnoredCount    => scalar @IgnoredConfigItemID,
+            ItemCount       => scalar @ConfigItemIDs,
 
-            TaskName     => $Self->{Action} . '-' . $Param{FormID} . '-ITSMBulkDo',
-            TaskType     => 'AsynchronousExecutor',
-            Action       => $Self->{Action},
-            LoaderText   => 'Config items will be saved, please wait a moment...',
-            Title        => 'ITSM ConfigItem Bulk Action',
-            EndParam     => {
+            TaskName        => $Self->{Action} . '-' . $Param{FormID} . '-ITSMBulkDo',
+            TaskType        => 'AsynchronousExecutor',
+
+            AbortCheck      => 1,
+            AbortSubaction  => 'DoEnd',
+            Action          => $Self->{Action},
+
+            LoaderText      => 'Config items will be saved, please wait a moment...',
+            Title           => 'ITSM ConfigItem Bulk Action',
+            EndParam        => {
                 UserID      => $Self->{UserID},
-                FormID      => $Param{FormID},
                 ActionFlag  => $ActionFlag,
                 Subaction   => 'DoEnd',
             },
-            FooterType   => 'Small',
-            HeaderType   => 'Small',
+            FooterType      => 'Small',
+            HeaderType      => 'Small',
         );
     }
 
