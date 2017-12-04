@@ -1,7 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
-# 17.2.1 (2017/11/30)
+# 17.2.1 (2017/12/??)
+ * (2017/12/04) - Bugfix: T2017120490000743 (missing param declaration) (ddoerffel)
+
+# 17.2.1 RC1 (2017/11/30)
  * (2017/11/27) - Bugfix: T2017081890000609 (fixed toolbar layout glitch) (uboehm)
  * (2017/11/24) - Bugfix: T2017110990000656 (added abort function during the progress bar) (fjacquemin)
  * (2017/11/23) - Bugfix: T2017101790001221 (fixed missing address book search check during field creation of CI AttributeType "customer" is used) (fjacquemin)
