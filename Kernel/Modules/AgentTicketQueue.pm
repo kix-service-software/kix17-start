@@ -843,6 +843,7 @@ sub Run {
                     $Search{TicketPendingTimeOlderMinutes} = $Time;
                 }
                 else {
+                    $Search{TicketPendingTimeOlderMinutes} = 0;
                     $Search{TicketPendingTimeNewerMinutes} = $Time;
                 }
             }
