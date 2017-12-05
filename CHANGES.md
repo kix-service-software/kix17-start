@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 # 17.2.1 (2017/12/??)
+ * (2017/12/05) - Bugfix: T2017120590000625 (toolbar icons are not fully displayed) (ddoerffel)
  * (2017/12/05) - Bugfix: T2017102090001028 (pending time search provides different search results for dashboard and ticket lists - rectification) (ddoerffel)
  * (2017/12/04) - Bugfix: T2017120490000743 (missing param declaration) (ddoerffel)
 
