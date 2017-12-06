@@ -1818,9 +1818,91 @@ sub _CalcStringDistance {
     }
     return $d{$len1}{$len2};
 }
+
+=item TicketEscalationDisabledCheck()
+
+check if escalation is disabled for this ticket
+
+    my $Disabled = $TicketObject->TicketEscalationDisabledCheck(
+        TicketID => $Param{TicketID},
+        UserID   => $Param{UserID},
+    );
+
+=cut
+
+sub TicketEscalationDisabledCheck {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    for my $Needed (qw(TicketID UserID)) {
+        if ( !defined $Param{$Needed} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!"
+            );
+            return;
+        }
+    }
+
+    my %Ticket = $Self->TicketGet(
+        TicketID      => $Param{TicketID},
+        UserID        => $Param{UserID},
+        DynamicFields => 0,
+    );
+
+    # no escalation for certain ticket types
+    my $RelevantTypeNamesArrRef = $Kernel::OM->Get('Kernel::Config')->Get(
+        'Ticket::EscalationDisabled::RelevantTypes'
+    );
+    if (
+        $Ticket{Type}
+        && $RelevantTypeNamesArrRef
+        && ref($RelevantTypeNamesArrRef) eq 'ARRAY'
+    ) {
+        if (grep { $_ eq $Ticket{Type} } @{$RelevantTypeNamesArrRef}) {
+            return 1;
+        }
+    }
+
+    # no escalation for certain queues
+    my $RelevantQueueNamesArrRef = $Kernel::OM->Get('Kernel::Config')->Get(
+        'Ticket::EscalationDisabled::RelevantQueues'
+    );
+    if (
+        $Ticket{Queue}
+        && $RelevantQueueNamesArrRef
+        && ref($RelevantQueueNamesArrRef) eq 'ARRAY'
+    ) {
+        if (grep { $_ eq $Ticket{Queue} } @{$RelevantQueueNamesArrRef}) {
+            return 1;
+        }
+    }
+
+    # check for Non-SLA-relevant pending time...
+    my $RelevantStateNamesArrRef = $Kernel::OM->Get('Kernel::Config')->Get(
+        'Ticket::EscalationDisabled::RelevantStates'
+    );
+    my %RelevantStateHash         = ();
+    my $RelevantStateNamesArrStrg = '';
+    if (
+        $RelevantStateNamesArrRef
+        && ref($RelevantStateNamesArrRef) eq 'ARRAY'
+    ) {
+        my %StateListHash = $Kernel::OM->Get('Kernel::System::State')->StateList( UserID => 1, );
+        for my $CurrStateID ( keys(%StateListHash) ) {
+            if ( grep { $_ eq $StateListHash{$CurrStateID} } @{$RelevantStateNamesArrRef} ) {
+                $RelevantStateHash{$CurrStateID} = $StateListHash{$CurrStateID};
+            }
+        }
+    }
+    if ( grep { $_ eq $Ticket{State} } @{$RelevantStateNamesArrRef} ) {
+        return 1;
+    }
+
+    return 0;
+}
+
 1;
-
-
 
 =back
 
