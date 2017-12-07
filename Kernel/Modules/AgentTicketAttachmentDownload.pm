@@ -59,14 +59,22 @@ sub Run {
     my $ZipFilename = "Ticket_" . $TicketNumber . "_Article_" . $Self->{ArticleID} . ".zip";
     my $ZipObject;
 
+    my %Article = $TicketObject->ArticleGet(
+        ArticleID     => $Self->{ArticleID},
+        DynamicFields => 0,
+    );
+
     # get all attachments from article
     my %ArticleAttachments = $TicketObject->ArticleAttachmentIndex(
-        ArticleID => $Self->{ArticleID},
-        UserID    => 1,
+        ArticleID                  => $Self->{ArticleID},
+        UserID                     => 1,
+        Article                    => \%Article,
+        StripPlainBodyAsAttachment => 1,
     );
+
     if ( !%ArticleAttachments ) {
         $LogObject->Log(
-            Message  => "No such attacment ($Self->{FileID})! May be an attack!!!",
+            Message  => "No attachments given for this article",
             Priority => 'error',
         );
         return $LayoutObject->ErrorScreen();
@@ -83,7 +91,7 @@ sub Run {
         next if ( $Attachment{Filename} eq 'file-2' );
 
         if ( !$ZipObject ) {
-            $ZipObject   = new IO::Compress::Zip(
+            $ZipObject = new IO::Compress::Zip(
                 \$ZipResult,
                 BinModeIn => 1,
                 Name      => $Attachment{Filename},
@@ -99,13 +107,16 @@ sub Run {
 
             $ZipObject->print( $Attachment{Content} );
             $ZipObject->flush();
-        } else {
+        }
+        else {
             $ZipObject->newStream( Name => $Attachment{Filename} );
             $ZipObject->print( $Attachment{Content} );
             $ZipObject->flush();
         }
     }
-    $ZipObject->close();
+    if ($ZipObject) {
+        $ZipObject->close();
+    }
 
     # output all attachmentfiles
     return $LayoutObject->Attachment(
@@ -119,8 +130,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 
