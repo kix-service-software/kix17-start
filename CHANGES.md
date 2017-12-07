@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+#17.2.2 (2017/12/??)
+ * (2017/11/29) - Bugfix: T2017102090000707 (reverted bugfix for KIX_CUSTOMER_REALNAME replacement) (millinger)
+
 # 17.2.1 (2017/11/30)
  * (2017/11/27) - Bugfix: T2017081890000609 (fixed toolbar layout glitch) (uboehm)
  * (2017/11/24) - Bugfix: T2017110990000656 (added abort function during the progress bar) (fjacquemin)
