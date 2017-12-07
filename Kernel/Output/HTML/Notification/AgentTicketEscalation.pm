@@ -114,10 +114,20 @@ sub Run {
 
         # check response time
         if ( defined $Ticket{FirstResponseTime} ) {
-            $Ticket{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Ticket{FirstResponseTime},
-                Space => ' ',
+            my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+                TicketID => $TicketID,
+                UserID   => $Self->{UserID},
             );
+
+            if ($TicketEscalationDisabled) {
+                $Ticket{FirstResponseTimeHuman} = $LayoutObject->{LanguageObject}->Translate('suspended');
+            }
+            else {
+                $Ticket{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                    Age   => $Ticket{FirstResponseTime},
+                    Space => ' ',
+                );
+            }
             if ( $Ticket{FirstResponseTimeEscalation} ) {
                 $LayoutObject->Block(
                     Name => 'TicketEscalationFirstResponseTimeOver',
@@ -152,10 +162,20 @@ sub Run {
 
         # check update time
         if ( defined $Ticket{UpdateTime} ) {
-            $Ticket{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Ticket{UpdateTime},
-                Space => ' ',
+            my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+                TicketID => $TicketID,
+                UserID   => $Self->{UserID},
             );
+
+            if ($TicketEscalationDisabled) {
+                $Ticket{UpdateTimeHuman} = $LayoutObject->{LanguageObject}->Translate('suspended');
+            }
+            else {
+                $Ticket{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                    Age   => $Ticket{UpdateTime},
+                    Space => ' ',
+                );
+            }
             if ( $Ticket{UpdateTimeEscalation} ) {
                 $LayoutObject->Block(
                     Name => 'TicketEscalationUpdateTimeOver',
@@ -190,10 +210,20 @@ sub Run {
 
         # check solution
         if ( defined $Ticket{SolutionTime} ) {
-            $Ticket{SolutionTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Ticket{SolutionTime},
-                Space => ' ',
+            my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+                TicketID => $TicketID,
+                UserID   => $Self->{UserID},
             );
+
+            if ($TicketEscalationDisabled) {
+                $Ticket{SolutionTimeHuman} = $LayoutObject->{LanguageObject}->Translate('suspended');
+            }
+            else {
+                $Ticket{SolutionTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                    Age   => $Ticket{SolutionTime},
+                    Space => ' ',
+                );
+            }
             if ( $Ticket{SolutionTimeEscalation} ) {
                 $LayoutObject->Block(
                     Name => 'TicketEscalationSolutionTimeOver',

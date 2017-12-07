@@ -333,49 +333,89 @@ sub Run {
 
     # show first response time if needed
     if ( defined $Ticket{FirstResponseTime} ) {
-        $Ticket{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
-            Age   => $Ticket{FirstResponseTime},
-            Space => ' ',
+        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+            TicketID => $Param{TicketID},
+            UserID   => $Self->{UserID},
         );
-        $Ticket{FirstResponseTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
-            Age   => $Ticket{FirstResponseTimeWorkingTime},
-            Space => ' ',
-        );
-        if ( 60 * 60 * 1 > $Ticket{FirstResponseTime} ) {
-            $Ticket{FirstResponseTimeClass} = 'Warning';
+
+        if ($TicketEscalationDisabled) {
+            $Ticket{FirstResponseTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{FirstResponseTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
+
+            $LayoutObject->Block(
+                Name => 'FirstResponseTime',
+                Data => { %Ticket, %AclAction },
+            );
         }
-        $LayoutObject->Block(
-            Name => 'FirstResponseTime',
-            Data => { %Ticket, %AclAction },
-        );
+        else {
+            $Ticket{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                Age   => $Ticket{FirstResponseTime},
+                Space => ' ',
+            );
+            $Ticket{FirstResponseTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
+                Age   => $Ticket{FirstResponseTimeWorkingTime},
+                Space => ' ',
+            );
+            if ( 60 * 60 * 1 > $Ticket{FirstResponseTime} ) {
+                $Ticket{FirstResponseTimeClass} = 'Warning';
+            }
+            $LayoutObject->Block(
+                Name => 'FirstResponseTime',
+                Data => { %Ticket, %AclAction },
+            );
+        }
     }
 
     # show update time if needed
     if ( defined $Ticket{UpdateTime} ) {
-        $Ticket{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
-            Age   => $Ticket{UpdateTime},
-            Space => ' ',
+        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+            TicketID => $Param{TicketID},
+            UserID   => $Self->{UserID},
         );
-        $Ticket{UpdateTimeWorkingTime} =
-            $LayoutObject->CustomerAgeInHours(
-            Age   => $Ticket{UpdateTimeWorkingTime},
-            Space => ' ',
+
+        if ($TicketEscalationDisabled) {
+            $Ticket{UpdateTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{UpdateTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
+
+            $LayoutObject->Block(
+                Name => 'UpdateTime',
+                Data => { %Ticket, %AclAction },
             );
-        if ( 60 * 60 * 1 > $Ticket{UpdateTime} ) {
-            $Ticket{UpdateTimeClass} = 'Warning';
         }
-        $LayoutObject->Block(
-            Name => 'UpdateTime',
-            Data => { %Ticket, %AclAction },
-        );
+        else {
+            $Ticket{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                Age   => $Ticket{UpdateTime},
+                Space => ' ',
+            );
+            $Ticket{UpdateTimeWorkingTime} =
+                $LayoutObject->CustomerAgeInHours(
+                Age   => $Ticket{UpdateTimeWorkingTime},
+                Space => ' ',
+                );
+            if ( 60 * 60 * 1 > $Ticket{UpdateTime} ) {
+                $Ticket{UpdateTimeClass} = 'Warning';
+            }
+            $LayoutObject->Block(
+                Name => 'UpdateTime',
+                Data => { %Ticket, %AclAction },
+            );
+        }
     }
 
     # show solution time if needed
     if ( defined $Ticket{SolutionTime} ) {
-        if ( $Ticket{SolutionTimeDestinationDate} =~ m/[31.12.2025|12.31.2025|2025.12.31] 01:00/ ) {
+        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+            TicketID => $Param{TicketID},
+            UserID   => $Self->{UserID},
+        );
+
+        if ($TicketEscalationDisabled) {
+            $Ticket{SolutionTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{SolutionTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
+
             $LayoutObject->Block(
-                Name => 'SolutionTimeSuspended',
-                Data => { %Param, %Ticket },
+                Name => 'SolutionTime',
+                Data => { %Ticket, %AclAction },
             );
         }
         else {
