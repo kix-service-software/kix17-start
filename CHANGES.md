@@ -1,11 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
-#17.2.2 (2017/12/??)
+# 17.2.2 (2017/12/??)
  * (2017/12/07) - Bugfix: T2017120590000698 (attachment download button causes internal server error) (ddoerffel)
  * (2017/11/29) - Bugfix: T2017102090000707 (reverted bugfix for KIX_CUSTOMER_REALNAME replacement) (millinger)
 
-# 17.2.1 (2017/11/30)
+# 17.2.1 (2017/12/05)
+ * (2017/12/05) - Bugfix: T2017120590000625 (toolbar icons are not fully displayed) (ddoerffel)
+ * (2017/12/05) - Bugfix: T2017102090001028 (pending time search provides different search results for dashboard and ticket lists - rectification) (ddoerffel)
+ * (2017/12/04) - Bugfix: T2017120490000743 (missing param declaration) (ddoerffel)
  * (2017/11/27) - Bugfix: T2017081890000609 (fixed toolbar layout glitch) (uboehm)
  * (2017/11/24) - Bugfix: T2017110990000656 (added abort function during the progress bar) (fjacquemin)
  * (2017/11/23) - Bugfix: T2017101790001221 (fixed missing address book search check during field creation of CI AttributeType "customer" is used) (fjacquemin)

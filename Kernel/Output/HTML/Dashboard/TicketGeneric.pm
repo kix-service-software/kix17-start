@@ -1248,7 +1248,6 @@ sub Run {
                 }
                 if ( $SearchProfileData{TicketPendingTimePointStart} eq 'Before' ) {
                     $SearchProfileData{TicketPendingTimeOlderMinutes} = $Time;
-                    $SearchProfileData{TicketPendingTimeNewerMinutes} = 0;
                 }
                 else {
                     $SearchProfileData{TicketPendingTimeOlderMinutes} = 0;

@@ -166,7 +166,7 @@
     position: absolute;
     right: -7px;
     text-align: center;
-    top: -3px;
+    top: 0px;
     width: 15px;
     display: none !important;
 }
