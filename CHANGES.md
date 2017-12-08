@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 # 17.2.2 (2017/12/??)
+ * (2017/12/08) - Usability-CR: T2017051690000887 (all queues should be selectable in admin quick ticket configurator) (ddoerffel)
  * (2017/12/07) - Bugfix: T2017120590000698 (attachment download button causes internal server error) (ddoerffel)
  * (2017/11/29) - Bugfix: T2017102090000707 (reverted bugfix for KIX_CUSTOMER_REALNAME replacement) (millinger)
 
