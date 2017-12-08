@@ -787,8 +787,6 @@ sub _RecipientsGet {
                     );
                 }
 
-                my %Recipient;
-
                 # KIX4OTRS-capeIT
                 my @CustomerRecipients = ();
                 if ( $Recipient eq 'CustomerLinkedPerson' ) {
@@ -803,6 +801,8 @@ sub _RecipientsGet {
                     # ArticleLastCustomerArticle() returns the latest customer article but if there
                     # is no customer article, it returns the latest agent article. In this case
                     # notification must not be send to the "From", but to the "To" article field.
+
+                    my %Recipient;
 
                     # Check if we actually do have an article
                     if ( defined $Article{SenderType} ) {

@@ -64,6 +64,28 @@ sub Run {
             Type        => 'inline',
             NoCache     => 1,
         );
+    } elsif ( $Self->{Subaction} eq 'ProgressAbort' ) {
+
+        my $Count       = 0;
+        my @List        = $SchedulerDBObject->TaskList(
+            Type => $Param{TaskType},
+        );
+
+        for my $Task ( @List ) {
+            if ( $Task->{Name} eq $Param{TaskName} ) {
+                $SchedulerDBObject->TaskDelete(
+                    TaskID => $Task->{TaskID}
+                );
+            }
+        }
+
+        # send JSON response
+        return $LayoutObject->Attachment(
+            ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
+            Content     => 1,
+            Type        => 'inline',
+            NoCache     => 1,
+        );
     }
 }
 

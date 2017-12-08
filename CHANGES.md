@@ -1,7 +1,21 @@
 # Change log of KIX
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
-#17.2.1 (2017/12/??)
+# 17.2.2 (2017/12/??)
+ * (2017/12/07) - Bugfix: T2017120590000698 (attachment download button causes internal server error) (ddoerffel)
+ * (2017/11/29) - Bugfix: T2017102090000707 (reverted bugfix for KIX_CUSTOMER_REALNAME replacement) (millinger)
+
+# 17.2.1 (2017/12/05)
+ * (2017/12/05) - Bugfix: T2017120590000625 (toolbar icons are not fully displayed) (ddoerffel)
+ * (2017/12/05) - Bugfix: T2017102090001028 (pending time search provides different search results for dashboard and ticket lists - rectification) (ddoerffel)
+ * (2017/12/04) - Bugfix: T2017120490000743 (missing param declaration) (ddoerffel)
+ * (2017/11/27) - Bugfix: T2017081890000609 (fixed toolbar layout glitch) (uboehm)
+ * (2017/11/24) - Bugfix: T2017110990000656 (added abort function during the progress bar) (fjacquemin)
+ * (2017/11/23) - Bugfix: T2017101790001221 (fixed missing address book search check during field creation of CI AttributeType "customer" is used) (fjacquemin)
+ * (2017/11/23) - Bugfix: T2017062090000715 (implemented merge of linked objects on ticket merge) (millinger)
+ * (2017/11/21) - Bugfix: T2017111390006893 (fixed content output, if change the page over the pagination) (fjacquemin)
+ * (2017/11/21) - Bugfix: T2017041990001033 (fixed send multiple of a ticket notification to a customer or a third party where several were selected) (fjacquemin)
+ * (2017/11/17) - Bugfix: T2017091490000874 (do not show tabs by hash key not working) (ddoerffel)
  * (2017/11/15) - Bugfix: T2017111090001091 (wrong loader string for article expanding) (ddoerffel)
  * (2017/11/10) - Bugfix: T2017111090000261 (missing closing bracket in SQL statement) (ddoerffel)
  * (2017/11/10) - Bugfix: T2017060190000886 (fixed output of the signature when an assigned queue is set by service) (fjacquemin)

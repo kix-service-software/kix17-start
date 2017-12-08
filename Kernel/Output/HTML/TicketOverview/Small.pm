@@ -1586,14 +1586,25 @@ sub Run {
 
         # escalation human times
         if ( $Article{EscalationTime} ) {
-            $Article{EscalationTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Article{EscalationTime},
-                Space => ' ',
+            my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
+                TicketID => $Article{TicketID},
+                UserID   => $Self->{UserID},
             );
-            $Article{EscalationTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Article{EscalationTimeWorkingTime},
-                Space => ' ',
-            );
+
+            if ($TicketEscalationDisabled) {
+                $Article{EscalationTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
+                $Article{EscalationTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
+            }
+            else {
+                $Article{EscalationTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                    Age   => $Article{EscalationTime},
+                    Space => ' ',
+                );
+                $Article{EscalationTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
+                    Age   => $Article{EscalationTimeWorkingTime},
+                    Space => ' ',
+                );
+            }
         }
 
         # customer info
@@ -1786,65 +1797,115 @@ sub Run {
                 # escalation column
                 my %EscalationData;
                 if ( $TicketColumn eq 'EscalationTime' ) {
-                    $EscalationData{EscalationTime}            = $Article{EscalationTime};
-                    $EscalationData{EscalationDestinationDate} = $Article{EscalationDestinationDate};
+                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
+                        TicketID => $Article{TicketID},
+                        UserID   => $Self->{UserID},
+                    );
 
-                    $EscalationData{EscalationTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                        Age   => $EscalationData{EscalationTime},
-                        Space => ' ',
-                    );
-                    $EscalationData{EscalationTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
-                        Age   => $EscalationData{EscalationTimeWorkingTime},
-                        Space => ' ',
-                    );
-                    if (
-                        defined $Article{EscalationTime}
-                        && $Article{EscalationTime} < 60 * 60 * 1
-                        )
-                    {
-                        $EscalationData{EscalationClass} = 'Warning';
+                    if ($TicketEscalationDisabled) {
+                        $LayoutObject->Block(
+                            Name => "RecordTicketColumnTranslatable",
+                            Data => {
+                                GenericValue => 'suspended',
+                                Class        => '',
+                            },
+                        );
+                        next TICKETCOLUMN;
                     }
-                    $LayoutObject->Block(
-                        Name => 'RecordEscalationTime',
-                        Data => {%EscalationData},
-                    );
-                    next TICKETCOLUMN;
+                    else {
+                        $EscalationData{EscalationTime}            = $Article{EscalationTime};
+                        $EscalationData{EscalationDestinationDate} = $Article{EscalationDestinationDate};
+
+                        $EscalationData{EscalationTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                            Age   => $EscalationData{EscalationTime},
+                            Space => ' ',
+                        );
+                        $EscalationData{EscalationTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
+                            Age   => $EscalationData{EscalationTimeWorkingTime},
+                            Space => ' ',
+                        );
+                        if (
+                            defined $Article{EscalationTime}
+                            && $Article{EscalationTime} < 60 * 60 * 1
+                            )
+                        {
+                            $EscalationData{EscalationClass} = 'Warning';
+                        }
+                        $LayoutObject->Block(
+                            Name => 'RecordEscalationTime',
+                            Data => {%EscalationData},
+                        );
+                        next TICKETCOLUMN;
+                    }
                 }
 
                 my $BlockType = '';
                 my $CSSClass  = '';
                 if ( $TicketColumn eq 'EscalationSolutionTime' ) {
-                    $BlockType = 'Escalation';
-                    $DataValue = $LayoutObject->CustomerAgeInHours(
-                        Age => $Article{SolutionTime} || 0,
-                        Space => ' ',
+                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
+                        TicketID => $Article{TicketID},
+                        UserID   => $Self->{UserID},
                     );
-                    if ( defined $Article{SolutionTime} && $Article{SolutionTime} < 60 * 60 * 1 ) {
-                        $CSSClass = 'Warning';
+
+                    if ($TicketEscalationDisabled) {
+                        $BlockType = 'Translatable';
+                        $DataValue = 'suspended';
+                    }
+                    else {
+                        $BlockType = 'Escalation';
+                        $DataValue = $LayoutObject->CustomerAgeInHours(
+                            Age => $Article{SolutionTime} || 0,
+                            Space => ' ',
+                        );
+                        if ( defined $Article{SolutionTime} && $Article{SolutionTime} < 60 * 60 * 1 ) {
+                            $CSSClass = 'Warning';
+                        }
                     }
                 }
                 elsif ( $TicketColumn eq 'EscalationResponseTime' ) {
-                    $BlockType = 'Escalation';
-                    $DataValue = $LayoutObject->CustomerAgeInHours(
-                        Age => $Article{FirstResponseTime} || 0,
-                        Space => ' ',
+                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
+                        TicketID => $Article{TicketID},
+                        UserID   => $Self->{UserID},
                     );
-                    if (
-                        defined $Article{FirstResponseTime}
-                        && $Article{FirstResponseTime} < 60 * 60 * 1
-                        )
-                    {
-                        $CSSClass = 'Warning';
+
+                    if ($TicketEscalationDisabled) {
+                        $BlockType = 'Translatable';
+                        $DataValue = 'suspended';
+                    }
+                    else {
+                        $BlockType = 'Escalation';
+                        $DataValue = $LayoutObject->CustomerAgeInHours(
+                            Age => $Article{FirstResponseTime} || 0,
+                            Space => ' ',
+                        );
+                        if (
+                            defined $Article{FirstResponseTime}
+                            && $Article{FirstResponseTime} < 60 * 60 * 1
+                            )
+                        {
+                            $CSSClass = 'Warning';
+                        }
                     }
                 }
                 elsif ( $TicketColumn eq 'EscalationUpdateTime' ) {
-                    $BlockType = 'Escalation';
-                    $DataValue = $LayoutObject->CustomerAgeInHours(
-                        Age => $Article{UpdateTime} || 0,
-                        Space => ' ',
+                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
+                        TicketID => $Article{TicketID},
+                        UserID   => $Self->{UserID},
                     );
-                    if ( defined $Article{UpdateTime} && $Article{UpdateTime} < 60 * 60 * 1 ) {
-                        $CSSClass = 'Warning';
+
+                    if ($TicketEscalationDisabled) {
+                        $BlockType = 'Translatable';
+                        $DataValue = 'suspended';
+                    }
+                    else {
+                        $BlockType = 'Escalation';
+                        $DataValue = $LayoutObject->CustomerAgeInHours(
+                            Age => $Article{UpdateTime} || 0,
+                            Space => ' ',
+                        );
+                        if ( defined $Article{UpdateTime} && $Article{UpdateTime} < 60 * 60 * 1 ) {
+                            $CSSClass = 'Warning';
+                        }
                     }
                 }
                 elsif ( $TicketColumn eq 'PendingTime' ) {

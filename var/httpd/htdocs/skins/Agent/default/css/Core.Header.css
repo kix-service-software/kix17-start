@@ -101,6 +101,9 @@
     top: 10px;
     position: absolute;
     z-index: 20;
+    padding-right: 300px;
+    height: 31px;
+    overflow: hidden;
 }
 
 #ToolBar:last-child {
@@ -163,7 +166,7 @@
     position: absolute;
     right: -7px;
     text-align: center;
-    top: -3px;
+    top: 0px;
     width: 15px;
     display: none !important;
 }

@@ -590,6 +590,12 @@ span.Pagination form {
     top: 49%;
     left: 0;
 }
+.TaskAbortBtn {
+    position: absolute;
+    top: 65%;
+    text-align: center;
+    width: 100%;
+}
 .TaskAbort {
     margin: auto;
     text-align: center;

@@ -2451,6 +2451,7 @@ sub _RenderCustomer {
     }
 
     my %CustomerUserData = ();
+    my %Data             = ();
 
     my $SubmittedCustomerUserID = $Param{GetParam}{CustomerUserID};
 
