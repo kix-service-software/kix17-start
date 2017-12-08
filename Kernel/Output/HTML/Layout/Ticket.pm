@@ -976,7 +976,9 @@ sub TicketListShow {
 
     # load overview backend module
     if ( !$Kernel::OM->Get('Kernel::System::Main')->Require( $Backends->{$View}->{Module} ) ) {
-        return $Env->{LayoutObject}->FatalError();
+        return $Self->FatalError(
+            Message => 'Can not load overview backend ' . $Backends->{$View}->{Module},
+        );
     }
     my $Object = $Backends->{$View}->{Module}->new( %{$Env} );
     return if !$Object;

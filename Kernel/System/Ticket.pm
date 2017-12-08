@@ -2817,65 +2817,42 @@ sub TicketEscalationIndexBuild {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    # KIX4OTRS-capeIT
-    # no escalation for certain ticket types
-    my $RelevantTypeNamesArrRef = $Kernel::OM->Get('Kernel::Config')->Get(
-        'Ticket::EscalationDisabled::RelevantTypes'
-    );
-    if ( $Ticket{Type} && $RelevantTypeNamesArrRef && ref($RelevantTypeNamesArrRef) eq 'ARRAY' )
-    {
-        if (grep { $_ eq $Ticket{Type} } @{$RelevantTypeNamesArrRef}) {
-            $Ticket{DoNotSetEscalation} = 1;
-        }
-    }
-
-    # no escalation for certain queues
-    my $RelevantQueueNamesArrRef = $Kernel::OM->Get('Kernel::Config')->Get(
-        'Ticket::EscalationDisabled::RelevantQueues'
-    );
-    if (
-        $Ticket{Queue}
-        && $RelevantQueueNamesArrRef
-        && ref($RelevantQueueNamesArrRef) eq 'ARRAY'
-        )
-    {
-        if (grep { $_ eq $Ticket{Queue} } @{$RelevantQueueNamesArrRef}) {
-            $Ticket{DoNotSetEscalation} = 1;
-        }
-    }
-
-    # check for Non-SLA-relevant pending time...
-    my $RelevantStateNamesArrRef = $Kernel::OM->Get('Kernel::Config')->Get(
-        'Ticket::EscalationDisabled::RelevantStates'
-    );
-
-    my %RelevantStateHash         = ();
-    my $RelevantStateNamesArrStrg = '';
-
-    if ( $RelevantStateNamesArrRef && ref($RelevantStateNamesArrRef) eq 'ARRAY' ) {
-        my %StateListHash
-            = $Kernel::OM->Get('Kernel::System::State')->StateList( UserID => 1, );
-        for my $CurrStateID ( keys(%StateListHash) ) {
-            if ( grep { $_ eq $StateListHash{$CurrStateID} } @{$RelevantStateNamesArrRef} ) {
-                $RelevantStateHash{$CurrStateID} = $StateListHash{$CurrStateID};
-            }
-        }
-    }
-
+# KIX4OTRS-capeIT
     my $PendSumTime = 0;
     my $StatePend   = 0;
 
-    if ( grep { $_ eq $Ticket{State} } @{$RelevantStateNamesArrRef} ) {
+    # check disabled ticket escalation
+    my $TicketEscalationDisabled = $Self->TicketEscalationDisabledCheck(
+        TicketID => $Param{TicketID},
+        UserID   => $Param{UserID},
+    );
+    if ($TicketEscalationDisabled) {
         $Ticket{DoNotSetEscalation} = 1;
-    }
-    else {
+    } else {
+        # check for Non-SLA-relevant pending time...
+        my $RelevantStateNamesArrRef = $Kernel::OM->Get('Kernel::Config')->Get(
+            'Ticket::EscalationDisabled::RelevantStates'
+        );
+
+        my %RelevantStateHash         = ();
+        my $RelevantStateNamesArrStrg = '';
+
+        if ( $RelevantStateNamesArrRef && ref($RelevantStateNamesArrRef) eq 'ARRAY' ) {
+            my %StateListHash
+                = $Kernel::OM->Get('Kernel::System::State')->StateList( UserID => 1, );
+            for my $CurrStateID ( keys(%StateListHash) ) {
+                if ( grep { $_ eq $StateListHash{$CurrStateID} } @{$RelevantStateNamesArrRef} ) {
+                    $RelevantStateHash{$CurrStateID} = $StateListHash{$CurrStateID};
+                }
+            }
+        }
+
         $PendSumTime = $Self->GetTotalNonEscalationRelevantBusinessTime(
             TicketID       => $Param{TicketID},
             RelevantStates => \%RelevantStateHash,
         ) || 0;
     }
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     # do no escalations on (merge|close|remove) tickets
     # KIX4OTRS-capeIT
