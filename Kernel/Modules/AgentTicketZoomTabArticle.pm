@@ -37,15 +37,19 @@ sub new {
     my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    $Self->{ArticleID}      = $ParamObject->GetParam( Param => 'ArticleID' );
+    $Self->{ArticleID} = $ParamObject->GetParam( Param => 'ArticleID' );
+
     # KIX4OTRS-capeIT
     # $Self->{ZoomExpand}     = $ParamObject->GetParam( Param => 'ZoomExpand' );
-    $Self->{ZoomExpand}     = $ParamObject->GetParam( Param => 'ZoomExpand' ) || 0;
+    $Self->{ZoomExpand} = $ParamObject->GetParam( Param => 'ZoomExpand' ) || 0;
+
     # EO KIX4OTRS-capeIT
     $Self->{ZoomExpandSort} = $ParamObject->GetParam( Param => 'ZoomExpandSort' );
+
     # KIX4OTRS-capeIT
     # $Self->{ZoomTimeline}   = $ParamObject->GetParam( Param => 'ZoomTimeline' );
-    $Self->{ZoomTimeline}   = $ParamObject->GetParam( Param => 'ZoomTimeline' ) || 0;
+    $Self->{ZoomTimeline} = $ParamObject->GetParam( Param => 'ZoomTimeline' ) || 0;
+
     # EO KIX4OTRS-capeIT
 
     my %UserPreferences = $UserObject->GetPreferences(
@@ -58,7 +62,8 @@ sub new {
         # KIX4OTRS-capeIT
         # if ( !defined $Self->{ZoomExpand} && !defined $Self->{ZoomTimeline} ) {
         if ( !$Self->{ZoomExpand} && !$Self->{ZoomTimeline} ) {
-        # EO KIX4OTRS-capeIT
+
+            # EO KIX4OTRS-capeIT
             $Self->{ZoomExpand} = $ConfigObject->Get('Ticket::Frontend::ZoomExpand');
             if ( $UserPreferences{UserLastUsedZoomViewType} ) {
                 if ( $UserPreferences{UserLastUsedZoomViewType} eq 'Expand' ) {
@@ -135,8 +140,8 @@ sub new {
     }
 
     # KIX4OTRS-capeIT
-    $Self->{Config} = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
-    $Self->{CallingAction} = $ParamObject->GetParam( Param => 'CallingAction' ) || '';
+    $Self->{Config}           = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
+    $Self->{CallingAction}    = $ParamObject->GetParam( Param => 'CallingAction' ) || '';
     $Self->{DirectLinkAnchor} = $ParamObject->GetParam( Param => 'DirectLinkAnchor' ) || '';
 
     # EO KIX4OTRS-capeIT
@@ -144,12 +149,12 @@ sub new {
     # get dynamic field config for frontend module
     $Self->{DynamicFieldFilter} = {
 
-       # KIX4OTRS-capeIT
-       # %{ $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{DynamicField} || {} },
+        # KIX4OTRS-capeIT
+        # %{ $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{DynamicField} || {} },
         %{
             $ConfigObject->Get("Ticket::Frontend::AgentTicketZoomTabArticle")
                 ->{DynamicField} || {}
-            },
+        },
 
         # EO KIX4OTRS-capeIT
     };
@@ -304,7 +309,6 @@ sub Run {
     my $ImagePath = $ConfigObject->Get('Frontend::ImagePath');
 
     # EO KIX4OTRS-capeIT
-
 
     # get all registered Actions
     if ( ref $ConfigObject->Get('Frontend::Module') eq 'HASH' ) {
@@ -465,7 +469,9 @@ sub Run {
 
         # get a list of all available article flags from sysconfig
         my %ArticleFlagList = ();
-        if ( defined $Self->{Config}->{ArticleFlags} && ref $Self->{Config}->{ArticleFlags} eq 'HASH' ) {
+        if ( defined $Self->{Config}->{ArticleFlags}
+            && ref $Self->{Config}->{ArticleFlags} eq 'HASH' )
+        {
             %ArticleFlagList = %{ $Self->{Config}->{ArticleFlags} };
         }
 
@@ -603,7 +609,8 @@ sub Run {
         if ( !$Content ) {
             $LayoutObject->FatalError(
                 Message =>
-                    $LayoutObject->{LanguageObject}->Translate( 'Can\'t get for ArticleID %s!', $Self->{ArticleID} ),
+                    $LayoutObject->{LanguageObject}
+                    ->Translate( 'Can\'t get for ArticleID %s!', $Self->{ArticleID} ),
             );
         }
         return $LayoutObject->Attachment(
@@ -1067,6 +1074,7 @@ sub MaskAgentZoom {
         UserID                     => $Self->{UserID},
         Limit                      => $Limit + $Extra,
         Order                      => $Order,
+
         # KIX4OTRS-capeIT
         # DynamicFields => 0,    # fetch later only for the article(s) to display
         DynamicFields => 1,
@@ -1225,12 +1233,12 @@ sub MaskAgentZoom {
                     &&
                     (
                         (
-                               $Preferences{ShownArticle} eq 'first'
+                            $Preferences{ShownArticle} eq 'first'
                             && $Self->{ZoomExpandSort} ne 'reverse'
                         )
                         ||
                         (
-                               $Preferences{ShownArticle} eq 'last'
+                            $Preferences{ShownArticle} eq 'last'
                             && $Self->{ZoomExpandSort} eq 'reverse'
                         )
                     )
@@ -1245,12 +1253,12 @@ sub MaskAgentZoom {
                     &&
                     (
                         (
-                               $Preferences{ShownArticle} eq 'last'
+                            $Preferences{ShownArticle} eq 'last'
                             && $Self->{ZoomExpandSort} ne 'reverse'
                         )
                         ||
                         (
-                               $Preferences{ShownArticle} eq 'first'
+                            $Preferences{ShownArticle} eq 'first'
                             && $Self->{ZoomExpandSort} eq 'reverse'
                         )
                     )
@@ -1322,7 +1330,8 @@ sub MaskAgentZoom {
             # article type id does not match
             if (
                 $Self->{ArticleFilter}->{ArticleTypeID}
-                && !grep { $_ eq $Article->{ArticleTypeID} } @{$Self->{ArticleFilter}->{ArticleTypeID} }
+                && !grep { $_ eq $Article->{ArticleTypeID} }
+                @{ $Self->{ArticleFilter}->{ArticleTypeID} }
                 )
             {
                 next ARTICLE;
@@ -1331,7 +1340,8 @@ sub MaskAgentZoom {
             # article sender type id does not match
             if (
                 $Self->{ArticleFilter}->{ArticleSenderTypeID}
-                &&  !grep { $_ eq  $Article->{SenderTypeID} } @{ $Self->{ArticleFilter}->{ArticleSenderTypeID} }
+                && !grep { $_ eq $Article->{SenderTypeID} }
+                @{ $Self->{ArticleFilter}->{ArticleSenderTypeID} }
                 )
             {
                 next ARTICLE;
@@ -1430,12 +1440,12 @@ sub MaskAgentZoom {
         }
 
         # change article id if it was filtered out
-        if ( $NewArticleID && !$Self->{ArticleFilter}->{ShownArticleIDs}->{ $NewArticleID } ) {
+        if ( $NewArticleID && !$Self->{ArticleFilter}->{ShownArticleIDs}->{$NewArticleID} ) {
             $ArticleID = $NewArticleID;
         }
 
         # add current article id
-        $Self->{ArticleFilter}->{ShownArticleIDs}->{ $NewArticleID } = 1;
+        $Self->{ArticleFilter}->{ShownArticleIDs}->{$NewArticleID} = 1;
     }
 
     # check if expand view is usable (only for less then 400 article)
@@ -1451,6 +1461,7 @@ sub MaskAgentZoom {
     if ( !$Self->{ZoomExpand} ) {
         ARTICLEBOX:
         for my $ArticleTmp (@ArticleBox) {
+
             # if ( $ArticleID eq $ArticleTmp->{ArticleID} ) {
             if ( defined $ArticleID && $ArticleID eq $ArticleTmp->{ArticleID} ) {
                 push @ArticleBoxShown, $ArticleTmp;
@@ -1461,16 +1472,18 @@ sub MaskAgentZoom {
     else {
         # KIX4OTRS-capeIT
         if ( $Self->{ArticleFilterActive} && $Self->{ArticleFilter} ) {
-            for my $ArticleItem ( @ArticleBox ) {
+            for my $ArticleItem (@ArticleBox) {
                 next if !$Self->{ArticleFilter}->{ShownArticleIDs}->{ $ArticleItem->{ArticleID} };
                 push @ArticleBoxShown, $ArticleItem;
             }
         }
         else {
-        # EO KIX4OTRS-capeIT
+            # EO KIX4OTRS-capeIT
             @ArticleBoxShown = @ArticleBox;
-        # KIX4OTRS-capeIT
+
+            # KIX4OTRS-capeIT
         }
+
         # EO KIX4OTRS-capeIT
     }
 
@@ -1495,7 +1508,7 @@ sub MaskAgentZoom {
 
         my $Pagination;
 
-        if ( $NeedPagination ) {
+        if ($NeedPagination) {
             $Pagination = {
                 Pages       => $Pages,
                 CurrentPage => $Page,
@@ -1511,16 +1524,18 @@ sub MaskAgentZoom {
 
         # show article tree
         $Param{ArticleTree} = $Self->_ArticleTree(
-            Ticket            => \%Ticket,
-            ArticleFlags      => \%ArticleFlags,
-            ArticleID         => $ArticleID,
-            ArticleMaxLimit   => $ArticleMaxLimit,
-            ArticleBox        => \@ArticleBox,
-            Pagination        => $Pagination,
-            Page              => $Page,
+            Ticket          => \%Ticket,
+            ArticleFlags    => \%ArticleFlags,
+            ArticleID       => $ArticleID,
+            ArticleMaxLimit => $ArticleMaxLimit,
+            ArticleBox      => \@ArticleBox,
+            Pagination      => $Pagination,
+            Page            => $Page,
+
             # KIX4OTRS-capeIT
             # ArticleCount      => scalar @ArticleBox,
-            ArticleCount      => $CurrentArticleCount,
+            ArticleCount => $CurrentArticleCount,
+
             # EO KIX4OTRS-capeIT
             AclAction         => \%AclAction,
             StandardResponses => $StandardTemplates{Answer},
@@ -1578,6 +1593,7 @@ sub MaskAgentZoom {
     # KIX4OTRS-capeIT
     # $Param{ArticleCount} = scalar @ArticleBox;
     $Param{ArticleCount} = $Count;
+
     # EO KIX4OTRS-capeIT
 
     if ( $ConfigObject->Get('Ticket::UseArticleColors') ) {
@@ -1626,8 +1642,10 @@ sub MaskAgentZoom {
 
             # KIX4OTRS-capeIT
             my %ArticleFlagList = ();
-            if ( defined $Self->{Config}->{ArticleFlags}
-                && ref $Self->{Config}->{ArticleFlags} eq 'HASH' )
+            if (
+                defined $Self->{Config}->{ArticleFlags}
+                && ref $Self->{Config}->{ArticleFlags} eq 'HASH'
+                )
             {
                 %ArticleFlagList = %{ $Self->{Config}->{ArticleFlags} };
             }
@@ -1709,7 +1727,8 @@ sub MaskAgentZoom {
                     );
                 }
 
-                my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+                my $DynamicFieldBackendObject
+                    = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
                 my $DynamicFieldHTML = $DynamicFieldBackendObject->EditFieldRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Value => defined $Self->{ArticleFilter}->{$ArticleFilterDynamicFieldName}
@@ -1839,8 +1858,8 @@ sub _ArticleTree {
     my $IsProcessTicket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketCheckForProcessType(
         'TicketID' => $Self->{TicketID}
     );
-    my  $SelectedTab = 0;
-    if ( $IsProcessTicket ) {
+    my $SelectedTab = 0;
+    if ($IsProcessTicket) {
         $SelectedTab = 1;
     }
 
@@ -2037,12 +2056,12 @@ sub _ArticleTree {
                 Subject      => $Article{Subject} || '',
             );
 
-    # KIX4OTRS-capeIT
-    # # set icon for SenderType
-    # my $ArticleSenderTypeIconConfig = $ConfigObject->Get('Ticket::ArticleSenderTypeIcon');
-    # if ($ArticleSenderTypeIconConfig) {
-    #     $Article{SenderTypeIcon} = $ArticleSenderTypeIconConfig->{$Article{SenderType}};
-    # }
+            # KIX4OTRS-capeIT
+            # # set icon for SenderType
+            # my $ArticleSenderTypeIconConfig = $ConfigObject->Get('Ticket::ArticleSenderTypeIcon');
+            # if ($ArticleSenderTypeIconConfig) {
+            #     $Article{SenderTypeIcon} = $ArticleSenderTypeIconConfig->{$Article{SenderType}};
+            # }
 
             # set icon for ArticleType
             my $ArticleTypeIconConfig = $ConfigObject->Get('Ticket::ArticleTypeIcon');
@@ -2399,7 +2418,8 @@ sub _ArticleTree {
 
         # Get mapping of history types to readable strings
         my %HistoryTypes;
-        my %HistoryTypeConfig = %{ $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::HistoryTypes') // {} };
+        my %HistoryTypeConfig
+            = %{ $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::HistoryTypes') // {} };
         for my $Entry ( sort keys %HistoryTypeConfig ) {
             %HistoryTypes = (
                 %HistoryTypes,
@@ -3353,10 +3373,10 @@ sub _ArticleMenu {
 
             # build html string
             my $StandardResponsesStrg = $LayoutObject->BuildSelection(
-                Name => 'ResponseID',
-                ID   => 'ResponseID',
+                Name  => 'ResponseID',
+                ID    => 'ResponseID',
                 Class => 'Modernize Small',
-                Data => \@StandardResponseArray,
+                Data  => \@StandardResponseArray,
             );
 
             push @MenuItems, {
@@ -3400,11 +3420,12 @@ sub _ArticleMenu {
                 for my $Address (@Addresses) {
                     my $Email = $EmailParser->GetEmailAddress( Email => $Address );
                     next ADDRESS if !$Email;
-                    next ADDRESS if ( lc( $Email ) eq lc( $SystemAddress{Email} ) );
-                    if ($ConfigObject->Get('CheckEmailInternalAddress')) {
-                        my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressIsLocalAddress(
+                    next ADDRESS if ( lc($Email) eq lc( $SystemAddress{Email} ) );
+                    if ( $ConfigObject->Get('CheckEmailInternalAddress') ) {
+                        my $IsLocal = $Kernel::OM->Get('Kernel::System::SystemAddress')
+                            ->SystemAddressIsLocalAddress(
                             Address => $Email,
-                        );
+                            );
                         next ADDRESS if $IsLocal;
                     }
                     $RecipientCount++;
@@ -3520,10 +3541,10 @@ sub _ArticleMenu {
 
                 # build html string
                 my $StandardForwardsStrg = $LayoutObject->BuildSelection(
-                    Name => 'ForwardTemplateID',
-                    ID   => 'ForwardTemplateID',
-                    Class  => 'Modernize Small',
-                    Data => \@StandardForwardArray,
+                    Name  => 'ForwardTemplateID',
+                    ID    => 'ForwardTemplateID',
+                    Class => 'Modernize Small',
+                    Data  => \@StandardForwardArray,
                 );
 
                 push @MenuItems, {
@@ -3548,8 +3569,8 @@ sub _ArticleMenu {
 
                 push @MenuItems, {
                     ItemType    => 'Link',
-                        Description => Translatable('Forward article via mail'),
-                        Name        => Translatable('Forward'),
+                    Description => Translatable('Forward article via mail'),
+                    Name        => Translatable('Forward'),
 
                     # KIX4OTRS-capeIT
                     # Class                 => 'AsPopup PopupType_TicketAction',
@@ -3758,7 +3779,15 @@ sub _ArticleMenu {
                 }
             }
         }
-        if ($Access) {
+
+        my %ArticleAttachments = $TicketObject->ArticleAttachmentIndex(
+            ArticleID                  => $Article{ArticleID},
+            UserID                     => 1,
+            Article                    => \%Article,
+            StripPlainBodyAsAttachment => 1,
+        );
+
+        if ( $Access && %ArticleAttachments ) {
             push @MenuItems, {
                 ItemType    => 'Link',
                 Description => 'Download all Attachements for this article',
@@ -3849,7 +3878,8 @@ sub _ArticleMenu {
         )
     {
 
-        my $Link        = "Action=AgentTicketNote;TicketID=$Ticket{TicketID};ReplyToArticle=$Article{ArticleID}";
+        my $Link
+            = "Action=AgentTicketNote;TicketID=$Ticket{TicketID};ReplyToArticle=$Article{ArticleID}";
         my $Description = Translatable('Reply to note');
 
         # set important menu item
@@ -3993,7 +4023,8 @@ sub _CollectArticleAttachments {
         $Target = 'target="attachment" ';
     }
 
-    $Attachments{ZoomAttachmentDisplayCount} = $ConfigObject->Get('Ticket::ZoomAttachmentDisplayCount');
+    $Attachments{ZoomAttachmentDisplayCount}
+        = $ConfigObject->Get('Ticket::ZoomAttachmentDisplayCount');
 
     ATTACHMENT:
     for my $FileID ( sort keys %{ $Article{Atms} } ) {
@@ -4053,8 +4084,6 @@ sub _ArticleFlagSelectionString {
 
 # EO KIX4OTRS-capeIT
 1;
-
-
 
 =back
 
