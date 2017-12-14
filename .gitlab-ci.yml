@@ -11,7 +11,7 @@ build:TARBuild:
     expire_in: 1 day
   script:
   - touch $CI_PROJECT_NAME.tar.gz
-  - tar --exclude=.git* --exclude=$CI_PROJECT_NAME.tar.gz -zcf $CI_PROJECT_NAME.tar.gz ./*
+  - tar --exclude=.git* --exclude=$CI_PROJECT_NAME.tar.gz -zcf $CI_PROJECT_NAME.tar.gz -C .
   stage: build
   tags:
   - Shell
