@@ -10,7 +10,7 @@ build:TARBuild:
     when: on_success
     expire_in: 1 day
   script:
-  - tar --exclude "./.gitignore" --exclude "./$CI_PROJECT_NAME.tar.gz" -zcf $CI_PROJECT_NAME.tar.gz ./
+  - tar --exclude "./.gitignore" --exclude "./*.gz" -zcf $CI_PROJECT_NAME.tar.gz .
   stage: build
   tags:
   - Shell
