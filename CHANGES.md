@@ -2,6 +2,7 @@
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
 # 17.2.2 (2017/12/??)
+ * (2017/12/15) - Bugfix: T2017110390000756 (multiple submit possible for bulk action and other) (ddoerffel)
  * (2017/12/08) - Bugfix: T2017111090000519 (Usability-CR: added to dynamic field sys config settings output filter) (ddoerffel)
  * (2017/12/08) - Bugfix: T2017070690000713 (Scheduler Daemon Cron: MailAccountFetch Use of Uninitialized value) (ddoerffel)
  * (2017/12/08) - Bugfix: T2017051690000887 (Usability-CR: all queues should be selectable in admin quick ticket configurator) (ddoerffel)
