@@ -1,0 +1,55 @@
+stages:
+- build
+- deploy
+
+build:TARBuild:
+  allow_failure: false
+  artifacts:
+    paths: 
+    - "*.tar.gz"
+    when: on_success
+    expire_in: 1 day
+  script:
+  - touch $CI_PROJECT_NAME.tar.gz
+  - tar --exclude=.git* --exclude=$CI_PROJECT_NAME.tar.gz -zcf $CI_PROJECT_NAME.tar.gz *
+  stage: build
+  tags:
+  - Shell
+
+deploy:TARBuild:Branch:
+  allow_failure: false
+  dependencies:
+  - build:TARBuild
+  environment:
+    name: $CI_BUILD_REF_NAME
+    url: http://git.intra.cape-it.de:8088/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME/
+  except:
+  - tags
+  only:
+  - /^(Branch_Pub_|rel-)\d+(_\d+)?(_(BUGFIX|FEATURE|TEST)|)$/
+  script:
+  - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME
+  - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME/
+  stage: deploy
+  tags:
+  - Shell
+  when: on_success
+
+deploy:TARBuild:Release:
+  allow_failure: false
+  dependencies:
+  - build:TARBuild
+  environment:
+    name: Release
+    url: http://git.intra.cape-it.de:8088/builds/$CI_PROJECT_PATH/Release/
+  except:
+  - branch
+  only:
+  - /^rel-[0-9]+_[0-9]+_[0-9]+(-.+)?$/
+  script:
+  - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/Release
+  - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/Release/$CI_PROJECT_NAME-$CI_BUILD_REF_NAME.tar.gz
+  stage: deploy
+  tags:
+  - Shell
+  when: on_success
