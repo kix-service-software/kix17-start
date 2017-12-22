@@ -13273,11 +13273,13 @@ via the Preferences button after logging in.
                         <Item Key="AdminDynamicFieldCheckbox">1</Item>
                         <Item Key="AdminDynamicFieldDateTime">1</Item>
                         <Item Key="AdminDynamicFieldDropdown">1</Item>
-                        <Item Key="AdminDynamicFieldMultiselect">1</Item>
-                        <Item Key="AdminDynamicFieldText">1</Item>
-                        <Item Key="AdminDynamicFieldObjectReference">1</Item>
                         <Item Key="AdminDynamicFieldDropdownGeneralCatalog">1</Item>
+                        <Item Key="AdminDynamicFieldITSMConfigItem">1</Item>
+                        <Item Key="AdminDynamicFieldMultiselect">1</Item>
                         <Item Key="AdminDynamicFieldMultiselectGeneralCatalog">1</Item>
+                        <Item Key="AdminDynamicFieldObjectReference">1</Item>
+                        <Item Key="AdminDynamicFieldRemoteDB">1</Item>
+                        <Item Key="AdminDynamicFieldText">1</Item>
                     </Hash>
                 </Item>
             </Hash>
