@@ -344,6 +344,7 @@ sub TicketSearch {
         EscalationUpdateTime   => 'st.escalation_update_time',
         EscalationResponseTime => 'st.escalation_response_time',
         EscalationSolutionTime => 'st.escalation_solution_time',
+        ID                     => 'st.id'
     );
 
     # check required params
@@ -465,6 +466,11 @@ sub TicketSearch {
         @SortByArray  = ($SortBy);
         @OrderByArray = ($OrderBy);
     }
+
+    # add ID to sort/order
+    push(@SortByArray, 'ID');
+    push(@OrderByArray, 'Up');
+
     for my $Count ( 0 .. $#SortByArray ) {
         if (
             !$SortOptions{ $SortByArray[$Count] }
@@ -2558,6 +2564,7 @@ sub TicketSearchOR {
         EscalationUpdateTime   => 'st.escalation_update_time',
         EscalationResponseTime => 'st.escalation_response_time',
         EscalationSolutionTime => 'st.escalation_solution_time',
+        ID                     => 'st.id'
     );
 
     # check required params
@@ -2679,6 +2686,11 @@ sub TicketSearchOR {
         @SortByArray  = ($SortBy);
         @OrderByArray = ($OrderBy);
     }
+
+    # add ID to sort/order
+    push(@SortByArray, 'ID');
+    push(@OrderByArray, 'Up');
+
     for my $Count ( 0 .. $#SortByArray ) {
         if (
             !$SortOptions{ $SortByArray[$Count] }
