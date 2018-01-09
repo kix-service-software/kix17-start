@@ -446,7 +446,7 @@ sub Run {
             @ViewableTickets = $TicketObject->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 %ColumnFilter,
-                Limit  => $Start + $PageShown - 1,
+                Limit  => $Limit,
                 Result => 'ARRAY',
             );
         }
@@ -843,6 +843,7 @@ sub Run {
                     $Search{TicketPendingTimeOlderMinutes} = $Time;
                 }
                 else {
+                    $Search{TicketPendingTimeOlderMinutes} = 0;
                     $Search{TicketPendingTimeNewerMinutes} = $Time;
                 }
             }

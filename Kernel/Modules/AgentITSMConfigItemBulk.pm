@@ -31,8 +31,63 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $UploadCacheObject   = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
+    my $EncodeObject        = $Kernel::OM->Get('Kernel::System::Encode');
+    my $ConfigItemObject    = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
+    my $BulkExecutor        = $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::ITSMBulkExecutor');
+
+    # declare the variables for all the parameters
+    my %Error;
+    my %GetParam;
+    my @Notify;
+
+    $Param{FormID}     = $ParamObject->GetParam( Param => 'FormID' );
+    if ( !$Param{FormID} ) {
+        $Param{FormID} = $UploadCacheObject->FormIDCreate();
+    }
+
+    # get involved config items, filtering empty ConfigItemIDs
+    my @ContentItems = $UploadCacheObject->FormIDGetAllFilesData(
+        FormID => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID},
+    );
+
+    if ( $Self->{Subaction} eq 'CancelAndClose' ) {
+        $UploadCacheObject->FormIDRemove( FormID => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID} );
+
+        return $LayoutObject->PopupClose(
+            URL => ( $Self->{LastScreenOverview} || 'Action=AgentDashboard' ),
+        );
+    }
+
+    elsif ( $Self->{Subaction} eq 'DoEnd' ) {
+        my $ActionFlag = $ParamObject->GetParam( Param => 'ActionFlag' );
+
+        if ( $ActionFlag ) {
+            $UploadCacheObject->FormIDRemove( FormID => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID} );
+
+            return $LayoutObject->PopupClose(
+                URL => ( $Self->{LastScreenOverview} || 'Action=AgentDashboard' ),
+            );
+        } else {
+            my @ContentItems = $UploadCacheObject->FormIDGetAllFilesData(
+                FormID => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID},
+            );
+
+            for my $Item (@ContentItems) {
+                next if $Item->{Filename} ne 'GetParam';
+                $Item->{Content} = $EncodeObject->Convert(
+                    Text => $Item->{Content},
+                    From => 'utf-8',
+                    To   => 'iso-8859-1',
+                );
+                %GetParam = $JSONObject->Decode( Data => $Item->{Content});
+            }
+        }
+    }
 
     # check if bulk feature is enabled
     if ( !$ConfigObject->Get('ITSMConfigItem::Frontend::BulkFeature') ) {
@@ -41,12 +96,16 @@ sub Run {
         );
     }
 
-    # get param object
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-
-    # get involved config items, filtering empty ConfigItemIDs
-    my @ConfigItemIDs = grep {$_}
-        $ParamObject->GetArray( Param => 'ConfigItemID' );
+    my @ConfigItemIDs;
+    for my $Item (@ContentItems) {
+        next if $Item->{Filename} ne 'ItemIDs';
+        $Item->{Content} = $EncodeObject->Convert(
+            Text => $Item->{Content},
+            From => 'utf-8',
+            To   => 'iso-8859-1',
+        );
+        push(@ConfigItemIDs, split(',', $Item->{Content}));
+    }
 
     # check needed stuff
     if ( !@ConfigItemIDs ) {
@@ -58,14 +117,6 @@ sub Run {
     my $Output .= $LayoutObject->Header(
         Type => 'Small',
     );
-
-    # declare the variables for all the parameters
-    my %Error;
-
-    my %GetParam;
-
-    # get config item object
-    my $ConfigItemObject = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
 
     # get all parameters and check for errors
     if ( $Self->{Subaction} eq 'Do' ) {
@@ -99,6 +150,7 @@ sub Run {
 
     # process config item
     my @ConfigItemIDSelected;
+    my @IgnoredConfigItemID;
     my $ActionFlag = 0;
     my $Counter    = 1;
 
@@ -124,10 +176,8 @@ sub Run {
         if ( !$Access ) {
 
             # error screen, don't show config item
-            $Output .= $LayoutObject->Notify(
-                Data => $ConfigItem->{Number}
-                    . ': $Text{"You don\'t have write access to this configuration item."}',
-            );
+            push(@Notify, $ConfigItem->{Number} . ': $Text{"You don\'t have write access to this configuration item."}');
+            push(@IgnoredConfigItemID, $ConfigItemID);
             next CONFIGITEM_ID;
         }
 
@@ -140,112 +190,59 @@ sub Run {
             # challenge token check for write action
             $LayoutObject->ChallengeTokenCheck();
 
-            # bulk action version ddd
-            if ( $GetParam{DeplStateID} || $GetParam{InciStateID} ) {
+            my %JobParam = (
+                CallAction      => 'ITSMBulkDo',
+                FormID          => $Param{FormID},
+                ConfigItemID    => $ConfigItemID,
+                Action          => $Self->{Action},
+                UserID          => $Self->{UserID},
+                GetParam        => \%GetParam,
+                ConfigItemIDs   => \@ConfigItemIDs,
+                Counter         => $Counter,
+            );
+            my $Success = $BulkExecutor->AsyncCall(
+                ObjectName     => 'Kernel::System::AsynchronousExecutor::ITSMBulkExecutor',
+                FunctionName   => 'Run',
+                TaskName       => $Self->{Action} . '-' . $Param{FormID} . '-ITSMBulkDo',
+                FunctionParams => \%JobParam,
+                Attempts       => 1,
+            );
 
-                # get current version of the config item
-                my $CurrentVersion = $ConfigItemObject->VersionGet(
-                    ConfigItemID => $ConfigItemID,
-                    XMLDataGet   => 1,
-                );
-
-                my $NewDeplStateID = $CurrentVersion->{DeplStateID};
-                my $NewInciStateID = $CurrentVersion->{InciStateID};
-
-                if ( IsNumber( $GetParam{DeplStateID} ) ) {
-                    $NewDeplStateID = $GetParam{DeplStateID};
-                }
-                if ( IsNumber( $GetParam{InciStateID} ) ) {
-                    $NewInciStateID = $GetParam{InciStateID};
-                }
-
-                my $VersionID = $ConfigItemObject->VersionAdd(
-                    ConfigItemID => $ConfigItemID,
-                    Name         => $CurrentVersion->{Name},
-                    DefinitionID => $CurrentVersion->{DefinitionID},
-                    DeplStateID  => $NewDeplStateID,
-                    InciStateID  => $NewInciStateID,
-                    XMLData      => $CurrentVersion->{XMLData},
-                    UserID       => $Self->{UserID},
-                );
-            }
-
-            # bulk action links
-            # link all config items to another config item
-            if ( $GetParam{'LinkTogetherAnother'} ) {
-                my $MainConfigItemID = $ConfigItemObject->ConfigItemLookup(
-                    ConfigItemNumber => $GetParam{'LinkTogetherAnother'},
-                );
-
-                # split the type identifier
-                my @Type = split q{::}, $GetParam{LinkType};
-
-                if ( $Type[0] && $Type[1] && ( $Type[1] eq 'Source' || $Type[1] eq 'Target' ) ) {
-
-                    my $SourceKey = $ConfigItemID;
-                    my $TargetKey = $MainConfigItemID;
-
-                    if ( $Type[1] eq 'Target' ) {
-                        $SourceKey = $MainConfigItemID;
-                        $TargetKey = $ConfigItemID
-                    }
-
-                    for my $ConfigItemIDPartner (@ConfigItemIDs) {
-                        if ( $MainConfigItemID ne $ConfigItemIDPartner ) {
-                            $LinkObject->LinkAdd(
-                                SourceObject => 'ITSMConfigItem',
-                                SourceKey    => $SourceKey,
-                                TargetObject => 'ITSMConfigItem',
-                                TargetKey    => $TargetKey,
-                                Type         => $Type[0],
-                                State        => 'Valid',
-                                UserID       => $Self->{UserID},
-                            );
-                        }
-                    }
-                }
-            }
-
-            # link together
-            if ( $GetParam{'LinkTogether'} ) {
-
-                # split the type identifier
-                my @Type = split q{::}, $GetParam{LinkTogetherLinkType};
-
-                if ( $Type[0] && $Type[1] && ( $Type[1] eq 'Source' || $Type[1] eq 'Target' ) ) {
-                    for my $ConfigItemIDPartner (@ConfigItemIDs) {
-
-                        my $SourceKey = $ConfigItemID;
-                        my $TargetKey = $ConfigItemIDPartner;
-
-                        if ( $Type[1] eq 'Target' ) {
-                            $SourceKey = $ConfigItemIDPartner;
-                            $TargetKey = $ConfigItemID
-                        }
-
-                        if ( $ConfigItemID ne $ConfigItemIDPartner ) {
-                            $LinkObject->LinkAdd(
-                                SourceObject => 'ITSMConfigItem',
-                                SourceKey    => $SourceKey,
-                                TargetObject => 'ITSMConfigItem',
-                                TargetKey    => $TargetKey,
-                                Type         => $Type[0],
-                                State        => 'Valid',
-                                UserID       => $Self->{UserID},
-                            );
-                        }
-                    }
-                }
-            }
             $ActionFlag = 1;
         }
         $Counter++;
     }
 
-    # redirect
-    if ($ActionFlag) {
-        return $LayoutObject->PopupClose(
-            URL => ( $Self->{LastScreenOverview} || 'Action=AgentDashboard' ),
+    if ( $Self->{Subaction} eq 'Do' && ( !%Error ) ) {
+        my $FileID = $UploadCacheObject->FormIDAddFile(
+            FormID      => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID},
+            Filename    => 'GetParam',
+            Content     => $JSONObject->Encode( Data => %GetParam),
+            ContentType => 'text/xml',
+        );
+
+        return $LayoutObject->ProgressBar(
+            FormID          => $Param{FormID},
+            MaxCount        => scalar @ConfigItemIDSelected,
+            IgnoredCount    => scalar @IgnoredConfigItemID,
+            ItemCount       => scalar @ConfigItemIDs,
+
+            TaskName        => $Self->{Action} . '-' . $Param{FormID} . '-ITSMBulkDo',
+            TaskType        => 'AsynchronousExecutor',
+
+            AbortCheck      => 1,
+            AbortSubaction  => 'DoEnd',
+            Action          => $Self->{Action},
+
+            LoaderText      => 'Config items will be saved, please wait a moment...',
+            Title           => 'ITSM ConfigItem Bulk Action',
+            EndParam        => {
+                UserID      => $Self->{UserID},
+                ActionFlag  => $ActionFlag,
+                Subaction   => 'DoEnd',
+            },
+            FooterType      => 'Small',
+            HeaderType      => 'Small',
         );
     }
 
@@ -255,6 +252,7 @@ sub Run {
         ConfigItemIDs => \@ConfigItemIDSelected,
         Errors        => \%Error,
     );
+
     $Output .= $LayoutObject->Footer(
         Type => 'Small',
     );
@@ -278,6 +276,21 @@ sub _Mask {
         Name => 'BulkAction',
         Data => \%Param,
     );
+
+    if ( $Param{Notify} ) {
+        $LayoutObject->Block(
+            Name => 'BulkNotify',
+        );
+        for my $Notify ( @{$Param{Notify}} ) {
+            $LayoutObject->Block(
+                Name => 'BulkNotifyRow',
+                Data => {
+                    Priority => 'Notice',
+                    Notify   => $Notify
+                }
+            );
+        }
+    }
 
     # remember config item ids
     if ( $Param{ConfigItemIDs} ) {
@@ -454,8 +467,6 @@ sub _Mask {
 }
 
 1;
-
-
 
 =back
 

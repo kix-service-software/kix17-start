@@ -168,9 +168,13 @@ sub Run {
     my $GetParam = $Self->GetEmailParams();
 
     # get tickets containing this message
-    my @SkipTicketIDs = $TicketObject->ArticleGetTicketIDsOfMessageID(
-        MessageID => $GetParam->{'Message-ID'},
-    );
+    my @SkipTicketIDs = qw{};
+    if( $GetParam->{'Message-ID'} ) {
+        @SkipTicketIDs = $TicketObject->ArticleGetTicketIDsOfMessageID(
+            MessageID => $GetParam->{'Message-ID'},
+        );
+    }
+
     my %SkipTicketIDHash = ();
     for my $TicketID ( @SkipTicketIDs ) {
         $SkipTicketIDHash{$TicketID} = 1;
@@ -348,19 +352,17 @@ sub Run {
 
                 # create new ticket
                 if ($QueueID) {
-                    my $TicketID = $Self->{NewTicketObject}->Run(
+                    my @Result = $Self->{NewTicketObject}->Run(
                         InmailUserID     => $Self->{PostmasterUserID},
                         GetParam         => $GetParam,
                         QueueID          => $QueueID,
                         AutoResponseType => 'auto reply',
+                        SkipTicketIDs    => \%SkipTicketIDHash,
                     );
 
-                    if ( !$TicketID ) {
-                        next;
+                    if ( @Result ) {
+                        push (@Return, \@Result);
                     }
-
-                    my @Ret = ( 1, $TicketID );
-                    push( @Return, \@Ret );
                 }
             }
         }
@@ -388,17 +390,17 @@ sub Run {
             if ($TQueueID) {
                 $Param{QueueID} = $TQueueID;
             }
-            my $TicketID = $Self->{NewTicketObject}->Run(
+            my @Result = $Self->{NewTicketObject}->Run(
                 InmailUserID     => $Self->{PostmasterUserID},
                 GetParam         => $GetParam,
                 QueueID          => $Param{QueueID},
                 AutoResponseType => 'auto reply',
+                SkipTicketIDs    => \%SkipTicketIDHash,
             );
 
-            return if !$TicketID;
-
-            my @Ret = ( 1, $TicketID );
-            push( @Return, \@Ret );
+            if ( @Result ) {
+                push (@Return, \@Result);
+            }
         }
     } else {
         my %Queues = $QueueObject->QueueList( Valid => 1 );
@@ -444,16 +446,17 @@ sub Run {
 
             # create new ticket
             if ($Param{QueueID}) {
-                my $TicketID = $Self->{NewTicketObject}->Run(
+                my @Result = $Self->{NewTicketObject}->Run(
                     InmailUserID     => $Self->{PostmasterUserID},
                     GetParam         => $GetParam,
                     QueueID          => $Param{QueueID},
                     AutoResponseType => 'auto reply',
+                    SkipTicketIDs    => \%SkipTicketIDHash,
                 );
-                return if !$TicketID;
 
-                my @Ret = ( 1, $TicketID );
-                push( @Return, \@Ret );
+                if ( @Result ) {
+                    push (@Return, \@Result);
+                }
             }
         }
     }
@@ -603,7 +606,7 @@ sub GetEmailParams {
     for my $Param ( @{ $Self->{'PostmasterX-Header'} } ) {
 
         # do not scan x-otrs headers if mailbox is not marked as trusted
-        next HEADER if ( !$Self->{Trusted} && $Param =~ /^x-otrs/i );
+        next HEADER if ( !$Self->{Trusted} && $Param =~ /^(x-otrs|x-kix)/i );
         if ( $Self->{Debug} > 2 ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'debug',
@@ -828,7 +831,7 @@ sub _HandlePossibleFollowUp {
                 );
             }
 
-            $Param{TicketID} = $Self->{NewTicketObject}->Run(
+            my @Result = $Self->{NewTicketObject}->Run(
                 InmailUserID     => $Self->{PostmasterUserID},
                 GetParam         => $Param{GetParam},
                 QueueID          => $Param{QueueID},
@@ -837,11 +840,10 @@ sub _HandlePossibleFollowUp {
                 LinkToTicketID   => $Param{TicketID},
             );
 
-            if ( !$Param{TicketID} ) {
-                return;
+            if ( @Result ) {
+                return ( 3, $Result[1] );
             }
 
-            return ( 3, $Param{TicketID} );
         }
 
         # reject follow up

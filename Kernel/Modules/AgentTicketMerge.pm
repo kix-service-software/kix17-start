@@ -169,12 +169,6 @@ sub Run {
                 = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $Parameter ) || '';
         }
 
-        # KIX4OTRS-capeIT
-        # set main ticket number correctly
-        $GetParam{'MainTicketNumber'} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'MainTicketNumberAutoComplete');
-
-        # EO KIX4OTRS-capeIT
-
         # rewrap body if no rich text is used
         if ( $GetParam{Body} && !$LayoutObject->{BrowserRichText} ) {
             $GetParam{Body} = $LayoutObject->WrapPlainText(
@@ -346,7 +340,7 @@ sub Run {
                     );
                 }
                 my %Ticket = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
-#rbo - T2016121190001552 - added KIX placeholders
+                #rbo - T2016121190001552 - added KIX placeholders
                 $GetParam{Body} =~ s/(&lt;|<)KIX_TICKET(&gt;|>)/$Ticket{TicketNumber}/g;
                 $GetParam{Body}
                     =~ s/(&lt;|<)KIX_MERGE_TO_TICKET(&gt;|>)/$GetParam{'MainTicketNumber'}/g;
@@ -435,8 +429,14 @@ sub Run {
             next if $Ticket{StateType} eq 'merged';
 
             push @Data, {
-                SearchObjectKey   => $Ticket{Title},
-                SearchObjectValue => $Ticket{TicketNumber},
+
+                # KIX4OTRS-capeIT
+                # SearchObjectKey   => $Ticket{Title},
+                # SearchObjectValue => $Ticket{TicketNumber},
+                SearchObjectKey   => $Ticket{TicketNumber},
+                SearchObjectValue => $Ticket{Title},
+
+                # EO KIX4OTRS-capeIT
             };
             $MaxResultCount--;
             last if $MaxResultCount == 0;
@@ -566,8 +566,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 

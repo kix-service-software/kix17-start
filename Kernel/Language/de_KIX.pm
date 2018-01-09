@@ -2189,6 +2189,31 @@ sub Data {
     $Lang->{'Criticality'} = 'Kritikalität';
     $Lang->{'Impact'}      = 'Auswirkung';
 
+    # Template: AgentTicketOverview...
+    $Lang->{'From which page should be selected the tickets.'}
+        = 'Von welchen Seiten sollen die Tickets ausgewählt werden';
+    $Lang->{'From which page should be selected the config items.'}
+        = 'Von welchen Seiten sollen die ConfigItems ausgewählt werden';
+    $Lang->{'Current Page'}     = 'aktuelle Seite';
+    $Lang->{'All Pages'}        = 'alle Seiten';
+    $Lang->{'Ticket selection'} = 'Ticketauswahl';
+    $Lang->{'CI selection'}     = 'CI-Auswahl';
+    $Lang->{'passed Objects'}   = 'übergebene Objekte';
+    $Lang->{'You have selected a larger number (###) of objects. Please note that this can lead to a loss of performance! Do you want to continue?'}
+        = 'Sie haben eine größere Anzahl (###) an Objekten selektiert. Bitte beachten Sie, dass dies zu Performanceeinbußen führen kann! Möchten Sie fortfahren?';
+    $Lang->{'Locking the tickets, please wait a moment...'}
+        = 'Die Tickets werden gesperrt, bitte warten Sie einen Moment...';
+    $Lang->{'Tickets will be saved, please wait a moment...'}
+        = 'Tickets werden gespeichert, bitte warten Sie einen Moment...';
+    $Lang->{'Unlocking the tickets, please wait a moment...'}
+        = 'Die Tickets werden entsperrt, bitte warten Sie einen Moment...';
+    $Lang->{'Config items will be saved, please wait a moment...'}
+        = 'ConfigItems werden gespeichert, bitte warten Sie einen Moment...';
+    $Lang->{'The current process has been canceled because no objects to be processed are available.'}
+        = 'Der laufende Prozess wurde abgebrochen, da keine zu bearbeitenden Objekte verfügbar sind.';
+    $Lang->{'%s objects are skipped during the process.'}
+        = 'Es werden im laufendem Prozess %s Objekte übersprungen.';
+
     # SysConfig
     $Lang->{'Add a decision!'}                = 'Hinzufügen einer Entscheidung!';
     $Lang->{'Additional ITSM Fields'}         = 'Zusätzliche ITSM Felder';
@@ -2536,7 +2561,7 @@ sub Data {
     $Lang->{'Router'}                        = 'Router';
     $Lang->{'Scanner'}                       = 'Scanner';
     $Lang->{'Search Config Items'}           = 'Config Item Suche';
-    $Lang->{'Security Device'}               = 'Sichertheitsgerät';
+    $Lang->{'Security Device'}               = 'Sicherheitsgerät';
     $Lang->{'Serial Number'}                 = 'Seriennummer';
     $Lang->{'Server'}                        = 'Server';
     $Lang->{'Server Application'}            = 'Server Anwendung';

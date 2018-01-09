@@ -291,6 +291,29 @@ sub InputCreate {
 
     #create string...
     my $String = '';
+
+    if ($Param{Item}->{Input}->{ReferencedServiceAttrKey}){
+        $String .= '<input type="hidden" name="'
+            . $Param{Key}
+            . '::ServiceData" value="" id="'
+            . $ItemId
+            . 'ServiceData"/>';
+    }
+    if ($Param{Item}->{Input}->{ReferencedCustomerLogin}){
+        $String .= '<input type="hidden" name="'
+            . $Param{Key}
+            . '::CustomerLoginData" value="" id="'
+            . $ItemId
+            . 'CustomerLoginData"/>';
+    }
+    elsif ($Param{Item}->{Input}->{ReferencedCustomerCompany} ) {
+        $String .= '<input type="hidden" name="'
+            . $Param{Key}
+            . '::CustomerCompanyData" value="" id="'
+            . $ItemId
+            . 'CustomerCompanyData"/>';
+    }
+
     if (   $AutoCompleteConfig
         && ref($AutoCompleteConfig) eq 'HASH'
         && $AutoCompleteConfig->{Active} )
@@ -318,11 +341,11 @@ sub InputCreate {
             }
         );
 
-        $String = $Self->{LayoutObject}->Output(
+        $Self->{LayoutObject}->Output(
             TemplateFile => 'AgentSLASearch',
         );
         $String
-            = '<input type="hidden" name="'
+            .= '<input type="hidden" name="'
             . $Param{Key}
             . '" value="'
             . $Value
@@ -350,11 +373,11 @@ sub InputCreate {
             }
         );
 
-        $String = $Self->{LayoutObject}->Output(
+        $Self->{LayoutObject}->Output(
             TemplateFile => 'AgentSLASearch',
         );
         $String
-            = '<input type="hidden" name="'
+            .= '<input type="hidden" name="'
             . $Param{Key}
             . '" value="'
             . $Value
@@ -380,28 +403,6 @@ sub InputCreate {
             . '::ButtonClear" value="'
             . $Self->{LanguageObject}->Translate( "Clear" )
             . '">';
-    }
-
-    if ($Param{Item}->{Input}->{ReferencedServiceAttrKey}){
-        $String .= '<input type="hidden" name="'
-            . $Param{Key}
-            . '::ServiceData" value="" id="'
-            . $ItemId
-            . 'ServiceData"/>';
-    }
-    if ($Param{Item}->{Input}->{ReferencedCustomerLogin}){
-        $String .= '<input type="hidden" name="'
-            . $Param{Key}
-            . '::CustomerLoginData" value="" id="'
-            . $ItemId
-            . 'CustomerLoginData"/>';
-    }
-    elsif ($Param{Item}->{Input}->{ReferencedCustomerCompany} ) {
-        $String .= '<input type="hidden" name="'
-            . $Param{Key}
-            . '::CustomerCompanyData" value="" id="'
-            . $ItemId
-            . 'CustomerCompanyData"/>';
     }
 
     return $String;
@@ -656,15 +657,11 @@ sub _SLASearch {
 
 1;
 
-
 =head1 VERSION
 
 $Revision$ $Date$
 
 =cut
-
-
-
 
 =back
 

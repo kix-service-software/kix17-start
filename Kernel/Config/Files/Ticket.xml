@@ -611,6 +611,17 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::EventModulePost###990-DeleteDraft" Required="0" Valid="1">
+        <Description Translatable="1">Delete draft of used action if a new Article got created.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Ticket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Event::DeleteDraft</Item>
+                <Item Key="Event">ArticleCreate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="CustomerCompany::EventModulePost###110-UpdateTickets" Required="0" Valid="1">
         <Description Translatable="1">Event module that updates tickets after an update of the Customer.</Description>
         <Group>Ticket</Group>
@@ -7351,6 +7362,486 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="DashboardBackend###0901-SearchTemplate01" Required="0" Valid="1">
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Dashboard::TicketGeneric</Item>
+                <Item Key="Title">Search Template 01</Item>
+                <Item Key="Description">All search template tickets</Item>
+                <Item Key="Attributes"></Item>
+                <Item Key="Filter">All</Item>
+                <Item Key="Time"></Item>
+                <Item Key="Limit">10</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Default">0</Item>
+                <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="DefaultColumns">
+                    <Hash>
+                        <Item Key="Age">2</Item>
+                        <Item Key="Changed">1</Item>
+                        <Item Key="Created">1</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
+                        <Item Key="CustomerID">1</Item>
+                        <Item Key="CustomerName">1</Item>
+                        <Item Key="CustomerUserID">1</Item>
+                        <Item Key="EscalationResponseTime">1</Item>
+                        <Item Key="EscalationSolutionTime">1</Item>
+                        <Item Key="EscalationTime">1</Item>
+                        <Item Key="EscalationUpdateTime">1</Item>
+                        <Item Key="TicketNumber">2</Item>
+                        <Item Key="Lock">1</Item>
+                        <Item Key="Owner">1</Item>
+                        <Item Key="PendingTime">1</Item>
+                        <Item Key="Queue">1</Item>
+                        <Item Key="Responsible">1</Item>
+                        <Item Key="Priority">1</Item>
+                        <Item Key="Service">1</Item>
+                        <Item Key="State">1</Item>
+                        <Item Key="SLA">1</Item>
+                        <Item Key="Title">2</Item>
+                        <Item Key="Type">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DashboardBackend###0901-SearchTemplate02" Required="0" Valid="1">
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Dashboard::TicketGeneric</Item>
+                <Item Key="Title">Search Template 02</Item>
+                <Item Key="Description">All search template tickets</Item>
+                <Item Key="Attributes"></Item>
+                <Item Key="Filter">All</Item>
+                <Item Key="Time"></Item>
+                <Item Key="Limit">10</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Default">0</Item>
+                <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="DefaultColumns">
+                    <Hash>
+                        <Item Key="Age">2</Item>
+                        <Item Key="Changed">1</Item>
+                        <Item Key="Created">1</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
+                        <Item Key="CustomerID">1</Item>
+                        <Item Key="CustomerName">1</Item>
+                        <Item Key="CustomerUserID">1</Item>
+                        <Item Key="EscalationResponseTime">1</Item>
+                        <Item Key="EscalationSolutionTime">1</Item>
+                        <Item Key="EscalationTime">1</Item>
+                        <Item Key="EscalationUpdateTime">1</Item>
+                        <Item Key="TicketNumber">2</Item>
+                        <Item Key="Lock">1</Item>
+                        <Item Key="Owner">1</Item>
+                        <Item Key="PendingTime">1</Item>
+                        <Item Key="Queue">1</Item>
+                        <Item Key="Responsible">1</Item>
+                        <Item Key="Priority">1</Item>
+                        <Item Key="Service">1</Item>
+                        <Item Key="State">1</Item>
+                        <Item Key="SLA">1</Item>
+                        <Item Key="Title">2</Item>
+                        <Item Key="Type">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DashboardBackend###0901-SearchTemplate03" Required="0" Valid="1">
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Dashboard::TicketGeneric</Item>
+                <Item Key="Title">Search Template 03</Item>
+                <Item Key="Description">All search template tickets</Item>
+                <Item Key="Attributes"></Item>
+                <Item Key="Filter">All</Item>
+                <Item Key="Time"></Item>
+                <Item Key="Limit">10</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Default">0</Item>
+                <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="DefaultColumns">
+                    <Hash>
+                        <Item Key="Age">2</Item>
+                        <Item Key="Changed">1</Item>
+                        <Item Key="Created">1</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
+                        <Item Key="CustomerID">1</Item>
+                        <Item Key="CustomerName">1</Item>
+                        <Item Key="CustomerUserID">1</Item>
+                        <Item Key="EscalationResponseTime">1</Item>
+                        <Item Key="EscalationSolutionTime">1</Item>
+                        <Item Key="EscalationTime">1</Item>
+                        <Item Key="EscalationUpdateTime">1</Item>
+                        <Item Key="TicketNumber">2</Item>
+                        <Item Key="Lock">1</Item>
+                        <Item Key="Owner">1</Item>
+                        <Item Key="PendingTime">1</Item>
+                        <Item Key="Queue">1</Item>
+                        <Item Key="Responsible">1</Item>
+                        <Item Key="Priority">1</Item>
+                        <Item Key="Service">1</Item>
+                        <Item Key="State">1</Item>
+                        <Item Key="SLA">1</Item>
+                        <Item Key="Title">2</Item>
+                        <Item Key="Type">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DashboardBackend###0901-SearchTemplate04" Required="0" Valid="1">
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Dashboard::TicketGeneric</Item>
+                <Item Key="Title">Search Template 04</Item>
+                <Item Key="Description">All search template tickets</Item>
+                <Item Key="Attributes"></Item>
+                <Item Key="Filter">All</Item>
+                <Item Key="Time"></Item>
+                <Item Key="Limit">10</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Default">0</Item>
+                <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="DefaultColumns">
+                    <Hash>
+                        <Item Key="Age">2</Item>
+                        <Item Key="Changed">1</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
+                        <Item Key="CustomerID">1</Item>
+                        <Item Key="Created">1</Item>
+                        <Item Key="CustomerName">1</Item>
+                        <Item Key="CustomerUserID">1</Item>
+                        <Item Key="EscalationResponseTime">1</Item>
+                        <Item Key="EscalationSolutionTime">1</Item>
+                        <Item Key="EscalationTime">1</Item>
+                        <Item Key="EscalationUpdateTime">1</Item>
+                        <Item Key="TicketNumber">2</Item>
+                        <Item Key="Lock">1</Item>
+                        <Item Key="Owner">1</Item>
+                        <Item Key="PendingTime">1</Item>
+                        <Item Key="Queue">1</Item>
+                        <Item Key="Responsible">1</Item>
+                        <Item Key="Priority">1</Item>
+                        <Item Key="Service">1</Item>
+                        <Item Key="State">1</Item>
+                        <Item Key="SLA">1</Item>
+                        <Item Key="Title">2</Item>
+                        <Item Key="Type">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DashboardBackend###0901-SearchTemplate05" Required="0" Valid="1">
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Dashboard::TicketGeneric</Item>
+                <Item Key="Title">Search Template 05</Item>
+                <Item Key="Description">All search template tickets</Item>
+                <Item Key="Attributes"></Item>
+                <Item Key="Filter">All</Item>
+                <Item Key="Time"></Item>
+                <Item Key="Limit">10</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Default">0</Item>
+                <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="DefaultColumns">
+                    <Hash>
+                        <Item Key="Age">2</Item>
+                        <Item Key="Changed">1</Item>
+                        <Item Key="Created">1</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
+                        <Item Key="CustomerID">1</Item>
+                        <Item Key="CustomerName">1</Item>
+                        <Item Key="CustomerUserID">1</Item>
+                        <Item Key="EscalationResponseTime">1</Item>
+                        <Item Key="EscalationSolutionTime">1</Item>
+                        <Item Key="EscalationTime">1</Item>
+                        <Item Key="EscalationUpdateTime">1</Item>
+                        <Item Key="TicketNumber">2</Item>
+                        <Item Key="Lock">1</Item>
+                        <Item Key="Owner">1</Item>
+                        <Item Key="PendingTime">1</Item>
+                        <Item Key="Queue">1</Item>
+                        <Item Key="Responsible">1</Item>
+                        <Item Key="Priority">1</Item>
+                        <Item Key="Service">1</Item>
+                        <Item Key="State">1</Item>
+                        <Item Key="SLA">1</Item>
+                        <Item Key="Title">2</Item>
+                        <Item Key="Type">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DashboardBackend###0901-SearchTemplate06" Required="0" Valid="0">
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Dashboard::TicketGeneric</Item>
+                <Item Key="Title">Search Template 06</Item>
+                <Item Key="Description">All search template tickets</Item>
+                <Item Key="Attributes"></Item>
+                <Item Key="Filter">All</Item>
+                <Item Key="Time"></Item>
+                <Item Key="Limit">10</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Default">0</Item>
+                <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="DefaultColumns">
+                    <Hash>
+                        <Item Key="Age">2</Item>
+                        <Item Key="Changed">1</Item>
+                        <Item Key="Created">1</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
+                        <Item Key="CustomerID">1</Item>
+                        <Item Key="CustomerName">1</Item>
+                        <Item Key="CustomerUserID">1</Item>
+                        <Item Key="EscalationResponseTime">1</Item>
+                        <Item Key="EscalationSolutionTime">1</Item>
+                        <Item Key="EscalationTime">1</Item>
+                        <Item Key="EscalationUpdateTime">1</Item>
+                        <Item Key="TicketNumber">2</Item>
+                        <Item Key="Lock">1</Item>
+                        <Item Key="Owner">1</Item>
+                        <Item Key="PendingTime">1</Item>
+                        <Item Key="Queue">1</Item>
+                        <Item Key="Responsible">1</Item>
+                        <Item Key="Priority">1</Item>
+                        <Item Key="Service">1</Item>
+                        <Item Key="State">1</Item>
+                        <Item Key="SLA">1</Item>
+                        <Item Key="Title">2</Item>
+                        <Item Key="Type">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DashboardBackend###0901-SearchTemplate07" Required="0" Valid="0">
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Dashboard::TicketGeneric</Item>
+                <Item Key="Title">Search Template 07</Item>
+                <Item Key="Description">All search template tickets</Item>
+                <Item Key="Attributes"></Item>
+                <Item Key="Filter">All</Item>
+                <Item Key="Time"></Item>
+                <Item Key="Limit">10</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Default">0</Item>
+                <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="DefaultColumns">
+                    <Hash>
+                        <Item Key="Age">2</Item>
+                        <Item Key="Changed">1</Item>
+                        <Item Key="Created">1</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
+                        <Item Key="CustomerID">1</Item>
+                        <Item Key="CustomerName">1</Item>
+                        <Item Key="CustomerUserID">1</Item>
+                        <Item Key="EscalationResponseTime">1</Item>
+                        <Item Key="EscalationSolutionTime">1</Item>
+                        <Item Key="EscalationTime">1</Item>
+                        <Item Key="EscalationUpdateTime">1</Item>
+                        <Item Key="TicketNumber">2</Item>
+                        <Item Key="Lock">1</Item>
+                        <Item Key="Owner">1</Item>
+                        <Item Key="PendingTime">1</Item>
+                        <Item Key="Queue">1</Item>
+                        <Item Key="Responsible">1</Item>
+                        <Item Key="Priority">1</Item>
+                        <Item Key="Service">1</Item>
+                        <Item Key="State">1</Item>
+                        <Item Key="SLA">1</Item>
+                        <Item Key="Title">2</Item>
+                        <Item Key="Type">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DashboardBackend###0901-SearchTemplate08" Required="0" Valid="0">
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Dashboard::TicketGeneric</Item>
+                <Item Key="Title">Search Template 08</Item>
+                <Item Key="Description">All search template tickets</Item>
+                <Item Key="Attributes"></Item>
+                <Item Key="Filter">All</Item>
+                <Item Key="Time"></Item>
+                <Item Key="Limit">10</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Default">0</Item>
+                <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="DefaultColumns">
+                    <Hash>
+                        <Item Key="Age">2</Item>
+                        <Item Key="Changed">1</Item>
+                        <Item Key="Created">1</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
+                        <Item Key="CustomerID">1</Item>
+                        <Item Key="CustomerName">1</Item>
+                        <Item Key="CustomerUserID">1</Item>
+                        <Item Key="EscalationResponseTime">1</Item>
+                        <Item Key="EscalationSolutionTime">1</Item>
+                        <Item Key="EscalationTime">1</Item>
+                        <Item Key="EscalationUpdateTime">1</Item>
+                        <Item Key="TicketNumber">2</Item>
+                        <Item Key="Lock">1</Item>
+                        <Item Key="Owner">1</Item>
+                        <Item Key="PendingTime">1</Item>
+                        <Item Key="Queue">1</Item>
+                        <Item Key="Responsible">1</Item>
+                        <Item Key="Priority">1</Item>
+                        <Item Key="Service">1</Item>
+                        <Item Key="State">1</Item>
+                        <Item Key="SLA">1</Item>
+                        <Item Key="Title">2</Item>
+                        <Item Key="Type">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DashboardBackend###0901-SearchTemplate09" Required="0" Valid="0">
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Dashboard::TicketGeneric</Item>
+                <Item Key="Title">Search Template 09</Item>
+                <Item Key="Description">All search template tickets</Item>
+                <Item Key="Attributes"></Item>
+                <Item Key="Filter">All</Item>
+                <Item Key="Time"></Item>
+                <Item Key="Limit">10</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Default">0</Item>
+                <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="DefaultColumns">
+                    <Hash>
+                        <Item Key="Age">2</Item>
+                        <Item Key="Changed">1</Item>
+                        <Item Key="Created">1</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
+                        <Item Key="CustomerID">1</Item>
+                        <Item Key="CustomerName">1</Item>
+                        <Item Key="CustomerUserID">1</Item>
+                        <Item Key="EscalationResponseTime">1</Item>
+                        <Item Key="EscalationSolutionTime">1</Item>
+                        <Item Key="EscalationTime">1</Item>
+                        <Item Key="EscalationUpdateTime">1</Item>
+                        <Item Key="TicketNumber">2</Item>
+                        <Item Key="Lock">1</Item>
+                        <Item Key="Owner">1</Item>
+                        <Item Key="PendingTime">1</Item>
+                        <Item Key="Queue">1</Item>
+                        <Item Key="Responsible">1</Item>
+                        <Item Key="Priority">1</Item>
+                        <Item Key="Service">1</Item>
+                        <Item Key="State">1</Item>
+                        <Item Key="SLA">1</Item>
+                        <Item Key="Title">2</Item>
+                        <Item Key="Type">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DashboardBackend###0901-SearchTemplate10" Required="0" Valid="0">
+        <Description Translatable="1">Parameters for the dashboard backend of the search template tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::Dashboard::TicketGeneric</Item>
+                <Item Key="Title">Search Template 10</Item>
+                <Item Key="Description">All search template tickets</Item>
+                <Item Key="Attributes"></Item>
+                <Item Key="Filter">All</Item>
+                <Item Key="Time"></Item>
+                <Item Key="Limit">10</Item>
+                <Item Key="Permission">ro</Item>
+                <Item Key="Block">ContentLarge</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Default">0</Item>
+                <Item Key="CacheTTLLocal">0.5</Item>
+                <Item Key="DefaultColumns">
+                    <Hash>
+                        <Item Key="Age">2</Item>
+                        <Item Key="Changed">1</Item>
+                        <Item Key="Created">1</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
+                        <Item Key="CustomerID">1</Item>
+                        <Item Key="CustomerName">1</Item>
+                        <Item Key="CustomerUserID">1</Item>
+                        <Item Key="EscalationResponseTime">1</Item>
+                        <Item Key="EscalationSolutionTime">1</Item>
+                        <Item Key="EscalationTime">1</Item>
+                        <Item Key="EscalationUpdateTime">1</Item>
+                        <Item Key="TicketNumber">2</Item>
+                        <Item Key="Lock">1</Item>
+                        <Item Key="Owner">1</Item>
+                        <Item Key="PendingTime">1</Item>
+                        <Item Key="Queue">1</Item>
+                        <Item Key="Responsible">1</Item>
+                        <Item Key="Priority">1</Item>
+                        <Item Key="Service">1</Item>
+                        <Item Key="State">1</Item>
+                        <Item Key="SLA">1</Item>
+                        <Item Key="Title">2</Item>
+                        <Item Key="Type">1</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="DashboardBackend###0280-DashboardEventsTicketCalendar" Required="0" Valid="1">
         <Description Translatable="1">Parameters for the dashboard backend of the ticket events calendar of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
         <Group>Ticket</Group>
@@ -9887,6 +10378,7 @@
                 <Item Key="Ticket">Ticket</Item>
                 <Item Key="Action">Action</Item>
                 <Item Key="ActivityDialog">ActivityDialog</Item>
+                <Item Key="Form">Form</Item>
                 <Item Key="Process">Process</Item>
             </Hash>
         </Setting>
@@ -14088,14 +14580,13 @@ Thanks for your help!
             <Hash>
                 <Item Key="1000">Type</Item>
                 <Item Key="1050Translated">Lock</Item>
-                <Item Key="1100Translated">State</Item>
-                <Item Key="1105Unquoted">PendingUntil</Item>
                 <Item Key="1200UnquotedNewLinedBy::">CallMethod::TicketObject::TicketQueueLinkGet</Item>
                 <Item Key="1500UnquotedNewLinedBy::">Service</Item>
                 <Item Key="1502">SLA</Item>
                 <Item Key="1700Unquoted">CallMethod::TicketObject::TicketOwnerName</Item>
                 <Item Key="1800Unquoted">CallMethod::TicketObject::TicketResponsibleName</Item>
                 <Item Key="1900">CallMethod::TicketObject::TicketAccountedTimeGet</Item>
+                <Item Key="2000Translated">State</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -15721,15 +16212,6 @@ Thanks for your help!
                 <Item Key="1">Yes</Item>
                 <Item Key="0">No</Item>
             </Option>
-        </Setting>
-    </ConfigItem>
-  <ConfigItem Name="Ticket::Frontend::CustomerTicketProcess###DynamicField" Required="0" Valid="1">
-        <Description Translatable="1">Dynamic fields shown in the processmanagement interfaces of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Frontend::Customer::Ticket::ViewProcess</SubGroup>
-        <Setting>
-            <Hash>
-            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::EventModulePost###900-NotificationToOutOfOfficeSubstitute" Required="0" Valid="1">

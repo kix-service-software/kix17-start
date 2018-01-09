@@ -1495,7 +1495,7 @@ sub Header {
                     },
                 );
             }
-            
+
             # set toolbar position from UserPreferences
             my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
                 UserID => $Self->{UserID},
@@ -2668,30 +2668,30 @@ sub PageNavBar {
     my $WindowStart = sprintf( "%.0f", ( $Param{StartHit} / $Param{PageShown} ) );
     $WindowStart = int( ( $WindowStart / $WindowSize ) ) + 1;
     $WindowStart = ( $WindowStart * $WindowSize ) - ($WindowSize);
-    my $Action = $Param{Action} || '';
-    my $Link   = $Param{Link}   || '';
+
+    my $Action   = $Param{Action} || '';
+    my $Link     = $Param{Link}   || '';
     my $Baselink = "$Self->{Baselink}$Action;$Link";
     my $i        = 0;
+
     while ( $i <= ( $Pages - 1 ) ) {
         $i++;
 
         # show normal page 1,2,3,...
         if ( $i <= ( $WindowStart + $WindowSize ) && $i > $WindowStart ) {
-            my $BaselinkAll = $Baselink
-                . "StartWindow=$WindowStart;StartHit="
-                . ( ( ( $i - 1 ) * $Param{PageShown} ) + 1 );
             my $SelectedPage = "";
             my $PageNumber   = $i;
 
             if ( $Page == $i ) {
-                $SelectedPage = " class=\"Selected\"";
+                $SelectedPage = "Selected";
             }
 
             if ( $Param{AJAXReplace} ) {
                 $Self->Block(
                     Name => 'PageAjax',
                     Data => {
-                        BaselinkAll  => $BaselinkAll,
+                        StartWindow  => $WindowStart,
+                        StartHit     => ( ( ( $i - 1 ) * $Param{PageShown} ) + 1 ),
                         AjaxReplace  => $Param{AJAXReplace},
                         PageNumber   => $PageNumber,
                         IDPrefix     => $IDPrefix,
@@ -2703,7 +2703,8 @@ sub PageNavBar {
                 $Self->Block(
                     Name => 'Page',
                     Data => {
-                        BaselinkAll  => $BaselinkAll,
+                        StartWindow  => $WindowStart,
+                        StartHit     => ( ( ( $i - 1 ) * $Param{PageShown} ) + 1 ),
                         PageNumber   => $PageNumber,
                         IDPrefix     => $IDPrefix,
                         SelectedPage => $SelectedPage
@@ -2716,15 +2717,13 @@ sub PageNavBar {
         elsif ( $i > ( $WindowStart + $WindowSize ) ) {
             my $StartWindow     = $WindowStart + $WindowSize + 1;
             my $LastStartWindow = int( $Pages / $WindowSize );
-            my $BaselinkAllBack = $Baselink . "StartHit=" . ( ( $i - 1 ) * $Param{PageShown} + 1 );
-            my $BaselinkAllNext = $Baselink . "StartHit=" . ( ( $Param{PageShown} * ( $Pages - 1 ) ) + 1 );
 
             if ( $Param{AJAXReplace} ) {
                 $Self->Block(
                     Name => 'PageForwardAjax',
                     Data => {
-                        BaselinkAllBack => $BaselinkAllBack,
-                        BaselinkAllNext => $BaselinkAllNext,
+                        StartHitBack    => ( ( $i - 1 ) * $Param{PageShown} + 1 ),
+                        StartHitNext    => ( ( $Param{PageShown} * ( $Pages - 1 ) ) + 1 ),
                         AjaxReplace     => $Param{AJAXReplace},
                         IDPrefix        => $IDPrefix,
                     },
@@ -2734,8 +2733,8 @@ sub PageNavBar {
                 $Self->Block(
                     Name => 'PageForward',
                     Data => {
-                        BaselinkAllBack => $BaselinkAllBack,
-                        BaselinkAllNext => $BaselinkAllNext,
+                        StartHitBack    => ( ( $i - 1 ) * $Param{PageShown} + 1 ),
+                        StartHitNext    => ( ( $Param{PageShown} * ( $Pages - 1 ) ) + 1 ),
                         IDPrefix        => $IDPrefix,
                     },
                 );
@@ -2747,15 +2746,14 @@ sub PageNavBar {
         # over window "<<" and "|<"
         elsif ( $i < $WindowStart && ( $i - 1 ) < $Pages ) {
             my $StartWindow     = $WindowStart - $WindowSize - 1;
-            my $BaselinkAllBack = $Baselink . 'StartHit=1;StartWindow=1';
-            my $BaselinkAllNext = $Baselink . 'StartHit=' . ( ( $WindowStart - 1 ) * ( $Param{PageShown} ) + 1 );
 
             if ( $Param{AJAXReplace} ) {
                 $Self->Block(
                     Name => 'PageBackAjax',
                     Data => {
-                        BaselinkAllBack => $BaselinkAllBack,
-                        BaselinkAllNext => $BaselinkAllNext,
+                        StartWindowBack => 1,
+                        StartHitBack    => 1,
+                        StartHitNext    => ( ( $WindowStart - 1 ) * ( $Param{PageShown} ) + 1 ),
                         AjaxReplace     => $Param{AJAXReplace},
                         IDPrefix        => $IDPrefix,
                     },
@@ -2765,15 +2763,58 @@ sub PageNavBar {
                 $Self->Block(
                     Name => 'PageBack',
                     Data => {
-                        BaselinkAllBack => $BaselinkAllBack,
-                        BaselinkAllNext => $BaselinkAllNext,
+                        StartWindowBack => 1,
+                        StartHitBack    => 1,
+                        StartHitNext    => ( ( $WindowStart - 1 ) * ( $Param{PageShown} ) + 1 ),
                         IDPrefix        => $IDPrefix,
                     },
                 );
             }
-
             $i = $WindowStart - 1;
         }
+    }
+
+    if ( $Pages > 1 ) {
+        for my $Parameter ( qw(Action Link) ) {
+            if ( $Param{$Parameter} ) {
+                my @Params = split(';', $Param{$Parameter});
+                for my $Item ( @Params ) {
+                    my @Items = split('=', $Item);
+                    $Self->Block(
+                        Name => 'PageHiddenGeneric',
+                        Data => {
+                            Name    => $Items[0],
+                            Value   => $Items[1] || ''
+                        }
+                    );
+                }
+            }
+        }
+        for my $Block ( qw(PageHidden PageLink) ) {
+            $Self->Block(
+                Name => $Block,
+                Data => {
+                    Baselink => $Baselink,
+                    IDPrefix => $IDPrefix,
+                }
+            );
+        }
+    }
+
+    if ( $IDPrefix !~ /^Dashboard/ ) {
+        $Self->Block(
+            Name => 'PageSelectItem',
+        );
+    }
+
+    for my $Key ( qw(SelectedItems UnselectedItems FormID) ) {
+        $Self->Block(
+            Name => 'PageHiddenGeneric',
+            Data => {
+                Name    => $Key,
+                Value   => $Param{$Key} || '',
+            }
+        );
     }
 
     $Param{SearchNavBar} = $Self->Output(
@@ -2784,9 +2825,9 @@ sub PageNavBar {
     # only show total amount of pages if there is more than one
     if ( $Pages > 1 ) {
         $Param{NavBarLong} = "- " . $Self->{LanguageObject}->Translate("Page") . ": $Param{SearchNavBar}";
-    }
-    else {
-        $Param{SearchNavBar} = '';
+    } else {
+        $Param{SearchNavBar} =~ s/<a.*a>//g;
+        $Param{NavBarLong}   = $Param{SearchNavBar};
     }
 
     # return data
@@ -5528,6 +5569,144 @@ sub TransfromDateSelection {
     return $Self->TransformDateSelection(@_);
 }
 
+
+=item ProgressBar()
+    This function generates a progress bar. This progress bar is to use fundamental to the daemon, since it determines on the Create Task progress.
+    generates a progess bar
+
+    return $LayoutObject->ProgressBar(
+        FormID          => 1508136538.3920846.40874949,
+        TaskName        => 'Kernel::System::Ticket-Run()',              # generated name of the daemon task
+        TaskType        => 'AsynchronousExecutor',                      # type of daemon task
+        MaxCount        => 15,                                          # max number of items that are processed.
+        IgnoreCount     => 5,                                           # max number of items that are ignored.
+        ItemCount       => 20,                                          # max number of items that are passed.
+        Action          => 'AgentXXX',                                  # e. g. 'Action=' . $Self->{LayoutObject}->{Action}
+        AbortSubaction  => 'CancelAndClose',                            # e. g. 'Subaction=' . $Self->{LayoutObject}->{Subaction} subaction for abort if max count is 0
+        AbortCheck      => 1,                                           # Added to the process bar a cancel option added (0: disable 1: shows Cancel button to 2: shows Cancel button and abort message at MaxCount == 0)
+                                                                        # Option 2 requires an abort subaction
+        RefreshCycle    => '1'                                          # optional: sets the time (in seconds) to which distance the progress bar should be updated, Default 1s
+        EndParam        => {                                            # optional: definition of parameters as hash which are set at the end of the process to the following link.
+            TicketID    => 123,
+            Subaction   => 'ProgressEnd'
+        },
+        LoaderText      => 'Add ticket links, please wait a moment...', # optional: Display text for the current process.
+        Title           => 'Ticket Bulk Action',                        # optional: Display title for the current process window.
+        HeaderType      => 'Small',                                     # optional
+        FooterType      => 'Small',                                     # optional
+    );
+
+    return string of html output
+=cut
+
+sub ProgressBar {
+    my ( $Self, %Param ) = @_;
+
+    for ( qw(TaskName TaskType Action MaxCount IgnoredCount ItemCount FormID) ) {
+        if ( !IsStringWithData($Param{$_}) ) {
+            return $Self->ErrorScreen(
+                Message => "No $_ is given!",
+                Comment => 'Please contact your administrator',
+            );
+        }
+    }
+
+    if ( $Param{EndParam}
+        && ref $Param{EndParam} ne 'HASH'
+    ) {
+        return $Self->ErrorScreen(
+            Message => 'The parameter is not a hash!',
+            Comment => 'Please contact your administrator',
+        );
+    } elsif ( $Param{EndParam}
+        && ref $Param{EndParam} eq 'HASH'
+    ) {
+
+        $Param{EndParam}->{FormID}  = $Param{FormID};
+        $Param{Params}              = $Param{EndParam};
+        $Param{EndParam}            = $Self->JSONEncode(
+            Data => $Param{EndParam},
+            NoQuotes => 1,
+        );
+    }
+
+    if ( !IsStringWithData( $Param{RefreshCycle} ) ) {
+        $Param{RefreshCycle} = 1000;
+    } else {
+        $Param{RefreshCycle} = $Param{RefreshCycle} * 1000;
+    }
+
+    if ( !IsStringWithData( $Param{LoaderText} ) ) {
+        $Param{LoaderText} = 'Current process is processed, please wait a moment...';
+    }
+
+    if ( !IsStringWithData( $Param{Title} ) ) {
+        $Param{Title} = 'Current progress bar';
+    }
+
+    if ( !$Param{MaxCount}
+        && $Param{AbortCheck} == 2
+    ) {
+
+        if ( !IsStringWithData($Param{AbortSubaction}) ) {
+            return $Self->ErrorScreen(
+                Message => "No AbortSubaction is given!",
+                Comment => 'Please contact your administrator',
+            );
+        }
+
+        my $ParamStrg = '';
+        for my $Key ( keys %{$Param{Params}} ) {
+            next if $Key eq 'Subaction';
+            $ParamStrg .= ';' if $ParamStrg;
+            $ParamStrg .= $Key . '=' . $Param{Params}->{$Key};
+        }
+
+        $Self->Block(
+            Name => 'ProgressStopped',
+            Data => {
+                %Param,
+                Params => $ParamStrg,
+            },
+        );
+    } else {
+        $Self->Block(
+            Name => 'ProgressBar',
+            Data => \%Param,
+        );
+
+        if ( IsStringWithData( $Param{IgnoredCount})
+             && $Param{IgnoredCount}
+        ) {
+            $Self->Block(
+                Name => 'IgnoredObjects',
+                Data => {
+                    IgnoredText => $Self->{LanguageObject}->Translate('%s objects are skipped during the process.', $Param{IgnoredCount}),
+                }
+            );
+        }
+    }
+
+    if ( $Param{AbortCheck} ) {
+        $Self->Block(
+            Name => 'TaskAbort',
+        );
+    }
+
+    my $Output = $Self->Header(
+        Type => $Param{HeaderType},
+    );
+    $Output .= $Self->Output(
+        TemplateFile => 'ProgressBar',
+        Data => {
+            %Param,
+        }
+    );
+    $Output .= $Self->Footer(
+        Type => $Param{FooterType},
+    );
+    return $Output;
+}
 1;
 
 =end Internal:

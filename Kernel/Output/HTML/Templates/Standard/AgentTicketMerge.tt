@@ -50,7 +50,7 @@
                         <div class="Field">
 # KIX4OTRS-capeIT
 #                        <input type="text" id="MainTicketNumber" name="MainTicketNumber" value="[% Data.MainTicketNumber | html %]" class="Validate_Required [% Data.MainTicketNumberInvalid %] W33pc" />
-                        <input id="MainTicketNumber" type="hidden" name="MainTicketNumber" value=""/>
+                        <input id="MainTicketNumber" type="hidden" name="MainTicketNumber" value="" class="Validate_Required [% Data.MainTicketNumberInvalid %] W33pc"/>
                         <input id="MainTicketNumberAutoComplete" type="text" name="MainTicketNumberAutoComplete" value="" class="AutocompleteOff Validate_Required"/>
                         <img src="[% Config("Frontend::ImagePath") %]loader.gif" border="2" alt="[% Translate("Loading") | html %]" class="Hidden" id="QuickLinkLoading"/>
 [% WRAPPER JSOnDocumentComplete %]

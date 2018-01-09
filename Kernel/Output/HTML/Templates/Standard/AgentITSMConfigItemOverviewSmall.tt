@@ -16,7 +16,7 @@
             <tr>
 [% RenderBlockStart("RecordBulkActionHeader") %]
                 <th class="Checkbox Fixed">
-                    <input type="checkbox" class="Checkbox" title="[% Translate("Select all") | html %]" id="SelectAllConfigItems" autocomplete="off" />
+                    <input type="checkbox" class="Checkbox [% Data.SelectedAll %]" title="[% Translate("Select all") | html %]" id="SelectAllConfigItems" autocomplete="off" [% Data.ItemALLChecked %] />
                 </th>
 [% RenderBlockEnd("RecordBulkActionHeader") %]
 [% RenderBlockStart("RecordCurInciSignalHeader") %]
@@ -91,7 +91,7 @@
 # EO KIX4OTRS-capeIT
 [% RenderBlockStart("RecordBulkAction") %]
                 <td class="Checkbox Fixed NonTextContent">
-                    <input class="Checkbox" type="checkbox" name="ConfigItemID" value="[% Data.ConfigItemID | html %]"  autocomplete="off" />
+                    <input class="Checkbox SelectItem" type="checkbox" name="ConfigItemID" value="[% Data.ConfigItemID | html %]"  autocomplete="off" [% Data.ItemChecked %]]/>
                 </td>
 [% RenderBlockEnd("RecordBulkAction") %]
 [% RenderBlockStart("RecordCurInciSignal") %]
@@ -207,5 +207,45 @@
             return false;
         }
     });
+
+    $('#SelectAllConfigItems').bind('click', function (Event) {
+        var $Element = $(this);
+
+        if ( $(this).hasClass('SelectAllItemsPages')
+             && $(this).prop('checked')
+        ) {
+            ITSM.UI.ConfigItemActionRow.InitShowContentDialog(
+                {
+                    Element: $Element,
+                    ID: 'SelectItemsSettingsDialogContainer',
+                    Title: '[% Translate("CI selection") %]',
+                    Content: '<p style="text-align: center;">[% Translate("From which page should be selected the config items.")%]</p>',
+                    Label: [
+                        '[% Translate("Current Page") %]',
+                        '[% Translate("All Pages") %]'
+                    ]
+                }, 'SelectDialog');
+
+            $('.Dialog > .Header .Close').on('click',function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                $('#SelectAllConfigItems').prop('checked',false);
+            });
+        } else if ( $(this).prop('checked') ) {
+            ITSM.UI.ConfigItemActionRow.UpdateSelectItems($Element, false);
+        } else {
+            ITSM.UI.ConfigItemActionRow.UpdateSelectItems($Element, true);
+        }
+    });
+
+
+    Core.Config.Set('ITSMBulkDialogButtonNo', '[% Translate("No") %]');
+    Core.Config.Set('ITSMBulkDialogButtonYes', '[% Translate("Yes") %]');
+    Core.Config.Set('ITSMBulkDialog', '<p style="text-align: center;">[% Translate("You have selected a larger number (###) of objects. Please note that this can lead to a loss of performance! Do you want to continue?") %]</p>');
+    Core.Config.Set('ITSMBulkDialogTitle', '[% Translate("Warning") %]');
+
+[% RenderBlockStart("BulkActivate") %]
+    ITSM.UI.ConfigItemActionRow.TriggerUpdateActionRow();
+[% RenderBlockEnd("BulkActivate") %]
 //]]></script>
 [% END %]

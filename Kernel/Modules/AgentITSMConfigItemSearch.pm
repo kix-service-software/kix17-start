@@ -869,7 +869,7 @@ sub Run {
 
                 # store data
                 my @Data;
-                for my $StoreData (qw(Class InciState Name Number DeplState VersionID CreateTime)) {
+                for my $StoreData (@CSVHead) {
                     push @Data, $LastVersion->{$StoreData};
                 }
                 push @CSVData, \@Data;

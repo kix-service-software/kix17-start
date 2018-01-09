@@ -540,12 +540,25 @@ sub _ShowEdit {
     }
 
     # lookup existing Transition Actions on disk
-    my $Directory
-        = $Kernel::OM->Get('Kernel::Config')->Get('Home') . '/Kernel/System/ProcessManagement/TransitionAction';
-    my @List = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
-        Directory => $Directory,
-        Filter    => '*.pm',
-    );
+    my $Home        = $Kernel::OM->Get('Kernel::Config')->Get('Home');
+    my @KIXFolders  = ( $Home . '/Kernel/System/ProcessManagement/TransitionAction' );
+
+    foreach my $TmpDir (@INC) {
+        last if $TmpDir =~ /\/Custom$/;
+        my $NewDir = $TmpDir.'/Kernel/System/ProcessManagement/TransitionAction';
+        next if !( -e $NewDir );
+        push @KIXFolders, $NewDir;
+    }
+
+    my @List = ();
+    for my $TransitionDirectory (@KIXFolders) {
+        my @ListTmp = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
+            Directory => $TransitionDirectory,
+            Filter    => '*.pm',
+        );
+        @List = ( @List, @ListTmp );
+    }
+
     my %TransitionAction;
     ITEM:
     for my $Item (@List) {

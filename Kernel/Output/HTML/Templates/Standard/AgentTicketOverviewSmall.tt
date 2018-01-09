@@ -72,6 +72,7 @@
 [% RenderBlockEnd("NoTicketFound") %]
     <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="matrix">
         <input type="hidden" name="Action" value="AgentTicketBulk"/>
+        <input type="hidden" name="Subaction" value="TicketLocking"/>
         <input type="hidden" name="TicketID" value=""/>
         <input type="hidden" name="LastColumnFilter" id="LastColumnFilter" value="[% Data.LastColumnFilter | html %]"/>
 [% RenderBlockStart("OverviewTable") %]
@@ -84,7 +85,7 @@
 
 [% RenderBlockStart("BulkNavBar") %]
                     <th class="Checkbox">
-                        <input type="checkbox" class="Checkbox" title="[% Translate("Select all") | html %]" id="SelectAllTickets" autocomplete="off" />
+                        <input type="checkbox" class="Checkbox [% Data.SelectedAll %]" title="[% Translate("Select all") | html %]" id="SelectAllTickets" autocomplete="off" [% Data.ItemALLChecked %]/>
                     </th>
 [% RenderBlockEnd("BulkNavBar") %]
 [% RenderBlockStart("OverviewNavBarPageFlag") %]
@@ -227,74 +228,6 @@ Core.Agent.TableFilters.InitUserAutocomplete( $(".UserAutoComplete") );
 
 [% RenderBlockEnd("GeneralOverviewHeader") %]
 
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field1") %]
-#                    <th class="DynamicField Last [% Data.CSS | html %]">
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field1_Sortable") %]
-#                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]">[% Translate(Data.Label) | html %]</a>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field1_Sortable") %]
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field1_NotSortable") %]
-#                        <span class="Gray" title="[% Data.Title | html %]">[% Translate(Data.Label) | html %]</span>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field1_NotSortable") %]
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field1_FiltrableSortable") %]
-#                        <a href="#" class="ColumnSettingsTrigger" title="[% Data.FilterTitle | html %]">
-#                            <i class="fa fa-filter"></i>
-#                        </a>
-#                        <div class="ColumnSettingsContainer DontPrint">
-#                            <div class="ColumnSettingsBox">
-#                                [% Data.ColumnFilterStrg %]
-#                            </div>
-#                        </div>
-#                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]" title="[% Translate(Data.Title) | html %]">[% Data.Label | html %]</a>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field1_FiltrableSortable") %]
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field1_FiltrableNotSortable") %]
-#                        <a href="#" class="ColumnSettingsTrigger" title="[% Data.FilterTitle | html %]">
-#                            <i class="fa fa-filter"></i>
-#                        </a>
-#                        <div class="ColumnSettingsContainer DontPrint">
-#                            <div class="ColumnSettingsBox">
-#                                [% Data.ColumnFilterStrg %]
-#                            </div>
-#                        </div>
-#                        <span class="Gray" title="[% Data.Title | html %]">[% Data.Label | html %]</span>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field1_FiltrableNotSortable") %]
-#                    </th>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field1") %]
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field2") %]
-#                    <th class="DynamicField Last [% Data.CSS | html %]">
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field2_Sortable") %]
-#                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]">[% Translate(Data.Label) | html %]</a>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field2_Sortable") %]
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field2_NotSortable") %]
-#                        <span class="Gray" title="[% Data.Title | html %]">[% Translate(Data.Label) | html %]</span>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field2_NotSortable") %]
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field2_FiltrableSortable") %]
-#                        <a href="#" class="ColumnSettingsTrigger" title="[% Data.FilterTitle | html %]">
-#                            <i class="fa fa-filter"></i>
-#                        </a>
-#                        <div class="ColumnSettingsContainer DontPrint">
-#                            <div class="ColumnSettingsBox">
-#                                [% Data.ColumnFilterStrg %]
-#                            </div>
-#                        </div>
-#                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]" title="[% Translate(Data.Title) | html %]">[% Data.Label | html %]</a>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field2_FiltrableSortable") %]
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field2_FiltrableNotSortable") %]
-#                        <a href="#" class="ColumnSettingsTrigger" title="[% Data.FilterTitle | html %]">
-#                            <i class="fa fa-filter"></i>
-#                        </a>
-#                        <div class="ColumnSettingsContainer DontPrint">
-#                            <div class="ColumnSettingsBox">
-#                                [% Data.ColumnFilterStrg %]
-#                            </div>
-#                        </div>
-#                        <span class="Gray" title="[% Data.Title | html %]">[% Data.Label | html %]</span>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field2_FiltrableNotSortable") %]
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field2") %]
-#                    </th>
-
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function() {
@@ -403,7 +336,7 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
 
 [% RenderBlockStart("Bulk") %]
                     <td class="Checkbox NonTextContent">
-                        <input class="Checkbox" type="checkbox" name="TicketID" title="[% Translate("Select this ticket") | html %]" value="[% Data.TicketID | html %]"  autocomplete="off" />
+                        <input class="Checkbox SelectItem" type="checkbox" name="TicketID" title="[% Translate("Select this ticket") | html %]" value="[% Data.TicketID | html %]"  autocomplete="off" [% Data.ItemChecked %]]/>
                     </td>
 [% RenderBlockEnd("Bulk") %]
 [% RenderBlockStart("ContentLargeTicketGenericRowMeta") %]
@@ -518,35 +451,6 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
 [% RenderBlockEnd("RecordDynamicField") %]
 
 [% RenderBlockEnd("GeneralOverviewRow") %]
-
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("RecordDynamicField_Field1") %]
-#                    <td>
-#                        <div title="[% Data.Title | html %]">
-#[% RenderBlockStart("RecordDynamicField_Field1_Link") %]
-#                            <a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>
-#[% RenderBlockEnd("RecordDynamicField_Field1_Link") %]
-#[% RenderBlockStart("RecordDynamicField_Field1_Plain") %]
-#                            [% Data.Value %]
-#[% RenderBlockEnd("RecordDynamicField_Field1_Plain") %]
-#                        </div>
-#                    </td>
-#[% RenderBlockEnd("RecordDynamicField_Field1") %]
-#[% RenderBlockStart("RecordDynamicField_Field2") %]
-#                    <td>
-#                        <div title="[% Data.Title | html %]">
-#[% RenderBlockStart("RecordDynamicField_Field2_Link") %]
-#                            <a href="[% Data.Link | Interpolate %]" target="_blank" class="DynamicFieldLink">[% Data.Value %]</a>
-#[% RenderBlockEnd("RecordDynamicField_Field2_Link") %]
-#[% RenderBlockStart("RecordDynamicField_Field2_Plain") %]
-#                            [% Data.Value %]
-#[% RenderBlockEnd("RecordDynamicField_Field2_Plain") %]
-#                        </div>
-#                    </td>
-#[% RenderBlockEnd("RecordDynamicField_Field2") %]
-
                 </tr>
 
 [% RenderBlockStart("DocumentReadyActionRowAdd") %]
@@ -641,5 +545,43 @@ $('.ArticleFlagIcon').bind('mouseout',function(){
     $('.ArticleFlagIconTooltip').addClass('Hidden');
 });
 # EO KIX4OTRS-capeIT
+
+$('#SelectAllTickets').bind('click', function (Event) {
+    var $Element = $(this);
+
+    if ( $(this).hasClass('SelectAllItemsPages')
+         && $(this).prop('checked')
+    ) {
+        Core.UI.ActionRow.InitShowContentDialog(
+            {
+                Element: $Element,
+                ID: 'SelectTicketsSettingsDialogContainer',
+                Title: '[% Translate("Ticket selection") %]',
+                Content: '<p style="text-align: center;">[% Translate("From which page should be selected the tickets.")%]</p>',
+                Label: [
+                    '[% Translate("Current Page") %]',
+                    '[% Translate("All Pages") %]'
+                ]
+            }, 'SelectDialog');
+        $('.Dialog > .Header .Close').on('click',function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            $('#SelectAllTickets').prop('checked',false);
+        });
+    } else if ( $(this).prop('checked') ) {
+        Core.UI.ActionRow.UpdateSelectItems($Element, false);
+    } else {
+        Core.UI.ActionRow.UpdateSelectItems($Element, true);
+    }
+});
+
+Core.Config.Set('BulkDialogButtonYes', '[% Translate("Yes") %]');
+Core.Config.Set('BulkDialogButtonNo', '[% Translate("No") %]');
+Core.Config.Set('BulkDialog', '<p style="text-align: center;">[% Translate("You have selected a larger number (###) of objects. Please note that this can lead to a loss of performance! Do you want to continue?") %]</p>');
+Core.Config.Set('BulkDialogTitle', '[% Translate("Warning") %]');
+
+[% RenderBlockStart("BulkActivate") %]
+Core.UI.ActionRow.TriggerUpdateActionRow();
+[% RenderBlockEnd("BulkActivate") %]
 //]]></script>
 [% END %]

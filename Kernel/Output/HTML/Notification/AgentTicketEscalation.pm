@@ -48,7 +48,7 @@ sub Run {
     # only show the escalations on ticket overviews
     return ''
         if $LayoutObject->{Action}
-        !~ /^AgentTicket(Queue|(Status|Locked|Watch|Responsible)View)/;
+        !~ /^AgentTicket(Queue|Service|(Status|Locked|Watch|Responsible)View)/;
 
     # get cache object
     my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
@@ -87,7 +87,7 @@ sub Run {
 
     # KIX4OTRS-capeIT
     my @TicketIDs;
-    if ( $SearchAdd{QueueIDs} ) {
+    if ( ref $SearchAdd{QueueIDs} eq 'ARRAY' && @{ $SearchAdd{QueueIDs} } ) {
         @TicketIDs = $TicketObject->TicketSearch(
             Result                           => 'ARRAY',
             Limit                            => $ShownMax,
@@ -114,10 +114,20 @@ sub Run {
 
         # check response time
         if ( defined $Ticket{FirstResponseTime} ) {
-            $Ticket{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Ticket{FirstResponseTime},
-                Space => ' ',
+            my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+                TicketID => $TicketID,
+                UserID   => $Self->{UserID},
             );
+
+            if ($TicketEscalationDisabled) {
+                $Ticket{FirstResponseTimeHuman} = $LayoutObject->{LanguageObject}->Translate('suspended');
+            }
+            else {
+                $Ticket{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                    Age   => $Ticket{FirstResponseTime},
+                    Space => ' ',
+                );
+            }
             if ( $Ticket{FirstResponseTimeEscalation} ) {
                 $LayoutObject->Block(
                     Name => 'TicketEscalationFirstResponseTimeOver',
@@ -152,10 +162,20 @@ sub Run {
 
         # check update time
         if ( defined $Ticket{UpdateTime} ) {
-            $Ticket{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Ticket{UpdateTime},
-                Space => ' ',
+            my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+                TicketID => $TicketID,
+                UserID   => $Self->{UserID},
             );
+
+            if ($TicketEscalationDisabled) {
+                $Ticket{UpdateTimeHuman} = $LayoutObject->{LanguageObject}->Translate('suspended');
+            }
+            else {
+                $Ticket{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                    Age   => $Ticket{UpdateTime},
+                    Space => ' ',
+                );
+            }
             if ( $Ticket{UpdateTimeEscalation} ) {
                 $LayoutObject->Block(
                     Name => 'TicketEscalationUpdateTimeOver',
@@ -190,10 +210,20 @@ sub Run {
 
         # check solution
         if ( defined $Ticket{SolutionTime} ) {
-            $Ticket{SolutionTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Ticket{SolutionTime},
-                Space => ' ',
+            my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+                TicketID => $TicketID,
+                UserID   => $Self->{UserID},
             );
+
+            if ($TicketEscalationDisabled) {
+                $Ticket{SolutionTimeHuman} = $LayoutObject->{LanguageObject}->Translate('suspended');
+            }
+            else {
+                $Ticket{SolutionTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                    Age   => $Ticket{SolutionTime},
+                    Space => ' ',
+                );
+            }
             if ( $Ticket{SolutionTimeEscalation} ) {
                 $LayoutObject->Block(
                     Name => 'TicketEscalationSolutionTimeOver',
@@ -211,12 +241,7 @@ sub Run {
             }
             elsif ( $Ticket{SolutionTimeNotification} ) {
                 $LayoutObject->Block(
-
-                    # KIX4OTRS-capeIT (OTRS-Bug)
-                    # Name => 'TicketEscalationSolutionTimeOver',
                     Name => 'TicketEscalationSolutionTimeWillBeOver',
-
-                    # EO KIX4OTRS-capeIT
                     Data => \%Ticket,
                 );
                 my $Data = $LayoutObject->Output(

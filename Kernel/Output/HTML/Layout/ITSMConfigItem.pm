@@ -306,11 +306,57 @@ sub ITSMConfigItemListShow {
         $Param{View} = $Self->{ 'UserITSMConfigItemOverview' . $Env->{Action} };
     }
 
+    # KIX4OTRS-capeIT
+    # fallback due to problem with session object (T#2015102290000583)
+    my %UserPreferences
+        = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
+    if ( !$Param{View} && $UserPreferences{ 'UserITSMConfigItemOverview' . $Env->{Action} } ) {
+        $Param{View} = $UserPreferences{ 'UserITSMConfigItemOverview' . $Env->{Action} };
+    }
+
+    # EO KIX4OTRS-capeIT
+
     # set frontend
     my $Frontend = $Param{Frontend} || 'Agent';
 
     # set defaut view mode to 'small'
     my $View = $Param{View} || 'Small';
+
+    # KIX4OTRS-capeIT
+    my $ClassID = $Param{Filter} || $Param{ClassID} || 'All';
+
+    if (
+        $Self->{Action} eq 'AgentITSMConfigItem'
+        && ( !defined $Param{TitleValue} || $Param{TitleValue} eq '' )
+        )
+    {
+        $Param{TitleValue} = 'All';
+    }
+    elsif (
+        $Self->{Action} eq 'AgentITSMConfigItemSearch'
+        && ( !defined $Param{TitleValue} || $Param{TitleValue} eq '' )
+        && $ClassID ne 'All'
+        && $ClassID ne '-'
+        )
+    {
+        my $ClassList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+            Class => 'ITSM::ConfigItem::Class',
+        );
+        $Param{TitleValue} = $ClassList->{$ClassID};
+    }
+    elsif (
+        $Self->{Action} eq 'AgentITSMConfigItemSearch'
+        && ( !defined $Param{TitleValue} || $Param{TitleValue} eq '' )
+        && $ClassID eq '-'
+        )
+    {
+        $Param{TitleValue} = 'SearchResult';
+    }
+    elsif ( !defined $Param{TitleValue} || $Param{TitleValue} eq '' ) {
+        $Param{TitleValue} = $ClassID;
+    }
+
+    # EO KIX4OTRS-capeIT
 
     # store latest view mode
     $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
@@ -322,6 +368,23 @@ sub ITSMConfigItemListShow {
     # get needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    # KIX4OTRS-capeIT
+    # update preferences if needed
+    my $Key = 'UserITSMConfigItemOverview' . $Env->{Action};
+    my $LastView = $Self->{$Key} || '';
+
+    # if ( !$ConfigObject->Get('DemoSystem') && $Self->{$Key} ne $View ) {
+    if ( !$ConfigObject->Get('DemoSystem') && $LastView ne $View ) {
+
+        $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
+            UserID => $Self->{UserID},
+            Key    => $Key,
+            Value  => $View,
+        );
+    }
+
+    # EO KIX4OTRS-capeIT
 
     # get backend from config
     my $Backends = $ConfigObject->Get('ITSMConfigItem::Frontend::Overview');
@@ -369,22 +432,45 @@ sub ITSMConfigItemListShow {
         %Data = %{ $Config->{$Group}->{Data} };
     }
 
+    my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $UploadCacheObject   = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
+
+    my $SelectedItemStrg    = $ParamObject->GetParam( Param => 'SelectedItems' )   || '';
+    my $UnselectedItemStrg  = $ParamObject->GetParam( Param => 'UnselectedItems' ) || '';
+    my @SelectedItems       = split(',', $SelectedItemStrg);
+    my @UnselectedItems     = split(',', $UnselectedItemStrg);
+
+    for my $ConfigItem ( @{$Param{ConfigItemIDs}} ) {
+        if ( !grep(/^$ConfigItem$/, @UnselectedItems)
+            && !grep(/^$ConfigItem$/, @SelectedItems)
+        ) {
+            push(@UnselectedItems, $ConfigItem);
+        }
+    }
+
+    if ( !$Self->{FormID} ) {
+        $Self->{FormID} = $UploadCacheObject->FormIDCreate();
+    }
+
     # set page limit and build page nav
     my $Limit = $Param{Limit} || 20_000;
     my %PageNav = $LayoutObject->PageNavBar(
-        Limit     => $Limit,
-        StartHit  => $StartHit,
-        PageShown => $PageShown,
-        AllHits   => $Param{Total} || 0,
-        Action    => 'Action=' . $Env->{Action},
-        Link      => $Param{LinkPage},
+        Limit           => $Limit,
+        StartHit        => $StartHit,
+        PageShown       => $PageShown,
+        AllHits         => $Param{Total} || 0,
+        Action          => 'Action=' . $Env->{Action},
+        Link            => $Param{LinkPage},
+        SelectedItems   => join(',', @SelectedItems)   || '',
+        UnselectedItems => join(',', @UnselectedItems) || '',
+        FormID          => $Self->{FormID}
     );
 
     # build shown ticket a page
     $Param{RequestedURL}    = "Action=$Self->{Action}";
     $Param{Group}           = $Group;
     $Param{PreferencesKey}  = $PageShownPreferencesKey;
-    $Param{PageShownString} = $Self->BuildSelection(
+    $Param{PageShownString} = $LayoutObject->BuildSelection(
         Name        => $PageShownPreferencesKey,
         SelectedID  => $PageShown,
         Data        => \%Data,
@@ -455,13 +541,35 @@ sub ITSMConfigItemListShow {
                         %{$Filter},
                     },
                 );
-
             }
         }
     }
 
+    # KIX4OTRS-capeIT
+    # set priority if not defined
+    for my $Backend (
+        keys %{$Backends}
+        )
+    {
+        if ( !defined $Backends->{$Backend}->{ModulePriority} ) {
+            $Backends->{$Backend}->{ModulePriority} = 0;
+        }
+    }
+
+    # EO KIX4OTRS-capeIT
+
     # loop over configured backends
-    for my $Backend ( sort keys %{$Backends} ) {
+    # for my $Backend ( sort keys %{$Backends} ) {
+
+    for my $Backend (
+
+        # KIX4OTRS-capeIT
+        sort { $Backends->{$a}->{ModulePriority} cmp $Backends->{$b}->{ModulePriority} }
+
+        # EO KIX4OTRS-capeIT
+        keys %{$Backends}
+        )
+    {
 
         # build navbar view mode
         $LayoutObject->Block(
@@ -500,6 +608,10 @@ sub ITSMConfigItemListShow {
     }
 
     # check if page nav is available
+    # KIX4OTRS-capeIT
+    my $Columns = '';
+
+    # EO KIX4OTRS-capeIT
     if (%PageNav) {
         $LayoutObject->Block(
             Name => 'OverviewNavBarPageNavBar',
@@ -514,8 +626,24 @@ sub ITSMConfigItemListShow {
                 Data => {
                     %PageNav,
                     %Param,
+
+                    # KIX4OTRS-capeIT
+                    ClassID => $ClassID,
+
+                    # EO KIX4OTRS-capeIT
                 },
             );
+
+            # KIX4OTRS-capeIT
+            $Param{TranslationRef} = $Self->_ShowColumnSettings(
+                ClassID      => $ClassID,
+                TitleValue   => $Param{TitleValue},
+                View         => $View,
+                ShowColumns  => $Param{PossibleColumns},
+                Action       => $LayoutObject->{Action},
+                LayoutObject => $LayoutObject,
+            );
+            # EO KIX4OTRS-capeIT
         }
     }
 
@@ -581,11 +709,13 @@ sub ITSMConfigItemListShow {
     # run module
     my $Output = $Object->Run(
         %Param,
-        Limit     => $Limit,
-        StartHit  => $StartHit,
-        PageShown => $PageShown,
-        AllHits   => $Param{Total} || 0,
-        Frontend  => $Frontend,
+        Limit           => $Limit,
+        StartHit        => $StartHit,
+        PageShown       => $PageShown,
+        AllHits         => $Param{Total} || 0,
+        Frontend        => $Frontend,
+        SelectedItems   => $SelectedItemStrg,
+        UnselectedItems => $UnselectedItemStrg,
     );
 
     # create output
@@ -608,10 +738,314 @@ sub ITSMConfigItemListShow {
     return $OutputRaw;
 }
 
+sub _ShowColumnSettings {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    return if !$Param{ClassID};
+    return if !$Param{View};
+    return if !$Param{TitleValue};
+    return if !$Param{Action};
+    return if !$Param{LayoutObject};
+
+    # create needed objects
+    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $UserObject           = $Kernel::OM->Get('Kernel::System::User');
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    my $CustomerUserObject   = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $LogObject            = $Kernel::OM->Get('Kernel::System::Log');
+
+    my $ClassID = $Param{ClassID};
+    my $View    = $Param{View};
+    my $Action  = $Param{Action};
+
+    # get data selection
+    my %CurrentUserData = $UserObject->GetUserData(
+        UserID => $Self->{UserID},
+    );
+
+    # get subattributes for column settings
+    my $Definition;
+    my %DefinitionHash = ();
+    my $ClassList      = ();
+    if ($ClassID) {
+
+        # get definition
+        if ( $ClassID ne 'All' ) {
+
+            # get definition
+            $Definition = $ConfigItemObject->DefinitionGet(
+                ClassID => $ClassID,
+            );
+        }
+        elsif ( $ClassID eq 'All' && $Action eq 'AgentITSMConfigItemSearch' )
+        {
+
+            $ClassList = $GeneralCatalogObject->ItemList(
+                Class => 'ITSM::ConfigItem::Class',
+            );
+
+            # check access
+            $Self->{Config}
+                = $ConfigObject->Get("ITSMConfigItem::Frontend::$Self->{Action}");
+            for my $ClassID ( sort keys %{$ClassList} ) {
+                my $HasAccess = $ConfigItemObject->Permission(
+                    Type    => $Self->{Config}->{Permission},
+                    Scope   => 'Class',
+                    ClassID => $ClassID,
+                    UserID  => $Self->{UserID},
+                );
+
+                delete $ClassList->{$ClassID} if !$HasAccess;
+            }
+
+            # get definition hash
+            for my $Class ( keys %{$ClassList} ) {
+                $DefinitionHash{$Class} = $ConfigItemObject->DefinitionGet(
+                    ClassID => $Class,
+                );
+            }
+        }
+    }
+
+    my $CSSClass           = '';
+    my @SelectedValueArray = ();
+
+    # get user settings
+    if (
+        defined $CurrentUserData{
+            'UserCustomCILV-'
+                . $Action . '-'
+                . $Param{TitleValue}
+        }
+        && $CurrentUserData{
+            'UserCustomCILV-'
+                . $Action . '-'
+                . $Param{TitleValue}
+        }
+        )
+    {
+        my $SelectedColumnString
+            = $CurrentUserData{
+            'UserCustomCILV-'
+                . $Action . '-'
+                . $Param{TitleValue}
+            };
+        my @SelectedColumnArray = split( /,/, $SelectedColumnString );
+
+        # get selected values
+        for my $Item (@SelectedColumnArray) {
+            push @SelectedValueArray, $Param{TitleValue} . '::' . $Item;
+        }
+    }
+
+    # if no columns selected
+    if ( !( scalar @SelectedValueArray ) ) {
+        for my $ShownColumn ( keys %{ $Param{ShowColumns} } ) {
+            next if !$Param{ShowColumns}->{$ShownColumn};
+            push @SelectedValueArray, $Param{TitleValue} . '::' . $ShownColumn;
+        }
+    }
+    else {
+        my @TempArray = ();
+        for my $ShownColumn (@SelectedValueArray) {
+            $ShownColumn =~ m/^(.*?)::(.*)$/;
+            push @TempArray, $2;
+        }
+        if ( $View eq 'Custom' ) {
+            $Param{ShowColumns} = \@TempArray;
+        }
+    }
+
+    # create translation hash
+    my %TranslationHash = (
+        'CurDeplState'     => 'Deployment State',
+        'CurInciState'     => 'Current Incident State',
+        'CurDeplStateType' => 'Deployment State Type',
+        'CurInciStateType' => 'Current Incident State Type',
+        'LastChanged'      => 'Last changed',
+        'CurInciSignal'    => 'Current Incident Signal',
+        'CurDeplSignal'    => 'Current Deployment Signal'
+    );
+
+    # get selected value string
+    my $SelectedValueStrg
+        = '<div class="SortableColumns"><span class="SortableColumnsDescription">'
+        . $LayoutObject->{LanguageObject}->Translate('Selected Columns')
+        . ':</span><ul class="ColumnOrder" id="SortableSelected">';
+
+    my %SelectedAttributes = map { $_ => 1 } @SelectedValueArray;
+
+    # get selected class specific attributes for translation
+    $Self->_ConfigLine(
+        DefinitionRef      => $Definition->{DefinitionRef},
+        CSSClass           => $CSSClass,
+        MainItem           => $Param{TitleValue},
+        SelectedAttributes => \%SelectedAttributes,
+        TranslationRef     => \%TranslationHash,
+        ReturnSelected     => 1,
+    );
+
+    for my $Item (@SelectedValueArray) {
+
+        # translate selected item
+        my @SplitItem = split( /::/, $Item );
+
+        # CI class name will not be translated
+        my @TranslationArray;
+
+        foreach my $SplitPart (@SplitItem) {
+            if ( defined $TranslationHash{$SplitPart} ) {
+                push @TranslationArray,
+                    $LayoutObject->{LanguageObject}->Translate( $TranslationHash{$SplitPart} );
+            }
+            else {
+                push @TranslationArray,
+                    $LayoutObject->{LanguageObject}->Translate($SplitPart);
+            }
+        }
+
+        $SelectedValueStrg .= '<li class="ui-state-default'
+            . $CSSClass
+            . '" name="'
+            . $Item . '">'
+            . join( '::', @TranslationArray )
+            . '<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>'
+            . '</li>';
+    }
+    $SelectedValueStrg .= '</ul></div>';
+
+    # get possible value string
+    my $PossibleValueStrg
+        = '<div class="SortableColumns"><span class="SortableColumnsDescription">'
+        . $LayoutObject->{LanguageObject}->Translate('Possible Columns')
+        . ':</span><ul class="ColumnOrder" id="SortablePossible">';
+
+    # if no possible columns selected
+    if ( !defined $Param{PossibleColumns} || !$Param{PossibleColumns} ) {
+        $Self->{DefaultConfig}
+            = $ConfigObject->Get("ITSMConfigItem::Frontend::AgentITSMConfigItem");
+        $Param{PossibleColumns} = $Self->{DefaultConfig}->{ShowColumns};
+    }
+
+    my @UsedColumns = keys %{ $Param{PossibleColumns} };
+
+    # add main attributes
+    for my $MainItem ( keys %{ $Param{PossibleColumns} } ) {
+
+        next if !$Param{PossibleColumns}->{$MainItem};
+        next if $SelectedAttributes{ $Param{TitleValue} . '::' . $MainItem };
+
+        my $TranslatedMainItem = $TranslationHash{$MainItem} || $MainItem;
+        $PossibleValueStrg .= '<li class="ui-state-default'
+            . $CSSClass
+            . '" name="'
+            . $Param{TitleValue} . '::' . $MainItem . '">'
+            . $LayoutObject->{LanguageObject}->Translate( $Param{TitleValue} ) . '::'
+            . $LayoutObject->{LanguageObject}->Translate($TranslatedMainItem)
+            . '<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>'
+            . '</li>';
+    }
+
+    if ( $ClassID && $ClassID ne 'All' ) {
+
+        # add class specific attributes
+        $PossibleValueStrg .= $Self->_ConfigLine(
+            DefinitionRef      => $Definition->{DefinitionRef},
+            CSSClass           => $CSSClass,
+            MainItem           => $Param{TitleValue},
+            SelectedAttributes => \%SelectedAttributes,
+            TranslationRef     => \%TranslationHash,
+            UsedColumns        => \@UsedColumns,
+        );
+    }
+    elsif ( $ClassID eq 'All' && $Action eq 'AgentITSMConfigItemSearch' ) {
+
+        for my $Class ( keys %{$ClassList} ) {
+
+            # add class specific attributes
+            $PossibleValueStrg .= $Self->_ConfigLine(
+                DefinitionRef      => $DefinitionHash{$Class}->{DefinitionRef},
+                CSSClass           => $CSSClass,
+                MainItem           => $Param{TitleValue},
+                SelectedAttributes => \%SelectedAttributes,
+                TranslationRef     => \%TranslationHash,
+                UsedColumns        => \@UsedColumns,
+            );
+        }
+    }
+    $PossibleValueStrg .= '</ul></div>';
+
+    # Output
+    $LayoutObject->Block(
+        Name => 'OverviewNavSettingCustomCILV',
+        Data => {
+            Columns => $PossibleValueStrg . $SelectedValueStrg,
+        },
+    );
+    return \%TranslationHash;
+}
+
+sub _ConfigLine {
+    my ( $Self, %Param ) = @_;
+
+    # create needed objects
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    if ( !$Param{MainItemTranslated} ) {
+        $Param{MainItemTranslated} = $LayoutObject->{LanguageObject}->Translate( $Param{MainItem} );
+    }
+
+    my $Line = '';
+    for my $Item ( @{ $Param{DefinitionRef} } ) {
+
+        next if ( grep { $_ eq $Item->{Name} } @{ $Param{UsedColumns} } );
+
+        # get name for translating
+        $Param{TranslationRef}->{ $Item->{Key} } = $Item->{Name};
+
+        if (
+            (
+                !$Param{ReturnSelected}
+                && !$Param{SelectedAttributes}->{ $Param{MainItem} . '::' . $Item->{Key} }
+            )
+            ||
+            (
+                $Param{ReturnSelected}
+                && $Param{SelectedAttributes}->{ $Param{MainItem} . '::' . $Item->{Key} }
+            )
+            )
+        {
+            $Line = $Line . '<li class="ui-state-default'
+                . $Param{CSSClass}
+                . '" name="'
+                . $Param{MainItem} . '::' . $Item->{Key} . '">'
+                . $Param{MainItemTranslated} . '::'
+                . $LayoutObject->{LanguageObject}->Translate( $Item->{Name} )
+                . '<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>'
+                . '</li>';
+            push @{ $Param{UsedColumns} }, $Item->{Name};
+        }
+
+        if ( $Item->{Sub} ) {
+            $Line .= $Self->_ConfigLine(
+                DefinitionRef      => $Item->{Sub},
+                CSSClass           => $Param{CSSClass},
+                MainItem           => $Param{MainItem} . '::' . $Item->{Key},
+                MainItemTranslated => $Param{MainItemTranslated} . '::'
+                    . $LayoutObject->{LanguageObject}->Translate( $Item->{Name} ),
+                SelectedAttributes => $Param{SelectedAttributes},
+                TranslationRef     => $Param{TranslationRef},
+                UsedColumns        => $Param{UsedColumns},
+            );
+        }
+    }
+
+    return $Line;
+}
 1;
-
-
-
 
 =back
 

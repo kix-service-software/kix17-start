@@ -7,7 +7,7 @@
 # --
 
 
-[% RenderBlockStart("SidebarFrame") %]
+[% RenderBlockStart("WidgetHeader") %]
 <div id="[% Data.Identifier %]" class="KIXSidebarTools WidgetSimple CanDrag [% Data.AdditionalClasses | html %]">
     <div class="Header">
         <div class="WidgetAction Toggle">
@@ -18,6 +18,14 @@
         </div>
         <h2 class="PaddingLeft15px"><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
+[% RenderBlockEnd("WidgetHeader") %]
+[% RenderBlockStart("CustomerWidgetHeader") %]
+<div id="[% Data.Identifier %]" class="KIXSidebarTools WidgetSimple [% Data.AdditionalClasses | html %]">
+    <div class="Header">
+        <h2><span>[% Translate(Data.Title) | html %]</span></h2>
+    </div>
+[% RenderBlockEnd("CustomerWidgetHeader") %]
+[% RenderBlockStart("SidebarFrame") %]
     <div id="Content[% Data.Identifier %]" class="Content">
 [% RenderBlockStart("SearchBox") %]
         <div class="SearchBox">
@@ -202,12 +210,12 @@
 [% RenderBlockStart("KIXSidebarFAQSearchResultColumnView") %]
                 <td>
                     <a href="[% Env("Baselink") %]Action=[% Data.Frontend | uri %]FAQZoom;ItemID=[% Data.FAQID | uri %]" target="_blank" title="[% Data.Result | html %]" class="MasterActionLink">
-                        [% Data.ResultShort | html %]
+                        [% Data.ResultShort  %]
                     </a>
 [% RenderBlockEnd("KIXSidebarFAQSearchResultColumnView") %]
 [% RenderBlockStart("KIXSidebarFAQSearchResultColumnCompose") %]
                 <td onclick="javascript:KIXSidebarTools.KIXSidebarFAQ.ShowContent('[% Data.FAQID | html %]');" title="[% Data.Result | html %]" style="cursor:pointer;">
-                    [% Data.ResultShort | html %]
+                    [% Data.ResultShort  %]
 [% RenderBlockEnd("KIXSidebarFAQSearchResultColumnCompose") %]
                 </td>
             </tr>

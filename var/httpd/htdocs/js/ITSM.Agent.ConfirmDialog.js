@@ -22,6 +22,24 @@ ITSM.Agent = ITSM.Agent || {};
 ITSM.Agent.ConfirmDialog = (function (TargetNS) {
 
     /**
+     * @private
+     * @name SerializeData
+     * @memberof ITSM.Agent.ConfirmDialog
+     * @function
+     * @returns {String} query string of the data
+     * @param {Object} Data - The data that should be converted.
+     * @description
+     *      Converts a given hash into a query string.
+     */
+    function SerializeData(Data) {
+        var QueryString = '';
+        $.each(Data, function (Key, Value) {
+            QueryString += ';' + encodeURIComponent(Key) + '=' + encodeURIComponent(Value);
+        });
+        return QueryString;
+    }
+
+    /**
      * @variable
      * @private
      *     This variable stores the parameters that are passed from the DTL and contain all the data that the dialog needs.
@@ -79,7 +97,7 @@ ITSM.Agent.ConfirmDialog = (function (TargetNS) {
                         $('div.Dialog:visible div.ContentFooter button').attr('disabled', 'disabled');
 
                         // redirect to the module that does the confirmed action after pressing the Yes button
-                        location.href = Core.Config.Get('Baselink') + LocalDialogData.ConfirmedActionQueryString;
+                        location.href = Core.Config.Get('Baselink') + LocalDialogData.ConfirmedActionQueryString + SerializeData(Core.App.GetSessionInformation());
                     }
                 }, {
                     Label: LocalDialogData.TranslatedText.No,

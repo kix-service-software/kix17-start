@@ -86,6 +86,8 @@ sub Run {
         # lookup each mail address
         MAILADDRESS:
         for my $CurrEmailAddress (@SplitAddresses) {
+            # accept only valid email adresses
+            next if ($CurrEmailAddress =~ /^\s*'.*?'\s*$/g);
 
             # ignore system addresses
             next if ($Self->{SystemAddressObject}->SystemAddressIsLocalAddress( Address => $CurrEmailAddress ));

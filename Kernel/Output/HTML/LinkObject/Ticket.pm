@@ -315,28 +315,72 @@ sub TableCreateComplex {
             if ( $TmpHash{Content} ) {
 
                 if ( $Column eq 'Age' || $Column eq 'EscalationTime' ) {
-                    $TmpHash{Content} = $LayoutObject->CustomerAge(
-                        Age   => $Ticket->{Age},
-                        Space => ' ',
+                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::User')->TicketEscalationDisabledCheck(
+                        TicketID => $TicketID,
+                        UserID   => $Self->{UserID},
                     );
+
+                    if ($TicketEscalationDisabled) {
+                        $TmpHash{Translate} = 1;
+                        $TmpHash{Content}   = 'suspended';
+                    }
+                    else {
+                        $TmpHash{Content} = $LayoutObject->CustomerAge(
+                            Age   => $Ticket->{Age},
+                            Space => ' ',
+                        );
+                    }
                 }
                 elsif ( $Column eq 'EscalationSolutionTime' ) {
-                    $TmpHash{Content} = $LayoutObject->CustomerAgeInHours(
-                        Age => $Ticket->{SolutionTime} || 0,
-                        Space => ' ',
+                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::User')->TicketEscalationDisabledCheck(
+                        TicketID => $TicketID,
+                        UserID   => $Self->{UserID},
                     );
+
+                    if ($TicketEscalationDisabled) {
+                        $TmpHash{Translate} = 1;
+                        $TmpHash{Content}   = 'suspended';
+                    }
+                    else {
+                        $TmpHash{Content} = $LayoutObject->CustomerAgeInHours(
+                            Age => $Ticket->{SolutionTime} || 0,
+                            Space => ' ',
+                        );
+                    }
                 }
                 elsif ( $Column eq 'EscalationResponseTime' ) {
-                    $TmpHash{Content} = $LayoutObject->CustomerAgeInHours(
-                        Age => $Ticket->{FirstResponseTime} || 0,
-                        Space => ' ',
+                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::User')->TicketEscalationDisabledCheck(
+                        TicketID => $TicketID,
+                        UserID   => $Self->{UserID},
                     );
+
+                    if ($TicketEscalationDisabled) {
+                        $TmpHash{Translate} = 1;
+                        $TmpHash{Content}   = 'suspended';
+                    }
+                    else {
+                        $TmpHash{Content} = $LayoutObject->CustomerAgeInHours(
+                            Age => $Ticket->{FirstResponseTime} || 0,
+                            Space => ' ',
+                        );
+                    }
                 }
                 elsif ( $Column eq 'EscalationUpdateTime' ) {
-                    $TmpHash{Content} = $LayoutObject->CustomerAgeInHours(
-                        Age => $Ticket->{UpdateTime} || 0,
-                        Space => ' ',
+                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::User')->TicketEscalationDisabledCheck(
+                        TicketID => $TicketID,
+                        UserID   => $Self->{UserID},
                     );
+
+                    if ($TicketEscalationDisabled) {
+                        $TmpHash{Translate} = 1;
+                        $TmpHash{Content}   = 'suspended';
+                    }
+                    else {
+                        $TmpHash{Content} = $LayoutObject->CustomerAgeInHours(
+                            Age => $Ticket->{UpdateTime} || 0,
+                            Space => ' ',
+                        );
+                    }
                 }
                 elsif ( $Column eq 'PendingTime' ) {
 
@@ -738,16 +782,17 @@ sub SearchOptionList {
         }
     }
 
+    # if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Type') ) {
+    #     push @SearchOptionList,
+    #         {
+    #         Key  => 'TypeIDs',
+    #         Name => Translatable('Type'),
+    #         Type => 'List',
+    #         };
+    # }
+
     # EO KIX4OTRS-capeIT
 
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Type') ) {
-        push @SearchOptionList,
-            {
-            Key  => 'TypeIDs',
-            Name => Translatable('Type'),
-            Type => 'List',
-            };
-    }
 
     if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ArchiveSystem') ) {
         push @SearchOptionList,
@@ -895,9 +940,6 @@ sub SearchOptionList {
 }
 
 1;
-
-
-
 
 =back
 

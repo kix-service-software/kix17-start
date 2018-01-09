@@ -195,7 +195,7 @@ sub Run {
         }
     }
 
-    # get needed object
+    # get needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
@@ -242,23 +242,75 @@ sub Run {
     my $CounterOnSite = 0;
     my @TicketIDsShown;
 
+    # get needed un-/selected tickets for bulk feature
+    my @SelectedItems     = split(',', $Param{SelectedItems});
+    my @UnselectedItems   = split(',', $Param{UnselectedItems});
+
     # check if there are tickets to show
     if ( scalar @{ $Param{TicketIDs} } ) {
 
+        my $BulkActivate    = 0;
+        my $ItemALLChecked  = 0;
+        my $SelectedAll     = 0;
+        my $BulkSelectedAll = 0;
+
         for my $TicketID ( @{ $Param{TicketIDs} } ) {
+            if ( !grep(/^$TicketID$/, @UnselectedItems)
+                && !grep(/^$TicketID$/, @SelectedItems)
+            ) {
+                push(@UnselectedItems, $TicketID);
+            }
+        }
+
+        for my $TicketID ( @{ $Param{TicketIDs} } ) {
+            my $ItemChecked = '';
             $Counter++;
+
             if (
                 $Counter >= $Param{StartHit}
                 && $Counter < ( $Param{PageShown} + $Param{StartHit} )
                 )
             {
+                if ( grep( /^$TicketID$/, @SelectedItems ) ) {
+                    $ItemChecked = ' checked="checked"';
+                }
+
+                if ( !scalar @UnselectedItems
+                    && !$ItemALLChecked
+                ) {
+                    $ItemALLChecked = 1;
+                }
+
+                if ( $Param{AllHits} > $Param{PageShown}
+                    && !$SelectedAll
+                ) {
+                    $SelectedAll = 1;
+                }
+
                 push @TicketIDsShown, $TicketID;
                 my $Output = $Self->_Show(
-                    TicketID => $TicketID,
-                    Counter  => $CounterOnSite,
-                    Bulk     => $BulkFeature,
-                    Config   => $Param{Config},
+                    TicketID        => $TicketID,
+                    Counter         => $CounterOnSite,
+                    Bulk            => $BulkFeature,
+                    Config          => $Param{Config},
+                    ItemChecked     => $ItemChecked,
+                    BulkActivate    => $BulkActivate,
+                    BulkSelectedAll => $BulkSelectedAll,
+                    ItemALLChecked  => $ItemALLChecked,
                 );
+
+                if ( !$BulkActivate
+                    && $ItemChecked
+                ) {
+                    $BulkActivate = 1;
+                }
+
+                if ( !$BulkSelectedAll
+                    && $SelectedAll
+                ) {
+                    $BulkSelectedAll = 1;
+                }
+
                 $CounterOnSite++;
                 if ( !$Param{Output} ) {
                     $LayoutObject->Print( Output => $Output );
@@ -297,8 +349,6 @@ sub Run {
         }
     }
 
-    # add action row js data
-
     return $OutputRaw;
 }
 
@@ -317,6 +367,28 @@ sub _Show {
     # get needed objects
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # check if bulk feature is enabled
+    if ( $Param{Bulk} ) {
+        $LayoutObject->Block(
+            Name => 'Bulk',
+            Data => \%Param,
+        );
+
+        if ( !$Param{BulkActivate}
+            && $Param{ItemChecked}
+        ) {
+            $LayoutObject->Block(
+                Name => 'BulkActivate',
+                Data => \%Param,
+            );
+        }
+        if ( !$Param{BulkSelectedAll} ) {
+            $LayoutObject->Block(
+                Name => 'BulkSelectedAll',
+            );
+        }
+    }
 
     # get move queues
     my %MoveQueues = $TicketObject->MoveList(
@@ -579,9 +651,23 @@ sub _Show {
     # check if bulk feature is enabled
     if ( $Param{Bulk} ) {
         $LayoutObject->Block(
-            Name => Translatable('Bulk'),
+            Name => 'Bulk',
             Data => \%Param,
         );
+
+        if ( !$Param{BulkActivate}
+            && $Param{ItemChecked}
+        ) {
+            $LayoutObject->Block(
+                Name => 'BulkActivate',
+                Data => \%Param,
+            );
+        }
+        if ( !$Param{BulkSelectedAll} ) {
+            $LayoutObject->Block(
+                Name => 'BulkSelectedAll',
+            );
+        }
     }
 
     # show ticket flags
@@ -744,59 +830,107 @@ sub _Show {
 
     # show first response time if needed
     if ( defined $Article{FirstResponseTime} ) {
-        $Article{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
-            Age   => $Article{FirstResponseTime},
-            Space => ' ',
+        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+            TicketID => $Param{TicketID},
+            UserID   => $Self->{UserID},
         );
-        $Article{FirstResponseTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
-            Age   => $Article{FirstResponseTimeWorkingTime},
-            Space => ' ',
-        );
-        if ( 60 * 60 * 1 > $Article{FirstResponseTime} ) {
-            $Article{FirstResponseTimeClass} = 'Warning'
+
+        if ($TicketEscalationDisabled) {
+            $Article{FirstResponseTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Article{FirstResponseTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
+
+            $LayoutObject->Block(
+                Name => 'FirstResponseTime',
+                Data => { %Param, %Article },
+            );
         }
-        $LayoutObject->Block(
-            Name => 'FirstResponseTime',
-            Data => { %Param, %Article },
-        );
+        else {
+            $Article{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                Age   => $Article{FirstResponseTime},
+                Space => ' ',
+            );
+            $Article{FirstResponseTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
+                Age   => $Article{FirstResponseTimeWorkingTime},
+                Space => ' ',
+            );
+            if ( 60 * 60 * 1 > $Article{FirstResponseTime} ) {
+                $Article{FirstResponseTimeClass} = 'Warning'
+            }
+            $LayoutObject->Block(
+                Name => 'FirstResponseTime',
+                Data => { %Param, %Article },
+            );
+        }
     }
 
     # show update time if needed
     if ( defined $Article{UpdateTime} ) {
-        $Article{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
-            Age   => $Article{UpdateTime},
-            Space => ' ',
+        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+            TicketID => $Param{TicketID},
+            UserID   => $Self->{UserID},
         );
-        $Article{UpdateTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
-            Age   => $Article{UpdateTimeWorkingTime},
-            Space => ' ',
-        );
-        if ( 60 * 60 * 1 > $Article{UpdateTime} ) {
-            $Article{UpdateTimeClass} = 'Warning'
+
+        if ($TicketEscalationDisabled) {
+            $Article{UpdateTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Article{UpdateTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
+
+            $LayoutObject->Block(
+                Name => 'UpdateTime',
+                Data => { %Param, %Article },
+            );
         }
-        $LayoutObject->Block(
-            Name => 'UpdateTime',
-            Data => { %Param, %Article },
-        );
+        else {
+            $Article{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                Age   => $Article{UpdateTime},
+                Space => ' ',
+            );
+            $Article{UpdateTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
+                Age   => $Article{UpdateTimeWorkingTime},
+                Space => ' ',
+            );
+            if ( 60 * 60 * 1 > $Article{UpdateTime} ) {
+                $Article{UpdateTimeClass} = 'Warning'
+            }
+            $LayoutObject->Block(
+                Name => 'UpdateTime',
+                Data => { %Param, %Article },
+            );
+        }
     }
 
     # show solution time if needed
     if ( defined $Article{SolutionTime} ) {
-        $Article{SolutionTimeHuman} = $LayoutObject->CustomerAgeInHours(
-            Age   => $Article{SolutionTime},
-            Space => ' ',
+        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+            TicketID => $Param{TicketID},
+            UserID   => $Self->{UserID},
         );
-        $Article{SolutionTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
-            Age   => $Article{SolutionTimeWorkingTime},
-            Space => ' ',
-        );
-        if ( 60 * 60 * 1 > $Article{SolutionTime} ) {
-            $Article{SolutionTimeClass} = 'Warning'
+
+        if ($TicketEscalationDisabled) {
+            $Article{SolutionTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Article{SolutionTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
+
+            $LayoutObject->Block(
+                Name => 'SolutionTime',
+                Data => { %Param, %Article },
+            );
         }
-        $LayoutObject->Block(
-            Name => 'SolutionTime',
-            Data => { %Param, %Article },
-        );
+        else {
+            $Article{SolutionTimeHuman} = $LayoutObject->CustomerAgeInHours(
+                Age   => $Article{SolutionTime},
+                Space => ' ',
+            );
+            $Article{SolutionTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
+                Age   => $Article{SolutionTimeWorkingTime},
+                Space => ' ',
+            );
+            if ( 60 * 60 * 1 > $Article{SolutionTime} ) {
+                $Article{SolutionTimeClass} = 'Warning'
+            }
+            $LayoutObject->Block(
+                Name => 'SolutionTime',
+                Data => { %Param, %Article },
+            );
+        }
     }
 
     # Dynamic fields

@@ -890,6 +890,11 @@ sub ArticleQuote {
 sub TicketListShow {
     my ( $Self, %Param ) = @_;
 
+    # KIX4OTRS-capeIT
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+
+    # EO KIX4OTRS-capeIT
+
     # take object ref to local, remove it from %Param (prevent memory leak)
     my $Env = $Param{Env};
     delete $Param{Env};
@@ -926,7 +931,14 @@ sub TicketListShow {
 
     # update preferences if needed
     my $Key = 'UserTicketOverview' . $Env->{Action};
-    if ( !$ConfigObject->Get('DemoSystem') && ( $Self->{$Key} // '' ) ne $View ) {
+
+    # KIX4OTRS-capeIT
+    my $LastView = $Self->{$Key} || '';
+
+    # if ( !$ConfigObject->Get('DemoSystem') && $Self->{$Key} ne $View ) {
+    if ( !$ConfigObject->Get('DemoSystem') && $LastView ne $View ) {
+
+        # EO KIX4OTRS-capeIT
         $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
             UserID => $Self->{UserID},
             Key    => $Key,
@@ -964,7 +976,9 @@ sub TicketListShow {
 
     # load overview backend module
     if ( !$Kernel::OM->Get('Kernel::System::Main')->Require( $Backends->{$View}->{Module} ) ) {
-        return $Env->{LayoutObject}->FatalError();
+        return $Self->FatalError(
+            Message => 'Can not load overview backend ' . $Backends->{$View}->{Module},
+        );
     }
     my $Object = $Backends->{$View}->{Module}->new( %{$Env} );
     return if !$Object;
@@ -1010,20 +1024,51 @@ sub TicketListShow {
         $StartHit = ( ( $Pages - 1 ) * $PageShown ) + 1;
     }
 
+
+    my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $UploadCacheObject   = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
+
+    my $SelectedItemStrg    = $ParamObject->GetParam( Param => 'SelectedItems' )   || '';
+    my $UnselectedItemStrg  = $ParamObject->GetParam( Param => 'UnselectedItems' ) || '';
+    my @SelectedItems       = split(',', $SelectedItemStrg);
+    my @UnselectedItems     = split(',', $UnselectedItemStrg);
+
+    for my $TicketID ( @{$Param{TicketIDs}} ) {
+        if ( !grep(/^$TicketID$/, @UnselectedItems)
+            && !grep(/^$TicketID$/, @SelectedItems)
+        ) {
+            push(@UnselectedItems, $TicketID);
+        }
+    }
+
+    if ( !$Self->{FormID} ) {
+        $Self->{FormID} = $UploadCacheObject->FormIDCreate();
+    }
+
     # build nav bar
-    my $Limit = $Param{Limit} || 20_000;
+    my $Limit   = $Param{Limit} || 20_000;
     my %PageNav = $Self->PageNavBar(
-        Limit     => $Limit,
-        StartHit  => $StartHit,
-        PageShown => $PageShown,
-        AllHits   => $Param{Total} || 0,
-        Action    => 'Action=' . $Self->{Action},
-        Link      => $Param{LinkPage},
-        IDPrefix  => $Self->{Action},
+        Limit               => $Limit,
+        StartHit            => $StartHit,
+        PageShown           => $PageShown,
+        AllHits             => $Param{Total} || 0,
+        Action              => 'Action=' . $Self->{Action},
+        Link                => $Param{LinkPage},
+        IDPrefix            => $Self->{Action},
+        SelectedItems       => join(',', @SelectedItems)   || '',
+        UnselectedItems     => join(',', @UnselectedItems) || '',
+        FormID              => $Self->{FormID}
     );
 
     # build shown ticket per page
-    $Param{RequestedURL}    = $Param{RequestedURL} || "Action=$Self->{Action}";
+    # KIX4OTRS-capeIT
+    # this results in a re-open of the search dialog if someone uses the context settings after a ticket search
+    # $Param{RequestedURL}    = "Action=$Self->{Action}";
+    $Param{RequestedURL}
+        = $Kernel::OM->Get('Kernel::System::Web::Request')->{Query}->url( -query_string => 1 )
+        || "Action=$Self->{Action}";
+
+    # EO KIX4OTRS-capeIT
     $Param{Group}           = $Group;
     $Param{PreferencesKey}  = $PageShownPreferencesKey;
     $Param{PageShownString} = $Self->BuildSelection(
@@ -1165,20 +1210,6 @@ sub TicketListShow {
                 my @ColumnsEnabled = @{ $Object->{ColumnsEnabled} };
                 my @ColumnsAvailable;
 
-                # remove duplicate columns
-                my %UniqueColumns;
-                my @ColumnsEnabledAux;
-
-                for my $Column (@ColumnsEnabled) {
-                    if ( !$UniqueColumns{$Column} ) {
-                        push @ColumnsEnabledAux, $Column;
-                    }
-                    $UniqueColumns{$Column} = 1;
-                }
-
-                # set filtered column list
-                @ColumnsEnabled = @ColumnsEnabledAux;
-
                 for my $ColumnName ( sort { $a cmp $b } @{ $Object->{ColumnsAvailable} } ) {
                     if ( !grep { $_ eq $ColumnName } @ColumnsEnabled ) {
                         push @ColumnsAvailable, $ColumnName;
@@ -1186,8 +1217,14 @@ sub TicketListShow {
                 }
 
                 my %Columns;
-                for my $ColumnName ( sort @ColumnsAvailable ) {
-                    $Columns{Columns}->{$ColumnName} = ( grep { $ColumnName eq $_ } @ColumnsEnabled ) ? 1 : 0;
+
+                # KIX4OTRS-capeIT
+                # for my $ColumnName ( sort @ColumnsAvailable ) {
+                for my $ColumnName (@ColumnsAvailable) {
+
+                    # EO KIX4OTRS-capeIT
+                    $Columns{Columns}->{$ColumnName}
+                        = ( grep { $ColumnName eq $_ } @ColumnsEnabled ) ? 1 : 0;
                 }
 
                 $Self->Block(
@@ -1197,7 +1234,7 @@ sub TicketListShow {
                         ColumnsEnabled   => $JSONObject->Encode( Data => \@ColumnsEnabled ),
                         ColumnsAvailable => $JSONObject->Encode( Data => \@ColumnsAvailable ),
                         NamePref         => $PrefKeyColumns,
-                        Desc             => Translatable('Shown Columns'),
+                        Desc             => 'Shown Columns',
                         Name             => $Env->{Action},
                         View             => $View,
                         GroupName        => 'TicketOverviewFilterSettings',
@@ -1205,17 +1242,17 @@ sub TicketListShow {
                     },
                 );
             }
-        }    # end show column filters preferences
+            }    # end show column filters preferences
 
-        # check if there was stored filters, and print a link to delete them
-        if ( IsHashRefWithData( $Object->{StoredFilters} ) ) {
+            # check if there was stored filters, and print a link to delete them
+            if ( IsHashRefWithData( $Object->{StoredFilters} ) ) {
             $Self->Block(
-                Name => 'DocumentActionRowRemoveColumnFilters',
-                Data => {
-                    CSS => "ContextSettings RemoveFilters",
-                    %Param,
-                },
-            );
+                    Name => 'DocumentActionRowRemoveColumnFilters',
+                    Data => {
+                        CSS => "ContextSettings RemoveFilters",
+                        %Param,
+                    },
+                );
         }
     }
 
@@ -1243,12 +1280,14 @@ sub TicketListShow {
     # run overview backend module
     my $Output = $Object->Run(
         %Param,
-        Config    => $Backends->{$View},
-        Limit     => $Limit,
-        StartHit  => $StartHit,
-        PageShown => $PageShown,
-        AllHits   => $Param{Total} || 0,
-        Output    => $Param{Output} || '',
+        Config          => $Backends->{$View},
+        Limit           => $Limit,
+        StartHit        => $StartHit,
+        PageShown       => $PageShown,
+        AllHits         => $Param{Total} || 0,
+        Output          => $Param{Output} || '',
+        SelectedItems   => $SelectedItemStrg,
+        UnselectedItems => $UnselectedItemStrg,
     );
     if ( !$Param{Output} ) {
         $Self->Print( Output => \$Output );

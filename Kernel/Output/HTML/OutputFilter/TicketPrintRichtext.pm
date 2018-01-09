@@ -109,7 +109,7 @@ sub Run {
             = '(<a.*?href=[^>]*?AgentTicketPrint;.*?")(.*?)AsPopup.*?PopupType_TicketAction(.*?</a>)';
         if ( $Param{Data} !~ /return TicketPrintRichtextInit/ ) {
             ${ $Param{Data} }
-                =~ s{ $ReplaceString }{$1 onclick="javascript:return TicketPrintRichtextInit(\$(this));"$2$3}gxism;
+                =~ s{ $ReplaceString }{$1 onclick="javascript:return TicketPrintRichtextInit(\$(this));"$2$3}gxi;
         }
     }
     elsif ( $AgentData{UserPrintBehaviour} eq 'printrichtext'

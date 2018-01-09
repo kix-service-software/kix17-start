@@ -8,82 +8,51 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
+<form name="Pagination" id="Pagination" method="post">
+[% RenderBlockStart("PageHiddenGeneric") %]
+    <input type="hidden" name="[% Data.Name %]" value="[% Data.Value %]" />
+[% RenderBlockEnd("PageHiddenGeneric") %]
+[% RenderBlockStart("PageHidden") %]
+    <input type="hidden" name="StartWindow"     value="" />
+    <input type="hidden" name="StartHit"        value="" />
+[% RenderBlockEnd("PageHidden") %]
 
 [% RenderBlockStart("PageBack") %]
-<a id="[% Data.IDPrefix %]PageAllBack" href="[% Data.BaselinkAllBack %]" title="[% Translate("Show first page") | html %]">|&lt;</a>
-<a id="[% Data.IDPrefix %]PageOneBack" href="[% Data.BaselinkAllNext %]" title="[% Translate("Show previous pages") | html %]">&lt;&lt;</a>
+    <a id="[% Data.IDPrefix %]PageAllBack" title="[% Translate("Show first page") | html %]"     class="PageLink" StartHit="[% Data.StartHitBack %]" StartWindow="[% Data.StartWindowBack %]">|&lt;</a>
+    <a id="[% Data.IDPrefix %]PageOneBack" title="[% Translate("Show previous pages") | html %]" class="PageLink" StartHit="[% Data.StartHitNext %]" StartWindow="[% Data.StartWindowNext %]">&lt;&lt;</a>
 [% RenderBlockEnd("PageBack") %]
 [% RenderBlockStart("PageBackAjax") %]
-<a id="[% Data.IDPrefix %]PageAllBack" href="#" title="[% Translate("Show first page") | html %]">|&lt;</a>
-<a id="[% Data.IDPrefix %]PageOneBack" href="#" title="[% Translate("Show previous pages") | html %]">&lt;&lt;</a>
-[% WRAPPER JSOnDocumentComplete %]
-<script type="text/javascript">//<![CDATA[
-    $('#[% Data.IDPrefix %]PageAllBack').unbind('click').bind('click', function(){
-        var $Container = $(this).parents('.WidgetSimple');
-        $Container.addClass('Loading');
-        Core.AJAX.ContentUpdate($('#[% Data.AjaxReplace %]'), '[% Data.BaselinkAllBack %]', function () {
-            $Container.removeClass('Loading');
-        });
-        return false;
-    });
-    $('#[% Data.IDPrefix %]PageOneBack').unbind('click').bind('click', function(){
-        var $Container = $(this).parents('.WidgetSimple');
-        $Container.addClass('Loading');
-        Core.AJAX.ContentUpdate($('#[% Data.AjaxReplace %]'), '[% Data.BaselinkAllNext %]', function () {
-            $Container.removeClass('Loading');
-        });
-        return false;
-    });
-//]]></script>
-[% END %]
+    <a id="[% Data.IDPrefix %]PageAllBack" title="[% Translate("Show first page") | html %]"     class="PageLink PageAJAX" StartHit="[% Data.StartHitBack %]" StartWindow="[% Data.StartWindowBack %]" Identifier="[% Data.AjaxReplace %]">|&lt;</a>
+    <a id="[% Data.IDPrefix %]PageOneBack" title="[% Translate("Show previous pages") | html %]" class="PageLink PageAJAX" StartHit="[% Data.StartHitNext %]" StartWindow="[% Data.StartWindowNext %]" Identifier="[% Data.AjaxReplace %]">&lt;&lt;</a>
 [% RenderBlockEnd("PageBackAjax") %]
 
 
 [% RenderBlockStart("Page") %]
-<a id="[% Data.IDPrefix %]Page[% Data.PageNumber %]" href="[% Data.BaselinkAll %]"[% Data.SelectedPage %] title="[% Translate("Show page %s", Data.PageNumber) | html %]">[% Data.PageNumber %]</a>
+    <a id="[% Data.IDPrefix %]Page[% Data.PageNumber %]" class="PageLink [% Data.SelectedPage %]" title="[% Translate("Show page %s", Data.PageNumber) | html %]"    StartHit="[% Data.StartHit %]" StartWindow="[% Data.StartWindow %]">[% Data.PageNumber %]</a>
 [% RenderBlockEnd("Page") %]
 [% RenderBlockStart("PageAjax") %]
-<a id="[% Data.IDPrefix %]Page[% Data.PageNumber %]" href="#"[% Data.SelectedPage %] title="[% Translate("Show page %s", Data.PageNumber) | html %]">[% Data.PageNumber %]</a>
-[% WRAPPER JSOnDocumentComplete %]
-<script type="text/javascript">//<![CDATA[
-    $('#[% Data.IDPrefix %]Page[% Data.PageNumber %]').unbind('click').bind('click', function(){
-        var $Container = $(this).parents('.WidgetSimple');
-        $Container.addClass('Loading');
-        Core.AJAX.ContentUpdate($('#[% Data.AjaxReplace %]'), '[% Data.BaselinkAll %]', function () {
-            $Container.removeClass('Loading');
-        });
-        return false;
-    });
-//]]></script>
-[% END %]
+    <a id="[% Data.IDPrefix %]Page[% Data.PageNumber %]" class="PageLink PageAJAX [% Data.SelectedPage %]" title="[% Translate("Show page %s", Data.PageNumber) | html %]"   Identifier="[% Data.AjaxReplace %]" StartHit="[% Data.StartHit %]" StartWindow="[% Data.StartWindow %]">[% Data.PageNumber %]</a>
 [% RenderBlockEnd("PageAjax") %]
 
 
 [% RenderBlockStart("PageForward") %]
-<a id="[% Data.IDPrefix %]PageOneForward" href="[% Data.BaselinkAllBack %]" title="[% Translate("Show next pages") | html %]">&gt;&gt;</a>
-<a id="[% Data.IDPrefix %]PageAllForward" href="[% Data.BaselinkAllNext %]" title="[% Translate("Show last page") | html %]">&gt;|</a>
+    <a id="[% Data.IDPrefix %]PageOneForward" title="[% Translate("Show next pages") | html %]" class="PageLink" StartHit="[% Data.StartHitBack %]" StartWindow="[% Data.StartWindowBack %]">&gt;&gt;</a>
+    <a id="[% Data.IDPrefix %]PageAllForward" title="[% Translate("Show last page") | html %]"  class="PageLink" StartHit="[% Data.StartHitNext %]" StartWindow="[% Data.StartWindowNext %]">&gt;|</a>
 [% RenderBlockEnd("PageForward") %]
 [% RenderBlockStart("PageForwardAjax") %]
-<a id="[% Data.IDPrefix %]PageOneForward" href="#" title="[% Translate("Show next pages") | html %]">&gt;&gt;</a>
-<a id="[% Data.IDPrefix %]PageAllForward" href="#" title="[% Translate("Show last page") | html %]">&gt;|</a>
+    <a id="[% Data.IDPrefix %]PageOneForward" title="[% Translate("Show next pages") | html %]" class="PageLink PageAJAX" StartHit="[% Data.StartHitBack %]" StartWindow="[% Data.StartWindowBack %]" Identifier="[% Data.AjaxReplace %]">&gt;&gt;</a>
+    <a id="[% Data.IDPrefix %]PageAllForward" title="[% Translate("Show last page") | html %]"  class="PageLink PageAJAX" StartHit="[% Data.StartHitNext %]" StartWindow="[% Data.StartWindowNext %]" Identifier="[% Data.AjaxReplace %]">&gt;|</a>
+[% RenderBlockEnd("PageForwardAjax") %]
+
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-    $('#[% Data.IDPrefix %]PageOneForward').unbind('click').bind('click', function(){
-        var $Container = $(this).parents('.WidgetSimple');
-        $Container.addClass('Loading');
-        Core.AJAX.ContentUpdate($('#[% Data.AjaxReplace %]'), '[% Data.BaselinkAllBack %]', function () {
-            $Container.removeClass('Loading');
-        });
-        return false;
-    });
-    $('#[% Data.IDPrefix %]PageAllForward').unbind('click').bind('click', function(){
-        var $Container = $(this).parents('.WidgetSimple');
-        $Container.addClass('Loading');
-        Core.AJAX.ContentUpdate($('#[% Data.AjaxReplace %]'), '[% Data.BaselinkAllNext %]', function () {
-            $Container.removeClass('Loading');
-        });
-        return false;
-    });
+[% RenderBlockStart("PageLink") %]
+    Core.UI.Pagination.Init('[% Data.Baselink %]', '[% Data.IDPrefix %]');
+[% RenderBlockEnd("PageLink") %]
+
+[% RenderBlockStart("PageSelectItem") %]
+    Core.UI.Pagination.InitSelectItem();
+[% RenderBlockEnd("PageSelectItem") %]
 //]]></script>
 [% END %]
-[% RenderBlockEnd("PageForwardAjax") %]
+</form>

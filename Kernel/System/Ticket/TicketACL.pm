@@ -899,7 +899,7 @@ sub TicketAcl {
             }
 
             # KIX4OTRS-capeIT
-            # build new FormFields data hash
+            # build new FormFields data hash for Possible
             if (
                 ( %Checks || %ChecksDatabase )
                 && $Match
@@ -956,6 +956,118 @@ sub TicketAcl {
                 };
             }
 
+            # build new FormFields data hash for PossibleAdd
+            elsif (
+                ( %Checks || %ChecksDatabase )
+                && $Match
+                && $MatchTry
+                && $Step{PossibleAdd}->{'Form'}
+                )
+            {
+
+                $UseNewParams = 1;
+
+                # If we haven't had any TicketAclFormData yet
+                # Populate with the default visible DynamicFields for that Action
+                if ( !IsHashRefWithData( $Self->{TicketAclFormData} ) ) {
+
+                    $Self->{TicketAclFormData} = {};
+
+                    if ( $Param{Action} ) {
+
+                        # get screen configuration
+                        my $ScreenConfig = $Kernel::OM->Get('Kernel::Config')->Get(
+                            'Ticket::Frontend::' . $Param{Action}
+                        );
+
+                        if (
+                            IsHashRefWithData($ScreenConfig)
+                            && IsHashRefWithData( $ScreenConfig->{DynamicField} )
+                            )
+                        {
+                            $Self->{TicketAclFormData} = $ScreenConfig->{DynamicField};
+                        }
+                    }
+                }
+
+                # ACL GUI editor sets all values as arrays, while a scalar value 0, 1 or 2 is
+                #    expected, find and convert any array to scalar, using its first value item
+                my %Form;
+
+                # loop all fields in From step
+                for my $Key (sort keys %{ $Step{PossibleAdd}->{'Form'} } ){
+
+                    # check if content is an array and extract the first value
+                    if ( ref $Step{PossibleAdd}->{'Form'}->{$Key} eq 'ARRAY' ) {
+                        $Form{$Key} = $Step{PossibleAdd}->{'Form'}->{$Key}->[0] || 0;
+                    }
+
+                    # otherwise it should be a scalar value, that can be assigned directly
+                    else {
+                        $Form{$Key} = $Step{PossibleAdd}->{'Form'}->{$Key};
+                    }
+                }
+                $Self->{TicketAclFormData} = {
+                    %{ $Self->{TicketAclFormData} },
+                    %Form,
+                };
+            }
+
+            # build new FormFields data hash for PossibleNot
+            elsif (
+                ( %Checks || %ChecksDatabase )
+                && $Match
+                && $MatchTry
+                && $Step{PossibleNot}->{'Form'}
+                )
+            {
+                $UseNewParams = 1;
+
+                # If we haven't had any TicketAclFormData yet
+                # Populate with the default visible DynamicFields for that Action
+                if ( !IsHashRefWithData( $Self->{TicketAclFormData} ) ) {
+
+                    $Self->{TicketAclFormData} = {};
+
+                    if ( $Param{Action} ) {
+
+                        # get screen configuration
+                        my $ScreenConfig = $Kernel::OM->Get('Kernel::Config')->Get(
+                            'Ticket::Frontend::' . $Param{Action}
+                        );
+
+                        if (
+                            IsHashRefWithData($ScreenConfig)
+                            && IsHashRefWithData( $ScreenConfig->{DynamicField} )
+                            )
+                        {
+                            $Self->{TicketAclFormData} = $ScreenConfig->{DynamicField};
+                        }
+                    }
+                }
+
+                # ACL GUI editor sets all values as arrays, while a scalar value 0, 1 or 2 is
+                #    expected, find and convert any array to scalar, using its first value item
+                my %Form;
+
+                # loop all fields in From step
+                for my $Key (sort keys %{ $Step{PossibleNot}->{'Form'} } ){
+
+                    # check if content is an array and extract the first value
+                    if ( ref $Step{PossibleNot}->{'Form'}->{$Key} eq 'ARRAY' ) {
+                        $Form{$Key} = !($Step{PossibleNot}->{'Form'}->{$Key}->[0]) || 0;
+                    }
+
+                    # otherwise it should be a scalar value, that can be assigned directly
+                    else {
+                        $Form{$Key} = !($Step{PossibleNot}->{'Form'}->{$Key});
+                    }
+                }
+                $Self->{TicketAclFormData} = {
+                    %{ $Self->{TicketAclFormData} },
+                    %Form,
+                };
+            }
             # EO KIX4OTRS-capeIT
         }
 

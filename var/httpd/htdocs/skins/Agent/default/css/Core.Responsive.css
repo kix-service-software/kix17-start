@@ -1458,3 +1458,7 @@
         display: none;
     }
 }
+
+#ResponsiveCssLoaded {
+    display: none;
+}
