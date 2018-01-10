@@ -18,13 +18,6 @@
     Core.Config.Set('Duplicated.RemoveText', [% Translate("It is going to be deleted from the field, please try again.") | JSON %]);
     Core.Config.Set('Ticket::Frontend::AgentTicketPhone::AllowMultipleFrom', "[% Config("Ticket::Frontend::AgentTicketPhone::AllowMultipleFrom") %]");
     Core.Agent.CustomerSearch.Init($("#CustomerAutoComplete, .CustomerAutoComplete"));
-
-# KIX4OTRS-capeIT
-#    $("#CustomerAutoComplete, .CustomerAutoComplete").each(function () {
-#        Core.Agent.CustomerSearch.Init($(this), '[% Data.ActiveAutoComplete | html %]');
-#    });
-# EO KIX4OTRS-capeIT
-
 //]]></script>
 [% END %]
 [% RenderBlockEnd("CustomerSearchAutoComplete") %]
