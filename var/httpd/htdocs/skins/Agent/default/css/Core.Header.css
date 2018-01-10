@@ -101,6 +101,9 @@
     top: 10px;
     position: absolute;
     z-index: 20;
+}
+
+#Header.ToolbarTop > #ToolBar {
     padding-right: 300px;
     height: 31px;
     overflow: hidden;
