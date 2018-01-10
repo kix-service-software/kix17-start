@@ -1244,8 +1244,8 @@ sub _GetTos {
         for my $QueueID ( sort keys %Tos ) {
             my %QueueData = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet( ID => $QueueID );
 
-            # permission check, can we create new tickets in queue
-            next QUEUEID if !$UserGroups{ $QueueData{GroupID} };
+            # permission check, can we create new tickets in queue - disabled with usablity-cr T#2017051690000887
+            # next QUEUEID if !$UserGroups{ $QueueData{GroupID} };
 
             my $String = $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionString')
                 || '<Realname> <<Email>> - Queue: <Queue>';
@@ -1301,16 +1301,8 @@ sub _MaskNew {
     }
 
     # build customer search autocomplete field
-    my $AutoCompleteConfig
-        = $ConfigObject->Get('Ticket::Frontend::CustomerSearchAutoComplete');
     $LayoutObject->Block(
         Name => 'CustomerSearchAutoComplete',
-        Data => {
-            ActiveAutoComplete  => $AutoCompleteConfig->{Active},
-            minQueryLength      => $AutoCompleteConfig->{MinQueryLength} || 2,
-            queryDelay          => $AutoCompleteConfig->{QueryDelay} || 100,
-            maxResultsDisplayed => $AutoCompleteConfig->{MaxResultsDisplayed} || 20,
-        },
     );
 
     # build customer portal group selection string

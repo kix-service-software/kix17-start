@@ -50,16 +50,8 @@ sub Run {
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my $AutoCompleteConfig =
-        $ConfigObject->Get('Ticket::Frontend::CustomerSearchAutoComplete');
     $LayoutObject->Block(
         Name => 'CustomerSearchAutoComplete',
-        Data => {
-            ActiveAutoComplete  => $AutoCompleteConfig->{Active},
-            minQueryLength      => $AutoCompleteConfig->{MinQueryLength} || 2,
-            queryDelay          => $AutoCompleteConfig->{QueryDelay} || 0.1,
-            maxResultsDisplayed => $AutoCompleteConfig->{MaxResultsDisplayed} || 20,
-        },
     );
 
     my $CustomerUserLogin = $Self->{Config}->{CustomerUserLogin};
@@ -68,9 +60,6 @@ sub Run {
         # initialize autocomplete for customer search on AJAXUpdate
         $LayoutObject->Block(
             Name => 'CustomerSearchAutoCompleteOnAJAX',
-            Data => {
-                ActiveAutoComplete => $AutoCompleteConfig->{Active},
-            },
         );
 
         # get customer data

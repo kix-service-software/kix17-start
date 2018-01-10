@@ -1516,27 +1516,17 @@ sub MaskAgentZoom {
             };
         }
 
-        # get current article count
-        my $CurrentArticleCount = $Count;
-        if ( $NeedPagination && $Pagination->{CurrentPage} != $Pages ) {
-            $CurrentArticleCount = scalar @ArticleBox
-        }
 
         # show article tree
         $Param{ArticleTree} = $Self->_ArticleTree(
-            Ticket          => \%Ticket,
-            ArticleFlags    => \%ArticleFlags,
-            ArticleID       => $ArticleID,
-            ArticleMaxLimit => $ArticleMaxLimit,
-            ArticleBox      => \@ArticleBox,
-            Pagination      => $Pagination,
-            Page            => $Page,
-
-            # KIX4OTRS-capeIT
-            # ArticleCount      => scalar @ArticleBox,
-            ArticleCount => $CurrentArticleCount,
-
-            # EO KIX4OTRS-capeIT
+            Ticket            => \%Ticket,
+            ArticleFlags      => \%ArticleFlags,
+            ArticleID         => $ArticleID,
+            ArticleMaxLimit   => $ArticleMaxLimit,
+            ArticleBox        => \@ArticleBox,
+            Pagination        => $Pagination,
+            Page              => $Page,
+            ArticleCount      => scalar @ArticleBoxAll,
             AclAction         => \%AclAction,
             StandardResponses => $StandardTemplates{Answer},
             StandardForwards  => $StandardTemplates{Forward},

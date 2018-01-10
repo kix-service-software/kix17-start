@@ -190,14 +190,14 @@ sub Run {
                     # next if customer already linked
                     next
                         if defined $LinkList->{Person}->{Customer}->{Source}
-                            ->{ $CustomerUserData{UserLogin} }
-                            && $LinkList->{Person}->{Customer}->{Source}
-                            ->{ $CustomerUserData{UserLogin} };
+                        ->{ $CustomerUserData{UserLogin} }
+                        && $LinkList->{Person}->{Customer}->{Source}
+                        ->{ $CustomerUserData{UserLogin} };
                     next
                         if defined $LinkList->{Person}->{'3rdParty'}->{Source}
-                            ->{ $CustomerUserData{UserLogin} }
-                            && $LinkList->{Person}->{'3rdParty'}->{Source}
-                            ->{ $CustomerUserData{UserLogin} };
+                        ->{ $CustomerUserData{UserLogin} }
+                        && $LinkList->{Person}->{'3rdParty'}->{Source}
+                        ->{ $CustomerUserData{UserLogin} };
 
                     if (
                         $CustomerUserData{UserCustomerID}
@@ -340,7 +340,15 @@ sub Run {
 
         $Blacklisted = 0;
         for my $Item (@Blacklist) {
-            next if $Ticket{CustomerUserID} !~ m/$Item/ && $CustomerUserData{UserEmail} !~ m/$Item/;
+            next
+                if (
+                !defined $CustomerUserData{UserEmail}
+                || !defined $Ticket{CustomerUserID}
+                || (
+                    $Ticket{CustomerUserID} !~ m/$Item/
+                    && $CustomerUserData{UserEmail} !~ m/$Item/
+                )
+                );
             $Blacklisted = 1;
             last;
         }
@@ -421,8 +429,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 

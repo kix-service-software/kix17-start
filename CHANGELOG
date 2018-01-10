@@ -1,7 +1,12 @@
 # Change log of KIX
 * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
-# 17.2.2 (2017/12/??)
+# 17.2.2 (2018/01/09)
+ * (2018/01/09) - productive release
+ * (2018/01/08) - Bugfix: T2017062390000568 (missing CustomerUserLogin for pagination in customer information center) (ddoerffel)
+ * (2017/12/08) - Bugfix: T2017111090000519 (Usability-CR: added to dynamic field sys config settings output filter) (ddoerffel)
+ * (2017/12/08) - Bugfix: T2017070690000713 (Scheduler Daemon Cron: MailAccountFetch Use of Uninitialized value) (ddoerffel)
+ * (2017/12/08) - Bugfix: T2017051690000887 (all queues should be selectable in admin quick ticket configurator) (ddoerffel)
  * (2017/12/07) - Bugfix: T2017120590000698 (attachment download button causes internal server error) (ddoerffel)
  * (2017/11/29) - Bugfix: T2017102090000707 (reverted bugfix for KIX_CUSTOMER_REALNAME replacement) (millinger)
 

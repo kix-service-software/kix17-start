@@ -1684,6 +1684,10 @@ sub Run {
     if ( $Param{CustomerID} ) {
         $LinkPage .= "CustomerID=$Param{CustomerID};";
     }
+    elsif ( $Param{CustomerUserLogin} ) {
+        $LinkPage .= "CustomerLogin=$Param{CustomerUserLogin};";
+    }
+
     my %PageNav = $LayoutObject->PageNavBar(
         StartHit       => $Self->{StartHit},
         PageShown      => $Self->{PageShown},
