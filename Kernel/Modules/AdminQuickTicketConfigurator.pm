@@ -1301,16 +1301,8 @@ sub _MaskNew {
     }
 
     # build customer search autocomplete field
-    my $AutoCompleteConfig
-        = $ConfigObject->Get('Ticket::Frontend::CustomerSearchAutoComplete');
     $LayoutObject->Block(
         Name => 'CustomerSearchAutoComplete',
-        Data => {
-            ActiveAutoComplete  => $AutoCompleteConfig->{Active},
-            minQueryLength      => $AutoCompleteConfig->{MinQueryLength} || 2,
-            queryDelay          => $AutoCompleteConfig->{QueryDelay} || 100,
-            maxResultsDisplayed => $AutoCompleteConfig->{MaxResultsDisplayed} || 20,
-        },
     );
 
     # build customer portal group selection string
