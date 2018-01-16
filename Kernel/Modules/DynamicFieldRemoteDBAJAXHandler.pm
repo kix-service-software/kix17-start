@@ -80,10 +80,11 @@ sub Run {
         my %WebParams  = map { $_ => 1 } @ParamNames;
 
         my $DFRemoteDBObject = Kernel::System::DFRemoteDB->new(
+            %{ $Self },
             DatabaseDSN  => $DynamicFieldConfig->{Config}->{DatabaseDSN},
             DatabaseUser => $DynamicFieldConfig->{Config}->{DatabaseUser},
             DatabasePw   => $DynamicFieldConfig->{Config}->{DatabasePw},
-            %{ $Self },
+            Type         => $DynamicFieldConfig->{Config}->{DatabaseType},
         );
 
         #handle subaction Search
