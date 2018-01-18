@@ -128,7 +128,6 @@ sub TicketQueueLinkGet {
         . $SessionID . '">'
         . $Param{'Queue'} . '</a>';
 
-
     return $Output;
 }
 
