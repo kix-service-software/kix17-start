@@ -34,8 +34,34 @@ $Selenium->RunTest(
         # get config object
         my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
+        # check if gpg is located there
+        if ( !-e $ConfigObject->Get('PGP::Bin') ) {
+
+            # maybe it's a mac with macport
+            if ( -e '/opt/local/bin/gpg' ) {
+                $ConfigObject->Set(
+                    Key   => 'PGP::Bin',
+                    Value => '/opt/local/bin/gpg'
+                );
+            }
+
+            # Try to guess using system 'which'
+            else {    # try to guess
+                my $GPGBin = `which gpg`;
+                chomp $GPGBin;
+                if ($GPGBin) {
+                    $ConfigObject->Set(
+                        Key   => 'PGP::Bin',
+                        Value => $GPGBin,
+                    );
+                }
+            }
+        }
+
+        my $Home = $ConfigObject->Get('Home');
+
         # create test PGP path and set it in sysConfig
-        my $PGPPath = $ConfigObject->Get('Home') . "/var/tmp/pgp";
+        my $PGPPath = $Home . '/var/tmp/pgp' . $Helper->GetRandomID();
         mkpath( [$PGPPath], 0, 0770 );    ## no critic
 
         $Helper->ConfigSettingChange(
@@ -46,7 +72,8 @@ $Selenium->RunTest(
 
         # create test user and login
         my $TestUserLogin = $Helper->TestCustomerUserCreate(
-            Groups => ['admin'],
+            Groups   => ['admin'],
+            Language => 'en'
         ) || die "Did not get test user";
 
         $Selenium->Login(
@@ -61,16 +88,15 @@ $Selenium->RunTest(
         $Selenium->VerifiedGet("${ScriptAlias}customer.pl?Action=CustomerPreferences");
 
         # change customer PGP key preference
-        my $Location = $ConfigObject->Get('Home')
-            . "/scripts/test/sample/Crypt/PGPPrivateKey-1.asc";
-        $Selenium->find_element( "#UserPGPKey", 'css' )->send_keys($Location);
-        $Selenium->find_element( "#UserPGPKey", 'css' )->VerifiedSubmit();
+        my $Location = $Home . '/scripts/test/sample/Crypt/PGPPrivateKey-1.asc';
+        $Selenium->find_element( "#UserPGPKey",       'css' )->send_keys($Location);
+        $Selenium->find_element( "#UserPGPKeyUpdate", 'css' )->VerifiedClick();
 
-        # check for update PGP preference key on screen
+        # Check if PGP key was uploaded correctly.
         $Self->True(
-            index( $Selenium->get_page_source(), 'imported: 1 gpg' ) > -1,
+            index( $Selenium->get_page_source(), '38677C3B' ) > -1,
             'Customer preference PGP key - updated'
-        ) || die "Imported string not found";
+        );
 
         # remove test PGP path
         my $Success = rmtree( [$PGPPath] );

@@ -23,6 +23,12 @@ $Selenium->RunTest(
         # get helper object
         my $Helper = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
 
+        # do not check email addresses
+        $Helper->ConfigSettingChange(
+            Key   => 'CheckEmailAddresses',
+            Value => 0,
+        );
+
         # do not check Service
         $Helper->ConfigSettingChange(
             Valid => 1,
@@ -37,15 +43,35 @@ $Selenium->RunTest(
             Value => 1,
         );
 
-        # create test customer user and login
-        my $TestCustomerUserLogin = $Helper->TestCustomerUserCreate(
-        # rkaiser - T#2017020290001194 - changed customer user to contact
-        ) || die "Did not get test contact";
+        my $RandomID = $Helper->GetRandomID();
+
+        # Create test customer user.
+        my $TestCustomerUserLogin = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserAdd(
+            Source         => 'CustomerUser',
+            UserFirstname  => $RandomID,
+            UserLastname   => $RandomID,
+            UserCustomerID => $RandomID,
+            UserLogin      => 'CustomerUser (Example) ' . $RandomID,
+            UserPassword   => $RandomID,
+            UserEmail      => "$RandomID\@example.com",
+            ValidID        => 1,
+            UserID         => 1
+        );
+        $Self->True(
+            $TestCustomerUserLogin,
+            "CustomerUser $TestCustomerUserLogin is created",
+        );
+
+        $Kernel::OM->Get('Kernel::System::CustomerUser')->SetPreferences(
+            UserID => $TestCustomerUserLogin,
+            Key    => 'UserLanguage',
+            Value  => 'en',
+        );
 
         $Selenium->Login(
             Type     => 'Customer',
             User     => $TestCustomerUserLogin,
-            Password => $TestCustomerUserLogin,
+            Password => $RandomID,
         );
 
         # get script alias
@@ -72,7 +98,7 @@ $Selenium->RunTest(
         my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
         # create ticket for test scenario
-        my $TitleRandom = 'Title' . $Helper->GetRandomID();
+        my $TitleRandom = 'Title' . $RandomID;
         my $TicketID    = $TicketObject->TicketCreate(
             Title        => $TitleRandom,
             Queue        => 'Raw',
@@ -88,6 +114,25 @@ $Selenium->RunTest(
             "Ticket ID $TicketID - created",
         );
 
+        # Add test article to the ticket.
+        #   Make it email-internal, with sender type customer, in order to check if it's filtered out correctly.
+        my $InternalArticleMessage = 'not for the customer';
+        my $ArticleID              = $TicketObject->ArticleCreate(
+            TicketID       => $TicketID,
+            ArticleType    => 'email-internal',
+            SenderType     => 'customer',
+            Subject        => $TitleRandom,
+            Body           => $InternalArticleMessage,
+            ContentType    => 'text/plain; charset=ISO-8859-15',
+            HistoryType    => 'EmailCustomer',
+            HistoryComment => 'Some free text!',
+            UserID         => 1,
+        );
+        $Self->True(
+            $ArticleID,
+            "Article is created - ID $ArticleID"
+        );
+
         # get test ticket number
         my %Ticket = $TicketObject->TicketGet(
             TicketID => $TicketID,
@@ -95,12 +140,18 @@ $Selenium->RunTest(
 
         # input ticket number as search parameter
         $Selenium->find_element( "#TicketNumber", 'css' )->send_keys( $Ticket{TicketNumber} );
-        $Selenium->find_element( "#TicketNumber", 'css' )->VerifiedSubmit();
+        $Selenium->find_element( "#Submit",       'css' )->VerifiedClick();
 
         # check for expected result
         $Self->True(
             index( $Selenium->get_page_source(), $TitleRandom ) > -1,
             "Ticket $TitleRandom found on page",
+        );
+
+        # Check if internal article was not shown.
+        $Self->True(
+            index( $Selenium->get_page_source(), $InternalArticleMessage ) == -1,
+            'Internal article not found on page'
         );
 
         # click on '← Change search options'
@@ -111,7 +162,7 @@ $Selenium->RunTest(
         $Selenium->find_element( "#TicketNumber", 'css' )->send_keys("123456789012345");
         $Selenium->execute_script("\$('#StateIDs').val([1, 4]).trigger('redraw.InputField').trigger('change');");
         $Selenium->execute_script("\$('#PriorityIDs').val([2, 3]).trigger('redraw.InputField').trigger('change');");
-        $Selenium->find_element( "#TicketNumber", 'css' )->VerifiedSubmit();
+        $Selenium->find_element( "#Submit", 'css' )->VerifiedClick();
 
         # check for expected result
         $Self->True(
@@ -140,23 +191,65 @@ $Selenium->RunTest(
             "Filter data is found - Priority: 2 low+3 normal",
         );
 
+        # Test without customer company ticket access for bug#12595.
+        $Helper->ConfigSettingChange(
+            Valid => 1,
+            Key   => 'Ticket::Frontend::CustomerDisableCompanyTicketAccess',
+            Value => 1,
+        );
+
+        $Selenium->VerifiedGet("${ScriptAlias}customer.pl?Action=CustomerTicketSearch");
+
+        # input ticket number as search parameter
+        $Selenium->find_element( "#TicketNumber", 'css' )->send_keys( $Ticket{TicketNumber} );
+        $Selenium->find_element( "#Submit",       'css' )->VerifiedClick();
+
+        # check for expected result
+        $Self->True(
+            index( $Selenium->get_page_source(), $TitleRandom ) > -1,
+            "Ticket $TitleRandom found on page",
+        );
+
         # clean up test data from the DB
         my $Success = $TicketObject->TicketDelete(
             TicketID => $TicketID,
             UserID   => 1,
         );
+
+        # Ticket deletion could fail if apache still writes to ticket history. Try again in this case.
+        if ( !$Success ) {
+            sleep 3;
+            $Success = $TicketObject->TicketDelete(
+                TicketID => $TicketID,
+                UserID   => 1,
+            );
+        }
         $Self->True(
             $Success,
             "Ticket is deleted - $TicketID"
         );
 
-        # make sure the cache is correct
-        $Kernel::OM->Get('Kernel::System::Cache')->CleanUp( Type => 'Ticket' );
+        my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+        # Delete test created customer user.
+        $Success = $DBObject->Do(
+            SQL  => "DELETE FROM customer_user WHERE login = ?",
+            Bind => [ \$TestCustomerUserLogin ],
+        );
+        $Self->True(
+            $Success,
+            "CustomerUser $TestCustomerUserLogin is deleted",
+        );
+
+        for my $Cache (qw (Ticket CustomerUser)) {
+            $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+                Type => $Cache,
+            );
+        }
     }
 );
 
 1;
-
 
 =back
 
