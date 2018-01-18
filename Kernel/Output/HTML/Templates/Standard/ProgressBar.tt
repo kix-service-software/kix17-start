@@ -39,7 +39,7 @@
             }, '[% Data.RefreshCycle %]' );
 
         function ProgressInformations(){
-            var URL         = "Action=ProgressBarAJAXHandler;Subaction=AJAXUpdate;TaskName=[% Data.TaskName %];TaskType=[% Data.TaskType %]",
+            var URL         = "Action=ProgressBarAJAXHandler;Subaction=AJAXUpdate;TaskName=[% Data.TaskName %];TaskType=[% Data.TaskType %][% Data.Session | html %]",
                 MaxCount    = '[% Data.MaxCount %]',
                 ParamData   = '[% Data.EndParam %]',
                 Data;
@@ -53,7 +53,7 @@
 
             if ( Data.Count == 0) {
                 clearInterval(ProgressID);
-                var URLOP = "?Action=[% Data.Action %]";
+                var URLOP = "?Action=[% Data.Action %][% Data.Session | html %]";
 
                 if ( ParamData ) {
                     $.each($.parseJSON(ParamData), function(Key, Value){
@@ -73,7 +73,7 @@
                     TaskType: '[% Data.TaskType %]',
                 },
                 ParamData   = '[% Data.EndParam %]',
-                URLOP       = "?Action=[% Data.Action %];Subaction=[% Data.AbortSubaction %]";
+                URLOP       = "?Action=[% Data.Action %];Subaction=[% Data.AbortSubaction %][% Data.Session | html %]";
             clearInterval(ProgressID);
 
             Core.AJAX.FunctionCall(
@@ -111,7 +111,7 @@
                         <td>[% Data.ItemCount %]</td>
                     </tr>
                 </table>
-                <a class="PopupCancelClose" href="[% Env("Baselink") %]Action=[% Data.Action %];Subaction=[% Data.AbortSubaction %];[% Env("ChallengeTokenParam") | html %];[% Data.Params %]">[% Translate("Cancel & close") | html %]</a>
+                <a class="PopupCancelClose" href="[% Env("Baselink") %]Action=[% Data.Action %];Subaction=[% Data.AbortSubaction %];[% Env("ChallengeTokenParam") | html %];[% Data.Params %][% Data.Session | html %]">[% Translate("Cancel & close") | html %]</a>
             </div>
         </div>
     </div>
