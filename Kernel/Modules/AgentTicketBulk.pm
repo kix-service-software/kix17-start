@@ -236,7 +236,7 @@ sub Run {
         my $MainTicketID = $ParamObject->GetParam( Param => 'TicketID' ) || undef;
 
         if ($ActionFlag) {
-            my $DestURL = defined $MainTicketID
+            my $DestURL = defined $MainTicketID && $MainTicketID !~ /^null$/i
                 ? "Action=AgentTicketZoom;TicketID=$MainTicketID"
                 : ( $Self->{LastScreenOverview} || 'Action=AgentDashboard' );
 
@@ -286,6 +286,7 @@ sub Run {
             } else {
                 my $Data    = $JSONObject->Decode( Data => $Item->{Content});
                 my ($ID)    = $Item->{Filename} =~ /Ticket_(.*)/;
+                next if !defined $ID;
                 $GetTickets{$ID} = $Data;
             }
         }
