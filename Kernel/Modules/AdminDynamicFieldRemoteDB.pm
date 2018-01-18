@@ -180,7 +180,7 @@ sub _AddAction {
     for my $ConfigParam (
         qw(
             ObjectType ObjectTypeName FieldType FieldTypeName ValidID
-            DatabaseFieldValue CacheTTL CachePossibleValues
+            DatabaseType DatabaseFieldValue CacheTTL CachePossibleValues
             ShowKeyInTitle AgentLink CustomerLink
             DatabaseFieldSearch SearchPrefix SearchSuffix Constrictions
             MinQueryLength QueryDelay MaxQueryResult CaseSensitive
@@ -220,6 +220,7 @@ sub _AddAction {
         DatabaseDSN         => $GetParam{DatabaseDSN},
         DatabaseUser        => $GetParam{DatabaseUser},
         DatabasePw          => $GetParam{DatabasePw},
+        DatabaseType        => lc $GetParam{DatabaseType}     || '',
         DatabaseTable       => $GetParam{DatabaseTable},
         DatabaseFieldKey    => $GetParam{DatabaseFieldKey},
         DatabaseFieldValue  => $GetParam{DatabaseFieldValue}  || $GetParam{DatabaseFieldKey},
@@ -406,7 +407,7 @@ sub _ChangeAction {
     for my $ConfigParam (
         qw(
             ObjectType ObjectTypeName FieldType FieldTypeName ValidID
-            DatabaseFieldValue CacheTTL CachePossibleValues
+            DatabaseType DatabaseFieldValue CacheTTL CachePossibleValues
             ShowKeyInTitle AgentLink CustomerLink
             DatabaseFieldSearch SearchPrefix SearchSuffix Constrictions
             MinQueryLength QueryDelay MaxQueryResult CaseSensitive
@@ -457,6 +458,7 @@ sub _ChangeAction {
         DatabaseDSN         => $GetParam{DatabaseDSN},
         DatabaseUser        => $GetParam{DatabaseUser},
         DatabasePw          => $GetParam{DatabasePw},
+        DatabaseType        => lc $GetParam{DatabaseType}     || '',
         DatabaseTable       => $GetParam{DatabaseTable},
         DatabaseFieldKey    => $GetParam{DatabaseFieldKey},
         DatabaseFieldValue  => $GetParam{DatabaseFieldValue}  || $GetParam{DatabaseFieldKey},
@@ -515,6 +517,7 @@ sub _ShowScreen {
     $Param{DatabaseDSN}         = $Param{Config}->{DatabaseDSN};
     $Param{DatabaseUser}        = $Param{Config}->{DatabaseUser};
     $Param{DatabasePw}          = $Param{Config}->{DatabasePw};
+    $Param{DatabaseType}        = $Param{Config}->{DatabaseType}        || '';
     $Param{DatabaseTable}       = $Param{Config}->{DatabaseTable};
     $Param{DatabaseFieldKey}    = $Param{Config}->{DatabaseFieldKey};
     $Param{DatabaseFieldValue}  = $Param{Config}->{DatabaseFieldValue}  || $Param{Config}->{DatabaseFieldKey};
@@ -664,6 +667,7 @@ sub _ShowScreen {
                     DatabaseDSN        => $Param{DatabaseDSN},
                     DatabaseUser       => $Param{DatabaseUser},
                     DatabasePw         => $Param{DatabasePw},
+                    DatabaseType       => $Param{DatabaseType},
                     DatabaseTable      => $Param{DatabaseTable},
                     DatabaseFieldKey   => $Param{DatabaseFieldKey},
                     DatabaseFieldValue => $Param{DatabaseFieldValue},
@@ -752,6 +756,7 @@ sub _DefaultValueSearch {
     my $DatabaseDSN         = $Self->{ParamObject}->GetParam( Param => 'DatabaseDSN' )         || '';
     my $DatabaseUser        = $Self->{ParamObject}->GetParam( Param => 'DatabaseUser' )        || '';
     my $DatabasePw          = $Self->{ParamObject}->GetParam( Param => 'DatabasePw' )          || '';
+    my $DatabaseType        = lc $Self->{ParamObject}->GetParam( Param => 'DatabaseType' )     || '';
     my $DatabaseFieldKey    = $Self->{ParamObject}->GetParam( Param => 'DatabaseFieldKey' )    || '';
     my $DatabaseFieldValue  = $Self->{ParamObject}->GetParam( Param => 'DatabaseFieldValue' )  || $DatabaseFieldKey;
     my $DatabaseFieldSearch = $Self->{ParamObject}->GetParam( Param => 'DatabaseFieldSearch' ) || $DatabaseFieldKey;
@@ -766,10 +771,11 @@ sub _DefaultValueSearch {
         && $DatabaseUser
     ) {
         $DFRemoteDBObject = Kernel::System::DFRemoteDB->new(
+            %{ $Self },
             DatabaseDSN  => $DatabaseDSN,
             DatabaseUser => $DatabaseUser,
             DatabasePw   => $DatabasePw,
-            %{ $Self },
+            Type         => $DatabaseType,
         );
     }
 
