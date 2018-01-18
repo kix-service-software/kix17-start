@@ -1661,7 +1661,7 @@ sub _GetUserInfoString {
 
         my $AgentConfig
             = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::KIXSidebarTicketInfo');
-        for my $Attribute ( keys %{ $AgentConfig->{DisplayAttributes} } ) {
+        for my $Attribute ( sort keys %{ $AgentConfig->{DisplayAttributes} } ) {
             next if !$AgentConfig->{DisplayAttributes}->{$Attribute};
 
             $Attribute =~ m/^User(.*)$/;
