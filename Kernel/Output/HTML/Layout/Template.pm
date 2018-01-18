@@ -227,7 +227,7 @@ sub Output {
             my $Target  = $2;
             my $End     = $3;
             my $RealEnd = $4;
-            if ( lc $Target =~ /^(http:|https:|#|ftp:)/ ||
+            if ( lc($Target) =~ /^(http:|https:|#|ftp:)/ ||
                 $Target !~ /\.(pl|php|cgi|fcg|fcgi|fpl)(\?|$)/ ||
                 $Target =~ /(\?|&|;)\Q$Self->{SessionName}\E=/) {
                 $AHref.$Target.$End.$RealEnd;
@@ -245,7 +245,7 @@ sub Output {
             my $AHref = $1;
             my $Target = $2;
             my $End = $3;
-            if (lc $Target =~ m{^http s? :}smx || !$Self->{SessionID} ||
+            if (lc($Target) =~ m{^http s? :}smx || !$Self->{SessionID} ||
                 $Target !~ /\.(pl|php|cgi|fcg|fcgi|fpl)(\?|$)/ ||
                 $Target =~ /\Q$Self->{SessionName}\E=/) {
                 $AHref.$Target.$End;
