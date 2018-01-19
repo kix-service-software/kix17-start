@@ -10724,6 +10724,7 @@
                 <Item>X-KIX-FollowUp-ArticleType</Item>
                 <Item>X-KIX-BodyDecrypted</Item>
                 <Item>X-KIX-TicketTemplate</Item>
+                <Item>X-KIX-From</Item>
             </Array>
         </Setting>
     </ConfigItem>
