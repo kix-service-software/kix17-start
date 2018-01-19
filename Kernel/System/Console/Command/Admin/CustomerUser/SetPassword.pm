@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
@@ -67,6 +67,7 @@ sub Run {
     my $Result = $CustomerUserObject->SetPassword(
         UserLogin => $Login,
         PW        => $Password,
+        UserID    => 1,
     );
 
     if ( !$Result ) {
@@ -80,8 +81,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 
