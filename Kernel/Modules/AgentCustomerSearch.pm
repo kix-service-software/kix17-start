@@ -54,27 +54,29 @@ sub Run {
         my $IncludeUnknownTicketCustomers
             = int( $ParamObject->GetParam( Param => 'IncludeUnknownTicketCustomers' ) || 0 );
 
-        my $UnknownTicketCustomerList;
+        # init result hash
+        my %CustomerUserList = ();
 
+        # check if unknown users should be included
         if ($IncludeUnknownTicketCustomers) {
-
             # add customers that are not saved in any backend
-            $UnknownTicketCustomerList = $TicketObject->SearchUnknownTicketCustomers(
+            my $UnknownTicketCustomerList = $TicketObject->SearchUnknownTicketCustomers(
                 SearchTerm => $Search,
             );
+            map { $CustomerUserList{$_} = $UnknownTicketCustomerList->{$_} } keys %{$UnknownTicketCustomerList};
         }
-
-        # get customer list
-        my %CustomerUserList = $CustomerUserObject->CustomerSearch(
-            Search => $Search,
-        );
-        map { $CustomerUserList{$_} = $UnknownTicketCustomerList->{$_} } keys %{$UnknownTicketCustomerList};
 
         # search address book
         my %AddressList = $AddressBookObject->AddressList(
             Search => '*'.$Search.'*',
         );
         map { $CustomerUserList{$_} = $_ } values %AddressList;
+
+        # search customer user backends
+        my %CustomerUserSearch = $CustomerUserObject->CustomerSearch(
+            Search => $Search,
+        );
+        map { $CustomerUserList{$_} = $CustomerUserSearch{$_} } keys %CustomerUserSearch;
 
         # build data
         my @Data;
