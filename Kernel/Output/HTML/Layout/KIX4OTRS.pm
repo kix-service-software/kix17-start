@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -27,6 +27,15 @@ sub KIXSideBarReuseArticleAttachmentsTable {
         UserID                     => $Self->{UserID},
     );
 
+    my @UploadedAtm;
+    if (defined $Param{FormID}
+        && $Param{FormID}
+    ) {
+        @UploadedAtm = $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDGetAllFilesMeta(
+            FormID => $Param{FormID},
+        );
+    }
+
     my %AttachmentList;
     foreach my $Article (@ArticleList) {
         my %AtmIndex = %{ $Article->{Atms} };
@@ -50,6 +59,16 @@ sub KIXSideBarReuseArticleAttachmentsTable {
         keys %AttachmentList
         )
     {
+        my $IsChecked = '';
+        if ( scalar @UploadedAtm ) {
+            UPLOADEDATM:
+            for my $UpAtm ( @UploadedAtm ) {
+                if ( $UpAtm->{Filename} eq $AttachmentList{$AttachmentID}->{Filename}) {
+                    $IsChecked = 'checked="checked"';
+                    last UPLOADEDATM;
+                }
+            }
+        }
 
         if ( $Count == 0 ) {
             $Self->Block(
@@ -66,6 +85,7 @@ sub KIXSideBarReuseArticleAttachmentsTable {
             Data => {
                 %{ $AttachmentList{$AttachmentID} },
                 ArticleAttachmentID => $AttachmentID,
+                IsChecked           => $IsChecked || ''
             },
         );
 
