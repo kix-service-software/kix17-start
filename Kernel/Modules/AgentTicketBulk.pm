@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
@@ -283,9 +283,11 @@ sub Run {
 
             if ( $Item->{Filename} eq 'ItemIDs' ) {
                 @TicketIDs = split(',',$Item->{Content});
-            } else {
+            }
+
+            elsif ($Item->{Filename} =~ /Ticket_(.*)/) {
                 my $Data    = $JSONObject->Decode( Data => $Item->{Content});
-                my ($ID)    = $Item->{Filename} =~ /Ticket_(.*)/;
+                my ($ID)    = $1;
                 next if !defined $ID;
                 $GetTickets{$ID} = $Data;
             }
