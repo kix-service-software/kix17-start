@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -35,22 +35,25 @@
 
     function initReuseArticleAttachments() {
         $('input[name=ReuseArticleAttachmentID]').click(function() {
-            var TicketID = $("input[name=TicketID]").val();
-            var FormID = $("input[name=FormID]").val();
+            var TicketID = $("input[name=TicketID]").val(),
+                FormID   = $("input[name=FormID]").val(),
+                URL      = '';
             if ($(this).prop('checked')) {
-                var URL = 'Action=ReuseArticleAttachmentsAJAXHandler;Subaction=AttachmentAdd;TicketID=' + TicketID + ';FormID=' + FormID + ';AttachmentID=' + $(this).val();
+                URL = 'Action=ReuseArticleAttachmentsAJAXHandler;Subaction=AttachmentAdd;TicketID=' + TicketID + ';FormID=' + FormID + ';AttachmentID=' + $(this).val();
                 Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function () {}, 'text', true);
             }
             else {
-                var URL = 'Action=ReuseArticleAttachmentsAJAXHandler;Subaction=AttachmentRemove;TicketID=' + TicketID + ';FormID=' + FormID + ';AttachmentID=' + $(this).val();
+                URL = 'Action=ReuseArticleAttachmentsAJAXHandler;Subaction=AttachmentRemove;TicketID=' + TicketID + ';FormID=' + FormID + ';AttachmentID=' + $(this).val();
                 Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function () {}, 'text', true);
             }
         });
         $('#SearchBoxButton').click(function(event) {
-            var TicketID = $("input[name=TicketID]").val();
-            var SearchString = $("#ReuseArticleAttachments input[name=SearchString]").val();
+            var TicketID     = $("input[name=TicketID]").val(),
+                FormID       = $("input[name=FormID]").val(),
+                SearchString = $("#ReuseArticleAttachments input[name=SearchString]").val(),
+                URL      = '';
             $('#ArticleAttachmentStrgContainer').html('<center><img src="'+Core.Config.Get('Images')+'loader.gif"></center>');
-            var URL = '[% Env("Baselink") %]Action=ReuseArticleAttachmentsAJAXHandler;Subaction=LoadAttachments;TicketID=' + TicketID + ";SearchString=" + SearchString;
+            URL = '[% Env("Baselink") %]Action=ReuseArticleAttachmentsAJAXHandler;Subaction=LoadAttachments;TicketID=' + TicketID + ";SearchString=" + SearchString + ';FormID=' + FormID;
             Core.AJAX.ContentUpdate($('#ArticleAttachmentStrgContainer'), URL, function () {
                 initReuseArticleAttachments();
             });
@@ -65,9 +68,11 @@
     $('#ReuseArticleAttachments .WidgetAction.Toggle a').bind('click', function() {
         // load attachments on first expand
         if ($('#ReuseArticleAttachments').hasClass('Expanded')) {
-            var TicketID = $("input[name=TicketID]").val();
+            var TicketID = $("input[name=TicketID]").val(),
+                FormID   = $("input[name=FormID]").val(),
+                URL      = '';
             $('#ArticleAttachmentStrgContainer').html('<center><img src="'+Core.Config.Get('Images')+'loader.gif"></center>');
-            var URL = '[% Env("Baselink") %]Action=ReuseArticleAttachmentsAJAXHandler;Subaction=LoadAttachments;TicketID=' + TicketID;
+            URL = '[% Env("Baselink") %]Action=ReuseArticleAttachmentsAJAXHandler;Subaction=LoadAttachments;TicketID=' + TicketID + ';FormID=' + FormID;
             Core.AJAX.ContentUpdate($('#ArticleAttachmentStrgContainer'), URL, function () {
                 initReuseArticleAttachments();
             });
