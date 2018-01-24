@@ -18,16 +18,20 @@ our @ObjectDependencies = (
     'Kernel::System::CustomerUser',
     'Kernel::System::DynamicField',
     'Kernel::System::DynamicField::Backend',
+
     # KIX4OTRS-capeIT
     'Kernel::System::HTMLUtils',
+
     # EO KIX4OTRS-capeIT
     'Kernel::System::LinkObject',
     'Kernel::System::Log',
     'Kernel::System::Priority',
     'Kernel::System::Queue',
     'Kernel::System::Service',
-     # KIX4OTRS-capeIT
+
+    # KIX4OTRS-capeIT
     'Kernel::System::SLA',
+
     # EO KIX4OTRS-capeIT
     'Kernel::System::State',
     'Kernel::System::Ticket',
@@ -71,7 +75,8 @@ sub Run {
     # KIX4OTRS-capeIT
     # get ticket template
     my %TicketTemplate;
-#rbo - T2016121190001552 - renamed X-OTRS headers
+
+    #rbo - T2016121190001552 - renamed X-OTRS headers
     if ( $GetParam{'X-KIX-TicketTemplate'} || $GetParam{'X-OTRS-TicketTemplate'} ) {
         %TicketTemplate = $Kernel::OM->Get('Kernel::System::Ticket')->TicketTemplateGet(
             Name => $GetParam{'X-KIX-TicketTemplate'} || $GetParam{'X-OTRS-TicketTemplate'},
@@ -91,7 +96,8 @@ sub Run {
     if (
         $Param{SkipTicketIDs}
         && ref( $Param{SkipTicketIDs} ) eq 'HASH'
-    ) {
+        )
+    {
         for my $TicketID ( keys( %{ $Param{SkipTicketIDs} } ) ) {
             my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
                 TicketID      => $TicketID,
@@ -101,8 +107,9 @@ sub Run {
             if (
                 %Ticket
                 && $Ticket{QueueID} eq $QueueID
-            ) {
-                return (6, $TicketID);
+                )
+            {
+                return ( 6, $TicketID );
             }
         }
     }
@@ -119,7 +126,8 @@ sub Run {
     # my $State = $ConfigObject->Get('PostmasterDefaultState') || 'new';
     my $State;
     if ( defined $TicketTemplate{StateID} ) {
-        $State = $Kernel::OM->Get('Kernel::System::State')->StateLookup( StateID => $TicketTemplate{StateID} );
+        $State = $Kernel::OM->Get('Kernel::System::State')
+            ->StateLookup( StateID => $TicketTemplate{StateID} );
     }
     else {
         $State = $ConfigObject->Get('PostmasterDefaultState') || 'new';
@@ -127,7 +135,7 @@ sub Run {
 
     # EO KIX4OTRS-capeIT
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
+    #rbo - T2016121190001552 - renamed X-OTRS headers
     if ( $GetParam{'X-KIX-State'} || $GetParam{'X-OTRS-State'} ) {
 
         my $StateID = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
@@ -140,7 +148,9 @@ sub Run {
         else {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "State ".($GetParam{'X-KIX-State'} || $GetParam{'X-OTRS-State'})." does not exist, falling back to $State!"
+                Message  => "State "
+                    . ( $GetParam{'X-KIX-State'} || $GetParam{'X-OTRS-State'} )
+                    . " does not exist, falling back to $State!"
             );
         }
     }
@@ -151,7 +161,8 @@ sub Run {
     my $Priority;
     if ( defined $TicketTemplate{PriorityID} ) {
         $Priority
-            = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup( PriorityID => $TicketTemplate{PriorityID} );
+            = $Kernel::OM->Get('Kernel::System::Priority')
+            ->PriorityLookup( PriorityID => $TicketTemplate{PriorityID} );
     }
     else {
         $Priority = $ConfigObject->Get('PostmasterDefaultPriority') || '3 normal';
@@ -159,7 +170,7 @@ sub Run {
 
     # EO KIX4OTRS-capeIT
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
+    #rbo - T2016121190001552 - renamed X-OTRS headers
     if ( $GetParam{'X-KIX-Priority'} || $GetParam{'X-OTRS-Priority'} ) {
 
         my $PriorityID = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
@@ -173,41 +184,50 @@ sub Run {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message =>
-                    "Priority ".($GetParam{'X-KIX-Priority'} || $GetParam{'X-OTRS-Priority'})." does not exist, falling back to $Priority!"
+                    "Priority "
+                    . ( $GetParam{'X-KIX-Priority'} || $GetParam{'X-OTRS-Priority'} )
+                    . " does not exist, falling back to $Priority!"
             );
         }
     }
 
     my $TypeID;
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
+    #rbo - T2016121190001552 - renamed X-OTRS headers
     if ( $GetParam{'X-KIX-Type'} || $GetParam{'X-OTRS-Type'} ) {
 
         # Check if type exists
-        $TypeID = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup( Type => ($GetParam{'X-KIX-Type'} || $GetParam{'X-OTRS-Type'}) );
+        $TypeID = $Kernel::OM->Get('Kernel::System::Type')
+            ->TypeLookup( Type => ( $GetParam{'X-KIX-Type'} || $GetParam{'X-OTRS-Type'} ) );
 
         if ( !$TypeID ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message =>
-                    "Type ".($GetParam{'X-KIX-Type'} || $GetParam{'X-OTRS-Type'})." does not exist, falling back to default type."
+                    "Type "
+                    . ( $GetParam{'X-KIX-Type'} || $GetParam{'X-OTRS-Type'} )
+                    . " does not exist, falling back to default type."
             );
         }
     }
 
     # get sender email
     my @EmailAddresses = $Self->{ParserObject}->SplitAddressLine(
-        Line => $GetParam{From},
+        Line => $GetParam{'X-KIX-From'} || $GetParam{From},
     );
+    use Data::Dumper;
+    print STDERR Dumper( \@EmailAddresses );
     for my $Address (@EmailAddresses) {
         $GetParam{SenderEmailAddress} = $Self->{ParserObject}->GetEmailAddress(
             Email => $Address,
         );
     }
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
+    #rbo - T2016121190001552 - renamed X-OTRS headers
     # get customer id (sender email) if there is no customer id given
-    if ( (!$GetParam{'X-KIX-CustomerNo'} && $GetParam{'X-KIX-CustomerUser'}) || (!$GetParam{'X-OTRS-CustomerNo'} && $GetParam{'X-OTRS-CustomerUser'}) ) {
+    if (   ( !$GetParam{'X-KIX-CustomerNo'} && $GetParam{'X-KIX-CustomerUser'} )
+        || ( !$GetParam{'X-OTRS-CustomerNo'} && $GetParam{'X-OTRS-CustomerUser'} ) )
+    {
 
         # get customer user object
         my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
@@ -222,15 +242,15 @@ sub Run {
         }
     }
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
+    #rbo - T2016121190001552 - renamed X-OTRS headers
     # get customer user data form From: (sender address)
     if ( !$GetParam{'X-KIX-CustomerUser'} && !$GetParam{'X-OTRS-CustomerUser'} ) {
 
         my %CustomerData;
-        if ( $GetParam{From} ) {
+        if ( $GetParam{'X-KIX-From'} || $GetParam{From} ) {
 
             my @EmailAddresses = $Self->{ParserObject}->SplitAddressLine(
-                Line => $GetParam{From},
+                Line => $GetParam{'X-KIX-From'} || $GetParam{From},
             );
 
             for my $Address (@EmailAddresses) {
@@ -257,7 +277,9 @@ sub Run {
         }
 
         # take CustomerID from customer backend lookup or from from field
-        if ( $CustomerData{UserLogin} && !($GetParam{'X-KIX-CustomerUser'} || $GetParam{'X-OTRS-CustomerUser'}) ) {
+        if ( $CustomerData{UserLogin}
+            && !( $GetParam{'X-KIX-CustomerUser'} || $GetParam{'X-OTRS-CustomerUser'} ) )
+        {
             $GetParam{'X-KIX-CustomerUser'} = $CustomerData{UserLogin};
 
             # notice that UserLogin is from customer source backend
@@ -267,7 +289,9 @@ sub Run {
                     . "customer source backend based on ($GetParam{'EmailFrom'}).",
             );
         }
-        if ( $CustomerData{UserCustomerID} && !($GetParam{'X-KIX-CustomerNo'} || $GetParam{'X-OTRS-CustomerNo'}) ) {
+        if ( $CustomerData{UserCustomerID}
+            && !( $GetParam{'X-KIX-CustomerNo'} || $GetParam{'X-OTRS-CustomerNo'} ) )
+        {
             $GetParam{'X-KIX-CustomerNo'} = $CustomerData{UserCustomerID};
 
             # notice that UserCustomerID is from customer source backend
@@ -281,30 +305,36 @@ sub Run {
 
     # KIX4OTRS-capeIT
     # if there is no customer id found
-#rbo - T2016121190001552 - renamed X-OTRS headers
-    if ( !($GetParam{'X-KIX-CustomerUser'} || $GetParam{'X-OTRS-CustomerUser'}) && $TicketTemplate{CustomerLogin} ) {
+    #rbo - T2016121190001552 - renamed X-OTRS headers
+    if ( !( $GetParam{'X-KIX-CustomerUser'} || $GetParam{'X-OTRS-CustomerUser'} )
+        && $TicketTemplate{CustomerLogin} )
+    {
         $GetParam{'X-KIX-CustomerUser'} = $TicketTemplate{CustomerLogin};
     }
 
     # EO KIX4OTRS-capeIT
 
     # if there is no customer id found!
-    if ( !($GetParam{'X-KIX-CustomerNo'} || $GetParam{'X-OTRS-CustomerNo'}) ) {
+    if ( !( $GetParam{'X-KIX-CustomerNo'} || $GetParam{'X-OTRS-CustomerNo'} ) ) {
         $GetParam{'X-KIX-CustomerNo'} = $GetParam{SenderEmailAddress};
     }
 
     # if there is no customer user found!
-    if ( !($GetParam{'X-KIX-CustomerUser'} || $GetParam{'X-OTRS-CustomerUser'}) ) {
+    if ( !( $GetParam{'X-KIX-CustomerUser'} || $GetParam{'X-OTRS-CustomerUser'} ) ) {
         $GetParam{'X-KIX-CustomerUser'} = $GetParam{SenderEmailAddress};
     }
 
     # get ticket owner
     # KIX4OTRS-capeIT
     # my $OwnerID = $GetParam{'X-KIX-OwnerID'} || $Param{InmailUserID};
-    my $OwnerID = $GetParam{'X-KIX-OwnerID'} || $GetParam{'X-OTRS-OwnerID'} || $TicketTemplate{OwnerID} || $Param{InmailUserID};
+    my $OwnerID
+        = $GetParam{'X-KIX-OwnerID'}
+        || $GetParam{'X-OTRS-OwnerID'}
+        || $TicketTemplate{OwnerID}
+        || $Param{InmailUserID};
 
     # EO KIX4OTRS-capeIT
-    if ( $GetParam{'X-KIX-Owner'} || $GetParam{'X-OTRS-Owner'}) {
+    if ( $GetParam{'X-KIX-Owner'} || $GetParam{'X-OTRS-Owner'} ) {
 
         my $TmpOwnerID = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
             UserLogin => $GetParam{'X-KIX-Owner'} || $GetParam{'X-OTRS-Owner'},
@@ -315,7 +345,8 @@ sub Run {
 
     my %Opts;
     if ( $GetParam{'X-KIX-ResponsibleID'} || $GetParam{'X-OTRS-ResponsibleID'} ) {
-        $Opts{ResponsibleID} = $GetParam{'X-KIX-ResponsibleID'} || $GetParam{'X-OTRS-ResponsibleID'};
+        $Opts{ResponsibleID}
+            = $GetParam{'X-KIX-ResponsibleID'} || $GetParam{'X-OTRS-ResponsibleID'};
     }
 
     # KIX4OTRS-capeIT
@@ -341,26 +372,31 @@ sub Run {
     # get ticket type
     my $Type;
     if ( $ConfigObject->Get('Ticket::Type') && defined $TicketTemplate{TypeID} ) {
-        $Type = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup( TypeID => $TicketTemplate{TypeID} );
+        $Type = $Kernel::OM->Get('Kernel::System::Type')
+            ->TypeLookup( TypeID => $TicketTemplate{TypeID} );
     }
 
     # get service
     my $Service;
     if ( defined $TicketTemplate{ServiceID} ) {
-        $Service = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup( ServiceID => $TicketTemplate{ServiceID} );
+        $Service = $Kernel::OM->Get('Kernel::System::Service')
+            ->ServiceLookup( ServiceID => $TicketTemplate{ServiceID} );
     }
 
     # get sla
     my $SLA;
     if ( defined $TicketTemplate{SLAID} ) {
-        $SLA = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup( SLAID => $TicketTemplate{SLAID} );
+        $SLA
+            = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup( SLAID => $TicketTemplate{SLAID} );
     }
 
-#rbo - T2016121190001552 - added KIX placeholders
+    #rbo - T2016121190001552 - added KIX placeholders
     # get subject
     my $Subject = $GetParam{Subject};
-    if ( defined $TicketTemplate{Subject}
-        && $TicketTemplate{Subject} =~ m/(.*?)<(KIX|OTRS)_EMAIL_SUBJECT>(.*)/g )
+    if (
+        defined $TicketTemplate{Subject}
+        && $TicketTemplate{Subject} =~ m/(.*?)<(KIX|OTRS)_EMAIL_SUBJECT>(.*)/g
+        )
     {
         $Subject = $1 . $Subject . $3;
     }
@@ -370,7 +406,7 @@ sub Run {
     # create new ticket
     my $NewTn    = $TicketObject->TicketCreateNumber();
     my $TicketID = $TicketObject->TicketCreate(
-        TN           => $NewTn,
+        TN => $NewTn,
 
         # KIX4OTRS-capeIT
         # Title        => $GetParam{Subject},
@@ -379,10 +415,10 @@ sub Run {
         QueueID => $QueueID || $TicketTemplate{QueueID},
 
         # EO KIX4OTRS-capeIT
-#rbo - T2016121190001552 - renamed X-KIX headers
-        Lock         => $GetParam{'X-KIX-Lock'} || $GetParam{'X-OTRS-Lock'} || 'unlock',
-        Priority     => $Priority,
-        State        => $State,
+        #rbo - T2016121190001552 - renamed X-KIX headers
+        Lock => $GetParam{'X-KIX-Lock'} || $GetParam{'X-OTRS-Lock'} || 'unlock',
+        Priority => $Priority,
+        State    => $State,
 
         # KIX4OTRS-capeIT
         # Type         => $GetParam{'X-KIX-Type'} || '',
@@ -391,10 +427,10 @@ sub Run {
         Type    => $Type    || $GetParam{'X-KIX-Type'}    || $GetParam{'X-OTRS-Type'}    || '',
         Service => $Service || $GetParam{'X-KIX-Service'} || $GetParam{'X-OTRS-Service'} || '',
         SLA     => $SLA     || $GetParam{'X-KIX-SLA'}     || $GetParam{'X-OTRS-SLA'}     || '',
-        TicketTemplate => (%TicketTemplate && $TicketTemplate{ID}) ? $TicketTemplate{ID} : '',
+        TicketTemplate => ( %TicketTemplate && $TicketTemplate{ID} ) ? $TicketTemplate{ID} : '',
 
         # EO KIX4OTRS-capeIT
-        CustomerID   => $GetParam{'X-KIX-CustomerNo'} || $GetParam{'X-OTRS-CustomerNo'},
+        CustomerID   => $GetParam{'X-KIX-CustomerNo'}   || $GetParam{'X-OTRS-CustomerNo'},
         CustomerUser => $GetParam{'X-KIX-CustomerUser'} || $GetParam{'X-OTRS-CustomerUser'},
         OwnerID      => $OwnerID,
         UserID       => $Param{InmailUserID},
@@ -412,28 +448,33 @@ sub Run {
         print "TicketID: $TicketID\n";
         print "Priority: $Priority\n";
         print "State: $State\n";
-        print "CustomerID: ".($GetParam{'X-KIX-CustomerNo'} || $GetParam{'X-OTRS-CustomerNo'})."\n";
-        print "CustomerUser: ".($GetParam{'X-KIX-CustomerUser'} || $GetParam{'X-OTRS-CustomerUser'})."\n";
+        print "CustomerID: "
+            . ( $GetParam{'X-KIX-CustomerNo'} || $GetParam{'X-OTRS-CustomerNo'} ) . "\n";
+        print "CustomerUser: "
+            . ( $GetParam{'X-KIX-CustomerUser'} || $GetParam{'X-OTRS-CustomerUser'} ) . "\n";
         for my $Value (qw(Type Service SLA Lock)) {
 
             if ( $GetParam{ 'X-KIX-' . $Value } || $GetParam{ 'X-OTRS-' . $Value } ) {
-                print "Type: " . ($GetParam{ 'X-KIX-' . $Value } || $GetParam{ 'X-OTRS-' . $Value }) . "\n";
+                print "Type: "
+                    . ( $GetParam{ 'X-KIX-' . $Value } || $GetParam{ 'X-OTRS-' . $Value } ) . "\n";
             }
         }
     }
 
-#rbo - T2016121190001552 - renamed X-KIX headers
+    #rbo - T2016121190001552 - renamed X-KIX headers
     # set pending time
     if ( $GetParam{'X-KIX-State-PendingTime'} || $GetParam{'X-OTRS-State-PendingTime'} ) {
 
-  # You can specify absolute dates like "2010-11-20 00:00:00" or relative dates, based on the arrival time of the email.
-  # Use the form "+ $Number $Unit", where $Unit can be 's' (seconds), 'm' (minutes), 'h' (hours) or 'd' (days).
-  # Only one unit can be specified. Examples of valid settings: "+50s" (pending in 50 seconds), "+30m" (30 minutes),
-  # "+12d" (12 days). Note that settings like "+1d 12h" are not possible. You can specify "+36h" instead.
+# You can specify absolute dates like "2010-11-20 00:00:00" or relative dates, based on the arrival time of the email.
+# Use the form "+ $Number $Unit", where $Unit can be 's' (seconds), 'm' (minutes), 'h' (hours) or 'd' (days).
+# Only one unit can be specified. Examples of valid settings: "+50s" (pending in 50 seconds), "+30m" (30 minutes),
+# "+12d" (12 days). Note that settings like "+1d 12h" are not possible. You can specify "+36h" instead.
 
-        my $TargetTimeStamp = $GetParam{'X-KIX-State-PendingTime'} || $GetParam{'X-OTRS-State-PendingTime'};
+        my $TargetTimeStamp
+            = $GetParam{'X-KIX-State-PendingTime'} || $GetParam{'X-OTRS-State-PendingTime'};
 
-        my ( $Sign, $Number, $Unit ) = $TargetTimeStamp =~ m{^\s*([+-]?)\s*(\d+)\s*([smhd]?)\s*$}smx;
+        my ( $Sign, $Number, $Unit )
+            = $TargetTimeStamp =~ m{^\s*([+-]?)\s*(\d+)\s*([smhd]?)\s*$}smx;
 
         if ($Number) {
             $Sign ||= '+';
@@ -466,7 +507,9 @@ sub Run {
 
         # debug
         if ( $Set && $Self->{Debug} > 0 ) {
-            print "State-PendingTime: ".($GetParam{'X-KIX-State-PendingTime'} || $GetParam{'X-OTRS-State-PendingTime'})."\n";
+            print "State-PendingTime: "
+                . ( $GetParam{'X-KIX-State-PendingTime'} || $GetParam{'X-OTRS-State-PendingTime'} )
+                . "\n";
         }
     }
 
@@ -487,9 +530,11 @@ sub Run {
     for my $DynamicFieldID ( sort keys %{$DynamicFieldList} ) {
         next DYNAMICFIELDID if !$DynamicFieldID;
         next DYNAMICFIELDID if !$DynamicFieldList->{$DynamicFieldID};
-#rbo - T2016121190001552 - renamed X-KIX headers
+
+        #rbo - T2016121190001552 - renamed X-KIX headers
         my $Key = 'X-KIX-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
         if ( !defined $GetParam{$Key} || !length $GetParam{$Key} ) {
+
             # fallback
             $Key = 'X-OTRS-DynamicField-' . $DynamicFieldList->{$DynamicFieldID}
         }
@@ -521,9 +566,9 @@ sub Run {
     # for backward compatibility (should be removed in a future version)
     my %Values =
         (
-#rbo - T2016121190001552 - renamed X-KIX headers
-        'X-KIX-TicketKey'   => 'TicketFreeKey',
-        'X-KIX-TicketValue' => 'TicketFreeText',
+        #rbo - T2016121190001552 - renamed X-KIX headers
+        'X-KIX-TicketKey'    => 'TicketFreeKey',
+        'X-KIX-TicketValue'  => 'TicketFreeText',
         'X-OTRS-TicketKey'   => 'TicketFreeKey',
         'X-OTRS-TicketValue' => 'TicketFreeText',
         );
@@ -560,9 +605,10 @@ sub Run {
     # for backward compatibility (should be removed in a future version)
     for my $Count ( 1 .. 6 ) {
 
-#rbo - T2016121190001552 - renamed X-KIX headers
+        #rbo - T2016121190001552 - renamed X-KIX headers
         my $Key = 'X-KIX-TicketTime' . $Count;
         if ( !defined $GetParam{$Key} || !length $GetParam{$Key} ) {
+
             # fallback
             $Key = 'X-OTRS-TicketTime' . $Count;
         }
@@ -601,15 +647,19 @@ sub Run {
 
     # KIX4OTRS-capeIT
     # get body
-    my $Body = $GetParam{Body};
+    my $Body         = $GetParam{Body};
     my $RichTextUsed = $ConfigObject->Get('Frontend::RichText');
     if ( defined $TicketTemplate{Body} ) {
-#rbo - T2016121190001552 - added KIX placeholders
-        if ( $RichTextUsed && $TicketTemplate{Body} =~ m/(.*?)&lt;(KIX|OTRS)_EMAIL_BODY&gt;(.*)/msg ) {
+
+        #rbo - T2016121190001552 - added KIX placeholders
+        if (   $RichTextUsed
+            && $TicketTemplate{Body} =~ m/(.*?)&lt;(KIX|OTRS)_EMAIL_BODY&gt;(.*)/msg )
+        {
             $Body = $1 . $Body . $3;
             $GetParam{'Content-Type'} = 'text/html';
         }
-        elsif ( !$RichTextUsed && $TicketTemplate{Body} =~ m/(.*?)<(KIX|OTRS)_EMAIL_BODY>(.*)/msg ) {
+        elsif ( !$RichTextUsed && $TicketTemplate{Body} =~ m/(.*?)<(KIX|OTRS)_EMAIL_BODY>(.*)/msg )
+        {
             $Body = $1 . $Body . $3;
         }
     }
@@ -625,29 +675,31 @@ sub Run {
 
     # do article db insert
     my $ArticleID = $TicketObject->ArticleCreate(
-        TicketID         => $TicketID,
+        TicketID => $TicketID,
 
         # KIX4OTRS-capeIT
-#rbo - T2016121190001552 - renamed X-KIX headers
+        #rbo - T2016121190001552 - renamed X-KIX headers
         # ArticleType      => $GetParam{'X-KIX-ArticleType'},
-        ArticleType => $GetParam{'X-KIX-ArticleType'} || $GetParam{'X-OTRS-ArticleType'} || $ArticleType,
+        ArticleType => $GetParam{'X-KIX-ArticleType'}
+            || $GetParam{'X-OTRS-ArticleType'}
+            || $ArticleType,
 
         # EO KIX4OTRS-capeIT
-        SenderType       => $GetParam{'X-KIX-SenderType'} || $GetParam{'X-OTRS-SenderType'},
-        From             => $GetParam{From},
-        ReplyTo          => $GetParam{ReplyTo},
-        To               => $GetParam{To},
-        Cc               => $GetParam{Cc},
+        SenderType => $GetParam{'X-KIX-SenderType'} || $GetParam{'X-OTRS-SenderType'},
+        From       => $GetParam{'X-KIX-From'}       || $GetParam{From},
+        ReplyTo    => $GetParam{ReplyTo},
+        To         => $GetParam{To},
+        Cc         => $GetParam{Cc},
 
         # KIX4OTRS-capeIT
         # Subject          => $GetParam{Subject},
         Subject => $Subject,
 
         # EO KIX4OTRS-capeIT
-        MessageID        => $GetParam{'Message-ID'},
-        InReplyTo        => $GetParam{'In-Reply-To'},
-        References       => $GetParam{'References'},
-        ContentType      => $GetParam{'Content-Type'},
+        MessageID   => $GetParam{'Message-ID'},
+        InReplyTo   => $GetParam{'In-Reply-To'},
+        References  => $GetParam{'References'},
+        ContentType => $GetParam{'Content-Type'},
 
         # KIX4OTRS-capeIT
         # Body             => $GetParam{Body},
@@ -715,9 +767,11 @@ sub Run {
     for my $DynamicFieldID ( sort keys %{$DynamicFieldList} ) {
         next DYNAMICFIELDID if !$DynamicFieldID;
         next DYNAMICFIELDID if !$DynamicFieldList->{$DynamicFieldID};
-#rbo - T2016121190001552 - renamed X-KIX headers
+
+        #rbo - T2016121190001552 - renamed X-KIX headers
         my $Key = 'X-KIX-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
         if ( !defined $GetParam{$Key} || !length $GetParam{$Key} ) {
+
             # fallback
             $Key = 'X-OTRS-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
         }
@@ -749,9 +803,9 @@ sub Run {
     # for backward compatibility (should be removed in a future version)
     %Values =
         (
-#rbo - T2016121190001552 - renamed X-KIX headers
-        'X-KIX-ArticleKey'   => 'ArticleFreeKey',
-        'X-KIX-ArticleValue' => 'ArticleFreeText',
+        #rbo - T2016121190001552 - renamed X-KIX headers
+        'X-KIX-ArticleKey'    => 'ArticleFreeKey',
+        'X-KIX-ArticleValue'  => 'ArticleFreeText',
         'X-OTRS-ArticleKey'   => 'ArticleFreeKey',
         'X-OTRS-ArticleValue' => 'ArticleFreeText',
         );
@@ -805,12 +859,10 @@ sub Run {
         );
     }
 
-    return (1, $TicketID);
+    return ( 1, $TicketID );
 }
 
 1;
-
-
 
 =back
 
