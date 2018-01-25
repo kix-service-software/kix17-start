@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -26,20 +26,20 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{CacheType} = 'CustomerUserPreferencesDB';
+    $Self->{CacheType} = 'CustomerCompanyPreferencesDB';
     $Self->{CacheTTL}  = 60 * 60 * 24 * 20;
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # preferences table data
-    $Self->{PreferencesTable} = $ConfigObject->Get('CustomerCompanyPreferences')->{Params}->{Table}
-        || 'customer_preferences';
-    $Self->{PreferencesTableKey} = $ConfigObject->Get('CustomerCompanyPreferences')->{Params}->{TableKey}
+    $Self->{PreferencesTable} = $ConfigObject->Get('CustomerCompany::PreferencesModule')->{Params}->{Table}
+        || 'kix_customer_company_prefs';
+    $Self->{PreferencesTableKey} = $ConfigObject->Get('CustomerCompany::PreferencesModule')->{Params}->{TableKey}
         || 'preferences_key';
-    $Self->{PreferencesTableValue} = $ConfigObject->Get('CustomerCompanyPreferences')->{Params}->{TableValue}
+    $Self->{PreferencesTableValue} = $ConfigObject->Get('CustomerCompany::PreferencesModule')->{Params}->{TableValue}
         || 'preferences_value';
-    $Self->{PreferencesTableUserID} = $ConfigObject->Get('CustomerCompanyPreferences')->{Params}->{TableUserID}
+    $Self->{PreferencesTableUserID} = $ConfigObject->Get('CustomerCompany::PreferencesModule')->{Params}->{TableUserID}
         || 'user_id';
 
     # set lower if database is case sensitive
@@ -61,7 +61,7 @@ sub new {
 sub SetPreferences {
     my ( $Self, %Param ) = @_;
 
-    return if !$Param{UserID};
+    return if !$Param{CustomerID};
     return if !$Param{Key};
 
     my $Value = defined $Param{Value} ? $Param{Value} : '';
@@ -75,7 +75,7 @@ sub SetPreferences {
             DELETE FROM $Self->{PreferencesTable}
             WHERE $Self->{PreferencesTableUserID} = ?
                 AND $Self->{PreferencesTableKey} = ?",
-        Bind => [ \$Param{UserID}, \$Param{Key} ],
+        Bind => [ \$Param{CustomerID}, \$Param{Key} ],
     );
 
     # insert new data
@@ -84,13 +84,13 @@ sub SetPreferences {
             INSERT INTO $Self->{PreferencesTable}
             ($Self->{PreferencesTableUserID}, $Self->{PreferencesTableKey}, $Self->{PreferencesTableValue})
             VALUES (?, ?, ?)",
-        Bind => [ \$Param{UserID}, \$Param{Key}, \$Value ],
+        Bind => [ \$Param{CustomerID}, \$Param{Key}, \$Value ],
     );
 
     # delete cache
     $Kernel::OM->Get('Kernel::System::Cache')->Delete(
         Type => $Self->{CacheType},
-        Key  => $Self->{CachePrefix} . $Param{UserID},
+        Key  => $Self->{CachePrefix} . $Param{CustomerID},
     );
 
     return 1;
@@ -98,13 +98,13 @@ sub SetPreferences {
 
 =item RenamePreferences()
 
-rename the old userid with the new userid in the preferences
+rename the old Customerid with the new Customerid in the preferences
 
 returns 1 if success or undef otherwise
 
     my $Success = $PreferencesObject->RenamePreferences(
-        NewUserID => 2,
-        OldUserID => 1,
+        NewCustomerID => 2,
+        OldCustomerID => 1,
     );
 
 =cut
@@ -112,8 +112,8 @@ returns 1 if success or undef otherwise
 sub RenamePreferences {
     my ( $Self, %Param ) = @_;
 
-    return if !$Param{NewUserID};
-    return if !$Param{OldUserID};
+    return if !$Param{NewCustomerID};
+    return if !$Param{OldCustomerID};
 
     # update the preferences
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
@@ -121,13 +121,13 @@ sub RenamePreferences {
             UPDATE $Self->{PreferencesTable}
             SET $Self->{PreferencesTableUserID} = ?
             WHERE $Self->{PreferencesTableUserID} = ?",
-        Bind => [ \$Param{NewUserID}, \$Param{OldUserID}, ],
+        Bind => [ \$Param{NewCustomerID}, \$Param{OldCustomerID}, ],
     );
 
     # delete cache
     $Kernel::OM->Get('Kernel::System::Cache')->Delete(
         Type => $Self->{CacheType},
-        Key  => $Self->{CachePrefix} . $Param{OldUserID},
+        Key  => $Self->{CachePrefix} . $Param{OldCustomerID},
     );
 
     return 1;
@@ -136,12 +136,12 @@ sub RenamePreferences {
 sub GetPreferences {
     my ( $Self, %Param ) = @_;
 
-    return if !$Param{UserID};
+    return if !$Param{CustomerID};
 
     # read cache
     my $Cache = $Kernel::OM->Get('Kernel::System::Cache')->Get(
         Type => $Self->{CacheType},
-        Key  => $Self->{CachePrefix} . $Param{UserID},
+        Key  => $Self->{CachePrefix} . $Param{CustomerID},
     );
     return %{$Cache} if $Cache;
 
@@ -154,7 +154,7 @@ sub GetPreferences {
             SELECT $Self->{PreferencesTableKey}, $Self->{PreferencesTableValue}
             FROM $Self->{PreferencesTable}
             WHERE $Self->{PreferencesTableUserID} = ?",
-        Bind => [ \$Param{UserID} ],
+        Bind => [ \$Param{CustomerID} ],
     );
 
     # fetch the result
@@ -167,7 +167,7 @@ sub GetPreferences {
     $Kernel::OM->Get('Kernel::System::Cache')->Set(
         Type  => $Self->{CacheType},
         TTL   => $Self->{CacheTTL},
-        Key   => $Self->{CachePrefix} . $Param{UserID},
+        Key   => $Self->{CachePrefix} . $Param{CustomerID},
         Value => \%Data,
     );
 
@@ -206,12 +206,12 @@ sub SearchPreferences {
     );
 
     # fetch the result
-    my %UserID;
+    my %CustomerID;
     while ( my @Row = $DBObject->FetchrowArray() ) {
-        $UserID{ $Row[0] } = $Row[1];
+        $CustomerID{ $Row[0] } = $Row[1];
     }
 
-    return %UserID;
+    return %CustomerID;
 }
 
 1;

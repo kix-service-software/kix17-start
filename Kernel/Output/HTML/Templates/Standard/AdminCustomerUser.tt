@@ -253,6 +253,14 @@
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("Input") %]
+[% RenderBlockStart("TextArea") %]
+                        <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %]: </label>
+                        <div class="Field">
+                            <textarea name="[% Data.Name | html %]" id="[% Data.Name | html %]" rows="[% Data.Rows | html %]" cols="[% Data.Cols | html %]">[% Data.SelectedID | html %]</textarea>
+                            <p class="FieldExplanation">[% Translate(Data.Desc) | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("TextArea") %]
 [% RenderBlockStart("Option") %]
                         <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %]:</label>
                         <div class="Field">
