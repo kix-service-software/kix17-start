@@ -135,6 +135,9 @@ sub Run {
 
         next DYNAMICFIELD if !$DynamicField;
         next DYNAMICFIELD if !$DynamicFieldValues{$DynamicField};
+        next DYNAMICFIELD
+            if ( ref( $DynamicFieldValues{$DynamicField} ) eq 'ARRAY'
+            && !scalar( @{ $DynamicFieldValues{$DynamicField} } ) );
 
         $DynamicFieldACLParameters{ 'DynamicField_' . $DynamicField }
             = $DynamicFieldValues{$DynamicField};
@@ -779,14 +782,14 @@ sub Run {
                         DoNotAdd => $GetParam{XMLUploadDoNotAdd},
                         UserID   => $Self->{UserID},
                         )
-                    };
+                };
 
                 if ( $UploadResult{XMLResultString} ) {
                     my $DownloadFileName = $UploadFileName;
                     my $TimeString       = $TimeObject->SystemTime2TimeStamp(
                         SystemTime => $TimeObject->SystemTime(),
                     );
-                    $TimeString       =~ s/\s/\_/g;
+                    $TimeString =~ s/\s/\_/g;
                     $DownloadFileName =~ s/\.(.*)$/_ImportResult_$TimeString\.xml/g;
 
                     my $FileID = $UploadCacheObject->FormIDAddFile(
@@ -933,8 +936,9 @@ sub Run {
     );
 
     if ( $Param{Count} ) {
-        my %PortalGroups = $Kernel::OM->Get('Kernel::System::CustomerPortalGroup')->PortalGroupList( ValidID => 1 );
-        
+        my %PortalGroups = $Kernel::OM->Get('Kernel::System::CustomerPortalGroup')
+            ->PortalGroupList( ValidID => 1 );
+
         for my $CurrHashID (
             sort { $TicketTemplateData{$a}->{Name} cmp $TicketTemplateData{$b}->{Name} }
             keys %TicketTemplateData
@@ -947,10 +951,11 @@ sub Run {
             push( @FrontendInfoArray, 'C' ) if ( $TicketTemplateData{$CurrHashID}->{Customer} );
             $TicketTemplateData{$CurrHashID}->{FrontendInfoStrg}
                 = join( '/', @FrontendInfoArray );
-                
+
             # get customer portal group if set
-            if ($TicketTemplateData{$CurrHashID}->{CustomerPortalGroupID}) {
-                $TicketTemplateData{$CurrHashID}->{CustomerPortalGroup} = $PortalGroups{$TicketTemplateData{$CurrHashID}->{CustomerPortalGroupID}},
+            if ( $TicketTemplateData{$CurrHashID}->{CustomerPortalGroupID} ) {
+                $TicketTemplateData{$CurrHashID}->{CustomerPortalGroup}
+                    = $PortalGroups{ $TicketTemplateData{$CurrHashID}->{CustomerPortalGroupID} },
             }
 
             $LayoutObject->Block(
@@ -1033,7 +1038,8 @@ sub _GetUsers {
 
     # show all users who are owner or rw in the queue group
     elsif ( $Param{QueueID} ) {
-        my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{QueueID} );
+        my $GID = $Kernel::OM->Get('Kernel::System::Queue')
+            ->GetQueueGroupID( QueueID => $Param{QueueID} );
         my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
             GroupID => $GID,
             Type    => 'owner',
@@ -1095,7 +1101,8 @@ sub _GetResponsibles {
 
     # show all users who are responsible or rw in the queue group
     elsif ( $Param{QueueID} ) {
-        my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{QueueID} );
+        my $GID = $Kernel::OM->Get('Kernel::System::Queue')
+            ->GetQueueGroupID( QueueID => $Param{QueueID} );
         my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
             GroupID => $GID,
             Type    => 'responsible',
@@ -1244,8 +1251,8 @@ sub _GetTos {
         for my $QueueID ( sort keys %Tos ) {
             my %QueueData = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet( ID => $QueueID );
 
-            # permission check, can we create new tickets in queue - disabled with usablity-cr T#2017051690000887
-            # next QUEUEID if !$UserGroups{ $QueueData{GroupID} };
+# permission check, can we create new tickets in queue - disabled with usablity-cr T#2017051690000887
+# next QUEUEID if !$UserGroups{ $QueueData{GroupID} };
 
             my $String = $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionString')
                 || '<Realname> <<Email>> - Queue: <Queue>';
@@ -1253,9 +1260,10 @@ sub _GetTos {
             $String =~ s/<QueueComment>/$QueueData{Comment}/g;
             if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' )
             {
-                my %SystemAddressData = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
+                my %SystemAddressData
+                    = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
                     ID => $Tos{$QueueID},
-                );
+                    );
                 $String =~ s/<Realname>/$SystemAddressData{Realname}/g;
                 $String =~ s/<Email>/$SystemAddressData{Name}/g;
             }
@@ -1272,11 +1280,11 @@ sub _MaskNew {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
-    my $LinkObject   = $Kernel::OM->Get('Kernel::System::LinkObject');
+    my $ConfigObject              = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject              = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $TicketObject              = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $GroupObject               = $Kernel::OM->Get('Kernel::System::Group');
+    my $LinkObject                = $Kernel::OM->Get('Kernel::System::LinkObject');
     my $CustomerPortalGroupObject = $Kernel::OM->Get('Kernel::System::CustomerPortalGroup');
 
     my @Templates = $TicketObject->TicketTemplateList(
@@ -1308,12 +1316,12 @@ sub _MaskNew {
     # build customer portal group selection string
     my %PortalGroups = $CustomerPortalGroupObject->PortalGroupList( ValidID => 1 );
     $Param{CustomerPortalGroupStrg} = $LayoutObject->BuildSelection(
-        Data        => \%PortalGroups,
-        SelectedID  => $Param{CustomerPortalGroupID},
-        Translation => 1,
-        Name        => 'CustomerPortalGroupID',
+        Data         => \%PortalGroups,
+        SelectedID   => $Param{CustomerPortalGroupID},
+        Translation  => 1,
+        Name         => 'CustomerPortalGroupID',
         PossibleNone => 1,
-        Class       => 'Modernize Validate_Required',
+        Class        => 'Modernize Validate_Required',
     );
 
     # build user group selection string
@@ -1421,10 +1429,10 @@ sub _MaskNew {
     # build type string
     if ( $ConfigObject->Get('Ticket::Type') ) {
         $Param{TypeStrg} = $LayoutObject->BuildSelection(
-            Data         => $Param{Types},
-            Name         => 'TypeID',
-            Class        => 'Validate_Required Modernize ' . ( $Param{Errors}->{TypeInvalid} || ' ' ),
-            SelectedID   => $Param{TypeID},
+            Data       => $Param{Types},
+            Name       => 'TypeID',
+            Class      => 'Validate_Required Modernize ' . ( $Param{Errors}->{TypeInvalid} || ' ' ),
+            SelectedID => $Param{TypeID},
             PossibleNone => 1,
             Sort         => 'AlphanumericValue',
             Translation  => 0,
@@ -1533,7 +1541,9 @@ sub _MaskNew {
             . '"/>';
 
         # set pin only on selections
-        if ( $DynamicFieldConfig->{FieldType} =~ /Multiselect|Dropdown/ || $DynamicFieldConfig->{Config}->{DisplayFieldType} =~ /Multiselect|Dropdown/) {
+        if (   $DynamicFieldConfig->{FieldType} =~ /Multiselect|Dropdown/
+            || $DynamicFieldConfig->{Config}->{DisplayFieldType} =~ /Multiselect|Dropdown/ )
+        {
             $DynamicFieldHTML->{Label} =~ s/(<label(.*?)>)/$1$Pin/gi;
         }
 
@@ -1768,8 +1778,6 @@ sub _GetFieldsToUpdate {
 }
 
 1;
-
-
 
 =back
 
