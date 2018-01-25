@@ -5962,6 +5962,7 @@ Ihr Helpdesk-Team
         'Locked Tickets.' => 'Gesperrte Tickets.',
         'Locked ticket.' => 'Ticket gesperrt.',
         'Log file for the ticket counter.' => 'Log-Datei für den Ticket-Counter.',
+        'Logged-In Users' => 'Angemeldete Nutzer',
         'Logout of customer panel.' => 'Abmelden vom Kunden-Bereich',
         'Loop-Protection! No auto-response sent to "%s".' => 'Loop-Protection! Keine Auto-Antwort versandt an "%s".',
         'Mail Accounts' => 'E-Mailkonten',
