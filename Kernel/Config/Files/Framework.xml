@@ -13183,7 +13183,7 @@ via the Preferences button after logging in.
             <FrontendModuleReg>
                 <Group>admin</Group>
                 <Description>Admin</Description>
-                <Title>DependingDynamicFields</Title>
+                <Title Translatable="1">Depending Dynamic Fields</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
