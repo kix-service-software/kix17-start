@@ -4466,8 +4466,8 @@ Ihr Helpdesk-Team
         'Added subscription for user "%s".' => 'Abo für Benutzer "%s" eingetragen.',
         # rkaiser - T#2017020290001194 - changed customer user to contact
         'Address book of contact sources.' => 'Adressbuch für Ansprechpartner-Quellen.',
-        'Adds a suffix with the actual year and month to the OTRS log file. A logfile for every month will be created.' =>
-            'Fügt einen Suffix mit dem aktuellen Jahr und Monat in die OTRS-Protokolldatei hinzu. Für jeden Monat wir eine eigen Log-Datei erstellt.',
+        'Adds a suffix with the actual year and month to the KIX log file. A logfile for every month will be created.' =>
+            'Fügt einen Suffix mit dem aktuellen Jahr und Monat in die KIX-Protokolldatei hinzu. Für jeden Monat wird eine eigene Log-Datei erstellt.',
         'Adds customers email addresses to recipients in the ticket compose screen of the agent interface. The customers email address won\'t be added if the article type is email-internal.' =>
             'Fügt die Kunden E-Mailadresse zu den Empfängern hinzu in der "TicketCompose"-Oberfläche des Agenten-Interface hinzu. Die Kunden E-Mailadresse wird nicht hinzugefügt, wenn der Artikel-Typ \'email an intern\' ist.',
         'Adds the one time vacation days for the indicated calendar. Please use single digit pattern for numbers from 1 to 9 (instead of 01 - 09).' =>
