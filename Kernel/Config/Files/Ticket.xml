@@ -8324,6 +8324,22 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="CustomerCompanyPreferences###Comment2" Required="0" Valid="0">
+        <Description Translatable="1">Parameters of the example queue attribute Comment2.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::CustomerCompany::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::CustomerCompanyPreferences::Generic</Item>
+                <Item Key="Label" Translatable="1">Comment2</Item>
+                <Item Key="Desc" Translatable="1">Define the queue comment 2.</Item>
+                <Item Key="Block">TextArea</Item>
+                <Item Key="Cols">50</Item>
+                <Item Key="Rows">5</Item>
+                <Item Key="PrefKey">Comment2</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="QueuePreferences###Comment2" Required="0" Valid="0">
         <Description Translatable="1">Parameters of the example queue attribute Comment2.</Description>
         <Group>Ticket</Group>

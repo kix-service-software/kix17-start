@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -194,6 +194,56 @@ $('.MasterAction').bind('click', function (Event) {
 
 [% RenderBlockEnd("PreferencesGenericOption") %]
 [% RenderBlockEnd("PreferencesGeneric") %]
+[% RenderBlockStart("Item") %]
+[% RenderBlockStart("InputKey") %]
+                        <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %]:</label>
+                        <div class="Field">
+                            <input id="[% Data.Name | html %]"type="text" name="[% Data.Name | html %]" class="W50pc" value="[% Data.SelectedID | html %]"/>
+                            <div class="FieldExplanation"> [% Translate(Data.Key) | html %] </div>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("InputKey") %]
+[% RenderBlockStart("Input") %]
+                        <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %]:</label>
+                        <div class="Field">
+                            <input id="[% Data.Name | html %]" type="text" name="[% Data.Name | html %]" class="W50pc" value="[% Data.SelectedID | html %]"/>
+                            <div class="FieldExplanation">[% Translate(Data.Desc) | html %][% Translate(Data.Key) | html %]</div>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("Input") %]
+[% RenderBlockStart("TextArea") %]
+                        <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %]: </label>
+                        <div class="Field">
+                            <textarea name="[% Data.Name | html %]" id="[% Data.Name | html %]" rows="[% Data.Rows | html %]" cols="[% Data.Cols | html %]">[% Data.SelectedID | html %]</textarea>
+                            <p class="FieldExplanation">[% Translate(Data.Desc) | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("TextArea") %]
+[% RenderBlockStart("Option") %]
+                        <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %]:</label>
+                        <div class="Field">
+                            [% Data.Option %]
+                            <div class="FieldExplanation">[% Translate(Data.Desc) | html %][% Translate(Data.Key) | html %]</div>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("Option") %]
+[% RenderBlockStart("Upload") %]
+                        <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %]:</label>
+                        <div class="Field">
+                            <input id="[% Data.Name | html %]" name="[% Data.Name | html %]" type="file"/>
+                            <div class="FieldExplanation">[% Translate(Data.Desc) | html %][% Translate(Data.Key) | html %]</div>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("Upload") %]
+[% RenderBlockStart("Password") %]
+                        <label for="[% Data.Name | html %]">[% Translate(Data.Label) | html %]:</label>
+                        <div class="Field">
+                            <input id="[% Data.Name | html %]" type="password" name="[% Data.Name | html %]" class="W50pc" value="[% Data.SelectedID | html %]" autocomplete="off" />
+                            <div>[% Translate(Data.Key) | html %]</div>
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("Password") %]
+[% RenderBlockEnd("Item") %]
                             <div class="Field SpacingTop">
                                 <button class="Primary CallForAction" type="submit" value="[% Translate("Submit") | html %]"><span>[% Translate("Submit") | html %]</span></button>
                                 [% Translate("or") | html %]
