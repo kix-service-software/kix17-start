@@ -72,6 +72,8 @@ Core.KIXBase.Customer = (function(TargetNS) {
             }
         });
 
+        $('#Messages').addClass('MessageContent');
+
         // move sidebar header to div
         var Counter = 0;
 
