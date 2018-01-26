@@ -164,16 +164,31 @@ sub ValueSet {
 
     for my $Value (@Values) {
 
-        # create a new value entry
-        return if !$DBObject->Do(
-            SQL =>
-                'INSERT INTO dynamic_field_value (field_id, object_id, value_text, value_date, value_int)'
-                . ' VALUES (?, ?, ?, ?, ?)',
-            Bind => [
-                \$Param{FieldID}, \$Param{ObjectID},
-                \$Value->{ValueText}, \$Value->{ValueDateTime}, \$Value->{ValueInt},
-            ],
-        );
+        # T2017120690001131
+        if ( $Param{ObjectID} =~ /^\d+$/g ) {
+            # create a new value entry with numeric ObjectID
+            return if !$DBObject->Do(
+                SQL =>
+                    'INSERT INTO dynamic_field_value (field_id, object_id, value_text, value_date, value_int)'
+                    . ' VALUES (?, ?, ?, ?, ?)',
+                Bind => [
+                    \$Param{FieldID}, \$Param{ObjectID},
+                    \$Value->{ValueText}, \$Value->{ValueDateTime}, \$Value->{ValueInt},
+                ],
+            );
+        }
+        else {
+            # create a new value entry with textual ObjectID
+            return if !$DBObject->Do(
+                SQL =>
+                    'INSERT INTO dynamic_field_value (field_id, object_id_text, value_text, value_date, value_int)'
+                    . ' VALUES (?, ?, ?, ?, ?)',
+                Bind => [
+                    \$Param{FieldID}, \$Param{ObjectID},
+                    \$Value->{ValueText}, \$Value->{ValueDateTime}, \$Value->{ValueInt},
+                ],
+            );
+        }
     }
 
     # delete cache
@@ -252,9 +267,9 @@ sub ValueGet {
         SQL =>
             'SELECT id, value_text, value_date, value_int, field_id
             FROM dynamic_field_value
-            WHERE object_id = ?
+            WHERE ((object_id = ? AND object_id_text is NULL) OR (object_id is NULL AND object_id_text = ?))
             ORDER BY id',
-        Bind => [ \$Param{ObjectID} ],
+        Bind => [ \$Param{ObjectID}, \$Param{ObjectID} ],
     );
 
     my %CacheData;
@@ -327,8 +342,8 @@ sub ValueDelete {
 
     # delete dynamic field value
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL  => 'DELETE FROM dynamic_field_value WHERE field_id = ? AND object_id = ?',
-        Bind => [ \$Param{FieldID}, \$Param{ObjectID} ],
+        SQL  => 'DELETE FROM dynamic_field_value WHERE field_id = ? AND ((object_id = ? AND object_id_text is NULL) OR (object_id is NULL AND object_id_text = ?))',
+        Bind => [ \$Param{FieldID}, \$Param{ObjectID}, \$Param{ObjectID} ],
     );
 
     # delete cache

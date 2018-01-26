@@ -323,6 +323,22 @@ sub DynamicFieldGet {
 
     if (%Data) {
 
+        # T2017120690001131
+        $Data{IdentifierDataType} = $Kernel::OM->Get('Kernel::System::DynamicField::ObjectType::'.$Data{ObjectType})->{IdentifierDataType} || 'NUMERIC';
+        if ($Data{IdentifierDataType} eq 'NUMERIC') {
+            $Data{IdentifierDataDBAttribute} = 'object_id';
+        }
+        elsif ($Data{IdentifierDataType} eq 'TEXT') {
+            $Data{IdentifierDataDBAttribute} = 'object_id_text';
+        }
+        else {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => 'Object backend '.$Data{ObjecType}.' gives unknown IdentifierDataType! Falling back to NUMERIC.'
+            );
+            $Data{IdentifierDataDBAttribute} = 'object_id';
+        }
+
         # Set the cache only, if the YAML->Load was successful (see bug#12483).
         if ( $Data{Config} ) {
 

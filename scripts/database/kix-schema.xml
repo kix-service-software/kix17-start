@@ -2001,7 +2001,8 @@
     <!-- foreign key to the dynamic_field -->
     <Column Name="field_id" Required="true" Type="INTEGER"/>
     <!-- the current object to link to (e. g. ticket or article ID) -->
-    <Column Name="object_id" Required="true" Type="BIGINT"/>
+    <Column Name="object_id" Required="false" Type="BIGINT"/>
+    <Column Name="object_id_text" Required="false" Type="VARCHAR" Size="255"/>
     <!-- for value we have different field types to store data, can be extended in future -->
     <Column Name="value_text" Required="false" Type="VARCHAR" Size="3800" />
     <Column Name="value_date" Required="false" Type="DATE" />
@@ -2019,6 +2020,10 @@
     <!-- Allow queries for all fields of an object, or for specific fields and objects e.g. search. -->
     <Index Name="dynamic_field_value_field_values">
         <IndexColumn Name="object_id"/>
+        <IndexColumn Name="field_id"/>
+    </Index>
+    <Index Name="dynamic_field_value_field_val2">
+        <IndexColumn Name="object_id_text"/>
         <IndexColumn Name="field_id"/>
     </Index>
     <ForeignKey ForeignTable="dynamic_field">

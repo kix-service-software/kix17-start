@@ -32,8 +32,17 @@ use vars qw(%INC);
 my %Opts;
 getopt( 'v', \%Opts );
 
+my $UpdatePath = $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update';
+
+if ( -f $UpdatePath.'/db-update-'.$Opts{v}.'_pre.pl' ) {
+    my $ExitCode = system($UpdatePath.'/db-update-'.$Opts{v}.'pre.pl');    
+    if (!$ExitCode) {
+        print STDERR "Unable to execute PRE script!";         
+    }
+}
+
 # check if xml file exists, if it doesn't, exit gracefully
-my $XMLFile = $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update/db-update-'.$Opts{v}.'.xml';
+my $XMLFile = $UpdatePath.'/db-update-'.$Opts{v}.'.xml';
 if ( ! -f "$XMLFile" ) {
     exit 0;
 }
@@ -80,6 +89,14 @@ for my $SQL (@SQLPost) {
         print STDERR "Unable to execute POST SQL!"; 
     }
 }
+
+if ( -f $UpdatePath.'/db-update-'.$Opts{v}.'_post.pl' ) {
+    my $ExitCode = system($UpdatePath.'/db-update-'.$Opts{v}.'_post.pl');    
+    if (!$ExitCode) {
+        print STDERR "Unable to execute POST script!";         
+    }
+}
+
 
 exit 1;
 
