@@ -187,7 +187,7 @@ sub LinkObjectTableCreateComplex {
                         . $Object
                         . $1
                         . $2
-                    },
+                },
             );
             $EnabledColumns{ $Object . $1 . $2 } = $Enabled;
         }
@@ -299,8 +299,10 @@ sub LinkObjectTableCreateComplex {
         }
 
         if (
-            ( grep { $_ eq 'LinkType' }
-            @{ $EnabledColumns{ $Block->{Object} . $Placeholder1 . $Class } } )
+            (
+                grep { $_ eq 'LinkType' }
+                @{ $EnabledColumns{ $Block->{Object} . $Placeholder1 . $Class } }
+            )
             || $NoColumnsEnabled
             )
         {
@@ -317,16 +319,17 @@ sub LinkObjectTableCreateComplex {
 
             for my $Item ( @{ $Block->{ItemList} } ) {
 
-            # define check-box cell
-            my $CheckboxCell = {
-                Type         => 'LinkTypeList',
-                Content      => '',
-                LinkTypeList => $LinkList{ $Block->{Object} }->{ $Item->[0]->{Key} },
-                Translate    => 1,
-            };
+                # define check-box cell
+                my $CheckboxCell = {
+                    Type         => 'LinkTypeList',
+                    Content      => '',
+                    LinkTypeList => $LinkList{ $Block->{Object} }->{ $Item->[0]->{Key} },
+                    Translate    => 1,
+                    CssStyle     => $Item->[0]->{CssStyle},
+                };
 
-            # add check-box cell to item
-            push @{$Item}, $CheckboxCell;
+                # add check-box cell to item
+                push @{$Item}, $CheckboxCell;
             }
 
             # KIX4OTRS-capeIT
@@ -470,10 +473,10 @@ sub LinkObjectTableCreateComplex {
 
     my $BlockCounter = 0;
 
-# KIX4OTRS-capeIT
-# OTRS complex table settings
-# disabled because KIX4OTRS brings own link object table preferences settings
-# EO KIX4OTRS-capeIT
+    # KIX4OTRS-capeIT
+    # OTRS complex table settings
+    # disabled because KIX4OTRS brings own link object table preferences settings
+    # EO KIX4OTRS-capeIT
 
     BLOCK:
     for my $Block (@OutputData) {
@@ -509,10 +512,10 @@ sub LinkObjectTableCreateComplex {
             },
         );
 
-# KIX4OTRS-capeIT
-# OTRS complex table settings
-# disabled because KIX4OTRS brings own link object table preferences settings
-# EO KIX4OTRS-capeIT
+        # KIX4OTRS-capeIT
+        # OTRS complex table settings
+        # disabled because KIX4OTRS brings own link object table preferences settings
+        # EO KIX4OTRS-capeIT
 
         # output table headline
         for my $HeadlineColumn ( @{ $Block->{Headline} } ) {
@@ -1510,9 +1513,6 @@ sub _PreferencesLinkObject {
 =cut
 
 1;
-
-
-
 
 =back
 
