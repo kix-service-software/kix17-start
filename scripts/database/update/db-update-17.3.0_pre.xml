@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <database Name="kix">
     <TableAlter Name="dynamic_field_value">
-        <ColumnChange NameOld="object_id" NameNew="object_id" Type="BIGINT" Required="false"/>
         <ColumnAdd Name="object_id_text" Type="VARCHAR" Size="255" Required="false"/>
-        <IndexAdd Name="dynamic_field_value_field_val2">
+        <IndexCreate Name="dynamic_field_value_field_val2">
             <IndexColumn Name="object_id_text"/>
             <IndexColumn Name="field_id"/>
-        </IndexAdd>
+        </IndexCreate>
     </TableAlter>
 </database>
