@@ -608,6 +608,11 @@ sub TicketSearch {
        $SQLFrom .= ' INNER JOIN kix_ticket_notes ktn ON st.id = ktn.ticket_id ';
     }
 
+    # ticket checklist
+    if ( $Param{TicketChecklistState} ) {
+        $SQLFrom .= "INNER JOIN kix_ticket_checklist ktc ON st.id = ktc.ticket_id ";
+    }
+
     # EO KIX4OTRS-capeIT
 
     # current type lookup
@@ -1213,6 +1218,20 @@ sub TicketSearch {
         my $SearchPattern = $Param{ContentSearchPrefix}.$Param{TicketNotes}.$Param{ContentSearchSuffix};
         $SearchPattern =~ s/\*/%/g;
         $SQLExt .= " AND LOWER(ktn.note) LIKE LOWER('" . $DBObject->Quote( $SearchPattern ) . "')";
+    }
+
+    # ticket checklist
+    if ( $Param{TicketChecklistState} ) {
+
+        my @ChecklistItemStates = @{ $Param{TicketChecklistState} };
+        $SQLFrom .= " AND (";
+        my $Counter = 0;
+        for my $ChecklistItemState ( @ChecklistItemStates ) {
+            $ChecklistItemStates[$Counter] = " ktc.state LIKE LOWER('" . $DBObject->Quote( $ChecklistItemState ) . "')";
+            $Counter++;
+        }
+        $SQLFrom .= join ' OR ', @ChecklistItemStates; 
+        $SQLFrom .= ")";
     }
 
     # EO KIX4OTRS-capeIT
