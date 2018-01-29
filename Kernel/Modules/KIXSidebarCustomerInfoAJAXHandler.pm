@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -356,12 +356,23 @@ sub _BuildTicketContactsSelection {
         PossibleNone => 0,
     );
 
+    foreach my $ContactType ( sort { $ListPrio{$a} <=> $ListPrio{$b} } keys %EmailData ) {
+        foreach my $Contact (
+            sort { $EmailData{$ContactType}->{$a} cmp $EmailData{$ContactType}->{$b} }
+            keys %{ $EmailData{$ContactType} }
+        ) {
+            my $DataType = 'Customer';
+            if ( $ContactType eq 'Agent') {
+                $DataType = 'Agent';
+            }
+            $Content =~ s/(value=\"$Contact\")/$1 data-type=\"$DataType\" /ig;
+        }
+    }
+
     return $Content;
 }
 
 1;
-
-
 
 =back
 
