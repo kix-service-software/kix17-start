@@ -215,8 +215,7 @@ sub Run {
     my @EmailAddresses = $Self->{ParserObject}->SplitAddressLine(
         Line => $GetParam{'X-KIX-From'} || $GetParam{From},
     );
-    use Data::Dumper;
-    print STDERR Dumper( \@EmailAddresses );
+
     for my $Address (@EmailAddresses) {
         $GetParam{SenderEmailAddress} = $Self->{ParserObject}->GetEmailAddress(
             Email => $Address,
