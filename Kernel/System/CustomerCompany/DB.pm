@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -27,8 +27,10 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    # get customer company map
-    $Self->{CustomerCompanyMap} = $Param{CustomerCompanyMap} || die "Got no CustomerCompanyMap!";
+    # check needed data
+    for my $Needed (qw( PreferencesObject CustomerCompanyMap )) {
+        $Self->{$Needed} = $Param{$Needed} || die "Got no $Needed!";
+    }
 
     # config options
     $Self->{CustomerCompanyTable} = $Self->{CustomerCompanyMap}->{Params}->{Table}
@@ -265,18 +267,20 @@ sub CustomerCompanyGet {
         }
     }
 
+    # get preferences
+    my %Preferences = $Self->GetPreferences( CustomerID => $Param{CustomerID} );
+
     # cache request
     if ( $Self->{CacheObject} ) {
         $Self->{CacheObject}->Set(
             Type  => $Self->{CacheType},
             Key   => "CustomerCompanyGet::$Param{CustomerID}",
-            Value => \%Data,
+            Value => { %Data, %Preferences },
             TTL   => $Self->{CacheTTL},
         );
     }
 
-    # return data
-    return (%Data);
+    return ( %Data, %Preferences );
 }
 
 sub CustomerCompanyAdd {
@@ -381,6 +385,16 @@ sub CustomerCompanyUpdate {
         Bind => \@Values,
     );
 
+    # check if we need to update Customer Preferences
+    if ( $Param{CustomerCompanyID} ne $Param{CustomerID} ) {
+
+        # update the preferences
+        $Self->{PreferencesObject}->RenamePreferences(
+            NewCustomerID => $Param{CustomerID},
+            OldCustomerID => $Param{CustomerCompanyID},
+        );
+    }
+
     # log notice
     $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'info',
@@ -394,6 +408,44 @@ sub CustomerCompanyUpdate {
     }
 
     return 1;
+}
+
+sub SetPreferences {
+    my ( $Self, %Param ) = @_;
+
+    # check needed params
+    if ( !$Param{CustomerID} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Need CustomerID!',
+        );
+        return;
+    }
+
+    $Self->_CustomerCompanyCacheClear( CustomerID => $Param{CustomerID} );
+
+    return $Self->{PreferencesObject}->SetPreferences(%Param);
+}
+
+sub GetPreferences {
+    my ( $Self, %Param ) = @_;
+
+    # check needed params
+    if ( !$Param{CustomerID} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Need CustomerID!',
+        );
+        return;
+    }
+
+    return $Self->{PreferencesObject}->GetPreferences(%Param);
+}
+
+sub SearchPreferences {
+    my ( $Self, %Param ) = @_;
+
+    return $Self->{PreferencesObject}->SearchPreferences(%Param);
 }
 
 sub _CustomerCompanyCacheClear {
@@ -445,8 +497,6 @@ sub DESTROY {
 }
 
 1;
-
-
 
 =back
 

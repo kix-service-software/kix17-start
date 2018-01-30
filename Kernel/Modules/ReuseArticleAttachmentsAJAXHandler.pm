@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -47,18 +47,18 @@ sub Run {
 
     # generate output...
     if ( $Param{Subaction} eq 'LoadAttachments' ) {
-        for my $Needed (qw(SearchString)) {
+        for my $Needed (qw(SearchString FormID)) {
             $Param{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
         }
 
         # generate output...
-        $Param{ArticleAttachmentStrg} =
-            $LayoutObject->KIXSideBarReuseArticleAttachmentsTable(
+        $Param{ArticleAttachmentStrg} = $LayoutObject->KIXSideBarReuseArticleAttachmentsTable(
             SearchString => $Param{SearchString},
-            TicketID     => $Param{TicketID} || '',
-            UserID       => $Self->{UserID} || '',
-            AJAX         => $Param{Data}->{AJAX} || 0,
-            );
+            TicketID     => $Param{TicketID}        || '',
+            UserID       => $Self->{UserID}         || '',
+            AJAX         => $Param{Data}->{AJAX}    || 0,
+            FormID       => $Param{FormID}
+        );
 
         return $LayoutObject->Attachment(
             ContentType => 'text/plain; charset=' . $LayoutObject->{Charset},
@@ -137,8 +137,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 

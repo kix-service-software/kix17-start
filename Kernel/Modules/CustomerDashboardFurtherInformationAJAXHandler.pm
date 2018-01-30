@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -20,10 +20,9 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $CustomerDashboardConfig
-        = $ConfigObject->Get('AgentCustomerInformationCenter::Backend');
-    $Self->{DashletConfig} = $CustomerDashboardConfig->{'0270-CIC-FurtherInformation'};
+    my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
+    my $CustomerDashboardConfig = $ConfigObject->Get('AgentCustomerInformationCenter::Backend');
+    $Self->{DashletConfig}      = $CustomerDashboardConfig->{'0270-CIC-FurtherInformation'};
 
     return $Self;
 }
@@ -37,7 +36,7 @@ sub Run {
 
     # get params
     my %GetParam;
-    for my $Key (qw(Notes CustomerUserID CustomerLogin))
+    for my $Key (qw(Notes CustomerID CustomerLogin))
     {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
     }
@@ -63,21 +62,16 @@ sub Run {
     my $Result = 0;
     if ($AccessRw) {
 
-        my $UserID;
-        if ( defined $GetParam{CustomerUserID} && $GetParam{CustomerUserID} ) {
-            $UserID          = $GetParam{CustomerUserID};
-
+        if ( defined $GetParam{CustomerID} && $GetParam{CustomerID} ) {
             $Result = $Kernel::OM->Get('Kernel::System::CustomerCompany')->SetPreferences(
-                UserID => $UserID,
-                Key    => 'CustomerUserDashboardFurtherInformation',
-                Value  => $GetParam{Notes},
+                CustomerID => $GetParam{CustomerID},
+                Key        => 'CustomerUserDashboardFurtherInformation',
+                Value      => $GetParam{Notes},
             );
         }
         elsif ( defined $GetParam{CustomerLogin} && $GetParam{CustomerLogin} ) {
-            $UserID          = $GetParam{CustomerLogin};
-
             $Result = $Kernel::OM->Get('Kernel::System::CustomerUser')->SetPreferences(
-                UserID => $UserID,
+                UserID => $GetParam{CustomerLogin},
                 Key    => 'CustomerUserDashboardFurtherInformation',
                 Value  => $GetParam{Notes},
             );
@@ -85,7 +79,7 @@ sub Run {
         else {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "No CustomerUserLogin or CustomerID given!",
+                Message  => "No CustomerLogin or CustomerID given!",
             );
             return;
         }
@@ -111,8 +105,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 

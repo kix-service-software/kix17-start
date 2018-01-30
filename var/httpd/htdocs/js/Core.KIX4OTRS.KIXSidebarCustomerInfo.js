@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+// Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you
@@ -24,7 +24,7 @@ Core.KIX4OTRS.KIXSidebarCustomerInfo = (function(TargetNS) {
      * @return nothing This function initializes the special module functions
      */
 
-    TargetNS.UpdateContactSelection = function(CGIHandle,TicketID,ArticleID,SelectedCustomerID) {
+    TargetNS.UpdateContactSelection = function(CGIHandle,TicketID,ArticleID,SelectedCustomerID,Type) {
 
         if ( ArticleID == '' || ArticleID == TicketID ) {
             var ArticleLoaded = 0,
@@ -45,7 +45,7 @@ Core.KIX4OTRS.KIXSidebarCustomerInfo = (function(TargetNS) {
                         ArticleID = $ArticleBox.prev('a').attr('name').substring(7);
                         URL = CGIHandle + 'Action=KIXSidebarCustomerInfoAJAXHandler;Subaction=LoadCustomerEmails;TicketID='+TicketID+';ArticleID='+ArticleID+';SelectedCustomerID='+SelectedCustomerID+';';
                         Core.AJAX.ContentUpdate($('#CustomerUserEmail'), URL, function () {
-                            Core.Agent.CustomerSearch.ReloadCustomerInfo($('#CustomerUserEmail').val(),'AgentKIXSidebarCustomerInfo');
+                            Core.Agent.CustomerSearch.ReloadCustomerInfo($('#CustomerUserEmail').val(),'AgentKIXSidebarCustomerInfo',Type);
                         },false);
                     }
                 }
@@ -54,7 +54,7 @@ Core.KIX4OTRS.KIXSidebarCustomerInfo = (function(TargetNS) {
                     window.clearInterval(ActiveInterval);
                     URL = CGIHandle + 'Action=KIXSidebarCustomerInfoAJAXHandler;Subaction=LoadCustomerEmails;TicketID='+TicketID+';SelectedCustomerID='+SelectedCustomerID+';';
                     Core.AJAX.ContentUpdate($('#CustomerUserEmail'), URL, function () {
-                        Core.Agent.CustomerSearch.ReloadCustomerInfo($('#CustomerUserEmail').val(),'AgentKIXSidebarCustomerInfo');
+                        Core.Agent.CustomerSearch.ReloadCustomerInfo($('#CustomerUserEmail').val(),'AgentKIXSidebarCustomerInfo',Type);
                     },false);
                 }
             }, 100);
@@ -63,7 +63,7 @@ Core.KIX4OTRS.KIXSidebarCustomerInfo = (function(TargetNS) {
         else {
             URL = CGIHandle + 'Action=KIXSidebarCustomerInfoAJAXHandler;Subaction=LoadCustomerEmails;TicketID='+TicketID+';ArticleID='+ArticleID+';SelectedCustomerID='+SelectedCustomerID+';';
             Core.AJAX.ContentUpdate($('#CustomerUserEmail'), URL, function () {
-                Core.Agent.CustomerSearch.ReloadCustomerInfo($('#CustomerUserEmail').val(),'AgentKIXSidebarCustomerInfo');
+                Core.Agent.CustomerSearch.ReloadCustomerInfo($('#CustomerUserEmail').val(),'AgentKIXSidebarCustomerInfo',Type);
             },false);
         }
 

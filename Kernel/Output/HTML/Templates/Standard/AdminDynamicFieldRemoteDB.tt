@@ -6,7 +6,6 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
     <h1>[% Translate("Dynamic Fields") | html %] - [% Translate(Data.ObjectTypeName) | html %]: [% Translate(Data.Mode) | html %] [% Translate(Data.FieldTypeName) | html %] [% Translate("Field") | html %]</h1>
 
@@ -134,6 +133,19 @@ $('#DatabaseDSN').bind('change', function (Event) {
                             <div id="DatabasePwServerError" class="TooltipErrorMessage"><p>[% Translate(Data.DatabasePwServerErrorMessage) | html %]</p></div>
                             <p class="FieldExplanation">[% Translate("Specify the password for used database.") | html %]</p>
                         </div>
+                        <div class="Clear"></div>
+                        <label for="DatabaseType">[% Translate("DatabaseType") | html %]:</label>
+                        <div class="Field">
+                            <input id="DatabaseType" class="W25pc [% Data.DatabaseTypeServerError | html %]" type="text"  value="[% Data.DatabaseType | html %]" name="DatabaseType">
+                            <p class="FieldExplanation">[% Translate("Specify the type of used database.") | html %] [% Translate("Needed for ODBC connections.") | html %] [% Translate("Supported are mssql, mysql, oracle and postgresql.") | html %]</p>
+                        </div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#DatabaseType').bind('change', function (Event) {
+    $('input[name=DefaultValues]').siblings('div.Remove').find('a').trigger('click');
+});
+//]]></script>
+[% END %]
                         <div class="Clear"></div>
                         <label class="Mandatory" for="DatabaseTable"><span class="Marker">*</span> [% Translate("DatabaseTable") | html %]:</label>
                         <div class="Field">
