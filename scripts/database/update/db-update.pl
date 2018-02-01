@@ -62,6 +62,8 @@ exit 1;
 sub _ExecScript {
     my ($Version, $Type) = @_;
 
+    my $OrgType = $Type || '';
+
     if ( $Type ) {
         $Type = '_'.$Type;
     }
@@ -75,11 +77,11 @@ sub _ExecScript {
         return 1;
     }
 
-    print "executing $Type update script\n";
+    print "executing $OrgType update script\n";
 
     my $ExitCode = system($ScriptFile);    
     if (!$ExitCode) {
-        print STDERR "Unable to execute $Type update script!";
+        print STDERR "Unable to execute $OrgType update script!";
         return;
     }
 
@@ -102,7 +104,7 @@ sub _ExecSQL {
         Location => $XMLFile,
     );
     if (!$XML) {
-        print STDERR "Unable to read file \"$XMLFile\"!"; 
+        print STDERR "Unable to read file \"$XMLFile\"!\n"; 
         return;
     }
 
@@ -110,7 +112,7 @@ sub _ExecSQL {
         String => $XML,
     );
     if (!@XMLArray) {
-        print STDERR "Unable to parse file \"$XMLFile\"!"; 
+        print STDERR "Unable to parse file \"$XMLFile\"!\n"; 
         return;
     }
 
@@ -118,7 +120,7 @@ sub _ExecSQL {
         Database => \@XMLArray,
     );
     if (!@SQL) {
-        print STDERR "Unable to create SQL from file \"$XMLFile\"!"; 
+        print STDERR "Unable to create SQL from file \"$XMLFile\"!\n"; 
         return;
     }
 
@@ -127,7 +129,7 @@ sub _ExecSQL {
             SQL => $SQL 
         );
         if (!$Result) {
-            print STDERR "Unable to execute SQL from file \"$XMLFile\"!"; 
+            print STDERR "Unable to execute SQL from file \"$XMLFile\"!\n"; 
         }
     }
 
@@ -138,7 +140,7 @@ sub _ExecSQL {
             SQL => $SQL 
         );
         if (!$Result) {
-            print STDERR "Unable to execute POST SQL!"; 
+            print STDERR "Unable to execute POST SQL!\n"; 
         }
     }
 

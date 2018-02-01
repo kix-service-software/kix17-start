@@ -2018,11 +2018,11 @@
         <IndexColumn Name="value_int"/>
     </Index>
     <!-- Allow queries for all fields of an object, or for specific fields and objects e.g. search. -->
-    <Index Name="dynamic_field_value_field_values">
+    <Index Name="dynamic_field_value_field_oid">
         <IndexColumn Name="object_id"/>
         <IndexColumn Name="field_id"/>
     </Index>
-    <Index Name="dynamic_field_value_field_val2">
+    <Index Name="dynamic_field_value_field_oid2">
         <IndexColumn Name="object_id_text"/>
         <IndexColumn Name="field_id"/>
     </Index>
