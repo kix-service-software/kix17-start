@@ -1173,7 +1173,8 @@ sub InvertFormatXMLData {
                             for my $ArrayItemKey ( sort keys %{$ArrayItem} ) {
 
                                 my $NewXMLDataPart = $Self->InvertFormatXMLData(
-                                    XMLData => $ArrayItem->{$ArrayItemKey},
+                                    XMLData => [ undef, { $ArrayItemKey => $ArrayItem->{$ArrayItemKey} } ],
+                                    RootKey => $ArrayItemKey,
                                 );
                                 $NewXMLData->{$RootHashKey}->[$Counter]->{$ArrayItemKey} = $NewXMLDataPart;
                             }
@@ -1202,7 +1203,8 @@ sub InvertFormatXMLData {
                             for my $ArrayItemKey ( sort keys %{$ArrayItem} ) {
 
                                 my $NewXMLDataPart = $Self->InvertFormatXMLData(
-                                    XMLData => $ArrayItem->{$ArrayItemKey},
+                                    XMLData => [ undef, { $ArrayItemKey => $ArrayItem->{$ArrayItemKey} } ],
+                                    RootKey => $ArrayItemKey,
                                 );
                                 $NewXMLData->{$RootHashKey}->{$ArrayItemKey} = $NewXMLDataPart;
                             }
@@ -1215,7 +1217,7 @@ sub InvertFormatXMLData {
             }
 
             # if we are on a final node
-            elsif ( ref $RootHash->{$RootHashKey} eq '' && $RootHashKey eq 'Content' ) {
+            elsif ( !$Param{RootKey} && ref $RootHash->{$RootHashKey} eq '' && $RootHashKey eq 'Content' ) {
                 $NewXMLData = $RootHash->{$RootHashKey};
             }
         }
