@@ -82,8 +82,9 @@ sub Run {
         # check needed stuff
         if ( !@TicketIDs ) {
             return $LayoutObject->ErrorScreen(
-                Message => Translatable('Can\'t lock Tickets, no TicketIDs are given!'),
-                Comment => Translatable('Please contact the administrator.'),
+                Message => $LayoutObject->{LanguageObject}->Translate('Can\'t lock Tickets, no TicketIDs are given!')
+                    . ' - '
+                    . $LayoutObject->{LanguageObject}->Translate('Please contact the administrator.'),
             );
         }
 
@@ -269,7 +270,7 @@ sub Run {
     # check if bulk feature is enabled
     if ( !$ConfigObject->Get('Ticket::Frontend::BulkFeature') ) {
         return $LayoutObject->ErrorScreen(
-            Message => Translatable('Bulk feature is not enabled!'),
+            Message => $LayoutObject->{LanguageObject}->Translate('Bulk feature is not enabled!'),
         );
     }
 
@@ -328,15 +329,16 @@ sub Run {
         if ( !@ValidTicketIDs ) {
             if ( $Config->{RequiredLock} ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => Translatable('No selectable TicketID is given!'),
-                    Comment =>
-                        Translatable('You either selected no ticket or only tickets which are locked by other agents.'),
+                    Message => $LayoutObject->{LanguageObject}->Translate('No selectable TicketID is given!')
+                        . ' - '
+                        . $LayoutObject->{LanguageObject}->Translate('You either selected no ticket or only tickets which are locked by other agents.'),
                 );
             }
             else {
                 return $LayoutObject->ErrorScreen(
-                    Message => Translatable('No TicketID is given!'),
-                    Comment => Translatable('You need to select at least one ticket.'),
+                    Message => $LayoutObject->{LanguageObject}->Translate('No TicketID is given!')
+                        . ' - '
+                        . $LayoutObject->{LanguageObject}->Translate('You need to select at least one ticket.'),
                 );
             }
         }

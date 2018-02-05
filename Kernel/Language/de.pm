@@ -3624,9 +3624,9 @@ sub Data {
         'Ticket (%s) is not unlocked!' => 'Ticket %s ist nicht entsperrt!',
         'Bulk feature is not enabled!' => 'Das Stapelverarbeitungs-Feature ist nicht aktiviert!',
         'No selectable TicketID is given!' => 'Keine auswählbare TicketID übermittelt!',
-        'You either selected no ticket or only tickets which are locked by other agents' =>
+        'You either selected no ticket or only tickets which are locked by other agents.' =>
             'Sie haben entweder kein Ticket ausgewählt oder ausschließlich Tickets, die bereits durch andere Agenten gesperrt sind.',
-        'You need to select at least one ticket' => 'Sie müssen mindestens ein Ticket auswählen',
+        'You need to select at least one ticket.' => 'Sie müssen mindestens ein Ticket auswählen',
         'Ticket is locked by another agent and will be ignored!' => 'Ticket ist von einem anderen Agenten gesperrt und wird ignoriert!',
 
         # Perl Module: Kernel/Modules/AgentTicketCompose.pm
