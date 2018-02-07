@@ -182,7 +182,7 @@ sub Run {
         # build JSON output
         $JSON = $LayoutObject->JSONEncode(
             Data => {
-                CustomerID              => $CustomerID,
+                CustomerID              => $CustomerID || $CustomerUserID,
                 CustomerTableHTMLString => $CustomerTableHTMLString,
 
                 # KIX4OTRS-capeIT
