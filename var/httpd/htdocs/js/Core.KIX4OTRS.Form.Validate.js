@@ -20,14 +20,25 @@ Core.KIX4OTRS.Form = Core.KIX4OTRS.Form || {};
  */
 Core.KIX4OTRS.Form.Validate = (function(TargetNS) {
     function DateValidator(Prefix, DateInFuture) {
-        var DateObject, DateCheck, YearValue = $('#' + Prefix + 'Year').val(), MonthValue = $('#' + Prefix + 'Month').val(), DayValue = $('#' + Prefix + 'Day').val();
+        var DateObject,
+            DateCheck,
+            YearValue   = $('#' + Prefix + 'Year').val(),
+            MonthValue  = $('#' + Prefix + 'Month').val(),
+            DayValue    = $('#' + Prefix + 'Day').val(),
+            HourValue   = $('#' + Prefix + 'Hour').val(),
+            MinuteValue = $('#' + Prefix + 'Minute').val();
 
         if (YearValue && MonthValue && DayValue) {
             DateObject = new Date(YearValue, MonthValue - 1, DayValue);
             if (DateObject.getFullYear() === parseInt(YearValue, 10) && DateObject.getMonth() + 1 === parseInt(MonthValue, 10) && DateObject.getDate() === parseInt(DayValue, 10)) {
                 if (DateInFuture) {
                     DateCheck = new Date();
-                    DateCheck.setHours(0, 0, 0, 0);
+                    if (MinuteValue.length && HourValue.length) {
+                        DateObject.setHours(HourValue, MinuteValue, 0, 0);
+                    }
+                    else {
+                        DateCheck.setHours(0, 0, 0, 0);
+                    }
                     if (DateObject >= DateCheck) {
                         return true;
                     }

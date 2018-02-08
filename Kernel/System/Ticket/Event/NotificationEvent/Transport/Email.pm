@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
@@ -98,6 +98,7 @@ sub SendNotification {
     # get recipient data
     my %Recipient = %{ $Param{Recipient} };
 
+# NotificationEventX-capeIT
     # Verify a customer have an email
     # check if recipient hash has DynamicField
     if (
@@ -179,7 +180,7 @@ sub SendNotification {
         # done
         return 1;
     }
-    # EO NotificationEventX-capeIT
+# EO NotificationEventX-capeIT
 
     # Verify a customer have an email
     if ( $Recipient{Type} eq 'Customer' && $Recipient{UserID} && !$Recipient{UserEmail} ) {
@@ -243,6 +244,7 @@ sub SendNotification {
         );
     }
 
+# NotificationEventX-capeIT
     if (
         $Notification{Data}->{RecipientAttachmentDF}
         && ref($Notification{Data}->{RecipientAttachmentDF}) eq 'ARRAY'
@@ -313,7 +315,7 @@ sub SendNotification {
             Size         => 0,
         );
     }
-    # EO NotificationEventX-capeIT
+# EO NotificationEventX-capeIT
 
     # send notification
     if ( $Recipient{Type} eq 'Agent' ) {
@@ -726,7 +728,7 @@ sub TransportSettingsDisplayGet {
         Disabled    => $Param{SecurityDisabled},
     );
 
-    # NotificationEventX-capeIT
+# NotificationEventX-capeIT
     # get objects
     my $DynamicFieldObject  = $Kernel::OM->Get('Kernel::System::DynamicField');
 
@@ -817,10 +819,7 @@ sub TransportSettingsDisplayGet {
 
     # generate HTML
     my $Output = $LayoutObject->Output(
-# NotificationEventX-capeIT
-#        TemplateFile => 'AdminNotificationEventTransportEmailSettings',
-        TemplateFile => 'AdminNotificationEventTransportEmailXSettings',
-# EO NotificationEventX-capeIT
+        TemplateFile => 'AdminNotificationEventTransportEmailSettings',
         Data         => \%Param,
     );
 
@@ -1066,9 +1065,6 @@ sub SecurityOptionsGet {
 }
 
 1;
-
-
-
 
 =back
 

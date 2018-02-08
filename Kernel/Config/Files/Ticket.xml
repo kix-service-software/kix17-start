@@ -8324,6 +8324,22 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="CustomerCompanyPreferences###Comment2" Required="0" Valid="0">
+        <Description Translatable="1">Parameters of the example queue attribute Comment2.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::CustomerCompany::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::CustomerCompanyPreferences::Generic</Item>
+                <Item Key="Label" Translatable="1">Comment2</Item>
+                <Item Key="Desc" Translatable="1">Define the queue comment 2.</Item>
+                <Item Key="Block">TextArea</Item>
+                <Item Key="Cols">50</Item>
+                <Item Key="Rows">5</Item>
+                <Item Key="PrefKey">Comment2</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="QueuePreferences###Comment2" Required="0" Valid="0">
         <Description Translatable="1">Parameters of the example queue attribute Comment2.</Description>
         <Group>Ticket</Group>
@@ -9942,11 +9958,11 @@
             <FrontendModuleReg>
                 <Group>admin</Group>
                 <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
-                <Title Translatable="1">GenericAgent</Title>
+                <Title Translatable="1">Generic Agent</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <Name Translatable="1">GenericAgent</Name>
+                    <Name Translatable="1">Generic Agent</Name>
                     <Description Translatable="1">Manage tasks triggered by event or time based execution.</Description>
                     <Block>System</Block>
                     <Prio>300</Prio>
@@ -10724,6 +10740,7 @@
                 <Item>X-KIX-FollowUp-ArticleType</Item>
                 <Item>X-KIX-BodyDecrypted</Item>
                 <Item>X-KIX-TicketTemplate</Item>
+                <Item>X-KIX-From</Item>
             </Array>
         </Setting>
     </ConfigItem>

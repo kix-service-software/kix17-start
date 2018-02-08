@@ -1,5 +1,5 @@
 // --
-// Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+// Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 // based on the original work of:
 // Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 // --
@@ -43,6 +43,71 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      *      Needed for the change event of customer fields, if ActiveAutoComplete is false (disabled).
      */
         CustomerFieldChangeRunCount = {};
+
+    /**
+     * @name ExistsCustomerUser
+     * @memberof Core.Agent.CustomerSearch
+     * @function
+     * @param {String} UserID
+     * @description
+     *      This function check if exists a customer user to this agent.
+     */
+    function ExistsCustomerUser(UserID) {
+        var Data = {
+                Action: 'AgentCustomerSearch',
+                Subaction: 'ExistsCustomerUser',
+                UserID: UserID,
+            },
+            Customer = 0;
+
+        Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function (Response) {
+            if (!$.isEmptyObject(Response.Customer)) {
+                Customer = 1;
+            }
+        },'',false);
+
+        return Customer;
+    }
+
+    /**
+     * @private
+     * @name GetUserInfo
+     * @memberof Core.Agent.CustomerSearch
+     * @function
+     * @param {String} UserID
+     * @param {String} CallingAction
+     * @description
+     *      This function gets user data for customer info table.
+     */
+    function GetUserInfo(UserID, CallingAction) {
+        var MagnifierString = '<i class="fa fa-search"></i>',
+            Async = true,
+            Data = {
+                Action: 'AgentCustomerSearch',
+                Subaction: 'UserInfo',
+                UserID: UserID,
+                CallingAction : CallingAction || ''
+            };
+
+        if ( CallingAction == 'AgentTicketZoomTabArticle' ) {
+            Async = false;
+        }
+
+        // get ticket ID for customer info sidebar (for possible links in user attributes)
+        if ( CallingAction == 'AgentKIXSidebarCustomerInfo' ) {
+            Data.TicketID = $('input[name="TicketID"]').val();
+        }
+
+        Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function (Response) {
+            // Publish information for subscribers
+            Core.App.Publish('Event.Agent.UserSearch.GetCustomerInfo.Callback', [Response.UserID]);
+
+            // show customer info
+            $('#CustomerInfo .Content').html(Response.UserTableHTMLString);
+
+            Core.KIXBase.Agent.AutoToggleSidebars();
+        },'',Async);
+    }
 
     /**
      * @private
@@ -123,7 +188,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 // update services (trigger ServiceID change event)
                 Core.AJAX.FormUpdate($('#CustomerID').closest('form'), 'AJAXUpdate', 'ServiceID', Core.Config.Get('ProcessManagement.UpdatableFields'));
             }
-            
+
             Core.KIXBase.Agent.AutoToggleSidebars();
         },'',Async);
     }
@@ -726,28 +791,39 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      */
     // KIX4OTRS-capeIT
     // TargetNS.ReloadCustomerInfo = function (CustomerKey) {
-    TargetNS.ReloadCustomerInfo = function (CustomerKey,CallingAction) {
-        // EO KIX4OTRS-capeIT
-        // get customer tickets
-        GetCustomerTickets(CustomerKey);
+    TargetNS.ReloadCustomerInfo = function (CustomerKey,CallingAction,Type) {
+	// EO KIX4OTRS-capeIT
 
-        // get customer data for customer info table
-        // KIX4OTRS-capeIT
-        // GetCustomerInfo(CustomerKey);
-        var Action = Core.Config.Get('Action');
-        if ( CallingAction !== undefined && CallingAction != '' ) {
-            Action = CallingAction;
-        }
-        GetCustomerInfo(CustomerKey,Action);
-        // EO KIX4OTRS-capeIT
+        if (Type == 'Agent'
+            && !ExistsCustomerUser(CustomerKey)
+        ) {
+            var Action = Core.Config.Get('Action');
+            if ( CallingAction !== undefined && CallingAction != '' ) {
+                Action = CallingAction;
+            }
+            GetUserInfo(CustomerKey,Action);
+        } else {
+            // get customer tickets
+            GetCustomerTickets(CustomerKey);
 
-        // set hidden field SelectedCustomerUser
-        // KIX4OTRS-capeIT
-        // $('#SelectedCustomerUser').val(CustomerKey);
-        if ($('#SelectedCustomerUser').val() != CustomerKey) {
-            $('#SelectedCustomerUser').val(CustomerKey).trigger('change');
+            // get customer data for customer info table
+            // KIX4OTRS-capeIT
+            // GetCustomerInfo(CustomerKey);
+            var Action = Core.Config.Get('Action');
+            if ( CallingAction !== undefined && CallingAction != '' ) {
+                Action = CallingAction;
+            }
+            GetCustomerInfo(CustomerKey,Action);
+            // EO KIX4OTRS-capeIT
+
+            // set hidden field SelectedCustomerUser
+            // KIX4OTRS-capeIT
+            // $('#SelectedCustomerUser').val(CustomerKey);
+            if ($('#SelectedCustomerUser').val() != CustomerKey) {
+                $('#SelectedCustomerUser').val(CustomerKey).trigger('change');
+            }
+            // EO KIX4OTRS-capeIT
         }
-        // EO KIX4OTRS-capeIT
     };
 
     /**

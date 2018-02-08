@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -50,13 +50,13 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # get preferences
     my %Preferences;
     if ( defined $Param{CustomerID} && $Param{CustomerID} ) {
         %Preferences = $Kernel::OM->Get('Kernel::System::CustomerCompany')->GetPreferences(
-            UserID => $Param{CustomerID},
+            CustomerID => $Param{CustomerID},
         );
     }
     elsif ( defined $Param{CustomerUserLogin} && $Param{CustomerUserLogin} ) {
@@ -94,9 +94,9 @@ sub Run {
         $LayoutObject->Block(
             Name => 'CustomerDashboardFurtherInformationRw',
             Data => {
-                CustomerUserID => $Param{CustomerID},
-                CustomerLogin  => $Param{CustomerUserLogin},
-                Notes => $Notes,
+                CustomerID    => $Param{CustomerID},
+                CustomerLogin => $Param{CustomerUserLogin},
+                Notes         => $Notes,
             },
         );
     }
@@ -104,9 +104,9 @@ sub Run {
         $LayoutObject->Block(
             Name => 'CustomerDashboardFurtherInformationRo',
             Data => {
-                CustomerUserID => $Param{CustomerID},
-                CustomerLogin  => $Param{CustomerUserLogin},
-                Notes => $Notes,
+                CustomerID    => $Param{CustomerID},
+                CustomerLogin => $Param{CustomerUserLogin},
+                Notes         => $Notes,
             },
         );
     }
@@ -116,8 +116,8 @@ sub Run {
         Data         => {
             %{ $Self->{Config} },
             %Param,
-            CustomerUserID => $Param{CustomerID},
-            CustomerLogin  => $Param{CustomerUserLogin},
+            CustomerID    => $Param{CustomerID},
+            CustomerLogin => $Param{CustomerUserLogin},
         },
         KeepScriptTags => $Param{AJAX},
     );
@@ -126,8 +126,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 

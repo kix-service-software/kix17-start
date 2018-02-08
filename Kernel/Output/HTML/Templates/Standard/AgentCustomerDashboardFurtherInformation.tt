@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -12,7 +12,7 @@
     <form action="[% Env("CGIHandle") %]" method="post" name="CustomerDashboardFurtherInformation" id="CustomerDashboardFurtherInformation" enctype="multipart/form-data" class="PreventMultipleSubmits Validate">
         <input type="hidden" name="Action" value="CustomerDashboardFurtherInformationAJAXHandler" />
         <input type="hidden" name="Subaction" value="UpdateNotes" />
-        <input type="hidden" name="CustomerUserID" value="[% Data.CustomerUserID | html %]" />
+        <input type="hidden" name="CustomerID" value="[% Data.CustomerID | html %]" />
         <input type="hidden" name="CustomerLogin" value="[% Data.CustomerLogin | html %]" />
         <input type="hidden" id="CustomerDashboardFurtherInformationResult" name="CustomerDashboardFurtherInformationResult" value="0" />
         <textarea id="CustomerDashboardFurtherInformationNotes" name="Notes" class="Validate_MaxLength Validate_Length_2000" rows="8">[% Data.Notes | html %]</textarea>

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -113,30 +113,71 @@ sub Run {
         # if no errors occurred
         if ( !%Errors ) {
 
-            # update group
-            if (
-                $CustomerCompanyObject->CustomerCompanyUpdate(
-                    %GetParam,
-                    UserID => $Self->{UserID},
-                )
-                )
-            {
-                $Self->_Overview(
-                    Nav    => $Nav,
-                    Search => $Search,
-                    %GetParam,
-                );
-                my $Output = $LayoutObject->Header();
-                $Output .= $LayoutObject->NavigationBar(
-                    Type => $NavigationBarType,
-                );
-                $Output .= $LayoutObject->Notify( Info => Translatable('Customer company updated!') );
-                $Output .= $LayoutObject->Output(
-                    TemplateFile => 'AdminCustomerCompany',
-                    Data         => \%Param,
-                );
-                $Output .= $LayoutObject->Footer();
-                return $Output;
+            # update customer company
+            my $Update = $CustomerCompanyObject->CustomerCompanyUpdate(
+                %GetParam,
+                UserID => $Self->{UserID},
+            );
+            if ($Update) {
+
+                # update preferences
+                my %Preferences = %{ $ConfigObject->Get('CustomerCompanyPreferences') };
+                GROUP:
+                for my $Group ( sort keys %Preferences ) {
+                    # get customer company data
+                    my %CompanyData = $CustomerCompanyObject->CustomerCompanyGet(
+                        CustomerID => $GetParam{CustomerID}
+                    );
+                    my $Module = $Preferences{$Group}->{Module};
+                    if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($Module) ) {
+                        return $LayoutObject->FatalError();
+                    }
+                    my $Object = $Module->new(
+                        %{$Self},
+                        ConfigItem => $Preferences{$Group},
+                        Debug      => $Self->{Debug},
+                    );
+                    my @Params = $Object->Param( CustomerCompanyData => \%CompanyData );
+                    if (@Params) {
+                        my %GetParam;
+                        for my $ParamItem (@Params) {
+                            my @Array = $ParamObject->GetArray( Param => $ParamItem->{Name} );
+                            $GetParam{ $ParamItem->{Name} } = \@Array;
+                        }
+                        if (
+                            !$Object->Run(
+                                GetParam            => \%GetParam,
+                                CustomerCompanyData => \%CompanyData
+                            )
+                            )
+                        {
+                            $Note .= $LayoutObject->Notify( Info => $Object->Error() );
+                        }
+                    }
+                }
+
+                # get user data and show screen again
+                if ( !$Note ) {
+                    $Self->_Overview(
+                        Nav    => $Nav,
+                        Search => $Search,
+                        %GetParam,
+                    );
+                    my $Output = $LayoutObject->Header();
+                    $Output .= $LayoutObject->NavigationBar(
+                        Type => $NavigationBarType,
+                    );
+                    $Output .= $LayoutObject->Notify( Info => Translatable('Customer company updated!') );
+                    $Output .= $LayoutObject->Output(
+                        TemplateFile => 'AdminCustomerCompany',
+                        Data         => \%Param,
+                    );
+                    $Output .= $LayoutObject->Footer();
+                    return $Output;
+                }
+            }
+            else {
+                $Note .= $LayoutObject->Notify( Priority => 'Error' );
             }
         }
 
@@ -146,7 +187,7 @@ sub Run {
             Type => $NavigationBarType,
         );
 
-        $Output .= $LayoutObject->Notify( Priority => 'Error' );
+        $Output .= $Note;
 
         # set notification for duplicate entry
         if ( $Errors{Duplicate} ) {
@@ -237,32 +278,75 @@ sub Run {
         # if no errors occurred
         if ( !%Errors ) {
 
+            # add customer company
+            my $CustomerID = $CustomerCompanyObject->CustomerCompanyAdd(
+                %GetParam,
+                UserID => $Self->{UserID},
+            );
+
             # add company
-            if (
-                $CustomerCompanyObject->CustomerCompanyAdd(
-                    %GetParam,
-                    UserID => $Self->{UserID},
-                )
-                )
-            {
-                $Self->_Overview(
-                    Nav    => $Nav,
-                    Search => $Search,
-                    %GetParam,
-                );
-                my $Output = $LayoutObject->Header();
-                $Output .= $LayoutObject->NavigationBar(
-                    Type => $NavigationBarType,
-                );
-                $Output .= $LayoutObject->Notify(
-                    Info => Translatable('Customer company added!'),
-                );
-                $Output .= $LayoutObject->Output(
-                    TemplateFile => 'AdminCustomerCompany',
-                    Data         => \%Param,
-                );
-                $Output .= $LayoutObject->Footer();
-                return $Output;
+            if ($CustomerID) {
+
+                # update preferences
+                my %Preferences = %{ $ConfigObject->Get('CustomerCompanyPreferences') };
+                GROUP:
+                for my $Group ( sort keys %Preferences ) {
+                    # get customer company data
+                    my %CompanyData = $CustomerCompanyObject->CustomerCompanyGet(
+                        CustomerID => $GetParam{CustomerID}
+                    );
+                    my $Module = $Preferences{$Group}->{Module};
+                    if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($Module) ) {
+                        return $LayoutObject->FatalError();
+                    }
+                    my $Object = $Module->new(
+                        %{$Self},
+                        ConfigItem => $Preferences{$Group},
+                        Debug      => $Self->{Debug},
+                    );
+                    my @Params = $Object->Param( CustomerCompanyData => \%CompanyData );
+                    if (@Params) {
+                        my %GetParam;
+                        for my $ParamItem (@Params) {
+                            my @Array = $ParamObject->GetArray( Param => $ParamItem->{Name} );
+                            $GetParam{ $ParamItem->{Name} } = \@Array;
+                        }
+                        if (
+                            !$Object->Run(
+                                GetParam            => \%GetParam,
+                                CustomerCompanyData => \%CompanyData
+                            )
+                            )
+                        {
+                            $Note .= $LayoutObject->Notify( Info => $Object->Error() );
+                        }
+                    }
+                }
+
+                # get user data and show screen again
+                if ( !$Note ) {
+                    $Self->_Overview(
+                        Nav    => $Nav,
+                        Search => $Search,
+                        %GetParam,
+                    );
+                    my $Output = $LayoutObject->Header();
+                    $Output .= $LayoutObject->NavigationBar(
+                        Type => $NavigationBarType,
+                    );
+                    $Output .= $LayoutObject->Notify(
+                        Info => Translatable('Customer company added!'),
+                    );
+                    $Output .= $LayoutObject->Output(
+                        TemplateFile => 'AdminCustomerCompany',
+                        Data         => \%Param,
+                    );
+                    $Output .= $LayoutObject->Footer();
+                    return $Output;
+                }
+            }
+            else {
+                $Note .= $LayoutObject->Notify( Priority => 'Error' );
             }
         }
 
@@ -272,7 +356,7 @@ sub Run {
             Type => $NavigationBarType,
         );
 
-        $Output .= $LayoutObject->Notify( Priority => 'Error' );
+        $Output .= $Note;
 
         # set notification for duplicate entry
         if ( $Errors{Duplicate} ) {
@@ -325,6 +409,17 @@ sub Run {
 
 sub _Edit {
     my ( $Self, %Param ) = @_;
+
+    my $CustomerCompanyObject = $Kernel::OM->Get('Kernel::System::CustomerCompany');
+    my %CompanyData;
+
+    # get params
+    if ( $Param{CustomerCompanyID} ) {
+        %CompanyData = $CustomerCompanyObject->CustomerCompanyGet(
+            CustomerID => $Param{CustomerCompanyID},
+            UserID     => $Self->{UserID},
+        );
+    }
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
@@ -479,6 +574,57 @@ sub _Edit {
                         },
                     );
                 }
+            }
+        }
+    }
+
+    # show each preferences setting
+    my %Preferences = ();
+    if ( $ConfigObject->Get('CustomerCompanyPreferences') ) {
+        %Preferences = %{ $ConfigObject->Get('CustomerCompanyPreferences') };
+    }
+    for my $Item ( sort keys %Preferences ) {
+        my $Module = $Preferences{$Item}->{Module}
+            || 'Kernel::Output::HTML::CustomerCompanyPreferences::Generic';
+
+        # load module
+        if ( !$Kernel::OM->Get('Kernel::System::Main')->Require($Module) ) {
+            return $LayoutObject->FatalError();
+        }
+        my $Object = $Module->new(
+            %{$Self},
+            ConfigItem => $Preferences{$Item},
+            Debug      => $Self->{Debug},
+        );
+        my @Params = $Object->Param( CustomerCompanyData => \%CompanyData );
+        if (@Params) {
+            for my $ParamItem (@Params) {
+                $LayoutObject->Block(
+                    Name => 'Item',
+                    Data => { %Param, },
+                );
+                if (
+                    ref( $ParamItem->{Data} ) eq 'HASH'
+                    || ref( $Preferences{$Item}->{Data} ) eq 'HASH'
+                    )
+                {
+                    my %BuildSelectionParams = (
+                        %{ $Preferences{$Item} },
+                        %{$ParamItem},
+                    );
+                    $BuildSelectionParams{Class} = join( ' ', $BuildSelectionParams{Class} // '', 'Modernize' );
+
+                    $ParamItem->{'Option'} = $LayoutObject->BuildSelection(
+                        %BuildSelectionParams,
+                    );
+                }
+                $LayoutObject->Block(
+                    Name => $ParamItem->{Block} || $Preferences{$Item}->{Block} || 'Option',
+                    Data => {
+                        %{ $Preferences{$Item} },
+                        %{$ParamItem},
+                    },
+                );
             }
         }
     }

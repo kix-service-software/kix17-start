@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -33,14 +33,16 @@ sub Run {
 
     # create needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     $Self->{Config} = $ConfigObject->Get('Ticket::SaveAsDraftAJAXHandler');
 
-    my $Interval = $Self->{Config}->{Interval};
-    my $TranslatedLoadMsg
-        = $LayoutObject->{LanguageObject}->Translate( $Self->{Config}->{LoadMessage} );
-    my $Action = $LayoutObject->{EnvRef}->{Action};
+    my $Interval          = $Self->{Config}->{Interval};
+    my $TranslatedLoadMsg = $LayoutObject->{LanguageObject}->Translate( $Self->{Config}->{LoadMessage} );
+    my $Action            = $LayoutObject->{EnvRef}->{Action};
+    my $Subaction         = $ParamObject->GetParam( Param => 'Subaction' );
+    my $InitialLoadDraft  = 'true';
     my $SearchPattern;
 
     # get pretend action from action common tab if set
@@ -61,6 +63,11 @@ sub Run {
                         );
             }
         }
+    }
+
+    # check if 'Subaction' of request begins with 'Store'
+    if ( $Subaction =~ /^Store/ ) {
+        $InitialLoadDraft = 'false';
     }
 
     # create HMTL
@@ -86,7 +93,7 @@ sub Run {
             LoadDraftMsg: '$TranslatedLoadMsg',
             Attributes: '$Attributes'
         });
-        Core.KIX4OTRS.InitSaveAsDraft('$Action','$TranslatedLoadMsg','$Interval');
+        Core.KIX4OTRS.InitSaveAsDraft('$Action','$TranslatedLoadMsg','$Interval', '$InitialLoadDraft');
 EOF
 
     if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms )
