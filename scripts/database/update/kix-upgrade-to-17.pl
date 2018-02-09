@@ -73,14 +73,14 @@ my %PackageTables = (
 my $XMLFile = $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update/kix-upgrade-to-17.xml';
 if ( ! -f "$XMLFile" ) {
     print STDERR "File \"$XMLFile\" doesn't exist!"; 
-    exit -1;
+    exit 1;
 }
 my $XML = $Kernel::OM->Get('Kernel::System::Main')->FileRead(
     Location => $XMLFile,
 );
 if (!$XML) {
     print STDERR "Unable to read file \"$XMLFile\"!"; 
-    exit -1;
+    exit 1;
 }
 
 my @XMLArray = $Kernel::OM->Get('Kernel::System::XML')->XMLParse(
@@ -88,7 +88,7 @@ my @XMLArray = $Kernel::OM->Get('Kernel::System::XML')->XMLParse(
 );
 if (!@XMLArray) {
     print STDERR "Unable to parse file \"$XMLFile\"!"; 
-    exit -1;
+    exit 1;
 }
 
 my @SQL = $Kernel::OM->Get('Kernel::System::DB')->SQLProcessor(
@@ -96,7 +96,7 @@ my @SQL = $Kernel::OM->Get('Kernel::System::DB')->SQLProcessor(
 );
 if (!@SQL) {
     print STDERR "Unable to create SQL from file \"$XMLFile\"!"; 
-    exit -1;
+    exit 1;
 }
 
 for my $SQL (@SQL) {
@@ -215,7 +215,7 @@ foreach my $Package (@ObsoletePackages) {
     }
 }
 
-exit 1;
+exit 0;
 
 
 
