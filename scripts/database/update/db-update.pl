@@ -80,7 +80,7 @@ sub _ExecScript {
     print "executing $OrgType update script\n";
 
     my $ExitCode = system($ScriptFile);    
-    if (!$ExitCode) {
+    if ($ExitCode) {
         print STDERR "Unable to execute $OrgType update script!";
         return;
     }
