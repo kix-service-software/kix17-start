@@ -344,6 +344,7 @@ sub TicketSearch {
         EscalationUpdateTime   => 'st.escalation_update_time',
         EscalationResponseTime => 'st.escalation_response_time',
         EscalationSolutionTime => 'st.escalation_solution_time',
+        ID                     => 'st.id'
     );
 
     # check required params
@@ -465,6 +466,11 @@ sub TicketSearch {
         @SortByArray  = ($SortBy);
         @OrderByArray = ($OrderBy);
     }
+
+    # add ID to sort/order
+    push(@SortByArray, 'ID');
+    push(@OrderByArray, 'Up');
+
     for my $Count ( 0 .. $#SortByArray ) {
         if (
             !$SortOptions{ $SortByArray[$Count] }
@@ -600,6 +606,11 @@ sub TicketSearch {
     # ticket note
     if ( $Param{TicketNotes} ) {
        $SQLFrom .= ' INNER JOIN kix_ticket_notes ktn ON st.id = ktn.ticket_id ';
+    }
+
+    # ticket checklist
+    if ( $Param{TicketChecklistState} ) {
+        $SQLFrom .= "INNER JOIN kix_ticket_checklist ktc ON st.id = ktc.ticket_id ";
     }
 
     # EO KIX4OTRS-capeIT
@@ -1209,6 +1220,20 @@ sub TicketSearch {
         $SQLExt .= " AND LOWER(ktn.note) LIKE LOWER('" . $DBObject->Quote( $SearchPattern ) . "')";
     }
 
+    # ticket checklist
+    if ( $Param{TicketChecklistState} ) {
+
+        my @ChecklistItemStates = @{ $Param{TicketChecklistState} };
+        $SQLFrom .= " AND (";
+        my $Counter = 0;
+        for my $ChecklistItemState ( @ChecklistItemStates ) {
+            $ChecklistItemStates[$Counter] = " ktc.state LIKE LOWER('" . $DBObject->Quote( $ChecklistItemState ) . "')";
+            $Counter++;
+        }
+        $SQLFrom .= join ' OR ', @ChecklistItemStates; 
+        $SQLFrom .= ")";
+    }
+
     # EO KIX4OTRS-capeIT
 
     # other ticket stuff
@@ -1435,7 +1460,7 @@ sub TicketSearch {
 
                 # Join the table for this dynamic field
                 $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                    ON (CAST(st.id AS char(255)) = CAST(dfv$DynamicFieldJoinCounter.object_id AS char(255))
+                    ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
                         AND dfv$DynamicFieldJoinCounter.field_id = " .
                     $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
             }
@@ -1446,7 +1471,7 @@ sub TicketSearch {
                 }
 
                 $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                    ON (CAST(art.id AS char(255)) = CAST(dfv$DynamicFieldJoinCounter.object_id AS char(255))
+                    ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
                         AND dfv$DynamicFieldJoinCounter.field_id = " .
                     $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
 
@@ -2183,7 +2208,7 @@ sub TicketSearch {
                         #   for the DF which is used for sorting.
                         $SQLFrom
                             .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                            ON (CAST(st.id AS char(255)) = CAST(dfv$DynamicFieldJoinCounter.object_id AS char(255))
+                            ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
                                 AND dfv$DynamicFieldJoinCounter.field_id = " .
                             $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
                     }
@@ -2195,7 +2220,7 @@ sub TicketSearch {
 
                         $SQLFrom
                             .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                            ON (CAST(art.id AS char(255)) = CAST(dfv$DynamicFieldJoinCounter.object_id AS char(255))
+                            ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
                                 AND dfv$DynamicFieldJoinCounter.field_id = " .
                             $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
                     }
@@ -2558,6 +2583,7 @@ sub TicketSearchOR {
         EscalationUpdateTime   => 'st.escalation_update_time',
         EscalationResponseTime => 'st.escalation_response_time',
         EscalationSolutionTime => 'st.escalation_solution_time',
+        ID                     => 'st.id'
     );
 
     # check required params
@@ -2679,6 +2705,11 @@ sub TicketSearchOR {
         @SortByArray  = ($SortBy);
         @OrderByArray = ($OrderBy);
     }
+
+    # add ID to sort/order
+    push(@SortByArray, 'ID');
+    push(@OrderByArray, 'Up');
+
     for my $Count ( 0 .. $#SortByArray ) {
         if (
             !$SortOptions{ $SortByArray[$Count] }
@@ -3568,7 +3599,7 @@ sub TicketSearchOR {
 
                 # Join the table for this dynamic field
                 $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                    ON (st.id = dfv$DynamicFieldJoinCounter.object_id
+                    ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
                         AND dfv$DynamicFieldJoinCounter.field_id = " .
                     $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
             }
@@ -3579,7 +3610,7 @@ sub TicketSearchOR {
                 }
 
                 $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                    ON (art.id = dfv$DynamicFieldJoinCounter.object_id
+                    ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
                         AND dfv$DynamicFieldJoinCounter.field_id = " .
                     $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
 
@@ -4362,7 +4393,7 @@ sub TicketSearchOR {
                        #   for the DF which is used for sorting.
                         $SQLFrom
                             .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                            ON (CAST(st.id AS char(255)) = CAST(dfv$DynamicFieldJoinCounter.object_id AS char(255))
+                            ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
                                 AND dfv$DynamicFieldJoinCounter.field_id = " .
                             $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
                     }
@@ -4374,7 +4405,7 @@ sub TicketSearchOR {
 
                         $SQLFrom
                             .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                            ON ((CAST(art.id AS char(255)) = CAST(dfv$DynamicFieldJoinCounter.object_id AS char(255))
+                            ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
                                 AND dfv$DynamicFieldJoinCounter.field_id = " .
                             $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
                     }
