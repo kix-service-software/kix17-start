@@ -473,7 +473,9 @@ Core.KIX4OTRS = (function(TargetNS) {
                 if ( Response.AssignedQueue != 0 ) {
                     // set queue id for note, close, etc.
                     if ( $("#NewQueueID").length ) {
-                        $("#NewQueueID").val(Response.AssignedQueue);
+                        if ( $("#NewQueueID").val() !== Response.AssignedQueue ) {
+                            $("#NewQueueID").val(Response.AssignedQueue).trigger('change');
+                        }
                     }
                     // set queue id for phone, email, etc.
                     else if ( $("#Dest").length ) {

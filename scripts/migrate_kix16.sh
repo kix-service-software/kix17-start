@@ -21,10 +21,12 @@
 
 LOGFILE=/opt/kix/var/log/migrate_kix16.log
 
-# determine apache user
+# determine apache user and service
 APACHEUSER=wwwrun
+APACHESERVICE=apache2
 if [ -f /etc/centos-release ] || [ -f /etc/redhat-release ]; then
     APACHEUSER=apache
+    APACHESERVICE=httpd
 elif [ -f /etc/debian_version ]; then
     APACHEUSER=www-data
 fi
@@ -91,7 +93,7 @@ chmod 777 $LOGFILE
 
 # stop apache, cronjobs and daemon
 echo stopping apache service
-service apache2 stop
+service $APACHESERVICE stop
 
 echo stopping cronjobs
 /opt/kix/bin/Cron.sh stop $APACHEUSER 2>&1 >> $LOGFILE

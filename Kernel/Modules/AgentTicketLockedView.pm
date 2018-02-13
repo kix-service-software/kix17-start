@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
@@ -35,6 +35,7 @@ sub Run {
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
     my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
+    my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
@@ -45,18 +46,27 @@ sub Run {
         || $Config->{'Order::Default'}
         || 'Up';
 
+    # create URL to store last screen
+    my $URL = "Action=AgentTicketLockedView;"
+        . ";View="          . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'View')        || '' )
+        . ";Filter="        . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'Filter')      || '' )
+        . ";SortBy="        . $LayoutObject->LinkEncode( $SortBy )
+        . ";OrderBy="       . $LayoutObject->LinkEncode( $OrderBy )
+        . ";StartHit="      . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartHit')    || '')
+        . ";StartWindow="   . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartWindow') || 0);
+
     # store last screen
     $SessionObject->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'LastScreenView',
-        Value     => $Self->{RequestedURL},
+        Value     => $URL,
     );
 
     # store last queue screen
     $SessionObject->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'LastScreenOverview',
-        Value     => $Self->{RequestedURL},
+        Value     => $URL,
     );
 
     # get needed objects
@@ -150,9 +160,6 @@ sub Run {
         };
         $GetColumnFilter{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $FilterValue;
     }
-
-    # get layout object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # starting with page ...
     my $Refresh = '';

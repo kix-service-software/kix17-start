@@ -129,12 +129,26 @@ Core.KIX4OTRS.Agent.DynamicFieldObjectReference = (function(TargetNS) {
                     var Key         = UI.item.key, Value = UI.item.value,
                         ElementID   = $Element.attr('id').substr(0,$Element.attr('id').length-4);
 
-                    $($Element).val(Value);
+                    $Element.val(Value);
+                    $Element.data('LastValue', Value);
                     $('#'+ElementID).val(Key);
                     Event.preventDefault();
                     return false;
                 }
             });
+            $Element.bind('blur', function() {
+                var ElementID   = $(this).attr('id').substr(0,$(this).attr('id').length-4);
+                if ($(this).val().length > 0) {
+                    $(this).val($(this).data('LastValue'));
+                } else {
+                    $(this).val('');
+                    $(this).data('LastValue', '');
+                    $('#'+ElementID).val('');
+                    $('#'+ElementID).trigger('change');
+                }
+
+            })
+            $Element.data('LastValue', $Element.val());
 
             if (!ActiveAutoComplete) {
                 $Element

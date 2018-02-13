@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
@@ -34,6 +34,7 @@ sub Run {
     # get needed object
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # get config
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
@@ -45,11 +46,20 @@ sub Run {
         || $Config->{'Order::Default'}
         || 'Up';
 
+    # create URL to store last screen
+    my $URL = "Action=AgentTicketResponsibleView;"
+        . ";View="          . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'View')        || '' )
+        . ";Filter="        . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'Filter')      || '' )
+        . ";SortBy="        . $LayoutObject->LinkEncode( $SortBy )
+        . ";OrderBy="       . $LayoutObject->LinkEncode( $OrderBy )
+        . ";StartHit="      . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartHit')    || '')
+        . ";StartWindow="   . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartWindow') || 0);
+
     # store last queue screen
     $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'LastScreenOverview',
-        Value     => $Self->{RequestedURL},
+        Value     => $URL,
     );
 
     # get user object
@@ -150,9 +160,6 @@ sub Run {
         $Refresh = 60 * $Self->{UserRefreshTime};
     }
     my $Output;
-
-    # get layout object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     if ( $Self->{Subaction} ne 'AJAXFilterUpdate' ) {
         $Output = $LayoutObject->Header(
