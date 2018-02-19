@@ -762,7 +762,7 @@ Core.UI.Popup = (function (TargetNS) {
             $(window).unbind("beforeunload.Popup");
         });
 
-        $('#TaskAbort, .PopupUndoClose, .PopupCancelClose').on('click',function(){
+        $('#TaskAbort, .PopupUndoClose, .PopupCancelClose, .DisableValidation.Add, .DisableValidation.Remove').on('click',function(){
             $(window).unbind("beforeunload.Popup");
         });
 
