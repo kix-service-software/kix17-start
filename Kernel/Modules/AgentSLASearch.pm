@@ -141,7 +141,7 @@ sub Run {
     # if KIX Professional is installed
     else {
         # prepare relevant services
-        my %ServiceHash;
+        my %ServiceHash = ();
         if ( $ServiceData && $ServiceData ne 'NONE' ) {
             my @Services = split( ';', $ServiceData );
             if (@Services) {
@@ -225,20 +225,36 @@ sub Run {
                 %SLAs = ();
             }
         }
+        # get SLA only by Service
+        else {
+            for my $ServiceID ( keys( %ServiceHash ) ) {
+                my %SLAsForService = $Self->{SLAObject}->SLAList(
+                    Valid     => 1,
+                    ServiceID => $ServiceID,
+                    UserID    => $Self->{UserID},
+                );
 
-
-        my %SLAsForDefaultServices = ();
-        my @CustomerServiceSLAs = $Self->{ServiceObject}->CustomerServiceMemberSearch(
-            CustomerID => 'DEFAULT',
-            Result     => 'HASH',
-        );
-        for my $CatalogEntry (@CustomerServiceSLAs) {
-            next if ( ref($CatalogEntry) ne 'HASH' );
-            if ( $CatalogEntry->{SLAID} ) {
-                $SLAsForDefaultServices{ $CatalogEntry->{SLAID} } = $AllValidSLAs{ $CatalogEntry->{SLAID} },
+                # delete SLA from result if it is not configured for one of Services
+                for my $SLA ( keys %SLAs ) {
+                    delete $SLAs{$SLA} if !$SLAsForService{$SLA};
+                }
             }
         }
-        %SLAs = ( %SLAs, %SLAsForDefaultServices );
+
+        if (!%ServiceHash) {
+            my %SLAsForDefaultServices = ();
+            my @CustomerServiceSLAs = $Self->{ServiceObject}->CustomerServiceMemberSearch(
+                CustomerID => 'DEFAULT',
+                Result     => 'HASH',
+            );
+            for my $CatalogEntry (@CustomerServiceSLAs) {
+                next if ( ref($CatalogEntry) ne 'HASH' );
+                if ( $CatalogEntry->{SLAID} ) {
+                    $SLAsForDefaultServices{ $CatalogEntry->{SLAID} } = $AllValidSLAs{ $CatalogEntry->{SLAID} },
+                }
+            }
+            %SLAs = ( %SLAs, %SLAsForDefaultServices );
+        }
     }
 
     $Search =~ s/\_/\./g;
