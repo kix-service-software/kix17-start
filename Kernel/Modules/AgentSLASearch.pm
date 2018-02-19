@@ -241,20 +241,19 @@ sub Run {
             }
         }
 
-        if (!%ServiceHash) {
-            my %SLAsForDefaultServices = ();
-            my @CustomerServiceSLAs = $Self->{ServiceObject}->CustomerServiceMemberSearch(
-                CustomerID => 'DEFAULT',
-                Result     => 'HASH',
-            );
-            for my $CatalogEntry (@CustomerServiceSLAs) {
-                next if ( ref($CatalogEntry) ne 'HASH' );
-                if ( $CatalogEntry->{SLAID} ) {
-                    $SLAsForDefaultServices{ $CatalogEntry->{SLAID} } = $AllValidSLAs{ $CatalogEntry->{SLAID} },
-                }
+        my %SLAsForDefaultServices = ();
+        my @CustomerServiceSLAs = $Self->{ServiceObject}->CustomerServiceMemberSearch(
+            CustomerID => 'DEFAULT',
+            Result     => 'HASH',
+        );
+        for my $CatalogEntry (@CustomerServiceSLAs) {
+            next if ( ref($CatalogEntry) ne 'HASH' );
+            next if ( %ServiceHash && !$ServiceHash{$CatalogEntry->{ServiceID}} );
+            if ( $CatalogEntry->{SLAID} ) {
+                $SLAsForDefaultServices{ $CatalogEntry->{SLAID} } = $AllValidSLAs{ $CatalogEntry->{SLAID} },
             }
-            %SLAs = ( %SLAs, %SLAsForDefaultServices );
         }
+        %SLAs = ( %SLAs, %SLAsForDefaultServices );
     }
 
     $Search =~ s/\_/\./g;
