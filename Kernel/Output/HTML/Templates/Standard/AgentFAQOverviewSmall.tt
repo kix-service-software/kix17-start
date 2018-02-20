@@ -63,7 +63,7 @@
 [% RenderBlockStart("RecordDynamicFieldHeader") %]
                 <th class="DynamicField [% Data.CSS | html %]">
 [% RenderBlockStart("RecordDynamicFieldHeaderSortable") %]
-                    <a href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]">[% Translate(Data.Label) | html %]</a>
+                    <span>[% Translate(Data.Label) | html %]</span>
 [% RenderBlockEnd("RecordDynamicFieldHeaderSortable") %]
 [% RenderBlockStart("RecordDynamicFieldHeaderNotSortable") %]
                     <span>[% Translate(Data.Label) | html %]</span>
