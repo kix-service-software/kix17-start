@@ -63,7 +63,9 @@
 [% RenderBlockStart("RecordDynamicFieldHeader") %]
                 <th class="DynamicField [% Data.CSS | html %]">
 [% RenderBlockStart("RecordDynamicFieldHeaderSortable") %]
-                    <a href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]">[% Translate(Data.Label) | html %]</a>
+                    # <a href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]">[% Translate(Data.Label) | html %]</a>
+                    # removed because of Bug T#2017122290000558
+                    <span>[% Translate(Data.Label) | html %]</span>
 [% RenderBlockEnd("RecordDynamicFieldHeaderSortable") %]
 [% RenderBlockStart("RecordDynamicFieldHeaderNotSortable") %]
                     <span>[% Translate(Data.Label) | html %]</span>

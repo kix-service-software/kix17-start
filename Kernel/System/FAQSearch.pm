@@ -977,7 +977,7 @@ sub FAQSearch {
                 #   for the DF which is used for sorting.
                 $SQL
                     .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                    ON (i.item_id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
+                    ON (i.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
                         AND dfv$DynamicFieldJoinCounter.field_id = " .
                     $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
 
