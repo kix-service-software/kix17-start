@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.3.0 (2018/02/22)
+ * (2018/02/20) - Bugfix: T2017122290000558 (FAQ search not working with dynamic fields) (ddoerffel)
+ * (2018/02/19) - Bugfix: T2017120890000745 (fixed sla search with only service as restriction) (millinger)
+ * (2018/02/19) - Bugfix: T2018021290000781 (fixed missing CIs after clicking add or remove an attribute in the CIBulkAction) (fjacquemin)
+ 
 # 17.3.0-RC1 (2018/02/08)
  * (2018/02/08) - Bugfix: T2018010290000659 (values could not be deleted using autocomplete) (millinger)
  * (2018/02/07) - Bugfix: T2018020190000793 (fixed LastScreenOverview does not jump to the selected page) (fjacquemin)
