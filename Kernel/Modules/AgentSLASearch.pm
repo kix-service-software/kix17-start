@@ -68,7 +68,7 @@ sub Run {
         }
         else {
             # if ServiceData is given -> get SLAs that are configured for ALL given services
-            if ( $ServiceData && $ServiceData ne 'NONE' ) {
+            if ( $ServiceData ne 'NONE' ) {
                 my @Services = split( ';', $ServiceData );
                 if (@Services) {
                     for my $ServiceID (@Services) {
