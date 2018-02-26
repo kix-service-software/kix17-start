@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
@@ -39,6 +39,7 @@ sub Run {
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # get config
     my $Config       = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
@@ -75,18 +76,27 @@ sub Run {
 
     # EO KIX4OTRS-capeIT
 
+    # create URL to store last screen
+    my $URL = "Action=AgentTicketEscalationView;"
+        . ";View="          . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'View')        || '' )
+        . ";Filter="        . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'Filter')      || '' )
+        . ";SortBy="        . $LayoutObject->LinkEncode( $Self->{SortBy} )
+        . ";OrderBy="       . $LayoutObject->LinkEncode( $Self->{OrderBy} )
+        . ";StartHit="      . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartHit')    || '')
+        . ";StartWindow="   . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartWindow') || 0);
+
     # store last queue screen
     $SessionObject->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'LastScreenOverview',
-        Value     => $Self->{RequestedURL},
+        Value     => $URL,
     );
 
     # store last screen
     $SessionObject->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'LastScreenView',
-        Value     => $Self->{RequestedURL},
+        Value     => $URL,
     );
 
     # get user object
@@ -195,9 +205,6 @@ sub Run {
     if ( $Self->{UserRefreshTime} ) {
         $Refresh = 60 * $Self->{UserRefreshTime};
     }
-
-    # get layout object
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     my $Output;
     if ( $Self->{Subaction} ne 'AJAXFilterUpdate' ) {

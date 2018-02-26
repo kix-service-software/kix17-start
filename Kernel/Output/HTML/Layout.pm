@@ -5611,6 +5611,12 @@ sub ProgressBar {
         }
     }
 
+    if ( !$Self->{SessionIDCookie}
+        && $Self->{SessionID}
+    ) {
+        $Param{Session} = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+    }
+
     if ( $Param{EndParam}
         && ref $Param{EndParam} ne 'HASH'
     ) {
@@ -5621,7 +5627,6 @@ sub ProgressBar {
     } elsif ( $Param{EndParam}
         && ref $Param{EndParam} eq 'HASH'
     ) {
-
         $Param{EndParam}->{FormID}  = $Param{FormID};
         $Param{Params}              = $Param{EndParam};
         $Param{EndParam}            = $Self->JSONEncode(

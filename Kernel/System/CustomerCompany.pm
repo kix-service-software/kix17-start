@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -58,7 +58,7 @@ sub new {
 
     # KIX4OTRS-capeIT
     # load generator customer preferences module
-    my $GeneratorModule = $ConfigObject->Get('CustomerCompanyPreferences')->{Module}
+    my $GeneratorModule = $ConfigObject->Get('CustomerCompany::PreferencesModule')->{Module}
         || 'Kernel::System::CustomerCompany::Preferences::DB';
 
     if ( $MainObject->Require($GeneratorModule) ) {
@@ -79,6 +79,7 @@ sub new {
         }
         $Self->{"CustomerCompany$Count"} = $GenericModule->new(
             Count              => $Count,
+            PreferencesObject  => $Self->{PreferencesObject},
             CustomerCompanyMap => $ConfigObject->Get("CustomerCompany$Count"),
         );
     }
@@ -353,10 +354,10 @@ sub CustomerCompanyList {
 # KIX4OTRS-capeIT
 =item GetPreferences()
 
-get customer user preferences
+get customer company preferences
 
-    my %Preferences = $CustomerUserObject->GetPreferences(
-        UserID => 'some-login',
+    my %Preferences = $CustomerCompanyObject->GetPreferences(
+        CustomerID => 'CustomerID',
     );
 
 =cut
@@ -365,27 +366,27 @@ sub GetPreferences {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    if ( !$Param{UserID} ) {
+    if ( !$Param{CustomerID} ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => 'Need UserID!'
+            Message  => 'Need CustomerID!'
         );
         return;
     }
 
     # check if user exists
-    my %User = $Self->CustomerCompanyGet( CustomerID => $Param{UserID} );
-    if ( !%User ) {
+    my %Company = $Self->CustomerCompanyGet( CustomerID => $Param{CustomerID} );
+    if ( !%Company ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => "No such user '$Param{UserID}'!",
+            Message  => "No such company '$Param{CustomerID}'!",
         );
         return;
     }
 
     # call new api (2.4.8 and higher)
-    if ( $Self->{ $User{Source} }->can('GetPreferences') ) {
-        return $Self->{ $User{Source} }->GetPreferences(%Param);
+    if ( $Self->{ $Company{Source} }->can('GetPreferences') ) {
+        return $Self->{ $Company{Source} }->GetPreferences(%Param);
     }
 
     # call old api
@@ -394,12 +395,12 @@ sub GetPreferences {
 
 =item SetPreferences()
 
-set customer user preferences
+set customer company preferences
 
-    $CustomerUserObject->SetPreferences(
-        Key    => 'UserComment',
-        Value  => 'some comment',
-        UserID => 'some-login',
+    $CustomerCompanyObject->SetPreferences(
+        Key        => 'CompanyComment',
+        Value      => 'some comment',
+        CustomerID => 'CustomerID',
     );
 
 =cut
@@ -408,20 +409,20 @@ sub SetPreferences {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    if ( !$Param{UserID} ) {
+    if ( !$Param{CustomerID} ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => 'Need UserID!'
+            Message  => 'Need CustomerID!'
         );
         return;
     }
 
     # check if user exists
-    my %User = $Self->CustomerCompanyGet( CustomerID => $Param{UserID} );
-    if ( !%User ) {
+    my %Company = $Self->CustomerCompanyGet( CustomerID => $Param{CustomerID} );
+    if ( !%Company ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => "No such user '$Param{UserID}'!",
+            Message  => "No such user '$Param{CustomerID}'!",
         );
         return;
     }
@@ -438,8 +439,8 @@ sub SetPreferences {
     my $Result;
 
     # call new api (2.4.8 and higher)
-    if ( $Self->{ $User{Source} }->can('SetPreferences') ) {
-        $Result = $Self->{ $User{Source} }->SetPreferences(%Param);
+    if ( $Self->{ $Company{Source} }->can('SetPreferences') ) {
+        $Result = $Self->{ $Company{Source} }->SetPreferences(%Param);
     }
 
     # call old api
@@ -453,8 +454,8 @@ sub SetPreferences {
             Event => 'CustomerCompanySetPreferences',
             Data  => {
                 %Param,
-                UserData => \%User,
-                Result   => $Result,
+                CompanyData => \%Company,
+                Result      => $Result,
             },
             UserID => 1,
         );
@@ -462,6 +463,43 @@ sub SetPreferences {
     return $Result;
 
     # EO KIX4OTRS-capeIT
+}
+
+=item SearchPreferences()
+
+search in user preferences
+
+    my %CustomerCompanyList = $CustomerCompanyObject->SearchPreferences(
+        Key   => 'SomeKey',
+        Value => 'SomeValue',   # optional, limit to a certain value/pattern
+    );
+
+=cut
+
+sub SearchPreferences {
+    my ( $Self, %Param ) = @_;
+
+    my %Data;
+    SOURCE:
+    for my $Count ( '', 1 .. 10 ) {
+
+        next SOURCE if !$Self->{"CustomerCompany$Count"};
+
+        # get customer search result of backend and merge it
+        # call new api (2.4.8 and higher)
+        my %SubData;
+        if ( $Self->{"CustomerUserCustomerCompany$Count"}->can('SearchPreferences') ) {
+            %SubData = $Self->{"CustomerCompany$Count"}->SearchPreferences(%Param);
+        }
+
+        # call old api
+        else {
+            %SubData = $Self->{PreferencesObject}->SearchPreferences(%Param);
+        }
+        %Data = ( %SubData, %Data );
+    }
+
+    return %Data;
 }
 # KIX4OTRS-capeIT
 
@@ -475,9 +513,6 @@ sub DESTROY {
 }
 
 1;
-
-
-
 
 =back
 

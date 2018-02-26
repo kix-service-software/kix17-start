@@ -12336,8 +12336,8 @@ via the Preferences button after logging in.
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="CustomerCompanyPreferences" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Defines the parameters for the customer company preferences table.</Description>
+    <ConfigItem Name="CustomerCompany::PreferencesModule" Required="1" Valid="1" ConfigLevel="200">
+        <Description Translatable="1">Defines the parameters for the customer company preferences module.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer::Preferences</SubGroup>
         <Setting>
@@ -13183,7 +13183,7 @@ via the Preferences button after logging in.
             <FrontendModuleReg>
                 <Group>admin</Group>
                 <Description>Admin</Description>
-                <Title>DependingDynamicFields</Title>
+                <Title Translatable="1">Depending Dynamic Fields</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>

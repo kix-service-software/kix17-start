@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
@@ -82,8 +82,9 @@ sub Run {
         # check needed stuff
         if ( !@TicketIDs ) {
             return $LayoutObject->ErrorScreen(
-                Message => Translatable('Can\'t lock Tickets, no TicketIDs are given!'),
-                Comment => Translatable('Please contact the administrator.'),
+                Message => $LayoutObject->{LanguageObject}->Translate('Can\'t lock Tickets, no TicketIDs are given!')
+                    . ' - '
+                    . $LayoutObject->{LanguageObject}->Translate('Please contact the administrator.'),
             );
         }
 
@@ -236,7 +237,7 @@ sub Run {
         my $MainTicketID = $ParamObject->GetParam( Param => 'TicketID' ) || undef;
 
         if ($ActionFlag) {
-            my $DestURL = defined $MainTicketID
+            my $DestURL = defined $MainTicketID && $MainTicketID !~ /^null$/i
                 ? "Action=AgentTicketZoom;TicketID=$MainTicketID"
                 : ( $Self->{LastScreenOverview} || 'Action=AgentDashboard' );
 
@@ -269,7 +270,7 @@ sub Run {
     # check if bulk feature is enabled
     if ( !$ConfigObject->Get('Ticket::Frontend::BulkFeature') ) {
         return $LayoutObject->ErrorScreen(
-            Message => Translatable('Bulk feature is not enabled!'),
+            Message => $LayoutObject->{LanguageObject}->Translate('Bulk feature is not enabled!'),
         );
     }
 
@@ -283,9 +284,12 @@ sub Run {
 
             if ( $Item->{Filename} eq 'ItemIDs' ) {
                 @TicketIDs = split(',',$Item->{Content});
-            } else {
+            }
+
+            elsif ($Item->{Filename} =~ /Ticket_(.*)/) {
                 my $Data    = $JSONObject->Decode( Data => $Item->{Content});
-                my ($ID)    = $Item->{Filename} =~ /Ticket_(.*)/;
+                my ($ID)    = $1;
+                next if !defined $ID;
                 $GetTickets{$ID} = $Data;
             }
         }
@@ -325,15 +329,16 @@ sub Run {
         if ( !@ValidTicketIDs ) {
             if ( $Config->{RequiredLock} ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => Translatable('No selectable TicketID is given!'),
-                    Comment =>
-                        Translatable('You either selected no ticket or only tickets which are locked by other agents.'),
+                    Message => $LayoutObject->{LanguageObject}->Translate('No selectable TicketID is given!')
+                        . ' - '
+                        . $LayoutObject->{LanguageObject}->Translate('You either selected no ticket or only tickets which are locked by other agents.'),
                 );
             }
             else {
                 return $LayoutObject->ErrorScreen(
-                    Message => Translatable('No TicketID is given!'),
-                    Comment => Translatable('You need to select at least one ticket.'),
+                    Message => $LayoutObject->{LanguageObject}->Translate('No TicketID is given!')
+                        . ' - '
+                        . $LayoutObject->{LanguageObject}->Translate('You need to select at least one ticket.'),
                 );
             }
         }

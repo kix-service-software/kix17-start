@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -33,44 +33,44 @@ sub Run {
 
     # create needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     $Self->{Config} = $ConfigObject->Get('Ticket::SaveAsDraftAJAXHandler');
 
-    my $Interval = $Self->{Config}->{Interval};
-    my $TranslatedLoadMsg
-        = $LayoutObject->{LanguageObject}->Translate( $Self->{Config}->{LoadMessage} );
-    my $Action = $LayoutObject->{EnvRef}->{Action};
+    my $Interval          = $Self->{Config}->{Interval};
+    my $TranslatedLoadMsg = $LayoutObject->{LanguageObject}->Translate( $Self->{Config}->{LoadMessage} );
+    my $Action            = $LayoutObject->{EnvRef}->{Action};
+    my $Subaction         = $ParamObject->GetParam( Param => 'Subaction' ) || '';
+    my $InitialLoadDraft  = 'true';
     my $SearchPattern;
 
     # get pretend action from action common tab if set
     if ( $Action eq 'AgentTicketZoomTabActionCommon' ) {
         $SearchPattern = '<input\s.*?name=\"PretendAction\"\svalue=\"(.*?)\".*?\/>';
-        if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms )
-        {
+        if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms ) {
             if ( defined $1 && $1 ) {
                 $Action = $1;
-                my $OutputFilterConfig
-                    = $ConfigObject->Get('Frontend::Output::FilterElementPost');
-                return
-                    if !
-                        defined $OutputFilterConfig->{AgentTicketSaveAsDraft}->{Templates}
-                        ->{$Action}
-                        || !(
-                            $OutputFilterConfig->{AgentTicketSaveAsDraft}->{Templates}->{$Action}
-                        );
+                my $OutputFilterConfig = $ConfigObject->Get('Frontend::Output::FilterElementPost');
+                return 1 if (
+                    !defined $OutputFilterConfig->{AgentTicketSaveAsDraft}->{Templates}->{$Action}
+                    || !$OutputFilterConfig->{AgentTicketSaveAsDraft}->{Templates}->{$Action}
+                );
             }
         }
     }
 
-    # create HMTL
-    $SearchPattern
-        = '<button\s+.*?class=\"(CallForAction\sPrimary|Primary\sCallForAction)\"\s+.*?type=\"submit(RichText)?\"\s+.*?>(.*?)<\/button>';
+    # check if 'Subaction' of request begins with 'Store'
+    if ( $Subaction =~ /^Store/ ) {
+        $InitialLoadDraft = 'false';
+    }
 
-    my $ReplacementString
-        = '<button id="SaveAsDraft" class="CallForAction SaveAsDraftButton" type="button" value="SaveAsDraft"><span><i class="fa fa-file-text"></i>'
-        . $LayoutObject->{LanguageObject}->Translate('Save As Draft (Subject and Text)')
-        . '</span></button>';
+    # create HMTL
+    $SearchPattern = '<button\s+.*?class=\"(CallForAction\sPrimary|Primary\sCallForAction)\"\s+.*?type=\"submit(RichText)?\"\s+.*?>(.*?)<\/button>';
+
+    my $ReplacementString = '<button id="SaveAsDraft" class="CallForAction SaveAsDraftButton" type="button" value="SaveAsDraft"><span><i class="fa fa-file-text"></i>'
+                          . $LayoutObject->{LanguageObject}->Translate('Save As Draft (Subject and Text)')
+                          . '</span></button>';
 
     # get config values
     my $YesMessage    = $LayoutObject->{LanguageObject}->Translate('Yes');
@@ -86,11 +86,10 @@ sub Run {
             LoadDraftMsg: '$TranslatedLoadMsg',
             Attributes: '$Attributes'
         });
-        Core.KIX4OTRS.InitSaveAsDraft('$Action','$TranslatedLoadMsg','$Interval');
+        Core.KIX4OTRS.InitSaveAsDraft('$Action','$TranslatedLoadMsg','$Interval', '$InitialLoadDraft');
 EOF
 
-    if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms )
-    {
+    if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms ) {
         ${ $Param{Data} } =~ s{ ($SearchPattern) }{ $1$ReplacementString }ixms;
     }
 
@@ -98,8 +97,6 @@ EOF
 }
 
 1;
-
-
 
 =back
 

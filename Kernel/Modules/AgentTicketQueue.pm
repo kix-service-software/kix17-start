@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
@@ -131,18 +131,28 @@ sub Run {
     # get session object
     my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
 
+    # create URL to store last screen
+    my $URL = "Action=AgentTicketQueue;"
+        . ";QueueID="       . $LayoutObject->LinkEncode( $Self->{QueueID} )
+        . ";View="          . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'View')        || '' )
+        . ";Filter="        . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'Filter')      || '' )
+        . ";SortBy="        . $LayoutObject->LinkEncode( $SortBy )
+        . ";OrderBy="       . $LayoutObject->LinkEncode( $OrderBy )
+        . ";StartHit="      . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartHit')    || '')
+        . ";StartWindow="   . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'StartWindow') || 0);
+
     # store last queue screen
     $SessionObject->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'LastScreenOverview',
-        Value     => $Self->{RequestedURL},
+        Value     => $URL,
     );
 
     # store last screen
     $SessionObject->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'LastScreenView',
-        Value     => $Self->{RequestedURL},
+        Value     => $URL,
     );
 
     # get user object
@@ -400,6 +410,18 @@ sub Run {
 
     # otherwise use Preview as default as in LayoutTicket
     $View ||= 'Preview';
+
+    # Check if selected view is available.
+    my $Backends = $ConfigObject->Get('Ticket::Frontend::Overview');
+    if ( !$Backends->{$View} ) {
+
+        # Try to find fallback, take first configured view mode.
+        KEY:
+        for my $Key ( sort keys %{$Backends} ) {
+            $View = $Key;
+            last KEY;
+        }
+    }
 
     # get personal page shown count
     my $PageShownPreferencesKey = 'UserTicketOverview' . $View . 'PageShown';

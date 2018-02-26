@@ -307,8 +307,8 @@
        display: none;
     }
 
-    #Messages {
-        min-height: 150px;
+    .MessageContent {
+        min-height: 350px;
     }
     #Messages li {
        margin-top: 10px;

@@ -162,12 +162,18 @@ sub ValueSet {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
+    # T2017120690001131
+    my $DFConfig = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
+        ID => $Param{FieldID}
+    );    
+
     for my $Value (@Values) {
 
-        # create a new value entry
+        # T2017120690001131
+        # create a new value entry with numeric ObjectID
         return if !$DBObject->Do(
             SQL =>
-                'INSERT INTO dynamic_field_value (field_id, object_id, value_text, value_date, value_int)'
+                'INSERT INTO dynamic_field_value (field_id, '.(IsHashRefWithData($DFConfig) && $DFConfig->{IdentifierDBAttribute} || 'object_id').', value_text, value_date, value_int)'
                 . ' VALUES (?, ?, ?, ?, ?)',
             Bind => [
                 \$Param{FieldID}, \$Param{ObjectID},
@@ -245,6 +251,11 @@ sub ValueGet {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
+    # T2017120690001131
+    my $DFConfig = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
+        ID => $Param{FieldID}
+    );    
+
     # We'll populate cache with all object's dynamic fields to reduce
     # number of db accesses (only one db query for all dynamic fields till
     # cache expiration); return only specified one dynamic field
@@ -252,7 +263,7 @@ sub ValueGet {
         SQL =>
             'SELECT id, value_text, value_date, value_int, field_id
             FROM dynamic_field_value
-            WHERE object_id = ?
+            WHERE '.(IsHashRefWithData($DFConfig) && $DFConfig->{IdentifierDBAttribute} || 'object_id').' = ?
             ORDER BY id',
         Bind => [ \$Param{ObjectID} ],
     );
@@ -325,9 +336,14 @@ sub ValueDelete {
         }
     }
 
+    # T2017120690001131
+    my $DFConfig = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
+        ID => $Param{FieldID}
+    );    
+
     # delete dynamic field value
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL  => 'DELETE FROM dynamic_field_value WHERE field_id = ? AND object_id = ?',
+        SQL  => 'DELETE FROM dynamic_field_value WHERE field_id = ? AND '.(IsHashRefWithData($DFConfig) && $DFConfig->{IdentifierDBAttribute} || 'object_id').' = ?',
         Bind => [ \$Param{FieldID}, \$Param{ObjectID} ],
     );
 

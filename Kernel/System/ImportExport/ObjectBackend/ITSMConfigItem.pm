@@ -1618,7 +1618,7 @@ sub _ImportXMLSearchDataPrepare {
     for my $Item ( @{ $Param{XMLDefinition} } ) {
 
         # create key
-        my $Key = $Param{Prefix} ? $Param{Prefix} . '::\d+::' . $Item->{Key} : $Item->{Key};
+        my $Key = $Param{Prefix} ? $Param{Prefix} . '::' . $Item->{Key} : $Item->{Key};
         $Key .= '::\d+';
 
         my $IdentifierKey;

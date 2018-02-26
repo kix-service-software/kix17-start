@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -46,16 +46,17 @@
 <script type="text/javascript">//<![CDATA[
 if ( '[% Env("Action") %]' == 'AgentTicketZoom' ) {
 
-    Core.KIX4OTRS.KIXSidebarCustomerInfo.UpdateContactSelection(Core.Config.Get('CGIHandle') + '?[% Config("SessionName") | uri %]=' + Core.App.GetSessionInformation().[% Config("SessionName") | uri %]+';','[% Data.TicketID %]','[% Data.ArticleID %]','');
+    Core.KIX4OTRS.KIXSidebarCustomerInfo.UpdateContactSelection(Core.Config.Get('CGIHandle') + '?[% Config("SessionName") | uri %]=' + Core.App.GetSessionInformation().[% Config("SessionName") | uri %]+';','[% Data.TicketID %]','[% Data.ArticleID %]','', '');
 
     $(document).on('change','#CustomerUserEmail',function(){
         // open widget if it's closed
         if ($('#KIXSidebarCustomerInfoBlockOpen').attr('aria-expanded') == 'false')
             $('#KIXSidebarCustomerInfoBlockOpen').click();
 
-        var CustomerID = $(this).val();
-        Core.Agent.CustomerSearch.ReloadCustomerInfo(CustomerID,'AgentKIXSidebarCustomerInfo');
-        Core.KIX4OTRS.KIXSidebarCustomerInfo.UpdateContactSelection(Core.Config.Get('CGIHandle') + '?[% Config("SessionName") | uri %]=' + Core.App.GetSessionInformation().[% Config("SessionName") | uri %]+';','[% Data.TicketID %]','[% Data.ArticleID %]',CustomerID);
+        var CustomerID = $(this).val(),
+            Type       = $(this).find(':selected').data('type');
+        Core.Agent.CustomerSearch.ReloadCustomerInfo(CustomerID,'AgentKIXSidebarCustomerInfo',Type);
+        Core.KIX4OTRS.KIXSidebarCustomerInfo.UpdateContactSelection(Core.Config.Get('CGIHandle') + '?[% Config("SessionName") | uri %]=' + Core.App.GetSessionInformation().[% Config("SessionName") | uri %]+';','[% Data.TicketID %]','[% Data.ArticleID %]',CustomerID, Type);
     });
 }
 //]]>

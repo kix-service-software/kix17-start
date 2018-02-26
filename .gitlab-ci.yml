@@ -49,6 +49,7 @@ deploy:TARBuild:Release:
   script:
   - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/Release
   - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/Release/$CI_PROJECT_NAME-$CI_BUILD_REF_NAME.tar.gz
+  - deploydb "$CI_PROJECT_NAME" "$CI_BUILD_REF_NAME"
   stage: deploy
   tags:
   - Shell

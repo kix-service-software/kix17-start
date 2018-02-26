@@ -1,5 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
 # --
@@ -41,6 +41,7 @@ sub Run {
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
     my $AddressBookObject  = $Kernel::OM->Get('Kernel::System::AddressBook');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
 
     # get config for frontend
     $Self->{Config} = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
@@ -54,27 +55,29 @@ sub Run {
         my $IncludeUnknownTicketCustomers
             = int( $ParamObject->GetParam( Param => 'IncludeUnknownTicketCustomers' ) || 0 );
 
-        my $UnknownTicketCustomerList;
+        # init result hash
+        my %CustomerUserList = ();
 
+        # check if unknown users should be included
         if ($IncludeUnknownTicketCustomers) {
-
             # add customers that are not saved in any backend
-            $UnknownTicketCustomerList = $TicketObject->SearchUnknownTicketCustomers(
+            my $UnknownTicketCustomerList = $TicketObject->SearchUnknownTicketCustomers(
                 SearchTerm => $Search,
             );
+            map { $CustomerUserList{$_} = $UnknownTicketCustomerList->{$_} } keys %{$UnknownTicketCustomerList};
         }
-
-        # get customer list
-        my %CustomerUserList = $CustomerUserObject->CustomerSearch(
-            Search => $Search,
-        );
-        map { $CustomerUserList{$_} = $UnknownTicketCustomerList->{$_} } keys %{$UnknownTicketCustomerList};
 
         # search address book
         my %AddressList = $AddressBookObject->AddressList(
             Search => '*'.$Search.'*',
         );
         map { $CustomerUserList{$_} = $_ } values %AddressList;
+
+        # search customer user backends
+        my %CustomerUserSearch = $CustomerUserObject->CustomerSearch(
+            Search => $Search,
+        );
+        map { $CustomerUserList{$_} = $CustomerUserSearch{$_} } keys %CustomerUserSearch;
 
         # build data
         my @Data;
@@ -179,7 +182,7 @@ sub Run {
         # build JSON output
         $JSON = $LayoutObject->JSONEncode(
             Data => {
-                CustomerID              => $CustomerID,
+                CustomerID              => $CustomerID || $CustomerUserID,
                 CustomerTableHTMLString => $CustomerTableHTMLString,
 
                 # KIX4OTRS-capeIT
@@ -271,6 +274,84 @@ sub Run {
         );
     }
 
+    elsif ($Self->{Subaction} eq 'UserInfo') {
+
+        my $CallingAction       = $ParamObject->GetParam( Param => 'CallingAction' ) || '';
+        my $UserID              = $ParamObject->GetParam( Param => 'UserID' )        || '';
+        my $UserTableHTMLString = '';
+
+        # get customer data
+        my %UserData = $UserObject->GetUserData(
+            User => $UserID,
+        );
+
+        # build html for user info table
+        if ( %UserData && $ConfigObject->Get('Ticket::Frontend::CustomerInfoCompose') ) {
+
+            # build html table
+            $LayoutObject->Block(
+                Name => 'Customer',
+                Data => \%UserData
+            );
+
+            my $CustomerInfoString = '$UserData{UserFullname}<br/><br/>
+                <b>' . $LayoutObject->{LanguageObject}->Translate('Mail') . ':</b> $UserData{UserEmail}';
+
+            $UserTableHTMLString = $LayoutObject->Output(
+                Template => $CustomerInfoString,
+                Data     => {},
+            );
+
+            while ( $CustomerInfoString =~ /\$UserData\{(.+?)}/ ) {
+                my $Tag = $1;
+                if ( $UserData{$Tag} ) {
+                    $CustomerInfoString =~ s/\$UserData\{$Tag\}/$UserData{$Tag}/;
+                }
+                else {
+                    $CustomerInfoString =~ s/\$UserData\{$Tag\}//;
+                }
+            }
+
+            $LayoutObject->Block(
+                Name => 'CustomerInfoString',
+                Data => {
+                    %UserData,
+                    CustomerInfoString => $CustomerInfoString,
+                }
+            );
+
+            $UserTableHTMLString = $LayoutObject->Output(
+                TemplateFile   => 'AgentCustomerTableView',
+                Data           => \%UserData,
+                KeepScriptTags => 1,
+            );
+        }
+
+        # build JSON output
+        $JSON = $LayoutObject->JSONEncode(
+            Data => {
+                UserID              => $UserID,
+                UserTableHTMLString => $UserTableHTMLString,
+            },
+        );
+    }
+
+    elsif ( $Self->{Subaction} eq 'ExistsCustomerUser') {
+
+        my $UserID = $ParamObject->GetParam( Param => 'UserID' ) || '';
+
+        my %CustomerUser = $CustomerUserObject->CustomerSearch(
+            UserLogin => $UserID,
+            Valid     => 1,
+        );
+
+        $JSON = $LayoutObject->JSONEncode(
+            Data => {
+                Customer => \%CustomerUser || ''
+            }
+        );
+    }
+
     # send JSON response
     return $LayoutObject->Attachment(
         ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
@@ -278,7 +359,6 @@ sub Run {
         Type        => 'inline',
         NoCache     => 1,
     );
-
 }
 
 1;

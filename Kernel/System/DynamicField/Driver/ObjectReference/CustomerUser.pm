@@ -478,6 +478,16 @@ sub EditFieldValueGet {
     {
         my @Data = $Param{ParamObject}->GetArray( Param => $FieldName );
 
+        if (
+            $Param{DynamicFieldConfig}->{Config}->{DisplayFieldType} eq 'AutoComplete'
+            && $Data[0]
+        ) {
+            my $SearchValue = $Param{ParamObject}->GetParam( Param => $FieldName . '_Key' );
+            if ( !$SearchValue ) {
+                $Data[0] = '';
+            }
+        }
+
         # delete empty values (can happen if the user has selected the "-" entry)
         my $Index = 0;
         ITEM:

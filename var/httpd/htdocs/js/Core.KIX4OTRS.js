@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+// Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file COPYING for license information (AGPL). If you
@@ -296,7 +296,7 @@ Core.KIX4OTRS = (function(TargetNS) {
      *            save interval in milliseconds
      */
 
-    TargetNS.InitSaveAsDraft = function(Action, Question, Interval) {
+    TargetNS.InitSaveAsDraft = function(Action, Question, Interval, InitialLoadDraft) {
         // get form
         var $Form = $('#SaveAsDraft').closest('form'),
             ActiveInterval,
@@ -341,13 +341,15 @@ Core.KIX4OTRS = (function(TargetNS) {
             }, Interval);
         });
 
-        // show dialog on load if saved form is available
-        $(window).load(function() {
-            TargetNS.LoadDraft(Action, TicketID, Question);
-        });
+        if ( InitialLoadDraft !== 'false' ) {
+            // show dialog on load if saved form is available
+            $(window).load(function() {
+                TargetNS.LoadDraft(Action, TicketID, Question);
+            });
 
-        // initial call to check for loadable content (necessary for Ticket Tabs)
-        TargetNS.LoadDraft(Action, TicketID, Question);
+            // initial call to check for loadable content (necessary for Ticket Tabs)
+            TargetNS.LoadDraft(Action, TicketID, Question);
+        }
     }
 
     /**
@@ -471,7 +473,9 @@ Core.KIX4OTRS = (function(TargetNS) {
                 if ( Response.AssignedQueue != 0 ) {
                     // set queue id for note, close, etc.
                     if ( $("#NewQueueID").length ) {
-                        $("#NewQueueID").val(Response.AssignedQueue);
+                        if ( $("#NewQueueID").val() !== Response.AssignedQueue ) {
+                            $("#NewQueueID").val(Response.AssignedQueue).trigger('change');
+                        }
                     }
                     // set queue id for phone, email, etc.
                     else if ( $("#Dest").length ) {

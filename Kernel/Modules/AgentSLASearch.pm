@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -49,13 +49,9 @@ sub Run {
     my $CustomerCompanyData = $Self->{ParamObject}->GetParam( Param => 'CustomerCompanyData' ) || '';
 
     # check if KIXServiceCatalog is installed
-    my $KIXServCatalogInstalled = 0;
-    my @InstalledPackages = $Self->{PackageObject}->RepositoryList();
-    for my $Package (@InstalledPackages) {
-        if ( $Package->{Name}->{Content} eq 'KIXServiceCatalog' ) {
-            $KIXServCatalogInstalled = 1;
-        }
-    }
+    my $KIXProInstalled = $Self->{PackageObject}->PackageIsInstalled(
+        Name   => 'KIXPro',
+    );
 
     # get all valid SLAs
     my %AllValidSLAs = $Self->{SLAObject}->SLAList(
@@ -64,133 +60,210 @@ sub Run {
     );
     my %SLAs = %AllValidSLAs;
 
-    #-------------------------------------------------------------------------------
-    # if ServiceData is given -> get SLAs that are configured for ALL given services
-    if ( $ServiceData && $ServiceData ne 'NONE' ) {
-        my @Services = split( ';', $ServiceData );
-        if (@Services) {
-            for my $ServiceID (@Services) {
+    # if KIX Professional is not installed
+    if (!$KIXProInstalled) {
+        # no slas if restricted to service but no service given
+        if ( !$ServiceData ) {
+            %SLAs = ();
+        }
+        else {
+            # if ServiceData is given -> get SLAs that are configured for ALL given services
+            if ( $ServiceData ne 'NONE' ) {
+                my @Services = split( ';', $ServiceData );
+                if (@Services) {
+                    for my $ServiceID (@Services) {
+                        my %SLAsForService = $Self->{SLAObject}->SLAList(
+                            Valid     => 1,
+                            ServiceID => $ServiceID,
+                            UserID    => $Self->{UserID},
+                        );
+
+                        # delete SLA from result if it is not configured for one of Services
+                        for my $SLA ( keys %SLAs ) {
+                            delete $SLAs{$SLA} if !$SLAsForService{$SLA};
+                        }
+                    }
+                }
+                else {
+                    %SLAs = ();
+                }
+            }
+
+            # if CustomerLoginData is given -> get SLAs that are configured for ALL CustomerUser's Services
+            if ( $CustomerLoginData && $CustomerLoginData ne 'NONE' ) {
+                my @CustomerUsers = split( ';', $CustomerLoginData );
+                if (@CustomerUsers) {
+                    for my $CustomerUserLogin (@CustomerUsers) {
+                        my %SLAsForCustomerUser = ();
+
+                        # get Services for CustomerUser
+                        my %Services = $Self->{ServiceObject}->CustomerUserServiceMemberList(
+                            CustomerUserLogin => $CustomerUserLogin,
+                            Result            => 'HASH',
+                            DefaultServices   => 0,
+                        );
+
+                        # get SLAs for each Service (SLAs for CUstomerUser)
+                        for my $ServiceID ( keys %Services ) {
+                            my %SLAsForService = $Self->{SLAObject}->SLAList(
+                                Valid             => 1,
+                                ServiceID         => $ServiceID,
+                                UserID            => $Self->{UserID},
+                            );
+                            %SLAsForCustomerUser = ( %SLAsForCustomerUser, %SLAsForService );
+                        }
+
+                        # delete SLA from result if it is not configured for one of CustomerUsers
+                        for my $SLA ( keys %SLAs ) {
+                            delete $SLAs{$SLA} if !$SLAsForCustomerUser{$SLA};
+                        }
+                    }
+                }
+                else {
+                    %SLAs = ();
+                }
+            }
+
+            # get SLAs for DEFAULT-Services
+            my %SLAsForDefaultServices = ();
+            my %DefaultServices = $Self->{ServiceObject}->CustomerUserServiceMemberList(
+                CustomerUserLogin => '<DEFAULT>',
+                Result            => 'HASH',
+                DefaultServices   => 0,
+            );
+            for my $ServiceID ( keys %DefaultServices ) {
                 my %SLAsForService = $Self->{SLAObject}->SLAList(
                     Valid     => 1,
                     ServiceID => $ServiceID,
                     UserID    => $Self->{UserID},
                 );
-
-                # delete SLA from result if it is not configured for one of Services
-                for my $SLA ( keys %SLAs ) {
-                    delete $SLAs{$SLA} if !$SLAsForService{$SLA};
-                }
+                %SLAsForDefaultServices = ( %SLAsForDefaultServices, %SLAsForService );
             }
-        }
-        else {
-            %SLAs = ();
+            %SLAs = ( %SLAs, %SLAsForDefaultServices );
         }
     }
+    # if KIX Professional is installed
+    else {
+        # no slas if restricted to service but no service given
+        if ( !$ServiceData ) {
+            %SLAs = ();
+        }
+        else {
+            # prepare relevant services
+            my %ServiceHash = ();
+            if ( $ServiceData ne 'NONE' ) {
+                my @Services = split( ';', $ServiceData );
+                if (@Services) {
+                    for my $ServiceID (@Services) {
+                        $ServiceHash{$ServiceID} = 1;
+                    }
+                }
+            }
 
-    # if CustomerLoginData is given -> get SLAs that are configured for ALL CustomerUser's Services
-    #----------------------------------------------------------------------------------------------
-    if ( $CustomerLoginData && $CustomerLoginData ne 'NONE' ) {
-        my @CustomerUsers = split( ';', $CustomerLoginData );
-        if (@CustomerUsers) {
-            for my $CustomerUserLogin (@CustomerUsers) {
-                my %SLAsForCustomerUser = ();
+            # if CustomerLoginData is given -> get relevant
+            if ( $CustomerLoginData && $CustomerLoginData ne 'NONE' ) {
+                my @CustomerUsers = split( ';', $CustomerLoginData );
+                if (@CustomerUsers) {
+                    for my $CustomerUserLogin (@CustomerUsers) {
+                        my %SLAsForCustomerUser = ();
 
-                # get Services for CustomerUser
-                my %Services = $Self->{ServiceObject}->CustomerUserServiceMemberList(
-                    CustomerUserLogin => $CustomerUserLogin,
-                    Result            => 'HASH',
-                    DefaultServices   => 0,
-                );
+                        my %Services;
+                        if (!%ServiceHash) {
+                            # get Services for CustomerUser
+                            %Services = $Self->{ServiceObject}->CustomerUserServiceMemberList(
+                                CustomerUserLogin => $CustomerUserLogin,
+                                Result            => 'HASH',
+                                DefaultServices   => 0,
+                            );
+                        }
+                        else {
+                            %Services = %ServiceHash;
+                        }
 
-                # get SLAs for each Service (SLAs for CUstomerUser)
-                for my $ServiceID ( keys %Services ) {
+                        # get SLAs for each Service (SLAs for CUstomerUser)
+                        for my $ServiceID ( keys %Services ) {
+                            my %SLAsForService = $Self->{SLAObject}->SLAList(
+                                Valid             => 1,
+                                ServiceID         => $ServiceID,
+                                CustomerUserLogin => $CustomerUserLogin,
+                                UserID            => $Self->{UserID},
+                            );
+                            %SLAsForCustomerUser = ( %SLAsForCustomerUser, %SLAsForService );
+                        }
+
+                        # delete SLA from result if it is not configured for one of CustomerUsers
+                        for my $SLA ( keys %SLAs ) {
+                            delete $SLAs{$SLA} if !$SLAsForCustomerUser{$SLA};
+                        }
+                    }
+                }
+                else {
+                    %SLAs = ();
+                }
+            }
+            # if CustomerCompanyData is given -> get relevant SLAs
+            elsif ( $CustomerCompanyData && $CustomerCompanyData ne 'NONE' ) {
+                my @CustomerCompanyList = split( ';', $CustomerCompanyData );
+                if (@CustomerCompanyList) {
+                    for my $CustomerCompany (@CustomerCompanyList) {
+
+                        # get CustomerServiceSLA entries that have this CustomerID
+                        my @CustomerServiceSLAs = $Self->{ServiceObject}->CustomerServiceMemberSearch(
+                            CustomerID => $CustomerCompany,
+                            Result     => 'HASH',
+                        );
+
+                        # get SLAs for this CustomerCompany (CustomerID)
+                        my %SLAsForCustomerCompany = ();
+                        for my $CatalogEntry (@CustomerServiceSLAs) {
+                            next if ( ref($CatalogEntry) ne 'HASH' );
+                            next if ( %ServiceHash && !$ServiceHash{$CatalogEntry->{ServiceID}} );
+                            if ( $CatalogEntry->{SLAID} ) {
+                                $SLAsForCustomerCompany{ $CatalogEntry->{SLAID} } = 1,
+                            }
+                        }
+
+                        # delete SLA from result if it is not configured for one of CustomerIDs
+                        for my $SLA ( keys %SLAs ) {
+                            delete $SLAs{$SLA} if !$SLAsForCustomerCompany{$SLA};
+                        }
+                    }
+                }
+                else {
+                    %SLAs = ();
+                }
+            }
+            # get SLA only by Service
+            elsif ( $ServiceData ne 'NONE' ) {
+                for my $ServiceID ( keys( %ServiceHash ) ) {
                     my %SLAsForService = $Self->{SLAObject}->SLAList(
                         Valid     => 1,
                         ServiceID => $ServiceID,
                         UserID    => $Self->{UserID},
                     );
-                    %SLAsForCustomerUser = ( %SLAsForCustomerUser, %SLAsForService );
-                }
 
-                # delete SLA from result if it is not configured for one of CustomerUsers
-                for my $SLA ( keys %SLAs ) {
-                    delete $SLAs{$SLA} if !$SLAsForCustomerUser{$SLA};
-                }
-            }
-        }
-        else {
-            %SLAs = ();
-        }
-    }
-
-    # if CustomerCompanyData is given AND KIXServiceCatalog installiert
-    # -> get SLAs that are configured for ALL given CustomerIDs
-    #------------------------------------------------------------------
-    elsif ( $CustomerCompanyData && $CustomerCompanyData ne 'NONE' && $KIXServCatalogInstalled ) {
-        my @CustomerUsers = ();
-        my @CustomerCompanyList = split( ';', $CustomerCompanyData );
-        if (@CustomerCompanyList) {
-            for my $CustomerCompany (@CustomerCompanyList) {
-
-                # get CustomerServiceSLA entries that have this CustomerID
-                my @CustomerServiceSLAs = $Self->{ServiceObject}->CustomerServiceMemberSearch(
-                    CustomerID => $CustomerCompany,
-                    Result     => 'HASH',
-                );
-
-                # get SLAs for this CustomerCompany (CustomerID)
-                my %SLAsForCustomerCompany = ();
-                for my $CatalogEntry (@CustomerServiceSLAs) {
-                    next if ( ref($CatalogEntry) ne 'HASH' );
-                    if ( $CatalogEntry->{SLAID} ) {
-                        $SLAsForCustomerCompany{ $CatalogEntry->{SLAID} } = 1,
+                    # delete SLA from result if it is not configured for one of Services
+                    for my $SLA ( keys %SLAs ) {
+                        delete $SLAs{$SLA} if !$SLAsForService{$SLA};
                     }
                 }
+            }
 
-                # delete SLA from result if it is not configured for one of CustomerIDs
-                for my $SLA ( keys %SLAs ) {
-                    delete $SLAs{$SLA} if !$SLAsForCustomerCompany{$SLA};
+            my %SLAsForDefaultServices = ();
+            my @CustomerServiceSLAs = $Self->{ServiceObject}->CustomerServiceMemberSearch(
+                CustomerID => 'DEFAULT',
+                Result     => 'HASH',
+            );
+            for my $CatalogEntry (@CustomerServiceSLAs) {
+                next if ( ref($CatalogEntry) ne 'HASH' );
+                next if ( %ServiceHash && !$ServiceHash{$CatalogEntry->{ServiceID}} );
+                if ( $CatalogEntry->{SLAID} ) {
+                    $SLAsForDefaultServices{ $CatalogEntry->{SLAID} } = $AllValidSLAs{ $CatalogEntry->{SLAID} },
                 }
             }
-        }
-        else {
-            %SLAs = ();
+            %SLAs = ( %SLAs, %SLAsForDefaultServices );
         }
     }
-
-    # get SLAs for DEFAULT-Services
-    my %SLAsForDefaultServices = ();
-    if ( !$KIXServCatalogInstalled ) {
-        my %DefaultServices = $Self->{ServiceObject}->CustomerUserServiceMemberList(
-            CustomerUserLogin => '<DEFAULT>',
-            Result            => 'HASH',
-            DefaultServices   => 0,
-        );
-        for my $ServiceID ( keys %DefaultServices ) {
-            my %SLAsForService = $Self->{SLAObject}->SLAList(
-                Valid     => 1,
-                ServiceID => $ServiceID,
-                UserID    => $Self->{UserID},
-            );
-            %SLAsForDefaultServices = ( %SLAsForDefaultServices, %SLAsForService );
-        }
-    }
-    else {
-        my @CustomerServiceSLAs = $Self->{ServiceObject}->CustomerServiceMemberSearch(
-            CustomerID => 'DEFAULT',
-            Result     => 'HASH',
-        );
-        for my $CatalogEntry (@CustomerServiceSLAs) {
-            next if ( ref($CatalogEntry) ne 'HASH' );
-            if ( $CatalogEntry->{SLAID} ) {
-                $SLAsForDefaultServices{ $CatalogEntry->{SLAID} }
-                    = $AllValidSLAs{ $CatalogEntry->{SLAID} },
-            }
-        }
-    }
-    %SLAs = ( %SLAs, %SLAsForDefaultServices );
-
-
 
     $Search =~ s/\_/\./g;
     $Search =~ s/\%/\.\*/g;
@@ -222,8 +295,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 
