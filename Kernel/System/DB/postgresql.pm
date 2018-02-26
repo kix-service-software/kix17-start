@@ -462,6 +462,9 @@ sub TableAlter {
                     push @SQL, "ALTER TABLE $Table ALTER $Tag->{NameNew} SET NOT NULL";
                 }
             }
+            else {
+                push @SQL, $SQLStart . " ALTER $Tag->{NameNew} DROP NOT NULL";
+            }
         }
         elsif ( $Tag->{Tag} eq 'ColumnDrop' && $Tag->{TagType} eq 'Start' ) {
             my $SQLEnd = $SQLStart . " DROP $Tag->{Name}";
@@ -777,8 +780,6 @@ sub _TypeTranslation {
 }
 
 1;
-
-
 
 =back
 

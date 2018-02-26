@@ -3,7 +3,7 @@
     <TableAlter Name="dynamic_field_value">
         <ColumnAdd Name="object_id_text" Type="VARCHAR" Size="255" Required="false"/>
         <ColumnAdd Name="object_id_new" Type="BIGINT" Required="false"/>
-        <IndexCreate Name="dynamic_field_value_field_val2">
+        <IndexCreate Name="dynamic_field_value_field_oid2">
             <IndexColumn Name="object_id_text"/>
             <IndexColumn Name="field_id"/>
         </IndexCreate>

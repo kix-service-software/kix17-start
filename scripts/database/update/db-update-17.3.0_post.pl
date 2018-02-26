@@ -32,7 +32,7 @@ use vars qw(%INC);
 # migrate DFs "CustomerUser" and "CustomerCompany"
 _MigrateDynamicFields();
 
-exit 1;
+exit 0;
 
 
 sub _MigrateDynamicFields {
