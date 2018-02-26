@@ -34,30 +34,30 @@ getopt( 'v', \%Opts );
 
 # check and exec pre update script (before any SQL)
 if (!_ExecScript($Opts{v}, 'pre')) {
-    exit -1;
+    exit 1;
 }
 
 # check and execute pre SQL script (to prepare some thing in the DB)
 if (!_ExecSQL($Opts{v}, 'pre')) {
-    exit -1;
+    exit 1;
 }
 
 # check and exec main update script (after preparation)
 if (!_ExecScript($Opts{v})) {
-    exit -1;
+    exit 1;
 }
 
 # check and execute post SQL script (to do some things after main migration)
 if (!_ExecSQL($Opts{v}, 'post')) {
-    exit -1;
+    exit 1;
 }
 
 # check and exec post update script (after all SQL)
 if (!_ExecScript($Opts{v}, 'post')) {
-    exit -1;
+    exit 1;
 }
 
-exit 1;
+exit 0;
 
 sub _ExecScript {
     my ($Version, $Type) = @_;
@@ -80,7 +80,7 @@ sub _ExecScript {
     print "executing $OrgType update script\n";
 
     my $ExitCode = system($ScriptFile);    
-    if (!$ExitCode) {
+    if ($ExitCode) {
         print STDERR "Unable to execute $OrgType update script!";
         return;
     }
@@ -147,7 +147,7 @@ sub _ExecSQL {
     return 1;
 }
 
-exit 1;
+1;
 
 =back
 
