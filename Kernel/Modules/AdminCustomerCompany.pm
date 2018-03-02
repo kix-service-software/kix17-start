@@ -121,7 +121,10 @@ sub Run {
             if ($Update) {
 
                 # update preferences
-                my %Preferences = %{ $ConfigObject->Get('CustomerCompanyPreferences') };
+                my %Preferences = ();
+                if ( $ConfigObject->Get('CustomerCompanyPreferences') ) {
+                    %Preferences = %{ $ConfigObject->Get('CustomerCompanyPreferences') };
+                }
                 GROUP:
                 for my $Group ( sort keys %Preferences ) {
                     # get customer company data
@@ -288,7 +291,10 @@ sub Run {
             if ($CustomerID) {
 
                 # update preferences
-                my %Preferences = %{ $ConfigObject->Get('CustomerCompanyPreferences') };
+                my %Preferences = ();
+                if ( $ConfigObject->Get('CustomerCompanyPreferences') ) {
+                    %Preferences = %{ $ConfigObject->Get('CustomerCompanyPreferences') };
+                }
                 GROUP:
                 for my $Group ( sort keys %Preferences ) {
                     # get customer company data
