@@ -1,8 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
-# 17.3.0 (2018/02/26)
- * (2018/02/26) - productive release
+# 17.3.0 (2018/02/28)
+ * (2018/02/28) - productive release
+ * (2018/02/28) - Bugfix: T2018022790000922 (index size added for text_value) (ddoerffel)
  * (2018/02/26) - Bugfix: T2018022590000499 (NOT NULL not removable in ColumnChange) (ddoerffel)
  * (2018/02/23) - Bugfix: T2017120890000745 (clear sla list if service is restricted but not given) (millinger)
  * (2018/02/23) - Bugfix: T2017122290000558 (FAQ search not working with dynamic fields) (ddoerffel)
