@@ -9,7 +9,7 @@
         </IndexCreate>
         <IndexCreate Name="dynamic_field_value_search_text">
             <IndexColumn Name="field_id"/>
-            <IndexColumn Name="value_text"/>
+            <IndexColumn Name="value_text" Size="100"/>
         </IndexCreate>        
     </TableAlter>
 </database>

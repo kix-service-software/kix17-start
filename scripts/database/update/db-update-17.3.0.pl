@@ -36,15 +36,6 @@ exit 0;
 
 
 sub _MigrateDynamicFields {
-    my $EmptyValue = 0;
-
-    # in case of installed KIXPro we have to use a text value 
-    my %RegisteredCustomPackages = reverse %{$Kernel::OM->Get('Kernel::System::KIXUtils')->GetRegisteredCustomPackages()};
-
-    if ( $RegisteredCustomPackages{KIXPro} ) {
-        $EmptyValue = "'0'";
-    }
-
     # migrate object_id in dynamic_field_value - move values for type CustomerUser and CustomerCompany to new column object_id_text
     my $List = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid      => 0,
@@ -54,38 +45,40 @@ sub _MigrateDynamicFields {
         # get database object
         my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-        # get DBMS specific datatype to casat to
-        my $CastDatatype = $DBObject->{Backend}->_TypeTranslation(
-            {
-                Type => 'BIGINT',
-            }
-        );
+        # get DBMS specific datatype to cast to
+        my $CastDatatype = 'BIGINT';
+        if ($DBObject->{Backend}->{'DB::Version'} =~ /(MySQL|MariaDB)/i) {
+            $CastDatatype = 'UNSIGNED';
+        }
 
         foreach my $DynamicField (@{$List}) {
-            if ($DynamicField->{IdentifierDBAttribute} eq 'object_id') {
-
-                my $Success = $DBObject->Do(
-                    SQL =>"UPDATE dynamic_field_value SET object_id_new = CAST(object_id AS $CastDatatype->{Type}) WHERE field_id = ?",
+            my $Success;
+            $Success = $DBObject->Do(
+                SQL  => "UPDATE dynamic_field_value SET object_id_new = CAST(object_id AS $CastDatatype) WHERE field_id = ?",
+                Bind => [ \$DynamicField->{ID} ]
+            );
+            if (!$Success) {
+                # fallback if the SQL has failed, it's likely to be a textual object_id
+                $Success = $DBObject->Do(
+                    SQL  => "UPDATE dynamic_field_value SET object_id_text = object_id WHERE field_id = ?",
                     Bind => [ \$DynamicField->{ID} ]
                 );
                 if (!$Success) {
                     $Kernel::OM->Get('Kernel::System::Log')->Log(
                         Priority => 'error',
-                        Message  => "Upable to migrate value of DynamicField '$DynamicField->{Name}' ($DynamicField->{ID})!"
+                        Message  => "Unable to migrate DynamicField '$DynamicField->{Name}' (Step 1)!"
                     );
                 }
             }
-            else {
-                my $Success = $DBObject->Do(
-                    SQL =>"UPDATE dynamic_field_value SET object_id_text = object_id WHERE field_id = ?",
-                    Bind => [ \$DynamicField->{ID} ]
+            $Success = $DBObject->Do(
+                SQL  => "UPDATE dynamic_field_value SET object_id_text = object_id WHERE field_id = ? AND object_id_new = 0",
+                Bind => [ \$DynamicField->{ID} ]
+            );
+            if (!$Success) {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "Unable to migrate DynamicField '$DynamicField->{Name}' (Step 2)!"
                 );
-                if (!$Success) {
-                    $Kernel::OM->Get('Kernel::System::Log')->Log(
-                        Priority => 'error',
-                        Message  => "Upable to migrate value of DynamicField '$DynamicField->{Name}' ($DynamicField->{ID})!"
-                    );
-                }
             }
         }
     }
