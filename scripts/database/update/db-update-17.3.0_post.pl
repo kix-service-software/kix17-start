@@ -37,29 +37,17 @@ exit 0;
 
 sub _MigrateDynamicFields {
 
-    # migrate object_id in dynamic_field_value - move values for type CustomerUser and CustomerCompany to new column object_id_text
-    my $List = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-        Valid      => 0,
+    # get database object
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    my $Success = $DBObject->Do(
+        SQL =>'UPDATE dynamic_field_value SET object_id = NULL WHERE object_id_text IS NOT NULL',
     );
-
-    if ($List) {
-        # get database object
-        my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
-
-        foreach my $DynamicField (@{$List}) {
-            next if ($DynamicField->{IdentifierDBAttribute} eq 'object_id');
-
-            my $Success = $DBObject->Do(
-                SQL =>'UPDATE dynamic_field_value SET object_id = NULL WHERE field_id = ?',
-                Bind => [ \$DynamicField->{ID} ]
-            );
-            if (!$Success) {
-                $Kernel::OM->Get('Kernel::System::Log')->Log(
-                    Priority => 'error',
-                    Message  => "Upable to erase object_id for DynamicField '$DynamicField->{Name}' ($DynamicField->{ID})!"
-                );
-            }
-        }
+    if (!$Success) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "Unable to erase object_id for DynamicFields with textual object_id!"
+        );
     }
 
     return 1;
