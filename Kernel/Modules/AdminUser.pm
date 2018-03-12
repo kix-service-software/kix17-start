@@ -243,7 +243,10 @@ sub Run {
             );
 
             if ($Update) {
-                my %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+                my %Preferences = ();
+                if ( $ConfigObject->Get('PreferencesGroups') ) {
+                    %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+                }
 
                 GROUP:
                 for my $Group ( sort keys %Preferences ) {
@@ -408,7 +411,10 @@ sub Run {
             if ($UserID) {
 
                 # update preferences
-                my %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+                my %Preferences = ();
+                if ( $ConfigObject->Get('PreferencesGroups') ) {
+                    %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+                }
                 GROUP:
                 for my $Group ( sort keys %Preferences ) {
                     next GROUP if $Group eq 'Password';
@@ -612,7 +618,10 @@ sub _Edit {
     my @Groups = @{ $ConfigObject->Get('PreferencesView') };
     for my $Column (@Groups) {
         my %Data        = ();
-        my %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+        my %Preferences = ();
+        if ( $ConfigObject->Get('PreferencesGroups') ) {
+            %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+        }
 
         GROUP:
         for my $Group ( sort keys %Preferences ) {
