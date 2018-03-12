@@ -256,25 +256,28 @@ sub Run {
                     }
 
                     my %ConfigItemIDs;
-                    my $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
-                        Name         => $Search,
-                        ClassIDs     => \@ITSMConfigItemClasses,
-                        DeplStateIDs => $DynamicFieldConfig->{Config}->{DeploymentStates},
-                        What         => \@SearchParamsWhat,
-                    );
+                    my $ConfigItemIDResult;
+                    if ( $Search !~ m/^[*]+$/) {
+                        $ConfigItemIDResult = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
+                            Name         => $Search,
+                            ClassIDs     => \@ITSMConfigItemClasses,
+                            DeplStateIDs => $DynamicFieldConfig->{Config}->{DeploymentStates},
+                            What         => \@SearchParamsWhat,
+                        );
 
-                    for my $ID ( @{$ConfigItemIDs} ) {
-                        $ConfigItemIDs{$ID} = 1;
+                        for my $ID ( @{$ConfigItemIDResult} ) {
+                            $ConfigItemIDs{$ID} = 1;
+                        }
                     }
 
-                    $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
+                    $ConfigItemIDResult = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
                         Number       => $Search,
                         ClassIDs     => \@ITSMConfigItemClasses,
                         DeplStateIDs => $DynamicFieldConfig->{Config}->{DeploymentStates},
                         What         => \@SearchParamsWhat,
                     );
 
-                    for my $ID ( @{$ConfigItemIDs} ) {
+                    for my $ID ( @{$ConfigItemIDResult} ) {
                         $ConfigItemIDs{$ID} = 1;
                     }
 
@@ -455,7 +458,7 @@ sub Run {
                 }
 
                 my $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
-                    Name         => '*',
+                    Number       => '*',
                     ClassIDs     => \@ITSMConfigItemClasses,
                     DeplStateIDs => $DynamicFieldConfig->{Config}->{DeploymentStates},
                     What         => \@SearchParamsWhat,
