@@ -3636,48 +3636,48 @@ A(z) [<KIX_CONFIG_Ticket::Hook><KIX_CONFIG_Ticket::HookDivider><KIX_TICKET_Ticke
         <Data Key="notification_id">14</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;KIX_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <KIX_AGENT_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;KIX_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;KIX_AGENT_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">80</Data>
         <Data Key="notification_id">14</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;KIX_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <KIX_AGENT_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;KIX_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;KIX_AGENT_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">81</Data>
         <Data Key="notification_id">15</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;KIX_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <KIX_AGENT_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;KIX_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;KIX_AGENT_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">82</Data>
         <Data Key="notification_id">15</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;KIX_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <KIX_AGENT_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;KIX_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;KIX_AGENT_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">83</Data>
         <Data Key="notification_id">16</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">de</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;KIX_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[BENACHRICHTIGUNG! <KIX_AGENT_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hallo,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" hat folgende Notiz an Ticket &lt;KIX_TICKET_TicketNumber&gt; angehangen.<br /><br />----------------------<br />&lt;KIX_AGENT_BODY&gt;<br />----------------------<br /><br />Diese Benachrichtigung wurde Ihnen im Auftrag von "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" zugesendet.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
     <Insert Table="notification_event_message">
         <Data Key="id" Type="AutoIncrement">84</Data>
         <Data Key="notification_id">16</Data>
         <Data Key="content_type" Type="Quote">text/html</Data>
         <Data Key="language" Type="Quote">en</Data>
-        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <KIX_CUSTOMER_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
-        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;KIX_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;KIX_CUSTOMER_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
+        <Data Key="subject" Type="Quote"><![CDATA[NOTIFICATION! <KIX_AGENT_SUBJECT[24]> [<KIX_CONFIG_Ticket::Hook><KIX_TICKET_TicketNumber>]]]></Data>
+        <Data Key="text" Type="Quote"><![CDATA[Hello,<br /><br />"&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" has added following notice to ticket &lt;KIX_TICKET_TicketNumber&gt;.<br /><br />----------------------<br />&lt;KIX_AGENT_BODY&gt;<br />----------------------<br /><br />This notification was sent to you, because "&lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;" wants to inform you about this process.<br /><br />&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentZoom&TicketID=&lt;KIX_TICKET_TicketID&gt;]]></Data>
     </Insert>
 
     <!-- dynamic fields -->
