@@ -450,7 +450,7 @@ sub _BulkDo {
             if ( $MainTicketID ne $Param{TicketID} ) {
                 $LinkObject->LinkAdd(
                     SourceObject => 'Ticket',
-                    SourceKey    => $Param{MainTicketID},
+                    SourceKey    => $MainTicketID,
                     TargetObject => 'Ticket',
                     TargetKey    => $Param{TicketID},
                     Type         => 'ParentChild',
