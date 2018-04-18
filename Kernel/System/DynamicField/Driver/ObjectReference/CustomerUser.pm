@@ -1156,38 +1156,23 @@ sub ValueLookup {
         # set the value as the key by default
         my $Value = $Item;
 
-# KIX4OTRS-capeIT
-#        # try to convert key to real value
-#        if ( $PossibleValues->{$Item} ) {
-#            $Value = $PossibleValues->{$Item};
-#
-#            # check if translation is possible
-#            if (
-#                defined $Param{LanguageObject}
-#                && $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
-#                )
-#            {
-#
-#                # translate value
-#                $Value = $Param{LanguageObject}->Translate($Value);
-#            }
-#        }
         my %CustomerUserData = $Self->{CustomerUserObject}->CustomerUserDataGet(
             User => $Value,
         );
-        $Value = $CustomerUserData{UserFirstname}
-               . " "
-               . $CustomerUserData{UserLastname}
-               . " <"
-               . $CustomerUserData{UserEmail}
-               . ">";
+        if ( %CustomerUserData ) {
+            $Value = $CustomerUserData{UserFirstname}
+                   . " "
+                   . $CustomerUserData{UserLastname}
+                   . " <"
+                   . $CustomerUserData{UserEmail}
+                   . ">";
+        }
 
         # alternative display string defined ?
         if ( $Param{DynamicFieldConfig}->{Config}->{AlternativeDisplay} ) {
             $Value = $Param{DynamicFieldConfig}->{Config}->{AlternativeDisplay};
             $Value =~ s{<(.+?)>}{$CustomerUserData{$1}}egx;
         }
-# EO KIX4OTRS-capeIT
         push @Values, $Value;
     }
 
