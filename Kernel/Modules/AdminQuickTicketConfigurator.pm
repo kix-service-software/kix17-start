@@ -163,9 +163,6 @@ sub Run {
             );
             for my $DataKey ( keys %TicketTemplateData ) {
                 $GetParam{$DataKey} = $TicketTemplateData{$DataKey};
-                if ( $DataKey eq 'QueueID' && $GetParam{$DataKey} eq '-' ) {
-                    $GetParam{$DataKey} = '';
-                }
             }
             $TicketTemplateData{Agent}    = 'checked="checked"' if $TicketTemplateData{Agent};
             $TicketTemplateData{Customer} = 'checked="checked"' if $TicketTemplateData{Customer};
@@ -268,7 +265,7 @@ sub Run {
         $TicketTemplateData{BccEmpty}  = 'checked="checked"' if $TicketTemplateData{BccEmpty};
 
         # queue id
-        if ( !defined $TicketTemplateData{QueueID} || $TicketTemplateData{QueueID} eq '-' ) {
+        if ( !defined $TicketTemplateData{QueueID} ) {
             $TicketTemplateData{QueueID} = '';
         }
 
@@ -424,9 +421,6 @@ sub Run {
                     );
             }
 
-            # set QueueID if empty selection
-            $GetParam{QueueID} = '' if $GetParam{QueueID} eq '-';
-
             # get and format default subject and body
             my $Subject = $GetParam{Subject} || '';
             my $Body    = $GetParam{Body}    || '';
@@ -530,10 +524,6 @@ sub Run {
     # ------------------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'AJAXUpdate' ) {
 
-        if ( $GetParam{QueueID} eq '-' ) {
-            $GetParam{QueueID} = '';
-        }
-
         if ( $ConfigObject->Get('Frontend::Agent::CreateOptions::ViewAllOwner') ) {
             $GetParam{OwnerAll}       = 1;
             $GetParam{ResponsibleAll} = 1;
@@ -564,16 +554,6 @@ sub Run {
             CustomerUserID => $GetParam{SelectedCustomerUser} || '',
             QueueID => $GetParam{QueueID} || 1,
         );
-
-        my $NewTos;
-
-        if ($Tos) {
-            TOs:
-            for my $KeyTo ( sort keys %{$Tos} ) {
-                next TOs if ( $Tos->{$KeyTo} eq '-' );
-                $NewTos->{"$KeyTo||$Tos->{$KeyTo}"} = $Tos->{$KeyTo};
-            }
-        }
 
         my $Users = $Self->_GetUsers(
             %GetParam,
@@ -781,7 +761,7 @@ sub Run {
                         Content  => $UploadStuff{Content},
                         DoNotAdd => $GetParam{XMLUploadDoNotAdd},
                         UserID   => $Self->{UserID},
-                        )
+                    )
                 };
 
                 if ( $UploadResult{XMLResultString} ) {
@@ -789,7 +769,7 @@ sub Run {
                     my $TimeString       = $TimeObject->SystemTime2TimeStamp(
                         SystemTime => $TimeObject->SystemTime(),
                     );
-                    $TimeString =~ s/\s/\_/g;
+                    $TimeString       =~ s/\s/\_/g;
                     $DownloadFileName =~ s/\.(.*)$/_ImportResult_$TimeString\.xml/g;
 
                     my $FileID = $UploadCacheObject->FormIDAddFile(
@@ -804,8 +784,7 @@ sub Run {
                     $Param{XMLResultFileSize} = length( $UploadStuff{Content} );
                 }
                 if ( !$UploadResult{UploadMessage} ) {
-                    $UploadResult{UploadMessage}
-                        = $UploadStuff{Filename} . ' successful loaded.<br /><br />';
+                    $UploadResult{UploadMessage} = $UploadStuff{Filename} . ' successful loaded.<br /><br />';
                 }
             }
         }
@@ -818,7 +797,7 @@ sub Run {
             Name => 'Upload',
             Data => {
                 %Param,
-                }
+            }
         );
 
         # output overview list
@@ -1038,8 +1017,7 @@ sub _GetUsers {
 
     # show all users who are owner or rw in the queue group
     elsif ( $Param{QueueID} ) {
-        my $GID = $Kernel::OM->Get('Kernel::System::Queue')
-            ->GetQueueGroupID( QueueID => $Param{QueueID} );
+        my $GID        = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{QueueID} );
         my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
             GroupID => $GID,
             Type    => 'owner',
@@ -1101,8 +1079,7 @@ sub _GetResponsibles {
 
     # show all users who are responsible or rw in the queue group
     elsif ( $Param{QueueID} ) {
-        my $GID = $Kernel::OM->Get('Kernel::System::Queue')
-            ->GetQueueGroupID( QueueID => $Param{QueueID} );
+        my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{QueueID} );
         my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
             GroupID => $GID,
             Type    => 'responsible',
@@ -1260,10 +1237,9 @@ sub _GetTos {
             $String =~ s/<QueueComment>/$QueueData{Comment}/g;
             if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' )
             {
-                my %SystemAddressData
-                    = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
+                my %SystemAddressData = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
                     ID => $Tos{$QueueID},
-                    );
+                );
                 $String =~ s/<Realname>/$SystemAddressData{Realname}/g;
                 $String =~ s/<Email>/$SystemAddressData{Name}/g;
             }
@@ -1362,7 +1338,7 @@ sub _MaskNew {
     }
 
     # build to string
-    $Param{FromList}->{'-'} = '-';
+    $Param{FromList}->{''} = '-';
     $Param{QueueStrg} = $LayoutObject->AgentQueueListOption(
         Class          => 'Modernize',
         Data           => $Param{FromList},
@@ -1429,10 +1405,10 @@ sub _MaskNew {
     # build type string
     if ( $ConfigObject->Get('Ticket::Type') ) {
         $Param{TypeStrg} = $LayoutObject->BuildSelection(
-            Data       => $Param{Types},
-            Name       => 'TypeID',
-            Class      => 'Validate_Required Modernize ' . ( $Param{Errors}->{TypeInvalid} || ' ' ),
-            SelectedID => $Param{TypeID},
+            Data         => $Param{Types},
+            Name         => 'TypeID',
+            Class        => 'Validate_Required Modernize ' . ( $Param{Errors}->{TypeInvalid} || ' ' ),
+            SelectedID   => $Param{TypeID},
             PossibleNone => 1,
             Sort         => 'AlphanumericValue',
             Translation  => 0,
@@ -1541,9 +1517,10 @@ sub _MaskNew {
             . '"/>';
 
         # set pin only on selections
-        if (   $DynamicFieldConfig->{FieldType} =~ /Multiselect|Dropdown/
-            || $DynamicFieldConfig->{Config}->{DisplayFieldType} =~ /Multiselect|Dropdown/ )
-        {
+        if (
+            $DynamicFieldConfig->{FieldType} =~ /Multiselect|Dropdown/
+            || $DynamicFieldConfig->{Config}->{DisplayFieldType} =~ /Multiselect|Dropdown/
+        ) {
             $DynamicFieldHTML->{Label} =~ s/(<label(.*?)>)/$1$Pin/gi;
         }
 
