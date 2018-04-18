@@ -40,11 +40,6 @@ sub Run {
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # secure mode message (don't allow this action till secure mode is enabled)
-    if ( !$Kernel::OM->Get('Kernel::Config')->Get('SecureMode') ) {
-        return $LayoutObject->SecureMode();
-    }
-
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 

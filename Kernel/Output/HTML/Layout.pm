@@ -68,17 +68,6 @@ create a new object. Do not use it directly, instead use:
     );
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-From the web installer, a special Option C<InstallerOnly> is passed
-to indicate that a database connection is not yet available.
-
-    use Kernel::System::ObjectManager;
-    local $Kernel::OM = Kernel::System::ObjectManager->new(
-        'Kernel::Output::HTML::Layout' => {
-            InstallerOnly => 1,
-        },
-    );
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
 =cut
 
 sub new {
@@ -1010,21 +999,6 @@ sub FatalError {
     $Output .= $Self->Footer();
     $Self->Print( Output => \$Output );
     exit;
-}
-
-sub SecureMode {
-    my ( $Self, %Param ) = @_;
-
-    my $Output = $Self->Header(
-        Area  => 'Frontend',
-        Title => 'Secure Mode'
-    );
-    $Output .= $Self->Output(
-        TemplateFile => 'AdminSecureMode',
-        Data         => \%Param
-    );
-    $Output .= $Self->Footer();
-    return $Output;
 }
 
 sub FatalDie {

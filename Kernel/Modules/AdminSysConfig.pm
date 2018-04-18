@@ -1038,11 +1038,6 @@ sub Run {
     # ------------------------------------------------------------ #
     else {
 
-        # secure mode message (don't allow this action till secure mode is enabled)
-        if ( !$ConfigObject->Get('SecureMode') ) {
-            return $LayoutObject->SecureMode();
-        }
-
         $LayoutObject->Block( Name => 'ActionList' );
         $LayoutObject->Block(
             Name => 'SearchBox',

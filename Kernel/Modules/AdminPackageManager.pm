@@ -69,11 +69,6 @@ sub Run {
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    # secure mode message (don't allow this action until secure mode is enabled)
-    if ( !$ConfigObject->Get('SecureMode') ) {
-        return $LayoutObject->SecureMode();
-    }
-
     my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
     my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $MainObject    = $Kernel::OM->Get('Kernel::System::Main');

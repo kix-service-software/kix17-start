@@ -32,11 +32,6 @@ sub Run {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # secure mode message (don't allow this action until secure mode is enabled)
-    if ( !$ConfigObject->Get('SecureMode') ) {
-        return $LayoutObject->SecureMode();
-    }
-
     $Param{ResultFormatStrg} = $LayoutObject->BuildSelection(
         Name  => 'ResultFormat',
         Data  => [ 'HTML', 'CSV', 'Excel' ],

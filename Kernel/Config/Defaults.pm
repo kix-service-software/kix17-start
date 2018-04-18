@@ -62,11 +62,6 @@ sub LoadDefaults {
     # --------------------------------------------------- #
     # system data                                         #
     # --------------------------------------------------- #
-    # SecureMode
-    # Disables the use of web-installer (installer.pl).
-    # GenericAgent, PackageManager and SQL Box can only be used if SecureMode is enabled.
-    $Self->{SecureMode} = 0;
-
     # SystemID
     # (The identify of the system. Each ticket number and
     # each HTTP session id starts with this number)
@@ -1703,18 +1698,6 @@ via the Preferences button after logging in.
         },
     };
 
-    # specify Loader settings for the installer
-    $Self->{'Frontend::Module'}->{Installer} = {
-        Loader       => {
-            JavaScript => [
-                'Core.Installer.js',
-            ],
-            CSS => [
-                'Core.Installer.css'
-            ],
-        },
-    };
-
     return;
 }
 
@@ -1877,7 +1860,7 @@ sub new {
         }
     }
 
-    #rbo - T2016121190001552 - extended handling of RELEASE file 
+    #rbo - T2016121190001552 - extended handling of RELEASE file
     # load basic RELEASE file to check integrity of installation
     if ( -e ! "$Self->{Home}/RELEASE" ) {
         print STDERR "ERROR: $Self->{Home}/RELEASE does not exist! This file is needed by central system parts of KIX, the system will not work without this file.\n";
@@ -1887,14 +1870,14 @@ sub new {
         # load VERSION from RELEASE file into FrameworkVersion for framework check in package management
         if ( open( my $File, '<', "$Self->{Home}/RELEASE" ) ) { ## no critic
             while (my $Line = <$File>) {
-    
+
                 # filtering of comment lines
                 if ( $Line =~ /^VERSION\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
                     $Self->{FrameworkVersion} = $1;
                 }
             }
             close($File);
-        }        
+        }
     }
     # load most recent RELEASE file
     if ( opendir(my $HOME, "$Self->{Home}") ) {
@@ -1902,10 +1885,10 @@ sub new {
         closedir $HOME;
         @ReleaseFiles = reverse sort @ReleaseFiles;
         my $MostRecentReleaseFile = $ReleaseFiles[0];
-        
+
         if ( open( my $Product, '<', "$Self->{Home}/$MostRecentReleaseFile" ) ) { ## no critic
             while (my $Line = <$Product>) {
-    
+
                 # filtering of comment lines
                 if ( $Line !~ /^#/ ) {
                     if ( $Line =~ /^PRODUCT\s{0,2}=\s{0,2}(.*)\s{0,2}$/i ) {
