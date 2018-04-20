@@ -1,6 +1,22 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.3.1-RC1 (2018/04/20)
+ * (2018/04/18) - Bugfix: T2017112390000638 (Removed installer and corresponding files and methods) (millinger)
+ * (2018/04/18) - Bugfix: T2018020190001211 (fixed handling of empty queue selection for quick tickets) (millinger)
+ * (2018/04/18) - Bugfix: T2018022790000646 (log error - uninitialized value for customer data) (ddoerffel)
+ * (2018/04/13) - Bugfix: T2018030790000673 (link with parent not working on bulk action) (ddoerffel)
+ * (2018/04/13) - Bugfix: T2018030790000655 (Translatable causes error on migration) (ddoerffel)
+ * (2018/04/13) - Bugfix: T2018021890000476 (FilterLink has to be LinkFilter in ViewModules) (ddoerffel)
+ * (2018/04/10) - Bugfix: T2017122190000603 (removed redundant calls for dynamic fields in process dialogs) (millinger)
+ * (2018/04/10) - Bugfix: T2018030690000586 (fixed incorrect trimming of whitespace if the file name of the attachments is too long) (fjacquemin)
+ * (2018/04/04) - Bugfix: T2018031290000761 (CIClass reference tries to add links without given configuration) (millinger)
+ * (2018/04/04) - Bugfix: T2018032790002339 (load draft shows up after attachment upload in AgentTicketCompose) (millinger)
+ * (2018/04/03) - Bugfix: T2017112390001066 (fixed use of the wrong placeholder in the linked person notification) (fjacquemin)
+ * (2018/04/03) - Bugfix T2018021590000481 (Restore the table "gi_object_lock_state") (fjacquemin)
+ * (2018/03/02) - Bugfix: T2018022290000824 (fixed internal server error if no preference is configured) (millinger)
+ * (2018/03/02) - Performance-CR: T2018021690000523 (optimized search with only wildcards) (millinger)
+
 # 17.3.0 (2018/02/28)
  * (2018/02/28) - productive release
  * (2018/02/28) - Bugfix: T2018022790000922 (index size added for text_value) (ddoerffel)
