@@ -1145,9 +1145,15 @@ sub _GetParam {
     $GetParam{ElementChanged} = $ParamObject->GetParam( Param => 'ElementChanged' );
 # ---
 
+    # All Ticket DynamicFields
+    # used for ACL checking
+    my %DynamicFieldCheckParam = map { $_ => $GetParam{$_} }
+        grep {m{^DynamicField_}xms} ( keys %GetParam );
+
     # run acl to prepare TicketAclFormData
     my $ACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %GetParam,
+        DynamicField  => \%DynamicFieldCheckParam,
         ReturnType    => 'Ticket',
         ReturnSubType => '-',
         Data          => {},
