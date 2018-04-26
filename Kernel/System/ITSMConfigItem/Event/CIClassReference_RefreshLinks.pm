@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -86,24 +86,12 @@ sub Run {
     #---------------------------------------------------------------------------
     # get hash with all attribute-keys, referenced CI-classes,
     # corresponding link types and -directions from CI-class definition...
-
     my %RelAttrNewVersion = ();
     my %RelAttrOldVersion = ();
     my $XMLDefinition = $Self->{ConfigItemObject}->DefinitionGet(
         ClassID => $NewVersionData->{ClassID},
     );
 
-    # _CreateCIReferencesHash() returns a hash with attributes of Type CICLassREference;
-    # for non-empty attributes there are values for
-    # $RelAttr{Key}->{ReferencedCIClassLinkType}
-    # $RelAttr{Key}->{ReferencedCIClassLinkDirection}
-    # Example:
-#              'PartOfProject' => [
-#                               {
-#                                 'ReferencedCIClassLinkType' => 'PartOf',
-#                                 'ReferencedCIClassLinkDirection' => '',
-#                               }
-#                             ]
     # relelvant attributes for the old version
     %RelAttrNewVersion = $Self->_CreateCIReferencesHash(
         XMLData       => $NewVersionData->{XMLData}->[1]->{Version}->[1],
@@ -128,15 +116,14 @@ sub Run {
 
                 next if ( !$RelAttrOldVersion{$CurrKeyname}->[0]->{ReferencedCIClassLinkType} );
 
-                my $LastLinkType
-                    = $RelAttrOldVersion{$CurrKeyname}->[0]->{ReferencedCIClassLinkType};
+                my $LastLinkType = $RelAttrOldVersion{$CurrKeyname}->[0]->{ReferencedCIClassLinkType};
 
                 # NOTE: result looks like {<$CurrKeyname> => [ <CIID1>, <CIID2>, ...]}
                 $CIReferenceAttrDataRef = $Self->_GetAttributeDataByKey(
                     XMLData       => $OldVersionData->{XMLData}->[1]->{Version}->[1],
                     XMLDefinition => $XMLDefinition->{DefinitionRef},
                     KeyName       => $CurrKeyname,
-                    Content => 1,    #need the CI-ID, not the shown value
+                    Content       => 1,    #need the CI-ID, not the shown value
                 );
 
                 if (
@@ -162,6 +149,10 @@ sub Run {
         #  create new linkes for attributes if the new version
         for my $CurrKeyname ( keys(%RelAttrNewVersion) ) {
 
+            next if ( !$RelAttrNewVersion{$CurrKeyname}->[0]->{ReferencedCIClassLinkType} );
+
+            my $NewLinkType = $RelAttrNewVersion{$CurrKeyname}->[0]->{ReferencedCIClassLinkType};
+
             $CIReferenceAttrDataRef = $Self->_GetAttributeDataByKey(
                 XMLData       => $NewVersionData->{XMLData}->[1]->{Version}->[1],
                 XMLDefinition => $XMLDefinition->{DefinitionRef},
@@ -171,32 +162,29 @@ sub Run {
 
             #-----------------------------------------------------------------------
             # create all links from available data...
-            for my $SearchResult ( keys(%{$CIReferenceAttrDataRef}) ) {
+            for my $SearchResult ( keys( %{$CIReferenceAttrDataRef} ) ) {
 
                 my @ReferenceCIIDs = @{ $CIReferenceAttrDataRef->{$SearchResult} };
                 for my $CurrCIReferenceID (@ReferenceCIIDs) {
 
                     #create link between this CI and current CIReference-attribute...
-                    if ( $CurrCIReferenceID && $Param{ConfigItemID} ) {
-
+                    if (
+                        $CurrCIReferenceID
+                        && $Param{ConfigItemID}
+                    ) {
                         if (
-                            $RelAttrNewVersion{$CurrKeyname}->[0]
-                            ->{ReferencedCIClassLinkDirection}
-                            && $RelAttrNewVersion{$CurrKeyname}->[0]
-                            ->{ReferencedCIClassLinkDirection} eq 'Reverse'
-                            )
-                        {
+                            $RelAttrNewVersion{$CurrKeyname}->[0]->{ReferencedCIClassLinkDirection}
+                            && $RelAttrNewVersion{$CurrKeyname}->[0]->{ReferencedCIClassLinkDirection} eq 'Reverse'
+                        ) {
                             $Self->{LinkObject}->LinkAdd(
                                 SourceObject => 'ITSMConfigItem',
                                 SourceKey    => $CurrCIReferenceID,
                                 TargetObject => 'ITSMConfigItem',
                                 TargetKey    => $Param{ConfigItemID},
-                                Type         => $RelAttrNewVersion{$CurrKeyname}->[0]
-                                    ->{ReferencedCIClassLinkType},
-                                State  => 'Valid',
-                                UserID => 1,
+                                Type         => $NewLinkType,
+                                State        => 'Valid',
+                                UserID       => 1,
                             );
-
                         }
                         else {
                             $Self->{LinkObject}->LinkAdd(
@@ -204,10 +192,9 @@ sub Run {
                                 TargetKey    => $CurrCIReferenceID,
                                 SourceObject => 'ITSMConfigItem',
                                 SourceKey    => $Param{ConfigItemID},
-                                Type         => $RelAttrNewVersion{$CurrKeyname}->[0]
-                                    ->{ReferencedCIClassLinkType},
-                                State  => 'Valid',
-                                UserID => 1,
+                                Type         => $NewLinkType,
+                                State        => 'Valid',
+                                UserID       => 1,
                             );
                         }
 
@@ -325,8 +312,6 @@ sub _GetAttributeDataByKey {
 }
 
 1;
-
-
 
 =back
 

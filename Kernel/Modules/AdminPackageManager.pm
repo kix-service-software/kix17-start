@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -68,11 +68,6 @@ sub Run {
     }
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # secure mode message (don't allow this action until secure mode is enabled)
-    if ( !$ConfigObject->Get('SecureMode') ) {
-        return $LayoutObject->SecureMode();
-    }
 
     my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
     my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
@@ -2005,8 +2000,6 @@ sub _UpgradeHandling {
 #rbo - T2016121190001552 - removed CloudServices and FeatureAddOns
 
 1;
-
-
 
 =back
 

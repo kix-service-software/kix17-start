@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -201,8 +201,10 @@ sub Run {
                     );
 
                     # notify the agent that the ticket was locked
-                    push @{ $Param{Notify} }, "$TicketNumber: "
-                        . $LayoutObject->{LanguageObject}->Translate("Ticket locked.");
+                    push @{ $Param{Notify} }, {
+                        Priority => 'Notice',
+                        Data     => "$TicketNumber: " . $LayoutObject->{LanguageObject}->Translate("Ticket locked."),
+                    };
                 }
             }
 
@@ -215,6 +217,7 @@ sub Run {
                 TicketID               => $TicketID,
                 ReturnType             => 'ActivityDialog',
                 ReturnSubType          => '-',
+                Action                 => $Self->{Action},
                 UserID                 => $Self->{UserID},
             );
 
@@ -222,7 +225,7 @@ sub Run {
                 %{$PossibleActivityDialogs} = $TicketObject->TicketAclData();
             }
 
-            # check if ACL resctictions exist
+            # check if ACL restrictions exist
             if ( !IsHashRefWithData($PossibleActivityDialogs) )
             {
                 return $LayoutObject->NoPermission( WithHeader => 'yes' );
@@ -230,11 +233,8 @@ sub Run {
         }
     }
 
-    # KIX4OTRS-capeIT
     # load KIXSidebar
     $Param{KIXSidebarContent} = $LayoutObject->AgentKIXSidebar(%Param);
-
-    # EO KIX4OTRS-capeIT
 
     # list only Active processes by default
     my @ProcessStates = ('Active');
@@ -293,7 +293,9 @@ sub Run {
         ReturnType    => 'Process',
         ReturnSubType => '-',
         Data          => \%ProcessListACL,
+        Action        => $Self->{Action},
         UserID        => $Self->{UserID},
+        TicketID      => $TicketID,
     );
 
     if ( IsHashRefWithData($ProcessList) && $ACL ) {
@@ -443,11 +445,6 @@ sub _RenderAjax {
     # communications error
 
     my ( $Self, %Param ) = @_;
-
-    # KIX4OTRS-capeIT
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
-    # EO KIX4OTRS-capeIT
-
     for my $Needed (qw(ProcessEntityID)) {
         if ( !$Param{$Needed} ) {
             $LayoutObject->FatalError(
@@ -486,24 +483,11 @@ sub _RenderAjax {
     my %FieldsProcessed;
     my @JSONCollector;
 
-    # KIX4OTRS-capeIT
-    my %DynamicFieldHTML;
-    # EO KIX4OTRS-capeIT
-
     my $Services;
 
     # All submitted DynamicFields
     # get dynamic field values form http request
     my %DynamicFieldValues;
-
-    # KIX4OTRS-capeIT
-    # my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-
-        # EO KIX4OTRS-capeIT
-        Valid      => 1,
-        ObjectType => 'Ticket',
-    );
 
     # get needed object
     my $ParamObject               = $Kernel::OM->Get('Kernel::System::Web::Request');
@@ -511,42 +495,9 @@ sub _RenderAjax {
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    # KIX4OTRS-capeIT
-    # for my $DynamicFieldConfig ( @{$DynamicField} ) {
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
 
-        # EO KIX4OTRS-capeIT
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-
-        # KIX4OTRS-capeIT
-        my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
-            DynamicFieldConfig => $DynamicFieldConfig,
-            Behavior           => 'IsACLReducible',
-        );
-
-        if ( !$IsACLReducible ) {
-        $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-            $DynamicFieldBackendObject->EditFieldRender(
-                DynamicFieldConfig => $DynamicFieldConfig,
-                LayoutObject    => $LayoutObject,
-                ParamObject     => $ParamObject,
-                AJAXUpdate      => 0,
-                UseDefaultValue => 1,
-            );
-            next DYNAMICFIELD;
-        }
-
-        my $PossibleValues = $DynamicFieldBackendObject->PossibleValuesGet(
-            DynamicFieldConfig => $DynamicFieldConfig,
-        );
-
-        # convert possible values key => value to key => key for ACLs using a Hash slice
-        my %AclData = %{$PossibleValues};
-        @AclData{ keys %AclData } = keys %AclData;
-
-        # get ticket object
-        my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-        # EO KIX4OTRS-capeIT
 
         # extract the dynamic field value form the web request
         $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->EditFieldValueGet(
@@ -554,24 +505,6 @@ sub _RenderAjax {
             ParamObject        => $ParamObject,
             LayoutObject       => $LayoutObject,
         );
-
-        # KIX4OTRS-capeIT
-        # set possible values filter from ACLs
-        my $ACL = $TicketObject->TicketAcl(
-            %{ $Param{GetParam} },
-            ReturnType    => 'Ticket',
-            ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
-            Data          => \%AclData,
-            UserID        => $Self->{UserID},
-        );
-
-        if ($ACL) {
-            my %Filter = $TicketObject->TicketAclData();
-
-            # convert Filer key => key back to key => value using map
-            %{$PossibleValues} = map { $_ => $PossibleValues->{$_} } keys %Filter;
-        }
-        # EO KIX4OTRS-capeIT
     }
 
     # convert dynamic field values into a structure for ACLs
@@ -579,11 +512,28 @@ sub _RenderAjax {
     DYNAMICFIELD:
     for my $DynamicFieldItem ( sort keys %DynamicFieldValues ) {
         next DYNAMICFIELD if !$DynamicFieldItem;
-        next DYNAMICFIELD if !$DynamicFieldValues{$DynamicFieldItem};
+        next DYNAMICFIELD if !defined $DynamicFieldValues{$DynamicFieldItem};
 
         $DynamicFieldCheckParam{ 'DynamicField_' . $DynamicFieldItem } = $DynamicFieldValues{$DynamicFieldItem};
     }
     $Param{GetParam}->{DynamicField} = \%DynamicFieldCheckParam;
+
+    # run acl to prepare TicketAclFormData
+    my $ACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %{ $Param{GetParam} },
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
+
+    my %DynamicFieldHTML;
+    my $AJAXUpdatableFields = $Self->_GetAJAXUpdatableFields(
+        ActivityDialogFields => $ActivityDialog->{Fields},
+    );
 
     # Get the activity dialog's Submit Param's or Config Params
     DIALOGFIELD:
@@ -601,16 +551,20 @@ sub _RenderAjax {
         if ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
             my $DynamicFieldName = $1;
 
-            # KIX4OTRS-capeIT
-            # my $DynamicFieldConfig = ( grep { $_->{Name} eq $DynamicFieldName } @{$DynamicField} )[0];
             my $DynamicFieldConfig = ( grep { $_->{Name} eq $DynamicFieldName } @{ $Self->{DynamicField} } )[0];
 
-            $Self->_GetShownDynamicFields();
-
             next DIALOGFIELD if !$DynamicFieldConfig->{Shown};
-            # EO KIX4OTRS-capeIT
 
             next DIALOGFIELD if !IsHashRefWithData($DynamicFieldConfig);
+
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->EditFieldRender(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                LayoutObject       => $LayoutObject,
+                ParamObject        => $ParamObject,
+                AJAXUpdate         => 1,
+                UseDefaultValue    => 1,
+                UpdatableFields    => $AJAXUpdatableFields,
+            );
 
             my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
@@ -635,6 +589,7 @@ sub _RenderAjax {
                 ReturnType    => 'Ticket',
                 ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
                 Data          => \%AclData,
+                Action        => $Self->{Action},
                 UserID        => $Self->{UserID},
             );
 
@@ -650,22 +605,6 @@ sub _RenderAjax {
                 PossibleValues     => $PossibleValues,
                 Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
             ) || $PossibleValues;
-
-            # KIX4OTRS-capeIT
-            my $AJAXUpdatableFields = $Self->_GetAJAXUpdatableFields(
-                ActivityDialogFields => $ActivityDialog->{Fields},
-            );
-
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-                $DynamicFieldBackendObject->EditFieldRender(
-                    DynamicFieldConfig   => $DynamicFieldConfig,
-                    LayoutObject    => $LayoutObject,
-                    ParamObject     => $ParamObject,
-                    AJAXUpdate      => 1,
-                    UseDefaultValue => 1,
-                    UpdatableFields => $AJAXUpdatableFields,
-                );
-            # EO KIX4OTRS-capeIT
 
             # add dynamic field to the JSONCollector
             push(
@@ -780,7 +719,7 @@ sub _RenderAjax {
             my $Data = $Self->_GetPriorities(
                 %{ $Param{GetParam} },
             );
-
+# ---
 # ITSMIncidentProblemManagement
 # ---
             # check if priority needs to be recalculated
@@ -883,14 +822,33 @@ sub _RenderAjax {
             );
             $FieldsProcessed{ $Self->{NameToID}{$CurrentField} } = 1;
         }
+        elsif ( $Self->{NameToID}{$CurrentField} eq 'TypeID' ) {
+            next DIALOGFIELD if $FieldsProcessed{ $Self->{NameToID}{$CurrentField} };
+
+            my $Data = $Self->_GetTypes(
+                %{ $Param{GetParam} },
+            );
+
+            # Add Type to the JSONCollector (Use SelectedID from web request).
+            push(
+                @JSONCollector,
+                {
+                    Name         => $Self->{NameToID}{$CurrentField},
+                    Data         => $Data,
+                    SelectedID   => $ParamObject->GetParam( Param => 'TypeID' ) || '',
+                    PossibleNone => 1,
+                    Translation  => 0,
+                    Max          => 100,
+                },
+            );
+            $FieldsProcessed{ $Self->{NameToID}{$CurrentField} } = 1;
+        }
     }
 
-    # KIX4OTRS-capeIT
     my %Output;
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-        next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
-        if ( defined $DynamicFieldConfig->{Shown} && $DynamicFieldConfig->{Shown} == 1 && $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } ) {
+        if ( $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } ) {
 
             $Output{ ( "DynamicField_" . $DynamicFieldConfig->{Name} ) } = (
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }->{Label}
@@ -904,23 +862,15 @@ sub _RenderAjax {
         }
     }
 
-    my @FormDisplayOutput;
     if ( IsHashRefWithData( \%Output ) ) {
-        push @FormDisplayOutput, {
+        push @JSONCollector, {
             Name => 'FormDisplay',
             Data => \%Output,
             Max  => 10000,
         };
     }
 
-    # my $JSON = $LayoutObject->BuildSelectionJSON( [@JSONCollector] );
-    my $JSON = $LayoutObject->BuildSelectionJSON(
-        [
-            @JSONCollector,
-            @FormDisplayOutput
-        ]
-    );
-    # EO KIX4OTRS-capeIT
+    my $JSON = $LayoutObject->BuildSelectionJSON( [@JSONCollector] );
 
     return $LayoutObject->Attachment(
         ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
@@ -930,9 +880,7 @@ sub _RenderAjax {
     );
 }
 
-# =cut
-#
-# _GetParam()
+# =item _GetParam()
 #
 # returns the current data state of the submitted information
 #
@@ -1100,6 +1048,23 @@ sub _GetParam {
     $GetParam{ActivityEntityID}       = $ActivityEntityID;
     $GetParam{ProcessEntityID}        = $ProcessEntityID;
 
+    # prepare field filter
+    my %FieldFilter = ();
+    for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
+        if ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
+            my $DynamicFieldName = $1;
+
+            $FieldFilter{$DynamicFieldName} = 1,
+        }
+    }
+
+    # get all relevant dynamic fields
+    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+        Valid       => 1,
+        ObjectType  => 'Ticket',
+        FieldFilter => \%FieldFilter,
+    );
+
     # Get the activitydialogs's Submit Param's or Config Params
     DIALOGFIELD:
     for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
@@ -1113,21 +1078,8 @@ sub _GetParam {
         if ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
             my $DynamicFieldName = $1;
 
-            # KIX4OTRS-capeIT
-            # my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-            $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-
-                # EO KIX4OTRS-capeIT
-                Valid      => 1,
-                ObjectType => 'Ticket',
-            );
-
             # Get the Config of the current DynamicField (the first element of the grep result array)
-            # KIX4OTRS-capeIT
-            # my $DynamicFieldConfig = ( grep { $_->{Name} eq $DynamicFieldName } @{$DynamicField} )[0];
             my $DynamicFieldConfig = ( grep { $_->{Name} eq $DynamicFieldName } @{ $Self->{DynamicField} } )[0];
-
-            # EO KIX4OTRS-capeIT
 
             if ( !IsHashRefWithData($DynamicFieldConfig) ) {
                 my $Message =
@@ -1149,7 +1101,7 @@ sub _GetParam {
                 ParamObject        => $ParamObject,
                 LayoutObject       => $LayoutObject,
             );
-
+# ---
 # ITSMIncidentProblemManagement
 # ---
             # set the criticality from the service
@@ -1200,7 +1152,7 @@ sub _GetParam {
             # If we had neither submitted nor ticket param get the ActivityDialog's default Value
             # next out if it was successful
             $Value = $ActivityDialog->{Fields}{$CurrentField}{DefaultValue};
-            if ($Value) {
+            if ( defined $Value && length $Value ) {
                 $GetParam{$CurrentField} = $Value;
                 next DIALOGFIELD;
             }
@@ -1208,7 +1160,7 @@ sub _GetParam {
             # If we had no submitted, ticket or ActivityDialog default value
             # use the DynamicField's default value and next out
             $Value = $DynamicFieldConfig->{Config}{DefaultValue};
-            if ($Value) {
+            if ( defined $Value && length $Value ) {
                 $GetParam{$CurrentField} = $Value;
                 next DIALOGFIELD;
             }
@@ -1383,6 +1335,17 @@ sub _GetParam {
         }
     }
 
+    my $Dest = $ParamObject->GetParam( Param => 'Dest' ) || '';
+    if ($Dest) {
+
+        my @QueueParts = split( /\|\|/, $Dest );
+
+        $GetParam{QueueID} = $QueueParts[0];
+        $GetParam{Queue}   = $QueueParts[1];
+
+        $ValuesGotten{QueueID} = 1;
+    }
+
     # get also the IDs for the Required files (if they are not present)
     if ( $GetParam{Queue} && !$GetParam{QueueID} ) {
         $GetParam{QueueID} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup( Queue => $GetParam{Queue} );
@@ -1403,6 +1366,24 @@ sub _GetParam {
     $GetParam{ResponsibleAll} = $ParamObject->GetParam( Param => 'ResponsibleAll' );
     $GetParam{OwnerAll}       = $ParamObject->GetParam( Param => 'OwnerAll' );
     $GetParam{ElementChanged} = $ParamObject->GetParam( Param => 'ElementChanged' );
+
+    # All Ticket DynamicFields
+    # used for ACL checking
+    my %DynamicFieldCheckParam = map { $_ => $GetParam{$_} }
+        grep {m{^DynamicField_}xms} ( keys %GetParam );
+
+    # run acl to prepare TicketAclFormData
+    my $ACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %GetParam,
+        DynamicField  => \%DynamicFieldCheckParam,
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
 
     return \%GetParam;
 }
@@ -1601,10 +1582,8 @@ sub _OutputActivityDialog {
         # display given notify messages if this is not an AJAX request
         if ( IsArrayRefWithData( $Param{Notify} ) ) {
 
-            for my $NotifyString ( @{ $Param{Notify} } ) {
-                $Output .= $LayoutObject->Notify(
-                    Data => $NotifyString,
-                );
+            for my $NotifyData ( @{ $Param{Notify} } ) {
+                $Output .= $LayoutObject->Notify( %{$NotifyData} );
             }
         }
 
@@ -1938,7 +1917,7 @@ sub _OutputActivityDialog {
 
             $RenderedFields{ $Self->{NameToID}->{$CurrentField} } = 1;
         }
-        
+
         # render HorizontalLine
         elsif ( $Self->{NameToID}->{$CurrentField} eq 'horizontalline' )
         {
@@ -2355,6 +2334,7 @@ sub _OutputActivityDialog {
         # AgentTicketProcess.tt
         $LayoutObject->Block(
             Name => 'FooterJS',
+            Data => {},
         );
 
         $FooterCSSClass = 'Centered';
@@ -2376,7 +2356,6 @@ sub _OutputActivityDialog {
             ButtonText     => $ButtonText,
             ButtonTitle    => $ButtonTitle,
             ButtonID       => $ButtonID
-
         },
     );
 
@@ -2529,24 +2508,7 @@ sub _RenderDynamicField {
         }
     }
 
-    # KIX4OTRS-capeIT
-    # my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-
-        # EO KIX4OTRS-capeIT
-        Valid      => 1,
-        ObjectType => 'Ticket',
-    );
-
-    # KIX4OTRS-capeIT
-    # get shown or hidden fields
-    $Self->_GetShownDynamicFields();
-
-    # my $DynamicFieldConfig = ( grep { $_->{Name} eq $Param{FieldName} } @{$DynamicField} )[0];
-    my $DynamicFieldConfig
-        = ( grep { $_->{Name} eq $Param{FieldName} } @{ $Self->{DynamicField} } )[0];
-
-    # EO KIX4OTRS-capeIT
+    my $DynamicFieldConfig = ( grep { $_->{Name} eq $Param{FieldName} } @{ $Self->{DynamicField} } )[0];
 
     if ( !IsHashRefWithData($DynamicFieldConfig) ) {
 
@@ -2575,9 +2537,6 @@ sub _RenderDynamicField {
         Behavior           => 'IsACLReducible',
     );
 
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
     if ($IsACLReducible) {
 
         # get PossibleValues
@@ -2598,7 +2557,8 @@ sub _RenderDynamicField {
             @AclData{ keys %AclData } = keys %AclData;
 
             # set possible values filter from ACLs
-            my $ACL = $TicketObject->TicketAcl(
+            my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+            my $ACL          = $TicketObject->TicketAcl(
                 %{ $Param{GetParam} },
                 DynamicField  => \%DynamicFieldCheckParam,
                 Action        => $Self->{Action},
@@ -2637,54 +2597,54 @@ sub _RenderDynamicField {
         }
     }
 
-        my $DynamicFieldHTML = $DynamicFieldBackendObject->EditFieldRender(
-            DynamicFieldConfig   => $DynamicFieldConfig,
-            PossibleValuesFilter => $PossibleValuesFilter,
-            Value                => $Param{GetParam}{ 'DynamicField_' . $Param{FieldName} },
-            LayoutObject         => $LayoutObject,
-            ParamObject          => $Kernel::OM->Get('Kernel::System::Web::Request'),
-            AJAXUpdate           => 1,
-            Mandatory            => $Param{ActivityDialogField}->{Display} == 2,
-            UpdatableFields      => $Param{AJAXUpdatableFields},
-            ServerError          => $ServerError,
-            ErrorMessage         => $ErrorMessage,
-        );
+    my $DynamicFieldHTML = $DynamicFieldBackendObject->EditFieldRender(
+        DynamicFieldConfig   => $DynamicFieldConfig,
+        PossibleValuesFilter => $PossibleValuesFilter,
+        Value                => $Param{GetParam}{ 'DynamicField_' . $Param{FieldName} },
+        LayoutObject         => $LayoutObject,
+        ParamObject          => $Kernel::OM->Get('Kernel::System::Web::Request'),
+        AJAXUpdate           => 1,
+        Mandatory            => $Param{ActivityDialogField}->{Display} == 2,
+        UpdatableFields      => $Param{AJAXUpdatableFields},
+        ServerError          => $ServerError,
+        ErrorMessage         => $ErrorMessage,
+    );
 
-        # set class for dynamic field depending on shown or not
-        my $Class = "";
-        if ( !$DynamicFieldConfig->{Shown} ) {
-            $Class = " Hidden";
-            $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
-        }
+    # set class for dynamic field depending on shown or not
+    my $Class = "";
+    if ( !$DynamicFieldConfig->{Shown} ) {
+        $Class = " Hidden";
+        $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
+    }
 
-        my %Data = (
-            Name    => $DynamicFieldConfig->{Name},
-            Label   => $DynamicFieldHTML->{Label},
-            Content => $DynamicFieldHTML->{Field},
-            Class   => $Class,
-        );
+    my %Data = (
+        Name    => $DynamicFieldConfig->{Name},
+        Label   => $DynamicFieldHTML->{Label},
+        Content => $DynamicFieldHTML->{Field},
+        Class   => $Class,
+    );
 
+    $LayoutObject->Block(
+        Name => $Param{ActivityDialogField}->{LayoutBlock} || 'rw:DynamicField',
+        Data => \%Data,
+    );
+    if ( $Param{DescriptionShort} ) {
         $LayoutObject->Block(
-            Name => $Param{ActivityDialogField}->{LayoutBlock} || 'rw:DynamicField',
-            Data => \%Data,
+            Name => $Param{ActivityDialogField}->{LayoutBlock}
+                || 'rw:DynamicField:DescriptionShort',
+            Data => {
+                DescriptionShort => $Param{DescriptionShort},
+            },
         );
-        if ( $Param{DescriptionShort} ) {
-            $LayoutObject->Block(
-                Name => $Param{ActivityDialogField}->{LayoutBlock}
-                    || 'rw:DynamicField:DescriptionShort',
-                Data => {
-                    DescriptionShort => $Param{DescriptionShort},
-                },
-            );
-        }
+    }
 
-        if ( $Param{DescriptionLong} ) {
-            $LayoutObject->Block(
-                Name => 'rw:DynamicField:DescriptionLong',
-                Data => {
-                    DescriptionLong => $Param{DescriptionLong},
-                },
-            );
+    if ( $Param{DescriptionLong} ) {
+        $LayoutObject->Block(
+            Name => 'rw:DynamicField:DescriptionLong',
+            Data => {
+                DescriptionLong => $Param{DescriptionLong},
+            },
+        );
     }
 
     return {
@@ -3036,6 +2996,9 @@ sub _RenderArticle {
             $Param{TimeUnitsRequired} = 'Validate_Required';
         }
 
+        # Get TimeUnits value.
+        $Param{TimeUnits} = $Param{GetParam}{TimeUnits};
+
         $LayoutObject->Block(
             Name => 'TimeUnits',
             Data => \%Param,
@@ -3121,6 +3084,13 @@ sub _RenderCustomer {
             "$CustomerUserData{UserLastname}\" <$CustomerUserData{UserEmail}>";
         $Data{CustomerID}           = $CustomerUserData{UserCustomerID} || '';
         $Data{SelectedCustomerUser} = $CustomerUserData{UserID}         || '';
+    }
+
+    # When there is no Customer in the DB, it could be unknown Customer, set it from the ticket.
+    # See bug#12797 ( https://bugs.otrs.org/show_bug.cgi?id=12797 ).
+    else {
+        $Data{CustomerUserID} = $Param{Ticket}{CustomerUserID} || '';
+        $Data{CustomerID}     = $Param{Ticket}{CustomerID}     || '';
     }
 
     # set fields that will get an AJAX loader icon when this field changes
@@ -3228,7 +3198,7 @@ sub _RenderResponsible {
             # Fetch DefaultValue from Config
             if ( !$SelectedValue ) {
                 $SelectedValue = $UserObject->UserLookup(
-                    User => $Param{ActivityDialogField}->{DefaultValue} || '',
+                    UserLogin => $Param{ActivityDialogField}->{DefaultValue} || '',
                 );
                 if ($SelectedValue) {
                     $SelectedValue = $Param{ActivityDialogField}->{DefaultValue};
@@ -3238,7 +3208,7 @@ sub _RenderResponsible {
         else {
             if ( !$SelectedValue ) {
                 $SelectedValue = $UserObject->UserLookup(
-                    UserID => $Param{ActivityDialogField}->{DefaultValue} || ''
+                    UserID => $Param{ActivityDialogField}->{DefaultValue} || '',
                 );
             }
         }
@@ -3405,7 +3375,7 @@ sub _RenderOwner {
 
                 # Fetch DefaultValue from Config
                 $SelectedValue = $UserObject->UserLookup(
-                    User => $Param{ActivityDialogField}->{DefaultValue},
+                    UserLogin => $Param{ActivityDialogField}->{DefaultValue} || '',
                 );
                 if ($SelectedValue) {
                     $SelectedValue = $Param{ActivityDialogField}->{DefaultValue};
@@ -3415,7 +3385,7 @@ sub _RenderOwner {
         else {
             if ( !$SelectedValue ) {
                 $SelectedValue = $UserObject->UserLookup(
-                    UserID => $Param{ActivityDialogField}->{DefaultValue},
+                    UserID => $Param{ActivityDialogField}->{DefaultValue} || '',
                 );
             }
         }
@@ -4639,66 +4609,8 @@ sub _StoreActivityDialog {
         $Error{AttachmentUpload} = 1;
     }
 
-    # KIX4OTRS-capeIT
-    # my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-
-        # EO KIX4OTRS-capeIT
-        Valid      => 1,
-        ObjectType => 'Ticket',
-    );
-
     # get dynamic field backend object
     my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-
-    # KIX4OTRS-capeIT
-
-    # All Ticket DynamicFields
-    # used for ACL checking
-    my %DynamicFieldCheckParam = map { $_ => $Param{GetParam}{$_} }
-        grep {m{^DynamicField_}xms} ( keys %{ $Param{GetParam} } );
-
-    # get acl data to decide if dynamic field is hidden or not
-    # cycle through the activated Dynamic Fields for this screen and check acl use
-    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-        next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-
-        my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
-            DynamicFieldConfig => $DynamicFieldConfig,
-            Behavior           => 'IsACLReducible',
-        );
-
-        my $PossibleValues = $DynamicFieldBackendObject->PossibleValuesGet(
-            DynamicFieldConfig => $DynamicFieldConfig,
-        ) || {} ;
-
-        # convert possible values key => value to key => key for ACLs using a Hash slice
-        my %AclData = %{$PossibleValues};
-
-        # get ticket object
-        my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
-        # set possible values filter from ACLs
-        my $ACL = $TicketObject->TicketAcl(
-            %{ $Param{GetParam} },
-            DynamicField  => \%DynamicFieldCheckParam,
-            ReturnType    => 'Ticket',
-            ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
-            Data          => \%AclData,
-            UserID        => $Self->{UserID},
-        );
-
-        if ($ACL) {
-            my %Filter = $TicketObject->TicketAclData();
-
-            # convert Filer key => key back to key => value using map
-            %{$PossibleValues} = map { $_ => $PossibleValues->{$_} } keys %Filter;
-        }
-    }
-
-    # get shown or hidden fields
-    $Self->_GetShownDynamicFields();
-    # EO KIX4OTRS-capeIT
 
     if ( !$IsUpload ) {
 
@@ -4710,12 +4622,7 @@ sub _StoreActivityDialog {
                 my $DynamicFieldName = $1;
 
                 # Get the Config of the current DynamicField (the first element of the grep result array)
-                # KIX4OTRS-capeIT
-                # my $DynamicFieldConfig = ( grep { $_->{Name} eq $DynamicFieldName } @{$DynamicField} )[0];
-                my $DynamicFieldConfig
-                    = ( grep { $_->{Name} eq $DynamicFieldName } @{ $Self->{DynamicField} } )[0];
-
-                # EO KIX4OTRS-capeIT
+                my $DynamicFieldConfig = ( grep { $_->{Name} eq $DynamicFieldName } @{ $Self->{DynamicField} } )[0];
 
                 if ( !IsHashRefWithData($DynamicFieldConfig) ) {
 
@@ -4736,9 +4643,17 @@ sub _StoreActivityDialog {
                 my $PossibleValuesFilter;
 
                 # if we have an invisible field, use config's default value
-                if ( $ActivityDialog->{Fields}{$CurrentField}{Display} == 0 ) {
-                    $TicketParam{$CurrentField} = $ActivityDialog->{Fields}{$CurrentField}{DefaultValue}
-                        || '';
+                if ( $ActivityDialog->{Fields}->{$CurrentField}->{Display} == 0 ) {
+                    if (
+                        defined $ActivityDialog->{Fields}->{$CurrentField}->{DefaultValue}
+                        && length $ActivityDialog->{Fields}->{$CurrentField}->{DefaultValue}
+                        )
+                    {
+                        $TicketParam{$CurrentField} = $ActivityDialog->{Fields}->{$CurrentField}->{DefaultValue};
+                    }
+                    else {
+                        $TicketParam{$CurrentField} = '';
+                    }
 # ---
 # ITSMIncidentProblemManagement
 # ---
@@ -4749,12 +4664,10 @@ sub _StoreActivityDialog {
 # ---
                 }
 
-                # KIX4OTRS-capeIT
                 # set as empty if field is hidden
                 elsif ( !$DynamicFieldConfig->{Shown} ) {
                     $TicketParam{$CurrentField} = '';
                 }
-                # EO KIX4OTRS-capeIT
 
                 # only validate visible fields
                 else {
@@ -4777,7 +4690,7 @@ sub _StoreActivityDialog {
 
                     if ( $ValidationResult->{ServerError} ) {
                         $Error{ $DynamicFieldConfig->{Name} }         = 1;
-                        $ErrorMessages{ $DynamicFieldConfig->{Name} } = $ValidationResult->{ErrorMessage};
+                        $ErrorMessages{ $DynamicFieldConfig->{Name} } = $ValidationResult->{ErrorMessage} || '';
                     }
 
                     $TicketParam{$CurrentField} =
@@ -4875,21 +4788,15 @@ sub _StoreActivityDialog {
                     %{ $ActivityDialog->{Fields}{$CurrentField} },
                 );
 
-                if ( !$Result && $ActivityDialog->{Fields}->{$CurrentField}->{Display} == 2 ) {
-
-                    # special case for Article (Subject & Body)
+                if ( !$Result ) {
                     if ( $CurrentField eq 'Article' ) {
                         for my $ArticlePart (qw(Subject Body)) {
                             if ( !$Param{GetParam}->{$ArticlePart} ) {
-
-                                # set error for each part (if any)
                                 $Error{ 'Article' . $ArticlePart } = 1;
                             }
                         }
                     }
-
-                    # all other fields
-                    else {
+                    elsif ( $ActivityDialog->{Fields}->{$CurrentField}->{Display} == 2 ) {
                         $Error{ $Self->{NameToID}->{$CurrentField} } = 1;
                     }
                 }
@@ -4928,6 +4835,8 @@ sub _StoreActivityDialog {
 
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    my @Notify;
 
     my $NewTicketID;
     if ( !$TicketID ) {
@@ -5077,11 +4986,7 @@ sub _StoreActivityDialog {
 
                     # 3. grep from the DynamicFieldConfigs the resulting DynamicFields without
                     # "DynamicField_"
-                    # KIX4OTRS-capeIT
-                    # grep { $_->{Name} eq $Field } @{$DynamicField}
                     grep { $_->{Name} eq $Field } @{ $Self->{DynamicField} }
-
-                    # EO KIX4OTRS-capeIT
                 }
 
                 # 1. grep all DynamicFields
@@ -5207,13 +5112,36 @@ sub _StoreActivityDialog {
         };
         if ( !$ActivityEntityID )
         {
-            return $LayoutObject->ErrorScreen(
+
+            return $Self->_ShowDialogError(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'Missing ActivityEntityID in Ticket %s!',
                     $Ticket{TicketID},
                 ),
                 Comment => Translatable('Please contact the administrator.'),
             );
+        }
+
+        # Make sure the activity dialog to save is still the correct activity
+        my $Activity = $Kernel::OM->Get('Kernel::System::ProcessManagement::Activity')->ActivityGet(
+            ActivityEntityID => $ActivityEntityID,
+            Interface        => ['AgentInterface'],
+        );
+        my %ActivityDialogs = reverse %{ $Activity->{ActivityDialog} // {} };
+        if ( !$ActivityDialogs{$ActivityDialogEntityID} ) {
+            my $TicketHook        = $ConfigObject->Get('Ticket::Hook');
+            my $TicketHookDivider = $ConfigObject->Get('Ticket::HookDivider');
+
+            $Error{WrongActivity} = 1;
+            push @Notify, {
+                Priority => 'Error',
+                Data     => $LayoutObject->{LanguageObject}->Translate(
+                    'This step does not belong anymore to the current activity in process for ticket \'%s%s%s\'! Another user changed this ticket in the meantime. Please close this window and reload the ticket.',
+                    $TicketHook,
+                    $TicketHookDivider,
+                    $Ticket{TicketNumber},
+                ),
+            };
         }
 
         $ProcessEntityID = $Ticket{
@@ -5223,11 +5151,12 @@ sub _StoreActivityDialog {
 
         if ( !$ProcessEntityID )
         {
-            $LayoutObject->FatalError(
+            return $Self->_ShowDialogError(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'Missing ProcessEntityID in Ticket %s!',
                     $Ticket{TicketID},
                 ),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
     }
@@ -5242,6 +5171,7 @@ sub _StoreActivityDialog {
             ErrorMessages          => \%ErrorMessages,
             GetParam               => $Param{GetParam},
             IsUpload               => $IsUpload,
+            Notify                 => \@Notify,
         );
     }
 
@@ -5270,11 +5200,7 @@ sub _StoreActivityDialog {
         if ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
             my $DynamicFieldName = $1;
 
-            # KIX4OTRS-capeIT
-            # my $DynamicFieldConfig = ( grep { $_->{Name} eq $DynamicFieldName } @{$DynamicField} )[0];
             my $DynamicFieldConfig = ( grep { $_->{Name} eq $DynamicFieldName } @{ $Self->{DynamicField} } )[0];
-
-            # EO KIX4OTRS-capeIT
 
             if ( !IsHashRefWithData($DynamicFieldConfig) ) {
 
@@ -5348,6 +5274,18 @@ sub _StoreActivityDialog {
                     );
                 }
 
+                # Change history type and comment accordingly to the process article.
+                my $ArticleType = $ActivityDialog->{Fields}->{Article}->{Config}->{ArticleType};
+                my $HistoryType;
+                my $HistoryComment = '';
+                if ( $ArticleType eq 'phone' ) {
+                    $HistoryType = 'PhoneCallAgent';
+                }
+                else {
+                    $HistoryType    = 'AddNote';
+                    $HistoryComment = 'Note';
+                }
+
                 my $From = "\"$Self->{UserFirstname} $Self->{UserLastname}\" <$Self->{UserEmail}>";
                 $ArticleID = $TicketObject->ArticleCreate(
                     TicketID                  => $TicketID,
@@ -5356,11 +5294,11 @@ sub _StoreActivityDialog {
                     MimeType                  => $MimeType,
                     Charset                   => $LayoutObject->{UserCharset},
                     UserID                    => $Self->{UserID},
-                    HistoryType               => 'AddNote',
-                    HistoryComment            => '%%Note',
+                    HistoryType               => $HistoryType,
+                    HistoryComment            => '%%' . $HistoryComment,
                     Body                      => $Param{GetParam}{Body},
                     Subject                   => $Param{GetParam}{Subject},
-                    ArticleType               => $ActivityDialog->{Fields}->{Article}->{Config}->{ArticleType},
+                    ArticleType               => $ArticleType,
                     ForceNotificationToUserID => $ActivityDialog->{Fields}->{Article}->{Config}->{InformAgents}
                     ? $Param{GetParam}{InformUserID}
                     : [],
@@ -5724,9 +5662,7 @@ sub _DisplayProcessList {
     return $Output;
 }
 
-# =cut
-#
-# _CheckField()
+# =item _CheckField()
 #
 # checks all the possible ticket fields and returns the ID (if possible) value of the field, if valid
 # and checks are successful
@@ -5842,8 +5778,25 @@ sub _CheckField {
         # check if the given field param is valid
         if ( $Param{Field} eq 'Article' ) {
 
-            # in case of article fields we need to fake a value
             $Value = 1;
+
+            my ( $Body, $Subject, $AttachmentDelete1, $TimeUnits ) = (
+                $ParamObject->GetParam( Param => 'Body' ),
+                $ParamObject->GetParam( Param => 'Subject' ),
+                $ParamObject->GetParam( Param => 'AttachmentDelete1' ),
+                $ParamObject->GetParam( Param => 'TimeUnits' )
+            );
+
+            # If attachment exists and body and subject not, it is error (see bug#13081).
+            if ( defined $AttachmentDelete1 && ( !$Body && !$Subject ) ) {
+                $Value = 0;
+            }
+
+            # If time units exists and body and subject not, it is error (see bug#13266).
+            if ( $TimeUnits && ( !$Body && !$Subject ) ) {
+                $Value = 0;
+            }
+
         }
         else {
 
@@ -5879,9 +5832,7 @@ sub _CheckField {
     return $Value;
 }
 
-# =cut
-#
-# _LookupValue()
+# =item _LookupValue()
 #
 # returns the ID (if possible) of nearly all ticket fields and/or checks if its valid.
 # Can handle IDs or Strings.
@@ -6023,6 +5974,11 @@ sub _GetResponsibles {
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
     my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    # Get available permissions and set permission group type accordingly.
+    my $ConfigPermissions = $ConfigObject->Get('System::Permission');
+    my $PermissionGroupType = ( grep { $_ eq 'responsible' } @{$ConfigPermissions} ) ? 'responsible' : 'rw';
 
     # if we are updating a ticket show the full list of possible responsibles
     if ( $Param{TicketID} ) {
@@ -6030,7 +5986,7 @@ sub _GetResponsibles {
             my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
-                Type    => 'responsible',
+                Type    => $PermissionGroupType,
             );
             for my $UserID ( sort keys %MemberList ) {
                 $ShownUsers{$UserID} = $AllGroupsMembers{$UserID};
@@ -6038,9 +5994,6 @@ sub _GetResponsibles {
         }
     }
     else {
-
-        # get config object
-        my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
         # the StartActivityDialog does not provide a TicketID and it could be that also there
         # is no QueueID information. Get the default QueueID for this matters.
@@ -6073,12 +6026,12 @@ sub _GetResponsibles {
             %ShownUsers = %AllGroupsMembers;
         }
 
-        # show all users who are rw in the queue group
+        # show all subscribed users who have the appropriate permission in the queue group
         elsif ( $Param{QueueID} ) {
             my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
-                Type    => 'responsible',
+                Type    => $PermissionGroupType,
             );
             for my $KeyMember ( sort keys %MemberList ) {
                 if ( $AllGroupsMembers{$KeyMember} ) {
@@ -6117,6 +6070,11 @@ sub _GetOwners {
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
     my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    # Get available permissions and set permission group type accordingly.
+    my $ConfigPermissions = $ConfigObject->Get('System::Permission');
+    my $PermissionGroupType = ( grep { $_ eq 'owner' } @{$ConfigPermissions} ) ? 'owner' : 'rw';
 
     # if we are updating a ticket show the full list of possible owners
     if ( $Param{TicketID} ) {
@@ -6124,7 +6082,7 @@ sub _GetOwners {
             my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
-                Type    => 'owner',
+                Type    => $PermissionGroupType,
             );
             for my $UserID ( sort keys %MemberList ) {
                 $ShownUsers{$UserID} = $AllGroupsMembers{$UserID};
@@ -6132,9 +6090,6 @@ sub _GetOwners {
         }
     }
     else {
-
-        # get config object
-        my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
         # the StartActivityDialog does not provide a TicketID and it could be that also there
         # is no QueueID information. Get the default QueueID for this matters.
@@ -6167,12 +6122,12 @@ sub _GetOwners {
             %ShownUsers = %AllGroupsMembers;
         }
 
-        # show all users who are rw in the queue group
+        # show all subscribed users who have the appropriate permission in the queue group
         elsif ( $Param{QueueID} ) {
             my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
-                Type    => 'owner',
+                Type    => $PermissionGroupType,
             );
             for my $KeyMember ( sort keys %MemberList ) {
                 if ( $AllGroupsMembers{$KeyMember} ) {
@@ -6336,6 +6291,10 @@ sub _GetQueues {
                 || '<Realname> <<Email>> - Queue: <Queue>';
             $String =~ s/<Queue>/$QueueData{Name}/g;
             $String =~ s/<QueueComment>/$QueueData{Comment}/g;
+
+            # remove trailing spaces
+            $String =~ s{\s+\z}{} if !$QueueData{Comment};
+
             if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' )
             {
                 my %SystemAddressData = $Self->{SystemAddress}->SystemAddressGet(
@@ -6399,23 +6358,11 @@ sub _GetAJAXUpdatableFields {
         StateID       => 1,
         OwnerID       => 1,
         LockID        => 1,
-    );
-
-    # KIX4OTRS-capeIT
-    # my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-
-        # EO KIX4OTRS-capeIT
-        Valid      => 1,
-        ObjectType => 'Ticket',
+        TypeID        => 1,
     );
 
     # create a DynamicFieldLookupTable
-    # KIX4OTRS-capeIT
-    # my %DynamicFieldLookup = map { 'DynamicField_' . $_->{Name} => $_ } @{$DynamicField};
     my %DynamicFieldLookup = map { 'DynamicField_' . $_->{Name} => $_ } @{ $Self->{DynamicField} };
-
-    # EO KIX4OTRS-capeIT
 
     my @UpdatableFields;
     FIELD:
@@ -6483,7 +6430,17 @@ sub _GetFieldsToUpdateStrg {
     return $FieldsToUpdate;
 }
 
-# KIX4OTRS-capeIT
+sub _ShowDialogError {
+    my ( $Self, %Param ) = @_;
+
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    my $Output = $LayoutObject->Header( Type => 'Small' );
+    $Output .= $LayoutObject->Error(%Param);
+    $Output .= $LayoutObject->Footer( Type => 'Small' );
+    return $Output;
+}
+
 sub _GetShownDynamicFields {
     my ( $Self, %Param ) = @_;
 
@@ -6526,11 +6483,7 @@ sub _GetShownDynamicFields {
     return 1;
 }
 
-# EO KIX4OTRS-capeIT
-
 1;
-
-
 
 =back
 

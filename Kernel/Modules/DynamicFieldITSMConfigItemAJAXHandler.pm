@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -256,25 +256,28 @@ sub Run {
                     }
 
                     my %ConfigItemIDs;
-                    my $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
-                        Name         => $Search,
-                        ClassIDs     => \@ITSMConfigItemClasses,
-                        DeplStateIDs => $DynamicFieldConfig->{Config}->{DeploymentStates},
-                        What         => \@SearchParamsWhat,
-                    );
+                    my $ConfigItemIDResult;
+                    if ( $Search !~ m/^[*]+$/) {
+                        $ConfigItemIDResult = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
+                            Name         => $Search,
+                            ClassIDs     => \@ITSMConfigItemClasses,
+                            DeplStateIDs => $DynamicFieldConfig->{Config}->{DeploymentStates},
+                            What         => \@SearchParamsWhat,
+                        );
 
-                    for my $ID ( @{$ConfigItemIDs} ) {
-                        $ConfigItemIDs{$ID} = 1;
+                        for my $ID ( @{$ConfigItemIDResult} ) {
+                            $ConfigItemIDs{$ID} = 1;
+                        }
                     }
 
-                    $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
+                    $ConfigItemIDResult = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
                         Number       => $Search,
                         ClassIDs     => \@ITSMConfigItemClasses,
                         DeplStateIDs => $DynamicFieldConfig->{Config}->{DeploymentStates},
                         What         => \@SearchParamsWhat,
                     );
 
-                    for my $ID ( @{$ConfigItemIDs} ) {
+                    for my $ID ( @{$ConfigItemIDResult} ) {
                         $ConfigItemIDs{$ID} = 1;
                     }
 
@@ -455,7 +458,7 @@ sub Run {
                 }
 
                 my $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
-                    Name         => '*',
+                    Number       => '*',
                     ClassIDs     => \@ITSMConfigItemClasses,
                     DeplStateIDs => $DynamicFieldConfig->{Config}->{DeploymentStates},
                     What         => \@SearchParamsWhat,
@@ -565,8 +568,6 @@ sub _ExportXMLSearchDataPrepare {
 }
 
 1;
-
-
 
 =back
 
