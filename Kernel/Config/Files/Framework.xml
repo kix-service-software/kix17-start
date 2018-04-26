@@ -5504,7 +5504,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="LogModule::LogFile::Date" Required="1" Valid="1">
-        <Description Translatable="1">Adds a suffix with the actual year and month to the OTRS log file. A logfile for every month will be created.</Description>
+        <Description Translatable="1">Adds a suffix with the actual year and month to the KIX log file. A logfile for every month will be created.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Log</SubGroup>
         <Setting>
