@@ -1369,7 +1369,6 @@ sub Run {
         # EO KIX4OTRS-capeIT
         Filter     => $Filter,
         Filters    => \%NavBarFilter,
-        LinkFilter => $LinkFilter,
 
         # KIX4OTRS-capeIT
         # DataInTheMiddle => $LayoutObject->Output(
