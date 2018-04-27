@@ -476,15 +476,15 @@ sub Run {
 
         Filter     => $Filter,
         Filters    => \%NavBarFilter,
-        LinkFilter => $LinkFilter,
 
         TitleName  => Translatable('My Watched Tickets'),
         TitleValue => $Filters{$Filter}->{Name},
         Bulk       => 1,
 
-        Env      => $Self,
-        LinkPage => $LinkPage,
-        LinkSort => $LinkSort,
+        Env        => $Self,
+        LinkPage   => $LinkPage,
+        LinkSort   => $LinkSort,
+        LinkFilter => $LinkFilter,
 
         OrderBy             => $OrderBy,
         SortBy              => $SortBy,
