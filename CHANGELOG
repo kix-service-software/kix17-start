@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.3.1-RC3 (2018/04/27)
+ * (2018/04/27) - Bugfix: T2018021890000476 (changed FilterLink to LinkFilter for AgentTicketArticleFlagView) (millinger)
+ * (2018/04/27) - Bugfix: T2018021590000481 (added sql to update routine) (millinger)
+
 # 17.3.1-RC2 (2018/04/26)
  * (2018/04/26) - Bugfix: T2016040790000541 (fixed description for sysconfig 'LogModule::LogFile::Date') (millinger)
  * (2018/04/25) - Bugfix: T2017122190000603 (Values of dynamic fields ignored for acl on submit) (millinger)
