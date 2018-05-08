@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -1156,38 +1156,23 @@ sub ValueLookup {
         # set the value as the key by default
         my $Value = $Item;
 
-# KIX4OTRS-capeIT
-#        # try to convert key to real value
-#        if ( $PossibleValues->{$Item} ) {
-#            $Value = $PossibleValues->{$Item};
-#
-#            # check if translation is possible
-#            if (
-#                defined $Param{LanguageObject}
-#                && $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
-#                )
-#            {
-#
-#                # translate value
-#                $Value = $Param{LanguageObject}->Translate($Value);
-#            }
-#        }
         my %CustomerUserData = $Self->{CustomerUserObject}->CustomerUserDataGet(
             User => $Value,
         );
-        $Value = $CustomerUserData{UserFirstname}
-               . " "
-               . $CustomerUserData{UserLastname}
-               . " <"
-               . $CustomerUserData{UserEmail}
-               . ">";
+        if ( %CustomerUserData ) {
+            $Value = $CustomerUserData{UserFirstname}
+                   . " "
+                   . $CustomerUserData{UserLastname}
+                   . " <"
+                   . $CustomerUserData{UserEmail}
+                   . ">";
+        }
 
         # alternative display string defined ?
         if ( $Param{DynamicFieldConfig}->{Config}->{AlternativeDisplay} ) {
             $Value = $Param{DynamicFieldConfig}->{Config}->{AlternativeDisplay};
             $Value =~ s{<(.+?)>}{$CustomerUserData{$1}}egx;
         }
-# EO KIX4OTRS-capeIT
         push @Values, $Value;
     }
 
@@ -1195,8 +1180,6 @@ sub ValueLookup {
 }
 
 1;
-
-
 
 =back
 

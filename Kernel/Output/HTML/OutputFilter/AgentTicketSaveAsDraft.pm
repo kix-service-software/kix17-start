@@ -61,7 +61,7 @@ sub Run {
     }
 
     # check if 'Subaction' of request begins with 'Store'
-    if ( $Subaction =~ /^Store/ ) {
+    if ( $Subaction =~ /^(Store|SendEmail)/ ) {
         $InitialLoadDraft = 'false';
     }
 

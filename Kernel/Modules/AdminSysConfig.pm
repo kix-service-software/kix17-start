@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -1038,11 +1038,6 @@ sub Run {
     # ------------------------------------------------------------ #
     else {
 
-        # secure mode message (don't allow this action till secure mode is enabled)
-        if ( !$ConfigObject->Get('SecureMode') ) {
-            return $LayoutObject->SecureMode();
-        }
-
         $LayoutObject->Block( Name => 'ActionList' );
         $LayoutObject->Block(
             Name => 'SearchBox',
@@ -1838,8 +1833,6 @@ sub ListConfigItem {
 }
 
 1;
-
-
 
 =back
 

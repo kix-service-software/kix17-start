@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -243,7 +243,10 @@ sub Run {
             );
 
             if ($Update) {
-                my %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+                my %Preferences = ();
+                if ( $ConfigObject->Get('PreferencesGroups') ) {
+                    %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+                }
 
                 GROUP:
                 for my $Group ( sort keys %Preferences ) {
@@ -408,7 +411,10 @@ sub Run {
             if ($UserID) {
 
                 # update preferences
-                my %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+                my %Preferences = ();
+                if ( $ConfigObject->Get('PreferencesGroups') ) {
+                    %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+                }
                 GROUP:
                 for my $Group ( sort keys %Preferences ) {
                     next GROUP if $Group eq 'Password';
@@ -612,7 +618,10 @@ sub _Edit {
     my @Groups = @{ $ConfigObject->Get('PreferencesView') };
     for my $Column (@Groups) {
         my %Data        = ();
-        my %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+        my %Preferences = ();
+        if ( $ConfigObject->Get('PreferencesGroups') ) {
+            %Preferences = %{ $ConfigObject->Get('PreferencesGroups') };
+        }
 
         GROUP:
         for my $Group ( sort keys %Preferences ) {
@@ -832,8 +841,6 @@ sub _Overview {
 }
 
 1;
-
-
 
 =back
 
