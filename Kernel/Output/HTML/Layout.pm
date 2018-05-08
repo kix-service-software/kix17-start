@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -64,17 +64,6 @@ create a new object. Do not use it directly, instead use:
     local $Kernel::OM = Kernel::System::ObjectManager->new(
         'Kernel::Output::HTML::Layout' => {
             Lang    => 'de',
-        },
-    );
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
-From the web installer, a special Option C<InstallerOnly> is passed
-to indicate that a database connection is not yet available.
-
-    use Kernel::System::ObjectManager;
-    local $Kernel::OM = Kernel::System::ObjectManager->new(
-        'Kernel::Output::HTML::Layout' => {
-            InstallerOnly => 1,
         },
     );
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
@@ -1010,21 +999,6 @@ sub FatalError {
     $Output .= $Self->Footer();
     $Self->Print( Output => \$Output );
     exit;
-}
-
-sub SecureMode {
-    my ( $Self, %Param ) = @_;
-
-    my $Output = $Self->Header(
-        Area  => 'Frontend',
-        Title => 'Secure Mode'
-    );
-    $Output .= $Self->Output(
-        TemplateFile => 'AdminSecureMode',
-        Data         => \%Param
-    );
-    $Output .= $Self->Footer();
-    return $Output;
 }
 
 sub FatalDie {
@@ -5715,9 +5689,6 @@ sub ProgressBar {
 1;
 
 =end Internal:
-
-
-
 
 =back
 

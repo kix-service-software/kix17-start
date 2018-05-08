@@ -1,7 +1,7 @@
 # --
 # Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -476,15 +476,15 @@ sub Run {
 
         Filter     => $Filter,
         Filters    => \%NavBarFilter,
-        FilterLink => $LinkFilter,
 
         TitleName  => Translatable('My Watched Tickets'),
         TitleValue => $Filters{$Filter}->{Name},
         Bulk       => 1,
 
-        Env      => $Self,
-        LinkPage => $LinkPage,
-        LinkSort => $LinkSort,
+        Env        => $Self,
+        LinkPage   => $LinkPage,
+        LinkSort   => $LinkSort,
+        LinkFilter => $LinkFilter,
 
         OrderBy             => $OrderBy,
         SortBy              => $SortBy,
@@ -502,8 +502,6 @@ sub Run {
 }
 
 1;
-
-
 
 =back
 
