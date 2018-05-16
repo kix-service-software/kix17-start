@@ -468,8 +468,37 @@ sub _CheckConfigItem {
         };
     }
 
+    my $ConfigObject     = $Kernel::OM->Get('Kernel::Config');
+    my $ConfigItemObject = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+
+    # check, whether the feature to check for a unique name is enabled
+    if (
+        IsStringWithData( $ConfigItem->{Name} )
+        && $ConfigObject->Get('UniqueCIName::EnableUniquenessCheck')
+    ) {
+        my $ConfigItemIDs = $ConfigItemObject->ConfigItemSearchExtended(
+            Name           => $ConfigItem->{Name},
+            ClassIDs       => [$Self->{ReverseClassList}->{ $ConfigItem->{Class} }],
+            UsingWildcards => 0,
+        );
+
+        my $NameDuplicates = $ConfigItemObject->UniqueNameCheck(
+            ConfigItemID => $ConfigItemIDs->[0],
+            ClassID      => $Self->{ReverseClassList}->{ $ConfigItem->{Class} },
+            Name         => $ConfigItem->{Name},
+        );
+
+        # stop processing if the name is not unique
+        if ( IsArrayRefWithData($NameDuplicates) ) {
+            return {
+                ErrorCode    => "$Self->{OperationName}.DuplicatedName",
+                ErrorMessage => "The name $ConfigItem->{Name} is already in use by the ConfigItemID(s): $ConfigItemIDs->[0]"
+            };
+        }
+    }
+
     # get last config item defintion
-    my $DefinitionData = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->DefinitionGet(
+    my $DefinitionData = $ConfigItemObject->DefinitionGet(
         ClassID => $Self->{ReverseClassList}->{ $ConfigItem->{Class} },
     );
 
@@ -631,6 +660,13 @@ sub _ConfigItemCreate {
         UserID  => $Param{UserID},
     );
 
+    if ( !$ConfigItemID ) {
+        return {
+            Success      => 0,
+            ErrorMessage => 'Configuration Item could not be created, please contact the system administrator',
+        };
+    }
+
     my $VersionID = $ConfigItemObject->VersionAdd(
         ConfigItemID => $ConfigItemID,
         Name         => $ConfigItem->{Name},
@@ -641,12 +677,21 @@ sub _ConfigItemCreate {
         UserID       => $Param{UserID},
     );
 
-    if ( !$ConfigItemID && !$VersionID ) {
+    if ( !$VersionID ) {
+        my $Success = $ConfigItemObject->ConfigItemDelete(
+            ConfigItemID => $ConfigItemID,
+            UserID       => $Param{UserID},
+        );
+        if ( !$Success ) {
+            return {
+                Success      => 0,
+                ErrorMessage => "Configuration Item $ConfigItemID could not be deleted after failed VersionAdd, please contact the system administrator",
+            };
+        }
         return {
             Success      => 0,
-            ErrorMessage => 'Configuration Item could not be created, please contact the system'
-                . 'administrator',
-            }
+            ErrorMessage => "Configuration Item $ConfigItemID could not be created a version, please contact the system administrator",
+        };
     }
 
     # set attachments
@@ -661,8 +706,7 @@ sub _ConfigItemCreate {
 
             if ( !$Result->{Success} ) {
                 my $ErrorMessage =
-                    $Result->{ErrorMessage} || "Attachment could not be created, please contact"
-                    . " the system administrator";
+                    $Result->{ErrorMessage} || "Attachment could not be created, please contact the system administrator";
 
                 return {
                     Success      => 0,
@@ -680,9 +724,8 @@ sub _ConfigItemCreate {
     if ( !IsHashRefWithData($ConfigItemData) ) {
         return {
             Success      => 0,
-            ErrorMessage => 'Could not get new configuration item information, please contact the'
-                . ' system administrator',
-            }
+            ErrorMessage => 'Could not get new configuration item information, please contact the system administrator',
+        };
     }
 
     return {
