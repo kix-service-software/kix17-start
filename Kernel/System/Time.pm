@@ -85,7 +85,7 @@ sub SystemTime {
 
 =item SystemTime2TimeStamp()
 
-returns a time stamp for a given system time in "yyyy-mm-dd 23:59:59" format.
+returns a time stamp for a given system time in C<yyyy-mm-dd 23:59:59> format.
 
     my $TimeStamp = $TimeObject->SystemTime2TimeStamp(
         SystemTime => $SystemTime,
@@ -129,7 +129,7 @@ sub SystemTime2TimeStamp {
 =item CurrentTimestamp()
 
 returns a time stamp of the local system time (see L<SystemTime()>)
-in "yyyy-mm-dd 23:59:59" format.
+in C<yyyy-mm-dd 23:59:59> format.
 
     my $TimeStamp = $TimeObject->CurrentTimestamp();
 
@@ -733,8 +733,8 @@ sub DestinationTime {
 
                 # Check if we have a working hour
                 if ( grep { $H == $_ } @{ $TimeWorkingHours->{ $LDay{$WDay} } } ) {
-                    if ( $Param{Time} > 60 * 60 ) {
                         my $RestOfHour = 3600 - ( $Minute * 60 + $Second );
+                    if ( $Param{Time} > $RestOfHour ) {
                         $DestinationTime += $RestOfHour;
                         $Param{Time} -= $RestOfHour;
                     }
