@@ -1491,9 +1491,6 @@ sub VersionSearch {
         # duplicate the name
         my $Name = $Param{Name};
 
-        # quote
-        $Name = $Kernel::OM->Get('Kernel::System::DB')->Quote($Name);
-
         if ( $Param{UsingWildcards} ) {
 
             # prepare like string
@@ -1502,6 +1499,9 @@ sub VersionSearch {
             push @SQLWhere, "LOWER(vr.name) LIKE LOWER('$Name') $LikeEscapeString";
         }
         else {
+            # quote
+            $Name = $Kernel::OM->Get('Kernel::System::DB')->Quote($Name);
+            
             push @SQLWhere, "LOWER(vr.name) = LOWER('$Name')";
         }
     }
