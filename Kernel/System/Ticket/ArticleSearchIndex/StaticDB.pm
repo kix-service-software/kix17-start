@@ -47,6 +47,7 @@ sub ArticleIndexBuild {
                 String        => $Article{$Key},
                 WordLengthMin => $SearchIndexAttributes->{WordLengthMin} || 3,
                 WordLengthMax => $SearchIndexAttributes->{WordLengthMax} || 30,
+                SplitPattern  => $SearchIndexAttributes->{SplitPattern}  || '\s+',
             );
         }
     }
@@ -272,6 +273,7 @@ sub _ArticleIndexString {
             String        => \$Param{String},
             WordLengthMin => $Param{WordLengthMin} || $SearchIndexAttributes->{WordLengthMin} || 3,
             WordLengthMax => $Param{WordLengthMax} || $SearchIndexAttributes->{WordLengthMax} || 30,
+            SplitPattern  => $Param{SplitPattern}  || $SearchIndexAttributes->{SplitPattern}  || '\s+',
         );
     };
 
@@ -368,17 +370,18 @@ sub _ArticleIndexStringToWord {
     }
 
     # get words
-    my $LengthMin = $Param{WordLengthMin} || $SearchIndexAttributes->{WordLengthMin} || 3;
-    my $LengthMax = $Param{WordLengthMax} || $SearchIndexAttributes->{WordLengthMax} || 30;
+    my $LengthMin    = $Param{WordLengthMin} || $SearchIndexAttributes->{WordLengthMin} || 3;
+    my $LengthMax    = $Param{WordLengthMax} || $SearchIndexAttributes->{WordLengthMax} || 30;
+    my $SplitPattern = $Param{SplitPattern}  || $SearchIndexAttributes->{SplitPattern}  || '\s+';
     my @ListOfWords;
 
     WORD:
-    for my $Word ( split /\s+/, ${ $Param{String} } ) {
+    for my $Word ( split /$SplitPattern/, ${ $Param{String} } ) {
 
         # apply filters
         FILTER:
         for my $Filter (@Filters) {
-            next FILTER if !defined $Word || !length $Word;
+            next WORD if !defined $Word || !length $Word;
             $Word =~ s/$Filter//g;
         }
 
