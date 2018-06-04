@@ -706,6 +706,7 @@
                 <Item Key="WordCountMax">1000</Item>
                 <Item Key="WordLengthMin">3</Item>
                 <Item Key="WordLengthMax">30</Item>
+                <Item Key="SplitPattern"><![CDATA[\s+]]></Item>
             </Hash>
         </Setting>
     </ConfigItem>
