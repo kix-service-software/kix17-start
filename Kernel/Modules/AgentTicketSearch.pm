@@ -888,27 +888,24 @@ sub Run {
             }
 
             # merge arrays
-            my $MergeIndex = 1;
-            my %MergeHash = map { $_ => $MergeIndex++ } @ViewableTicketIDs;
-            my %MergeHashTitle =
-                map { $_ => $MergeHash{$_} || $MergeIndex++ } @ViewableTicketIDsTitle;
-            my %MergeHashTicketNotes =
-                map { $_ => $MergeHash{$_} || $MergeIndex++ } @ViewableTicketIDsTicketNotes;
-            my %MergeHashTN =
-                map { $_ => $MergeHash{$_} || $MergeHashTitle{$_} || $MergeIndex++ }
-                @ViewableTicketIDsTN;
-            my %MergeHashDF =
-                map { $_ => $MergeHash{$_} || $MergeHashTitle{$_} || $MergeIndex++ }
-                @ViewableTicketIDsDF;
-
-            %MergeHash = (
-                %MergeHash,
-                %MergeHashTitle,
-                %MergeHashTicketNotes,
-                %MergeHashTN,
-                %MergeHashDF,
+            my @MergeArray;
+            push(
+                @MergeArray,
+                @ViewableTicketIDs,
+                @ViewableTicketIDsTitle,
+                @ViewableTicketIDsTicketNotes,
+                @ViewableTicketIDsTN,
+                @ViewableTicketIDsDF
             );
-            @ViewableTicketIDs = sort { $MergeHash{$a} <=> $MergeHash{$b} } keys %MergeHash;
+
+            # sort merged tickets
+            @ViewableTicketIDs = $TicketObject->TicketSearch(
+                Result    => 'ARRAY',
+                SortBy    => $Self->{SortBy},
+                OrderBy   => $Self->{OrderBy},
+                UserID    => $Self->{UserID},
+                TicketID  => \@MergeArray
+            );
         }
 
         # linked tickets

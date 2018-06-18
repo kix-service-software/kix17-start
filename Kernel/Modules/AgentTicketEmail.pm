@@ -505,8 +505,10 @@ sub Run {
         UserID => $Self->{UserID},
     );
 
-    if ( $Self->{DefaultSet} && ( !$Self->{Subaction} || $Self->{Subaction} ne 'AJAXUpdate' ) )
-    {
+    if ( $Self->{DefaultSet}
+        && ( !$Self->{Subaction}
+        || $Self->{Subaction} eq 'Created' )
+    ) {
 
         my %TemplateData = $Self->TicketTemplateReplace(
             IsUpload         => $IsUpload,
