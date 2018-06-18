@@ -1,6 +1,17 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.3.2-RC1 (2018/06/18)
+ * (2018/05/29) - Bugfix: T2018050290000606 (fixed issue that CI search with single quotes doen't work with PostgreSQL) (rbo)
+ * (2018/05/29) - Bugfix: T2018052490001127 (fixed output of small itsm config item overview with shown xml values) (millinger)
+ * (2018/05/29) - Bugfix: T2018031390001661 (Fixed incorrect sorting of search results when FulltextsearchInDynamicFields is used) (fjacquemin)
+ * (2018/05/28) - Bugfix: T2018030190001031 (fixed missing images after ticket creation) (fjacquemin)
+ * (2018/05/08) - Bugfix: T2018050390000882 (Fixed changing the service resets the queue selection if no queue is assigned to the service) (fjacquemin)
+ * (2018/05/08) - Bugfix: T2018041090000414 (fixed missing check on existing CI, if creating a CI about a web service) (fjacquemin)
+ * (2018/05/07) - Bugfix: T2018032690000619 (fixed faulty saving of email address with simple quotes in address book) (fjacquemin)
+ * (2018/05/07) - Bugfix: T2018021590000614 (fixed missing hash parameter transfer "%ACLCompatGetParam" to the TicketACL and internal subs of the ActionCommon) (fjacquemin)
+ * (2018/05/03) - Bugfix: T2017091190001361 (Fixed handling of LastChanged column on LinkedObject for ITSMConfigItem) (fjacquemin)
+
 # 17.3.1 (2018/05/08)
  * (2018/05/08) - productive release
 
