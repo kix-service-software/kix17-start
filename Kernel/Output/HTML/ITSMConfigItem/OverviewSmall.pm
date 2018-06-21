@@ -300,7 +300,7 @@ END
         CONFIGITEMID:
         for my $ConfigItemID (@ConfigItemIDs) {
             $Counter++;
-            next CONFIGITEM if (
+            next CONFIGITEMID if (
                 $Counter < $Param{StartHit}
                 || $Counter >= ( $Param{PageShown} + $Param{StartHit} )
             );
