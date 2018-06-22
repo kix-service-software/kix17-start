@@ -1,6 +1,12 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.3.2-RC2 (2018/06/22)
+ * (2018/06/22) - Bugfix: T2018052290000819 (otrs fix added
+
+) (ddoerffel)
+ * (2018/06/21) - Bugfix: T2018052490001127 (fixed label name for itsm config item overview small) (millinger)
+
 # 17.3.2-RC1 (2018/06/18)
  * (2018/05/29) - Bugfix: T2018050290000606 (fixed issue that CI search with single quotes doen't work with PostgreSQL) (rbo)
  * (2018/05/29) - Bugfix: T2018052490001127 (fixed output of small itsm config item overview with shown xml values) (millinger)
