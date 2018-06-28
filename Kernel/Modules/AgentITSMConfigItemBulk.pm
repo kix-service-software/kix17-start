@@ -163,6 +163,10 @@ sub Run {
             ConfigItemID => $ConfigItemID,
         );
 
+        my $XMLDefinition = $ConfigItemObject->DefinitionGet(
+            ClassID => $ConfigItem->{ClassID},
+        );
+
         my $Config = $ConfigObject->Get("ITSMConfigItem::Frontend::AgentITSMConfigItemEdit");
 
         # check permissions
@@ -198,6 +202,7 @@ sub Run {
                 UserID          => $Self->{UserID},
                 GetParam        => \%GetParam,
                 ConfigItemIDs   => \@ConfigItemIDs,
+                XMLDefinition   => \%{$XMLDefinition},
                 Counter         => $Counter,
             );
             my $Success = $BulkExecutor->AsyncCall(
