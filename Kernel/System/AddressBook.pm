@@ -82,8 +82,9 @@ sub AddAddress {
         }
     }
 
+    $Param{Email} =~ s/'/\'/gm;
     my $EmailLower = lc($Param{Email});
-    
+
     # do the db insert...
     my $DBInsert = $Self->{DBObject}->Do(
         SQL  => "INSERT INTO addressbook (email, email_lower) VALUES (?, ?)",
@@ -103,7 +104,7 @@ sub AddAddress {
 
         return 0 if !$Self->{DBObject}->Prepare(
             SQL  => 'SELECT max(id) FROM addressbook WHERE email = ?',
-            Bind => [ 
+            Bind => [
                 \$Param{Email}
             ],
         );
@@ -137,8 +138,8 @@ sub DeleteAddress {
 
     # check required params...
     if ( !$Param{IDs} ) {
-        $Self->{LogObject}->Log( 
-            Priority => 'error', 
+        $Self->{LogObject}->Log(
+            Priority => 'error',
             Message  => 'DeleteAddress: Need IDs!' );
         return;
     }
@@ -190,6 +191,7 @@ sub AddressList {
     my ( $Self, %Param ) = @_;
     my $WHEREClauseExt = '';
     my %Result;
+    my @Binds;
 
     # check cache
     my $CacheTTL = 60 * 60 * 24 * 30;   # 30 days
@@ -203,19 +205,24 @@ sub AddressList {
     if ( $Param{Search} ) {
         my $Email = $Param{Search};
         $Email =~ s/\*/%/g;
+        $Email =~ s/'/\'/gm;
+
         if ($Param{SearchCaseSensitive}) {
-            $WHEREClauseExt .= " AND email like \'$Email\'";
+            $WHEREClauseExt .= " AND email like ?";
+            push(@Binds, \$Email);
         }
         else {
-            $WHEREClauseExt .= " AND email_lower like \'".lc($Email)."\'";
+            $WHEREClauseExt .= " AND email_lower like ?";
+            push(@Binds, \lc($Email));
         }
     }
 
     my $SQL = "SELECT id, email FROM addressbook WHERE 1=1";
 
-    return if !$Self->{DBObject}->Prepare( 
+    return if !$Self->{DBObject}->Prepare(
         SQL   => $SQL . $WHEREClauseExt . " ORDER by email",
-        Limit => $Param{Limit}, 
+        Bind  => \@Binds,
+        Limit => $Param{Limit},
     );
 
     my $Count = 0;

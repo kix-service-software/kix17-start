@@ -540,6 +540,12 @@ sub TableCreateComplex {
                         $TmpHashContent{Type} = 'TimeLong';
                     }
 
+                    # special date/time handling
+                    elsif ( $Col eq 'LastChanged' ) {
+                        $TmpHashContent{Type}    = 'TimeLong';
+                        $TmpHashContent{Content} = $Version->{CreateTime};
+                    }
+
                     # headline
                     $TmpHashHeadline{Content} = $TranslationHash{$Col} || $Col;
                     $TmpHashHeadline{Width}   = 130;
