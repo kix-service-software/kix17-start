@@ -390,8 +390,10 @@ sub Run {
     }
 
     # KIX4OTRS-capeIT
-    if ( $Self->{DefaultSet} && ( !$Self->{Subaction} || $Self->{Subaction} ne 'AJAXUpdate' ) )
-    {
+    if ( $Self->{DefaultSet}
+        && ( !$Self->{Subaction}
+        || $Self->{Subaction} eq 'Created' )
+    ) {
 
         my %TemplateData = $Self->TicketTemplateReplace(
             IsUpload         => $IsUpload,

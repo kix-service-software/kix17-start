@@ -272,21 +272,222 @@ END
 
     # check ShowColumns parameter
     my @ShowColumns;
-    my @XMLShowColumns;
     if ( $Param{ShowColumns} && ref $Param{ShowColumns} eq 'ARRAY' ) {
         @ShowColumns = @{ $Param{ShowColumns} };
     }
+    # show the bulk action button checkboxes if feature is enabled
+    if (
+        @ShowColumns
+        && $BulkFeature
+    ) {
+        push @ShowColumns, 'BulkAction';
+    }
+    my @XMLShowColumns = grep /::/, @ShowColumns;
+    my %XMLColumnsHash = ();
 
     # get config item object
     my $ConfigItemObject = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
 
+
+    # show config items if there are some
+    if (@ConfigItemIDs) {
+        # to store all data
+        my %ConfigItemData    = ();
+        my $BulkActivate      = 0;
+        my $Counter           = 0;
+        my $StateHighlighting = $ConfigObject->Get('ConfigItemOverview::HighlightMapping');
+
+        CONFIGITEMID:
+        for my $ConfigItemID (@ConfigItemIDs) {
+            $Counter++;
+            next CONFIGITEMID if (
+                $Counter < $Param{StartHit}
+                || $Counter >= ( $Param{PageShown} + $Param{StartHit} )
+            );
+
+            # check for access rights
+            my $HasAccess = $ConfigItemObject->Permission(
+                Scope  => 'Item',
+                ItemID => $ConfigItemID,
+                UserID => $Self->{UserID},
+                Type   => $Self->{Config}->{Permission},
+            );
+            next CONFIGITEMID if !$HasAccess;
+
+            # get config item data
+            my $ConfigItem = $ConfigItemObject->VersionGet(
+                ConfigItemID => $ConfigItemID,
+                XMLDataGet   => 1,
+            );
+            next CONFIGITEMID if !$ConfigItem;
+
+            # convert the XML data into a hash
+            my $ExtendedVersionData = $Self->_XMLData2Hash(
+                XMLDefinition => $ConfigItem->{XMLDefinition},
+                XMLData       => $ConfigItem->{XMLData}->[1]->{Version}->[1],
+            );
+
+            $ConfigItemData{$ConfigItemID}->{'VersionData'} = $ConfigItem;
+            $ConfigItemData{$ConfigItemID}->{'XMLData'}     = $ExtendedVersionData;
+
+            COLUMN:
+            for my $Column (@XMLShowColumns) {
+
+                # check if column exists in CI-Data
+                next COLUMN if !$ExtendedVersionData->{$Column}->{Name};
+
+                $XMLColumnsHash{$Column} = $ExtendedVersionData->{$Column}->{Name};
+            }
+        }
+
+        $Counter = 0;
+        CONFIGITEM:
+        for my $ConfigItemID (@ConfigItemIDs) {
+            $Counter++;
+            next CONFIGITEM if (
+                $Counter < $Param{StartHit}
+                || $Counter >= ( $Param{PageShown} + $Param{StartHit} )
+            );
+
+            next CONFIGITEM if (!$ConfigItemData{$ConfigItemID});
+
+            my %Data                = %{$ConfigItemData{$ConfigItemID}->{'VersionData'}};
+            my $ExtendedVersionData = $ConfigItemData{$ConfigItemID}->{'XMLData'};
+
+            if (
+                $StateHighlighting
+                && ref($StateHighlighting) eq 'HASH'
+                && $StateHighlighting->{ $Data{CurDeplState} }
+            ) {
+                $Data{'LineStyle'} = $StateHighlighting->{ $Data{CurDeplState} };
+            }
+
+            # build record block
+            $LayoutObject->Block(
+                Name => 'Record',
+                Data => {
+                    %Param,
+                    %Data,
+                },
+            );
+
+            # build column record blocks
+            if (@ShowColumns) {
+
+                COLUMN:
+                for my $Column (@ShowColumns) {
+                    if ( $Column eq 'BulkAction') {
+                        my $ItemChecked = '';
+
+                        if ( grep( /^$ConfigItemID$/, @SelectedItems ) ) {
+                            $ItemChecked = ' checked="checked"';
+                        }
+                        $LayoutObject->Block(
+                            Name => 'Record' . $Column,
+                            Data => {
+                                %Param,
+                                %Data,
+                                CurInciSignal => $InciSignals{ $Data{CurInciStateType} },
+                                CurDeplSignal => $DeplSignals{ $Data{CurDeplState} },
+                                ItemChecked   => $ItemChecked,
+                            },
+                        );
+
+                        if ( !$BulkActivate
+                            && $ItemChecked
+                        ) {
+                            $BulkActivate = 1;
+                            $LayoutObject->Block(
+                                Name => 'BulkActivate',
+                            );
+                        }
+                    } else {
+                        $LayoutObject->Block(
+                            Name => 'Record' . $Column,
+                            Data => {
+                                %Param,
+                                %Data,
+                                CurInciSignal => $InciSignals{ $Data{CurInciStateType} },
+                                CurDeplSignal => $DeplSignals{ $Data{CurDeplState} },
+                            },
+                        );
+                    }
+                    # show links if available
+                    $LayoutObject->Block(
+                        Name => 'Record' . $Column . 'LinkStart',
+                        Data => {
+                            %Param,
+                            %Data,
+                        },
+                    );
+                    $LayoutObject->Block(
+                        Name => 'Record' . $Column . 'LinkEnd',
+                        Data => {
+                            %Param,
+                            %Data,
+                        },
+                    );
+                }
+                COLUMN:
+                for my $Column (@XMLShowColumns) {
+
+                    # check if column exists in CI-Data
+                    next COLUMN if !$XMLColumnsHash{$Column};
+
+                    # convert to ascii text in case the value contains html
+                    my $Value = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii( String => $ExtendedVersionData->{$Column}->{Value} || '' ) || '';
+
+                    # convert all whitespace and newlines to single spaces
+                    $Value =~ s{ \s+ }{ }gxms;
+
+                    # show the xml attribute data
+                    $LayoutObject->Block(
+                        Name => 'RecordXMLAttribute',
+                        Data => {
+                            %Param,
+                            XMLAttributeData => $Value,
+                        },
+                    );
+                }
+            }
+
+            # make a deep copy of the action items to avoid changing the definition
+            my $ClonedActionItems = Storable::dclone( \@ActionItems );
+
+            # substitute TT variables
+            for my $ActionItem ( @{$ClonedActionItems} ) {
+                $ActionItem->{HTML} =~ s{ \Q[% Data.ConfigItemID | html %]\E }{$ConfigItemID}xmsg;
+                $ActionItem->{HTML} =~ s{ \Q[% Data.VersionID | html %]\E }{$Data{VersionID}}xmsg;
+                $ActionItem->{Link} =~ s{ \Q[% Data.ConfigItemID | html %]\E }{$ConfigItemID}xmsg;
+                $ActionItem->{Link} =~ s{ \Q[% Data.VersionID | html %]\E }{$Data{VersionID}}xmsg;
+            }
+
+            my $JSON = $LayoutObject->JSONEncode(
+                Data => $ClonedActionItems,
+            );
+
+            $LayoutObject->Block(
+                Name => 'DocumentReadyActionRowAdd',
+                Data => {
+                    ConfigItemID => $ConfigItemID,
+                    Data         => $JSON,
+                },
+            );
+        }
+
+    }
+    # if there are no config items to show, a no data found message is displayed in the table
+    else {
+        $LayoutObject->Block(
+            Name => 'NoDataFoundMsg',
+            Data => {
+                TotalColumns => scalar @ShowColumns,
+            },
+        );
+    }
+
     # build column header blocks
     if (@ShowColumns) {
-
-        # show the bulk action button checkboxes if feature is enabled
-        if ($BulkFeature) {
-            push @ShowColumns, 'BulkAction';
-        }
 
         for my $Column (@ShowColumns) {
 
@@ -356,229 +557,26 @@ END
         # and if there are CIs to show
         if ( $Param{Filter} && $Param{Filter} ne 'All' && @ConfigItemIDs ) {
 
-            # get the version data of the first config item, including all the XML data
-            # to get the column header names
-            my $ConfigItem = $ConfigItemObject->VersionGet(
-                ConfigItemID => $ConfigItemIDs[0],
-                XMLDataGet   => 1,
-            );
-
-            # convert the XML data into a hash
-            my $ExtendedVersionData = $Self->_XMLData2Hash(
-                XMLDefinition => $ConfigItem->{XMLDefinition},
-                XMLData       => $ConfigItem->{XMLData}->[1]->{Version}->[1],
-            );
-
-            # get the xml columns (they contain ::)
-            @XMLShowColumns = grep /::/, @ShowColumns;
-
             COLUMN:
             for my $Column (@XMLShowColumns) {
 
-                # check if column exists in CI-Data
-                next COLUMN if !$ExtendedVersionData->{$Column}->{Name};
+                # check if column should be shown
+                next COLUMN if !$XMLColumnsHash{$Column};
 
                 # show the xml attribute header
                 $LayoutObject->Block(
                     Name => 'RecordXMLAttributeHeader',
                     Data => {
                         %Param,
-                        XMLAttributeHeader => $ExtendedVersionData->{$Column}->{Name},
+                        XMLAttributeHeader => $XMLColumnsHash{$Column},
                     },
                 );
             }
         }
-    }
-
-    my $Output  = '';
-    my $Counter = 0;
-
-    # show config items if there are some
-    if (@ConfigItemIDs) {
-
-        # to store all data
-        my %Data;
-        my $BulkActivate = 0;
-
-        CONFIGITEMID:
-        for my $ConfigItemID (@ConfigItemIDs) {
-            $Counter++;
-            if (
-                $Counter >= $Param{StartHit}
-                && $Counter < ( $Param{PageShown} + $Param{StartHit} )
-                )
-            {
-
-                # check for access rights
-                my $HasAccess = $ConfigItemObject->Permission(
-                    Scope  => 'Item',
-                    ItemID => $ConfigItemID,
-                    UserID => $Self->{UserID},
-                    Type   => $Self->{Config}->{Permission},
-                );
-
-                next CONFIGITEMID if !$HasAccess;
-
-                # get config item data
-                my $ConfigItem = $ConfigItemObject->VersionGet(
-                    ConfigItemID => $ConfigItemID,
-                    XMLDataGet   => 1,
-                );
-
-                next CONFIGITEMID if !$ConfigItem;
-
-                # convert the XML data into a hash
-                my $ExtendedVersionData = $Self->_XMLData2Hash(
-                    XMLDefinition => $ConfigItem->{XMLDefinition},
-                    XMLData       => $ConfigItem->{XMLData}->[1]->{Version}->[1],
-                );
-
-                # store config item data,
-                %Data = %{$ConfigItem};
-
-                # KIX4OTRS-capeIT
-                my $StateHighlighting
-                    = $ConfigObject->Get('ConfigItemOverview::HighlightMapping');
-                if (
-                    $StateHighlighting
-                    && ref($StateHighlighting) eq 'HASH'
-                    && $StateHighlighting->{ $Data{CurDeplState} }
-                    )
-                {
-                    $Data{LineStyle} = $StateHighlighting->{ $Data{CurDeplState} };
-                }
-
-                # EO KIX4OTRS-capeIT
-                # build record block
-                $LayoutObject->Block(
-                    Name => 'Record',
-                    Data => {
-                        %Param,
-                        %Data,
-                    },
-                );
-
-                # build column record blocks
-                if (@ShowColumns) {
-
-                    COLUMN:
-                    for my $Column (@ShowColumns) {
-                        if ( $Column eq 'BulkAction') {
-                            my $ItemChecked = '';
-
-                            if ( grep( /^$ConfigItemID$/, @SelectedItems ) ) {
-                                $ItemChecked = ' checked="checked"';
-                            }
-                            $LayoutObject->Block(
-                                Name => 'Record' . $Column,
-                                Data => {
-                                    %Param,
-                                    %Data,
-                                    CurInciSignal => $InciSignals{ $Data{CurInciStateType} },
-                                    CurDeplSignal => $DeplSignals{ $Data{CurDeplState} },
-                                    ItemChecked   => $ItemChecked,
-                                },
-                            );
-
-                            if ( !$BulkActivate
-                                && $ItemChecked
-                            ) {
-                                $BulkActivate = 1;
-                                $LayoutObject->Block(
-                                    Name => 'BulkActivate',
-                                );
-                            }
-                        } else {
-                            $LayoutObject->Block(
-                                Name => 'Record' . $Column,
-                                Data => {
-                                    %Param,
-                                    %Data,
-                                    CurInciSignal => $InciSignals{ $Data{CurInciStateType} },
-                                    CurDeplSignal => $DeplSignals{ $Data{CurDeplState} },
-                                },
-                            );
-                        }
-                        # show links if available
-                        $LayoutObject->Block(
-                            Name => 'Record' . $Column . 'LinkStart',
-                            Data => {
-                                %Param,
-                                %Data,
-                            },
-                        );
-                        $LayoutObject->Block(
-                            Name => 'Record' . $Column . 'LinkEnd',
-                            Data => {
-                                %Param,
-                                %Data,
-                            },
-                        );
-                    }
-
-                    COLUMN:
-                    for my $Column (@XMLShowColumns) {
-
-                        # check if column exists in CI-Data
-                        next COLUMN if !$ExtendedVersionData->{$Column}->{Name};
-
-                        # convert to ascii text in case the value contains html
-                        my $Value = $Kernel::OM->Get('Kernel::System::HTMLUtils')
-                            ->ToAscii( String => $ExtendedVersionData->{$Column}->{Value} )
-                            || '';
-
-                        # convert all whitespace and newlines to single spaces
-                        $Value =~ s{ \s+ }{ }gxms;
-
-                        # show the xml attribute data
-                        $LayoutObject->Block(
-                            Name => 'RecordXMLAttribute',
-                            Data => {
-                                %Param,
-                                XMLAttributeData => $Value,
-                            },
-                        );
-                    }
-                }
-
-                # make a deep copy of the action items to avoid changing the definition
-                my $ClonedActionItems = Storable::dclone( \@ActionItems );
-
-                # substitute TT variables
-                for my $ActionItem ( @{$ClonedActionItems} ) {
-                    $ActionItem->{HTML} =~ s{ \Q[% Data.ConfigItemID | html %]\E }{$ConfigItemID}xmsg;
-                    $ActionItem->{HTML} =~ s{ \Q[% Data.VersionID | html %]\E }{$ConfigItem->{VersionID}}xmsg;
-                    $ActionItem->{Link} =~ s{ \Q[% Data.ConfigItemID | html %]\E }{$ConfigItemID}xmsg;
-                    $ActionItem->{Link} =~ s{ \Q[% Data.VersionID | html %]\E }{$ConfigItem->{VersionID}}xmsg;
-                }
-
-                my $JSON = $LayoutObject->JSONEncode(
-                    Data => $ClonedActionItems,
-                );
-
-                $LayoutObject->Block(
-                    Name => 'DocumentReadyActionRowAdd',
-                    Data => {
-                        ConfigItemID => $ConfigItemID,
-                        Data         => $JSON,
-                    },
-                );
-            }
-        }
-    }
-
-    # if there are no config items to show, a no data found message is displayed in the table
-    else {
-        $LayoutObject->Block(
-            Name => 'NoDataFoundMsg',
-            Data => {
-                TotalColumns => scalar @ShowColumns,
-            },
-        );
     }
 
     # use template
-    $Output .= $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'AgentITSMConfigItemOverviewSmall',
         Data         => {
             %Param,

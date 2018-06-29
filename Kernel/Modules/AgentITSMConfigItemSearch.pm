@@ -13,6 +13,7 @@ package Kernel::Modules::AgentITSMConfigItemSearch;
 use strict;
 use warnings;
 
+use Kernel::Language qw(Translatable);
 use Kernel::System::VariableCheck qw(:all);
 
 our $ObjectManagerDisabled = 1;
@@ -90,8 +91,8 @@ sub Run {
 
         # EO KIX4OTRS-capeIT
         return $LayoutObject->ErrorScreen(
-            Message => 'Invalid ClassID!',
-            Comment => 'Please contact the admin.',
+            Message => Translatable('Invalid ClassID!'),
+            Comment => Translatable('Please contact the administrator.'),
         );
     }
 
@@ -170,7 +171,7 @@ sub Run {
             Name         => 'SearchClassID',
             PossibleNone => 1,
             SelectedID   => $ClassID || '',
-            Translation  => 0,
+            Translation  => 1,
             Class        => 'Modernize',
         );
 
@@ -214,8 +215,8 @@ sub Run {
         # ClassID is required for the search mask and for actual searching
         if ( !$ClassID ) {
             return $LayoutObject->ErrorScreen(
-                Message => 'No ClassID is given!',
-                Comment => 'Please contact the admin.',
+                Message => Translatable('No ClassID is given!'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 
@@ -250,8 +251,8 @@ sub Run {
         # show error screen
         if ( !$HasAccess ) {
             return $LayoutObject->ErrorScreen(
-                Message => 'No access rights for this class given!',
-                Comment => 'Please contact the admin.',
+                Message => Translatable('No access rights for this class given!'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 
@@ -271,8 +272,9 @@ sub Run {
             # EO KIX4OTRS-capeIT
             if ( !$XMLDefinition->{DefinitionID} ) {
             return $LayoutObject->ErrorScreen(
-                    Message => "No Definition was defined for class $ClassID!",
-                    Comment => 'Please contact the admin.',
+                Message =>
+                    $LayoutObject->{LanguageObject}->Translate( 'No definition was defined for class %s!', $ClassID ),
+                Comment => Translatable('Please contact the administrator.'),
                 );
             }
 
@@ -284,19 +286,19 @@ sub Run {
             my @XMLAttributes = (
                 {
                     Key   => 'Number',
-                    Value => 'Number',
+                Value => Translatable('Number'),
                 },
                 {
                     Key   => 'Name',
-                    Value => 'Name',
+                Value => Translatable('Name'),
                 },
                 {
                     Key   => 'DeplStateIDs',
-                    Value => 'Deployment State',
+                Value => Translatable('Deployment State'),
                 },
                 {
                     Key   => 'InciStateIDs',
-                    Value => 'Incident State',
+                Value => Translatable('Incident State'),
                 },
             );
 
@@ -435,8 +437,8 @@ sub Run {
         my $PreviousVersionOptionStrg = $LayoutObject->BuildSelection(
             Name => 'PreviousVersionSearch',
             Data => {
-                0 => 'No',
-                1 => 'Yes',
+                0 => Translatable('No'),
+                1 => Translatable('Yes'),
             },
             SelectedID => $GetParam{PreviousVersionSearch} || '0',
             Class => 'Modernize',
@@ -445,9 +447,9 @@ sub Run {
         # build output format string
         $Param{ResultFormStrg} = $LayoutObject->BuildSelection(
             Data => {
-                Normal => 'Normal',
-                Print  => 'Print',
-                CSV    => 'CSV',
+                Normal => Translatable('Normal'),
+                Print  => Translatable('Print'),
+                CSV    => Translatable('CSV'),
             },
             Name       => 'ResultForm',
             SelectedID => $GetParam{ResultForm} || 'Normal',
@@ -605,8 +607,8 @@ sub Run {
         # ClassID is required for the search mask and for actual searching
         if ( !$ClassID ) {
             return $LayoutObject->ErrorScreen(
-                Message => 'No ClassID is given!',
-                Comment => 'Please contact the admin.',
+                Message => Translatable('No ClassID is given!'),
+                Comment => Translatable('Please contact the administrator.'),
             );
         }
 
@@ -669,8 +671,9 @@ sub Run {
             # abort, if no definition is defined
             if ( !$XMLDefinition->{DefinitionID} ) {
                 return $LayoutObject->ErrorScreen(
-                    Message => "No Definition was defined for class $ClassID!",
-                    Comment => 'Please contact the admin.',
+                Message =>
+                    $LayoutObject->{LanguageObject}->Translate( 'No definition was defined for class %s!', $ClassID ),
+                Comment => Translatable('Please contact the administrator.'),
                 );
             }
 
@@ -790,6 +793,7 @@ sub Run {
                         # EO KIX4OTRS-capeIT
                         for my $Key ( sort keys %{$Parameter} ) {
                             if ( $Parameter->{$Key} ) {
+
                             $SearchProfileObject->SearchProfileAdd(
                                     Base      => 'ConfigItemSearch' . $ClassID,
                                     Name      => $Self->{Profile},
@@ -843,6 +847,17 @@ sub Run {
             my @CSVData;
             my @CSVHead;
 
+            # mapping between header name and data field
+            my %Header2Data = (
+                'Class'            => 'Class',
+                'Incident State'   => 'InciState',
+                'Name'             => 'Name',
+                'ConfigItemNumber' => 'Number',
+                'Deployment State' => 'DeplState',
+                'Version'          => 'VersionID',
+                'Create Time'      => 'CreateTime',
+            );
+
             CONFIGITEMID:
             for my $ConfigItemID ( @{$SearchResultList} ) {
 
@@ -869,8 +884,8 @@ sub Run {
 
                 # store data
                 my @Data;
-                for my $StoreData (@CSVHead) {
-                    push @Data, $LastVersion->{$StoreData};
+                for my $Header (@CSVHead) {
+                    push @Data, $LastVersion->{ $Header2Data{$Header} };
                 }
                 push @CSVData, \@Data;
             }
@@ -1406,6 +1421,42 @@ sub _XMLSearchFormGet {
             $InputKey = $Param{Prefix} . '::' . $InputKey;
         }
 
+        # Date type fields must to get all date parameters.
+        if ( $Item->{Input}->{Type} eq 'Date' && $Param{$InputKey} ) {
+            $Param{$InputKey} =
+                {
+                $InputKey                      => $Param{$InputKey},
+                $InputKey . '::TimeStart::Day' => $Param{ $InputKey . '::TimeStart::Day' },
+                $InputKey
+                    . '::TimeStart::Month' => $Param{ $InputKey . '::TimeStart::Month' },
+                $InputKey . '::TimeStart::Year' => $Param{ $InputKey . '::TimeStart::Year' },
+                $InputKey . '::TimeStop::Day'   => $Param{ $InputKey . '::TimeStop::Day' },
+                $InputKey . '::TimeStop::Month' => $Param{ $InputKey . '::TimeStop::Month' },
+                $InputKey . '::TimeStop::Year'  => $Param{ $InputKey . '::TimeStop::Year' },
+                } || '';
+        }
+
+        # Date-time type fields must get all date and time parameters.
+        elsif ( $Item->{Input}->{Type} eq 'DateTime' && $Param{$InputKey} ) {
+            $Param{$InputKey} =
+                {
+                $InputKey => $Param{$InputKey},
+                $InputKey
+                    . '::TimeStart::Minute' => $Param{ $InputKey . '::TimeStart::Minute' },
+                $InputKey . '::TimeStart::Hour' => $Param{ $InputKey . '::TimeStart::Hour' },
+                $InputKey . '::TimeStart::Day'  => $Param{ $InputKey . '::TimeStart::Day' },
+                $InputKey
+                    . '::TimeStart::Month' => $Param{ $InputKey . '::TimeStart::Month' },
+                $InputKey . '::TimeStart::Year' => $Param{ $InputKey . '::TimeStart::Year' },
+                $InputKey
+                    . '::TimeStop::Minute' => $Param{ $InputKey . '::TimeStop::Minute' },
+                $InputKey . '::TimeStop::Hour'  => $Param{ $InputKey . '::TimeStop::Hour' },
+                $InputKey . '::TimeStop::Day'   => $Param{ $InputKey . '::TimeStop::Day' },
+                $InputKey . '::TimeStop::Month' => $Param{ $InputKey . '::TimeStop::Month' },
+                $InputKey . '::TimeStop::Year'  => $Param{ $InputKey . '::TimeStop::Year' },
+                } || '';
+        }
+
         # get search form data
         my $Values = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->ITSMConfigItemSearchFormDataGet(
             Key   => $InputKey,
@@ -1505,6 +1556,7 @@ sub _XMLSearchFormGet {
 
         # start recursion, if "Sub" was found
         $Self->_XMLSearchFormGet(
+            %Param,
             XMLDefinition => $Item->{Sub},
             XMLFormData   => $Param{XMLFormData},
             XMLGetParam   => $Param{XMLGetParam},

@@ -470,7 +470,9 @@ Core.KIX4OTRS = (function(TargetNS) {
             Core.AJAX.FunctionCall(Core.Config.Get('Baselink'),Core.AJAX.SerializeForm($Form),function(Response){
 
                 // if queue id given
-                if ( Response.AssignedQueue != 0 ) {
+                if ( Response.AssignedQueue != 0
+                     && Response.AssignedQueue !== undefined
+                ) {
                     // set queue id for note, close, etc.
                     if ( $("#NewQueueID").length ) {
                         if ( $("#NewQueueID").val() !== Response.AssignedQueue ) {
