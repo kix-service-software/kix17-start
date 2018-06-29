@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.3.2 (2018/06/29)
+ * (2018/06/29) - productive release
+
 # 17.3.2-RC2 (2018/06/22)
  * (2018/06/22) - Bugfix: T2018052290000819 (otrs fix added
 
