@@ -156,8 +156,6 @@ sub Run {
     # EO KIX4OTRS-capeIT
 
     for my $Key ( sort keys %TicketSearch ) {
-#print STDERR $Key."\n";
-#print STDERR $TicketSearch{$Key}."\n";
         if ( ref $TicketSearch{$Key} eq 'ARRAY' ) {
             for my $Value ( @{ $TicketSearch{$Key} } ) {
                 $URL .= ';' . $Key . '=' . $LayoutObject->LinkEncode($Value);
