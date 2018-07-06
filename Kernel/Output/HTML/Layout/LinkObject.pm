@@ -129,7 +129,8 @@ sub LinkObjectTableCreateComplex {
 
     # KIX4OTRS-capeIT
     # get user data
-    my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Self->{UserID} );
+    my %UserData
+        = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Self->{UserID} );
     my @UserLinkObjectTablePosition = ();
     if ( $UserData{ 'UserLinkObjectTablePosition-' . $Self->{Action} } ) {
         @UserLinkObjectTablePosition
@@ -439,26 +440,8 @@ sub LinkObjectTableCreateComplex {
 
                 # EO KIX4OTRS-capeIT
 
-                # $CheckboxCell = {};
-
                 # add checkbox cell to item
-                # KIX4OTRS-capeIT
-                if (
-                    !(
-                        $Block->{Object} eq 'ITSMConfigItem'
-                        && defined $Param{LinkConfigItem}
-                        && !$Param{LinkConfigItem}
-                    )
-                    )
-                {
-
-                    # EO KIX4OTRS-capeIT
-                    unshift @{$Item}, $CheckboxCell;
-
-                    # KIX4OTRS-capeIT
-                }
-
-                # EO KIX4OTRS-capeIT
+                unshift @{$Item}, $CheckboxCell;
             }
         }
     }
@@ -469,7 +452,8 @@ sub LinkObjectTableCreateComplex {
     );
 
     # set block description
-    my $BlockDescription = $Param{ViewMode} eq 'ComplexAdd' ? Translatable('Search Result') : Translatable('Linked');
+    my $BlockDescription
+        = $Param{ViewMode} eq 'ComplexAdd' ? Translatable('Search Result') : Translatable('Linked');
 
     my $BlockCounter = 0;
 
