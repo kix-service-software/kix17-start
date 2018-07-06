@@ -147,15 +147,17 @@ sub Run {
     # KIX4OTRS-capeIT
     # $URL .= ';CustomerID=' . $LayoutObject->LinkEncode($CustomerIDRaw);
     if ( $ConfigObject->Get("Frontend::CustomerUser::CustomerInfoTicketCount") ) {
-        $TicketSearch{CustomerID} = $Param{Data}->{UserCustomerID};
+        $TicketSearch{CustomerID} = $Param{Data}->{UserCustomerID} || '';
     }
     else {
-        $TicketSearch{CustomerUserLogin} = $Param{Data}->{UserLogin};
+        $TicketSearch{CustomerUserLogin} = $Param{Data}->{UserLogin} || '';
     }
 
     # EO KIX4OTRS-capeIT
 
     for my $Key ( sort keys %TicketSearch ) {
+#print STDERR $Key."\n";
+#print STDERR $TicketSearch{$Key}."\n";
         if ( ref $TicketSearch{$Key} eq 'ARRAY' ) {
             for my $Value ( @{ $TicketSearch{$Key} } ) {
                 $URL .= ';' . $Key . '=' . $LayoutObject->LinkEncode($Value);
@@ -365,7 +367,8 @@ sub Run {
         @ViewableTicketIDs = @ViewableTicketsTmp;
 
         $Count = scalar(@ViewableTicketIDs);
-        $URL .= ';CustomerUser=' . $Param{Data}->{UserLogin};
+        my $UserLogin = $Param{Data}->{UserLogin} || '';
+        $URL .= ';CustomerUser=' . $UserLogin;
     }
 
     # EO KIX4OTRS-capeIT
