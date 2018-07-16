@@ -2064,6 +2064,27 @@
     </ForeignKey>
 </Table>
 
+<Table Name="dynamic_field_value_ttl">
+    <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
+    <Column Name="field_id" Required="true" Type="INTEGER"/>
+    <Column Name="object_id" Required="false" Type="BIGINT"/>
+    <Column Name="object_id_text" Required="false" Type="VARCHAR" Size="255"/>
+    <Column Name="value_ttl" Required="true" Type="DATE"/>
+    <Column Name="create_time" Required="true" Type="DATE"/>
+
+    <Index Name="dynamic_field_value_ttl_field_oid">
+        <IndexColumn Name="object_id"/>
+        <IndexColumn Name="field_id"/>
+    </Index>
+    <Index Name="dynamic_field_value_ttl_field_oid2">
+        <IndexColumn Name="object_id_text"/>
+        <IndexColumn Name="field_id"/>
+    </Index>
+    <ForeignKey ForeignTable="dynamic_field">
+        <Reference Local="field_id" Foreign="id"/>
+    </ForeignKey>
+</Table>
+
 <Table Name="dynamic_field">
     <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
     <!-- internal fields are protected -->

@@ -13422,4 +13422,67 @@ via the Preferences button after logging in.
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
+
+    <ConfigItem Name="DynamicFieldValue::EventModulePost###000-DFValueTTLDeleteAll" Required="0" Valid="1">
+        <Description Translatable="1">Event to clear all ttl entries if all dynamic field entries are deleted.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::DynamicField</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::DynamicField::Event::DFValueTTLDeleteAll</Item>
+                <Item Key="Event">DynamicFieldValueDeleteAll</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFieldValue::EventModulePost###001-DFValueTTLDelete" Required="0" Valid="1">
+        <Description Translatable="1">Event to clear the ttl entry if dynamic field entry for an object is deleted.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::DynamicField</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::DynamicField::Event::DFValueTTLDelete</Item>
+                <Item Key="Event">DynamicFieldValueDelete</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicFieldValue::EventModulePost###100-DFValueTTLSet" Required="0" Valid="1">
+        <Description Translatable="1">Set ttl entry if dynamic field entry for an object is set.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::DynamicField</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::DynamicField::Event::DFValueTTLSet</Item>
+                <Item Key="Event">DynamicFieldValueSet</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="DynamicField::EventModulePost###000-DFTTLUpdate" Required="0" Valid="0">
+        <Description Translatable="1">Update all existing ttl entries if dynamic field is updated.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::DynamicField</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::DynamicField::Event::DFTTLUpdate</Item>
+                <Item Key="Event">DynamicFieldUpdate</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Daemon::SchedulerCronTaskManager::Task###DynamicFieldTTLCheck" Required="0" Valid="1" ConfigLevel="100">
+        <Description Translatable="1">Delete expired dynamic field values.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Daemon::SchedulerCronTaskManager::Task</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="TaskName">DynamicFieldTTLCheck</Item>
+                <Item Key="Schedule">20 1 * * *</Item> <!-- default every day at 01:20 AM -->
+                <Item Key="Module">Kernel::System::Console::Command::Maint::DynamicField::TTLCheck</Item>
+                <Item Key="Function">Execute</Item>
+                <Item Key="MaximumParallelInstances">1</Item>
+                <Item Key="Params">
+                    <Array>
+                    </Array>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
 </otrs_config>
