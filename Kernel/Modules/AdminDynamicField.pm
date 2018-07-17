@@ -312,6 +312,7 @@ sub _DynamicFieldsListShow {
         SelectedID  => $PageShown,
         Translation => 0,
         Data        => \%Data,
+        Sort        => 'NumericValue',
     );
 
     if (%PageNav) {
