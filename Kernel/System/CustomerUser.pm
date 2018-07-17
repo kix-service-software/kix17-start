@@ -19,19 +19,11 @@ our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::CustomerCompany',
     'Kernel::System::DB',
-
-    # KIX4OTRS-capeIT
     'Kernel::System::Group',
-
-    # EO KIX4OTRS-capeIT
     'Kernel::System::Log',
     'Kernel::System::Main',
-
-    # KIX4OTRS-capeIT
     'Kernel::System::Time',
     'Kernel::System::User',
-
-    # EO KIX4OTRS-capeIT
 );
 
 =head1 NAME
@@ -79,7 +71,6 @@ sub new {
         $Self->{PreferencesObject} = $GeneratorModule->new();
     }
 
-    # KIX4OTRS-capeIT
     my $TimeObject  = $Kernel::OM->Get('Kernel::System::Time');
     my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
     my $UserObject  = $Kernel::OM->Get('Kernel::System::User');
@@ -139,26 +130,21 @@ sub new {
         $Param{UserID} = $ConfigObject->Get("CustomerPanelUserID");
     }
 
-    # EO KIX4OTRS-capeIT
-
     # load customer user backend module
     SOURCE:
     for my $Count ( '', 1 .. 10 ) {
 
         next SOURCE if !$ConfigObject->Get("CustomerUser$Count");
 
-        # KIX4OTRS-capeIT
         my $BackendGroups = $ConfigObject->Get("CustomerUser$Count")->{AccessGroups} || "";
-
-        my $Access = 1;
+        my $Access        = 1;
         if (
             $Param{UserID}
             && (
                 $Param{UserID} eq '1'
                 || $Param{UserID} eq $ConfigObject->Get("CustomerPanelUserID")
             )
-            )
-        {
+        ) {
             $Access = 1;
         }
         elsif ( $BackendGroups && ref $BackendGroups eq 'ARRAY' ) {
@@ -171,8 +157,6 @@ sub new {
             }
         }
         next if !$Access;
-
-        # EO KIX4OTRS-capeIT
 
         my $GenericModule = $ConfigObject->Get("CustomerUser$Count")->{Module};
         if ( !$MainObject->Require($GenericModule) ) {
@@ -620,8 +604,6 @@ sub SetPassword {
         return;
     }
 
-    # KIX4OTRS-capeIT
-    # return $Self->{ $User{Source} }->SetPassword(%Param);
     my $Result = $Self->{ $User{Source} }->SetPassword(%Param);
 
     # trigger event handler
@@ -637,8 +619,6 @@ sub SetPassword {
         );
     }
     return $Result;
-
-    # EO KIX4OTRS-capeIT
 }
 
 =item GenerateRandomPassword()
@@ -695,15 +675,6 @@ sub SetPreferences {
         return;
     }
 
-    # KIX4OTRS-capeIT
-    # # call new api (2.4.8 and higher)
-    # if ( $Self->{ $User{Source} }->can('SetPreferences') ) {
-    #     return $Self->{ $User{Source} }->SetPreferences(%Param);
-    # }
-    #
-    # # call old api
-    # return $Self->{PreferencesObject}->SetPreferences(%Param);
-
     my $Result;
 
     # call new api (2.4.8 and higher)
@@ -729,8 +700,6 @@ sub SetPreferences {
         );
     }
     return $Result;
-
-    # EO KIX4OTRS-capeIT
 }
 
 =item GetPreferences()
@@ -809,6 +778,66 @@ sub SearchPreferences {
     }
 
     return %Data;
+}
+
+=item DeletePreferences()
+
+delete customer user preferences
+
+    $CustomerUserObject->DeletePreferences(
+        Key    => 'UserComment',
+        UserID => 'some-login',
+    );
+
+=cut
+
+sub DeletePreferences {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    if ( !$Param{UserID} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Need UserID!'
+        );
+        return;
+    }
+
+    # check if user exists
+    my %User = $Self->CustomerUserDataGet( User => $Param{UserID} );
+    if ( !%User ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "No such user '$Param{UserID}'!",
+        );
+        return;
+    }
+
+    my $Result;
+
+    # call new api (2.4.8 and higher)
+    if ( $Self->{ $User{Source} }->can('DeletePreferences') ) {
+        $Result = $Self->{ $User{Source} }->DeletePreferences(%Param);
+    }
+
+    # call old api
+    else {
+        $Result = $Self->{PreferencesObject}->DeletePreferences(%Param);
+    }
+
+    # trigger event handler
+    if ($Result) {
+        $Self->EventHandler(
+            Event => 'CustomerUserDeletePreferences',
+            Data  => {
+                %Param,
+                UserData => \%User,
+                Result   => $Result,
+            },
+            UserID => 1,
+        );
+    }
+    return $Result;
 }
 
 =item TokenGenerate()
