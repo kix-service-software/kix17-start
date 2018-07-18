@@ -185,8 +185,11 @@ sub TableCreateComplex {
         return;
     }
 
+    my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+
     # get and remember the Deployment state colors
-    my $DeploymentStatesList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+    my $DeploymentStatesList = $GeneralCatalogObject->ItemList(
         Class => 'ITSM::ConfigItem::DeploymentState',
     );
 
@@ -194,7 +197,7 @@ sub TableCreateComplex {
     for my $ItemID ( sort keys %{$DeploymentStatesList} ) {
 
         # get deployment state preferences
-        my %Preferences = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->GeneralCatalogPreferencesGet(
+        my %Preferences = $GeneralCatalogObject->GeneralCatalogPreferencesGet(
             ItemID => $ItemID,
         );
 
@@ -255,11 +258,10 @@ sub TableCreateComplex {
 
     my @BlockData;
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     # get user data
     my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Self->{UserID} );
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     for my $Class ( sort { lc $a cmp lc $b } keys %LinkList ) {
 
@@ -272,7 +274,7 @@ sub TableCreateComplex {
         # create the item list
         my @ItemList;
 
-        # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
         my @Columns;
         my $PreferenceClass = $Class;
         $PreferenceClass =~ s/[^A-Za-z0-9_-]/_/g;
@@ -290,13 +292,15 @@ sub TableCreateComplex {
         {
             @Columns = @{ $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $Class } };
         }
-
-        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
         for my $ConfigItemID (
             sort { $ConfigItemList->{$a}->{Data}->{Name} cmp $ConfigItemList->{$b}->{Data}->{Name} }
             keys %{$ConfigItemList}
             )
         {
+            my $ConfigItemData = $ConfigItemObject->ConfigItemGet(
+                ConfigItemID => $ConfigItemID,
+            );
 
             # extract version data
             my $Version = $ConfigItemList->{$ConfigItemID}->{Data};
@@ -304,13 +308,12 @@ sub TableCreateComplex {
             # make sure the column headline array is empty for each loop
             @ShowColumnsHeadlines = ();
 
-            # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
             my @ItemColumns = ();
-
-            # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
             # get the version data, including all the XML data
-            my $VersionXMLData = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->VersionGet(
+            my $VersionXMLData = $ConfigItemObject->VersionGet(
                 ConfigItemID => $ConfigItemID,
                 XMLDataGet   => 1,
             );
@@ -321,18 +324,17 @@ sub TableCreateComplex {
                 XMLData       => $VersionXMLData->{XMLData}->[1]->{Version}->[1],
             );
 
-            # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
             if ( !scalar @Columns ) {
-
-                # EO KIX4OTRS-capeIT
-                @ItemColumns = (
-                    {
-                        Type             => 'CurInciSignal',
-                        Key              => $ConfigItemID,
-                        Content          => $Version->{CurInciState},
-                        CurInciStateType => $Version->{CurInciStateType},
-                    },
-                    {
+# EO KIX4OTRS-capeIT
+            @ItemColumns = (
+                {
+                    Type             => 'CurInciSignal',
+                    Key              => $ConfigItemID,
+                    Content          => $Version->{CurInciState},
+                    CurInciStateType => $Version->{CurInciStateType},
+                },
+                {
                     Type    => 'CurDeplSignal',
                     Key     => $ConfigItemID,
                     Content => $Version->{CurDeplState},
@@ -361,7 +363,7 @@ sub TableCreateComplex {
                 },
                 {
                     Type    => 'TimeLong',
-                    Content => $Version->{CreateTime},
+                    Content => $ConfigItemData->{CreateTime},
                 },
             );
 
@@ -456,51 +458,51 @@ sub TableCreateComplex {
                         next COLUMN;
                     }
 
-                        # convert to ascii text in case the value contains html
-                        my $Value = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
-                            String => $ExtendedVersionData->{$Column}->{Value} || '',
-                        );
-
-                        # convert all whitespace and newlines to single spaces
-                        $Value =~ s{ \s+ }{ }gxms;
-
-                        # add the column
-                        push @ItemColumns, {
-                            Type    => 'Text',
-                            Content => $Value,
-                        };
-
-                        # add the headline
-                        push @ShowColumnsHeadlines, {
-                            Content => $ExtendedVersionData->{$Column}->{Name} || '',
-                        };
-                    }
-                }
-
-                # individual column config for this class does not exist,
-                # so the default columns will be used
-                else {
-
-                    # add the default columns
-                    push @ItemColumns, @AdditionalDefaultItemColumns;
-
-                    # add the default column headlines
-                    @ShowColumnsHeadlines = (
-                        {
-                            Content => 'Name',
-                        },
-                        {
-                            Content => 'Deployment State',
-                            Width   => 130,
-                        },
-                        {
-                            Content => 'Created',
-                            Width   => 130,
-                        },
+                    # convert to ascii text in case the value contains html
+                    my $Value = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
+                        String => $ExtendedVersionData->{$Column}->{Value} || '',
                     );
-                }
 
-                # KIX4OTRS-capeIT
+                    # convert all whitespace and newlines to single spaces
+                    $Value =~ s{ \s+ }{ }gxms;
+
+                    # add the column
+                    push @ItemColumns, {
+                        Type    => 'Text',
+                        Content => $Value,
+                    };
+
+                    # add the headline
+                    push @ShowColumnsHeadlines, {
+                        Content => $ExtendedVersionData->{$Column}->{Name} || '',
+                    };
+                }
+            }
+
+            # individual column config for this class does not exist,
+            # so the default columns will be used
+            else {
+
+                # add the default columns
+                push @ItemColumns, @AdditionalDefaultItemColumns;
+
+                # add the default column headlines
+                @ShowColumnsHeadlines = (
+                    {
+                        Content => 'Name',
+                    },
+                    {
+                        Content => 'Deployment State',
+                        Width   => 130,
+                    },
+                    {
+                        Content => 'Created',
+                        Width   => 130,
+                    },
+                );
+            }
+
+# KIX4OTRS-capeIT
             }
             else {
                 # create translation hash
@@ -563,8 +565,7 @@ sub TableCreateComplex {
                     push @ItemColumns,          \%TmpHashContent;
                 }
             }
-
-            # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
             push @ItemList, \@ItemColumns;
         }
@@ -576,26 +577,26 @@ sub TableCreateComplex {
             Object    => $Self->{ObjectData}->{Object},
             Blockname => $Self->{ObjectData}->{Realname} . ' (' . $Class . ')',
 
-            # KIX4OTRS-capeIT
-            # Headline  => [
-            #     {
-            #         Content => 'Incident State',
-            #         Width   => 20,
-            #     },
-            #     {
-            #         Content => 'Deployment State',
-            #         Width   => 20,
-            #     },
-            #     {
-            #         Content => 'ConfigItem#',
-            #         Width   => 100,
-            #     },
-            # ],
-            # EO KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
+#             Headline  => [
+#                 {
+#                     Content => 'Incident State',
+#                     Width   => 20,
+#                 },
+#                 {
+#                     Content => 'Deployment State',
+#                     Width   => 20,
+#                 },
+#                 {
+#                     Content => 'ConfigItem#',
+#                     Width   => 100,
+#                 },
+#             ],
+# EO KIX4OTRS-capeIT
             ItemList => \@ItemList,
         );
 
-        # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
         my @Headlines = (
             {
                 Content => 'Incident State',
@@ -610,11 +611,10 @@ sub TableCreateComplex {
                 Width   => 100,
             },
         );
-
-        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
         # add the column headlines
-        # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
         if ( !scalar @Columns ) {
             push @{ $Block{Headline} }, @Headlines;
         }
@@ -631,7 +631,7 @@ sub TableCreateComplex {
             push @TempArray, $Item if $HasAccess;
         }
         $Block{ItemList} = \@TempArray;
-        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
         push @{ $Block{Headline} }, @ShowColumnsHeadlines;
 
         push @BlockData, \%Block;
@@ -920,7 +920,7 @@ sub SelectableObjectList {
     # where the user has the permission to use them
     if (@ObjectSelectList) {
 
-        # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
         # add search all config items as first array element, but only if we are not linking
         my $Action = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam(Param => 'Action');
         if ($Action ne 'AgentLinkObject') {
@@ -929,8 +929,7 @@ sub SelectableObjectList {
                 Value => 'ConfigItem::' . $Self->{LayoutObject}->{LanguageObject}->Translate('All'),
             };
         }
-
-        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
         # add headline as first array element
         unshift @ObjectSelectList, {
@@ -1011,7 +1010,7 @@ sub SearchOptionList {
     #    }
     #}
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     my @FinalSearchOptionList;
     if ( $Param{SubObject} ) {
 
@@ -1028,8 +1027,7 @@ sub SearchOptionList {
         );
 
     }
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     # add formkey
     for my $Row (@SearchOptionList) {
@@ -1060,10 +1058,9 @@ sub SearchOptionList {
                 TemplateFile => 'LinkObject',
             );
 
-            # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
             push( @FinalSearchOptionList, $Row );
-
-            # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
             next ROW;
         }
@@ -1111,17 +1108,17 @@ sub SearchOptionList {
                 SelectedID => $Row->{FormData},
                 Size       => 3,
                 Multiple   => 1,
+                Class      => 'Modernize',
             );
 
-            # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
             push( @FinalSearchOptionList, $Row );
-
-            # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
             next ROW;
         }
 
-        # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
         if ( $Row->{Type} eq 'GeneralCatalog' ) {
 
             # get form data
@@ -1188,15 +1185,13 @@ sub SearchOptionList {
                 . $Row->{Type}
                 . ' removed from search mask',
         );
-
-        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
     }
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     #return @SearchOptionList;
     return @FinalSearchOptionList;
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 }
 
 # KIX4OTRS-capeIT
@@ -1245,7 +1240,6 @@ sub _XMLSearchAttributeList {
 
     return 1;
 }
-
 # EO KIX4OTRS-capeIT
 
 =item _XMLData2Hash()
@@ -1295,10 +1289,9 @@ sub _XMLData2Hash {
         COUNTER:
         for my $Counter ( 1 .. $Item->{CountMax} ) {
 
-            # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
             next ITEM if !defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content};
-
-            # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
             # lookup value
             my $Value = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->XMLValueLookup(
