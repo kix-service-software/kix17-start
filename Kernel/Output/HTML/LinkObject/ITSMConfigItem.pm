@@ -274,7 +274,16 @@ sub TableCreateComplex {
 
         # KIX4OTRS-capeIT
         my @Columns;
+        my $PreferenceClass = $Class;
+        $PreferenceClass =~ s/[^A-Za-z0-9_-]/_/g;
         if (
+            defined $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $PreferenceClass }
+            && scalar @{ $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $PreferenceClass } }
+            )
+        {
+            @Columns = @{ $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $PreferenceClass } };
+        }
+        elsif (
             defined $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $Class }
             && scalar @{ $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $Class } }
             )
@@ -449,8 +458,8 @@ sub TableCreateComplex {
 
                         # convert to ascii text in case the value contains html
                         my $Value = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
-                            String => $ExtendedVersionData->{$Column}->{Value},
-                        ) || '';
+                            String => $ExtendedVersionData->{$Column}->{Value} || '',
+                        );
 
                         # convert all whitespace and newlines to single spaces
                         $Value =~ s{ \s+ }{ }gxms;
@@ -519,8 +528,8 @@ sub TableCreateComplex {
                     }
 
                     $TmpHashContent{Content} = $Version->{$Col} || $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
-                        String => $ExtendedVersionData->{$Col}->{Value},
-                    ) ||'';
+                        String => $ExtendedVersionData->{$Col}->{Value} || '',
+                    );
                     $TmpHashContent{Type}    = 'Text';
                     $TmpHashContent{Key}     = $ConfigItemID;
 

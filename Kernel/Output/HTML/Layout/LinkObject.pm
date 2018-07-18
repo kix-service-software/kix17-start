@@ -292,6 +292,7 @@ sub LinkObjectTableCreateComplex {
         if ( $Block->{Object} eq 'ITSMConfigItem' ) {
             $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
             ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $1 );
+            $Class =~ s/[^A-Za-z0-9_-]/_/g;
         }
 
         my $NoColumnsEnabled = 0;
@@ -474,6 +475,7 @@ sub LinkObjectTableCreateComplex {
         if ( $Block->{Object} eq 'ITSMConfigItem' ) {
             $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
             ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $1 );
+            $Class =~ s/[^A-Za-z0-9_-]/_/g;
         }
 
         # EO KIX4OTRS-capeIT
@@ -1264,6 +1266,8 @@ sub _PreferencesLinkObject {
             # get class
             $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
             ( $Class, $Placeholder1, $Placeholder2 ) = ( $1, '-', '_' );
+            my $RealClass = $Class;
+            $Class =~ s/[^A-Za-z0-9_-]/_/g;
 
             # check if user columns enabled
             if (
@@ -1306,7 +1310,7 @@ sub _PreferencesLinkObject {
                         my ( $DefinedClass, $Col ) = ( $1, $2 );
 
                         # create new entry
-                        if ( $DefinedClass eq $Class ) {
+                        if ( $DefinedClass eq $RealClass ) {
                             my @SplitArray = split( /::/, $Col );
                             my $Count = 0;
                             for my $SplitItem (@SplitArray) {
