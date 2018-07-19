@@ -119,6 +119,8 @@ sub new {
         ScheduleMinutes         => 'ARRAY',
         ScheduleHours           => 'ARRAY',
         EventValues             => 'ARRAY',
+        TicketAttrDeleteIDs     => 'ARRAY',
+        DynamicFieldDeleteIDs   => 'ARRAY',
     );
 
     # add time attributes
@@ -234,6 +236,11 @@ sub JobRun {
                 $NewKey =~ s/^New//;
                 $Job{New}->{$NewKey} = $DBJobRaw{$Key};
             }
+
+            elsif ( $Key =~ /DeleteIDs$/ ) {
+                push(@{$Job{Delete}}, @{$DBJobRaw{$Key}} );
+            }
+
             else {
 
                 # skip dynamic fields
@@ -1149,47 +1156,71 @@ sub _JobRunTicket {
     }
 
     # set new service
-    if ( $Param{Config}->{New}->{Service} ) {
+    if ( grep( { $_ =~ /ServiceID|Service/ } @{$Param{Config}->{Delete}} ) ) {
         if ( $Self->{NoticeSTDOUT} ) {
-            print "  - set service of Ticket $Ticket to '$Param{Config}->{New}->{Service}'\n";
-        }
-        $TicketObject->TicketServiceSet(
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID},
-            Service  => $Param{Config}->{New}->{Service},
-        );
-    }
-    if ( $Param{Config}->{New}->{ServiceID} ) {
-        if ( $Self->{NoticeSTDOUT} ) {
-            print "  - set service id of Ticket $Ticket to '$Param{Config}->{New}->{ServiceID}'\n";
+            print "  - delete service id from Ticket $Ticket\n";
         }
         $TicketObject->TicketServiceSet(
             TicketID  => $Param{TicketID},
             UserID    => $Param{UserID},
-            ServiceID => $Param{Config}->{New}->{ServiceID},
+            ServiceID => "",
         );
+    }
+    else {
+        if ( $Param{Config}->{New}->{Service} ) {
+            if ( $Self->{NoticeSTDOUT} ) {
+                print "  - set service of Ticket $Ticket to '$Param{Config}->{New}->{Service}'\n";
+            }
+            $TicketObject->TicketServiceSet(
+                TicketID => $Param{TicketID},
+                UserID   => $Param{UserID},
+                Service  => $Param{Config}->{New}->{Service},
+            );
+        }
+        if ( $Param{Config}->{New}->{ServiceID} ) {
+            if ( $Self->{NoticeSTDOUT} ) {
+                print "  - set service id of Ticket $Ticket to '$Param{Config}->{New}->{ServiceID}'\n";
+            }
+            $TicketObject->TicketServiceSet(
+                TicketID  => $Param{TicketID},
+                UserID    => $Param{UserID},
+                ServiceID => $Param{Config}->{New}->{ServiceID},
+            );
+        }
     }
 
     # set new sla
-    if ( $Param{Config}->{New}->{SLA} ) {
+    if ( grep( { $_ =~ /SLAID|SLA/ } @{$Param{Config}->{Delete}} ) ) {
         if ( $Self->{NoticeSTDOUT} ) {
-            print "  - set sla of Ticket $Ticket to '$Param{Config}->{New}->{SLA}'\n";
+            print "  - delete sla from Ticket $Ticket\n";
         }
         $TicketObject->TicketSLASet(
             TicketID => $Param{TicketID},
             UserID   => $Param{UserID},
-            SLA      => $Param{Config}->{New}->{SLA},
+            SLAID    => "",
         );
     }
-    if ( $Param{Config}->{New}->{SLAID} ) {
-        if ( $Self->{NoticeSTDOUT} ) {
-            print "  - set sla id of Ticket $Ticket to '$Param{Config}->{New}->{SLAID}'\n";
+    else {
+        if ( $Param{Config}->{New}->{SLA} ) {
+            if ( $Self->{NoticeSTDOUT} ) {
+                print "  - set sla of Ticket $Ticket to '$Param{Config}->{New}->{SLA}'\n";
+            }
+            $TicketObject->TicketSLASet(
+                TicketID => $Param{TicketID},
+                UserID   => $Param{UserID},
+                SLA      => $Param{Config}->{New}->{SLA},
+            );
         }
-        $TicketObject->TicketSLASet(
-            TicketID => $Param{TicketID},
-            UserID   => $Param{UserID},
-            SLAID    => $Param{Config}->{New}->{SLAID},
-        );
+        if ( $Param{Config}->{New}->{SLAID} ) {
+            if ( $Self->{NoticeSTDOUT} ) {
+                print "  - set sla id of Ticket $Ticket to '$Param{Config}->{New}->{SLAID}'\n";
+            }
+            $TicketObject->TicketSLASet(
+                TicketID => $Param{TicketID},
+                UserID   => $Param{UserID},
+                SLAID    => $Param{Config}->{New}->{SLAID},
+            );
+        }
     }
 
     # set new priority
@@ -1300,6 +1331,29 @@ sub _JobRunTicket {
             TransformDates     => 0,
         );
 
+        if ( grep( {$DynamicFieldConfig->{Name} eq $_} @{$Param{Config}->{Delete}} ) ) {
+            my $Success = $DynamicFieldBackendObject->ValueDelete(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                ObjectID           => $Param{TicketID},
+                UserID             => 1,
+            );
+
+            if ($Success) {
+                if ( $Self->{NoticeSTDOUT} ) {
+                    print "  - delete ticket dynamic field $DynamicFieldConfig->{Name} "
+                        . "from Ticket $Ticket'\n";
+                }
+            }
+            else {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "Could not delete dynamic field $DynamicFieldConfig->{Name} "
+                        . "for Ticket $Ticket.",
+                );
+            }
+            next DYNAMICFIELD;
+        }
+
         # check if we got a value or an empty value if
         # an empty value is configured as valid (PossibleNone)
         # for the current dynamic field
@@ -1309,8 +1363,7 @@ sub _JobRunTicket {
                 $DynamicFieldConfig->{Config}->{PossibleNone}
                 || $Value ne ''
             )
-            )
-        {
+        ) {
             my $Success = $DynamicFieldBackendObject->ValueSet(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 ObjectID           => $Param{TicketID},
