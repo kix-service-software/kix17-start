@@ -214,6 +214,33 @@ sub SearchPreferences {
     return %UserID;
 }
 
+sub DeletePreferences {
+    my ( $Self, %Param ) = @_;
+
+    return if !$Param{UserID};
+    return if !$Param{Key};
+
+    # get database object
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    # delete old data
+    return if !$DBObject->Do(
+        SQL => "
+            DELETE FROM $Self->{PreferencesTable}
+            WHERE $Self->{PreferencesTableUserID} = ?
+                AND $Self->{PreferencesTableKey} = ?",
+        Bind => [ \$Param{UserID}, \$Param{Key} ],
+    );
+
+    # delete cache
+    $Kernel::OM->Get('Kernel::System::Cache')->Delete(
+        Type => $Self->{CacheType},
+        Key  => $Self->{CachePrefix} . $Param{UserID},
+    );
+
+    return 1;
+}
+
 1;
 
 =back
