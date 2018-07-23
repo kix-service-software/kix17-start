@@ -89,7 +89,7 @@ sub ExportSearchValuePrepare {
     my ( $Self, %Param ) = @_;
 
     return if !defined $Param{Value};
-    return $Param{Value};
+    return 1;
 }
 
 =item ExportValuePrepare()
@@ -106,7 +106,7 @@ sub ExportValuePrepare {
     my ( $Self, %Param ) = @_;
 
     return if !defined $Param{Value};
-    return $Param{Value};
+    return 1;
 }
 
 =item ImportSearchValuePrepare()
