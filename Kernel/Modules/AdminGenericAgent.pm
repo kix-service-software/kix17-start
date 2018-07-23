@@ -111,8 +111,7 @@ sub Run {
             NewLockID NewDelete NewCMD NewSendNoNotification NewArchiveFlag
             ScheduleLastRun Valid
             )
-            )
-        {
+        ) {
             $GetParam{$Parameter} = $ParamObject->GetParam( Param => $Parameter );
 
             # remove leading and trailing blank spaces
@@ -125,8 +124,7 @@ sub Run {
 
         for my $Type (
             qw(Time ChangeTime CloseTime LastChangeTime TimePending EscalationTime EscalationResponseTime EscalationUpdateTime EscalationSolutionTime)
-            )
-        {
+        ) {
             my $Key = $Type . 'SearchType';
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
         }
@@ -196,10 +194,9 @@ sub Run {
             qw(LockIDs StateIDs StateTypeIDs QueueIDs PriorityIDs OwnerIDs ResponsibleIDs
             TypeIDs ServiceIDs SLAIDs
             ScheduleDays ScheduleMinutes ScheduleHours
-            EventValues
+            EventValues TicketAttrDeleteIDs DynamicFieldDeleteIDs
             )
-            )
-        {
+        ) {
 
             # get search array params (get submitted params)
             if ( $ParamObject->GetArray( Param => $Parameter ) ) {
@@ -398,6 +395,7 @@ sub _MaskUpdate {
     my ( $Self, %Param ) = @_;
 
     my %JobData;
+    my %EventDeleteElements;
 
     if ( $Self->{Profile} ) {
 
@@ -887,6 +885,9 @@ sub _MaskUpdate {
             Name => 'NewTicketService',
             Data => {%JobData},
         );
+
+        $EventDeleteElements{TicketAttr}->{'ServiceID'} = 'Service';
+        $EventDeleteElements{TicketAttr}->{'SLAID'}     = 'Service Level Agreement';
     }
 
     # ticket responsible string
@@ -1089,6 +1090,32 @@ sub _MaskUpdate {
             Data => {
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},
+            },
+        );
+        $EventDeleteElements{DynamicField}->{$DynamicFieldConfig->{Name}} = $DynamicFieldConfig->{Name};
+    }
+
+    for my $Key ( qw(TicketAttr DynamicField) ) {
+
+        $JobData{$Key . 'DeleteStrg'} = $LayoutObject->BuildSelection(
+            Data        => $EventDeleteElements{$Key},
+            Name        => $Key . 'DeleteIDs',
+            Size        => 5,
+            Multiple    => 1,
+            Translation => 1,
+            SelectedID  => $JobData{$Key . 'DeleteIDs'},
+            Class       => 'Modernize',
+        );
+
+        my $FieldLabel = 'Ticket Attributes';
+        $FieldLabel = 'Dynamic Fields' if $Key eq 'DynamicField';
+
+        $LayoutObject->Block(
+            Name => 'NewDeleteField',
+            Data => {
+                DeleteStrg => $JobData{$Key . 'DeleteStrg'},
+                FieldKey   => $Key,
+                FieldLabel => $FieldLabel
             },
         );
     }
