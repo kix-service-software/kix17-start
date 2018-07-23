@@ -10053,6 +10053,7 @@
                 <Item>HistoryDelete</Item>
                 <Item>TicketAccountTime</Item>
                 <Item>TicketMerge</Item>
+                <Item>TicketMergeTarget</Item>
                 <Item>TicketSubscribe</Item>
                 <Item>TicketUnsubscribe</Item>
                 <Item>TicketFlagSet</Item>

@@ -180,9 +180,11 @@ sub _FAQJournalShow {
     $Param{Group}           = $Group;
     $Param{PreferencesKey}  = $PageShownPreferencesKey;
     $Param{PageShownString} = $LayoutObject->BuildSelection(
-        Name       => $PageShownPreferencesKey,
-        SelectedID => $PageShown,
-        Data       => \%Data,
+        Name        => $PageShownPreferencesKey,
+        SelectedID  => $PageShown,
+        Translation => 0,
+        Data        => \%Data,
+        Sort        => 'NumericValue',
     );
 
     # store last overview screen (for back menu action)
