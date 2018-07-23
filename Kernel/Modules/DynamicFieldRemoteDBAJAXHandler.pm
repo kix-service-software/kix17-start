@@ -399,13 +399,28 @@ sub Run {
                     } elsif (
                         $ConstrictionRule[1] eq 'Ticket'
                         && (
-                            $Self->{ParamObject}->GetParam( Param => $ConstrictionRule[2] )
-                            || $TicketData{ $ConstrictionRule[2] }
+                            $WebParams{ $ConstrictionRule[2] }
+                            || defined( $TicketData{ $ConstrictionRule[2] } )
                         )
                     ) {
-                        $ConstrictionValue = $Self->{ParamObject}->GetParam( Param => $ConstrictionRule[2] )
-                                          || $TicketData{ $ConstrictionRule[2] };
-                        $ConstrictionCheck = 1;
+                        # get value from ticket data
+                        $ConstrictionValue = $TicketData{ $ConstrictionRule[2] };
+                        # use only first entry if array is given
+                        if ( ref($ConstrictionValue) eq 'ARRAY' ) {
+                            $ConstrictionValue = $ConstrictionValue->[0];
+                        }
+                        # check if attribute is in web params
+                        if ( $WebParams{ $ConstrictionRule[2] } ) {
+                            $ConstrictionValue = $Self->{ParamObject}->GetParam( Param => $ConstrictionRule[2] ) || '';
+                        }
+                        # mark check success if value is not empty
+                        if ( $ConstrictionValue ) {
+                            $ConstrictionCheck = 1;
+                        }
+                        # set constriction value undef if empty
+                        else {
+                            $ConstrictionValue = undef;
+                        }
                     } elsif (
                         $ConstrictionRule[1] eq 'CustomerUser'
                         && $CustomerUserData{ $ConstrictionRule[2] }
