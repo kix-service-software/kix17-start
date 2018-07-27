@@ -133,7 +133,7 @@ sub Run {
         my @CancelErrorID;
 
         for my $Item (@ContentItems) {
-            next if $Item->{Filename} ne 'CancelErrorID';
+            next if $Item->{Filename} !~ /^CancelError_[0-9]+$/;
             $Item->{Content} = $EncodeObject->Convert(
                 Text => $Item->{Content},
                 From => 'utf-8',
@@ -260,7 +260,9 @@ sub Run {
                 );
                 if ( $Item->{Filename} eq 'GetParam' ) {
                     %GetParam = $JSONObject->Decode( Data => $Item->{Content});
-                } elsif ( $Item->{Filename} eq 'Time' ) {
+                }
+
+                elsif ( $Item->{Filename} eq 'Time' ) {
                     %Time = $JSONObject->Decode( Data => $Item->{Content});
                 }
             }
@@ -286,7 +288,7 @@ sub Run {
                 @TicketIDs = split(',',$Item->{Content});
             }
 
-            elsif ($Item->{Filename} =~ /Ticket_(.*)/) {
+            elsif ($Item->{Filename} =~ /^Ticket_([0-9]+)$/) {
                 my $Data    = $JSONObject->Decode( Data => $Item->{Content});
                 my ($ID)    = $1;
                 next if !defined $ID;
