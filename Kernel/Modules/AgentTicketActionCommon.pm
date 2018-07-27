@@ -309,7 +309,7 @@ sub Run {
         NewStateID NewPriorityID TimeUnits ArticleTypeID Title Body Subject NewQueueID
         Year Month Day Hour Minute NewOwnerID NewResponsibleID TypeID ServiceID SLAID
         Expand ReplyToArticle StandardTemplateID CreateArticle
-        TypeID ServiceID SLAID DestQueue  NewOwnerType OldOwnerID NewResponsibleID
+        TypeID ServiceID SLAID DestQueue  NewOwnerType OldOwnerID NewResponsibleID ElementChanged
         )
 
         # EO KIX4OTRS-capeIT
@@ -723,6 +723,7 @@ sub Run {
                     # set possible values filter from ACLs
                     my $ACL = $TicketObject->TicketAcl(
                         %GetParam,
+                        %ACLCompatGetParam,
                         Action        => $Self->{Action},
                         TicketID      => $Self->{TicketID},
                         ReturnType    => 'Ticket',
@@ -736,8 +737,10 @@ sub Run {
                         # convert Filer key => key back to key => value using map
                         # KIX4OTRS-capeIT
                         # %{$PossibleValuesFilter} = map { $_ => $PossibleValues->{$_} }
-                        %{$DynamicFieldConfig->{ShownPossibleValues}} = map { $_ => $PossibleValues->{$_} }
-                        # EO KIX4OTRS-capeIT
+                        %{ $DynamicFieldConfig->{ShownPossibleValues} }
+                            = map { $_ => $PossibleValues->{$_} }
+
+                            # EO KIX4OTRS-capeIT
                             keys %Filter;
                     }
                 }
@@ -768,17 +771,20 @@ sub Run {
                     # KIX4OTRS-capeIT
                     # PossibleValuesFilter => $PossibleValuesFilter,
                     PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
+
                     # EO KIX4OTRS-capeIT
                     ParamObject          => $ParamObject,
-                    Mandatory =>
-                        $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                    Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                 );
 
                 if ( !IsHashRefWithData($ValidationResult) ) {
                     return $LayoutObject->ErrorScreen(
                         Message =>
                             $LayoutObject->{LanguageObject}
-                            ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
+                            ->Translate(
+                            'Could not perform validation on field %s!',
+                            $DynamicFieldConfig->{Label}
+                            ),
                         Comment => Translatable('Please contact the administrator.'),
                     );
                 }
@@ -792,10 +798,12 @@ sub Run {
             # get field html
             $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
                 $DynamicFieldBackendObject->EditFieldRender(
-                DynamicFieldConfig   => $DynamicFieldConfig,
+                DynamicFieldConfig => $DynamicFieldConfig,
+
                 # KIX4OTRS-capeIT
                 # PossibleValuesFilter => $PossibleValuesFilter,
                 PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
+
                 # EO KIX4OTRS-capeIT
                 Mandatory =>
                     $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
@@ -816,6 +824,7 @@ sub Run {
                 Value     => $Ticket{TicketNumber},
                 BodyClass => 'Popup',
             );
+
             $Output .= $Self->_Mask(
                 Attachments       => \@Attachments,
                 TimeUnitsRequired => (
@@ -827,6 +836,7 @@ sub Run {
                 DynamicFieldHTML => \%DynamicFieldHTML,
                 IsUpload         => $IsUpload,
                 %GetParam,
+                %ACLCompatGetParam,
                 %Error,
             );
             $Output .= $LayoutObject->Footer(
@@ -1322,33 +1332,39 @@ sub Run {
 
         my $Owners = $Self->_GetOwners(
             %GetParam,
+            %ACLCompatGetParam,
             QueueID  => $QueueID,
             StateID  => $StateID,
             AllUsers => $GetParam{OwnerAll},
         );
         my $OldOwners = $Self->_GetOldOwners(
             %GetParam,
+            %ACLCompatGetParam,
             QueueID  => $QueueID,
             StateID  => $StateID,
             AllUsers => $GetParam{OwnerAll},
         );
         my $ResponsibleUsers = $Self->_GetResponsible(
             %GetParam,
+            %ACLCompatGetParam,
             QueueID  => $QueueID,
             StateID  => $StateID,
             AllUsers => $GetParam{OwnerAll},
         );
         my $Priorities = $Self->_GetPriorities(
             %GetParam,
+            %ACLCompatGetParam,
         );
         my $Services = $Self->_GetServices(
             %GetParam,
+            %ACLCompatGetParam,
             CustomerUserID => $CustomerUser,
             QueueID        => $QueueID,
             StateID        => $StateID,
         );
         my $Types = $Self->_GetTypes(
             %GetParam,
+            %ACLCompatGetParam,
             CustomerUserID => $CustomerUser,
             QueueID        => $QueueID,
             StateID        => $StateID,
@@ -1384,18 +1400,21 @@ sub Run {
                 # re-evaluate owners and responsible
                 $Owners = $Self->_GetOwners(
                     %GetParam,
+                     %ACLCompatGetParam,
                     QueueID  => $QueueID,
                     NewQueueID => $QueueID,
                     AllUsers => $GetParam{OwnerAll},
                 );
                 $OldOwners = $Self->_GetOldOwners(
                     %GetParam,
+                    %ACLCompatGetParam,
                     QueueID  => $QueueID,
                     NewQueueID => $QueueID,
                     AllUsers => $GetParam{OwnerAll},
                 );
                 $ResponsibleUsers = $Self->_GetResponsible(
                     %GetParam,
+                    %ACLCompatGetParam,
                     QueueID  => $QueueID,
                     NewQueueID => $QueueID,
                     AllUsers => $GetParam{OwnerAll},
@@ -1407,6 +1426,7 @@ sub Run {
 
         my $SLAs = $Self->_GetSLAs(
             %GetParam,
+            %ACLCompatGetParam,
             CustomerUserID => $CustomerUser,
             QueueID        => $QueueID,
             StateID        => $StateID,
@@ -1414,6 +1434,7 @@ sub Run {
         );
         my $NextStates = $Self->_GetNextStates(
             %GetParam,
+            %ACLCompatGetParam,
             CustomerUserID => $CustomerUser || '',
             QueueID        => $QueueID,
             StateID        => $StateID,
@@ -1421,6 +1442,7 @@ sub Run {
 
         # update Dynamic Fields Possible Values via AJAX
         my @DynamicFieldAJAX;
+
         # KIX4OTRS-capeIT
         my %DynamicFieldHTML;
 
@@ -1449,6 +1471,7 @@ sub Run {
 
                 next DYNAMICFIELD;
             }
+
             # EO KIX4OTRS-capeIT
 
             my $PossibleValues = $DynamicFieldBackendObject->PossibleValuesGet(
@@ -1462,6 +1485,7 @@ sub Run {
             # set possible values filter from ACLs
             my $ACL = $TicketObject->TicketAcl(
                 %GetParam,
+                %ACLCompatGetParam,
                 Action        => $Self->{Action},
                 TicketID      => $Self->{TicketID},
                 QueueID       => $QueueID,
@@ -1494,7 +1518,8 @@ sub Run {
                 ParamObject     => $ParamObject,
                 AJAXUpdate      => 1,
                 UpdatableFields => $Self->_GetFieldsToUpdate(),
-            );
+                );
+
             # EO KIX4OTRS-capeIT
 
             # add dynamic field to the list of fields to update
@@ -1548,6 +1573,7 @@ sub Run {
                 Max  => 10000,
             };
         }
+
         # EO KIX4OTRS-capeIT
 
         my $StandardTemplates = $Self->_GetStandardTemplates(
@@ -2009,9 +2035,11 @@ sub Run {
                 : ''
             ),
             %GetParam,
+            %ACLCompatGetParam,
             %Ticket,
             DynamicFieldHTML => \%DynamicFieldHTML,
         );
+
         $Output .= $LayoutObject->Footer(
             Type => 'Small',
         );
@@ -2255,7 +2283,7 @@ sub _Mask {
             Size           => 0,
             Class          => 'NewQueueID Modernize',
             Name           => 'NewQueueID',
-            SelectedID     => $Param{NewQueueID},
+            SelectedID     => $Param{NewQueueID} || '',
             TreeView       => $TreeView,
             CurrentQueueID => $Param{QueueID},
             OnChangeSubmit => 0,
@@ -2466,6 +2494,7 @@ sub _Mask {
             PossibleNone => 1,
             Size         => 1,
         );
+
         $LayoutObject->Block(
             Name => 'Responsible',
             Data => \%Param,
@@ -2640,15 +2669,17 @@ sub _Mask {
 
         # get the html strings form $Param
         my $DynamicFieldHTML = $Param{DynamicFieldHTML}->{ $DynamicFieldConfig->{Name} };
-# ---
-# ITSMIncidentProblemManagement
-# ---
+
+        # ---
+        # ITSMIncidentProblemManagement
+        # ---
         # remember dynamic fields that should be displayed individually
         if ( $DynamicFieldConfig->{Name} eq 'ITSMImpact' ) {
             push @IndividualDynamicFields, $DynamicFieldConfig;
             next DYNAMICFIELD;
         }
-# ---
+
+        # ---
 
         # KIX4OTRS-capeIT
         my $Class = "";
@@ -2656,6 +2687,7 @@ sub _Mask {
             $Class = " Hidden";
             $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
         }
+
         # EO KIX4OTRS-capeIT
 
         $LayoutObject->Block(
@@ -2682,12 +2714,13 @@ sub _Mask {
             },
         );
     }
-# ---
-# ITSMIncidentProblemManagement
-# ---
+
+    # ---
+    # ITSMIncidentProblemManagement
+    # ---
     # cycle trough dynamic fields that should be displayed individually
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @IndividualDynamicFields ) {
+    for my $DynamicFieldConfig (@IndividualDynamicFields) {
 
         # get the html strings form $Param
         my $DynamicFieldHTML = $Param{DynamicFieldHTML}->{ $DynamicFieldConfig->{Name} };
@@ -2702,7 +2735,8 @@ sub _Mask {
             },
         );
     }
-# ---
+
+    # ---
 
     # End Widget Dynamic Fields
 
@@ -2730,8 +2764,9 @@ sub _Mask {
             $Param{BodyRequired}    = 'Validate_Required';
         }
         else {
-            $Param{SubjectRequired} = 'Validate_DependingRequiredAND Validate_Depending_CreateArticle';
-            $Param{BodyRequired}    = 'Validate_DependingRequiredAND Validate_Depending_CreateArticle';
+            $Param{SubjectRequired}
+                = 'Validate_DependingRequiredAND Validate_Depending_CreateArticle';
+            $Param{BodyRequired} = 'Validate_DependingRequiredAND Validate_Depending_CreateArticle';
         }
 
         $LayoutObject->Block(
@@ -2850,7 +2885,8 @@ sub _Mask {
                 }
             }
 
-            my $InvolvedAgentSize = $ConfigObject->Get('Ticket::Frontend::InvolvedAgentMaxSize') || 3;
+            my $InvolvedAgentSize
+                = $ConfigObject->Get('Ticket::Frontend::InvolvedAgentMaxSize') || 3;
             $Param{InvolvedAgentStrg} = $LayoutObject->BuildSelection(
                 Data       => \@InvolvedAgents,
                 SelectedID => \@InvolvedUserID,
@@ -2989,10 +3025,11 @@ sub _Mask {
         }
 
         # build text template string
-        my %StandardTemplates = $Kernel::OM->Get('Kernel::System::StandardTemplate')->StandardTemplateList(
+        my %StandardTemplates
+            = $Kernel::OM->Get('Kernel::System::StandardTemplate')->StandardTemplateList(
             Valid => 1,
             Type  => 'Note',
-        );
+            );
 
         my $QueueStandardTemplates = $Self->_GetStandardTemplates(
             %Param,
@@ -3278,8 +3315,9 @@ sub _GetServices {
         # EO KIX4OTRS-capeIT
         %Service = $Kernel::OM->Get('Kernel::System::Ticket')->TicketServiceList(
             %Param,
-            Action => $Self->{Action},
-            UserID => $Self->{UserID},
+            TicketID => $Self->{TicketID},
+            Action   => $Self->{Action},
+            UserID   => $Self->{UserID},
         );
     }
     return \%Service;
@@ -3308,12 +3346,9 @@ sub _GetSLAs {
     if ( $Param{ServiceID} ) {
         %SLA = $Kernel::OM->Get('Kernel::System::Ticket')->TicketSLAList(
             %Param,
-            Action => $Self->{Action},
-
-            # KIX4OTRS-capeIT
-            UserID => $Self->{UserID},
-
-            # EO KIX4OTRS-capeIT
+            TicketID => $Self->{TicketID},
+            Action   => $Self->{Action},
+            UserID   => $Self->{UserID},
         );
     }
     return \%SLA;
@@ -3413,7 +3448,8 @@ sub _GetQuotedReplyBody {
                 );
 
                 my $ResponseFormat
-                    = $LayoutObject->{LanguageObject}->FormatTimeString( $Param{Created}, 'DateFormat', 'NoSeconds' );
+                    = $LayoutObject->{LanguageObject}
+                    ->FormatTimeString( $Param{Created}, 'DateFormat', 'NoSeconds' );
                 $ResponseFormat .= ' - ' . $Param{From} . ' ';
                 $ResponseFormat
                     .= $LayoutObject->{LanguageObject}->Translate('wrote') . ':';
@@ -3535,8 +3571,9 @@ sub _GetTypes {
     if ( $Param{QueueID} || $Param{TicketID} ) {
         %Type = $Kernel::OM->Get('Kernel::System::Ticket')->TicketTypeList(
             %Param,
-            Action => $Self->{Action},
-            UserID => $Self->{UserID},
+            TicketID => $Self->{TicketID},
+            Action   => $Self->{Action},
+            UserID   => $Self->{UserID},
         );
     }
     return \%Type;
@@ -3599,6 +3636,7 @@ sub _GetShownDynamicFields {
 
     return 1;
 }
+
 # EO KIX4OTRS-capeIT
 1;
 
