@@ -46,8 +46,10 @@ Core.Agent.HidePendingTimeInput = (function (TargetNS) {
     TargetNS.DisplayInput = function (Value, Data) {
         if(Data[Value]){
             $('.HidePendingTimeInput').show();
+            Core.Form.Validate.EnableValidation($('.HidePendingTimeInput'));
         }else{
             $('.HidePendingTimeInput').hide();
+            Core.Form.Validate.DisableValidation($('.HidePendingTimeInput'));
         }
     };
 
