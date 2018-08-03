@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <database Name="kix">
+    <TableAlter Name="article">
+        <ColumnChange NameOld="a_to" NameNew="a_to" Required="false" Size="1800000" Type="VARCHAR"/>
+        <ColumnChange NameOld="a_cc" NameNew="a_cc" Required="false" Size="1800000" Type="VARCHAR"/>
+    </TableAlter>
 
     <TableCreate Name="dynamic_field_value_ttl">
         <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
