@@ -898,14 +898,19 @@ sub Run {
                 @ViewableTicketIDsDF
             );
 
-            # sort merged tickets
-            @ViewableTicketIDs = $TicketObject->TicketSearch(
-                Result    => 'ARRAY',
-                SortBy    => $Self->{SortBy},
-                OrderBy   => $Self->{OrderBy},
-                UserID    => $Self->{UserID},
-                TicketID  => \@MergeArray
-            );
+            if ( scalar(@MergeArray) > 1 ) {
+                # sort merged tickets
+                @ViewableTicketIDs = $TicketObject->TicketSearch(
+                    Result    => 'ARRAY',
+                    SortBy    => $Self->{SortBy},
+                    OrderBy   => $Self->{OrderBy},
+                    UserID    => $Self->{UserID},
+                    TicketID  => \@MergeArray
+                );
+            }
+            else {
+                @ViewableTicketIDs = @MergeArray;
+            }
         }
 
         # linked tickets
