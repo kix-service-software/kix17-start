@@ -125,8 +125,7 @@ sub Run {
 
         for my $Type (
             qw(Time ChangeTime CloseTime LastChangeTime TimePending EscalationTime EscalationResponseTime EscalationUpdateTime EscalationSolutionTime)
-            )
-        {
+        ) {
             my $Key = $Type . 'SearchType';
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
         }
@@ -198,8 +197,7 @@ sub Run {
             ScheduleDays ScheduleMinutes ScheduleHours
             EventValues
             )
-            )
-        {
+        ) {
 
             # get search array params (get submitted params)
             if ( $ParamObject->GetArray( Param => $Parameter ) ) {
