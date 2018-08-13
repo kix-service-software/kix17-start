@@ -2748,6 +2748,18 @@ sub PageNavBar {
         }
     }
 
+    my $Wrapper = '';
+    if ( $IDPrefix ne 'AgentCustomerSearch' ) {
+        $Wrapper = 'Wrapper';
+        $Self->Block(
+            Name => 'PaginationJSWrapper',
+        );
+    } else {
+        $Self->Block(
+            Name => 'PaginationJS',
+        );
+    }
+
     if ( $Pages > 1 ) {
         for my $Parameter ( qw(Action Link) ) {
             if ( $Param{$Parameter} ) {
@@ -2764,20 +2776,27 @@ sub PageNavBar {
                 }
             }
         }
-        for my $Block ( qw(PageHidden PageLink) ) {
-            $Self->Block(
-                Name => $Block,
-                Data => {
-                    Baselink => $Baselink,
-                    IDPrefix => $IDPrefix,
-                }
-            );
-        }
+
+        $Self->Block(
+            Name => 'PageHidden',
+            Data => {
+                Baselink => $Baselink,
+                IDPrefix => $IDPrefix,
+            }
+        );
+
+        $Self->Block(
+            Name => 'PageLink' . $Wrapper,
+            Data => {
+                Baselink => $Baselink,
+                IDPrefix => $IDPrefix,
+            }
+        );
     }
 
     if ( $IDPrefix !~ /^Dashboard/ ) {
         $Self->Block(
-            Name => 'PageSelectItem',
+            Name => 'PageSelectItem' . $Wrapper,
         );
     }
 

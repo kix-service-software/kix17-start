@@ -45,7 +45,21 @@
     <a id="[% Data.IDPrefix %]PageAllForward" title="[% Translate("Show last page") | html %]"  class="PageLink PageAJAX" StartHit="[% Data.StartHitNext %]" StartWindow="[% Data.StartWindowNext %]" Identifier="[% Data.AjaxReplace %]">&gt;|</a>
 [% RenderBlockEnd("PageForwardAjax") %]
 
+[% RenderBlockStart("PaginationJSWrapper") %]
 [% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+[% RenderBlockStart("PageLinkWrapper") %]
+    Core.UI.Pagination.Init('[% Data.Baselink %]', '[% Data.IDPrefix %]');
+[% RenderBlockEnd("PageLinkWrapper") %]
+
+[% RenderBlockStart("PageSelectItemWrapper") %]
+    Core.UI.Pagination.InitSelectItem();
+[% RenderBlockEnd("PageSelectItemWrapper") %]
+//]]></script>
+[% END %]
+[% RenderBlockEnd("PaginationJSWrapper"") %]
+
+[% RenderBlockStart("PaginationJS") %]
 <script type="text/javascript">//<![CDATA[
 [% RenderBlockStart("PageLink") %]
     Core.UI.Pagination.Init('[% Data.Baselink %]', '[% Data.IDPrefix %]');
@@ -55,5 +69,6 @@
     Core.UI.Pagination.InitSelectItem();
 [% RenderBlockEnd("PageSelectItem") %]
 //]]></script>
-[% END %]
+[% RenderBlockEnd("PaginationJS") %]
+
 </form>
