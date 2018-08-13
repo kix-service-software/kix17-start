@@ -112,7 +112,7 @@ sub Run {
         );
     }
 
-    if ( !IsHashRefWithData($Webservice) ) {
+    if ( !IsHashRefWithData($Webservice) || $Webservice->{ValidID} != 1 ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message =>
