@@ -122,6 +122,17 @@ sub Run {
         return;    # bail out without Transport, Apache will generate 500 Error
     }
 
+    # Check if web service has valid state.
+    if ( $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $Webservice->{ValidID} ) ne 'valid' ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message =>
+                "Web service '$Webservice->{Name}' is not valid and can not be loaded",
+        );
+
+        return;    # bail out without Transport, Apache will generate 500 Error
+    }
+
     $WebserviceID = $Webservice->{ID};
 
     #

@@ -33,7 +33,12 @@ Core.KIX4OTRS.Form.Validate = (function(TargetNS) {
             if (DateObject.getFullYear() === parseInt(YearValue, 10) && DateObject.getMonth() + 1 === parseInt(MonthValue, 10) && DateObject.getDate() === parseInt(DayValue, 10)) {
                 if (DateInFuture) {
                     DateCheck = new Date();
-                    if (MinuteValue.length && HourValue.length) {
+
+                    if ( MinuteValue !== undefined
+                        && HourValue !== undefined
+                        && MinuteValue.length
+                        && HourValue.length
+                    ) {
                         DateObject.setHours(HourValue, MinuteValue, 0, 0);
                     }
                     else {

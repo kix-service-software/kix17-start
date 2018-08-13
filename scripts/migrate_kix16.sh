@@ -31,25 +31,31 @@ elif [ -f /etc/debian_version ]; then
     APACHEUSER=www-data
 fi
 
+getConfig() {
+    CONFIGKEY=$1
+    RESULT=`export PERL5LIB=.:$PERL5LIB; perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "$CONFIGKEY=" | cut -d= -f2 | cut -d: -f2`
+    echo $RESULT
+}
+
 # determine KIX16 parameters
 cd /opt/kix16
-KIX16_VERSION=`cat RELEASE | grep VERSION | cut -d' ' -f3 | sed -e "s/\s*//g"`
-KIX16_DBMS=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseDSN=" | cut -d= -f2 | cut -d: -f2`
-KIX16_DB=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "Database=" | cut -d= -f2 | cut -d: -f2`
-KIX16_DBUSER=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseUser=" | cut -d= -f2 | cut -d: -f2`
-KIX16_DBHOST=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseHost=" | cut -d= -f2 | cut -d: -f2`
-KIX16_DBPW=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabasePw=" | cut -d= -f2 | cut -d: -f2`
-KIX16_DBPW=`perl -e 'use Kernel::System::DB; if ( "$ARGV[0]" =~ /^\{(.*)\}$/ ) { my $Result = Kernel::System::DB::_Decrypt({}, "$ARGV[0]");chop($Result);print $Result;} else { print "$ARGV[0]" }' $KIX16_DBPW`;
+KIX16_VERSION=`cat ./RELEASE | grep VERSION | cut -d' ' -f3 | sed -e "s/\s*//g"`
+KIX16_DBMS=$(getConfig "DatabaseDSN")
+KIX16_DB=$(getConfig "Database")
+KIX16_DBUSER=$(getConfig "DatabaseUser")
+KIX16_DBHOST=$(getConfig "DatabaseHost")
+KIX16_DBPW=$(getConfig "DatabasePw")
+KIX16_DBPW=`export PERL5LIB=.:$PERL5LIB; perl -e 'use Kernel::System::DB; if ( "$ARGV[0]" =~ /^\{(.*)\}$/ ) { my $Result = Kernel::System::DB::_Decrypt({}, "$ARGV[0]");chop($Result);print $Result;} else { print "$ARGV[0]" }' $KIX16_DBPW`;
 
 # determine KIX DBMS and DB
 cd /opt/kix
 KIX17_VERSION=`cat RELEASE | grep VERSION | cut -d' ' -f3 | sed -e "s/\s*//g"`
-KIX17_DBMS=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseDSN=" | cut -d= -f2 | cut -d: -f2`
-KIX17_DB=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "Database=" | cut -d= -f2 | cut -d: -f2`
-KIX17_DBUSER=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseUser=" | cut -d= -f2 | cut -d: -f2`
-KIX17_DBHOST=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabaseHost=" | cut -d= -f2 | cut -d: -f2`
-KIX17_DBPW=`perl -e 'use Kernel::Config;my %Data;Kernel::Config::Load(\%Data);foreach (keys %Data) {print "$_=$Data{$_}\n"}' | grep "DatabasePw=" | cut -d= -f2 | cut -d: -f2`
-KIX17_DBPW=`perl -e 'use Kernel::System::DB; if ( "$ARGV[0]" =~ /^\{(.*)\}$/ ) { my $Result = Kernel::System::DB::_Decrypt({}, "$ARGV[0]");chop($Result);print $Result;} else { print "$ARGV[0]" }' $KIX17_DBPW`;
+KIX17_DBMS=$(getConfig "DatabaseDSN")
+KIX17_DB=$(getConfig "Database")
+KIX17_DBUSER=$(getConfig "DatabaseUser")
+KIX17_DBHOST=$(getConfig "DatabaseHost")
+KIX17_DBPW=$(getConfig "DatabasePw")
+KIX17_DBPW=`export PERL5LIB=.:$PERL5LIB; perl -e 'use Kernel::System::DB; if ( "$ARGV[0]" =~ /^\{(.*)\}$/ ) { my $Result = Kernel::System::DB::_Decrypt({}, "$ARGV[0]");chop($Result);print $Result;} else { print "$ARGV[0]" }' $KIX16_DBPW`;
 
 echo
 

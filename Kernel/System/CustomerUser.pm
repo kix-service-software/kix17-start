@@ -149,18 +149,17 @@ sub new {
 
         # KIX4OTRS-capeIT
         my $BackendGroups = $ConfigObject->Get("CustomerUser$Count")->{AccessGroups} || "";
-
-        my $Access = 1;
+        my $Access        = 1;
         if (
             $Param{UserID}
             && (
                 $Param{UserID} eq '1'
                 || $Param{UserID} eq $ConfigObject->Get("CustomerPanelUserID")
             )
-            )
-        {
+        ) {
             $Access = 1;
         }
+
         elsif ( $BackendGroups && ref $BackendGroups eq 'ARRAY' ) {
             GROUP:
             for my $Group ( @{$BackendGroups} ) {

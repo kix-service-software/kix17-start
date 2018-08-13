@@ -38,7 +38,20 @@ Core.UI.Pagination = (function (TargetNS) {
                 StartWindow = $(this).attr('StartWindow'),
                 URL         = BaseLinks[IDPrefix];
 
-            if ( $(this).hasClass('PageAJAX') ) {
+            if ( IDPrefix === 'AgentCustomerSearch' ) {
+                if ( StartHit ) {
+                    URL += ';StartHit=' + StartHit;
+                }
+                if ( StartWindow ) {
+                    URL += ';StartWindow=' + StartWindow;
+                }
+
+                Core.AJAX.ContentUpdate($('#CustomerTickets'), URL, function () {
+                    Core.Agent.CustomerSearch.ReplaceCustomerTicketLinks();
+                });
+                return false;
+            }
+            else if ( $(this).hasClass('PageAJAX') ) {
                 var $Container  = $(this).parents('.WidgetSimple'),
                     Identifier  = $(this).attr('Identifier');
 

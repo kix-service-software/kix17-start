@@ -266,11 +266,11 @@ sub Run {
             );
         }
 
-        # build JSON output
-        $JSON = $LayoutObject->JSONEncode(
-            Data => {
-                CustomerTicketsHTMLString => $CustomerTicketsHTMLString,
-            },
+        return $LayoutObject->Attachment(
+            ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
+            Content     => $CustomerTicketsHTMLString || '',
+            Type        => 'inline',
+            NoCache     => 1,
         );
     }
 

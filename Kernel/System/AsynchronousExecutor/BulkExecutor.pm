@@ -136,7 +136,7 @@ sub _BulkLock {
 
     my $FileID = $Self->{UploadCacheObject}->FormIDAddFile(
         FormID      => $FormID,
-        Filename    => 'Ticket_'.$Param{TicketID},
+        Filename    => 'Ticket_' . $Param{TicketID},
         Content     => $Self->{JSONObject}->Encode( Data => \%Data),
         ContentType => 'text/xml',
     );
@@ -532,7 +532,7 @@ sub _BulkCancel {
     if ( !$Lock ) {
         my $FileID = $Self->{UploadCacheObject}->FormIDAddFile(
             FormID      => $FormID,
-            Filename    => 'CancelErrorID',
+            Filename    => 'CancelError_' . $Param{TicketID},
             Content     => $Param{TicketID},
             ContentType => 'text/xml',
         );

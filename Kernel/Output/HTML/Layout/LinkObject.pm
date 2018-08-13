@@ -129,7 +129,8 @@ sub LinkObjectTableCreateComplex {
 
     # KIX4OTRS-capeIT
     # get user data
-    my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Self->{UserID} );
+    my %UserData
+        = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Self->{UserID} );
     my @UserLinkObjectTablePosition = ();
     if ( $UserData{ 'UserLinkObjectTablePosition-' . $Self->{Action} } ) {
         @UserLinkObjectTablePosition
@@ -291,6 +292,7 @@ sub LinkObjectTableCreateComplex {
         if ( $Block->{Object} eq 'ITSMConfigItem' ) {
             $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
             ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $1 );
+            $Class =~ s/[^A-Za-z0-9_-]/_/g;
         }
 
         my $NoColumnsEnabled = 0;
@@ -439,26 +441,8 @@ sub LinkObjectTableCreateComplex {
 
                 # EO KIX4OTRS-capeIT
 
-                # $CheckboxCell = {};
-
                 # add checkbox cell to item
-                # KIX4OTRS-capeIT
-                if (
-                    !(
-                        $Block->{Object} eq 'ITSMConfigItem'
-                        && defined $Param{LinkConfigItem}
-                        && !$Param{LinkConfigItem}
-                    )
-                    )
-                {
-
-                    # EO KIX4OTRS-capeIT
-                    unshift @{$Item}, $CheckboxCell;
-
-                    # KIX4OTRS-capeIT
-                }
-
-                # EO KIX4OTRS-capeIT
+                unshift @{$Item}, $CheckboxCell;
             }
         }
     }
@@ -469,7 +453,8 @@ sub LinkObjectTableCreateComplex {
     );
 
     # set block description
-    my $BlockDescription = $Param{ViewMode} eq 'ComplexAdd' ? Translatable('Search Result') : Translatable('Linked');
+    my $BlockDescription
+        = $Param{ViewMode} eq 'ComplexAdd' ? Translatable('Search Result') : Translatable('Linked');
 
     my $BlockCounter = 0;
 
@@ -490,6 +475,7 @@ sub LinkObjectTableCreateComplex {
         if ( $Block->{Object} eq 'ITSMConfigItem' ) {
             $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
             ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $1 );
+            $Class =~ s/[^A-Za-z0-9_-]/_/g;
         }
 
         # EO KIX4OTRS-capeIT
@@ -992,7 +978,7 @@ sub _LinkObjectContentStringCreate {
 
         # transform ascii to html
         $Content->{Content} = $Param{LayoutObject}->Ascii2Html(
-            Text => $String || '-',
+            Text           => $String || '-',
             HTMLResultMode => 1,
             LinkFeature    => 0,
         );
@@ -1280,6 +1266,8 @@ sub _PreferencesLinkObject {
             # get class
             $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
             ( $Class, $Placeholder1, $Placeholder2 ) = ( $1, '-', '_' );
+            my $RealClass = $Class;
+            $Class =~ s/[^A-Za-z0-9_-]/_/g;
 
             # check if user columns enabled
             if (
@@ -1322,7 +1310,7 @@ sub _PreferencesLinkObject {
                         my ( $DefinedClass, $Col ) = ( $1, $2 );
 
                         # create new entry
-                        if ( $DefinedClass eq $Class ) {
+                        if ( $DefinedClass eq $RealClass ) {
                             my @SplitArray = split( /::/, $Col );
                             my $Count = 0;
                             for my $SplitItem (@SplitArray) {
