@@ -6727,7 +6727,7 @@ Ihr Helpdesk-Team
             '',
         'Specifies the available note types for this ticket mask. If the option is deselected, ArticleTypeDefault is used and the option is removed from the mask.' =>
             '',
-        'Specifies the default article type for the ticket compose screen in the agent interface if the article type cannot be automatically detected.' =>
+        'Specifies the default article type for the ticket compose screen in the agent interface.' =>
             '',
         'Specifies the different article types that will be used in the system.' =>
             'Legt die verschiedenen Artikel-Typen fest, die im System verwendet werden.',
