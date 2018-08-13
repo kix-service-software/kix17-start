@@ -450,6 +450,7 @@
     Core.Customer.TicketZoom.Init();
 # KIX4OTRS-capeIT
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("CustomerTicketZoomSidebarWidth") %]','[% Env("Action") %]','TicketID=[% Data.TicketID | uri %]');
+    Core.UI.InitWidgetActionToggle();
 # EO KIX4OTRS-capeIT
     $('a.AsPopup').bind('click', function (Event) {
         Core.UI.Popup.OpenPopup($(this).attr('href'), 'TicketAction');
