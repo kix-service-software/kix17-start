@@ -1,6 +1,45 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.3.3-RC1 (2018/08/13)
+ * (2018/08/13) - Bugfix: T2018080990000811 (ticket state not updated in agent ticket zoom tabs) (millinger)
+ * (2018/08/13) - Bugfix: T2018080890000635 (widget toggle not initialized in customer ticket zoom) (millinger)
+ * (2018/08/13) - Bugfix: T2018070990000411 (description changed of SysConfig key 
+Ticket::Frontend::AgentTicketCompose###DefaultArticleType
+
+some code formatting) (ddoerffel)
+ * (2018/08/13) - Bugfix: T2018080990001043 (invalid Webservice is still usable) (rbo)
+ * (2018/08/08) - Bugfix: T2018072790000708 (fixed missing actions of the pagination of the customer history table) (fjacquemin)
+ * (2018/08/07) - Bugfix: T2017121390001109 (Fixed problem with TransitionAction placeholder assignment) (fjacquemin)
+ * (2018/08/07) - Bugfix: T2018080390000591 (fixed wrong data entry in imexport_object table for customer company mapping) (fjacquemin)
+ * (2018/08/07) - Bugfix: T2018080390000724 (fixed missing closed HTML-Tags in login screen) (fjacquemin)
+ * (2018/08/06) - Bugfix: T2018073190000951 (Fulltext-Search shows all tickets if search matched nothing) (millinger)
+ * (2018/08/03) - Bugfix: T2018050490000791 (faq search for title and keyword word by word) (millinger)
+ * (2018/08/01) - Bugfix: T2018062090003756 (invalid sql for faq sidebar with separate tailing exclamation mark) (millinger)
+ * (2018/08/01) - Bugfix: T2018062090003765 (invalid sql for ticket sidebar with separate tailing exclamation mark) (millinger)
+ * (2018/08/01) - Bugfix: T2018061990001046 (disable validation of pending time while hidden) (millinger)
+ * (2018/07/27) - Bugfix: T2018071190000925 (fixed missing tickets in the bulk actions when the web upload cache FS used) (fjacquemin)
+ * (2018/07/27) - Bugfix: T2018072790000548 (re-added removed $DIBI$ pattern because windows installer doesn't work anymore) (rbo)
+ * (2018/07/25) - Bugfix: T2018070390000495 (wrong acl handling in AgentTicketNote) (ddoerffel)
+ * (2018/07/25) - Bugfix: T2018062190000819 (date transformation missing) (ddoerffel)
+ * (2018/07/25) - Bugfix: T2018071090000801 (create article not activated) (ddoerffel)
+ * (2018/07/18) - Bugfix: T2017101790000599 (replace whitespaces in class names for link object preferences) (millinger)
+ * (2018/07/17) - Bugfix: T2018060790000981 (fix im-/export of dummy fields) (millinger)
+ * (2018/07/17) - Bugfix: T2017112490001279 (fixed sorting of pagination preferences) (millinger)
+ * (2018/07/13) - Bugfix: T2018060790001069 (added current directory to Perl library path due to new perl in debian 9 etc.) (rbo)
+ * (2018/07/12) - Usability-CR: T2018062290000773 (added TicketMergeTarget to Events###Ticket) (ddoerffel)
+ * (2018/07/12) - Bugfix: T2018071290000521 (DF RemoteDB fails value check for constricted array values) (millinger)
+ * (2018/07/11) - Bugfix: T2018062090003569 (Fixed incorrect transfer to parameters in the CustomerTicketProcess) (fjacquemin)
+ * (2018/07/11) - Bugfix: T2018042390000561 (fixed no check on Validate when a dynamic field of type Date is used) (fjacquemin)
+ * (2018/07/06) - Bugfix: T2018041990000676 (log error on ticket split with unknown customer) (ddoerffel)
+ * (2018/07/06) - Bugfix: T2018050390001327 (checkbox cell should always be displayed) (ddoerffel)
+ * (2018/07/06) - Bugfix: T2018070590000277 (missing translation for queues and services) (ddoerffel)
+ * (2018/07/06) - Bugfix: T2018010490000904 (translate some attributes for customer process) (ddoerffel)
+ * (2018/07/06) - Bugfix: T2018070590000571 (wrong syntax for opacity) (ddoerffel)
+ * (2018/06/29) - Bugfix: T2018051490001057 (fixed ITSM bulk action creates new config item version with obsolete CIClass DefinitionID) (fjacquemin)
+ * (2018/06/29) - Bugfix: T2018030990000893 (fixed incorrect trimming of linebreaks) (fjacquemin)
+ * (2018/06/08) - Bugfix: T2018031290001082 (added search parameters) (ddoerffel)
+
 # 17.3.2 (2018/06/29)
  * (2018/06/29) - productive release
 
