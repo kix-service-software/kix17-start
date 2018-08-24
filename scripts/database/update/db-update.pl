@@ -44,7 +44,7 @@ if ($Opts{s} =~ /^(\d+).(\d+).(\d+)$/g) {
 }
 
 if (!$StartVersion) {
-    print STDERR "Wrong version format (Start)!\n"; 
+    print STDERR "Wrong version format ($Opts{s})!\n"; 
     exit 1;
 }
 
@@ -54,7 +54,7 @@ if ($Opts{t} =~ /^(\d+).(\d+).(\d+)$/g) {
 }
 
 if (!$TargetVersion) {
-    print STDERR "Wrong version format (Target)!\n"; 
+    print STDERR "Wrong version format ($Opts{t})!\n"; 
     exit 1;
 }
 
