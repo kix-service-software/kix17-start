@@ -17,6 +17,7 @@ use lib dirname($RealBin).'/../../Kernel/cpan-lib';
 
 use Getopt::Std;
 use File::Path qw(mkpath);
+use File::Basename qw(fileparse);
 
 use Kernel::System::ObjectManager;
 
@@ -30,34 +31,92 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 use vars qw(%INC);
 
 my %Opts;
-getopt( 'v', \%Opts );
+getopt( 'st', \%Opts );
 
-# check and exec pre update script (before any SQL)
-if (!_ExecScript($Opts{v}, 'pre')) {
+if (!%Opts) {
+    print "USAGE: db-update.pl -s <Startversion> -t <Targetversion>\n";
+    exit 0;
+}
+
+my $StartVersion;
+if ($Opts{s} =~ /^(\d+).(\d+).(\d+)$/g) {
+    $StartVersion = 0 + "$1$2$3";
+}
+
+if (!$StartVersion) {
+    print STDERR "Wrong version format (Start)!\n"; 
     exit 1;
 }
 
-# check and execute pre SQL script (to prepare some thing in the DB)
-if (!_ExecSQL($Opts{v}, 'pre')) {
+my $TargetVersion;
+if ($Opts{t} =~ /^(\d+).(\d+).(\d+)$/g) {
+    $TargetVersion = 0 + "$1$2$3";
+}
+
+if (!$TargetVersion) {
+    print STDERR "Wrong version format (Target)!\n"; 
     exit 1;
 }
 
-# check and exec main update script (after preparation)
-if (!_ExecScript($Opts{v})) {
-    exit 1;
+# get all relevant versions between Start (f) and to (t)
+my @FileList = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
+    Directory => $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update',
+    Filter    => 'db-update-*',
+);
+
+my %VersionList;
+foreach my $File (sort @FileList) {
+    my ($Filename, $Dirs, $Suffix) = fileparse($File, qr/\.[^.]*/);
+    if ($Filename =~ /^db-update-(\d+).(\d+).(\d+).*?$/g) {
+        my $NummericVersion = 0 + "$1$2$3";
+        $VersionList{$NummericVersion} = "$1.$2.$3";
+    }
 }
 
-# check and execute post SQL script (to do some things after main migration)
-if (!_ExecSQL($Opts{v}, 'post')) {
-    exit 1;
-}
+foreach my $NummericVersion (sort keys %VersionList) {
+    next if $NummericVersion <= $StartVersion;
+    last if $NummericVersion > $TargetVersion;
 
-# check and exec post update script (after all SQL)
-if (!_ExecScript($Opts{v}, 'post')) {
-    exit 1;
+    if (!DoVersionUpdate($VersionList{$NummericVersion})) {
+        exit 1;
+    }
 }
 
 exit 0;
+
+
+sub DoVersionUpdate {
+    my ($Version) = @_;
+
+    print "updating to $Version\n";
+
+    # check and exec pre update script (before any SQL)
+    if (!_ExecScript($Version, 'pre')) {
+        return;
+    }
+
+    # check and execute pre SQL script (to prepare some thing in the DB)
+    if (!_ExecSQL($Version, 'pre')) {
+        return;
+    }
+
+    # check and exec main update script (after preparation)
+    if (!_ExecScript($Version)) {
+        return;
+    }
+
+    # check and execute post SQL script (to do some things after main migration)
+    if (!_ExecSQL($Version, 'post')) {
+        return;
+    }
+
+    # check and exec post update script (after all SQL)
+    if (!_ExecScript($Version, 'post')) {
+        return;
+    }
+
+    return 1;
+}
 
 sub _ExecScript {
     my ($Version, $Type) = @_;
@@ -77,11 +136,11 @@ sub _ExecScript {
         return 1;
     }
 
-    print "executing $OrgType update script\n";
+    print "    executing $OrgType update script\n";
 
     my $ExitCode = system($ScriptFile);    
     if ($ExitCode) {
-        print STDERR "Unable to execute $OrgType update script!";
+        print STDERR "ERROR: Unable to execute $OrgType update script!";
         return;
     }
 
@@ -98,13 +157,13 @@ sub _ExecSQL {
         return 1;
     }
 
-    print "executing $Type SQL\n";
+    print "    executing $Type SQL\n";
 
     my $XML = $Kernel::OM->Get('Kernel::System::Main')->FileRead(
         Location => $XMLFile,
     );
     if (!$XML) {
-        print STDERR "Unable to read file \"$XMLFile\"!\n"; 
+        print STDERR "ERROR: Unable to read file \"$XMLFile\"!\n"; 
         return;
     }
 
@@ -112,7 +171,7 @@ sub _ExecSQL {
         String => $XML,
     );
     if (!@XMLArray) {
-        print STDERR "Unable to parse file \"$XMLFile\"!\n"; 
+        print STDERR "ERROR: Unable to parse file \"$XMLFile\"!\n"; 
         return;
     }
 
@@ -120,7 +179,7 @@ sub _ExecSQL {
         Database => \@XMLArray,
     );
     if (!@SQL) {
-        print STDERR "Unable to create SQL from file \"$XMLFile\"!\n"; 
+        print STDERR "ERROR: Unable to create SQL Start file \"$XMLFile\"!\n"; 
         return;
     }
 
@@ -129,7 +188,7 @@ sub _ExecSQL {
             SQL => $SQL 
         );
         if (!$Result) {
-            print STDERR "Unable to execute SQL from file \"$XMLFile\"!\n"; 
+            print STDERR "ERROR: Unable to execute SQL Start file \"$XMLFile\"!\n"; 
         }
     }
 
@@ -140,7 +199,7 @@ sub _ExecSQL {
             SQL => $SQL 
         );
         if (!$Result) {
-            print STDERR "Unable to execute POST SQL!\n"; 
+            print STDERR "ERROR: Unable to execute POST SQL!\n"; 
         }
     }
 
