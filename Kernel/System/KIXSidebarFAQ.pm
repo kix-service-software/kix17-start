@@ -76,7 +76,7 @@ sub KIXSidebarFAQSearch {
     # clean up SearchString
     $Param{SearchString} =~ s/([!*%&|])/\\$1/g;
     $Param{SearchString} =~ s/\s+/ /g;
-    $Param{SearchString} =~ s/(^\s+|\s+)//g;
+    $Param{SearchString} =~ s/(^\s+|\s+$)//g;
 
     if ( $Param{SearchString} ) {
 
