@@ -1262,7 +1262,7 @@ Core.UI.InputFields = (function (TargetNS) {
                             .css({
                                 left: $InputContainerObj.offset().left
                             });
-                        
+
                         var HeaderHeight = $('#Header').height();
 
                         // decide wether list should be positioned on top or at the bottom of the input field
@@ -2136,7 +2136,7 @@ Core.UI.InputFields = (function (TargetNS) {
                     if (
                         !$SearchObj.parents('.Dialog').length ||
                         $SearchObj.parents('.Dialog').length &&
-                        ($InputContainerObj.position().top + $InputContainerObj.outerHeight() - $SearchObj.parents('.Dialog').find('.InnerContent').outerHeight() < 0)
+                        ($InputContainerObj.position().top + $InputContainerObj.outerHeight() - $SearchObj.parents('.Dialog').find('.InnerContent').position().top - $SearchObj.parents('.Dialog').find('.InnerContent').outerHeight() < 0)
                         ) {
                         $ListContainerObj.fadeIn(Config.FadeDuration);
                     }
