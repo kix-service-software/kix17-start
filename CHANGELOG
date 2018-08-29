@@ -46,9 +46,7 @@
  * (2018/06/29) - productive release
 
 # 17.3.2-RC2 (2018/06/22)
- * (2018/06/22) - Bugfix: T2018052290000819 (otrs fix added
-
-) (ddoerffel)
+ * (2018/06/22) - Bugfix: T2018052290000819 (otrs fix added) (ddoerffel)
  * (2018/06/21) - Bugfix: T2018052490001127 (fixed label name for itsm config item overview small) (millinger)
 
 # 17.3.2-RC1 (2018/06/18)
