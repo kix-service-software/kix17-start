@@ -4,7 +4,7 @@
 # 17.3.3-RC2 (2018/08/29)
  * (2018/08/28) - Bugfix: T2018051490000531 (fixed calculation for visible input field in dialog) (millinger)
  * (2018/08/27) - Bugfix: T2018050490000791 (faq and ticket sidebar provided invalid search strings) (millinger)
- * (2018/08/24) - Bugfix:  T2018081690000781 (fixed bug that multiple DB updates don't work when updating more than one framework version) (rbo)
+ * (2018/08/24) - Bugfix: T2018081690000781 (fixed bug that multiple DB updates don't work when updating more than one framework version) (rbo)
  * (2018/08/23) - Bugfix: T2018051490000531 (fixed linked ci filter layout in customer frontend) (millinger)
 
 # 17.3.3-RC1 (2018/08/27)
