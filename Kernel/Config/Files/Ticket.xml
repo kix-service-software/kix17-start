@@ -13080,7 +13080,7 @@ Thanks for your help!
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::System::Ticket::Event::AutoCreateLinkedPerson</Item>
-                <Item Key="Event">(ArticleCreate|TicketOwnerUpdate|TicketResponsibleUpdate|TicketMerge|TicketCustomerUpdate)</Item>
+                <Item Key="Event">(ArticleCreate|TicketOwnerUpdate|TicketResponsibleUpdate|TicketCustomerUpdate)</Item>
             </Hash>
         </Setting>
     </ConfigItem>
