@@ -178,6 +178,8 @@ sub _GetAllAvailableFrontendModules {
 
     # get customer frontend modules
     my $ConfigHashCustomer = $ConfigObject->Get('CustomerFrontend::Module');
+
+    # get admin frontend modules
     my %ConfigHash = ( %{$ConfigHashAgent}, %{$ConfigHashCustomer} );
 
     # get all tabs

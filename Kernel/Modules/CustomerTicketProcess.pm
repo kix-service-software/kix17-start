@@ -438,10 +438,10 @@ sub _RenderAjax {
     # run acl to prepare TicketAclFormData
     my $ACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %{ $Param{GetParam} },
-        ReturnType    => 'Ticket',
-        ReturnSubType => '-',
-        Data          => {},
-        UserID        => $Self->{UserID},
+        ReturnType     => 'Ticket',
+        ReturnSubType  => '-',
+        Data           => {},
+        CustomerUserID => $Self->{UserID},
     );
 
     # update 'Shown' for $Self->{DynamicField}
@@ -1153,11 +1153,11 @@ sub _GetParam {
     # run acl to prepare TicketAclFormData
     my $ACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %GetParam,
-        DynamicField  => \%DynamicFieldCheckParam,
-        ReturnType    => 'Ticket',
-        ReturnSubType => '-',
-        Data          => {},
-        UserID        => $Self->{UserID},
+        DynamicField   => \%DynamicFieldCheckParam,
+        ReturnType     => 'Ticket',
+        ReturnSubType  => '-',
+        Data           => {},
+        CustomerUserID => $Self->{UserID},
     );
 
     # update 'Shown' for $Self->{DynamicField}
@@ -1374,7 +1374,7 @@ sub _OutputActivityDialog {
             );
         }
     }
-    elsif ( $Self->{IsMainWindow} && IsHashRefWithData( \%Error ) ) {
+    elsif ( $Self->{IsMainWindow} ) {
 
         # add rich text editor
         if ( $LayoutObject->{BrowserRichText} ) {

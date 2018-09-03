@@ -38,7 +38,7 @@ my $Result = $Kernel::OM->Get('Kernel::System::DB')->Prepare(
     SQL => 'SELECT name FROM package_repository',
 );
 if (!$Result) {
-    print STDERR "Unable to execute SQL to get installed packages!"; 
+    print STDERR "Unable to execute SQL to get installed packages!\n"; 
 }
 else {
     while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
@@ -72,14 +72,14 @@ my %PackageTables = (
 # create database tables and insert initial values
 my $XMLFile = $Kernel::OM->Get('Kernel::Config')->Get('Home').'/scripts/database/update/kix-upgrade-to-17.xml';
 if ( ! -f "$XMLFile" ) {
-    print STDERR "File \"$XMLFile\" doesn't exist!"; 
+    print STDERR "File \"$XMLFile\" doesn't exist!\n"; 
     exit 1;
 }
 my $XML = $Kernel::OM->Get('Kernel::System::Main')->FileRead(
     Location => $XMLFile,
 );
 if (!$XML) {
-    print STDERR "Unable to read file \"$XMLFile\"!"; 
+    print STDERR "Unable to read file \"$XMLFile\"!\n"; 
     exit 1;
 }
 
@@ -87,7 +87,7 @@ my @XMLArray = $Kernel::OM->Get('Kernel::System::XML')->XMLParse(
     String => $XML,
 );
 if (!@XMLArray) {
-    print STDERR "Unable to parse file \"$XMLFile\"!"; 
+    print STDERR "Unable to parse file \"$XMLFile\"!\n"; 
     exit 1;
 }
 
@@ -95,7 +95,7 @@ my @SQL = $Kernel::OM->Get('Kernel::System::DB')->SQLProcessor(
     Database => \@XMLArray,
 );
 if (!@SQL) {
-    print STDERR "Unable to create SQL from file \"$XMLFile\"!"; 
+    print STDERR "Unable to create SQL from file \"$XMLFile\"!\n"; 
     exit 1;
 }
 
@@ -112,7 +112,7 @@ for my $SQL (@SQL) {
         SQL => $SQL 
     );
     if (!$Result) {
-        print STDERR "Unable to execute SQL from file \"$XMLFile\"!"; 
+        print STDERR "Unable to execute SQL from file \"$XMLFile\"!\n"; 
     }
 }
 
@@ -123,7 +123,7 @@ for my $SQL (@SQLPost) {
         SQL => $SQL 
     );
     if (!$Result) {
-        print STDERR "Unable to execute POST SQL!"; 
+        print STDERR "Unable to execute POST SQL!\n"; 
     }
 }
 
@@ -191,7 +191,7 @@ EOT
         ],
     );
     if (!$Result) {
-        print STDERR "Unable to create package entry \"KIXPro\" in package repository!"; 
+        print STDERR "Unable to create package entry \"KIXPro\" in package repository!\n"; 
     }
     
     # create "fake" KIXPro directory for update installation
@@ -211,8 +211,22 @@ foreach my $Package (@ObsoletePackages) {
         ],
     );
     if (!$Result) {
-        print STDERR "Unable to remove package \"$Package\" from package repository!"; 
+        print STDERR "Unable to remove package \"$Package\" from package repository!\n"; 
     }
+}
+
+# do all incremental DB updates to current version
+my $FrameworkVersion = $Kernel::OM->Get('Kernel::Config')->Get('FrameworkVersion');
+$FrameworkVersion =~ s/-\d+//g;
+$Result = system(
+    $Kernel::OM->Get('Kernel::Config')->Get('Home') . '/scripts/database/update/db-update.pl',
+    '-s',
+    '17.0.0',
+    '-t',
+    $FrameworkVersion,
+);
+if (!$Result) {
+    print STDERR "Unable to install necessary incremental database updates! Maybe they are already in place - please check.\n"; 
 }
 
 exit 0;

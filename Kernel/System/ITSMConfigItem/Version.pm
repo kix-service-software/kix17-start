@@ -1196,6 +1196,7 @@ sub VersionDelete {
         push @{$VersionList}, @{ $Param{VersionIDs} };
     }
     else {
+
         # get version list
         $VersionList = $Self->VersionList(
             ConfigItemID => $Param{ConfigItemID},

@@ -156,8 +156,7 @@ sub Run {
             Pw             => $CurPw,
             TwoFactorToken => $TwoFactorToken || '',
         )
-        )
-    {
+    ) {
         $Self->{Error} = Translatable('The current password is not correct. Please try again!');
         return;
     }

@@ -55,6 +55,7 @@ sub _ITSMBulkDo {
     my %GetParam        = %{$Param{GetParam}};
     my $ConfigItemID    = $Param{ConfigItemID};
     my @ConfigItemIDs   = @{$Param{ConfigItemIDs}};
+    my $XMLDefinition   = $Param{XMLDefinition};
 
     # bulk action version ddd
     if ( $GetParam{DeplStateID} || $GetParam{InciStateID} ) {
@@ -78,7 +79,7 @@ sub _ITSMBulkDo {
         my $VersionID = $Self->{ConfigItemObject}->VersionAdd(
             ConfigItemID => $ConfigItemID,
             Name         => $CurrentVersion->{Name},
-            DefinitionID => $CurrentVersion->{DefinitionID},
+            DefinitionID => $XMLDefinition->{DefinitionID},
             DeplStateID  => $NewDeplStateID,
             InciStateID  => $NewInciStateID,
             XMLData      => $CurrentVersion->{XMLData},

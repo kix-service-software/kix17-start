@@ -38,7 +38,7 @@
     height: 100%;
     background-color: #000;
     opacity: 0.5;
-    filter: alpha(opacity = 50);
+    filter: alpha(opacity=50);
     z-index: 200;
 }
 
@@ -47,7 +47,7 @@
  */
 .Dialog {
     position: absolute;
-    z-index: 99999;
+    z-index: 999;
     min-width: 150px;
     background: #FFF;
 }
@@ -132,6 +132,13 @@
     width: 450px;
     top: 100px;
     left: 300px;
+}
+
+.Dialog .Field .FocusField {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    z-index: -1;
 }
 
 /**

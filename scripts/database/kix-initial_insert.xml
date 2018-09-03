@@ -5988,7 +5988,7 @@ TreeView: '0'
     <Insert Table="imexport_object">
         <Data Key="id" Type="AutoIncrement">1</Data>
         <Data Key="template_id">2</Data>
-        <Data Key="data_key" Type="Quote">CustomerBackend</Data>
+        <Data Key="data_key" Type="Quote">CustomerCompanyBackend</Data>
         <Data Key="data_value" Type="Quote">CustomerCompany</Data>
     </Insert>
     <Insert Table="imexport_object">

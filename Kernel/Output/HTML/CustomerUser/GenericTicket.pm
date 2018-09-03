@@ -147,10 +147,10 @@ sub Run {
     # KIX4OTRS-capeIT
     # $URL .= ';CustomerID=' . $LayoutObject->LinkEncode($CustomerIDRaw);
     if ( $ConfigObject->Get("Frontend::CustomerUser::CustomerInfoTicketCount") ) {
-        $TicketSearch{CustomerID} = $Param{Data}->{UserCustomerID};
+        $TicketSearch{CustomerID} = $Param{Data}->{UserCustomerID} || '';
     }
     else {
-        $TicketSearch{CustomerUserLogin} = $Param{Data}->{UserLogin};
+        $TicketSearch{CustomerUserLogin} = $Param{Data}->{UserLogin} || '';
     }
 
     # EO KIX4OTRS-capeIT
@@ -365,7 +365,8 @@ sub Run {
         @ViewableTicketIDs = @ViewableTicketsTmp;
 
         $Count = scalar(@ViewableTicketIDs);
-        $URL .= ';CustomerUser=' . $Param{Data}->{UserLogin};
+        my $UserLogin = $Param{Data}->{UserLogin} || '';
+        $URL .= ';CustomerUser=' . $UserLogin;
     }
 
     # EO KIX4OTRS-capeIT

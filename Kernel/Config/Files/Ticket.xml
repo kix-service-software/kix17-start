@@ -5573,7 +5573,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketCompose###DefaultArticleType" Required="1" Valid="1">
-        <Description Translatable="1">Specifies the default article type for the ticket compose screen in the agent interface if the article type cannot be automatically detected.</Description>
+        <Description Translatable="1">Specifies the default article type for the ticket compose screen in the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewCompose</SubGroup>
         <Setting>
@@ -10052,6 +10052,7 @@
                 <Item>HistoryDelete</Item>
                 <Item>TicketAccountTime</Item>
                 <Item>TicketMerge</Item>
+                <Item>TicketMergeTarget</Item>
                 <Item>TicketSubscribe</Item>
                 <Item>TicketUnsubscribe</Item>
                 <Item>TicketFlagSet</Item>

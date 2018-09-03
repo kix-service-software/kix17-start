@@ -237,8 +237,8 @@
 # EO KIX4OTRS-capeIT
 [% RenderBlockEnd("Responsible") %]
 [% RenderBlockStart("ProcessData") %]
-                    <li><span class="Key">[% Translate("Process") | html %]:</span> <span title="[% Data.Process | html %]">[% Data.Process | html %]</span></li>
-                    <li><span class="Key">[% Translate("Activity") | html %]:</span> <span title="[% Data.Activity | html %]">[% Data.Activity | html %]</span></li>
+                    <li><span class="Key">[% Translate("Process") | html %]:</span> <span title="[% Translate(Data.Process) | html %]">[% Translate(Data.Process) | html %]</span></li>
+                    <li><span class="Key">[% Translate("Activity") | html %]:</span> <span title="[% Translate(Data.Activity) | html %]">[% Translate(Data.Activity) | html %]</span></li>
 [% RenderBlockEnd("ProcessData") %]
 
 # show ticket dynamic fields
@@ -278,7 +278,7 @@
                         </div>
                     </li>
 [% RenderBlockStart("ActivityDialog") %]
-                    <li><a title="[% Data.Name | html %]" class="AsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=CustomerTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | uri %];ProcessEntityID=[% Data.ProcessEntityID | uri %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | uri %]">[% Data.Name | html %]</a></li>
+                    <li><a title="[% Translate(Data.Name) | html %]" class="AsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=CustomerTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | uri %];ProcessEntityID=[% Data.ProcessEntityID | uri %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | uri %]">[% Translate(Data.Name) | html %]</a></li>
 [% RenderBlockEnd("ActivityDialog") %]
 [% RenderBlockStart("NoActivityDialog") %]
                     <li>[% Translate("There are no dialogs available at this point in the process.") | html %]</li>
@@ -450,6 +450,7 @@
     Core.Customer.TicketZoom.Init();
 # KIX4OTRS-capeIT
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("CustomerTicketZoomSidebarWidth") %]','[% Env("Action") %]','TicketID=[% Data.TicketID | uri %]');
+    Core.UI.InitWidgetActionToggle();
 # EO KIX4OTRS-capeIT
     $('a.AsPopup').bind('click', function (Event) {
         Core.UI.Popup.OpenPopup($(this).attr('href'), 'TicketAction');

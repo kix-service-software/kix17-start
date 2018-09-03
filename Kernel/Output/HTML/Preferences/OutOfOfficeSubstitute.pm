@@ -49,7 +49,7 @@ sub Param {
             Name       => 'OutOfOfficeSubstitute',
             Multiple   => 0,
             Size       => 0,
-            Class => 'Modernize'
+            Class      => 'Modernize',
         );
         $Param{OptionSubstituteNote} = $Param{UserData}->{OutOfOfficeSubstituteNote} || '';
 

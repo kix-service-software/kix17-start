@@ -6,7 +6,6 @@
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-
 <div id="CustomizeForm" class="WidgetSimple Hidden">
     <input type="hidden" name="Action" value="[% Env("Action") %]" id="Action"/>
     <input type="hidden" name="FieldOrderString" value="[% Data.FieldOrderString %]" id="FieldOrderString"/>
@@ -44,6 +43,9 @@ if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
     if (EndOfForm.length) {
         EndOfForm.remove();
     }
+
+    // enable create article
+    $('#CreateArticle').prop('checked',true);
 
     /* Agent Frontend */
     if ( ActionRegexpA.test(Action) ) {

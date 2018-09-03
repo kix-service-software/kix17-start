@@ -6727,7 +6727,7 @@ Ihr Helpdesk-Team
             '',
         'Specifies the available note types for this ticket mask. If the option is deselected, ArticleTypeDefault is used and the option is removed from the mask.' =>
             '',
-        'Specifies the default article type for the ticket compose screen in the agent interface if the article type cannot be automatically detected.' =>
+        'Specifies the default article type for the ticket compose screen in the agent interface.' =>
             '',
         'Specifies the different article types that will be used in the system.' =>
             'Legt die verschiedenen Artikel-Typen fest, die im System verwendet werden.',
@@ -6962,9 +6962,9 @@ Ihr Helpdesk-Team
         'Your email with ticket number "<KIX_TICKET>" is bounced to "<KIX_BOUNCE_TO>". Contact this address for further information.' =>
             'Ihre E-Mail mit Ticket-Nummer "<KIX_TICKET>" wurde an "<KIX_BOUNCE_TO>" umgeleitet. Kontaktieren Sie diese Adresse für weitere Informationen.',
         'Your queue selection of your preferred queues. You also get notified about those queues via email if enabled.' =>
-            '',
+            'Die Auswahl ihrer bevorzugten (abbonnierten) Queues. Sie werden auch per E-Mail über diese Queues benachrichtigt, wenn die Einstellung aktiv ist.',
         'Your service selection of your preferred services. You also get notified about those services via email if enabled.' =>
-            '',
+            'Auswahl der bevorzugten Services. Es werden E-Mail-Benachrichtigungen über diesen ausgewählten Services versendet, falls aktiviert.',
         'attachment' => 'attachment',
         'debug' => 'debug',
         'error' => 'error',

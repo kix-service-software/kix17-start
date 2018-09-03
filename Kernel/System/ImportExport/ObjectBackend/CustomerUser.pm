@@ -591,9 +591,9 @@ sub ImportDataSave {
             my $CountryList = $Kernel::OM->Get('Kernel::System::ReferenceData')->CountryList();
             if ( exists $CountryList->{$Param{ImportDataRow}->[$Counter]} ) {
                 $NewCustomerUserData{ $MappingObjectData->{Key} } = $Param{ImportDataRow}->[$Counter];
-            } 
+            }
             else {
-                $NewCustomerUserData{ $MappingObjectData->{Key} } = 
+                $NewCustomerUserData{ $MappingObjectData->{Key} } =
                     join ('', map { ucfirst lc } split /(\s+)/, $Param{ImportDataRow}->[$Counter]);
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'notice',
