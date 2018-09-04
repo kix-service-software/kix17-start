@@ -1031,8 +1031,8 @@
     <Column Name="article_sender_type_id" Required="true" Type="SMALLINT"/>
     <Column Name="a_from" Required="false" Size="3800" Type="VARCHAR"/>
     <Column Name="a_reply_to" Required="false" Size="500" Type="VARCHAR"/>
-    <Column Name="a_to" Required="false" Size="3800" Type="VARCHAR"/>
-    <Column Name="a_cc" Required="false" Size="3800" Type="VARCHAR"/>
+    <Column Name="a_to" Required="false" Size="1800000" Type="VARCHAR"/>
+    <Column Name="a_cc" Required="false" Size="1800000" Type="VARCHAR"/>
     <Column Name="a_subject" Required="false" Size="3800" Type="VARCHAR"/>
     <Column Name="a_message_id" Required="false" Size="3800" Type="VARCHAR"/>
     <Column Name="a_message_id_md5" Required="false" Size="32" Type="VARCHAR"/>
@@ -2056,6 +2056,27 @@
         <IndexColumn Name="field_id"/>
     </Index>
     <Index Name="dynamic_field_value_field_oid2">
+        <IndexColumn Name="object_id_text"/>
+        <IndexColumn Name="field_id"/>
+    </Index>
+    <ForeignKey ForeignTable="dynamic_field">
+        <Reference Local="field_id" Foreign="id"/>
+    </ForeignKey>
+</Table>
+
+<Table Name="dynamic_field_value_ttl">
+    <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
+    <Column Name="field_id" Required="true" Type="INTEGER"/>
+    <Column Name="object_id" Required="false" Type="BIGINT"/>
+    <Column Name="object_id_text" Required="false" Type="VARCHAR" Size="255"/>
+    <Column Name="value_ttl" Required="true" Type="DATE"/>
+    <Column Name="create_time" Required="true" Type="DATE"/>
+
+    <Index Name="dynamic_field_value_ttl_field_oid">
+        <IndexColumn Name="object_id"/>
+        <IndexColumn Name="field_id"/>
+    </Index>
+    <Index Name="dynamic_field_value_ttl_field_oid2">
         <IndexColumn Name="object_id_text"/>
         <IndexColumn Name="field_id"/>
     </Index>

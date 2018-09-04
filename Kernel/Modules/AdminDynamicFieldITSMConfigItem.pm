@@ -205,6 +205,20 @@ sub _AddAction {
         $GetParam{$ConfigParam} = \@Data;
     }
 
+    # get ValueTTL
+    for my $ConfigParam (qw(ValueTTLData ValueTTLMultiplier)) {
+        $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
+    }
+    if (
+        $GetParam{'ValueTTLData'}
+        && $GetParam{'ValueTTLMultiplier'}
+    ) {
+        $GetParam{'ValueTTL'} = $GetParam{'ValueTTLData'} * $GetParam{'ValueTTLMultiplier'};
+    }
+    else {
+        $GetParam{'ValueTTL'} = 0;
+    }
+
     # uncorrectable errors
     if ( !$GetParam{ValidID} ) {
         return $Self->{LayoutObject}->ErrorScreen(
@@ -227,6 +241,11 @@ sub _AddAction {
         QueryDelay            => $GetParam{QueryDelay}            || 300,
         MaxQueryResult        => $GetParam{MaxQueryResult}        || 10,
     };
+
+    # get ValueTTL config
+    for my $ConfigParam (qw(ValueTTL ValueTTLData ValueTTLMultiplier)) {
+        $FieldConfig->{$ConfigParam} = $GetParam{$ConfigParam};
+    }
 
     # create a new field
     my $FieldID = $Self->{DynamicFieldObject}->DynamicFieldAdd(
@@ -418,6 +437,19 @@ sub _ChangeAction {
         my @Data = $Self->{ParamObject}->GetArray( Param => $ConfigParam );
         $GetParam{$ConfigParam} = \@Data;
     }
+    # get ValueTTL
+    for my $ConfigParam (qw(ValueTTLData ValueTTLMultiplier)) {
+        $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
+    }
+    if (
+        $GetParam{'ValueTTLData'}
+        && $GetParam{'ValueTTLMultiplier'}
+    ) {
+        $GetParam{'ValueTTL'} = $GetParam{'ValueTTLData'} * $GetParam{'ValueTTLMultiplier'};
+    }
+    else {
+        $GetParam{'ValueTTL'} = 0;
+    }
 
     # uncorrectable errors
     if ( !$GetParam{ValidID} ) {
@@ -452,6 +484,11 @@ sub _ChangeAction {
         QueryDelay            => $GetParam{QueryDelay}            || 300,
         MaxQueryResult        => $GetParam{MaxQueryResult}        || 10,
     };
+
+    # get ValueTTL config
+    for my $ConfigParam (qw(ValueTTL ValueTTLData ValueTTLMultiplier)) {
+        $FieldConfig->{$ConfigParam} = $GetParam{$ConfigParam};
+    }
 
     # update dynamic field (FieldType and ObjectType cannot be changed; use old values)
     my $UpdateSuccess = $Self->{DynamicFieldObject}->DynamicFieldUpdate(
@@ -657,13 +694,31 @@ sub _ShowScreen {
     # MaxQueryResult
     # nothing to do
 
+    my $ReadonlyInternalField = '';
+
     # Internal fields can not be deleted and name should not change.
     if ( $Param{InternalField} ) {
         $Self->{LayoutObject}->Block(
             Name => 'InternalField',
             Data => {%Param},
         );
+        $ReadonlyInternalField = 'readonly="readonly"';
     }
+
+    # create the value ttl multiplier select
+    $Param{ValueTTLMultiplierStrg} = $LayoutObject->BuildSelection(
+        Data => {
+            60       => Translatable('Minutes'),
+            3600     => Translatable('Hours'),
+            86400    => Translatable('Days'),
+            31536000 => Translatable('Years'),
+        },
+        Name         => 'ValueTTLMultiplier',
+        SelectedID   => $Param{ValueTTLMultiplier} || 60,
+        PossibleNone => 0,
+        Translation  => 1,
+        Class        => 'Modernize',
+    );
 
     # generate output
     $Output .= $Self->{LayoutObject}->Output(
@@ -676,6 +731,7 @@ sub _ShowScreen {
             DeploymentStatesStrg      => $DeploymentStatesStrg,
             ItemSeparatorStrg         => $ItemSeparatorStrg,
             DefaultValuesCount        => $DefaultValuesCount,
+            ReadonlyInternalField => $ReadonlyInternalField,
         }
     );
 

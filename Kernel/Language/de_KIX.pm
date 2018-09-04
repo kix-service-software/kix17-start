@@ -4389,8 +4389,6 @@ sub Data {
         '';
     $Lang->{'Width of ITSM textareas.'} = '';
 
-    # $$STOP$$
-
     $Lang->{'Call contact'}         = 'Telefonanruf-Kontakt';
     $Lang->{'Call contacts'}        = 'Telefonanruf-Kontakte';
     $Lang->{'As call contact'}      = 'Als Telefonanrufs-Kontakt festlegen';
@@ -4411,6 +4409,13 @@ sub Data {
     $Lang->{'The new email notification article to customers will already be marked as seen for agents.'}
         = 'Der neue E-Mail-Benachrichtigungs-Artikel an Kunden wird für Agenten schon als gesehen markiert.';
 
+    # Generic Agent
+    $Lang->{'Warning: Delete/Empty a ticket attribute or dynamic field has a higher priority than update/add.'}
+        = 'Warnung: Löschen/Leeren eines Ticket-Attributs oder dynamischen Feldes hat eine höhere Priorität als Aktualisieren/Hinzufügen.';
+    $Lang->{'Delete/Empty Ticket Attributes'} = 'Ticket-Attribute löschen/leeren';
+    $Lang->{'Ticket Attributes'}              = 'Ticket-Attribute';
+
+    # $$STOP$$
     return 0;
 }
 
