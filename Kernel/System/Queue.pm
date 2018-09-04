@@ -587,9 +587,15 @@ sub GetAllCustomQueues {
 
 get id or name for queue
 
-    my $Queue = $QueueObject->QueueLookup( QueueID => $QueueID );
+    my $Queue = $QueueObject->QueueLookup(
+        QueueID => $QueueID,
+        Valid   => 1,         # not required -> 0|1 (default 0)
+    );
 
-    my $QueueID = $QueueObject->QueueLookup( Queue => $Queue );
+    my $QueueID = $QueueObject->QueueLookup(
+        Queue => $Queue,
+        Valid => 1,           # not required -> 0|1 (default 0)
+    );
 
 =cut
 
@@ -605,9 +611,18 @@ sub QueueLookup {
         return;
     }
 
-    # get (already cached) queue data
+    # set valid option
+    my $Valid = $Param{Valid};
+    if ( $Valid ) {
+        $Valid = 1;
+    }
+    else {
+        $Valid = 0;
+    }
+
+    # get queue data
     my %QueueList = $Self->QueueList(
-        Valid => 0,
+        Valid => $Valid,
     );
 
     my $Key;
@@ -627,10 +642,18 @@ sub QueueLookup {
 
     # check if data exists
     if ( !$ReturnData ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Found no $Key for $Value!",
-        );
+        if ( $Valid ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Found no valid $Key for $Value!",
+            );
+        }
+        else {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Found no $Key for $Value!",
+            );
+        }
         return;
     }
 
