@@ -462,7 +462,7 @@ sub MaskAgentZoom {
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
                 LayoutObject       => $LayoutObject,
-
+                HTMLOutput         => 1,
                 # no ValueMaxChars here, enough space available
             );
 
