@@ -112,9 +112,9 @@ sub GetTrustedQueueID {
     # get email headers
     my %GetParam = %{ $Param{Params} };
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
+    # fallback for OTRS-Header
     if( !$GetParam{'X-KIX-Queue'} ) {
-        $GetParam{'X-KIX-Queue'} = $GetParam{'X-OTRS-Queue'};       # fallback
+        $GetParam{'X-KIX-Queue'} = $GetParam{'X-OTRS-Queue'};
     }
 
     return if !$GetParam{'X-KIX-Queue'};
@@ -122,17 +122,15 @@ sub GetTrustedQueueID {
     if ( $Self->{Debug} > 0 ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'debug',
-            Message =>
-                "There exists a X-KIX-Queue header: $GetParam{'X-KIX-Queue'} (MessageID:$GetParam{'Message-ID'})!",
+            Message  => "There exists a X-KIX-Queue header: $GetParam{'X-KIX-Queue'} (MessageID: $GetParam{'Message-ID'})!",
         );
     }
 
     # get dest queue
     return $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
         Queue => $GetParam{'X-KIX-Queue'},
+        Valid => 1,
     );
-
-    return;
 }
 
 1;
