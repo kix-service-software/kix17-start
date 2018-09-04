@@ -161,7 +161,7 @@ sub Run {
     $Param{UserID} = $Self->_OverrideUserID(%Param);
 
     # use ticket attributes if needed
-    $Self->_ReplaceTicketAttributes(%Param);
+    $Self->_ReplaceTicketAttributes(\%Param);
 
     # convert scalar items into array references
     for my $Attribute (

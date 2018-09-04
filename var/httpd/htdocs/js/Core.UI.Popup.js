@@ -762,6 +762,19 @@ Core.UI.Popup = (function (TargetNS) {
             $(window).unbind("beforeunload.Popup");
         });
 
+        $('form').on('submit',function(){
+            if ( $('#AttachmentUpload').val() == '1') {
+                $(window).unbind("beforeunload.Popup");
+            } else {
+                $.each($('input[id^="AttachmentDelete"]'), function() {
+                    if ( $(this).val() == '1' ) {
+                        $(window).unbind("beforeunload.Popup");
+                        return 1;
+                    }
+                });
+            }
+        });
+
         $('#TaskAbort, .PopupUndoClose, .PopupCancelClose, .DisableValidation.Add, .DisableValidation.Remove').on('click',function(){
             $(window).unbind("beforeunload.Popup");
         });

@@ -262,3 +262,6 @@
 [% END %]
 
 [% InsertTemplate("CustomerFooterJS.tt") %]
+
+</body>
+</html>

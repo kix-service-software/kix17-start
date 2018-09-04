@@ -225,8 +225,10 @@ sub Run {
     # get access for single options
     # get access for edit
     my $AccessGroupEditOk = 0;
-    if ( defined $Self->{Config}->{PermissionGroupEdit}
-        && ( ref $Self->{Config}->{PermissionGroupEdit} ) eq 'ARRAY' )
+    if (
+        defined $Self->{Config}->{PermissionGroupEdit}
+        && ( ref $Self->{Config}->{PermissionGroupEdit} ) eq 'ARRAY'
+        )
     {
         if ( scalar @{ $Self->{Config}->{PermissionGroupEdit} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupEdit} } ) {
@@ -241,8 +243,10 @@ sub Run {
 
     # get access for copy
     my $AccessGroupCopyOk = 0;
-    if ( defined $Self->{Config}->{PermissionGroupCopy}
-        && ( ref $Self->{Config}->{PermissionGroupCopy} ) eq 'ARRAY' )
+    if (
+        defined $Self->{Config}->{PermissionGroupCopy}
+        && ( ref $Self->{Config}->{PermissionGroupCopy} ) eq 'ARRAY'
+        )
     {
         if ( scalar @{ $Self->{Config}->{PermissionGroupCopy} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupCopy} } ) {
@@ -257,8 +261,10 @@ sub Run {
 
     # get access for move
     my $AccessGroupMoveOk = 0;
-    if ( defined $Self->{Config}->{PermissionGroupMove}
-        && ( ref $Self->{Config}->{PermissionGroupMove} ) eq 'ARRAY' )
+    if (
+        defined $Self->{Config}->{PermissionGroupMove}
+        && ( ref $Self->{Config}->{PermissionGroupMove} ) eq 'ARRAY'
+        )
     {
         if ( scalar @{ $Self->{Config}->{PermissionGroupMove} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupMove} } ) {
@@ -273,8 +279,10 @@ sub Run {
 
     # get access for delete
     my $AccessGroupDeleteOk = 0;
-    if ( defined $Self->{Config}->{PermissionGroupDelete}
-        && ( ref $Self->{Config}->{PermissionGroupDelete} ) eq 'ARRAY' )
+    if (
+        defined $Self->{Config}->{PermissionGroupDelete}
+        && ( ref $Self->{Config}->{PermissionGroupDelete} ) eq 'ARRAY'
+        )
     {
         if ( scalar @{ $Self->{Config}->{PermissionGroupDelete} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupDelete} } ) {
@@ -338,8 +346,7 @@ sub Run {
             );
         }
     }
-    
-    
+
     # get first article
     my %FirstArticle = $TicketObject->ArticleFirstArticle(
         TicketID => $GetParam{TicketID},
@@ -418,6 +425,20 @@ sub Run {
             )
         {
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
+        }
+
+        # transform pending time, time stamp based on user time zone
+        if (
+            defined $GetParam{Year}
+            && defined $GetParam{Month}
+            && defined $GetParam{Day}
+            && defined $GetParam{Hour}
+            && defined $GetParam{Minute}
+            )
+        {
+            %GetParam = $LayoutObject->TransformDateSelection(
+                %GetParam,
+            );
         }
 
         $GetParam{Created}
@@ -912,7 +933,10 @@ sub Run {
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'ArticleCopy' || $Self->{Subaction} eq 'ArticleMove' ) {
 
-        for (qw(NewTicketNumber NewTicketNumberArticleMove NewTicketNumberArticleCopy TimeUnits TimeUnitsOriginal)) {
+        for (
+            qw(NewTicketNumber NewTicketNumberArticleMove NewTicketNumberArticleCopy TimeUnits TimeUnitsOriginal)
+            )
+        {
             $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
         }
 

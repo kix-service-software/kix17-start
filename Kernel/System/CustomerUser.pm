@@ -147,6 +147,7 @@ sub new {
         ) {
             $Access = 1;
         }
+
         elsif ( $BackendGroups && ref $BackendGroups eq 'ARRAY' ) {
             GROUP:
             for my $Group ( @{$BackendGroups} ) {

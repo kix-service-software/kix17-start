@@ -295,7 +295,7 @@ sub _OverrideUserID {
 }
 
 sub _ReplaceTicketAttributes {
-    my ( $Self, %Param ) = @_;
+    my ( $Self, $Param ) = @_;
 
 # BPMX-capeIT
 #    include more Placeholder
@@ -305,21 +305,20 @@ sub _ReplaceTicketAttributes {
 # ...
 # Repleace from file Kernel/System/ProcessManagement/TransitionAction/Base.pm (version otrs 5.0.12) line 80 to 129
 # ...
+    for my $Attribute ( sort keys %{ $Param->{Config} } ) {
 
-    for my $Attribute ( sort keys %{ $Param{Config} } ) {
-        
         # save placeholder
-        if ( $Param{Config}->{$Attribute} =~ /<(KIX|OTRS)_(.*?)>/i ) {
-            $Param{Config}->{Placeholder}->{$Attribute} = $Param{Config}->{$Attribute};
+        if ( $Param->{Config}->{$Attribute} =~ /<(KIX|OTRS)_(.*?)>/i ) {
+            $Param->{Placeholder}->{$Attribute} = $Param->{Config}->{$Attribute};
         }
-    
+
         # replace
-        $Param{Config}->{$Attribute} = $Self->ReplaceExtended(
+        $Param->{Config}->{$Attribute} = $Self->ReplaceExtended(
             RichText => '0',
-            Text     => $Param{Config}->{$Attribute},
-            TicketID => $Param{Ticket}->{TicketID} || '',
-            Data     => $Param{Data} || {},
-            UserID   => $Param{UserID} || 1,
+            Text     => $Param->{Config}->{$Attribute},
+            TicketID => $Param->{Ticket}->{TicketID} || '',
+            Data     => $Param->{Data} || {},
+            UserID   => $Param->{UserID} || 1,
         );
     }
 

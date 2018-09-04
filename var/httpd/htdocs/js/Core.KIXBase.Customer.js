@@ -33,13 +33,13 @@ Core.KIXBase.Customer = (function(TargetNS) {
         // move BottomActionRow into fieldset, but not in search dialog
         if ($('#BottomActionRow').parents('div#MainBox.Search').length == 0 ) {
             if ( !$('#CustomerIDSelection').length) {
-                var $ButtonDiv = $('<div class="Field SpacingTop" style="margin-left: ' + $('fieldset div label').width() + 'px"></div>');
-                $('#BottomActionRow > button').css('margin-left', $('fieldset div label').css('padding-right')).appendTo($ButtonDiv);
-                $('fieldset').parent().append($ButtonDiv);
+                var $ButtonDiv = $('<div class="Field SpacingTop" style="margin-left: ' + $('form[name=compose] fieldset div label').width() + 'px"></div>');
+                $('#BottomActionRow > button').css('margin-left', $('form[name=compose] fieldset div label').css('padding-right')).appendTo($ButtonDiv);
+                $('form[name=compose] fieldset').parent().append($ButtonDiv);
                 $('#BottomActionRow').remove();
             }
             else {
-                $('#BottomActionRow > button').detach().appendTo('fieldset');
+                $('#BottomActionRow > button').detach().appendTo('form[name=compose] fieldset');
                 $('#BottomActionRow').remove();
             }
         }
@@ -104,10 +104,10 @@ Core.KIXBase.Customer = (function(TargetNS) {
                     } else {
                         var Key             = $(this).find('span.Key').html(),
                             IsRatingLabel   = $(this).find('span.Key').hasClass('RatingLabel'),
-                            NextValue       = $(this).find('span.Key').next(), 
+                            NextValue       = $(this).find('span.Key').next(),
                             Value           = NextValue.html(),
                             Title           = Value;
-                        
+
                         if ( IsRatingLabel ) {
                             while ( NextValue.hasClass('RateStar') ) {
                                 NextValue = NextValue.next();
