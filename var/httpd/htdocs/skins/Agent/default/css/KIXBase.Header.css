@@ -264,6 +264,10 @@
         margin-top: 60px;
     }
 
+    #AppWrapper.NonMarginTop {
+        margin-top: 0;
+    }
+
     a {
         color: #82C826;
     }
