@@ -15973,6 +15973,106 @@ Thanks for your help!
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Frontend::KIXSidebarBackend###KIXSBConfigItemView001" Required="0" Valid="0">
+        <Description Translatable="1">Sidebar module registration for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::KIXSidebarConfigItemView</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Actions">AgentTicketZoom</Item>
+                <Item Key="Module">Kernel::Output::HTML::KIXSidebar::ConfigItemView</Item>
+                <Item Key="Title">ConfigItem</Item>
+                <Item Key="Description">Shows data of config item.</Item>
+                <Item Key="Prio">0570</Item>
+                <Item Key="InitialCollapsed"></Item>
+                <Item Key="Identifier">KIXSBConfigItemView001</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Callback"></Item>
+                <Item Key="ConfigItemAttribute::Name">1</Item>
+                <Item Key="ConfigItemAttribute::DeplState">1</Item>
+                <Item Key="ConfigItemAttribute::Vendor">1</Item>
+                <Item Key="ConfigItemAttribute::Model">1</Item>
+                <Item Key="ConfigItemAttribute::Description">1</Item>
+                <Item Key="ConfigItemAttribute::Type">1</Item>
+                <Item Key="ConfigItemAttribute::Owner">1</Item>
+                <Item Key="DynamicField"></Item>
+                <Item Key="ShowEmptyValue">0</Item>
+                <Item Key="TicketIDSearchMaskRegExp">AgentTicketZoom</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerFrontend::KIXSidebarBackend###KIXSBConfigItemView001" Required="0" Valid="0">
+        <Description Translatable="1">Sidebar module registration for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Customer::KIXSidebarConfigItemView</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Actions">CustomerTicketZoom</Item>
+                <Item Key="Module">Kernel::Output::HTML::KIXSidebar::ConfigItemView</Item>
+                <Item Key="Title">ConfigItem</Item>
+                <Item Key="Description">Shows data of config item.</Item>
+                <Item Key="Prio">0570</Item>
+                <Item Key="InitialCollapsed"></Item>
+                <Item Key="Identifier">KIXSBConfigItemView001</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Callback"></Item>
+                <Item Key="ConfigItemAttribute::Name">1</Item>
+                <Item Key="ConfigItemAttribute::DeplState">1</Item>
+                <Item Key="ConfigItemAttribute::Vendor">1</Item>
+                <Item Key="ConfigItemAttribute::Model">1</Item>
+                <Item Key="ConfigItemAttribute::Description">1</Item>
+                <Item Key="ConfigItemAttribute::Type">1</Item>
+                <Item Key="ConfigItemAttribute::Owner">1</Item>
+                <Item Key="DynamicField"></Item>
+                <Item Key="ShowEmptyValue">0</Item>
+                <Item Key="TicketIDSearchMaskRegExp">CustomerTicketZoom</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###KIXSidebarConfigItemViewAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>KIXSidebarRemoteDBView Search AJAX handler</Description>
+                <Title>KIXSidebarRemoteDBView Search AJAX handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerFrontend::Module###KIXSidebarConfigItemViewAJAXHandler" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Customer::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>KIXSidebarConfigItemView Search AJAX handler</Description>
+                <Title>KIXSidebarConfigItemView Search AJAX handler</Title>
+                <NavBarName>Ticket</NavBarName>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Agent::CommonJS###112-KIXSidebarConfigItemView" Required="0" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIXSidebarTools.KIXSidebarConfigItemView.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Loader::Customer::CommonJS###112-KIXSidebarConfigItemView" Required="0" Valid="1">
+        <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Array>
+                <Item>KIXSidebarTools.KIXSidebarConfigItemView.js</Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::GenericAutoCompleteSearch###SearchTypeMapping" Required="0" Valid="1">
         <Description Translatable="1">Configuration of the mapping for the search type. example: Module:::Element => Typ</Description>
         <Group>Ticket</Group>
