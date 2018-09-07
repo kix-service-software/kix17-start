@@ -763,6 +763,30 @@ Core.Agent.Admin.GenericAgent.Init({
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Delete/Empty Ticket Attributes") | html %]</span></h2>
+                </div>
+                <div class="Content">
+                    <fieldset class="TableLike">
+                        <div class="Field">
+                            <p class="Error">
+                                [% Translate("Warning: Delete/Empty a ticket attribute or dynamic field has a higher priority than update/add.") | html %]
+                            </p>
+                        </div>
+[% RenderBlockStart("NewDeleteField") %]
+                        <label for="[% Data.FieldKey %]DeleteIDs">[% Translate(Data.FieldLabel) | html %]:</label>
+                        <div class="Field">
+                            [% Data.DeleteStrg %]
+                        </div>
+                        <div class="Clear"></div>
+[% RenderBlockEnd("NewDeleteField") %]
+                    </fieldset>
+                </div>
+            </div>
+            <div class="WidgetSimple SpacingTop Collapsed">
+                <div class="Header">
+                    <div class="WidgetAction Toggle">
+                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
+                    </div>
                     <h2 class="PaddingLeft15px"><span>[% Translate("Add Note") | html %]</span></h2>
                 </div>
                 <div class="Content">

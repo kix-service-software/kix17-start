@@ -13,6 +13,8 @@ package Kernel::System::DynamicFieldValue;
 use strict;
 use warnings;
 
+use base qw(Kernel::System::EventHandler);
+
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
@@ -53,6 +55,11 @@ sub new {
     # allocate new hash for object
     my $Self = {};
     bless( $Self, $Type );
+
+    # init of event handler
+    $Self->EventHandlerInit(
+        Config => 'DynamicFieldValue::EventModulePost',
+    );
 
     return $Self;
 }
@@ -165,7 +172,7 @@ sub ValueSet {
     # T2017120690001131
     my $DFConfig = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
         ID => $Param{FieldID}
-    );    
+    );
 
     for my $Value (@Values) {
 
@@ -184,6 +191,17 @@ sub ValueSet {
 
     # delete cache
     $Self->_DeleteFromCache(%Param);
+
+    # trigger event
+    $Self->EventHandler(
+        Event => 'DynamicFieldValueSet',
+        Data  => {
+            FieldID  => $Param{FieldID},
+            ObjectID => $Param{ObjectID},
+            Values   => \@Values,
+        },
+        UserID => $Param{UserID},
+    );
 
     return 1;
 }
@@ -254,7 +272,7 @@ sub ValueGet {
     # T2017120690001131
     my $DFConfig = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
         ID => $Param{FieldID}
-    );    
+    );
 
     # We'll populate cache with all object's dynamic fields to reduce
     # number of db accesses (only one db query for all dynamic fields till
@@ -339,7 +357,7 @@ sub ValueDelete {
     # T2017120690001131
     my $DFConfig = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
         ID => $Param{FieldID}
-    );    
+    );
 
     # delete dynamic field value
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
@@ -349,6 +367,16 @@ sub ValueDelete {
 
     # delete cache
     $Self->_DeleteFromCache(%Param);
+
+    # trigger event
+    $Self->EventHandler(
+        Event => 'DynamicFieldValueDelete',
+        Data  => {
+            FieldID  => $Param{FieldID},
+            ObjectID => $Param{ObjectID},
+        },
+        UserID => $Param{UserID},
+    );
 
     return 1;
 }
@@ -389,6 +417,15 @@ sub AllValuesDelete {
     # Cleanup entire cache!
     $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
         Type => 'DynamicFieldValue',
+    );
+
+    # trigger event
+    $Self->EventHandler(
+        Event => 'DynamicFieldValueDeleteAll',
+        Data  => {
+            FieldID  => $Param{FieldID},
+        },
+        UserID => $Param{UserID},
     );
 
     return 1;

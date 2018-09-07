@@ -13,8 +13,9 @@ use warnings;
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor',
     'Kernel::System::CustomerUser',
-    'Kernel::System::Link',
+    'Kernel::System::LinkObject',
     'Kernel::System::Log',
     'Kernel::System::SystemAddress',
     'Kernel::System::State',
@@ -37,6 +38,7 @@ sub new {
 
     # create needed objects
     $Self->{ConfigObject}        = $Kernel::OM->Get('Kernel::Config');
+    $Self->{ExecutorObject}      = $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor');
     $Self->{CustomerUserObject}  = $Kernel::OM->Get('Kernel::System::CustomerUser');
     $Self->{LinkObject}          = $Kernel::OM->Get('Kernel::System::LinkObject');
     $Self->{LogObject}           = $Kernel::OM->Get('Kernel::System::Log');
@@ -145,21 +147,13 @@ sub Run {
 
                     my $Type = "Agent";
 
-                    my $Success = $Self->{LinkObject}->LinkAdd(
-                        SourceObject => 'Person',
-                        SourceKey    => $User{UserLogin},
-                        TargetObject => 'Ticket',
-                        TargetKey    => $Data{TicketID},
-                        Type         => $Type,
-                        State        => 'Valid',
-                        UserID       => $Param{UserID},
-                    );
-
-                    $Self->{TicketObject}->HistoryAdd(
-                        Name         => 'added involved person ' . $CurrUserID,
-                        HistoryType  => 'TicketLinkAdd',
-                        TicketID     => $Ticket{TicketID},
-                        CreateUserID => 1,
+                    # call async execution
+                    $Self->{ExecutorObject}->AsyncCall(
+                        TicketID      => $Data{TicketID},
+                        PersonID      => $User{UserLogin},
+                        PersonHistory => $CurrUserID,
+                        LinkType      => $Type,
+                        UserID        => $Param{UserID},
                     );
 
                     # avoid adding agent as customer user - next mail address...
@@ -216,22 +210,13 @@ sub Run {
                     }
                     next if $Blacklisted;
 
-                    # add links to database
-                    my $Success = $Self->{LinkObject}->LinkAdd(
-                        SourceObject => 'Person',
-                        SourceKey    => $CustomerUserData{UserLogin},
-                        TargetObject => 'Ticket',
-                        TargetKey    => $Data{TicketID},
-                        Type         => $Type,
-                        State        => 'Valid',
-                        UserID       => $Param{UserID},
-                    );
-
-                    $Self->{TicketObject}->HistoryAdd(
-                        Name         => 'added involved person ' . $CurrUserLogin,
-                        HistoryType  => 'TicketLinkAdd',
-                        TicketID     => $Ticket{TicketID},
-                        CreateUserID => 1,
+                    # call async execution
+                    $Self->{ExecutorObject}->AsyncCall(
+                        TicketID      => $Data{TicketID},
+                        PersonID      => $CustomerUserData{UserLogin},
+                        PersonHistory => $CurrUserLogin,
+                        LinkType      => $Type,
+                        UserID        => $Param{UserID},
                     );
 
                     # avoid multiple links caused by multiple users for one mailaddress...
@@ -259,21 +244,13 @@ sub Run {
         }
         next if $Blacklisted;
 
-        my $Success = $Self->{LinkObject}->LinkAdd(
-            SourceObject => 'Person',
-            SourceKey    => $User{UserLogin},
-            TargetObject => 'Ticket',
-            TargetKey    => $Data{TicketID},
-            Type         => 'Agent',
-            State        => 'Valid',
-            UserID       => $Param{UserID},
-        );
-
-        $Self->{TicketObject}->HistoryAdd(
-            Name         => 'added involved person ' . $User{UserLogin},
-            HistoryType  => 'TicketLinkAdd',
-            TicketID     => $Ticket{TicketID},
-            CreateUserID => 1,
+        # call async execution
+        $Self->{ExecutorObject}->AsyncCall(
+            TicketID      => $Data{TicketID},
+            PersonID      => $User{UserLogin},
+            PersonHistory => $User{UserLogin},
+            LinkType      => 'Agent',
+            UserID        => $Param{UserID},
         );
 
     }
@@ -310,21 +287,13 @@ sub Run {
         }
         return 1 if $Blacklisted;
 
-        my $Success = $Self->{LinkObject}->LinkAdd(
-            SourceObject => 'Person',
-            SourceKey    => $User{UserLogin},
-            TargetObject => 'Ticket',
-            TargetKey    => $Data{TicketID},
-            Type         => 'Agent',
-            State        => 'Valid',
-            UserID       => $Param{UserID},
-        );
-
-        $Self->{TicketObject}->HistoryAdd(
-            Name         => 'added involved person ' . $User{UserLogin},
-            HistoryType  => 'TicketLinkAdd',
-            TicketID     => $Ticket{TicketID},
-            CreateUserID => 1,
+        # call async execution
+        $Self->{ExecutorObject}->AsyncCall(
+            TicketID      => $Data{TicketID},
+            PersonID      => $User{UserLogin},
+            PersonHistory => $User{UserLogin},
+            LinkType      => 'Agent',
+            UserID        => $Param{UserID},
         );
     }
 
@@ -354,75 +323,14 @@ sub Run {
         }
         return 1 if $Blacklisted;
 
-        my $Success = $Self->{LinkObject}->LinkAdd(
-            SourceObject => 'Person',
-            SourceKey    => $Ticket{CustomerUserID},
-            TargetObject => 'Ticket',
-            TargetKey    => $Data{TicketID},
-            Type         => 'Customer',
-            State        => 'Valid',
-            UserID       => $Param{UserID},
+        # call async execution
+        $Self->{ExecutorObject}->AsyncCall(
+            TicketID      => $Data{TicketID},
+            PersonID      => $Ticket{CustomerUserID},
+            PersonHistory => $Ticket{CustomerUserID},
+            LinkType      => 'Customer',
+            UserID        => $Param{UserID},
         );
-
-        $Self->{TicketObject}->HistoryAdd(
-            Name         => 'added involved person ' . $Ticket{CustomerUserID},
-            HistoryType  => 'TicketLinkAdd',
-            TicketID     => $Ticket{TicketID},
-            CreateUserID => 1,
-        );
-    }
-
-    elsif ( $Param{Event} eq 'TicketMerge' ) {
-        return if !$Data{MainTicketID};
-
-        # get ticket data and ticket state
-        my %Ticket = $Self->{TicketObject}->TicketGet(
-            TicketID => $Data{TicketID},
-            UserID   => 1,
-        );
-        my %State = $Self->{StateObject}->StateGet( ID => $Ticket{StateID} );
-
-        # if ticket is merged, linked persons will be added to target
-        if ( $State{TypeName} eq 'merged' ) {
-
-            my $LinkList = $Self->{LinkObject}->LinkList(
-                Object  => 'Ticket',
-                Key     => $Data{TicketID},
-                Object2 => 'Person',
-                State   => 'Valid',
-                UserID  => 1,
-            );
-
-            for my $LinkType ( keys %{ $LinkList->{Person} } ) {
-                for my $Person ( keys %{ $LinkList->{Person}->{$LinkType}->{Source} } ) {
-
-                    $Blacklisted = 0;
-                    for my $Item (@Blacklist) {
-                        next if $Person !~ m/$Item/;
-                        $Blacklisted = 1;
-                        last;
-                    }
-                    next if $Blacklisted;
-
-                    my $Success = $Self->{LinkObject}->LinkAdd(
-                        SourceObject => 'Person',
-                        SourceKey    => $Person,
-                        TargetObject => 'Ticket',
-                        TargetKey    => $Data{MainTicketID},
-                        Type         => $LinkType,
-                        State        => 'Valid',
-                        UserID       => $Param{UserID},
-                    );
-
-                    $Self->{TicketObject}->HistoryAdd(
-                        Name         => 'added involved person ',
-                        HistoryType  => 'TicketLinkAdd',
-                        TicketID     => $Data{MainTicketID},
-                        CreateUserID => 1,
-                    );
-                }
-            }
-        }
     }
 
     return 1;
