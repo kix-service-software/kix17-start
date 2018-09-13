@@ -13,6 +13,7 @@ use warnings;
 
 use Kernel::System::DFRemoteDB;
 use Kernel::System::VariableCheck qw(:all);
+use Kernel::Language qw(Translatable);
 
 use URI::Escape qw(uri_unescape);
 

@@ -4409,6 +4409,23 @@ sub Data {
     $Lang->{'The new email notification article to customers will already be marked as seen for agents.'}
         = 'Der neue E-Mail-Benachrichtigungs-Artikel an Kunden wird für Agenten schon als gesehen markiert.';
 
+    $Lang->{'Event to clear all ttl entries if all dynamic field entries are deleted.'}
+          = 'Event um alle TTL-Einträge zu löschen, wenn alle Einträge eines DynamicFields gelöscht werden.';
+    $Lang->{'Event to clear the ttl entry if dynamic field entry for an object is deleted.'}
+          = 'Event um relevante TTL-Einträge zu löschen, wenn ein Eintrag eines DynamicField gelöscht wird.';
+    $Lang->{'Set ttl entry if dynamic field entry for an object is set.'}
+          = 'Erstellt den relevanten TTL-Eintrag beim hinzufügen eines DynamicField Eintrages.';
+    $Lang->{'Update all existing ttl entries if dynamic field is updated.'}
+          = 'Aktualisiert alle bestehenden TTL-Einträge, wenn ein DynamicField aktualisiert wird.';
+    $Lang->{'Delete expired dynamic field values.'}
+          = 'Löscht abgelaufene Einträge von DynamicFields.';
+
+    # DF Value TTL
+    $Lang->{'Years'}              = 'Jahre';
+    $Lang->{'Time to live (TTL)'} = 'Wert-Lebenszeit (TTL)';
+    $Lang->{'This is the time a value is stored before it expires. Use 0 to deactivate expiration.'}
+          = 'Das ist die Zeit für einen Wert bevor dieser ungültig wird. Verwende 0 um den Verfall zu deaktivieren.';
+
     # Generic Agent
     $Lang->{'Warning: Delete/Empty a ticket attribute or dynamic field has a higher priority than update/add.'}
         = 'Warnung: Löschen/Leeren eines Ticket-Attributs oder dynamischen Feldes hat eine höhere Priorität als Aktualisieren/Hinzufügen.';

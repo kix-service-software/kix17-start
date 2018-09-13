@@ -13,6 +13,7 @@ use warnings;
 
 use Kernel::System::VariableCheck qw(:all);
 use URI::Escape qw(uri_unescape);
+use Kernel::Language qw(Translatable);
 
 our @ObjectDependencies = (
     'Kernel::Config',
