@@ -1805,9 +1805,9 @@ sub _CreateTextModuleExportCSV {
                 push( @ExportHeadArray, $CurrKey );
             }
             push( @ExportHeadArray, 'TextModuleCategoryList' );
-            push( @ExportHeadArray, 'TextModuleQueueList' );
-            push( @ExportHeadArray, 'TextModuleTicketTypeList' );
-            push( @ExportHeadArray, 'TextModuleTicketStateList' );
+            push( @ExportHeadArray, 'QueueList' );
+            push( @ExportHeadArray, 'TicketTypeList' );
+            push( @ExportHeadArray, 'TicketStateList' );
         }
 
         # add all keys
