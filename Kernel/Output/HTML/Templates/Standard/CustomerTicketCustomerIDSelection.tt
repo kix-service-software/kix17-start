@@ -37,7 +37,7 @@
 [% RenderBlockStart("CustomerIDSelection") %]
 <div id="MainBox" class="TicketCompose ARIARoleMain">
     <div class="Content">
-        <form action="[% Env("CGIHandle") %]" method="post" id="CustomerIDSelection" name="CustomerIDSelection" enctype="multipart/form-data" class="Validate PreventMultipleSubmits" >
+        <form action="[% Env("CGIHandle") %]" method="post" id="CustomerIDSelection" name="compose" enctype="multipart/form-data" class="Validate PreventMultipleSubmits" >
             <input type="hidden" name="Action" value="[% Env("Action") %]" />
             <input type="hidden" name="Subaction" value="NewTicket" />
             <input type="hidden" name="SelectedCustomerID" id="SelectedCustomerID" value="" />
