@@ -1,7 +1,7 @@
 # --
 # Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -87,7 +87,7 @@ sub ToAscii {
     $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$Param{String} );
 
     # get length of line for forcing line breakes
-    my $LineLength = $Self->{'Ticket::Frontend::TextAreaNote'} || 78;
+    my $LineLength = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::TextAreaNote') || 78;
 
     # find <a href=....> and replace it with [x]
     my $LinkList = '';
@@ -1140,10 +1140,28 @@ sub Safety {
                 }egsxim;
             }
 
+            # Remove malicious CSS content
+            $Tag =~ s{
+                (\s)style=("|') (.*?) \2
+            }
+            {
+                my ($Space, $Delimiter, $Content) = ($1, $2, $3);
+
+                if (
+                    ($Param{NoIntSrcLoad} && $Content =~ m{url\(})
+                    || ($Param{NoExtSrcLoad} && $Content =~ m/(http|ftp|https):\//i)) {
+                    $Replaced = 1;
+                    '';
+                }
+                else {
+                    "${Space}style=${Delimiter}${Content}${Delimiter}";
+                }
+            }egsxim;
+
             # remove load tags
             if ($Param{NoIntSrcLoad} || $Param{NoExtSrcLoad}) {
                 $Tag =~ s{
-                    ($TagStart (.+?) (?: \s | /) src=(.+?) (\s.+?|) $TagEnd)
+                    ($TagStart (.+?) (?: \s | /) (?:src|poster)=(.+?) (\s.+?|) $TagEnd)
                 }
                 {
                     my $URL = $3;

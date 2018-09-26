@@ -1,7 +1,7 @@
 # --
 # Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -238,6 +238,8 @@ sub _SupportDataCollectorView {
 sub _GenerateSupportBundle {
     my ( $Self, %Param ) = @_;
 
+    $Kernel::OM->Get('Kernel::Output::HTML::Layout')->ChallengeTokenCheck();
+
     my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
     my $RandomID   = $MainObject->GenerateRandomString(
         Length     => 8,
@@ -308,12 +310,23 @@ sub _DownloadSupportBundle {
 
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    $LayoutObject->ChallengeTokenCheck();
+
     my $Filename     = $ParamObject->GetParam( Param => 'Filename' ) || '';
     my $RandomID     = $ParamObject->GetParam( Param => 'RandomID' ) || '';
 
-    if ( !$Filename ) {
+    # Validate simple file name.
+    if ( !$Filename || $Filename !~ m{^[a-z0-9._-]+$}smxi ) {
         return $LayoutObject->ErrorScreen(
-            Message => "Need Filename!",
+            Message => "Need Filename or Filename invalid!",
+        );
+    }
+
+    # Validate simple RandomID.
+    if ( !$RandomID || $RandomID !~ m{^[a-f0-9]+$}smx ) {
+        return $LayoutObject->ErrorScreen(
+            Message => "Need RandomID or RandomID invalid!",
         );
     }
 
