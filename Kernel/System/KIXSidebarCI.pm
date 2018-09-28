@@ -29,6 +29,7 @@ sub new {
     $Self->{GeneralCatalogObject} = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
     $Self->{ConfigItemObject}     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
     $Self->{LinkObject}           = $Kernel::OM->Get('Kernel::System::LinkObject');
+    $Self->{LogObject}            = $Kernel::OM->Get('Kernel::System::Log');
 
     return $Self;
 }
