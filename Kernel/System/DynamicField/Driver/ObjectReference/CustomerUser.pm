@@ -808,6 +808,46 @@ EOF
                 });
 EOF
 
+        $HTMLString .= <<"EOF";
+<script type="text/javascript">//<![CDATA[
+    function Init$FieldNameKey() {
+        \$('$FieldSelector').each(function () {
+            Core.Config.Set('Autocomplete.QueryDelay', 100);
+            Core.Config.Set('Autocomplete.MaxResultsDisplayed', 20);
+            Core.Config.Set('Autocomplete.MinQueryLength', 2);
+            Core.Config.Set('Autocomplete.DynamicWidth', 1);
+            Core.Config.Set('Autocomplete.ShowCustomerTickets', 0);
+            Core.Config.Set('Autocomplete.SearchButtonText', "Search Customer");
+            Core.KIX4OTRS.Agent.DynamicFieldObjectReference.Init(\$(this), 1, '$ObjectReference');
+        });
+    }
+    function Wait$FieldNameKey() {
+        if (window.jQuery) {
+            \$('#Attribute').bind('redraw.InputField', function() {
+                Init$FieldNameKey();
+            });
+            if (
+                \$('form[name=compose] input[name=Action]').first().val() == 'AdminGenericAgent'
+                && \$('form[name=compose] input[name=Subaction]').first().val() == 'UpdateAction'
+            ) {
+                Init$FieldNameKey();
+            }
+            if (
+                \$('form[name=compose] input[name=Action]').first().val() == 'AdminNotificationEvent'
+                && (
+                    \$('form[name=compose] input[name=Subaction]').first().val() == 'ChangeAction'
+                    || \$('form[name=compose] input[name=Subaction]').first().val() == 'AddAction'
+                )
+            ) {
+                Init$FieldNameKey();
+            }
+        } else {
+            window.setTimeout(Wait$FieldNameKey, 1);
+        }
+    }
+    window.setTimeout(Wait$FieldNameKey, 0);
+//]]></script>
+EOF
     }
     elsif ( $DisplayFieldType eq 'Multiselect' || $DisplayFieldType eq 'Dropdown' ) {
 
