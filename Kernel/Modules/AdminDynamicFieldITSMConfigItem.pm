@@ -208,7 +208,7 @@ sub _AddAction {
 
     # get ValueTTL
     for my $ConfigParam (qw(ValueTTLData ValueTTLMultiplier)) {
-        $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
+        $GetParam{$ConfigParam} = $Self->{ParamObject}->GetParam( Param => $ConfigParam );
     }
     if (
         $GetParam{'ValueTTLData'}
@@ -440,7 +440,7 @@ sub _ChangeAction {
     }
     # get ValueTTL
     for my $ConfigParam (qw(ValueTTLData ValueTTLMultiplier)) {
-        $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
+        $GetParam{$ConfigParam} = $Self->{ParamObject}->GetParam( Param => $ConfigParam );
     }
     if (
         $GetParam{'ValueTTLData'}
