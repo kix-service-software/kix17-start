@@ -968,6 +968,10 @@ sub Data {
     # EO KIX4OTRS_SysConfigChangeLog.xml
 
     # KIXSidebar
+    $Lang->{'Sidebar module registration for the agent interface.'} =
+        'Registrierung für das Sidebarmodul im Agenten-Interface.';
+    $Lang->{'Sidebar module registration for the customer interface.'} =
+        'Registrierung für das Sidebarmodul im Kunden-Interface.';
     $Lang->{'Parameters for the KIXSidebar backend TextModules.'} =
         'Parameter für das KIXSidebar-Backend TextModules.';
     $Lang->{'Parameters for the KIXSidebar backend LinkedPersons.'} =
