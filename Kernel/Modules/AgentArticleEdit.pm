@@ -417,6 +417,7 @@ sub Run {
     if ( $Self->{Subaction} eq 'ArticleEdit' ) {
 
         my %Error;
+        my %ArticleTypeList = $TicketObject->ArticleTypeList( Result => 'HASH' );
 
         # get params
         for my $Key (
@@ -427,30 +428,32 @@ sub Run {
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
         }
 
-        # transform pending time, time stamp based on user time zone
-        if (
-            defined $GetParam{Year}
-            && defined $GetParam{Month}
-            && defined $GetParam{Day}
-            && defined $GetParam{Hour}
-            && defined $GetParam{Minute}
-            )
-        {
-            %GetParam = $LayoutObject->TransformDateSelection(
-                %GetParam,
-            );
+        if ( $ArticleTypeList{$GetParam{ArticleTypeID}} !~ /^email/ ) {
+            # transform pending time, time stamp based on user time zone
+            if (
+                defined $GetParam{Year}
+                && defined $GetParam{Month}
+                && defined $GetParam{Day}
+                && defined $GetParam{Hour}
+                && defined $GetParam{Minute}
+                )
+            {
+                %GetParam = $LayoutObject->TransformDateSelection(
+                    %GetParam,
+                );
+            }
+
+            $GetParam{Created}
+                = $GetParam{Year} . '-'
+                . $GetParam{Month} . '-'
+                . $GetParam{Day} . ' '
+                . $GetParam{Hour} . ':'
+                . $GetParam{Minute} . ':'
+                . '00';
+
+            $GetParam{IncomingTime}
+                = $TimeObject->TimeStamp2SystemTime( String => $GetParam{Created} );
         }
-
-        $GetParam{Created}
-            = $GetParam{Year} . '-'
-            . $GetParam{Month} . '-'
-            . $GetParam{Day} . ' '
-            . $GetParam{Hour} . ':'
-            . $GetParam{Minute} . ':'
-            . '00';
-
-        $GetParam{IncomingTime}
-            = $TimeObject->TimeStamp2SystemTime( String => $GetParam{Created} );
 
         #-----------------------------------------------------------------------
         # If is an action about attachments
@@ -490,14 +493,16 @@ sub Run {
 
         if ( !$IsUpload ) {
 
-            # check subject
-            if ( !$GetParam{Subject} ) {
-                $Error{SubjectInvalid} = 'ServerError';
-            }
+            if ( $ArticleTypeList{$GetParam{ArticleTypeID}} !~ /^email/ ) {
+                # check subject
+                if ( !$GetParam{Subject} ) {
+                    $Error{SubjectInvalid} = 'ServerError';
+                }
 
-            # check body
-            if ( !$GetParam{Body} ) {
-                $Error{BodyInvalid} = 'ServerError';
+                # check body
+                if ( !$GetParam{Body} ) {
+                    $Error{BodyInvalid} = 'ServerError';
+                }
             }
 
             # check time units
@@ -612,172 +617,175 @@ sub Run {
         # if the action is not about attachments and no error occured -> update article values
         #-----------------------------------------------------------------------
 
-        #-----------------------------------------------------------------------
-        # check if create date has been changed (if diference is more than 1 minute)
-        if ( abs( $Article{IncomingTime} - $GetParam{IncomingTime} ) >= 60 ) {
-            my $UpdateSuccessful = $TicketObject->ArticleCreateDateUpdate(
-                TicketID     => $Article{TicketID},
-                ArticleID    => $Article{ArticleID},
-                IncomingTime => $GetParam{IncomingTime},
-                Created      => $GetParam{Created},
-                UserID       => $Self->{UserID},
-            );
-            if ( !$UpdateSuccessful ) {
-                return $LayoutObject->ErrorScreen(
-                    Message => Translatable('Can\'t update article create time!'),
-                    Comment => Translatable('Please contact the admin.'),
-                );
-            }
-            else {
-                $TicketObject->HistoryAdd(
-                    Name => "Article updated, ID: "
-                        . $Article{ArticleID}
-                        . " - Updated incoming time from '"
-                        . $Article{Created}
-                        . "' to '"
-                        . $GetParam{Created} . "'",
-                    HistoryType  => $Self->{Config}->{HistoryType},
+        if ( $ArticleTypeList{$GetParam{ArticleTypeID}} !~ /^email/ ) {
+            #-----------------------------------------------------------------------
+            # check if create date has been changed (if diference is more than 1 minute)
+            if ( abs( $Article{IncomingTime} - $GetParam{IncomingTime} ) >= 60 ) {
+                my $UpdateSuccessful = $TicketObject->ArticleCreateDateUpdate(
                     TicketID     => $Article{TicketID},
-                    CreateUserID => $Self->{UserID},
+                    ArticleID    => $Article{ArticleID},
+                    IncomingTime => $GetParam{IncomingTime},
+                    Created      => $GetParam{Created},
+                    UserID       => $Self->{UserID},
                 );
-            }
-        }
-
-        #-----------------------------------------------------------------------
-        # check if subject has been changed
-        if ( $GetParam{Subject} ne $Article{Subject} ) {
-            my $UpdateSuccessful = $TicketObject->ArticleUpdate(
-                ArticleID => $Article{ArticleID},
-                Key       => 'Subject',
-                Value     => $GetParam{Subject},
-                UserID    => $Self->{UserID},
-                TicketID  => $Article{TicketID},
-            );
-            if ( !$UpdateSuccessful ) {
-                return $LayoutObject->ErrorScreen(
-                    Message => Translatable('Can\'t update article subject!'),
-                    Comment => Translatable('Please contact the admin.'),
-                );
-            }
-            else {
-                $TicketObject->HistoryAdd(
-                    Name => "Article updated, ID: "
-                        . $Article{ArticleID}
-                        . " - Updated article subject from '"
-                        . $Article{Subject}
-                        . "' to '"
-                        . $GetParam{Subject} . "'",
-                    HistoryType  => $Self->{Config}->{HistoryType},
-                    TicketID     => $Article{TicketID},
-                    CreateUserID => $Self->{UserID},
-                );
-            }
-        }
-
-        #-----------------------------------------------------------------------
-        # Update attachments (incl. article note if saved as HTML attachment)
-        # It is not optimal, because there is no way to delete ONE particular
-        # attachment, it's only possibel to delete them ALL (see Article.pm)
-
-        if ( $GetParam{AttachmentChanged} || $GetParam{Body} ne $Article{Body} ) {
-
-            # delete all (old) attachments
-            my $UpdateSuccessful = $TicketObject->ArticleDeleteAttachment(
-                ArticleID => $Article{ArticleID},
-                UserID    => $Self->{UserID},
-            );
-            if ( !$UpdateSuccessful ) {
-                return $LayoutObject->ErrorScreen(
-                    Message => Translatable('Can\'t delete article attachment!'),
-                    Comment => Translatable('Please contact the admin.'),
-                );
-            }
-
-            # if RichText is used - save (new) body as HTML attachment
-            if ( $LayoutObject->{BrowserRichText} ) {
-
-                # verify html document
-                my $HTMLBody =
-                    $LayoutObject
-                    ->RichTextDocumentComplete( String => $GetParam{Body}, );
-
-                # and save (new) body as html attachment
-                $UpdateSuccessful =
-                    $TicketObject->ArticleWriteAttachment(
-                    Content => $HTMLBody,
-                    ContentType =>
-                        "text/html; charset=\"$LayoutObject->{UserCharset}\"",
-                    Filename =>
-                        'file-2',    # as used in Article.pm (sub ArticleCreate)
-                    ArticleID => $Article{ArticleID},
-                    UserID    => $Self->{UserID},
-                    Force     => 1,
-                    );
                 if ( !$UpdateSuccessful ) {
                     return $LayoutObject->ErrorScreen(
-                        Message => Translatable('Can\'t add article body as attachment!'),
+                        Message => Translatable('Can\'t update article create time!'),
                         Comment => Translatable('Please contact the admin.'),
+                    );
+                }
+                else {
+                    $TicketObject->HistoryAdd(
+                        Name => "Article updated, ID: "
+                            . $Article{ArticleID}
+                            . " - Updated incoming time from '"
+                            . $Article{Created}
+                            . "' to '"
+                            . $GetParam{Created} . "'",
+                        HistoryType  => $Self->{Config}->{HistoryType},
+                        TicketID     => $Article{TicketID},
+                        CreateUserID => $Self->{UserID},
                     );
                 }
             }
 
-            # save all (new) attachments
-
-            # get pre loaded attachments
-            @Attachments =
-                $UploadCacheObject
-                ->FormIDGetAllFilesData( FormID => $Self->{FormID}, );
-
-            # get submit attachment
-            my %UploadStuff = $ParamObject->GetUploadAll(
-                Param  => 'FileUpload',
-                Source => 'String',
-            );
-            if (%UploadStuff) {
-                push @Attachments, \%UploadStuff;
+            #-----------------------------------------------------------------------
+            # check if subject has been changed
+            if ( $GetParam{Subject} ne $Article{Subject} ) {
+                my $UpdateSuccessful = $TicketObject->ArticleUpdate(
+                    ArticleID => $Article{ArticleID},
+                    Key       => 'Subject',
+                    Value     => $GetParam{Subject},
+                    UserID    => $Self->{UserID},
+                    TicketID  => $Article{TicketID},
+                );
+                if ( !$UpdateSuccessful ) {
+                    return $LayoutObject->ErrorScreen(
+                        Message => Translatable('Can\'t update article subject!'),
+                        Comment => Translatable('Please contact the admin.'),
+                    );
+                }
+                else {
+                    $TicketObject->HistoryAdd(
+                        Name => "Article updated, ID: "
+                            . $Article{ArticleID}
+                            . " - Updated article subject from '"
+                            . $Article{Subject}
+                            . "' to '"
+                            . $GetParam{Subject} . "'",
+                        HistoryType  => $Self->{Config}->{HistoryType},
+                        TicketID     => $Article{TicketID},
+                        CreateUserID => $Self->{UserID},
+                    );
+                }
             }
 
-            # write attachments
-            for my $Attachment (@Attachments) {
+            #-----------------------------------------------------------------------
+            # Update attachments (incl. article note if saved as HTML attachment)
+            # It is not optimal, because there is no way to delete ONE particular
+            # attachment, it's only possibel to delete them ALL (see Article.pm)
 
-                # skip, deleted not used inline images
+            if ( $GetParam{AttachmentChanged}
+                || $GetParam{Body} ne $Article{Body}
+            ) {
+
+                # delete all (old) attachments
+                my $UpdateSuccessful = $TicketObject->ArticleDeleteAttachment(
+                    ArticleID => $Article{ArticleID},
+                    UserID    => $Self->{UserID},
+                );
+                if ( !$UpdateSuccessful ) {
+                    return $LayoutObject->ErrorScreen(
+                        Message => Translatable('Can\'t delete article attachment!'),
+                        Comment => Translatable('Please contact the admin.'),
+                    );
+                }
+
+                # if RichText is used - save (new) body as HTML attachment
                 if ( $LayoutObject->{BrowserRichText} ) {
-                    my $ContentID = $Attachment->{ContentID};
-                    if ($ContentID) {
-                        my $ContentIDHTMLQuote =
-                            $LayoutObject->Ascii2Html( Text => $ContentID, );
 
-                        # workaround for link encode of rich text editor, see bug#5053
-                        my $ContentIDLinkEncode =
-                            $LayoutObject->LinkEncode($ContentID);
-                        $GetParam{Body} =~
-                            s/(ContentID=)$ContentIDLinkEncode/$1$ContentID/g;
+                    # verify html document
+                    my $HTMLBody =
+                        $LayoutObject
+                        ->RichTextDocumentComplete( String => $GetParam{Body}, );
 
-                        # ignore attachment if not linked in body
-                        next
-                            if $GetParam{Body} !~
-                            /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
+                    # and save (new) body as html attachment
+                    $UpdateSuccessful =
+                        $TicketObject->ArticleWriteAttachment(
+                        Content => $HTMLBody,
+                        ContentType =>
+                            "text/html; charset=\"$LayoutObject->{UserCharset}\"",
+                        Filename =>
+                            'file-2',    # as used in Article.pm (sub ArticleCreate)
+                        ArticleID => $Article{ArticleID},
+                        UserID    => $Self->{UserID},
+                        Force     => 1,
+                        );
+                    if ( !$UpdateSuccessful ) {
+                        return $LayoutObject->ErrorScreen(
+                            Message => Translatable('Can\'t add article body as attachment!'),
+                            Comment => Translatable('Please contact the admin.'),
+                        );
                     }
                 }
 
-                # write existing file to backend
-                $UpdateSuccessful =
-                    $TicketObject->ArticleWriteAttachment(
-                    %{$Attachment},
-                    ArticleID => $Article{ArticleID},
-                    UserID    => $Self->{UserID},
-                    );
-                if ( !$UpdateSuccessful ) {
+                # save all (new) attachments
 
-                    # error page
-                    return $LayoutObject->ErrorScreen(
-                        Message => Translatable('Can\'t update article body!'),
-                        Comment => Translatable('Please contact the admin.'),
-                    );
+                # get pre loaded attachments
+                @Attachments =
+                    $UploadCacheObject
+                    ->FormIDGetAllFilesData( FormID => $Self->{FormID}, );
+
+                # get submit attachment
+                my %UploadStuff = $ParamObject->GetUploadAll(
+                    Param  => 'FileUpload',
+                    Source => 'String',
+                );
+                if (%UploadStuff) {
+                    push @Attachments, \%UploadStuff;
+                }
+
+                # write attachments
+                for my $Attachment (@Attachments) {
+
+                    # skip, deleted not used inline images
+                    if ( $LayoutObject->{BrowserRichText} ) {
+                        my $ContentID = $Attachment->{ContentID};
+                        if ($ContentID) {
+                            my $ContentIDHTMLQuote =
+                                $LayoutObject->Ascii2Html( Text => $ContentID, );
+
+                            # workaround for link encode of rich text editor, see bug#5053
+                            my $ContentIDLinkEncode =
+                                $LayoutObject->LinkEncode($ContentID);
+                            $GetParam{Body} =~
+                                s/(ContentID=)$ContentIDLinkEncode/$1$ContentID/g;
+
+                            # ignore attachment if not linked in body
+                            next
+                                if $GetParam{Body} !~
+                                /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
+                        }
+                    }
+
+                    # write existing file to backend
+                    $UpdateSuccessful =
+                        $TicketObject->ArticleWriteAttachment(
+                        %{$Attachment},
+                        ArticleID => $Article{ArticleID},
+                        UserID    => $Self->{UserID},
+                        );
+                    if ( !$UpdateSuccessful ) {
+
+                        # error page
+                        return $LayoutObject->ErrorScreen(
+                            Message => Translatable('Can\'t update article body!'),
+                            Comment => Translatable('Please contact the admin.'),
+                        );
+                    }
                 }
             }
         }
-
         # set dynamic fields
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
@@ -795,7 +803,9 @@ sub Run {
 
         #-----------------------------------------------------------------------
         # check if body has been changed
-        if ( $GetParam{Body} ne $Article{Body} ) {
+        if ( $ArticleTypeList{$GetParam{ArticleTypeID}} !~ /^email/
+             && $GetParam{Body} ne $Article{Body}
+        ) {
 
             # if RichText is used - get ascii body
             if ( $LayoutObject->{BrowserRichText} ) {
