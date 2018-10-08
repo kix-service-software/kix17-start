@@ -11,22 +11,13 @@ package Kernel::Modules::AdminDynamicFieldRemoteDB;
 use strict;
 use warnings;
 
+our $ObjectManagerDisabled = 1;
+
 use Kernel::System::DFRemoteDB;
 use Kernel::System::VariableCheck qw(:all);
 use Kernel::Language qw(Translatable);
 
 use URI::Escape qw(uri_unescape);
-
-our @ObjectDependencies = (
-    'Kernel::Config',
-    'Kernel::Output::HTML::Layout',
-    'Kernel::System::DynamicField',
-    'Kernel::System::DynamicField::Driver::RemoteDB',
-    'Kernel::System::Encode',
-    'Kernel::System::TemplateGenerator',
-    'Kernel::System::Valid',
-    'Kernel::System::Web::Request',
-);
 
 sub new {
     my ( $Type, %Param ) = @_;
@@ -34,27 +25,13 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    # create additional objects
-    $Self->{ConfigObject}            = $Kernel::OM->Get('Kernel::Config');
-    $Self->{LayoutObject}            = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    $Self->{DynamicFieldObject}      = $Kernel::OM->Get('Kernel::System::DynamicField');
-    $Self->{RemoteDBObject}          = $Kernel::OM->Get('Kernel::System::DynamicField::Driver::RemoteDB');
-    $Self->{EncodeObject}            = $Kernel::OM->Get('Kernel::System::Encode');
-    $Self->{TemplateGeneratorObject} = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
-    $Self->{ValidObject}             = $Kernel::OM->Get('Kernel::System::Valid');
-    $Self->{ParamObject}             = $Kernel::OM->Get('Kernel::System::Web::Request');
-
-    # get configured object types
-    $Self->{ObjectTypeConfig} = $Self->{ConfigObject}->Get('DynamicFields::ObjectType');
-
-    # get the fields config
-    $Self->{FieldTypeConfig} = $Self->{ConfigObject}->Get('DynamicFields::Driver') || {};
-
     return $Self;
 }
 
 sub Run {
     my ( $Self, %Param ) = @_;
+
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     if ( $Self->{Subaction} eq 'Add' ) {
         return $Self->_Add(
@@ -99,19 +76,23 @@ sub Run {
 sub _Add {
     my ( $Self, %Param ) = @_;
 
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
     my %GetParam;
     for my $Needed (qw(ObjectType FieldType FieldOrder)) {
-        $GetParam{$Needed} = $Self->{ParamObject}->GetParam( Param => $Needed );
+        $GetParam{$Needed} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $Needed );
         if ( !$Needed ) {
-            return $Self->{LayoutObject}->ErrorScreen(
-                Message => "Need $Needed",
+            return $LayoutObject->ErrorScreen(
+                Message => $LayoutObject->{LanguageObject}->Translate( 'Need %s', $Needed ),
             );
         }
     }
 
     # get the object type and field type display name
-    my $ObjectTypeName = $Self->{ObjectTypeConfig}->{ $GetParam{ObjectType} }->{DisplayName} || '';
-    my $FieldTypeName  = $Self->{FieldTypeConfig}->{ $GetParam{FieldType} }->{DisplayName}   || '';
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $ObjectTypeName
+        = $ConfigObject->Get('DynamicFields::ObjectType')->{ $GetParam{ObjectType} }->{DisplayName} || '';
+    my $FieldTypeName = $ConfigObject->Get('DynamicFields::Driver')->{ $GetParam{FieldType} }->{DisplayName} || '';
 
     return $Self->_ShowScreen(
         SearchSuffix   => '*',
@@ -128,9 +109,10 @@ sub _AddAction {
 
     my %Errors;
     my %GetParam;
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     for my $Needed (qw(Name Label FieldOrder MaxArraySize DatabaseDSN DatabaseUser DatabasePw DatabaseTable DatabaseFieldKey)) {
-        $GetParam{$Needed} = $Self->{ParamObject}->GetParam( Param => $Needed );
+        $GetParam{$Needed} = $ParamObject->GetParam( Param => $Needed );
         if ( !$GetParam{$Needed} ) {
             $Errors{ $Needed . 'ServerError' }        = 'ServerError';
             $Errors{ $Needed . 'ServerErrorMessage' } = 'This field is required.';
@@ -149,7 +131,7 @@ sub _AddAction {
         }
 
         # get dynamic field list
-        my $DynamicFieldsList = $Self->{DynamicFieldObject}->DynamicFieldList(
+        my $DynamicFieldsList = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldList(
             Valid      => 0,
             ResultType => 'HASH',
         ) || {};
@@ -187,7 +169,7 @@ sub _AddAction {
             MinQueryLength QueryDelay MaxQueryResult CaseSensitive
         )
     ) {
-        $GetParam{$ConfigParam} = $Self->{ParamObject}->GetParam( Param => $ConfigParam );
+        $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 
     # get 'raw' configuration params
@@ -196,7 +178,7 @@ sub _AddAction {
             ItemSeparator
         )
     ) {
-        $GetParam{$ConfigParam} = $Self->{ParamObject}->GetParam( Param => $ConfigParam, Raw => 1, );
+        $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam, Raw => 1, );
     }
 
     # get 'array' configuration params
@@ -205,7 +187,7 @@ sub _AddAction {
             DefaultValues
         )
     ) {
-        my @Data = $Self->{ParamObject}->GetArray( Param => $ConfigParam );
+        my @Data = $ParamObject->GetArray( Param => $ConfigParam );
         $GetParam{$ConfigParam} = \@Data;
     }
 
@@ -223,9 +205,11 @@ sub _AddAction {
         $GetParam{'ValueTTL'} = 0;
     }
 
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
     # uncorrectable errors
     if ( !$GetParam{ValidID} ) {
-        return $Self->{LayoutObject}->ErrorScreen(
+        return $LayoutObject->ErrorScreen(
             Message => "Need ValidID",
         );
     }
@@ -263,7 +247,7 @@ sub _AddAction {
     }
 
     # create a new field
-    my $FieldID = $Self->{DynamicFieldObject}->DynamicFieldAdd(
+    my $FieldID = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldAdd(
         Name       => $GetParam{Name},
         Label      => $GetParam{Label},
         FieldOrder => $GetParam{FieldOrder},
@@ -275,12 +259,12 @@ sub _AddAction {
     );
 
     if ( !$FieldID ) {
-        return $Self->{LayoutObject}->ErrorScreen(
+        return $LayoutObject->ErrorScreen(
             Message => "Could not create the new field",
         );
     }
 
-    return $Self->{LayoutObject}->Redirect(
+    return $LayoutObject->Redirect(
         OP => "Action=AdminDynamicField",
     );
 }
@@ -288,37 +272,42 @@ sub _AddAction {
 sub _Change {
     my ( $Self, %Param ) = @_;
 
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
     my %GetParam;
     for my $Needed (qw(ObjectType FieldType)) {
-        $GetParam{$Needed} = $Self->{ParamObject}->GetParam( Param => $Needed );
+        $GetParam{$Needed} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $Needed );
         if ( !$Needed ) {
-            return $Self->{LayoutObject}->ErrorScreen(
-                Message => "Need $Needed",
+            return $LayoutObject->ErrorScreen(
+                Message => $LayoutObject->{LanguageObject}->Translate( 'Need %s', $Needed ),
             );
         }
     }
 
     # get the object type and field type display name
-    my $ObjectTypeName = $Self->{ObjectTypeConfig}->{ $GetParam{ObjectType} }->{DisplayName} || '';
-    my $FieldTypeName  = $Self->{FieldTypeConfig}->{ $GetParam{FieldType} }->{DisplayName}   || '';
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $ObjectTypeName
+        = $ConfigObject->Get('DynamicFields::ObjectType')->{ $GetParam{ObjectType} }->{DisplayName} || '';
+    my $FieldTypeName = $ConfigObject->Get('DynamicFields::Driver')->{ $GetParam{FieldType} }->{DisplayName} || '';
 
-    my $FieldID = $Self->{ParamObject}->GetParam( Param => 'ID' );
+    my $FieldID = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'ID' );
 
     if ( !$FieldID ) {
-        return $Self->{LayoutObject}->ErrorScreen(
-            Message => "Need ID",
+        return $LayoutObject->ErrorScreen(
+            Message => Translatable('Need ID'),
         );
     }
 
     # get dynamic field data
-    my $DynamicFieldData = $Self->{DynamicFieldObject}->DynamicFieldGet(
+    my $DynamicFieldData = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
         ID => $FieldID,
     );
 
     # check for valid dynamic field configuration
     if ( !IsHashRefWithData($DynamicFieldData) ) {
-        return $Self->{LayoutObject}->ErrorScreen(
-            Message => "Could not get data for dynamic field $FieldID",
+        return $LayoutObject->ErrorScreen(
+            Message =>
+                $LayoutObject->{LanguageObject}->Translate( 'Could not get data for dynamic field %s', $FieldID ),
         );
     }
 
@@ -336,33 +325,38 @@ sub _Change {
 sub _ChangeAction {
     my ( $Self, %Param ) = @_;
 
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
     my %Errors;
     my %GetParam;
 
     for my $Needed (qw(Name Label FieldOrder MaxArraySize DatabaseDSN DatabaseUser DatabasePw DatabaseTable DatabaseFieldKey)) {
-        $GetParam{$Needed} = $Self->{ParamObject}->GetParam( Param => $Needed );
+        $GetParam{$Needed} = $ParamObject->GetParam( Param => $Needed );
         if ( !$GetParam{$Needed} ) {
             $Errors{ $Needed . 'ServerError' }        = 'ServerError';
-            $Errors{ $Needed . 'ServerErrorMessage' } = 'This field is required.';
+            $Errors{ $Needed . 'ServerErrorMessage' } = Translatable('This field is required.');
         }
     }
 
-    my $FieldID = $Self->{ParamObject}->GetParam( Param => 'ID' );
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $FieldID = $ParamObject->GetParam( Param => 'ID' );
     if ( !$FieldID ) {
-        return $Self->{LayoutObject}->ErrorScreen(
-            Message => "Need ID",
+        return $LayoutObject->ErrorScreen(
+            Message => Translatable('Need ID'),
         );
     }
 
+    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField');
+
     # get dynamic field data
-    my $DynamicFieldData = $Self->{DynamicFieldObject}->DynamicFieldGet(
+    my $DynamicFieldData = $DynamicField->DynamicFieldGet(
         ID => $FieldID,
     );
 
     # check for valid dynamic field configuration
     if ( !IsHashRefWithData($DynamicFieldData) ) {
-        return $Self->{LayoutObject}->ErrorScreen(
-            Message => "Could not get data for dynamic field $FieldID",
+        return $LayoutObject->ErrorScreen(
+            Message =>
+                $LayoutObject->{LanguageObject}->Translate( 'Could not get data for dynamic field %s', $FieldID ),
         );
     }
 
@@ -374,11 +368,11 @@ sub _ChangeAction {
             # add server error error class
             $Errors{NameServerError} = 'ServerError';
             $Errors{NameServerErrorMessage} =
-                'The field does not contain only ASCII letters and numbers.';
+                Translatable('The field does not contain only ASCII letters and numbers.');
         }
 
         # get dynamic field list
-        my $DynamicFieldsList = $Self->{DynamicFieldObject}->DynamicFieldList(
+        my $DynamicFieldsList = $DynamicField->DynamicFieldList(
             Valid      => 0,
             ResultType => 'HASH',
         ) || {};
@@ -395,7 +389,7 @@ sub _ChangeAction {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
-            $Errors{NameServerErrorMessage} = 'There is another field with the same name.';
+            $Errors{NameServerErrorMessage} = Translatable('There is another field with the same name.');
         }
 
         # if it's an internal field, it's name should not change
@@ -407,7 +401,7 @@ sub _ChangeAction {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
-            $Errors{NameServerErrorMessage} = 'The name for this field should not change.';
+            $Errors{NameServerErrorMessage} = Translatable('The name for this field should not change.');
             $Param{InternalField}           = $DynamicFieldData->{InternalField};
         }
     }
@@ -419,7 +413,7 @@ sub _ChangeAction {
 
             # add server error error class
             $Errors{FieldOrderServerError}        = 'ServerError';
-            $Errors{FieldOrderServerErrorMessage} = 'The field must be numeric.';
+            $Errors{FieldOrderServerErrorMessage} = Translatable('The field must be numeric.');
         }
     }
 
@@ -433,7 +427,7 @@ sub _ChangeAction {
             MinQueryLength QueryDelay MaxQueryResult CaseSensitive
         )
     ) {
-        $GetParam{$ConfigParam} = $Self->{ParamObject}->GetParam( Param => $ConfigParam );
+        $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 
     # get 'raw' configuration params
@@ -442,7 +436,7 @@ sub _ChangeAction {
             ItemSeparator
         )
     ) {
-        $GetParam{$ConfigParam} = $Self->{ParamObject}->GetParam( Param => $ConfigParam, Raw => 1, );
+        $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam, Raw => 1, );
     }
 
     # get 'array' configuration params
@@ -451,7 +445,7 @@ sub _ChangeAction {
             DefaultValues
         )
     ) {
-        my @Data = $Self->{ParamObject}->GetArray( Param => $ConfigParam );
+        my @Data = $ParamObject->GetArray( Param => $ConfigParam );
         $GetParam{$ConfigParam} = \@Data;
     }
 
@@ -471,8 +465,8 @@ sub _ChangeAction {
 
     # uncorrectable errors
     if ( !$GetParam{ValidID} ) {
-        return $Self->{LayoutObject}->ErrorScreen(
-            Message => "Need ValidID",
+        return $LayoutObject->ErrorScreen(
+            Message => Translatable('Need ValidID'),
         );
     }
 
@@ -520,7 +514,7 @@ sub _ChangeAction {
     }
 
     # update dynamic field (FieldType and ObjectType cannot be changed; use old values)
-    my $UpdateSuccess = $Self->{DynamicFieldObject}->DynamicFieldUpdate(
+    my $UpdateSuccess = $DynamicField->DynamicFieldUpdate(
         ID         => $FieldID,
         Name       => $GetParam{Name},
         Label      => $GetParam{Label},
@@ -533,12 +527,12 @@ sub _ChangeAction {
     );
 
     if ( !$UpdateSuccess ) {
-        return $Self->{LayoutObject}->ErrorScreen(
-            Message => "Could not update the field $GetParam{Name}",
+        return $LayoutObject->ErrorScreen(
+            Message => $LayoutObject->{LanguageObject}->Translate( 'Could not update the field %s', $GetParam{Name} ),
         );
     }
 
-    return $Self->{LayoutObject}->Redirect(
+    return $LayoutObject->Redirect(
         OP => "Action=AdminDynamicField",
     );
 }
@@ -552,6 +546,8 @@ sub _ShowScreen {
         $Param{ShowWarning}      = 'ShowWarning';
         $Param{DisplayFieldName} = $Param{Name};
     }
+
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     $Param{DatabaseDSN}         = $Param{Config}->{DatabaseDSN};
     $Param{DatabaseUser}        = $Param{Config}->{DatabaseUser};
@@ -578,11 +574,11 @@ sub _ShowScreen {
     $Param{DefaultValues}       = $Param{Config}->{DefaultValues}       || [];
 
     # header
-    my $Output = $Self->{LayoutObject}->Header();
-    $Output   .= $Self->{LayoutObject}->NavigationBar();
+    my $Output = $LayoutObject->Header();
+    $Output .= $LayoutObject->NavigationBar();
 
     # get all fields
-    my $DynamicFieldList = $Self->{DynamicFieldObject}->DynamicFieldListGet(
+    my $DynamicFieldList = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid => 0,
     );
 
@@ -607,7 +603,7 @@ sub _ShowScreen {
 
     # show the names of the other fields to ease ordering
     my %OrderNamesList;
-    my $CurrentlyText = $Self->{LayoutObject}->{LanguageObject}->Translate('Currently') . ': ';
+    my $CurrentlyText = $LayoutObject->{LanguageObject}->Translate('Currently') . ': ';
     for my $OrderNumber ( sort @DynamicfieldOrderList ) {
         $OrderNamesList{$OrderNumber} = $OrderNumber;
         if ( $DynamicfieldNamesList{$OrderNumber} && $OrderNumber ne $Param{FieldOrder} ) {
@@ -617,7 +613,7 @@ sub _ShowScreen {
         }
     }
 
-    my $DynamicFieldOrderStrg = $Self->{LayoutObject}->BuildSelection(
+    my $DynamicFieldOrderStrg = $LayoutObject->BuildSelection(
         Data          => \%OrderNamesList,
         Name          => 'FieldOrder',
         SelectedValue => $Param{FieldOrder} || 1,
@@ -627,10 +623,10 @@ sub _ShowScreen {
         Class         => 'Modernize W75pc Validate_Number',
     );
 
-    my %ValidList = $Self->{ValidObject}->ValidList();
+    my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
 
     # create the Validity select
-    my $ValidityStrg = $Self->{LayoutObject}->BuildSelection(
+    my $ValidityStrg = $LayoutObject->BuildSelection(
         Data         => \%ValidList,
         Name         => 'ValidID',
         SelectedID   => $Param{ValidID} || 1,
@@ -652,7 +648,7 @@ sub _ShowScreen {
     # nothing to do
 
     # ItemSeparator
-    my $ItemSeparatorStrg = $Self->{LayoutObject}->BuildSelection(
+    my $ItemSeparatorStrg = $LayoutObject->BuildSelection(
         Data => {
             ', ' => 'Comma (,)',
             '; ' => 'Semicolon (;)',
@@ -667,7 +663,7 @@ sub _ShowScreen {
     );
 
     # CachePossibleValues
-    my $CachePossibleValuesStrg = $Self->{LayoutObject}->BuildSelection(
+    my $CachePossibleValuesStrg = $LayoutObject->BuildSelection(
         Data         => {
             0 => 'No',
             1 => 'Yes',
@@ -680,7 +676,7 @@ sub _ShowScreen {
     );
 
     # ShowKeyInTitle
-    my $ShowKeyInTitleStrg = $Self->{LayoutObject}->BuildSelection(
+    my $ShowKeyInTitleStrg = $LayoutObject->BuildSelection(
         Data => {
             0 => 'No',
             1 => 'Yes',
@@ -698,7 +694,7 @@ sub _ShowScreen {
         next if (!$Key);
         $DefaultValuesCount++;
 
-        my $Label = $Self->{RemoteDBObject}->ValueLookup(
+        my $Label = $Kernel::OM->Get('Kernel::System::DynamicField::Driver::RemoteDB')->ValueLookup(
             Key                => $Key,
             DynamicFieldConfig => {
                 Name   => $Param{Name},
@@ -715,7 +711,7 @@ sub _ShowScreen {
             },
         );
 
-        $Self->{LayoutObject}->Block(
+        $LayoutObject->Block(
             Name => 'DefaultValue',
             Data => {
                 DefaultValue => $Key,
@@ -741,7 +737,7 @@ sub _ShowScreen {
     # nothing to do
 
     # CaseSensitive
-    my $CaseSensitiveSelectionStrg = $Self->{LayoutObject}->BuildSelection(
+    my $CaseSensitiveSelectionStrg = $LayoutObject->BuildSelection(
         Data => {
             0 => 'No',
             1 => 'Yes',
@@ -757,7 +753,7 @@ sub _ShowScreen {
 
     # Internal fields can not be deleted and name should not change.
     if ( $Param{InternalField} ) {
-        $Self->{LayoutObject}->Block(
+        $LayoutObject->Block(
             Name => 'InternalField',
             Data => {%Param},
         );
@@ -780,7 +776,7 @@ sub _ShowScreen {
     );
 
     # generate output
-    $Output .= $Self->{LayoutObject}->Output(
+    $Output .= $LayoutObject->Output(
         TemplateFile => 'AdminDynamicFieldRemoteDB',
         Data => {
             %Param,
@@ -795,7 +791,7 @@ sub _ShowScreen {
         }
     );
 
-    $Output .= $Self->{LayoutObject}->Footer();
+    $Output .= $LayoutObject->Footer();
 
     return $Output;
 }
@@ -803,25 +799,28 @@ sub _ShowScreen {
 sub _DefaultValueSearch {
     my ( $Self, %Param ) = @_;
 
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+
     my @PossibleValues;
 
     # get search
-    my $Search = $Self->{ParamObject}->GetParam( Param => 'Search' ) || '';
+    my $Search = $ParamObject->GetParam( Param => 'Search' ) || '';
     $Search = '*' . $Search . '*';
-    $Self->{EncodeObject}->EncodeInput( \$Search );
+    $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$Search );
 
     # get DB config
-    my $DatabaseDSN         = $Self->{ParamObject}->GetParam( Param => 'DatabaseDSN' )         || '';
-    my $DatabaseUser        = $Self->{ParamObject}->GetParam( Param => 'DatabaseUser' )        || '';
-    my $DatabasePw          = $Self->{ParamObject}->GetParam( Param => 'DatabasePw' )          || '';
-    my $DatabaseType        = lc $Self->{ParamObject}->GetParam( Param => 'DatabaseType' )     || '';
-    my $DatabaseFieldKey    = $Self->{ParamObject}->GetParam( Param => 'DatabaseFieldKey' )    || '';
-    my $DatabaseFieldValue  = $Self->{ParamObject}->GetParam( Param => 'DatabaseFieldValue' )  || $DatabaseFieldKey;
-    my $DatabaseFieldSearch = $Self->{ParamObject}->GetParam( Param => 'DatabaseFieldSearch' ) || $DatabaseFieldKey;
-    my $SearchPrefix        = $Self->{ParamObject}->GetParam( Param => 'SearchPrefix' )        || '';
-    my $SearchSuffix        = $Self->{ParamObject}->GetParam( Param => 'SearchSuffix' )        || '';
-    my $DatabaseTable       = $Self->{ParamObject}->GetParam( Param => 'DatabaseTable' )       || '';
-    my $CaseSensitive       = $Self->{ParamObject}->GetParam( Param => 'CaseSensitive' )       || '';
+    my $DatabaseDSN         = $ParamObject->GetParam( Param => 'DatabaseDSN' )         || '';
+    my $DatabaseUser        = $ParamObject->GetParam( Param => 'DatabaseUser' )        || '';
+    my $DatabasePw          = $ParamObject->GetParam( Param => 'DatabasePw' )          || '';
+    my $DatabaseType        = lc $ParamObject->GetParam( Param => 'DatabaseType' )     || '';
+    my $DatabaseFieldKey    = $ParamObject->GetParam( Param => 'DatabaseFieldKey' )    || '';
+    my $DatabaseFieldValue  = $ParamObject->GetParam( Param => 'DatabaseFieldValue' )  || $DatabaseFieldKey;
+    my $DatabaseFieldSearch = $ParamObject->GetParam( Param => 'DatabaseFieldSearch' ) || $DatabaseFieldKey;
+    my $SearchPrefix        = $ParamObject->GetParam( Param => 'SearchPrefix' )        || '';
+    my $SearchSuffix        = $ParamObject->GetParam( Param => 'SearchSuffix' )        || '';
+    my $DatabaseTable       = $ParamObject->GetParam( Param => 'DatabaseTable' )       || '';
+    my $CaseSensitive       = $ParamObject->GetParam( Param => 'CaseSensitive' )       || '';
 
     my $DFRemoteDBObject;
     if (
@@ -845,13 +844,13 @@ sub _DefaultValueSearch {
         && $DatabaseTable
     ) {
         # get relevant config
-        my $ShowKeyInTitle = $Self->{ParamObject}->GetParam( Param => 'ShowKeyInTitle' ) || '';
+        my $ShowKeyInTitle = $ParamObject->GetParam( Param => 'ShowKeyInTitle' ) || '';
 
         # get used Constrictions
-        my $Constrictions = $Self->{ParamObject}->GetParam( Param => 'Constrictions' ) || '';
+        my $Constrictions = $ParamObject->GetParam( Param => 'Constrictions' ) || '';
 
         # get used entries
-        my @Entries = $Self->{ParamObject}->GetArray( Param => 'DefaultValues' );
+        my @Entries = $ParamObject->GetArray( Param => 'DefaultValues' );
 
         $Search         =~ s/\*/%/gi;
         my $QuotedValue = $DFRemoteDBObject->Quote($Search);
@@ -939,13 +938,13 @@ sub _DefaultValueSearch {
     }
 
     # build JSON output
-    my $JSON = $Self->{LayoutObject}->JSONEncode(
+    my $JSON = $LayoutObject->JSONEncode(
         Data => \@PossibleValues,
     );
 
     # send JSON response
-    return $Self->{LayoutObject}->Attachment(
-        ContentType => 'application/json; charset=' . $Self->{LayoutObject}->{Charset},
+    return $LayoutObject->Attachment(
+        ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
         Content     => $JSON || '',
         Type        => 'inline',
         NoCache     => 1,
