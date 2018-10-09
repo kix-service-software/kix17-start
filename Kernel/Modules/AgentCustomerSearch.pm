@@ -247,7 +247,7 @@ sub Run {
             . ';CustomerID=' . $LayoutObject->Ascii2Html( Text => $CustomerID )
             . '&';
 
-        my $CustomerTicketsHTMLString = '';
+        my $CustomerTicketsHTMLString = ' ';
         if (@ViewableTickets) {
             $CustomerTicketsHTMLString .= $LayoutObject->TicketListShow(
                 TicketIDs  => \@ViewableTickets,
@@ -267,8 +267,8 @@ sub Run {
         }
 
         return $LayoutObject->Attachment(
-            ContentType => 'application/json; charset=' . $LayoutObject->{Charset},
-            Content     => $CustomerTicketsHTMLString || '',
+            ContentType => 'text/html; charset=' . $LayoutObject->{Charset},
+            Content     => $CustomerTicketsHTMLString || ' ',
             Type        => 'inline',
             NoCache     => 1,
         );
