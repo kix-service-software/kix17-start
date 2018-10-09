@@ -13,6 +13,8 @@ package Kernel::System::User;
 use strict;
 use warnings;
 
+use base qw(Kernel::System::EventHandler);
+
 use Crypt::PasswdMD5 qw(unix_md5_crypt apache_md5_crypt);
 use Digest::SHA;
 
@@ -77,6 +79,11 @@ sub new {
     if ( $Kernel::OM->Get('Kernel::System::DB')->GetDatabaseFunction('CaseSensitive') ) {
         $Self->{Lower} = 'LOWER';
     }
+
+    # init of event handler
+    $Self->EventHandlerInit(
+        Config => 'User::EventModulePost',
+    );
 
     return $Self;
 }
@@ -467,6 +474,16 @@ sub UserAdd {
         Type => $Self->{CacheType},
     );
 
+    # trigger event
+    $Self->EventHandler(
+        Event => 'UserAdd',
+        Data  => {
+            UserLogin => $Param{UserLogin},
+            NewData   => \%Param,
+        },
+        UserID => $UserID,
+    );
+
     return $UserID;
 }
 
@@ -515,8 +532,7 @@ sub UserUpdate {
             UserLogin => $Param{UserLogin},
             UserID    => $Param{UserID}
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "A user with username '$Param{UserLogin}' already exists!"
@@ -528,8 +544,7 @@ sub UserUpdate {
     if (
         $Param{UserEmail}
         && !$Kernel::OM->Get('Kernel::System::CheckItem')->CheckEmail( Address => $Param{UserEmail} )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Email address ($Param{UserEmail}) not valid ("
@@ -585,7 +600,7 @@ sub UserUpdate {
 
     # TODO Not needed to delete the cache if ValidID or Name was not changed
 
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $CacheObject            = $Kernel::OM->Get('Kernel::System::Cache');
     my $SystemPermissionConfig = $Kernel::OM->Get('Kernel::Config')->Get('System::Permission') || [];
 
     for my $Type ( @{$SystemPermissionConfig}, 'rw' ) {
@@ -598,6 +613,17 @@ sub UserUpdate {
 
     $CacheObject->CleanUp(
         Type => 'GroupPermissionGroupGet',
+    );
+
+    # trigger event
+    $Self->EventHandler(
+        Event => 'UserUpdate',
+        Data  => {
+            UserID       => $Param{UserID},
+            OldUserLogin => $OldUserLogin,
+            NewData      => \%Param,
+        },
+        UserID => $Param{UserID},
     );
 
     return 1;
@@ -758,7 +784,7 @@ sub SetPassword {
         return;
     }
 
-    my $Pw = $Param{PW} || '';
+    my $Pw        = $Param{PW} || '';
     my $CryptedPw = '';
 
     # get crypt type
@@ -868,6 +894,16 @@ sub SetPassword {
     $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'notice',
         Message  => "User: '$Param{UserLogin}' changed password successfully!",
+    );
+
+    # trigger event handler
+    $Self->EventHandler(
+        Event => 'UserSetPassword',
+        Data  => {
+            %Param,
+            OldData => \%User,
+        },
+        UserID => $Param{UserID},
     );
 
     return 1;
@@ -1225,7 +1261,21 @@ sub SetPreferences {
     my $PreferencesObject = $Kernel::OM->Get($GeneratorModule);
 
     # set preferences
-    return $PreferencesObject->SetPreferences(%Param);
+    my $Result = $PreferencesObject->SetPreferences(%Param);
+
+    if ( $Result ) {
+        $Self->EventHandler(
+            Event => 'UserSetPreferences',
+            Data  => {
+                %Param,
+                UserData => \%User,
+                Result   => $Result,
+            },
+            UserID => 1,
+        );
+    }
+
+    return $Result;
 }
 
 sub _UserCacheClear {
@@ -1524,6 +1574,15 @@ sub UserLoginExistsCheck {
         return 1;
     }
     return 0;
+}
+
+sub DESTROY {
+    my $Self = shift;
+
+    # execute all transaction events
+    $Self->EventHandlerTransaction();
+
+    return 1;
 }
 
 1;
