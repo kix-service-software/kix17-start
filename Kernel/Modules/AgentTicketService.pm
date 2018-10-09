@@ -35,13 +35,19 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $SessionObject       = $Kernel::OM->Get('Kernel::System::AuthSession');
+    my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
+    my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
+    my $DynamicFieldObject  = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $LockObject          = $Kernel::OM->Get('Kernel::System::Lock');
+    my $StateObject         = $Kernel::OM->Get('Kernel::System::State');
+    my $QueueObject         = $Kernel::OM->Get('Kernel::System::Queue');
+    my $ServiceObject       = $Kernel::OM->Get('Kernel::System::Service');
 
-    # KIX4OTRS-capeIT
     $Param{SelectedServiceID} = $Self->{ServiceID};
-    # EO KIX4OTRS-capeIT
 
     # check if feature is active
     my $Access = $ConfigObject->Get('Ticket::Service');
@@ -61,9 +67,6 @@ sub Run {
     my $OrderBy = $ParamObject->GetParam( Param => 'OrderBy' )
         || $Config->{'Order::Default'}
         || 'Up';
-
-    # get session object
-    my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
 
     # create URL to store last screen
     my $URL = "Action=AgentTicketService"
@@ -89,11 +92,7 @@ sub Run {
         Value     => $URL,
     );
 
-    # get user object
-    my $UserObject = $Kernel::OM->Get('Kernel::System::User');
-
-    # KIX4OTRS-capeIT
-    my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+    my %UserPreferences      = $UserObject->GetPreferences( UserID => $Self->{UserID} );
     $Self->{UserPreferences} = \%UserPreferences;
     if ( !defined( $Self->{UserPreferences}->{UserServiceViewLayout} ) ) {
         $Self->{UserPreferences}->{UserServiceViewLayout} = 'Tree';
@@ -106,14 +105,12 @@ sub Run {
         = $ParamObject->GetParam( Param => 'Filter' )
         || $Self->{UserPreferences}->{UserViewAllTicketsInServiceView}
         || 'Unlocked';
-    # EO KIX4OTRS-capeIT
 
     # get filters stored in the user preferences
     my %Preferences = $UserObject->GetPreferences(
         UserID => $Self->{UserID},
     );
     my $StoredFiltersKey = 'UserStoredFilterColumns-' . $Self->{Action};
-    my $JSONObject       = $Kernel::OM->Get('Kernel::System::JSON');
     my $StoredFilters    = $JSONObject->Decode(
         Data => $Preferences{$StoredFiltersKey},
     );
@@ -129,11 +126,9 @@ sub Run {
     COLUMNNAME:
     for my $ColumnName (
         qw(Owner Responsible State Queue Priority Type Lock Service SLA CustomerID CustomerUserID)
-        )
-    {
+    ) {
         # get column filter from web request
-        my $FilterValue = $ParamObject->GetParam( Param => 'ColumnFilter' . $ColumnName )
-            || '';
+        my $FilterValue = $ParamObject->GetParam( Param => 'ColumnFilter' . $ColumnName ) || '';
 
         # if filter is not present in the web request, try with the user preferences
         if ( $FilterValue eq '' ) {
@@ -167,7 +162,7 @@ sub Run {
     }
 
     # get all dynamic fields
-    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    $Self->{DynamicField} = $DynamicFieldObject->DynamicFieldListGet(
         Valid      => 1,
         ObjectType => ['Ticket'],
     );
@@ -233,20 +228,12 @@ sub Run {
     }
 
     # viewable locks
-    my @ViewableLockIDs = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock( Type => 'ID' );
-
-    # KIX4OTRS-capeIT
-    if ( $Self->{Filter} eq 'All' ) {
-        $Kernel::OM->Get('Kernel::System::DB')->Prepare( SQL => "SELECT id FROM ticket_lock_type" );
-        while ( my @Data = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
-            push( @ViewableLockIDs, $Data[0] );
-        }
-    }
-
-    # EO KIX4OTRS-capeIT
+    my @ViewableLockIDs = $LockObject->LockViewableLock(
+         Type => 'ID'
+    );
 
     # viewable states
-    my @ViewableStateIDs = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
+    my @ViewableStateIDs = $StateObject->StateGetStatesByType(
         Type   => 'Viewable',
         Result => 'ID',
     );
@@ -276,14 +263,11 @@ sub Run {
     }
 
     # get all queues the agent is allowed to see
-    my %ViewableQueues = $Kernel::OM->Get('Kernel::System::Queue')->GetAllQueues(
+    my %ViewableQueues = $QueueObject->GetAllQueues(
         UserID => $Self->{UserID},
         Type   => 'ro',
     );
     my @ViewableQueueIDs = sort keys %ViewableQueues;
-
-    # get service object
-    my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
 
     # get custom services
     my @MyServiceIDs = $ServiceObject->GetAllCustomServices( UserID => $Self->{UserID} );
@@ -389,8 +373,7 @@ sub Run {
                     $HeaderColumn eq 'CustomerUserID'
                 )
             )
-            )
-        {
+        ) {
             @OriginalViewableTickets = $TicketObject->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 Limit  => $Limit,
@@ -519,6 +502,13 @@ sub Run {
 
     my $Count = 0;
 
+    if ( $Self->{Filter} eq 'All' ) {
+        $Kernel::OM->Get('Kernel::System::DB')->Prepare( SQL => "SELECT id FROM ticket_lock_type" );
+        while ( my @Data = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
+            push( @ViewableLockIDs, $Data[0] );
+        }
+    }
+
     # get the agent custom services count
     if (@MyServiceIDs) {
 
@@ -578,59 +568,34 @@ sub Run {
         $LastColumnFilter = 1;
     }
 
-    # KIX4OTRS-capeIT
-    # my %NavBar = $Self->_MaskServiceView(
     my $ViewLayoutFunction = '_MaskServiceView' . $Self->{UserPreferences}->{UserServiceViewLayout};
     my %NavBar             = $Self->$ViewLayoutFunction(
-
-        # EO KIX4OTRS-capeIT
         %Data,
-        ServiceID   => $ServiceID,
-        AllServices => \%AllServices,
-
-        # KIX4OTRS-capeIT
+        ServiceID         => $ServiceID,
+        AllServices       => \%AllServices,
         SelectedServiceID => $Param{SelectedServiceID},
-
-        # EO KIX4OTRS-capeIT
     );
 
     # show tickets
-    # KIX4OTRS-capeIT
-    # $Output .= $LayoutObject->TicketListShow(
     my $TicketList = $LayoutObject->TicketListShow(
-
-        # EO KIX4OTRS-capeIT
-        Filter     => $Self->{Filter},
-        Filters    => \%NavBarFilter,
-
-        # KIX4OTRS-capeIT
-        # DataInTheMiddle => $LayoutObject->Output(
-        #    TemplateFile => 'AgentTicketService',
-        #    Data         => \%NavBar,
-        # ),
-        # EO KIX4OTRS-capeIT
-
-        TicketIDs => \@ViewableTickets,
-
-        OriginalTicketIDs => \@OriginalViewableTickets,
-        GetColumnFilter   => \%GetColumnFilter,
-        LastColumnFilter  => $LastColumnFilter,
-        Action            => 'AgentTicketService',
-        Total             => $CountTotal,
-        RequestedURL      => $Self->{RequestedURL},
-
-        NavBar => \%NavBar,
-        View   => $View,
-
-        Bulk       => 1,
-        TitleName  => Translatable('Service View'),
-        TitleValue => $NavBar{SelectedService},
-
-        Env        => $Self,
-        LinkPage   => $LinkPage,
-        LinkSort   => $LinkSort,
-        LinkFilter => $LinkFilter,
-
+        Filter              => $Self->{Filter},
+        Filters             => \%NavBarFilter,
+        TicketIDs           => \@ViewableTickets,
+        OriginalTicketIDs   => \@OriginalViewableTickets,
+        GetColumnFilter     => \%GetColumnFilter,
+        LastColumnFilter    => $LastColumnFilter,
+        Action              => 'AgentTicketService',
+        Total               => $CountTotal,
+        RequestedURL        => $Self->{RequestedURL},
+        NavBar              => \%NavBar,
+        View                => $View,
+        Bulk                => 1,
+        TitleName           => Translatable('Service View'),
+        TitleValue          => $NavBar{SelectedService},
+        Env                 => $Self,
+        LinkPage            => $LinkPage,
+        LinkSort            => $LinkSort,
+        LinkFilter          => $LinkFilter,
         OrderBy             => $OrderBy,
         SortBy              => $SortBy,
         EnableColumnFilters => 1,
@@ -638,18 +603,13 @@ sub Run {
             ServiceID => $ServiceID || '',
             Filter    => $Filter    || '',
         },
-
-        # do not print the result earlier, but return complete content
-        Output => 1,
+        Output              => 1, # do not print the result earlier, but return complete content
     );
 
-    # KIX4OTRS-capeIT
     $Output .= $LayoutObject->Output(
         TemplateFile => 'AgentTicketService' . $Self->{UserPreferences}->{UserServiceViewLayout},
         Data => { %NavBar, TicketList => $TicketList }
     );
-
-    # EO KIX4OTRS-capeIT
 
     # get page footer
     $Output .= $LayoutObject->Footer() if $Self->{Subaction} ne 'AJAXFilterUpdate';
@@ -662,10 +622,10 @@ sub _MaskServiceView {
     # get needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my $CustomService
-        = $LayoutObject->{LanguageObject}->Translate( $ConfigObject->Get('Ticket::CustomService') || 'My Services' );
-    my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
+    my $CustomService = $LayoutObject->{LanguageObject}->Translate( $ConfigObject->Get('Ticket::CustomService') || 'My Services' );
+    my $Config        = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     my $ServiceID   = $Param{ServiceID} || 0;
     my @ServicesNew = @{ $Param{Services} };
@@ -706,8 +666,7 @@ sub _MaskServiceView {
                 $Counter{$ServiceName} = 0;
             }
             $Counter{$ServiceName} = $Counter{$ServiceName} + $Service{Count};
-            if ( $Counter{$ServiceName} && !$Service{$ServiceName} && !$UsedService{$ServiceName} )
-            {
+            if ( $Counter{$ServiceName} && !$Service{$ServiceName} && !$UsedService{$ServiceName} ) {
                 my %Hash;
                 $Hash{Service} = $ServiceName;
                 $Hash{Count}   = $Counter{$ServiceName};
@@ -738,13 +697,13 @@ sub _MaskServiceView {
         $Service{ServiceID} = 0 if ( !$Service{ServiceID} );
 
         # get view param
-        my $View = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'View' ) || '';
+        my $View   = $ParamObject->GetParam( Param => 'View' ) || '';
+        my $Filter = $ParamObject->GetParam( Param => 'Filter' ) || '';
 
-        $ServiceStrg
-            .= "<li><a href=\"$LayoutObject->{Baselink}Action=AgentTicketService;ServiceID=$Service{ServiceID}";
-        $ServiceStrg .= ';View=' . $LayoutObject->Ascii2Html( Text => $View ) . '"';
-
-        $ServiceStrg .= ' class="';
+        $ServiceStrg .= "<li><a href=\"$LayoutObject->{Baselink}Action=AgentTicketService;ServiceID=$Service{ServiceID}"
+            . ';Filter=' . $LayoutObject->Ascii2Html( Text => $Filter ) . '"'
+            . ';View=' . $LayoutObject->Ascii2Html( Text => $View ) . '"'
+            . ' class="';
 
         # should i highlight this Service
         if ( $Param{SelectedService} =~ /^\Q$ServiceName[0]\E/ && $Level - 1 >= $#ServiceName ) {
@@ -752,33 +711,32 @@ sub _MaskServiceView {
                 $#ServiceName == 0
                 && $#MetaService >= 0
                 && $Service{Service} =~ /^\Q$MetaService[0]\E$/
-                )
-            {
+            ) {
                 $ServiceStrg .= ' Active';
             }
+
             if (
                 $#ServiceName == 1
                 && $#MetaService >= 1
                 && $Service{Service} =~ /^\Q$MetaService[0]::$MetaService[1]\E$/
-                )
-            {
+            ) {
                 $ServiceStrg .= ' Active';
             }
+
             if (
                 $#ServiceName == 2
                 && $#MetaService >= 2
                 && $Service{Service} =~ /^\Q$MetaService[0]::$MetaService[1]::$MetaService[2]\E$/
-                )
-            {
+            ) {
                 $ServiceStrg .= ' Active';
             }
+
             if (
                 $#ServiceName == 3
                 && $#MetaService >= 3
                 && $Service{Service}
                 =~ /^\Q$MetaService[0]::$MetaService[1]::$MetaService[2]::$MetaService[3]\E$/
-                )
-            {
+            ) {
                 $ServiceStrg .= ' Active';
             }
         }
@@ -793,40 +751,39 @@ sub _MaskServiceView {
 
         # ServiceStrg
         $ServiceStrg .= $LayoutObject->Ascii2Html( Text => $ShortServiceName )
-            . " ($Counter{$Service{Service}})";
-
-        $ServiceStrg .= '</a></li>';
+            . " ($Counter{$Service{Service}})"
+            . '</a></li>';
 
         if ( $#ServiceName == 0 ) {
             $Param{ServiceStrg1} .= $ServiceStrg;
         }
-        elsif ( $#ServiceName == 1 && $Level >= 2 && $Service{Service} =~ /^\Q$MetaService[0]::\E/ )
-        {
+
+        elsif ( $#ServiceName == 1 && $Level >= 2 && $Service{Service} =~ /^\Q$MetaService[0]::\E/ ) {
             $Param{ServiceStrg2} .= $ServiceStrg;
         }
+
         elsif (
             $#ServiceName == 2
             && $Level >= 3
             && $Service{Service} =~ /^\Q$MetaService[0]::$MetaService[1]::\E/
-            )
-        {
+        ) {
             $Param{ServiceStrg3} .= $ServiceStrg;
         }
+
         elsif (
             $#ServiceName == 3
             && $Level >= 4
             && $Service{Service} =~ /^\Q$MetaService[0]::$MetaService[1]::$MetaService[2]::\E/
-            )
-        {
+        ) {
             $Param{ServiceStrg4} .= $ServiceStrg;
         }
+
         elsif (
             $#ServiceName == 4
             && $Level >= 5
             && $Service{Service}
             =~ /^\Q$MetaService[0]::$MetaService[1]::$MetaService[2]::$MetaService[3]::\E/
-            )
-        {
+        ) {
             $Param{ServiceStrg5} .= $ServiceStrg;
         }
     }
@@ -834,8 +791,11 @@ sub _MaskServiceView {
     LEVEL:
     for my $Level ( 1 .. 5 ) {
         next LEVEL if !$Param{ 'ServiceStrg' . $Level };
-        $Param{ServiceStrg}
-            .= '<ul class="ServiceOverviewList Level_' . $Level . '">' . $Param{ 'ServiceStrg' . $Level } . '</ul>';
+        $Param{ServiceStrg} .= '<ul class="ServiceOverviewList Level_'
+            . $Level
+            . '">'
+            . $Param{ 'ServiceStrg' . $Level }
+            . '</ul>';
     }
 
     return (
@@ -846,7 +806,6 @@ sub _MaskServiceView {
     );
 }
 
-# KIX4OTRS-capeIT
 sub _MaskServiceViewTree {
     my ( $Self, %Param ) = @_;
 
@@ -854,9 +813,8 @@ sub _MaskServiceViewTree {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    my $CustomService
-        = $LayoutObject->{LanguageObject}->Translate( $ConfigObject->Get('Ticket::CustomService') || 'My Services' );
-    my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
+    my $CustomService = $LayoutObject->{LanguageObject}->Translate( $ConfigObject->Get('Ticket::CustomService') || 'My Services' );
+    my $Config        = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     my $ServiceID = $Param{ServiceID} || 0;
     my @ServicesNew = @{ $Param{Services} };
@@ -931,13 +889,12 @@ sub _MaskServiceViewTree {
         my $ShortServiceName = $ServiceName[-1];
         $Service{ServiceID} = 0 if ( !$Service{ServiceID} );
 
-        $ServiceStrg
-            .= "<a href=\"$LayoutObject->{Baselink}Action=AgentTicketService;ServiceID=$Service{ServiceID}";
-        $ServiceStrg
-            .= ';View=' . $LayoutObject->Ascii2Html( Text => $Self->{View} ) . '">';
-        $ServiceStrg .= $LayoutObject->Ascii2Html( Text => $ShortServiceName )
-            . " ($Counter{$Service{Service}})";
-        $ServiceStrg .= '</a>';
+        $ServiceStrg .= "<a href=\"$LayoutObject->{Baselink}Action=AgentTicketService;ServiceID=$Service{ServiceID}"
+            . ';Filter=' . $LayoutObject->Ascii2Html( Text => $Self->{Filter} )
+            . ';View=' . $LayoutObject->Ascii2Html( Text => $Self->{View} ) . '">'
+            . $LayoutObject->Ascii2Html( Text => $ShortServiceName )
+            . " ($Counter{$Service{Service}})"
+            . '</a>';
 
         # should I focus and expand this queue
         my $ListClass = '';
@@ -1031,15 +988,17 @@ sub _MaskServiceViewDropDown {
             if ( !$ServiceName ) {
                 $ServiceName .= $Service[$Index];
             }
+
             else {
                 $ServiceName .= '::' . $Service[$Index];
             }
+
             if ( !$Counter{$ServiceName} ) {
                 $Counter{$ServiceName} = 0;
             }
+
             $Counter{$ServiceName} = $Counter{$ServiceName} + $Service{Count};
-            if ( $Counter{$ServiceName} && !$Service{$ServiceName} && !$UsedService{$ServiceName} )
-            {
+            if ( $Counter{$ServiceName} && !$Service{$ServiceName} && !$UsedService{$ServiceName} ) {
                 my %Hash;
                 $Hash{Service} = $ServiceName;
                 $Hash{Count}   = $Counter{$ServiceName};
@@ -1070,10 +1029,10 @@ sub _MaskServiceViewDropDown {
         my $ShortServiceName = $ServiceName[-1];
         $Service{ServiceID} = 0 if ( !$Service{ServiceID} );
 
-        my $ServiceStrg
-            .= $LayoutObject->{Baselink}
-            . "Action=AgentTicketService;ServiceID=$Service{ServiceID}";
-        $ServiceStrg .= ';View=' . $LayoutObject->Ascii2Html( Text => $Self->{View} );
+        my $ServiceStrg .= $LayoutObject->{Baselink}
+            . "Action=AgentTicketService;ServiceID=$Service{ServiceID}"
+            . ';View=' . $LayoutObject->Ascii2Html( Text => $Self->{View} )
+            . ';Filter=' . $LayoutObject->Ascii2Html( Text => $Self->{Filter} );
 
         # remember to selected Service info
         if ( $ServiceID eq $Service{ServiceID} ) {
@@ -1117,9 +1076,11 @@ sub _MaskServiceViewDropDown {
                 }
                 = '-';
         }
+
         if ( $Param{ServiceStrg} ) {
             $Param{ServiceStrg} .= '<span class="SpacingLeft SpacingRight">&gt;&gt;</span>';
         }
+
         $Param{ServiceStrg} .= $LayoutObject->BuildSelection(
             Data       => \%ServiceLevelList,
             SelectedID => $ServiceStrg{$ServiceLevel}->{SelectedID},
@@ -1135,8 +1096,6 @@ sub _MaskServiceViewDropDown {
         Total           => $Param{TicketsShown},
     );
 }
-
-# EO KIX4OTRS-capeIT
 
 1;
 
