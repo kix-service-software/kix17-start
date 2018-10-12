@@ -48,8 +48,7 @@ sub Param {
     # get config
     $Self->{Config} = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
     my %ArticleFlagList = ();
-    if ( defined $Self->{Config}->{ArticleFlags} && ref $Self->{Config}->{ArticleFlags} eq 'HASH' )
-    {
+    if ( defined $Self->{Config}->{ArticleFlags} && ref $Self->{Config}->{ArticleFlags} eq 'HASH' ) {
         %ArticleFlagList = %{ $Self->{Config}->{ArticleFlags} };
     }
 
@@ -69,8 +68,7 @@ sub Param {
     if (
         defined $UserPreferences{ArticleFlagsRemoveOnClose}
         && $UserPreferences{ArticleFlagsRemoveOnClose}
-        )
-    {
+    ) {
         @ArticleFlagsDeleteOnCloseArray
             = split( /\;/, $UserPreferences{ArticleFlagsRemoveOnClose} );
     }
@@ -102,7 +100,6 @@ sub Param {
                 Block => 'RemoveArticleFlags'
             },
         );
-
     }
 
     return @Params;
@@ -118,11 +115,12 @@ sub Run {
     my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $UserObject    = $Kernel::OM->Get('Kernel::System::User');
 
-    my @FlagsToRemove = $ParamObject->GetArray( Param => 'RemoveArticleFlags' );
+    my @FlagsToRemove     = $ParamObject->GetArray( Param => 'RemoveArticleFlags' );
+    my $PreferencesString = '';
 
-    return 1 if !scalar @FlagsToRemove;
-
-    my $PreferencesString = join( ";", @FlagsToRemove );
+    if ( scalar(@FlagsToRemove) ) {
+        $PreferencesString = join( ";", @FlagsToRemove );
+    }
 
     # pref update db
     if ( !$ConfigObject->Get('DemoSystem') ) {
