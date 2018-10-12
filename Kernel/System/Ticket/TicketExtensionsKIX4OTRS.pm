@@ -1421,7 +1421,6 @@ sub TicketChecklistTaskUpdate {
     # db quote
     $Param{TaskID}   = $Kernel::OM->Get('Kernel::System::DB')->Quote( $Param{TaskID},   'Integer' );
     $Param{Position} = $Kernel::OM->Get('Kernel::System::DB')->Quote( $Param{Position}, 'Integer' );
-    $Param{Task}     = $Kernel::OM->Get('Kernel::System::DB')->Quote( $Param{Task} );
 
     # update
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
@@ -1455,9 +1454,6 @@ sub TicketChecklistTaskCreate {
             return;
         }
     }
-
-    # db quote
-    $Param{Task} = $Kernel::OM->Get('Kernel::System::DB')->Quote( $Param{Task} );
 
     # insert action
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
