@@ -808,26 +808,28 @@ sub Login {
     # add login logo, if configured
     if ( defined $ConfigObject->Get('AgentLoginLogo') ) {
         my %AgentLoginLogo = %{ $ConfigObject->Get('AgentLoginLogo') };
-        my %Data;
+        my $CSS            = '';
 
         for my $CSSStatement ( sort keys %AgentLoginLogo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                $Data{'URL'} = 'url(' . $WebPath . $AgentLoginLogo{$CSSStatement} . ')';
+                $CSS .= 'background-image: url(' . $WebPath . $AgentLoginLogo{$CSSStatement} . '); ';
             }
             else {
-                $Data{$CSSStatement} = $AgentLoginLogo{$CSSStatement};
+                my $Attr = $CSSStatement;
+                $Attr =~ s/^Style//;
+                $CSS .= lc($Attr) . ': ' . $AgentLoginLogo{$CSSStatement} . '; ';
             }
         }
 
-        $Self->Block(
-            Name => 'LoginLogoCSS',
-            Data => \%Data,
-        );
-
-        $Self->Block(
-            Name => 'LoginLogo'
-        );
+        if ( $CSS ) {
+            $Self->Block(
+                Name => 'LoginLogoCSS',
+                Data => {
+                    CSSAttr => $CSS
+                }
+            );
+        }
     }
 
     # get system maintenance object
@@ -3545,6 +3547,7 @@ sub CustomerLogin {
     $Self->LoaderCreateCustomerCSSCalls();
     $Self->LoaderCreateCustomerJSCalls();
 
+
     # Add header logo, if configured
     if ( defined $ConfigObject->Get('CustomerLogo') ) {
         my %CustomerLogo = %{ $ConfigObject->Get('CustomerLogo') };
@@ -3571,6 +3574,33 @@ sub CustomerLogin {
         $Self->Block(
             Name => 'HeaderLogo',
         );
+    }
+
+    # add login logo, if configured
+    if ( defined $ConfigObject->Get('CustomerLoginLogo') ) {
+        my %CustomerLoginLogo = %{ $ConfigObject->Get('CustomerLoginLogo') };
+        my $CSS               = '';
+
+        for my $CSSStatement ( sort keys %CustomerLoginLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                $CSS .= 'background-image: url(' . $WebPath . $CustomerLoginLogo{$CSSStatement} . '); ';
+            }
+            else {
+                my $Attr = $CSSStatement;
+                $Attr =~ s/^Style//;
+                $CSS .= lc($Attr) . ': ' . $CustomerLoginLogo{$CSSStatement} . '; ';
+            }
+        }
+
+        if ( $CSS ) {
+            $Self->Block(
+                Name => 'LoginLogoCSS',
+                Data => {
+                    CSSAttr => $CSS
+                }
+            );
+        }
     }
 
     # get system maintenance object

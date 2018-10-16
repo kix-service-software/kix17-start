@@ -56,10 +56,10 @@
 
     .LoginLogo {
         background-image: url("../img/KIX_logo.png");
-        float: left;
         width: 60px;
         height: 60px;
-        margin: 10px;
+        margin: 15px auto auto;
+        display: block;
     }
 
     #Login, #Reset, #Signup, #PreLogin {
@@ -75,23 +75,23 @@
 
     .LoginBox {
         width: 500px;
-        height: 300px;
+        height: auto;
         border: 1px solid #82C826;
-        box-shadow: 3px 3px 10px #a0a0a0;
+        box-shadow: 3px 3px 10px #A0A0A0;
         background-image: url("../img/login_background_kix.png");
+        background-size: cover;
     }
 
     .LoginBox .WidgetSimple {
         background: transparent !important;
         margin-bottom: 0px;
-        margin-top: 90px;
     }
 
     .LoginBox .Welcome {
-        float: left;
-        margin-top: 30px;
+        margin: 15px auto auto;
         text-align: center;
-        width: 350px;
+        width: 100%;
+        display: block;
     }
 
     .LoginBox .Welcome h2 {
@@ -581,7 +581,7 @@
         text-align: center;
         width: 100%;
     }
-    
+
     .CustomerTicketTemplates .TemplateSelectionArea > div {
         margin: 0px 0px 80px 0px;
         width: 900px;
@@ -611,7 +611,7 @@
         height: 64px;
         padding: 5px;
         border: 1px solid #e0e0e0;
-        box-shadow: 2px 2px 2px #a0a0a0; 
+        box-shadow: 2px 2px 2px #a0a0a0;
     }
 
     .CustomerTicketTemplates .TicketTemplateElement a:hover img {
@@ -622,7 +622,7 @@
         -webkit-filter: none;
         filter: none;
     }
-    
+
     .CustomerTicketTemplates .TicketTemplateElement > .Label {
         display: block;
         margin-top: 10px;
@@ -632,12 +632,12 @@
     .CustomerTicketTemplates .FilterArea {
         margin: 20px 0px 30px 5px;
     }
-    
+
     .CustomerTicketTemplates .FilterArea label {
         width: auto;
         padding-top: 5px;
     }
-    
+
     #PortalGroupFilter,
     #TicketTemplateFilter {
         width: 250px;
@@ -648,7 +648,7 @@
         padding-right: 20px;
         box-sizing: border-box;
     }
-    
+
     #PortalGroupFilterClear,
     #TicketTemplateFilterClear {
         position: relative;
