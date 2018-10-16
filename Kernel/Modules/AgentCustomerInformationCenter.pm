@@ -53,31 +53,16 @@ sub Run {
         );
     }
 
-    # Get all configured statistics from the system that should be shown as a dashboard widget
-    #   and register them dynamically in the configuration.
-
-    # KIX4OTRS-capeIT
-    # agent dashboard content removed
-    # EO KIX4OTRS-capeIT
-
     # get needed objects
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    # KIX4OTRS-capeIT
     $Self->{CustomerID}    = $ParamObject->GetParam( Param => 'CustomerID' ) || undef;
     $Self->{CustomerLogin} = $ParamObject->GetParam( Param => 'CustomerLogin' ) || undef;
 
-    # if ( $Self->{Action} eq 'AgentCustomerInformationCenter' ) {
-    # $Self->{CustomerID} = $ParamObject->GetParam( Param => 'CustomerID' );
-    # EO KIX4OTRS-capeIT
-
     # check CustomerID presence for all subactions that need it
     if ( $Self->{Subaction} ne 'UpdatePosition' ) {
-        # KIX4OTRS-capeIT
-        # if ( !$Self->{CustomerID} ) {
         if ( !$Self->{CustomerID} && !$Self->{CustomerLogin} ) {
 
-            # EO KIX4OTRS-capeIT
             my $Output = $LayoutObject->Header();
             $Output .= $LayoutObject->NavigationBar();
             $Output .= $LayoutObject->Output(
@@ -92,9 +77,6 @@ sub Run {
             return $Output;
         }
     }
-    # KIX4OTRS-capeIT
-    # }
-    # EO KIX4OTRS-capeIT
 
     # get needed objects
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
@@ -130,11 +112,9 @@ sub Run {
         if ( $Self->{CustomerID} ) {
             $URL .= ";CustomerID=" . $LayoutObject->LinkEncode( $Self->{CustomerID} );
         }
-        # KIX4OTRS-capeIT
         elsif ($Self->{CustomerLogin}) {
             $URL .= ";CustomerLogin=" . $LayoutObject->LinkEncode( $Self->{CustomerLogin} );
         }
-        # EO KIX4OTRS-capeIT
 
         return $LayoutObject->Redirect(
             OP => $URL,
@@ -154,10 +134,8 @@ sub Run {
             Name            => $Name,
             Configs         => $Config,
             PreferencesOnly => 1,
-            # KIX4OTRS-capeIT
             CustomerID      => $Self->{CusomerID},
             CustomerLogin   => $Self->{CustomerLogin},
-            # EO KIX4OTRS-capeIT
         );
         if ( !@PreferencesOnly ) {
             $LayoutObject->FatalError(
@@ -193,13 +171,11 @@ sub Run {
 
         # deliver new content page
         my %ElementReload = $Self->_Element(
-            Name    => $Name,
-            Configs => $Config,
-            AJAX    => 1,
-            # KIX4OTRS-capeIT
+            Name            => $Name,
+            Configs         => $Config,
+            AJAX            => 1,
             CustomerID      => $Self->{CusomerID},
             CustomerLogin   => $Self->{CustomerLogin},
-            # EO KIX4OTRS-capeIT
         );
         if ( !%ElementReload ) {
             $LayoutObject->FatalError(
@@ -252,11 +228,9 @@ sub Run {
         if ( $Self->{CustomerID} ) {
             $URL .= ";CustomerID=" . $LayoutObject->LinkEncode( $Self->{CustomerID} );
         }
-        # KIX4OTRS-capeIT
         elsif ($Self->{CustomerLogin}) {
             $URL .= ";CustomerLogin=" . $LayoutObject->LinkEncode( $Self->{CustomerLogin} );
         }
-        # EO KIX4OTRS-capeIT
 
         return $LayoutObject->Redirect(
             OP => $URL,
@@ -277,6 +251,13 @@ sub Run {
         for my $Backend (@Backends) {
             $Backend =~ s{ \A Dashboard (.+?) -box \z }{$1}gxms;
             $Data .= $Backend . ';';
+        }
+
+        if ( $Self->{CustomerID} ) {
+            $Key .= 'Customer';
+        }
+        elsif ( $Self->{CustomerLogin} ) {
+            $Key .= 'User';
         }
 
         # update session
@@ -316,8 +297,7 @@ sub Run {
         COLUMNNAME:
         for my $ColumnName (
             qw(Owner Responsible State Queue Priority Type Lock Service SLA CustomerID CustomerUserID)
-            )
-        {
+        ) {
             my $FilterValue = $ParamObject->GetParam( Param => 'ColumnFilter' . $ColumnName . $Name )
                 || '';
             next COLUMNNAME if $FilterValue eq '';
@@ -373,10 +353,8 @@ sub Run {
             ColumnFilter          => \%ColumnFilter,
             GetColumnFilter       => \%GetColumnFilter,
             GetColumnFilterSelect => \%GetColumnFilterSelect,
-            # KIX4OTRS-capeIT
-            CustomerID      => $Self->{CusomerID},
-            CustomerLogin   => $Self->{CustomerLogin},
-            # EO KIX4OTRS-capeIT
+            CustomerID            => $Self->{CusomerID},
+            CustomerLogin         => $Self->{CustomerLogin},
         );
 
         if ( !%Element ) {
@@ -408,10 +386,8 @@ sub Run {
             FilterColumn      => $Column,
             ElementChanged    => $ElementChanged,
             Configs           => $Config,
-            # KIX4OTRS-capeIT
-            CustomerID      => $Self->{CusomerID},
-            CustomerLogin   => $Self->{CustomerLogin},
-            # EO KIX4OTRS-capeIT
+            CustomerID        => $Self->{CusomerID},
+            CustomerLogin     => $Self->{CustomerLogin},
         );
 
         if ( !$FilterContent ) {
@@ -437,14 +413,10 @@ sub Run {
     );
 
     my %ContentBlockData;
-
-    # KIX4OTRS-capeIT
-    # if ( $Self->{Action} eq 'AgentCustomerInformationCenter' ) {
     my %CustomerCompanyData;
     my %CustomerUserData;
 
     if ( defined $Self->{CustomerID} ) {
-    # EO KIX4OTRS-capeIT
 
         $ContentBlockData{CustomerID} = $Self->{CustomerID};
 
@@ -474,7 +446,6 @@ sub Run {
             = $CustomerUserData{UserFirstname} . " "
             . $CustomerUserData{UserLastname} . " ("
             . $CustomerUserData{UserLogin} . ")";
-
     }
 
     # show dashboard
@@ -513,9 +484,16 @@ sub Run {
     }
 
     # set order of plugins
-    my $Key = $UserSettingsKey . 'Position';
+    my $Key   = $UserSettingsKey . 'Position';
+    my $Value = '';
     my @Order;
-    my $Value = $Self->{$Key};
+
+    if ( $Self->{CustomerID} ) {
+        $Value = $Self->{$Key . 'Customer'};
+    }
+    elsif ( $Self->{CustomerLogin} ) {
+        $Value = $Self->{$Key . 'User'};
+    }
 
     if ($Value) {
         @Order = split /;/, $Value;
@@ -551,13 +529,11 @@ sub Run {
 
         # get element data
         my %Element = $Self->_Element(
-            Name     => $Name,
-            Configs  => $Config,
-            Backends => \%Backends,
-            # KIX4OTRS-capeIT
-            CustomerID      => $Self->{CusomerID},
-            CustomerLogin   => $Self->{CustomerLogin},
-            # EO KIX4OTRS-capeIT
+            Name          => $Name,
+            Configs       => $Config,
+            Backends      => \%Backends,
+            CustomerID    => $Self->{CusomerID},
+            CustomerLogin => $Self->{CustomerLogin},
         );
         next NAME if !%Element;
 
@@ -570,15 +546,11 @@ sub Run {
             Name => $Element{Config}->{Block},
             Data => {
                 %{ $Element{Config} },
-                Name       => $Name,
-                NameForm   => $NameForm,
-                Content    => ${ $Element{Content} },
-                CustomerID => $Self->{CustomerID} || '',
-
-                # KIX4OTRS-capeIT
+                Name          => $Name,
+                NameForm      => $NameForm,
+                Content       => ${ $Element{Content} },
+                CustomerID    => $Self->{CustomerID} || '',
                 CustomerLogin => $Self->{CustomerLogin},
-
-                # EO KIX4OTRS-capeIT
             },
         );
 
@@ -676,10 +648,8 @@ sub Run {
                 Name => 'MainMenuItem',
                 Data => {
                     %{ $MainMenuConfig->{$MainMenuItem} },
-                    CustomerID => $Self->{CustomerID},
-                    # KIX4OTRS-capeIT
+                    CustomerID    => $Self->{CustomerID},
                     CustomerLogin => $Self->{CustomerLogin},
-                    # EO KIX4OTRS-capeIT
                 },
             );
         }
@@ -798,22 +768,18 @@ sub _Element {
         return if !$PermissionOK;
     }
 
-    # get config object
+    # get needed object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # load backends
     my $Module = $Configs->{$Name}->{Module};
     return if !$Kernel::OM->Get('Kernel::System::Main')->Require($Module);
 
-    # KIX4OTRS-capeIT
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
     # my $Object = $Module->new(
     my $Object;
     if ( defined $Self->{CustomerID} ) {
         $Object = $Module->new(
-
-            # EO KIX4OTRS-capeIT
             %{$Self},
             Config                => $Configs->{$Name},
             Name                  => $Name,
@@ -824,15 +790,13 @@ sub _Element {
             GetColumnFilter       => $GetColumnFilter,
             GetColumnFilterSelect => $GetColumnFilterSelect,
         );
-
-        # KIX4OTRS-capeIT
     }
     else {
         $Object = $Module->new(
             %{$Self},
-            Config            => $Configs->{$Name},
-            Name              => $Name,
-            CustomerUserLogin => $Self->{CustomerLogin},
+            Config                => $Configs->{$Name},
+            Name                  => $Name,
+            CustomerUserLogin     => $Self->{CustomerLogin},
             SortBy                => $SortBy,
             OrderBy               => $OrderBy,
             ColumnFilter          => $ColumnFilter,
@@ -841,19 +805,15 @@ sub _Element {
         );
     }
 
-    # EO KIX4OTRS-capeIT
-
     # get module config
     my %Config = $Object->Config();
 
-    # KIX4OTRS-capeIT
     if ( $Object->{SearchTemplateName} ) {
         $Config{Title} =
             $LayoutObject->{LanguageObject}->Translate('Search Template') . ": "
             . $Object->{SearchTemplateName};
     }
 
-    # EO KIX4OTRS-capeIT
     # Perform the actual data fetching and computation on the slave db, if configured
     local $Kernel::System::DB::UseSlaveDB = 1;
 
@@ -873,11 +833,6 @@ sub _Element {
         );
         return $FilterContent;
     }
-
-    # KIX4OTRS-capeIT
-    # moved content upwards
-    # my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    # EO KIX4OTRS-capeIT
 
     # add backend to settings selection
     if ($Backends) {
@@ -903,10 +858,8 @@ sub _Element {
 
     if ( !$CacheKey ) {
 
-        # KIX4OTRS-capeIT
         if ( defined $Self->{CustomerID} ) {
 
-            # EO KIX4OTRS-capeIT
             $CacheKey = $Name . '-'
                 . $Self->{CustomerID}. '-'
                 . $LayoutObject->{UserLanguage};
@@ -916,8 +869,6 @@ sub _Element {
                 . ( $Self->{CustomerLogin} || '' )  . '-'
                 . $LayoutObject->{UserLanguage};
         }
-
-        # EO KIX4OTRS-capeIT
     }
 
     if ( $Config{CacheTTL} ) {
@@ -932,17 +883,12 @@ sub _Element {
     if ( !defined $Content || $SortBy ) {
         $CacheUsed = 0;
 
-        # KIX4OTRS-capeIT
         if ( defined $Self->{CustomerID} ) {
-
-            # EO KIX4OTRS-capeIT
 
             $Content   = $Object->Run(
                 AJAX       => $Param{AJAX},
                 CustomerID => $Self->{CustomerID},
             );
-
-            # KIX4OTRS-capeIT
         }
         else {
             $Content = $Object->Run(
@@ -950,8 +896,6 @@ sub _Element {
                 CustomerUserLogin => $Self->{CustomerLogin} || '',
             );
         }
-
-        # EO KIX4OTRS-capeIT
     }
 
     # check if content should be shown
