@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="Clear"></div>
 
-                                <label for="ValueTTLData">[% Translate(""Time to live (TTL)") | html %]:</label>
+                                <label for="ValueTTLData">[% Translate("Time to live (TTL)") | html %]:</label>
                                 <div class="Field">
                                     <input id="Name" class="W50pc Validate_Number" type="text" maxlength="200" value="[% Data.ValueTTLData | html %]" name="ValueTTLData" />
                                     <div id="ValueTTLDataError" class="TooltipErrorMessage"><p>[% Translate("This field must be numeric.") | html %]</p></div>
