@@ -1601,6 +1601,7 @@ sub _MaskPhone {
         if ( !$DynamicFieldConfig->{Shown} ) {
             $Class = " Hidden";
             $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
+            $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
         }
         # EO KIX4OTRS-capeIT
         $LayoutObject->Block(

@@ -912,7 +912,7 @@ sub Run {
                 TicketID     => $Self->{TicketID},
                 StateID      => $GetParam{NewStateID},
                 UserID       => $Self->{UserID},
-                DynamicField => $GetParam{DynamicField}, 
+                DynamicField => $GetParam{DynamicField},
             );
 
             # unlock the ticket after close
@@ -2523,6 +2523,7 @@ sub _Mask {
         if ( !$DynamicFieldConfig->{Shown} ) {
             $Class = " Hidden";
             $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
+            $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
         }
 
         $LayoutObject->Block(
