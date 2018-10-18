@@ -1,11 +1,11 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
 # Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (GPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::Modules::AdminSupportDataCollector;
@@ -32,31 +32,17 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    #rbo - T2016121190001552 - removed Registration/SupportDataSend
-    if ( $Self->{Subaction} eq 'GenerateSupportBundle' ) {
-        return $Self->_GenerateSupportBundle();
-    }
-    elsif ( $Self->{Subaction} eq 'DownloadSupportBundle' ) {
-        return $Self->_DownloadSupportBundle();
-    }
-    elsif ( $Self->{Subaction} eq 'SendSupportBundle' ) {
-        return $Self->_SendSupportBundle();
-    }
     return $Self->_SupportDataCollectorView(%Param);
 }
 
 sub _SupportDataCollectorView {
     my ( $Self, %Param ) = @_;
 
-    #rbo - T2016121190001552 - removed Registration
-
     my %SupportData = $Kernel::OM->Get('Kernel::System::SupportDataCollector')->Collect(
         UseCache => 1,
     );
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
-    #rbo - T2016121190001552 - removed CloudServices
 
     if ( !$SupportData{Success} ) {
         $LayoutObject->Block(
@@ -65,11 +51,6 @@ sub _SupportDataCollectorView {
         );
     }
     else {
-        #rbo - T2016121190001552 - removed CloudServices
-        $LayoutObject->Block(
-            Name => 'NoteSupportBundle',
-        );
-
         $LayoutObject->Block(
             Name => 'SupportData',
         );
@@ -195,35 +176,6 @@ sub _SupportDataCollectorView {
         }
     }
 
-    # get user data
-    my %User = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
-        UserID => $Self->{UserID},
-        Cached => 1,
-    );
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # get sender email address
-    if ( $User{UserEmail} && $User{UserEmail} !~ /root\@localhost/ ) {
-        $Param{SenderAddress} = $User{UserEmail};
-    }
-    elsif (
-
-        $ConfigObject->Get('AdminEmail')
-        && $ConfigObject->Get('AdminEmail') !~ /root\@localhost/
-        && $ConfigObject->Get('AdminEmail') !~ /admin\@example.com/
-        )
-    {
-        $Param{SenderAddress} = $ConfigObject->Get('AdminEmail');
-    }
-    $Param{SenderName} = $User{UserFirstname} . ' ' . $User{UserLastname};
-
-    # verify if the email is valid, set it to empty string if not, this will be checked on client
-    #    side
-    if ( !$Kernel::OM->Get('Kernel::System::CheckItem')->CheckEmail( Address => $Param{SenderAddress} ) ) {
-        $Param{SenderAddress} = '';
-    }
-
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
     $Output .= $LayoutObject->Output(
@@ -235,273 +187,6 @@ sub _SupportDataCollectorView {
     return $Output;
 }
 
-sub _GenerateSupportBundle {
-    my ( $Self, %Param ) = @_;
-
-    $Kernel::OM->Get('Kernel::Output::HTML::Layout')->ChallengeTokenCheck();
-
-    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
-    my $RandomID   = $MainObject->GenerateRandomString(
-        Length     => 8,
-        Dictionary => [ 0 .. 9, 'a' .. 'f' ],
-    );
-
-    # remove any older file
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $TempDir      = $ConfigObject->Get('TempDir') . '/SupportBundleDownloadCache';
-
-    if ( !-d $TempDir ) {
-        mkdir $TempDir;
-    }
-
-    $TempDir = $ConfigObject->Get('TempDir') . '/SupportBundleDownloadCache/' . $RandomID;
-
-    if ( !-d $TempDir ) {
-        mkdir $TempDir;
-    }
-
-    # remove all files
-    my @ListOld = glob( $TempDir . '/*' );
-    for my $File (@ListOld) {
-        unlink $File;
-    }
-
-    # create the support bundle
-    my $Result = $Kernel::OM->Get('Kernel::System::SupportBundleGenerator')->Generate();
-
-    if ( !$Result->{Success} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => $Result->{Message},
-        );
-    }
-    else {
-
-        # save support bundle in the FS (temporary)
-        my $FileLocation = $MainObject->FileWrite(
-            Location   => $TempDir . '/' . $Result->{Data}->{Filename},
-            Content    => $Result->{Data}->{Filecontent},
-            Mode       => 'binmode',
-            Type       => 'Local',
-            Permission => '644',
-        );
-    }
-
-    my $JSONString = $Kernel::OM->Get('Kernel::System::JSON')->Encode(
-        Data => {
-            Success  => $Result->{Success},
-            Message  => $Result->{Message} || '',
-            Filesize => $Result->{Data}->{Filesize} || '',
-            Filename => $Result->{Data}->{Filename} || '',
-            RandomID => $RandomID,
-        },
-    );
-
-    return $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Attachment(
-        ContentType => 'text/html',
-        Content     => $JSONString,
-        Type        => 'inline',
-        NoCache     => 1,
-    );
-}
-
-sub _DownloadSupportBundle {
-    my ( $Self, %Param ) = @_;
-
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
-    $LayoutObject->ChallengeTokenCheck();
-
-    my $Filename     = $ParamObject->GetParam( Param => 'Filename' ) || '';
-    my $RandomID     = $ParamObject->GetParam( Param => 'RandomID' ) || '';
-
-    # Validate simple file name.
-    if ( !$Filename || $Filename !~ m{^[a-z0-9._-]+$}smxi ) {
-        return $LayoutObject->ErrorScreen(
-            Message => "Need Filename or Filename invalid!",
-        );
-    }
-
-    # Validate simple RandomID.
-    if ( !$RandomID || $RandomID !~ m{^[a-f0-9]+$}smx ) {
-        return $LayoutObject->ErrorScreen(
-            Message => "Need RandomID or RandomID invalid!",
-        );
-    }
-
-    my $TempDir  = $Kernel::OM->Get('Kernel::Config')->Get('TempDir') . '/SupportBundleDownloadCache/' . $RandomID;
-    my $Location = $TempDir . '/' . $Filename;
-
-    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
-    my $Content    = $MainObject->FileRead(
-        Location => $Location,
-        Mode     => 'binmode',
-        Type     => 'Local',
-        Result   => 'SCALAR',
-    );
-
-    if ( !$Content ) {
-        return $LayoutObject->ErrorScreen(
-            Message => $LayoutObject->{LanguageObject}->Translate( 'File %s could not be read!', $Location ),
-        );
-    }
-
-    my $Success = $MainObject->FileDelete(
-        Location => $Location,
-        Type     => 'Local',
-    );
-
-    if ( !$Success ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "File $Location could not be deleted!",
-        );
-    }
-
-    rmdir $TempDir;
-
-    return $LayoutObject->Attachment(
-        Filename    => $Filename,
-        ContentType => 'application/octet-stream; charset=' . $LayoutObject->{UserCharset},
-        Content     => $$Content,
-    );
-}
-
-sub _SendSupportBundle {
-    my ( $Self, %Param ) = @_;
-
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $LogObject   = $Kernel::OM->Get('Kernel::System::Log');
-    my $Filename    = $ParamObject->GetParam( Param => 'Filename' ) || '';
-    my $RandomID    = $ParamObject->GetParam( Param => 'RandomID' ) || '';
-    my $Success;
-
-    if ($Filename) {
-
-        my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-        my $TempDir = $ConfigObject->Get('TempDir')
-            . '/SupportBundleDownloadCache/'
-            . $RandomID;
-        my $Location = $TempDir . '/' . $Filename;
-
-        my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
-
-        my $Content = $MainObject->FileRead(
-            Location => $Location,
-            Mode     => 'binmode',
-            Type     => 'Local',
-            Result   => 'SCALAR',
-        );
-
-        if ($Content) {
-
-            $Success = $MainObject->FileDelete(
-                Location => $Location,
-                Type     => 'Local',
-            );
-
-            if ( !$Success ) {
-                $LogObject->Log(
-                    Priority => 'error',
-                    Message  => "File $Location could not be deleted!",
-                );
-            }
-
-            rmdir $TempDir;
-
-            #rbo - T2016121190001552 - removed Registration
-
-            my %Data;
-
-            # get user data
-            my %User = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
-                UserID => $Self->{UserID},
-                Cached => 1,
-            );
-
-            # get sender email address
-            my $SenderAddress = '';
-            if ( $User{UserEmail} && $User{UserEmail} !~ /root\@localhost/ ) {
-                $SenderAddress = $User{UserEmail};
-            }
-            elsif (
-                $ConfigObject->Get('AdminEmail')
-                && $ConfigObject->Get('AdminEmail') !~ /root\@localhost/
-                && $ConfigObject->Get('AdminEmail') !~ /admin\@example.com/
-                )
-            {
-                $SenderAddress = $ConfigObject->Get('AdminEmail');
-            }
-
-            my $SenderName = $User{UserFirstname} . ' ' . $User{UserLastname};
-
-            my $Body;
-
-            $Body = "Sender:$SenderName\n";
-            $Body .= "Email:$SenderAddress\n";
-
-            if (%Data) {
-                for my $Key ( sort keys %Data ) {
-                    my $ItemValue = $Data{$Key} || '';
-                    $Body .= "$Key:$ItemValue\n";
-                }
-            }
-            else {
-                $Body .= "Not registered\n";
-            }
-
-            my ( $HeadRef, $BodyRef ) = $Kernel::OM->Get('Kernel::System::Email')->Send(
-                From          => $SenderAddress,
-                #rbo - T2016121190001552 - changed recipient
-                To            => 'support@cape-it.de',
-                Subject       => 'Support::Bundle::Email',
-                Type          => 'text/plain',
-                Charset       => 'utf-8',
-                Body          => $Body,
-                #rbo - T2016121190001552 - removed Registration
-                Attachment => [
-                    {
-                        Filename    => $Filename,
-                        Content     => $Content,
-                        ContentType => 'application/octet-stream',
-                        Disposition => 'attachment',
-                    },
-                ],
-            );
-
-            if ( $HeadRef && $BodyRef ) {
-                $Success = 1;
-            }
-        }
-        else {
-            $LogObject->Log(
-                Priority => 'error',
-                Message  => "$Filename could not be read!",
-            );
-        }
-    }
-    else {
-        $LogObject->Log(
-            Priority => 'error',
-            Message  => "Need Filename",
-        );
-    }
-
-    my $JSONString = $Kernel::OM->Get('Kernel::System::JSON')->Encode(
-        Data => {
-            Success => $Success || '',
-        },
-    );
-
-    return $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Attachment(
-        ContentType => 'text/html',
-        Content     => $JSONString,
-        Type        => 'inline',
-        NoCache     => 1,
-    );
-}
 1;
 
 =back
@@ -509,11 +194,11 @@ sub _SendSupportBundle {
 =head1 TERMS AND CONDITIONS
 
 This software is part of the KIX project
-(L<http://www.kixdesk.com/>).
+(L<https://www.kixdesk.com/>).
 
 This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-COPYING for license information (AGPL). If you did not receive this file, see
+LICENSE for license information (AGPL). If you did not receive this file, see
 
-<http://www.gnu.org/licenses/agpl.txt>.
+<https://www.gnu.org/licenses/agpl.txt>.
 
 =cut

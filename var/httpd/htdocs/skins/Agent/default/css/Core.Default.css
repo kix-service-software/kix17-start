@@ -1,47 +1,15 @@
 /**
  * This software is part of the KIX project, http://www.kixdesk.com/
- *  Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+ *  Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
  *  based on the original work of:
- *  Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+ *  Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
  *  --
  * @project OTRS (http://www.otrs.org) <http://www.otrs.org> - Agent Frontend
  * @copyright OTRS AG
  * @license AGPL (http://www.gnu.org/licenses/agpl.txt) <http://www.gnu.org/licenses/agpl.txt>
  *  --
  *  This software comes with ABSOLUTELY NO WARRANTY. For details, see
- *  the enclosed file COPYING for license information (AGPL). If you
- *  did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
- *
- */
-
-/**
- * This software is part of the KIX project, http://www.kixdesk.com/
- *  Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
- *  based on the original work of:
- *  Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
- *  --
- * @project OTRS (http://www.otrs.org) <http://www.otrs.org> - Agent Frontend
- * @copyright OTRS AG
- * @license AGPL (http://www.gnu.org/licenses/agpl.txt) <http://www.gnu.org/licenses/agpl.txt>
- *  --
- *  This software comes with ABSOLUTELY NO WARRANTY. For details, see
- *  the enclosed file COPYING for license information (AGPL). If you
- *  did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
- *
- */
-
-/**
- * This software is part of the KIX project, http://www.kixdesk.com/
- *  Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
- *  based on the original work of:
- *  Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
- *  --
- * @project OTRS (http://www.otrs.org) <http://www.otrs.org> - Agent Frontend
- * @copyright OTRS AG
- * @license AGPL (http://www.gnu.org/licenses/agpl.txt) <http://www.gnu.org/licenses/agpl.txt>
- *  --
- *  This software comes with ABSOLUTELY NO WARRANTY. For details, see
- *  the enclosed file COPYING for license information (AGPL). If you
+ *  the enclosed file LICENSE for license information (AGPL). If you
  *  did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
  *
  */
@@ -1152,7 +1120,7 @@ body > div.MetaFloater {
     border-top: 30px solid #eee;
 }
 
-body > div.MetaFloater:after, 
+body > div.MetaFloater:after,
 body > div.MetaFloater:before {
     bottom: 399px;
     left: 50%;
@@ -1164,19 +1132,19 @@ body > div.MetaFloater:before {
     pointer-events: none;
 }
 
-body > div.MetaFloater.Left:after, 
+body > div.MetaFloater.Left:after,
 body > div.MetaFloater.Left:before {
     left: 15px;
     margin-top: -1px;
 }
 
-body > div.MetaFloater.Right:after, 
+body > div.MetaFloater.Right:after,
 body > div.MetaFloater.Right:before {
     left: auto;
     right: 15px;
 }
 
-body > div.MetaFloater.Bottom:after, 
+body > div.MetaFloater.Bottom:after,
 body > div.MetaFloater.Bottom:before {
     bottom: auto;
     top: 100%;

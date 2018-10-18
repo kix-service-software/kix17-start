@@ -6,27 +6,27 @@ This package provides an CSV-based import/export backend for customer user items
 
 This package automatically creates import-/export mapping during re-/installation for each registered customer user backend as long as no equally named mapping exists.
 
-=over 4 
+=over 4
 
-=item * "Force import in configured customer backend": 
+=item * "Force import in configured customer backend":
 
         if enabled, the entry will be added/updated to/in the customer data backend to which the mapping refers even if the login exists in another backend.
 
-=item * "Default Customer ID": 
+=item * "Default Customer ID":
 
         defines a default group that is assigned to a new faq-category if not specified in import date
 
-=item * "Maildomain-CustomerID Mapping": 
+=item * "Maildomain-CustomerID Mapping":
 
         automatically build customer ID out of mail-domain (requires some SysConfig settings which domain should be mapped to which customer ID)
         CustomerUserImport::EMailDomainCustomerIDMapping
 
 
-=item * "Default Email": 
+=item * "Default Email":
 
         default email address if not specified in import data (see unique email configuration for customer backends)
 
-=item * "Reset password if updated": 
+=item * "Reset password if updated":
 
         resets the user password to user login if user data is updated in writable customer data backend
 
@@ -43,6 +43,6 @@ This package automatically creates import-/export mapping during re-/installatio
 The field "UserLogin" is automatically used as identifier for existing entries: If a Customer with the given UserLogin already exists it will be updated. Otherwise a new Customer will be created.
 
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file COPYING for license information (AGPL). If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file LICENSE for license information (AGPL). If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 
 =cut
