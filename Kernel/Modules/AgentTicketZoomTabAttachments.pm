@@ -170,28 +170,43 @@ sub Run {
     if ( $Self->{Subaction} eq 'Delete' || $Self->{Subaction} eq 'Download' ) {
 
         my @AttachmentIDs = $ParamObject->GetArray( Param => 'AttachmentID' );
-        my $TicketID = $ParamObject->GetParam( Param => 'TicketID' );
-        my @ArticleIdxs = $ParamObject->GetArray( Param => 'ArticleIdx' );
+        my $TicketID      = $ParamObject->GetParam( Param => 'TicketID' );
+        my @ArticleIdxs   = $ParamObject->GetArray( Param => 'ArticleIdx' );
         my $Access = 0;
 
         my %Ticket = $TicketObject->TicketGet( TicketID => $TicketID );
 
-        # check responsible permissions
-        if ( $Ticket{Responsible} || $Ticket{ResponsibleID} ) {
-            my $Access = $TicketObject->TicketPermission(
-                Type     => 'responsible',
-                TicketID => $TicketID,
-                UserID   => $Self->{UserID},
-            );
-            if ( !$Access ) {
-                return {
-                    ErrorCode => 'TicketAttachmentDelete.AccessDenied',
-                    ErrorMessage =>
-                        "TicketAttachmentDelete: Does not have permissions to update responsibe!",
-                };
+        if ( $Self->{Subaction} eq 'Delete' ) {
+            # check responsible permissions
+            if ( $Ticket{Responsible} || $Ticket{ResponsibleID} ) {
+                my $Access = $TicketObject->TicketPermission(
+                    Type     => 'responsible',
+                    TicketID => $TicketID,
+                    UserID   => $Self->{UserID},
+                );
+                if ( !$Access ) {
+                    return $LayoutObject->ErrorScreen(
+                        Message => "Does not have permissions to delete attachment!",
+                        Comment => 'Please contact the administrator.',
+                    );
+                }
             }
         }
 
+        else {
+            # check permissions
+            my $Access = $TicketObject->TicketPermission(
+                Type     => 'ro',
+                TicketID => $TicketID,
+                UserID   => $Self->{UserID}
+            );
+            if ( !$Access ) {
+                return $LayoutObject->ErrorScreen(
+                    Message => "Does not have permissions to download attachment!",
+                    Comment => 'Please contact the administrator.',
+                );
+            }
+        }
         # if any attachment selected
         if ( ref \@AttachmentIDs eq 'ARRAY' && scalar @AttachmentIDs ) {
 
