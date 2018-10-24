@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.4.0-RC2 (2018/10/24)
+ * (2018/10/18) - Bugfix: T2018101590005014 (added COPYING file for license information) (rbo)
+ * (2018/10/15) - Bugfix: T2018092490000362 (Updated copyrights) (millinger)
+
 # 17.4.0-RC1 (2018/10/11)
  * (2018/10/09) - CR: T2018032390000893 (added event handler for the user object) (fjacquemin)
  * (2018/10/08) - Bugfix: T2018040390000491 (fixed objects for dynamic field administration) (millinger)
