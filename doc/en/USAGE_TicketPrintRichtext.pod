@@ -1,20 +1,20 @@
 # $Id$
 
-=head1 Usage Information 
+=head1 Usage Information
 
 This version does not require the OTRS-extensions package KIX4OTRS.
 
-This package provides the possibility to force the user to select an articletype. 
+This package provides the possibility to force the user to select an articletype.
 
-=over 4 
+=over 4
 
 =back
 
 =head2 Technical implementation
 
-=over 4 
+=over 4
 
-=item * implements an new ticket print function 
+=item * implements an new ticket print function
 
 =item * it uses parts of the OTRS-function AgentTicketPrint
 
@@ -26,7 +26,7 @@ This package provides the possibility to force the user to select an articletype
 
 =head2 Configuration
 
-=over 4 
+=over 4
 
 =item * SysConfig-Entry for ModulRegistration "Frontend::Module###AgentTicketPrintRichtext"
 
@@ -110,6 +110,6 @@ The following persons have contributed to this extension:
 
 =back
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file COPYING for license information (AGPL). If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file LICENSE for license information (AGPL). If you did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 
 =cut

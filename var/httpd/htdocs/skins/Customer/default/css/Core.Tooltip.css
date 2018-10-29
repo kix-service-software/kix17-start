@@ -1,15 +1,15 @@
 /**
  * This software is part of the KIX project, http://www.kixdesk.com/
- *  Modified version of the work: Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+ *  Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
  *  based on the original work of:
- *  Copyright (C) 2001-2017 OTRS AG, http://otrs.com/
+ *  Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
  *  --
  * @project OTRS (http://www.otrs.org) <http://www.otrs.org> - Agent Frontend
  * @copyright OTRS AG
  * @license AGPL (http://www.gnu.org/licenses/agpl.txt) <http://www.gnu.org/licenses/agpl.txt>
  *  --
  *  This software comes with ABSOLUTELY NO WARRANTY. For details, see
- *  the enclosed file COPYING for license information (AGPL). If you
+ *  the enclosed file LICENSE for license information (AGPL). If you
  *  did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
  *
  */
@@ -80,12 +80,12 @@ div.Tooltip > div.Content:before {
     pointer-events: none;
 }
 
-div.Tooltip.TongueTop > div.Content:after, 
+div.Tooltip.TongueTop > div.Content:after,
 div.Tooltip.TongueTop > div.Content:before {
     top: 100%;
 }
 
-div.Tooltip.TongueBottom > div.Content:after, 
+div.Tooltip.TongueBottom > div.Content:after,
 div.Tooltip.TongueBottom > div.Content:before {
     bottom: 100%;
 }

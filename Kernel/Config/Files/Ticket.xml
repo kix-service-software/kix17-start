@@ -15974,7 +15974,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::KIXSidebarBackend###KIXSBConfigItemView001" Required="0" Valid="0">
-        <Description Translatable="1">Sidebar module registration for the agent interface.</Description>
+        <Description Translatable="1">Sidebar module registration for the customer interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::KIXSidebarConfigItemView</SubGroup>
         <Setting>

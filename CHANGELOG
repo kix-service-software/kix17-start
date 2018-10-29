@@ -1,6 +1,47 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.4.0-RC3 (2018/10/28)
+ * (2018/10/12) - Bugfix: T2018032390000893 (fixed translation on customer login) (millinger)
+
+# 17.4.0-RC2 (2018/10/24)
+ * (2018/10/18) - Bugfix: T2018101590005014 (added COPYING file for license information) (rbo)
+ * (2018/10/15) - Bugfix: T2018092490000362 (Updated copyrights) (millinger)
+
+# 17.4.0-RC1 (2018/10/11)
+ * (2018/10/09) - CR: T2018032390000893 (added event handler for the user object) (fjacquemin)
+ * (2018/10/08) - Bugfix: T2018040390000491 (fixed objects for dynamic field administration) (millinger)
+ * (2018/10/04) - CR: T2016120290000801 (translations added) (ddoerffel)
+ * (2018/10/04) - Bugfix: T2018100490000736 (missing ParamObject) (ddoerffel)
+ * (2018/09/28) - Bugfix: T2018092490000362 (updated copyrights) (millinger)
+ * (2018/09/28) - Bugfix: T2018092090001136 (missing log object causes ajax errors) (ddoerffel)
+ * (2018/09/25) - Bugfix: T2018092490000362 (merged security fixes from OTRS) (millinger)
+ * (2018/09/20) - Bugfix: T2018092090000477 (fixed customer company selection in customer frontend) (millinger)
+ * (2018/09/13) - Bugfix: T2018040390000491 (added missing translations for dynamic field value ttl) (millinger)
+ * (2018/09/06) - CR: T2016120290000801 (implemented new sidebar to show information of linked config items) (millinger)
+ * (2018/08/30) - Bugfix: T2018031290000958 (fixed simultaneous adding of linked persons on ticket merge) (millinger)
+ * (2018/08/16) - Bugfix: T2018073090000596 (PostMaster filter can create tickets in invalid queues) (millinger)
+ * (2018/08/14) - Bugfix: T2018072390000608 (fixed problems with usernames with capital letters) (ddoerffel)
+ * (2018/08/07) - Bugfix: T2018080390000591 (fixed wrong data entry in imexport_object table for customer company mapping) (fjacquemin)
+ * (2018/08/07) - Bugfix: T2018032790001134 (show html of dynamicfield richtext in process zoom tab) (millinger)
+ * (2018/08/01) - CR: T2018031990000651 (increased possible size of article 'to' and 'cc' field) (millinger)
+ * (2018/07/19) - CR: T2017120690000614 (added method to delete or empty of a ticket attribute or dynamic field in generic agent) (fjacquemin)
+ * (2018/07/17) - CR: T2018012690001023 (added function to delete customer user preferences) (fjacquemin)
+ * (2018/07/16) - CR: T2018040390000491 (implemented TTL for dynamic field values) (millinger)
+ * (2018/05/30) - CR: T2018020590001203 (configurable split pattern for static ticket search in) (millinger)
+
+# 17.4.0-RC1 (2018/09/07)
+ * (2018/09/06) - CR: T2016120290000801 (implemented new sidebar to show information of linked config items) (millinger)
+ * (2018/08/30) - Bugfix: T2018031290000958 (fixed simultaneous adding of linked persons on ticket merge) (millinger)
+ * (2018/08/16) - Bugfix: T2018073090000596 (PostMaster filter can create tickets in invalid queues) (millinger)
+ * (2018/08/14) - Bugfix: T2018072390000608 (fixed problems with usernames with capital letters) (ddoerffel)
+ * (2018/08/07) - Bugfix: T2018032790001134 (show html of dynamicfield richtext in process zoom tab) (millinger)
+ * (2018/08/01) - CR: T2018031990000651 (increased possible size of article 'to' and 'cc' field) (millinger)
+ * (2018/07/19) - CR: T2017120690000614 (added method to delete or empty of a ticket attribute or dynamic field in generic agent) (fjacquemin)
+ * (2018/07/17) - CR: T2018012690001023 (added function to delete customer user preferences) (fjacquemin)
+ * (2018/07/16) - CR: T2018040390000491 (implemented TTL for dynamic field values) (millinger)
+ * (2018/05/30) - CR: T2018020590001203 (configurable split pattern for static ticket search in) (millinger)
+
 # 17.3.3 (2018/09/03)
  * (2018/09/03) - productive release
 
