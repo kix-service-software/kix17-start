@@ -1,11 +1,11 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::CustomerUser;
@@ -666,6 +666,35 @@ sub SetPreferences {
         return;
     }
 
+    # Don't allow overwriting of native user data.
+    my %Blacklisted = (
+        UserID         => 1,
+        UserLogin      => 1,
+        UserPassword   => 1,
+        UserFirstname  => 1,
+        UserLastname   => 1,
+        UserFullname   => 1,
+        UserStreet     => 1,
+        UserCity       => 1,
+        UserZip        => 1,
+        UserCountry    => 1,
+        UserComment    => 1,
+        UserCustomerID => 1,
+        UserTitle      => 1,
+        UserEmail      => 1,
+        ChangeTime     => 1,
+        ChangeBy       => 1,
+        CreateTime     => 1,
+        CreateBy       => 1,
+        UserPhone      => 1,
+        UserMobile     => 1,
+        UserFax        => 1,
+        UserMailString => 1,
+        ValidID        => 1,
+    );
+
+    return 0 if $Blacklisted{ $Param{Key} };
+
     # check if user exists
     my %User = $Self->CustomerUserDataGet( User => $Param{UserID} );
     if ( !%User ) {
@@ -935,11 +964,11 @@ sub DESTROY {
 =head1 TERMS AND CONDITIONS
 
 This software is part of the KIX project
-(L<http://www.kixdesk.com/>).
+(L<https://www.kixdesk.com/>).
 
 This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-COPYING for license information (AGPL). If you did not receive this file, see
+LICENSE for license information (AGPL). If you did not receive this file, see
 
-<http://www.gnu.org/licenses/agpl.txt>.
+<https://www.gnu.org/licenses/agpl.txt>.
 
 =cut

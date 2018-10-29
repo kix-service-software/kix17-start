@@ -1,13 +1,13 @@
 /**
  * This software is part of the KIX project, http://www.kixdesk.com/
- * Copyright (C) 2006-2017 c.a.p.e. IT GmbH, http://www.cape-it.de
+ * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
  * --
  * @project KIX (http://www.kixdesk.com) <http://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
  * @license AGPL (http://www.gnu.org/licenses/agpl.txt) <http://www.gnu.org/licenses/agpl.txt>
  * --
  * This software comes with ABSOLUTELY NO WARRANTY. For details, see
- * the enclosed file COPYING for license information (AGPL). If you
+ * the enclosed file LICENSE for license information (AGPL). If you
  * did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
  *
  */
@@ -581,7 +581,7 @@
         text-align: center;
         width: 100%;
     }
-    
+
     .CustomerTicketTemplates .TemplateSelectionArea > div {
         margin: 0px 0px 80px 0px;
         width: 900px;
@@ -611,7 +611,7 @@
         height: 64px;
         padding: 5px;
         border: 1px solid #e0e0e0;
-        box-shadow: 2px 2px 2px #a0a0a0; 
+        box-shadow: 2px 2px 2px #a0a0a0;
     }
 
     .CustomerTicketTemplates .TicketTemplateElement a:hover img {
@@ -622,7 +622,7 @@
         -webkit-filter: none;
         filter: none;
     }
-    
+
     .CustomerTicketTemplates .TicketTemplateElement > .Label {
         display: block;
         margin-top: 10px;
@@ -632,12 +632,12 @@
     .CustomerTicketTemplates .FilterArea {
         margin: 20px 0px 30px 5px;
     }
-    
+
     .CustomerTicketTemplates .FilterArea label {
         width: auto;
         padding-top: 5px;
     }
-    
+
     #PortalGroupFilter,
     #TicketTemplateFilter {
         width: 250px;
@@ -648,7 +648,7 @@
         padding-right: 20px;
         box-sizing: border-box;
     }
-    
+
     #PortalGroupFilterClear,
     #TicketTemplateFilterClear {
         position: relative;

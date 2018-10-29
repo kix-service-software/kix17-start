@@ -1,11 +1,14 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::System::HTMLUtils;
@@ -87,7 +90,7 @@ sub ToAscii {
     $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$Param{String} );
 
     # get length of line for forcing line breakes
-    my $LineLength = $Self->{'Ticket::Frontend::TextAreaNote'} || 78;
+    my $LineLength = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::TextAreaNote') || 78;
 
     # find <a href=....> and replace it with [x]
     my $LinkList = '';
@@ -1140,10 +1143,32 @@ sub Safety {
                 }egsxim;
             }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+            # Remove malicious CSS content
+            $Tag =~ s{
+                (\s)style=("|') (.*?) \2
+            }
+            {
+                my ($Space, $Delimiter, $Content) = ($1, $2, $3);
+
+                if (
+                    ($Param{NoIntSrcLoad} && $Content =~ m{url\(})
+                    || ($Param{NoExtSrcLoad} && $Content =~ m/(http|ftp|https):\//i)) {
+                    $Replaced = 1;
+                    '';
+                }
+                else {
+                    "${Space}style=${Delimiter}${Content}${Delimiter}";
+                }
+            }egsxim;
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+
             # remove load tags
             if ($Param{NoIntSrcLoad} || $Param{NoExtSrcLoad}) {
                 $Tag =~ s{
-                    ($TagStart (.+?) (?: \s | /) src=(.+?) (\s.+?|) $TagEnd)
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+                    ($TagStart (.+?) (?: \s | /) (?:src|poster)=(.+?) (\s.+?|) $TagEnd)
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
                 }
                 {
                     my $URL = $3;
@@ -1336,11 +1361,13 @@ sub HTMLTruncate {
 =head1 TERMS AND CONDITIONS
 
 This software is part of the KIX project
-(L<http://www.kixdesk.com/>).
+(L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-COPYING for license information (AGPL). If you did not receive this file, see
-
-<http://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. This program is
+licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+For details, see the enclosed files LICENSE (AGPL) and
+LICENSE-GPL3 (GPL3) for license information. If you did not receive
+this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
+<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
 
 =cut
