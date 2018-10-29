@@ -180,6 +180,20 @@ sub _AddAction {
         $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 
+    # get ValueTTL
+    for my $ConfigParam (qw(ValueTTLData ValueTTLMultiplier)) {
+        $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
+    }
+    if (
+        $GetParam{'ValueTTLData'}
+        && $GetParam{'ValueTTLMultiplier'}
+    ) {
+        $GetParam{'ValueTTL'} = $GetParam{'ValueTTLData'} * $GetParam{'ValueTTLMultiplier'};
+    }
+    else {
+        $GetParam{'ValueTTL'} = 0;
+    }
+
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # uncorrectable errors
@@ -210,6 +224,11 @@ sub _AddAction {
         TranslatableValues => $GetParam{TranslatableValues},
         AlternativeDisplay => $GetParam{AlternativeDisplay},
     };
+
+    # get ValueTTL config
+    for my $ConfigParam (qw(ValueTTL ValueTTLData ValueTTLMultiplier)) {
+        $FieldConfig->{$ConfigParam} = $GetParam{$ConfigParam};
+    }
 
     # create a new field
     my $FieldID = $DynamicFieldObject->DynamicFieldAdd(
@@ -409,6 +428,20 @@ sub _ChangeAction {
         $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 
+    # get ValueTTL
+    for my $ConfigParam (qw(ValueTTLData ValueTTLMultiplier)) {
+        $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
+    }
+    if (
+        $GetParam{'ValueTTLData'}
+        && $GetParam{'ValueTTLMultiplier'}
+    ) {
+        $GetParam{'ValueTTL'} = $GetParam{'ValueTTLData'} * $GetParam{'ValueTTLMultiplier'};
+    }
+    else {
+        $GetParam{'ValueTTL'} = 0;
+    }
+
     # uncorrectable errors
     if ( !$GetParam{ValidID} ) {
         return $LayoutObject->ErrorScreen(
@@ -437,6 +470,11 @@ sub _ChangeAction {
         PossibleNone       => $GetParam{PossibleNone},
         AlternativeDisplay => $GetParam{AlternativeDisplay},
     };
+
+    # get ValueTTL config
+    for my $ConfigParam (qw(ValueTTL ValueTTLData ValueTTLMultiplier)) {
+        $FieldConfig->{$ConfigParam} = $GetParam{$ConfigParam};
+    }
 
     # update dynamic field (FieldType and ObjectType cannot be changed; use old values)
     my $UpdateSuccess = $DynamicFieldObject->DynamicFieldUpdate(
@@ -630,6 +668,21 @@ sub _ShowScreen {
         Name       => 'TreeView',
         SelectedID => $TreeView,
         Class      => 'W50pc',
+    );
+
+    # create the value ttl multiplier select
+    $Param{ValueTTLMultiplierStrg} = $LayoutObject->BuildSelection(
+        Data => {
+            60       => Translatable('Minutes'),
+            3600     => Translatable('Hours'),
+            86400    => Translatable('Days'),
+            31536000 => Translatable('Years'),
+        },
+        Name         => 'ValueTTLMultiplier',
+        SelectedID   => $Param{ValueTTLMultiplier} || 60,
+        PossibleNone => 0,
+        Translation  => 1,
+        Class        => 'Modernize',
     );
 
     # generate output

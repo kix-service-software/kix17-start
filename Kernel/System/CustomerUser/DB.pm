@@ -41,10 +41,8 @@ sub new {
     }
 
     # get database object
-    $Self->{DBObject} = $Kernel::OM->Get('Kernel::System::DB');
-    # KIX4OTRS-capeIT
+    $Self->{DBObject}     = $Kernel::OM->Get('Kernel::System::DB');
     $Self->{ConfigObject} = $Kernel::OM->Get('Kernel::Config');
-    # EO KIX4OTRS-capeIT
 
     # max shown user per search list
     $Self->{UserSearchListLimit} = $Self->{CustomerUserMap}->{CustomerUserSearchListLimit} || 250;
@@ -191,11 +189,8 @@ sub CustomerSearch {
         && !$Param{PostMasterSearch}
         && !$Param{CustomerID}
         && !$Param{CustomerIDRaw}
-        # KIX4OTRS-capeIT
         && !$Param{SearchFields}
-        # EO KIX4OTRS-capeIT
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Search, UserLogin, PostMasterSearch, CustomerIDRaw or CustomerID!',
@@ -218,14 +213,11 @@ sub CustomerSearch {
     my $SQL = "SELECT $Self->{CustomerKey} ";
     my @Bind;
 
-    # KIX4OTRS-capeIT
-    # if ( $Self->{CustomerUserMap}->{CustomerUserListFields} ) {
     if ( $Param{ListFields} && $Param{ListFields} ne '' ) {
         $SQL .= $Param{ListFields};
     }
     elsif ( $Self->{CustomerUserMap}->{CustomerUserListFields} ) {
 
-        # EO KIX4OTRS-capeIT
         for my $Entry ( @{ $Self->{CustomerUserMap}->{CustomerUserListFields} } ) {
             $SQL .= ", $Entry";
         }
@@ -323,7 +315,6 @@ sub CustomerSearch {
             $SQL .= "LOWER($Self->{CustomerID}) LIKE LOWER(?) $LikeEscapeString";
         }
 
-        # KIX4OTRS-capeIT
         # if multiple customer ids used
         if ( $Param{MultipleCustomerIDs} ) {
 
@@ -346,8 +337,6 @@ sub CustomerSearch {
                 }
             }
         }
-
-        # EO KIX4OTRS-capeIT
     }
     elsif ( $Param{CustomerIDRaw} ) {
 
@@ -361,7 +350,6 @@ sub CustomerSearch {
         }
     }
 
-    # KIX4OTRS-capeIT
     # add fields based search input
     if ( $Param{SearchFields} ) {
         my $SearchFurtherFields;
@@ -406,8 +394,6 @@ sub CustomerSearch {
         $SQL .= ' AND ' if ( $SQL =~ /LIKE/ );
         $SQL .= $SQLExt;
     }
-
-    # EO KIX4OTRS-capeIT
 
     # add valid option
     if ( $Self->{CustomerUserMap}->{CustomerValid} && $Valid ) {
@@ -602,20 +588,12 @@ sub CustomerIDs {
             # split it
             my @IDs = split /\Q$Split\E/, $Data{UserCustomerIDs};
 
-            # KIX4OTRS-capeIT
-            #for my $ID ( @IDs ) {
             for my $ID ( sort @IDs ) {
-
-                # EO KIX4OTRS-capeIT
 
                 $ID =~ s/^\s+//g;
                 $ID =~ s/\s+$//g;
 
-                # KIX4OTRS-capeIT
                 next if !$ID;
-
-                # EO KIX4OTRS-capeIT
-
                 push @CustomerIDs, $ID;
             }
             last SPLIT;
@@ -706,12 +684,7 @@ sub CustomerUserDataGet {
 
         for my $Entry ( @{ $Self->{CustomerUserMap}->{Map} } ) {
 
-            # KIX4OTRS-capeIT
-            # $Data{ $Entry->[0] } = $Row[$MapCounter];
             $Data{ $Entry->[0] } = $Row[$MapCounter] || $Entry->[8] || '';
-
-            # EO KIX4OTRS-capeIT
-
             $MapCounter++;
         }
 
@@ -1315,6 +1288,12 @@ sub SearchPreferences {
     my ( $Self, %Param ) = @_;
 
     return $Self->{PreferencesObject}->SearchPreferences(%Param);
+}
+
+sub DeletePreferences {
+    my ( $Self, %Param ) = @_;
+
+    return $Self->{PreferencesObject}->DeletePreferences(%Param);
 }
 
 sub _CustomerUserCacheClear {
