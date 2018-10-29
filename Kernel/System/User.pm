@@ -1,17 +1,19 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::User;
 
 use strict;
 use warnings;
+
+use base qw(Kernel::System::EventHandler);
 
 use Crypt::PasswdMD5 qw(unix_md5_crypt apache_md5_crypt);
 use Digest::SHA;
@@ -77,6 +79,11 @@ sub new {
     if ( $Kernel::OM->Get('Kernel::System::DB')->GetDatabaseFunction('CaseSensitive') ) {
         $Self->{Lower} = 'LOWER';
     }
+
+    # init of event handler
+    $Self->EventHandlerInit(
+        Config => 'User::EventModulePost',
+    );
 
     return $Self;
 }
@@ -467,6 +474,16 @@ sub UserAdd {
         Type => $Self->{CacheType},
     );
 
+    # trigger event
+    $Self->EventHandler(
+        Event => 'UserAdd',
+        Data  => {
+            UserLogin => $Param{UserLogin},
+            NewData   => \%Param,
+        },
+        UserID => $UserID,
+    );
+
     return $UserID;
 }
 
@@ -492,22 +509,14 @@ sub UserUpdate {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    # KIX4OTRS-capeIT
-    my @FixUserStuffArray =
-        qw(UserID UserFirstname UserLastname UserLogin ValidID UserID ChangeUserID);
     my %FixUserStuffHash = ();
-
-    # for (qw(UserID UserFirstname UserLastname UserLogin ValidID UserID ChangeUserID)) {
-    for my $FixUserStuff (@FixUserStuffArray) {
-        $FixUserStuffHash{$FixUserStuff} = 1;
-
-       # if ( !$Param{$_} ) {
-       # $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "Need $_!" );
-        if ( !$Param{$FixUserStuff} ) {
-            $Kernel::OM->Get('Kernel::System::Log')
-                ->Log( Priority => 'error', Message => "Need $FixUserStuff!" );
-
-            # EO KIX4OTRS-capeIT
+    for (qw(UserID UserFirstname UserLastname UserLogin ValidID ChangeUserID)) {
+        $FixUserStuffHash{$_} = 1;
+        if ( !$Param{$_} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $_!",
+            );
             return;
         }
     }
@@ -523,8 +532,7 @@ sub UserUpdate {
             UserLogin => $Param{UserLogin},
             UserID    => $Param{UserID}
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "A user with username '$Param{UserLogin}' already exists!"
@@ -536,8 +544,7 @@ sub UserUpdate {
     if (
         $Param{UserEmail}
         && !$Kernel::OM->Get('Kernel::System::CheckItem')->CheckEmail( Address => $Param{UserEmail} )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Email address ($Param{UserEmail}) not valid ("
@@ -564,27 +571,14 @@ sub UserUpdate {
             UserLogin => $Param{UserLogin},
             PW        => $Param{UserPw}
         );
-
-        # KIX4OTRS-capeIT
         $FixUserStuffHash{UserPw} = 1;
-
-        # EO KIX4OTRS-capeIT
     }
 
-    # KIX4OTRS-capeIT
-    # set email address
-    # $Self->SetPreferences(
-    #     UserID => $Param{UserID},
-    #     Key    => 'UserEmail',
-    #     Value  => $Param{UserEmail}
-    # );
-    foreach my $ParamKey ( keys %Param ) {
+    for my $ParamKey ( keys %Param ) {
         if (
-            ( $ParamKey =~ /^User/ )
-            &&
-            ( !$FixUserStuffHash{$ParamKey} )
-            )
-        {
+            $ParamKey =~ /^User/
+            && !$FixUserStuffHash{$ParamKey}
+        ) {
             $Self->SetPreferences(
                 UserID => $Param{UserID},
                 Key    => $ParamKey,
@@ -592,15 +586,6 @@ sub UserUpdate {
             );
         }
     }
-
-    # EO KIX4OTRS-capeIT
-
-    # set email address
-    $Self->SetPreferences(
-        UserID => $Param{UserID},
-        Key    => 'UserMobile',
-        Value  => $Param{UserMobile} || '',
-    );
 
     # update search profiles if the UserLogin changed
     if ( lc $OldUserLogin ne lc $Param{UserLogin} ) {
@@ -611,16 +596,11 @@ sub UserUpdate {
         );
     }
 
-    # get cache object
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-
-    # delete cache
-    $CacheObject->CleanUp(
-        Type => $Self->{CacheType},
-    );
+    $Self->_UserCacheClear( UserID => $Param{UserID} );
 
     # TODO Not needed to delete the cache if ValidID or Name was not changed
 
+    my $CacheObject            = $Kernel::OM->Get('Kernel::System::Cache');
     my $SystemPermissionConfig = $Kernel::OM->Get('Kernel::Config')->Get('System::Permission') || [];
 
     for my $Type ( @{$SystemPermissionConfig}, 'rw' ) {
@@ -633,6 +613,17 @@ sub UserUpdate {
 
     $CacheObject->CleanUp(
         Type => 'GroupPermissionGroupGet',
+    );
+
+    # trigger event
+    $Self->EventHandler(
+        Event => 'UserUpdate',
+        Data  => {
+            UserID       => $Param{UserID},
+            OldUserLogin => $OldUserLogin,
+            NewData      => \%Param,
+        },
+        UserID => $Param{UserID},
     );
 
     return 1;
@@ -793,7 +784,7 @@ sub SetPassword {
         return;
     }
 
-    my $Pw = $Param{PW} || '';
+    my $Pw        = $Param{PW} || '';
     my $CryptedPw = '';
 
     # get crypt type
@@ -903,6 +894,16 @@ sub SetPassword {
     $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'notice',
         Message  => "User: '$Param{UserLogin}' changed password successfully!",
+    );
+
+    # trigger event handler
+    $Self->EventHandler(
+        Event => 'UserSetPassword',
+        Data  => {
+            %Param,
+            OldData => \%User,
+        },
+        UserID => $Param{UserID},
     );
 
     return 1;
@@ -1037,7 +1038,7 @@ sub UserLookup {
 get user name
 
     my $Name = $UserObject->UserName(
-        UserLogin => 'some-login',
+        User => 'some-login',
     );
 
     or
@@ -1222,6 +1223,22 @@ sub SetPreferences {
         }
     }
 
+    # Don't allow overwriting of native user data.
+    my %Blacklisted = (
+        UserID        => 1,
+        UserLogin     => 1,
+        UserPw        => 1,
+        UserFirstname => 1,
+        UserLastname  => 1,
+        UserFullname  => 1,
+        UserTitle     => 1,
+        ChangeTime    => 1,
+        CreateTime    => 1,
+        ValidID       => 1,
+    );
+
+    return 0 if $Blacklisted{ $Param{Key} };
+
     # get current setting
     my %User = $Self->GetUserData(
         UserID        => $Param{UserID},
@@ -1234,11 +1251,46 @@ sub SetPreferences {
         && defined $Param{Value}
         && $User{ $Param{Key} } eq $Param{Value};
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    $Self->_UserCacheClear( UserID => $Param{UserID} );
+
+    # get user preferences config
+    my $GeneratorModule = $Kernel::OM->Get('Kernel::Config')->Get('User::PreferencesModule')
+        || 'Kernel::System::User::Preferences::DB';
+
+    # get generator preferences module
+    my $PreferencesObject = $Kernel::OM->Get($GeneratorModule);
+
+    # set preferences
+    my $Result = $PreferencesObject->SetPreferences(%Param);
+
+    if ( $Result ) {
+        $Self->EventHandler(
+            Event => 'UserSetPreferences',
+            Data  => {
+                %Param,
+                UserData => \%User,
+                Result   => $Result,
+            },
+            UserID => 1,
+        );
+    }
+
+    return $Result;
+}
+
+sub _UserCacheClear {
+    my ( $Self, %Param ) = @_;
+
+    if ( !$Param{UserID} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "Need UserID!"
+        );
+        return;
+    }
 
     # get configuration for the full name order
-    my $FirstnameLastNameOrder = $ConfigObject->Get('FirstnameLastnameOrder') || 0;
+    my $FirstnameLastNameOrder = $Kernel::OM->Get('Kernel::Config')->Get('FirstnameLastnameOrder') || 0;
 
     # create cachekey
     my $Login = $Self->UserLookup( UserID => $Param{UserID} );
@@ -1259,6 +1311,8 @@ sub SetPreferences {
         'UserList::Long::0::' . $FirstnameLastNameOrder . '::1',
         'UserList::Long::1::' . $FirstnameLastNameOrder . '::0',
         'UserList::Long::1::' . $FirstnameLastNameOrder . '::1',
+        'UserLookup::ID::' . $Login,
+        'UserLookup::Login::' . $Param{UserID},
     );
 
     # get cache object
@@ -1273,15 +1327,7 @@ sub SetPreferences {
         );
     }
 
-    # get user preferences config
-    my $GeneratorModule = $ConfigObject->Get('User::PreferencesModule')
-        || 'Kernel::System::User::Preferences::DB';
-
-    # get generator preferences module
-    my $PreferencesObject = $Kernel::OM->Get($GeneratorModule);
-
-    # set preferences
-    return $PreferencesObject->SetPreferences(%Param);
+    return 1;
 }
 
 =item GetPreferences()
@@ -1530,6 +1576,15 @@ sub UserLoginExistsCheck {
     return 0;
 }
 
+sub DESTROY {
+    my $Self = shift;
+
+    # execute all transaction events
+    $Self->EventHandlerTransaction();
+
+    return 1;
+}
+
 1;
 
 =back
@@ -1537,11 +1592,11 @@ sub UserLoginExistsCheck {
 =head1 TERMS AND CONDITIONS
 
 This software is part of the KIX project
-(L<http://www.kixdesk.com/>).
+(L<https://www.kixdesk.com/>).
 
 This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-COPYING for license information (AGPL). If you did not receive this file, see
+LICENSE for license information (AGPL). If you did not receive this file, see
 
-<http://www.gnu.org/licenses/agpl.txt>.
+<https://www.gnu.org/licenses/agpl.txt>.
 
 =cut

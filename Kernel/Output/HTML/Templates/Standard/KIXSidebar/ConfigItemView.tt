@@ -1,0 +1,109 @@
+# --
+# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+
+[% RenderBlockStart("SidebarFrame") %]
+<div id="[% Data.Identifier %]" class="KIXSidebarTools WidgetSimple CanDrag [% Data.AdditionalClasses | html %]">
+    <div class="Header">
+        <div class="WidgetAction Toggle">
+            <a href="#" title="[% Translate(Data.Description) | html %]">
+                <i class="fa fa-caret-right"></i>
+                <i class="fa fa-caret-down"></i>
+            </a>
+        </div>
+        <h2 class="PaddingLeft15px"><span>[% Translate(Data.Title) | html %]</span></h2>
+    </div>
+    <div id="Content[% Data.Identifier %]" class="Content">
+        <div id="SearchResult[% Data.Identifier | html %]">
+        </div>
+    </div>
+</div>
+<script type="text/javascript">//<![CDATA[
+    var KIXSidebarCallback[% Data.Identifier | html %] = function (Response) {
+        KIXSidebarTools.KIXSidebarConfigItemView.UpdatePages("[% Data.Identifier | html %]");
+        [% Data.Callback %]
+    }
+//]]>
+</script>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    KIXSidebarTools.Init('[% Data.Identifier | html %]');
+
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
+
+    var Data = {};
+
+    KIXSidebarTools.UpdateSidebar(
+        'KIXSidebarConfigItemViewAJAXHandler',
+        '[% Data.Identifier | html %]',
+        Data,
+        window.KIXSidebarCallback[% Data.Identifier | html %]
+    );
+[% RenderBlockStart("DynamicFieldSearch") %]
+    $('#DynamicField_[% Data.DynamicField | html %]').bind('change', function () {
+        var Data = {};
+
+        KIXSidebarTools.UpdateSidebar(
+            'KIXSidebarConfigItemViewAJAXHandler',
+            '[% Data.Identifier | html %]',
+            Data,
+            window.KIXSidebarCallback[% Data.Identifier | html %]
+        );
+    });
+
+    var Data = {};
+
+    KIXSidebarTools.UpdateSidebar(
+        'KIXSidebarConfigItemViewAJAXHandler',
+        '[% Data.Identifier | html %]',
+        Data,
+        window.KIXSidebarCallback[% Data.Identifier | html %]
+    );
+[% RenderBlockEnd("DynamicFieldSearch") %]
+//]]></script>
+[% END %]
+[% RenderBlockEnd("SidebarFrame") %]
+
+[% RenderBlockStart("KIXSidebarConfigItemViewResult") %]
+<div><span id="[% Data.Identifier | html %]Pagination" class="Pagination"></span></div>
+<div class="Clear">
+</div>
+[% RenderBlockStart("KIXSidebarConfigItemViewResultPage") %]
+<div class="[% Data.Identifier | html %]Page">
+                        <table class="DataTable">
+                            <thead>
+                                <tr>
+                                    <th>[% Translate("Property") | html %]</th>
+                                    <th>[% Translate("Value") | html %]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+[% RenderBlockStart("Data") %]
+                                <tr>
+                                    <td class="W25pc" style="padding-left: [% Translate(Data.Indentation) | html %]px;" title="[% Translate(Data.Description) | html %]">
+                                        [% Translate(Data.Name) | html %]:
+                                    </td>
+                                    <td style="padding-left: [% Translate(Data.Indentation) | html %]px;">
+                                        [% Data.Value %]
+                                    </td>
+                                </tr>
+[% RenderBlockEnd("Data") %]
+                            </tbody>
+                        </table>
+</div>
+[% RenderBlockEnd("KIXSidebarConfigItemViewResultPage") %]
+[% RenderBlockEnd("KIXSidebarConfigItemViewResult") %]
+
+[% RenderBlockStart("NoSearchResult") %]
+<p>[% Translate("Nothing found.") | html %]</p>
+[% RenderBlockEnd("NoSearchResult") %]
