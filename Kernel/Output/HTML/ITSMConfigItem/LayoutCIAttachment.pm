@@ -17,7 +17,8 @@ our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
     'Kernel::System::CIAttachmentStorage::AttachmentStorage',
     'Kernel::System::Log',
-    'Kernel::System::Web::Request'
+    'Kernel::System::Web::Request',
+    'Kernel::System::ITSMConfigItem'
 );
 
 =head1 NAME
@@ -55,6 +56,7 @@ sub new {
     $Self->{AttachmentStorageObject} = $Kernel::OM->Get('Kernel::System::CIAttachmentStorage::AttachmentStorage');
     $Self->{LogObject}               = $Kernel::OM->Get('Kernel::System::Log');
     $Self->{ParamObject}             = $Kernel::OM->Get('Kernel::System::Web::Request');
+    $Self->{ITSMConfigItemObject}    = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
 
     return $Self;
 }
@@ -92,6 +94,16 @@ sub OutputStringCreate {
         # get saved properties (attachment directory info)
         %AttDirData = $Self->{AttachmentStorageObject}->AttachmentStorageGetDirectory(
             ID => $Param{Value},
+        );
+
+        my $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
+            What => [
+                # each array element is a and condition
+                {
+                    # or condition in hash
+                    "[%]{'Version'}[%]{'$Param{Item}->{Key}'}[%]{'Content'}" => $Param{Value},
+                },
+            ]
         );
 
         if (
@@ -136,13 +148,14 @@ sub OutputStringCreate {
 
         # build the attachment part of the output
         $String = $Self->BuildAttachmentPresentation(
-            FileName   => $AttDirData{FileName},
-            FileSize   => $AttDirData{Preferences}->{FileSize},
-            DataType   => $AttDirData{Preferences}->{DataType},
-            SizeNote   => $SizeNote,
-            SizeOnDisk => $RealFileSize,
-            MD5Note    => $MD5Note,
-            AttachID   => $AttDirData{AttDirID},
+            FileName     => $AttDirData{FileName},
+            FileSize     => $AttDirData{Preferences}->{FileSize},
+            DataType     => $AttDirData{Preferences}->{DataType},
+            SizeNote     => $SizeNote,
+            SizeOnDisk   => $RealFileSize,
+            MD5Note      => $MD5Note,
+            AttachID     => $AttDirData{AttDirID},
+            ConfigItemID => $ConfigItemIDs->[0] || ''
         );
     }
 
@@ -234,11 +247,12 @@ create a input string
 
 sub InputCreate {
     my ( $Self, %Param ) = @_;
-    my %AttDirData   = ();
-    my $SizeNote     = "";
-    my $RealFileSize = 0;
-    my $MD5Note      = "";
-    my $RealMD5Sum   = "";
+    my %AttDirData    = ();
+    my $SizeNote      = "";
+    my $RealFileSize  = 0;
+    my $MD5Note       = "";
+    my $RealMD5Sum    = "";
+    my $ConfigItemIDs = [];
 
     #check required stuff...
     foreach (qw(Key Item)) {
@@ -253,6 +267,16 @@ sub InputCreate {
         # get saved attachment properties und preferences
         %AttDirData = $Self->{AttachmentStorageObject}->AttachmentStorageGetDirectory(
             ID => $Param{Value}
+        );
+
+        $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
+            What => [
+                # each array element is a and condition
+                {
+                    # or condition in hash
+                    "[%]{'Version'}[%]{'$Param{Item}->{Key}'}[%]{'Content'}" => $Param{Value},
+                },
+            ]
         );
 
         if (
@@ -298,14 +322,15 @@ sub InputCreate {
 
     # build the attachment part of the output
     my $String = $Self->BuildAttachmentModification(
-        FileName   => $AttDirData{FileName},
-        FileSize   => $AttDirData{Preferences}->{FileSize},
-        DataType   => $AttDirData{Preferences}->{DataType},
-        SizeNote   => $SizeNote,
-        SizeOnDisk => $RealFileSize,
-        MD5Note    => $MD5Note,
-        AttachID   => $Param{Value},
-        Key        => $Param{Key},
+        FileName     => $AttDirData{FileName},
+        FileSize     => $AttDirData{Preferences}->{FileSize},
+        DataType     => $AttDirData{Preferences}->{DataType},
+        SizeNote     => $SizeNote,
+        SizeOnDisk   => $RealFileSize,
+        MD5Note      => $MD5Note,
+        AttachID     => $Param{Value},
+        Key          => $Param{Key},
+        ConfigItemID => $ConfigItemIDs->[0] || ''
     );
 
     return $String;
@@ -332,7 +357,8 @@ sub BuildAttachmentModification {
             "<a href=\""
             . $Self->{LayoutObject}->{Baselink}
             . "Action=AgentAttachmentStorage;"
-            . "AttachmentDirectoryID=$Param{AttachID}";
+            . "AttachmentDirectoryID=$Param{AttachID};"
+            . "ConfigItemID=$Param{ConfigItemID}";
 
         # add session id if needed
         if ( !$Self->{LayoutObject}->{SessionIDCookie} ) {
@@ -385,7 +411,8 @@ sub BuildAttachmentPresentation {
         my $ahref = "<a href=\""
             . $Self->{LayoutObject}->{Baselink}
             . "Action=AgentAttachmentStorage;"
-            . "AttachmentDirectoryID=$Param{AttachID}";
+            . "AttachmentDirectoryID=$Param{AttachID};"
+            . "ConfigItemID=$Param{ConfigItemID}";
 
         # add session id if needed
         if ( !$Self->{LayoutObject}->{SessionIDCookie} ) {
@@ -493,13 +520,6 @@ sub SearchInputCreate {
 }
 
 1;
-
-
-=head1 VERSION
-
-$Revision$ $Date$
-
-=cut
 
 =back
 
