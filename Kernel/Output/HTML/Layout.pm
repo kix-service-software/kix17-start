@@ -16,9 +16,7 @@ use warnings;
 use Storable;
 use URI::Escape qw();
 
-# KIX-capeIT
 use vars qw(@ISA);
-# EO KIX-capeIT
 
 use Kernel::System::Time;
 use Kernel::System::VariableCheck qw(:all);
@@ -2525,6 +2523,8 @@ sub Attachment {
     }
 
     if ( $Param{Filename} ) {
+        # trim whitespace and special characters
+        $Param{Filename} =~ s/[ <>\?":\\\*\|\/;\[\]\r\n]/_/g;
 
         # IE 10+ supports this
         my $URLEncodedFilename = URI::Escape::uri_escape_utf8( $Param{Filename} );
