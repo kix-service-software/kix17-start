@@ -330,6 +330,7 @@ sub TicketSearch {
         Ticket                 => 'st.tn',
         TicketNumber           => 'st.tn',
         Title                  => 'st.title',
+        FromTitle              => 'st.title',
         Queue                  => 'sq.name',
         Type                   => 'st.type_id',
         Priority               => 'st.ticket_priority_id',
@@ -1230,7 +1231,7 @@ sub TicketSearch {
             $ChecklistItemStates[$Counter] = " ktc.state LIKE LOWER('" . $DBObject->Quote( $ChecklistItemState ) . "')";
             $Counter++;
         }
-        $SQLFrom .= join ' OR ', @ChecklistItemStates; 
+        $SQLFrom .= join ' OR ', @ChecklistItemStates;
         $SQLFrom .= ")";
     }
 
