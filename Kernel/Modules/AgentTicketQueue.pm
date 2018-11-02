@@ -40,6 +40,9 @@ sub Run {
 
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
+    # get config of AgentTicketSearch for fulltext search
+    my $AgentTicketSearchConfig = $ConfigObject->Get("Ticket::Frontend::AgentTicketSearch");
+
     # KIX4OTRS-capeIT
     my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
@@ -468,7 +471,7 @@ sub Run {
             @ViewableTickets = $TicketObject->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 %ColumnFilter,
-                Limit  => $Limit,
+                Limit  => $Start + $PageShown - 1,
                 Result => 'ARRAY',
             );
         }
@@ -508,437 +511,96 @@ sub Run {
             UserLogin => $SearchProfileUser || $Self->{UserLogin},
         );
 
-        # get create time settings
-        if ( !$Search{ArticleTimeSearchType} ) {
+        my %TimeMap = (
+            ArticleCreate    => 'ArticleTime',
+            TicketCreate     => 'Time',
+            TicketChange     => 'ChangeTime',
+            TicketLastChange => 'LastChangeTime',
+            TicketClose      => 'CloseTime',
+            TicketEscalation => 'EscalationTime',
+            TicketPending    => 'PendingTime',
+        );
 
-            # do nothing with time stuff
-        }
-        elsif ( $Search{ArticleTimeSearchType} eq 'TimeSlot' ) {
-            for my $Key (qw(Month Day)) {
-                $Search{"ArticleCreateTimeStart$Key"}
-                    = sprintf( "%02d", $Search{"ArticleCreateTimeStart$Key"} );
-                $Search{"ArticleCreateTimeStop$Key"}
-                    = sprintf( "%02d", $Search{"ArticleCreateTimeStop$Key"} );
-            }
-            if (
-                $Search{ArticleCreateTimeStartDay}
-                && $Search{ArticleCreateTimeStartMonth}
-                && $Search{ArticleCreateTimeStartYear}
-                )
-            {
-                $Search{ArticleCreateTimeNewerDate}
-                    = $Search{ArticleCreateTimeStartYear} . '-'
-                    . $Search{ArticleCreateTimeStartMonth} . '-'
-                    . $Search{ArticleCreateTimeStartDay}
-                    . ' 00:00:00';
-            }
-            if (
-                $Search{ArticleCreateTimeStopDay}
-                && $Search{ArticleCreateTimeStopMonth}
-                && $Search{ArticleCreateTimeStopYear}
-                )
-            {
-                $Search{ArticleCreateTimeOlderDate}
-                    = $Search{ArticleCreateTimeStopYear} . '-'
-                    . $Search{ArticleCreateTimeStopMonth} . '-'
-                    . $Search{ArticleCreateTimeStopDay}
-                    . ' 23:59:59';
-            }
-        }
-        elsif ( $Search{ArticleTimeSearchType} eq 'TimePoint' ) {
-            if (
-                $Search{ArticleCreateTimePoint}
-                && $Search{ArticleCreateTimePointStart}
-                && $Search{ArticleCreateTimePointFormat}
-                )
-            {
-                my $Time = 0;
-                if ( $Search{ArticleCreateTimePointFormat} eq 'minute' ) {
-                    $Time = $Search{ArticleCreateTimePoint};
-                }
-                elsif ( $Search{ArticleCreateTimePointFormat} eq 'hour' ) {
-                    $Time = $Search{ArticleCreateTimePoint} * 60;
-                }
-                elsif ( $Search{ArticleCreateTimePointFormat} eq 'day' ) {
-                    $Time = $Search{ArticleCreateTimePoint} * 60 * 24;
-                }
-                elsif ( $Search{ArticleCreateTimePointFormat} eq 'week' ) {
-                    $Time = $Search{ArticleCreateTimePoint} * 60 * 24 * 7;
-                }
-                elsif ( $Search{ArticleCreateTimePointFormat} eq 'month' ) {
-                    $Time = $Search{ArticleCreateTimePoint} * 60 * 24 * 30;
-                }
-                elsif ( $Search{ArticleCreateTimePointFormat} eq 'year' ) {
-                    $Time = $Search{ArticleCreateTimePoint} * 60 * 24 * 365;
-                }
-                if ( $Search{ArticleCreateTimePointStart} eq 'Before' ) {
-                    $Search{ArticleCreateTimeOlderMinutes} = $Time;
-                }
-                else {
-                    $Search{ArticleCreateTimeNewerMinutes} = $Time;
-                }
-            }
-        }
+        for my $TimeType ( sort keys %TimeMap ) {
 
-        # get create time settings
-        if ( !$Search{TimeSearchType} ) {
+            # get create time settings
+            if ( !$Search{ $TimeMap{$TimeType} . 'SearchType' } ) {
 
-            # do nothing with time stuff
-        }
-        elsif ( $Search{TimeSearchType} eq 'TimeSlot' ) {
-            for my $Key (qw(Month Day)) {
-                $Search{"TicketCreateTimeStart$Key"}
-                    = sprintf( "%02d", $Search{"TicketCreateTimeStart$Key"} );
-                $Search{"TicketCreateTimeStop$Key"}
-                    = sprintf( "%02d", $Search{"TicketCreateTimeStop$Key"} );
+                # do nothing with time stuff
             }
-            if (
-                $Search{TicketCreateTimeStartDay}
-                && $Search{TicketCreateTimeStartMonth}
-                && $Search{TicketCreateTimeStartYear}
-                )
-            {
-                $Search{TicketCreateTimeNewerDate}
-                    = $Search{TicketCreateTimeStartYear} . '-'
-                    . $Search{TicketCreateTimeStartMonth} . '-'
-                    . $Search{TicketCreateTimeStartDay}
-                    . ' 00:00:00';
-            }
-            if (
-                $Search{TicketCreateTimeStopDay}
-                && $Search{TicketCreateTimeStopMonth}
-                && $Search{TicketCreateTimeStopYear}
-                )
-            {
-                $Search{TicketCreateTimeOlderDate}
-                    = $Search{TicketCreateTimeStopYear} . '-'
-                    . $Search{TicketCreateTimeStopMonth} . '-'
-                    . $Search{TicketCreateTimeStopDay}
-                    . ' 23:59:59';
-            }
-        }
-        elsif ( $Search{TimeSearchType} eq 'TimePoint' ) {
-            if (
-                $Search{TicketCreateTimePoint}
-                && $Search{TicketCreateTimePointStart}
-                && $Search{TicketCreateTimePointFormat}
-                )
-            {
-                my $Time = 0;
-                if ( $Search{TicketCreateTimePointFormat} eq 'minute' ) {
-                    $Time = $Search{TicketCreateTimePoint};
+            elsif ( $Search{ $TimeMap{$TimeType} . 'SearchType' } eq 'TimeSlot' ) {
+                for my $Key (qw(Month Day)) {
+                    $Search{ $TimeType . 'TimeStart' . $Key }
+                        = sprintf( "%02d", $Search{ $TimeType . 'TimeStart' . $Key } );
+                    $Search{ $TimeType . 'TimeStop' . $Key }
+                        = sprintf( "%02d", $Search{ $TimeType . 'TimeStop' . $Key } );
                 }
-                elsif ( $Search{TicketCreateTimePointFormat} eq 'hour' ) {
-                    $Time = $Search{TicketCreateTimePoint} * 60;
+                if (
+                    $Search{ $TimeType . 'TimeStartDay' }
+                    && $Search{ $TimeType . 'TimeStartMonth' }
+                    && $Search{ $TimeType . 'TimeStartYear' }
+                    )
+                {
+                    $Search{ $TimeType . 'TimeNewerDate' } = $Search{ $TimeType . 'TimeStartYear' } . '-'
+                        . $Search{ $TimeType . 'TimeStartMonth' } . '-'
+                        . $Search{ $TimeType . 'TimeStartDay' }
+                        . ' 00:00:00';
                 }
-                elsif ( $Search{TicketCreateTimePointFormat} eq 'day' ) {
-                    $Time = $Search{TicketCreateTimePoint} * 60 * 24;
-                }
-                elsif ( $Search{TicketCreateTimePointFormat} eq 'week' ) {
-                    $Time = $Search{TicketCreateTimePoint} * 60 * 24 * 7;
-                }
-                elsif ( $Search{TicketCreateTimePointFormat} eq 'month' ) {
-                    $Time = $Search{TicketCreateTimePoint} * 60 * 24 * 30;
-                }
-                elsif ( $Search{TicketCreateTimePointFormat} eq 'year' ) {
-                    $Time = $Search{TicketCreateTimePoint} * 60 * 24 * 365;
-                }
-                if ( $Search{TicketCreateTimePointStart} eq 'Before' ) {
-                    $Search{TicketCreateTimeOlderMinutes} = $Time;
-                }
-                else {
-                    $Search{TicketCreateTimeNewerMinutes} = $Time;
+                if (
+                    $Search{ $TimeType . 'TimeStopDay' }
+                    && $Search{ $TimeType . 'TimeStopMonth' }
+                    && $Search{ $TimeType . 'TimeStopYear' }
+                    )
+                {
+                    $Search{ $TimeType . 'TimeOlderDate' } = $Search{ $TimeType . 'TimeStopYear' } . '-'
+                        . $Search{ $TimeType . 'TimeStopMonth' } . '-'
+                        . $Search{ $TimeType . 'TimeStopDay' }
+                        . ' 23:59:59';
                 }
             }
-        }
+            elsif ( $Search{ $TimeMap{$TimeType} . 'SearchType' } eq 'TimePoint' ) {
+                if (
+                    $Search{ $TimeType . 'TimePoint' }
+                    && $Search{ $TimeType . 'TimePointStart' }
+                    && $Search{ $TimeType . 'TimePointFormat' }
+                    )
+                {
+                    my $Time = 0;
+                    if ( $Search{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
+                        $Time = $Search{ $TimeType . 'TimePoint' };
+                    }
+                    elsif ( $Search{ $TimeType . 'TimePointFormat' } eq 'hour' ) {
+                        $Time = $Search{ $TimeType . 'TimePoint' } * 60;
+                    }
+                    elsif ( $Search{ $TimeType . 'TimePointFormat' } eq 'day' ) {
+                        $Time = $Search{ $TimeType . 'TimePoint' } * 60 * 24;
+                    }
+                    elsif ( $Search{ $TimeType . 'TimePointFormat' } eq 'week' ) {
+                        $Time = $Search{ $TimeType . 'TimePoint' } * 60 * 24 * 7;
+                    }
+                    elsif ( $Search{ $TimeType . 'TimePointFormat' } eq 'month' ) {
+                        $Time = $Search{ $TimeType . 'TimePoint' } * 60 * 24 * 30;
+                    }
+                    elsif ( $Search{ $TimeType . 'TimePointFormat' } eq 'year' ) {
+                        $Time = $Search{ $TimeType . 'TimePoint' } * 60 * 24 * 365;
+                    }
+                    if ( $Search{ $TimeType . 'TimePointStart' } eq 'Before' ) {
 
-        # get change time settings
-        if ( !$Search{ChangeTimeSearchType} ) {
+                        # more than ... ago
+                        $Search{ $TimeType . 'TimeOlderMinutes' } = $Time;
+                    }
+                    elsif ( $Search{ $TimeType . 'TimePointStart' } eq 'Next' ) {
 
-            # do nothing on time stuff
-        }
-        elsif ( $Search{ChangeTimeSearchType} eq 'TimeSlot' ) {
-            for my $Key (qw(Month Day)) {
-                $Search{"TicketChangeTimeStart$Key"}
-                    = sprintf( "%02d", $Search{"TicketChangeTimeStart$Key"} );
-                $Search{"TicketChangeTimeStop$Key"}
-                    = sprintf( "%02d", $Search{"TicketChangeTimeStop$Key"} );
-            }
-            if (
-                $Search{TicketChangeTimeStartDay}
-                && $Search{TicketChangeTimeStartMonth}
-                && $Search{TicketChangeTimeStartYear}
-                )
-            {
-                $Search{TicketChangeTimeNewerDate}
-                    = $Search{TicketChangeTimeStartYear} . '-'
-                    . $Search{TicketChangeTimeStartMonth} . '-'
-                    . $Search{TicketChangeTimeStartDay}
-                    . ' 00:00:00';
-            }
-            if (
-                $Search{TicketChangeTimeStopDay}
-                && $Search{TicketChangeTimeStopMonth}
-                && $Search{TicketChangeTimeStopYear}
-                )
-            {
-                $Search{TicketChangeTimeOlderDate}
-                    = $Search{TicketChangeTimeStopYear} . '-'
-                    . $Search{TicketChangeTimeStopMonth} . '-'
-                    . $Search{TicketChangeTimeStopDay}
-                    . ' 23:59:59';
-            }
-        }
-        elsif ( $Search{ChangeTimeSearchType} eq 'TimePoint' ) {
-            if (
-                $Search{TicketChangeTimePoint}
-                && $Search{TicketChangeTimePointStart}
-                && $Search{TicketChangeTimePointFormat}
-                )
-            {
-                my $Time = 0;
-                if ( $Search{TicketChangeTimePointFormat} eq 'minute' ) {
-                    $Time = $Search{TicketChangeTimePoint};
-                }
-                elsif ( $Search{TicketChangeTimePointFormat} eq 'hour' ) {
-                    $Time = $Search{TicketChangeTimePoint} * 60;
-                }
-                elsif ( $Search{TicketChangeTimePointFormat} eq 'day' ) {
-                    $Time = $Search{TicketChangeTimePoint} * 60 * 24;
-                }
-                elsif ( $Search{TicketChangeTimePointFormat} eq 'week' ) {
-                    $Time = $Search{TicketChangeTimePoint} * 60 * 24 * 7;
-                }
-                elsif ( $Search{TicketChangeTimePointFormat} eq 'month' ) {
-                    $Time = $Search{TicketChangeTimePoint} * 60 * 24 * 30;
-                }
-                elsif ( $Search{TicketChangeTimePointFormat} eq 'year' ) {
-                    $Time = $Search{TicketChangeTimePoint} * 60 * 24 * 365;
-                }
-                if ( $Search{TicketChangeTimePointStart} eq 'Before' ) {
-                    $Search{TicketChangeTimeOlderMinutes} = $Time;
-                }
-                else {
-                    $Search{TicketChangeTimeNewerMinutes} = $Time;
-                }
-            }
-        }
+                        # within next
+                        $Search{ $TimeType . 'TimeNewerMinutes' } = 0;
+                        $Search{ $TimeType . 'TimeOlderMinutes' } = -$Time;
+                    }
+                    else {
 
-        # get close time settings
-        if ( !$Search{CloseTimeSearchType} ) {
-
-            # do nothing on time stuff
-        }
-        elsif ( $Search{CloseTimeSearchType} eq 'TimeSlot' ) {
-            for my $Key (qw(Month Day)) {
-                $Search{"TicketCloseTimeStart$Key"}
-                    = sprintf( "%02d", $Search{"TicketCloseTimeStart$Key"} );
-                $Search{"TicketCloseTimeStop$Key"}
-                    = sprintf( "%02d", $Search{"TicketCloseTimeStop$Key"} );
-            }
-            if (
-                $Search{TicketCloseTimeStartDay}
-                && $Search{TicketCloseTimeStartMonth}
-                && $Search{TicketCloseTimeStartYear}
-                )
-            {
-                $Search{TicketCloseTimeNewerDate}
-                    = $Search{TicketCloseTimeStartYear} . '-'
-                    . $Search{TicketCloseTimeStartMonth} . '-'
-                    . $Search{TicketCloseTimeStartDay}
-                    . ' 00:00:00';
-            }
-            if (
-                $Search{TicketCloseTimeStopDay}
-                && $Search{TicketCloseTimeStopMonth}
-                && $Search{TicketCloseTimeStopYear}
-                )
-            {
-                $Search{TicketCloseTimeOlderDate}
-                    = $Search{TicketCloseTimeStopYear} . '-'
-                    . $Search{TicketCloseTimeStopMonth} . '-'
-                    . $Search{TicketCloseTimeStopDay}
-                    . ' 23:59:59';
-            }
-        }
-        elsif ( $Search{CloseTimeSearchType} eq 'TimePoint' ) {
-            if (
-                $Search{TicketCloseTimePoint}
-                && $Search{TicketCloseTimePointStart}
-                && $Search{TicketCloseTimePointFormat}
-                )
-            {
-                my $Time = 0;
-                if ( $Search{TicketCloseTimePointFormat} eq 'minute' ) {
-                    $Time = $Search{TicketCloseTimePoint};
-                }
-                elsif ( $Search{TicketCloseTimePointFormat} eq 'hour' ) {
-                    $Time = $Search{TicketCloseTimePoint} * 60;
-                }
-                elsif ( $Search{TicketCloseTimePointFormat} eq 'day' ) {
-                    $Time = $Search{TicketCloseTimePoint} * 60 * 24;
-                }
-                elsif ( $Search{TicketCloseTimePointFormat} eq 'week' ) {
-                    $Time = $Search{TicketCloseTimePoint} * 60 * 24 * 7;
-                }
-                elsif ( $Search{TicketCloseTimePointFormat} eq 'month' ) {
-                    $Time = $Search{TicketCloseTimePoint} * 60 * 24 * 30;
-                }
-                elsif ( $Search{TicketCloseTimePointFormat} eq 'year' ) {
-                    $Time = $Search{TicketCloseTimePoint} * 60 * 24 * 365;
-                }
-                if ( $Search{TicketCloseTimePointStart} eq 'Before' ) {
-                    $Search{TicketCloseTimeOlderMinutes} = $Time;
-                }
-                else {
-                    $Search{TicketCloseTimeNewerMinutes} = $Time;
-                }
-            }
-        }
-
-        # get pending time settings
-        if ( !$Search{PendingTimeSearchType} ) {
-
-            # do nothing on time stuff
-        }
-        elsif ( $Search{PendingTimeSearchType} eq 'TimeSlot' ) {
-            for (qw(Month Day)) {
-                $Search{"TicketPendingTimeStart$_"}
-                    = sprintf( "%02d", $Search{"TicketPendingTimeStart$_"} );
-            }
-            for (qw(Month Day)) {
-                $Search{"TicketPendingTimeStop$_"}
-                    = sprintf( "%02d", $Search{"TicketPendingTimeStop$_"} );
-            }
-            if (
-                $Search{TicketPendingTimeStartDay}
-                && $Search{TicketPendingTimeStartMonth}
-                && $Search{TicketPendingTimeStartYear}
-                )
-            {
-                $Search{TicketPendingTimeNewerDate}
-                    = $Search{TicketPendingTimeStartYear} . '-'
-                    . $Search{TicketPendingTimeStartMonth} . '-'
-                    . $Search{TicketPendingTimeStartDay}
-                    . ' 00:00:00';
-            }
-            if (
-                $Search{TicketPendingTimeStopDay}
-                && $Search{TicketPendingTimeStopMonth}
-                && $Search{TicketPendingTimeStopYear}
-                )
-            {
-                $Search{TicketPendingTimeOlderDate}
-                    = $Search{TicketPendingTimeStopYear} . '-'
-                    . $Search{TicketPendingTimeStopMonth} . '-'
-                    . $Search{TicketPendingTimeStopDay}
-                    . ' 23:59:59';
-            }
-        }
-        elsif ( $Search{PendingTimeSearchType} eq 'TimePoint' ) {
-            if (
-                $Search{TicketPendingTimePoint}
-                && $Search{TicketPendingTimePointStart}
-                && $Search{TicketPendingTimePointFormat}
-                )
-            {
-                my $Time = 0;
-                if ( $Search{TicketPendingTimePointFormat} eq 'minute' ) {
-                    $Time = $Search{TicketPendingTimePoint};
-                }
-                elsif ( $Search{TicketPendingTimePointFormat} eq 'hour' ) {
-                    $Time = $Search{TicketPendingTimePoint} * 60;
-                }
-                elsif ( $Search{TicketPendingTimePointFormat} eq 'day' ) {
-                    $Time = $Search{TicketPendingTimePoint} * 60 * 24;
-                }
-                elsif ( $Search{TicketPendingTimePointFormat} eq 'week' ) {
-                    $Time = $Search{TicketPendingTimePoint} * 60 * 24 * 7;
-                }
-                elsif ( $Search{TicketPendingTimePointFormat} eq 'month' ) {
-                    $Time = $Search{TicketPendingTimePoint} * 60 * 24 * 30;
-                }
-                elsif ( $Search{TicketPendingTimePointFormat} eq 'year' ) {
-                    $Time = $Search{TicketPendingTimePoint} * 60 * 24 * 365;
-                }
-                if ( $Search{TicketPendingTimePointStart} eq 'Before' ) {
-                    $Search{TicketPendingTimeOlderMinutes} = $Time;
-                }
-                else {
-                    $Search{TicketPendingTimeOlderMinutes} = 0;
-                    $Search{TicketPendingTimeNewerMinutes} = $Time;
-                }
-            }
-        }
-
-        # get escalation time settings
-        if ( !$Search{EscalationTimeSearchType} ) {
-
-            # do nothing on time stuff
-        }
-        elsif ( $Search{EscalationTimeSearchType} eq 'TimeSlot' ) {
-            for my $Key (qw(Month Day)) {
-                $Search{"TicketEscalationTimeStart$Key"}
-                    = sprintf( "%02d", $Search{"TicketEscalationTimeStart$Key"} );
-                $Search{"TicketEscalationTimeStop$Key"}
-                    = sprintf( "%02d", $Search{"TicketEscalationTimeStop$Key"} );
-            }
-            if (
-                $Search{TicketEscalationTimeStartDay}
-                && $Search{TicketEscalationTimeStartMonth}
-                && $Search{TicketEscalationTimeStartYear}
-                )
-            {
-                $Search{TicketEscalationTimeNewerDate}
-                    = $Search{TicketEscalationTimeStartYear} . '-'
-                    . $Search{TicketEscalationTimeStartMonth} . '-'
-                    . $Search{TicketEscalationTimeStartDay}
-                    . ' 00:00:00';
-            }
-            if (
-                $Search{TicketEscalationTimeStopDay}
-                && $Search{TicketEscalationTimeStopMonth}
-                && $Search{TicketEscalationTimeStopYear}
-                )
-            {
-                $Search{TicketEscalationTimeOlderDate}
-                    = $Search{TicketEscalationTimeStopYear} . '-'
-                    . $Search{TicketEscalationTimeStopMonth} . '-'
-                    . $Search{TicketEscalationTimeStopDay}
-                    . ' 23:59:59';
-            }
-        }
-        elsif ( $Search{EscalationTimeSearchType} eq 'TimePoint' ) {
-            if (
-                $Search{TicketEscalationTimePoint}
-                && $Search{TicketEscalationTimePointStart}
-                && $Search{TicketEscalationTimePointFormat}
-                )
-            {
-                my $Time = 0;
-                if ( $Search{TicketEscalationTimePointFormat} eq 'minute' ) {
-                    $Time = $Search{TicketEscalationTimePoint};
-                }
-                elsif ( $Search{TicketEscalationTimePointFormat} eq 'hour' ) {
-                    $Time = $Search{TicketEscalationTimePoint} * 60;
-                }
-                elsif ( $Search{TicketEscalationTimePointFormat} eq 'day' ) {
-                    $Time = $Search{TicketEscalationTimePoint} * 60 * 24;
-                }
-                elsif ( $Search{TicketEscalationTimePointFormat} eq 'week' ) {
-                    $Time = $Search{TicketEscalationTimePoint} * 60 * 24 * 7;
-                }
-                elsif ( $Search{TicketEscalationTimePointFormat} eq 'month' ) {
-                    $Time = $Search{TicketEscalationTimePoint} * 60 * 24 * 30;
-                }
-                elsif ( $Search{TicketEscalationTimePointFormat} eq 'year' ) {
-                    $Time = $Search{TicketEscalationTimePoint} * 60 * 24 * 365;
-                }
-                if ( $Search{TicketEscalationTimePointStart} eq 'Before' ) {
-                    $Search{TicketEscalationTimeOlderMinutes} = $Time;
-                }
-                else {
-                    $Search{TicketEscalationTimeNewerMinutes} = $Time;
+                        # within last ...
+                        $Search{ $TimeType . 'TimeOlderMinutes' } = 0;
+                        $Search{ $TimeType . 'TimeNewerMinutes' } = $Time;
+                    }
                 }
             }
         }
@@ -1047,6 +709,142 @@ sub Run {
             Limit  => $Start + 50,
             Result => 'ARRAY',
         );
+
+        if ( $Filters{ $Filter }->{Search}->{Fulltext} ) {
+            my @ViewableTicketIDsDF = ();
+
+            # search tickets with TicketNumber
+            # (we have to do this here, because TicketSearch concatenates TN and Title with AND condition)
+            # clear additional parameters
+            for (qw(From To Cc Subject Body)) {
+                delete $Filters{ $Filter }->{Search}->{$_};
+            }
+
+            my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
+            my $FulltextSearchParam = $Filters{ $Filter }->{Search}->{Fulltext};
+            $FulltextSearchParam =~ s/$TicketHook//g;
+            $Filters{ $Filter }->{Search}->{TicketNumber} = $FulltextSearchParam;
+
+            my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
+                %{ $Filters{ $Filter }->{Search} },
+                %ColumnFilter,
+                Limit  => $Start + 50,
+                Result => 'ARRAY',
+            );
+
+            # search tickets with Title
+            delete $Filters{ $Filter }->{Search}->{TicketNumber};
+            $Filters{ $Filter }->{Search}->{Title} = $Filters{ $Filter }->{Search}->{Fulltext};
+            my @ViewableTicketIDsTitle = $TicketObject->TicketSearch(
+                %{ $Filters{ $Filter }->{Search} },
+                %ColumnFilter,
+                Limit  => $Start + 50,
+                Result => 'ARRAY',
+            );
+
+            # search tickets with remarks (TicketNotes)
+            delete $Filters{ $Filter }->{Search}->{Title};
+            $Filters{ $Filter }->{Search}->{TicketNotes} = $Filters{ $Filter }->{Search}->{Fulltext};
+            my @ViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
+                %{ $Filters{ $Filter }->{Search} },
+                %ColumnFilter,
+                Limit  => $Start + 50,
+                Result => 'ARRAY',
+            );
+            delete $Filters{ $Filter }->{Search}->{TicketNotes};
+
+            # search ticket with DF if configured
+            if ( $AgentTicketSearchConfig->{FulltextSearchInDynamicFields} ) {
+
+                # prepare fulltext serach in DFs
+                DYNAMICFIELDFULLTEXT:
+                for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+                    next DYNAMICFIELDFULLTEXT
+                        if !(
+                                $AgentTicketSearchConfig->{FulltextSearchInDynamicFields}
+                                ->{ $DynamicFieldConfig->{Name} }
+                        );
+                    next DYNAMICFIELDFULLTEXT if !IsHashRefWithData($DynamicFieldConfig);
+
+                    my %DynamicFieldSearchParameters;
+
+                    # get search field preferences
+                    my $SearchFieldPreferences = $DynamicFieldBackendObject->SearchFieldPreferences(
+                        DynamicFieldConfig => $DynamicFieldConfig,
+                    );
+
+                    next DYNAMICFIELDFULLTEXT if !IsArrayRefWithData($SearchFieldPreferences);
+
+                    PREFERENCEFULLTEXT:
+                    for my $Preference ( @{$SearchFieldPreferences} ) {
+
+                        # extract the dynamic field value from the profile
+                        my $SearchParameter = $DynamicFieldBackendObject->SearchFieldParameterBuild(
+                            DynamicFieldConfig => $DynamicFieldConfig,
+                            Profile            => {
+                                "Search_DynamicField_$DynamicFieldConfig->{Name}" => '*'
+                                    . $Filters{ $Filter }->{Search}->{Fulltext} . '*',
+                            },
+                            LayoutObject => $LayoutObject,
+                            Type         => $Preference->{Type},
+                        );
+
+                        # set search parameter
+                        if ( defined $SearchParameter ) {
+                            $DynamicFieldSearchParameters{ 'DynamicField_'
+                                    . $DynamicFieldConfig->{Name} }
+                                = $SearchParameter->{Parameter};
+                        }
+                    }
+
+                    # search tickets
+                    my @ViewableTicketIDsThisDF = $TicketObject->TicketSearch(
+                        Result          => 'ARRAY',
+                        SortBy          => $Self->{SortBy},
+                        OrderBy         => $Self->{OrderBy},
+                        Limit           => $Start + 50,
+                        UserID          => $Self->{UserID},
+                        ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
+                        %DynamicFieldSearchParameters,
+                    );
+
+                    if (@ViewableTicketIDsThisDF) {
+
+                        # join arrays
+                        @ViewableTicketIDsDF = (
+                            @ViewableTicketIDsDF,
+                            @ViewableTicketIDsThisDF,
+                        );
+                    }
+                }
+            }
+
+            # merge arrays
+            my @MergeArray;
+            push(
+                @MergeArray,
+                @ViewableTickets,
+                @ViewableTicketIDsTitle,
+                @ViewableTicketIDsTicketNotes,
+                @ViewableTicketIDsTN,
+                @ViewableTicketIDsDF
+            );
+
+            if ( scalar(@MergeArray) > 1 ) {
+                # sort merged tickets
+                @ViewableTickets = $TicketObject->TicketSearch(
+                    Result    => 'ARRAY',
+                    SortBy    => $Self->{SortBy},
+                    OrderBy   => $Self->{OrderBy},
+                    UserID    => $Self->{UserID},
+                    TicketID  => \@MergeArray,
+                    Limit     => $Start + 50,
+                );
+            }
+            else {
+                @ViewableTickets = @MergeArray;
+            }
+        }
 
         push @ViewableQueueIDs, 0;
 
@@ -1262,6 +1060,153 @@ sub Run {
             }
             else {
 
+                if ( $Filters{ $FilterColumn }->{Search}->{Fulltext} ) {
+                    $Filters{All}->{Search}->{ContentSearch}      = 'OR';
+                    $Filters{Unlocked}->{Search}->{ContentSearch} = 'OR';
+
+                    for (qw(From To Cc Subject Body)) {
+                        $Filters{All}->{Search}->{$_} =
+                            $Filters{ $FilterColumn }->{Search}->{Fulltext};
+                        $Filters{Unlocked}->{Search}->{$_} =
+                            $Filters{ $FilterColumn }->{Search}->{Fulltext};
+                    }
+
+                    my @CountTickets = $TicketObject->TicketSearch(
+                        %{ $Filters{ $FilterColumn }->{Search} },
+                        %ColumnFilter,
+                        Result => 'ARRAY',
+                    );
+                    my @CountTicketIDsDF = ();
+
+                    # search tickets with TicketNumber
+                    # (we have to do this here, because TicketSearch concatenates TN and Title with AND condition)
+                    # clear additional parameters
+                    for (qw(From To Cc Subject Body)) {
+                        delete $Filters{ $FilterColumn }->{Search}->{$_};
+                    }
+
+                    my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
+                    my $FulltextSearchParam = $Filters{ $FilterColumn }->{Search}->{Fulltext};
+                    $FulltextSearchParam =~ s/$TicketHook//g;
+                    $Filters{ $FilterColumn }->{Search}->{TicketNumber} = $FulltextSearchParam;
+
+                    my @CountTicketIDsTN = $TicketObject->TicketSearch(
+                        %{ $Filters{ $FilterColumn }->{Search} },
+                        %ColumnFilter,
+                        Result => 'ARRAY',
+                    );
+
+                    # search tickets with Title
+                    delete $Filters{ $FilterColumn }->{Search}->{TicketNumber};
+                    $Filters{ $FilterColumn }->{Search}->{Title} = $Filters{ $FilterColumn }->{Search}->{Fulltext};
+                    my @CountTicketIDsTitle = $TicketObject->TicketSearch(
+                        %{ $Filters{ $FilterColumn }->{Search} },
+                        %ColumnFilter,
+                        Result => 'ARRAY',
+                    );
+
+                    # search tickets with remarks (TicketNotes)
+                    delete $Filters{ $FilterColumn }->{Search}->{Title};
+                    $Filters{ $FilterColumn }->{Search}->{TicketNotes} = $Filters{ $FilterColumn }->{Search}->{Fulltext};
+                    my @CountTicketIDsTicketNotes = $TicketObject->TicketSearch(
+                        %{ $Filters{ $FilterColumn }->{Search} },
+                        %ColumnFilter,
+                        Result => 'ARRAY',
+                    );
+                    delete $Filters{ $FilterColumn }->{Search}->{TicketNotes};
+
+                    # search ticket with DF if configured
+                    if ( $AgentTicketSearchConfig->{FulltextSearchInDynamicFields} ) {
+
+                        # prepare fulltext serach in DFs
+                        DYNAMICFIELDFULLTEXT:
+                        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+                            next DYNAMICFIELDFULLTEXT
+                                if !(
+                                        $AgentTicketSearchConfig->{FulltextSearchInDynamicFields}
+                                        ->{ $DynamicFieldConfig->{Name} }
+                                );
+                            next DYNAMICFIELDFULLTEXT if !IsHashRefWithData($DynamicFieldConfig);
+
+                            my %DynamicFieldSearchParameters;
+
+                            # get search field preferences
+                            my $SearchFieldPreferences = $DynamicFieldBackendObject->SearchFieldPreferences(
+                                DynamicFieldConfig => $DynamicFieldConfig,
+                            );
+
+                            next DYNAMICFIELDFULLTEXT if !IsArrayRefWithData($SearchFieldPreferences);
+
+                            PREFERENCEFULLTEXT:
+                            for my $Preference ( @{$SearchFieldPreferences} ) {
+
+                                # extract the dynamic field value from the profile
+                                my $SearchParameter = $DynamicFieldBackendObject->SearchFieldParameterBuild(
+                                    DynamicFieldConfig => $DynamicFieldConfig,
+                                    Profile            => {
+                                        "Search_DynamicField_$DynamicFieldConfig->{Name}" => '*'
+                                            . $Filters{ $FilterColumn }->{Search}->{Fulltext} . '*',
+                                    },
+                                    LayoutObject => $LayoutObject,
+                                    Type         => $Preference->{Type},
+                                );
+
+                                # set search parameter
+                                if ( defined $SearchParameter ) {
+                                    $DynamicFieldSearchParameters{ 'DynamicField_'
+                                            . $DynamicFieldConfig->{Name} }
+                                        = $SearchParameter->{Parameter};
+                                }
+                            }
+
+                            # search tickets
+                            my @CountTicketIDsThisDF = $TicketObject->TicketSearch(
+                                Result          => 'ARRAY',
+                                SortBy          => $Self->{SortBy},
+                                OrderBy         => $Self->{OrderBy},
+                                UserID          => $Self->{UserID},
+                                ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
+                                %DynamicFieldSearchParameters,
+                            );
+
+                            if (@CountTicketIDsThisDF) {
+
+                                # join arrays
+                                @CountTicketIDsDF = (
+                                    @CountTicketIDsDF,
+                                    @CountTicketIDsThisDF,
+                                );
+                            }
+                        }
+                    }
+
+                    # merge arrays
+                    my @MergeArray;
+                    push(
+                        @MergeArray,
+                        @CountTickets,
+                        @CountTicketIDsTitle,
+                        @CountTicketIDsTicketNotes,
+                        @CountTicketIDsTN,
+                        @CountTicketIDsDF
+                    );
+
+                    if ( scalar(@MergeArray) > 1 ) {
+                        # sort merged tickets
+                        @CountTickets = $TicketObject->TicketSearch(
+                            Result    => 'ARRAY',
+                            SortBy    => $Self->{SortBy},
+                            OrderBy   => $Self->{OrderBy},
+                            UserID    => $Self->{UserID},
+                            TicketID  => \@MergeArray,
+                        );
+                    }
+                    else {
+                        @CountTickets = @MergeArray;
+                    }
+                    $Count = scalar( @CountTickets ) || 0;
+                }
+                else {
                 # EO KIX4OTRS-capeIT
                 $Count = $TicketObject->TicketSearch(
                     %{ $Filters{$FilterColumn}->{Search} },
@@ -1270,6 +1215,7 @@ sub Run {
                 );
 
                 # KIX4OTRS-capeIT
+                }
             }
 
             # EO KIX4OTRS-capeIT
@@ -1294,7 +1240,7 @@ sub Run {
         next COLUMNNAME if $GetColumnFilter{$ColumnName} eq '';
         $ColumnFilterLink
             .= ';' . $LayoutObject->Ascii2Html( Text => 'ColumnFilter' . $ColumnName )
-            . '=' . $LayoutObject->Ascii2Html( Text => $GetColumnFilter{$ColumnName} )
+            . '=' . $LayoutObject->Ascii2Html( Text => $GetColumnFilter{$ColumnName} );
     }
 
     my $SubQueueLink = '';
@@ -1465,6 +1411,10 @@ sub BuildQueueView {
     );
 
     # KIX4OTRS-capeIT
+    my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
+    my $Config                  = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
+    my $AgentTicketSearchConfig = $ConfigObject->Get("Ticket::Frontend::AgentTicketSearch");
+
     # build individual queue views (search profiles and virtual queues)
     my $SearchProfileObject = $Kernel::OM->Get('Kernel::System::SearchProfile');
     my %Profiles            = $SearchProfileObject->SearchProfileList(
@@ -1491,516 +1441,96 @@ sub BuildQueueView {
                 UserLogin => $SearchProfileUser || $Self->{UserLogin},
             );
 
-            # get create time settings
-            if ( !$SearchProfileData{ArticleTimeSearchType} ) {
+            my %TimeMap = (
+                ArticleCreate    => 'ArticleTime',
+                TicketCreate     => 'Time',
+                TicketChange     => 'ChangeTime',
+                TicketLastChange => 'LastChangeTime',
+                TicketClose      => 'CloseTime',
+                TicketEscalation => 'EscalationTime',
+                TicketPending    => 'PendingTime',
+            );
 
-                # do nothing with time stuff
-            }
-            elsif ( $SearchProfileData{ArticleTimeSearchType} eq 'TimeSlot' ) {
-                for my $Key (qw(Month Day)) {
-                    $SearchProfileData{"ArticleCreateTimeStart$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"ArticleCreateTimeStart$Key"} );
-                    $SearchProfileData{"ArticleCreateTimeStop$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"ArticleCreateTimeStop$Key"} );
-                }
-                if (
-                    $SearchProfileData{ArticleCreateTimeStartDay}
-                    && $SearchProfileData{ArticleCreateTimeStartMonth}
-                    && $SearchProfileData{ArticleCreateTimeStartYear}
-                    )
-                {
-                    $SearchProfileData{ArticleCreateTimeNewerDate}
-                        = $SearchProfileData{ArticleCreateTimeStartYear} . '-'
-                        . $SearchProfileData{ArticleCreateTimeStartMonth} . '-'
-                        . $SearchProfileData{ArticleCreateTimeStartDay}
-                        . ' 00:00:00';
-                }
-                if (
-                    $SearchProfileData{ArticleCreateTimeStopDay}
-                    && $SearchProfileData{ArticleCreateTimeStopMonth}
-                    && $SearchProfileData{ArticleCreateTimeStopYear}
-                    )
-                {
-                    $SearchProfileData{ArticleCreateTimeOlderDate}
-                        = $SearchProfileData{ArticleCreateTimeStopYear} . '-'
-                        . $SearchProfileData{ArticleCreateTimeStopMonth} . '-'
-                        . $SearchProfileData{ArticleCreateTimeStopDay}
-                        . ' 23:59:59';
-                }
-            }
-            elsif ( $SearchProfileData{ArticleTimeSearchType} eq 'TimePoint' ) {
-                if (
-                    $SearchProfileData{ArticleCreateTimePoint}
-                    && $SearchProfileData{ArticleCreateTimePointStart}
-                    && $SearchProfileData{ArticleCreateTimePointFormat}
-                    )
-                {
-                    my $Time = 0;
-                    if ( $SearchProfileData{ArticleCreateTimePointFormat} eq 'minute' ) {
-                        $Time = $SearchProfileData{ArticleCreateTimePoint};
-                    }
-                    elsif ( $SearchProfileData{ArticleCreateTimePointFormat} eq 'hour' ) {
-                        $Time = $SearchProfileData{ArticleCreateTimePoint} * 60;
-                    }
-                    elsif ( $SearchProfileData{ArticleCreateTimePointFormat} eq 'day' ) {
-                        $Time = $SearchProfileData{ArticleCreateTimePoint} * 60 * 24;
-                    }
-                    elsif ( $SearchProfileData{ArticleCreateTimePointFormat} eq 'week' ) {
-                        $Time = $SearchProfileData{ArticleCreateTimePoint} * 60 * 24 * 7;
-                    }
-                    elsif ( $SearchProfileData{ArticleCreateTimePointFormat} eq 'month' ) {
-                        $Time = $SearchProfileData{ArticleCreateTimePoint} * 60 * 24 * 30;
-                    }
-                    elsif ( $SearchProfileData{ArticleCreateTimePointFormat} eq 'year' ) {
-                        $Time = $SearchProfileData{ArticleCreateTimePoint} * 60 * 24 * 365;
-                    }
-                    if ( $SearchProfileData{ArticleCreateTimePointStart} eq 'Before' ) {
-                        $SearchProfileData{ArticleCreateTimeOlderMinutes} = $Time;
-                    }
-                    else {
-                        $SearchProfileData{ArticleCreateTimeNewerMinutes} = $Time;
-                    }
-                }
-            }
+            for my $TimeType ( sort keys %TimeMap ) {
 
-            # get create time settings
-            if ( !$SearchProfileData{TimeSearchType} ) {
+                # get create time settings
+                if ( !$SearchProfileData{ $TimeMap{$TimeType} . 'SearchType' } ) {
 
-                # do nothing with time stuff
-            }
-            elsif ( $SearchProfileData{TimeSearchType} eq 'TimeSlot' ) {
-                for my $Key (qw(Month Day)) {
-                    $SearchProfileData{"TicketCreateTimeStart$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketCreateTimeStart$Key"} );
-                    $SearchProfileData{"TicketCreateTimeStop$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketCreateTimeStop$Key"} );
+                    # do nothing with time stuff
                 }
-                if (
-                    $SearchProfileData{TicketCreateTimeStartDay}
-                    && $SearchProfileData{TicketCreateTimeStartMonth}
-                    && $SearchProfileData{TicketCreateTimeStartYear}
-                    )
-                {
-                    $SearchProfileData{TicketCreateTimeNewerDate}
-                        = $SearchProfileData{TicketCreateTimeStartYear} . '-'
-                        . $SearchProfileData{TicketCreateTimeStartMonth} . '-'
-                        . $SearchProfileData{TicketCreateTimeStartDay}
-                        . ' 00:00:00';
+                elsif ( $SearchProfileData{ $TimeMap{$TimeType} . 'SearchType' } eq 'TimeSlot' ) {
+                    for my $Key (qw(Month Day)) {
+                        $SearchProfileData{ $TimeType . 'TimeStart' . $Key }
+                            = sprintf( "%02d", $SearchProfileData{ $TimeType . 'TimeStart' . $Key } );
+                        $SearchProfileData{ $TimeType . 'TimeStop' . $Key }
+                            = sprintf( "%02d", $SearchProfileData{ $TimeType . 'TimeStop' . $Key } );
+                    }
+                    if (
+                        $SearchProfileData{ $TimeType . 'TimeStartDay' }
+                        && $SearchProfileData{ $TimeType . 'TimeStartMonth' }
+                        && $SearchProfileData{ $TimeType . 'TimeStartYear' }
+                        )
+                    {
+                        $SearchProfileData{ $TimeType . 'TimeNewerDate' } = $SearchProfileData{ $TimeType . 'TimeStartYear' } . '-'
+                            . $SearchProfileData{ $TimeType . 'TimeStartMonth' } . '-'
+                            . $SearchProfileData{ $TimeType . 'TimeStartDay' }
+                            . ' 00:00:00';
+                    }
+                    if (
+                        $SearchProfileData{ $TimeType . 'TimeStopDay' }
+                        && $SearchProfileData{ $TimeType . 'TimeStopMonth' }
+                        && $SearchProfileData{ $TimeType . 'TimeStopYear' }
+                        )
+                    {
+                        $SearchProfileData{ $TimeType . 'TimeOlderDate' } = $SearchProfileData{ $TimeType . 'TimeStopYear' } . '-'
+                            . $SearchProfileData{ $TimeType . 'TimeStopMonth' } . '-'
+                            . $SearchProfileData{ $TimeType . 'TimeStopDay' }
+                            . ' 23:59:59';
+                    }
                 }
-                if (
-                    $SearchProfileData{TicketCreateTimeStopDay}
-                    && $SearchProfileData{TicketCreateTimeStopMonth}
-                    && $SearchProfileData{TicketCreateTimeStopYear}
-                    )
-                {
-                    $SearchProfileData{TicketCreateTimeOlderDate}
-                        = $SearchProfileData{TicketCreateTimeStopYear} . '-'
-                        . $SearchProfileData{TicketCreateTimeStopMonth} . '-'
-                        . $SearchProfileData{TicketCreateTimeStopDay}
-                        . ' 23:59:59';
-                }
-            }
+                elsif ( $SearchProfileData{ $TimeMap{$TimeType} . 'SearchType' } eq 'TimePoint' ) {
+                    if (
+                        $SearchProfileData{ $TimeType . 'TimePoint' }
+                        && $SearchProfileData{ $TimeType . 'TimePointStart' }
+                        && $SearchProfileData{ $TimeType . 'TimePointFormat' }
+                        )
+                    {
+                        my $Time = 0;
+                        if ( $SearchProfileData{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
+                            $Time = $SearchProfileData{ $TimeType . 'TimePoint' };
+                        }
+                        elsif ( $SearchProfileData{ $TimeType . 'TimePointFormat' } eq 'hour' ) {
+                            $Time = $SearchProfileData{ $TimeType . 'TimePoint' } * 60;
+                        }
+                        elsif ( $SearchProfileData{ $TimeType . 'TimePointFormat' } eq 'day' ) {
+                            $Time = $SearchProfileData{ $TimeType . 'TimePoint' } * 60 * 24;
+                        }
+                        elsif ( $SearchProfileData{ $TimeType . 'TimePointFormat' } eq 'week' ) {
+                            $Time = $SearchProfileData{ $TimeType . 'TimePoint' } * 60 * 24 * 7;
+                        }
+                        elsif ( $SearchProfileData{ $TimeType . 'TimePointFormat' } eq 'month' ) {
+                            $Time = $SearchProfileData{ $TimeType . 'TimePoint' } * 60 * 24 * 30;
+                        }
+                        elsif ( $SearchProfileData{ $TimeType . 'TimePointFormat' } eq 'year' ) {
+                            $Time = $SearchProfileData{ $TimeType . 'TimePoint' } * 60 * 24 * 365;
+                        }
+                        if ( $SearchProfileData{ $TimeType . 'TimePointStart' } eq 'Before' ) {
 
-            elsif ( $SearchProfileData{TimeSearchType} eq 'TimePoint' ) {
-                if (
-                    $SearchProfileData{TicketCreateTimePoint}
-                    && $SearchProfileData{TicketCreateTimePointStart}
-                    && $SearchProfileData{TicketCreateTimePointFormat}
-                    )
-                {
-                    my $Time = 0;
-                    if ( $SearchProfileData{TicketCreateTimePointFormat} eq 'minute' ) {
-                        $Time = $SearchProfileData{TicketCreateTimePoint};
-                    }
-                    elsif ( $SearchProfileData{TicketCreateTimePointFormat} eq 'hour' ) {
-                        $Time = $SearchProfileData{TicketCreateTimePoint} * 60;
-                    }
-                    elsif ( $SearchProfileData{TicketCreateTimePointFormat} eq 'day' ) {
-                        $Time = $SearchProfileData{TicketCreateTimePoint} * 60 * 24;
-                    }
-                    elsif ( $SearchProfileData{TicketCreateTimePointFormat} eq 'week' ) {
-                        $Time = $SearchProfileData{TicketCreateTimePoint} * 60 * 24 * 7;
-                    }
-                    elsif ( $SearchProfileData{TicketCreateTimePointFormat} eq 'month' ) {
-                        $Time = $SearchProfileData{TicketCreateTimePoint} * 60 * 24 * 30;
-                    }
-                    elsif ( $SearchProfileData{TicketCreateTimePointFormat} eq 'year' ) {
-                        $Time = $SearchProfileData{TicketCreateTimePoint} * 60 * 24 * 365;
-                    }
-                    if ( $SearchProfileData{TicketCreateTimePointStart} eq 'Before' ) {
-                        $SearchProfileData{TicketCreateTimeOlderMinutes} = $Time;
-                    }
-                    else {
-                        $SearchProfileData{TicketCreateTimeNewerMinutes} = $Time;
-                    }
-                }
-            }
+                            # more than ... ago
+                            $SearchProfileData{ $TimeType . 'TimeOlderMinutes' } = $Time;
+                        }
+                        elsif ( $SearchProfileData{ $TimeType . 'TimePointStart' } eq 'Next' ) {
 
-            # get change time settings
-            if ( !$SearchProfileData{ChangeTimeSearchType} ) {
+                            # within next
+                            $SearchProfileData{ $TimeType . 'TimeNewerMinutes' } = 0;
+                            $SearchProfileData{ $TimeType . 'TimeOlderMinutes' } = -$Time;
+                        }
+                        else {
 
-                # do nothing on time stuff
-            }
-            elsif ( $SearchProfileData{ChangeTimeSearchType} eq 'TimeSlot' ) {
-                for my $Key (qw(Month Day)) {
-                    $SearchProfileData{"TicketChangeTimeStart$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketChangeTimeStart$Key"} );
-                    $SearchProfileData{"TicketChangeTimeStop$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketChangeTimeStop$Key"} );
-                }
-                if (
-                    $SearchProfileData{TicketChangeTimeStartDay}
-                    && $SearchProfileData{TicketChangeTimeStartMonth}
-                    && $SearchProfileData{TicketChangeTimeStartYear}
-                    )
-                {
-                    $SearchProfileData{TicketChangeTimeNewerDate}
-                        = $SearchProfileData{TicketChangeTimeStartYear} . '-'
-                        . $SearchProfileData{TicketChangeTimeStartMonth} . '-'
-                        . $SearchProfileData{TicketChangeTimeStartDay}
-                        . ' 00:00:00';
-                }
-                if (
-                    $SearchProfileData{TicketChangeTimeStopDay}
-                    && $SearchProfileData{TicketChangeTimeStopMonth}
-                    && $SearchProfileData{TicketChangeTimeStopYear}
-                    )
-                {
-                    $SearchProfileData{TicketChangeTimeOlderDate}
-                        = $SearchProfileData{TicketChangeTimeStopYear} . '-'
-                        . $SearchProfileData{TicketChangeTimeStopMonth} . '-'
-                        . $SearchProfileData{TicketChangeTimeStopDay}
-                        . ' 23:59:59';
-                }
-            }
-            elsif ( $SearchProfileData{ChangeTimeSearchType} eq 'TimePoint' ) {
-                if (
-                    $SearchProfileData{TicketChangeTimePoint}
-                    && $SearchProfileData{TicketChangeTimePointStart}
-                    && $SearchProfileData{TicketChangeTimePointFormat}
-                    )
-                {
-                    my $Time = 0;
-                    if ( $SearchProfileData{TicketChangeTimePointFormat} eq 'minute' ) {
-                        $Time = $SearchProfileData{TicketChangeTimePoint};
-                    }
-                    elsif ( $SearchProfileData{TicketChangeTimePointFormat} eq 'hour' ) {
-                        $Time = $SearchProfileData{TicketChangeTimePoint} * 60;
-                    }
-                    elsif ( $SearchProfileData{TicketChangeTimePointFormat} eq 'day' ) {
-                        $Time = $SearchProfileData{TicketChangeTimePoint} * 60 * 24;
-                    }
-                    elsif ( $SearchProfileData{TicketChangeTimePointFormat} eq 'week' ) {
-                        $Time = $SearchProfileData{TicketChangeTimePoint} * 60 * 24 * 7;
-                    }
-                    elsif ( $SearchProfileData{TicketChangeTimePointFormat} eq 'month' ) {
-                        $Time = $SearchProfileData{TicketChangeTimePoint} * 60 * 24 * 30;
-                    }
-                    elsif ( $SearchProfileData{TicketChangeTimePointFormat} eq 'year' ) {
-                        $Time = $SearchProfileData{TicketChangeTimePoint} * 60 * 24 * 365;
-                    }
-                    if ( $SearchProfileData{TicketChangeTimePointStart} eq 'Before' ) {
-                        $SearchProfileData{TicketChangeTimeOlderMinutes} = $Time;
-                    }
-                    else {
-                        $SearchProfileData{TicketChangeTimeNewerMinutes} = $Time;
-                    }
-                }
-            }
-
-            # get close time settings
-            if ( !$SearchProfileData{CloseTimeSearchType} ) {
-
-                # do nothing on time stuff
-            }
-            elsif ( $SearchProfileData{CloseTimeSearchType} eq 'TimeSlot' ) {
-                for my $Key (qw(Month Day)) {
-                    $SearchProfileData{"TicketCloseTimeStart$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketCloseTimeStart$Key"} );
-                    $SearchProfileData{"TicketCloseTimeStop$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketCloseTimeStop$Key"} );
-                }
-                if (
-                    $SearchProfileData{TicketCloseTimeStartDay}
-                    && $SearchProfileData{TicketCloseTimeStartMonth}
-                    && $SearchProfileData{TicketCloseTimeStartYear}
-                    )
-                {
-                    $SearchProfileData{TicketCloseTimeNewerDate}
-                        = $SearchProfileData{TicketCloseTimeStartYear} . '-'
-                        . $SearchProfileData{TicketCloseTimeStartMonth} . '-'
-                        . $SearchProfileData{TicketCloseTimeStartDay}
-                        . ' 00:00:00';
-                }
-                if (
-                    $SearchProfileData{TicketCloseTimeStopDay}
-                    && $SearchProfileData{TicketCloseTimeStopMonth}
-                    && $SearchProfileData{TicketCloseTimeStopYear}
-                    )
-                {
-                    $SearchProfileData{TicketCloseTimeOlderDate}
-                        = $SearchProfileData{TicketCloseTimeStopYear} . '-'
-                        . $SearchProfileData{TicketCloseTimeStopMonth} . '-'
-                        . $SearchProfileData{TicketCloseTimeStopDay}
-                        . ' 23:59:59';
-                }
-            }
-            elsif ( $SearchProfileData{CloseTimeSearchType} eq 'TimePoint' ) {
-                if (
-                    $SearchProfileData{TicketCloseTimePoint}
-                    && $SearchProfileData{TicketCloseTimePointStart}
-                    && $SearchProfileData{TicketCloseTimePointFormat}
-                    )
-                {
-                    my $Time = 0;
-                    if ( $SearchProfileData{TicketCloseTimePointFormat} eq 'minute' ) {
-                        $Time = $SearchProfileData{TicketCloseTimePoint};
-                    }
-                    elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'hour' ) {
-                        $Time = $SearchProfileData{TicketCloseTimePoint} * 60;
-                    }
-                    elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'day' ) {
-                        $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24;
-                    }
-                    elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'week' ) {
-                        $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24 * 7;
-                    }
-                    elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'month' ) {
-                        $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24 * 30;
-                    }
-                    elsif ( $SearchProfileData{TicketCloseTimePointFormat} eq 'year' ) {
-                        $Time = $SearchProfileData{TicketCloseTimePoint} * 60 * 24 * 365;
-                    }
-                    if ( $SearchProfileData{TicketCloseTimePointStart} eq 'Before' ) {
-                        $SearchProfileData{TicketCloseTimeOlderMinutes} = $Time;
-                    }
-                    else {
-                        $SearchProfileData{TicketCloseTimeNewerMinutes} = $Time;
-                    }
-                }
-            }
-
-            # KIX4OTRS-capeIT
-            # get last change time settings
-            if ( !$SearchProfileData{LastChangeTimeSearchType} ) {
-
-                # do nothing on time stuff
-            }
-            elsif ( $SearchProfileData{LastChangeTimeSearchType} eq 'TimeSlot' ) {
-                for my $Key (qw(Month Day)) {
-                    $SearchProfileData{"TicketLastChangeTimeStart$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketLastChangeTimeStart$Key"} );
-                    $SearchProfileData{"TicketLastChangeTimeStop$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketLastChangeTimeStop$Key"} );
-                }
-                if (
-                    $SearchProfileData{TicketLastChangeTimeStartDay}
-                    && $SearchProfileData{TicketLastChangeTimeStartMonth}
-                    && $SearchProfileData{TicketLastChangeTimeStartYear}
-                    )
-                {
-                    $SearchProfileData{TicketLastChangeTimeNewerDate}
-                        = $SearchProfileData{TicketLastChangeTimeStartYear} . '-'
-                        . $SearchProfileData{TicketLastChangeTimeStartMonth} . '-'
-                        . $SearchProfileData{TicketLastChangeTimeStartDay}
-                        . ' 00:00:00';
-                }
-                if (
-                    $SearchProfileData{TicketLastChangeTimeStopDay}
-                    && $SearchProfileData{TicketLastChangeTimeStopMonth}
-                    && $SearchProfileData{TicketLastChangeTimeStopYear}
-                    )
-                {
-                    $SearchProfileData{TicketLastChangeTimeOlderDate}
-                        = $SearchProfileData{TicketLastChangeTimeStopYear} . '-'
-                        . $SearchProfileData{TicketLastChangeTimeStopMonth} . '-'
-                        . $SearchProfileData{TicketLastChangeTimeStopDay}
-                        . ' 23:59:59';
-                }
-            }
-            elsif ( $SearchProfileData{LastChangeTimeSearchType} eq 'TimePoint' ) {
-                if (
-                    $SearchProfileData{TicketLastChangeTimePoint}
-                    && $SearchProfileData{TicketLastChangeTimePointStart}
-                    && $SearchProfileData{TicketLastChangeTimePointFormat}
-                    )
-                {
-                    my $Time = 0;
-                    if ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'minute' ) {
-                        $Time = $SearchProfileData{TicketLastChangeTimePoint};
-                    }
-                    elsif ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'hour' ) {
-                        $Time = $SearchProfileData{TicketLastChangeTimePoint} * 60;
-                    }
-                    elsif ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'day' ) {
-                        $Time = $SearchProfileData{TicketLastChangeTimePoint} * 60 * 24;
-                    }
-                    elsif ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'week' ) {
-                        $Time = $SearchProfileData{TicketLastChangeTimePoint} * 60 * 24 * 7;
-                    }
-                    elsif ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'month' ) {
-                        $Time = $SearchProfileData{TicketLastChangeTimePoint} * 60 * 24 * 30;
-                    }
-                    elsif ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'year' ) {
-                        $Time = $SearchProfileData{TicketLastChangeTimePoint} * 60 * 24 * 365;
-                    }
-                    if ( $SearchProfileData{TicketLastChangeTimePointStart} eq 'Before' ) {
-                        $SearchProfileData{TicketLastChangeTimeOlderMinutes} = $Time;
-                    }
-                    else {
-                        $SearchProfileData{TicketLastChangeTimeNewerMinutes} = $Time;
-                    }
-                }
-            }
-
-            # get pending time settings
-            if ( !$SearchProfileData{PendingTimeSearchType} ) {
-
-                # do nothing on time stuff
-            }
-            elsif ( $SearchProfileData{PendingTimeSearchType} eq 'TimeSlot' ) {
-                for (qw(Month Day)) {
-                    $SearchProfileData{"TicketPendingTimeStart$_"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketPendingTimeStart$_"} );
-                }
-                for (qw(Month Day)) {
-                    $SearchProfileData{"TicketPendingTimeStop$_"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketPendingTimeStop$_"} );
-                }
-                if (
-                    $SearchProfileData{TicketPendingTimeStartDay}
-                    && $SearchProfileData{TicketPendingTimeStartMonth}
-                    && $SearchProfileData{TicketPendingTimeStartYear}
-                    )
-                {
-                    $SearchProfileData{TicketPendingTimeNewerDate}
-                        = $SearchProfileData{TicketPendingTimeStartYear} . '-'
-                        . $SearchProfileData{TicketPendingTimeStartMonth} . '-'
-                        . $SearchProfileData{TicketPendingTimeStartDay}
-                        . ' 00:00:00';
-                }
-                if (
-                    $SearchProfileData{TicketPendingTimeStopDay}
-                    && $SearchProfileData{TicketPendingTimeStopMonth}
-                    && $SearchProfileData{TicketPendingTimeStopYear}
-                    )
-                {
-                    $SearchProfileData{TicketPendingTimeOlderDate}
-                        = $SearchProfileData{TicketPendingTimeStopYear} . '-'
-                        . $SearchProfileData{TicketPendingTimeStopMonth} . '-'
-                        . $SearchProfileData{TicketPendingTimeStopDay}
-                        . ' 23:59:59';
-                }
-            }
-            elsif ( $SearchProfileData{PendingTimeSearchType} eq 'TimePoint' ) {
-                if (
-                    $SearchProfileData{TicketPendingTimePoint}
-                    && $SearchProfileData{TicketPendingTimePointStart}
-                    && $SearchProfileData{TicketPendingTimePointFormat}
-                    )
-                {
-                    my $Time = 0;
-                    if ( $SearchProfileData{TicketPendingTimePointFormat} eq 'minute' ) {
-                        $Time = $SearchProfileData{TicketPendingTimePoint};
-                    }
-                    elsif ( $SearchProfileData{TicketPendingTimePointFormat} eq 'hour' ) {
-                        $Time = $SearchProfileData{TicketPendingTimePoint} * 60;
-                    }
-                    elsif ( $SearchProfileData{TicketPendingTimePointFormat} eq 'day' ) {
-                        $Time = $SearchProfileData{TicketPendingTimePoint} * 60 * 24;
-                    }
-                    elsif ( $SearchProfileData{TicketPendingTimePointFormat} eq 'week' ) {
-                        $Time = $SearchProfileData{TicketPendingTimePoint} * 60 * 24 * 7;
-                    }
-                    elsif ( $SearchProfileData{TicketPendingTimePointFormat} eq 'month' ) {
-                        $Time = $SearchProfileData{TicketPendingTimePoint} * 60 * 24 * 30;
-                    }
-                    elsif ( $SearchProfileData{TicketPendingTimePointFormat} eq 'year' ) {
-                        $Time = $SearchProfileData{TicketPendingTimePoint} * 60 * 24 * 365;
-                    }
-                    if ( $SearchProfileData{TicketPendingTimePointStart} eq 'Before' ) {
-                        $SearchProfileData{TicketPendingTimeOlderMinutes} = $Time;
-                    }
-                    else {
-                        $SearchProfileData{TicketPendingTimeNewerMinutes} = $Time;
-                    }
-                }
-            }
-
-            # get escalation time settings
-            if ( !$SearchProfileData{EscalationTimeSearchType} ) {
-
-                # do nothing on time stuff
-            }
-            elsif ( $SearchProfileData{EscalationTimeSearchType} eq 'TimeSlot' ) {
-                for my $Key (qw(Month Day)) {
-                    $SearchProfileData{"TicketEscalationTimeStart$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketEscalationTimeStart$Key"} );
-                    $SearchProfileData{"TicketEscalationTimeStop$Key"}
-                        = sprintf( "%02d", $SearchProfileData{"TicketEscalationTimeStop$Key"} );
-                }
-                if (
-                    $SearchProfileData{TicketEscalationTimeStartDay}
-                    && $SearchProfileData{TicketEscalationTimeStartMonth}
-                    && $SearchProfileData{TicketEscalationTimeStartYear}
-                    )
-                {
-                    $SearchProfileData{TicketEscalationTimeNewerDate}
-                        = $SearchProfileData{TicketEscalationTimeStartYear} . '-'
-                        . $SearchProfileData{TicketEscalationTimeStartMonth} . '-'
-                        . $SearchProfileData{TicketEscalationTimeStartDay}
-                        . ' 00:00:00';
-                }
-                if (
-                    $SearchProfileData{TicketEscalationTimeStopDay}
-                    && $SearchProfileData{TicketEscalationTimeStopMonth}
-                    && $SearchProfileData{TicketEscalationTimeStopYear}
-                    )
-                {
-                    $SearchProfileData{TicketEscalationTimeOlderDate}
-                        = $SearchProfileData{TicketEscalationTimeStopYear} . '-'
-                        . $SearchProfileData{TicketEscalationTimeStopMonth} . '-'
-                        . $SearchProfileData{TicketEscalationTimeStopDay}
-                        . ' 23:59:59';
-                }
-            }
-            elsif ( $SearchProfileData{EscalationTimeSearchType} eq 'TimePoint' ) {
-                if (
-                    $SearchProfileData{TicketEscalationTimePoint}
-                    && $SearchProfileData{TicketEscalationTimePointStart}
-                    && $SearchProfileData{TicketEscalationTimePointFormat}
-                    )
-                {
-                    my $Time = 0;
-                    if ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'minute' ) {
-                        $Time = $SearchProfileData{TicketEscalationTimePoint};
-                    }
-                    elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'hour' ) {
-                        $Time = $SearchProfileData{TicketEscalationTimePoint} * 60;
-                    }
-                    elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'day' ) {
-                        $Time = $SearchProfileData{TicketEscalationTimePoint} * 60 * 24;
-                    }
-                    elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'week' ) {
-                        $Time = $SearchProfileData{TicketEscalationTimePoint} * 60 * 24 * 7;
-                    }
-                    elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'month' ) {
-                        $Time = $SearchProfileData{TicketEscalationTimePoint} * 60 * 24 * 30;
-                    }
-                    elsif ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'year' ) {
-                        $Time = $SearchProfileData{TicketEscalationTimePoint} * 60 * 24 * 365;
-                    }
-
-                    if ( $SearchProfileData{TicketEscalationTimePointStart} eq 'Before' ) {
-                        $SearchProfileData{TicketEscalationTimeOlderMinutes} = $Time;
-                    }
-                    elsif ( $SearchProfileData{TicketEscalationTimePointStart} eq 'Next' ) {
-                        $SearchProfileData{TicketEscalationTimeOlderMinutes} = (-1) * $Time;
-                        $SearchProfileData{TicketEscalationTimeNewerMinutes} = 0;
-                    }
-                    else {
-                        $SearchProfileData{TicketEscalationTimeOlderMinutes} = 0;
-                        $SearchProfileData{TicketEscalationTimeNewerMinutes} = $Time;
+                            # within last ...
+                            $SearchProfileData{ $TimeType . 'TimeOlderMinutes' } = 0;
+                            $SearchProfileData{ $TimeType . 'TimeNewerMinutes' } = $Time;
+                        }
                     }
                 }
             }
@@ -2085,25 +1615,313 @@ sub BuildQueueView {
                 $SearchProfileData{ArchiveFlags} = ['y'];
             }
 
-            # do ticket search to get ticket count
-            $Hash{Total} = $TicketObject->TicketSearch(
+            # get total ticket count
+            my @ViewableTicketIDs = $TicketObject->TicketSearch(
+                %SearchProfileData,
+                UserID          => $Self->{UserID},
+                ConditionInline => 1,
+                FullTextIndex   => 1,
+                Result          => 'ARRAY',
+            );
 
-                # StateIDs => $Self->{ViewableStateIDs},
-                # LockIDs  => \@ViewableLockIDs,
+            if ( $SearchProfileData{Fulltext} ) {
+                my @ViewableTicketIDsDF = ();
+
+                # search tickets with TicketNumber
+                # (we have to do this here, because TicketSearch concatenates TN and Title with AND condition)
+                # clear additional parameters
+                for (qw(From To Cc Subject Body)) {
+                    delete $SearchProfileData{$_};
+                }
+
+                my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
+                my $FulltextSearchParam = $SearchProfileData{Fulltext};
+                $FulltextSearchParam =~ s/$TicketHook//g;
+                $SearchProfileData{TicketNumber} = $FulltextSearchParam;
+
+                my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
+                    %SearchProfileData,
+                    UserID          => $Self->{UserID},
+                    ConditionInline => 1,
+                    FullTextIndex   => 1,
+                    Result          => 'ARRAY',
+                );
+
+                # search tickets with Title
+                delete $SearchProfileData{TicketNumber};
+                $SearchProfileData{Title} = $SearchProfileData{Fulltext};
+                my @ViewableTicketIDsTitle = $TicketObject->TicketSearch(
+                    %SearchProfileData,
+                    UserID          => $Self->{UserID},
+                    ConditionInline => 1,
+                    FullTextIndex   => 1,
+                    Result          => 'ARRAY',
+                );
+
+                # search tickets with remarks (TicketNotes)
+                delete $SearchProfileData{Title};
+                $SearchProfileData{TicketNotes} = $SearchProfileData{Fulltext};
+                my @ViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
+                    %SearchProfileData,
+                    UserID          => $Self->{UserID},
+                    ConditionInline => 1,
+                    FullTextIndex   => 1,
+                    Result          => 'ARRAY',
+                );
+                delete $SearchProfileData{TicketNotes};
+
+                # search ticket with DF if configured
+                if ( $AgentTicketSearchConfig->{FulltextSearchInDynamicFields} ) {
+
+                    # prepare fulltext serach in DFs
+                    DYNAMICFIELDFULLTEXT:
+                    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+                        next DYNAMICFIELDFULLTEXT
+                            if !(
+                                    $AgentTicketSearchConfig->{FulltextSearchInDynamicFields}
+                                    ->{ $DynamicFieldConfig->{Name} }
+                            );
+                        next DYNAMICFIELDFULLTEXT if !IsHashRefWithData($DynamicFieldConfig);
+
+                        my %DynamicFieldSearchParameters;
+
+                        # get search field preferences
+                        my $SearchFieldPreferences = $DynamicFieldBackendObject->SearchFieldPreferences(
+                            DynamicFieldConfig => $DynamicFieldConfig,
+                        );
+
+                        next DYNAMICFIELDFULLTEXT if !IsArrayRefWithData($SearchFieldPreferences);
+
+                        PREFERENCEFULLTEXT:
+                        for my $Preference ( @{$SearchFieldPreferences} ) {
+
+                            # extract the dynamic field value from the profile
+                            my $SearchParameter = $DynamicFieldBackendObject->SearchFieldParameterBuild(
+                                DynamicFieldConfig => $DynamicFieldConfig,
+                                Profile            => {
+                                    "Search_DynamicField_$DynamicFieldConfig->{Name}" => '*'
+                                        . $SearchProfileData{Fulltext} . '*',
+                                },
+                                LayoutObject => $LayoutObject,
+                                Type         => $Preference->{Type},
+                            );
+
+                            # set search parameter
+                            if ( defined $SearchParameter ) {
+                                $DynamicFieldSearchParameters{ 'DynamicField_'
+                                        . $DynamicFieldConfig->{Name} }
+                                    = $SearchParameter->{Parameter};
+                            }
+                        }
+
+                        # search tickets
+                        my @ViewableTicketIDsThisDF = $TicketObject->TicketSearch(
+                            Result          => 'ARRAY',
+                            SortBy          => $Self->{SortBy},
+                            OrderBy         => $Self->{OrderBy},
+                            Limit           => $Self->{SearchLimit},
+                            UserID          => $Self->{UserID},
+                            ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
+                            %DynamicFieldSearchParameters,
+                        );
+
+                        if (@ViewableTicketIDsThisDF) {
+
+                            # join arrays
+                            @ViewableTicketIDsDF = (
+                                @ViewableTicketIDsDF,
+                                @ViewableTicketIDsThisDF,
+                            );
+                        }
+                    }
+                }
+
+                # merge arrays
+                my @MergeArray;
+                push(
+                    @MergeArray,
+                    @ViewableTicketIDs,
+                    @ViewableTicketIDsTitle,
+                    @ViewableTicketIDsTicketNotes,
+                    @ViewableTicketIDsTN,
+                    @ViewableTicketIDsDF
+                );
+
+                if ( scalar(@MergeArray) > 1 ) {
+                    # sort merged tickets
+                    @ViewableTicketIDs = $TicketObject->TicketSearch(
+                        Result    => 'ARRAY',
+                        SortBy    => $Self->{SortBy},
+                        OrderBy   => $Self->{OrderBy},
+                        UserID    => $Self->{UserID},
+                        TicketID  => \@MergeArray
+                    );
+                }
+                else {
+                    @ViewableTicketIDs = @MergeArray;
+                }
+            }
+            $Hash{Total} = scalar( @ViewableTicketIDs ) || 0;
+
+            # prepare fulltext search
+            if ( $SearchProfileData{Fulltext} ) {
+                $SearchProfileData{ContentSearch} = 'OR';
+                for (qw(From To Cc Subject Body)) {
+                    $SearchProfileData{$_} = $SearchProfileData{Fulltext};
+                }
+            }
+            # get ticket count
+            @ViewableTicketIDs = $TicketObject->TicketSearch(
                 %SearchProfileData,
+                LockIDs         => \@ViewableLockIDs,
                 UserID          => $Self->{UserID},
                 ConditionInline => 1,
                 FullTextIndex   => 1,
-                Result          => 'COUNT',
-            ) || 0;
-            $Hash{Count} = $TicketObject->TicketSearch(
-                LockIDs => \@ViewableLockIDs,
-                %SearchProfileData,
-                UserID          => $Self->{UserID},
-                ConditionInline => 1,
-                FullTextIndex   => 1,
-                Result          => 'COUNT',
-            ) || 0;
+                Result          => 'ARRAY',
+            );
+
+            if ( $SearchProfileData{Fulltext} ) {
+                my @ViewableTicketIDsDF = ();
+
+                # search tickets with TicketNumber
+                # (we have to do this here, because TicketSearch concatenates TN and Title with AND condition)
+                # clear additional parameters
+                for (qw(From To Cc Subject Body)) {
+                    delete $SearchProfileData{$_};
+                }
+
+                my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
+                my $FulltextSearchParam = $SearchProfileData{Fulltext};
+                $FulltextSearchParam =~ s/$TicketHook//g;
+                $SearchProfileData{TicketNumber} = $FulltextSearchParam;
+
+                my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
+                    %SearchProfileData,
+                    LockIDs         => \@ViewableLockIDs,
+                    UserID          => $Self->{UserID},
+                    ConditionInline => 1,
+                    FullTextIndex   => 1,
+                    Result          => 'ARRAY',
+                );
+
+                # search tickets with Title
+                delete $SearchProfileData{TicketNumber};
+                $SearchProfileData{Title} = $SearchProfileData{Fulltext};
+                my @ViewableTicketIDsTitle = $TicketObject->TicketSearch(
+                    %SearchProfileData,
+                    LockIDs         => \@ViewableLockIDs,
+                    UserID          => $Self->{UserID},
+                    ConditionInline => 1,
+                    FullTextIndex   => 1,
+                    Result          => 'ARRAY',
+                );
+
+                # search tickets with remarks (TicketNotes)
+                delete $SearchProfileData{Title};
+                $SearchProfileData{TicketNotes} = $SearchProfileData{Fulltext};
+                my @ViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
+                    %SearchProfileData,
+                    LockIDs         => \@ViewableLockIDs,
+                    UserID          => $Self->{UserID},
+                    ConditionInline => 1,
+                    FullTextIndex   => 1,
+                    Result          => 'ARRAY',
+                );
+                delete $SearchProfileData{TicketNotes};
+
+                # search ticket with DF if configured
+                if ( $AgentTicketSearchConfig->{FulltextSearchInDynamicFields} ) {
+
+                    # prepare fulltext serach in DFs
+                    DYNAMICFIELDFULLTEXT:
+                    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+                        next DYNAMICFIELDFULLTEXT
+                            if !(
+                                    $AgentTicketSearchConfig->{FulltextSearchInDynamicFields}
+                                    ->{ $DynamicFieldConfig->{Name} }
+                            );
+                        next DYNAMICFIELDFULLTEXT if !IsHashRefWithData($DynamicFieldConfig);
+
+                        my %DynamicFieldSearchParameters;
+
+                        # get search field preferences
+                        my $SearchFieldPreferences = $DynamicFieldBackendObject->SearchFieldPreferences(
+                            DynamicFieldConfig => $DynamicFieldConfig,
+                        );
+
+                        next DYNAMICFIELDFULLTEXT if !IsArrayRefWithData($SearchFieldPreferences);
+
+                        PREFERENCEFULLTEXT:
+                        for my $Preference ( @{$SearchFieldPreferences} ) {
+
+                            # extract the dynamic field value from the profile
+                            my $SearchParameter = $DynamicFieldBackendObject->SearchFieldParameterBuild(
+                                DynamicFieldConfig => $DynamicFieldConfig,
+                                Profile            => {
+                                    "Search_DynamicField_$DynamicFieldConfig->{Name}" => '*'
+                                        . $SearchProfileData{Fulltext} . '*',
+                                },
+                                LayoutObject => $LayoutObject,
+                                Type         => $Preference->{Type},
+                            );
+
+                            # set search parameter
+                            if ( defined $SearchParameter ) {
+                                $DynamicFieldSearchParameters{ 'DynamicField_'
+                                        . $DynamicFieldConfig->{Name} }
+                                    = $SearchParameter->{Parameter};
+                            }
+                        }
+
+                        # search tickets
+                        my @ViewableTicketIDsThisDF = $TicketObject->TicketSearch(
+                            Result          => 'ARRAY',
+                            LockIDs         => \@ViewableLockIDs,
+                            SortBy          => $Self->{SortBy},
+                            OrderBy         => $Self->{OrderBy},
+                            Limit           => $Self->{SearchLimit},
+                            UserID          => $Self->{UserID},
+                            ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
+                            %DynamicFieldSearchParameters,
+                        );
+
+                        if (@ViewableTicketIDsThisDF) {
+
+                            # join arrays
+                            @ViewableTicketIDsDF = (
+                                @ViewableTicketIDsDF,
+                                @ViewableTicketIDsThisDF,
+                            );
+                        }
+                    }
+                }
+
+                # merge arrays
+                my @MergeArray;
+                push(
+                    @MergeArray,
+                    @ViewableTicketIDs,
+                    @ViewableTicketIDsTitle,
+                    @ViewableTicketIDsTicketNotes,
+                    @ViewableTicketIDsTN,
+                    @ViewableTicketIDsDF
+                );
+
+                if ( scalar(@MergeArray) > 1 ) {
+                    # sort merged tickets
+                    @ViewableTicketIDs = $TicketObject->TicketSearch(
+                        Result    => 'ARRAY',
+                        SortBy    => $Self->{SortBy},
+                        OrderBy   => $Self->{OrderBy},
+                        UserID    => $Self->{UserID},
+                        TicketID  => \@MergeArray
+                    );
+                }
+                else {
+                    @ViewableTicketIDs = @MergeArray;
+                }
+            }
+            $Hash{Count} = scalar( @ViewableTicketIDs ) || 0;
 
             my $Encrypted            = Digest::MD5::md5_hex($Profiles{$SearchProfileName});
             $Hash{QueueID}           = 'SearchProfile_' . $Encrypted;
@@ -2121,9 +1939,6 @@ sub BuildQueueView {
             }
         }
     }
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $Config       = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     # show individual views
     if (
