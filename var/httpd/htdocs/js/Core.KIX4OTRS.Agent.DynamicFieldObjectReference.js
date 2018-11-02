@@ -69,7 +69,7 @@ Core.KIX4OTRS.Agent.DynamicFieldObjectReference = (function(TargetNS) {
                             FormData : Core.AJAX.SerializeForm($Element.closest('form')),
                             DynamicField : ElementID
                             },
-                        DynamicFieldName = ElementID.split("_")[1];
+                        DynamicFieldName = ElementID.split("_")[0] === "Search" ? ElementID.split("_")[2] : ElementID.split("_")[1];
 
                     // if an old ajax request is already running, stop the old request and start the new one
                     if ($Element.data('AutoCompleteXHR')) {
