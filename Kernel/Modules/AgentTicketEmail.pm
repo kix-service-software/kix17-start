@@ -546,6 +546,15 @@ sub Run {
                     }
                 }
             }
+
+            elsif ( $TemplateData{$Key}
+                    && $Key =~ /^QuickTicket/
+                    && $Key ne 'QuickTicketDynamicFieldHash'
+            ) {
+                my $Attribute = $Key;
+                $Attribute =~ s/^QuickTicket(.*)$/$1/gm;
+                $ACLCompatGetParam{$Attribute} = $TemplateData{$Key};
+            }
         }
         @MultipleCustomer       = @{ $TemplateData{MultipleCustomer} } if defined $TemplateData{MultipleCustomer} && ref $TemplateData{MultipleCustomer}  eq 'ARRAY';
         @MultipleCustomerCc     = @{ $TemplateData{MultipleCustomerCc} } if defined $TemplateData{MultipleCustomerCc} && ref $TemplateData{MultipleCustomerCc}  eq 'ARRAY';
