@@ -1254,6 +1254,7 @@ sub _ACLMigrateFrom33 {
     my $ACL = $Param{ACL};
 
     return $ACL if !ref $ACL->{ConfigChange};
+    return $ACL if !ref $ACL->{ConfigChange}->{Possible};
     return $ACL if !$ACL->{ConfigChange}->{Possible}->{Action};
     return $ACL if ref $ACL->{ConfigChange}->{Possible}->{Action} ne 'HASH';
 
