@@ -88,6 +88,9 @@ sub Run {
             {
                 my %PersonData = %{ $LinkListWithData->{Person}->{$LinkType}->{Source}->{$UserID} };
 
+                # check for UserID
+                next if (!$PersonData{UserID});
+
                 # option to inform involved persons
                 # build recipient selection
                 my $PersonRecipientTypeStrg = $LayoutObject->BuildSelection(
