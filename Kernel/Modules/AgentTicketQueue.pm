@@ -723,7 +723,7 @@ sub Run {
             my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
             my $FulltextSearchParam = $Filters{ $Filter }->{Search}->{Fulltext};
             $FulltextSearchParam =~ s/$TicketHook//g;
-            $Filters{ $Filter }->{Search}->{TicketNumber} = $FulltextSearchParam;
+            $Filters{ $Filter }->{Search}->{TicketNumber} = '*' . $FulltextSearchParam . '*';
 
             my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
                 %{ $Filters{ $Filter }->{Search} },
@@ -1088,7 +1088,7 @@ sub Run {
                     my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
                     my $FulltextSearchParam = $Filters{ $FilterColumn }->{Search}->{Fulltext};
                     $FulltextSearchParam =~ s/$TicketHook//g;
-                    $Filters{ $FilterColumn }->{Search}->{TicketNumber} = $FulltextSearchParam;
+                    $Filters{ $FilterColumn }->{Search}->{TicketNumber} = '*' . $FulltextSearchParam . '*';
 
                     my @CountTicketIDsTN = $TicketObject->TicketSearch(
                         %{ $Filters{ $FilterColumn }->{Search} },
@@ -1637,7 +1637,7 @@ sub BuildQueueView {
                 my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
                 my $FulltextSearchParam = $SearchProfileData{Fulltext};
                 $FulltextSearchParam =~ s/$TicketHook//g;
-                $SearchProfileData{TicketNumber} = $FulltextSearchParam;
+                $SearchProfileData{TicketNumber} = '*' . $FulltextSearchParam . '*';
 
                 my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
                     %SearchProfileData,
@@ -1793,7 +1793,7 @@ sub BuildQueueView {
                 my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
                 my $FulltextSearchParam = $SearchProfileData{Fulltext};
                 $FulltextSearchParam =~ s/$TicketHook//g;
-                $SearchProfileData{TicketNumber} = $FulltextSearchParam;
+                $SearchProfileData{TicketNumber} = '*' . $FulltextSearchParam . '*';
 
                 my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
                     %SearchProfileData,

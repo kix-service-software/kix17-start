@@ -771,7 +771,7 @@ sub Run {
             my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
             my $FulltextSearchParam = $GetParam{Fulltext};
             $FulltextSearchParam =~ s/$TicketHook//g;
-            $GetParam{TicketNumber} = $FulltextSearchParam;
+            $GetParam{TicketNumber} = '*' . $FulltextSearchParam . '*';
 
             local $Kernel::System::DB::UseSlaveDB = 1;
 
