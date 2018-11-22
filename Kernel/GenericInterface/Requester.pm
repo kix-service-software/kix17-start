@@ -295,10 +295,7 @@ sub Run {
         my $Response = $InvokerObject->HandleResponse(
             ResponseSuccess      => 0,
             ResponseErrorMessage => $FunctionResult->{ErrorMessage},
-            
-            # KIXPro-capeIT  
-            ResponseOriginal => $Param{Data} || '',
-            # EO KIXPro-capeIT        
+            ResponseOriginal     => $Param{Data} || '',
         );
 
         if ($IsAsynchronousCall) {
@@ -311,7 +308,7 @@ sub Run {
                 next RESPONSEKEY if $ResponseKey eq 'ErrorMessage';
 
                 # add any other key from the invoker HandleResponse() in Data
-                $ErrorReturn->{$ResponseKey} = $Response->{$ResponseKey}
+                $ErrorReturn->{$ResponseKey} = $Response->{$ResponseKey};
             }
         }
 
@@ -415,7 +412,7 @@ sub Run {
                 next RESPONSEKEY if $ResponseKey eq 'ErrorMessage';
 
                 # add any other key from the invoker HandleResponse() in Data
-                $ErrorReturn->{$ResponseKey} = $FunctionResult->{$ResponseKey}
+                $ErrorReturn->{$ResponseKey} = $FunctionResult->{$ResponseKey};
             }
         }
 

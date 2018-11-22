@@ -34,7 +34,7 @@ Kernel::GenericInterface::Operation::Ticket::Common - Base class for all Ticket 
 
 =item Init()
 
-initialize the operation by checking the webservice configuration and gather of the dynamic fields
+initialize the operation by checking the web service configuration and gather of the dynamic fields
 
     my $Return = $CommonObject->Init(
         WebserviceID => 1,
@@ -58,7 +58,7 @@ sub Init {
         };
     }
 
-    # get webservice configuration
+    # get web service configuration
     my $Webservice = $Kernel::OM->Get('Kernel::System::GenericInterface::Webservice')->WebserviceGet(
         ID => $Param{WebserviceID},
     );
@@ -309,7 +309,7 @@ sub ValidateCustomer {
 
     # if customer is not registered in the database, check if email is valid
     if ( !IsHashRefWithData( \%CustomerData ) ) {
-        return $Self->ValidateFrom( From => $Param{CustomerUser} )
+        return $Self->ValidateFrom( From => $Param{CustomerUser} );
     }
 
     # if ValidID is present, check if it is valid!
@@ -750,7 +750,7 @@ sub ValidatePendingTime {
     # check that no time attribute is empty or negative
     for my $TimeAttribute ( sort keys %{ $Param{PendingTime} } ) {
         return if $Param{PendingTime}->{$TimeAttribute} eq '';
-        return if int $Param{PendingTime}->{$TimeAttribute} < 0,
+        return if int $Param{PendingTime}->{$TimeAttribute} < 0;
     }
 
     # try to convert pending time to a SystemTime
@@ -788,7 +788,7 @@ sub ValidateAutoResponseType {
     return if !%AutoResponseType;
 
     for my $AutoResponseType ( values %AutoResponseType ) {
-        return 1 if $AutoResponseType eq $Param{AutoResponseType}
+        return 1 if $AutoResponseType eq $Param{AutoResponseType};
     }
     return;
 }
@@ -1002,9 +1002,8 @@ sub ValidateCharset {
     # check needed stuff
     return if !$Param{Charset};
 
-    my $CharsetList = $Self->_CharsetList();
-
-    return if !$CharsetList->{ $Param{Charset} };
+    use Encode;
+    return if !Encode::resolve_alias( $Param{Charset} );
 
     return 1;
 }
@@ -1162,7 +1161,44 @@ sub ValidateDynamicFieldValue {
         UserID             => 1,
     );
 
-    return $ValueType;
+    return if !$ValueType;
+
+    # Check if value parameter exists in config of possible values, for example for dropdown/multi-select fields.
+    #   Please see bug#13444 for more information.
+    if (
+        defined $Param{Value}
+        && length $Param{Value}
+        && (
+            IsArrayRefWithData( $DynamicFieldConfig->{Config}->{PossibleValues} )
+            || IsHashRefWithData( $DynamicFieldConfig->{Config}->{PossibleValues} )
+        )
+        )
+    {
+        my @Values;
+        if ( ref $Param{Value} eq 'ARRAY' ) {
+            @Values = @{ $Param{Value} };
+        }
+        else {
+            push @Values, $Param{Value};
+        }
+
+        if ( IsArrayRefWithData( $DynamicFieldConfig->{Config}->{PossibleValues} ) ) {
+            for my $Value (@Values) {
+                if ( !grep { $_ eq $Value } @{ $DynamicFieldConfig->{Config}->{PossibleValues} } ) {
+                    return;
+                }
+            }
+        }
+        else {
+            for my $Value (@Values) {
+                if ( !grep { $_ eq $Value } keys %{ $DynamicFieldConfig->{Config}->{PossibleValues} } ) {
+                    return;
+                }
+            }
+        }
+    }
+
+    return 1;
 }
 
 =item ValidateDynamicFieldObjectType()
@@ -1278,12 +1314,12 @@ sub SetDynamicFieldValue {
 
     return {
         Success => $Success,
-        }
+    };
 }
 
 =item CreateAttachment()
 
-cretes a new attachment for the given article.
+creates a new attachment for the given article.
 
     my $Result = $CommonObject->CreateAttachment(
         Content     => $Data,                   # file content (Base64 encoded)
@@ -1328,7 +1364,7 @@ sub CreateAttachment {
 
     return {
         Success => $Success,
-        }
+    };
 }
 
 =item CheckCreatePermissions ()
@@ -1484,6 +1520,8 @@ sub _ValidateUser {
 }
 
 =item _CharsetList()
+
+DEPRECATED: This function will be removed in further versions of KIX.
 
 returns a list of all available charsets.
 
