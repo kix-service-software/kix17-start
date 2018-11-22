@@ -145,7 +145,7 @@ sub ReplaceExtended {
                 for ( my $i = 0; $i < $Line; $i++ ) {
                     if ( $#Body >= $i ) {
 
-                        # add no quote char, do it later by using DocumentStyleCleanup()
+                        # add no quote char, do it later by using DocumentCleanup()
                         if ( $Param{RichText} ) {
                             $NewOldBody .= $Body[$i];
                         }
@@ -177,7 +177,7 @@ sub ReplaceExtended {
                     # add quote
                     $NewOldBody = "<blockquote type=\"cite\">$NewOldBody</blockquote>";
                     $NewOldBody
-                        = $Kernel::OM->Get('Kernel::System::HTMLUtils')->DocumentStyleCleanup(
+                        = $Kernel::OM->Get('Kernel::System::HTMLUtils')->DocumentCleanup(
                         String => $NewOldBody,
                         );
 
