@@ -129,13 +129,16 @@
 
         var Class = $('#ConfigItemClass').val(),
             URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';TicketID=' + TicketID;
-        Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {});
+        Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {
+            initLinkedCICheckboxes();
+        });
 
         // reload attribute selection for this class
         var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
             URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';' + Data + ';TicketID=' + TicketID;
         Core.AJAX.ContentUpdate($('#KIXSidebarLinkedCIAttribute'), URL , function () {
             $('#KIXSidebarLinkedConfigItemResetClassFilter').addClass('Hidden');
+            initLinkedCICheckboxes();
         });
     });
 
@@ -150,7 +153,9 @@
                     var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
                         ExtendedData = 'CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
 
-                    Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), Core.Config.Get('CGIHandle') + '?' + Data + ExtendedData , function () {});
+                    Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), Core.Config.Get('CGIHandle') + '?' + Data + ExtendedData , function () {
+                        initLinkedCICheckboxes();
+                    });
                     Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
                     $('#KIXSidebarLinkedConfigItemResetClassFilter').removeClass('Hidden');
                 }
@@ -169,7 +174,9 @@
             var Class = $('#ConfigItemClass').val(),
                 URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
 
-            Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {});
+            Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {
+                initLinkedCICheckboxes();
+            });
             $('#KIXSidebarLinkedConfigItemResetClassFilter').addClass('Hidden');
     });
 
@@ -234,7 +241,7 @@
         var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
             URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';' + Data;
         Core.AJAX.ContentUpdate($('#KIXSidebarLinkedCIAttribute'), URL , function () {
-            $('#KIXSidebarLinkedCIAttribute').trigger('redraw.InputField');
+            initLinkedCICheckboxes();
         });
 
         event.preventDefault();
