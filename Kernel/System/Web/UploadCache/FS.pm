@@ -3,9 +3,12 @@
 # based on the original work of:
 # Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::System::Web::UploadCache::FS;
@@ -56,6 +59,10 @@ sub FormIDRemove {
         return;
     }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+    return if !$Self->_FormIDValidate( $Param{FormID} );
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+
     # get main object
     my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
 
@@ -86,6 +93,10 @@ sub FormIDAddFile {
             return;
         }
     }
+
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+    return if !$Self->_FormIDValidate( $Param{FormID} );
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
 
     # create content id
     my $ContentID = $Param{ContentID};
@@ -146,6 +157,10 @@ sub FormIDRemoveFile {
         }
     }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+    return if !$Self->_FormIDValidate( $Param{FormID} );
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+
     my @Index = @{ $Self->FormIDGetAllFilesMeta(%Param) };
 
     # finish if files have been already removed by other process
@@ -188,6 +203,12 @@ sub FormIDGetAllFilesData {
         return;
     }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+    my @Data;
+
+    return \@Data if !$Self->_FormIDValidate( $Param{FormID} );
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+
     # get main object
     my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
 
@@ -197,7 +218,6 @@ sub FormIDGetAllFilesData {
     );
 
     my $Counter = 0;
-    my @Data;
 
     FILE:
     for my $File (@List) {
@@ -215,7 +235,7 @@ sub FormIDGetAllFilesData {
 
             # remove meta data in files
             if ( $FileSize > 30 ) {
-                $FileSize = $FileSize - 30
+                $FileSize = $FileSize - 30;
             }
             if ( $FileSize > 1048576 ) {    # 1024 * 1024
                 $FileSize = sprintf "%.1f MBytes", ( $FileSize / 1048576 );    # 1024 * 1024
@@ -285,6 +305,12 @@ sub FormIDGetAllFilesMeta {
         return;
     }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+    my @Data;
+
+    return \@Data if !$Self->_FormIDValidate( $Param{FormID} );
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+
     # get main object
     my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
 
@@ -294,7 +320,6 @@ sub FormIDGetAllFilesMeta {
     );
 
     my $Counter = 0;
-    my @Data;
 
     FILE:
     for my $File (@List) {
@@ -312,7 +337,7 @@ sub FormIDGetAllFilesMeta {
 
             # remove meta data in files
             if ( $FileSize > 30 ) {
-                $FileSize = $FileSize - 30
+                $FileSize = $FileSize - 30;
             }
             if ( $FileSize > 1048576 ) {    # 1024 * 1024
                 $FileSize = sprintf "%.1f MBytes", ( $FileSize / 1048576 );    # 1024 * 1024
@@ -392,6 +417,24 @@ sub FormIDCleanUp {
     return 1;
 }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+sub _FormIDValidate {
+    my ( $Self, $FormID ) = @_;
+
+    return if !$FormID;
+
+    if ( $FormID !~ m{^ \d+ \. \d+ \. \d+ $}xms ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Invalid FormID!',
+        );
+        return;
+    }
+
+    return 1;
+}
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+
 1;
 
 =back
@@ -401,9 +444,11 @@ sub FormIDCleanUp {
 This software is part of the KIX project
 (L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-LICENSE for license information (AGPL). If you did not receive this file, see
-
-<https://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. This program is
+licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+For details, see the enclosed files LICENSE (AGPL) and
+LICENSE-GPL3 (GPL3) for license information. If you did not receive
+this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
+<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
 
 =cut

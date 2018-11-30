@@ -330,6 +330,7 @@ sub TicketSearch {
         Ticket                 => 'st.tn',
         TicketNumber           => 'st.tn',
         Title                  => 'st.title',
+        FromTitle              => 'st.title',
         Queue                  => 'sq.name',
         Type                   => 'st.type_id',
         Priority               => 'st.ticket_priority_id',
@@ -394,12 +395,9 @@ sub TicketSearch {
         # quote elements
         for my $Element ( @{ $Param{$Key} } ) {
 
-            # KIX4OTRS-capeIT
             if ( $Element eq '_NONE_' ) {
                 $Element = 0;
             }
-
-            # EO KIX4OTRS-capeIT
 
             if ( !defined $DBObject->Quote( $Element, 'Integer' ) ) {
 
@@ -564,20 +562,7 @@ sub TicketSearch {
         }
     }
 
-    # add article and article_flag tables
-    # KIX4OTRS-capeIT
-    # if ( $Param{ArticleFlag} ) {
-    #     my $Index = 1;
-    #     for my $Key ( sort keys %{ $Param{ArticleFlag} } ) {
-    #         $SQLFrom .= "INNER JOIN article ataf$Index ON st.id = ataf$Index.ticket_id ";
-    #         $SQLFrom .=
-    #            "INNER JOIN article_flag taf$Index ON ataf$Index.id = taf$Index.article_id ";
-    #         $Index++;
-    #     }
-    # }
-    # EO KIX4OTRS-capeIT
-
-    if ( $Param{NotTicketFlag} ) {
+     if ( $Param{NotTicketFlag} ) {
         my $TicketFlagUserID = $Param{TicketFlagUserID} || $Param{UserID};
         return if !defined $TicketFlagUserID;
 
@@ -592,7 +577,6 @@ sub TicketSearch {
         }
     }
 
-    # KIX4OTRS-capeIT
     # add ticket flag table
     if ( $Param{ArticleFlag} ) {
         my $Index = 1;
@@ -612,8 +596,6 @@ sub TicketSearch {
     if ( $Param{TicketChecklistState} ) {
         $SQLFrom .= "INNER JOIN kix_ticket_checklist ktc ON st.id = ktc.ticket_id ";
     }
-
-    # EO KIX4OTRS-capeIT
 
     # current type lookup
     if ( $Param{Types} ) {
@@ -1145,7 +1127,6 @@ sub TicketSearch {
             my $Value = $Param{TicketFlag}->{$Key};
             return if !defined $Value;
 
-            # KIX4OTRS-capeIT
             # neccessary to fix a bug caused by KIXTemplateWorkflows
             if (
                 $Param{TicketFlagUserIDs}
@@ -1157,8 +1138,6 @@ sub TicketSearch {
             }
             return if !defined $TicketFlagUserID;
 
-            # EO KIX4OTRS-capeIT
-
             $SQLExt .= " AND tf$Index.ticket_key = '" . $DBObject->Quote($Key) . "'";
             $SQLExt .= " AND tf$Index.ticket_value = '" . $DBObject->Quote($Value) . "'";
             $SQLExt .= " AND tf$Index.create_by = "
@@ -1167,25 +1146,6 @@ sub TicketSearch {
             $Index++;
         }
     }
-
-    # add article flag extension
-#    if ( $Param{ArticleFlag} ) {
-#        my $ArticleFlagUserID = $Param{ArticleFlagUserID} || $Param{UserID};
-#        return if !defined $ArticleFlagUserID;
-#
-#        my $Index = 1;
-#        for my $Key ( sort keys %{ $Param{ArticleFlag} } ) {
-#            my $Value = $Param{ArticleFlag}->{$Key};
-#            return if !defined $Value;
-#
-#            $SQLExt .= " AND taf$Index.article_key = '" . $DBObject->Quote($Key) . "'";
-#            $SQLExt .= " AND taf$Index.article_value = '" . $DBObject->Quote($Value) . "'";
-#            $SQLExt .= " AND taf$Index.create_by = "
-#                . $DBObject->Quote( $ArticleFlagUserID, 'Integer' );
-#
-#            $Index++;
-#        }
-#    }
 
     if ( $Param{NotTicketFlag} ) {
         my $Index = 1;
@@ -1200,7 +1160,6 @@ sub TicketSearch {
         }
     }
 
-    # KIX4OTRS-capeIT
     # add article flag extension
     if ( $Param{ArticleFlag} ) {
 
@@ -1230,11 +1189,9 @@ sub TicketSearch {
             $ChecklistItemStates[$Counter] = " ktc.state LIKE LOWER('" . $DBObject->Quote( $ChecklistItemState ) . "')";
             $Counter++;
         }
-        $SQLFrom .= join ' OR ', @ChecklistItemStates; 
+        $SQLFrom .= join ' OR ', @ChecklistItemStates;
         $SQLFrom .= ")";
     }
-
-    # EO KIX4OTRS-capeIT
 
     # other ticket stuff
     my %FieldSQLMap = (
@@ -1288,15 +1245,12 @@ sub TicketSearch {
                 $SQLExt .= ' OR ';
             }
 
-            # KIX4OTRS-capeIT
             if ( $Value eq '_NONE_' ) {
                 $SQLExt
                     .= " $FieldSQLMap{$Key} IS NULL OR"
                     . " $FieldSQLMap{$Key} LIKE ''";
                 next;
             }
-
-            # EO KIX4OTRS-capeIT
 
             # add * to prefix/suffix on title search
             my %ConditionFocus;
@@ -2547,7 +2501,6 @@ sub _InConditionGet {
     return $SQL;
 }
 
-# KIX4OTRS-capeIT
 # nearly the same as TicketSearch but SOME search paramaters combined with OR
 
 sub TicketSearchOR {
@@ -2633,12 +2586,9 @@ sub TicketSearchOR {
         # quote elements
         for my $Element ( @{ $Param{$Key} } ) {
 
-            # KIX4OTRS-capeIT
             if ( $Element eq '_NONE_' ) {
                 $Element = 0;
             }
-
-            # EO KIX4OTRS-capeIT
 
             if ( !defined $DBObject->Quote( $Element, 'Integer' ) ) {
 
@@ -2798,10 +2748,7 @@ sub TicketSearchOR {
         }
     }
 
-    # KIX4OTRS-capeIT
     my $SQLExtOR = '';
-
-    # EO KIX4OTRS-capeIT
 
     # current type lookup
     if ( $Param{Types} ) {
@@ -2823,10 +2770,7 @@ sub TicketSearchOR {
     # type ids
     if ( $Param{TypeIDs} ) {
 
-        # KIX4OTRS-capeIT
-        # $SQLExt .= $Self->_InConditionGet(
         $SQLExtOR .= $Self->_InConditionGetOR(
-        # EO KIX4OTRS-capeIT
             TableColumn => 'st.type_id',
             IDRef       => $Param{TypeIDs},
         );
@@ -3010,10 +2954,7 @@ sub TicketSearchOR {
     # current owner user ids
     if ( $Param{OwnerIDs} ) {
 
-        # KIX4OTRS-capeIT
-        # $SQLExt .= $Self->_InConditionGet(
         $SQLExtOR .= $Self->_InConditionGetOR(
-        # EO KIX4OTRS-capeIT
             TableColumn => 'st.user_id',
             IDRef       => $Param{OwnerIDs},
         );
@@ -3022,10 +2963,7 @@ sub TicketSearchOR {
     # current responsible user ids
     if ( $Param{ResponsibleIDs} ) {
 
-        # KIX4OTRS-capeIT
-        # $SQLExt .= $Self->_InConditionGet(
         $SQLExtOR .= $Self->_InConditionGetOR(
-        # EO KIX4OTRS-capeIT
             TableColumn => 'st.responsible_user_id',
             IDRef       => $Param{ResponsibleIDs},
         );
@@ -3095,10 +3033,7 @@ sub TicketSearchOR {
     # current queue ids
     if ( $Param{QueueIDs} ) {
 
-        # KIX4OTRS-capeIT
-        # $SQLExt .= $Self->_InConditionGet(
         $SQLExtOR .= $Self->_InConditionGetOR(
-        # EO KIX4OTRS-capeIT
             TableColumn => 'st.queue_id',
             IDRef       => $Param{QueueIDs},
         );
@@ -3231,10 +3166,7 @@ sub TicketSearchOR {
     # priority ids
     if ( $Param{PriorityIDs} ) {
 
-        # KIX4OTRS-capeIT
-        # $SQLExt .= $Self->_InConditionGet(
         $SQLExtOR .= $Self->_InConditionGetOR(
-        # EOKIX4OTRS-capeIT
             TableColumn => 'st.ticket_priority_id',
             IDRef       => $Param{PriorityIDs},
         );
@@ -3300,10 +3232,7 @@ sub TicketSearchOR {
     # service ids
     if ( $Param{ServiceIDs} ) {
 
-        # KIX4OTRS-capeIT
-        # $SQLExt .= $Self->_InConditionGet(
         $SQLExtOR .= $Self->_InConditionGetOR(
-        # EO KIX4OTRS-capeIT
             TableColumn => 'st.service_id',
             IDRef       => $Param{ServiceIDs},
         );
@@ -3331,10 +3260,7 @@ sub TicketSearchOR {
     # sla ids
     if ( $Param{SLAIDs} ) {
 
-        # KIX4OTRS-capeIT
-        # $SQLExt .= $Self->_InConditionGet(
         $SQLExtOR .= $Self->_InConditionGetOR(
-        # EO KIX4OTRS-capeIT
             TableColumn => 'st.sla_id',
             IDRef       => $Param{SLAIDs},
         );
@@ -3427,15 +3353,12 @@ sub TicketSearchOR {
                 $SQLExt .= ' OR ';
             }
 
-            # KIX4OTRS-capeIT
             if ( $Value eq '_NONE_' ) {
                 $SQLExt
                     .= " $FieldSQLMap{$Key} IS NULL OR"
                     . " $FieldSQLMap{$Key} LIKE ''";
                 next;
             }
-
-            # EO KIX4OTRS-capeIT
 
             # add * to prefix/suffix on title search
             my %ConditionFocus;
@@ -3642,10 +3565,7 @@ sub TicketSearchOR {
             my $Time = $TimeObject->SystemTime()
                 - ( $Param{ $Key . 'OlderMinutes' } * 60 );
 
-            # KIX4OTRS-capeIT
-            # $SQLExt .= " AND $ArticleTime{$Key} >= '$Time'";
             $SQLExtOR .= " OR $ArticleTime{$Key} >= '$Time'";
-            # EO KIX4OTRS-capeIT
         }
 
         # get articles created newer than x minutes
@@ -3656,10 +3576,7 @@ sub TicketSearchOR {
             my $Time = $TimeObject->SystemTime()
                 - ( $Param{ $Key . 'NewerMinutes' } * 60 );
 
-            # KIX4OTRS-capeIT
-            # $SQLExt .= " AND $ArticleTime{$Key} >= '$Time'";
             $SQLExtOR .= " OR $ArticleTime{$Key} >= '$Time'";
-            # EO KIX4OTRS-capeIT
         }
 
         # get articles created older than xxxx-xx-xx xx:xx date
@@ -3697,10 +3614,7 @@ sub TicketSearchOR {
             }
             $CompareOlderNewerDate = $SystemTime;
 
-            # KIX4OTRS-capeIT
-            # $SQLExt .= " AND $ArticleTime{$Key} <= '" . $SystemTime . "'";
             $SQLExtOR .= " OR $ArticleTime{$Key} <= '" . $SystemTime . "'";
-            # EO KIX4OTRS-capeIT
         }
 
         # get articles created newer than xxxx-xx-xx xx:xx date
@@ -3742,10 +3656,7 @@ sub TicketSearchOR {
             # don't execute queries if older/newer date restriction show now valid timeframe
             return if $CompareOlderNewerDate && $SystemTime > $CompareOlderNewerDate;
 
-            # EO KIX4OTRS-capeIT
-            # $SQLExt .= " AND $ArticleTime{$Key} >= '" . $SystemTime . "'";
             $SQLExtOR .= " OR $ArticleTime{$Key} >= '" . $SystemTime . "'";
-            # EO KIX4OTRS-capeIT
         }
     }
 
@@ -3815,10 +3726,7 @@ sub TicketSearchOR {
             # exclude tickets with no escalation
             if ( $Key =~ m{ \A TicketEscalation }xms ) {
 
-                # KIX4OTRS-capeIT
-                # $SQLExt .= " AND $TicketTime{$Key} != 0";
                 $SQLExtOR .= " OR $TicketTime{$Key} != 0";
-                # EO KIX4OTRS-capeIT
             }
             my $Time = $TimeObject->TimeStamp2SystemTime(
                 String => $Param{ $Key . 'OlderDate' },
@@ -3834,10 +3742,7 @@ sub TicketSearchOR {
             }
             $CompareOlderNewerDate = $Time;
 
-            # KIX4OTRS-capeIT
-            # $SQLExt .= " AND $TicketTime{$Key} <= $Time";
             $SQLExtOR .= " OR $TicketTime{$Key} <= $Time";
-            # EO KIX4OTRS-capeIT
         }
 
         # get tickets created/escalated newer than xxxx-xx-xx xx:xx date
@@ -3857,10 +3762,7 @@ sub TicketSearchOR {
             # exclude tickets with no escalation
             if ( $Key =~ m{ \A TicketEscalation }xms ) {
 
-                # KIX4OTRS-capeIT
-                # $SQLExt .= " AND $TicketTime{$Key} != 0";
                 $SQLExtOR .= " OR $TicketTime{$Key} != 0";
-                # EO KIX4OTRS-capeIT
             }
             my $Time = $TimeObject->TimeStamp2SystemTime(
                 String => $Param{ $Key . 'NewerDate' },
@@ -3881,10 +3783,7 @@ sub TicketSearchOR {
             # don't execute queries if older/newer date restriction show now valid timeframe
             return if $CompareOlderNewerDate && $Time > $CompareOlderNewerDate;
 
-            # KIX4OTRS-capeIT
-            # $SQLExt .= " AND $TicketTime{$Key} >= $Time";
             $SQLExtOR .= " OR $TicketTime{$Key} >= $Time";
-            # EO KIX4OTRS-capeIT
         }
     }
 
@@ -3944,11 +3843,8 @@ sub TicketSearchOR {
         }
         $CompareChangeTimeOlderNewerDate = $Time;
 
-        # KIX4OTRS-capeIT
-        # $SQLExt .= " AND th.create_time <= '"
         $SQLExtOR .= " OR th.create_time <= '"
             . $DBObject->Quote( $Param{TicketChangeTimeOlderDate} ) . "'";
-        # EO KIX4OTRS-capeIT
     }
 
     # get tickets based on ticket history changed newer than xxxx-xx-xx xx:xx date
@@ -3983,12 +3879,8 @@ sub TicketSearchOR {
         # don't execute queries if older/newer date restriction show now valid timeframe
         return if $CompareChangeTimeOlderNewerDate && $Time > $CompareChangeTimeOlderNewerDate;
 
-
-        # KIX4OTRS-capeIT
-        # $SQLExt .= " AND th.create_time >= '"
         $SQLExtOR .= " OR th.create_time >= '"
             . $DBObject->Quote( $Param{TicketChangeTimeNewerDate} ) . "'";
-        # EO KIX4OTRS-capeIT
     }
 
     # get tickets changed older than x minutes
@@ -4047,12 +3939,8 @@ sub TicketSearchOR {
         }
         $CompareLastChangeTimeOlderNewerDate = $Time;
 
-        # KIX4OTRS-capeIT
-        # $SQLExt .= " AND st.change_time <= '"
-        #    . $DBObject->Quote( $Param{TicketLastChangeTimeOlderDate} ) . "'";
         $SQLExt .= " OR st.change_time <= '"
             . $DBObject->Quote( $Param{TicketLastChangeTimeOlderDate} ) . "'";
-        # EO KIX4OTRS-capeIT
     }
 
     # get tickets changed newer than xxxx-xx-xx xx:xx date
@@ -4088,12 +3976,8 @@ sub TicketSearchOR {
         return
             if $CompareLastChangeTimeOlderNewerDate && $Time > $CompareLastChangeTimeOlderNewerDate;
 
-        # KIX4OTRS-capeIT
-        # $SQLExt .= " AND st.change_time >= '"
-        #     . $DBObject->Quote( $Param{TicketLastChangeTimeNewerDate} ) . "'";
         $SQLExt .= " OR st.change_time >= '"
             . $DBObject->Quote( $Param{TicketLastChangeTimeNewerDate} ) . "'";
-        # KIX4OTRS-capeIT
     }
 
     # get tickets closed older than x minutes
@@ -4362,11 +4246,8 @@ sub TicketSearchOR {
         }
     }
 
-    # KIX4OTRS-capeIT
     $SQLExtOR =~ s/^ OR //;
     $SQLExt .= ' AND ( ' . $SQLExtOR . ' ) ';
-
-    # EO KIX4OTRS-capeIT
 
     # database query for sort/order by option
     if ( $Result ne 'COUNT' ) {
@@ -4582,7 +4463,85 @@ sub _InConditionGetOR {
     return $SQL;
 }
 
-# EO KIX4OTRS-capeIT
+=item FilterPrepare()
+
+Preparation of the filters into one.
+
+    my $PreparedFilter = $TicketObject->FilterPrepare(
+        FilterArray = [
+            {
+                QueueIDs => [...],
+                ...
+            },
+            {
+                LockedIDs => undef,
+                ...
+            },
+            ...
+        ]
+    );
+
+Returns:
+
+Result: 'HASH'
+
+    $PreparedFilter = {
+        QueueIDs   => [...],
+        ServiceIDs => [...],
+        SortBy     => 'TicketNumber',
+        UserID     => '2',
+        ....
+    };
+
+Result: 'undef'
+
+=cut
+
+sub FilterPrepare {
+    my ( $Self, %Param ) = @_;
+
+    my %Prepared;
+
+    FILTER:
+    for my $Filter ( @{$Param{FilterArray}} ) {
+        next FILTER if !defined $Filter;
+        next FILTER if $Filter eq 'undef';
+        next FILTER if ref $Filter ne 'HASH';
+
+        ATTRIBUTE:
+        for my $Attribute ( sort keys %{$Filter} ) {
+            next ATTRIBUTE if !defined $Filter->{$Attribute};
+            next ATTRIBUTE if $Filter->{$Attribute} eq 'undef';
+
+            if ( $Prepared{$Attribute} ) {
+                if ( ref $Filter->{$Attribute} eq 'ARRAY' ) {
+                    my @Force = @{$Filter->{$Attribute}};
+                    my @Curr  = @{$Prepared{$Attribute}};
+                    my @NewArray;
+
+                    for my $Item ( @Force ) {
+                        if ( grep({$Item eq $_} @Curr) ) {
+                            push(@NewArray, $Item);
+                        }
+                    }
+
+                    return if !scalar(@NewArray);
+                    $Prepared{$Attribute} = \@NewArray;
+                }
+            } else {
+                if ( ref $Filter->{$Attribute} eq 'ARRAY' ) {
+                    push(@{$Prepared{$Attribute}}, @{$Filter->{$Attribute}});
+                }
+
+                elsif ( ref $Filter->{$Attribute} ne 'HASH' ) {
+                    $Prepared{$Attribute} = $Filter->{$Attribute};
+                }
+            }
+        }
+    }
+
+    return \%Prepared;
+}
 
 1;
 

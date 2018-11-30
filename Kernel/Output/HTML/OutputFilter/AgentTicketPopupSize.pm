@@ -33,6 +33,9 @@ sub Run {
     my $ReplaceString = '[% WRAPPER JSOnDocumentComplete %]'
         . '<script type="text/javascript">//<![CDATA['
         . 'Core.KIX4OTRS.ResizePopup (\'' . $LayoutObject->{EnvRef}->{Action} . '\');'
+        . 'if ( $(\'body\').hasClass(\'RealPopup\') ) {'
+        . '    $(\'#AppWrapper\').addClass(\'NonMarginTop\');'
+        . '}'
         . '//]]></script>'
         . '[% END %]';
 

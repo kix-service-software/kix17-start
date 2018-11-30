@@ -219,7 +219,14 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         if ($('#NewQueueID').length) {
             QueueID = $('#NewQueueID').val();
         } else if ($('#Dest').length) {
-            QueueID = $('#Dest').val().split('||')[0];
+            if ( $('#Dest').val() !== ''
+                 && $('#Dest').val() !== undefined
+                 && $('#Dest').val() !== null
+            ) {
+                QueueID = $('#Dest').val().split('||')[0];
+            } else {
+                QueueID = '';
+            }
         }
 
         // determine TicketID

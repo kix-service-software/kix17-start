@@ -1941,7 +1941,7 @@ sub _Replace {
                 for ( my $i = 0; $i < $Line; $i++ ) {
                     if ( $#Body >= $i ) {
 
-                        # add no quote char, do it later by using DocumentStyleCleanup()
+                        # add no quote char, do it later by using DocumentCleanup()
                         if ( $Param{RichText} ) {
                             $NewOldBody .= $Body[$i];
                         }
@@ -1973,7 +1973,7 @@ sub _Replace {
                     # add quote
                     $NewOldBody = "<blockquote type=\"cite\">$NewOldBody</blockquote>";
                     $NewOldBody
-                        = $HTMLUtilsObject->DocumentStyleCleanup(
+                        = $HTMLUtilsObject->DocumentCleanup(
                         String => $NewOldBody,
                         );
                 }
@@ -1996,7 +1996,7 @@ sub _Replace {
                 # http://lists.otrs.org/pipermail/dev/2002-June/000012.html
                 if ( $#Body >= $i ) {
 
-                    # add no quote char, do it later by using DocumentStyleCleanup()
+                    # add no quote char, do it later by using DocumentCleanup()
                     if ( $Param{RichText} ) {
                         $NewOldBody .= $Body[$i];
                     }
@@ -2024,7 +2024,7 @@ sub _Replace {
 
                 # add quote
                 $NewOldBody = "<blockquote type=\"cite\">$NewOldBody</blockquote>";
-                $NewOldBody = $HTMLUtilsObject->DocumentStyleCleanup(
+                $NewOldBody = $HTMLUtilsObject->DocumentCleanup(
                     String => $NewOldBody,
                 );
             }

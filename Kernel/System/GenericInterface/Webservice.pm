@@ -35,7 +35,7 @@ Kernel::System::Webservice
 
 =head1 SYNOPSIS
 
-Webservice configuration backend.
+Web service configuration backend.
 
 =head1 PUBLIC INTERFACE
 
@@ -67,7 +67,7 @@ sub new {
 
 add new Webservices
 
-returns id of new webservice if successful or undef otherwise
+returns id of new web service if successful or undef otherwise
 
     my $ID = $WebserviceObject->WebserviceAdd(
         Name    => 'some name',
@@ -182,7 +182,7 @@ sub WebserviceAdd {
         Type => 'Webservice',
     );
 
-    # get webservice history object
+    # get web service history object
     my $WebserviceHistoryObject = $Kernel::OM->Get('Kernel::System::GenericInterface::WebserviceHistory');
 
     # add history
@@ -305,7 +305,7 @@ sub WebserviceGet {
 
 =item WebserviceUpdate()
 
-update Webservice attributes
+update web service attributes
 
 returns 1 if successful or undef otherwise
 
@@ -427,7 +427,7 @@ sub WebserviceUpdate {
         Type => 'Webservice',
     );
 
-    # get webservice history object
+    # get web service history object
     my $WebserviceHistoryObject = $Kernel::OM->Get('Kernel::System::GenericInterface::WebserviceHistory');
 
     # add history
@@ -473,7 +473,7 @@ sub WebserviceDelete {
     );
     return if !IsHashRefWithData($Webservice);
 
-    # get webservice history object
+    # get web service history object
     my $WebserviceHistoryObject = $Kernel::OM->Get('Kernel::System::GenericInterface::WebserviceHistory');
 
     # delete history
@@ -493,7 +493,7 @@ sub WebserviceDelete {
     # get debug log object
     my $DebugLogObject = $Kernel::OM->Get('Kernel::System::GenericInterface::DebugLog');
 
-    # delete debugging data for webservice
+    # delete debugging data for web service
     return if !$DebugLogObject->LogDelete(
         WebserviceID   => $Param{ID},
         NoErrorIfEmpty => 1,
@@ -515,7 +515,7 @@ sub WebserviceDelete {
 
 =item WebserviceList()
 
-get Webservice list
+get web service list
 
     my $List = $WebserviceObject->WebserviceList();
 

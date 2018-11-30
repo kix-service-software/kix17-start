@@ -37,20 +37,10 @@ sub new {
     my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    $Self->{ArticleID} = $ParamObject->GetParam( Param => 'ArticleID' );
-
-    # KIX4OTRS-capeIT
-    # $Self->{ZoomExpand}     = $ParamObject->GetParam( Param => 'ZoomExpand' );
-    $Self->{ZoomExpand} = $ParamObject->GetParam( Param => 'ZoomExpand' ) || 0;
-
-    # EO KIX4OTRS-capeIT
+    $Self->{ArticleID}      = $ParamObject->GetParam( Param => 'ArticleID' );
+    $Self->{ZoomExpand}     = $ParamObject->GetParam( Param => 'ZoomExpand' )      || 0;
     $Self->{ZoomExpandSort} = $ParamObject->GetParam( Param => 'ZoomExpandSort' );
-
-    # KIX4OTRS-capeIT
-    # $Self->{ZoomTimeline}   = $ParamObject->GetParam( Param => 'ZoomTimeline' );
-    $Self->{ZoomTimeline} = $ParamObject->GetParam( Param => 'ZoomTimeline' ) || 0;
-
-    # EO KIX4OTRS-capeIT
+    $Self->{ZoomTimeline}   = $ParamObject->GetParam( Param => 'ZoomTimeline' )    || 0;
 
     my %UserPreferences = $UserObject->GetPreferences(
         UserID => $Self->{UserID},
@@ -59,11 +49,8 @@ sub new {
     # save last used view type in preferences
     if ( !$Self->{Subaction} ) {
 
-        # KIX4OTRS-capeIT
-        # if ( !defined $Self->{ZoomExpand} && !defined $Self->{ZoomTimeline} ) {
         if ( !$Self->{ZoomExpand} && !$Self->{ZoomTimeline} ) {
 
-            # EO KIX4OTRS-capeIT
             $Self->{ZoomExpand} = $ConfigObject->Get('Ticket::Frontend::ZoomExpand');
             if ( $UserPreferences{UserLastUsedZoomViewType} ) {
                 if ( $UserPreferences{UserLastUsedZoomViewType} eq 'Expand' ) {
@@ -97,8 +84,6 @@ sub new {
             );
         }
     }
-
-    # ddoerffel - T2016121190001552 - BusinessSolution code removed
 
     if ( !defined $Self->{DoNotShowBrowserLinkMessage} ) {
         if ( $UserPreferences{UserAgentDoNotShowBrowserLinkMessage} ) {
@@ -139,27 +124,18 @@ sub new {
         );
     }
 
-    # KIX4OTRS-capeIT
     $Self->{Config}           = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
     $Self->{CallingAction}    = $ParamObject->GetParam( Param => 'CallingAction' ) || '';
     $Self->{DirectLinkAnchor} = $ParamObject->GetParam( Param => 'DirectLinkAnchor' ) || '';
 
-    # EO KIX4OTRS-capeIT
-
     # get dynamic field config for frontend module
     $Self->{DynamicFieldFilter} = {
-
-        # KIX4OTRS-capeIT
-        # %{ $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{DynamicField} || {} },
         %{
             $ConfigObject->Get("Ticket::Frontend::AgentTicketZoomTabArticle")
                 ->{DynamicField} || {}
         },
-
-        # EO KIX4OTRS-capeIT
     };
 
-    # KIX4OTRS-capeIT
     my %ShowFields = ();
     for my $Field ( keys %{ $Self->{DynamicFieldFilter} } ) {
         if ( $Self->{DynamicFieldFilter}->{$Field} == 2 ) {
@@ -182,12 +158,6 @@ sub new {
         FieldFilter => $ConfigObject->Get("Ticket::Frontend::AgentTicketZoomTabArticle")
             ->{DynamicFieldActiveFilter} || {},
     );
-
-    # EO KIX4OTRS-capeIT
-
-    # KIX4OTRS-capeIT
-    # removed: create additional objects for process management
-    # EO KIX4OTRS-capeIT
 
     # get zoom settings depending on ticket type
     $Self->{DisplaySettings} = $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom");
@@ -248,8 +218,7 @@ sub new {
     if (
         defined $ConfigObject->Get('TimelineViewEnabled')
         && $ConfigObject->Get('TimelineViewEnabled') == 1
-        )
-    {
+        ) {
         my $ZoomFrontendConfiguration = $ConfigObject->Get('Frontend::Module')->{AgentTicketZoom};
         my @CustomJSFiles             = (
             'Core.Agent.TicketZoom.TimelineView.js',
@@ -305,10 +274,7 @@ sub Run {
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    # KIX4OTRS-capeIT
     my $ImagePath = $ConfigObject->Get('Frontend::ImagePath');
-
-    # EO KIX4OTRS-capeIT
 
     # get all registered Actions
     if ( ref $ConfigObject->Get('Frontend::Module') eq 'HASH' ) {
@@ -369,8 +335,7 @@ sub Run {
                 $ConfigObject->Get('Ticket::Responsible')
                 && $Self->{UserID} == $Ticket{ResponsibleID}
             )
-            )
-        {
+        ) {
 
             # Always use user id 1 because other users also have to see the important flag
             my %ArticleFlag = $TicketObject->ArticleFlagGet(
@@ -425,7 +390,6 @@ sub Run {
         );
     }
 
-    # KIX4OTRS-capeIT
     # set article flag
     elsif ( $Self->{Subaction} eq 'ArticleFlagSet' ) {
 
@@ -470,8 +434,8 @@ sub Run {
         # get a list of all available article flags from sysconfig
         my %ArticleFlagList = ();
         if ( defined $Self->{Config}->{ArticleFlags}
-            && ref $Self->{Config}->{ArticleFlags} eq 'HASH' )
-        {
+            && ref $Self->{Config}->{ArticleFlags} eq 'HASH'
+        ) {
             %ArticleFlagList = %{ $Self->{Config}->{ArticleFlags} };
         }
 
@@ -562,8 +526,6 @@ sub Run {
         );
     }
 
-    # EO KIX4OTRS-capeIT
-
     # article update
     elsif ( $Self->{Subaction} eq 'ArticleUpdate' ) {
         my $Count = $ParamObject->GetParam( Param => 'Count' );
@@ -598,13 +560,8 @@ sub Run {
             Type              => 'OnLoad',
         );
         my $Content = $LayoutObject->Output(
-
-            # KIX4OTRS-capeIT
-            # TemplateFile => 'AgentTicketZoom',
             TemplateFile => 'AgentTicketZoomTabArticle',
-
-            # EO KIX4OTRS-capeIT
-            Data => { %Ticket, %Article, %AclAction },
+            Data         => { %Ticket, %Article, %AclAction },
         );
         if ( !$Content ) {
             $LayoutObject->FatalError(
@@ -630,24 +587,22 @@ sub Run {
     if ( $Self->{Subaction} eq 'ArticleFilterSet' ) {
 
         # get params
-        my $TicketID     = $ParamObject->GetParam( Param => 'TicketID' );
-        my $SaveDefaults = $ParamObject->GetParam( Param => 'SaveDefaults' );
-        my @ArticleTypeFilterIDs = $ParamObject->GetArray( Param => 'ArticleTypeFilter' );
-        my @ArticleSenderTypeFilterIDs
-            = $ParamObject->GetArray( Param => 'ArticleSenderTypeFilter' );
+        my $TicketID                   = $ParamObject->GetParam( Param => 'TicketID' );
+        my $SaveDefaults               = $ParamObject->GetParam( Param => 'SaveDefaults' );
+        my @ArticleTypeFilterIDs       = $ParamObject->GetArray( Param => 'ArticleTypeFilter' );
+        my @ArticleSenderTypeFilterIDs = $ParamObject->GetArray( Param => 'ArticleSenderTypeFilter' );
 
-        # KIX4OTRS-capeIT (extended article filter)
-        my $ArticleSubjectFilter
-            = $ParamObject->GetParam( Param => 'ArticleSubjectFilter' );
-        my $ArticleBodyFilter = $ParamObject->GetParam( Param => 'ArticleBodyFilter' );
-        my @ArticleFlagFilter = $ParamObject->GetArray( Param => 'ArticleFlagFilter' );
-        my $ArticleFlagTextFilter
-            = $ParamObject->GetParam( Param => 'ArticleFlagTextFilter' );
+        # extended article filter
+        my $ArticleSubjectFilter  = $ParamObject->GetParam( Param => 'ArticleSubjectFilter' );
+        my $ArticleBodyFilter     = $ParamObject->GetParam( Param => 'ArticleBodyFilter' );
+        my @ArticleFlagFilter     = $ParamObject->GetArray( Param => 'ArticleFlagFilter' );
+        my $ArticleFlagTextFilter = $ParamObject->GetParam( Param => 'ArticleFlagTextFilter' );
 
         my %ArticleDynamicFieldFilter;
 
         # cycle trough the activated Dynamic Fields for this screen
         my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicFieldActiveFilter} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
@@ -655,13 +610,11 @@ sub Run {
             # extract the dynamic field value from the web request
             $ArticleDynamicFieldFilter{ $DynamicFieldConfig->{Name} }
                 = $DynamicFieldBackendObject->EditFieldValueGet(
-                DynamicFieldConfig => $DynamicFieldConfig,
-                ParamObject        => $ParamObject,
-                LayoutObject       => $LayoutObject,
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    ParamObject        => $ParamObject,
+                    LayoutObject       => $LayoutObject,
                 ) || '';
         }
-
-        # EO KIX4OTRS-capeIT
 
         # build session string
         my $SessionString = '';
@@ -676,7 +629,7 @@ sub Run {
             $SessionString .= '>';
         }
 
-        # KIX4OTRS-capeIT (extended article filter)
+        # extended article filter
         if ($ArticleSubjectFilter) {
             $SessionString .= 'ArticleSubjectFilter<';
             $SessionString .= join ',', $ArticleSubjectFilter;
@@ -705,10 +658,7 @@ sub Run {
             $SessionString .= '>';
         }
 
-        # EO KIX4OTRS-capeIT
-
         # write the session
-
         # save default filter settings to user preferences
         if ($SaveDefaults) {
             $UserObject->SetPreferences(
@@ -731,13 +681,8 @@ sub Run {
         # update the session
         my $Update = $SessionObject->UpdateSessionID(
             SessionID => $Self->{SessionID},
-
-            # KIX4OTRS-capeIT
-            # Key       => "ArticleFilter$TicketID",
-            Key => 'ArticleFilter' . $Self->{TicketID},
-
-            # EO KIX4OTRS-capeIT
-            Value => $SessionString,
+            Key       => 'ArticleFilter' . $Self->{TicketID},
+            Value     => $SessionString,
         );
 
         # build JSON output
@@ -776,7 +721,6 @@ sub Run {
         }
 
         # write the session
-
         # save default filter settings to user preferences
         if ($SaveDefaults) {
             $UserObject->SetPreferences(
@@ -838,7 +782,6 @@ sub Run {
             $ArticleFilterSessionString = '';
         }
 
-        # KIX4OTRS-capeIT
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicFieldActiveFilter} } ) {
@@ -851,20 +794,16 @@ sub Run {
                 $ArticleFilterSessionString
                 && $ArticleFilterSessionString
                 =~ m{ $ArticleFilterDynamicFieldName < ( [^<>]+ ) > }xms
-                )
-            {
+            ) {
                 $Self->{ArticleFilter}->{$ArticleFilterDynamicFieldName} = $1;
             }
         }
-
-        # EO KIX4OTRS-capeIT
 
         # extract ArticleTypeIDs
         if (
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleTypeFilter < ( [^<>]+ ) > }xms
-            )
-        {
+        ) {
             my @IDs = split /,/, $1;
             $Self->{ArticleFilter}->{ArticleTypeID} = \@IDs;
         }
@@ -873,8 +812,7 @@ sub Run {
         if (
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleSenderTypeFilter < ( [^<>]+ ) > }xms
-            )
-        {
+        ) {
             my @IDs = split /,/, $1;
             $Self->{ArticleFilter}->{ArticleSenderTypeID} = \@IDs;
         }
@@ -896,19 +834,16 @@ sub Run {
         if (
             $EventTypeFilterSessionString
             && $EventTypeFilterSessionString =~ m{ EventTypeFilter < ( [^<>]+ ) > }xms
-            )
-        {
+        ) {
             my @IDs = split /,/, $1;
             $Self->{EventTypeFilter}->{EventTypeID} = \@IDs,
         }
 
-        # KIX4OTRS-capeIT (extended article filter)
         # extract ArticleSubjet
         if (
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleSubjectFilter < ( [^<>]+ ) > }xms
-            )
-        {
+            ) {
             $Self->{ArticleFilter}->{Subject} = $1;
         }
 
@@ -916,8 +851,7 @@ sub Run {
         if (
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleBodyFilter < ( [^<>]+ ) > }xms
-            )
-        {
+            ) {
             $Self->{ArticleFilter}->{Body} = $1;
         }
 
@@ -925,8 +859,7 @@ sub Run {
         if (
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleFlagFilter < ( [^<>]+ ) > }xms
-            )
-        {
+            ) {
             my @IDs = split /,/, $1;
             $Self->{ArticleFilter}->{ArticleFlag} = { map { $_ => 1 } @IDs };
         }
@@ -935,13 +868,9 @@ sub Run {
         if (
             $ArticleFilterSessionString
             && $ArticleFilterSessionString =~ m{ ArticleFlagTextFilter < ( [^<>]+ ) > }xms
-            )
-        {
+            ) {
             $Self->{ArticleFilter}->{ArticleFlagText} = $1;
         }
-
-        # EO KIX4OTRS-capeIT
-
     }
 
     # return if HTML email
@@ -974,23 +903,13 @@ sub Run {
     }
 
     # generate output
-    # KIX4OTRS-capeIT
-    # my $Output = $LayoutObject->Header( Value => $Ticket{TicketNumber} );
-    # $Output .= $LayoutObject->NavigationBar();
-    # $Output .= $Self->MaskAgentZoom( Ticket => \%Ticket, AclAction => \%AclAction );
     my $Output = $Self->MaskAgentZoom(
-
-        # EO KIX4OTRS-capeIT
-
         Ticket    => \%Ticket,
         AclAction => \%AclAction
     );
 
-    # KIX4OTRS-capeIT
-    # $Output .= $LayoutObject->Footer();
     $Output .= $LayoutObject->Footer( Type => 'TicketZoomTab' );
 
-    # EO KIX4OTRS-capeIT
     return $Output;
 }
 
@@ -1002,10 +921,6 @@ sub MaskAgentZoom {
 
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
-    # KIX4OTRS-capeIT
-    # removed: fetch all move queues
-    # EO KIX4OTRS-capeIT
 
     # fetch all std. templates
     my %StandardTemplates = $Kernel::OM->Get('Kernel::System::Queue')->QueueStandardTemplateMemberList(
@@ -1074,15 +989,7 @@ sub MaskAgentZoom {
         UserID                     => $Self->{UserID},
         Limit                      => $Limit + $Extra,
         Order                      => $Order,
-
-        # KIX4OTRS-capeIT
-        # DynamicFields => 0,    # fetch later only for the article(s) to display
-        DynamicFields => 1,
-
-        # removed to show article numbers - filtering done downwards
-        # %{ $Self->{ArticleFilter} // {} },    # limit by ArticleSenderTypeID/ArticleTypeID
-        # EO KIX4OTRS-capeIT
-
+        DynamicFields              => 1,
     );
 
     # get content
@@ -1223,8 +1130,6 @@ sub MaskAgentZoom {
         # set selected article
         if ( !$ArticleID ) {
             if (@ArticleBox) {
-
-                # KIX4OTRS-capeIT
                 my %Preferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
 
                 # show first article
@@ -1242,8 +1147,7 @@ sub MaskAgentZoom {
                             && $Self->{ZoomExpandSort} eq 'reverse'
                         )
                     )
-                    )
-                {
+                ) {
 
                     # set first listed article as fallback
                     $ArticleID = $ArticleBox[0]->{ArticleID};
@@ -1262,8 +1166,7 @@ sub MaskAgentZoom {
                             && $Self->{ZoomExpandSort} eq 'reverse'
                         )
                     )
-                    )
-                {
+                ) {
 
                     # set last article as default if reverse sort
                     $ArticleID = $ArticleBox[$#ArticleBox]->{ArticleID};
@@ -1321,8 +1224,7 @@ sub MaskAgentZoom {
                         !defined $Article->{$DynamicFieldName}
                         || $Article->{$DynamicFieldName} !~ m/$DynamicFieldFilter/i
                     )
-                    )
-                {
+                ) {
                     next ARTICLE;
                 }
             }
@@ -1332,8 +1234,7 @@ sub MaskAgentZoom {
                 $Self->{ArticleFilter}->{ArticleTypeID}
                 && !grep { $_ eq $Article->{ArticleTypeID} }
                 @{ $Self->{ArticleFilter}->{ArticleTypeID} }
-                )
-            {
+            ) {
                 next ARTICLE;
             }
 
@@ -1342,8 +1243,7 @@ sub MaskAgentZoom {
                 $Self->{ArticleFilter}->{ArticleSenderTypeID}
                 && !grep { $_ eq $Article->{SenderTypeID} }
                 @{ $Self->{ArticleFilter}->{ArticleSenderTypeID} }
-                )
-            {
+            ) {
                 next ARTICLE;
             }
 
@@ -1408,8 +1308,7 @@ sub MaskAgentZoom {
                                 defined $ArticleFlagData{Note}
                                 && $ArticleFlagData{Note} =~ m/$ArticleFilterFlagText/
                             )
-                            )
-                        {
+                        ) {
                             $FoundFlagText = 1;
                         }
                     }
@@ -1419,8 +1318,6 @@ sub MaskAgentZoom {
                 }
                 next ARTICLE if !$FoundFlag || !$FoundFlagText;
             }
-
-            # EO KIX4OTRS-capeIT
 
             # count shown articles
             $Count++;
@@ -1470,7 +1367,6 @@ sub MaskAgentZoom {
         }
     }
     else {
-        # KIX4OTRS-capeIT
         if ( $Self->{ArticleFilterActive} && $Self->{ArticleFilter} ) {
             for my $ArticleItem (@ArticleBox) {
                 next if !$Self->{ArticleFilter}->{ShownArticleIDs}->{ $ArticleItem->{ArticleID} };
@@ -1478,13 +1374,8 @@ sub MaskAgentZoom {
             }
         }
         else {
-            # EO KIX4OTRS-capeIT
             @ArticleBoxShown = @ArticleBox;
-
-            # KIX4OTRS-capeIT
         }
-
-        # EO KIX4OTRS-capeIT
     }
 
     # set display options
@@ -1515,7 +1406,6 @@ sub MaskAgentZoom {
                 TicketID    => $Ticket{TicketID},
             };
         }
-
 
         # show article tree
         $Param{ArticleTree} = $Self->_ArticleTree(
@@ -1555,13 +1445,8 @@ sub MaskAgentZoom {
             );
         }
         $Param{ArticleItems} .= $LayoutObject->Output(
-
-            # KIX4OTRS-capeIT
-            # TemplateFile => 'AgentTicketZoom',
             TemplateFile => 'AgentTicketZoomTabArticle',
-
-            # EO KIX4OTRS-capeIT
-            Data => { %Ticket, %AclAction },
+            Data         => { %Ticket, %AclAction },
         );
     }
 
@@ -1580,11 +1465,7 @@ sub MaskAgentZoom {
     );
 
     # number of articles
-    # KIX4OTRS-capeIT
-    # $Param{ArticleCount} = scalar @ArticleBox;
     $Param{ArticleCount} = $Count;
-
-    # EO KIX4OTRS-capeIT
 
     if ( $ConfigObject->Get('Ticket::UseArticleColors') ) {
         $Param{UseArticleColors} = 1;
@@ -1594,13 +1475,6 @@ sub MaskAgentZoom {
         Name => 'Header',
         Data => { %Param, %Ticket, %AclAction },
     );
-
-    # KIX4OTRS-capeIT
-    # removed: run ticket menu modules
-    # removed: queue move string
-    # removed: process ticket handling
-    # removed: sidebar content
-    # EO KIX4OTRS-capeIT
 
     # article filter is activated in sysconfig
     if ( $Self->{ArticleFilterActive} ) {
@@ -1630,17 +1504,13 @@ sub MaskAgentZoom {
                 Result => 'HASH',
             );
 
-            # KIX4OTRS-capeIT
             my %ArticleFlagList = ();
             if (
                 defined $Self->{Config}->{ArticleFlags}
                 && ref $Self->{Config}->{ArticleFlags} eq 'HASH'
-                )
-            {
+            ) {
                 %ArticleFlagList = %{ $Self->{Config}->{ArticleFlags} };
             }
-
-            # EO KIX4OTRS-capeIT
 
             # build article type list for filter dialog
             $Param{ArticleTypeFilterString} = $LayoutObject->BuildSelection(
@@ -1669,7 +1539,6 @@ sub MaskAgentZoom {
                 Class       => 'Modernize',
             );
 
-            # KIX4OTRS-capeIT
             $Param{ArticleSubjectFilterString} = $Self->{ArticleFilter}->{Subject};
             $Param{ArticleBodyFilterString}    = $Self->{ArticleFilter}->{Body};
 
@@ -1738,8 +1607,6 @@ sub MaskAgentZoom {
                 );
             }
 
-            # EO KIX4OTRS-capeIT
-
             # Ticket ID
             $Param{TicketID} = $Self->{TicketID};
 
@@ -1751,7 +1618,6 @@ sub MaskAgentZoom {
 
     }
 
-    # KIX4OTRS-capeIT
     # create layout block
     $LayoutObject->Block(
         Name => 'ArticleFlagDialog',
@@ -1759,8 +1625,6 @@ sub MaskAgentZoom {
             TicketID => $Self->{TicketID},
         },
     );
-
-    # EO KIX4OTRS-capeIT
 
     # check if ticket need to be marked as seen
     my $ArticleAllSeen = 1;
@@ -1794,23 +1658,18 @@ sub MaskAgentZoom {
         Name => 'TicketZoomInit',
         Data => {
             %Param,
-
-            # KIX4OTRS-capeIT
             TicketID => $Self->{TicketID},
-
-            # EO KIX4OTRS-capeIT
         },
     );
 
     # return output
     return $LayoutObject->Output(
-
-        # KIX4OTRS-capeIT
-        # TemplateFile => 'AgentTicketZoom',
         TemplateFile => 'AgentTicketZoomTabArticle',
-
-        # EO KIX4OTRS-capeIT
-        Data => { %Param, %Ticket, %AclAction },
+        Data         => {
+            %Param,
+            %Ticket,
+            %AclAction
+        },
     );
 }
 
@@ -1917,10 +1776,14 @@ sub _ArticleTree {
 
         # build article filter reset link only if filter is set
         if (
-            ( !$Self->{ZoomTimeline} && $Self->{ArticleFilter} )
-            || ( $Self->{ZoomTimeline} && $Self->{EventTypeFilter} )
+            ( !$Self->{ZoomTimeline}
+              && $Self->{ArticleFilter}
             )
-        {
+            ||
+            ( $Self->{ZoomTimeline}
+              && $Self->{EventTypeFilter}
+            )
+        ) {
             $LayoutObject->Block(
                 Name => 'ArticleFilterResetLink',
                 Data => {%Param},
@@ -1928,7 +1791,6 @@ sub _ArticleTree {
         }
     }
 
-    # KIX4OTRS-capeIT
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{ $Self->{DynamicFieldShow} } ) {
@@ -1942,8 +1804,6 @@ sub _ArticleTree {
             },
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get needed objects
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
@@ -1981,13 +1841,10 @@ sub _ArticleTree {
             my $ClassRow   = '';
             my $NewArticle = 0;
 
-            # KIX4OTRS-capeIT
             my %ArticleFlag = $TicketObject->ArticleFlagGet(
                 ArticleID => $Article{ArticleID},
                 UserID    => $Self->{UserID},
             );
-
-            # EO KIX4OTRS-capeIT
 
             # ignore system sender types
             if (
@@ -1997,12 +1854,10 @@ sub _ArticleTree {
                     || $ConfigObject->Get('Ticket::NewArticleIgnoreSystemSender')
                     && $Article{SenderType} ne 'system'
                 )
-                )
-            {
+            ) {
                 $NewArticle = 1;
 
                 # show ticket flags
-
                 # always show archived tickets as seen
                 if ( $Ticket{ArchiveFlag} ne 'y' ) {
                     $Class    .= ' UnreadArticles';
@@ -2014,8 +1869,7 @@ sub _ArticleTree {
                 if (
                     $Self->{UserID} == $Article{OwnerID}
                     || $Self->{UserID} == $Article{ResponsibleID}
-                    )
-                {
+                ) {
                     $ShowMeta = 1;
                 }
                 if ( !$ShowMeta && $ConfigObject->Get('Ticket::Watcher') ) {
@@ -2045,13 +1899,6 @@ sub _ArticleTree {
                 TicketNumber => $Article{TicketNumber},
                 Subject      => $Article{Subject} || '',
             );
-
-            # KIX4OTRS-capeIT
-            # # set icon for SenderType
-            # my $ArticleSenderTypeIconConfig = $ConfigObject->Get('Ticket::ArticleSenderTypeIcon');
-            # if ($ArticleSenderTypeIconConfig) {
-            #     $Article{SenderTypeIcon} = $ArticleSenderTypeIconConfig->{$Article{SenderType}};
-            # }
 
             # set icon for ArticleType
             my $ArticleTypeIconConfig = $ConfigObject->Get('Ticket::ArticleTypeIcon');
@@ -2102,8 +1949,6 @@ sub _ArticleTree {
                 $Article{FromRealname} = $Article{From};
             }
 
-            # EO KIX4OTRS-capeIT
-
             # check if we need to show also expand/collapse icon
             $LayoutObject->Block(
                 Name => 'TreeItem',
@@ -2117,7 +1962,6 @@ sub _ArticleTree {
                 },
             );
 
-            # KIX4OTRS-capeIT
             # reset $Article{FromRealname}
             $Article{FromRealname} = $Article{FromRealnameTmp};
 
@@ -2154,8 +1998,6 @@ sub _ArticleTree {
                 );
             }
 
-            # EO KIX4OTRS-capeIT
-
             # always show archived tickets as seen
             if ( $NewArticle && $Ticket{ArchiveFlag} ne 'y' ) {
                 $LayoutObject->Block(
@@ -2167,39 +2009,6 @@ sub _ArticleTree {
                 );
             }
 
-            # KIX4OTRS-capeIT
-            #            # cycle trough the activated Dynamic Fields for this screen
-            #            DYNAMICFIELD:
-            #            for my $DynamicFieldConfig ( @{ $Self->{DynamicFieldShow} } ) {
-            #                next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-            #
-            #                my $Value = $BackendObject->ValueGet(
-            #                    DynamicFieldConfig => $DynamicFieldConfig,
-            #                    ObjectID           => $Article{ArticleID},
-            #                );
-            #
-            #                # get print string for this dynamic field
-            #                my $ValueStrg = $BackendObject->DisplayValueRender(
-            #                    DynamicFieldConfig => $DynamicFieldConfig,
-            #                    Value              => $Value,
-            #                    ValueMaxChars      => $ConfigObject->
-            #                        Get('Ticket::Frontend::DynamicFieldsZoomMaxSizeArticle')
-            #                        || 160,    # limit for article display
-            #                    LayoutObject => $LayoutObject,
-            #                );
-            #
-            #                $LayoutObject->Block(
-            #                    Name => 'TreeItemDynamicField',
-            #                    Data => {
-            #                        Name  => $DynamicFieldConfig->{Name},
-            #                        Title => $ValueStrg->{Title},
-            #                        Value => $ValueStrg->{Value},
-            #                    },
-            #                );
-            #            }
-
-            # EO KIX4OTRS-capeIT
-
             # Bugfix for IE7: a table cell should not be empty
             # (because otherwise the cell borders are not shown):
             # we add an empty element here
@@ -2209,21 +2018,6 @@ sub _ArticleTree {
                     Data => {},
                 );
             }
-
-            # KIX4OTRS-capeIT
-            # # Determine communication direction
-            # if ( $Article{ArticleType} =~ /-internal$/smx ) {
-            #     $LayoutObject->Block( Name => 'TreeItemDirectionInternal' );
-            # }
-            # else {
-            #     if ( $Article{SenderType} eq 'customer' ) {
-            #         $LayoutObject->Block( Name => 'TreeItemDirectionIncoming' );
-            #     }
-            #     else {
-            #         $LayoutObject->Block( Name => 'TreeItemDirectionOutgoing' );
-            #     }
-            # }
-            # EO KIX4OTRS-capeIT
 
             # show attachment info
             # Bugfix for IE7: a table cell should not be empty
@@ -2304,14 +2098,12 @@ sub _ArticleTree {
         if (
             $Self->{EventTypeFilter}->{EventTypeID}
             && IsArrayRefWithData( $Self->{EventTypeFilter}->{EventTypeID} )
-            )
-        {
+        ) {
             for my $EventType ( sort keys %{ $Self->{HistoryTypeMapping} } ) {
                 if (
                     $EventType ne 'NewTicket' && !grep { $_ eq $EventType }
                     @{ $Self->{EventTypeFilter}->{EventTypeID} }
-                    )
-                {
+                    ) {
                     push @TypesDodge, $EventType;
                 }
             }
@@ -2454,8 +2246,7 @@ sub _ArticleTree {
                 && $Item->{HistoryType} eq 'AddNote'
                 && IsHashRefWithData( $ArticlesByArticleID->{ $Item->{ArticleID} } )
                 && $ArticlesByArticleID->{ $Item->{ArticleID} }->{SenderType} eq 'customer'
-                )
-            {
+            ) {
                 $Item->{Class} = 'TypeIncoming';
 
                 # We fake a custom history type because external notes from customers still
@@ -2469,8 +2260,7 @@ sub _ArticleTree {
                 && $Item->{HistoryType} eq 'EmailAgent'
                 && IsHashRefWithData( $ArticlesByArticleID->{ $Item->{ArticleID} } )
                 && $ArticlesByArticleID->{ $Item->{ArticleID} }->{ArticleType} eq 'email-internal'
-                )
-            {
+            ) {
                 $Item->{Class}       = 'TypeNoteInternal';
                 $Item->{HistoryType} = 'EmailAgentInternal';
             }
@@ -2480,8 +2270,7 @@ sub _ArticleTree {
                 $Item->{ArticleID}
                 && IsHashRefWithData( $ArticlesByArticleID->{ $Item->{ArticleID} } )
                 && $ArticlesByArticleID->{ $Item->{ArticleID} }->{ArticleType} eq 'chat-external'
-                )
-            {
+            ) {
                 $Item->{HistoryType} = 'ChatExternal';
                 $Item->{Class}       = 'TypeIncoming';
             }
@@ -2489,8 +2278,7 @@ sub _ArticleTree {
                 $Item->{ArticleID}
                 && IsHashRefWithData( $ArticlesByArticleID->{ $Item->{ArticleID} } )
                 && $ArticlesByArticleID->{ $Item->{ArticleID} }->{ArticleType} eq 'chat-internal'
-                )
-            {
+            ) {
                 $Item->{HistoryType} = 'ChatInternal';
                 $Item->{Class}       = 'TypeInternal';
             }
@@ -2499,8 +2287,7 @@ sub _ArticleTree {
                 && $Item->{ArticleID}
                 && IsHashRefWithData( $ArticlesByArticleID->{ $Item->{ArticleID} } )
                 && $ArticlesByArticleID->{ $Item->{ArticleID} }->{ArticleType} eq 'email-internal'
-                )
-            {
+            ) {
 
                 $Item->{Class} = 'TypeNoteInternal';
             }
@@ -2545,8 +2332,7 @@ sub _ArticleTree {
                 if (
                     $Item->{ArticleData}->{ArticleType} eq 'chat-external'
                     || $Item->{ArticleData}->{ArticleType} eq 'chat-internal'
-                    )
-                {
+                ) {
                     $Item->{IsChatArticle} = 1;
 
                     # display only the first three (shortened) lines of a chart article
@@ -2625,8 +2411,7 @@ sub _ArticleTree {
                 $LastCreateSystemTime
                 && $Item->{CreateSystemTime} <= $LastCreateSystemTime
                 && $Item->{CreateSystemTime} >= ( $LastCreateSystemTime - 5 )
-                )
-            {
+            ) {
                 push @{ $HistoryItems{$LastCreateTime} }, $Item;
                 $Item->{CreateTime} = $LastCreateTime;
             }
@@ -2714,7 +2499,7 @@ sub _ArticleTree {
                     Data => {
                         ArticleID   => $ArticleID,
                         Attachments => $ArticleAttachments,
-                        }
+                    }
                 );
             }
         }
@@ -2722,13 +2507,8 @@ sub _ArticleTree {
 
     # return output
     return $LayoutObject->Output(
-
-        # KIX4OTRS-capeIT
-        # TemplateFile => 'AgentTicketZoom',
         TemplateFile => 'AgentTicketZoomTabArticle',
-
-        # EO KIX4OTRS-capeIT
-        Data => { %Param, %Ticket },
+        Data         => { %Param, %Ticket },
     );
 }
 
@@ -2822,8 +2602,7 @@ sub _ArticleItem {
                 !$Self->{ZoomExpand}
                 && defined $Param{ActualArticleID}
                 && $Param{ActualArticleID} == $Article{ArticleID}
-                )
-            {
+            ) {
                 $LayoutObject->Block(
                     Name => 'ArticleItemMarkAsSeen',
                     Data => { %Param, %Article, %AclAction },
@@ -2842,29 +2621,20 @@ sub _ArticleItem {
     for my $Key (qw(From To Cc)) {
         next KEY if !$Article{$Key};
 
-        # KIX4OTRS-capeIT
         # use realname only or use realname and email address
         my $Realname = '';
         if ( $Self->{Config}->{ArticleDetailViewFrom} eq 'Realname' ) {
             $Realname = 'Realname'
         }
 
-        # EO KIX4OTRS-capeIT
-
         my $DisplayType = $Key eq 'From'             ? $SenderDisplayType : $RecipientDisplayType;
         my $HiddenType  = $DisplayType eq 'Realname' ? 'Value'            : 'Realname';
         $LayoutObject->Block(
             Name => 'RowRecipient',
             Data => {
-                Key   => $Key,
-                Value => $Article{$Key},
-
-                # KIX4OTRS-capeIT
-                # Realname => $Article{ $Key . 'Realname' },
-                Realname => $Article{ $Key . $Realname },
-
-                # EO KIX4OTRS-capeIT
-
+                Key                  => $Key,
+                Value                => $Article{$Key},
+                Realname             => $Article{ $Key . $Realname },
                 ArticleID            => $Article{ArticleID},
                 $HiddenType . Hidden => 'Hidden',
             },
@@ -2875,8 +2645,7 @@ sub _ArticleItem {
     if (
         $ConfigObject->Get('Ticket::ZoomTimeDisplay')
         && $ConfigObject->Get('Ticket::Frontend::AccountTime')
-        )
-    {
+    ) {
         my $ArticleTime = $TicketObject->ArticleAccountedTimeGet(
             ArticleID => $Article{ArticleID}
         );
@@ -3060,7 +2829,8 @@ sub _ArticleItem {
             # filter option
             $Object->Filter(
                 Article => \%Article,
-                %Ticket, Config => $Jobs{$Job}
+                %Ticket,
+                Config  => $Jobs{$Job}
             );
         }
     }
@@ -3133,7 +2903,6 @@ sub _ArticleItem {
         }
     }
 
-    # KIX4OTRS-capeIT
     # get all article flags for this article
     my %ArticleFlag = $TicketObject->ArticleFlagGet(
         ArticleID => $Article{ArticleID},
@@ -3168,8 +2937,6 @@ sub _ArticleItem {
 
         $Count++;
     }
-
-    # EO KIX4OTRS-capeIT
 
     # Special treatment for chat articles
     if ( $Article{ArticleType} eq 'chat-external' || $Article{ArticleType} eq 'chat-internal' ) {
@@ -3231,7 +2998,6 @@ sub _ArticleItem {
 }
 
 sub _ArticleMenu {
-
     my ( $Self, %Param ) = @_;
 
     my %Ticket    = %{ $Param{Ticket} };
@@ -3247,7 +3013,6 @@ sub _ArticleMenu {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    # KIX4OTRS-capeIT
     # Owner and Responsible can mark articles as important or remove mark
     if (
         !$Self->{Config}->{ArticleFlagsOnlyOwnerAndResponsible} ||
@@ -3259,8 +3024,7 @@ sub _ArticleMenu {
                 && $Self->{UserID} == $Ticket{ResponsibleID}
             )
         )
-        )
-    {
+    ) {
 
         # Always use user id 1 because other users also have to see the important flag
         my %ArticleFlags = $TicketObject->ArticleFlagGet(
@@ -3284,25 +3048,15 @@ sub _ArticleMenu {
         };
     }
 
-    # EO KIX4OTRS-capeIT
-
     # select the output template
-    # KIX4OTRS-capeIT
-    # if ( $Article{ArticleType} !~ /^(note|email-noti|chat)/i ) {
-    # EO KIX4OTRS-capeIT
     # check if compose link should be shown
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketCompose}
         && ( $AclActionLookup{AgentTicketCompose} )
-
-        # KIX4OTRS-capeIT
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketCompose}
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketCompose} =~
         /(^|.*,)$Article{ArticleType}(,.*|$)/
-
-        # EO KIX4OTRS-capeIT
-        )
-    {
+    ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketCompose');
         if ( $Config->{Permission} ) {
@@ -3374,16 +3128,11 @@ sub _ArticleMenu {
                 DropdownType          => 'Reply',
                 StandardResponsesStrg => $StandardResponsesStrg,
                 Name                  => Translatable('Reply'),
-
-                # KIX4OTRS-capeIT
-                # Class                 => 'AsPopup PopupType_TicketAction',
-                Class => 'TabAsPopup PopupType_TicketAction',
-
-                # EO KIX4OTRS-capeIT
-                Action            => 'AgentTicketCompose',
-                FormID            => 'Reply' . $Article{ArticleID},
-                ResponseElementID => 'ResponseID',
-                Type              => $Param{Type},
+                Class                 => 'TabAsPopup PopupType_TicketAction',
+                Action                => 'AgentTicketCompose',
+                FormID                => 'Reply' . $Article{ArticleID},
+                ResponseElementID     => 'ResponseID',
+                Type                  => $Param{Type},
             };
 
             # check if reply all is needed
@@ -3444,17 +3193,12 @@ sub _ArticleMenu {
                     DropdownType          => 'Reply',
                     StandardResponsesStrg => $StandardResponsesStrg,
                     Name                  => Translatable('Reply All'),
-
-                    # KIX4OTRS-capeIT
-                    # Class                 => 'AsPopup PopupType_TicketAction',
-                    Class => 'TabAsPopup PopupType_TicketAction',
-
-                    # EO KIX4OTRS-capeIT
-                    Action            => 'AgentTicketCompose',
-                    FormID            => 'ReplyAll' . $Article{ArticleID},
-                    ReplyAll          => 1,
-                    ResponseElementID => 'ResponseIDAll' . $Article{ArticleID},
-                    Type              => $Param{Type},
+                    Class                 => 'TabAsPopup PopupType_TicketAction',
+                    Action                => 'AgentTicketCompose',
+                    FormID                => 'ReplyAll' . $Article{ArticleID},
+                    ReplyAll              => 1,
+                    ResponseElementID     => 'ResponseIDAll' . $Article{ArticleID},
+                    Type                  => $Param{Type},
                 };
             }
         }
@@ -3465,16 +3209,10 @@ sub _ArticleMenu {
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketForward}
         && $AclActionLookup{AgentTicketForward}
-
-        # KIX4OTRS-capeIT
-        # && $Article{ArticleType} =~ /^(email-external|email-internal|phone|webrequest|fax)$/i
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketForward}
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketForward} =~
         /(^|.*,)$Article{ArticleType}(,.*|$)/
-
-        # EO KIX4OTRS-capeIT
-        )
-    {
+    ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketForward');
         if ( $Config->{Permission} ) {
@@ -3489,8 +3227,7 @@ sub _ArticleMenu {
             }
         }
         if ( $Config->{RequiredLock} ) {
-            if ( $TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} ) )
-            {
+            if ( $TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} ) ) {
                 my $AccessOk = $TicketObject->OwnerCheck(
                     TicketID => $Ticket{TicketID},
                     OwnerID  => $Self->{UserID},
@@ -3501,15 +3238,14 @@ sub _ArticleMenu {
             }
         }
         if ($Access) {
-
             if ( IsHashRefWithData( $Param{StandardForwards} ) ) {
 
                 # get StandardForwardsStrg
                 my %StandardForwardHash = %{ $Param{StandardForwards} };
 
-               # get revers @StandardForwardHash because we need to sort by Values
-               # from %ReverseStandarForward we get value of Key by %StandardForwardHash Value
-               # and @StandardForwardArray is created as array of hashes with elements Key and Value
+                # get revers @StandardForwardHash because we need to sort by Values
+                # from %ReverseStandarForward we get value of Key by %StandardForwardHash Value
+                # and @StandardForwardArray is created as array of hashes with elements Key and Value
                 my %ReverseStandarForward = reverse %StandardForwardHash;
                 my @StandardForwardArray  = map {
                     {
@@ -3542,16 +3278,11 @@ sub _ArticleMenu {
                     DropdownType         => 'Forward',
                     StandardForwardsStrg => $StandardForwardsStrg,
                     Name                 => Translatable('Forward'),
-
-                    # KIX4OTRS-capeIT
-                    # Class                 => 'AsPopup PopupType_TicketAction',
-                    Class => 'TabAsPopup PopupType_TicketAction',
-
-                    # EO KIX4OTRS-capeIT
-                    Action           => 'AgentTicketForward',
-                    FormID           => 'Forward' . $Article{ArticleID},
-                    ForwardElementID => 'ForwardTemplateID',
-                    Type             => $Param{Type},
+                    Class                => 'TabAsPopup PopupType_TicketAction',
+                    Action               => 'AgentTicketForward',
+                    FormID               => 'Forward' . $Article{ArticleID},
+                    ForwardElementID     => 'ForwardTemplateID',
+                    Type                 => $Param{Type},
                 };
 
             }
@@ -3561,14 +3292,8 @@ sub _ArticleMenu {
                     ItemType    => 'Link',
                     Description => Translatable('Forward article via mail'),
                     Name        => Translatable('Forward'),
-
-                    # KIX4OTRS-capeIT
-                    # Class                 => 'AsPopup PopupType_TicketAction',
-                    Class => 'TabAsPopup PopupType_TicketAction',
-
-                    # EO KIX4OTRS-capeIT
-                    Link =>
-                        "Action=AgentTicketForward;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID}"
+                    Class       => 'TabAsPopup PopupType_TicketAction',
+                    Link        => "Action=AgentTicketForward;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID}"
                 };
             }
         }
@@ -3579,16 +3304,10 @@ sub _ArticleMenu {
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketBounce}
         && $AclActionLookup{AgentTicketBounce}
-
-        # KIX4OTRS-capeIT
-        # && $Article{ArticleType} =~ /^(email-external|email-internal)$/i
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketBounce}
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketBounce} =~
         /(^|.*,)$Article{ArticleType}(,.*|$)/
-
-        # EO KIX4OTRS-capeIT
-        )
-    {
+    ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketBounce');
         if ( $Config->{Permission} ) {
@@ -3603,8 +3322,7 @@ sub _ArticleMenu {
             }
         }
         if ( $Config->{RequiredLock} ) {
-            if ( $TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} ) )
-            {
+            if ( $TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} ) ) {
                 my $AccessOk = $TicketObject->OwnerCheck(
                     TicketID => $Ticket{TicketID},
                     OwnerID  => $Self->{UserID},
@@ -3620,43 +3338,26 @@ sub _ArticleMenu {
                 ItemType    => 'Link',
                 Description => 'Bounce Article to a different mail address',
                 Name        => Translatable('Bounce'),
-
-                # KIX4OTRS-capeIT
-                # Class                 => 'AsPopup PopupType_TicketAction',
-                Class => 'TabAsPopup PopupType_TicketAction',
-
-                # EO KIX4OTRS-capeIT
-                Link =>
-                    "Action=AgentTicketBounce;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID}"
+                Class       => 'TabAsPopup PopupType_TicketAction',
+                Link        => "Action=AgentTicketBounce;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID}"
             };
         }
     }
-
-    # KIX4OTRS-capeIT
-    # }
-    # EO KIX4OTRS-capeIT
 
     # check if split link should be shown
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketPhone}
         && $AclActionLookup{AgentTicketPhone}
-
-        # KIX4OTRS-capeIT
-        # && $Article{ArticleType} !~ /^(chat-external|chat-internal)$/i
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketPhoneSplit}
         && $Self->{Config}->{ArticleEmailActions}->{AgentTicketPhoneSplit} =~
         /(^|.*,)$Article{ArticleType}(,.*|$)/
-
-        # EO KIX4OTRS-capeIT
-        )
-    {
+    ) {
 
         push @MenuItems, {
             ItemType    => 'Link',
             Description => Translatable('Split this article'),
             Name        => Translatable('Split'),
-            Link =>
-                "Action=AgentTicketPhone;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID};LinkTicketID=$Ticket{TicketID}"
+            Link        => "Action=AgentTicketPhone;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID};LinkTicketID=$Ticket{TicketID}"
         };
     }
 
@@ -3664,8 +3365,7 @@ sub _ArticleMenu {
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketPrint}
         && $AclActionLookup{AgentTicketPrint}
-        )
-    {
+    ) {
         my $OK = $TicketObject->TicketPermission(
             Type     => 'ro',
             TicketID => $Ticket{TicketID},
@@ -3678,19 +3378,12 @@ sub _ArticleMenu {
                 ItemType    => 'Link',
                 Description => Translatable('Print this article'),
                 Name        => Translatable('Print'),
-
-                # KIX4OTRS-capeIT
-                # Class                 => 'AsPopup PopupType_TicketAction',
-                Class => 'TabAsPopup PopupType_TicketAction',
-
-                # EO KIX4OTRS-capeIT
-                Link =>
-                    "Action=AgentTicketPrint;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID};ArticleNumber=$Article{Count}"
+                Class       => 'TabAsPopup PopupType_TicketAction',
+                Link        => "Action=AgentTicketPrint;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID};ArticleNumber=$Article{Count}"
             };
         }
     }
 
-    # KIX4OTRS-capeIT
     # check if edit link should be shown
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentArticleEdit}
@@ -3698,8 +3391,7 @@ sub _ArticleMenu {
         && $Self->{Config}->{ArticleEmailActions}->{AgentArticleEdit}
         && $Self->{Config}->{ArticleEmailActions}->{AgentArticleEdit} =~
         /(^|.*,)$Article{ArticleType}(,.*|$)/
-        )
-    {
+    ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentArticleEdit');
         if ( $Config->{Permission} ) {
@@ -3714,8 +3406,7 @@ sub _ArticleMenu {
             }
         }
         if ( $Config->{RequiredLock} ) {
-            if ( $TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} ) )
-            {
+            if ( $TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} ) ) {
                 my $AccessOk = $TicketObject->OwnerCheck(
                     TicketID => $Ticket{TicketID},
                     OwnerID  => $Self->{UserID},
@@ -3732,8 +3423,7 @@ sub _ArticleMenu {
                 Description => 'Edit article',
                 Name        => Translatable('Edit article'),
                 Class       => 'TabAsPopup PopupType_TicketAction',
-                Link =>
-                    "Action=AgentArticleEdit;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID};Count=$Article{Count}",
+                Link        => "Action=AgentArticleEdit;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID};Count=$Article{Count}",
             };
         }
     }
@@ -3742,8 +3432,7 @@ sub _ArticleMenu {
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketAttachmentDownload}
         && $AclActionLookup{AgentTicketAttachmentDownload}
-        )
-    {
+    ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketAttachmentDownload');
         if ( $Config->{Permission} ) {
@@ -3758,8 +3447,7 @@ sub _ArticleMenu {
             }
         }
         if ( $Config->{RequiredLock} ) {
-            if ( $TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} ) )
-            {
+            if ( $TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} ) ) {
                 my $AccessOk = $TicketObject->OwnerCheck(
                     TicketID => $Ticket{TicketID},
                     OwnerID  => $Self->{UserID},
@@ -3783,13 +3471,10 @@ sub _ArticleMenu {
                 Description => 'Download all Attachements for this article',
                 Name        => Translatable('Attachments Download'),
                 Class       => 'TabAsPopup PopupType_TicketAction',
-                Link =>
-                    "Action=AgentTicketAttachmentDownload;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID}",
+                Link        => "Action=AgentTicketAttachmentDownload;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID}",
             };
         }
     }
-
-    # EO KIX4OTRS-capeIT
 
     # check if plain link should be shown
     if (
@@ -3797,8 +3482,7 @@ sub _ArticleMenu {
         && $ConfigObject->Get('Ticket::Frontend::PlainView')
         && $AclActionLookup{AgentTicketPlain}
         && $Article{ArticleType} =~ /email/i
-        )
-    {
+    ) {
         my $OK = $TicketObject->TicketPermission(
             Type     => 'ro',
             TicketID => $Ticket{TicketID},
@@ -3811,87 +3495,64 @@ sub _ArticleMenu {
                 ItemType    => 'Link',
                 Description => Translatable('View the source for this Article'),
                 Name        => Translatable('Plain Format'),
-
-                # KIX4OTRS-capeIT
-                # Class                 => 'AsPopup PopupType_TicketAction',
-                Class => 'TabAsPopup PopupType_TicketAction',
-
-                # EO KIX4OTRS-capeIT
-                Link =>
-                    "Action=AgentTicketPlain;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID}",
+                Class       => 'TabAsPopup PopupType_TicketAction',
+                Link        => "Action=AgentTicketPlain;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID}",
             };
         }
     }
-
-# Owner and Responsible can mark articles as important or remove mark
-# KIX4OTRS-capeIT
-# moved upwards and replaced by selection
-# if (
-#     $Self->{UserID} == $Ticket{OwnerID}
-#     || (
-#         $ConfigObject->Get('Ticket::Responsible')
-#         && $Self->{UserID} == $Ticket{ResponsibleID}
-#     )
-#     )
-# {
-#
-#     # Always use user id 1 because other users also have to see the important flag
-#     my %ArticleFlags = $TicketObject->ArticleFlagGet(
-#         ArticleID => $Article{ArticleID},
-#         UserID    => 1,
-#     );
-#
-#     my $ArticleIsImportant = $ArticleFlags{Important};
-#
-#     my $Link
-#         = "Action=AgentTicketZoom;Subaction=MarkAsImportant;TicketID=$Ticket{TicketID};ArticleID=$Article{ArticleID}";
-#     my $Description = 'Mark';
-#     if ($ArticleIsImportant) {
-#         $Description = 'Unmark';
-#     }
-#
-#     # set important menu item
-#     push @MenuItems, {
-#         ItemType    => 'Link',
-#         Description     => $Description,
-#         Name            => $Description,
-#         Link        => $Link,
-#     };
-# }
-# EO KIX4OTRS-capeIT
 
     # check if internal reply link should be shown
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketNote}
         && $AclActionLookup{AgentTicketNote}
         && $Article{ArticleType} =~ /^note-(internal|external)$/i
-        )
-    {
+    ) {
+        my $Access = 1;
+        my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketNote');
+        if ( $Config->{Permission} ) {
+            my $OK = $TicketObject->TicketPermission(
+                Type     => $Config->{Permission},
+                TicketID => $Ticket{TicketID},
+                UserID   => $Self->{UserID},
+                LogNo    => 1,
+            );
+            if ( !$OK ) {
+                $Access = 0;
+            }
+        }
 
-        my $Link
-            = "Action=AgentTicketNote;TicketID=$Ticket{TicketID};ReplyToArticle=$Article{ArticleID}";
-        my $Description = Translatable('Reply to note');
+        if ( $Config->{RequiredLock} ) {
+            if ( $TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} ) ) {
+                my $AccessOk = $TicketObject->OwnerCheck(
+                    TicketID => $Ticket{TicketID},
+                    OwnerID  => $Self->{UserID},
+                );
+                if ( !$AccessOk ) {
+                    $Access = 0;
+                }
+            }
+        }
 
-        # set important menu item
-        push @MenuItems, {
-            ItemType    => 'Link',
-            Description => $Description,
-            Name        => $Description,
+        if ( $Access ) {
+            my $Link
+                = "Action=AgentTicketNote;TicketID=$Ticket{TicketID};ReplyToArticle=$Article{ArticleID}";
+            my $Description = Translatable('Reply to note');
 
-            # KIX4OTRS-capeIT
-            # Class                 => 'AsPopup PopupType_TicketAction',
-            Class => 'TabAsPopup PopupType_TicketAction',
-
-            # EO KIX4OTRS-capeIT
-            Link => $Link,
-        };
+            # set important menu item
+            push @MenuItems, {
+                ItemType    => 'Link',
+                Description => $Description,
+                Name        => $Description,
+                Class       => 'TabAsPopup PopupType_TicketAction',
+                Link        => $Link,
+            };
+        }
     }
 
     return @MenuItems;
 }
 
 sub _ArticleCollectMeta {
-
     my ( $Self, %Param ) = @_;
 
     my %Article = %{ $Param{Article} };
@@ -3992,7 +3653,6 @@ sub _ArticleCollectMeta {
 }
 
 sub _CollectArticleAttachments {
-
     my ( $Self, %Param ) = @_;
 
     my %Article = %{ $Param{Article} };
@@ -4029,7 +3689,6 @@ sub _CollectArticleAttachments {
     return \%Attachments;
 }
 
-# KIX4OTRS-capeIT
 sub _ArticleFlagSelectionString {
     my ( $Self, %Param ) = @_;
 
@@ -4072,7 +3731,6 @@ sub _ArticleFlagSelectionString {
     return $ArticleFlagStrg;
 }
 
-# EO KIX4OTRS-capeIT
 1;
 
 =back

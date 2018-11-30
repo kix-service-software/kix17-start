@@ -66,7 +66,7 @@ sub Run {
 
     # get dynamic field name
     my $DynamicField = $ParamObject->GetParam( Param => 'DynamicField' );
-    if ( $DynamicField =~ m/^DynamicField_(.*)/ ) {
+    if ( $DynamicField =~ m/^(?:Search_)?DynamicField_(.*)/ ) {
         $DynamicField = $1;
     }
 

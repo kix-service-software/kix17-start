@@ -33,10 +33,7 @@
 [% RenderBlockStart("MetaLink") %]
     <link rel="[% Data.Rel | html %]" type="[% Data.Type | html %]" title="[% Data.Title | html %]" href="[% Data.Href %]" />
 [% RenderBlockEnd("MetaLink") %]
-# KIX4OTRS-capeIT
-#    <link rel="shortcut icon" href="[% Config("Frontend::ImagePath") %]icons/product.ico" type="image/ico" />
     <link rel="shortcut icon" href="[% Config("Frontend::ImagePath") %][% Config("ProductIcon") %]" type="image/ico" />
-#    <link rel="apple-touch-icon" href="[% Config("Frontend::ImagePath") %]icons/apple-touch-icon.png" />
     <link rel="apple-touch-icon" href="[% Config("Frontend::ImagePath") %][% Config("ProductIcon") %]" />
 # EO KIX4OTRS-capeIT
 [% RenderBlockStart("CommonCSS") %]
@@ -52,13 +49,6 @@
 
 [% RenderBlockStart("HeaderLogoCSS") %]
     <style type="text/css">
-        .LoginLogo {
-            background-image: [% Data.URL | html %];
-            top: [% Data.StyleTop | html %];
-            right: [% Data.StyleRight | html %];
-            width: [% Data.StyleWidth | html %];
-            height: [% Data.StyleHeight | html %];
-        }
         #Header #Logo {
             background-image: [% Data.URL | html %];
             top: [% Data.StyleTop | html %];
@@ -68,6 +58,14 @@
         }
     </style>
 [% RenderBlockEnd("HeaderLogoCSS") %]
+
+[% RenderBlockStart("LoginLogoCSS") %]
+    <style type="text/css">
+        .LoginLogo {
+            [% Data.CSSAttr | html %]
+        }
+    </style>
+[% RenderBlockEnd("LoginLogoCSS") %]
 
     <style type="text/css">
         @font-face {
