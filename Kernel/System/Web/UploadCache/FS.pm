@@ -402,10 +402,13 @@ sub FormIDCleanUp {
     for my $File (@List) {
 
         # get FormID
-        $File =~ s/^.*\/(.+?)\..+?$/$1/;
-        if ( $CurrentTile > $File ) {
-            if ( !$RemoveFormIDs{$File} ) {
-                $RemoveFormIDs{$File} = 1;
+        if ($File =~ m/^.*\/((\d+) \. (?: \d+ | \w+ \. \w+ \. \d+ | \w+ (?:\. \d+)+ \. \w+ ) \. \d+)\..+?$/xms) {
+            my $FormID = $1;
+            my $Time   = $2;
+            if ( $CurrentTile > $Time ) {
+                if ( !$RemoveFormIDs{$FormID} ) {
+                    $RemoveFormIDs{$FormID} = 1;
+                }
             }
         }
     }
@@ -423,7 +426,10 @@ sub _FormIDValidate {
 
     return if !$FormID;
 
-    if ( $FormID !~ m{^ \d+ \. \d+ \. \d+ $}xms ) {
+# KIX-capeIT
+#    if ( $FormID !~ m{^ \d+ \. \d+ \. \d+ $}xms ) {
+    if ( $FormID !~ m{^ \d+ \. (?: \d+ | \w+ \. \w+ \. \d+ | \w+ (?:\. \d+)+ \. \w+ ) \. \d+ $}xms ) {
+# EO KIX-capeIT
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Invalid FormID!',
