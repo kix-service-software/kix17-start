@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.4.1-RC2 (2018/12/17)
+ * (2018/12/04) - Bugfix: T2018111390001476 (fixed FormIDValidation for SaveAsDraft) (millinger)
+ * (2018/12/03) - Bugfix: T2018120390000332 (fixed fulltext ticket search for archived tickets) (millinger)
+ * (2018/11/30) - Bugfix: T2018110590000831 (fixed missing closing brace of map function) (fjacquemin)
+
 # 17.4.1-RC1 (2018/11/30)
  * (2018/11/29) - Bugfix: T2018082390000777 (fixed number of tickets found in dashboard links are incorrect) (fjacquemin)
  * (2018/11/28) - Bugfix: T2018112790001093 (fixed missing repositioning of input type hidden when using CustomizeForm in the customer frontend) (fjacquemin)
