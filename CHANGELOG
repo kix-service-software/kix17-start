@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.4.1-RC3 (2018/12/19)
+ * (2018/12/19) - Bugfix: T2018120390000332 (fixed syntax error) (millinger)
+
 # 17.4.1-RC2 (2018/12/17)
  * (2018/12/04) - Bugfix: T2018111390001476 (fixed FormIDValidation for SaveAsDraft) (millinger)
  * (2018/12/03) - Bugfix: T2018120390000332 (fixed fulltext ticket search for archived tickets) (millinger)
