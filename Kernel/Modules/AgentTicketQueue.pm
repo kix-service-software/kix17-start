@@ -805,7 +805,7 @@ sub Run {
                         Limit           => $Start + 50,
                         UserID          => $Self->{UserID},
                         ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
-                        ArchiveFlags    => $Filters{ $Filter }->{Search}->{ArchiveFlags}
+                        ArchiveFlags    => $Filters{ $Filter }->{Search}->{ArchiveFlags},
                         %DynamicFieldSearchParameters,
                     );
 
@@ -839,7 +839,7 @@ sub Run {
                     OrderBy      => $Self->{OrderBy},
                     UserID       => $Self->{UserID},
                     TicketID     => \@MergeArray,
-                    ArchiveFlags => $Filters{ $Filter }->{Search}->{ArchiveFlags}
+                    ArchiveFlags => $Filters{ $Filter }->{Search}->{ArchiveFlags},
                     Limit        => $Start + 50,
                 );
             }
