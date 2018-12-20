@@ -36,7 +36,10 @@ sub FinishGraph {
     my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
 
-    my $Output = $LayoutObject->Header( Type => 'Small' );
+    my $Output = $LayoutObject->Header(
+        Type         => 'Small',
+        WrapperClass => 'NonMarginTop'
+    );
 
     if ( scalar keys %{$Param{Nodes}} > 100 ) {
         $Param{TooManyNodes} = (scalar keys %{$Param{Nodes}}) ;

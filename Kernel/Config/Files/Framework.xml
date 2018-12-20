@@ -5157,6 +5157,17 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="CustomerLoginLogo" Required="0" Valid="0">
+        <Description Translatable="1">The logo shown on top of the login box of the customer interface. The URL to the image must be relative URL to the skin image directory.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="URL">skins/Customer/default/img/loginlogo_default.png</Item>
+                <Item Key="StyleHeight">100px</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Frontend::WebPath" Required="1" Valid="1" ConfigLevel="200">
         <Description Translatable="1">Defines the URL base path of icons, CSS and Java Script.</Description>
         <Group>Framework</Group>

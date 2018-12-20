@@ -22,7 +22,7 @@
         <input type="hidden" value="" name="SelectedClass" id="SelectedClass" />
         <input type="hidden" value="[% Data.CustomerUserID %]" name="KIXSidebarCustomerUserID" />
         <fieldset class="TableLike"  style="width:500px;" id="KIXSidebarLinkedConfigItemAttributes">
-            <label for="ArticleTypeFilter">[% Translate("Attribute") | html %]:</label>
+            <label for="KIXSidebarLinkedCIAttribute">[% Translate("Attribute") | html %]:</label>
             <div class="Field">
                 [% Data.AttributesStrg %]
                 <button id="KIXSidebarAddAttribute" class="Add" value="Add" title="Add entry">[% Translate("Add") | html %]</button>
@@ -129,13 +129,16 @@
 
         var Class = $('#ConfigItemClass').val(),
             URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';TicketID=' + TicketID;
-        Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {});
+        Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {
+            initLinkedCICheckboxes();
+        });
 
         // reload attribute selection for this class
         var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
             URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';' + Data + ';TicketID=' + TicketID;
         Core.AJAX.ContentUpdate($('#KIXSidebarLinkedCIAttribute'), URL , function () {
             $('#KIXSidebarLinkedConfigItemResetClassFilter').addClass('Hidden');
+            initLinkedCICheckboxes();
         });
     });
 
@@ -150,7 +153,9 @@
                     var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
                         ExtendedData = 'CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
 
-                    Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), Core.Config.Get('CGIHandle') + '?' + Data + ExtendedData , function () {});
+                    Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), Core.Config.Get('CGIHandle') + '?' + Data + ExtendedData , function () {
+                        initLinkedCICheckboxes();
+                    });
                     Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
                     $('#KIXSidebarLinkedConfigItemResetClassFilter').removeClass('Hidden');
                 }
@@ -169,7 +174,9 @@
             var Class = $('#ConfigItemClass').val(),
                 URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class;
 
-            Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {});
+            Core.AJAX.ContentUpdate($('#LinkConfigItemStrgContainer'), URL , function () {
+                initLinkedCICheckboxes();
+            });
             $('#KIXSidebarLinkedConfigItemResetClassFilter').addClass('Hidden');
     });
 
@@ -182,26 +189,29 @@
                 KIXSidebarLinkedCIAttribute: Selected
             };
 
-        // get input string for new attribute
-        Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function (Response) {
-            var SelectedSearchFields = $('#SelectedSearchFields').val(),
-                SelectedSearchFieldsArray = new Array();
+        if ( Selected ) {
+            // get input string for new attribute
+            Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function (Response) {
+                var SelectedSearchFields = $('#SelectedSearchFields').val(),
+                    SelectedSearchFieldsArray = new Array();
 
-            // create used fields for processing
-            if ( SelectedSearchFields.length ) {
-                SelectedSearchFieldsArray = SelectedSearchFields.split(",")
-            }
+                // create used fields for processing
+                if ( SelectedSearchFields.length ) {
+                    SelectedSearchFieldsArray = SelectedSearchFields.split(",")
+                }
 
-            // insert new attribute input field
-            $('#KIXSidebarLinkedConfigItemAttributes').append(Response.InputString);
-            SelectedSearchFieldsArray.push(Selected);
+                // insert new attribute input field
+                $('#KIXSidebarLinkedConfigItemAttributes').append(Response.InputString);
+                SelectedSearchFieldsArray.push(Selected);
 
-            // save used fields for processing
-            $('#SelectedSearchFields').val(SelectedSearchFieldsArray.join(','));
-       });
+                // save used fields for processing
+                $('#SelectedSearchFields').val(SelectedSearchFieldsArray.join(','));
+           });
 
-        // remove already used attribut from selection
-        $('#KIXSidebarLinkedCIAttribute').find("option[value='"+Selected+"']").remove();
+            // remove already used attribut from selection
+            $('#KIXSidebarLinkedCIAttribute').find("option[value='"+Selected+"']").remove();
+            $('#KIXSidebarLinkedCIAttribute').trigger('redraw.InputField');
+        }
 
         event.preventDefault();
     });
@@ -230,7 +240,9 @@
         // add option to selection again
         var Data = Core.AJAX.SerializeForm($('#KIXSidebarLinkedConfigItemDialogForm')),
             URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedCIsAJAXHandler;Subaction=AJAXUpdateSelection;CallingAction=' + CallingAction + ';CustomerUserID=' + CustomerUserID + ';FormID=' + FormID + ';ConfigItemClass=' + Class + ';' + Data;
-        Core.AJAX.ContentUpdate($('#KIXSidebarLinkedCIAttribute'), URL , function () {});
+        Core.AJAX.ContentUpdate($('#KIXSidebarLinkedCIAttribute'), URL , function () {
+            initLinkedCICheckboxes();
+        });
 
         event.preventDefault();
     });

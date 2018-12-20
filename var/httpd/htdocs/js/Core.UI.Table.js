@@ -33,21 +33,21 @@ Core.UI.Table = (function (TargetNS) {
      *      dynamically filter a table or a list with the class TableLike (e.g. in the admin area overviews).
      */
     TargetNS.InitTableFilter = function ($FilterInput, $Container, ColumnNumber) {
-        var Timeout,
-            $Rows = $Container.find('tbody tr:not(.FilterMessage), li:not(.Header):not(.FilterMessage)'),
-            $Elements = $Rows.closest('tr, li');
-
-        // Only search in one special column of the table
-        if (typeof ColumnNumber === 'string' || typeof ColumnNumber === 'number') {
-            $Rows = $Rows.find('td:eq(' + ColumnNumber + ')');
-        }
+        var Timeout;
 
         $FilterInput.unbind('keydown.FilterInput').bind('keydown.FilterInput', function () {
 
             window.clearTimeout(Timeout);
             Timeout = window.setTimeout(function () {
 
-                var FilterText = ($FilterInput.val() || '').toLowerCase();
+                var FilterText = ($FilterInput.val() || '').toLowerCase(),
+                    $Rows      = $Container.find('tbody tr:not(.FilterMessage), li:not(.Header):not(.FilterMessage)'),
+                    $Elements  = $Rows.closest('tr, li');
+
+                // Only search in one special column of the table
+                if (typeof ColumnNumber === 'string' || typeof ColumnNumber === 'number') {
+                    $Rows = $Rows.find('td:eq(' + ColumnNumber + ')');
+                }
 
                 /**
                  * @private

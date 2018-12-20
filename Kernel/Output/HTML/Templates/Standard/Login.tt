@@ -46,8 +46,7 @@ X-KIX-Login: [% Env("Baselink") %]
 [% RenderBlockStart("LoginLogoCSS") %]
     <style type="text/css">
         #LoginLogo {
-            background-image: [% Data.URL | html %];
-            height: [% Data.StyleHeight | html %];
+            [% Data.CSSAttr | html %]
         }
     </style>
 [% RenderBlockEnd("LoginLogoCSS") %]

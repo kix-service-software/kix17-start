@@ -781,8 +781,10 @@ sub ProcessList {
             FROM pm_process ';
     if ( $StateEntityIDsStrg ne 'ALL' ) {
 
-        my $StateEntityIDsStrgDB =
-            join ',', map "'" . $DBObject->Quote($_) . "'", @{ $Param{StateEntityIDs} };
+        my $StateEntityIDsStrgDB = join(
+            ',',
+            map( {"'" . $DBObject->Quote($_) . "'"} @{ $Param{StateEntityIDs} } )
+        );
 
         $SQL .= "WHERE state_entity_id IN ($StateEntityIDsStrgDB)";
     }
@@ -1551,7 +1553,7 @@ sub ProcessImport {
 
                 # check if EntityID matched the format (it could be that a process from 3.3.x is been
                 #    imported)
-                if ( $NewEntityID !~ m{\A $PartName - [0-9a-f]{32}? \z}msx ) {
+                if ( $NewEntityID !~ m{\A $PartName - [0-9a-f]{32} \z}msx ) {
 
                     # generate new EntityIDs
                     $NewEntityID = $Self->{EntityObject}->EntityIDGenerate(

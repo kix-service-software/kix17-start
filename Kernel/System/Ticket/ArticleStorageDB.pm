@@ -277,6 +277,12 @@ sub ArticleWriteAttachment {
         }
     }
 
+    $Param{Filename} = $Kernel::OM->Get('Kernel::System::Main')->FilenameCleanUp(
+        Filename  => $Param{Filename},
+        Type      => 'Local',
+        NoReplace => 1,
+    );
+
     my $NewFileName = $Param{Filename};
     my %UsedFile;
     my %Index = $Self->ArticleAttachmentIndex(
@@ -476,7 +482,7 @@ sub ArticleAttachmentIndexRaw {
 
             # converted article body should be inline
             elsif ( $Row[0] =~ m{file-[12]} ) {
-                $Disposition = 'inline'
+                $Disposition = 'inline';
             }
 
             # all others including attachments with content id that are not images
@@ -597,7 +603,7 @@ sub ArticleAttachmentIndexRaw {
 
             # converted article body should be inline
             elsif ( $Filename =~ m{file-[12]} ) {
-                $Disposition = 'inline'
+                $Disposition = 'inline';
             }
 
             # all others including attachments with content id that are not images
@@ -715,7 +721,7 @@ sub ArticleAttachment {
 
         # converted article body should be inline
         elsif ( $Data{Filename} =~ m{file-[12]} ) {
-            $Data{Disposition} = 'inline'
+            $Data{Disposition} = 'inline';
         }
 
         # all others including attachments with content id that are not images
@@ -817,7 +823,7 @@ sub ArticleAttachment {
 
                     # converted article body should be inline
                     elsif ( $Filename =~ m{file-[12]} ) {
-                        $Data{Disposition} = 'inline'
+                        $Data{Disposition} = 'inline';
                     }
 
                     # all others including attachments with content id that are not images

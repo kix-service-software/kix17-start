@@ -3,9 +3,12 @@
 # based on the original work of:
 # Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::System::User;
@@ -1238,6 +1241,9 @@ sub SetPreferences {
     );
 
     return 0 if $Blacklisted{ $Param{Key} };
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+    return 0 if substr( $Param{Key}, 0, 11 ) eq 'UserIsGroup';
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
 
     # get current setting
     my %User = $Self->GetUserData(
@@ -1594,9 +1600,11 @@ sub DESTROY {
 This software is part of the KIX project
 (L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-LICENSE for license information (AGPL). If you did not receive this file, see
-
-<https://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. This program is
+licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+For details, see the enclosed files LICENSE (AGPL) and
+LICENSE-GPL3 (GPL3) for license information. If you did not receive
+this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
+<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
 
 =cut

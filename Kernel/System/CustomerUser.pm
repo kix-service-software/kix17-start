@@ -3,9 +3,12 @@
 # based on the original work of:
 # Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::System::CustomerUser;
@@ -17,6 +20,7 @@ use base qw(Kernel::System::EventHandler);
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::Language',
     'Kernel::System::CustomerCompany',
     'Kernel::System::DB',
     'Kernel::System::Group',
@@ -404,7 +408,7 @@ sub CustomerUserDataGet {
 
         next SOURCE if !$Self->{"CustomerUser$Count"};
 
-        my %Customer = $Self->{"CustomerUser$Count"}->CustomerUserDataGet( %Param, );
+        my %Customer = $Self->{"CustomerUser$Count"}->CustomerUserDataGet(%Param);
         next SOURCE if !%Customer;
 
         # add preferences defaults
@@ -480,7 +484,8 @@ sub CustomerUserAdd {
         if (%User) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "User already exists '$Param{UserLogin}'!",
+                Message  => $Kernel::OM->Get('Kernel::Language')
+                    ->Translate( 'Customer user "%s" already exists.', $Param{UserLogin} ),
             );
             return;
         }
@@ -539,7 +544,8 @@ sub CustomerUserUpdate {
         if (%User) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "User already exists '$Param{UserLogin}'!",
+                Message  => $Kernel::OM->Get('Kernel::Language')
+                    ->Translate( 'Customer user "%s" already exists.', $Param{UserLogin} ),
             );
             return;
         }
@@ -694,6 +700,9 @@ sub SetPreferences {
     );
 
     return 0 if $Blacklisted{ $Param{Key} };
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+    return 0 if substr( $Param{Key}, 0, 11 ) eq 'UserIsGroup';
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
 
     # check if user exists
     my %User = $Self->CustomerUserDataGet( User => $Param{UserID} );
@@ -966,9 +975,11 @@ sub DESTROY {
 This software is part of the KIX project
 (L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-LICENSE for license information (AGPL). If you did not receive this file, see
-
-<https://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. This program is
+licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+For details, see the enclosed files LICENSE (AGPL) and
+LICENSE-GPL3 (GPL3) for license information. If you did not receive
+this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
+<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
 
 =cut

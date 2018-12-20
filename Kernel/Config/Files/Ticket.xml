@@ -17250,4 +17250,21 @@ Here you may define a default text for the forward function. You find this confi
             </Hash>
         </Setting>
     </ConfigItem>
+
+    <ConfigItem Name="Ticket::CreateOptions::DefaultTicketType" Required="0" Valid="0">
+        <Description Translatable="1">Sets default ticket type in AgentTicketPhone and AgentTicketEmail.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket</SubGroup>
+        <Setting>
+            <String Regex="">Incident</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::CreateOptions::DefaultQueue" Required="0" Valid="0">
+        <Description Translatable="1">Sets default queue in AgentTicketPhone and AgentTicketEmail.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket</SubGroup>
+        <Setting>
+            <String Regex=""></String>
+        </Setting>
+    </ConfigItem>
 </otrs_config>

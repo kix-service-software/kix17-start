@@ -172,7 +172,7 @@ if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
                 return true;
             }
 
-            var $Item = $(this).find('input[type=text],input[type=file],input[type=checkbox],textarea,select');
+            var $Item = $(this).find('input[type=hidden],input[type=text],input[type=file],input[type=checkbox],textarea,select');
             GetSortOrder( $Item,FieldOrderArray,DefaultPriority );
         });
 

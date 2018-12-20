@@ -84,10 +84,9 @@ sub new {
     my @ColumnsEnabled
         = grep { $DefaultColumns{$_} eq '2' } sort _DefaultColumnSort keys %DefaultColumns;
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     # add article flags
-    my $ArticleTabConfig
-        = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
+    my $ArticleTabConfig = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
     my %ArticleFlagConfig;
     for my $Key (qw(ArticleFlags ArticleFlagIcons ArticleFlagCSS)) {
         $ArticleFlagConfig{$Key} = ();
@@ -110,37 +109,31 @@ sub new {
     for my $Column (@ColumnsAvailable) {
         if ( $Column =~ m/^DynamicField_(.*?)$/ ) {
             my $DynamicField = $DynamicFieldObject->DynamicFieldGet( Name => $1 );
-            $ColumnsAvailableTranslated{$Column}
-                = $LayoutObject->{LanguageObject}->Translate( $DynamicField->{Label} );
+            $ColumnsAvailableTranslated{$Column} = $LayoutObject->{LanguageObject}->Translate( $DynamicField->{Label} );
         }
         elsif ( $Column =~ m/^FromTitle/ ) {
-            $ColumnsAvailableTranslated{$Column}
-                = $LayoutObject->{LanguageObject}->Translate('From') . ' / ';
+            $ColumnsAvailableTranslated{$Column} = $LayoutObject->{LanguageObject}->Translate('From') . ' / ';
 
             if ( $Self->{SmallViewColumnHeader} eq 'LastCustomerSubject' ) {
-                $ColumnsAvailableTranslated{$Column}
-                    .= $LayoutObject->{LanguageObject}->Translate('Subject');
+                $ColumnsAvailableTranslated{$Column} .= $LayoutObject->{LanguageObject}->Translate('Subject');
+                $Self->{Config}->{SortFromTitle}      = 0;
             }
             elsif ( $Self->{SmallViewColumnHeader} eq 'TicketTitle' ) {
-                $ColumnsAvailableTranslated{$Column}
-                    .= $LayoutObject->{LanguageObject}->Translate('Title');
+                $ColumnsAvailableTranslated{$Column} .= $LayoutObject->{LanguageObject}->Translate('Title');
+                $Self->{Config}->{SortFromTitle}      = 1;
             }
         }
         elsif ( $Column =~ m/^MarkedAs::(.*)/ ) {
-            $ColumnsAvailableTranslated{$Column}
-                = $LayoutObject->{LanguageObject}->Translate('MarkedAs') . ': '
-                . $LayoutObject->{LanguageObject}->Translate($1);
+            $ColumnsAvailableTranslated{$Column} = $LayoutObject->{LanguageObject}->Translate('MarkedAs') . ': '
+                                                 . $LayoutObject->{LanguageObject}->Translate($1);
         }
         else {
-            $ColumnsAvailableTranslated{$Column}
-                = $LayoutObject->{LanguageObject}->Translate($Column);
+            $ColumnsAvailableTranslated{$Column} = $LayoutObject->{LanguageObject}->Translate($Column);
         }
     }
-    @ColumnsAvailable
-        = sort { $ColumnsAvailableTranslated{$a} cmp $ColumnsAvailableTranslated{$b} }
+    @ColumnsAvailable = sort { $ColumnsAvailableTranslated{$a} cmp $ColumnsAvailableTranslated{$b} }
         keys %ColumnsAvailableTranslated;
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     # if preference settings are available, take them
     if ( $Preferences{ $Self->{PrefKeyColumns} } ) {
@@ -173,10 +166,9 @@ sub new {
     $Self->{ColumnsEnabled}   = \@ColumnsEnabled;
     $Self->{ColumnsAvailable} = \@ColumnsAvailable;
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     $Self->{ColumnsAvailableTranslated} = \%ColumnsAvailableTranslated;
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     {
 
@@ -217,13 +209,9 @@ sub new {
         'Type'                   => 1,
         'Lock'                   => 1,
         'Title'                  => 1,
-
-        # KIX4OTRS-capeIT
-        'From'                => 0,
-        'FromTitle'           => 'Title',    # alternative SortBy (identical to standard OTRS)
-        'LastCustomerSubject' => 1,
-
-        # EO KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
+        'FromTitle'              => $Self->{Config}->{SortFromTitle},
+# EO KIX4OTRS-capeIT
         'Service'                => 1,
         'Changed'                => 1,
         'SLA'                    => 1,
@@ -353,12 +341,11 @@ sub ActionRow {
     }
 
     # add translations for the allocation lists for regular columns
-    # KIX4OTRS-capeIT
-    # my $Columns = $Self->{Config}->Get('DefaultOverviewColumns') || {};
-    my %Column = map { $_ => 1 } @{ $Self->{ColumnsAvailable} };
+# KIX4OTRS-capeIT
+#    my $Columns = $Self->{Config}->Get('DefaultOverviewColumns') || {};
+    my %Column  = map { $_ => 1 } @{ $Self->{ColumnsAvailable} };
     my $Columns = \%Column;
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
     if ( $Columns && IsHashRefWithData($Columns) ) {
 
         COLUMN:
@@ -369,43 +356,47 @@ sub ActionRow {
 
             my $TranslatedWord = $Column;
             if ( $Column eq 'EscalationTime' ) {
-                $TranslatedWord = 'Service Time';
+                $TranslatedWord = Translatable('Service Time');
             }
             elsif ( $Column eq 'EscalationResponseTime' ) {
-                $TranslatedWord = 'First Response Time';
+                $TranslatedWord = Translatable('First Response Time');
             }
             elsif ( $Column eq 'EscalationSolutionTime' ) {
-                $TranslatedWord = 'Solution Time';
+                $TranslatedWord = Translatable('Solution Time');
             }
             elsif ( $Column eq 'EscalationUpdateTime' ) {
-                $TranslatedWord = 'Update Time';
+                $TranslatedWord = Translatable('Update Time');
             }
             elsif ( $Column eq 'PendingTime' ) {
-                $TranslatedWord = 'Pending till';
+                $TranslatedWord = Translatable('Pending till');
+            }
+            elsif ( $Column eq 'CustomerCompanyName' ) {
+                $TranslatedWord = Translatable('Customer Company Name');
+            }
+            elsif ( $Column eq 'CustomerUserID' ) {
+                $TranslatedWord = Translatable('Customer User ID');
             }
 
-            # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
             my $TranslateString;
             if ( $Column =~ m/^MarkedAs::(.*)$/ ) {
                 $TranslateString = $LayoutObject->{LanguageObject}->Translate('MarkedAs') . ': '
-                    . $LayoutObject->{LanguageObject}->Translate($1);
+                                 . $LayoutObject->{LanguageObject}->Translate($1);
             }
             else {
                 $TranslateString = $LayoutObject->{LanguageObject}->Translate($TranslatedWord);
             }
-
-            # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
             $LayoutObject->Block(
                 Name => 'ColumnTranslation',
                 Data => {
                     ColumnName => $Column,
 
-                    # KIX4OTRS-capeIT
-                    # TranslateString => $TranslatedWord,
+# KIX4OTRS-capeIT
+#                    TranslateString => $TranslatedWord,
                     TranslateString => $TranslateString,
-
-                    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                 },
             );
             $LayoutObject->Block(
@@ -436,13 +427,10 @@ sub ActionRow {
                 Data => {
                     ColumnName => 'DynamicField_' . $DynamicField->{Name},
 
-                    # KIX4OTRS-capeIT
-                    # TranslateString => $DynamicField->{Label},
-                    TranslateString =>
-                        $LayoutObject->{LanguageObject}->Translate( $DynamicField->{Label} )
-                        . " (DF)",
-
-                    # EO KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
+#                    TranslateString => $DynamicField->{Label},
+                    TranslateString => $LayoutObject->{LanguageObject}->Translate( $DynamicField->{Label} ) . " (DF)",
+# EO KIX4OTRS-capeIT
                 },
             );
 
@@ -540,31 +528,30 @@ sub Run {
             # get last customer article
             my %Article = $TicketObject->ArticleLastCustomerArticle(
                 TicketID      => $TicketID,
+                Extended      => 1,
                 DynamicFields => 0,
             );
 
             # get ticket data
             my %Ticket = $TicketObject->TicketGet(
                 TicketID      => $TicketID,
+                Extended      => 1,
                 DynamicFields => 0,
             );
 
             # Fallback for tickets without articles: get at least basic ticket data
             if ( !%Article ) {
-                %Article = $TicketObject->TicketGet(
-                    TicketID      => $TicketID,
-                    DynamicFields => 0,
-                );
+                %Article = %Ticket;
                 if ( !$Article{Title} ) {
                     $Article{Title} = $LayoutObject->{LanguageObject}->Translate(
                         'This ticket has no title or subject'
                     );
                 }
                 $Article{Subject} = $Article{Title};
-
-                # show ticket create time in small view
-                $Article{Created} = $Ticket{Created};
             }
+
+            # show ticket create time in small view
+            $Article{Created} = $Ticket{Created};
 
             # prepare a "long" version of the subject to show in the title attribute. We don't take
             # the whole string (which could be VERY long) to avoid polluting the DOM and having too
@@ -575,19 +562,16 @@ sub Run {
                 Size         => 500,
             );
 
-            # KIX4OTRS-capeIT
-            my $StateHighlighting
-                = $ConfigObject->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
+# KIX4OTRS-capeIT
+            my $StateHighlighting = $ConfigObject->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
             if (
                 $StateHighlighting
                 && ref($StateHighlighting) eq 'HASH'
                 && $StateHighlighting->{ $Article{State} }
-                )
-            {
+            ) {
                 $Article{LineStyle} = $StateHighlighting->{ $Article{State} };
             }
-
-            # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
             # prepare subject
             $Article{Subject} = $TicketObject->TicketSubjectClean(
@@ -603,7 +587,6 @@ sub Run {
 
 # KIX4OTRS-capeIT
             my $Counter = 0;
-
 #            # get ACL restrictions
 #            my %PossibleActions;
 #            my $Counter = 0;
@@ -728,25 +711,23 @@ sub Run {
                     $Output =~ s/\s+/ /g;
                     $Output =~ s/<\!--.+?-->//g;
 
-                    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                     # check if the browser sends the session id cookie
                     # if not, add the session id to the url
                     my $SessionID = '';
                     if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
                         $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
                     }
-
-                    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
                     push @ActionItems, {
                         HTML => $Output,
                         ID   => $Item->{ID},
 
-                        # KIX4OTRS-capeIT
-                        # Link        => $LayoutObject->{Baselink} . $Item->{Link},
-                        Link => $LayoutObject->{Baselink} . $Item->{Link} . $SessionID,
-
-                        # EO KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
+#                        Link        => $LayoutObject->{Baselink} . $Item->{Link},
+                        Link        => $LayoutObject->{Baselink} . $Item->{Link} . $SessionID,
+# EO KIX4OTRS-capeIT
                         Target      => $Item->{Target},
                         PopupType   => $Item->{PopupType},
                         Description => $Item->{Description},
@@ -755,7 +736,7 @@ sub Run {
                 }
             }
 
-            # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
             # get all article flags of ticket
             my %ArticleFlagHash = ();
             my %ArticleFlags = $TicketObject->ArticleFlagsOfTicketGet(
@@ -764,7 +745,7 @@ sub Run {
             );
 
             for my $ArticleID (keys %ArticleFlags) {
-                my @TempArray    = ();
+                my @TempArray = ();
                 for my $Flag ( keys %{$ArticleFlags{$ArticleID}} ) {
                     next if $Flag eq 'Seen';
                     push @TempArray, $Flag;
@@ -773,8 +754,7 @@ sub Run {
             }
 
             $Article{FlagHash} = \%ArticleFlagHash;
-
-            # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
             push @ArticleBox, \%Article;
         }
@@ -808,26 +788,25 @@ sub Run {
     my %SpecialColumns = (
         TicketNumber => 1,
         Owner        => 1,
+        Responsible  => 1,
         CustomerID   => 1,
 
-        # KIX4OTRS-capeIT
-        # Title           => 1,
+# KIX4OTRS-capeIT
+#        Title           => 1,
         FromTitle           => 1,
         LastCustomerSubject => 1,
         ArticleFlagAll      => 1,
-
-        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
     );
 
     # get dynamic field backend object
     my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
-    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
     for my $Flag ( keys %{ $Self->{ArticleFlagConfig}->{ArticleFlags} } ) {
         $SpecialColumns{ 'MarkedAs::' . $Self->{ArticleFlagConfig}->{ArticleFlags}->{$Flag} } = 1
     }
-
-    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
     my $TicketData = scalar @ArticleBox;
     if ($TicketData) {
@@ -893,7 +872,8 @@ sub Run {
             $LayoutObject->Block(
                 Name => 'OverviewNavBarPageFlag',
                 Data => {
-                    CSS => $CSS,
+                    CSS   => $CSS,
+                    Title => $Title,
                 },
             );
 
@@ -962,27 +942,26 @@ sub Run {
                 # translate the column name to write it in the current language
                 my $TranslatedWord;
 
-                # KIX4OTRS-capeIT
-                # if ( $Column eq 'Title' ) {
-                #     $TranslatedWord = $LayoutObject->{LanguageObject}->Translate('From') . ' / ';
-                #     if ( $Self->{SmallViewColumnHeader} eq 'LastCustomerSubject' ) {
-                #         $TranslatedWord .= $Self->{ColumnsAvailableTranslated}->{FromTitle};
-                #     }
-                #     elsif ( $Self->{SmallViewColumnHeader} eq 'TicketTitle' ) {
-                #         $TranslatedWord .= $LayoutObject->{LanguageObject}->Translate('Title');
-                #     }
-                # }
-                # else {
+# KIX4OTRS-capeIT
+#                if ( $Column eq 'Title' ) {
+#                    $TranslatedWord = $LayoutObject->{LanguageObject}->Translate('From') . ' / ';
+#                    if ( $Self->{SmallViewColumnHeader} eq 'LastCustomerSubject' ) {
+#                        $TranslatedWord .= $Self->{ColumnsAvailableTranslated}->{FromTitle};
+#                    }
+#                    elsif ( $Self->{SmallViewColumnHeader} eq 'TicketTitle' ) {
+#                        $TranslatedWord .= $LayoutObject->{LanguageObject}->Translate('Title');
+#                    }
+#                }
+#                else {
 
                 $TranslatedWord = $Self->{ColumnsAvailableTranslated}->{$Column};
 
-                # }
+#                }
 
                 if ( $Column =~ /^MarkedAs::(.*)$/ ) {
                     $TranslatedWord = $LayoutObject->{LanguageObject}->Translate($1);
                 }
-
-                # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
                 my $FilterTitle     = $TranslatedWord;
                 my $FilterTitleDesc = Translatable('filter not active');
@@ -1022,7 +1001,7 @@ sub Run {
                     )
                 {
                     my $Css;
-                    if ( $Column eq 'CustomerID' || $Column eq 'Owner' ) {
+                    if ( $Column eq 'CustomerID' || $Column eq 'Owner' || $Column eq 'Responsible' ) {
                         $Css .= ' Hidden';
                     }
 
@@ -1039,14 +1018,7 @@ sub Run {
                         Name => 'OverviewNavBarPageColumnFilterLink',
                         Data => {
                             %Param,
-
-                            # KIX4OTRS-capeIT
-                            # ColumnName           => $Column,
-                            ColumnName => $Self->{ValidSortableColumns}->{$Column} ne 1
-                            ? $Self->{ValidSortableColumns}->{$Column}
-                            : $Column,
-
-                            # EO KIX4OTRS-capeIT
+                            ColumnName           => $Column,
                             CSS                  => $CSS,
                             ColumnNameTranslated => $TranslatedWord || $Column,
                             ColumnFilterStrg     => $ColumnFilterHTML,
@@ -1068,7 +1040,7 @@ sub Run {
                             },
                         );
                     }
-                    elsif ( $Column eq 'Owner' ) {
+                    elsif ( $Column eq 'Owner' || $Column eq 'Responsible' ) {
 
                         $LayoutObject->Block(
                             Name => 'ContentLargeTicketGenericHeaderColumnFilterLinkUserSearch',
@@ -1114,14 +1086,7 @@ sub Run {
                         Name => 'OverviewNavBarPageColumnLink',
                         Data => {
                             %Param,
-
-                            # KIX4OTRS-capeIT
-                            # ColumnName           => $Column,
-                            ColumnName => $Self->{ValidSortableColumns}->{$Column} ne 1
-                            ? $Self->{ValidSortableColumns}->{$Column}
-                            : $Column,
-
-                            # EO KIX4OTRS-capeIT
+                            ColumnName           => $Column,
                             CSS                  => $CSS,
                             ColumnNameTranslated => $TranslatedWord || $Column,
                             OrderBy              => $OrderBy,
@@ -1179,6 +1144,12 @@ sub Run {
                 elsif ( $Column eq 'PendingTime' ) {
                     $TranslatedWord = $LayoutObject->{LanguageObject}->Translate('Pending till');
                 }
+                elsif ( $Column eq 'CustomerCompanyName' ) {
+                    $TranslatedWord = $LayoutObject->{LanguageObject}->Translate('Customer Company Name');
+                }
+                elsif ( $Column eq 'CustomerUserID' ) {
+                    $TranslatedWord = $LayoutObject->{LanguageObject}->Translate('Customer User ID');
+                }
                 else {
                     $TranslatedWord = $LayoutObject->{LanguageObject}->Translate($Column);
                 }
@@ -1208,10 +1179,6 @@ sub Run {
                     && $Self->{ValidSortableColumns}->{$Column}
                     )
                 {
-                    my $Css;
-                    if ( $Column eq 'Responsible' ) {
-                        $Css .= ' Hidden';
-                    }
 
                     # variable to save the filter's HTML code
                     my $ColumnFilterHTML = $Self->_InitialColumnFilter(
@@ -1219,7 +1186,6 @@ sub Run {
                         Label         => $Column,
                         ColumnValues  => $ColumnValues->{$Column},
                         SelectedValue => $Param{GetColumnFilter}->{$Column} || '',
-                        Css           => $Css,
                     );
 
                     $LayoutObject->Block(
@@ -1235,19 +1201,6 @@ sub Run {
                             FilterTitle          => $FilterTitle,
                         },
                     );
-
-                    if ( $Column eq 'Responsible' ) {
-
-                        $LayoutObject->Block(
-                            Name => 'ContentLargeTicketGenericHeaderColumnFilterLinkUserSearch',
-                            Data => {
-                                minQueryLength      => 2,
-                                queryDelay          => 100,
-                                maxResultsDisplayed => 20,
-                            },
-                        );
-                    }
-
                 }
 
                 # verify if column is just filterable
@@ -1640,6 +1593,12 @@ sub Run {
             UserID => $Article{OwnerID},
         );
 
+        # Responsible info.
+        my %ResponsibleInfo = $UserObject->GetUserData(
+            UserID => $Article{ResponsibleID},
+        );
+        $UserInfo{ResponsibleInfo} = \%ResponsibleInfo;
+
         $LayoutObject->Block(
             Name => 'Record',
             Data => { %Article, %UserInfo },
@@ -1712,38 +1671,35 @@ sub Run {
 
                 if ( $SpecialColumns{$TicketColumn} ) {
 
-                    # KIX4OTRS-capeIT
-                    # if ( $TicketColumn eq 'Title' ) {
+# KIX4OTRS-capeIT
+#                    if ( $TicketColumn eq 'Title' ) {
                     if ( $TicketColumn eq 'FromTitle' ) {
-
-                        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
                         # check if last customer subject or ticket title should be shown
                         if ( $Self->{SmallViewColumnHeader} eq 'LastCustomerSubject' ) {
                             $LayoutObject->Block(
 
-                                # KIX4OTRS-capeIT
-                                # Name => 'RecordLastCustomerSubject',
+# KIX4OTRS-capeIT
+#                                Name => 'RecordLastCustomerSubject',
                                 Name => 'RecordFromLastCustomerSubject',
-
-                                # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                                 Data => { %Article, %UserInfo },
                             );
                         }
                         elsif ( $Self->{SmallViewColumnHeader} eq 'TicketTitle' ) {
                             $LayoutObject->Block(
 
-                                # KIX4OTRS-capeIT
-                                # Name => 'RecordTicketTitle',
+# KIX4OTRS-capeIT
+#                                Name => 'RecordTicketTitle',
                                 Name => 'RecordFromTicketTitle',
-
-                                # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                                 Data => { %Article, %UserInfo },
                             );
                         }
                     }
 
-                    # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                     elsif ( $TicketColumn =~ m/^MarkedAs::(.*)/ ) {
 
                         $LayoutObject->Block(
@@ -1783,14 +1739,26 @@ sub Run {
                             }
                         }
                     }
-
-                    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                     else {
                         $LayoutObject->Block(
                             Name => 'Record' . $TicketColumn,
                             Data => { %Article, %UserInfo },
                         );
                     }
+                    next TICKETCOLUMN;
+                }
+
+                if ( $TicketColumn eq 'CreatedBy' ) {
+
+                    my %TicketCreatedByInfo = $UserObject->GetUserData(
+                        UserID => $Article{CreatedBy},
+                    );
+
+                    $LayoutObject->Block(
+                        Name => 'RecordTicketCreatedBy',
+                        Data => \%TicketCreatedByInfo,
+                    );
                     next TICKETCOLUMN;
                 }
 
@@ -1911,33 +1879,29 @@ sub Run {
                 elsif ( $TicketColumn eq 'PendingTime' ) {
                     $BlockType = 'Escalation';
 
-                    # KIX4OTRS-capeIT
-                    my %UserPreferences
-                        = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+# KIX4OTRS-capeIT
+                    my %UserPreferences    = $UserObject->GetPreferences( UserID => $Self->{UserID} );
                     my $DisplayPendingTime = $UserPreferences{UserDisplayPendingTime} || '';
 
                     if ( $DisplayPendingTime && $DisplayPendingTime eq 'RemainingTime' ) {
-
-                        # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
                         $DataValue = $LayoutObject->CustomerAge(
                             Age   => $Article{'UntilTime'},
                             Space => ' '
                         );
 
-                        # KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
                     }
                     elsif ( defined $Article{UntilTime} && $Article{UntilTime} ) {
                         $DataValue = $Kernel::OM->Get('Kernel::System::Time')->SystemTime2TimeStamp(
                             SystemTime => $Article{RealTillTimeNotUsed},
                         );
-                        $DataValue = $LayoutObject->{LanguageObject}
-                            ->FormatTimeString( $DataValue, 'DateFormat' );
+                        $DataValue = $LayoutObject->{LanguageObject}->FormatTimeString( $DataValue, 'DateFormat' );
                     }
                     else {
                         $DataValue = '';
                     }
-
-                    # EO KIX4OTRS-capeIT
+# EO KIX4OTRS-capeIT
 
                     if ( defined $Article{UntilTime} && $Article{UntilTime} < -1 ) {
                         $CSSClass = 'Warning';
@@ -1955,15 +1919,6 @@ sub Run {
                 elsif ( $TicketColumn eq 'Created' || $TicketColumn eq 'Changed' ) {
                     $BlockType = 'Time';
                     $DataValue = $Article{$TicketColumn} || $UserInfo{$TicketColumn};
-                }
-                elsif ( $TicketColumn eq 'Responsible' ) {
-
-                    # get responsible info
-                    my %ResponsibleInfo = $UserObject->GetUserData(
-                        UserID => $Article{ResponsibleID},
-                    );
-                    $DataValue = $ResponsibleInfo{'UserFirstname'} . ' '
-                        . $ResponsibleInfo{'UserLastname'};
                 }
                 else {
                     $DataValue = $Article{$TicketColumn}
@@ -2404,15 +2359,13 @@ sub _DefaultColumnSort {
         EscalationResponseTime => 115,
         EscalationUpdateTime   => 116,
 
-        # KIX4OTRS-capeIT
-        FromTitle           => 120,
-        From                => 121,
-        LastCustomerSubject => 122,
-
-        # Title                  => 120,
-        Title => 123,
-
-        # EO KIX4OTRS-capeIT
+# KIX4OTRS-capeIT
+#        Title                  => 120,
+        FromTitle              => 120,
+        From                   => 121,
+        LastCustomerSubject    => 122,
+        Title                  => 123,
+# EO KIX4OTRS-capeIT
         State          => 130,
         Lock           => 140,
         Queue          => 150,

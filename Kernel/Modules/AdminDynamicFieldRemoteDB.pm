@@ -41,7 +41,7 @@ sub Run {
     elsif ( $Self->{Subaction} eq 'AddAction' ) {
 
         # challenge token check for write action
-        $Self->{LayoutObject}->ChallengeTokenCheck();
+        $LayoutObject->ChallengeTokenCheck();
 
         return $Self->_AddAction(
             %Param,
@@ -55,7 +55,7 @@ sub Run {
     elsif ( $Self->{Subaction} eq 'ChangeAction' ) {
 
         # challenge token check for write action
-        $Self->{LayoutObject}->ChallengeTokenCheck();
+        $LayoutObject->ChallengeTokenCheck();
 
         return $Self->_ChangeAction(
             %Param,
@@ -68,7 +68,7 @@ sub Run {
         );
     }
 
-    return $Self->{LayoutObject}->ErrorScreen(
+    return $LayoutObject->ErrorScreen(
         Message => "Undefined subaction.",
     );
 }

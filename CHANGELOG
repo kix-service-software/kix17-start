@@ -1,6 +1,56 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.4.1 (2018/12/20)
+ * (2018/12/20) - productive release
+
+# 17.4.1-RC3 (2018/12/19)
+ * (2018/12/19) - Bugfix: T2018120390000332 (fixed syntax error) (millinger)
+
+# 17.4.1-RC2 (2018/12/17)
+ * (2018/12/04) - Bugfix: T2018111390001476 (fixed FormIDValidation for SaveAsDraft) (millinger)
+ * (2018/12/03) - Bugfix: T2018120390000332 (fixed fulltext ticket search for archived tickets) (millinger)
+ * (2018/11/30) - Bugfix: T2018110590000831 (fixed missing closing brace of map function) (fjacquemin)
+
+# 17.4.1-RC1 (2018/11/30)
+ * (2018/11/29) - Bugfix: T2018082390000777 (fixed number of tickets found in dashboard links are incorrect) (fjacquemin)
+ * (2018/11/28) - Bugfix: T2018112790001093 (fixed missing repositioning of input type hidden when using CustomizeForm in the customer frontend) (fjacquemin)
+ * (2018/11/28) - Bugfix: T2018110590000831 (fixed useless use of greediness modifier "?" in the DB Process) (fjacquemin)
+ * (2018/11/26) - Bugfix: T2018111390001485 (merged security fixes from OTRS) (millinger)
+ * (2018/11/26) - Bugfix: T2018111390001476 (merged security fixes from OTRS) (millinger)
+ * (2018/11/16) - Bugfix: T2018102490001028 (fixed duplicated articles on follow up) (millinger)
+ * (2018/11/16) - Bugfix: T2018110790000425 (fixed object call in dynamic field administration) (millinger)
+ * (2018/11/16) - Bugfix: T2018110190000472 (merged bugfixes from KIXConnect) (millinger)
+ * (2018/11/15) - Bugfix: T2018111390001851 (KIX placeholder does not work) (ddoerffel)
+ * (2018/11/05) - Bugfix: T2018050990000648 (fixed ticket fulltext search result for partial ticketnumber) (millinger)
+ * (2018/11/05) - Bugfix: T2018092190000493 (fixed empty entries on acl import) (millinger)
+ * (2018/11/05) - Bugfix: T2017120190000918 (remove empty entries from linked person sidebar) (millinger)
+ * (2018/11/01) - Bugfix: T2016072690000802 (fixed missing parameter in the ACLCompatGetParam to use the TicketACL correctly) (fjacquemin)
+ * (2018/11/01) - Bugfix: T2018101990000735 (added checking of permissions to download attachments from the attribute CIAttachment) (fjacquemin)
+ * (2018/10/23) - Bugfix: T2018092090001092 (fixed error output when download a zip of attachment without permission) (fjacquemin)
+ * (2018/10/23) - Bugfix: T2018101290000739 (fixed check of undefined or empty value by FormInputCreate in ImportExport) (fjacquemin)
+ * (2018/10/18) - Bugfix: T2018081790000887 (fixed missing initial disabling of dynamic fields when doesn't show) (fjacquemin)
+ * (2018/10/16) - Usability-CR: T2017092090000531 (changed layout of the login screens and added missing configuration CustomerLoginLogo) (fjacquemin)
+ * (2018/10/16) - Bugfix: T2017090190001076 (added separation of the sidebar user position preference in customer and user for the AgentCustomerInformationCenter) (fjacquemin)
+ * (2018/10/12) - Bugfix: T2018091490000711 (fixed issue of AgentPreferences selection of removable article marks can't be completely empty) (fjacquemin)
+ * (2018/10/12) - Bugfix: T2017030690000668 (fixed JavaScript error when split of an empty value) (fjacquemin)
+ * (2018/10/12) - Bugfix: T2017112190000785 (fixed filtering for "Available columns" in the assignment list also affects "Displayed columns") (fjacquemin)
+ * (2018/10/12) - Bugfix: T2017121390000815 (added trim of whitespace and special characters when download attachments) (fjacquemin)
+ * (2018/10/12) - Bugfix: T2018012590000446 (Removed double quoting of the checklist note) (fjacquemin)
+ * (2018/10/09) - Bugfix: T2018082290000831 (fixed incorrect display of the number of tickets and incomplete status selection in the table filter in AgentTicketService) (fjacquemin)
+ * (2018/10/09) - Bugfix: T2018090790000751 (fixed JavaScript error message when selecting a customer user without customer tickets) (fjacquemin)
+ * (2018/10/05) - Bugfix: T2018061290000827 (fixed issue of missing check of permissions/ticket lock to hide the note-button in AgentTicketZoomTabArticle) (fjacquemin)
+ * (2018/10/05) - Bugfix: T2017112190001113 (fixed issue when saving an email on changing the type of article) (fjacquemin)
+ * (2018/09/28) - Bugfix: T2018022190001021 (fixed dynamic field object reference in ticket search) (millinger)
+ * (2018/09/19) - Bugfix: T2018062190000891 (fixed ticket overview by queue for search profiles with last change date) (millinger)
+ * (2018/09/19) - Bugfix: T2018090790000653 (fixed ticket overview by queue for search profiles with fulltext) (millinger)
+ * (2018/09/18) - Bugfix: T2018032690000502 (fixed sorting of column 'FromTitle' in ticket overview small) (millinger)
+ * (2018/09/13) - Bugfix: T2018091290000527 (fixed head row of exported text modules) (millinger)
+ * (2018/09/13) - Bugfix: T2018082290000724 (fixed missing reinitialization of the checkbox events when using filters in the KIXSidebarLinkedCIs) (fjacquemin)
+ * (2018/09/11) - Bugfix: T2018082990000748 (fixed filter selection for linked config item sidebar) (millinger)
+ * (2018/09/07) - Bugfix: T2018031690000647 (fixed missing replacement of the TypeID with the standard and addition of missing configurations) (fjacquemin)
+ * (2018/09/07) - Bugfix: T2017070790000524 (Fixed layout header margin to popups and CMDBExplorer on responsive mode) (fjacquemin)
+
 # 17.4.0 (2018/10/29)
  * (2018/10/29) - productive release
 
