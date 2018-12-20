@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.4.1 (2018/12/20)
+ * (2018/12/20) - productive release
+
 # 17.4.1-RC3 (2018/12/19)
  * (2018/12/19) - Bugfix: T2018120390000332 (fixed syntax error) (millinger)
 
