@@ -18,6 +18,7 @@ use Kernel::System::VariableCheck qw(:all);
 our @ObjectDependencies = (
     'Kernel::System::Cache',
     'Kernel::System::DB',
+    'Kernel::System::Encode',
     'Kernel::System::Log',
 );
 
@@ -179,6 +180,9 @@ sub LogAdd {
             return;
         }
     }
+
+    # encode data
+    $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput(\$Param{Data});
 
     # create entry
     if (
@@ -370,6 +374,10 @@ sub LogGetWithData {
             DebugLevel => $Row[2],
             Summary    => $Row[3],
         );
+
+        # encode data
+        $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput(\$SingleEntry{Data});
+
         push @LogDataEntries, \%SingleEntry;
     }
 

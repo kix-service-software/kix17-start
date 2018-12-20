@@ -885,6 +885,9 @@ sub _HandlePossibleFollowUp {
                 return;
             }
 
+            # remember created followup
+            $Param{SkipTicketIDs}->{ $Param{TicketID} } = 1;
+
             return ( 2, $Param{TicketID} );
         }
     }

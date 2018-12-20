@@ -25,6 +25,7 @@ use Kernel::System::VariableCheck (qw(IsHashRefWithData));
 our @ObjectDependencies = (
     'Kernel::System::Log',
     'Kernel::System::GenericInterface::Webservice',
+    'Kernel::System::Valid',
 );
 
 =head1 NAME

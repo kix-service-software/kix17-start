@@ -771,7 +771,7 @@ sub Run {
             my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
             my $FulltextSearchParam = $GetParam{Fulltext};
             $FulltextSearchParam =~ s/$TicketHook//g;
-            $GetParam{TicketNumber} = $FulltextSearchParam;
+            $GetParam{TicketNumber} = '*' . $FulltextSearchParam . '*';
 
             local $Kernel::System::DB::UseSlaveDB = 1;
 
@@ -873,6 +873,7 @@ sub Run {
                         Limit           => $Self->{SearchLimit},
                         UserID          => $Self->{UserID},
                         ConditionInline => $Config->{ExtendedSearchCondition},
+                        ArchiveFlags    => $GetParam{ArchiveFlags},
                         %DynamicFieldSearchParameters,
                     );
 
@@ -901,11 +902,12 @@ sub Run {
             if ( scalar(@MergeArray) > 1 ) {
                 # sort merged tickets
                 @ViewableTicketIDs = $TicketObject->TicketSearch(
-                    Result    => 'ARRAY',
-                    SortBy    => $Self->{SortBy},
-                    OrderBy   => $Self->{OrderBy},
-                    UserID    => $Self->{UserID},
-                    TicketID  => \@MergeArray
+                    Result       => 'ARRAY',
+                    SortBy       => $Self->{SortBy},
+                    OrderBy      => $Self->{OrderBy},
+                    UserID       => $Self->{UserID},
+                    TicketID     => \@MergeArray,
+                    ArchiveFlags => $GetParam{ArchiveFlags},
                 );
             }
             else {

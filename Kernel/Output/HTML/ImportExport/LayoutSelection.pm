@@ -78,7 +78,7 @@ sub FormInputCreate {
 
     # set default value
     $Param{Prefix} ||= '';
-    $Param{Value}  ||= $Param{Item}->{Input}->{ValueDefault};
+    $Param{Value}  //= $Param{Item}->{Input}->{ValueDefault};
 
     if ( $Param{Value} && $Param{Value} =~ m{ ##### }xms ) {
         my @Values = split '#####', $Param{Value};
