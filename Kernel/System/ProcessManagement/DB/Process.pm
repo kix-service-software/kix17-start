@@ -783,7 +783,7 @@ sub ProcessList {
 
         my $StateEntityIDsStrgDB = join(
             ',',
-            map( {"'" . $DBObject->Quote($_) . "'"} @{ $Param{StateEntityIDs} }
+            map( {"'" . $DBObject->Quote($_) . "'"} @{ $Param{StateEntityIDs} } )
         );
 
         $SQL .= "WHERE state_entity_id IN ($StateEntityIDsStrgDB)";

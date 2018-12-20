@@ -805,6 +805,7 @@ sub Run {
                         Limit           => $Start + 50,
                         UserID          => $Self->{UserID},
                         ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
+                        ArchiveFlags    => $Filters{ $Filter }->{Search}->{ArchiveFlags},
                         %DynamicFieldSearchParameters,
                     );
 
@@ -833,12 +834,13 @@ sub Run {
             if ( scalar(@MergeArray) > 1 ) {
                 # sort merged tickets
                 @ViewableTickets = $TicketObject->TicketSearch(
-                    Result    => 'ARRAY',
-                    SortBy    => $Self->{SortBy},
-                    OrderBy   => $Self->{OrderBy},
-                    UserID    => $Self->{UserID},
-                    TicketID  => \@MergeArray,
-                    Limit     => $Start + 50,
+                    Result       => 'ARRAY',
+                    SortBy       => $Self->{SortBy},
+                    OrderBy      => $Self->{OrderBy},
+                    UserID       => $Self->{UserID},
+                    TicketID     => \@MergeArray,
+                    ArchiveFlags => $Filters{ $Filter }->{Search}->{ArchiveFlags},
+                    Limit        => $Start + 50,
                 );
             }
             else {
@@ -1051,7 +1053,7 @@ sub Run {
         if (@ViewableQueueIDs) {
 
             # KIX4OTRS-capeIT
-            if ( $Filters{$Filter}->{SearchOR} ) {
+            if ( $Filters{ $FilterColumn }->{SearchOR} ) {
                 $Count = $TicketObject->TicketSearchOR(
                     %{ $Filters{$FilterColumn}->{SearchOR} },
                     %ColumnFilter,
@@ -1166,6 +1168,7 @@ sub Run {
                                 OrderBy         => $Self->{OrderBy},
                                 UserID          => $Self->{UserID},
                                 ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
+                                ArchiveFlags    => $Filters{ $FilterColumn }->{Search}->{ArchiveFlags},
                                 %DynamicFieldSearchParameters,
                             );
 
@@ -1194,11 +1197,12 @@ sub Run {
                     if ( scalar(@MergeArray) > 1 ) {
                         # sort merged tickets
                         @CountTickets = $TicketObject->TicketSearch(
-                            Result    => 'ARRAY',
-                            SortBy    => $Self->{SortBy},
-                            OrderBy   => $Self->{OrderBy},
-                            UserID    => $Self->{UserID},
-                            TicketID  => \@MergeArray,
+                            Result       => 'ARRAY',
+                            SortBy       => $Self->{SortBy},
+                            OrderBy      => $Self->{OrderBy},
+                            UserID       => $Self->{UserID},
+                            TicketID     => \@MergeArray,
+                            ArchiveFlags => $Filters{ $FilterColumn }->{Search}->{ArchiveFlags},
                         );
                     }
                     else {
@@ -1722,6 +1726,7 @@ sub BuildQueueView {
                             Limit           => $Self->{SearchLimit},
                             UserID          => $Self->{UserID},
                             ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
+                            ArchiveFlags    => $SearchProfileData{ArchiveFlags},
                             %DynamicFieldSearchParameters,
                         );
 
@@ -1750,11 +1755,12 @@ sub BuildQueueView {
                 if ( scalar(@MergeArray) > 1 ) {
                     # sort merged tickets
                     @ViewableTicketIDs = $TicketObject->TicketSearch(
-                        Result    => 'ARRAY',
-                        SortBy    => $Self->{SortBy},
-                        OrderBy   => $Self->{OrderBy},
-                        UserID    => $Self->{UserID},
-                        TicketID  => \@MergeArray
+                        Result       => 'ARRAY',
+                        SortBy       => $Self->{SortBy},
+                        OrderBy      => $Self->{OrderBy},
+                        UserID       => $Self->{UserID},
+                        TicketID     => \@MergeArray,
+                        ArchiveFlags => $SearchProfileData{ArchiveFlags},
                     );
                 }
                 else {
@@ -1882,6 +1888,7 @@ sub BuildQueueView {
                             Limit           => $Self->{SearchLimit},
                             UserID          => $Self->{UserID},
                             ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
+                            ArchiveFlags    => $SearchProfileData{ArchiveFlags},
                             %DynamicFieldSearchParameters,
                         );
 
@@ -1910,11 +1917,12 @@ sub BuildQueueView {
                 if ( scalar(@MergeArray) > 1 ) {
                     # sort merged tickets
                     @ViewableTicketIDs = $TicketObject->TicketSearch(
-                        Result    => 'ARRAY',
-                        SortBy    => $Self->{SortBy},
-                        OrderBy   => $Self->{OrderBy},
-                        UserID    => $Self->{UserID},
-                        TicketID  => \@MergeArray
+                        Result       => 'ARRAY',
+                        SortBy       => $Self->{SortBy},
+                        OrderBy      => $Self->{OrderBy},
+                        UserID       => $Self->{UserID},
+                        TicketID     => \@MergeArray,
+                        ArchiveFlags => $SearchProfileData{ArchiveFlags},
                     );
                 }
                 else {
