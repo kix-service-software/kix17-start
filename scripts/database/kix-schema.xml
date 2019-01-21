@@ -3014,4 +3014,37 @@
     </Index>
 </Table>
 
+<!--  kix_quick_state -->
+<Table Name="kix_quick_state">
+    <Column Name="id"           Required="true"     Type="INTEGER" PrimaryKey="true" AutoIncrement="true" />
+    <Column Name="name"         Required="true"     Type="VARCHAR" Size="200"/>
+    <Column Name="state_id"     Required="true"     Type="SMALLINT" />
+    <Column Name="valid_id"     Required="true"     Type="SMALLINT" />
+    <Column Name="config"       Required="false"    Type="VARCHAR" Size="1800000" />
+    <Column Name="created"      Required="true"     Type="DATE" />
+    <Column Name="created_by"   Required="true"     Type="INTEGER" />
+    <Column Name="changed"      Required="true"     Type="DATE" />
+    <Column Name="changed_by"   Required="true"     Type="INTEGER" />
+    <ForeignKey ForeignTable="ticket_state">
+        <Reference Local="state_id" Foreign="id" />
+    </ForeignKey>
+</Table>
+<!--  kix_quick_state_attachment - for all attachments of the quick states -->
+<Table Name="kix_quick_state_attachment">
+    <Column Name="id"               Required="true"     Type="BIGINT" PrimaryKey="true" AutoIncrement="true"  />
+    <Column Name="quick_state_id"   Required="true"     Type="INTEGER" />
+    <Column Name="filename"         Required="false"    Type="VARCHAR" Size="250"/>
+    <Column Name="content_size"     Required="false"    Type="VARCHAR" Size="30"/>
+    <Column Name="content_type"     Required="false"    Type="VARCHAR" Size="450"/>
+    <Column Name="content_id"       Required="false"    Type="VARCHAR" Size="250"/>
+    <Column Name="disposition"      Required="false"    Type="VARCHAR" Size="15"/>
+    <Column Name="content"          Required="true"     Type="INTEGER" />
+    <Column Name="created"          Required="true"     Type="DATE" />
+    <Column Name="created_by"       Required="true"     Type="INTEGER" />
+    <Column Name="changed"          Required="true"     Type="DATE" />
+    <Column Name="changed_by"       Required="true"     Type="INTEGER" />
+    <ForeignKey ForeignTable="kix_quick_state">
+        <Reference Local="quick_state_id" Foreign="id" />
+    </ForeignKey>
+</Table>
 </database>

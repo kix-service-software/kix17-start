@@ -4436,6 +4436,39 @@ sub Data {
     $Lang->{'Delete/Empty Ticket Attributes'} = 'Ticket-Attribute löschen/leeren';
     $Lang->{'Ticket Attributes'}              = 'Ticket-Attribute';
 
+    # Quick State
+    $Lang->{'QuickState'}             = 'Statuswechsel';
+    $Lang->{'Quick State'}            = 'Statuswechsel';
+    $Lang->{'Quick State Management'} = 'Statuswechsel Verwaltung';
+    $Lang->{'Add Quick State'}        = 'Statuswechsel hinzufügen';
+    $Lang->{'Quick States per page'}  = 'Statuswechsel pro Seite';
+    $Lang->{'Article Settings'}       = 'Artikeleinstellungen';
+    $Lang->{'General Settings'}       = 'Grundeistellungen';
+    $Lang->{'Import Quick State'}     = 'Statuswechsel importieren';
+    $Lang->{'Pending time in the future'}     = 'Wartezeit in der Zukunft';
+    $Lang->{'Here you can upload a configuration file to import a Quick State to your system. The file needs to be in .yml format as exported by this module.'}
+        = 'Hier können Sie eine Konfigurationdatei hochladen, um einen Statuswechsel in Ihr System zu importieren. Die Datei muss im YAML-Format vorliegen, so wie sie vom Statuswechsel auch exportiert wird. ';
+    $Lang->{'Sorry, the quick state \'%s\' couldn\'t use. The current Ticket has the same state as the selected quick state or the quick state is invalid!'}
+        = 'Leider konnte der Statuswechsel \'%s\' nicht verwendet werden. Das aktuelle Ticket hat entweder den gleichen Status wie der ausgewählte Statuswechsel oder der Statuswechsel ist ungültig!';
+    $Lang->{'Please use a another quick state or contact the administrator.'}
+        = 'Bitte verwenden Sie einen anderen Statuswechsel oder wenden Sie sich an einen Administrator.';
+    $Lang->{'The specified time is added to the current time when using a quick status with a pending state. (Default: 1 Day)'}
+        = 'Die angegebene Zeit wird bei Verwendung eines Statuswechsels mit einem Wartestatus auf die aktuelle Zeit addiert. (Standard: 1 Tag)';
+    $Lang->{'Use 0 if no adjustment of the pending time is required.'}
+        = 'Verwenden Sie 0, wenn keine Anpassung der Wartezeit erforderlich ist.';
+    $Lang->{'Frontend module registration for the quick state in the admin interface.'}
+        = 'Frontend-Modulregistrierung für den Statuswechsel in der Admin-Oberfläche.';
+    $Lang->{'Defines the default article type of new quick state.'}
+        = 'Definiert den Standard-Artikeltyp für den neuen Statuswechsel.';
+    $Lang->{'Create and manage quick states.'}
+        = 'Statuswechsel erzeugen und verwalten.';
+    $Lang->{'Please contact the administrator.'}
+        = 'Wenden Sie sich bitte an einen Administrator.';
+    $Lang->{'The status couldn\'t be changed with the quick state \'%s\'!'}
+        = 'Der Status konnte mit dem gewähltem Statuswechsel \'%s\' nicht geändert werden!';
+    $Lang->{'It could not be created the corresponding article to the quick state \'%s\'!'}
+        = 'Es konnte nicht der entsprechende Artikel zum Statuswechsel \'%s\' erstellt werden!';
+
     # $$STOP$$
     return 0;
 }
