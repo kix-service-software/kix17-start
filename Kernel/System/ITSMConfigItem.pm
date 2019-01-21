@@ -1033,7 +1033,7 @@ sub ConfigItemSearchExtended {
     }
 
     # xml version search is required if What is given
-    if ( defined $Param{What} && $Param{What} ne '' ) {
+    if ( IsArrayRefWithData( $Param{What} ) ) {
         $RequiredSearch{XMLVersion} = 1;
     }
 

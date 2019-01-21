@@ -179,8 +179,12 @@ sub GetParam {
             $Address->phrase( $Self->_DecodeString( String => $Address->phrase() ) );
             $Address->address( $Self->_DecodeString( String => $Address->address() ) );
             $Address->comment( $Self->_DecodeString( String => $Address->comment() ) );
+
+            my $TmpAddress = $Address->format();
+            $TmpAddress =~ s/(?:"|')(.*)(?:"|')/$1/;
+
             $ReturnLine .= ', ' if $ReturnLine;
-            $ReturnLine .= $Address->format();
+            $ReturnLine .= $TmpAddress;
         }
     }
     else {
