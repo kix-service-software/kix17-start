@@ -4442,8 +4442,6 @@ sub Data {
     $Lang->{'Quick State Management'} = 'Statuswechsel Verwaltung';
     $Lang->{'Add Quick State'}        = 'Statuswechsel hinzufügen';
     $Lang->{'Quick States per page'}  = 'Statuswechsel pro Seite';
-    $Lang->{'Article Settings'}       = 'Artikeleinstellungen';
-    $Lang->{'General Settings'}       = 'Grundeistellungen';
     $Lang->{'Import Quick State'}     = 'Statuswechsel importieren';
     $Lang->{'Pending time in the future'}     = 'Wartezeit in der Zukunft';
     $Lang->{'Here you can upload a configuration file to import a Quick State to your system. The file needs to be in .yml format as exported by this module.'}

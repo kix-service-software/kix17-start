@@ -840,7 +840,7 @@ sub _Mask {
         Translation  => 1,
         PossibleNone => 1,
         SelectedID   => $Param{StateID} || '',
-        Class        => 'W25pc Modernize Validate_Required ' . $Param{StateIDInvalid}
+        Class        => 'W33pc Modernize Validate_Required ' . $Param{StateIDInvalid}
     );
 
     $Param{ValidIDOption} = $LayoutObject->BuildSelection(
@@ -848,7 +848,7 @@ sub _Mask {
         Data         => \%ValidList,
         Translation  => 1,
         SelectedID   => $Param{ValidID} || '',
-        Class        => 'W25pc Modernize Validate_Required ' . $Param{ValidIDInvalid}
+        Class        => 'W33pc Modernize Validate_Required ' . $Param{ValidIDInvalid}
     );
 
     $Param{ArticleTypeIDOption} = $LayoutObject->BuildSelection(
@@ -856,7 +856,7 @@ sub _Mask {
         Data         => \%ArticleTypeList,
         Translation  => 1,
         SelectedID   => $Param{ArticleTypeID} || $DefaultArticleTypeID || '',
-        Class        => 'W25pc Modernize'
+        Class        => 'W33pc Modernize'
     );
 
     $Param{PendingFormatIDOption} = $LayoutObject->BuildSelection(
@@ -864,7 +864,7 @@ sub _Mask {
         Data         => ['Days', 'Hours', 'Minutes'],
         Translation  => 1,
         SelectedID   => $Param{PendingFormatID} || 'Days',
-        Class        => 'W25pc Modernize'
+        Class        => 'W33pc Modernize'
     );
 
     if ( ref $HideConfig eq 'HASH'
@@ -898,11 +898,13 @@ sub _Mask {
         $Param{PendingTime} = 1;
     }
 
-    $Param{UsedArticleWidget} = 'Collapsed';
+    $Param{UsedArticleClass}   = 'Hidden';
+    $Param{UsedArticleChecked} = '';
     if ( $Param{UsedArticle} ) {
-        $Param{UsedArticleWidget} = 'Expanded';
-        $Param{BodyRequired}      = 'Validate_Required';
-        $Param{SubjectRequired}   = 'Validate_Required';
+        $Param{UsedArticleChecked} = 'checked="checked"';
+        $Param{UsedArticleClass}   = '';
+        $Param{BodyRequired}       = 'Validate_Required';
+        $Param{SubjectRequired}    = 'Validate_Required';
     }
 
     $LayoutObject->Block( Name => 'ActionList' );
