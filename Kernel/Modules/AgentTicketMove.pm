@@ -42,8 +42,10 @@ sub Run {
     # get needed objects
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # KIX4OTRS-capeIT
     my $StateObject = $Kernel::OM->Get('Kernel::System::State');
+
     # EO KIX4OTRS-capeIT
 
     # check needed stuff
@@ -385,7 +387,9 @@ sub Run {
 
         # KIX4OTRS-capeIT
         # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
+        $Self->_GetShownDynamicFields(
+            DynamicFields => $DynamicField
+        );
 
         # use only dynamic fields which passed the acl
         my %Output;
@@ -634,6 +638,11 @@ sub Run {
             }
         }
 
+        # get shown or hidden fields
+        $Self->_GetShownDynamicFields(
+            DynamicFields => $DynamicField
+        );
+
         # to store dynamic field value from database (or undefined)
         my $Value;
 
@@ -644,6 +653,7 @@ sub Run {
             # get value stored on the database from Ticket
             $Value = $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} };
         }
+        
 
         # get field html
         $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
@@ -664,12 +674,6 @@ sub Run {
             UpdatableFields => $Self->_GetFieldsToUpdate(),
             );
     }
-
-    # KIX4OTRS-capeIT
-    # get shown or hidden fields
-    $Self->_GetShownDynamicFields();
-
-    # EO KIX4OTRS-capeIT
 
     # move action
     if ( ( $Self->{Subaction} eq 'MoveTicket' ) && ( !$IsUpload ) ) {
@@ -801,7 +805,9 @@ sub Run {
         }
 
         # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
+        $Self->_GetShownDynamicFields(
+            DynamicFields => $DynamicField
+        );
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
@@ -1487,6 +1493,7 @@ sub AgentMove {
             $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
             $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
         }
+
         # EO KIX4OTRS-capeIT
 
         $LayoutObject->Block(
@@ -1904,15 +1911,8 @@ sub _GetShownDynamicFields {
     # get config of frontend module
     my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
 
-    # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-        Valid       => 1,
-        ObjectType  => [ 'Ticket', 'Article' ],
-        FieldFilter => $Config->{DynamicField} || {},
-    );
-
     # cycle through dynamic fields to get shown or hidden fields
-    for my $DynamicField ( @{ $DynamicField } ) {
+    for my $DynamicField ( @{ $Param{DynamicFields} } ) {
 
         # if field was not configured initially set it as not visible
         if ( $Self->{NotShownDynamicFields}->{ $DynamicField->{Name} } ) {
