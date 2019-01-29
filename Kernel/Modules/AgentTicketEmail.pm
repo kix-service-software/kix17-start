@@ -881,10 +881,8 @@ sub Run {
                     $Value = $UserPreferences{ 'UserDynamicField_' . $DynamicFieldConfig->{Name} };
                 }
 
-                elsif ( $GetParam{ 'QuickTicketDynamicField_' . $DynamicFieldConfig->{Name} } )
-                {
-                    $Value
-                        = $GetParam{ 'QuickTicketDynamicField_' . $DynamicFieldConfig->{Name} };
+                elsif ( $GetParam{ 'QuickTicketDynamicFieldHash' }->{ 'DynamicField_' . $DynamicFieldConfig->{Name} } ) {
+                    $Value = $GetParam{ 'QuickTicketDynamicFieldHash' }->{ 'DynamicField_' . $DynamicFieldConfig->{Name} };
                 }
 
                 # get field html
