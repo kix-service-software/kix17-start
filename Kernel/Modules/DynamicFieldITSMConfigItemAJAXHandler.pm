@@ -102,20 +102,25 @@ sub Run {
                                     || uri_unescape($Self->{ParamObject}->GetParam( Param => 'SelectedCustomerUser' ))
                                     || '';
 
-                    if ( $CustomerUserID ) {
-                        if ( $CustomerUserID =~ m/<(.*)>/){
-                            my %List = $Self->{CustomerUserObject}->CustomerSearch(
-                                PostMasterSearch => $1,
-                                Valid            => 1,
-                            );
-                            for my $Key ( keys %List ) {
-                                if ( $List{$Key} eq $CustomerUserID ) {
-                                    $CustomerUserID = $Key;
-                                    last;
-                                }
+                    if (
+                        $CustomerUserID
+                        && $CustomerUserID =~ m/<(.*)>/
+                    ) {
+                        my %List = $Self->{CustomerUserObject}->CustomerSearch(
+                            PostMasterSearch => $1,
+                            Valid            => 1,
+                        );
+                        for my $Key ( keys %List ) {
+                            if ( $List{$Key} eq $CustomerUserID ) {
+                                $CustomerUserID = $Key;
+                                last;
                             }
                         }
                     }
+                }
+
+                if ( $Self->{UserType} eq 'Customer' ) {
+                    $CustomerUserID = $Self->{UserID};
                 }
 
                 my %TicketData;
@@ -324,6 +329,26 @@ sub Run {
             my $CustomerUserID = $Self->{ParamObject}->GetParam( Param => 'CustomerUserID' )
                                 || uri_unescape($Self->{ParamObject}->GetParam( Param => 'SelectedCustomerUser' ))
                                 || '';
+
+            if (
+                $CustomerUserID
+                && $CustomerUserID =~ m/<(.*)>/
+            ) {
+                my %List = $Self->{CustomerUserObject}->CustomerSearch(
+                    PostMasterSearch => $1,
+                    Valid            => 1,
+                );
+                for my $Key ( keys %List ) {
+                    if ( $List{$Key} eq $CustomerUserID ) {
+                        $CustomerUserID = $Key;
+                        last;
+                    }
+                }
+            }
+
+            if ( $Self->{UserType} eq 'Customer' ) {
+                $CustomerUserID = $Self->{UserID};
+            }
 
             my %TicketData;
             if ($TicketID =~ /^\d+$/) {
