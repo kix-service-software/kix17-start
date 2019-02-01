@@ -860,6 +860,8 @@ sub Run {
         if ( $ConfigObject->Get('Ticket::Type') && $Config->{TicketType} ) {
             if ( $GetParam{TypeID} ) {
                 $TicketObject->TicketTypeSet(
+                    %GetParam,
+                    %ACLCompatGetParam,
                     TypeID   => $GetParam{TypeID},
                     TicketID => $Self->{TicketID},
                     UserID   => $Self->{UserID},
