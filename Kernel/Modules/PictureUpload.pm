@@ -3,9 +3,12 @@
 # based on the original work of:
 # Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::Modules::PictureUpload;
@@ -67,6 +70,26 @@ sub Run {
         for my $Attachment (@AttachmentData) {
             next ATTACHMENT if !$Attachment->{ContentID};
             next ATTACHMENT if $Attachment->{ContentID} ne $ContentID;
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+            if (
+                $Attachment->{Filename} !~ /\.(png|gif|jpg|jpeg|bmp)$/i
+                || substr( $Attachment->{ContentType}, 0, 6 ) ne 'image/'
+                )
+            {
+                $LayoutObject->Block(
+                    Name => 'ErrorNoImageFile',
+                    Data => {
+                        CKEditorFuncNum => $CKEditorFuncNum,
+                    },
+                );
+                return $LayoutObject->Attachment(
+                    ContentType => 'text/html; charset=' . $Charset,
+                    Content     => $LayoutObject->Output( TemplateFile => 'PictureUpload' ),
+                    Type        => 'inline',
+                    NoCache     => 1,
+                );
+            }
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
             return $LayoutObject->Attachment(
                 Type => 'inline',
                 %{$Attachment},
@@ -96,7 +119,10 @@ sub Run {
     }
 
     # return error if file is not possible to show inline
-    if ( $File{Filename} !~ /\.(png|gif|jpg|jpeg)$/i ) {
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+#    if ( $File{Filename} !~ /\.(png|gif|jpg|jpeg)$/i ) {
+    if ( $File{Filename} !~ /\.(png|gif|jpg|jpeg|bmp)$/i || substr( $File{ContentType}, 0, 6 ) ne 'image/' ) {
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
         $LayoutObject->Block(
             Name => 'ErrorNoImageFile',
             Data => {
@@ -206,9 +232,11 @@ sub Run {
 This software is part of the KIX project
 (L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-LICENSE for license information (AGPL). If you did not receive this file, see
-
-<https://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. This program is
+licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+For details, see the enclosed files LICENSE (AGPL) and
+LICENSE-GPL3 (GPL3) for license information. If you did not receive
+this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
+<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
 
 =cut
