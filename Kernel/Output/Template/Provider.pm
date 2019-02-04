@@ -441,7 +441,7 @@ EOF
 
             # only operate on real files
             next FILTER if !$Param{TemplateFile};
-            next FILTER if !$TemplateList{ $Param{TemplateFile} };
+            next FILTER if !$TemplateList{ $TemplateFileWithoutTT };
 
             # check template list
             my $Match = 0;
