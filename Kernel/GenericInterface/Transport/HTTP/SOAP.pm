@@ -3,9 +3,12 @@
 # based on the original work of:
 # Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::GenericInterface::Transport::HTTP::SOAP;
@@ -1064,6 +1067,19 @@ sub _SOAPOutputRecursion {
             next KEY;
         }
 
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+        # Clean up empty hash references for data and empty array references for sort.
+        if (
+            $Key eq 'Data' && $Ref eq 'HASH'
+            || $Key eq 'Sort' && $Ref eq 'ARRAY'
+            )
+        {
+            $Param{$Key} = undef;
+            $Type{$Key}  = 'UNDEFINED';
+            next KEY;
+        }
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+
         # everything else is invalid - throw error
         if ( $Ref =~ m{ \A (?: ARRAY | HASH ) \z }xms ) {
             $Ref .= ' (empty)';
@@ -1073,6 +1089,13 @@ sub _SOAPOutputRecursion {
             ErrorMessage => "$Key type '$Ref' is invalid",
         };
     }
+
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+    # If there is no data to be sorted set sorting accordingly.
+    if ( $Type{Data} eq 'UNDEFINED' && $Type{Sort} ne 'UNDEFINED' ) {
+        $Type{Sort} = 'UNDEFINED';
+    }
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
 
     # types of data and sort must match if sorting is used (=is defined)
     # if data is hash ref sort must be array ref
@@ -1093,8 +1116,14 @@ sub _SOAPOutputRecursion {
 
     # undefined variables are processed as empty string
     if ( $Type{Data} eq 'UNDEFINED' ) {
-        $Param{Data} = '';
-        $Type{Data}  = 'STRING';
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+#        $Param{Data} = '';
+#        $Type{Data}  = 'STRING';
+        return {
+            Success => 1,
+            Data    => '',
+        };
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
     }
 
     # process string
@@ -1251,7 +1280,10 @@ sub _SOAPOutputHashRecursion {
 
     # set result based on data type
     my $Result;
-    if ( !defined $Param{Data} || IsString( $Param{Data} ) ) {
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+#    if ( !defined $Param{Data} || IsString( $Param{Data} ) ) {
+    if ( !defined $Param{Data} || IsString( $Param{Data} ) || IsString( $RecurseResult->{Data} ) ) {
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
         $Result = $RecurseResult->{Data};
     }
     elsif ( IsArrayRefWithData( $Param{Data} ) ) {
@@ -1316,9 +1348,11 @@ sub _SOAPOutputProcessString {
 This software is part of the KIX project
 (L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-LICENSE for license information (AGPL). If you did not receive this file, see
-
-<https://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. This program is
+licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+For details, see the enclosed files LICENSE (AGPL) and
+LICENSE-GPL3 (GPL3) for license information. If you did not receive
+this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
+<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
 
 =cut
