@@ -1,5 +1,14 @@
 # Change log of KIX
-* Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
+* Copyright (C) 2006-2019 c.a.p.e. IT GmbH, http://www.cape-it.de/
+
+# 17.5.0-RC1 (2019/01/21)
+ * (2019/01/18) - CR: T2019011590000712 (added QuickState Modules) (fjacquemin)
+ * (2019/01/18) - Bugfix: T2018111590000802 (fixed ConfigItemSearchExtended with empty param 'What') (millinger)
+ * (2019/01/08) - CR: T2018121890000859 (updated version of packed cpan-lib PDF::API2) (millinger)
+ * (2018/12/21) - Bugfix: T2018071990000661 (merged faq edit fixes from OTRS) (fjacquemin)
+ * (2018/12/21) - Bugfix: T2018110290000756 (fixed missing removal of single/double qute in mail address) (fjacquemin)
+ * (2018/12/17) - Bugfix: T2018110690000196 (fixed missing action parameter to transfer for TicketACL) (fjacquemin)
+ * (2018/12/13) - Bugfix: T2018120590000721 (fixed missing check of available templates if used OutputFilterPre) (fjacquemin)
 
 # 17.4.1 (2018/12/20)
  * (2018/12/20) - productive release

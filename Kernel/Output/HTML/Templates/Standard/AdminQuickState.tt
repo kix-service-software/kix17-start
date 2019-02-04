@@ -217,7 +217,7 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
         <form action="[% Env("CGIHandle") %]" method="post" name="compose" class="Validate PreventMultipleSubmits">
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2><span>[% Translate("General Settings") | html %]</span></h2>
+                    <h2><span>[% Translate("Settings") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">
@@ -226,7 +226,6 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
                         <input type="hidden" name="ID" value="[% Data.ID | html %]" />
                         <input type="hidden" name="FormID" value="[% Data.FormID | html %]" />
                         <input type="hidden" id="UsedPending" name="UsedPending" value="[% Data.UsedPending %]" />
-                        <input type="hidden" id="UsedArticle" name="UsedArticle" value="[% Data.UsedArticle %]" />
 
                         <label class="Mandatory" for="Name"><span class="Marker">*</span> [% Translate("Name") | html %]:</label>
                         <div class="Field">
@@ -275,19 +274,14 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
                             </div>
                         </div>
                         <div class="Clear"></div>
+                        <label class="SpacingTop" for="UsedArticle">[% Translate("Add Article") | html %]:</label>
+                        <div class="Field SpacingTop">
+                            <input type="checkbox" id="UsedArticle" name="UsedArticle" value="1" [% Data.UsedArticleChecked %] />
+                        </div>
+                        <div class="Clear"></div>
                     </fieldset>
-                </div>
-            </div>
 
-            <div class="WidgetSimple SpacingTop [% Data.UsedArticleWidget %]">
-                <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a id="AricleSetting" href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Article Settings") | html %]</span></h2>
-                </div>
-                <div class="Content">
-                    <fieldset class="TableLike">
+                    <fieldset class="TableLike [% Data.UsedArticleClass %]" id="ArticleBox">
                         <label class="Mandatory" for="Subject"><span class="Marker">*</span> [% Translate("Subject") | html %]:</label>
                         <div class="Field">
                             <input type="text" id="Subject" name="Subject" class="W50pc [% Data.SubjectRequired %] [% Data.SubjectInvalid %]" value="[% Data.Subject %]"/>
@@ -320,7 +314,6 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
                     </fieldset>
                 </div>
             </div>
-
             <div class="WidgetSimple SpacingTop">
                 <div class="Header">
                      <h2><span>[% Translate("Save Changes") | html %]</span></h2>
@@ -488,17 +481,16 @@ ticket [&lt;KIX_CONFIG_TicketHook&gt;&lt;KIX_TICKET_TicketNumber&gt;] has been c
         }
     });
 
-    $('#AricleSetting').on('click', function(){
-        var Toogle = $(this).closest('div.WidgetSimple');
-
-        if ( Toogle.hasClass('Collapsed') ) {
+    $('#UsedArticle').on('click', function(){
+        if ( !$(this).is(':checked') ) {
             $('#Subject').removeClass('Validate_Required');
             $('#Body').removeClass('Validate_Required');
-            $('#UsedArticle').val('0');
+            $('#ArticleBox').addClass('Hidden');
         } else {
             $('#Subject').addClass('Validate_Required');
             $('#Body').addClass('Validate_Required');
-            $('#UsedArticle').val('1');
+            $('#ArticleBox').removeClass('Hidden');
+            Core.UI.InputFields.Init();
         }
     });
 //]]></script>
