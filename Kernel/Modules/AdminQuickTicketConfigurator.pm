@@ -67,7 +67,7 @@ sub Run {
         qw(ID  Name CustomerLogin CcCustomerLogin BccCustomerLogin ElementChanged
         PriorityID OwnerID QueueID From Subject Body StateID TimeUnits Cc Bcc FormID
         PendingOffset LinkType LinkDirection ArticleType ArticleSenderType
-        ResponsibleID ResponsibleAll OwnerAll TypeID ServiceID SLAID KIXSidebarChecklistTextField CustomerPortalGroupID)
+        ResponsibleID ResponsibleAll OwnerAll TypeID ServiceID ServiceAll SLAID KIXSidebarChecklistTextField CustomerPortalGroupID)
         )
     {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key ) || '';
@@ -278,6 +278,7 @@ sub Run {
         my $Services = $Self->_GetServices(
             CustomerUserID => $TicketTemplateData{CustomerUserID} || '',
             QueueID        => $TicketTemplateData{QueueID}        || 1,
+            AllServices    => $TicketTemplateData{ServiceAll},
         );
         my $SLAs = $Self->_GetSLAs(
             %GetParam,
@@ -299,7 +300,7 @@ sub Run {
                 QueueID  => $TicketTemplateData{QueueID},
                 AllUsers => $TicketTemplateData{OwnerAll},
             ),
-            ResponsibleUsers => $Self->_GetUsers(
+            ResponsibleUsers => $Self->_GetResponsibles(
                 QueueID  => $TicketTemplateData{QueueID},
                 AllUsers => $TicketTemplateData{ResponsibleAll},
             ),
@@ -430,6 +431,7 @@ sub Run {
                 %GetParam,
                 CustomerUserID => $GetParam{CustomerUserID} || '',
                 QueueID        => $GetParam{QueueID}        || 1,
+                AllServices    => $GetParam{ServiceAll},
             );
             my $SLAs = $Self->_GetSLAs(
                 QueueID => $GetParam{QueueID} || 1,
@@ -443,7 +445,7 @@ sub Run {
                     QueueID  => $GetParam{QueueID},
                     AllUsers => $GetParam{OwnerAll},
                 ),
-                ResponsibleUsers => $Self->_GetUsers(
+                ResponsibleUsers => $Self->_GetResponsibles(
                     QueueID  => $GetParam{QueueID},
                     AllUsers => $GetParam{ResponsibleAll},
                 ),
@@ -561,7 +563,7 @@ sub Run {
             QueueID  => $GetParam{QueueID},
             AllUsers => $GetParam{OwnerAll},
         );
-        my $ResponsibleUsers = $Self->_GetUsers(
+        my $ResponsibleUsers = $Self->_GetResponsibles(
             %GetParam,
             %ACLCompatGetParam,
             QueueID  => $GetParam{QueueID},
@@ -576,7 +578,8 @@ sub Run {
         my $Services = $Self->_GetServices(
             %GetParam,
             CustomerUserID => $GetParam{SelectedCustomerUser} || $GetParam{CustomerLogin} || '',
-            QueueID => $GetParam{QueueID} || 1,
+            QueueID        => $GetParam{QueueID} || 1,
+            AllServices    => $GetParam{ServiceAll},
         );
         my $SLAs = $Self->_GetSLAs(
             %GetParam,
@@ -933,8 +936,7 @@ sub Run {
 
             # get customer portal group if set
             if ( $TicketTemplateData{$CurrHashID}->{CustomerPortalGroupID} ) {
-                $TicketTemplateData{$CurrHashID}->{CustomerPortalGroup}
-                    = $PortalGroups{ $TicketTemplateData{$CurrHashID}->{CustomerPortalGroupID} },
+                $TicketTemplateData{$CurrHashID}->{CustomerPortalGroup} = $PortalGroups{ $TicketTemplateData{$CurrHashID}->{CustomerPortalGroupID} };
             }
 
             $LayoutObject->Block(
@@ -1138,30 +1140,53 @@ sub _GetTypes {
 sub _GetServices {
     my ( $Self, %Param ) = @_;
 
+    # get needed objects
+    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
+    my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+
     # get service
     my %Service;
 
-    # check needed
-    return \%Service if !$Param{QueueID};
+    if ( !$Param{AllServices} ) {
+        # check needed
+        return \%Service if !$Param{QueueID};
 
-    # get options for default services for unknown customers
-    my $DefaultServiceUnknownCustomer
-        = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Service::Default::UnknownCustomer');
+        # get options for default services for unknown customers
+        my $DefaultServiceUnknownCustomer = $ConfigObject->Get('Ticket::Service::Default::UnknownCustomer');
 
-    # check if no CustomerUserID is selected
-    # if $DefaultServiceUnknownCustomer = 0 leave CustomerUserID empty, it will not get any services
-    # if $DefaultServiceUnknownCustomer = 1 set CustomerUserID to get default services
-    if ( !$Param{CustomerUserID} && $DefaultServiceUnknownCustomer ) {
-        $Param{CustomerUserID} = '<DEFAULT>';
+        # check if no CustomerUserID is selected
+        # if $DefaultServiceUnknownCustomer = 0 leave CustomerUserID empty, it will not get any services
+        # if $DefaultServiceUnknownCustomer = 1 set CustomerUserID to get default services
+        if ( !$Param{CustomerUserID} && $DefaultServiceUnknownCustomer ) {
+            $Param{CustomerUserID} = '<DEFAULT>';
+        }
+
+        # get service list
+        if ( $Param{CustomerUserID} || $DefaultServiceUnknownCustomer ) {
+            %Service = $TicketObject->TicketServiceList(
+                %Param,
+                Action => $Self->{Action},
+                UserID => $Self->{UserID},
+            );
+        }
     }
-
-    # get service list
-    if ( $Param{CustomerUserID} || $DefaultServiceUnknownCustomer ) {
-        %Service = $Kernel::OM->Get('Kernel::System::Ticket')->TicketServiceList(
-            %Param,
-            Action => $Self->{Action},
-            UserID => $Self->{UserID},
+    else {
+        %Service = $ServiceObject->ServiceList(
+            UserID       => 1,
+            KeepChildren => $ConfigObject->Get('Ticket::Service::KeepChildren'),
         );
+
+        # workflow
+        my $ACL = $TicketObject->TicketAcl(
+            %Param,
+            ReturnType    => 'Ticket',
+            ReturnSubType => 'Service',
+            Data          => \%Service,
+            UserID        => $Self->{UserID},
+        );
+
+        return { $TicketObject->TicketAclData() } if $ACL;
     }
     return \%Service;
 }
@@ -1537,9 +1562,9 @@ sub _MaskNew {
         if (
             (
                 defined $DynamicFieldConfig->{Config}->{DisplayFieldType}
-                && $DynamicFieldConfig->{Config}->{DisplayFieldType} !~ m/(Dropdown)/i
+                && $DynamicFieldConfig->{Config}->{DisplayFieldType} !~ m/Dropdown/i
             )
-            || $DynamicFieldConfig->{FieldType} !~ m/(Dropdown)/i
+            || $DynamicFieldConfig->{FieldType} !~ m/Dropdown/i
             || $DynamicFieldConfig->{Config}->{PossibleNone}
             )
         {

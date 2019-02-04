@@ -194,6 +194,7 @@
                     <input type="hidden" name="ExpandCustomerName" id="ExpandCustomerName" value="0" />
                     <input type="hidden" name="OwnerAll" id="OwnerAll" value="[% Data.OwnerAll | html %]"/>
                     <input type="hidden" name="ResponsibleAll" id="ResponsibleAll" value="[% Data.ResponsibleAll | html %]"/>
+                    <input type="hidden" name="ServiceAll" id="ServiceAll" value="[% Data.ServiceAll | html %]"/>
                     <input type="hidden" name="SelectedCustomerUser" id="SelectedCustomerUser" value="[% Data.CustomerLogin | html %]" />
                     <input type="hidden" name="CustomerLogin" id="CustomerLogin" value="[% Data.CustomerLogin | html %]"/>
                     <input type="hidden" name="CcCustomerLogin" id="CcCustomerLogin" value="[% Data.CcCustomerLogin | html %]"/>
@@ -308,11 +309,22 @@ $('#ToCustomer, #CcCustomer, #BccCustomer').bind('change',function() {
                         </label>
                         <div class="Field">
                         [% Data.ServiceStrg %]
+                        <a href="#" id="ServiceSelectionGetAll" class="GetAllAJAX" title="[% Translate("Get all") | html %]">
+                            <span>[% Translate("Get all") | html %]</span>
+                            <i class="fa fa-refresh"></i>
+                        </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#ServiceID').bind('change', function (Event) {
         Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'ServiceID', [ 'SLAID' ] );
     });
+$('#ServiceSelectionGetAll').bind('click', function (Event) {
+    $('#ServiceAll').val('1');
+    Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'ServiceAll', ['ServiceID'], function() {
+        $('#ServiceID').focus();
+    });
+    return false;
+});
 //]]></script>
 [% END %]
                             <input type="Checkbox" id="ServiceIDEmpty" name="ServiceIDEmpty" value="1"[% Data.ServiceIDEmpty | html %]>[% Translate("Empty value") | html %]
@@ -340,7 +352,7 @@ $('#ToCustomer, #CcCustomer, #BccCustomer').bind('change',function() {
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 $('#OwnerSelectionGetAll').bind('click', function (Event) {
-    $('#OwnerAll').val('1'); // Needed? Why?
+    $('#OwnerAll').val('1');
     Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'OwnerAll', ['OwnerID'], function() {
         $('#OwnerID').focus();
     });
@@ -362,7 +374,7 @@ $('#OwnerSelectionGetAll').bind('click', function (Event) {
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 $('#ResponsibleSelectionGetAll').bind('click', function (Event) {
-    $('#ResponsibleAll').val('1'); // Needed? Why?
+    $('#ResponsibleAll').val('1');
     Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'ResponsibleAll', ['ResponsibleID'], function() {
         $('#ResponsibleID').focus();
     });
