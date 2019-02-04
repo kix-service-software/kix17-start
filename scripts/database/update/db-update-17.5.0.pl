@@ -29,10 +29,43 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 
 use vars qw(%INC);
 
+# migrate configuration for shown deployment states for config item link graph
+_MigrateDeploymentStateConfiguration();
+
 # Add a default quick state if state "closed successful" exists
 _AddDefaultQuickState();
 
 exit 0;
+
+sub _MigrateDeploymentStateConfiguration {
+    # get needed object
+    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
+    my $SysConfigObject = $Kernel::OM->Get('Kernel::System::SysConfig');
+
+    # prepare config mapping
+    my %ConfigMapping = (
+        'ConfigItemOverview::HighlightMapping'                  => 'ConfigItemLinkGraph::HighlightMapping',
+        'ConfigItemOverview::ShowDeploymentStatePostproductive' => 'ConfigItemLinkGraph::ShowDeploymentStatePostproductive',
+        'ConfigItemOverview::ExcludedDeploymentStates'          => 'ConfigItemLinkGraph::ExcludedDeploymentStates',
+    );
+
+    # process mapping
+    for my $ConfigName ( keys( %ConfigMapping ) ) {
+        # get current configuration
+        my %ConfigItem = $SysConfigObject->ConfigItemGet(
+            Name => $ConfigName,
+        );
+        my $Config = $ConfigObject->Get($ConfigName);
+
+        # update new configuration
+        $SysConfigObject->ConfigItemUpdate(
+            Key   => $ConfigMapping{$ConfigName},
+            Value => $Config,
+            Valid => $ConfigItem{Valid},
+        );
+    }
+    return 1;
+}
 
 sub _AddDefaultQuickState {
     my $StateObject      = $Kernel::OM->Get('Kernel::System::State');
@@ -71,7 +104,6 @@ sub _AddDefaultQuickState {
             }
         }
     }
-
     return 1;
 }
 
