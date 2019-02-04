@@ -71,41 +71,34 @@ sub Run {
 
     # create HMTL
     # append multiselect for changing sysconfig settings
-    my $SearchPattern
-        = '<fieldset\sclass\=\"TableLike\">\s*<div\sclass\=\"Field\sSpacingTop\">\s*<button';
-    my $ReplacementString = '<div class="WidgetSimple">'
-        . '<div class="Header">'
-        . '<h2><span>'
+    my $SearchPattern     = '<fieldset\sclass\=\"TableLike\">\s*<div\sclass\=\"Field\sSpacingTop\">\s*<button';
+    my $ReplacementString = '<div class="WidgetSimple">
+<div class="Header">
+<h2><span>'
         . $LayoutObject->{LanguageObject}->Translate('DynamicField SysConfig Settings')
-        . '</span></h2>'
-        . '</div>'
-        . '<div class="Content">'
-        . '<fieldset class="TableLike">'
-        . '<label for="Rows">'
-        . $LayoutObject->{LanguageObject}
-        ->Translate('Show DynamicField in frontend modules')
+        . '</span></h2>
+</div>
+<div class="Content">
+<fieldset class="TableLike">
+<label for="Rows">'
+        . $LayoutObject->{LanguageObject}->Translate('Show DynamicField in frontend modules')
         . ':<br /><br />('
-        . $LayoutObject->{LanguageObject}
-        ->Get('Please select all frontend modules which should display the dynamic field.')
-        . ')</label>'
-        . '<div class="Field">'
+        . $LayoutObject->{LanguageObject}->Translate('Please select all frontend modules which should display the dynamic field.')
+        . ')</label><div class="Field">'
         . $Param{AvailableFrontendModulesStrg}
-        . '</div>'
-        . '<div class="Clear"></div>'
-        . '<label for="Rows">'
+        . '</div>
+<div class="Clear"></div>
+<label for="Rows">'
         . $LayoutObject->{LanguageObject}->Translate('Mandatory in frontend modules')
         . ':<br /><br />('
-        . $LayoutObject->{LanguageObject}->Translate(
-        'Please select all frontend modules which should have the dynamic field as a mandatory field.'
-        )
-        . ')</label>'
-        . '<div class="Field">'
+        . $LayoutObject->{LanguageObject}->Translate('Please select all frontend modules which should have the dynamic field as a mandatory field.')
+        . ')</label><div class="Field">'
         . $Param{MandatoryFrontendModulesStrg}
-        . '</div>'
-        . '<div class="Clear"></div>'
-        . '</fieldset>'
-        . '</div>'
-        . '</div>';
+        . '</div>
+<div class="Clear"></div>
+</fieldset>
+</div>
+</div>';
 
     # do replace
     if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms )
@@ -115,49 +108,43 @@ sub Run {
 
     # add some javascript / jquery to move selected fields into mandatory fields
     $SearchPattern     = 'Core\.Agent\.Admin\.DynamicField\.ValidationInit';
-    $ReplacementString = '$(\'#AvailableFrontends\').bind(\'click\',function(){'
-        . '    var OptionStrg = \'\','
-        . '    SelectedOptions = new Array();'
-        . '    $(\'#MandatoryFrontends\').find(\'option:selected\').each(function(){'
-        . '        SelectedOptions.push($(this).html());'
-        . '    });'
-        . '    $(this).find(\'option:selected\').each(function(){'
-        . '        OptionStrg += \'<option value="\'+$(this).val()+\'">\'+$(this).html()+\'</option>\';'
-        . '    });'
-        . '    $(\'#MandatoryFrontends\').html(OptionStrg);'
-        . '    $.each(SelectedOptions,function(index,item){'
-        . '        $("#MandatoryFrontends option[value=\'" + item + "\']").attr("selected","selected");'
-        . '    });'
-        . '});'
-        . 'var $Form  = $(\'#AvailableFrontends\').closest(\'form\'),'
-        . '    $Action = $Form.find(\'input[name="Action"]\'), '
-        . '    ActionValue = $Action.val();'
-        . '$Form.find(\'button[type="Submit"]\').bind(\'click\',function(){'
-        . '    $(this).attr("disabled", "disabled");'
-        . '    $(this).parents(\'fieldset\').find(\'div.Clear\').parent().append("<div class=\"Field\">'
-        . $LayoutObject->{LanguageObject}
-        ->Translate('Saving module assignments in SysConfig')
+    $ReplacementString = '$(\'#AvailableFrontends\').bind(\'click\',function(){
+    var OptionStrg = \'\',
+        SelectedOptions = new Array();
+    $(\'#MandatoryFrontends\').find(\'option:selected\').each(function(){
+        SelectedOptions.push($(this).html());
+    });
+    $(this).find(\'option:selected\').each(function(){
+        OptionStrg += \'<option value="\'+$(this).val()+\'">\'+$(this).html()+\'</option>\';
+    });
+    $(\'#MandatoryFrontends\').html(OptionStrg);
+    $.each(SelectedOptions,function(index,item){
+        $("#MandatoryFrontends option[value=\'" + item + "\']").attr("selected","selected");
+    });
+});
+var $Action = $(\'#AvailableFrontends\').closest(\'form\').find(\'input[name="Action"]\'),
+    ActionValue = $Action.val();
+Core.Form.Validate.SetSubmitFunction( $(\'#AvailableFrontends\').closest(\'form\'), function (Form) {
+    $(Form).find(\'button[type="Submit"]\').parents(\'fieldset\').find(\'div.Clear\').parent().append("<div class=\"Field\">'
+        . $LayoutObject->{LanguageObject}->Translate('Saving module assignments in SysConfig')
         . '...<img src=\"'
         . $Kernel::OM->Get('Kernel::Config')->Get('Frontend::ImagePath')
-        . 'loader.gif\"></div><div class=\"Clear\"></div>");'
-        . '    $Action.val(\'AdminDynamicFieldSysConfigSettingsAJAXHandler\');'
-        . '    Core.AJAX.FunctionCall(Core.Config.Get(\'Baselink\'),Core.AJAX.SerializeForm($Form),function(){'
-        . '        $Action.val(ActionValue);'
-        . '        $Form.submit();'
-        . '    });'
-        . '    return false;'
-        . '});';
+        . 'loader.gif\"></div><div class=\"Clear\"></div>");
+    $Action.val(\'AdminDynamicFieldSysConfigSettingsAJAXHandler\');
+    Core.AJAX.FunctionCall(Core.Config.Get(\'Baselink\'),Core.AJAX.SerializeForm($(Form)),function(){
+        Core.Form.EnableForm($(Form));
+        $Action.val(ActionValue);
+        Form.submit();
+        window.setTimeout(function () {
+            Core.Form.DisableForm($(Form));
+        }, 0);
+    });
+});';
 
     # do replace
     if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms )
     {
         ${ $Param{Data} } =~ s{ ($SearchPattern) }{ $ReplacementString$1 }ixms;
-    }
-
-    my $SearchPattern1 = 'Core\.Agent';
-    if ( ${ $Param{Data} } =~ m{ $SearchPattern1 }ixms )
-    {
-
     }
 
     # return
