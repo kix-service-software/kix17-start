@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -14,6 +14,7 @@ use warnings;
 our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Encode',
+    'Kernel::System::GeneralCatalog',
     'Kernel::System::ITSMConfigItem',
     'Kernel::System::Web::Request'
 );
@@ -25,10 +26,11 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    $Self->{LayoutObject}     = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    $Self->{EncodeObject}     = $Kernel::OM->Get('Kernel::System::Encode');
-    $Self->{ConfigItemObject} = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
-    $Self->{ParamObject}      = $Kernel::OM->Get('Kernel::System::Web::Request');
+    $Self->{LayoutObject}         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    $Self->{EncodeObject}         = $Kernel::OM->Get('Kernel::System::Encode');
+    $Self->{GeneralCatalogObject} = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
+    $Self->{ConfigItemObject}     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    $Self->{ParamObject}          = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     return $Self;
 }
@@ -42,6 +44,38 @@ sub Run {
     my $Search  = $Self->{ParamObject}->GetParam( Param => 'Term' )    || '';
     my $ClassID = $Self->{ParamObject}->GetParam( Param => 'ClassID' ) || 0;
 
+    # get class list
+    my $ClassList = $Self->{GeneralCatalogObject}->ItemList(
+        Class => 'ITSM::ConfigItem::Class',
+    );
+
+    # check for access rights on the classes
+    for my $ClassID ( sort keys %{$ClassList} ) {
+        my $HasAccess = $Self->{ConfigItemObject}->Permission(
+            Type    => 'ro',
+            Scope   => 'Class',
+            ClassID => $ClassID,
+            UserID  => $Self->{UserID} || 1,
+        );
+
+        delete $ClassList->{$ClassID} if !$HasAccess;
+    }
+
+    my @ClassIDArray = ();
+    if ($ClassID eq 'All') {
+        @ClassIDArray = keys %{$ClassList};
+    }
+    else {
+        my @TempClassIDArray = split( /\s*,\s*/, $ClassID);
+        for my $ClassID ( @TempClassIDArray ) {
+            if ( $ClassList->{$ClassID} ) {
+                push( @ClassIDArray, $ClassID );
+            }
+        }
+    }
+    if ( !@ClassIDArray ) {
+        push( @ClassIDArray, '0');
+    }
 
     # get CI Class list
     #-----------------------------------------------------------------------
@@ -49,7 +83,7 @@ sub Run {
     my @Data;
     my $CISearchListRef = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
         Name     => '*' . $Search . '*',
-        ClassIDs => [$ClassID],
+        ClassIDs => \@ClassIDArray,
     );
     my %FoundCIHash = ();
 
@@ -79,7 +113,7 @@ sub Run {
     # search for number....
     $CISearchListRef = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
         Number   => '*' . $Search . '*',
-        ClassIDs => [$ClassID],
+        ClassIDs => \@ClassIDArray,
     );
 
     for my $SearchResult ( @{$CISearchListRef} ) {

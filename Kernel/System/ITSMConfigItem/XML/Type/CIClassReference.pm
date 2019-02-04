@@ -188,51 +188,33 @@ sub ExportValuePrepare {
 
         my $VersionData = $Self->{ConfigItemObject}->VersionGet(
             ConfigItemID => $Param{Value},
+            XMLDataGet   => 1,
         );
 
         if ( $VersionData && ref $VersionData eq 'HASH' ) {
             return $VersionData->{Name} if $SearchAttr eq 'Name';
 
-            # get ConfigItem class ID
-            my $ReferencedCIClassID = "";
-            if (
-                $Param{Item}
-                && ref( $Param{Item} ) eq 'HASH'
-                && $Param{Item}->{Input}
-                && ref( $Param{Item}->{Input} ) eq 'HASH'
-                && $Param{Item}->{Input}->{ReferencedCIClassName}
-                )
-            {
-                my $ItemDataRef = $Self->{GeneralCatalogObject}->ItemGet(
-                    Class => 'ITSM::ConfigItem::Class',
-                    Name => $Param{Item}->{Input}->{ReferencedCIClassName} || '',
-                );
-                if ( $ItemDataRef && ref($ItemDataRef) eq 'HASH' && $ItemDataRef->{ItemID} ) {
-                    $ReferencedCIClassID = $ItemDataRef->{ItemID} || '';
-                }
+            my $XMLDefinition = $Self->{ConfigItemObject}->DefinitionGet( DefinitionID => $VersionData->{DefinitionID}, );
 
-                my $XMLDefinition =
-                    $Self->{ConfigItemObject}->DefinitionGet( ClassID => $ReferencedCIClassID, );
+            my $ArrRef = $Self->{CIACUtilsObject}->GetAttributeValuesByKey(
+                KeyName       => $SearchAttr,
+                XMLData       => $VersionData->{XMLData}->[1]->{Version}->[1],
+                XMLDefinition => $XMLDefinition->{DefinitionRef},
+            );
 
-                my $ArrRef = $Self->{CIACUtilsObject}->GetAttributeValuesByKey(
-                    KeyName       => $SearchAttr,
-                    XMLData       => $VersionData->{XMLData}->[1]->{Version}->[1],
-                    XMLDefinition => $XMLDefinition->{DefinitionRef},
-                );
-
-                if ( $ArrRef && $ArrRef->[0] ) {
-                    return $ArrRef->[0];
-                }
+            if ( $ArrRef && $ArrRef->[0] ) {
+                return $ArrRef->[0];
             }
         }
     }
-
-    # lookup CI number for given CI ID
-    my $CIRef = $Self->{ConfigItemObject}->ConfigItemGet(
-        ConfigItemID => $Param{Value},
-    );
-    if ( $CIRef && ref $CIRef eq 'HASH' && $CIRef->{Number} ) {
-        return $CIRef->{Number};
+    else {
+        # lookup CI number for given CI ID
+        my $CIRef = $Self->{ConfigItemObject}->ConfigItemGet(
+            ConfigItemID => $Param{Value},
+        );
+        if ( $CIRef && ref $CIRef eq 'HASH' && $CIRef->{Number} ) {
+            return $CIRef->{Number};
+        }
     }
 
     return '';
@@ -295,95 +277,132 @@ sub ImportValuePrepare {
 
     my $SearchAttr = $Param{Item}->{Input}->{ReferencedCIClassReferenceAttributeKey} || '';
 
-    # make CI-Number out of given value
+    # get class list
+    my $ClassList = $Self->{GeneralCatalogObject}->ItemList(
+        Class => 'ITSM::ConfigItem::Class',
+    );
+
+    # check for access rights on the classes
+    for my $ClassID ( sort keys %{$ClassList} ) {
+        my $HasAccess = $Self->{ConfigItemObject}->Permission(
+            Type    => 'ro',
+            Scope   => 'Class',
+            ClassID => $ClassID,
+            UserID  => $Self->{UserID} || 1,
+        );
+
+        delete $ClassList->{$ClassID} if !$HasAccess;
+    }
+
+    my @ClassIDArray = ();
+    if ($Param{Item}->{Input}->{ReferencedCIClassID}) {
+        if ($Param{Item}->{Input}->{ReferencedCIClassID} eq 'All') {
+            @ClassIDArray = keys %{$ClassList};
+        }
+        else {
+            my @TempClassIDArray = split( /\s*,\s*/, $Param{Item}->{Input}->{ReferencedCIClassID});
+            for my $ClassID ( @TempClassIDArray ) {
+                if ( $ClassList->{$ClassID} ) {
+                    push( @ClassIDArray, $ClassID );
+                }
+            }
+        }
+    }
+    elsif ($Param{Item}->{Input}->{ReferencedCIClassName}) {
+        if ($Param{Item}->{Input}->{ReferencedCIClassName} eq 'All') {
+            @ClassIDArray = keys %{$ClassList};
+        }
+        else {
+            my @ClassNameArray = split( /\s*,\s*/, $Param{Item}->{Input}->{ReferencedCIClassName});
+            CLASSNAME:
+            for my $ClassName ( @ClassNameArray ) {
+                if ( !$ClassName ) {
+                    @ClassIDArray = ();
+                    last CLASSNAME;
+                }
+
+                my $ItemDataRef = $Self->{GeneralCatalogObject}->ItemGet(
+                    Class => 'ITSM::ConfigItem::Class',
+                    Name  => $ClassName,
+                );
+                if (
+                    $ItemDataRef
+                    && ref($ItemDataRef) eq 'HASH'
+                    && $ItemDataRef->{ItemID}
+                    && $ClassList->{$ItemDataRef->{ItemID}}
+                ) {
+                    push( @ClassIDArray, $ItemDataRef->{ItemID} );
+                }
+                else {
+                    @ClassIDArray = ();
+                    last CLASSNAME;
+                }
+            }
+        }
+    }
+    if ( !@ClassIDArray ) {
+        push( @ClassIDArray, '0');
+    }
+
+    # make CI-ID out of given value
     if ($SearchAttr) {
-
-        # get ConfigItem class ID
-        my $ReferencedCIClassID = "";
-        if (
-            $Param{Item}
-            && ref( $Param{Item} ) eq 'HASH'
-            && $Param{Item}->{Input}
-            && ref( $Param{Item}->{Input} ) eq 'HASH'
-            && $Param{Item}->{Input}->{ReferencedCIClassName}
-            )
-        {
-            my $ItemDataRef = $Self->{GeneralCatalogObject}->ItemGet(
-                Class => 'ITSM::ConfigItem::Class',
-                Name => $Param{Item}->{Input}->{ReferencedCIClassName} || '',
-            );
-            if ( $ItemDataRef && ref($ItemDataRef) eq 'HASH' && $ItemDataRef->{ItemID} ) {
-                $ReferencedCIClassID = $ItemDataRef->{ItemID} || '';
-            }
-
-            # prepare search params
-            my %SearchParams = ();
-            my %SearchData   = ();
-
-            $SearchData{$SearchAttr} = $Param{Value};
-
-            my $XMLDefinition =
-                $Self->{ConfigItemObject}->DefinitionGet( ClassID => $ReferencedCIClassID, );
-
-            my @SearchParamsWhat;
-            $Self->_XMLSearchDataPrepare(
-                XMLDefinition => $XMLDefinition->{DefinitionRef},
-                What          => \@SearchParamsWhat,
-                SearchData    => \%SearchData,
-            );
-
-            if (@SearchParamsWhat) {
-                $SearchParams{What} = \@SearchParamsWhat;
-            }
-
-            # search the config items
+        if ( $SearchAttr eq 'Name' ) {
             my $ConfigItemIDs = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
-                %SearchParams,
-                ClassIDs              => [$ReferencedCIClassID],
-                PreviousVersionSearch => 0,
+                Name     => $Param{Value},
+                ClassIDs => \@ClassIDArray,
             );
-
-            # get and return CofigItem ID
             my $CIID = "";
             if ( $ConfigItemIDs && ref($ConfigItemIDs) eq 'ARRAY' ) {
                 $CIID = $ConfigItemIDs->[0] || '';
             }
-            return $CIID;
+            return $CIID if $CIID;
+        }
+        else {
+            # prepare search params
+            my %SearchData   = (
+                $SearchAttr => $Param{Value},
+            );
+
+            $SearchData{$SearchAttr} = $Param{Value};
+
+            CLASSID:
+            for my $ClassID ( @ClassIDArray ) {
+                next CLASSID if ( !$ClassID );
+                my $XMLDefinition = $Self->{ConfigItemObject}->DefinitionGet( ClassID => $ClassID, );
+
+                my @SearchParamsWhat;
+                $Self->_XMLSearchDataPrepare(
+                    XMLDefinition => $XMLDefinition->{DefinitionRef},
+                    What          => \@SearchParamsWhat,
+                    SearchData    => \%SearchData,
+                );
+
+                my %SearchParams = ();
+                if (@SearchParamsWhat) {
+                    $SearchParams{What} = \@SearchParamsWhat;
+                }
+
+                # search the config items
+                my $ConfigItemIDs = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
+                    %SearchParams,
+                    ClassIDs              => [$ClassID],
+                    PreviousVersionSearch => 0,
+                );
+
+                # get and return CofigItem ID
+                my $CIID = "";
+                if ( $ConfigItemIDs && ref($ConfigItemIDs) eq 'ARRAY' ) {
+                    $CIID = $ConfigItemIDs->[0] || '';
+                }
+                return $CIID;
+            }
         }
     }
-
-    # check if CI number was given
-    my $CIID = $Self->{ConfigItemObject}->ConfigItemLookup(
-        ConfigItemNumber => $Param{Value},
-    );
-    return $CIID if $CIID;
-
-    # make CI-Number out of given Name...
-    my $ReferencedCIClassID = "";
-    if (
-        $Param{Item}
-        && ref( $Param{Item} ) eq 'HASH'
-        && $Param{Item}->{Input}
-        && ref( $Param{Item}->{Input} ) eq 'HASH'
-        && $Param{Item}->{Input}->{ReferencedCIClassName}
-        )
-    {
-        my $RefClassName = $Param{Item}->{Input}->{ReferencedCIClassName};
-        my $ItemDataRef  = $Self->{GeneralCatalogObject}->ItemGet(
-            Class => 'ITSM::ConfigItem::Class',
-            Name => $Param{Item}->{Input}->{ReferencedCIClassName} || '',
+    else {
+        # check if CI number was given
+        my $CIID = $Self->{ConfigItemObject}->ConfigItemLookup(
+            ConfigItemNumber => $Param{Value},
         );
-        if ( $ItemDataRef && ref($ItemDataRef) eq 'HASH' && $ItemDataRef->{ItemID} ) {
-            $ReferencedCIClassID = $ItemDataRef->{ItemID} || '';
-        }
-        my $ConfigItemIDs = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
-            Name     => $Param{Value},
-            ClassIDs => [$ReferencedCIClassID],
-        );
-        my $CIID = "";
-        if ( $ConfigItemIDs && ref($ConfigItemIDs) eq 'ARRAY' ) {
-            $CIID = $ConfigItemIDs->[0] || '';
-        }
         return $CIID if $CIID;
     }
 

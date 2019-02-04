@@ -1356,7 +1356,7 @@ sub ConfigItemSearch {
         # create string
         my $InString = join q{, }, @{ $Param{$ArrayParam} };
 
-        next ARRAYPARAM if !$InString;
+        next ARRAYPARAM if $InString eq '';
 
         push @SQLWhere, "$ArrayParams{ $ArrayParam } IN ($InString)";
     }
