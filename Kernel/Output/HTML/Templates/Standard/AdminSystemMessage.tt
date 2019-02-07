@@ -1,0 +1,306 @@
+# --
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+    <h1>[% Translate("Message Management") | html %]</h1>
+
+    <div class="SidebarColumn">
+
+[% RenderBlockStart("ActionList") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
+            </div>
+            <div class='Content'>
+                <ul class="ActionList">
+[% RenderBlockStart("ActionOverview") %]
+                    <li>
+                        <a href='[% Env("Baselink") %]Action=[% Env("Action") | html %];[% Env("ChallengeTokenParam") | html %][% Data.Session | html %]' class="CallForAction Fullsize Center"><span><i class="fa fa-caret-left"></i>[% Translate("Go to overview") | html %]</span></a>
+                    </li>
+[% RenderBlockEnd("ActionOverview") %]
+[% RenderBlockStart("ActionSearch") %]
+                    <li>
+                        <form class="SearchBox" action="[% Env("CGIHandle") %]" method="post">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value="Search"/>
+                            <input type="text" name="Search" value="[% Data.Search | html %]" id="Search" title="[% Translate("Search") | html %]"/>
+                            <button type="submit" value="[% Translate("Search") | html %]" title="[% Translate("Search") | html %]"><i class="fa fa-search"></i></button>
+                        </form>
+                        <p class="FieldExplanation">
+                            [% Translate("Wildcards like '*' are allowed.") | html %]
+                        </p>
+                    </li>
+[% RenderBlockEnd("ActionSearch") %]
+[% RenderBlockStart("ActionAdd") %]
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post">
+                            <input type="hidden" name="Action" value='[% Env("Action") %]'/>
+                            <input type="hidden" name="Subaction" value="Add"/>
+                            <button class="CallForAction Fullsize Center" type="submit" value="[% Translate("Add") | html %]">
+                                <span><i class="fa fa-plus-square"></i>[% Translate("Add Message") | html %]</span>
+                            </button>
+                        </form>
+                    </li>
+[% RenderBlockEnd("ActionAdd") %]
+                </ul>
+            </div>
+        </div>
+[% RenderBlockEnd("ActionList") %]
+    </div>
+
+    <div class="ContentColumn">
+[% RenderBlockStart("Overview") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2><span>[% Translate("List") | html %]</span></h2>
+[% RenderBlockStart("ContextSettings") %]
+                <ul class="ContextFunctions">
+                    <li class="ContextSettings">
+                        <a href="#" id="ShowContextSettingsDialog" title="[% Translate("Settings") | html %]">
+                            <i class="fa fa-cog"></i>
+                            <span>[% Translate("Settings") | html %]</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div id="ContextSettingsDialogContainer" class="Hidden">
+                    <form action="[% Env("CGIHandle") %]" method="post" id="ContextSettingsDialog">
+                        <input type="hidden" name="Action" value="AgentPreferences"/>
+                        <input type="hidden" name="Subaction" value="Update"/>
+                        <input type="hidden" name="Group" value="[% Data.Group | html %]"/>
+                        <input type="hidden" name="RedirectURL" value="[% Data.RequestedURL | html %]"/>
+                        <fieldset class="TableLike">
+                            <label for="[% Data.PreferencesKey | html %]">[% Translate("Message per page") | html %]:</label>
+                            <div class="Field">
+                                [% Data.PageShownString %]
+                            </div>
+                            <div class="Clear"></div>
+                        </fieldset>
+                    </form>
+                </div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#ShowContextSettingsDialog').bind('click', function (Event) {
+    Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainer'), [% Translate("Settings") | JSON %], '20%', 'Center', true,
+        [
+            {
+                Label: [% Translate("Submit") | JSON %],
+                Type: 'Submit',
+                Class: 'Primary'
+            }
+        ]
+    );
+    Event.preventDefault();
+    Event.stopPropagation();
+    return false;
+});
+//]]></script>
+[% END %]
+[% RenderBlockEnd("ContextSettings") %]
+
+            </div>
+            <div class="Content">
+                <div class="QuickStatePagination">
+                    <span class="Pagination">
+[% RenderBlockStart("OverviewNavBarPageNavBar") %]
+                        [% Data.ResultLong %]
+                        [% Data.SiteNavBarLong %]
+[% RenderBlockEnd("OverviewNavBarPageNavBar") %]
+                    </span>
+                </div>
+                <div class="Clear"></div>
+                <div class="SystemMessageContent">
+                    <table class="DataTable">
+                        <thead>
+                            <tr>
+                                <th>[% Translate("Header") | html %]</th>
+                                <th>[% Translate("Short Text") | html %]</th>
+                                <th>[% Translate("Valitiy") | html %]</th>
+                                <th>[% Translate("Valid From") | html %]</th>
+                                <th>[% Translate("Valid To") | html %]</th>
+                                <th>[% Translate("Author") | html %]</th>
+                                <th>[% Translate("Display") | html %]</th>
+                                <th>[% Translate("Delete") | html %]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+[% RenderBlockStart("OverviewResultRow") %]
+                            <tr class="[% Data.Invalid %]">
+                                <td><a class="AsBlock" href='[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Change;MessageID=[% Data.MessageID | uri %];[% Env("ChallengeTokenParam") | html %][% Data.Session | html %]'>[% Data.Title | html %]</a></td>
+                                <td>[% Data.ShortText | html %]</td>
+                                <td>[% Translate(Data.Valid) | html %]</td>
+                                <td>[% Data.ValidFrom | Localize("TimeShort") %]</td>
+                                <td>[% Data.ValidTo | Localize("TimeShort") %]</td>
+                                <td>[% Data.Username %]</td>
+                                <td class="Center">
+                                    <a title='[% Translate("Display templates") | html %]' class="ShowDisplay" data-id="[% Data.MessageID %]">
+                                        <i class="fa fa-eye"></i>
+                                        <span class="InvisibleText">[% Translate("Display templates") | html %]</span>
+                                    </a>
+                                </td>
+                                <td class="Center">
+                                    <a title='[% Translate("Delete") | html %]' href='[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;MessageID=[% Data.MessageID | uri %];[% Env("ChallengeTokenParam") | html %][% Data.Session | html %]' onclick="javascript:return ConfirmDeletion('[% Data.MessageID | html %]', '[% Data.Title | html %]');">
+                                        <i class="fa fa-trash-o"></i>
+                                        <span class="InvisibleText">[% Translate("Delete") | html %]</span>
+                                    </a>
+                                </td>
+                            </tr>
+[% RenderBlockEnd("OverviewResultRow") %]
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+<script type="text/javascript">//<![CDATA[
+    function ConfirmDeletion(ID, Name) {
+        return confirm(
+            '[% Translate("Confirm deletion of") | html %] "'
+            + Title
+            + '" (ID '
+            + ID
+            + ')'
+        );
+    };
+
+//]]></script>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('.ShowDisplay').on('click', function(){
+        var Data = {
+            Action: 'AdminSystemMessage',
+            Subaction: 'AJAXDisplay',
+            MessageID: $(this).attr('data-id')
+        };
+
+        Core.AJAX.FunctionCall(Core.Config.Get('Baselink'), Data, function (Response) {
+            Core.UI.Dialog.ShowContentDialog(
+                Response.Content,
+                Response.Title,
+                '20%',
+                'Center',
+                true,
+                [
+                    {
+                        Label: Response.Close,
+                        Type:'Close',
+                    }
+                ]
+            );
+        });
+        return false;
+    });
+
+//]]></script>
+[% END %]
+[% RenderBlockEnd("Overview") %]
+[% RenderBlockStart("OverviewEdit") %]
+        <form action="[% Env("CGIHandle") %]" method="post" name="compose" class="Validate PreventMultipleSubmits">
+            <div class="WidgetSimple">
+                <div class="Header">
+                    <h2><span>[% Translate("Settings") | html %]</span></h2>
+                </div>
+                <div class="Content">
+                    <fieldset class="TableLike">
+                        <input type="hidden" name="Action" value="[% Env("Action") %]" />
+                        <input type="hidden" name="Subaction" value="[% Data.Subaction | html %]Action" />
+                        <input type="hidden" name="MessageID" value="[% Data.MessageID | html %]" />
+                        <input type="hidden" name="FormID" value="[% Data.FormID | html %]" />
+
+                        <label class="Mandatory" for="Title"><span class="Marker">*</span> [% Translate("Headline") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" id="Title" name="Title" class="W50pc Validate_Required [% Data.TitleInvalid %]" value="[% Data.Title %]"/>
+                            <div id="TitleError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="TitleServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="ShortText"><span class="Marker">*</span> [% Translate("Teaser") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" id="ShortText" name="ShortText" class="W50pc Validate_Required [% Data.ShortTextInvalid %]" value="[% Data.ShortText %]"/>
+                            <div id="ShortTextError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="ShortTextServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="Body"><span class="Marker">*</span> [% Translate("Body") | html %]:</label>
+                        <div class="Field">
+                            <textarea id="Body" class="W50pc Validate_Required [% Data.BodyInvalid | html %]" name="Body" title="[% Translate("Message body") | html %]" rows="10" >[% Data.Body | html %]</textarea>
+                            <div id="BodyError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="BodyServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="Templates"><span class="Marker">*</span>[% Translate("Display") | html %]:</label>
+                        <div class="Field">
+                            [% Data.TemplatesOption %]
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="ValidFrom">[% Translate("Validation date") | html %]:</label>
+                        <div class="Field">
+                            [% Data.ValidFromOption %]
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="ValidTo">[% Translate("Invalidation date") | html %]:</label>
+                        <div class="Field">
+                            [% Data.ValidToOption %]
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="UsedDashboard">[% Translate("Open news when user visits dashboard") | html %]:</label>
+                        <div class="Field">
+                            <input type="checkbox" id="UsedDashboard" name="UsedDashboard" value="1" [% Data.IsChecked %]/>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label class="Mandatory" for="ValidID"><span class="Marker">*</span> [% Translate("Validity") | html %]:</label>
+                        <div class="Field">
+                            [% Data.ValidIDOption %]
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="WidgetSimple SpacingTop">
+                <div class="Header">
+                     <h2><span>[% Translate("Save Changes") | html %]</span></h2>
+                </div>
+                <div class="Content">
+                    <fieldset class="TableLike">
+                        <div class="Field SpacingTop">
+                            <button class="Primary CallForAction" type="submit" value="[% Translate("Submit") | html %]"><span>[% Translate("Submit") |  html %]</span></button>
+                            [% Translate("or") | html %]
+                            <a href="[% Env("Baselink") %]Action=[% Env("Action") %]">[% Translate("Cancel") | html %]</a>
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.Agent.TicketAction.Init();
+
+//]]></script>
+[% END %]
+[% RenderBlockEnd("OverviewEdit") %]
+    </div>
+    <div class="Clear"></div>
+</div>

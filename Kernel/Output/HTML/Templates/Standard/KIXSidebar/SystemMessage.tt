@@ -1,0 +1,96 @@
+# --
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+
+[% RenderBlockStart("WidgetHeader") %]
+<div id="[% Data.Identifier %]" class="KIXSidebarTools WidgetSimple CanDrag [% Data.AdditionalClasses | html %]">
+    <div class="Header">
+        <div class="WidgetAction Toggle">
+            <a href="#" title="[% Translate(Data.Description) | html %]">
+                <i class="fa fa-caret-right"></i>
+                <i class="fa fa-caret-down"></i>
+            </a>
+        </div>
+        <h2 class="PaddingLeft15px"><span>[% Translate(Data.Title) | html %]</span></h2>
+    </div>
+[% RenderBlockEnd("WidgetHeader") %]
+[% RenderBlockStart("CustomerWidgetHeader") %]
+<div id="[% Data.Identifier %]" class="KIXSidebarTools WidgetSimple [% Data.AdditionalClasses | html %]">
+    <div class="Header">
+        <h2><span>[% Translate(Data.Title) | html %]</span></h2>
+    </div>
+[% RenderBlockEnd("CustomerWidgetHeader") %]
+[% RenderBlockStart("SidebarFrame") %]
+    <div id="Content[% Data.Identifier %]" class="Content">
+        <div id="SearchResult[% Data.Identifier | html %]">
+        </div>
+    </div>
+</div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    KIXSidebarTools.Init('[% Data.Identifier | html %]');
+
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
+
+    Core.UI.SystemMessage.Init('KIXSidebar', '[% Data.Identifier | html %]', null);
+//]]>
+</script>
+[% END %]
+<script type="text/javascript">//<![CDATA[
+    var KIXSidebarCallback[% Data.Identifier | html %] = function (Response) {
+        if ( !$('#Result[% Data.Identifier | html %]').is(':visible') ) {
+            $('#[% Data.Identifier | html %]').hide();
+        } else {
+            $('#[% Data.Identifier | html %]').show();
+        }
+        [% Data.Callback %]
+    }
+//]]>
+</script>
+[% RenderBlockEnd("SidebarFrame") %]
+
+[% RenderBlockStart("KIXSidebarMessageResult") %]
+<div style="[% Data.Style | html %]" >
+    <table id="Result[% Data.Identifier | html %]" class="DataTable">
+        <thead>
+            <tr>
+                <th></th>
+                <th>[% Translate("Headline") %]</th>
+                <th>[% Translate("Teaser") %]</th>
+            </tr>
+        </thead>
+        <tbody>
+[% RenderBlockStart("KIXSidebarMessageResultRow") %]
+            <tr data-id="[% Data.MessageID | html %]">
+                <td class="SystemMessageMarkAsRead" title="[% Data.MarkAsRead | html %]">
+                    <i class="fa fa-times"></i>
+                </td>
+                <td class="SystemMessageOpenDialog" title="[% Data.ReadMessage | html %]" >
+                    [% Data.Title  %]
+                </td>
+                <td class="SystemMessageOpenDialog" title="[% Data.ReadMessage | html %]" >
+                    [% Data.ShortText %]
+                </td>
+            </tr>
+[% RenderBlockEnd("KIXSidebarMessageResultRow") %]
+        </tbody>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.UI.SystemMessage.KIXSidebarButtons('[% Data.Identifier | html %]');
+//]]>
+</script>
+[% END %]
+    </table>
+</div>
+[% RenderBlockEnd("KIXSidebarMessageResult") %]
+

@@ -1,0 +1,56 @@
+# --
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+
+[% RenderBlockStart("DashboardSystemMessage") %]
+<table class="DataTable">
+    <thead>
+        <tr>
+            <th>[% Translate("Headline") | html %]</th>
+[% RenderBlockStart("DashboardHeadTeaser") %]
+            <th>[% Translate("Teaser") | html %]</th>
+[% RenderBlockEnd("DashboardHeadTeaser") %]
+[% RenderBlockStart("DashboardHeadCreatedBy") %]
+            <th>[% Translate("Author") | html %]</th>
+[% RenderBlockEnd("DashboardHeadCreatedBy") %]
+[% RenderBlockStart("DashboardHeadEdit") %]
+            <th>[% Translate("Edit") | html %]</th>
+[% RenderBlockEnd("DashboardHeadEdit") %]
+[% RenderBlockStart("DashboardHeadDelete") %]
+            <th>[% Translate("Delete") | html %]</th>
+[% RenderBlockEnd("DashboardHeadDelete") %]
+        </tr>
+    </thead>
+    <tbody>
+[% RenderBlockStart("DashboardRow") %]
+        <tr data-id="[% Data.MessageID %]" title="[% Translate("Read this message") %]">
+            <td class="SystemMessageOpenDialog">
+                [% Data.Title | html %]
+            </td>
+[% RenderBlockStart("DashboardColumnTeaser") %]
+            <td class="SystemMessageOpenDialog" >[% Data.ShortText | html %]</td>
+[% RenderBlockEnd("DashboardColumnTeaser") %]
+[% RenderBlockStart("DashboardColumnCreatedBy") %]
+            <td class="SystemMessageOpenDialog" >[% Data.UserFirstname | html %] [% Data.UserLastname | html %]</td>
+[% RenderBlockEnd("DashboardColumnCreatedBy") %]
+[% RenderBlockStart("DashboardColumnEdit") %]
+            <td><a href="[% Env("Baselink") %]Action=AdminSystemMessage;Subaction=Change;MessageID=[% Data.MessageID | uri %]" ><i class="fa fa-edit"></i></a></td>
+[% RenderBlockEnd("DashboardColumnEdit") %]
+[% RenderBlockStart("DashboardColumnDelete") %]
+            <td><a href="[% Env("Baselink") %]Action=AdminSystemMessage;Subaction=Delete;MessageID=[% Data.MessageID | uri %]" ><i class="fa fa-trash"></i></a></td>
+[% RenderBlockEnd("DashboardColumnDelete") %]
+        </tr>
+[% RenderBlockEnd("DashboardRow") %]
+    </tbody>
+</table>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.UI.SystemMessage.Init('Dashboard', null, '[% Data.ForceDialog %]');
+//]]></script>
+[% END %]
+[% RenderBlockEnd("DashboardSystemMessage") %]

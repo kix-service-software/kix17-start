@@ -4444,6 +4444,8 @@ sub Data {
     $Lang->{'Quick States per page'}  = 'Statuswechsel pro Seite';
     $Lang->{'Import Quick State'}     = 'Statuswechsel importieren';
     $Lang->{'Pending time in the future'}     = 'Wartezeit in der Zukunft';
+    $Lang->{'Quick State Overview Limit'}     = 'Übersichtsbegrenzung der Statuswechsel';
+    $Lang->{'Quick state limit per page for overview.'}   = 'Übersichtsbegrenzung pro Seite der Statuswechsel.';
     $Lang->{'Here you can upload a configuration file to import a Quick State to your system. The file needs to be in .yml format as exported by this module.'}
         = 'Hier können Sie eine Konfigurationdatei hochladen, um einen Statuswechsel in Ihr System zu importieren. Die Datei muss im YAML-Format vorliegen, so wie sie vom Statuswechsel auch exportiert wird. ';
     $Lang->{'Sorry, the quick state \'%s\' couldn\'t use. The current Ticket has the same state as the selected quick state or the quick state is invalid!'}
@@ -4467,7 +4469,46 @@ sub Data {
     $Lang->{'It could not be created the corresponding article to the quick state \'%s\'!'}
         = 'Es konnte nicht der entsprechende Artikel zum Statuswechsel \'%s\' erstellt werden!';
 
+    # System Message
+    $Lang->{'Defined modules in the blacklist are not displayed in the selection.'}
+        = 'Definierte Module in der Blacklist werden nicht in der Auswahl angezeigt.';
+    $Lang->{'Defines a restricted list of modules.'}
+        = 'Definiert eine eingeschränkte Modulliste.';
+    $Lang->{'Dis-/enables displaying the short text of a message entry.'}
+        = 'De-/aktiviert die Anzeige des Kurztextes eines Nachrichteneintrags.';
+    $Lang->{'Dis-/enables displaying the author of a message entry.'}
+        = 'De-/aktiviert die Anzeige des Autor eines Nachrichteneintrags.';
+    $Lang->{'Dis-/enables edit link in dashboard for author and users of group defined in "SystemMessage###GroupDashboard".'}
+        = 'De-/aktiviert den Bearbeitungslink im Dashboard für Autor und Benutzer einer Gruppe, die in "SystemMessage###GroupDashboard" definiert ist.';
+    $Lang->{'Dis-/enables delete link in dashboard for author and users of group defined in "SystemMessage###GroupDashboard".'}
+        = 'De-/aktiviert den Link zum Löschen im Dashboard für Autor und Benutzer einer Gruppe, die in "SystemMessage###GroupDashboard" definiert ist.';
+    $Lang->{'Defines the group name to which the user must belong to see edit/delete link if not author.'}
+        = 'Definiert den Gruppennamen, zu dem der Benutzer gehören muss, um den Link zum Bearbeiten/Löschen anzuzeigen, wenn er nicht autorisiert ist.';
+    $Lang->{'Allows the user to disable the message by clicking on "mark as read".'}
+        = 'Ermöglicht dem Benutzers die Nachricht  zu deaktiveren bei Klick auf Als gelesen markieren".';
+    $Lang->{'Open news when user visits dashboard'} = 'Nachricht öffnen wenn Agenten das Dashboard öffnen';
+    $Lang->{'Create and manage messages.'}     = 'Erstellt und verwaltet Nachrichten.';
+    $Lang->{'System message Overview Limit'}   = 'Übersichtsbegrenzung der Produktneuigkeiten';
+    $Lang->{'System message limit per page for overview.'}   = 'Übersichtsbegrenzung pro Seite der Produktneuigkeiten.';
+    $Lang->{'Message per page'}     = 'Nachricht pro Seite';
+    $Lang->{'Mark as read'}         = 'Als gelesen markieren';
+    $Lang->{'Invalidation date'}    = 'Nachricht gültig bis';
+    $Lang->{'Validation date'}      = 'Nachricht gültig ab';
+    $Lang->{'Teaser'}               = 'Kurztext';
+    $Lang->{'Headline'}             = 'Überschrift';
+    $Lang->{'Add Message'}          = 'Nachricht hinzufügen';
+    $Lang->{'Message Management'}   = 'Nachrichten Verwaltung';
+    $Lang->{'Short Text'}           = 'Kurztext';
+    $Lang->{'Valitiy'}              = 'Gültigkeit';
+    $Lang->{'Valid From'}           = 'Gültig ab';
+    $Lang->{'Valid To'}             = 'Gültig bis';
+    $Lang->{'Author'}               = 'Autor';
+    $Lang->{'Message added!'}       = 'Nachricht hinzugefügt!';
+    $Lang->{'Message updated!'}     = 'Nachricht aktualisiert!';
+    $Lang->{'Message deleted!'}     = 'Nachricht gelöscht!';
+    $Lang->{'Read this message'}    = 'Diese Nachticht lesen';
     # $$STOP$$
+
     return 0;
 }
 
