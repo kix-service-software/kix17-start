@@ -50,14 +50,17 @@
     z-index: 999;
     min-width: 150px;
     background: #FFF;
+    border: 1px solid #82C826;
+    box-shadow: 3px 3px 10px #a0a0a0;
 }
 
 .Dialog > .Header {
     cursor: move;
     display: block;
     position: relative;
-    background: #ddd;
-    border-bottom: 1px solid #CCC;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #82C826;
+    height: 25px;
 }
 
 .Dialog > .Header .Close {
@@ -66,14 +69,17 @@
     height: 12px;
     width: 12px;
     right: 8px;
-    top: 50%;
-    margin-top: -6px;
-    color: #000;
+    top: 7px;
+    color: #bbb;
+}
+.Dialog > .Header .Close:hover i {
+    color: #1491D2;
 }
 
 .Dialog > .Header h1 {
     padding: 10px;
     font-size: 12px;
+    margin: 0 0 15px 0;
 }
 
 .Dialog > .Content {
@@ -93,7 +99,6 @@
     margin: 0px -5px -5px -5px;
     background: #ddd;
     min-height: 20px;
-    border-top: 1px solid #CCC;
 }
 
 .Dialog > .Content > .ContentFooter button + button {
@@ -110,6 +115,20 @@
 
 .Dialog > .Footer.ContentFooter {
     display: none;
+}
+
+.Dialog > .Footer,
+.Dialog > .Content > .ContentFooter {
+    background-color: #f0f0f0;
+    border-top: 1px solid #82C826;
+}
+
+.Dialog .CallForAction {
+    padding: 0 !important;
+}
+
+.Dialog .CallForAction > span {
+    border: none;
 }
 
 /**
@@ -148,6 +167,5 @@
 .Dialog.Search {
     width: 550px;
 }
-
 
 } /* end @media */

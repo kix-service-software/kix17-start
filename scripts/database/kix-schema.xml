@@ -3047,4 +3047,16 @@
         <Reference Local="quick_state_id" Foreign="id" />
     </ForeignKey>
 </Table>
+
+<!--  kix_system_message -->
+<Table Name="kix_system_message">
+    <Column Name="id"           Required="true"     Type="INTEGER" PrimaryKey="true" AutoIncrement="true" />
+    <Column Name="title"        Required="true"     Type="VARCHAR" Size="200"/>
+    <Column Name="valid_id"     Required="true"     Type="SMALLINT" />
+    <Column Name="config"       Required="false"    Type="VARCHAR" Size="1800000" />
+    <Column Name="create_time"  Required="true"     Type="DATE" />
+    <Column Name="create_by"    Required="true"     Type="INTEGER" />
+    <Column Name="change_time"  Required="true"     Type="DATE" />
+    <Column Name="change_by"    Required="true"     Type="INTEGER" />
+</Table>
 </database>

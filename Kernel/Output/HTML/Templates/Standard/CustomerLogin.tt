@@ -50,6 +50,36 @@
         </div>
 [% RenderBlockEnd("SystemMaintenance") %]
 
+[% RenderBlockStart("SystemMessage") %]
+            <div class="SystemMessageLoginBox">
+                <div class="Header Center">
+                    <h1>
+                       [% Translate("Product News") %]
+                    </h1>
+                </div>
+                <div class="Content">
+                    <table class="DataTable">
+                        <tbody>
+[% RenderBlockStart("SystemMessageRow") %]
+                            <tr class="SystemMessageOpenDialog" data-id="[% Data.MessageID %]" title="[% Translate("Read this message") %]">
+                                <td><i class="fa fa-eye"></i></td>
+                                <td>[% Data.Title | html %]</td>
+[% RenderBlockStart("SystemMessageTeaser") %]
+                                <td>[% Data.ShortText | html %]</td>
+[% RenderBlockEnd("SystemMessageTeaser") %]
+                            </tr>
+[% RenderBlockEnd("SystemMessageRow") %]
+                        </tbody>
+                    </table>
+                </div>
+[% WRAPPER JSOnDocumentComplete %]
+    <script type="text/javascript">//<![CDATA[
+        Core.UI.SystemMessage.Init('Login', null, null);
+    //]]></script>
+[% END %]
+            </div>
+[% RenderBlockEnd("SystemMessage") %]
+
 [% RenderBlockStart("PreLogin") %]
         <div id="PreLogin" class="PreLogin LoginBox">
             <p>[% Translate("One moment please, you are being redirected...") | html %]</p>

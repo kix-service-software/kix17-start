@@ -26,5 +26,11 @@
         <button onclick="Core.Debug.SimulateRTLPage();" type="button">Simulate RTL</button>
 [% RenderBlockEnd("DebugRTLButton") %]
     </div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.UI.SystemMessage.Init('Header', null, null);
+//]]></script>
+[% END %]
 <!-- end CI layout -->
 <!-- end header -->
