@@ -1,6 +1,24 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.5.0-RC2 (2019/02/07)
+ * (2019/02/07) - CR: T2019011590001301 (added system message) (fjacquemin)
+ * (2019/02/06) - Bugfix: T2019011590000712 (fixed wrong column naming of table kix_quick_state and kix_quick_state_attachment) (fjacquemin)
+ * (2019/02/05) - CR: T2019013090000621 (Updated copyright header) (millinger)
+ * (2019/02/04) - Bugfix: T2018121390000653 (customer ticket process not opening in new window) (ddoerffel)
+ * (2019/02/01) - Bugfix: T2017060790001132 (validate dynamic field administration before disable form) (millinger)
+ * (2019/02/01) - Bugfix: T2017092790000466 (show default value after a dynamic field was hidden before) (millinger)
+ * (2019/02/01) - Bugfix: T2019012190000791 (fixed soap handling of config items with empty sub array) (millinger)
+ * (2019/02/01) - Bugfix: T2018112890000431 (common ticket action can not update ticket type with acl restriction) (millinger)
+ * (2019/02/01) - Bugfix: T2019012190000488 (merged security fixes from OTRS) (millinger)
+ * (2019/02/01) - Bugfix: T2018120690000907 (dynamic field customer constriction dont work at customer frontend) (millinger)
+ * (2019/01/30) - CR: T2018102590000831 (function to load all services in AdminQuickTicketConfigurator) (millinger)
+ * (2019/01/29) - Bugfix: T2019011790000665 (dymanic fields not shown in agent ticket move) (ddoerffel)
+ * (2019/01/28) - CR: T2018102290000818 (support multiple classes for config item class reference) (millinger)
+ * (2019/01/25) - Bugfix: T2019011590000712 (changed create/edit layout of quick state) (fjacquemin)
+ * (2019/01/22) - Bugfix: T2019011590000712 (fixed wrong column naming of table kix_quick_state and kix_quick_state_attachment) (fjacquemin)
+ * (2019/01/18) - CR: T2019011590001122 (implemended own deployment state restriction for itsm link graph) (millinger)
+
 # 17.5.0-RC1 (2019/01/21)
  * (2019/01/18) - CR: T2019011590000712 (added QuickState Modules) (fjacquemin)
  * (2019/01/18) - Bugfix: T2018111590000802 (fixed ConfigItemSearchExtended with empty param 'What') (millinger)
