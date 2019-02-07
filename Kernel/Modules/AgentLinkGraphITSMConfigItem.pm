@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -241,7 +241,7 @@ sub _PrepareITSMConfigItem {
     # get possible deployment state list for config items to be in color
     # get functionality - should postproductive states be shown
     my $ShowDeploymentStatePostproductive =
-        $Self->{ConfigObject}->Get('ConfigItemOverview::ShowDeploymentStatePostproductive');
+        $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ShowDeploymentStatePostproductive');
     my @Functionality = ( 'preproductive', 'productive' );
     if ($ShowDeploymentStatePostproductive) {
         push( @Functionality, 'postproductive' );
@@ -255,11 +255,11 @@ sub _PrepareITSMConfigItem {
 
     # remove excluded deployment states from state list
     my %DeplStateList = %{$StateList};
-    if ( $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates') ) {
+    if ( $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates') ) {
         my @ExcludedStates =
             split(
             /,/,
-            $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates')
+            $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates')
             );
         for my $Item ( keys %DeplStateList ) {
             next if !( grep( /$DeplStateList{$Item}/, @ExcludedStates ) );
@@ -268,7 +268,7 @@ sub _PrepareITSMConfigItem {
     }
     $Param{DeplStatesWithColor} = \%DeplStateList;
 
-    $Param{StateHighlighting} = $Self->{ConfigObject}->Get('ConfigItemOverview::HighlightMapping');
+    $Param{StateHighlighting} = $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping');
 
     # get all possible linkable CI classes
     my $CIClassListRef = $Self->{GeneralCatalogObject}->ItemList(
@@ -756,18 +756,18 @@ sub _InsertCI {
     if ($CurrVersionData) {
         my $DeplStateColor;
         if (
-            $Self->{ConfigObject}->Get('ConfigItemOverview::HighlightMapping')
+            $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping')
             ->{ $CurrVersionData->{CurDeplState} }
             )
         {
             $DeplStateColor =
-                $Self->{ConfigObject}->Get('ConfigItemOverview::HighlightMapping')
+                $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping')
                 ->{ $CurrVersionData->{CurDeplState} };
         }
 
         # get possible deployment state list for config items to be in color
         my $ShowDeploymentStatePostproductive =
-            $Self->{ConfigObject}->Get('ConfigItemOverview::ShowDeploymentStatePostproductive');
+            $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ShowDeploymentStatePostproductive');
         my @Functionality = ( 'preproductive', 'productive' );
         if ($ShowDeploymentStatePostproductive) {
             push( @Functionality, 'postproductive' );
@@ -781,11 +781,11 @@ sub _InsertCI {
 
         # remove excluded deployment states from state list
         my %DeplStateList = %{$StateList};
-        if ( $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates') ) {
+        if ( $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates') ) {
             my @ExcludedStates =
                 split(
                 /,/,
-                $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates')
+                $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates')
                 );
             for my $Item ( keys %DeplStateList ) {
                 next if !( grep( /$DeplStateList{$Item}/, @ExcludedStates ) );

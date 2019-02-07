@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -857,6 +857,11 @@ sub Login {
             );
         }
     }
+
+    # show the block of the system message
+    $Self->_BuildSystemMessage(
+        Action => 'Login'
+    );
 
     # show prelogin block, if in prelogin mode (e.g. SSO login)
     if ( defined $Param{'Mode'} && $Param{'Mode'} eq 'PreLogin' ) {
@@ -3629,6 +3634,11 @@ sub CustomerLogin {
         }
     }
 
+    # show the block of the system message
+    $Self->_BuildSystemMessage(
+        Action => 'CustomerLogin'
+    );
+
     # show prelogin block, if in prelogin mode (e.g. SSO login)
     if ( defined $Param{'Mode'} && $Param{'Mode'} eq 'PreLogin' ) {
         $Self->Block(
@@ -5592,7 +5602,6 @@ sub TransfromDateSelection {
     return $Self->TransformDateSelection(@_);
 }
 
-
 =item ProgressBar()
     This function generates a progress bar. This progress bar is to use fundamental to the daemon, since it determines on the Create Task progress.
     generates a progess bar
@@ -5735,6 +5744,49 @@ sub ProgressBar {
     );
     return $Output;
 }
+
+sub _BuildSystemMessage {
+    my ($Self, %Param) = @_;
+
+    my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
+    my $SystemMessageObject = $Kernel::OM->Get('Kernel::System::SystemMessage');
+
+    my $Config = $ConfigObject->Get('SystemMessage');
+
+    # get message list
+    my %MessageList = $SystemMessageObject->MessageSearch(
+        Action => $Param{Action},
+        Valid  => 1
+    );
+
+    return 1 if !%MessageList;
+
+    $Self->Block(
+        Name => 'SystemMessage'
+    );
+
+    for my $MessageID ( sort keys %MessageList ) {
+        my %MessageData = $SystemMessageObject->MessageGet(
+            MessageID => $MessageID
+        );
+
+        $Self->Block(
+            Name => 'SystemMessageRow',
+            Data => \%MessageData
+        );
+
+        if ( $Config->{ShowTeaser} ) {
+
+            $Self->Block(
+                Name => 'SystemMessageTeaser',
+                Data => \%MessageData
+            );
+        }
+    }
+
+    return 1;
+}
+
 1;
 
 =end Internal:

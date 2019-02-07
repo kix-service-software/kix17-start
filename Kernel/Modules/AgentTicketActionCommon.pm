@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -721,7 +721,7 @@ sub Run {
                     @AclData{ keys %AclData } = keys %AclData;
 
                     # set possible values filter from ACLs
-                    my $ACL = $TicketObject->TicketAcl(
+                    $ACL = $TicketObject->TicketAcl(
                         %GetParam,
                         %ACLCompatGetParam,
                         Action        => $Self->{Action},
@@ -860,6 +860,8 @@ sub Run {
         if ( $ConfigObject->Get('Ticket::Type') && $Config->{TicketType} ) {
             if ( $GetParam{TypeID} ) {
                 $TicketObject->TicketTypeSet(
+                    %GetParam,
+                    %ACLCompatGetParam,
                     TypeID   => $GetParam{TypeID},
                     TicketID => $Self->{TicketID},
                     UserID   => $Self->{UserID},
@@ -921,7 +923,7 @@ sub Run {
                 $UnlockOnAway = 0;
 
                 # remember to not notify owner twice
-                if ( $Success && $Success eq 1 ) {
+                if ( $Success && $Success eq "1" ) {
                     push @NotifyDone, $GetParam{NewOwnerID};
                 }
             }
@@ -941,7 +943,7 @@ sub Run {
                 );
 
                 # remember to not notify responsible twice
-                if ( $Success && $Success eq 1 ) {
+                if ( $Success && $Success eq "1" ) {
                     push @NotifyDone, $GetParam{NewResponsibleID};
                 }
             }
@@ -1063,7 +1065,7 @@ sub Run {
             }
 
             # get pre loaded attachment
-            my @Attachments = $UploadCacheObject->FormIDGetAllFilesData(
+            @Attachments = $UploadCacheObject->FormIDGetAllFilesData(
                 FormID => $Self->{FormID},
             );
 
@@ -1315,7 +1317,7 @@ sub Run {
         my $StateID = $GetParam{NewStateID} || $Ticket{StateID};
 
         # convert dynamic field values into a structure for ACLs
-        my %DynamicFieldACLParameters;
+        %DynamicFieldACLParameters;
         DYNAMICFIELD:
         for my $DynamicFieldItem ( sort keys %DynamicFieldValues ) {
             next DYNAMICFIELD if !$DynamicFieldItem;
@@ -1483,7 +1485,7 @@ sub Run {
             @AclData{ keys %AclData } = keys %AclData;
 
             # set possible values filter from ACLs
-            my $ACL = $TicketObject->TicketAcl(
+            $ACL = $TicketObject->TicketAcl(
                 %GetParam,
                 %ACLCompatGetParam,
                 Action        => $Self->{Action},
@@ -1958,7 +1960,7 @@ sub Run {
                     @AclData{ keys %AclData } = keys %AclData;
 
                     # set possible values filter from ACLs
-                    my $ACL = $TicketObject->TicketAcl(
+                    $ACL = $TicketObject->TicketAcl(
                         %GetParam,
                         Action        => $Self->{Action},
                         TicketID      => $Self->{TicketID},
