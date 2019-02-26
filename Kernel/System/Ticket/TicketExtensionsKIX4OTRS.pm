@@ -1736,21 +1736,23 @@ sub TicketAccountedTimeDelete {
     # check needed stuff
     for my $Needed (qw(TicketID)) {
         if ( !$Param{$Needed} ) {
-            $Kernel::OM->Get('Kernel::System::Log')
-                ->Log( Priority => 'error', Message => "Need $Needed!" );
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!"
+            );
             return;
         }
     }
 
     # db query
     if ( $Param{ArticleID} ) {
-        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
             SQL => 'DELETE FROM time_accounting WHERE ticket_id = ? AND article_id = ?',
             Bind => [ \$Param{TicketID}, \$Param{ArticleID} ],
         );
     }
     else {
-        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
             SQL  => 'DELETE FROM time_accounting WHERE ticket_id = ?',
             Bind => [ \$Param{TicketID} ],
         );
