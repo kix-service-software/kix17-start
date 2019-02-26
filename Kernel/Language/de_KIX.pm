@@ -1395,6 +1395,10 @@ sub Data {
         'Defines which deployment states should not be shown in config item overview. Separate different states by comma.'
         }
         = 'Legt fest, welche Verwendungsstatus in der Übersicht nicht mit angezeigt werden sollen. Mehrere Werte werden durch Komma getrennt.';
+    $Lang->{
+        'Defines which deployment states should not be shown in config item link graph. Separate different states by comma.'
+        }
+        = 'Legt fest, welche Verwendungsstatus im Verknüpfungsgraph nicht mit angezeigt werden sollen. Mehrere Werte werden durch Komma getrennt.';
 
     $Lang->{'Only attributes of the following types are shown in the list'}
         = 'Nur Attribute folgender Typen werden in der Liste angezeigt';
