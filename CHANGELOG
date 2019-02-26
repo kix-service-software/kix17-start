@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.5.0-RC3 (2019/02/26)
+ * (2019/02/18) - Bugfix: T2019010890001369 (fixed missing download of attachments when using CIAttachment as sub) (fjacquemin)
+ * (2019/02/18) - Bugfix: T2018112690000551 (fixed incorrected cache key if using ArticleTypeNotLike) (fjacquemin)
+ * (2019/02/18) - Bugfix: T2019012290000888 (fixed missing parameter change of the placeholder) (fjacquemin)
+ * (2019/02/15) - Bugfix: T2018102390000709 (fixed ticket deletion with package specific ticket data references) (millinger)
+ * (2019/02/15) - Bugfix: T2019011590001122 (added missing translations for sysconfig descriptions) (millinger)
+
 # 17.5.0-RC2 (2019/02/07)
  * (2019/02/07) - CR: T2019011590001301 (added system message) (fjacquemin)
  * (2019/02/06) - Bugfix: T2019011590000712 (fixed wrong column naming of table kix_quick_state and kix_quick_state_attachment) (fjacquemin)
