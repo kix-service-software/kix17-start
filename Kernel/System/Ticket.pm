@@ -19,6 +19,7 @@ use Encode ();
 
 use Kernel::Language qw(Translatable);
 use Kernel::System::EventHandler;
+use Kernel::System::PreEventHandler;
 use Kernel::System::Ticket::Article;
 use Kernel::System::Ticket::TicketACL;
 use Kernel::System::Ticket::TicketSearch;
@@ -95,6 +96,16 @@ sub new {
         Kernel::System::Ticket::TicketACL
         Kernel::System::Ticket::TicketSearch
         Kernel::System::EventHandler
+        Kernel::System::PreEventHandler
+    );
+
+    # init of pre-event handler
+    $Self->PreEventHandlerInit(
+        Config     => 'Ticket::EventModulePre',
+        BaseObject => 'TicketObject',
+        Objects    => {
+            %{$Self},
+        },
     );
 
     # init of event handler
@@ -594,6 +605,28 @@ sub TicketDelete {
         }
     }
 
+    # trigger PreEvent TicketDelete
+    my $Result = $Self->PreEventHandler(
+        Event => 'TicketDelete',
+        Data  => {
+            TicketID => $Param{TicketID},
+            UserID   => $Param{UserID},
+        },
+        UserID => $Param{UserID},
+    );
+    if ( ( ref($Result) eq 'HASH' ) && ( $Result->{Error} ) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'notice',
+            Message  => "Pre-TicketDelete refused ticket delete.",
+        );
+        return $Result;
+    }
+    elsif ( ref($Result) eq 'HASH' ) {
+        for my $ResultKey ( keys %{$Result} ) {
+            $Param{$ResultKey} = $Result->{$ResultKey};
+        }
+    }
+
     # get dynamic field objects
     my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
     my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
@@ -619,9 +652,6 @@ sub TicketDelete {
             UserID             => $Param{UserID},
         );
     }
-
-    # clear ticket cache
-    $Self->_TicketCacheClear( TicketID => $Param{TicketID} );
 
     # delete ticket links
     $Kernel::OM->Get('Kernel::System::LinkObject')->LinkDeleteAll(
@@ -683,6 +713,9 @@ sub TicketDelete {
         SQL  => 'DELETE FROM ticket WHERE id = ?',
         Bind => [ \$Param{TicketID} ],
     );
+
+    # clear ticket cache
+    $Self->_TicketCacheClear( TicketID => $Param{TicketID} );
 
     # trigger event
     $Self->EventHandler(
