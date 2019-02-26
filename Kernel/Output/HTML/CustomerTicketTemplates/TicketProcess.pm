@@ -79,7 +79,7 @@ sub TicketTemplateList {
             PortalGroupID   => $Process->{CustomerPortalGroupID},
             Name            => $Result{$ProcessID},
             Link            => "Action=CustomerTicketProcess;Subaction=DisplayActivityDialog;ProcessEntityID=$ProcessID;IsMainWindow=1",
-            LinkClass       => "AsPopup",
+            LinkClass       => "",
         );
         $Result{$ProcessID} = \%Data;
     }
