@@ -642,7 +642,7 @@ fieldset.TableLike.FixedLabel > .Row > label {
 
 fieldset.TableLike.FixedLabel > .Field,
 fieldset.TableLike.FixedLabel > .Row > .Field {
-	margin-bottom: 2px;
+    margin-bottom: 2px;
 }
 
 fieldset.TableLike.FixedLabel > .Field,

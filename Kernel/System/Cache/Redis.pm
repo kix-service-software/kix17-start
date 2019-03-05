@@ -58,30 +58,32 @@ sub Set {
     return if !$Self->{RedisObject};
 
     my $PreparedKey = $Self->_prepareMemCacheKey(%Param);
-    my $TTL = $Param{TTL};
-    if ($Self->{Config}->{OverrideTTL}) {
-        foreach my $TypePattern (keys %{$Self->{Config}->{OverrideTTL}}) {
-            if ($Param{Type} =~ /^$TypePattern$/g) {
+    my $TTL         = $Param{TTL};
+    if ( $Self->{Config}->{OverrideTTL} ) {
+        foreach my $TypePattern ( keys %{ $Self->{Config}->{OverrideTTL} } ) {
+            if ( $Param{Type} =~ /^$TypePattern$/g ) {
                 $TTL = $Self->{Config}->{OverrideTTL}->{$TypePattern};
                 last;
             }
         }
     }
 
-    if ($Self->{Config}->{CacheMetaInfo}) {
-		my $Result;
-		
+    if ( $Self->{Config}->{CacheMetaInfo} ) {
+        my $Result;
+
         # update indexes
         $Result->{'Memcached::CachedObjects'} = $Self->{RedisObject}->get(
             "Memcached::CachedObjects",
-		);
-		
-		$Result->{"Memcached::CacheIndex::$Param{Type}"} = $Self->{RedisObject}->get(
+        );
+
+        $Result->{"Memcached::CacheIndex::$Param{Type}"} = $Self->{RedisObject}->get(
             "Memcached::CacheIndex::$Param{Type}",
         );
-		
+
         # update global object index
-        if ( !$Result->{'Memcached::CachedObjects'} || ref( $Result->{'Memcached::CachedObjects'} ) ne 'HASH' ) {
+        if ( !$Result->{'Memcached::CachedObjects'}
+            || ref( $Result->{'Memcached::CachedObjects'} ) ne 'HASH' )
+        {
             $Result->{'Memcached::CachedObjects'} = {};
         }
         $Result->{'Memcached::CachedObjects'}->{ $Param{Type} } = 1;
@@ -96,20 +98,20 @@ sub Set {
         }
         $Result->{"Memcached::CacheIndex::$Param{Type}"}->{$PreparedKey} = 1;
 
-		$Self->{RedisObject}->set(
-			"Memcached::CacheIndex::$Param{Type}", 
-			$Result->{"Memcached::CacheIndex::$Param{Type}"},
-		);
+        $Self->{RedisObject}->set(
+            "Memcached::CacheIndex::$Param{Type}",
+            $Result->{"Memcached::CacheIndex::$Param{Type}"},
+        );
 
-		$Self->{RedisObject}->set(
-			"Memcached::CachedObjects",
-			$Result->{"Memcached::CachedObjects"},
-		);
+        $Self->{RedisObject}->set(
+            "Memcached::CachedObjects",
+            $Result->{"Memcached::CachedObjects"},
+        );
 
         return $Self->{RedisObject}->setex(
-            $PreparedKey, 
-			$TTL, 
-			$Param{Value},
+            $PreparedKey,
+            $TTL,
+            $Param{Value},
         );
     }
     else {
@@ -119,20 +121,20 @@ sub Set {
         );
 
         # update cache index for Type
-        if (!$Result || ref( $Result ) ne 'HASH') {
+        if ( !$Result || ref($Result) ne 'HASH' ) {
             $Result = {};
         }
         $Result->{$PreparedKey} = 1;
 
         $Self->{RedisObject}->set(
-			"Memcached::CacheIndex::$Param{Type}", $Result
-		),
+            "Memcached::CacheIndex::$Param{Type}", $Result
+            ),
 
-        return $Self->{RedisObject}->setex(
-            $PreparedKey, 
-			$TTL, 
-			$Param{Value},
-        );
+            return $Self->{RedisObject}->setex(
+            $PreparedKey,
+            $TTL,
+            $Param{Value},
+            );
     }
 }
 
@@ -142,7 +144,8 @@ sub Get {
     # check needed stuff
     for (qw(Type Key)) {
         if ( !defined $Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "Need $_!" );
+            $Kernel::OM->Get('Kernel::System::Log')
+                ->Log( Priority => 'error', Message => "Need $_!" );
             return;
         }
     }
@@ -160,7 +163,8 @@ sub Delete {
     # check needed stuff
     for (qw(Type Key)) {
         if ( !defined $Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "Need $_!" );
+            $Kernel::OM->Get('Kernel::System::Log')
+                ->Log( Priority => 'error', Message => "Need $_!" );
             return;
         }
     }
@@ -193,7 +197,8 @@ sub CleanUp {
                 "Memcached::CacheIndex::$Param{Type}",
             );
 
-            if ($Self->{Config}->{CacheMetaInfo}) {
+            if ( $Self->{Config}->{CacheMetaInfo} ) {
+
                 # delete from global object index
                 $CacheIndex = $Self->{RedisObject}->get(
                     "Memcached::CachedObjects",
@@ -249,8 +254,8 @@ we use here algo similar to original one from FileStorable.pm.
 sub _prepareMemCacheKey {
     my ( $Self, %Param ) = @_;
 
-    if ($Param{Raw}) {
-        return $Param{Type}.'::'.$Param{Key};
+    if ( $Param{Raw} ) {
+        return $Param{Type} . '::' . $Param{Key};
     }
 
     my $Key = $Param{Key};

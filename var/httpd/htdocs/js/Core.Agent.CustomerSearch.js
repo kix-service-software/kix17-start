@@ -120,13 +120,13 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      */
     function GetCustomerInfo(CustomerUserID, CallingAction) {
         var MagnifierString = '<i class="fa fa-search"></i>',
-            Async 			= true,
-        	Data  			= {
-            	Action: 'AgentCustomerSearch',
-            	Subaction: 'CustomerInfo',
-            	CustomerUserID: CustomerUserID,
-            	CallingAction : CallingAction || ''
-        	};
+            Async             = true,
+            Data              = {
+                Action: 'AgentCustomerSearch',
+                Subaction: 'CustomerInfo',
+                CustomerUserID: CustomerUserID,
+                CallingAction : CallingAction || ''
+            };
 
         if ( CallingAction == 'AgentTicketZoomTabArticle' ) {
             Async = false;
