@@ -54,7 +54,7 @@
             <div class="SystemMessageLoginBox">
                 <div class="Header Center">
                     <h1>
-                       [% Translate("Product News") %]
+                       [% Translate("Messages") %]
                     </h1>
                 </div>
                 <div class="Content">

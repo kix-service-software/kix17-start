@@ -10,7 +10,7 @@
 [% RenderBlockStart("SystemMessageWidget") %]
 <div id="SystemMessageWidget" class="WidgetSimple">
     <div class="Header">
-        <h2><span>[% Translate("Product News") %]</span></h2>
+        <h2><span>[% Translate("Message") %]</span></h2>
     </div>
      <div class="Content">
         <table class="DataTable">
