@@ -54,7 +54,7 @@ Core.Agent.Responsive = (function (TargetNS) {
 
         // expand toolbar on click on the header
         $('#Header').off().on('click', function() {
-        	$('#ToolBar').toggleClass('toggle');
+            $('#ToolBar').toggleClass('toggle');
             // KIXBase-capeIT
             // deactivated with ticket 2016122190003148
 //               var TargetHeight = '70px',
