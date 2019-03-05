@@ -17,7 +17,7 @@ our @ObjectDependencies = (
     'Kernel::System::DB',
     'Kernel::System::Valid',
     'Kernel::System::Main',
-    'Kernel::System::YAML',
+    'Kernel::System::YAML'
 );
 
 =head1 NAME
@@ -289,17 +289,16 @@ sub MessageList {
 
 search for message
 
-    my %Message = $SystemMessageObject->MessageSearch(
+    my @Message = $SystemMessageObject->MessageSearch(
         Search  => '*some*',           # optional
         Valid   => 1,                  # optional defaul(0)
+        SortBy  => 'Created',          # optional defaul(Created)
+        OrderBy => 'Down',             # optional default(Down)
+        Result  => 'ARRAY'             # optional default(HASH)
     );
 
 Returns:
-    %Message = (
-        1 => 'Some Name',
-        2 => 'Some Name2',
-        3 => 'Some Name3',
-    );
+    @MessageID = (3,1,2);
 
 search with used action and active state or valid date
 
@@ -343,9 +342,26 @@ sub MessageSearch {
     my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
     my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
     my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $JSONObject         = $Kernel::OM->Get('Kernel::System::JSON');
 
     my @Bind;
-    my $Valid = 1;
+    my $Valid          = 1;
+    my $SortBy         = $Param{SortBy}  || 'Created';
+    my $OrderBy        = $Param{OrderBy} || 'Down';
+    my $Result         = $Param{Result}  || 'HASH';
+    my %SortAttributes = (
+        Title       => 'title',
+        Created     => 'create_time',
+        Changed     => 'change_time',
+        MessageID   => 'id',
+        CreateBy    => 'create_by',
+        ChangeBy    => 'change_by'
+    );
+    my %OrderAttributes = (
+        Down => 'DESC',
+        Up   => 'ASC',
+    );
+
     if ( defined $Param{Valid}
          && !$Param{Valid}
     ) {
@@ -354,7 +370,7 @@ sub MessageSearch {
 
     my $SQLWhere = '';
     my $SQL      = '
-        SELECT id, title
+        SELECT id
         FROM kix_system_message
         WHERE';
 
@@ -402,9 +418,33 @@ sub MessageSearch {
         }
 
         if ( $Preferences{UserMessageRead} ) {
-            %UserReads = map( { $_ => 1 } split( /;/, $Preferences{UserMessageRead} || '') );
+            my $JSONData = $JSONObject->Decode(
+                Data => $Preferences{UserMessageRead}
+            );
+            %UserReads = %{$JSONData};
         }
     }
+
+    if ( !$SortAttributes{$SortBy} ) {
+        $LogObject->Log(
+            Priority => 'error',
+            Message  => "Invalid sort attribute '$SortBy' used!"
+        );
+        return;
+    }
+
+    if ( !$OrderAttributes{$OrderBy} ) {
+        $LogObject->Log(
+            Priority => 'error',
+            Message  => "Invalid order attribute '$OrderBy' used!"
+        );
+        return;
+    }
+
+    $SQLWhere .= ' ORDER BY '
+        . $SortAttributes{$SortBy}
+        . ' '
+        . $OrderAttributes{$OrderBy};
 
     return if !$DBObject->Prepare(
         SQL  => $SQL . $SQLWhere,
@@ -412,15 +452,38 @@ sub MessageSearch {
     );
 
     my $SystemTime = $TimeObject->SystemTime();
-    my %Result;
+    my @TmpResult;
     while ( my @Row = $DBObject->FetchrowArray() ) {
-        $Result{ $Row[0] } = $Row[1];
+        push(@TmpResult, $Row[0]);
     }
 
-    for my $MessageID ( sort keys %Result ) {
+    my @ResultArray;
+    my %ResultHash;
+    my %NewUserReads;
+    for my $MessageID ( @TmpResult ) {
         my %Data = $Self->MessageGet(
             MessageID => $MessageID
         );
+
+        if (
+            %UserReads
+            && $UserReads{$MessageID}
+        ) {
+            my $ChangedTime = $TimeObject->TimeStamp2SystemTime(
+                String => $Data{Changed}
+            );
+
+            if (
+                $Data{ValidTo}
+                && $Data{ValidTo} > $SystemTime
+            ) {
+                $NewUserReads{$MessageID} = $UserReads{$MessageID};
+            }
+
+            elsif ( $ChangedTime < $UserReads{$MessageID} ) {
+                $NewUserReads{$MessageID} = $UserReads{$MessageID};
+            }
+        }
 
         if ( $Param{Action} ) {
             if (
@@ -433,10 +496,13 @@ sub MessageSearch {
                     $Data{ValidTo}
                     &&  $Data{ValidTo} < $SystemTime
                 )
-                || $UserReads{$MessageID}
+                || $NewUserReads{$MessageID}
             ) {
-                delete $Result{ $MessageID };
+                next;
             }
+
+            push(@ResultArray, $MessageID);
+            $ResultHash{$MessageID} = $Data{Title};
         }
 
         elsif ( $Param{DateCheck} ) {
@@ -450,12 +516,49 @@ sub MessageSearch {
                     &&  $Data{ValidTo} < $SystemTime
                 )
             ) {
-                delete $Result{ $MessageID };
+                next;
             }
+
+            push(@ResultArray, $MessageID);
+            $ResultHash{$MessageID} = $Data{Title};
+        }
+
+        else {
+            push(@ResultArray, $MessageID);
+            $ResultHash{$MessageID} = $Data{Title};
         }
     }
 
-    return %Result;
+    if ( $Param{UserID} ) {
+        my $UserReadsStrg = '';
+        if ( %NewUserReads ) {
+            $UserReadsStrg = $JSONObject->Encode(
+                Data => \%NewUserReads
+            );
+        }
+
+        if ( $Param{UserType} eq  'User' ) {
+            $UserObject->SetPreferences(
+                Key    => 'UserMessageRead',
+                Value  => $UserReadsStrg,
+                UserID => $Param{UserID},
+            );
+        }
+
+        elsif ( $Param{UserType} eq 'Customer' ) {
+            $CustomerUserObject->SetPreferences(
+                Key    => 'UserMessageRead',
+                Value  => $UserReadsStrg,
+                UserID => $Param{UserID},
+            );
+        }
+    }
+
+    if ( $Result eq 'ARRAY' ) {
+        return @ResultArray;
+    }
+
+    return %ResultHash;
 }
 
 =item MessageGet()
@@ -516,7 +619,7 @@ sub MessageGet {
             ValidID   => $Row[2],
             Created   => $Row[4],
             CreatedBy => $Row[5],
-            Created   => $Row[6],
+            Changed   => $Row[6],
             ChangedBy => $Row[7]
         );
 
