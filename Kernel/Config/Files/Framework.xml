@@ -13506,11 +13506,11 @@ via the Preferences button after logging in.
             <FrontendModuleReg>
                 <Group>admin</Group>
                 <Description Translatable="1">Create and manage messages.</Description>
-                <Title Translatable="1">Product News</Title>
+                <Title Translatable="1">Messages</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <Name Translatable="1">Product News</Name>
+                    <Name Translatable="1">Messages</Name>
                     <Description Translatable="1">Create and manage messages.</Description>
                     <Block>System</Block>
                     <Prio>1000</Prio>
@@ -13528,8 +13528,8 @@ via the Preferences button after logging in.
         <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
-                <Description>System Message AJAX handler</Description>
-                <Title> System Message AJAX handler</Title>
+                <Description>Message AJAX handler</Description>
+                <Title>Message AJAX handler</Title>
                 <NavBarName>Ticket</NavBarName>
             </FrontendModuleReg>
         </Setting>
@@ -13541,8 +13541,8 @@ via the Preferences button after logging in.
         <SubGroup>Frontend::Customer::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
-                <Description>System Message AJAX handler</Description>
-                <Title> System Message AJAX handler</Title>
+                <Description>Message AJAX handler</Description>
+                <Title>Message AJAX handler</Title>
                 <NavBarName>Ticket</NavBarName>
             </FrontendModuleReg>
         </Setting>
@@ -13554,8 +13554,8 @@ via the Preferences button after logging in.
         <SubGroup>Frontend::Public::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
-                <Description>System Message AJAX handler</Description>
-                <Title> System Message AJAX handler</Title>
+                <Description>Message AJAX handler</Description>
+                <Title>Message AJAX handler</Title>
                 <NavBarName>Ticket</NavBarName>
             </FrontendModuleReg>
         </Setting>
@@ -13569,7 +13569,7 @@ via the Preferences button after logging in.
             <Hash>
                 <Item Key="Actions">AgentTicket(Zoom|Phone|PhoneInbound|PhoneOutbound|Note|Compose|ZoomTabActionCommon)</Item>
                 <Item Key="Module">Kernel::Output::HTML::KIXSidebar::SystemMessage</Item>
-                <Item Key="Title">Product News</Item>
+                <Item Key="Title">Messages</Item>
                 <Item Key="Description">.</Item>
                 <Item Key="Prio">0530</Item>
                 <Item Key="InitialCollapsed"></Item>
@@ -13588,7 +13588,7 @@ via the Preferences button after logging in.
             <Hash>
                 <Item Key="Actions">CustomerTicket(Zoom|Message)</Item>
                 <Item Key="Module">Kernel::Output::HTML::KIXSidebar::SystemMessage</Item>
-                <Item Key="Title">Product News</Item>
+                <Item Key="Title">Messages</Item>
                 <Item Key="Description">.</Item>
                 <Item Key="Prio">0530</Item>
                 <Item Key="InitialCollapsed"></Item>
@@ -13606,7 +13606,7 @@ via the Preferences button after logging in.
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Dashboard::SystemMessage</Item>
-                <Item Key="Title" Translatable="1">Product News</Item>
+                <Item Key="Title" Translatable="1">Messages</Item>
                 <Item Key="Description" Translatable="1">Current message!</Item>
                 <Item Key="Block">ContentLarge</Item>
                 <Item Key="Group">users</Item>
@@ -13659,6 +13659,7 @@ via the Preferences button after logging in.
                 <Item>CustomerTicketZoom</Item>
                 <Item>CustomerTicketTemplate</Item>
                 <Item>CustomerTicketMessage</Item>
+                <Item>CustomerTicketOverview</Item>
                 <Item>AgentTicketZoom</Item>
                 <Item>AgentTicketPhone</Item>
                 <Item>AgentTicketEmail</Item>
@@ -13740,15 +13741,15 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PreferencesGroups###SystemMessageOverviewPageShown" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the pages (in which the system message are shown) of the overview.</Description>
+        <Description Translatable="1">Parameters for the pages (in which the message are shown) of the overview.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::Preferences</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Preferences::Generic</Item>
                 <Item Key="Column">Other Settings</Item>
-                <Item Key="Label" Translatable="1">System message Overview Limit</Item>
-                <Item Key="Key" Translatable="1">System message limit per page for overview.</Item>
+                <Item Key="Label" Translatable="1">Message Overview Limit</Item>
+                <Item Key="Key" Translatable="1">Message limit per page for overview.</Item>
                 <Item Key="Data">
                     <Hash>
                         <Item Key="10">10</Item>

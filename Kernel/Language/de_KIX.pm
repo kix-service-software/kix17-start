@@ -4479,9 +4479,9 @@ sub Data {
     $Lang->{'Defines a restricted list of modules.'}
         = 'Definiert eine eingeschränkte Modulliste.';
     $Lang->{'Dis-/enables displaying the short text of a message entry.'}
-        = 'De-/aktiviert die Anzeige des Kurztextes eines Nachrichteneintrags.';
+        = 'De-/aktiviert die Anzeige des Kurztextes eines Neuigkeiten Eintrages.';
     $Lang->{'Dis-/enables displaying the author of a message entry.'}
-        = 'De-/aktiviert die Anzeige des Autor eines Nachrichteneintrags.';
+        = 'De-/aktiviert die Anzeige des Autor eines Neuigkeiten Eintrages.';
     $Lang->{'Dis-/enables edit link in dashboard for author and users of group defined in "SystemMessage###GroupDashboard".'}
         = 'De-/aktiviert den Bearbeitungslink im Dashboard für Autor und Benutzer einer Gruppe, die in "SystemMessage###GroupDashboard" definiert ist.';
     $Lang->{'Dis-/enables delete link in dashboard for author and users of group defined in "SystemMessage###GroupDashboard".'}
@@ -4489,28 +4489,30 @@ sub Data {
     $Lang->{'Defines the group name to which the user must belong to see edit/delete link if not author.'}
         = 'Definiert den Gruppennamen, zu dem der Benutzer gehören muss, um den Link zum Bearbeiten/Löschen anzuzeigen, wenn er nicht autorisiert ist.';
     $Lang->{'Allows the user to disable the message by clicking on "mark as read".'}
-        = 'Ermöglicht dem Benutzers die Nachricht  zu deaktiveren bei Klick auf Als gelesen markieren".';
-    $Lang->{'Open news when user visits dashboard'} = 'Nachricht öffnen wenn Agenten das Dashboard öffnen';
-    $Lang->{'Create and manage messages.'}     = 'Erstellt und verwaltet Nachrichten.';
-    $Lang->{'System message Overview Limit'}   = 'Übersichtsbegrenzung der Produktneuigkeiten';
-    $Lang->{'System message limit per page for overview.'}   = 'Übersichtsbegrenzung pro Seite der Produktneuigkeiten.';
-    $Lang->{'Message per page'}     = 'Nachricht pro Seite';
+        = 'Ermöglicht dem Benutzers die Neuigkeit zu deaktiveren bei Klick auf Als gelesen markieren".';
+    $Lang->{'Open message when user visits dashboard'}  = 'Neuigkeit öffnen wenn Agenten das Dashboard öffnen';
+    $Lang->{'Create and manage messages.'}              = 'Erstellt und verwaltet Neuigkeiten.';
+    $Lang->{'Message Overview Limit'}                   = 'Übersichtsbegrenzung der Neuigkeiten';
+    $Lang->{'Message limit per page for overview.'}     = 'Übersichtsbegrenzung pro Seite der Neuigkeiten.';
+
+    $Lang->{'Messages per page'}    = 'Neuigkeiten pro Seite';
     $Lang->{'Mark as read'}         = 'Als gelesen markieren';
-    $Lang->{'Invalidation date'}    = 'Nachricht gültig bis';
-    $Lang->{'Validation date'}      = 'Nachricht gültig ab';
+    $Lang->{'Invalidation date'}    = 'Neuigkeit gültig bis';
+    $Lang->{'Validation date'}      = 'Neuigkeit gültig ab';
     $Lang->{'Teaser'}               = 'Kurztext';
     $Lang->{'Headline'}             = 'Überschrift';
-    $Lang->{'Add Message'}          = 'Nachricht hinzufügen';
-    $Lang->{'Message Management'}   = 'Nachrichten Verwaltung';
+    $Lang->{'Add Message'}          = 'Neuigkeit hinzufügen';
+    $Lang->{'Messages Management'}  = 'Neuigkeiten Verwaltung';
     $Lang->{'Short Text'}           = 'Kurztext';
     $Lang->{'Valitiy'}              = 'Gültigkeit';
     $Lang->{'Valid From'}           = 'Gültig ab';
     $Lang->{'Valid To'}             = 'Gültig bis';
     $Lang->{'Author'}               = 'Autor';
-    $Lang->{'Message added!'}       = 'Nachricht hinzugefügt!';
-    $Lang->{'Message updated!'}     = 'Nachricht aktualisiert!';
-    $Lang->{'Message deleted!'}     = 'Nachricht gelöscht!';
-    $Lang->{'Read this message'}    = 'Diese Nachticht lesen';
+    $Lang->{'Message added!'}       = 'Neuigkeit hinzugefügt!';
+    $Lang->{'Message updated!'}     = 'Neuigkeit aktualisiert!';
+    $Lang->{'Message deleted!'}     = 'Neuigkeit gelöscht!';
+    $Lang->{'Read this message'}    = 'Diese Neuigkeit lesen';
+    $Lang->{'Messages'}             = 'Neuigkeiten';
     # $$STOP$$
 
     return 0;

@@ -8,7 +8,7 @@
 
 
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
-    <h1>[% Translate("Message Management") | html %]</h1>
+    <h1>[% Translate("Messages Management") | html %]</h1>
 
     <div class="SidebarColumn">
 
@@ -76,7 +76,7 @@
                         <input type="hidden" name="Group" value="[% Data.Group | html %]"/>
                         <input type="hidden" name="RedirectURL" value="[% Data.RequestedURL | html %]"/>
                         <fieldset class="TableLike">
-                            <label for="[% Data.PreferencesKey | html %]">[% Translate("Message per page") | html %]:</label>
+                            <label for="[% Data.PreferencesKey | html %]">[% Translate("Messages per page") | html %]:</label>
                             <div class="Field">
                                 [% Data.PageShownString %]
                             </div>
@@ -263,7 +263,7 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
                         </div>
                         <div class="Clear"></div>
 
-                        <label for="UsedDashboard">[% Translate("Open news when user visits dashboard") | html %]:</label>
+                        <label for="UsedDashboard">[% Translate("Open message when user visits dashboard") | html %]:</label>
                         <div class="Field">
                             <input type="checkbox" id="UsedDashboard" name="UsedDashboard" value="1" [% Data.IsChecked %]/>
                         </div>
