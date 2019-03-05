@@ -1,6 +1,12 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.5.0-RC4 (2019/03/05)
+ * (2019/03/05) - CR: T20190115900001301 (added removal preference of mark as seen if changed message entry) (fjacquemin)
+ * (2019/03/05) - Bugfix: T2019011590001301 (fixed missing challenge token if using delete or edit a message from dashboard) (fjacquemin)
+ * (2019/03/05) - CR: T2019011590001301 (changed sorted message list by creation time) (fjacquemin)
+ * (2019/03/05) - CR: T2019011590001301 (Changed naming and translation of system message) (fjacquemin)
+
 # 17.5.0-RC3 (2019/02/26)
  * (2019/02/18) - Bugfix: T2019010890001369 (fixed missing download of attachments when using CIAttachment as sub) (fjacquemin)
  * (2019/02/18) - Bugfix: T2018112690000551 (fixed incorrected cache key if using ArticleTypeNotLike) (fjacquemin)
