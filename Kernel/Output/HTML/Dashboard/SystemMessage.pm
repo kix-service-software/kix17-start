@@ -65,9 +65,14 @@ sub Run {
     );
 
     # get message list
-    my %MessageList = $SystemMessageObject->MessageSearch(
+    my @MessageIDList = $SystemMessageObject->MessageSearch(
         DateCheck => 1,
-        Valid     => 1
+        Valid     => 1,
+        UserID    => $Self->{UserID},
+        UserType  => $Self->{UserType},
+        SortBy    => 'Created',
+        OrderBy   => 'Down',
+        Result    => 'ARRAY'
     );
 
     # get user preferences
@@ -75,11 +80,17 @@ sub Run {
         UserID => $Self->{UserID},
     );
 
-    my %UserReads = map( { $_ => 1 } split( /;/, $Preferences{UserMessageRead} || '') );
+    my %UserReads;
+    if ( $Preferences{UserMessageRead} ) {
+        my $JSONData = $JSONObject->Decode(
+            Data => $Preferences{UserMessageRead}
+        );
+        %UserReads = %{$JSONData};
+    }
 
     my $ForceDialog;
     my @MessageDataList;
-    for my $MessageID ( sort keys %MessageList ) {
+    for my $MessageID ( @MessageIDList ) {
 
         # get message data
         my %MessageData = $SystemMessageObject->MessageGet(
@@ -186,7 +197,7 @@ sub Run {
     }
 
     # check if content got shown, if true, render block
-    if (%MessageList) {
+    if (scalar(@MessageIDList)) {
         $Output = $LayoutObject->Output(
             TemplateFile => 'AgentDashboardSystemMessage',
             Data         => {

@@ -5754,18 +5754,21 @@ sub _BuildSystemMessage {
     my $Config = $ConfigObject->Get('SystemMessage');
 
     # get message list
-    my %MessageList = $SystemMessageObject->MessageSearch(
-        Action => $Param{Action},
-        Valid  => 1
+    my @MessageIDList = $SystemMessageObject->MessageSearch(
+        Action  => $Param{Action},
+        Valid   => 1,
+        SortBy  => 'Created',
+        OrderBy => 'Down',
+        Result  => 'ARRAY'
     );
 
-    return 1 if !%MessageList;
+    return 1 if !scalar(@MessageIDList);
 
     $Self->Block(
         Name => 'SystemMessage'
     );
 
-    for my $MessageID ( sort keys %MessageList ) {
+    for my $MessageID ( @MessageIDList ) {
         my %MessageData = $SystemMessageObject->MessageGet(
             MessageID => $MessageID
         );

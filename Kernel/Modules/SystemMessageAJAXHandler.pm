@@ -18,7 +18,9 @@ our @ObjectDependencies = (
     'Kernel::System::Valid',
     'Kernel::System::Web::Request',
     'Kernel::System::SystemMessage',
-    'Kernel::System::CustomerUser'
+    'Kernel::System::CustomerUser',
+    'Kernel::System::JSON',
+    'Kernel::System::Time'
 );
 
 sub new {
@@ -42,6 +44,8 @@ sub Run {
     my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
     my $CustomerUserObject  = $Kernel::OM->Get('Kernel::System::CustomerUser');
     my $ValidObject         = $Kernel::OM->Get('Kernel::System::Valid');
+    my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
+    my $TimeObject          = $Kernel::OM->Get('Kernel::System::Time');
 
     my $Config        = $ConfigObject->Get('SystemMessage');
     my $Identifier    = $ParamObject->GetParam( Param => 'Identifier' )    || '';
@@ -68,7 +72,13 @@ sub Run {
         );
     }
 
-    my %UserReads = map( { $_ => 1 } split( /;/, $Preferences{UserMessageRead} || '') );
+    my %UserReads;
+    if ( $Preferences{UserMessageRead} ) {
+        my $JSONData = $JSONObject->Decode(
+            Data => $Preferences{UserMessageRead}
+        );
+        %UserReads = %{$JSONData};
+    }
 
     my $Output = '&nbsp;';
     if ( $Self->{Subaction} eq 'AJAXMessageGet' ) {
@@ -133,36 +143,24 @@ sub Run {
     }
 
     elsif ( $Self->{Subaction} eq 'AJAXUpdate' ) {
-        my %MessageList = $SystemMessageObject->MessageList(
-            Valid  => 0,
+
+        $UserReads{$MessageID} = $TimeObject->SystemTime();
+
+        my $NewUserReads = $JSONObject->Encode(
+            Data => \%UserReads
         );
-
-        $UserReads{$MessageID} = 1;
-
-        for my $ID ( keys %UserReads ) {
-            my %MessageData = $SystemMessageObject->MessageGet(
-                MessageID => $ID
-            );
-
-            if (
-                !%MessageData
-                || $ValidObject->ValidLookup( ValidID => $MessageData{ValidID}) ne 'valid'
-            ) {
-                delete $UserReads{$ID}
-            }
-        }
 
         if ( $Self->{UserType} eq 'Customer' ) {
             $CustomerUserObject->SetPreferences(
                 Key    => 'UserMessageRead',
-                Value  => join( ';', keys %UserReads ),
+                Value  => $NewUserReads,
                 UserID => $Self->{UserID},
             );
         }
         elsif ( $Self->{UserType} eq 'User' ) {
             $UserObject->SetPreferences(
                 Key    => 'UserMessageRead',
-                Value  => join( ';', keys %UserReads ),
+                Value  => $NewUserReads,
                 UserID => $Self->{UserID},
             );
         }
@@ -201,14 +199,17 @@ sub Run {
         }
 
         if ( $IsShow ) {
-            my %MessageList = $SystemMessageObject->MessageSearch(
+            my @MessageIDList = $SystemMessageObject->MessageSearch(
                 Action   => $CallingAction,
                 Valid    => 1,
                 UserID   => $UserID,
-                UserType => $UserType
+                UserType => $UserType,
+                SortBy   => 'Created',
+                OrderBy  => 'Down',
+                Result   => 'ARRAY'
             );
 
-            if ( %MessageList ) {
+            if ( scalar(@MessageIDList) ) {
                 $LayoutObject->Block(
                     Name => 'SystemMessageWidget',
                     Data => {
@@ -228,7 +229,7 @@ sub Run {
                 }
 
                 # show messages
-                for my $MessageID ( sort keys %MessageList ) {
+                for my $MessageID ( @MessageIDList ) {
 
                     # get message data
                     my %MessageData = $SystemMessageObject->MessageGet(
@@ -281,14 +282,17 @@ sub Run {
 
     elsif ( $Module eq 'KIXSidebar' ) {
 
-        my %MessageList = $SystemMessageObject->MessageSearch(
+        my @MessageIDList = $SystemMessageObject->MessageSearch(
             Action   => $CallingAction,
             Valid    => 1,
             UserID   => $Self->{UserID},
-            UserType => $Self->{UserType}
+            UserType => $Self->{UserType},
+            SortBy   => 'Created',
+            OrderBy  => 'Down',
+            Result   => 'ARRAY'
         );
 
-        if ( %MessageList ) {
+        if ( scalar(@MessageIDList) ) {
             $LayoutObject->Block(
                 Name => 'KIXSidebarMessageResult',
                 Data => {
@@ -298,7 +302,7 @@ sub Run {
                 },
             );
 
-            for my $MessageID ( sort keys %MessageList ) {
+            for my $MessageID ( @MessageIDList ) {
 
                 my %MessageData = $SystemMessageObject->MessageGet(
                     MessageID => $MessageID
