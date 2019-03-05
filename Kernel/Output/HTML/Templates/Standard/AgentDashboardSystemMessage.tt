@@ -39,10 +39,10 @@
             <td class="SystemMessageOpenDialog" >[% Data.UserFirstname | html %] [% Data.UserLastname | html %]</td>
 [% RenderBlockEnd("DashboardColumnCreatedBy") %]
 [% RenderBlockStart("DashboardColumnEdit") %]
-            <td><a href="[% Env("Baselink") %]Action=AdminSystemMessage;Subaction=Change;MessageID=[% Data.MessageID | uri %]" ><i class="fa fa-edit"></i></a></td>
+            <td><a href="[% Env("Baselink") %]Action=AdminSystemMessage;Subaction=Change;MessageID=[% Data.MessageID | uri %];[% Env("ChallengeTokenParam") | html %]" ><i class="fa fa-edit"></i></a></td>
 [% RenderBlockEnd("DashboardColumnEdit") %]
 [% RenderBlockStart("DashboardColumnDelete") %]
-            <td><a href="[% Env("Baselink") %]Action=AdminSystemMessage;Subaction=Delete;MessageID=[% Data.MessageID | uri %]" ><i class="fa fa-trash"></i></a></td>
+            <td><a href="[% Env("Baselink") %]Action=AdminSystemMessage;Subaction=Delete;MessageID=[% Data.MessageID | uri %];[% Env("ChallengeTokenParam") | html %]" ><i class="fa fa-trash"></i></a></td>
 [% RenderBlockEnd("DashboardColumnDelete") %]
         </tr>
 [% RenderBlockEnd("DashboardRow") %]
