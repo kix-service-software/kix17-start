@@ -4447,9 +4447,15 @@ sub Data {
     $Lang->{'Add Quick State'}        = 'Statuswechsel hinzufügen';
     $Lang->{'Quick States per page'}  = 'Statuswechsel pro Seite';
     $Lang->{'Import Quick State'}     = 'Statuswechsel importieren';
+    $Lang->{'Quick State deleted!'}   = 'Statuswechsel wurde gelöscht!';
+    $Lang->{'Quick State added!'}     = 'Statuswechsel wurde hinzugefügt!';
+    $Lang->{'Quick State updated!'}   = 'Statuswechsel wurde aktualisiert!';
+    $Lang->{'Quick State imported!'}  = 'Statuswechsel wurde importiert!';
     $Lang->{'Pending time in the future'}     = 'Wartezeit in der Zukunft';
     $Lang->{'Quick State Overview Limit'}     = 'Übersichtsbegrenzung der Statuswechsel';
     $Lang->{'Quick state limit per page for overview.'}   = 'Übersichtsbegrenzung pro Seite der Statuswechsel.';
+    $Lang->{'Quick State already exists! (Overwrite not used)'}
+        = 'Statuswechsel existiert bereits! (Überscheiben nicht verwendet)';
     $Lang->{'Here you can upload a configuration file to import a Quick State to your system. The file needs to be in .yml format as exported by this module.'}
         = 'Hier können Sie eine Konfigurationdatei hochladen, um einen Statuswechsel in Ihr System zu importieren. Die Datei muss im YAML-Format vorliegen, so wie sie vom Statuswechsel auch exportiert wird. ';
     $Lang->{'Sorry, the quick state \'%s\' couldn\'t use. The current Ticket has the same state as the selected quick state or the quick state is invalid!'}
