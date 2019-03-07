@@ -16,7 +16,8 @@ our @ObjectDependencies = (
     'Kernel::System::Group',
     'Kernel::System::User',
     'Kernel::Output::HTML::Layout',
-    'Kernel::System::SystemMessage'
+    'Kernel::System::SystemMessage',
+    'Kernel::System::JSON'
 );
 
 sub new {
@@ -51,6 +52,7 @@ sub Run {
     my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
     my $SystemMessageObject = $Kernel::OM->Get('Kernel::System::SystemMessage');
     my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
 
     my $Config  = $ConfigObject->Get('SystemMessage');
     my $GroupID = $GroupObject->GroupLookup(
