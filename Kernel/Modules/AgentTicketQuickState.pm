@@ -136,6 +136,10 @@ sub Run {
         ID => $GetParam{QuickStateID}
     );
 
+    if ( ref $QuickStateData{Config} ne 'HASH') {
+        $QuickStateData{Config} = {};
+    }
+
     if (
         $QuickStateData{StateID} ne $Ticket{StateID}
         && $StateList{$QuickStateData{StateID}}
