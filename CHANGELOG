@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.5.0-RC5 (2019/03/07)
+ * (2019/03/07) - Bugfix: T20190115900001301 (fixed missing JSON object declaration in system message dashboard) (fjacquemin)
+ * (2019/03/06) - Bugfix: T2019011590000712 (fixed internal server error if used quick state) (fjacquemin)
+ * (2019/03/06) - Bugfix: T2019011590000712 (fixed missing translation in quick state module) (fjacquemin)
+
 # 17.5.0-RC4 (2019/03/05)
  * (2019/03/05) - CR: T20190115900001301 (added removal preference of mark as seen if changed message entry) (fjacquemin)
  * (2019/03/05) - Bugfix: T2019011590001301 (fixed missing challenge token if using delete or edit a message from dashboard) (fjacquemin)
