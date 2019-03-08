@@ -68,10 +68,11 @@ sub Run {
     # get ticket
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{Data}->{TicketID},
+        DynamicFields => 1,
+        Silent        => 1,
         UserID        => 1,
-        DynamicFields => 0,
     );
-    return if !%Ticket;
+    return if ( !%Ticket );
 
     # only set the pending time to 0 if it's actually set
     return 1 if !$Ticket{UntilTime};

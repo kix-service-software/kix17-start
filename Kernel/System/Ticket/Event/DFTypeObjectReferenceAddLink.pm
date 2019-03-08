@@ -67,9 +67,11 @@ sub Run {
     # get current ticket data
     my %Ticket = $Self->{TicketObject}->TicketGet(
         TicketID      => $Param{Data}->{TicketID},
-        UserID        => $Param{UserID},
         DynamicFields => 1,
+        Silent        => 1,
+        UserID        => $Param{UserID},
     );
+    return 1 if ( !%Ticket );
 
     # check event
     if ( $Param{Event} =~ /TicketDynamicFieldUpdate_(.*)/ ) {

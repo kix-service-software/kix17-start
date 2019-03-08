@@ -112,8 +112,10 @@ sub Run {
 
         #get ticket data...
         my %TicketData = $Self->{TicketObject}->TicketGet(
-            TicketID => $Param{Data}->{TicketID},
-            UserID   => 1,
+            TicketID      => $Param{Data}->{TicketID},
+            DynamicFields => 0,
+            Silent        => 1,
+            UserID        => 1,
         );
 
         if ( !scalar( keys(%TicketData) ) ) {

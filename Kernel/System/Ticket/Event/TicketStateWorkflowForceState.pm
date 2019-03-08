@@ -62,9 +62,12 @@ sub Run {
     }
 
     my %Ticket = $Self->{TicketObject}->TicketGet(
-        TicketID => $Param{Data}->{TicketID},
-        UserID   => $Param{UserID},
+        TicketID      => $Param{Data}->{TicketID},
+        DynamicFields => 0,
+        Silent        => 1,
+        UserID        => $Param{UserID},
     );
+    return 1 if ( !%Ticket );
 
     # should I unlock a ticket after move?
     if ( $Ticket{Lock} =~ /^lock$/i ) {

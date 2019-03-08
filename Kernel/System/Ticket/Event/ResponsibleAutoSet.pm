@@ -65,9 +65,11 @@ sub Run {
     # get current ticket data
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{Data}->{TicketID},
-        UserID        => $Param{UserID},
         DynamicFields => 0,
+        Silent        => 1,
+        UserID        => $Param{UserID},
     );
+    return 1 if ( !%Ticket );
 
     # check responible update
     if ( $Ticket{ResponsibleID} == 1 && $Param{UserID} != 1 ) {

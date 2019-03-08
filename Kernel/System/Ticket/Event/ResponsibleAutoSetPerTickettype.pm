@@ -70,9 +70,12 @@ sub Run {
     if ( $Self->{ConfigObject}->Get('Ticket::Responsible') && $SetMode ) {
 
         my %Ticket = $Self->{TicketObject}->TicketGet(
-            TicketID => $Param{Data}->{TicketID},
-            UserID   => $Param{UserID},
+            TicketID      => $Param{Data}->{TicketID},
+            DynamicFields => 0,
+            Silent        => 1,
+            UserID        => $Param{UserID},
         );
+        return 1 if ( !%Ticket );
 
         my $UserLogin     = $Param{Config}->{ 'TicketType:::' . $Ticket{Type} } || "";
         my $UserID        = 0;

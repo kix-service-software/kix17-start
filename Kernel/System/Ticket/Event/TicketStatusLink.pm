@@ -83,10 +83,12 @@ sub Run {
 
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
     my %Ticket       = $TicketObject->TicketGet(
-        TicketID => $TicketID,
-        UserID   => 1,
+        TicketID      => $TicketID,
+        DynamicFields => 0,
+        Silent        => 1,
+        UserID        => 1,
     );
-    return 1 if !%Ticket;
+    return 1 if ( !%Ticket );
 
     # check if ticket type is relevant (optional functionality)
     my $OldTicketTypeRelevant;
