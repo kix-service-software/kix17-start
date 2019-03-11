@@ -66,10 +66,12 @@ sub Run {
 
     # get customer user data, so that values can be stored in dynamic fields
     my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
-        TicketID => $Param{Data}->{TicketID},
+        TicketID      => $Param{Data}->{TicketID},
+        DynamicFields => 0,
+        Silent        => 1,
+        UserID        => 1,
     );
-
-    return if !%Ticket;
+    return if ( !%Ticket );
 
     # get dynamic field objects
     my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');

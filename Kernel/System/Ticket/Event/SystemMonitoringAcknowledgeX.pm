@@ -89,7 +89,10 @@ sub Run {
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{Data}->{TicketID},
         DynamicFields => 1,
+        Silent        => 1,
+        UserID        => 1,
     );
+    return 1 if ( !%Ticket );
 
     my $ConfigKey;
     if ( $Ticket{ "DynamicField_" . $AcknowledgeNameField } ) {

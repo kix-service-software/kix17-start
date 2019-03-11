@@ -75,7 +75,14 @@ sub Run {
     }
 
     # get ticket data and check ticket state
-    my %Ticket = $Self->{TicketObject}->TicketGet( TicketID => $Param{Data}->{TicketID} );
+    my %Ticket = $Self->{TicketObject}->TicketGet(
+        TicketID      => $Param{Data}->{TicketID},
+        DynamicFields => 0,
+        Silent        => 1,
+        UserID        => 1,
+    );
+    return 1 if ( !%Ticket );
+
     my %State = $Self->{StateObject}->StateGet(
         ID => $Ticket{StateID},
     );

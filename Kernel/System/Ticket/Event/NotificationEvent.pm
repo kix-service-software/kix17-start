@@ -97,9 +97,11 @@ sub Run {
     # get ticket attribute matches
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{Data}->{TicketID},
-        UserID        => $Param{UserID},
         DynamicFields => 1,
+        Silent        => 1,
+        UserID        => $Param{UserID},
     );
+    return 1 if ( !%Ticket );
 
     # get dynamic field objects
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');

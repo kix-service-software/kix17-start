@@ -61,10 +61,11 @@ sub Run {
     # get ticket
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{Data}->{TicketID},
-        UserID        => 1,
         DynamicFields => 0,
+        Silent        => 1,
+        UserID        => 1,
     );
-    return if !%Ticket;
+    return if ( !%Ticket );
 
     # do not restore until ticket is closed, removed or merged
     # (restore just open tickets)

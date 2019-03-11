@@ -56,9 +56,11 @@ sub Run {
 
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{Data}->{TicketID},
-        UserID        => $Param{UserID},
         DynamicFields => 0,
+        Silent        => 1,
+        UserID        => $Param{UserID},
     );
+    return 1 if ( !%Ticket );
 
     # should I unlock a ticket after move?
     return 1 if lc $Ticket{Lock} ne 'lock';

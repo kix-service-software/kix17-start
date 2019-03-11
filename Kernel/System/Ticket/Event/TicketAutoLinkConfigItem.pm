@@ -183,9 +183,11 @@ sub Run {
 
         my %TicketData = $Self->{TicketObject}->TicketGet(
             TicketID      => $Param{Data}->{TicketID},
-            UserID        => 1,
             DynamicFields => 1,
+            Silent        => 1,
+            UserID        => 1,
         );
+        return 1 if ( !%TicketData );
 
         for my $Key ( keys( %{$CISearchPatternRef} ) ) {
 
