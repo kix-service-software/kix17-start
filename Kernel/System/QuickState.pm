@@ -205,7 +205,7 @@ sub QuickStateDelete {
 
     # get database object
     my $DBObject  = $Kernel::OM->Get('Kernel::System::DB');
-    my $LogObject = $Kernal::OM->Get('Kernel::System::Log');
+    my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
 
     # check needed stuff
     if ( !$Param{ID} ) {
