@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -97,7 +97,6 @@ sub Run {
     my $XMLDefinition      = $VersionRef->{XMLDefinition};
     my $XMLData            = $VersionRef->{XMLData}->[1]->{Version}->[1];
 
-
     # check if requested AttachmentID is available as CIAttachment at all
     my $Attachments = $Self->{ConfigItemObject}->GetAttributeDataByType(
         XMLDefinition => $XMLDefinition,
@@ -121,7 +120,6 @@ sub Run {
         Key           => $AttributeKeyName,
     );
 
-    # if CustomerViewable set for customer
     if (
         $Self->{UserType} eq 'Customer'
         && !$IsCustomerViewable
@@ -190,23 +188,27 @@ sub  _CIAttributeIsCustomerViewable {
     ITEM:
     for my $Item ( @{ $Param{XMLDefinition} } ) {
 
-        if( $Item->{Key} && $Item->{Key} eq $Param{Key}) {
+        if(
+            $Item->{Key}
+            && $Item->{Key} eq $Param{Key}
+        ) {
             return $Item->{CustomerViewable} || '0';
         }
 
         # check if item should be shown in customer frontend
         next ITEM if !$Item->{CustomerViewable};
 
-
         if ( $Item->{Sub} ) {
-            return $Self->_CIAttributeIsCustomerViewable (
+            my $SubResult = $Self->_CIAttributeIsCustomerViewable (
                 XMLDefinition => $Item->{Sub},
                 Key           => $Param{Key},
             );
+
+            return $SubResult if defined $SubResult;
         }
     }
 
-    return 0;
+    return;
 }
 
 1;
