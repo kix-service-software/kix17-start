@@ -187,7 +187,8 @@ sub Run {
                 );
 
                 if (
-                    $ImportData->{Config}->{Body}
+                    $ImportData->{Config}
+                    && $ImportData->{Config}->{Body}
                     && $ImportData->{Attachments}
                 ) {
                     $QuickStateObject->QuickStateDelete(
@@ -238,7 +239,8 @@ sub Run {
                 );
 
                 if (
-                    $ImportData->{Config}->{Body}
+                    $ImportData->{Config}
+                    && $ImportData->{Config}->{Body}
                     && $ImportData->{Attachments}
                 ) {
                     for my $Attachment ( @{$ImportData->{Attachments}} ) {
