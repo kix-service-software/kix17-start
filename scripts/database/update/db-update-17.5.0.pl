@@ -44,9 +44,7 @@ sub _MigrateDeploymentStateConfiguration {
 
     # prepare config mapping
     my %ConfigMapping = (
-        'ConfigItemOverview::HighlightMapping'                  => 'ConfigItemLinkGraph::HighlightMapping',
-        'ConfigItemOverview::ShowDeploymentStatePostproductive' => 'ConfigItemLinkGraph::ShowDeploymentStatePostproductive',
-        'ConfigItemOverview::ExcludedDeploymentStates'          => 'ConfigItemLinkGraph::ExcludedDeploymentStates',
+        'ConfigItemOverview::HighlightMapping' => 'ConfigItemLinkGraph::HighlightMapping',
     );
 
     # process mapping
@@ -60,7 +58,7 @@ sub _MigrateDeploymentStateConfiguration {
         # update new configuration
         $SysConfigObject->ConfigItemUpdate(
             Key   => $ConfigMapping{$ConfigName},
-            Value => $Config,
+            Value => $Config || '',
             Valid => $ConfigItem{Valid},
         );
     }
