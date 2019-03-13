@@ -1424,6 +1424,10 @@ sub _TicketCacheClear {
     );
     $CacheObject->Delete(
         Type => $Self->{CacheType},
+        Key  => 'ArticleIndex::' . $Param{TicketID} . '::customer::internal'
+    );
+    $CacheObject->Delete(
+        Type => $Self->{CacheType},
         Key  => 'ArticleIndex::' . $Param{TicketID} . '::system'
     );
     $CacheObject->Delete(
