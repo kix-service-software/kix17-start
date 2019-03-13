@@ -12,12 +12,13 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::Output::HTML::Layout',
     'Kernel::System::GeneralCatalog',
-    'Kernel::System::ITSMConfigItem',
     'Kernel::System::Group',
+    'Kernel::System::ITSMConfigItem',
     'Kernel::System::Log',
-    'Kernel::System::Time',
-    'Kernel::System::User',
+    'Kernel::System::Web::Request',
 );
 
 use base qw(Kernel::Modules::AgentLinkGraph);
@@ -60,15 +61,13 @@ sub new {
     bless( $Self, $Type );
 
     # create needed objects
-    $Self->{ConfigObject}     = $Kernel::OM->Get('Kernel::Config');
-    $Self->{LayoutObject}     = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    $Self->{ConfigItemObject} = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
+    $Self->{ConfigObject}         = $Kernel::OM->Get('Kernel::Config');
+    $Self->{LayoutObject}         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     $Self->{GeneralCatalogObject} = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
     $Self->{GroupObject}          = $Kernel::OM->Get('Kernel::System::Group');
+    $Self->{ConfigItemObject}     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
     $Self->{LogObject}            = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{TimeObject}           = $Kernel::OM->Get('Kernel::System::Time');
-    $Self->{UserObject}           = $Kernel::OM->Get('Kernel::System::User');
-    $Self->{ParamObject}           = $Kernel::OM->Get('Kernel::System::Web::Request');
+    $Self->{ParamObject}          = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     $Self->{Config} = $Self->{ConfigObject}->Get("Frontend::Agent::$Self->{Action}");
 
@@ -239,34 +238,32 @@ sub _PrepareITSMConfigItem {
     }
 
     # get possible deployment state list for config items to be in color
-    # get functionality - should postproductive states be shown
-    my $ShowDeploymentStatePostproductive =
-        $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ShowDeploymentStatePostproductive');
-    my @Functionality = ( 'preproductive', 'productive' );
-    if ($ShowDeploymentStatePostproductive) {
-        push( @Functionality, 'postproductive' );
+    # get relevant functionality
+    my $ColorDeploymentStatePostproductive = $Self->{ConfigObject}->Get('ConfigItemOverview::ShowDeploymentStatePostproductive');
+    my @ColorFunctionality                 = ( 'preproductive', 'productive' );
+    if ($ColorDeploymentStatePostproductive) {
+        push( @ColorFunctionality, 'postproductive' );
     }
-    my $StateList = $Self->{GeneralCatalogObject}->ItemList(
+    # get state list
+    my $ColorStateList = $Self->{GeneralCatalogObject}->ItemList(
         Class       => 'ITSM::ConfigItem::DeploymentState',
         Preferences => {
-            Functionality => \@Functionality,
+            Functionality => \@ColorFunctionality,
         },
     );
-
     # remove excluded deployment states from state list
-    my %DeplStateList = %{$StateList};
-    if ( $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates') ) {
-        my @ExcludedStates =
-            split(
+    my %ColorDeplStateList = %{$ColorStateList};
+    if ( $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates') ) {
+        my @ExcludedStates = split(
             /,/,
-            $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates')
-            );
-        for my $Item ( keys %DeplStateList ) {
-            next if !( grep( /$DeplStateList{$Item}/, @ExcludedStates ) );
-            delete $DeplStateList{$Item};
+            $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates')
+        );
+        for my $Item ( keys %ColorDeplStateList ) {
+            next if !( grep { /^$ColorDeplStateList{$Item}$/ } @ExcludedStates );
+            delete $ColorDeplStateList{$Item};
         }
     }
-    $Param{DeplStatesWithColor} = \%DeplStateList;
+    $Param{DeplStatesColor} = \%ColorDeplStateList;
 
     $Param{StateHighlighting} = $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping');
 
@@ -437,6 +434,47 @@ sub _GetObjectsAndLinks {
             return 0;
         }
 
+        # check if object has relevant deployment state to show... but ignore start object
+        if ( $Param{StartObjectID} ne $Param{CurrentObjectID} ) {
+            # get possible deployment state list for config items to be shown
+            # get relevant functionality
+            my $ShowDeploymentStatePostproductive = $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ShowDeploymentStatePostproductive');
+            my @ShowFunctionality                 = ( 'preproductive', 'productive' );
+            if ($ShowDeploymentStatePostproductive) {
+                push( @ShowFunctionality, 'postproductive' );
+            }
+            my $ShowStateList = $Self->{GeneralCatalogObject}->ItemList(
+                Class       => 'ITSM::ConfigItem::DeploymentState',
+                Preferences => {
+                    Functionality => \@ShowFunctionality,
+                },
+            );
+            # remove excluded deployment states from state list
+            my %ShowDeplStateList = %{$ShowStateList};
+            if ( $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates') ) {
+                my @ExcludedStates =
+                    split(
+                    /,/,
+                    $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates')
+                );
+                for my $Item ( keys %ShowDeplStateList ) {
+                    next if !( grep { /^$ShowDeplStateList{$Item}$/ } @ExcludedStates );
+                    delete $ShowDeplStateList{$Item};
+                }
+            }
+
+            # check deployment state
+            my $ShowCurrentObject;
+            for my $DeplState ( values %ShowDeplStateList ) {
+                if ( $CurrVersionData->{CurDeplState} eq $DeplState ) {
+                    $ShowCurrentObject = 1;
+                }
+            }
+            if ( !$ShowCurrentObject ) {
+                return 0;
+            }
+        }
+
         # define border of start object
         my $Start;
         if (
@@ -456,13 +494,13 @@ sub _GetObjectsAndLinks {
 
         $String = $Self->_BuildNodes(
             %Param,
-            CurrVersionData     => $CurrVersionData,
-            CurrentObjectType   => $Param{CurrentObjectType},
-            CurrentObjectID     => $Param{CurrentObjectID},
-            Start               => $Start,
-            DeplStatesWithColor => $Param{DeplStatesWithColor},
-            ConsiderAttribute   => $ConsiderAttribute,
-            DeplStateColor      => $DeplStateColor,
+            CurrVersionData   => $CurrVersionData,
+            CurrentObjectType => $Param{CurrentObjectType},
+            CurrentObjectID   => $Param{CurrentObjectID},
+            Start             => $Start,
+            DeplStatesColor   => $Param{DeplStatesColor},
+            ConsiderAttribute => $ConsiderAttribute,
+            DeplStateColor    => $DeplStateColor,
         );
         return 0 if !$String;
 
@@ -482,7 +520,7 @@ sub _BuildNodes {
     my ( $Self, %Param ) = @_;
 
     # check required params...
-    for my $CurrKey (qw( DeplStatesWithColor CurrentObjectType CurrentObjectID CurrVersionData )) {
+    for my $CurrKey (qw( DeplStatesColor CurrentObjectType CurrentObjectID CurrVersionData )) {
         if ( !$Param{$CurrKey} ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
@@ -496,7 +534,7 @@ sub _BuildNodes {
 
     # check if CI-node should have a no colored images because it is not shown in the CMDB overview
     my $WithColor;
-    for my $DeplState ( values %{ $Param{DeplStatesWithColor} } ) {
+    for my $DeplState ( values %{ $Param{DeplStatesColor} } ) {
         if ( $Param{CurrVersionData}->{CurDeplState} eq $DeplState ) {
             $WithColor = 1;
         }
@@ -756,51 +794,46 @@ sub _InsertCI {
     if ($CurrVersionData) {
         my $DeplStateColor;
         if (
-            $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping')
-            ->{ $CurrVersionData->{CurDeplState} }
-            )
-        {
-            $DeplStateColor =
-                $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping')
-                ->{ $CurrVersionData->{CurDeplState} };
+            $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping')->{ $CurrVersionData->{CurDeplState} }
+        ) {
+            $DeplStateColor = $Self->{ConfigObject}->Get('ConfigItemLinkGraph::HighlightMapping')->{ $CurrVersionData->{CurDeplState} };
         }
 
         # get possible deployment state list for config items to be in color
-        my $ShowDeploymentStatePostproductive =
-            $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ShowDeploymentStatePostproductive');
-        my @Functionality = ( 'preproductive', 'productive' );
-        if ($ShowDeploymentStatePostproductive) {
-            push( @Functionality, 'postproductive' );
+        # get relevant functionality
+        my $ColorDeploymentStatePostproductive = $Self->{ConfigObject}->Get('ConfigItemOverview::ShowDeploymentStatePostproductive');
+        my @ColorFunctionality                 = ( 'preproductive', 'productive' );
+        if ($ColorDeploymentStatePostproductive) {
+            push( @ColorFunctionality, 'postproductive' );
         }
-        my $StateList = $Self->{GeneralCatalogObject}->ItemList(
+        # get state list
+        my $ColorStateList = $Self->{GeneralCatalogObject}->ItemList(
             Class       => 'ITSM::ConfigItem::DeploymentState',
             Preferences => {
-                Functionality => \@Functionality,
+                Functionality => \@ColorFunctionality,
             },
         );
-
         # remove excluded deployment states from state list
-        my %DeplStateList = %{$StateList};
-        if ( $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates') ) {
-            my @ExcludedStates =
-                split(
+        my %ColorDeplStateList = %{$ColorStateList};
+        if ( $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates') ) {
+            my @ExcludedStates = split(
                 /,/,
-                $Self->{ConfigObject}->Get('ConfigItemLinkGraph::ExcludedDeploymentStates')
-                );
-            for my $Item ( keys %DeplStateList ) {
-                next if !( grep( /$DeplStateList{$Item}/, @ExcludedStates ) );
-                delete $DeplStateList{$Item};
+                $Self->{ConfigObject}->Get('ConfigItemOverview::ExcludedDeploymentStates')
+            );
+            for my $Item ( keys %ColorDeplStateList ) {
+                next if !( grep { /^$ColorDeplStateList{$Item}$/ } @ExcludedStates );
+                delete $ColorDeplStateList{$Item};
             }
         }
 
         $CIString = $Self->_BuildNodes(
             %Param,
-            CurrVersionData     => $CurrVersionData,
-            CurrentObjectType   => $CurObject[0],
-            CurrentObjectID     => $CurObject[1],
-            DeplStatesWithColor => \%DeplStateList,
-            ConsiderAttribute   => $ConsiderAttribute,
-            DeplStateColor      => $DeplStateColor,
+            CurrVersionData   => $CurrVersionData,
+            CurrentObjectType => $CurObject[0],
+            CurrentObjectID   => $CurObject[1],
+            DeplStatesColor   => \%ColorDeplStateList,
+            ConsiderAttribute => $ConsiderAttribute,
+            DeplStateColor    => $DeplStateColor,
         );
     }
 

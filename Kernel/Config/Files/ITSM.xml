@@ -2115,7 +2115,7 @@
         <Group>ITSM</Group>
         <SubGroup>Frontend::Agent::ITSMConfigItem::ViewZoomTabLinkGraph</SubGroup>
         <Setting>
-            <Option SelectedID="0">
+            <Option SelectedID="1">
                 <Item Key="1">Yes</Item>
                 <Item Key="0">No</Item>
             </Option>
