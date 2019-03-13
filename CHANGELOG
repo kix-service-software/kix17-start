@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.5.0-RC6 (2019/03/13)
+ * (2019/03/12) - Bugfix: T2019011590001122 (ConfigItemLinkGraph configuration controls show/hide of linked CIs) (millinger)
+ * (2019/03/12) - Bugfix: T2019010890001369 (fixed incorrected return after sub attrbute check) (fjacquemin)
+ * (2019/03/12) - Bugfix: T2018112690000551 (fixed missing cache delete if using ArticleTypeNotLike) (fjacquemin)
+ * (2019/03/12) - Bugfix: T2019011590000712 (fixed missing check of the parameter Config if this is defined at the import quick state) (fjacquemin)
+ * (2019/03/12) - Bugfix: T2019011590000712 (fixed typing error on Kernel::OM in QuickState delete) (fjacquemin)
+ * (2019/03/08) - Bugfix: T2018102390000709 (prevent log entry for deleted tickets) (millinger)
+
 # 17.5.0-RC5 (2019/03/07)
  * (2019/03/07) - Bugfix: T20190115900001301 (fixed missing JSON object declaration in system message dashboard) (fjacquemin)
  * (2019/03/06) - Bugfix: T2019011590000712 (fixed internal server error if used quick state) (fjacquemin)
