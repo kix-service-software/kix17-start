@@ -933,26 +933,36 @@ sub MaskAgentZoom {
     }
 
     if ( $ConfigObject->Get('Frontend::Module')->{AgentTicketQuickState} ) {
-        my $QuickStateObject = $Kernel::OM->Get('Kernel::System::QuickState');
-        my %QuickStates      = $QuickStateObject->QuickStateList(
-            Valid => 1,
+        my $QuickStateConfig = $ConfigObject->Get('Ticket::Frontend::AdminQuickState');
+        my $Access           = $TicketObject->TicketPermission(
+            Type     => $QuickStateConfig->{Permissions} || 'rw',
+            TicketID => $Ticket{TicketID},
+            UserID   => $Self->{UserID},
+            LogNo    => 1,
         );
 
-        if ( %QuickStates ) {
-            $QuickStates{0}        = '- ' . $LayoutObject->{LanguageObject}->Translate('Selection') . ' -';
-            $Param{QuickStateStrg} = $LayoutObject->AgentQueueListOption(
-                Name           => 'QuickStateID',
-                Data           => \%QuickStates,
-                Class          => 'Modernize Small',
+        if ( $Access ) {
+            my $QuickStateObject = $Kernel::OM->Get('Kernel::System::QuickState');
+            my %QuickStates      = $QuickStateObject->QuickStateList(
+                Valid => 1,
             );
 
-            $LayoutObject->Block(
-                Name => 'QuickStateLink',
-                Data => {
-                    %Param,
-                    %AclAction
-                },
-            );
+            if ( %QuickStates ) {
+                $QuickStates{0}        = '- ' . $LayoutObject->{LanguageObject}->Translate('Selection') . ' -';
+                $Param{QuickStateStrg} = $LayoutObject->AgentQueueListOption(
+                    Name           => 'QuickStateID',
+                    Data           => \%QuickStates,
+                    Class          => 'Modernize Small',
+                );
+
+                $LayoutObject->Block(
+                    Name => 'QuickStateLink',
+                    Data => {
+                        %Param,
+                        %AclAction
+                    },
+                );
+            }
         }
     }
 
