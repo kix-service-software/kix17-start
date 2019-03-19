@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, http://www.cape-it.de/
 
+# 17.5.0-RC7 (2019/03/19)
+ * (2019/03/19) - Bugfix: T2019011590000712 (fixed internal server error by permission check of using quick state) (fjacquemin)
+ * (2019/03/19) - Bugfix: T2019011590001301 (removed permission configuration of dashboard system message) (fjacquemin)
+
 # 17.5.0-RC6 (2019/03/13)
  * (2019/03/12) - Bugfix: T2019011590001122 (ConfigItemLinkGraph configuration controls show/hide of linked CIs) (millinger)
  * (2019/03/12) - Bugfix: T2019010890001369 (fixed incorrected return after sub attrbute check) (fjacquemin)
