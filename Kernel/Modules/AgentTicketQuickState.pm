@@ -48,7 +48,8 @@ sub Run {
     my $QuickStateObject        = $Kernel::OM->Get('Kernel::System::QuickState');
     my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
 
-    my $LanguageObject    = $LayoutObject->{LanguageObject};
+    my $LanguageObject = $LayoutObject->{LanguageObject};
+    my $Config         = $ConfigObject->Get('Ticket::Frontend::AdminQuickState');
 
     # check needed stuff
     for my $Needed (qw(TicketID)) {
@@ -61,7 +62,7 @@ sub Run {
 
     # check permissions
     my $Access = $TicketObject->TicketPermission(
-        Type     => 'rw',
+        Type     => $Config->{Permissions} || 'rw',
         TicketID => $Self->{TicketID},
         UserID   => $Self->{UserID}
     );
@@ -69,7 +70,7 @@ sub Run {
     # error screen, don't show ticket
     if ( !$Access ) {
         return $LayoutObject->NoPermission(
-            Message    => Translatable("You need rw permissions!"),
+            Message    => $LanguageObject->Translate("You need rw permissions!"),
             WithHeader => 'yes',
         );
     }

@@ -17315,6 +17315,14 @@ Here you may define a default text for the forward function. You find this confi
             <String Regex="">note-internal</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AdminQuickState###Permissions" Required="1" Valid="1">
+        <Description Translatable="1">Required permissions to use the quick state view screen in the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Admin::ViewQuickState</SubGroup>
+        <Setting>
+            <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AdminQuickState###RichTextWidth" Required="0" Valid="1">
         <Description Translatable="1">Defines the width for the rich text editor component for this screen. Enter number (pixels) or percent value (relative).</Description>
         <Group>Ticket</Group>
