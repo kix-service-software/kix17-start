@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -127,8 +127,7 @@ sub Run {
     if (
         defined $Param{Config}->{StateID}
         && $Param{Config}->{StateID} eq $Param{Ticket}->{StateID}
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -137,8 +136,7 @@ sub Run {
     elsif (
         defined $Param{Config}->{StateID}
         && $Param{Config}->{StateID} ne $Param{Ticket}->{StateID}
-        )
-    {
+    ) {
         %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
             ID => $Param{Config}->{StateID},
         );
@@ -165,8 +163,7 @@ sub Run {
     elsif (
         defined $Param{Config}->{State}
         && $Param{Config}->{State} eq $Param{Ticket}->{State}
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -175,8 +172,7 @@ sub Run {
     elsif (
         defined $Param{Config}->{State}
         && $Param{Config}->{State} ne $Param{Ticket}->{State}
-        )
-    {
+    ) {
         %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
             Name => $Param{Config}->{State},
         );
@@ -211,8 +207,7 @@ sub Run {
         $Success
         && IsHashRefWithData( \%StateData )
         && $StateData{TypeName} =~ m{\A pending}msxi
-        )
-    {
+    ) {
 
         # get time object
         my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
@@ -222,8 +217,7 @@ sub Run {
 
         if (
             IsNumber( $Param{Config}->{PendingTimeDiff} )
-            )
-        {
+        ) {
 
             # add PendingTimeDiff
             $PendingTime += $Param{Config}->{PendingTimeDiff};
@@ -241,17 +235,15 @@ sub Run {
             );
 
         }
-        elsif ( $Param{Config}->{PendingDateTime} && ref $Param{Config}->{Placeholder} eq 'HASH' ) {
+        elsif ( $Param{Config}->{PendingDateTime} && ref $Param{Placeholder} eq 'HASH' ) {
             if (
-                defined $Param{Config}->{Placeholder}->{PendingDateTime}
-                && $Param{Config}->{Placeholder}->{PendingDateTime}
+                defined $Param{Placeholder}->{PendingDateTime}
+                && $Param{Placeholder}->{PendingDateTime}
                 =~ /\<(KIX|OTRS)_TICKET_DynamicField_(.*?)\>/i
-                )
-            {
-                my $DynamicField
-                    = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
+            ) {
+                my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
                     Name => $2,
-                    );
+                );
 
                 my $PendingTime;
 
@@ -338,7 +330,6 @@ sub Run {
                 );
             }
         }
-
     }
 
     return $Success;

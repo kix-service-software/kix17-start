@@ -1,0 +1,66 @@
+# --
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+
+[% RenderBlockStart("SystemMessageWidget") %]
+<div id="SystemMessageWidget" class="WidgetSimple">
+    <div class="Header">
+        <h2><span>[% Translate("Message") %]</span></h2>
+    </div>
+     <div class="Content">
+        <table class="DataTable">
+            <thead>
+                <tr>
+                    <th>[% Translate("Headline") | html %]</th>
+[% RenderBlockStart("SystemMessageHeadTeaser") %]
+                    <th>[% Translate("Teaser") | html %]</th>
+[% RenderBlockEnd("SystemMessageHeadTeaser") %]
+[% RenderBlockStart("SystemMessageHeadCreatedBy") %]
+                    <th>[% Translate("Author") | html %]</th>
+[% RenderBlockEnd("SystemMessageHeadCreatedBy") %]
+                </tr>
+            </thead>
+            <tbody>
+[% RenderBlockStart("SystemMessageRow") %]
+                <tr data-id="[% Data.MessageID %]" title="[% Translate("Read this message") %]">
+                    <td class="SystemMessageOpenDialog">
+                        [% Data.Title | html %]
+                    </td>
+[% RenderBlockStart("SystemMessageColumnTeaser") %]
+                    <td class="SystemMessageOpenDialog" >[% Data.ShortText | html %]</td>
+[% RenderBlockEnd("SystemMessageColumnTeaser") %]
+[% RenderBlockStart("SystemMessageColumnCreatedBy") %]
+                    <td class="SystemMessageOpenDialog" >[% Data.UserFirstname | html %] [% Data.UserLastname | html %]</td>
+[% RenderBlockEnd("SystemMessageColumnCreatedBy") %]
+                </tr>
+[% RenderBlockEnd("SystemMessageRow") %]
+            </tbody>
+        </table>
+    </div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.UI.SystemMessage.Init('Widget', null, null);
+//]]></script>
+[% END %]
+</div>
+[% RenderBlockEnd("SystemMessageWidget") %]
+
+[% RenderBlockStart("SystemMessageDialog") %]
+<div class="SystemMessageDialog">
+[% RenderBlockStart("SystemMessageTeaser")%]
+    <h3><span>[% Data.ShortText %]</span></h3>
+[% RenderBlockEnd("SystemMessageTeaser")%]
+    <p>[% Data.Body %]</p>
+    <div>
+        <span>[% Data.Created | Localize("TimeShort") %]</span>
+[% RenderBlockStart("SystemMessageCreateBy")%]
+        <span>[% Translate("Author") %]: [% Data.UserFirstname %] [% Data.UserLastname %]</span>
+[% RenderBlockEnd("SystemMessageCreateBy")%]
+    </div>
+</div>
+[% RenderBlockEnd("SystemMessageDialog") %]

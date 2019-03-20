@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -93,28 +93,37 @@ sub Run {
 
     my $IsCustomerViewable = 1;
     my $IsAttachment       = 0;
+    my $AttributeKeyName   = "";
     my $XMLDefinition      = $VersionRef->{XMLDefinition};
     my $XMLData            = $VersionRef->{XMLData}->[1]->{Version}->[1];
 
-    # searches for the CIAttachment attribute
-    ATTRIBUTE:
-    for my $Attribute ( @{$XMLDefinition} ) {
-        next ATTRIBUTE if $Attribute->{Input}->{Type} ne 'CIAttachment';
-        next ATTRIBUTE if !defined $XMLData->{$Attribute->{Key}};
+    # check if requested AttachmentID is available as CIAttachment at all
+    my $Attachments = $Self->{ConfigItemObject}->GetAttributeDataByType(
+        XMLDefinition => $XMLDefinition,
+        XMLData       => $XMLData,
+        AttributeType => 'CIAttachment',
+    );
 
-        # checks if AttachmentDirectoryID is stored in the ConfigItem
-        ENTRY:
-        for my $Entry ( @{$XMLData->{$Attribute->{Key}}} ) {
-            next ENTRY if !defined $Entry;
-            next ENTRY if $Entry->{Content} ne $GetParam{AttachmentDirectoryID};
+    for my $CurrKey ( sort keys %{$Attachments} ) {
+        next if ( ref( $Attachments->{$CurrKey}) ne 'ARRAY' );
+        next if ( !scalar( @{$Attachments->{$CurrKey}} ) );
 
-            $IsCustomerViewable = 0 if $Self->{UserType} eq 'Customer' && !$Attribute->{CustomerViewable};
-            $IsAttachment       = 1;
+        if ( grep( { $GetParam{'AttachmentDirectoryID'} eq $_ } @{$Attachments->{$CurrKey}} ) ) {
+            $IsAttachment     = 1;
+            $AttributeKeyName = $CurrKey;
+            last;
         }
     }
 
-    # if CustomerViewable set for customer
-    if ( !$IsCustomerViewable ) {
+    $IsCustomerViewable = $Self->_CIAttributeIsCustomerViewable(
+        XMLDefinition => $XMLDefinition,
+        Key           => $AttributeKeyName,
+    );
+
+    if (
+        $Self->{UserType} eq 'Customer'
+        && !$IsCustomerViewable
+    ) {
         return $Self->{LayoutObject}->ErrorScreen(
             Message => "No access is given to download attachment!",
             Comment => 'Please contact the admin.',
@@ -149,6 +158,57 @@ sub Run {
             Comment => 'Please contact the admin.',
         );
     }
+}
+
+=item _CIAttributeIsCustomerViewable
+
+returns if a CIattribute defined by its Key is customer visible. Note, that this is requires
+the attribute key to be unique within the CI-class definition. It must not occur in various
+document paths.
+
+    my $IsCustomerVisible = _CIAttributeIsCustomerViewable(
+       XMLDefinition => @SomeXMLDefinition,
+       Key           => 'SomeKeyName',
+    );
+
+Returns:
+
+    my $IsVisible = 0 || 1;
+
+=cut
+
+sub  _CIAttributeIsCustomerViewable {
+    my ( $Self, %Param ) = @_;
+
+    # check required params...
+    return 0 if !$Param{Key};
+    return 0 if !$Param{XMLDefinition};
+    return 0 if ref $Param{XMLDefinition} ne 'ARRAY';
+
+    ITEM:
+    for my $Item ( @{ $Param{XMLDefinition} } ) {
+
+        if(
+            $Item->{Key}
+            && $Item->{Key} eq $Param{Key}
+        ) {
+            return $Item->{CustomerViewable} || '0';
+        }
+
+        # check if item should be shown in customer frontend
+        next ITEM if !$Item->{CustomerViewable};
+
+        if ( $Item->{Sub} ) {
+            my $SubResult = $Self->_CIAttributeIsCustomerViewable (
+                XMLDefinition => $Item->{Sub},
+                Key           => $Param{Key},
+            );
+
+            return $SubResult if defined $SubResult;
+        }
+    }
+
+    return;
 }
 
 1;

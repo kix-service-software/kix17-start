@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -70,7 +70,7 @@ sub new {
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-	# ddoerffel - some business code removed
+    # ddoerffel - some business code removed
 
     return $Self;
 }
@@ -164,7 +164,7 @@ sub CreateSessionID {
         return;
     }
 
-	# ddoerffel - some business code removed
+    # ddoerffel - some business code removed
 
     return $Self->{Backend}->CreateSessionID(%Param);
 }
@@ -181,7 +181,7 @@ session can't get deleted)
 sub RemoveSessionID {
     my ( $Self, %Param ) = @_;
 
-	# ddoerffel - some business code removed
+    # ddoerffel - some business code removed
 
     return $Self->{Backend}->RemoveSessionID(%Param);
 }
@@ -303,7 +303,7 @@ cleanup of sessions in your system
 sub CleanUp {
     my ( $Self, %Param ) = @_;
 
-	# ddoerffel - some business code removed
+    # ddoerffel - some business code removed
 
     return $Self->{Backend}->CleanUp(%Param);
 }

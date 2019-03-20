@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -109,8 +109,10 @@ sub Run {
 
     # get ticket data...
     my %Ticket = $Self->{TicketObject}->TicketGet(
-        TicketID => $Param{Data}->{TicketID},
-        UserID   => 1,
+        TicketID      => $Param{Data}->{TicketID},
+        DynamicFields => 0,
+        Silent        => 1,
+        UserID        => 1,
     );
 
     if ( !%Ticket ) {

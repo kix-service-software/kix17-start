@@ -56,7 +56,7 @@
 
 .BigButtons a:not(.Disabled):hover,
 .BigButtons a.Active {
-	background-color: #e5e5e5;
+    background-color: #e5e5e5;
     border-color: #999;
 }
 
@@ -81,13 +81,13 @@
 }
 
 .BigButtons a span {
-	color: #555;
+    color: #555;
 }
 
 .BigButtons a i {
-	font-size: 25px;
-	color: #bbb;
-	margin-bottom: 5px;
+    font-size: 25px;
+    color: #bbb;
+    margin-bottom: 5px;
 }
 
 .PreviewWidget {
@@ -103,12 +103,12 @@
 }
 
 .PreviewContainer .Preview {
-	width: 70%;
-	background: #eee;
-	height: 300px;
+    width: 70%;
+    background: #eee;
+    height: 300px;
     padding: 10px 0px;
-	margin: 20px auto;
-	border: 1px solid #ddd;
+    margin: 20px auto;
+    border: 1px solid #ddd;
 }
 
 .PreviewContainer .Preview .Error,
@@ -170,21 +170,21 @@
 
 .PreviewContainer .CallForAction.Left,
 .PreviewContainer .CallForAction.Right {
-	position: absolute;
-	top: 50%;
-	margin-top: -30px;
-	left: 50px;
-	text-align: center;
+    position: absolute;
+    top: 50%;
+    margin-top: -30px;
+    left: 50px;
+    text-align: center;
 }
 
 .PreviewContainer .CallForAction.Right {
-	left: auto;
-	right: 50px;
+    left: auto;
+    right: 50px;
 }
 
 .PreviewContainer .CallForAction.Bottom {
-	display: block;
-	margin: 0px auto 20px auto;
+    display: block;
+    margin: 0px auto 20px auto;
 }
 
 .WidgetSimple fieldset legend {
@@ -229,9 +229,9 @@ fieldset legend a {
 }
 
 .PreviewContainer #PreviewCanvas {
-	width: 100%;
-	margin: 15px 0px;
-	height: 300px;
+    width: 100%;
+    margin: 15px 0px;
+    height: 300px;
 }
 
 .PreviewContainer .PreviewTable {
@@ -241,7 +241,7 @@ fieldset legend a {
 }
 
 .PreviewContainer .PreviewTable td {
-	white-space: nowrap;
+    white-space: nowrap;
 }
 
 #EditDialog {

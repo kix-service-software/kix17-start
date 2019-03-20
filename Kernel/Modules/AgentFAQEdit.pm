@@ -1,11 +1,14 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::Modules::AgentFAQEdit;
@@ -547,7 +550,53 @@ sub Run {
             FormID => $FormID,
         );
 
-        # build a lookup lookup hash of the new attachments
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+        # Get all existing attachments.
+        my @ExistingAttachments = $FAQObject->AttachmentIndex(
+            ItemID     => $GetParam{ItemID},
+            ShowInline => 1,
+            UserID     => $Self->{UserID},
+        );
+
+        # Lookup old inline attachments (initially loaded to AgentFAQEdit.pm screen)
+        # and push to Attachments array if they still exist in the form.
+        ATTACHMENT:
+        for my $Attachment (@ExistingAttachments) {
+
+            next ATTACHMENT if !$Attachment->{Inline};
+
+            NUMBER:
+            for my $Number ( 1 .. 6 ) {
+
+                if (
+                    $FAQData{ 'Field' . $Number }
+                    =~ m{ Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=$GetParam{ItemID};FileID=$Attachment->{FileID} }msx
+                    )
+                {
+
+                    # Get the existing inline attachment data.
+                    my %File = $FAQObject->AttachmentGet(
+                        ItemID => $GetParam{ItemID},
+                        FileID => $Attachment->{FileID},
+                        UserID => $Self->{UserID},
+                    );
+
+                    push @Attachments, {
+                        Content     => $File{Content},
+                        ContentType => $File{ContentType},
+                        Filename    => $File{Filename},
+                        Filesize    => $File{Filesize},
+                        Disposition => 'inline',
+                        FileID      => $Attachment->{FileID},
+                    };
+
+                    last NUMBER;
+                }
+            }
+        }
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+
+        # Build a lookup hash of the new attachments.
         my %NewAttachment;
         for my $Attachment (@Attachments) {
 
@@ -565,21 +614,16 @@ sub Run {
             $NewAttachment{$Key} = $Attachment;
         }
 
-        # get all existing attachments, without inline attachments
-        my @ExistingAttachments = $FAQObject->AttachmentIndex(
-            ItemID     => $GetParam{ItemID},
-            ShowInline => 0,
-            UserID     => $Self->{UserID},
-        );
-
-        # check the existing attachments
+        # Check the existing attachments.
         ATTACHMENT:
         for my $Attachment (@ExistingAttachments) {
 
             # the key is the filename + filesize + content type
             # (no content id, as existing attachments don't have it)
             my $Key = $Attachment->{Filename}
-                . $Attachment->{Filesize}
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+                . $Attachment->{FilesizeRaw}
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
                 . $Attachment->{ContentType};
 
             # attachment is already existing, we can delete it from the new attachment hash
@@ -610,7 +654,9 @@ sub Run {
 
             # check if attachment is an inline attachment
             my $Inline = 0;
-            if ( $Attachment->{ContentID} ) {
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+            if ( $Attachment->{Disposition} eq 'inline' ) {
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
 
                 # remember that it is inline
                 $Inline = 1;
@@ -628,8 +674,17 @@ sub Run {
                     # skip empty fields
                     next NUMBER if !$Field;
 
-                    # skip fields that do not contain the content id
-                    next NUMBER if $Field !~ m{ $Attachment->{ContentID} }xms;
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+                    # Skip if the field is not new (added) or old (initially loaded) inline attachment.
+                    if (
+                        $Field !~ m{ $Attachment->{ContentID} }xms
+                        && $Field
+                        !~ m{ Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=$GetParam{ItemID};FileID=$Attachment->{FileID} }xms
+                        )
+                    {
+                        next NUMBER;
+                    }
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
 
                     # found the content id
                     $ContentIDFound = 1;
@@ -1023,9 +1078,11 @@ sub _MaskNew {
 This software is part of the KIX project
 (L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
-LICENSE for license information (AGPL). If you did not receive this file, see
-
-<https://www.gnu.org/licenses/agpl.txt>.
+This software comes with ABSOLUTELY NO WARRANTY. This program is
+licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+For details, see the enclosed files LICENSE (AGPL) and
+LICENSE-GPL3 (GPL3) for license information. If you did not receive
+this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
+<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
 
 =cut

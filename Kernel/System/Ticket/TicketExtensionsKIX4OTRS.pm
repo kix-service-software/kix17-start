@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1736,21 +1736,23 @@ sub TicketAccountedTimeDelete {
     # check needed stuff
     for my $Needed (qw(TicketID)) {
         if ( !$Param{$Needed} ) {
-            $Kernel::OM->Get('Kernel::System::Log')
-                ->Log( Priority => 'error', Message => "Need $Needed!" );
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!"
+            );
             return;
         }
     }
 
     # db query
     if ( $Param{ArticleID} ) {
-        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
             SQL => 'DELETE FROM time_accounting WHERE ticket_id = ? AND article_id = ?',
             Bind => [ \$Param{TicketID}, \$Param{ArticleID} ],
         );
     }
     else {
-        return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
             SQL  => 'DELETE FROM time_accounting WHERE ticket_id = ?',
             Bind => [ \$Param{TicketID} ],
         );

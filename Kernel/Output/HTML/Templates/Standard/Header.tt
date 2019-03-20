@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -24,9 +24,6 @@
 [% RenderBlockStart("ToolBarItem") %]
             <li class="[% Data.Class | html %]"><a href="[% Data.Link %]" target="[% Data.Target | html %]" accesskey="[% Data.AccessKey | html %]" title="[% Translate(Data.Description) | html %]: [% Data.Count | html %][% Data.AccessKeyReference | html %]">[% Translate(Data.Description) | html %] <i class="icon-small fa fa-clock-o icon-show-reached"></i> <i class="icon-small fa fa-star icon-show-new"></i><i class="[% Data.Icon | html %]"></i> <span class="Counter">[% Data.Count | html %]</span> </a></li>
 [% RenderBlockEnd("ToolBarItem") %]
-# KIX4OTRS-capeIT
-# content moved
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("ToolBarSearchProfile") %]
             <li class="Extended SearchProfile">
                 <form action="[% Env("CGIHandle") %]" method="post" name="SearchProfile">
@@ -34,7 +31,6 @@
                     <input type="hidden" name="Subaction" value="LoadProfile"/>
                     <input type="hidden" name="SearchTemplate" value="[% Translate("Search") | html %]"/>
                     [% Data.Link %]
-#                    <a href="#" id="ToolbarProfileSearch" title="[% Translate(Data.Description) | html %]  ([% Data.AccessKey | html %])" accesskey="[% Data.AccessKey | html %]" [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a>
                 </form>
             </li>
 [% WRAPPER JSOnDocumentComplete %]
@@ -56,7 +52,6 @@
                     <input type="hidden" name="SearchTemplate" value="[% Translate("Search") | html %]"/>
                     <input type="hidden" name="CheckTicketNumberAndRedirect" value="1"/>
                     <input type="text" size="[% Data.Size | html %]" name="Fulltext" id="Fulltext" value="[% Data.Fulltext | html %]" placeholder="[% Translate(Data.Description) | html %]" title="[% Translate(Data.Description) | html %]"/>
-#                    <a href="#" id="ToolbarFulltextSearch" title="[% Translate(Data.Description) | html %] ([% Data.AccessKey | html %])" accesskey="[% Data.AccessKey | html %]" [% Data.LinkOption %]>[% Translate(Data.Name) | html %]</a>
                 </form>
             </li>
 [% RenderBlockEnd("ToolBarSearchFulltext") %]
@@ -116,7 +111,6 @@ if ($('#ToolBar li.Extended.SearchFulltext').length) {
 [% RenderBlockEnd("DebugRTLButton") %]
         </ul>
     </div>
-# KIX4OTRS-capeIT
     <div id="UserInfo">
 [% RenderBlockStart("Login") %]
         <a class="PreferencesButton" href="[% Env("Baselink") %]Action=AgentPreferences" title="[% Translate("Edit personal preferences") | html %]">
@@ -130,4 +124,9 @@ if ($('#ToolBar li.Extended.SearchFulltext').length) {
         </a>
 [% RenderBlockEnd("Logout") %]
     </div>
-# EO KIX4OTRS-capeIT
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.UI.SystemMessage.Init('Header', null, null);
+//]]></script>
+[% END %]

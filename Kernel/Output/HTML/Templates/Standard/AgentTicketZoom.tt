@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -28,9 +28,7 @@
 
     <div class="LayoutFixedSidebar SidebarLast">
         <div class="SidebarColumn">
-# KIX4OTRS-capeIT
            [% Data.KIXSidebarContent %]
-# EO KIX4OTRS-capeIT
         </div>
         <div class="ContentColumn OverflowVisible">
             <div class="ControlRow">
@@ -49,10 +47,7 @@
 [% RenderBlockStart("TicketMenu") %]
                             <li id="nav-[% Data.Name | replace(' ', '-') | html %]">
                             [% IF Data.Type == 'Cluster' %]
-# KIX4OTRS-capeIT
-#                                <span class="[% Data.Class %]" >[% Translate(Data.Name) | html %] <i class="fa fa-caret-down"></i></span>
                                 <span class="[% Data.Class %]" title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %] </span><span class="MenuClusterIcon"><i class="fa fa-caret-down"></span></i>
-# EO KIX4OTRS-capeIT
                             [% ELSE %]
                                 <a href="[% Env("Baselink") %][% Data.Link | Interpolate %]" class="[% Data.Class %]" [% Data.LinkParam %] title="[% Translate(Data.Description) | html %]">[% Translate(Data.Name) | html %]</a>
                             [% END %]
@@ -97,10 +92,7 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
                                     <input type="hidden" name="Action" value="AgentTicketMove"/>
                                     <input type="hidden" name="QueueID" value="[% Data.QueueID | html %]"/>
                                     <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
-# KIX4OTRS-capeIT
-#                            <label for="DestQueueID" class="InvisibleText">[% Translate("Queue") | html %]:</label>
                             <label for="DestQueueID" class="Text">[% Translate("Queue") | html %]:</label>
-# EO KIX4OTRS-capeIT
                             [% Data.MoveQueuesStrg %]
                         </form>
 [% WRAPPER JSOnDocumentComplete %]
@@ -119,15 +111,29 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
                                 <a href="[% Env("Baselink") %]Action=AgentTicketMove;TicketID=[% Data.TicketID | uri %];" class="AsPopup PopupType_TicketAction" title="[% Translate("Change Queue") | html %]">[% Translate("Queue") | html %]</a>
                             </li>
 [% RenderBlockEnd("MoveForm") %]
+[% RenderBlockStart("QuickStateLink") %]
+                            <li class="[% Data.Class | html %]">
+                                <form title="[% Translate("") | html %]" action="[% Env("CGIHandle") %]" method="post">
+                                    <input type="hidden" name="Action" value="AgentTicketQuickState"/>
+                                    <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
+                                    <label for="QuickStateID" class="Text">[% Translate("QuickState") | html %]:</label>
+                                    [% Data.QuickStateStrg %]
+                                </form>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#QuickStateID').bind('change', function (Event) {
+        if ($('#QuickStateID option:selected').val() !== '0' ) {
+            $(this).closest('form').submit();
+        }
+    });
+//]]></script>
+[% END %]
+                            </li>
+[% RenderBlockEnd("QuickStateLink") %]
                 </ul>
                 <div class="Clear"></div>
             </div>
 
-# KIX4OTRS-capeIT
-# moved content into separate tab
-# EO KIX4OTRS-capeIT
-
-# KIX4OTRS-capeIT
 # initalize tab view
             <div id="ContentItemTabs">
                 <ul>
@@ -210,7 +216,6 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
     });
 //]]></script>
 [% END %]
-# EO KIX4OTRS-capeIT
             </div>
         </div>
         <div class="Clear"></div>

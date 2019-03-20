@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -32,7 +32,7 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-	$Self->{MainObject} = $Kernel::OM->Get('Kernel::System::Main');
+    $Self->{MainObject} = $Kernel::OM->Get('Kernel::System::Main');
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -53,9 +53,9 @@ sub new {
             }
         }
     }
-	
-	# init RAM cache
-	$Self->{Cache} = {};
+
+    # init RAM cache
+    $Self->{Cache} = {};
 
     return $Self;
 }
@@ -77,16 +77,18 @@ sub Set {
     my $Result = $Self->_FileRead(
         Type => $Param{Type},
     );
-    return if !IsHashRefWithData($Self->{Cache}->{$Param{Type}});
+    return if !IsHashRefWithData( $Self->{Cache}->{ $Param{Type} } );
 
-    my $TTL = time() + $Param{TTL};     # do not move this into the hash below, since this will result in about 5000 Ops/s less
-	$Self->{Cache}->{$Param{Type}}->{IsDirty} = 1;
-	$Self->{Cache}->{$Param{Type}}->{Content}->{$Param{Key}} = {
-		Value => $Param{Value},
-		TTL   => $TTL,
-	};
-	
-	return 1;
+    my $TTL = time()
+        + $Param{TTL}
+        ;    # do not move this into the hash below, since this will result in about 5000 Ops/s less
+    $Self->{Cache}->{ $Param{Type} }->{IsDirty} = 1;
+    $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} } = {
+        Value => $Param{Value},
+        TTL   => $TTL,
+    };
+
+    return 1;
 }
 
 sub Get {
@@ -95,27 +97,30 @@ sub Get {
     # check needed stuff
     for (qw(Type Key)) {
         if ( !defined $Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "Need $_!" );
+            $Kernel::OM->Get('Kernel::System::Log')
+                ->Log( Priority => 'error', Message => "Need $_!" );
             return;
         }
     }
 
     # read the file (if necessary)
-	my $Result = $Self->_FileRead(
-		Type => $Param{Type},
-	);
-    return if !IsHashRefWithData($Self->{Cache}->{$Param{Type}}->{Content});
+    my $Result = $Self->_FileRead(
+        Type => $Param{Type},
+    );
+    return if !IsHashRefWithData( $Self->{Cache}->{ $Param{Type} }->{Content} );
 
     # check TTL
-    if ($Self->{Cache}->{$Param{Type}}->{Content}->{$Param{Key}}->{TTL} && $Self->{Cache}->{$Param{Type}}->{Content}->{$Param{Key}}->{TTL} < time()) {
-        delete $Self->{Cache}->{$Param{Type}}->{Content}->{$Param{Key}};
+    if (   $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} }->{TTL}
+        && $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} }->{TTL} < time() )
+    {
+        delete $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} };
     }
 
-	if (IsHashRefWithData($Self->{Cache}->{$Param{Type}}->{Content}->{$Param{Key}})) {
-	    return $Self->{Cache}->{$Param{Type}}->{Content}->{$Param{Key}}->{Value};
-	}
-	
-	return;
+    if ( IsHashRefWithData( $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} } ) ) {
+        return $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} }->{Value};
+    }
+
+    return;
 }
 
 sub Delete {
@@ -124,63 +129,68 @@ sub Delete {
     # check needed stuff
     for (qw(Type Key)) {
         if ( !defined $Param{$_} ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log( Priority => 'error', Message => "Need $_!" );
+            $Kernel::OM->Get('Kernel::System::Log')
+                ->Log( Priority => 'error', Message => "Need $_!" );
             return;
         }
     }
 
     # read the file (if necessary)
-	my $Result = $Self->_FileRead(
-		Type => $Param{Type},
-	);
-	return if !IsHashRefWithData($Self->{Cache}->{$Param{Type}});
+    my $Result = $Self->_FileRead(
+        Type => $Param{Type},
+    );
+    return if !IsHashRefWithData( $Self->{Cache}->{ $Param{Type} } );
 
-    delete $Self->{Cache}->{$Param{Type}}->{Content}->{$Param{Key}};
+    delete $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} };
 }
 
 sub CleanUp {
     my ( $Self, %Param ) = @_;
 
-	# get main object
-	my @FileList = $Self->{MainObject}->DirectoryRead(
-		Directory => $Self->{CacheDirectory},
-		Filter    => $Param{Type} || '*',
-	);
-	
-	foreach my $File (@FileList) {
-		$Self->{MainObject}->FileDelete(
-			Directory => $Self->{CacheDirectory},
-			Filename  => $Param{Type},
-		);
-	}
+    # get main object
+    my @FileList = $Self->{MainObject}->DirectoryRead(
+        Directory => $Self->{CacheDirectory},
+        Filter => $Param{Type} || '*',
+    );
+
+    foreach my $File (@FileList) {
+        $Self->{MainObject}->FileDelete(
+            Directory => $Self->{CacheDirectory},
+            Filename  => $Param{Type},
+        );
+    }
 }
 
 sub _FileRead {
     my ( $Self, %Param ) = @_;
 
-    
-    # check and retrieve file if exists and the memory cache has not been loaded for this this or the file on the disk has been modified in the meantime
+# check and retrieve file if exists and the memory cache has not been loaded for this this or the file on the disk has been modified in the meantime
     my $CacheFile = "$Self->{CacheDirectory}/$Param{Type}";
-    if (-f $CacheFile && (!$Self->{Cache}->{$Param{Type}} || $Self->{Cache}->{$Param{Type}}->{FileMTime} < (stat($CacheFile))[9])) {
+    if (
+        -f $CacheFile
+        && (  !$Self->{Cache}->{ $Param{Type} }
+            || $Self->{Cache}->{ $Param{Type} }->{FileMTime} < ( stat($CacheFile) )[9] )
+        )
+    {
 
-        $Self->{Cache}->{$Param{Type}}->{IsDirty} = 0;
-        $Self->{Cache}->{$Param{Type}}->{FileMTime} = (stat($CacheFile))[9];
-        $Self->{Cache}->{$Param{Type}}->{Content} = lock_retrieve($CacheFile); 
+        $Self->{Cache}->{ $Param{Type} }->{IsDirty}   = 0;
+        $Self->{Cache}->{ $Param{Type} }->{FileMTime} = ( stat($CacheFile) )[9];
+        $Self->{Cache}->{ $Param{Type} }->{Content}   = lock_retrieve($CacheFile);
     }
 
-	return 1;
+    return 1;
 }
 
 sub DESTROY {
     my $Self = shift;
 
-	# write all dirty types to file
-	foreach my $Type (keys %{$Self->{Cache}}) {
-		next if !$Self->{Cache}->{$Type}->{IsDirty};
-		
-		# store data to file
-        lock_store($Self->{Cache}->{$Type}->{Content}, "$Self->{CacheDirectory}/$Type");
-   	}
+    # write all dirty types to file
+    foreach my $Type ( keys %{ $Self->{Cache} } ) {
+        next if !$Self->{Cache}->{$Type}->{IsDirty};
+
+        # store data to file
+        lock_store( $Self->{Cache}->{$Type}->{Content}, "$Self->{CacheDirectory}/$Type" );
+    }
 
     return 1;
 }

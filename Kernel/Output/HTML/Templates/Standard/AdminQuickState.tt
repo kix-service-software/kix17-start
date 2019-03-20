@@ -1,0 +1,501 @@
+# --
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
+    <h1>[% Translate("Quick State Management") | html %]</h1>
+
+    <div class="SidebarColumn">
+
+[% RenderBlockStart("ActionList") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2><span>[% Translate("Actions") | html %]</span></h2>
+            </div>
+            <div class='Content'>
+                <ul class="ActionList">
+[% RenderBlockStart("ActionOverview") %]
+                    <li>
+                        <a href='[% Env("Baselink") %]Action=[% Env("Action") | html %];[% Env("ChallengeTokenParam") | html %][% Data.Session | html %]' class="CallForAction Fullsize Center"><span><i class="fa fa-caret-left"></i>[% Translate("Go to overview") | html %]</span></a>
+                    </li>
+[% RenderBlockEnd("ActionOverview") %]
+[% RenderBlockStart("ActionSearch") %]
+                    <li>
+                        <form class="SearchBox" action="[% Env("CGIHandle") %]" method="post">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value="Search"/>
+                            <input type="text" name="Search" value="[% Data.Search | html %]" id="Search" title="[% Translate("Search") | html %]"/>
+                            <button type="submit" value="[% Translate("Search") | html %]" title="[% Translate("Search") | html %]"><i class="fa fa-search"></i></button>
+                        </form>
+                        <p class="FieldExplanation">
+                            [% Translate("Wildcards like '*' are allowed.") | html %]
+                        </p>
+                    </li>
+[% RenderBlockEnd("ActionSearch") %]
+[% RenderBlockStart("ActionAdd") %]
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post">
+                            <input type="hidden" name="Action" value='[% Env("Action") %]'/>
+                            <input type="hidden" name="Subaction" value="Add"/>
+                            <button class="CallForAction Fullsize Center" type="submit" value="[% Translate("Add") | html %]">
+                                <span><i class="fa fa-plus-square"></i>[% Translate("Add Quick State") | html %]</span>
+                            </button>
+                        </form>
+                    </li>
+[% RenderBlockEnd("ActionAdd") %]
+                </ul>
+            </div>
+        </div>
+[% RenderBlockStart("ActionImport") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2><span>[% Translate("Import") | html %]</span></h2>
+            </div>
+            <div class="Content">
+                <p class="FieldExplanation">
+                    [% Translate("Here you can upload a configuration file to import a Quick State to your system. The file needs to be in .yml format as exported by this module.") | html %]
+                </p>
+                <ul class="ActionList">
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value="Import"/>
+                            <input name="FileUpload" id="FileUpload" type="file" size="18" class="Fixed W100pc SpacingTop Validate_Required [% Data.FileUploadInvalid | html %]"/>
+                            <div id="FileUploadError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="FileUploadServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <fieldset class="SpacingTop">
+                                <input type="checkbox" id="OverwriteExistingEntitiesImport" name="OverwriteExistingEntities" value="1" checked="checked" />
+                                <label for="OverwriteExistingEntitiesImport">[% Translate("Overwrite existing entities") | html %]</label>
+                            </fieldset>
+                            <button class="CallForAction Fullsize Center SpacingTop" type="submit" value="[% Translate("Upload Quick State") | html %]">
+                                <span><i class="fa fa-upload"></i>[% Translate("Import Quick State") | html %]</span>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+[% RenderBlockEnd("ActionImport") %]
+[% RenderBlockEnd("ActionList") %]
+    </div>
+
+    <div class="ContentColumn">
+[% RenderBlockStart("Overview") %]
+        <div class="WidgetSimple">
+            <div class="Header">
+                <h2><span>[% Translate("List") | html %]</span></h2>
+[% RenderBlockStart("ContextSettings") %]
+                <ul class="ContextFunctions">
+                    <li class="ContextSettings">
+                        <a href="#" id="ShowContextSettingsDialog" title="[% Translate("Settings") | html %]">
+                            <i class="fa fa-cog"></i>
+                            <span>[% Translate("Settings") | html %]</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div id="ContextSettingsDialogContainer" class="Hidden">
+                    <form action="[% Env("CGIHandle") %]" method="post" id="ContextSettingsDialog">
+                        <input type="hidden" name="Action" value="AgentPreferences"/>
+                        <input type="hidden" name="Subaction" value="Update"/>
+                        <input type="hidden" name="Group" value="[% Data.Group | html %]"/>
+                        <input type="hidden" name="RedirectURL" value="[% Data.RequestedURL | html %]"/>
+                        <fieldset class="TableLike">
+                            <label for="[% Data.PreferencesKey | html %]">[% Translate("Quick States per page") | html %]:</label>
+                            <div class="Field">
+                                [% Data.PageShownString %]
+                            </div>
+                            <div class="Clear"></div>
+                        </fieldset>
+                    </form>
+                </div>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('#ShowContextSettingsDialog').bind('click', function (Event) {
+    Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainer'), [% Translate("Settings") | JSON %], '20%', 'Center', true,
+        [
+            {
+                Label: [% Translate("Submit") | JSON %],
+                Type: 'Submit',
+                Class: 'Primary'
+            }
+        ]
+    );
+    Event.preventDefault();
+    Event.stopPropagation();
+    return false;
+});
+//]]></script>
+[% END %]
+[% RenderBlockEnd("ContextSettings") %]
+
+            </div>
+            <div class="Content">
+                <div class="QuickStatePagination">
+                    <span class="Pagination">
+[% RenderBlockStart("OverviewNavBarPageNavBar") %]
+                        [% Data.ResultLong %]
+                        [% Data.SiteNavBarLong %]
+[% RenderBlockEnd("OverviewNavBarPageNavBar") %]
+                    </span>
+                </div>
+                <div class="Clear"></div>
+                <div class="QuickStateContent">
+                    <table class="DataTable">
+                        <thead>
+                            <tr>
+                                <th>[% Translate("Name") | html %]</th>
+                                <th>[% Translate("Validity") | html %]</th>
+                                <th>[% Translate("Created") | html %]</th>
+                                <th>[% Translate("Changed") | html %]</th>
+                                <th>[% Translate("Export") | html %]</th>
+                                <th>[% Translate("Delete") | html %]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+[% RenderBlockStart("OverviewResultRow") %]
+                            <tr class="[% Data.Invalid %]">
+                                <td><a class="AsBlock" href='[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Change;ID=[% Data.ID | uri %];[% Env("ChallengeTokenParam") | html %][% Data.Session | html %]'>[% Data.Name | html %]</a></td>
+                                <td>[% Translate(Data.Valid) | html %]</td>
+                                <td>[% Data.Created | Localize("TimeShort") %]</td>
+                                <td>[% Data.Changed | Localize("TimeShort") %]</td>
+                                <td class="Center">
+                                    <a title='[% Translate("Export") | html %]' href='[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Export;ID=[% Data.ID | uri %];Search=[% Data.Search | uri %];[% Env("ChallengeTokenParam") | html %][% Data.Session | html %]'>
+                                        <i class="fa fa-download"></i>
+                                        <span class="InvisibleText">[% Translate("Export") | html %]</span>
+                                    </a>
+                                </td>
+                                <td class="Center">
+                                    <a title='[% Translate("Delete") | html %]' href='[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Delete;ID=[% Data.ID | uri %];[% Env("ChallengeTokenParam") | html %][% Data.Session | html %]' onclick="javascript:return ConfirmDeletion('[% Data.ID | html %]', '[% Data.Name | html %]');">
+                                        <i class="fa fa-trash-o"></i>
+                                        <span class="InvisibleText">[% Translate("Delete") | html %]</span>
+                                    </a>
+                                </td>
+                            </tr>
+[% RenderBlockEnd("OverviewResultRow") %]
+                        </tbody>
+                    </table>
+                    <div id="CopyQuickStateDialogContainer" class="Hidden">
+                        <form action="[% Env("CGIHandle") %]" method="post" id="CopyQuickStateDialog" class="Validate PreventMultipleSubmits">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value="Copy"/>
+                            <input type="hidden" name="ID" value=""/>
+                            <fieldset class="TableLike">
+                                <label class="Mandatory" for="CopyName"><span class="Marker">*</span>[% Translate("Name of copy") | html %]:</label>
+                                <div class="Field">
+                                    <input type="text" id="CopyName" name="CopyName" value="" maxlength="200" class="Validate_Required"/>
+                                </div>
+                                <div class="Clear"></div>
+                            </fieldset>
+                            <div id="CopyNameError" class="Error Hidden">
+                                <p>[% Translate("A Quick State with this name already exists!") | html %]</p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+<script type="text/javascript">//<![CDATA[
+    function ConfirmDeletion(ID, Name) {
+        return confirm(
+            '[% Translate("Confirm deletion of") | html %] "'
+            + Name
+            + '" (ID '
+            + ID
+            + ')'
+        );
+    };
+//]]></script>
+[% RenderBlockEnd("Overview") %]
+[% RenderBlockStart("OverviewEdit") %]
+        <form action="[% Env("CGIHandle") %]" method="post" name="compose" class="Validate PreventMultipleSubmits">
+            <div class="WidgetSimple">
+                <div class="Header">
+                    <h2><span>[% Translate("Settings") | html %]</span></h2>
+                </div>
+                <div class="Content">
+                    <fieldset class="TableLike">
+                        <input type="hidden" name="Action" value="[% Env("Action") %]" />
+                        <input type="hidden" name="Subaction" value="[% Data.Subaction | html %]Action" />
+                        <input type="hidden" name="ID" value="[% Data.ID | html %]" />
+                        <input type="hidden" name="FormID" value="[% Data.FormID | html %]" />
+                        <input type="hidden" id="UsedPending" name="UsedPending" value="[% Data.UsedPending %]" />
+
+                        <label class="Mandatory" for="Name"><span class="Marker">*</span> [% Translate("Name") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" id="Name" name="Name" class="W50pc Validate_Required [% Data.NameInvalid %]" value="[% Data.Name %]"/>
+                            <div id="NameError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="NameServerError" class="TooltipErrorMessage">
+[% RenderBlockStart("NameServerError") %]
+                                <p>[% Translate("This field is required.") | html %]</p>
+[% RenderBlockEnd("NameServerError") %]
+[% RenderBlockStart("ExistNameServerError") %]
+                                <p>[% Translate("A quick state with this name already exists!") | html %]</p>
+[% RenderBlockEnd("ExistNameServerError") %]
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+                        <label class="Mandatory" for="StateID"><span class="Marker">*</span> [% Translate("State") | html %]:</label>
+                        <div class="Field">
+                            [% Data.StateIDOption %]
+                            <div id="StateIDError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="StateIDServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+                        <label for="PendingTime" class="HidePendingTimeInput">[% Translate("Pending time in the future") | html %]:</label>
+                        <div class="Field HidePendingTimeInput">
+                            <input type="text" id="PendingTime" name="PendingTime" value="[% Data.PendingTime %]" class="W25pc" />
+                            [% Data.PendingFormatIDOption %]
+                            <p class="FieldExplanation">[% Translate("For all pending* states.") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("The specified time is added to the current time when using a quick status with a pending state. (Default: 1 Day)") | html %]</p>
+                            <p class="FieldExplanation">[% Translate("Use 0 if no adjustment of the pending time is required.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
+                        <label class="Mandatory"  for="ValidID"><span class="Marker">*</span> [% Translate("Validity") | html %]:</label>
+                        <div class="Field">
+                            [% Data.ValidIDOption %]
+                            <div id="ValidIDError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="ValidIDServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+                        <label class="SpacingTop" for="UsedArticle">[% Translate("Add Article") | html %]:</label>
+                        <div class="Field SpacingTop">
+                            <input type="checkbox" id="UsedArticle" name="UsedArticle" value="1" [% Data.UsedArticleChecked %] />
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+
+                    <fieldset class="TableLike [% Data.UsedArticleClass %]" id="ArticleBox">
+                        <label class="Mandatory" for="Subject"><span class="Marker">*</span> [% Translate("Subject") | html %]:</label>
+                        <div class="Field">
+                            <input type="text" id="Subject" name="Subject" class="W50pc [% Data.SubjectRequired %] [% Data.SubjectInvalid %]" value="[% Data.Subject %]"/>
+                            <div id="SubjectError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                            <div id="SubjectServerError" class="TooltipErrorMessage">
+                                <p>[% Translate("This field is required.") | html %]</p>
+                            </div>
+                        </div>
+                        <div class="Clear"></div>
+                        <label class="Mandatory" for="Body"><span class="Marker">*</span> [% Translate("Text") | html %]:</label>
+                        <div id="RichTextField" class="RichTextField">
+
+[% RenderBlockStart("RichText") %]
+[% InsertTemplate("RichTextEditor.tt") %]
+[% RenderBlockEnd("RichText") %]
+
+                            <textarea id="Body" class="RichText [% Data.BodyRequired %] [% Data.BodyInvalid | html %]" name="Body" title="[% Translate("Message body") | html %]" rows="15" cols="[% Config("Ticket::Frontend::TextAreaEmail") %]">[% Data.Body | html %]</textarea>
+                            <div id="BodyError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="BodyServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <label for="ArticleTypeID">[% Translate("Note type") | html %]:</label>
+                        <div class="Field">
+                            [% Data.ArticleTypeIDOption %]
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="WidgetSimple SpacingTop">
+                <div class="Header">
+                     <h2><span>[% Translate("Save Changes") | html %]</span></h2>
+                </div>
+                <div class="Content">
+                    <fieldset class="TableLike">
+                        <div class="Field SpacingTop">
+                            <button class="Primary CallForAction" type="submit" value="[% Translate("Submit") | html %]"><span>[% Translate("Submit") |  html %]</span></button>
+                            [% Translate("or") | html %]
+                            <a href="[% Env("Baselink") %]Action=[% Env("Action") %]">[% Translate("Cancel") | html %]</a>
+                        </div>
+                        <div class="Clear"></div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="WidgetSimple SpacingTop Collapsed">
+                <div class="Header">
+                    <div class="WidgetAction Toggle">
+                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
+                    </div>
+                    <h2 class="PaddingLeft15px"><span>[% Translate("Tag Reference") | html %]</span></h2>
+                </div>
+
+                <div class="Content">
+
+
+                    <p>[% Translate("You can use the following tags") | html %]:</p>
+
+                    <dl>
+                        <dt><code>&lt;KIX_AGENT_SUBJECT[20]&gt;</code></dt>
+                        <dd>
+                            [% Translate("To get the first 20 character of the subject (of the latest agent article).") | html %]
+                        </dd>
+
+                        <dt><code>&lt;KIX_AGENT_BODY[5]&gt;</code></dt>
+                        <dd>
+                            [% Translate("To get the first 5 lines of the body (of the latest agent article).") | html %]
+                        </dd>
+
+                        <dt><code>&lt;KIX_AGENT_*&gt;</code></dt>
+                        <dd>
+                            [% Translate("To get the article attribute") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_AGENT_From&gt;, &lt;KIX_AGENT_To&gt;, &lt;KIX_AGENT_Cc&gt;</code>).
+                        </dd>
+
+                        <dt><code>&lt;KIX_CUSTOMER_SUBJECT[20]&gt;</code></dt>
+                        <dd>
+                            [% Translate("To get the first 20 character of the subject (of the latest customer article).") | html %]
+                        </dd>
+
+                        <dt><code>&lt;KIX_CUSTOMER_BODY[5]&gt;</code></dt>
+                        <dd>
+                            [% Translate("To get the first 5 lines of the body (of the latest customer article).") | html %]
+                        </dd>
+
+                        <dt><code>&lt;KIX_CUSTOMER_REALNAME&gt;</code></dt>
+                        <dd>
+                            [% Translate("To get the name of the ticket's contact (if given).") | html %]
+                        </dd>
+
+                        <dt><code>&lt;KIX_CUSTOMER_*&gt;</code></dt>
+                        <dd>
+                            [% Translate("To get the article attribute") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_CUSTOMER_From&gt;, &lt;KIX_CUSTOMER_To&gt;,
+                            &lt;KIX_CUSTOMER_Cc&gt;</code>).
+                        </dd>
+
+                        <dt><code>&lt;KIX_CUSTOMER_DATA_*&gt;</code></dt>
+                        <dd>
+                            [% Translate("Attributes of the current contact data") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_CUSTOMER_DATA_UserFirstname&gt;</code>).
+                        </dd>
+
+                        <dt><code>&lt;KIX_OWNER_*&gt;</code> [% Translate("or") | html %] <code>&lt;KIX_TICKET_OWNER_*&gt;</code></dt>
+                        <dd>
+                            [% Translate("Attributes of the current ticket owner user data") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_OWNER_UserFirstname&gt;</code> [% Translate("or") | html %] <code>&lt;KIX_TICKET_OWNER_UserFirstname&gt;</code>).
+                        </dd>
+
+                        <dt><code>&lt;KIX_RESPONSIBLE_*&gt;</code> [% Translate("or") | html %] <code>&lt;KIX_TICKET_RESPONSIBLE_*&gt;</code></dt>
+                        <dd>
+                            [% Translate("Attributes of the current ticket responsible user data") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_RESPONSIBLE_UserFirstname&gt;</code> [% Translate("or") | html %] <code>&lt;KIX_TICKET_RESPONSIBLE_UserFirstname&gt;</code>).
+                        </dd>
+
+                        <dt><code>&lt;KIX_CURRENT_*&gt;</code></dt>
+                        <dd>
+                            [% Translate("Attributes of the current agent user who requested this action") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_CURRENT_UserFirstname&gt;</code>).
+                        </dd>
+
+                        <dt><code>&lt;KIX_*&gt;</code> [% Translate("or") | html %] <code>&lt;KIX_NOTIFICATION_RECIPIENT_*&gt;</code></dt>
+                        <dd>
+                            [% Translate("Attributes of the recipient user for the notification") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_UserFullname&gt;</code> [% Translate("or") | html %] <code>&lt;KIX_NOTIFICATION_RECIPIENT_UserFullname&gt;</code>).
+                        </dd>
+
+                        <dt><code>&lt;KIX_TICKET_*&gt;</code></dt>
+                        <dd>
+                            [% Translate("Attributes of the ticket data") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_TICKET_TicketNumber&gt;, &lt;KIX_TICKET_TicketID&gt;,
+                            &lt;KIX_TICKET_Queue&gt;, &lt;KIX_TICKET_State&gt;</code>).
+                        </dd>
+
+                        <dt><code>&lt;KIX_TICKET_DynamicField_*&gt;</code></dt>
+                        <dd>
+                            [% Translate("Ticket dynamic fields internal key values") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_TICKET_DynamicField_TestField&gt;,
+                            &lt;KIX_TICKET_DynamicField_TicketFreeText1&gt;</code>).
+                        </dd>
+
+                        <dt><code>&lt;KIX_TICKET_DynamicField_*_Value&gt;</code></dt>
+                        <dd>
+                            [% Translate("Ticket dynamic fields display values, useful for Dropdown and Multiselect fields") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_TICKET_DynamicField_TestField_Value&gt;,
+                            &lt;KIX_TICKET_DynamicField_TicketFreeText1_Value&gt;</code>).
+                        </dd>
+
+                        <dt><code>&lt;KIX_CONFIG_*&gt;</code></dt>
+                        <dd>
+                            [% Translate("Config options") | html %]
+                            ([% Translate(" e. g.") | html %] <code>&lt;KIX_CONFIG_HttpType&gt;</code>).
+                        </dd>
+                    </dl>
+
+                    <p class="SpacingTop">
+                        [% Translate("Example") | html %]:
+                    </p>
+                    <label for="SubjectExample">[% Translate("Subject") | html %]</label>:
+                    <input type="text" name="SubjectExample" id="SubjectExample" value="Ticket Created: &lt;KIX_TICKET_Title&gt;" size="80" maxlength="80" readonly />
+                    <br/>
+                    <label for="ResponseExample">[% Translate("Text") | html %]</label>:
+                    <br/>
+                    <textarea rows="12" cols="70" name="ResponseExample" id="ResponseExample" readonly>
+Hi &lt;KIX_NOTIFICATION_RECIPIENT_UserFirstname&gt;,
+
+ticket [&lt;KIX_CONFIG_TicketHook&gt;&lt;KIX_TICKET_TicketNumber&gt;] has been created in queue &lt;KIX_TICKET_Queue&gt;.
+
+&lt;KIX_CUSTOMER_REALNAME&gt; wrote:
+&lt;KIX_CUSTOMER_Body[30]&gt;
+
+&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentTicketZoom;TicketID=&lt;KIX_TICKET_TicketID&gt;
+
+-- &lt;KIX_CONFIG_NotificationSenderName&gt;
+                    </textarea>
+                </div>
+            </div>
+        </form>
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.Agent.TicketAction.Init();
+    Core.Agent.HidePendingTimeInput.Init([% Data.HideStates %],'StateID');
+
+    $('#PendingTime').on('keypress keyup blur', function() {
+        $(this).val( $(this).val().replace(/[^\d]/g,''));
+    });
+
+    $('#StateID').on('change', function() {
+        if ( $('#PendingTime').is(':visible') ) {
+            $('#UsedPending').val('1');
+        } else {
+            $('#UsedPending').val('0');
+        }
+    });
+
+    $('#UsedArticle').on('click', function(){
+        if ( !$(this).is(':checked') ) {
+            $('#Subject').removeClass('Validate_Required');
+            $('#Body').removeClass('Validate_Required');
+            $('#ArticleBox').addClass('Hidden');
+        } else {
+            $('#Subject').addClass('Validate_Required');
+            $('#Body').addClass('Validate_Required');
+            $('#ArticleBox').removeClass('Hidden');
+            Core.UI.InputFields.Init();
+        }
+    });
+//]]></script>
+[% END %]
+[% RenderBlockEnd("OverviewEdit") %]
+    </div>
+    <div class="Clear"></div>
+</div>

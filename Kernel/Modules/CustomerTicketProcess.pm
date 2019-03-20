@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -438,6 +438,7 @@ sub _RenderAjax {
     # run acl to prepare TicketAclFormData
     my $ACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %{ $Param{GetParam} },
+        Action         => $Self->{Action},
         ReturnType     => 'Ticket',
         ReturnSubType  => '-',
         Data           => {},
@@ -535,7 +536,7 @@ sub _RenderAjax {
                 {
                     Name        => 'DynamicField_' . $DynamicFieldConfig->{Name},
                     Data        => $DataValues,
-                    SelectedID  => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
+                    SelectedID  => $DynamicFieldValues{ $DynamicFieldConfig->{Name} } // $DynamicFieldConfig->{Config}->{DefaultValue},
                     Translation => $DynamicFieldConfig->{Config}->{TranslatableValues} || 0,
                     Max         => 100,
                 }
@@ -1153,6 +1154,7 @@ sub _GetParam {
     # run acl to prepare TicketAclFormData
     my $ACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %GetParam,
+        Action         => $Self->{Action},
         DynamicField   => \%DynamicFieldCheckParam,
         ReturnType     => 'Ticket',
         ReturnSubType  => '-',

@@ -1,5 +1,65 @@
 # Change log of KIX
-* Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de/
+* Copyright (C) 2006-2019 c.a.p.e. IT GmbH, http://www.cape-it.de/
+
+# 17.5.0 (2019/03/20)
+ * (2019/03/20) - productive release
+
+# 17.5.0-RC7 (2019/03/19)
+ * (2019/03/19) - Bugfix: T2019011590000712 (fixed internal server error by permission check of using quick state) (fjacquemin)
+ * (2019/03/19) - Bugfix: T2019011590001301 (removed permission configuration of dashboard system message) (fjacquemin)
+
+# 17.5.0-RC6 (2019/03/13)
+ * (2019/03/12) - Bugfix: T2019011590001122 (ConfigItemLinkGraph configuration controls show/hide of linked CIs) (millinger)
+ * (2019/03/12) - Bugfix: T2019010890001369 (fixed incorrected return after sub attrbute check) (fjacquemin)
+ * (2019/03/12) - Bugfix: T2018112690000551 (fixed missing cache delete if using ArticleTypeNotLike) (fjacquemin)
+ * (2019/03/12) - Bugfix: T2019011590000712 (fixed missing check of the parameter Config if this is defined at the import quick state) (fjacquemin)
+ * (2019/03/12) - Bugfix: T2019011590000712 (fixed typing error on Kernel::OM in QuickState delete) (fjacquemin)
+ * (2019/03/08) - Bugfix: T2018102390000709 (prevent log entry for deleted tickets) (millinger)
+
+# 17.5.0-RC5 (2019/03/07)
+ * (2019/03/07) - Bugfix: T20190115900001301 (fixed missing JSON object declaration in system message dashboard) (fjacquemin)
+ * (2019/03/06) - Bugfix: T2019011590000712 (fixed internal server error if used quick state) (fjacquemin)
+ * (2019/03/06) - Bugfix: T2019011590000712 (fixed missing translation in quick state module) (fjacquemin)
+
+# 17.5.0-RC4 (2019/03/05)
+ * (2019/03/05) - CR: T20190115900001301 (added removal preference of mark as seen if changed message entry) (fjacquemin)
+ * (2019/03/05) - Bugfix: T2019011590001301 (fixed missing challenge token if using delete or edit a message from dashboard) (fjacquemin)
+ * (2019/03/05) - CR: T2019011590001301 (changed sorted message list by creation time) (fjacquemin)
+ * (2019/03/05) - CR: T2019011590001301 (Changed naming and translation of system message) (fjacquemin)
+
+# 17.5.0-RC3 (2019/02/26)
+ * (2019/02/18) - Bugfix: T2019010890001369 (fixed missing download of attachments when using CIAttachment as sub) (fjacquemin)
+ * (2019/02/18) - Bugfix: T2018112690000551 (fixed incorrected cache key if using ArticleTypeNotLike) (fjacquemin)
+ * (2019/02/18) - Bugfix: T2019012290000888 (fixed missing parameter change of the placeholder) (fjacquemin)
+ * (2019/02/15) - Bugfix: T2018102390000709 (fixed ticket deletion with package specific ticket data references) (millinger)
+ * (2019/02/15) - Bugfix: T2019011590001122 (added missing translations for sysconfig descriptions) (millinger)
+
+# 17.5.0-RC2 (2019/02/07)
+ * (2019/02/07) - CR: T2019011590001301 (added system message) (fjacquemin)
+ * (2019/02/06) - Bugfix: T2019011590000712 (fixed wrong column naming of table kix_quick_state and kix_quick_state_attachment) (fjacquemin)
+ * (2019/02/05) - CR: T2019013090000621 (Updated copyright header) (millinger)
+ * (2019/02/04) - Bugfix: T2018121390000653 (customer ticket process not opening in new window) (ddoerffel)
+ * (2019/02/01) - Bugfix: T2017060790001132 (validate dynamic field administration before disable form) (millinger)
+ * (2019/02/01) - Bugfix: T2017092790000466 (show default value after a dynamic field was hidden before) (millinger)
+ * (2019/02/01) - Bugfix: T2019012190000791 (fixed soap handling of config items with empty sub array) (millinger)
+ * (2019/02/01) - Bugfix: T2018112890000431 (common ticket action can not update ticket type with acl restriction) (millinger)
+ * (2019/02/01) - Bugfix: T2019012190000488 (merged security fixes from OTRS) (millinger)
+ * (2019/02/01) - Bugfix: T2018120690000907 (dynamic field customer constriction dont work at customer frontend) (millinger)
+ * (2019/01/30) - CR: T2018102590000831 (function to load all services in AdminQuickTicketConfigurator) (millinger)
+ * (2019/01/29) - Bugfix: T2019011790000665 (dymanic fields not shown in agent ticket move) (ddoerffel)
+ * (2019/01/28) - CR: T2018102290000818 (support multiple classes for config item class reference) (millinger)
+ * (2019/01/25) - Bugfix: T2019011590000712 (changed create/edit layout of quick state) (fjacquemin)
+ * (2019/01/22) - Bugfix: T2019011590000712 (fixed wrong column naming of table kix_quick_state and kix_quick_state_attachment) (fjacquemin)
+ * (2019/01/18) - CR: T2019011590001122 (implemended own deployment state restriction for itsm link graph) (millinger)
+
+# 17.5.0-RC1 (2019/01/21)
+ * (2019/01/18) - CR: T2019011590000712 (added QuickState Modules) (fjacquemin)
+ * (2019/01/18) - Bugfix: T2018111590000802 (fixed ConfigItemSearchExtended with empty param 'What') (millinger)
+ * (2019/01/08) - CR: T2018121890000859 (updated version of packed cpan-lib PDF::API2) (millinger)
+ * (2018/12/21) - Bugfix: T2018071990000661 (merged faq edit fixes from OTRS) (fjacquemin)
+ * (2018/12/21) - Bugfix: T2018110290000756 (fixed missing removal of single/double qute in mail address) (fjacquemin)
+ * (2018/12/17) - Bugfix: T2018110690000196 (fixed missing action parameter to transfer for TicketACL) (fjacquemin)
+ * (2018/12/13) - Bugfix: T2018120590000721 (fixed missing check of available templates if used OutputFilterPre) (fjacquemin)
 
 # 17.4.1 (2018/12/20)
  * (2018/12/20) - productive release

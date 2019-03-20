@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1005,13 +1005,9 @@ sub ArticleLastCustomerArticle {
 
     # get article index
     my @Index = $Self->ArticleIndex(
-        TicketID   => $Param{TicketID},
-        SenderType => 'customer',
-
-        # KIX4OTRS-capeIT
+        TicketID           => $Param{TicketID},
+        SenderType         => 'customer',
         ArticleTypeNotLike => '%internal',
-
-        # EO KIX4OTRS-capeIT
     );
 
     # get article data
@@ -1123,6 +1119,13 @@ sub ArticleIndex {
 
     my $CacheKey = 'ArticleIndex::' . $Param{TicketID} . '::' . ( $Param{SenderType} || 'ALL' );
 
+    if ( $Param{ArticleTypeNotLike} ) {
+        my $NOTLike = $Param{ArticleTypeNotLike};
+        $NOTLike =~ s/\%//gm;
+        $CacheKey .= '::'
+            . $NOTLike;
+    }
+
     if ($UseCache) {
         my $Cached = $Kernel::OM->Get('Kernel::System::Cache')->Get(
             Type => $Self->{CacheType},
@@ -1132,14 +1135,12 @@ sub ArticleIndex {
         if ( ref $Cached eq 'ARRAY' ) {
             return @{$Cached};
         }
-
     }
 
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     # db query
-    # KIX4OTRS-capeIT
     if ( $Param{SenderType} && $Param{ArticleTypeNotLike} ) {
         return if !$DBObject->Prepare(
             SQL => '
@@ -1154,8 +1155,6 @@ sub ArticleIndex {
     }
     elsif ( $Param{SenderType} ) {
 
-        # if ( $Param{SenderType} ) {
-        # EO KIX4OTRS-capeIT
         return if !$DBObject->Prepare(
             SQL => '
                 SELECT art.id FROM article art, article_sender_type ast
@@ -3037,94 +3036,6 @@ sub ArticleAccountedTimeDelete {
     return 1;
 }
 
-1;
-
-# the following is the pod for Kernel/System/Ticket/ArticleStorage*.pm
-
-=item ArticleDelete()
-
-delete an article, its plain message, and all attachments
-
-    my $Success = $TicketObject->ArticleDelete(
-        ArticleID => 123,
-        UserID    => 123,
-    );
-
-=item ArticleDeletePlain()
-
-delete a plain article
-
-    my $Success = $TicketObject->ArticleDeletePlain(
-        ArticleID => 123,
-        UserID    => 123,
-    );
-
-=item ArticleDeleteAttachment()
-
-delete all attachments of an article
-
-    my $Success = $TicketObject->ArticleDeleteAttachment(
-        ArticleID => 123,
-        UserID    => 123,
-    );
-
-=item ArticleWritePlain()
-
-write a plain email to storage
-
-    my $Success = $TicketObject->ArticleWritePlain(
-        ArticleID => 123,
-        Email     => $EmailAsString,
-        UserID    => 123,
-    );
-
-=item ArticlePlain()
-
-get plain article/email
-
-    my $PlainMessage = $TicketObject->ArticlePlain(
-        ArticleID => 123,
-        UserID    => 123,
-    );
-
-=item ArticleWriteAttachment()
-
-write an article attachment to storage
-
-    my $Success = $TicketObject->ArticleWriteAttachment(
-        Content            => $ContentAsString,
-        ContentType        => 'text/html; charset="iso-8859-15"',
-        Filename           => 'lala.html',
-        ContentID          => 'cid-1234',   # optional
-        ContentAlternative => 0,            # optional, alternative content to shown as body
-        Disposition        => 'attachment', # or 'inline'
-        ArticleID          => 123,
-        UserID             => 123,
-    );
-
-=item ArticleAttachment()
-
-get article attachment (Content, ContentType, Filename and optional ContentID, ContentAlternative)
-
-    my %Attachment = $TicketObject->ArticleAttachment(
-        ArticleID => 123,
-        FileID    => 1,   # as returned by ArticleAttachmentIndex
-        UserID    => 123,
-    );
-
-returns:
-
-    my %Attachment = (
-        Content            => "xxxx",     # actual attachment contents
-        ContentAlternative => "",
-        ContentID          => "",
-        ContentType        => "application/pdf",
-        Filename           => "StdAttachment-Test1.pdf",
-        Filesize           => "4.6 KBytes",
-        FilesizeRaw        => 4722,
-        Disposition        => 'attachment',
-    );
-
 =item ArticleAttachmentIndex()
 
 get article attachment index as hash
@@ -3326,6 +3237,93 @@ sub ArticleAttachmentIndex {
 
     return %Attachments;
 }
+
+# the following is the pod for Kernel/System/Ticket/ArticleStorage*.pm
+
+=item ArticleDelete()
+
+delete an article, its plain message, and all attachments
+
+    my $Success = $TicketObject->ArticleDelete(
+        ArticleID => 123,
+        UserID    => 123,
+    );
+
+=item ArticleDeletePlain()
+
+delete a plain article
+
+    my $Success = $TicketObject->ArticleDeletePlain(
+        ArticleID => 123,
+        UserID    => 123,
+    );
+
+=item ArticleDeleteAttachment()
+
+delete all attachments of an article
+
+    my $Success = $TicketObject->ArticleDeleteAttachment(
+        ArticleID => 123,
+        UserID    => 123,
+    );
+
+=item ArticleWritePlain()
+
+write a plain email to storage
+
+    my $Success = $TicketObject->ArticleWritePlain(
+        ArticleID => 123,
+        Email     => $EmailAsString,
+        UserID    => 123,
+    );
+
+=item ArticlePlain()
+
+get plain article/email
+
+    my $PlainMessage = $TicketObject->ArticlePlain(
+        ArticleID => 123,
+        UserID    => 123,
+    );
+
+=item ArticleWriteAttachment()
+
+write an article attachment to storage
+
+    my $Success = $TicketObject->ArticleWriteAttachment(
+        Content            => $ContentAsString,
+        ContentType        => 'text/html; charset="iso-8859-15"',
+        Filename           => 'lala.html',
+        ContentID          => 'cid-1234',   # optional
+        ContentAlternative => 0,            # optional, alternative content to shown as body
+        Disposition        => 'attachment', # or 'inline'
+        ArticleID          => 123,
+        UserID             => 123,
+    );
+
+=item ArticleAttachment()
+
+get article attachment (Content, ContentType, Filename and optional ContentID, ContentAlternative)
+
+    my %Attachment = $TicketObject->ArticleAttachment(
+        ArticleID => 123,
+        FileID    => 1,   # as returned by ArticleAttachmentIndex
+        UserID    => 123,
+    );
+
+returns:
+
+    my %Attachment = (
+        Content            => "xxxx",     # actual attachment contents
+        ContentAlternative => "",
+        ContentID          => "",
+        ContentType        => "application/pdf",
+        Filename           => "StdAttachment-Test1.pdf",
+        Filesize           => "4.6 KBytes",
+        FilesizeRaw        => 4722,
+        Disposition        => 'attachment',
+    );
+=cut
 
 1;
 

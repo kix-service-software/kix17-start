@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -74,8 +74,6 @@ sub OTRSInit {
     # caching can be disabled for debugging reasons
     $Self->{CachingEnabled} = $Kernel::OM->Get('Kernel::Config')->Get('Frontend::TemplateCache') // 1;
 
-    # KIXCore-capeIT
-    #
     # Pre-compute the list of not cacheable Templates. If a pre-output filter is
     #   registered for a particular or for all templates, the template cannot be
     #   cached any more.
@@ -130,7 +128,6 @@ EOF
         keys %UncacheableTemplates;
 
     $Self->{UncacheableTemplates} = \%UncacheableTemplates;
-    # EO KIXCore-capeIT
 }
 
 =item _fetch()
@@ -155,17 +152,12 @@ sub _fetch {
 
     $self->debug("_fetch($name)") if $self->{DEBUG};
 
-    # KIXCore-capeIT
     my $TemplateIsCacheable = !$self->{UncacheableTemplates}->{ALL} && !$self->{UncacheableTemplates}->{$t_name};
-    # EO KIXCore-capeIT
 
     # Check in-memory template cache if we already had this template.
     $self->{_TemplateCache} //= {};
 
-    # KIXCore-capeIT
-    # if ( $self->{_TemplateCache}->{$name} ) {
     if ( $TemplateIsCacheable && $self->{_TemplateCache}->{$name} ) {
-    # EO KIXCore-capeIT
         return $self->{_TemplateCache}->{$name};
     }
 
@@ -175,10 +167,7 @@ sub _fetch {
     }
 
     # Check if the template exists, is cacheable and if a cached version exists.
-    # KIXCore-capeIT
-    # if ( -e $name && $self->{CachingEnabled} ) {
     if ( -e $name && $TemplateIsCacheable && $self->{CachingEnabled} ) {
-    # EO KIXCore-capeIT
 
         my $template_mtime = $self->_template_modified($name);
         my $CacheKey       = $self->_compiled_filename($name) . '::' . $template_mtime;
@@ -230,9 +219,7 @@ sub _fetch {
         return ( $template, $error );
     }
 
-    # KIXCore-capeIT
     if ($TemplateIsCacheable) {
-    # EO KIXCore-capeIT
 
         # Make sure template cache does not get too big
         if ( keys %{ $self->{_TemplateCache} } > 1000 ) {
@@ -240,9 +227,7 @@ sub _fetch {
         }
 
         $self->{_TemplateCache}->{$name} = $template->{data};
-    # KIXCore-capeIT
     }
-    # EO KIXCore-capeIT
 
     return $template->{data};
 
@@ -413,10 +398,7 @@ sub _PreProcessTemplateContent {
 
     } until ( !$Replaced || ++$ReplaceCounter > 100 );
 
-    # KIXCore-capeIT
-    #
     # pre putput filter handling
-    #
     if ( $Self->{FilterElementPre} && ref $Self->{FilterElementPre} eq 'HASH' ) {
 
         # extract filter list
@@ -459,10 +441,9 @@ EOF
 
             # only operate on real files
             next FILTER if !$Param{TemplateFile};
+            next FILTER if !$TemplateList{ $TemplateFileWithoutTT };
 
             # check template list
-            # KIXCore-capeIT
-            # next FILTER if !$TemplateList{$TemplateFileWithoutTT};
             my $Match = 0;
             for my $Template ( keys %TemplateList ) {
                 if ( $TemplateFileWithoutTT =~ m/$Template/ ) {
@@ -470,7 +451,6 @@ EOF
                 }
             }
             next FILTER if !$Match;
-            # EO KIXCore-capeIT
 
             # check filter construction
             next FILTER if !$Kernel::OM->Get('Kernel::System::Main')->Require( $FilterConfig->{Module} );
@@ -490,7 +470,6 @@ EOF
             );
         }
     }
-    # EO KIXCore-capeIT
 
     #
     # Remove DTL-style comments (lines starting with #)

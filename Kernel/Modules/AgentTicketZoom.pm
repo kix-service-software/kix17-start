@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -125,22 +125,9 @@ sub new {
         );
     }
 
-    # KIX4OTRS-capeIT
-    # removed: create additional objects for process management
-    # EO KIX4OTRS-capeIT
-
     # get zoom settings depending on ticket type
-    $Self->{DisplaySettings} = $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom");
-
-    # KIX4OTRS-capeIT
-    # removed: mapping of history types
-    # removed: time-line config
-    # EO KIX4OTRS-capeIT
-
-    # KIX4OTRS-capeIT
+    $Self->{DisplaySettings}  = $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom");
     $Self->{DirectLinkAnchor} = $ParamObject->GetParam( Param => 'DirectLinkAnchor' ) || '';
-
-    # EO KIX4OTRS-capeIT
 
     return $Self;
 }
@@ -183,20 +170,17 @@ sub Run {
         DynamicFields => 1,
     );
 
-    # KIX4OTRS-capeIT
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
     my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $Config =
-        $ConfigObject->Get('Ticket::Frontend::AgentTicketZoom');
+    my $Config             = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoom');
 
     # customer info
     my %TicketCustomerData = ();
     if (
         $ConfigObject->Get('Ticket::Frontend::CustomerInfoZoom')
         && $Ticket{CustomerUserID}
-        )
-    {
+    ) {
         %TicketCustomerData = $CustomerUserObject->CustomerUserDataGet(
             User => $Ticket{CustomerUserID},
         );
@@ -207,8 +191,6 @@ sub Run {
     if ( !$Param{SelectedTab} ) {
         $Param{SelectedTab} = '0';
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get ACL restrictions
     my %PossibleActions;
@@ -279,8 +261,7 @@ sub Run {
                 $ConfigObject->Get('Ticket::Responsible')
                 && $Self->{UserID} == $Ticket{ResponsibleID}
             )
-            )
-        {
+        ) {
 
             # Always use user id 1 because other users also have to see the important flag
             my %ArticleFlag = $TicketObject->ArticleFlagGet(
@@ -314,12 +295,6 @@ sub Run {
             OP => "Action=AgentTicketZoom;TicketID=$Self->{TicketID};ArticleID=$Self->{ArticleID}",
         );
     }
-
-    # get param object
-    # KIX4OTRS-capeIT
-    # moved content upwards
-    # my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-    # EO KIX4OTRS-capeIT
 
     # mark shown article as seen
     if ( $Self->{Subaction} eq 'MarkAsSeen' ) {
@@ -418,7 +393,6 @@ sub Run {
         }
 
         # write the session
-
         # save default filter settings to user preferences
         if ($SaveDefaults) {
             $UserObject->SetPreferences(
@@ -464,7 +438,6 @@ sub Run {
         );
     }
 
-    # KIX4OTRS-capeIT
     # update position
     elsif ( $Self->{Subaction} eq 'UpdatePosition' ) {
 
@@ -504,12 +477,6 @@ sub Run {
         );
     }
 
-    # EO KIX4OTRS-capeIT
-
-    # KIX4OTRS-capeIT
-    # removed: article filter handling
-    # EO KIX4OTRS-capeIT
-
     # generate output
     my $Output = $LayoutObject->Header(
         Value    => $Ticket{TicketNumber},
@@ -517,14 +484,10 @@ sub Run {
     );
     $Output .= $LayoutObject->NavigationBar();
     $Output .= $Self->MaskAgentZoom(
-        Ticket    => \%Ticket,
-        AclAction => \%AclAction,
-
-        # KIX4OTRS-capeIT
+        Ticket       => \%Ticket,
+        AclAction    => \%AclAction,
         CustomerData => \%TicketCustomerData,
         SelectedTab  => $Param{SelectedTab},
-
-        # EO KIX4OTRS-capeIT
     );
     $Output .= $LayoutObject->Footer();
     return $Output;
@@ -538,14 +501,10 @@ sub MaskAgentZoom {
 
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
-    # KIX4OTRS-capeIT
     my %CustomerData = %{ $Param{CustomerData} };
 
     # the next is needed, otherwise the tabs will have no TicketID parameter in merged tickets
     $Param{TicketID} = $Ticket{TicketID};
-
-    # EO KIX4OTRS-capeIT
 
     # else show normal ticket zoom view
     # fetch all move queues
@@ -578,14 +537,11 @@ sub MaskAgentZoom {
     # get cofig object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    # KIX4OTRS-capeIT
     # get user preferences
     my %Preferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
 
     # set display options
     $Param{Hook} = $ConfigObject->Get('Ticket::Hook') || 'Ticket#';
-
-    # EO KIX4OTRS-capeIT
 
     # generate shown articles
     my $Limit = $ConfigObject->Get('Ticket::Frontend::MaxArticlesPerPage');
@@ -615,9 +571,7 @@ sub MaskAgentZoom {
         $Page = 1;
     }
 
-    # KIX4OTRS-capeIT
     $Param{ArticlePage} = $Page;
-    # EO KIX4OTRS-capeIT
 
     # We need to find out whether pagination is actually necessary.
     # The easiest way would be count the articles, but that would slow
@@ -636,7 +590,7 @@ sub MaskAgentZoom {
         UserID                     => $Self->{UserID},
         Limit                      => $Limit + $Extra,
         Order                      => $Order,
-        DynamicFields => 0,    # fetch later only for the article(s) to display
+        DynamicFields              => 0,      # fetch later only for the article(s) to display
         %{ $Self->{ArticleFilter} // {} },    # limit by ArticleSenderTypeID/ArticleTypeID
 
     );
@@ -818,11 +772,7 @@ sub MaskAgentZoom {
         @ArticleBoxShown = @ArticleBox;
     }
 
-    # KIX4OTRS-capeIT
-    # removed: article tree
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
-    # EO KIX4OTRS-capeIT
 
     # age design
     $Ticket{Age} = $LayoutObject->CustomerAge(
@@ -833,15 +783,10 @@ sub MaskAgentZoom {
     # number of articles
     $Param{ArticleCount} = scalar @ArticleBox;
 
-    # KIX4OTRS-capeIT
-    # if ( $ConfigObject->Get('Ticket::UseArticleColors') ) {
     if ( $ConfigObject->Get('Ticket::UseArticleColors') && $Preferences{UserUseArticleColors} ) {
-
-        # EO KIX4OTRS-capeIT
         $Param{UseArticleColors} = 1;
     }
 
-    # KIX4OTRS-capeIT
     # load KIXSidebar
     my $Config =
         $ConfigObject->Get('Ticket::Frontend::AgentTicketZoom');
@@ -854,8 +799,6 @@ sub MaskAgentZoom {
 
     # check if CKEditor is activated
     $Param{RichTextEditorActivated} = $LayoutObject->{BrowserRichText};
-
-    # EO KIX4OTRS-capeIT
 
     $LayoutObject->Block(
         Name => 'Header',
@@ -917,7 +860,7 @@ sub MaskAgentZoom {
                 Link  => '#',
                 Class => 'ClusterLink',
                 Items => $MenuClusters{$Cluster}->{Items},
-                }
+            };
         }
 
         # display all items
@@ -957,11 +900,8 @@ sub MaskAgentZoom {
             CurrentQueueID => $Ticket{QueueID},
         );
 
-        # KIX4OTRS-capeIT
         # replace class W75pc with W75 - causes no line break
         $Param{MoveQueuesStrg} =~ s/W75pc/W75/;
-
-        # EO KIX4OTRS-capeIT
     }
     my %AclActionLookup = reverse %AclAction;
     if (
@@ -992,8 +932,41 @@ sub MaskAgentZoom {
         }
     }
 
-    # KIX4OTRS-capeIT
-    $Param{ZoomExpand} = $Self->{ZoomExpand};
+    if ( $ConfigObject->Get('Frontend::Module')->{AgentTicketQuickState} ) {
+        my $QuickStateConfig = $ConfigObject->Get('Ticket::Frontend::AdminQuickState');
+        my $Access           = $TicketObject->TicketPermission(
+            Type     => $QuickStateConfig->{Permissions} || 'rw',
+            TicketID => $Ticket{TicketID},
+            UserID   => $Self->{UserID},
+            LogNo    => 1,
+        );
+
+        if ( $Access ) {
+            my $QuickStateObject = $Kernel::OM->Get('Kernel::System::QuickState');
+            my %QuickStates      = $QuickStateObject->QuickStateList(
+                Valid => 1,
+            );
+
+            if ( %QuickStates ) {
+                $QuickStates{0}        = '- ' . $LayoutObject->{LanguageObject}->Translate('Selection') . ' -';
+                $Param{QuickStateStrg} = $LayoutObject->AgentQueueListOption(
+                    Name           => 'QuickStateID',
+                    Data           => \%QuickStates,
+                    Class          => 'Modernize Small',
+                );
+
+                $LayoutObject->Block(
+                    Name => 'QuickStateLink',
+                    Data => {
+                        %Param,
+                        %AclAction
+                    },
+                );
+            }
+        }
+    }
+
+    $Param{ZoomExpand}   = $Self->{ZoomExpand};
     $Param{ZoomTimeline} = $Self->{ZoomTimeline};
 
     # check if ticket is normal or process ticket
@@ -1061,14 +1034,12 @@ sub MaskAgentZoom {
             my $Count = '';
             if (
                 $BackendShortRef->{CountMethod}
-                &&
-                (
+                && (
                     $BackendShortRef->{CountMethod} =~ /CallMethod::(\w+)Object::(\w+)::(\w+)/
                     ||
                     $BackendShortRef->{CountMethod} =~ /CallMethod::(\w+)Object::(\w+)/
                 )
-                )
-            {
+            ) {
                 my $ObjectType = $1;
                 my $Method     = $2;
                 my $Hashresult = $3;
@@ -1173,9 +1144,6 @@ sub MaskAgentZoom {
                     },
                 );
             }
-
-            # EO KIX4OTRS-capeIT
-
         }
     }
 
@@ -1185,22 +1153,12 @@ sub MaskAgentZoom {
         Data => {%Param},
     );
 
-    # KIX4OTRS-capeIT
-    # removed: article flag handling
-    # removed: linked object table
-    # removed: sidebar content - done via sidebar plugin
-    # EO KIX4OTRS-capeIT
-
     # return output
     return $LayoutObject->Output(
         TemplateFile => 'AgentTicketZoom',
         Data => { %Param, %Ticket, %AclAction },
     );
 }
-
-# KIX4OTRS-capeIT
-# removed: article tree functions
-# EO KIX4OTRS-capeIT
 
 1;
 

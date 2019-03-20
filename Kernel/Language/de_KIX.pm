@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1395,6 +1395,10 @@ sub Data {
         'Defines which deployment states should not be shown in config item overview. Separate different states by comma.'
         }
         = 'Legt fest, welche Verwendungsstatus in der Übersicht nicht mit angezeigt werden sollen. Mehrere Werte werden durch Komma getrennt.';
+    $Lang->{
+        'Defines which deployment states should not be shown in config item link graph. Separate different states by comma.'
+        }
+        = 'Legt fest, welche Verwendungsstatus im Verknüpfungsgraph nicht mit angezeigt werden sollen. Mehrere Werte werden durch Komma getrennt.';
 
     $Lang->{'Only attributes of the following types are shown in the list'}
         = 'Nur Attribute folgender Typen werden in der Liste angezeigt';
@@ -4436,7 +4440,87 @@ sub Data {
     $Lang->{'Delete/Empty Ticket Attributes'} = 'Ticket-Attribute löschen/leeren';
     $Lang->{'Ticket Attributes'}              = 'Ticket-Attribute';
 
+    # Quick State
+    $Lang->{'QuickState'}             = 'Statuswechsel';
+    $Lang->{'Quick State'}            = 'Statuswechsel';
+    $Lang->{'Quick State Management'} = 'Statuswechsel Verwaltung';
+    $Lang->{'Add Quick State'}        = 'Statuswechsel hinzufügen';
+    $Lang->{'Quick States per page'}  = 'Statuswechsel pro Seite';
+    $Lang->{'Import Quick State'}     = 'Statuswechsel importieren';
+    $Lang->{'Quick State deleted!'}   = 'Statuswechsel wurde gelöscht!';
+    $Lang->{'Quick State added!'}     = 'Statuswechsel wurde hinzugefügt!';
+    $Lang->{'Quick State updated!'}   = 'Statuswechsel wurde aktualisiert!';
+    $Lang->{'Quick State imported!'}  = 'Statuswechsel wurde importiert!';
+    $Lang->{'Pending time in the future'}     = 'Wartezeit in der Zukunft';
+    $Lang->{'Quick State Overview Limit'}     = 'Übersichtsbegrenzung der Statuswechsel';
+    $Lang->{'Quick state limit per page for overview.'}   = 'Übersichtsbegrenzung pro Seite der Statuswechsel.';
+    $Lang->{'Quick State already exists! (Overwrite not used)'}
+        = 'Statuswechsel existiert bereits! (Überscheiben nicht verwendet)';
+    $Lang->{'Here you can upload a configuration file to import a Quick State to your system. The file needs to be in .yml format as exported by this module.'}
+        = 'Hier können Sie eine Konfigurationdatei hochladen, um einen Statuswechsel in Ihr System zu importieren. Die Datei muss im YAML-Format vorliegen, so wie sie vom Statuswechsel auch exportiert wird. ';
+    $Lang->{'Sorry, the quick state \'%s\' couldn\'t use. The current Ticket has the same state as the selected quick state or the quick state is invalid!'}
+        = 'Leider konnte der Statuswechsel \'%s\' nicht verwendet werden. Das aktuelle Ticket hat entweder den gleichen Status wie der ausgewählte Statuswechsel oder der Statuswechsel ist ungültig!';
+    $Lang->{'Please use a another quick state or contact the administrator.'}
+        = 'Bitte verwenden Sie einen anderen Statuswechsel oder wenden Sie sich an einen Administrator.';
+    $Lang->{'The specified time is added to the current time when using a quick status with a pending state. (Default: 1 Day)'}
+        = 'Die angegebene Zeit wird bei Verwendung eines Statuswechsels mit einem Wartestatus auf die aktuelle Zeit addiert. (Standard: 1 Tag)';
+    $Lang->{'Use 0 if no adjustment of the pending time is required.'}
+        = 'Verwenden Sie 0, wenn keine Anpassung der Wartezeit erforderlich ist.';
+    $Lang->{'Frontend module registration for the quick state in the admin interface.'}
+        = 'Frontend-Modulregistrierung für den Statuswechsel in der Admin-Oberfläche.';
+    $Lang->{'Defines the default article type of new quick state.'}
+        = 'Definiert den Standard-Artikeltyp für den neuen Statuswechsel.';
+    $Lang->{'Create and manage quick states.'}
+        = 'Statuswechsel erzeugen und verwalten.';
+    $Lang->{'Please contact the administrator.'}
+        = 'Wenden Sie sich bitte an einen Administrator.';
+    $Lang->{'The status couldn\'t be changed with the quick state \'%s\'!'}
+        = 'Der Status konnte mit dem gewähltem Statuswechsel \'%s\' nicht geändert werden!';
+    $Lang->{'It could not be created the corresponding article to the quick state \'%s\'!'}
+        = 'Es konnte nicht der entsprechende Artikel zum Statuswechsel \'%s\' erstellt werden!';
+
+    # System Message
+    $Lang->{'Defined modules in the blacklist are not displayed in the selection.'}
+        = 'Definierte Module in der Blacklist werden nicht in der Auswahl angezeigt.';
+    $Lang->{'Defines a restricted list of modules.'}
+        = 'Definiert eine eingeschränkte Modulliste.';
+    $Lang->{'Dis-/enables displaying the short text of a message entry.'}
+        = 'De-/aktiviert die Anzeige des Kurztextes eines Neuigkeiten Eintrages.';
+    $Lang->{'Dis-/enables displaying the author of a message entry.'}
+        = 'De-/aktiviert die Anzeige des Autor eines Neuigkeiten Eintrages.';
+    $Lang->{'Dis-/enables edit link in dashboard for author and users of group defined in "SystemMessage###GroupDashboard".'}
+        = 'De-/aktiviert den Bearbeitungslink im Dashboard für Autor und Benutzer einer Gruppe, die in "SystemMessage###GroupDashboard" definiert ist.';
+    $Lang->{'Dis-/enables delete link in dashboard for author and users of group defined in "SystemMessage###GroupDashboard".'}
+        = 'De-/aktiviert den Link zum Löschen im Dashboard für Autor und Benutzer einer Gruppe, die in "SystemMessage###GroupDashboard" definiert ist.';
+    $Lang->{'Defines the group name to which the user must belong to see edit/delete link if not author.'}
+        = 'Definiert den Gruppennamen, zu dem der Benutzer gehören muss, um den Link zum Bearbeiten/Löschen anzuzeigen, wenn er nicht autorisiert ist.';
+    $Lang->{'Allows the user to disable the message by clicking on "mark as read".'}
+        = 'Ermöglicht dem Benutzers die Neuigkeit zu deaktiveren bei Klick auf Als gelesen markieren".';
+    $Lang->{'Open message when user visits dashboard'}  = 'Neuigkeit öffnen wenn Agenten das Dashboard öffnen';
+    $Lang->{'Create and manage messages.'}              = 'Erstellt und verwaltet Neuigkeiten.';
+    $Lang->{'Message Overview Limit'}                   = 'Übersichtsbegrenzung der Neuigkeiten';
+    $Lang->{'Message limit per page for overview.'}     = 'Übersichtsbegrenzung pro Seite der Neuigkeiten.';
+
+    $Lang->{'Messages per page'}    = 'Neuigkeiten pro Seite';
+    $Lang->{'Mark as read'}         = 'Als gelesen markieren';
+    $Lang->{'Invalidation date'}    = 'Neuigkeit gültig bis';
+    $Lang->{'Validation date'}      = 'Neuigkeit gültig ab';
+    $Lang->{'Teaser'}               = 'Kurztext';
+    $Lang->{'Headline'}             = 'Überschrift';
+    $Lang->{'Add Message'}          = 'Neuigkeit hinzufügen';
+    $Lang->{'Messages Management'}  = 'Neuigkeiten Verwaltung';
+    $Lang->{'Short Text'}           = 'Kurztext';
+    $Lang->{'Valitiy'}              = 'Gültigkeit';
+    $Lang->{'Valid From'}           = 'Gültig ab';
+    $Lang->{'Valid To'}             = 'Gültig bis';
+    $Lang->{'Author'}               = 'Autor';
+    $Lang->{'Message added!'}       = 'Neuigkeit hinzugefügt!';
+    $Lang->{'Message updated!'}     = 'Neuigkeit aktualisiert!';
+    $Lang->{'Message deleted!'}     = 'Neuigkeit gelöscht!';
+    $Lang->{'Read this message'}    = 'Diese Neuigkeit lesen';
+    $Lang->{'Messages'}             = 'Neuigkeiten';
     # $$STOP$$
+
     return 0;
 }
 

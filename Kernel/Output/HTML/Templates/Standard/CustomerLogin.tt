@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -49,6 +49,36 @@
             <i class="fa fa-exclamation-circle"></i> [% Translate(Data.LoginMessage) | html %]
         </div>
 [% RenderBlockEnd("SystemMaintenance") %]
+
+[% RenderBlockStart("SystemMessage") %]
+            <div class="SystemMessageLoginBox">
+                <div class="Header Center">
+                    <h1>
+                       [% Translate("Messages") %]
+                    </h1>
+                </div>
+                <div class="Content">
+                    <table class="DataTable">
+                        <tbody>
+[% RenderBlockStart("SystemMessageRow") %]
+                            <tr class="SystemMessageOpenDialog" data-id="[% Data.MessageID %]" title="[% Translate("Read this message") %]">
+                                <td><i class="fa fa-eye"></i></td>
+                                <td>[% Data.Title | html %]</td>
+[% RenderBlockStart("SystemMessageTeaser") %]
+                                <td>[% Data.ShortText | html %]</td>
+[% RenderBlockEnd("SystemMessageTeaser") %]
+                            </tr>
+[% RenderBlockEnd("SystemMessageRow") %]
+                        </tbody>
+                    </table>
+                </div>
+[% WRAPPER JSOnDocumentComplete %]
+    <script type="text/javascript">//<![CDATA[
+        Core.UI.SystemMessage.Init('Login', null, null);
+    //]]></script>
+[% END %]
+            </div>
+[% RenderBlockEnd("SystemMessage") %]
 
 [% RenderBlockStart("PreLogin") %]
         <div id="PreLogin" class="PreLogin LoginBox">

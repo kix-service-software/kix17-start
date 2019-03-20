@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2018 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -18,7 +18,7 @@ our @ObjectDependencies = (
     'Kernel::System::GeneralCatalog',
     'Kernel::System::ITSMConfigItem',
     'Kernel::System::Log',
-    'Kernel::System::Web::Request'
+    'Kernel::System::Web::Request',
 );
 
 =head1 NAME
@@ -185,32 +185,71 @@ sub InputCreate {
         $Value = $Param{Item}->{Input}->{ValueDefault};
     }
 
-    if (
-        !$Param{Item}->{Input}->{ReferencedCIClassID}
-        && $Param{Item}->{Input}->{ReferencedCIClassName}
-        )
-    {
+    # get class list
+    my $ClassList = $Self->{GeneralCatalogObject}->ItemList(
+        Class => 'ITSM::ConfigItem::Class',
+    );
 
-        my $ItemDataRef = $Self->{GeneralCatalogObject}->ItemGet(
-            Class => 'ITSM::ConfigItem::Class',
-            Name  => $Param{Item}->{Input}->{ReferencedCIClassName},
+    # check for access rights on the classes
+    for my $ClassID ( sort keys %{$ClassList} ) {
+        my $HasAccess = $Self->{ConfigItemObject}->Permission(
+            Type    => 'ro',
+            Scope   => 'Class',
+            ClassID => $ClassID,
+            UserID  => $Self->{UserID} || 1,
         );
 
-        if ( !$ItemDataRef || !( $ItemDataRef->{ItemID} ) ) {
-            $Self->{LogObject}->Log(
-                Priority => 'error',
-                Message  => "ITSMConfigItemLayoutCIClassReference: CI-Class <"
-                    . $Param{Item}->{Input}->{ReferencedCIClassName}
-                    . "> not defined in GeneralCatalog!",
-            );
+        delete $ClassList->{$ClassID} if !$HasAccess;
+    }
+
+    my @ClassIDArray = ();
+    if ($Param{Item}->{Input}->{ReferencedCIClassID}) {
+        if ($Param{Item}->{Input}->{ReferencedCIClassID} eq 'All') {
+            @ClassIDArray = keys %{$ClassList};
         }
         else {
-            $Self->{CIClassReferenceClassID} = $ItemDataRef->{ItemID};
+            my @TempClassIDArray = split( /\s*,\s*/, $Param{Item}->{Input}->{ReferencedCIClassID});
+            for my $ClassID ( @TempClassIDArray ) {
+                if ( $ClassList->{$ClassID} ) {
+                    push( @ClassIDArray, $ClassID );
+                }
+            }
         }
-
     }
-    elsif ( $Param{Item}->{Input}->{ReferencedCIClassID} ) {
-        $Self->{CIClassReferenceClassID} = $Param{Item}->{Input}->{ReferencedCIClassID};
+    elsif ($Param{Item}->{Input}->{ReferencedCIClassName}) {
+        if ($Param{Item}->{Input}->{ReferencedCIClassName} eq 'All') {
+            @ClassIDArray = keys %{$ClassList};
+        }
+        else {
+            my @ClassNameArray = split( /\s*,\s*/, $Param{Item}->{Input}->{ReferencedCIClassName});
+            CLASSNAME:
+            for my $ClassName ( @ClassNameArray ) {
+                if ( !$ClassName ) {
+                    @ClassIDArray = ();
+                    last CLASSNAME;
+                }
+
+                my $ItemDataRef = $Self->{GeneralCatalogObject}->ItemGet(
+                    Class => 'ITSM::ConfigItem::Class',
+                    Name  => $ClassName,
+                );
+                if (
+                    $ItemDataRef
+                    && ref($ItemDataRef) eq 'HASH'
+                    && $ItemDataRef->{ItemID}
+                    && $ClassList->{$ItemDataRef->{ItemID}}
+                ) {
+                    push( @ClassIDArray, $ItemDataRef->{ItemID} );
+                }
+                else {
+                    @ClassIDArray = ();
+                    last CLASSNAME;
+                }
+            }
+        }
+    }
+    if ( !@ClassIDArray ) {
+        push( @ClassIDArray, '0');
     }
 
     my $Size         = $Param{Item}->{Input}->{Size} || 50;
@@ -240,7 +279,7 @@ sub InputCreate {
         my %CISearchList    = ();
         my $CISearchListRef = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
             Name     => '*' . $Param{Item}->{Form}->{ $Param{Key} }->{Search} . '*',
-            ClassIDs => [ $Self->{CIClassReferenceClassID} ],
+            ClassIDs => \@ClassIDArray,
         );
 
         for my $SearchResult ( @{$CISearchListRef} ) {
@@ -267,7 +306,7 @@ sub InputCreate {
         # search for number....
         $CISearchListRef = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
             Number   => '*' . $Param{Item}->{Form}->{ $Param{Key} }->{Search} . '*',
-            ClassIDs => [ $Self->{CIClassReferenceClassID} ],
+            ClassIDs => \@ClassIDArray,
         );
 
         for my $SearchResult ( @{$CISearchListRef} ) {
@@ -401,7 +440,7 @@ sub InputCreate {
             Name => 'CIClassSearchInit',
             Data => {
                 ItemID             => $ItemId,
-                ClassID            => $Self->{CIClassReferenceClassID},
+                ClassID            => join(',', @ClassIDArray),
                 ActiveAutoComplete => 'true',
             },
         );
@@ -423,7 +462,7 @@ sub InputCreate {
             . '" id="'
             . $ItemId
             . '" classid="'
-            . $Self->{CIClassReferenceClassID}
+            . join(',', @ClassIDArray)
             . '" SearchClass="CIClassSearch" value="'
             . $Search . '"/>';
     }
@@ -491,25 +530,71 @@ sub SearchFormDataGet {
         if ( ref($Param{Value}) eq 'ARRAY' ) {
             @Values = @{ $Param{Value} };
         } else {
-            if ( !$Self->{CIClassReferenceClassID} ) {
+            # get class list
+            my $ClassList = $Self->{GeneralCatalogObject}->ItemList(
+                Class => 'ITSM::ConfigItem::Class',
+            );
 
-                my $ItemDataRef = $Self->{GeneralCatalogObject}->ItemGet(
-                    Class => 'ITSM::ConfigItem::Class',
-                    Name  => $Param{Item}->{Input}->{ReferencedCIClassName},
+            # check for access rights on the classes
+            for my $ClassID ( sort keys %{$ClassList} ) {
+                my $HasAccess = $Self->{ConfigItemObject}->Permission(
+                    Type    => 'ro',
+                    Scope   => 'Class',
+                    ClassID => $ClassID,
+                    UserID  => $Self->{UserID} || 1,
                 );
+        
+                delete $ClassList->{$ClassID} if !$HasAccess;
+            }
 
-                if ( !$ItemDataRef || !( $ItemDataRef->{ItemID} ) ) {
-                    $Self->{LogObject}->Log(
-                        Priority => 'error',
-                        Message  => "ITSMConfigItemLayoutCIClassReference: CI-Class <"
-                            . $Param{Item}->{Input}->{ReferencedCIClassName}
-                            . "> not defined in GeneralCatalog!",
-                    );
+            my @ClassIDArray = ();
+            if ($Param{Item}->{Input}->{ReferencedCIClassID}) {
+                if ($Param{Item}->{Input}->{ReferencedCIClassID} eq 'All') {
+                    @ClassIDArray = keys %{$ClassList};
                 }
                 else {
-                    $Self->{CIClassReferenceClassID} = $ItemDataRef->{ItemID};
+                    my @TempClassIDArray = split( /\s*,\s*/, $Param{Item}->{Input}->{ReferencedCIClassID});
+                    for my $ClassID ( @TempClassIDArray ) {
+                        if ( $ClassList->{$ClassID} ) {
+                            push( @ClassIDArray, $ClassID );
+                        }
+                    }
                 }
+            }
+            elsif ($Param{Item}->{Input}->{ReferencedCIClassName}) {
+                if ($Param{Item}->{Input}->{ReferencedCIClassName} eq 'All') {
+                    @ClassIDArray = keys %{$ClassList};
+                }
+                else {
+                    my @ClassNameArray = split( /\s*,\s*/, $Param{Item}->{Input}->{ReferencedCIClassName});
+                    CLASSNAME:
+                    for my $ClassName ( @ClassNameArray ) {
+                        if ( !$ClassName ) {
+                            @ClassIDArray = ();
+                            last CLASSNAME;
+                        }
 
+                        my $ItemDataRef = $Self->{GeneralCatalogObject}->ItemGet(
+                            Class => 'ITSM::ConfigItem::Class',
+                            Name  => $ClassName,
+                        );
+                        if (
+                            $ItemDataRef
+                            && ref($ItemDataRef) eq 'HASH'
+                            && $ItemDataRef->{ItemID}
+                            && $ClassList->{$ItemDataRef->{ItemID}}
+                        ) {
+                            push( @ClassIDArray, $ItemDataRef->{ItemID} );
+                        }
+                        else {
+                            @ClassIDArray = ();
+                            last CLASSNAME;
+                        }
+                    }
+                }
+            }
+            if ( !@ClassIDArray ) {
+                push( @ClassIDArray, '0');
             }
 
             my $SearchValue = $Self->{ParamObject}->GetParam( Param => $Param{Key} ) || '';
@@ -530,7 +615,7 @@ sub SearchFormDataGet {
                 if ($CurrSearchValuePart =~ m/^\[Number\]([0-9*]+)$/i) {
                     my $CISearchListRef = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
                         Number   => $1,
-                        ClassIDs => [ $Self->{CIClassReferenceClassID} ],
+                        ClassIDs => \@ClassIDArray,
                     );
                     for my $SearchResult ( @{$CISearchListRef} ) {
                         push(@Values, $SearchResult);
@@ -541,7 +626,7 @@ sub SearchFormDataGet {
 
                 my $CISearchListRef = $Self->{ConfigItemObject}->ConfigItemSearchExtended(
                     Name     => $CurrSearchValuePart,
-                    ClassIDs => [ $Self->{CIClassReferenceClassID} ],
+                    ClassIDs => \@ClassIDArray,
                 );
                 for my $SearchResult ( @{$CISearchListRef} ) {
                     push(@Values, $SearchResult);
