@@ -26,7 +26,7 @@ deploy:TARBuild:Branch:
   except:
   - tags
   only:
-  - /^(Branch_Pub_|rel-)\d+(_\d+)?(_(BUGFIX|FEATURE|TEST)|)$/
+  - /^(Branch_Pub_|rel-)\d+(_\d+)?(_(DEVELOPMENT|TEST)|)$/
   script:
   - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME
   - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME/
