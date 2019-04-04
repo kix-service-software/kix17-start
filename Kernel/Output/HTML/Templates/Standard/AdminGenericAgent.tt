@@ -120,7 +120,7 @@ $('.TaskDelete').bind('click', function (Event) {
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="UpdateAction"/>
                     <input type="hidden" name="ScheduleLastRun" value="[% Data.ScheduleLastRun | html %]"/>
-                    <input type="hidden" name="OldProfile" value="[% Data.Profile | html %]"/>
+                    <input type="hidden" name="OldProfile" value="[% Data.OldProfile | html %]"/>
                     <fieldset class="TableLike">
                         <label for="Profile" class="Mandatory"><span class="Marker">*</span> [% Translate("Job name") | html %]:</label>
                         <div class="Field">
