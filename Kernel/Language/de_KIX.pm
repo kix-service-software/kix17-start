@@ -661,6 +661,9 @@ sub Data {
     $Lang->{'The postmaster default queue.'} = 'Postmaster default Queue.';
     $Lang->{'Enable ticket responsible feature.'}
         = 'Aktivieren des Ticket-Verantwortlichkeits-Features.';
+    $Lang->{'Clone Filter'} = 'Filter kopieren';
+    $Lang->{'A filter with this name already exists!'}
+        = 'Ein Filter mit diesem Namen existiert bereits!';
 
     # KIX4OTRS_Escalation.xml
     $Lang->{'Disables response time SLA, if the newly created ticket is a phone ticket.'}
