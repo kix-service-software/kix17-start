@@ -242,6 +242,14 @@ sub Run {
             $Errors{ProfileInvalid} = 'ServerError';
         }
 
+        if ( $Self->{Profile} ne $Self->{OldProfile} ) {
+            my %JobData = $GenericAgentObject->JobGet( Name => $Self->{Profile} );
+            if ( %JobData ) {
+                $Errors{ProfileInvalid}    = 'ServerError';
+                $Errors{ProfileInvalidMsg} = 'AddError';
+            }
+        }
+
         # Check if ticket selection contains stop words
         my %StopWordsServerErrors = $Self->_StopWordsServerErrorsGet(
             From    => $GetParam{From},
@@ -311,7 +319,9 @@ sub Run {
     # ---------------------------------------------------------- #
     if ( $Self->{Subaction} eq 'Update' ) {
         my $JobDataReference;
-        $JobDataReference = $Self->_MaskUpdate(%Param);
+
+        $Self->{OldProfile} = $Self->{Profile};
+        $JobDataReference   = $Self->_MaskUpdate(%Param);
 
         # generate search mask
         my $Output = $LayoutObject->Header( Title => 'Edit' );
@@ -404,7 +414,8 @@ sub _MaskUpdate {
             Name => $Self->{Profile},
         );
     }
-    $JobData{Profile} = $Self->{Profile};
+    $JobData{Profile}    = $Self->{Profile};
+    $JobData{OldProfile} = $Self->{OldProfile} || '';
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -1108,7 +1119,7 @@ sub _MaskUpdate {
         );
 
         my $FieldLabel = 'Ticket Attributes';
-        $FieldLabel = 'Dynamic Fields' if $Key eq 'DynamicField';
+        $FieldLabel    = 'Dynamic Fields' if $Key eq 'DynamicField';
 
         $LayoutObject->Block(
             Name => 'NewDeleteField',
