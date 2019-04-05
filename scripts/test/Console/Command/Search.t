@@ -45,7 +45,7 @@ $Self->False(
 );
 
 $Self->True(
-    index( $Result, 'List all installed OTRS packages' ) > -1,
+    index( $Result, 'List all installed KIX packages' ) > -1,
     "Found Admin::Package::List command entry",
 );
 

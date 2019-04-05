@@ -417,7 +417,7 @@ sub MailTimeStamp {
     my @DayMap   = qw/Sun Mon Tue Wed Thu Fri Sat/;
     my @MonthMap = qw/Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec/;
 
-    # Here we cannot use the OTRS "TimeZone" because OTRS uses localtime()
+    # Here we cannot use the KIX "TimeZone" because KIXs uses localtime()
     #   and does not know if that is UTC or another time zone.
     #   Therefore OTRS cannot generate the correct offset for the mail timestamp.
     #   So we need to use the real time configuration of the server to determine this properly.

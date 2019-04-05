@@ -404,7 +404,7 @@ sub StdAttachmentLookup {
 
 =item StdAttachmentsByResponseID()
 
-DEPRECATED: This function will be removed in further versions of OTRS
+DEPRECATED: This function will be removed in further versions of KIX
 
 return a hash (ID => Name) of std. attachment by response id
 
@@ -478,7 +478,7 @@ sub StdAttachmentList {
 
 =item StdAttachmentSetResponses()
 
-DEPRECATED: This function will be removed in further versions of OTRS
+DEPRECATED: This function will be removed in further versions of KIX
 
 set std responses of response id
 

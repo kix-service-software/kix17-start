@@ -25,7 +25,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('List all installed OTRS packages.');
+    $Self->Description('List all installed KIX packages.');
 
     $Self->AddOption(
         Name        => 'package-name',
@@ -44,14 +44,14 @@ sub Configure {
 
     $Self->AddOption(
         Name        => 'show-verification-info',
-        Description => 'Shows package OTRS Verify™ status.',
+        Description => 'Shows package KIX Verify™ status.',
         Required    => 0,
         HasValue    => 0,
     );
 
     $Self->AddOption(
         Name        => 'delete-verification-cache',
-        Description => 'Deletes OTRS Verify™ cache, so verification info is fetch again from OTRS group servers.',
+        Description => 'Deletes KIX Verify™ cache, so verification info is fetch again from KIX group servers.',
         Required    => 0,
         HasValue    => 0,
     );

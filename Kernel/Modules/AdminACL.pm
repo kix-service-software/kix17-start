@@ -83,7 +83,7 @@ sub Run {
         if ( !$ACLImport->{Success} ) {
             my $Message = $ACLImport->{Message}
                 || Translatable(
-                'ACLs could not be Imported due to a unknown error, please check OTRS logs for more information'
+                'ACLs could not be Imported due to a unknown error, please check KIX logs for more information'
                 );
             return $LayoutObject->ErrorScreen(
                 Message => $Message,

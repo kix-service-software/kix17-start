@@ -33,7 +33,7 @@ my %Compare;
 my %Opts;
 getopt( 'abd', \%Opts );
 if ( exists $Opts{h} || !keys %Opts ) {
-    print "kix.CheckSum.pl - OTRS check sum\n";
+    print "kix.CheckSum.pl - KIX check sum\n";
     print
         "usage: kix.CheckSum.pl -a create|compare [-b /path/to/ARCHIVE] [-d /path/to/framework]\n";
     exit 1;
@@ -91,7 +91,7 @@ sub ProcessDirectory {
         # clean up directory name
         $File =~ s{//}{/}smxg;
 
-        # always stay in OTRS directory
+        # always stay in KIX directory
         next FILE if $File !~ m{^\Q$Start\E};
 
         # ignore source code directories, ARCHIVE file
@@ -138,7 +138,7 @@ sub ProcessDirectory {
                 print "Notice: Dif $File\n";
             }
             elsif ( -e "$File.save" )
-            {    ## report .save files as modified by the OTRS Package Manager
+            {    ## report .save files as modified by the KIX Package Manager
                 print "Notice: OPM Changed $File\n"
             }
             if ( defined $Compare{$File} ) {

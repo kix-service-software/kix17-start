@@ -27,7 +27,7 @@ Kernel::System::Spelling - spelling lib
 
 =head1 SYNOPSIS
 
-This module is the spellchecker backend wrapper of OTRS.
+This module is the spellchecker backend wrapper of KIX.
 Currently, ispell and aspell are supported as spellchecker backends.
 
 =head1 PUBLIC INTERFACE

@@ -1336,7 +1336,7 @@ sub PackageOnlineList {
     my $Filelist;
     if ( !$Param{FromCloud} ) {
 
-        my $XML = $Self->_Download( URL => $Param{URL} . '/otrs.xml' );
+        my $XML = $Self->_Download( URL => $Param{URL} . '/kix.xml' );
         return if !$XML;
 
         my @XMLARRAY = $Kernel::OM->Get('Kernel::System::XML')->XMLParse( String => $XML );
@@ -3377,7 +3377,7 @@ sub _FileSystemCheck {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "ERROR: Need write permissions for directory $Home$Filepath\n"
-                    . " Try: $Home/bin/otrs.SetPermissions.pl!",
+                    . " Try: $Home/bin/kix.SetPermissions.pl!",
             );
             return;
         }
@@ -3416,7 +3416,7 @@ CodeUninstall are not called.
 
     $Success = $PackageObject->_PackageUninstallMerged(
         Name        => 'some package name',
-        Home        => 'OTRS Home path',      # Optional
+        Home        => 'KIX Home path',      # Optional
         DeleteSaved => 1,                     # or 0, 1 Default, Optional: if set to 1 it also
                                               # delete .save files
     );

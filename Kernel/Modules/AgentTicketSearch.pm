@@ -1617,7 +1617,7 @@ sub Run {
         );
 
         # KIX4OTRS-capeIT
-        # use default OTRS-style, see for T
+        # use default KIX-style, see for T
         $GetParam{SmartDateInput} = 0;
         $GetParam{SmartTimeInput} = 0;
 

@@ -98,7 +98,7 @@ sub new {
     }
 
     # this setting specifies if the table has the create_time,
-    # create_by, change_time and change_by fields of OTRS
+    # create_by, change_time and change_by fields of KIX
     $Self->{ForeignDB} = $Self->{CustomerUserMap}->{Params}->{ForeignDB} ? 1 : 0;
 
     # defines if the database search will be performend case sensitive (1) or not (0)

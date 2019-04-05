@@ -16,7 +16,7 @@ This package provides the possibility to force the user to select an articletype
 
 =item * implements an new ticket print function
 
-=item * it uses parts of the OTRS-function AgentTicketPrint
+=item * it uses parts of the KIX-function AgentTicketPrint
 
 =item * it can be enable or disable by user preferences
 

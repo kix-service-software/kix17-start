@@ -162,8 +162,8 @@ sub HandleLanguage {
     if ( !$Module ) {
         $LanguageFile  = "$Home/Kernel/Language/$Language.pm";
         $TargetFile    = "$Home/Kernel/Language/$Language.pm";
-        $TargetPOTFile = "$Home/i18n/otrs/otrs.pot";
-        $TargetPOFile  = "$Home/i18n/otrs/otrs.$TransifexLanguage.po";
+        $TargetPOTFile = "$Home/i18n/kix/kix.pot";
+        $TargetPOFile  = "$Home/i18n/kix/kix.$TransifexLanguage.po";
     }
     else {
         $IsSubTranslation = 1;
@@ -344,7 +344,7 @@ sub HandleLanguage {
         }
 
         # add translatable strings from XB XML
-        my @DBXMLFiles = "$Home/scripts/database/otrs-initial_insert.xml";
+        my @DBXMLFiles = "$Home/scripts/database/kix-initial_insert.xml";
         if ($IsSubTranslation) {
             @DBXMLFiles = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
                 Directory => "$ModuleDirectory",

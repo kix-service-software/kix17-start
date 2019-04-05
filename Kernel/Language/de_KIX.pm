@@ -478,13 +478,13 @@ sub Data {
         }
         = 'Überschreibt (redefiniert) bestehende Funktionen in Kernel::System::Ticket. Dies vereinfacht das Hinzufügen von Anpassungen.';
     $Lang->{
-        'Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (OTRS-default behavior is disabled).'
+        'Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).'
         }
-        = 'Definiert ob die "Possible"-Ergebnisse für Aktionen mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (OTRS-Standardverhalten ist deakviert).';
+        = 'Definiert ob die "Possible"-Ergebnisse für Aktionen mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (KIX-Standardverhalten ist deakviert).';
     $Lang->{
-        'Defines whether results of PossibleNot for tickets of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (OTRS-default behavior is disabled).'
+        'Defines whether results of PossibleNot for tickets of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).'
         }
-        = 'Definiert ob die "PossibleNot"-Ergebnisse für Ticket-Eigenschaften mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (OTRS-Standardverhalten ist deakviert).';
+        = 'Definiert ob die "PossibleNot"-Ergebnisse für Ticket-Eigenschaften mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (KIX-Standardverhalten ist deakviert).';
     $Lang->{
         'Determines the next possible ticket states, after the creation of a new phone ticket in the agent interface.'
         }
@@ -643,9 +643,9 @@ sub Data {
     $Lang->{'Parameters for the FollowUpNotify object in the preference view.'}
         = 'Parameter für das FollowUpNotify-Objekt in der Ansicht für die Einstellungen.';
     $Lang->{
-        'Select your TicketStorageModule to safe the attachments of articles. "DB" stores all data in the database. Don\'t use this module if big attachments will be stored. "FS" stores the data in the filesystem. This is faster but webserver user should be the otrs user. You can switch between the modules even on a running system without any loss of data.'
+        'Select your TicketStorageModule to safe the attachments of articles. "DB" stores all data in the database. Don\'t use this module if big attachments will be stored. "FS" stores the data in the filesystem. This is faster but webserver user should be the KIX user. You can switch between the modules even on a running system without any loss of data.'
         }
-        = 'Wählen Sie das TicketStorage-Modul aus und legen sie fest, wie die Anhänge zu Artikeln gespeichert werden sollen. "DB" speichert alle Daten in der Datenbank. Wird nur mit kleinen Anhängen gearbeitet, ist das kein Problem. "FS" legt die Daten im Filesystem ab, der Zugriff ist schneller. Allerdings sollte bei Verwendung von "FS" der WEB-Server unter dem selben Benutzer laufen, der auch für OTRS verwendet wird. Sie können das Modul auch für laufende Systeme ändern, es wird trotzdem weiter auf alle Daten zugegriffen und auch die Daten, die mit Hilfe des anderen Moduls gespeichert wurden, bleiben verfügbar.';
+        = 'Wählen Sie das TicketStorage-Modul aus und legen sie fest, wie die Anhänge zu Artikeln gespeichert werden sollen. "DB" speichert alle Daten in der Datenbank. Wird nur mit kleinen Anhängen gearbeitet, ist das kein Problem. "FS" legt die Daten im Filesystem ab, der Zugriff ist schneller. Allerdings sollte bei Verwendung von "FS" der WEB-Server unter dem selben Benutzer laufen, der auch für KIX verwendet wird. Sie können das Modul auch für laufende Systeme ändern, es wird trotzdem weiter auf alle Daten zugegriffen und auch die Daten, die mit Hilfe des anderen Moduls gespeichert wurden, bleiben verfügbar.';
     $Lang->{
         'Would you like to execute followup checks on In-Reply-To or References headers for mails, that don\'t have a ticket number in the subject?'
         }
@@ -748,9 +748,9 @@ sub Data {
         }
         = 'Status für ein Ticket, für das ein Follow-up eintrifft (nutzen Sie _PREVIOUS_ als Platzhalter für den letzten Status in der Tickethistorie vor dem aktuellen).';
     $Lang->{
-        'Checks if the sender of a follow-up message is contained in customer database an has an identical customer-ID as the ticket. If so, the email is considered as email-external, otherwise it is considered as email-internal. Default OTRS-behavior if disabled.'
+        'Checks if the sender of a follow-up message is contained in customer database an has an identical customer-ID as the ticket. If so, the email is considered as email-external, otherwise it is considered as email-internal. Default KIX-behavior if disabled.'
         }
-        = 'Prüft ob der Absender einer Nachricht als Kundennutzer hinterlegt ist und dieselbe Kunden-ID hat wie am Ticket hinterlegt ist. Ist dem so wird die Email als "email-external" betrachtet, andernfalls als "email-internal". Standard OTRS-Verhalten wenn deaktiviert.';
+        = 'Prüft ob der Absender einer Nachricht als Kundennutzer hinterlegt ist und dieselbe Kunden-ID hat wie am Ticket hinterlegt ist. Ist dem so wird die Email als "email-external" betrachtet, andernfalls als "email-internal". Standard KIX-Verhalten wenn deaktiviert.';
     $Lang->{
         'Checks if the sender of a follow-up message is contained in agent database, and if so sets sender type "agent".'
         }
@@ -1852,21 +1852,21 @@ sub Data {
         = 'Aufgrund fehlender Berechtigungen können mehr verlinkte Objekte existieren, als angezeigt werden.';
 
     $Lang->{
-        'information: even though this package is not certified by OTRS Group, this does NOT mean that you should NOT use it.'
+        'information: even though this package is not certified by KIX Group, this does NOT mean that you should NOT use it.'
         }
-        = 'Paket ist zwar nicht durch OTRS Gruppe verifiziert - das bedeutet aber NICHT, dass dieses Paket nicht verwendet werden kann oder darf.';
+        = 'Paket ist zwar nicht durch KIX Gruppe verifiziert - das bedeutet aber NICHT, dass dieses Paket nicht verwendet werden kann oder darf.';
     $Lang->{
-        'Disables the unrequested automatic communication of installed packages and other system details to OTRS AG.'
+        'Disables the unrequested automatic communication of installed packages and other system details to KIX AG.'
         }
-        = 'Deaktiviert die unaufgeforderte automatische Kommunikation, der installierten Pakete und anderer System-Details, zur OTRS AG.';
+        = 'Deaktiviert die unaufgeforderte automatische Kommunikation, der installierten Pakete und anderer System-Details, zur KIX AG.';
     $Lang->{
         'Enables the unrequested automatic communication of installed packages and other system details to the path.'
         }
         = 'Aktiviert die unaufgeforderte automatische Kommunikation, der installierten Pakete und anderer System-Details, zum angegebenen Pfad.';
     $Lang->{
-        'Even though this package is not certified by OTRS Group, this does NOT mean that you should NOT use it.'
+        'Even though this package is not certified by KIX Group, this does NOT mean that you should NOT use it.'
         }
-        = 'Das Paket ist zwar nicht durch OTRS Gruppe verifiziert - das bedeutet aber NICHT, dass dieses Paket nicht verwendet werden kann oder darf.';
+        = 'Das Paket ist zwar nicht durch KIX Gruppe verifiziert - das bedeutet aber NICHT, dass dieses Paket nicht verwendet werden kann oder darf.';
 
     $Lang->{'Pre-create loader cache.'} = 'Loadercache vorgenerieren.';
 
@@ -3256,10 +3256,10 @@ sub Data {
 
     # SysConfig
     $Lang->{
-        'A filter for HTML output to add links behind a defined string. The element Image allows two input kinds. First the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possibility is to insert the link to the image.'
+        'A filter for HTML output to add links behind a defined string. The element Image allows two input kinds. First the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possibility is to insert the link to the image.'
         }
         =
-        'Ein Filter zur automatischen Generierung von FAQ-Links, wenn ein Hinweis auf einen FAQ-Artikel identifiziert wird. Das Element Image erlaubt zwei Eingabeformen: Erstens der Name eines Icons (z. B. faq.png). In diesem Fall wird auf das Grafik-Verzeichnis des OTRS zugegriffen. Als zweite Möglichkeit kann man aber auch den direkten Link zur Grafik angeben (z. B. http://otrs.org/faq.png).';
+        'Ein Filter zur automatischen Generierung von FAQ-Links, wenn ein Hinweis auf einen FAQ-Artikel identifiziert wird. Das Element Image erlaubt zwei Eingabeformen: Erstens der Name eines Icons (z. B. faq.png). In diesem Fall wird auf das Grafik-Verzeichnis des KIX zugegriffen. Als zweite Möglichkeit kann man aber auch den direkten Link zur Grafik angeben (z. B. http://kixdesk.com/faq.png).';
     $Lang->{'Add FAQ article'} = 'FAQ-Artikel hinzufügen';
     $Lang->{'CSS color for the voting result.'}
         = 'CSS-Farbe für das Bewertungs-Ergebnis.';
@@ -3800,8 +3800,8 @@ sub Data {
         = 'Definiert Artikeltypen die weiterleitet werden, wenn sie zu Tickets in spez. Queues hinzugefuegt werden (Note-Report wird NICHT beachtet).';
     $Lang->{'Defines PGP-Keys for mail addresses which are not registered in the key.'}
         = 'Definiert PGP-Schluessel fuer Mailadressen die im Schluessel nicht registriert sind.';
-    $Lang->{'Defines mapping of OTRS queues to be forwarded and corresponding email-addresses.'}
-        = 'Definiert Mapping von weiterzuleitenden OTRS-queues und den entsprechenden Email-Adressen.';
+    $Lang->{'Defines mapping of KIX queues to be forwarded and corresponding email-addresses.'}
+        = 'Definiert Mapping von weiterzuleitenden KIX-queues und den entsprechenden Email-Adressen.';
     $Lang->{'Module to decrypt PGP-encrypted mails before any other processing.'}
         = 'Modul zum Entschluesseln von PGP-verschluesselten Emails vor allen weiteren Bearbeitungen.';
     $Lang->{'Ticket-ACL to show/hide ticket action AgentTicketPrintForwardFax.'}
@@ -3811,8 +3811,8 @@ sub Data {
     $Lang->{'Extended organization description.'} = 'Erweiterte Organisationsbeschreibung.';
     $Lang->{'Defines which ticket dynamic fields are forwarded.'}
         = 'Definiert welche dynamischen Felder weitergeleitet werden.';
-    $Lang->{'Defines mapping of OTRS queues to be fax-forwarded and corresponding fax-numbers.'}
-        = 'Definiert Mapping von per Fax weiterzuleitenden OTRS-queues und den entsprechenden FAX-Nummern.';
+    $Lang->{'Defines mapping of KIX queues to be fax-forwarded and corresponding fax-numbers.'}
+        = 'Definiert Mapping von per Fax weiterzuleitenden KIX-queues und den entsprechenden FAX-Nummern.';
     $Lang->{
         'Frontend module registration for the AgentTicketPrintForwardFax object in the agent interface.'
         } = 'Frontendmodul-Registration des AgentTicketPrintForwardFax-Objekts im Agent-Interface.';
@@ -4109,10 +4109,10 @@ sub Data {
         =
         'Frontendmodul-Registration des CI-AgentAttachmentStorage-Objekts im Agent-Interface.';
     $Lang->{
-        'The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the OTRS-Home.'
+        'The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the KIX-Home.'
         }
         =
-        'Pfad zum Verzeichnis in welchem vom Dateisystemspeichermodul (AttachmentStorageFS) neue Anhänge abgelegt werden. Der Pfad wird relativ zum OTRS-Home Verzeichnis angegeben.';
+        'Pfad zum Verzeichnis in welchem vom Dateisystemspeichermodul (AttachmentStorageFS) neue Anhänge abgelegt werden. Der Pfad wird relativ zum KIX-Home Verzeichnis angegeben.';
 
     $Lang->{'Welcome to KIX'}     = 'Willkommen bei KIX';
     $Lang->{'show Toolbar'}       = 'Toolbar anzeigen';

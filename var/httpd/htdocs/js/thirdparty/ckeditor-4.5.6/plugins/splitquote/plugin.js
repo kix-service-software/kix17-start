@@ -7,7 +7,7 @@ CKEDITOR.plugins.add('splitquote', {
             exec: function(editor) {
                 var helper, quote, text, range, cursorNode, cursorNodeLength = 0, cursorNodeOffset, cursorNodeType;
 
-                // is the cursor position within a quote (otrs-style)?
+                // is the cursor position within a quote (kix-style)?
                 quote = editor.elementPath().contains('div', false, true);
                 if (quote !== null && quote.hasAttribute('type') && quote.getAttribute('type') === 'cite') {
 

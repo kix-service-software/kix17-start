@@ -364,7 +364,7 @@ my @NeededModules = (
     {
         Module    => 'Template',
         Required  => 1,
-        Comment   => 'Template::Toolkit, the rendering engine of OTRS.',
+        Comment   => 'Template::Toolkit, the rendering engine of KIX.',
         InstTypes => {
             aptget => 'libtemplate-perl',
             emerge => 'dev-perl/Template-Toolkit',

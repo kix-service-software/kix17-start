@@ -588,7 +588,7 @@ sub Run {
         if ( !IsHashRefWithData($ImportedConfig) ) {
             return $LayoutObject->ErrorScreen(
                 Message =>
-                    Translatable('The imported file has not valid YAML content! Please check OTRS log for details'),
+                    Translatable('The imported file has not valid YAML content! Please check KIX log for details'),
             );
         }
 
@@ -803,7 +803,7 @@ sub _ShowOverview {
 
             if ( !$Webservice->{Config} || !IsHashRefWithData( $Webservice->{Config} ) ) {
 
-                # write an error message to the OTRS log
+                # write an error message to the KIX log
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Configuration of WebserviceID $WebserviceID is invalid!",

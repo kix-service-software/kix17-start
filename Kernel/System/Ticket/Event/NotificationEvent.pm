@@ -768,7 +768,7 @@ sub _RecipientsGet {
                 # EO KIX4OTRS-capeIT
             }
 
-            # Other OTRS packages might add other kind of recipients that are normally handled by
+            # Other KIX packages might add other kind of recipients that are normally handled by
             #   other modules then an elsif condition here is useful.
             # KIX4OTRS-capeIT
             # elsif ( $Recipient eq 'Customer' ) {

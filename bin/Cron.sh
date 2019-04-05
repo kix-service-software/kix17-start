@@ -41,7 +41,7 @@ if test -e $KIX_HOME/var/cron; then
     KIX_ROOT=$KIX_HOME
 else
     echo "No cronjobs in $KIX_HOME/var/cron found!";
-    echo " * Check the \$HOME (/etc/passwd) of the OTRS user. It must be the root dir of your OTRS system (e. g. /opt/otrs). ";
+    echo " * Check the \$HOME (/etc/passwd) of the KIX user. It must be the root dir of your KIX system (e. g. /opt/otrs). ";
     exit 5;
 fi
 

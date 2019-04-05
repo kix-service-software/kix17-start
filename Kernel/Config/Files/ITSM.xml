@@ -296,7 +296,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AttachmentStorageFS::StorageDirectory" Required="1" Valid="1">
-        <Description Translatable="1">The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the OTRS-Home.</Description>
+        <Description Translatable="1">The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the KIX-Home.</Description>
         <Group>ITSM</Group>
         <SubGroup>Core::AttachmentStorage</SubGroup>
         <Setting>

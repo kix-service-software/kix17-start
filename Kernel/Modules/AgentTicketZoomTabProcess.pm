@@ -209,11 +209,11 @@ sub Run {
         return $LayoutObject->NoPermission( WithHeader => 'yes' );
     }
 
-    # KIXOTRS-capeIT
+    # KIX4OTRS-capeIT
     # removed: mark as seen, mark as important and update article
     # removed: article filter settings
     # removed: show HTML email
-    # EO KIXOTRS-capeIT
+    # EO KIX4OTRS-capeIT
 
     # generate output
     # KIX4OTRS-capeIT
@@ -251,11 +251,11 @@ sub MaskAgentZoom {
     my %Ticket    = %{ $Param{Ticket} };
     my %AclAction = %{ $Param{AclAction} };
 
-    # KIXOTRS-capeIT
+    # KIX4OTRS-capeIT
     # removed: fetch all queues, std templates etc
     # removed: generate shown articles
     # removed: show article box
-    # EO KIXOTRS-capeIT
+    # EO KIX4OTRS-capeIT
 
     # set display options
     $Param{WidgetTitle} = 'Ticket Information';

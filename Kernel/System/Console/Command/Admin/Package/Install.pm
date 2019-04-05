@@ -22,7 +22,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Install an OTRS package.');
+    $Self->Description('Install an KIX package.');
     $Self->AddOption(
         Name        => 'force',
         Description => 'Force package installation even if validation fails.',
