@@ -30,6 +30,18 @@
                         <a class="CallForAction Fullsize Center" href="[% Env("Baselink") %]Action=[% Env("Action") %]"><span><i class="fa fa-caret-left"></i>[% Translate("Go to overview") | html %]</span></a>
                     </li>
 [% RenderBlockEnd("ActionOverview") %]
+[% RenderBlockStart("ActionClone") %]
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value="Clone"/>
+                            <input type="hidden" name="Nav" value="[% Data.Nav | html %]"/>
+                            <input type="hidden" name="Profile" value="[% Data.Profile | html %]"/>
+
+                            <button class="CallForAction Plus" type="submit"><span>[% Translate("Clone Job") | html %]</span></button>
+                        </form>
+                    </li>
+[% RenderBlockEnd("ActionClone") %]
                 </ul>
             </div>
         </div>
