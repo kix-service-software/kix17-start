@@ -4442,6 +4442,7 @@ sub Data {
         = 'Warnung: Löschen/Leeren eines Ticket-Attributs oder dynamischen Feldes hat eine höhere Priorität als Aktualisieren/Hinzufügen.';
     $Lang->{'Delete/Empty Ticket Attributes'} = 'Ticket-Attribute löschen/leeren';
     $Lang->{'Ticket Attributes'}              = 'Ticket-Attribute';
+    $Lang->{'Clone Job'}                      = 'Job kopieren';
 
     # Quick State
     $Lang->{'QuickState'}             = 'Statuswechsel';

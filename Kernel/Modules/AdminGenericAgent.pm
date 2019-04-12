@@ -301,6 +301,7 @@ sub Run {
             %DynamicFieldValues,
             %Errors,
             StopWordsAlreadyChecked => 1,
+            UpdateError             => 1
         );
 
         # generate search mask
@@ -321,6 +322,26 @@ sub Run {
         my $JobDataReference;
 
         $Self->{OldProfile} = $Self->{Profile};
+        $JobDataReference   = $Self->_MaskUpdate(%Param);
+
+        # generate search mask
+        my $Output = $LayoutObject->Header( Title => 'Edit' );
+
+        $Output .= $LayoutObject->NavigationBar();
+        $Output .= $LayoutObject->Output(
+            TemplateFile => 'AdminGenericAgent',
+            Data         => $JobDataReference,
+        );
+        $Output .= $LayoutObject->Footer();
+        return $Output;
+    }
+
+    # ------------------------------------------------------------ #
+    # clone an generic agent job
+    # ------------------------------------------------------------ #
+    elsif ( $Self->{Subaction} eq 'Clone' ) {
+        my $JobDataReference;
+
         $JobDataReference   = $Self->_MaskUpdate(%Param);
 
         # generate search mask
@@ -407,15 +428,31 @@ sub _MaskUpdate {
     my %JobData;
     my %EventDeleteElements;
 
-    if ( $Self->{Profile} ) {
+    if (
+        $Self->{Profile}
+        && !$Param{UpdateError}
+    ) {
 
         # get db job data
         %JobData = $Kernel::OM->Get('Kernel::System::GenericAgent')->JobGet(
             Name => $Self->{Profile},
         );
     }
+
+    elsif ( $Param{UpdateError} ) {
+        %JobData = %Param;
+    }
+
     $JobData{Profile}    = $Self->{Profile};
     $JobData{OldProfile} = $Self->{OldProfile} || '';
+
+    if ( $Self->{Subaction} eq 'Clone' ) {
+        $JobData{Profile}    = '';
+        $JobData{OldProfile} = '';
+        $JobData{Name}       = '';
+        $Self->{Profile}     = '';
+        $Self->{OldProfile}  = '';
+    }
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -767,6 +804,16 @@ sub _MaskUpdate {
     $LayoutObject->Block(
         Name => 'ActionOverview',
     );
+
+    if ( $Self->{OldProfile} ) {
+        $LayoutObject->Block(
+            Name => 'ActionClone',
+            Data => {
+                Profile => $Self->{Profile}
+            }
+        );
+    }
+
     $LayoutObject->Block(
         Name => 'Edit',
         Data => {
