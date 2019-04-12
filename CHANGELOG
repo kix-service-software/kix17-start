@@ -1,5 +1,11 @@
 # Change log of KIX
-* Copyright (C) 2006-2019 c.a.p.e. IT GmbH, http://www.cape-it.de/
+* Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
+
+# 17.6.0-RC1 (2019/04/12)
+ * (2019/04/11) - CR: T2018020190001023 (added copy of generic agent jobs) (fjacquemin)
+ * (2019/04/04) - Bugfix: T2019032590000879 (subject not shown in smime certificates) (ddoerffel)
+ * (2019/04/03) - Bugfix: T2019021990000669 (fixed incomplete profile duplicate check of generic agent jobs) (fjacquemin)
+ * (2019/04/02) - CR: T2019021190001306 (added function to clone postmaster filter) (fjacquemin)
 
 # 17.5.0 (2019/03/20)
  * (2019/03/20) - productive release
