@@ -180,11 +180,8 @@ sub GetParam {
             $Address->address( $Self->_DecodeString( String => $Address->address() ) );
             $Address->comment( $Self->_DecodeString( String => $Address->comment() ) );
 
-            my $TmpAddress = $Address->format();
-            $TmpAddress =~ s/(?:"|')(.*)(?:"|')/$1/;
-
             $ReturnLine .= ', ' if $ReturnLine;
-            $ReturnLine .= $TmpAddress;
+            $ReturnLine .= $Address->format();
         }
     }
     else {

@@ -288,6 +288,9 @@ sub Run {
                 Email => $EmailAddress
             );
             next if ( !$MailAddress );
+
+            $MailAddress =~ s/("|')//g;
+
             $EmailsHash{$MailAddress} = '1';
         }
 
