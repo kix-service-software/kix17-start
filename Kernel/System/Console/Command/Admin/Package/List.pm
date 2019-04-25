@@ -22,6 +22,8 @@ our @ObjectDependencies = (
     'Kernel::System::Package',
 );
 
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 sub Configure {
     my ( $Self, %Param ) = @_;
 
@@ -209,6 +211,90 @@ sub _PackageMetadataGet {
         Description => $Description,
         Title       => $Title,
     );
+}
+
+sub _PackageContentGet {
+    my ( $Self, %Param ) = @_;
+
+    my $FileString;
+
+    if ( -e $Param{Location} ) {
+        my $ContentRef = $Kernel::OM->Get('Kernel::System::Main')->FileRead(
+            Location => $Param{Location},
+            Mode     => 'utf8',             # optional - binmode|utf8
+            Result   => 'SCALAR',           # optional - SCALAR|ARRAY
+        );
+        if ($ContentRef) {
+            $FileString = ${$ContentRef};
+        }
+        else {
+            $Self->PrintError("Can't open: $Param{Location}: $!");
+            return;
+        }
+    }
+    elsif ( $Param{Location} =~ /^(online|.*):(.+?)$/ ) {
+        my $URL         = $1;
+        my $PackageName = $2;
+        if ( $URL eq 'online' ) {
+            my %List = %{ $Kernel::OM->Get('Kernel::Config')->Get('Package::RepositoryList') };
+            %List = (
+                %List,
+                $Kernel::OM->Get('Kernel::System::Package')->PackageOnlineRepositories()
+            );
+            for ( sort keys %List ) {
+                if ( $List{$_} =~ /^\[-Master-\]/ ) {
+                    $URL = $_;
+                }
+            }
+        }
+        if ( $PackageName !~ /^.+?.opm$/ ) {
+            my @Packages = $Kernel::OM->Get('Kernel::System::Package')->PackageOnlineList(
+                URL  => $URL,
+                Lang => $Kernel::OM->Get('Kernel::Config')->Get('DefaultLanguage'),
+            );
+            PACKAGE:
+            for my $Package (@Packages) {
+                if ( $Package->{Name} eq $PackageName ) {
+                    $PackageName = $Package->{File};
+                    last PACKAGE;
+                }
+            }
+        }
+        $FileString = $Kernel::OM->Get('Kernel::System::Package')->PackageOnlineGet(
+            Source => $URL,
+            File   => $PackageName,
+        );
+        if ( !$FileString ) {
+            $Self->PrintError("No such file '$Param{Location}' in $URL!");
+            return;
+        }
+    }
+    else {
+        if ( $Param{Location} =~ /^(.*)\-(\d{1,4}\.\d{1,4}\.\d{1,4})$/ ) {
+            $FileString = $Kernel::OM->Get('Kernel::System::Package')->RepositoryGet(
+                Name    => $1,
+                Version => $2,
+            );
+        }
+        else {
+            PACKAGE:
+            for my $Package ( $Kernel::OM->Get('Kernel::System::Package')->RepositoryList() ) {
+                if ( $Param{Location} eq $Package->{Name}->{Content} ) {
+                    $FileString = $Kernel::OM->Get('Kernel::System::Package')->RepositoryGet(
+                        Name    => $Package->{Name}->{Content},
+                        Version => $Package->{Version}->{Content},
+                    );
+                    last PACKAGE;
+                }
+            }
+        }
+        if ( !$FileString ) {
+            $Self->PrintError("No such file '$Param{Location}' or invalid 'package-version'!");
+            return;
+        }
+    }
+
+    return $FileString;
 }
 
 1;
