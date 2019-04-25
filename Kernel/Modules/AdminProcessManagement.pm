@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AdminProcessManagement;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Dumper)
 
 use strict;
 use warnings;
@@ -96,11 +95,12 @@ sub Run {
             }
 
             # extract file name without extension
-            $ExampleProcessFilename =~ m{(.*?)\.yml$}smx;
-            $FileWithoutExtension = $1;
+            if ( $ExampleProcessFilename =~ m{(.*?)\.yml$}smx ) {
+                $FileWithoutExtension = $1;
+            }
 
             # run _pre.pm if available
-            if ( -e "$Home/var/processes/examples/" . $FileWithoutExtension . "_pre.pm" ) {
+            if ( -e ($Home . "/var/processes/examples/" . $FileWithoutExtension . "_pre.pm") ) {
 
                 my $BackendName = 'var::processes::examples::' . $FileWithoutExtension . '_pre';
 
@@ -182,9 +182,8 @@ sub Run {
             # Run _post.pm if available.
             if (
                 $ExampleProcess
-                && -e "$Home/var/processes/examples/" . $FileWithoutExtension . "_post.pm"
-                )
-            {
+                && -e ($Home . "/var/processes/examples/" . $FileWithoutExtension . "_post.pm")
+            ) {
                 my $BackendName = 'var::processes::examples::' . $FileWithoutExtension . '_post';
 
                 my $Loaded = $MainObject->Require(
@@ -230,7 +229,6 @@ sub Run {
     elsif ( $Self->{Subaction} eq 'ProcessExport' ) {
 
         # check for ProcessID
-        my $ProcessID = $ParamObject->GetParam( Param => 'ID' ) || '';
         if ( !$ProcessID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('Need ProcessID!'),
@@ -264,7 +262,6 @@ sub Run {
         $Data::Dumper::Indent = 1;
 
         # check for ProcessID
-        my $ProcessID = $ParamObject->GetParam( Param => 'ID' ) || '';
         if ( !$ProcessID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('Need ProcessID!'),
@@ -353,8 +350,7 @@ sub Run {
 
                 for my $ElementAttribute (
                     qw(DescriptionShort DescriptionLong SubmitButtonText SubmitAdviceText Permission RequiredLock)
-                    )
-                {
+                ) {
 
                     my $Value = $ProcessData->{ActivityDialogs}->{$ActivityDialogEntityID}->{Config}
                         ->{$ElementAttribute};
@@ -398,7 +394,7 @@ sub Run {
                                 ->{Config}->{Fields}->{$AssignedField}
                         };
                         if ( $Values{Config} ) {
-                            $Values{Config} = Dumper( $Values{Config} );    ## no critic
+                            $Values{Config} = Dumper( $Values{Config} );
                             $Values{Config} =~ s{ \s* \$VAR1 \s* =}{}xms;
                             $Values{Config} =~ s{\s+\{}{\{}xms;
                         }
@@ -488,8 +484,7 @@ sub Run {
 
                                             for my $SubSubKey (
                                                 sort keys %{ $Values{$Key}->{$SubKey} }
-                                                )
-                                            {
+                                            ) {
 
                                                 $LayoutObject->Block(
                                                     Name => 'ConditionRowSubSubValue',
@@ -629,8 +624,7 @@ sub Run {
             && $AgentLogoCustom
             && IsHashRefWithData($AgentLogoCustom)
             && $AgentLogoCustom->{$SkinSelected}
-            )
-        {
+        ) {
             %AgentLogo = %{ $AgentLogoCustom->{$SkinSelected} };
         }
 
@@ -663,8 +657,7 @@ sub Run {
 
             for my $Transition (
                 sort keys %{ $ProcessData->{Process}->{Config}->{Path}->{$Activity} }
-                )
-            {
+            ) {
                 my $TransitionActionString;
                 if (
                     $ProcessData->{Process}->{Config}->{Path}->{$Activity}->{$Transition}
@@ -673,8 +666,7 @@ sub Run {
                         $ProcessData->{Process}->{Config}->{Path}->{$Activity}->{$Transition}
                             ->{TransitionAction}
                     }
-                    )
-                {
+                ) {
                     $TransitionActionString = join(
                         ', ',
                         @{
@@ -750,13 +742,13 @@ sub Run {
             . ')';
 
         # generate entity ID
-        my $EntityID = $EntityObject->EntityIDGenerate(
+        my $NewEntityID = $EntityObject->EntityIDGenerate(
             EntityType => 'Process',
             UserID     => $Self->{UserID},
         );
 
         # show error if can't generate a new EntityID
-        if ( !$EntityID ) {
+        if ( !$NewEntityID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error generating a new EntityID for this Process'),
             );
@@ -769,16 +761,16 @@ sub Run {
         my $StateEntityID = $StateLookup{'Inactive'};
 
         # show error if  StateEntityID for Inactive does not exist
-        if ( !$EntityID ) {
+        if ( !$NewEntityID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('The StateEntityID for state Inactive does not exists'),
             );
         }
 
         # otherwise save configuration and return to overview screen
-        my $ProcessID = $ProcessObject->ProcessAdd(
+        my $NewProcessID = $ProcessObject->ProcessAdd(
             Name          => $ProcessName,
-            EntityID      => $EntityID,
+            EntityID      => $NewEntityID,
             StateEntityID => $StateEntityID,
             Layout        => $ProcessData->{Layout},
             Config        => $ProcessData->{Config},
@@ -786,7 +778,7 @@ sub Run {
         );
 
         # show error if can't create
-        if ( !$ProcessID ) {
+        if ( !$NewProcessID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error creating the Process'),
             );
@@ -795,7 +787,7 @@ sub Run {
         # set entitty sync state
         my $Success = $EntityObject->EntitySyncStateSet(
             EntityType => 'Process',
-            EntityID   => $EntityID,
+            EntityID   => $NewEntityID,
             SyncState  => 'not_sync',
             UserID     => $Self->{UserID},
         );
@@ -804,7 +796,7 @@ sub Run {
         if ( !$Success ) {
             return $LayoutObject->ErrorScreen(
                 Message => $LayoutObject->{LanguageObject}->Translate(
-                    'There was an error setting the entity sync status for Process entity: %s', $EntityID
+                    'There was an error setting the entity sync status for Process entity: %s', $NewEntityID
                 ),
             );
         }
@@ -862,8 +854,7 @@ sub Run {
         # check if state exists
         my $StateList = $StateObject->StateList( UserID => $Self->{UserID} );
 
-        if ( !$StateList->{ $GetParam->{StateEntityID} } )
-        {
+        if ( !$StateList->{ $GetParam->{StateEntityID} } ) {
 
             # add server error error class
             $Error{StateEntityIDServerError} = 'ServerError';
@@ -880,22 +871,22 @@ sub Run {
         }
 
         # generate entity ID
-        my $EntityID = $EntityObject->EntityIDGenerate(
+        my $NewEntityID = $EntityObject->EntityIDGenerate(
             EntityType => 'Process',
             UserID     => $Self->{UserID},
         );
 
         # show error if can't generate a new EntityID
-        if ( !$EntityID ) {
+        if ( !$NewEntityID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error generating a new EntityID for this Process'),
             );
         }
 
         # otherwise save configuration and return to overview screen
-        my $ProcessID = $ProcessObject->ProcessAdd(
+        my $NewProcessID = $ProcessObject->ProcessAdd(
             Name          => $ProcessData->{Name},
-            EntityID      => $EntityID,
+            EntityID      => $NewEntityID,
             StateEntityID => $ProcessData->{StateEntityID},
             Layout        => {},
             Config        => $ProcessData->{Config},
@@ -903,7 +894,7 @@ sub Run {
         );
 
         # show error if can't create
-        if ( !$ProcessID ) {
+        if ( !$NewProcessID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error creating the Process'),
             );
@@ -912,7 +903,7 @@ sub Run {
         # set entitty sync state
         my $Success = $EntityObject->EntitySyncStateSet(
             EntityType => 'Process',
-            EntityID   => $EntityID,
+            EntityID   => $NewEntityID,
             SyncState  => 'not_sync',
             UserID     => $Self->{UserID},
         );
@@ -921,7 +912,7 @@ sub Run {
         if ( !$Success ) {
             return $LayoutObject->ErrorScreen(
                 Message => $LayoutObject->{LanguageObject}->Translate(
-                    'There was an error setting the entity sync status for Process entity: %s', $EntityID
+                    'There was an error setting the entity sync status for Process entity: %s', $NewEntityID
                 ),
             );
         }
@@ -929,7 +920,7 @@ sub Run {
         # redirect to process edit screen
         return $LayoutObject->Redirect(
             OP =>
-                "Action=AdminProcessManagement;Subaction=ProcessEdit;ID=$ProcessID"
+                "Action=AdminProcessManagement;Subaction=ProcessEdit;ID=$NewProcessID"
         );
 
     }
@@ -1032,8 +1023,7 @@ sub Run {
         # check if state exists
         my $StateList = $StateObject->StateList( UserID => $Self->{UserID} );
 
-        if ( !$StateList->{ $GetParam->{StateEntityID} } )
-        {
+        if ( !$StateList->{ $GetParam->{StateEntityID} } ) {
 
             # add server error error class
             $Error{StateEntityIDServerError} = 'ServerError';
@@ -1158,7 +1148,7 @@ sub Run {
             else {
 
                 # set entitty sync state
-                my $Success = $EntityObject->EntitySyncStateSet(
+                $Success = $EntityObject->EntitySyncStateSet(
                     EntityType => 'Process',
                     EntityID   => $CheckResult->{ProcessData}->{EntityID},
                     SyncState  => 'deleted',
@@ -1346,7 +1336,7 @@ sub Run {
                 else {
 
                     # set entitty sync state
-                    my $Success = $EntityObject->EntitySyncStateSet(
+                    $Success = $EntityObject->EntitySyncStateSet(
                         EntityType => $GetParam{EntityType},
                         EntityID   => $Entity->{EntityID},
                         SyncState  => 'deleted',
@@ -1455,11 +1445,6 @@ sub Run {
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'UpdateSyncMessage' ) {
 
-        # get the list of updated or deleted entities
-        my $EntitySyncStateList = $EntityObject->EntitySyncStateList(
-            UserID => $Self->{UserID}
-        );
-
         # prevent errors by defining $Output as an empty string instead of undef
         my $Output = '';
         if ( IsArrayRefWithData($EntitySyncStateList) ) {
@@ -1496,8 +1481,7 @@ sub Run {
                 for my $ElementData (
                     sort { lc( $a->{Name} ) cmp lc( $b->{Name} ) }
                     @{$ElementList}
-                    )
-                {
+                ) {
 
                     my $AvailableIn = '';
                     if ( $Element eq "ActivityDialog" ) {
@@ -1739,8 +1723,7 @@ sub _ShowEdit {
                 for my $ElementData (
                     sort { lc( $a->{Name} ) cmp lc( $b->{Name} ) }
                     @{$ElementList}
-                    )
-                {
+                ) {
 
                     my $AvailableIn = '';
                     if ( $Element eq "ActivityDialog" ) {
@@ -1830,7 +1813,7 @@ sub _ShowEdit {
             PossibleNone => 1,
             Class       => 'Modernize W75pc Validate_Required',
         );
-        
+
         $LayoutObject->Block(
             Name => 'CustomerPortalGroupSelection',
             Data => \%Param,
@@ -1908,8 +1891,7 @@ sub _GetParams {
     # get parameters from web browser
     for my $ParamName (
         qw( Name EntityID ProcessLayout Path StartActivity StartActivityDialog Description StateEntityID CustomerPortalGroupID )
-        )
-    {
+    ) {
         $GetParam->{$ParamName} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $ParamName )
             || '';
     }
@@ -2109,11 +2091,6 @@ sub _PushSessionScreen {
     );
 
     return 1;
-}
-
-sub _GetFullProcessConfig {
-    my ( $Self, %Param )
-
 }
 
 sub _GetProcessData {

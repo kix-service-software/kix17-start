@@ -98,8 +98,7 @@ sub Run {
         %ServiceData
         && $ServiceData{AssignedQueueID}
         && $ServiceData{AssignedQueueID} != $Ticket{QueueID}
-        )
-    {
+    ) {
         my $Success = $Self->{TicketObject}->TicketQueueSet(
             QueueID  => $ServiceData{AssignedQueueID},
             TicketID => $Param{Data}->{TicketID},

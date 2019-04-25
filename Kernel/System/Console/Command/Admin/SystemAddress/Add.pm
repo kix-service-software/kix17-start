@@ -95,8 +95,7 @@ sub Run {
             QueueID  => $Self->{QueueID},
             Name     => $Self->{EmailAddress},
         )
-        )
-    {
+    ) {
         $Self->PrintError("Can't add system address.");
         return $Self->ExitCodeError();
     }

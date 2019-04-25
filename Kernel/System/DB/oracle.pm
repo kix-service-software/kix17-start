@@ -152,8 +152,7 @@ sub TableCreate {
         if (
             ( $Tag->{Tag} eq 'Table' || $Tag->{Tag} eq 'TableCreate' )
             && $Tag->{TagType} eq 'Start'
-            )
-        {
+        ) {
             if ( $ConfigObject->Get('Database::ShellOutput') ) {
                 $SQLStart .= $Self->{'DB::Comment'}
                     . "----------------------------------------------------------\n";

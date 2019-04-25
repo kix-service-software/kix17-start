@@ -342,8 +342,7 @@ sub GenericAgentSchedule2CronTab {
 
     # convert week days (Sunday needs to be changed from 0 to 7)
     my @ScheduleDays = map {
-        if   ( $_ == 0 ) {7}
-        else             {$_}
+        ( $_ == 0 ) ? {7} : {$_}
     } @{ $Param{ScheduleDays} };
 
     $Schedule .= join ',', sort { $a <=> $b } @ScheduleDays;
@@ -403,7 +402,7 @@ sub _Init {
     # create new internal cron object
     my $CronObject;
     eval {
-        $CronObject = Schedule::Cron::Events->new(    ## no critic
+        $CronObject = Schedule::Cron::Events->new(
             $Param{Schedule},
             Seconds => $Param{StartTime},
         );

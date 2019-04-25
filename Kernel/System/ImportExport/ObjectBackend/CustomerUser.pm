@@ -439,8 +439,7 @@ sub ExportDataGet {
         if (
             $CustomerUserData{Source}
             && ( $CustomerUserData{Source} eq $ObjectData->{CustomerBackend} )
-            )
-        {
+        ) {
             my @CurrRow;
             for my $MappingObject (@MappingObjectList) {
                 my $Key = $MappingObject->{Key};
@@ -687,8 +686,7 @@ sub ImportDataSave {
             elsif (
                 $EmailDomainCustomerIDMapping->{$DomainPart}
                 && $EmailDomainCustomerIDMapping->{ANYTHINGELSE}
-                )
-            {
+            ) {
                 $NewCustomerUserData{UserCustomerID} =
                     $EmailDomainCustomerIDMapping->{ANYTHINGELSE};
             }
@@ -716,8 +714,7 @@ sub ImportDataSave {
             ( $NewCustomerUserData{UserPassword} && $NewCustomerUserData{UserPassword} eq '-' )
             || ( !$NewCustomerUserData{UserPassword} )
         )
-        )
-    {
+    ) {
         $NewCustomerUserData{UserPassword} = $NewCustomerUserData{$CustomerUserKey}
             . ( $ObjectData->{ResetPasswordSuffix} || '' );
     }
@@ -770,8 +767,7 @@ sub ImportDataSave {
         if (
             $CustomerUserData{Source}
             && $CustomerUserData{Source} eq $ObjectData->{CustomerBackend}
-            )
-        {
+        ) {
             $Result = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserUpdate(
                 Source => $ObjectData->{CustomerBackend},
                 %CustomerUserData,
@@ -805,8 +801,7 @@ sub ImportDataSave {
             while (
                 $CustomerUserData{Source}
                 && $CustomerUserData{Source} ne $ObjectData->{CustomerBackend}
-                )
-            {
+            ) {
                 $BackendRef{ $CustomerUserData{Source} } =
                     $Kernel::OM->Get('Kernel::System::CustomerUser')->{ $CustomerUserData{Source} };
                 delete( $Kernel::OM->Get('Kernel::System::CustomerUser')->{ $CustomerUserData{Source} } );
@@ -825,8 +820,7 @@ sub ImportDataSave {
             if (
                 $CustomerUserData{Source}
                 && $CustomerUserData{Source} eq $ObjectData->{CustomerBackend}
-                )
-            {
+            ) {
                 $CustomerUserData{ID} = $NewCustomerUserData{$CustomerUserKey};
                 $Result = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserUpdate(
                     %CustomerUserData,

@@ -37,23 +37,23 @@ sub new {
 sub TicketTemplateList {
     my ( $Self, %Param ) = @_;
     my %Result;
-    
+
     # get ticket templates from database
     my @Templates = $Self->{TicketObject}->TicketTemplateList(
         Frontend => 'Customer',
         Result   => 'ID',
         UserID   => $Param{UserID},
     );
-    
+
     foreach my $TemplateID (@Templates) {
         my %Template = $Self->{TicketObject}->TicketTemplateGet(
             ID => $TemplateID,
         );
-        $Template{PortalGroupID} = $Template{CustomerPortalGroupID},
+        $Template{PortalGroupID} = $Template{CustomerPortalGroupID};
         $Template{Link}          = "Action=CustomerTicketMessage;DefaultSet=$TemplateID";
-        $Result{$TemplateID} = \%Template;
+        $Result{$TemplateID}     = \%Template;
     }
-    
+
     return %Result;
 }
 

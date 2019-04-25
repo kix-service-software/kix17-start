@@ -1,12 +1,12 @@
 #!/bin/sh
 # --
-# Modified version of the work: Copyright (C) 2006-2018 c.a.p.e. IT GmbH, http://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
 CURRENTUSER=`whoami`
@@ -15,7 +15,6 @@ CRON_USER="$2"
 # check if a common user try to use -u
 if test -n "$CRON_USER"; then
     if test $CURRENTUSER != root; then
-#rbo - T2016121190001552 - replaced OTRS wording
         echo "Run this script just as webserver user! Or use 'Cron.sh {start|stop|restart} <webserver user>' as root!"
         exit 5
     fi
@@ -24,7 +23,6 @@ fi
 # check if the cron user is specified
 if test -z "$CRON_USER"; then
     if test $CURRENTUSER = root; then
-#rbo - T2016121190001552 - replaced OTRS wording
         echo "Run this script just as webserver user! Or use 'Cron.sh {start|stop|restart} <webserver user>' as root!"
         exit 5
     fi
@@ -32,24 +30,20 @@ fi
 
 # find otrs root
 cd "`dirname $0`/../"
-#rbo - T2016121190001552 - replaced OTRS wording
 KIX_HOME="`pwd`"
 cd -
 
-#rbo - T2016121190001552 - replaced OTRS wording
 if test -e $KIX_HOME/var/cron; then
     KIX_ROOT=$KIX_HOME
 else
     echo "No cronjobs in $KIX_HOME/var/cron found!";
-    echo " * Check the \$HOME (/etc/passwd) of the OTRS user. It must be the root dir of your OTRS system (e. g. /opt/otrs). ";
+    echo " * Check the \$HOME (/etc/passwd) of the KIX user. It must be the root dir of your KIX system (e. g. /opt/otrs). ";
     exit 5;
 fi
 
-#rbo - T2016121190001552 - replaced OTRS wording
 CRON_DIR=$KIX_ROOT/var/cron
 CRON_TMP_FILE=$KIX_ROOT/var/tmp/otrs-cron-tmp.$$
 
-#rbo - T2016121190001552 - replaced OTRS wording
 echo "Cron.sh - start/stop KIX cronjobs"
 
 #

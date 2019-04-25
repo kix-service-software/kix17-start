@@ -77,8 +77,7 @@ sub Run {
             Active => 1,
             UserID => 1,
         )
-        )
-    {
+    ) {
         $Self->PrintError("Can't add user to role.");
         return $Self->ExitCodeError();
     }

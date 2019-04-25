@@ -14,6 +14,7 @@ use strict;
 use warnings;
 
 use Kernel::System::EventHandler;
+use Kernel::System::PreEventHandler;
 use Kernel::System::ITSMConfigItem::Definition;
 use Kernel::System::ITSMConfigItem::History;
 use Kernel::System::ITSMConfigItem::Number;
@@ -23,8 +24,6 @@ use Kernel::System::ITSMConfigItem::XML;
 use Kernel::System::VariableCheck qw(:all);
 
 use Storable;
-
-use vars qw(@ISA);
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -74,7 +73,11 @@ sub new {
     $Self->{CacheType} = 'ITSMConfigurationManagement';
     $Self->{CacheTTL}  = 60 * 60 * 24 * 20;
 
-    @ISA = qw(
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
+
+    use base qw(
         Kernel::System::ITSMConfigItem::Definition
         Kernel::System::ITSMConfigItem::History
         Kernel::System::ITSMConfigItem::Number
@@ -82,45 +85,39 @@ sub new {
         Kernel::System::ITSMConfigItem::Version
         Kernel::System::ITSMConfigItem::XML
         Kernel::System::EventHandler
+        Kernel::System::PreEventHandler
     );
 
-    # KIX4OTRS-capeIT
-    # Dynamically find packages which are considered as super-classes for this
-    # package. These packages may contain methods which overwrite functions
-    # contained in @ISA as initially set, but not methods contained in this very
-    # file, unless SUPER is used.
-        if (
-            !$Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::CustomModules')
-            || ref( $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::CustomModules') ) ne 'HASH'
-            )
-        {
-            die "Got no ITSMConfigItem::CustomModules! Please check your SysConfig! Error occured";
+    # load ticket extension modules
+    my $CustomModule = $ConfigObject->Get('ITSMConfigItem::CustomModules');
+    if ($CustomModule) {
+
+        my %ModuleList;
+        if ( ref $CustomModule eq 'HASH' ) {
+            %ModuleList = %{$CustomModule};
         }
-        my %CustomModules = %{ $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::CustomModules') };
-        for my $CustModKey ( sort( keys(%CustomModules) ) ) {
-            next if ( !$CustomModules{$CustModKey} );
-            if ( !$Kernel::OM->Get('Kernel::System::Main')->Require( $CustomModules{$CustModKey} ) ) {
-                $Kernel::OM->Get('Kernel::System::Log')->Log(
-                    Priority => 'error',
-                    Message  => "Can't load ITSMConfigItem custom module "
-                        . $CustomModules{$CustModKey} . " ($@)!",
-                );
-            }
-            else {
-                unshift( @ISA, $CustomModules{$CustModKey} );
-            }
+        else {
+            $ModuleList{Init} = $CustomModule;
         }
 
-        # init of pre-event handler
-        $Self->PreEventHandlerInit(
-            Config     => 'ITSMConfigItem::EventModulePre',
-            BaseObject => 'ConfigItemObject',
-            Objects    => {
-                %{$Self},
-            },
-        );
+        MODULEKEY:
+        for my $ModuleKey ( sort keys %ModuleList ) {
 
-    # EO KIX4OTRS-capeIT
+            my $Module = $ModuleList{$ModuleKey};
+
+            next MODULEKEY if !$Module;
+            next MODULEKEY if !$MainObject->RequireBaseClass($Module);
+        }
+    }
+
+    # init of pre-event handler
+    $Self->PreEventHandlerInit(
+        Config     => 'ITSMConfigItem::EventModulePre',
+        BaseObject => 'ConfigItemObject',
+        Objects    => {
+            %{$Self},
+        },
+    );
 
     # init of event handler
     $Self->EventHandlerInit(
@@ -421,7 +418,6 @@ sub ConfigItemAdd {
         return;
     }
 
-    # KIX4OTRS-capeIT
     # trigger ConfigItemCreate
     my $Result = $Self->PreEventHandler(
         Event => 'ConfigItemCreate',
@@ -444,7 +440,6 @@ sub ConfigItemAdd {
             $Param{$ResultKey} = $Result->{$ResultKey};
         }
     }
-    # EO KIX4OTRS-capeIT
 
     # create config item number
     if ( $Param{Number} ) {
@@ -539,7 +534,6 @@ sub ConfigItemDelete {
     );
 
     #---------------------------------------------------------------------------
-    # KIX4OTRS-capeIT
     # trigger ConfigItemDelete
     my $Result = $Self->PreEventHandler(
         Event => 'ConfigItemDelete',
@@ -562,8 +556,6 @@ sub ConfigItemDelete {
             $Param{$ResultKey} = $Result->{$ResultKey};
         }
     }
-
-    # EO KIX4OTRS-capeIT
     #---------------------------------------------------------------------------
 
     # delete all links to this config item first, before deleting the versions
@@ -1018,8 +1010,7 @@ sub ConfigItemSearchExtended {
         ( defined $Param{Name} && $Param{Name} ne '' )
         || ( defined $Param{What} && $Param{What} ne '' )
         || $Param{PreviousVersionSearch}
-        )
-    {
+    ) {
         $RequiredSearch{Version} = 1;
     }
 
@@ -1180,8 +1171,7 @@ sub ConfigItemSearch {
         OrderBy
         OrderByDirection
         )
-        )
-    {
+    ) {
         if ( !defined $Param{$Argument} ) {
             $Param{$Argument} ||= [];
 
@@ -1210,7 +1200,6 @@ sub ConfigItemSearch {
         ChangeBy     => 'change_by',
     );
 
-    # KIX4OTRS-capeIT
     # do default sort if item not used
     my $Match = 0;
     for my $OrderBy ( @{ $Param{OrderBy} } ) {
@@ -1220,8 +1209,6 @@ sub ConfigItemSearch {
     if ( !$Match ) {
         @{ $Param{OrderBy} } = ('Number');
     }
-
-    # EO KIX4OTRS-capeIT
 
     # check if OrderBy contains only unique valid values
     my %OrderBySeen;
@@ -1523,8 +1510,7 @@ sub UniqueNameCheck {
     if (
         !IsInteger( $Param{ConfigItemID} )
         && ( IsStringWithData( $Param{ConfigItemID} ) && $Param{ConfigItemID} ne 'NEW' )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "The ConfigItemID parameter needs to be an integer or 'NEW'",
@@ -1729,8 +1715,7 @@ sub CurInciStateRecalc {
             if (
                 !$NewConfigItemIncidentState{$ConfigItemID}
                 || $NewConfigItemIncidentState{$ConfigItemID} eq 'operational'
-                )
-            {
+            ) {
                 $NewConfigItemIncidentState{$ConfigItemID} = $InciStateType;
             }
         }
@@ -1866,8 +1851,7 @@ sub CurInciStateRecalc {
     return 1;
 }
 
-# KIX4OTRS-capeIT
-# Thefollowing methods are meant to ease the handling of the XML-LIKE data hash.
+# The following methods are meant to ease the handling of the XML-LIKE data hash.
 # They do not replace any internal/original methods.
 
 =item GetAttributeValuesByKey()
@@ -1892,8 +1876,7 @@ sub GetAttributeValuesByKey {
         ( !$Param{XMLDefinition} ) ||
         ( ref $Param{XMLData} ne 'HASH' ) ||
         ( ref $Param{XMLDefinition} ne 'ARRAY' )
-        )
-    {
+    ) {
         return \@RetArray;
     }
 
@@ -1963,8 +1946,7 @@ sub GetAttributeContentsByKey {
         ( !$Param{XMLDefinition} ) ||
         ( ref $Param{XMLData} ne 'HASH' ) ||
         ( ref $Param{XMLDefinition} ne 'ARRAY' )
-        )
-    {
+    ) {
         return \@RetArray;
     }
 
@@ -2031,8 +2013,8 @@ sub GetAttributeDataByType {
         $Self->GetKeyNamesByType(
             XMLDefinition => $Param{XMLDefinition},
             AttributeType => $Param{AttributeType}
-            )
-        };
+        )
+    };
 
     if ( $Param{Content} ) {
         for my $CurrKey (@Keys) {
@@ -2089,51 +2071,8 @@ sub GetKeyNamesByType {
                 $Self->GetKeyNamesByType(
                     AttributeType => $Param{AttributeType},
                     XMLDefinition => $AttrDef->{Sub},
-                    )
-                };
-
-            @Keys = ( @Keys, @SubResult );
-        }
-
-    }
-
-    return \@Keys;
-}
-
-=item _GetKeyNamesByType()
-
-    Sames as GetKeyNamesByType - returns an array of keynames which are of a
-    specified data type. => use GetKeyNamesByType instead !
-    !!! DEPRECATED - ONLY FOR COMPATIBILITY - WILL BE REMOVED !!!
-
-    $ConfigItemObject->_GetKeyNamesByType(
-        XMLDefinition => $XMLDefinition,
-        AttributeType => $AttributeType,
-    );
-
-=cut
-
-sub _GetKeyNamesByType {
-    my ( $Self, %Param ) = @_;
-
-    my @Keys = ();
-    my %Result;
-
-    if ( defined( $Param{XMLDefinition} ) ) {
-
-        for my $AttrDef ( @{ $Param{XMLDefinition} } ) {
-            if ( $AttrDef->{Input}->{Type} eq $Param{AttributeType} ) {
-                push( @Keys, $AttrDef->{Key} )
-            }
-
-            next if !$AttrDef->{Sub};
-
-            my @SubResult = @{
-                $Self->_GetKeyNamesByType(
-                    AttributeType => $Param{AttributeType},
-                    XMLDefinition => $AttrDef->{Sub},
-                    )
-                };
+                )
+            };
 
             @Keys = ( @Keys, @SubResult );
         }
@@ -2175,12 +2114,11 @@ sub GetAttributeDefByTagKey {
     my ( $Self, %Param ) = @_;
 
     # check required params...
-    return
-        if (
+    return if (
         !$Param{XMLData}       || ref( $Param{XMLData} )       ne 'HASH' ||
         !$Param{XMLDefinition} || ref( $Param{XMLDefinition} ) ne 'ARRAY' ||
         !$Param{TagKey}
-        );
+    );
 
     ITEM:
     for my $Item ( @{ $Param{XMLDefinition} } ) {
@@ -2289,14 +2227,12 @@ sub SetAttributeContentsByKey {
     # check required params...
     if (
         !$Param{KeyName}
-        ||
-        !length( $Param{NewContent} ) ||
-        ( !$Param{XMLData} ) ||
-        ( !$Param{XMLDefinition} ) ||
-        ( ref $Param{XMLData} ne 'HASH' ) ||
-        ( ref $Param{XMLDefinition} ne 'ARRAY' )
-        )
-    {
+        || !length( $Param{NewContent} )
+        || ( !$Param{XMLData} )
+        || ( !$Param{XMLDefinition} )
+        || ( ref $Param{XMLData} ne 'HASH' )
+        || ( ref $Param{XMLDefinition} ne 'ARRAY' )
+    ) {
         return 0;
     }
 
@@ -2399,8 +2335,6 @@ sub CountLinkedObjects {
 
     return $Result;
 }
-
-# EO KIX4OTRS-capeIT
 
 =begin Internal:
 
@@ -2505,8 +2439,7 @@ sub _FindWarnConfigItems {
         if (
             $Param{ScannedConfigItemIDs}->{$ConfigItemID}->{Type}
             && $Param{ScannedConfigItemIDs}->{$ConfigItemID}->{Type} eq 'incident'
-            )
-        {
+        ) {
             $IncidentCount++;
         }
     }
@@ -2515,18 +2448,12 @@ sub _FindWarnConfigItems {
 # it is ok that a config item is investigated as many times as there are configured link types * number of incident config iteems
     if (
         $Param{ScannedConfigItemIDs}->{ $Param{ConfigItemID} }->{FindWarn}
-        && $Param{ScannedConfigItemIDs}->{ $Param{ConfigItemID} }->{FindWarn}
-        >= ( $Param{NumberOfLinkTypes} * $IncidentCount )
-        )
-    {
+        && $Param{ScannedConfigItemIDs}->{ $Param{ConfigItemID} }->{FindWarn} >= ( $Param{NumberOfLinkTypes} * $IncidentCount )
+    ) {
         return;
     }
 
-    # KIX4OTRS-capeIT
-    $Self->{Direction} =
-        $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::CILinkDirection') || 'Both';
-
-    # EO KIX4OTRS-capeIT
+    $Self->{Direction} = $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::CILinkDirection') || 'Both';
 
     # increase the visit counter
     $Param{ScannedConfigItemIDs}->{ $Param{ConfigItemID} }->{FindWarn}++;

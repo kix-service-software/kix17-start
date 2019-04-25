@@ -84,8 +84,7 @@ sub Run {
             next if !$LinkListWithData->{Person}->{$LinkType}->{Source};
             next if ref $LinkListWithData->{Person}->{$LinkType}->{Source} ne 'HASH';
 
-            for my $UserID ( sort keys %{ $LinkListWithData->{Person}->{$LinkType}->{Source} } )
-            {
+            for my $UserID ( sort keys %{ $LinkListWithData->{Person}->{$LinkType}->{Source} } ) {
                 my %PersonData = %{ $LinkListWithData->{Person}->{$LinkType}->{Source}->{$UserID} };
 
                 # check for UserID

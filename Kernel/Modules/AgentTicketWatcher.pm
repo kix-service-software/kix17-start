@@ -101,12 +101,12 @@ sub Run {
 
         # Checks if the user has permissions to see the ticket.
         #   This is needed because watching grants ro permissions (depending on configuration).
-        my $Access = $TicketObject->TicketPermission(
+        my $HasAccess = $TicketObject->TicketPermission(
             Type     => 'ro',
             TicketID => $Self->{TicketID},
             UserID   => $Self->{UserID},
         );
-        if ( !$Access ) {
+        if ( !$HasAccess ) {
             return $LayoutObject->NoPermission( WithHeader => 'yes' );
         }
 
@@ -149,12 +149,12 @@ sub Run {
 
         # redirect
         # checks if the user has permissions to see the ticket
-        my $Access = $TicketObject->TicketPermission(
+        my $HasAccess = $TicketObject->TicketPermission(
             Type     => 'ro',
             TicketID => $Self->{TicketID},
             UserID   => $Self->{UserID},
         );
-        if ( !$Access ) {
+        if ( !$HasAccess ) {
 
             # generate output
             return $LayoutObject->Redirect(
@@ -166,7 +166,7 @@ sub Run {
         );
     }
 
-    $LayoutObject->ErrorScreen(
+    return $LayoutObject->ErrorScreen(
         Message => Translatable('Invalid Subaction.'),
     );
 }

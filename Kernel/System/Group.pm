@@ -1181,8 +1181,7 @@ sub PermissionGroupUserAdd {
         && ref $DBGroupUser{ $Param{UID} } eq 'HASH'
         && $DBGroupUser{ $Param{UID} }->{ $Param{GID} }
         && ref $DBGroupUser{ $Param{UID} }->{ $Param{GID} } eq 'ARRAY'
-        )
-    {
+    ) {
         @CurrentPermissions = @{ $DBGroupUser{ $Param{UID} }->{ $Param{GID} } };
     }
 
@@ -1482,8 +1481,7 @@ sub PermissionGroupRoleAdd {
         && ref $DBGroupRole{ $Param{RID} } eq 'HASH'
         && $DBGroupRole{ $Param{RID} }->{ $Param{GID} }
         && ref $DBGroupRole{ $Param{RID} }->{ $Param{GID} } eq 'ARRAY'
-        )
-    {
+    ) {
         @CurrentPermissions = @{ $DBGroupRole{ $Param{RID} }->{ $Param{GID} } };
     }
 

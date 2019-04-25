@@ -55,26 +55,21 @@ sub Run {
     $Self->Print("<yellow>Uploading queues-groups-roles schema from CSV-file...</yellow>\n");
     my $QGRObject = $Kernel::OM->Get('Kernel::System::QueuesGroupsRoles');
 
-    my $currLine = undef;
     my $CSV;
     my $FileName = $Self->GetArgument('filename');
+    my @Content;
 
     #-------------------------------------------------------------------------------
     # check CSV...
-    if ( !open( $CSV, "<", $FileName ) ) {
-        die "\nCould not open file: <$FileName> ($!).\n";
-    }
+    open( $CSV, "<", $FileName ) or die "\nCould not open file: <$FileName> ($!).\n";
 
     #-------------------------------------------------------------------------------
     # process CSV...
-    my @Content;
-    while (<$CSV>) {
-        chomp($_);
-        $currLine = $_;
-        utf8::decode($currLine);
-        $currLine =~ s/"//g;
-        push( @Content, $currLine )
-    }
+    $Self->_ReadContent(
+        FileHandle => $CSV,
+        Content    => \@Content,
+    );
+    close( $CSV );
 
     my $Result = $QGRObject->Upload(
         MessageToSTDERR => 1,
@@ -86,9 +81,22 @@ sub Run {
     else {
         $Self->Print("<red>Import failed!<$FileName>.</red>\n");
     }
-    close $CSV;
     $Self->Print("<green>Done.</green>\n");
     return $Self->ExitCodeOk();
+}
+
+sub _ReadContent {
+    my ( $Self, %Param ) = @_;
+
+    while (<$Param{FileHandle}>) {
+        chomp($_);
+        my $currLine = $_;
+        utf8::decode($currLine);
+        $currLine =~ s/"//g;
+        push( @{$Param{Content}}, $currLine )
+    }
+
+    return 1;
 }
 
 1;

@@ -311,9 +311,9 @@ my @Tests = (
     },
     {
         Input =>
-            '<br />http://cuba/otrs/index.pl?Action=AgentTicketZoom&amp;TicketID=4348<br /><br />Your OTRS Notification Master',
+            '<br />http://cuba/otrs/index.pl?Action=AgentTicketZoom&amp;TicketID=4348<br /><br />Your KIX Notification Master',
         Result =>
-            '<br /><a href="http://cuba/otrs/index.pl?Action=AgentTicketZoom&amp;TicketID=4348" title="http://cuba/otrs/index.pl?Action=AgentTicketZoom&amp;TicketID=4348">http://cuba/otrs/index.pl?Action=AgentTicketZoom&amp;TicketID=4348</a><br /><br />Your OTRS Notification Master',
+            '<br /><a href="http://cuba/otrs/index.pl?Action=AgentTicketZoom&amp;TicketID=4348" title="http://cuba/otrs/index.pl?Action=AgentTicketZoom&amp;TicketID=4348">http://cuba/otrs/index.pl?Action=AgentTicketZoom&amp;TicketID=4348</a><br /><br />Your KIX Notification Master',
         Name   => 'LinkQuote - just TLD given;',
         Target => '',
     },

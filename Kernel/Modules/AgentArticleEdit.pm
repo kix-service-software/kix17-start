@@ -228,8 +228,7 @@ sub Run {
     if (
         defined $Self->{Config}->{PermissionGroupEdit}
         && ( ref $Self->{Config}->{PermissionGroupEdit} ) eq 'ARRAY'
-        )
-    {
+    ) {
         if ( scalar @{ $Self->{Config}->{PermissionGroupEdit} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupEdit} } ) {
                 $AccessGroupEditOk = grep { $_ eq $Group } @GroupListArray;
@@ -246,8 +245,7 @@ sub Run {
     if (
         defined $Self->{Config}->{PermissionGroupCopy}
         && ( ref $Self->{Config}->{PermissionGroupCopy} ) eq 'ARRAY'
-        )
-    {
+    ) {
         if ( scalar @{ $Self->{Config}->{PermissionGroupCopy} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupCopy} } ) {
                 $AccessGroupCopyOk = grep { $_ eq $Group } @GroupListArray;
@@ -264,8 +262,7 @@ sub Run {
     if (
         defined $Self->{Config}->{PermissionGroupMove}
         && ( ref $Self->{Config}->{PermissionGroupMove} ) eq 'ARRAY'
-        )
-    {
+    ) {
         if ( scalar @{ $Self->{Config}->{PermissionGroupMove} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupMove} } ) {
                 $AccessGroupMoveOk = grep { $_ eq $Group } @GroupListArray;
@@ -282,8 +279,7 @@ sub Run {
     if (
         defined $Self->{Config}->{PermissionGroupDelete}
         && ( ref $Self->{Config}->{PermissionGroupDelete} ) eq 'ARRAY'
-        )
-    {
+    ) {
         if ( scalar @{ $Self->{Config}->{PermissionGroupDelete} } ) {
             for my $Group ( @{ $Self->{Config}->{PermissionGroupDelete} } ) {
                 $AccessGroupDeleteOk = grep { $_ eq $Group } @GroupListArray;
@@ -301,8 +297,7 @@ sub Run {
         && $Self->{Config}->{EditableArticleTypes}
         && $Self->{Config}->{EditableArticleTypes} =~
         /(^|.*,)$Article{ArticleType}(,.*|$)/
-        )
-    {
+    ) {
         $LayoutObject->Block(
             Name => 'ArticleEdit',
             Data => {
@@ -423,8 +418,7 @@ sub Run {
         for my $Key (
             qw(Body Subject Year Month Day Hour Minute AttachmentChanged ArticleTypeID TimeUnits
             )
-            )
-        {
+        ) {
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
         }
 
@@ -436,8 +430,7 @@ sub Run {
                 && defined $GetParam{Day}
                 && defined $GetParam{Hour}
                 && defined $GetParam{Minute}
-                )
-            {
+            ) {
                 %GetParam = $LayoutObject->TransformDateSelection(
                     %GetParam,
                 );
@@ -510,8 +503,7 @@ sub Run {
                 defined $GetParam{TimeUnits}
                 && $GetParam{TimeUnits} eq ''
                 && $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
-                )
-            {
+            ) {
                 $Error{TimeUnitsInvalid} = 'ServerError';
             }
 
@@ -764,7 +756,7 @@ sub Run {
                             # ignore attachment if not linked in body
                             next
                                 if $GetParam{Body} !~
-                                /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
+                                /(?:\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
                         }
                     }
 
@@ -862,10 +854,7 @@ sub Run {
         if (
             defined $GetParam{ArticleTypeID}
             && $GetParam{ArticleTypeID} != $Article{ArticleTypeID}
-            )
-        {
-            my %ArticleTypeList = $TicketObject->ArticleTypeList( Result => 'HASH' );
-
+        ) {
             # update article type
             my $UpdateSuccessful = $TicketObject->ArticleUpdate(
                 ArticleID => $Article{ArticleID},
@@ -945,8 +934,7 @@ sub Run {
 
         for (
             qw(NewTicketNumber NewTicketNumberArticleMove NewTicketNumberArticleCopy TimeUnits TimeUnitsOriginal)
-            )
-        {
+        ) {
             $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
         }
 
@@ -1178,8 +1166,7 @@ sub Run {
             if (
                 $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ ) ne
                 'undefined'
-                )
-            {
+            ) {
                 $Param{$_}
                     = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $_ )
                     || '';
@@ -1223,17 +1210,16 @@ sub Run {
         for my $TicketID (
             sort { $ResultHash{$a} cmp $ResultHash{$b} }
             keys %ResultHash
-            )
-        {
-            my %Ticket = $TicketObject->TicketGet(
+        ) {
+            my %TicketData = $TicketObject->TicketGet(
                 TicketID => $TicketID,
             );
 
-            next if $Ticket{StateType} eq 'merged';
+            next if $TicketData{StateType} eq 'merged';
 
             push @Data, {
-                SearchObjectKey   => $Ticket{TicketNumber},
-                SearchObjectValue => $Ticket{Title},
+                SearchObjectKey   => $TicketData{TicketNumber},
+                SearchObjectValue => $TicketData{Title},
             };
             $MaxResultCount--;
             last if $MaxResultCount == 0;
@@ -1541,9 +1527,9 @@ sub _Mask {
 
             # filter the list
             for my $Key ( sort keys %ArticleTypeList ) {
-                my @SplitArray = split( /-/, $ArticleTypeList{$Key} );
-                pop @SplitArray if ( scalar(@SplitArray) > 1 );
-                my $TmpType = join( '-', @SplitArray );
+                my @TypeArray = split( /-/, $ArticleTypeList{$Key} );
+                pop @TypeArray if ( scalar(@TypeArray) > 1 );
+                my $TmpType = join( '-', @TypeArray );
                 if ( $TmpType eq $ArticleBaseType ) {
                     $ArticleTypes{$Key} = $ArticleTypeList{$Key};
                 }

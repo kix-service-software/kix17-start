@@ -31,9 +31,9 @@ sub new {
     bless( $Self, $Type );
 
     # create needed objects
-    $Self->{ConfigObject}        = $Kernel::OM->Get('Kernel::Config');
-    $Self->{LogObject}           = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{TicketObject}        = $Kernel::OM->Get('Kernel::System::Ticket');
+    $Self->{ConfigObject} = $Kernel::OM->Get('Kernel::Config');
+    $Self->{LogObject}    = $Kernel::OM->Get('Kernel::System::Log');
+    $Self->{TicketObject} = $Kernel::OM->Get('Kernel::System::Ticket');
 
     return $Self;
 }
@@ -142,9 +142,8 @@ sub Run {
             ref($ForceDefaultState) eq 'HASH'
             && $ForceDefaultState->{ $TicketData{Type} }
             && !$TicketStateWorkflow->{ $TicketData{Type}.':::'.$TicketData{State} }
-            )
-        {
-            $Self->{TicketObject}->StateSet(
+        ) {
+            $Self->{TicketObject}->TicketStateSet(
                 State    => $ForceDefaultState->{ $TicketData{Type} },
                 TicketID => $TicketData{TicketID},
                 UserID   => $Self->{UserID} || 1,
@@ -168,8 +167,7 @@ sub Run {
                     if (
                         $CurrentState eq $TicketData{State}
                         || $TicketStateWorkflow->{$Key} =~ /(^|.*,\s*)$TicketData{State}(,.*|$)/
-                        )
-                    {
+                    ) {
 
                         $CurrentStateIsNotValid = 0;
                         last;
@@ -180,7 +178,7 @@ sub Run {
 
             if ($CurrentStateIsNotValid) {
 
-                $Self->{TicketObject}->StateSet(
+                $Self->{TicketObject}->TicketStateSet(
                     State    => $DefaultState->{ $TicketData{Type} },
                     TicketID => $TicketData{TicketID},
                     UserID   => $Self->{UserID} || 1,

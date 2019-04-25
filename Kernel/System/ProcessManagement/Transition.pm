@@ -220,15 +220,13 @@ sub TransitionCheck {
             next DEBUGFILTER if !$Self->{TransitionDebugFilters}->{$DebugFilter};
             next DEBUGFILTER if ref $Param{Data} ne 'HASH';
 
-#rbo - T2016121190001552 - added KIX placeholders
             if ( $DebugFilter =~ m{<(KIX|OTRS)_TICKET_([^>]+)>}msx ) {
                 my $TicketParam = $2;
 
                 if (
                     defined $Param{Data}->{$TicketParam}
                     && $Param{Data}->{$TicketParam}
-                    )
-                {
+                ) {
                     if ( ref $Param{Data}->{$TicketParam} eq 'ARRAY' ) {
                         for my $Item ( @{ $Param{Data}->{$TicketParam} } ) {
 
@@ -244,10 +242,8 @@ sub TransitionCheck {
                     }
 
                     elsif (
-                        $Self->{TransitionDebugFilters}->{$DebugFilter} ne
-                        $Param{Data}->{$TicketParam}
-                        )
-                    {
+                        $Self->{TransitionDebugFilters}->{$DebugFilter} ne $Param{Data}->{$TicketParam}
+                    ) {
                         $Self->{TransitionDebug} = 0;
                         last DEBUGFILTER;
                     }
@@ -301,8 +297,7 @@ sub TransitionCheck {
             $Self->{TransitionDebug}
             && defined $Self->{TransitionDebugFilters}->{'TransitionEntityID'}
             && $Self->{TransitionDebugFilters}->{'TransitionEntityID'} ne $TransitionEntityID
-            )
-        {
+        ) {
             $Self->{TransitionDebug} = 0;
         }
 
@@ -335,8 +330,7 @@ sub TransitionCheck {
         if (
             !$Transitions->{$TransitionEntityID}->{Condition}->{ConditionLinking}
             && !$Transitions->{$TransitionEntityID}->{Condition}->{Type}
-            )
-        {
+        ) {
 
             $Self->DebugLog(
                 MessageType => 'Custom',
@@ -353,8 +347,7 @@ sub TransitionCheck {
             $ConditionLinking ne 'and'
             && $ConditionLinking ne 'or'
             && $ConditionLinking ne 'xor'
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid Condition->Type in $TransitionEntityID!",
@@ -367,8 +360,7 @@ sub TransitionCheck {
         for my $Cond (
             sort { $a cmp $b }
             keys %{ $Transitions->{$TransitionEntityID}->{Condition} }
-            )
-        {
+        ) {
 
             next CONDITIONLOOP if $Cond eq 'Type' || $Cond eq 'ConditionLinking';
 
@@ -376,8 +368,7 @@ sub TransitionCheck {
             my $ActualCondition = $Transitions->{$TransitionEntityID}->{Condition}->{$Cond};
 
             # Check if we have Fields in our Cond
-            if ( !IsHashRefWithData( $ActualCondition->{Fields} ) )
-            {
+            if ( !IsHashRefWithData( $ActualCondition->{Fields} ) ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "No Fields in Transition $TransitionEntityID->Condition->$Cond"
@@ -451,8 +442,7 @@ sub TransitionCheck {
                     && $FieldType ne 'Array'
                     && $FieldType ne 'Regexp'
                     && $FieldType ne 'Module'
-                    )
-                {
+                ) {
                     $Kernel::OM->Get('Kernel::System::Log')->Log(
                         Priority => 'error',
                         Message  => "Invalid Condition->Type in $TransitionEntityID!",
@@ -471,8 +461,7 @@ sub TransitionCheck {
                             && $ActualCondition->{Fields}->{$Field}->{Match} ne '0'
                         )
                         || ref $ActualCondition->{Fields}->{$Field}->{Match}
-                        )
-                    {
+                    ) {
                         $Kernel::OM->Get('Kernel::System::Log')->Log(
                             Priority => 'error',
                             Message =>
@@ -489,15 +478,13 @@ sub TransitionCheck {
                     if (
                         defined $Param{Data}->{$Field}
                         && defined $ActualCondition->{Fields}->{$Field}->{Match}
-                        )
-                    {
+                    ) {
 
                         # check if field data is a string and compare directly
                         if (
                             ref $Param{Data}->{$Field} eq ''
                             && $ActualCondition->{Fields}->{$Field}->{Match} eq $Param{Data}->{$Field}
-                            )
-                        {
+                        ) {
                             $Match      = 1;
                             $MatchValue = $Param{Data}->{$Field};
                         }
@@ -579,19 +566,21 @@ sub TransitionCheck {
                     # 3. grep through $Data->{$Field}
                     #   to find the "toCheck" value inside the Data->{$Field} Array
                     # 4. Assign all found Values to @CheckResults
-                    my $CheckValue;
-                    my @CheckResults = map {
-                        $CheckValue = $_;
-                        grep { $CheckValue eq $_ } @{ $Param{Data}->{$Field} }
+                    my @CheckResults = ();
+                    CHECKVALUE:
+                    for my $CheckValue ( @{ $ActualCondition->{Fields}->{$Field}->{Match} } ) {
+                        for my $DataValue ( @{ $Param{Data}->{$Field} } ) {
+                            if ( $CheckValue eq $DataValue ) {
+                                push(@CheckResults, $CheckValue);
+                                next CHECKVALUE;
+                            }
                         }
-                        @{ $ActualCondition->{Fields}->{$Field}->{Match} };
+                    }
 
                     # if the found amount is the same as the "toCheck" amount we succeeded
                     if (
-                        scalar @CheckResults
-                        == scalar @{ $ActualCondition->{Fields}->{$Field}->{Match} }
-                        )
-                    {
+                        scalar @CheckResults == scalar @{ $ActualCondition->{Fields}->{$Field}->{Match} }
+                    ) {
                         $FieldSuccess++;
 
                         $Self->DebugLog(
@@ -656,8 +645,7 @@ sub TransitionCheck {
                     if (
                         !$Param{Data}->{$Field}
                         || ref $Param{Data}->{$Field} ne 'HASH'
-                        )
-                    {
+                    ) {
                         $FieldFail++;
                         next FIELDLOOP;
                     }
@@ -671,10 +659,8 @@ sub TransitionCheck {
                     # If the amount of Results equals the amount of Keys in our hash
                     # this part matched
                     if (
-                        scalar @CheckResults
-                        == scalar keys %{ $ActualCondition->{Fields}->{$Field}->{Match} }
-                        )
-                    {
+                        scalar @CheckResults == scalar keys %{ $ActualCondition->{Fields}->{$Field}->{Match} }
+                    ) {
 
                         $FieldSuccess++;
 
@@ -723,8 +709,7 @@ sub TransitionCheck {
                     }
                     next FIELDLOOP;
                 }
-                elsif ( $ActualCondition->{Fields}->{$Field}->{Type} eq 'Regexp' )
-                {
+                elsif ( $ActualCondition->{Fields}->{$Field}->{Type} eq 'Regexp' ) {
 
                     # if our Check contains anything else then a string we can't check
                     if (
@@ -734,8 +719,7 @@ sub TransitionCheck {
                             ref $ActualCondition->{Fields}->{$Field}->{Match} ne 'Regexp'
                             && ref $ActualCondition->{Fields}->{$Field}->{Match} ne ''
                         )
-                        )
-                    {
+                    ) {
                         $Kernel::OM->Get('Kernel::System::Log')->Log(
                             Priority => 'error',
                             Message =>
@@ -771,8 +755,7 @@ sub TransitionCheck {
                         if (
                             ref $Param{Data}->{$Field} eq ''
                             && $Param{Data}->{$Field} =~ $ActualCondition->{Fields}->{$Field}->{Match}
-                            )
-                        {
+                        ) {
                             $Match      = 1;
                             $MatchValue = $Param{Data}->{$Field};
                         }
@@ -854,10 +837,8 @@ sub TransitionCheck {
                     # Default location for validation modules:
                     # Kernel/System/ProcessManagement/TransitionValidation/
                     if (
-                        !$Kernel::OM->Get('Kernel::System::Main')
-                        ->Require( $ActualCondition->{Fields}->{$Field}->{Match} )
-                        )
-                    {
+                        !$Kernel::OM->Get('Kernel::System::Main')->Require( $ActualCondition->{Fields}->{$Field}->{Match} )
+                    ) {
                         $Kernel::OM->Get('Kernel::System::Log')->Log(
                             Priority => 'error',
                             Message  => "Can't load "
@@ -952,8 +933,7 @@ sub TransitionCheck {
                     next TRANSITIONLOOP if $ConditionLinking eq 'and';
                 }
             }
-            elsif ( $CondType eq 'or' )
-            {
+            elsif ( $CondType eq 'or' ) {
 
                 # if we had at least one successful check, this condition matched
                 if ( $FieldSuccess > 0 ) {
@@ -981,8 +961,7 @@ sub TransitionCheck {
                     next TRANSITIONLOOP if $ConditionLinking eq 'and';
                 }
             }
-            elsif ( $CondType eq 'xor' )
-            {
+            elsif ( $CondType eq 'xor' ) {
 
                 # if we had exactly one successful check, this condition matched
                 if ( $FieldSuccess == 1 ) {
@@ -1024,8 +1003,7 @@ sub TransitionCheck {
                 return $TransitionEntityID;
             }
         }
-        elsif ( $ConditionLinking eq 'or' )
-        {
+        elsif ( $ConditionLinking eq 'or' ) {
 
             # if we had at least one successful condition, this transition matched
             if ( $ConditionSuccess > 0 ) {
@@ -1039,8 +1017,7 @@ sub TransitionCheck {
                 return $TransitionEntityID;
             }
         }
-        elsif ( $ConditionLinking eq 'xor' )
-        {
+        elsif ( $ConditionLinking eq 'xor' ) {
 
             # if we had exactly one successful condition, this transition matched
             if ( $ConditionSuccess == 1 ) {

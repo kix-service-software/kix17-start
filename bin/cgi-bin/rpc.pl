@@ -21,6 +21,8 @@ use lib "$Bin/../../Custom";
 use SOAP::Transport::HTTP;
 use Kernel::System::ObjectManager;
 
+## no critic qw(Subroutines::ProhibitManyArgs)
+
 SOAP::Transport::HTTP::CGI->dispatch_to('Core')->handle();
 
 package Core;
@@ -69,8 +71,7 @@ sub Dispatch {
         !defined $RequiredUser
         || !length $RequiredUser
         || !defined $RequiredPassword || !length $RequiredPassword
-        )
-    {
+    ) {
         $CommonObject{LogObject}->Log(
             Priority => 'notice',
             Message  => "SOAP::User or SOAP::Password is empty, SOAP access denied!",
@@ -147,8 +148,7 @@ sub DispatchMultipleTicketMethods {
         !defined $RequiredUser
         || !length $RequiredUser
         || !defined $RequiredPassword || !length $RequiredPassword
-        )
-    {
+    ) {
         $CommonObject{LogObject}->Log(
             Priority => 'notice',
             Message  => "SOAP::User or SOAP::Password is empty, SOAP access denied!",

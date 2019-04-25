@@ -13,8 +13,6 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
-# use base qw(Kernel::System::DB);
-
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -66,35 +64,33 @@ sub Run {
     if ( defined( $Self->{DashletConfig}->{RestrictedMandatory} ) ) {
         @RestrictedMandatory = split( ",", $Self->{DashletConfig}->{RestrictedMandatory} );
     }
-    my @RestrictedOTRSObjects = ();
-    if ( defined( $Self->{DashletConfig}->{RestrictedOTRSObjects} ) ) {
-        @RestrictedOTRSObjects = split( ",", $Self->{DashletConfig}->{RestrictedOTRSObjects} );
+    my @RestrictedKIXObjects = ();
+    if ( defined( $Self->{DashletConfig}->{RestrictedKIXObjects} ) ) {
+        @RestrictedKIXObjects = split( ",", $Self->{DashletConfig}->{RestrictedKIXObjects} );
     }
-    my @RestrictedOTRSAttributes = ();
-    if ( defined( $Self->{DashletConfig}->{RestrictedOTRSAttributes} ) ) {
-        @RestrictedOTRSAttributes
-            = split( ",", $Self->{DashletConfig}->{RestrictedOTRSAttributes} );
+    my @RestrictedKIXAttributes = ();
+    if ( defined( $Self->{DashletConfig}->{RestrictedKIXAttributes} ) ) {
+        @RestrictedKIXAttributes
+            = split( ",", $Self->{DashletConfig}->{RestrictedKIXAttributes} );
     }
     my @RestrictedValues = ();
 
     if (
         @RestrictedDBAttributes
-        && @RestrictedOTRSObjects
-        && @RestrictedOTRSAttributes
+        && @RestrictedKIXObjects
+        && @RestrictedKIXAttributes
         && @RestrictedMandatory
-        && scalar(@RestrictedOTRSAttributes) == scalar(@RestrictedOTRSObjects)
-        && scalar(@RestrictedOTRSAttributes) == scalar(@RestrictedDBAttributes)
-        && scalar(@RestrictedOTRSAttributes) == scalar(@RestrictedMandatory)
-        )
-    {
-        for ( my $Index = 0; $Index < scalar(@RestrictedOTRSObjects); $Index++ ) {
+        && scalar(@RestrictedKIXAttributes) == scalar(@RestrictedKIXObjects)
+        && scalar(@RestrictedKIXAttributes) == scalar(@RestrictedDBAttributes)
+        && scalar(@RestrictedKIXAttributes) == scalar(@RestrictedMandatory)
+    ) {
+        for ( my $Index = 0; $Index < scalar(@RestrictedKIXObjects); $Index++ ) {
             my $RestrictedValue = '';
             if (
-                $RestrictedOTRSObjects[$Index] eq 'Configuration'
-                && $RestrictedOTRSAttributes[$Index]
-                )
-            {
-                $RestrictedValue = $RestrictedOTRSAttributes[$Index];
+                $RestrictedKIXObjects[$Index] eq 'Configuration'
+                && $RestrictedKIXAttributes[$Index]
+            ) {
+                $RestrictedValue = $RestrictedKIXAttributes[$Index];
             }
 
             if ( !$RestrictedValue && $RestrictedMandatory[$Index] ) {
@@ -105,11 +101,10 @@ sub Run {
     }
     elsif (
         !@RestrictedDBAttributes
-        && !@RestrictedOTRSObjects
-        && !@RestrictedOTRSAttributes
+        && !@RestrictedKIXObjects
+        && !@RestrictedKIXAttributes
         && !@RestrictedMandatory
-        )
-    {
+    ) {
 
         # do nothing
     }
@@ -230,8 +225,7 @@ sub Run {
                 my $ResultIndex = $ResultOffset;
                 $ResultIndex < scalar( @{$ResultRow} );
                 $ResultIndex++
-                )
-            {
+            ) {
 
                 my $Result = $ResultRow->[$ResultIndex] || '';
                 my $ResultShort = $Result;
@@ -316,8 +310,7 @@ sub _CustomerDashboardRemoteDBSearch {
         DatabaseTable ShowAttributes
         SearchAttribute SearchValue
         )
-        )
-    {
+    ) {
         if ( !$Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -382,8 +375,7 @@ sub _CustomerDashboardRemoteDBSearch {
         Type Limit DirectBlob Attribute QuoteSingle QuoteBack
         Connect Encode CaseSensitive LcaseLikeInLargeText
         )
-        )
-    {
+    ) {
         if ( defined $Param{$Setting} ) {
             $DBObject->{Backend}->{"DB::$Setting"} = $Param{$Setting};
         }
@@ -399,24 +391,21 @@ sub _CustomerDashboardRemoteDBSearch {
     if (
         $Param{RestrictedMandatory}
         && ref( $Param{RestrictedMandatory} ) eq 'ARRAY'
-        )
-    {
+    ) {
         push( @RestrictedMandatory, @{ $Param{RestrictedMandatory} } );
     }
     my @RestrictedAttributes = ();
     if (
         $Param{RestrictedAttributes}
         && ref( $Param{RestrictedAttributes} ) eq 'ARRAY'
-        )
-    {
+    ) {
         push( @RestrictedAttributes, @{ $Param{RestrictedAttributes} } );
     }
     my @QuotedRestrictedValues = ();
     if (
         $Param{RestrictedValues}
         && ref( $Param{RestrictedValues} ) eq 'ARRAY'
-        )
-    {
+    ) {
         for my $RestrictedValue ( @{ $Param{RestrictedValues} } ) {
             push( @QuotedRestrictedValues, $DBObject->Quote($RestrictedValue) );
         }
@@ -429,14 +418,12 @@ sub _CustomerDashboardRemoteDBSearch {
         && @QuotedRestrictedValues
         && scalar(@RestrictedMandatory) == scalar(@QuotedRestrictedValues)
         && scalar(@RestrictedAttributes) == scalar(@QuotedRestrictedValues)
-        )
-    {
+    ) {
         for ( my $Index = 0; $Index < scalar(@RestrictedAttributes); $Index++ ) {
             if (
                 $RestrictedMandatory[$Index]
                 && !$QuotedRestrictedValues[$Index]
-                )
-            {
+            ) {
                 return \@List;
             }
         }
@@ -462,8 +449,7 @@ sub _CustomerDashboardRemoteDBSearch {
             @RestrictedAttributes
             && @QuotedRestrictedValues
             && scalar(@RestrictedAttributes) == scalar(@QuotedRestrictedValues)
-            )
-        {
+        ) {
             for ( my $Index = 0; $Index < scalar(@RestrictedAttributes); $Index++ ) {
                 $Self->{CacheKey}
                     .= "::"
@@ -490,8 +476,7 @@ sub _CustomerDashboardRemoteDBSearch {
         @RestrictedAttributes
         && @QuotedRestrictedValues
         && scalar(@RestrictedAttributes) == scalar(@QuotedRestrictedValues)
-        )
-    {
+    ) {
         for ( my $Index = 0; $Index < scalar(@RestrictedAttributes); $Index++ ) {
             if ( $QuotedRestrictedValues[$Index] ) {
                 $QueryCondition .= ' AND '
@@ -603,34 +588,6 @@ sub _Connect {
     return $Self->{dbh};
 }
 
-=item _Disconnect()
-
-to disconnect from a database
-
-    $Self->Disconnect();
-
-=cut
-
-sub _Disconnect {
-    my $Self = shift;
-
-    # debug
-    if ( $Self->{Debug} > 2 ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Caller   => 1,
-            Priority => 'debug',
-            Message  => 'KIXSBRemoteDB.pm->Disconnect',
-        );
-    }
-
-    # do disconnect
-    if ( $Self->{dbh} ) {
-        $Self->{dbh}->disconnect();
-    }
-
-    return 1;
-}
-
 =item _Do()
 
 to insert, update or delete values
@@ -711,12 +668,7 @@ sub _Do {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Caller   => 1,
             Priority => 'debug',
-
-            # capeIT
-            #            Message  => "DB.pm->Do ($Self->{DoCounter}) SQL: '$Param{SQL}'",
-            Message => "KIXSBRemoteDB.pm->Do ($Self->{DoCounter}) SQL: '$Param{SQL}'",
-
-            # EO capeIT
+            Message  => "KIXSBRemoteDB.pm->Do ($Self->{DoCounter}) SQL: '$Param{SQL}'",
         );
     }
 
@@ -821,14 +773,9 @@ sub _Prepare {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Caller   => 1,
             Priority => 'debug',
-
-     # capeIT
-     #            Message  => "DB.pm->Prepare ($Self->{PrepareCounter}/" . time() . ") SQL: '$SQL'",
-            Message => "KIXSBRemoteDB.pm->Prepare ($Self->{PrepareCounter}/"
-                . time()
-                . ") SQL: '$SQL'",
-
-            # EO capeIT
+            Message  => "KIXSBRemoteDB.pm->Prepare ($Self->{PrepareCounter}/"
+                      . time()
+                      . ") SQL: '$SQL'",
         );
     }
 

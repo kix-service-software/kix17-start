@@ -203,11 +203,6 @@ sub Run {
 
         return $LayoutObject->Redirect( OP => "Action=$Self->{Action}" ) if !$ClassID;
 
-        # get class list
-        my $ClassList = $GeneralCatalogObject->ItemList(
-            Class => 'ITSM::ConfigItem::Class',
-        );
-
         # get definition
         my $Definition = $ConfigItemObject->DefinitionGet(
             ClassID => $ClassID,

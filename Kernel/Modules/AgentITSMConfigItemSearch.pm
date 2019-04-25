@@ -83,28 +83,22 @@ sub Run {
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # KIX4OTRS-capeIT
     my @ClassIDArray = ();
 
-    # if ( $ClassID && !$ClassList->{$ClassID} ) {
     if ( $ClassID && !$ClassList->{$ClassID} && $ClassID ne 'All' ) {
 
-        # EO KIX4OTRS-capeIT
         return $LayoutObject->ErrorScreen(
             Message => Translatable('Invalid ClassID!'),
             Comment => Translatable('Please contact the administrator.'),
         );
     }
 
-    # KIX4OTRS-capeIT
     elsif ( $ClassID && $ClassID ne 'All' ) {
         push @ClassIDArray, $ClassID;
     }
     else {
         @ClassIDArray = keys %{$ClassList};
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get single params
     my %GetParam;
@@ -121,7 +115,6 @@ sub Run {
         );
     }
 
-    # KIX4OTRS-capeIT
     # search with a saved template
     if ( $ParamObject->GetParam( Param => 'SearchTemplate' ) && $Self->{Profile} ) {
         return $LayoutObject->Redirect(
@@ -129,8 +122,6 @@ sub Run {
                 "Action=AgentITSMConfigItemSearch;Subaction=Search;TakeLastSearch=1;ClassID=$ClassID;Profile=$Self->{Profile};SearchDialog=1;ResultForm=Normal;"
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     # ------------------------------------------------------------ #
     # delete search profiles
@@ -143,7 +134,7 @@ sub Run {
             Name      => $Self->{Profile},
             UserLogin => $Self->{UserLogin},
         );
-        my $Output = $LayoutObject->JSONEncode(
+        $Output = $LayoutObject->JSONEncode(
             Data => 1,
         );
         return $LayoutObject->Attachment(
@@ -161,10 +152,7 @@ sub Run {
 
         # generate dropdown for selecting the class
         # automatically show search mask after selecting a class via AJAX
-        # KIX4OTRS-capeIT
         $ClassList->{'All'} = '<' . $LayoutObject->{LanguageObject}->Translate('All') . '>';
-
-        # EO KIX4OTRS-capeIT
 
         my $ClassOptionStrg = $LayoutObject->BuildSelection(
             Data         => $ClassList,
@@ -220,33 +208,17 @@ sub Run {
             );
         }
 
-        # KIX4OTRS-capeIT
         my $HasAccess = 1;
         for my $Class (@ClassIDArray) {
 
-            # EO KIX4OTRS-capeIT
-
             # check if user is allowed to search class
-            # KIX4OTRS-capeIT
-            # my $HasAccess = $ConfigItemObject->Permission(
             $HasAccess = $HasAccess && $ConfigItemObject->Permission(
-
-                # EO KIX4OTRS-capeIT
-                Type  => $Self->{Config}->{Permission},
-                Scope => 'Class',
-
-                # KIX4OTRS-capeIT
-                # ClassID => $ClassID,
+                Type    => $Self->{Config}->{Permission},
+                Scope   => 'Class',
                 ClassID => $Class,
-
-                # EO KIX4OTRS-capeIT
-                UserID => $Self->{UserID},
+                UserID  => $Self->{UserID},
             );
-
-            # KIX4OTRS-capeIT
         }
-
-        # EO KIX4OTRS-capeIT
 
         # show error screen
         if ( !$HasAccess ) {
@@ -257,19 +229,14 @@ sub Run {
         }
 
         # get current definition
-        # KIX4OTRS-capeIT
         my %AttributesHash;
         my %XMLDefinitionHash = ();
         for my $Class (@ClassIDArray) {
 
-            # my $XMLDefinition = $ConfigItemObject->DefinitionGet(
-            #     ClassID => $ClassID,
-            # );
             my $XMLDefinition = $ConfigItemObject->DefinitionGet(
                 ClassID => $Class,
             );
 
-            # EO KIX4OTRS-capeIT
             if ( !$XMLDefinition->{DefinitionID} ) {
             return $LayoutObject->ErrorScreen(
                 Message =>
@@ -278,10 +245,7 @@ sub Run {
                 );
             }
 
-            # KIX4OTRS-capeIT
             $XMLDefinitionHash{$Class} = $XMLDefinition;
-
-            # EO KIX4OTRS-capeIT
 
             my @XMLAttributes = (
                 {
@@ -310,7 +274,6 @@ sub Run {
                 );
             }
 
-            # KIX4OTRS-capeIT
             for my $Attribute (@XMLAttributes) {
                 if ( defined $AttributesHash{Key}->{ $Attribute->{Key} } ) {
                     $AttributesHash{Key}->{ $Attribute->{Key} }++;
@@ -321,15 +284,13 @@ sub Run {
                 }
             }
         }
-        # EO KIX4OTRS-capeIT
 
-        my %GetParam = $SearchProfileObject->SearchProfileGet(
+        %GetParam = $SearchProfileObject->SearchProfileGet(
             Base      => 'ConfigItemSearch' . $ClassID,
             Name      => $Self->{Profile},
             UserLogin => $Self->{UserLogin},
         );
 
-        # KIX4OTRS-capeIT
         # get user data
         my %CurrentUserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
             UserID => $Self->{UserID},
@@ -338,16 +299,14 @@ sub Run {
         if (
             defined $CurrentUserData{UserConfigItemSearchAllBehavior}
             && $CurrentUserData{UserConfigItemSearchAllBehavior} eq 'EqualAttributes'
-            )
-        {
+        ) {
             my $ListSize = scalar @ClassIDArray;
             for my $Attribute (
                 sort {
                     $LayoutObject->{LanguageObject}->Translate($a)
                         cmp $LayoutObject->{LanguageObject}->Translate($b)
                 } keys %{ $AttributesHash{Key} }
-                )
-            {
+            ) {
                 next if $AttributesHash{Key}->{$Attribute} < $ListSize;
                 my %TmpHash = ();
                 $TmpHash{Key}   = $Attribute;
@@ -361,8 +320,7 @@ sub Run {
                     $LayoutObject->{LanguageObject}->Translate($a)
                         cmp $LayoutObject->{LanguageObject}->Translate($b)
                 } keys %{ $AttributesHash{Key} }
-                )
-            {
+            ) {
                 my %TmpHash = ();
                 $TmpHash{Key}   = $Attribute;
                 $TmpHash{Value} = $AttributesHash{Value}->{$Attribute};
@@ -370,7 +328,6 @@ sub Run {
             }
         }
 
-        # EO KIX4OTRS-capeIT
         # build attributes string for attributes list
         $Param{AttributesStrg} = $LayoutObject->BuildSelection(
             Data     => \@XMLAttributes,
@@ -473,30 +430,21 @@ sub Run {
         );
 
         # output xml search form
-        # KIX4OTRS-capeIT
         # default values
         my @DefaultKeys = ( 'Number', 'Name', 'DeplStateIDs', 'InciStateIDs' );
         my @UsedKeys;
         for my $Class (@ClassIDArray) {
 
-            # if ( $XMLDefinition->{Definition} ) {
             if ( $XMLDefinitionHash{$Class}->{Definition} ) {
 
                 if ( scalar @XMLAttributes ) {
 
-                    # EO KIX4OTRS-capeIT
                     $Self->_XMLSearchFormOutput(
-
-                        # KIX4OTRS-capeIT
-                        # XMLDefinition => $XMLDefinition->{DefinitionRef},
                         XMLDefinition => $XMLDefinitionHash{$Class}->{DefinitionRef},
-
-                        # EO KIX4OTRS-capeIT
                         XMLAttributes => \@XMLAttributes,
                         GetParam      => \%GetParam,
                     );
 
-                    # KIX4OTRS-capeIT
                     # remove already used xml attributes
                     my @TmpArray;
                     for my $Hash (@XMLAttributes) {
@@ -523,8 +471,6 @@ sub Run {
                     @XMLAttributes = @TmpArray;
                 }
             }
-
-            # EO KIX4OTRS-capeIT
         }
 
         # show attributes
@@ -612,33 +558,17 @@ sub Run {
             );
         }
 
-        # KIX4OTRS-capeIT
         my $HasAccess = 1;
         for my $Class (@ClassIDArray) {
 
-            # EO KIX4OTRS-capeIT
-
             # check if user is allowed to search class
-            # KIX4OTRS-capeIT
-            # my $HasAccess = $ConfigItemObject->Permission(
             $HasAccess = $HasAccess && $ConfigItemObject->Permission(
-
-                # EO KIX4OTRS-capeIT
-                Type  => $Self->{Config}->{Permission},
-                Scope => 'Class',
-
-                # KIX4OTRS-capeIT
-                # ClassID => $ClassID,
+                Type    => $Self->{Config}->{Permission},
+                Scope   => 'Class',
                 ClassID => $Class,
-
-                # EO KIX4OTRS-capeIT
-                UserID => $Self->{UserID},
+                UserID  => $Self->{UserID},
             );
-
-            # KIX4OTRS-capeIT
         }
-
-        # EO KIX4OTRS-capeIT
 
         # show error screen
         if ( !$HasAccess ) {
@@ -648,25 +578,15 @@ sub Run {
             );
         }
 
-        # KIX4OTRS-capeIT
         my %DefinitionHash = ();
         for my $Class (@ClassIDArray) {
 
-            # EO KIX4OTRS-capeIT
             # get current definition
             my $XMLDefinition = $ConfigItemObject->DefinitionGet(
-
-                # KIX4OTRS-capeIT
-                # ClassID => $ClassID,
                 ClassID => $Class,
-
-                # EO KIX4OTRS-capeIT
             );
 
-            # KIX4OTRS-capeIT
             $DefinitionHash{$Class} = $XMLDefinition;
-
-            # EO KIX4OTRS-capeIT
 
             # abort, if no definition is defined
             if ( !$XMLDefinition->{DefinitionID} ) {
@@ -676,11 +596,7 @@ sub Run {
                 Comment => Translatable('Please contact the administrator.'),
                 );
             }
-
-            # KIX4OTRS-capeIT
         }
-
-        # EO KIX4OTRS-capeIT
 
         # get scalar search attributes (special handling for Number and Name)
         FORMVALUE:
@@ -718,40 +634,25 @@ sub Run {
             $GetParam{$FormArray} = \@Array;
         }
 
-        # KIX4OTRS-capeIT
         my %XMLGetParamHash = ();
         for my $Class (@ClassIDArray) {
-
-            # EO KIX4OTRS-capeIT
 
             # get xml search form
             my $XMLFormData = [];
             my $XMLGetParam = [];
             $Self->_XMLSearchFormGet(
-
-                # KIX4OTRS-capeIT
-                # XMLDefinition => $XMLDefinition->{DefinitionRef},
                 XMLDefinition => $DefinitionHash{$Class}->{DefinitionRef},
-
-                # EO KIX4OTRS-capeIT
-                XMLFormData => $XMLFormData,
-                XMLGetParam => $XMLGetParam,
+                XMLFormData   => $XMLFormData,
+                XMLGetParam   => $XMLGetParam,
                 %GetParam,
             );
 
-            # KIX4OTRS-capeIT
             $XMLGetParamHash{$Class} = $XMLGetParam;
-
-            # EO KIX4OTRS-capeIT
 
             if ( @{$XMLFormData} ) {
                 $GetParam{What} = $XMLFormData;
             }
-
-            # KIX4OTRS-capeIT
         }
-
-        # EO KIX4OTRS-capeIT
 
         # save search profile (under last-search or real profile name)
         $Self->{SaveProfile} = 1;
@@ -781,7 +682,6 @@ sub Run {
             }
 
             # insert new profile params also from XMLform
-            # KIX4OTRS-capeIT
             for my $Class (@ClassIDArray) {
 
                 # if ( @{$XMLGetParam} ) {
@@ -789,8 +689,6 @@ sub Run {
 
                     # for my $Parameter ( @{$XMLGetParam} ) {
                     for my $Parameter ( @{ $XMLGetParamHash{$Class} } ) {
-
-                        # EO KIX4OTRS-capeIT
                         for my $Key ( sort keys %{$Parameter} ) {
                             if ( $Parameter->{$Key} ) {
 
@@ -801,16 +699,11 @@ sub Run {
                                     Value     => $Parameter->{$Key},
                                     UserLogin => $Self->{UserLogin},
                                 );
-
                             }
                         }
                     }
                 }
-
-                # KIX4OTRS-capeIT
             }
-
-            # EO KIX4OTRS-capeIT
         }
 
         my $SearchResultList = [];
@@ -824,12 +717,7 @@ sub Run {
                 OrderBy          => [ $Self->{SortBy} ],
                 OrderByDirection => [ $Self->{OrderBy} ],
                 Limit            => $Self->{SearchLimit},
-
-                # KIX4OTRS-capeIT
-                # ClassIDs         => [$ClassID],
-                ClassIDs => \@ClassIDArray,
-
-                # EO KIX4OTRS-capeIT
+                ClassIDs         => \@ClassIDArray,
             );
         }
 
@@ -862,14 +750,14 @@ sub Run {
             for my $ConfigItemID ( @{$SearchResultList} ) {
 
                 # check for access rights
-                my $HasAccess = $ConfigItemObject->Permission(
+                my $AccessOK = $ConfigItemObject->Permission(
                     Scope  => 'Item',
                     ItemID => $ConfigItemID,
                     UserID => $Self->{UserID},
                     Type   => $Self->{Config}->{Permission},
                 );
 
-                next CONFIGITEMID if !$HasAccess;
+                next CONFIGITEMID if !$AccessOK;
 
                 # get version
                 my $LastVersion = $ConfigItemObject->VersionGet(
@@ -943,14 +831,14 @@ sub Run {
             for my $ConfigItemID ( @{$SearchResultList} ) {
 
                 # check for access rights
-                my $HasAccess = $ConfigItemObject->Permission(
+                my $AccessOK = $ConfigItemObject->Permission(
                     Scope  => 'Item',
                     ItemID => $ConfigItemID,
                     UserID => $Self->{UserID},
                     Type   => $Self->{Config}->{Permission},
                 );
 
-                next CONFIGITEMID if !$HasAccess;
+                next CONFIGITEMID if !$AccessOK;
 
                 # get version
                 my $LastVersion = $ConfigItemObject->VersionGet(
@@ -1116,7 +1004,7 @@ sub Run {
         else {
 
             # start html page
-            my $Output = $LayoutObject->Header();
+            $Output = $LayoutObject->Header();
             $Output .= $LayoutObject->NavigationBar();
             $LayoutObject->Print( Output => \$Output );
             $Output = '';
@@ -1170,8 +1058,7 @@ sub Run {
             if (
                 IsArrayRefWithData( $Self->{Config}->{ShowColumnsByClass} )
                 && $ClassID
-                )
-            {
+            ) {
 
                 my %ColumnByClass;
 
@@ -1191,7 +1078,6 @@ sub Run {
                 }
             }
 
-            # KIX4OTRS-capeIT
             # my $ClassName = $ClassList->{$ClassID};
             my $ClassName;
             if ( $ClassID ne 'All' ) {
@@ -1200,8 +1086,6 @@ sub Run {
             else {
                 $ClassName = $ClassID;
             }
-
-            # EO KIX4OTRS-capeIT
 
             my $Title
                 = $LayoutObject->{LanguageObject}->Translate('Config Item Search Results')
@@ -1226,11 +1110,7 @@ sub Run {
                 SortBy        => $LayoutObject->Ascii2Html( Text => $Self->{SortBy} ),
                 OrderBy       => $LayoutObject->Ascii2Html( Text => $Self->{OrderBy} ),
                 ClassID       => $ClassID,
-
-                # KIX4OTRS-capeIT
-                ClassList => $ClassList,
-
-                # EO KIX4OTRS-capeIT
+                ClassList     => $ClassList,
             );
 
             # build footer
@@ -1291,7 +1171,6 @@ sub _XMLSearchFormOutput {
             $Name     = $Param{PrefixName} . '::' . $Name;
         }
 
-        # KIX4OTRS-capeIT
         # check if attribute is in xml attribute array and remove it if found
         my $Found = 0;
         my $Position = -1;
@@ -1303,20 +1182,13 @@ sub _XMLSearchFormOutput {
             last;
         }
 
-        # EO KIX4OTRS-capeIT
-
         # output attribute, if marked as searchable
-        # KIX4OTRS-capeIT
-        # if ( $Item->{Searchable} ) {
         if ( $Item->{Searchable} && $Found ) {
-
-            # EO KIX4OTRS-capeIT
             my $Value;
 
             # date type fields must to get all date parameters
             if ( $Item->{Input}->{Type} eq 'Date' ) {
-                $Value =
-                    {
+                $Value = {
                     $InputKey                      => $GetParam{$InputKey},
                     $InputKey . '::TimeStart::Day' => $GetParam{ $InputKey . '::TimeStart::Day' },
                     $InputKey
@@ -1325,13 +1197,12 @@ sub _XMLSearchFormOutput {
                     $InputKey . '::TimeStop::Day'   => $GetParam{ $InputKey . '::TimeStop::Day' },
                     $InputKey . '::TimeStop::Month' => $GetParam{ $InputKey . '::TimeStop::Month' },
                     $InputKey . '::TimeStop::Year'  => $GetParam{ $InputKey . '::TimeStop::Year' },
-                    } || '';
+                } || '';
             }
 
             # date-time type fields must get all date and time parameters
             elsif ( $Item->{Input}->{Type} eq 'DateTime' ) {
-                $Value =
-                    {
+                $Value = {
                     $InputKey => $GetParam{$InputKey},
                     $InputKey
                         . '::TimeStart::Minute' => $GetParam{ $InputKey . '::TimeStart::Minute' },
@@ -1346,7 +1217,7 @@ sub _XMLSearchFormOutput {
                     $InputKey . '::TimeStop::Day'   => $GetParam{ $InputKey . '::TimeStop::Day' },
                     $InputKey . '::TimeStop::Month' => $GetParam{ $InputKey . '::TimeStop::Month' },
                     $InputKey . '::TimeStop::Year'  => $GetParam{ $InputKey . '::TimeStop::Year' },
-                    } || '';
+                } || '';
             }
 
             # other kinds of fields can get its value directly
@@ -1374,13 +1245,6 @@ sub _XMLSearchFormOutput {
                     InputString => $InputString,
                 },
             );
-
-            # KIX4OTRS-capeIT
-            # push @{ $Param{XMLAttributes} }, {
-            #     Key   => $InputKey,
-            #     Value => $Name,
-            # };
-            # EO KIX4OTRS-capeIT
         }
 
         next ITEM if !$Item->{Sub};

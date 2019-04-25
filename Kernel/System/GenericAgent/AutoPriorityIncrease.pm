@@ -78,10 +78,8 @@ sub Run {
     );
 
     if (
-        ( $TimeObject->SystemTime() - $LatestAutoIncrease )
-        > $Param{New}->{TimeInterval}
-        )
-    {
+        ( $TimeObject->SystemTime() - $LatestAutoIncrease ) > $Param{New}->{TimeInterval}
+    ) {
         $Update = 1;
     }
 

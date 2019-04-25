@@ -125,8 +125,7 @@ sub Run {
             TicketCreateTimeStop TicketCreateTimeStopDay TicketCreateTimeStopMonth
             TicketCreateTimeStopYear
             )
-            )
-        {
+        ) {
 
             # get search string params (get submitted params)
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
@@ -141,8 +140,7 @@ sub Run {
         # get array params
         for my $Key (
             qw(StateIDs StateTypeIDs PriorityIDs OwnerIDs ResponsibleIDs ServiceIDs TypeIDs)
-            )
-        {
+        ) {
 
             # get search array params (get submitted params)
             my @Array = $ParamObject->GetArray( Param => $Key );
@@ -213,7 +211,7 @@ sub Run {
 
     # check request
     if ( $Self->{Subaction} eq 'OpenSearchDescription' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'CustomerTicketSearchOpenSearchDescription',
             Data         => {%Param},
         );
@@ -238,8 +236,7 @@ sub Run {
     if (
         $Self->{Subaction} eq 'Search'
         && !$Self->{EraseTemplate}
-        )
-    {
+    ) {
 
         # check for stop word errors
         my %StopWordsServerErrors = $Self->_StopWordsServerErrorsGet(
@@ -321,8 +318,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStartDay' }
                     && $GetParam{ $TimeType . 'TimeStartMonth' }
                     && $GetParam{ $TimeType . 'TimeStartYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeNewerDate' } = $GetParam{ $TimeType . 'TimeStartYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartDay' }
@@ -332,8 +328,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStopDay' }
                     && $GetParam{ $TimeType . 'TimeStopMonth' }
                     && $GetParam{ $TimeType . 'TimeStopYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeOlderDate' } = $GetParam{ $TimeType . 'TimeStopYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopDay' }
@@ -345,8 +340,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimePoint' }
                     && $GetParam{ $TimeType . 'TimePointStart' }
                     && $GetParam{ $TimeType . 'TimePointFormat' }
-                    )
-                {
+                ) {
                     my $Time = 0;
                     if ( $GetParam{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
                         $Time = $GetParam{ $TimeType . 'TimePoint' };
@@ -391,9 +385,8 @@ sub Run {
         if (
             $ConfigObject->Get('Ticket::ArchiveSystem')
             && $ConfigObject->Get('Ticket::CustomerArchiveSystem')
-            && $ConfigObject->Get('Ticket::CustomerArchiveSystem') eq 1
-            )
-        {
+            && $ConfigObject->Get('Ticket::CustomerArchiveSystem') eq '1'
+        ) {
 
             $GetParam{SearchInArchive} ||= '';
             if ( $GetParam{SearchInArchive} eq 'AllTickets' ) {
@@ -409,9 +402,8 @@ sub Run {
         elsif (
             $ConfigObject->Get('Ticket::ArchiveSystem')
             && $ConfigObject->Get('Ticket::CustomerArchiveSystem')
-            && $ConfigObject->Get('Ticket::CustomerArchiveSystem') eq 2
-            )
-        {
+            && $ConfigObject->Get('Ticket::CustomerArchiveSystem') eq '2'
+        ) {
             $GetParam{ArchiveFlags} = ['n'];
         }
         else {
@@ -499,8 +491,7 @@ sub Run {
         if (
             $GetParam{ResultForm} eq 'CSV'
             || $GetParam{ResultForm} eq 'Excel'
-            )
-        {
+        ) {
 
             # create head (actual head and head for data fill)
             my @TmpCSVHead = @{ $Config->{SearchCSVData} };
@@ -1005,8 +996,7 @@ sub Run {
                             $SortBy eq
                             ( 'DynamicField_' . $DynamicFieldConfig->{Name} )
                         )
-                        )
-                    {
+                    ) {
                         if ( $CurrentOrder && ( $CurrentOrder eq 'Up' ) ) {
                             $Order = 'Down';
                             $CSS .= ' SortAscending';
@@ -1061,8 +1051,7 @@ sub Run {
                 if (
                     $Counter >= $StartHit
                     && $Counter < ( $SearchPageShown + $StartHit )
-                    )
-                {
+                ) {
 
                     # Get last customer or any other article if it doesn't exist.
                     my %Article = $Self->_LastCustomerArticle(
@@ -1227,8 +1216,7 @@ sub Run {
             qw(TicketNumber From To Cc Subject Body CustomerID TimeSearchType StateType
             StateIDs StateTypeIDs PriorityIDs OwnerIDs ResponsibleIDs
             )
-            )
-        {
+        ) {
             next KEY if !$GetParam{$Key};
             my $Attribute = $IDMap{$Key}->{Name}   || $Key;
             my $Object    = $IDMap{$Key}->{Object} || '';
@@ -1388,7 +1376,7 @@ sub Run {
         }
 
         # start html page
-        my $Output = $LayoutObject->CustomerHeader();
+        $Output = $LayoutObject->CustomerHeader();
         $Output .= $LayoutObject->CustomerNavigationBar();
         $Output .= $LayoutObject->Output(
             TemplateFile => 'CustomerTicketSearchResultShort',
@@ -1497,23 +1485,20 @@ sub Run {
             for my $Preference ( @{$SearchFieldPreferences} ) {
 
                 # get field html
-                $DynamicFieldHTML{ $DynamicFieldConfig->{Name} . $Preference->{Type} }
-                    = $BackendObject->SearchFieldRender(
-                    DynamicFieldConfig   => $DynamicFieldConfig,
-                    Profile              => \%GetParam,
-                    PossibleValuesFilter => $PossibleValuesFilter,
-                    DefaultValue =>
-                        $Config->{Defaults}->{DynamicField}
-                        ->{ $DynamicFieldConfig->{Name} },
+                $DynamicFieldHTML{ $DynamicFieldConfig->{Name} . $Preference->{Type} } = $BackendObject->SearchFieldRender(
+                    DynamicFieldConfig     => $DynamicFieldConfig,
+                    Profile                => \%GetParam,
+                    PossibleValuesFilter   => $PossibleValuesFilter,
+                    DefaultValue           => $Config->{Defaults}->{DynamicField}->{ $DynamicFieldConfig->{Name} },
                     LayoutObject           => $LayoutObject,
                     ConfirmationCheckboxes => 1,
                     Type                   => $Preference->{Type},
-                    );
+                );
             }
         }
 
         # generate search mask
-        my $Output = $LayoutObject->CustomerHeader();
+        $Output = $LayoutObject->CustomerHeader();
         $Output .= $LayoutObject->CustomerNavigationBar();
         $Output .= $Self->MaskForm(
             %GetParam,
@@ -1574,13 +1559,13 @@ sub MaskForm {
     if ( $ConfigObject->Get('Customer::TicketSearch::AllServices') ) {
         %ServiceList = $ServiceObject->ServiceList(
             UserID => $Self->{UserID},
-            ),
+        );
     }
     else {
         %ServiceList = $ServiceObject->CustomerUserServiceMemberList(
             CustomerUserLogin => $Self->{UserID},
             Result            => 'HASH',
-            ),
+        );
     }
 
     $Param{ServicesStrg} = $LayoutObject->BuildSelection(
@@ -1754,9 +1739,8 @@ sub MaskForm {
     if (
         $ConfigObject->Get('Ticket::ArchiveSystem')
         && $ConfigObject->Get('Ticket::CustomerArchiveSystem')
-        && $ConfigObject->Get('Ticket::CustomerArchiveSystem') eq 1
-        )
-    {
+        && $ConfigObject->Get('Ticket::CustomerArchiveSystem') eq '1'
+    ) {
 
         $Param{SearchInArchiveStrg} = $LayoutObject->BuildSelection(
             Data => {
@@ -1844,8 +1828,7 @@ sub MaskForm {
     if (
         $ConfigObject->Get('Ticket::StorageModule') eq
         'Kernel::System::Ticket::ArticleStorageDB'
-        )
-    {
+    ) {
         $LayoutObject->Block(
             Name => 'Attachment',
             Data => \%Param

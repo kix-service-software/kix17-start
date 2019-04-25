@@ -75,7 +75,6 @@
                 <p class="FieldExplanation">
                     [% Translate("Here you can activate ready-to-run processes showcasing our best practices. Please note that some additional configuration may be required." ) %]
                 </p>
-#ddoerffel - T2016121190001552 - removed business code
                 <ul class="ActionList SpacingTop">
                     <li>
                         <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">

@@ -18,15 +18,11 @@ our @ObjectDependencies = (
     'Kernel::System::Cache',
     'Kernel::System::CheckItem',
     'Kernel::System::DB',
+    'Kernel::System::KIXUtils',
     'Kernel::System::Log',
     'Kernel::System::Main',
     'Kernel::System::Time',
     'Kernel::System::Valid',
-
-    # KIXCore-capeIT
-    'Kernel::System::KIXUtils',
-
-    # EO KIXCore-capeIT
 );
 
 =head1 NAME
@@ -272,10 +268,7 @@ sub PossibleLinkList {
     # get location of the backend modules
     my $BackendLocation = $ConfigObject->Get('Home') . '/Kernel/System/LinkObject/';
 
-    # KIXCore-capeIT
-    my @KIXPackages = $Kernel::OM->Get('Kernel::System::KIXUtils')
-        ->GetRegisteredCustomPackages( Result => 'ARRAY' );
-    # EO KIXCore-capeIT
+    my @KIXPackages = $Kernel::OM->Get('Kernel::System::KIXUtils')->GetRegisteredCustomPackages( Result => 'ARRAY' );
 
     # check the existing objects
     POSSIBLELINK:
@@ -288,25 +281,21 @@ sub PossibleLinkList {
             # extract object
             my $Object = $PossibleLinkList{$PossibleLink}->{$Argument};
 
-            # KIXCore-capeIT
-            #next ARGUMENT if -e $BackendLocation . $Object . '.pm';
             my $Found = 0;
             for my $CurrPrefix (@KIXPackages) {
                 my $CheckBackendLocation =
                     $Kernel::OM->Get('Kernel::Config')->Get('Home') . "/"
                     . $CurrPrefix
                     . '/Kernel/System/LinkObject/';
-                if ( -e $CheckBackendLocation . $Object . '.pm' ) {
+                if ( -e ($CheckBackendLocation . $Object . '.pm') ) {
                     $Found = 1;
                     last;
                 }
             }
             if ( !$Found ) {
-                next ARGUMENT if -e $BackendLocation . $Object . '.pm';
+                next ARGUMENT if ( -e ($BackendLocation . $Object . '.pm') );
             }
             next ARGUMENT if $Found;
-
-            # EO KIXCore-capeIT
 
             # remove entry from list if it is invalid
             delete $PossibleLinkList{$PossibleLink};
@@ -430,17 +419,18 @@ sub LinkAdd {
 
     # check if link already exists in database
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT source_object_id, source_key, state_id
-            FROM link_relation
-            WHERE (
-                    ( source_object_id = ? AND source_key = ?
-                    AND target_object_id = ? AND target_key = ? )
-                OR
-                    ( source_object_id = ? AND source_key = ?
-                    AND target_object_id = ? AND target_key = ? )
-                )
-                AND type_id = ?',
+        SQL  => <<'END',
+SELECT source_object_id, source_key, state_id
+FROM link_relation
+WHERE (
+        ( source_object_id = ? AND source_key = ?
+        AND target_object_id = ? AND target_key = ? )
+    OR
+        ( source_object_id = ? AND source_key = ?
+        AND target_object_id = ? AND target_key = ? )
+    )
+    AND type_id = ?
+END
         Bind => [
             \$Param{SourceObjectID}, \$Param{SourceKey},
             \$Param{TargetObjectID}, \$Param{TargetKey},
@@ -563,11 +553,12 @@ sub LinkAdd {
     );
 
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO link_relation
-            (source_object_id, source_key, target_object_id, target_key,
-            type_id, state_id, create_time, create_by)
-            VALUES (?, ?, ?, ?, ?, ?, current_timestamp, ?)',
+        SQL  => <<'END',
+INSERT INTO link_relation
+    (source_object_id, source_key, target_object_id, target_key,
+    type_id, state_id, create_time, create_by)
+VALUES (?, ?, ?, ?, ?, ?, current_timestamp, ?)
+END
         Bind => [
             \$Param{SourceObjectID}, \$Param{SourceKey},
             \$Param{TargetObjectID}, \$Param{TargetKey},
@@ -645,10 +636,11 @@ sub LinkCleanup {
 
     # delete the link
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            DELETE FROM link_relation
-            WHERE state_id = ?
-            AND create_time < ?',
+        SQL  => <<'END',
+DELETE FROM link_relation
+WHERE state_id = ?
+    AND create_time < ?
+END
         Bind => [
             \$StateID, \$DeleteTime,
         ],
@@ -718,17 +710,18 @@ sub LinkDelete {
 
     # get the existing link
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT source_object_id, source_key, target_object_id, target_key, state_id
-            FROM link_relation
-            WHERE (
-                    (source_object_id = ? AND source_key = ?
-                    AND target_object_id = ? AND target_key = ? )
-                OR
-                    ( source_object_id = ? AND source_key = ?
-                    AND target_object_id = ? AND target_key = ? )
-                )
-                AND type_id = ?',
+        SQL  => <<'END',
+SELECT source_object_id, source_key, target_object_id, target_key, state_id
+FROM link_relation
+WHERE (
+        (source_object_id = ? AND source_key = ?
+        AND target_object_id = ? AND target_key = ? )
+    OR
+        ( source_object_id = ? AND source_key = ?
+        AND target_object_id = ? AND target_key = ? )
+    )
+    AND type_id = ?
+END
         Bind => [
             \$Param{Object1ID}, \$Param{Key1},
             \$Param{Object2ID}, \$Param{Key2},
@@ -808,16 +801,17 @@ sub LinkDelete {
 
     # delete the link
     return if !$DBObject->Do(
-        SQL => '
-            DELETE FROM link_relation
-            WHERE (
-                    ( source_object_id = ? AND source_key = ?
-                    AND target_object_id = ? AND target_key = ? )
-                OR
-                    ( source_object_id = ? AND source_key = ?
-                    AND target_object_id = ? AND target_key = ? )
-                )
-                AND type_id = ?',
+        SQL  => <<'END',
+DELETE FROM link_relation
+WHERE (
+        ( source_object_id = ? AND source_key = ?
+        AND target_object_id = ? AND target_key = ? )
+    OR
+        ( source_object_id = ? AND source_key = ?
+        AND target_object_id = ? AND target_key = ? )
+    )
+    AND type_id = ?
+END
         Bind => [
             \$Param{Object1ID}, \$Param{Key1},
             \$Param{Object2ID}, \$Param{Key2},
@@ -1023,13 +1017,12 @@ sub LinkList {
 
     # get links where the given object is the source
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT target_object_id, target_key, type_id
-            FROM link_relation
-            WHERE source_object_id = ?
-                AND source_key = ?
-                AND state_id = ? '
-            . $TypeSQL,
+        SQL  => 'SELECT target_object_id, target_key, type_id'
+              . ' FROM link_relation'
+              . ' WHERE source_object_id = ?'
+              . '    AND source_key = ?'
+              . '    AND state_id = ? '
+              . $TypeSQL,
         Bind => \@Bind,
     );
 
@@ -1066,13 +1059,12 @@ sub LinkList {
 
     # get links where the given object is the target
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT source_object_id, source_key, type_id
-            FROM link_relation
-            WHERE target_object_id = ?
-                AND target_key = ?
-                AND state_id = ? '
-            . $TypeSQL,
+        SQL  => 'SELECT source_object_id, source_key, type_id'
+              . ' FROM link_relation'
+              . ' WHERE target_object_id = ?'
+              . '    AND target_key = ?'
+              . '    AND state_id = ? '
+              . $TypeSQL,
         Bind => \@Bind,
     );
 
@@ -1241,8 +1233,7 @@ sub LinkListWithData {
         # check if backend object can be loaded
         if (
             !$Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::LinkObject::' . $Object )
-            )
-        {
+        ) {
             delete $LinkList->{$Object};
             next OBJECT;
         }
@@ -1260,8 +1251,7 @@ sub LinkListWithData {
         if (
             ref $Param{ObjectParameters} eq 'HASH'
             && ref $Param{ObjectParameters}->{$Object} eq 'HASH'
-            )
-        {
+        ) {
             %ObjectParameters = %{ $Param{ObjectParameters}->{$Object} };
         }
 
@@ -1494,10 +1484,11 @@ sub ObjectLookup {
 
         # ask the database
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT name
-                FROM link_object
-                WHERE id = ?',
+            SQL   => <<'END',
+SELECT name
+FROM link_object
+WHERE id = ?
+END
             Bind  => [ \$Param{ObjectID} ],
             Limit => 1,
         );
@@ -1548,10 +1539,11 @@ sub ObjectLookup {
 
             # ask the database
             return if !$DBObject->Prepare(
-                SQL => '
-                    SELECT id
-                    FROM link_object
-                    WHERE name = ?',
+                SQL   => <<'END',
+SELECT id
+FROM link_object
+WHERE name = ?
+END
                 Bind  => [ \$Param{Name} ],
                 Limit => 1,
             );
@@ -1733,10 +1725,10 @@ sub TypeLookup {
 
             # insert the new type
             return if !$DBObject->Do(
-                SQL => '
-                    INSERT INTO link_type
-                    (name, valid_id, create_time, create_by, change_time, change_by)
-                    VALUES (?, 1, current_timestamp, ?, current_timestamp, ?)',
+                SQL  => <<'END',
+INSERT INTO link_type (name, valid_id, create_time, create_by, change_time, change_by)
+VALUES (?, 1, current_timestamp, ?, current_timestamp, ?)
+END
                 Bind => [ \$Param{Name}, \$Param{UserID}, \$Param{UserID} ],
             );
         }
@@ -1810,10 +1802,11 @@ sub TypeGet {
 
     # ask the database
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name, create_time, create_by, change_time, change_by
-            FROM link_type
-            WHERE id = ?',
+        SQL   => <<'END',
+SELECT id, name, create_time, create_by, change_time, change_by
+FROM link_type
+WHERE id = ?
+END
         Bind  => [ \$Param{TypeID} ],
         Limit => 1,
     );
@@ -2124,10 +2117,11 @@ sub StateLookup {
 
         # ask the database
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT name
-                FROM link_state
-                WHERE id = ?',
+            SQL   => <<'END',
+SELECT name
+FROM link_state
+WHERE id = ?
+END
             Bind  => [ \$Param{StateID} ],
             Limit => 1,
         );
@@ -2172,10 +2166,11 @@ sub StateLookup {
 
         # ask the database
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id
-                FROM link_state
-                WHERE name = ?',
+            SQL   => <<'END',
+SELECT id
+FROM link_state
+WHERE name = ?
+END
             Bind  => [ \$Param{Name} ],
             Limit => 1,
         );

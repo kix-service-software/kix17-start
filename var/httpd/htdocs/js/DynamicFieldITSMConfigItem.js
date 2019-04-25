@@ -133,12 +133,37 @@ var DynamicFieldITSMConfigItem = (function (TargetNS) {
 
         $(Identifiers[Identifier]['AutoCompleteFieldID']).blur(function() {
             $(this).val('');
+            Core.Form.ErrorTooltips.HideTooltip();
             if ( $(Identifiers[Identifier]['ValidateFieldID']).hasClass('Error') ) {
                 $('label[for=' + Identifier + ']').addClass('LabelError');
                 $(Identifiers[Identifier]['AutoCompleteFieldID']).addClass('Error');
             } else {
                 $('label[for=' + Identifier + ']').removeClass('LabelError');
                 $(Identifiers[Identifier]['AutoCompleteFieldID']).removeClass('Error');
+            }
+        });
+
+        if ( $(Identifiers[Identifier]['ValidateFieldID']).hasClass('Error') ) {
+            $('label[for=' + Identifier + ']').addClass('LabelError');
+            $(Identifiers[Identifier]['AutoCompleteFieldID']).addClass('Error');
+            $(Identifiers[Identifier]['FieldID']).addClass('Error');
+
+            if ( $(Identifiers[Identifier]['ValidateFieldID']).hasClass('ServerError') ) {
+                $(Identifiers[Identifier]['AutoCompleteFieldID']).addClass('ServerError');
+                $(Identifiers[Identifier]['FieldID']).addClass('ServerError');
+            }
+        }
+
+        $(Identifiers[Identifier]['AutoCompleteFieldID']).off('focus').on('focus', function() {
+            if ($(this).hasClass('Error')) {
+                Core.Form.ErrorTooltips.ShowTooltip(
+                    $(this), $(Identifiers[Identifier]['FieldID'] + 'Error').html(), 'TongueTop'
+                );
+            }
+            if ($(this).hasClass('ServerError')) {
+                Core.Form.ErrorTooltips.ShowTooltip(
+                    $(this), $(Identifiers[Identifier]['FieldID'] + 'ServerError').html(), 'TongueTop'
+                );
             }
         });
 

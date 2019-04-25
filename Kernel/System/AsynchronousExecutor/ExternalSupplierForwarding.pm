@@ -26,8 +26,7 @@ our @ObjectDependencies = (
 );
 
 sub new {
-    my $Type  = shift;
-    my %Param = @_;
+    my ( $Type, %Param ) = @_;
 
     # allocate new hash for object
     my $Self = {};
@@ -220,8 +219,7 @@ sub Run {
                 if (
                     $CustomerUserAttrBlacklist
                     && ref($CustomerUserAttrBlacklist) eq 'ARRAY'
-                    )
-                {
+                ) {
                     next
                         if (
                         grep { $_ eq ${$Field}[0]; }
@@ -242,13 +240,11 @@ sub Run {
                 if (
                     $CustomerUserAttrBlacklist
                     && ref($CustomerUserAttrBlacklist) eq 'ARRAY'
-                    )
-                {
-                    next
-                        if (
+                ) {
+                    next if (
                         grep { $_ eq ${$Field}[0]; }
                         @{$CustomerUserAttrBlacklist}
-                        );
+                    );
                 }
 
                 # EO Remove blacklisted fields
@@ -265,9 +261,10 @@ sub Run {
 
     #-------------------------------------------------------------------
     # cleaning up...
-    $FwdBody =~ s/-----BEGIN PGP SIGNED MESSAGE-----\n.*\n//g;
-    $FwdBody =~
-        s/-----BEGIN PGP SIGNATURE-----(.|\n)+----END PGP SIGNATURE-----//g;
+    my $SignedMsgPattern = '-----BEGIN PGP SIGNED MESSAGE-----\n.*\n';
+    my $SignaturePattern = '-----BEGIN PGP SIGNATURE-----(.|\n)+----END PGP SIGNATURE-----';
+    $FwdBody =~ s/$SignedMsgPattern//g;
+    $FwdBody =~ s/$SignaturePattern//g;
 
     #-------------------------------------------------------------------
     # retrieve related object data...

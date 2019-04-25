@@ -19,6 +19,8 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
 );
 
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 =head1 NAME
 
 Kernel::System::Daemon::DaemonModules::BaseTaskWorker - scheduler task worker base class

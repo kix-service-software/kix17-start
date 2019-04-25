@@ -60,14 +60,12 @@ sub KIXSidebarCISearch {
                 && ( ref($VersionRef) eq 'HASH' )
                 && $VersionRef->{Name}
                 && $VersionRef->{Number}
-                )
-            {
+            ) {
 
                 if (
                     $Param{CIClasses}
                     && ref( $Param{CIClasses} ) eq 'HASH'
-                    )
-                {
+                ) {
                     CLASS:
                     for my $Class ( keys %{ $Param{CIClasses} } ) {
                         if ( $Class eq $VersionRef->{Class} ) {
@@ -97,8 +95,7 @@ sub KIXSidebarCISearch {
         if (
             $Param{CIClasses}
             && ref( $Param{CIClasses} ) eq 'HASH'
-            )
-        {
+        ) {
             %SearchInClasses = %{ $Param{CIClasses} };
         }
         else {
@@ -108,8 +105,7 @@ sub KIXSidebarCISearch {
             if (
                 $ClassList
                 && ref($ClassList) eq 'HASH'
-                )
-            {
+            ) {
                 for my $ClassID ( keys %{$ClassList} ) {
                     $SearchInClasses{ $ClassList->{$ClassID} } = '';
                 }
@@ -194,8 +190,7 @@ sub KIXSidebarCISearch {
                         && ( ref($VersionRef) eq 'HASH' )
                         && $VersionRef->{Name}
                         && $VersionRef->{Number}
-                        )
-                    {
+                    ) {
                         $Result{$ID} = $VersionRef;
                         $Result{$ID}->{'Link'} = 0;
 
@@ -227,8 +222,7 @@ sub KIXSidebarCISearch {
                         && ( ref($VersionRef) eq 'HASH' )
                         && $VersionRef->{Name}
                         && $VersionRef->{Number}
-                        )
-                    {
+                    ) {
                         $Result{$ID} = $VersionRef;
                         $Result{$ID}->{'Link'} = 0;
 

@@ -84,8 +84,7 @@ sub Run {
         if (
             $GetParam{Name}
             && !$CheckItemObject->CheckEmail( Address => $GetParam{Name} )
-            )
-        {
+        ) {
             $Errors{NameInvalid} = 'ServerError';
             $Errors{ErrorType}   = $CheckItemObject->CheckErrorType();
         }
@@ -99,8 +98,7 @@ sub Run {
                     %GetParam,
                     UserID => $Self->{UserID},
                 )
-                )
-            {
+            ) {
                 $Self->_Overview();
                 my $Output = $LayoutObject->Header();
                 $Output .= $LayoutObject->NavigationBar();
@@ -178,8 +176,7 @@ sub Run {
         if (
             $GetParam{Name}
             && !$CheckItemObject->CheckEmail( Address => $GetParam{Name} )
-            )
-        {
+        ) {
             $Errors{NameInvalid} = 'ServerError';
             $Errors{ErrorType}   = $CheckItemObject->CheckErrorType();
         }

@@ -13,6 +13,8 @@ package Kernel::Output::HTML::HeaderMeta::Refresh;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
 );

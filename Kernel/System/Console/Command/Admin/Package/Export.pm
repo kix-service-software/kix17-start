@@ -23,7 +23,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Export the contents of an OTRS package to a directory.');
+    $Self->Description('Export the contents of an KIX package to a directory.');
     $Self->AddOption(
         Name        => 'target-directory',
         Description => "Export contents of the package to the specified directory.",
@@ -33,7 +33,7 @@ sub Configure {
     );
     $Self->AddArgument(
         Name        => 'source-path',
-        Description => "Specify the path to an OTRS package (opm) file that should be exported.",
+        Description => "Specify the path to an KIX package (opm) file that should be exported.",
         Required    => 1,
         ValueRegex  => qr/.*/smx,
     );
@@ -84,8 +84,7 @@ sub Run {
     if (
         defined $Structure{PackageIsDownloadable}
         && !$Structure{PackageIsDownloadable}->{Content}
-        )
-    {
+    ) {
         $Self->PrintError("Files cannot be exported.\n");
         return $Self->ExitCodeError();
     }

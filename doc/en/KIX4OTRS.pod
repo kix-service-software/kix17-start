@@ -15,7 +15,7 @@ The installation of KIX4OTRS requires that the user which installs the packer (i
     "bin/kix.ManageMultipleCustomPackages.pl -a Register -n KIX4OTRSITSMConfigManagement -p 0120"
     "bin/kix.ManageMultipleCustomPackages.pl -a Register -n KIX4OTRSITSMIncidentProblem -p 0130"
 
-After the installation you should delete your OTRS-cache and rebuild your configuration before you continue the use of this OTRS installation.
+After the installation you should delete your KIX-cache and rebuild your configuration before you continue the use of this OTRS installation.
 
     "bin/otrs.DeleteCache.pl"
     "bin/otrs.RebuildConfig.pl"
@@ -287,7 +287,7 @@ This section shows the table of contents for the KIX4OTRS documentation. It give
 
 =head1 Credits and Copyright
 
-Thanks to all OTRS-community members which provided valuable feedback, responses, bug fixes or even patches to OTRS::CiCS/KIX4OTRS. Special thanks to Martin Edenhofer who founded the OTRS-Project!
+Thanks to all KIX-community members which provided valuable feedback, responses, bug fixes or even patches to OTRS::CiCS/KIX4OTRS. Special thanks to Martin Edenhofer who founded the KIX-Project!
 
 KIX4OTRS written/edited by:
 

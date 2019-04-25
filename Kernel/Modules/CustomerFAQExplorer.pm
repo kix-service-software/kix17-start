@@ -268,8 +268,7 @@ sub Run {
             if (
                 $Counter >= $StartHit
                 && $Counter < ( $SearchPageShown + $StartHit )
-                )
-            {
+            ) {
 
                 # get FAQ data details
                 my %FAQData = $FAQObject->FAQGet(

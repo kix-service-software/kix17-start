@@ -231,11 +231,11 @@ sub CustomerName {
     # check cache
     my $Name = '';
     if ( $Self->{CacheObject} ) {
-        my $Name = $Self->{CacheObject}->Get(
+        my $CacheName = $Self->{CacheObject}->Get(
             Type => $Self->{CacheType},
             Key  => 'CustomerName::' . $Param{UserLogin},
         );
-        return $Name if defined $Name;
+        return $CacheName if defined $CacheName;
     }
 
     # create ldap connect
@@ -295,30 +295,19 @@ sub CustomerSearch {
     }
 
     # check needed stuff
-    # KIX4OTRS-capeIT
-    #if ( !$Param{Search} && !$Param{UserLogin} && !$Param{PostMasterSearch} ) {
-    #    $Kernel::OM->Get('Kernel::System::Log')->Log(
-    #        Priority => 'error',
-    #        Message  => 'Need Search, UserLogin or PostMasterSearch!'
-    #    );
-    #    return;
-    #}
     if (
         !$Param{Search}
         && !$Param{UserLogin}
         && !$Param{PostMasterSearch}
         && !$Param{SearchFields}
         && !$Param{CustomerID}
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Search, UserLogin, PostMasterSearch, CustomerID or SearchFields!'
         );
         return;
     }
-
-    # EO KIX4OTRS-capeIT
 
     # build filter
     my $Filter = '';
@@ -383,7 +372,6 @@ sub CustomerSearch {
     elsif ( $Param{CustomerID} ) {
         $Filter = "($Self->{CustomerID}=" . escape_filter_value( $Param{CustomerID} ) . ')';
 
-        # KIX4OTRS-capeIT
         # if multiple customer ids used
         if ( $Param{MultipleCustomerIDs} ) {
             my @CustomerIDsMap;
@@ -396,11 +384,8 @@ sub CustomerSearch {
                 $Filter .= " || ( $Self->{CustomerIDs} =~ m/$Param{CustomerID}/ )";
             }
         }
-
-        # EO KIX4OTRS-capeIT
     }
 
-    # KIX4OTRS-capeIT
     # add field based filter input
     if ( $Param{SearchFields} ) {
         my $SearchFurtherFields;
@@ -438,8 +423,6 @@ sub CustomerSearch {
         }
         $Filter .= ')';
     }
-
-    # EO KIX4OTRS-capeIT
 
     # prepare filter
     if ( $Self->{AlwaysFilter} ) {
@@ -813,19 +796,13 @@ sub CustomerIDs {
             # split it
             my @IDs = split /\Q$Separator\E/, $Data{UserCustomerIDs};
 
-            # KIX4OTRS-capeIT
             # for my $ID (@IDs) {
             for my $ID ( sort @IDs ) {
-
-                # EO KIX4OTRS-capeIT
 
                 $ID =~ s/^\s+//g;
                 $ID =~ s/\s+$//g;
 
-                # KIX4OTRS-capeIT
                 next if !$ID;
-
-                # EO KIX4OTRS-capeIT
 
                 push @CustomerIDs, $ID;
             }
@@ -922,7 +899,6 @@ sub CustomerUserDataGet {
     my %Data;
     for my $Entry ( @{ $Self->{CustomerUserMap}->{Map} } ) {
 
-        # KIX4OTRS-capeIT
         # my $Value = $Self->_ConvertFrom( $Result2->get_value( $Entry->[2] ) ) || '';
         my $Value = "";
         if ( $Entry->[5] && $Entry->[5] =~ /^ArrayIndex\[(\d+)\]$/ ) {
@@ -939,23 +915,17 @@ sub CustomerUserDataGet {
             $Value = $Self->_ConvertFrom( $Result2->get_value( $Entry->[2] ) ) || '';
         }
 
-        # EO KIX4OTRS-capeIT
-
         if ( $Value && $Entry->[2] =~ /^targetaddress$/i ) {
             $Value =~ s/SMTP:(.*)/$1/;
         }
 
-        # KIX4OTRS-capeIT
         if ( !$Value && $Entry->[8] ) {
             $Value = $Entry->[8];
         }
 
-        # EO KIX4OTRS-capeIT
-
         $Data{ $Entry->[0] } = $Value;
     }
 
-    # KIX4OTRS-capeIT
     # set certain user attributes depending on group membership...
     my $GroupMemberSyncAttributesDefinition = $Self->{CustomerUserMap}->{GroupMemberSyncAttributes};
     my $CustomerUserDN                      = $Result2->dn();
@@ -967,45 +937,41 @@ sub CustomerUserDataGet {
     if ($GroupMemberSyncAttributesDefinition) {
 
         for my $GroupDN ( sort keys %{$GroupMemberSyncAttributesDefinition} ) {
-            my $Filter = '';
+            my $GroupFilter = '';
             if ( $Self->{CustomerUserMap}->{GroupMemberSyncUserAttr} eq 'DN' ) {
-                $Filter =
+                $GroupFilter =
                     "($Self->{CustomerUserMap}->{GroupMemberSyncAccessAttr}=$CustomerUserDNQuote)";
             }
             else {
-                $Filter = "($Self->{CustomerUserMap}->{GroupMemberSyncAccessAttr}=$Param{User})";
+                $GroupFilter = "($Self->{CustomerUserMap}->{GroupMemberSyncAccessAttr}=$Param{User})";
             }
 
-            my $Result = $Self->{LDAP}->search(
+            my $GroupResult = $Self->{LDAP}->search(
                 base   => $GroupDN,
-                filter => $Filter,
+                filter => $GroupFilter,
             );
-            if ( $Result->code ) {
+            if ( $GroupResult->code ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
-                    Message  => "Search failed! ($GroupDN) filter='$Filter' " . $Result->error,
+                    Message  => "Search failed! ($GroupDN) filter='$GroupFilter' " . $GroupResult->error,
                 );
             }
 
             my $Valid = '';
-            for my $Entry ( $Result->all_entries ) {
+            for my $Entry ( $GroupResult->all_entries ) {
                 $Valid = $Entry->dn();
             }
 
             if ($Valid) {
                 for my $AttributeKey (
                     keys( %{ $GroupMemberSyncAttributesDefinition->{$GroupDN} } )
-                    )
-                {
-                    $Data{$AttributeKey} =
-                        $GroupMemberSyncAttributesDefinition->{$GroupDN}->{$AttributeKey};
+                ) {
+                    $Data{$AttributeKey} = $GroupMemberSyncAttributesDefinition->{$GroupDN}->{$AttributeKey};
                 }
             }
         }
 
     }
-
-    # EO KIX4OTRS-capeIT
 
     return if !$Data{UserLogin};
 

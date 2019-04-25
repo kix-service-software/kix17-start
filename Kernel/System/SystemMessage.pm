@@ -96,11 +96,10 @@ sub MessageAdd {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO kix_system_message (
-                title, valid_id, config, create_time, create_by, change_time, change_by
-            )
-            VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => <<'END',
+INSERT INTO kix_system_message (title, valid_id, config, create_time, create_by, change_time, change_by)
+VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)
+END
         Bind => [
             \$Param{Title},   \$Param{ValidID},
             \$ConfigStrg,     \$Param{UserID},
@@ -164,15 +163,16 @@ sub MessageUpdate {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE kix_system_message
-            SET
-                title = ?,
-                valid_id = ?,
-                config   = ?,
-                change_time = current_timestamp,
-                change_by = ?
-            WHERE id = ?',
+        SQL  => <<'END',
+UPDATE kix_system_message
+SET
+    title = ?,
+    valid_id = ?,
+    config   = ?,
+    change_time = current_timestamp,
+    change_by = ?
+WHERE id = ?
+END
         Bind => [
             \$Param{Title}, \$Param{ValidID},
             \$ConfigStrg,   \$Param{UserID},
@@ -211,9 +211,7 @@ sub MessageDelete {
 
     # sql
     return if !$DBObject->Do(
-        SQL  => 'DELETE
-            FROM kix_system_message
-            WHERE id = ?',
+        SQL  => 'DELETE FROM kix_system_message WHERE id = ?',
         Bind => [ \$Param{ID} ],
     );
 
@@ -261,14 +259,12 @@ sub MessageList {
         $Valid = 0;
     }
 
-    my $SQL = '
-        SELECT id, title
-        FROM kix_system_message';
+    my $SQL = 'SELECT id, title FROM kix_system_message';
 
     if ($Valid) {
         $SQL .= ' WHERE valid_id IN ('
-            . join( ', ', $ValidObject->ValidIDsGet())
-            . ')';
+              . join( ', ', $ValidObject->ValidIDsGet())
+              . ')';
     }
 
     my @Bind;
@@ -369,15 +365,12 @@ sub MessageSearch {
     }
 
     my $SQLWhere = '';
-    my $SQL      = '
-        SELECT id
-        FROM kix_system_message
-        WHERE';
+    my $SQL      = 'SELECT id FROM kix_system_message WHERE';
 
     if ($Valid) {
         $SQLWhere .= ' valid_id IN ('
-            . join( ', ', $ValidObject->ValidIDsGet())
-            . ')';
+                   . join( ', ', $ValidObject->ValidIDsGet())
+                   . ')';
     }
 
     if ( $Param{Search} ) {
@@ -604,9 +597,11 @@ sub MessageGet {
     }
 
     return if !$DBObject->Prepare(
-        SQL  => 'SELECT id, title, valid_id, config, create_time, create_by, change_time, change_by
-            FROM kix_system_message
-            WHERE id = ?',
+        SQL  => <<'END',
+SELECT id, title, valid_id, config, create_time, create_by, change_time, change_by
+FROM kix_system_message
+WHERE id = ?
+END
         Bind => [\$Param{MessageID}]
     );
 

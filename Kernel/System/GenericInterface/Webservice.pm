@@ -547,7 +547,7 @@ sub WebserviceList {
 
     my $SQL = 'SELECT id, name FROM gi_webservice_config';
 
-    if ( !defined $Param{Valid} || $Param{Valid} eq 1 ) {
+    if ( !defined $Param{Valid} || $Param{Valid} eq "1" ) {
 
         # get valid object
         my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');

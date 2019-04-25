@@ -70,8 +70,7 @@ sub TicketAcceleratorIndex {
         $AgentTicketQueue
         && ref $AgentTicketQueue eq 'HASH'
         && $AgentTicketQueue->{ViewAllPossibleTickets}
-        )
-    {
+    ) {
         $Type = 'ro';
     }
 
@@ -89,10 +88,6 @@ sub TicketAcceleratorIndex {
     $Queues{TicketsAvail} = 0;
 
     # prepare "All tickets: ??" in Queue
-    # KIX4OTRS-capeIT
-    # my @ViewableLockIDs = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock(
-    #     Type => 'ID',
-    # );
     my @ViewableLockIDs;
     if ( $Param{ViewableLockIDs} ) {
         @ViewableLockIDs = @{ $Param{ViewableLockIDs} };
@@ -100,8 +95,6 @@ sub TicketAcceleratorIndex {
     else {
         @ViewableLockIDs = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock( Type => 'ID' );
     }
-
-    # EO KIX4OTRS-capeIT
 
     my %ViewableLockIDs = ( map { $_ => 1 } @ViewableLockIDs );
 
@@ -112,12 +105,11 @@ sub TicketAcceleratorIndex {
 
     if (@QueueIDs) {
 
-        my $SQL = "
-            SELECT count(*)
-            FROM ticket st
-            WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )
-                AND st.archive_flag = 0
-                AND st.queue_id IN (";
+        my $SQL = "SELECT count(*)"
+                . " FROM ticket st"
+                . " WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )"
+                . "  AND st.archive_flag = 0"
+                . "  AND st.queue_id IN (";
 
         for ( 0 .. $#QueueIDs ) {
 
@@ -154,16 +146,15 @@ sub TicketAcceleratorIndex {
     return if !$DBObject->Prepare(
 
         # Differentiate between total and unlocked tickets
-        SQL => "
-            SELECT count(*), st.ticket_lock_id
-            FROM ticket st, queue sq, personal_queues suq
-            WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )
-                AND st.queue_id = sq.id
-                AND st.archive_flag = 0
-                AND suq.queue_id = st.queue_id
-                AND sq.group_id IN ( ${\(join ', ', @GroupIDs)} )
-                AND suq.user_id = $Param{UserID}
-                GROUP BY st.ticket_lock_id",
+        SQL => "SELECT count(*), st.ticket_lock_id"
+             . " FROM ticket st, queue sq, personal_queues suq"
+             . " WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )"
+             . "  AND st.queue_id = sq.id"
+             . "  AND st.archive_flag = 0"
+             . "  AND suq.queue_id = st.queue_id"
+             . "  AND sq.group_id IN ( ${\(join ', ', @GroupIDs)} )"
+             . "  AND suq.user_id = $Param{UserID}"
+             . " GROUP BY st.ticket_lock_id",
     );
 
     my %CustomQueueHashes = (
@@ -186,27 +177,21 @@ sub TicketAcceleratorIndex {
     push @{ $Queues{Queues} }, \%CustomQueueHashes;
 
     # set some things
-    # KIX4OTRS-capeIT
-    # changed due to used not numeric ID in virtual queue views
-    # if ( $Param{QueueID} == 0 ) {
-    if ( $Param{QueueID} eq 0 ) {
-
-        # EO KIX4OTRS-capeIT
+    if ( $Param{QueueID} eq "0" ) {
         $Queues{TicketsShown} = $CustomQueueHashes{Total};
         $Queues{TicketsAvail} = $CustomQueueHashes{Count};
     }
 
     # prepare the tickets in Queue bar (all data only with my/your Permission)
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT st.queue_id, sq.name, min(st.create_time_unix), st.ticket_lock_id, count(*)
-            FROM ticket st, queue sq
-            WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )
-                AND st.queue_id = sq.id
-                AND st.archive_flag = 0
-                AND sq.group_id IN ( ${\(join ', ', @GroupIDs)} )
-            GROUP BY st.queue_id, sq.name, st.ticket_lock_id
-            ORDER BY sq.name"
+        SQL => "SELECT st.queue_id, sq.name, min(st.create_time_unix), st.ticket_lock_id, count(*)"
+             . " FROM ticket st, queue sq"
+             . " WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )"
+             . "  AND st.queue_id = sq.id"
+             . "  AND st.archive_flag = 0"
+             . "  AND sq.group_id IN ( ${\(join ', ', @GroupIDs)} )"
+             . " GROUP BY st.queue_id, sq.name, st.ticket_lock_id"
+             . " ORDER BY sq.name"
     );
 
     # get time object

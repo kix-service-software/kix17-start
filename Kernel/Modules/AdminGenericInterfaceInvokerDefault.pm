@@ -280,8 +280,7 @@ sub _Change {
         || ref $WebserviceData->{Config}->{Requester} ne 'HASH'
         || ref $WebserviceData->{Config}->{Requester}->{Invoker} ne 'HASH'
         || ref $WebserviceData->{Config}->{Requester}->{Invoker}->{$Invoker} ne 'HASH'
-        )
-    {
+    ) {
         return $LayoutObject->ErrorScreen(
             Message =>
                 $LayoutObject->{LanguageObject}->Translate( 'Could not determine config for invoker %s', $Invoker ),
@@ -334,8 +333,7 @@ sub _ChangeAction {
         || ref $WebserviceData->{Config}->{Requester}->{Invoker} ne 'HASH'
         || ref $WebserviceData->{Config}->{Requester}->{Invoker}->{ $GetParam{OldInvoker} } ne
         'HASH'
-        )
-    {
+    ) {
         return $LayoutObject->ErrorScreen(
             Message => $LayoutObject->{LanguageObject}
                 ->Translate( 'Could not determine config for invoker %s', $GetParam{OldInvoker} ),
@@ -729,8 +727,7 @@ sub _AddEvent {
         || ref $WebserviceData->{Config}->{Requester}->{Invoker} ne 'HASH'
         || ref $WebserviceData->{Config}->{Requester}->{Invoker}->{ $GetParam{Invoker} } ne
         'HASH'
-        )
-    {
+    ) {
         return $LayoutObject->ErrorScreen(
             Message => $LayoutObject->{LanguageObject}
                 ->Translate( 'Could not determine config for invoker %s', $GetParam{Invoker} ),
@@ -808,8 +805,7 @@ sub _DeleteEvent {
         || ref $WebserviceData->{Config}->{Requester}->{Invoker} ne 'HASH'
         || ref $WebserviceData->{Config}->{Requester}->{Invoker}->{ $GetParam{Invoker} } ne
         'HASH'
-        )
-    {
+    ) {
         return $LayoutObject->ErrorScreen(
             Message => $LayoutObject->{LanguageObject}
                 ->Translate( 'Could not determine config for invoker %s', $GetParam{Invoker} ),

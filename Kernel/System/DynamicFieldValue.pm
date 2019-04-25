@@ -102,8 +102,10 @@ sub ValueSet {
     }
 
     # return if no Value was provided
-    if ( ref $Param{Value} ne 'ARRAY' || !$Param{Value}->[0] )
-    {
+    if (
+        ref $Param{Value} ne 'ARRAY'
+        || !$Param{Value}->[0]
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Need Param{Value}!"
@@ -129,8 +131,7 @@ sub ValueSet {
             )
             && !defined $Param{Value}->[$Counter]->{ValueInt}
             && !defined $Param{Value}->[$Counter]->{ValueDateTime}
-            )
-        {
+        ) {
             last VALUE;
         }
 
@@ -278,11 +279,10 @@ sub ValueGet {
     # number of db accesses (only one db query for all dynamic fields till
     # cache expiration); return only specified one dynamic field
     return if !$DBObject->Prepare(
-        SQL =>
-            'SELECT id, value_text, value_date, value_int, field_id
-            FROM dynamic_field_value
-            WHERE '.(IsHashRefWithData($DFConfig) && $DFConfig->{IdentifierDBAttribute} || 'object_id').' = ?
-            ORDER BY id',
+        SQL  => 'SELECT id, value_text, value_date, value_int, field_id'
+              . ' FROM dynamic_field_value'
+              . ' WHERE '.(IsHashRefWithData($DFConfig) && $DFConfig->{IdentifierDBAttribute} || 'object_id').' = ?'
+              . ' ORDER BY id',
         Bind => [ \$Param{ObjectID} ],
     );
 

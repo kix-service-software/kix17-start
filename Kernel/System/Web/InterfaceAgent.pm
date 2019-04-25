@@ -321,7 +321,7 @@ sub Run {
                     Title => 'Panic!',
                     Message =>
                         Translatable(
-                        'Panic, user authenticated but no user data can be found in OTRS DB!! Perhaps the user is invalid.'
+                        'Panic, user authenticated but no user data can be found in KIX DB!! Perhaps the user is invalid.'
                         ),
                     %Param,
                     MessageType => 'Error',
@@ -399,8 +399,7 @@ sub Run {
         if (
             $ConfigObject->Get('TimeZoneUser')
             && $ConfigObject->Get('TimeZoneUserBrowserAutoOffset')
-            )
-        {
+        ) {
             my $TimeOffset = $ParamObject->GetParam( Param => 'TimeOffset' ) || 0;
             if ( $TimeOffset > 0 ) {
                 $TimeOffset = '-' . ( $TimeOffset / 60 );
@@ -459,41 +458,6 @@ sub Run {
                 SessionName => $Param{SessionName},
             },
         );
-
-        # Check if Chat is active
-        if ( $Kernel::OM->Get('Kernel::Config')->Get('ChatEngine::Active') ) {
-            my $ChatReceivingAgentsGroup
-                = $Kernel::OM->Get('Kernel::Config')->Get('ChatEngine::PermissionGroup::ChatReceivingAgents');
-            if (
-                $UserData{UserID} != -1
-                && $ChatReceivingAgentsGroup
-                && $UserData{"UserIsGroup[$ChatReceivingAgentsGroup]"}
-                && $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Agent::UnavailableForExternalChatsOnLogin')
-                )
-            {
-                # Get user preferences
-                my %Preferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
-                    UserID => $UserData{UserID},
-                );
-
-                if ( $Preferences{ChatAvailability} && $Preferences{ChatAvailability} == 2 ) {
-
-                    # User is available for external chats. Set his availability to internal only.
-                    $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
-                        Key    => 'ChatAvailability',
-                        Value  => '1',
-                        UserID => $UserData{UserID},
-                    );
-
-                    # Set ChatAvailabilityNotification to display notification in agent interface (only once)
-                    $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
-                        Key    => 'ChatAvailabilityNotification',
-                        Value  => '1',
-                        UserID => $UserData{UserID},
-                    );
-                }
-            }
-        }
 
         # redirect with new session id and old params
         # prepare old redirect URL -- do not redirect to Login or Logout (loop)!
@@ -681,7 +645,6 @@ sub Run {
             my $Subject = $ConfigObject->Get('NotificationSubjectLostPasswordToken')
                 || 'ERROR: NotificationSubjectLostPasswordToken is missing!';
             for ( sort keys %UserData ) {
-#rbo - T2016121190001552 - added KIX placeholders
                 $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
             }
             my $Sent = $EmailObject->Send(
@@ -735,7 +698,6 @@ sub Run {
             PW        => $UserData{NewPW}
         );
 
-#rbo - T2016121190001552 - added KIX placeholders
         # send notify email
         my $Body = $ConfigObject->Get('NotificationBodyLostPassword')
             || 'New Password is: <KIX_NEWPW>';
@@ -938,8 +900,10 @@ sub Run {
                     }
                 }
                 else {
-                    if ( $UserData{ $Key . "[$Group]" } && $UserData{ $Key . "[$Group]" } eq 'Yes' )
-                    {
+                    if (
+                        $UserData{ $Key . "[$Group]" }
+                        && $UserData{ $Key . "[$Group]" } eq 'Yes'
+                    ) {
                         $AccessOk = 1;
                     }
                 }
@@ -973,16 +937,7 @@ sub Run {
         # update last request time
         if (
             !$ParamObject->IsAJAXRequest()
-            || $Param{Action} eq 'AgentVideoChat'
-            ||
-            (
-                $Param{Action} eq 'AgentChat'
-                &&
-                $Param{Subaction} ne 'ChatGetOpenRequests' &&
-                $Param{Subaction} ne 'ChatMonitorCheck'
-            )
-            )
-        {
+        ) {
             $SessionObject->UpdateSessionID(
                 SessionID => $Param{SessionID},
                 Key       => 'UserLastRequest',
@@ -991,14 +946,14 @@ sub Run {
         }
 
         # pre application module
-        my $PreModule = $ConfigObject->Get('PreApplicationModule');
-        if ($PreModule) {
+        my $PreModuleConfig = $ConfigObject->Get('PreApplicationModule');
+        if ($PreModuleConfig) {
             my %PreModuleList;
-            if ( ref $PreModule eq 'HASH' ) {
-                %PreModuleList = %{$PreModule};
+            if ( ref $PreModuleConfig eq 'HASH' ) {
+                %PreModuleList = %{$PreModuleConfig};
             }
             else {
-                $PreModuleList{Init} = $PreModule;
+                $PreModuleList{Init} = $PreModuleConfig;
             }
 
             MODULE:
@@ -1063,9 +1018,7 @@ sub Run {
                 $QueryString = 'Action=' . $Param{Action} . '&Subaction=' . $Param{Subaction};
             }
             my $File = $ConfigObject->Get('PerformanceLog::File');
-            ## no critic
             if ( open my $Out, '>>', $File ) {
-                ## use critic
                 print $Out time()
                     . '::Agent::'
                     . ( time() - $Self->{PerformanceLogStart} )

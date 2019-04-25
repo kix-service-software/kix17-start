@@ -94,10 +94,8 @@ sub CategoryAdd {
 
     # insert record
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO faq_category (name, parent_id, comments, valid_id, created, created_by,
-                changed, changed_by)
-            VALUES ( ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => 'INSERT INTO faq_category (name, parent_id, comments, valid_id, created, created_by, changed, changed_by)'
+              . ' VALUES ( ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{Name}, \$Param{ParentID}, \$Param{Comment}, \$Param{ValidID},
             \$Param{UserID}, \$Param{UserID},
@@ -106,10 +104,7 @@ sub CategoryAdd {
 
     # get new category id
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id
-            FROM faq_category
-            WHERE name = ?',
+        SQL   => 'SELECT id FROM faq_category WHERE name = ?',
         Bind  => [ \$Param{Name} ],
         Limit => 1,
     );
@@ -168,12 +163,11 @@ sub CategoryCount {
     }
 
     # build SQL
-    my $SQL = '
-        SELECT COUNT(*)
-        FROM faq_category
-        WHERE valid_id IN ('
-        . join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet()
-        . ')';
+    my $SQL = 'SELECT COUNT(*)'
+            . ' FROM faq_category'
+            . ' WHERE valid_id IN ('
+            . join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet()
+            . ')';
 
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
@@ -243,17 +237,13 @@ sub CategoryDelete {
 
     # delete the category
     return if !$DBObject->Do(
-        SQL => '
-            DELETE FROM faq_category
-            WHERE id = ?',
+        SQL  => 'DELETE FROM faq_category WHERE id = ?',
         Bind => [ \$Param{CategoryID} ],
     );
 
     # delete the category groups
     return if !$DBObject->Do(
-        SQL => '
-            DELETE FROM faq_category_group
-            WHERE category_id = ?',
+        SQL  => 'DELETE FROM faq_category_group WHERE category_id = ?',
         Bind => [ \$Param{CategoryID} ],
     );
 
@@ -305,12 +295,10 @@ sub CategoryDuplicateCheck {
     $Param{ParentID} = $DBObject->Quote( $Param{ParentID}, 'Integer' );
 
     # build SQL
-    my $SQL = '
-        SELECT id
-        FROM faq_category
-        WHERE name = ?
-            AND parent_id = ?
-        ';
+    my $SQL = 'SELECT id'
+            . ' FROM faq_category'
+            . ' WHERE name = ?'
+            . '  AND parent_id = ?';
     if ( defined $Param{CategoryID} ) {
         $SQL .= " AND id != ?";
         push @Values, \$Param{CategoryID};
@@ -395,10 +383,9 @@ sub CategoryGet {
 
     # SQL
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, parent_id, name, comments, valid_id
-            FROM faq_category
-            WHERE id = ?',
+        SQL   => 'SELECT id, parent_id, name, comments, valid_id'
+               . ' FROM faq_category'
+               . ' WHERE id = ?',
         Bind  => [ \$Param{CategoryID} ],
         Limit => 1,
     );
@@ -464,10 +451,7 @@ sub CategoryGroupGet {
 
     # get groups
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT group_id
-            FROM faq_category_group
-            WHERE category_id = ?',
+        SQL  => 'SELECT group_id FROM faq_category_group WHERE category_id = ?',
         Bind => [ \$Param{CategoryID} ],
     );
 
@@ -540,9 +524,7 @@ sub CategoryGroupGetAll {
 
     # get groups
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT group_id, category_id
-            FROM faq_category_group',
+        SQL => 'SELECT group_id, category_id FROM faq_category_group',
     );
 
     my %Groups;
@@ -606,9 +588,7 @@ sub CategoryList {
     }
 
     # build SQL
-    my $SQL = '
-        SELECT id, parent_id, name
-        FROM faq_category';
+    my $SQL = 'SELECT id, parent_id, name FROM faq_category';
     if ($Valid) {
 
         # get the valid ids
@@ -671,12 +651,11 @@ sub CategorySearch {
     }
 
     # SQL
-    my $SQL = '
-        SELECT id
-        FROM faq_category
-        WHERE valid_id IN ('
-        . join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet()
-        . ')';
+    my $SQL = 'SELECT id'
+            . ' FROM faq_category'
+            . ' WHERE valid_id IN ('
+            . join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet()
+            . ')';
 
     my $Ext = '';
 
@@ -706,8 +685,7 @@ sub CategorySearch {
         defined $Param{ParentIDs}
         && ref $Param{ParentIDs} eq 'ARRAY'
         && @{ $Param{ParentIDs} }
-        )
-    {
+    ) {
 
         # integer quote the parent ids
         for my $ParentID ( @{ $Param{ParentIDs} } ) {
@@ -725,8 +703,7 @@ sub CategorySearch {
         defined $Param{CategoryIDs}
         && ref $Param{CategoryIDs} eq 'ARRAY'
         && @{ $Param{CategoryIDs} }
-        )
-    {
+    ) {
 
         # integer quote the category ids
         for my $CategoryID ( @{ $Param{CategoryIDs} } ) {
@@ -916,9 +893,7 @@ sub CategoryTreeList {
     }
 
     # build SQL
-    my $SQL = '
-        SELECT id, parent_id, name
-        FROM faq_category';
+    my $SQL = 'SELECT id, parent_id, name FROM faq_category';
 
     # add where clause for valid categories
     if ($Valid) {
@@ -1038,11 +1013,9 @@ sub CategoryUpdate {
 
     # SQL
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE faq_category
-            SET parent_id = ?, name = ?, comments = ?, valid_id = ?, changed = current_timestamp,
-                changed_by = ?
-            WHERE id = ?',
+        SQL  => 'UPDATE faq_category'
+              . ' SET parent_id = ?, name = ?, comments = ?, valid_id = ?, changed = current_timestamp, changed_by = ?'
+              . ' WHERE id = ?',
         Bind => [
             \$Param{ParentID}, \$Param{Name},
             \$Param{Comment},  \$Param{ValidID},
@@ -1173,14 +1146,13 @@ sub CustomerCategorySearch {
         # build valid id string
         my $ValidIDsString = join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
 
-        my $SQL = "
-            SELECT faq_item.id, faq_item.category_id
-            FROM faq_item, faq_state_type, faq_state
-            WHERE faq_state.id = faq_item.state_id
-                AND faq_state.type_id = faq_state_type.id
-                AND faq_state_type.name != 'internal'
-                AND faq_item.valid_id IN ($ValidIDsString)
-                AND faq_item.approved = 1";
+        my $SQL = "SELECT faq_item.id, faq_item.category_id"
+                . " FROM faq_item, faq_state_type, faq_state"
+                . " WHERE faq_state.id = faq_item.state_id"
+                . "  AND faq_state.type_id = faq_state_type.id"
+                . "  AND faq_state_type.name != 'internal'"
+                . "  AND faq_item.valid_id IN ($ValidIDsString)"
+                . "  AND faq_item.approved = 1";
 
         # get database object
         my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
@@ -1292,15 +1264,14 @@ sub PublicCategorySearch {
         # check if category contains articles with state public
         my $FoundArticle = 0;
 
-        my $SQL = "
-            SELECT faq_item.id
-            FROM faq_item, faq_state_type, faq_state
-            WHERE faq_item.category_id = ?
-                AND faq_item.valid_id IN ($ValidIDsString)
-                AND faq_state.id = faq_item.state_id
-                AND faq_state.type_id = faq_state_type.id
-                AND faq_state_type.name = 'public'
-                AND faq_item.approved = 1";
+        my $SQL = "SELECT faq_item.id"
+                . " FROM faq_item, faq_state_type, faq_state"
+                . " WHERE faq_item.category_id = ?"
+                . "  AND faq_item.valid_id IN ($ValidIDsString)"
+                . "  AND faq_state.id = faq_item.state_id"
+                . "  AND faq_state.type_id = faq_state_type.id"
+                . "  AND faq_state_type.name = 'public'"
+                . "  AND faq_item.approved = 1";
 
         ID:
         for my $ID (@IDs) {
@@ -1873,9 +1844,7 @@ sub SetCategoryGroup {
 
     # delete old groups
     return if !$DBObject->Do(
-        SQL => '
-            DELETE FROM faq_category_group
-            WHERE category_id = ?',
+        SQL => 'DELETE FROM faq_category_group WHERE category_id = ?',
         Bind => [ \$Param{CategoryID} ],
     );
 
@@ -1886,11 +1855,8 @@ sub SetCategoryGroup {
         # db quote
         $GroupID = $DBObject->Quote( $GroupID, 'Integer' );
 
-        my $SQL = "
-            INSERT INTO faq_category_group (category_id, group_id, changed, changed_by, created,
-                created_by)
-            VALUES ($Param{CategoryID}, $GroupID, current_timestamp, $Param{UserID},
-                current_timestamp, $Param{UserID})";
+        my $SQL = "INSERT INTO faq_category_group (category_id, group_id, changed, changed_by, created, created_by)"
+                . " VALUES ($Param{CategoryID}, $GroupID, current_timestamp, $Param{UserID}, current_timestamp, $Param{UserID})";
 
         # write attachment to db
         return if !$DBObject->Do( SQL => $SQL );

@@ -73,10 +73,6 @@ sub Run {
                 URL => ( $Self->{LastScreenOverview} || 'Action=AgentDashboard' ),
             );
         } else {
-            my @ContentItems = $UploadCacheObject->FormIDGetAllFilesData(
-                FormID => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID},
-            );
-
             for my $Item (@ContentItems) {
                 next if $Item->{Filename} ne 'GetParam';
                 $Item->{Content} = $EncodeObject->Convert(
@@ -114,7 +110,7 @@ sub Run {
             Comment => 'You need at least one selected Configuration Item!',
         );
     }
-    my $Output .= $LayoutObject->Header(
+    my $Output = $LayoutObject->Header(
         Type => 'Small',
     );
 
@@ -128,8 +124,7 @@ sub Run {
         for my $Key (
             qw( LinkTogether LinkTogetherAnother LinkType LinkTogetherLinkType DeplStateID
             InciStateID )
-            )
-        {
+        ) {
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key ) || '';
         }
 

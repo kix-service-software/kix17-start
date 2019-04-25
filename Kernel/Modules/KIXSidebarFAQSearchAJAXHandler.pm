@@ -97,8 +97,7 @@ sub Run {
             $TIDSearchMaskRegexp
             && $CallingAction =~ /$TIDSearchMaskRegexp/
             && $TicketID      =~ m/^\d+$/
-            )
-        {
+        ) {
             my %TicketData = $Self->{TicketObject}->TicketGet(
                 TicketID => $TicketID,
                 UserID   => 1,
@@ -159,8 +158,7 @@ sub Run {
                 || $ResultHash->{$a}->{'Title'} cmp $ResultHash->{$b}->{'Title'}
         }
         keys %{$ResultHash}
-        )
-    {
+    ) {
 
         my $Result = $ResultHash->{$ID}->{'Title'} || '';
         my $ResultShort = $Result;

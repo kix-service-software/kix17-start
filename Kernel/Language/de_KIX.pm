@@ -177,7 +177,6 @@ sub Data {
     $Lang->{'Determines the way the linked objects are displayed in each zoom mask.'}
         = 'Bestimmt die Art, wie verlinkte Objekte in jeder Zoom-Maske angezeigt werden.';
     $Lang->{'Create new linked person on create new Article or Update Owner.'}
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         = 'Erstellt eine neue verlinkte Person, wenn ein Artikel erstellt oder ein Bearbeiter neu gesetzt wird.';
     $Lang->{'Defines which persons should not be added on AutoCreateLinkedPerson'}
         = 'Legt fest, welche Personen nicht automatisch bei AutoCreateLinkedPerson hinzugefügt werden sollen.';
@@ -467,7 +466,6 @@ sub Data {
 
     # KIX4OTRS_Ticket.xml
     $Lang->{'Shows all owners and responsibles in selecetions.'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Legt die Anzeige aller Bearbeiter und Verantwortlichen als Standard fest.';
     $Lang->{'Default body for a forwarded email.'} =
         'Standardinhalt für eine weitergeleitete Email.';
@@ -478,13 +476,13 @@ sub Data {
         }
         = 'Überschreibt (redefiniert) bestehende Funktionen in Kernel::System::Ticket. Dies vereinfacht das Hinzufügen von Anpassungen.';
     $Lang->{
-        'Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (OTRS-default behavior is disabled).'
+        'Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).'
         }
-        = 'Definiert ob die "Possible"-Ergebnisse für Aktionen mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (OTRS-Standardverhalten ist deakviert).';
+        = 'Definiert ob die "Possible"-Ergebnisse für Aktionen mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (KIX-Standardverhalten ist deakviert).';
     $Lang->{
-        'Defines whether results of PossibleNot for tickets of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (OTRS-default behavior is disabled).'
+        'Defines whether results of PossibleNot for tickets of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).'
         }
-        = 'Definiert ob die "PossibleNot"-Ergebnisse für Ticket-Eigenschaften mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (OTRS-Standardverhalten ist deakviert).';
+        = 'Definiert ob die "PossibleNot"-Ergebnisse für Ticket-Eigenschaften mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (KIX-Standardverhalten ist deakviert).';
     $Lang->{
         'Determines the next possible ticket states, after the creation of a new phone ticket in the agent interface.'
         }
@@ -643,9 +641,9 @@ sub Data {
     $Lang->{'Parameters for the FollowUpNotify object in the preference view.'}
         = 'Parameter für das FollowUpNotify-Objekt in der Ansicht für die Einstellungen.';
     $Lang->{
-        'Select your TicketStorageModule to safe the attachments of articles. "DB" stores all data in the database. Don\'t use this module if big attachments will be stored. "FS" stores the data in the filesystem. This is faster but webserver user should be the otrs user. You can switch between the modules even on a running system without any loss of data.'
+        'Select your TicketStorageModule to safe the attachments of articles. "DB" stores all data in the database. Don\'t use this module if big attachments will be stored. "FS" stores the data in the filesystem. This is faster but webserver user should be the KIX user. You can switch between the modules even on a running system without any loss of data.'
         }
-        = 'Wählen Sie das TicketStorage-Modul aus und legen sie fest, wie die Anhänge zu Artikeln gespeichert werden sollen. "DB" speichert alle Daten in der Datenbank. Wird nur mit kleinen Anhängen gearbeitet, ist das kein Problem. "FS" legt die Daten im Filesystem ab, der Zugriff ist schneller. Allerdings sollte bei Verwendung von "FS" der WEB-Server unter dem selben Benutzer laufen, der auch für OTRS verwendet wird. Sie können das Modul auch für laufende Systeme ändern, es wird trotzdem weiter auf alle Daten zugegriffen und auch die Daten, die mit Hilfe des anderen Moduls gespeichert wurden, bleiben verfügbar.';
+        = 'Wählen Sie das TicketStorage-Modul aus und legen sie fest, wie die Anhänge zu Artikeln gespeichert werden sollen. "DB" speichert alle Daten in der Datenbank. Wird nur mit kleinen Anhängen gearbeitet, ist das kein Problem. "FS" legt die Daten im Filesystem ab, der Zugriff ist schneller. Allerdings sollte bei Verwendung von "FS" der WEB-Server unter dem selben Benutzer laufen, der auch für KIX verwendet wird. Sie können das Modul auch für laufende Systeme ändern, es wird trotzdem weiter auf alle Daten zugegriffen und auch die Daten, die mit Hilfe des anderen Moduls gespeichert wurden, bleiben verfügbar.';
     $Lang->{
         'Would you like to execute followup checks on In-Reply-To or References headers for mails, that don\'t have a ticket number in the subject?'
         }
@@ -751,9 +749,9 @@ sub Data {
         }
         = 'Status für ein Ticket, für das ein Follow-up eintrifft (nutzen Sie _PREVIOUS_ als Platzhalter für den letzten Status in der Tickethistorie vor dem aktuellen).';
     $Lang->{
-        'Checks if the sender of a follow-up message is contained in customer database an has an identical customer-ID as the ticket. If so, the email is considered as email-external, otherwise it is considered as email-internal. Default OTRS-behavior if disabled.'
+        'Checks if the sender of a follow-up message is contained in customer database an has an identical customer-ID as the ticket. If so, the email is considered as email-external, otherwise it is considered as email-internal. Default KIX-behavior if disabled.'
         }
-        = 'Prüft ob der Absender einer Nachricht als Kundennutzer hinterlegt ist und dieselbe Kunden-ID hat wie am Ticket hinterlegt ist. Ist dem so wird die Email als "email-external" betrachtet, andernfalls als "email-internal". Standard OTRS-Verhalten wenn deaktiviert.';
+        = 'Prüft ob der Absender einer Nachricht als Kundennutzer hinterlegt ist und dieselbe Kunden-ID hat wie am Ticket hinterlegt ist. Ist dem so wird die Email als "email-external" betrachtet, andernfalls als "email-internal". Standard KIX-Verhalten wenn deaktiviert.';
     $Lang->{
         'Checks if the sender of a follow-up message is contained in agent database, and if so sets sender type "agent".'
         }
@@ -837,23 +835,18 @@ sub Data {
         'Umgang mit Zeitbuchung am Original-Artikel?';
     $Lang->{'Change to residue'}   = 'Auf Rest verringern';
     $Lang->{'Leave unchanged'}     = 'Unverändert lassen';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Owner / Responsible'} = 'Bearbeiter / Verantwortlicher';
     $Lang->{'Change the ticket owner and responsible!'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Ändern des Ticket-Bearbeiters und -Verantwortlichen!';
     $Lang->{'Perhaps, you forgot to enter a ticket number!'} =
         'Bitte geben Sie eine Ticket-Nummer ein';
     $Lang->{'Sorry, no ticket found for ticket number: '} =
         'Es konnte kein Ticket gefunden werden für Ticket-Nummer: ';
     $Lang->{'Sorry, you need to be owner of the new ticket to do this action!'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Sie müssen der Bearbeiter des neuen Tickets sein, um diese Aktion auszuführen!';
     $Lang->{'Sorry, you need to be owner of the selected ticket to do this action!'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Sie müssen der Bearbeiter des ausgewählten Tickets sein, um diese Aktion auszuführen!';
     $Lang->{'Please contact your admin.'}     = 'Bitte kontaktieren Sie Ihren Administrator.';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Please change the owner first.'} = 'Bitte ändern Sie zunächst den Bearbeiter.';
     $Lang->{'Sorry, you are not a member of allowed groups!'} =
         'Bitte entschuldigen Sie, aber Sie nicht Mitglied der berechtigten Gruppen!';
@@ -940,7 +933,6 @@ sub Data {
     $Lang->{
         'If ticket responsible feature is enabled, set automatically the owner as responsible on owner set.'
         } =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Wenn das Ticket-Verantwortlichkeits-Featues aktiviert ist, wird beim nicht gesetzten Verantwortlichen der Bearbeiter auch automatisch als Verantwortlich gesetzt.';
 
     #EO KIX4OTRS_ResponsibleAutoSetPerTicketType.xml
@@ -1057,7 +1049,6 @@ sub Data {
 
     # UserQueueSelectionStyle...
     $Lang->{'Queue selection style'}       = 'Queueauswahl - Methode';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Owner selection style'}       = 'Bearbeiterauswahl - Methode';
     $Lang->{'Responsible selection style'} = 'Verantwortlichenauswahl - Methode';
     $Lang->{'Selection Style'}             = 'Auswahlmethode';
@@ -1074,11 +1065,8 @@ sub Data {
     $Lang->{'Pending Time'}            = 'Erinnerungszeit';
     $Lang->{'Pending DateTime'}        = 'Wartezeitpunkt';
     $Lang->{'Pending UntilTime'}       = 'Warten bis';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'OwnerLogin'}              = 'Bearbeiter (Login)';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Owner Login'}             = 'Bearbeiter (Login)';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Owner Information'}       = 'Information Bearbeiter';
     $Lang->{'ResponsibleLogin'}        = 'Verantw. (Login)';
     $Lang->{'Responsible Login'}       = 'Verantw. (Login)';
@@ -1210,7 +1198,6 @@ sub Data {
     $Lang->{'Assigned CIs'}                    = 'Zugewiesene CIs';
     $Lang->{'Config Item Data'}                = 'CI Daten';
     $Lang->{'Show CILinks Selection'}          = 'Anzahl der verlinkten ConfigItems pro Seite';
-    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Lang->{'Contact info CILinks selection'}  = 'Ansprechpartner-Info: verlinkte ConfigItems';
     $Lang->{'File is no image or image type not supported. Please contact your admin.'}
         = 'Datei ist kein Bild oder Bildtyp wird nicht unterstützt.';
@@ -1380,7 +1367,6 @@ sub Data {
         'Defines the link type which is used for the link creation between ticket and config item.'
         }
         = 'Legt den Link-Typ fest, welcher für die Erzeugung eines Links zwischen Ticket und Config Item genutzt wird.';
-    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Lang->{
         'Common Parameters for the KIXSidebarLinkedCIs backend. You can use CI class specific contact attributes (SearchAttribute:::&lt;CIClass&gt;) as well as multiple contact attributes, separated by comma.'
         }
@@ -1406,7 +1392,6 @@ sub Data {
     $Lang->{'Only attributes of the following types are shown in the list'}
         = 'Nur Attribute folgender Typen werden in der Liste angezeigt';
 
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbieter'
     $Lang->{'Assigned owner'} = 'Zugewiesener Besitzer';
 
     # KIX4OTRS_AgentLinkGraph.xml
@@ -1665,10 +1650,8 @@ sub Data {
         } =
         'Aktiviert die Serviceauswahl im Notiztab des Agenteninterfaces (Ticket::Service muss aktiviert sein).';
     $Lang->{'Sets the ticket owner in the ticket note screen of the agent interface.'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Aktiviert die Ticket-Bearbeiterauswahl im Notiztab des Agenteninterfaces.';
     $Lang->{'Sets if ticket owner must be selected by the agent.'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Legt fest, ob die Auswahl des Bearbeiters ein Pflichtfeld ist.';
     $Lang->{
         'Sets the responsible agent of the ticket in the ticket note screen of the agent interface.'
@@ -1745,7 +1728,6 @@ sub Data {
         } =
         'Aktiviert die Serviceauswahl im Kerndatentab des Agenteninterfaces (Ticket::Service muss aktiviert sein).';
     $Lang->{'Sets the ticket owner in the ticket core data tab of the agent interface.'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Aktiviert die Ticket-Bearbeiterauswahl im Kerndatentab des Agenteninterfaces.';
     $Lang->{
         'Sets the responsible agent of the ticket in the ticket core data tab of the agent interface.'
@@ -1855,21 +1837,21 @@ sub Data {
         = 'Aufgrund fehlender Berechtigungen können mehr verlinkte Objekte existieren, als angezeigt werden.';
 
     $Lang->{
-        'information: even though this package is not certified by OTRS Group, this does NOT mean that you should NOT use it.'
+        'information: even though this package is not certified by KIX Group, this does NOT mean that you should NOT use it.'
         }
-        = 'Paket ist zwar nicht durch OTRS Gruppe verifiziert - das bedeutet aber NICHT, dass dieses Paket nicht verwendet werden kann oder darf.';
+        = 'Paket ist zwar nicht durch KIX Gruppe verifiziert - das bedeutet aber NICHT, dass dieses Paket nicht verwendet werden kann oder darf.';
     $Lang->{
-        'Disables the unrequested automatic communication of installed packages and other system details to OTRS AG.'
+        'Disables the unrequested automatic communication of installed packages and other system details to KIX AG.'
         }
-        = 'Deaktiviert die unaufgeforderte automatische Kommunikation, der installierten Pakete und anderer System-Details, zur OTRS AG.';
+        = 'Deaktiviert die unaufgeforderte automatische Kommunikation, der installierten Pakete und anderer System-Details, zur KIX AG.';
     $Lang->{
         'Enables the unrequested automatic communication of installed packages and other system details to the path.'
         }
         = 'Aktiviert die unaufgeforderte automatische Kommunikation, der installierten Pakete und anderer System-Details, zum angegebenen Pfad.';
     $Lang->{
-        'Even though this package is not certified by OTRS Group, this does NOT mean that you should NOT use it.'
+        'Even though this package is not certified by KIX Group, this does NOT mean that you should NOT use it.'
         }
-        = 'Das Paket ist zwar nicht durch OTRS Gruppe verifiziert - das bedeutet aber NICHT, dass dieses Paket nicht verwendet werden kann oder darf.';
+        = 'Das Paket ist zwar nicht durch KIX Gruppe verifiziert - das bedeutet aber NICHT, dass dieses Paket nicht verwendet werden kann oder darf.';
 
     $Lang->{'Pre-create loader cache.'} = 'Loadercache vorgenerieren.';
 
@@ -1933,7 +1915,6 @@ sub Data {
     $Lang->{'Search for customers.'}             = 'Suche nach Kunden.';
     $Lang->{'Change the ticket classification!'} = 'ändern der Ticket-Klassifizierung!';
     $Lang->{'Change the ticket responsible!'}    = 'ändern des Ticket-Verantwortlichen!';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Select new owner'}                  = 'Neuen Bearbeiter auswählen';
     $Lang->{'Filter for SLAs'}                   = 'Filter für SLAs';
 
@@ -1970,7 +1951,6 @@ sub Data {
 
     # service2customeruser ex-/import...
     $Lang->{'Service available for CU'} = 'Service für Kundennutzer verfügbar';
-    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Lang->{'Contact login'}      = 'Ansprechpartner-Login';
     $Lang->{'Validity of service assignment for CU'} =
         'Gültigkeit der Servicezuordnung zu Kundennutzer';
@@ -2241,13 +2221,11 @@ sub Data {
         'Defines if a ticket lock is required in the additional ITSM field screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).'
         }
         =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.';
     $Lang->{
         'Defines if a ticket lock is required in the decision screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).'
         }
         =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.';
     $Lang->{
         'Defines if the service incident state should be shown during service selection in the agent interface.'
@@ -2391,10 +2369,8 @@ sub Data {
     $Self->{Translation}
         ->{'Sets the ticket owner in the additional ITSM field screen of the agent interface.'}
         =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Setzt den Ticket-Bearbeiter in der zusätzliche ITSM Felder-Oberfläche im Agenten-Interface.';
     $Lang->{'Sets the ticket owner in the decision screen of the agent interface.'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Setzt den Bearbeiter in der Entscheidungs-Oberfläche für Tickets im Agentenbereich.';
     $Lang->{
         'Sets the ticket responsible in the additional ITSM field screen of the agent interface.'
@@ -3259,10 +3235,10 @@ sub Data {
 
     # SysConfig
     $Lang->{
-        'A filter for HTML output to add links behind a defined string. The element Image allows two input kinds. First the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possibility is to insert the link to the image.'
+        'A filter for HTML output to add links behind a defined string. The element Image allows two input kinds. First the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possibility is to insert the link to the image.'
         }
         =
-        'Ein Filter zur automatischen Generierung von FAQ-Links, wenn ein Hinweis auf einen FAQ-Artikel identifiziert wird. Das Element Image erlaubt zwei Eingabeformen: Erstens der Name eines Icons (z. B. faq.png). In diesem Fall wird auf das Grafik-Verzeichnis des OTRS zugegriffen. Als zweite Möglichkeit kann man aber auch den direkten Link zur Grafik angeben (z. B. http://otrs.org/faq.png).';
+        'Ein Filter zur automatischen Generierung von FAQ-Links, wenn ein Hinweis auf einen FAQ-Artikel identifiziert wird. Das Element Image erlaubt zwei Eingabeformen: Erstens der Name eines Icons (z. B. faq.png). In diesem Fall wird auf das Grafik-Verzeichnis des KIX zugegriffen. Als zweite Möglichkeit kann man aber auch den direkten Link zur Grafik angeben (z. B. http://kixdesk.com/faq.png).';
     $Lang->{'Add FAQ article'} = 'FAQ-Artikel hinzufügen';
     $Lang->{'CSS color for the voting result.'}
         = 'CSS-Farbe für das Bewertungs-Ergebnis.';
@@ -3803,8 +3779,8 @@ sub Data {
         = 'Definiert Artikeltypen die weiterleitet werden, wenn sie zu Tickets in spez. Queues hinzugefuegt werden (Note-Report wird NICHT beachtet).';
     $Lang->{'Defines PGP-Keys for mail addresses which are not registered in the key.'}
         = 'Definiert PGP-Schluessel fuer Mailadressen die im Schluessel nicht registriert sind.';
-    $Lang->{'Defines mapping of OTRS queues to be forwarded and corresponding email-addresses.'}
-        = 'Definiert Mapping von weiterzuleitenden OTRS-queues und den entsprechenden Email-Adressen.';
+    $Lang->{'Defines mapping of KIX queues to be forwarded and corresponding email-addresses.'}
+        = 'Definiert Mapping von weiterzuleitenden KIX-queues und den entsprechenden Email-Adressen.';
     $Lang->{'Module to decrypt PGP-encrypted mails before any other processing.'}
         = 'Modul zum Entschluesseln von PGP-verschluesselten Emails vor allen weiteren Bearbeitungen.';
     $Lang->{'Ticket-ACL to show/hide ticket action AgentTicketPrintForwardFax.'}
@@ -3814,8 +3790,8 @@ sub Data {
     $Lang->{'Extended organization description.'} = 'Erweiterte Organisationsbeschreibung.';
     $Lang->{'Defines which ticket dynamic fields are forwarded.'}
         = 'Definiert welche dynamischen Felder weitergeleitet werden.';
-    $Lang->{'Defines mapping of OTRS queues to be fax-forwarded and corresponding fax-numbers.'}
-        = 'Definiert Mapping von per Fax weiterzuleitenden OTRS-queues und den entsprechenden FAX-Nummern.';
+    $Lang->{'Defines mapping of KIX queues to be fax-forwarded and corresponding fax-numbers.'}
+        = 'Definiert Mapping von per Fax weiterzuleitenden KIX-queues und den entsprechenden FAX-Nummern.';
     $Lang->{
         'Frontend module registration for the AgentTicketPrintForwardFax object in the agent interface.'
         } = 'Frontendmodul-Registration des AgentTicketPrintForwardFax-Objekts im Agent-Interface.';
@@ -4081,7 +4057,6 @@ sub Data {
     $Lang->{'Restrict export per search'} = 'Export mittels Suche einschränken';
     $Lang->{'Object backend module registration for the import/export module.'}
         = 'Objekt-Backend Modul Registration des Import/Export Moduls.';
-    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Lang->{
         'Defines which customer ID to use if no company defined - only relevant for new contacts.'
         }
@@ -4112,10 +4087,10 @@ sub Data {
         =
         'Frontendmodul-Registration des CI-AgentAttachmentStorage-Objekts im Agent-Interface.';
     $Lang->{
-        'The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the OTRS-Home.'
+        'The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the KIX-Home.'
         }
         =
-        'Pfad zum Verzeichnis in welchem vom Dateisystemspeichermodul (AttachmentStorageFS) neue Anhänge abgelegt werden. Der Pfad wird relativ zum OTRS-Home Verzeichnis angegeben.';
+        'Pfad zum Verzeichnis in welchem vom Dateisystemspeichermodul (AttachmentStorageFS) neue Anhänge abgelegt werden. Der Pfad wird relativ zum KIX-Home Verzeichnis angegeben.';
 
     $Lang->{'Welcome to KIX'}     = 'Willkommen bei KIX';
     $Lang->{'show Toolbar'}       = 'Toolbar anzeigen';

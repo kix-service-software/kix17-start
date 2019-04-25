@@ -90,7 +90,7 @@ sub AttachmentAdd {
 
     #check if destination path exists...
     if ( !-d $retVal ) {
-        if ( !File::Path::mkpath( [$retVal], 0, 0775 ) ) {
+        if ( !File::Path::mkpath( [$retVal], 0, oct(775) ) ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
                 Message =>

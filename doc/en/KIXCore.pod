@@ -2,9 +2,9 @@
 
 =head1 General
 
-This package provides a more flexible and more general approach for extensions of extensions than the common "Custom"-folder of OTRS itself. KIXCore (as the custom folder itself) is the continued development of the previous tsunami approach to extend other OTRS-extensions. Employing "use lib" instead of "unshift @INC" provides more stability and reduced complexity. Therefore each extension requires a modification of Kernel/Config.pm and scripts/apache2-perl-startup.pl. This can be done automatically by KIXUtils::RegisterCustomPackage. Each time a new custom folder is registered, a backup of the modified file Config.pm or apache2-perl-startup.pl with a timestamp suffix is written.
+This package provides a more flexible and more general approach for extensions of extensions than the common "Custom"-folder of KIX itself. KIXCore (as the custom folder itself) is the continued development of the previous tsunami approach to extend other KIX-extensions. Employing "use lib" instead of "unshift @INC" provides more stability and reduced complexity. Therefore each extension requires a modification of Kernel/Config.pm and scripts/apache2-perl-startup.pl. This can be done automatically by KIXUtils::RegisterCustomPackage. Each time a new custom folder is registered, a backup of the modified file Config.pm or apache2-perl-startup.pl with a timestamp suffix is written.
 
-You can use the following OTRS console commands to list custom folders, register or unregister a custom folder but actually this should be done by the package installation process:
+You can use the following KIX console commands to list custom folders, register or unregister a custom folder but actually this should be done by the package installation process:
 
 =item * Admin::MultipleCustomPackages::List
 =item * Admin::MultipleCustomPackages::Rebuild
@@ -13,7 +13,7 @@ You can use the following OTRS console commands to list custom folders, register
 
 IMPORTANT: if you're using mod-perl a webserver restart is required after the modification of apache2-perl-startup. Otherwise, no further custom packages in your custom modification will be found. Using a function of your custom extension upon installation (type "post") will NOT work, since @INC does not contain your custom directory yet. In order to use custom functions immediately on installation you need to install the extension via command line.
 
-The common folder "Custom" allows to overwrite an existing file of an already installed package once. If you installed another extension, you would encounter the same problem as if you had no "Custom" folder. This drawback is resolved with KIXCore. Furthermore the common Custom-folder of OTRS does not affect following files/items (yet). By extending the custom-folder approach it is possible to easily dis- and enable whole OTRS-extensions by un-/registering the corresponding custom folder.
+The common folder "Custom" allows to overwrite an existing file of an already installed package once. If you installed another extension, you would encounter the same problem as if you had no "Custom" folder. This drawback is resolved with KIXCore. Furthermore the common Custom-folder of KIX does not affect following files/items (yet). By extending the custom-folder approach it is possible to easily dis- and enable whole KIX-extensions by un-/registering the corresponding custom folder.
 
 =over 4
 
@@ -45,7 +45,7 @@ contains modifications to use KIX paths for skins
 
 =over 8
 
-required modification since module searches LinkObject backends not based on @INC but on hard coded file paths - should be fexed in future OTRS releases
+required modification since module searches LinkObject backends not based on @INC but on hard coded file paths - should be fexed in future KIX releases
 
 =back
 

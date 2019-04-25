@@ -23,7 +23,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Create an OTRS package (opm) file from an OTRS package source (sopm) file.');
+    $Self->Description('Create an KIX package (opm) file from an KIX package source (sopm) file.');
     $Self->AddOption(
         Name        => 'version',
         Description => "Specify the version to be used (overrides version from sopm file).",
@@ -34,14 +34,14 @@ sub Configure {
     $Self->AddOption(
         Name => 'module-directory',
         Description =>
-            "Specify the directory containing the module sources (otherwise the OTRS home directory will be used).",
+            "Specify the directory containing the module sources (otherwise the KIX home directory will be used).",
         Required   => 0,
         HasValue   => 1,
         ValueRegex => qr/.*/smx,
     );
     $Self->AddArgument(
         Name        => 'source-path',
-        Description => "Specify the path to an OTRS package source (sopm) file that should be built.",
+        Description => "Specify the path to an KIX package source (sopm) file that should be built.",
         Required    => 1,
         ValueRegex  => qr/.*/smx,
     );
@@ -102,8 +102,7 @@ sub Run {
     if (
         defined $Structure{PackageIsDownloadable}
         && !$Structure{PackageIsDownloadable}->{Content}
-        )
-    {
+    ) {
         $Self->PrintError("Package cannot be built.\n");
         return $Self->ExitCodeError();
     }
@@ -112,7 +111,7 @@ sub Run {
         $Structure{Version}->{Content} = $Self->GetOption('version');
     }
 
-    # build from given package directory, if any (otherwise default to OTRS home)
+    # build from given package directory, if any (otherwise default to KIX home)
     if ( $Self->GetOption('module-directory') ) {
         $Structure{Home} = $Self->GetOption('module-directory');
     }

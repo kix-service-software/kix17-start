@@ -263,7 +263,7 @@ Core.Form.Validate = (function (TargetNS) {
         var Text,
             $Element = $(Element);
 
-        // special treatment of <select> elements in OTRS
+        // special treatment of <select> elements in KIX
         if (Element.nodeName.toLowerCase() === 'select') {
             Text = $(Element).find('option:selected').text();
             return (Text.length && Text !== '-');
@@ -287,12 +287,12 @@ Core.Form.Validate = (function (TargetNS) {
     }
 
     /*
-     * Definitions of all OTRS specific rules and rule methods
+     * Definitions of all KIX specific rules and rule methods
      */
     $.validator.addMethod("Validate_Required", ValidatorMethodRequired, "");
     $.validator.addMethod("Validate_Number", $.validator.methods.digits, "");
 
-    // There is a configuration option in OTRS that controls if email addresses
+    // There is a configuration option in KIX that controls if email addresses
     // should be validated or not.
     // If email address should be validated, this function is overwritten in Init method
     $.validator.addMethod("Validate_Email", ValidatorMethodRequired, "");
@@ -515,7 +515,7 @@ Core.Form.Validate = (function (TargetNS) {
     });
 
     // Backwards compatibility: these methods are deprecated, do not use them!
-    // They will be removed in OTRS 3.1.
+    // They will be removed
     $.validator.addClassRules("Validate_RequiredDropdown", {
         Validate_Required: true
     });
@@ -654,7 +654,7 @@ Core.Form.Validate = (function (TargetNS) {
             FormSelector = 'form';
         }
 
-        // There is a configuration option in OTRS that controls if email addresses
+        // There is a configuration option in KIX that controls if email addresses
         //  should be validated or not.
         if (Core.Config.Get('CheckEmailAddresses')) {
             $.validator.addMethod("Validate_Email", $.validator.methods.email, "");

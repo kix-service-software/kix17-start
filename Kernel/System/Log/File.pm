@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::Log::File;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Time)
 
 use strict;
 use warnings;
@@ -18,6 +17,8 @@ our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Encode',
 );
+
+## no critic qw(InputOutput::RequireBriefOpen)
 
 sub new {
     my ( $Type, %Param ) = @_;
@@ -35,7 +36,7 @@ sub new {
 
     # get log file suffix
     if ( $ConfigObject->Get('LogModule::LogFile::Date') ) {
-        my ( $s, $m, $h, $D, $M, $Y, $WD, $YD, $DST ) = localtime( time() );    ## no critic
+        my ( $s, $m, $h, $D, $M, $Y, $WD, $YD, $DST ) = localtime( time() );
         $Y = $Y + 1900;
         $M = sprintf '%02d', ++$M;
         $Self->{LogFile} .= ".$Y-$M";
@@ -44,9 +45,7 @@ sub new {
     # Fixed bug# 2265 - For IIS we need to create a own error log file.
     # Bind stderr to log file, because iis do print stderr to web page.
     if ( $ENV{SERVER_SOFTWARE} && $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis/i ) {
-        ## no critic
         if ( !open STDERR, '>>', $Self->{LogFile} . '.error' ) {
-            ## use critic
             print STDERR "ERROR: Can't write $Self->{LogFile}.error: $!";
         }
     }
@@ -60,9 +59,7 @@ sub Log {
     my $FH;
 
     # open logfile
-    ## no critic
     if ( !open $FH, '>>', $Self->{LogFile} ) {
-        ## use critic
 
         # print error screen
         print STDERR "\n";
@@ -74,7 +71,7 @@ sub Log {
     # write log file
     $Kernel::OM->Get('Kernel::System::Encode')->SetIO($FH);
 
-    print $FH '[' . localtime() . ']';    ## no critic
+    print $FH '[' . localtime() . ']';
 
     if ( lc $Param{Priority} eq 'debug' ) {
         print $FH "[Debug][$Param{Module}][$Param{Line}] $Param{Message}\n";

@@ -139,8 +139,7 @@ sub Run {
         if (
             ( ( $Param{Event} eq 'ArticleCreate' ) || ( $Param{Event} eq 'ArticleSend' ) )
             && $Param{Data}->{ArticleID}
-            )
-        {
+        ) {
 
             # add attachments to notification
             if ( $Notification{Data}->{ArticleAttachmentInclude}->[0] ) {
@@ -169,15 +168,11 @@ sub Run {
                         );
                         next FILE_ID if !%Attachment;
 
-                        # KIX4OTRS-capeIT
                         # remove HTML-Attachments (HTML-Emails)
-                        next
-                            if (
+                        next if (
                             $Index{$FileID}->{Filename} =~ /^file-[12]$/
                             && $Index{$FileID}->{ContentType} =~ /text\/html/i
-                            );
-
-                        # EO KIX4OTRS-capeIT
+                        );
 
                         push @Attachments, \%Attachment;
                     }
@@ -286,8 +281,7 @@ sub Run {
                         defined $Notification{Data}->{VisibleForAgent}->[0]
                         && !$Notification{Data}->{VisibleForAgent}->[0]
                     )
-                    )
-                {
+                ) {
                     $AgentSendNotification = 1;
                 }
 
@@ -297,8 +291,7 @@ sub Run {
                     && $Notification{Data}->{VisibleForAgent}->[0]
                     && $Bundle->{Recipient}->{Type} eq 'Agent'
                     && !$AgentSendNotification
-                    )
-                {
+                ) {
                     next BUNDLE;
                 }
 
@@ -306,8 +299,7 @@ sub Run {
                 if (
                     $Bundle->{Recipient}->{Type} eq 'Customer'
                     && $ConfigObject->Get('CustomerNotifyJustToRealCustomer')
-                    )
-                {
+                ) {
 
                     # No UserID means it's not a mapped customer.
                     next BUNDLE if !$Bundle->{Recipient}->{UserID};
@@ -509,8 +501,7 @@ sub _NotificationFilter {
     if (
         ( ( $Param{Event} eq 'ArticleCreate' ) || ( $Param{Event} eq 'ArticleSend' ) )
         && $Param{Data}->{ArticleID}
-        )
-    {
+    ) {
 
         my %Article = $Kernel::OM->Get('Kernel::System::Ticket')->ArticleGet(
             ArticleID     => $Param{Data}->{ArticleID},
@@ -615,7 +606,6 @@ sub _RecipientsGet {
         my $QueueObject        = $Kernel::OM->Get('Kernel::System::Queue');
         my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
 
-        # KIX4OTRS-capeIT
         my @LinkedAgents = ();
         my @LinkedCustomers = ();
         my %SelectedRecipientTypes = map {$_ => 1} grep { $_ =~ /^LinkedPerson/ } @{ $Notification{Data}->{Recipients} };
@@ -646,19 +636,15 @@ sub _RecipientsGet {
                 push @{ $Notification{Data}->{Recipients} }, $RecipientParts[0].'LinkedPerson';
             }
         }
-        # EO KIX4OTRS-capeIT
 
+        my @Recipients = qw(
+            AgentOwner AgentResponsible AgentWatcher AgentWritePermissions
+            AgentMyQueues AgentMyServices AgentMyQueuesMyServices AgentLinkedPerson
+        );
         RECIPIENT:
         for my $Recipient ( @{ $Notification{Data}->{Recipients} } ) {
 
-            if (
-                $Recipient
-                # KIX4OTRS-capeIT
-                # =~ /^Agent(Owner|Responsible|Watcher|WritePermissions|MyQueues|MyServices|MyQueuesMyServices)$/
-                =~ /^Agent(Owner|Responsible|Watcher|WritePermissions|MyQueues|MyServices|MyQueuesMyServices|LinkedPerson)$/
-                # EO KIX4OTRS-capeIT
-                )
-            {
+            if ( grep( { $Recipient eq $_ } @Recipients ) ) {
 
                 if ( $Recipient eq 'AgentOwner' ) {
                     push @{ $Notification{Data}->{RecipientAgents} }, $Ticket{OwnerID};
@@ -761,19 +747,14 @@ sub _RecipientsGet {
 
                     push @{ $Notification{Data}->{RecipientAgents} }, @UserIDs;
                 }
-                # KIX4OTRS-capeIT
                 elsif ( $Recipient eq 'AgentLinkedPerson' ) {
                     push @{ $Notification{Data}->{RecipientAgents} }, @LinkedAgents;
                 }
-                # EO KIX4OTRS-capeIT
             }
 
-            # Other OTRS packages might add other kind of recipients that are normally handled by
+            # Other KIX packages might add other kind of recipients that are normally handled by
             #   other modules then an elsif condition here is useful.
-            # KIX4OTRS-capeIT
-            # elsif ( $Recipient eq 'Customer' ) {
             elsif ( $Recipient eq 'Customer' || $Recipient eq 'CustomerLinkedPerson' ) {
-            # EO KIX4OTRS-capeIT
 
                 # get old article for quoting
                 my %Article = $TicketObject->ArticleLastCustomerArticle(
@@ -789,7 +770,6 @@ sub _RecipientsGet {
                     );
                 }
 
-                # KIX4OTRS-capeIT
                 my @CustomerRecipients = ();
                 if ( $Recipient eq 'CustomerLinkedPerson' ) {
                     @CustomerRecipients = @LinkedCustomers;
@@ -799,7 +779,6 @@ sub _RecipientsGet {
                 }
 
                 for my $Customer ( @CustomerRecipients ) {
-                # EO KIX4OTRS-capeIT
                     # ArticleLastCustomerArticle() returns the latest customer article but if there
                     # is no customer article, it returns the latest agent article. In this case
                     # notification must not be send to the "From", but to the "To" article field.
@@ -820,12 +799,8 @@ sub _RecipientsGet {
                     # check if customer notifications should be send
                     if (
                         $ConfigObject->Get('CustomerNotifyJustToRealCustomer')
-                        # KIX4OTRS-capeIT
-                        # && !$Article{CustomerUserID}
                         && !$Customer
-                        # EO KIX4OTRS-capeIT
-                        )
-                    {
+                    ) {
                         $Kernel::OM->Get('Kernel::System::Log')->Log(
                             Priority => 'info',
                             Message  => 'Send no customer notification because no customer is set!',
@@ -839,10 +814,7 @@ sub _RecipientsGet {
                     if ( $Article{CustomerUserID} ) {
 
                         my %CustomerUser = $CustomerUserObject->CustomerUserDataGet(
-                            # KIX4OTRS-capeIT
-                            # User => $Article{CustomerUserID},
                             User => $Customer,
-                            # EO KIX4OTRS-capeIT
                         );
 
                         # join Recipient data with CustomerUser data
@@ -857,10 +829,7 @@ sub _RecipientsGet {
                     # get real name
                     if ( $Article{CustomerUserID} ) {
                         $Recipient{Realname} = $CustomerUserObject->CustomerName(
-                            # KIX4OTRS-capeIT
-                            # UserLogin => $Article{CustomerUserID},
                             UserLogin => $Customer,
-                            # EO KIX4OTRS-capeIT
                         );
                     }
                     if ( !$Recipient{Realname} ) {
@@ -870,9 +839,7 @@ sub _RecipientsGet {
                     }
 
                     push @RecipientUsers, \%Recipient;
-                # KIX4OTRS-capeIT
                 }
-                # EO KIX4OTRS-capeIT
             }
         }
     }
@@ -982,8 +949,7 @@ sub _RecipientsGet {
             !$ConfigObject->Get('AgentSelfNotifyOnAction')
             && $User{UserID} == $Param{UserID}
             && !$PrecalculatedUserIDs{ $Param{UserID} }
-            )
-        {
+        ) {
             next RECIPIENT;
         }
 
@@ -1086,8 +1052,7 @@ sub _SendRecipientNotification {
                 $CurrYear == $Year
                 && $CurrMonth == $Month
                 && $CurrDay == $Day
-                )
-            {
+            ) {
                 return;
             }
         }
@@ -1111,8 +1076,7 @@ sub _SendRecipientNotification {
     if (
         $Param{Recipient}->{Type} eq 'Agent'
         && $Param{Recipient}->{UserLogin}
-        )
-    {
+    ) {
 
         # write history
         $TicketObject->HistoryAdd(
@@ -1154,7 +1118,7 @@ sub _ArticleToUpdate {
     }
 
     # not update for User 1
-    return 1 if $Param{UserID} eq 1;
+    return 1 if $Param{UserID} eq "1";
 
     # get needed objects
     my $DBObject   = $Kernel::OM->Get('Kernel::System::DB');

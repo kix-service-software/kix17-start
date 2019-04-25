@@ -138,7 +138,7 @@ sub Run {
         }
 
         # try to set the configured value
-        my $Success = $DynamicFieldBackendObject->ValueSet(
+        $Success = $DynamicFieldBackendObject->ValueSet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ObjectID           => $Param{Ticket}->{TicketID},
             Value              => $Param{Config}->{$CurrentDynamicField},

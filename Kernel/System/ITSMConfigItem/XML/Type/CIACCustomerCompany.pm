@@ -208,8 +208,7 @@ sub ImportSearchValuePrepare {
     if (
         %CustomerCompanyList
         && ( scalar( keys %CustomerCompanyList ) == 1 )
-        )
-    {
+    ) {
         my @Result = keys %CustomerCompanyList;
         return $Result[0];
     }

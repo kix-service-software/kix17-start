@@ -13,6 +13,8 @@ package Kernel::System::JSON;
 use strict;
 use warnings;
 
+## no critic qw(Variables::RequireLocalizedPunctuationVars)
+
 # on PerlEx JSON::XS causes problems so force JSON::PP as backend
 # see http://bugs.otrs.org/show_bug.cgi?id=7337
 BEGIN {

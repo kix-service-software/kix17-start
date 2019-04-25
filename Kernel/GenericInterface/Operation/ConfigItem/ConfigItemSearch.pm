@@ -175,7 +175,7 @@ perform ConfigItemCreate Operation. This will return the created config item num
         Success         => 1,                       # 0 or 1
         ErrorMessage    => '',                      # in case of error
         Data            => {                        # result data payload after Operation
-            ConfigItemID     => [123, 456],         # Configuration Item  IDs number in OTRS::ITSM (Service desk system)
+            ConfigItemID     => [123, 456],         # Configuration Item  IDs number in KIX::ITSM (Service desk system)
             Error => {                              # should not return errors
                     ErrorCode    => 'ConfigItemSearch.ErrorCode'
                     ErrorMessage => 'Error Description'
@@ -203,8 +203,7 @@ sub Run {
     if (
         !$Param{Data}->{UserLogin}
         && !$Param{Data}->{SessionID}
-        )
-    {
+    ) {
         return $Self->ReturnError(
             ErrorCode => "$Self->{OperationName}.MissingParameter",
             ErrorMessage =>
@@ -214,8 +213,7 @@ sub Run {
 
     if ( $Param{Data}->{UserLogin} ) {
 
-        if ( !$Param{Data}->{Password} )
-        {
+        if ( !$Param{Data}->{Password} ) {
             return $Self->ReturnError(
                 ErrorCode    => "$Self->{OperationName}.MissingParameter",
                 ErrorMessage => "$Self->{OperationName}: Password or SessionID is required!",
@@ -444,6 +442,8 @@ sub _CleanXMLData {
             $XMLData->{$Key} =~ s{\s+\z}{};
         }
     }
+
+    return 1;
 }
 
 =item _CheckConfigItem()
@@ -525,15 +525,13 @@ sub _CheckConfigItem {
 
     for my $TimeParam (
         qw(CreateTimeNewerDate CreateTimeOlderDate ChangeTimeNewerDate ChangeTimeOlderDate)
-        )
-    {
+    ) {
         if ( defined $ConfigItem->{"ConfigItem$TimeParam"} ) {
             if (
                 !$Self->ValidateInputDateTime(
                     Value => $ConfigItem->{"ConfigItem$TimeParam"},
                 )
-                )
-            {
+            ) {
                 return {
                     ErrorCode => "$Self->{OperationName}.InvalidParameter",
                     ErrorMessage =>
@@ -615,8 +613,7 @@ sub _ConfigItemSearch {
         ConfigItemCreateTimeNewerDate ConfigItemCreateTimeOlderDate ConfigItemChangeTimeNewerDate
         ConfigItemChangeTimeOlderDate
         )
-        )
-    {
+    ) {
         if ( defined $ConfigItem->{$PlainParam} ) {
             $SearchParams{$PlainParam} = $ConfigItem->{$PlainParam};
         }

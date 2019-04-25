@@ -115,29 +115,29 @@ sub Run {
         }
 
         # generate entity ID
-        my $EntityID = $EntityObject->EntityIDGenerate(
+        my $NewEntityID = $EntityObject->EntityIDGenerate(
             EntityType => 'TransitionAction',
             UserID     => $Self->{UserID},
         );
 
         # show error if can't generate a new EntityID
-        if ( !$EntityID ) {
+        if ( !$NewEntityID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error generating a new EntityID for this TransitionAction'),
             );
         }
 
         # otherwise save configuration and return process screen
-        my $TransitionActionID = $TransitionActionObject->TransitionActionAdd(
+        my $NewTransitionActionID = $TransitionActionObject->TransitionActionAdd(
             Name     => $TransitionActionData->{Name},
             Module   => $TransitionActionData->{Module},
-            EntityID => $EntityID,
+            EntityID => $NewEntityID,
             Config   => $TransitionActionData->{Config},
             UserID   => $Self->{UserID},
         );
 
         # show error if can't create
-        if ( !$TransitionActionID ) {
+        if ( !$NewTransitionActionID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error creating the TransitionAction'),
             );
@@ -146,7 +146,7 @@ sub Run {
         # set entitty sync state
         my $Success = $EntityObject->EntitySyncStateSet(
             EntityType => 'TransitionAction',
-            EntityID   => $EntityID,
+            EntityID   => $NewEntityID,
             SyncState  => 'not_sync',
             UserID     => $Self->{UserID},
         );
@@ -156,7 +156,7 @@ sub Run {
             return $LayoutObject->ErrorScreen(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'There was an error setting the entity sync status for TransitionAction entity: %s',
-                    $EntityID
+                    $NewEntityID
                 ),
             );
         }
@@ -168,7 +168,7 @@ sub Run {
 
         # get latest config data to send it back to main window
         my $TransitionActionConfig = $Self->_GetTransitionActionConfig(
-            EntityID => $EntityID,
+            EntityID => $NewEntityID,
         );
 
         my $ConfigJSON = $LayoutObject->JSONEncode( Data => $TransitionActionConfig );
@@ -177,8 +177,8 @@ sub Run {
         if ( $Redirect && $Redirect eq '1' ) {
 
             $Self->_PushSessionScreen(
-                ID        => $TransitionActionID,
-                EntityID  => $EntityID,
+                ID        => $NewTransitionActionID,
+                EntityID  => $NewEntityID,
                 Subaction => 'TransitionActionEdit'    # always use edit screen
             );
 
@@ -601,8 +601,7 @@ sub _GetParams {
     # get parameters from web browser
     for my $ParamName (
         qw( Name Module EntityID )
-        )
-    {
+    ) {
         $GetParam->{$ParamName} = $ParamObject->GetParam( Param => $ParamName ) || '';
     }
 
@@ -705,7 +704,10 @@ sub _PopupResponse {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    if ( $Param{Redirect} && $Param{Redirect} eq 1 ) {
+    if (
+        defined $Param{Redirect}
+        && $Param{Redirect} eq '1'
+    ) {
         $LayoutObject->Block(
             Name => 'Redirect',
             Data => {
@@ -714,7 +716,10 @@ sub _PopupResponse {
             },
         );
     }
-    elsif ( $Param{ClosePopup} && $Param{ClosePopup} eq 1 ) {
+    elsif (
+        defined $Param{ClosePopup}
+        && $Param{ClosePopup} eq '1'
+    ) {
         $LayoutObject->Block(
             Name => 'ClosePopup',
             Data => {

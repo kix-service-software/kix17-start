@@ -9,7 +9,6 @@
 # --
 
 package var::processes::examples::Application_for_leave_post;
-## nofilter(TidyAll::Plugin::OTRS::Perl::PerlCritic)
 
 use strict;
 use warnings;
@@ -79,8 +78,7 @@ sub Run {
                 if (
                     !$CurrentValue->{$Key}->{$InnerKey}
                     || $CurrentValue->{$Key}->{$InnerKey} ne $Value
-                    )
-                {
+                ) {
                     $CurrentValue->{$Key}->{$InnerKey} = $Value;
                 }
             }

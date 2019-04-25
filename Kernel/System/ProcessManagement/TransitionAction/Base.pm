@@ -18,8 +18,6 @@ use utf8;
 use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
-
-    # BPMX-capeIT
     'Kernel::Config',
     'Kernel::System::Encode',
     'Kernel::System::HTMLUtils',
@@ -27,12 +25,11 @@ our @ObjectDependencies = (
     'Kernel::System::Queue',
     'Kernel::System::TemplateGenerator',
     'Kernel::System::Ticket',
-
-    # EO BPMX-capeIT
     'Kernel::System::Log',
 );
 
-# BPMX-capeIT
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 sub ArticleLastArticle {
 
     # result is ArticleID from last article from Ticket
@@ -125,7 +122,6 @@ sub ReplaceExtended {
         %Queue = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet( ID => $Param{QueueID} );
     }
 
-#rbo - T2016121190001552 - added KIX placeholders
     my $Tag = $Start . '(KIX|OTRS)_LAST_';
     if ( $Param{Text} =~ /$Tag.+$End/i ) {
 
@@ -134,7 +130,6 @@ sub ReplaceExtended {
             TicketID => $Param{TicketID},
         );
 
-#rbo - T2016121190001552 - added KIX placeholders
         # replace <KIX_LAST_BODY> and <KIX_LAST_COMMENT> tags
         for my $Key (qw(KIX_LAST_BODY KIX_LAST_COMMENT OTRS_LAST_BODY OTRS_LAST_COMMENT)) {
             my $Tag2 = $Start . $Key;
@@ -188,7 +183,6 @@ sub ReplaceExtended {
             }
         }
 
-#rbo - T2016121190001552 - added KIX placeholders
         # replace <KIX_LAST_SUBJECT[]> tags
         my $Tag2 = $Start . '(KIX|OTRS)_LAST_SUBJECT';
         if ( $Param{Text} =~ /$Tag2\[(.+?)\]$End/g ) {
@@ -226,7 +220,7 @@ sub ReplaceExtended {
     }
     else
     {
-        # using TemplateGenerator from KIX4OTRS
+        # using TemplateGenerator
         $Param{Text} = $Kernel::OM->Get('Kernel::System::TemplateGenerator')->ReplacePlaceHolder(
             RichText => $Param{RichText},
             Text     => $Param{Text},
@@ -240,7 +234,6 @@ sub ReplaceExtended {
     return $Param{Text};
 
 }
-# EO BPMX-capeIT
 
 sub _CheckParams {
     my ( $Self, %Param ) = @_;
@@ -251,8 +244,7 @@ sub _CheckParams {
         qw(UserID Ticket ProcessEntityID ActivityEntityID TransitionEntityID
         TransitionActionEntityID Config
         )
-        )
-    {
+    ) {
         if ( !defined $Param{$Needed} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -297,14 +289,6 @@ sub _OverrideUserID {
 sub _ReplaceTicketAttributes {
     my ( $Self, $Param ) = @_;
 
-# BPMX-capeIT
-#    include more Placeholder
-#
-#   # get needed objects
-#
-# ...
-# Repleace from file Kernel/System/ProcessManagement/TransitionAction/Base.pm (version otrs 5.0.12) line 80 to 129
-# ...
     for my $Attribute ( sort keys %{ $Param->{Config} } ) {
 
         # save placeholder
@@ -322,18 +306,13 @@ sub _ReplaceTicketAttributes {
         );
     }
 
-    # EO BPMX-capeIT
     return 1;
 }
 
 sub _ConvertScalar2ArrayRef {
     my ( $Self, %Param ) = @_;
 
-    # BPMX-capeIT
-    #    my @Data = split /,/, $Param{Data};
     my @Data = split( '/,/,', $Param{Data} );
-
-    # EO BPMX-capeIT
 
     # remove any possible heading and tailing white spaces
     for my $Item (@Data) {

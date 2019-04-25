@@ -256,8 +256,7 @@ sub Sign {
     if (
         IsHashRefWithData( $Self->{Version} )
         && sprintf( "%.3d%.3d", $Self->{Version}->{Major}, $Self->{Version}->{Minor} ) >= 2_001
-        )
-    {
+    ) {
         $Quiet = '--quiet --batch --pinentry-mode=loopback';
     }
 
@@ -353,10 +352,8 @@ sub Verify {
         my $KeyID = '';
 
         if (
-            $LogMessage{GOODSIG}->{MessageLong}
-            =~ m{\Q[GNUPG:] GOODSIG \E (?: [0-9A-F]{8}) ([0-9A-F]{8}) }xms
-            )
-        {
+            $LogMessage{GOODSIG}->{MessageLong} =~ m{\Q[GNUPG:] GOODSIG \E (?: [0-9A-F]{8}) ([0-9A-F]{8}) }xms
+        ) {
             $KeyID = $1;
         }
         else {
@@ -368,10 +365,8 @@ sub Verify {
 
         my $KeyUserID = '';
         if (
-            $LogMessage{GOODSIG}->{MessageLong}
-            =~ m{\Q[GNUPG:] GOODSIG \E (?:[0-9A-F]{16}) \s (.*) }xms
-            )
-        {
+            $LogMessage{GOODSIG}->{MessageLong} =~ m{\Q[GNUPG:] GOODSIG \E (?:[0-9A-F]{16}) \s (.*) }xms
+        ) {
             $KeyUserID = $1;
         }
         else {
@@ -386,8 +381,7 @@ sub Verify {
         if (
             $LogMessage{VALIDSIG}
             && $LogMessage{VALIDSIG}->{MessageLong} =~ m{\Q[GNUPG:] VALIDSIG \E ([0-9A-F]{40}) }xms
-            )
-        {
+        ) {
             $KeyFingerprint   = $1;
             $ValidMessageLong = $LogMessage{VALIDSIG}->{MessageLong};
         }
@@ -412,10 +406,8 @@ sub Verify {
 
         # key id
         if (
-            $LogMessage{ERRSIG}->{MessageLong}
-            =~ m{ \Q[GNUPG:] ERRSIG \E (?:[0-9A-F]{8}) ([0-9A-F]{8}) }xms
-            )
-        {
+            $LogMessage{ERRSIG}->{MessageLong} =~ m{ \Q[GNUPG:] ERRSIG \E (?:[0-9A-F]{8}) ([0-9A-F]{8}) }xms
+        ) {
             $KeyID = $1;
         }
         else {
@@ -442,10 +434,8 @@ sub Verify {
         # revoked has the preference but also expired can be shown, is it?
         my $KeyID;
         if (
-            $LogMessage{EXPKEYSIG}->{MessageLong}
-            =~ m{\Q[GNUPG:] EXPKEYSIG \E (?:[0-9A-F]{8}) ([0-9A-F]{8})}xms
-            )
-        {
+            $LogMessage{EXPKEYSIG}->{MessageLong} =~ m{\Q[GNUPG:] EXPKEYSIG \E (?:[0-9A-F]{8}) ([0-9A-F]{8})}xms
+        ) {
             $KeyID = $1;
         }
         else {
@@ -457,10 +447,8 @@ sub Verify {
 
         my $KeyUserID = '';
         if (
-            $LogMessage{EXPKEYSIG}->{MessageLong}
-            =~ m{\Q[GNUPG:] EXPKEYSIG \E (?:[0-9A-F]{16}) \s (.*) }xms
-            )
-        {
+            $LogMessage{EXPKEYSIG}->{MessageLong} =~ m{\Q[GNUPG:] EXPKEYSIG \E (?:[0-9A-F]{16}) \s (.*) }xms
+        ) {
             $KeyUserID = $1;
         }
         else {
@@ -486,10 +474,8 @@ sub Verify {
 
         my $KeyID;
         if (
-            $LogMessage{REVKEYSIG}->{MessageLong}
-            =~ m{\Q[GNUPG:] REVKEYSIG \E (?:[0-9A-F]{8}) ([0-9A-F]{8}) }xms
-            )
-        {
+            $LogMessage{REVKEYSIG}->{MessageLong} =~ m{\Q[GNUPG:] REVKEYSIG \E (?:[0-9A-F]{8}) ([0-9A-F]{8}) }xms
+        ) {
             $KeyID = $1;
         }
         else {
@@ -501,10 +487,8 @@ sub Verify {
 
         my $KeyUserID = '';
         if (
-            $LogMessage{REVKEYSIG}->{MessageLong}
-            =~ m{\Q[GNUPG:] REVKEYSIG \E (?:[0-9A-F]{16}) \s (.*) }xms
-            )
-        {
+            $LogMessage{REVKEYSIG}->{MessageLong} =~ m{\Q[GNUPG:] REVKEYSIG \E (?:[0-9A-F]{16}) \s (.*) }xms
+        ) {
             $KeyUserID = $1;
         }
         else {
@@ -530,10 +514,8 @@ sub Verify {
 
         my $KeyID;
         if (
-            $LogMessage{EXPKEYSIG}->{MessageLong}
-            =~ m{\Q[GNUPG:] EXPKEYSIG \E (?:[0-9A-F]{8}) ([0-9A-F]{8}) }xms
-            )
-        {
+            $LogMessage{EXPKEYSIG}->{MessageLong} =~ m{\Q[GNUPG:] EXPKEYSIG \E (?:[0-9A-F]{8}) ([0-9A-F]{8}) }xms
+        ) {
             $KeyID = $1;
         }
         else {
@@ -545,10 +527,8 @@ sub Verify {
 
         my $KeyUserID = '';
         if (
-            $LogMessage{EXPKEYSIG}->{MessageLong}
-            =~ m{\Q[GNUPG:] EXPKEYSIG \E (?:[0-9A-F]{16}) \s (.*) }xms
-            )
-        {
+            $LogMessage{EXPKEYSIG}->{MessageLong} =~ m{\Q[GNUPG:] EXPKEYSIG \E (?:[0-9A-F]{16}) \s (.*) }xms
+        ) {
             $KeyUserID = $1;
         }
         else {
@@ -607,8 +587,7 @@ sub Verify {
     if (
         $Param{Message} =~ m{ \s* \S+ \s* ^ \s* -----BEGIN [ ] PGP [ ] SIGNED [ ] MESSAGE----- }xmsg
         || $Param{Message} =~ m{ ^ \s* -----END [ ] PGP [ ] SIGNATURE----- \s* \S+ \s* }xmsg
-        )
-    {
+    ) {
         push @Warnings, {
             Result => 'Error',
             Key    => 'Sign Warning',
@@ -745,8 +724,7 @@ sub SecretKeyGet {
     if (
         IsHashRefWithData( $Self->{Version} )
         && sprintf( "%.3d%.3d", $Self->{Version}->{Major}, $Self->{Version}->{Minor} ) >= 2_001
-        )
-    {
+    ) {
         my %PasswordHash = %{ $Kernel::OM->Get('Kernel::Config')->Get('PGP::Key::Password') };
         my $Key          = quotemeta( $Param{Key} || '' );
         my $Password     = $PasswordHash{$Key} || '';
@@ -999,8 +977,7 @@ sub _DecryptPart {
     if (
         IsHashRefWithData( $Self->{Version} )
         && sprintf( "%.3d%.3d", $Self->{Version}->{Major}, $Self->{Version}->{Minor} ) >= 2_001
-        )
-    {
+    ) {
         my $GPGOptions
             = qq{--batch --pinentry-mode=loopback --passphrase-fd 0 --armor -o $FileDecrypt --decrypt $QuotedFilename};
         $LogMessage = qx{$Self->{GPGBin} $GPGOptions < $FilePhrase 2>&1};
@@ -1072,14 +1049,15 @@ sub _HandleLog {
     for my $Line (@ComputableLines) {
 
         # get tag
-        $Line =~ m{(:?\[GNUPG\:\]\s)(\w*)(:?\s.*)?}xms;
-        my $Tag     = $2;
-        my $Message = $Line;
+        if ( $Line =~ m{(:?\[GNUPG\:\]\s)(\w*)(:?\s.*)?}xms ) {
+            my $Tag     = $2;
+            my $Message = $Line;
 
-        $ComputableLog{$Tag} = {
-            Log => $LogDictionary->{$Tag} || $Line,
-            MessageLong => $Line || $LogDictionary->{$Tag},
-            }
+            $ComputableLog{$Tag} = {
+                Log => $LogDictionary->{$Tag} || $Line,
+                MessageLong => $Line || $LogDictionary->{$Tag},
+            };
+        }
     }
 
     # get clean log lines
@@ -1197,11 +1175,10 @@ sub _ParseGPGKeyList {
             # add fingerprint in standard format, too
             if (
                 $Fields[9] =~ m{
-                (\w\w\w\w)(\w\w\w\w)(\w\w\w\w)(\w\w\w\w)(\w\w\w\w)
-                (\w\w\w\w)(\w\w\w\w)(\w\w\w\w)(\w\w\w\w)(\w\w\w\w)
-            }x
-                )
-            {
+                    (\w\w\w\w)(\w\w\w\w)(\w\w\w\w)(\w\w\w\w)(\w\w\w\w)
+                    (\w\w\w\w)(\w\w\w\w)(\w\w\w\w)(\w\w\w\w)(\w\w\w\w)
+                }x
+            ) {
                 $Key{Fingerprint} = "$1 $2 $3 $4 $5  $6 $7 $8 $9 $10";
             }
         }

@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::PostMaster::LoopProtection::FS;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Time)
 
 use strict;
 use warnings;
@@ -36,7 +35,7 @@ sub new {
     $Self->{PostmasterMaxEmails} = $ConfigObject->Get('PostmasterMaxEmails') || 40;
 
     # create logfile name
-    my ( $Sec, $Min, $Hour, $Day, $Month, $Year ) = localtime(time);    ## no critic
+    my ( $Sec, $Min, $Hour, $Day, $Month, $Year ) = localtime(time);
     $Year = $Year + 1900;
     $Month++;
     $Self->{LoopProtectionLog} .= '-' . $Year . '-' . $Month . '-' . $Day . '.log';
@@ -50,10 +49,8 @@ sub SendEmail {
     my $To = $Param{To} || return;
 
     # write log
-    ## no critic
     if ( open( my $Out, '>>', $Self->{LoopProtectionLog} ) ) {
-        ## use critic
-        print $Out "$To;" . localtime() . ";\n";    ## no critic
+        print $Out "$To;" . localtime() . ";\n";
         close($Out);
     }
     else {
@@ -73,25 +70,7 @@ sub Check {
     my $Count = 0;
 
     # check existing logfile
-    ## no critic
-    if ( !open( my $In, '<', $Self->{LoopProtectionLog} ) ) {
-        ## use critic
-
-        # create new log file
-        ## no critic
-        if ( !open( my $Out, '>', $Self->{LoopProtectionLog} ) ) {
-            ## use critic
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "LoopProtection! Can't write '$Self->{LoopProtectionLog}': $!!",
-            );
-        }
-        else {
-            close($Out);
-        }
-    }
-    else {
-
+    if ( open( my $In, '<', $Self->{LoopProtectionLog} ) ) {
         # open old log file
         while (<$In>) {
             my @Data = split( /;/, $_ );
@@ -100,6 +79,17 @@ sub Check {
             }
         }
         close($In);
+    }
+    else {
+        # create new log file
+        if ( open( my $Out, '>', $Self->{LoopProtectionLog} ) ) {
+            close($Out);
+        } else {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "LoopProtection! Can't write '$Self->{LoopProtectionLog}': $!!",
+            );
+        }
     }
 
     # check possible loop

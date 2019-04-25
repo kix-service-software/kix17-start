@@ -992,7 +992,7 @@ sub Safety {
 
     # This can also be entity-encoded to hide it from the parser.
     #   Browsers seem to tolerate an omitted ";".
-    my $JavaScriptPrefixRegex = '
+    my $JavaScriptPrefixRegex = <<'END';
         (?: j | &\#106[;]? | &\#x6a[;]? )
         (?: a | &\#97[;]?  | &\#x61[;]? )
         (?: v | &\#118[;]? | &\#x76[;]? )
@@ -1003,9 +1003,9 @@ sub Safety {
         (?: i | &\#105[;]? | &\#x69[;]? )
         (?: p | &\#112[;]? | &\#x70[;]? )
         (?: t | &\#116[;]? | &\#x74[;]? )
-    ';
+END
 
-    my $ExpressionPrefixRegex = '
+    my $ExpressionPrefixRegex = <<'END';
         (?: e | &\#101[;]? | &\#x65[;]? )
         (?: x | &\#120[;]? | &\#x78[;]? )
         (?: p | &\#112[;]? | &\#x70[;]? )
@@ -1016,7 +1016,7 @@ sub Safety {
         (?: i | &\#105[;]? | &\#x69[;]? )
         (?: o | &\#111[;]? | &\#x6f[;]? )
         (?: n | &\#110[;]? | &\#x6e[;]? )
-    ';
+END
 
     # Replace as many times as it is needed to avoid nesting tag attacks.
     do {
@@ -1188,7 +1188,7 @@ sub Safety {
 
         $Safety{Replace} += $Replaced;
 
-    } while ($Replaced);    ## no critic
+    } while ($Replaced);
 
     # check ref && return result like called
     if ($StringScalar) {
@@ -1261,7 +1261,7 @@ sub EmbeddedImagesExtract {
 
 =item HTMLTruncate()
 
-DEPRECATED: This function will be removed in further versions of OTRS
+DEPRECATED: This function will be removed in further versions of KIX
 
 truncate an HTML string to certain amount of characters without loosing the HTML tags, the resulting
 string will contain the specified amount of text characters plus the HTML tags, and ellipsis string.

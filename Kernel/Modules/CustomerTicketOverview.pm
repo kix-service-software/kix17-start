@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::CustomerTicketOverview;
-## nofilter(TidyAll::Plugin::OTRS::Perl::DBObject)
 
 use strict;
 use warnings;
@@ -176,8 +175,7 @@ sub Run {
     if (
         $ConfigObject->Get('Ticket::ArchiveSystem')
         && !$ConfigObject->Get('Ticket::CustomerArchiveSystem')
-        )
-    {
+    ) {
         $SearchInArchive{ArchiveFlags} = [ 'y', 'n' ];
     }
 
@@ -235,8 +233,7 @@ sub Run {
                 eq 'HASH'
                 && defined $ConfigObject->Get('Ticket::Frontend::CustomerTicketOverviewCustomEmptyText')
                 ->{Button}
-                )
-            {
+            ) {
                 $LayoutObject->Block(
                     Name => 'EmptyCustomButton',
                     Data => $CustomTexts,
@@ -252,8 +249,7 @@ sub Run {
             if (
                 ref $ConfigObject->Get('CustomerFrontend::Module')->{CustomerTicketMessage}
                 eq 'HASH'
-                )
-            {
+            ) {
                 $LayoutObject->Block(
                     Name => 'EmptyDefaultButton',
                 );
@@ -433,8 +429,7 @@ sub Run {
                 if (
                     $SortBy
                     && ( $SortBy eq ( 'DynamicField_' . $DynamicFieldConfig->{Name} ) )
-                    )
-                {
+                ) {
                     if ( $OrderByCurrent && ( $OrderByCurrent eq 'Up' ) ) {
                         $OrderBy = 'Down';
                         $CSS .= ' SortDescending';
@@ -536,8 +531,7 @@ sub Run {
             if (
                 $Counter >= $StartHit
                 && $Counter < ( $PageShown + $StartHit )
-                )
-            {
+            ) {
                 $Self->ShowTicketStatus( TicketID => $TicketID );
             }
         }
@@ -596,8 +590,8 @@ sub ShowTicketStatus {
         for my $ArticleID ( reverse @ArticleIDs ) {
             my %CurrentArticle = $TicketObject->ArticleGet( ArticleID => $ArticleID );
 
-            # check for non-internal and non-chat article
-            next ARTICLEID if $CurrentArticle{ArticleType} =~ m{internal|chat}smx;
+            # check for non-internal
+            next ARTICLEID if $CurrentArticle{ArticleType} =~ m{internal}smx;
 
             # check for customer article
             if ( $CurrentArticle{SenderType} eq 'customer' ) {
@@ -815,6 +809,7 @@ sub ShowTicketStatus {
             );
         }
     }
+    return 1;
 }
 
 1;

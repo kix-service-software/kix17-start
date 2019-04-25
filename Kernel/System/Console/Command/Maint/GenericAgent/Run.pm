@@ -24,6 +24,8 @@ our @ObjectDependencies = (
     'Kernel::System::PID',
 );
 
+## no critic qw(BuiltinFunctions::ProhibitStringyEval)
+
 sub Configure {
     my ( $Self, %Param ) = @_;
 
@@ -51,13 +53,13 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'debug',
-        Description => "Print debug info to the OTRS log.",
+        Description => "Print debug info to the KIX log.",
         Required    => 0,
         HasValue    => 0,
     );
 
     $Self->AdditionalHelp(
-        "This script only runs file based generic agent jobs, database based jobs are handled by the OTRS Daemon."
+        "This script only runs file based generic agent jobs, database based jobs are handled by the KIX Daemon."
     );
     return;
 }
@@ -131,7 +133,7 @@ sub Run {
         $Self->PrintError("Could not load agent job file '$ConfigurationModule': $!\n");
         return $Self->ExitCodeError();
     }
-    eval "import $ConfigurationModule";    ## no critic
+    eval( "import $ConfigurationModule" );
 
     # set the maximum number of affected tickets
     my $Limit = $Self->GetOption('ticket-limit');

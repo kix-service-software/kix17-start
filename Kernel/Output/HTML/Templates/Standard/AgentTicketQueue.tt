@@ -17,6 +17,4 @@
 </div>
 <div class="QueueOverviewSeparator"></div>
 
-# KIX4OTRS-capeIT
 [% Data.TicketList %]
-# EO KIX4OTRS-capeIT

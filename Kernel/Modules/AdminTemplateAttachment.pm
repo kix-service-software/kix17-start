@@ -295,8 +295,7 @@ sub _Overview {
         for my $StandardTemplateID (
             sort { uc( $StandardTemplateData{$a} ) cmp uc( $StandardTemplateData{$b} ) }
             keys %StandardTemplateData
-            )
-        {
+        ) {
             $LayoutObject->Block(
                 Name => 'List1n',
                 Data => {
@@ -324,8 +323,7 @@ sub _Overview {
         for my $StdAttachmentID (
             sort { uc( $StdAttachmentData{$a} ) cmp uc( $StdAttachmentData{$b} ) }
             keys %StdAttachmentData
-            )
-        {
+        ) {
             $LayoutObject->Block(
                 Name => 'Listn1',
                 Data => {

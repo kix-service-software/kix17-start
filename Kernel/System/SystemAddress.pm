@@ -290,10 +290,7 @@ sub SystemAddressList {
 
     # get system address
     return if !$Self->{DBObject}->Prepare(
-        SQL => "
-            SELECT id, value0
-            FROM system_address
-            $ValidSQL",
+        SQL => "SELECT id, value0 FROM system_address $ValidSQL",
     );
 
     my %List;

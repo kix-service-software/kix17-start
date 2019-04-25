@@ -81,9 +81,10 @@ sub Set {
         );
 
         # update global object index
-        if ( !$Result->{'Memcached::CachedObjects'}
-            || ref( $Result->{'Memcached::CachedObjects'} ) ne 'HASH' )
-        {
+        if (
+            !$Result->{'Memcached::CachedObjects'}
+            || ref( $Result->{'Memcached::CachedObjects'} ) ne 'HASH'
+        ) {
             $Result->{'Memcached::CachedObjects'} = {};
         }
         $Result->{'Memcached::CachedObjects'}->{ $Param{Type} } = 1;
@@ -92,8 +93,7 @@ sub Set {
         if (
             !$Result->{"Memcached::CacheIndex::$Param{Type}"}
             || ref( $Result->{"Memcached::CacheIndex::$Param{Type}"} ) ne 'HASH'
-            )
-        {
+        ) {
             $Result->{"Memcached::CacheIndex::$Param{Type}"} = {};
         }
         $Result->{"Memcached::CacheIndex::$Param{Type}"}->{$PreparedKey} = 1;
@@ -128,14 +128,16 @@ sub Set {
 
         $Self->{RedisObject}->set(
             "Memcached::CacheIndex::$Param{Type}", $Result
-            ),
+        );
 
-            return $Self->{RedisObject}->setex(
+        return $Self->{RedisObject}->setex(
             $PreparedKey,
             $TTL,
             $Param{Value},
-            );
+        );
     }
+
+    return 1;
 }
 
 sub Get {

@@ -32,8 +32,6 @@ sub Run {
     my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my $Result;
-
     my %UserData = $UserObject->GetUserData( UserID => $Self->{UserID} );
     my $SearchProfileCategory
         = $ParamObject->GetParam( Param => 'PrefSearchProfileCategory' );
@@ -91,11 +89,7 @@ sub Run {
 
         for my $Profile (@SearchProfiles) {
 
-            $Profile =~ m/^(.*?)::(.*?)::(.*?)$/;
-
-            my $Base  = $1;
-            my $Login = $2;
-            my $Name  = $3;
+            my ($Base, $Login, $Name) = $Profile =~ m/^(.*?)::(.*?)::(.*?)$/;
 
             # delete old copied profile with this name
             $SearchProfileObject->SearchProfileDelete(
@@ -146,11 +140,7 @@ sub Run {
         SEARCHPROFILE:
         for my $Profile (@SearchProfiles) {
 
-            $Profile =~ m/^(.*?)::(.*?)::(.*?)$/;
-
-            my $Base  = $1;
-            my $Login = $2;
-            my $Name  = $3;
+            my ($Base, $Login, $Name) = $Profile =~ m/^(.*?)::(.*?)::(.*?)$/;
 
             # check if search profile already exists
             my %ExistingSearchProfile = $SearchProfileObject->SearchProfileGet(
@@ -190,12 +180,7 @@ sub Run {
 
         for my $Profile (@SearchProfilesNew) {
 
-            $Profile =~ m/^(.*?)::(.*?)::(.*?)\|\|(.*?)$/;
-
-            my $Base    = $1;
-            my $Login   = $2;
-            my $Name    = $3;
-            my $NewName = $4;
+            my ($Base, $Login, $Name, $NewName) = $Profile =~ m/^(.*?)::(.*?)::(.*?)\|\|(.*?)$/;
 
             if ( $NewName eq $Name ) {
 
@@ -218,7 +203,6 @@ sub Run {
                 OldLogin  => $Login,
                 UserLogin => $UserData{UserLogin},
             );
-
         }
 
         return $LayoutObject->Attachment(

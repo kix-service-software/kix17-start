@@ -159,8 +159,7 @@ sub EditFieldRender {
     if (
         IsHashRefWithData( $Param{Template} )
         && defined $Param{Template}->{$FieldName}
-        )
-    {
+    ) {
         $Value = $Param{Template}->{$FieldName};
     }
 
@@ -326,12 +325,11 @@ sub EditFieldValueGet {
     elsif (
         defined $Param{ParamObject}
         && ref $Param{ParamObject} eq 'Kernel::System::Web::Request'
-        )
-    {
+    ) {
         $Value = $Param{ParamObject}->GetParam( Param => $FieldName );
     }
 
-    if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq 1 ) {
+    if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq "1" ) {
         return {
             $FieldName => $Value,
         };
@@ -582,7 +580,7 @@ sub SearchFieldValueGet {
         return;
     }
 
-    if ( defined $Param{ReturnProfileStructure} && $Param{ReturnProfileStructure} eq 1 ) {
+    if ( defined $Param{ReturnProfileStructure} && $Param{ReturnProfileStructure} eq "1" ) {
         return {
             'Search_DynamicField_' . $Param{DynamicFieldConfig}->{Name} => $Value,
         };
@@ -617,8 +615,7 @@ sub SearchFieldParameterBuild {
                 if (
                     $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
                     && defined $Param{LayoutObject}
-                    )
-                {
+                ) {
                     $DisplayItem = $Param{LayoutObject}->{LanguageObject}->Translate($DisplayItem);
                 }
 
@@ -637,8 +634,7 @@ sub SearchFieldParameterBuild {
             if (
                 $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
                 && defined $Param{LayoutObject}
-                )
-            {
+            ) {
                 $DisplayValue = $Param{LayoutObject}->{LanguageObject}->Translate($DisplayValue);
             }
         }
@@ -817,8 +813,7 @@ sub ValueLookup {
             if (
                 defined $Param{LanguageObject}
                 && $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
-                )
-            {
+            ) {
 
                 # translate value
                 $Value = $Param{LanguageObject}->Translate($Value);
@@ -891,8 +886,7 @@ sub BuildSelectionDataGet {
                     if (
                         !defined $FilteredPossibleValues->{$ElementLongName}
                         && !$DisabledElements{$ElementLongName}
-                        )
-                    {
+                    ) {
 
                         # mark element as disabled
                         $DisabledElements{$ElementLongName} = 1;
@@ -910,8 +904,7 @@ sub BuildSelectionDataGet {
                         defined $Param{Value}
                         && $Param{Value}
                         && $ElementLongName eq $Param{Value}
-                        )
-                    {
+                    ) {
                         $Selected = 1;
                     }
 

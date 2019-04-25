@@ -70,7 +70,7 @@ returns:
         Hostname     => "servername.example.com",
         OS           => "Linux",
         OSName       => "debian 7.1",
-        Path         => "/home/otrs/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games",
+        Path         => "/home/kix/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games",
         POSIX        => [
                         "Linux",
                         "servername",
@@ -283,8 +283,7 @@ sub PerlInfoGet {
             YAML
             URI
             )
-            )
-        {
+        ) {
             $Modules{$Module} = $Self->ModuleVersionGet( Module => $Module );
         }
     }
@@ -333,8 +332,6 @@ sub DBInfoGet {
 
     return %EnvDB;
 }
-
-#rbo - T2016121190001552 - renamed OTRS to KIX
 
 =item KIXInfoGet()
 

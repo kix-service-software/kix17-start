@@ -294,7 +294,6 @@ sub _MaskUpdate {
         ResultType => 'HASH',
     );
     for my $DynamicField ( values %$DynamicFields ) {
-        #rbo - T2016121190001552 - renamed X-OTRS headers
         push @Headers, 'X-KIX-DynamicField-' . $DynamicField;
         push @Headers, 'X-KIX-FollowUp-DynamicField-' . $DynamicField;
     }
@@ -303,7 +302,7 @@ sub _MaskUpdate {
     $Header{''} = '-';
     $Header{Body} = 'Body';
 
-    # otrs header
+    # kix header
     my %SetHeader = ();
     for my $HeaderKey ( sort keys %Header ) {
         if ( $HeaderKey =~ /^x-(otrs|kix)/i ) {

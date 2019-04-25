@@ -274,7 +274,7 @@ sub Run {
                 my $ChildNodeDynamicFieldID = $ChildNodeValues->{DynamicFieldID};
 
                 # next if dynamic field already used
-                next if grep /$ChildNodeDynamicFieldID/, @UsedDynamicFieldList;
+                next if grep( {/$ChildNodeDynamicFieldID/} @UsedDynamicFieldList );
 
                 # add dynamic field id to used dynamic field list
                 push @UsedDynamicFieldList, $ChildNodeDynamicFieldID;
@@ -282,10 +282,9 @@ sub Run {
                 # build dynamic field target selection (dropdown)
                 my $ParentID = $DependingField->{ParentID};
                 if (
-                    !( grep /$DependingField->{DynamicFieldID}/, @UsedDynamicFields )
+                    !( grep( {/$DependingField->{DynamicFieldID}/} @UsedDynamicFields ) )
                     && $DependingField->{DynamicFieldID}
-                    )
-                {
+                ) {
                     push @UsedDynamicFields, $DependingField->{DynamicFieldID};
                 }
                 while ($ParentID) {
@@ -299,7 +298,7 @@ sub Run {
                 # remove already used dynamic fields
                 my %TargetDataHash;
                 for my $Hash (@DynamicFieldsDataList) {
-                    next if grep {/$Hash->{ID}/} @UsedDynamicFields;
+                    next if grep( {/$Hash->{ID}/} @UsedDynamicFields );
                     $TargetDataHash{ $Hash->{ID} } = $Hash->{Name};
                 }
                 my $DynamicFieldTargetString = $LayoutObject->BuildSelection(
@@ -361,7 +360,7 @@ sub Run {
                         DynamicFieldTargetValueString => $DynamicFieldTargetValueString || ''
                     },
                 );
-                if ( !( grep /$ChildNodeDynamicFieldID/, @UsedDynamicFields ) ) {
+                if ( !( grep( {/$ChildNodeDynamicFieldID/} @UsedDynamicFields ) ) ) {
                     push @UsedDynamicFields, $ChildNodeDynamicFieldID;
                 }
                 $Counter++;
@@ -466,8 +465,7 @@ sub Run {
 
             if (
                 ref $DynamicFieldData eq 'HASH'
-                )
-            {
+            ) {
                 $DynamicFieldValueHash = $DynamicFieldBackendObject->PossibleValuesGet(
                     DynamicFieldConfig    => $DynamicFieldData,
                     GetAutocompleteValues => 1
@@ -529,13 +527,11 @@ sub Run {
         $Self->{Subaction}    eq 'Store'
         || $Self->{Subaction} eq 'StoreDelete'
         || $Self->{Subaction} eq 'StoreAdd'
-        )
-    {
+    ) {
         my %GetParam;
         for my $Key (
             qw(DependingFieldID DynamicFieldID DynamicFieldSource CountMax ValidID)
-            )
-        {
+        ) {
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
         }
 
@@ -592,7 +588,7 @@ sub Run {
 
         # depending dynamic field exists - update
         if ( $GetParam{DependingFieldID} ) {
-            my $DeleteResult = 1;
+            $DeleteResult = 1;
 
             # get existing child nodes
             $ChildNodes = $DependingDynamicFieldObject
@@ -607,13 +603,11 @@ sub Run {
                     if (
                         $Child->{DynamicFieldID} eq $TargetHash{$Node}->{DynamicFieldTargetID}
                         && ( grep {/$Child->{Value}/} @{ $TargetHash{$Node}->{TargetValues} } )
-                        )
-                    {
+                    ) {
                         if (
                             $TargetHash{$Node}->{OldDynamicFieldTargetID} eq
                             $TargetHash{$Node}->{DynamicFieldTargetID}
-                            )
-                        {
+                        ) {
                             $ChildExists = 1;
 
                             # get Index
@@ -672,8 +666,7 @@ sub Run {
             if (
                 scalar @{ $TargetHash{$Node}->{TargetValues} }
                 && ref $TargetHash{$Node}->{TargetValues} eq 'ARRAY'
-                )
-            {
+            ) {
                 for my $NewChild ( @{ $TargetHash{$Node}->{TargetValues} } ) {
                     my $DependingFieldID = $DependingDynamicFieldObject
                         ->DependingDynamicFieldAdd(

@@ -76,8 +76,7 @@ sub Run {
     if (
         !$FAQData{Approved}
         || !$InterfaceStates->{ $FAQData{StateTypeID} }
-        )
-    {
+    ) {
         return $LayoutObject->CustomerNoPermission(
             WithHeader => 'yes',
         );

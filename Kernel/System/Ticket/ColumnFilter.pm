@@ -905,8 +905,7 @@ sub DynamicFieldFilterValuesGet {
             defined $Row[0]
             && $Row[0] ne ''
             && !$Data{ $Row[0] }
-            )
-        {
+        ) {
 
             if ( $ValueType eq 'Date' ) {
 

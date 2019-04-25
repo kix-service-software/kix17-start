@@ -258,8 +258,7 @@ sub _Change {
         || ref $WebserviceData->{Config}->{Provider} ne 'HASH'
         || ref $WebserviceData->{Config}->{Provider}->{Operation} ne 'HASH'
         || ref $WebserviceData->{Config}->{Provider}->{Operation}->{$Operation} ne 'HASH'
-        )
-    {
+    ) {
         return $LayoutObject->ErrorScreen(
             Message =>
                 $LayoutObject->{LanguageObject}->Translate( 'Could not determine config for operation %s', $Operation ),
@@ -312,8 +311,7 @@ sub _ChangeAction {
         || ref $WebserviceData->{Config}->{Provider}->{Operation} ne 'HASH'
         || ref $WebserviceData->{Config}->{Provider}->{Operation}->{ $GetParam{OldOperation} } ne
         'HASH'
-        )
-    {
+    ) {
         return $LayoutObject->ErrorScreen(
             Message => $LayoutObject->{LanguageObject}
                 ->Translate( 'Could not determine config for operation %s', $GetParam{OldOperation} ),

@@ -340,7 +340,6 @@ Core.Agent.Admin.GenericAgent.Init({
                         </div>
                         <div class="Clear"></div>
 
-# rkaiser - T#2017020290001194 - changed customer user to contact
                         <label for="CustomerUserLogin">[% Translate("Contact") | html %]:</label>
                         <div class="Field">
                             <input type="text" name="CustomerUserLogin" id="CustomerUserLogin" class="W33pc" value="[% Data.CustomerUserLogin | html %]"/>
@@ -724,7 +723,6 @@ Core.Agent.Admin.GenericAgent.Init({
                         </div>
                         <div class="Clear"></div>
 
-# rkaiser - T#2017020290001194 - changed customer user to contact
                         <label for="NewCustomerUserLogin">[% Translate("New contact") | html %]:</label>
                         <div class="Field">
                             <input type="text" name="NewCustomerUserLogin" id="NewCustomerUserLogin" value="[% Data.NewCustomerUserLogin | html %]" class="W33pc"/>

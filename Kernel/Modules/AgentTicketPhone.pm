@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AgentTicketPhone;
-## nofilter(TidyAll::Plugin::OTRS::Perl::DBObject)
 
 use strict;
 use warnings;
@@ -72,11 +71,10 @@ sub Run {
         From Subject Body NextStateID TimeUnits
         Year Month Day Hour Minute
         NewResponsibleID ResponsibleAll OwnerAll TypeID ServiceID SLAID
-        StandardTemplateID FromChatID
-        DefaultSetTypeChanged SelectedConfigItemIDs CustomerID Dest
+        StandardTemplateID DefaultSetTypeChanged SelectedConfigItemIDs
+        CustomerID Dest
         )
-        )
-    {
+    ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
     }
 
@@ -126,8 +124,7 @@ sub Run {
 
                     # check email address
                     for my $Email ( Mail::Address->parse($CustomerElement) ) {
-                        if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) )
-                        {
+                        if ( !$CheckItemObject->CheckEmail( Address => $Email->address() ) ) {
                             $CustomerErrorMsg = $CheckItemObject->CheckErrorType()
                                 . 'ServerErrorMsg';
                             $CustomerError = 'ServerError';
@@ -334,47 +331,10 @@ sub Run {
         && defined $GetParam{Day}
         && defined $GetParam{Hour}
         && defined $GetParam{Minute}
-        )
-    {
+    ) {
         %GetParam = $LayoutObject->TransformDateSelection(
             %GetParam,
         );
-    }
-
-    if ( $GetParam{FromChatID} ) {
-        if ( !$ConfigObject->Get('ChatEngine::Active') ) {
-            return $LayoutObject->FatalError(
-                Message => Translatable('Chat is not active.'),
-            );
-        }
-
-        # Ok, take the chat
-        my %ChatParticipant = $Kernel::OM->Get('Kernel::System::Chat')->ChatParticipantCheck(
-            ChatID        => $GetParam{FromChatID},
-            ChatterType   => 'User',
-            ChatterID     => $Self->{UserID},
-            ChatterActive => 1,
-        );
-
-        if ( !%ChatParticipant ) {
-            return $LayoutObject->FatalError(
-                Message => Translatable('No permission.'),
-            );
-        }
-
-        # Get permissions
-        my $PermissionLevel = $Kernel::OM->Get('Kernel::System::Chat')->ChatPermissionLevelGet(
-            ChatID => $GetParam{FromChatID},
-            UserID => $Self->{UserID},
-        );
-
-        # Check if observer
-        if ( $PermissionLevel ne 'Owner' && $PermissionLevel ne 'Participant' ) {
-            return $LayoutObject->FatalError(
-                Message => Translatable('No permission.'),
-                Comment => $PermissionLevel,
-            );
-        }
     }
 
     if ( $Self->{DefaultSet}
@@ -467,8 +427,7 @@ sub Run {
             $Self->{LastScreenOverview}
             && $Self->{LastScreenOverview} !~ /Action=AgentTicketPhone/
             && $Self->{RequestedURL} !~ /Action=AgentTicketPhone.*LinkTicketID=/
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
                 SessionID => $Self->{SessionID},
                 Key       => 'LastScreenOverview',
@@ -609,8 +568,7 @@ sub Run {
             my $CustomerDisabled = '';
             my $CustomerSelected = ( $CountFrom eq '1' ? 'checked="checked"' : '' );
             my $EmailAddress     = $Email->address();
-            if ( !$CheckItemObject->CheckEmail( Address => $EmailAddress ) )
-            {
+            if ( !$CheckItemObject->CheckEmail( Address => $EmailAddress ) ) {
                 $CustomerErrorMsg = $CheckItemObject->CheckErrorType()
                     . 'ServerErrorMsg';
                 $CustomerError = 'ServerError';
@@ -631,8 +589,7 @@ sub Run {
             if (
                 defined $CustomerDataFrom{UserEmail}
                 && $CustomerDataFrom{UserEmail} eq $EmailAddress
-                )
-            {
+            ) {
                 $CustomerKey = $Article{CustomerUserID};
             }
 
@@ -739,7 +696,7 @@ sub Run {
         }
 
         # get queue id for use with acl
-        my $QueueID        = $GetParam{QueueID} || $Self->{QueueID};
+        my $QueueID = $GetParam{QueueID} || $Self->{QueueID};
         if ( !defined $GetParam{QueueID}
           && !$Self->{QueueID}
           && defined $GetParam{Dest}
@@ -776,7 +733,7 @@ sub Run {
                         %GetParam,
                         %ACLCompatGetParam,
                         %SplitTicketParam,
-                        QueueID => $QueueID,
+                        QueueID       => $QueueID,
                         Action        => $Self->{Action},
                         ReturnType    => 'Ticket',
                         ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
@@ -858,8 +815,7 @@ sub Run {
                 $CustomerData{UserCustomerID}
                 && $CustomerData{UserID}
                 && $CustomerData{UserEmail}
-                )
-            {
+            ) {
                 my $CustomerName = $CustomerUserObject
                     ->CustomerName( UserLogin => $CustomerData{UserID} );
                 $Article{From}
@@ -906,10 +862,10 @@ sub Run {
             $GetParam{DefaultQueueSelected} = $Self->{QueueID} . "||" . $QueueName;
         }
         elsif ( $GetParam{DefaultQueue} ) {
-            my $QueueID = $QueueObject->QueueLookup(
+            my $DefaultQueueID = $QueueObject->QueueLookup(
                 Queue => $GetParam{DefaultQueue}
             );
-            $Self->{QueueID}                = $QueueID;
+            $Self->{QueueID}                = $DefaultQueueID;
             $GetParam{DefaultQueueSelected} = $Self->{QueueID} . "||" . $GetParam{DefaultQueue};
             $GetParam{DefaultQueueSet}      = 1;
         }
@@ -1006,6 +962,7 @@ sub Run {
         elsif ( $DefaultQueueRef->{''} ) {
             $DefaultQueueName = $DefaultQueueRef->{''};
         }
+
         if (
             $DefaultQueueName
             &&
@@ -1014,12 +971,11 @@ sub Run {
                     $Self->{QueueID} && $GetParam{DefaultQueueSet}
                 )
             )
-            )
-        {
-            my $QueueID = $QueueObject->QueueLookup(
+        ) {
+            $DefaultQueueID = $QueueObject->QueueLookup(
                 Queue => $DefaultQueueName,
             );
-            $Self->{QueueID} = $QueueID;
+            $Self->{QueueID}                = $DefaultQueueID;
             $GetParam{DefaultQueueSelected} = $Self->{QueueID} . "||" . $DefaultQueueName;
         }
 
@@ -1066,8 +1022,7 @@ sub Run {
             IsHashRefWithData( \%SplitTicketParam )
             && $SplitTicketParam{QueueID}
             && !$Self->{QueueID}
-            )
-        {
+        ) {
             $Self->{QueueID} = $SplitTicketParam{QueueID};
         }
 
@@ -1075,8 +1030,7 @@ sub Run {
         if (
             IsHashRefWithData( \%SplitTicketParam )
             && $SplitTicketParam{NextStateID}
-            )
-        {
+        ) {
             $SplitTicketParam{NextStateID} = '';
         }
 
@@ -1175,7 +1129,6 @@ sub Run {
             CustomerData => \%CustomerData,
             Attachments  => \@Attachments,
             LinkTicketID => $GetParam{LinkTicketID} || '',
-            FromChatID   => $GetParam{FromChatID} || '',
 
             %SplitTicketParam,
             DynamicFieldHTML => \%DynamicFieldHTML,
@@ -1201,7 +1154,7 @@ sub Run {
         my $Dest = $ParamObject->GetParam( Param => 'Dest' ) || '';
 
         # see if only a name has been passed
-        if ( $Dest && $Dest !~ m{ \A (\d+)? \| \| .+ \z }xms ) {
+        if ( $Dest && $Dest !~ m{ \A (?:\d+)? \| \| .+ \z }xms ) {
 
             # see if we can get an ID for this queue name
             my $DestID = $QueueObject->QueueLookup(
@@ -1262,10 +1215,12 @@ sub Run {
         }
 
         # attachment delete
-        my @AttachmentIDs = map {
-            my ($ID) = $_ =~ m{ \A AttachmentDelete (\d+) \z }xms;
-            $ID ? $ID : ();
-        } $ParamObject->GetParamNames();
+        my @AttachmentIDs = ();
+        for my $Name ( $ParamObject->GetParamNames() ) {
+            if ( $Name =~ m{ \A AttachmentDelete (\d+) \z }xms ) {
+                push (@AttachmentIDs, $1);
+            };
+        }
 
         COUNT:
         for my $Count ( reverse sort @AttachmentIDs ) {
@@ -1312,8 +1267,7 @@ sub Run {
             if (
                 $TimeObject->Date2SystemTime( %GetParam, Second => 0 )
                 < $TimeObject->SystemTime()
-                )
-            {
+            ) {
                 if ( $IsUpload == 0 ) {
                     $Error{DateInvalid} = ' ServerError';
                 }
@@ -1452,7 +1406,7 @@ sub Run {
             if ( $Param{CustomerUserListCount} == 1 ) {
                 $GetParam{From}            = $Param{CustomerUserListLast};
                 $Error{ExpandCustomerName} = 1;
-                my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
+                %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
                     User => $Param{CustomerUserListLastUser},
                 );
                 if ( $CustomerUserData{UserCustomerID} ) {
@@ -1547,11 +1501,10 @@ sub Run {
                         $CustomerID &&
                         (
                             $CustomerID ne $CustomerUserData{UserCustomerID} &&
-                            $CustomerUserData{UserCustomerIDs} !~ /(^|,\s*)$CustomerID(,\s*|$)/
+                            $CustomerUserData{UserCustomerIDs} !~ /(?:^|,\s*)$CustomerID(?:,\s*|$)/
                         )
                     )
-                    )
-                {
+                ) {
                     $CustomerID = $CustomerUserData{UserCustomerID};
                 }
                 if ( $CustomerUserData{UserLogin} ) {
@@ -1581,8 +1534,7 @@ sub Run {
         }
 
         if ( !$IsUpload && !$ExpandCustomerName ) {
-            if ( !$GetParam{From} )
-            {
+            if ( !$GetParam{From} ) {
                 $Error{'FromInvalid'} = ' ServerError';
             }
             if ( !$GetParam{Subject} ) {
@@ -1595,8 +1547,7 @@ sub Run {
                 $ConfigObject->Get('Ticket::Service')
                 && $GetParam{SLAID}
                 && !$GetParam{ServiceID}
-                )
-            {
+            ) {
                 $Error{'ServiceInvalid'} = ' ServerError';
             }
 
@@ -1605,8 +1556,7 @@ sub Run {
                 $ConfigObject->Get('Ticket::Service')
                 && $Config->{ServiceMandatory}
                 && !$GetParam{ServiceID}
-                )
-            {
+            ) {
                 $Error{'ServiceInvalid'} = ' ServerError';
             }
 
@@ -1615,8 +1565,7 @@ sub Run {
                 $ConfigObject->Get('Ticket::Service')
                 && $Config->{SLAMandatory}
                 && !$GetParam{SLAID}
-                )
-            {
+            ) {
                 $Error{'SLAInvalid'} = ' ServerError';
             }
 
@@ -1630,8 +1579,7 @@ sub Run {
                 $ConfigObject->Get('Ticket::Frontend::AccountTime')
                 && $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
                 && $GetParam{TimeUnits} eq ''
-                )
-            {
+            ) {
                 $Error{'TimeUnitsInvalid'} = ' ServerError';
             }
         }
@@ -1866,8 +1814,7 @@ sub Run {
                     $ContentID
                     && ( $Attachment->{ContentType} =~ /image/i )
                     && ( $Attachment->{Disposition} eq 'inline' )
-                    )
-                {
+                ) {
                     my $ContentIDHTMLQuote = $LayoutObject->Ascii2Html(
                         Text => $ContentID,
                     );
@@ -1878,7 +1825,7 @@ sub Run {
 
                     # ignore attachment if not linked in body
                     next ATTACHMENT
-                        if $GetParam{Body} !~ /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
+                        if $GetParam{Body} !~ /(?:\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
                 }
 
                 # remember inline images and normal attachments
@@ -1949,133 +1896,6 @@ sub Run {
             );
         }
 
-        # Permissions check were done earlier
-        if ( $GetParam{FromChatID} ) {
-            my $ChatObject = $Kernel::OM->Get('Kernel::System::Chat');
-            my %Chat       = $ChatObject->ChatGet(
-                ChatID => $GetParam{FromChatID},
-            );
-            my @ChatMessageList = $ChatObject->ChatMessageList(
-                ChatID => $GetParam{FromChatID},
-            );
-            my $ChatArticleID;
-
-            if (@ChatMessageList) {
-                my $JSONBody = $Kernel::OM->Get('Kernel::System::JSON')->Encode(
-                    Data => \@ChatMessageList,
-                );
-
-                my $ChatArticleType = 'chat-internal';
-                if (
-                    $Chat{RequesterType} eq 'Customer'
-                    || $Chat{TargetType} eq 'Customer'
-                    )
-                {
-                    $ChatArticleType = 'chat-external';
-                }
-
-                $ChatArticleID = $TicketObject->ArticleCreate(
-                    NoAgentNotify  => $NoAgentNotify,
-                    TicketID       => $TicketID,
-                    ArticleType    => $ChatArticleType,
-                    SenderType     => $Config->{SenderType},
-                    From           => $GetParam{From},
-                    To             => $GetParam{To},
-                    Subject        => $Kernel::OM->Get('Kernel::Language')->Translate('Chat'),
-                    Body           => $JSONBody,
-                    MimeType       => 'application/json',
-                    Charset        => $LayoutObject->{UserCharset},
-                    UserID         => $Self->{UserID},
-                    HistoryType    => $Config->{HistoryType},
-                    HistoryComment => $Config->{HistoryComment} || '%%',
-                    Queue          => $QueueObject->QueueLookup( QueueID => $NewQueueID ),
-                );
-            }
-            if ($ChatArticleID) {
-
-                # check is customer actively present
-                # it means customer has accepted this chat and not left it!
-                my $CustomerPresent = $ChatObject->CustomerPresent(
-                    ChatID => $GetParam{FromChatID},
-                    Active => 1,
-                );
-
-                my $Success;
-
-                # if there is no customer present in the chat
-                # just remove the chat
-                if ( !$CustomerPresent ) {
-                    $Success = $ChatObject->ChatDelete(
-                        ChatID => $GetParam{FromChatID},
-                    );
-                }
-
-                # otherwise set chat status to closed and inform other agents
-                else {
-                    $Success = $ChatObject->ChatUpdate(
-                        ChatID     => $GetParam{FromChatID},
-                        Status     => 'closed',
-                        Deprecated => 1,
-                    );
-
-                    # get user data
-                    my %User = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
-                        UserID => $Self->{UserID},
-                    );
-
-                    my $RequesterName = $User{UserFullname};
-                    $RequesterName ||= $Self->{UserID};
-
-                    my $LeaveMessage = $Kernel::OM->Get('Kernel::Language')->Translate(
-                        "%s has left the chat.",
-                        $RequesterName,
-                    );
-
-                    $Success = $ChatObject->ChatMessageAdd(
-                        ChatID          => $GetParam{FromChatID},
-                        ChatterID       => $Self->{UserID},
-                        ChatterType     => 'User',
-                        MessageText     => $LeaveMessage,
-                        SystemGenerated => 1,
-                    );
-
-                    # time after chat will be removed
-                    my $ChatTTL = $Kernel::OM->Get('Kernel::Config')->Get('ChatEngine::ChatTTL');
-
-                    my $ChatClosedMessage = $Kernel::OM->Get('Kernel::Language')->Translate(
-                        "This chat has been closed and will be removed in %s hours.",
-                        $ChatTTL,
-                    );
-
-                    $Success = $ChatObject->ChatMessageAdd(
-                        ChatID          => $GetParam{FromChatID},
-                        ChatterID       => $Self->{UserID},
-                        ChatterType     => 'User',
-                        MessageText     => $ChatClosedMessage,
-                        SystemGenerated => 1,
-                    );
-
-                    # remove all AGENT participants from chat
-                    my @ParticipantsList = $ChatObject->ChatParticipantList(
-                        ChatID => $GetParam{FromChatID},
-                    );
-                    CHATPARTICIPANT:
-                    for my $ChatParticipant (@ParticipantsList) {
-
-                        # skip it this participant is not agent
-                        next CHATPARTICIPANT if $ChatParticipant->{ChatterType} ne 'User';
-
-                        # remove this participants from the chat
-                        $Success = $ChatObject->ChatParticipantRemove(
-                            ChatID      => $GetParam{FromChatID},
-                            ChatterID   => $ChatParticipant->{ChatterID},
-                            ChatterType => 'User',
-                        );
-                    }
-                }
-            }
-        }
-
         # set owner (if new user id is given)
         if ( $GetParam{NewUserID} ) {
             $TicketObject->TicketOwnerSet(
@@ -2139,8 +1959,7 @@ sub Run {
             && $Config->{SplitLinkType}
             && $Config->{SplitLinkType}->{LinkType}
             && $Config->{SplitLinkType}->{Direction}
-            )
-        {
+        ) {
             my $Access = $TicketObject->TicketPermission(
                 Type     => 'ro',
                 TicketID => $GetParam{LinkTicketID},
@@ -3027,7 +2846,7 @@ sub _GetTos {
         # SelectionType Queue or SystemAddress?
         my %Tos;
         if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') eq 'Queue' ) {
-            %Tos = $Kernel::OM->Get('Kernel::System::Ticket')->MoveList(
+            %Tos = $Kernel::OM->Get('Kernel::System::Ticket')->TicketMoveList(
                 %Param,
                 Type    => 'create',
                 Action  => $Self->{Action},
@@ -3063,8 +2882,7 @@ sub _GetTos {
                 || '<Realname> <<Email>> - Queue: <Queue>';
             $String =~ s/<Queue>/$QueueData{Name}/g;
             $String =~ s/<QueueComment>/$QueueData{Comment}/g;
-            if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' )
-            {
+            if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' ) {
                 my %SystemAddressData = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
                     ID => $Tos{$QueueID},
                 );
@@ -3239,8 +3057,7 @@ sub _MaskPhoneNew {
         defined $Param{FromExternalCustomer} &&
         defined $Param{FromExternalCustomer}->{Email} &&
         defined $Param{FromExternalCustomer}->{Customer}
-        )
-    {
+    ) {
         $ShowErrors = 0;
         $LayoutObject->Block(
             Name => 'FromExternalCustomer',
@@ -3478,8 +3295,7 @@ sub _MaskPhoneNew {
     if (
         $ConfigObject->Get('Ticket::Responsible')
         && $ConfigObject->Get('Ticket::Frontend::NewResponsibleSelection')
-        )
-    {
+    ) {
         $Param{ResponsibleUsers}->{''} = '-';
         $Param{ResponsibleOptionStrg} = $LayoutObject->BuildSelection(
             Data       => $Param{ResponsibleUsers},
@@ -3672,8 +3488,7 @@ sub _MaskPhoneNew {
             && $LayoutObject->{BrowserRichText}
             && ( $Attachment->{ContentType} =~ /image/i )
             && ( $Attachment->{Disposition} eq 'inline' )
-            )
-        {
+        ) {
             next ATTACHMENT;
         }
         $LayoutObject->Block(
@@ -3692,19 +3507,6 @@ sub _MaskPhoneNew {
         $LayoutObject->Block(
             Name => 'RichText',
             Data => \%Param,
-        );
-    }
-
-    # Permissions have been checked before in Run()
-    if ( $Param{FromChatID} ) {
-        my @ChatMessages = $Kernel::OM->Get('Kernel::System::Chat')->ChatMessageList(
-            ChatID => $Param{FromChatID},
-        );
-        $LayoutObject->Block(
-            Name => 'ChatArticlePreview',
-            Data => {
-                ChatMessages => \@ChatMessages,
-            },
         );
     }
 
@@ -3779,8 +3581,7 @@ sub _GetShownDynamicFields {
             if (
                 IsHashRefWithData( \%TicketAclFormData )
                 && defined $TicketAclFormData{ $DynamicField->{Name} }
-                )
-            {
+            ) {
                 if ( $TicketAclFormData{ $DynamicField->{Name} } >= 1 ) {
                     $DynamicField->{Shown} = 1;
                 }

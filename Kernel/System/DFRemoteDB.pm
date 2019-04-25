@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::DFRemoteDB;
-## nofilter(TidyAll::Plugin::OTRS::Perl::PODSpelling)
 
 use strict;
 use warnings;
@@ -27,10 +26,7 @@ our @ObjectDependencies = (
     'Kernel::System::Time',
 );
 
-# capeIT
-#our $UseSlaveDB = 0;
 use base qw(Kernel::System::DB);
-# EO capeIT
 
 =head1 NAME
 
@@ -80,21 +76,7 @@ sub new {
     # 0=off; 1=updates; 2=+selects; 3=+Connects;
     $Self->{Debug} = $Param{Debug} || 0;
 
-# capeIT
-#    # get config object
-#    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-# EO capeIT
 
-    # get config data
-# capeIT
-#    $Self->{DSN}  = $Param{DatabaseDSN}  || $ConfigObject->Get('DatabaseDSN');
-#    $Self->{USER} = $Param{DatabaseUser} || $ConfigObject->Get('DatabaseUser');
-#    $Self->{PW}   = $Param{DatabasePw}   || $ConfigObject->Get('DatabasePw');
-#
-#    $Self->{IsSlaveDB} = $Param{IsSlaveDB};
-#
-#    $Self->{SlowLog} = $Param{'Database::SlowLog'}
-#        || $ConfigObject->Get('Database::SlowLog');
     # check needed params
     for my $Needed (qw(DatabaseDSN DatabaseUser)) {
         if ( !$Param{$Needed} ) {
@@ -106,7 +88,6 @@ sub new {
     $Self->{PW}   = $Param{DatabasePw};
 
     $Self->{SlowLog} = $Param{'Database::SlowLog'};
-# EO capeIT
 
     # decrypt pw (if needed)
     if ( $Self->{PW} =~ /^\{(.*)\}$/ ) {
@@ -129,13 +110,6 @@ sub new {
     elsif ( $Self->{DSN} =~ /(mssql|sybase|sql server)/i ) {
         $Self->{'DB::Type'} = 'mssql';
     }
-
-# capeIT
-#    # get database type (config option)
-#    if ( $ConfigObject->Get('Database::Type') ) {
-#        $Self->{'DB::Type'} = $ConfigObject->Get('Database::Type');
-#    }
-# EO capeIT
 
     # get database type (overwrite with params)
     if ( $Param{Type} ) {
@@ -167,17 +141,9 @@ sub new {
         Type Limit DirectBlob Attribute QuoteSingle QuoteBack
         Connect Encode CaseSensitive LcaseLikeInLargeText
         )
-        )
-    {
-# capeIT
-#        if ( defined $Param{$Setting} || defined $ConfigObject->Get("Database::$Setting") )
-#        {
-#            $Self->{Backend}->{"DB::$Setting"} = $Param{$Setting}
-#                // $ConfigObject->Get("Database::$Setting");
-        if ( defined $Param{$Setting})
-        {
+    ) {
+        if ( defined $Param{$Setting}) {
             $Self->{Backend}->{"DB::$Setting"} = $Param{$Setting};
-# EO capeIT
         }
     }
 
@@ -199,7 +165,7 @@ sub Connect {
     if ( $Self->{dbh} ) {
 
         my $PingTimeout = 10;        # Only ping every 10 seconds (see bug#12383).
-        my $CurrentTime = time();    ## no critic
+        my $CurrentTime = time();
 
         if ( $CurrentTime - ( $Self->{LastPingTime} // 0 ) < $PingTimeout ) {
             return $Self->{dbh};
@@ -221,10 +187,7 @@ sub Connect {
             Caller   => 1,
             Priority => 'debug',
             Message =>
-# capeIT
-#                "DB.pm->Connect: DSN: $Self->{DSN}, User: $Self->{USER}, Pw: $Self->{PW}, DB Type: $Self->{'DB::Type'};",
                 "DFRemoteDB.pm->Connect: DSN: $Self->{DSN}, User: $Self->{USER}, Pw: $Self->{PW}, DB Type: $Self->{'DB::Type'};",
-# EO capeIT
         );
     }
 
@@ -246,25 +209,16 @@ sub Connect {
     }
 
     if ( $Self->{Backend}->{'DB::Connect'} ) {
-# capeIT
-#        $Self->Do( SQL => $Self->{Backend}->{'DB::Connect'} );
         $Self->Do(
             SQL              => $Self->{Backend}->{'DB::Connect'},
             SkipConnectCheck => 1,
         );
-# EO capeIT
     }
 
     # set utf-8 on for PostgreSQL
     if ( $Self->{Backend}->{'DB::Type'} eq 'postgresql' ) {
         $Self->{dbh}->{pg_enable_utf8} = 1;
     }
-
-# capeIT
-#    if ( $Self->{SlaveDBObject} ) {
-#        $Self->{SlaveDBObject}->Connect();
-#    }
-# EO capeIT
 
     return $Self->{dbh};
 }
@@ -285,10 +239,7 @@ sub Disconnect {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Caller   => 1,
             Priority => 'debug',
-# capeIT
-#            Message  => 'DB.pm->Disconnect',
             Message  => 'DFRemoteDB.pm->Disconnect',
-# EO capeIT
         );
     }
 
@@ -297,12 +248,6 @@ sub Disconnect {
         $Self->{dbh}->disconnect();
         delete $Self->{dbh};
     }
-
-# capeIT
-#    if ( $Self->{SlaveDBObject} ) {
-#        $Self->{SlaveDBObject}->Disconnect();
-#    }
-# EO capeIT
 
     return 1;
 }
@@ -384,20 +329,13 @@ sub Do {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Caller   => 1,
             Priority => 'debug',
-# capeIT
-#            Message  => "DB.pm->Do ($Self->{DoCounter}) SQL: '$Param{SQL}'",
             Message  => "DFRemoteDB.pm->Do ($Self->{DoCounter}) SQL: '$Param{SQL}'",
-# EO capeIT
         );
     }
 
-# capeIT
     if ( !$Param{SkipConnectCheck} ) {
-# EO capeIT
-    return if !$Self->Connect();
-# capeIT
+        return if !$Self->Connect();
     }
-# EO capeIT
 
     # send sql to database
     if ( !$Self->{dbh}->do( $Param{SQL}, undef, @Array ) ) {
@@ -465,22 +403,6 @@ sub Prepare {
         return;
     }
 
-# capeIT
-#    $Self->{_PreparedOnSlaveDB} = 0;
-#
-#    # Route SELECT statements to the DB slave if requested and a slave is configured.
-#    if (
-#        $UseSlaveDB
-#        && !$Self->{IsSlaveDB}
-#        && $Self->_InitSlaveDB()    # this is very cheap after the first call (cached)
-#        && $SQL =~ m{\A\s*SELECT}xms
-#        )
-#    {
-#        $Self->{_PreparedOnSlaveDB} = 1;
-#        return $Self->{SlaveDBObject}->Prepare(%Param);
-#    }
-# EO capeIT
-
     if ( defined $Param{Encode} ) {
         $Self->{Encode} = $Param{Encode};
     }
@@ -514,10 +436,7 @@ sub Prepare {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Caller   => 1,
             Priority => 'debug',
-# capeIT
-#            Message  => "DB.pm->Prepare ($Self->{PrepareCounter}/" . time() . ") SQL: '$SQL'",
             Message  => "DFRemoteDB.pm->Prepare ($Self->{PrepareCounter}/" . time() . ") SQL: '$SQL'",
-# EO capeIT
         );
     }
 

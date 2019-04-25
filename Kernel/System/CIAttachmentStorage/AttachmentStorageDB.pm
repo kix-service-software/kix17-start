@@ -26,7 +26,7 @@ Kernel::System::CIAttachmentStorage::AttachmentStorageDB
 
 =head1 SYNOPSIS
 
-Provides attachment handling for data base backend - local, OTRS-data base.
+Provides attachment handling for data base backend - local, KIX-data base.
 
 =head1 PUBLIC INTERFACE
 
@@ -181,9 +181,9 @@ sub AttachmentGet {
     my @Data = $Self->{DBObject}->FetchrowArray();
 
     if (@Data) {
-        my $SQL = "SELECT data FROM attachment_storage " . $WHERE;
+        my $DataSQL = "SELECT data FROM attachment_storage " . $WHERE;
 
-        if ( !$Self->{DBObject}->Prepare( SQL => $SQL ) ) {
+        if ( !$Self->{DBObject}->Prepare( SQL => $DataSQL ) ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
                 Message  => "Failed to prepare SQL for FetchrowArray!"

@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AgentTicketProcess;
-## nofilter(TidyAll::Plugin::OTRS::Perl::DBObject)
 
 use strict;
 use warnings;
@@ -211,7 +210,7 @@ sub Run {
             my $PossibleActivityDialogs = { 1 => $ActivityDialogEntityID };
 
             # get ACL restrictions
-            my $ACL = $TicketObject->TicketAcl(
+            $ACL = $TicketObject->TicketAcl(
                 Data                   => $PossibleActivityDialogs,
                 ActivityDialogEntityID => $ActivityDialogEntityID,
                 TicketID               => $TicketID,
@@ -226,8 +225,7 @@ sub Run {
             }
 
             # check if ACL restrictions exist
-            if ( !IsHashRefWithData($PossibleActivityDialogs) )
-            {
+            if ( !IsHashRefWithData($PossibleActivityDialogs) ) {
                 return $LayoutObject->NoPermission( WithHeader => 'yes' );
             }
         }
@@ -350,8 +348,7 @@ sub Run {
         $Self->{Subaction} eq 'DisplayActivityDialogAJAX'
         && !$ProcessList->{$ProcessEntityID}
         && $Self->{IsMainWindow}
-        )
-    {
+    ) {
 
         # translate the error message (as it will be injected in the HTML)
         my $ErrorMessage = $LayoutObject->{LanguageObject}->Translate("The selected process is invalid!");
@@ -370,8 +367,7 @@ sub Run {
         $Self->{Subaction} eq 'DisplayActivityDialog'
         && !$FollowupProcessList->{$ProcessEntityID}
         && !$Self->{IsMainWindow}
-        )
-    {
+    ) {
         $LayoutObject->FatalError(
             Message => $LayoutObject->{LanguageObject}->Translate( 'Process %s is invalid!', $ProcessEntityID ),
             Comment => Translatable('Please contact the administrator.'),
@@ -437,14 +433,11 @@ sub Run {
 }
 
 sub _RenderAjax {
+    my ( $Self, %Param ) = @_;
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # FatalError is safe because a JSON structure is expecting, then it will result into a
-    # communications error
-
-    my ( $Self, %Param ) = @_;
     for my $Needed (qw(ProcessEntityID)) {
         if ( !$Param{$Needed} ) {
             $LayoutObject->FatalError(
@@ -543,8 +536,7 @@ sub _RenderAjax {
         if (
             $Self->{NameToID}{$CurrentField}
             && $FieldsProcessed{ $Self->{NameToID}{$CurrentField} }
-            )
-        {
+        ) {
             next DIALOGFIELD;
         }
 
@@ -584,7 +576,7 @@ sub _RenderAjax {
             my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
             # set possible values filter from ACLs
-            my $ACL = $TicketObject->TicketAcl(
+            $ACL = $TicketObject->TicketAcl(
                 %{ $Param{GetParam} },
                 ReturnType    => 'Ticket',
                 ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
@@ -971,8 +963,7 @@ sub _GetParam {
         if (
             !$ActivityActivityDialog->{ActivityDialog}
             || !$ActivityActivityDialog->{Activity}
-            )
-        {
+        ) {
             my $Message = $LayoutObject->{LanguageObject}->Translate(
                 'Got no Start ActivityEntityID or Start ActivityDialogEntityID for Process: %s in _GetParam!',
                 $ProcessEntityID,
@@ -1054,7 +1045,7 @@ sub _GetParam {
         if ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
             my $DynamicFieldName = $1;
 
-            $FieldFilter{$DynamicFieldName} = 1,
+            $FieldFilter{$DynamicFieldName} = 1;
         }
     }
 
@@ -1070,8 +1061,7 @@ sub _GetParam {
     for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
 
         # Skip if we're working on a field that was already done with or without ID
-        if ( $Self->{NameToID}{$CurrentField} && $ValuesGotten{ $Self->{NameToID}{$CurrentField} } )
-        {
+        if ( $Self->{NameToID}{$CurrentField} && $ValuesGotten{ $Self->{NameToID}{$CurrentField} } ) {
             next DIALOGFIELD;
         }
 
@@ -1127,8 +1117,7 @@ sub _GetParam {
                     || IsArrayRefWithData($Value)
                     || IsHashRefWithData($Value)
                 )
-                )
-            {
+            ) {
                 $GetParam{$CurrentField} = $Value;
                 next DIALOGFIELD;
             }
@@ -1143,8 +1132,7 @@ sub _GetParam {
                     || IsArrayRefWithData( $Ticket{$CurrentField} )
                     || IsHashRefWithData( $Ticket{$CurrentField} )
                 )
-                )
-            {
+            ) {
                 $GetParam{$CurrentField} = $Ticket{$CurrentField};
                 next DIALOGFIELD;
             }
@@ -1239,8 +1227,7 @@ sub _GetParam {
                 IsHashRefWithData( \%StateData )
                 && $StateData{TypeName}
                 && $StateData{TypeName} =~ /^pending/i
-                )
-            {
+            ) {
 
                 my %DateParam = ( Prefix => $Prefix );
 
@@ -1258,8 +1245,7 @@ sub _GetParam {
                     && defined $DateParam{ $Prefix . 'Day' }
                     && defined $DateParam{ $Prefix . 'Hour' }
                     && defined $DateParam{ $Prefix . 'Minute' }
-                    )
-                {
+                ) {
 
                     # recalculate time according to the user's timezone
                     %DateParam = $LayoutObject->TransformDateSelection(
@@ -1276,7 +1262,7 @@ sub _GetParam {
 
         # Non DynamicFields
         # 1. try to get the required param
-        my $Value = $ParamObject->GetParam( Param => $Self->{NameToID}{$CurrentField} );
+        $Value = $ParamObject->GetParam( Param => $Self->{NameToID}{$CurrentField} );
 
         if ($Value) {
 
@@ -1599,8 +1585,7 @@ sub _OutputActivityDialog {
     elsif (
         ( $Self->{IsMainWindow} || $Self->{IsProcessEnroll} )
         && ( IsHashRefWithData( \%Error ) || $Param{IsUpload} )
-        )
-    {
+    ) {
 
         # add rich text editor
         if ( $LayoutObject->{BrowserRichText} ) {
@@ -1661,8 +1646,7 @@ sub _OutputActivityDialog {
         if (
             defined $ActivityDialog->{DescriptionShort}
             && $ActivityDialog->{DescriptionShort} ne ''
-            )
-        {
+        ) {
             $LayoutObject->Block(
                 Name => 'ProcessInfoSidebarActivityDialogDesc',
                 Data => {
@@ -1808,8 +1792,7 @@ sub _OutputActivityDialog {
         }
 
         # render State
-        elsif ( $Self->{NameToID}->{$CurrentField} eq 'StateID' )
-        {
+        elsif ( $Self->{NameToID}->{$CurrentField} eq 'StateID' ) {
 
             # We don't render Fields twice,
             # if there was already a Config without ID, skip this field
@@ -1847,8 +1830,7 @@ sub _OutputActivityDialog {
         }
 
         # render Queue
-        elsif ( $Self->{NameToID}->{$CurrentField} eq 'QueueID' )
-        {
+        elsif ( $Self->{NameToID}->{$CurrentField} eq 'QueueID' ) {
             next DIALOGFIELD if $RenderedFields{ $Self->{NameToID}->{$CurrentField} };
 
             my $Response = $Self->_RenderQueue(
@@ -1883,8 +1865,7 @@ sub _OutputActivityDialog {
         }
 
         # render Priority
-        elsif ( $Self->{NameToID}->{$CurrentField} eq 'PriorityID' )
-        {
+        elsif ( $Self->{NameToID}->{$CurrentField} eq 'PriorityID' ) {
             next DIALOGFIELD if $RenderedFields{ $Self->{NameToID}->{$CurrentField} };
 
             my $Response = $Self->_RenderPriority(
@@ -1919,8 +1900,7 @@ sub _OutputActivityDialog {
         }
 
         # render HorizontalLine
-        elsif ( $Self->{NameToID}->{$CurrentField} eq 'horizontalline' )
-        {
+        elsif ( $Self->{NameToID}->{$CurrentField} eq 'horizontalline' ) {
             my $Response = $Self->_RenderHorizontalLine(
                 ActivityDialogField => $ActivityDialog->{Fields}{$CurrentField},
                 FieldName           => $CurrentField,
@@ -2581,8 +2561,7 @@ sub _RenderDynamicField {
         if (
             defined $Param{Error}->{ $Param{FieldName} }
             && $Param{Error}->{ $Param{FieldName} } ne ''
-            )
-        {
+        ) {
             $ServerError = 1;
         }
     }
@@ -2591,8 +2570,7 @@ sub _RenderDynamicField {
         if (
             defined $Param{ErrorMessages}->{ $Param{FieldName} }
             && $Param{ErrorMessages}->{ $Param{FieldName} } ne ''
-            )
-        {
+        ) {
             $ErrorMessage = $Param{ErrorMessages}->{ $Param{FieldName} };
         }
     }
@@ -2947,8 +2925,7 @@ sub _RenderArticle {
             && $LayoutObject->{BrowserRichText}
             && ( $Attachment->{ContentType} =~ /image/i )
             && ( $Attachment->{Disposition} eq 'inline' )
-            )
-        {
+        ) {
             next ATTACHMENT;
         }
         $LayoutObject->Block(
@@ -2969,8 +2946,7 @@ sub _RenderArticle {
     if (
         $ConfigObject->Get('Ticket::Frontend::AccountTime')
         && $Param{ActivityDialogField}->{Config}->{TimeUnits}
-        )
-    {
+    ) {
 
         if ( $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime') ) {
 
@@ -3040,7 +3016,6 @@ sub _RenderCustomer {
     my $SubmittedCustomerUserID = $Param{GetParam}{CustomerUserID};
 
     my %Data = (
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         LabelCustomerUser => $LayoutObject->{LanguageObject}->Translate("Contact"),
         LabelCustomerID   => $LayoutObject->{LanguageObject}->Translate("CustomerID"),
         FormID            => $Param{FormID},
@@ -3071,8 +3046,7 @@ sub _RenderCustomer {
     if (
         ( IsHashRefWithData( $Param{Ticket} ) && $Param{Ticket}->{CustomerUserID} )
         || $SubmittedCustomerUserID
-        )
-    {
+    ) {
         %CustomerUserData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
             User => $SubmittedCustomerUserID
                 || $Param{Ticket}{CustomerUserID},
@@ -3221,8 +3195,7 @@ sub _RenderResponsible {
         !$SelectedValue
         && !$PossibleNone
         && IsHashRefWithData( $Param{Ticket} )
-        )
-    {
+    ) {
         $SelectedValue = $Param{Ticket}->{Responsible};
     }
 
@@ -3238,8 +3211,7 @@ sub _RenderResponsible {
         && $PossibleNone
         && IsHashRefWithData( $Param{Ticket} )
         && $SelectedValue eq $Param{Ticket}->{Responsible}
-        )
-    {
+    ) {
         $SelectedValue = '';
     }
 
@@ -3398,8 +3370,7 @@ sub _RenderOwner {
         !$SelectedValue
         && !$PossibleNone
         && IsHashRefWithData( $Param{Ticket} )
-        )
-    {
+    ) {
         $SelectedValue = $Param{Ticket}->{Owner};
     }
 
@@ -3415,8 +3386,7 @@ sub _RenderOwner {
         && $PossibleNone
         && IsHashRefWithData( $Param{Ticket} )
         && $SelectedValue eq $Param{Ticket}->{Owner}
-        )
-    {
+    ) {
         $SelectedValue = '';
     }
 
@@ -3561,8 +3531,7 @@ sub _RenderSLA {
             if (
                 defined $Param{ActivityDialogField}->{DefaultValue}
                 && $Param{ActivityDialogField}->{DefaultValue} ne ''
-                )
-            {
+            ) {
                 $SelectedValue = $SLAObject->SLALookup(
                     SLA => $Param{ActivityDialogField}->{DefaultValue},
                 );
@@ -3578,8 +3547,7 @@ sub _RenderSLA {
             if (
                 defined $Param{ActivityDialogField}->{DefaultValue}
                 && $Param{ActivityDialogField}->{DefaultValue} ne ''
-                )
-            {
+            ) {
                 $SelectedValue = $SLAObject->SLALookup(
                     SLA => $Param{ActivityDialogField}->{DefaultValue},
                 );
@@ -3724,8 +3692,7 @@ sub _RenderService {
             if (
                 defined $Param{ActivityDialogField}->{DefaultValue}
                 && $Param{ActivityDialogField}->{DefaultValue} ne ''
-                )
-            {
+            ) {
                 $SelectedValue = $ServiceObject->ServiceLookup(
                     Name => $Param{ActivityDialogField}->{DefaultValue},
                 );
@@ -3740,8 +3707,7 @@ sub _RenderService {
             if (
                 defined $Param{ActivityDialogField}->{DefaultValue}
                 && $Param{ActivityDialogField}->{DefaultValue} ne ''
-                )
-            {
+            ) {
                 $SelectedValue = $ServiceObject->ServiceLookup(
                     Service => $Param{ActivityDialogField}->{DefaultValue},
                 );
@@ -4439,8 +4405,7 @@ sub _RenderType {
             if (
                 defined $Param{ActivityDialogField}->{DefaultValue}
                 && $Param{ActivityDialogField}->{DefaultValue} ne ''
-                )
-            {
+            ) {
                 $SelectedValue = $TypeObject->TypeLookup(
                     Type => $Param{ActivityDialogField}->{DefaultValue},
                 );
@@ -4455,8 +4420,7 @@ sub _RenderType {
             if (
                 defined $Param{ActivityDialogField}->{DefaultValue}
                 && $Param{ActivityDialogField}->{DefaultValue} ne ''
-                )
-            {
+            ) {
                 $SelectedValue = $TypeObject->TypeLookup(
                     Type => $Param{ActivityDialogField}->{DefaultValue},
                 );
@@ -4576,10 +4540,12 @@ sub _StoreActivityDialog {
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # attachment delete
-    my @AttachmentIDs = map {
-        my ($ID) = $_ =~ m{ \A AttachmentDelete (\d+) \z }xms;
-        $ID ? $ID : ();
-    } $ParamObject->GetParamNames();
+    my @AttachmentIDs = ();
+    for my $Name ( $ParamObject->GetParamNames() ) {
+        if ( $Name =~ m{ \A AttachmentDelete (\d+) \z }xms ) {
+            push (@AttachmentIDs, $1);
+        };
+    }
 
     # get upload cache object
     my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
@@ -4648,8 +4614,7 @@ sub _StoreActivityDialog {
                     if (
                         defined $ActivityDialog->{Fields}->{$CurrentField}->{DefaultValue}
                         && length $ActivityDialog->{Fields}->{$CurrentField}->{DefaultValue}
-                        )
-                    {
+                    ) {
                         $TicketParam{$CurrentField} = $ActivityDialog->{Fields}->{$CurrentField}->{DefaultValue};
                     }
                     else {
@@ -4709,8 +4674,7 @@ sub _StoreActivityDialog {
             elsif (
                 $Self->{NameToID}->{$CurrentField} eq 'CustomerID'
                 || $Self->{NameToID}->{$CurrentField} eq 'CustomerUserID'
-                )
-            {
+            ) {
 
                 next DIALOGFIELD if $CheckedFields{ $Self->{NameToID}->{'CustomerID'} };
 
@@ -4739,8 +4703,7 @@ sub _StoreActivityDialog {
                     for my $Email ( Mail::Address->parse($CustomerUserID) ) {
                         if (
                             !$Kernel::OM->Get('Kernel::System::CheckItem')->CheckEmail( Address => $Email->address() )
-                            )
-                        {
+                        ) {
                             $Error{'CustomerUserID'} = 1;
                         }
                     }
@@ -4767,8 +4730,7 @@ sub _StoreActivityDialog {
                     && defined $Param{GetParam}->{PendingTime}->{Day}
                     && defined $Param{GetParam}->{PendingTime}->{Hour}
                     && defined $Param{GetParam}->{PendingTime}->{Minute}
-                    )
-                {
+                ) {
                     $TicketParam{$CurrentField} = $Param{GetParam}->{PendingTime};
                 }
 
@@ -4806,8 +4768,7 @@ sub _StoreActivityDialog {
                     $CurrentField eq 'Article'
                     && $ActivityDialog->{Fields}->{$CurrentField}->{Config}->{TimeUnits}
                     && $ActivityDialog->{Fields}->{$CurrentField}->{Config}->{TimeUnits} == 2
-                    )
-                {
+                ) {
                     if ( !$Param{GetParam}->{TimeUnits} ) {
 
                         # set error for the time-units (if any)
@@ -4839,12 +4800,10 @@ sub _StoreActivityDialog {
 
     my @Notify;
 
-    my $NewTicketID;
     if ( !$TicketID ) {
 
         $ProcessEntityID = $Param{GetParam}->{ProcessEntityID};
-        if ( !$ProcessEntityID )
-        {
+        if ( !$ProcessEntityID ) {
             return $LayoutObject->FatalError(
                 Message => Translatable('Missing ProcessEntityID, check your ActivityDialogHeader.tt!'),
             );
@@ -4858,8 +4817,7 @@ sub _StoreActivityDialog {
             !$ProcessStartpoint
             || !IsHashRefWithData($ProcessStartpoint)
             || !$ProcessStartpoint->{Activity} || !$ProcessStartpoint->{ActivityDialog}
-            )
-        {
+        ) {
             $LayoutObject->FatalError(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'No StartActivityDialog or StartActivityDialog for Process "%s" configured!',
@@ -4978,34 +4936,25 @@ sub _StoreActivityDialog {
                     Comment => Translatable('Please contact the administrator.'),
                 );
             }
-            for my $DynamicFieldConfig (
 
-                # 2. remove "DynamicField_" from string
-                map {
-                    my $Field = $_;
-                    $Field =~ s{^DynamicField_(.*)}{$1}xms;
-
-                    # 3. grep from the DynamicFieldConfigs the resulting DynamicFields without
-                    # "DynamicField_"
-                    grep { $_->{Name} eq $Field } @{ $Self->{DynamicField} }
+            for my $FieldName ( @{ $ActivityDialog->{FieldOrder} } ) {
+                if ( $FieldName =~ m/^DynamicField_(.*)/xms ) {
+                    my $Field = $1;
+                    DFCONFIG:
+                    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+                        if ( $Field eq $DynamicFieldConfig->{Name} ) {
+                            # and now it's easy, just store the dynamic Field Values ;)
+                            $DynamicFieldBackendObject->ValueSet(
+                                DynamicFieldConfig => $DynamicFieldConfig,
+                                ObjectID           => $TicketID,
+                                Value              => $TicketParam{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
+                                UserID             => $Self->{UserID},
+                            );
+                            last DFCONFIG;
+                        }
+                    }
                 }
-
-                # 1. grep all DynamicFields
-                grep {m{^DynamicField_(.*)}xms} @{ $ActivityDialog->{FieldOrder} }
-                )
-            {
-
-                # and now it's easy, just store the dynamic Field Values ;)
-                $DynamicFieldBackendObject->ValueSet(
-                    DynamicFieldConfig => $DynamicFieldConfig,
-                    ObjectID           => $TicketID,
-                    Value              => $TicketParam{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-                    UserID             => $Self->{UserID},
-                );
             }
-
-            # remember new created TicketID
-            $NewTicketID = $TicketID;
         }
     }
 
@@ -5050,8 +4999,7 @@ sub _StoreActivityDialog {
             !$ProcessStartpoint
             || !IsHashRefWithData($ProcessStartpoint)
             || !$ProcessStartpoint->{Activity} || !$ProcessStartpoint->{ActivityDialog}
-            )
-        {
+        ) {
             $LayoutObject->Error(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'No StartActivityDialog or StartActivityDialog for Process "%s" configured!',
@@ -5111,8 +5059,7 @@ sub _StoreActivityDialog {
             'DynamicField_'
                 . $ConfigObject->Get('Process::DynamicFieldProcessManagementActivityID')
         };
-        if ( !$ActivityEntityID )
-        {
+        if ( !$ActivityEntityID ) {
 
             return $Self->_ShowDialogError(
                 Message => $LayoutObject->{LanguageObject}->Translate(
@@ -5150,8 +5097,7 @@ sub _StoreActivityDialog {
                 . $ConfigObject->Get('Process::DynamicFieldProcessManagementProcessID')
         };
 
-        if ( !$ProcessEntityID )
-        {
+        if ( !$ProcessEntityID ) {
             return $Self->_ShowDialogError(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'Missing ProcessEntityID in Ticket %s!',
@@ -5257,9 +5203,7 @@ sub _StoreActivityDialog {
             }
         }
 
-        elsif ( $CurrentField eq 'Article' && ( $UpdateTicketID || $NewTicketID ) ) {
-
-            my $TicketID = $UpdateTicketID || $NewTicketID;
+        elsif ( $CurrentField eq 'Article' && $UpdateTicketID ) {
 
             if ( $Param{GetParam}->{Subject} && $Param{GetParam}->{Body} ) {
 
@@ -5331,8 +5275,7 @@ sub _StoreActivityDialog {
                         $ContentID
                         && ( $Attachment->{ContentType} =~ /image/i )
                         && ( $Attachment->{Disposition} eq 'inline' )
-                        )
-                    {
+                    ) {
                         my $ContentIDHTMLQuote = $LayoutObject->Ascii2Html(
                             Text => $ContentID,
                         );
@@ -5342,8 +5285,7 @@ sub _StoreActivityDialog {
                         $Param{GetParam}->{Body} =~ s/(ContentID=)$ContentIDLinkEncode/$1$ContentID/g;
 
                         # ignore attachment if not linked in body
-                        if ( $Param{GetParam}->{Body} !~ /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i )
-                        {
+                        if ( $Param{GetParam}->{Body} !~ /(?:\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i ) {
                             next ATTACHMENT;
                         }
                     }
@@ -5381,8 +5323,7 @@ sub _StoreActivityDialog {
                 if (
                     !defined $TicketParam{'Title'}
                     || ( defined $TicketParam{'Title'} && $TicketParam{'Title'} eq '' )
-                    )
-                {
+                ) {
                     $Success = 1;
                 }
 
@@ -5400,8 +5341,7 @@ sub _StoreActivityDialog {
                     $Self->{NameToID}->{$CurrentField} eq 'CustomerID'
                     || $Self->{NameToID}->{$CurrentField} eq 'CustomerUserID'
                 )
-                )
-            {
+            ) {
                 next DIALOGFIELD if $StoredFields{ $Self->{NameToID}->{$CurrentField} };
 
                 if ( $ActivityDialog->{Fields}->{$CurrentField}->{Display} == 1 ) {
@@ -5417,8 +5357,7 @@ sub _StoreActivityDialog {
                 if (
                     $Ticket{CustomerID} eq $TicketParam{CustomerID}
                     && $Ticket{CustomerUserID} eq $TicketParam{CustomerUser}
-                    )
-                {
+                ) {
 
                     # In this case we don't want to call any additional stores
                     # on Customer, CustomerNo, CustomerID or CustomerUserID
@@ -5452,8 +5391,7 @@ sub _StoreActivityDialog {
                 $TicketFieldSetSub =~ s{ID$}{}xms;
                 $TicketFieldSetSub = 'Ticket' . $TicketFieldSetSub . 'Set';
 
-                if ( $TicketObject->can($TicketFieldSetSub) )
-                {
+                if ( $TicketObject->can($TicketFieldSetSub) ) {
                     my $UpdateFieldName;
 
                     # sadly we need an exception for Owner(ID) and Responsible(ID), because the
@@ -5461,8 +5399,7 @@ sub _StoreActivityDialog {
                     if (
                         scalar grep { $Self->{NameToID}->{$CurrentField} eq $_ }
                         qw( OwnerID ResponsibleID )
-                        )
-                    {
+                    ) {
                         $UpdateFieldName = 'NewUserID';
                     }
                     else {
@@ -5478,15 +5415,13 @@ sub _StoreActivityDialog {
                     if (
                         ( $UpdateFieldName eq 'ServiceID' || $UpdateFieldName eq 'SLAID' )
                         && !defined $TicketParam{ $Self->{NameToID}->{$CurrentField} }
-                        )
-                    {
+                    ) {
                         $TicketParam{ $Self->{NameToID}->{$CurrentField} } = '';
                         $FieldUpdate = 1;
                     }
 
                     # update Service an SLA fields if they have a defined value (even empty)
-                    elsif ( $UpdateFieldName eq 'ServiceID' || $UpdateFieldName eq 'SLAID' )
-                    {
+                    elsif ( $UpdateFieldName eq 'ServiceID' || $UpdateFieldName eq 'SLAID' ) {
                         $FieldUpdate = 1;
                     }
 
@@ -5496,8 +5431,7 @@ sub _StoreActivityDialog {
                         && $UpdateFieldName ne 'SLAID'
                         && defined $TicketParam{ $Self->{NameToID}->{$CurrentField} }
                         && $TicketParam{ $Self->{NameToID}->{$CurrentField} } ne ''
-                        )
-                    {
+                    ) {
                         $FieldUpdate = 1;
                     }
 
@@ -5516,11 +5450,9 @@ sub _StoreActivityDialog {
                         if (
                             $UpdateFieldName eq 'ServiceID'
                             && !defined $TicketParam{SLAID}
-                            )
-                        {
-
+                        ) {
                             # get ticket details
-                            my %Ticket = $TicketObject->TicketGet(
+                            %Ticket = $TicketObject->TicketGet(
                                 TicketID      => $TicketID,
                                 DynamicFields => 0,
                                 UserID        => $Self->{UserID},
@@ -6257,7 +6189,7 @@ sub _GetQueues {
         # SelectionType Queue or SystemAddress?
         my %Queues;
         if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') eq 'Queue' ) {
-            %Queues = $Kernel::OM->Get('Kernel::System::Ticket')->MoveList(
+            %Queues = $Kernel::OM->Get('Kernel::System::Ticket')->TicketMoveList(
                 %Param,
                 Type    => $PermissionType,
                 Action  => $Self->{Action},
@@ -6296,8 +6228,7 @@ sub _GetQueues {
             # remove trailing spaces
             $String =~ s{\s+\z}{} if !$QueueData{Comment};
 
-            if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' )
-            {
+            if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' ) {
                 my %SystemAddressData = $Self->{SystemAddress}->SystemAddressGet(
                     ID => $Queues{$QueueID},
                 );
@@ -6464,8 +6395,7 @@ sub _GetShownDynamicFields {
             if (
                 IsHashRefWithData( \%TicketAclFormData )
                 && defined $TicketAclFormData{ $DynamicField->{Name} }
-                )
-            {
+            ) {
                 if ( $TicketAclFormData{ $DynamicField->{Name} } >= 1 ) {
                     $DynamicField->{Shown} = 1;
                 }

@@ -103,8 +103,7 @@ sub Run {
             if (
                 $Counter >= $Param{StartHit}
                 && $Counter < ( $Param{PageShown} + $Param{StartHit} )
-                )
-            {
+            ) {
 
                 # get FAQ data for corruption check
                 my %FAQ = $FAQObject->FAQGet(

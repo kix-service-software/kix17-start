@@ -136,16 +136,14 @@ sub Run {
             TicketEscalation       TicketEscalationResponse
             TicketEscalationUpdate TicketEscalationSolution
             )
-            )
-        {
+        ) {
             for my $Attribute (
                 qw(
                 TimePoint TimePointFormat TimePointStart
                 TimeStart TimeStartDay TimeStartMonth TimeStopMonth
                 TimeStop TimeStopDay TimeStopYear TimeStartYear
                 )
-                )
-            {
+            ) {
                 my $Key = $Type . $Attribute;
                 $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
             }
@@ -153,8 +151,7 @@ sub Run {
             # validate data
             for my $Attribute (
                 qw(TimeStartDay TimeStartMonth TimeStopMonth TimeStopDay)
-                )
-            {
+            ) {
                 my $Key = $Type . $Attribute;
 
                 if ( $GetParam{$Key} ) {
@@ -669,8 +666,7 @@ sub _MaskUpdate {
         TicketEscalation       TicketEscalationResponse
         TicketEscalationUpdate TicketEscalationSolution
         )
-        )
-    {
+    ) {
         my $SearchType = $Map{$Type} . 'SearchType';
         if ( !$JobData{$SearchType} ) {
             $JobData{ $SearchType . '::None' } = 'checked="checked"';
@@ -836,8 +832,7 @@ sub _MaskUpdate {
         !defined $JobData{ScheduleDays}->[0]
         || !defined $JobData{ScheduleHours}->[0]
         || !defined $JobData{ScheduleMinutes}->[0]
-        )
-    {
+    ) {
         $LayoutObject->Block(
             Name => 'JobScheduleWarning',
         );
@@ -1315,8 +1310,7 @@ sub _MaskRun {
                         . $DynamicFieldConfig->{Name}
                         . $Preference->{Type}
                 }
-                )
-            {
+            ) {
                 next PREFERENCE;
             }
 

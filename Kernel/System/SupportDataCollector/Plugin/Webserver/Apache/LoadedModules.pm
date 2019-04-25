@@ -35,8 +35,7 @@ sub Run {
         || $ENV{SERVER_SOFTWARE} !~ m{apache}i
         || !$ENV{MOD_PERL}
         || !eval { require Apache2::Module; }
-        )
-    {
+    ) {
         return $Self->GetResults();
     }
 

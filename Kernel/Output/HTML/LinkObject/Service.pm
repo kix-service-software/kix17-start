@@ -214,8 +214,7 @@ sub TableCreateComplex {
         && IsHashRefWithData($ComplexTableData)
         && $ComplexTableData->{Service}
         && IsHashRefWithData( $ComplexTableData->{Service} )
-        )
-    {
+    ) {
         $DefaultColumns = $ComplexTableData->{"Service"}->{"DefaultColumns"};
     }
 
@@ -261,8 +260,7 @@ sub TableCreateComplex {
     if (
         $ComplexTableData->{"Service"}->{"Priority"}
         && IsHashRefWithData( $ComplexTableData->{"Service"}->{"Priority"} )
-        )
-    {
+    ) {
         %SortOrder = %{ $ComplexTableData->{"Service"}->{"Priority"} };
     }
 
@@ -279,8 +277,7 @@ sub TableCreateComplex {
             && IsHashRefWithData($ColumnsEnabled)
             && $ColumnsEnabled->{Order}
             && IsArrayRefWithData( $ColumnsEnabled->{Order} )
-            )
-        {
+        ) {
             # Clear sort order.
             %SortOrder = ();
 
@@ -353,8 +350,7 @@ sub TableCreateComplex {
     for my $ServiceID (
         sort { lc $LinkList{$a}{Data}->{Name} cmp lc $LinkList{$b}{Data}->{Name} }
         keys %LinkList
-        )
-    {
+    ) {
 
         # extract service data
         my $Service = $LinkList{$ServiceID}->{Data};
@@ -493,8 +489,7 @@ sub TableCreateSimple {
                 sort {
                     lc $DirectionList->{$a}->{NameShort} cmp lc $DirectionList->{$b}->{NameShort}
                 } keys %{$DirectionList}
-                )
-            {
+            ) {
 
                 # extract service data
                 my $Service = $DirectionList->{$ServiceID};

@@ -296,7 +296,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AttachmentStorageFS::StorageDirectory" Required="1" Valid="1">
-        <Description Translatable="1">The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the OTRS-Home.</Description>
+        <Description Translatable="1">The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the KIX-Home.</Description>
         <Group>ITSM</Group>
         <SubGroup>Core::AttachmentStorage</SubGroup>
         <Setting>
@@ -1718,14 +1718,6 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="ITSMConfigItem::CustomModules###030-CustomModule" Required="0" Valid="1">
-        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
-        <Group>ITSM</Group>
-        <SubGroup>Core::ITSMConfigItem</SubGroup>
-        <Setting>
-            <String Regex="">Kernel::System::PreEventHandler</String>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="ITSMConfigItem::CILinkDirection" Required="0" Valid="1">
         <Description Translatable="1">ConfigItem link direction for propagating of warning/error incident states.</Description>
         <Group>ITSM</Group>
@@ -2223,7 +2215,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="KIXSidebarConfigItemLink::KIXSidebarLinkedCIsParams" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Common Parameters for the KIXSidebarLinkedCIs backend. You can use CI class specific contact attributes (SearchAttribute:::&lt;CIClass&gt;) as well as multiple customer user attributes, separated by comma.</Description>
         <Group>ITSM</Group>
         <SubGroup>Frontend::Customer</SubGroup>

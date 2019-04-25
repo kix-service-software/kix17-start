@@ -159,8 +159,8 @@ perform ConfigItemCreate Operation. This will return the created config item num
         Success         => 1,                       # 0 or 1
         ErrorMessage    => '',                      # in case of error
         Data            => {                        # result data payload after Operation
-            ConfigItemID => 123,                    # Configuration Item  ID number in OTRS::ITSM (Service desk system)
-            Number       => 2324454323322           # Configuration Item  Number in OTRS::ITSM (Service desk system)
+            ConfigItemID => 123,                    # Configuration Item  ID number in KIX::ITSM (Service desk system)
+            Number       => 2324454323322           # Configuration Item  Number in KIX::ITSM (Service desk system)
             Error => {                              # should not return errors
                     ErrorCode    => 'ConfigItemCreate.ErrorCode'
                     ErrorMessage => 'Error Description'
@@ -189,8 +189,7 @@ sub Run {
     if (
         !$Param{Data}->{UserLogin}
         && !$Param{Data}->{SessionID}
-        )
-    {
+    ) {
         return $Self->ReturnError(
             ErrorCode => "$Self->{OperationName}.MissingParameter",
             ErrorMessage =>
@@ -200,8 +199,7 @@ sub Run {
 
     if ( $Param{Data}->{UserLogin} ) {
 
-        if ( !$Param{Data}->{Password} )
-        {
+        if ( !$Param{Data}->{Password} ) {
             return $Self->ReturnError(
                 ErrorCode    => "$Self->{OperationName}.MissingParameter",
                 ErrorMessage => "$Self->{OperationName}: Password or SessionID is required!",
@@ -403,6 +401,8 @@ sub _CleanXMLData {
             $XMLData->{$Key} =~ s{\s+\z}{};
         }
     }
+
+    return 1;
 }
 
 =item _CheckConfigItem()
@@ -568,8 +568,10 @@ sub _CheckAttachment {
             $Charset =~ s/(.+?);.*/$1/g;
         }
 
-        if ( $Charset && !$Self->ValidateCharset( Charset => $Charset ) )
-        {
+        if (
+            $Charset
+            && !$Self->ValidateCharset( Charset => $Charset )
+        ) {
             return {
                 ErrorCode    => "$Self->{OperationName}.InvalidParameter",
                 ErrorMessage => "$Self->{OperationName}: Attachment->ContentType is invalid!",

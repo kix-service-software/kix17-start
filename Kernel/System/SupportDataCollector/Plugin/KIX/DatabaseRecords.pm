@@ -92,11 +92,10 @@ sub Run {
             Label      => Translatable("Invalid Dynamic Fields"),
         },
         {
-            SQL => "
-                SELECT count(*)
-                FROM dynamic_field_value
-                    JOIN dynamic_field ON dynamic_field.id = dynamic_field_value.field_id
-                WHERE dynamic_field.valid_id > 1",
+            SQL => "SELECT count(*)"
+                 . " FROM dynamic_field_value"
+                 . "  JOIN dynamic_field ON dynamic_field.id = dynamic_field_value.field_id"
+                 . " WHERE dynamic_field.valid_id > 1",
             Identifier => 'InvalidDynamicFieldValueCount',
             Label      => Translatable("Invalid Dynamic Field Values"),
         },
@@ -111,12 +110,11 @@ sub Run {
             Label      => Translatable("Processes"),
         },
         {
-            SQL => "
-                SELECT count(*)
-                FROM dynamic_field df
-                    LEFT JOIN dynamic_field_value dfv ON df.id = dfv.field_id
-                    RIGHT JOIN ticket t ON t.id = dfv.object_id
-                WHERE df.name = '"
+            SQL => "SELECT count(*)"
+                 . " FROM dynamic_field df"
+                 . "  LEFT JOIN dynamic_field_value dfv ON df.id = dfv.field_id"
+                 . "  RIGHT JOIN ticket t ON t.id = dfv.object_id"
+                 . " WHERE df.name = '"
                 . $Kernel::OM->Get('Kernel::Config')->Get("Process::DynamicFieldProcessManagementProcessID") . "'",
             Identifier => 'ProcessTickets',
             Label      => Translatable("Process Tickets"),
@@ -127,7 +125,6 @@ sub Run {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     my %Counts;
-    CHECK:
     for my $Check (@Checks) {
         $DBObject->Prepare( SQL => $Check->{SQL} );
         while ( my @Row = $DBObject->FetchrowArray() ) {

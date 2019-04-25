@@ -595,6 +595,7 @@ sub _Overview {
             Data => {},
         );
     }
+    return 1;
 }
 
 1;

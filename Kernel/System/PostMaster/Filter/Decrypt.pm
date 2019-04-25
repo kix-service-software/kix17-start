@@ -85,7 +85,6 @@ sub Run {
 
     if ( $EncryptionMethod eq 'PGP' ) {
 
-##rbo - T2016121190001552 - renamed X-OTRS headers
         # Try to decrypt body with PGP.
         $Param{GetParam}->{'X-KIX-BodyDecrypted'} = $Self->_DecryptPGP(
             Body        => $Message,
@@ -136,8 +135,7 @@ sub _DecryptPGP {
     if (
         $DecryptBody !~ m{\A[\s\n]*^-----BEGIN PGP MESSAGE-----}i
         && $ContentType !~ m{application/pgp}i
-        )
-    {
+    ) {
         return;
     }
 
@@ -188,9 +186,8 @@ sub _DecryptSMIME {
     # Check for SMIME encryption
     if (
         $DecryptBody !~ m{^-----BEGIN PKCS7-----}i
-        && $ContentType !~ m{application/(x-pkcs7|pkcs7)}i
-        )
-    {
+        && $ContentType !~ m{application/(?:x-pkcs7|pkcs7)}i
+    ) {
         return;
     }
 

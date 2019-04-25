@@ -142,18 +142,17 @@ sub Run {
                     );
                     my @Params = $Object->Param( CustomerCompanyData => \%CompanyData );
                     if (@Params) {
-                        my %GetParam;
+                        my %GroupParam;
                         for my $ParamItem (@Params) {
                             my @Array = $ParamObject->GetArray( Param => $ParamItem->{Name} );
-                            $GetParam{ $ParamItem->{Name} } = \@Array;
+                            $GroupParam{ $ParamItem->{Name} } = \@Array;
                         }
                         if (
                             !$Object->Run(
-                                GetParam            => \%GetParam,
+                                GetParam            => \%GroupParam,
                                 CustomerCompanyData => \%CompanyData
                             )
-                            )
-                        {
+                        ) {
                             $Note .= $LayoutObject->Notify( Info => $Object->Error() );
                         }
                     }
@@ -312,18 +311,17 @@ sub Run {
                     );
                     my @Params = $Object->Param( CustomerCompanyData => \%CompanyData );
                     if (@Params) {
-                        my %GetParam;
+                        my %GroupParam;
                         for my $ParamItem (@Params) {
                             my @Array = $ParamObject->GetArray( Param => $ParamItem->{Name} );
-                            $GetParam{ $ParamItem->{Name} } = \@Array;
+                            $GroupParam{ $ParamItem->{Name} } = \@Array;
                         }
                         if (
                             !$Object->Run(
-                                GetParam            => \%GetParam,
+                                GetParam            => \%GroupParam,
                                 CustomerCompanyData => \%CompanyData
                             )
-                            )
-                        {
+                        ) {
                             $Note .= $LayoutObject->Notify( Info => $Object->Error() );
                         }
                     }
@@ -612,8 +610,7 @@ sub _Edit {
                 if (
                     ref( $ParamItem->{Data} ) eq 'HASH'
                     || ref( $Preferences{$Item}->{Data} ) eq 'HASH'
-                    )
-                {
+                ) {
                     my %BuildSelectionParams = (
                         %{ $Preferences{$Item} },
                         %{$ParamItem},

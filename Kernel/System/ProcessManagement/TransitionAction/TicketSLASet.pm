@@ -129,8 +129,7 @@ sub Run {
         defined $Param{Config}->{SLAID}
         && defined $Param{Ticket}->{SLAID}
         && $Param{Config}->{SLAID} eq $Param{Ticket}->{SLAID}
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -143,8 +142,7 @@ sub Run {
             && $Param{Config}->{SLAID} ne $Param{Ticket}->{SLAID}
         )
         || !defined $Param{Ticket}->{SLAID}
-        )
-    {
+    ) {
 
         # check if serivce is assigned to Service otherwise return
         $Success = $Self->_CheckSLA(
@@ -189,8 +187,7 @@ sub Run {
         defined $Param{Config}->{SLA}
         && defined $Param{Ticket}->{SLA}
         && $Param{Config}->{SLA} eq $Param{Ticket}->{SLA}
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -203,8 +200,7 @@ sub Run {
             && $Param{Config}->{SLA} ne $Param{Ticket}->{SLA}
         )
         || !defined $Param{Ticket}->{SLA}
-        )
-    {
+    ) {
 
         my $SLAID = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
             Name => $Param{Config}->{SLA},

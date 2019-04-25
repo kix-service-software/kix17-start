@@ -288,8 +288,6 @@ sub TicketAcl {
     my %NewData;
     my $UseNewMasterParams = 0;
 
-    my %NewDefaultActionData;
-
     if ( $Param{ReturnType} eq 'Action' ) {
 
         if ( !IsHashRefWithData( $Param{Data} ) ) {
@@ -352,7 +350,6 @@ sub TicketAcl {
             next DEBUGFILTER if $DebugFilter eq 'ACLName';
             next DEBUGFILTER if !$Self->{ACLDebugFilters}->{$DebugFilter};
 
-#rbo - T2016121190001552 - added KIX placeholders
             if ( $DebugFilter =~ m{<(KIX|OTRS)_TICKET_([^>]+)>}msx ) {
                 my $TicketParam = $2;
 
@@ -361,8 +358,7 @@ sub TicketAcl {
                     && $ChecksDatabase{Ticket}->{$TicketParam}
                     && $Self->{ACLDebugFilters}->{$DebugFilter} ne
                     $ChecksDatabase{Ticket}->{$TicketParam}
-                    )
-                {
+                ) {
                     $Self->{ACLDebug} = 0;
                     last DEBUGFILTER;
                 }
@@ -381,8 +377,7 @@ sub TicketAcl {
             $Self->{ACLDebugRecovery}
             && defined $Self->{ACLDebugFilters}->{'ACLName'}
             && $Self->{ACLDebugFilters}->{'ACLName'}
-            )
-        {
+        ) {
             # if not match current ACL disable ACLDebug
             if ( $Self->{ACLDebugFilters}->{'ACLName'} ne $Acl ) {
                 $Self->{ACLDebug} = 0;
@@ -401,8 +396,7 @@ sub TicketAcl {
         if (
             !IsHashRefWithData( $Step{Properties} )
             && !IsHashRefWithData( $Step{PropertiesDatabase} )
-            )
-        {
+        ) {
             $ForceMatch = 1;
         }
 
@@ -440,8 +434,7 @@ sub TicketAcl {
                                     Data       => $ArrayDataItem,
                                     SingleItem => 0,
                                 );
-                                if ( !$LoopMatchResult->{Skip} )
-                                {
+                                if ( !$LoopMatchResult->{Skip} ) {
                                     $MatchItem = $LoopMatchResult->{Match};
                                     last ARRAYDATAITEM;
                                 }
@@ -560,8 +553,7 @@ sub TicketAcl {
                 && $MatchTry
                 && $Step{Possible}->{ $Param{ReturnType} }
                 && IsArrayRefWithData( $Step{Possible}->{ $Param{ReturnType} } )
-                )
-            {
+            ) {
                 $UseNewParams = 1;
 
                 # reset return data as it will be filled with just the Possible Items excluded the
@@ -622,8 +614,7 @@ sub TicketAcl {
                 && $MatchTry
                 && $Step{PossibleAdd}->{ $Param{ReturnType} }
                 && IsArrayRefWithData( $Step{PossibleAdd}->{ $Param{ReturnType} } )
-                )
-            {
+            ) {
 
                 $UseNewParams = 1;
 
@@ -675,8 +666,7 @@ sub TicketAcl {
                 && $MatchTry
                 && $Step{PossibleNot}->{ $Param{ReturnType} }
                 && IsArrayRefWithData( $Step{PossibleNot}->{ $Param{ReturnType} } )
-                )
-            {
+            ) {
 
                 $UseNewParams = 1;
 
@@ -691,7 +681,7 @@ sub TicketAcl {
 
                 # not possible list
                 for my $ID ( sort keys %Data ) {
-                    my $Match = 1;
+                    my $DataMatch = 1;
                     for my $New ( @{ $Step{PossibleNot}->{ $Param{ReturnType} } } ) {
                         my $LoopMatchResult = $Self->_CompareMatchWithData(
                             Match      => $New,
@@ -699,10 +689,10 @@ sub TicketAcl {
                             SingleItem => 1
                         );
                         if ( $LoopMatchResult->{Match} ) {
-                            $Match = 0;
+                            $DataMatch = 0;
                         }
                     }
-                    if ( !$Match ) {
+                    if ( !$DataMatch ) {
                         if ( $Self->{ACLDebug} ) {
                             $Kernel::OM->Get('Kernel::System::Log')->Log(
                                 Priority => $Self->{ACLDebugLogPriority},
@@ -736,8 +726,7 @@ sub TicketAcl {
                 && $Match
                 && $MatchTry
                 && $Step{Possible}->{Ticket}->{ $Param{ReturnSubType} }
-                )
-            {
+            ) {
                 $UseNewParams = 1;
 
                 # reset return data as it will be filled with just the Possible Items excluded the ones
@@ -797,8 +786,7 @@ sub TicketAcl {
                 && $Match
                 && $MatchTry
                 && $Step{PossibleAdd}->{Ticket}->{ $Param{ReturnSubType} }
-                )
-            {
+            ) {
                 $UseNewParams = 1;
 
                 # debug log
@@ -848,8 +836,7 @@ sub TicketAcl {
                 && $Match
                 && $MatchTry
                 && $Step{PossibleNot}->{Ticket}->{ $Param{ReturnSubType} }
-                )
-            {
+            ) {
                 $UseNewParams = 1;
 
                 # debug log
@@ -863,7 +850,7 @@ sub TicketAcl {
 
                 # not possible list
                 for my $ID ( sort keys %Data ) {
-                    my $Match = 1;
+                    my $DataMatch = 1;
                     for my $New ( @{ $Step{PossibleNot}->{Ticket}->{ $Param{ReturnSubType} } } ) {
                         my $LoopMatchResult = $Self->_CompareMatchWithData(
                             Match      => $New,
@@ -871,10 +858,10 @@ sub TicketAcl {
                             SingleItem => 1
                         );
                         if ( $LoopMatchResult->{Match} ) {
-                            $Match = 0;
+                            $DataMatch = 0;
                         }
                     }
-                    if ( !$Match ) {
+                    if ( !$DataMatch ) {
                         if ( $Self->{ACLDebug} ) {
                             $Kernel::OM->Get('Kernel::System::Log')->Log(
                                 Priority => $Self->{ACLDebugLogPriority},
@@ -898,16 +885,13 @@ sub TicketAcl {
                 }
             }
 
-            # KIX4OTRS-capeIT
             # build new FormFields data hash for Possible
             if (
                 ( %Checks || %ChecksDatabase )
                 && $Match
                 && $MatchTry
                 && $Step{Possible}->{'Form'}
-                )
-            {
-
+            ) {
                 $UseNewParams = 1;
 
                 # If we haven't had any TicketAclFormData yet
@@ -926,8 +910,7 @@ sub TicketAcl {
                         if (
                             IsHashRefWithData($ScreenConfig)
                             && IsHashRefWithData( $ScreenConfig->{DynamicField} )
-                            )
-                        {
+                        ) {
                             $Self->{TicketAclFormData} = $ScreenConfig->{DynamicField};
                         }
                     }
@@ -962,8 +945,7 @@ sub TicketAcl {
                 && $Match
                 && $MatchTry
                 && $Step{PossibleAdd}->{'Form'}
-                )
-            {
+            ) {
 
                 $UseNewParams = 1;
 
@@ -983,8 +965,7 @@ sub TicketAcl {
                         if (
                             IsHashRefWithData($ScreenConfig)
                             && IsHashRefWithData( $ScreenConfig->{DynamicField} )
-                            )
-                        {
+                        ) {
                             $Self->{TicketAclFormData} = $ScreenConfig->{DynamicField};
                         }
                     }
@@ -1019,8 +1000,7 @@ sub TicketAcl {
                 && $Match
                 && $MatchTry
                 && $Step{PossibleNot}->{'Form'}
-                )
-            {
+            ) {
                 $UseNewParams = 1;
 
                 # If we haven't had any TicketAclFormData yet
@@ -1039,8 +1019,7 @@ sub TicketAcl {
                         if (
                             IsHashRefWithData($ScreenConfig)
                             && IsHashRefWithData( $ScreenConfig->{DynamicField} )
-                            )
-                        {
+                        ) {
                             $Self->{TicketAclFormData} = $ScreenConfig->{DynamicField};
                         }
                     }
@@ -1068,23 +1047,18 @@ sub TicketAcl {
                     %Form,
                 };
             }
-            # EO KIX4OTRS-capeIT
         }
 
         # remember to new params if given
         if ($UseNewParams) {
 
-            # KIX4OTRS-capeIT
             # build subsumption for PossibleNOT
-            my $ACLPPSubsumption =
-                $ConfigObject->Get('Ticket::ACL-PossiblePropertiesSubsumption') || 0;
+            my $ACLPPSubsumption = $ConfigObject->Get('Ticket::ACL-PossiblePropertiesSubsumption') || 0;
             if ( $ACLPPSubsumption && %NewData ) {
                 foreach ( keys %NewTmpData ) {
                     delete $NewTmpData{$_} if !defined $NewData{$_};
                 }
             }
-
-            # EO KIX4OTRS-capeIT
 
             %NewData            = %NewTmpData;
             $UseNewMasterParams = 1;
@@ -1264,7 +1238,6 @@ sub _GetChecks {
         };
     }
 
-    # KIX4OTRS-capeIT
     # ACL support for quick ticket templates
     if ( $Param{DefaultSet} ) {
         $Checks{Frontend} = {
@@ -1272,8 +1245,6 @@ sub _GetChecks {
             DefaultSet => $Param{DefaultSet},
         };
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -1332,15 +1303,12 @@ sub _GetChecks {
         }
     }
 
-    # KIX4OTRS-capeIT
     # keep ticket type, if available
     if ( $Param{TypeID} ) {
         $Checks{Ticket}->{TypeID} = $Param{TypeID};
         my $Type = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup( TypeID => $Param{TypeID} );
         $Checks{Ticket}->{Type} = $Type;
     }
-
-    # EO KIX4OTRS-capeIT
 
     # check for dynamic fields
     if ( IsHashRefWithData( $Param{DynamicField} ) ) {
@@ -1480,15 +1448,13 @@ sub _GetChecks {
     if (
         ( $CheckAll || $RequiredChecks{CustomerUser} )
         && IsStringWithData( $ChecksDatabase{Ticket}->{CustomerUserID} )
-        )
-    {
+    ) {
 
         # check if database data matches current data (performance)
         if (
             defined $Checks{CustomerUser}->{UserLogin}
             && $ChecksDatabase{Ticket}->{CustomerUserID} eq $Checks{CustomerUser}->{UserLogin}
-            )
-        {
+        ) {
             $ChecksDatabase{CustomerUser} = $Checks{CustomerUser};
         }
 
@@ -1550,15 +1516,13 @@ sub _GetChecks {
     if (
         ( $CheckAll || $RequiredChecks{Queue} )
         && IsPositiveInteger( $ChecksDatabase{Ticket}->{QueueID} )
-        )
-    {
+    ) {
 
         # check if database data matches current data (performance)
         if (
             defined $Checks{Queue}->{QueueID}
             && $ChecksDatabase{Ticket}->{QueueID} eq $Checks{Queue}->{QueueID}
-            )
-        {
+        ) {
             $ChecksDatabase{Queue} = $Checks{Queue};
         }
 
@@ -1623,8 +1587,7 @@ sub _GetChecks {
             if (
                 defined $Checks{Queue}->{QueueID}
                 && $ChecksDatabase{Ticket}->{ServiceID} eq $Checks{Service}->{ServiceID}
-                )
-            {
+            ) {
                 $ChecksDatabase{Service} = $Checks{Service};
             }
 
@@ -1704,8 +1667,7 @@ sub _GetChecks {
             if (
                 defined $Checks{Type}->{ID}
                 && $ChecksDatabase{Ticket}->{TypeID} eq $Checks{Type}->{ID}
-                )
-            {
+            ) {
                 $ChecksDatabase{Type} = $Checks{Type};
             }
 
@@ -1775,8 +1737,7 @@ sub _GetChecks {
         if (
             defined $Checks{Priority}->{ID}
             && $ChecksDatabase{Ticket}->{PriorityID} eq $Checks{Priority}->{ID}
-            )
-        {
+        ) {
             $ChecksDatabase{Priority} = $Checks{Priority};
         }
 
@@ -1847,8 +1808,7 @@ sub _GetChecks {
         if (
             defined $Checks{SLA}->{SLAID}
             && $ChecksDatabase{Ticket}->{SLAID} eq $Checks{SLA}->{SLAID}
-            )
-        {
+        ) {
             $ChecksDatabase{SLA} = $Checks{SLA};
         }
 
@@ -1915,8 +1875,7 @@ sub _GetChecks {
         if (
             defined $Checks{State}->{ID}
             && $ChecksDatabase{Ticket}->{StateID} eq $Checks{State}->{ID}
-            )
-        {
+        ) {
             $ChecksDatabase{State} = $Checks{State};
         }
 
@@ -1941,8 +1900,7 @@ sub _GetChecks {
             && !$Param{OwnerID}
             && defined $Param{NewOwnerType}
             && $Param{NewOwnerType} eq 'New'
-            )
-        {
+        ) {
             $Param{OwnerID} = $Param{NewOwnerID};
         }
         elsif (
@@ -1950,8 +1908,7 @@ sub _GetChecks {
             && !$Param{OwnerID}
             && defined $Param{NewOwnerType}
             && $Param{NewOwnerType} eq 'Old'
-            )
-        {
+        ) {
             $Param{OwnerID} = $Param{OldOwnerID};
         }
 
@@ -2055,8 +2012,7 @@ sub _GetChecks {
         if (
             defined $Checks{Owner}->{UserID}
             && $ChecksDatabase{Ticket}->{OwnerID} eq $Checks{Owner}->{UserID}
-            )
-        {
+        ) {
             $ChecksDatabase{Owner} = $Checks{Owner};
         }
 
@@ -2192,8 +2148,7 @@ sub _GetChecks {
             defined $Checks{Owner}->{UserID}
             && defined $Checks{Responsible}->{UserID}
             && $ChecksDatabase{Ticket}->{ResponsibleID} eq $Checks{Responsible}->{UserID}
-            )
-        {
+        ) {
             $ChecksDatabase{Responsible} = $Checks{Responsible};
         }
 

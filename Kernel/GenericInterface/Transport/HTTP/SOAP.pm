@@ -26,6 +26,8 @@ use Kernel::System::VariableCheck qw(:all);
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(Variables::RequireLocalizedPunctuationVars InputOutput::RequireEncodingWithUTF8Layer)
+
 =head1 NAME
 
 Kernel::GenericInterface::Transport::SOAP - GenericInterface network transport interface for HTTP::SOAP
@@ -290,8 +292,7 @@ sub ProviderProcessRequest {
         $Config->{RequestNameScheme} eq 'Append'
         && $Config->{RequestNameFreeText}
         && $LocalOperation =~ m{ \A ( .+ ) $Config->{RequestNameFreeText} \z }xms
-        )
-    {
+    ) {
         $LocalOperation = $1;
     }
 
@@ -555,8 +556,7 @@ sub RequesterPerformRequest {
         if (
             IsStringWithData( $Config->{Authentication}->{Type} )
             && $Config->{Authentication}->{Type} eq 'BasicAuth'
-            )
-        {
+        ) {
             my $User = $Config->{Authentication}->{User};
             my $Password = $Config->{Authentication}->{Password} || '';
 
@@ -576,38 +576,37 @@ sub RequesterPerformRequest {
         if (
             IsStringWithData( $Config->{SSL}->{UseSSL} )
             && $Config->{SSL}->{UseSSL} eq 'Yes'
-            )
-        {
+        ) {
 
             # Force Net::SSL instead of IO::Socket::SSL, otherwise GI can't connect to certificate
             #   authentication restricted servers, see https://metacpan.org/pod/Net::HTTPS#ENVIRONMENT,
             #   see bug #12306.
-            $ENV{PERL_NET_HTTPS_SSL_SOCKET_CLASS} = 'Net::SSL';    ## no critic
+            $ENV{PERL_NET_HTTPS_SSL_SOCKET_CLASS} = 'Net::SSL';
 
-            $ENV{HTTPS_PKCS12_FILE}     = $Config->{SSL}->{SSLP12Certificate};    ## no critic
-            $ENV{HTTPS_PKCS12_PASSWORD} = $Config->{SSL}->{SSLP12Password};       ## no critic
+            $ENV{HTTPS_PKCS12_FILE}     = $Config->{SSL}->{SSLP12Certificate};
+            $ENV{HTTPS_PKCS12_PASSWORD} = $Config->{SSL}->{SSLP12Password};
 
             # add certificate authority
             if ( IsStringWithData( $Config->{SSL}->{SSLCAFile} ) ) {
-                $ENV{HTTPS_CA_FILE} = $Config->{SSL}->{SSLCAFile};                ## no critic
+                $ENV{HTTPS_CA_FILE} = $Config->{SSL}->{SSLCAFile};
             }
             if ( IsStringWithData( $Config->{SSL}->{SSLCADir} ) ) {
-                $ENV{HTTPS_CA_DIR} = $Config->{SSL}->{SSLCADir};                  ## no critic
+                $ENV{HTTPS_CA_DIR} = $Config->{SSL}->{SSLCADir};
             }
         }
     }
 
     # add proxy
     if ( IsStringWithData( $Config->{SSL}->{SSLProxy} ) ) {
-        $ENV{HTTPS_PROXY} = $Config->{SSL}->{SSLProxy};                           ## no critic
+        $ENV{HTTPS_PROXY} = $Config->{SSL}->{SSLProxy};
     }
 
     # add proxy basic authentication
     if ( IsStringWithData( $Config->{SSL}->{SSLProxyUser} ) ) {
-        $ENV{HTTPS_PROXY_USERNAME} = $Config->{SSL}->{SSLProxyUser};              ## no critic
+        $ENV{HTTPS_PROXY_USERNAME} = $Config->{SSL}->{SSLProxyUser};
     }
     if ( IsStringWithData( $Config->{SSL}->{SSLProxyPassword} ) ) {
-        $ENV{HTTPS_PROXY_PASSWORD} = $Config->{SSL}->{SSLProxyPassword};          ## no critic
+        $ENV{HTTPS_PROXY_PASSWORD} = $Config->{SSL}->{SSLProxyPassword};
     }
 
     # prepare connect
@@ -642,8 +641,7 @@ sub RequesterPerformRequest {
         elsif (
             $Config->{SOAPActionSeparator} ne '#'
             || $OperationRequest ne $Param{Operation}
-            )
-        {
+        ) {
             $SOAPHandle->on_action(
                 sub { '"' . $Config->{NameSpace} . $Config->{SOAPActionSeparator} . $Param{Operation} . '"' }
             );
@@ -906,7 +904,7 @@ sub _Output {
     $Param{Content}  ||= '';
     $Param{HTTPCode} ||= 500;
     my $ContentType;
-    if ( $Param{HTTPCode} eq 200 ) {
+    if ( $Param{HTTPCode} eq '200' ) {
         $ContentType = 'text/xml';
         if ( $Self->{ContentType} ) {
             $ContentType = $Self->{ContentType};
@@ -921,7 +919,7 @@ sub _Output {
 
     # log to debugger
     my $DebugLevel;
-    if ( $Param{HTTPCode} eq 200 ) {
+    if ( $Param{HTTPCode} eq '200' ) {
         $DebugLevel = 'debug';
     }
     else {
@@ -947,7 +945,7 @@ sub _Output {
     # this solution to set the binmode in the constructor and then :utf8 layer before the response
     # is sent  apparently works in all situations. ( Linux circumstances to requires :raw was no
     # reproducible, and not tested in this solution).
-    binmode STDOUT, ':utf8';    ## no critic
+    binmode STDOUT, ':utf8';
 
     # print data to http - '\r' is required according to HTTP RFCs
     my $StatusMessage = HTTP::Status::status_message( $Param{HTTPCode} );
@@ -1072,8 +1070,7 @@ sub _SOAPOutputRecursion {
         if (
             $Key eq 'Data' && $Ref eq 'HASH'
             || $Key eq 'Sort' && $Ref eq 'ARRAY'
-            )
-        {
+        ) {
             $Param{$Key} = undef;
             $Type{$Key}  = 'UNDEFINED';
             next KEY;
@@ -1106,8 +1103,7 @@ sub _SOAPOutputRecursion {
             $Type{Data} eq 'HASHREF'
             && $Type{Sort} eq 'ARRAYREF'
         )
-        )
-    {
+    ) {
         return {
             Success      => 0,
             ErrorMessage => "Types of Data '$Type{Data}' and Sort '$Type{Sort}' don't match",

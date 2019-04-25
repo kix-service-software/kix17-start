@@ -101,7 +101,7 @@ sub Run {
             );
         }
 
-        my $Output .= $LayoutObject->CustomerHeader();
+        my $Output = $LayoutObject->CustomerHeader();
         $Output .= $LayoutObject->CustomerNavigationBar();
         $Output .= $Self->_MaskNew( %Param, %GetParam, CustomerIDArray => \@CustomerIDArray );
         $Output .= $LayoutObject->CustomerFooter();

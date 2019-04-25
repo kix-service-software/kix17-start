@@ -73,8 +73,7 @@ sub Permission {
     if (
         ( $Param{Scope} eq 'Class' && !$Param{ClassID} )
         || ( $Param{Scope} eq 'Item' && !$Param{ItemID} )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Need ClassID if Scope is 'Class' or ItemID if Scope is 'Item'!",
@@ -85,8 +84,7 @@ sub Permission {
     # run all ITSMConfigItem Permission modules
     if (
         ref $Kernel::OM->Get('Kernel::Config')->Get( 'ITSMConfigItem::Permission::' . $Param{Scope} ) eq 'HASH'
-        )
-    {
+    ) {
         my %Modules = %{
             $Kernel::OM->Get('Kernel::Config')->Get( 'ITSMConfigItem::Permission::' . $Param{Scope} )
         };

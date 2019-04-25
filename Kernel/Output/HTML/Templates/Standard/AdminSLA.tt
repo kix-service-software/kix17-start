@@ -42,7 +42,6 @@
         </div>
 [% RenderBlockEnd("ActionList") %]
 
-# KIX4OTRS-capeIT
         <div class="WidgetSimple">
             <div class="Header">
                  <h2><span><label for="FilterSLA">[% Translate("Filter for SLAs") | html %]</label></span></h2>
@@ -51,7 +50,6 @@
                 <input type="text" id="FilterSLA" class="W50pc" name="FilterSLA" value="" title="[% Translate("Filter for SLAs") | html %]" />
             </div>
         </div>
-# EO KIX4OTRS-capeIT
     </div>
 
     <div class="ContentColumn">
@@ -74,13 +72,11 @@
                         </tr>
                     </thead>
                     <tbody>
-# KIX4OTRS-capeIT
                         <tr class="FilterMessage Hidden">
                             <td colspan="5">
                                 [% Translate("No matches found.") | html %]
                             </td>
                         </tr>
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("NoDataFoundMsg") %]
                         <tr>
                             <td colspan="6">
@@ -90,16 +86,12 @@
 [% RenderBlockEnd("NoDataFoundMsg") %]
 [% RenderBlockStart("OverviewListRow") %]
                         <tr [% IF Data.ValidID && Data.ValidID != 1 %]class="Invalid"[% END %]>
-# KIX4OTRS-capeIT
-#                            <td><a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=SLAEdit;SLAID=[% Data.SLAID | uri %]">[% Data.Name | html %]</a></td>
                             <td class="Top"><a class="AsBlock" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=SLAEdit;SLAID=[% Data.SLAID | uri %]">[% Data.Name | html %]</a></td>
-#                            <td>[% Data.Service | html %]</td>
                             <td>
 [% RenderBlockStart("OverviewListRowService") %]
                             [% Data.Service | html %]<br/>
 [% RenderBlockEnd("OverviewListRowService") %]
                             </td>
-# EO KIX4OTRS-capeIT
                             <td title="[% Data.Comment | html %]">[% Data.Comment | truncate(26) | html %]</td>
                             <td>[% Translate(Data.Valid) | html %]</td>
                             <td>[% Data.ChangeTime | Localize("TimeShort") %]</td>
@@ -280,11 +272,9 @@
     </div>
     <div class="Clear"></div>
 </div>
-# KIX4OTRS-capeIT
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.UI.Table.InitTableFilter($('#FilterSLA'), $('.DataTable'));
 //]]></script>
 [% END %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("Overview") %]

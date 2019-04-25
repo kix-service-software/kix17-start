@@ -30,8 +30,7 @@ sub new {
     # check required objects...
     for (
         qw(UserID)
-        )
-    {
+    ) {
         if ( !$Self->{$_} ) {
             $Self->{LayoutObject}->FatalError( Message => "Got no $_!" );
         }

@@ -33,13 +33,9 @@ sub new {
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # get current filter
-    my $Name = $ParamObject->GetParam( Param => 'Name' ) || '';
-
-    # KIX4OTRS-capeIT
-    # my $PreferencesKey = 'UserDashboardUserOnlineFilter' . $Self->{Name};
+    my $Name           = $ParamObject->GetParam( Param => 'Name' ) || '';
     my $PreferencesKey = 'UserDashboardUserOfflineFilter' . $Self->{Name};
 
-    # EO KIX4OTRS-capeIT
     if ( $Self->{Name} eq $Name ) {
         $Self->{Filter} = $ParamObject->GetParam( Param => 'Filter' ) || '';
     }
@@ -144,10 +140,7 @@ sub Run {
     my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
 
     # check cache
-    # KIX4OTRS-capeIT
     my $Offline = $CacheObject->Get(
-
-        # EO KIX4OTRS-capeIT
         Type => 'Dashboard',
         Key  => $Self->{CacheKey},
     );
@@ -155,19 +148,10 @@ sub Run {
     # get session info
     my $CacheUsed = 1;
 
-    # KIX4OTRS-capeIT
-    # if ( !$Online ) {
     if ( !$Offline ) {
 
-        # EO KIX4OTRS-capeIT
-
         $CacheUsed = 0;
-
-        # KIX4OTRS-capeIT
-        # $Online    = {
-        $Offline = {
-
-            # EO KIX4OTRS-capeIT
+        $Offline   = {
             User => {
                 Agent    => {},
                 Customer => {},
@@ -182,7 +166,6 @@ sub Run {
             },
         };
 
-        # KIX4OTRS-capeIT
         # get all users and users data
         my %Offlines = $Kernel::OM->Get('Kernel::System::User')->UserList(
             Type  => 'Short',
@@ -197,8 +180,6 @@ sub Run {
             $Offline->{User}->{Agent}->{$UserID}     = $UserData{$SortBy};
             $Offline->{UserData}->{Agent}->{$UserID} = \%UserData;
         }
-
-        # EO KIX4OTRS-capeIT
 
         # get database object
         my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
@@ -242,37 +223,24 @@ sub Run {
             next SESSIONID if $Data{UserLastRequest} + ( $IdleMinutes * 60 ) < $Time;
 
             # remember user and data
-            # KIX4OTRS-capeIT
-            # $Online->{User}->{ $Data{UserType} }->{ $Data{UserID} } = $Data{$SortBy};
-            # $Online->{UserCount}->{ $Data{UserType} }++;
-            # $Online->{UserData}->{ $Data{UserType} }->{ $Data{UserID} } = { %Data, %AgentData };
             $Offline->{User}->{ $Data{UserType} }->{ $Data{UserID} } = $Data{$SortBy};
             $Offline->{UserCount}->{ $Data{UserType} }++;
             $Offline->{UserData}->{ $Data{UserType} }->{ $Data{UserID} } = { %Data, %AgentData };
-            # EO KIX4OTRS-capeIT
 
-            # KIX4OTRS-capeIT
             # delete online user and data
             delete $Offline->{User}->{ $Data{UserType} }->{ $Data{UserID} };
             delete $Offline->{UserData}->{ $Data{UserType} }->{ $Data{UserID} };
             $Offline->{UserCount}->{ $Data{UserType} }--;
-
-            # EO KIX4OTRS-capeIT
         }
     }
 
     # set cache
     if ( !$CacheUsed && $Self->{Config}->{CacheTTLLocal} ) {
         $CacheObject->Set(
-            Type => 'Dashboard',
-            Key  => $Self->{CacheKey},
-
-            # KIX4OTRS-capeIT
-            # Value => $Online,
+            Type  => 'Dashboard',
+            Key   => $Self->{CacheKey},
             Value => $Offline,
-
-            # EO KIX4OTRS-capeIT
-            TTL => $Self->{Config}->{CacheTTLLocal} * 60,
+            TTL   => $Self->{Config}->{CacheTTLLocal} * 60,
         );
     }
 
@@ -285,31 +253,17 @@ sub Run {
 
     # filter bar
     $LayoutObject->Block(
-
-        # KIX4OTRS-capeIT
-        # Name => 'ContentSmallUserOnlineFilter',
         Name => 'ContentSmallUserOfflineFilter',
-
-        # EO KIX4OTRS-capeIT
         Data => {
             %{ $Self->{Config} },
             Name => $Self->{Name},
-
-            # KIX4OTRS-capeIT
-            # %{ $Online->{UserCount} },
             %{ $Offline->{UserCount} },
-
-            # EO KIX4OTRS-capeIT
             %Summary,
         },
     );
 
     # add page nav bar
-    # KIX4OTRS-capeIT
-    # my $Total    = $Online->{UserCount}->{ $Self->{Filter} } || 0;
-    my $Total = $Offline->{UserCount}->{ $Self->{Filter} } || 0;
-
-    # EO KIX4OTRS-capeIT
+    my $Total    = $Offline->{UserCount}->{ $Self->{Filter} } || 0;
     my $LinkPage = 'Subaction=Element;Name=' . $Self->{Name} . ';Filter=' . $Self->{Filter} . ';';
     my %PageNav  = $LayoutObject->PageNavBar(
         StartHit       => $Self->{StartHit},
@@ -333,13 +287,8 @@ sub Run {
     );
 
     # show agent/customer
-    # KIX4OTRS-capeIT
-    # my %OnlineUser = %{ $Online->{User}->{ $Self->{Filter} } };
-    # my %OnlineData = %{ $Online->{UserData}->{ $Self->{Filter} } };
     my %OfflineUser = %{ $Offline->{User}->{ $Self->{Filter} } };
     my %OfflineData = %{ $Offline->{UserData}->{ $Self->{Filter} } };
-
-    # EO KIX4OTRS-capeIT
 
     my $Count = 0;
     my $Limit = $LayoutObject->{ $Self->{PrefKey} } || $Self->{Config}->{Limit};
@@ -348,12 +297,7 @@ sub Run {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     USERID:
-
-    # KIX4OTRS-capeIT
-    # for my $UserID ( sort { $OnlineUser{$a} cmp $OnlineUser{$b} } keys %OnlineUser ) {
     for my $UserID ( sort { $OfflineUser{$a} cmp $OfflineUser{$b} } keys %OfflineUser ) {
-
-        # KIX4OTRS-capeIT
         $Count++;
 
         next USERID if !$UserID;
@@ -361,25 +305,14 @@ sub Run {
         last USERID if $Count >= ( $Self->{StartHit} + $Self->{PageShown} );
 
         # extract user data
-        # KIX4OTRS-capeIT
-        # my $UserData = $OnlineData{$UserID};
         my $UserData = $OfflineData{$UserID};
-        # EO KIX4OTRS-capeIT
 
         # Default status
-        # KIX4OTRS-capeIT
-        # my $UserState            = "Offline";
         my $UserState            = "Online";
-        # EO KIX4OTRS-capeIT
         my $UserStateDescription = $LayoutObject->{LanguageObject}->Translate('This user is currently offline');
 
         $LayoutObject->Block(
-
-            # KIX4OTRS-capeIT
-            # Name => 'ContentSmallUserOnlineRow',
             Name => 'ContentSmallUserOfflineRow',
-
-            # EO KIX4OTRS-capeIT
             Data => {
                 %{$UserData},
                 UserState            => $UserState,
@@ -389,12 +322,7 @@ sub Run {
 
         if ( $Self->{Config}->{ShowEmail} ) {
             $LayoutObject->Block(
-
-                # KIX4OTRS-capeIT
-                # Name => 'ContentSmallUserOnlineRowEmail',
                 Name => 'ContentSmallUserOfflineRowEmail',
-
-                # KIX4OTRS-capeIT
                 Data => $UserData,
             );
         }
@@ -421,26 +349,13 @@ sub Run {
         next USERID if $TimeStart > $Time || $TimeEnd < $Time;
 
         $LayoutObject->Block(
-
-            # KIX4OTRS-capeIT
-            # Name => 'ContentSmallUserOnlineRowOutOfOffice',
             Name => 'ContentSmallUserOfflineRowOutOfOffice',
-
-            # EO KIX4OTRS-capeIT
         );
     }
 
-    # KIX4OTRS-capeIT
-    # if ( !%OnlineUser ) {
     if ( !%OfflineUser ) {
-    # EO KIX4OTRS-capeIT
         $LayoutObject->Block(
-
-            # KIX4OTRS-capeIT
-            # Name => 'ContentSmallUserOnlineRowOutOfOffice',
             Name => 'ContentSmallUserOfflineNone',
-
-            # EO KIX4OTRS-capeIT
         );
     }
 
@@ -450,13 +365,8 @@ sub Run {
     $NameHTML =~ s{-}{_}xmsg;
 
     my $Content = $LayoutObject->Output(
-
-        # KIX4OTRS-capeIT
-        # TemplateFile => 'AgentDashboardUserOnline',
         TemplateFile => 'AgentDashboardUserOffline',
-
-        # EO KIX4OTRS-capeIT
-        Data => {
+        Data         => {
             %{ $Self->{Config} },
             Name        => $Self->{Name},
             NameHTML    => $NameHTML,

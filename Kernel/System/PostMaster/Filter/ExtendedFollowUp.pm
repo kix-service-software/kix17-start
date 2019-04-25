@@ -104,7 +104,6 @@ sub Run {
 
         if ($ReferenceNumber) {
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
             # write DynamicField
             $Param{GetParam}->{ 'X-KIX-FollowUp-DynamicField-' . $DynamicField } = $ReferenceNumber;
             $Param{GetParam}->{ 'X-KIX-DynamicField-' . $DynamicField }          = $ReferenceNumber;

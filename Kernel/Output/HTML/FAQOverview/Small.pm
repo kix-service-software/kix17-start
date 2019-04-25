@@ -167,8 +167,7 @@ sub Run {
                     if (
                         $Param{SortBy}
                         && ( $Param{SortBy} eq ( 'DynamicField_' . $DynamicFieldConfig->{Name} ) )
-                        )
-                    {
+                    ) {
                         if ( $Param{OrderBy} && ( $Param{OrderBy} eq 'Up' ) ) {
                             $OrderBy = 'Down';
                             $CSS .= ' SortDescending';
@@ -264,8 +263,7 @@ sub Run {
             if (
                 $Counter >= $Param{StartHit}
                 && $Counter < ( $Param{PageShown} + $Param{StartHit} )
-                )
-            {
+            ) {
 
                 # to store all data
                 my %Data;

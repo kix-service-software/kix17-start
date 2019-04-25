@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::Time;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Time)
 
 use strict;
 use warnings;
@@ -166,7 +165,7 @@ sub SystemTime2Date {
     }
 
     # get time format
-    my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WDay ) = localtime $Param{SystemTime};    ## no critic
+    my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WDay ) = localtime $Param{SystemTime};
     $Year  += 1900;
     $Month += 1;
     $Month = sprintf "%02d", $Month;
@@ -242,8 +241,7 @@ sub TimeStamp2SystemTime {
     elsif (
         $Param{String}
         =~ /(\d{4})-(\d{1,2})-(\d{1,2})T(\d{1,2}):(\d{1,2}):(\d{1,2})(\+|\-)((\d{1,2}):(\d{1,2}))/i
-        )
-    {
+    ) {
         $SystemTime = $Self->Date2SystemTime(
             Year   => $1,
             Month  => $2,
@@ -258,8 +256,7 @@ sub TimeStamp2SystemTime {
     elsif (
         $Param{String}
         =~ /((...),\s+|)(\d{1,2})\s(...)\s(\d{4})\s(\d{1,2}):(\d{1,2}):(\d{1,2})\s((\+|\-)(\d{2})(\d{2})|...)/
-        )
-    {
+    ) {
         my $DiffTime = 0;
         if ( $10 && $10 eq '+' ) {
 
@@ -290,8 +287,7 @@ sub TimeStamp2SystemTime {
     }
     elsif (    # match yyyy-mm-ddThh:mm:ssZ
         $Param{String} =~ /(\d{4})-(\d{1,2})-(\d{1,2})T(\d{1,2}):(\d{1,2}):(\d{1,2})Z$/
-        )
-    {
+    ) {
         $SystemTime = $Self->Date2SystemTime(
             Year   => $1,
             Month  => $2,
@@ -417,7 +413,7 @@ sub MailTimeStamp {
     my @DayMap   = qw/Sun Mon Tue Wed Thu Fri Sat/;
     my @MonthMap = qw/Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec/;
 
-    # Here we cannot use the OTRS "TimeZone" because OTRS uses localtime()
+    # Here we cannot use the KIX "TimeZone" because KIXs uses localtime()
     #   and does not know if that is UTC or another time zone.
     #   Therefore OTRS cannot generate the correct offset for the mail timestamp.
     #   So we need to use the real time configuration of the server to determine this properly.
@@ -507,11 +503,11 @@ sub WorkingTime {
     );
 
     my $Counted = 0;
-    my ( $ASec, $AMin, $AHour, $ADay, $AMonth, $AYear, $AWDay ) = localtime $Param{StartTime};    ## no critic
+    my ( $ASec, $AMin, $AHour, $ADay, $AMonth, $AYear, $AWDay ) = localtime $Param{StartTime};
     $AYear  += 1900;
     $AMonth += 1;
     my $ADate = "$AYear-$AMonth-$ADay";
-    my ( $BSec, $BMin, $BHour, $BDay, $BMonth, $BYear, $BWDay ) = localtime $Param{StopTime};     ## no critic
+    my ( $BSec, $BMin, $BHour, $BDay, $BMonth, $BYear, $BWDay ) = localtime $Param{StopTime};
     $BYear  += 1900;
     $BMonth += 1;
     my $BDate = "$BYear-$BMonth-$BDay";
@@ -519,7 +515,7 @@ sub WorkingTime {
 
     while ( $Param{StartTime} < $Param{StopTime} ) {
 
-        my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WDay ) = localtime $Param{StartTime};       ## no critic
+        my ( $Sec, $Min, $Hour, $Day, $Month, $Year, $WDay ) = localtime $Param{StartTime};
         $Year  += 1900;
         $Month += 1;
         my $CDate   = "$Year-$Month-$Day";
@@ -543,8 +539,7 @@ sub WorkingTime {
         if (
             $TimeVacationDays->{$Month}->{$Day}
             || $TimeVacationDaysOneTime->{$Year}->{$Month}->{$Day}
-            )
-        {
+        ) {
 
             # do nothing
         }
@@ -689,7 +684,7 @@ sub DestinationTime {
         $LoopCounter++;
         last LOOP if $LoopCounter > 600;
 
-        my ( $Second, $Minute, $Hour, $Day, $Month, $Year, $WDay ) = localtime $CTime;    ## no critic
+        my ( $Second, $Minute, $Hour, $Day, $Month, $Year, $WDay ) = localtime $CTime;
         $Year  += 1900;
         $Month += 1;
         my $CTime00 = $CTime - ( ( $Hour * 60 + $Minute ) * 60 + $Second );               # 00:00:00
@@ -713,8 +708,7 @@ sub DestinationTime {
             $TimeVacationDays->{$Month}->{$Day}
             || $TimeVacationDaysOneTime->{$Year}->{$Month}->{$Day}
             || !$TimeWorkingHours->{ $LDay{$WDay} }
-            )
-        {
+        ) {
             # Set destination time to next day, 00:00:00
             $DestinationTime = $Self->Date2SystemTime(
                 Year   => $Year,

@@ -63,7 +63,6 @@ $(document).on('change', '#[% Item.FormID | html %] select[name=ForwardTemplateI
             <a href="[% Env("Baselink") %][% Item.Link %]" class="[% Item.Class | html %]" [% Item.LinkParam %] title="[% Translate(Item.Description) | html %]">[% Translate(Item.Name) | html %]</a>
         </li>
 
-# KIX4OTRS-capeIT
     [% ELSIF Item.ItemType == 'Dropdown' && Item.DropdownType == 'MarkAs' %]
 
         <li>
@@ -72,10 +71,9 @@ $(document).on('change', '#[% Item.FormID | html %] select[name=ForwardTemplateI
                 <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
                 <input type="hidden" name="ArticleID" value="[% Data.ArticleID | html %]"/>
                 <label for="[% Item.ResponseElementID | html %]" class="InvisibleText">[% Translate(Item.Name) | html %]:</label>
-                        [% Item.ArticleFlagStrg %]
+                    [% Item.ArticleFlagStrg %]
             </form>
         </li>
-# EO KIX4OTRS-capeIT
 
     [% ELSIF Item.ItemType == 'Dropdown' && Item.DropdownType == 'Reply' %]
 

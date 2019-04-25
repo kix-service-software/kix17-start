@@ -30,8 +30,7 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    if ( !$Self->{UserType} || ( $Self->{UserType} ne 'User' && $Self->{UserType} ne 'Customer' ) )
-    {
+    if ( !$Self->{UserType} || ( $Self->{UserType} ne 'User' && $Self->{UserType} ne 'Customer' ) ) {
         return $Self;
     }
 
@@ -101,8 +100,7 @@ sub Run {
                     !defined( $CustomerData{ValidID} )
                     || ( defined( $CustomerData{ValidID} ) && $CustomerData{ValidID} )
                 )
-                )
-            {
+            ) {
                 $Access = 1;
             }
 

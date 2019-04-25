@@ -11,32 +11,22 @@
 
 [% RenderBlockStart("StartNormal") %]
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarLast">
-# KIX4OTRS-capeIT
-#    <h1>[% Translate("Edit") | html %]: [% Translate("Config Item") | html %]: [% Translate(Data.Number) | html %] - [% Translate("Class") | html %]: [% Data.Class | html %]</h1>
     <h1>[% Translate("Edit") | html %]: [% Translate("Config Item") | html %]: [% Data.Number | html %] - [% Translate("Class") | html %]: [% Translate(Data.Class) | html %]</h1>
-# EO KIX4OTRS-capeIT
 
-# KIX4OTRS-capeIT
     <div class="Content">
             <div class="LayoutFixedSidebar SidebarLast">
                 <div class="SidebarColumn">
                     [% Data.KIXSidebarContent %]
                 </div>
-# EO KIX4OTRS-capeIT
             <div class="ContentColumn">
 [% RenderBlockEnd("StartNormal") %]
 [% InsertTemplate("AgentITSMCustomerSearch.tt") %]
-# KIX4OTRS-capeIT
 #        <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="ClassItem" class="Validate PreventMultipleSubmits" id="ClassItem">
         <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="ClassItem" class="Validate PreventMultipleSubmits" id="ClassItem" enctype="multipart/form-data">
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("StartSmall") %]
             <div class="LayoutPopup ARIARoleMain">
                 <div class="Header">
-# KIX4OTRS-capeIT
-#                    <h1>[% Translate("Edit") | html %]: [% Translate("Config Item") | html %]: [% Translate(Data.Number) | html %] - [% Translate("Class") | html %]: [% Data.Class | html %]</h1>
                     <h1>[% Translate("Edit") | html %]: [% Translate("Config Item") | html %]: [% Data.Number | html %] - [% Translate("Class") | html %]: [% Translate(Data.Class) | html %]</h1>
-# EO KIX4OTRS-capeIT
                     <p>
                         <a class="CancelClosePopup" href="#">[% Translate("Cancel & close") | html %]</a>
                     </p>
@@ -44,13 +34,11 @@
                 <input type="hidden" name="ScreenType" value="Popup"/>
 [% RenderBlockEnd("StartSmall") %]
                 <div class="Content">
-# KIX4OTRS-capeIT
                     <div class="LayoutFixedSidebar SidebarLast">
                         <div class="SidebarColumn">
                             [% Data.KIXSidebarContent %]
                         </div>
                     <div class="ContentColumn">
-# EO KIX4OTRS-capeIT
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="VersionSave"/>
                     <input type="hidden" name="ClassID" value="[% Data.ClassID | html %]"/>
@@ -58,14 +46,12 @@
                     <input type="hidden" name="DuplicateID" value="[% Data.DuplicateID | html %]"/>
                     <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
                     <input type="hidden" name="SubmitSave" value="[% Data.SubmitSave | html %]"/>
-# KIX4OTRS-capeIT
                     <input type="hidden" name="PreEventErrorScreen" value="[% Data.PreEventErrorScreen | html %]"/>
 [% RenderBlockStart("PlausiCheckNote") %]
                       <div class="MessageBox Notice">
                           <p>[% Translate(Data.Text) | html %]&nbsp;[% Data.Code %]</p>
                       </div>
 [% RenderBlockEnd("PlausiCheckNote") %]
-# EO KIX4OTRS-capeIT
                     <fieldset class="TableLike">
 [% RenderBlockStart("RowName") %]
                         <label class="Mandatory" for="Name"><span class="Marker">*</span> [% Translate("Name") | html %]: </label>
@@ -195,10 +181,7 @@
 [% RenderBlockStart("EndNormal") %]
     </div>
     <div class="Clear"></div>
-# KIX4OTRS-capeIT
-# end of ContentColumn
-            </div>
-# EO KIX4OTRS-capeIT
+   </div>
 </div>
 [% RenderBlockEnd("EndNormal") %]
 

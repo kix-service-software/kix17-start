@@ -414,8 +414,7 @@ sub ProcessTransition {
     if (
         !IsHashRefWithData($Process)
         || !IsHashRefWithData( $Process->{Path} )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Need Path for ProcessEntityID $Param{ProcessEntityID}!",
@@ -478,8 +477,7 @@ sub ProcessTransition {
                 ActivityEntityID => $Transitions{$TransitionEntityID}{ActivityEntityID}
                 )
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Need Target Activity for Process with "
@@ -530,8 +528,7 @@ sub ProcessTransition {
             ref $Transitions{$TransitionEntityID}{TransitionAction} eq 'ARRAY'
             && !@{ $Transitions{$TransitionEntityID}{TransitionAction} }
         )
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -580,7 +577,7 @@ sub ProcessTransition {
         #   for multiple tickets, see bug#12179
         my %Config = %{ $TransitionAction->{Config} || {} };
 
-        my $Success = $TransitionActionModuleObject->Run(
+        $Success = $TransitionActionModuleObject->Run(
             UserID                   => $Param{UserID},
             Ticket                   => \%Data,
             ProcessEntityID          => $Param{ProcessEntityID},
@@ -707,8 +704,7 @@ sub ProcessTicketActivitySet {
             Value              => $Param{ActivityEntityID},
             UserID             => $Param{UserID}
         )
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -809,8 +805,7 @@ sub ProcessTicketProcessSet {
             Value              => $Param{ProcessEntityID},
             UserID             => $Param{UserID},
         )
-        )
-    {
+    ) {
         return 1;
     }
 

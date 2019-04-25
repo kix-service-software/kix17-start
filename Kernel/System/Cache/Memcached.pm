@@ -85,8 +85,7 @@ sub Set {
         if (
             !$Result->{"Memcached::CacheIndex::$Param{Type}"}
             || ref( $Result->{"Memcached::CacheIndex::$Param{Type}"} ) ne 'HASH'
-            )
-        {
+        ) {
             $Result->{"Memcached::CacheIndex::$Param{Type}"} = {};
         }
         $Result->{"Memcached::CacheIndex::$Param{Type}"}->{$PreparedKey} = 1;

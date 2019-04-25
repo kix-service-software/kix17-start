@@ -72,6 +72,8 @@ sub Configure {
         Required    => 0,
         HasValue    => 0,
     );
+
+    return;
 }
 
 sub PreRun {

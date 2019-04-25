@@ -94,17 +94,17 @@ sub SaveGraph {
     # do insert
     if (
         !$Self->{DBObject}->Do(
-            SQL => '
-            INSERT INTO kix_link_graph ( name, object_id, object_type, layout, config, create_time, create_by, change_time, change_by )
-            VALUES (?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+            SQL  => <<'END',
+INSERT INTO kix_link_graph ( name, object_id, object_type, layout, config, create_time, create_by, change_time, change_by )
+VALUES (?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)
+END
             Bind => [
                 \$Param{GraphName}, \$Param{CurID}, \$Param{ObjectType}, \$Param{LayoutString},
                 \$Param{GraphConfig},
                 \$Param{UserID}, \$Param{UserID}
             ],
         )
-        )
-    {
+    ) {
         $Self->{LogObject}->Log(
             Priority => 'error',
             Message  => "Could not save Graph $Param{GraphName}!",
@@ -121,8 +121,7 @@ sub SaveGraph {
             Bind => [ \$Param{CurID}, \$Param{ObjectType} ],
             Limit => 1,
         )
-        )
-    {
+    ) {
         $Self->{LogObject}
             ->Log(
             Priority => 'error',
@@ -243,8 +242,7 @@ sub UpdateGraph {
                 \$Param{UserID}, \$Param{GraphID},
                 ],
         )
-        )
-    {
+    ) {
         $Self->{LogObject}->Log( Priority => 'error', Message => 'Could not update saved graph!' );
         return;
     }

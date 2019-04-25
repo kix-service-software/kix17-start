@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::SupportDataCollector::Plugin::KIX::TimeSettings;
-## nofilter(TidyAll::Plugin::KIX::Perl::Time)
 
 use strict;
 use warnings;
@@ -33,7 +32,7 @@ sub GetDisplayPath {
 sub Run {
     my $Self = shift;
 
-    my $Dummy          = localtime();       ## no critic
+    my $Dummy          = localtime();
     my $ServerTimeZone = POSIX::tzname();
 
     $Self->AddResultInformation(

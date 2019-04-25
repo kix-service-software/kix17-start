@@ -86,8 +86,7 @@ sub Run {
     COLUMNNAME:
     for my $ColumnName (
         qw(Owner Responsible State Queue Priority Type Lock Service SLA CustomerID CustomerUserID)
-        )
-    {
+    ) {
         # get column filter from web request
         my $FilterValue = $ParamObject->GetParam( Param => 'ColumnFilter' . $ColumnName )
             || '';
@@ -264,8 +263,7 @@ sub Run {
                 $HeaderColumn eq 'CustomerUserID'
             )
         )
-        )
-    {
+    ) {
 
         @OriginalViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
@@ -355,13 +353,12 @@ sub Run {
     else {
 
         # store column filters
-        my $StoredFilters = \%ColumnFilter;
+        my $NewStoredFilters = \%ColumnFilter;
 
-        my $StoredFiltersKey = 'UserStoredFilterColumns-' . $Self->{Action};
         $UserObject->SetPreferences(
             UserID => $Self->{UserID},
             Key    => $StoredFiltersKey,
-            Value  => $JSONObject->Encode( Data => $StoredFilters ),
+            Value  => $JSONObject->Encode( Data => $NewStoredFilters ),
         );
     }
 

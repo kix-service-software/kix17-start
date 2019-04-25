@@ -235,16 +235,17 @@ sub FAQGet {
     else {
 
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT i.f_name, i.f_language_id, i.f_subject, i.created, i.created_by, i.changed,
-                    i.changed_by, i.category_id, i.state_id, c.name, s.name, l.name, i.f_keywords,
-                    i.approved, i.valid_id, i.content_type, i.f_number, st.id, st.name
-                FROM faq_item i, faq_category c, faq_state s, faq_state_type st, faq_language l
-                WHERE i.state_id = s.id
-                    AND s.type_id = st.id
-                    AND i.category_id = c.id
-                    AND i.f_language_id = l.id
-                    AND i.id = ?',
+            SQL   => <<'END',
+SELECT i.f_name, i.f_language_id, i.f_subject, i.created, i.created_by, i.changed,
+       i.changed_by, i.category_id, i.state_id, c.name, s.name, l.name, i.f_keywords,
+       i.approved, i.valid_id, i.content_type, i.f_number, st.id, st.name
+FROM faq_item i, faq_category c, faq_state s, faq_state_type st, faq_language l
+WHERE i.state_id = s.id
+    AND s.type_id = st.id
+    AND i.category_id = c.id
+    AND i.f_language_id = l.id
+    AND i.id = ?
+END
             Bind  => [ \$Param{ItemID} ],
             Limit => 1,
         );
@@ -450,9 +451,11 @@ sub ItemFieldGet {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     return if !$DBObject->Prepare(
-        SQL => 'SELECT ' . $FieldLookup{ $Param{Field} } . '
-            FROM faq_item
-            WHERE id = ?',
+        SQL   => <<"END",
+SELECT $FieldLookup{ $Param{Field} }
+FROM faq_item
+WHERE id = ?
+END
         Bind  => [ \$Param{ItemID} ],
         Limit => 1,
     );
@@ -581,17 +584,18 @@ sub FAQAdd {
     }
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            INSERT INTO faq_item
-                (f_number, f_name, f_language_id, f_subject,
-                category_id, state_id, f_keywords, approved, valid_id, content_type,
-                f_field1, f_field2, f_field3, f_field4, f_field5, f_field6,
-                created, created_by, changed, changed_by)
-            VALUES
-                (?, ?, ?, ?,
-                ?, ?, ?, ?, ?, ?,
-                ?, ?, ?, ?, ?, ?,
-                current_timestamp, ?, current_timestamp, ?)',
+        SQL  => <<'END',
+INSERT INTO faq_item
+    (f_number, f_name, f_language_id, f_subject,
+    category_id, state_id, f_keywords, approved, valid_id, content_type,
+    f_field1, f_field2, f_field3, f_field4, f_field5, f_field6,
+    created, created_by, changed, changed_by)
+VALUES
+    (?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?,
+    ?, ?, ?, ?, ?, ?,
+    current_timestamp, ?, current_timestamp, ?)
+END
         Bind => [
             \$Param{Number},     \$Param{Name},    \$Param{LanguageID}, \$Param{Title},
             \$Param{CategoryID}, \$Param{StateID}, \$Param{Keywords},   \$Param{Approved},
@@ -603,42 +607,39 @@ sub FAQAdd {
     );
 
     # build SQL to get the id of the newly inserted FAQ article
-    my $SQL = '
-        SELECT id FROM faq_item
-        WHERE f_number = ?
-            AND f_name = ?
-            AND f_language_id = ?
-            AND category_id = ?
-            AND state_id = ?
-            AND approved = ?
-            AND valid_id = ?
-            AND created_by = ?
-            AND changed_by = ?';
+    my $SQL = <<'END';
+SELECT id FROM faq_item
+WHERE f_number = ?
+    AND f_name = ?
+    AND f_language_id = ?
+    AND category_id = ?
+    AND state_id = ?
+    AND approved = ?
+    AND valid_id = ?
+    AND created_by = ?
+    AND changed_by = ?
+END
 
     # handle the title
     if ( $Param{Title} ) {
-        $SQL .= '
-            AND f_subject = ? ';
+        $SQL .= ' AND f_subject = ?';
     }
 
     # additional SQL for the case that the title is an empty string
     # and the database is oracle, which treats empty strings as NULL
     else {
-        $SQL .= '
-            AND ((f_subject = ?) OR (f_subject IS NULL)) ';
+        $SQL .= ' AND ((f_subject = ?) OR (f_subject IS NULL))';
     }
 
     # handle the keywords
     if ( $Param{Keywords} ) {
-        $SQL .= '
-            AND f_keywords = ? ';
+        $SQL .= ' AND f_keywords = ?';
     }
 
     # additional SQL for the case that keywords is an empty string
     # and the database is oracle, which treats empty strings as NULL
     else {
-        $SQL .= '
-            AND ((f_keywords = ?) OR (f_keywords IS NULL)) ';
+        $SQL .= ' AND ((f_keywords = ?) OR (f_keywords IS NULL))';
     }
 
     # get database object
@@ -768,16 +769,17 @@ sub FAQUpdate {
     }
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            UPDATE faq_item SET
-                f_name = ?, f_language_id = ?, f_subject = ?, category_id = ?,
-                state_id = ?, f_keywords = ?, valid_id = ?, content_type = ?,
-                f_field1 = ?, f_field2 = ?,
-                f_field3 = ?, f_field4 = ?,
-                f_field5 = ?, f_field6 = ?,
-                changed = current_timestamp,
-                changed_by = ?
-            WHERE id = ?',
+        SQL => <<'END',
+UPDATE faq_item SET
+    f_name = ?, f_language_id = ?, f_subject = ?, category_id = ?,
+    state_id = ?, f_keywords = ?, valid_id = ?, content_type = ?,
+    f_field1 = ?, f_field2 = ?,
+    f_field3 = ?, f_field4 = ?,
+    f_field5 = ?, f_field6 = ?,
+    changed = current_timestamp,
+    changed_by = ?
+WHERE id = ?
+END
         Bind => [
             \$Param{Name},    \$Param{LanguageID}, \$Param{Title},   \$Param{CategoryID},
             \$Param{StateID}, \$Param{Keywords},   \$Param{ValidID}, \$Param{ContentType},
@@ -1476,11 +1478,12 @@ sub FAQHistoryGet {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT name, created, created_by
-            FROM faq_history
-            WHERE item_id = ?
-            ORDER BY created, id',
+        SQL  => <<'END',
+SELECT name, created, created_by
+FROM faq_history
+WHERE item_id = ?
+ORDER BY created, id
+END
         Bind => [ \$Param{ItemID} ],
     );
 
@@ -2175,9 +2178,7 @@ sub FAQContentTypeSet {
     }
 
     # SQL to set the content type (default or given).
-    my $SQL = '
-        UPDATE faq_item
-        SET content_type = ?';
+    my $SQL = 'UPDATE faq_item SET content_type = ?';
 
     # Get FAQ item IDs from the param.
     my @FAQItemIDs = @{ $Param{FAQItemIDs} // [] };
@@ -2187,8 +2188,7 @@ sub FAQContentTypeSet {
 
         my $IDString = join ',', @FAQItemIDs;
 
-        $SQL .= "
-            WHERE id IN ($IDString)";
+        $SQL .= " WHERE id IN ($IDString)";
     }
 
     # Get DB object.
@@ -2218,10 +2218,11 @@ sub FAQContentTypeSet {
     # Get all FAQIDs (if no faq item was given).
     if ( !@FAQItemIDs ) {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT DISTINCT(faq_item.id)
-                FROM faq_item
-                ORDER BY id ASC',
+            SQL => <<'END',
+SELECT DISTINCT(faq_item.id)
+FROM faq_item
+ORDER BY id ASC
+END
         );
 
         while ( my @Row = $DBObject->FetchrowArray() ) {
@@ -2248,10 +2249,8 @@ sub FAQContentTypeSet {
 
             # if field content seams to be HTML set the content type to HTML
             if (
-                $FieldContent
-                =~ m{(?: <br\s*/> | </li> | </ol> | </ul> | </table> | </tr> | </td> | </div> | </o> | </i> | </span> | </h\d> | </p> | </pre> )}msx
-                )
-            {
+                $FieldContent =~ m{(?: <br\s*/> | </li> | </ol> | </ul> | </table> | </tr> | </td> | </div> | </o> | </i> | </span> | </h\d> | </p> | </pre> )}msx
+            ) {
                 $DeterminedContentType = 'text/html';
                 last FIELD;
             }
@@ -2261,10 +2260,11 @@ sub FAQContentTypeSet {
 
         # Set the content type according to the field content.
         return if !$DBObject->Do(
-            SQL => '
-                UPDATE faq_item
-                SET content_type = ?
-                WHERE id =?',
+            SQL  => <<'END',
+UPDATE faq_item
+SET content_type = ?
+WHERE id =?
+END
             Bind => [
                 \$DeterminedContentType,
                 \$ItemID,
@@ -2405,7 +2405,6 @@ sub _FAQApprovalTicketCreate {
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-#rbo - T2016121190001552 - added KIX placeholders
     # get subject
     my $Subject = $ConfigObject->Get('FAQ::ApprovalTicketSubject');
     $Subject =~ s{ <(KIX|OTRS)_FAQ_NUMBER> }{$Param{FAQNumber}}xms;
@@ -2490,7 +2489,6 @@ sub _FAQApprovalTicketCreate {
             $Language = '-';
         }
 
-#rbo - T2016121190001552 - added KIX placeholders
         # get body from config
         my $Body = $ConfigObject->Get('FAQ::ApprovalTicketBody');
         $Body =~ s{ <(KIX|OTRS)_FAQ_CATEGORYID> }{$Param{CategoryID}}xms;

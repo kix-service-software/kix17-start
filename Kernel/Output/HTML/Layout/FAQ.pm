@@ -633,8 +633,7 @@ sub FAQPathShow {
         if (
             $CategoryData->{CategoryID} == $CategoryList->[-1]->{CategoryID}
             && !$Param{PathForItem}
-            )
-        {
+        ) {
             $Block = 'FAQPathCategoryElementNoLink';
         }
 

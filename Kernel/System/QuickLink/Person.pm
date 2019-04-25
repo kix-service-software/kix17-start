@@ -157,8 +157,7 @@ sub Search {
     my %LinkedPersons;
     for my $UserID (
         keys %{ $LinkList->{Person}->{ $Param{LinkType} }->{ $Param{LinkDirection} } }
-        )
-    {
+    ) {
         $LinkedPersons{$UserID} = 1;
     }
 
@@ -208,8 +207,7 @@ sub Search {
     for my $SearchID (
         sort { $SearchList{$a} cmp $SearchList{$b} }
         keys %SearchList
-        )
-    {
+    ) {
         push @Data, {
             SearchObjectKey   => $SearchID,
             SearchObjectValue => $SearchList{$SearchID},

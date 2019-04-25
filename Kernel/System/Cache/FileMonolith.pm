@@ -43,9 +43,7 @@ sub new {
     # check if cache directory exists and in case create one
     for my $Directory ( $TempDir, $Self->{CacheDirectory} ) {
         if ( !-e $Directory ) {
-            ## no critic
             if ( !mkdir( $Directory, 0770 ) ) {
-                ## use critic
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Can't create directory '$Directory': $!",
@@ -79,9 +77,7 @@ sub Set {
     );
     return if !IsHashRefWithData( $Self->{Cache}->{ $Param{Type} } );
 
-    my $TTL = time()
-        + $Param{TTL}
-        ;    # do not move this into the hash below, since this will result in about 5000 Ops/s less
+    my $TTL = time() + $Param{TTL};    # do not move this into the hash below, since this will result in about 5000 Ops/s less
     $Self->{Cache}->{ $Param{Type} }->{IsDirty} = 1;
     $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} } = {
         Value => $Param{Value},
@@ -110,9 +106,10 @@ sub Get {
     return if !IsHashRefWithData( $Self->{Cache}->{ $Param{Type} }->{Content} );
 
     # check TTL
-    if (   $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} }->{TTL}
-        && $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} }->{TTL} < time() )
-    {
+    if (
+        $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} }->{TTL}
+        && $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} }->{TTL} < time()
+    ) {
         delete $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} };
     }
 
@@ -142,6 +139,8 @@ sub Delete {
     return if !IsHashRefWithData( $Self->{Cache}->{ $Param{Type} } );
 
     delete $Self->{Cache}->{ $Param{Type} }->{Content}->{ $Param{Key} };
+
+    return 1;
 }
 
 sub CleanUp {
@@ -159,20 +158,22 @@ sub CleanUp {
             Filename  => $Param{Type},
         );
     }
+
+    return 1;
 }
 
 sub _FileRead {
     my ( $Self, %Param ) = @_;
 
-# check and retrieve file if exists and the memory cache has not been loaded for this this or the file on the disk has been modified in the meantime
+    # check and retrieve file if exists and the memory cache has not been loaded for this this or the file on the disk has been modified in the meantime
     my $CacheFile = "$Self->{CacheDirectory}/$Param{Type}";
     if (
         -f $CacheFile
-        && (  !$Self->{Cache}->{ $Param{Type} }
-            || $Self->{Cache}->{ $Param{Type} }->{FileMTime} < ( stat($CacheFile) )[9] )
+        && (
+            !$Self->{Cache}->{ $Param{Type} }
+            || $Self->{Cache}->{ $Param{Type} }->{FileMTime} < ( stat($CacheFile) )[9]
         )
-    {
-
+    ) {
         $Self->{Cache}->{ $Param{Type} }->{IsDirty}   = 0;
         $Self->{Cache}->{ $Param{Type} }->{FileMTime} = ( stat($CacheFile) )[9];
         $Self->{Cache}->{ $Param{Type} }->{Content}   = lock_retrieve($CacheFile);

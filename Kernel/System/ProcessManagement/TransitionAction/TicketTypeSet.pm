@@ -127,8 +127,7 @@ sub Run {
     if (
         defined $Param{Config}->{Type}
         && $Param{Config}->{Type} ne $Param{Ticket}->{Type}
-        )
-    {
+    ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketTypeSet(
             Type     => $Param{Config}->{Type},
             TicketID => $Param{Ticket}->{TicketID},
@@ -138,8 +137,7 @@ sub Run {
     elsif (
         defined $Param{Config}->{TypeID}
         && $Param{Config}->{TypeID} ne $Param{Ticket}->{TypeID}
-        )
-    {
+    ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketTypeSet(
             TypeID   => $Param{Config}->{TypeID},
             TicketID => $Param{Ticket}->{TicketID},

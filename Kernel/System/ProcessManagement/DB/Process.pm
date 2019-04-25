@@ -126,10 +126,7 @@ sub ProcessAdd {
 
     # check if EntityID already exists
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT id
-            FROM pm_process
-            WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)",
+        SQL   => "SELECT id FROM pm_process WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)",
         Bind  => [ \$Param{EntityID} ],
         Limit => 1,
     );
@@ -177,10 +174,8 @@ sub ProcessAdd {
 
     # SQL
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO pm_process ( entity_id, name, state_entity_id, layout, config, create_time,
-                create_by, change_time, change_by )
-            VALUES (?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => 'INSERT INTO pm_process ( entity_id, name, state_entity_id, layout, config, create_time, create_by, change_time, change_by )'
+              . ' VALUES (?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{EntityID}, \$Param{Name}, \$Param{StateEntityID}, \$Layout, \$Config,
             \$Param{UserID}, \$Param{UserID},
@@ -389,22 +384,18 @@ sub ProcessGet {
     # SQL
     if ( $Param{ID} ) {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id, entity_id, name, state_entity_id, layout, config, create_time,
-                    change_time
-                FROM pm_process
-                WHERE id = ?',
+            SQL => 'SELECT id, entity_id, name, state_entity_id, layout, config, create_time, change_time'
+                 . ' FROM pm_process'
+                 . ' WHERE id = ?',
             Bind  => [ \$Param{ID} ],
             Limit => 1,
         );
     }
     else {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id, entity_id, name, state_entity_id, layout, config, create_time,
-                    change_time
-                FROM pm_process
-                WHERE entity_id = ?',
+            SQL => 'SELECT id, entity_id, name, state_entity_id, layout, config, create_time, change_time'
+                 . ' FROM pm_process'
+                 . ' WHERE entity_id = ?',
             Bind  => [ \$Param{EntityID} ],
             Limit => 1,
         );
@@ -475,8 +466,7 @@ sub ProcessGet {
             for my $ActivityEntityID ( sort keys %{ $Data{Config}->{Path} } ) {
                 for my $TransitionEntityID (
                     sort keys %{ $Data{Config}->{Path}->{$ActivityEntityID} }
-                    )
-                {
+                ) {
                     $Transitions{$TransitionEntityID} = $TransitionList->{$TransitionEntityID};
                 }
             }
@@ -492,8 +482,7 @@ sub ProcessGet {
 
                 for my $TransitionEntityID (
                     sort keys %{ $Data{Config}->{Path}->{$ActivityEntityID} }
-                    )
-                {
+                ) {
                     push @Transitions, $TransitionEntityID;
                 }
             }
@@ -607,10 +596,7 @@ sub ProcessUpdate {
 
     # check if EntityID already exists
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT id FROM pm_process
-            WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)
-            AND id != ?",
+        SQL   => "SELECT id FROM pm_process WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?) AND id != ?",
         Bind  => [ \$Param{EntityID}, \$Param{ID} ],
         LIMIT => 1,
     );
@@ -658,10 +644,7 @@ sub ProcessUpdate {
 
     # check if need to update db
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT entity_id, name, state_entity_id, layout, config
-            FROM pm_process
-            WHERE id = ?',
+        SQL   => 'SELECT entity_id, name, state_entity_id, layout, config FROM pm_process WHERE id = ?',
         Bind  => [ \$Param{ID} ],
         Limit => 1,
     );
@@ -690,11 +673,9 @@ sub ProcessUpdate {
 
     # SQL
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE pm_process
-            SET entity_id = ?, name = ?,  state_entity_id = ?, layout = ?, config = ?,
-                change_time = current_timestamp,  change_by = ?
-            WHERE id = ?',
+        SQL  => 'UPDATE pm_process'
+              . ' SET entity_id = ?, name = ?,  state_entity_id = ?, layout = ?, config = ?, change_time = current_timestamp,  change_by = ?'
+              . ' WHERE id = ?',
         Bind => [
             \$Param{EntityID}, \$Param{Name}, \$Param{StateEntityID}, \$Layout, \$Config,
             \$Param{UserID}, \$Param{ID},
@@ -776,9 +757,7 @@ sub ProcessList {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    my $SQL = '
-            SELECT id, entity_id, name
-            FROM pm_process ';
+    my $SQL = 'SELECT id, entity_id, name FROM pm_process';
     if ( $StateEntityIDsStrg ne 'ALL' ) {
 
         my $StateEntityIDsStrgDB = join(
@@ -786,7 +765,7 @@ sub ProcessList {
             map( {"'" . $DBObject->Quote($_) . "'"} @{ $Param{StateEntityIDs} } )
         );
 
-        $SQL .= "WHERE state_entity_id IN ($StateEntityIDsStrgDB)";
+        $SQL .= " WHERE state_entity_id IN ($StateEntityIDsStrgDB)";
     }
 
     return if !$DBObject->Prepare( SQL => $SQL );
@@ -880,10 +859,7 @@ sub ProcessListGet {
 
     # SQL
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, entity_id
-            FROM pm_process
-            ORDER BY id',
+        SQL => 'SELECT id, entity_id FROM pm_process ORDER BY id',
     );
 
     my @ProcessIDs;
@@ -919,7 +895,7 @@ ActivityDialogs, Transitions and TransitionActions
 
     my $ProcessDump = $ProcessObject->ProcessDump(
         ResultType  => 'SCALAR'                     # 'SCALAR' || 'HASH' || 'FILE'
-        Location    => '/opt/otrs/var/myfile.txt'   # mandatory for ResultType = 'FILE'
+        Location    => '/opt/kix/var/myfile.txt'   # mandatory for ResultType = 'FILE'
         UserID      => 1,
     );
 
@@ -1030,7 +1006,7 @@ Returns:
 
     my $ProcessDump = $ProcessObject->ProcessDump(
         ResultType  => 'HASH'                       # 'SCALAR' || 'HASH' || 'FILE'
-        Location    => '/opt/otrs/var/myfile.txt'   # mandatory for ResultType = 'FILE'
+        Location    => '/opt/kix/var/myfile.txt'   # mandatory for ResultType = 'FILE'
         UserID      => 1,
     );
 
@@ -1141,12 +1117,12 @@ Returns:
 
     my $ProcessDump = $ProcessObject->ProcessDump(
         ResultType  => 'Location'                     # 'SCALAR' || 'HASH' || 'FILE'
-        Location    => '/opt/otrs/var/myfile.txt'     # mandatory for ResultType = 'FILE'
+        Location    => '/opt/kix/var/myfile.txt'     # mandatory for ResultType = 'FILE'
         UserID      => 1,
     );
 
 Returns:
-    $ProcessDump = '/opt/otrs/var/myfile.txt';      # or undef if can't write the file
+    $ProcessDump = '/opt/kix/var/myfile.txt';      # or undef if can't write the file
 
 =cut
 
@@ -1162,8 +1138,7 @@ sub ProcessDump {
         return;
     }
 
-    if ( !defined $Param{ResultType} )
-    {
+    if ( !defined $Param{ResultType} ) {
         $Param{ResultType} = 'SCALAR';
     }
 
@@ -1363,7 +1338,7 @@ sub ProcessDump {
 
             # build comment (therefore we need to trick out the filter)
             my $FileStart = <<'EOF';
-# OTRS config file (automatically generated)
+# KIX config file (automatically generated)
 # VERSION:1.1
 package Kernel::Config::Files::ZZZProcessManagement;
 use strict;
@@ -1442,8 +1417,7 @@ sub ProcessImport {
         for my $FieldName (
             sort
             keys %{ $ProcessData->{ActivityDialogs}->{$ActivityDialog}->{Config}->{Fields} }
-            )
-        {
+        ) {
             if ( $FieldName =~ s{DynamicField_(\w+)}{$1}xms ) {
                 push @UsedDynamicFields, $FieldName;
             }
@@ -1485,8 +1459,7 @@ sub ProcessImport {
         else {
             for my $UsedActivityDialog (
                 @{ $ProcessData->{Activities}->{$ActivityEntityID}->{ActivityDialogs} }
-                )
-            {
+            ) {
                 push @UsedActivityDialogs, $UsedActivityDialog;
             }
         }

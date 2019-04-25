@@ -108,7 +108,6 @@ sub Output {
         "$Self->{StandardTemplateDir}",
     );
 
-    # KIXCore-capeIT
     my @KIXTemplateFolders = ();
     foreach my $TmpDir (@INC) {
         last if $TmpDir =~ /\/bin\/Custom$/;
@@ -117,7 +116,6 @@ sub Output {
     }
 
     @TemplateFolders = ( @KIXTemplateFolders, @TemplateFolders );
-    # EO KIXCore-capeIT
 
     my $TemplateString;
 
@@ -151,7 +149,7 @@ sub Output {
                 COMPILE_EXT  => '.ttc',
             }
         );
-        $Self->{TemplateProviderObject}->OTRSInit(
+        $Self->{TemplateProviderObject}->KIXInit(
             LayoutObject => $Self,
         );
 
@@ -315,8 +313,9 @@ sub AddJSOnDocumentComplete {
     my ( $Self, %Param ) = @_;
 
     $Self->{_JSOnDocumentComplete} //= [];
-    push @{ $Self->{_JSOnDocumentComplete} }, $Param{Code};
+    push( @{ $Self->{_JSOnDocumentComplete} }, $Param{Code} );
 
+    return 1;
 }
 
 1;

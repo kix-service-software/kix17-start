@@ -1,5 +1,5 @@
 Return-Path: <nagios@example.com>
-To: otrs@example.com
+To: kix@example.com
 Subject: ** RECOVERY alert 2 - ANDROMEDA host is UP **
 Message-Id: <20070317231946.0DFD55DC00F@h53795.example.com>
 Date: Sun, 18 Mar 2007 00:19:46 +0100 (CET)

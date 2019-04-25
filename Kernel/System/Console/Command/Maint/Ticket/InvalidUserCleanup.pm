@@ -97,12 +97,11 @@ sub Run {
         $Self->Print("Checking for tickets with seen flags for user <yellow>$User{UserLogin}</yellow>...\n");
 
         return if !$DBObject->Prepare(
-            SQL => "
-                SELECT DISTINCT(ticket.id)
-                FROM ticket
-                    INNER JOIN ticket_flag ON ticket.id = ticket_flag.ticket_id
-                WHERE ticket_flag.create_by = $UserID
-                    AND ticket_flag.ticket_key = 'Seen'",
+            SQL => "SELECT DISTINCT(ticket.id)"
+                 . " FROM ticket"
+                 . "  INNER JOIN ticket_flag ON ticket.id = ticket_flag.ticket_id"
+                 . " WHERE ticket_flag.create_by = $UserID"
+                 . "  AND ticket_flag.ticket_key = 'Seen'",
             Limit => 1_000_000,
         );
 
@@ -131,13 +130,12 @@ sub Run {
         $Self->Print("Checking for articles with seen flags for user <yellow>$User{UserLogin}</yellow>...\n");
 
         return if !$DBObject->Prepare(
-            SQL => "
-                SELECT DISTINCT(article.id)
-                FROM article
-                    INNER JOIN ticket ON ticket.id = article.ticket_id
-                    INNER JOIN article_flag ON article.id = article_flag.article_id
-                WHERE article_flag.create_by = $UserID
-                    AND article_flag.article_key = 'Seen'",
+            SQL => "SELECT DISTINCT(article.id)"
+                 . " FROM article"
+                 . "  INNER JOIN ticket ON ticket.id = article.ticket_id"
+                 . "  INNER JOIN article_flag ON article.id = article_flag.article_id"
+                 . " WHERE article_flag.create_by = $UserID"
+                 . "  AND article_flag.article_key = 'Seen'",
             Limit => 1_000_000,
         );
 
@@ -171,10 +169,9 @@ sub Run {
             );
 
             return if !$DBObject->Prepare(
-                SQL => "
-                    SELECT DISTINCT(ticket.id)
-                    FROM ticket
-                        INNER JOIN ticket_watcher ON ticket.id = ticket_watcher.ticket_id",
+                SQL => "SELECT DISTINCT(ticket.id)"
+                     . " FROM ticket"
+                     . "  INNER JOIN ticket_watcher ON ticket.id = ticket_watcher.ticket_id",
                 Limit => 1_000_000,
             );
 
@@ -183,7 +180,7 @@ sub Run {
                 push @TicketIDs, $Row[0];
             }
 
-            my $Count = 0;
+            my $TicketCount = 0;
             for my $TicketID (@TicketIDs) {
 
                 $TicketObject->TicketWatchUnsubscribe(
@@ -191,14 +188,14 @@ sub Run {
                     WatchUserID => $UserID,
                     UserID      => 1,
                 );
-                $Count++;
+                $TicketCount++;
                 print
                     "    Removing ticket watcher entries of ticket <yellow>$TicketID</yellow> for user <yellow>$User{UserLogin}</yellow>\n";
                 Time::HiRes::usleep($MicroSleep) if $MicroSleep;
             }
 
             $Self->Print(
-                "<green>Done</green> (changed <yellow>$Count</yellow> tickets for user <yellow>$User{UserLogin}</yellow>).\n"
+                "<green>Done</green> (changed <yellow>$TicketCount</yellow> tickets for user <yellow>$User{UserLogin}</yellow>).\n"
             );
         }
     }

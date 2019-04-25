@@ -22,7 +22,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Clears the OTRS log.');
+    $Self->Description('Clears the KIX log.');
 
     return;
 }
@@ -30,7 +30,7 @@ sub Configure {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    $Self->Print("<yellow>Clearing the OTRS log...</yellow>\n");
+    $Self->Print("<yellow>Clearing the KIX log...</yellow>\n");
 
     $Kernel::OM->Get('Kernel::System::Log')->CleanUp();
 

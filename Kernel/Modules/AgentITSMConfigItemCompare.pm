@@ -19,6 +19,8 @@ our @ObjectDependencies = (
     'Kernel::System::User',
 );
 
+## no critic qw(BuiltinFunctions::ProhibitStringyEval)
+
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -255,9 +257,8 @@ sub Run {
         );
 
         # swaped attributes may behave like changed attributes - remove them
-        my $RHash;
         if ( $Self->{Config}->{CompareBehaviour} ) {
-            $RHash = $Self->_RemoveUnusedChanges(
+            $Self->_RemoveUnusedChanges(
                 Hash            => $Param{Hash},
                 ReverseHash     => $Param{ReverseHash},
                 VersionHash     => $Version{Left}->{XMLData},
@@ -309,7 +310,7 @@ sub Run {
 
 removes unused changes from swaped items
 
-    my $Changes = $Self->_RemoveUnusedChanges(
+    my $Success = $Self->_RemoveUnusedChanges(
             Hash            => $DiffChanges,
             ReverseHash     => $DiffChangesReverse,
             VersionHash     => $VersionHashRef,
@@ -349,8 +350,7 @@ sub _RemoveUnusedChanges {
                         if (
                             $Hash->{$Key}->{$Item}->{$Value}->{new} eq
                             $ReverseHash->{$Key}->{$ReverseItem}->{$Value}->{new}
-                            )
-                        {
+                        ) {
 
                             # check if there are changed sub attributes
                             $Self->_CheckSubAttributes(
@@ -372,13 +372,14 @@ sub _RemoveUnusedChanges {
             }
         }
     }
+    return 1;
 }
 
 =item _CheckSubAttributes
 
 checks wether sub attributes of items to be removed were changed
 
-    my $Changes = $Self->_CheckSubAttributes(
+    my $Success = $Self->_CheckSubAttributes(
         VersionHash     => $Param{VersionHash},
         LastVersionHash => $Param{LastVersionHash},
         Hash            => $Param{Hash},
@@ -437,8 +438,8 @@ sub _CheckSubAttributes {
     $ChangesReverseHashKey .= $KeyArray[-1] . $LastReverseIndexHash;
 
     # create version sub hash
-    eval($XMLDefinitionPath);
-    eval($XMLDefinitionLastPath);
+    eval({$XMLDefinitionPath});
+    eval({$XMLDefinitionLastPath});
 
     # get changes of sub hash for all items except TagKey and Content
     for my $HashKey ( keys %{$VersionSubHash} ) {
@@ -480,7 +481,7 @@ sub _CheckSubAttributes {
             }
         }
     }
-
+    return 1;
 }
 
 =item _GetAllChanges
@@ -560,7 +561,7 @@ sub _GetAllChanges {
 
 returns the merged hash in $Param{ResultHash}
 
-    my $Changes = $Self->_GetAllChanges(
+    my $Success = $Self->_GetAllChanges(
         DiffChanges         => $DiffChangesRef          # required (normal diff hash)
         DiffChangesReverse  => $DiffChangesReverse      # required (reverse diff hash)
         Key                 => $Key,                    # required (e.g. Version/Software/Type...)
@@ -609,8 +610,7 @@ sub _GetChangesHash {
             if (
                 defined $Param{DifferencesHash}->{ $Param{Key} }->{$Number}->{$Item}->{new}
                 && defined $Param{DifferencesHash}->{ $Param{Key} }->{$Number}->{$Item}->{old}
-                )
-            {
+            ) {
 
                 # changed
                 if (
@@ -620,8 +620,7 @@ sub _GetChangesHash {
                         $Param{DifferencesHash}->{ $Param{Key} }->{$Number}->{$Item}->{new} eq
                         $Param{DifferencesHashReverse}->{ $Param{Key} }->{$Number}->{$Item}->{old}
                     )
-                    )
-                {
+                ) {
                     $Side = $FirstSide;
                     $String =
                         $ResultString . '{'
@@ -643,8 +642,7 @@ sub _GetChangesHash {
                     !defined $Param{DifferencesHashReverse}->{ $Param{Key} }->{$Number}->{$Item}
                     ->{new}
                     && $Type eq 'normal'
-                    )
-                {
+                ) {
                     $Side = $FirstSide;
                     $String =
                         $ResultString . '{'
@@ -659,8 +657,7 @@ sub _GetChangesHash {
                     !defined $Param{DifferencesHashReverse}->{ $Param{Key} }->{$Number}->{$Item}
                     ->{new}
                     && $Type eq 'reverse'
-                    )
-                {
+                ) {
                     $Side = $FirstSide;
                     $String =
                         $ResultString . '{'
@@ -694,8 +691,7 @@ sub _GetChangesHash {
                 defined $Param{DifferencesHash}->{ $Param{Key} }->{$Number}->{$Item}->{new}
                 && !defined $Param{DifferencesHash}->{ $Param{Key} }->{$Number}->{$Item}->{old}
                 && $Type eq 'normal'
-                )
-            {
+            ) {
                 $Side = $FirstSide;
                 $String =
                     $ResultString . '{'
@@ -710,8 +706,7 @@ sub _GetChangesHash {
                 defined $Param{DifferencesHash}->{ $Param{Key} }->{$Number}->{$Item}->{new}
                 && !defined $Param{DifferencesHash}->{ $Param{Key} }->{$Number}->{$Item}->{old}
                 && $Type eq 'reverse'
-                )
-            {
+            ) {
                 $Side = $FirstSide;
                 $String
                     = $ResultString . '{'
@@ -722,6 +717,7 @@ sub _GetChangesHash {
             }
         }
     }
+    return 1;
 }
 
 =item _GetChanges
@@ -782,8 +778,7 @@ sub _GetChanges {
             defined $LastContent
             && defined $Hash->{Content}
             && $Hash->{Content} ne $LastContent
-            )
-        {
+        ) {
             if ( !$Param{HashContent} ) { $Param{HashContent} = '-' }
 
             # new
@@ -876,8 +871,7 @@ sub _XMLOutput {
             if (
                 defined $Param{Changes}->{ $Param{Part} }->{ $Item->{Key} . "_" . $Counter }
                 ->{Content}
-                )
-            {
+            ) {
                 $css =
                     $Self->{Config}->{CSSHighlight}
                     ->{

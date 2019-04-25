@@ -17,6 +17,8 @@ use Kernel::System::VariableCheck qw(:all);
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(TestingAndDebugging::ProhibitNoWarnings)
+
 sub KIXSideBarReuseArticleAttachmentsTable {
     my ( $Self, %Param ) = @_;
 
@@ -57,8 +59,7 @@ sub KIXSideBarReuseArticleAttachmentsTable {
     for my $AttachmentID (
         sort { $AttachmentList{$a}->{Filename} cmp $AttachmentList{$b}->{Filename} }
         keys %AttachmentList
-        )
-    {
+    ) {
         my $IsChecked = '';
         if ( scalar @UploadedAtm ) {
             UPLOADEDATM:
@@ -268,14 +269,14 @@ sub CustomerAssignedCustomerIDsTable {
     for my $CustomerID (@CustomerIDs) {
 
         # get customer data
-        my %CustomerData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
+        my %Customer = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
             CustomerID => $CustomerID,
         );
 
         $Self->Block(
             Name => 'CustomerIDRow',
             Data => {
-                %CustomerData,
+                %Customer,
                 ID => $CustomerID,
             },
         );
@@ -379,8 +380,7 @@ sub AgentKIXSidebar {
             defined $KIXSidebarToolsConfig->{ActionsMatch}->{$Identifier} &&
             substr( $KIXSidebarToolsConfig->{ActionsMatch}->{$Identifier}, 0, 8 ) eq
             '[regexp]'
-            )
-        {
+        ) {
             $ActionsMatch = substr $KIXSidebarToolsConfig->{ActionsMatch}->{$Identifier}, 8;
         }
         next if !defined $ActionsMatch || !$ActionsMatch || $Self->{Action} !~ /$ActionsMatch/;
@@ -478,9 +478,9 @@ sub AgentKIXSidebar {
             if ( $Config->{$Backend}->{Group} ) {
                 my @Groups = split( ';', $Config->{$Backend}->{Group} );
                 for my $Group (@Groups) {
-                    my $Backend = 'UserIsGroup[' . $Group . ']';
-                    next BACKEND if !$Self->{$Backend};
-                    next BACKEND if $Self->{$Backend} ne 'Yes';
+                    my $UserBackend = 'UserIsGroup[' . $Group . ']';
+                    next BACKEND if !$Self->{$UserBackend};
+                    next BACKEND if $Self->{$UserBackend} ne 'Yes';
                 }
             }
 
@@ -585,8 +585,7 @@ sub CustomerKIXSidebar {
         if (
             substr( $KIXSidebarToolsConfig->{ActionsMatch}->{$Identifier}, 0, 8 ) eq
             '[regexp]'
-            )
-        {
+        ) {
             $ActionsMatch = substr $KIXSidebarToolsConfig->{ActionsMatch}->{$Identifier}, 8;
         }
         next if $Self->{Action} !~ /$ActionsMatch/;
@@ -790,6 +789,8 @@ sub AgentQueueListOptionJSON {
     $Self->AgentListOptionJSON(
         $Array
     );
+
+    return 1;
 }
 
 =item DependingDynamicFieldTree()
@@ -906,15 +907,16 @@ sub DependingDynamicFieldTree {
             $Param{SelectedID}
             && $Current eq $Param{SelectedID}
             && $Level - 1 >= $#Split
-            )
-        {
+        ) {
             if ( $#SelectedSplit >= $#Split ) {
                 $ListClass   .= ' Active';
                 $AnchorClass .= ' selected';
             }
         }
 
-        $ObjectName = $1 . '::' . $2 if ( $ObjectName =~ m/(.*?)\|(.*)/ );
+        if ( $ObjectName =~ m/(.*?)\|(.*)/ ) {
+            $ObjectName = $1 . '::' . $2;
+        }
 
         # create delete icon
         $ObjectStrg
@@ -1005,7 +1007,6 @@ sub DependingDynamicFieldTree {
             $BoxClass = 'Info';
         }
 
-        # KIX4OTRS-capeIT
         if ( $Self->{Baselink} =~ /\/index.pl/ ) {
             my ( $CallerPackage, $CallerFilename, $CallerLine ) = caller;
             my %UserPreferences
@@ -1022,7 +1023,6 @@ sub DependingDynamicFieldTree {
                 $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
                 );
         }
-        # EO KIX4OTRS-capeIT
 
         if ( $Param{Link} ) {
             $Self->Block(
@@ -1146,7 +1146,6 @@ sub DependingDynamicFieldTree {
             }
         }
 
-        # KIX4OTRS-capeIT
         # use CustomerInfoString
         my $CustomerInfoString = $Param{Data}->{Config}->{CustomerInfoString}
             || $ConfigObject->Get('DefaultCustomerInfoString') || '';
@@ -1175,8 +1174,6 @@ sub DependingDynamicFieldTree {
             );
         }
         else {
-
-            # EO KIX4OTRS-capeIT
             # build table
             for my $Field (@MapNew) {
                 if ( $Field->[3] && $Field->[3] >= $ShownType && $Param{Data}->{ $Field->[0] } ) {
@@ -1210,8 +1207,7 @@ sub DependingDynamicFieldTree {
                     if (
                         $Param{Data}->{Config}->{CustomerCompanySupport}
                         && $Field->[0] eq 'CustomerCompanyName'
-                        )
-                    {
+                    ) {
                         my $CompanyValidID = $Param{Data}->{CustomerCompanyValidID};
 
                         if ($CompanyValidID) {
@@ -1227,11 +1223,7 @@ sub DependingDynamicFieldTree {
                     }
                 }
             }
-
-            # KIX4OTRS-capeIT
         }
-
-        # EO KIX4OTRS-capeIT
 
         # check Frontend::CustomerUser::Item
         my $CustomerItem      = $ConfigObject->Get('Frontend::CustomerUser::Item');
@@ -1257,13 +1249,9 @@ sub DependingDynamicFieldTree {
                 next MODULE if !$Object;
 
                 my $Run = $Object->Run(
-                    Config => $Modules{$Module},
-                    Data   => $Param{Data},
-
-                    # KIX4OTRS-capeIT
+                    Config        => $Modules{$Module},
+                    Data          => $Param{Data},
                     CallingAction => $Param{CallingAction}
-
-                    # EO KIX4OTRS-capeIT
                 );
 
                 next MODULE if !$Run;
@@ -1273,15 +1261,11 @@ sub DependingDynamicFieldTree {
         }
 
         # create & return output
-        # KIX4OTRS-capeIT
-        # return $Self->Output( TemplateFile => 'AgentCustomerTableView', Data => \%Param );
         return $Self->Output(
             TemplateFile   => 'AgentCustomerTableView',
             Data           => \%Param,
             KeepScriptTags => $Param{Data}->{AJAX} || 0,
         );
-
-        # EO KIX4OTRS-capeIT
     }
 
     sub Kernel::Output::HTML::Layout::BuildDateSelection {
@@ -1289,7 +1273,6 @@ sub DependingDynamicFieldTree {
 
         my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-        # KIX4OTRS-capeIT
         my ( $SmartStyleDate, $SmartStyleTime, $MinuteInterval );
         my $TimeIntervalConfig
             = $ConfigObject->Get('DateSelection::Layout::TimeInputIntervall');
@@ -1317,8 +1300,6 @@ sub DependingDynamicFieldTree {
             last;
         }
 
-        # EO KIX4OTRS-capeIT
-
         my $DateInputStyle = $ConfigObject->Get('TimeInputFormat');
         my $Prefix         = $Param{Prefix} || '';
         my $DiffTime       = $Param{DiffTime} || 0;
@@ -1327,9 +1308,6 @@ sub DependingDynamicFieldTree {
         my $Optional       = $Param{ $Prefix . 'Optional' } || 0;
         my $Required       = $Param{ $Prefix . 'Required' } || 0;
         my $Used           = $Param{ $Prefix . 'Used' } || 0;
-
-        # KIX4OTRS-capeIT
-        # my $Class          = $Param{ $Prefix . 'Class' } || '';
         my $Class          = '';
         my $ClassDate      = '';
         my $ClassTime      = '';
@@ -1356,7 +1334,6 @@ sub DependingDynamicFieldTree {
                 $ClassTime = 'Modernize';
             }
         }
-        # EO KIX4OTRS-capeIT
 
         # Defines, if the date selection should be validated on client side with JS
         my $Validate = $Param{Validate} || 0;
@@ -1381,8 +1358,7 @@ sub DependingDynamicFieldTree {
             && $Param{ $Prefix . 'Month' }
             && $Param{ $Prefix . 'Day' }
             && !$Param{OverrideTimeZone}
-            )
-        {
+        ) {
             my $TimeStamp = $Self->{TimeObject}->TimeStamp2SystemTime(
                 String => $Param{ $Prefix . 'Year' } . '-'
                     . $Param{ $Prefix . 'Month' } . '-'
@@ -1402,7 +1378,6 @@ sub DependingDynamicFieldTree {
             ) = $Self->{UserTimeObject}->SystemTime2Date( SystemTime => $TimeStamp );
         }
 
-        # KIX4OTRS-capeIT
         my $DateValidateClasses = '';
         if ($Validate) {
             $DateValidateClasses
@@ -1426,16 +1401,12 @@ sub DependingDynamicFieldTree {
                 $DateValidateClasses .= " Validate_DateFullInFuture";
             }
         }
-        my $DateFormat
-            = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->{DateInputFormat};
+        my $DateFormat = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->{DateInputFormat};
         $DateFormat =~ s/\%D/dd/g;
         $DateFormat =~ s/\%M/mm/g;
         $DateFormat =~ s/\%Y/yy/g;
 
-        # EO KIX4OTRS-capeIT
-
         # year
-        # KIX4OTRS-capeIT
         if ($SmartStyleDate) {
             my $Date = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}
                 ->FormatTimeString(
@@ -1461,10 +1432,8 @@ sub DependingDynamicFieldTree {
                 . sprintf( "%04d", ( $Param{ $Prefix . 'Year' } || $Y ) ) . "\"/>";
         }
 
-        # if ( $DateInputStyle eq 'Option' ) {
         elsif ( $DateInputStyle eq 'Option' ) {
 
-            # EO KIX4OTRS-capeIT
             my %Year;
             if ( defined $Param{YearPeriodPast} && defined $Param{YearPeriodFuture} ) {
                 for ( $Y - $Param{YearPeriodPast} .. $Y + $Param{YearPeriodFuture} ) {
@@ -1477,8 +1446,8 @@ sub DependingDynamicFieldTree {
                 }
             }
 
-       # Check if the DiffTime is in a future year. In this case, we add the missing years between
-       # $CY (current year) and $Y (year) to allow the user to manually set back the year if needed.
+            # Check if the DiffTime is in a future year. In this case, we add the missing years between
+            # $CY (current year) and $Y (year) to allow the user to manually set back the year if needed.
             if ( $Y > $CY ) {
                 for ( $CY .. $Y ) {
                     $Year{$_} = $_;
@@ -1507,7 +1476,6 @@ sub DependingDynamicFieldTree {
         }
 
         # month
-        # KIX4OTRS-capeIT
         if ($SmartStyleDate) {
             $Param{DateStr} .= "<input type=\"hidden\" "
                 . "class=\"$ClassDate\" "
@@ -1516,10 +1484,8 @@ sub DependingDynamicFieldTree {
                 . sprintf( "%02d", ( $Param{ $Prefix . 'Month' } || $M ) ) . "\"/>";
         }
 
-        # if ( $DateInputStyle eq 'Option' ) {
         elsif ( $DateInputStyle eq 'Option' ) {
 
-            # EO KIX4OTRS-capeIT
             my %Month = map { $_ => sprintf( "%02d", $_ ); } ( 1 .. 12 );
             $Param{Month} = $Self->BuildSelection(
                 Name        => $Prefix . 'Month',
@@ -1543,7 +1509,6 @@ sub DependingDynamicFieldTree {
         }
 
         # day
-        # KIX4OTRS-capeIT
         if ($SmartStyleDate) {
             $Param{DateStr} .= "<input type=\"hidden\" "
                 . "class=\"$ClassDate\" "
@@ -1552,10 +1517,8 @@ sub DependingDynamicFieldTree {
                 . sprintf( "%02d", ( $Param{ $Prefix . 'Day' } || $D ) ) . "\"/>";
         }
 
-        #if ( $DateInputStyle eq 'Option' ) {
         elsif ( $DateInputStyle eq 'Option' ) {
 
-            # EO KIX4OTRS-capeIT
             my %Day = map { $_ => sprintf( "%02d", $_ ); } ( 1 .. 31 );
             $Param{Day} = $Self->BuildSelection(
                 Name        => $Prefix . 'Day',
@@ -1581,7 +1544,6 @@ sub DependingDynamicFieldTree {
         if ( $Format eq 'DateInputFormatLong' ) {
 
             # hour
-            # KIX4OTRS-capeIT
             if ($SmartStyleTime) {
                 $h =
                     defined( $Param{ $Prefix . 'Hour' } )
@@ -1644,10 +1606,8 @@ sub DependingDynamicFieldTree {
                     . "\"/>";
             }
 
-            #if ( $DateInputStyle eq 'Option' ) {
             elsif ( $DateInputStyle eq 'Option' ) {
 
-                # EO KIX4OTRS-capeIT
                 my %Hour = map { $_ => sprintf( "%02d", $_ ); } ( 0 .. 23 );
                 $Param{Hour} = $Self->BuildSelection(
                     Name       => $Prefix . 'Hour',
@@ -1682,7 +1642,6 @@ sub DependingDynamicFieldTree {
             }
 
             # minute
-            # KIX4OTRS-capeIT
             if ($SmartStyleTime) {
                 $Param{TimeStr} .= "<input type=\"hidden\" "
                     . (
@@ -1694,10 +1653,7 @@ sub DependingDynamicFieldTree {
                     . "\"/>";
             }
 
-            #if ( $DateInputStyle eq 'Option' ) {
             elsif ( $DateInputStyle eq 'Option' ) {
-
-                # EO KIX4OTRS-capeIT
 
                 my %Minute = map { $_ => sprintf( "%02d", $_ ); } ( 0 .. 59 );
                 $Param{Minute} = $Self->BuildSelection(
@@ -1764,7 +1720,6 @@ sub DependingDynamicFieldTree {
         }
 
         # date format
-        # KIX4OTRS-capeIT
         if ($SmartStyleDate) {
             $Output .= $Param{DateStr};
             if ( $Param{TimeStr} || $Param{Hour} ) {
@@ -1780,8 +1735,6 @@ sub DependingDynamicFieldTree {
             }
         }
         else {
-
-            # EO KIX4OTRS-capeIT
             $Output .= $Self->{LanguageObject}->Time(
                 Action => 'Return',
                 Format => 'DateInputFormat',
@@ -1801,30 +1754,42 @@ sub DependingDynamicFieldTree {
             Data => $VacationDays,
         );
 
+        my $DateInFuture    = 'false';
+        my $DateNotInFuture = 'false';
+        if ( $ValidateDateInFuture ) {
+            $DateInFuture = 'true';
+        }
+
+        if ( $ValidateDateNotInFuture ) {
+            $DateNotInFuture = 'true';
+        }
+
         # Add Datepicker JS to output.
-        my $DatepickerJS = 'Core.UI.Datepicker.Init({
-            // KIX4OTRS-capeIT
-            Date: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Date"),
-            Time: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Time"),
-            Format: "' . $DateFormat . '",
-            // EO KIX4OTRS-capeIT
-            Day: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Day"),
-            Month: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Month"),
-            Year: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Year"),
-            Hour: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Hour"),
-            Minute: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Minute"),
-            VacationDays: ' . $VacationDaysJSON . ',
-            DateInFuture: ' .    ( $ValidateDateInFuture    ? 'true' : 'false' ) . ',
-            DateNotInFuture: ' . ( $ValidateDateNotInFuture ? 'true' : 'false' ) . ',
-            WeekDayStart: ' . $WeekDayStart . '
-        });';
+        my $DatepickerJS = <<"END";
+    Core.UI.Datepicker.Init({
+        Date: \$("#" + Core.App.EscapeSelector("$Prefix") + "Date"),
+        Time: \$("#" + Core.App.EscapeSelector("$Prefix") + "Time"),
+        Format: "$DateFormat",
+        Day: \$("#" + Core.App.EscapeSelector("$Prefix") + "Day"),
+        Month: \$("#" + Core.App.EscapeSelector("$Prefix") + "Month"),
+        Year: \$("#" + Core.App.EscapeSelector("$Prefix") + "Year"),
+        Hour: \$("#" + Core.App.EscapeSelector("$Prefix") + "Hour"),
+        Minute: \$("#" + Core.App.EscapeSelector("$Prefix") + "Minute"),
+        VacationDays: $VacationDaysJSON,
+        DateInFuture: $DateInFuture,
+        DateNotInFuture: $DateNotInFuture,
+        WeekDayStart: $WeekDayStart
+    });
+END
 
         if ( $Self->{Action} eq 'AgentStatistics' ) {
-            $DatepickerJS .= "\n" . 'Core.Config.Set("' . $Prefix . 'Format", "' . $DateFormat . '");
-                Core.Config.Set("' . $Prefix . 'VacationDays", ' . $VacationDaysJSON . ');
-                Core.Config.Set("' . $Prefix . 'DateInFuture", ' . ( $ValidateDateInFuture    ? 'true' : 'false' ) . ');
-                Core.Config.Set("' . $Prefix . 'DateNotInFuture", ' . ( $ValidateDateNotInFuture ? 'true' : 'false' ) . ');
-                Core.Config.Set("' . $Prefix . 'WeekDayStart", ' . $WeekDayStart . ');';
+            $DatepickerJS .= <<"END";
+    Core.Config.Set($Prefix + "Format", "$DateFormat");
+    Core.Config.Set($Prefix + "VacationDays", $VacationDaysJSON);
+    Core.Config.Set($Prefix + "DateInFuture", $DateInFuture);
+    Core.Config.Set($Prefix + "DateNotInFuture", $DateNotInFuture);
+    Core.Config.Set($Prefix + "WeekDayStart", '$WeekDayStart);
+END
         }
 
         $Self->AddJSOnDocumentComplete( Code => $DatepickerJS );
@@ -1887,7 +1852,6 @@ sub DependingDynamicFieldTree {
             $OnChangeSubmit = " onchange=\"$Param{OnChange}\"";
         }
 
-        #  KIX4OTRS-capeIT
         my %UserPreferences;
         my $AutoCompleteConfig
             = $Kernel::OM->Get('Kernel::Config')
@@ -1903,22 +1867,14 @@ sub DependingDynamicFieldTree {
                 ->GetPreferences( UserID => $Self->{UserID} );
         }
 
-        #  EO KIX4OTRS-capeIT
-
         # just show a simple list
-        #  KIX4OTRS-capeIT
-        # if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::ListType'){
         if (
             $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::ListType') eq 'list'
             || (
                 $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
                 && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
             )
-            )
-        {
-
-            # EO KIX4OTRS-capeIT
-
+        ) {
             # transform data from Hash in Array because of ordering in frontend by Queue name
             # it was a problem wit name like '(some_queue)'
             # see bug#10621 http://bugs.otrs.org/show_bug.cgi?id=10621
@@ -1936,7 +1892,7 @@ sub DependingDynamicFieldTree {
             # find index of first element in array @QueueDataArray for displaying in frontend
             # at the top should be element with ' $QueueDataArray[$_]->{Key} = 0' like "- Move -"
             # when such element is found, it is moved at the top
-            my ($FirstElementIndex) = grep $QueueDataArray[$_]->{Key} == 0, 0 .. $#QueueDataArray;
+            my ($FirstElementIndex) = grep( {$QueueDataArray[$_]->{Key} == 0}  0 .. $#QueueDataArray);
             splice( @QueueDataArray, 0, 0, splice( @QueueDataArray, $FirstElementIndex, 1 ) );
             $Param{Data} = \@QueueDataArray;
 
@@ -1973,7 +1929,7 @@ sub DependingDynamicFieldTree {
         my $KeyNoQueue;
         my $ValueNoQueue;
         my $MoveStr = $Self->{LanguageObject}->Get('Move');
-        my $ValueOfQueueNoKey .= "- " . $MoveStr . " -";
+        my $ValueOfQueueNoKey = "- " . $MoveStr . " -";
         DATA:
         for ( sort { $Data{$a} cmp $Data{$b} } keys %Data ) {
 
@@ -1982,8 +1938,7 @@ sub DependingDynamicFieldTree {
             if (
                 $Data{$_} eq "-"
                 || $Data{$_} eq $ValueOfQueueNoKey
-                )
-            {
+            ) {
                 $KeyNoQueue   = $_;
                 $ValueNoQueue = $Data{$_};
                 next DATA;
@@ -2085,8 +2040,7 @@ sub DependingDynamicFieldTree {
                     $SelectedID  eq $_
                     || $Selected eq $Param{Data}->{$_}
                     || $Param{SelectedIDRefArrayOK}->{$_}
-                    )
-                {
+                ) {
                     $Param{MoveQueuesStrg}
                         .= '<option selected="selected" value="'
                         . $_ . '"'
@@ -2094,8 +2048,7 @@ sub DependingDynamicFieldTree {
                         . $String
                         . "</option>\n";
                 }
-                elsif ( $CurrentQueueID eq $_ )
-                {
+            elsif ( $CurrentQueueID eq $_ ) {
                     $Param{MoveQueuesStrg}
                         .= '<option value="-" disabled="disabled"'
                         . $OptionTitleHTMLValue . '>'
@@ -2150,16 +2103,12 @@ sub DependingDynamicFieldTree {
             return;
         }
 
-        # KIX4OTRS-capeIT
         if (
             $Kernel::OM->Get('Kernel::Config')->Get('Ticket::TypeTranslation')
             && ( $Param{Name} eq 'TypeID' || $Param{Name} eq 'TypeIDs' )
-            )
-        {
+        ) {
             $Param{Translation} = 1;
         }
-
-        # EO KIX4OTRS-capeIT
 
         # set OnChange if AJAX is used
         if ( $Param{Ajax} ) {
@@ -2207,8 +2156,7 @@ sub DependingDynamicFieldTree {
                 if (
                     $Param{Filters}->{$Filter}->{Name}
                     && $Param{Filters}->{$Filter}->{Values}
-                    )
-                {
+                ) {
                     my $FilterData = $Self->_BuildSelectionDataRefCreate(
                         Data         => $Param{Filters}->{$Filter}->{Values},
                         AttributeRef => $AttributeRef,
@@ -2234,7 +2182,6 @@ sub DependingDynamicFieldTree {
             @Filters = sort { $a->{Name} cmp $b->{Name} } @Filters;
         }
 
-        # KIX4OTRS-capeIT
         # get disabled selections
         if ( defined $Param{DisabledOptions} && ref $Param{DisabledOptions} eq 'HASH' ) {
             my $DisabledOptions = $Param{DisabledOptions};
@@ -2258,8 +2205,7 @@ sub DependingDynamicFieldTree {
             ->Get('Ticket::Frontend::GenericAutoCompleteSearch') eq 'HASH'
             && defined $Self->{UserID}
             && $Self->{Action} !~ /^Customer/
-            )
-        {
+        ) {
             my $AutoCompleteConfig
                 = $Kernel::OM->Get('Kernel::Config')
                 ->Get('Ticket::Frontend::GenericAutoCompleteSearch');
@@ -2276,8 +2222,7 @@ sub DependingDynamicFieldTree {
             if (
                 $SearchTypeMappingKey
                 && defined $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey}
-                )
-            {
+            ) {
                 $SearchType = $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey};
             }
 
@@ -2286,8 +2231,7 @@ sub DependingDynamicFieldTree {
                 $SearchType
                 && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
                 && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
-                )
-            {
+            ) {
                 my $AutoCompleteString
                     = '<input id="'
                     . $Param{Name}
@@ -2310,19 +2254,16 @@ EOF
             }
         }
 
-        # EO KIX4OTRS-capeIT
         # generate output
         my $String = $Self->_BuildSelectionOutput(
-            AttributeRef  => $AttributeRef,
-            DataRef       => $DataRef,
-            OptionTitle   => $Param{OptionTitle},
-            TreeView      => $Param{TreeView},
-            FiltersRef    => \@Filters,
-            FilterActive  => $FilterActive,
-            ExpandFilters => $Param{ExpandFilters},
-            # KIX4OTRS-capeIT
+            AttributeRef    => $AttributeRef,
+            DataRef         => $DataRef,
+            OptionTitle     => $Param{OptionTitle},
+            TreeView        => $Param{TreeView},
+            FiltersRef      => \@Filters,
+            FilterActive    => $FilterActive,
+            ExpandFilters   => $Param{ExpandFilters},
             DisabledOptions => $Param{DisabledOptions},
-            # EO KIX4OTRS-capeIT
         );
         return $String;
     }
@@ -2348,12 +2289,10 @@ EOF
                 }
             }
 
-            # KIX4OTRS-capeIT
             if (
                 $Kernel::OM->Get('Kernel::Config')->Get('Ticket::TypeTranslation')
                 &&  ( $Param{Name} eq 'TypeID' || $Param{Name} eq 'TypeIDs' )
-                )
-            {
+            ) {
                 $Param{Translation} = 1;
             }
 
@@ -2364,9 +2303,7 @@ EOF
                 $DisabledOptions = $Param{DisabledOptions};
             }
 
-            # EO KIX4OTRS-capeIT
-
-             if ( !defined( $Param{Data} ) ) {
+            if ( !defined( $Param{Data} ) ) {
                 if ( !$Param{PossibleNone} ) {
                     $LogObject->Log(
                         Priority => 'error',
@@ -2378,7 +2315,6 @@ EOF
             }
             elsif ( ref $Param{Data} eq '' ) {
 
-                # KIX4OTRS-capeIT
                 if ( defined $Param{FieldDisabled} && $Param{FieldDisabled} ) {
                     my @DataArray;
                     push @DataArray, $Param{Data};
@@ -2388,8 +2324,6 @@ EOF
                 else {
                     $DataHash{ $Param{Name} } = $Param{Data};
                 }
-
-                # EO KIX4OTRS-capeIT
             }
             else {
 
@@ -2425,23 +2359,16 @@ EOF
                         # DefaultSelected parameter for JavaScript New Option
                         my $DefaultSelected = Kernel::System::JSON::False();
 
-                      # KIX4OTRS-capeIT
                       # to set a disabled option (Disabled is not included in JavaScript New Option)
                       # my $Disabled = Kernel::System::JSON::False();
                         my $DisabledOption = Kernel::System::JSON::False();
 
-                        # EO KIX4OTRS-capeIT
                         if ( $Row->{Selected} ) {
                             $DefaultSelected = Kernel::System::JSON::True();
                         }
                         elsif ( $Row->{Disabled} ) {
                             $DefaultSelected = Kernel::System::JSON::False();
-
-                            # KIX4OTRS-capeIT
-                            # $Disabled        = Kernel::System::JSON::True();
-                            $DisabledOption = Kernel::System::JSON::True();
-
-                            # EO KIX4OTRS-capeIT
+                            $DisabledOption  = Kernel::System::JSON::True();
                         }
 
                         if ($Disabled) {
@@ -2456,12 +2383,10 @@ EOF
                             [ $Key, $Value, $DefaultSelected, $Selected, $DisabledOption ];
                     }
 
-                    # KIX4OTRS-capeIT
                     if ( defined $Param{FieldDisabled} && $Param{FieldDisabled} ) {
                         push @DataArray, Kernel::System::JSON::False();
                     }
 
-                    # EO KIX4OTRS-capeIT
                     $DataHash{ $AttributeRef->{name} } = \@DataArray;
                 }
             }
@@ -2476,7 +2401,6 @@ EOF
     sub Kernel::Output::HTML::Layout::TicketMetaItems {
         my ( $Self, %Param ) = @_;
 
-        # KIX4OTRS-capeIT
         my %ActiveColums = (
             'Priority'    => 1,
             'New Article' => 1,
@@ -2495,8 +2419,6 @@ EOF
             }
         }
 
-        # EO KIX4OTRS-capeIT
-
         if ( ref $Param{Ticket} ne 'HASH' ) {
             $Self->FatalError( Message => 'Need Hash ref in Ticket param!' );
         }
@@ -2505,14 +2427,8 @@ EOF
         my @Result;
 
         # show priority
-        # KIX4OTRS-capeIT
-        # if (1) {
         if ( $ActiveColums{'Priority'} ) {
-
-            # EO KIX4OTRS-capeIT
             push @Result, {
-
-                #            Image => $Image,
                 Title      => $Param{Ticket}->{Priority},
                 Class      => 'Flag',
                 ClassSpan  => 'PriorityID-' . $Param{Ticket}->{PriorityID},
@@ -2534,28 +2450,19 @@ EOF
             );
         }
 
-        # KIX4OTRS-capeIT
-        # if ( $Ticket{ArchiveFlag} eq 'y' || $TicketFlag{Seen} ) {
-        if ( $ActiveColums{'New Article'} && ( $Ticket{ArchiveFlag} eq 'y' || $TicketFlag{Seen} ) )
-        {
-
-            # EO KIX4OTRS-capeIT
+    if ( $ActiveColums{'New Article'} && ( $Ticket{ArchiveFlag} eq 'y' || $TicketFlag{Seen} ) ) {
             push @Result, undef;
         }
 
-        # KIX4OTRS-capeIT
         # else
         elsif ( $Ticket{ArchiveFlag} ne 'y' && $ActiveColums{'New Article'} ) {
-
-            # EO KIX4OTRS-capeIT
 
             # just show ticket flags if agent belongs to the ticket
             my $ShowMeta;
             if (
                 $Self->{UserID} == $Param{Ticket}->{OwnerID}
                 || $Self->{UserID} == $Param{Ticket}->{ResponsibleID}
-                )
-            {
+            ) {
                 $ShowMeta = 1;
             }
             if ( !$ShowMeta && $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Watcher') ) {

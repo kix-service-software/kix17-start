@@ -110,8 +110,7 @@ sub OutputStringCreate {
             $AttDirData{Preferences}->{FileSizeBytes}
             &&
             $AttDirData{Preferences}->{MD5Sum}
-            )
-        {
+        ) {
 
             # get real properties to check if the attachment content has been changed
             my %RealProperties =
@@ -283,8 +282,7 @@ sub InputCreate {
             $AttDirData{Preferences}->{FileSizeBytes}
             &&
             $AttDirData{Preferences}->{MD5Sum}
-            )
-        {
+        ) {
 
             # get real properties to check if the attachment content has been changed
             my %RealProperties =

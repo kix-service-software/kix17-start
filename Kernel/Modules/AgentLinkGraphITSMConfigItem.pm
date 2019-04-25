@@ -231,8 +231,7 @@ sub _PrepareITSMConfigItem {
             $ItemRef
             && ref($ItemRef) eq 'HASH'
             && $ItemRef->{Class} eq 'ITSM::ConfigItem::Class'
-            )
-        {
+        ) {
             $Param{RelevantObjectSubTypeNames}->{ $ItemRef->{Name} } = $CurrID;
         }
     }
@@ -332,8 +331,7 @@ sub _GetObjectsAndLinks {
     for my $CurrKey (
         qw( CurrentObjectID CurrentObjectType CurrentDepth RelevantObjectSubTypeNames
         MaxSearchDepth VisitedNodes Nodes DiscoveredEdges RelevantObjectTypeNames)
-        )
-    {
+    ) {
         if ( !$Param{$CurrKey} ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
@@ -357,8 +355,7 @@ sub _GetObjectsAndLinks {
         &&
         $Param{VisitedNodes}->{ $Param{CurrentObjectType} . '-' . $Param{CurrentObjectID} } <
         $Param{CurrentDepth}
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -367,8 +364,7 @@ sub _GetObjectsAndLinks {
         $Param{Nodes}->{ $Param{CurrentObjectType} . '-' . $Param{CurrentObjectID} }
         &&
         $Param{CurrentDepth} == $Param{MaxSearchDepth} + 2
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -429,8 +425,7 @@ sub _GetObjectsAndLinks {
                 !$CurrVersionData->{Class}
                 || !$Param{RelevantObjectSubTypeNames}->{ $CurrVersionData->{Class} }
             ) && $Param{StartObjectID} ne $Param{CurrentObjectID}
-            )
-        {
+        ) {
             return 0;
         }
 
@@ -480,15 +475,13 @@ sub _GetObjectsAndLinks {
         if (
             $Param{StartObjectType}  eq $Param{CurrentObjectType}
             && $Param{StartObjectID} eq $Param{CurrentObjectID}
-            )
-        {
+        ) {
             $Start = 'border:1px solid #ee9900;';
             $Param{StartName} = $CurrVersionData->{Name};
         }
 
         my $DeplStateColor;
-        if ( $Param{StateHighlighting}->{ $CurrVersionData->{CurDeplState} } )
-        {
+        if ( $Param{StateHighlighting}->{ $CurrVersionData->{CurDeplState} } ) {
             $DeplStateColor = $Param{StateHighlighting}->{ $CurrVersionData->{CurDeplState} } . ";";
         }
 
@@ -686,8 +679,7 @@ sub _PropagateInciState {
     if (
         $Param{Result}
         && $RelevantLinkTypes->{ $Param{LinkType} }
-        )
-    {
+    ) {
 
         # get attributes of source
         my $CIAttsSource = $Self->{ConfigItemObject}->VersionGet(
@@ -704,16 +696,14 @@ sub _PropagateInciState {
         if (
             !$Param{SourceInciStateType}
             || $CIAttsSource->{CurInciStateType} ne $Param{SourceInciStateType}
-            )
-        {
+        ) {
             $PropagateStart = $Param{SourceType} . '-' . $Param{SourceID};
             $NewInciState   = $CIAttsSource->{CurInciStateType};
         }
         elsif (
             !$Param{TargetInciStateType}
             || $CIAttsTarget->{CurInciStateType} ne $Param{TargetInciStateType}
-            )
-        {
+        ) {
             $PropagateStart = $Param{TargetType} . '-' . $Param{TargetID};
             $NewInciState   = $CIAttsTarget->{CurInciStateType};
         }
@@ -757,8 +747,7 @@ sub _GetClassNames {
             $ItemRef
             && ref($ItemRef) eq 'HASH'
             && $ItemRef->{Class} eq 'ITSM::ConfigItem::Class'
-            )
-        {
+        ) {
             $ClassesString .=
                 $Self->{LayoutObject}->{LanguageObject}->Translate( $ItemRef->{Name} ) . ', ';
         }

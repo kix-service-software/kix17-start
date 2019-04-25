@@ -46,7 +46,6 @@ Create a new TextModule category tree
 
 sub TextModuleCategoryTree {
     my ( $Self, %Param ) = @_;
-    my %VirtualCategories;
     my $TextModuleObject;
 
     if ( $Kernel::OM->Get('Kernel::System::Main')->Require('Kernel::System::TextModule') ) {
@@ -90,23 +89,23 @@ sub TextModuleCategoryTree {
     # build tree information
     my $Count;
     for my $CategoryID ( sort { $AllCategories{$a} cmp $AllCategories{$b} } keys %AllCategories ) {
-        my $CategoryCount = $Param{CategoryCount}->{$CategoryID} || 0;
-        my @CategorySplit = split( /::/, $AllCategories{$CategoryID} );
+        my $CategoryCount    = $Param{CategoryCount}->{$CategoryID} || 0;
+        my @AllCategorySplit = split( /::/, $AllCategories{$CategoryID} );
 
         $AllCategoriesData{ $AllCategories{$CategoryID} } = {
             Count => $CategoryCount || 0,
             AllCount => 0,
-            Name     => $CategorySplit[-1],
+            Name     => $AllCategorySplit[-1],
             ID       => $CategoryID,
-            Split    => \@CategorySplit,
+            Split    => \@AllCategorySplit,
             Type     => 'Category',
         };
 
         # process current category information to all parents
         my $CategoryName = '';
-        for ( 0 .. $#CategorySplit - 1 ) {
+        for ( 0 .. $#AllCategorySplit - 1 ) {
             $CategoryName .= '::' if $CategoryName;
-            $CategoryName .= $CategorySplit[$_];
+            $CategoryName .= $AllCategorySplit[$_];
 
             # parent not initialized yet?
             if ( !$AllCategoriesData{$CategoryName} ) {
@@ -133,8 +132,7 @@ sub TextModuleCategoryTree {
                         cmp $Param{CategoryTextModules}->{$CategoryID}->{$b}->{Name}
                 }
                 keys %{ $Param{CategoryTextModules}->{$CategoryID} }
-                )
-            {
+            ) {
                 my $TextModuleName = $AllCategories{$CategoryID} . '::'
                     . $Param{CategoryTextModules}->{$CategoryID}->{$CurrHashID}->{Name};
                 my @Split = split( /::/, $TextModuleName );
@@ -324,8 +322,8 @@ sub ShowAllTextModules {
             );
 
             foreach my $CategoryID ( @{$LinkedCategoriesRef} ) {
-                $CategoryTextModules{$CategoryID}->{$ID} = $TextModuleContentData{$ID},
-                    $CategoryCount{$CategoryID}++;
+                $CategoryTextModules{$CategoryID}->{$ID} = $TextModuleContentData{$ID};
+                $CategoryCount{$CategoryID}++;
                 my @TempArray = split(/::/,$Categories{$CategoryID});
 
                 # check if parent category empty
@@ -373,8 +371,7 @@ sub ShowAllTextModules {
                 my $TextModuleID (
                 sort { $TextModuleContentData{$a}->{Name} cmp $TextModuleContentData{$b}->{Name} }
                 keys %TextModuleContentData
-                )
-            {
+            ) {
                 $Self->Block(
                     Name => 'TextModuleList',
                     Data => $TextModuleContentData{$TextModuleID},

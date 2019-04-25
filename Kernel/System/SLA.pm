@@ -18,11 +18,7 @@ our @ObjectDependencies = (
     'Kernel::System::Cache',
     'Kernel::System::CheckItem',
     'Kernel::System::DB',
-# ---
-# GeneralCatalog
-# ---
     'Kernel::System::GeneralCatalog',
-# ---
     'Kernel::System::Log',
     'Kernel::System::Valid',
 );
@@ -68,7 +64,6 @@ sub new {
     $Self->{CacheType} = 'SLA';
     $Self->{CacheTTL}  = 60 * 60 * 24 * 20;
 
-    # KIX4OTRS-capeIT
     # load service extension modules
     my $CustomModule = $Kernel::OM->Get('Kernel::Config')->Get('SLA::CustomModule');
     if ($CustomModule) {
@@ -86,7 +81,6 @@ sub new {
             next MODULEKEY if !$Kernel::OM->Get('Kernel::System::Main')->RequireBaseClass($Module);
         }
     }
-    # EO KIX4OTRS-capeIT
 
     return $Self;
 }
@@ -818,9 +812,9 @@ set SLA preferences
 =cut
 
 sub SLAPreferencesSet {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return $Self->{PreferencesObject}->SLAPreferencesSet(@_);
+    return $Self->{PreferencesObject}->SLAPreferencesSet(%Param);
 }
 
 =item SLAPreferencesGet()
@@ -835,9 +829,9 @@ get SLA preferences
 =cut
 
 sub SLAPreferencesGet {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return $Self->{PreferencesObject}->SLAPreferencesGet(@_);
+    return $Self->{PreferencesObject}->SLAPreferencesGet(%Param);
 }
 
 1;

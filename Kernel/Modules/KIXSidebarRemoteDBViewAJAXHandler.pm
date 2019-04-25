@@ -88,8 +88,7 @@ sub Run {
         && $TIDSearchMaskRegexp
         && $CallingAction =~ /$TIDSearchMaskRegexp/
         && $TicketID      =~ m/^\d+$/
-        )
-    {
+    ) {
         my %TicketData = $Self->{TicketObject}->TicketGet(
             TicketID      => $TicketID,
             UserID        => $Self->{UserID},

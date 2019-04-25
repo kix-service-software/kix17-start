@@ -105,8 +105,7 @@ sub Run {
             Host DefaultCommand Authentication User Password UseX509
             X509CertFile X509KeyFile X509CAFile MaxLength KeepAlive
             )
-            )
-        {
+        ) {
             $GetParam->{$ParamName} = $ParamObject->GetParam( Param => $ParamName ) || '';
         }
 
@@ -122,8 +121,7 @@ sub Run {
             NEEDED:
             for my $ParamName (
                 qw( Host DefaultCommand )
-                )
-            {
+            ) {
                 if ( !$GetParam->{$ParamName} ) {
 
                     # add server error error class
@@ -215,8 +213,7 @@ sub Run {
             NEEDED:
             for my $ParamName (
                 qw( MaxLength KeepAlive )
-                )
-            {
+            ) {
                 if ( !defined $GetParam->{$ParamName} ) {
 
                     # add server error error class
@@ -397,8 +394,7 @@ sub _ShowEdit {
 
         # hide and disable authentication methods if they are not selected
         $Param{BasicAuthHidden} = 'Hidden';
-        if ( $Param{Authentication} && $Param{Authentication} eq 'BasicAuth' )
-        {
+        if ( $Param{Authentication} && $Param{Authentication} eq 'BasicAuth' ) {
             $Param{BasicAuthHidden}      = '';
             $Param{UserValidateRequired} = 'Validate_Required';
         }
@@ -415,8 +411,7 @@ sub _ShowEdit {
 
         # hide and disable X509 options if they are not selected
         $Param{X509Hidden} = 'Hidden';
-        if ( $Param{UseX509} && $Param{UseX509} eq 'Yes' )
-        {
+        if ( $Param{UseX509} && $Param{UseX509} eq 'Yes' ) {
             $Param{X509Hidden}                   = '';
             $Param{X509CertFileValidateRequired} = 'Validate_Required';
             $Param{X509KeyFileValidateRequired}  = 'Validate_Required';

@@ -87,7 +87,6 @@
 
 </div>
 
-# KIX4OTRS-capeIT
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('.DataTable > tbody > tr').bind('click', function (Event) {
@@ -95,4 +94,3 @@
     });
 //]]></script>
 [% END %]
-# EO KIX4OTRS-capeIT

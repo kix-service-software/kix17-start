@@ -157,8 +157,7 @@ sub Run {
                 UserID    => $Self->{UserID},
                 NewUserID => $Self->{UserID},
             )
-            )
-        {
+        ) {
             return $LayoutObject->ErrorScreen();
         }
     }

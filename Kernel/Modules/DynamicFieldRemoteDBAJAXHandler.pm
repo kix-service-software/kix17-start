@@ -296,7 +296,7 @@ sub Run {
                         RESULT:
                         while (my @Row = $DFRemoteDBObject->FetchrowArray()) {
                             my $Key    = $Row[0];
-                            next RESULT if ( grep( /^$Key$/, @Entries ) );
+                            next RESULT if ( grep( {/^$Key$/} @Entries ) );
 
                             my $Value  = $Row[1];
 
@@ -519,7 +519,7 @@ sub Run {
                     RESULT:
                     while (my @Row = $DFRemoteDBObject->FetchrowArray()) {
                         my $Key = $Row[0];
-                        next RESULT if ( !grep( /^$Key$/, @Entries ) );
+                        next RESULT if ( !grep( {/^$Key$/} @Entries ) );
 
                         push ( @PossibleValues, $Key );
                     }
@@ -547,7 +547,7 @@ sub Run {
         elsif($Subaction eq 'AddValue') {
             my %Data;
             my $Key = $Self->{ParamObject}->GetParam( Param => 'Key' )  || '';
-            if ( !grep( /^$Key$/, @Entries ) ) {
+            if ( !grep( {/^$Key$/} @Entries ) ) {
                 my $Value = $Self->{RemoteDBObject}->ValueLookup(
                     Key                => $Key,
                     DynamicFieldConfig => $DynamicFieldConfig,

@@ -29,8 +29,7 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    for my $NeededData (qw( UserID Subaction AccessRo SessionID ))
-    {
+    for my $NeededData (qw( UserID Subaction AccessRo SessionID )) {
         if ( !$Param{$NeededData} ) {
             $LayoutObject->FatalError(
                 Message => $LayoutObject->{LanguageObject}->Translate( 'Parameter %s is missing.', $NeededData ),
@@ -558,8 +557,7 @@ sub EditAction {
                 if (
                     !$Data{UseAsValueSeries}[$Index]{SelectedValues}[0]
                     || !exists $TimeScaleLookup{ $Data{UseAsValueSeries}[$Index]{SelectedValues}[0] }
-                    )
-                {
+                ) {
 
                     my @TimeScaleSorted
                         = sort { $TimeScale->{$a}->{Position} <=> $TimeScale->{$b}->{Position} } keys %{$TimeScale};
@@ -604,8 +602,7 @@ sub EditAction {
                 if ( $TimeSelect eq 'Absolut' ) {
                     for my $Limit (qw(Start Stop)) {
                         for my $Unit (qw(Year Month Day Hour Minute Second)) {
-                            if ( defined( $ParamObject->GetParam( Param => "$Element$Limit$Unit" ) ) )
-                            {
+                            if ( defined( $ParamObject->GetParam( Param => "$Element$Limit$Unit" ) ) ) {
                                 $Time{ $Limit . $Unit } = $ParamObject->GetParam(
                                     Param => "$Element$Limit$Unit",
                                 );
@@ -1033,8 +1030,6 @@ sub RunAction {
         UserID    => $Self->{UserID},
         %Param
     );
-
-    return;
 }
 
 sub GeneralSpecificationsWidgetAJAX {
@@ -1049,31 +1044,6 @@ sub GeneralSpecificationsWidgetAJAX {
         Type    => 'inline',
         NoCache => 1,
     );
-}
-
-# ATTENTION: this function delivers only approximations!!!
-sub _TimeInSeconds {
-    my ( $Self, %Param ) = @_;
-
-    # check if need params are available
-    if ( !$Param{TimeUnit} ) {
-        return $Kernel::OM->Get('Kernel::Output::HTML::Layout')
-            ->ErrorScreen( Message => '_TimeInSeconds: Need TimeUnit!' );
-    }
-
-    my %TimeInSeconds = (
-        Year     => 31536000,    # 60 * 60 * 24 * 365
-        HalfYear => 15724800,    # 60 * 60 * 24 * 182
-        Quarter  => 7862400,     # 60 * 60 * 24 * 91
-        Month    => 2592000,     # 60 * 60 * 24 * 30
-        Week     => 604800,      # 60 * 60 * 24 * 7
-        Day      => 86400,       # 60 * 60 * 24
-        Hour     => 3600,        # 60 * 60
-        Minute   => 60,
-        Second   => 1,
-    );
-
-    return $TimeInSeconds{ $Param{TimeUnit} };
 }
 
 1;

@@ -148,8 +148,7 @@ sub InputCreate {
             $Param{Item}->{Input}->{ValueDefault} < $ValueMin
             || $Param{Item}->{Input}->{ValueDefault} > $ValueMax
         )
-        )
-    {
+    ) {
         $Param{Item}->{Input}->{ValueDefault} = '';
     }
 

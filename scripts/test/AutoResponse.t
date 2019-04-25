@@ -229,7 +229,7 @@ my $ArticleID1 = $TicketObject->ArticleCreate(
     TicketID       => $TicketID,
     ArticleType    => 'email-internal',
     SenderType     => 'agent',
-    From           => 'Some Agent <otrs@example.com>',
+    From           => 'Some Agent <kix@example.com>',
     To             => 'Suplier<suplier@example.com>',
     Subject        => 'Email for suplier',
     Body           => 'the message text',
@@ -256,7 +256,7 @@ my $ArticleID2 = $TicketObject->ArticleCreate(
     ArticleType      => 'email-internal',
     SenderType       => 'customer',
     From             => 'Suplier<suplier@example.com>',
-    To               => 'Some Agent <otrs@example.com>',
+    To               => 'Some Agent <kix@example.com>',
     Subject          => 'some short description',
     Body             => 'the message text',
     Charset          => 'utf8',
@@ -266,7 +266,7 @@ my $ArticleID2 = $TicketObject->ArticleCreate(
     UserID           => 1,
     AutoResponseType => 'auto reply',
     OrigHeader       => {
-        From    => 'Some Agent <otrs@example.com>',
+        From    => 'Some Agent <kix@example.com>',
         Subject => 'some short description',
     },
 );
@@ -283,7 +283,7 @@ my $Emails = $TestEmailObject->EmailsGet();
 $Self->IsDeeply(
     $Emails->[0]->{ToArray},
     [
-        'otrs@example.com'
+        'kix@example.com'
     ],
     'Check AutoResponse recipients.'
 );

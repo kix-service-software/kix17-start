@@ -114,8 +114,7 @@ sub Run {
             ItemChangeTimeStop ItemChangeTimeStopDay ItemChangeTimeStopMonth
             ItemChangeTimeStopYear
             )
-            )
-        {
+        ) {
             $GetParam{$ParamName} = $ParamObject->GetParam( Param => $ParamName );
 
             # remove whitespace on the start and end
@@ -128,8 +127,7 @@ sub Run {
         # get array search params
         for my $SearchParam (
             qw(CategoryIDs LanguageIDs ValidIDs StateIDs CreatedUserIDs LastChangedUserIDs)
-            )
-        {
+        ) {
             my @Array = $ParamObject->GetArray( Param => $SearchParam );
             if (@Array) {
                 $GetParam{$SearchParam} = \@Array;
@@ -315,8 +313,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStartDay' }
                     && $GetParam{ $TimeType . 'TimeStartMonth' }
                     && $GetParam{ $TimeType . 'TimeStartYear' }
-                    )
-                {
+                    ) {
                     $GetParam{ $TimeType . 'TimeNewerDate' } = $GetParam{ $TimeType . 'TimeStartYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartDay' }
@@ -326,8 +323,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStopDay' }
                     && $GetParam{ $TimeType . 'TimeStopMonth' }
                     && $GetParam{ $TimeType . 'TimeStopYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeOlderDate' } = $GetParam{ $TimeType . 'TimeStopYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopDay' }
@@ -339,8 +335,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimePoint' }
                     && $GetParam{ $TimeType . 'TimePointStart' }
                     && $GetParam{ $TimeType . 'TimePointFormat' }
-                    )
-                {
+                ) {
                     my $Time = 0;
                     if ( $GetParam{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
                         $Time = $GetParam{ $TimeType . 'TimePoint' };
@@ -579,7 +574,7 @@ sub Run {
         }
 
         # start HTML page
-        my $Output = $LayoutObject->Header(
+        $Output = $LayoutObject->Header(
             Type => 'Small',
         );
         $LayoutObject->Print(

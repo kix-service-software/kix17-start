@@ -33,10 +33,10 @@ our @ObjectDependencies = (
 );
 
 our %Jobs = (
-    INSERT => \&Kernel::System::Console::Command::Dev::Tools::Database::SQLBenchmark::_SQLInsert,
-    UPDATE => \&Kernel::System::Console::Command::Dev::Tools::Database::SQLBenchmark::_SQLUpdate,
-    SELECT => \&Kernel::System::Console::Command::Dev::Tools::Database::SQLBenchmark::_SQLSelect,
-    DELETE => \&Kernel::System::Console::Command::Dev::Tools::Database::SQLBenchmark::_SQLDelete,
+    'INSERT' => '_SQLInsert',
+    'UPDATE' => '_SQLUpdate',
+    'SELECT' => '_SQLSelect',
+    'DELETE' => '_SQLDelete',
 ); 
 
 sub Configure {
@@ -98,13 +98,32 @@ sub Run {
         );
     }
     else {
-        my $Job   = $Self->GetOption('job');
+        my $Job = $Self->GetOption('job');
 
-        $Jobs{$Job}->(
-            $Self, 
-            Records => $Records,
-        Process => $ProcessID,
-        );
+        if ( $Job eq 'INSERT') {
+            $Self->_SQLInsert(
+                Records => $Records,
+                Process => $ProcessID,
+            );
+        }
+        elsif ( $Job eq 'UPDATE') {
+            $Self->_SQLUpdate(
+                Records => $Records,
+                Process => $ProcessID,
+            );
+        }
+        elsif ( $Job eq 'SELECT') {
+            $Self->_SQLSelect(
+                Records => $Records,
+                Process => $ProcessID,
+            );
+        }
+        elsif ( $Job eq 'DELETE') {
+            $Self->_SQLDelete(
+                Records => $Records,
+                Process => $ProcessID,
+            );
+        }
     }
 
     exit 1;
@@ -120,15 +139,13 @@ sub _Benchmark {
         $Self->{DBObject}   = Kernel::System::DB->new( %{$Self} );
 
     # create the table
-    my $TableCreate = '
-        <TableCreate Name="sql_benchmark">
-            <Column Name="name_a" Required="true" Size="60" Type="VARCHAR"></Column>
-            <Column Name="name_b" Required="true" Size="60" Type="VARCHAR"></Column>
-            <Index Name="idx_sql_benchmark_name_a">
-                <IndexColumn Name="name_a">
-                </IndexColumn>
-            </Index>
-        </TableCreate>';
+    my $TableCreate = '<TableCreate Name="sql_benchmark">'
+                    . '  <Column Name="name_a" Required="true" Size="60" Type="VARCHAR"></Column>'
+                    . '  <Column Name="name_b" Required="true" Size="60" Type="VARCHAR"></Column>'
+                    . '  <Index Name="idx_sql_benchmark_name_a">'
+                    . '    <IndexColumn Name="name_a"></IndexColumn>'
+                    . '  </Index>'
+                    . '</TableCreate>';
 
     my @XMLArray = $Kernel::OM->Get('Kernel::System::XML')->XMLParse(
         String => $TableCreate,
@@ -145,7 +162,7 @@ sub _Benchmark {
 
         foreach my $Job (qw(INSERT UPDATE SELECT DELETE)) {
             printf("%-9s %8s ", $Job, $TotalRecords);
-            $| = 1;
+            local $| = 1;
 
             my $TimeTaken = 0;
             if (!$IsWin32) {
