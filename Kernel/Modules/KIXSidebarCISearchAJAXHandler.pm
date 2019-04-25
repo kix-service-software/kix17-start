@@ -91,8 +91,7 @@ sub Run {
         && $CallingAction
         && $CallingAction =~ /$TIDSearchMaskRegexp/
         && $TicketID      =~ /^\d+$/
-        )
-    {
+    ) {
         %TicketData = $Self->{TicketObject}->TicketGet(
             TicketID      => $TicketID,
             DynamicFields => 1,
@@ -205,8 +204,7 @@ sub Run {
                         || $ResultHash->{$a}->{'Number'} cmp $ResultHash->{$b}->{'Number'}
                 }
                 keys ( %{$ResultHash} )
-                )
-            {
+            ) {
                 if ( $MaxResultDisplay < ++$Counter ) {
                     delete $ResultHash->{$Key};
                 }
@@ -266,8 +264,7 @@ sub Run {
                 || $ResultHash->{$a}->{'Number'} cmp $ResultHash->{$b}->{'Number'}
         }
         keys ( %{$ResultHash} )
-        )
-    {
+    ) {
 
         $Self->{LayoutObject}->Block(
             Name => 'KIXSidebarCISearchResultRow',

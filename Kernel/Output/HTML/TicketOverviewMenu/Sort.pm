@@ -81,8 +81,7 @@ sub Run {
             if (
                 $CurrentSortByOption eq $Param{SortBy}
                 && $CurrentOrderBy eq $Param{OrderBy}
-                )
-            {
+            ) {
                 $Selected             = 1;
                 $SelectedSortByOption = 1;
             }

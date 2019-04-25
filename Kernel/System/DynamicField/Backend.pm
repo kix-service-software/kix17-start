@@ -286,8 +286,7 @@ sub EditFieldRender {
     if (
         defined $Param{PossibleValuesFilter}
         && ref $Param{PossibleValuesFilter} ne 'HASH'
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "The possible values filter is invalid",
@@ -471,8 +470,7 @@ sub ValueSet {
             Value1             => $OldValue,
             Value2             => $NewValue,
         )
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -1159,8 +1157,7 @@ sub EditFieldValueValidate {
     if (
         defined $Param{PossibleValuesFilter}
         && ref $Param{PossibleValuesFilter} ne 'HASH'
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "The possible values filter is invalid",
@@ -2584,6 +2581,8 @@ sub ColumnFilterValuesGet {
         %Param
     );
 }
+
+1;
 
 =back
 

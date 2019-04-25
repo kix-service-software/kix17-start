@@ -14,7 +14,7 @@ use strict;
 use warnings;
 
 use Exporter qw(import);
-our %EXPORT_TAGS = (    ## no critic
+our %EXPORT_TAGS = (
     all => [
         'IsArrayRefWithData',
         'IsHashRefWithData',
@@ -31,6 +31,8 @@ our %EXPORT_TAGS = (    ## no critic
     ],
 );
 Exporter::export_ok_tags('all');
+
+## no critic qw(Subroutines::RequireArgUnpacking)
 
 =head1 NAME
 
@@ -112,7 +114,7 @@ returns 1 if data matches criteria or undef otherwise
 sub IsString {
     my $TestData = $_[0];
 
-    return if scalar @_ ne 1;
+    return if scalar @_ != 1;
     return if ref $TestData;
     return if !defined $TestData;
 
@@ -158,7 +160,7 @@ returns 1 if data matches criteria or undef otherwise
 sub IsArrayRefWithData {
     my $TestData = $_[0];
 
-    return if scalar @_ ne 1;
+    return if scalar @_ != 1;
     return if ref $TestData ne 'ARRAY';
     return if !@{$TestData};
 
@@ -183,7 +185,7 @@ returns 1 if data matches criteria or undef otherwise
 sub IsHashRefWithData {
     my $TestData = $_[0];
 
-    return if scalar @_ ne 1;
+    return if scalar @_ != 1;
     return if ref $TestData ne 'HASH';
     return if !%{$TestData};
 
@@ -276,7 +278,7 @@ sub IsIPv4Address {
     my @Part = split '\.', $TestData;
 
     # four parts delimited by '.' needed
-    return if scalar @Part ne 4;
+    return if scalar @Part != 4;
     for my $Part (@Part) {
 
         # allow numbers 0 to 255, no leading zeroes
@@ -338,10 +340,10 @@ sub IsIPv6Address {
         delete $Part[-1];
     }
     return if scalar @Part < 2 || scalar @Part > 8;
-    return if scalar @Part ne 8 && $TestData !~ m{ :: }xms;
+    return if scalar @Part != 8 && $TestData !~ m{ :: }xms;
 
     # handle full addreses
-    if ( scalar @Part eq 8 ) {
+    if ( scalar @Part == 8 ) {
         my $EmptyPart;
         PART:
         for my $Part (@Part) {

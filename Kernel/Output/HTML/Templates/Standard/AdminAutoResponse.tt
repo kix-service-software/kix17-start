@@ -194,8 +194,6 @@
 
                 <p>[% Translate("You can use the following tags") | html %]:</p>
                 <dl>
-
-#rbo - T2016121190001552 - added KIX placeholders
                     <dt><code>&lt;KIX_CUSTOMER_SUBJECT[20]&gt;</code></dt>
                     <dd>
                         [% Translate("To get the first 20 character of the subject.") | html %]

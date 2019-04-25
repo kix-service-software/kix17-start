@@ -365,8 +365,7 @@ sub TicketSearch {
         Locks LockIDs OwnerIDs ResponsibleIDs CreatedUserIDs Queues QueueIDs CreatedQueues CreatedQueueIDs
         Priorities PriorityIDs CreatedPriorities CreatedPriorityIDs Services ServiceIDs SLAs SLAIDs WatchUserIDs
         )
-        )
-    {
+    ) {
         next ARGUMENT if !$Param{$Key};
         next ARGUMENT if ref $Param{$Key} eq 'ARRAY' && @{ $Param{$Key} };
 
@@ -388,8 +387,7 @@ sub TicketSearch {
         TypeIDs CreatedTypeIDs StateIDs CreatedStateIDs StateTypeIDs LockIDs OwnerIDs ResponsibleIDs CreatedUserIDs
         QueueIDs CreatedQueueIDs PriorityIDs CreatedPriorityIDs ServiceIDs SLAIDs WatchUserIDs
         )
-        )
-    {
+    ) {
         next ARGUMENT if !$Param{$Key};
 
         # quote elements
@@ -473,8 +471,7 @@ sub TicketSearch {
         if (
             !$SortOptions{ $SortByArray[$Count] }
             && !$ValidDynamicFieldParams{ $SortByArray[$Count] }
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Need valid SortBy (' . $SortByArray[$Count] . ')!',
@@ -513,14 +510,12 @@ sub TicketSearch {
             $Kernel::OM->Get('Kernel::Config')->Get('Ticket::StorageModule') eq
             'Kernel::System::Ticket::ArticleStorageDB'
         )
-        )
-    {
+    ) {
 
         # joins to article and article_attachments are needed, it can not use existing article joins
         # otherwise the search will be limited to already matching articles
-        my $AttachmentJoinSQL = '
-        INNER JOIN article art_for_att ON st.id = art_for_att.ticket_id
-        INNER JOIN article_attachment att ON att.article_id = art_for_att.id ';
+        my $AttachmentJoinSQL = ' INNER JOIN article art_for_att ON st.id = art_for_att.ticket_id'
+                              . ' INNER JOIN article_attachment att ON att.article_id = art_for_att.id ';
 
         # SQL, use also article_attachment table if needed
         $SQLFrom .= $AttachmentJoinSQL;
@@ -1132,8 +1127,7 @@ sub TicketSearch {
                 $Param{TicketFlagUserIDs}
                 && ref( $Param{TicketFlagUserIDs} ) eq 'HASH'
                 && $Param{TicketFlagUserIDs}->{$Key}
-                )
-            {
+            ) {
                 $TicketFlagUserID = $Param{TicketFlagUserIDs}->{$Key};
             }
             return if !defined $TicketFlagUserID;
@@ -1229,8 +1223,7 @@ sub TicketSearch {
             if (
                 $Key ne 'CustomerIDRaw'
                 && $Key ne 'CustomerUserLoginRaw'
-                )
-            {
+            ) {
                 $Value =~ s/\*/%/gi;
             }
 
@@ -1311,8 +1304,7 @@ sub TicketSearch {
             $Kernel::OM->Get('Kernel::Config')->Get('Ticket::StorageModule') eq
             'Kernel::System::Ticket::ArticleStorageDB'
         )
-        )
-    {
+    ) {
         $SQLExt .= ' AND ';
 
         # replace wild card search
@@ -1413,9 +1405,9 @@ sub TicketSearch {
             if ( $DynamicField->{ObjectType} eq 'Ticket' ) {
 
                 # Join the table for this dynamic field
-                $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                    ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
-                        AND dfv$DynamicFieldJoinCounter.field_id = " .
+                $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter"
+                          . " ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}"
+                          . "  AND dfv$DynamicFieldJoinCounter.field_id = " .
                     $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
             }
             elsif ( $DynamicField->{ObjectType} eq 'Article' ) {
@@ -1424,9 +1416,9 @@ sub TicketSearch {
                     $SQLFrom .= $ArticleJoinSQL;
                 }
 
-                $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                    ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
-                        AND dfv$DynamicFieldJoinCounter.field_id = " .
+                $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter"
+                          . " ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}"
+                          . "  AND dfv$DynamicFieldJoinCounter.field_id = " .
                     $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
 
             }
@@ -1474,11 +1466,19 @@ sub TicketSearch {
         # get articles created older than xxxx-xx-xx xx:xx date
         my $CompareOlderNewerDate;
         if ( $Param{ $Key . 'OlderDate' } ) {
-            if (
-                $Param{ $Key . 'OlderDate' }
-                !~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-                )
-            {
+            my $SystemTime;
+            if ( $Param{ $Key . 'OlderDate' } =~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/ ) {
+                # convert param date to system time
+                $SystemTime = $TimeObject->Date2SystemTime(
+                    Year   => $1,
+                    Month  => $2,
+                    Day    => $3,
+                    Hour   => $4,
+                    Minute => $5,
+                    Second => $6,
+                );
+            }
+            else {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Invalid time format '" . $Param{ $Key . 'OlderDate' } . "'!",
@@ -1486,15 +1486,6 @@ sub TicketSearch {
                 return;
             }
 
-            # convert param date to system time
-            my $SystemTime = $TimeObject->Date2SystemTime(
-                Year   => $1,
-                Month  => $2,
-                Day    => $3,
-                Hour   => $4,
-                Minute => $5,
-                Second => $6,
-            );
             if ( !$SystemTime ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
@@ -1512,11 +1503,19 @@ sub TicketSearch {
 
         # get articles created newer than xxxx-xx-xx xx:xx date
         if ( $Param{ $Key . 'NewerDate' } ) {
-            if (
-                $Param{ $Key . 'NewerDate' }
-                !~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-                )
-            {
+            my $SystemTime;
+            if ( $Param{ $Key . 'NewerDate' } =~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/ ) {
+                # convert param date to system time
+                $SystemTime = $TimeObject->Date2SystemTime(
+                    Year   => $1,
+                    Month  => $2,
+                    Day    => $3,
+                    Hour   => $4,
+                    Minute => $5,
+                    Second => $6,
+                );
+            }
+            else {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Invalid time format '" . $Param{ $Key . 'NewerDate' } . "'!",
@@ -1524,15 +1523,6 @@ sub TicketSearch {
                 return;
             }
 
-            # convert param date to system time
-            my $SystemTime = $TimeObject->Date2SystemTime(
-                Year   => $1,
-                Month  => $2,
-                Day    => $3,
-                Hour   => $4,
-                Minute => $5,
-                Second => $6,
-            );
             if ( !$SystemTime ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
@@ -1605,10 +1595,8 @@ sub TicketSearch {
 
             # check time format
             if (
-                $Param{ $Key . 'OlderDate' }
-                !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-                )
-            {
+                $Param{ $Key . 'OlderDate' } !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Invalid time format '" . $Param{ $Key . 'OlderDate' } . "'!",
@@ -1640,10 +1628,8 @@ sub TicketSearch {
         # get tickets created/escalated newer than xxxx-xx-xx xx:xx date
         if ( $Param{ $Key . 'NewerDate' } ) {
             if (
-                $Param{ $Key . 'NewerDate' }
-                !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-                )
-            {
+                $Param{ $Key . 'NewerDate' } !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Invalid time format '" . $Param{ $Key . 'NewerDate' } . "'!",
@@ -1710,10 +1696,8 @@ sub TicketSearch {
 
         # check time format
         if (
-            $Param{TicketChangeTimeOlderDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketChangeTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketChangeTimeOlderDate}'!",
@@ -1741,10 +1725,8 @@ sub TicketSearch {
     # get tickets based on ticket history changed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketChangeTimeNewerDate} ) {
         if (
-            $Param{TicketChangeTimeNewerDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketChangeTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketChangeTimeNewerDate}'!",
@@ -1806,10 +1788,8 @@ sub TicketSearch {
 
         # check time format
         if (
-            $Param{TicketLastChangeTimeOlderDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketLastChangeTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketLastChangeTimeOlderDate}'!",
@@ -1837,10 +1817,8 @@ sub TicketSearch {
     # get tickets changed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketLastChangeTimeNewerDate} ) {
         if (
-            $Param{TicketLastChangeTimeNewerDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketLastChangeTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketLastChangeTimeNewerDate}'!",
@@ -1903,10 +1881,8 @@ sub TicketSearch {
 
         # check time format
         if (
-            $Param{TicketCloseTimeOlderDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketCloseTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketCloseTimeOlderDate}'!",
@@ -1945,10 +1921,8 @@ sub TicketSearch {
     # get tickets closed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketCloseTimeNewerDate} ) {
         if (
-            $Param{TicketCloseTimeNewerDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketCloseTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketCloseTimeNewerDate}'!",
@@ -1995,8 +1969,7 @@ sub TicketSearch {
         || defined $Param{TicketPendingTimeNewerMinutes}
         || $Param{TicketPendingTimeOlderDate}
         || $Param{TicketPendingTimeNewerDate}
-        )
-    {
+    ) {
 
         # get close state ids
         my @List = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
@@ -2040,10 +2013,8 @@ sub TicketSearch {
 
         # check time format
         if (
-            $Param{TicketPendingTimeOlderDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketPendingTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketPendingTimeOlderDate}'!",
@@ -2070,10 +2041,8 @@ sub TicketSearch {
     # get pending tickets newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketPendingTimeNewerDate} ) {
         if (
-            $Param{TicketPendingTimeNewerDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketPendingTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketPendingTimeNewerDate}'!",
@@ -2161,9 +2130,9 @@ sub TicketSearch {
                         # With an INNER JOIN we'd limit the result set to tickets which have an entry
                         #   for the DF which is used for sorting.
                         $SQLFrom
-                            .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                            ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
-                                AND dfv$DynamicFieldJoinCounter.field_id = " .
+                            .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter"
+                             . " ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}"
+                             . "  AND dfv$DynamicFieldJoinCounter.field_id = " .
                             $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
                     }
                     elsif ( $ArticleDynamicFieldName2Config{$DynamicFieldName} ) {
@@ -2173,9 +2142,9 @@ sub TicketSearch {
                         }
 
                         $SQLFrom
-                            .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                            ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
-                                AND dfv$DynamicFieldJoinCounter.field_id = " .
+                            .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter"
+                             . " ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}"
+                             . "  AND dfv$DynamicFieldJoinCounter.field_id = " .
                             $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
                     }
 
@@ -2195,8 +2164,7 @@ sub TicketSearch {
             elsif (
                 $SortByArray[$Count] eq 'Owner'
                 || $SortByArray[$Count] eq 'Responsible'
-                )
-            {
+            ) {
                 # include first and last name in select
                 $SQLSelect
                     .= ', ' . $SortOptions{ $SortByArray[$Count] }
@@ -2424,8 +2392,7 @@ sub SearchStringStopWordsUsageWarningActive {
     if (
         $SearchIndexModule eq 'Kernel::System::Ticket::ArticleSearchIndex::StaticDB'
         && $WarnOnStopWordUsage
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -2556,8 +2523,7 @@ sub TicketSearchOR {
         Locks LockIDs OwnerIDs ResponsibleIDs CreatedUserIDs Queues QueueIDs CreatedQueues CreatedQueueIDs
         Priorities PriorityIDs CreatedPriorities CreatedPriorityIDs Services ServiceIDs SLAs SLAIDs WatchUserIDs
         )
-        )
-    {
+    ) {
         next ARGUMENT if !$Param{$Key};
         next ARGUMENT if ref $Param{$Key} eq 'ARRAY' && @{ $Param{$Key} };
 
@@ -2579,8 +2545,7 @@ sub TicketSearchOR {
         TypeIDs CreatedTypeIDs StateIDs CreatedStateIDs StateTypeIDs LockIDs OwnerIDs ResponsibleIDs CreatedUserIDs
         QueueIDs CreatedQueueIDs PriorityIDs CreatedPriorityIDs ServiceIDs SLAIDs WatchUserIDs
         )
-        )
-    {
+    ) {
         next ARGUMENT if !$Param{$Key};
 
         # quote elements
@@ -2664,8 +2629,7 @@ sub TicketSearchOR {
         if (
             !$SortOptions{ $SortByArray[$Count] }
             && !$ValidDynamicFieldParams{ $SortByArray[$Count] }
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => 'Need valid SortBy (' . $SortByArray[$Count] . ')!',
@@ -2704,14 +2668,12 @@ sub TicketSearchOR {
             $Kernel::OM->Get('Kernel::Config')->Get('Ticket::StorageModule') eq
             'Kernel::System::Ticket::ArticleStorageDB'
         )
-        )
-    {
+    ) {
 
         # joins to article and article_attachments are needed, it can not use existing article joins
         # otherwise the search will be limited to already matching articles
-        my $AttachmentJoinSQL = '
-        INNER JOIN article art_for_att ON st.id = art_for_att.ticket_id
-        INNER JOIN article_attachment att ON att.article_id = art_for_att.id ';
+        my $AttachmentJoinSQL = ' INNER JOIN article art_for_att ON st.id = art_for_att.ticket_id'
+                              . ' INNER JOIN article_attachment att ON att.article_id = art_for_att.id ';
 
         # SQL, use also article_attachment table if needed
         $SQLFrom .= $AttachmentJoinSQL;
@@ -3419,8 +3381,7 @@ sub TicketSearchOR {
             $Kernel::OM->Get('Kernel::Config')->Get('Ticket::StorageModule') eq
             'Kernel::System::Ticket::ArticleStorageDB'
         )
-        )
-    {
+    ) {
         $SQLExt .= ' AND ';
 
         # replace wild card search
@@ -3521,9 +3482,9 @@ sub TicketSearchOR {
             if ( $DynamicField->{ObjectType} eq 'Ticket' ) {
 
                 # Join the table for this dynamic field
-                $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                    ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
-                        AND dfv$DynamicFieldJoinCounter.field_id = " .
+                $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter"
+                          . " ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}"
+                          . "  AND dfv$DynamicFieldJoinCounter.field_id = " .
                     $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
             }
             elsif ( $DynamicField->{ObjectType} eq 'Article' ) {
@@ -3532,9 +3493,9 @@ sub TicketSearchOR {
                     $SQLFrom .= $ArticleJoinSQL;
                 }
 
-                $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                    ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
-                        AND dfv$DynamicFieldJoinCounter.field_id = " .
+                $SQLFrom .= "INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter"
+                          . " ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}"
+                          . "  AND dfv$DynamicFieldJoinCounter.field_id = " .
                     $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
 
             }
@@ -3582,11 +3543,19 @@ sub TicketSearchOR {
         # get articles created older than xxxx-xx-xx xx:xx date
         my $CompareOlderNewerDate;
         if ( $Param{ $Key . 'OlderDate' } ) {
-            if (
-                $Param{ $Key . 'OlderDate' }
-                !~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-                )
-            {
+            my $SystemTime;
+            if ( $Param{ $Key . 'OlderDate' }= ~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/ ) {
+                # convert param date to system time
+                $SystemTime = $TimeObject->Date2SystemTime(
+                    Year   => $1,
+                    Month  => $2,
+                    Day    => $3,
+                    Hour   => $4,
+                    Minute => $5,
+                    Second => $6,
+                );
+            }
+            else {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Invalid time format '" . $Param{ $Key . 'OlderDate' } . "'!",
@@ -3594,15 +3563,6 @@ sub TicketSearchOR {
                 return;
             }
 
-            # convert param date to system time
-            my $SystemTime = $TimeObject->Date2SystemTime(
-                Year   => $1,
-                Month  => $2,
-                Day    => $3,
-                Hour   => $4,
-                Minute => $5,
-                Second => $6,
-            );
             if ( !$SystemTime ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
@@ -3619,11 +3579,19 @@ sub TicketSearchOR {
 
         # get articles created newer than xxxx-xx-xx xx:xx date
         if ( $Param{ $Key . 'NewerDate' } ) {
-            if (
-                $Param{ $Key . 'NewerDate' }
-                !~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-                )
-            {
+            my $SystemTime;
+            if ( $Param{ $Key . 'NewerDate' } =~ /(\d\d\d\d)-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/ ) {
+                # convert param date to system time
+                $SystemTime = $TimeObject->Date2SystemTime(
+                    Year   => $1,
+                    Month  => $2,
+                    Day    => $3,
+                    Hour   => $4,
+                    Minute => $5,
+                    Second => $6,
+                );
+            }
+            else {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Invalid time format '" . $Param{ $Key . 'NewerDate' } . "'!",
@@ -3631,15 +3599,6 @@ sub TicketSearchOR {
                 return;
             }
 
-            # convert param date to system time
-            my $SystemTime = $TimeObject->Date2SystemTime(
-                Year   => $1,
-                Month  => $2,
-                Day    => $3,
-                Hour   => $4,
-                Minute => $5,
-                Second => $6,
-            );
             if ( !$SystemTime ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
@@ -3711,11 +3670,9 @@ sub TicketSearchOR {
         if ( $Param{ $Key . 'OlderDate' } ) {
 
             # check time format
-     if (
-                $Param{ $Key . 'OlderDate' }
-                !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-                )
-            {
+            if (
+                $Param{ $Key . 'OlderDate' } !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Invalid time format '" . $Param{ $Key . 'OlderDate' } . "'!",
@@ -3748,10 +3705,8 @@ sub TicketSearchOR {
         # get tickets created/escalated newer than xxxx-xx-xx xx:xx date
         if ( $Param{ $Key . 'NewerDate' } ) {
             if (
-                $Param{ $Key . 'NewerDate' }
-                !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-                )
-            {
+                $Param{ $Key . 'NewerDate' } !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+            ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Invalid time format '" . $Param{ $Key . 'NewerDate' } . "'!",
@@ -3819,10 +3774,8 @@ sub TicketSearchOR {
 
         # check time format
         if (
-            $Param{TicketChangeTimeOlderDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketChangeTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketChangeTimeOlderDate}'!",
@@ -3850,10 +3803,8 @@ sub TicketSearchOR {
     # get tickets based on ticket history changed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketChangeTimeNewerDate} ) {
         if (
-            $Param{TicketChangeTimeNewerDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketChangeTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketChangeTimeNewerDate}'!",
@@ -3915,10 +3866,8 @@ sub TicketSearchOR {
 
         # check time format
         if (
-            $Param{TicketLastChangeTimeOlderDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketLastChangeTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketLastChangeTimeOlderDate}'!",
@@ -3946,10 +3895,8 @@ sub TicketSearchOR {
     # get tickets changed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketLastChangeTimeNewerDate} ) {
         if (
-            $Param{TicketLastChangeTimeNewerDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketLastChangeTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketLastChangeTimeNewerDate}'!",
@@ -4012,10 +3959,8 @@ sub TicketSearchOR {
 
         # check time format
         if (
-            $Param{TicketCloseTimeOlderDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketCloseTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketCloseTimeOlderDate}'!",
@@ -4054,10 +3999,8 @@ sub TicketSearchOR {
     # get tickets closed newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketCloseTimeNewerDate} ) {
         if (
-            $Param{TicketCloseTimeNewerDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketCloseTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketCloseTimeNewerDate}'!",
@@ -4104,8 +4047,7 @@ sub TicketSearchOR {
         || defined $Param{TicketPendingTimeNewerMinutes}
         || $Param{TicketPendingTimeOlderDate}
         || $Param{TicketPendingTimeNewerDate}
-        )
-    {
+    ) {
 
         # get close state ids
         my @List = $Kernel::OM->Get('Kernel::System::State')->StateGetStatesByType(
@@ -4149,10 +4091,8 @@ sub TicketSearchOR {
 
         # check time format
         if (
-            $Param{TicketPendingTimeOlderDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketPendingTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketPendingTimeOlderDate}'!",
@@ -4179,10 +4119,8 @@ sub TicketSearchOR {
     # get pending tickets newer than xxxx-xx-xx xx:xx date
     if ( $Param{TicketPendingTimeNewerDate} ) {
         if (
-            $Param{TicketPendingTimeNewerDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+            $Param{TicketPendingTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{TicketPendingTimeNewerDate}'!",
@@ -4273,9 +4211,9 @@ sub TicketSearchOR {
                        # With an INNER JOIN we'd limit the result set to tickets which have an entry
                        #   for the DF which is used for sorting.
                         $SQLFrom
-                            .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                            ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
-                                AND dfv$DynamicFieldJoinCounter.field_id = " .
+                            .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter"
+                             . " ON (st.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}"
+                             . "  AND dfv$DynamicFieldJoinCounter.field_id = " .
                             $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
                     }
                     elsif ( $ArticleDynamicFieldName2Config{$DynamicFieldName} ) {
@@ -4285,9 +4223,9 @@ sub TicketSearchOR {
                         }
 
                         $SQLFrom
-                            .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                            ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
-                                AND dfv$DynamicFieldJoinCounter.field_id = " .
+                            .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter"
+                             . " ON (art.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}"
+                             . "  AND dfv$DynamicFieldJoinCounter.field_id = " .
                             $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
                     }
 

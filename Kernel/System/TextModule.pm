@@ -12,7 +12,6 @@ use strict;
 use warnings;
 
 use Kernel::System::VariableCheck qw(:all);
-use vars qw(@ISA);
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -69,20 +68,25 @@ sub new {
     $Self->{TypeObject}   = $Kernel::OM->Get('Kernel::System::Type');
     $Self->{XMLObject}    = $Kernel::OM->Get('Kernel::System::XML');
 
-    # extension modules
-    if ( $Self->{ConfigObject}->Get('TextModule::CustomModules') ) {
-        my @CustomModules = @{ $Self->{ConfigObject}->Get('TextModule::CustomModules') };
-        for my $CustMod (@CustomModules) {
-            if ( !$Self->{MainObject}->Require($CustMod) ) {
-                $Self->{LogObject}->Log(
-                    Priority => 'error',
-                    Message  => "Can't load TextModule custom module "
-                        . $CustMod . " ($@)!",
-                );
-                next;
-            }
+    # load text module extension modules
+    my $CustomModule = $Self->{ConfigObject}->Get('TextModule::CustomModule');
+    if ($CustomModule) {
 
-            unshift( @ISA, $CustMod );
+        my %ModuleList;
+        if ( ref $CustomModule eq 'HASH' ) {
+            %ModuleList = %{$CustomModule};
+        }
+        else {
+            $ModuleList{Init} = $CustomModule;
+        }
+
+        MODULEKEY:
+        for my $ModuleKey ( sort keys %ModuleList ) {
+
+            my $Module = $ModuleList{$ModuleKey};
+
+            next MODULEKEY if !$Module;
+            next MODULEKEY if !$Self->{MainObject}->RequireBaseClass($Module);
         }
     }
 
@@ -976,22 +980,18 @@ sub _ImportTextModuleCategoriesXML {
 
     if (
         $XMLHash[1]
-        &&
-        ref( $XMLHash[1] ) eq 'HASH'
+        && ref( $XMLHash[1] ) eq 'HASH'
         && $XMLHash[1]->{'TextModuleCategoryList'}
         && ref( $XMLHash[1]->{'TextModuleCategoryList'} ) eq 'ARRAY'
         && $XMLHash[1]->{'TextModuleCategoryList'}->[1]
         && ref( $XMLHash[1]->{'TextModuleCategoryList'}->[1] ) eq 'HASH'
         && $XMLHash[1]->{'TextModuleCategoryList'}->[1]->{'TextModuleCategoryEntry'}
-        && ref( $XMLHash[1]->{'TextModuleCategoryList'}->[1]->{'TextModuleCategoryEntry'} ) eq
-        'ARRAY'
-        )
-    {
+        && ref( $XMLHash[1]->{'TextModuleCategoryList'}->[1]->{'TextModuleCategoryEntry'} ) eq 'ARRAY'
+    ) {
         my $TMArrIndex = 0;
         for my $TMArrRef (
             @{ $XMLHash[1]->{'TextModuleCategoryList'}->[1]->{'TextModuleCategoryEntry'} }
-            )
-        {
+        ) {
             next if ( !defined($TMArrRef) || ref($TMArrRef) ne 'HASH' );
 
             $TMArrIndex++;
@@ -1002,8 +1002,7 @@ sub _ImportTextModuleCategoriesXML {
                     ref( $TMArrRef->{$Key} ) eq 'ARRAY'
                     && $TMArrRef->{$Key}->[1]
                     && ref( $TMArrRef->{$Key}->[1] ) eq 'HASH'
-                    )
-                {
+                ) {
                     $UpdateData{$Key} = $TMArrRef->{$Key}->[1]->{Content} || '';
                 }
             }
@@ -1384,8 +1383,7 @@ sub TextModuleList {
     my @Params;
     foreach my $ParamKey (
         qw{Result CategoryID TextModuleID QueueID TicketTypeID TicketStateID Customer Public Agent Language ValidID Limit Name}
-        )
-    {
+    ) {
         if ( $Param{$ParamKey} ) {
             push( @Params, $Param{$ParamKey} );
         }
@@ -1944,8 +1942,7 @@ sub _CreateTextModuleExportXML {
         if (
             !$CurrTM{TextModuleCategoryList}->[1]->{TextModuleCategory}->[1]
             || ref $CurrTM{TextModuleCategoryList}->[1]->{TextModuleCategory}->[1] ne 'HASH'
-            )
-        {
+        ) {
             %{ $CurrTM{TextModuleCategoryList}->[1]->{TextModuleCategory}->[1] } = ();
         }
 
@@ -1971,8 +1968,7 @@ sub _CreateTextModuleExportXML {
         if (
             !$CurrTM{QueueList}->[1]->{Queue}->[1]
             || ref $CurrTM{QueueList}->[1]->{Queue}->[1] ne 'HASH'
-            )
-        {
+        ) {
             %{ $CurrTM{QueueList}->[1]->{Queue}->[1] } = ();
         }
 
@@ -1998,8 +1994,7 @@ sub _CreateTextModuleExportXML {
         if (
             !$CurrTM{TicketTypeList}->[1]->{TicketType}->[1]
             || ref $CurrTM{TicketTypeList}->[1]->{TicketType}->[1] ne 'HASH'
-            )
-        {
+        ) {
             %{ $CurrTM{TicketTypeList}->[1]->{TicketType}->[1] } = ();
         }
 
@@ -2025,8 +2020,7 @@ sub _CreateTextModuleExportXML {
         if (
             !$CurrTM{TicketStateList}->[1]->{TicketState}->[1]
             || ref $CurrTM{TicketStateList}->[1]->{TicketState}->[1] ne 'HASH'
-            )
-        {
+        ) {
             %{ $CurrTM{TicketStateList}->[1]->{TicketState}->[1] } = ();
         }
 
@@ -2137,7 +2131,7 @@ sub _ImportTextModuleCSV {
         my $ColumnIdx = 0;
         foreach my $ColumnContent ( @{$Row} ) {
             my $Key = $HeadLine->[$ColumnIdx];
-            if ( $Key !~ /(.*?)List$/g ) {
+            if ( $Key !~ /(?:.*?)List$/g ) {
                 $UpdateData{$Key} = $ColumnContent;
             }
             else {
@@ -2381,16 +2375,14 @@ sub _ImportTextModuleXML {
 
     if (
         $XMLHash[1]
-        &&
-        ref( $XMLHash[1] ) eq 'HASH'
+        && ref( $XMLHash[1] ) eq 'HASH'
         && $XMLHash[1]->{'TextModuleList'}
         && ref( $XMLHash[1]->{'TextModuleList'} ) eq 'ARRAY'
         && $XMLHash[1]->{'TextModuleList'}->[1]
         && ref( $XMLHash[1]->{'TextModuleList'}->[1] ) eq 'HASH'
         && $XMLHash[1]->{'TextModuleList'}->[1]->{'TextModuleEntry'}
         && ref( $XMLHash[1]->{'TextModuleList'}->[1]->{'TextModuleEntry'} ) eq 'ARRAY'
-        )
-    {
+    ) {
         my $TMArrIndex = 0;
         for my $TMArrRef ( @{ $XMLHash[1]->{'TextModuleList'}->[1]->{'TextModuleEntry'} } ) {
             next if ( !defined($TMArrRef) || ref($TMArrRef) ne 'HASH' );
@@ -2402,8 +2394,7 @@ sub _ImportTextModuleXML {
                     ref( $TMArrRef->{$Key} ) eq 'ARRAY'
                     && $TMArrRef->{$Key}->[1]
                     && ref( $TMArrRef->{$Key}->[1] ) eq 'HASH'
-                    )
-                {
+                ) {
                     $UpdateData{$Key} = $TMArrRef->{$Key}->[1]->{Content} || '';
                 }
             }
@@ -2417,13 +2408,11 @@ sub _ImportTextModuleXML {
                     && ref( $TMArrRef->{ $ObjectType . 'List' }->[1] ) eq 'HASH'
                     && $TMArrRef->{ $ObjectType . 'List' }->[1]->{$ObjectType}
                     && ref( $TMArrRef->{ $ObjectType . 'List' }->[1]->{$ObjectType} ) eq 'ARRAY'
-                    )
-                {
+                ) {
                     my $Index = 1;
                     for my $SubContent (
                         @{ $TMArrRef->{ $ObjectType . 'List' }->[1]->{$ObjectType} }
-                        )
-                    {
+                    ) {
                         next if ( !defined($SubContent) );
                         $ObjectList{$Index}->{ID}   = $SubContent->{ID}      || '0';
                         $ObjectList{$Index}->{Name} = $SubContent->{Content} || '';

@@ -50,14 +50,10 @@ sub Run {
         # prepare signature
         my $TemplateGenerator = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
         $NewData{Signature} = $TemplateGenerator->Signature(
-            QueueID => $NewData{AssignedQueue},
-            Data    => \%Param,
-            UserID  => $Self->{UserID},
-
-            # KIX4OTRS-capeIT
+            QueueID  => $NewData{AssignedQueue},
+            Data     => \%Param,
+            UserID   => $Self->{UserID},
             TicketID => $Param{TicketID},
-
-            # EO KIX4OTRS-capeIT
         );
 
     }

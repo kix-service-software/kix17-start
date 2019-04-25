@@ -43,8 +43,7 @@ sub Run {
         if (
             defined $Package->{PackageIsVisible}
             && !$Package->{PackageIsVisible}->{Content}
-            )
-        {
+        ) {
             next PACKAGE;
         }
 

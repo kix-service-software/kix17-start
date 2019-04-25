@@ -63,7 +63,7 @@ $("#SetColumnPreferences_[% Data.PreferencesID %]").bind('click', function (Even
 
 
                             var Found = 0;
-                            $.each( $(this).closest('form').find('input[name="FilterAction"]'), function()  {
+                            $.each( $(this).closest('form').find('input[name="FilterAction"]'), function() {
                                 if ( $(this).val().match(Regexp) ) {
                                     Found = 1;
                                 }

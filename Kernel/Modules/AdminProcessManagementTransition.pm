@@ -101,28 +101,28 @@ sub Run {
         }
 
         # generate entity ID
-        my $EntityID = $EntityObject->EntityIDGenerate(
+        my $NewEntityID = $EntityObject->EntityIDGenerate(
             EntityType => 'Transition',
             UserID     => $Self->{UserID},
         );
 
         # show error if can't generate a new EntityID
-        if ( !$EntityID ) {
+        if ( !$NewEntityID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error generating a new EntityID for this Transition'),
             );
         }
 
         # otherwise save configuration and return process screen
-        my $TransitionID = $TransitionObject->TransitionAdd(
+        my $NewTransitionID = $TransitionObject->TransitionAdd(
             Name     => $TransitionData->{Name},
-            EntityID => $EntityID,
+            EntityID => $NewEntityID,
             Config   => $TransitionData->{Config},
             UserID   => $Self->{UserID},
         );
 
         # show error if can't create
-        if ( !$TransitionID ) {
+        if ( !$NewTransitionID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error creating the Transition'),
             );
@@ -131,7 +131,7 @@ sub Run {
         # set entity sync state
         my $Success = $EntityObject->EntitySyncStateSet(
             EntityType => 'Transition',
-            EntityID   => $EntityID,
+            EntityID   => $NewEntityID,
             SyncState  => 'not_sync',
             UserID     => $Self->{UserID},
         );
@@ -141,7 +141,7 @@ sub Run {
             return $LayoutObject->ErrorScreen(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'There was an error setting the entity sync status for Transition entity: %s',
-                    $EntityID
+                    $NewEntityID
                 ),
             );
         }
@@ -153,7 +153,7 @@ sub Run {
 
         # get latest config data to send it back to main window
         my $TransitionConfig = $Self->_GetTransitionConfig(
-            EntityID => $EntityID,
+            EntityID => $NewEntityID,
         );
 
         my $ConfigJSON = $LayoutObject->JSONEncode( Data => $TransitionConfig );
@@ -162,8 +162,8 @@ sub Run {
         if ( $Redirect && $Redirect eq '1' ) {
 
             $Self->_PushSessionScreen(
-                ID        => $TransitionID,
-                EntityID  => $EntityID,
+                ID        => $NewTransitionID,
+                EntityID  => $NewEntityID,
                 Subaction => 'TransitionEdit'    # always use edit screen
             );
 
@@ -748,7 +748,10 @@ sub _PopupResponse {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    if ( $Param{Redirect} && $Param{Redirect} eq 1 ) {
+    if (
+        defined $Param{Redirect}
+        && $Param{Redirect} eq '1'
+    ) {
         $LayoutObject->Block(
             Name => 'Redirect',
             Data => {
@@ -757,7 +760,10 @@ sub _PopupResponse {
             },
         );
     }
-    elsif ( $Param{ClosePopup} && $Param{ClosePopup} eq 1 ) {
+    elsif (
+        defined $Param{ClosePopup}
+        && $Param{ClosePopup} eq '1'
+    ) {
         $LayoutObject->Block(
             Name => 'ClosePopup',
             Data => {

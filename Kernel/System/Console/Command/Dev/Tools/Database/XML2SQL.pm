@@ -15,8 +15,6 @@ use warnings;
 
 use base qw(Kernel::System::Console::BaseCommand);
 
-## nofilter(TidyAll::Plugin::OTRS::Perl::ObjectManagerCreation)
-
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::DB',
@@ -110,7 +108,11 @@ sub Run {
     }
     else {
         # read xml data from STDIN
-        $SourceXML = do { local $/; <STDIN> };
+        
+        $SourceXML = do {
+            local $/ = undef;
+            <STDIN>
+        };
     }
 
     for my $DatabaseType (@DatabaseType) {

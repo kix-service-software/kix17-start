@@ -129,8 +129,6 @@ sub Run {
         );
     }
 
-    my @EventsDisplayed;
-
     my $Counter = 1;
     my $Limit   = scalar keys %Tickets;
 
@@ -154,8 +152,7 @@ sub Run {
                 %TicketDetail &&
                 $TicketDetail{ 'DynamicField_' . $StartTimeDynamicField } &&
                 $TicketDetail{ 'DynamicField_' . $EndTimeDynamicField }
-                )
-            {
+            ) {
 
                 # end time should be greater than start time
                 my $StartTime = $TimeObject->TimeStamp2SystemTime(
@@ -193,22 +190,22 @@ sub Run {
                 my %Data;
                 $Data{ID}    = $TicketID;
                 $Data{Title} = $TicketDetail{Title};
-                $TicketDetail{ 'DynamicField_' . $StartTimeDynamicField }
-                    =~ /(\d+)\-(\d+)\-(\d+)\ (\d+)\:(\d+)\:(\d+)/;
-                $Data{SYear}   = $1;
-                $Data{SMonth}  = $2 - 1;
-                $Data{SDay}    = $3;
-                $Data{SHour}   = $4;
-                $Data{SMinute} = $5;
-                $Data{SSecond} = $6;
-                $TicketDetail{ 'DynamicField_' . $EndTimeDynamicField }
-                    =~ /(\d+)\-(\d+)\-(\d+)\ (\d+)\:(\d+)\:(\d+)/;
-                $Data{EYear}     = $1;
-                $Data{EMonth}    = $2 - 1;
-                $Data{EDay}      = $3;
-                $Data{EHour}     = $4;
-                $Data{EMinute}   = $5;
-                $Data{ESecond}   = $6;
+                my @SDate = $TicketDetail{ 'DynamicField_' . $StartTimeDynamicField } =~ /(\d+)\-(\d+)\-(\d+)\ (\d+)\:(\d+)\:(\d+)/;
+                $Data{SYear}   = $SDate[0];
+                $Data{SMonth}  = $SDate[1] - 1;
+                $Data{SDay}    = $SDate[2];
+                $Data{SHour}   = $SDate[3];
+                $Data{SMinute} = $SDate[4];
+                $Data{SSecond} = $SDate[5];
+
+                my @EDate = $TicketDetail{ 'DynamicField_' . $EndTimeDynamicField } =~ /(\d+)\-(\d+)\-(\d+)\ (\d+)\:(\d+)\:(\d+)/;
+                $Data{EYear}     = $EDate[0];
+                $Data{EMonth}    = $EDate[1] - 1;
+                $Data{EDay}      = $EDate[2];
+                $Data{EHour}     = $EDate[3];
+                $Data{EMinute}   = $EDate[4];
+                $Data{ESecond}   = $EDate[5];
+
                 $Data{Color}     = $Self->{TicketColors}->{$TicketID};
                 $Data{AllDay}    = 'false';
                 $Data{Url}       = "index.pl?Action=AgentTicketZoom;TicketID=$TicketID";

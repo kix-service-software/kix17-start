@@ -40,8 +40,8 @@ sub Run {
 
     $Self->{LogObject}->Log( Priority => 'notice', Message => "FileWatcher started." );
 
-    $Self->{FileSystemObject}->_MetaImport();
-    $Self->{FileSystemObject}->_MetaSync();
+    $Self->{FileSystemObject}->MetaImport();
+    $Self->{FileSystemObject}->MetaSync();
 
     # $Self->{LogObject}->Log( Priority => 'notice', Message => "FileWatcher syncronized ".$FileCount." files using metadata file." );
 

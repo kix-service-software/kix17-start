@@ -136,16 +136,14 @@ sub Run {
             TicketEscalation       TicketEscalationResponse
             TicketEscalationUpdate TicketEscalationSolution
             )
-            )
-        {
+        ) {
             for my $Attribute (
                 qw(
                 TimePoint TimePointFormat TimePointStart
                 TimeStart TimeStartDay TimeStartMonth TimeStopMonth
                 TimeStop TimeStopDay TimeStopYear TimeStartYear
                 )
-                )
-            {
+            ) {
                 my $Key = $Type . $Attribute;
                 $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
             }
@@ -153,8 +151,7 @@ sub Run {
             # validate data
             for my $Attribute (
                 qw(TimeStartDay TimeStartMonth TimeStopMonth TimeStopDay)
-                )
-            {
+            ) {
                 my $Key = $Type . $Attribute;
 
                 if ( $GetParam{$Key} ) {
@@ -242,6 +239,14 @@ sub Run {
             $Errors{ProfileInvalid} = 'ServerError';
         }
 
+        if ( $Self->{Profile} ne $Self->{OldProfile} ) {
+            my %JobData = $GenericAgentObject->JobGet( Name => $Self->{Profile} );
+            if ( %JobData ) {
+                $Errors{ProfileInvalid}    = 'ServerError';
+                $Errors{ProfileInvalidMsg} = 'AddError';
+            }
+        }
+
         # Check if ticket selection contains stop words
         my %StopWordsServerErrors = $Self->_StopWordsServerErrorsGet(
             From    => $GetParam{From},
@@ -293,6 +298,7 @@ sub Run {
             %DynamicFieldValues,
             %Errors,
             StopWordsAlreadyChecked => 1,
+            UpdateError             => 1
         );
 
         # generate search mask
@@ -311,7 +317,29 @@ sub Run {
     # ---------------------------------------------------------- #
     if ( $Self->{Subaction} eq 'Update' ) {
         my $JobDataReference;
-        $JobDataReference = $Self->_MaskUpdate(%Param);
+
+        $Self->{OldProfile} = $Self->{Profile};
+        $JobDataReference   = $Self->_MaskUpdate(%Param);
+
+        # generate search mask
+        my $Output = $LayoutObject->Header( Title => 'Edit' );
+
+        $Output .= $LayoutObject->NavigationBar();
+        $Output .= $LayoutObject->Output(
+            TemplateFile => 'AdminGenericAgent',
+            Data         => $JobDataReference,
+        );
+        $Output .= $LayoutObject->Footer();
+        return $Output;
+    }
+
+    # ------------------------------------------------------------ #
+    # clone an generic agent job
+    # ------------------------------------------------------------ #
+    elsif ( $Self->{Subaction} eq 'Clone' ) {
+        my $JobDataReference;
+
+        $JobDataReference   = $Self->_MaskUpdate(%Param);
 
         # generate search mask
         my $Output = $LayoutObject->Header( Title => 'Edit' );
@@ -397,14 +425,31 @@ sub _MaskUpdate {
     my %JobData;
     my %EventDeleteElements;
 
-    if ( $Self->{Profile} ) {
+    if (
+        $Self->{Profile}
+        && !$Param{UpdateError}
+    ) {
 
         # get db job data
         %JobData = $Kernel::OM->Get('Kernel::System::GenericAgent')->JobGet(
             Name => $Self->{Profile},
         );
     }
-    $JobData{Profile} = $Self->{Profile};
+
+    elsif ( $Param{UpdateError} ) {
+        %JobData = %Param;
+    }
+
+    $JobData{Profile}    = $Self->{Profile};
+    $JobData{OldProfile} = $Self->{OldProfile} || '';
+
+    if ( $Self->{Subaction} eq 'Clone' ) {
+        $JobData{Profile}    = '';
+        $JobData{OldProfile} = '';
+        $JobData{Name}       = '';
+        $Self->{Profile}     = '';
+        $Self->{OldProfile}  = '';
+    }
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -621,8 +666,7 @@ sub _MaskUpdate {
         TicketEscalation       TicketEscalationResponse
         TicketEscalationUpdate TicketEscalationSolution
         )
-        )
-    {
+    ) {
         my $SearchType = $Map{$Type} . 'SearchType';
         if ( !$JobData{$SearchType} ) {
             $JobData{ $SearchType . '::None' } = 'checked="checked"';
@@ -756,6 +800,16 @@ sub _MaskUpdate {
     $LayoutObject->Block(
         Name => 'ActionOverview',
     );
+
+    if ( $Self->{OldProfile} ) {
+        $LayoutObject->Block(
+            Name => 'ActionClone',
+            Data => {
+                Profile => $Self->{Profile}
+            }
+        );
+    }
+
     $LayoutObject->Block(
         Name => 'Edit',
         Data => {
@@ -778,8 +832,7 @@ sub _MaskUpdate {
         !defined $JobData{ScheduleDays}->[0]
         || !defined $JobData{ScheduleHours}->[0]
         || !defined $JobData{ScheduleMinutes}->[0]
-        )
-    {
+    ) {
         $LayoutObject->Block(
             Name => 'JobScheduleWarning',
         );
@@ -1108,7 +1161,7 @@ sub _MaskUpdate {
         );
 
         my $FieldLabel = 'Ticket Attributes';
-        $FieldLabel = 'Dynamic Fields' if $Key eq 'DynamicField';
+        $FieldLabel    = 'Dynamic Fields' if $Key eq 'DynamicField';
 
         $LayoutObject->Block(
             Name => 'NewDeleteField',
@@ -1257,8 +1310,7 @@ sub _MaskRun {
                         . $DynamicFieldConfig->{Name}
                         . $Preference->{Type}
                 }
-                )
-            {
+            ) {
                 next PREFERENCE;
             }
 

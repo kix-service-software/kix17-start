@@ -246,14 +246,12 @@ sub Run {
                     $Item->{Input}->{Regex}
                     &&
                     !$AttributeValues{ $Item->{Key} } =~ $Item->{Input}->{Regex}
-                    )
-                {
+                ) {
 
                     $DataTypeError{ $Item->{Name} } = 1;
                     $Error = 1;
                 }
             }
-
         }
 
         # reload with server errors
@@ -1592,7 +1590,6 @@ sub _MaskTemplateEdit2 {
         my $Class = ' ';
         my $Value;
 
-        my $DataTypeError;
         my $ErrorMessage;
 
         if ( $Item->{Input}->{Required} ) {

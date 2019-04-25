@@ -144,8 +144,7 @@ sub FormDataGet {
         if (
             !$Self->{ParamObject}->GetParam( Param => $Param{Key} . '::Search' )
             && defined $FormData{Value}
-            )
-        {
+        ) {
             $FormData{Value} = '';
         }
 
@@ -316,8 +315,8 @@ sub InputCreate {
 
     if (   $AutoCompleteConfig
         && ref($AutoCompleteConfig) eq 'HASH'
-        && $AutoCompleteConfig->{Active} )
-    {
+        && $AutoCompleteConfig->{Active}
+    ) {
 
         $Self->{LayoutObject}->Block(
             Name => 'SLASearchAutoComplete',
@@ -583,7 +582,7 @@ sub _SLASearch {
                 for my $CatalogEntry (@CustomerServiceSLAs) {
                     next if ( ref($CatalogEntry) ne 'HASH' );
                     if ( $CatalogEntry->{SLAID} ) {
-                        $SLAsForCustomerCompany{ $CatalogEntry->{SLAID} } = 1,
+                        $SLAsForCustomerCompany{ $CatalogEntry->{SLAID} } = 1;
                     }
                 }
 
@@ -623,22 +622,11 @@ sub _SLASearch {
         for my $CatalogEntry (@CustomerServiceSLAs) {
             next if ( ref($CatalogEntry) ne 'HASH' );
             if ( $CatalogEntry->{SLAID} ) {
-                $SLAsForDefaultServices{ $CatalogEntry->{SLAID} }
-                    = $AllValidSLAs{ $CatalogEntry->{SLAID} },
+                $SLAsForDefaultServices{ $CatalogEntry->{SLAID} } = $AllValidSLAs{ $CatalogEntry->{SLAID} };
             }
         }
     }
     %SLAs = ( %SLAs, %SLAsForDefaultServices );
-
-    # workaround, all auto completion requests get posted by utf8 anyway
-    # convert any to 8bit string if application is not running in utf8
-#    if ( !$Self->{EncodeObject}->EncodeInternalUsed() ) {
-#        $Param{Search} = $Self->{EncodeObject}->Convert(
-#            Text => $Param{Search},
-#            From => 'utf-8',
-#            To   => $Self->{LayoutObject}->{UserCharset},
-#        );
-#    }
 
     $Param{Search} =~ s/\_/\./g;
     $Param{Search} =~ s/\%/\.\*/g;

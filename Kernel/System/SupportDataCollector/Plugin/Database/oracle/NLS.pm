@@ -79,8 +79,7 @@ sub Run {
     if (
         $CreateTime
         && $CreateTime =~ /^\d\d\d\d-(\d|\d\d)-(\d|\d\d)\s(\d|\d\d):(\d|\d\d):(\d|\d\d)/
-        )
-    {
+    ) {
         $Self->AddResultOk(
             Identifier => 'NLS_DATE_FORMAT_SELECT',
             Label      => Translatable('NLS_DATE_FORMAT Setting SQL Check'),

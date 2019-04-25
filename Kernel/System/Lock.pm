@@ -111,11 +111,12 @@ sub LockViewableLock {
 
     # sql
     return if !$Kernel::OM->Get('Kernel::System::DB')->Prepare(
-        SQL => "
-            SELECT id, name
-            FROM ticket_lock_type
-            WHERE name IN ( ${\(join ', ', @{$Self->{ViewableLocks}})} )
-                AND valid_id IN ( ${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())} )",
+        SQL => <<"END",
+SELECT id, name
+FROM ticket_lock_type
+WHERE name IN ( ${\(join ', ', @{$Self->{ViewableLocks}})} )
+    AND valid_id IN ( ${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())} )
+END
     );
 
     my @Name;

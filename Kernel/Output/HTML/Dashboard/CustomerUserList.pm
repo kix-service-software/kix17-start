@@ -51,12 +51,9 @@ sub Preferences {
 
     my @Params = (
         {
-            # rkaiser - T#2017020290001194 - changed customer user to contact
             Desc  => Translatable('Shown contacts'),
             Name  => $Self->{PrefKey},
             Block => 'Option',
-
-            #            Block => 'Input',
             Data => {
                 5  => ' 5',
                 10 => '10',
@@ -88,20 +85,14 @@ sub Config {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
-    # return if !$Param{CustomerID};
     return if !$Param{CustomerID} && !$Param{CustomerUserLogin};
-
-    # EO KIX4OTRS-capeIT
 
     # get customer user object
     my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
 
-    # KIX4OTRS-capeIT
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # my $CustomerIDs = { $CustomerUserObject->CustomerSearch( CustomerID => $Param{CustomerID} ) };
     my $CustomerIDs;
     my $CustomerIDUsed = 1;
     my %CustomerUserData;
@@ -145,30 +136,16 @@ sub Run {
         );
     }
 
-    # EO KIX4OTRS-capeIT
-
     # add page nav bar
     my $Total = scalar keys %{$CustomerIDs};
-
-    # get layout object
-    # KIX4OTRS-capeIT
-    # moved upwards
-    # my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    # EO KIX4OTRS-capeIT
-
 
     # my $LinkPage
     my $LinkPage;
     if ($CustomerIDUsed) {
-        $LinkPage
-
-            # EO KIX4OTRS-capeIT
-            = 'Subaction=Element;Name='
+        $LinkPage = 'Subaction=Element;Name='
             . $Self->{Name} . ';'
             . 'CustomerID='
             . $LayoutObject->LinkEncode( $Param{CustomerID} ) . ';';
-
-        # KIX4OTRS-capeIT
     }
     else {
         $LinkPage
@@ -177,8 +154,6 @@ sub Run {
             . 'CustomerLogin='
             . $LayoutObject->LinkEncode( $Param{CustomerUserLogin} ) . ';';
     }
-
-    # EO KIX4OTRS-capeIT
 
     my %PageNav = $LayoutObject->PageNavBar(
         StartHit       => $Self->{StartHit},
@@ -245,12 +220,7 @@ sub Run {
 
     if ( $AddAccess && scalar keys %CustomerSource ) {
         $LayoutObject->Block(
-
-            # KIX4OTRS-capeIT
-            # Name => 'ContentLargeCustomerUserAdd',
             Name => 'OverviewResultEditCustomer',
-
-            # EO KIX4OTRS-capeIT
             Data => {
                 CustomerID => $Self->{CustomerID},
             },
@@ -297,11 +267,8 @@ sub Run {
         );
 
         # can edit?
-        # KIX4OTRS-capeIT
-        # if ( $AddAccess && scalar keys %CustomerSource ) {
         if ($CustomerIDUsed) {
 
-            # EO KIX4OTRS-capeIT
             $LayoutObject->Block(
                 Name => 'ContentLargeCustomerUserListRowCustomerKeyLink',
                 Data => {
@@ -313,48 +280,30 @@ sub Run {
         }
         else {
 
-            # KIX4OTRS-capeIT
             # multiple customers used
             my @CustomerIDs;
-            if ( defined $CustomerUserData{UserCustomerIDs} && $CustomerUserData{UserCustomerIDs} )
-            {
+            if ( defined $CustomerUserData{UserCustomerIDs} && $CustomerUserData{UserCustomerIDs} ) {
                 @CustomerIDs = split( /,/, $CustomerUserData{UserCustomerIDs} );
             }
 
             # add UserCustomerID from customer data hash
-            if ( !scalar grep( /$CustomerUserData{UserCustomerID}/, @CustomerIDs ) ) {
+            if ( !scalar grep( {/$CustomerUserData{UserCustomerID}/} @CustomerIDs ) ) {
                 push @CustomerIDs, $CustomerUserData{UserCustomerID};
             }
 
             # show all customer ids
             for my $Item (@CustomerIDs) {
-
-                # EO KIX4OTRS-capeIT
                 $LayoutObject->Block(
-
-                    # KIX4OTRS-capeIT
                     Name => 'ContentLargeCustomerUserListRowCompanyKeyLink',
-
-                    # EO KIX4OTRS-capeIT
                     Data => {
                         %Param,
-
-                        # KIX4OTRS-capeIT
-                        # CustomerKey       => $CustomerKey,
                         CustomerCompanyKey => $Item,
                         CustomerListEntry  => $CustomerIDs->{$CustomerKey},
-
-                        # EO KIX4OTRS-capeIT
                     },
                 );
-
-                # KIX4OTRS-capeIT
             }
-
-            # EO KIX4OTRS-capeIT
         }
 
-        # KIX4OTRS-capeIT
         if ( $AddAccess && scalar keys %CustomerSource ) {
             $LayoutObject->Block(
                 Name => 'ContentLargeCustomerUserListRowCustomerEditLink',
@@ -364,109 +313,6 @@ sub Run {
                     CustomerListEntry => $CustomerIDs->{$CustomerKey},
                 },
             );
-        }
-
-        # EO KIX4OTRS-capeIT
-        if ( $ConfigObject->Get('ChatEngine::Active') ) {
-
-            # Check if agent has permission to start chats with the customer users.
-            my $EnableChat = 1;
-            my $ChatStartingAgentsGroup
-                = $ConfigObject->Get('ChatEngine::PermissionGroup::ChatStartingAgents') || 'users';
-
-            if (
-                !defined $LayoutObject->{"UserIsGroup[$ChatStartingAgentsGroup]"}
-                || $LayoutObject->{"UserIsGroup[$ChatStartingAgentsGroup]"} ne 'Yes'
-                )
-            {
-                $EnableChat = 0;
-            }
-            if (
-                $EnableChat
-                && !$ConfigObject->Get('ChatEngine::ChatDirection::AgentToCustomer')
-                )
-            {
-                $EnableChat = 0;
-            }
-
-            if ($EnableChat) {
-                my $VideoChatEnabled = 0;
-                my $VideoChatAgentsGroup
-                    = $ConfigObject->Get('ChatEngine::PermissionGroup::VideoChatAgents') || 'users';
-
-                # Enable the video chat feature if system is entitled and agent is a member of configured group.
-                if (
-                    defined $Self->{"UserIsGroup[$VideoChatAgentsGroup]"}
-                    && $Self->{"UserIsGroup[$VideoChatAgentsGroup]"} eq 'Yes'
-                    )
-                {
-                    if ( $Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::VideoChat', Silent => 1 ) )
-                    {
-                        $VideoChatEnabled = $Kernel::OM->Get('Kernel::System::VideoChat')->IsEnabled();
-                    }
-                }
-
-                my $CustomerEnableChat = 0;
-                my $ChatAccess         = 0;
-                my $VideoChatAvailable = 0;
-                my $VideoChatSupport   = 0;
-
-                # Default status is offline.
-                my $UserState            = Translatable('Offline');
-                my $UserStateDescription = $LayoutObject->{LanguageObject}->Translate('User is currently offline.');
-
-                my $CustomerChatAvailability = $Kernel::OM->Get('Kernel::System::Chat')->CustomerAvailabilityGet(
-                    UserID => $CustomerKey,
-                );
-
-                my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
-
-                my %CustomerUser = $CustomerUserObject->CustomerUserDataGet(
-                    User => $CustomerKey,
-                );
-                $CustomerUser{UserFullname} = $CustomerUserObject->CustomerName(
-                    UserLogin => $CustomerKey,
-                );
-                $VideoChatSupport = 1 if $CustomerUser{VideoChatHasWebRTC};
-
-                if ( $CustomerChatAvailability == 3 ) {
-                    $UserState            = Translatable('Active');
-                    $CustomerEnableChat   = 1;
-                    $UserStateDescription = $LayoutObject->{LanguageObject}->Translate('User is currently active.');
-                    $VideoChatAvailable   = 1;
-                }
-                elsif ( $CustomerChatAvailability == 2 ) {
-                    $UserState          = Translatable('Away');
-                    $CustomerEnableChat = 1;
-                    $UserStateDescription
-                        = $LayoutObject->{LanguageObject}->Translate('User was inactive for a while.');
-                }
-
-                $LayoutObject->Block(
-                    Name => 'ContentLargeCustomerUserListRowUserStatus',
-                    Data => {
-                        %CustomerUser,
-                        UserState            => $UserState,
-                        UserStateDescription => $UserStateDescription,
-                    },
-                );
-
-                if (
-                    $CustomerEnableChat
-                    && $ConfigObject->Get('Ticket::Agent::StartChatWOTicket')
-                    )
-                {
-                    $LayoutObject->Block(
-                        Name => 'ContentLargeCustomerUserListRowChatIcons',
-                        Data => {
-                            %CustomerUser,
-                            VideoChatEnabled   => $VideoChatEnabled,
-                            VideoChatAvailable => $VideoChatAvailable,
-                            VideoChatSupport   => $VideoChatSupport,
-                        },
-                    );
-                }
-            }
         }
 
         # get ticket object
@@ -512,15 +358,12 @@ sub Run {
             },
         );
 
-        # KIX4OTRS-capeIT
         # see configuration for this dashboard-backend, e.g.:
         # AgentCustomerInformationCenter::Backend###0050-CIC-CustomerUserList->PhoneTicketDisabled
         # AgentCustomerInformationCenter::Backend###0050-CIC-CustomerUserList->EmailTicketDisabled
         # show/disabled new phone/email-ticket link...
-        # if ($NewAgentTicketPhonePermission) {
         if ( !$Self->{Config}->{PhoneTicketDisabled} && $NewAgentTicketPhonePermission ) {
 
-            # EO KIX4OTRS-capeIT
             $LayoutObject->Block(
                 Name => 'ContentLargeCustomerUserListNewAgentTicketPhone',
                 Data => {
@@ -529,14 +372,10 @@ sub Run {
                     CustomerListEntry => $CustomerIDs->{$CustomerKey},
                 },
             );
-
-            # KIX4OTRS-capeIT
         }
 
-        # if ($NewAgentTicketEmailPermission) {
         if ( !$Self->{Config}->{EmailTicketDisabled} && $NewAgentTicketEmailPermission ) {
 
-            # EO KIX4OTRS-capeIT
             $LayoutObject->Block(
                 Name => 'ContentLargeCustomerUserListNewAgentTicketEmail',
                 Data => {
@@ -545,14 +384,9 @@ sub Run {
                     CustomerListEntry => $CustomerIDs->{$CustomerKey},
                 },
             );
-
-            # KIX4OTRS-capeIT
         }
 
-        # EO KIX4OTRS-capeIT
-
-        if ( $ConfigObject->Get('SwitchToCustomer') && $Self->{SwitchToCustomerPermission} )
-        {
+        if ( $ConfigObject->Get('SwitchToCustomer') && $Self->{SwitchToCustomerPermission} ) {
             $LayoutObject->Block(
                 Name => 'OverviewResultRowSwitchToCustomer',
                 Data => {
@@ -582,13 +416,11 @@ sub Run {
             Name => 'ContentLargeTicketGenericRefresh',
             Data => {
                 %{ $Self->{Config} },
-                Name        => $Self->{Name},
-                NameHTML    => $NameHTML,
-                RefreshTime => $Refresh,
-                CustomerID  => $Param{CustomerID},
-                # KIX4OTRS-capeIT
-                CustomerUserLogin   => $Param{CustomerUserLogin},
-                # EO KIX4OTRS-capeIT
+                Name              => $Self->{Name},
+                NameHTML          => $NameHTML,
+                RefreshTime       => $Refresh,
+                CustomerID        => $Param{CustomerID},
+                CustomerUserLogin => $Param{CustomerUserLogin},
             },
         );
     }

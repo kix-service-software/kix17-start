@@ -42,11 +42,7 @@ sub Run {
     # get needed objects
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-
-    # KIX4OTRS-capeIT
-    my $StateObject = $Kernel::OM->Get('Kernel::System::State');
-
-    # EO KIX4OTRS-capeIT
+    my $StateObject  = $Kernel::OM->Get('Kernel::System::State');
 
     # check needed stuff
     for my $Needed (qw(TicketID)) {
@@ -137,13 +133,12 @@ sub Run {
     # get params
     my %GetParam;
     for my $Parameter (
-        qw(Subject Body
-        NewUserID NewStateID NewPriorityID
-        OwnerAll NoSubmit DestQueueID DestQueue
-        StandardTemplateID CreateArticle
+        qw( Subject Body
+            NewUserID NewStateID NewPriorityID
+            OwnerAll NoSubmit DestQueueID DestQueue
+            StandardTemplateID CreateArticle
         )
-        )
-    {
+    ) {
         $GetParam{$Parameter} = $ParamObject->GetParam( Param => $Parameter ) || '';
     }
     for my $Parameter (qw(Year Month Day Hour Minute TimeUnits)) {
@@ -215,8 +210,7 @@ sub Run {
         && defined $GetParam{Day}
         && defined $GetParam{Hour}
         && defined $GetParam{Minute}
-        )
-    {
+    ) {
         %GetParam = $LayoutObject->TransformDateSelection(
             %GetParam,
         );
@@ -289,11 +283,8 @@ sub Run {
         # update Dynamc Fields Possible Values via AJAX
         my @DynamicFieldAJAX;
 
-        # KIX4OTRS-capeIT
         # get field html
         my %DynamicFieldHTML;
-
-        # EO KIX4OTRS-capeIT
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
@@ -305,8 +296,6 @@ sub Run {
                 Behavior           => 'IsACLReducible',
             );
 
-            # KIX4OTRS-capeIT
-            # next DYNAMICFIELD if !$IsACLReducible;
             if ( !$IsACLReducible ) {
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
                     $DynamicFieldBackendObject->EditFieldRender(
@@ -322,8 +311,6 @@ sub Run {
                 next DYNAMICFIELD;
             }
 
-            # EO KIX4OTRS-capeIT
-
             my $PossibleValues = $DynamicFieldBackendObject->PossibleValuesGet(
                 DynamicFieldConfig => $DynamicFieldConfig,
             );
@@ -333,7 +320,7 @@ sub Run {
             @AclData{ keys %AclData } = keys %AclData;
 
             # set possible values filter from ACLs
-            my $ACL = $TicketObject->TicketAcl(
+            $ACL = $TicketObject->TicketAcl(
                 %GetParam,
                 %ACLCompatGetParam,
                 Action        => $Self->{Action},
@@ -369,23 +356,17 @@ sub Run {
                 }
             );
 
-            # KIX4OTRS-capeIT
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-                $DynamicFieldBackendObject->EditFieldRender(
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->EditFieldRender(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
-                Mandatory =>
-                    $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                LayoutObject    => $LayoutObject,
-                ParamObject     => $ParamObject,
-                AJAXUpdate      => 1,
-                UpdatableFields => $Self->_GetFieldsToUpdate(),
-                );
-
-            # EO KIX4OTRS-capeIT
+                Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                LayoutObject         => $LayoutObject,
+                ParamObject          => $ParamObject,
+                AJAXUpdate           => 1,
+                UpdatableFields      => $Self->_GetFieldsToUpdate(),
+            );
         }
 
-        # KIX4OTRS-capeIT
         # get shown or hidden fields
         $Self->_GetShownDynamicFields(
             DynamicFields => $DynamicField
@@ -419,8 +400,6 @@ sub Run {
                 Max  => 10000,
             };
         }
-
-        # EO KIX4OTRS-capeIT
 
         my $StandardTemplates = $Self->_GetStandardTemplates(
             %GetParam,
@@ -533,11 +512,7 @@ sub Run {
                 },
                 @DynamicFieldAJAX,
                 @TemplateAJAX,
-
-                # KIX4OTRS-capeIT
                 @FormDisplayOutput,
-
-                # EO KIX4OTRS-capeIT
             ],
         );
         return $LayoutObject->Attachment(
@@ -549,10 +524,12 @@ sub Run {
     }
 
     # attachment delete
-    my @AttachmentIDs = map {
-        my ($ID) = $_ =~ m{ \A AttachmentDelete (\d+) \z }xms;
-        $ID ? $ID : ();
-    } $ParamObject->GetParamNames();
+    my @AttachmentIDs = ();
+    for my $Name ( $ParamObject->GetParamNames() ) {
+        if ( $Name =~ m{ \A AttachmentDelete (\d+) \z }xms ) {
+            push (@AttachmentIDs, $1);
+        };
+    }
 
     COUNT:
     for my $Count ( reverse sort @AttachmentIDs ) {
@@ -589,10 +566,6 @@ sub Run {
     for my $DynamicFieldConfig ( @{$DynamicField} ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-        # KIX4OTRS-capeIT
-        # my $PossibleValuesFilter;
-        # EO KIX4OTRS-capeIT
-
         my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
             DynamicFieldConfig => $DynamicFieldConfig,
             Behavior           => 'IsACLReducible',
@@ -613,7 +586,7 @@ sub Run {
                 @AclData{ keys %AclData } = keys %AclData;
 
                 # set possible values filter from ACLs
-                my $ACL = $TicketObject->TicketAcl(
+                $ACL = $TicketObject->TicketAcl(
                     %GetParam,
                     %ACLCompatGetParam,
                     Action        => $Self->{Action},
@@ -627,12 +600,8 @@ sub Run {
                     my %Filter = $TicketObject->TicketAclData();
 
                     # convert Filer key => key back to key => value using map
-                    # KIX4OTRS-capeIT
-                    # %{$PossibleValuesFilter} = map { $_ => $PossibleValues->{$_} }
                     %{ $DynamicFieldConfig->{ShownPossibleValues} }
                         = map { $_ => $PossibleValues->{$_} }
-
-                        # EO KIX4OTRS-capeIT
                         keys %Filter;
                 }
             }
@@ -653,26 +622,18 @@ sub Run {
             # get value stored on the database from Ticket
             $Value = $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} };
         }
-        
 
         # get field html
-        $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-            $DynamicFieldBackendObject->EditFieldRender(
-            DynamicFieldConfig => $DynamicFieldConfig,
-
-            # KIX4OTRS-capeIT
-            # PossibleValuesFilter => $PossibleValuesFilter,
+        $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->EditFieldRender(
+            DynamicFieldConfig   => $DynamicFieldConfig,
             PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
-
-            # EO KIX4OTRS-capeIT
-            Value => $Value,
-            Mandatory =>
-                $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-            LayoutObject    => $LayoutObject,
-            ParamObject     => $ParamObject,
-            AJAXUpdate      => 1,
-            UpdatableFields => $Self->_GetFieldsToUpdate(),
-            );
+            Value                => $Value,
+            Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            LayoutObject         => $LayoutObject,
+            ParamObject          => $ParamObject,
+            AJAXUpdate           => 1,
+            UpdatableFields      => $Self->_GetFieldsToUpdate(),
+        );
     }
 
     # move action
@@ -691,8 +652,7 @@ sub Run {
             && $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
             && $GetParam{TimeUnits} eq ''
             && $Config->{Note}
-            )
-        {
+        ) {
             $Error{'TimeUnitsInvalid'} = ' ServerError';
         }
 
@@ -722,8 +682,7 @@ sub Run {
                 if (
                     $TimeObject->Date2SystemTime( %GetParam, Second => 0 )
                     < $TimeObject->SystemTime()
-                    )
-                {
+                ) {
                     $Error{'DateInvalid'} = 'ServerError';
                 }
             }
@@ -752,10 +711,6 @@ sub Run {
         for my $DynamicFieldConfig ( @{$DynamicField} ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-            # KIX4OTRS-capeIT
-            # my $PossibleValuesFilter;
-            # EO KIX4OTRS-capeIT
-
             my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Behavior           => 'IsACLReducible',
@@ -776,7 +731,7 @@ sub Run {
                     @AclData{ keys %AclData } = keys %AclData;
 
                     # set possible values filter from ACLs
-                    my $ACL = $TicketObject->TicketAcl(
+                    $ACL = $TicketObject->TicketAcl(
                         %GetParam,
                         %ACLCompatGetParam,
                         Action        => $Self->{Action},
@@ -790,18 +745,12 @@ sub Run {
                         my %Filter = $TicketObject->TicketAclData();
 
                         # convert Filer key => key back to key => value using map
-                        # KIX4OTRS-capeIT
-                        # %{$PossibleValuesFilter} = map { $_ => $PossibleValues->{$_} }
                         %{ $DynamicFieldConfig->{ShownPossibleValues} }
                             = map { $_ => $PossibleValues->{$_} }
-
-                            # EO KIX4OTRS-capeIT
                             keys %Filter;
                     }
                 }
             }
-
-            # KIX4OTRS-capeIT
         }
 
         # get shown or hidden fields
@@ -814,32 +763,19 @@ sub Run {
         for my $DynamicFieldConfig ( @{ $DynamicField } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-            # EO KIX4OTRS-capeIT
-
             my $ValidationResult;
 
-            # KIX4OTRS-capeIT
             # do not validate on attachment upload or if field is disabled
-            # if ( !$IsUpload ) {
             if (
                 !$IsUpload
                 && $DynamicFieldConfig->{Shown}
-                )
-            {
-
-                # EO KIX4OTRS-capeIT
+            ) {
 
                 $ValidationResult = $DynamicFieldBackendObject->EditFieldValueValidate(
-                    DynamicFieldConfig => $DynamicFieldConfig,
-
-                    # KIX4OTRS-capeIT
-                    # PossibleValuesFilter => $PossibleValuesFilter,
+                    DynamicFieldConfig   => $DynamicFieldConfig,
                     PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
-
-                    # EO KIX4OTRS-capeIT
-                    ParamObject => $ParamObject,
-                    Mandatory =>
-                        $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                    ParamObject          => $ParamObject,
+                    Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                 );
 
                 if ( !IsHashRefWithData($ValidationResult) ) {
@@ -859,23 +795,16 @@ sub Run {
             }
 
             # get field html
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }
-                = $DynamicFieldBackendObject->EditFieldRender(
-                DynamicFieldConfig => $DynamicFieldConfig,
-
-                # KIX4OTRS-capeIT
-                # PossibleValuesFilter => $PossibleValuesFilter,
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $DynamicFieldBackendObject->EditFieldRender(
+                DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
-
-                # EO KIX4OTRS-capeIT
-                Mandatory =>
-                    $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                ServerError  => $ValidationResult->{ServerError}  || '',
-                ErrorMessage => $ValidationResult->{ErrorMessage} || '',
-                LayoutObject => $LayoutObject,
-                ParamObject  => $ParamObject,
-                AJAXUpdate   => 1,
-                UpdatableFields => $Self->_GetFieldsToUpdate(),
+                Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                ServerError          => $ValidationResult->{ServerError}  || '',
+                ErrorMessage         => $ValidationResult->{ErrorMessage} || '',
+                LayoutObject         => $LayoutObject,
+                ParamObject          => $ParamObject,
+                AJAXUpdate           => 1,
+                UpdatableFields      => $Self->_GetFieldsToUpdate(),
             );
         }
     }
@@ -914,10 +843,8 @@ sub Run {
                 # show lock state
                 if ($Success) {
 
-                    # KIX4OTRS-capeIT
                     %Ticket = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
 
-                    # EO KIX4OTRS-capeIT
                     $LayoutObject->Block(
                         Name => 'PropertiesLock',
                         Data => { %Param, TicketID => $Self->{TicketID} },
@@ -932,7 +859,7 @@ sub Run {
                 );
                 if ( !$AccessOk ) {
 
-                    my $Output = $LayoutObject->Header(
+                    $Output = $LayoutObject->Header(
                         Type      => 'Small',
                         BodyClass => 'Popup',
                     );
@@ -970,7 +897,7 @@ sub Run {
         }
 
         # fetch all queues
-        my %MoveQueues = $TicketObject->MoveList(
+        my %MoveQueues = $TicketObject->TicketMoveList(
             %GetParam,
             %ACLCompatGetParam,
             TicketID => $Self->{TicketID},
@@ -1135,8 +1062,7 @@ sub Run {
         $GetParam{CreateArticle}
         && $Config->{Note}
         && ( $GetParam{Body} || $GetParam{Subject} )
-        )
-    {
+    ) {
 
         # get pre-loaded attachments
         my @AttachmentData = $UploadCacheObject->FormIDGetAllFilesData(
@@ -1164,13 +1090,12 @@ sub Run {
                     $ContentID
                     && ( $Attachment->{ContentType} =~ /image/i )
                     && ( $Attachment->{Disposition} eq 'inline' )
-                    )
-                {
+                ) {
                     my $ContentIDHTMLQuote = $LayoutObject->Ascii2Html(
                         Text => $ContentID,
                     );
                     next ATTACHMENT
-                        if $GetParam{Body} !~ /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
+                        if $GetParam{Body} !~ /(?:\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
                 }
 
                 # remember inline images and normal attachments
@@ -1313,19 +1238,16 @@ sub AgentMove {
 
     my %Data       = %{ $Param{MoveQueues} };
     my %MoveQueues = %Data;
-    my %UsedData;
 
     my $DynamicFieldNames = $Self->_GetFieldsToUpdate(
         OnlyDynamicFields => 1
     );
 
     # create a string with the quoted dynamic field names separated by commas
-    # KIX4OTRS-capeIT
     if ( !$Param{DynamicFieldNamesStrg} ) {
         $Param{DynamicFieldNamesStrg} = '';
     }
 
-    # EO KIX4OTRS-capeIT
     if ( IsArrayRefWithData($DynamicFieldNames) ) {
         for my $Field ( @{$DynamicFieldNames} ) {
             $Param{DynamicFieldNamesStrg} .= ", '" . $Field . "'";
@@ -1437,12 +1359,7 @@ sub AgentMove {
         SelectedID     => $Param{DestQueueID},
         TreeView       => $TreeView,
         CurrentQueueID => $Param{QueueID},
-
-        # KIX4OTRS-capeIT
-        Translation => 0,
-
-        # EO KIX4OTRS-capeIT
-
+        Translation    => 0,
         OnChangeSubmit => 0,
     );
 
@@ -1486,7 +1403,6 @@ sub AgentMove {
         # get the html strings form $Param
         my $DynamicFieldHTML = $Param{DynamicFieldHTML}->{ $DynamicFieldConfig->{Name} };
 
-        # KIX4OTRS-capeIT
         my $Class = "";
         if ( !$DynamicFieldConfig->{Shown} ) {
             $Class = " Hidden";
@@ -1494,19 +1410,13 @@ sub AgentMove {
             $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
         }
 
-        # EO KIX4OTRS-capeIT
-
         $LayoutObject->Block(
             Name => 'DynamicField',
             Data => {
                 Name  => $DynamicFieldConfig->{Name},
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},
-
-                # KIX4OTRS-capeIT
                 Class => $Class,
-
-                # EO KIX4OTRS-capeIT
             },
         );
 
@@ -1530,16 +1440,14 @@ sub AgentMove {
             $Config->{NoteMandatory}
             || $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
             || $Param{IsUpload}
-            )
-        {
+        ) {
             $Param{WidgetStatus} = 'Expanded';
         }
 
         if (
             $Config->{NoteMandatory}
             || $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
-            )
-        {
+        ) {
             $Param{SubjectRequired} = 'Validate_Required';
             $Param{BodyRequired}    = 'Validate_Required';
         }
@@ -1622,7 +1530,7 @@ sub AgentMove {
                         ? 'Validate_Required'
                         : ''
                     ),
-                    }
+                }
             );
         }
 
@@ -1646,8 +1554,7 @@ sub AgentMove {
                 && $LayoutObject->{BrowserRichText}
                 && ( $Attachment->{ContentType} =~ /image/i )
                 && ( $Attachment->{Disposition} eq 'inline' )
-                )
-            {
+            ) {
                 next ATTACHMENT;
             }
             $LayoutObject->Block(
@@ -1672,8 +1579,7 @@ sub AgentMove {
         if (
             $Config->{NoteMandatory}
             || $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
-            )
-        {
+        ) {
             $LayoutObject->Block(
                 Name => 'SubjectLabelMandatory',
             );
@@ -1901,7 +1807,6 @@ sub _GetStandardTemplates {
     return $StandardTemplates{Note};
 }
 
-# KIX4OTRS-capeIT
 sub _GetShownDynamicFields {
     my ( $Self, %Param ) = @_;
 
@@ -1924,8 +1829,7 @@ sub _GetShownDynamicFields {
             if (
                 IsHashRefWithData( \%TicketAclFormData )
                 && defined $TicketAclFormData{ $DynamicField->{Name} }
-                )
-            {
+            ) {
                 if ( $TicketAclFormData{ $DynamicField->{Name} } >= 1 ) {
                     $DynamicField->{Shown} = 1;
                 }
@@ -1943,8 +1847,6 @@ sub _GetShownDynamicFields {
 
     return 1;
 }
-
-# EO KIX4OTRS-capeIT
 
 1;
 

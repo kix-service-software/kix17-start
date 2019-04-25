@@ -80,8 +80,7 @@ sub Run {
     for my $Type (
         qw(FirstResponseTimeEscalation UpdateTimeEscalation SolutionTimeEscalation
         FirstResponseTimeNotification UpdateTimeNotification SolutionTimeNotification)
-        )
-    {
+    ) {
         if ( defined $Ticket{$Type} ) {
             if ( $Type =~ /TimeEscalation$/ ) {
                 $EscalationType = 'Escalation';

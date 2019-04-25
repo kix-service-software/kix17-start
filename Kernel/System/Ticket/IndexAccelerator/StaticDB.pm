@@ -108,10 +108,9 @@ sub TicketAcceleratorUpdate {
             if ( $IndexTicketData{TicketID} ) {
 
                 $Kernel::OM->Get('Kernel::System::DB')->Do(
-                    SQL => '
-                        UPDATE ticket_index
-                        SET queue_id = ?, queue = ?, group_id = ?, s_lock = ?, s_state = ?
-                        WHERE ticket_id = ?',
+                    SQL  => 'UPDATE ticket_index'
+                          . ' SET queue_id = ?, queue = ?, group_id = ?, s_lock = ?, s_state = ?'
+                          . ' WHERE ticket_id = ?',
                     Bind => [
                         \$TicketData{QueueID}, \$TicketData{Queue}, \$TicketData{GroupID},
                         \$TicketData{Lock},    \$TicketData{State}, \$Param{TicketID},
@@ -161,10 +160,7 @@ sub TicketAcceleratorUpdateOnQueueUpdate {
 
     #update ticket_index for changed queue name
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            UPDATE ticket_index
-            SET queue = ?
-            WHERE queue = ?',
+        SQL  => 'UPDATE ticket_index SET queue = ? WHERE queue = ?',
         Bind => [
             \$Param{NewQueueName},
             \$Param{OldQueueName},
@@ -243,10 +239,8 @@ sub TicketAcceleratorAdd {
     }
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            INSERT INTO ticket_index
-                (ticket_id, queue_id, queue, group_id, s_lock, s_state, create_time_unix)
-                VALUES (?, ?, ?, ?, ?, ?, ?)',
+        SQL  => 'INSERT INTO ticket_index (ticket_id, queue_id, queue, group_id, s_lock, s_state, create_time_unix)'
+              . ' VALUES (?, ?, ?, ?, ?, ?, ?)',
         Bind => [
             \$Param{TicketID},     \$TicketData{QueueID}, \$TicketData{Queue},
             \$TicketData{GroupID}, \$TicketData{Lock},    \$TicketData{State},
@@ -329,11 +323,9 @@ sub TicketAcceleratorIndex {
 
     my @QueueIDs = @{ $Param{ShownQueueIDs} };
 
-    # KIX4OTRS-capeIT
     my @ViewableLockIDs = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock( Type => 'ID' );
     my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Param{UserID} );
 
-    # EO KIX4OTRS-capeIT
     # prepare "All tickets: ??" in Queue
     my @ViewableLocks = $Kernel::OM->Get('Kernel::System::Lock')->LockViewableLock(
         Type => 'Name',
@@ -351,11 +343,9 @@ sub TicketAcceleratorIndex {
         # get database object
         my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-        my $SQL = "
-            SELECT count(*)
-            FROM ticket st
-            WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )
-                AND st.queue_id IN (";
+        my $SQL = "SELECT count(*) FROM ticket st"
+                . " WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )"
+                . "  AND st.queue_id IN (";
 
         for ( 0 .. $#QueueIDs ) {
 
@@ -383,8 +373,7 @@ sub TicketAcceleratorIndex {
         $AgentTicketQueue
         && ref $AgentTicketQueue eq 'HASH'
         && $AgentTicketQueue->{ViewAllPossibleTickets}
-        )
-    {
+    ) {
         $Type = 'ro';
     }
 
@@ -416,23 +405,12 @@ sub TicketAcceleratorIndex {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     # CustomQueue add on
-    # KIX4OTRS-capeIT
-    #    return if !$DBObject->Prepare(
-    #        SQL => "
-    #            SELECT count(*), ti.s_lock
-    #            FROM ticket_index ti
-    #                JOIN personal_queues suq ON suq.queue_id = ti.queue_id
-    #            WHERE ti.group_id IN ( ${\(join ', ', @GroupIDs)} )
-    #                AND suq.user_id = $Param{UserID}
-    #            GROUP BY ti.s_lock",
-    #    );
-    my $SQL = "
-            SELECT count(*), ti.s_lock
-            FROM ticket_index ti, personal_queues suq, ticket_lock_type tl
-            WHERE suq.queue_id = ti.queue_id
-                AND tl.name = ti.s_lock
-                AND ti.group_id IN ( ${\(join ', ', @GroupIDs)} )
-                AND suq.user_id = $Param{UserID}";
+    my $SQL = "SELECT count(*), ti.s_lock"
+            . " FROM ticket_index ti, personal_queues suq, ticket_lock_type tl"
+            . " WHERE suq.queue_id = ti.queue_id"
+            . "  AND tl.name = ti.s_lock"
+            . "  AND ti.group_id IN ( ${\(join ', ', @GroupIDs)} )"
+            . "  AND suq.user_id = $Param{UserID}";
 
     if ( $Self->{UserPreferences}->{UserViewAllTickets} ) {
         $SQL .= " AND tl.id IN ( ${\(join ', ', @ViewableLockIDs)} )";
@@ -443,8 +421,6 @@ sub TicketAcceleratorIndex {
     return if !$DBObject->Prepare(
         SQL => $SQL
     );
-
-    # EO KIX4OTRS-capeIT
 
     my %CustomQueueHashes = (
         QueueID => 0,
@@ -464,38 +440,25 @@ sub TicketAcceleratorIndex {
     push @{ $Queues{Queues} }, \%CustomQueueHashes;
 
     # prepare the tickets in Queue bar (all data only with my/your Permission)
-    # KIX4OTRS-capeIT
     if ( $Self->{UserPreferences}->{UserViewAllTickets} ) {
-        $SQL = "
-                SELECT queue_id, queue, min(create_time_unix), s_lock, count(*)
-                FROM ticket_index ti, ticket_lock_type tl
-                WHERE group_id IN ( ${\(join ', ', @GroupIDs)} )
-                  AND tl.name = ti.s_lock
-                  AND tl.id IN ( ${\(join ', ', @ViewableLockIDs)} )";
+        $SQL = "SELECT queue_id, queue, min(create_time_unix), s_lock, count(*)"
+             . " FROM ticket_index ti, ticket_lock_type tl"
+             . " WHERE group_id IN ( ${\(join ', ', @GroupIDs)} )"
+             . "  AND tl.name = ti.s_lock"
+             . "  AND tl.id IN ( ${\(join ', ', @ViewableLockIDs)} )";
     }
     else {
-        $SQL = "
-            SELECT queue_id, queue, min(create_time_unix), s_lock, count(*)
-            FROM ticket_index
-            WHERE group_id IN ( ${\(join ', ', @GroupIDs)} )";
+        $SQL = "SELECT queue_id, queue, min(create_time_unix), s_lock, count(*)"
+             . " FROM ticket_index"
+             . " WHERE group_id IN ( ${\(join ', ', @GroupIDs)} )";
     }
 
-    $SQL .= "GROUP BY queue_id, queue, s_lock
-             ORDER BY queue";
+    $SQL .= " GROUP BY queue_id, queue, s_lock"
+          . " ORDER BY queue";
 
-    #    return if !$Self->{DBObject}->Prepare(
-    #        SQL => "
-    #            SELECT queue_id, queue, min(create_time_unix), count(*)
-    #            FROM ticket_index
-    #            WHERE group_id IN ( ${\(join ', ', @GroupIDs)} )
-    #            GROUP BY queue_id, queue, s_lock
-    #            ORDER BY queue",
-    #    );
     return if !$DBObject->Prepare(
         SQL => $SQL,
     );
-
-    # EO KIX4OTRS-capeIT
 
     # get time object
     my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
@@ -560,14 +523,13 @@ sub TicketAcceleratorRebuild {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     # get all viewable tickets
-    my $SQL = "
-        SELECT st.id, st.queue_id, sq.name, sq.group_id, slt.name, tsd.name, st.create_time_unix
-        FROM ticket st
-            JOIN queue sq             ON st.queue_id = sq.id
-            JOIN ticket_state tsd     ON st.ticket_state_id = tsd.id
-            JOIN ticket_lock_type slt ON st.ticket_lock_id = slt.id
-        WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )
-            AND st.archive_flag = 0";
+    my $SQL = "SELECT st.id, st.queue_id, sq.name, sq.group_id, slt.name, tsd.name, st.create_time_unix"
+            . " FROM ticket st"
+            . "  JOIN queue sq             ON st.queue_id = sq.id"
+            . "  JOIN ticket_state tsd     ON st.ticket_state_id = tsd.id"
+            . "  JOIN ticket_lock_type slt ON st.ticket_lock_id = slt.id"
+            . " WHERE st.ticket_state_id IN ( ${\(join ', ', @ViewableStateIDs)} )"
+            . "  AND st.archive_flag = 0";
 
     return if !$DBObject->Prepare( SQL => $SQL );
 
@@ -594,10 +556,8 @@ sub TicketAcceleratorRebuild {
         my %Data = %{$_};
 
         $DBObject->Do(
-            SQL => '
-                INSERT INTO ticket_index
-                    (ticket_id, queue_id, queue, group_id, s_lock, s_state, create_time_unix)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)',
+            SQL  => 'INSERT INTO ticket_index (ticket_id, queue_id, queue, group_id, s_lock, s_state, create_time_unix)'
+                  . ' VALUES (?, ?, ?, ?, ?, ?, ?)',
             Bind => [
                 \$Data{TicketID}, \$Data{QueueID}, \$Data{Queue}, \$Data{GroupID},
                 \$Data{Lock}, \$Data{State}, \$Data{CreateTimeUnix},
@@ -607,10 +567,9 @@ sub TicketAcceleratorRebuild {
 
     # write lock index
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT ti.id
-            FROM ticket ti
-            WHERE ti.ticket_lock_id not IN ( ${\(join ', ', @ViewableLockIDs)} ) ",
+        SQL => "SELECT ti.id"
+             . " FROM ticket ti"
+             . " WHERE ti.ticket_lock_id not IN ( ${\(join ', ', @ViewableLockIDs)} ) ",
     );
 
     my @LockRowBuffer;
@@ -647,10 +606,9 @@ sub GetIndexTicket {
 
     # sql query
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT ticket_id, queue_id, queue, group_id, s_lock, s_state, create_time_unix
-            FROM ticket_index
-            WHERE ticket_id = ?',
+        SQL  => 'SELECT ticket_id, queue_id, queue, group_id, s_lock, s_state, create_time_unix'
+              . ' FROM ticket_index'
+              . ' WHERE ticket_id = ?',
         Bind => [ \$Param{TicketID} ]
     );
 

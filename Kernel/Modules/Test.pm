@@ -15,6 +15,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+use Kernel::System::ObjectManager;
+
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -31,7 +33,7 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # get test page header
-    my $Output = $LayoutObject->Header( Title => 'OTRS Test Page' );
+    my $Output = $LayoutObject->Header( Title => 'KIX Test Page' );
 
     # example blocks
     $LayoutObject->Block(

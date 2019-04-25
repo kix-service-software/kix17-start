@@ -18,6 +18,8 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
 );
 
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 sub ArticleIndexBuild {
     my ( $Self, %Param ) = @_;
 
@@ -74,8 +76,7 @@ sub _ArticleIndexQuerySQL {
         ArticleCreateTimeOlderMinutes ArticleCreateTimeNewerMinutes
         ArticleCreateTimeOlderDate ArticleCreateTimeNewerDate
         )
-        )
-    {
+    ) {
 
         if ( $Param{Data}->{$_} ) {
             return ' INNER JOIN article art ON st.id = art.ticket_id ';

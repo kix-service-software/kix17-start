@@ -120,15 +120,12 @@ sub Run {
 
             # match string
             elsif (
-                defined $Param{GetParam}->{$_} &&
-                (
+                defined $Param{GetParam}->{$_}
+                && (
                     ( !$Config{Not}->{$_} && $Param{GetParam}->{$_} =~ m{$Match{$_}}i )
-                    ||
-                    ( $Config{Not}->{$_} && $Param{GetParam}->{$_} !~ m{$Match{$_}}i )
+                    || ( $Config{Not}->{$_} && $Param{GetParam}->{$_} !~ m{$Match{$_}}i )
                 )
-                )
-            {
-
+            ) {
                 # don't lose older match values if more than one header is
                 # used for matching.
                 $Matched = 1;

@@ -28,14 +28,12 @@
                 Function: function () {
                     $('#ArticleTypeFilter').val('').trigger('redraw.InputField');
                     $('#ArticleSenderTypeFilter').val('').trigger('redraw.InputField');
-# KIX4OTRS-capeIT
                     $('#ArticleSubject').val('').trigger('redraw.InputField');
                     $('#ArticleBody').val('').trigger('redraw.InputField');
 [% RenderBlockStart("ArticleFilterDialogDynamicFieldReset") %]
                     $('#DynamicField_[% Data.Name | JSON %]_Active').attr('checked',false);
                     $('#DynamicField_[% Data.Name | JSON %]_Active').trigger('change');
 [% RenderBlockEnd("ArticleFilterDialogDynamicFieldReset") %]
-# EO KIX4OTRS-capeIT
                 }
             }
         ]);
@@ -43,10 +41,7 @@
     });
     $('#ResetArticleFilter').bind('click', function (Event) {
         var Data = {
-# KIX4OTRS-capeIT
-#            Action:       'AgentTicketZoom',
             Action:       'AgentTicketZoomTabArticle',
-# EO KIX4OTRS-capeIT
             Subaction:    'ArticleFilterSet',
             TicketID:     "[% Data.TicketID | html %]",
             SaveDefaults: 1
@@ -55,27 +50,19 @@
             location.reload();
         });
     });
-# KIX4OTRS-capeIT
 [% RenderBlockStart("ArticleFilterDialogDynamicFieldActive") %]
     $('#DynamicField_[% Data.Name %]_Active').attr('checked',true);
 [% RenderBlockEnd("ArticleFilterDialogDynamicFieldActive") %]
 [% RenderBlockStart("ArticleFilterDialogDynamicFieldInactive") %]
     $('#DynamicField_[% Data.Name %]').prop('disabled',true);
 [% RenderBlockEnd("ArticleFilterDialogDynamicFieldInactive") %]
-# EO KIX4OTRS-capeIT
 //]]></script>
 [% END %]
 <div id="ArticleFilterDialog" class="Hidden">
     <form action="[% Env("CGIHandle") %]" method="post" id="ArticleFilterDialogForm" name="ArticleFilterDialogForm">
-# KIX4OTRS-capeIT
-#        <input type="hidden" value="AgentTicketZoom" name="Action"/>
         <input type="hidden" value="AgentTicketZoomTabArticle" name="Action"/>
-# EO KIX4OTRS-capeIT
         <input type="hidden" value="ArticleFilterSet" name="Subaction"/>
-# KIX4OTRS-capeIT
-#        <input type="hidden" value="[% Data.TicketID | html %]" name="TicketID"/>
         <input type="hidden" value="[% Data.TicketID | html %]" name="TicketID" id="TicketID" />
-# EO KIX4OTRS-capeIT
         <fieldset class="TableLike">
             <label for="ArticleTypeFilter">[% Translate("Article Type") | html %]:</label>
             <div class="Field">
@@ -87,7 +74,6 @@
                 [% Data.ArticleSenderTypeFilterString %]
             </div>
             <div class="Clear"></div>
-# KIX4OTRS-capeIT
             <label for="ArticleSubjectFilter">[% Translate("Article Subject") | html %]:</label>
             <div class="Field">
                 <input type="text" id="ArticleSubject" name="ArticleSubjectFilter" value="[% Data.ArticleSubjectFilterString | html %]" />
@@ -120,7 +106,6 @@
             </div>
 [% RenderBlockEnd("ArticleFilterDialogDynamicField") %]
             <div class="Clear"></div>
-# EO KIX4OTRS-capeIT
             <label for="SaveDefaults">[% Translate("Save filter settings as default") | html %]:</label>
             <div class="Field">
                 <input type="checkbox" id="SaveDefaults" name="SaveDefaults" value="1" />
@@ -156,10 +141,7 @@
     });
     $('#ResetArticleFilter').bind('click', function (Event) {
         var Data = {
-# KIX4OTRS-capeIT
-#            Action:       'AgentTicketZoom',
             Action:       'AgentTicketZoomTabArticle',
-# EO KIX4OTRS-capeIT
             Subaction:    'EvenTypeFilterSet',
             TicketID:     "[% Data.TicketID | html %]",
             SaveDefaults: 1
@@ -172,10 +154,7 @@
 [% END %]
 <div id="EventTypeFilterDialog" class="Hidden">
     <form action="[% Env("CGIHandle") %]" method="post" id="EventTypeFilterDialogForm" name="EventTypeFilterDialogForm">
-# KIX4OTRS-capeIT
-#        <input type="hidden" value="AgentTicketZoom" name="Action"/>
         <input type="hidden" value="AgentTicketZoomTabArticle" name="Action"/>
-# EO KIX4OTRS-capeIT
         <input type="hidden" value="EvenTypeFilterSet" name="Subaction"/>
         <input type="hidden" value="[% Data.TicketID | html %]" name="TicketID"/>
         <fieldset class="TableLike">
@@ -193,7 +172,6 @@
 </div>
 [% RenderBlockEnd("EventTypeFilterDialog") %]
 
-# KIX4OTRS-capeIT
 [% RenderBlockStart("ArticleFlagDialog") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
@@ -231,12 +209,9 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
     </form>
 </div>
 [% RenderBlockEnd("ArticleFlagDialog") %]
-# EO KIX4OTRS-capeIT
 
 [% RenderBlockStart("Header") %]
         <div id="AgentTicketZoomTab">
-# EO KIX4OTRS-capeIT
-
             <div id="ArticleTree">
 [% Data.ArticleTree %]
             </div>
@@ -252,14 +227,8 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
             <div id="ArticleItems">
 [% Data.ArticleItems %]
             </div>
-# KIX4OTRS-capeIT
-# LinkTableComplex removed
-# EO KIX4OTRS-capeIT
         </div>
         <div class="Clear"></div>
-# KIX4OTRS-capeIT
-# two closing divs removed
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("Header") %]
 
 [% RenderBlockStart("Tree") %]
@@ -272,11 +241,7 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
             </a>
         </div>
         <h2 class="PaddingLeft15px"><span>
-        [% IF Data.ZoomTimeline %]
-            [% Translate("Ticket Timeline View") | html %]
-        [% ELSE %]
             [% Translate("Article Overview") | html %] - [% Data.ArticleCount | html %] [% Translate("Article(s)") | html %]
-        [% END %]
         </span></h2>
         <div class="AdditionalInformation ControlRow">
 
@@ -290,10 +255,7 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
 [% RenderBlockStart("ArticleFilterDialogLink") %]
             <div class="ArticleFilter Icons">
                 <span class="InvisibleText">[% Translate("Article Filter") | html %]:</span>
-# Only show one: Set or Reset.
-#[% RenderBlockStart("ArticleFilterSetLink") %]
                 <a href="#" id="SetArticleFilter" title="[% Translate("Add Filter") | html %]"><i class="fa fa-filter"></i><span>[% Translate("Set") | html %]</span></a>
-#[% RenderBlockEnd("ArticleFilterSetLink") %]
 [% RenderBlockStart("ArticleFilterResetLink") %]
                 <a href="#" id="ResetArticleFilter" title="[% Translate("Reset Filter") | html %]"><i class="fa fa-trash-o"></i><span>[% Translate("Reset") | html %]</span></a>
 [% RenderBlockEnd("ArticleFilterResetLink") %]
@@ -302,45 +264,13 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
             <div class="ArticleView Icons">
                 <span class="InvisibleText">[% Translate("Article") | html %] [% Translate("View") | html %]:</span>
 [% RenderBlockStart("Expand") %]
-# KIX4OTRS-capeIT
-#                <a class="OneArticle Active" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0;ArticlePage=[% Data.Page | uri %]" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
-#                <a class="AllArticles" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=1;ArticlePage=[% Data.Page | uri %]" title="[% Translate("Show all articles") | html %]"><i class="fa fa-bars"></i><span>[% Translate("Show all articles") | html %]</span></a>
                 <a class="OneArticle Active" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0;SelectedTab=[% Data.SelectedTab | uri %];ArticlePage=[% Data.Page | uri %]" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
                 <a class="AllArticles" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=1;SelectedTab=[% Data.SelectedTab | uri %];ArticlePage=[% Data.Page | uri %]" title="[% Translate("Show all articles") | html %]"><i class="fa fa-bars"></i><span>[% Translate("Show all articles") | html %]</span></a>
-# EO KIX4OTRS-capeIT
-            [% IF Config("TimelineViewEnabled") == 1 %]
-# KIX4OTRS-capeIT
-#                <a class="Timeline [% Data.Class | html %]" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomTimeline=1" title="[% Translate("Show Ticket Timeline View") | html %]"><i class="fa fa-clock-o"></i><span>[% Translate("Show Ticket Timeline View") | html %]</span></a>
-                <a class="Timeline [% Data.Class | html %]" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomTimeline=1;SelectedTab=[% Data.SelectedTab | uri %]" title="[% Translate("Show Ticket Timeline View") | html %]"><i class="fa fa-clock-o"></i><span>[% Translate("Show Ticket Timeline View") | html %]</span></a>
-# EO KIX4OTRS-capeIT
-            [% END %]
 [% RenderBlockEnd("Expand") %]
 [% RenderBlockStart("Collapse") %]
-# KIX4OTRS-capeIT
-#                <a class="OneArticle" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
-#                <a class="AllArticles Active" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=1" title="[% Translate("Show all articles") | html %]"><i class="fa fa-bars"></i><span>[% Translate("Show all articles") | html %]</span></a>
                 <a class="OneArticle" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0;SelectedTab=[% Data.SelectedTab | uri %]" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
                 <a class="AllArticles Active" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=1;SelectedTab=[% Data.SelectedTab | uri %]" title="[% Translate("Show all articles") | html %]"><i class="fa fa-bars"></i><span>[% Translate("Show all articles") | html %]</span></a>
-# EO KIX4OTRS-capeIT
-            [% IF Config("TimelineViewEnabled") == 1 %]
-# KIX4OTRS-capeIT
-#                <a class="Timeline [% Data.Class | html %]" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomTimeline=1" title="[% Translate("Show Ticket Timeline View") | html %]"><i class="fa fa-clock-o"></i><span>[% Translate("Show Ticket Timeline View") | html %]</span></a>
-                <a class="Timeline [% Data.Class | html %]" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomTimeline=1;SelectedTab=[% Data.SelectedTab | uri %]" title="[% Translate("Show Ticket Timeline View") | html %]"><i class="fa fa-clock-o"></i><span>[% Translate("Show Ticket Timeline View") | html %]</span></a>
-# EO KIX4OTRS-capeIT
-            [% END %]
 [% RenderBlockEnd("Collapse") %]
-[% IF Config("TimelineViewEnabled") == 1 %]
-[% RenderBlockStart("Timeline") %]
-# KIX4OTRS-capeIT
-#                <a class="OneArticle" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
-#                <a class="AllArticles" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=1" title="[% Translate("Show all articles") | html %]"><i class="fa fa-bars"></i><span>[% Translate("Show all articles") | html %]</span></a>
-#                <a class="Timeline Active" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomTimeline=1" title="[% Translate("Show Ticket Timeline View") | html %]"><i class="fa fa-clock-o"></i><span>[% Translate("Show Ticket Timeline View") | html %]</span></a>
-                <a class="OneArticle" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=0;SelectedTab=[% Data.SelectedTab | uri %]" title="[% Translate("Show one article") | html %]"><i class="fa fa-minus"></i><span>[% Translate("Show one article") | html %]</span></a>
-                <a class="AllArticles" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomExpand=1;SelectedTab=[% Data.SelectedTab | uri %]" title="[% Translate("Show all articles") | html %]"><i class="fa fa-bars"></i><span>[% Translate("Show all articles") | html %]</span></a>
-                <a class="Timeline Active" href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %];ZoomTimeline=1;SelectedTab=[% Data.SelectedTab | uri %]" title="[% Translate("Show Ticket Timeline View") | html %]"><i class="fa fa-clock-o"></i><span>[% Translate("Show Ticket Timeline View") | html %]</span></a>
-# EO KIX4OTRS-capeIT
-[% RenderBlockEnd("Timeline") %]
-[% END %]
             </div>
             <div class="Clear"></div>
         </div>
@@ -363,19 +293,15 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                     </a>
                                 </th>
                                 <th class="No Sortable"><a href="#">[% Translate("No.") | html %]</a></th>
-# KIX4OTRS-capeIT
                                 <th class="SenderType Sortable"><a href="#">[% Translate("Sender") | html %]</a></th>
-# EO KIX4OTRS-capeIT
                                 <th class="Type Sortable"><a href="#">[% Translate("Type") | html %]</a></th>
                                 <th class="Direction Sortable"><a href="#" title="[% Translate("Direction") | html %]"><i class="fa fa-exchange"></i></a></th>
                                 <th class="From Sortable"><a href="#">[% Translate("From") | html %]</a></th>
                                 <th class="Subject Sortable"><a href="#">[% Translate("Subject") | html %]</a></th>
                                 <th class="Created Sortable"><a href="#">[% Translate("Created") | html %]</a></th>
-# KIX4OTRS-capeIT
 [% RenderBlockStart("TreeHeadDynamicField") %]
                         <th class="[% Data.Name | html %] Sortable"><a href="#">[% Translate(Data.Label) | html %]</a></th>
 [% RenderBlockEnd("TreeHeadDynamicField") %]
-# EO KIX4OTRS-capeIT
                                 <th class="Attachments Last">
                                     <a href="#" title="[% Translate("Attachments") | html %]">
                                         <i class="fa fa-paperclip"></i>
@@ -399,7 +325,6 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                         <i class="fa fa-star"></i>
                                     </span>
 [% RenderBlockEnd("TreeItemNewArticle") %]
-# KIX4OTRS-capeIT
 [% RenderBlockStart("TreeItemArticleFlagSet") %]
 # show icon
                             <span class="FlagIcon" id="ArticleFlag_[% Data.ArticleID | html %]_[% Data.ArticleFlagKey | html %]" style="[% Data.CSS | html %]">
@@ -440,23 +365,16 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                             </div>
 
 [% RenderBlockEnd("TreeItemArticleFlagSet") %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("TreeItemNoNewArticle") %]
                                     <span class="NoContent"></span>
 [% RenderBlockEnd("TreeItemNoNewArticle") %]
                                 </td>
                                 <td class="No">
                                     [% Data.Count | html %]
-# KIX4OTRS-capeIT
-#                                     <input type="hidden" class="ArticleInfo" name="Link[% Data.Count | uri %]" value="[% Env("Baselink") %]Action=AgentTicketZoom;Subaction=ArticleUpdate;Count=[% Data.Count | uri %];TicketID=[% Data.TicketID | html %];ArticleID=[% Data.ArticleID | html %];"/>
                                     <input type="hidden" class="ArticleInfo" name="Link[% Data.Count | uri %]" value="[% Env("Baselink") %]Action=AgentTicketZoomTabArticle;Subaction=ArticleUpdate;Count=[% Data.Count | uri %];TicketID=[% Data.TicketID | html %];ArticleID=[% Data.ArticleID | html %];"/>
-# EO KIX4OTRS-capeIT
                                     <input type="hidden" class="ArticleID" value="[% Data.ArticleID | html %]" />
                                     <input type="hidden" class="SortData" value="[% Data.Count | html %]" />
                                 </td>
-# KIX4OTRS-capeIT
-#                                 <td class="Type">
-#                                     <div>[% Translate(Data.SenderType) | html %] &ndash; [% Translate(Data.ArticleType) | html %]</div>
                                 <td class="SenderType">
                                     <div>[% Translate(Data.SenderType) | html %]</div>
                                     <input type="hidden" class="SortData" value="[% Translate(Data.SenderType) | html %] &ndash; [% Translate(Data.ArticleType) | html %]" />
@@ -465,43 +383,16 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                     <div class="Center"><img src="[% Data.ArticleTypeIcon | html %]" title="[% Translate(Data.ArticleType) | html %]" alt="[% Translate(Data.ArticleType) | html %]"></div>
                                     <input type="hidden" class="SortData" value="[% Translate(Data.ArticleType) | html %]" />
                                 </td>
-# EO KIX4OTRS-capeIT
                                 <td class="Direction">
-# KIX4OTRS-capeIT
                                     <div class="Center"><img src="[% Data.DirectionIcon | html %]" title="[% Translate(Data.Direction) | html %]" alt="[% Translate(Data.Direction) | html %]"></div>
                                     <input type="hidden" class="SortData" value="[% Data.Direction | html %]" />
-#                                <td class="Direction">
-# [% RenderBlockStart("TreeItemDirectionIncoming") %]
-#                                     <span class="Direction Incoming" title="[% Translate("Incoming message") | html %]">
-#                                         <i class="fa fa-long-arrow-left"></i>
-#                                         <i class="fa fa-square-o"></i>
-#                                     </span>
-#                                     <input type="hidden" class="SortData" value="0" />
-# [% RenderBlockEnd("TreeItemDirectionIncoming") %]
-# [% RenderBlockStart("TreeItemDirectionOutgoing") %]
-#                                     <span class="Direction Outgoing" title="[% Translate("Outgoing message") | html %]">
-#                                         <i class="fa fa-long-arrow-right"></i>
-#                                         <i class="fa fa-square-o"></i>
-#                                     </span>
-#                                     <input type="hidden" class="SortData" value="1" />
-# [% RenderBlockEnd("TreeItemDirectionOutgoing") %]
-# [% RenderBlockStart("TreeItemDirectionInternal") %]
-#                                     <span class="Direction Internal" title="[% Translate("Internal message") | html %]">
-#                                         <i class="fa fa-square-o"></i>
-#                                     </span>
-#                                     <input type="hidden" class="SortData" value="2" />
-# [% RenderBlockEnd("TreeItemDirectionInternal") %]
-# EO KIX4OTRS-capeIT
                                  </td>
                                  <td class="From">
                                     <div title="[% Data.From | html %]"><a href="#">[% Data.FromRealname | truncate(34) | html %]</a></div>
                                     <input type="hidden" class="SortData" value="[% Data.From | html %]" />
                                 </td>
                                 <td class="Subject">
-# KIX4OTRS-capeIT
-#                                    <div title="[% Data.Subject | html %]"><a href="#">[% Data.Subject | truncate(36) | html %]</a></div>
                                     <div title="[% Data.Subject | html %]"><a href="#">[% Data.Subject | truncate(64) | html %]</a></div>
-# EO KIX4OTRS-capeIT
                                     <input type="hidden" class="SortData" value="[% Data.Subject | html %]" />
                                 </td>
                                 <td class="Created">
@@ -510,14 +401,12 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
 # Other date formats cannot be sorted reliably.
                                     <input type="hidden" class="SortData" value="[% Data.Created | html %]" />
                                 </td>
-# KIX4OTRS-capeIT
 [% RenderBlockStart("TreeItemDynamicField") %]
                         <td class="[% Data.Name %]">
                             <div title="[% Data.Title | html %]"><a href="#">[% Data.Value | truncate(34) | html %]</a></div>
                             <input type="hidden" class="SortData" value="[% Data.Title | html %]" />
                         </td>
 [% RenderBlockEnd("TreeItemDynamicField") %]
-# EO KIX4OTRS-capeIT
                                 <td class="Attachments Attachment Fixed NonTextContent">
 [% RenderBlockStart("TreeItemAttachment") %]
 [% PROCESS ArticleAttachments.tt %]
@@ -537,120 +426,6 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
             </div>
         </div>
 [% RenderBlockEnd("ArticleList") %]
-
-[% RenderBlockStart("TimelineView") %]
-
-        <div class="TimelineViewTicketActions Hidden">
-[% RenderBlockStart("TimelineViewTicketActions") %]
-            <div class="TicketActions ArticleID_[% Data.ArticleID | html %]">
-[% PROCESS ArticleActionMenu.tt %]
-            </div>
-[% RenderBlockEnd("TimelineViewTicketActions") %]
-        </div>
-
-        <div class="TimelineViewArticleAttachments Hidden">
-[% RenderBlockStart("TimelineViewArticleAttachments") %]
-            <div class="ArticleAttachments ArticleID_[% Data.ArticleID | html %]">
-[% PROCESS ArticleAttachments.tt %]
-            </div>
-[% RenderBlockEnd("TimelineViewArticleAttachments") %]
-        </div>
-
-        <ul class="Hidden">
-            <li id="TemplateListItem">
-                <h3>
-                    <div class="UnreadArticles Remarkable" title="[% Translate("Mark this article as read") | html %]">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                    </div>
-                    <i class="fa fa-info-circle" title="[% Translate("Important") | html %]"></i>
-                    <em></em>
-                    <strong class="Type"></strong>
-                    <span><span></span></span>
-                    <a href="#" class="ShowFullArticleText" title="[% Translate("Show Full Text") | html %]">
-                        <i class="fa fa-search-plus"></i>
-                    </a>
-                </h3>
-            </li>
-        </ul>
-
-        <div id="TemplateArticleData" class="Hidden">
-            <ul>
-                <li class="subject">
-                    <strong>[% Translate("Subject") | html %]: </strong>
-                </li>
-                <li class="from">
-                    <strong>[% Translate("From") | html %]: </strong>
-                </li>
-                <li class="to">
-                    <strong>[% Translate("To") | html %]: </strong>
-                </li>
-                <li class="cc">
-                    <strong>[% Translate("Cc") | html %]: </strong>
-                </li>
-            </ul>
-            <div class="Hidden FullArticlePlainText" data-title="[% Translate("Full Article Text") | html %]">
-                <div class="TimelinePlainText"></div>
-            </div>
-            <p class="PlainText"></p>
-            <div class="Hidden ArticleIFrame" data-title="[% Translate("Full Article Text") | html %]"></div>
-        </div>
-
-        <div class="TimelineView [% IF Data.UseArticleColors %]UseArticleColors[% END %]">
-            <ul class="ListLeft">
-                <li class="NoEvents">[% Translate("No more events found. Please try changing the filter settings.") | html %]</li>
-            </ul>
-            <ul class="ListRight"></ul>
-            <div class="Clear"></div>
-            <span><i class="fa fa-spinner fa-spin"></i></span>
-        </div>
-[% WRAPPER JSOnDocumentComplete %]
-<script type="text/javascript">//<![CDATA[
-
-[% IF Config("TimelineViewEnabled") == 1 %]
-var TicketID    = [% Data.TicketID | JSON %],
-    ArticleID   = [% Data.ArticleID | JSON %],
-    ListObjects = [
-[% FOREACH Item IN Data.Items %]
-    {
-        'orientation'   : [% Item.Orientation | JSON %],
-        'order'         : [% Item.Counter | JSON %],
-        'id'            : "[% IF Item.ArticleID %]ArticleID_[% Item.ArticleID %][% END %]",
-        'class'         : [% Item.Class | JSON %],
-        'time'          : [% Item.CreateTime | JSON %],
-        'time_long'     : [% Item.CreateTime | Localize("TimeLong") | JSON %],
-        'type'          : [% Item.HistoryType | JSON %],
-        'type_readable' : [% Translate(Item.HistoryTypeReadable) | JSON %],
-        'name'          : [% Item.Name | JSON %],
-        'article_id'    : [% Item.ArticleID | JSON %],
-        'is_chat'       : [% Item.IsChatArticle | JSON %],
-        'article_data'  : {
-        [% IF Item.ArticleID %]
-            'sender_type' : [% Item.ArticleData.SenderType | html | JSON %],
-            'article_type' : [% Item.ArticleData.ArticleType | html | JSON %],
-            'subject': [% Item.ArticleData.Subject | html | JSON %],
-            'from'   : [% Item.ArticleData.From | html | JSON %],
-            'to'     : [% Item.ArticleData.To | html | JSON %],
-            'cc'     : [% Item.ArticleData.Cc | html | JSON %],
-            'is_important' : [% Item.ArticleData.ArticleIsImportant | JSON %],
-            'is_seen' : [% Item.ArticleData.ArticleIsSeen | JSON %],
-            'text'   : [% IF Item.IsChatArticle %][% Item.ArticleData.BodyChat | JSON %][% ELSE %][% Item.ArticleData.Body | truncate(650) | JSON %][% END %],
-            'text_long' : [% IF Item.IsChatArticle %][% JSON(Item.ArticleData.ChatMessages) %][% ELSE %][% IF !Item.ArticleData.AttachmentIDOfHTMLBody %][% Item.ArticleData.Body | JSON %][% ELSE %]""[% END %][% END %],
-            'attachment_id' : [% Item.ArticleData.AttachmentIDOfHTMLBody | JSON %],
-            'iframe_html' : '<iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" data-url="[% Env("Baselink") %]Action=AgentTicketAttachment;Subaction=HTMLView;ArticleID=[% Item.ArticleID | html %];FileID=[% Item.ArticleData.AttachmentIDOfHTMLBody | html %];[% Env("SessionName") | html %]=[% Env("SessionID") | html %]" width="100%" frameborder="0" id="Iframe[% Item.ArticleID | html %]" class="TimelineArticleiFrame" src=""></iframe>'
-        [% END %]
-        }
-    }[% IF !loop.last %],[% END %]
-[% END %]
-];
-
-Core.Agent.TicketZoom.TimelineView.Init(TicketID, ListObjects, ArticleID);
-
-[% END %]
-//]]></script>
-[% END %]
-
-[% RenderBlockEnd("TimelineView") %]
 
     </div>
 </div>
@@ -673,11 +448,8 @@ Core.Agent.TicketZoom.TimelineView.Init(TicketID, ListObjects, ArticleID);
             </div>
         </div>
 
-# rkaiser - T2016121190001552 - ArticleActionMenu moved down because some js in Core.KIXBase.Agent.js was removed
-
         <div class="Content">
 
-# rkaiser - T2016121190001552 - moved from above
 [% PROCESS ArticleActionMenu.tt %]
 
             <div class="ArticleMailHeader">
@@ -743,7 +515,6 @@ Core.Agent.TicketZoom.TimelineView.Init(TicketID, ListObjects, ArticleID);
                     <label>[% Translate("Subject") | html %]:</label>
                     <p class="Value">[% Data.Subject | html %]</p>
                     <div class="Clear"></div>
-# KIX4OTRS-capeIT
 [% RenderBlockStart("ArticleFlagOption") %]
                     <label>[% Translate("MarkedAs") | html %]:</label>
                     <p class="Value" title="[% Translate(Data.Note) | html %]">
@@ -753,7 +524,6 @@ Core.Agent.TicketZoom.TimelineView.Init(TicketID, ListObjects, ArticleID);
                     </p>
                     <div class="Clear"></div>
 [% RenderBlockEnd("ArticleFlagOption") %]
-# EO KIX4OTRS-capeIT
 
 # show article accounted time
 [% RenderBlockStart("ArticleAccountedTime") %]
@@ -826,10 +596,6 @@ function CheckIFrameHeight(IFrameID) {
                     </script>
                 </div>
 [% RenderBlockEnd("BodyHTML") %]
-[% RenderBlockStart("BodyChat") %]
-[% INCLUDE "ChatDisplay.tt" %]
-[% RenderBlockEnd("BodyChat") %]
-
             [% IF Data.ArticleMetaData && Data.ArticleMetaData.size() %]
                 <div class="ArticleMeta">
                 [% FOREACH Entry IN Data.ArticleMetaData %]
@@ -849,10 +615,7 @@ function CheckIFrameHeight(IFrameID) {
 [% RenderBlockStart("ArticleItemMarkAsSeen") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-# KIX4OTRS-capeIT
-#    Core.Agent.TicketZoom.MarkAsSeen([% Data.TicketID | html %], [% Data.ArticleID | html %]);
     Core.KIX4OTRS.TicketZoomTabs.MarkAsSeen([% Data.TicketID | html %], [% Data.ArticleID | html %]);
-# EO KIX4OTRS-capeIT
 //]]></script>
 [% END %]
 [% RenderBlockEnd("ArticleItemMarkAsSeen") %]
@@ -861,61 +624,23 @@ function CheckIFrameHeight(IFrameID) {
 [% RenderBlockStart("TicketItemMarkAsSeen") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-# KIX4OTRS-capeIT
-//    Core.Agent.TicketZoom.MarkTicketAsSeen([% Data.TicketID | html %]);
     Core.KIX4OTRS.TicketZoomTabs.MarkTicketAsSeen([% Data.TicketID | html %]);
-# EO KIX4OTRS-capeIT
 //]]></script>
 [% END %]
 [% RenderBlockEnd("TicketItemMarkAsSeen") %]
 
 [% RenderBlockStart("TicketZoomInit") %]
 
-[% INCLUDE "ChatStartForm.tt" %]
-
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-# KIX4OTRS-capeIT
     Core.KIX4OTRS.TicketZoomTabs.SetArticleFlagColumnWidth();
     Core.KIX4OTRS.TicketZoomTabs.ShowArticleFlagOptionsDialog();
     Core.KIX4OTRS.TicketZoomTabs.ArticleFlagOptions([% Data.TicketID | html %],'[% Translate("Apply") | html %]','[% Translate("Set article flag") | html %]');
     Core.KIX4OTRS.TicketZoomTabs.PopUpInit();
-#    Core.Agent.TicketZoom.Init({ ArticleTableHeight: parseInt('[% Env("UserTicketZoomArticleTableHeight") %]', 10)});
     Core.Agent.TicketZoom.Init({ ArticleTableHeight: parseInt('[% Env("UserTicketZoomArticleTableHeight") %]',10)},'AgentTicketZoomTabArticle');
-# EO KIX4OTRS-capeIT
     Core.Config.Set('Ticket::Frontend::HTMLArticleHeightDefault', parseInt("[% Config("Ticket::Frontend::HTMLArticleHeightDefault") %]" || 0, 10));
     Core.Config.Set('Ticket::Frontend::HTMLArticleHeightMax', parseInt("[% Config("Ticket::Frontend::HTMLArticleHeightMax") %]" || 0, 10));
     Core.Config.Set('Language.AttachmentViewMessage', [% Translate('Article could not be opened! Perhaps it is on another article page?') | JSON %]);
-
-    $('a.CreateChatRequest').bind('click', function() {
-        var UserID = $(this).data('user-id'),
-            $Dialog = $('#DashboardUserOnlineChatStartDialog').clone();
-
-        $Dialog.find('input[name=ChatStartUserID]').val($(this).data('customer-user-id'));
-        $Dialog.find('input[name=ChatStartUserType]').val($(this).data('user-type'));
-        $Dialog.find('input[name=ChatStartUserFullname]').val($(this).data('user-fullname'));
-        $Dialog.find('input[name=TicketID]').val($(this).data('ticket-id'));
-        $Dialog.find('input[name=ChannelID]').val($(this).data('channel-id'));
-
-        Core.UI.Dialog.ShowContentDialog($Dialog.html(), [% Translate('Start chat') | JSON %], '100px', 'Center', true);
-
-        // Only enable button if there is a message
-        $('.Dialog textarea[name="ChatStartFirstMessage"]').on('keyup', function(){
-            $('.Dialog button').prop('disabled', $(this).val().length ? false : true );
-        });
-
-        $('.Dialog form').on('submit', function(){
-            if (!$('.Dialog textarea[name=ChatStartFirstMessage]').val().length) {
-                return false;
-            }
-            // Close after submit
-            window.setTimeout(function(){
-                Core.UI.Dialog.CloseDialog($('.Dialog'));
-            }, 1);
-        });
-
-        return false;
-    });
 
     if (typeof Core.UI.Floater !== 'undefined') {
         Core.UI.Floater.Init();

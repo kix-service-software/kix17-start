@@ -45,13 +45,12 @@ sub Run {
     my @Tickets;
 
     $Kernel::OM->Get('Kernel::System::DB')->Prepare(
-        SQL => "
-            SELECT st.tn, st.id, st.timeout, sq.unlock_timeout, st.sla_id, st.queue_id
-            FROM ticket st, queue sq
-            WHERE st.queue_id = sq.id
-                AND sq.unlock_timeout != 0
-                AND st.ticket_state_id IN ( ${\(join ', ', @UnlockStateIDs)} )
-                AND st.ticket_lock_id NOT IN ( ${\(join ', ', @ViewableLockIDs)} ) ",
+        SQL => "SELECT st.tn, st.id, st.timeout, sq.unlock_timeout, st.sla_id, st.queue_id"
+             . " FROM ticket st, queue sq"
+             . " WHERE st.queue_id = sq.id"
+             . "  AND sq.unlock_timeout != 0"
+             . "  AND st.ticket_state_id IN ( ${\(join ', ', @UnlockStateIDs)} )"
+             . "  AND st.ticket_lock_id NOT IN ( ${\(join ', ', @ViewableLockIDs)} ) ",
     );
 
     while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
@@ -76,7 +75,7 @@ sub Run {
         next TICKET if $CountedTime < $Row[3] * 60;
 
         $Self->Print(" Unlocking ticket id $Row[0]... ");
-        my $Unlock = $Kernel::OM->Get('Kernel::System::Ticket')->LockSet(
+        my $Unlock = $Kernel::OM->Get('Kernel::System::Ticket')->TicketLockSet(
             TicketID => $Row[1],
             Lock     => 'unlock',
             UserID   => 1,

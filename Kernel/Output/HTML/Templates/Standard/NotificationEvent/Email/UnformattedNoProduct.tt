@@ -18,12 +18,6 @@
     [% Data.Subject | html %]
     <br /><br />
     [% Data.Body %]
-# NotificationEventX-capeIT
-#    <br />
-#    <hr>
-#    [% Translate("Powered by") | html %] [% Config("Product") %] [% Config("Version").remove('\.0\..*') %]
-#    <br /><br />
-# EO NotificationEventX-capeIT
 </body>
 
 </html>

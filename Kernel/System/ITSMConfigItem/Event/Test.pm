@@ -22,9 +22,6 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    # create needed objects
-    $Self->{LogObject}   = $Kernel::OM->Get('Kernel::System::Log');
-
     my @keyarr = keys(%Param);
 
     return $Self;
@@ -37,7 +34,7 @@ sub Run {
     #check required params...
     foreach (qw(Event UserID)) {
         if ( !$Param{$_} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "ITSMConfigItem-Event-Test: Need $_!"
             );
@@ -47,7 +44,7 @@ sub Run {
 
     my @ParamKeys = keys(%Param);
 
-    $Self->{LogObject}->Log(
+    $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'notice',
         Message  => "ITSMConfigItem-Event-Test: Event ($Param{Event}) "
             . "occured - keys: @ParamKeys."

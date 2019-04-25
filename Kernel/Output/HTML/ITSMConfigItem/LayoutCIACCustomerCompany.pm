@@ -132,8 +132,7 @@ sub FormDataGet {
         if (
             !$Self->{ParamObject}->GetParam( Param => $Param{Key} . '::Search' )
             && defined $FormData{Value}
-            )
-        {
+        ) {
             $FormData{Value} = '';
         }
 
@@ -231,7 +230,7 @@ sub InputCreate {
 
             # get CustomerCompany data
             $Value = ( keys %CustomerCompanySearchList )[0];
-            my %CustomerCompanySearchList = $Self->{CustomerCompanyObject}->CustomerCompanyGet(
+            my %CustomerCompanyData = $Self->{CustomerCompanyObject}->CustomerCompanyGet(
                 CustomerID => $Value,
             );
 
@@ -240,12 +239,11 @@ sub InputCreate {
             if ( $CustCompanyMapRef && ref($CustCompanyMapRef) eq 'HASH' ) {
 
                 for my $MappingField ( sort( keys( %{$CustCompanyMapRef} ) ) ) {
-                    if ( $CustomerCompanySearchList{ $CustCompanyMapRef->{$MappingField} } ) {
+                    if ( $CustomerCompanyData{ $CustCompanyMapRef->{$MappingField} } ) {
                         $Search .= ' '
-                            . $CustomerCompanySearchList{ $CustCompanyMapRef->{$MappingField} };
+                            . $CustomerCompanyData{ $CustCompanyMapRef->{$MappingField} };
                     }
                 }
-
             }
 
             $Search =~ s/\s+$//g;
@@ -290,8 +288,7 @@ sub InputCreate {
         $AutoCompleteConfig
         && ref($AutoCompleteConfig) eq 'HASH'
         && $AutoCompleteConfig->{Active}
-        )
-    {
+    ) {
 
         $Self->{LayoutObject}->Block(
             Name => 'CustomerCompanySearchAutoComplete',

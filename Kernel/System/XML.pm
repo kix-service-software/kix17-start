@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::XML;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Require)
 
 use strict;
 use warnings;
@@ -21,7 +20,10 @@ our @ObjectDependencies = (
     'Kernel::System::DB',
     'Kernel::System::Encode',
     'Kernel::System::Log',
+    'Kernel::System::Main',
 );
+
+## no critic qw(BuiltinFunctions::ProhibitStringyEval)
 
 =head1 NAME
 
@@ -242,7 +244,7 @@ sub XMLHashGet {
         }
         $Content .= '$XMLHash' . $Data[0] . " = '$Data[1]';\n 1;\n";
     }
-    if ( $Content && !eval $Content ) {    ## no critic
+    if ( $Content && !eval( $Content ) ) {
         print STDERR "ERROR: XML.pm $@\n";
     }
 
@@ -793,7 +795,7 @@ sub XMLParse {
     # load parse package and parse
     my $UseFallback = 1;
 
-    if ( eval 'require XML::Parser' ) {    ## no critic
+    if ( $Kernel::OM->Get('Kernel::System::Main')->Require('XML::Parser') ) {
         my $Parser = XML::Parser->new(
             Handlers => {
                 Start => sub { $Self->_HS(@_); },
@@ -826,7 +828,7 @@ sub XMLParse {
     }
 
     if ($UseFallback) {
-        require XML::Parser::Lite;    ## no critic
+        require XML::Parser::Lite;
 
         my $Parser = XML::Parser::Lite->new(
             Handlers => {

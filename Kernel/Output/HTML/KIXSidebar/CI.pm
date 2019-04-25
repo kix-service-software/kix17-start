@@ -11,6 +11,8 @@ package Kernel::Output::HTML::KIXSidebar::CI;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout'
 );
@@ -35,13 +37,13 @@ sub Run {
 
     my $AdditionalClasses = '';
     if (   $Param{Config}->{'NoActionWithoutSelection'}
-        && $Param{Action} =~ /$Param{Config}->{'NoActionWithoutSelection'}/ )
-    {
+        && $Param{Action} =~ /$Param{Config}->{'NoActionWithoutSelection'}/
+    ) {
         $AdditionalClasses .= 'NoActionWithoutSelection';
     }
     if (   $Param{Config}->{'InitialCollapsed'}
-        && $Param{Action} =~ /$Param{Config}->{'InitialCollapsed'}/ )
-    {
+        && $Param{Action} =~ /$Param{Config}->{'InitialCollapsed'}/
+    ) {
         if ( $AdditionalClasses ne '' ) {
             $AdditionalClasses .= ' ';
         }
@@ -85,8 +87,8 @@ sub Run {
         );
     }
     if (   $Param{Config}->{'AutoSelectOne'}
-        && $Param{Action} =~ /$Param{Config}->{'AutoSelectOne'}/ )
-    {
+        && $Param{Action} =~ /$Param{Config}->{'AutoSelectOne'}/
+    ) {
         $Self->{LayoutObject}->Block(
             Name => 'AutoSelectOne',
             Data => {
@@ -96,8 +98,8 @@ sub Run {
         );
     }
     if (   $Param{Config}->{'CustomerDependend'}
-        && $Param{Action} =~ /$Param{Config}->{'CustomerDependend'}/ )
-    {
+        && $Param{Action} =~ /$Param{Config}->{'CustomerDependend'}/
+    ) {
         $Self->{LayoutObject}->Block(
             Name => 'CustomerDependend',
             Data => {

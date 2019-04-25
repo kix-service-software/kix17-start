@@ -157,17 +157,15 @@ sub BuildFwdContent {
 
                 if (
                     ( ref $LocVersionRef eq 'HASH' )
-                    &&
-                    ( $LocVersionRef->{XMLDefinition} ) &&
-                    ( $LocVersionRef->{XMLData} ) &&
-                    ( ref $LocVersionRef->{XMLDefinition} eq 'ARRAY' ) &&
-                    ( ref $LocVersionRef->{XMLData}       eq 'ARRAY' ) &&
-                    ( $LocVersionRef->{XMLData}->[1] ) &&
-                    ( ref $LocVersionRef->{XMLData}->[1] eq 'HASH' ) &&
-                    ( $LocVersionRef->{XMLData}->[1]->{Version} ) &&
-                    ( ref $LocVersionRef->{XMLData}->[1]->{Version} eq 'ARRAY' )
-                    )
-                {
+                    && ( $LocVersionRef->{XMLDefinition} )
+                    && ( $LocVersionRef->{XMLData} )
+                    && ( ref $LocVersionRef->{XMLDefinition} eq 'ARRAY' )
+                    && ( ref $LocVersionRef->{XMLData}       eq 'ARRAY' )
+                    && ( $LocVersionRef->{XMLData}->[1] )
+                    && ( ref $LocVersionRef->{XMLData}->[1] eq 'HASH' )
+                    && ( $LocVersionRef->{XMLData}->[1]->{Version} )
+                    && ( ref $LocVersionRef->{XMLData}->[1]->{Version} eq 'ARRAY' )
+                ) {
                     $CIInfoString = $Self->_StringOutputFromCIXMLData(
                         XMLDefinition  => $LocVersionRef->{XMLDefinition},
                         XMLData        => $LocVersionRef->{XMLData}->[1]->{Version}->[1],
@@ -200,17 +198,15 @@ sub BuildFwdContent {
 
             if (
                 ( ref $VersionRef eq 'HASH' )
-                &&
-                ( $VersionRef->{XMLDefinition} ) &&
-                ( $VersionRef->{XMLData} ) &&
-                ( ref $VersionRef->{XMLDefinition} eq 'ARRAY' ) &&
-                ( ref $VersionRef->{XMLData}       eq 'ARRAY' ) &&
-                ( $VersionRef->{XMLData}->[1] ) &&
-                ( ref $VersionRef->{XMLData}->[1] eq 'HASH' ) &&
-                ( $VersionRef->{XMLData}->[1]->{Version} ) &&
-                ( ref $VersionRef->{XMLData}->[1]->{Version} eq 'ARRAY' )
-                )
-            {
+                && ( $VersionRef->{XMLDefinition} )
+                && ( $VersionRef->{XMLData} )
+                && ( ref $VersionRef->{XMLDefinition} eq 'ARRAY' )
+                && ( ref $VersionRef->{XMLData}       eq 'ARRAY' )
+                && ( $VersionRef->{XMLData}->[1] )
+                && ( ref $VersionRef->{XMLData}->[1] eq 'HASH' )
+                && ( $VersionRef->{XMLData}->[1]->{Version} )
+                && ( ref $VersionRef->{XMLData}->[1]->{Version} eq 'ARRAY' )
+            ) {
                 $CIInfoString = $Self->_StringOutputFromCIXMLData(
                     XMLDefinition  => $VersionRef->{XMLDefinition},
                     XMLData        => $VersionRef->{XMLData}->[1]->{Version}->[1],
@@ -236,8 +232,11 @@ sub _GetLinkedObjects {
     my @IDArr = qw{};
 
     # check required params...
-    if ( ( !$Param{ToObject} ) || ( !$Param{FromObject} ) || ( !$Param{FromObjectID} ) )
-    {
+    if (
+        ( !$Param{ToObject} )
+        || ( !$Param{FromObject} )
+        || ( !$Param{FromObjectID} )
+    ) {
         return;
     }
 
@@ -275,14 +274,11 @@ sub _GetLinkedObjects {
             #if linked object is a source
             if (
                 ( defined( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) )
-                &&
-                ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) eq 'HASH' )
-                )
-            {
+                && ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) eq 'HASH' )
+            ) {
                 for my $CurrCIID (
                     keys( %{ $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} } )
-                    )
-                {
+                ) {
                     my $CurrCI = $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source}
                         ->{$CurrCIID};
 
@@ -298,14 +294,11 @@ sub _GetLinkedObjects {
             #if linked object is target
             if (
                 ( defined( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) )
-                &&
-                ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) eq 'HASH' )
-                )
-            {
+                && ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) eq 'HASH' )
+            ) {
                 for my $CurrCIID (
                     keys( %{ $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} } )
-                    )
-                {
+                ) {
                     my $CurrCI = $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target}
                         ->{$CurrCIID};
 
@@ -334,12 +327,10 @@ sub _StringOutputFromCIXMLData {
     # check required params...
     if (
         ( !$Param{XMLData} )
-        ||
-        ( !$Param{XMLDefinition} ) ||
-        ( ref $Param{XMLData} ne 'HASH' ) ||
-        ( ref $Param{XMLDefinition} ne 'ARRAY' )
-        )
-    {
+        || ( !$Param{XMLDefinition} )
+        || ( ref $Param{XMLData} ne 'HASH' )
+        || ( ref $Param{XMLDefinition} ne 'ARRAY' )
+    ) {
         return;
     }
 
@@ -396,30 +387,28 @@ sub _StringOutputFromCIXMLData {
 
             if ( $NewLine->{Value} ) {
 
-                my $Value = $NewLine->{Value};
-                if ( $Value =~ /\015\012|\015|\012/ ) {
-                    $Value =~ s/\015\012|\015|\012/\n$Param{Intend}$Param{Intend}/g;
-                    $Value = "\n" . $Param{Intend} . $Param{Intend} . $Value;
+                my $DisplayValue = $NewLine->{Value};
+                if ( $DisplayValue =~ /\015\012|\015|\012/ ) {
+                    $DisplayValue =~ s/\015\012|\015|\012/\n$Param{Intend}$Param{Intend}/g;
+                    $DisplayValue = "\n" . $Param{Intend} . $Param{Intend} . $DisplayValue;
                 }
 
                 if (
                     ( $Param{ExcludedAttr} )
                     &&
-                    ( $Param{ExcludedAttr} !~ /(^|.*,)$Item->{Key}(,.*|$)/ )
-                    )
-                {
-                    $OutStrg .= $Param{Intend} . $NewLine->{Key} . ": " . $Value . "\n";
+                    ( $Param{ExcludedAttr} !~ /(?:^|.*,)$Item->{Key}(?:,.*|$)/ )
+                ) {
+                    $OutStrg .= $Param{Intend} . $NewLine->{Key} . ": " . $DisplayValue . "\n";
                 }
                 elsif (
                     ( $Param{OnlyAttr} )
                     &&
-                    ( $Param{OnlyAttr} =~ /(^|.*,)$Item->{Key}(,.*|$)/ )
-                    )
-                {
-                    $OutStrg .= $Param{Intend} . $NewLine->{Key} . ": " . $Value . "\n";
+                    ( $Param{OnlyAttr} =~ /(?:^|.*,)$Item->{Key}(?:,.*|$)/ )
+                ) {
+                    $OutStrg .= $Param{Intend} . $NewLine->{Key} . ": " . $DisplayValue . "\n";
                 }
                 elsif ( !( $Param{ExcludedAttr} ) && !( $Param{OnlyAttr} ) ) {
-                    $OutStrg .= $Param{Intend} . $NewLine->{Key} . ": " . $Value . "\n";
+                    $OutStrg .= $Param{Intend} . $NewLine->{Key} . ": " . $DisplayValue . "\n";
                 }
 
             }

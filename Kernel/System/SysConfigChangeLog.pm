@@ -18,6 +18,7 @@ use Carp ();
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Encode',
+    'Kernel::System::Main',
 );
 
 =head1 NAME
@@ -71,13 +72,12 @@ sub new {
     $Self->{LogPrefix} .= '-' . $SystemID;
 
     # load log backend
-    # KIX4OTRS-capeIT
-    # my $GenericModule = $ConfigObject->Get('LogModule') || 'Kernel::System::Log::SysLog';
-    my $GenericModule = $ConfigObject->Get('SysConfigChangeLog::LogModule')
-        || 'Kernel::System::SysConfigChangeLog::SysLog';
+    my $GenericModule = $ConfigObject->Get('SysConfigChangeLog::LogModule') || 'Kernel::System::SysConfigChangeLog::SysLog';
 
-    # EO KIX4OTRS-capeIT
-    if ( !eval "require $GenericModule" ) {    ## no critic
+    # get main object
+    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
+
+    if ( !$MainObject->Require( $GenericModule ) ) {
         die "Can't load log backend module $GenericModule! $@";
     }
 
@@ -86,18 +86,13 @@ sub new {
         %Param,
     );
 
-    return $Self if !eval "require IPC::SysV";    ## no critic
+    return $Self if !$MainObject->Require('IPC::SysV');
 
     # create the IPC options
     $Self->{IPC}     = 1;
     $Self->{IPCKey}  = '444423' . $SystemID;
 
-    # KIX4OTRS-capeIT
-    # $Self->{IPCSize} = $ConfigObject->Get('LogSystemCacheSize') || 32 * 1024;
-    $Self->{IPCSize} = $ConfigObject->Get('SysConfigChangeLog::LogSystemCacheSize')
-        || 32 * 1024;
-
-    # EO KIX4OTRS-capeIT
+    $Self->{IPCSize} = $ConfigObject->Get('SysConfigChangeLog::LogSystemCacheSize') || 32 * 1024;
 
     # init session data mem
     if ( !eval { $Self->{Key} = shmget( $Self->{IPCKey}, $Self->{IPCSize}, oct(1777) ) } ) {
@@ -169,10 +164,8 @@ sub Log {
     # if error, write it to STDERR
     if ( $Priority =~ /^error/i ) {
 
-        ## no critic
         my $Error = sprintf "ERROR: $Self->{LogPrefix} Perl: %vd OS: $^O Time: "
             . localtime() . "\n\n", $^V;
-        ## use critic
 
         $Error .= " Message: $Message\n\n";
 
@@ -190,28 +183,28 @@ sub Log {
         COUNT:
         for ( my $Count = 0; $Count < 30; $Count++ ) {
 
-            my ( $Package1, $Filename1, $Line1, $Subroutine1 ) = caller( $Caller + $Count );
+            my ( $TracePackage1, $TraceFilename1, $TraceLine1, $TraceSubroutine1 ) = caller( $Caller + $Count );
 
-            last COUNT if !$Line1;
+            last COUNT if !$TraceLine1;
 
-            my ( $Package2, $Filename2, $Line2, $Subroutine2 ) = caller( $Caller + 1 + $Count );
+            my ( $TracePackage2, $TraceFilename2, $TraceLine2, $TraceSubroutine2 ) = caller( $Caller + 1 + $Count );
 
             # if there is no caller module use the file name
-            $Subroutine2 ||= $0;
+            $TraceSubroutine2 ||= $0;
 
             # print line if upper caller module exists
             my $VersionString = '';
 
-            eval { $VersionString = $Package1->VERSION || ''; };    ## no critic
+            eval { $VersionString = $TracePackage1->VERSION || ''; };
 
             # version is present
             if ($VersionString) {
                 $VersionString = ' (v' . $VersionString . ')';
             }
 
-            $Error .= "   Module: $Subroutine2$VersionString Line: $Line1\n";
+            $Error .= "   Module: $TraceSubroutine2$VersionString Line: $TraceLine1\n";
 
-            last COUNT if !$Line2;
+            last COUNT if !$TraceLine2;
             }
 
         $Error .= "\n";
@@ -232,7 +225,7 @@ sub Log {
 
         $Priority = lc $Priority;
 
-        my $Data   = localtime() . ";;$Priority;;$Self->{LogPrefix};;$Message\n";    ## no critic
+        my $Data   = localtime() . ";;$Priority;;$Self->{LogPrefix};;$Message\n";
         my $String = $Self->GetLog();
 
         shmwrite( $Self->{Key}, $Data . $String, 0, $Self->{IPCSize} ) || die $!;
@@ -320,7 +313,7 @@ dump a perl variable to log
 sub Dumper {
     my ( $Self, @Data ) = @_;
 
-    require Data::Dumper;    ## no critic
+    require Data::Dumper;
 
     # returns the context of the current subroutine and sub-subroutine!
     my ( $Package1, $Filename1, $Line1, $Subroutine1 ) = caller(0);
@@ -331,7 +324,7 @@ sub Dumper {
     # log backend
     $Self->{Backend}->Log(
         Priority  => 'debug',
-        Message   => substr( Data::Dumper::Dumper(@Data), 0, 600600600 ),    ## no critic
+        Message   => substr( Data::Dumper::Dumper(@Data), 0, 600600600 ),
         LogPrefix => $Self->{LogPrefix},
         Module    => $Subroutine2,
         Line      => $Line1,

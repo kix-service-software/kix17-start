@@ -26,7 +26,6 @@
 [% RenderBlockEnd("TicketBack") %]
 
 [% RenderBlockStart("PropertiesLock") %]
-#rbo - T2017022490001394 - optimized visualization
             <p class="TicketLockMessage">
                 [% Translate("The ticket has been locked") | html %].
                 <a class="UndoClosePopup" href="[% Env("Baselink") %]Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID | uri %];[% Env("ChallengeTokenParam") | html %]">
@@ -48,8 +47,6 @@
                     <fieldset class="TableLike FixedLabel">
                         <label class="Mandatory" for="MainTicketNumber"><span class="Marker">*</span>[% Translate("Merge to") | html %] [% Config("Ticket::Hook") %]:</label>
                         <div class="Field">
-# KIX4OTRS-capeIT
-#                        <input type="text" id="MainTicketNumber" name="MainTicketNumber" value="[% Data.MainTicketNumber | html %]" class="Validate_Required [% Data.MainTicketNumberInvalid %] W33pc" />
                         <input id="MainTicketNumber" type="hidden" name="MainTicketNumber" value="" class="Validate_Required [% Data.MainTicketNumberInvalid %] W33pc"/>
                         <input id="MainTicketNumberAutoComplete" type="text" name="MainTicketNumberAutoComplete" value="" class="AutocompleteOff Validate_Required"/>
                         <img src="[% Config("Frontend::ImagePath") %]loader.gif" border="2" alt="[% Translate("Loading") | html %]" class="Hidden" id="QuickLinkLoading"/>
@@ -61,8 +58,6 @@
     Core.KIX4OTRS.GenericAutoCompleteSearch.Init($("#MainTicketNumberAutoComplete"),$("#MainTicketNumber"));
 //]]></script>
 [% END %]
-# EO KIX4OTRS-capeIT
-
                             <div id="MainTicketNumberError" class="TooltipErrorMessage"><p>[% Translate("You need to use a ticket number!") | html %]</p></div>
                             <div id="MainTicketNumberServerError" class="TooltipErrorMessage"><p>[% Translate("A valid ticket number is required.") | html %]</p></div>
                         </div>

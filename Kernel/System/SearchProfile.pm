@@ -61,10 +61,7 @@ sub new {
         $Self->{Lower} = 'LOWER';
     }
 
-    # KIX4OTRS-capeIT
     $Self->{LanguageObject} = $Kernel::OM->Get('Kernel::Language');
-
-    # EO KIX4OTRS-capeIT
 
     return $Self;
 }
@@ -116,11 +113,11 @@ sub SearchProfileAdd {
     for my $Value (@Data) {
 
         return if !$Self->{DBObject}->Do(
-            SQL => "
-                INSERT INTO search_profile
-                (login, profile_name,  profile_type, profile_key, profile_value)
-                VALUES (?, ?, ?, ?, ?)
-                ",
+            SQL  => <<'END',
+INSERT INTO search_profile
+    (login, profile_name,  profile_type, profile_key, profile_value)
+VALUES (?, ?, ?, ?, ?)
+END
             Bind => [
                 \$Login, \$Param{Name}, \$Param{Type}, \$Param{Key}, \$Value,
             ],
@@ -180,12 +177,12 @@ sub SearchProfileGet {
 
     # get search profile
     return if !$Self->{DBObject}->Prepare(
-        SQL => "
-            SELECT profile_type, profile_key, profile_value
-            FROM search_profile
-            WHERE profile_name = ?
-                AND $Self->{Lower}(login) = $Self->{Lower}(?)
-            ",
+        SQL  => <<"END",
+SELECT profile_type, profile_key, profile_value
+FROM search_profile
+WHERE profile_name = ?
+    AND $Self->{Lower}(login) = $Self->{Lower}(?)
+END
         Bind => [ \$Param{Name}, \$Login ],
     );
 
@@ -239,12 +236,11 @@ sub SearchProfileDelete {
 
     # delete search profile
     return if !$Self->{DBObject}->Do(
-        SQL => "
-            DELETE
-            FROM search_profile
-            WHERE profile_name = ?
-                AND $Self->{Lower}(login) = $Self->{Lower}(?)
-            ",
+        SQL  => <<"END",
+DELETE FROM search_profile
+WHERE profile_name = ?
+    AND $Self->{Lower}(login) = $Self->{Lower}(?)
+END
         Bind => [ \$Param{Name}, \$Login ],
     );
 
@@ -266,12 +262,10 @@ sub SearchProfileDelete {
 returns a hash of all profiles for the given user.
 
     my %SearchProfiles = $SearchProfileObject->SearchProfileList(
-        Base      => 'TicketSearch',
-        UserLogin => 'me',
-        # KIX4OTRS-capeIT
-        Category            => 'CategoryName', # get list depending on category
-        WithSubscription    => 1 # get also profiles from other agents
-        # EO KIX4OTRS-capeIT
+        Base             => 'TicketSearch',
+        UserLogin        => 'me',
+        Category         => 'CategoryName', # get list depending on category
+        WithSubscription => 1 # get also profiles from other agents
     );
 
 =cut
@@ -301,14 +295,12 @@ sub SearchProfileList {
 
     my %Result;
 
-    # KIX4OTRS-capeIT
     # use category
     if ( defined $Param{Category} && $Param{Category} ) {
 
         return
             if !$Self->{DBObject}->Prepare(
-            SQL =>
-                "SELECT name,login,state FROM kix_search_profile WHERE category = ?",
+            SQL  => "SELECT name,login,state FROM kix_search_profile WHERE category = ?",
             Bind => [ \$Param{Category} ],
             );
 
@@ -378,25 +370,18 @@ sub SearchProfileList {
         }
 
     }
-
-    # EO KIX4OTRS-capeIT
-
     # get search profile list
-    # KIX4OTRS-capeIT
     else {
-
         # get old search profiles
-        # EO KIX4OTRS-capeIT
         return if !$Self->{DBObject}->Prepare(
-            SQL => "
-            SELECT profile_name
-            FROM search_profile
-            WHERE $Self->{Lower}(login) = $Self->{Lower}(?)
-            ",
+            SQL  => <<"END",
+SELECT profile_name
+FROM search_profile
+WHERE $Self->{Lower}(login) = $Self->{Lower}(?)
+END
             Bind => [ \$Login ],
         );
 
-        # KIX4OTRS-capeIT
         while ( my @Data = $Self->{DBObject}->FetchrowArray() ) {
             $Result{ $Data[0] } = $Data[0];
         }
@@ -420,9 +405,6 @@ sub SearchProfileList {
                 $Result{$Key} = "[" . substr( $Subscription, 0, 1 ) . "] " . $2;
             }
         }
-
-        # EO KIX4OTRS-capeIT
-
     }
 
     return %Result;
@@ -486,10 +468,9 @@ sub SearchProfileUpdateUserLogin {
             UserLogin => $Param{UserLogin},
         );
     }
+
+    return 1;
 }
-
-
-# KIX4OTRS-capeIT
 
 =item SearchProfileCopy()
 
@@ -781,6 +762,8 @@ sub SearchProfileAutoSubscribe {
             UserLogin => $UserData{UserLogin},
         );
     }
+
+    return 1;
 }
 
 =item SearchProfilesByCategory()
@@ -847,8 +830,6 @@ sub SearchProfilesBasesGet {
     }
     return @Result;
 }
-
-# EO KIX4OTRS-capeIT
 
 1;
 

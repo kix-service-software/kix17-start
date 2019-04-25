@@ -67,10 +67,6 @@ sub Run {
     my $FAQEnabled = $Article{DynamicField_KIXFAQEntry} || 'No';
 
     if ( $FAQEnabled && $FAQEnabled eq 'Yes' ) {
-
-        my $FAQEntryKey;
-        my $FAQEntry;
-
         # check needed stuff
         for my $Needed (qw(TicketID ArticleID)) {
             if ( !$Param{Data}->{$Needed} ) {
@@ -187,8 +183,7 @@ sub Run {
                 if (
                     $ArticleIndex0{$Index}->{'Filename'} =~ /^file/
                     && $ArticleIndex0{$Index}->{'ContentType'} =~ /^text\/html/
-                    )
-                {
+                ) {
                     my %Attachment = $Self->{TicketObject}->ArticleAttachment(
                         ArticleID => $Param{Data}->{ArticleID},
                         FileID    => $Index,
@@ -208,8 +203,7 @@ sub Run {
                 if (
                     $ArticleIndex1{$Index}->{'Filename'} =~ /^file/
                     && $ArticleIndex1{$Index}->{'ContentType'} =~ /^text\/html/
-                    )
-                {
+                ) {
                     my %Attachment = $Self->{TicketObject}->ArticleAttachment(
                         ArticleID => $FirstArticle{ArticleID},
                         FileID    => $Index,

@@ -82,8 +82,7 @@ sub new {
             # check if module can be loaded
             if (
                 !$Kernel::OM->Get('Kernel::System::Main')->RequireBaseClass( $Extension->{Module} )
-                )
-            {
+            ) {
                 die "Can't load dynamic fields backend module"
                     . " $Extension->{Module}! $@";
             }
@@ -186,16 +185,14 @@ sub ValueIsDifferent {
         !defined $Param{Value1}
         && ref $Param{Value2} eq 'ARRAY'
         && !IsArrayRefWithData( $Param{Value2} )
-        )
-    {
+    ) {
         return
     }
     if (
         !defined $Param{Value2}
         && ref $Param{Value1} eq 'ARRAY'
         && !IsArrayRefWithData( $Param{Value1} )
-        )
-    {
+    ) {
         return
     }
 
@@ -258,8 +255,7 @@ sub EditFieldRender {
     if (
         IsHashRefWithData( $Param{Template} )
         && defined $Param{Template}->{$FieldName}
-        )
-    {
+    ) {
         $Value = $Param{Template}->{$FieldName};
     }
 
@@ -425,8 +421,7 @@ sub EditFieldValueGet {
     elsif (
         defined $Param{ParamObject}
         && ref $Param{ParamObject} eq 'Kernel::System::Web::Request'
-        )
-    {
+    ) {
         my @Data = $Param{ParamObject}->GetArray( Param => $FieldName );
 
         # delete empty values (can happen if the user has selected the "-" entry)
@@ -444,7 +439,7 @@ sub EditFieldValueGet {
         $Value = \@Data;
     }
 
-    if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq 1 ) {
+    if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq "1" ) {
         return {
             $FieldName => $Value,
         };
@@ -658,8 +653,7 @@ sub SearchFieldParameterBuild {
                 if (
                     $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
                     && defined $Param{LayoutObject}
-                    )
-                {
+                ) {
                     $DisplayItem = $Param{LayoutObject}->{LanguageObject}->Translate($DisplayItem);
                 }
 
@@ -678,8 +672,7 @@ sub SearchFieldParameterBuild {
             if (
                 $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
                 && defined $Param{LayoutObject}
-                )
-            {
+            ) {
                 $DisplayValue = $Param{LayoutObject}->{LanguageObject}->Translate($DisplayValue);
             }
         }
@@ -873,8 +866,7 @@ sub ValueLookup {
             if (
                 defined $Param{LanguageObject}
                 && $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
-                )
-            {
+            ) {
 
                 # translate value
                 $Value = $Param{LanguageObject}->Translate($Value);
@@ -926,8 +918,7 @@ sub BuildSelectionDataGet {
                     if (
                         !IsHashRefWithData( \%Values )
                         || ( defined $Values{''} && $Values{''} )
-                        )
-                    {
+                    ) {
                         $Selected = 1;
                     }
 
@@ -964,8 +955,7 @@ sub BuildSelectionDataGet {
                     if (
                         !defined $FilteredPossibleValues->{$ElementLongName}
                         && !$DisabledElements{$ElementLongName}
-                        )
-                    {
+                    ) {
 
                         # mark element as disabled
                         $DisabledElements{$ElementLongName} = 1;

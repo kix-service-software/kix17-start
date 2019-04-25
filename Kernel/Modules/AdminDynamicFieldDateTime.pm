@@ -167,8 +167,7 @@ sub _AddAction {
 
     for my $ConfigParam (
         qw(ObjectType ObjectTypeName FieldType FieldTypeName YearsPeriod DateRestriction ValidID Link LinkPreview)
-        )
-    {
+    ) {
         $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 
@@ -369,8 +368,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldsList{ $GetParam{Name} } &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -381,8 +379,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldData->{InternalField} &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -430,8 +427,7 @@ sub _ChangeAction {
 
     for my $ConfigParam (
         qw(ObjectType ObjectTypeName FieldType FieldTypeName YearsPeriod DateRestriction ValidID Link LinkPreview)
-        )
-    {
+    ) {
         $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 

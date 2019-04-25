@@ -21,6 +21,8 @@ our @ObjectDependencies = (
     'Kernel::System::PostMaster',
 );
 
+## no critic qw(InputOutput::ProhibitExplicitStdin)
+
 sub Configure {
     my ( $Self, %Param ) = @_;
 
@@ -59,6 +61,8 @@ sub PreRun {
             Message  => "OTRS email handle ($Name) started.",
         );
     }
+
+    return;
 }
 
 sub Run {
@@ -157,6 +161,8 @@ sub PostRun {
             Message  => "OTRS email handle ($Name) stopped.",
         );
     }
+
+    return;
 }
 
 1;

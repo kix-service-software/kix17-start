@@ -21,8 +21,7 @@ our @ObjectDependencies = (
 );
 
 sub new {
-    my $Type  = shift;
-    my %Param = @_;
+    my ( $Type, %Param ) = @_;
 
     # allocate new hash for object
     my $Self = {};

@@ -411,11 +411,10 @@ sub Run {
 
     # check if all InfoBoxes are empty and hide the Sidebar
     if (
-        $InfoBoxResults{LastCreate} eq -1
-        && $InfoBoxResults{LastChange} eq -1
-        && $InfoBoxResults{Top10} eq -1
-        )
-    {
+        $InfoBoxResults{LastCreate} eq '-1'
+        && $InfoBoxResults{LastChange} eq '-1'
+        && $InfoBoxResults{Top10} eq '-1'
+    ) {
         $SidebarClass = 'Hidden';
     }
 

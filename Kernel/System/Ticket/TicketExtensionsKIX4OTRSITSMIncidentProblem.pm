@@ -97,13 +97,6 @@ sub TicketImpactStringGet {
     return $RetVal;
 }
 
-# disable redefine warnings in this scope
-{
-    no warnings 'redefine';
-
-    # reset all warnings
-}
-
 1;
 
 =back

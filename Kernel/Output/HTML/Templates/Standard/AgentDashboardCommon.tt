@@ -22,9 +22,7 @@
                 <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                 <input type="hidden" name="Subaction" value="UpdateSettings"/>
                 <input type="hidden" name="CustomerID" value="[% Data.CustomerID | html %]"/>
-# KIX4OTRS-capeIT
                 <input type="hidden" name="CustomerLogin" value="[% Data.CustomerLogin | html %]"/>
-# EO KIX4OTRS-capeIT
                 <ul>
 [% RenderBlockStart("ContentSettings") %]
                     <li>
@@ -80,10 +78,7 @@ $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + '_toggle').
 [% END %]
 [% RenderBlockEnd("ContentSmallRefresh") %]
                 <div class="WidgetAction Close">
-# KIX4OTRS-capeIT
-#                    <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=UpdateRemove;Name=[% Data.Name | uri %];CustomerID=[% Data.CustomerID | uri %];[% Env("ChallengeTokenParam") | html %]" title="[% Translate("Close") | html %]">
                     <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=UpdateRemove;Name=[% Data.Name | uri %];CustomerID=[% Data.CustomerID | uri %];CustomerLogin=[% Data.CustomerLogin | uri %];[% Env("ChallengeTokenParam") | html %]" title="[% Translate("Close") | html %]">
-# EO KIX4OTRS-capeIT
                         <i class="fa fa-times"></i>
                     </a>
                 </div>
@@ -98,9 +93,7 @@ $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + '_toggle').
                     <input type="hidden" name="Subaction" value="UpdatePreferences"/>
                     <input type="hidden" name="Name" value="[% Data.Name | html %]"/>
                     <input type="hidden" name="CustomerID" value="[% Data.CustomerID | html %]"/>
-# KIX4OTRS-capeIT
                     <input type="hidden" name="CustomerLogin" value="[% Data.CustomerLogin | html %]"/>
-# EO KIX4OTRS-capeIT
                     <fieldset class="TableLike DontPrint">
 [% RenderBlockStart("ContentSmallPreferencesItem") %]
 [% RenderBlockStart("ContentSmallPreferencesItemOption") %]
@@ -183,10 +176,7 @@ Core.UI.RegisterToggleTwoContainer($('#Dashboard' + Core.App.EscapeSelector('[% 
 [% END %]
 [% RenderBlockEnd("ContentLargePreferences") %]
                 <div class="WidgetAction Close">
-# KIX4OTRS-capeIT
-#                    <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=UpdateRemove;Name=[% Data.Name | uri %];CustomerID=[% Data.CustomerID | uri %];[% Env("ChallengeTokenParam") | html %]" title="[% Translate("Close") | html %]">
                     <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=UpdateRemove;Name=[% Data.Name | uri %];CustomerID=[% Data.CustomerID | uri %];CustomerLogin=[% Data.CustomerLogin | uri %];[% Env("ChallengeTokenParam") | html %]" title="[% Translate("Close") | html %]">
-# EO KIX4OTRS-capeIT
                         <i class="fa fa-times"></i>
                     </a>
                 </div>
@@ -202,9 +192,7 @@ Core.UI.RegisterToggleTwoContainer($('#Dashboard' + Core.App.EscapeSelector('[% 
                     <input type="hidden" name="Subaction" value="UpdatePreferences"/>
                     <input type="hidden" name="Name" value="[% Data.Name | html %]"/>
                     <input type="hidden" name="CustomerID" value="[% Data.CustomerID | html %]"/>
-# KIX4OTRS-capeIT
-                <input type="hidden" name="CustomerLogin" value="[% Data.CustomerLogin | html %]"/>
-# EO KIX4OTRS-capeIT
+                    <input type="hidden" name="CustomerLogin" value="[% Data.CustomerLogin | html %]"/>
                     <fieldset class="TableLike FixedLabelSmall DontPrint">
 [% RenderBlockStart("ContentLargePreferencesItem") %]
 [% RenderBlockStart("ContentLargePreferencesItemOption") %]

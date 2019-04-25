@@ -99,10 +99,8 @@ sub LinkListWithData {
             PERSONID:
             for my $PersonID (
                 keys %{ $Param{LinkList}->{$LinkType}->{$Direction} }
-                )
-            {
+            ) {
                 my %PersonData;
-                my $Person;
                 if ( $LinkType eq 'Agent' ) {
                     %PersonData =
                         $Self->{UserObject}->GetUserData( User => $PersonID, );
@@ -115,12 +113,6 @@ sub LinkListWithData {
                     $PersonData{Type} = 'Customer';
                 }
 
-                #                else {
-##                    $Person = $1;
-                #                    %PersonData = $Self->{CustomerUserObject}->CustomerUserDataGet(
-                #                        User   => $PersonID,
-                #                    );
-                #                }
                 # remove id from hash if person can not get
                 if ( !%PersonData ) {
                     delete $Param{LinkList}->{$LinkType}->{$Direction}

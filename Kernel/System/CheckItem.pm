@@ -135,9 +135,8 @@ sub CheckEmail {
     # mx check
     elsif (
         $ConfigObject->Get('CheckMXRecord')
-        && eval { require Net::DNS }    ## no critic
-        )
-    {
+        && eval { require Net::DNS }
+    ) {
 
         # get host
         my $Host = $Param{Address};
@@ -184,7 +183,7 @@ sub CheckEmail {
                     );
 
                     # see if our previous A-record lookup returned a RR
-                    if ( scalar $Packet->answer() eq 0 ) {
+                    if ( scalar $Packet->answer() == 0 ) {
 
                         $Self->{ErrorType} = 'InvalidMX';
                         $Error = "$Host has no mail exchanger (MX) or A resource record defined.";
@@ -210,8 +209,8 @@ sub CheckEmail {
     if ( !$Error ) {
 
         # check special stuff
-        my $RegExp = $ConfigObject->Get('CheckEmailInvalidAddress');
-        if ( $RegExp && $Param{Address} =~ /$RegExp/i ) {
+        my $InvalidRegExp = $ConfigObject->Get('CheckEmailInvalidAddress');
+        if ( $InvalidRegExp && $Param{Address} =~ /$InvalidRegExp/i ) {
             $Self->{Error}     = "invalid $Param{Address} (config)!";
             $Self->{ErrorType} = 'InvalidConfig';
             return;

@@ -173,7 +173,6 @@
 [% Translate("Customer") | html %]
 [% Translate("Customer Realname") | html %]
 [% Translate("Customer History") | html %]
-# rkaiser - T#2017020290001194 - changed customer user to contact
 [% Translate("Edit contacts") | html %]
 [% Translate("Edit Customer") | html %]
 [% Translate("Bulk Action") | html %]
@@ -216,7 +215,6 @@
 [% Translate("My Queues") | html %]
 [% Translate("Shown Tickets") | html %]
 [% Translate("Shown Columns") | html %]
-#rbo - T2016121190001552 - added KIX placeholders
 [% Translate("Your email with ticket number \"<KIX_TICKET>\" is merged to \"<KIX_MERGE_TO_TICKET>\".") | html %]
 [% Translate("Ticket %s: first response time is over (%s)!") | html %]
 [% Translate("Ticket %s: first response time will be over in %s!") | html %]

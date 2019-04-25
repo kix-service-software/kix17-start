@@ -42,7 +42,7 @@ sub Run {
     my $Access = 0;
 
     # check params...
-    for my $Needed ( qw(AttachmentDirectoryID ConfigItemID) )  {
+    for my $Needed ( qw(AttachmentDirectoryID ConfigItemID) ) {
         $GetParam{$Needed} = $Self->{ParamObject}->GetParam( Param => $Needed ) || '';
         if ( !$GetParam{$Needed} ) {
             return $Self->{LayoutObject}->ErrorScreen(

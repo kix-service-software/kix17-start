@@ -13,6 +13,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+use Kernel::System::ObjectManager;
+
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -60,8 +62,7 @@ sub Run {
         my $SearchPattern = '(\[\%\s+(Translate\()?Data\.'.$FieldRegexp.'(\))?\s+\|\s+truncate\()(\d+)(\)\s+(\|.*?)?\s+\%\])';
 
         # replace...
-        if ( ${ $Param{Data} } =~ m{ $SearchPattern }igxms )
-        {
+        if ( ${ $Param{Data} } =~ m{ $SearchPattern }igxms ) {
             ${ $Param{Data} } =~ s{ $SearchPattern }{ $1$NewLength$6 }igxms;
         }
 

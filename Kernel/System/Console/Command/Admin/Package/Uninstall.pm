@@ -58,16 +58,14 @@ sub Run {
     if (
         defined $Structure{PackageIsRemovable}
         && !$Structure{PackageIsRemovable}->{Content}
-        )
-    {
+    ) {
         my $Error = "Not possible to remove this package!\n";
 
         # exchange message if package should not be visible
         if (
             defined $Structure{PackageIsVisible}
             && !$Structure{PackageIsVisible}->{Content}
-            )
-        {
+        ) {
             $Error = "No such package!\n";
         }
         $Self->PrintError($Error);

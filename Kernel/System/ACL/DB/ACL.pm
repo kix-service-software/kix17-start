@@ -148,10 +148,7 @@ sub ACLAdd {
 
     # check if ACL with this name already exists
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT id
-            FROM acl
-            WHERE $Self->{Lower}(name) = $Self->{Lower}(?)",
+        SQL   => "SELECT id FROM acl WHERE $Self->{Lower}(name) = $Self->{Lower}(?)",
         Bind  => [ \$Param{Name} ],
         Limit => 1,
     );
@@ -171,10 +168,9 @@ sub ACLAdd {
 
     # SQL
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO acl ( name, comments, description, stop_after_match, config_match,
-                config_change, valid_id, create_time, create_by, change_time, change_by )
-            VALUES (?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => 'INSERT INTO acl ( name, comments, description, stop_after_match, config_match,'
+              . ' config_change, valid_id, create_time, create_by, change_time, change_by )'
+              . ' VALUES (?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{Name}, \$Param{Comment}, \$Param{Description}, \$Param{StopAfterMatch},
             \$ConfigMatch, \$ConfigChange, \$Param{ValidID},
@@ -200,9 +196,7 @@ sub ACLAdd {
     );
 
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO acl_sync ( acl_id, sync_state, create_time, change_time )
-            VALUES (?, ?, current_timestamp, current_timestamp)',
+        SQL  => 'INSERT INTO acl_sync ( acl_id, sync_state, create_time, change_time ) VALUES (?, ?, current_timestamp, current_timestamp)',
         Bind => [ \$ID, \'not_sync' ],
     );
 
@@ -259,9 +253,7 @@ sub ACLDelete {
     );
 
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO acl_sync ( acl_id, sync_state, create_time, change_time )
-            VALUES (?, ?, current_timestamp, current_timestamp)',
+        SQL  => 'INSERT INTO acl_sync ( acl_id, sync_state, create_time, change_time ) VALUES (?, ?, current_timestamp, current_timestamp)',
         Bind => [ \$Param{ID}, \'deleted' ],
     );
 
@@ -341,22 +333,20 @@ sub ACLGet {
     # SQL
     if ( $Param{ID} ) {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id, name, comments, description, stop_after_match, valid_id, config_match,
-                    config_change, create_time, change_time, create_by, change_by
-                FROM acl
-                WHERE id = ?',
+            SQL   => 'SELECT id, name, comments, description, stop_after_match, valid_id, config_match,'
+                   . ' config_change, create_time, change_time, create_by, change_by'
+                   . ' FROM acl'
+                   . ' WHERE id = ?',
             Bind  => [ \$Param{ID} ],
             Limit => 1,
         );
     }
     else {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id, name, comments, description, stop_after_match, valid_id, config_match,
-                    config_change, create_time, change_time, create_by, change_by
-                FROM acl
-                WHERE name = ?',
+            SQL   => 'SELECT id, name, comments, description, stop_after_match, valid_id, config_match,'
+                   . ' config_change, create_time, change_time, create_by, change_by'
+                   . ' FROM acl'
+                   . ' WHERE name = ?',
             Bind  => [ \$Param{Name} ],
             Limit => 1,
         );
@@ -485,10 +475,7 @@ sub ACLUpdate {
 
     # check if Name already exists
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT id FROM acl
-            WHERE $Self->{Lower}(name) = $Self->{Lower}(?)
-            AND id != ?",
+        SQL   => "SELECT id FROM acl WHERE $Self->{Lower}(name) = $Self->{Lower}(?) AND id != ?",
         Bind  => [ \$Param{Name}, \$Param{ID} ],
         LIMIT => 1,
     );
@@ -508,11 +495,10 @@ sub ACLUpdate {
 
     # check if need to update db
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT name, comments, description, stop_after_match, valid_id, config_match,
-                config_change
-            FROM acl
-            WHERE id = ?',
+        SQL   => 'SELECT name, comments, description, stop_after_match, valid_id, config_match,'
+               . ' config_change'
+               . ' FROM acl'
+               . ' WHERE id = ?',
         Bind  => [ \$Param{ID} ],
         Limit => 1,
     );
@@ -543,18 +529,16 @@ sub ACLUpdate {
         && $CurrentValidID eq $Param{ValidID}
         && $CurrentConfigMatch eq $Param{ConfigMatch}
         && $CurrentConfigChange eq $Param{ConfigChange}
-        )
-    {
+    ) {
         return 1;
     }
 
     # SQL
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE acl
-            SET name = ?, comments = ?, description = ?, stop_after_match = ?, valid_id = ?,
-                config_match = ?, config_change = ?, change_time = current_timestamp,  change_by = ?
-            WHERE id = ?',
+        SQL => 'UPDATE acl'
+             . ' SET name = ?, comments = ?, description = ?, stop_after_match = ?, valid_id = ?,'
+             . ' config_match = ?, config_change = ?, change_time = current_timestamp,  change_by = ?'
+             . ' WHERE id = ?',
         Bind => [
             \$Param{Name}, \$Param{Comment}, \$Param{Description}, \$Param{StopAfterMatch},
             \$Param{ValidID}, \$ConfigMatch, \$ConfigChange,
@@ -568,9 +552,7 @@ sub ACLUpdate {
     );
 
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO acl_sync ( acl_id, sync_state, create_time, change_time )
-            VALUES (?, ?, current_timestamp, current_timestamp)',
+        SQL  => 'INSERT INTO acl_sync ( acl_id, sync_state, create_time, change_time ) VALUES (?, ?, current_timestamp, current_timestamp)',
         Bind => [ \$Param{ID}, \'not_sync' ],
     );
 
@@ -628,9 +610,7 @@ sub ACLList {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    my $SQL = '
-            SELECT id, name
-            FROM acl ';
+    my $SQL = 'SELECT id, name FROM acl ';
 
     if ( $ValidIDsStrg ne 'ALL' ) {
 
@@ -729,9 +709,7 @@ sub ACLListGet {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    my $SQL = '
-            SELECT id
-            FROM acl ';
+    my $SQL = 'SELECT id FROM acl ';
 
     if ( $ValidIDsStrg ne 'ALL' ) {
 
@@ -790,9 +768,7 @@ sub ACLsNeedSync {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    my $SQL = '
-        SELECT COUNT(*)
-        FROM acl_sync';
+    my $SQL = 'SELECT COUNT(*) FROM acl_sync';
 
     return if !$DBObject->Prepare( SQL => $SQL );
 

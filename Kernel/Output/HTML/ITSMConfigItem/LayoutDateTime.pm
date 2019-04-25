@@ -251,8 +251,7 @@ sub SearchFormDataGet {
         $Used
         && $StartMinute && $StartHour && $StartDay && $StartMonth && $StartYear
         && $StopMinute  && $StopHour  && $StopDay  && $StopMonth  && $StopYear
-        )
-    {
+    ) {
 
         # add hour, minutes and seconds,
         # so that that the first and the last day is selected as well

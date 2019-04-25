@@ -211,7 +211,7 @@ sub ArticleDeleteAttachment {
 
         for my $File (@List) {
 
-            if ( $File !~ /(\/|\\)plain.txt$/ ) {
+            if ( $File !~ /(?:\/|\\)plain.txt$/ ) {
 
                 if ( !unlink $File ) {
 
@@ -335,11 +335,10 @@ sub ArticleWriteAttachment {
 
     # write attachment to db
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO article_attachment (article_id, filename, content_type, content_size,
-                content, content_id, content_alternative, disposition, create_time, create_by,
-                change_time, change_by)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => 'INSERT INTO article_attachment (article_id, filename, content_type, content_size,'
+              . '  content, content_id, content_alternative, disposition, create_time, create_by,'
+              . '  change_time, change_by)'
+              . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{ArticleID}, \$Param{Filename}, \$Param{ContentType}, \$Param{Filesize},
             \$Param{Content}, \$Param{ContentID}, \$Param{ContentAlternative},
@@ -399,7 +398,7 @@ sub ArticlePlain {
     if ( -f "$Self->{ArticleDataDir}/$ContentPath/$Param{ArticleID}/plain.txt" ) {
 
         # read whole article
-        my $Data = $Kernel::OM->Get('Kernel::System::Main')->FileRead(
+        $Data = $Kernel::OM->Get('Kernel::System::Main')->FileRead(
             Directory => "$Self->{ArticleDataDir}/$ContentPath/$Param{ArticleID}/",
             Filename  => 'plain.txt',
             Mode      => 'binmode',
@@ -447,12 +446,10 @@ sub ArticleAttachmentIndexRaw {
 
     # try database
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT filename, content_type, content_size, content_id, content_alternative,
-                disposition
-            FROM article_attachment
-            WHERE article_id = ?
-            ORDER BY filename, id',
+        SQL  => 'SELECT filename, content_type, content_size, content_id, content_alternative, disposition'
+              . ' FROM article_attachment'
+              . ' WHERE article_id = ?'
+              . ' ORDER BY filename, id',
         Bind => [ \$Param{ArticleID} ],
     );
 
@@ -568,31 +565,31 @@ sub ArticleAttachmentIndexRaw {
 
             # content id (optional)
             if ( -e "$Filename.content_id" ) {
-                my $Content = $MainObject->FileRead(
+                my $FileContent = $MainObject->FileRead(
                     Location => "$Filename.content_id",
                 );
-                if ($Content) {
-                    $ContentID = ${$Content};
+                if ($FileContent) {
+                    $ContentID = ${$FileContent};
                 }
             }
 
             # alternativ (optional)
             if ( -e "$Filename.content_alternative" ) {
-                my $Content = $MainObject->FileRead(
+                my $FileContent = $MainObject->FileRead(
                     Location => "$Filename.content_alternative",
                 );
-                if ($Content) {
-                    $Alternative = ${$Content};
+                if ($FileContent) {
+                    $Alternative = ${$FileContent};
                 }
             }
 
             # disposition
             if ( -e "$Filename.disposition" ) {
-                my $Content = $MainObject->FileRead(
+                my $FileContent = $MainObject->FileRead(
                     Location => "$Filename.disposition",
                 );
-                if ($Content) {
-                    $Disposition = ${$Content};
+                if ($FileContent) {
+                    $Disposition = ${$FileContent};
                 }
             }
 
@@ -672,11 +669,10 @@ sub ArticleAttachment {
 
     # try database
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id
-            FROM article_attachment
-            WHERE article_id = ?
-            ORDER BY filename, id',
+        SQL   => 'SELECT id'
+               . ' FROM article_attachment'
+               . ' WHERE article_id = ?'
+               . ' ORDER BY filename, id',
         Bind  => [ \$Param{ArticleID} ],
         Limit => $Param{FileID},
     );
@@ -687,10 +683,9 @@ sub ArticleAttachment {
     }
 
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT content_type, content, content_id, content_alternative, disposition, filename
-            FROM article_attachment
-            WHERE id = ?',
+        SQL    => 'SELECT content_type, content, content_id, content_alternative, disposition, filename'
+                . ' FROM article_attachment'
+                . ' WHERE id = ?',
         Bind   => [ \$AttachmentID ],
         Encode => [ 1, 0, 0, 0, 1, 1 ],
     );
@@ -788,31 +783,31 @@ sub ArticleAttachment {
 
                     # content id (optional)
                     if ( -e "$Filename.content_id" ) {
-                        my $Content = $MainObject->FileRead(
+                        my $FileContent = $MainObject->FileRead(
                             Location => "$Filename.content_id",
                         );
-                        if ($Content) {
-                            $Data{ContentID} = ${$Content};
+                        if ($FileContent) {
+                            $Data{ContentID} = ${$FileContent};
                         }
                     }
 
                     # alternativ (optional)
                     if ( -e "$Filename.content_alternative" ) {
-                        my $Content = $MainObject->FileRead(
+                        my $FileContent = $MainObject->FileRead(
                             Location => "$Filename.content_alternative",
                         );
-                        if ($Content) {
-                            $Data{Alternative} = ${$Content};
+                        if ($FileContent) {
+                            $Data{Alternative} = ${$FileContent};
                         }
                     }
 
                     # disposition
                     if ( -e "$Filename.disposition" ) {
-                        my $Content = $MainObject->FileRead(
+                        my $FileContent = $MainObject->FileRead(
                             Location => "$Filename.disposition",
                         );
-                        if ($Content) {
-                            $Data{Disposition} = ${$Content};
+                        if ($FileContent) {
+                            $Data{Disposition} = ${$FileContent};
                         }
                     }
 
@@ -842,19 +837,18 @@ sub ArticleAttachment {
                     );
                     return if !$Content;
                     $Data{ContentType} = $Content->[0];
-                    my $Counter = 0;
+                    my $LineCounter = 0;
                     for my $Line ( @{$Content} ) {
-                        if ($Counter) {
+                        if ($LineCounter) {
                             $Data{Content} .= $Line;
                         }
-                        $Counter++;
+                        $LineCounter++;
                     }
                 }
                 if (
                     $Data{ContentType} =~ /plain\/text/i
                     && $Data{ContentType} =~ /(utf\-8|utf8)/i
-                    )
-                {
+                ) {
                     $EncodeObject->EncodeInput( \$Data{Content} );
                 }
 

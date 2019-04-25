@@ -102,13 +102,11 @@ sub Run {
         !$Kernel::OM->Get('Kernel::System::Time')->ServerLocalTimeOffsetSeconds()
         && $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser')
         && $Self->{UserTimeZone}
-        )
-    {
+    ) {
         $UseUserTimeZone = 1;
         $TimeObject      = $LayoutObject->{UserTimeObject};
     }
 
-    # KIX4OTRS-capeIT
     my $CustomerIDs;
     my %CustomerUserData;
 
@@ -133,8 +131,6 @@ sub Run {
             . $CustomerUserData{UserEmail} . '>';
         $CustomerIDs = \%TempHash;
     }
-
-    # EO KIX4OTRS-capeIT
 
     for my $Key ( 0 .. 6 ) {
 
@@ -182,15 +178,12 @@ sub Run {
             );
         }
 
-        # KIX4OTRS-capeIT
         my $CountCreated = 0;
 
         # my $CountCreated = $TicketObject->TicketSearch(
         if ( ref $CustomerIDs eq 'HASH' && $CustomerIDs ) {
             for my $ID ( keys %{$CustomerIDs} ) {
                 $CountCreated += $TicketObject->TicketSearch(
-
-                    # EO KIX4OTRS-capeIT
 
                     # cache search result 30 min
                     CacheTTL => 60 * 30,
@@ -208,8 +201,6 @@ sub Run {
                     Permission => $Self->{Config}->{Permission} || 'ro',
                     UserID => $Self->{UserID},
                 );
-
-                # KIX4OTRS-capeIT
             }
         }
         else {
@@ -232,21 +223,16 @@ sub Run {
             );
         }
 
-        # EO KIX4OTRS-capeIT
         if ( $CountCreated && $CountCreated > $Max ) {
             $Max = $CountCreated;
         }
         push @TicketsCreated, $CountCreated;
 
-        # KIX4OTRS-capeIT
         my $CountClosed = 0;
         if ( ref $CustomerIDs eq 'HASH' && $CustomerIDs ) {
             for my $ID ( keys %{$CustomerIDs} ) {
 
-                # my $CountClosed = $TicketObject->TicketSearch(
                 $CountClosed += $TicketObject->TicketSearch(
-
-                    # EO KIX4OTRS-capeIT
 
                     # cache search result 30 min
                     CacheTTL => 60 * 30,
@@ -264,8 +250,6 @@ sub Run {
                     Permission => $Self->{Config}->{Permission} || 'ro',
                     UserID => $Self->{UserID},
                 );
-
-                # KIX4OTRS-capeIT
             }
         }
         elsif ( !$Param{Data}->{UserCustomerID} ) {
@@ -289,7 +273,6 @@ sub Run {
             );
         }
 
-        # EO KIX4OTRS-capeIT
         if ( $CountClosed && $CountClosed > $Max ) {
             $Max = $CountClosed;
         }

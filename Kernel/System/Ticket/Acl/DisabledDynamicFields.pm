@@ -39,7 +39,7 @@ sub Run {
 
     return if ( $Param{ReturnType} ne 'Ticket' );
     return if !$Param{Action};
-    return if ($Param{Action} !~ /^(AgentTicketPhone|AgentTicketEmail|CustomerTicketMessage|AgentTicketProcess)$/ && !$Param{TicketID});
+    return if ($Param{Action} !~ /^(?:AgentTicketPhone|AgentTicketEmail|CustomerTicketMessage|AgentTicketProcess)$/ && !$Param{TicketID});
 
     my %Ticket = ();
     if ( defined $Param{TicketID} && $Param{TicketID} ) {
@@ -69,7 +69,6 @@ sub Run {
         if ( $Elements[2] =~ /\[regexp\](.*)/ ) {
             $RegExpPatternCondition = $1;
         }
-        my @RestrictedDynamicFieldNames;
 
         # if action matches
         if ( $Elements[0] eq $Param{Action} || $Param{Action} =~ /$Elements[0]/ ) {
@@ -111,8 +110,7 @@ sub Run {
             elsif (
                 ( $Elements[1] eq 'NextState' || $Elements[1] eq 'State' )
                 && ( $Param{NextStateID} )
-                )
-            {
+            ) {
                 my %StateList
                     = $Kernel::OM->Get('Kernel::System::State')->StateList( UserID => 1, );
                 $ConditionElement = $StateList{ $Param{NextStateID} } || '';
@@ -120,8 +118,7 @@ sub Run {
             elsif (
                 ( $Elements[1] eq 'NextState' || $Elements[1] eq 'State' )
                 && ( $Ticket{State} )
-                )
-            {
+            ) {
                 $ConditionElement = $Ticket{State};
             }
 
@@ -139,8 +136,7 @@ sub Run {
                 ( !$RegExpPatternCondition && $Elements[2] eq $ConditionElement )
                 || ( !$RegExpPatternCondition && $Elements[2] eq 'EMPTY' && !$ConditionElement )
                 || ( $RegExpPatternCondition && $ConditionElement && $ConditionElement =~ /$RegExpPatternCondition/ )
-                )
-            {
+            ) {
 
                 my $Regexp = $DisabledDynamicFieldConfig->{$RestrictedDynamicField};
                 for my $DynamicField ( @{$DynamicFieldList} ) {

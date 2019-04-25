@@ -61,8 +61,7 @@ sub Run {
     my %GetParam;
     for my $ParamName (
         qw(ItemID Title CategoryID StateID LanguageID ValidID Keywords Approved Field1 Field2 Field3 Field4 Field5 Field6)
-        )
-    {
+    ) {
         $GetParam{$ParamName} = $ParamObject->GetParam( Param => $ParamName );
     }
 
@@ -362,10 +361,12 @@ sub Run {
         }
 
         # check if an attachment must be deleted
-        my @AttachmentIDs = map {
-            my ($ID) = $_ =~ m{ \A AttachmentDelete (\d+) \z }xms;
-            $ID ? $ID : ();
-        } $ParamObject->GetParamNames();
+        my @AttachmentIDs = ();
+        for my $Name ( $ParamObject->GetParamNames() ) {
+            if ( $Name =~ m{ \A AttachmentDelete (\d+) \z }xms ) {
+                push (@AttachmentIDs, $1);
+            };
+        }
 
         COUNT:
         for my $Count ( reverse sort @AttachmentIDs ) {
@@ -550,7 +551,7 @@ sub Run {
             FormID => $FormID,
         );
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
         # Get all existing attachments.
         my @ExistingAttachments = $FAQObject->AttachmentIndex(
             ItemID     => $GetParam{ItemID},
@@ -571,8 +572,7 @@ sub Run {
                 if (
                     $FAQData{ 'Field' . $Number }
                     =~ m{ Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=$GetParam{ItemID};FileID=$Attachment->{FileID} }msx
-                    )
-                {
+                ) {
 
                     # Get the existing inline attachment data.
                     my %File = $FAQObject->AttachmentGet(
@@ -594,7 +594,7 @@ sub Run {
                 }
             }
         }
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
 
         # Build a lookup hash of the new attachments.
         my %NewAttachment;
@@ -621,9 +621,9 @@ sub Run {
             # the key is the filename + filesize + content type
             # (no content id, as existing attachments don't have it)
             my $Key = $Attachment->{Filename}
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
                 . $Attachment->{FilesizeRaw}
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
                 . $Attachment->{ContentType};
 
             # attachment is already existing, we can delete it from the new attachment hash
@@ -654,9 +654,9 @@ sub Run {
 
             # check if attachment is an inline attachment
             my $Inline = 0;
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
             if ( $Attachment->{Disposition} eq 'inline' ) {
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
 
                 # remember that it is inline
                 $Inline = 1;
@@ -674,17 +674,16 @@ sub Run {
                     # skip empty fields
                     next NUMBER if !$Field;
 
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
                     # Skip if the field is not new (added) or old (initially loaded) inline attachment.
                     if (
                         $Field !~ m{ $Attachment->{ContentID} }xms
                         && $Field
                         !~ m{ Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=$GetParam{ItemID};FileID=$Attachment->{FileID} }xms
-                        )
-                    {
+                    ) {
                         next NUMBER;
                     }
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
 
                     # found the content id
                     $ContentIDFound = 1;

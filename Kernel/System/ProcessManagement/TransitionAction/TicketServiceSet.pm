@@ -129,8 +129,7 @@ sub Run {
         defined $Param{Config}->{ServiceID}
         && defined $Param{Ticket}->{ServiceID}
         && $Param{Config}->{ServiceID} eq $Param{Ticket}->{ServiceID}
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -143,8 +142,7 @@ sub Run {
             && $Param{Config}->{ServiceID} ne $Param{Ticket}->{ServiceID}
         )
         || !defined $Param{Ticket}->{ServiceID}
-        )
-    {
+    ) {
 
         # check if serivce is assigned to Customer User otherwise return
         $Success = $Self->_CheckService(
@@ -158,7 +156,6 @@ sub Run {
                 Message  => $CommonMessage
                     . 'ServiceID '
                     . $Param{Config}->{ServiceID}
-                    # rkaiser - T#2017020290001194 - changed customer user to contact
                     . ' is not assigned to contact '
                     . $Param{Ticket}->{CustomerUserID}
             );
@@ -190,8 +187,7 @@ sub Run {
         defined $Param{Config}->{Service}
         && defined $Param{Ticket}->{Service}
         && $Param{Config}->{Service} eq $Param{Ticket}->{Service}
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -204,9 +200,7 @@ sub Run {
             && $Param{Config}->{Service} ne $Param{Ticket}->{Service}
         )
         || !defined $Param{Ticket}->{Service}
-
-        )
-    {
+    ) {
 
         my $ServiceID = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
             Name => $Param{Config}->{Service},
@@ -235,7 +229,6 @@ sub Run {
                 Message  => $CommonMessage
                     . 'Service '
                     . $Param{Config}->{Service}
-                    # rkaiser - T#2017020290001194 - changed customer user to contact
                     . ' is not assigned to contact '
                     . $Param{Ticket}->{CustomerUserID}
             );

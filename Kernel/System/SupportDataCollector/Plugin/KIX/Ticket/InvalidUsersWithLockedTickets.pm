@@ -34,13 +34,10 @@ sub Run {
 
     my @InvalidUsers;
     $DBObject->Prepare(
-        SQL => '
-        SELECT DISTINCT(users.login) FROM ticket, users
-        WHERE
-            ticket.user_id = users.id
-            AND ticket.ticket_lock_id = 2
-            AND users.valid_id != 1
-        '
+        SQL => 'SELECT DISTINCT(users.login) FROM ticket, users'
+             . ' WHERE ticket.user_id = users.id'
+             . '  AND ticket.ticket_lock_id = 2'
+             . '  AND users.valid_id != 1'
     );
 
     while ( my @Row = $DBObject->FetchrowArray() ) {

@@ -105,7 +105,7 @@ sub Run {
         );
 
         # check article type...
-        return 0 if ( join( ',', @ArticleTypes ) !~ /(^|.*,)$ArticleData{ArticleType}(,.*|$)/ );
+        return 0 if ( join( ',', @ArticleTypes ) !~ /(?:^|.*,)$ArticleData{ArticleType}(?:,.*|$)/ );
 
         # check if it's the first article...
         if ($OnlyFirstArticle) {
@@ -162,8 +162,7 @@ sub Run {
                 if (
                     $SearchPatternRegExp
                     && $ArticleData{$SearchIn} =~ /$SearchPatternRegExp/m
-                    )
-                {
+                ) {
                     $SearchString = $1;
                     $SearchString =~ s/^\s+//g;
                     $SearchString =~ s/\s+$//g;
@@ -199,18 +198,12 @@ sub Run {
             my $SearchString = '';
             $Key =~ s/_OR\d$//g;
 
-            #            if ( $TicketData{$Key} ) { #&& $Key =~ /(TicketFreeText)(\d+)/ ) {
-            #$SearchInIndex = $2;
             $SearchPatternRegExp = $CISearchPatternRef->{$Key} || '';
 
             if (
                 $SearchPatternRegExp
-
-                #&& $TicketData{ 'TicketFreeText' . $SearchInIndex }
-                && $TicketData{$Key}
-                =~ /.*($SearchPatternRegExp).*/
-                )
-            {
+                && $TicketData{$Key} =~ /.*($SearchPatternRegExp).*/
+            ) {
                 $SearchString = $1;
                 $SearchString =~ s/^\s+//g;
                 $SearchString =~ s/\s+$//g;
@@ -231,8 +224,7 @@ sub Run {
         if ( $ToAddress && $SearchInClassesPerRecipientRef->{$ToAddress} ) {
             my @AllowedSearchClasses = split( ',', $SearchInClassesPerRecipientRef->{$ToAddress} );
             for my $CIClass ( keys %{$SearchInClassesRef} ) {
-                if ( $SearchInClassesPerRecipientRef->{$ToAddress} !~ /(^|.*,\s+)$CIClass(,.*|$)/ )
-                {
+                if ( $SearchInClassesPerRecipientRef->{$ToAddress} !~ /(?:^|.*,\s+)$CIClass(?:,.*|$)/ ) {
                     delete( $SearchInClassesRef->{$CIClass} );
                 }
             }

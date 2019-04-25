@@ -81,8 +81,7 @@ sub CheckSessionID {
     if (
         $Data{UserRemoteAddr} ne $RemoteAddr
         && $ConfigObject->Get('SessionCheckRemoteIP')
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'notice',
             Message  => "RemoteIP of '$Param{SessionID}' ($Data{UserRemoteAddr}) is "

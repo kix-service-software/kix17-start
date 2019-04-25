@@ -65,8 +65,7 @@ sub Run {
             !%CustomerData
             || !$CustomerData{UserLogin}
             || ( defined $CustomerData{ValidID} && !$CustomerData{ValidID} )
-            )
-        {
+        ) {
             return $LayoutObject->Redirect(
                 OP => '&Reason=NotACustomer'
             );
@@ -120,7 +119,7 @@ sub Run {
             $SecureAttribute = 1;
         }
 
-        my $LayoutObject = Kernel::Output::HTML::Layout->new(
+        my $SessionLayoutObject = Kernel::Output::HTML::Layout->new(
             %{$Self},
             SetCookies => {
                 SessionIDCookie => $ParamObject->SetCookie(
@@ -234,7 +233,7 @@ sub Run {
             $SecureAttribute = 1;
         }
 
-        my $LayoutObject = Kernel::Output::HTML::Layout->new(
+        my $SessionLayoutObject = Kernel::Output::HTML::Layout->new(
             %{$Self},
             SetCookies => {
                 SessionIDCookie => $ParamObject->SetCookie(

@@ -271,8 +271,7 @@ sub TypeUpdate {
             Name => $Param{Name},
             ID   => $Param{ID}
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "A type with name '$Param{Name}' already exists!"
@@ -288,8 +287,7 @@ sub TypeUpdate {
     if (
         $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Type::Default') eq $Type{Name}
         && $Param{ValidID} != 1
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "The ticket type is set as a default ticket type, so it cannot be set to invalid!"
@@ -310,8 +308,7 @@ sub TypeUpdate {
     if (
         $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Type::Default') eq $Type{Name}
         && $Type{Name} ne $Param{Name}
-        )
-    {
+    ) {
 
         # update default ticket type SySConfig item
         $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(

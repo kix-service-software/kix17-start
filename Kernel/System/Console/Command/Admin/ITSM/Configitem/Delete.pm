@@ -104,8 +104,7 @@ sub PreRun {
         && !$AllOldVersions
         && !$AllButKeepLast
         && !$AllOlderThanDays
-        )
-    {
+    ) {
         die
             "Please provide option --all, --class, --configitem-number, --all-old-versions, --all-but-keep-last-versions or --all-older-than-days-versions."
             . " For more details use --help\n";
@@ -231,10 +230,10 @@ sub Run {
                 if ( $DeploymentState2ID{$DeploymentState} ) {
 
                     # get the deployment state id
-                    my $ID = $DeploymentState2ID{$DeploymentState};
+                    my $DeplStateID = $DeploymentState2ID{$DeploymentState};
 
                     # add search parameter
-                    $SearchParam{DeplStateIDs} = [$ID];
+                    $SearchParam{DeplStateIDs} = [$DeplStateID];
                 }
                 else {
                     $Self->PrintError("Unable to find deployment state $DeploymentState.");

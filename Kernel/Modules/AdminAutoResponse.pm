@@ -94,8 +94,7 @@ sub Run {
                 $AutoResponseObject->AutoResponseUpdate(
                     %GetParam, UserID => $Self->{UserID}
                 )
-                )
-            {
+            ) {
                 $Self->_Overview();
                 my $Output = $LayoutObject->Header();
                 $Output .= $LayoutObject->NavigationBar();

@@ -29,7 +29,7 @@ sub Run {
     my $Self = shift;
 
     # Check if used OS is a linux system
-    if ( $^O !~ /(linux|unix|netbsd|freebsd|darwin)/i ) {
+    if ( $^O !~ /(?:linux|unix|netbsd|freebsd|darwin)/i ) {
         return $Self->GetResults();
     }
 

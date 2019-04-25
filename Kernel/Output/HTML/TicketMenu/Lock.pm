@@ -70,11 +70,11 @@ sub Run {
 
     # check permission
     if ( $TicketObject->TicketLockGet( TicketID => $Param{Ticket}->{TicketID} ) ) {
-        my $AccessOk = $TicketObject->OwnerCheck(
+        my $HasAccess = $TicketObject->OwnerCheck(
             TicketID => $Param{Ticket}->{TicketID},
             OwnerID  => $Self->{UserID},
         );
-        return if !$AccessOk;
+        return if !$HasAccess;
     }
 
     # group check
@@ -82,7 +82,7 @@ sub Run {
 
         my @Items = split /;/, $Param{Config}->{Group};
 
-        my $AccessOk;
+        my $HasAccess;
         ITEM:
         for my $Item (@Items) {
 
@@ -107,12 +107,12 @@ sub Run {
 
             next ITEM if !$GroupsReverse{$Name};
 
-            $AccessOk = 1;
+            $HasAccess = 1;
 
             last ITEM;
         }
 
-        return if !$AccessOk;
+        return if !$HasAccess;
     }
 
     # check acl

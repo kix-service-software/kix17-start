@@ -46,8 +46,7 @@ sub Run {
             ValidID => 1,
             Name    => $Self->GetOption('name'),
         )
-        )
-    {
+    ) {
         $Self->PrintError("Can't add ticket type.");
         return $Self->ExitCodeError();
     }

@@ -27,19 +27,19 @@ sub Run {
     my $Self = shift;
 
     # Check if used OS is a linux system
-    if ( $^O !~ /(linux|unix|netbsd|freebsd|darwin)/i ) {
+    if ( $^O !~ /(?:linux|unix|netbsd|freebsd|darwin)/i ) {
         return $Self->GetResults();
     }
 
     my @Loads;
 
     # If used OS is a linux system
-    if ( $^O =~ /(linux|unix|netbsd|freebsd|darwin)/i ) {
+    if ( $^O =~ /(?:linux|unix|netbsd|freebsd|darwin)/i ) {
 
         # linux systems
         if ( -e "/proc/loadavg" ) {
             my $LoadFile;
-            open( $LoadFile, '<', "/proc/loadavg" );    ## no critic
+            open( $LoadFile, '<', "/proc/loadavg" ) or die "Can't open '/proc/loadavg': ?!";
             while (<$LoadFile>) {
                 @Loads = split( " ", $_ );
             }
@@ -48,9 +48,9 @@ sub Run {
 
         # mac os
         elsif ( $^O =~ /darwin/i ) {
-            if ( open( my $In, "-|", "sysctl vm.loadavg" ) ) {    ## no critic
+            if ( open( my $In, "-|", "sysctl vm.loadavg" ) ) {
                 while (<$In>) {
-                    if ( my ($Loads) = $_ =~ /vm\.loadavg: \s* \{ \s*  (.*) \s* \}/smx ) {
+                    if ( my ($Loads) = $_ =~ /vm\.loadavg: \s* \{ \s*  (?:.*) \s* \}/smx ) {
                         @Loads = split ' ', $Loads;
                     }
                 }

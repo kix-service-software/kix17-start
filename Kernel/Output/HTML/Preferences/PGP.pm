@@ -72,8 +72,10 @@ sub Run {
         return;
     }
     else {
+        my $KeyID = '';
         if ( $Message =~ /gpg: key (.*):/ ) {
-            my @Result = $PGPObject->PublicKeySearch( Search => $1 );
+            $KeyID = $1;
+            my @Result = $PGPObject->PublicKeySearch( Search => $KeyID );
             if ( $Result[0] ) {
                 $UploadStuff{Filename}
                     = "$Result[0]->{Identifier}-$Result[0]->{Bit}-$Result[0]->{Key}.$Result[0]->{Type}";
@@ -83,7 +85,7 @@ sub Run {
         $Self->{UserObject}->SetPreferences(
             UserID => $Param{UserData}->{UserID},
             Key    => 'PGPKeyID',                   # new parameter PGPKeyID
-            Value  => $1,                           # write KeyID on a per user base
+            Value  => $KeyID,                       # write KeyID on a per user base
         );
         $Self->{UserObject}->SetPreferences(
             UserID => $Param{UserData}->{UserID},

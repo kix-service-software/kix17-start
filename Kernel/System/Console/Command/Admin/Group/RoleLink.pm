@@ -91,8 +91,7 @@ sub Run {
                 %Permissions,
             },
         )
-        )
-    {
+    ) {
         $Self->PrintError("Can't add role to group.");
         return $Self->ExitCodeError();
     }

@@ -214,8 +214,7 @@ sub Run {
     # decide if mapping needs to be used or not
     if (
         IsHashRefWithData( $ProviderConfig->{Operation}->{$Operation}->{MappingInbound} )
-        )
-    {
+    ) {
         my $MappingInObject = Kernel::GenericInterface::Mapping->new(
             DebuggerObject => $DebuggerObject,
             Operation      => $Operation,
@@ -317,8 +316,7 @@ sub Run {
         IsHashRefWithData(
             $ProviderConfig->{Operation}->{$Operation}->{MappingOutbound}
         )
-        )
-    {
+    ) {
         my $MappingOutObject = Kernel::GenericInterface::Mapping->new(
             DebuggerObject => $DebuggerObject,
             Operation      => $Operation,

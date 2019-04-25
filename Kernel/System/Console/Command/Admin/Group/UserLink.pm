@@ -92,8 +92,7 @@ sub Run {
                 %Permissions,
             },
         )
-        )
-    {
+    ) {
         $Self->PrintError("Can't add user to group.");
         return $Self->ExitCodeError();
     }

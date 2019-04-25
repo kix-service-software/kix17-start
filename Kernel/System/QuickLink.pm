@@ -185,10 +185,11 @@ sub FilterSelectableObjectsList {
     );
 
     # filter given list
-    if (   defined $Self->{Backends}
+    if (
+        defined $Self->{Backends}
         && ref( $Self->{Backends} ) eq 'HASH'
-        && keys %{ $Self->{Backends} } )
-    {
+        && keys %{ $Self->{Backends} }
+    ) {
 
         foreach my $Item ( @{ $Param{List} } ) {
 

@@ -558,9 +558,11 @@ sub StdAttachmentStandardTemplateMemberAdd {
 
     # delete existing relation
     return if !$Self->{DBObject}->Do(
-        SQL => 'DELETE FROM standard_template_attachment
-            WHERE standard_attachment_id = ?
-            AND standard_template_id = ?',
+        SQL  => <<'END',
+DELETE FROM standard_template_attachment
+WHERE standard_attachment_id = ?
+    AND standard_template_id = ?
+END
         Bind => [ \$Param{AttachmentID}, \$Param{StandardTemplateID} ],
     );
 
@@ -574,10 +576,11 @@ sub StdAttachmentStandardTemplateMemberAdd {
 
     # insert new relation
     my $Success = $Self->{DBObject}->Do(
-        SQL => '
-            INSERT INTO standard_template_attachment (standard_attachment_id, standard_template_id,
-                create_time, create_by, change_time, change_by)
-            VALUES (?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => <<'END',
+INSERT INTO standard_template_attachment (standard_attachment_id, standard_template_id,
+    create_time, create_by, change_time, change_by)
+VALUES (?, ?, current_timestamp, ?, current_timestamp, ?)
+END
         Bind => [
             \$Param{AttachmentID}, \$Param{StandardTemplateID}, \$Param{UserID},
             \$Param{UserID}
@@ -650,10 +653,11 @@ sub StdAttachmentStandardTemplateMemberList {
     # sql
     my %Data;
     my @Bind;
-    my $SQL = '
-        SELECT sta.standard_attachment_id, sa.name, sta.standard_template_id, st.name
-        FROM standard_template_attachment sta, standard_attachment sa, standard_template st
-        WHERE';
+    my $SQL = <<'END';
+SELECT sta.standard_attachment_id, sa.name, sta.standard_template_id, st.name
+FROM standard_template_attachment sta, standard_attachment sa, standard_template st
+WHERE
+END
 
     if ( $Param{AttachmentID} ) {
         $SQL .= ' st.valid_id IN (' . join ', ',
@@ -664,9 +668,10 @@ sub StdAttachmentStandardTemplateMemberList {
             $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet() . ')';
     }
 
-    $SQL .= '
-            AND sta.standard_attachment_id = sa.id
-            AND sta.standard_template_id = st.id';
+    $SQL .= <<'END';
+    AND sta.standard_attachment_id = sa.id
+    AND sta.standard_template_id = st.id
+END
 
     if ( $Param{AttachmentID} ) {
         $SQL .= ' AND sta.standard_attachment_id = ?';

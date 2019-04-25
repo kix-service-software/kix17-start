@@ -45,8 +45,7 @@ sub Run {
         $LinkListWithData
         && $LinkListWithData->{Person}
         && ref( $LinkListWithData->{Person} ) eq 'HASH'
-        )
-    {
+    ) {
         $LayoutObject->Block(
             Name => 'SidebarWidget',
             Data => {

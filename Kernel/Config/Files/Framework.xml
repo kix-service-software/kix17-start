@@ -31,16 +31,13 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0050-CIC-CustomerUserList" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Parameters for the dashboard backend of the contact list overview of the agent interface . "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Dashboard::CustomerUserList</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Title" Translatable="1">Contacts</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Description" Translatable="1">All contacts of a CustomerID</Item>
                 <Item Key="Attributes"></Item>
                 <Item Key="Limit">10</Item>
@@ -1180,7 +1177,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0270-CIC-FurtherInformation" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Parameters for the customer dashboard backend to provide and save further information for contact or customer company. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;).  "RwGroup" is used to restrict the writing access to the plugin. "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
@@ -1372,7 +1368,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ExternalSupplierForwarding::CustomerUserAttrBlacklist" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines contact attributes which should not be shown in forwarded documents.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
@@ -1406,7 +1401,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUserImport::DefaultCustomerID" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines which customer ID to use if no company defined - only relevant for new contacts.</Description>
         <Group>Framework</Group>
         <SubGroup>CustomerUserImportExport</SubGroup>
@@ -1668,7 +1662,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerPanelPreApplicationModule###CustomerTicketCustomerIDSelection" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">This module and its PreRun() function will be executed, if defined, for every request. This module checks if contact has multiple customer ids and presents selection of one of them for a new ticket creation.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -7701,7 +7694,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SwitchToCustomer" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Allows the administrators to login as other customers, via the contact administration panel.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
@@ -8634,7 +8626,6 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerGroupAlwaysGroups" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines the groups every contact will be in (if CustomerGroupSupport is enabled and you don't want to manage every user for these groups).</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -8704,7 +8695,6 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###1-GoogleMaps" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines a customer item, which generates a google maps icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -8723,7 +8713,6 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###2-Google" Required="0" Valid="0">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines a customer item, which generates a google icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -8742,7 +8731,6 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###2-LinkedIn" Required="0" Valid="0">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines a customer item, which generates a LinkedIn icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -8761,7 +8749,6 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###3-XING" Required="0" Valid="0">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines a customer item, which generates a XING icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -9094,7 +9081,6 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Customer::AuthModule::LDAP::UserSuffix" Required="0" Valid="0" ConfigLevel="200">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">If "LDAP" was selected for Customer::AuthModule and if you want to add a suffix to every contact login name, specifiy it here, e. g. you just want to write the username user but in your LDAP directory exists user@domain.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer::Auth</SubGroup>
@@ -9541,7 +9527,6 @@ via the Preferences button after logging in.
         <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Description Translatable="1">Address book of contact sources.</Description>
                 <Title Translatable="1">Address Book</Title>
                 <NavBarName></NavBarName>
@@ -9730,18 +9715,14 @@ via the Preferences button after logging in.
                 <GroupRo></GroupRo>
                 <Group>admin</Group>
                 <Group>users</Group>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Description Translatable="1">Edit contacts.</Description>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Title Translatable="1">Contacts</Title>
                 <NavBarName>Customer Management</NavBarName>
                 <NavBar>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Name Translatable="1">Contact Administration</Name>
                     <Link>Action=AdminCustomerUser;Nav=Agent</Link>
                     <LinkOption></LinkOption>
                     <NavBar>Customer Management</NavBar>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Description Translatable="1">Contact Administration</Description>
                     <Type></Type>
                     <Block></Block>
@@ -9749,7 +9730,6 @@ via the Preferences button after logging in.
                     <Prio>900</Prio>
                 </NavBar>
                 <NavBar>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Description Translatable="1">Contact Administration</Description>
                     <Type>Menu</Type>
                     <Block>ItemArea</Block>
@@ -9762,10 +9742,8 @@ via the Preferences button after logging in.
                 </NavBar>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Name Translatable="1">Contact</Name>
                     <Block>Customer</Block>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Description Translatable="1">Create and manage contacts.</Description>
                     <Prio>300</Prio>
                 </NavBarModule>
@@ -9830,9 +9808,7 @@ via the Preferences button after logging in.
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Name Translatable="1">Contact &lt;-&gt; Groups</Name>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Description Translatable="1">Link contact to groups.</Description>
                     <Block>Customer</Block>
                     <Prio>400</Prio>
@@ -9869,7 +9845,6 @@ via the Preferences button after logging in.
             <FrontendModuleReg>
                 <Group>admin</Group>
                 <Description>Admin</Description>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Title Translatable="1">Contact &lt;-&gt; Services</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBar>
@@ -9885,9 +9860,7 @@ via the Preferences button after logging in.
                 </NavBar>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Name Translatable="1">Contact &lt;-&gt; Services</Name>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Description Translatable="1">Link contact to services.</Description>
                     <Block>Customer</Block>
                     <Prio>500</Prio>
@@ -11425,7 +11398,6 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerCompany::EventModulePost###100-UpdateCustomerUsers" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Event module that updates contacts after an update of the Customer.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::CustomerCompany</SubGroup>
@@ -11438,7 +11410,6 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUser::EventModulePost###100-UpdateSearchProfiles" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Event module that updates contact search profiles if login changes.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::CustomerUser</SubGroup>
@@ -11451,7 +11422,6 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUser::EventModulePost###100-UpdateServiceMembership" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Event module that updates contact service membership if login changes.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::CustomerUser</SubGroup>
@@ -12884,7 +12854,6 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::CustomerInfoTicketCount" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Sets the search paramater for the ticket count in contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -12956,7 +12925,6 @@ via the Preferences button after logging in.
             </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###98-CustomerIDsSelection" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">A contact info block, which shows all customer IDs assigned to this customer. Depending on the calling action it allows you to select the relevant customer ID for the ticket, which will be created.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>

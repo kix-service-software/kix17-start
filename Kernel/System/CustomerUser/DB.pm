@@ -285,7 +285,7 @@ sub CustomerSearch {
         if ( $Self->{CustomerKeyInteger} ) {
 
             # return if login is no integer
-            return if $Param{UserLogin} !~ /^(\+|\-|)\d{1,16}$/;
+            return if $Param{UserLogin} !~ /^(?:\+|\-|)\d{1,16}$/;
 
             $SQL .= "$Self->{CustomerKey} = ?";
             push @Bind, \$UserLogin;
@@ -325,8 +325,7 @@ sub CustomerSearch {
             }
 
             # if mapping exists
-            if ( defined $CustomerIDsMap[5] && $CustomerIDsMap[5] )
-            {
+            if ( defined $CustomerIDsMap[5] && $CustomerIDsMap[5] ) {
                 my $MultipleCustomerID = '%'.$CustomerID.'%';
                 push @Bind, \$MultipleCustomerID;
                 if ( $Self->{CaseSensitive} ) {
@@ -492,10 +491,9 @@ sub CustomerIDList {
         return @{$Result} if ref $Result eq 'ARRAY';
     }
 
-    my $SQL = "
-        SELECT DISTINCT($Self->{CustomerID})
-        FROM $Self->{CustomerTable}
-        WHERE 1 = 1 ";
+    my $SQL = "SELECT DISTINCT($Self->{CustomerID})"
+            . " FROM $Self->{CustomerTable}"
+            . " WHERE 1 = 1";
     my @Bind;
 
     # add valid option
@@ -505,8 +503,7 @@ sub CustomerIDList {
         my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
 
         my $ValidIDs = join( ', ', $ValidObject->ValidIDsGet() );
-        $SQL .= "
-            AND $Self->{CustomerUserMap}->{CustomerValid} IN ($ValidIDs) ";
+        $SQL .= " AND $Self->{CustomerUserMap}->{CustomerValid} IN ($ValidIDs)";
     }
 
     # add search term
@@ -816,8 +813,7 @@ sub CustomerUserAdd {
     if (
         $Param{UserEmail}
         && !$CheckItemObject->CheckEmail( Address => $Param{UserEmail} )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Email address ($Param{UserEmail}) not valid ("
@@ -943,8 +939,7 @@ sub CustomerUserUpdate {
     if (
         $Param{UserEmail}
         && !$CheckItemObject->CheckEmail( Address => $Param{UserEmail} )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Email address ($Param{UserEmail}) not valid ("
@@ -961,8 +956,7 @@ sub CustomerUserUpdate {
         $Param{UserEmail}
         && $Self->{CustomerUserMap}->{CustomerUserEmailUniqCheck}
         && lc $Param{UserEmail} ne lc $UserData{UserEmail}
-        )
-    {
+    ) {
         my %Result = $Self->CustomerSearch(
             Valid            => 0,
             PostMasterSearch => $Param{UserEmail},

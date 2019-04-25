@@ -63,7 +63,6 @@ sub Run {
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # KIX4OTRS-capeIT
     # get search profile data with the use of categories, e.g. SearchProfile::UserLogin
     my $SearchProfileLong = $Self->{Profile};
     my $SearchProfileUser = '';
@@ -72,11 +71,9 @@ sub Run {
         $SearchProfileUser = $2;
     }
 
-    # EO KIX4OTRS-capeIT
-
     # check request
     if ( $Self->{Subaction} eq 'OpenSearchDescriptionTicketNumber' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'AgentTicketSearchOpenSearchDescriptionTicketNumber',
             Data         => \%Param,
         );
@@ -88,7 +85,7 @@ sub Run {
         );
     }
     if ( $Self->{Subaction} eq 'OpenSearchDescriptionFulltext' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'AgentTicketSearchOpenSearchDescriptionFulltext',
             Data         => \%Param,
         );
@@ -102,16 +99,12 @@ sub Run {
 
     # check request
     if ( $ParamObject->GetParam( Param => 'SearchTemplate' ) && $Self->{Profile} ) {
-        # KIX4OTRS-capeIT
-        # my $Profile = $LayoutObject->LinkEncode( $Self->{Profile} );
         my $Profile = $LayoutObject->LinkEncode($SearchProfileLong);
 
         return $LayoutObject->Redirect(
             OP =>
-                # "Action=AgentTicketSearch;Subaction=Search;TakeLastSearch=1;SaveProfile=1;Profile=$Profile"
                 "Action=AgentTicketSearch;Subaction=Search;TakeLastSearch=1;SaveProfile=0;Profile=$Profile"
         );
-        # EO KIX4OTRS-capeIT
     }
 
     # get single params
@@ -137,11 +130,7 @@ sub Run {
         %GetParam = $SearchProfileObject->SearchProfileGet(
             Base      => 'TicketSearch',
             Name      => $Self->{Profile},
-            # KIX4OTRS-capeIT
-            # UserLogin => $Self->{UserLogin},
             UserLogin => $SearchProfileUser || $Self->{UserLogin},
-
-            # EO KIX4OTRS-capeIT
         );
 
         # convert attributes
@@ -152,11 +141,6 @@ sub Run {
 
     # get search string params (get submitted params)
     else {
-
-    # KIX4OTRS-capeIT
-    # added: PendingTimeSearchType EscalationTimeSearchType TicketPendingTime* TicketEscalationTime*
-    # LinkedTickets CustomerUser ShowProfileAsQueue SearchProfileCategory SearchProfileCategoryAdd TicketNotes
-    # EO KIX4OTRS-capeIT
         for my $Key (
             qw(TicketNumber Title From To Cc Subject Body CustomerID CustomerIDRaw
             CustomerUserLogin CustomerUserLoginRaw StateType Agent ResultForm
@@ -212,8 +196,7 @@ sub Run {
             TicketNotes LinkedTickets CustomerUser ArticleFlag
             ShowProfileAsQueue SearchProfileShare SearchProfileAddCategory SearchProfileCategory
             )
-            )
-        {
+        ) {
 
             # get search string params (get submitted params)
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
@@ -230,8 +213,7 @@ sub Run {
             qw(StateIDs StateTypeIDs QueueIDs PriorityIDs OwnerIDs
             CreatedQueueIDs CreatedUserIDs WatchUserIDs ResponsibleIDs
             TypeIDs ServiceIDs SLAIDs LockIDs)
-            )
-        {
+        ) {
 
             # get search array params (get submitted params)
             my @Array = $ParamObject->GetArray( Param => $Key );
@@ -328,7 +310,6 @@ sub Run {
         $GetParam{'CloseTimeSearchType::TimeSlot'} = 1;
     }
 
-    # KIX4OTRS-capeIT
     # get pending time option
     if ( !$GetParam{PendingTimeSearchType} ) {
         $GetParam{'PendingTimeSearchType::None'} = '1';
@@ -339,8 +320,6 @@ sub Run {
     elsif ( $GetParam{PendingTimeSearchType} eq 'TimeSlot' ) {
         $GetParam{'PendingTimeSearchType::TimeSlot'} = '1';
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get escalation time option
     if ( !$GetParam{EscalationTimeSearchType} ) {
@@ -374,22 +353,17 @@ sub Run {
         $Self->{SaveProfile} = 1;
 
         # remember last search values
-        # KIX4OTRS-capeIT
         # convert attributes
         if ( $GetParam{ShownAttributes} && ref $GetParam{ShownAttributes} eq '' ) {
             $GetParam{ShownAttributes} = [ split /;/, $GetParam{ShownAttributes} ];
         }
 
         # save only if not subscribed
-        # if ( $Self->{SaveProfile} && $Self->{Profile} ) {
         if (
             $Self->{SaveProfile}
             && $Self->{Profile}
             && ( $Self->{Profile} eq 'last-search' || !$SearchProfileUser || $Self->{UserLogin} eq $SearchProfileUser )
-            )
-        {
-
-            # EO KIX4OTRS-capeIT
+        ) {
 
             # remove old profile stuff
             $SearchProfileObject->SearchProfileDelete(
@@ -397,9 +371,6 @@ sub Run {
                 Name      => $Self->{Profile},
                 UserLogin => $Self->{UserLogin},
             );
-
-            # KIX4OTRS-capeIT
-            # moved content upwards
 
             # delete old search profile category
             my $SearchProfileName = 'TicketSearch::' . $SearchProfileUser . '::' . $Self->{Profile};
@@ -413,8 +384,6 @@ sub Run {
                     Name      => $SearchProfileName,
                 );
             }
-
-            # EO KIX4OTRS-capeIT
 
             # convert attributes
             if ( $GetParam{ShownAttributes} && ref $GetParam{ShownAttributes} eq '' ) {
@@ -478,7 +447,6 @@ sub Run {
                 );
             }
 
-            # KIX4OTRS-capeIT
             # add category if search profile should be shared
             if ( $Self->{Profile} ne 'last-search' && $GetParam{SearchProfileShare} ) {
 
@@ -513,8 +481,6 @@ sub Run {
                     );
                 }
             }
-
-            # EO KIX4OTRS-capeIT
         }
 
         my %TimeMap = (
@@ -545,8 +511,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStartDay' }
                     && $GetParam{ $TimeType . 'TimeStartMonth' }
                     && $GetParam{ $TimeType . 'TimeStartYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeNewerDate' } = $GetParam{ $TimeType . 'TimeStartYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartDay' }
@@ -556,8 +521,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStopDay' }
                     && $GetParam{ $TimeType . 'TimeStopMonth' }
                     && $GetParam{ $TimeType . 'TimeStopYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeOlderDate' } = $GetParam{ $TimeType . 'TimeStopYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopDay' }
@@ -569,8 +533,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimePoint' }
                     && $GetParam{ $TimeType . 'TimePointStart' }
                     && $GetParam{ $TimeType . 'TimePointFormat' }
-                    )
-                {
+                ) {
                     my $Time = 0;
                     if ( $GetParam{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
                         $Time = $GetParam{ $TimeType . 'TimePoint' };
@@ -625,21 +588,13 @@ sub Run {
             && $ParamObject->GetParam( Param => 'CheckTicketNumberAndRedirect' )
             && $GetParam{ResultForm} ne 'Normal'
             && $GetParam{ResultForm} ne 'Print'
-            )
-        {
-            # KIX4OTRS-capeIT
+        ) {
             my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
             my $FulltextSearchParam = $GetParam{Fulltext};
             $FulltextSearchParam =~ s/$TicketHook//g;
 
-            # EO KIX4OTRS-capeIT
-
             my $TicketID = $TicketObject->TicketIDLookup(
-                # KIX4OTRS-capeIT
-                # TicketNumber => $GetParam{Fulltext},
                 TicketNumber => $FulltextSearchParam,
-
-                # EO KIX4OTRS-capeIT
                 UserID       => $Self->{UserID},
             );
             if ($TicketID) {
@@ -672,13 +627,10 @@ sub Run {
             }
         }
 
-        # KIX4OTRS-capeIT
         if ( $GetParam{LinkedTickets} ) {
             $GetParam{CustomerID}        = '';
             $GetParam{CustomerUserLogin} = '';
         }
-
-        # EO KIX4OTRS-capeIT
 
         my %AttributeLookup;
 
@@ -711,8 +663,7 @@ sub Run {
                             . $DynamicFieldConfig->{Name}
                             . $Preference->{Type}
                     }
-                    )
-                {
+                ) {
                     next PREFERENCE;
                 }
 
@@ -742,11 +693,7 @@ sub Run {
                 Result              => 'ARRAY',
                 SortBy              => $Self->{SortBy},
                 OrderBy             => $Self->{OrderBy},
-                # KIX4OTRS-capeIT
-                # Limit               => $Self->{SearchLimit},
-                Limit => $GetParam{LinkedTickets} ? undef : $Self->{SearchLimit},
-
-                # EO KIX4OTRS-capeIT
+                Limit               => $GetParam{LinkedTickets} ? undef : $Self->{SearchLimit},
                 UserID              => $Self->{UserID},
                 ConditionInline     => $Config->{ExtendedSearchCondition},
                 ContentSearchPrefix => '*',
@@ -757,7 +704,6 @@ sub Run {
             );
         }
 
-        # KIX4OTRS-capeIT
         if ( $GetParam{Fulltext} ) {
             my @ViewableTicketIDsDF = ();
 
@@ -834,7 +780,7 @@ sub Run {
                         );
                     next DYNAMICFIELDFULLTEXT if !IsHashRefWithData($DynamicFieldConfig);
 
-                    my %DynamicFieldSearchParameters;
+                    my %DFSearchParameters;
 
                     # get search field preferences
                     my $SearchFieldPreferences = $BackendObject->SearchFieldPreferences(
@@ -859,9 +805,7 @@ sub Run {
 
                         # set search parameter
                         if ( defined $SearchParameter ) {
-                            $DynamicFieldSearchParameters{ 'DynamicField_'
-                                    . $DynamicFieldConfig->{Name} }
-                                = $SearchParameter->{Parameter};
+                            $DFSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $SearchParameter->{Parameter};
                         }
                     }
 
@@ -874,7 +818,7 @@ sub Run {
                         UserID          => $Self->{UserID},
                         ConditionInline => $Config->{ExtendedSearchCondition},
                         ArchiveFlags    => $GetParam{ArchiveFlags},
-                        %DynamicFieldSearchParameters,
+                        %DFSearchParameters,
                     );
 
                     if (@ViewableTicketIDsThisDF) {
@@ -933,7 +877,6 @@ sub Run {
             @ViewableTicketIDs = @ViewableTicketsTmp;
         }
 
-        # EO KIX4OTRS-capeIT
         # get needed objects
         my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
         my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
@@ -948,10 +891,8 @@ sub Run {
         # CSV and Excel output
         if (
             $GetParam{ResultForm} eq 'CSV'
-            ||
-            $GetParam{ResultForm} eq 'Excel'
-            )
-        {
+            || $GetParam{ResultForm} eq 'Excel'
+        ) {
 
             # create head (actual head and head for data fill)
             my @TmpCSVHead = @{ $Config->{SearchCSVData} };
@@ -1004,14 +945,11 @@ sub Run {
                     Space => ' '
                 );
 
-                # KIX4OTRS-capeIT
                 if ( $Data{RealTillTimeNotUsed} ) {
                     $Data{PendingTimeString} = $TimeObject->SystemTime2TimeStamp(
                         SystemTime => $Data{RealTillTimeNotUsed},
                     );
                 }
-
-                # EO KIX4OTRS-capeIT
 
                 # get whole article (if configured!)
                 if ( $Config->{SearchArticleCSVTree} ) {
@@ -1025,8 +963,8 @@ sub Run {
                             'This item has no articles yet.'
                         );
                     }
-                    else
-                    {
+
+                    else {
                         for my $Articles (@Article) {
                             if ( $Articles->{Body} ) {
                                 $Data{ArticleTree}
@@ -1406,7 +1344,10 @@ sub Run {
         else {
 
             # redirect to the ticketzoom if result of the search is only one
-            if ( scalar @ViewableTicketIDs eq 1 && !$Self->{TakeLastSearch} ) {
+            if (
+                scalar( @ViewableTicketIDs ) == 1
+                && !$Self->{TakeLastSearch}
+            ) {
                 return $LayoutObject->Redirect(
                     OP => "Action=AgentTicketZoom;TicketID=$ViewableTicketIDs[0]",
                 );
@@ -1427,7 +1368,7 @@ sub Run {
             );
 
             # start HTML page
-            my $Output = $LayoutObject->Header();
+            $Output = $LayoutObject->Header();
             $Output .= $LayoutObject->NavigationBar();
 
             $Self->{Filter} = $ParamObject->GetParam( Param => 'Filter' ) || '';
@@ -1497,24 +1438,14 @@ sub Run {
         }
     }
     elsif ( $Self->{Subaction} eq 'AJAXProfileDelete' ) {
-        # KIX4OTRS-capeIT
-        # removed for easy use of shared search profiles
-        # my $Profile = $ParamObject->GetParam( Param => 'Profile' );
-        # EO KIX4OTRS-capeIT
 
         # remove old profile stuff
         $SearchProfileObject->SearchProfileDelete(
             Base      => 'TicketSearch',
-            # KIX4OTRS-capeIT
-            # Name      => $Profile,
-            Name => $Self->{Profile},
-
-            # EO KIX4OTRS-capeIT
+            Name      => $Self->{Profile},
             UserLogin => $Self->{UserLogin},
         );
 
-        # KIX4OTRS-capeIT
-        # remove shared profiles
         if ($SearchProfileUser) {
 
             my $SearchProfileName = 'TicketSearch::' . $SearchProfileUser . '::' . $Self->{Profile};
@@ -1527,8 +1458,7 @@ sub Run {
             if (
                 defined $SearchProfileCategory{State}
                 && $SearchProfileCategory{State} eq 'subscriber'
-                )
-            {
+            ) {
                 $SearchProfileObject->SearchProfileCategoryDelete(
                     Name      => $SearchProfileName,
                     UserLogin => $Self->{UserLogin},
@@ -1539,17 +1469,14 @@ sub Run {
             elsif (
                 defined $SearchProfileCategory{State}
                 && $SearchProfileCategory{State} eq 'owner'
-                )
-            {
+            ) {
                 $SearchProfileObject->SearchProfileCategoryDelete(
                     Name => $SearchProfileName,
                 );
             }
         }
 
-        # EO KIX4OTRS-capeIT
-
-        my $Output = $LayoutObject->JSONEncode(
+        $Output = $LayoutObject->JSONEncode(
             Data => 1,
         );
         return $LayoutObject->Attachment(
@@ -1570,8 +1497,9 @@ sub Run {
             my %SearchStrings;
             SEARCHSTRINGPARAMNAME:
             for my $SearchStringParamName ( sort @ParamNames ) {
-                next SEARCHSTRINGPARAMNAME if $SearchStringParamName !~ m{\ASearchStrings\[(.*)\]\z}sm;
-                $SearchStrings{$1} = $ParamObject->GetParam( Param => $SearchStringParamName );
+                if ( $SearchStringParamName =~ m{\ASearchStrings\[(.*)\]\z}sm ) {
+                    $SearchStrings{$1} = $ParamObject->GetParam( Param => $SearchStringParamName );
+                }
             }
 
             $StopWordCheckResult->{FoundStopWords}
@@ -1580,7 +1508,7 @@ sub Run {
                 );
         }
 
-        my $Output = $LayoutObject->JSONEncode(
+        $Output = $LayoutObject->JSONEncode(
             Data => $StopWordCheckResult,
         );
         return $LayoutObject->Attachment(
@@ -1591,37 +1519,19 @@ sub Run {
         );
     }
     elsif ( $Self->{Subaction} eq 'AJAX' ) {
-        # KIX4OTRS-capeIT
-        # removed for easy use of shared search profiles
-        # my $Profile = $ParamObject->GetParam( Param => 'Profile' ) || '';
-        # EO KIX4OTRS-capeIT
         my $EmptySearch = $ParamObject->GetParam( Param => 'EmptySearch' );
 
-        # KIX4OTRS-capeIT
-        # if ( !$Profile ) {
         if ( !$Self->{Profile} ) {
-
-            # EO KIX4OTRS-capeIT
             $EmptySearch = 1;
         }
-        my %GetParam = $SearchProfileObject->SearchProfileGet(
+        %GetParam = $SearchProfileObject->SearchProfileGet(
             Base      => 'TicketSearch',
-            # KIX4OTRS-capeIT
-            # Name      => $Profile,
-            Name => $Self->{Profile},
-
-            # UserLogin => $Self->{UserLogin},
+            Name      => $Self->{Profile},
             UserLogin => $SearchProfileUser || $Self->{UserLogin},
-
-            # EO KIX4OTRS-capeIT
         );
 
-        # KIX4OTRS-capeIT
-        # use default KIX-style, see for T
         $GetParam{SmartDateInput} = 0;
         $GetParam{SmartTimeInput} = 0;
-
-        # EO KIX4OTRS-capeIT
 
         # convert attributes
         if ( IsArrayRefWithData( $GetParam{ShownAttributes} ) ) {
@@ -1630,11 +1540,7 @@ sub Run {
         }
 
         # if no profile is used, set default params of default attributes
-        # KIX4OTRS-capeIT
-        # if ( !$Profile ) {
         if ( !$Self->{Profile} ) {
-
-            # EO KIX4OTRS-capeIT
             if ( $Config->{Defaults} ) {
                 KEY:
                 for my $Key ( sort keys %{ $Config->{Defaults} } ) {
@@ -1701,8 +1607,7 @@ sub Run {
         if (
             $ConfigObject->Get('Ticket::StorageModule') eq
             'Kernel::System::Ticket::ArticleStorageDB'
-            )
-        {
+        ) {
             push @Attributes, (
                 {
                     Key   => 'AttachmentName',
@@ -1728,12 +1633,10 @@ sub Run {
             },
             {
                 Key   => 'CustomerUserLogin',
-                # rkaiser - T#2017020290001194 - changed customer user to contact
                 Value => Translatable('Contact login (complex search)'),
             },
             {
                 Key   => 'CustomerUserLoginRaw',
-                # rkaiser - T#2017020290001194 - changed customer user to contact
                 Value => Translatable('Contact login (exact match)'),
             },
             {
@@ -1862,8 +1765,6 @@ sub Run {
                 Key   => 'ArticleCreateTimeSlot',
                 Value => Translatable('Article Create Time (between)'),
             },
-
-            # KIX4OTRS-capeIT
             {
                 Key   => 'TicketPendingTimePoint',
                 Value => 'Ticket Pending Time (before/after)',
@@ -1880,7 +1781,6 @@ sub Run {
                 Key   => 'TicketNotes',
                 Value => 'Remarks',
             },
-            # EO KIX4OTRS-capeIT
         );
 
         if ( $ConfigObject->Get('Ticket::ArchiveSystem') ) {
@@ -2217,44 +2117,25 @@ sub Run {
         }
 
         my %Profiles = $SearchProfileObject->SearchProfileList(
-            Base      => 'TicketSearch',
-            UserLogin => $Self->{UserLogin},
-
-            # KIX4OTRS-capeIT
-            # get also shared and subscribed search profiles
+            Base             => 'TicketSearch',
+            UserLogin        => $Self->{UserLogin},
             WithSubscription => 1,
-
-            # EO KIX4OTRS-capeIT
         );
-        delete $Profiles{''};
 
-        # KIX4OTRS-capeIT
-        # delete $Profiles{'last-search'};
+        delete $Profiles{''};
         delete $Profiles{ 'last-search::' . $Self->{UserLogin} };
 
-        # EO KIX4OTRS-capeIT
         if ($EmptySearch) {
             $Profiles{''} = '-';
         }
         else {
-
-            # KIX4OTRS-capeIT
-            # $Profiles{'last-search'} = '-';
             $Profiles{ 'last-search::' . $Self->{UserLogin} } = '-';
-
-            # EO KIX4OTRS-capeIT
         }
         $Param{ProfilesStrg} = $LayoutObject->BuildSelection(
-            Data       => \%Profiles,
-            Name       => 'Profile',
-            ID         => 'SearchProfile',
-
-            # KIX4OTRS-capeIT
-            # SelectedID => $Profile,
-            SelectedID => $SearchProfileLong || $Self->{Profile},
-
-            # EO KIX4OTRS-capeIT
-
+            Data         => \%Profiles,
+            Name         => 'Profile',
+            ID           => 'SearchProfile',
+            SelectedID   => $SearchProfileLong || $Self->{Profile},
             Class        => 'Modernize',
             PossibleNone => 1,
         );
@@ -2516,7 +2397,6 @@ sub Run {
             Format => 'DateInputFormat',
         );
 
-        # KIX4OTRS-capeIT
         $Param{TicketPendingTimePoint} = $LayoutObject->BuildSelection(
             Data => [ 1 .. 59 ],
 
@@ -2556,7 +2436,6 @@ sub Run {
             Format => 'DateInputFormat',
         );
 
-        # EO KIX4OTRS-capeIT
         $Param{TicketEscalationTimePoint} = $LayoutObject->BuildSelection(
             Data       => [ 1 .. 59 ],
             Name       => 'TicketEscalationTimePoint',
@@ -2597,7 +2476,6 @@ sub Run {
             Validate => 1,
         );
 
-        # KIX4OTRS-capeIT
         my $ArticleConfig =
             $ConfigObject->Get("Ticket::Frontend::AgentTicketZoomTabArticle");
         my %ArticleFlagList = ();
@@ -2614,16 +2492,10 @@ sub Run {
             $Param{ShowProfileAsQueueChecked} = ' checked="checked"';
         }
 
-        # EO KIX4OTRS-capeIT
-
         my %GetParamBackup = %GetParam;
         for my $Key (
-            # KIX4OTRS-capeIT
-            # qw(TicketEscalation TicketClose TicketChange TicketLastChange TicketCreate ArticleCreate)
             qw(TicketEscalation TicketPending TicketClose TicketLastChange TicketChange TicketCreate ArticleCreate)
-            # EO KIX4OTRS-capeIT
-            )
-        {
+        ) {
             for my $SubKey (qw(TimeStart TimeStop TimePoint TimePointStart TimePointFormat)) {
                 delete $GetParam{ $Key . $SubKey };
                 delete $GetParamBackup{ $Key . $SubKey };
@@ -2647,7 +2519,6 @@ sub Run {
             );
         }
 
-        # KIX4OTRS-capeIT
         # get search profile categories
         my %SearchProfileCategories = $SearchProfileObject->SearchProfileCategoryList();
         $Param{SearchProfileCategoryStrg} = $LayoutObject->BuildSelection(
@@ -2657,8 +2528,6 @@ sub Run {
             PossibleNone => 1,
         );
 
-        # EO KIX4OTRS-capeIT
-
         # html search mask output
         $LayoutObject->Block(
             Name => 'SearchAJAX',
@@ -2666,11 +2535,7 @@ sub Run {
                 %Param,
                 %GetParam,
                 EmptySearch => $EmptySearch,
-
-                # KIX4OTRS-capeIT
-                UserLogin => $Self->{UserLogin},
-
-                # EO KIX4OTRS-capeIT
+                UserLogin   => $Self->{UserLogin},
             },
         );
 
@@ -2735,11 +2600,7 @@ sub Run {
             @ShownAttributes = split /;/, $GetParamBackup{ShownAttributes};
         }
         my %AlreadyShown;
-        # KIX4OTRS-capeIT
-        # if ($Profile) {
         if ( $Self->{Profile} ) {
-
-            # EO KIX4OTRS-capeIT
             ITEM:
             for my $Item (@Attributes) {
                 my $Key = $Item->{Key};
@@ -2832,7 +2693,7 @@ sub Run {
             }
         }
 
-        my $Output .= $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'AgentTicketSearch',
             Data         => \%Param,
         );

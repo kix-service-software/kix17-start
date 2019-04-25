@@ -139,7 +139,7 @@ sub PostValueSet {
 
     my $FieldName;
     if ( !defined $Param{DynamicFieldConfig}->{Name} ) {
-        $FieldName = '',
+        $FieldName = '';
     }
     else {
         $FieldName = $Param{DynamicFieldConfig}->{Name};
@@ -172,7 +172,7 @@ sub PostValueSet {
         }
 
         # limit FieldName to 55 chars if is necessary
-        my $FieldNameLength = int( ( $NoCharacters - length($HistoryOldValue) ) / 2 );
+        $FieldNameLength = int( ( $NoCharacters - length($HistoryOldValue) ) / 2 );
         my $ValueLength = $FieldNameLength;
         if ( length($FieldName) > $FieldNameLength ) {
 

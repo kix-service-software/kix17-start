@@ -139,13 +139,13 @@ sub Run {
         local *STDERR;
 
         # Redirect the standard error to a variable.
-        open STDERR, ">>", \$ErrorMessage;
+        open STDERR, ">>", \$ErrorMessage or die "Can't open STDERR: $!";
 
         # Disable ANSI terminal colors for console commands, then in case of an error the output
         #   will be clean.
         # Prevent used once warning, setting the variable as local and then assign the value
         #   in the next statement.
-        local $Kernel::System::Console::BaseCommand::SuppressANSI;
+        local $Kernel::System::Console::BaseCommand::SuppressANSI = undef;
         $Kernel::System::Console::BaseCommand::SuppressANSI = 1;
 
         # Run function on the module with the specified parameters in Data->{Params}
@@ -161,8 +161,7 @@ sub Run {
     if (
         substr( $Param{Data}->{Module}, 0, length 'Kernel::System::Console' ) eq 'Kernel::System::Console'
         && $Function eq 'Execute'
-        )
-    {
+    ) {
         $IsConsoleCommand = 1;
     }
 

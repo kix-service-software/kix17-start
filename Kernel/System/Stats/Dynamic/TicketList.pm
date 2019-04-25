@@ -86,8 +86,7 @@ sub GetObjectAttributes {
     if (
         defined $ConfigObject->Get('Stats::UseInvalidAgentInStats')
         && ( $ConfigObject->Get('Stats::UseInvalidAgentInStats') == 0 )
-        )
-    {
+    ) {
         $ValidAgent = 1;
     }
 
@@ -852,8 +851,7 @@ sub GetStatTable {
     for my $ParameterName ( sort keys %{ $Param{Restrictions} } ) {
         if (
             $ParameterName =~ m{ \A DynamicField_ ( [a-zA-Z\d]+ ) (?: _ ( [a-zA-Z\d]+ ) )? \z }xms
-            )
-        {
+        ) {
             my $FieldName = $1;
             my $Operator  = $2;
 
@@ -1043,8 +1041,7 @@ sub GetStatTable {
             )
         )
         && @TicketIDs
-        )
-    {
+    ) {
 
         # start building the SQL query from back to front
         # what's fixed is the history_type_id we have to search for
@@ -1063,8 +1060,7 @@ sub GetStatTable {
         if (
             defined $Param{Restrictions}->{StateTypeIDsHistoric}
             && ref $Param{Restrictions}->{StateTypeIDsHistoric} eq 'ARRAY'
-            )
-        {
+        ) {
 
             # getting the StateListType:
             # my %ListType = (
@@ -1109,8 +1105,7 @@ sub GetStatTable {
         if (
             defined $Param{Restrictions}->{StateIDsHistoric}
             && ref $Param{Restrictions}->{StateIDsHistoric} eq 'ARRAY'
-            )
-        {
+        ) {
 
             # Validate the StateIDsHistoric list by
             # checking if they are in the %StateList hash
@@ -1172,8 +1167,7 @@ sub GetStatTable {
                 if (
                     $RowTimeUnix >= $UnixTimeStart
                     && $RowTimeUnix <= $UnixTimeEnd
-                    )
-                {
+                ) {
 
                     # if we found a record
                     # with the searched states
@@ -1306,8 +1300,7 @@ sub GetStatTable {
                 $Param{TimeZone}
                 && $Ticket{$Attribute}
                 && $Ticket{$Attribute} =~ /(\d{4})-(\d{2})-(\d{2})\s(\d{2}):(\d{2}):(\d{2})/
-                )
-            {
+            ) {
                 $Ticket{$Attribute} = $Kernel::OM->Get('Kernel::System::Stats')->_AddTimeZone(
                     TimeStamp => $Ticket{$Attribute},
                     TimeZone  => $Param{TimeZone},
@@ -1404,8 +1397,7 @@ sub ExportWrapper {
                 $ElementName eq 'OwnerIDs'
                 || $ElementName eq 'CreatedUserIDs'
                 || $ElementName eq 'ResponsibleIDs'
-                )
-            {
+            ) {
                 ID:
                 for my $ID ( @{$Values} ) {
                     next ID if !$ID;
@@ -1499,8 +1491,7 @@ sub ImportWrapper {
                 $ElementName eq 'OwnerIDs'
                 || $ElementName eq 'CreatedUserIDs'
                 || $ElementName eq 'ResponsibleIDs'
-                )
-            {
+            ) {
                 ID:
                 for my $ID ( @{$Values} ) {
                     next ID if !$ID;
@@ -1553,7 +1544,6 @@ sub _TicketAttributes {
         Created    => 'Created',
 
         #CreateTimeUnix => 'CreateTimeUnix',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         CustomerUserID => 'Contact',
         Lock           => 'lock',
 

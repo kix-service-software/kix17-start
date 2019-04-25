@@ -393,8 +393,7 @@ sub Run {
         if (
             $ConfigObject->Get('TimeZoneUser')
             && $ConfigObject->Get('TimeZoneUserBrowserAutoOffset')
-            )
-        {
+        ) {
             my $TimeOffset = $ParamObject->GetParam( Param => 'TimeOffset' ) || 0;
             if ( $TimeOffset > 0 ) {
                 $TimeOffset = '-' . ( $TimeOffset / 60 );
@@ -618,7 +617,6 @@ sub Run {
             my $Subject = $ConfigObject->Get('CustomerPanelSubjectLostPasswordToken')
                 || 'ERROR: CustomerPanelSubjectLostPasswordToken is missing!';
             for ( sort keys %UserData ) {
-#rbo - T2016121190001552 - added KIX placeholders
                 $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
             }
             my $Sent = $EmailObject->Send(
@@ -683,7 +681,6 @@ sub Run {
             return;
         }
 
-#rbo - T2016121190001552 - added KIX placeholders
         # send notify email
         my $Body = $ConfigObject->Get('CustomerPanelBodyLostPassword')
             || 'New Password is: <KIX_NEWPW>';
@@ -849,7 +846,6 @@ sub Run {
             $LayoutObject->Print(
                 Output => \$LayoutObject->CustomerLogin(
                     Title         => 'Login',
-                    # rkaiser - T#2017020290001194 - changed customer user to contact
                     Message       => Translatable('Contact can\'t be added!'),
                     UserTitle     => $GetParams{UserTitle},
                     UserFirstname => $GetParams{UserFirstname},
@@ -867,7 +863,6 @@ sub Run {
         my $Subject = $ConfigObject->Get('CustomerPanelSubjectNewAccount')
             || 'New OTRS Account!';
         for ( sort keys %GetParams ) {
-#rbo - T2016121190001552 - added KIX placeholders
             $Body =~ s/<(KIX|OTRS)_$_>/$GetParams{$_}/gi;
         }
 
@@ -1151,9 +1146,7 @@ sub Run {
         # update last request time
         if (
             !$ParamObject->IsAJAXRequest()
-            || $Param{Action} eq 'CustomerVideoChat'
-            )
-        {
+        ) {
             $SessionObject->UpdateSessionID(
                 SessionID => $Param{SessionID},
                 Key       => 'UserLastRequest',
@@ -1162,14 +1155,14 @@ sub Run {
         }
 
         # pre application module
-        my $PreModule = $ConfigObject->Get('CustomerPanelPreApplicationModule');
-        if ($PreModule) {
+        my $PreModuleConfig = $ConfigObject->Get('CustomerPanelPreApplicationModule');
+        if ($PreModuleConfig) {
             my %PreModuleList;
-            if ( ref $PreModule eq 'HASH' ) {
-                %PreModuleList = %{$PreModule};
+            if ( ref $PreModuleConfig eq 'HASH' ) {
+                %PreModuleList = %{$PreModuleConfig};
             }
             else {
-                $PreModuleList{Init} = $PreModule;
+                $PreModuleList{Init} = $PreModuleConfig;
             }
 
             MODULE:
@@ -1232,9 +1225,7 @@ sub Run {
                 $QueryString = 'Action=' . $Param{Action} . ';Subaction=' . $Param{Subaction};
             }
             my $File = $ConfigObject->Get('PerformanceLog::File');
-            ## no critic
             if ( open my $Out, '>>', $File ) {
-                ## use critic
                 print $Out time()
                     . '::Customer::'
                     . ( time() - $Self->{PerformanceLogStart} )
@@ -1311,8 +1302,10 @@ sub _CheckModulePermission {
             }
         }
         else {
-            if ( $Param{ $Key . "[$Group]" } && $Param{ $Key . "[$Group]" } eq 'Yes' )
-            {
+            if (
+                $Param{ $Key . "[$Group]" }
+                && $Param{ $Key . "[$Group]" } eq 'Yes'
+            ) {
                 $AccessOk = 1;
             }
         }

@@ -27,6 +27,8 @@ our @ObjectDependencies = (
     'Kernel::System::Time',
 );
 
+## no critic qw(InputOutput::RequireBriefOpen)
+
 =head1 NAME
 
 Kernel::System::SupportBundleGenerator - support bundle generator
@@ -211,11 +213,9 @@ sub Generate {
     # get time object
     my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
 
-    ## no critic
     my ( $s, $m, $h, $D, $M, $Y, $wd, $yd, $dst ) = $TimeObject->SystemTime2Date(
         SystemTime => $TimeObject->SystemTime(),
     );
-    ## use critic
     my $Filename = "SupportBundle_$Y-$M-$D" . '_' . "$h-$m";
 
     # add files to the tar archive
@@ -225,9 +225,12 @@ sub Generate {
     $TarObject->write( $Archive, 0 ) || die "Could not write: $_!";
 
     # add files to the tar archive
-    open( my $Tar, '<', $Archive );    ## no critic
+    open( my $Tar, '<', $Archive ) or die "Can't open '$Archive': ?!";
     binmode $Tar;
-    my $TmpTar = do { local $/; <$Tar> };
+    my $TmpTar = do {
+        local $/ = undef;
+        <$Tar>
+    };
     close $Tar;
 
     # remove all files
@@ -367,7 +370,7 @@ sub GenerateCustomFilesArchive {
 
     # add files to the tar archive
     my $TARFH;
-    if ( !open( $TARFH, '<', $CustomFilesArchive ) ) {    ## no critic
+    if ( !open( $TARFH, '<', $CustomFilesArchive ) ) {
 
         # log info
         $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -378,7 +381,10 @@ sub GenerateCustomFilesArchive {
     }
 
     binmode $TARFH;
-    my $TmpTar = do { local $/; <$TARFH> };
+    my $TmpTar = do {
+        local $/ = undef;
+        <$TARFH>
+    };
     close $TARFH;
 
     if ( $Kernel::OM->Get('Kernel::System::Main')->Require('Compress::Zlib') ) {

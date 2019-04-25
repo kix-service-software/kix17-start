@@ -105,11 +105,11 @@ sub Run {
         my $DeplStateColor = lc $Preferences{Color};
 
         # add to style classes string
-        $StyleClasses .= "
-            .Flag span.$DeplState {
-                background-color: #$DeplStateColor;
-            }
-        ";
+        $StyleClasses .= <<"END";
+.Flag span.$DeplState {
+    background-color: #$DeplStateColor;
+}
+END
     }
 
     # wrap into style tags
@@ -129,8 +129,8 @@ sub Run {
     my @UnselectedItems   = split(',', $Param{UnselectedItems} || '' );
 
     for my $ConfigItem ( @ConfigItemIDs ) {
-        if ( !grep(/^$ConfigItem$/, @UnselectedItems)
-            && !grep(/^$ConfigItem$/, @SelectedItems)
+        if ( !grep({/^$ConfigItem$/} @UnselectedItems)
+            && !grep({/^$ConfigItem$/} @SelectedItems)
         ) {
             push(@UnselectedItems, $ConfigItem);
         }
@@ -282,7 +282,7 @@ END
     ) {
         push @ShowColumns, 'BulkAction';
     }
-    my @XMLShowColumns = grep /::/, @ShowColumns;
+    my @XMLShowColumns = grep( {/::/} @ShowColumns );
     my %XMLColumnsHash = ();
 
     # get config item object
@@ -379,7 +379,7 @@ END
                     if ( $Column eq 'BulkAction') {
                         my $ItemChecked = '';
 
-                        if ( grep( /^$ConfigItemID$/, @SelectedItems ) ) {
+                        if ( grep( {/^$ConfigItemID$/} @SelectedItems ) ) {
                             $ItemChecked = ' checked="checked"';
                         }
                         $LayoutObject->Block(
@@ -638,9 +638,7 @@ sub _XMLData2Hash {
         COUNTER:
         for my $Counter ( 1 .. $Item->{CountMax} ) {
 
-            # KIX4OTRS-capeIT
             next ITEM if !defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content};
-            # EO KIX4OTRS-capeIT
 
             # lookup value
             my $Value = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->XMLValueLookup(

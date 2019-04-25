@@ -119,8 +119,7 @@ sub Run {
                     %GetParam,
                     UserID => $Self->{UserID},
                 )
-                )
-            {
+            ) {
                 my %AttachmentsAll = $StdAttachmentObject->StdAttachmentList();
 
                 # create hash with selected queues
@@ -467,8 +466,7 @@ sub _Overview {
 
         # get valid list
         my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
-        for my $ID ( sort { $ListGet{$a}->{SortName} cmp $ListGet{$b}->{SortName} } keys %ListGet )
-        {
+        for my $ID ( sort { $ListGet{$a}->{SortName} cmp $ListGet{$b}->{SortName} } keys %ListGet ) {
 
             my %Data = %{ $ListGet{$ID} };
             my @SelectedAttachment;

@@ -28,13 +28,8 @@ sub new {
     bless( $Self, $Type );
 
     # set syslog facility
-    # KIX4OTRS-capeIT
-    # $Self->{SysLogFacility} = $Kernel::OM->Get('Kernel::Config')->Get('LogModule::SysLog::Facility') || 'user';
-    $Self->{SysLogFacility}
-        = $Kernel::OM->Get('Kernel::Config')->Get('SysConfigChangeLog::LogModule::SysLog::Facility')
-        || 'user';
+    $Self->{SysLogFacility} = $Kernel::OM->Get('Kernel::Config')->Get('SysConfigChangeLog::LogModule::SysLog::Facility') || 'user';
 
-    # EO KIX4OTRS-capeIT
 
     return $Self;
 }
@@ -52,15 +47,9 @@ sub Log {
     }
     else {
         $Param{Message} = $EncodeObject->Convert(
-            Text => $Param{Message},
-            From => 'utf8',
-
-            # KIX4OTRS-capeIT
-            # To    => $ConfigObject->Get('LogModule::SysLog::Charset') || 'iso-8859-15',
-            To => $ConfigObject->Get('SysConfigChangeLog::LogModule::SysLog::Charset')
-                || 'iso-8859-15',
-
-            # EO KIX4OTRS-capeIT
+            Text  => $Param{Message},
+            From  => 'utf8',
+            To    => $ConfigObject->Get('SysConfigChangeLog::LogModule::SysLog::Charset') || 'iso-8859-15',
             Force => 1,
         );
     }
@@ -73,36 +62,16 @@ sub Log {
     Sys::Syslog::openlog( $Param{LogPrefix}, 'cons,pid', $Self->{SysLogFacility} );
 
     if ( lc $Param{Priority} eq 'debug' ) {
-
-        # KIX4OTRS-capeIT
-        # Sys::Syslog::syslog( 'debug', "[Debug][$Param{Module}][$Param{Line}] $Param{Message}" );
         Sys::Syslog::syslog( 'debug', "[Debug][$Param{Line}] $Param{Message}" );
-
-        # EO KIX4OTRS-capeIT
     }
     elsif ( lc $Param{Priority} eq 'info' ) {
-
-        # KIX4OTRS-capeIT
-        # Sys::Syslog::syslog( 'info', "[Info][$Param{Module}] $Param{Message}" );
         Sys::Syslog::syslog( 'info', "[Info] $Param{Message}" );
-
-        # EO KIX4OTRS-capeIT
     }
     elsif ( lc $Param{Priority} eq 'notice' ) {
-
-        # KIX4OTRS-capeIT
-        # Sys::Syslog::syslog( 'notice', "[Notice][$Param{Module}] $Param{Message}" );
         Sys::Syslog::syslog( 'notice', "[Notice] $Param{Message}" );
-
-        # EO KIX4OTRS-capeIT
     }
     elsif ( lc $Param{Priority} eq 'error' ) {
-
-      # KIX4OTRS-capeIT
-      # Sys::Syslog::syslog( 'err', "[Error][$Param{Module}][Line:$Param{Line}]: $Param{Message}" );
         Sys::Syslog::syslog( 'err', "[Error][Line:$Param{Line}]: $Param{Message}" );
-
-        # EO KIX4OTRS-capeIT
     }
     else {
 

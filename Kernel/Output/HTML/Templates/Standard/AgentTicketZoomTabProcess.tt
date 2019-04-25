@@ -82,10 +82,7 @@ $('.ShowFieldInfoOverlay').bind('click', function() {
                             <li><strong>[% Translate(Data.ActivityName) | html %]:</strong></li>
 [% RenderBlockStart("ActivityDialog") %]
                             <li>
-# KIX4OTRS-capeIT
-#                               <a title="[% Data.Name | html %]" class="AsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=AgentTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | html %];ProcessEntityID=[% Data.ProcessEntityID | html %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | html %]">[% Translate(Data.Name) | html %]</a>
                                 <a title="[% Data.Name | html %]" class="TabAsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=AgentTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | html %];ProcessEntityID=[% Data.ProcessEntityID | html %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | html %]">[% Translate(Data.Name) | html %]</a>
-# EO KIX4OTRS-capeIT
                             </li>
 [% RenderBlockEnd("ActivityDialog") %]
                         </ul>
@@ -137,10 +134,8 @@ $('.ShowFieldInfoOverlay').bind('click', function() {
         <div class="Clear"></div>
 [% RenderBlockEnd("Header") %]
 
-# KIX4OTRS-capeIT
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.KIX4OTRS.TicketZoomTabs.PopUpInit();
 //]]></script>
 [% END %]
-# EO KIX4OTRS-capeIT

@@ -86,8 +86,7 @@ sub new {
             # check if module can be loaded
             if (
                 !$Kernel::OM->Get('Kernel::System::Main')->RequireBaseClass( $Extension->{Module} )
-                )
-            {
+            ) {
                 die "Can't load dynamic fields backend module"
                     . " $Extension->{Module}! $@";
             }
@@ -144,8 +143,7 @@ sub ValueValidate {
         $Param{Value}
         && $Param{Value} !~ m{\A \d{4}-\d{2}-\d{2}\s00:00:00 \z}xms
         && $Param{Value} !~ m{\A \d{4}-\d{2}-\d{2}\s23:59:59 \z}xms
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "The value for the field Date is invalid!\n"
@@ -417,8 +415,7 @@ sub EditFieldValueGet {
     elsif (
         defined $Param{ParamObject}
         && ref $Param{ParamObject} eq 'Kernel::System::Web::Request'
-        )
-    {
+    ) {
         for my $Type (qw(Used Year Month Day)) {
             $DynamicFieldValues{ $Prefix . $Type } = $Param{ParamObject}->GetParam(
                 Param => $Prefix . $Type,
@@ -653,30 +650,30 @@ sub SearchFieldRender {
 
         ITEM:
         for my $Item (@Items) {
-            my ( $Key, $Value ) = split /=/, $Item;
+            my ( $ItemKey, $ItemValue ) = split /=/, $Item;
 
             # only handle keys that match the current type
-            next ITEM if $Key !~ m{ $Param{Type} }xms;
+            next ITEM if $ItemKey !~ m{ $Param{Type} }xms;
 
             if ( $Param{Type} eq 'TimePoint' ) {
 
-                if ( $Key eq $KeyName . 'Format' ) {
-                    $DefaultValue{Format}->{$Key} = $Value;
+                if ( $ItemKey eq $KeyName . 'Format' ) {
+                    $DefaultValue{Format}->{$ItemKey} = $ItemValue;
                 }
-                elsif ( $Key eq $KeyName . 'Start' ) {
-                    $DefaultValue{Start}->{$Key} = $Value;
+                elsif ( $ItemKey eq $KeyName . 'Start' ) {
+                    $DefaultValue{Start}->{$ItemKey} = $ItemValue;
                 }
-                elsif ( $Key eq $KeyName . 'Value' ) {
-                    $DefaultValue{Value}->{$Key} = $Value;
+                elsif ( $ItemKey eq $KeyName . 'Value' ) {
+                    $DefaultValue{Value}->{$ItemKey} = $ItemValue;
                 }
 
                 next ITEM;
             }
-            if ( $Key =~ m{Start} ) {
-                $DefaultValue{ValueStart}->{$Key} = $Value;
+            if ( $ItemKey =~ m{Start} ) {
+                $DefaultValue{ValueStart}->{$ItemKey} = $ItemValue;
             }
-            elsif ( $Key =~ m{Stop} ) {
-                $DefaultValue{ValueStop}->{$Key} = $Value;
+            elsif ( $ItemKey =~ m{Stop} ) {
+                $DefaultValue{ValueStop}->{$ItemKey} = $ItemValue;
             }
         }
     }
@@ -696,8 +693,7 @@ sub SearchFieldRender {
         && $Param{Type} eq 'TimeSlot'
         && defined $FieldValues->{ValueStart}
         && defined $FieldValues->{ValueStop}
-        )
-    {
+    ) {
         $Value = $FieldValues;
     }
     elsif (
@@ -706,8 +702,7 @@ sub SearchFieldRender {
         && defined $FieldValues->{Format}
         && defined $FieldValues->{Start}
         && defined $FieldValues->{Value}
-        )
-    {
+    ) {
         $Value = $FieldValues;
     }
 
@@ -1016,35 +1011,34 @@ sub SearchFieldParameterBuild {
             && $Value->{Format}->{ $Prefix . 'Format' }
             && $Value->{Value}->{ $Prefix . 'Value' }
             && $Value->{$Prefix}
-            )
-        {
+        ) {
 
             # to store the search parameters
             my %Parameter;
 
             # store in local variables for easier handling
-            my $Format = $Value->{Format}->{ $Prefix . 'Format' };
-            my $Start  = $Value->{Start}->{ $Prefix . 'Start' };
-            my $Value  = $Value->{Value}->{ $Prefix . 'Value' };
+            my $Format    = $Value->{Format}->{ $Prefix . 'Format' };
+            my $Start     = $Value->{Start}->{ $Prefix . 'Start' };
+            my $DiffValue = $Value->{Value}->{ $Prefix . 'Value' };
 
             my $DiffTimeMinutes = 0;
             if ( $Format eq 'minute' ) {
-                $DiffTimeMinutes = $Value;
+                $DiffTimeMinutes = $DiffValue;
             }
             elsif ( $Format eq 'hour' ) {
-                $DiffTimeMinutes = $Value * 60;
+                $DiffTimeMinutes = $DiffValue * 60;
             }
             elsif ( $Format eq 'day' ) {
-                $DiffTimeMinutes = $Value * 60 * 24;
+                $DiffTimeMinutes = $DiffValue * 60 * 24;
             }
             elsif ( $Format eq 'week' ) {
-                $DiffTimeMinutes = $Value * 60 * 24 * 7;
+                $DiffTimeMinutes = $DiffValue * 60 * 24 * 7;
             }
             elsif ( $Format eq 'month' ) {
-                $DiffTimeMinutes = $Value * 60 * 24 * 30;
+                $DiffTimeMinutes = $DiffValue * 60 * 24 * 30;
             }
             elsif ( $Format eq 'year' ) {
-                $DiffTimeMinutes = $Value * 60 * 24 * 365;
+                $DiffTimeMinutes = $DiffValue * 60 * 24 * 365;
             }
 
             # get time object
@@ -1056,7 +1050,7 @@ sub SearchFieldParameterBuild {
             # calculate difference time seconds
             my $DiffTimeSeconds = $DiffTimeMinutes * 60;
 
-            my $DisplayValue = '';
+            $DisplayValue = '';
 
             # define to search before or after that time stamp
             if ( $Start eq 'Before' ) {

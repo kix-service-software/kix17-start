@@ -157,8 +157,7 @@ sub Run {
             if (
                 $RedirectSubaction eq 'TransitionActionEdit'
                 || $RedirectSubaction eq 'TransitionActionNew'
-                )
-            {
+            ) {
                 $EntityID = $TransferData->{TransitionEntityID};
             }
             elsif ( $RedirectSubaction eq 'TransitionEdit' ) {
@@ -293,8 +292,7 @@ sub _ShowEdit {
     for my $TransitionID (
         sort { lc $TransitionList{$a} cmp lc $TransitionList{$b} }
         keys %TransitionList
-        )
-    {
+    ) {
         push @TransitionList, {
             Key   => $TransitionID,
             Value => $TransitionList{$TransitionID},
@@ -350,8 +348,7 @@ sub _GetParams {
     # get parameters from web browser
     for my $ParamName (
         qw( ID EntityID ProcessData TransitionInfo ProcessEntityID StartActivityID TransitionEntityID )
-        )
-    {
+    ) {
         $GetParam->{$ParamName}
             = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $ParamName ) || '';
     }
@@ -425,7 +422,10 @@ sub _PopupResponse {
     my ( $Self, %Param ) = @_;
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    if ( $Param{Redirect} && $Param{Redirect} eq 1 ) {
+    if (
+        defined $Param{Redirect}
+        && $Param{Redirect} eq '1'
+    ) {
         $LayoutObject->Block(
             Name => 'Redirect',
             Data => {
@@ -434,7 +434,10 @@ sub _PopupResponse {
             },
         );
     }
-    elsif ( $Param{ClosePopup} && $Param{ClosePopup} eq 1 ) {
+    elsif (
+        defined $Param{ClosePopup}
+        && $Param{ClosePopup} eq '1'
+    ) {
         $LayoutObject->Block(
             Name => 'ClosePopup',
             Data => {

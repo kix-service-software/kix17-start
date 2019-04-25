@@ -72,6 +72,8 @@ sub GetConfigItemSpecificLayoutContentForGraph {
         TemplateFile => 'AgentLinkGraphAdditionalITSMConfigItem',
         Data         => $Param,
     );
+
+    return 1;
 }
 
 1;

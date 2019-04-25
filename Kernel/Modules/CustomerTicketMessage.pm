@@ -18,10 +18,7 @@ our $ObjectManagerDisabled = 1;
 use Kernel::System::VariableCheck qw(:all);
 use Kernel::Language qw(Translatable);
 
-# KIX4OTRS-capeIT
 use base qw(Kernel::Modules::BaseTicketTemplateHandler);
-
-# EO KIX4OTRS-capeIT
 
 sub new {
     my ( $Type, %Param ) = @_;
@@ -48,11 +45,8 @@ sub Run {
     my %GetParam;
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    # KIX4OTRS-capeIT
-    # for my $Key (qw( Subject Body PriorityID TypeID ServiceID SLAID Expand Dest FromChatID)) {
-    for my $Key (qw( Subject Body PriorityID TypeID ServiceID SLAID Expand Dest FromChatID QueueID )) {
+    for my $Key (qw( Subject Body PriorityID TypeID ServiceID SLAID Expand Dest QueueID )) {
 
-        # EO KIX4OTRS-capeIT
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
     }
 
@@ -60,15 +54,12 @@ sub Run {
     my %ACLCompatGetParam;
     $ACLCompatGetParam{OwnerID} = $GetParam{NewUserID};
 
-    # KIX4OTRS-capeIT
     $GetParam{SelectedCustomerID} = $ParamObject->GetParam( Param => 'SelectedCustomerID' )
         || '';
     my $ConfigItemIDStrg = $ParamObject->GetParam( Param => 'SelectedConfigItemIDs' ) || '';
     $ConfigItemIDStrg =~ s/^,//g;
     my @SelectedCIIDs = split( ',', $ConfigItemIDStrg );
     $GetParam{DefaultSet} = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
-
-    # EO KIX4OTRS-capeIT
 
     # get Dynamic fields from ParamObject
     my %DynamicFieldValues;
@@ -101,7 +92,6 @@ sub Run {
     }
     $DynamicField = \@CustomerDynamicFields;
 
-    # KIX4OTRS-capeIT
     # save dynamic field config to $Self for use with show and hide acl
     $Self->{DynamicField} = $DynamicField;
 
@@ -140,13 +130,9 @@ sub Run {
     # will set to empty right before is assigned to the HTML element (non select).
     $Self->{EmptyString} = '_DynamicTicketTemplate_EmptyString_Dont_Use_It_Please';
 
-    # EO KIX4OTRS-capeIT
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    # KIX4OTRS-capeIT
-    # for my $DynamicFieldConfig ( @{$DynamicField} ) {
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-        # EO KIX4OTRS-capeIT
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # extract the dynamic field value form the web request
@@ -173,15 +159,12 @@ sub Run {
     my $QueueObject  = $Kernel::OM->Get('Kernel::System::Queue');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    # KIX4OTRS-capeIT
     # handle for quick ticket templates
-
     if (
         $Self->{DefaultSet}
         && $Self->{Subaction} ne 'StoreNew'
         && ( !$Self->{Subaction} || $Self->{Subaction} ne 'AJAXUpdate' )
-        )
-    {
+    ) {
 
         my %TemplateData = $Self->TicketTemplateReplace(
             IsUpload   => 0,
@@ -203,37 +186,11 @@ sub Run {
         }
     }
 
-    # EO KIX4OTRS-capeIT
-
-    if ( $GetParam{FromChatID} ) {
-        if ( !$ConfigObject->Get('ChatEngine::Active') ) {
-            return $LayoutObject->FatalError(
-                Message => Translatable('Chat is not active.'),
-            );
-        }
-
-        # Check chat participant
-        my %ChatParticipant = $Kernel::OM->Get('Kernel::System::Chat')->ChatParticipantCheck(
-            ChatID      => $GetParam{FromChatID},
-            ChatterType => 'Customer',
-            ChatterID   => $Self->{UserID},
-        );
-
-        if ( !%ChatParticipant ) {
-            return $LayoutObject->FatalError(
-                Message => Translatable('No permission.'),
-            );
-        }
-    }
-
     if ( !$Self->{Subaction} ) {
 
         #Get default Queue ID if none is set
         my $QueueDefaultID;
-        # KIX4OTRS-capeIT
-        # if ( !$GetParam{Dest} && !$Param{ToSelected} ) {
         if ( !$GetParam{Dest} && !$Param{ToSelected} && !$GetParam{DefaultQueueSelected} ) {
-        # EO KIX4OTRS-capeIT
             my $QueueDefault = $Config->{'QueueDefault'} || '';
             if ($QueueDefault) {
                 $QueueDefaultID = $QueueObject->QueueLookup( Queue => $QueueDefault );
@@ -253,13 +210,11 @@ sub Run {
                 return;
             }
         }
-        # KIX4OTRS-capeIT
-        # elsif ( $GetParam{Dest} ) {
+
         elsif ( $GetParam{Dest} || $GetParam{DefaultQueueSelected} ) {
             if ( !$GetParam{Dest} ) {
                 $GetParam{Dest} = $GetParam{DefaultQueueSelected};
             }
-            # EO KIX4OTRS-capeIT
             my ( $QueueIDParam, $QueueParam ) = split( /\|\|/, $GetParam{Dest} );
             my $QueueIDLookup = $QueueObject->QueueLookup( Queue => $QueueParam );
             if ( $QueueIDLookup && $QueueIDLookup eq $QueueIDParam ) {
@@ -274,7 +229,6 @@ sub Run {
             }
         }
 
-        # KIX4OTRS-capeIT
         # for ACL compatibility
         if ( !$GetParam{QueueID} ) {
             $GetParam{QueueID} = $QueueDefaultID;
@@ -300,22 +254,14 @@ sub Run {
             $DynamicFieldDefaults{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $DefaultValue;
         }
         $GetParam{DynamicField} = \%DynamicFieldDefaults;
-        # EO KIX4OTRS-capeIT
 
         # create html strings for all dynamic fields
         my %DynamicFieldHTML;
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        # KIX4OTRS-capeIT
-        # for my $DynamicFieldConfig ( @{$DynamicField} ) {
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-            # EO KIX4OTRS-capeIT
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-
-            # KIX4OTRS-capeIT
-            # my $PossibleValuesFilter;
-            # EO KIX4OTRS-capeIT
 
             my $IsACLReducible = $BackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
@@ -351,48 +297,28 @@ sub Run {
                         my %Filter = $TicketObject->TicketAclData();
 
                         # convert Filer key => key back to key => value using map
-                        # KIX4OTRS-capeIT
-                        # %{$PossibleValuesFilter} = map { $_ => $PossibleValues->{$_} }
                         %{ $DynamicFieldConfig->{ShownPossibleValues} }
-                            = map { $_ => $PossibleValues->{$_} }
-
-                            # EO KIX4OTRS-capeIT
-                            keys %Filter;
+                            = map( { $_ => $PossibleValues->{$_} } keys %Filter );
                     }
                 }
             }
 
             # get field html
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-                $BackendObject->EditFieldRender(
-                DynamicFieldConfig => $DynamicFieldConfig,
-
-                # KIX4OTRS-capeIT
-                # PossibleValuesFilter => $PossibleValuesFilter,
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
+                DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
-
-                # EO KIX4OTRS-capeIT
-                Mandatory =>
-                    $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                LayoutObject    => $LayoutObject,
-                ParamObject     => $ParamObject,
-                AJAXUpdate      => 1,
-                UpdatableFields => $Self->_GetFieldsToUpdate(),
-
-                # KIX4OTRS-capeIT
-                Value =>
-                    $GetParam{DynamicFieldHash}->{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-                Template => $GetParam{QuickTicketDynamicFieldHash},
-
-                # EO KIX4OTRS-capeIT
-                );
+                Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                LayoutObject         => $LayoutObject,
+                ParamObject          => $ParamObject,
+                AJAXUpdate           => 1,
+                UpdatableFields      => $Self->_GetFieldsToUpdate(),
+                Value                => $GetParam{DynamicFieldHash}->{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
+                Template             => $GetParam{QuickTicketDynamicFieldHash},
+            );
         }
 
-        # KIX4OTRS-capeIT
         # get shown or hidden fields
         $Self->_GetShownDynamicFields();
-
-        # EO KIX4OTRS-capeIT
 
         # print form ...
         my $Output .= $LayoutObject->CustomerHeader();
@@ -402,12 +328,7 @@ sub Run {
             %ACLCompatGetParam,
             ToSelected       => $Param{ToSelected},
             DynamicFieldHTML => \%DynamicFieldHTML,
-            FromChatID       => $GetParam{FromChatID} || '',
-
-            # KIX4OTRS-capeIT => http://bugs.otrs.org/show_bug.cgi?id=7900
-            DefaultQueueID => $QueueDefaultID || $GetParam{QueueID},
-
-            # EO KIX4OTRS-capeIT
+            DefaultQueueID   => $QueueDefaultID || $GetParam{QueueID},
         );
         $Output .= $LayoutObject->CustomerFooter();
         return $Output;
@@ -498,28 +419,17 @@ sub Run {
             FormID => $Self->{FormID},
         );
 
-        # KIX4OTRS-capeIT
-        # for ACL compatibility
         if ( !$GetParam{QueueID} ) {
             $GetParam{QueueID} = $NewQueueID;
         }
-
-        # EO KIX4OTRS-capeIT
 
         # create html strings for all dynamic fields
         my %DynamicFieldHTML;
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        # KIX4OTRS-capeIT
-        # for my $DynamicFieldConfig ( @{$DynamicField} ) {
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-            # EO KIX4OTRS-capeIT
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-
-            # KIX4OTRS-capeIT
-            # my $PossibleValuesFilter;
-            # EO KIX4OTRS-capeIT
 
             my $IsACLReducible = $BackendObject->HasBehavior(
                 DynamicFieldConfig => $DynamicFieldConfig,
@@ -554,18 +464,11 @@ sub Run {
                         my %Filter = $TicketObject->TicketAclData();
 
                         # convert Filer key => key back to key => value using map
-                        # KIX4OTRS-capeIT
-                        # %{$PossibleValuesFilter} = map { $_ => $PossibleValues->{$_} }
                         %{ $DynamicFieldConfig->{ShownPossibleValues} }
-                            = map { $_ => $PossibleValues->{$_} }
-
-                            # EO KIX4OTRS-capeIT
-                            keys %Filter;
+                            = map( { $_ => $PossibleValues->{$_} } keys %Filter );
                     }
                 }
             }
-
-            # KIX4OTRS-capeIT
         }
 
         # get shown or hidden fields
@@ -576,28 +479,16 @@ sub Run {
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-            # EO KIX4OTRS-capeIT
-
             my $ValidationResult;
 
             # do not validate on attachment upload or GetParam Expand
-            # KIX4OTRS-capeIT
-            # if ( !$IsUpload && !$GetParam{Expand} ) {
             if ( !$IsUpload && !$GetParam{Expand} && $DynamicFieldConfig->{Shown} ) {
 
-                # EO KIX4OTRS-capeIT
-
                 $ValidationResult = $BackendObject->EditFieldValueValidate(
-                    DynamicFieldConfig => $DynamicFieldConfig,
-
-                    # KIX4OTRS-capeIT
-                    # PossibleValuesFilter => $PossibleValuesFilter,
+                    DynamicFieldConfig   => $DynamicFieldConfig,
                     PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
-
-                    # EO KIX4OTRS-capeIT
-                    ParamObject => $ParamObject,
-                    Mandatory =>
-                        $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                    ParamObject          => $ParamObject,
+                    Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                 );
 
                 if ( !IsHashRefWithData($ValidationResult) ) {
@@ -619,24 +510,17 @@ sub Run {
             }
 
             # get field html
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-                $BackendObject->EditFieldRender(
-                DynamicFieldConfig => $DynamicFieldConfig,
-
-                # KIX4OTRS-capeIT
-                # PossibleValuesFilter => $PossibleValuesFilter,
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
+                DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
-
-                # EO KIX4OTRS-capeIT
-                Mandatory =>
-                    $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                ServerError  => $ValidationResult->{ServerError}  || '',
-                ErrorMessage => $ValidationResult->{ErrorMessage} || '',
-                LayoutObject => $LayoutObject,
-                ParamObject  => $ParamObject,
-                AJAXUpdate   => 1,
-                UpdatableFields => $Self->_GetFieldsToUpdate(),
-                );
+                Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                ServerError          => $ValidationResult->{ServerError}  || '',
+                ErrorMessage         => $ValidationResult->{ErrorMessage} || '',
+                LayoutObject         => $LayoutObject,
+                ParamObject          => $ParamObject,
+                AJAXUpdate           => 1,
+                UpdatableFields      => $Self->_GetFieldsToUpdate(),
+            );
         }
 
         # rewrap body if no rich text is used
@@ -644,13 +528,6 @@ sub Run {
             $GetParam{Body} = $LayoutObject->WrapPlainText(
                 MaxCharacters => $ConfigObject->Get('Ticket::Frontend::TextAreaNote'),
                 PlainText     => $GetParam{Body},
-            );
-        }
-
-        # if there is FromChatID, get related messages and prepend them to body
-        if ( $GetParam{FromChatID} ) {
-            my @ChatMessages = $Kernel::OM->Get('Kernel::System::Chat')->ChatMessageList(
-                ChatID => $GetParam{FromChatID},
             );
         }
 
@@ -702,8 +579,7 @@ sub Run {
             && $Config->{ServiceMandatory}
             && !$GetParam{ServiceID}
             && !$IsUpload
-            )
-        {
+        ) {
             $Error{'ServiceIDInvalid'} = 'ServerError';
         }
 
@@ -714,8 +590,7 @@ sub Run {
             && $Config->{SLAMandatory}
             && !$GetParam{SLAID}
             && !$IsUpload
-            )
-        {
+        ) {
             $Error{'SLAIDInvalid'} = 'ServerError';
         }
 
@@ -725,13 +600,8 @@ sub Run {
             && !$GetParam{TypeID}
             && !$IsUpload
             && !$GetParam{Expand}
-
-            # KIX4OTRS-capeIT
             && $Config->{TicketType}
-
-            # EO KIX4OTRS-capeIT
-            )
-        {
+        ) {
             $Error{TypeIDInvalid} = 'ServerError';
         }
 
@@ -741,7 +611,7 @@ sub Run {
             my $Output .= $LayoutObject->CustomerHeader();
             $Output    .= $LayoutObject->CustomerNavigationBar();
             $Output    .= $Self->_MaskNew(
-                Attachments => \@Attachments,
+                Attachments      => \@Attachments,
                 %GetParam,
                 ToSelected       => $Dest,
                 QueueID          => $NewQueueID,
@@ -761,7 +631,6 @@ sub Run {
             $GetParam{Priority}   = $Config->{PriorityDefault};
         }
 
-        # KIX4OTRS-capeIT
         # if customer is not alowed to set ticket type, set it to default
         if ( $ConfigObject->Get('Ticket::Type') && !$Config->{TicketType} ) {
             my %Type = $TicketObject->TicketTypeList(
@@ -789,25 +658,18 @@ sub Run {
             }
         }
 
-        # EO KIX4OTRS-capeIT
-
         # create new ticket, do db insert
         my $TicketID = $TicketObject->TicketCreate(
-            QueueID    => $NewQueueID,
-            TypeID     => $GetParam{TypeID},
-            ServiceID  => $GetParam{ServiceID},
-            SLAID      => $GetParam{SLAID},
-            Title      => $GetParam{Subject},
-            PriorityID => $GetParam{PriorityID},
-            Priority   => $GetParam{Priority},
-            Lock       => 'unlock',
-            State      => $Config->{StateDefault},
-
-            # KIX4OTRS-capeIT
-            # CustomerID   => $Self->{UserCustomerID},
-            CustomerID => $GetParam{SelectedCustomerID} || $Self->{UserCustomerID},
-
-            # EO KIX4OTRS-capeIT
+            QueueID      => $NewQueueID,
+            TypeID       => $GetParam{TypeID},
+            ServiceID    => $GetParam{ServiceID},
+            SLAID        => $GetParam{SLAID},
+            Title        => $GetParam{Subject},
+            PriorityID   => $GetParam{PriorityID},
+            Priority     => $GetParam{Priority},
+            Lock         => 'unlock',
+            State        => $Config->{StateDefault},
+            CustomerID   => $GetParam{SelectedCustomerID} || $Self->{UserCustomerID},
             CustomerUser => $Self->{UserLogin},
             OwnerID      => $ConfigObject->Get('CustomerPanelUserID'),
             UserID       => $ConfigObject->Get('CustomerPanelUserID'),
@@ -816,17 +678,10 @@ sub Run {
         # set ticket dynamic fields
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        # KIX4OTRS-capeIT
-        # for my $DynamicFieldConfig ( @{$DynamicField} ) {
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-            # EO KIX4OTRS-capeIT
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
-
-            # KIX4OTRS-capeIT
             next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
-
-            # EO KIX4OTRS-capeIT
 
             # set the value
             my $Success = $BackendObject->ValueSet(
@@ -893,17 +748,10 @@ sub Run {
         # set article dynamic fields
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        # KIX4OTRS-capeIT
-        # for my $DynamicFieldConfig ( @{$DynamicField} ) {
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-            # EO KIX4OTRS-capeIT
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Article';
-
-            # KIX4OTRS-capeIT
             next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
-
-            # EO KIX4OTRS-capeIT
 
             # set the value
             my $Success = $BackendObject->ValueSet(
@@ -912,51 +760,6 @@ sub Run {
                 Value              => $DynamicFieldValues{ $DynamicFieldConfig->{Name} },
                 UserID             => $ConfigObject->Get('CustomerPanelUserID'),
             );
-        }
-
-        # Permissions check were done earlier
-        if ( $GetParam{FromChatID} ) {
-            my $ChatObject = $Kernel::OM->Get('Kernel::System::Chat');
-            my %Chat       = $ChatObject->ChatGet(
-                ChatID => $GetParam{FromChatID},
-            );
-            my @ChatMessageList = $ChatObject->ChatMessageList(
-                ChatID => $GetParam{FromChatID},
-            );
-            my $ChatArticleID;
-
-            if (@ChatMessageList) {
-                my $JSONBody = $Kernel::OM->Get('Kernel::System::JSON')->Encode(
-                    Data => \@ChatMessageList,
-                );
-
-                my $ChatArticleType = 'chat-external';
-
-                $ChatArticleID = $TicketObject->ArticleCreate(
-
-                    #NoAgentNotify => $NoAgentNotify,
-                    TicketID    => $TicketID,
-                    ArticleType => $ChatArticleType,
-                    SenderType  => $Config->{SenderType},
-
-                    From => $From,
-
-                    # To               => $To,
-                    Subject        => $Kernel::OM->Get('Kernel::Language')->Translate('Chat'),
-                    Body           => $JSONBody,
-                    MimeType       => 'application/json',
-                    Charset        => $LayoutObject->{UserCharset},
-                    UserID         => $ConfigObject->Get('CustomerPanelUserID'),
-                    HistoryType    => $Config->{HistoryType},
-                    HistoryComment => $Config->{HistoryComment} || '%%',
-                    Queue          => $QueueObject->QueueLookup( QueueID => $NewQueueID ),
-                );
-            }
-            if ($ChatArticleID) {
-                $ChatObject->ChatDelete(
-                    ChatID => $GetParam{FromChatID},
-                );
-            }
         }
 
         # get pre loaded attachment
@@ -982,8 +785,7 @@ sub Run {
                 $ContentID
                 && ( $Attachment->{ContentType} =~ /image/i )
                 && ( $Attachment->{Disposition} eq 'inline' )
-                )
-            {
+            ) {
                 my $ContentIDHTMLQuote = $LayoutObject->Ascii2Html(
                     Text => $ContentID,
                 );
@@ -1004,7 +806,6 @@ sub Run {
             );
         }
 
-        # KIX4OTRS-capeIT
         my $LinkType = $ConfigObject->Get('KIXSidebarConfigItemLink::LinkType')
             || 'Normal';
         for my $CurrKey (@SelectedCIIDs) {
@@ -1082,8 +883,6 @@ sub Run {
             }
         }
 
-        # EO KIX4OTRS-capeIT
-
         # remove pre submitted attachments
         $UploadCacheObject->FormIDRemove( FormID => $Self->{FormID} );
 
@@ -1141,11 +940,7 @@ sub Run {
             CustomerUserID => $CustomerUser || '',
             QueueID        => $QueueID      || 1,
             Services       => $Services,
-
-            # KIX4OTRS-capeIT
-            CustomerID => $GetParam{SelectedCustomerID},
-
-            # EO KIX4OTRS-capeIT
+            CustomerID     => $GetParam{SelectedCustomerID},
         );
         my $Types = $Self->_GetTypes(
             %GetParam,
@@ -1156,18 +951,11 @@ sub Run {
 
         # update Dynamic Fields Possible Values via AJAX
         my @DynamicFieldAJAX;
-
-        # KIX4OTRS-capeIT
         my %DynamicFieldHTML;
-
-        # EO KIX4OTRS-capeIT
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        # KIX4OTRS-capeIT
-        # for my $DynamicFieldConfig ( @{$DynamicField} ) {
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-            # EO KIX4OTRS-capeIT
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $IsACLReducible = $BackendObject->HasBehavior(
@@ -1175,24 +963,18 @@ sub Run {
                 Behavior           => 'IsACLReducible',
             );
 
-            # KIX4OTRS-capeIT
-            # next DYNAMICFIELD if !$IsACLReducible;
             if ( !$IsACLReducible ) {
-                $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-                    $BackendObject->EditFieldRender(
+                $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
-                    Mandatory =>
-                        $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                    LayoutObject    => $LayoutObject,
-                    ParamObject     => $ParamObject,
-                    AJAXUpdate      => 0,
-                    UpdatableFields => $Self->_GetFieldsToUpdate(),
-                    UseDefaultValue => 1,
-                    );
+                    Mandatory          => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                    LayoutObject       => $LayoutObject,
+                    ParamObject        => $ParamObject,
+                    AJAXUpdate         => 0,
+                    UpdatableFields    => $Self->_GetFieldsToUpdate(),
+                    UseDefaultValue    => 1,
+                );
                 next DYNAMICFIELD;
             }
-
-            # EO KIX4OTRS-capeIT
 
             my $PossibleValues = $BackendObject->PossibleValuesGet(
                 DynamicFieldConfig => $DynamicFieldConfig,
@@ -1238,19 +1020,15 @@ sub Run {
                 }
             );
 
-            # KIX4OTRS-capeIT
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-                $BackendObject->EditFieldRender(
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $PossibleValues,
-                Mandatory =>
-                    $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                LayoutObject    => $LayoutObject,
-                ParamObject     => $ParamObject,
-                AJAXUpdate      => 1,
-                UpdatableFields => $Self->_GetFieldsToUpdate(),
-                );
-
+                Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                LayoutObject         => $LayoutObject,
+                ParamObject          => $ParamObject,
+                AJAXUpdate           => 1,
+                UpdatableFields      => $Self->_GetFieldsToUpdate(),
+            );
         }
 
         # get shown or hidden fields
@@ -1284,8 +1062,6 @@ sub Run {
                 Max  => 10000,
             };
         }
-
-        # EO KIX4OTRS-capeIT
 
         my $JSON = $LayoutObject->BuildSelectionJSON(
             [
@@ -1330,11 +1106,7 @@ sub Run {
                     Translation  => 0,
                     Max          => 100,
                 },
-
-                # KIX4OTRS-capeIT
                 @FormDisplayOutput,
-
-                # EO KIX4OTRS-capeIT
                 @DynamicFieldAJAX,
             ],
         );
@@ -1403,12 +1175,8 @@ sub _GetServices {
             %Param,
             Action         => $Self->{Action},
             CustomerUserID => $Self->{UserID},
-
-            # KIX4OTRS-capeIT
-            DefaultSet => $Self->{DefaultSet} || '',
-            CustomerID => $Param{SelectedCustomerID} || $Self->{UserCustomerID} || '',
-
-            # EO KIX4OTRS-capeIT
+            DefaultSet     => $Self->{DefaultSet}        || '',
+            CustomerID     => $Param{SelectedCustomerID} || $Self->{UserCustomerID} || '',
         );
     }
     return \%Service;
@@ -1472,12 +1240,8 @@ sub _GetTos {
 sub _MaskNew {
     my ( $Self, %Param ) = @_;
 
-    $Param{FormID} = $Self->{FormID};
-
-    # KIX4OTRS-capeIT
-    $Param{QueueID} = ( $Param{DefaultQueueID} || $Self->{QueueID} ) if !defined $Param{QueueID};
-
-    # EO KIX4OTRS-capeIT
+    $Param{FormID}                 = $Self->{FormID};
+    $Param{QueueID}                = ( $Param{DefaultQueueID}       || $Self->{QueueID} ) if !defined $Param{QueueID};
     $Param{Errors}->{QueueInvalid} = $Param{Errors}->{QueueInvalid} || '';
 
     my $DynamicFieldNames = $Self->_GetFieldsToUpdate(
@@ -1502,15 +1266,12 @@ sub _MaskNew {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $Config       = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
 
-    # KIX4OTRS-capeIT
     if ( $Param{SelectedCustomerID} ) {
         $LayoutObject->Block(
             Name => 'SelectedCustomer',
             Data => \%Param,
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     if ( $Config->{Queue} ) {
 
@@ -1544,12 +1305,9 @@ sub _MaskNew {
             return $LayoutObject->FatalError();
         }
 
-        # KIX4OTRS-capeIT
         # get queue and build selected string
-        #
         if ( !$Param{QueueID} ) {
-            if ( $Self->{'UserDefaultTicketQueue'} && $Self->{'UserDefaultTicketQueue'} ne '-' )
-            {
+            if ( $Self->{'UserDefaultTicketQueue'} && $Self->{'UserDefaultTicketQueue'} ne '-' ) {
                 my $UserDefQueueID = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
                     Queue => $Self->{'UserDefaultTicketQueue'}
                 );
@@ -1558,31 +1316,25 @@ sub _MaskNew {
         }
         my $SelectedQueueID = "";
 
-        # EO KIX4OTRS-capeIT
-
         # build to string
         if (%NewTos) {
             for ( sort keys %NewTos ) {
                 $NewTos{"$_||$NewTos{$_}"} = $NewTos{$_};
 
-                # KIX4OTRS-capeIT
                 if ( $Param{QueueID} && $_ && $_ == $Param{QueueID} ) {
                     $SelectedQueueID = "$_||$NewTos{$_}";
                 }
 
-                # EO KIX4OTRS-capeIT
                 delete $NewTos{$_};
             }
         }
 
-        # KIX4OTRS-capeIT
         # fallback in case of CustomerPanelOwnSelection
         if (
             $ConfigObject->Get('CustomerPanelOwnSelection')
             && !$SelectedQueueID
             && $Param{DefaultQueueSelected}
-            )
-        {
+        ) {
             my ( $SelectedQueueID, $Tmp ) = split( /||/, $Param{DefaultQueueSelected} );
             foreach my $NewTo ( sort keys %NewTos ) {
                 my ( $QueueID, $Tmp ) = split( /||/, $NewTo );
@@ -1593,21 +1345,14 @@ sub _MaskNew {
             }
         }
 
-        # EO KIX4OTRS-capeIT
-
         $Param{ToStrg} = $LayoutObject->AgentQueueListOption(
-            Data     => \%NewTos,
-            Multiple => 0,
-            Size     => 0,
-            Name     => 'Dest',
-            Class    => "Validate_Required Modernize " . $Param{Errors}->{QueueInvalid},
-
-            # KIX4OTRS-capeIT
-            # SelectedID => $Param{ToSelected} || $Param{QueueID},
-            SelectedID => $SelectedQueueID || $Param{DefaultQueueSelected} || '',
-
-            # EO KIX4OTRS-capeIT
-            TreeView => $TreeView,
+            Data        => \%NewTos,
+            Multiple    => 0,
+            Size        => 0,
+            Name        => 'Dest',
+            Class       => "Validate_Required Modernize " . $Param{Errors}->{QueueInvalid},
+            SelectedID  => $SelectedQueueID || $Param{DefaultQueueSelected} || '',
+            TreeView    => $TreeView,
         );
         $LayoutObject->Block(
             Name => 'Queue',
@@ -1625,11 +1370,7 @@ sub _MaskNew {
     if ( $Config->{Priority} ) {
         my %Priorities = $TicketObject->TicketPriorityList(
             %Param,
-
-            # KIX4OTRS-capeIT
-            DefaultSet => $Self->{DefaultSet} || '',
-
-            # EO KIX4OTRS-capeIT
+            DefaultSet     => $Self->{DefaultSet} || '',
             CustomerUserID => $Self->{UserID},
             Action         => $Self->{Action},
         );
@@ -1642,17 +1383,15 @@ sub _MaskNew {
         else {
             $PrioritySelected{SelectedValue} = $Config->{PriorityDefault} || '3 normal';
         }
+
         $Param{PriorityStrg} = $LayoutObject->BuildSelection(
             Data  => \%Priorities,
             Name  => 'PriorityID',
             Class => 'Modernize',
             %PrioritySelected,
-
-            # KIX4OTRS-capeIT
             Translation => 1,
-
-            # EO KIX4OTRS-capeIT
         );
+
         $LayoutObject->Block(
             Name => 'Priority',
             Data => \%Param,
@@ -1665,11 +1404,7 @@ sub _MaskNew {
             %Param,
             Action         => $Self->{Action},
             CustomerUserID => $Self->{UserID},
-
-            # KIX4OTRS-capeIT
-            DefaultSet => $Self->{DefaultSet} || '',
-
-            # EO KIX4OTRS-capeIT
+            DefaultSet     => $Self->{DefaultSet} || '',
         );
 
         if ( $Config->{'TicketTypeDefault'} && !$Param{TypeID} ) {
@@ -1677,7 +1412,6 @@ sub _MaskNew {
             $Param{TypeID} = $ReverseType{ $Config->{'TicketTypeDefault'} };
         }
 
-        # KIX4OTRS-capeIT
         # get default ticket type and lookup type ID
         if ( $Self->{'UserDefaultTicketType'} && $Self->{'UserDefaultTicketType'} ne '-' ) {
             $Param{TicketTypeDefault} = $Self->{'UserDefaultTicketType'};
@@ -1714,29 +1448,21 @@ sub _MaskNew {
             $Param{DefaultTypeID} = $DefaultTypeID;
         }
 
-        # EO KIX4OTRS-capeIT
-
         $Param{TypeStrg} = $LayoutObject->BuildSelection(
-            Data => \%Type,
-            Name => 'TypeID',
-
-            # KIX4OTRS-capeIT
-            # SelectedID   => $Param{TypeID},
-            SelectedID => $Param{TypeID} || $Param{DefaultTypeID} || '',
-
-            # EO KIX4OTRS-capeIT
-
+            Data         => \%Type,
+            Name         => 'TypeID',
+            SelectedID   => $Param{TypeID} || $Param{DefaultTypeID} || '',
             PossibleNone => 1,
             Sort         => 'AlphanumericValue',
             Translation  => 0,
-            Class => "Validate_Required Modernize " . ( $Param{Errors}->{TypeIDInvalid} || '' ),
+            Class        => "Validate_Required Modernize " . ( $Param{Errors}->{TypeIDInvalid} || '' ),
         );
         $LayoutObject->Block(
             Name => 'TicketType',
             Data => {
                 %Param,
                 TypeIDInvalid => $Param{Errors}->{TypeIDInvalid},
-                }
+            }
         );
     }
 
@@ -1748,16 +1474,11 @@ sub _MaskNew {
                 %Param,
                 Action         => $Self->{Action},
                 CustomerUserID => $Self->{UserID},
-
-                # KIX4OTRS-capeIT
-                DefaultSet => $Self->{DefaultSet} || '',
-                CustomerID => $Param{SelectedCustomerID} || $Self->{UserCustomerID} || '',
-
-                # EO KIX4OTRS-capeIT
+                DefaultSet     => $Self->{DefaultSet}        || '',
+                CustomerID     => $Param{SelectedCustomerID} || $Self->{UserCustomerID} || '',
             );
         }
 
-        # KIX4OTRS-capeIT
         my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
         if ( !$Self->{DefaultSet} && !$Param{ServiceID} && $Self->{'UserDefaultService'} ) {
             $Param{ServiceID} = $ServiceObject->ServiceLookup(
@@ -1765,21 +1486,19 @@ sub _MaskNew {
             );
         }
 
-        # EO KIX4OTRS-capeIT
-
         if ( $Config->{ServiceMandatory} ) {
             $Param{ServiceStrg} = $LayoutObject->BuildSelection(
-                Data       => \%Services,
-                Name       => 'ServiceID',
-                SelectedID => $Param{ServiceID},
-                Class      => "Validate_Required Modernize "
-                    . ( $Param{Errors}->{ServiceIDInvalid} || '' ),
+                Data         => \%Services,
+                Name         => 'ServiceID',
+                SelectedID   => $Param{ServiceID},
+                Class        => "Validate_Required Modernize " . ( $Param{Errors}->{ServiceIDInvalid} || '' ),
                 PossibleNone => 1,
                 TreeView     => $TreeView,
                 Sort         => 'TreeView',
                 Translation  => 0,
                 Max          => 200,
             );
+
             $LayoutObject->Block(
                 Name => 'TicketServiceMandatory',
                 Data => \%Param,
@@ -1814,26 +1533,22 @@ sub _MaskNew {
                     %Param,
                     Action         => $Self->{Action},
                     CustomerUserID => $Self->{UserID},
-
-                    # KIX4OTRS-capeIT
-                    DefaultSet => $Self->{DefaultSet} || '',
-
-                    # EO KIX4OTRS-capeIT
+                    DefaultSet     => $Self->{DefaultSet} || '',
                 );
             }
 
             if ( $Config->{SLAMandatory} ) {
                 $Param{SLAStrg} = $LayoutObject->BuildSelection(
-                    Data       => \%SLA,
-                    Name       => 'SLAID',
-                    SelectedID => $Param{SLAID},
-                    Class      => "Validate_Required Modernize "
-                        . ( $Param{Errors}->{SLAIDInvalid} || '' ),
+                    Data         => \%SLA,
+                    Name         => 'SLAID',
+                    SelectedID   => $Param{SLAID},
+                    Class        => "Validate_Required Modernize " . ( $Param{Errors}->{SLAIDInvalid} || '' ),
                     PossibleNone => 1,
                     Sort         => 'AlphanumericValue',
                     Translation  => 0,
                     Max          => 200,
                 );
+
                 $LayoutObject->Block(
                     Name => 'TicketSLAMandatory',
                     Data => \%Param,
@@ -1850,6 +1565,7 @@ sub _MaskNew {
                     Translation  => 0,
                     Max          => 200,
                 );
+
                 $LayoutObject->Block(
                     Name => 'TicketSLA',
                     Data => \%Param,
@@ -1875,10 +1591,8 @@ sub _MaskNew {
     # reduce the dynamic fields to only the ones that are designed for customer interface
     my @CustomerDynamicFields;
     DYNAMICFIELD:
-    # KIX4OTRS-capeIT
     # for my $DynamicFieldConfig ( @{$DynamicField} ) {
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-        # EO KIX4OTRS-capeIT
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         my $IsCustomerInterfaceCapable = $Kernel::OM->Get('Kernel::System::DynamicField::Backend')->HasBehavior(
@@ -1889,18 +1603,12 @@ sub _MaskNew {
 
         push @CustomerDynamicFields, $DynamicFieldConfig;
     }
-    # KIX4OTRS-capeIT
-    # $DynamicField = \@CustomerDynamicFields;
     $Self->{DynamicField} = \@CustomerDynamicFields;
-    # EO KIX4OTRS-capeIT
 
     # Dynamic fields
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    # KIX4OTRS-capeIT
-    # for my $DynamicFieldConfig ( @{$DynamicField} ) {
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-        # EO KIX4OTRS-capeIT
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # skip fields that HTML could not be retrieved
@@ -1911,14 +1619,12 @@ sub _MaskNew {
         # get the html strings form $Param
         my $DynamicFieldHTML = $Param{DynamicFieldHTML}->{ $DynamicFieldConfig->{Name} };
 
-        # KIX4OTRS-capeIT
         my $Class = "";
         if ( !$DynamicFieldConfig->{Shown} ) {
             $Class = " Hidden";
             $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
             $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
         }
-        # EO KIX4OTRS-capeIT
 
         $LayoutObject->Block(
             Name => 'DynamicField',
@@ -1926,11 +1632,7 @@ sub _MaskNew {
                 Name  => $DynamicFieldConfig->{Name},
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},
-
-                # KIX4OTRS-capeIT
                 Class => $Class,
-
-                # EO KIX4OTRS-capeIT
             },
         );
 
@@ -1953,8 +1655,7 @@ sub _MaskNew {
             && $LayoutObject->{BrowserRichText}
             && ( $Attachment->{ContentType} =~ /image/i )
             && ( $Attachment->{Disposition} eq 'inline' )
-            )
-        {
+        ) {
             next ATTACHMENT;
         }
         $LayoutObject->Block(
@@ -1963,7 +1664,6 @@ sub _MaskNew {
         );
     }
 
-    # KIX4OTRS-capeIT
     if ( !$Param{Subject} && $Config->{Subject} ) {
         $Param{Subject} = $LayoutObject->Output(
             Template => $Config->{Subject} || '',
@@ -1978,8 +1678,6 @@ sub _MaskNew {
         }
     }
 
-    # EO KIX4OTRS-capeIT
-
     # add rich text editor
     if ( $LayoutObject->{BrowserRichText} ) {
 
@@ -1993,24 +1691,8 @@ sub _MaskNew {
         );
     }
 
-    # Permissions have been checked before in Run()
-    if ( $Param{FromChatID} ) {
-        my @ChatMessages = $Kernel::OM->Get('Kernel::System::Chat')->ChatMessageList(
-            ChatID => $Param{FromChatID},
-        );
-        $LayoutObject->Block(
-            Name => 'ChatArticlePreview',
-            Data => {
-                ChatMessages => \@ChatMessages,
-            },
-        );
-    }
-
-    # KIX4OTRS-capeIT
     # load KIXSidebar
     $Param{KIXSidebarContent} = $LayoutObject->CustomerKIXSidebar(%Param);
-
-    # EO KIX4OTRS-capeIT
 
     # get output back
     return $LayoutObject->Output(
@@ -2040,10 +1722,8 @@ sub _GetFieldsToUpdate {
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    # KIX4OTRS-capeIT
     # for my $DynamicFieldConfig ( @{$DynamicField} ) {
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-        # EO KIX4OTRS-capeIT
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         my $IsACLReducible = $Kernel::OM->Get('Kernel::System::DynamicField::Backend')->HasBehavior(
@@ -2058,7 +1738,6 @@ sub _GetFieldsToUpdate {
     return \@UpdatableFields;
 }
 
-# KIX4OTRS-capeIT
 sub _GetShownDynamicFields {
     my ( $Self, %Param ) = @_;
 
@@ -2081,8 +1760,7 @@ sub _GetShownDynamicFields {
             if (
                 IsHashRefWithData( \%TicketAclFormData )
                 && defined $TicketAclFormData{ $DynamicField->{Name} }
-                )
-            {
+            ) {
                 if ( $TicketAclFormData{ $DynamicField->{Name} } >= 1 ) {
                     $DynamicField->{Shown} = 1;
                 }
@@ -2100,8 +1778,6 @@ sub _GetShownDynamicFields {
 
     return 1;
 }
-
-# EO KIX4OTRS-capeIT
 
 1;
 

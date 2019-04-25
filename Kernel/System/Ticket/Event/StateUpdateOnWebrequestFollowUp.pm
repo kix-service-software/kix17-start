@@ -107,7 +107,7 @@ sub Run {
     }
 
     # check whether last state update done by system and old state like close or pending
-    return 1 if ( $LastChangedBy != 1 && $OldState !~ /^(close|pending)/i );
+    return 1 if ( $LastChangedBy != 1 && $OldState !~ /^(?:close|pending)/i );
 
     # set state
     my $State = $Self->{ConfigObject}->Get('PostmasterFollowUpStateClosed') || 'open';
@@ -126,10 +126,8 @@ sub Run {
 
     if (
         $TicketStateWorkflowConfig
-        &&
-        ($TicketStateWorkflowConfig->{ $Ticket{Type}.':::'.$OldState } || $TicketStateWorkflowConfig->{ $OldState })
-        )
-    {
+        && ($TicketStateWorkflowConfig->{ $Ticket{Type}.':::'.$OldState } || $TicketStateWorkflowConfig->{ $OldState })
+    ) {
         $State = $TicketStateWorkflowConfig->{ $Ticket{Type}.':::'.$OldState } || $TicketStateWorkflowConfig->{ $OldState };
     }
 

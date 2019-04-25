@@ -328,15 +328,6 @@ sub Auth {
         return;
     }
 
-    # maybe check if pw is expired
-    # if () {
-    #     $Kernel::OM->Get('Kernel::System::Log')->Log(
-    #         Priority => 'info',
-    #         Message  => "Password is expired!",
-    #     );
-    #     return;
-    # }
-
     # login note
     $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'notice',
@@ -367,27 +358,6 @@ sub _ConvertTo {
         Text => $Text,
         From => $Charset,
         To   => $Self->{DestCharset},
-    );
-}
-
-sub _ConvertFrom {
-    my ( $Self, $Text, $Charset ) = @_;
-
-    return if !defined $Text;
-
-    # get encode object
-    my $EncodeObject = $Kernel::OM->Get('Kernel::System::Encode');
-
-    if ( !$Charset || !$Self->{DestCharset} ) {
-        $EncodeObject->EncodeInput( \$Text );
-        return $Text;
-    }
-
-    # convert from directory charset ($Self->{DestCharset}) to input charset ($Charset)
-    return $EncodeObject->Convert(
-        Text => $Text,
-        From => $Self->{DestCharset},
-        To   => $Charset,
     );
 }
 

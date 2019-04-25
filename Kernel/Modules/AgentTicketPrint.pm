@@ -188,20 +188,15 @@ sub Run {
 
     if ( $Ticket{UntilTime} ) {
 
-        # KIX4OTRS-capeIT
         my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
         my $DisplayPendingTime = $UserPreferences{UserDisplayPendingTime} || '';
 
         if ( $DisplayPendingTime && $DisplayPendingTime eq 'RemainingTime' ) {
 
-            # $Ticket{PendingUntil} = $LayoutObject->CustomerAge(
             $Ticket{PendingUntil} .= $LayoutObject->CustomerAge(
-
-                # EO KIX4OTRS-capeIT
                 Age   => $Ticket{UntilTime},
                 Space => ' ',
             );
-            # KIX4OTRS-capeIT
         }
         else {
             $Ticket{PendingUntil} = $Kernel::OM->Get('Kernel::System::Time')->SystemTime2TimeStamp(
@@ -210,8 +205,6 @@ sub Run {
             $Ticket{PendingUntil} = $LayoutObject->{LanguageObject}
                 ->FormatTimeString( $Ticket{PendingUntil}, 'DateFormat' );
         }
-
-        # EO KIX4OTRS-capeIT
     }
 
     # get needed objects
@@ -347,8 +340,7 @@ sub Run {
         !$Kernel::OM->Get('Kernel::System::Time')->ServerLocalTimeOffsetSeconds()
         && $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser')
         && $Self->{UserTimeZone}
-        )
-    {
+    ) {
         $TimeObject = $LayoutObject->{UserTimeObject};
     }
 
@@ -661,14 +653,8 @@ sub _PDFOutputLinkedObjects {
         for my $Object ( sort { lc $a cmp lc $b } keys %{$ObjectList} ) {
 
             for my $Item ( @{ $ObjectList->{$Object} } ) {
-
                 $TableParam{CellData}[$Row][0]{Content} ||= '';
-
-                # KIX4OTRS-capeIT
-                # $TableParam{CellData}[$Row][1]{Content} = $Item->{Title} || '';
                 $TableParam{CellData}[$Row][1]{Content} = $Item->{Title} || $Item->{Content} || '';
-
-                # EO KIX4OTRS-capeIT
             }
             continue {
                 $Row++;
@@ -944,7 +930,6 @@ sub _PDFOutputCustomerInfos {
 
         # output headline
         $PDFObject->Text(
-            # rkaiser - T#2017020290001194 - changed customer user to contact
             Text     => $LayoutObject->{LanguageObject}->Translate('Contact information'),
             Height   => 10,
             Type     => 'Cut',
@@ -1196,31 +1181,6 @@ sub _PDFOutputArticles {
                 );
                 $Page{PageCount}++;
             }
-        }
-
-        if ( $Article{ArticleType} eq 'chat-external' || $Article{ArticleType} eq 'chat-internal' )
-        {
-            $Article{Body} = $Kernel::OM->Get('Kernel::System::JSON')->Decode(
-                Data => $Article{Body}
-            );
-            my $Lines;
-            if ( IsArrayRefWithData( $Article{Body} ) ) {
-                for my $Line ( @{ $Article{Body} } ) {
-                    my $CreateTime
-                        = $LayoutObject->{LanguageObject}->FormatTimeString( $Line->{CreateTime}, 'DateFormat' );
-                    if ( $Line->{SystemGenerated} ) {
-                        $Lines .= '[' . $CreateTime . '] ' . $Line->{MessageText} . "\n";
-                    }
-                    else {
-                        $Lines
-                            .= '['
-                            . $CreateTime . '] '
-                            . $Line->{ChatterName} . ' '
-                            . $Line->{MessageText} . "\n";
-                    }
-                }
-            }
-            $Article{Body} = $Lines;
         }
 
         # table params (article body)

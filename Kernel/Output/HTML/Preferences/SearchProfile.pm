@@ -54,8 +54,7 @@ sub Param {
         !$Category
         && scalar keys %SearchProfileCategories
         && defined( $SearchProfileCategories{ ( sort( keys %SearchProfileCategories ) )[0] } )
-        )
-    {
+    ) {
         $Category = $SearchProfileCategories{ ( sort( keys %SearchProfileCategories ) )[0] };
     }
 
@@ -143,7 +142,6 @@ sub Run {
 
     if ( !defined $Type || !$Type ) {
 
-        my %UserData = $UserObject->GetUserData( UserID => $Self->{UserID} );
         my $SearchProfileCategory
             = $ParamObject->GetParam( Param => 'PrefSearchProfileCategory' );
 

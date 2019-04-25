@@ -218,8 +218,7 @@ sub Run {
     my $Limit           = $LayoutObject->{ $Self->{PrefKey} } || $Self->{Config}->{Limit};
 
     USERID:
-    for my $UserID ( sort { $OutOfOfficeUser{$a} cmp $OutOfOfficeUser{$b} } keys %OutOfOfficeUser )
-    {
+    for my $UserID ( sort { $OutOfOfficeUser{$a} cmp $OutOfOfficeUser{$b} } keys %OutOfOfficeUser ) {
 
         $Count++;
 

@@ -36,8 +36,7 @@ sub Run {
 
     # get params
     my %GetParam;
-    for my $Key (qw(Notes CustomerID CustomerLogin))
-    {
+    for my $Key (qw(Notes CustomerID CustomerLogin)) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
     }
 

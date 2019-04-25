@@ -14,18 +14,11 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
-    # KIX4OTRS-capeIT
     'Kernel::Config',
-    # EO KIX4OTRS-capeIT
-
     'Kernel::System::User',
     'Kernel::Output::HTML::Layout',
     'Kernel::System::SearchProfile',
-
-    # KIX4OTRS-capeIT
     'Kernel::System::GeneralCatalog',
-
-    # EO KIX4OTRS-capeIT
 );
 
 sub new {
@@ -44,21 +37,18 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
     # get needed objects
     my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
     my $SearchProfileObject = $Kernel::OM->Get('Kernel::System::SearchProfile');
     my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
     my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
-    # EO KIX4OTRS-capeIT
 
     # get user data
     my %User = $UserObject->GetUserData(
         UserID => $Self->{UserID},
     );
 
-    # KIX4OTRS-capeIT
     # get all possible search profiles
     my $Config = $ConfigObject->Get('ToolbarSearchProfile');
     my @Bases = $SearchProfileObject->SearchProfilesBasesGet();
@@ -102,39 +92,20 @@ sub Run {
         }
     }
 
-    # EO KIX4OTRS-capeIT
-
     # create search profiles string
     my $ProfilesStrg = $LayoutObject->BuildSelection(
         Data => {
-            # KIX4OTRS-capeIT
-            # '', '-',
-            # $SearchProfileObject->SearchProfileList(
-            #     Base      => 'TicketSearch',
-            #     UserLogin => $User{UserLogin},
-            # ),
             %SearchProfiles
-
-            # EO KIX4OTRS-capeIT
         },
-
-        # KIX4OTRS-capeIT
-        # Name       => 'Profile',
-        # ID         => 'ToolBarSearchProfile',
-        Name => 'SearchProfile',
-        ID   => 'ToolBarSearchProfiles',
-
-        # EO KIX4OTRS-capeIT
-        Title      => $LayoutObject->{LanguageObject}->Translate('Search template'),
-        SelectedID => '',
-        Max        => $Param{Config}->{MaxWidth},
-        Class      => 'Modernize',
-
-        # KIX4OTRS-capeIT
+        Name         => 'SearchProfile',
+        ID           => 'ToolBarSearchProfiles',
+        Title        => $LayoutObject->{LanguageObject}->Translate('Search template'),
+        SelectedID   => '',
+        Max          => $Param{Config}->{MaxWidth},
+        Class        => 'Modernize',
         TreeView     => 1,
         Sort         => 'TreeView',
         PossibleNone => 1
-        # EO KIX4OTRS-capeIT
     );
 
     my $Priority = $Param{Config}->{'Priority'};

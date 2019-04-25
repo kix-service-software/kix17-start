@@ -81,8 +81,7 @@ sub new {
             # check if module can be loaded
             if (
                 !$Kernel::OM->Get('Kernel::System::Main')->RequireBaseClass( $Extension->{Module} )
-                )
-            {
+            ) {
                 die "Can't load dynamic fields backend module"
                     . " $Extension->{Module}! $@";
             }

@@ -42,8 +42,6 @@ sub Run {
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    my $Content;
-
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{TicketID},
         DynamicFields => 1
@@ -105,8 +103,8 @@ sub Run {
     # get ticket data length for shown dynamic fields
     my $TicketDataLength = '';
     if ( $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{TicketDataLength}
-        >= $ConfigObject->Get("Ticket::Frontend::DynamicFieldsZoomMaxSizeSidebar") )
-    {
+        >= $ConfigObject->Get("Ticket::Frontend::DynamicFieldsZoomMaxSizeSidebar")
+    ) {
         $TicketDataLength
             = $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{TicketDataLength};
     }
@@ -150,8 +148,7 @@ sub Run {
             || $DynamicFieldConfig->{FieldType} eq 'Multiselect'
             || $DynamicFieldConfig->{FieldType} eq 'MultiselectGeneralCatalog'
             || $DynamicFieldConfig->{FieldType} eq 'DropdownGeneralCatalog'
-            )
-        {
+        ) {
             $LayoutObject->Block(
                 Name => 'DynamicFieldContentQuoted',
                 Data => {
@@ -212,8 +209,7 @@ sub Run {
         if (
             !$Ticket{ $DirectDataConfRef->{$TicketKey} }
             && $Self->_IsCallMethod( $DirectDataConfRef->{$TicketKey} )
-            )
-        {
+        ) {
             $Ticket{ $DirectDataConfRef->{$TicketKey} } =
                 $Self->_ExecCallMethod(
                 $DirectDataConfRef->{$TicketKey},
@@ -316,8 +312,7 @@ sub Run {
                 $ValueHashRef
                 && ref($ValueHashRef) eq 'HASH'
                 && $ValueHashRef->{ $Ticket{$ShortRef} }
-                )
-            {
+            ) {
                 $Ticket{$ShortRef} = $ValueHashRef->{ $Ticket{$ShortRef} };
             }
 
@@ -467,7 +462,7 @@ sub Run {
     }
 
     # output result
-    $Content = $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'AgentKIXSidebarTicketInfo',
         Data         => {
             %Param,
@@ -476,7 +471,7 @@ sub Run {
         KeepScriptTags => $Param{AJAX},
     );
 
-    return $Content;
+    return $Output;
 }
 
 sub _IsCallMethod {
@@ -490,8 +485,8 @@ sub _ExecCallMethod {
     my $Result;
 
     if (   $Value =~ /CallMethod::(\w+)Object::(\w+)::(\w+)/
-        || $Value =~ /CallMethod::(\w+)Object::(\w+)/ )
-    {
+        || $Value =~ /CallMethod::(\w+)Object::(\w+)/
+    ) {
         my $ObjectType = $1;
         my $Method     = $2;
         my $Hashresult = $3;

@@ -203,6 +203,8 @@ sub AddArgument {
 
     $Self->{_Arguments} //= [];
     push @{ $Self->{_Arguments} }, \%Param;
+
+    return 1;
 }
 
 =item GetArgument()
@@ -294,6 +296,7 @@ sub AddOption {
     $Self->{_Options} //= [];
     push @{ $Self->{_Options} }, \%Param;
 
+    return 1;
 }
 
 =item GetOption()
@@ -434,9 +437,8 @@ sub Execute {
     if (
         IO::Interactive::is_interactive()
         && !$Kernel::OM->Get('Kernel::Config')->Get('SuppressConsoleEncodingCheck')
-        )
-    {
-        my $ConsoleEncoding = lc $Encode::Locale::ENCODING_CONSOLE_OUT;    ## no critic
+    ) {
+        my $ConsoleEncoding = lc $Encode::Locale::ENCODING_CONSOLE_OUT;
 
         if ( $ConsoleEncoding ne 'utf-8' ) {
             $Self->PrintError(

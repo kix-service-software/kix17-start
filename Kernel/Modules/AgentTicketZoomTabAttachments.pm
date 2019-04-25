@@ -179,7 +179,7 @@ sub Run {
         if ( $Self->{Subaction} eq 'Delete' ) {
             # check responsible permissions
             if ( $Ticket{Responsible} || $Ticket{ResponsibleID} ) {
-                my $Access = $TicketObject->TicketPermission(
+                $Access = $TicketObject->TicketPermission(
                     Type     => 'responsible',
                     TicketID => $TicketID,
                     UserID   => $Self->{UserID},
@@ -195,7 +195,7 @@ sub Run {
 
         else {
             # check permissions
-            my $Access = $TicketObject->TicketPermission(
+            $Access = $TicketObject->TicketPermission(
                 Type     => 'ro',
                 TicketID => $TicketID,
                 UserID   => $Self->{UserID}
@@ -234,7 +234,6 @@ sub Run {
         }
 
         return $LayoutObject->Redirect( OP => $URL );
-
     }
 
     # store last screen...
@@ -304,8 +303,8 @@ sub _ArticleDeleteChangedAttachment {
                 Filter    => "*",
             );
             for my $File (@List) {
-                next if ( $File =~ /(\/|\\)plain.txt$/ );
-                next if ( $File !~ /(\/|\\)$Filename$/ );
+                next if ( $File =~ /(?:\/|\\)plain.txt$/ );
+                next if ( $File !~ /(?:\/|\\)$Filename$/ );
 
                 if ( !unlink $File ) {
                     $LogObject->Log(
@@ -348,8 +347,6 @@ sub _ArticleDownloadAttachments {
     my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-    my @Articles;
-    my @Attachments;
     my $ArticleIdx = $Param{ArticleIdxs};
 
     # create zip object
@@ -385,7 +382,7 @@ sub _ArticleDownloadAttachments {
 
             if ( $Attachment{Filename} eq $Filename ) {
                 if ( !$ZipObject ) {
-                    $ZipObject   = new IO::Compress::Zip(
+                    $ZipObject   = IO::Compress::Zip->new(
                         \$ZipResult,
                         BinModeIn => 1,
                         Name      => $Attachment{Filename},

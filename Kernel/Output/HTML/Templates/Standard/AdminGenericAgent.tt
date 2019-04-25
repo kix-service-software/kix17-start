@@ -30,6 +30,18 @@
                         <a class="CallForAction Fullsize Center" href="[% Env("Baselink") %]Action=[% Env("Action") %]"><span><i class="fa fa-caret-left"></i>[% Translate("Go to overview") | html %]</span></a>
                     </li>
 [% RenderBlockEnd("ActionOverview") %]
+[% RenderBlockStart("ActionClone") %]
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value="Clone"/>
+                            <input type="hidden" name="Nav" value="[% Data.Nav | html %]"/>
+                            <input type="hidden" name="Profile" value="[% Data.Profile | html %]"/>
+
+                            <button class="CallForAction Plus" type="submit"><span>[% Translate("Clone Job") | html %]</span></button>
+                        </form>
+                    </li>
+[% RenderBlockEnd("ActionClone") %]
                 </ul>
             </div>
         </div>
@@ -120,7 +132,7 @@ $('.TaskDelete').bind('click', function (Event) {
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="UpdateAction"/>
                     <input type="hidden" name="ScheduleLastRun" value="[% Data.ScheduleLastRun | html %]"/>
-                    <input type="hidden" name="OldProfile" value="[% Data.Profile | html %]"/>
+                    <input type="hidden" name="OldProfile" value="[% Data.OldProfile | html %]"/>
                     <fieldset class="TableLike">
                         <label for="Profile" class="Mandatory"><span class="Marker">*</span> [% Translate("Job name") | html %]:</label>
                         <div class="Field">
@@ -328,7 +340,6 @@ Core.Agent.Admin.GenericAgent.Init({
                         </div>
                         <div class="Clear"></div>
 
-# rkaiser - T#2017020290001194 - changed customer user to contact
                         <label for="CustomerUserLogin">[% Translate("Contact") | html %]:</label>
                         <div class="Field">
                             <input type="text" name="CustomerUserLogin" id="CustomerUserLogin" class="W33pc" value="[% Data.CustomerUserLogin | html %]"/>
@@ -712,7 +723,6 @@ Core.Agent.Admin.GenericAgent.Init({
                         </div>
                         <div class="Clear"></div>
 
-# rkaiser - T#2017020290001194 - changed customer user to contact
                         <label for="NewCustomerUserLogin">[% Translate("New contact") | html %]:</label>
                         <div class="Field">
                             <input type="text" name="NewCustomerUserLogin" id="NewCustomerUserLogin" value="[% Data.NewCustomerUserLogin | html %]" class="W33pc"/>

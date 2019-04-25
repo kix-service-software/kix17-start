@@ -50,8 +50,7 @@ sub new {
     # check needed objects
     for my $Needed (
         qw(DebuggerObject WebserviceID)
-        )
-    {
+    ) {
         if ( !$Param{$Needed} ) {
 
             return {

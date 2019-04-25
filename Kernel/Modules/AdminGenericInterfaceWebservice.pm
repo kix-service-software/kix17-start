@@ -120,8 +120,7 @@ sub Run {
             if (
                 $WebserviceData->{Config}->{$CommunicationType}->{Transport}->{Type} ne
                 $GetParam->{ $CommunicationType . 'Transport' }
-                )
-            {
+            ) {
 
                 # delete current communication type transport
                 delete $WebserviceData->{Config}->{$CommunicationType}->{Transport};
@@ -151,8 +150,7 @@ sub Run {
         if (
             $WebserviceList{ $GetParam->{Name} } &&
             $WebserviceList{ $GetParam->{Name} } ne $WebserviceID
-            )
-        {
+        ) {
 
             # add server error error class
             $Error{NameServerError}        = 'ServerError';
@@ -267,8 +265,7 @@ sub Run {
         if (
             $WebserviceList{ $GetParam->{Name} } &&
             $WebserviceList{ $GetParam->{Name} } ne $WebserviceID
-            )
-        {
+        ) {
 
             # add server error error class
             $Error{NameServerError}        = 'ServerError';
@@ -503,11 +500,12 @@ sub Run {
             }
 
             # extract file name
-            $ExampleWebServiceFilename =~ m{(.*?)\.yml$}smx;
-            $FileWithoutExtension = $1;
+            if ( $ExampleWebServiceFilename =~ m{(.*?)\.yml$}smx ) {
+                $FileWithoutExtension = $1;
+            }
 
             # Run _pre.pm if available.
-            if ( -e "$Home/var/webservices/examples/" . $FileWithoutExtension . "_pre.pm" ) {
+            if ( -e ($Home . "/var/webservices/examples/" . $FileWithoutExtension . "_pre.pm")  ) {
 
                 my $BackendName = 'var::webservices::examples::' . $FileWithoutExtension . '_pre';
 
@@ -584,7 +582,7 @@ sub Run {
             $WebserviceName = $ConfigFile{Filename};
         }
 
-        # display any YAML error message as a normal otrs error message
+        # display any YAML error message as a normal kix error message
         if ( !IsHashRefWithData($ImportedConfig) ) {
             return $LayoutObject->ErrorScreen(
                 Message =>
@@ -596,8 +594,7 @@ sub Run {
         if (
             !$ImportedConfig->{FrameworkVersion}
             || $ImportedConfig->{FrameworkVersion} ne $Kernel::OM->Get('Kernel::Config')->Get('Version')
-            )
-        {
+        ) {
             $ImportedConfig = $Self->_UpdateConfiguration( Configuration => $ImportedConfig );
         }
 
@@ -631,8 +628,7 @@ sub Run {
         if (
             $WebserviceList{$WebserviceName} &&
             $WebserviceList{$WebserviceName} ne $WebserviceID
-            )
-        {
+        ) {
 
             # add server error error class
             $Error{NameServerError}        = 'ServerError';
@@ -660,9 +656,8 @@ sub Run {
 
         if (
             $FileWithoutExtension
-            && -e "$Home/var/webservices/examples/" . $FileWithoutExtension . "_post.pm"
-            )
-        {
+            && -e ($Home. "/var/webservices/examples/" . $FileWithoutExtension . "_post.pm")
+        ) {
             my $BackendName = 'var::webservices::examples::' . $FileWithoutExtension . '_post';
 
             my $Loaded = $MainObject->Require(
@@ -788,8 +783,7 @@ sub _ShowOverview {
         for my $WebserviceID (
             sort { $WebserviceList->{$a} cmp $WebserviceList->{$b} }
             keys %{$WebserviceList}
-            )
-        {
+        ) {
             next WEBSERVICEID if !$WebserviceID;
 
             # get web service data
@@ -925,8 +919,6 @@ sub _ShowEdit {
         }
 
         my %Frontend;
-
-        # ddoerffel - T2016121190001552 - BusinessSolution code removed
 
         # Enable Example web services
         $LayoutObject->Block(
@@ -1082,7 +1074,7 @@ sub _ShowEdit {
     # meta configuration for output blocks
     my %CommTypeConfig = (
         Provider => {
-            Title             => $LayoutObject->{LanguageObject}->Translate('OTRS as provider'),
+            Title             => $LayoutObject->{LanguageObject}->Translate('KIX as provider'),
             SelectedTransport => $ProviderData->{Transport}->{Type},
             ActionType        => 'Operation',
             ActionsTitle      => 'Operations',
@@ -1090,7 +1082,7 @@ sub _ShowEdit {
             ControllerData    => \%GIOperations,
         },
         Requester => {
-            Title             => $LayoutObject->{LanguageObject}->Translate('OTRS as requester'),
+            Title             => $LayoutObject->{LanguageObject}->Translate('KIX as requester'),
             SelectedTransport => $RequesterData->{Transport}->{Type},
             ActionType        => 'Invoker',
             ActionsTitle      => 'Invokers',
@@ -1157,8 +1149,7 @@ sub _ShowEdit {
         if (
             $CommTypeConfig{$CommunicationType}->{SelectedTransport} &&
             $GITransports{ $CommTypeConfig{$CommunicationType}->{SelectedTransport} }
-            )
-        {
+        ) {
 
             $LayoutObject->Block(
                 Name => 'DetailsTransportPropertiesButton',
@@ -1186,8 +1177,7 @@ sub _ShowEdit {
             # output operation and invoker tables
             for my $ActionName (
                 sort keys %{ $CommTypeConfig{$CommunicationType}->{ActionsConfig} }
-                )
-            {
+            ) {
 
                 # get control information
                 my $ActionDetails = $CommTypeConfig{$CommunicationType}->{ActionsConfig}->{$ActionName};
@@ -1303,8 +1293,7 @@ sub _GetParams {
     # get parameters from web browser
     for my $ParamName (
         qw( Name Description RemoteSystem DebugThreshold ValidID )
-        )
-    {
+    ) {
         $GetParam->{$ParamName} = $ParamObject->GetParam( Param => $ParamName ) || '';
     }
 
@@ -1322,8 +1311,8 @@ sub _UpdateConfiguration {
 
     my $Configuration = $Param{Configuration};
 
-    # this function needs to be extended for further otrs versions
-    # it could be that newer otrs versions has different configuration options
+    # this function needs to be extended for further kix versions
+    # it could be that newer kix versions has different configuration options
     # migration from previous version should be automatic and needs to be done here
     return $Configuration;
 }

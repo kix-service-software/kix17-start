@@ -52,11 +52,8 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    # KIX4OTRS-capeIT
     $Self->{CustomerUserObject}      = $Kernel::OM->Get('Kernel::System::CustomerUser');
     $Self->{DynamicFieldValueObject} = $Kernel::OM->Get('Kernel::System::DynamicFieldValue');
-
-    # EO KIX4OTRS-capeIT
 
     # set field behaviors
     $Self->{Behaviors} = {
@@ -87,8 +84,7 @@ sub new {
             # check if module can be loaded
             if (
                 !$Kernel::OM->Get('Kernel::System::Main')->RequireBaseClass( $Extension->{Module} )
-                )
-            {
+            ) {
                 die "Can't load dynamic fields backend module"
                     . " $Extension->{Module}! $@";
             }
@@ -131,10 +127,6 @@ sub ValueGet {
 sub ValueSet {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
-    # content removed
-    # EO KIX4OTRS-capeIT
-
     # check value
     my @Values;
     if ( ref $Param{Value} eq 'ARRAY' ) {
@@ -144,15 +136,12 @@ sub ValueSet {
         @Values = ( $Param{Value} );
     }
 
-    # KIX4OTRS-capeIT
     # check for valid CustomerUserLogin
     for my $Object (@Values) {
 
         next if !$Object;
 
-        my %UserListCustomer =
-            $Self->{CustomerUserObject}
-            ->CustomerSearch( UserLogin => $Object, );
+        my %UserListCustomer =$Self->{CustomerUserObject}->CustomerSearch( UserLogin => $Object, );
         if ( !%UserListCustomer ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -164,8 +153,6 @@ sub ValueSet {
             return 0;
         }
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get dynamic field value object
     my $DynamicFieldValueObject = $Kernel::OM->Get('Kernel::System::DynamicFieldValue');
@@ -213,12 +200,9 @@ sub ValueValidate {
         @Values = ( $Param{Value} );
     }
 
-    # KIX4OTRS-capeIT
     # check for valid CustomerUserLogin
     for my $Object (@Values) {
-        my %UserListCustomer =
-            $Self->{CustomerUserObject}
-            ->CustomerSearch( UserLogin => $Object, );
+        my %UserListCustomer = $Self->{CustomerUserObject}->CustomerSearch( UserLogin => $Object, );
         if ( !%UserListCustomer ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -230,8 +214,6 @@ sub ValueValidate {
             return 0;
         }
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get dynamic field value object
     my $DynamicFieldValueObject = $Kernel::OM->Get('Kernel::System::DynamicFieldValue');
@@ -258,11 +240,8 @@ sub EditFieldRender {
     my $FieldName   = 'DynamicField_' . $Param{DynamicFieldConfig}->{Name};
     my $FieldLabel  = $Param{DynamicFieldConfig}->{Label};
 
-    # KIX4OTRS-capeIT
     my $ObjectReference  = $FieldConfig->{ObjectReference};
     my $DisplayFieldType = $FieldConfig->{DisplayFieldType};
-
-    # EO KIX4OTRS-capeIT
 
     my $Value;
 
@@ -277,8 +256,7 @@ sub EditFieldRender {
     if (
         IsHashRefWithData( $Param{Template} )
         && defined $Param{Template}->{$FieldName}
-        )
-    {
+    ) {
         $Value = $Param{Template}->{$FieldName};
     }
 
@@ -296,11 +274,8 @@ sub EditFieldRender {
     }
 
     # check and set class if necessary
-    # KIX4OTRS-capeIT
-    # my $FieldClass = 'DynamicFieldText';
     my $FieldClass = 'DynamicFieldObjectReference Modernize';
 
-    # EO KIX4OTRS-capeIT
     if ( defined $Param{Class} && $Param{Class} ne '' ) {
         $FieldClass .= ' ' . $Param{Class};
     }
@@ -320,10 +295,6 @@ sub EditFieldRender {
         $FieldClass .= ' DynamicFieldWithTreeView';
     }
 
-    # KIX4OTRS-capeIT
-    # content removed
-    # EO KIX4OTRS-capeIT
-
     # check value
     my $SelectedValuesArrayRef;
     if ( defined $Value ) {
@@ -335,7 +306,6 @@ sub EditFieldRender {
         }
     }
 
-    # KIX4OTRS-capeIT
     # create HTML string
     my $HTMLString;
 
@@ -420,8 +390,6 @@ EOF
         );
     }
 
-    # EO KIX4OTRS-capeIT
-
     if ( $Param{ServerError} ) {
 
         my $ErrorMessage = $Param{ErrorMessage} || 'This field is required.';
@@ -438,10 +406,6 @@ EOF
 </div>
 EOF
     }
-
-    # KIX4OTRS-capeIT
-    # removed, no AJAX update needed
-    # EO KIX4OTRS-capeIT
 
     # call EditLabelRender on the common Driver
     my $LabelString = $Self->EditLabelRender(
@@ -474,8 +438,7 @@ sub EditFieldValueGet {
     elsif (
         defined $Param{ParamObject}
         && ref $Param{ParamObject} eq 'Kernel::System::Web::Request'
-        )
-    {
+    ) {
         my @Data = $Param{ParamObject}->GetArray( Param => $FieldName );
 
         if (
@@ -503,7 +466,7 @@ sub EditFieldValueGet {
         $Value = \@Data;
     }
 
-    if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq 1 ) {
+    if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq "1" ) {
         return {
             $FieldName => $Value,
         };
@@ -535,8 +498,6 @@ sub EditFieldValueValidate {
         };
     }
     else {
-
-        # KIX4OTRS-capeIT
         # check if valid CustomerLogin
         for my $Object ( @{$Values} ) {
             next if !$Object;
@@ -548,8 +509,6 @@ sub EditFieldValueValidate {
                 $ErrorMessage = 'The field content is invalid';
             }
         }
-
-        # EO KIX4OTRS-capeIT
     }
 
     # create resulting structure
@@ -584,10 +543,6 @@ sub DisplayValueRender {
         @Values = ( $Param{Value} );
     }
 
-    # KIX4OTRS-capeIT
-    # content removed
-    # EO KIX4OTRS-capeIT
-
     my @ReadableValues;
     my @ReadableTitles;
 
@@ -600,11 +555,6 @@ sub DisplayValueRender {
 
         my $ReadableValue = $Item;
 
-        # KIX4OTRS-capeIT
-        # content removed
-        # EO KIX4OTRS-capeIT
-
-        # KIX4OTRS-capeIT
         my %UserData = $Self->{CustomerUserObject}->CustomerUserDataGet(
             User => $ReadableValue,
         );
@@ -618,8 +568,6 @@ sub DisplayValueRender {
             $ReadableValue = $Param{DynamicFieldConfig}->{Config}->{AlternativeDisplay};
             $ReadableValue =~ s{<(.+?)>}{$UserData{$1}}egx;
         }
-
-        # EO KIX4OTRS-capeIT
 
         my $ReadableLength = length $ReadableValue;
 
@@ -712,11 +660,8 @@ sub SearchFieldRender {
     my $FieldName   = 'Search_DynamicField_' . $Param{DynamicFieldConfig}->{Name};
     my $FieldLabel  = $Param{DynamicFieldConfig}->{Label};
 
-    # KIX4OTRS-capeIT
     my $ObjectReference  = $FieldConfig->{ObjectReference};
     my $DisplayFieldType = $FieldConfig->{DisplayFieldType};
-
-    # EO KIX4OTRS-capeIT
 
     my $Value = '';
 
@@ -744,18 +689,10 @@ sub SearchFieldRender {
     }
 
     # check and set class if necessary
-    # KIX4OTRS-capeIT
-    # my $FieldClass = 'DynamicFieldMultiSelect';
     my $FieldClass = 'DynamicFieldObjectReference Modernize';
 
-    # EO KIX4OTRS-capeIT
-
-    # KIX4OTRS-capeIT
     # set PossibleValues
-    # my $SelectionData = $FieldConfig->{PossibleValues};
     my $SelectionData;
-
-    # EO KIX4OTRS-capeIT
 
     # get historical values from database
     my $HistoricalValues = $Self->HistoricalValuesGet(%Param);
@@ -769,7 +706,6 @@ sub SearchFieldRender {
         }
     }
 
-    # KIX4OTRS-capeIT
     my $HTMLString;
     if ( $DisplayFieldType eq 'AutoComplete' ) {
 
@@ -878,8 +814,6 @@ EOF
         );
     }
 
-    # EO KIX4OTRS-capeIT
-
     # call EditLabelRender on the common Driver
     my $LabelString = $Self->EditLabelRender(
         %Param,
@@ -921,8 +855,7 @@ sub SearchFieldParameterBuild {
                 if (
                     $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
                     && defined $Param{LayoutObject}
-                    )
-                {
+                ) {
                     $DisplayItem = $Param{LayoutObject}->{LanguageObject}->Translate($DisplayItem);
                 }
 
@@ -941,8 +874,7 @@ sub SearchFieldParameterBuild {
             if (
                 $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
                 && defined $Param{LayoutObject}
-                )
-            {
+            ) {
                 $DisplayValue = $Param{LayoutObject}->{LanguageObject}->Translate($DisplayValue);
             }
         }
@@ -960,20 +892,9 @@ sub SearchFieldParameterBuild {
 sub StatsFieldParameterBuild {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
-    # content removed
-    # EO KIX4OTRS-capeIT
     return {
-
-        # KIX4OTRS-capeIT
-        # Values             => $Values,
-        # EO KIX4OTRS-capeIT
         Name    => $Param{DynamicFieldConfig}->{Label},
         Element => 'DynamicField_' . $Param{DynamicFieldConfig}->{Name},
-
-        # KIX4OTRS-capeIT
-        # TranslatableValues => $Param{DynamicFieldConfig}->{Config}->{TranslatableValues},
-        # EO KIX4OTRS-capeIT
     };
 }
 
@@ -1097,11 +1018,11 @@ sub PossibleValuesGet {
     # to store the possible values
     my %PossibleValues = ();
 
-    if (   $Param{DynamicFieldConfig}->{Config}->{DisplayFieldType} ne 'AutoComplete'
-        || $Param{GetAutocompleteValues} )
-    {
+    if (
+        $Param{DynamicFieldConfig}->{Config}->{DisplayFieldType} ne 'AutoComplete'
+        || $Param{GetAutocompleteValues}
+    ) {
 
-        # KIX4OTRS-capeIT
         # get data
         my %ObjectList;
         if ($Param{Search}) {
@@ -1128,27 +1049,17 @@ sub PossibleValuesGet {
         # set PossibleValues
         my $DefinedPossibleValues = \%UserHash;
 
-        # EO KIX4OTRS-capeIT
-
         # set none value if defined on field config
         if ( $Param{DynamicFieldConfig}->{Config}->{PossibleNone} ) {
             %PossibleValues = ( '' => '-' );
         }
 
         # set all other possible values if defined on field config
-        # KIX4OTRS-capeIT
         # if ( IsHashRefWithData( $Param{DynamicFieldConfig}->{Config}->{PossibleValues} ) ) {
         if ( IsHashRefWithData($DefinedPossibleValues) ) {
-
-            # EO KIX4OTRS-capeIT
             %PossibleValues = (
                 %PossibleValues,
-
-                # KIX4OTRS-capeIT
-                # %{ $Param{DynamicFieldConfig}->{Config}->{PossibleValues} },
                 %{$DefinedPossibleValues},
-
-                # EO KIX4OTRS-capeIT
             );
         }
     }
@@ -1180,11 +1091,6 @@ sub ValueLookup {
     else {
         @Keys = ( $Param{Key} );
     }
-
-# KIX4OTRS-capeIT
-#    # get real values
-#    my $PossibleValues = $Param{DynamicFieldConfig}->{Config}->{PossibleValues};
-# EO KIX4OTRS-capeIT
 
     # to store final values
     my @Values;

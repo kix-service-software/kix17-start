@@ -287,8 +287,7 @@ sub _Overview {
         for my $TextModuleID (
             sort { uc( $TextModulesData{$a} ) cmp uc( $TextModulesData{$b} ) }
             keys %TextModulesData
-            )
-        {
+        ) {
 
             # set output class
             $LayoutObject->Block(

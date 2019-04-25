@@ -24,6 +24,8 @@ our @ObjectDependencies = (
     'Kernel::System::PID',
 );
 
+## no critic qw(BuiltinFunctions::ProhibitStringyEval)
+
 sub Configure {
     my ( $Self, %Param ) = @_;
 
@@ -131,7 +133,7 @@ sub Run {
         $Self->PrintError("Could not load agent job file '$ConfigurationModule': $!\n");
         return $Self->ExitCodeError();
     }
-    eval "import $ConfigurationModule";    ## no critic
+    eval( "import $ConfigurationModule" );
 
     # set the maximum number of affected tickets
     my $Limit = $Self->GetOption('ticket-limit');

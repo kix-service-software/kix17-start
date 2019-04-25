@@ -18,9 +18,6 @@
         [% Data.StyleClasses %]
         <thead>
             <tr>
-# KIX4OTRS-capeIT
-# content removed in custom view (not needed)
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("RecordBulkActionHeader") %]
                 <th class="Checkbox Fixed">
                     <input type="checkbox" class="Checkbox [% Data.SelectedAll %]" title="[% Translate("Select all") | html %]" id="SelectAllConfigItems" autocomplete="off" [% Data.ItemALLChecked %] />
@@ -48,11 +45,7 @@
             </tr>
 [% RenderBlockEnd("NoDataFoundMsg") %]
 [% RenderBlockStart("Record") %]
-# KIX4OTRS-capeIT
-#            <tr id="ConfigItemID_[% Data.ConfigItemID | html %]" class="MasterAction">
             <tr id="ConfigItemID_[% Data.ConfigItemID | html %]" class="MasterAction" style="[% Data.LineStyle | html %]">
-# more following content removed in custom view (not needed)
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("RecordBulkAction") %]
                 <td class="Checkbox Fixed NonTextContent">
                     <input class="Checkbox SelectItem" type="checkbox" name="ConfigItemID" value="[% Data.ConfigItemID | html %]"  autocomplete="off" [% Data.ItemChecked %]]/>
@@ -93,7 +86,6 @@
 
     $('.MasterAction').bind('click', function (Event) {
         var $MasterActionLink = $(this).find('.MasterActionLink'),
-# KIX4OTRS-capeIT
             URL,
             Title = $(this).find('div').attr('title'),
             ConfigItem = Title.split('::');
@@ -104,13 +96,10 @@
         else {
             URL = $MasterActionLink.attr('href');
         }
-# EO KIX4OTRS-capeIT
         // only act if the link was not clicked directly
         if (Event.target !== $MasterActionLink.get(0)) {
-# KIX4OTRS-capeIT
             // window.location = $MasterActionLink.attr('href');
             window.location = URL;
-# EO KIX4OTRS-capeIT
             return false;
         }
     });

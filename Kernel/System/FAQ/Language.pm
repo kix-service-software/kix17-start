@@ -64,9 +64,7 @@ sub LanguageAdd {
     }
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            INSERT INTO faq_language (name)
-            VALUES (?)',
+        SQL  => 'INSERT INTO faq_language (name) VALUES (?)',
         Bind => [ \$Param{Name} ],
     );
 
@@ -105,9 +103,7 @@ sub LanguageDelete {
 
     # delete the language
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            DELETE FROM faq_language
-            WHERE id = ?',
+        SQL  => 'DELETE FROM faq_language WHERE id = ?',
         Bind => [ \$Param{LanguageID} ],
     );
 
@@ -145,10 +141,7 @@ sub LanguageDuplicateCheck {
 
     # build SQL
     my @Bind = ( \$Param{Name} );
-    my $SQL  = '
-        SELECT id
-        FROM faq_language
-        WHERE name = ?';
+    my $SQL  = 'SELECT id FROM faq_language WHERE name = ?';
     if ( defined $Param{LanguageID} ) {
         push @Bind, \$Param{LanguageID};
         $SQL .= " AND id != ?";
@@ -211,10 +204,7 @@ sub LanguageGet {
 
     # SQL
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name
-            FROM faq_language
-            WHERE id = ?',
+        SQL   => 'SELECT id, name FROM faq_language WHERE id = ?',
         Bind  => [ \$Param{LanguageID} ],
         Limit => 1,
     );
@@ -266,9 +256,7 @@ sub LanguageList {
 
     # build SQL
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name
-            FROM faq_language',
+        SQL => 'SELECT id, name FROM faq_language',
     );
 
     # fetch the result
@@ -342,10 +330,7 @@ sub LanguageLookup {
     if ( $Param{LanguageID} ) {
 
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT name
-                FROM faq_language
-                WHERE id = ?',
+            SQL   => 'SELECT name FROM faq_language WHERE id = ?',
             Bind  => [ \$Param{LanguageID} ],
             Limit => 1,
         );
@@ -353,10 +338,7 @@ sub LanguageLookup {
     elsif ( $Param{Name} ) {
 
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id
-                FROM faq_language
-                WHERE name = ?',
+            SQL   => 'SELECT id FROM faq_language WHERE name = ?',
             Bind  => [ \$Param{Name} ],
             Limit => 1,
         );
@@ -407,10 +389,7 @@ sub LanguageUpdate {
 
     # build SQL
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE faq_language
-            SET name = ?
-            WHERE id = ?',
+        SQL  => 'UPDATE faq_language SET name = ? WHERE id = ?',
         Bind => [ \$Param{Name}, \$Param{LanguageID} ],
     );
 

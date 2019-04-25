@@ -51,7 +51,6 @@ sub Run {
     if ( $MainObject->Require('Kernel::System::TextModule') ) {
 
         my $ShowEmptyList = 1;
-        my %Frontend;
         my $CustomerUser;
 
         if ( $Self->{Action} =~ /^CustomerTicketMessage/ ) {

@@ -176,8 +176,7 @@ sub PreRun {
             $Kernel::OM->Get('Kernel::System::Time')->ServerLocalTimeOffsetSeconds()
             || !$Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser')
         )
-        )
-    {
+    ) {
         die
             "You defined a timzone but this is only provided, if the system use UTC as system time and the time zone user support is active.\n";
     }
@@ -269,13 +268,12 @@ sub Run {
     }
 
     # run stat...
-    my @StatArray = @{
-        $Kernel::OM->Get('Kernel::System::Stats')->StatsRun(
-            StatID   => $Self->{StatID},
-            GetParam => \%GetParam,
-            UserID   => 1,
-        ),
-    };
+    my $StatArrayRef = $Kernel::OM->Get('Kernel::System::Stats')->StatsRun(
+        StatID   => $Self->{StatID},
+        GetParam => \%GetParam,
+        UserID   => 1,
+    );
+    my @StatArray = @{$StatArrayRef};
 
     # generate output
     my $TitleArrayRef  = shift(@StatArray);

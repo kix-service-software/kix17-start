@@ -100,7 +100,7 @@ sub Run {
     for my $Key ( keys %{ $Param{Config} } ) {
 
         # check validity
-        if ( $Key !~ m/(.+)::(.+)/ ) {
+        if ( $Key !~ m/(?:.+)::(?:.+)/ ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => $CommonMessage
@@ -108,8 +108,20 @@ sub Run {
             );
             return 0;
         }
-        my $Method    = $1;
-        my $Attribute = $2;
+        my $Method;
+        my $Attribute;
+        if ( $Key =~ m/(.+)::(.+)/ ) {
+            $Method    = $1;
+            $Attribute = $2;
+        }
+        else {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => $CommonMessage
+                    . "No valid string for search or update given (format: X::Y) for $Key.",
+            );
+            return 0;
+        }
 
         # normalize search attribute...
         my $SearchAttribute = $Self->{AllowedTicketSearchParams}->{$Attribute} || $Attribute;
@@ -135,8 +147,7 @@ sub Run {
                 $Attribute
                 && $Self->{AllowedTicketSearchParams}->{$Attribute}
                 && $Attribute !~ m/^DynamicField_/
-                )
-            {
+            ) {
                 $TicketMethods{Search}->{$SearchAttribute} = [ $Param{Config}->{$Key} ];
             }
             elsif ( $Attribute =~ m/DynamicField_/ ) {
@@ -185,8 +196,7 @@ sub Run {
         );
         return 0;
     }
-    elsif ( scalar(@TicketIDs) > ($Kernel::OM->Get('Kernel::Config')->Get('UpdateMultipleTickets::TicketSearchFoundThreshold') || 25) )
-    {
+    elsif ( scalar(@TicketIDs) > ($Kernel::OM->Get('Kernel::Config')->Get('UpdateMultipleTickets::TicketSearchFoundThreshold') || 25) ) {
         #too many tickets found, something wrong? no update...
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'notice',

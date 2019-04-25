@@ -163,15 +163,10 @@ sub Run {
             Name     => $Self->{Name},
             Comment  => $Self->GetOption('comment'),
             ParentID => $Self->{ParentID},
-# ---
-# GeneralCatalog
-# ---
             TypeID      => $Self->{TypeID},
             Criticality => $Self->{Criticality},
-# ---
         )
-        )
-    {
+    ) {
         $Self->PrintError("Can't add service.");
         return $Self->ExitCodeError();
     }

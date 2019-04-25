@@ -112,8 +112,6 @@ sub Run {
     ) {
         $GetParam{$Parameter} = $ParamObject->GetParam( Param => $Parameter ) || '';
     }
-    # error handling
-    my %Error;
 
     # if QuickStateID not zero
     if ( !$GetParam{QuickStateID} ) {

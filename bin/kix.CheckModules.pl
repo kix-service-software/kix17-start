@@ -91,11 +91,11 @@ our %DistToInstType = (
 our $OSDist = Linux::Distribution::distribution_name() || '';
 
 my $AllModules;
-my $PackageList;
+my $NeedPackageList;
 my $Help;
 GetOptions(
     all  => \$AllModules,
-    list => \$PackageList,
+    list => \$NeedPackageList,
     h    => \$Help
 );
 
@@ -103,23 +103,20 @@ GetOptions(
 if ($Help) {
     print "kix.CheckModules.pl - KIX CheckModules\n";
     print "usage: kix.CheckModules.pl [-list|all] \n";
-    print "
-   kix.CheckModules.pl
-       Returns all required and optional packages of KIX.\n";
-    print "
-   kix.CheckModules.pl -list
-       Returns a install command with all required packages.\n";
-    print "
-   kix.CheckModules.pl -all
-       Returns all required, optional and bundled packages of KIX.\n\n";
+    print "\n\tkix.CheckModules.pl";
+    print "\n\t\ŧReturns all required and optional packages of KIX.\n";
+    print "\n\tkix.CheckModules.pl -list";
+    print "\n\t\ŧReturns a install command with all required packages.\n";
+    print "\n\tkix.CheckModules.pl -all";
+    print "\n\t\ŧReturns all required, optional and bundled packages of KIX.\n\n";
     exit 1;
 }
 
 my $Options = shift || '';
-my $NoColors;
+my $NeedNoColors;
 
 if ( $ENV{nocolors} || $Options =~ m{\A nocolors}msxi ) {
-    $NoColors = 1;
+    $NeedNoColors = 1;
 }
 
 # config
@@ -445,7 +442,6 @@ my @NeededModules = (
             zypper => 'perl-YAML-LibYAML',
         },
     },
-    # kix4otrs
     {
         Module   => 'Data::Compare',
         Required => 0,
@@ -454,7 +450,7 @@ my @NeededModules = (
 
 );
 
-if ($PackageList) {
+if ($NeedPackageList) {
     my %PackageList = _PackageList( \@NeededModules );
 
     if ( IsArrayRefWithData( $PackageList{Packages} ) ) {
@@ -476,7 +472,7 @@ else {
     my $Depends = 0;
 
     for my $Module (@NeededModules) {
-        _Check( $Module, $Depends, $NoColors );
+        _Check( $Module, $Depends, $NeedNoColors );
     }
 
     if ($AllModules) {
@@ -493,7 +489,7 @@ else {
                     Required => 1,
                 },
                 $Depends,
-                $NoColors
+                $NeedNoColors
             );
         }
     }
@@ -526,11 +522,9 @@ sub _Check {
             'Apache2::Reload' => 1,    # is not needed / working on systems without mod_perl (like Plack etc.)
         );
 
-        ## no critic
-        if ( !$DontRequire{ $Module->{Module} } && !eval "require $Module->{Module}" ) {
+        if ( !$DontRequire{ $Module->{Module} } && !eval( {"require $Module->{Module}"} ) ) {
             $ErrorMessage .= 'Not all prerequisites for this module correctly installed. ';
         }
-        ## use critic
 
         if ( $Module->{NotSupported} ) {
 
@@ -652,11 +646,12 @@ sub _PackageList {
         if ( !$Version ) {
             my %InstallCommand = _GetInstallCommand($Module);
 
+            next MODULE if !$Required;
+
             if ( $Module->{Depends} ) {
 
                 MODULESUB:
                 for my $ModuleSub ( @{ $Module->{Depends} } ) {
-                    my $Required          = $Module->{Required};
                     my %InstallCommandSub = _GetInstallCommand($ModuleSub);
 
                     next MODULESUB if !IsHashRefWithData( \%InstallCommandSub );
@@ -667,7 +662,6 @@ sub _PackageList {
             }
 
             next MODULE if !IsHashRefWithData( \%InstallCommand );
-            next MODULE if !$Required;
 
             $CMD    = $InstallCommand{CMD};
             $SubCMD = $InstallCommand{SubCMD};
@@ -725,8 +719,7 @@ sub _GetInstallCommand {
         if (
             exists $Module->{InstTypes}->{$InstType}
             && !defined $Module->{InstTypes}->{$InstType}
-            )
-        {
+        ) {
             # if we a hash key for the installation type but a undefined value
             # then we prevent the output for the installation command
             $OuputInstall = 0;

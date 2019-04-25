@@ -212,12 +212,10 @@ sub Run {
         # get time object
         my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
 
-        # get current time
-        my $PendingTime = $TimeObject->SystemTime();
+        if ( IsNumber( $Param{Config}->{PendingTimeDiff} ) ) {
 
-        if (
-            IsNumber( $Param{Config}->{PendingTimeDiff} )
-        ) {
+            # get current time
+            my $PendingTime = $TimeObject->SystemTime();
 
             # add PendingTimeDiff
             $PendingTime += $Param{Config}->{PendingTimeDiff};

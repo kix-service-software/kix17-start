@@ -10,7 +10,6 @@
 
 
 [% RenderBlockStart("AgentUserSearchAutoComplete") %]
-# EO ITSM-CIAttributeCollection-capeIT
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Config.Set('Autocomplete.MinQueryLength', "[% Data.minQueryLength | html %]");
@@ -21,37 +20,14 @@
     Core.Config.Set('Autocomplete.Groups', "[% Data.groups | html %]");
 //]]></script>
 
-# ITSM-CIAttributeCollection-capeIT
-#[% RenderBlockStart("UserSearchInit") %]
 [% RenderBlockStart("AgentUserSearchInit") %]
-# EO ITSM-CIAttributeCollection-capeIT
 <script type="text/javascript">//<![CDATA[
 /*global ITSM: true */
-# ITSM-CIAttributeCollection-capeIT
-#    ITSM.Agent.UserSearch.Init($("#[% Data.ItemID | html %]"), [% Data.ActiveAutoComplete | html %]);
     var FieldID = '[% Data.ItemID | html %]';
     FieldID = FieldID.replace(/:/g, '\\:');
     Core.Agent.UserSearch.Init($("#"+FieldID), [% Data.ActiveAutoComplete | html %]);
-# EO ITSM-CIAttributeCollection-capeIT
 //]]></script>
-# ITSM-CIAttributeCollection-capeIT
-#[% RenderBlockEnd("UserSearchInit") %]
 [% RenderBlockEnd("AgentUserSearchInit") %]
-# EO ITSM-CIAttributeCollection-capeIT
 
 [% END %]
-# ITSM-CIAttributeCollection-capeIT
-#[% RenderBlockEnd("UserSearchAutoComplete") %]
 [% RenderBlockEnd("AgentUserSearchAutoComplete") %]
-
-#[% RenderBlockStart("UserSearchITSMSearchAutocomplete") %]
-#<script type="text/javascript">//<![CDATA[
-#    Core.Config.Set('Autocomplete.Active', "[% Data.active | html %]");
-#    Core.Config.Set('Autocomplete.QueryDelay', "[% Data.queryDelay | html %]");
-#    Core.Config.Set('Autocomplete.MaxResultsDisplayed', "[% Data.maxResultsDisplayed | html %]");
-#    Core.Config.Set('Autocomplete.MinQueryLength', "[% Data.minQueryLength | html %]");
-#    Core.Config.Set('Autocomplete.DynamicWidth', "[% Data.dynamicWidth | html %]");
-#    Core.Config.Set('Autocomplete.SearchButtonText', [% Translate("Search Agent") | JSON %]);
-#//]]></script>
-#[% RenderBlockEnd("UserSearchITSMSearchAutocomplete") %]
-# EO ITSM-CIAttributeCollection-capeIT

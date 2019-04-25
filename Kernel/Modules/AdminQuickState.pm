@@ -402,7 +402,7 @@ sub Run {
 
                         # ignore attachment if not linked in body
                         next ATTACHMENT
-                            if $GetParam{Body} !~ /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
+                            if $GetParam{Body} !~ m/(?:\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
                     }
 
                     # remember inline images and normal attachments
@@ -626,7 +626,7 @@ sub Run {
                         $GetParam{Body} =~ s/(ContentID=)$ContentIDLinkEncode/$1$ContentID/g;
 
                         # ignore attachment if not linked in body
-                        next ATTACHMENT if $GetParam{Body} !~ /(\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
+                        next ATTACHMENT if $GetParam{Body} !~ m/(?:\Q$ContentIDHTMLQuote\E|\Q$ContentID\E)/i;
                     }
 
                     # remember inline images and normal attachments
@@ -1085,19 +1085,19 @@ sub _PagingListShow {
         for my $ListKey ( sort { $List{$a} cmp $List{$b} } keys %List ) {
             $Counter++;
             if ( $Counter >= $StartHit && $Counter < ( $PageShown + $StartHit ) ) {
-                my %Data = $QuickStateObject->QuickStateGet(
+                my %StateData = $QuickStateObject->QuickStateGet(
                     ID       => $ListKey,
                     MetaOnly => 1
                 );
 
-                if ( $ValidList{ $Data{ValidID} } ne 'valid' ) {
+                if ( $ValidList{ $StateData{ValidID} } ne 'valid' ) {
                     $Data{Invalid} = 'Invalid';
                 }
 
                 $LayoutObject->Block(
                     Name => 'OverviewResultRow',
                     Data => {
-                        %Data,
+                        %StateData,
                         Valid   => $ValidList{ $Data{ValidID} },
                         Session => $Session
                     },

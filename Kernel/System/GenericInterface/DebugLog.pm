@@ -83,8 +83,7 @@ sub LogAdd {
 
     # check needed params
     NEEDED:
-    for my $Needed (qw(CommunicationID CommunicationType DebugLevel Summary WebserviceID))
-    {
+    for my $Needed (qw(CommunicationID CommunicationType DebugLevel Summary WebserviceID)) {
         next NEEDED if IsStringWithData( $Param{$Needed} );
 
         $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -110,10 +109,9 @@ sub LogAdd {
         return;
     }
     if (
-        defined $Param{RemoteIP} &&
-        $Param{RemoteIP} ne ''
-        )
-    {
+        defined $Param{RemoteIP}
+        && $Param{RemoteIP} ne ''
+    ) {
         if ( !IsStringWithData( $Param{RemoteIP} ) ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -195,8 +193,7 @@ sub LogAdd {
                 \$Param{Data}, \$Param{DebugLevel}, \$LogData->{LogID}, \$Param{Summary},
             ],
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Could not create debug entry in db!',
@@ -257,8 +254,7 @@ sub LogGet {
             Bind  => [ \$Param{CommunicationID} ],
             Limit => 1,
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Could not prepare db query!',
@@ -356,8 +352,7 @@ sub LogGetWithData {
                 . ' ORDER BY create_time ASC',
             Bind => [ \$LogData->{LogID} ],
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Could not prepare db query!',
@@ -422,10 +417,8 @@ sub LogDelete {
     }
     if (
         ( !$CommunicationIDValid && !$WebserviceIDValid )
-        ||
-        ( $CommunicationIDValid && $WebserviceIDValid )
-        )
-    {
+        || ( $CommunicationIDValid && $WebserviceIDValid )
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need exactly one of CommunicationID or WebserviceID!',
@@ -463,16 +456,15 @@ sub LogDelete {
     }
 
     # delete individual entries first
-    my $SQLIndividual =
-        'DELETE FROM gi_debugger_entry_content
-        WHERE gi_debugger_entry_id in( SELECT id FROM gi_debugger_entry ';
+    my $SQLIndividual = 'DELETE FROM gi_debugger_entry_content'
+                      . ' WHERE gi_debugger_entry_id in( SELECT id FROM gi_debugger_entry';
     my @BindIndividual;
     if ($CommunicationIDValid) {
-        $SQLIndividual .= 'WHERE communication_id = ?';
+        $SQLIndividual .= ' WHERE communication_id = ?';
         push @BindIndividual, \$Param{CommunicationID};
     }
     else {
-        $SQLIndividual .= 'WHERE  webservice_id = ?';
+        $SQLIndividual .= ' WHERE  webservice_id = ?';
         push @BindIndividual, \$Param{WebserviceID};
     }
     $SQLIndividual .= ' )';
@@ -485,8 +477,7 @@ sub LogDelete {
             SQL  => $SQLIndividual,
             Bind => \@BindIndividual,
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Could not remove entries of communication chain in db!',
@@ -510,8 +501,7 @@ sub LogDelete {
             SQL  => $SQLMain,
             Bind => \@BindMain,
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Could not remove communication chain in db!',
@@ -573,8 +563,7 @@ sub LogSearch {
     KEY:
     for my $Key (
         qw(CommunicationID CommunicationType CreatedAtOrAfter CreatedAtOrBefore Limit RemoteIP WebserviceID WithData)
-        )
-    {
+    ) {
         next KEY if !defined $Param{$Key};
         next KEY if IsStringWithData( $Param{$Key} );
 
@@ -596,8 +585,7 @@ sub LogSearch {
     if (
         $Param{CommunicationType}
         && $Param{CommunicationType} !~ m{ \A (?: Provider | Requester ) \z }xms
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "CommunicationType '$Param{CommunicationType}' is not valid!",
@@ -625,10 +613,9 @@ sub LogSearch {
         return;
     }
     if (
-        defined $Param{RemoteIP} &&
-        $Param{RemoteIP} ne ''
-        )
-    {
+        defined $Param{RemoteIP}
+        && $Param{RemoteIP} ne ''
+    ) {
         if ( !IsStringWithData( $Param{RemoteIP} ) ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -703,8 +690,7 @@ sub LogSearch {
             Bind  => \@Bind,
             Limit => $Param{Limit} || 100,
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Could not prepare db query!',
@@ -792,10 +778,9 @@ sub _LogAddChain {
         return;
     }
     if (
-        defined $Param{RemoteIP} &&
-        $Param{RemoteIP} ne ''
-        )
-    {
+        defined $Param{RemoteIP}
+        && $Param{RemoteIP} ne ''
+    ) {
         if ( !IsStringWithData( $Param{RemoteIP} ) ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -831,8 +816,7 @@ sub _LogAddChain {
                 \$Param{RemoteIP},        \$Param{WebserviceID},
             ],
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Could not create debug entry chain in db!',

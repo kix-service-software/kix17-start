@@ -171,7 +171,7 @@ sub GetSystemAddress {
     }
 
     # prepare realname quote
-    if ( $Address{RealName} =~ /(,|@|\(|\)|:)/ && $Address{RealName} !~ /^("|')/ ) {
+    if ( $Address{RealName} =~ /(?:,|@|\(|\)|:)/ && $Address{RealName} !~ /^(?:"|')/ ) {
         $Address{RealName} =~ s/"/\"/g;
         $Address{RealName} = '"' . $Address{RealName} . '"';
     }
@@ -250,9 +250,11 @@ sub QueueStandardTemplateMemberAdd {
 
     # delete existing relation
     return if !$DBObject->Do(
-        SQL => 'DELETE FROM queue_standard_template
-            WHERE queue_id = ?
-            AND standard_template_id = ?',
+        SQL  => <<'END',
+DELETE FROM queue_standard_template
+WHERE queue_id = ?
+    AND standard_template_id = ?
+END
         Bind => [ \$Param{QueueID}, \$Param{StandardTemplateID} ],
     );
 
@@ -266,10 +268,11 @@ sub QueueStandardTemplateMemberAdd {
 
     # insert new relation
     my $Success = $DBObject->Do(
-        SQL => '
-            INSERT INTO queue_standard_template (queue_id, standard_template_id, create_time,
-                create_by, change_time, change_by)
-            VALUES (?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => <<'END',
+INSERT INTO queue_standard_template (queue_id, standard_template_id, create_time,
+    create_by, change_time, change_by)
+VALUES (?, ?, current_timestamp, ?, current_timestamp, ?)
+END
         Bind => [ \$Param{QueueID}, \$Param{StandardTemplateID}, \$Param{UserID}, \$Param{UserID} ],
     );
 
@@ -798,8 +801,7 @@ sub QueueAdd {
             qw(UnlockTimeout FirstResponseTime FirstResponseNotify UpdateTime UpdateNotify SolutionTime SolutionNotify
             FollowUpLock SystemAddressID SalutationID SignatureID
             FollowUpID FollowUpLock DefaultSignKey Calendar)
-            )
-        {
+        ) {
 
             # I added default values in the Load Routine
             if ( !$Param{$_} ) {
@@ -888,8 +890,7 @@ sub QueueAdd {
         $StandardTemplate2QueueByCreating
         && ref $StandardTemplate2QueueByCreating eq 'ARRAY'
         && @{$StandardTemplate2QueueByCreating}
-        )
-    {
+    ) {
 
         # get standard template object
         my $StandardTemplateObject = $Kernel::OM->Get('Kernel::System::StandardTemplate');
@@ -1116,8 +1117,7 @@ sub QueueUpdate {
     # check needed stuff
     for (
         qw(QueueID Name ValidID GroupID SystemAddressID SalutationID SignatureID UserID FollowUpID)
-        )
-    {
+    ) {
         if ( !$Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -1192,8 +1192,7 @@ sub QueueUpdate {
             ID   => $Param{QueueID},
             Name => $Param{Name}
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "A queue with name '$Param{Name}' already exists!"
@@ -1206,14 +1205,15 @@ sub QueueUpdate {
 
     # SQL
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE queue
-            SET name = ?, comments = ?, group_id = ?, unlock_timeout = ?, first_response_time = ?,
-                first_response_notify = ?, update_time = ?, update_notify = ?, solution_time = ?,
-                solution_notify = ?, follow_up_id = ?, follow_up_lock = ?, system_address_id = ?,
-                calendar_name = ?, default_sign_key = ?, salutation_id = ?, signature_id = ?,
-                valid_id = ?, change_time = current_timestamp, change_by = ?
-            WHERE id = ?',
+        SQL => <<'END',
+UPDATE queue
+SET name = ?, comments = ?, group_id = ?, unlock_timeout = ?, first_response_time = ?,
+    first_response_notify = ?, update_time = ?, update_notify = ?, solution_time = ?,
+    solution_notify = ?, follow_up_id = ?, follow_up_lock = ?, system_address_id = ?,
+    calendar_name = ?, default_sign_key = ?, salutation_id = ?, signature_id = ?,
+    valid_id = ?, change_time = current_timestamp, change_by = ?
+WHERE id = ?
+END
         Bind => [
             \$Param{Name}, \$Param{Comment}, \$Param{GroupID}, \$Param{UnlockTimeout},
             \$Param{FirstResponseTime}, \$Param{FirstResponseNotify}, \$Param{UpdateTime},
@@ -1258,10 +1258,11 @@ sub QueueUpdate {
                 $NewQueueName =~ s/\Q$OldQueue{Name}\E/$Param{Name}/;
 
                 return if !$DBObject->Do(
-                    SQL => '
-                        UPDATE queue
-                        SET name = ?, change_time = current_timestamp, change_by = ?
-                        WHERE id = ?',
+                    SQL  => <<'END',
+UPDATE queue
+SET name = ?, change_time = current_timestamp, change_by = ?
+WHERE id = ?
+END
                     Bind => [ \$NewQueueName, \$Param{UserID}, \$QueueID ],
                 );
 

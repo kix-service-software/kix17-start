@@ -126,8 +126,7 @@ sub LinkListWithData {
                 if (
                     $Param{IgnoreLinkedTicketStateTypes}
                     && $IgnoreLinkTicketStateTypesHash{ $TicketData{StateType} }
-                    )
-                {
+                ) {
                     delete $Param{LinkList}->{$LinkType}->{$Direction}->{$TicketID};
                     next TICKETID;
                 }
@@ -485,7 +484,6 @@ sub LinkAddPost {
         return 1;
     }
 
-    # KIX4OTRS-capeIT
     # do action for other link objects (document, change, CI)
     if ( $Param{TargetObject} ) {
 
@@ -524,8 +522,6 @@ sub LinkAddPost {
             UserID => $Param{UserID},
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     return 1;
 }
@@ -676,7 +672,6 @@ sub LinkDeletePost {
         return 1;
     }
 
-    # KIX4OTRS-capeIT
     # do action for other link objects (document, change, CI)
     if ( $Param{TargetObject} ) {
 
@@ -716,8 +711,6 @@ sub LinkDeletePost {
             },
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     return 1;
 }

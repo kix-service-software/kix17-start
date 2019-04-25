@@ -41,10 +41,7 @@
     </div>
 
     <div class="Content">
-# KIX4OTRS-capeIT
-#        <form action="[% Env("CGIHandle") %]" method="post" name="compose">
         <form action="[% Env("CGIHandle") %]" method="post" name="compose" id="LinkObject" class="Validate PreventMultipleSubmits">
-# EO KIX4OTRS-capeIT
             <input type="hidden" name="Action" value="[% Env("Action") %]" />
             <input type="hidden" name="Mode" value="[% Data.Mode | html %]" />
             <input type="hidden" name="SourceObject" value="[% Data.SourceObject | html %]" />
@@ -64,9 +61,7 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#TargetIdentifier').bind('change', function (Event) {
-# KIX4OTRS-capeIT
         Core.Form.Validate.DisableValidation($(this).closest('form'));
-# EO KIX4OTRS-capeIT
         $('#SubmitSelect').addClass('gotclicked');
         $(this).closest('form').submit();
     });
@@ -74,9 +69,7 @@
     // if SubmitSelect or AddLinks button was clicked,
     // add "gotclicked" class to this button
     $('#SubmitSelect, #AddLinks').bind('click.Submit', function () {
-# KIX4OTRS-capeIT
        Core.Form.Validate.DisableValidation($(this).closest('form'));
-# EO KIX4OTRS-capeIT
        $('#SubmitSelect').addClass('gotclicked');
     });
 
@@ -118,10 +111,7 @@
                 <div class="Content">
                     <fieldset class="TableLike FixedLabel">
 [% RenderBlockStart("LinkSearchRow") %]
-# KIX4OTRS-capeIT
-#                        <label for="[% Data.FormKey | html %]">
                         <label for="[% Data.FormKey | html %]" class="[% Data.ClassLabel %]">
-# EO KIX4OTRS-capeIT
                             [% Translate(Data.Name) | html %]:
                         </label>
                         <div class="Field">
@@ -186,6 +176,4 @@
     </div>
 </div>
 [% RenderBlockEnd("Delete") %]
-# KIX4OTRS-capeIT
 [% Data.PreferencesLinkTableStrg %]
-# EO KIX4OTRS-capeIT

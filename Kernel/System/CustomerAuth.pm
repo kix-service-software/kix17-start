@@ -192,7 +192,7 @@ sub Auth {
 
     # check if user is valid
     my %CustomerData = $CustomerUserObject->CustomerUserDataGet( User => $User );
-    if ( defined $CustomerData{ValidID} && $CustomerData{ValidID} ne 1 ) {
+    if ( defined $CustomerData{ValidID} && $CustomerData{ValidID} ne "1" ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'notice',
             Message  => "CustomerUser: '$User' is set to invalid, can't login!",

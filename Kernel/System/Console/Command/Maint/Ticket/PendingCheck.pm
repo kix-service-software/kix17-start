@@ -70,13 +70,10 @@ sub Run {
 
             next TICKETID if $Ticket{UntilTime} >= 1;
 
-            # KIX4OTRS-capeIT
             if ( $States{ $Ticket{Type} . ':::' . $Ticket{State} } || $States{ $Ticket{State} } ) {
                 $States{ $Ticket{State} } = $States{ $Ticket{Type} . ':::' . $Ticket{State} }
                     || $States{ $Ticket{State} };
             }
-
-            # EO KIX4OTRS-capeIT
 
             next TICKETID if !$States{ $Ticket{State} };
 
@@ -85,7 +82,7 @@ sub Run {
             );
 
             # set new state
-            my $Success = $TicketObject->StateSet(
+            my $Success = $TicketObject->TicketStateSet(
                 TicketID => $TicketID,
                 State    => $States{ $Ticket{State} },
                 UserID   => 1,
@@ -104,7 +101,7 @@ sub Run {
             if ( $State{TypeName} eq 'closed' ) {
 
                 # set new ticket lock
-                $TicketObject->LockSet(
+                $TicketObject->TicketLockSet(
                     TicketID     => $TicketID,
                     Lock         => 'unlock',
                     UserID       => 1,

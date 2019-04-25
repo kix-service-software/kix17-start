@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::DB;
-## nofilter(TidyAll::Plugin::OTRS::Perl::PODSpelling)
 
 use strict;
 use warnings;
@@ -28,6 +27,8 @@ our @ObjectDependencies = (
 );
 
 our $UseSlaveDB = 0;
+
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
 
 =head1 NAME
 
@@ -147,10 +148,8 @@ sub new {
         Type Limit DirectBlob Attribute QuoteSingle QuoteBack
         Connect Encode CaseSensitive LcaseLikeInLargeText
         )
-        )
-    {
-        if ( defined $Param{$Setting} || defined $ConfigObject->Get("Database::$Setting") )
-        {
+    ) {
+        if ( defined $Param{$Setting} || defined $ConfigObject->Get("Database::$Setting") ) {
             $Self->{Backend}->{"DB::$Setting"} = $Param{$Setting}
                 // $ConfigObject->Get("Database::$Setting");
         }
@@ -174,7 +173,7 @@ sub Connect {
     if ( $Self->{dbh} ) {
 
         my $PingTimeout = 10;        # Only ping every 10 seconds (see bug#12383).
-        my $CurrentTime = time();    ## no critic
+        my $CurrentTime = time();
 
         if ( $CurrentTime - ( $Self->{LastPingTime} // 0 ) < $PingTimeout ) {
             return $Self->{dbh};
@@ -218,13 +217,10 @@ sub Connect {
     }
 
     if ( $Self->{Backend}->{'DB::Connect'} ) {
-# capeIT
-#        $Self->Do( SQL => $Self->{Backend}->{'DB::Connect'} );
         $Self->Do(
             SQL              => $Self->{Backend}->{'DB::Connect'},
             SkipConnectCheck => 1,
         );
-# EO capeIT
     }
 
     # set utf-8 on for PostgreSQL
@@ -463,13 +459,9 @@ sub Do {
         );
     }
 
-# capeIT
     if ( !$Param{SkipConnectCheck} ) {
-# EO capeIT
-    return if !$Self->Connect();
-# capeIT
+        return if !$Self->Connect();
     }
-# EO capeIT
 
     # send sql to database
     if ( !$Self->{dbh}->do( $Param{SQL}, undef, @Array ) ) {
@@ -522,8 +514,7 @@ sub _InitSlaveDB {
             $CurrentSlave{DSN}
             && $CurrentSlave{User}
             && $CurrentSlave{Password}
-            )
-        {
+        ) {
             my $SlaveDBObject = Kernel::System::DB->new(
                 DatabaseDSN  => $CurrentSlave{DSN},
                 DatabaseUser => $CurrentSlave{User},
@@ -603,8 +594,7 @@ sub Prepare {
         && !$Self->{IsSlaveDB}
         && $Self->_InitSlaveDB()    # this is very cheap after the first call (cached)
         && $SQL =~ m{\A\s*SELECT}xms
-        )
-    {
+    ) {
         $Self->{_PreparedOnSlaveDB} = 1;
         return $Self->{SlaveDBObject}->Prepare(%Param);
     }
@@ -926,8 +916,7 @@ sub SQLProcessor {
                 $Tag->{Tag} eq 'Unique'
                 || $Tag->{Tag} eq 'UniqueCreate'
                 || $Tag->{Tag} eq 'UniqueDrop'
-                )
-            {
+            ) {
                 push @Table, $Tag;
             }
 
@@ -940,8 +929,7 @@ sub SQLProcessor {
                 $Tag->{Tag} eq 'Index'
                 || $Tag->{Tag} eq 'IndexCreate'
                 || $Tag->{Tag} eq 'IndexDrop'
-                )
-            {
+            ) {
                 push @Table, $Tag;
             }
 
@@ -954,8 +942,7 @@ sub SQLProcessor {
                 $Tag->{Tag} eq 'ForeignKey'
                 || $Tag->{Tag} eq 'ForeignKeyCreate'
                 || $Tag->{Tag} eq 'ForeignKeyDrop'
-                )
-            {
+            ) {
                 push @Table, $Tag;
             }
             elsif ( $Tag->{Tag} eq 'Reference' && $Tag->{TagType} eq 'Start' ) {
@@ -1239,20 +1226,10 @@ sub QueryCondition {
 
     # clean up not needed spaces in condistions
     # removed spaces examples
-    # KIX4OTRS-capeIT
     # # [SPACE](, [SPACE]), [SPACE]|, [SPACE]&
     # [SPACE](, [SPACE]), [SPACE]||, [SPACE]&&
     # example not removed spaces
     # [SPACE]\\(, [SPACE]\\), [SPACE]\\&
-    # $Param{Value} =~ s{(
-    #     \s
-    #     (
-    #           (?<!\\) \(
-    #         | (?<!\\) \)
-    #         |         \|
-    #         | (?<!\\) &
-    #     )
-    # )}{$2}xg;
     $Param{Value} =~ s{(
         \s
         (
@@ -1268,15 +1245,6 @@ sub QueryCondition {
     # )[SPACE], )[SPACE], ||[SPACE], &&[SPACE]
     # example not removed spaces
     # \\([SPACE], \\)[SPACE], \\&[SPACE]
-    # $Param{Value} =~ s{(
-    #     (
-    #           (?<!\\) \(
-    #         | (?<!\\) \)
-    #         |         \|
-    #         | (?<!\\) &
-    #     )
-    #     \s
-    # )}{$2}xg;
     $Param{Value} =~ s{(
         (
               (?<!\\) \(
@@ -1286,7 +1254,6 @@ sub QueryCondition {
         )
         \s
     )}{$2}xg;
-    # EO KIX4OTRS-capeIT
 
     # use extended condition mode
     # 1. replace " " by "&&"
@@ -1334,8 +1301,7 @@ sub QueryCondition {
                 $SpecialCharacters->{ $Array[ $Position + 1 ] }
                 || $Array[ $Position + 1 ] eq '\\'
             )
-            )
-        {
+        ) {
             $Backslash = 1;
             next POSITION;
         }
@@ -1429,28 +1395,20 @@ sub QueryCondition {
                         $SQLA .= "$Key $Type $WordSQL";
                     }
                     elsif ( $Self->GetDatabaseFunction('LcaseLikeInLargeText') ) {
-
-                        # KIX4OTRS-capeIT
                         if ( $Param{StaticDB} ) {
                             $SQLA .= "$Key $Type LCASE($WordSQL)";
                         }
                         else {
                             $SQLA .= "LCASE($Key) $Type LCASE($WordSQL)";
                         }
-
-                        # EO KIX4OTRS-capeIT
                     }
                     else {
-
-                        # KIX4OTRS-capeIT
                         if ( $Param{StaticDB} ) {
                             $SQLA .= "$Key $Type LOWER($WordSQL)";
                         }
                         else {
                             $SQLA .= "LOWER($Key) $Type LOWER($WordSQL)";
                         }
-
-                        # EO KIX4OTRS-capeIT
                     }
 
                     if ( $Type eq 'NOT LIKE' ) {
@@ -1496,28 +1454,20 @@ sub QueryCondition {
                         $SQLA .= "$Key $Type $WordSQL";
                     }
                     elsif ( $Self->GetDatabaseFunction('LcaseLikeInLargeText') ) {
-
-                        # KIX4OTRS-capeIT
                         if ( $Param{StaticDB} ) {
                             $SQLA .= "$Key $Type LCASE($WordSQL)";
                         }
                         else {
                             $SQLA .= "LCASE($Key) $Type LCASE($WordSQL)";
                         }
-
-                        # EO KIX4OTRS-capeIT
                     }
                     else {
-
-                        # KIX4OTRS-capeIT
                         if ( $Param{StaticDB} ) {
                             $SQLA .= "$Key $Type LOWER($WordSQL)";
                         }
                         else {
                             $SQLA .= "LOWER($Key) $Type LOWER($WordSQL)";
                         }
-
-                        # EO KIX4OTRS-capeIT
                     }
 
                     if ( $Type eq 'LIKE' ) {
@@ -1594,8 +1544,7 @@ sub QueryCondition {
                     || $Array[ $Position + 1 ] ne '|'
                     || $Array[ $Position + 2 ] ne '|'
                 )
-                )
-            {
+            ) {
                 $SQL .= ' AND ';
             }
 
@@ -1747,9 +1696,8 @@ sub _TypeCheck {
 
     if (
         $Tag->{Type}
-        && $Tag->{Type} !~ /^(DATE|SMALLINT|BIGINT|INTEGER|DECIMAL|VARCHAR|LONGBLOB)$/i
-        )
-    {
+        && $Tag->{Type} !~ /^(?:DATE|SMALLINT|BIGINT|INTEGER|DECIMAL|VARCHAR|LONGBLOB)$/i
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'Error',
             Message  => "Unknown data type '$Tag->{Type}'!",

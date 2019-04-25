@@ -105,10 +105,7 @@ sub TransitionAdd {
 
     # check if EntityID already exists
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT id
-            FROM pm_transition
-            WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)",
+        SQL   => "SELECT id FROM pm_transition WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)",
         Bind  => [ \$Param{EntityID} ],
         Limit => 1,
     );
@@ -163,10 +160,8 @@ sub TransitionAdd {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO pm_transition ( entity_id, name, config, create_time,
-                create_by, change_time, change_by )
-            VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => 'INSERT INTO pm_transition ( entity_id, name, config, create_time, create_by, change_time, change_by )'
+              . ' VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{EntityID}, \$Param{Name}, \$Config, \$Param{UserID}, \$Param{UserID},
         ],
@@ -307,20 +302,18 @@ sub TransitionGet {
     # sql
     if ( $Param{ID} ) {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id, entity_id, name, config, create_time, change_time
-                FROM pm_transition
-                WHERE id = ?',
+            SQL => 'SELECT id, entity_id, name, config, create_time, change_time'
+                 . ' FROM pm_transition'
+                 . ' WHERE id = ?',
             Bind  => [ \$Param{ID} ],
             Limit => 1,
         );
     }
     else {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id, entity_id, name, config, create_time, change_time
-                FROM pm_transition
-                WHERE entity_id = ?',
+            SQL   => 'SELECT id, entity_id, name, config, create_time, change_time'
+                   . ' FROM pm_transition'
+                   . ' WHERE entity_id = ?',
             Bind  => [ \$Param{EntityID} ],
             Limit => 1,
         );
@@ -394,10 +387,7 @@ sub TransitionUpdate {
 
     # check if EntityID already exists
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT id FROM pm_transition
-            WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)
-            AND id != ?",
+        SQL   => "SELECT id FROM pm_transition WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?) AND id != ?",
         Bind  => [ \$Param{EntityID}, \$Param{ID} ],
         LIMIT => 1,
     );
@@ -451,10 +441,7 @@ sub TransitionUpdate {
 
     # check if need to update db
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT entity_id, name, config
-            FROM pm_transition
-            WHERE id = ?',
+        SQL   => 'SELECT entity_id, name, config FROM pm_transition WHERE id = ?',
         Bind  => [ \$Param{ID} ],
         Limit => 1,
     );
@@ -477,11 +464,9 @@ sub TransitionUpdate {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE pm_transition
-            SET entity_id = ?, name = ?,  config = ?, change_time = current_timestamp,
-                change_by = ?
-            WHERE id = ?',
+        SQL  => 'UPDATE pm_transition'
+              . ' SET entity_id = ?, name = ?,  config = ?, change_time = current_timestamp, change_by = ?'
+              . ' WHERE id = ?',
         Bind => [
             \$Param{EntityID}, \$Param{Name}, \$Config, \$Param{UserID}, \$Param{ID},
         ],
@@ -551,9 +536,7 @@ sub TransitionList {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    my $SQL = '
-            SELECT id, entity_id, name
-            FROM pm_transition';
+    my $SQL = 'SELECT id, entity_id, name FROM pm_transition';
 
     return if !$DBObject->Prepare( SQL => $SQL );
 
@@ -638,10 +621,7 @@ sub TransitionListGet {
 
     # sql
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, entity_id
-            FROM pm_transition
-            ORDER BY id',
+        SQL => 'SELECT id, entity_id FROM pm_transition ORDER BY id',
     );
 
     my @TransitionIDs;

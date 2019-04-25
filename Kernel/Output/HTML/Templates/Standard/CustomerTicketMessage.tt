@@ -11,27 +11,20 @@
 
 <div id="MainBox" class="TicketCompose ARIARoleMain">
   <div class="Content">
-# KIX4OTRS-capeIT
     <div class="LayoutFixedSidebar SidebarLast">
       <div class="SidebarColumn">
         [% Data.KIXSidebarContent %]
       </div>
       <div class="ContentColumn">
-#        <form action="[% Env("CGIHandle") %]" method="post" name="compose" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">
         <form action="[% Env("CGIHandle") %]" method="post" id="NewCustomerTicket" name="compose" enctype="multipart/form-data" class="Validate PreventMultipleSubmits">
-# EO KIX4OTRS-capeIT
             <input type="hidden" name="Action" value="[% Env("Action") %]" />
             <input type="hidden" name="Subaction" value="StoreNew" />
             <input type="hidden" name="Expand" id="Expand" value="" />
             <input type="hidden" name="FormID" value="[% Data.FormID | html %]" />
-            <input type="hidden" name="FromChatID" value="[% Data.FromChatID | html %]" />
-# KIX4OTRS-capeIT
             <input type="hidden" name="SelectedConfigItemIDs" id="SelectedConfigItemIDs" value=""/>
             <input type="hidden" name="DefaultSet" value="[% Data.DefaultSet | html %]" />
-# EO KIX4OTRS-capeIT
             <fieldset>
 
-# KIX4OTRS-capeIT
 [% RenderBlockStart("SelectedCustomer") %]
                 <div>
                     <label for="SelectedCustomerID">[% Translate("Selected customer ID") | html %]</label>
@@ -39,14 +32,9 @@
                     <div class="Clear"></div>
                 </div>
 [% RenderBlockEnd("SelectedCustomer") %]
-# EO KIX4OTRS-capeIT
 
 [% RenderBlockStart("TicketType") %]
                 <div>
-<!--
-                    <label for="TicketNumber">[% Config("Ticket::Hook") %]</label>
-                    <input title="Ticket#" type="text" name="TicketNumber" size="30" value="[% Data.TicketNumber | html %]" />
-                    -->
                     <label for="TypeID" class="Mandatory"><span class="Marker">*</span>[% Translate("Type") | html %]:</label>
                     [% Data.TypeStrg %]
                     <div id="TypeIDError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
@@ -203,18 +191,6 @@
 
                     <div class="Clear"></div>
                 </div>
-[% RenderBlockStart("ChatArticlePreview") %]
-                <div>
-                    <label>[% Translate("Chat protocol") | html %]:</label>
-                    <div class="Field">
-                        <div class="ChatProtocol">
-[% INCLUDE "ChatDisplay.tt" %]
-                        </div>
-                        <p class="FieldExplanation">[% Translate('The chat will be appended as a separate article.') | html %]
-                    </div>
-                    <div class="Clear"></div>
-                </div>
-[% RenderBlockEnd("ChatArticlePreview") %]
 [% RenderBlockStart("Priority") %]
                 <div>
                     <label for="PriorityID">[% Translate("Priority") | html %]:</label>
@@ -231,10 +207,7 @@
 [% RenderBlockEnd("Priority") %]
 
 [% RenderBlockStart("DynamicField") %]
-# KIX4OTRS-capeIT
-#                <div class="Row Row_DynamicField_[% Data.Name | html %]">
                 <div class="Row Row_DynamicField_[% Data.Name | html %] [% Data.Class | html %]">
-# EO KIX4OTRS-capeIT
                     [% Data.Label %]
                     <div class="Field">
                         [% Data.Field %]
@@ -243,12 +216,9 @@
                 </div>
 [% RenderBlockEnd("DynamicField") %]
 
-# KIX4OTRS-capeIT
                 <div class="EndOfForm"></div>
-# EO KIX4OTRS-capeIT
             </fieldset>
 
-# KIX4OTRS-capeIT
 [% RenderBlockStart("CustomerAssignedConfigItem") %]
             <div>
             <h4>[% Translate("Please check the config item which is affected by your request") | html %]:</h4>
@@ -256,21 +226,16 @@
             <div class="Clear"></div>
             [% Data.AssignedConfigItemStrg %]
 [% RenderBlockEnd("CustomerAssignedConfigItem") %]
-# EO KIX4OTRS-capeIT
             <div id="BottomActionRow" class="ActionRow">
                 <button id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]">[% Translate("Submit") | html %]</button>
             </div>
         </form>
     </div>
-# KIX4OTRS-capeIT
-# EO Sidebar
     </div>
   </div>
-# EO KIX4OTRS-capeIT
 </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">
-# KIX4OTRS-capeIT
     Core.Form.Validate.SetSubmitFunction( $('#NewCustomerTicket'), function (Form) {
         $(".AssignedConfigItemCheckBox").filter(":checked").each(function() {
             $('#SelectedConfigItemIDs').val($('#SelectedConfigItemIDs').val() + ',' + $(this).val() );
@@ -279,6 +244,5 @@
     });
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("CustomerTicketMessageSidebarWidth") %]','[% Env("Action") %]');
     Core.UI.InitWidgetActionToggle();
-# EO KIX4OTRS-capeIT
 </script>
 [% END %]

@@ -180,11 +180,8 @@ sub GetParam {
             $Address->address( $Self->_DecodeString( String => $Address->address() ) );
             $Address->comment( $Self->_DecodeString( String => $Address->comment() ) );
 
-            my $TmpAddress = $Address->format();
-            $TmpAddress =~ s/(?:"|')(.*)(?:"|')/$1/;
-
             $ReturnLine .= ', ' if $ReturnLine;
-            $ReturnLine .= $TmpAddress;
+            $ReturnLine .= $Address->format();
         }
     }
     else {
@@ -703,11 +700,11 @@ sub PartsAttachments {
         );
         $PartData{ContentDisposition} = $Part->head()->get('Content-Disposition');
         if ( $PartData{ContentDisposition} ) {
-            my %Data = $Self->GetContentTypeParams(
+            my %ContentTypeData = $Self->GetContentTypeParams(
                 ContentType => $PartData{ContentDisposition},
             );
-            if ( $Data{Charset} ) {
-                $PartData{Charset} = $Data{Charset};
+            if ( $ContentTypeData{Charset} ) {
+                $PartData{Charset} = $ContentTypeData{Charset};
             }
         }
         else {
@@ -782,8 +779,7 @@ sub PartsAttachments {
         $ContentMixed
         && ( !$PartData{Disposition} || $PartData{Disposition} eq 'inline' )
         && ( $PartData{ContentType} =~ /text\/(?:html|plain)/i )
-        )
-    {
+    ) {
         # Is it a plain or HTML body?
         my $MimeType = $PartData{ContentType} =~ /text\/html/i ? 'text/html' : 'text/plain';
         my $AttachmentKey = 'AttachmentFor_' . $MimeType;
@@ -877,20 +873,16 @@ sub GetContentTypeParams {
     }
     if ( !$Param{Charset} ) {
         if (
-            $Param{ContentType}
-            =~ /\?(iso-\d{3,4}-(\d{1,2}|[A-z]{1,2})|utf(-8|8)|windows-\d{3,5}|koi8-.+?|cp(-|)\d{2,4}|big5(|.+?)|shift(_|-)jis|euc-.+?|tcvn|visii|vps|gb.+?)\?/i
-            )
-        {
+            $Param{ContentType} =~ /\?(iso-\d{3,4}-(\d{1,2}|[A-z]{1,2})|utf(-8|8)|windows-\d{3,5}|koi8-.+?|cp(-|)\d{2,4}|big5(|.+?)|shift(_|-)jis|euc-.+?|tcvn|visii|vps|gb.+?)\?/i
+        ) {
             $Param{Charset} = $1;
         }
         elsif ( $Param{ContentType} =~ /name\*0\*=(utf-8|utf8)/i ) {
             $Param{Charset} = $1;
         }
         elsif (
-            $Param{ContentType}
-            =~ /filename\*=(iso-\d{3,4}-(\d{1,2}|[A-z]{1,2})|utf(-8|8)|windows-\d{3,5}|koi8-.+?|cp(-|)\d{2,4}|big5(|.+?)|shift(_|-)jis|euc-.+?|tcvn|visii|vps|gb.+?)''/i
-            )
-        {
+            $Param{ContentType} =~ /filename\*=(iso-\d{3,4}-(\d{1,2}|[A-z]{1,2})|utf(-8|8)|windows-\d{3,5}|koi8-.+?|cp(-|)\d{2,4}|big5(|.+?)|shift(_|-)jis|euc-.+?|tcvn|visii|vps|gb.+?)''/i
+        ) {
             $Param{Charset} = $1;
         }
     }
@@ -934,7 +926,7 @@ sub CheckMessageBody {
         # add .html suffix to filename if not aleady there
         else {
             if ( $Self->{Attachments}->[0]->{Filename} ) {
-                if ( $Self->{Attachments}->[0]->{Filename} !~ /\.(htm|html)/i ) {
+                if ( $Self->{Attachments}->[0]->{Filename} !~ /\.(?:htm|html)/i ) {
                     $Self->{Attachments}->[0]->{Filename} .= '.html';
                 }
             }
@@ -990,8 +982,7 @@ sub _DecodeString {
         if (
             $BufferedString ne ''
             && ( !$PrevEncoding || !$Entry->[1] || lc($PrevEncoding) ne lc( $Entry->[1] ) )
-            )
-        {
+        ) {
             my $Encoding = $EncodeObject->FindAsciiSupersetEncoding(
                 Encodings => [ $PrevEncoding, $Param{Encode}, $Self->GetCharset() ],
             );
@@ -1044,6 +1035,8 @@ sub _MailAddressParse {
 
     return @Chunks;
 }
+
+1;
 
 =end Internal:
 

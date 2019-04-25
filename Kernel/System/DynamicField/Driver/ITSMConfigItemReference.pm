@@ -85,8 +85,7 @@ sub new {
             # check if module can be loaded
             if (
                 !$Kernel::OM->Get('Kernel::System::Main')->RequireBaseClass( $Extension->{Module} )
-                )
-            {
+            ) {
                 die "Can't load dynamic fields backend module"
                     . " $Extension->{Module}! $@";
             }
@@ -220,16 +219,14 @@ sub ValueIsDifferent {
         !defined $Param{Value1}
         && ref $Param{Value2} eq 'ARRAY'
         && !IsArrayRefWithData( $Param{Value2} )
-        )
-    {
+    ) {
         return
     }
     if (
         !defined $Param{Value2}
         && ref $Param{Value1} eq 'ARRAY'
         && !IsArrayRefWithData( $Param{Value1} )
-        )
-    {
+    ) {
         return
     }
 
@@ -412,8 +409,7 @@ sub EditFieldRender {
     if (
         IsHashRefWithData( $Param{Template} )
         && defined $Param{Template}->{$FieldName}
-        )
-    {
+    ) {
         $Value = $Param{Template}->{$FieldName};
     }
 
@@ -642,8 +638,7 @@ sub EditFieldValueGet {
     elsif (
         defined $Param{ParamObject}
         && ref $Param{ParamObject} eq 'Kernel::System::Web::Request'
-        )
-    {
+    ) {
         my @Data = $Param{ParamObject}->GetArray( Param => $FieldName );
 
         # delete empty values (can happen if the user has selected the "-" entry)
@@ -661,7 +656,7 @@ sub EditFieldValueGet {
         $Value = \@Data;
     }
 
-    if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq 1 ) {
+    if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq "1" ) {
         return {
             $FieldName => $Value,
         };
@@ -976,7 +971,7 @@ sub SearchFieldValueGet {
         return;
     }
 
-    if ( defined $Param{ReturnProfileStructure} && $Param{ReturnProfileStructure} eq 1 ) {
+    if ( defined $Param{ReturnProfileStructure} && $Param{ReturnProfileStructure} eq "1" ) {
         return {
             'Search_DynamicField_' . $Param{DynamicFieldConfig}->{Name} => $Value,
         };
@@ -1193,8 +1188,7 @@ sub DisplayValueRender {
             if (
                 $Param{LayoutObject}->{UserType} eq 'User'
                 && $Param{DynamicFieldConfig}->{Config}->{AgentLink}
-                )
-            {
+            ) {
                 $EntryValue
                     = '<a href="'
                     . $Param{DynamicFieldConfig}->{Config}->{AgentLink}
@@ -1207,8 +1201,7 @@ sub DisplayValueRender {
             elsif (
                 $Param{LayoutObject}->{UserType} eq 'Customer'
                 && $Param{DynamicFieldConfig}->{Config}->{CustomerLink}
-                )
-            {
+            ) {
                 $EntryValue
                     = '<a href="'
                     . $Param{DynamicFieldConfig}->{Config}->{CustomerLink}

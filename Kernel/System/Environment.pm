@@ -283,8 +283,7 @@ sub PerlInfoGet {
             YAML
             URI
             )
-            )
-        {
+        ) {
             $Modules{$Module} = $Self->ModuleVersionGet( Module => $Module );
         }
     }
@@ -333,8 +332,6 @@ sub DBInfoGet {
 
     return %EnvDB;
 }
-
-#rbo - T2016121190001552 - renamed OTRS to KIX
 
 =item KIXInfoGet()
 

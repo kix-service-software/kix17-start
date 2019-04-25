@@ -205,8 +205,7 @@ sub Run {
         !$Param{Data}->{UserLogin}
         && !$Param{Data}->{CustomerUserLogin}
         && !$Param{Data}->{SessionID}
-        )
-    {
+    ) {
         return $Self->ReturnError(
             ErrorCode    => 'TicketCreate.MissingParameter',
             ErrorMessage => "TicketCreate: UserLogin, CustomerUserLogin or SessionID is required!",
@@ -215,8 +214,7 @@ sub Run {
 
     if ( $Param{Data}->{UserLogin} || $Param{Data}->{CustomerUserLogin} ) {
 
-        if ( !$Param{Data}->{Password} )
-        {
+        if ( !$Param{Data}->{Password} ) {
             return $Self->ReturnError(
                 ErrorCode    => 'TicketCreate.MissingParameter',
                 ErrorMessage => "TicketCreate: Password or SessionID is required!",
@@ -257,8 +255,7 @@ sub Run {
             defined $Param{Data}->{$Optional}
             && !IsHashRefWithData( $Param{Data}->{$Optional} )
             && !IsArrayRefWithData( $Param{Data}->{$Optional} )
-            )
-        {
+        ) {
             return $Self->ReturnError(
                 ErrorCode    => 'TicketCreate.MissingParameter',
                 ErrorMessage => "TicketCreate: $Optional parameter is missing or not valid!",
@@ -557,8 +554,7 @@ sub _CheckTicket {
         !$Ticket->{TypeID}
         && !$Ticket->{Type}
         && $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Type')
-        )
-    {
+    ) {
         return {
             ErrorCode    => 'TicketCreate.MissingParameter',
             ErrorMessage => "TicketCreate: Ticket->TypeID or Ticket->Type parameter is required"
@@ -882,8 +878,7 @@ sub _CheckArticle {
         ( !defined $Article->{TimeUnit} || !IsStringWithData( $Article->{TimeUnit} ) )
         && $ConfigObject->{'Ticket::Frontend::AccountTime'}
         && $ConfigObject->{'Ticket::Frontend::NeedAccountedTime'}
-        )
-    {
+    ) {
         return {
             ErrorCode    => 'TicketCreate.MissingParameter',
             ErrorMessage => "TicketCreate: Article->TimeUnit is required by sysconfig option!",
@@ -909,8 +904,7 @@ sub _CheckArticle {
     # check Article array parameters
     for my $Attribute (
         qw( ForceNotificationToUserID ExcludeNotificationToUserID ExcludeMuteNotificationToUserID )
-        )
-    {
+    ) {
         if ( defined $Article->{$Attribute} ) {
 
             # check structure
@@ -974,8 +968,7 @@ sub _CheckDynamicField {
         if (
             !defined $DynamicField->{$Needed}
             || ( !IsString( $DynamicField->{$Needed} ) && ref $DynamicField->{$Needed} ne 'ARRAY' )
-            )
-        {
+        ) {
             return {
                 ErrorCode    => 'TicketCreate.MissingParameter',
                 ErrorMessage => "TicketCreate: DynamicField->$Needed  parameter is missing!",

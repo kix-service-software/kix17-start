@@ -13,6 +13,7 @@
 <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" class="Validate">
     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
     <input type="hidden" name="Subaction" value="Do"/>
+    <input type="hidden" name="FormID" value="[% Data.FormID %]"/>
 
     <div class="LayoutPopup ARIARoleMain">
         <div class="Header">

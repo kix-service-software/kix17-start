@@ -42,33 +42,6 @@ sub Configure {
         HasValue    => 0,
     );
 
-    $Self->AddOption(
-        Name        => 'show-verification-info',
-        Description => 'Shows package KIX Verify™ status.',
-        Required    => 0,
-        HasValue    => 0,
-    );
-
-    $Self->AddOption(
-        Name        => 'delete-verification-cache',
-        Description => 'Deletes KIX Verify™ cache, so verification info is fetch again from KIX group servers.',
-        Required    => 0,
-        HasValue    => 0,
-    );
-
-    return;
-}
-
-sub PreRun {
-    my ( $Self, %Param ) = @_;
-
-    my $ShowVerificationInfoOption    = $Self->GetOption('show-verification-info');
-    my $DeleteVerificationCacheOption = $Self->GetOption('delete-verification-cache');
-
-    if ( $DeleteVerificationCacheOption && !$ShowVerificationInfoOption ) {
-        die "--delete-verification-cache requires --show-verification-info";
-    }
-
     return;
 }
 
@@ -86,15 +59,9 @@ sub Run {
 
     my $PackageNameOption             = $Self->GetOption('package-name');
     my $ShowDeploymentInfoOption      = $Self->GetOption('show-deployment-info');
-    my $ShowVerificationInfoOption    = $Self->GetOption('show-verification-info');
-    my $DeleteVerificationCacheOption = $Self->GetOption('delete-verification-cache');
-
-    #rbo - T2016121190001552 - removed CloudServices
 
     # Get package object
     my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
-
-    my %VerificationInfo;
 
     PACKAGE:
     for my $Package (@Packages) {
@@ -103,8 +70,7 @@ sub Run {
         if (
             defined $Package->{PackageIsVisible}
             && !$Package->{PackageIsVisible}->{Content}
-            )
-        {
+        ) {
             next PACKAGE;
         }
 
@@ -146,33 +112,6 @@ sub Run {
                 $Self->Print(
                     '| <yellow>Pck. Status:</yellow> ' . ( $PackageDeploymentOK ? 'OK' : 'Not OK' ) . "\n"
                 );
-            }
-        }
-
-        if ($ShowVerificationInfoOption) {
-
-            if ( !%VerificationInfo ) {
-
-                # Clear the package verification cache to get fresh results.
-                if ($DeleteVerificationCacheOption) {
-                    $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
-                        Type => 'PackageVerification',
-                    );
-                }
-
-                # Get verification info for all packages (this will create the cache again).
-                %VerificationInfo = $PackageObject->PackageVerifyAll();
-            }
-
-            if (
-                !defined $VerificationInfo{ $Package->{Name}->{Content} }
-                || $VerificationInfo{ $Package->{Name}->{Content} } ne 'verified'
-                )
-            {
-                $Self->Print("| <red>OTRS Verify:</red> Not Verified\n");
-            }
-            else {
-                $Self->Print("| <yellow>OTRS Verify:</yellow> Verified\n");
             }
         }
     }
@@ -270,90 +209,6 @@ sub _PackageMetadataGet {
         Description => $Description,
         Title       => $Title,
     );
-}
-
-sub _PackageContentGet {
-    my ( $Self, %Param ) = @_;
-
-    my $FileString;
-
-    if ( -e $Param{Location} ) {
-        my $ContentRef = $Kernel::OM->Get('Kernel::System::Main')->FileRead(
-            Location => $Param{Location},
-            Mode     => 'utf8',             # optional - binmode|utf8
-            Result   => 'SCALAR',           # optional - SCALAR|ARRAY
-        );
-        if ($ContentRef) {
-            $FileString = ${$ContentRef};
-        }
-        else {
-            $Self->PrintError("Can't open: $Param{Location}: $!");
-            return;
-        }
-    }
-    elsif ( $Param{Location} =~ /^(online|.*):(.+?)$/ ) {
-        my $URL         = $1;
-        my $PackageName = $2;
-        if ( $URL eq 'online' ) {
-            my %List = %{ $Kernel::OM->Get('Kernel::Config')->Get('Package::RepositoryList') };
-            %List = (
-                %List,
-                $Kernel::OM->Get('Kernel::System::Package')->PackageOnlineRepositories()
-            );
-            for ( sort keys %List ) {
-                if ( $List{$_} =~ /^\[-Master-\]/ ) {
-                    $URL = $_;
-                }
-            }
-        }
-        if ( $PackageName !~ /^.+?.opm$/ ) {
-            my @Packages = $Kernel::OM->Get('Kernel::System::Package')->PackageOnlineList(
-                URL  => $URL,
-                Lang => $Kernel::OM->Get('Kernel::Config')->Get('DefaultLanguage'),
-            );
-            PACKAGE:
-            for my $Package (@Packages) {
-                if ( $Package->{Name} eq $PackageName ) {
-                    $PackageName = $Package->{File};
-                    last PACKAGE;
-                }
-            }
-        }
-        $FileString = $Kernel::OM->Get('Kernel::System::Package')->PackageOnlineGet(
-            Source => $URL,
-            File   => $PackageName,
-        );
-        if ( !$FileString ) {
-            $Self->PrintError("No such file '$Param{Location}' in $URL!");
-            return;
-        }
-    }
-    else {
-        if ( $Param{Location} =~ /^(.*)\-(\d{1,4}\.\d{1,4}\.\d{1,4})$/ ) {
-            $FileString = $Kernel::OM->Get('Kernel::System::Package')->RepositoryGet(
-                Name    => $1,
-                Version => $2,
-            );
-        }
-        else {
-            PACKAGE:
-            for my $Package ( $Kernel::OM->Get('Kernel::System::Package')->RepositoryList() ) {
-                if ( $Param{Location} eq $Package->{Name}->{Content} ) {
-                    $FileString = $Kernel::OM->Get('Kernel::System::Package')->RepositoryGet(
-                        Name    => $Package->{Name}->{Content},
-                        Version => $Package->{Version}->{Content},
-                    );
-                    last PACKAGE;
-                }
-            }
-        }
-        if ( !$FileString ) {
-            $Self->PrintError("No such file '$Param{Location}' or invalid 'package-version'!");
-            return;
-        }
-    }
-
-    return $FileString;
 }
 
 1;

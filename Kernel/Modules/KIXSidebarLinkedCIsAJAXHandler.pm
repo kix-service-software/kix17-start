@@ -33,7 +33,6 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my $Result;
     my %GetParam;
     my @SelectedSearchFields;
 
@@ -46,8 +45,7 @@ sub Run {
     my $UserObject           = $Kernel::OM->Get('Kernel::System::User');
 
     # create string for attribute input text field
-    if ( $Self->{Subaction} eq 'KIXSidebarAddAttribute' )
-    {
+    if ( $Self->{Subaction} eq 'KIXSidebarAddAttribute' ) {
 
         # get attribute
         $Param{Name} = $ParamObject->GetParam( Param => 'KIXSidebarLinkedCIAttribute' )
@@ -104,8 +102,7 @@ sub Run {
     if (
         !$Param{CustomerUserID}
         && ( $Self->{Subaction} eq 'SetFilter' || $Self->{Subaction} eq 'AJAXUpdateSelection' )
-        )
-    {
+    ) {
 
         my %UserData = $UserObject->GetUserData(
             UserID => $Self->{UserID},

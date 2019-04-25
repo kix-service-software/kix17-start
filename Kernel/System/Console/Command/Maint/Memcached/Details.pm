@@ -11,6 +11,8 @@ package Kernel::System::Console::Command::Maint::Memcached::Details;
 use strict;
 use warnings;
 
+use Data::Dumper;
+
 use base qw(Kernel::System::Console::BaseCommand);
 
 our @ObjectDependencies = (
@@ -51,7 +53,6 @@ sub Run {
         Raw  => 1,
     );
     if ($Result) {
-        use Data::Dumper;
         print STDERR Dumper($Result);
     }
 

@@ -203,8 +203,7 @@ sub Run {
     if (
         !$Param{Data}->{UserLogin}
         && !$Param{Data}->{SessionID}
-        )
-    {
+    ) {
         return $Self->ReturnError(
             ErrorCode => "$Self->{OperationName}.MissingParameter",
             ErrorMessage =>
@@ -214,8 +213,7 @@ sub Run {
 
     if ( $Param{Data}->{UserLogin} ) {
 
-        if ( !$Param{Data}->{Password} )
-        {
+        if ( !$Param{Data}->{Password} ) {
             return $Self->ReturnError(
                 ErrorCode    => "$Self->{OperationName}.MissingParameter",
                 ErrorMessage => "$Self->{OperationName}: Password or SessionID is required!",
@@ -444,6 +442,8 @@ sub _CleanXMLData {
             $XMLData->{$Key} =~ s{\s+\z}{};
         }
     }
+
+    return 1;
 }
 
 =item _CheckConfigItem()
@@ -525,15 +525,13 @@ sub _CheckConfigItem {
 
     for my $TimeParam (
         qw(CreateTimeNewerDate CreateTimeOlderDate ChangeTimeNewerDate ChangeTimeOlderDate)
-        )
-    {
+    ) {
         if ( defined $ConfigItem->{"ConfigItem$TimeParam"} ) {
             if (
                 !$Self->ValidateInputDateTime(
                     Value => $ConfigItem->{"ConfigItem$TimeParam"},
                 )
-                )
-            {
+            ) {
                 return {
                     ErrorCode => "$Self->{OperationName}.InvalidParameter",
                     ErrorMessage =>
@@ -615,8 +613,7 @@ sub _ConfigItemSearch {
         ConfigItemCreateTimeNewerDate ConfigItemCreateTimeOlderDate ConfigItemChangeTimeNewerDate
         ConfigItemChangeTimeOlderDate
         )
-        )
-    {
+    ) {
         if ( defined $ConfigItem->{$PlainParam} ) {
             $SearchParams{$PlainParam} = $ConfigItem->{$PlainParam};
         }

@@ -14,17 +14,11 @@
 [% RenderBlockEnd("Plain") %]
 
 [% RenderBlockStart("Text") %]
-# KIX4OTRS-capeIT
-# <span title="[% Data.Content | html %]">[% Data.Content | truncate(Data.MaxLength) | html %]</span>
 <label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | html %]" class="[% Data.Class | html %]">[% Data.Content | truncate(Data.MaxLength) | html %]</label>
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("Text") %]
 
 [% RenderBlockStart("TextTranslate") %]
-# KIX4OTRS-capeIT
-# <span title="[% Translate(Data.Content) | html %]">[% Data.Content | Translate | truncate(Data.MaxLength) | html %]</span>
 <label for="Checkbox[% Data.Key | html %]" title="[% Translate(Data.Content) | html %]" class="[% Data.Class | html %]">[% Data.Content | Translate | truncate(Data.MaxLength) | html %]</label>
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("TextTranslate") %]
 
 [% RenderBlockStart("Link") %]
@@ -42,10 +36,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 
 
 [% RenderBlockStart("TimeLong") %]
-# KIX4OTRS-capeIT
-# [% Data.Content | Localize("TimeLong") %]
 <label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | Localize("TimeLong") %]" class="[% Data.Class | html %]">[% Data.Content | Localize("TimeLong") %]</label>
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("TimeLong") %]
 
 [% RenderBlockStart("Date") %]
@@ -53,10 +44,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 [% RenderBlockEnd("Date") %]
 
 [% RenderBlockStart("Checkbox") %]
-# KIX4OTRS-capeIT
-# <input type="checkbox" name="[% Data.Name | html %]" value="[% Data.Content | html %]" alt="[% Data.Title | html %]" title="[% Data.Title | html %]"
 <input type="checkbox" name="[% Data.Name | html %]" id="Checkbox[% Data.Content | html %]" value="[% Data.Content | html %]" alt="[% Data.Title | html %]" title="[% Data.Title | html %]" class="[% Data.Class | html %]"
-# EO KIX4OTRS-capeIT
 [% IF Data.Checked %]
     checked="checked"
 [% END %]
@@ -65,10 +53,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 [% RenderBlockEnd("Checkbox") %]
 
 [% RenderBlockStart("InputText") %]
-# KIX4OTRS-capeIT
-# <input type="text" name="[% Data.Key | html %]" class="W50pc" value="[% Data.Value | html %]"/>
 <input type="text" name="[% Data.Key | html %]" class="W50pc [% Data.Class | html %]" value="[% Data.Value | html %]"/>
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("InputText") %]
 
 [% RenderBlockStart("TableSimpleNone") %]
@@ -78,13 +63,9 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 [% RenderBlockStart("TableSimple") %]
 [% RenderBlockStart("TableSimpleType") %]
 <h3 class="SpacingTopSmall">
-# KIX4OTRS-capeIT
-#    [% Translate(Data.LinkTypeName) | html %]
 </h3>
 <ul class="Tablelike SpacingTopSmall">
-#    <li class="Header">[% Translate("Object#") | html %]</li>
     <li class="Header">[% Translate(Data.LinkTypeName) | html %]</li>
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("TableSimpleTypeRow") %]
     <li class="[% Data.CssClass | html %]">[% Data.Content %]</li>
 [% RenderBlockEnd("TableSimpleTypeRow") %]
@@ -95,13 +76,9 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 [% RenderBlockStart("TableComplex") %]
 [% RenderBlockStart("TableComplexBlock") %]
 [% IF !Data.AJAX.defined %]
-# KIX4OTRS-capeIT
-# <div class="WidgetSimple SpacingTop Expanded" id="Widget[% Data.Name | html %]">
 <div class="WidgetSimple SpacingTop Expanded CanDrag" id="Widget[% Data.Name | html %]">
-# EO KIX4OTRS-capeIT
 [% END %]
     <div class="Header">
-# KIX4OTRS-capeIT
         <div class="ActionMenu">
             <div class="WidgetAction Settings">
                 <a id="SetColumnPreferences_[% Data.PreferencesID %]" title="[% Translate(Data.Blockname) | html %]" href="#">
@@ -110,7 +87,6 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
             </div>
             <div class="Clear"></div>
         </div>
-# EO KIX4OTRS-capeIT
         <div class="WidgetAction Toggle">
             <a href="#" title="[% Translate("Show or hide the content") | html %]">
                 <i class="fa fa-caret-right">
@@ -129,10 +105,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
             <li class="Bulk">
                 <span>
                     <input type="checkbox" class="SelectAll" title="[% Translate("Select all") | html %]" id="SelectAllLinks[% Translate(Data.TableNumber) | html %]" autocomplete="off" />
-# KIX4OTRS-capeIT
-#                    <label class="InvisibleText" for="SelectAllLinks[% Translate(Data.TableNumber) | html %]">[% Translate("Select all") | html %]</label>
                     <label class="Label" for="SelectAllLinks[% Translate(Data.TableNumber) | html %]">[% Translate("Select all") | html %]</label>
-# EO KIX4OTRS-capeIT
                 </span>
             </li>
 [% RenderBlockEnd("TableComplexBlockActionRowBulk") %]
@@ -152,10 +125,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 [% RenderBlockStart("TableComplexBlockRow") %]
                 <tr>
 [% RenderBlockStart("TableComplexBlockRowColumn") %]
-# KIX4OTRS-capeIT
-#                    <td class="[% Data.CssClass | html %]">
                     <td class="LinkedObjects [% Data.Css | html %]" [% Data.CssStyle %]>
-# EO KIX4OTRS-capeIT
                         [% Data.Content %]
                     </td>
 [% RenderBlockEnd("TableComplexBlockRowColumn") %]
@@ -200,7 +170,6 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 //]]></script>
 [% END %]
 
-# KIX4OTRS-capeIT
 [% RenderBlockStart("FilterColumnSettings") %]
 <div id="ContextSettingsDialogContainer-[% Data.PreferencesID %]" class="Hidden">
     <form action="[% Env("CGIHandle") %]" method="post" id="ContextSettingsDialogOverview[% Data.View | html %]" class="WidgetSettingsForm">
@@ -261,7 +230,7 @@ $("#SetColumnPreferences_[% Data.PreferencesID %]").bind('click', function (Even
 
 
                             var Found = 0;
-                            $.each( $(this).closest('form').find('input[name="FilterAction"]'), function()  {
+                            $.each( $(this).closest('form').find('input[name="FilterAction"]'), function() {
                                 if ( $(this).val().match(Regexp) ) {
                                     Found = 1;
                                 }
@@ -292,5 +261,4 @@ Core.Config.AddConfig({
 
 //]]></script>
 [% END %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("FilterColumnSettings") %]

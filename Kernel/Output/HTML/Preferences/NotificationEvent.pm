@@ -91,8 +91,7 @@ sub Param {
     for my $Name (
         sort { $Self->{TransportConfig}->{$a}->{Prio} <=> $Self->{TransportConfig}->{$b}->{Prio} }
         keys %{ $Self->{TransportConfig} }
-        )
-    {
+    ) {
 
         my $TransportConfig = $Self->{TransportConfig}->{$Name};
 
@@ -125,8 +124,7 @@ sub Param {
         for my $NotificationID (
             sort { $Self->{NotificationList}->{$a}->{Name} cmp $Self->{NotificationList}->{$b}->{Name} }
             keys %{ $Self->{NotificationList} }
-            )
-        {
+        ) {
 
             next NOTIFICATION if !$Self->{NotificationList}->{$NotificationID};
 
@@ -146,8 +144,7 @@ sub Param {
             for my $TransportName (
                 sort { $Self->{TransportConfig}->{$a}->{Prio} <=> $Self->{TransportConfig}->{$b}->{Prio} }
                 keys %{ $Self->{TransportConfig} }
-                )
-            {
+            ) {
 
                 my $Identifier = "Notification-$NotificationID-$TransportName";
 

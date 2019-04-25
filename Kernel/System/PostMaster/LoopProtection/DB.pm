@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::PostMaster::LoopProtection::DB;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Time)
 
 use strict;
 use warnings;
@@ -31,7 +30,7 @@ sub new {
     $Self->{PostmasterMaxEmails} = $Kernel::OM->Get('Kernel::Config')->Get('PostmasterMaxEmails') || 40;
 
     # create logfile name
-    my ( $Sec, $Min, $Hour, $Day, $Month, $Year ) = localtime(time);    ## no critic
+    my ( $Sec, $Min, $Hour, $Day, $Month, $Year ) = localtime(time);
     $Year = $Year + 1900;
     $Month++;
     $Self->{LoopProtectionDate} .= $Year . '-' . $Month . '-' . $Day;

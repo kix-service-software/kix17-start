@@ -59,10 +59,8 @@ sub HandleSearch {
 
         if (
             $Command !~ m{\Q$SearchCommand\E}smxi
-            &&
-            $CommandObject->Description() !~ m{\Q$SearchCommand\E}smxi
-            )
-        {
+            && $CommandObject->Description() !~ m{\Q$SearchCommand\E}smxi
+        ) {
             next COMMAND;
         }
         my $CommandName = $CommandObject->Name();

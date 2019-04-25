@@ -20,9 +20,7 @@ use Kernel::Config;
 
 use base qw(Kernel::System::EventHandler);
 
-# KIXCore-capeIT
 use Kernel::System::VariableCheck qw(:all);
-# EO KIXCore-capeIT
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -31,12 +29,10 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
     'Kernel::System::Main',
     'Kernel::System::XML',
-
-    # KIXCore-capeIT
     'Kernel::System::EventHandler',
-
-    # EO KIXCore-capeIT
 );
+
+## no critic qw(InputOutput::RequireBriefOpen BuiltinFunctions::ProhibitStringyEval)
 
 =head1 NAME
 
@@ -62,8 +58,6 @@ create an object. Do not use it directly, instead use:
 
 =cut
 
-## no critic (StringyEval)
-
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -86,7 +80,6 @@ sub new {
     $Self->{ConfigClearObject}   = Kernel::Config->new( Level => 'Clear' );
     $Self->{ConfigCounter}       = $Self->_Init();
 
-    # KIXCore-capeIT
     # check if we have a UserID in Param
     if (!$Param{UserID}) {
         # no, we haven't => try to get it from an existing session
@@ -124,8 +117,6 @@ sub new {
         },
     );
 
-    # EO KIXCore-capeIT
-
     return $Self;
 }
 
@@ -162,7 +153,7 @@ sub WriteDefault {
             if ( $Config{Valid} ) {
                 $File .= "\$Self->{'$Name'} = " . $Self->_XML2Perl( Data => \%Config );
             }
-            elsif ( eval( '$Self->{ConfigDefaultObject}->{\'' . $Name . '\'}' ) ) {
+            elsif ( $Self->{ConfigDefaultObject}->{$Name} ) {
                 $File .= "delete \$Self->{'$Name'};\n";
             }
         }
@@ -217,9 +208,7 @@ sub Download {
     if ( !-e "$Home/Kernel/Config/Files/ZZZAuto.pm" ) {
         return '';
     }
-    ## no critic
     elsif ( !open( $In, "<$Self->{FileMode}", "$Home/Kernel/Config/Files/ZZZAuto.pm" ) ) {
-        ## use critic
         return if $Param{Type};
 
         $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -317,7 +306,6 @@ sub CreateConfig {
     # read all config files and only save the changed config options
     if ( !$Param{EmptyFile} ) {
 
-        #rbo - T2016121190001552 - added sorted output of keys
         for my $ConfigItem ( sort { $a->{Name} cmp $b->{Name} } @{ $Self->{XMLConfig} } ) {
 
             if ( $ConfigItem->{Name} && !$UsedKeys{ $ConfigItem->{Name} } ) {
@@ -340,14 +328,13 @@ sub CreateConfig {
                 if (
                     $Config{Valid}
                     || ( $Config{ReadOnly} && $ConfigDefault{Valid} && $ConfigDefault{Required} )
-                    )
-                {
+                ) {
 
                     my $C = $Self->_XML2Perl( Data => \%Config );
                     my $D = $Self->_XML2Perl( Data => \%ConfigDefault );
                     my ( $A1, $A2 );
-                    eval "\$A1 = $C";
-                    eval "\$A2 = $D";
+                    eval( "\$A1 = $C" );
+                    eval( "\$A2 = $D" );
 
                     if ( !defined $A1 && !defined $A2 ) {
 
@@ -365,8 +352,7 @@ sub CreateConfig {
                             Data2 => \$A2
                         )
                         || ( $Config{Valid} && !$ConfigDefault{Valid} )
-                        )
-                    {
+                    ) {
                         $File .= "\$Self->{'$Name'} = $C";
                     }
                     else {
@@ -378,10 +364,9 @@ sub CreateConfig {
                     !$Config{Valid}
                     && (
                         $ConfigDefault{Valid}
-                        || eval( '$Self->{ConfigDefaultObject}->{\'' . $Name . '\'}' )
+                        || $Self->{ConfigDefaultObject}->{$Name}
                     )
-                    )
-                {
+                ) {
                     $File .= "delete \$Self->{'$Name'};\n";
                 }
             }
@@ -454,9 +439,7 @@ sub ConfigItemUpdate {
 
     # check if config file is writable
     my $Out;
-    ## no critic
     if ( !open( $Out, ">>$Self->{FileMode}", "$Home/Kernel/Config/Files/ZZZAuto.pm" ) ) {
-        ## use critic
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Can't write $Home/Kernel/Config/Files/ZZZAuto.pm: $!",
@@ -490,11 +473,8 @@ sub ConfigItemUpdate {
         }
     }
 
-    # KIXCore-capeIT
     # we will need the original key later
     $Param{OrgKey} = $Param{Key};
-
-    # EO KIXCore-capeIT
 
     $Param{Key} =~ s/\\/\\\\/g;
     $Param{Key} =~ s/'/\'/g;
@@ -510,27 +490,22 @@ sub ConfigItemUpdate {
         $Option =~ s/\$VAR1/\$Self->{'$Param{Key}'}/;
     }
 
-    # KIXCore-capeIT
     # get old value
-    my $OldValue = eval("\$Self->{ConfigObject}->{'$Param{Key}'}");
+    my $OldValue = $Self->{ConfigObject}->{$Param{Key}};
 
     # get old config item
     my %OldConfig = $Self->ConfigItemGet( Name => $Param{OrgKey} );
 
-    # EO KIXCore-capeIT
-
     # set option in runtime
     my $OptionRuntime = $Option;
     $OptionRuntime =~ s/Self->/Self->\{ConfigObject\}->/;
-    eval $OptionRuntime;
+    eval( $OptionRuntime );
 
-    # KIXCore-capeIT
     # get new value
     my $NewValue = $Param{Value};
 
     my $ChangeType = 0;
-    if ( IsHashRefWithData($Self->{ConfigObject}->Get('SysConfig::EventModulePost')) )
-    {
+    if ( IsHashRefWithData($Self->{ConfigObject}->Get('SysConfig::EventModulePost')) ) {
         if ( $Kernel::OM->Get('Kernel::System::Main')->Require('Data::Compare') ) {
             my $Comparator = Data::Compare->new();
             if ( ( ( $OldConfig{Valid} || 0 ) + ( $Param{Valid} || 0 ) ) == 1 ) {
@@ -554,14 +529,9 @@ sub ConfigItemUpdate {
         }
     }
 
-    # EO KIXCore-capeIT
-
     # get config file and insert it
     my $In;
-    ## no critic
     if ( !open( $In, "<$Self->{FileMode}", "$Home/Kernel/Config/Files/ZZZAuto.pm" ) ) {
-        ## use critic
-
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Can't read $Home/Kernel/Config/Files/ZZZAuto.pm: $!",
@@ -587,14 +557,12 @@ sub ConfigItemUpdate {
         $Content .= $Line;
     }
 
-    # KIXCore-capeIT
-    # return $Self->_FileWriteAtomic(
     my $Result = $Self->_FileWriteAtomic(
         Filename => "$Self->{Home}/Kernel/Config/Files/ZZZAuto.pm",
         Content  => \$Content,
     );
 
-# trigger event handler only if this key has been changed in some way and has been successfully written to the file
+    # trigger event handler only if this key has been changed in some way and has been successfully written to the file
     if ( $ChangeType && $Result ) {
         $Self->EventHandler(
             Event => 'SysConfigItemUpdate',
@@ -608,9 +576,6 @@ sub ConfigItemUpdate {
         );
     }
     return $Result;
-
-    # EO KIXCore-capeIT
-
 }
 
 =item ConfigItemGet()
@@ -663,7 +628,7 @@ sub ConfigItemGet {
     # rh as 8 bug fix
     $Dump =~ s/\$\{\\\$VAR1->\{'.+?'}\[0\]}/\{\}/g;
     my $ConfigItem;
-    if ( !eval $Dump ) {
+    if ( !eval( $Dump ) ) {
         die "ERROR: $!: $@ in $Dump";
     }
 
@@ -731,36 +696,36 @@ sub ConfigItemGet {
             }
             for my $Key ( sort keys %Hash ) {
                 if ( ref $Hash{$Key} eq 'ARRAY' ) {
-                    my @Array = (
+                    my @ConfigItemArray = (
                         undef,
                         {
                             Content => '',
                         }
                     );
-                    @{ $Array[1]{Item} } = (undef);
+                    @{ $ConfigItemArray[1]{Item} } = (undef);
                     for my $Content ( @{ $Hash{$Key} } ) {
-                        push( @{ $Array[1]{Item} }, { Content => $Content } );
+                        push( @{ $ConfigItemArray[1]{Item} }, { Content => $Content } );
                     }
                     push(
                         @{ $ConfigItem->{Setting}->[1]->{Hash}->[1]->{Item} },
                         {
                             Key     => $Key,
                             Content => '',
-                            Array   => \@Array,
+                            Array   => \@ConfigItemArray,
                         },
                     );
                 }
                 elsif ( ref $Hash{$Key} eq 'HASH' ) {
-                    my @Array = (
+                    my @ConfigItemArray = (
                         undef,
                         {
                             Content => '',
                         }
                     );
-                    @{ $Array[1]{Item} } = (undef);
+                    @{ $ConfigItemArray[1]{Item} } = (undef);
                     for my $Key2 ( sort keys %{ $Hash{$Key} } ) {
                         push(
-                            @{ $Array[1]{Item} },
+                            @{ $ConfigItemArray[1]{Item} },
                             {
                                 Content => $Hash{$Key}{$Key2},
                                 Key     => $Key2
@@ -772,7 +737,7 @@ sub ConfigItemGet {
                         {
                             Key     => $Key,
                             Content => '',
-                            Hash    => \@Array,
+                            Hash    => \@ConfigItemArray,
                         },
                     );
                 }
@@ -783,8 +748,7 @@ sub ConfigItemGet {
                             defined( $Array[$Index]{Key} )
                             && $Array[$Index]{Key} eq $Key
                             && defined( $Array[$Index]{Option} )
-                            )
-                        {
+                        ) {
                             $Option = 1;
                             $Array[$Index]{Option}[1]{SelectedID} = $Hash{$Key};
                             push(
@@ -859,8 +823,7 @@ sub ConfigItemGet {
                         if (
                             $Key2 eq 'CSS'
                             || $Key2 eq 'JavaScript'
-                            )
-                        {
+                        ) {
                             if ( ref $Key2 ne 'ARRAY' ) {
                                 my @Files = (undef);
                                 for my $Index ( 0 .. $#{ $Hash{$Key}->{$Key2} } ) {
@@ -1064,8 +1027,8 @@ sub ConfigItemGet {
         my $C = $Self->_XML2Perl( Data => $ConfigItem );
         my $D = $Self->_XML2Perl( Data => \%ConfigItemDefault );
         my ( $A1, $A2 );
-        eval "\$A1 = $C";
-        eval "\$A2 = $D";
+        eval( "\$A1 = $C" );
+        eval( "\$A2 = $D" );
         if ( $ConfigItemDefault{Valid} ne $ConfigItem->{Valid} ) {
             $ConfigItem->{Diff} = 1;
         }
@@ -1079,23 +1042,20 @@ sub ConfigItemGet {
                 Data1 => \$A1,
                 Data2 => \$A2
             )
-            )
-        {
+        ) {
             $ConfigItem->{Diff} = 1;
         }
     }
     if (
         $ConfigItem->{Setting}->[1]->{Option}
         && $ConfigItem->{Setting}->[1]->{Option}->[1]->{Location}
-        )
-    {
+    ) {
         my $Home = $Self->{Home};
         my @List = $MainObject->DirectoryRead(
             Directory => $Home,
             Filter    => "$ConfigItem->{Setting}->[1]->{Option}->[1]->{Location}",
         );
 
-        # KIXCore-capeIT
         for my $Dir (@INC) {
             last if ( $Dir =~ m/$Self->{Home}\/Custom/ );
             if ( -e "$Dir" ) {
@@ -1109,8 +1069,6 @@ sub ConfigItemGet {
                 push @List, @KIXList;
             }
         }
-
-        # EO KIXCore-capeIT
 
         for my $Item (@List) {
             $Item =~ s/\Q$Home\E//g;
@@ -1169,7 +1127,7 @@ sub ConfigItemReset {
     );
     my $A = $Self->_XML2Perl( Data => \%ConfigItemDefault );
     my ($B);
-    eval "\$B = $A";
+    eval( "\$B = $A" );
 
     $Self->ConfigItemUpdate(
         Key   => $Param{Name},
@@ -1212,7 +1170,7 @@ sub ConfigItemValidityUpdate {
 
     my $A = $Self->_XML2Perl( Data => \%ConfigItemDefault );
     my ($B);
-    eval "\$B = $A";
+    eval( { "\$B = $A" } );
 
     $Self->ConfigItemUpdate(
         Key   => $Param{Name},
@@ -1336,15 +1294,13 @@ sub ConfigSubGroupConfigItemList {
                         $Group
                         && $ConfigItem->{SubGroup}
                         && ref $ConfigItem->{SubGroup} eq 'ARRAY'
-                        )
-                    {
+                    ) {
                         for my $SubGroup ( @{ $ConfigItem->{SubGroup} } ) {
                             if (
                                 !$Used{ $ConfigItem->{Name} }
                                 && $SubGroup->{Content}
                                 && $Group->{Content}
-                                )
-                            {
+                            ) {
                                 $Used{ $ConfigItem->{Name} } = 1;
                                 push(
                                     @{
@@ -1483,8 +1439,7 @@ sub ConfigItemSearch {
                                     $LanguageObject->Translate($Description)
                                     =~ /\Q$Param{Search}\E/i
                                 )
-                                )
-                            {
+                            ) {
                                 push(
                                     @List,
                                     {
@@ -1775,7 +1730,6 @@ sub _Init {
         Filter    => "*.xml",
     );
 
-    # KIXCore-capeIT
     for my $Dir (@INC) {
         last if ( $Dir =~ m/$Self->{Home}\/(.*?)\/Custom/ );
         my $ConfDir = "$Dir/Kernel/Config/Files";
@@ -1788,8 +1742,6 @@ sub _Init {
             push @Files, @KIXFiles;
         }
     }
-
-    # EO KIXCore-capeIT
 
     # get the md5 representing the current configuration state
     my $ConfigChecksum = $Self->{ConfigObject}->ConfigChecksum();
@@ -1809,7 +1761,7 @@ sub _Init {
 
         if ( ref $CacheData eq 'SCALAR' ) {
             my $XMLHashRef;
-            if ( eval ${$CacheData} ) {
+            if ( eval( ${$CacheData} ) ) {
                 $Data{$File} = $XMLHashRef;
                 next FILE;
             }
@@ -1862,18 +1814,14 @@ sub _Init {
     # These are the valid "init" values that the config XML may use.
     #   Settings must be processed in this order, and inside each group alphabetically.
     my %ValidInit = (
-        Framework   => 1,
-        Application => 1,
-        Config      => 1,
-        Changes     => 1,
-
-        # KIXCore-capeIT
+        Framework      => 1,
+        Application    => 1,
+        Config         => 1,
+        Changes        => 1,
         KIXFramework   => 1,
         KIXApplication => 1,
         KIXConfig      => 1,
         KIXChanges     => 1,
-
-        # EO KIXCore-capeIT
     );
 
     # Temp hash for sorting
@@ -1897,10 +1845,7 @@ sub _Init {
     }
 
     # Now process the entries in init order and assign them to the xml entry list.
-    # KIXCore-capeIT
-    # for my $Init (qw(Framework Application Config Changes Unkown)) {
     for my $Init (qw(Framework Application Config Changes KIXFramework KIXApplication KIXConfig KIXChanges)) {
-        # EO KIXCore-capeIT
         for my $ConfigItem ( @{ $XMLConfigTMP{$Init} } ) {
             push(
                 @{ $Self->{XMLConfig} },
@@ -2127,10 +2072,7 @@ sub _FileWriteAtomic {
     my $TempFilename = $Param{Filename} . '.' . $$;
     my $FH;
 
-    ## no critic
     if ( !open( $FH, ">$Self->{FileMode}", $TempFilename ) ) {
-        ## use critic
-
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Can't open file $TempFilename: $!",
@@ -2184,8 +2126,7 @@ sub _ConfigItemTranslatableStrings {
                 ref $Param{Data}->{$Key} eq ''
                 && $Param{Data}->{Translatable}
                 && $Param{Data}->{Content}
-                )
-            {
+            ) {
                 return if !$Param{Data}->{Content};
                 return if $Param{Data}->{Content} =~ /^\d+$/;
                 $Self->{ConfigItemTranslatableStrings}->{ $Param{Data}->{Content} } = 1;
@@ -2303,8 +2244,7 @@ sub _XML2Perl {
                 my %SubHash;
                 for my $Index (
                     1 .. $#{ $ConfigItem->{Hash}->[1]->{Item}->[$Item]->{Hash}->[1]->{Item} }
-                    )
-                {
+                ) {
                     $SubHash{
                         $ConfigItem->{Hash}->[1]->{Item}->[$Item]->{Hash}->[1]->{Item}->[$Index]
                             ->{Key}
@@ -2317,8 +2257,7 @@ sub _XML2Perl {
                 my @SubArray;
                 for my $Index (
                     1 .. $#{ $ConfigItem->{Hash}->[1]->{Item}->[$Item]->{Array}->[1]->{Item} }
-                    )
-                {
+                ) {
                     push(
                         @SubArray,
                         $ConfigItem->{Hash}->[1]->{Item}->[$Item]->{Array}->[1]->{Item}->[$Index]
@@ -2419,8 +2358,7 @@ sub _XML2Perl {
                     if (
                         $Key eq 'CSS'
                         || $Key eq 'JavaScript'
-                        )
-                    {
+                    ) {
                         my @Array;
                         for my $Index ( 1 .. $#{ $Content->{$Key} } ) {
                             push @Array, $Content->{$Key}->[$Index]->{Content};

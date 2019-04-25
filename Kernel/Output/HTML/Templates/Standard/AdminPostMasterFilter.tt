@@ -31,6 +31,18 @@
                         <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=AddAction" class="CallForAction Fullsize Center"><span><i class="fa fa-plus-square"></i>[% Translate("Add filter") | html %]</span></a>
                     </li>
 [% RenderBlockEnd("ActionAdd") %]
+[% RenderBlockStart("ActionClone") %]
+                    <li>
+                        <form action="[% Env("CGIHandle") %]" method="post">
+                            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+                            <input type="hidden" name="Subaction" value="Clone"/>
+                            <input type="hidden" name="Nav" value="[% Data.Nav | html %]"/>
+                            <input type="hidden" name="Name" value="[% Data.Name | html %]"/>
+
+                            <button class="CallForAction Plus" type="submit"><span>[% Translate("Clone Filter") | html %]</span></button>
+                        </form>
+                    </li>
+[% RenderBlockEnd("ActionClone") %]
                 </ul>
             </div>
         </div>
@@ -129,13 +141,20 @@ $('.FilterDelete').bind('click', function (Event) {
                 <div class="Content">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="UpdateAction"/>
-                    <input type="hidden" name="OldName" value="[% Data.Name | html %]"/>
+                    <input type="hidden" name="OldName" value="[% Data.OldName | html %]"/>
                     <fieldset class="TableLike">
                         <label class="Mandatory" for="EditName"><span class="Marker">*</span> [% Translate("Name") | html %]:</label>
                         <div class="Field">
                             <input type="text" class="W50pc Validate_Required [% Data.NameInvalid | html %]" name="Name" id="EditName" value="[% Data.Name | html %]"/>
                             <div id="EditNameError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
-                            <div id="EditNameServerError" class="TooltipErrorMessage"><p>[% Translate("The name is required.") | html %]</p></div>
+                            <div id="EditNameServerError" class="TooltipErrorMessage">
+[% RenderBlockStart("NameServerError")%]
+                                <p>[% Translate("The name is required.") | html %]</p></div>
+[% RenderBlockEnd("NameServerError")%]
+[% RenderBlockStart("ExistNameServerError")%]
+                                <p>[% Translate("A filter with this name already exists!") | html %]</p>
+[% RenderBlockEnd("ExistNameServerError")%]
+                            </div>
                         </div>
                         <div class="Clear"></div>
 
@@ -247,7 +266,6 @@ $('.FilterDelete').bind('click', function (Event) {
 
                     <label for="SetHeaderExample">[% Translate("Header") | html %] 1:</label>
                     <div class="Field">
-#rbo - T2016121190001552 - renamed X-OTRS headers
                         <select name="SetHeaderExample" id="SetHeaderExample" class="Modernize W33pc"><option selected="selected" value="X-KIX-Queue">X-KIX-Queue</option></select>
                         <label for="SetValueExample">[% Translate("Value") | html %] 1:</label>
                         <input type="text" name="SetValueExample" id="SetValueExample" value="SomeQueue" class="W33pc" maxlength="50"/>

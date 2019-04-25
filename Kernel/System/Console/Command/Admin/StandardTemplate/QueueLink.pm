@@ -75,8 +75,7 @@ sub Run {
             Active             => 1,
             UserID             => 1,
         )
-        )
-    {
+    ) {
         $Self->PrintError("Can't link template to queue.");
         return $Self->ExitCodeError();
     }

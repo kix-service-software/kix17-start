@@ -87,7 +87,7 @@ sub Run {
 
     # build output for open search description by FAQ number
     if ( $Self->{Subaction} eq 'OpenSearchDescriptionFAQNumber' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'PublicFAQSearchOpenSearchDescriptionFAQNumber',
             Data         => \%Param,
         );
@@ -101,7 +101,7 @@ sub Run {
 
     # build output for open search description by full-text
     if ( $Self->{Subaction} eq 'OpenSearchDescriptionFulltext' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'PublicFAQSearchOpenSearchDescriptionFullText',
             Data         => \%Param,
         );
@@ -129,8 +129,7 @@ sub Run {
         ItemCreateTimeStop ItemCreateTimeStopDay ItemCreateTimeStopMonth
         ItemCreateTimeStopYear
         )
-        )
-    {
+    ) {
 
         # get search string params (get submitted params)
         $GetParam{$ParamName} = $ParamObject->GetParam( Param => $ParamName );
@@ -218,8 +217,7 @@ sub Run {
                     if (
                         defined $DynamicFieldValue->{$KeyItem}
                         && ref $DynamicFieldValue->{$KeyItem} eq ''
-                        )
-                    {
+                    ) {
                         $DynamicFieldValue->{$KeyItem} = [ $DynamicFieldValue->{$KeyItem} ];
                     }
 
@@ -280,7 +278,7 @@ sub Run {
 
     # check request
     if ( $Self->{Subaction} eq 'OpenSearchDescription' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'PublicFAQSearchOpenSearchDescription',
             Data         => {%Param},
         );
@@ -387,8 +385,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStartDay' }
                     && $GetParam{ $TimeType . 'TimeStartMonth' }
                     && $GetParam{ $TimeType . 'TimeStartYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeNewerDate' } = $GetParam{ $TimeType . 'TimeStartYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartDay' }
@@ -398,8 +395,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStopDay' }
                     && $GetParam{ $TimeType . 'TimeStopMonth' }
                     && $GetParam{ $TimeType . 'TimeStopYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeOlderDate' } = $GetParam{ $TimeType . 'TimeStopYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopDay' }
@@ -411,8 +407,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimePoint' }
                     && $GetParam{ $TimeType . 'TimePointStart' }
                     && $GetParam{ $TimeType . 'TimePointFormat' }
-                    )
-                {
+                ) {
                     my $Time = 0;
                     if ( $GetParam{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
                         $Time = $GetParam{ $TimeType . 'TimePoint' };
@@ -931,8 +926,7 @@ sub Run {
                             $SortBy eq
                             ( 'DynamicField_' . $DynamicFieldConfig->{Name} )
                         )
-                        )
-                    {
+                    ) {
                         if ( $Self->{Order} && ( $Self->{Order} eq 'Up' ) ) {
                             $Order = 'Down';
                             $CSS .= ' SortAscending';
@@ -988,8 +982,7 @@ sub Run {
                 if (
                     $Counter >= $StartHit
                     && $Counter < ( $SearchPageShown + $StartHit )
-                    )
-                {
+                ) {
 
                     # get FAQ data details
                     my %FAQData = $FAQObject->FAQGet(
@@ -1235,9 +1228,8 @@ sub Run {
             PageShown => $SearchPageShown,
             AllHits   => $Counter,
             Action    => "Action=PublicFAQSearch;Subaction=Search",
-            Link =>
-                "$Self->{Profile}SortBy=$SortBy;Order=$OrderBy;",
-            IDPrefix => "PublicFAQSearch",
+            Link      => "$Self->{Profile}SortBy=$SortBy;Order=$OrderBy;",
+            IDPrefix  => "PublicFAQSearch",
         );
 
         # show footer filter - show only if more the one page is available
@@ -1252,7 +1244,7 @@ sub Run {
         }
 
         # start HTML page
-        my $Output = $LayoutObject->CustomerHeader();
+        $Output = $LayoutObject->CustomerHeader();
 
         #Set the SortBy Class
         my $SortClass;
@@ -1325,21 +1317,19 @@ sub Run {
             for my $Preference ( @{$SearchFieldPreferences} ) {
 
                 # get field HTML
-                $DynamicFieldHTML{ $DynamicFieldConfig->{Name} . $Preference->{Type} }
-                    = $DynamicFieldBackendObject->SearchFieldRender(
-                    DynamicFieldConfig => $DynamicFieldConfig,
-                    Profile            => \%GetParam,
-                    DefaultValue =>
-                        $Config->{Defaults}->{DynamicField}->{ $DynamicFieldConfig->{Name} },
+                $DynamicFieldHTML{ $DynamicFieldConfig->{Name} . $Preference->{Type} } = $DynamicFieldBackendObject->SearchFieldRender(
+                    DynamicFieldConfig     => $DynamicFieldConfig,
+                    Profile                => \%GetParam,
+                    DefaultValue           => $Config->{Defaults}->{DynamicField}->{ $DynamicFieldConfig->{Name} },
                     LayoutObject           => $LayoutObject,
                     ConfirmationCheckboxes => 1,
                     Type                   => $Preference->{Type},
-                    );
+                );
             }
         }
 
         # generate search mask
-        my $Output = $LayoutObject->CustomerHeader();
+        $Output = $LayoutObject->CustomerHeader();
         $Output .= $Self->MaskForm(
             %GetParam,
             Profile          => $Self->{Profile},

@@ -81,7 +81,7 @@ else {
 }
 
 # read xml file
-my @File       = <STDIN>;
+my @File       = "<STDIN>";
 my $FileString = '';
 for my $Line (@File) {
     $FileString .= $Line;
@@ -102,10 +102,10 @@ for my $DatabaseType (@DatabaseType) {
     );
     $CommonObject{EncodeObject} = $Kernel::OM->Get('Kernel::System::Encode');
     $CommonObject{LogObject}    = $Kernel::OM->Get('Kernel::System::Log');
-    $CommonObject{MainObject} = $Kernel::OM->Get('Kernel::System::Main');
-    $CommonObject{TimeObject} = $Kernel::OM->Get('Kernel::System::Time');
-    $CommonObject{DBObject}   = $Kernel::OM->Get('Kernel::System::DB');
-    $CommonObject{XMLObject} = $Kernel::OM->Get('Kernel::System::XML');
+    $CommonObject{MainObject}   = $Kernel::OM->Get('Kernel::System::Main');
+    $CommonObject{TimeObject}   = $Kernel::OM->Get('Kernel::System::Time');
+    $CommonObject{DBObject}     = $Kernel::OM->Get('Kernel::System::DB');
+    $CommonObject{XMLObject}    = $Kernel::OM->Get('Kernel::System::XML');
 
     # parse xml package
     my @XMLARRAY = $CommonObject{XMLObject}->XMLParse( String => $FileString );
@@ -172,7 +172,7 @@ sub Dump {
 
     if ($StdOut) {
         open my $OutHandle, '>', $Filename or die "Can't write: $!";
-        binmode $OutHandle, ':utf8';
+        binmode $OutHandle, ':encoding(UTF-8)';
         print "writing: $Filename\n";
         print $OutHandle $Head;
         for my $Item ( @{$SQL} ) {

@@ -80,15 +80,12 @@ sub Run {
         }
     }
 
-    # KIX4OTRS-capeIT
     # check frontend
     if ( !defined $Param{Frontend} || !$Param{Frontend} ) {
         $Param{Frontend} = 'Agent';
     }
 
     my $CustomerGroupSupport = $Kernel::OM->Get('Kernel::Config')->Get('CustomerGroupSupport');
-
-    # EO KIX4OTRS-capeIT
 
     # get config item data
     my $ConfigItem = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->ConfigItemGet(
@@ -100,7 +97,6 @@ sub Run {
         ItemID => $ConfigItem->{ClassID}
     );
 
-    # KIX4OTRS-capeIT
     # get config item data
     my $ConfigItemData = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->VersionGet(
         ConfigItemID => $Param{ItemID},
@@ -133,22 +129,15 @@ sub Run {
         }
     }
 
-    # EO KIX4OTRS-capeIT
-
     # get user groups
-    # KIX4OTRS-capeIT
     my @GroupIDs;
     if ( $Param{Frontend} eq 'Agent' ) {
-
-        # EO KIX4OTRS-capeIT
         @GroupIDs = $Kernel::OM->Get('Kernel::System::Group')->GroupMemberList(
             UserID => $Param{UserID},
             Type   => $Param{Type},
             Result => 'ID',
             Cached => 1,
         );
-
-        # KIX4OTRS-capeIT
     }
     elsif ( $Param{Frontend} eq 'Customer' && $CustomerGroupSupport ) {
         @GroupIDs = $Kernel::OM->Get('Kernel::System::CustomerGroup')->GroupMemberList(
@@ -162,28 +151,16 @@ sub Run {
         return 1;
     }
 
-    # EO KIX4OTRS-capeIT
-
     # looking for group id, return access if user is in group
-    # KIX4OTRS-capeIT
     my $DefaultAccess = 0;
     my $GroupAccess   = 0;
 
     if ( scalar @{$Array} ) {
-
-    # EO KIX4OTRS-capeIT
         for my $GroupID (@GroupIDs) {
-
-            # KIX4OTRS-capeIT
-            # return 1 if $ClassItem->{Permission} && $GroupID eq $ClassItem->{Permission};
             $DefaultAccess = 1 if $ClassItem->{Permission} && $GroupID eq $ClassItem->{Permission};
             $GroupAccess = 1 if grep { $_ eq $GroupID } @AccessGroupIDs;
             last if ( $DefaultAccess && $GroupAccess );
-
-            # EO KIX4OTRS-capeIT
         }
-
-        # KIX4OTRS-capeIT
     }
     else {
 
@@ -194,14 +171,8 @@ sub Run {
         }
     }
 
-    # EO KIX4OTRS-capeIT
     # return no access
-    # KIX4OTRS-capeIT
-    # return;
     return ( $DefaultAccess && $GroupAccess );
-
-    # EO KIX4OTRS-capeIT
-
 }
 
 1;

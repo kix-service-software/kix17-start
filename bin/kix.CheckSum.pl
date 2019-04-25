@@ -56,34 +56,33 @@ my $Output;
 
 if ( $Action eq 'create' ) {
     print "Writing $Archive ...";
-    open( $Output, '>', $Archive ) || die "ERROR: Can't write: $Archive";    ## no critic
+    open( $Output, '>', $Archive ) || die "ERROR: Can't write: $Archive";
+
+    ProcessDirectory($Start);
+
+    close $Output;
+    print " done.\n";
 }
 else {
-    open( my $In, '<', $Archive ) || die "ERROR: Can't read: $Archive";      ## no critic
+    open( my $In, '<', $Archive ) || die "ERROR: Can't read: $Archive";
     while (<$In>) {
         my @Row = split( /::/, $_ );
         chomp $Row[1];
         $Compare{ $Row[1] } = $Row[0];
     }
     close $In;
-}
 
-my @Dirs;
-ProcessDirectory($Start);
-for my $File ( sort keys %Compare ) {
+    ProcessDirectory($Start);
 
-    #print "Notice: Removed $Compare{$File}\n";
-    print "Notice: Removed $File\n";
-}
-if ( $Action eq 'create' ) {
-    print " done.\n";
-    close $Output;
+    for my $File ( sort keys %Compare ) {
+        print "Notice: Removed $File\n";
+    }
 }
 
 sub ProcessDirectory {
-    my $In = shift;
+    my $Directory = shift;
 
-    my @List = glob("$In/*");
+    my @List = glob("$Directory/*");
 
     FILE:
     for my $File (@List) {
@@ -120,7 +119,7 @@ sub ProcessDirectory {
 
         # next if not readable
         # print "File: $File\n";
-        open( my $In, '<', $OrigFile ) || die "ERROR: $!";    ## no critic
+        open( my $In, '<', $OrigFile ) || die "ERROR: $!";
 
         my $DigestGenerator = Digest::MD5->new();
         $DigestGenerator->addfile($In);
@@ -137,8 +136,8 @@ sub ProcessDirectory {
             elsif ( $Compare{$File} ne $Digest && !-e "$File.save" ) {    ## ignore files with .save
                 print "Notice: Dif $File\n";
             }
-            elsif ( -e "$File.save" )
-            {    ## report .save files as modified by the KIX Package Manager
+            elsif ( -e "$File.save" ) {
+                ## report .save files as modified by the KIX Package Manager
                 print "Notice: OPM Changed $File\n"
             }
             if ( defined $Compare{$File} ) {

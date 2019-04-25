@@ -161,8 +161,7 @@ sub TableCreate {
         if (
             ( $Tag->{Tag} eq 'Table' || $Tag->{Tag} eq 'TableCreate' )
             && $Tag->{TagType} eq 'Start'
-            )
-        {
+        ) {
             if ( $ConfigObject->Get('Database::ShellOutput') ) {
                 $SQLStart .= $Self->{'DB::Comment'}
                     . "----------------------------------------------------------\n";
@@ -174,16 +173,14 @@ sub TableCreate {
         if (
             ( $Tag->{Tag} eq 'Table' || $Tag->{Tag} eq 'TableCreate' )
             && $Tag->{TagType} eq 'Start'
-            )
-        {
+        ) {
             $SQLStart .= "CREATE TABLE $Tag->{Name} (\n";
             $TableName = $Tag->{Name};
         }
         if (
             ( $Tag->{Tag} eq 'Table' || $Tag->{Tag} eq 'TableCreate' )
             && $Tag->{TagType} eq 'End'
-            )
-        {
+        ) {
             $SQLEnd .= ")";
         }
         elsif ( $Tag->{Tag} eq 'Column' && $Tag->{TagType} eq 'Start' ) {

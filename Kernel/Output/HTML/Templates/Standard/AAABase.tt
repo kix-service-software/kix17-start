@@ -137,9 +137,7 @@
 [% Translate("customer") | html %]
 [% Translate("agent") | html %]
 [% Translate("system") | html %]
-# rkaiser - T#2017020290001194 - changed customer user to contact
 [% Translate("Contact info") | html %]
-# rkaiser - T#2017020290001194 - changed customer user to contact
 [% Translate("Contact information") | html %]
 [% Translate("Customer Companies") | html %]
 [% Translate("Company") | html %]
@@ -187,9 +185,7 @@
 [% Translate("View") | html %]
 [% Translate("Number") | html %]
 [% Translate("System") | html %]
-# rkaiser - T#2017020290001194 - changed customer user to contact
 [% Translate("Contact") | html %]
-# rkaiser - T#2017020290001194 - changed customer user to contact
 [% Translate("Contacts") | html %]
 [% Translate("Export") | html %]
 [% Translate("Up") | html %]
@@ -373,7 +369,6 @@
 [% Translate("more") | html %]
 [% Translate("Collapse") | html %]
 [% Translate("Shown") | html %]
-# rkaiser - T#2017020290001194 - changed customer user to contact
 [% Translate("Shown contacts") | html %]
 [% Translate("News") | html %]
 [% Translate("Product News") | html %]

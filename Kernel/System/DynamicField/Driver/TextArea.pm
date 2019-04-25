@@ -85,8 +85,7 @@ sub new {
             # check if module can be loaded
             if (
                 !$Kernel::OM->Get('Kernel::System::Main')->RequireBaseClass( $Extension->{Module} )
-                )
-            {
+            ) {
                 die "Can't load dynamic fields backend module"
                     . " $Extension->{Module}! $@";
             }
@@ -206,11 +205,11 @@ EOF
 
         my $ErrorMessage = $Param{ErrorMessage} || 'This field is required.';
         $ErrorMessage = $Param{LayoutObject}->{LanguageObject}->Translate($ErrorMessage);
-        my $DivID = $FieldName . 'ServerError';
+        my $ServerErrorDivID = $FieldName . 'ServerError';
 
         # for server side validation
         $HTMLString .= <<"EOF";
-<div id="$DivID" class="TooltipErrorMessage">
+<div id="$ServerErrorDivID" class="TooltipErrorMessage">
     <p>
         $ErrorMessage
     </p>
@@ -259,8 +258,7 @@ sub EditFieldValueValidate {
     elsif (
         IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{RegExList} )
         && ( $Param{Mandatory} || ( !$Param{Mandatory} && $Value ne '' ) )
-        )
-    {
+    ) {
 
         # check regular expressions
         my @RegExList = @{ $Param{DynamicFieldConfig}->{Config}->{RegExList} };

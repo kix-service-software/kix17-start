@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AdminPackageManager;
-## nofilter(TidyAll::Plugin::OTRS::Perl::DBObject)
 
 use strict;
 use warnings;
@@ -25,8 +24,6 @@ sub new {
     # allocate new hash for object
     my $Self = {%Param};
     bless( $Self, $Type );
-
-    #rbo - T2016121190001552 - removed CloudServices
 
     return $Self;
 }
@@ -44,8 +41,8 @@ sub Run {
     # ------------------------------------------------------------ #
 
     if ( exists $ENV{MOD_PERL} ) {
-        if ( defined $mod_perl::VERSION ) {    ## no critic
-            if ( $mod_perl::VERSION >= 1.99 ) {    ## no critic
+        if ( defined $mod_perl::VERSION ) {
+            if ( $mod_perl::VERSION >= 1.99 ) {
 
                 # check if Apache::Reload is loaded
                 my $ApacheReload = 0;
@@ -72,13 +69,6 @@ sub Run {
     my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
     my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $MainObject    = $Kernel::OM->Get('Kernel::System::Main');
-
-    # KIXCore-capeIT
-    # set variable about sysconfig
-    my $ConfigureCallHome
-        = $ConfigObject->Get('Package::ConfigureCallHomeVerificationPath');
-
-    # EO KIXCore-capeIT
 
     # ------------------------------------------------------------ #
     # view diff file
@@ -200,42 +190,6 @@ sub Run {
         # parse package
         my %Structure = $PackageObject->PackageParse( String => $Package );
 
-        # KIXCore-capeIT
-        # # online verification
-        # my $Verified = $PackageObject->PackageVerify(
-        #     Package   => $Package,
-        #     Structure => \%Structure,
-        # ) || 'verified';
-        # my %VerifyInfo = $PackageObject->PackageVerifyInfo();
-        # # translate description
-        # if ( $LayoutObject->{LanguageObject} ) {
-        #     $VerifyInfo{Description} = $LayoutObject->{LanguageObject}->Get(
-        #         $VerifyInfo{Description}
-        #     );
-        # }
-        # check if verification is enabled
-        my $Verified = '';
-        my %VerifyInfo;
-
-        if ($ConfigureCallHome) {
-
-            # online verification
-            $Verified = $PackageObject->PackageVerify(
-                Package   => $Package,
-                Structure => \%Structure,
-            ) || 'unknown';
-            %VerifyInfo = $PackageObject->PackageVerifyInfo();
-
-            # translate description
-            if ( $LayoutObject->{LanguageObject} ) {
-            $VerifyInfo{Description} = $LayoutObject->{LanguageObject}->Translate(
-                    $VerifyInfo{Description}
-                );
-            }
-        }
-
-        # EO KIXCore-capeIT
-
         # deploy check
         my $Deployed = $PackageObject->DeployCheck(
             Name    => $Name,
@@ -260,8 +214,7 @@ sub Run {
             defined $Structure{PackageIsVisible}
             && exists $Structure{PackageIsVisible}->{Content}
             && !$Structure{PackageIsVisible}->{Content}
-            )
-        {
+        ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('No such package!'),
             );
@@ -277,8 +230,7 @@ sub Run {
                     && exists $Structure{PackageIsDownloadable}->{Content}
                     && !$Structure{PackageIsDownloadable}->{Content}
                 )
-                )
-            {
+            ) {
                 next PACKAGEACTION;
             }
 
@@ -462,8 +414,7 @@ sub Run {
                                 defined $Structure{PackageIsDownloadable}->{Content}
                                 && $Structure{PackageIsDownloadable}->{Content} eq '1'
                             )
-                            )
-                        {
+                        ) {
                             $LayoutObject->Block(
                                 Name => "PackageItemFilelistFileLink",
                                 Data => {
@@ -589,8 +540,7 @@ sub Run {
                 defined $Structure{PackageIsDownloadable}->{Content}
                 && $Structure{PackageIsDownloadable}->{Content} eq '1'
             )
-            )
-        {
+        ) {
 
             $LayoutObject->Block(
                 Name => 'PackageDownloadRemote',
@@ -755,8 +705,7 @@ sub Run {
                                 defined $Structure{PackageIsDownloadable}->{Content}
                                 && $Structure{PackageIsDownloadable}->{Content} eq '1'
                             )
-                            )
-                        {
+                        ) {
                             $LayoutObject->Block(
                                 Name => "PackageItemFilelistFileLink",
                                 Data => {
@@ -848,11 +797,11 @@ sub Run {
         # challenge token check for write action
         $LayoutObject->ChallengeTokenCheck();
 
-        my $Source = $ParamObject->GetParam( Param => 'Source' ) || '';
+        my $SourceRepo = $ParamObject->GetParam( Param => 'Source' ) || '';
         $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
             SessionID => $Self->{SessionID},
             Key       => 'UserRepository',
-            Value     => $Source,
+            Value     => $SourceRepo,
         );
         return $LayoutObject->Redirect( OP => "Action=$Self->{Action}" );
     }
@@ -1197,12 +1146,12 @@ sub Run {
             );
         }
         if ( %Data && !$IntroUninstallPost ) {
-            my %Data = $Self->_MessageGet( Info => $Structure{IntroUninstallPost} );
+            my %MessageData = $Self->_MessageGet( Info => $Structure{IntroUninstallPost} );
             $LayoutObject->Block(
                 Name => 'Intro',
                 Data => {
                     %Param,
-                    %Data,
+                    %MessageData,
                     Subaction => '',
                     Type      => 'IntroUninstallPost',
                     Name      => $Name,
@@ -1328,7 +1277,6 @@ sub Run {
         %RepositoryRoot = $PackageObject->PackageOnlineRepositories();
     }
 
-    #rbo - T2016121190001552 - removed CloudServices
     $Frontend{SourceList} = $LayoutObject->BuildSelection(
         Data        => { %List, %RepositoryRoot, },
         Name        => 'Source',
@@ -1436,7 +1384,6 @@ sub Run {
         );
     }
 
-    #rbo - T2016121190001552 - removed CloudServices and PackageVerfication
     for my $Package (@RepositoryList) {
 
         my %Data = $Self->_MessageGet( Info => $Package->{Description} );
@@ -1452,8 +1399,6 @@ sub Run {
                 URL     => $Package->{URL}->{Content},
             },
         );
-
-        #rbo - T2016121190001552 - removed CloudServices and PackageVerfication
 
         # show documentation link
         my %DocFile = $Self->_DocumentationGet( Filelist => $Package->{Filelist} );
@@ -1476,8 +1421,7 @@ sub Run {
                     defined $Package->{PackageIsRemovableInGUI}->{Content}
                     && $Package->{PackageIsRemovableInGUI}->{Content} eq '1'
                 )
-                )
-            {
+            ) {
 
                 $LayoutObject->Block(
                     Name => 'ShowLocalPackageUninstall',
@@ -1496,8 +1440,7 @@ sub Run {
                     Name    => $Package->{Name}->{Content},
                     Version => $Package->{Version}->{Content}
                 )
-                )
-            {
+            ) {
                 $NeedReinstall{ $Package->{Name}->{Content} } = $Package->{Version}->{Content};
                 $LayoutObject->Block(
                     Name => 'ShowLocalPackageReinstall',
@@ -1523,9 +1466,6 @@ sub Run {
                 },
             );
         }
-
-        #rbo - T2016121190001552 - removed CloudServices and PackageVerfication
-
     }
 
     # show file upload
@@ -1567,8 +1507,6 @@ sub Run {
         }
     }
 
-    #rbo - T2016121190001552 - removed CloudServices and FeatureAddOns
-
     my $Output = $LayoutObject->Header();
     $Output .= $LayoutObject->NavigationBar();
     $Output .= $OutputNotify;
@@ -1592,8 +1530,6 @@ sub Run {
                 . $NeedReinstall{$ReinstallKey},
         );
     }
-
-    #rbo - T2016121190001552 - removed CloudServices and PackageVerfication
 
     $Output .= $LayoutObject->Output(
         TemplateFile => 'AdminPackageManager',
@@ -1744,49 +1680,15 @@ sub _InstallHandling {
     # parse package
     my %Structure = $PackageObject->PackageParse( String => $Param{Package} );
 
-    # KIXCore-capeIT
-    # # online verification
-    # my $Verified = $PackageObject->PackageVerify(
-    #     Package   => $Param{Package},
-    #     Structure => \%Structure,
-    # ) || 'verified';
-    # my %VerifyInfo = $PackageObject->PackageVerifyInfo();
-    # # translate description
-    # if ( $LayoutObject->{LanguageObject} ) {
-    #     $VerifyInfo{Description} = $LayoutObject->{LanguageObject}->Get(
-    #         $VerifyInfo{Description}
-    #     );
-    # }
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $ConfigureCallHome
-        = $ConfigObject->Get('Package::ConfigureCallHomeVerificationPath');
-    my $Verified = '';
-    my %VerifyInfo;
-    if ($ConfigureCallHome) {
-        $Verified = $PackageObject->PackageVerify(
-            Package   => $Param{Package},
-            Structure => \%Structure,
-        ) || 'verified';
-        %VerifyInfo = $PackageObject->PackageVerifyInfo();
-
-        # translate description
-        if ( $LayoutObject->{LanguageObject} ) {
-            $VerifyInfo{Description} = $LayoutObject->{LanguageObject}->Get(
-                $VerifyInfo{Description}
-            );
-        }
-    }
-
-    # EO KIXCore-capeIT
 
     # vendor screen
-    if ( !$IntroInstallVendor && !$IntroInstallPre && $Verified ne 'verified' ) {
+    if ( !$IntroInstallVendor && !$IntroInstallPre ) {
 
         $LayoutObject->Block(
             Name => 'Intro',
             Data => {
                 %Param,
-                %VerifyInfo,
                 Subaction => $Self->{Subaction},
                 Type      => 'IntroInstallVendor',
                 Name      => $Structure{Name}->{Content},
@@ -1816,8 +1718,6 @@ sub _InstallHandling {
         );
     }
 
-    #rbo - T2016121190001552 - removed CloudServices
-
     # intro before installation
     if ( %Data && !$IntroInstallPre ) {
 
@@ -1832,8 +1732,6 @@ sub _InstallHandling {
                 Version   => $Structure{Version}->{Content},
             },
         );
-
-        #rbo - T2016121190001552 - removed CloudServices and PackageVerification
 
         $LayoutObject->Block(
             Name => 'IntroCancel',
@@ -1852,18 +1750,17 @@ sub _InstallHandling {
         $PackageObject->PackageInstall(
             String    => $Param{Package},
         )
-        )
-    {
+    ) {
 
         # intro screen
-        my %Data;
+        my %MessageData;
         if ( $Structure{IntroInstall} ) {
-            %Data = $Self->_MessageGet(
+            %MessageData = $Self->_MessageGet(
                 Info => $Structure{IntroInstall},
                 Type => 'post'
             );
         }
-        if (%Data) {
+        if (%MessageData) {
             $LayoutObject->Block(
                 Name => 'Intro',
                 Data => {
@@ -1875,12 +1772,6 @@ sub _InstallHandling {
                     Version   => $Structure{Version}->{Content},
                 },
             );
-
-            if ( $Verified eq 'verified' ) {
-                $LayoutObject->Block(
-                    Name => 'OTRSVerifyLogo',
-                );
-            }
 
             my $Output = $LayoutObject->Header();
             $Output .= $LayoutObject->NavigationBar();
@@ -1962,14 +1853,14 @@ sub _UpgradeHandling {
     elsif ( $PackageObject->PackageUpgrade( String => $Param{Package} ) ) {
 
         # intro screen
-        my %Data;
+        my %MessageData;
         if ( $Structure{IntroUpgrade} ) {
-            %Data = $Self->_MessageGet(
+            %MessageData = $Self->_MessageGet(
                 Info => $Structure{IntroUpgrade},
                 Type => 'post'
             );
         }
-        if (%Data) {
+        if (%MessageData) {
             $LayoutObject->Block(
                 Name => 'Intro',
                 Data => {
@@ -1996,8 +1887,6 @@ sub _UpgradeHandling {
 
     return $LayoutObject->ErrorScreen();
 }
-
-#rbo - T2016121190001552 - removed CloudServices and FeatureAddOns
 
 1;
 

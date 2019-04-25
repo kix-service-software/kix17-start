@@ -258,10 +258,8 @@ sub TableCreateComplex {
 
     my @BlockData;
 
-# KIX4OTRS-capeIT
     # get user data
     my %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Self->{UserID} );
-# EO KIX4OTRS-capeIT
 
     for my $Class ( sort { lc $a cmp lc $b } keys %LinkList ) {
 
@@ -273,31 +271,26 @@ sub TableCreateComplex {
 
         # create the item list
         my @ItemList;
-
-# KIX4OTRS-capeIT
         my @Columns;
         my $PreferenceClass = $Class;
         $PreferenceClass =~ s/[^A-Za-z0-9_-]/_/g;
         if (
             defined $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $PreferenceClass }
             && scalar @{ $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $PreferenceClass } }
-            )
-        {
+        ) {
             @Columns = @{ $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $PreferenceClass } };
         }
         elsif (
             defined $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $Class }
             && scalar @{ $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $Class } }
-            )
-        {
+        ) {
             @Columns = @{ $Param{EnabledColumns}->{ 'ITSMConfigItem-' . $Class } };
         }
-# EO KIX4OTRS-capeIT
+
         for my $ConfigItemID (
             sort { $ConfigItemList->{$a}->{Data}->{Name} cmp $ConfigItemList->{$b}->{Data}->{Name} }
             keys %{$ConfigItemList}
-            )
-        {
+        ) {
             my $ConfigItemData = $ConfigItemObject->ConfigItemGet(
                 ConfigItemID => $ConfigItemID,
             );
@@ -308,9 +301,7 @@ sub TableCreateComplex {
             # make sure the column headline array is empty for each loop
             @ShowColumnsHeadlines = ();
 
-# KIX4OTRS-capeIT
             my @ItemColumns = ();
-# EO KIX4OTRS-capeIT
 
             # get the version data, including all the XML data
             my $VersionXMLData = $ConfigItemObject->VersionGet(
@@ -324,185 +315,181 @@ sub TableCreateComplex {
                 XMLData       => $VersionXMLData->{XMLData}->[1]->{Version}->[1],
             );
 
-# KIX4OTRS-capeIT
             if ( !scalar @Columns ) {
-# EO KIX4OTRS-capeIT
-            @ItemColumns = (
-                {
-                    Type             => 'CurInciSignal',
-                    Key              => $ConfigItemID,
-                    Content          => $Version->{CurInciState},
-                    CurInciStateType => $Version->{CurInciStateType},
-                },
-                {
-                    Type    => 'CurDeplSignal',
-                    Key     => $ConfigItemID,
-                    Content => $Version->{CurDeplState},
-                },
-                {
-                    Type    => 'Link',
-                    Content => $Version->{Number},
-                    Link    => $Self->{LayoutObject}->{Baselink}
-                        . 'Action=AgentITSMConfigItemZoom;ConfigItemID='
-                        . $ConfigItemID,
-                    Title => "ConfigItem# $Version->{Number} ($Version->{Class}): $Version->{Name}",
-                },
-            );
-
-            # these columns will be added if no class based column config is defined
-            my @AdditionalDefaultItemColumns = (
-                {
-                    Type      => 'Text',
-                    Content   => $Version->{Name},
-                    MaxLength => 50,
-                },
-                {
-                    Type      => 'Text',
-                    Content   => $Version->{CurDeplState},
-                    Translate => 1,
-                },
-                {
-                    Type    => 'TimeLong',
-                    Content => $ConfigItemData->{CreateTime},
-                },
-            );
-
-            # individual column config for this class exists
-            if ( $ColumnByClass{$Class} ) {
-
-                COLUMN:
-                for my $Column ( @{ $ColumnByClass{$Class} } ) {
-
-                    # process some non-xml attributes
-                    if ( $Version->{$Column} ) {
-
-                        # handle the CI name
-                        if ( $Column eq 'Name' ) {
-
-                            # add the column
-                            push @ItemColumns, {
-                                Type      => 'Text',
-                                Content   => $Version->{Name},
-                                MaxLength => 50,
-                            };
-
-                            # add the headline
-                            push @ShowColumnsHeadlines, {
-                                Content => 'Name',
-                            };
-                        }
-
-                        # special translation handling
-                        elsif ( $Column eq 'CurDeplState' ) {
-
-                            # add the column
-                            push @ItemColumns, {
-                                Type      => 'Text',
-                                Content   => $Version->{$Column},
-                                Translate => 1,
-                            };
-
-                            # add the headline
-                            push @ShowColumnsHeadlines, {
-                                Content => 'Deployment State',
-                            };
-                        }
-
-                        # special translation handling
-                        elsif ( $Column eq 'CurInciState' ) {
-
-                            # add the column
-                            push @ItemColumns, {
-                                Type      => 'Text',
-                                Content   => $Version->{$Column},
-                                Translate => 1,
-                            };
-
-                            # add the headline
-                            push @ShowColumnsHeadlines, {
-                                Content => 'Incident State',
-                            };
-                        }
-
-                        # special translation handling
-                        elsif ( $Column eq 'Class' ) {
-
-                            # add the column
-                            push @ItemColumns, {
-                                Type      => 'Text',
-                                Content   => $Version->{$Column},
-                                Translate => 1,
-                            };
-
-                            # add the headline
-                            push @ShowColumnsHeadlines, {
-                                Content => 'Class',
-                            };
-                        }
-
-                        # special date/time handling
-                        elsif ( $Column eq 'CreateTime' ) {
-
-                            # add the column
-                            push @ItemColumns, {
-                                Type    => 'TimeLong',
-                                Content => $Version->{CreateTime},
-                            };
-
-                            # add the headline
-                            push @ShowColumnsHeadlines, {
-                                Content => 'Created',
-                            };
-                        }
-
-                        next COLUMN;
-                    }
-
-                    # convert to ascii text in case the value contains html
-                    my $Value = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
-                        String => $ExtendedVersionData->{$Column}->{Value} || '',
-                    );
-
-                    # convert all whitespace and newlines to single spaces
-                    $Value =~ s{ \s+ }{ }gxms;
-
-                    # add the column
-                    push @ItemColumns, {
-                        Type    => 'Text',
-                        Content => $Value,
-                    };
-
-                    # add the headline
-                    push @ShowColumnsHeadlines, {
-                        Content => $ExtendedVersionData->{$Column}->{Name} || '',
-                    };
-                }
-            }
-
-            # individual column config for this class does not exist,
-            # so the default columns will be used
-            else {
-
-                # add the default columns
-                push @ItemColumns, @AdditionalDefaultItemColumns;
-
-                # add the default column headlines
-                @ShowColumnsHeadlines = (
+                @ItemColumns = (
                     {
-                        Content => 'Name',
+                        Type             => 'CurInciSignal',
+                        Key              => $ConfigItemID,
+                        Content          => $Version->{CurInciState},
+                        CurInciStateType => $Version->{CurInciStateType},
                     },
                     {
-                        Content => 'Deployment State',
-                        Width   => 130,
+                        Type    => 'CurDeplSignal',
+                        Key     => $ConfigItemID,
+                        Content => $Version->{CurDeplState},
                     },
                     {
-                        Content => 'Created',
-                        Width   => 130,
+                        Type    => 'Link',
+                        Content => $Version->{Number},
+                        Link    => $Self->{LayoutObject}->{Baselink}
+                            . 'Action=AgentITSMConfigItemZoom;ConfigItemID='
+                            . $ConfigItemID,
+                        Title => "ConfigItem# $Version->{Number} ($Version->{Class}): $Version->{Name}",
                     },
                 );
-            }
 
-# KIX4OTRS-capeIT
+                # these columns will be added if no class based column config is defined
+                my @AdditionalDefaultItemColumns = (
+                    {
+                        Type      => 'Text',
+                        Content   => $Version->{Name},
+                        MaxLength => 50,
+                    },
+                    {
+                        Type      => 'Text',
+                        Content   => $Version->{CurDeplState},
+                        Translate => 1,
+                    },
+                    {
+                        Type    => 'TimeLong',
+                        Content => $ConfigItemData->{CreateTime},
+                    },
+                );
+
+                # individual column config for this class exists
+                if ( $ColumnByClass{$Class} ) {
+
+                    COLUMN:
+                    for my $Column ( @{ $ColumnByClass{$Class} } ) {
+
+                        # process some non-xml attributes
+                        if ( $Version->{$Column} ) {
+
+                            # handle the CI name
+                            if ( $Column eq 'Name' ) {
+
+                                # add the column
+                                push @ItemColumns, {
+                                    Type      => 'Text',
+                                    Content   => $Version->{Name},
+                                    MaxLength => 50,
+                                };
+
+                                # add the headline
+                                push @ShowColumnsHeadlines, {
+                                    Content => 'Name',
+                                };
+                            }
+
+                            # special translation handling
+                            elsif ( $Column eq 'CurDeplState' ) {
+
+                                # add the column
+                                push @ItemColumns, {
+                                    Type      => 'Text',
+                                    Content   => $Version->{$Column},
+                                    Translate => 1,
+                                };
+
+                                # add the headline
+                                push @ShowColumnsHeadlines, {
+                                    Content => 'Deployment State',
+                                };
+                            }
+
+                            # special translation handling
+                            elsif ( $Column eq 'CurInciState' ) {
+
+                                # add the column
+                                push @ItemColumns, {
+                                    Type      => 'Text',
+                                    Content   => $Version->{$Column},
+                                    Translate => 1,
+                                };
+
+                                # add the headline
+                                push @ShowColumnsHeadlines, {
+                                    Content => 'Incident State',
+                                };
+                            }
+
+                            # special translation handling
+                            elsif ( $Column eq 'Class' ) {
+
+                                # add the column
+                                push @ItemColumns, {
+                                    Type      => 'Text',
+                                    Content   => $Version->{$Column},
+                                    Translate => 1,
+                                };
+
+                                # add the headline
+                                push @ShowColumnsHeadlines, {
+                                    Content => 'Class',
+                                };
+                            }
+
+                            # special date/time handling
+                            elsif ( $Column eq 'CreateTime' ) {
+
+                                # add the column
+                                push @ItemColumns, {
+                                    Type    => 'TimeLong',
+                                    Content => $Version->{CreateTime},
+                                };
+
+                                # add the headline
+                                push @ShowColumnsHeadlines, {
+                                    Content => 'Created',
+                                };
+                            }
+
+                            next COLUMN;
+                        }
+
+                        # convert to ascii text in case the value contains html
+                        my $Value = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToAscii(
+                            String => $ExtendedVersionData->{$Column}->{Value} || '',
+                        );
+
+                        # convert all whitespace and newlines to single spaces
+                        $Value =~ s{ \s+ }{ }gxms;
+
+                        # add the column
+                        push @ItemColumns, {
+                            Type    => 'Text',
+                            Content => $Value,
+                        };
+
+                        # add the headline
+                        push @ShowColumnsHeadlines, {
+                            Content => $ExtendedVersionData->{$Column}->{Name} || '',
+                        };
+                    }
+                }
+
+                # individual column config for this class does not exist,
+                # so the default columns will be used
+                else {
+
+                    # add the default columns
+                    push @ItemColumns, @AdditionalDefaultItemColumns;
+
+                    # add the default column headlines
+                    @ShowColumnsHeadlines = (
+                        {
+                            Content => 'Name',
+                        },
+                        {
+                            Content => 'Deployment State',
+                            Width   => 130,
+                        },
+                        {
+                            Content => 'Created',
+                            Width   => 130,
+                        },
+                    );
+                }
             }
             else {
                 # create translation hash
@@ -565,7 +552,6 @@ sub TableCreateComplex {
                     push @ItemColumns,          \%TmpHashContent;
                 }
             }
-# EO KIX4OTRS-capeIT
 
             push @ItemList, \@ItemColumns;
         }
@@ -576,27 +562,9 @@ sub TableCreateComplex {
         my %Block = (
             Object    => $Self->{ObjectData}->{Object},
             Blockname => $Self->{ObjectData}->{Realname} . ' (' . $Class . ')',
-
-# KIX4OTRS-capeIT
-#             Headline  => [
-#                 {
-#                     Content => 'Incident State',
-#                     Width   => 20,
-#                 },
-#                 {
-#                     Content => 'Deployment State',
-#                     Width   => 20,
-#                 },
-#                 {
-#                     Content => 'ConfigItem#',
-#                     Width   => 100,
-#                 },
-#             ],
-# EO KIX4OTRS-capeIT
-            ItemList => \@ItemList,
+            ItemList  => \@ItemList,
         );
 
-# KIX4OTRS-capeIT
         my @Headlines = (
             {
                 Content => 'Incident State',
@@ -611,10 +579,8 @@ sub TableCreateComplex {
                 Width   => 100,
             },
         );
-# EO KIX4OTRS-capeIT
 
         # add the column headlines
-# KIX4OTRS-capeIT
         if ( !scalar @Columns ) {
             push @{ $Block{Headline} }, @Headlines;
         }
@@ -631,9 +597,7 @@ sub TableCreateComplex {
             push @TempArray, $Item if $HasAccess;
         }
         $Block{ItemList} = \@TempArray;
-# EO KIX4OTRS-capeIT
         push @{ $Block{Headline} }, @ShowColumnsHeadlines;
-
         push @BlockData, \%Block;
     }
 
@@ -893,8 +857,7 @@ sub SelectableObjectList {
             elsif (
                 $Param{Selected} eq $Self->{ObjectData}->{Object}
                 && $DefaultSubobject->{ $Self->{ObjectData}->{Object} }
-                )
-            {
+            ) {
 
                 # extract default class name
                 my $DefaultClass = $DefaultSubobject->{ $Self->{ObjectData}->{Object} } || '';
@@ -920,7 +883,6 @@ sub SelectableObjectList {
     # where the user has the permission to use them
     if (@ObjectSelectList) {
 
-# KIX4OTRS-capeIT
         # add search all config items as first array element, but only if we are not linking
         my $Action = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam(Param => 'Action');
         if ($Action ne 'AgentLinkObject') {
@@ -929,7 +891,6 @@ sub SelectableObjectList {
                 Value => 'ConfigItem::' . $Self->{LayoutObject}->{LanguageObject}->Translate('All'),
             };
         }
-# EO KIX4OTRS-capeIT
 
         # add headline as first array element
         unshift @ObjectSelectList, {
@@ -996,21 +957,6 @@ sub SearchOptionList {
         },
     );
 
-    # add object dependence attributes
-    #if ( $Param{SubObject} ) {
-    #
-    #    # get class list
-    #    my $ClassList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
-    #        Class => 'ITSM::ConfigItem::Class',
-    #    );
-    #
-    #    if ( $ClassList && $ClassList eq 'HASH' ) {
-    #
-    #        # add here the search attributes of the subobject!
-    #    }
-    #}
-
-# KIX4OTRS-capeIT
     my @FinalSearchOptionList;
     if ( $Param{SubObject} ) {
 
@@ -1027,7 +973,6 @@ sub SearchOptionList {
         );
 
     }
-# EO KIX4OTRS-capeIT
 
     # add formkey
     for my $Row (@SearchOptionList) {
@@ -1058,9 +1003,7 @@ sub SearchOptionList {
                 TemplateFile => 'LinkObject',
             );
 
-# KIX4OTRS-capeIT
             push( @FinalSearchOptionList, $Row );
-# EO KIX4OTRS-capeIT
 
             next ROW;
         }
@@ -1111,14 +1054,11 @@ sub SearchOptionList {
                 Class      => 'Modernize',
             );
 
-# KIX4OTRS-capeIT
             push( @FinalSearchOptionList, $Row );
-# EO KIX4OTRS-capeIT
 
             next ROW;
         }
 
-# KIX4OTRS-capeIT
         if ( $Row->{Type} eq 'GeneralCatalog' ) {
 
             # get form data
@@ -1155,13 +1095,6 @@ sub SearchOptionList {
 
             $Row->{FormData} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $Row->{FormKey} );
 
-            #            my $String = $LayoutObject->ITSMConfigItemSearchInputCreate(
-            #                Key => $Row->{FormKey},
-            #                Item => $Row,
-            #                Value => $Row->{FormData} || '',
-            #            );
-            #            $Row->{InputStrg} = $String;
-
             $Self->{LayoutObject}->Block(
                 Name => 'InputText',
                 Data => {
@@ -1185,16 +1118,11 @@ sub SearchOptionList {
                 . $Row->{Type}
                 . ' removed from search mask',
         );
-# EO KIX4OTRS-capeIT
     }
 
-# KIX4OTRS-capeIT
-    #return @SearchOptionList;
     return @FinalSearchOptionList;
-# EO KIX4OTRS-capeIT
 }
 
-# KIX4OTRS-capeIT
 sub _XMLSearchAttributeList {
     my ( $Self, %Param ) = @_;
 
@@ -1240,7 +1168,6 @@ sub _XMLSearchAttributeList {
 
     return 1;
 }
-# EO KIX4OTRS-capeIT
 
 =item _XMLData2Hash()
 
@@ -1289,9 +1216,7 @@ sub _XMLData2Hash {
         COUNTER:
         for my $Counter ( 1 .. $Item->{CountMax} ) {
 
-# KIX4OTRS-capeIT
             next ITEM if !defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content};
-# EO KIX4OTRS-capeIT
 
             # lookup value
             my $Value = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->XMLValueLookup(

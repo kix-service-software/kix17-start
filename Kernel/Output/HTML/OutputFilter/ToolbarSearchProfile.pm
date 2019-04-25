@@ -36,8 +36,7 @@ sub Run {
         = '(<form(.*?)method\=\"post\"\sname\=\"SearchProfile\")(>)';
     my $ReplacementString = ' id="SearchProfileForm"';
 
-    if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms )
-    {
+    if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms ) {
         ${ $Param{Data} } =~ s{ $SearchPattern }{ $1$ReplacementString$3 }ixms;
     }
     else {
@@ -51,8 +50,7 @@ sub Run {
     $ReplacementString
         = '<input type="hidden" name="Profile" value=""/><input type="hidden" name="ClassID" value=""/>';
 
-    if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms )
-    {
+    if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms ) {
         ${ $Param{Data} }
             =~ s{ $SearchPattern }{ $1ToolbarSearchProfileAJAXHandler$2$ReplacementString$3 }ixms;
     }

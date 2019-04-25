@@ -105,7 +105,6 @@ sub LinkListWithData {
                 # add version data
                 $Param{LinkList}->{$LinkType}->{$Direction}->{$ConfigItemID} = $VersionData;
 
-                # KIX4OTRS-capeIT
                 # check for access rights
                 my $Access = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->Permission(
                     Scope   => 'Class',
@@ -115,7 +114,6 @@ sub LinkListWithData {
                 ) || 0;
 
                 $Param{LinkList}->{$LinkType}->{$Direction}->{$ConfigItemID}->{Access} = $Access;
-                # EO KIX4OTRS-capeIT
             }
         }
     }
@@ -291,7 +289,6 @@ sub ObjectSearch {
 
     return if !$Param{SubObject};
 
-    # KIX4OTRS-capeIT
     my @ClassIDArray;
     if ( $Param{SubObject} ne 'All' ) {
 
@@ -324,16 +321,11 @@ sub ObjectSearch {
         @ClassIDArray = keys %{ $ClassList };
     }
 
-    # EO KIX4OTRS-capeIT
-
     # search the config items
     my $ConfigItemIDs = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->ConfigItemSearchExtended(
         %{ $Param{SearchParams} },
         %Search,
-        # KIX4OTRS-capeIT
-        # ClassIDs              => [ $Param{SubObject} ],
         ClassIDs              => \@ClassIDArray,
-        # EO KIX4OTRS-capeIT
         PreviousVersionSearch => 0,
         UsingWildcards        => 1,
         OrderBy               => ['Number'],
@@ -586,7 +578,6 @@ sub LinkDeletePost {
     return 1;
 }
 
-# KIX4OTRS-capeIT
 sub _XMLSearchFormGet {
     my ( $Self, %Param ) = @_;
 
@@ -654,8 +645,6 @@ sub _XMLSearchFormGet {
 
     return 1;
 }
-
-#EO KIX4OTRS-capeIT
 
 1;
 

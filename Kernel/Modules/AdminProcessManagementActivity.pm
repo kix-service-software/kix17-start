@@ -109,11 +109,8 @@ sub Run {
                 if (
                     $ActivityDialogsLookup{$ActivityDialogID}
                     && $ActivityDialogsLookup{$ActivityDialogID}->{EntityID}
-                    )
-                {
-                    my $EntityID = $ActivityDialogsLookup{$ActivityDialogID}->{EntityID};
-
-                    $ConfigActivityDialog{$Counter} = $EntityID;
+                ) {
+                    $ConfigActivityDialog{$Counter} = $ActivityDialogsLookup{$ActivityDialogID}->{EntityID};
                     $Counter++;
                 }
             }
@@ -142,28 +139,28 @@ sub Run {
         }
 
         # generate entity ID
-        my $EntityID = $EntityObject->EntityIDGenerate(
+        my $NewEntityID = $EntityObject->EntityIDGenerate(
             EntityType => 'Activity',
             UserID     => $Self->{UserID},
         );
 
         # show error if can't generate a new EntityID
-        if ( !$EntityID ) {
+        if ( !$NewEntityID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error generating a new EntityID for this Activity'),
             );
         }
 
         # otherwise save configuration and return process screen
-        my $ActivityID = $ActivityObject->ActivityAdd(
+        my $NewActivityID = $ActivityObject->ActivityAdd(
             Name     => $ActivityData->{Name},
-            EntityID => $EntityID,
+            EntityID => $NewEntityID,
             Config   => $ActivityData->{Config},
             UserID   => $Self->{UserID},
         );
 
         # show error if can't create
-        if ( !$ActivityID ) {
+        if ( !$NewActivityID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error creating the Activity'),
             );
@@ -172,7 +169,7 @@ sub Run {
         # set entity sync state
         my $Success = $EntityObject->EntitySyncStateSet(
             EntityType => 'Activity',
-            EntityID   => $EntityID,
+            EntityID   => $NewEntityID,
             SyncState  => 'not_sync',
             UserID     => $Self->{UserID},
         );
@@ -182,7 +179,7 @@ sub Run {
             return $LayoutObject->ErrorScreen(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'There was an error setting the entity sync status for Activity entity: %s',
-                    $EntityID
+                    $NewEntityID
                 ),
             );
         }
@@ -194,7 +191,7 @@ sub Run {
 
         # get latest config data to send it back to main window
         my $ActivityConfig = $Self->_GetActivityConfig(
-            EntityID => $EntityID,
+            EntityID => $NewEntityID,
         );
 
         my $ConfigJSON = $LayoutObject->JSONEncode( Data => $ActivityConfig );
@@ -203,7 +200,7 @@ sub Run {
         if ( $Redirect && $Redirect eq '1' ) {
 
             $Self->_PushSessionScreen(
-                ID        => $ActivityID,
+                ID        => $NewActivityID,
                 EntityID  => $ActivityData->{EntityID},
                 Subaction => 'ActivityEdit'               # always use edit screen
             );
@@ -331,11 +328,8 @@ sub Run {
                 if (
                     $ActivityDialogsLookup{$ActivityDialogID}
                     && $ActivityDialogsLookup{$ActivityDialogID}->{EntityID}
-                    )
-                {
-                    my $EntityID = $ActivityDialogsLookup{$ActivityDialogID}->{EntityID};
-
-                    $ConfigActivityDialog{$Counter} = $EntityID;
+                ) {
+                    $ConfigActivityDialog{$Counter} = $ActivityDialogsLookup{$ActivityDialogID}->{EntityID};
                     $Counter++;
                 }
             }
@@ -467,7 +461,6 @@ sub Run {
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'AddActivityDialog' ) {
 
-        my %Params;
         my %Result;
         my $JSON;
 
@@ -882,8 +875,7 @@ sub _GetParams {
     # get parameters from web browser
     for my $ParamName (
         qw( Name EntityID )
-        )
-    {
+    ) {
         $GetParam->{$ParamName} = $ParamObject->GetParam( Param => $ParamName ) || '';
     }
 
@@ -967,7 +959,10 @@ sub _PopupResponse {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    if ( $Param{Redirect} && $Param{Redirect} eq 1 ) {
+    if (
+        defined $Param{Redirect}
+        && $Param{Redirect} eq '1'
+    ) {
         $LayoutObject->Block(
             Name => 'Redirect',
             Data => {
@@ -976,7 +971,10 @@ sub _PopupResponse {
             },
         );
     }
-    elsif ( $Param{ClosePopup} && $Param{ClosePopup} eq 1 ) {
+    elsif (
+        defined $Param{ClosePopup}
+        && $Param{ClosePopup} eq '1'
+    ) {
         $LayoutObject->Block(
             Name => 'ClosePopup',
             Data => {

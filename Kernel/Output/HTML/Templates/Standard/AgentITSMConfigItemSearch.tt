@@ -11,9 +11,6 @@
 
 [% RenderBlockStart("SearchAJAX") %]
 
-# KIX4OTRS-capeIT
-# space line inserted above to prevent mod_perl error
-# EO KIX4OTRS-capeIT
 <div class="InnerContent">
     <fieldset class="TableLike">
         <div class="Clear"></div>

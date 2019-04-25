@@ -157,11 +157,11 @@ sub Run {
         my $DeplStateColor = lc $Preferences{Color};
 
         # add to style classes string
-        $StyleClasses .= "
-            .Flag span.$DeplState {
-                background-color: #$DeplStateColor;
-            }
-        ";
+        $StyleClasses .= <<"END";
+.Flag span.$DeplState {
+    background-color: #$DeplStateColor;
+}
+END
     }
 
     # wrap into style tags
@@ -181,8 +181,7 @@ sub Run {
             for my $LinkDirection ( keys %{ $LinkListWithData->{$LinkObject}->{$LinkType} } ) {
                 for my $LinkItem (
                     keys %{ $LinkListWithData->{$LinkObject}->{$LinkType}->{$LinkDirection} }
-                    )
-                {
+                ) {
                     $LinkListWithData->{$LinkObject}->{$LinkType}->{$LinkDirection}->{$LinkItem}
                         ->{SourceObject} = 'ITSMConfigItem';
                     $LinkListWithData->{$LinkObject}->{$LinkType}->{$LinkDirection}->{$LinkItem}
@@ -275,7 +274,7 @@ sub Run {
     my $UserLanguage = $LayoutObject->{UserLanguage};
 
     # start template output
-    my $Output .= $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'AgentITSMConfigItemZoomTabLinkedObjects',
         Data         => {
             %{$LastVersion},
@@ -292,72 +291,6 @@ sub Run {
     $Output .= $LayoutObject->Footer( Type => 'TicketZoomTab' );
 
     return $Output;
-}
-
-sub _XMLOutput {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    return if !$Param{XMLData};
-    return if !$Param{XMLDefinition};
-    return if ref $Param{XMLData} ne 'HASH';
-    return if ref $Param{XMLDefinition} ne 'ARRAY';
-
-    $Param{Level} ||= 0;
-
-    ITEM:
-    for my $Item ( @{ $Param{XMLDefinition} } ) {
-        COUNTER:
-        for my $Counter ( 1 .. $Item->{CountMax} ) {
-
-            # stop loop, if no content was given
-            last COUNTER if !defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content};
-
-            # lookup value
-            my $Value = $Kernel::OM->Get('Kernel::System::ITSMConfigItem')->XMLValueLookup(
-                Item  => $Item,
-                Value => $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content},
-            );
-
-            # get layout object
-            my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
-            # create output string
-            $Value = $LayoutObject->ITSMConfigItemOutputStringCreate(
-                Value => $Value,
-                Item  => $Item,
-            );
-
-            # calculate indentation for left-padding css based on 15px per level and 10px as default
-            my $Indentation = 10;
-
-            if ( $Param{Level} ) {
-                $Indentation += 15 * $Param{Level};
-            }
-
-            # output data block
-            $LayoutObject->Block(
-                Name => 'Data',
-                Data => {
-                    Name        => $Item->{Name},
-                    Description => $Item->{Description} || $Item->{Name},
-                    Value       => $Value,
-                    Indentation => $Indentation,
-                },
-            );
-
-            # start recursion, if "Sub" was found
-            if ( $Item->{Sub} ) {
-                $Self->_XMLOutput(
-                    XMLDefinition => $Item->{Sub},
-                    XMLData       => $Param{XMLData}->{ $Item->{Key} }->[$Counter],
-                    Level         => $Param{Level} + 1,
-                );
-            }
-        }
-    }
-
-    return 1;
 }
 
 1;

@@ -84,8 +84,7 @@ sub Run {
     if (
         defined $Structure{PackageIsDownloadable}
         && !$Structure{PackageIsDownloadable}->{Content}
-        )
-    {
+    ) {
         $Self->PrintError("Files cannot be exported.\n");
         return $Self->ExitCodeError();
     }

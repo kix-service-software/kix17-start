@@ -40,12 +40,9 @@ sub new {
     $Self->{ZoomExpand}     = $ParamObject->GetParam( Param => 'ZoomExpand' );
     $Self->{ZoomExpandSort} = $ParamObject->GetParam( Param => 'ZoomExpandSort' );
 
-    # KIX4OTRS-capeIT
     $Self->{CallingAction}    = $ParamObject->GetParam( Param => 'CallingAction' )    || '';
     $Self->{DirectLinkAnchor} = $ParamObject->GetParam( Param => 'DirectLinkAnchor' ) || '';
     $Self->{Config} = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabProcess');
-
-    # EO KIX4OTRS-capeIT
 
     # ticket id lookup
     if ( !$Self->{TicketID} && $ParamObject->GetParam( Param => 'TicketNumber' ) ) {
@@ -57,71 +54,6 @@ sub new {
 
     # get zoom settings depending on ticket type
     $Self->{DisplaySettings} = $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom");
-
-    # this is a mapping of history types which is being used
-    # for the timeline view and its event type filter
-    $Self->{HistoryTypeMapping} = {
-        TicketLinkDelete                => Translatable('Link Deleted'),
-        Lock                            => Translatable('Ticket Locked'),
-        SetPendingTime                  => Translatable('Pending Time Set'),
-        TicketDynamicFieldUpdate        => Translatable('Dynamic Field Updated'),
-        EmailAgentInternal              => Translatable('Outgoing Email (internal)'),
-        NewTicket                       => Translatable('Ticket Created'),
-        TypeUpdate                      => Translatable('Type Updated'),
-        EscalationUpdateTimeStart       => Translatable('Escalation Update Time In Effect'),
-        EscalationUpdateTimeStop        => Translatable('Escalation Update Time Stopped'),
-        EscalationFirstResponseTimeStop => Translatable('Escalation First Response Time Stopped'),
-        CustomerUpdate                  => Translatable('Customer Updated'),
-        ChatInternal                    => Translatable('Internal Chat'),
-        SendAutoFollowUp                => Translatable('Automatic Follow-Up Sent'),
-        AddNote                         => Translatable('Note Added'),
-        AddNoteCustomer                 => Translatable('Note Added (Customer)'),
-        StateUpdate                     => Translatable('State Updated'),
-        SendAnswer                      => Translatable('Outgoing Answer'),
-        ServiceUpdate                   => Translatable('Service Updated'),
-        TicketLinkAdd                   => Translatable('Link Added'),
-        EmailCustomer                   => Translatable('Incoming Customer Email'),
-        WebRequestCustomer              => Translatable('Incoming Web Request'),
-        PriorityUpdate                  => Translatable('Priority Updated'),
-        Unlock                          => Translatable('Ticket Unlocked'),
-        EmailAgent                      => Translatable('Outgoing Email'),
-        TitleUpdate                     => Translatable('Title Updated'),
-        OwnerUpdate                     => Translatable('New Owner'),
-        Merged                          => Translatable('Ticket Merged'),
-        PhoneCallAgent                  => Translatable('Outgoing Phone Call'),
-        Forward                         => Translatable('Forwarded Message'),
-        Unsubscribe                     => Translatable('Removed User Subscription'),
-        TimeAccounting                  => Translatable('Time Accounted'),
-        PhoneCallCustomer               => Translatable('Incoming Phone Call'),
-        SystemRequest                   => Translatable('System Request.'),
-        FollowUp                        => Translatable('Incoming Follow-Up'),
-        SendAutoReply                   => Translatable('Automatic Reply Sent'),
-        SendAutoReject                  => Translatable('Automatic Reject Sent'),
-        ResponsibleUpdate               => Translatable('New Responsible'),
-        EscalationSolutionTimeStart     => Translatable('Escalation Solution Time In Effect'),
-        EscalationSolutionTimeStop      => Translatable('Escalation Solution Time Stopped'),
-        EscalationResponseTimeStart     => Translatable('Escalation Response Time In Effect'),
-        EscalationResponseTimeStop      => Translatable('Escalation Response Time Stopped'),
-        SLAUpdate                       => Translatable('SLA Updated'),
-        Move                            => Translatable('Queue Updated'),
-        ChatExternal                    => Translatable('External Chat'),
-        Move                            => Translatable('Queue Changed'),
-        SendAgentNotification           => Translatable('Notification Was Sent'),
-    };
-
-    # Add custom files to the zoom's frontend module registration on the fly
-    #    to avoid conflicts with other modules.
-    if (
-        defined $ConfigObject->Get('TimelineViewEnabled')
-        && $ConfigObject->Get('TimelineViewEnabled') == 1
-        )
-    {
-        my $ZoomFrontendConfiguration = $ConfigObject->Get('Frontend::Module')->{AgentTicketZoom};
-        my @CustomJSFiles             = (
-            'Core.Agent.TicketZoom.TimelineView.js',
-        );
-        push( @{ $ZoomFrontendConfiguration->{Loader}->{JavaScript} || [] }, @CustomJSFiles );
-    }
 
     return $Self;
 }
@@ -171,10 +103,7 @@ sub Run {
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    # KIX4OTRS-capeIT
     my $ImagePath = $ConfigObject->Get('Frontend::ImagePath');
-
-    # EO KIX4OTRS-capeIT
 
     # get all registered Actions
     if ( ref $ConfigObject->Get('Frontend::Module') eq 'HASH' ) {
@@ -209,36 +138,19 @@ sub Run {
         return $LayoutObject->NoPermission( WithHeader => 'yes' );
     }
 
-    # KIX4OTRS-capeIT
-    # removed: mark as seen, mark as important and update article
-    # removed: article filter settings
-    # removed: show HTML email
-    # EO KIX4OTRS-capeIT
-
-    # generate output
-    # KIX4OTRS-capeIT
-    # my $Output = $LayoutObject->Header( Value => $Ticket{TicketNumber} );
-    # $Output .= $LayoutObject->NavigationBar();
-    # $Output .= $Self->MaskAgentZoom(
     my $Output = $Self->MaskAgentZoom(
-
-        # EO KIX4OTRS-capeIT
         Ticket    => \%Ticket,
         AclAction => \%AclAction
     );
 
-    # KIX4OTRS-capeIT
-    # $Output .= $LayoutObject->Footer();
     $Output .= $LayoutObject->Footer( Type => 'TicketZoomTab' );
 
-    # EO KIX4OTRS-capeIT
     return $Output;
 }
 
 sub MaskAgentZoom {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
     # get needed objects
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
@@ -246,20 +158,13 @@ sub MaskAgentZoom {
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
     my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
-    # EO KIX4OTRS-capeIT
 
     my %Ticket    = %{ $Param{Ticket} };
     my %AclAction = %{ $Param{AclAction} };
 
-    # KIX4OTRS-capeIT
-    # removed: fetch all queues, std templates etc
-    # removed: generate shown articles
-    # removed: show article box
-    # EO KIX4OTRS-capeIT
-
     # set display options
     $Param{WidgetTitle} = 'Ticket Information';
-    $Param{Hook} = $ConfigObject->Get('Ticket::Hook') || 'Ticket#';
+    $Param{Hook}        = $ConfigObject->Get('Ticket::Hook') || 'Ticket#';
 
     # check if ticket is normal or process ticket
     my $IsProcessTicket = $TicketObject->TicketCheckForProcessType(
@@ -271,18 +176,10 @@ sub MaskAgentZoom {
         $Param{WidgetTitle} = $Self->{DisplaySettings}->{ProcessDisplay}->{WidgetTitle};
     }
 
-    # KIX4OTRS-capeIT
-    # removed: only show article tree if articles are present,
-    # EO KIX4OTRS-capeIT
-
     $LayoutObject->Block(
         Name => 'Header',
         Data => { %Param, %Ticket, %AclAction },
     );
-
-    # KIX4OTRS-capeIT
-    # removed: run ticket menu modules
-    # EO KIX4OTRS-capeIT
 
     # show process widget  and activity dialogs on process tickets
     if ($IsProcessTicket) {
@@ -456,8 +353,7 @@ sub MaskAgentZoom {
         if (
             $IsProcessTicket &&
             $Self->{DisplaySettings}->{ProcessWidgetDynamicField}->{ $DynamicFieldConfig->{Name} }
-            )
-        {
+        ) {
             my $ValueStrg = $DynamicFieldBackendObject->DisplayValueRender(
                 DynamicFieldConfig => $DynamicFieldConfig,
                 Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
@@ -490,8 +386,7 @@ sub MaskAgentZoom {
 
         if (
             $Self->{DisplaySettings}->{DynamicField}->{ $DynamicFieldConfig->{Name} }
-            )
-        {
+        ) {
             push @FieldsSidebar, {
                 Name                        => $DynamicFieldConfig->{Name},
                 Title                       => $ValueStrg->{Title},
@@ -526,8 +421,7 @@ sub MaskAgentZoom {
         my @FieldsInAGroup;
         for my $GroupName (
             sort keys %{ $Self->{DisplaySettings}->{ProcessWidgetDynamicFieldGroups} }
-            )
-        {
+        ) {
 
             $LayoutObject->Block(
                 Name => 'ProcessWidgetDynamicFieldGroups',
@@ -663,31 +557,16 @@ sub MaskAgentZoom {
         }
     }
 
-    # KIX4OTRS-capeIT
-    # removed: output dynamic fields in the sidebar
-    # removed: customer info string
-    # removed: linked objects
-    # EO KIX4OTRS-capeIT
-
     # return output
     return $LayoutObject->Output(
-
-        # KIX4OTRS-capeIT
-        # TemplateFile => 'AgentTicketZoom',
         TemplateFile => 'AgentTicketZoomTabProcess',
-
-        # EO KIX4OTRS-capeIT
-        Data => { %Param, %Ticket, %AclAction },
+        Data         => {
+            %Param,
+            %Ticket,
+            %AclAction
+        },
     );
 }
-
-# KIX4OTRS-capeIT
-# removed: sub _ArticleTree
-# removed: sub _ArticleItemSeen
-# removed: sub _ArticleItem
-# removed: sub _ArticleMenu
-# removed: sub _CollectArticleAttachments
-# EO KIX4OTRS-capeIT
 
 1;
 

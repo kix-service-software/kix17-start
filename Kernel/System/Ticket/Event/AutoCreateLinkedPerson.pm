@@ -197,8 +197,7 @@ sub Run {
                         $CustomerUserData{UserCustomerID}
                         && $Ticket{CustomerID}
                         && $Ticket{CustomerID} eq $CustomerUserData{UserCustomerID}
-                        )
-                    {
+                    ) {
                         $Type = "Customer";
                     }
 
@@ -260,8 +259,7 @@ sub Run {
     elsif (
         $Param{Event} eq 'TicketOwnerUpdate'
         || $Param{Event} eq 'TicketResponsibleUpdate'
-        )
-    {
+    ) {
 
         my %Ticket = $Self->{TicketObject}->TicketGet(
             TicketID => $Data{TicketID},
@@ -297,8 +295,7 @@ sub Run {
         );
     }
 
-    elsif ( $Param{Event} eq 'TicketCustomerUpdate' )
-    {
+    elsif ( $Param{Event} eq 'TicketCustomerUpdate' ) {
 
         my %Ticket = $Self->{TicketObject}->TicketGet(
             TicketID => $Data{TicketID},
