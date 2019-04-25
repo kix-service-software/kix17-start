@@ -670,14 +670,14 @@ set GeneralCatalog preferences
 =cut
 
 sub GeneralCatalogPreferencesSet {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
     # delete cache
     $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
         Type => $Self->{CacheType},
     );
 
-    return $Self->{PreferencesObject}->GeneralCatalogPreferencesSet(@_);
+    return $Self->{PreferencesObject}->GeneralCatalogPreferencesSet(%Param);
 }
 
 =item GeneralCatalogPreferencesGet()
@@ -691,9 +691,9 @@ get GeneralCatalog preferences
 =cut
 
 sub GeneralCatalogPreferencesGet {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return $Self->{PreferencesObject}->GeneralCatalogPreferencesGet(@_);
+    return $Self->{PreferencesObject}->GeneralCatalogPreferencesGet(%Param);
 }
 
 1;

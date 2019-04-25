@@ -105,8 +105,7 @@ sub Run {
         my %Error;
         for my $ParamName (
             qw( NameSpace )
-            )
-        {
+        ) {
             if ( !$GetParam->{$ParamName} ) {
 
                 # add server error error class
@@ -403,8 +402,7 @@ sub _ShowEdit {
 
         # hide and disable authentication methods if they are not selected
         $Param{BasicAuthHidden} = 'Hidden';
-        if ( $Param{Authentication} && $Param{Authentication} eq 'BasicAuth' )
-        {
+        if ( $Param{Authentication} && $Param{Authentication} eq 'BasicAuth' ) {
             $Param{BasicAuthHidden}      = '';
             $Param{UserValidateRequired} = 'Validate_Required';
         }
@@ -421,8 +419,7 @@ sub _ShowEdit {
 
         # hide and disable SSL options if they are not selected
         $Param{SSLHidden} = 'Hidden';
-        if ( $Param{UseSSL} && $Param{UseSSL} eq 'Yes' )
-        {
+        if ( $Param{UseSSL} && $Param{UseSSL} eq 'Yes' ) {
             $Param{SSLHidden}                         = '';
             $Param{SSLP12CertificateValidateRequired} = 'Validate_Required';
             $Param{SSLP12PasswordValidateRequired}    = 'Validate_Required';
@@ -474,8 +471,7 @@ sub _GetParams {
         SSLProxy SSLProxyUser SSLProxyPassword Sort
         RequestNameFreeText ResponseNameFreeText RequestNameScheme ResponseNameScheme
         )
-        )
-    {
+    ) {
         $GetParam->{$ParamName} = $ParamObject->GetParam( Param => $ParamName ) || '';
     }
     return $GetParam;

@@ -13,6 +13,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+use Kernel::System::ObjectManager;
+
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -42,8 +44,7 @@ sub Run {
     my $SearchPattern = '(TargetIdentifier=).*?([;"])';
 
     # do replace
-    if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms )
-    {
+    if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms ) {
         ${ $Param{Data} } =~ s{$SearchPattern}{$1$LinkObjectTargetIdentifier$2}ixms;
     }
 

@@ -65,7 +65,7 @@ sub Run {
     # add additional information to restriction hash
     if ( $ExcludedTicketData && ref $ExcludedTicketData eq 'HASH' ) {
         for my $Item ( sort keys %{$ExcludedTicketData} ) {
-            next if grep(/$Item/,@{$IdentifiersRef});
+            next if grep( { $_ =~ /$Item/ } @{$IdentifiersRef});
             push @{$IdentifiersRef},$Item;
             $MatchActionsRef->{$Item} = $ExcludedTicketData->{$Item}->{ActionsMatch};
             $MatchTicketDataRef->{$Item} = $ExcludedTicketData->{$Item}->{DataMatch};

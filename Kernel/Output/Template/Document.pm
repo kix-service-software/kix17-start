@@ -18,6 +18,8 @@ use base qw (Template::Document);
 
 our $ObjectManagerDisabled = 1;
 
+use Kernel::System::ObjectManager;
+
 =head1 NAME
 
 Kernel::Output::Template::Document - Template Toolkit document extension package
@@ -238,8 +240,7 @@ sub _PrecalculateBlockStructure {
             if (
                 !exists $BlockPointer->{Children}
                 || !exists $BlockPointer->{Children}->{$ParentBlock}
-                )
-            {
+            ) {
                 # Parent node was not found. That means we dan discard this block.
                 splice @{$BlockData}, $BlockIndex, 1;
                 next BLOCK;

@@ -83,7 +83,6 @@ sub ObjectAttributesGet {
         Class => 'ITSM::ConfigItem::Class',
     ) || {};
 
-    # KIX4OTRS-capeIT
     my $DeploymentStateDataRef = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
         Class => 'ITSM::ConfigItem::DeploymentState',
         Valid => 1,
@@ -92,8 +91,6 @@ sub ObjectAttributesGet {
         Class => 'ITSM::Core::IncidentState',
         Valid => 1,
     );
-
-    # EO KIX4OTRS-capeIT
 
     my $Attributes = [
         {
@@ -128,8 +125,6 @@ sub ObjectAttributesGet {
                 Type => 'Checkbox',
             },
         },
-
-        # KIX4OTRS-capeIT
         {
             Key   => 'DefaultDeploymentState',
             Name  => 'Default Deployment State',
@@ -163,12 +158,8 @@ sub ObjectAttributesGet {
                 Translation  => 0,
                 Size         => 30,
                 MaxLength    => 250,
-
-                # DataType     => 'String',
             },
         },
-
-        # EO KIX4OTRS-capeIT
     ];
 
     return $Attributes;
@@ -999,18 +990,14 @@ sub ImportDataSave {
             !$VersionData->{XMLData}
             || ref $VersionData->{XMLData} ne 'ARRAY'
             || !@{ $VersionData->{XMLData} }
-            )
-        {
+        ) {
             delete $VersionData->{XMLData};
         }
     }
 
-    # KIX4OTRS-capeIT
     my $DefaultInciStateID = $ObjectData->{DefaultIncidentState}   || '';
     my $DefaultDeplStateID = $ObjectData->{DefaultDeploymentState} || '';
     my $DefaultName        = $ObjectData->{DefaultName}            || '';
-
-    # EO KIX4OTRS-capeIT
 
     # set up fields in VersionData and in the XML attributes
     my %XMLData2D;
@@ -1028,20 +1015,13 @@ sub ImportDataSave {
         }
         elsif ( $Key eq 'Name' ) {
 
-            # KIX4OTRS-capeIT
-            # if ( $EmptyFieldsLeaveTheOldValues && ( !defined $Value || $Value eq '' ) ) {
             if ( !$Value && ( !$DefaultName || $EmptyFieldsLeaveTheOldValues ) ) {
 
-                # EO KIX4OTRS-capeIT
                 # do nothing, keep the old value
             }
-
-            # KIX4OTRS-capeIT
             elsif ( !$Value && $DefaultName ) {
                 $VersionData->{Name} = $DefaultName;
             }
-
-            # EO KIX4OTRS-capeIT
             else {
                 if ( !$Value ) {
                     $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -1058,10 +1038,6 @@ sub ImportDataSave {
         }
         elsif ( $Key eq 'DeplState' ) {
 
-            # KIX4OTRS-capeIT
-            # if ( $EmptyFieldsLeaveTheOldValues && ( !defined $Value || $Value eq '' ) ) {
-            #     # do nothing, keep the old value
-            # }
             if ( !$Value && ( !$DefaultDeplStateID || $EmptyFieldsLeaveTheOldValues ) ) {
 
                 # do nothing, keep the old value
@@ -1069,8 +1045,6 @@ sub ImportDataSave {
             elsif ( !$Value && $DefaultDeplStateID ) {
                 $VersionData->{DeplStateID} = $DefaultDeplStateID;
             }
-
-            # EO KIX4OTRS-capeIT
             else {
 
                 # extract deployment state id
@@ -1090,10 +1064,6 @@ sub ImportDataSave {
         }
         elsif ( $Key eq 'InciState' ) {
 
-            # KIX4OTRS-capeIT
-            #if ( $EmptyFieldsLeaveTheOldValues && ( !defined $Value || $Value eq '' ) ) {
-            #    # do nothing, keep the old value
-            #}
             if ( !$Value && ( !$DefaultInciStateID || $EmptyFieldsLeaveTheOldValues ) ) {
 
                 # do nothing, keep the old value
@@ -1101,8 +1071,6 @@ sub ImportDataSave {
             elsif ( !$Value && $DefaultInciStateID ) {
                 $VersionData->{InciStateID} = $DefaultInciStateID;
             }
-
-            # EO KIX4OTRS-capeIT
             else {
 
                 # extract the deployment state id
@@ -1155,8 +1123,7 @@ sub ImportDataSave {
     if (
         IsStringWithData( $VersionData->{Name} )
         && $Kernel::OM->Get('Kernel::Config')->Get('UniqueCIName::EnableUniquenessCheck')
-        )
-    {
+    ) {
 
         if ( $Kernel::OM->Get('Kernel::Config')->{Debug} > 0 ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -1189,7 +1156,7 @@ sub ImportDataSave {
             $RetCode = "DuplicateName '$VersionData->{Name}'";
 
             # return undef for the config item id so it will be counted as 'Failed'
-            return undef, $RetCode;    ## no critic
+            return (undef, $RetCode);
         }
     }
 
@@ -1213,7 +1180,6 @@ sub ImportDataSave {
             UserID  => $Param{UserID},
         );
 
-        # KIX4OTRS-capeIT
         if ( !$VersionData->{InciStateID} && $DefaultInciStateID ) {
             $VersionData->{InciStateID} = $DefaultInciStateID;
         }
@@ -1223,8 +1189,6 @@ sub ImportDataSave {
         if ( !$VersionData->{Name} && $DefaultName ) {
             $VersionData->{Name} = $DefaultName;
         }
-
-        # EO KIX4OTRS-capeIT
 
         # check the new config item id
         if ( !$ConfigItemID ) {
@@ -1251,11 +1215,7 @@ sub ImportDataSave {
     );
 
     # the import was successful, when we get a version id
-    # KIX4OTRS-capeIT
-    # if ($VersionID) {
     if ( $VersionID && ref($VersionID) ne 'HASH' ) {
-
-        # EO KIX4OTRS-capeIT
 
         # When VersionAdd() returns the previous latest version ID, we know that
         # no new version has been added.
@@ -1264,7 +1224,7 @@ sub ImportDataSave {
             $RetCode = 'Skipped';
         }
 
-        return $ConfigItemID, $RetCode;
+        return ($ConfigItemID, $RetCode);
     }
 
     if ( $RetCode eq 'Created' ) {
@@ -1276,24 +1236,15 @@ sub ImportDataSave {
         );
     }
 
-    # KIX4OTRS-capeIT
     my $ErrMsgFromEvent = '';
     if ( ref($VersionID) eq 'HASH' && $VersionID->{Error} && $VersionID->{Message} ) {
         $ErrMsgFromEvent = $VersionID->{Message};
     }
 
-    # EO KIX4OTRS-capeIT
-
     $Kernel::OM->Get('Kernel::System::Log')->Log(
         Priority => 'error',
-        Message =>
-            "Can't import entity $Param{Counter}: "
-
-            # KIX4OTRS-capeIT
-            # . "Error when adding the new config item version.",
-            . "Error when adding the new config item version. $ErrMsgFromEvent",
-
-        # EO KIX4OTRS-capeIT
+        Message  => "Can't import entity $Param{Counter}: "
+                  . "Error when adding the new config item version. $ErrMsgFromEvent",
     );
 
     return;

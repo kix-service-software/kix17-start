@@ -33,8 +33,6 @@ sub Run {
     my $LayoutObject      = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject       = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my $Result;
-
     for my $Needed (qw(Subaction TicketID)) {
         $Param{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
         if ( !$Param{$Needed} ) {

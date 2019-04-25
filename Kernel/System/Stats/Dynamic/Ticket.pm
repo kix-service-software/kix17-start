@@ -83,8 +83,7 @@ sub GetObjectAttributes {
     if (
         defined $ConfigObject->Get('Stats::UseInvalidAgentInStats')
         && ( $ConfigObject->Get('Stats::UseInvalidAgentInStats') == 0 )
-        )
-    {
+    ) {
         $ValidAgent = 1;
     }
 
@@ -210,7 +209,6 @@ sub GetObjectAttributes {
             Block            => 'InputField',
         },
         {
-            # rkaiser - T#2017020290001194 - changed customer user to contact
             Name             => Translatable('Contact login (complex search)'),
             UseAsXvalue      => 0,
             UseAsValueSeries => 0,
@@ -219,7 +217,6 @@ sub GetObjectAttributes {
             Block            => 'InputField',
         },
         {
-            # rkaiser - T#2017020290001194 - changed customer user to contact
             Name             => Translatable('Contact login (exact match)'),
             UseAsXvalue      => 0,
             UseAsValueSeries => 0,
@@ -702,8 +699,7 @@ sub GetStatElement {
     for my $ParameterName ( sort keys %Param ) {
         if (
             $ParameterName =~ m{ \A DynamicField_ ( [a-zA-Z\d]+ ) (?: _ ( [a-zA-Z\d]+ ) )? \z }xms
-            )
-        {
+        ) {
             my $FieldName = $1;
             my $Operator  = $2;
 
@@ -837,8 +833,7 @@ sub ExportWrapper {
                 $ElementName eq 'OwnerIDs'
                 || $ElementName eq 'CreatedUserIDs'
                 || $ElementName eq 'ResponsibleIDs'
-                )
-            {
+            ) {
                 ID:
                 for my $ID ( @{$Values} ) {
                     next ID if !$ID;
@@ -933,8 +928,7 @@ sub ImportWrapper {
                 $ElementName eq 'OwnerIDs'
                 || $ElementName eq 'CreatedUserIDs'
                 || $ElementName eq 'ResponsibleIDs'
-                )
-            {
+            ) {
                 ID:
                 for my $ID ( @{$Values} ) {
                     next ID if !$ID;

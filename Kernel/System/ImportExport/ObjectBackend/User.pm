@@ -208,8 +208,7 @@ sub MappingObjectAttributesGet {
         UserTheme UserLanguage UserComment UserSkin OutOfOffice OutOfOfficeStartYear OutOfOfficeStartMonth
         OutOfOfficeStartDay OutOfOfficeEndYear OutOfOfficeEndMonth OutOfOfficeEndDay UserSendMoveNotification
         UserSendFollowUpNotification UserSendNewTicketNotification UserSendLockTimeoutNotification)
-        )
-    {
+    ) {
         my $CurrAttribute = {
             Key   => $Parameter,
             Value => $Parameter,
@@ -447,10 +446,13 @@ sub ExportDataGet {
         # prepare preferences
         for my $Argument (
             qw(OutOfOffice UserSendMoveNotification UserSendFollowUpNotification UserSendNewTicketNotification UserSendLockTimeoutNotification)
-            )
-        {
-            if   ( $UserData{$Argument} ) { $UserData{$Argument} = 'yes' }
-            else                          { $UserData{$Argument} = 'no' }
+        ) {
+            if ( $UserData{$Argument} ) {
+                $UserData{$Argument} = 'yes';
+            }
+            else {
+                $UserData{$Argument} = 'no';
+            }
         }
 
         # get CustomQueues
@@ -604,8 +606,7 @@ sub ImportDataSave {
         if (
             $MappingObjectData->{Identifier}
             && $Identifier{ $MappingObjectData->{Key} }
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Can't import this entity. "
@@ -822,8 +823,7 @@ sub ImportDataSave {
             for (
                 qw(OutOfOfficeStartYear OutOfOfficeStartMonth OutOfOfficeStartDay
                 OutOfOfficeEndYear OutOfOfficeEndMonth OutOfOfficeEndDay)
-                )
-            {
+            ) {
                 $UserData{$_} = "";
             }
         }
@@ -831,8 +831,7 @@ sub ImportDataSave {
             qw(UserTheme UserLanguage UserComment UserSkin OutOfOfficeStartYear OutOfOfficeStartMonth OutOfOfficeStartDay
             OutOfOfficeEndYear OutOfOfficeEndMonth OutOfOfficeEndDay OutOfOffice UserSendMoveNotification
             UserSendFollowUpNotification UserSendNewTicketNotification UserSendLockTimeoutNotification)
-            )
-        {
+        ) {
 
             if ( $UserData{$Preference} ) {
 

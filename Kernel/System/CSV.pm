@@ -106,8 +106,8 @@ sub Array2CSV {
 
     if ( $Param{Format} eq 'Excel' ) {
 
-        open my $FileHandle, '>', \$Output;    ## no critic
-        if ( !$FileHandle ) {
+        my $FileHandle;
+        if ( !open $FileHandle, '>', \$Output ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Failed to open FileHandle: $!",
@@ -115,6 +115,8 @@ sub Array2CSV {
             return;
         }
         my $Workbook     = Excel::Writer::XLSX->new($FileHandle);
+        close $FileHandle;
+
         my $Worksheet    = $Workbook->add_worksheet();
         my $HeaderFormat = $Workbook->add_format(
             bold       => 1,
@@ -149,7 +151,7 @@ sub Array2CSV {
                     $Worksheet->write( $Row, $Col, "$DataRaw->[$Col]", $HeaderFormat );
                 }
                 else {
-                    # There are major problems with data recognition in Excel. OTRS
+                    # There are major problems with data recognition in Excel. KIX
                     #   ticket numbers will be recognized as numbers, but they are so big that
                     #   Excel will (incorrectly) round them. Prevent this by using write_string()
                     #   to protect the data. This might trigger formatting notifications in Excel,
@@ -268,11 +270,12 @@ sub CSV2Array {
 
     # parse all CSV data line by line (allows newlines in data fields)
     my $LineCounter = 1;
-    open my $FileHandle, '<', \$Param{String};    ## no critic
+    open my $FileHandle, '<', \$Param{String} or die "Can't open file handle: ?!";
     while ( my $ColRef = $CSV->getline($FileHandle) ) {
         push @Array, $ColRef;
         $LineCounter++;
     }
+    close $FileHandle;
 
     # log error if occurred and exit
     if ( !$CSV->eof() ) {

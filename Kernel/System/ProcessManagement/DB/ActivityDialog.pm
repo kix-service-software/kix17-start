@@ -105,10 +105,7 @@ sub ActivityDialogAdd {
 
     # check if EntityID already exists
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT id
-            FROM pm_activity_dialog
-            WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)",
+        SQL   => "SELECT id FROM pm_activity_dialog WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)",
         Bind  => [ \$Param{EntityID} ],
         Limit => 1,
     );
@@ -170,10 +167,8 @@ sub ActivityDialogAdd {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO pm_activity_dialog ( entity_id, name, config, create_time,
-                create_by, change_time, change_by )
-            VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => 'INSERT INTO pm_activity_dialog ( entity_id, name, config, create_time, create_by, change_time, change_by )'
+              . ' VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{EntityID}, \$Param{Name}, \$Config, \$Param{UserID}, \$Param{UserID},
         ],
@@ -314,20 +309,14 @@ sub ActivityDialogGet {
     # sql
     if ( $Param{ID} ) {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id, entity_id, name, config, create_time, change_time
-                FROM pm_activity_dialog
-                WHERE id = ?',
+            SQL   => 'SELECT id, entity_id, name, config, create_time, change_time FROM pm_activity_dialog WHERE id = ?',
             Bind  => [ \$Param{ID} ],
             Limit => 1,
         );
     }
     else {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id, entity_id, name, config, create_time, change_time
-                FROM pm_activity_dialog
-                WHERE entity_id = ?',
+            SQL   => 'SELECT id, entity_id, name, config, create_time, change_time FROM pm_activity_dialog WHERE entity_id = ?',
             Bind  => [ \$Param{EntityID} ],
             Limit => 1,
         );
@@ -401,10 +390,7 @@ sub ActivityDialogUpdate {
 
     # check if EntityID already exists
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT id FROM pm_activity_dialog
-            WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)
-            AND id != ?",
+        SQL   => "SELECT id FROM pm_activity_dialog WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?) AND id != ?",
         Bind  => [ \$Param{EntityID}, \$Param{ID} ],
         LIMIT => 1,
     );
@@ -465,10 +451,7 @@ sub ActivityDialogUpdate {
 
     # check if need to update db
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT entity_id, name, config
-            FROM pm_activity_dialog
-            WHERE id = ?',
+        SQL   => 'SELECT entity_id, name, config FROM pm_activity_dialog WHERE id = ?',
         Bind  => [ \$Param{ID} ],
         Limit => 1,
     );
@@ -491,11 +474,9 @@ sub ActivityDialogUpdate {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE pm_activity_dialog
-            SET entity_id = ?, name = ?,  config = ?, change_time = current_timestamp,
-                change_by = ?
-            WHERE id = ?',
+        SQL  => 'UPDATE pm_activity_dialog'
+              . ' SET entity_id = ?, name = ?,  config = ?, change_time = current_timestamp, change_by = ?'
+              . ' WHERE id = ?',
         Bind => [
             \$Param{EntityID}, \$Param{Name}, \$Config, \$Param{UserID}, \$Param{ID},
         ],
@@ -565,9 +546,7 @@ sub ActivityDialogList {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    my $SQL = '
-            SELECT id, entity_id, name
-            FROM pm_activity_dialog';
+    my $SQL = 'SELECT id, entity_id, name FROM pm_activity_dialog';
 
     return if !$DBObject->Prepare( SQL => $SQL );
 
@@ -652,10 +631,7 @@ sub ActivityDialogListGet {
 
     # sql
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, entity_id
-            FROM pm_activity_dialog
-            ORDER BY id',
+        SQL => 'SELECT id, entity_id FROM pm_activity_dialog ORDER BY id',
     );
 
     my @ActivityDialogIDs;

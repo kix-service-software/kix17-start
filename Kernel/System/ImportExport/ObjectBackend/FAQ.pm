@@ -536,8 +536,7 @@ sub ImportDataSave {
         if (
             $MappingObjectData->{Identifier}
             && $Identifier{ $MappingObjectData->{Key} }
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Can't import this entity. "

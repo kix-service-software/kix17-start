@@ -20,9 +20,7 @@
     <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
     <input type="hidden" name="ResponseID" value="[% Data.ResponseID | html %]"/>
     <input type="hidden" name="ReplyArticleID" value="[% Data.ReplyArticleID | html %]"/>
-# KIX4OTRS-capeIT
     <input type="hidden" name="TypeID" id="TypeID" value="[% Data.TypeID | html %]"/>
-# EO KIX4OTRS-capeIT
     <div class="LayoutPopup ARIARoleMain">
         <div class="Header">
             <h1>[% Translate("Compose Answer for %s%s%s", Config('Ticket::Hook'), Config('Ticket::HookDivider'), Data.TicketNumber) | html %] &mdash; [% Data.Title | html %]</h1>
@@ -33,7 +31,6 @@
             </p>
 [% RenderBlockEnd("TicketBack") %]
 [% RenderBlockStart("TicketBackUndo") %]
-#rbo - T2017022490001394 - optimized visualization
             <p class="TicketLockMessage">
                 [% Translate("The ticket has been locked") | html %].
                 <a class="UndoClosePopup" href="[% Env("Baselink") %]Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID %];[% Env("ChallengeTokenParam") | html %]">
@@ -43,12 +40,10 @@
 [% RenderBlockEnd("TicketBackUndo") %]
         </div>
         <div class="Content">
-# KIX4OTRS-capeIT
             <div class="LayoutFixedSidebar SidebarLast">
                <div class="SidebarColumn">
                    [% Data.KIXSidebarContent %]
                </div>
-# EO KIX4OTRS-capeIT
             <div class="ContentColumn">
                 <fieldset class="TableLike FixedLabel">
 
@@ -305,10 +300,8 @@
                     <label class="Mandatory" for="Subject"><span class="Marker">*</span>[% Translate("Subject") | html %]:</label>
                     <div class="Field">
                         <input type="text" name="Subject" id="Subject" value="[% Data.Subject | html %]" class="Validate_Required [% Data.SubjectInvalid %] W75pc"/>
-# KIX4OTRS-capeIT
                         <input type="checkbox" [% Data.IsChecked %] id="SubjectNoRe" name="SubjectNoRe" value="1" title="[% Translate("Don't write 'Re:' into subject") | html %]"/>
                         <label for="SubjectNoRe" class="SubjectNoReIcon" title="[% Translate("Don't write 'Re:' into subject") | html %]"></label>
-# EO KIX4OTRS-capeIT
                         <div id="SubjectError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                         <div id="SubjectServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                     </div>
@@ -324,12 +317,8 @@
 [% RenderBlockEnd("Option") %]
 
 [% RenderBlockStart("TicketOptions") %]
-# KIX4OTRS-capeIT
-#                    <label>[% Translate("Options") | html %]:</label>
-#                    <div class="Field">
                     <label for="Options">[% Translate("Options") | html %]:</label>
                     <div class="Options Field">
-# EO KIX4OTRS-capeIT
 
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
@@ -359,12 +348,8 @@
                     </div>
                     <div class="Clear"></div>
 
-# KIX4OTRS-capeIT
-#                    <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
-#                    <div class="Field FileUpload">
                     <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
                     <div class="Field FileUpload">
-# EO KIX4OTRS-capeIT
                         <ul>
 [% RenderBlockStart("Attachment") %]
                             <li>
@@ -384,10 +369,7 @@
                             </li>
 [% RenderBlockEnd("Attachment") %]
                             <li>
-# KIX4OTRS-capeIT
-#                               <input id="FileUpload" name="FileUpload" type="file" size="40" />
                                 <input id="FileUpload" name="FileUpload" type="file" size="30" />
-# EO KIX4OTRS-capeIT
                                 <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
                             </li>
                         </ul>
@@ -416,10 +398,7 @@
                     </div>
                     <div class="Clear"></div>
 
-# KIX4OTRS-capeIT
-#                    <label>[% Translate("Pending date") | html %]:</label>
                     <label for="Date">[% Translate("Pending date") | html %]:</label>
-# EO KIX4OTRS-capeIT
                     <div class="Field">
                         [% Data.PendingDateString %]
                         <div id="DayServerError" class="TooltipErrorMessage"><p>[% Translate("Date Invalid!") | html %]</p></div>
@@ -436,10 +415,7 @@
                     <div class="Clear"></div>
 [% RenderBlockEnd("ArticleType") %]
 [% RenderBlockStart("DynamicField") %]
-# KIX4OTRS-capeIT
-#                 <div class="Row Row_DynamicField_[% Data.Name | html %]">
                 <div class="Row Row_DynamicField_[% Data.Name | html %][% Data.Class | html %]">
-# EO KIX4OTRS-capeIT
                         [% Data.Label %]
                         <div class="Field">
                             [% Data.Field %]
@@ -484,20 +460,13 @@
                     </div>
                     <div class="Clear"></div>
 [% RenderBlockEnd("TimeUnits") %]
-# KIX4OTRS-capeIT
                     <div class="EndOfForm"></div>
-# EO KIX4OTRS-capeIT
                 </fieldset>
             </div>
         </div>
-# KIX4OTRS-capeIT
     </div>
-# EO KIX4OTRS-capeIT
     <div class="Footer">
-# KIX4OTRS-capeIT
         <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Send mail") | html %] (g)" type="submit" value="[% Translate("Send mail") | html %]" ><span><i class="fa fa-envelope-alt"></i> [% Translate("Send mail") | html %]</span></button>
-#        </div>
-# EO KIX4OTRS-capeIT
     </div>
 </form>
 
@@ -505,9 +474,7 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Agent.TicketAction.Init();
-# KIX4OTRS-capeIT
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentTicketComposeSidebarWidth") %]','[% Env("Action") %]','TicketID=[% Data.TicketID | uri %];NoResponse=1');
-# EO KIX4OTRS-capeIT
 
     //]]></script>
 [% END %]

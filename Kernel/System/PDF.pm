@@ -251,7 +251,7 @@ sub PageBlankNew {
 
         # set default value of ShowPageNumber, if no value given
         my $ShowPageNumber = 1;
-        if ( defined( $Param{ShowPageNumber} ) && $Param{ShowPageNumber} eq 0 ) {
+        if ( defined( $Param{ShowPageNumber} ) && $Param{ShowPageNumber} eq "0" ) {
             $ShowPageNumber = 0;
         }
 
@@ -370,8 +370,7 @@ sub PageNew {
             || $Param{LogoFile} =~ /^.*\.jpg$/i
             || $Param{LogoFile} =~ /^.*\.png$/i
         )
-        )
-    {
+    ) {
         $LogoFile = $Param{LogoFile};
     }
 
@@ -727,8 +726,7 @@ sub Table {
         ref( $Param{CellData} ) eq 'ARRAY'
         && ref( $Param{ColumnData} ) eq 'ARRAY'
         && ref( $Param{RowData} ) eq 'ARRAY'
-        )
-    {
+    ) {
         if ( !defined( $Param{OutputCount} ) ) {
 
             # set default values
@@ -771,11 +769,9 @@ sub Table {
                     - $Param{PaddingLeft}
                     - $Param{PaddingRight}
                     - ( 2 * $Param{Border} )
-                )
-                < 0
+                ) < 0
                 || $Param{Width} > $DefaultWidth
-                )
-            {
+            ) {
                 $Param{Width} = $DefaultWidth;
             }
 
@@ -798,11 +794,9 @@ sub Table {
                 - $Param{PaddingTop}
                 - $Param{PaddingBottom}
                 - ( 2 * $Param{Border} )
-            )
-            < 0
+            ) < 0
             || $Param{Height} > $DefaultHeight
-            )
-        {
+        ) {
             $Param{Height} = $DefaultHeight;
         }
 
@@ -848,8 +842,7 @@ sub Table {
                         if (
                             $Param{RowData}->[$Row]->{OutputHeight}
                             && $Param{RowData}->[$Row]->{OutputHeight} <= $Position{Y} - $Dim{Bottom}
-                            )
-                        {
+                        ) {
                             for ( $Block{ReturnColumnStart} .. $Block{ReturnColumnStop} ) {
                                 my $Column = $_;
                                 $Self->_TableCellOutput(
@@ -911,31 +904,27 @@ sub Table {
                                     my $Column = $_;
                                     my $Type   = 'ReturnLeftOver';
                                     if (
-                                        $Param{CellData}->[$Row]->[$Column]->{Type} eq
-                                        'ReturnLeftOverHard'
-                                        )
-                                    {
+                                        $Param{CellData}->[$Row]->[$Column]->{Type} eq 'ReturnLeftOverHard'
+                                    ) {
                                         $Type = 'ReturnLeftOverHard';
                                     }
                                     my %Return = $Self->_TableCellOutput(
-                                        Text     => $Param{CellData}->[$Row]->[$Column]->{Content},
-                                        Type     => $Type,
-                                        Width    => $Param{ColumnData}->[$Column]->{OutputWidth},
-                                        Height   => $NewOutputHeight,
-                                        Font     => $Param{CellData}->[$Row]->[$Column]->{Font},
-                                        FontSize => $Param{CellData}->[$Row]->[$Column]->{FontSize},
-                                        FontColor =>
-                                            $Param{CellData}->[$Row]->[$Column]->{FontColor},
-                                        Align         => $Param{CellData}->[$Row]->[$Column]->{Align},
-                                        Lead          => $Param{CellData}->[$Row]->[$Column]->{Lead},
-                                        PaddingTop    => $Param{PaddingTop},
-                                        PaddingRight  => $Param{PaddingRight},
-                                        PaddingBottom => $Param{PaddingBottom},
-                                        PaddingLeft   => $Param{PaddingLeft},
-                                        BackgroundColor =>
-                                            $Param{CellData}->[$Row]->[$Column]->{BackgroundColor},
-                                        Border      => $Param{Border},
-                                        BorderColor => $Param{BorderColor},
+                                        Text            => $Param{CellData}->[$Row]->[$Column]->{Content},
+                                        Type            => $Type,
+                                        Width           => $Param{ColumnData}->[$Column]->{OutputWidth},
+                                        Height          => $NewOutputHeight,
+                                        Font            => $Param{CellData}->[$Row]->[$Column]->{Font},
+                                        FontSize        => $Param{CellData}->[$Row]->[$Column]->{FontSize},
+                                        FontColor       => $Param{CellData}->[$Row]->[$Column]->{FontColor},
+                                        Align           => $Param{CellData}->[$Row]->[$Column]->{Align},
+                                        Lead            => $Param{CellData}->[$Row]->[$Column]->{Lead},
+                                        PaddingTop      => $Param{PaddingTop},
+                                        PaddingRight    => $Param{PaddingRight},
+                                        PaddingBottom   => $Param{PaddingBottom},
+                                        PaddingLeft     => $Param{PaddingLeft},
+                                        BackgroundColor => $Param{CellData}->[$Row]->[$Column]->{BackgroundColor},
+                                        Border          => $Param{Border},
+                                        BorderColor     => $Param{BorderColor},
                                     );
 
                                     # set new content
@@ -956,8 +945,7 @@ sub Table {
                                     if (
                                         $Block{ReturnBlock} eq $LastBlock
                                         && $Column eq $Block{ReturnColumnStop}
-                                        )
-                                    {
+                                    ) {
 
                                         # if Height was given
                                         if ( $Param{RowData}->[$Row]->{Height} > 0 ) {
@@ -965,10 +953,8 @@ sub Table {
 
                                             # if rest too small, deactivate all cells of this row
                                             if (
-                                                $Param{RowData}->[$Row]->{Height}
-                                                < $Param{RowData}->[$Row]->{MinFontSize}
-                                                )
-                                            {
+                                                $Param{RowData}->[$Row]->{Height} < $Param{RowData}->[$Row]->{MinFontSize}
+                                            ) {
                                                 for my $CellOff ( @{ $Param{CellData}->[$Row] } ) {
                                                     $CellOff->{Content} = ' ';
                                                     $CellOff->{Off}     = 1;
@@ -1140,8 +1126,7 @@ sub Text {
         !defined( $Param{Width} )
         || $Param{Width} < 0
         || ( $Position{X} + $Param{Width} ) >= ( $Dim{Left} + $Dim{Width} )
-        )
-    {
+    ) {
         $Param{Width} = $Dim{Left} + $Dim{Width} - $Position{X};
     }
 
@@ -1150,8 +1135,7 @@ sub Text {
         !defined( $Param{Height} )
         || $Param{Height} < 0
         || ( $Position{Y} - $Param{Height} ) < $Dim{Bottom}
-        )
-    {
+    ) {
         $Param{Height} = $Position{Y} - $Dim{Bottom};
     }
 
@@ -1462,8 +1446,7 @@ sub HLine {
             X => $Position{X} + $Param{Width},
             Y => $Position{Y} - $Param{LineWidth}
         )
-        )
-    {
+    ) {
         $Output = 1;
     }
     elsif (
@@ -1475,8 +1458,7 @@ sub HLine {
             X => $Position{X} + $Param{Width},
             Y => $Position{Y} - $Param{LineWidth}
         )
-        )
-    {
+    ) {
         $Output = 1;
     }
 
@@ -1556,11 +1538,9 @@ sub PositionSet {
         else {
             if ( defined( $Param{Move} ) && $Param{Move} eq 'relativ' ) {
                 if (
-                    ( $Position{X} + $Param{X} )
-                    >= $Dim{Left}
+                    ( $Position{X} + $Param{X} ) >= $Dim{Left}
                     && ( $Position{X} + $Param{X} ) < ( $Dim{Left} + $Dim{Width} )
-                    )
-                {
+                ) {
                     $Data{X} = $Position{X} + $Param{X};
                 }
                 elsif ( ( $Position{X} + $Param{X} ) >= ( $Dim{Left} + $Dim{Width} ) ) {
@@ -1597,11 +1577,9 @@ sub PositionSet {
         else {
             if ( defined( $Param{Move} ) && $Param{Move} eq 'relativ' ) {
                 if (
-                    ( $Position{Y} + $Param{Y} )
-                    <= ( $Dim{Bottom} + $Dim{Height} )
+                    ( $Position{Y} + $Param{Y} ) <= ( $Dim{Bottom} + $Dim{Height} )
                     && ( $Position{Y} + $Param{Y} ) > $Dim{Bottom}
-                    )
-                {
+                ) {
                     $Data{Y} = $Position{Y} + $Param{Y};
                 }
                 elsif ( ( $Position{Y} + $Param{Y} ) <= $Dim{Bottom} ) {
@@ -1829,8 +1807,7 @@ sub _TableCalculate {
         Type Font FontSize Lead FontColor Align BackgroundColor Width Border BorderColor
         PaddingTop PaddingRight PaddingBottom PaddingLeft
         )
-        )
-    {
+    ) {
         if ( !defined( $Param{$_} ) ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -1843,8 +1820,7 @@ sub _TableCalculate {
         ref( $Param{CellData} ) ne 'ARRAY'
         || ref( $Param{ColumnData} ) ne 'ARRAY'
         || ref( $Param{RowData} ) ne 'ARRAY'
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Need array references of CellData, ColumnData and RowData!"
@@ -1877,11 +1853,11 @@ sub _TableCalculate {
     }
 
     # repair, if table is corrupt
-    if ( $RowMax eq 0 ) {
+    if ( $RowMax == 0 ) {
         ${ $Param{CellData} }[0] = [];
         $RowMax = 1;
     }
-    if ( $ColumnMax eq 0 ) {
+    if ( $ColumnMax == 0 ) {
         $ColumnMax = 1;
     }
 
@@ -1915,8 +1891,7 @@ sub _TableCalculate {
                 if (
                     !defined( $Cell->{FontColor} )
                     && defined( $Param{FontColorOdd} )
-                    )
-                {
+                ) {
                     $Cell->{FontColor} = $Param{FontColorOdd};
                 }
 
@@ -1924,8 +1899,7 @@ sub _TableCalculate {
                 if (
                     !defined( $Cell->{BackgroundColor} )
                     && defined( $Param{BackgroundColorOdd} )
-                    )
-                {
+                ) {
                     $Cell->{BackgroundColor} = $Param{BackgroundColorOdd};
                 }
             }
@@ -1937,8 +1911,7 @@ sub _TableCalculate {
                 if (
                     !defined( $Cell->{FontColor} )
                     && defined( $Param{FontColorEven} )
-                    )
-                {
+                ) {
                     $Cell->{FontColor} = $Param{FontColorEven};
                 }
 
@@ -1946,8 +1919,7 @@ sub _TableCalculate {
                 if (
                     !defined( $Cell->{BackgroundColor} )
                     && defined( $Param{BackgroundColorEven} )
-                    )
-                {
+                ) {
                     $Cell->{BackgroundColor} = $Param{BackgroundColorEven};
                 }
             }
@@ -1973,8 +1945,7 @@ sub _TableCalculate {
             if (
                 !defined( $Cell->{Content} )
                 || $Cell->{Content} eq ''
-                )
-            {
+            ) {
                 $Cell->{Content} = ' ';
             }
 
@@ -2082,10 +2053,8 @@ sub _TableCalculate {
         }
         else {
             if (
-                ( $ColumnBlocks->[$Block]->{Width} + $ColumnWidth - $Param{Border} )
-                > $Param{Width}
-                )
-            {
+                ( $ColumnBlocks->[$Block]->{Width} + $ColumnWidth - $Param{Border} ) > $Param{Width}
+            ) {
                 $ColumnBlocks->[$Block]->{ColumnStop} = $Counter - 1;
                 $Block++;
                 $ColumnBlocks->[$Block]->{Width}       = $ColumnWidth;
@@ -2232,8 +2201,7 @@ sub _TableBlockNextCalculate {
     for my $Row ( @{ $Param{CellData} } ) {
 
         # if last block was temporary off, reactivate the row
-        if ( $Param{CellData}->[$RowCounter]->[ $#{ $Param{CellData}->[$RowCounter] } ]->{TmpOff} )
-        {
+        if ( $Param{CellData}->[$RowCounter]->[ $#{ $Param{CellData}->[$RowCounter] } ]->{TmpOff} ) {
             for ( my $ColumnCounter = 0; $ColumnCounter < scalar(@$Row); $ColumnCounter++ ) {
                 $Row->[$ColumnCounter]->{TmpOff} = 0;
             }
@@ -2245,12 +2213,11 @@ sub _TableBlockNextCalculate {
 
             # calculate RowStart and ColumnStart
             if (
-                $Row->[$ColumnCounter]->{Off} ne 1
-                && $Row->[$ColumnCounter]->{TmpOff} ne 1
+                $Row->[$ColumnCounter]->{Off} ne "1"
+                && $Row->[$ColumnCounter]->{TmpOff} ne "1"
                 && $RowStart eq 'NULL'
                 && $ColumnStart eq 'NULL'
-                )
-            {
+            ) {
                 $RowStart    = $RowCounter;
                 $ColumnStart = $ColumnCounter;
                 $ColumnStop  = $ColumnStart;
@@ -2269,8 +2236,7 @@ sub _TableBlockNextCalculate {
             if (
                 $ColumnCounter > $ColumnStop
                 && $Column->{Block} eq $Block
-                )
-            {
+            ) {
                 $ColumnStop = $ColumnCounter;
             }
             $ColumnCounter++;
@@ -2319,8 +2285,7 @@ sub _TableRowCalculate {
         ref( $Param{CellData} ) ne 'ARRAY'
         || ref( $Param{ColumnData} ) ne 'ARRAY'
         || ref( $Param{RowData} ) ne 'ARRAY'
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Need array references of CellData, ColumnData and RowData!"
@@ -2428,8 +2393,7 @@ sub _TableCellOutput {
     for (
         qw(Width Height Text Type Font FontSize FontColor Align Lead
         PaddingTop PaddingRight PaddingBottom PaddingLeft BackgroundColor Border BorderColor)
-        )
-    {
+    ) {
         if ( !defined( $Param{$_} ) ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -2591,7 +2555,7 @@ sub _TableCellOnCount {
     }
     for my $Row ( @{ $Param{CellData} } ) {
         for ( my $ColumnCounter = 0; $ColumnCounter < scalar(@$Row); $ColumnCounter++ ) {
-            if ( $Row->[$ColumnCounter]->{Off} ne 1 ) {
+            if ( $Row->[$ColumnCounter]->{Off} ne "1" ) {
                 $Return++;
             }
         }
@@ -2844,7 +2808,7 @@ sub _TextCalculate {
     }
 
     # correct RequiredHeight
-    if ( $Return{RequiredWidth} eq 0 ) {
+    if ( $Return{RequiredWidth} eq "0" ) {
         $Return{RequiredHeight} = 0;
     }
 
@@ -3015,7 +2979,7 @@ sub _CurPageNumberSet {
     $Self->{Current}->{Page}++;
 
     # set page number of current page
-    if ( $Param{ShowPageNumber} eq 0 ) {
+    if ( $Param{ShowPageNumber} eq "0" ) {
         $Self->{PageData}->{ $Self->{Current}->{Page} }->{PageNumber} = '';
     }
     else {
@@ -3164,53 +3128,6 @@ sub _CurPageDimGet {
     return %Data;
 }
 
-=item _CurPageDimCheck()
-
-Check given X an/or Y if inside the page dimension
-
-   $True = $PDFObject->_CurPageDimCheck(
-       X => 200,  # (optional)
-       Y => 100,  # (optional)
-   );
-
-=cut
-
-sub _CurPageDimCheck {
-    my ( $Self, %Param ) = @_;
-
-    if ( !$Self->{PDF} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Need a PDF Document!"
-        );
-        return;
-    }
-    if ( !$Self->{Page} ) {
-        $Kernel::OM->Get('Kernel::System::Log')->Log(
-            Priority => 'error',
-            Message  => "Need a Page!"
-        );
-        return;
-    }
-
-    my $Return = 0;
-    my %Page   = $Self->_CurPageDimGet();
-
-    if ( defined( $Param{X} ) ) {
-        if ( $Param{X} >= 0 && $Param{X} <= $Page{Width} ) {
-            $Return = 1;
-        }
-    }
-
-    if ( defined( $Param{Y} ) ) {
-        if ( $Param{Y} >= 0 && $Param{Y} <= $Page{Height} ) {
-            $Return = 1;
-        }
-    }
-
-    return $Return;
-}
-
 =item _CurPrintableDimSet()
 
 Set current Printable Dimension
@@ -3250,8 +3167,7 @@ sub _CurPrintableDimSet {
             defined( $Param{Top} )
             && $Param{Top} > 0
             && $Param{Top} < $Self->{Current}->{PageHeight} / 2
-            )
-        {
+        ) {
             $Self->{Current}->{PrintableTop} = $Param{Top};
             $NewValue = 1;
         }
@@ -3261,8 +3177,7 @@ sub _CurPrintableDimSet {
             defined( $Param{Right} )
             && $Param{Right} > 0
             && $Param{Right} < $Self->{Current}->{PageWidth} / 2
-            )
-        {
+        ) {
             $Self->{Current}->{PrintableRight} = $Param{Right};
             $NewValue = 1;
         }
@@ -3272,8 +3187,7 @@ sub _CurPrintableDimSet {
             defined( $Param{Bottom} )
             && $Param{Bottom} > 0
             && $Param{Bottom} < $Self->{Current}->{PageHeight} / 2
-            )
-        {
+        ) {
             $Self->{Current}->{PrintableBottom} = $Param{Bottom};
             $NewValue = 1;
         }
@@ -3283,8 +3197,7 @@ sub _CurPrintableDimSet {
             defined( $Param{Left} )
             && $Param{Left} > 0
             && $Param{Left} < $Self->{Current}->{PageWidth} / 2
-            )
-        {
+        ) {
             $Self->{Current}->{PrintableLeft} = $Param{Left};
             $NewValue = 1;
         }
@@ -3399,8 +3312,7 @@ sub _CurPrintableDimCheck {
         if (
             $Param{X} >= $Printable{Left}
             && $Param{X} <= ( $Printable{Left} + $Printable{Width} )
-            )
-        {
+        ) {
             $Return = 1;
         }
     }
@@ -3409,8 +3321,7 @@ sub _CurPrintableDimCheck {
         if (
             $Param{Y} >= $Printable{Bottom}
             && $Param{Y} <= ( $Printable{Bottom} + $Printable{Height} )
-            )
-        {
+        ) {
             $Return = 1;
         }
     }
@@ -3457,8 +3368,7 @@ sub _CurContentDimSet {
             defined( $Param{Top} )
             && $Param{Top} >= $Self->{Current}->{PrintableTop}
             && $Param{Top} < $Self->{Current}->{PageHeight} / 2
-            )
-        {
+        ) {
             $Self->{Current}->{ContentTop} = $Param{Top};
             $NewValue = 1;
         }
@@ -3468,8 +3378,7 @@ sub _CurContentDimSet {
             defined( $Param{Right} )
             && $Param{Right} >= $Self->{Current}->{PrintableRight}
             && $Param{Right} < $Self->{Current}->{PageWidth} / 2
-            )
-        {
+        ) {
             $Self->{Current}->{ContentRight} = $Param{Right};
             $NewValue = 1;
         }
@@ -3479,8 +3388,7 @@ sub _CurContentDimSet {
             defined( $Param{Bottom} )
             && $Param{Bottom} >= $Self->{Current}->{PrintableBottom}
             && $Param{Bottom} < $Self->{Current}->{PageHeight} / 2
-            )
-        {
+        ) {
             $Self->{Current}->{ContentBottom} = $Param{Bottom};
             $NewValue = 1;
         }
@@ -3490,8 +3398,7 @@ sub _CurContentDimSet {
             defined( $Param{Left} )
             && $Param{Left} >= $Self->{Current}->{PrintableLeft}
             && $Param{Left} < $Self->{Current}->{PageWidth} / 2
-            )
-        {
+        ) {
             $Self->{Current}->{ContentLeft} = $Param{Left};
             $NewValue = 1;
         }
@@ -3601,8 +3508,7 @@ sub _CurContentDimCheck {
     }
 
     if ( defined( $Param{Y} ) ) {
-        if ( $Param{Y} >= $Content{Bottom} && $Param{Y} <= ( $Content{Bottom} + $Content{Height} ) )
-        {
+        if ( $Param{Y} >= $Content{Bottom} && $Param{Y} <= ( $Content{Bottom} + $Content{Height} ) ) {
             $Return = 1;
         }
     }
@@ -3645,16 +3551,14 @@ sub _CurPositionSet {
                 defined( $Param{X} )
                 && $Param{X} >= $Self->{Current}->{PrintableLeft}
                 && $Param{X} <= $Self->{Current}->{PageWidth} - $Self->{Current}->{PrintableRight}
-                )
-            {
+            ) {
                 $Self->{Current}->{PositionX} = $Param{X};
             }
             if (
                 defined( $Param{Y} )
                 && $Param{Y} <= $Self->{Current}->{PageHeight} - $Self->{Current}->{PrintableTop}
                 && $Param{Y} >= $Self->{Current}->{PrintableBottom}
-                )
-            {
+            ) {
                 $Self->{Current}->{PositionY} = $Param{Y};
             }
         }
@@ -3663,16 +3567,14 @@ sub _CurPositionSet {
                 defined( $Param{X} )
                 && $Param{X} >= $Self->{Current}->{ContentLeft}
                 && $Param{X} <= $Self->{Current}->{PageWidth} - $Self->{Current}->{ContentRight}
-                )
-            {
+            ) {
                 $Self->{Current}->{PositionX} = $Param{X};
             }
             if (
                 defined( $Param{Y} )
                 && $Param{Y} <= $Self->{Current}->{PageHeight} - $Self->{Current}->{ContentTop}
                 && $Param{Y} >= $Self->{Current}->{ContentBottom}
-                )
-            {
+            ) {
                 $Self->{Current}->{PositionY} = $Param{Y};
             }
         }

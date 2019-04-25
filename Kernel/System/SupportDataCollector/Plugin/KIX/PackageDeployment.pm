@@ -52,8 +52,6 @@ sub Run {
             Result  => 'SCALAR',
         );
 
-        #rbo - T2016121190001552 - removed package verification
-
         my %PackageStructure = $PackageObject->PackageParse(
             String => $PackageContent,
         );

@@ -282,8 +282,7 @@ sub ArticleCreate {
         $DBObject->GetDatabaseFunction('Type') eq 'oracle'
         && defined $Param{Body}
         && !$Param{Body}
-        )
-    {
+    ) {
         $Param{Body} = ' ';
     }
 
@@ -337,8 +336,7 @@ sub ArticleCreate {
         if (
             $Attachment->{ContentType} eq "text/html; charset=\"$Param{Charset}\""
             && $Attachment->{Filename} eq 'file-2'
-            )
-        {
+        ) {
             $HTMLUtilsObject->EmbeddedImagesExtract(
                 DocumentRef    => \$Attachment->{Content},
                 AttachmentsRef => \@AttachmentConvert,
@@ -386,8 +384,7 @@ sub ArticleCreate {
         $Param{UnlockOnAway}
         && $OldTicketData{Lock} eq 'lock'
         && $ConfigObject->Get('Ticket::UnlockOnAway')
-        )
-    {
+    ) {
         my %OwnerInfo = $UserObject->GetUserData(
             UserID => $OldTicketData{OwnerID},
         );
@@ -454,8 +451,7 @@ sub ArticleCreate {
     elsif (
         $Param{SenderType} eq 'agent'
         && $Param{ArticleType} =~ /email-ext|phone|fax|sms|note-ext/
-        )
-    {
+    ) {
         $Self->TicketUnlockTimeoutUpdate(
             UnlockTimeout => $TimeObject->SystemTime(),
             TicketID      => $Param{TicketID},
@@ -484,20 +480,20 @@ sub ArticleCreate {
 
     # remember agent to exclude notifications
     my @SkipRecipients;
-    if ( $Param{ExcludeNotificationToUserID} && ref $Param{ExcludeNotificationToUserID} eq 'ARRAY' )
-    {
+    if (
+        $Param{ExcludeNotificationToUserID}
+        && ref $Param{ExcludeNotificationToUserID} eq 'ARRAY'
+    ) {
         for my $UserID ( @{ $Param{ExcludeNotificationToUserID} } ) {
             push @SkipRecipients, $UserID;
         }
     }
 
     # remember agent to exclude notifications / already sent
-    my %DoNotSendMute;
     if (
         $Param{ExcludeMuteNotificationToUserID}
         && ref $Param{ExcludeMuteNotificationToUserID} eq 'ARRAY'
-        )
-    {
+    ) {
         for my $UserID ( @{ $Param{ExcludeMuteNotificationToUserID} } ) {
             push @SkipRecipients, $UserID;
         }
@@ -511,10 +507,8 @@ sub ArticleCreate {
     # send agent notification on ticket create
     if (
         $FirstArticle &&
-        $Param{HistoryType}
-        =~ /^(EmailAgent|EmailCustomer|PhoneCallCustomer|WebRequestCustomer|SystemRequest)$/i
-        )
-    {
+        $Param{HistoryType} =~ /^(EmailAgent|EmailCustomer|PhoneCallCustomer|WebRequestCustomer|SystemRequest)$/i
+    ) {
         # trigger notification event
         $Self->EventHandler(
             Event => 'NotificationNewTicket',
@@ -1143,35 +1137,32 @@ sub ArticleIndex {
     # db query
     if ( $Param{SenderType} && $Param{ArticleTypeNotLike} ) {
         return if !$DBObject->Prepare(
-            SQL => '
-                    SELECT art.id FROM article art, article_sender_type ast, article_type at
-                    WHERE art.ticket_id = ?
-                        AND art.article_sender_type_id = ast.id
-                        AND art.article_type_id = at.id AND ast.name = ?
-                        AND NOT (at.name LIKE ?)
-                    ORDER BY art.id',
+            SQL => 'SELECT art.id FROM article art, article_sender_type ast, article_type at'
+                 . ' WHERE art.ticket_id = ?'
+                 . '  AND art.article_sender_type_id = ast.id'
+                 . '  AND art.article_type_id = at.id AND ast.name = ?'
+                 . '  AND NOT (at.name LIKE ?)'
+                 . ' ORDER BY art.id',
             Bind => [ \$Param{TicketID}, \$Param{SenderType}, \$Param{ArticleTypeNotLike} ],
         );
     }
     elsif ( $Param{SenderType} ) {
 
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT art.id FROM article art, article_sender_type ast
-                WHERE art.ticket_id = ?
-                    AND art.article_sender_type_id = ast.id
-                    AND ast.name = ?
-                ORDER BY art.id',
+            SQL => 'SELECT art.id FROM article art, article_sender_type ast'
+                 . ' WHERE art.ticket_id = ?'
+                 . '  AND art.article_sender_type_id = ast.id'
+                 . '  AND ast.name = ?'
+                 . ' ORDER BY art.id',
             Bind => [ \$Param{TicketID}, \$Param{SenderType} ],
         );
     }
     else {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id
-                FROM article
-                WHERE ticket_id = ?
-                ORDER BY id',
+            SQL  => 'SELECT id'
+                  . ' FROM article'
+                  . ' WHERE ticket_id = ?'
+                  . ' ORDER BY id',
             Bind => [ \$Param{TicketID} ],
         );
     }
@@ -1470,20 +1461,19 @@ sub ArticleGet {
     # sql query
     my @Content;
     my @Bind;
-    my $SQL = '
-        SELECT sa.ticket_id, sa.a_from, sa.a_to, sa.a_cc, sa.a_subject,
-            sa.a_reply_to, sa.a_message_id, sa.a_in_reply_to, sa.a_references, sa.a_body,
-            st.create_time_unix, st.ticket_state_id, st.queue_id, sa.create_time,
-            sa.a_content_type, sa.create_by, st.tn, article_sender_type_id, st.customer_id,
-            st.until_time, st.ticket_priority_id, st.customer_user_id, st.user_id,
-            st.responsible_user_id, sa.article_type_id,
-            sa.incoming_time, sa.id,
-            st.ticket_lock_id, st.title, st.escalation_update_time,
-            st.type_id, st.service_id, st.sla_id, st.escalation_response_time,
-            st.escalation_solution_time, st.escalation_time, st.change_time
-        FROM article sa
-        JOIN ticket st ON sa.ticket_id = st.id
-        WHERE ';
+    my $SQL = 'SELECT sa.ticket_id, sa.a_from, sa.a_to, sa.a_cc, sa.a_subject,'
+            . '  sa.a_reply_to, sa.a_message_id, sa.a_in_reply_to, sa.a_references, sa.a_body,'
+            . '  st.create_time_unix, st.ticket_state_id, st.queue_id, sa.create_time,'
+            . '  sa.a_content_type, sa.create_by, st.tn, article_sender_type_id, st.customer_id,'
+            . '  st.until_time, st.ticket_priority_id, st.customer_user_id, st.user_id,'
+            . '  st.responsible_user_id, sa.article_type_id,'
+            . '  sa.incoming_time, sa.id,'
+            . '  st.ticket_lock_id, st.title, st.escalation_update_time,'
+            . '  st.type_id, st.service_id, st.sla_id, st.escalation_response_time,'
+            . '  st.escalation_solution_time, st.escalation_time, st.change_time'
+            . ' FROM article sa'
+            . '  JOIN ticket st ON sa.ticket_id = st.id'
+            . ' WHERE ';
 
     if ( $Param{ArticleID} ) {
         $SQL .= 'sa.id = ?';
@@ -1706,8 +1696,7 @@ sub ArticleGet {
                         )
                         \z
                     }smxi
-                    )
-                {
+                ) {
 
                     # Set field for 3.0 and 2.4 compatibility
                     $Article->{ $DynamicFieldConfig->{Name} } = $Value;
@@ -1915,7 +1904,7 @@ sub ArticleGet {
 Returns the number of articles for a ticket, possibly filtered by
 ArticleSenderTypeID and ArticleTypeID
 
-    my $ArticleCount = $TicketID->ArticleCount(
+    my $ArticleCount = $TicketObject->ArticleCount(
         TicketID            => 123,
         ArticleTypeID       => [1, 2], # optional
         ArticleSenderTypeID => [1, 2], # optional
@@ -2492,8 +2481,7 @@ sub SendAutoResponse {
     if (
         $Param{AutoResponseType} eq 'auto reply'
         && ( $State{TypeName} eq 'closed' || $State{TypeName} eq 'removed' )
-        )
-    {
+    ) {
 
         # add history row
         $Self->HistoryAdd(
@@ -2508,7 +2496,6 @@ sub SendAutoResponse {
         return;
     }
 
-#rbo - T2016121190001552 - renamed X-KIX headers
     # log that no auto response was sent!
     if ( $OrigHeader{'X-KIX-Loop'} || $OrigHeader{'X-OTRS-Loop'} ) {
 
@@ -2628,8 +2615,7 @@ sub SendAutoResponse {
             $CustomerUser{UserEmail}
             && $OrigHeader{From} !~ /\Q$CustomerUser{UserEmail}\E/i
             && $Param{ArticleType} ne 'email-internal'
-            )
-        {
+        ) {
             $Cc = $CustomerUser{UserEmail};
         }
     }
@@ -2739,17 +2725,15 @@ sub ArticleFlagSet {
 
     # set flag
     return if !$DBObject->Do(
-        SQL => '
-            DELETE FROM article_flag
-            WHERE article_id = ?
-                AND article_key = ?
-                AND create_by = ?',
+        SQL  => 'DELETE FROM article_flag'
+              . ' WHERE article_id = ?'
+              . '  AND article_key = ?'
+              . '  AND create_by = ?',
         Bind => [ \$Param{ArticleID}, \$Param{Key}, \$Param{UserID} ],
     );
     return if !$DBObject->Do(
-        SQL => 'INSERT INTO article_flag
-            (article_id, article_key, article_value, create_time, create_by)
-            VALUES (?, ?, ?, current_timestamp, ?)',
+        SQL  => 'INSERT INTO article_flag (article_id, article_key, article_value, create_time, create_by)'
+              . ' VALUES (?, ?, ?, current_timestamp, ?)',
         Bind => [ \$Param{ArticleID}, \$Param{Key}, \$Param{Value}, \$Param{UserID} ],
     );
 
@@ -2824,20 +2808,18 @@ sub ArticleFlagDelete {
 
     if ( $Param{AllUsers} ) {
         return if !$DBObject->Do(
-            SQL => '
-                DELETE FROM article_flag
-                WHERE article_id = ?
-                    AND article_key = ?',
+            SQL  => 'DELETE FROM article_flag'
+                  . ' WHERE article_id = ?'
+                  . '  AND article_key = ?',
             Bind => [ \$Param{ArticleID}, \$Param{Key} ],
         );
     }
     else {
         return if !$DBObject->Do(
-            SQL => '
-                DELETE FROM article_flag
-                WHERE article_id = ?
-                    AND create_by = ?
-                    AND article_key = ?',
+            SQL  => 'DELETE FROM article_flag'
+                  . ' WHERE article_id = ?'
+                  . '  AND create_by = ?'
+                  . '  AND article_key = ?',
             Bind => [ \$Param{ArticleID}, \$Param{UserID}, \$Param{Key} ],
         );
 
@@ -2893,11 +2875,10 @@ sub ArticleFlagGet {
 
     # sql query
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT article_key, article_value
-            FROM article_flag
-            WHERE article_id = ?
-                AND create_by = ?',
+        SQL => 'SELECT article_key, article_value'
+             . ' FROM article_flag'
+             . ' WHERE article_id = ?'
+             . '  AND create_by = ?',
         Bind  => [ \$Param{ArticleID}, \$Param{UserID} ],
         Limit => 1500,
     );
@@ -2947,12 +2928,11 @@ sub ArticleFlagsOfTicketGet {
 
     # sql query
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT article.id, article_flag.article_key, article_flag.article_value
-            FROM article_flag, article
-            WHERE article.id = article_flag.article_id
-                AND article.ticket_id = ?
-                AND article_flag.create_by = ?',
+        SQL   => 'SELECT article.id, article_flag.article_key, article_flag.article_value'
+               . ' FROM article_flag, article'
+               . ' WHERE article.id = article_flag.article_id'
+               . '  AND article.ticket_id = ?'
+               . '  AND article_flag.create_by = ?',
         Bind  => [ \$Param{TicketID}, \$Param{UserID} ],
         Limit => 1500,
     );
@@ -3132,11 +3112,9 @@ sub ArticleAttachmentIndex {
             # find plain attachment
             if (
                 !$AttachmentIDPlain
-                &&
-                $File{Filename} eq 'file-1'
+                && $File{Filename} eq 'file-1'
                 && $File{ContentType} =~ /text\/plain/i
-                )
-            {
+            ) {
                 $AttachmentIDPlain = $AttachmentID;
             }
 
@@ -3145,11 +3123,9 @@ sub ArticleAttachmentIndex {
             #  o file-1.html, is only html attachment
             if (
                 !$AttachmentIDHTML
-                &&
-                ( $File{Filename} =~ /^file-[12]$/ || $File{Filename} eq 'file-1.html' )
+                && ( $File{Filename} =~ /^file-[12]$/ || $File{Filename} eq 'file-1.html' )
                 && $File{ContentType} =~ /text\/html/i
-                )
-            {
+            ) {
                 $AttachmentIDHTML = $AttachmentID;
             }
         }
@@ -3157,7 +3133,7 @@ sub ArticleAttachmentIndex {
             delete $Attachments{$AttachmentIDPlain};
 
             # remove any files with content-id from attachment list and listed in html body
-            if ( $Param{StripPlainBodyAsAttachment} eq 1 ) {
+            if ( $Param{StripPlainBodyAsAttachment} eq "1" ) {
 
                 # get html body
                 my %Attachment = $Self->ArticleAttachment(
@@ -3178,8 +3154,7 @@ sub ArticleAttachmentIndex {
                         $File{ContentID}
                         && $Attachment{Content} =~ /\Q$File{ContentID}\E/i
                         && $File{Disposition} eq 'inline'
-                        )
-                    {
+                    ) {
                         delete $Attachments{$AttachmentID};
                     }
                 }
@@ -3187,10 +3162,9 @@ sub ArticleAttachmentIndex {
 
             # only strip html body attachment by "1" or "3"
             if (
-                $Param{StripPlainBodyAsAttachment} eq 1
-                || $Param{StripPlainBodyAsAttachment} eq 3
-                )
-            {
+                $Param{StripPlainBodyAsAttachment} eq "1"
+                || $Param{StripPlainBodyAsAttachment} eq "3"
+            ) {
                 delete $Attachments{$AttachmentIDHTML};
             }
             $Param{Article}->{AttachmentIDOfHTMLBody} = $AttachmentIDHTML;
@@ -3199,7 +3173,7 @@ sub ArticleAttachmentIndex {
         # plain body size vs. attched body size check
         # and remove attachment if it's email body
         if ( !$AttachmentIDHTML ) {
-            my $AttachmentIDPlain = 0;
+            my $AttachmentIDPlainBody = 0;
             my %AttachmentFilePlain;
             ATTACHMENT_ID:
             for my $AttachmentID ( sort keys %Attachments ) {
@@ -3209,10 +3183,9 @@ sub ArticleAttachmentIndex {
                 if (
                     $File{Filename} eq 'file-1'
                     && $File{ContentType} =~ /text\/plain/i
-                    )
-                {
-                    $AttachmentIDPlain   = $AttachmentID;
-                    %AttachmentFilePlain = %File;
+                ) {
+                    $AttachmentIDPlainBody = $AttachmentID;
+                    %AttachmentFilePlain   = %File;
                     last ATTACHMENT_ID;
                 }
             }
@@ -3227,9 +3200,8 @@ sub ArticleAttachmentIndex {
                 if (
                     $BodySize / 1.1 < $AttachmentFilePlain{FilesizeRaw}
                     && $BodySize * 1.1 > $AttachmentFilePlain{FilesizeRaw}
-                    )
-                {
-                    delete $Attachments{$AttachmentIDPlain};
+                ) {
+                    delete $Attachments{$AttachmentIDPlainBody};
                 }
             }
         }

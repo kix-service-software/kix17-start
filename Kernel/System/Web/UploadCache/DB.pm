@@ -56,9 +56,7 @@ sub FormIDRemove {
     }
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            DELETE FROM web_upload_cache
-            WHERE form_id = ?',
+        SQL  => 'DELETE FROM web_upload_cache WHERE form_id = ?',
         Bind => [ \$Param{FormID} ],
     );
 
@@ -107,10 +105,8 @@ sub FormIDAddFile {
     my $Time = time();
 
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO web_upload_cache (form_id, filename, content_type, content_size, content,
-                create_time_unix, content_id, disposition)
-            VALUES  (?, ?, ?, ?, ?, ?, ?, ?)',
+        SQL => 'INSERT INTO web_upload_cache (form_id, filename, content_type, content_size, content, create_time_unix, content_id, disposition)'
+             . ' VALUES  (?, ?, ?, ?, ?, ?, ?, ?)',
         Bind => [
             \$Param{FormID}, \$Param{Filename}, \$Param{ContentType}, \$Param{Filesize},
             \$Param{Content}, \$Time, \$ContentID, \$Param{Disposition}
@@ -142,10 +138,7 @@ sub FormIDRemoveFile {
     $Param{Filename} = $Index[$ID]->{Filename};
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            DELETE FROM web_upload_cache
-            WHERE form_id = ?
-                AND filename = ?',
+        SQL  => 'DELETE FROM web_upload_cache WHERE form_id = ? AND filename = ?',
         Bind => [ \$Param{FormID}, \$Param{Filename} ],
     );
 
@@ -171,11 +164,10 @@ sub FormIDGetAllFilesData {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     $DBObject->Prepare(
-        SQL => '
-            SELECT filename, content_type, content_size, content, content_id, disposition
-            FROM web_upload_cache
-            WHERE form_id = ?
-            ORDER BY create_time_unix',
+        SQL    => 'SELECT filename, content_type, content_size, content, content_id, disposition'
+                . ' FROM web_upload_cache'
+                . ' WHERE form_id = ?'
+                . ' ORDER BY create_time_unix',
         Bind   => [ \$Param{FormID} ],
         Encode => [ 1, 1, 1, 0, 1, 1 ],
     );
@@ -238,11 +230,10 @@ sub FormIDGetAllFilesMeta {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     $DBObject->Prepare(
-        SQL => '
-            SELECT filename, content_type, content_size, content_id, disposition
-            FROM web_upload_cache
-            WHERE form_id = ?
-            ORDER BY create_time_unix',
+        SQL  => 'SELECT filename, content_type, content_size, content_id, disposition'
+              . ' FROM web_upload_cache'
+              . ' WHERE form_id = ?'
+              . ' ORDER BY create_time_unix',
         Bind => [ \$Param{FormID} ],
     );
 
@@ -284,9 +275,7 @@ sub FormIDCleanUp {
     my $CurrentTile = time() - ( 60 * 60 * 24 * 1 );
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            DELETE FROM web_upload_cache
-            WHERE create_time_unix < ?',
+        SQL  => 'DELETE FROM web_upload_cache WHERE create_time_unix < ?',
         Bind => [ \$CurrentTile ],
     );
 

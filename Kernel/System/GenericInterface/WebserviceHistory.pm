@@ -99,10 +99,8 @@ sub WebserviceHistoryAdd {
 
     # sql
     return if !$DBObject->Do(
-        SQL =>
-            'INSERT INTO gi_webservice_config_history
-                (config_id, config, config_md5, create_time, create_by, change_time, change_by)
-            VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL => 'INSERT INTO gi_webservice_config_history (config_id, config, config_md5, create_time, create_by, change_time, change_by)'
+             . ' VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{WebserviceID}, \$Config, \$MD5, \$Param{UserID}, \$Param{UserID},
         ],
@@ -158,9 +156,9 @@ sub WebserviceHistoryGet {
 
     # sql
     return if !$DBObject->Prepare(
-        SQL => 'SELECT config_id, config, create_time, change_time
-                FROM gi_webservice_config_history
-                WHERE id = ?',
+        SQL   => 'SELECT config_id, config, create_time, change_time'
+               . ' FROM gi_webservice_config_history'
+               . ' WHERE id = ?',
         Bind  => [ \$Param{ID} ],
         Limit => 1,
     );
@@ -220,9 +218,9 @@ sub WebserviceHistoryUpdate {
 
     # sql
     return if !$DBObject->Do(
-        SQL => 'UPDATE gi_webservice_config_history
-                SET config_id = ?, config = ?, change_time = current_timestamp, change_by = ?
-                WHERE id = ?',
+        SQL => 'UPDATE gi_webservice_config_history'
+             . ' SET config_id = ?, config = ?, change_time = current_timestamp, change_by = ?'
+             . ' WHERE id = ?',
         Bind => [
             \$Param{WebserviceID}, \$Config, \$Param{UserID}, \$Param{ID},
         ],
@@ -258,8 +256,7 @@ sub WebserviceHistoryDelete {
 
     # sql
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => 'DELETE FROM gi_webservice_config_history
-                WHERE config_id = ?',
+        SQL  => 'DELETE FROM gi_webservice_config_history WHERE config_id = ?',
         Bind => [ \$Param{WebserviceID} ],
     );
 
@@ -294,9 +291,7 @@ sub WebserviceHistoryList {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     return if !$DBObject->Prepare(
-        SQL =>
-            'SELECT id FROM gi_webservice_config_history
-            WHERE config_id = ? ORDER BY id DESC',
+        SQL  => 'SELECT id FROM gi_webservice_config_history WHERE config_id = ? ORDER BY id DESC',
         Bind => [ \$Param{WebserviceID} ],
     );
 

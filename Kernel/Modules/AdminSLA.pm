@@ -74,8 +74,7 @@ sub Run {
 #            qw(SLAID Name Calendar FirstResponseTime FirstResponseNotify SolutionTime SolutionNotify UpdateTime UpdateNotify ValidID Comment)
             qw(SLAID Name Calendar FirstResponseTime FirstResponseNotify SolutionTime SolutionNotify UpdateTime UpdateNotify ValidID Comment TypeID MinTimeBetweenIncidents)
 # ---
-            )
-        {
+        ) {
             $GetParam{$Param} = $ParamObject->GetParam( Param => $Param ) || '';
         }
 
@@ -152,26 +151,23 @@ sub Run {
                     my $Note;
                     my @Params = $Object->Param( SLAData => \%SLAData );
                     if (@Params) {
-                        my %GetParam = ();
+                        my %GetPrefParam = ();
                         for my $ParamItem (@Params) {
                             my @Array = $ParamObject->GetArray( Param => $ParamItem->{Name} );
-                            $GetParam{ $ParamItem->{Name} } = \@Array;
+                            $GetPrefParam{ $ParamItem->{Name} } = \@Array;
                         }
                         if (
                             !$Object->Run(
-                                GetParam => \%GetParam,
+                                GetParam => \%GetPrefParam,
                                 SLAData  => \%SLAData
                             )
-                            )
-                        {
+                        ) {
                             $Note .= $LayoutObject->Notify( Info => $Object->Error() );
                         }
                     }
                 }
-
                 return $LayoutObject->Redirect( OP => "Action=$Self->{Action}" );
             }
-
         }
 
         # header
@@ -265,8 +261,7 @@ sub Run {
                 for my $ServiceID (
                     sort { lc $ServiceList{$a} cmp lc $ServiceList{$b} }
                     @{ $SLAData{ServiceIDs} }
-                    )
-                {
+                ) {
                     push @ServiceList, $ServiceList{$ServiceID} || '-';
                 }
 
@@ -280,32 +275,11 @@ sub Run {
                     },
                 );
 
-                # KIX4OTRS-capeIT
-                # output each service in same column (instead of one line per service)
-                # next SLAID if scalar @ServiceList <= 1;
-                #
-                # # remove the first service id
-                # shift @ServiceList;
-                #
-                # for my $ServiceName (@ServiceList) {
-                #
-                #     # output overview list row
-                #     $LayoutObject->Block(
-                #         Name => 'OverviewListRow',
-                #         Data => {
-                #             Service => $ServiceName,
-                #         },
-                #     );
-                # }
                 for my $ServiceName (@ServiceList) {
 
                     # output overview list row
                     $LayoutObject->Block(
-
-                        # Name => 'OverviewListRow',
                         Name => 'OverviewListRowService',
-
-                        # EO KIX4OTRS-capeIT
                         Data => {
                             Service => $ServiceName,
                         },
@@ -513,8 +487,7 @@ sub _MaskNew {
                 if (
                     ref( $ParamItem->{Data} ) eq 'HASH'
                     || ref( $Preferences{$Item}->{Data} ) eq 'HASH'
-                    )
-                {
+                ) {
                     my %BuildSelectionParams = (
                         %{ $Preferences{$Item} },
                         %{$ParamItem},

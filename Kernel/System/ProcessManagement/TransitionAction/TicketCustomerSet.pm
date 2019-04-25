@@ -117,8 +117,7 @@ sub Run {
         && !$Param{Config}->{No}
         && !$Param{Config}->{CustomerUserID}
         && !$Param{Config}->{User}
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => $CommonMessage . "No CustomerID/No or CustomerUserID/User configured!",
@@ -140,12 +139,11 @@ sub Run {
             !defined $Param{Ticket}->{CustomerID}
             || $Param{Config}->{CustomerID} ne $Param{Ticket}->{CustomerID}
         )
-        )
-    {
+    ) {
         # get ticket object
         my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-        my $Success = $TicketObject->TicketCustomerSet(
+        $Success = $TicketObject->TicketCustomerSet(
             TicketID => $Param{Ticket}->{TicketID},
             No       => $Param{Config}->{CustomerID},
             UserID   => $Param{UserID},
@@ -171,12 +169,11 @@ sub Run {
             !defined $Param{Ticket}->{CustomerUserID}
             || $Param{Config}->{CustomerUserID} ne $Param{Ticket}->{CustomerUserID}
         )
-        )
-    {
+    ) {
         # get ticket object
         my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-        my $Success = $TicketObject->TicketCustomerSet(
+        $Success = $TicketObject->TicketCustomerSet(
             TicketID => $Param{Ticket}->{TicketID},
             User     => $Param{Config}->{CustomerUserID},
             UserID   => $Param{UserID},

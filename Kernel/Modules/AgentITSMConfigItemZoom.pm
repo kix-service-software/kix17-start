@@ -38,7 +38,6 @@ sub Run {
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # KIX4OTRS-capeIT
     # get needed objects
     my $LogObject = $Kernel::OM->Get('Kernel::System::Log');
 
@@ -50,14 +49,11 @@ sub Run {
 
     # possible params for graph
     # not enabled yet...
-    # my $Param{RelevantObjectTypes} = $ParamObject->GetParam( Param => 'RelevantObjectTypes' );
     $Param{RelevantObjectSubTypes} =
         $ParamObject->GetParam( Param => 'RelevantObjectSubTypes' );
     $Param{RelevantLinkTypes} = $ParamObject->GetParam( Param => 'RelevantLinkTypes' );
     $Param{MaxSearchDepth}    = $ParamObject->GetParam( Param => 'MaxSearchDepth' );
     $Param{UsedStrength}      = $ParamObject->GetParam( Param => 'UsedStrength' );
-
-    # EO KIX4OTRS-capeIT
 
     # check needed stuff
     if ( !$ConfigItemID ) {
@@ -94,14 +90,11 @@ sub Run {
         $Param{ShowVersions} = 1;
     }
 
-    # KIX4OTRS-capeIT
     # get selected tab
     $Param{SelectedTab} = $ParamObject->GetParam( Param => 'SelectedTab' );
     if ( !$Param{SelectedTab} ) {
         $Param{SelectedTab} = '0';
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get content
     my $ConfigItem = $ConfigItemObject->ConfigItemGet(
@@ -161,7 +154,6 @@ sub Run {
                     elsif ( $Menus{$Menu}->{Target} eq 'Back' ) {
                         $Menus{$Menu}->{MenuClass} = 'HistoryBack';
                     }
-
                 }
 
                 # run module
@@ -179,9 +171,7 @@ sub Run {
         }
     }
 
-    # KIX4OTRS-capeIT
     # outsourced version tree generation
-
     # load and build tabs
     my $ConfigItemZoomBackendRef = $ConfigObject->Get('AgentITSMConfigItemZoomBackend');
     if ( $ConfigItemZoomBackendRef && ref($ConfigItemZoomBackendRef) eq 'HASH' ) {
@@ -198,8 +188,7 @@ sub Run {
                     ||
                     $ConfigItemZoomBackendRef->{$CurrKey}->{CountMethod}
                     =~ /CallMethod::(\w+)Object::(\w+)/
-                    )
-                {
+                ) {
                     my $ObjectType = $1;
                     my $Method     = $2;
                     my $Hashresult = $3;
@@ -238,7 +227,7 @@ sub Run {
                         $LogObject->Log(
                             Priority => 'error',
                             Message  =>
-                                "KIX4OTRS::Kernel::Modules::AgentITSMConfigItemZoom::TabCount - "
+                                "Kernel::Modules::AgentITSMConfigItemZoom::TabCount - "
                                 . " invalid CallMethod ($Object->$Method) configured "
                                 . "(" . $@ . ")!",
                         );
@@ -263,8 +252,7 @@ sub Run {
                 if (
                     $Link =~ m/(.*?)ZoomTabLinkGraph(.*)/
                     && defined $Param{RelevantObjectSubTypes}
-                    )
-                {
+                ) {
                     $Link .= ";RelevantObjectSubTypes=" . $Param{RelevantObjectSubTypes};
                     $Link .= ";RelevantLinkTypes=" . $Param{RelevantLinkTypes};
                     $Link .= ";MaxSearchDepth=" . $Param{MaxSearchDepth};
@@ -310,8 +298,6 @@ sub Run {
             }
         }
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get last version
     my $LastVersion = $VersionList->[-1];
@@ -362,21 +348,17 @@ sub Run {
         my $DeplStateColor = lc $Preferences{Color};
 
         # add to style classes string
-        $StyleClasses .= "
-            .Flag span.$DeplState {
-                background-color: #$DeplStateColor;
-            }
-        ";
+        $StyleClasses .= <<"END";
+.Flag span.$DeplState {
+    background-color: #$DeplStateColor;
+}
+END
     }
 
     # wrap into style tags
     if ($StyleClasses) {
         $StyleClasses = "<style>$StyleClasses</style>";
     }
-
-    # KIX4OTRS-capeIT
-    # outsourced version tree generation
-    # EO KIX4OTRS-capeIT
 
     # output header
     my $Output = $LayoutObject->Header( Value => $ConfigItem->{Number} );
@@ -386,8 +368,6 @@ sub Run {
     my $Version = $ConfigItemObject->VersionGet(
         VersionID => $VersionID,
     );
-
-    # KIX4OTRS-capeIT
 
     $Param{KIXSidebarContent}
         = $LayoutObject->AgentKIXSidebar(
@@ -401,8 +381,6 @@ sub Run {
             %Param,
         },
     );
-
-    # EO KIX4OTRS-capeIT
 
     # store last screen
     $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
@@ -429,10 +407,6 @@ sub Run {
 
     return $Output;
 }
-
-# KIX4OTRS-capeIT
-# outsourced _XMLOutput
-# EO KIX4OTRS-capeIT
 
 1;
 

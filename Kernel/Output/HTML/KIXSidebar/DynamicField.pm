@@ -49,12 +49,9 @@ sub Run {
     my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my $Content;
-
     # get values
     my %GetParam = %Param;
-    for my $Key (qw(TicketID))
-    {
+    for my $Key (qw(TicketID)) {
         $GetParam{$Key} = $GetParam{$Key} || $Self->{ParamObject}->GetParam( Param => $Key ) || '';
     }
 
@@ -280,8 +277,7 @@ sub Run {
             if (
                 !defined $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
                 || !$Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
-                )
-            {
+            ) {
                 $LayoutObject->Block(
                     Name => 'DynamicFieldContentNotSet',
                     Data => {
@@ -302,8 +298,7 @@ sub Run {
                 || $DynamicFieldConfig->{FieldType} eq 'Multiselect'
                 || $DynamicFieldConfig->{FieldType} eq 'MultiselectGeneralCatalog'
                 || $DynamicFieldConfig->{FieldType} eq 'DropdownGeneralCatalog'
-                )
-            {
+            ) {
                 $LayoutObject->Block(
                     Name => 'DynamicFieldContentQuoted',
                     Data => {

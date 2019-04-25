@@ -384,8 +384,7 @@ sub UserAdd {
     if (
         $Param{UserEmail}
         && !$Kernel::OM->Get('Kernel::System::CheckItem')->CheckEmail( Address => $Param{UserEmail} )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Email address ($Param{UserEmail}) not valid ("
@@ -691,8 +690,7 @@ sub UserSearch {
     my $LikeEscapeString = $DBObject->GetDatabaseFunction('LikeEscapeString');
 
     # build SQL string
-    my $SQL = "SELECT $Self->{UserTableUserID}, login
-                   FROM $Self->{UserTable} WHERE ";
+    my $SQL = "SELECT $Self->{UserTableUserID}, login FROM $Self->{UserTable} WHERE ";
     my @Bind;
 
     if ( $Param{Search} ) {
@@ -1371,7 +1369,7 @@ search in user preferences
 =cut
 
 sub SearchPreferences {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
     # get user preferences config
     my $GeneratorModule = $Kernel::OM->Get('Kernel::Config')->Get('User::PreferencesModule')
@@ -1380,7 +1378,7 @@ sub SearchPreferences {
     # get generator preferences module
     my $PreferencesObject = $Kernel::OM->Get($GeneratorModule);
 
-    return $PreferencesObject->SearchPreferences(@_);
+    return $PreferencesObject->SearchPreferences(%Param);
 }
 
 =item TokenGenerate()

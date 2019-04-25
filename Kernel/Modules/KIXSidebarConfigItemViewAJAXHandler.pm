@@ -79,8 +79,7 @@ sub Run {
             && $TIDSearchMaskRegexp
             && $CallingAction =~ /$TIDSearchMaskRegexp/
             && $TicketID      =~ m/^\d+$/
-            )
-        {
+        ) {
             my %TicketData = $Self->{TicketObject}->TicketGet(
                 TicketID      => $TicketID,
                 UserID        => $Self->{UserID},
@@ -150,8 +149,7 @@ sub Run {
             && ref $VersionRef->{XMLData}->[1] eq 'HASH'
             && $VersionRef->{XMLData}->[1]->{Version}
             && ref $VersionRef->{XMLData}->[1]->{Version} eq 'ARRAY'
-            )
-        {
+        ) {
             if ( !$Result ) {
                 $Result = 1;
                 $Self->{LayoutObject}->Block(

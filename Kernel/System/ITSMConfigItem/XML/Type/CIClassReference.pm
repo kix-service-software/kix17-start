@@ -78,11 +78,9 @@ sub ValueLookup {
 
     if (
         $CIVersionDataRef
-        &&
-        ( ref($CIVersionDataRef) eq 'HASH' ) &&
-        $CIVersionDataRef->{Name}
-        )
-    {
+        && ( ref($CIVersionDataRef) eq 'HASH' )
+        && $CIVersionDataRef->{Name}
+    ) {
         $CIName = $CIVersionDataRef->{Name}
             . " ("
             . $CIVersionDataRef->{Number}

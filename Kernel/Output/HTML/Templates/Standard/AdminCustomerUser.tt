@@ -11,7 +11,6 @@
 
 [% RenderBlockStart("Overview") %]
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
-# rkaiser - T#2017020290001194 - changed customer user to contact
     <h1>[% Translate("Contact Management") | html %]</h1>
     <div class="SidebarColumn">
 [% RenderBlockStart("ActionList") %]
@@ -49,8 +48,6 @@
                             <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                             <input type="hidden" name="Subaction" value="Add"/>
                             <input type="hidden" name="Nav" value="[% Data.Nav | html %]"/>
-
-# rkaiser - T#2017020290001194 - changed customer user to contact
                             <button class="CallForAction Fullsize Center" type="submit"><span><i class="fa fa-plus-square"></i> [% Translate("Add contact") | html %]</span></button>
                             <br/>
                             <label class="InvisibleText" for="Source">[% Translate("Select") | html %]</label>
@@ -58,7 +55,6 @@
                         </form>
                     </li>
 [% RenderBlockEnd("ActionAdd") %]
-# KIX4OTRS-capeIT
 [% RenderBlockStart("ActionClone") %]
                     <li>
                         <form action="[% Env("CGIHandle") %]" method="post">
@@ -74,7 +70,6 @@
                         </form>
                     </li>
 [% RenderBlockEnd("ActionClone") %]
-# EO KIX4OTRS-capeIT
                 </ul>
 
             </div>
@@ -87,7 +82,6 @@
             </div>
             <div class="Content">
                 <p>
-# rkaiser - T#2017020290001194 - changed customer user to contact
                     [% Translate("Contact are needed to have a customer history and to login via customer panel.") | html %]
                 </p>
             </div>
@@ -165,11 +159,9 @@
 [% RenderBlockStart("OverviewUpdate") %]
             <div class="Header">
 [% RenderBlockStart("HeaderAdd") %]
-# rkaiser - T#2017020290001194 - changed customer user to contact
                  <h2><span>[% Translate("Add contact") | html %]</span></h2>
 [% RenderBlockEnd("HeaderAdd") %]
 [% RenderBlockStart("HeaderEdit") %]
-# rkaiser - T#2017020290001194 - changed customer user to contact
                  <h2><span>[% Translate("Edit contact") | html %]</span></h2>
 [% RenderBlockEnd("HeaderEdit") %]
             </div>

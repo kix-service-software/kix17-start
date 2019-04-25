@@ -22,6 +22,8 @@ our @ObjectDependencies = (
     'Kernel::System::User',
 );
 
+## no critic qw(TestingAndDebugging::ProhibitNoWarnings)
+
 sub KIXSideBarAssignedConfigItemsTable {
     my ( $Self, %Param ) = @_;
 
@@ -124,8 +126,7 @@ sub KIXSideBarAssignedConfigItemsTable {
                             || $KIXSidebarLinkedCIsParams->{SearchAttribute}
                         )
                 )
-                )
-            {
+            ) {
                 $Param{SearchPattern}
                     = $Customers{$Customer}->{$SearchAttribute} || '';
                 next CUSTOMER if !$Param{SearchPattern};
@@ -295,15 +296,13 @@ sub KIXSideBarAssignedConfigItemsTable {
                 for my $LinkDirection ( keys %{ $LinkListWithData->{$LinkObject}->{$LinkType} } ) {
                     for my $LinkItem (
                         keys %{ $LinkListWithData->{$LinkObject}->{$LinkType}->{$LinkDirection} }
-                        )
-                    {
+                    ) {
                         $ConfigItemList{$LinkItem} = 'checked="checked"';
                     }
                 }
             }
         }
     }
-    my @CIArray;
     my $Count    = 0;
     my $DivCount = 1;
 
@@ -524,8 +523,7 @@ sub CustomerDashboardAssignedConfigItemsTable {
                             || $KIXSidebarLinkedCIsParams->{SearchAttribute}
                         )
                 )
-                )
-            {
+            ) {
                 $Param{SearchPattern}
                     = $Customers{$Customer}->{$SearchAttribute} || '';
                 next CUSTOMER if !$Param{SearchPattern};
@@ -844,7 +842,7 @@ sub CountConfigItemImages {
     my @Files;
     if ( -e $Directory ) {
         opendir( DIR, $Directory );
-        @Files = grep { !/^(.|..|(.*?)\.txt(.*))$/g } readdir(DIR);
+        @Files = grep( { !/^(?:.|..|(?:.*?)\.txt(?:.*))$/g } readdir(DIR) );
         closedir(DIR);
     }
 

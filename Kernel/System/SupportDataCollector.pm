@@ -224,8 +224,7 @@ sub CollectByWebRequest {
 
     if (
         $Kernel::OM->Get('Kernel::System::SystemData')->SystemDataGet( Key => 'SupportDataCollector::ChallengeToken' )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::SystemData')->SystemDataUpdate(
             Key    => 'SupportDataCollector::ChallengeToken',
             Value  => $ChallengeToken,

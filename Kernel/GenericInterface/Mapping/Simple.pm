@@ -65,8 +65,7 @@ sub new {
     if (
         defined $Param{MappingConfig}->{Config}
         && !IsHashRefWithData( $Param{MappingConfig}->{Config} )
-        )
-    {
+    ) {
         return $Self->{DebuggerObject}->Error(
             Summary => 'Got MappingConfig with Data, but Data is no hash ref with content!',
         );
@@ -399,8 +398,7 @@ sub _ConfigCheck {
         if (
             !IsStringWithData( $Config->{$ConfigType}->{MapType} )
             || !$ValidMapTypes{ $Config->{$ConfigType}->{MapType} }
-            )
-        {
+        ) {
             return $Self->{DebuggerObject}->Error(
                 Summary => "Got no valid MapType in $ConfigType!",
             );
@@ -410,8 +408,7 @@ sub _ConfigCheck {
         if (
             $Config->{$ConfigType}->{MapType} eq 'MapTo'
             && !IsStringWithData( $Config->{$ConfigType}->{MapTo} )
-            )
-        {
+        ) {
             return $Self->{DebuggerObject}->Error(
                 Summary => "Got MapType 'MapTo', but MapTo value is not valid in $ConfigType!",
             );

@@ -30,10 +30,6 @@
     </ul>
     <div id="UserInfo">
         <span>[% Translate("You are logged in as") | html %] [% Translate("%s %s", Env("UserFirstname"), Env("UserLastname")) | html %]</span>
-[% RenderBlockStart("ChatRequests") %]
-        <a class="ChatRequests [% Data.Class | html %]" href="[% Env("Baselink") %]Action=CustomerChat;Subaction=ChatOverview;Filter=IncomingChatRequests;" title="[% Translate("Incoming Chat Requests") %]"><i class="fa fa-comments-o"></i> (<span class="Counter">[% Data.Count | html %]</span>)</a>
-
-[% RenderBlockEnd("ChatRequests") %]
 [% RenderBlockStart("Preferences") %]
         <a class="[% Data.Class | html %]" href="[% Env("Baselink") %]Action=CustomerPreferences" title="[% Translate("Edit personal preferences") | html %]">
             <i class="fa fa-cog"></i>

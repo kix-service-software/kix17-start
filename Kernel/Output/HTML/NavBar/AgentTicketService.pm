@@ -17,6 +17,8 @@ our @ObjectDependencies = (
     'Kernel::Config',
 );
 
+use Kernel::System::ObjectManager;
+
 sub new {
     my ( $Type, %Param ) = @_;
 

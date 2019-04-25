@@ -197,8 +197,7 @@ sub Run {
         for my $Item ( sort keys %Preferences ) {
 
             # skip items that don't belong to the class
-            if ( $Preferences{$Item}->{Class} && $Preferences{$Item}->{Class} ne $ItemData{Class} )
-            {
+            if ( $Preferences{$Item}->{Class} && $Preferences{$Item}->{Class} ne $ItemData{Class} ) {
                 next ITEM;
             }
 
@@ -225,8 +224,7 @@ sub Run {
                 if (
                     ref( $ParamItem->{Data} ) eq 'HASH'
                     || ref( $Preferences{$Item}->{Data} ) eq 'HASH'
-                    )
-                {
+                ) {
                     $ParamItem->{'Option'} = $LayoutObject->BuildSelection(
                         %{ $Preferences{$Item} },
                         %{$ParamItem},
@@ -357,8 +355,7 @@ sub Run {
                         GetParam => \%GetParam,
                         ItemID   => $GCData->{ItemID},
                     )
-                    )
-                {
+                ) {
                     $Note .= $LayoutObject->Notify( Info => $Object->Error() );
                 }
             }

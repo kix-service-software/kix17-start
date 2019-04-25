@@ -23,17 +23,19 @@ use File::Path qw();
 use Time::HiRes qw(sleep);
 use Fcntl qw(:flock);
 
-our $IsWin32 = 0; 
+our $IsWin32 = 0;
 if ( $^O eq 'MSWin32' ) {
-    eval { 
-        require Win32; 
-        require Win32::Process; 
+    eval {
+        require Win32;
+        require Win32::Process;
     } or last;
     $IsWin32 = 1;
 }
 
 use Kernel::Config;
 use Kernel::System::ObjectManager;
+
+## no critic qw(InputOutput::RequireBriefOpen)
 
 print STDOUT "kix.Daemon.pl - the KIX daemon\n";
 
@@ -74,7 +76,7 @@ my $PIDFH;
 my $LogDir = $ConfigObject->Get('Daemon::Log::LogPath') || $ConfigObject->Get('Home') . '/var/log/Daemon';
 
 if ( !-d $LogDir ) {
-    File::Path::mkpath( $LogDir, 0, 0770 );    ## no critic
+    File::Path::mkpath( $LogDir, 0, oct(770) );
 
     if ( !-d $LogDir ) {
         print STDERR "Failed to create path: $LogDir";
@@ -96,7 +98,7 @@ my %DebugDaemons;
 my $Debug;
 if (
     ((lc $ARGV[0] eq 'start') || (lc $ARGV[0] eq '--child') || (lc $ARGV[0] eq '--module'))
-    && (($ARGV[1] && lc $ARGV[1] eq '--debug') || ($ARGV[3] && lc $ARGV[3] eq '--debug')) 
+    && (($ARGV[1] && lc $ARGV[1] eq '--debug') || ($ARGV[3] && lc $ARGV[3] eq '--debug'))
     )
 {
     $Debug = 1;
@@ -193,34 +195,35 @@ sub Start {
 
         # check if fork was not possible
         die "Can not create daemon process: $!" if !defined $DaemonPID || $DaemonPID < 0;
-    
+
         # close parent gracefully
         exit 0 if $DaemonPID;
-        
+
         # run Child
         _Run();
     }
     else {
         my $ChildProcess;
         my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
-        my $Debug = join(' ', keys %DebugDaemons);
-        
+        my $StartDebug = join(' ', keys %DebugDaemons);
+
         Win32::Process::Create(
-            $ChildProcess, 
+            $ChildProcess,
             $ENV{COMSPEC},
-            "/c wperl $Home/bin/kix.Daemon.pl --child --debug ".$Debug, 
-            0, 
+            "/c wperl $Home/bin/kix.Daemon.pl --child --debug ".$StartDebug,
+            0,
             0x00000008,    # DETACHED_PROCESS
             "."
         );
         my $DaemonPID = $ChildProcess->GetProcessID();
-        
+
         # check if fork was not possible
         die "Can not create daemon process: $!" if !defined $DaemonPID || $DaemonPID < 0;
-    
+
         # close parent gracefully
         return 0;
     }
+    return;
 }
 
 sub Stop {
@@ -262,13 +265,16 @@ sub Status {
     if ( -e $PIDFile ) {
 
         # read existing PID file
-        open my $FH, '<', $PIDFile;    ## no critic
+        open my $FH, '<', $PIDFile || die "Can not read PID file: $PIDFile\n";
 
         # try to lock the file exclusively
         if ( !flock( $FH, LOCK_EX | LOCK_NB ) ) {
 
             # if no exclusive lock, daemon might be running, send signal to the PID
-            my $RegisteredPID = do { local $/; <$FH> };
+            my $RegisteredPID = do {
+                local $/ = undef;
+                <$FH>
+            };
             close $FH;
 
             if ($RegisteredPID) {
@@ -356,7 +362,7 @@ sub _Run {
                 my $ProcessObj;
                 $RunningPID = Win32::Process::Open($ProcessObj, $DaemonModules{$Module}->{PID}, 1);
             }
-            
+
             if ( $DaemonModules{$Module}->{PID} && !$RunningPID ) {
                 $DaemonModules{$Module}->{PID} = 0;
             }
@@ -372,13 +378,13 @@ sub _Run {
             else {
                 my $ChildProcess;
                 my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
-                my $Debug = join(' ', keys %DebugDaemons);
-                                
+                my $RunDebug = join(' ', keys %DebugDaemons);
+
                 Win32::Process::Create(
-                    $ChildProcess, 
+                    $ChildProcess,
                     $ENV{COMSPEC},
-                    "/c wperl $Home/bin/kix.Daemon.pl --module \"$Module\" \"$DaemonModules{$Module}->{Name}\" --debug ".$Debug, 
-                    0, 
+                    "/c wperl $Home/bin/kix.Daemon.pl --module \"$Module\" \"$DaemonModules{$Module}->{Name}\" --debug ".$RunDebug,
+                    0,
                     0x00000008,    # DETACHED_PROCESS
                     "."
                 );
@@ -405,7 +411,7 @@ sub _Run {
         # sleep 0.1 seconds to protect the system of a 100% CPU usage if one daemon
         # module is damaged and produces hard errors
         sleep 0.1;
-        
+
         # in windows sleep even more, otherwise the CPU load will be too high
         if ($IsWin32) {
             sleep 5;
@@ -451,7 +457,7 @@ sub _Run {
                 my $ProcessObj;
                 $RunningPID = Win32::Process::Open($ProcessObj, $DaemonModules{$Module}->{PID}, 1);
             }
-            
+
             if ( !$RunningPID ) {
 
                 # remove daemon pid from list
@@ -537,20 +543,17 @@ sub _RunModule {
     _LogFilesSet(
         Module => $Param{ModuleName}
     );
-    
+
     my $DaemonObject;
     LOOP:
     while ($ChildRun) {
 
         # create daemon object if not exists
         eval {
-
-        
             if (
                 !$DaemonObject
                 && ( $DebugDaemons{All} || $DebugDaemons{ $Param{ModuleName} } )
-               )
-            {
+           ) {
                 $Kernel::OM->ObjectParamAdd(
                     $Param{Module} => {
                         Debug => 1,
@@ -571,12 +574,12 @@ sub _RunModule {
         for my $Method ( 'PreRun', 'Run', 'PostRun' ) {
             last LOOP if !eval { $DaemonObject->$Method() };
         }
-        
+
         # in Win32 exit this loop to restart the whole process
         # otherwise zombies will remain when parent gets stopped
         last LOOP if ($IsWin32);
     }
-    
+
     return 0;
 }
 
@@ -585,7 +588,7 @@ sub _PIDLock {
     # check pid directory
     if ( !-e $PIDDir ) {
 
-        File::Path::mkpath( $PIDDir, 0, 0770 );    ## no critic
+        File::Path::mkpath( $PIDDir, 0, oct(770) );
 
         if ( !-e $PIDDir ) {
 
@@ -610,7 +613,7 @@ sub _PIDLock {
     if ( -e $PIDFile ) {
 
         # read existing PID file
-        open my $FH, '<', $PIDFile;    ## no critic
+        open my $FH, '<', $PIDFile || die "Can not read PID file: $PIDFile\n";
 
         # try to get a exclusive of the pid file, if fails daemon is already running
         if ( !flock( $FH, LOCK_EX | LOCK_NB ) ) {
@@ -618,7 +621,10 @@ sub _PIDLock {
             return;
         }
 
-        my $RegisteredPID = do { local $/; <$FH> };
+        my $RegisteredPID = do {
+            local $/ = undef;
+            <$FH>
+        };
         close $FH;
 
         if ($RegisteredPID) {
@@ -633,13 +639,13 @@ sub _PIDLock {
     }
 
     # create new PID file (set exclusive lock while writing the PIDFile)
-    open my $FH, '>', $PIDFile || die "Can not create PID file: $PIDFile\n";    ## no critic
+    open my $FH, '>', $PIDFile || die "Can not create PID file: $PIDFile\n";
     return if !flock( $FH, LOCK_EX | LOCK_NB );
     print $FH $$;
     close $FH;
 
     # keep PIDFile shared locked forever
-    open $PIDFH, '<', $PIDFile || die "Can not create PID file: $PIDFile\n";    ## no critic
+    open $PIDFH, '<', $PIDFile || die "Can not create PID file: $PIDFile\n";
     return if !flock( $PIDFH, LOCK_SH | LOCK_NB );
 
     return 1;
@@ -650,11 +656,14 @@ sub _PIDUnlock {
     return if !-e $PIDFile;
 
     # read existing PID file
-    open my $FH, '<', $PIDFile;                                                 ## no critic
+    open my $FH, '<', $PIDFile || die "Can not read PID file: $PIDFile\n";
 
     # wait if PID is exclusively locked (and do a shared lock for reading)
     flock $FH, LOCK_SH;
-    my $RegisteredPID = do { local $/; <$FH> };
+    my $RegisteredPID = do {
+        local $/ = undef;
+        <$FH>
+    };
     close $FH;
 
     unlink $PIDFile;
@@ -680,18 +689,15 @@ sub _LogFilesSet {
         move( "$FileStdErr.log", "$FileStdErr-$SystemTime.log" );
     }
 
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
     my $RedirectSTDOUT = $ConfigObject->Get('Daemon::Log::STDOUT') || 0;
     my $RedirectSTDERR = $ConfigObject->Get('Daemon::Log::STDERR') || 0;
 
     # redirect STDOUT and STDERR
     if ($RedirectSTDOUT) {
-        open STDOUT, '>>', "$FileStdOut.log";
+        open STDOUT, '>>', "$FileStdOut.log" || die "Can not write StdOut file: $FileStdOut.log\n";
     }
     if ($RedirectSTDERR) {
-        open STDERR, '>>', "$FileStdErr.log";
+        open STDERR, '>>', "$FileStdErr.log" || die "Can not write StdErr file: $FileStdErr.log\n";
     }
 
     # remove not needed log files
@@ -704,19 +710,19 @@ sub _LogFilesSet {
     for my $LogFile (@LogFiles) {
 
         # skip if is not a backup file
-        next LOGFILE if ( $LogFile !~ m{(?: .* /)* $Param{Module} (?: OUT|ERR ) - (\d+) \.log}igmx );
+        if ( $LogFile =~ m{(?: .* /)* $Param{Module} (?: OUT|ERR ) - (\d+) \.log}igmx ) {
+            # do not delete files during keep period if they have content
+            next LOGFILE if ( ( $1 > $DaysToKeepTime ) && -s $LogFile );
 
-        # do not delete files during keep period if they have content
-        next LOGFILE if ( ( $1 > $DaysToKeepTime ) && -s $LogFile );
+            # delete file
+            if ( !unlink $LogFile ) {
 
-        # delete file
-        if ( !unlink $LogFile ) {
-
-            # log old backup file cannot be deleted
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => "Daemon: $Param{Module} could not delete old log file $LogFile! $!",
-            );
+                # log old backup file cannot be deleted
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "Daemon: $Param{Module} could not delete old log file $LogFile! $!",
+                );
+            }
         }
     }
 

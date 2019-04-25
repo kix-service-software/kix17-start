@@ -196,10 +196,11 @@ sub NotificationGet {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     # general query structure
-    my $SQL = '
-        SELECT id, name, valid_id, comments, create_time, create_by, change_time, change_by
-        FROM notification_event
-        WHERE ';
+    my $SQL = <<'END';
+SELECT id, name, valid_id, comments, create_time, create_by, change_time, change_by
+FROM notification_event
+WHERE 
+END
 
     if ( $Param{Name} ) {
 
@@ -232,11 +233,12 @@ sub NotificationGet {
 
     # get notification event item data
     $DBObject->Prepare(
-        SQL => '
-            SELECT event_key, event_value
-            FROM notification_event_item
-            WHERE notification_id = ?
-            ORDER BY event_key, event_value ASC',
+        SQL  => <<'END',
+SELECT event_key, event_value
+FROM notification_event_item
+WHERE notification_id = ?
+ORDER BY event_key, event_value ASC
+END
         Bind => [ \$Data{ID} ],
     );
 
@@ -246,10 +248,11 @@ sub NotificationGet {
 
     # get notification event message data
     $DBObject->Prepare(
-        SQL => '
-            SELECT subject, text, content_type, language
-            FROM notification_event_message
-            WHERE notification_id = ?',
+        SQL  => <<'END',
+SELECT subject, text, content_type, language
+FROM notification_event_message
+WHERE notification_id = ?
+END
         Bind => [ \$Data{ID} ],
     );
 
@@ -355,10 +358,11 @@ sub NotificationAdd {
 
     # insert data into db
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO notification_event
-                (name, valid_id, comments, create_time, create_by, change_time, change_by)
-            VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => <<'END',
+INSERT INTO notification_event
+    (name, valid_id, comments, create_time, create_by, change_time, change_by)
+VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)
+END
         Bind => [
             \$Param{Name}, \$Param{ValidID}, \$Param{Comment},
             \$Param{UserID}, \$Param{UserID},
@@ -395,10 +399,11 @@ sub NotificationAdd {
             next ITEM if $Item eq '';
 
             return if !$DBObject->Do(
-                SQL => '
-                    INSERT INTO notification_event_item
-                        (notification_id, event_key, event_value)
-                    VALUES (?, ?, ?)',
+                SQL  => <<'END',
+INSERT INTO notification_event_item
+    (notification_id, event_key, event_value)
+VALUES (?, ?, ?)
+END
                 Bind => [ \$ID, \$Key, \$Item ],
             );
         }
@@ -410,10 +415,11 @@ sub NotificationAdd {
         my %Message = %{ $Param{Message}->{$Language} };
 
         return if !$DBObject->Do(
-            SQL => '
-                INSERT INTO notification_event_message
-                    (notification_id, subject, text, content_type, language)
-                VALUES (?, ?, ?, ?, ?)',
+            SQL  => <<'END',
+INSERT INTO notification_event_message
+    (notification_id, subject, text, content_type, language)
+VALUES (?, ?, ?, ?, ?)
+END
             Bind => [
                 \$ID,
                 \$Message{Subject},
@@ -509,10 +515,11 @@ sub NotificationUpdate {
 
     # update data in db
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE notification_event
-            SET name = ?, valid_id = ?, comments = ?, change_time = current_timestamp, change_by = ?
-            WHERE id = ?',
+        SQL  => <<'END',
+UPDATE notification_event
+SET name = ?, valid_id = ?, comments = ?, change_time = current_timestamp, change_by = ?
+WHERE id = ?
+END
         Bind => [
             \$Param{Name},    \$Param{ValidID},
             \$Param{Comment}, \$Param{UserID},
@@ -536,10 +543,11 @@ sub NotificationUpdate {
             next ITEM if $Item eq '';
 
             $DBObject->Do(
-                SQL => '
-                    INSERT INTO notification_event_item
-                        (notification_id, event_key, event_value)
-                    VALUES (?, ?, ?)',
+                SQL  => <<'END',
+INSERT INTO notification_event_item
+    (notification_id, event_key, event_value)
+VALUES (?, ?, ?)
+END
                 Bind => [
                     \$Param{ID},
                     \$Key,
@@ -561,10 +569,11 @@ sub NotificationUpdate {
         my %Message = %{ $Param{Message}->{$Language} };
 
         $DBObject->Do(
-            SQL => '
-                INSERT INTO notification_event_message
-                    (notification_id, subject, text, content_type, language)
-                VALUES (?, ?, ?, ?, ?)',
+            SQL  => <<'END',
+INSERT INTO notification_event_message
+    (notification_id, subject, text, content_type, language)
+VALUES (?, ?, ?, ?, ?)
+END
             Bind => [
                 \$Param{ID},
                 \$Message{Subject},
@@ -710,14 +719,15 @@ sub NotificationEventCheck {
     my $ValidIDString = join ', ', @ValidIDs;
 
     $DBObject->Prepare(
-        SQL => "
-            SELECT DISTINCT(nei.notification_id)
-            FROM notification_event ne, notification_event_item nei
-            WHERE ne.id = nei.notification_id
-                AND ne.valid_id IN ( $ValidIDString )
-                AND nei.event_key = 'Events'
-                AND nei.event_value = ?
-            ORDER BY nei.notification_id ASC",
+        SQL  => <<"END",
+SELECT DISTINCT(nei.notification_id)
+FROM notification_event ne, notification_event_item nei
+WHERE ne.id = nei.notification_id
+    AND ne.valid_id IN ( $ValidIDString )
+    AND nei.event_key = 'Events'
+    AND nei.event_value = ?
+ORDER BY nei.notification_id ASC
+END
         Bind => [ \$Param{Event} ],
     );
 

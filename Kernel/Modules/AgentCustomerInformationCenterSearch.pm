@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AgentCustomerInformationCenterSearch;
-## nofilter(TidyAll::Plugin::OTRS::Perl::DBObject)
 
 use strict;
 use warnings;
@@ -59,7 +58,10 @@ sub Run {
         my %CustomerCompanyList = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyList(
             Search => $SearchTerm,
         );
-        map { $CustomerCompanyList{$_} = $UnknownTicketCustomerList->{$_} } keys %{$UnknownTicketCustomerList};
+
+        for my $Key ( keys %{$UnknownTicketCustomerList} ) {
+            $CustomerCompanyList{$Key} = $UnknownTicketCustomerList->{$Key};
+        }
 
         my @CustomerIDs = $CustomerUserObject->CustomerIDList(
             SearchTerm => $SearchTerm,
@@ -85,20 +87,14 @@ sub Run {
         CUSTOMERID:
         for my $CustomerID ( sort keys %CustomerCompanyList ) {
             if ( !( grep { $_->{Value} eq $CustomerID } @Result ) ) {
-                push @Result,
+                push(
+                    @Result,
                     {
-
-                    # KIX4OTRS-capeIT
-                    # Label => $CustomerCompanyList{$CustomerID},
-                    Label => $CustomerCompanyList{$CustomerID} || $CustomerID,
-                    # EO KIX4OTRS-capeIT
-                    Value => $CustomerID,
-
-                    # KIX4OTRS-capeIT
-                    Key => 'CustomerID'
-
-                    # EO KIX4OTRS-capeIT
-                    };
+                        Label => $CustomerCompanyList{$CustomerID} || $CustomerID,
+                        Value => $CustomerID,
+                        Key => 'CustomerID'
+                    }
+                );
             }
             last CUSTOMERID if scalar @Result >= $MaxResults;
 
@@ -130,7 +126,10 @@ sub Run {
         my %CustomerList = $CustomerUserObject->CustomerSearch(
             Search => $SearchTerm,
         );
-        map { $CustomerList{$_} = $UnknownTicketCustomerList->{$_} } keys %{$UnknownTicketCustomerList};
+
+        for my $Key ( keys %{$UnknownTicketCustomerList} ) {
+            $CustomerList{$Key} = $UnknownTicketCustomerList->{$Key};
+        }
 
         my @Result;
 
@@ -140,16 +139,14 @@ sub Run {
                 User => $CustomerLogin,
             );
             if ( !( grep { $_->{Value} eq $CustomerData{UserCustomerID} } @Result ) ) {
-                push @Result,
+                push(
+                    @Result,
                     {
-                    Label => $CustomerList{$CustomerLogin},
-                    # KIX4OTRS-capeIT
-                    # Value => $CustomerData{UserCustomerID}
-                    Value => $CustomerLogin,
-                    Key   => 'CustomerLogin'
-
-                    # EO KIX4OTRS-capeIT
-                    };
+                        Label => $CustomerList{$CustomerLogin},
+                        Value => $CustomerLogin,
+                        Key   => 'CustomerLogin'
+                    }
+                );
             }
             last CUSTOMERLOGIN if scalar @Result >= $MaxResults;
 
@@ -167,7 +164,7 @@ sub Run {
         );
     }
 
-    my $Output .= $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'AgentCustomerInformationCenterSearch',
         Data         => \%Param,
     );

@@ -102,8 +102,7 @@ sub Run {
     if (
         defined $Structure{PackageIsDownloadable}
         && !$Structure{PackageIsDownloadable}->{Content}
-        )
-    {
+    ) {
         $Self->PrintError("Package cannot be built.\n");
         return $Self->ExitCodeError();
     }

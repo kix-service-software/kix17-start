@@ -306,7 +306,6 @@ sub ITSMConfigItemListShow {
         $Param{View} = $Self->{ 'UserITSMConfigItemOverview' . $Env->{Action} };
     }
 
-    # KIX4OTRS-capeIT
     # fallback due to problem with session object (T#2015102290000583)
     my %UserPreferences
         = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
@@ -314,22 +313,17 @@ sub ITSMConfigItemListShow {
         $Param{View} = $UserPreferences{ 'UserITSMConfigItemOverview' . $Env->{Action} };
     }
 
-    # EO KIX4OTRS-capeIT
-
     # set frontend
     my $Frontend = $Param{Frontend} || 'Agent';
 
     # set defaut view mode to 'small'
-    my $View = $Param{View} || 'Small';
-
-    # KIX4OTRS-capeIT
+    my $View    = $Param{View} || 'Small';
     my $ClassID = $Param{Filter} || $Param{ClassID} || 'All';
 
     if (
         $Self->{Action} eq 'AgentITSMConfigItem'
         && ( !defined $Param{TitleValue} || $Param{TitleValue} eq '' )
-        )
-    {
+    ) {
         $Param{TitleValue} = 'All';
     }
     elsif (
@@ -337,8 +331,7 @@ sub ITSMConfigItemListShow {
         && ( !defined $Param{TitleValue} || $Param{TitleValue} eq '' )
         && $ClassID ne 'All'
         && $ClassID ne '-'
-        )
-    {
+    ) {
         my $ClassList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
             Class => 'ITSM::ConfigItem::Class',
         );
@@ -348,15 +341,12 @@ sub ITSMConfigItemListShow {
         $Self->{Action} eq 'AgentITSMConfigItemSearch'
         && ( !defined $Param{TitleValue} || $Param{TitleValue} eq '' )
         && $ClassID eq '-'
-        )
-    {
+    ) {
         $Param{TitleValue} = 'SearchResult';
     }
     elsif ( !defined $Param{TitleValue} || $Param{TitleValue} eq '' ) {
         $Param{TitleValue} = $ClassID;
     }
-
-    # EO KIX4OTRS-capeIT
 
     # store latest view mode
     $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
@@ -369,7 +359,6 @@ sub ITSMConfigItemListShow {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # KIX4OTRS-capeIT
     # update preferences if needed
     my $Key = 'UserITSMConfigItemOverview' . $Env->{Action};
     my $LastView = $Self->{$Key} || '';
@@ -383,8 +372,6 @@ sub ITSMConfigItemListShow {
             Value  => $View,
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get backend from config
     my $Backends = $ConfigObject->Get('ITSMConfigItem::Frontend::Overview');
@@ -441,8 +428,8 @@ sub ITSMConfigItemListShow {
     my @UnselectedItems     = split(',', $UnselectedItemStrg);
 
     for my $ConfigItem ( @{$Param{ConfigItemIDs}} ) {
-        if ( !grep(/^$ConfigItem$/, @UnselectedItems)
-            && !grep(/^$ConfigItem$/, @SelectedItems)
+        if ( !grep({/^$ConfigItem$/} @UnselectedItems)
+            && !grep({/^$ConfigItem$/} @SelectedItems)
         ) {
             push(@UnselectedItems, $ConfigItem);
         }
@@ -546,31 +533,21 @@ sub ITSMConfigItemListShow {
         }
     }
 
-    # KIX4OTRS-capeIT
     # set priority if not defined
     for my $Backend (
         keys %{$Backends}
-        )
-    {
+    ) {
         if ( !defined $Backends->{$Backend}->{ModulePriority} ) {
             $Backends->{$Backend}->{ModulePriority} = 0;
         }
     }
 
-    # EO KIX4OTRS-capeIT
-
     # loop over configured backends
     # for my $Backend ( sort keys %{$Backends} ) {
-
     for my $Backend (
-
-        # KIX4OTRS-capeIT
         sort { $Backends->{$a}->{ModulePriority} cmp $Backends->{$b}->{ModulePriority} }
-
-        # EO KIX4OTRS-capeIT
         keys %{$Backends}
-        )
-    {
+    ) {
 
         # build navbar view mode
         $LayoutObject->Block(
@@ -609,10 +586,8 @@ sub ITSMConfigItemListShow {
     }
 
     # check if page nav is available
-    # KIX4OTRS-capeIT
     my $Columns = '';
 
-    # EO KIX4OTRS-capeIT
     if (%PageNav) {
         $LayoutObject->Block(
             Name => 'OverviewNavBarPageNavBar',
@@ -627,15 +602,10 @@ sub ITSMConfigItemListShow {
                 Data => {
                     %PageNav,
                     %Param,
-
-                    # KIX4OTRS-capeIT
                     ClassID => $ClassID,
-
-                    # EO KIX4OTRS-capeIT
                 },
             );
 
-            # KIX4OTRS-capeIT
             $Param{TranslationRef} = $Self->_ShowColumnSettings(
                 ClassID      => $ClassID,
                 TitleValue   => $Param{TitleValue},
@@ -644,7 +614,6 @@ sub ITSMConfigItemListShow {
                 Action       => $LayoutObject->{Action},
                 LayoutObject => $LayoutObject,
             );
-            # EO KIX4OTRS-capeIT
         }
     }
 
@@ -781,8 +750,7 @@ sub _ShowColumnSettings {
                 ClassID => $ClassID,
             );
         }
-        elsif ( $ClassID eq 'All' && $Action eq 'AgentITSMConfigItemSearch' )
-        {
+        elsif ( $ClassID eq 'All' && $Action eq 'AgentITSMConfigItemSearch' ) {
 
             $ClassList = $GeneralCatalogObject->ItemList(
                 Class => 'ITSM::ConfigItem::Class',
@@ -826,8 +794,7 @@ sub _ShowColumnSettings {
                 . $Action . '-'
                 . $Param{TitleValue}
         }
-        )
-    {
+    ) {
         my $SelectedColumnString
             = $CurrentUserData{
             'UserCustomCILV-'
@@ -852,8 +819,8 @@ sub _ShowColumnSettings {
     else {
         my @TempArray = ();
         for my $ShownColumn (@SelectedValueArray) {
-            $ShownColumn =~ m/^(.*?)::(.*)$/;
-            push @TempArray, $2;
+            my ( $Value, $Item) = $ShownColumn =~ m/^(.*?)::(.*)$/;
+            push( @TempArray, $Item );
         }
         if ( $View eq 'Custom' ) {
             $Param{ShowColumns} = \@TempArray;
@@ -1017,8 +984,7 @@ sub _ConfigLine {
                 $Param{ReturnSelected}
                 && $Param{SelectedAttributes}->{ $Param{MainItem} . '::' . $Item->{Key} }
             )
-            )
-        {
+        ) {
             $Line = $Line . '<li class="ui-state-default'
                 . $Param{CSSClass}
                 . '" name="'

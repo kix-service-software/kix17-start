@@ -125,10 +125,11 @@ sub PIDCreate {
     # add new entry
     my $Time = time();
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            INSERT INTO process_id
-            (process_name, process_id, process_host, process_create, process_change)
-            VALUES (?, ?, ?, ?, ?)',
+        SQL  => <<'END',
+INSERT INTO process_id
+    (process_name, process_id, process_host, process_create, process_change)
+VALUES (?, ?, ?, ?, ?)
+END
         Bind => [ \$Param{Name}, \$PIDCurrent, \$Self->{Host}, \$Time, \$Time ],
     );
 
@@ -162,10 +163,11 @@ sub PIDGet {
 
     # sql
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT process_name, process_id, process_host, process_create, process_change
-            FROM process_id
-            WHERE process_name = ?',
+        SQL   => <<'END',
+SELECT process_name, process_id, process_host, process_create, process_change
+FROM process_id
+WHERE process_name = ?
+END
         Bind  => [ \$Param{Name} ],
         Limit => 1,
     );
@@ -214,16 +216,13 @@ sub PIDDelete {
     }
 
     # set basic SQL statement
-    my $SQL = '
-        DELETE FROM process_id
-        WHERE process_name = ?';
+    my $SQL = 'DELETE FROM process_id WHERE process_name = ?';
 
     my @Bind = ( \$Param{Name} );
 
     # delete only processes from this host if Force option was not set
     if ( !$Param{Force} ) {
-        $SQL .= '
-        AND process_host = ?';
+        $SQL .= ' AND process_host = ?';
 
         push @Bind, \$Self->{Host}
     }
@@ -273,10 +272,11 @@ sub PIDUpdate {
     # sql
     my $Time = time();
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            UPDATE process_id
-            SET process_change = ?
-            WHERE process_name = ?',
+        SQL  => <<'END',
+UPDATE process_id
+SET process_change = ?
+WHERE process_name = ?
+END
         Bind => [ \$Time, \$Param{Name} ],
     );
 

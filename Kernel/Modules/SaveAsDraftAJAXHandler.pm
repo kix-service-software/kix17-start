@@ -38,8 +38,7 @@ sub Run {
 
     # get params
     my %GetParam;
-    for my $Key ( @{ $Self->{Config}->{Attributes} } )
-    {
+    for my $Key ( @{ $Self->{Config}->{Attributes} } ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
     }
 

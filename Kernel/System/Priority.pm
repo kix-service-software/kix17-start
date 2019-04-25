@@ -300,6 +300,8 @@ sub PriorityUpdate {
 
     # check all sysconfig options and correct them automatically if neccessary
     $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemCheckAll();
+
+    return 1;
 }
 
 =item PriorityLookup()

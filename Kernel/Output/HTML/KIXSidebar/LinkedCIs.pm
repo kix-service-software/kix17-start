@@ -73,8 +73,7 @@ sub Run {
         defined $GeneralCatalogObject->ItemList(
             Class => 'ITSM::ConfigItem::Class',
         )
-        )
-    {
+    ) {
 
         %Classes = reverse %{
             $GeneralCatalogObject->ItemList(

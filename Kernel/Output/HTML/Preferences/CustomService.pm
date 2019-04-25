@@ -53,8 +53,7 @@ sub Param {
     if (
         !$Param{UserData}->{UserID}
         || !$ConfigObject->Get('Ticket::Service')
-        )
-    {
+    ) {
         return ();
     }
 
@@ -105,18 +104,16 @@ sub Run {
 
     # delete old custom services
     $DBObject->Do(
-        SQL => "
-            DELETE FROM personal_services
-            WHERE user_id = ?",
+        SQL => "DELETE FROM personal_services"
+            . " WHERE user_id = ?",
         Bind => [ \$Param{UserData}->{UserID} ],
     );
 
     # add new custom services
     for my $ServiceID ( @{ $Param{GetParam}->{ServiceID} } ) {
         $DBObject->Do(
-            SQL => "
-                INSERT INTO personal_services (service_id, user_id)
-                VALUES (?, ?)",
+            SQL => "INSERT INTO personal_services (service_id, user_id)"
+                . " VALUES (?, ?)",
             Bind => [ \$ServiceID, \$Param{UserData}->{UserID} ]
         );
     }

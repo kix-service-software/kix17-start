@@ -25,7 +25,6 @@ sub new {
 
 sub Run {
     my ( $Self, %Param ) = @_;
-    my $Search;
     my $JSON = '';
     my %SearchList;
 
@@ -77,8 +76,7 @@ sub Run {
             $Param{Term} =~ s /\*/.*?/g;
         }
 
-        if ( $SearchType->{ $Param{Module} . ":::" . $Param{ElementID} } =~ /(Owner|Responsible)/g )
-        {
+        if ( $SearchType->{ $Param{Module} . ":::" . $Param{ElementID} } =~ /(Owner|Responsible)/g ) {
 
             # get QueueID
             my $QueueID = $TicketObject->TicketQueueID(
@@ -101,8 +99,7 @@ sub Run {
                 }
                 elsif (
                     $SearchType->{ $Param{Module} . ":::" . $Param{ElementID} } eq 'Responsible'
-                    )
-                {
+                ) {
                     %ResponsibleUsers = %AllGroupsMembers;
                     %SearchList       = %ResponsibleUsers;
                 }
@@ -128,8 +125,7 @@ sub Run {
                 # get responsible
                 elsif (
                     $SearchType->{ $Param{Module} . ":::" . $Param{ElementID} } ne 'Responsible'
-                    )
-                {
+                ) {
                     my $GID = $QueueObject->GetQueueGroupID( QueueID => $QueueID );
                     my %MemberList = $GroupObject->GroupMemberList(
                         GroupID => $GID,
@@ -148,7 +144,7 @@ sub Run {
         elsif ( $SearchType->{ $Param{Module} . ":::" . $Param{ElementID} } eq 'Queue' ) {
 
             # get queues are you can move
-            my %MemberList = $TicketObject->MoveList(
+            my %MemberList = $TicketObject->TicketMoveList(
                 TicketID => $Param{TicketID},
                 UserID   => $Self->{UserID},
                 Action   => $Param{Module},
@@ -171,8 +167,7 @@ sub Run {
         for my $SearchID (
             sort { $SearchList{$a} cmp $SearchList{$b} }
             keys %SearchList
-            )
-        {
+        ) {
             if ( $SearchList{$SearchID} =~ /^.*?$Param{Term}.*?/i ) {
                 push @Data, {
                     SearchObjectKey   => $SearchID,

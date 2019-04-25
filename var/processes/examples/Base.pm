@@ -9,7 +9,6 @@
 # --
 
 package var::processes::examples::Base;
-## nofilter(TidyAll::Plugin::OTRS::Perl::PerlCritic)
 
 use strict;
 use warnings;
@@ -113,8 +112,7 @@ sub DynamicFieldsAdd {
             if (
                 $DynamicFieldData->{ObjectType} ne $DynamicField->{ObjectType}
                 || $DynamicFieldData->{FieldType} ne $DynamicField->{FieldType}
-                )
-            {
+            ) {
                 $Response{Success} = 0;
                 $Response{Error}   = $Kernel::OM->Get('Kernel::Language')->Translate(
                     "Dynamic field %s already exists, but definition is wrong.",

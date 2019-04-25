@@ -11,6 +11,8 @@ package Kernel::System::ITSMConfigItem::XML::Type::TypeReference;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::System::Type'
 );
@@ -44,8 +46,6 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{TypeObject} = $Kernel::OM->Get('Kernel::System::Type');
-
     return $Self;
 }
 
@@ -64,7 +64,7 @@ sub ValueLookup {
 
     return '' if !$Param{Value};
 
-    my %TypeData = $Self->{TypeObject}->TypeGet(
+    my %TypeData = $Kernel::OM->Get('Kernel::System::Type')->TypeGet(
         ID     => $Param{Value},
         UserID => 1,
     );

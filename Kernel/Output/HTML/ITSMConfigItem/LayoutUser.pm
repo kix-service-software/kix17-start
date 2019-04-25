@@ -132,8 +132,7 @@ sub FormDataGet {
         if (
             !$Self->{ParamObject}->GetParam( Param => $Param{Key} . '::Search' )
             && defined $FormData{Value}
-            )
-        {
+        ) {
             $FormData{Value} = '';
         }
 
@@ -227,8 +226,8 @@ sub InputCreate {
     my $String = '';
     if (   $AutoCompleteConfig
         && ref($AutoCompleteConfig) eq 'HASH'
-        && $AutoCompleteConfig->{Active} )
-    {
+        && $AutoCompleteConfig->{Active}
+    ) {
 
         $Self->{LayoutObject}->Block(
             Name => 'AgentUserSearchAutoComplete',

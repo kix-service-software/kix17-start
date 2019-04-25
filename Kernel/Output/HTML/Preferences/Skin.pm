@@ -53,8 +53,7 @@ sub Param {
                 Skin     => $PossibleSkin->{InternalName},
                 SkinType => 'Agent'
             )
-            )
-        {
+        ) {
             $ActiveSkins{ $PossibleSkin->{InternalName} } = $PossibleSkin->{VisibleName};
         }
     }

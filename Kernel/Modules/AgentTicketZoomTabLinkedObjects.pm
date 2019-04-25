@@ -126,22 +126,12 @@ sub Run {
         return $LayoutObject->NoPermission( WithHeader => 'yes' );
     }
 
-    # KIX4OTRS-capeIT
-    # removed: mark as seen
-    # removed: article filter
-    # removed: HTML email
-    # EO KIX4OTRS-capeIT
-
     # generate output
-    # my $Output = $LayoutObject->Header( Value => $Ticket{TicketNumber} );
-    # $Output .= $LayoutObject->NavigationBar();
-    # $Output .= $Self->MaskAgentZoom(
     my $Output = $Self->MaskAgentZoomTabLinkedObjects(
         Ticket    => \%Ticket,
         AclAction => \%AclAction
     );
 
-    # $Output .= $LayoutObject->Footer();
     $Output .= $LayoutObject->Footer( Type => 'TicketZoomTab' );
     return $Output;
 }
@@ -173,7 +163,6 @@ sub MaskAgentZoomTabLinkedObjects {
         },
     );
 
-    # KIX4OTRS-capeIT
     # get count method
     my $Result;
     my $TicketZoomBackendRef = $ConfigObject->Get('AgentTicketZoomBackend');
@@ -182,8 +171,7 @@ sub MaskAgentZoomTabLinkedObjects {
         =~ /CallMethod::(\w+)::(\w+)::(\w+)/
         || $TicketZoomBackendRef->{'0120-LinkedObjects'}->{CountMethod}
         =~ /CallMethod::(\w+)::(\w+)/
-        )
-    {
+    ) {
         my $Object     = $1;
         my $Method     = $2;
         my $Hashresult = $3;
@@ -214,8 +202,7 @@ sub MaskAgentZoomTabLinkedObjects {
             for my $LinkDirection ( keys %{ $LinkListWithData->{$LinkObject}->{$LinkType} } ) {
                 for my $LinkItem (
                     keys %{ $LinkListWithData->{$LinkObject}->{$LinkType}->{$LinkDirection} }
-                    )
-                {
+                ) {
                     $LinkListWithData->{$LinkObject}->{$LinkType}->{$LinkDirection}->{$LinkItem}
                         ->{SourceObject} = 'Ticket';
                     $LinkListWithData->{$LinkObject}->{$LinkType}->{$LinkDirection}->{$LinkItem}
@@ -226,12 +213,9 @@ sub MaskAgentZoomTabLinkedObjects {
         }
     }
 
-    # EO KIX4OTRS-capeIT
-
     # get link table view mode
     my $LinkTableViewMode = $ConfigObject->Get('LinkObject::ViewMode');
 
-    # KIX4OTRS-capeIT
     # add quicklink if enabled
     if ( $Self->{Config}->{QuickLink} ) {
         my $QuickLinkStrg = $LayoutObject->BuildQuickLinkHTML(
@@ -247,20 +231,13 @@ sub MaskAgentZoomTabLinkedObjects {
         );
     }
 
-    # EO KIX4OTRS-capeIT
-
     # create the link table
     my $LinkTableStrg = $LayoutObject->LinkObjectTableCreate(
         LinkListWithData => $LinkListWithData,
-
-        # KIX4OTRS-capeIT
-        # ViewMode         => $LinkTableViewMode,
-        ViewMode       => $LinkTableViewMode . 'Delete',
-        Subaction      => $Self->{Subaction},
-        TicketID       => $Self->{TicketID},
-        GetPreferences => 0,
-
-        # EO KIX4OTRS-capeIT
+        ViewMode         => $LinkTableViewMode . 'Delete',
+        Subaction        => $Self->{Subaction},
+        TicketID         => $Self->{TicketID},
+        GetPreferences   => 0,
     );
 
     # create the link table preferences
@@ -272,7 +249,6 @@ sub MaskAgentZoomTabLinkedObjects {
         GetPreferences   => 1,
     );
 
-    # KIX4OTRS-capeIT
     $LayoutObject->Block(
         Name => 'TabContent',
         Data => {
@@ -283,26 +259,6 @@ sub MaskAgentZoomTabLinkedObjects {
             PreferencesLinkTableStrg => $PreferencesLinkTableStrg,
         },
     );
-
-    # # output the simple link table
-    # if ( $LinkTableStrg && $LinkTableViewMode eq 'Simple' ) {
-    #     $LayoutObject->Block(
-    #         Name => 'LinkTableSimple',
-    #         Data => {
-    #             LinkTableStrg => $LinkTableStrg,
-    #         },
-    #     );
-    # }
-
-    # # output the complex link table
-    # if ( $LinkTableStrg && $LinkTableViewMode eq 'Complex' ) {
-    #     $LayoutObject->Block(
-    #         Name => 'LinkTableComplex',
-    #         Data => {
-    #             LinkTableStrg => $LinkTableStrg,
-    #         },
-    #     );
-    # }
 
     # output the link table
     if ($LinkTableStrg) {
@@ -316,16 +272,14 @@ sub MaskAgentZoomTabLinkedObjects {
 
     $Param{UserLanguage} = $LayoutObject->{UserLanguage};
 
-    # EO KIX4OTRS-capeIT
-
     # return output
     return $LayoutObject->Output(
-
-        # KIX4OTRS-capeIT
-        # TemplateFile => 'AgentTicketZoom',
-        # EO KIX4OTRS-capeIT
         TemplateFile => 'AgentTicketZoomTabLinkedObjects',
-        Data => { %Param, %Ticket, %AclAction },
+        Data         => {
+            %Param,
+            %Ticket,
+            %AclAction
+        },
     );
 }
 1;

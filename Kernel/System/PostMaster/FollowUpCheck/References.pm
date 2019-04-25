@@ -13,6 +13,8 @@ package Kernel::System::PostMaster::FollowUpCheck::References;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Ticket',

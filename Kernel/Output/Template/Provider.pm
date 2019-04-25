@@ -9,8 +9,6 @@
 # --
 
 package Kernel::Output::Template::Provider;
-## no critic(Perl::Critic::Policy::OTRS::RequireCamelCase)
-## nofilter(TidyAll::Plugin::OTRS::Perl::SyntaxCheck) # bails on TT Constants
 
 use strict;
 use warnings;
@@ -30,6 +28,8 @@ our @ObjectDependencies = (
     'Kernel::System::Main',
 );
 
+## no critic qw(ControlStructures::ProhibitNegativeExpressionsInUnlessAndUntilConditions Subroutines::ProhibitUnusedPrivateSubroutines RegularExpressions::ProhibitComplexRegexes)
+
 # Force the use of our own document class.
 $Template::Provider::DOCUMENT = 'Kernel::Output::Template::Document';
 
@@ -43,10 +43,10 @@ Kernel::Output::Template::Provider - Template Toolkit custom provider
 
 =cut
 
-=item OTRSInit()
+=item KIXInit()
 
 performs some post-initialization and creates a bridget between Template::Toolkit
-and OTRS by adding the OTRS objects to the Provider object. This method must be
+and KIX by adding the KIX objects to the Provider object. This method must be
 called after instantiating the Provider object.
 
 Please note that we only store a weak reference to the LayoutObject to avoid ring
@@ -54,7 +54,7 @@ references.
 
 =cut
 
-sub OTRSInit {
+sub KIXInit {
     my ( $Self, %Param ) = @_;
 
     # Don't fetch LayoutObject via ObjectManager as there might be several instances involved
@@ -110,7 +110,7 @@ sub OTRSInit {
 
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => <<EOF,
+                Message  => <<"EOF",
 $FilterConfig->{Module} wants to operate on ALL templates.
 This will prohibit the templates from being cached and can therefore lead to serious performance issues.
 EOF
@@ -128,6 +128,8 @@ EOF
         keys %UncacheableTemplates;
 
     $Self->{UncacheableTemplates} = \%UncacheableTemplates;
+
+    return 1;
 }
 
 =item _fetch()
@@ -380,7 +382,8 @@ sub _PreProcessTemplateContent {
     # Include other templates into this one before parsing.
     # [% IncludeTemplate("DatePicker.tt") %]
     #
-    my ( $ReplaceCounter, $Replaced );
+    my $ReplaceCounter = 0;
+    my $Replaced;
     do {
         $Replaced = $Content =~ s{
             \[% -? \s* InsertTemplate \( \s* ['"]? (.*?) ['"]? \s* \) \s* -? %\]\n?
@@ -396,7 +399,7 @@ sub _PreProcessTemplateContent {
                 $TemplateContent;
             }esmxg;
 
-    } until ( !$Replaced || ++$ReplaceCounter > 100 );
+    } while ( $Replaced && ++$ReplaceCounter <= 100 );
 
     # pre putput filter handling
     if ( $Self->{FilterElementPre} && ref $Self->{FilterElementPre} eq 'HASH' ) {
@@ -430,7 +433,7 @@ sub _PreProcessTemplateContent {
 
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
-                    Message  => <<EOF,
+                    Message  => <<"EOF",
 $FilterConfig->{Module} wants to operate on ALL templates.
 This will prohibit the templates from being cached and can therefore lead to serious performance issues.
 EOF
@@ -527,11 +530,11 @@ sub MigrateDTLtoTT {
     my $ID = "[a-zA-Z0-9:_\-]+";
 
     my $SafeArrrayAccess = sub {
-        my $ID = shift;
-        if ( $ID !~ m{^[a-zA-Z0-9_]+$}xms ) {
-            return "item(\"$ID\")";
+        my $SafeID = shift;
+        if ( $SafeID !~ m{^[a-zA-Z0-9_]+$}xms ) {
+            return "item(\"$SafeID\")";
         }
-        return $ID;
+        return $SafeID;
     };
 
     # $Quote $Config
@@ -581,11 +584,11 @@ sub MigrateDTLtoTT {
         }esmxg;
 
     my $MigrateTextTag = sub {
-        my %Param       = @_;
-        my $Mode        = $Param{Mode};          # HTML or JSON
-        my $Text        = $Param{Text};          # The translated text
-        my $Dot         = $Param{Dot};           # Closing dot, sometimes outside of the Tag
-        my $ParamString = $Param{Parameters};    # Parameters to interpolate
+        my %MigrateParam = @_;
+        my $Mode         = $MigrateParam{Mode};          # HTML or JSON
+        my $Text         = $MigrateParam{Text};          # The translated text
+        my $Dot          = $MigrateParam{Dot};           # Closing dot, sometimes outside of the Tag
+        my $ParamString  = $MigrateParam{Parameters};    # Parameters to interpolate
 
         my $Result = '[% ';
 
@@ -612,8 +615,8 @@ sub MigrateDTLtoTT {
         # Plain text
         else {
             $Text =~ s{"}{\\"}smxg;    # Escape " signs
-            if ( $Param{Dot} ) {
-                $Text .= $Param{Dot};
+            if ( $MigrateParam{Dot} ) {
+                $Text .= $MigrateParam{Dot};
             }
             $Result .= "Translate(\"$Text\"";
         }

@@ -170,15 +170,13 @@ sub TableCreateComplex {
         return;
     }
 
-    # KIX4OTRS-capeIT
     # get user object
-    my $UserObject = $Kernel::OM->Get('Kernel::System::User');
+    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
+    my $TimeObject   = $Kernel::OM->Get('Kernel::System::Time');
 
     # get user preferences
     my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
-    # EO KIX4OTRS-capeIT
 
     # convert the list
     my %LinkList;
@@ -194,7 +192,6 @@ sub TableCreateComplex {
 
             for my $TicketID ( sort keys %{$DirectionList} ) {
 
-                # KIX4OTRS-capeIT
                 # skip showing links to merged tickets
                 next
                     if (
@@ -206,26 +203,18 @@ sub TableCreateComplex {
                     && $DirectionList->{$TicketID}->{State} eq 'merged'
                     );
 
-                # EO KIX4OTRS-capeIT
                 $LinkList{$TicketID}->{Data} = $DirectionList->{$TicketID};
             }
         }
     }
 
-    # KIX4OTRS-capeIT
-    # OTRS complex table settings
-    # disabled because KIX4OTRS brings own link object table preferences settings
-    # EO KIX4OTRS-capeIT
-
     # create the item list
     my @ItemList;
 
-    # KIX4OTRS-capeIT
     # default enabled queues
     my @ColumnsEnabled = ( "TicketNumber", "Title", "Type", "Queue", "State", "Created" );
 
-    if ( defined $Param{EnabledColumns}->{Ticket} && scalar @{ $Param{EnabledColumns}->{Ticket} } )
-    {
+    if ( defined $Param{EnabledColumns}->{Ticket} && scalar @{ $Param{EnabledColumns}->{Ticket} } ) {
         @ColumnsEnabled = ();
         for my $Column ( @{ $Param{EnabledColumns}->{Ticket} } ) {
             next if $Column eq 'LinkType';
@@ -233,66 +222,25 @@ sub TableCreateComplex {
         }
     }
 
-    # EO KIX4OTRS-capeIT
-
     for my $TicketID (
         sort { $LinkList{$a}{Data}->{Age} <=> $LinkList{$b}{Data}->{Age} }
         keys %LinkList
-        )
-    {
+    ) {
 
         # extract ticket data
         my $Ticket = $LinkList{$TicketID}{Data};
 
         # set css
-        # KIX4OTRS-capeIT
-        # my $CssClass;
         my $CssStyle = '';
 
-        # if ( $Ticket->{StateType} eq 'merged' ) {
-        #     $CssClass = 'StrikeThrough';
-        # }
-        #
-        # my @ItemColumns = (
-        #     {
-        #         Type     => 'Link',
-        #         Key      => $TicketID,
-        #         Content  => $Ticket->{TicketNumber},
-        #         Link     => $LayoutObject->{Baselink}
-        #            . 'Action=AgentTicketZoom;TicketID='
-        #            . $TicketID,CssClass => $CssClass,
-        #     },
-        #     {
-        #         Type      => 'Text',
-        #         Content   => $Ticket->{Title},
-        #         MaxLength => 50,
-        #     },
-        #     {
-        #         Type    => 'Text',
-        #         Content => $Ticket->{Queue},
-        #     },
-        #     {
-        #         Type      => 'Text',
-        #         Content   => $Ticket->{State},
-        #         Translate => 1,
-        #     },
-        #     {
-        #         Type    => 'TimeLong',
-        #         Content => $Ticket->{Created},
-        #     },
-        # );
-
-        my $StateHighlighting
-            = $Kernel::OM->Get('Kernel::Config')->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
+        my $StateHighlighting = $Kernel::OM->Get('Kernel::Config')->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
 
         if (
             $StateHighlighting
             && ref($StateHighlighting) eq 'HASH'
             && $StateHighlighting->{ $Ticket->{State} }
-            )
-        {
+        ) {
 
-            # if ( $Ticket->{StateType} eq 'merged' ) {
             if ( $Ticket->{StateType} eq 'closed' || $Ticket->{StateType} eq 'merged' ) {
                 $CssStyle = ' style="text-decoration: line-through; '
                     . $StateHighlighting->{ $Ticket->{State} } . '"';
@@ -383,9 +331,6 @@ sub TableCreateComplex {
                     }
                 }
                 elsif ( $Column eq 'PendingTime' ) {
-
-                    my %UserPreferences
-                        = $UserObject->GetPreferences( UserID => $Self->{UserID} );
                     my $DisplayPendingTime = $UserPreferences{UserDisplayPendingTime} || '';
 
                     if ( $DisplayPendingTime && $DisplayPendingTime eq 'RemainingTime' ) {
@@ -429,18 +374,15 @@ sub TableCreateComplex {
             push( @ItemColumns, \%TmpHash );
         }
 
-        # EO KIX4OTRS-capeIT
-
         push @ItemList, \@ItemColumns;
     }
 
     return if !@ItemList;
 
     # define the block data
-    my $TicketHook = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Hook');
+    my $TicketHook        = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Hook');
     my $TicketHookDivider = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::HookDivider');
 
-    # KIX4OTRS-capeIT
     my @Headlines;
 
     my %TranslationHash = (
@@ -466,38 +408,11 @@ sub TableCreateComplex {
         push( @Headlines, \%TmpHash );
     }
 
-    # EO KIX4OTRS-capeIT
-
     my %Block      = (
         Object    => $Self->{ObjectData}->{Object},
         Blockname => $Self->{ObjectData}->{Realname},
-
-        # KIX4OTRS-capeIT
-        # Headline  => [
-        #     {
-        #         Content => $TicketHook,
-        #         Width   => 130,
-        #     },
-        #     {
-        #         Content => 'Title',
-        #     },
-        #     {
-        #         Content => 'Queue',
-        #         Width   => 100,
-        #     },
-        #     {
-        #         Content => 'State',
-        #         Width   => 110,
-        #     },
-        #     {
-        #         Content => 'Created',
-        #         Width   => 130,
-        #     },
-        # ],
-        Headline => \@Headlines,
-
-        # EO KIX4OTRS-capeIT
-        ItemList => \@ItemList,
+        Headline  => \@Headlines,
+        ItemList  => \@ItemList,
     );
 
     return ( \%Block );
@@ -576,46 +491,28 @@ sub TableCreateSimple {
                 # set css
                 my $CssClass;
 
-                # KIX4OTRS-capeIT
-                # if ( $Ticket->{StateType} eq 'merged' ) {
                 if ( $Ticket->{StateType} eq 'closed' || $Ticket->{StateType} eq 'merged' ) {
-
-                    # EO KIX4OTRS-capeIT
-
                     $CssClass = 'StrikeThrough';
                 }
 
-                # KIX4OTRS-capeIT
                 $Ticket->{TitleFull} = $Ticket->{Title};
                 if ( length( $Ticket->{Title} ) > 20 ) {
                     $Ticket->{Title} = substr( $Ticket->{Title}, 0, 15 ) . '[...]';
                 }
 
-                # EO KIX4OTRS-capeIT
-
                 # define item data
                 my %Item = (
                     Type    => 'Link',
-
-                    # KIX4OTRS-capeIT
-                    # Content => 'T:' . $Ticket->{TicketNumber},
                     Content => 'T:' . $Ticket->{TicketNumber} . ' - ' . $Ticket->{Title},
-
-                    # EO KIX4OTRS-capeIT
-
                     Title   => "$TicketHook$TicketHookDivider$Ticket->{TicketNumber}: $Ticket->{Title}",
                     Link    => $Self->{LayoutObject}->{Baselink}
                         . 'Action=AgentTicketZoom;TicketID='
                         . $TicketID,
-                    CssClass => $CssClass,
-
-                    # KIX4OTRS-capeIT
+                    CssClass        => $CssClass,
                     ID              => $TicketID,
                     LinkType        => $LinkType,
                     ObjectType      => 'Ticket',
                     TicketStateType => $Ticket->{StateType},
-
-                    # EO KIX4OTRS-capeIT
                 );
 
                 push @ItemList, \%Item;
@@ -742,14 +639,6 @@ sub SearchOptionList {
             Name => Translatable('Fulltext'),
             Type => 'Text',
         },
-
-        # KIX4OTRS-capeIT
-        # {
-        #     Key  => 'StateIDs',
-        #     Name => 'State',
-        #     Type => 'List',
-        # },
-        # EO KIX4OTRS-capeIT
         {
             Key  => 'PriorityIDs',
             Name => Translatable('Priority'),
@@ -757,7 +646,6 @@ sub SearchOptionList {
         },
     );
 
-    # KIX4OTRS-capeIT
     # set further search criteria according to configuration
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $SearchOptionsRef = $ConfigObject->Get('Ticket::Link::SearchOptions::Order');
@@ -767,8 +655,7 @@ sub SearchOptionList {
         $SearchOptionsRef && ref($SearchOptionsRef) eq 'ARRAY' &&
         $SearchNamesRef   && ref($SearchNamesRef)   eq 'HASH' &&
         $SearchMethodsRef && ref($SearchMethodsRef) eq 'HASH'
-        )
-    {
+    ) {
         for my $Key ( @{$SearchOptionsRef} ) {
             push(
                 @SearchOptionList,
@@ -781,18 +668,6 @@ sub SearchOptionList {
             );
         }
     }
-
-    # if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Type') ) {
-    #     push @SearchOptionList,
-    #         {
-    #         Key  => 'TypeIDs',
-    #         Name => Translatable('Type'),
-    #         Type => 'List',
-    #         };
-    # }
-
-    # EO KIX4OTRS-capeIT
-
 
     if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ArchiveSystem') ) {
         push @SearchOptionList,
@@ -845,16 +720,6 @@ sub SearchOptionList {
             my $Multiple = 1;
 
             my %ListData;
-
-            # KIX4OTRS-capeIT
-            # get data according to current CallMethod
-            #if ( $Row->{Key} eq 'StateIDs' ) {
-            #
-            #    # get state list
-            #    %ListData = $Kernel::OM->Get('Kernel::System::State')->StateList(
-            #        UserID => $Self->{UserID},
-            #    );
-            #}
             if ( $Row->{Methods} && $Row->{Methods} =~ /(\w+)Object::(\w+)/ ) {
                 my $Object;
                 my $ObjectType = $1;
@@ -875,7 +740,6 @@ sub SearchOptionList {
                 }
             }
 
-            # EO KIX4OTRS-capeIT
             elsif ( $Row->{Key} eq 'PriorityIDs' ) {
                 %ListData = $Kernel::OM->Get('Kernel::System::Priority')->PriorityList(
                     UserID => $Self->{UserID},

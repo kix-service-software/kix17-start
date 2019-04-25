@@ -10,10 +10,7 @@
 
 
 <!-- start Notify -->
-# KIX4OTRS-capeIT
-# <div class="MessageBox [% Data.BoxClass %]">
 <div id="[% Data.NotifyID %]" class="MessageBox [% Data.BoxClass %]">
-# EO KIX4OTRS-capeIT
     <p>
 [% RenderBlockStart("LinkStart") %]
         <a href="[% Data.LinkStart %]" class="[% Data.LinkClass | html %]">
@@ -28,9 +25,6 @@
         </a>
 [% RenderBlockEnd("LinkStop") %]
     </p>
-#    <a class="Close" title="[% Translate("Close this message") | html %]" href="">[% Translate("Close this message") | html %]</a>
-# KIX4OTRS-capeIT
     <a class="Close" title="[% Translate("Close this message") | html %]" href="#"><i class="fa fa-times"></i></a>
-# EO KIX4OTRS-capeIT
 </div>
 <!-- end Notify -->

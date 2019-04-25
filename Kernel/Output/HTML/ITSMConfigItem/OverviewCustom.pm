@@ -145,11 +145,11 @@ sub Run {
         my $DeplStateColor = lc $Preferences{Color};
 
         # add to style classes string
-        $StyleClasses .= "
-            .Flag span.$DeplState {
-                background-color: #$DeplStateColor;
-            }
-        ";
+        $StyleClasses .= <<"END";
+.Flag span.$DeplState {
+    background-color: #$DeplStateColor;
+}
+END
     }
 
     # wrap into style tags
@@ -168,8 +168,8 @@ sub Run {
     my @UnselectedItems   = split(',', $Param{UnselectedItems} || '' );
 
     for my $ConfigItem ( @ConfigItemIDs ) {
-        if ( !grep(/^$ConfigItem$/, @UnselectedItems)
-            && !grep(/^$ConfigItem$/, @SelectedItems)
+        if ( !grep({/^$ConfigItem$/} @UnselectedItems)
+            && !grep({/^$ConfigItem$/} @SelectedItems)
         ) {
             push(@UnselectedItems, $ConfigItem);
         }
@@ -315,8 +315,7 @@ END
         && $Param{SortBy}
         && ( !grep { $Param{SortBy} eq $_ } @PredefinedColumns )
         && ( grep { $Param{SortBy} =~ m/$_/ } @ShowColumns )
-        )
-    {
+    ) {
         for my $ConfigItemID (@ConfigItemIDs) {
             $ConfigItemTableData{$ConfigItemID} = $Self->_GetColumnContent(
                 ConfigItemID      => $ConfigItemID,
@@ -336,8 +335,7 @@ END
             if (
                 $Counter >= $Param{StartHit}
                 && $Counter < ( $Param{PageShown} + $Param{StartHit} )
-                )
-            {
+            ) {
                 push( @ConfigItemIDsSorted, $ConfigItemID );
 
                 $ConfigItemTableData{$ConfigItemID} = $Self->_GetColumnContent(
@@ -359,8 +357,7 @@ END
         && $Param{SortBy}
         && ( !grep { $Param{SortBy} eq $_ } @PredefinedColumns )
         && ( grep { $Param{SortBy} =~ m/$_/ } @ShowColumns )
-        )
-    {
+    ) {
         my @SortArray;
         for my $ConfigItem ( keys %ConfigItemTableData ) {
             my %TmpHash = (
@@ -382,7 +379,7 @@ END
 
         # create data hash with sorted data
         @ConfigItemIDs = ();
-        my $Counter = 0;
+        $Counter       = 0;
         for my $Row (@ConfigItemIDsSorted) {
             $Counter++;
             next if $Counter < $Param{StartHit};
@@ -573,8 +570,7 @@ END
                 $StateHighlighting
                 && ref($StateHighlighting) eq 'HASH'
                 && $StateHighlighting->{ $Data{CurDeplState} }
-                )
-            {
+            ) {
                 $Data{LineStyle} = $StateHighlighting->{ $Data{CurDeplState} };
             }
 
@@ -612,7 +608,7 @@ END
                     else {
                         my $ItemChecked = '';
 
-                        if ( grep( /^$ConfigItemID$/, @SelectedItems ) ) {
+                        if ( grep( {/^$ConfigItemID$/} @SelectedItems ) ) {
                             $ItemChecked = ' checked="checked"';
                         }
 
@@ -744,8 +740,7 @@ sub _GetColumnContent {
         $StateHighlighting
         && ref($StateHighlighting) eq 'HASH'
         && $StateHighlighting->{ $ConfigItem->{CurDeplState} }
-        )
-    {
+    ) {
         $DataHash{LineStyle}
             = $StateHighlighting->{ $ConfigItem->{CurDeplState} };
     }
@@ -765,8 +760,7 @@ sub _GetColumnContent {
             if (
                 !grep { $SubColumn eq $_ }
                 @{ $Param{PredefinedColumns} }
-                )
-            {
+            ) {
                 $Content = join(
                     ",",
                     @{

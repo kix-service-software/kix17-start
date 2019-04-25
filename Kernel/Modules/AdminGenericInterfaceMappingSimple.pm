@@ -133,8 +133,7 @@ sub Run {
                 for my $ValueMapType (qw( ValueMapExact ValueMapRegEx )) {
                     for my $ValueName (
                         sort keys %{ $MappingConfig->{ValueMap}->{$NewKey}->{$ValueMapType} }
-                        )
-                    {
+                    ) {
                         $ValueIndex++;
                         my $NewVal = $MappingConfig->{ValueMap}->{$NewKey}->{$ValueMapType}->{$ValueName};
 
@@ -279,8 +278,7 @@ sub Run {
                 for my $ValueMapType (qw( ValueMapExact ValueMapRegEx )) {
                     for my $ValueName (
                         sort keys %{ $MappingConfig->{ValueMap}->{$NewKey}->{$ValueMapType} }
-                        )
-                    {
+                    ) {
                         $ValueIndex++;
                         my $NewVal = $MappingConfig->{ValueMap}->{$NewKey}->{$ValueMapType}->{$ValueName};
 
@@ -565,8 +563,7 @@ sub _GetParams {
         qw(
         DefaultKeyType DefaultKeyMapTo DefaultValueType DefaultValueMapTo
         )
-        )
-    {
+    ) {
         $GetParam->{$ParamName} = $ParamObject->GetParam( Param => $ParamName ) || '';
         if ( $GetParam->{$ParamName} eq '' ) {
             if ( $ParamName =~ /(DefaultKeyMapTo|DefaultValueMapTo)/i ) {

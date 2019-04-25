@@ -116,8 +116,7 @@ sub TransitionActionGet {
         || !$Kernel::OM->Get('Kernel::System::Main')->Require(
             $TransitionAction->{ $Param{TransitionActionEntityID} }{Module}
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Module for TransitionAction: $Param{TransitionActionEntityID} missing or"
@@ -222,8 +221,7 @@ sub TransitionActionList {
             || !$Kernel::OM->Get('Kernel::System::Main')->Require(
                 $TransitionAction->{$TransitionActionEntityID}{Module}
             )
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Module for TransitionAction: $TransitionActionEntityID"

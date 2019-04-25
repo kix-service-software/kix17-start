@@ -11,6 +11,10 @@ package Kernel::Output::HTML::CustomerUser::ConfigItem;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
+our $ObjectManagerDisabled = 1;
+
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -21,8 +25,7 @@ sub new {
     # get needed objects
     for (
         qw(ConfigObject LogObject DBObject LayoutObject TicketObject MainObject UserID EncodeObject ParamObject)
-        )
-    {
+    ) {
         $Self->{$_} = $Param{$_} || die "Got no $_!";
     }
 

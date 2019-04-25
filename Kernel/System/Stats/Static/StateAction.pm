@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::Stats::Static::StateAction;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Time)
 
 use strict;
 use warnings;
@@ -111,7 +110,7 @@ sub Run {
         Second => 0,
     );
 
-    my $TimePiece = localtime($SystemTime);    ## no critic
+    my $TimePiece = localtime($SystemTime);
 
     my @Data;
     my @Days      = ();

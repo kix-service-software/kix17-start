@@ -90,8 +90,7 @@ sub ActionRow {
     if (
         $Param{Config}->{OverviewMenuModules}
         && ref $ConfigObject->Get('Ticket::Frontend::OverviewMenuModule') eq 'HASH'
-        )
-    {
+    ) {
 
         my %Menus = %{ $ConfigObject->Get('Ticket::Frontend::OverviewMenuModule') };
         MENUMODULE:
@@ -255,8 +254,8 @@ sub Run {
         my $BulkSelectedAll = 0;
 
         for my $TicketID ( @{ $Param{TicketIDs} } ) {
-            if ( !grep(/^$TicketID$/, @UnselectedItems)
-                && !grep(/^$TicketID$/, @SelectedItems)
+            if ( !grep({/^$TicketID$/} @UnselectedItems)
+                && !grep({/^$TicketID$/} @SelectedItems)
             ) {
                 push(@UnselectedItems, $TicketID);
             }
@@ -269,9 +268,8 @@ sub Run {
             if (
                 $Counter >= $Param{StartHit}
                 && $Counter < ( $Param{PageShown} + $Param{StartHit} )
-                )
-            {
-                if ( grep( /^$TicketID$/, @SelectedItems ) ) {
+            ) {
+                if ( grep( {/^$TicketID$/} @SelectedItems ) ) {
                     $ItemChecked = ' checked="checked"';
                 }
 
@@ -288,7 +286,7 @@ sub Run {
                 }
 
                 push @TicketIDsShown, $TicketID;
-                my $Output = $Self->_Show(
+                $Output = $Self->_Show(
                     TicketID        => $TicketID,
                     Counter         => $CounterOnSite,
                     Bulk            => $BulkFeature,
@@ -337,7 +335,7 @@ sub Run {
                 Data => \%Param,
             );
         }
-        my $OutputMeta = $LayoutObject->Output(
+        $OutputMeta = $LayoutObject->Output(
             TemplateFile => 'AgentTicketOverviewMedium',
             Data         => \%Param,
         );
@@ -391,7 +389,7 @@ sub _Show {
     }
 
     # get move queues
-    my %MoveQueues = $TicketObject->MoveList(
+    my %MoveQueues = $TicketObject->TicketMoveList(
         TicketID => $Param{TicketID},
         UserID   => $Self->{UserID},
         Action   => $LayoutObject->{Action},
@@ -561,7 +559,6 @@ sub _Show {
             $Output =~ s/\s+/ /g;
             $Output =~ s/<\!--.+?-->//g;
 
-            # KIX4OTRS-capeIT
             # check if the browser sends the session id cookie
             # if not, add the session id to the url
             my $SessionID = '';
@@ -569,18 +566,11 @@ sub _Show {
                 $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
             }
 
-            # EO KIX4OTRS-capeIT
-
             push @ActionItems, {
                 HTML        => $Output,
                 ID          => $Item->{ID},
                 Name        => $Item->{Name},
-
-                # KIX4OTRS-capeIT
-                # Link        => $LayoutObject->{Baselink} . $Item->{Link},
-                Link => $LayoutObject->{Baselink} . $Item->{Link} . $SessionID,
-
-                # EO KIX4OTRS-capeIT
+                Link        => $LayoutObject->{Baselink} . $Item->{Link} . $SessionID,
                 Target      => $Item->{Target},
                 PopupType   => $Item->{PopupType},
                 Description => $Item->{Description},
@@ -687,15 +677,13 @@ sub _Show {
         }
     }
 
-    # KIX4OTRS-capeIT
     my $StateHighlighting
         = $ConfigObject->Get('KIX4OTRSTicketOverviewLargeHighlightMapping');
     if (
         $StateHighlighting
         && ref($StateHighlighting) eq 'HASH'
         && $StateHighlighting->{ $Article{State} }
-        )
-    {
+    ) {
         $LayoutObject->Block(
             Name => 'MetaIcon',
             Data => {
@@ -705,8 +693,6 @@ sub _Show {
             },
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     # run article modules
     if ( $Article{ArticleID} ) {
@@ -755,8 +741,7 @@ sub _Show {
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketCompose}
         && ( !defined $AclAction{AgentTicketCompose} || $AclAction{AgentTicketCompose} )
-        )
-    {
+    ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get("Ticket::Frontend::AgentTicketCompose");
         if ( $Config->{Permission} ) {
@@ -783,8 +768,7 @@ sub _Show {
             !defined $AclAction{AgentTicketPhoneOutbound}
             || $AclAction{AgentTicketPhoneOutbound}
         )
-        )
-    {
+    ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get("Ticket::Frontend::AgentTicketPhoneOutbound");
         if ( $Config->{Permission} ) {
@@ -1099,7 +1083,7 @@ sub _Show {
         # test access to ticket
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketCustomer');
         if ( $Config->{Permission} ) {
-            my $OK = $TicketObject->Permission(
+            my $OK = $TicketObject->TicketPermission(
                 Type     => $Config->{Permission},
                 TicketID => $Param{TicketID},
                 UserID   => $Self->{UserID},
@@ -1129,15 +1113,14 @@ sub _Show {
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketMove}
         && ( !defined $AclAction{AgentTicketMove} || $AclAction{AgentTicketMove} )
-        )
-    {
-        my $Access = $TicketObject->TicketPermission(
+    ) {
+        my $HasAccess = $TicketObject->TicketPermission(
             Type     => 'move',
             TicketID => $Param{TicketID},
             UserID   => $Self->{UserID},
             LogNo    => 1,
         );
-        if ($Access) {
+        if ($HasAccess) {
             $LayoutObject->Block(
                 Name => 'Move',
                 Data => { %Param, %AclAction },

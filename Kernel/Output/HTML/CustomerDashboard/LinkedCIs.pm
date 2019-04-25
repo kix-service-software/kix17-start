@@ -43,7 +43,6 @@ sub Config {
 
 sub Run {
     my ( $Self, %Param ) = @_;
-    my $Content;
 
     # create needed objects
     my $ConfigItemObject     = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
@@ -69,13 +68,10 @@ sub Run {
         $CustomerIDs = \%TempHash;
     }
 
-    return $Param{LinkConfigItemStrg}
-        = $LayoutObject->CustomerDashboardAssignedConfigItemsTable(
+    return $Param{LinkConfigItemStrg} = $LayoutObject->CustomerDashboardAssignedConfigItemsTable(
         CustomerUserIDs => $CustomerIDs,
-        UserID => $Self->{UserID} || '',
-        );
-
-    return $Param{LinkConfigItemStrg};
+        UserID          => $Self->{UserID} || '',
+    );
 }
 
 1;

@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AgentDashboardCommon;
-## nofilter(TidyAll::Plugin::OTRS::Perl::DBObject)
 
 use strict;
 use warnings;
@@ -188,8 +187,6 @@ sub Run {
         for my $Param (@PreferencesOnly) {
 
             # get params
-            # KIX4OTRS-capeIT
-            # my $Value = $ParamObject->GetParam( Param => $Param->{Name} );
             my $Value = $ParamObject->GetParam( Param => $Param->{Name} ) || '';
             my @ValueArray = $ParamObject->GetArray( Param => $Param->{Name} );
             if (@ValueArray) {
@@ -197,8 +194,6 @@ sub Run {
                 # NOTE: this is a quite simple approach - values MUST NOT contain commas
                 $Value = join( ",", @ValueArray );
             }
-
-            # EO KIX4OTRS-capeIT
 
             # update runtime vars
             $LayoutObject->{ $Param->{Name} } = $Value;
@@ -336,8 +331,7 @@ sub Run {
         COLUMNNAME:
         for my $ColumnName (
             qw(Owner Responsible State Queue Priority Type Lock Service SLA CustomerID CustomerUserID)
-            )
-        {
+        ) {
             my $FilterValue = $ParamObject->GetParam( Param => 'ColumnFilter' . $ColumnName . $Name )
                 || '';
             next COLUMNNAME if $FilterValue eq '';
@@ -615,13 +609,11 @@ sub Run {
                 );
                 if ( $Param->{Block} eq 'Option' ) {
                     $Param->{Option} = $LayoutObject->BuildSelection(
-                        Data        => $Param->{Data},
-                        Name        => $Param->{Name},
-                        SelectedID  => $Param->{SelectedID},
-                        Translation => $Param->{Translation},
-                        Class       => 'Modernize',
-
-                        # KIX4OTRS-capeIT
+                        Data           => $Param->{Data},
+                        Name           => $Param->{Name},
+                        SelectedID     => $Param->{SelectedID},
+                        Translation    => $Param->{Translation},
+                        Class          => 'Modernize',
                         Multiple       => $Param->{Multiple},
                         Size           => $Param->{Size},
                         Sort           => $Param->{Sort},
@@ -630,12 +622,8 @@ sub Run {
                         DisabledBranch => $Param->{DisabledBranch},
                         OnChange       => $Param->{OnChange},
                         OnClick        => $Param->{OnClick},
-
-                        # EO KIX4OTRS-capeIT
                     );
                 }
-
-                # KIX4OTRS-capeIT
 
                 # NOTE: this could be more elgant, but generating HTML
                 # snipplet here instead of in some DTL affects less files
@@ -690,8 +678,6 @@ sub Run {
                     $Param->{Option} .= '</ul>';
                     $Param->{Block} = 'Option';
                 }
-
-                # EO KIX4OTRS-capeIT
 
                 $LayoutObject->Block(
                     Name => $Element{Config}->{Block} . 'PreferencesItem' . $Param->{Block},
@@ -794,15 +780,10 @@ sub Run {
             $LayoutObject->Block(
                 Name => 'ColumnTranslation',
                 Data => {
-                    ColumnName => 'DynamicField_' . $DynamicField->{Name},
-
-                    # KIX4OTRS-capeIT
-                    # TranslateString => $DynamicField->{Label},
+                    ColumnName      => 'DynamicField_' . $DynamicField->{Name},
                     TranslateString =>
                         $LayoutObject->{LanguageObject}->Translate( $DynamicField->{Label} )
                         . " (DF)",
-
-                    # EO KIX4OTRS-capeIT
                 },
             );
 
@@ -876,7 +857,6 @@ sub _Element {
     # Perform the actual data fetching and computation on the slave db, if configured
     local $Kernel::System::DB::UseSlaveDB = 1;
 
-    # KIX4OTRS-capeIT
     # moved upwards
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
@@ -885,8 +865,6 @@ sub _Element {
             $LayoutObject->{LanguageObject}->Translate('Search Template') . ": "
             . $Object->{SearchTemplateName};
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get module preferences
     my @Preferences = $Object->Preferences();
@@ -904,11 +882,6 @@ sub _Element {
         );
         return $FilterContent;
     }
-
-    # KIX4OTRS-capeIT
-    # moved content upwards
-    # my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    # EO KIX4OTRS-capeIT
 
     # add backend to settings selection
     if ($Backends) {

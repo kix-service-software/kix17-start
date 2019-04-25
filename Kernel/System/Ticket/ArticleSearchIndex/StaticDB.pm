@@ -19,6 +19,8 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
 );
 
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 sub ArticleIndexBuild {
     my ( $Self, %Param ) = @_;
 
@@ -72,12 +74,8 @@ sub ArticleIndexBuild {
 
     # insert search index
     $DBObject->Do(
-        SQL => '
-            INSERT INTO article_search (id, ticket_id, article_type_id,
-                article_sender_type_id, a_from, a_to,
-                a_cc, a_subject, a_body,
-                incoming_time)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        SQL  => 'INSERT INTO article_search (id, ticket_id, article_type_id, article_sender_type_id, a_from, a_to, a_cc, a_subject, a_body, incoming_time)'
+              . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         Bind => [
             \$Article{ArticleID},    \$Article{TicketID}, \$Article{ArticleTypeID},
             \$Article{SenderTypeID}, \$Article{From},     \$Article{To},
@@ -153,8 +151,7 @@ sub _ArticleIndexQuerySQL {
         ArticleCreateTimeOlderMinutes ArticleCreateTimeNewerMinutes
         ArticleCreateTimeOlderDate ArticleCreateTimeNewerDate
         )
-        )
-    {
+    ) {
         if ( $Param{Data}->{$_} ) {
             return ' INNER JOIN article_search art ON st.id = art.ticket_id ';
         }
@@ -205,18 +202,13 @@ sub _ArticleIndexQuerySQLExt {
         # check if search condition extension is used
         if ( $Param{Data}->{ConditionInline} ) {
             $FullTextSQL .= $DBObject->QueryCondition(
-                Key          => $FieldSQLMapFullText{$Key},
-                Value        => lc $Param{Data}->{$Key},
-                SearchPrefix => $Param{Data}->{ContentSearchPrefix},
-                SearchSuffix => $Param{Data}->{ContentSearchSuffix},
-                Extended     => 1,
+                Key           => $FieldSQLMapFullText{$Key},
+                Value         => lc $Param{Data}->{$Key},
+                SearchPrefix  => $Param{Data}->{ContentSearchPrefix},
+                SearchSuffix  => $Param{Data}->{ContentSearchSuffix},
+                Extended      => 1,
                 CaseSensitive => 1,    # data in article_search are already stored in lower cases
-
-                # KIX4OTRS-capeIT
-                # tell QueryCondition method to regard StaticDB advantages
-                StaticDB => 1,
-
-                # EO KIX4OTRS-capeIT
+                StaticDB      => 1,    # tell QueryCondition method to regard StaticDB advantages
             );
         }
         else {

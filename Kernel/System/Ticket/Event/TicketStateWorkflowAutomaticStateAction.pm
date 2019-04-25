@@ -55,9 +55,6 @@ Run - contains the actions performed by this event handler.
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my $ArticleFreeKey;
-    my $ArticleFreeText;
-
     # check needed stuff
     for (qw(Event Config)) {
         if ( !$Param{$_} ) {
@@ -164,8 +161,7 @@ sub Run {
             $WFConfigRef->{QueueMove}->{ $Ticket{Type} . ':::' . $Ticket{State} }
             || $WFConfigRef->{QueueMove}->{ $Ticket{State} }
         )
-        )
-    {
+    ) {
         my $NextQueueName = $WFConfigRef->{QueueMove}->{ $Ticket{Type} . ':::' . $Ticket{State} }
             || $WFConfigRef->{QueueMove}->{ $Ticket{State} };
         my @SingleQueueNames = split( /::/, $NextQueueName );
@@ -173,7 +169,6 @@ sub Run {
 
         #check and replace placeholders...
         for my $QueueNamePart (@SingleQueueNames) {
-#rbo - T2016121190001552 - added KIX placeholders
             $QueueNamePart =~ s/<(KIX|OTRS)_Ticket_(.+)>/$Ticket{$2}/e;
             $SingleQueueNames[$Index] = $QueueNamePart;
             $Index++;
@@ -201,13 +196,11 @@ sub Run {
             if (
                 $WFConfigRef->{FallbackOnErrorQueue}
                 && $WFConfigRef->{FallbackOnErrorQueue} ne ''
-                )
-            {
-                my $NextQueueID = $Self->{QueueObject}
-                    ->QueueLookup( Queue => $WFConfigRef->{FallbackOnErrorQueue} );
-                if ($NextQueueID) {
-                    $Self->{TicketObject}->MoveTicket(
-                        QueueID  => $NextQueueID,
+            ) {
+                my $FallbackQueueID = $Self->{QueueObject}->QueueLookup( Queue => $WFConfigRef->{FallbackOnErrorQueue} );
+                if ($FallbackQueueID) {
+                    $Self->{TicketObject}->TicketQueueSet(
+                        QueueID  => $FallbackQueueID,
                         TicketID => $Param{Data}->{TicketID},
                         UserID   => 1,
                     );
@@ -218,18 +211,20 @@ sub Run {
             if (
                 $WFConfigRef->{FallbackOnErrorState}
                 && $WFConfigRef->{FallbackOnErrorState} ne ''
-                )
-            {
+            ) {
                 my %NextState = $Self->{StateObject}
                     ->StateGet( Name => $WFConfigRef->{FallbackOnErrorState} );
                 if ( $NextState{ID} ) {
-                    $Self->{TicketObject}->StateSet(
+                    $Self->{TicketObject}->TicketStateSet(
                         StateID  => $NextState{ID},
                         TicketID => $Param{Data}->{TicketID},
                         UserID   => 1,
                     );
                 }
             }
+
+            my $BodyQueue = $WFConfigRef->{FallbackOnErrorQueue} || $Ticket{Queue};
+            my $BodyState = $WFConfigRef->{FallbackOnErrorState} || $Ticket{State};
 
             # add system notice to inform agents about this failure
             if ( $WFConfigRef->{FallbackOnErrorNote} ) {
@@ -239,22 +234,17 @@ sub Run {
                     SenderType  => 'system',
                     From        => 'KIX4OTRS Systeminformation',
                     Subject     => 'Automatic move failed due to a misconfiguration.',
-                    Body        => 'Hello,
+                    Body        => <<"END",
+Hello,
 
 due to a misconfiguration in your system, the automatic queue move could not succed.
-You\'ve decided to move this ticket to "'
-                        . $NextQueueName
-                        . '". But this queue does not exists.
+You've decided to move this ticket to "$NextQueueName". But this queue does not exists.
 
 Have you forgotten to set required fields? Otherwhise please contact your admin.
 
 
-Furthermore this ticket has been moved to "'
-                        . ( $WFConfigRef->{FallbackOnErrorQueue} || $Ticket{Queue} )
-                        . '" with ticket state "'
-                        . ( $WFConfigRef->{FallbackOnErrorState} || $Ticket{State} )
-                        . '".'
-                    ,
+Furthermore this ticket has been moved to "$BodyQueue" with ticket state "$BodyState".
+END
                     UserID      => 1,
                     HistoryType => 'SystemRequest',
                     HistoryComment =>
@@ -274,10 +264,8 @@ Furthermore this ticket has been moved to "'
         && (
             $WFConfigRef->{NextStateSet}->{ $Ticket{Type} . ':::' . $Ticket{State} }
             || $WFConfigRef->{NextStateSet}->{ $Ticket{State} }
-
         )
-        )
-    {
+    ) {
         my $NextStateName = $WFConfigRef->{NextStateSet}->{ $Ticket{Type} . ':::' . $Ticket{State} }
             || $WFConfigRef->{NextStateSet}->{ $Ticket{State} };
         my %NextState = $Self->{StateObject}->StateGet( Name => $NextStateName );
@@ -306,7 +294,7 @@ Furthermore this ticket has been moved to "'
             }
 
             # set new state...
-            my $StateSet = $Self->{TicketObject}->StateSet(
+            my $StateSet = $Self->{TicketObject}->TicketStateSet(
                 StateID  => $NextState{ID},
                 TicketID => $Param{Data}->{TicketID},
                 UserID   => 1,

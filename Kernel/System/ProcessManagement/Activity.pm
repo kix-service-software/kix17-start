@@ -140,8 +140,7 @@ sub ActivityGet {
                 # keep activity dialog if interface is included in activity dialog configuration
                 if (
                     grep { $_ eq $Interface } @{ $ActivityDialogs->{$ActivityDialog}->{Interface} }
-                    )
-                {
+                ) {
                     next ACTIVITYDIALOG;
                 }
             }

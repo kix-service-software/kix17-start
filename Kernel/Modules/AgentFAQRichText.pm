@@ -59,7 +59,7 @@ sub Run {
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    my $ScriptAlias = $ConfigObject->Get('ScriptAlias') || 'otrs/';
+    my $ScriptAlias = $ConfigObject->Get('ScriptAlias') || 'kix/';
     my $URLRegex = '/' . $ScriptAlias . 'index.pl\?Action=AgentFAQZoom;'
         . 'Subaction=DownloadAttachment;ItemID=' . $GetParam{ItemID} . ';FileID=[0-9]+';
     my $ElemRegex = 'src="(' . $URLRegex . ')"';

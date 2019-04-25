@@ -119,8 +119,7 @@ sub Run {
         if (
             ( $ACLImport->{UpdatedACLs} || $ACLImport->{AddedACLs} )
             && !$SynchronizedMessageVisible
-            )
-        {
+        ) {
 
             $Param{NotifyData} = [
                 @{ $Param{NotifyData} || [] },
@@ -194,7 +193,7 @@ sub Run {
         }
 
         # otherwise save configuration and return to overview screen
-        my $ACLID = $ACLObject->ACLAdd(
+        my $NewACLID = $ACLObject->ACLAdd(
             Name           => $ACLData->{Name},
             Comment        => $ACLData->{Comment},
             Description    => $ACLData->{Description},
@@ -204,14 +203,14 @@ sub Run {
         );
 
         # show error if can't create
-        if ( !$ACLID ) {
+        if ( !$NewACLID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error creating the ACL'),
             );
         }
 
         # redirect to edit screen
-        return $LayoutObject->Redirect( OP => "Action=$Self->{Action};Subaction=ACLEdit;ID=$ACLID" );
+        return $LayoutObject->Redirect( OP => "Action=$Self->{Action};Subaction=ACLEdit;ID=$NewACLID" );
     }
 
     # ------------------------------------------------------------ #
@@ -443,7 +442,6 @@ sub Run {
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'ACLExport' ) {
 
-        my $ACLID = $ParamObject->GetParam( Param => 'ID' ) || '';
         my $ACLData;
         my $ACLSingleData;
         my $Filename = 'Export_ACL.yml';
@@ -516,19 +514,19 @@ sub Run {
             . ')';
 
         # otherwise save configuration and return to overview screen
-        my $ACLID = $ACLObject->ACLAdd(
+        my $NewACLID = $ACLObject->ACLAdd(
             Name           => $ACLName,
             Comment        => $ACLData->{Comment},
             Description    => $ACLData->{Description},
-            ConfigMatch    => $ACLData->{ConfigMatch} || '',
-            ConfigChange   => $ACLData->{ConfigChange} || '',
+            ConfigMatch    => $ACLData->{ConfigMatch}    || '',
+            ConfigChange   => $ACLData->{ConfigChange}   || '',
             StopAfterMatch => $ACLData->{StopAfterMatch} || 0,
             ValidID        => '1',
             UserID         => $Self->{UserID},
         );
 
         # show error if can't create
-        if ( !$ACLID ) {
+        if ( !$NewACLID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error creating the ACL'),
             );
@@ -807,8 +805,7 @@ sub _GetParams {
     # get parameters from web browser
     for my $ParamName (
         qw( Name EntityID Comment Description StopAfterMatch ValidID ConfigMatch ConfigChange )
-        )
-    {
+    ) {
         $GetParam->{$ParamName}
             = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $ParamName ) || '';
     }

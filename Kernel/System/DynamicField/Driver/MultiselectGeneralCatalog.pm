@@ -65,14 +65,7 @@ sub new {
     };
 
     # get the Dynamic Field Backend custom extensions
-    my $DynamicFieldDriverExtensions
-
-       # KIX4OTRS-capeIT
-       # = $Kernel::OM->Get('Kernel::Config')->Get('DynamicFields::Extension::Driver::Multiselect');
-        = $Kernel::OM->Get('Kernel::Config')
-        ->Get('DynamicFields::Extension::Driver::MultiselectGeneralCatalog');
-
-    # EO KIX4OTRS-capeIT
+    my $DynamicFieldDriverExtensions = $Kernel::OM->Get('Kernel::Config')->Get('DynamicFields::Extension::Driver::MultiselectGeneralCatalog');
 
     EXTENSION:
     for my $ExtensionKey ( sort keys %{$DynamicFieldDriverExtensions} ) {
@@ -89,8 +82,7 @@ sub new {
             # check if module can be loaded
             if (
                 !$Kernel::OM->Get('Kernel::System::Main')->RequireBaseClass( $Extension->{Module} )
-                )
-            {
+            ) {
                 die "Can't load dynamic fields backend module"
                     . " $Extension->{Module}! $@";
             }
@@ -145,19 +137,10 @@ sub ValueSet {
     my ( $Self, %Param ) = @_;
 
     # check for valid general catalog class
-    # KIX4OTRS-capeIT
-    # if ( !$Param{DynamicFieldConfig}->{Config}->{PossibleValues} ) {
     if ( !$Param{DynamicFieldConfig}->{Config}->{GeneralCatalogClass} ) {
-
-        # EO KIX4OTRS-capeIT
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-
-            # KIX4OTRS-capeIT
-            # Message  => "Need PossibleValues in DynamicFieldConfig!",
-            Message => "Need GeneralCatalogClass in DynamicFieldConfig!",
-
-            # EO KIX4OTRS-capeIT
+            Message  => "Need GeneralCatalogClass in DynamicFieldConfig!",
         );
         return;
     }
@@ -174,11 +157,8 @@ sub ValueSet {
     # get dynamic field value object
     my $DynamicFieldValueObject = $Kernel::OM->Get('Kernel::System::DynamicFieldValue');
 
-    # KIX4OTRS-capeIT
     # get dynamic field value object
     my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
-
-    # EO KIX4OTRS-capeIT
 
     my @ValueText;
     if ( IsArrayRefWithData( \@Values ) ) {
@@ -242,11 +222,7 @@ sub EditFieldRender {
     my $FieldName   = 'DynamicField_' . $Param{DynamicFieldConfig}->{Name};
     my $FieldLabel  = $Param{DynamicFieldConfig}->{Label};
 
-    # KIX4OTRS-capeIT
-    # my $Value;
     my $Value = '';
-
-    # EO KIX4OTRS-capeIT
 
     # set the field value or default
     if ( $Param{UseDefaultValue} ) {
@@ -259,8 +235,7 @@ sub EditFieldRender {
     if (
         IsHashRefWithData( $Param{Template} )
         && defined $Param{Template}->{$FieldName}
-        )
-    {
+    ) {
         $Value = $Param{Template}->{$FieldName};
     }
 
@@ -290,17 +265,13 @@ sub EditFieldRender {
         $FieldClass .= ' ServerError';
     }
 
-    # KIX4OTRS-capeIT
     # get general catalog class
     my $GeneralCatalogClass = $FieldConfig->{GeneralCatalogClass};
 
     # set PossibleValues
-    # my $PossibleValues = $FieldConfig->{PossibleValues};
     my $PossibleValues = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
         Class => $GeneralCatalogClass,
     );
-
-    # EO KIX4OTRS-capeIT
 
     # check value
     my $SelectedValuesArrayRef;
@@ -415,8 +386,7 @@ sub EditFieldValueGet {
     elsif (
         defined $Param{ParamObject}
         && ref $Param{ParamObject} eq 'Kernel::System::Web::Request'
-        )
-    {
+    ) {
         my @Data = $Param{ParamObject}->GetArray( Param => $FieldName );
 
         # delete empty values (can happen if the user has selected the "-" entry)
@@ -434,7 +404,7 @@ sub EditFieldValueGet {
         $Value = \@Data;
     }
 
-    if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq 1 ) {
+    if ( defined $Param{ReturnTemplateStructure} && $Param{ReturnTemplateStructure} eq "1" ) {
         return {
             $FieldName => $Value,
         };
@@ -466,18 +436,13 @@ sub EditFieldValueValidate {
         };
     }
     else {
-
-        # KIX4OTRS-capeIT
         # get general catalog class
         my $GeneralCatalogClass = $Param{DynamicFieldConfig}->{Config}->{GeneralCatalogClass};
 
         # get possible values list
-        # my $PossibleValues = $Param{DynamicFieldConfig}->{Config}->{PossibleValues};
         my $PossibleValues = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
             Class => $GeneralCatalogClass,
         );
-
-        # EO KIX4OTRS-capeIT
 
         # overwrite possible values if PossibleValuesFilter
         if ( defined $Param{PossibleValuesFilter} ) {
@@ -525,17 +490,14 @@ sub DisplayValueRender {
         @Values = ( $Param{Value} );
     }
 
-    # KIX4OTRS-capeIT
     # get general catalog class
     my $GeneralCatalogClass = $Param{DynamicFieldConfig}->{Config}->{GeneralCatalogClass};
 
     # get real values
-    # my $PossibleValues = $Param{DynamicFieldConfig}->{Config}->{PossibleValues};
     my $PossibleValues = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
         Class => $GeneralCatalogClass,
     );
 
-    # EO KIX4OTRS-capeIT
     my $TranslatableValues = $Param{DynamicFieldConfig}->{Config}->{TranslatableValues};
 
     my @ReadableValues;
@@ -673,17 +635,13 @@ sub SearchFieldRender {
     # check and set class if necessary
     my $FieldClass = 'DynamicFieldMultiSelect Modernize';
 
-    # KIX4OTRS-capeIT
     # get general catalog class
     my $GeneralCatalogClass = $FieldConfig->{GeneralCatalogClass};
 
     # set PossibleValues
-    # my $SelectionData = $FieldConfig->{PossibleValues};
     my $SelectionData = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
         Class => $GeneralCatalogClass,
     );
-
-    # EO KIX4OTRS-capeIT
 
     # get historical values from database
     my $HistoricalValues = $Self->HistoricalValuesGet(%Param);
@@ -739,7 +697,6 @@ sub SearchFieldParameterBuild {
         $DisplayValue = '';
     }
 
-    # KIX4OTRS-capeIT
     # get general catalog class
     my $GeneralCatalogClass = $Param{DynamicFieldConfig}->{Config}->{GeneralCatalogClass};
 
@@ -748,8 +705,6 @@ sub SearchFieldParameterBuild {
         Class => $GeneralCatalogClass,
     );
 
-    # EO KIX4OTRS-capeIT
-
     if ($Value) {
         if ( ref $Value eq 'ARRAY' ) {
 
@@ -757,15 +712,10 @@ sub SearchFieldParameterBuild {
             for my $Item ( @{$Value} ) {
 
                 # set the display value
-                # KIX4OTRS-capeIT
-                my $DisplayItem = $PossibleValues->{$Item}
-                    || $Item;
+                my $DisplayItem = $PossibleValues->{$Item} || $Item;
                 if ( $Param{DynamicFieldConfig}->{Config}->{TranslatableValues} ) {
-
                     # translate the value
                     $DisplayItem = $Param{LayoutObject}->{LanguageObject}->Translate($DisplayValue);
-
-                    # EO KIX4OTRS-capeIT
                 }
 
                 push @DisplayItemList, $DisplayItem;
@@ -777,13 +727,10 @@ sub SearchFieldParameterBuild {
         else {
 
             # set the display value
-            # KIX4OTRS-capeIT
             $DisplayValue = $PossibleValues->{$Value};
 
             if ( $Param{DynamicFieldConfig}->{Config}->{TranslatableValues} ) {
-
                 # translate the value
-                # EO KIX4OTRS-capeIT
                 $DisplayValue = $Param{LayoutObject}->{LanguageObject}->Translate($DisplayValue);
             }
         }
@@ -801,17 +748,13 @@ sub SearchFieldParameterBuild {
 sub StatsFieldParameterBuild {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
     # get general catalog class
     my $GeneralCatalogClass = $Param{DynamicFieldConfig}->{Config}->{GeneralCatalogClass};
 
     # set PossibleValues
-    # my $Values = $Param{DynamicFieldConfig}->{Config}->{PossibleValues};
     my $Values = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
         Class => $GeneralCatalogClass,
     );
-
-    # EO KIX4OTRS-capeIT
 
     # get historical values from database
     my $HistoricalValues = $Kernel::OM->Get('Kernel::System::DynamicFieldValue')->HistoricalValueGet(
@@ -954,7 +897,6 @@ sub ObjectMatch {
 sub PossibleValuesGet {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
     # get general catalog class
     my $GeneralCatalogClass = $Param{DynamicFieldConfig}->{Config}->{GeneralCatalogClass};
 
@@ -962,8 +904,6 @@ sub PossibleValuesGet {
     my $DefinedPossibleValues = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
         Class => $GeneralCatalogClass,
     );
-
-    # EO KIX4OTRS-capeIT
 
     # to store the possible values
     my %PossibleValues;
@@ -974,19 +914,10 @@ sub PossibleValuesGet {
     }
 
     # set all other possible values if defined on field config
-    # KIX4OTRS-capeIT
-    # if ( IsHashRefWithData( $Param{DynamicFieldConfig}->{Config}->{PossibleValues} ) ) {
     if ( IsHashRefWithData($DefinedPossibleValues) ) {
-
-        # EO KIX4OTRS-capeIT
         %PossibleValues = (
             %PossibleValues,
-
-            # KIX4OTRS-capeIT
-            # %{ $Param{DynamicFieldConfig}->{Config}->{PossibleValues} },
             %{$DefinedPossibleValues},
-
-            # EO KIX4OTRS-capeIT
         );
     }
 
@@ -1019,11 +950,7 @@ sub ValueLookup {
     }
 
     # get real values
-    # KIX4OTRS-capeIT
-    # my $PossibleValues = $Param{DynamicFieldConfig}->{Config}->{PossibleValues};
     my $PossibleValues = $Self->PossibleValuesGet(%Param);
-
-    # EO KIX4OTRS-capeIT
 
     # to store final values
     my @Values;
@@ -1043,9 +970,7 @@ sub ValueLookup {
             if (
                 defined $Param{LanguageObject}
                 && $Param{DynamicFieldConfig}->{Config}->{TranslatableValues}
-                )
-            {
-
+            ) {
                 # translate value
                 $Value = $Param{LanguageObject}->Translate($Value);
             }

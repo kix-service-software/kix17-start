@@ -18,6 +18,8 @@ use Kernel::System::VariableCheck qw(:all);
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -423,13 +425,12 @@ sub Run {
     else {
 
         # store column filters
-        my $StoredFilters = \%ColumnFilter;
+        my $NewStoredFilters = \%ColumnFilter;
 
-        my $StoredFiltersKey = 'UserStoredFilterColumns-' . $Self->{Action};
         $UserObject->SetPreferences(
             UserID => $Self->{UserID},
             Key    => $StoredFiltersKey,
-            Value  => $JSONObject->Encode( Data => $StoredFilters ),
+            Value  => $JSONObject->Encode( Data => $NewStoredFilters ),
         );
     }
 
@@ -855,8 +856,7 @@ sub _MaskServiceViewTree {
                 $Counter{$ServiceName} = 0;
             }
             $Counter{$ServiceName} = $Counter{$ServiceName} + $Service{Count};
-            if ( $Counter{$ServiceName} && !$Service{$ServiceName} && !$UsedService{$ServiceName} )
-            {
+            if ( $Counter{$ServiceName} && !$Service{$ServiceName} && !$UsedService{$ServiceName} ) {
                 my %Hash;
                 $Hash{Service} = $ServiceName;
                 $Hash{Count}   = $Counter{$ServiceName};
@@ -1029,7 +1029,7 @@ sub _MaskServiceViewDropDown {
         my $ShortServiceName = $ServiceName[-1];
         $Service{ServiceID} = 0 if ( !$Service{ServiceID} );
 
-        my $ServiceStrg .= $LayoutObject->{Baselink}
+        my $ServiceStrg = $LayoutObject->{Baselink}
             . "Action=AgentTicketService;ServiceID=$Service{ServiceID}"
             . ';View=' . $LayoutObject->Ascii2Html( Text => $Self->{View} )
             . ';Filter=' . $LayoutObject->Ascii2Html( Text => $Self->{Filter} );

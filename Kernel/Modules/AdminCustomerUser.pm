@@ -87,8 +87,7 @@ sub Run {
         $Self->{Subaction} eq 'Switch'
         && $ConfigObject->Get('SwitchToCustomer')
         && $Self->{SwitchToCustomerPermission}
-        )
-    {
+    ) {
 
         # challenge token check for write action
         $LayoutObject->ChallengeTokenCheck();
@@ -140,7 +139,7 @@ sub Run {
             $SecureAttribute = 1;
         }
 
-        my $LayoutObject = Kernel::Output::HTML::Layout->new(
+        my $SwitchLayoutObject = Kernel::Output::HTML::Layout->new(
             %{$Self},
             SetCookies => {
                 SessionIDCookie => $ParamObject->SetCookie(
@@ -177,7 +176,7 @@ sub Run {
         }
 
         # redirect to customer interface with new session id
-        return $LayoutObject->Redirect( ExtURL => $URL );
+        return $SwitchLayoutObject->Redirect( ExtURL => $URL );
     }
 
     # search user list
@@ -259,7 +258,6 @@ sub Run {
         return $Output;
     }
 
-    # KIX4OTRS-capeIT
     # ------------------------------------------------------------ #
     # clone
     # ------------------------------------------------------------ #
@@ -288,8 +286,6 @@ sub Run {
         return $Output;
     }
 
-    # EO KIX4OTRS-capeIT
-
     # ------------------------------------------------------------ #
     # change action
     # ------------------------------------------------------------ #
@@ -308,14 +304,10 @@ sub Run {
                 $Errors{ $Entry->[0] . 'Invalid' } = 'ServerError';
             }
 
-            # KIX4OTRS-capeIT
             if ( $Entry->[5] eq 'array' ) {
                 $GetParam{ $Entry->[0] }
                     = join( ', ', $ParamObject->GetArray( Param => $Entry->[0] ) );
             }
-
-            # EO KIX4OTRS-capeIT
-
         }
         $GetParam{ID} = $ParamObject->GetParam( Param => 'ID' ) || '';
 
@@ -323,8 +315,7 @@ sub Run {
         if (
             $GetParam{UserEmail}
             && !$CheckItemObject->CheckEmail( Address => $GetParam{UserEmail} )
-            )
-        {
+        ) {
             $Errors{UserEmailInvalid} = 'ServerError';
             $Errors{ErrorType}        = $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
         }
@@ -364,18 +355,17 @@ sub Run {
                     );
                     my @Params = $Object->Param( UserData => \%UserData );
                     if (@Params) {
-                        my %GetParam;
+                        my %GroupParam;
                         for my $ParamItem (@Params) {
                             my @Array = $ParamObject->GetArray( Param => $ParamItem->{Name} );
-                            $GetParam{ $ParamItem->{Name} } = \@Array;
+                            $GroupParam{ $ParamItem->{Name} } = \@Array;
                         }
                         if (
                             !$Object->Run(
-                                GetParam => \%GetParam,
+                                GetParam => \%GroupParam,
                                 UserData => \%UserData
                             )
-                            )
-                        {
+                        ) {
                             $Note .= $LayoutObject->Notify( Info => $Object->Error() );
                         }
                     }
@@ -487,8 +477,7 @@ sub Run {
         if (
             $GetParam{UserEmail}
             && !$CheckItemObject->CheckEmail( Address => $GetParam{UserEmail} )
-            )
-        {
+        ) {
             $Errors{UserEmailInvalid} = 'ServerError';
             $Errors{ErrorType}        = $CheckItemObject->CheckErrorType() . 'ServerErrorMsg';
         }
@@ -529,18 +518,17 @@ sub Run {
                     );
                     my @Params = $Object->Param( %{ $Preferences{$Group} }, UserData => \%UserData );
                     if (@Params) {
-                        my %GetParam;
+                        my %GroupParam;
                         for my $ParamItem (@Params) {
                             my @Array = $ParamObject->GetArray( Param => $ParamItem->{Name} );
-                            $GetParam{ $ParamItem->{Name} } = \@Array;
+                            $GroupParam{ $ParamItem->{Name} } = \@Array;
                         }
                         if (
                             !$Object->Run(
-                                GetParam => \%GetParam,
+                                GetParam => \%GroupParam,
                                 UserData => \%UserData
                             )
-                            )
-                        {
+                        ) {
                             $Note .= $LayoutObject->Notify( Info => $Object->Error() );
                         }
                     }
@@ -780,8 +768,7 @@ sub _Overview {
             Data => \%Param,
         );
 
-        if ( $ConfigObject->Get('SwitchToCustomer') && $Self->{SwitchToCustomerPermission} && $Param{Nav} ne 'None' )
-        {
+        if ( $ConfigObject->Get('SwitchToCustomer') && $Self->{SwitchToCustomerPermission} && $Param{Nav} ne 'None' ) {
             $ColSpan = 7;
             $LayoutObject->Block(
                 Name => 'OverviewResultSwitchToCustomer',
@@ -835,8 +822,7 @@ sub _Overview {
                     $ConfigObject->Get('SwitchToCustomer')
                     && $Self->{SwitchToCustomerPermission}
                     && $Param{Nav} ne 'None'
-                    )
-                {
+                ) {
                     $LayoutObject->Block(
                         Name => 'OverviewResultRowSwitchToCustomer',
                         Data => {
@@ -872,10 +858,7 @@ sub _Overview {
         $LayoutObject->Block( Name => 'BorrowedViewJS' );
     }
 
-    # KIX4OTRS-capeIT
     return;
-
-    # EO KIX4OTRS-capeIT
 }
 
 sub _Edit {
@@ -883,7 +866,6 @@ sub _Edit {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # KIX4OTRS-capeIT
     if ( $Param{Action} eq 'Clone' ) {
         $Param{UserLogin}    = '';
         $Param{UserPassword} = '';
@@ -891,19 +873,14 @@ sub _Edit {
         $Param{UserID}       = '';
     }
 
-    # EO KIX4OTRS-capeIT
-
     my $Output = '';
 
-    # KIX4OTRS-capeIT
     # build source string
     $Param{CompanyOption} = $LayoutObject->BuildSelection(
         Data       => { $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyList() },
         Name       => 'CustomerID',
         SelectedID => $Param{CustomerID},
     );
-
-    # EO KIX4OTRS-capeIT
 
     $LayoutObject->Block(
         Name => 'Overview',
@@ -916,14 +893,12 @@ sub _Edit {
         Data => \%Param,
     );
 
-    # KIX4OTRS-capeIT
     if ( $Self->{Subaction} ne 'Add' ) {
         $LayoutObject->Block(
             Name => 'ActionClone',
             Data => \%Param,
         );
     }
-    # EO KIX4OTRS-capeIT
 
     $LayoutObject->Block(
         Name => 'OverviewUpdate',
@@ -955,8 +930,7 @@ sub _Edit {
         if (
             $ConfigObject->Get( $Param{Source} )->{AutoLoginCreation}
             && $Entry->[0] eq 'UserLogin'
-            )
-        {
+        ) {
             $Block = 'InputHidden';
         }
         if ( $Entry->[7] ) {
@@ -1016,14 +990,12 @@ sub _Edit {
             );
         }
 
-        # KIX4OTRS-capeIT
         # build multiple selections
         elsif (
             $Entry->[5] eq 'array'
             && $ConfigObject->Get( $Param{Source} )->{SelectionsMultiple}
             && $ConfigObject->Get( $Param{Source} )->{SelectionsMultiple}->{ $Entry->[0] }
-            )
-        {
+        ) {
             $Block = 'Option';
 
             # Change the validation class
@@ -1053,8 +1025,6 @@ sub _Edit {
             );
         }
 
-        # EO KIX4OTRS-capeIT
-
         elsif ( $Entry->[0] =~ /^ValidID/i ) {
 
             # Change the validation class
@@ -1072,19 +1042,11 @@ sub _Edit {
             );
         }
 
-        # KIX4OTRS-capeIT
-        #        elsif (
-        #            $Entry->[0] =~ /^UserCustomerID$/i
-        #            && $ConfigObject->Get( $Param{Source} )->{CustomerCompanySupport}
-        #            )
         elsif (
             $Entry->[0] =~ /^UserCustomerID$/i
             && $ConfigObject->Get( $Param{Source} )->{CustomerCompanySupport}
             && $ConfigObject->Get( $Param{Source} )->{CustomerCompanySupportPersonalCustomerID}
-            )
-
-            # EO KIX4OTRS-capeIT
-        {
+        ) {
             my $CustomerCompanyObject = $Kernel::OM->Get('Kernel::System::CustomerCompany');
             my %CompanyList           = (
                 $CustomerCompanyObject->CustomerCompanyList( Limit => 0 ),
@@ -1119,13 +1081,11 @@ sub _Edit {
             $Param{Value} = $Param{ $Entry->[0] } || $Param{CustomerID} || '';
         }
 
-        # KIX4OTRS-capeIT
         elsif (
             $Entry->[0] =~ /^UserCustomerIDs$/i
             && $Entry->[5] eq 'array'
             && $ConfigObject->Get( $Param{Source} )->{CustomerCompanySupport}
-            )
-        {
+        ) {
             my @CustomerIDsArray;
             if ( $Param{ID} ) {
                 @CustomerIDsArray = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerIDs(
@@ -1152,8 +1112,6 @@ sub _Edit {
                 Class => 'Modernize ' .$Param{RequiredClass} . ' ' . $Param{Errors}->{ $Entry->[0] . 'Invalid' },
             );
         }
-
-        # EO KIX4OTRS-capeIT
 
         else {
             $Param{Value} = $Param{ $Entry->[0] } || '';
@@ -1292,8 +1250,7 @@ sub _Edit {
                             if (
                                 ref $ParamItem->{Data} eq 'HASH'
                                 || ref $Preference{Data} eq 'HASH'
-                                )
-                            {
+                            ) {
                                 my %BuildSelectionParams = (
                                     %Preference,
                                     %{$ParamItem},

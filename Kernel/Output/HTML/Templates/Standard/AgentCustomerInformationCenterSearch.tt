@@ -19,7 +19,6 @@
                 <input type="text" id="AgentCustomerInformationCenterSearchCustomerID" class="W90pc" />
             </div>
             <div class="Clear"></div>
-# rkaiser - T#2017020290001194 - changed customer user to contact
             <label>[% Translate("Contact") | html %]:</label>
             <div class="Field">
                 <input type="text" id="AgentCustomerInformationCenterSearchCustomerUser" class="W90pc" />

@@ -8,7 +8,7 @@
 # did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::Output::Template::Plugin::OTRS;
+package Kernel::Output::Template::Plugin::KIX;
 
 use strict;
 use warnings;
@@ -18,6 +18,8 @@ use base qw(Template::Plugin);
 use Scalar::Util;
 
 our $ObjectManagerDisabled = 1;
+
+use Kernel::System::ObjectManager;
 
 =head1 NAME
 

@@ -117,11 +117,11 @@ sub SystemDataAdd {
 
     # store data
     return if !$Self->{DBObject}->Do(
-        SQL => '
-            INSERT INTO system_data
-                (data_key, data_value, create_time, create_by, change_time, change_by)
-            VALUES (?, ?, current_timestamp, ?, current_timestamp, ?)
-            ',
+        SQL  => <<'END',
+INSERT INTO system_data
+    (data_key, data_value, create_time, create_by, change_time, change_by)
+VALUES (?, ?, current_timestamp, ?, current_timestamp, ?)
+END
         Bind => [ \$Param{Key}, \$Param{Value}, \$Param{UserID}, \$Param{UserID} ],
     );
 
@@ -167,11 +167,11 @@ sub SystemDataGet {
     return $Cache if $Cache;
 
     return if !$Self->{DBObject}->Prepare(
-        SQL => '
-            SELECT data_value
-            FROM system_data
-            WHERE data_key = ?
-            ',
+        SQL   => <<'END',
+SELECT data_value
+FROM system_data
+WHERE data_key = ?
+END
         Bind  => [ \$Param{Key} ],
         Limit => 1,
     );
@@ -242,11 +242,11 @@ sub SystemDataGroupGet {
     $Group = $Self->{DBObject}->Quote( $Group, 'Like' );
 
     return if !$Self->{DBObject}->Prepare(
-        SQL => "
-            SELECT data_key, data_value
-            FROM system_data
-            WHERE data_key LIKE '${Group}::%' $LikeEscapeString
-            ",
+        SQL => <<"END",
+SELECT data_key, data_value
+FROM system_data
+WHERE data_key LIKE '${Group}::%' $LikeEscapeString
+END
     );
 
     my %Result;
@@ -315,11 +315,11 @@ sub SystemDataUpdate {
 
     # sql
     return if !$Self->{DBObject}->Do(
-        SQL => '
-            UPDATE system_data
-            SET data_value = ?, change_time = current_timestamp, change_by = ?
-            WHERE data_key = ?
-            ',
+        SQL  => <<'END',
+UPDATE system_data
+SET data_value = ?, change_time = current_timestamp, change_by = ?
+WHERE data_key = ?
+END
         Bind => [
             \$Param{Value}, \$Param{UserID}, \$Param{Key},
         ],
@@ -374,10 +374,10 @@ sub SystemDataDelete {
 
     # sql
     return if !$Self->{DBObject}->Do(
-        SQL => '
-            DELETE FROM system_data
-            WHERE data_key = ?
-            ',
+        SQL  => <<'END',
+DELETE FROM system_data
+WHERE data_key = ?
+END
         Bind => [ \$Param{Key} ],
     );
 
@@ -446,6 +446,8 @@ sub _SystemDataCacheKeyDelete {
 
     return 1;
 }
+
+1;
 
 =end Internal:
 

@@ -91,8 +91,7 @@ sub Run {
                     UserID    => $Self->{UserID},
                     NewUserID => $Self->{UserID},
                 )
-                )
-            {
+            ) {
 
                 # show lock state
                 $LayoutObject->Block(
@@ -141,8 +140,7 @@ sub Run {
         if (
             $Param{SelectMergeMainTicketID}
             && $Param{SelectMergeMainTicketID} eq 'N'
-            )
-        {
+        ) {
 
             # newest ticket = highest ticket ID
             $Param{SelectMergeMainTicketID} = pop(@SelectedTicketIDs);
@@ -152,8 +150,7 @@ sub Run {
         elsif (
             $Param{SelectMergeMainTicketID}
             && $Param{SelectMergeMainTicketID} eq 'O'
-            )
-        {
+        ) {
 
             # oldest ticket = lowest ticket ID
             $Param{SelectMergeMainTicketID} = shift(@SelectedTicketIDs);

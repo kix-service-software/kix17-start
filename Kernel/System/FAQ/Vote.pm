@@ -68,9 +68,8 @@ sub VoteAdd {
     }
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            INSERT INTO faq_voting (created_by, item_id, ip, interface, rate, created )
-            VALUES ( ?, ?, ?, ?, ?, current_timestamp )',
+        SQL => 'INSERT INTO faq_voting (created_by, item_id, ip, interface, rate, created)'
+             . ' VALUES ( ?, ?, ?, ?, ?, current_timestamp )',
         Bind => [
             \$Param{CreatedBy}, \$Param{ItemID}, \$Param{IP}, \$Param{Interface},
             \$Param{Rate},
@@ -118,9 +117,7 @@ sub VoteDelete {
     }
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            DELETE FROM faq_voting
-            WHERE id = ?',
+        SQL  => 'DELETE FROM faq_voting WHERE id = ?',
         Bind => [ \$Param{VoteID} ],
     );
 
@@ -168,30 +165,26 @@ sub VoteGet {
     }
 
     my @Values;
-    my $SQL = '
-        SELECT created_by, item_id, interface, ip, created, rate
-        FROM faq_voting
-        WHERE';
+    my $SQL = 'SELECT created_by, item_id, interface, ip, created, rate'
+            . ' FROM faq_voting'
+            . ' WHERE';
 
     # public
     if ( $Param{Interface} eq '3' ) {
-        $SQL .= '
-            ip = ?
-            AND item_id = ?';
+        $SQL .= ' ip = ?'
+              . ' AND item_id = ?';
         push @Values, ( \$Param{IP}, \$Param{ItemID} );
     }
 
     # customer
     elsif ( $Param{Interface} eq '2' || $Param{Interface} eq '1' ) {
-        $SQL .= '
-            created_by = ?
-            AND item_id = ?';
+        $SQL .= ' created_by = ?'
+              . ' AND item_id = ?';
         push @Values, ( \$Param{CreateBy}, \$Param{ItemID} );
     }
 
     # leave a space between AND condition and ORDER BY statement
-    $SQL .= '
-        ORDER BY created DESC';
+    $SQL .= ' ORDER BY created DESC';
 
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
@@ -255,10 +248,7 @@ sub VoteSearch {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id
-            FROM faq_voting
-            WHERE item_id = ?',
+        SQL   => 'SELECT id FROM faq_voting WHERE item_id = ?',
         Bind  => [ \$Param{ItemID} ],
         Limit => $Param{Limit} || 500,
     );
@@ -321,10 +311,7 @@ sub ItemVoteDataGet {
 
     # get vote from db
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT count(*), avg(rate)
-            FROM faq_voting
-            WHERE item_id = ?',
+        SQL   => 'SELECT count(*), avg(rate) FROM faq_voting WHERE item_id = ?',
         Bind  => [ \$Param{ItemID} ],
         Limit => $Param{Limit} || 500,
     );

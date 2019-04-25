@@ -48,8 +48,7 @@ sub Run {
         if (
             defined $Package->{PackageIsVisible}
             && !$Package->{PackageIsVisible}->{Content}
-            )
-        {
+        ) {
             next PACKAGE;
         }
         for my $File ( @{ $Package->{Filelist} } ) {

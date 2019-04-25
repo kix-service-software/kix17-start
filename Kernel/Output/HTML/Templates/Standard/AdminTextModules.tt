@@ -397,7 +397,6 @@
             <div class="Content">
 
                 <p>[% Translate("You can use the following tags") | html %]:</p>
-#rbo - T2016121190001552 - added KIX placeholders
                 <dl>
                     <dt><code>&lt;KIX_OWNER_*&gt;</code></dt>
                     <dd>

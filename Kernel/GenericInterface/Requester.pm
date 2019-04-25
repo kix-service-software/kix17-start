@@ -200,7 +200,10 @@ sub Run {
     # there are cases in which the requester does not need to do anything, for this cases
     # StopCommunication can be sent. in this cases the request will be successful with out sending
     # the request actually
-    elsif ( $FunctionResult->{StopCommunication} && $FunctionResult->{StopCommunication} eq 1 ) {
+    elsif (
+        $FunctionResult->{StopCommunication}
+        && $FunctionResult->{StopCommunication} eq '1'
+    ) {
 
         return {
             Success => 1,
@@ -223,8 +226,7 @@ sub Run {
         IsHashRefWithData(
             $RequesterConfig->{Invoker}->{ $Param{Invoker} }->{MappingOutbound}
         )
-        )
-    {
+    ) {
         my $MappingOutObject = Kernel::GenericInterface::Mapping->new(
             DebuggerObject => $DebuggerObject,
             Invoker        => $Param{Invoker},
@@ -336,8 +338,7 @@ sub Run {
         IsHashRefWithData(
             $RequesterConfig->{Invoker}->{ $Param{Invoker} }->{MappingInbound}
         )
-        )
-    {
+    ) {
         my $MappingInObject = Kernel::GenericInterface::Mapping->new(
             DebuggerObject => $DebuggerObject,
             Invoker        => $Param{Invoker},

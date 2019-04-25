@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AgentTicketAttachment;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Print)
 
 use strict;
 use warnings;
@@ -101,7 +100,6 @@ sub Run {
         for ( sort keys %{ $ConfigObject->Get('MIME-Viewer') } ) {
             if ( $Data{ContentType} =~ /^$_/i ) {
                 $Viewer = $ConfigObject->Get('MIME-Viewer')->{$_};
-#rbo - T2016121190001552 - added KIX placeholders
                 $Viewer =~ s/\<KIX_CONFIG_(.+?)\>/$ConfigObject->{$1}/g;
             }
         }
@@ -113,7 +111,7 @@ sub Run {
         # write tmp file
         my $FileTempObject = $Kernel::OM->Get('Kernel::System::FileTemp');
         my ( $FH, $Filename ) = $FileTempObject->TempFile();
-        if ( open( my $ViewerDataFH, '>', $Filename ) ) {    ## no critic
+        if ( open( my $ViewerDataFH, '>', $Filename ) ) {
             print $ViewerDataFH $Data{Content};
             close $ViewerDataFH;
         }
@@ -129,7 +127,7 @@ sub Run {
 
         # use viewer
         my $Content = '';
-        if ( open( my $ViewerFH, "-|", "$Viewer $Filename" ) ) {    ## no critic
+        if ( open( my $ViewerFH, "-|", "$Viewer $Filename" ) ) {
             while (<$ViewerFH>) {
                 $Content .= $_;
             }
@@ -207,9 +205,8 @@ sub Run {
             ^ .* -----BEGIN [ ] PGP [ ] MESSAGE-----  .* $      # grep PGP begin tag
             .+                                                  # PGP parts may be nested in html
             ^ .* -----END [ ] PGP [ ] MESSAGE-----  .* $        # grep PGP end tag
-        }xms
-            )
-        {
+            }xms
+        ) {
 
             # html quoting
             $Article{Body} = $LayoutObject->Ascii2Html(

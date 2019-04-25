@@ -21,6 +21,8 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
 );
 
+## no critic qw(Subroutines::ProtectPrivateSubs)
+
 =head1 NAME
 
 Kernel::System::YAML - YAML wrapper functions

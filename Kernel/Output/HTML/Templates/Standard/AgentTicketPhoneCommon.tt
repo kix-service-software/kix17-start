@@ -11,7 +11,6 @@
 
 [% InsertTemplate("AgentCustomerSearch.tt") %]
 <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" class="Validate PreventMultipleSubmits" id="Compose">
-# EO KIX4OTRS-capeIT
     <input type="hidden" name="Action"    value="[% Env("Action") %]"/>
     <input type="hidden" name="Subaction" value="Store"/>
     <input type="hidden" name="FormID"    value="[% Data.FormID | html %]"/>
@@ -33,9 +32,7 @@
         <div class="LayoutFixedSidebar SidebarLast Content">
 
             <div class="SidebarColumn">
-# KIX4OTRS-capeIT
                 [% Data.KIXSidebarContent %]
-# EO KIX4OTRS-capeIT
             </div>
 
             <div class="ContentColumn">
@@ -135,12 +132,8 @@
                     <div class="Clear"></div>
 
 [% RenderBlockStart("TicketOptions") %]
-# KIX4OTRS-capeIT
-#                    <label>[% Translate("Options") | html %]:</label>
-#                    <div class="Field">
                     <label for="Options">[% Translate("Options") | html %]:</label>
                     <div class="Options Field">
-# EO KIX4OTRS-capeIT
 
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
@@ -187,12 +180,8 @@
                     </div>
                     <div class="Clear"></div>
 
-# KIX4OTRS-capeIT
-#                    <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
-#                    <div class="Field FileUpload">
                     <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
                     <div class="Field FileUpload">
-# EO KIX4OTRS-capeIT
                         <ul>
 
 [% RenderBlockStart("Attachment") %]
@@ -214,10 +203,7 @@
 [% RenderBlockEnd("Attachment") %]
 
                             <li>
-# KIX4OTRS-capeIT
-#                               <input id="FileUpload" name="FileUpload" type="file" size="40" />
                                 <input name="FileUpload" id="FileUpload" type="file" size="30" />
-# EO KIX4OTRS-capeIT
                                 <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
                             </li>
                         </ul>
@@ -246,10 +232,7 @@
 //]]></script>
 [% END %]
 
-# KIX4OTRS-capeIT
-#                    <label>[% Translate("Pending date") | html %]:</label>
                     <label for="Date">[% Translate("Pending date") | html %]:</label>
-# EO KIX4OTRS-capeIT
                     <div class="Field">
                         [% Data.PendingDateString %]
                         <div id="DayServerError" class="TooltipErrorMessage"><p>[% Translate("Date invalid!") | html %]</p></div>
@@ -259,10 +242,7 @@
                     <div class="Clear"></div>
 
 [% RenderBlockStart("DynamicField") %]
-# KIX4OTRS-capeIT
-#                 <div class="Row Row_DynamicField_[% Data.Name | html %]">
                 <div class="Row Row_DynamicField_[% Data.Name | html %][% Data.Class | html %]">
-# EO KIX4OTRS-capeIT
                         [% Data.Label %]
                         <div class="Field">
                             [% Data.Field %]
@@ -270,28 +250,6 @@
                         <div class="Clear"></div>
                     </div>
 [% RenderBlockEnd("DynamicField") %]
-
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("DynamicField_Field1") %]
-#                    <div class="Row Row_DynamicField_[% Data.Name | html %]">
-#                        [% Data.Label %]
-#                        <div class="Field">
-#                            [% Data.Field %]
-#                        </div>
-#                        <div class="Clear"></div>
-#                    </div>
-#[% RenderBlockEnd("DynamicField_Field1") %]
-#[% RenderBlockStart("DynamicField_Field2") %]
-#                    <div class="Row Row_DynamicField_[% Data.Name | html %]">
-#                        [% Data.Label %]
-#                        <div class="Field">
-#                            [% Data.Field %]
-#                        </div>
-#                        <div class="Clear"></div>
-#                    </div>
-#[% RenderBlockEnd("DynamicField_Field2") %]
 
 [% RenderBlockStart("TimeUnitsLabel") %]
                     <label for="TimeUnits">[% Translate("Time units") | html %] [% Translate(Config("Ticket::Frontend::TimeUnits")) | html %]:</label>
@@ -307,9 +265,7 @@
                     </div>
                     <div class="Clear"></div>
 [% RenderBlockEnd("TimeUnits") %]
-# KIX4OTRS-capeIT
                     <div class="EndOfForm"></div>
-# EO KIX4OTRS-capeIT
                 </fieldset>
             </div>
         </div>
@@ -324,8 +280,6 @@
 <script type="text/javascript">//<![CDATA[
     Core.Agent.TicketAction.Init();
     Core.Config.Set('Localization.Delete', [% Translate("Delete") | JSON %]);
-# KIX4OTRS-capeIT
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentTicketPhoneCommonSidebarWidth") %]','[% Env("Action") %]','TicketID=[% Data.TicketID | uri %]');
-# EO KIX4OTRS-capeIT
 //]]></script>
 [% END %]

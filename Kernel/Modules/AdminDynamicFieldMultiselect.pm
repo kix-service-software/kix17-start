@@ -166,8 +166,7 @@ sub _AddAction {
         ObjectType ObjectTypeName FieldType FieldTypeName PossibleNone
         TranslatableValues ValidID
         )
-        )
-    {
+    ) {
         $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 
@@ -419,8 +418,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldsList{ $GetParam{Name} } &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -431,8 +429,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldData->{InternalField} &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -457,8 +454,7 @@ sub _ChangeAction {
         ObjectType ObjectTypeName FieldType FieldTypeName PossibleNone
         TranslatableValues ValidID
         )
-        )
-    {
+    ) {
         $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 
@@ -846,7 +842,6 @@ sub _GetPossibleValues {
     my $PossibleValueConfig;
 
     # get possible values
-    my $Values;
     VALUEINDEX:
     for my $ValueIndex ( 1 .. $ValueCounter ) {
         my $Key = $ParamObject->GetParam( Param => 'Key' . '_' . $ValueIndex );

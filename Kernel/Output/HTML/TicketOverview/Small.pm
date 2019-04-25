@@ -84,7 +84,6 @@ sub new {
     my @ColumnsEnabled
         = grep { $DefaultColumns{$_} eq '2' } sort _DefaultColumnSort keys %DefaultColumns;
 
-# KIX4OTRS-capeIT
     # add article flags
     my $ArticleTabConfig = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoomTabArticle');
     my %ArticleFlagConfig;
@@ -133,7 +132,6 @@ sub new {
     }
     @ColumnsAvailable = sort { $ColumnsAvailableTranslated{$a} cmp $ColumnsAvailableTranslated{$b} }
         keys %ColumnsAvailableTranslated;
-# EO KIX4OTRS-capeIT
 
     # if preference settings are available, take them
     if ( $Preferences{ $Self->{PrefKeyColumns} } ) {
@@ -163,12 +161,9 @@ sub new {
         unshift @ColumnsEnabled, 'TicketNumber';
     }
 
-    $Self->{ColumnsEnabled}   = \@ColumnsEnabled;
-    $Self->{ColumnsAvailable} = \@ColumnsAvailable;
-
-# KIX4OTRS-capeIT
+    $Self->{ColumnsEnabled}             = \@ColumnsEnabled;
+    $Self->{ColumnsAvailable}           = \@ColumnsAvailable;
     $Self->{ColumnsAvailableTranslated} = \%ColumnsAvailableTranslated;
-# EO KIX4OTRS-capeIT
 
     {
 
@@ -209,9 +204,7 @@ sub new {
         'Type'                   => 1,
         'Lock'                   => 1,
         'Title'                  => 1,
-# KIX4OTRS-capeIT
         'FromTitle'              => $Self->{Config}->{SortFromTitle},
-# EO KIX4OTRS-capeIT
         'Service'                => 1,
         'Changed'                => 1,
         'SLA'                    => 1,
@@ -341,11 +334,8 @@ sub ActionRow {
     }
 
     # add translations for the allocation lists for regular columns
-# KIX4OTRS-capeIT
-#    my $Columns = $Self->{Config}->Get('DefaultOverviewColumns') || {};
     my %Column  = map { $_ => 1 } @{ $Self->{ColumnsAvailable} };
     my $Columns = \%Column;
-# EO KIX4OTRS-capeIT
     if ( $Columns && IsHashRefWithData($Columns) ) {
 
         COLUMN:
@@ -377,7 +367,6 @@ sub ActionRow {
                 $TranslatedWord = Translatable('Customer User ID');
             }
 
-# KIX4OTRS-capeIT
             my $TranslateString;
             if ( $Column =~ m/^MarkedAs::(.*)$/ ) {
                 $TranslateString = $LayoutObject->{LanguageObject}->Translate('MarkedAs') . ': '
@@ -386,17 +375,12 @@ sub ActionRow {
             else {
                 $TranslateString = $LayoutObject->{LanguageObject}->Translate($TranslatedWord);
             }
-# EO KIX4OTRS-capeIT
 
             $LayoutObject->Block(
                 Name => 'ColumnTranslation',
                 Data => {
-                    ColumnName => $Column,
-
-# KIX4OTRS-capeIT
-#                    TranslateString => $TranslatedWord,
+                    ColumnName      => $Column,
                     TranslateString => $TranslateString,
-# EO KIX4OTRS-capeIT
                 },
             );
             $LayoutObject->Block(
@@ -425,12 +409,8 @@ sub ActionRow {
             $LayoutObject->Block(
                 Name => 'ColumnTranslation',
                 Data => {
-                    ColumnName => 'DynamicField_' . $DynamicField->{Name},
-
-# KIX4OTRS-capeIT
-#                    TranslateString => $DynamicField->{Label},
+                    ColumnName      => 'DynamicField_' . $DynamicField->{Name},
                     TranslateString => $LayoutObject->{LanguageObject}->Translate( $DynamicField->{Label} ) . " (DF)",
-# EO KIX4OTRS-capeIT
                 },
             );
 
@@ -487,8 +467,8 @@ sub Run {
     my @UnselectedItems   = split(',', $Param{UnselectedItems});
 
     for my $TicketID ( @{$Param{TicketIDs}} ) {
-        if ( !grep(/^$TicketID$/, @UnselectedItems)
-            && !grep(/^$TicketID$/, @SelectedItems)
+        if ( !grep({/^$TicketID$/} @UnselectedItems)
+            && !grep({/^$TicketID$/} @SelectedItems)
         ) {
             push(@UnselectedItems, $TicketID);
         }
@@ -562,7 +542,6 @@ sub Run {
                 Size         => 500,
             );
 
-# KIX4OTRS-capeIT
             my $StateHighlighting = $ConfigObject->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
             if (
                 $StateHighlighting
@@ -571,7 +550,6 @@ sub Run {
             ) {
                 $Article{LineStyle} = $StateHighlighting->{ $Article{State} };
             }
-# EO KIX4OTRS-capeIT
 
             # prepare subject
             $Article{Subject} = $TicketObject->TicketSubjectClean(
@@ -585,41 +563,10 @@ sub Run {
                 Space => ' ',
             );
 
-# KIX4OTRS-capeIT
-            my $Counter = 0;
-#            # get ACL restrictions
-#            my %PossibleActions;
-#            my $Counter = 0;
-#
-#            # get all registered Actions
-#            if ( ref $ConfigObject->Get('Frontend::Module') eq 'HASH' ) {
-#
-#                my %Actions = %{ $ConfigObject->Get('Frontend::Module') };
-#
-#                # only use those Actions that stats with AgentTicket
-#                %PossibleActions = map { ++$Counter => $_ }
-#                    grep { substr( $_, 0, length 'AgentTicket' ) eq 'AgentTicket' }
-#                    sort keys %Actions;
-#            }
-#
-#            my $ACL = $TicketObject->TicketAcl(
-#                Data          => \%PossibleActions,
-#                Action        => $Self->{Action},
-#                TicketID      => $Article{TicketID},
-#                ReturnType    => 'Action',
-#                ReturnSubType => '-',
-#                UserID        => $Self->{UserID},
-#            );
-#            my %AclAction = %PossibleActions;
-#            if ($ACL) {
-#                %AclAction = $TicketObject->TicketAclActionData();
-#            }
-# EO KIX4OTRS-capeIT
+            my $PreMenuCount = 0;
 
             # run ticket pre menu modules
             my @ActionItems;
-# KIX4OTRS-capeIT
-#            if ( ref $ConfigObject->Get('Ticket::Frontend::PreMenuModule') eq 'HASH' ) {
             if ( IsHashRefWithData($ConfigObject->Get('Ticket::Frontend::PreMenuModule')) ) {
 
                 # get ACL restrictions
@@ -631,7 +578,7 @@ sub Run {
                     my %Actions = %{ $ConfigObject->Get('Frontend::Module') };
 
                     # only use those Actions that stats with AgentTicket
-                    %PossibleActions = map { ++$Counter => $_ }
+                    %PossibleActions = map { ++$PreMenuCount => $_ }
                         grep { substr( $_, 0, length 'AgentTicket' ) eq 'AgentTicket' }
                         sort keys %Actions;
                 }
@@ -648,10 +595,8 @@ sub Run {
                 if ($ACL) {
                     %AclAction = $TicketObject->TicketAclActionData();
                 }
-# EO KIX4OTRS-capeIT
 
                 my %Menus = %{ $ConfigObject->Get('Ticket::Frontend::PreMenuModule') };
-                my @Items;
                 MENU:
                 for my $Menu ( sort keys %Menus ) {
 
@@ -711,23 +656,17 @@ sub Run {
                     $Output =~ s/\s+/ /g;
                     $Output =~ s/<\!--.+?-->//g;
 
-# KIX4OTRS-capeIT
                     # check if the browser sends the session id cookie
                     # if not, add the session id to the url
                     my $SessionID = '';
                     if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
                         $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
                     }
-# EO KIX4OTRS-capeIT
 
                     push @ActionItems, {
-                        HTML => $Output,
-                        ID   => $Item->{ID},
-
-# KIX4OTRS-capeIT
-#                        Link        => $LayoutObject->{Baselink} . $Item->{Link},
+                        HTML        => $Output,
+                        ID          => $Item->{ID},
                         Link        => $LayoutObject->{Baselink} . $Item->{Link} . $SessionID,
-# EO KIX4OTRS-capeIT
                         Target      => $Item->{Target},
                         PopupType   => $Item->{PopupType},
                         Description => $Item->{Description},
@@ -736,7 +675,6 @@ sub Run {
                 }
             }
 
-# KIX4OTRS-capeIT
             # get all article flags of ticket
             my %ArticleFlagHash = ();
             my %ArticleFlags = $TicketObject->ArticleFlagsOfTicketGet(
@@ -754,7 +692,6 @@ sub Run {
             }
 
             $Article{FlagHash} = \%ArticleFlagHash;
-# EO KIX4OTRS-capeIT
 
             push @ArticleBox, \%Article;
         }
@@ -786,27 +723,21 @@ sub Run {
 
     # define special ticket columns
     my %SpecialColumns = (
-        TicketNumber => 1,
-        Owner        => 1,
-        Responsible  => 1,
-        CustomerID   => 1,
-
-# KIX4OTRS-capeIT
-#        Title           => 1,
+        TicketNumber        => 1,
+        Owner               => 1,
+        Responsible         => 1,
+        CustomerID          => 1,
         FromTitle           => 1,
         LastCustomerSubject => 1,
         ArticleFlagAll      => 1,
-# EO KIX4OTRS-capeIT
     );
 
     # get dynamic field backend object
     my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
-# KIX4OTRS-capeIT
     for my $Flag ( keys %{ $Self->{ArticleFlagConfig}->{ArticleFlags} } ) {
         $SpecialColumns{ 'MarkedAs::' . $Self->{ArticleFlagConfig}->{ArticleFlags}->{$Flag} } = 1
     }
-# EO KIX4OTRS-capeIT
 
     my $TicketData = scalar @ArticleBox;
     if ($TicketData) {
@@ -849,7 +780,6 @@ sub Run {
 
             my $CSS = '';
             my $OrderBy;
-            my $Link;
             my $Title = $Item;
 
             if ( $Param{SortBy} && ( $Param{SortBy} eq $Item ) ) {
@@ -940,28 +870,11 @@ sub Run {
                 }
 
                 # translate the column name to write it in the current language
-                my $TranslatedWord;
-
-# KIX4OTRS-capeIT
-#                if ( $Column eq 'Title' ) {
-#                    $TranslatedWord = $LayoutObject->{LanguageObject}->Translate('From') . ' / ';
-#                    if ( $Self->{SmallViewColumnHeader} eq 'LastCustomerSubject' ) {
-#                        $TranslatedWord .= $Self->{ColumnsAvailableTranslated}->{FromTitle};
-#                    }
-#                    elsif ( $Self->{SmallViewColumnHeader} eq 'TicketTitle' ) {
-#                        $TranslatedWord .= $LayoutObject->{LanguageObject}->Translate('Title');
-#                    }
-#                }
-#                else {
-
-                $TranslatedWord = $Self->{ColumnsAvailableTranslated}->{$Column};
-
-#                }
+                my $TranslatedWord = $Self->{ColumnsAvailableTranslated}->{$Column};
 
                 if ( $Column =~ /^MarkedAs::(.*)$/ ) {
                     $TranslatedWord = $LayoutObject->{LanguageObject}->Translate($1);
                 }
-# EO KIX4OTRS-capeIT
 
                 my $FilterTitle     = $TranslatedWord;
                 my $FilterTitleDesc = Translatable('filter not active');
@@ -971,8 +884,7 @@ sub Run {
                         $Self->{StoredFilters}->{$Column} ||
                         $Self->{StoredFilters}->{ $Column . 'IDs' }
                     )
-                    )
-                {
+                ) {
                     $CSS .= ' FilterActive';
                     $FilterTitleDesc = Translatable('filter active');
                 }
@@ -998,8 +910,7 @@ sub Run {
                 if (
                     $Self->{ValidFilterableColumns}->{$Column}
                     && $Self->{ValidSortableColumns}->{$Column}
-                    )
-                {
+                ) {
                     my $Css;
                     if ( $Column eq 'CustomerID' || $Column eq 'Owner' || $Column eq 'Responsible' ) {
                         $Css .= ' Hidden';
@@ -1177,8 +1088,7 @@ sub Run {
                 if (
                     $Self->{ValidFilterableColumns}->{$Column}
                     && $Self->{ValidSortableColumns}->{$Column}
-                    )
-                {
+                ) {
 
                     # variable to save the filter's HTML code
                     my $ColumnFilterHTML = $Self->_InitialColumnFilter(
@@ -1301,32 +1211,31 @@ sub Run {
                 );
 
                 if ($IsSortable) {
-                    my $CSS = 'DynamicField_' . $DynamicFieldConfig->{Name};
-                    my $OrderBy;
+                    my $DynamicFieldCSS = 'DynamicField_' . $DynamicFieldConfig->{Name};
+                    my $DynamicFieldOrderBy;
                     if (
                         $Param{SortBy}
                         && ( $Param{SortBy} eq ( 'DynamicField_' . $DynamicFieldConfig->{Name} ) )
-                        )
-                    {
+                    ) {
                         if ( $Param{OrderBy} && ( $Param{OrderBy} eq 'Up' ) ) {
-                            $OrderBy = 'Down';
-                            $CSS .= ' SortAscendingLarge';
+                            $DynamicFieldOrderBy = 'Down';
+                            $DynamicFieldCSS .= ' SortAscendingLarge';
                         }
                         else {
-                            $OrderBy = 'Up';
-                            $CSS .= ' SortDescendingLarge';
+                            $DynamicFieldOrderBy = 'Up';
+                            $DynamicFieldCSS .= ' SortDescendingLarge';
                         }
 
                         # add title description
                         my $TitleDesc
-                            = $OrderBy eq 'Down' ? Translatable('sorted ascending') : Translatable('sorted descending');
+                            = $DynamicFieldOrderBy eq 'Down' ? Translatable('sorted ascending') : Translatable('sorted descending');
                         $TitleDesc = $LayoutObject->{LanguageObject}->Translate($TitleDesc);
                         $Title .= ', ' . $TitleDesc;
                     }
 
                     my $FilterTitleDesc = Translatable('filter not active');
                     if ( $Self->{StoredFilters} && $Self->{StoredFilters}->{$Column} ) {
-                        $CSS .= ' FilterActive';
+                        $DynamicFieldCSS .= ' FilterActive';
                         $FilterTitleDesc = Translatable('filter active');
                     }
                     $FilterTitleDesc = $LayoutObject->{LanguageObject}->Translate($FilterTitleDesc);
@@ -1336,7 +1245,7 @@ sub Run {
                         Name => 'OverviewNavBarPageDynamicField',
                         Data => {
                             %Param,
-                            CSS => $CSS,
+                            CSS => $DynamicFieldCSS,
                         },
                     );
 
@@ -1356,11 +1265,10 @@ sub Run {
                             Name => 'OverviewNavBarPageDynamicFieldFiltrableSortable',
                             Data => {
                                 %Param,
-                                OrderBy          => $OrderBy,
                                 Label            => $Label,
                                 DynamicFieldName => $DynamicFieldConfig->{Name},
                                 ColumnFilterStrg => $ColumnFilterHTML,
-                                OrderBy          => $OrderBy,
+                                OrderBy          => $DynamicFieldOrderBy,
                                 Title            => $Title,
                                 FilterTitle      => $FilterTitle,
                             },
@@ -1372,7 +1280,7 @@ sub Run {
                             Name => 'OverviewNavBarPageDynamicFieldSortable',
                             Data => {
                                 %Param,
-                                OrderBy          => $OrderBy,
+                                OrderBy          => $DynamicFieldOrderBy,
                                 Label            => $Label,
                                 DynamicFieldName => $DynamicFieldConfig->{Name},
                                 Title            => $Title,
@@ -1385,7 +1293,7 @@ sub Run {
                         Name => 'OverviewNavBarPageDynamicField_' . $DynamicFieldConfig->{Name},
                         Data => {
                             %Param,
-                            CSS => $CSS,
+                            CSS => $DynamicFieldCSS,
                         },
                     );
 
@@ -1405,11 +1313,10 @@ sub Run {
                                 . '_FiltrableSortable',
                             Data => {
                                 %Param,
-                                OrderBy          => $OrderBy,
                                 Label            => $Label,
                                 DynamicFieldName => $DynamicFieldConfig->{Name},
                                 ColumnFilterStrg => $ColumnFilterHTML,
-                                OrderBy          => $OrderBy,
+                                OrderBy          => $DynamicFieldOrderBy,
                                 Title            => $Title,
                             },
                         );
@@ -1421,7 +1328,7 @@ sub Run {
                                 . '_Sortable',
                             Data => {
                                 %Param,
-                                OrderBy          => $OrderBy,
+                                OrderBy          => $DynamicFieldOrderBy,
                                 Label            => $Label,
                                 DynamicFieldName => $DynamicFieldConfig->{Name},
                                 Title            => $Title,
@@ -1432,13 +1339,13 @@ sub Run {
                 else {
 
                     my $DynamicFieldName = 'DynamicField_' . $DynamicFieldConfig->{Name};
-                    my $CSS              = $DynamicFieldName;
+                    my $DynamicFieldCSS  = $DynamicFieldName;
 
                     $LayoutObject->Block(
                         Name => 'OverviewNavBarPageDynamicField',
                         Data => {
                             %Param,
-                            CSS => $CSS,
+                            CSS => $DynamicFieldCSS,
                         },
                     );
 
@@ -1608,7 +1515,7 @@ sub Run {
         if ($BulkFeature) {
             my $ItemChecked = '';
 
-            if ( grep( /^$Article{TicketID}$/, @SelectedItems ) ) {
+            if ( grep( {/^$Article{TicketID}$/} @SelectedItems ) ) {
                 $ItemChecked = ' checked="checked"';
             }
 
@@ -1670,36 +1577,23 @@ sub Run {
                 );
 
                 if ( $SpecialColumns{$TicketColumn} ) {
-
-# KIX4OTRS-capeIT
-#                    if ( $TicketColumn eq 'Title' ) {
                     if ( $TicketColumn eq 'FromTitle' ) {
-# EO KIX4OTRS-capeIT
 
                         # check if last customer subject or ticket title should be shown
                         if ( $Self->{SmallViewColumnHeader} eq 'LastCustomerSubject' ) {
                             $LayoutObject->Block(
-
-# KIX4OTRS-capeIT
-#                                Name => 'RecordLastCustomerSubject',
                                 Name => 'RecordFromLastCustomerSubject',
-# EO KIX4OTRS-capeIT
                                 Data => { %Article, %UserInfo },
                             );
                         }
                         elsif ( $Self->{SmallViewColumnHeader} eq 'TicketTitle' ) {
                             $LayoutObject->Block(
-
-# KIX4OTRS-capeIT
-#                                Name => 'RecordTicketTitle',
                                 Name => 'RecordFromTicketTitle',
-# EO KIX4OTRS-capeIT
                                 Data => { %Article, %UserInfo },
                             );
                         }
                     }
 
-# KIX4OTRS-capeIT
                     elsif ( $TicketColumn =~ m/^MarkedAs::(.*)/ ) {
 
                         $LayoutObject->Block(
@@ -1739,7 +1633,6 @@ sub Run {
                             }
                         }
                     }
-# EO KIX4OTRS-capeIT
                     else {
                         $LayoutObject->Block(
                             Name => 'Record' . $TicketColumn,
@@ -1795,8 +1688,7 @@ sub Run {
                         if (
                             defined $Article{EscalationTime}
                             && $Article{EscalationTime} < 60 * 60 * 1
-                            )
-                        {
+                        ) {
                             $EscalationData{EscalationClass} = 'Warning';
                         }
                         $LayoutObject->Block(
@@ -1849,8 +1741,7 @@ sub Run {
                         if (
                             defined $Article{FirstResponseTime}
                             && $Article{FirstResponseTime} < 60 * 60 * 1
-                            )
-                        {
+                        ) {
                             $CSSClass = 'Warning';
                         }
                     }
@@ -1879,18 +1770,14 @@ sub Run {
                 elsif ( $TicketColumn eq 'PendingTime' ) {
                     $BlockType = 'Escalation';
 
-# KIX4OTRS-capeIT
                     my %UserPreferences    = $UserObject->GetPreferences( UserID => $Self->{UserID} );
                     my $DisplayPendingTime = $UserPreferences{UserDisplayPendingTime} || '';
 
                     if ( $DisplayPendingTime && $DisplayPendingTime eq 'RemainingTime' ) {
-# EO KIX4OTRS-capeIT
                         $DataValue = $LayoutObject->CustomerAge(
                             Age   => $Article{'UntilTime'},
                             Space => ' '
                         );
-
-# KIX4OTRS-capeIT
                     }
                     elsif ( defined $Article{UntilTime} && $Article{UntilTime} ) {
                         $DataValue = $Kernel::OM->Get('Kernel::System::Time')->SystemTime2TimeStamp(
@@ -1901,7 +1788,6 @@ sub Run {
                     else {
                         $DataValue = '';
                     }
-# EO KIX4OTRS-capeIT
 
                     if ( defined $Article{UntilTime} && $Article{UntilTime} < -1 ) {
                         $CSSClass = 'Warning';
@@ -1911,8 +1797,7 @@ sub Run {
                     $TicketColumn eq 'State'
                     || $TicketColumn eq 'Lock'
                     || $TicketColumn eq 'Priority'
-                    )
-                {
+                ) {
                     $BlockType = 'Translatable';
                     $DataValue = $Article{$TicketColumn} || $UserInfo{$TicketColumn};
                 }
@@ -2168,8 +2053,7 @@ sub _InitialColumnFilter {
         $Param{ColumnName} eq 'State'
         || $Param{ColumnName} eq 'Lock'
         || $Param{ColumnName} eq 'Priority'
-        )
-    {
+    ) {
         $TranslationOption = 1;
     }
 
@@ -2278,8 +2162,7 @@ sub _ColumnFilterJSON {
     if (
         !$Self->{AvailableFilterableColumns}->{ $Param{ColumnName} } &&
         !$Self->{AvailableFilterableColumns}->{ $Param{ColumnName} . 'IDs' }
-        )
-    {
+    ) {
         return;
     }
 
@@ -2323,8 +2206,7 @@ sub _ColumnFilterJSON {
         $Param{ColumnName} eq 'State'
         || $Param{ColumnName} eq 'Lock'
         || $Param{ColumnName} eq 'Priority'
-        )
-    {
+    ) {
         $TranslationOption = 1;
     }
 
@@ -2358,26 +2240,22 @@ sub _DefaultColumnSort {
         EscalationSolutionTime => 114,
         EscalationResponseTime => 115,
         EscalationUpdateTime   => 116,
-
-# KIX4OTRS-capeIT
-#        Title                  => 120,
         FromTitle              => 120,
         From                   => 121,
         LastCustomerSubject    => 122,
         Title                  => 123,
-# EO KIX4OTRS-capeIT
-        State          => 130,
-        Lock           => 140,
-        Queue          => 150,
-        Owner          => 160,
-        Responsible    => 161,
-        CustomerID     => 170,
-        CustomerName   => 171,
-        CustomerUserID => 172,
-        Type           => 180,
-        Service        => 191,
-        SLA            => 192,
-        Priority       => 193,
+        State                  => 130,
+        Lock                   => 140,
+        Queue                  => 150,
+        Owner                  => 160,
+        Responsible            => 161,
+        CustomerID             => 170,
+        CustomerName           => 171,
+        CustomerUserID         => 172,
+        Type                   => 180,
+        Service                => 191,
+        SLA                    => 192,
+        Priority               => 193,
     );
 
     # dynamic fields can not be on the DefaultColumns sorting hash

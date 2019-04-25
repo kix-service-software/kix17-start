@@ -93,10 +93,7 @@
 [% RenderBlockEnd("Bulk") %]
 [% RenderBlockStart("Meta") %]
 [% RenderBlockStart("MetaIcon") %]
-# KIX4OTRS-capeIT
-#            <div class="[% Data.Class | html %]" title="[% Translate(Data.Title) | html %]">
            <div class="[% Data.Class | html %]" style="[% Translate(Data.Style) | html %]" title="[% Translate(Data.Title) | html %]">
-# EO KIX4OTRS-capeIT
                 <span class="[% Data.ClassSpan | html %]">
                     <i class="fa fa-star"></i>
                     <i class="fa fa-star"></i>
@@ -118,30 +115,19 @@
                             <td>
                                 <label>[% Translate("Age") | html %]</label>[% Data.Age | html %]
                             </td>
-# KIX4OTRS-capeIT
-#                             <td>
-#                                 <label>[% Translate("Queue") | html %]</label><div title="[% Data.Queue | html %]">[% Data.Queue | truncate(26) | html %]</div>
-#                             </td>
                             <td>
 [% RenderBlockStart("Type") %]
                                 <label>[% Translate("Type") | html %]</label><div title="[% Data.Type | html %]">[% Data.Type | html %]</div>
 [% RenderBlockEnd("Type") %]
                             </td>
-# EO KIX4OTRS-capeIT
                         </tr>
                         <tr>
                             <td>
                                 <label>[% Translate("Created") | html %]</label>[% Data.Created | Localize("TimeLong") %]
                             </td>
-# KIX4OTRS-capeIT
-#                             <td>
-#                                 <label>[% Translate("State") | html %]</label><div title="[% Translate(Data.State) | html %]">[% Translate(Data.State) | html %]</div>
-#                             </td>
                             <td>
                                 <label>[% Translate("Queue") | html %]</label><div title="[% Data.Queue | html %]">[% Data.Queue | truncate(26) | html %]</div>
                             </td>
-# EO KIX4OTRS-capeIT
-
                         </tr>
 [% RenderBlockStart("Service") %]
                         <tr>
@@ -156,14 +142,6 @@
                         </tr>
 [% RenderBlockEnd("Service") %]
                         <tr>
-
-# KIX4OTRS-capeIT
-#                             <td>
-#                                 <label>[% Translate("Owner") | html %]</label><div title="[% Data.UserFirstname | html %] [% Data.UserLastname | html %] ([% Data.Owner | html %])">[% Data.UserFirstname | truncate(15) | html %] [% Data.UserLastname | truncate(15) | html %]</div>
-#                             </td>
-#                             <td>
-#                                 <label>[% Translate("Lock") | html %]</label><div title="[% Translate(Data.Lock) | html %]">[% Translate(Data.Lock) | html %]</div>
-#                             </td>
                             <td>
 [% RenderBlockStart("CustomerID") %]
                                 <label>[% Translate("CustomerID") | html %]</label>
@@ -181,25 +159,8 @@
                             <td>
                                 <label>[% Translate("State") | html %]</label><div title="[% Translate(Data.State) | html %]">[% Translate(Data.State) | html %]</div>
                             </td>
-# EO KIX4OTRS-capeIT
                         </tr>
                         <tr class="Middle">
-# KIX4OTRS-capeIT
-#                             <td>
-# [% RenderBlockStart("CustomerID") %]
-#                                 <label>[% Translate("CustomerID") | html %]</label>
-# [% RenderBlockStart("CustomerIDRW") %]
-#                                 <div title="[% Data.CustomerID | html %]"><a href="[% Config("CustomerDBLink") | Interpolate %]" class="AsPopup PopupType_TicketAction" [% Config("CustomerDBLinkTarget") %]>[% Data.CustomerID | html %]</a></div>
-# [% RenderBlockEnd("CustomerIDRW") %]
-# [% RenderBlockStart("CustomerIDRO") %]
-#                                 <div title="[% Data.CustomerID | html %]">[% Data.CustomerID | html %]</div>
-# [% RenderBlockEnd("CustomerIDRO") %]
-# [% RenderBlockStart("CustomerName") %]
-#                                 <div title="[% Data.CustomerName | html %]">[% Data.CustomerName | html %]</div>
-# [% RenderBlockEnd("CustomerName") %]
-# [% RenderBlockEnd("CustomerID") %]
-#                             </td>
-# EO KIX4OTRS-capeIT
                             <td>
 [% RenderBlockStart("FirstResponseTime") %]
                                 <label>[% Translate("First Response Time") | html %]</label>
@@ -208,19 +169,12 @@
                             </td>
                         </tr>
                         <tr>
-# KIX4OTRS-capeIT
-#                             <td>
-# [% RenderBlockStart("Type") %]
-#                                 <label>[% Translate("Type") | html %]</label><div title="[% Data.Type | html %]">[% Data.Type | html %]</div>
-# [% RenderBlockEnd("Type") %]
-#                             </td>
                             <td>
                                 <label>[% Translate("Owner") | html %]</label><div title="[% Data.UserFirstname | html %] [% Data.UserLastname | html %] ([% Data.Owner | html %])">[% Data.UserFirstname | truncate(15) | html %] [% Data.UserLastname | truncate(15) | html %]</div>
                             </td>
                             <td>
                                 <label>[% Translate("Lock") | html %]</label><div title="[% Translate(Data.Lock) | html %]">[% Translate(Data.Lock) | html %]</div>
                             </td>
-# EO KIX4OTRS-capeIT
                             <td>
 [% RenderBlockStart("UpdateTime") %]
                                 <label>[% Translate("Update Time") | html %]</label>
@@ -229,25 +183,19 @@
                             </td>
                         </tr>
                         <tr>
-# KIX4OTRS-capeIT
-#                            <td></td>
                             <td>
 [% RenderBlockStart("Responsible") %]
                                 <label>[% Translate("Responsible") | html %]</label><div title="[% Data.UserFirstname | html %] [% Data.UserLastname | html %] ([% Data.Responsible | html %])">[% Data.UserFirstname | html %] [% Data.UserLastname | html %]</div>
 [% RenderBlockEnd("Responsible") %]
                             </ td>
-#                             <td>
-# EO KIX4OTRS-capeIT
                             <td class="EscalationTimeEntry">
 [% RenderBlockStart("SolutionTime") %]
                                 <label>[% Translate("Solution Time") | html %]</label>
                                 <div title="[% Translate("Service Time") | html %]: [% Data.SolutionTimeWorkingTime | html %]" class="[% Data.SolutionTimeClass | html %]">[% Data.SolutionTimeHuman | html %] / [% Data.SolutionTimeDestinationDate | Localize("TimeShort") %]</div>
 [% RenderBlockEnd("SolutionTime") %]
-# KIX4OTRS-capeIT
 [% RenderBlockStart("SolutionTimeSuspended") %]
                                 <label>[% Translate("Solution Time") | html %]</label>[% Translate("suspended") | html %]</div>
 [% RenderBlockEnd("SolutionTimeSuspended") %]
-# EO KIX4OTRS-capeIT
                             </td>
                         </tr>
 # ---
@@ -459,10 +407,7 @@
         }
     });
 
-# KIX4OTRS-capeIT
-# Core.UI.Accordion.Init($('.Preview > ul'), 'li h3 a', '.HiddenBlock');
     Core.UI.Accordion.Init($('.Preview > ul'), 'li h3 a', '.HiddenBlock', 'fast');
-# EO KIX4OTRS-capeIT
     if ($('body').hasClass('TouchDevice')) {
         $('ul.InlineActions li:not(.ResponsiveActionMenu)').hide();
     }

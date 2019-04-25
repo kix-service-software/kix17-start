@@ -13,6 +13,8 @@ package Kernel::Output::HTML::CustomerUser::Generic;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our $ObjectManagerDisabled = 1;
 
 sub new {

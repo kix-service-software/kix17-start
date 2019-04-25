@@ -119,8 +119,7 @@ sub Run {
     if (
         defined $Param{Config}->{Priority}
         && $Param{Config}->{Priority} ne $Param{Ticket}->{Priority}
-        )
-    {
+    ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketPrioritySet(
             Priority     => $Param{Config}->{Priority},
             TicketID => $Param{Ticket}->{TicketID},
@@ -130,8 +129,7 @@ sub Run {
     elsif (
         defined $Param{Config}->{PriorityID}
         && $Param{Config}->{PriorityID} ne $Param{Ticket}->{PriorityID}
-        )
-    {
+    ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketPrioritySet(
             PriorityID   => $Param{Config}->{PriorityID},
             TicketID => $Param{Ticket}->{TicketID},

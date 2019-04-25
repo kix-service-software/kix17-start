@@ -11,6 +11,8 @@ package Kernel::System::SysConfig::Event::LogSysConfigChanges;
 use strict;
 use warnings;
 
+use Data::Dumper;
+
 our @ObjectDependencies = (
     'Kernel::System::Log',
     'Kernel::System::SysConfigChangeLog',
@@ -95,7 +97,6 @@ sub Run {
         );
     }
     elsif ( $Param{Data}->{ChangeType} == 3 ) {
-        use Data::Dumper;
         my $OldValueDump = Dumper( $Param{Data}->{OldValue} );
         $OldValueDump =~ s/\$VAR1 = (.*?);/$1/g;
         my $NewValueDump = Dumper( $Param{Data}->{NewValue} );

@@ -74,7 +74,7 @@ sub Run {
             DynamicFields => 0,
         );
 
-        if ( $Ticket{StateType} !~ m{ \A (close|merge|remove) }xms ) {
+        if ( $Ticket{StateType} !~ m{ \A (?:close|merge|remove) }xms ) {
             $OpenSubTickets = 1;
             last TICKETID;
         }

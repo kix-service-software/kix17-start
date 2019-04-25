@@ -86,8 +86,7 @@ sub CheckSessionID {
     if (
         $Data{UserRemoteAddr} ne $RemoteAddr
         && $ConfigObject->Get('SessionCheckRemoteIP')
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'notice',
             Message  => "RemoteIP of '$Param{SessionID}' ($Data{UserRemoteAddr}) is "
@@ -177,11 +176,10 @@ sub GetSessionIDData {
 
     # read data
     $DBObject->Prepare(
-        SQL => "
-            SELECT id, data_key, data_value, serialized
-            FROM $Self->{SessionTable}
-            WHERE session_id = ?
-            ORDER BY id ASC",
+        SQL  => "SELECT id, data_key, data_value, serialized"
+              . " FROM $Self->{SessionTable}"
+              . " WHERE session_id = ?"
+              . " ORDER BY id ASC",
         Bind => [ \$Param{SessionID} ],
     );
 
@@ -278,9 +276,7 @@ sub CreateSessionID {
 
     # delete old session data with the same session id
     $DBObject->Do(
-        SQL => "
-            DELETE FROM $Self->{SessionTable}
-            WHERE session_id = ?",
+        SQL  => "DELETE FROM $Self->{SessionTable} WHERE session_id = ?",
         Bind => [ \$SessionID, ],
     );
 
@@ -395,13 +391,12 @@ sub GetActiveSessions {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     $DBObject->Prepare(
-        SQL => "
-            SELECT session_id, data_key, data_value
-            FROM $Self->{SessionTable}
-            WHERE data_key = 'UserType'
-                OR data_key = 'UserLastRequest'
-                OR data_key = 'UserLogin'
-            ORDER BY id ASC",
+        SQL => "SELECT session_id, data_key, data_value"
+             . " FROM $Self->{SessionTable}"
+             . " WHERE data_key = 'UserType'"
+             . "  OR data_key = 'UserLastRequest'"
+             . "  OR data_key = 'UserLogin'"
+             . " ORDER BY id ASC",
     );
 
     my %SessionData;
@@ -463,12 +458,11 @@ sub GetExpiredSessionIDs {
 
     # get all needed timestamps to investigate the expired sessions
     $DBObject->Prepare(
-        SQL => "
-            SELECT session_id, data_key, data_value
-            FROM $Self->{SessionTable}
-            WHERE data_key = 'UserSessionStart'
-                OR data_key = 'UserLastRequest'
-            ORDER BY id ASC",
+        SQL => "SELECT session_id, data_key, data_value"
+             . " FROM $Self->{SessionTable}"
+             . " WHERE data_key = 'UserSessionStart'"
+             . "  OR data_key = 'UserLastRequest'"
+             . " ORDER BY id ASC",
     );
 
     my %SessionData;
@@ -523,8 +517,7 @@ sub CleanUp {
         || $Self->{DBType} eq 'postgresql'
         || $Self->{DBType} eq 'oracle'
         || $Self->{DBType} eq 'mssql'
-        )
-    {
+    ) {
 
         return if !$DBObject->Do( SQL => "TRUNCATE TABLE $Self->{SessionTable}" );
     }
@@ -596,11 +589,10 @@ sub DESTROY {
 
             # delete old session data from the database
             $DBObject->Do(
-                SQL => "
-                    DELETE FROM $Self->{SessionTable}
-                    WHERE session_id = ?
-                        AND data_key = ?
-                        AND id <= ?",
+                SQL  => "DELETE FROM $Self->{SessionTable}"
+                      . " WHERE session_id = ?"
+                      . "  AND data_key = ?"
+                      . "  AND id <= ?",
                 Bind => [ \$SessionID, \$Key, \$ID ],
             );
         }
@@ -643,9 +635,7 @@ sub _SQLCreate {
                 ref $Value eq 'HASH'
                 || ref $Value eq 'ARRAY'
                 || ref $Value eq 'SCALAR'
-                )
-            {
-
+            ) {
                 # dump the data
                 $Value      = MIME::Base64::encode_base64( Storable::nfreeze($Value) );
                 $Serialized = 1;
@@ -694,9 +684,7 @@ sub _SQLCreate {
                 || ref $Value eq 'HASH'
                 || ref $Value eq 'ARRAY'
                 || ref $Value eq 'SCALAR'
-                )
-            {
-
+            ) {
                 # workaround for the oracle problem with empty strings
                 # and NULL values in VARCHAR columns
                 if ( !defined $Value ) {
@@ -773,9 +761,7 @@ sub _SQLCreate {
                 ref $Value eq 'HASH'
                 || ref $Value eq 'ARRAY'
                 || ref $Value eq 'SCALAR'
-                )
-            {
-
+            ) {
                 # dump the data
                 $Value      = MIME::Base64::encode_base64( Storable::nfreeze($Value) );
                 $Serialized = 1;

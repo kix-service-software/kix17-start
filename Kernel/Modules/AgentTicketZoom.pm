@@ -40,7 +40,6 @@ sub new {
     $Self->{ArticleID}      = $ParamObject->GetParam( Param => 'ArticleID' );
     $Self->{ZoomExpand}     = $ParamObject->GetParam( Param => 'ZoomExpand' );
     $Self->{ZoomExpandSort} = $ParamObject->GetParam( Param => 'ZoomExpandSort' );
-    $Self->{ZoomTimeline}   = $ParamObject->GetParam( Param => 'ZoomTimeline' );
 
     my %UserPreferences = $UserObject->GetPreferences(
         UserID => $Self->{UserID},
@@ -49,7 +48,7 @@ sub new {
     # save last used view type in preferences
     if ( !$Self->{Subaction} ) {
 
-        if ( !defined $Self->{ZoomExpand} && !defined $Self->{ZoomTimeline} ) {
+        if ( !defined $Self->{ZoomExpand} ) {
             $Self->{ZoomExpand} = $ConfigObject->Get('Ticket::Frontend::ZoomExpand');
             if ( $UserPreferences{UserLastUsedZoomViewType} ) {
                 if ( $UserPreferences{UserLastUsedZoomViewType} eq 'Expand' ) {
@@ -58,13 +57,10 @@ sub new {
                 elsif ( $UserPreferences{UserLastUsedZoomViewType} eq 'Collapse' ) {
                     $Self->{ZoomExpand} = 0;
                 }
-                elsif ( $UserPreferences{UserLastUsedZoomViewType} eq 'Timeline' ) {
-                    $Self->{ZoomTimeline} = 1;
-                }
             }
         }
 
-        elsif ( defined $Self->{ZoomExpand} || defined $Self->{ZoomTimeline} ) {
+        elsif ( defined $Self->{ZoomExpand} ) {
 
             my $LastUsedZoomViewType = '';
             if ( defined $Self->{ZoomExpand} && $Self->{ZoomExpand} == 1 ) {
@@ -73,9 +69,6 @@ sub new {
             elsif ( defined $Self->{ZoomExpand} && $Self->{ZoomExpand} == 0 ) {
                 $LastUsedZoomViewType = 'Collapse';
             }
-            elsif ( defined $Self->{ZoomTimeline} && $Self->{ZoomTimeline} == 1 ) {
-                $LastUsedZoomViewType = 'Timeline';
-            }
             $UserObject->SetPreferences(
                 UserID => $Self->{UserID},
                 Key    => 'UserLastUsedZoomViewType',
@@ -83,8 +76,6 @@ sub new {
             );
         }
     }
-
-    # ddoerffel - T2016121190001552 - BusinessSolution code removed
 
     if ( !defined $Self->{DoNotShowBrowserLinkMessage} ) {
         if ( $UserPreferences{UserAgentDoNotShowBrowserLinkMessage} ) {
@@ -508,7 +499,7 @@ sub MaskAgentZoom {
 
     # else show normal ticket zoom view
     # fetch all move queues
-    my %MoveQueues = $TicketObject->MoveList(
+    my %MoveQueues = $TicketObject->TicketMoveList(
         TicketID => $Ticket{TicketID},
         UserID   => $Self->{UserID},
         Action   => $Self->{Action},
@@ -545,232 +536,13 @@ sub MaskAgentZoom {
 
     # generate shown articles
     my $Limit = $ConfigObject->Get('Ticket::Frontend::MaxArticlesPerPage');
-
     my $Order = $Self->{ZoomExpandSort} eq 'reverse' ? 'DESC' : 'ASC';
-    my $Page;
 
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # get article page
-    my $ArticlePage = $ParamObject->GetParam( Param => 'ArticlePage' );
-
-    if ( $Self->{ArticleID} ) {
-        $Page = $TicketObject->ArticlePage(
-            TicketID    => $Self->{TicketID},
-            ArticleID   => $Self->{ArticleID},
-            RowsPerPage => $Limit,
-            Order       => $Order,
-            %{ $Self->{ArticleFilter} // {} },
-        );
-    }
-    elsif ($ArticlePage) {
-        $Page = $ArticlePage;
-    }
-    else {
-        $Page = 1;
-    }
-
-    $Param{ArticlePage} = $Page;
-
-    # We need to find out whether pagination is actually necessary.
-    # The easiest way would be count the articles, but that would slow
-    # down the most common case (fewer articles than $Limit in the ticket).
-    # So instead we use the following trick:
-    # 1) if the $Page > 1, we need pagination
-    # 2) if not, request $Limit + 1 articles. If $Limit + 1 are actually
-    #    returned, pagination is necessary
-    my $Extra = $Page > 1 ? 0 : 1;
-    my $NeedPagination;
-    my $ArticleCount;
-
-    my @ArticleContentArgs = (
-        TicketID                   => $Self->{TicketID},
-        StripPlainBodyAsAttachment => $Self->{StripPlainBodyAsAttachment},
-        UserID                     => $Self->{UserID},
-        Limit                      => $Limit + $Extra,
-        Order                      => $Order,
-        DynamicFields              => 0,      # fetch later only for the article(s) to display
-        %{ $Self->{ArticleFilter} // {} },    # limit by ArticleSenderTypeID/ArticleTypeID
-
-    );
-
-    # get content
-    my @ArticleBox = $TicketObject->ArticleContentIndex(
-        @ArticleContentArgs,
-        Page => $Page,
-    );
-
-    if ( !@ArticleBox && $Page > 1 ) {
-
-        # if the page argument is past the actual number of pages,
-        # assume page 1 instead.
-        # This can happen when a new article filter was added.
-        $Page       = 1;
-        @ArticleBox = $TicketObject->ArticleContentIndex(
-            @ArticleContentArgs,
-            Page => $Page,
-        );
-        $ArticleCount = $TicketObject->ArticleCount(
-            TicketID => $Self->{TicketID},
-            %{ $Self->{ArticleFilter} // {} },
-        );
-        $NeedPagination = $ArticleCount > $Limit;
-    }
-    elsif ( @ArticleBox > $Limit ) {
-        pop @ArticleBox;
-        $NeedPagination = 1;
-        $ArticleCount   = $TicketObject->ArticleCount(
-            TicketID => $Self->{TicketID},
-            %{ $Self->{ArticleFilter} // {} },
-        );
-    }
-    elsif ( $Page == 1 ) {
-        $ArticleCount   = @ArticleBox;
-        $NeedPagination = 0;
-    }
-    else {
-        $NeedPagination = 1;
-        $ArticleCount   = $TicketObject->ArticleCount(
-            TicketID => $Ticket{TicketID},
-            %{ $Self->{ArticleFilter} // {} },
-        );
-    }
-
-    $Page ||= 1;
-
-    my $Pages;
-    if ($NeedPagination) {
-        $Pages = ceil( $ArticleCount / $Limit );
-    }
-
-    my $Count;
-    if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
-        $Count = scalar @ArticleBox + 1;
-    }
-    else {
-        $Count = 0;
-    }
-
-    # get all articles
-    my @ArticleContentArgsAll = (
-        TicketID                   => $Self->{TicketID},
-        StripPlainBodyAsAttachment => $Self->{StripPlainBodyAsAttachment},
-        UserID                     => $Self->{UserID},
-        Order                      => $Order,
-        DynamicFields => 0,    # fetch later only for the article(s) to display
-    );
-    my @ArticleBoxAll = $TicketObject->ArticleContentIndex(@ArticleContentArgsAll);
-
-    if ( scalar @ArticleBox != scalar @ArticleBoxAll ) {
-
-        if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
-            $Count = scalar @ArticleBoxAll + 1;
-        }
-
-        for my $Article (@ArticleBoxAll) {
-            if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
-                $Count--;
-            }
-            else {
-                $Count++;
-            }
-            $Article->{Count} = $Count;
-        }
-    }
-
-    my $ArticleIDFound = 0;
-    ARTICLE:
-    for my $Article (@ArticleBox) {
-
-        if ( scalar @ArticleBox != scalar @ArticleBoxAll ) {
-            my @ArticleOnPage = grep { $_->{ArticleID} =~ $Article->{ArticleID} } @ArticleBoxAll;
-            $Article->{Count} = $ArticleOnPage[0]->{Count};
-        }
-        else {
-            if ( $ConfigObject->Get('Ticket::Frontend::ZoomExpandSort') eq 'reverse' ) {
-                $Count--;
-            }
-            else {
-                $Count++;
-            }
-            $Article->{Count} = $Count;
-        }
-
-        next ARTICLE if !$Self->{ArticleID};
-        next ARTICLE if !$Article->{ArticleID};
-        next ARTICLE if $Self->{ArticleID} ne $Article->{ArticleID};
-
-        $ArticleIDFound = 1;
-    }
-
-    my %ArticleFlags = $TicketObject->ArticleFlagsOfTicketGet(
-        TicketID => $Ticket{TicketID},
-        UserID   => $Self->{UserID},
-    );
-
-    # get selected or last customer article
-    my $ArticleID;
-    if ($ArticleIDFound) {
-        $ArticleID = $Self->{ArticleID};
-    }
-    else {
-
-        # find latest not seen article
-        ARTICLE:
-        for my $Article (@ArticleBox) {
-
-            # ignore system sender type
-            next ARTICLE
-                if $ConfigObject->Get('Ticket::NewArticleIgnoreSystemSender')
-                && $Article->{SenderType} eq 'system';
-
-            next ARTICLE if $ArticleFlags{ $Article->{ArticleID} }->{Seen};
-            $ArticleID = $Article->{ArticleID};
-            last ARTICLE;
-        }
-
-        # set selected article
-        if ( !$ArticleID ) {
-            if (@ArticleBox) {
-
-                # set first listed article as fallback
-                $ArticleID = $ArticleBox[0]->{ArticleID};
-            }
-
-            # set last customer article as selected article replacing last set
-            ARTICLETMP:
-            for my $ArticleTmp (@ArticleBox) {
-                if ( $ArticleTmp->{SenderType} eq 'customer' ) {
-                    $ArticleID = $ArticleTmp->{ArticleID};
-                    last ARTICLETMP if $Self->{ZoomExpandSort} eq 'reverse';
-                }
-            }
-        }
-    }
-
-    # check if expand view is usable (only for less then 400 article)
-    # if you have more articles is going to be slow and not usable
-    my $ArticleMaxLimit = $ConfigObject->Get('Ticket::Frontend::MaxArticlesZoomExpand')
-        // 400;
-    if ( $Self->{ZoomExpand} && $#ArticleBox > $ArticleMaxLimit ) {
-        $Self->{ZoomExpand} = 0;
-    }
-
-    # get shown article(s)
-    my @ArticleBoxShown;
-    if ( !$Self->{ZoomExpand} ) {
-        ARTICLEBOX:
-        for my $ArticleTmp (@ArticleBox) {
-            if ( $ArticleID eq $ArticleTmp->{ArticleID} ) {
-                push @ArticleBoxShown, $ArticleTmp;
-                last ARTICLEBOX;
-            }
-        }
-    }
-    else {
-        @ArticleBoxShown = @ArticleBox;
-    }
+    $Param{ArticlePage} = $ParamObject->GetParam( Param => 'ArticlePage' );
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
@@ -781,15 +553,12 @@ sub MaskAgentZoom {
     );
 
     # number of articles
-    $Param{ArticleCount} = scalar @ArticleBox;
-
-    if ( $ConfigObject->Get('Ticket::UseArticleColors') && $Preferences{UserUseArticleColors} ) {
-        $Param{UseArticleColors} = 1;
-    }
+    $Param{ArticleCount} = $TicketObject->ArticleCount(
+        TicketID => $Self->{TicketID},
+    );
 
     # load KIXSidebar
-    my $Config =
-        $ConfigObject->Get('Ticket::Frontend::AgentTicketZoom');
+    my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketZoom');
     $Param{KIXSidebarContent} = $LayoutObject->AgentKIXSidebar(
         %Param,
         ModuleConfig    => $Config,              # needed for KIXSidebarTicketInfo
@@ -907,8 +676,7 @@ sub MaskAgentZoom {
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketMove}
         && ( $AclActionLookup{AgentTicketMove} )
-        )
-    {
+    ) {
         my $Access = $TicketObject->TicketPermission(
             Type     => 'move',
             TicketID => $Ticket{TicketID},
@@ -967,7 +735,6 @@ sub MaskAgentZoom {
     }
 
     $Param{ZoomExpand}   = $Self->{ZoomExpand};
-    $Param{ZoomTimeline} = $Self->{ZoomTimeline};
 
     # check if ticket is normal or process ticket
     my $IsProcessTicket = $TicketObject->TicketCheckForProcessType(
@@ -1011,20 +778,18 @@ sub MaskAgentZoom {
                     if ( !defined $AclAllowedActions{ $Self->{Action} . '###' . $CurrKey } );
 
                 # do not show tabs by action
-                next
-                    if (
+                next if (
                     $BackendAction
                     && !defined $AclAllowedActions{$BackendAction}
-                    );
+                );
             }
             elsif ( $BackendShortRef->{PreloadModule} ) {
-                next
-                    if ( !defined $AclAllowedActions{ $BackendShortRef->{PreloadModule} } );
+                next if ( !defined $AclAllowedActions{ $BackendShortRef->{PreloadModule} } );
             }
 
             # check for ticket permissions
             my $Access = $TicketObject->TicketPermission(
-                Type => $BackendShortRef->{Permission} || 'ro',
+                Type     => $BackendShortRef->{Permission} || 'ro',
                 TicketID => $Self->{TicketID},
                 UserID   => $Self->{UserID},
             );
@@ -1078,7 +843,7 @@ sub MaskAgentZoom {
                 if ($@) {
                     $Kernel::OM->Get('Kernel::System::Log')->Log(
                         Priority => 'error',
-                        Message  => "KIX4OTRS::Kernel::Modules::AgentTicketZoom::TabCount - "
+                        Message  => "Kernel::Modules::AgentTicketZoom::TabCount - "
                             . " invalid CallMethod ($Object->$Method) configured "
                             . "(" . $@ . ")!",
                     );

@@ -167,18 +167,17 @@ sub Run {
                     my $Note;
                     my @Params = $Object->Param( ServiceData => \%ServiceData );
                     if (@Params) {
-                        my %GetParam = ();
+                        my %GetPrefParam = ();
                         for my $ParamItem (@Params) {
                             my @Array = $ParamObject->GetArray( Param => $ParamItem->{Name} );
-                            $GetParam{ $ParamItem->{Name} } = \@Array;
+                            $GetPrefParam{ $ParamItem->{Name} } = \@Array;
                         }
                         if (
                             !$Object->Run(
-                                GetParam    => \%GetParam,
+                                GetParam    => \%GetPrefParam,
                                 ServiceData => \%ServiceData
                             )
-                            )
-                        {
+                        ) {
                             $Note .= $LayoutObject->Notify( Info => $Object->Error() );
                         }
                     }
@@ -206,90 +205,88 @@ sub Run {
             %Param,
         );
         $Output .= $LayoutObject->Footer();
-
+        return $Output;
     }
 
     # ------------------------------------------------------------ #
     # service overview
     # ------------------------------------------------------------ #
-    else {
 
-        # output header
-        my $Output = $LayoutObject->Header();
-        $Output .= $LayoutObject->NavigationBar();
+    # output header
+    my $Output = $LayoutObject->Header();
+    $Output .= $LayoutObject->NavigationBar();
 
-        # check if service is enabled to use it here
-        if ( !$ConfigObject->Get('Ticket::Service') ) {
-            $Output .= $LayoutObject->Notify(
-                Priority => 'Error',
-                Data     => $LayoutObject->{LanguageObject}->Translate( "Please activate %s first!", "Service" ),
-                Link =>
-                    $LayoutObject->{Baselink}
-                    . 'Action=AdminSysConfig;Subaction=Edit;SysConfigGroup=Ticket;SysConfigSubGroup=Core::Ticket#Ticket::Service',
-            );
-        }
-
-        # output overview
-        $LayoutObject->Block(
-            Name => 'Overview',
-            Data => { %Param, },
+    # check if service is enabled to use it here
+    if ( !$ConfigObject->Get('Ticket::Service') ) {
+        $Output .= $LayoutObject->Notify(
+            Priority => 'Error',
+            Data     => $LayoutObject->{LanguageObject}->Translate( "Please activate %s first!", "Service" ),
+            Link =>
+                $LayoutObject->{Baselink}
+                . 'Action=AdminSysConfig;Subaction=Edit;SysConfigGroup=Ticket;SysConfigSubGroup=Core::Ticket#Ticket::Service',
         );
-
-        $LayoutObject->Block( Name => 'ActionList' );
-        $LayoutObject->Block( Name => 'ActionAdd' );
-
-        # output overview result
-        $LayoutObject->Block(
-            Name => 'OverviewList',
-            Data => { %Param, },
-        );
-
-        # get service list
-        my $ServiceList = $ServiceObject->ServiceListGet(
-            Valid  => 0,
-            UserID => $Self->{UserID},
-        );
-
-        # if there are any services defined, they are shown
-        if ( @{$ServiceList} ) {
-
-            # get valid list
-            my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
-
-            # sort the service list by long service name
-            @{$ServiceList} = sort { $a->{Name} . '::' cmp $b->{Name} . '::' } @{$ServiceList};
-
-            for my $ServiceData ( @{$ServiceList} ) {
-
-                # output row
-                $LayoutObject->Block(
-                    Name => 'OverviewListRow',
-                    Data => {
-                        %{$ServiceData},
-                        Valid => $ValidList{ $ServiceData->{ValidID} },
-                    },
-                );
-            }
-
-        }
-
-        # otherwise a no data found msg is displayed
-        else {
-            $LayoutObject->Block(
-                Name => 'NoDataFoundMsg',
-                Data => {},
-            );
-        }
-
-        # generate output
-        $Output .= $LayoutObject->Output(
-            TemplateFile => 'AdminService',
-            Data         => \%Param,
-        );
-        $Output .= $LayoutObject->Footer();
-
-        return $Output;
     }
+
+    # output overview
+    $LayoutObject->Block(
+        Name => 'Overview',
+        Data => { %Param, },
+    );
+
+    $LayoutObject->Block( Name => 'ActionList' );
+    $LayoutObject->Block( Name => 'ActionAdd' );
+
+    # output overview result
+    $LayoutObject->Block(
+        Name => 'OverviewList',
+        Data => { %Param, },
+    );
+
+    # get service list
+    my $ServiceList = $ServiceObject->ServiceListGet(
+        Valid  => 0,
+        UserID => $Self->{UserID},
+    );
+
+    # if there are any services defined, they are shown
+    if ( @{$ServiceList} ) {
+
+        # get valid list
+        my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
+
+        # sort the service list by long service name
+        @{$ServiceList} = sort { $a->{Name} . '::' cmp $b->{Name} . '::' } @{$ServiceList};
+
+        for my $ServiceData ( @{$ServiceList} ) {
+
+            # output row
+            $LayoutObject->Block(
+                Name => 'OverviewListRow',
+                Data => {
+                    %{$ServiceData},
+                    Valid => $ValidList{ $ServiceData->{ValidID} },
+                },
+            );
+        }
+
+    }
+
+    # otherwise a no data found msg is displayed
+    else {
+        $LayoutObject->Block(
+            Name => 'NoDataFoundMsg',
+            Data => {},
+        );
+    }
+
+    # generate output
+    $Output .= $LayoutObject->Output(
+        TemplateFile => 'AdminService',
+        Data         => \%Param,
+    );
+    $Output .= $LayoutObject->Footer();
+
+    return $Output;
 }
 
 sub _MaskNew {
@@ -419,8 +416,7 @@ sub _MaskNew {
                 if (
                     ref( $ParamItem->{Data} ) eq 'HASH'
                     || ref( $Preferences{$Item}->{Data} ) eq 'HASH'
-                    )
-                {
+                ) {
                     my %BuildSelectionParams = (
                         %{ $Preferences{$Item} },
                         %{$ParamItem},

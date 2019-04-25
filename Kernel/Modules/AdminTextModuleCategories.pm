@@ -50,8 +50,7 @@ sub Run {
     for (
         qw(SelectedCategoryID ID Name ParentCategory FormID Limit Show Download DownloadType UploadType
         XMLUploadDoNotAdd XMLResultFileID XMLResultFileName)
-        )
-    {
+    ) {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
     }
 
@@ -283,8 +282,7 @@ sub Run {
                             $Char eq ';' || $Char eq "\n"
                         )
                         && $OldChar eq ';'
-                        )
-                    {
+                    ) {
                         $PreparedContent .= '""';
                     }
                     elsif (
@@ -294,8 +292,7 @@ sub Run {
                         && $Char    ne " \n "
                         && $Char    ne " \r "
                         && $OldChar ne '"'
-                        )
-                    {
+                    ) {
                         $PreparedContent .= '"';
                         $InQuote    = 1;
                         $AddedQuote = 1;
@@ -304,8 +301,7 @@ sub Run {
                         $InQuote
                         && $AddedQuote
                         && ( $Char eq " \n " || $Char eq " \r " || $Char eq ';' )
-                        )
-                    {
+                    ) {
                         $PreparedContent .= '"';
                         $InQuote    = 0;
                         $AddedQuote = 0;

@@ -80,10 +80,12 @@ sub TicketTemplateReplace {
         }
 
         # check if there are actions about attachments
-        my @AttachmentIDs = map {
-            my ($ID) = $_ =~ m{ \A AttachmentDelete (\d+) \z }xms;
-            $ID ? $ID : ();
-        } $ParamObject->GetParamNames();
+        my @AttachmentIDs = ();
+        for my $Name ( $ParamObject->GetParamNames() ) {
+            if ( $Name =~ m{ \A AttachmentDelete (\d+) \z }xms ) {
+                push (@AttachmentIDs, $1);
+            };
+        }
 
         for my $Count ( reverse sort @AttachmentIDs ) {
             my $Delete
@@ -116,8 +118,7 @@ sub TicketTemplateReplace {
                 $TempArrayCount = scalar @{ $Param{MultipleCustomerBcc} } if $Key eq 'Bcc';
 
                 if ( $TicketTemplate{$Key} ) {
-                    
-#rbo - T2016121190001552 - added KIX placeholders
+
                     $TicketTemplate{$Key} =~ s/OTRS_/KIX_/g;
 
                     # deselect already selected customer users to prevent double selected users
@@ -125,7 +126,6 @@ sub TicketTemplateReplace {
                         $Item->{CustomerSelected} = '';
                     }
 
-#rbo - T2016121190001552 - added KIX placeholders
                     # get current user
                     if ( $TicketTemplate{$Key} eq '<KIX_CURRENT_USER>' ) {
 
@@ -140,8 +140,7 @@ sub TicketTemplateReplace {
                             $UserData{UserID}
                             && $UserData{UserEmail}
                             && $UserData{UserFullname}
-                            )
-                        {
+                        ) {
                             $TicketTemplate{$Key}
                                 = '"' . $UserData{UserFullname} . '" '
                                 . '<' . $UserData{UserEmail} . '>';
@@ -160,8 +159,7 @@ sub TicketTemplateReplace {
                             @TempArray
                         )
                         && !$IsUpload
-                        )
-                    {
+                    ) {
                         $TempArrayCount++;
                         push @TempArray, {
                             Count            => $TempArrayCount,
@@ -201,8 +199,7 @@ sub TicketTemplateReplace {
                 }
                 $Data{DefaultTypeID} = $TicketTemplate{TypeID};
             }
-            elsif ( $TicketTemplate{TypeIDEmpty} )
-            {
+            elsif ( $TicketTemplate{TypeIDEmpty} ) {
                 $Data{DefaultTypeID} = '';
                 $Data{TypeID}        = '';
             }
@@ -216,8 +213,7 @@ sub TicketTemplateReplace {
             !$Self->{QueueID}
             && $TicketTemplate{QueueID}
             && $TicketTemplate{QueueID} ne '-'
-            )
-        {
+        ) {
             $Self->{QueueID} = $TicketTemplate{QueueID};
             my $DefaultQueueName = $QueueObject->QueueLookup(
                 QueueID => $Self->{QueueID},
@@ -227,8 +223,7 @@ sub TicketTemplateReplace {
                     $Self->{QueueID} . "||" . $DefaultQueueName;
             }
         }
-        elsif ( $TicketTemplate{QueueIDEmpty} )
-        {
+        elsif ( $TicketTemplate{QueueIDEmpty} ) {
             $Data{DefaultQueueSelected} = '';
         }
         elsif ( !$Self->{QueueID} && $Data{Dest} ) {
@@ -249,7 +244,7 @@ sub TicketTemplateReplace {
             $Data{QuickTicketPriorityID} = $Data{PriorityID};
         }
 
-        # get frontend to replace otrs-tags
+        # get frontend to replace otrs and kix-tags
         my $Frontend;
         if ( $Self->{Action} eq 'CustomerTicketMessage' ) {
             $Frontend = 'Customer';
@@ -260,19 +255,16 @@ sub TicketTemplateReplace {
 
         # set default value for subject
         if ( $TicketTemplate{Subject} ) {
-            $Data{QuickTicketSubject}
-                = $TicketTemplate{Subject};
-            $Data{QuickTicketSubject}
-                = $TemplateGeneratorObject->ReplacePlaceHolder(
+            $Data{QuickTicketSubject} = $TicketTemplate{Subject};
+            $Data{QuickTicketSubject} = $TemplateGeneratorObject->ReplacePlaceHolder(
                 Text     => $Data{QuickTicketSubject},
                 Data     => {},
                 RichText => 0,
                 UserID   => $Self->{UserID},
                 Frontend => $Frontend,
-                );
+            );
         }
-        elsif ( $TicketTemplate{SubjectEmpty} )
-        {
+        elsif ( $TicketTemplate{SubjectEmpty} ) {
             $Data{QuickTicketSubject} = '';
         }
         elsif ( $Data{Subject} ) {
@@ -292,8 +284,7 @@ sub TicketTemplateReplace {
                 Frontend => $Frontend,
                 );
         }
-        elsif ( $TicketTemplate{BodyEmpty} )
-        {
+        elsif ( $TicketTemplate{BodyEmpty} ) {
             $Data{QuickTicketBody} = '';
         }
         elsif ( $Data{Body} ) {
@@ -332,8 +323,7 @@ sub TicketTemplateReplace {
                 !defined $TicketTemplate{ServiceIDEmpty}
                 || !$TicketTemplate{ServiceIDEmpty}
             )
-            )
-        {
+        ) {
             $Data{QuickTicketServiceID} = '';
         }
         elsif ( $Data{PendingOffset} ) {
@@ -351,12 +341,10 @@ sub TicketTemplateReplace {
                 !defined $TicketTemplate{ServiceIDEmpty}
                 || !$TicketTemplate{ServiceIDEmpty}
             )
-            )
-        {
+        ) {
             $Data{QuickTicketServiceID} = '';
         }
-        elsif ( $TicketTemplate{ServiceIDEmpty} )
-        {
+        elsif ( $TicketTemplate{ServiceIDEmpty} ) {
             $Data{QuickTicketServiceID} = '';
         }
         elsif ( $Data{ServiceID} ) {
@@ -367,8 +355,7 @@ sub TicketTemplateReplace {
         if ( $TicketTemplate{SLAID} ) {
             $Data{QuickTicketSLAID} = $TicketTemplate{SLAID};
         }
-        elsif ( $TicketTemplate{SLAIDEmpty} )
-        {
+        elsif ( $TicketTemplate{SLAIDEmpty} ) {
             $Data{QuickTicketSLAID} = '';
         }
         elsif ( $Data{SLAID} ) {
@@ -379,8 +366,7 @@ sub TicketTemplateReplace {
         if ( $TicketTemplate{OwnerID} ) {
             $Data{QuickTicketOwnerID} = $TicketTemplate{OwnerID};
         }
-        elsif ( $TicketTemplate{OwnerIDEmpty} )
-        {
+        elsif ( $TicketTemplate{OwnerIDEmpty} ) {
             $Data{QuickTicketOwnerID} = '';
         }
         elsif ( $Data{OwnerID} ) {
@@ -391,8 +377,7 @@ sub TicketTemplateReplace {
         if ( $TicketTemplate{ResponsibleID} ) {
             $Data{QuickTicketResponsibleUserID} = $TicketTemplate{ResponsibleID};
         }
-        elsif ( $TicketTemplate{ResponsibleIDEmpty} )
-        {
+        elsif ( $TicketTemplate{ResponsibleIDEmpty} ) {
             $Data{QuickTicketResponsibleID} = '';
         }
         elsif ( $Data{ResponsibleID} ) {
@@ -404,8 +389,7 @@ sub TicketTemplateReplace {
             my $TimeUnits = $TicketTemplate{TimeUnits};
             $Data{QuickTicketTimeUnits} = int($TimeUnits);
         }
-        elsif ( $TicketTemplate{TimeUnitsEmpty} )
-        {
+        elsif ( $TicketTemplate{TimeUnitsEmpty} ) {
             $Data{QuickTicketTimeUnits} = '';
         }
         elsif ( $Data{TimeUnits} ) {
@@ -469,8 +453,7 @@ sub TicketTemplateReplace {
                         . $DynamicFieldConfig->{Name}
                         . 'Empty'
                 }
-                )
-            {
+            ) {
                 $QuickTicketDynamicFieldHash{
                     'DynamicField_'
                         . $DynamicFieldConfig->{Name}
@@ -485,7 +468,6 @@ sub TicketTemplateReplace {
             }
         }
         $Data{QuickTicketDynamicFieldHash} = \%QuickTicketDynamicFieldHash;
-
     }
 
     return %Data;

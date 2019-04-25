@@ -10,8 +10,6 @@
 
 package Kernel::Modules::AgentTicketPrintRichtext;
 
-# EO TicketPrintRichtext-capeIT
-
 use strict;
 use warnings;
 
@@ -132,13 +130,6 @@ sub Run {
         }
     }
 
-    # TicketPrintRichtext-capeIT
-    #    # resort article order
-    #    if ( $Self->{ZoomExpandSort} eq 'reverse' ) {
-    #        @ArticleBox = reverse(@ArticleBox);
-    #    }
-    # EO TicketPrintRichtext-capeIT
-
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
@@ -181,21 +172,16 @@ sub Run {
 
     if ( $Ticket{UntilTime} ) {
 
-        # KIX4OTRS-capeIT
-        my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+        my %UserPreferences    = $UserObject->GetPreferences( UserID => $Self->{UserID} );
         my $DisplayPendingTime = $UserPreferences{UserDisplayPendingTime} || '';
 
         if ( $DisplayPendingTime && $DisplayPendingTime eq 'RemainingTime' ) {
 
             # $Ticket{PendingUntil} = $LayoutObject->CustomerAge(
             $Ticket{PendingUntil} .= $LayoutObject->CustomerAge(
-
-                # EO KIX4OTRS-capeIT
                 Age   => $Ticket{UntilTime},
                 Space => ' ',
             );
-
-            # KIX4OTRS-capeIT
         }
         else {
             $Ticket{PendingUntil} = $Kernel::OM->Get('Kernel::System::Time')->SystemTime2TimeStamp(
@@ -204,16 +190,7 @@ sub Run {
             $Ticket{PendingUntil} = $LayoutObject->{LanguageObject}
                 ->FormatTimeString( $Ticket{PendingUntil}, 'DateFormat' );
         }
-
-        # EO KIX4OTRS-capeIT
     }
-
-    # TicketPrintRichtext-capeIT
-## REMOVED CODE FOR PDF-GENERATION ##
-    #    # get PDF object
-    #    my $PDFObject = $Kernel::OM->Get('Kernel::System::PDF');
-
-    # EO TicketPrintRichtext-capeIT
 
     if (%LinkData) {
 
@@ -285,21 +262,8 @@ sub Run {
 
     # return output
     return $Output;
-
-    # TicketPrintRichtext-capeIT
-    #    }
-    # EO TicketPrintRichtext-capeIT
 }
 
-# TicketPrintRichtext-capeIT
-## REMOVED sub _PDFOutputTicketInfos ##
-## REMOVED sub _PDFOutputLinkedObjects ##
-## REMOVED sub _PDFOutputTicketDynamicFields ##
-## REMOVED sub _PDFOutputCustomerInfos ##
-## REMOVED sub _PDFOutputArticles ##
-# EO TicketPrintRichtext-capeIT
-
-# TicketPrintRichtext-capeIT
 sub _HTMLMask {
     my ( $Self, %Param ) = @_;
 
@@ -473,164 +437,154 @@ sub _HTMLMask {
                 . "$File{Filename}</a> $File{Filesize}<br/>";
         }
 
-        if ( $Article{ArticleType} eq 'chat-external' || $Article{ArticleType} eq 'chat-internal' )
-        {
-            $Article{ChatMessages} = $Kernel::OM->Get('Kernel::System::JSON')->Decode(
-                Data => $Article{Body},
-            );
-            $Article{IsChat} = 1;
+        # check if just a only html email
+        my $MimeTypeText = $LayoutObject->CheckMimeType(
+            %Param,
+            %Article,
+            Action => 'AgentTicketZoom',
+        );
+        if ($MimeTypeText) {
+            $Param{TextNote} = $MimeTypeText;
+            $Article{Body}   = '';
         }
         else {
 
-            # check if just a only html email
-            my $MimeTypeText = $LayoutObject->CheckMimeType(
-                %Param,
-                %Article,
-                Action => 'AgentTicketZoom',
+            # html quoting
+            $Article{Body} = $LayoutObject->Ascii2Html(
+                NewLine => $ConfigObject->Get('DefaultViewNewLine'),
+                Text    => $Article{Body},
+                VMax    => $ConfigObject->Get('DefaultViewLines') || 5000,
             );
-            if ($MimeTypeText) {
-                $Param{TextNote} = $MimeTypeText;
-                $Article{Body}   = '';
-            }
-            else {
 
-                # html quoting
-                $Article{Body} = $LayoutObject->Ascii2Html(
-                    NewLine => $ConfigObject->Get('DefaultViewNewLine'),
-                    Text    => $Article{Body},
-                    VMax    => $ConfigObject->Get('DefaultViewLines') || 5000,
+            if ( $Article{AttachmentIDOfHTMLBody} ) {
+                my %AttachmentHTML = $TicketObject->ArticleAttachment(
+                    ArticleID => $Article{ArticleID},
+                    FileID    => $Article{AttachmentIDOfHTMLBody},
+                    UserID    => $Self->{UserID},
                 );
 
-                if ( $Article{AttachmentIDOfHTMLBody} ) {
-                    my %AttachmentHTML = $TicketObject->ArticleAttachment(
-                        ArticleID => $Article{ArticleID},
-                        FileID    => $Article{AttachmentIDOfHTMLBody},
-                        UserID    => $Self->{UserID},
-                    );
+                my $Charset = $AttachmentHTML{ContentType} || '';
+                $Charset =~ s/.+?charset=("|'|)(\w+)/$2/gi;
+                $Charset =~ s/"|'//g;
+                $Charset =~ s/(.+?);.*/$1/g;
 
-                    my $Charset = $AttachmentHTML{ContentType} || '';
-                    $Charset =~ s/.+?charset=("|'|)(\w+)/$2/gi;
-                    $Charset =~ s/"|'//g;
-                    $Charset =~ s/(.+?);.*/$1/g;
+                my $Body = $AttachmentHTML{Content};
 
-                    my $Body = $AttachmentHTML{Content};
+                # convert html body to correct charset
+                $Body = $Kernel::OM->Get('Kernel::System::Encode')->Convert(
+                    Text => $Body,
+                    From => $Charset,
+                    To   => $Self->{UserCharset} || 'utf-8',
+                );
 
-                    # convert html body to correct charset
-                    $Body = $Kernel::OM->Get('Kernel::System::Encode')->Convert(
-                        Text => $Body,
-                        From => $Charset,
-                        To   => $Self->{UserCharset} || 'utf-8',
-                    );
+                my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
 
-                    my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+                # add url quoting
+                $Body = $HTMLUtilsObject->LinkQuote(
+                    String => $Body,
+                );
 
-                    # add url quoting
-                    $Body = $HTMLUtilsObject->LinkQuote(
-                        String => $Body,
-                    );
+                # strip head, body and meta elements
+                $Body = $HTMLUtilsObject->DocumentStrip(
+                    String => $Body,
+                );
 
-                    # strip head, body and meta elements
-                    $Body = $HTMLUtilsObject->DocumentStrip(
-                        String => $Body,
-                    );
+                my %AttachmentIndex = $TicketObject->ArticleAttachmentIndex(
+                    ArticleID => $Article{ArticleID},
+                    UserID    => $Self->{UserID},
+                );
 
-                    my %AttachmentIndex = $TicketObject->ArticleAttachmentIndex(
-                        ArticleID => $Article{ArticleID},
-                        UserID    => $Self->{UserID},
-                    );
+                # search inline documents in body and add it to upload cache
+                my $SessionID = '';
+                if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
+                    $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+                }
 
-                    # search inline documents in body and add it to upload cache
-                    my $SessionID = '';
-                    if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
-                        $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+                my $AttachmentLink = $LayoutObject->{Baselink}
+                    . 'Action=AgentTicketAttachment;Subaction=HTMLView;ArticleID='
+                    . $Article{ArticleID}
+                    . ';FileID=';
+
+                my %Attachments = %AttachmentIndex;
+                my %AttachmentAlreadyUsed;
+                $Body =~ s{
+                    (=|"|')cid:(.*?)("|'|>|\/>|\s)
+                }
+                {
+                    my $Start= $1;
+                    my $ContentID = $2;
+                    my $End = $3;
+                    # improve html quality
+                    if ( $Start ne '"' && $Start ne '\'' ) {
+                        $Start .= '"';
+                    }
+                    if ( $End ne '"' && $End ne '\'' ) {
+                        $End = '"' . $End;
                     }
 
-                    my $AttachmentLink = $LayoutObject->{Baselink}
-                        . 'Action=AgentTicketAttachment;Subaction=HTMLView;ArticleID='
-                        . $Article{ArticleID}
-                        . ';FileID=';
+                    # find attachment to include
+                    ATMCOUNT:
+                    for my $AttachmentID ( sort keys %Attachments ) {
 
-                    my %Attachments = %AttachmentIndex;
-                    my %AttachmentAlreadyUsed;
-                    $Body =~ s{
-                        (=|"|')cid:(.*?)("|'|>|\/>|\s)
-                    }
-                    {
-                        my $Start= $1;
-                        my $ContentID = $2;
-                        my $End = $3;
-                        # improve html quality
-                        if ( $Start ne '"' && $Start ne '\'' ) {
-                            $Start .= '"';
-                        }
-                        if ( $End ne '"' && $End ne '\'' ) {
-                            $End = '"' . $End;
+                        if ( lc $Attachments{$AttachmentID}->{ContentID} ne lc "<$ContentID>" ) {
+                            next ATMCOUNT;
                         }
 
-                        # find attachment to include
-                        ATMCOUNT:
-                        for my $AttachmentID ( sort keys %Attachments ) {
+                        # get whole attachment
+                        my %AttachmentPicture = $TicketObject->ArticleAttachment(
+                            ArticleID => $Article{ArticleID},
+                            FileID    => $AttachmentID,
+                            UserID    => $Self->{UserID},
+                        );
 
-                            if ( lc $Attachments{$AttachmentID}->{ContentID} ne lc "<$ContentID>" ) {
-                                next ATMCOUNT;
-                            }
+                        ## content id cleanup
+                        $AttachmentPicture{ContentID} =~ s/^<//;
+                        $AttachmentPicture{ContentID} =~ s/>$//;
 
-                            # get whole attachment
-                            my %AttachmentPicture = $TicketObject->ArticleAttachment(
-                                ArticleID => $Article{ArticleID},
-                                FileID    => $AttachmentID,
-                                UserID    => $Self->{UserID},
+                        # find cid, add attachment URL and remember, file is already uploaded
+                        $ContentID = $AttachmentLink . $AttachmentID; #$LayoutObject->LinkEncode( $AttachmentPicture{ContentID} );
+
+                        # add to upload cache if not uploaded and remember
+                        if (!$AttachmentAlreadyUsed{$AttachmentID}) {
+
+                            # remember
+                            $AttachmentAlreadyUsed{$AttachmentID} = 1;
+
+                            # write attachment to upload cache
+                            $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDAddFile(
+                                FormID      => $Param{FormID},
+                                Disposition => 'inline',
+                                %{ $Attachments{$AttachmentID} },
+                                %AttachmentPicture,
                             );
-
-                            ## content id cleanup
-                            $AttachmentPicture{ContentID} =~ s/^<//;
-                            $AttachmentPicture{ContentID} =~ s/>$//;
-
-                            # find cid, add attachment URL and remember, file is already uploaded
-                            $ContentID = $AttachmentLink . $AttachmentID; #$LayoutObject->LinkEncode( $AttachmentPicture{ContentID} );
-
-                            # add to upload cache if not uploaded and remember
-                            if (!$AttachmentAlreadyUsed{$AttachmentID}) {
-
-                                # remember
-                                $AttachmentAlreadyUsed{$AttachmentID} = 1;
-
-                                # write attachment to upload cache
-                                $Kernel::OM->Get('Kernel::System::Web::UploadCache')->FormIDAddFile(
-                                    FormID      => $Param{FormID},
-                                    Disposition => 'inline',
-                                    %{ $Attachments{$AttachmentID} },
-                                    %AttachmentPicture,
-                                );
-                            }
                         }
-
-                        # return link
-                        $Start . $ContentID . $End;
-                    }egxi;
-
-                    # scale image
-                    $Body =~ s/(<img[^>]+style="[^"]*)width:[0-9]+px([^"]*"[^>]*>)/$1$2/g;
-                    $Body =~ s/(<img[^>]+style="[^"]*)height:[0-9]+px([^"]*"[^>]*>)/$1$2/g;
-                    $Body =~ s/(<img[^>]+)style="[\s;]*"([^>]*>)/$1$2/g;
-                    if ( $Body =~ m/<img[^>]+style="/ ) {
-                        $Body
-                            =~ s/(<img[^>]+style=")([^>]+>)/$1width:auto;max-width:612px;height:auto;$2/g;
-                    }
-                    else {
-                        $Body
-                            =~ s/(<img)([^>]+>)/$1 style="width:auto;max-width:612px;height:auto;" $2/g;
                     }
 
-                    # strip head, body and meta elements
-                    $Article{Body}
-                        = '<div class="ArticleMailContent" style="font-family:Geneva,Helvetica,Arial,sans-serif; font-size: 12px;">'
-                        . $Body
-                        . '</div>';
+                    # return link
+                    $Start . $ContentID . $End;
+                }egxi;
+
+                # scale image
+                $Body =~ s/(<img[^>]+style="[^"]*)width:[0-9]+px([^"]*"[^>]*>)/$1$2/g;
+                $Body =~ s/(<img[^>]+style="[^"]*)height:[0-9]+px([^"]*"[^>]*>)/$1$2/g;
+                $Body =~ s/(<img[^>]+)style="[\s;]*"([^>]*>)/$1$2/g;
+                if ( $Body =~ m/<img[^>]+style="/ ) {
+                    $Body
+                        =~ s/(<img[^>]+style=")([^>]+>)/$1width:auto;max-width:612px;height:auto;$2/g;
                 }
                 else {
-                    $Article{Body} = '<pre>' . $Article{Body} . '</pre>';
+                    $Body
+                        =~ s/(<img)([^>]+>)/$1 style="width:auto;max-width:612px;height:auto;" $2/g;
                 }
+
+                # strip head, body and meta elements
+                $Article{Body}
+                    = '<div class="ArticleMailContent" style="font-family:Geneva,Helvetica,Arial,sans-serif; font-size: 12px;">'
+                    . $Body
+                    . '</div>';
+            }
+            else {
+                $Article{Body} = '<pre>' . $Article{Body} . '</pre>';
             }
         }
 
@@ -673,7 +627,7 @@ sub _HTMLMask {
         }
 
         # get the dynamic fields for ticket object
-        my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+        my $ArticleDynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
             Valid       => 1,
             ObjectType  => ['Article'],
             FieldFilter => $DynamicFieldFilter || {},
@@ -681,7 +635,7 @@ sub _HTMLMask {
 
         # cycle trough the activated Dynamic Fields for ticket object
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{$ArticleDynamicField} ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $Value = $DynamicFieldBackendObject->ValueGet(
@@ -711,7 +665,6 @@ sub _HTMLMask {
                     Title => $ValueStrg->{Title},
                 },
             );
-
         }
     }
 
@@ -721,8 +674,6 @@ sub _HTMLMask {
     );
 
 }
-
-# EO TicketPrintRichtext-capeIT
 
 1;
 

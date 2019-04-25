@@ -41,12 +41,9 @@ sub Run {
         SYSTEMDRIVE          SYSTEMROOT           TEMP           WINDIR
         USERPROFILE          REMOTE_PORT
         )
-        )
-    {
+    ) {
         delete $Environment{$NotNeededString};
     }
-
-    my @Result;
 
     for my $Variable ( sort { $a cmp $b } keys %Environment ) {
         $Self->AddResultInformation(

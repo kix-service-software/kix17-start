@@ -51,8 +51,7 @@ sub new {
         defined(
             $ConfigObject->Get( 'Customer::AuthModule::LDAP::BaseDN' . $Param{Count} )
         )
-        )
-    {
+    ) {
         $Self->{BaseDN} = $ConfigObject->Get( 'Customer::AuthModule::LDAP::BaseDN' . $Param{Count} );
     }
     else {

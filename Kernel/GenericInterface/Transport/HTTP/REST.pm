@@ -23,6 +23,8 @@ use Kernel::System::VariableCheck qw(:all);
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(InputOutput::RequireEncodingWithUTF8Layer)
+
 =head1 NAME
 
 Kernel::GenericInterface::Transport::REST - GenericInterface network transport interface for HTTP::REST
@@ -118,11 +120,12 @@ sub ProviderProcessRequest {
     # remove any query parameter form the URL
     # e.g. from /Ticket/1/2?UserLogin=user&Password=secret
     # to /Ticket/1/2?
-    $RequestURI =~ s{([^?]+)(.+)?}{$1};
-
-    # remember the query parameters e.g. ?UserLogin=user&Password=secret
-    my $QueryParamsStr = $2 || '';
+    # and remember the query parameters e.g. ?UserLogin=user&Password=secret
+    my $QueryParamsStr;
     my %QueryParams;
+    if ( $RequestURI =~ s{([^?]+)(.+)?}{$1} ) {
+        $QueryParamsStr = $2 || '';
+    }
 
     if ($QueryParamsStr) {
 
@@ -488,8 +491,7 @@ sub RequesterPerformRequest {
         if (
             IsStringWithData( $Config->{Authentication}->{Type} )
             && $Config->{Authentication}->{Type} eq 'BasicAuth'
-            )
-        {
+        ) {
             my $User = $Config->{Authentication}->{User};
             my $Password = $Config->{Authentication}->{Password} || '';
 
@@ -528,8 +530,7 @@ sub RequesterPerformRequest {
         if (
             IsStringWithData( $Config->{X509}->{UseX509} )
             && $Config->{X509}->{UseX509} eq 'Yes'
-            )
-        {
+        ) {
             #X509 client authentication
             $RestClient->setCert( $Config->{X509}->{X509CertFile} );
             $RestClient->setKey( $Config->{X509}->{X509KeyFile} );
@@ -542,8 +543,7 @@ sub RequesterPerformRequest {
     }
 
     my $RestCommand = $Config->{DefaultCommand};
-    if ( IsStringWithData( $Config->{InvokerControllerMapping}->{ $Param{Operation} }->{Command} ) )
-    {
+    if ( IsStringWithData( $Config->{InvokerControllerMapping}->{ $Param{Operation} }->{Command} ) ) {
         $RestCommand = $Config->{InvokerControllerMapping}->{ $Param{Operation} }->{Command};
     }
 
@@ -569,8 +569,7 @@ sub RequesterPerformRequest {
         || !IsStringWithData(
             $Config->{InvokerControllerMapping}->{ $Param{Operation} }->{Controller}
         )
-        )
-    {
+    ) {
         my $ErrorMessage = "REST Transport: Have no Invoker <-> Controller mapping for Invoker '$Param{Operation}'.";
 
         # log to debugger
@@ -589,10 +588,11 @@ sub RequesterPerformRequest {
     # remove any query parameters that might be in the config
     # For example, from the controller: /Ticket/:TicketID/?:UserLogin&:Password
     #     controller must remain  /Ticket/:TicketID/
-    $Controller =~ s{([^?]+)(.+)?}{$1};
-
-    # remember the query parameters e.g. ?:UserLogin&:Password
-    my $QueryParamsStr = $2 || '';
+    # and remember the query parameters e.g. ?:UserLogin&:Password
+    my $QueryParamsStr;
+    if ( $Controller =~ s{([^?]+)(.+)?}{$1} ) {
+        $QueryParamsStr = $2 || '';
+    }
 
     my @ParamsToDelete;
 
@@ -654,8 +654,7 @@ sub RequesterPerformRequest {
             $RestCommand eq 'POST'
             || $RestCommand eq 'PUT'
             || $RestCommand eq 'PATCH'
-            )
-        {
+        ) {
             $Self->{DebuggerObject}->Debug(
                 Summary => "Remaining outgoing data to be sent",
                 Data    => $Param{Data},
@@ -797,15 +796,15 @@ sub RequesterPerformRequest {
         );
 
         if ( !$Result ) {
-            my $ResponseError = $ErrorMessage . ' Error while parsing JSON data.';
+            my $ResultResponseError = $ErrorMessage . ' Error while parsing JSON data.';
 
             # log to debugger
             $Self->{DebuggerObject}->Error(
-                Summary => $ResponseError,
+                Summary => $ResultResponseError,
             );
             return {
                 Success      => 0,
-                ErrorMessage => $ResponseError,
+                ErrorMessage => $ResultResponseError,
             };
         }
     }
@@ -870,7 +869,7 @@ sub _Output {
     $Param{Content}  ||= '';
     $Param{HTTPCode} ||= 500;
     my $ContentType;
-    if ( $Param{HTTPCode} eq 200 ) {
+    if ( $Param{HTTPCode} eq '200' ) {
         $ContentType = 'application/json';
     }
     else {
@@ -882,7 +881,7 @@ sub _Output {
 
     # log to debugger
     my $DebugLevel;
-    if ( $Param{HTTPCode} eq 200 ) {
+    if ( $Param{HTTPCode} eq '200' ) {
         $DebugLevel = 'debug';
     }
     else {
@@ -907,7 +906,7 @@ sub _Output {
     # this solution to set the binmode in the constructor and then :utf8 layer before the response
     # is sent  apparently works in all situations. ( Linux circumstances to requires :raw was no
     # reproducible, and not tested in this solution).
-    binmode STDOUT, ':utf8';    ## no critic
+    binmode STDOUT, ':utf8';
 
     # print data to http - '\r' is required according to HTTP RFCs
     my $StatusMessage = HTTP::Status::status_message( $Param{HTTPCode} );

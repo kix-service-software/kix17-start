@@ -124,8 +124,7 @@ sub Run {
         for my $Impact (
             sort { $Self->{ImpactList}->{$a} cmp $Self->{ImpactList}->{$b} }
             keys %{ $Self->{ImpactList} }
-            )
-        {
+        ) {
             $AllocateMatrix->[$Counter1]->[0]->{ObjectType}   = 'Impact';
             $AllocateMatrix->[$Counter1]->[0]->{ImpactKey}    = $Impact;
             $AllocateMatrix->[$Counter1]->[0]->{ObjectOption} = $Self->{ImpactList}->{$Impact};
@@ -137,8 +136,7 @@ sub Run {
         for my $Criticality (
             sort { $Self->{CriticalityList}->{$a} cmp $Self->{CriticalityList}->{$b} }
             keys %{ $Self->{CriticalityList} }
-            )
-        {
+        ) {
             $AllocateMatrix->[0]->[$Counter2]->{ObjectType}     = 'Criticality';
             $AllocateMatrix->[0]->[$Counter2]->{CriticalityKey} = $Criticality;
             $AllocateMatrix->[0]->[$Counter2]->{ObjectOption}   = $Self->{CriticalityList}->{$Criticality};

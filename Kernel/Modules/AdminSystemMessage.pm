@@ -158,7 +158,6 @@ sub Run {
         my $Note = '';
         my %GetParam;
         my %Errors;
-        my @AttachmentData;
 
         for my $Needed ( qw(ValidID Title ShortText Body) ) {
             $GetParam{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
@@ -408,7 +407,7 @@ sub _Mask {
     for my $Key ( qw(Frontend CustomerFrontend PublicFrontend) ) {
         MODULE:
         for my $Module ( sort keys %{ $ConfigObject->Get( $Key . '::Module' ) } ) {
-            next MODULE if $Module !~ /^(Customer|Login|Agent|Public)/;
+            next MODULE if $Module !~ /^(?:Customer|Login|Agent|Public)/;
             next MODULE if $Module =~ /(Handler|AJAXHandler|Add|Delete|Edit|Print|Event|Dashboard)$/;
             if (
                 $Config->{ActionWhitelist}
@@ -654,36 +653,36 @@ sub _PagingListShow {
         for my $ListKey ( sort { $List{$a} cmp $List{$b} } keys %List ) {
             $Counter++;
             if ( $Counter >= $StartHit && $Counter < ( $PageShown + $StartHit ) ) {
-                my %Data = $SystemMessageObject->MessageGet(
+                my %MessageData = $SystemMessageObject->MessageGet(
                     MessageID => $ListKey,
                 );
 
-                if ( $ValidList{ $Data{ValidID} } ne 'valid' ) {
-                    $Data{Invalid} = 'Invalid';
+                if ( $ValidList{ $MessageData{ValidID} } ne 'valid' ) {
+                    $MessageData{Invalid} = 'Invalid';
                 }
 
                 my %UserData = $UserObject->GetUserData(
-                    UserID => $Data{CreatedBy}
+                    UserID => $MessageData{CreatedBy}
                 );
-                if ( $Data{ValidFrom} ) {
-                    $Data{ValidFrom} = $TimeObject->SystemTime2TimeStamp(
-                        SystemTime => $Data{ValidFrom},
+                if ( $MessageData{ValidFrom} ) {
+                    $MessageData{ValidFrom} = $TimeObject->SystemTime2TimeStamp(
+                        SystemTime => $MessageData{ValidFrom},
                     );
                 }
-                if ( $Data{ValidTo} ) {
-                    $Data{ValidTo} = $TimeObject->SystemTime2TimeStamp(
-                        SystemTime => $Data{ValidTo},
+                if ( $MessageData{ValidTo} ) {
+                    $MessageData{ValidTo} = $TimeObject->SystemTime2TimeStamp(
+                        SystemTime => $MessageData{ValidTo},
                     );
                 }
 
                 $LayoutObject->Block(
                     Name => 'OverviewResultRow',
                     Data => {
-                        MessageID => $Data{MessageID},
-                        Title     => $Data{Title},
-                        ShortText => $Data{ShortText},
-                        ValidFrom => $Data{ValidFrom} || '-',
-                        ValidTo   => $Data{ValidTo}   || '-',
+                        MessageID => $MessageData{MessageID},
+                        Title     => $MessageData{Title},
+                        ShortText => $MessageData{ShortText},
+                        ValidFrom => $MessageData{ValidFrom} || '-',
+                        ValidTo   => $MessageData{ValidTo}   || '-',
                         Username  => $UserData{UserFirstname} . ' ' . $UserData{UserLastname},
                         Valid     => $ValidList{ $Data{ValidID} },
                         Session   => $Session

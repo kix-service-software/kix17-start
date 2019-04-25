@@ -26,7 +26,6 @@
     </form>
     <div id="CustomerInfo" class="Column ColumnRight WidgetSimple">
         <div class="Header">
-# rkaiser - T#2017020290001194 - changed customer user to contact
              <h2><span>[% Translate("Contact information") | html %]</span></h2>
         </div>
         <div class="Content">
@@ -34,7 +33,6 @@
         </div>
 [% RenderBlockStart("CustomerDetails") %]
         <div class="WidgetPopup CustomerShowDetails" id="WidgetPopup[% Data.UserLogin | html %]">
-# rkaiser - T#2017020290001194 - changed customer user to contact
             <div class="Header"> <h2><span>[% Translate("Contact information") | html %]</span></h2></div>
             <div class="Content">
                 <div class="Spacing" style="width:500px">

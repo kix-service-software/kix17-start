@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AgentCustomerSearch;
-## nofilter(TidyAll::Plugin::OTRS::Perl::DBObject)
 
 use strict;
 use warnings;
@@ -64,26 +63,31 @@ sub Run {
             my $UnknownTicketCustomerList = $TicketObject->SearchUnknownTicketCustomers(
                 SearchTerm => $Search,
             );
-            map { $CustomerUserList{$_} = $UnknownTicketCustomerList->{$_} } keys %{$UnknownTicketCustomerList};
+            for my $Key ( keys %{$UnknownTicketCustomerList} ) {
+                $CustomerUserList{$Key} = $UnknownTicketCustomerList->{$Key};
+            }
         }
 
         # search address book
         my %AddressList = $AddressBookObject->AddressList(
             Search => '*'.$Search.'*',
         );
-        map { $CustomerUserList{$_} = $_ } values %AddressList;
+        for my $Value ( values %AddressList ) {
+            $CustomerUserList{$Value} = $Value;
+        }
 
         # search customer user backends
         my %CustomerUserSearch = $CustomerUserObject->CustomerSearch(
             Search => $Search,
         );
-        map { $CustomerUserList{$_} = $CustomerUserSearch{$_} } keys %CustomerUserSearch;
+        for my $Key ( keys %CustomerUserSearch ) {
+            $CustomerUserList{$Key} = $CustomerUserSearch{$Key};
+        }
 
         # build data
         my @Data;
         CUSTOMERUSERID:
-        for my $CustomerUserID ( sort keys %CustomerUserList )
-        {
+        for my $CustomerUserID ( sort keys %CustomerUserList ) {
 
             my $CustomerValue = $CustomerUserList{$CustomerUserID};
 
@@ -109,7 +113,6 @@ sub Run {
     # get customer info
     elsif ( $Self->{Subaction} eq 'CustomerInfo' ) {
 
-        # KIX4OTRS-capeIT
         my $CallingAction = $ParamObject->GetParam( Param => 'CallingAction' ) || '';
         my $TicketID      = $ParamObject->GetParam( Param => 'TicketID' ) || '';
         my %TicketData;
@@ -120,18 +123,13 @@ sub Run {
                 UserID        => $Self->{UserID} || 1,
             );
         }
-        # EO KIX4OTRS-capeIT
 
         # get params
         my $CustomerUserID = $ParamObject->GetParam( Param => 'CustomerUserID' ) || '';
 
-        my $CustomerID              = '';
-        my $CustomerTableHTMLString = '';
-
-        # KIX4OTRS-capeIT
+        my $CustomerID                     = '';
+        my $CustomerTableHTMLString        = '';
         my $CustomerDetailsTableHTMLString = '';
-
-        # EO KIX4OTRS-capeIT
 
         # get customer data
         my %CustomerData = $CustomerUserObject->CustomerUserDataGet(
@@ -142,53 +140,33 @@ sub Run {
         if ( $CustomerData{UserCustomerID} ) {
             $CustomerID = $CustomerData{UserCustomerID};
 
-            # KIX4OTRS-capeIT
-            # use data from customer (see 'AgentCustomer(Details)ViewTable'), else it will be overwritten
             delete $TicketData{CustomerID};
             delete $TicketData{CustomerUserID};
-
-            # EO KIX4OTRS-capeIT
         }
 
         # build html for customer info table
-        # KIX4OTRS-capeIT
-        # if ( $ConfigObject->Get('Ticket::Frontend::CustomerInfoCompose') ) {
         if ( %CustomerData && $ConfigObject->Get('Ticket::Frontend::CustomerInfoCompose') ) {
-
-            # EO KIX4OTRS-capeIT
             $CustomerTableHTMLString = $LayoutObject->AgentCustomerViewTable(
-
-                # KIX4OTRS-capeIT
-                # Data => {%CustomerData},
-                Data          => { %CustomerData, AJAX => 1 },
-                Ticket        => \%TicketData,
-                CallingAction => $CallingAction,
-
-                # EO KIX4OTRS-capeIT
-                Max => $ConfigObject->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),
-            );
-
-            # KIX4OTRS-capeIT
-            $CustomerDetailsTableHTMLString = $LayoutObject->AgentCustomerDetailsViewTable(
                 Data          => { %CustomerData, AJAX => 1 },
                 Ticket        => \%TicketData,
                 CallingAction => $CallingAction,
                 Max           => $ConfigObject->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),
             );
 
-            # EO KIX4OTRS-capeIT
+            $CustomerDetailsTableHTMLString = $LayoutObject->AgentCustomerDetailsViewTable(
+                Data          => { %CustomerData, AJAX => 1 },
+                Ticket        => \%TicketData,
+                CallingAction => $CallingAction,
+                Max           => $ConfigObject->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),
+            );
         }
 
         # build JSON output
         $JSON = $LayoutObject->JSONEncode(
             Data => {
-                CustomerID              => $CustomerID || $CustomerUserID,
-                CustomerTableHTMLString => $CustomerTableHTMLString,
-
-                # KIX4OTRS-capeIT
+                CustomerID                     => $CustomerID || $CustomerUserID,
+                CustomerTableHTMLString        => $CustomerTableHTMLString,
                 CustomerDetailsTableHTMLString => $CustomerDetailsTableHTMLString,
-
-                # EO KIX4OTRS-capeIT
             },
         );
     }
@@ -294,8 +272,10 @@ sub Run {
                 Data => \%UserData
             );
 
-            my $CustomerInfoString = '$UserData{UserFullname}<br/><br/>
-                <b>' . $LayoutObject->{LanguageObject}->Translate('Mail') . ':</b> $UserData{UserEmail}';
+            my $CustomerInfoString = $UserData{UserFullname}
+                . '<br/><br/>'
+                . '<b>' . $LayoutObject->{LanguageObject}->Translate('Mail') . ':</b> '
+                . $UserData{UserEmail};
 
             $UserTableHTMLString = $LayoutObject->Output(
                 Template => $CustomerInfoString,

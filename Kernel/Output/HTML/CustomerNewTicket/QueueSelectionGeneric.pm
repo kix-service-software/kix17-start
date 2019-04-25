@@ -57,7 +57,7 @@ sub Run {
         }
 
         # check create permissions
-        my %Queues = $TicketObject->MoveList(
+        my %Queues = $TicketObject->TicketMoveList(
             %{ $Param{ACLParams} },
             CustomerUserID => $Param{Env}->{UserID},
             Type           => 'create',
@@ -74,7 +74,7 @@ sub Run {
         # SelectionType Queue or SystemAddress?
         my %Tos;
         if ( $ConfigObject->Get('CustomerPanelSelectionType') eq 'Queue' ) {
-            %Tos = $TicketObject->MoveList(
+            %Tos = $TicketObject->TicketMoveList(
                 %{ $Param{ACLParams} },
                 CustomerUserID => $Param{Env}->{UserID},
                 Type           => 'create',
@@ -82,7 +82,7 @@ sub Run {
             );
         }
         else {
-            my %Queues = $TicketObject->MoveList(
+            my %Queues = $TicketObject->TicketMoveList(
                 %{ $Param{ACLParams} },
                 CustomerUserID => $Param{Env}->{UserID},
                 Type           => 'create',

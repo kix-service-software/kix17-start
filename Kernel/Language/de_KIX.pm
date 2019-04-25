@@ -177,7 +177,6 @@ sub Data {
     $Lang->{'Determines the way the linked objects are displayed in each zoom mask.'}
         = 'Bestimmt die Art, wie verlinkte Objekte in jeder Zoom-Maske angezeigt werden.';
     $Lang->{'Create new linked person on create new Article or Update Owner.'}
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         = 'Erstellt eine neue verlinkte Person, wenn ein Artikel erstellt oder ein Bearbeiter neu gesetzt wird.';
     $Lang->{'Defines which persons should not be added on AutoCreateLinkedPerson'}
         = 'Legt fest, welche Personen nicht automatisch bei AutoCreateLinkedPerson hinzugefügt werden sollen.';
@@ -467,7 +466,6 @@ sub Data {
 
     # KIX4OTRS_Ticket.xml
     $Lang->{'Shows all owners and responsibles in selecetions.'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Legt die Anzeige aller Bearbeiter und Verantwortlichen als Standard fest.';
     $Lang->{'Default body for a forwarded email.'} =
         'Standardinhalt für eine weitergeleitete Email.';
@@ -837,23 +835,18 @@ sub Data {
         'Umgang mit Zeitbuchung am Original-Artikel?';
     $Lang->{'Change to residue'}   = 'Auf Rest verringern';
     $Lang->{'Leave unchanged'}     = 'Unverändert lassen';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Owner / Responsible'} = 'Bearbeiter / Verantwortlicher';
     $Lang->{'Change the ticket owner and responsible!'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Ändern des Ticket-Bearbeiters und -Verantwortlichen!';
     $Lang->{'Perhaps, you forgot to enter a ticket number!'} =
         'Bitte geben Sie eine Ticket-Nummer ein';
     $Lang->{'Sorry, no ticket found for ticket number: '} =
         'Es konnte kein Ticket gefunden werden für Ticket-Nummer: ';
     $Lang->{'Sorry, you need to be owner of the new ticket to do this action!'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Sie müssen der Bearbeiter des neuen Tickets sein, um diese Aktion auszuführen!';
     $Lang->{'Sorry, you need to be owner of the selected ticket to do this action!'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Sie müssen der Bearbeiter des ausgewählten Tickets sein, um diese Aktion auszuführen!';
     $Lang->{'Please contact your admin.'}     = 'Bitte kontaktieren Sie Ihren Administrator.';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Please change the owner first.'} = 'Bitte ändern Sie zunächst den Bearbeiter.';
     $Lang->{'Sorry, you are not a member of allowed groups!'} =
         'Bitte entschuldigen Sie, aber Sie nicht Mitglied der berechtigten Gruppen!';
@@ -940,7 +933,6 @@ sub Data {
     $Lang->{
         'If ticket responsible feature is enabled, set automatically the owner as responsible on owner set.'
         } =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Wenn das Ticket-Verantwortlichkeits-Featues aktiviert ist, wird beim nicht gesetzten Verantwortlichen der Bearbeiter auch automatisch als Verantwortlich gesetzt.';
 
     #EO KIX4OTRS_ResponsibleAutoSetPerTicketType.xml
@@ -1057,7 +1049,6 @@ sub Data {
 
     # UserQueueSelectionStyle...
     $Lang->{'Queue selection style'}       = 'Queueauswahl - Methode';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Owner selection style'}       = 'Bearbeiterauswahl - Methode';
     $Lang->{'Responsible selection style'} = 'Verantwortlichenauswahl - Methode';
     $Lang->{'Selection Style'}             = 'Auswahlmethode';
@@ -1074,11 +1065,8 @@ sub Data {
     $Lang->{'Pending Time'}            = 'Erinnerungszeit';
     $Lang->{'Pending DateTime'}        = 'Wartezeitpunkt';
     $Lang->{'Pending UntilTime'}       = 'Warten bis';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'OwnerLogin'}              = 'Bearbeiter (Login)';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Owner Login'}             = 'Bearbeiter (Login)';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Owner Information'}       = 'Information Bearbeiter';
     $Lang->{'ResponsibleLogin'}        = 'Verantw. (Login)';
     $Lang->{'Responsible Login'}       = 'Verantw. (Login)';
@@ -1210,7 +1198,6 @@ sub Data {
     $Lang->{'Assigned CIs'}                    = 'Zugewiesene CIs';
     $Lang->{'Config Item Data'}                = 'CI Daten';
     $Lang->{'Show CILinks Selection'}          = 'Anzahl der verlinkten ConfigItems pro Seite';
-    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Lang->{'Contact info CILinks selection'}  = 'Ansprechpartner-Info: verlinkte ConfigItems';
     $Lang->{'File is no image or image type not supported. Please contact your admin.'}
         = 'Datei ist kein Bild oder Bildtyp wird nicht unterstützt.';
@@ -1380,7 +1367,6 @@ sub Data {
         'Defines the link type which is used for the link creation between ticket and config item.'
         }
         = 'Legt den Link-Typ fest, welcher für die Erzeugung eines Links zwischen Ticket und Config Item genutzt wird.';
-    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Lang->{
         'Common Parameters for the KIXSidebarLinkedCIs backend. You can use CI class specific contact attributes (SearchAttribute:::&lt;CIClass&gt;) as well as multiple contact attributes, separated by comma.'
         }
@@ -1406,7 +1392,6 @@ sub Data {
     $Lang->{'Only attributes of the following types are shown in the list'}
         = 'Nur Attribute folgender Typen werden in der Liste angezeigt';
 
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbieter'
     $Lang->{'Assigned owner'} = 'Zugewiesener Besitzer';
 
     # KIX4OTRS_AgentLinkGraph.xml
@@ -1665,10 +1650,8 @@ sub Data {
         } =
         'Aktiviert die Serviceauswahl im Notiztab des Agenteninterfaces (Ticket::Service muss aktiviert sein).';
     $Lang->{'Sets the ticket owner in the ticket note screen of the agent interface.'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Aktiviert die Ticket-Bearbeiterauswahl im Notiztab des Agenteninterfaces.';
     $Lang->{'Sets if ticket owner must be selected by the agent.'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Legt fest, ob die Auswahl des Bearbeiters ein Pflichtfeld ist.';
     $Lang->{
         'Sets the responsible agent of the ticket in the ticket note screen of the agent interface.'
@@ -1745,7 +1728,6 @@ sub Data {
         } =
         'Aktiviert die Serviceauswahl im Kerndatentab des Agenteninterfaces (Ticket::Service muss aktiviert sein).';
     $Lang->{'Sets the ticket owner in the ticket core data tab of the agent interface.'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Aktiviert die Ticket-Bearbeiterauswahl im Kerndatentab des Agenteninterfaces.';
     $Lang->{
         'Sets the responsible agent of the ticket in the ticket core data tab of the agent interface.'
@@ -1933,7 +1915,6 @@ sub Data {
     $Lang->{'Search for customers.'}             = 'Suche nach Kunden.';
     $Lang->{'Change the ticket classification!'} = 'ändern der Ticket-Klassifizierung!';
     $Lang->{'Change the ticket responsible!'}    = 'ändern des Ticket-Verantwortlichen!';
-    # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
     $Lang->{'Select new owner'}                  = 'Neuen Bearbeiter auswählen';
     $Lang->{'Filter for SLAs'}                   = 'Filter für SLAs';
 
@@ -1970,7 +1951,6 @@ sub Data {
 
     # service2customeruser ex-/import...
     $Lang->{'Service available for CU'} = 'Service für Kundennutzer verfügbar';
-    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Lang->{'Contact login'}      = 'Ansprechpartner-Login';
     $Lang->{'Validity of service assignment for CU'} =
         'Gültigkeit der Servicezuordnung zu Kundennutzer';
@@ -2241,13 +2221,11 @@ sub Data {
         'Defines if a ticket lock is required in the additional ITSM field screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).'
         }
         =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.';
     $Lang->{
         'Defines if a ticket lock is required in the decision screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).'
         }
         =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.';
     $Lang->{
         'Defines if the service incident state should be shown during service selection in the agent interface.'
@@ -2391,10 +2369,8 @@ sub Data {
     $Self->{Translation}
         ->{'Sets the ticket owner in the additional ITSM field screen of the agent interface.'}
         =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Setzt den Ticket-Bearbeiter in der zusätzliche ITSM Felder-Oberfläche im Agenten-Interface.';
     $Lang->{'Sets the ticket owner in the decision screen of the agent interface.'} =
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Setzt den Bearbeiter in der Entscheidungs-Oberfläche für Tickets im Agentenbereich.';
     $Lang->{
         'Sets the ticket responsible in the additional ITSM field screen of the agent interface.'
@@ -4081,7 +4057,6 @@ sub Data {
     $Lang->{'Restrict export per search'} = 'Export mittels Suche einschränken';
     $Lang->{'Object backend module registration for the import/export module.'}
         = 'Objekt-Backend Modul Registration des Import/Export Moduls.';
-    # rkaiser - T#2017020290001194 - changed customer user to contact
     $Lang->{
         'Defines which customer ID to use if no company defined - only relevant for new contacts.'
         }

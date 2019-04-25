@@ -384,8 +384,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldsList{ $GetParam{Name} } &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -396,8 +395,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldData->{InternalField} &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -899,42 +897,38 @@ sub _DefaultValueSearch {
             . $DatabaseFieldKey
             . ', '
             . $DatabaseFieldValue
-            . ', '
-            . $DatabaseFieldSearch
             . ' FROM '
             . $DatabaseTable
             . ' WHERE '
             . $QueryCondition;
 
-            my $Success = $DFRemoteDBObject->Prepare(
-                SQL   => $SQL,
-            );
-            if ( !$Success ) {
-                return;
+        my $Success = $DFRemoteDBObject->Prepare(
+            SQL   => $SQL,
+        );
+        if ( !$Success ) {
+            return;
+        }
+
+        my $MaxCount = 1;
+        RESULT:
+        while (my @Row = $DFRemoteDBObject->FetchrowArray()) {
+            my $Key    = $Row[0];
+            next RESULT if ( grep( {/^$Key$/} @Entries ) );
+
+            my $Value = $Row[1];
+            my $Title = $Value;
+            if ( $ShowKeyInTitle ) {
+                $Title .= ' (' . $Key . ')';
             }
 
-            my $MaxCount = 1;
-            RESULT:
-            while (my @Row = $DFRemoteDBObject->FetchrowArray()) {
-                my $Key    = $Row[0];
-                next RESULT if ( grep( /^$Key$/, @Entries ) );
-
-                my $Value  = $Row[1];
-                my $Search = $Row[2];
-
-                my $Title = $Value;
-                if ( $ShowKeyInTitle ) {
-                    $Title .= ' (' . $Key . ')';
-                }
-
-                push @PossibleValues, {
-                    Key    => $Key,
-                    Value  => $Value,
-                    Title  => $Title,
-                };
-                last RESULT if ($MaxCount == 25);
-                $MaxCount++;
-            }
+            push @PossibleValues, {
+                Key    => $Key,
+                Value  => $Value,
+                Title  => $Title,
+            };
+            last RESULT if ($MaxCount == 25);
+            $MaxCount++;
+        }
     }
 
     # build JSON output

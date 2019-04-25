@@ -21,6 +21,8 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
 );
 
+## no critic qw(InputOutput::RequireBriefOpen)
+
 =head1 NAME
 
 Kernel::System::Spelling - spelling lib
@@ -175,7 +177,7 @@ sub Check {
 
     # open spell checker
     my $Spell;
-    if ( !open( $Spell, "-|", "$SpellChecker < $TmpFile" ) ) {    ## no critic
+    if ( !open( $Spell, "-|", "$SpellChecker < $TmpFile" ) ) {
         $Self->{Error} = 1;
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
@@ -217,9 +219,10 @@ sub Check {
 
         # '&' words with suggestions
         elsif ( $Line =~ /^& (.+?) .+?: (.*)$/ ) {
-            my @Replace = split /, /, $2;
+            my $Word    = $1;
+            my @Replace = split( /, /, $2 );
             $Data{$CurrentLine} = {
-                Word    => $1,
+                Word    => $Word,
                 Replace => \@Replace,
                 Line    => $Lines,
             };
@@ -230,6 +233,8 @@ sub Check {
             $Lines++;
         }
     }
+
+    close($Spell);
 
     # drop double words and add line of double word
     # bug#9914: only delete double words for non-wysiwyg spellchecker
@@ -253,14 +258,11 @@ sub Check {
                 defined $Data{$Word}
                 && $Data{$Word}->{Word}
                 && $Data{$Word}->{Word} =~ /^$IgnoreWord$/i
-                )
-            {
+            ) {
                 delete $Data{$Word};
             }
         }
     }
-
-    close($Spell);
 
     return %Data;
 }

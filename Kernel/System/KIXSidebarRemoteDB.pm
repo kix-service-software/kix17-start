@@ -39,8 +39,7 @@ sub KIXSidebarRemoteDBSearch {
         DatabaseTable ShowAttributes
         SearchAttribute SearchValue
         )
-        )
-    {
+    ) {
         if ( !$Param{$_} ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
@@ -92,14 +91,12 @@ sub KIXSidebarRemoteDBSearch {
         && @RestrictedValues
         && scalar(@RestrictedMandatory) == scalar(@RestrictedValues)
         && scalar(@RestrictedAttributes) == scalar(@RestrictedValues)
-        )
-    {
+    ) {
         for (my $Index = 0; $Index < scalar(@RestrictedAttributes); $Index++) {
             if (
                 $RestrictedMandatory[$Index]
                 && !$RestrictedValues[$Index]
-                )
-            {
+            ) {
                 return \@List;
             }
         }
@@ -119,8 +116,7 @@ sub KIXSidebarRemoteDBSearch {
         @RestrictedAttributes
         && @RestrictedValues
         && scalar(@RestrictedAttributes) == scalar(@RestrictedValues)
-        )
-    {
+    ) {
         for (my $Index = 0; $Index < scalar(@RestrictedAttributes); $Index++) {
             if ($RestrictedValues[$Index]) {
                 $QueryCondition .= ' AND ('

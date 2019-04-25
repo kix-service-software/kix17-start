@@ -26,6 +26,8 @@ sub Configure {
     my ( $Self, %Param ) = @_;
 
     $Self->Description('Lists available commands.');
+
+    return;
 }
 
 sub Run {
@@ -51,11 +53,7 @@ sub Run {
     COMMAND:
     for my $Command ( $Self->ListAllCommands() ) {
 
-        # KIXCore-capeIT
         if ( $Kernel::OM->Get('Kernel::System::Main')->Require( $Command, Silent => 1 ) ) {
-
-            # EO KIXCore-capeIT
-
             my $CommandObject = $Kernel::OM->Get($Command);
             my $CommandName   = $CommandObject->Name();
 
@@ -68,11 +66,7 @@ sub Run {
             }
             $UsageText .= sprintf( " <green>%-40s</green> - %s\n",
                 $CommandName, $CommandObject->Description() );
-
-            # KIXCore-capeIT
         }
-
-        # EO KIXCore-capeIT
     }
 
     $Self->Print($UsageText);
@@ -99,7 +93,6 @@ sub Run {
 sub ListAllCommands {
     my ( $Self, %Param ) = @_;
 
-    # KIXCore-capeIT
     my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
 
     my @KIXFolders = ( $Home . '/Kernel/System/Console/Command' );
@@ -112,9 +105,6 @@ sub ListAllCommands {
 
     my @CommandFiles = ();
     for my $CommandDirectory (@KIXFolders) {
-
-        # my @CommandFiles = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
-        #     Directory => $Kernel::OM->Get('Kernel::Config')->Get('Home') . '/Kernel/System/Console/Command',
         my @CommandFilesTmp = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
             Directory => $CommandDirectory,
             Filter    => '*.pm',
@@ -123,8 +113,6 @@ sub ListAllCommands {
 
         @CommandFiles = ( @CommandFiles, @CommandFilesTmp );
     }
-
-    # EO KIXCore-capeIT
 
     my @Commands;
 

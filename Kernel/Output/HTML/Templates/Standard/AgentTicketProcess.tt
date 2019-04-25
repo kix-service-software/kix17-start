@@ -16,12 +16,10 @@
 <div class="MainBox ARIARoleMain FormScreen">
     <h1>[% Translate("Create New Process Ticket") | html %]</h1>
     <p class="AsteriskExplanation">[% Translate("All fields marked with an asterisk (*) are mandatory.") | html %]</p>
-# KIX4OTRS-capeIT
      <div class="LayoutFixedSidebar SidebarLast">
         <div class="SidebarColumn">
             [% Data.KIXSidebarContent %]
         </div>
-# EO KIX4OTRS-capeIT
     <div class="ContentColumn">
         <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="NewProcessTicket" class="Validate PreventMultipleSubmits">
             <input type="hidden" name="Action" value="[% Env("Action") %]"/>
@@ -45,9 +43,7 @@
         <div id="ActivityDialogContent"></div>
         </div>
     </div>
-# KIX4OTRS-capeIT
 </div>
-# EO KIX4OTRS-capeIT
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Agent.TicketProcess.Init();

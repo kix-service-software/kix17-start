@@ -115,8 +115,7 @@ sub Run {
     $Success = 0;
     if (
         $Param{Config}->{Title} ne $Param{Ticket}->{Title}
-        )
-    {
+    ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketTitleUpdate(
             Title    => $Param{Config}->{Title},
             TicketID => $Param{Ticket}->{TicketID},

@@ -59,7 +59,9 @@ sub Run {
 
         # Get all matching commands
         my @CommandList = $Self->ListAllCommands();
-        @CommandList = map { my $T = $_; $T =~ s/^Kernel::System::Console::Command:://xms; $T } @CommandList;
+        for my $Command ( @CommandList ) {
+            $Command =~ s/^Kernel::System::Console::Command:://xms;
+        }
         if ($CurrentWord) {
             @CommandList = grep { $_ =~ m/\Q$CurrentWord\E/xms } @CommandList;
         }
@@ -92,7 +94,7 @@ sub Run {
         }
 
         # Hide options that are already on the commandline
-        @Options = grep { $CompLine !~ m/(^|\s)\Q$_\E(\s|=|$)/xms } @Options;
+        @Options = grep { $CompLine !~ m/(?:^|\s)\Q$_\E(?:\s|=|$)/xms } @Options;
 
         print join( "\n", @Options );
     }

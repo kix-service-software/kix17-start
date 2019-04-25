@@ -11,6 +11,8 @@ package Kernel::System::ITSMConfigItem::XML::Type::EncryptedText;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::System::Log'
 );
@@ -43,8 +45,6 @@ sub new {
     # allocate new hash for object
     my $Self = {};
     bless( $Self, $Type );
-
-    $Self->{LogObject} = $Kernel::OM->Get('Kernel::System::Log');
 
     return $Self;
 }
@@ -83,7 +83,7 @@ sub StatsAttributeCreate {
     # check needed stuff
     for my $Argument (qw(Key Name Item)) {
         if ( !$Param{$Argument} ) {
-            $Self->{LogObject}->Log(
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Need $Argument!",
             );
@@ -224,7 +224,6 @@ sub _Encrypt {
 }
 
 1;
-
 
 =head1 VERSION
 

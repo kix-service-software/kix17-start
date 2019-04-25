@@ -78,11 +78,10 @@ sub new {
     my $CalendarIndex    = 1;
     my %CalendarNameList = qw{};
     while (
-        $Kernel::OM->Get('Kernel::Config')->Get( "TimeZone::Calendar" . $CalendarIndex . "Name" ) )
-    {
+        $Kernel::OM->Get('Kernel::Config')->Get( "TimeZone::Calendar" . $CalendarIndex . "Name" )
+    ) {
         $CalendarNameList{$CalendarIndex} =
-            $Kernel::OM->Get('Kernel::Config')
-            ->Get( "TimeZone::Calendar" . $CalendarIndex . "Name" );
+            $Kernel::OM->Get('Kernel::Config')->Get( "TimeZone::Calendar" . $CalendarIndex . "Name" );
         $CalendarIndex++;
     }
     my %TmpHash = reverse(%CalendarNameList);
@@ -98,10 +97,9 @@ sub new {
                 Class => 'ITSM::SLA::Type',
             );
 
-            if ( $Self->{SLATypeList} && ( ref( $Self->{SLATypeList} ) eq 'HASH' ) )
-            {
-                my %TmpHash = reverse( %{ $Self->{SLATypeList} } );
-                $Self->{ReverseSLATypeList} = \%TmpHash;
+            if ( $Self->{SLATypeList} && ( ref( $Self->{SLATypeList} ) eq 'HASH' ) ) {
+                my %TmpSLATypeHash = reverse( %{ $Self->{SLATypeList} } );
+                $Self->{ReverseSLATypeList} = \%TmpSLATypeHash;
             }
         }
     }
@@ -277,8 +275,7 @@ sub MappingObjectAttributesGet {
         if (
             $Preferences{$Item}->{SelectionSource}
             && $Preferences{$Item}->{PrefKey} =~ /^(.+)ID$/
-            )
-        {
+        ) {
             my $NamePart = $1;
             push(
                 @{$ElementList},
@@ -549,8 +546,13 @@ sub ExportDataGet {
             next PREFERENCECHECK if ( !$Preferences{$CurrKey} );
 
             # check if this is an ID-attribute...
-            next PREFERENCECHECK if ( $CurrKey !~ /^(.+)ID$/ );
-            my $NamePart = $1;
+            my $NamePart;
+            if ( $CurrKey =~ /^(.+)ID$/ ) {
+                $NamePart = $1;
+            }
+            else {
+                next PREFERENCECHECK;
+            }
 
             # skip if an attribute with a similar name but no "ID" suffix exists...
             next PREFERENCECHECK if ( $SLAData{$NamePart} );
@@ -560,26 +562,21 @@ sub ExportDataGet {
             if (
                 $Preferences{$CurrKey}->{SelectionSource}
                 && $Preferences{$CurrKey}->{SelectionSource} eq 'QueueList'
-                )
-            {
+            ) {
                 %SelectionList = $Kernel::OM->Get('Kernel::System::Queue')->QueueList();
             }
             elsif (
                 $Preferences{$CurrKey}->{SelectionSource}
                 && $Preferences{$CurrKey}->{SelectionSource} eq 'TypeList'
-                )
-            {
+            ) {
                 %SelectionList = $Kernel::OM->Get('Kernel::System::Type')->TypeList();
             }
             elsif (
                 ( $Preferences{$CurrKey}->{SelectionSource} )
-                &&
-                ( $Preferences{$CurrKey}->{SelectionSource} eq 'GeneralCatalog' )
-                &&
-                ( $Preferences{$CurrKey}->{GeneralCatalogClass} ) &&
-                $Self->{GeneralCatalogObject}
-                )
-            {
+                && ( $Preferences{$CurrKey}->{SelectionSource} eq 'GeneralCatalog' )
+                && ( $Preferences{$CurrKey}->{GeneralCatalogClass} )
+                && $Self->{GeneralCatalogObject}
+            ) {
                 my $ItemListRef = $Self->{GeneralCatalogObject}->ItemList(
                     Class => $Preferences{$CurrKey}->{GeneralCatalogClass},
                 );
@@ -730,8 +727,7 @@ sub ImportDataSave {
         if (
             $MappingObjectData->{Identifier}
             && $Identifier{ $MappingObjectData->{Key} }
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Can't import this entity. "
@@ -775,8 +771,7 @@ sub ImportDataSave {
         $Self->{ReverseSLATypeList}
         && $NewSLAData{Type}
         && $Self->{ReverseSLATypeList}->{ $NewSLAData{Type} }
-        )
-    {
+    ) {
         $NewSLAData{TypeID} = $Self->{ReverseSLATypeList}->{ $NewSLAData{Type} };
     }
     if ( !$NewSLAData{TypeID} ) {
@@ -846,11 +841,9 @@ sub ImportDataSave {
         }
         elsif (
             ( $Preferences{$CurrUsedKey}->{SelectionSource} eq 'GeneralCatalog' )
-            &&
-            ( $Preferences{$CurrUsedKey}->{GeneralCatalogClass} ) &&
-            $Self->{GeneralCatalogObject}
-            )
-        {
+            && ( $Preferences{$CurrUsedKey}->{GeneralCatalogClass} )
+            && $Self->{GeneralCatalogObject}
+        ) {
             my $ItemListRef = $Self->{GeneralCatalogObject}->ItemList(
                 Class => $Preferences{$CurrUsedKey}->{GeneralCatalogClass},
             );
@@ -864,8 +857,7 @@ sub ImportDataSave {
         if (
             $NewSLAData{$CurrUsedKey}
             && ( !$NewSLAData{$NamePart} || $NamePart eq $CurrUsedKey )
-            )
-        {
+        ) {
             $NewSLAData{$NamePart} = $SelectionList{ $NewSLAData{$CurrUsedKey} };
         }
 
@@ -889,8 +881,7 @@ sub ImportDataSave {
             !$NewSLAData{$CurrUsedKey}
             && $NewSLAData{$NamePart}
             && $ReverseSelectionList{ $NewSLAData{$NamePart} }
-            )
-        {
+        ) {
             $NewSLAData{$CurrUsedKey} = $ReverseSelectionList{ $NewSLAData{$NamePart} };
         }
 
@@ -899,8 +890,7 @@ sub ImportDataSave {
             !$NewSLAData{$CurrUsedKey}
             && $NewSLAData{$NamePart}
             && !$ReverseSelectionList{ $NewSLAData{$NamePart} }
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Can't import this entity. "
@@ -922,8 +912,7 @@ sub ImportDataSave {
     if (
         ( !$SLAIdentifierKey || $SLAIdentifierKey eq 'Name' || !$NewSLAData{$SLAIdentifierKey} )
         && $NewSLAData{Name}
-        )
-    {
+    ) {
         $SLAID = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
             Name => $NewSLAData{Name},
         );
@@ -956,8 +945,7 @@ sub ImportDataSave {
     for my $CurrKey (
         qw( FirstResponseTime FirstResponseNotify UpdateTime
         UpdateNotify SolutionTime SolutionNotify MinTimeBetweenIncidents)
-        )
-    {
+    ) {
         if ( $SLAData{$CurrKey} && $SLAData{$CurrKey} eq '-' ) {
             delete( $SLAData{$CurrKey} );
         }

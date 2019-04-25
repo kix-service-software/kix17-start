@@ -9,7 +9,6 @@
 # --
 [%- INCLUDE "HTTPHeaders.tt" -%]
 # With this X-Header, Core.AJAX can recognize that the AJAX request returned the login page (session timeout) and perform a redirect.
-#rbo - T2016121190001552 - renamed X-OTRS headers
 X-KIX-Login: [% Env("Baselink") %]
 
 <!DOCTYPE html>
@@ -77,7 +76,6 @@ X-KIX-Login: [% Env("Baselink") %]
 # resposive CSS will not be loaded in "desktop mode" or if the document is within an iframe (customer overview in ticket phone overlay)
     <script>
       (function(doc, win) {
-          // #rbo - T2016121190001552 - renamed OTRS to KIX
           var isIFrame = (win.top.location.href !== win.location.href),
               isPopup = (win.name.search(/^(OTRS|KIX)Popup_/) != -1);
           try {
@@ -315,14 +313,6 @@ X-KIX-Login: [% Env("Baselink") %]
 [% WRAPPER JSOnDocumentComplete %]
     <script type="text/javascript">//<![CDATA[
         Core.Agent.Login.Init([% Data.LoginFailed %]);
-
-        // Clear chat availability
-        $('#LoginButton').click(function () {
-            localStorage.removeItem('Availability');
-
-            // continue
-            return true;
-        });
 
         $('#LostPassword').click(function () {
             $('#LoginBox').hide();

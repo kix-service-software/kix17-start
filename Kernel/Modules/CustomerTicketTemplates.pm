@@ -32,7 +32,7 @@ sub new {
     $Self->{ParamObject}  = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     $Self->{Config} = $Self->{ConfigObject}->Get('Ticket::Frontend::CustomerTicketTemplates');
-    
+
     # load all template backend modules
     my $BackendDir = '/Kernel/Output/HTML/CustomerTicketTemplates';
     for my $INCDir ( reverse @INC ) {
@@ -43,14 +43,14 @@ sub new {
             my @BackendFiles = $Self->{MainObject}->DirectoryRead(
                 Directory => $FullBackendDir,
                 Filter    => '*.pm',
-            );    
+            );
             for my $Backend (@BackendFiles) {
                 $Backend =~ s{\A.*\/(.+?).pm\z}{$1}xms;
                 $Self->{BackendObjects}->{$Backend} = $Kernel::OM->Get("Kernel::Output::HTML::CustomerTicketTemplates::$Backend");
             }
         }
     }
-    
+
     return $Self;
 }
 
@@ -66,14 +66,14 @@ sub Run {
     my %TemplateList;
     foreach my $BackendObject (keys %{$Self->{BackendObjects}}) {
         my %BackendTemplateList = $Self->{BackendObjects}->{$BackendObject}->TicketTemplateList(
-            UserID => $Self->{UserID}, 
+            UserID => $Self->{UserID},
         );
         foreach my $TemplateID (keys %BackendTemplateList) {
             # only active groups
             next if !$PortalGroups{$BackendTemplateList{$TemplateID}->{PortalGroupID}};
-            
-            $TemplateList{$BackendTemplateList{$TemplateID}->{PortalGroupID}}->{$BackendObject.'::'.$BackendTemplateList{$TemplateID}->{Name}} = $BackendTemplateList{$TemplateID}; 
-        } 
+
+            $TemplateList{$BackendTemplateList{$TemplateID}->{PortalGroupID}}->{$BackendObject.'::'.$BackendTemplateList{$TemplateID}->{Name}} = $BackendTemplateList{$TemplateID};
+        }
     }
 
     # filter ticket templates
@@ -81,39 +81,40 @@ sub Run {
         foreach my $PortalGroupID ( keys %TemplateList ) {
             foreach my $TemplateKey (keys %{$TemplateList{$PortalGroupID}}) {
                 my $UseTemplate = 1;
-        
+
                 for my $UserAttributeKey ( keys %{ $Self->{Config}->{UserAttributeRestriction} } ) {
-                    next if ( $UserAttributeKey !~ /^($TemplateList{$PortalGroupID}->{$TemplateKey}->{Name})\:\:(.*)/ );
-                    my $RestrictionKey = $UserAttributeKey;
-                    my $UserAttribute  = $2;
-                    if (
-                        !$Self->{$UserAttribute}
-                        || $Self->{$UserAttribute}
-                        =~ /$Self->{Config}->{UserAttributeRestriction}->{$RestrictionKey}/
-                        )
-                    {
-                        $UseTemplate = 0;
-                        last;
+
+                    if ( $UserAttributeKey =~ /^(?:$TemplateList{$PortalGroupID}->{$TemplateKey}->{Name})\:\:(.*)/ ) {
+                        my $UserAttribute  = $1;
+                        my $RestrictionKey = $UserAttributeKey;
+
+                        if (
+                            !$Self->{$UserAttribute}
+                            || $Self->{$UserAttribute} =~ /$Self->{Config}->{UserAttributeRestriction}->{$RestrictionKey}/
+                        ) {
+                            $UseTemplate = 0;
+                            last;
+                        }
                     }
                 }
-                    
+
                 if (!$UseTemplate) {
                     delete $TemplateList{$PortalGroupID}->{$TemplateKey};
                 }
             }
-            
+
             # remove whole portal group if no templates are available for this one
             if (!IsHashRefWithData($TemplateList{$PortalGroupID})) {
                 delete $TemplateList{$PortalGroupID};
             }
         }
     }
-    
+
     # create group selectors
     foreach my $PortalGroupID (sort { $PortalGroups{$a} cmp $PortalGroups{$b} } keys %PortalGroups) {
         # only groups with templates
         next if !$TemplateList{$PortalGroupID};
-        
+
         my %PortalGroup = $Self->{CustomerPortalGroupObject}->PortalGroupGet(
             PortalGroupID => $PortalGroupID,
         );
@@ -128,17 +129,16 @@ sub Run {
                 %{$PortalGroup{Icon}},
             }
         );
-
     }
 
     # create portal groups
     foreach my $PortalGroupID (sort { $PortalGroups{$a}->{Name} cmp $PortalGroups{$b}->{Name} } keys %TemplateList) {
-        
+
         $Self->{LayoutObject}->Block(
             Name => 'PortalGroup',
             Data => $PortalGroups{$PortalGroupID},
         );
-    
+
         foreach my $TemplateKey (sort { $TemplateList{$PortalGroupID}->{$a}->{Name} cmp $TemplateList{$PortalGroupID}->{$b}->{Name} } keys %{$TemplateList{$PortalGroupID}}) {
             $Self->{LayoutObject}->Block(
                 Name => 'TicketTemplate',

@@ -65,6 +65,7 @@ sub Run {
     if ( !open( $CSV, ">", $FileName ) ) {
         die "\nCould not open file: <$FileName> ($!).\n";
     }
+    close( $CSV );
 
     #-------------------------------------------------------------------------------
     # process CSV...

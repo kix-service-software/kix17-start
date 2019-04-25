@@ -30,7 +30,6 @@ sub Run {
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my $Result;
     my %GetParam;
 
     # article get customer emails
@@ -149,8 +148,7 @@ sub _BuildTicketContactsSelection {
     if (
         !$UserPreferences{UserKIXSidebarCustomerEmailSelection}
         || $UserPreferences{UserKIXSidebarCustomerEmailSelection} eq 'LinkedPersons'
-        )
-    {
+    ) {
 
         # get linked objects
         my $LinkListWithData = $LinkObject->LinkListWithData(
@@ -165,16 +163,14 @@ sub _BuildTicketContactsSelection {
             $LinkListWithData
             && $LinkListWithData->{Person}
             && ref( $LinkListWithData->{Person} ) eq 'HASH'
-            )
-        {
+        ) {
             for my $LinkType ( sort keys %{ $LinkListWithData->{Person} } ) {
                 next if !$LinkListWithData->{Person}->{$LinkType};
                 next if !$LinkListWithData->{Person}->{$LinkType}->{Source};
                 next if ref $LinkListWithData->{Person}->{$LinkType}->{Source} ne 'HASH';
 
                 SEARCHRESULT:
-                for my $UserID ( sort keys %{ $LinkListWithData->{Person}->{$LinkType}->{Source} } )
-                {
+                for my $UserID ( sort keys %{ $LinkListWithData->{Person}->{$LinkType}->{Source} } ) {
                     next if $EmailData{'Ticket Customer'}->{$UserID};
                     my $Found = 0;
                     my $CustomerLogin
@@ -189,8 +185,7 @@ sub _BuildTicketContactsSelection {
                     if (
                         defined $SearchResultCustomerUserData{UserCustomerID}
                         && $UserCustomerID eq $SearchResultCustomerUserData{UserCustomerID}
-                        )
-                    {
+                    ) {
                         if ( $ViewFrom eq 'Realname' ) {
                             $EmailData{'Customer Contact'}->{$CustomerLogin}
                                 = $SearchResultCustomerUserData{UserFirstname} . ' '
@@ -263,8 +258,7 @@ sub _BuildTicketContactsSelection {
                                 );
 
                             # customer is ticket customer
-                            if ( $UserCustomerID eq $SearchResultCustomerUserData{UserCustomerID} )
-                            {
+                            if ( $UserCustomerID eq $SearchResultCustomerUserData{UserCustomerID} ) {
                                 if ( $ViewFrom eq 'Realname' ) {
                                     $EmailData{'Customer Contact'}->{$SearchResult}
                                         = $SearchResultCustomerUserData{UserFirstname} . ' '
@@ -327,8 +321,7 @@ sub _BuildTicketContactsSelection {
             my $Contact (
             sort { $EmailData{$ContactType}->{$a} cmp $EmailData{$ContactType}->{$b} }
             keys %{ $EmailData{$ContactType} }
-            )
-        {
+        ) {
             push(
                 @EmailDataList,
                 {

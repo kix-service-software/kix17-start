@@ -49,9 +49,9 @@ sub new {
     bless( $Self, $Type );
 
     # create needed objects
-    $Self->{LinkObject} = $Kernel::OM->Get('Kernel::System::LinkObject');
-    $Self->{LogObject}  = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{TicketObject}  = $Kernel::OM->Get('Kernel::System::Ticket');
+    $Self->{LinkObject}   = $Kernel::OM->Get('Kernel::System::LinkObject');
+    $Self->{LogObject}    = $Kernel::OM->Get('Kernel::System::Log');
+    $Self->{TicketObject} = $Kernel::OM->Get('Kernel::System::Ticket');
 
     # return
     return $Self;
@@ -160,8 +160,7 @@ sub Search {
     my %LinkedTickets;
     for my $TicketID (
         keys %{ $LinkList->{Ticket}->{ $Param{LinkType} }->{ $Param{LinkDirection} } }
-        )
-    {
+    ) {
         $LinkedTickets{$TicketID} = 1;
     }
 
@@ -207,8 +206,7 @@ sub Search {
     for my $TicketID (
         sort { $SearchList{$a} cmp $SearchList{$b} }
         keys %SearchList
-        )
-    {
+    ) {
         my %Ticket = $Self->{TicketObject}->TicketGet(
             TicketID => $TicketID,
         );

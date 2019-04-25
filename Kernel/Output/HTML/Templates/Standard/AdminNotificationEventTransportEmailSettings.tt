@@ -15,7 +15,6 @@
 </div>
 <div class="Clear"></div>
 
-# NotificationEventX-capeIT
 [% RenderBlockStart("EmailXDynamicField") %]
 <label for="RecipientAgentDF">[% Translate("DynamicFields") | html %] [% Translate("User") | html %]: </label>
 <div class="Field">
@@ -43,7 +42,6 @@
     [% Data.RecipientSubjectStrg %]
 </div>
 <div class="Clear"></div>
-# EO NotificationEventX-capeIT
 
 <label for="NotificationArticleTypeID">[% Translate("Notification article type") | html %]: </label>
 <div class="Field">

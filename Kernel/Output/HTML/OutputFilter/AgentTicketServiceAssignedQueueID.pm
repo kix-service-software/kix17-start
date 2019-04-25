@@ -35,8 +35,7 @@ sub Run {
     my $SearchPattern
         = '(FormUpdate\(.*?\'AJAXUpdate\'\,\s\'ServiceID\'.*?\])(\)\;)';
     my $ReplacementString = ',function(){ Core.KIX4OTRS.ServiceAssignedQueue(); }';
-    if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms )
-    {
+    if ( ${ $Param{Data} } =~ m{ $SearchPattern }ixms ) {
         # do replace
         ${ $Param{Data} }
             =~ s{ $SearchPattern }{ $1$ReplacementString$2 }ixms;

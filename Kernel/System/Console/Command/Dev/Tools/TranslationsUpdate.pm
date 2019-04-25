@@ -118,8 +118,7 @@ sub Run {
     for my $Language (
         sort { $Stats{$b}->{Translated} <=> $Stats{$a}->{Translated} }
         keys %Stats
-        )
-    {
+    ) {
         my $Strings      = $Stats{$Language}->{Total};
         my $Translations = $Stats{$Language}->{Translated};
         $Self->Print( "\t" . sprintf( "%7s", $Language ) . ": " );
@@ -435,7 +434,7 @@ sub HandleLanguage {
         },
     );
     if ( $TranslitLanguagesMap{$Language} ) {
-        $TranslitObject = new Lingua::Translit( $TranslitLanguagesMap{$Language}->{TranslitTable} );    ## no critic
+        $TranslitObject = Lingua::Translit->new( $TranslitLanguagesMap{$Language}->{TranslitTable} );
         $TranslitLanguageCoreObject = Kernel::Language->new(
             UserLanguage    => $TranslitLanguagesMap{$Language}->{SourceLanguage},
             TranslationFile => 1,
@@ -703,7 +702,6 @@ sub WritePerlLanguageFile {
         }
     }
 
-    my %MetaData;
     my $NewOut = '';
 
     # translating a module
@@ -738,60 +736,14 @@ EOF
 
     # translating the core
     else {
-        ## no critic
         open( my $In, '<', $Param{LanguageFile} ) || die "Can't open: $Param{LanguageFile}\n";
-        ## use critic
-        while (<$In>) {
-            my $Line = $_;
-            $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$Line );
-            if ( !$MetaData{DataPrinted} ) {
-                $NewOut .= $Line;
-            }
-            if ( $_ =~ /\$\$START\$\$/ && !$MetaData{DataPrinted} ) {
-                $MetaData{DataPrinted} = 1;
-
-                $NewOut .= "    # possible charsets\n";
-                $NewOut .= "    \$Self->{Charset} = [";
-                for ( $LanguageCoreObject->GetPossibleCharsets() ) {
-                    $NewOut .= "'$_', ";
-                }
-                $NewOut .= "];\n";
-                my $Completeness = 0;
-                if ($StringsTranslated) {
-                    $Completeness = $StringsTranslated / $StringsTotal;
-                }
-                $NewOut .= <<"EOF";
-    # date formats (\%A=WeekDay;\%B=LongMonth;\%T=Time;\%D=Day;\%M=Month;\%Y=Year;)
-    \$Self->{DateFormat}          = '$LanguageCoreObject->{DateFormat}';
-    \$Self->{DateFormatLong}      = '$LanguageCoreObject->{DateFormatLong}';
-    \$Self->{DateFormatShort}     = '$LanguageCoreObject->{DateFormatShort}';
-    \$Self->{DateInputFormat}     = '$LanguageCoreObject->{DateInputFormat}';
-    \$Self->{DateInputFormatLong} = '$LanguageCoreObject->{DateInputFormatLong}';
-    \$Self->{Completeness}        = $Completeness;
-
-    # csv separator
-    \$Self->{Separator} = '$LanguageCoreObject->{Separator}';
-
-EOF
-
-                if ( $LanguageCoreObject->{TextDirection} ) {
-                    $NewOut .= <<"EOF";
-    # TextDirection rtl or ltr
-    \$Self->{TextDirection} = '$LanguageCoreObject->{TextDirection}';
-
-EOF
-                }
-                $NewOut .= <<"EOF";
-    \$Self->{Translation} = {
-$Data
-EOF
-            }
-            if ( $_ =~ /\$\$STOP\$\$/ ) {
-                $NewOut .= "    };\n";
-                $NewOut .= $Line;
-                $MetaData{DataPrinted} = 0;
-            }
-        }
+        $NewOut = $Self->_ReadContent(
+            FileHandle         => $In,
+            LanguageCoreObject => $LanguageCoreObject,
+            Data               => $Data,
+            StringsTranslated  => $StringsTranslated,
+            StringsTotal       => $StringsTotal,
+        );
         close $In;
     }
 
@@ -808,6 +760,69 @@ EOF
     );
 
     return 1;
+}
+
+sub _ReadContent {
+    my ( $Self, %Param ) = @_;
+
+    my %MetaData;
+    my $Output = '';
+
+    my $LanguageCoreObject = $Param{LanguageCoreObject};
+
+    while (<$Param{FileHandle}>) {
+        my $Line = $_;
+        $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$Line );
+        if ( !$MetaData{DataPrinted} ) {
+            $Output .= $Line;
+        }
+        if ( $_ =~ /\$\$START\$\$/ && !$MetaData{DataPrinted} ) {
+            $MetaData{DataPrinted} = 1;
+
+            $Output .= "    # possible charsets\n";
+            $Output .= "    \$Self->{Charset} = [";
+            for ( $LanguageCoreObject->GetPossibleCharsets() ) {
+                $Output .= "'$_', ";
+            }
+            $Output .= "];\n";
+            my $Completeness = 0;
+            if ($Param{StringsTranslated}) {
+                $Completeness = $Param{StringsTranslated} / $Param{StringsTotal};
+            }
+            $Output .= <<"EOF";
+    # date formats (\%A=WeekDay;\%B=LongMonth;\%T=Time;\%D=Day;\%M=Month;\%Y=Year;)
+    \$Self->{DateFormat}          = '$LanguageCoreObject->{DateFormat}';
+    \$Self->{DateFormatLong}      = '$LanguageCoreObject->{DateFormatLong}';
+    \$Self->{DateFormatShort}     = '$LanguageCoreObject->{DateFormatShort}';
+    \$Self->{DateInputFormat}     = '$LanguageCoreObject->{DateInputFormat}';
+    \$Self->{DateInputFormatLong} = '$LanguageCoreObject->{DateInputFormatLong}';
+    \$Self->{Completeness}        = $Completeness;
+
+    # csv separator
+    \$Self->{Separator} = '$LanguageCoreObject->{Separator}';
+
+EOF
+
+            if ( $LanguageCoreObject->{TextDirection} ) {
+                $Output .= <<"EOF";
+    # TextDirection rtl or ltr
+    \$Self->{TextDirection} = '$LanguageCoreObject->{TextDirection}';
+
+EOF
+            }
+            $Output .= <<"EOF";
+    \$Self->{Translation} = {
+$Param{Data}
+EOF
+        }
+        if ( $_ =~ /\$\$STOP\$\$/ ) {
+            $Output .= "    };\n";
+            $Output .= $Line;
+            $MetaData{DataPrinted} = 0;
+        }
+    }
+
+    return $Output;
 }
 
 1;

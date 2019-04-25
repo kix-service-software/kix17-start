@@ -218,8 +218,7 @@ sub Run {
         !$Param{Data}->{UserLogin}
         && !$Param{Data}->{CustomerUserLogin}
         && !$Param{Data}->{SessionID}
-        )
-    {
+    ) {
         return $Self->ReturnError(
             ErrorCode    => 'TicketUpdate.MissingParameter',
             ErrorMessage => "TicketUpdate: UserLogin, CustomerUserLogin or SessionID is required!",
@@ -228,8 +227,7 @@ sub Run {
 
     if ( $Param{Data}->{UserLogin} || $Param{Data}->{CustomerUserLogin} ) {
 
-        if ( !$Param{Data}->{Password} )
-        {
+        if ( !$Param{Data}->{Password} ) {
             return $Self->ReturnError(
                 ErrorCode    => 'TicketUpdate.MissingParameter',
                 ErrorMessage => "TicketUpdate: Password or SessionID is required!",
@@ -308,8 +306,7 @@ sub Run {
         if (
             defined $Param{Data}->{$Optional}
             && !IsHashRefWithData( $Param{Data}->{$Optional} )
-            )
-        {
+        ) {
             return $Self->ReturnError(
                 ErrorCode    => 'TicketUpdate.InvalidParameter',
                 ErrorMessage => "TicketUpdate: $Optional parameter is not valid!",
@@ -323,8 +320,7 @@ sub Run {
             defined $Param{Data}->{$Optional}
             && !IsHashRefWithData( $Param{Data}->{$Optional} )
             && !IsArrayRefWithData( $Param{Data}->{$Optional} )
-            )
-        {
+        ) {
             return $Self->ReturnError(
                 ErrorCode    => 'TicketUpdate.MissingParameter',
                 ErrorMessage => "TicketUpdate: $Optional parameter is missing or not valid!",
@@ -581,8 +577,7 @@ sub _CheckTicket {
     if (
         $Ticket->{CustomerUser}
         && !$Self->ValidateCustomer( %{$Ticket} )
-        )
-    {
+    ) {
         return {
             ErrorCode => 'TicketUpdate.InvalidParameter',
             ErrorMessage =>
@@ -636,8 +631,7 @@ sub _CheckTicket {
                 %{$Ticket},
                 CustomerUser => $CustomerUser,
             )
-            )
-        {
+        ) {
             return {
                 ErrorCode => 'TicketUpdate.InvalidParameter',
                 ErrorMessage =>
@@ -662,8 +656,7 @@ sub _CheckTicket {
                 Service   => $Service,
                 ServiceID => $ServiceID,
             )
-            )
-        {
+        ) {
             return {
                 ErrorCode => 'TicketUpdate.InvalidParameter',
                 ErrorMessage =>
@@ -949,8 +942,7 @@ sub _CheckArticle {
         ( !defined $Article->{TimeUnit} || !IsStringWithData( $Article->{TimeUnit} ) )
         && $ConfigObject->{'Ticket::Frontend::AccountTime'}
         && $ConfigObject->{'Ticket::Frontend::NeedAccountedTime'}
-        )
-    {
+    ) {
         return {
             ErrorCode    => 'TicketUpdate.MissingParameter',
             ErrorMessage => "TicketUpdate: Article->TimeUnit is required by sysconfig option!",
@@ -976,8 +968,7 @@ sub _CheckArticle {
     # check Article array parameters
     for my $Attribute (
         qw( ForceNotificationToUserID ExcludeNotificationToUserID ExcludeMuteNotificationToUserID )
-        )
-    {
+    ) {
         if ( defined $Article->{$Attribute} ) {
 
             # check structure
@@ -1047,8 +1038,7 @@ sub _CheckDynamicField {
         if (
             !defined $DynamicField->{$Needed}
             || ( !IsString( $DynamicField->{$Needed} ) && ref $DynamicField->{$Needed} ne 'ARRAY' )
-            )
-        {
+        ) {
             return {
                 ErrorCode    => 'TicketUpdate.MissingParameter',
                 ErrorMessage => "TicketUpdate: DynamicField->$Needed parameter is missing!",
@@ -1070,8 +1060,7 @@ sub _CheckDynamicField {
             %{$DynamicField},
             Article => $Article,
         )
-        )
-    {
+    ) {
         return {
             ErrorCode => 'TicketUpdate.MissingParameter',
             ErrorMessage =>
@@ -1436,8 +1425,7 @@ sub _TicketUpdate {
         defined $Ticket->{Title}
         && $Ticket->{Title} ne ''
         && $Ticket->{Title} ne $TicketData{Title}
-        )
-    {
+    ) {
         my $Success = $TicketObject->TicketTitleUpdate(
             Title    => $Ticket->{Title},
             TicketID => $TicketID,
@@ -1519,15 +1507,20 @@ sub _TicketUpdate {
     # update Ticket->Type
     if ( $Ticket->{Type} || $Ticket->{TypeID} ) {
         my $Success;
-        if ( defined $Ticket->{Type} && $Ticket->{Type} ne $TicketData{Type} ) {
+        if (
+            defined $Ticket->{Type}
+            && $Ticket->{Type} ne $TicketData{Type}
+        ) {
             $Success = $TicketObject->TicketTypeSet(
                 Type     => $Ticket->{Type},
                 TicketID => $TicketID,
                 UserID   => $Param{UserID},
             );
         }
-        elsif ( defined $Ticket->{TypeID} && $Ticket->{TypeID} ne $TicketData{TypeID} )
-        {
+        elsif (
+            defined $Ticket->{TypeID}
+            && $Ticket->{TypeID} ne $TicketData{TypeID}
+        ) {
             $Success = $TicketObject->TicketTypeSet(
                 TypeID   => $Ticket->{TypeID},
                 TicketID => $TicketID,
@@ -1613,15 +1606,20 @@ sub _TicketUpdate {
         }
 
         my $Success;
-        if ( defined $Ticket->{State} && $Ticket->{State} ne $TicketData{State} ) {
+        if (
+            defined $Ticket->{State}
+            && $Ticket->{State} ne $TicketData{State}
+        ) {
             $Success = $TicketObject->TicketStateSet(
                 State    => $Ticket->{State},
                 TicketID => $TicketID,
                 UserID   => $Param{UserID},
             );
         }
-        elsif ( defined $Ticket->{StateID} && $Ticket->{StateID} ne $TicketData{StateID} )
-        {
+        elsif (
+            defined $Ticket->{StateID}
+            && $Ticket->{StateID} ne $TicketData{StateID}
+        ) {
             $Success = $TicketObject->TicketStateSet(
                 StateID  => $Ticket->{StateID},
                 TicketID => $TicketID,
@@ -1657,8 +1655,7 @@ sub _TicketUpdate {
                     Service   => $Ticket->{Service} || '',
                     ServiceID => $Ticket->{ServiceID} || '',
                 )
-                )
-            {
+            ) {
 
                 # remove current SLA if is not compatible with new service
                 my $Success = $TicketObject->TicketSLASet(
@@ -1679,15 +1676,20 @@ sub _TicketUpdate {
             $TicketData{ServiceID} = '';
         }
 
-        if ( defined $Ticket->{Service} && $Ticket->{Service} ne $TicketData{Service} ) {
+        if (
+            defined $Ticket->{Service}
+            && $Ticket->{Service} ne $TicketData{Service}
+        ) {
             $Success = $TicketObject->TicketServiceSet(
                 Service  => $Ticket->{Service},
                 TicketID => $TicketID,
                 UserID   => $Param{UserID},
             );
         }
-        elsif ( defined $Ticket->{ServiceID} && $Ticket->{ServiceID} ne $TicketData{ServiceID} )
-        {
+        elsif (
+            defined $Ticket->{ServiceID}
+            && $Ticket->{ServiceID} ne $TicketData{ServiceID}
+        ) {
             $Success = $TicketObject->TicketServiceSet(
                 ServiceID => $Ticket->{ServiceID},
                 TicketID  => $TicketID,
@@ -1721,15 +1723,20 @@ sub _TicketUpdate {
             $TicketData{SLAID} = '';
         }
 
-        if ( defined $Ticket->{SLA} && $Ticket->{SLA} ne $TicketData{SLA} ) {
+        if (
+            defined $Ticket->{SLA}
+            && $Ticket->{SLA} ne $TicketData{SLA}
+        ) {
             $Success = $TicketObject->TicketSLASet(
                 SLA      => $Ticket->{SLA},
                 TicketID => $TicketID,
                 UserID   => $Param{UserID},
             );
         }
-        elsif ( defined $Ticket->{SLAID} && $Ticket->{SLAID} ne $TicketData{SLAID} )
-        {
+        elsif (
+            defined $Ticket->{SLAID}
+            && $Ticket->{SLAID} ne $TicketData{SLAID}
+        ) {
             $Success = $TicketObject->TicketSLASet(
                 SLAID    => $Ticket->{SLAID},
                 TicketID => $TicketID,
@@ -1764,8 +1771,7 @@ sub _TicketUpdate {
         if (
             $Ticket->{CustomerUser} ne $TicketData{CustomerUserID}
             || $Ticket->{CustomerID} ne $TicketData{CustomerID}
-            )
-        {
+        ) {
             my $CustomerID = $CustomerUserData{UserCustomerID} || '';
 
             # use user defined CustomerID if defined
@@ -1798,15 +1804,20 @@ sub _TicketUpdate {
     # update Ticket->Priority
     if ( $Ticket->{Priority} || $Ticket->{PriorityID} ) {
         my $Success;
-        if ( defined $Ticket->{Priority} && $Ticket->{Priority} ne $TicketData{Priority} ) {
+        if (
+            defined $Ticket->{Priority}
+            && $Ticket->{Priority} ne $TicketData{Priority}
+        ) {
             $Success = $TicketObject->TicketPrioritySet(
                 Priority => $Ticket->{Priority},
                 TicketID => $TicketID,
                 UserID   => $Param{UserID},
             );
         }
-        elsif ( defined $Ticket->{PriorityID} && $Ticket->{PriorityID} ne $TicketData{PriorityID} )
-        {
+        elsif (
+            defined $Ticket->{PriorityID}
+            && $Ticket->{PriorityID} ne $TicketData{PriorityID}
+        ) {
             $Success = $TicketObject->TicketPrioritySet(
                 PriorityID => $Ticket->{PriorityID},
                 TicketID   => $TicketID,
@@ -1833,7 +1844,10 @@ sub _TicketUpdate {
     # update Ticket->Owner
     if ( $Ticket->{Owner} || $Ticket->{OwnerID} ) {
         my $Success;
-        if ( defined $Ticket->{Owner} && $Ticket->{Owner} ne $TicketData{Owner} ) {
+        if (
+            defined $Ticket->{Owner}
+            && $Ticket->{Owner} ne $TicketData{Owner}
+        ) {
             $Success = $TicketObject->TicketOwnerSet(
                 NewUser  => $Ticket->{Owner},
                 TicketID => $TicketID,
@@ -1841,8 +1855,10 @@ sub _TicketUpdate {
             );
             $UnlockOnAway = 0;
         }
-        elsif ( defined $Ticket->{OwnerID} && $Ticket->{OwnerID} ne $TicketData{OwnerID} )
-        {
+        elsif (
+            defined $Ticket->{OwnerID}
+            && $Ticket->{OwnerID} ne $TicketData{OwnerID}
+        ) {
             $Success = $TicketObject->TicketOwnerSet(
                 NewUserID => $Ticket->{OwnerID},
                 TicketID  => $TicketID,
@@ -1871,8 +1887,7 @@ sub _TicketUpdate {
         if (
             defined $Ticket->{Responsible}
             && $Ticket->{Responsible} ne $TicketData{Responsible}
-            )
-        {
+        ) {
             $Success = $TicketObject->TicketResponsibleSet(
                 NewUser  => $Ticket->{Responsible},
                 TicketID => $TicketID,
@@ -1882,8 +1897,7 @@ sub _TicketUpdate {
         elsif (
             defined $Ticket->{ResponsibleID}
             && $Ticket->{ResponsibleID} ne $TicketData{ResponsibleID}
-            )
-        {
+        ) {
             $Success = $TicketObject->TicketResponsibleSet(
                 NewUserID => $Ticket->{ResponsibleID},
                 TicketID  => $TicketID,

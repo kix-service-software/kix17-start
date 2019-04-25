@@ -15,7 +15,6 @@
 # set viewport for mobile mode, do not set viewport for DesktopMode
     <script>
         (function(doc, win) {
-            // #rbo - T2016121190001552 - renamed OTRS to KIX
             var viewport = doc.getElementById('viewport'),
                 isIFrame = (win.top.location.href !== win.location.href),
                 isPopup = (win.name.search(/^(OTRS|KIX)Popup_/) != -1);
@@ -33,14 +32,10 @@
 [% RenderBlockStart("MetaLink") %]
     <link rel="[% Data.Rel | html %]" type="[% Data.Type | html %]" title="[% Data.Title | html %]" href="[% Data.Href %]" />
 [% RenderBlockEnd("MetaLink") %]
-# KIX4OTRS-capeIT
-#    <link rel="shortcut icon" href="[% Config("Frontend::ImagePath") %]icons/product.ico" type="image/ico" />
-#    <link rel="apple-touch-icon" href="[% Config("Frontend::ImagePath") %]icons/apple-touch-icon.png" />
     <link rel="shortcut icon" href="[% Config("Frontend::ImagePath") %][% Config("ProductIcon") %]" type="image/ico" />
     <link rel="apple-touch-icon" href="[% Config("Frontend::ImagePath") %][% Config("ProductIcon") %]" />
 
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/ui-theme/jquery-ui.css" />
-# EO KIX4OTRS-capeIT
 
 [% RenderBlockStart("CommonCSS") %]
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Agent/[% Data.Skin | uri %]/[% Data.CSSDirectory %]/[% Data.Filename %]" />
@@ -49,10 +44,6 @@
 [% RenderBlockStart("ModuleCSS") %]
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Agent/[% Data.Skin | uri %]/[% Data.CSSDirectory %]/[% Data.Filename %]" />
 [% RenderBlockEnd("ModuleCSS") %]
-
-# KIX4OTRS-capeIT
-#    <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Agent/default/css/thirdparty/ui-theme/jquery-ui.css" />
-# EO KIX4OTRS-capeIT
 
 [% RenderBlockStart("HeaderLogoCSS") %]
     <style type="text/css">
@@ -122,7 +113,6 @@
 [% INCLUDE "HTMLHeadBlockEvents.tt" %]
 
 </head>
-# KIX4OTRS-capeIT
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 // Register event for tree selection dialog
@@ -130,6 +120,5 @@ $('.ShowTreeSelection').bind('click', function (Event) {
     Core.UI.TreeSelection.ShowTreeSelection($(this));
     return false;
 });
-# EO KIX4OTRS-capeIT
 //]]></script>
 [% END %]

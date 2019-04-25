@@ -56,7 +56,6 @@ sub new {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
 
-    # KIX4OTRS-capeIT
     # load generator customer preferences module
     my $GeneratorModule = $ConfigObject->Get('CustomerCompany::PreferencesModule')->{Module}
         || 'Kernel::System::CustomerCompany::Preferences::DB';
@@ -64,7 +63,6 @@ sub new {
     if ( $MainObject->Require($GeneratorModule) ) {
         $Self->{PreferencesObject} = $GeneratorModule->new();
     }
-    # EO KIX4OTRS-capeIT
 
     # load customer company backend modules
     SOURCE:
@@ -351,7 +349,6 @@ sub CustomerCompanyList {
     return %Data;
 }
 
-# KIX4OTRS-capeIT
 =item GetPreferences()
 
 get customer company preferences
@@ -427,15 +424,6 @@ sub SetPreferences {
         return;
     }
 
-    # KIX4OTRS-capeIT
-    # # call new api (2.4.8 and higher)
-    # if ( $Self->{ $User{Source} }->can('SetPreferences') ) {
-    #     return $Self->{ $User{Source} }->SetPreferences(%Param);
-    # }
-    #
-    # # call old api
-    # return $Self->{PreferencesObject}->SetPreferences(%Param);
-
     my $Result;
 
     # call new api (2.4.8 and higher)
@@ -461,8 +449,6 @@ sub SetPreferences {
         );
     }
     return $Result;
-
-    # EO KIX4OTRS-capeIT
 }
 
 =item SearchPreferences()
@@ -501,7 +487,6 @@ sub SearchPreferences {
 
     return %Data;
 }
-# KIX4OTRS-capeIT
 
 sub DESTROY {
     my $Self = shift;
