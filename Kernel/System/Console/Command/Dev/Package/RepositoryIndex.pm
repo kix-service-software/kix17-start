@@ -23,10 +23,10 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Generate an index file (otrs.xml) for an OTRS package repository.');
+    $Self->Description('Generate an index file (kix.xml) for an KIX package repository.');
     $Self->AddArgument(
         Name        => 'source-directory',
-        Description => "Specify the directory containing the OTRS packages.",
+        Description => "Specify the directory containing the KIX packages.",
         Required    => 1,
         ValueRegex  => qr/.*/smx,
     );

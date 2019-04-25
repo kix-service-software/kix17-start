@@ -23,7 +23,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('List all known OTRS package repsitories.');
+    $Self->Description('List all known KIX package repsitories.');
 
     return;
 }
@@ -31,7 +31,7 @@ sub Configure {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    $Self->Print("<yellow>Listing OTRS package repositories...</yellow>\n");
+    $Self->Print("<yellow>Listing KIX package repositories...</yellow>\n");
 
     my $Count = 0;
     my %List;
@@ -54,7 +54,7 @@ sub Run {
     print "+----------------------------------------------------------------------------+\n";
     print "\n";
 
-    $Self->Print("<yellow>Listing OTRS package repository contents...</yellow>\n");
+    $Self->Print("<yellow>Listing KIX package repository contents...</yellow>\n");
 
     for my $URL ( sort { $List{$a} cmp $List{$b} } keys %List ) {
         print

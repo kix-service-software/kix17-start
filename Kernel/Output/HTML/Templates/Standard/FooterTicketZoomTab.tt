@@ -94,7 +94,7 @@ Core.App.Ready(function () {
         TicketActionTemplateOverwrite: [% Translate("Setting a template will overwrite any text or attachment.") | JSON %],
         TicketActionTemplateOverwriteConfirm: [% Translate("Do you really want to continue?") | JSON %],
         AgentLogoURL: '[% Config("AgentLogo").URL %]',
-        OTRSDaemonDialogTitleMsg: [% Translate('Information about the OTRS Daemon') | JSON %],
+        OTRSDaemonDialogTitleMsg: [% Translate('Information about the KIX Daemon') | JSON %],
         DeleteLinksQuestion: [% Translate("Do you really want to delete the selected links?") | JSON %],
         Question: [% Translate("Question") | JSON %],
         Yes: [% Translate("Yes") | JSON %],

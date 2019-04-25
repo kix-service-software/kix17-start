@@ -101,7 +101,7 @@ sub Run {
     );
 
     if ( !$Result ) {
-        $Self->PrintError("\nError occurred. Import impossible! See the OTRS log for details.\n");
+        $Self->PrintError("\nError occurred. Import impossible! See the KIX log for details.\n");
         return $Self->ExitCodeError();
     }
 

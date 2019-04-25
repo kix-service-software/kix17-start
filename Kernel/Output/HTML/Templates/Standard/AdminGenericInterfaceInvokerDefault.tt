@@ -123,7 +123,7 @@
                             <button type="button" class="HideOnChange" id="MappingOutboundConfigureButton" value="[% Translate("Configure") | html %]">[% Translate("Configure") | html %]</button>
 [% RenderBlockEnd("MappingOutboundConfigureButton") %]
                             <p class="FieldExplanation">
-                                [% Translate("The data from the invoker of OTRS will be processed by this mapping, to transform it to the kind of data the remote system expects.") | html %]
+                                [% Translate("The data from the invoker of KIX will be processed by this mapping, to transform it to the kind of data the remote system expects.") | html %]
                             </p>
                         </div>
                         <div class="Clear"></div>
@@ -136,7 +136,7 @@
                             <button type="button" class="HideOnChange" id="MappingInboundConfigureButton" value="[% Translate("Configure") | html %]">[% Translate("Configure") | html %]</button>
 [% RenderBlockEnd("MappingInboundConfigureButton") %]
                             <p class="FieldExplanation">
-                                [% Translate("The response data will be processed by this mapping, to transform it to the kind of data the invoker of OTRS expects.") | html %]
+                                [% Translate("The response data will be processed by this mapping, to transform it to the kind of data the invoker of KIX expects.") | html %]
                             </p>
                         </div>
                         <div class="Clear"></div>

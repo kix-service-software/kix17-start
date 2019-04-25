@@ -26,7 +26,7 @@ Kernel::System::CIAttachmentStorage::AttachmentStorageDB
 
 =head1 SYNOPSIS
 
-Provides attachment handling for data base backend - local, OTRS-data base.
+Provides attachment handling for data base backend - local, KIX-data base.
 
 =head1 PUBLIC INTERFACE
 

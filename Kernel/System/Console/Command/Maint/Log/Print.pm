@@ -22,7 +22,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Prints the OTRS log.');
+    $Self->Description('Prints the KIX log.');
 
     return;
 }

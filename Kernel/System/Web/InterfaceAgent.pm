@@ -321,7 +321,7 @@ sub Run {
                     Title => 'Panic!',
                     Message =>
                         Translatable(
-                        'Panic, user authenticated but no user data can be found in OTRS DB!! Perhaps the user is invalid.'
+                        'Panic, user authenticated but no user data can be found in KIX DB!! Perhaps the user is invalid.'
                         ),
                     %Param,
                     MessageType => 'Error',

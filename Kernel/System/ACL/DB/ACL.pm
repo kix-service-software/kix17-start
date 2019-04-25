@@ -800,12 +800,12 @@ gets a complete ACL information dump from the DB
 
     my $ACLDump = $ACLObject->ACLDump(
         ResultType  => 'SCALAR'                     # 'SCALAR' || 'HASH' || 'FILE'
-        Location    => '/opt/otrs/var/myfile.txt'   # mandatory for ResultType = 'FILE'
+        Location    => '/opt/kix/var/myfile.txt'   # mandatory for ResultType = 'FILE'
         UserID      => 1,
     );
 
 Returns:
-    $ACLDump = '/opt/otrs/var/myfile.txt';          # or undef if can't write the file
+    $ACLDump = '/opt/kix/var/myfile.txt';          # or undef if can't write the file
 
 =cut
 
@@ -916,7 +916,7 @@ sub ACLDump {
 
     # build comment (therefore we need to trick out the filter)
     my $FileStart = <<'EOF';
-# OTRS config file (automatically generated)
+# KIX config file (automatically generated)
 # VERSION:1.1
 package Kernel::Config::Files::ZZZACL;
 use strict;

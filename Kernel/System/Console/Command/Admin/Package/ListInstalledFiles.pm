@@ -24,7 +24,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('List all installed OTRS package files.');
+    $Self->Description('List all installed KIX package files.');
 
     return;
 }

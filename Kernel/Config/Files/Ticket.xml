@@ -452,7 +452,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::StorageModule" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Saves the attachments of articles. "DB" stores all data in the database (not recommended for storing big attachments). "FS" stores the data on the filesystem; this is faster but the webserver should run under the OTRS user. You can switch between the modules even on a system that is already in production without any loss of data. Note: Searching for attachment names is not supported when "FS" is used.</Description>
+        <Description Translatable="1">Saves the attachments of articles. "DB" stores all data in the database (not recommended for storing big attachments). "FS" stores the data on the filesystem; this is faster but the webserver should run under the KIX user. You can switch between the modules even on a system that is already in production without any loss of data. Note: Searching for attachment names is not supported when "FS" is used.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
@@ -9594,7 +9594,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Access Control Lists (ACL)</Title>
                 <NavBarName>Admin</NavBarName>
                 <Loader>
@@ -9618,7 +9618,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Queues</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9638,7 +9638,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Templates</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9658,7 +9658,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Templates &lt;-&gt; Queues</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9678,7 +9678,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Auto Responses</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9698,7 +9698,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Auto Responses &lt;-&gt; Queues</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9718,7 +9718,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Attachments</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9738,7 +9738,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Attachments &lt;-&gt; Templates</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9758,7 +9758,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Salutations</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9778,7 +9778,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Signatures</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9798,7 +9798,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Email Addresses</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9818,7 +9818,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Ticket Notifications</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9842,7 +9842,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Services</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9862,7 +9862,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Service Level Agreements</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9882,7 +9882,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Types</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9902,7 +9902,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">States</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9922,7 +9922,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Priorities</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -9942,7 +9942,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Generic Agent</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -17003,7 +17003,7 @@ Here you may define a default text for the forward function. You find this confi
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::ACL-PossibleActionSubsumption" Required="1" Valid="1">
-        <Description Translatable="1">Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (OTRS-default behavior is disabled).</Description>
+        <Description Translatable="1">Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
@@ -17014,7 +17014,7 @@ Here you may define a default text for the forward function. You find this confi
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::ACL-PossiblePropertiesSubsumption" Required="1" Valid="1">
-        <Description Translatable="1">Defines whether results of PossibleNot for tickets of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (OTRS-default behavior is disabled).</Description>
+        <Description Translatable="1">Defines whether results of PossibleNot for tickets of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>

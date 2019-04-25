@@ -60,7 +60,7 @@ The ObjectManager must always be provided to OTRS by the toplevel script like th
     local $Kernel::OM = Kernel::System::ObjectManager->new(
         # options for module constructors here
         LogObject {
-            LogPrefix => 'OTRS-MyTestScript',
+            LogPrefix => 'KIX-MyTestScript',
         },
     );
 
@@ -115,7 +115,7 @@ The hash reference will be flattened and passed to the constructor of the object
 
     local $Kernel::OM = Kernel::System::ObjectManager->new(
         Kernel::System::Log => {
-            LogPrefix => 'OTRS-MyTestScript',
+            LogPrefix => 'KIX-MyTestScript',
         },
     );
 
@@ -396,7 +396,7 @@ sub ObjectsDiscard {
         push @AllObjects, $Object;
     }
 
-    # During an OTRS package upgrade the packagesetup code module has just
+    # During an KIX package upgrade the packagesetup code module has just
     # recently been copied to it's location in the file system.
     # In a persistent Perl environment an old version of the module might still be loaded,
     # as watchdogs like Apache2::Reload haven't had a chance to reload it.

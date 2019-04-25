@@ -285,7 +285,7 @@ If you want to do this, click on this link:
 
 &lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentFAQEdit;ItemID=&lt;KIX_FAQ_ITEMID&gt;
 
-Your OTRS Notification Master
+Your KIX Notification Master
             </TextArea>
         </Setting>
     </ConfigItem>
@@ -719,7 +719,7 @@ Your OTRS Notification Master
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###FAQ" Required="0" Valid="0">
-        <Description Translatable="1">A filter for HTML output to add links behind a defined string. The element Image allows two input kinds. First the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possibility is to insert the link to the image.</Description>
+        <Description Translatable="1">A filter for HTML output to add links behind a defined string. The element Image allows two input kinds. First the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possibility is to insert the link to the image.</Description>
         <Group>FAQ</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -732,8 +732,8 @@ Your OTRS Notification Master
                 <Item Key="URL1">
                     <Hash>
                         <Item Translatable="1" Key="Description">FAQ</Item>
-                        <Item Key="URL">/otrs/index.pl?Action=AgentFAQZoom;ItemID=&lt;MATCH2&gt;</Item>
-                        <Item Key="Image">/otrs-web/skins/Agent/default/img/help-small.png</Item>
+                        <Item Key="URL">/kix/index.pl?Action=AgentFAQZoom;ItemID=&lt;MATCH2&gt;</Item>
+                        <Item Key="Image">/kix-web/skins/Agent/default/img/help-small.png</Item>
                         <Item Key="Target">_blank</Item>
                     </Hash>
                 </Item>

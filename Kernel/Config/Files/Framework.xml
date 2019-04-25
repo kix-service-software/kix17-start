@@ -56,7 +56,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields GUI</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -107,7 +107,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Text Backend GUI</Title>
                 <Loader>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
@@ -123,7 +123,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Checkbox Backend GUI</Title>
                 <Loader>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
@@ -138,7 +138,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Drop-down Backend GUI</Title>
                 <Loader>
                     <CSS>Core.Agent.Admin.DynamicField.css</CSS>
@@ -155,7 +155,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Date Time Backend GUI</Title>
                 <Loader>
                     <CSS>Core.Agent.Admin.DynamicField.css</CSS>
@@ -172,7 +172,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Multiselect Backend GUI</Title>
                 <Loader>
                     <CSS>Core.Agent.Admin.DynamicField.css</CSS>
@@ -1235,7 +1235,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ExternalSupplierForwarding::ForwardFaxQueues" Required="1" Valid="1">
-        <Description Translatable="1">Defines mapping of OTRS queues to be fax-forwarded and corresponding fax-numbers.</Description>
+        <Description Translatable="1">Defines mapping of KIX queues to be fax-forwarded and corresponding fax-numbers.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -1310,7 +1310,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ExternalSupplierForwarding::ForwardQueues" Required="1" Valid="1">
-        <Description Translatable="1">Defines mapping of OTRS queues to be forwarded and corresponding email-addresses.</Description>
+        <Description Translatable="1">Defines mapping of KIX queues to be forwarded and corresponding email-addresses.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -2033,12 +2033,12 @@
             <FrontendModuleReg>
                 <Group>admin</Group>
                 <Description>Admin</Description>
-                <Title Translatable="1">Shows information on how to start OTRS Daemon</Title>
+                <Title Translatable="1">Shows information on how to start KIX Daemon</Title>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::NotifyModule###800-Daemon-Check" Required="0" Valid="1">
-        <Description Translatable="1">Defines the module to display a notification in the agent interface if the OTRS Daemon is not running.</Description>
+        <Description Translatable="1">Defines the module to display a notification in the agent interface if the KIX Daemon is not running.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::ModuleNotify</SubGroup>
         <Setting>
@@ -2876,7 +2876,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="QueuesGroupsRoles###ShortcutMappings" Required="0" Valid="1">
-        <Description Translatable="1">Maps the permissions of OTRS to better readable shortcuts in CSV-Files. In the key is the OTRS-Permission and the value describes the shortcut. The Mapping should include all configured System::Permissions included the 'rw'-Permission. Please be shure that there are no double shortcuts inside.</Description>
+        <Description Translatable="1">Maps the permissions of KIX to better readable shortcuts in CSV-Files. In the key is the KIX-Permission and the value describes the shortcut. The Mapping should include all configured System::Permissions included the 'rw'-Permission. Please be shure that there are no double shortcuts inside.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Admin::ViewQueuesGroupsRoles</SubGroup>
         <Setting>
@@ -3491,7 +3491,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="TicketStateWorkflow::PostmasterFollowUpCheckCustomerIDFrom" Required="0" Valid="1">
-        <Description Translatable="1">Checks if the sender of a follow-up message is contained in customer database an has an identical customer-ID as the ticket. If so, the email is considered as email-external, otherwise it is considered as email-internal. Default OTRS-behavior if disabled.</Description>
+        <Description Translatable="1">Checks if the sender of a follow-up message is contained in customer database an has an identical customer-ID as the ticket. If so, the email is considered as email-external, otherwise it is considered as email-internal. Default KIX-behavior if disabled.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::PostMaster</SubGroup>
         <Setting>
@@ -3979,7 +3979,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4023,7 +4023,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4067,7 +4067,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4111,7 +4111,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4155,7 +4155,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4199,7 +4199,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4243,7 +4243,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4287,7 +4287,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4331,7 +4331,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4375,7 +4375,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4419,7 +4419,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4463,7 +4463,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4507,7 +4507,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4551,7 +4551,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4595,7 +4595,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4932,7 +4932,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SystemID" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Defines the system identifier. Every ticket number and http session string contains this ID. This ensures that only tickets which belong to your system will be processed as follow-ups (useful when communicating between two instances of OTRS).</Description>
+        <Description Translatable="1">Defines the system identifier. Every ticket number and http session string contains this ID. This ensures that only tickets which belong to your system will be processed as follow-ups (useful when communicating between two instances of KIX).</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -4948,7 +4948,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SupportDataCollector::HTTPHostname" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">Defines the HTTP hostname for the support data collection with the public module 'PublicSupportDataCollector' (e.g. used from the OTRS Daemon).</Description>
+        <Description Translatable="1">Defines the HTTP hostname for the support data collection with the public module 'PublicSupportDataCollector' (e.g. used from the KIX Daemon).</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -4956,7 +4956,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="NodeID" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">Defines the cluster node identifier. This is only used in cluster configurations where there is more than one OTRS frontend system. Note: only values from 1 to 99 are allowed.</Description>
+        <Description Translatable="1">Defines the cluster node identifier. This is only used in cluster configurations where there is more than one KIX frontend system. Note: only values from 1 to 99 are allowed.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -5270,7 +5270,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DisableIFrameOriginRestricted" Required="0" Valid="1">
-        <Description Translatable="1">Disable HTTP header "X-Frame-Options: SAMEORIGIN" to allow OTRS to be included as an IFrame in other websites. Disabling this HTTP header can be a security issue! Only disable it, if you know what you are doing!</Description>
+        <Description Translatable="1">Disable HTTP header "X-Frame-Options: SAMEORIGIN" to allow KIX to be included as an IFrame in other websites. Disabling this HTTP header can be a security issue! Only disable it, if you know what you are doing!</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -7603,7 +7603,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="WebMaxFileUpload" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Defines the maximal size (in bytes) for file uploads via the browser. Warning: Setting this option to a value which is too low could cause many masks in your OTRS instance to stop working (probably any mask which takes input from the user).</Description>
+        <Description Translatable="1">Defines the maximal size (in bytes) for file uploads via the browser. Warning: Setting this option to a value which is too low could cause many masks in your KIX instance to stop working (probably any mask which takes input from the user).</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -7834,7 +7834,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Package::RepositoryList" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">Defines the list of online repositories. Another installations can be used as repository, for example: Key="http://example.com/otrs/public.pl?Action=PublicRepository;File=" and Content="Some Name".</Description>
+        <Description Translatable="1">Defines the list of online repositories. Another installations can be used as repository, for example: Key="http://example.com/kix/public.pl?Action=PublicRepository;File=" and Content="Some Name".</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Package</SubGroup>
         <Setting>
@@ -8054,7 +8054,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PGP" Required="1" Valid="1">
-        <Description Translatable="1">Enables PGP support. When PGP support is enabled for signing and encrypting mail, it is HIGHLY recommended that the web server runs as the OTRS user. Otherwise, there will be problems with the privileges when accessing .gnupg folder.</Description>
+        <Description Translatable="1">Enables PGP support. When PGP support is enabled for signing and encrypting mail, it is HIGHLY recommended that the web server runs as the KIX user. Otherwise, there will be problems with the privileges when accessing .gnupg folder.</Description>
         <Group>Framework</Group>
         <SubGroup>Crypt::PGP</SubGroup>
         <Setting>
@@ -8077,7 +8077,7 @@
         <Group>Framework</Group>
         <SubGroup>Crypt::PGP</SubGroup>
         <Setting>
-            <String Regex="">--homedir /opt/otrs/.gnupg/ --batch --no-tty --yes</String>
+            <String Regex="">--homedir /opt/kix/.gnupg/ --batch --no-tty --yes</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PGP::Key::Password" Required="1" Valid="1">
@@ -8246,7 +8246,7 @@ If you did not request a new password, please ignore this email.
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
-            <String Regex="">New OTRS password</String>
+            <String Regex="">New KIX password</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="NotificationBodyLostPassword" Required="1" Valid="1">
@@ -8837,7 +8837,7 @@ You can log in via the following URL:
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
-            <String Regex="">New OTRS password request</String>
+            <String Regex="">New KIX password request</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerPanelBodyLostPasswordToken" Required="1" Valid="1">
@@ -8847,7 +8847,7 @@ You can log in via the following URL:
         <Setting>
             <TextArea>Hi &lt;KIX_USERFIRSTNAME&gt;,
 
-You or someone impersonating you has requested to change your OTRS
+You or someone impersonating you has requested to change your KIX
 password.
 
 If you want to do this, click on this link. You will receive another email containing the password.
@@ -8885,7 +8885,7 @@ New password: &lt;KIX_NEWPW&gt;
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
-            <String Regex="">New OTRS Account!</String>
+            <String Regex="">New KIX Account!</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerPanelBodyNewAccount" Required="1" Valid="1">
@@ -9030,7 +9030,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Customer::AuthModule::LDAP::GroupDN" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">If "LDAP" was selected for Customer::Authmodule, you can check if the user is allowed to authenticate because he is in a posixGroup, e.g. user needs to be in a group xyz to use OTRS. Specify the group, who may access the system.</Description>
+        <Description Translatable="1">If "LDAP" was selected for Customer::Authmodule, you can check if the user is allowed to authenticate because he is in a posixGroup, e.g. user needs to be in a group xyz to use KIX. Specify the group, who may access the system.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer::Auth</SubGroup>
         <Setting>
@@ -10526,7 +10526,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Core::MirrorDB::DSN" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">OTRS can use one or more readonly mirror databases for expensive operations like fulltext search or statistics generation. Here you can specify the DSN for the first mirror database.</Description>
+        <Description Translatable="1">KIX can use one or more readonly mirror databases for expensive operations like fulltext search or statistics generation. Here you can specify the DSN for the first mirror database.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::MirrorDB</SubGroup>
         <Setting>
@@ -10786,7 +10786,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###CVE" Required="0" Valid="0">
-        <Description Translatable="1">Defines a filter for html output to add links behind CVE numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.</Description>
+        <Description Translatable="1">Defines a filter for html output to add links behind CVE numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -10829,7 +10829,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###Bugtraq" Required="0" Valid="0">
-        <Description Translatable="1">Defines a filter for html output to add links behind bugtraq numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.</Description>
+        <Description Translatable="1">Defines a filter for html output to add links behind bugtraq numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <!-- Example strings: BugTraq ID: 23862 | BugTraq ID: 8945 | Bugtraq ID 140 | BUGTRAQ:20070425 | BID 20799 -->
@@ -10871,7 +10871,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###MSBulletins" Required="0" Valid="0">
-        <Description Translatable="1">Defines a filter for html output to add links behind MSBulletin numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.</Description>
+        <Description Translatable="1">Defines a filter for html output to add links behind MSBulletin numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <!-- Example strings: MS07-021 | MS04-028 | MS-07-002 -->
@@ -10908,7 +10908,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###Setting1" Required="0" Valid="0">
-        <Description Translatable="1">Define a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.</Description>
+        <Description Translatable="1">Define a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -10943,7 +10943,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###Setting2" Required="0" Valid="0">
-        <Description Translatable="1">Defines a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.</Description>
+        <Description Translatable="1">Defines a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -10986,7 +10986,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Secure::DisableBanner" Required="1" Valid="1">
-        <Description Translatable="1">If enabled, the OTRS version tag will be removed from the Webinterface, the HTTP headers and the X-Headers of outgoing mails.</Description>
+        <Description Translatable="1">If enabled, the KIX version tag will be removed from the Webinterface, the HTTP headers and the X-Headers of outgoing mails.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -10997,7 +10997,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Loader::Enabled::CSS" Required="1" Valid="1">
-        <Description Translatable="1">If enabled, OTRS will deliver all CSS files in minified form. WARNING: If you turn this off, there will likely be problems in IE 7, because it cannot load more than 32 CSS files.</Description>
+        <Description Translatable="1">If enabled, KIX will deliver all CSS files in minified form. WARNING: If you turn this off, there will likely be problems in IE 7, because it cannot load more than 32 CSS files.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -11008,7 +11008,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Loader::Enabled::JS" Required="1" Valid="1">
-        <Description Translatable="1">If enabled, OTRS will deliver all JavaScript files in minified form.</Description>
+        <Description Translatable="1">If enabled, KIX will deliver all JavaScript files in minified form.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -11237,7 +11237,7 @@ via the Preferences button after logging in.
                 <Item Key="InternalName">default</Item>
                 <Item Key="VisibleName" Translatable="1">Default</Item>
                 <Item Key="Description" Translatable="1">This is the default orange - black skin.</Item>
-                <Item Key="HomePage">www.otrs.org</Item>
+                <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -11250,7 +11250,7 @@ via the Preferences button after logging in.
                 <Item Key="InternalName">slim</Item>
                 <Item Key="VisibleName" Translatable="1">Default (Slim)</Item>
                 <Item Key="Description" Translatable="1">"Slim" skin which tries to save screen space for power users.</Item>
-                <Item Key="HomePage">www.otrs.org</Item>
+                <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -11308,7 +11308,7 @@ via the Preferences button after logging in.
                 <Item Key="InternalName">default</Item>
                 <Item Key="VisibleName" Translatable="1">Default</Item>
                 <Item Key="Description" Translatable="1">This is the default orange - black skin for the customer interface.</Item>
-                <Item Key="HomePage">www.otrs.org</Item>
+                <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
     </ConfigItem>

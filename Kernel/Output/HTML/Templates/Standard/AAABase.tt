@@ -262,7 +262,7 @@
 [% Translate("Facility") | html %]
 [% Translate("Time Zone") | html %]
 [% Translate("Pending till") | html %]
-[% Translate("Don't use the Superuser account to work with OTRS! Create new Agents and work with these accounts instead.") | html %]
+[% Translate("Don't use the Superuser account to work with KIX! Create new Agents and work with these accounts instead.") | html %]
 [% Translate("Dispatching by email To: field.") | html %]
 [% Translate("Dispatching by selected Queue.") | html %]
 [% Translate("No entry found!") | html %]
@@ -278,7 +278,7 @@
 [% Translate("Cannot create %s!") | html %]
 [% Translate("Check to activate this date") | html %]
 [% Translate("You have Out of Office enabled, would you like to disable it?") | html %]
-[% Translate("News about OTRS releases!") | html %]
+[% Translate("News about KIX releases!") | html %]
 [% Translate("Go to dashboard!") | html %]
 
 [% Translate("Customer %s added") | html %]
@@ -375,7 +375,7 @@
 [% Translate("OTRS News") | html %]
 [% Translate("7 Day Stats") | html %]
 [% Translate("Process Management information from database is not in sync with the system configuration, please synchronize all processes.") | html %]
-[% Translate("Package not verified by the OTRS Group! It is recommended not to use this package.") | html %]
+[% Translate("Package not verified by the KIX Group! It is recommended not to use this package.") | html %]
 [% Translate("<br>If you continue to install this package, the following issues may occur!<br><br>&nbsp;-Security problems<br>&nbsp;-Stability problems<br>&nbsp;-Performance problems<br><br>Please note that issues that are caused by working with this package are not covered by OTRS service contracts!<br><br>") | html %]
 [% Translate("Mark") | html %]
 [% Translate("Unmark") | html %]
@@ -405,7 +405,7 @@
 [% Translate("Redo") | html %]
 
 # daemon
-[% Translate("OTRS Daemon is not running.") | html %]
+[% Translate("KIX Daemon is not running.") | html %]
 
 # system registration
 [% Translate("Can't contact registration server. Please try again later.") | html %]

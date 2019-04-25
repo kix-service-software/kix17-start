@@ -895,7 +895,7 @@ ActivityDialogs, Transitions and TransitionActions
 
     my $ProcessDump = $ProcessObject->ProcessDump(
         ResultType  => 'SCALAR'                     # 'SCALAR' || 'HASH' || 'FILE'
-        Location    => '/opt/otrs/var/myfile.txt'   # mandatory for ResultType = 'FILE'
+        Location    => '/opt/kix/var/myfile.txt'   # mandatory for ResultType = 'FILE'
         UserID      => 1,
     );
 
@@ -1006,7 +1006,7 @@ Returns:
 
     my $ProcessDump = $ProcessObject->ProcessDump(
         ResultType  => 'HASH'                       # 'SCALAR' || 'HASH' || 'FILE'
-        Location    => '/opt/otrs/var/myfile.txt'   # mandatory for ResultType = 'FILE'
+        Location    => '/opt/kix/var/myfile.txt'   # mandatory for ResultType = 'FILE'
         UserID      => 1,
     );
 
@@ -1117,12 +1117,12 @@ Returns:
 
     my $ProcessDump = $ProcessObject->ProcessDump(
         ResultType  => 'Location'                     # 'SCALAR' || 'HASH' || 'FILE'
-        Location    => '/opt/otrs/var/myfile.txt'     # mandatory for ResultType = 'FILE'
+        Location    => '/opt/kix/var/myfile.txt'     # mandatory for ResultType = 'FILE'
         UserID      => 1,
     );
 
 Returns:
-    $ProcessDump = '/opt/otrs/var/myfile.txt';      # or undef if can't write the file
+    $ProcessDump = '/opt/kix/var/myfile.txt';      # or undef if can't write the file
 
 =cut
 
@@ -1338,7 +1338,7 @@ sub ProcessDump {
 
             # build comment (therefore we need to trick out the filter)
             my $FileStart = <<'EOF';
-# OTRS config file (automatically generated)
+# KIX config file (automatically generated)
 # VERSION:1.1
 package Kernel::Config::Files::ZZZProcessManagement;
 use strict;

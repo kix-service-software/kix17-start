@@ -42,7 +42,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'debug',
-        Description => "Print debug info to the OTRS log.",
+        Description => "Print debug info to the KIX log.",
         Required    => 0,
         HasValue    => 0,
     );

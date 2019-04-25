@@ -616,7 +616,7 @@ sub ConfigSettingChange {
     my $PackageName = "ZZZZUnitTest$RandomNumber";
 
     my $Content = <<"EOF";
-# OTRS config file (automatically generated)
+# KIX config file (automatically generated)
 # VERSION:1.1
 package Kernel::Config::Files::$PackageName;
 use strict;

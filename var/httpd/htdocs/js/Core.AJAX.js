@@ -614,7 +614,7 @@ Core.AJAX = (function (TargetNS) {
      * @param {String} ChangedElement - The name of the element which was changed by the user.
      * @param {Object} FieldsToUpdate - DEPRECATED.
      *                      This used to be the names of the fields that should be updated with the server answer,
-     *                      but is not needed any more and will be removed in a future version of OTRS.
+     *                      but is not needed any more and will be removed in a future version of KIX.
      * @param {Function} [SuccessCallback] Callback function to be executed on AJAX success (optional).
      * @param {String} Action The action parameter from the perl module (KIX4OTRS)
      * @param {Boolean} async Optional, defines if this is a asynchronous call (true default) or synchronous (false) (KIX4OTRS)

@@ -138,7 +138,7 @@ END
 get system data for key
 
     my $SystemData = $SystemDataObject->SystemDataGet(
-        Key => 'OTRS Version',
+        Key => 'KIX Version',
     );
 
 returns value as a simple scalar, or undef if the key does not exist.
@@ -275,7 +275,7 @@ Returns true if update was succesful or false if otherwise - for instance
 if key did not exist.
 
     my $Result = $SystemDataObject->SystemDataUpdate(
-        Key     => 'OTRS Version',
+        Key     => 'KIX Version',
         Value   => 'Some New Value',
         UserID  => 123,
     );
@@ -342,7 +342,7 @@ Returns true if delete was succesful or false if otherwise - for instance
 if key did not exist.
 
     $SystemDataObject->SystemDataDelete(
-        Key    => 'OTRS Version',
+        Key    => 'KIX Version',
         UserID => 123,
     );
 

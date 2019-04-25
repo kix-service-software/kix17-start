@@ -161,7 +161,7 @@ sub WriteDefault {
 
     # write default config file
     my $Out;
-    $Out .= "# OTRS config file (automatically generated)\n";
+    $Out .= "# KIX config file (automatically generated)\n";
     $Out .= "# VERSION:1.1\n";
     $Out .= "package Kernel::Config::Files::ZZZAAuto;\n";
     $Out .= "use strict;\n";
@@ -375,7 +375,7 @@ sub CreateConfig {
 
     # write new config file
     my $Out;
-    $Out .= "# OTRS config file (automatically generated)\n";
+    $Out .= "# KIX config file (automatically generated)\n";
     $Out .= "# VERSION:1.1\n";
     $Out .= "package Kernel::Config::Files::ZZZAuto;\n";
     $Out .= "use strict;\n";

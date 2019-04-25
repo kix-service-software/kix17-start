@@ -46,7 +46,7 @@ sub Run {
         Priority => 'Error',
         Link     => $LayoutObject->{Baselink} . 'Action=AdminUser',
         Info     => Translatable(
-            'Don\'t use the Superuser account to work with OTRS! Create new Agents and work with these accounts instead.'
+            'Don\'t use the Superuser account to work with KIX! Create new Agents and work with these accounts instead.'
         ),
     );
 }

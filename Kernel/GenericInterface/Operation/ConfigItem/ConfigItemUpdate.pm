@@ -162,8 +162,8 @@ perform ConfigItemUpdate Operation. This will return the updated config item num
         Success         => 1,                       # 0 or 1
         ErrorMessage    => '',                      # in case of error
         Data            => {                        # result data payload after Operation
-            ConfigItemID => 123,                    # Configuration Item  ID number in OTRS::ITSM (Service desk system)
-            Number       => 2324454323322           # Configuration Item  Number in OTRS::ITSM (Service desk system)
+            ConfigItemID => 123,                    # Configuration Item  ID number in KIX::ITSM (Service desk system)
+            Number       => 2324454323322           # Configuration Item  Number in KIX::ITSM (Service desk system)
             Error => {                              # should not return errors
                     ErrorCode    => 'ConfigItemUpdate.ErrorCode'
                     ErrorMessage => 'Error Description'

@@ -304,7 +304,7 @@ sub Run {
         );
 
         return $Self->{LayoutObject}->Error(
-            Message => 'Function not available - contact your OTRS-Admin '
+            Message => 'Function not available - contact your KIX-Admin '
                 . 'to have PDF-print enabled.',
         );
 
