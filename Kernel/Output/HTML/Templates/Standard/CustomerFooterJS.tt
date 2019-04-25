@@ -69,23 +69,13 @@ Core.App.Ready(function() {
         InputFieldsMore: [% Translate("and %s more...") | JSON %],
         InputFieldsFilters: [% Translate("Filters") | JSON %],
         InputFieldsConfirm: [% Translate("Confirm") | JSON %],
-        VideoChatEnabled: parseInt([% ( Data.VideoChatEnabled || 0 )| JSON %], 10),
-        VideoChatUnansweredRequests: [% Translate("You have unanswered chat requests") | JSON %],
-        VideoChatClose: [% Translate("Close") | JSON %],
-        VideoChatVideoCall: [% Translate("Video call") | JSON %],
-        VideoChatAudioCall: [% Translate("Audio call") | JSON %],
-        VideoChatInviteAccept: [% Translate("Accept") | JSON %],
-        VideoChatInviteDecline: [% Translate("Decline") | JSON %],
-        VideoChatInternalError: [% Translate("An internal error occurred.") | JSON %],
         ConnectionErrorTitle: [% Translate('Connection error') | JSON %],
         ConnectionErrorReloadButton: [% Translate('Reload page') | JSON %]
     });
 
     Core.Customer.Init();
 
-# KIXBase-capeIT
     Core.KIXBase.Customer.Init();
-# EO KIXBase-capeIT
 
 [% InsertTemplate("Datepicker.tt") %]
 

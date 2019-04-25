@@ -19,6 +19,8 @@ use Kernel::Language qw(Translatable);
 
 our @ObjectDependencies = ();
 
+## no critic qw(InputOutput::RequireBriefOpen)
+
 sub GetDisplayPath {
     return Translatable('Operating System');
 }
@@ -27,7 +29,7 @@ sub Run {
     my $Self = shift;
 
     # Check if used OS is a linux system
-    if ( $^O !~ /(linux|unix|netbsd|freebsd|darwin)/i ) {
+    if ( $^O !~ /(?:linux|unix|netbsd|freebsd|darwin)/i ) {
         return $Self->GetResults();
     }
 
@@ -35,7 +37,7 @@ sub Run {
     my ( $MemTotal, $MemFree, $SwapTotal, $SwapFree );
 
     # If used OS is a linux system
-    if ( -e "/proc/meminfo" && open( $MemInfoFile, '<', "/proc/meminfo" ) ) {    ## no critic
+    if ( -e "/proc/meminfo" && open( $MemInfoFile, '<', "/proc/meminfo" ) ) {
         while (<$MemInfoFile>) {
             my $TmpLine = $_;
             if ( $TmpLine =~ /MemTotal/ ) {

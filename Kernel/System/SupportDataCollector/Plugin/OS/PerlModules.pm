@@ -31,8 +31,8 @@ sub Run {
     my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
 
     my $Output;
-#rbo - T2016121190001552 - renamed OTRS to KIX
-    open( my $FH, "-|", "perl $Home/bin/kix.CheckModules.pl nocolors --all" );
+
+    open( my $FH, "-|", "perl $Home/bin/kix.CheckModules.pl nocolors --all" ) or die "Can't open pipe: ?!";
 
     while (<$FH>) {
         $Output .= $_;
@@ -42,8 +42,7 @@ sub Run {
     if (
         $Output =~ m{Not \s installed! \s \(required}ismx
         || $Output =~ m{failed!}ismx
-        )
-    {
+    ) {
         $Self->AddResultProblem(
             Label   => Translatable('Perl Modules'),
             Value   => $Output,

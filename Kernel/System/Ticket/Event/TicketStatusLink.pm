@@ -67,8 +67,12 @@ sub Run {
         }
 
         # check if link event concerns a ticket
-        return 1 if $Param{Data}->{Comment} !~ m{ \A ( \d+ ) %%Ticket \z }xms;
-        $TicketID = $1;
+        if ( $Param{Data}->{Comment} =~ m{ \A ( \d+ ) %%Ticket \z }xms ) {
+            $TicketID = $1;
+        }
+        else {
+            return 1;
+        }
     }
     else {
         if ( !$Param{Data}->{TicketID} ) {
@@ -227,8 +231,7 @@ sub Run {
         if (
             ( $Param{Event} eq 'TicketStateUpdate' && $NewTicketStateRelevant )
             || ( $Param{Event} eq 'TicketTypeUpdate' && $NewTicketTypeRelevant )
-            )
-        {
+        ) {
             $RelevantNow = 1;
         }
 

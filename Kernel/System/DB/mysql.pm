@@ -113,6 +113,8 @@ sub _FixMysqlUTF8 {
     return if !Encode::is_utf8($$StringRef);
 
     $$StringRef =~ s/([\x{10000}-\x{10FFFF}])/"\x{FFFD}"/eg;
+
+    return 1;
 }
 
 sub Quote {
@@ -194,8 +196,7 @@ sub TableCreate {
         if (
             ( $Tag->{Tag} eq 'Table' || $Tag->{Tag} eq 'TableCreate' )
             && $Tag->{TagType} eq 'Start'
-            )
-        {
+        ) {
             if ( $ConfigObject->Get('Database::ShellOutput') ) {
                 $SQLStart .= $Self->{'DB::Comment'}
                     . "----------------------------------------------------------\n";
@@ -464,7 +465,7 @@ sub TableAlter {
             push @SQL, $SQLStart . " CHANGE $Tag->{NameOld} $Tag->{NameNew} $Tag->{Type} NULL";
 
             # remove possible default (not on TEXT/BLOB/LONGBLOB type, not supported by mysql)
-            if ( $Tag->{Type} !~ /^(TEXT|MEDIUMTEXT|BLOB|LONGBLOB)$/i ) {
+            if ( $Tag->{Type} !~ /^(?:TEXT|MEDIUMTEXT|BLOB|LONGBLOB)$/i ) {
                 push @SQL, "ALTER TABLE $Table ALTER $Tag->{NameNew} DROP DEFAULT";
             }
 

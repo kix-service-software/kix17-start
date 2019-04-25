@@ -173,10 +173,8 @@ sub ExportValuePrepare {
 
     if (
         $AttDirData{Preferences}->{FileSizeBytes}
-        &&
-        $AttDirData{Preferences}->{MD5Sum}
-        )
-    {
+        && $AttDirData{Preferences}->{MD5Sum}
+    ) {
 
         my %RealProperties =
             $Self->{AttachmentStorageObject}->AttachmentStorageGetRealProperties(

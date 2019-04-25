@@ -18,7 +18,6 @@ use URI::Escape qw();
 
 use vars qw(@ISA);
 
-use Kernel::System::Time;
 use Kernel::System::VariableCheck qw(:all);
 use Kernel::Language qw(Translatable);
 
@@ -26,19 +25,18 @@ our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::Language',
     'Kernel::System::AuthSession',
-    'Kernel::System::Chat',
     'Kernel::System::Encode',
     'Kernel::System::HTMLUtils',
     'Kernel::System::JSON',
     'Kernel::System::Log',
     'Kernel::System::Main',
-    # ddoerffel - T2016121190001552 - BusinessSolution code removed    'Kernel::System::SystemMaintenance',
     'Kernel::System::Time',
     'Kernel::System::User',
-    'Kernel::System::VideoChat',
     'Kernel::System::Web::Request',
     'Kernel::System::Group',
 );
+
+## no critic qw(ClassHierarchies::ProhibitExplicitISA Subroutines::ProhibitUnusedPrivateSubroutines)
 
 =head1 NAME
 
@@ -186,7 +184,7 @@ sub new {
 
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => <<EOF,
+                Message  => <<"EOF",
 $FilterConfig->{Module} will be ignored because it wants to operate on all templates or does not specify a template list.
 EOF
             );
@@ -240,8 +238,7 @@ EOF
         elsif (
             $HttpUserAgent =~ /msie\s([0-9.]+)/
             || $HttpUserAgent =~ /internet\sexplorer\/([0-9.]+)/
-            )
-        {
+        ) {
             $Self->{Browser} = 'MSIE';
 
             if ( $1 =~ /(\d+)\.(\d+)/ ) {
@@ -355,8 +352,7 @@ EOF
         && $Self->{Platform} ne 'iOS'
         && $Self->{Platform} ne 'Android'
         && $Self->{Platform} ne 'Windows Phone'
-        )
-    {
+    ) {
         $Self->{BrowserRichText} = 0;
     }
 
@@ -417,7 +413,6 @@ EOF
         );
     }
 
-    # KIXCore-capeIT
     my $ThemePath   = $Self->{TemplateDir};
     my $HomeDir     = $ConfigObject->Get('Home');
     my $ThemeKIXDir = '';
@@ -428,15 +423,14 @@ EOF
         last if ( -e $ThemeKIXDir )
     }
 
-    # if ( !-e $Self->{TemplateDir} ) {
     if ( !-e ( $ThemeKIXDir || $Self->{TemplateDir} ) ) {
 
-        # EO KIXCore-capeIT
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message =>
-                "No existing template directory found ('$Self->{TemplateDir}')!.
-                Default theme used instead.",
+            Message => <<"END",
+No existing template directory found ('$Self->{TemplateDir}')!
+Default theme used instead.
+END
         );
 
         # Set TemplateDir to 'Standard' as a fallback.
@@ -451,7 +445,6 @@ EOF
     my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
 
     # load sub layout files
-    # KIXCore-capeIT
     my $LayoutPath    = $ConfigObject->Get('TemplateDir') . '/HTML/Layout';
     my $Home          = $ConfigObject->Get('Home');
     my $LayoutPathKIX = $LayoutPath;
@@ -478,13 +471,11 @@ EOF
                         );
                     }
                     $LayoutFiles{$NewFile} = $NewFile;
-                    push @ISA, "Kernel::Output::HTML::Layout::$NewFile";
+                    push( @ISA, "Kernel::Output::HTML::Layout::$NewFile" );
                 }
             }
         }
     }
-
-    # EO KIXCore-capeIT
 
     my $NewDir = $ConfigObject->Get('TemplateDir') . '/HTML/Layout';
     if ( -e $NewDir ) {
@@ -494,11 +485,7 @@ EOF
         );
         for my $NewFile (@NewFiles) {
 
-            # KIXCore-capeIT
-            # if ( $NewFile !~ /Layout.pm$/ ) {
             if ( ( $NewFile !~ /Layout.pm$/ ) && !exists( $LayoutFiles{$NewFile} ) ) {
-
-                # EO KIXCore-capeIT
 
                 $NewFile =~ s{\A.*\/(.+?).pm\z}{$1}xms;
                 my $NewClassName = "Kernel::Output::HTML::Layout::$NewFile";
@@ -508,11 +495,8 @@ EOF
                     );
                 }
 
-                # KIXCore-capeIT
                 $LayoutFiles{$NewFile} = $NewFile;
-                push @ISA, "Kernel::Output::HTML::Layout::$NewFile";
-
-                # EO KIXCore-capeIT
+                push( @ISA, "Kernel::Output::HTML::Layout::$NewFile" );
             }
         }
     }
@@ -563,11 +547,14 @@ sub Block {
         );
         return;
     }
-    push @{ $Self->{BlockData} },
+    push( @{ $Self->{BlockData} },
         {
-        Name => $Param{Name},
-        Data => $Param{Data},
-        };
+            Name => $Param{Name},
+            Data => $Param{Data},
+        }
+    );
+
+    return 1;
 }
 
 =item JSONEncode()
@@ -749,7 +736,6 @@ sub Login {
             # Restrict Cookie to HTTPS if it is used.
             $CookieSecureAttribute = 1;
         }
-        # ddoerffel - T2016121190001552 - BusinessSolution code removed
         $Self->{SetCookies}->{KIXBrowserHasCookie} = $Kernel::OM->Get('Kernel::System::Web::Request')->SetCookie(
             Key      => 'KIXBrowserHasCookie',
             Value    => 1,
@@ -787,7 +773,7 @@ sub Login {
         for my $CSSStatement ( sort keys %AgentLogo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = '';
-                if ( $AgentLogo{$CSSStatement} !~ /(http|ftp|https):\//i ) {
+                if ( $AgentLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
                     $WebPath = $ConfigObject->Get('Frontend::WebPath');
                 }
                 $Data{'URL'} = 'url(' . $WebPath . $AgentLogo{$CSSStatement} . ')';
@@ -915,8 +901,7 @@ sub Login {
         if (
             $ConfigObject->Get('LostPassword')
             && $ConfigObject->Get('AuthModule') eq 'Kernel::System::Auth::DB'
-            )
-        {
+        ) {
             $Self->Block(
                 Name => 'LostPasswordLink',
                 Data => \%Param,
@@ -1071,8 +1056,6 @@ sub Error {
 
     if ( !$Param{Message} ) {
         $Param{Message} = $Param{BackendMessage};
-
-        # ddoerffel - T2016121190001552 - BusinessSolution code removed
     }
 
     if ( $Param{BackendTraceback} ) {
@@ -1282,8 +1265,7 @@ sub Header {
         && $AgentLogoCustom
         && IsHashRefWithData($AgentLogoCustom)
         && $AgentLogoCustom->{ $Self->{SkinSelected} }
-        )
-    {
+    ) {
         %AgentLogo = %{ $AgentLogoCustom->{ $Self->{SkinSelected} } };
     }
 
@@ -1298,7 +1280,7 @@ sub Header {
         for my $CSSStatement ( sort keys %AgentLogo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = '';
-                if ( $AgentLogo{$CSSStatement} !~ /(http|ftp|https):\//i ) {
+                if ( $AgentLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
                     $WebPath = $ConfigObject->Get('Frontend::WebPath');
                 }
                 $Data{'URL'} = 'url(' . $WebPath . $AgentLogo{$CSSStatement} . ')';
@@ -1482,7 +1464,7 @@ sub Header {
             # enforce default if empty
             if (!$UserPreferences{UserToolbarPosition}) {
                 $UserPreferences{UserToolbarPosition} = 'ToolbarRight';
-                my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
+                my $Success = $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
                     Key    => 'UserToolbarPosition',
                     Value  => $UserPreferences{UserToolbarPosition},
                     UserID => $Self->{UserID},
@@ -1509,8 +1491,7 @@ sub Header {
         if (
             $Param{ShowLogoutButton}
             && $ConfigObject->Get('Frontend::Module')->{Logout}
-            )
-        {
+        ) {
             $Self->Block(
                 Name => 'Logout',
                 Data => \%Param,
@@ -1611,17 +1592,10 @@ sub Footer {
     );
 
     # Banner
-    # ddoerffel - T2016121190001552 - BusinessSolution code removed
     if ( !$ConfigObject->Get('Secure::DisableBanner') ) {
         $Self->Block(
             Name => 'Banner',
         );
-    }
-
-    # Check if video chat is enabled.
-    if ( $Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::VideoChat', Silent => 1 ) ) {
-        $Param{VideoChatEnabled} = $Kernel::OM->Get('Kernel::System::VideoChat')->IsEnabled()
-            || $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'UnitTestMode' ) // 0;
     }
 
     # create & return output
@@ -2272,8 +2246,7 @@ sub BuildSelection {
             if (
                 $Param{Filters}->{$Filter}->{Name}
                 && $Param{Filters}->{$Filter}->{Values}
-                )
-            {
+            ) {
                 my $FilterData = $Self->_BuildSelectionDataRefCreate(
                     Data         => $Param{Filters}->{$Filter}->{Values},
                     AttributeRef => $AttributeRef,
@@ -2873,8 +2846,7 @@ sub NavigationBar {
             if (
                 ( $Item->{Type} && $Item->{Type} eq 'Menu' )
                 && ( $Item->{NavBar} && $Item->{NavBar} eq $Param{Type} )
-                )
-            {
+            ) {
                 $Item->{CSS} .= ' Selected';
             }
 
@@ -3228,8 +3200,7 @@ sub BuildDateSelection {
         && $Param{ $Prefix . 'Month' }
         && $Param{ $Prefix . 'Day' }
         && !$Param{OverrideTimeZone}
-        )
-    {
+    ) {
         my $TimeStamp = $Self->{TimeObject}->TimeStamp2SystemTime(
             String => $Param{ $Prefix . 'Year' } . '-'
                 . $Param{ $Prefix . 'Month' } . '-'
@@ -3478,19 +3449,30 @@ sub BuildDateSelection {
         Data => $VacationDays,
     );
 
+    my $DateInFuture    = 'false';
+    my $DateNotInFuture = 'false';
+    if ( $ValidateDateInFuture ) {
+        $DateInFuture = 'true';
+    }
+
+    if ( $ValidateDateNotInFuture ) {
+        $DateNotInFuture = 'true';
+    }
+
     # Add Datepicker JS to output.
-    my $DatepickerJS = '
+    my $DatepickerJS = <<"END";
     Core.UI.Datepicker.Init({
-        Day: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Day"),
-        Month: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Month"),
-        Year: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Year"),
-        Hour: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Hour"),
-        Minute: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Minute"),
-        VacationDays: ' . $VacationDaysJSON . ',
-        DateInFuture: ' .    ( $ValidateDateInFuture    ? 'true' : 'false' ) . ',
-        DateNotInFuture: ' . ( $ValidateDateNotInFuture ? 'true' : 'false' ) . ',
-        WeekDayStart: ' . $WeekDayStart . '
-    });';
+        Day: \$("#" + Core.App.EscapeSelector("$Prefix") + "Day"),
+        Month: \$("#" + Core.App.EscapeSelector("$Prefix") + "Month"),
+        Year: \$("#" + Core.App.EscapeSelector("$Prefix") + "Year"),
+        Hour: \$("#" + Core.App.EscapeSelector("$Prefix") + "Hour"),
+        Minute: \$("#" + Core.App.EscapeSelector("$Prefix") + "Minute"),
+        VacationDays: $VacationDaysJSON,
+        DateInFuture: $DateInFuture,
+        DateNotInFuture: $DateNotInFuture,
+        WeekDayStart: $WeekDayStart
+    });
+END
 
     $Self->AddJSOnDocumentComplete( Code => $DatepickerJS );
     $Self->{HasDatepicker} = 1;    # Call some Datepicker init code.
@@ -3522,7 +3504,6 @@ sub CustomerLogin {
             # Restrict Cookie to HTTPS if it is used.
             $CookieSecureAttribute = 1;
         }
-        # ddoerffel - T2016121190001552 - BusinessSolution code removed
         $Self->{SetCookies}->{KIXBrowserHasCookie} = $Kernel::OM->Get('Kernel::System::Web::Request')->SetCookie(
             Key      => 'KIXBrowserHasCookie',
             Value    => 1,
@@ -3561,7 +3542,7 @@ sub CustomerLogin {
         for my $CSSStatement ( sort keys %CustomerLogo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = '';
-                if ( $CustomerLogo{$CSSStatement} !~ /(http|ftp|https):\//i ) {
+                if ( $CustomerLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
                     $WebPath = $ConfigObject->Get('Frontend::WebPath');
                 }
                 $Data{'URL'} = 'url(' . $WebPath . $CustomerLogo{$CSSStatement} . ')';
@@ -3672,8 +3653,7 @@ sub CustomerLogin {
             $ConfigObject->Get('CustomerPanelLostPassword')
             && $ConfigObject->Get('Customer::AuthModule') eq
             'Kernel::System::CustomerAuth::DB'
-            )
-        {
+        ) {
             $Self->Block(
                 Name => 'LostPasswordLink',
                 Data => \%Param,
@@ -3689,9 +3669,7 @@ sub CustomerLogin {
             $ConfigObject->Get('CustomerPanelCreateAccount')
             && $ConfigObject->Get('Customer::AuthModule') eq
             'Kernel::System::CustomerAuth::DB'
-            )
-
-        {
+        ) {
             $Self->Block(
                 Name => 'CreateAccountLink',
                 Data => \%Param,
@@ -3739,32 +3717,28 @@ sub CustomerHeader {
     if (
         !$Param{Area}
         && $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }
-        )
-    {
+    ) {
         $Param{Area} = $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }
             ->{NavBarName} || '';
     }
     if (
         !$Param{Title}
         && $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }
-        )
-    {
+    ) {
         $Param{Title} = $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }->{Title}
             || '';
     }
     if (
         !$Param{Area}
         && $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }
-        )
-    {
+    ) {
         $Param{Area} = $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }
             ->{NavBarName} || '';
     }
     if (
         !$Param{Title}
         && $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }
-        )
-    {
+    ) {
         $Param{Title} = $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }->{Title}
             || '';
     }
@@ -3869,7 +3843,7 @@ sub CustomerHeader {
         for my $CSSStatement ( sort keys %CustomerLogo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = '';
-                if ( $CustomerLogo{$CSSStatement} !~ /(http|ftp|https):\//i ) {
+                if ( $CustomerLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
                     $WebPath = $ConfigObject->Get('Frontend::WebPath');
                 }
                 $Data{'URL'} = 'url(' . $WebPath . $CustomerLogo{$CSSStatement} . ')';
@@ -3936,7 +3910,6 @@ sub CustomerFooter {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # Banner
-    # ddoerffel - T2016121190001552 - added on code merge
     if ( !$ConfigObject->Get('Secure::DisableBanner') ) {
         $Self->Block(
             Name => 'Banner',
@@ -3961,12 +3934,6 @@ sub CustomerFooter {
             AutocompleteConfig => $AutocompleteConfigJSON,
         },
     );
-
-    # Check if video chat is enabled.
-    if ( $Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::VideoChat', Silent => 1 ) ) {
-        $Param{VideoChatEnabled} = $Kernel::OM->Get('Kernel::System::VideoChat')->IsEnabled()
-            || $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'UnitTestMode' ) // 0;
-    }
 
     # create & return output
     return $Self->Output(
@@ -4146,8 +4113,7 @@ sub CustomerNavigationBar {
                 !$SelectedFlag
                 && $NavBarModule{$Item}->{Link} =~ /Action=$Self->{Action}/
                 && $NavBarModule{$Item}->{Link} =~ /$Self->{Subaction}/    # Subaction can be empty
-                )
-            {
+            ) {
                 $NavBarModule{$Item}->{Class} .= ' Selected';
                 $SelectedFlag = 1;
             }
@@ -4177,8 +4143,7 @@ sub CustomerNavigationBar {
                 if (
                     $ItemSub->{Link} =~ /Action=$Self->{Action}/
                     && $ItemSub->{Link} =~ /$Self->{Subaction}/    # Subaction can be empty
-                    )
-                {
+                ) {
                     $NavBarModule{$Item}->{Class} .= ' Selected';
                     $ItemSub->{Class} .= ' SubSelected';
                     $SelectedFlag = 1;
@@ -4247,30 +4212,6 @@ sub CustomerNavigationBar {
                 Name => 'Preferences',
                 Data => \%Param,
             );
-        }
-
-        # Show open chat requests (if chat engine is active).
-        if ( $Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::Chat', Silent => 1 ) ) {
-            if ( $ConfigObject->Get('ChatEngine::Active') ) {
-                my $ChatObject = $Kernel::OM->Get('Kernel::System::Chat');
-                my $Chats      = $ChatObject->ChatList(
-                    Status        => 'request',
-                    TargetType    => 'Customer',
-                    ChatterID     => $Self->{UserID},
-                    ChatterType   => 'Customer',
-                    ChatterActive => 0,
-                );
-
-                my $Count = scalar $Chats;
-
-                $Self->Block(
-                    Name => 'ChatRequests',
-                    Data => {
-                        Count => $Count,
-                        Class => ($Count) ? '' : 'Hidden',
-                    },
-                );
-            }
         }
     }
 
@@ -4618,7 +4559,7 @@ sub RichTextDocumentServe {
 
             # Strip out external images, but show a confirmation button to
             #   load them explicitly.
-            my %SafetyCheckResult = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            my %SafetyCheckResultNoExt = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
                 String       => $Param{Data}->{Content},
                 NoApplet     => 1,
                 NoObject     => 1,
@@ -4630,9 +4571,9 @@ sub RichTextDocumentServe {
                 Debug        => $Self->{Debug},
             );
 
-            $Param{Data}->{Content} = $SafetyCheckResult{String};
+            $Param{Data}->{Content} = $SafetyCheckResultNoExt{String};
 
-            if ( $SafetyCheckResult{Replace} ) {
+            if ( $SafetyCheckResultNoExt{Replace} ) {
 
                 # Generate blocker message.
                 my $Message = $Self->Output( TemplateFile => 'AttachmentBlocker' );
@@ -4819,7 +4760,10 @@ sub _BuildSelectionOptionRefCreate {
 
     # set Translation option
     $OptionRef->{Translation} = 1;
-    if ( defined $Param{Translation} && $Param{Translation} eq 0 ) {
+    if (
+        defined $Param{Translation}
+        && $Param{Translation} eq '0'
+    ) {
         $OptionRef->{Translation} = 0;
     }
 
@@ -4828,8 +4772,7 @@ sub _BuildSelectionOptionRefCreate {
         $OptionRef->{Translation}
         && $OptionRef->{SelectedValue}
         && ref $OptionRef->{SelectedValue} eq 'HASH'
-        )
-    {
+    ) {
         my %SelectedValueNew;
         for my $OriginalKey ( sort keys %{ $OptionRef->{SelectedValue} } ) {
             my $TranslatedKey = $Self->{LanguageObject}->Translate($OriginalKey);
@@ -5210,8 +5153,7 @@ sub _BuildSelectionDataRefCreate {
         }
 
         # sort array
-        if ( $OptionRef->{Sort} eq 'AlphanumericKey' || $OptionRef->{Sort} eq 'AlphanumericValue' )
-        {
+        if ( $OptionRef->{Sort} eq 'AlphanumericKey' || $OptionRef->{Sort} eq 'AlphanumericValue' ) {
             my @SortArray = sort( @{$DataLocal} );
             $DataLocal = \@SortArray;
         }
@@ -5238,8 +5180,7 @@ sub _BuildSelectionDataRefCreate {
     if (
         ref $DataLocal eq 'HASH'
         || ( ref $DataLocal eq 'ARRAY' && ref $DataLocal->[0] ne 'HASH' )
-        )
-    {
+    ) {
         for my $Row ( @{$DataRef} ) {
             if ( $DisabledElements{ $Row->{Value} } ) {
                 $Row->{Key}      = '-';
@@ -5268,8 +5209,7 @@ sub _BuildSelectionDataRefCreate {
                     || $OptionRef->{SelectedValue}->{ $Row->{Value} }
                 )
                 && !$DisabledElements{ $Row->{Value} }
-                )
-            {
+            ) {
                 $Row->{Selected} = 1;
             }
         }
@@ -5485,9 +5425,8 @@ sub _DisableBannerCheck {
     return   if !$Param{OutputRef};
 
     # remove the version tag from the header
-    ${ $Param{OutputRef} } =~ s{
-                ^ X-Powered-By: .+? Open \s Ticket \s Request \s System \s \(http .+? \)$ \n
-            }{}smx;
+    my $Pattern = '^ X-Powered-By: .+? Open \s Ticket \s Request \s System \s \(http .+? \)$ \n';
+    ${ $Param{OutputRef} } =~ s{$Pattern}{}smx;
 
     return 1;
 }
@@ -5593,13 +5532,6 @@ sub WrapPlainText {
     $WorkString =~ s/\r\n?/\n/g;
     $WorkString =~ s/(^>.+|.{4,$Param{MaxCharacters}})(?:\s|\z)/$1\n/gm;
     return $WorkString;
-}
-
-#COMPAT: to 3.0.x and lower (can be removed later)
-sub TransfromDateSelection {
-    my $Self = shift;
-
-    return $Self->TransformDateSelection(@_);
 }
 
 =item ProgressBar()

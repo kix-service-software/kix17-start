@@ -165,7 +165,7 @@ sub ObjectDescriptionGet {
 
     return %Description if $Param{Mode} && $Param{Mode} eq 'Temporary';
 
-    return if $Param{Key} !~ /^(.+):(.+)$/;
+    return if $Param{Key} !~ /^(?:.+):(?:.+)$/;
 
     # get description
     my %Document = $Self->{DocumentObject}->DocumentMetaGet( DocumentID => $Param{Key} );

@@ -59,8 +59,7 @@ sub Run {
         qw(ID Name Keywords Comment Comment1 Comment2 Subject TextModule
         Language LanguageEdit ValidID FormID Limit Show Download
         XMLUploadDoNotAdd XMLResultFileID XMLResultFileName)
-        )
-    {
+    ) {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
     }
 
@@ -105,8 +104,7 @@ sub Run {
         && $Config->{ShortcutMappings}
         && ref( $Config->{ShortcutMappings} ) eq 'HASH'
         && $Config->{ShortcutMappings}->{'rw'}
-        )
-    {
+    ) {
         %ShortcutMappings = %{ $Config->{ShortcutMappings} };
     }
 
@@ -159,7 +157,6 @@ sub Run {
             for my $Data ( @{$DataRow} ) {
                 my $ID;
                 my $Link;
-                my $Link2;
                 if ( !$Data ) {
                 }
                 elsif ( $Data eq ${$DataRow}[0] ) {
@@ -182,8 +179,7 @@ sub Run {
                     }
                     $Link = 'Action=AdminSystemAddress;Subaction=Change;ID=' . $ID;
                 }
-                elsif (%ShortcutMappings)
-                {
+                elsif (%ShortcutMappings) {
                     my $ExistingPermission = 0;
                     for my $ShortCutMaping ( keys %ShortcutMappings ) {
                         if ( $Data !~ /\d/ && $Data !~ /valid/ ) {
@@ -207,8 +203,7 @@ sub Run {
                     || $Data =~ /owner/
                     || $Data =~ /priority/
                     || $Data =~ /rw/
-                    )
-                {
+                ) {
                     $ID = $GroupObject->GroupLookup( Group => ${$DataRow}[1] );
                     $Link = 'Action=AdminRoleGroup;Subaction=Group;ID=' . $ID;
                 }

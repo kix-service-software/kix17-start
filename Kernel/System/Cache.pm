@@ -20,7 +20,7 @@ our @ObjectDependencies = (
 
 =head1 NAME
 
-Kernel::System::Cache - Key/value based data cache for OTRS
+Kernel::System::Cache - Key/value based data cache for KIX
 
 =head1 SYNOPSIS
 

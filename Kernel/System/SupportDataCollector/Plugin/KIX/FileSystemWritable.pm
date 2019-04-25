@@ -43,7 +43,7 @@ sub Run {
 
     for my $TestDirectory (@TestDirectories) {
         my $File = $Home . $TestDirectory . "check_permissions.$$";
-        if ( open( my $FH, '>', "$File" ) ) {    ## no critic
+        if ( open( my $FH, '>', "$File" ) ) {
             print $FH "test";
             close($FH);
             unlink $File;

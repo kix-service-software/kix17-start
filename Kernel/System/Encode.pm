@@ -17,7 +17,11 @@ use Encode;
 use Encode::Locale;
 use IO::Interactive qw(is_interactive);
 
-our @ObjectDependencies = ();
+our @ObjectDependencies = (
+    'Kernel::System::Main'
+);
+
+## no critic qw(Variables::RequireLocalizedPunctuationVars Subroutines::ProtectPrivateSubs InputOutput::RequireEncodingWithUTF8Layer)
 
 =head1 NAME
 
@@ -178,7 +182,7 @@ sub Convert {
     if ( $AdditionalChineseCharsets{ $Param{From} } ) {
 
         # require module, print error if module was not found
-        if ( !eval "require Encode::HanExtra" ) {    ## no critic
+        if ( !$Kernel::OM->Get('Kernel::System::Main')->Require('Encode::HanExtra') ) {
             print STDERR
                 "Charset '$Param{From}' requires Encode::HanExtra, which is not installed!\n";
         }
@@ -359,7 +363,7 @@ sub SetIO {
 
         # http://www.perlmonks.org/?node_id=644786
         # http://bugs.otrs.org/show_bug.cgi?id=12100
-        binmode( $Row, ':utf8' );    ## no critic
+        binmode( $Row, ':utf8' );
     }
 
     return;
@@ -386,7 +390,7 @@ sub EncodingIsAsciiSuperset {
         print STDERR "Unsupported Encoding $Param{Encoding}!\n";
         return;
     }
-    my $Test = join '', map chr, 0 .. 127;
+    my $Test = join '', map( { chr }  0 .. 127 );
     return Encode::encode( $Param{Encoding}, $Test )
         eq Encode::encode( 'ASCII',          $Test );
 }

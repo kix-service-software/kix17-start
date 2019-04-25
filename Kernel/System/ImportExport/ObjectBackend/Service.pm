@@ -66,10 +66,11 @@ sub new {
     my $ITSMCriticality = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet(
         Name => 'ITSMCriticality',
     );
-    if (   $ITSMCriticality
+    if (
+        $ITSMCriticality
         && $ITSMCriticality->{'FieldType'}  eq 'Dropdown'
-        && $ITSMCriticality->{'ObjectType'} eq 'Ticket' )
-    {
+        && $ITSMCriticality->{'ObjectType'} eq 'Ticket'
+    ) {
         $Self->{CriticalityList} = $ITSMCriticality->{'Config'}->{'PossibleValues'};
         my %TmpHash2 = reverse( %{ $Self->{CriticalityList} } );
         $Self->{ReverseCriticalityList} = \%TmpHash2;
@@ -206,8 +207,7 @@ sub MappingObjectAttributesGet {
         if (
             $Preferences{$Item}->{SelectionSource}
             && $Preferences{$Item}->{PrefKey} =~ /^(.+)ID$/
-            )
-        {
+        ) {
             my $NamePart = $1;
             push(
                 @{$ElementList},
@@ -456,8 +456,13 @@ sub ExportDataGet {
             next PREFERENCECHECK if ( !$Preferences{$CurrKey} );
 
             # check if this is an ID-attribute...
-            next PREFERENCECHECK if ( $CurrKey !~ /^(.+)ID$/ );
-            my $NamePart = $1;
+            my $NamePart;
+            if ( $CurrKey =~ /^(.+)ID$/ ) {
+                $NamePart = $1;
+            }
+            else {
+                next PREFERENCECHECK;
+            }
 
             # skip if an attribute with a similar name but no "ID" suffix exists...
             next PREFERENCECHECK if ( $ServiceData{$NamePart} );
@@ -467,15 +472,13 @@ sub ExportDataGet {
             if (
                 $Preferences{$CurrKey}->{SelectionSource}
                 && $Preferences{$CurrKey}->{SelectionSource} eq 'QueueList'
-                )
-            {
+            ) {
                 %SelectionList = $Kernel::OM->Get('Kernel::System::Queue')->QueueList();
             }
             elsif (
                 $Preferences{$CurrKey}->{SelectionSource}
                 && $Preferences{$CurrKey}->{SelectionSource} eq 'UserList'
-                )
-            {
+            ) {
                 %SelectionList = Kernel::OM->Get('Kernel::System::UserObject')->UserList(
 
                     #Type  => 'Long',
@@ -485,8 +488,7 @@ sub ExportDataGet {
             elsif (
                 $Preferences{$CurrKey}->{SelectionSource}
                 && $Preferences{$CurrKey}->{SelectionSource} eq 'TypeList'
-                )
-            {
+            ) {
                 %SelectionList = $Kernel::OM->Get('Kernel::System::Type')->TypeList();
             }
             elsif (
@@ -618,8 +620,7 @@ sub ImportDataSave {
         if (
             $MappingObjectData->{Identifier}
             && $Identifier{ $MappingObjectData->{Key} }
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Can't import this entity. "
@@ -664,8 +665,7 @@ sub ImportDataSave {
         $Self->{ReverseCriticalityList}
         && $NewServiceData{Criticality}
         && $Self->{ReverseCriticalityList}->{ $NewServiceData{Criticality} }
-        )
-    {
+    ) {
         $NewServiceData{CriticalityID} =
             $Self->{ReverseCriticalityList}->{ $NewServiceData{Criticality} };
     }
@@ -678,8 +678,7 @@ sub ImportDataSave {
         $Self->{ReverseServiceTypeList}
         && $NewServiceData{Type}
         && $Self->{ReverseServiceTypeList}->{ $NewServiceData{Type} }
-        )
-    {
+    ) {
         $NewServiceData{TypeID} = $Self->{ReverseServiceTypeList}->{ $NewServiceData{Type} };
     }
     if ( !$NewServiceData{TypeID} ) {
@@ -756,8 +755,7 @@ sub ImportDataSave {
         if (
             $NewServiceData{$CurrUsedKey}
             && ( !$NewServiceData{$NamePart} || $NamePart eq $CurrUsedKey )
-            )
-        {
+        ) {
             $NewServiceData{$NamePart} = $SelectionList{ $NewServiceData{$CurrUsedKey} };
         }
 
@@ -781,8 +779,7 @@ sub ImportDataSave {
             !$NewServiceData{$CurrUsedKey}
             && $NewServiceData{$NamePart}
             && $ReverseSelectionList{ $NewServiceData{$NamePart} }
-            )
-        {
+        ) {
             $NewServiceData{$CurrUsedKey} = $ReverseSelectionList{ $NewServiceData{$NamePart} };
         }
 
@@ -791,8 +788,7 @@ sub ImportDataSave {
             !$NewServiceData{$CurrUsedKey}
             && $NewServiceData{$NamePart}
             && !$ReverseSelectionList{ $NewServiceData{$NamePart} }
-            )
-        {
+        ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Can't import this entity. "
@@ -814,8 +810,7 @@ sub ImportDataSave {
         !$ServiceIdentifierKey
         || $ServiceIdentifierKey eq 'Name'
         || !$NewServiceData{$ServiceIdentifierKey}
-        )
-    {
+    ) {
         if ( $NewServiceData{FullName} ) {
             $ServiceID = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
                 Name => $NewServiceData{FullName},
@@ -876,12 +871,11 @@ sub ImportDataSave {
                 if (%NewDummyServiceData) {
                     if (
                         (
-                               $NewDummyServiceData{ParentID}
+                            $NewDummyServiceData{ParentID}
                             && $ParentServiceID != $NewDummyServiceData{ParentID}
                         )
                         || ( !$NewDummyServiceData{ParentID} && $ParentServiceID )
-                        )
-                    {
+                    ) {
                         $NewDummyServiceData{ParentID} = $ParentServiceID;
                         $Result = $Kernel::OM->Get('Kernel::System::Service')->ServiceUpdate(
                             %NewDummyServiceData,

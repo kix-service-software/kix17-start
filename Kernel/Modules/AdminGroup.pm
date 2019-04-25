@@ -187,8 +187,7 @@ sub Run {
                 if (
                     !$ConfigObject->Get('Frontend::Module')->{AdminUserGroup}
                     && $ConfigObject->Get('Frontend::Module')->{AdminRoleGroup}
-                    )
-                {
+                ) {
                     return $LayoutObject->Redirect(
                         OP => "Action=AdminRoleGroup;Subaction=Group;ID=$GroupID",
                     );

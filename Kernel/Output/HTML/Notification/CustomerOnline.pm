@@ -49,8 +49,7 @@ sub Run {
             && $Data{UserLastRequest} + ( $IdleMinutes * 60 ) > $Kernel::OM->Get('Kernel::System::Time')->SystemTime()
             && $Data{UserFirstname}
             && $Data{UserLastname}
-            )
-        {
+        ) {
             $Online{ $Data{UserID} } = "$Data{UserFirstname} $Data{UserLastname}";
             if ( $Param{Config}->{ShowEmail} ) {
                 $Online{ $Data{UserID} } .= " ($Data{UserEmail})";

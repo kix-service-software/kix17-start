@@ -113,8 +113,7 @@ sub Run {
                 && defined $SystemMaintenanceData->{StopDate}
             )
             && $SystemMaintenanceData->{StartDate} > $SystemMaintenanceData->{StopDate}
-            )
-        {
+        ) {
 
             # set server error
             $Error{StartDateServerError} = 'ServerError';
@@ -151,7 +150,7 @@ sub Run {
             );
         }
 
-        my $SystemMaintenanceID = $SystemMaintenanceObject->SystemMaintenanceAdd(
+        my $NewSystemMaintenanceID = $SystemMaintenanceObject->SystemMaintenanceAdd(
             StartDate        => $SystemMaintenanceData->{StartDate},
             StopDate         => $SystemMaintenanceData->{StopDate},
             Comment          => $SystemMaintenanceData->{Comment},
@@ -163,7 +162,7 @@ sub Run {
         );
 
         # show error if can't create
-        if ( !$SystemMaintenanceID ) {
+        if ( !$NewSystemMaintenanceID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable('There was an error creating the System Maintenance'),
             );
@@ -172,7 +171,7 @@ sub Run {
         # redirect to edit screen
         return $LayoutObject->Redirect(
             OP =>
-                "Action=$Self->{Action};Subaction=SystemMaintenanceEdit;SystemMaintenanceID=$SystemMaintenanceID;Saved=1"
+                "Action=$Self->{Action};Subaction=SystemMaintenanceEdit;SystemMaintenanceID=$NewSystemMaintenanceID;Saved=1"
         );
     }
 
@@ -284,8 +283,7 @@ sub Run {
                 && defined $SystemMaintenanceData->{StopDate}
             )
             && $SystemMaintenanceData->{StartDate} > $SystemMaintenanceData->{StopDate}
-            )
-        {
+        ) {
             $Error{StartDateServerError} = 'ServerError';
 
             # add notification
@@ -451,8 +449,7 @@ sub _ShowEdit {
             $SystemMaintenanceData->{ $Prefix . 'TimeStamp' }
             && $SystemMaintenanceData->{ $Prefix . 'TimeStamp' }
             =~ m{^(\d\d\d\d)-(\d\d)-(\d\d)\s(\d\d):(\d\d):(\d\d)$}xi
-            )
-        {
+        ) {
             $TimeConfig{$Prefix}->{ $Prefix . 'Year' }   = $1;
             $TimeConfig{$Prefix}->{ $Prefix . 'Month' }  = $2;
             $TimeConfig{$Prefix}->{ $Prefix . 'Day' }    = $3;
@@ -498,9 +495,8 @@ sub _ShowEdit {
 
     if (
         defined $SystemMaintenanceData->{ShowLoginMessage}
-        && $SystemMaintenanceData->{ShowLoginMessage} == '1'
-        )
-    {
+        && $SystemMaintenanceData->{ShowLoginMessage} eq '1'
+    ) {
         $Param{Checked} = 'checked="checked"';
     }
 
@@ -607,8 +603,7 @@ sub _GetParams {
         StartDateYear StartDateMonth StartDateDay StartDateHour StartDateMinute
         StopDateYear StopDateMonth StopDateDay StopDateHour StopDateMinute
         Comment LoginMessage ShowLoginMessage NotifyMessage ValidID )
-        )
-    {
+    ) {
         $GetParam->{$ParamName} = $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => $ParamName );
     }
     $Param{ShowLoginMessage} ||= 0;

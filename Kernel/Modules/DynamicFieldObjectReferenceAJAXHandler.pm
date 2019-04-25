@@ -127,7 +127,7 @@ sub Run {
 
         # for customer frontend
         if ( $CallingAction =~ /^CustomerTicket/ ) {
-            my $ACL = $TicketObject->TicketAcl(
+            $ACL = $TicketObject->TicketAcl(
                 %GetParam,
                 Action         => $CallingAction,
                 ReturnType     => 'Ticket',
@@ -139,7 +139,7 @@ sub Run {
 
         # for agent frontend
         else {
-            my $ACL = $TicketObject->TicketAcl(
+            $ACL = $TicketObject->TicketAcl(
                 %GetParam,
                 Action        => $CallingAction,
                 ReturnType    => 'Ticket',
@@ -232,8 +232,7 @@ sub Run {
                 for my $ObjectID (
                     sort { $ObjectList{$a} cmp $ObjectList{$b} }
                     keys %ObjectList
-                    )
-                {
+                ) {
                     push @Data, {
                         Key   => $ObjectID,
                         Value => $ObjectList{$ObjectID},
@@ -252,8 +251,7 @@ sub Run {
                             cmp $PossibleValuesHash{$DynamicFieldName}->{$b}
                     }
                     keys %{ $PossibleValuesHash{$DynamicFieldName} }
-                    )
-                {
+                ) {
                     push @Data, {
                         Key   => $PossibleValue,
                         Value => $PossibleValuesHash{$DynamicFieldName}->{$PossibleValue},

@@ -32,7 +32,7 @@ sub Run {
     my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
 
     my %Data = (
-        DaemonCron     => $Home . '/var/cron/otrs_daemon',
+        DaemonCron     => $Home . '/var/cron/kix_daemon',
         CronExecutable => $Home . '/bin/Cron.sh',
     );
 

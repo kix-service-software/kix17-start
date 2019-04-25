@@ -82,19 +82,19 @@ sub Connect {
     );
 }
 
-sub _Fetch {
+sub Fetch {
     my ( $Self, %Param ) = @_;
 
     # fetch again if still messages on the account
-    MESSAGE:
-    while (1) {
+    COUNT:
+    for ( 1 .. 200 ) {
         return if !$Self->_Fetch(%Param);
-        last MESSAGE if $Self->{Reconnect};
+        last COUNT if !$Self->{Reconnect};
     }
     return 1;
 }
 
-sub Fetch {
+sub _Fetch {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff

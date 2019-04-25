@@ -168,8 +168,7 @@ sub Run {
         qw(ForceNotificationToUserID ExcludeNotificationToUserID
         ExcludeMuteNotificationToUserID
         )
-        )
-    {
+    ) {
         if ( IsStringWithData( $Param{Config}->{$Attribute} ) ) {
             $Param{Config}->{$Attribute} = $Self->_ConvertScalar2ArrayRef(
                 Data => $Param{Config}->{$Attribute},
@@ -184,8 +183,7 @@ sub Run {
         CustomerID CustomerUser Owner OwnerID TN Type TypeID Service ServiceID SLA SLAID
         Responsible ResponsibleID ArchiveFlag
         )
-        )
-    {
+    ) {
         if ( defined $Param{Config}->{$Attribute} ) {
             $TicketParam{$Attribute} = $Param{Config}->{$Attribute}
         }
@@ -292,8 +290,7 @@ sub Run {
         AutoResponseType ForceNotificationToUserID ExcludeNotificationToUserID
         ExcludeMuteNotificationToUserID
         )
-        )
-    {
+    ) {
         if ( defined $Param{Config}->{$Attribute} ) {
             $ArticleParam{$Attribute} = $Param{Config}->{$Attribute}
         }
@@ -391,7 +388,7 @@ sub Run {
         }
 
         # set the value
-        my $Success = $DynamicFieldBackendObject->ValueSet(
+        $Success = $DynamicFieldBackendObject->ValueSet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ObjectID           => $ObjectID,
             Value              => $Param{Config}->{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
@@ -429,8 +426,7 @@ sub Run {
             if (
                 $Param{Config}->{LinkAs} ne $ConfiguredTypes{$Type}->{SourceName}
                 && $Param{Config}->{LinkAs} ne $ConfiguredTypes{$Type}->{TargetName}
-                )
-            {
+            ) {
                 next TYPE;
             }
             $SelectedType      = $Type;
@@ -457,7 +453,7 @@ sub Run {
             $TargetObjectID = $TicketID;
         }
 
-        my $Success = $LinkObject->LinkAdd(
+        $Success = $LinkObject->LinkAdd(
             SourceObject => 'Ticket',
             SourceKey    => $SourceObjectID,
             TargetObject => 'Ticket',

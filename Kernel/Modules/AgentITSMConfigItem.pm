@@ -58,9 +58,7 @@ sub Run {
     # get default parameters, try to get filter (ClassID) from session if not given as parameter
     $Self->{Filter} = $ParamObject->GetParam( Param => 'Filter' )
         || $Self->{AgentITSMConfigItemClassFilter}
-        # KIX4OTRS-capeIT
         || $ParamObject->GetParam( Param => 'ClassID' )
-        # EO KIX4OTRS-capeIT
         || '';
     $Self->{View} = $ParamObject->GetParam( Param => 'View' ) || '';
 
@@ -94,7 +92,6 @@ sub Run {
     );
 
     # get possible deployment state list for config items to be shown
-    # KIX4OTRS-capeIT
     # get functionality - should postproductive states be shown
     my $ShowDeploymentStatePostproductive
         = $Kernel::OM->Get('Kernel::Config')->Get('ConfigItemOverview::ShowDeploymentStatePostproductive');
@@ -104,42 +101,30 @@ sub Run {
     }
 
     # get state list
-    # EO KIX4OTRS-capeIT
     my $StateList = $GeneralCatalogObject->ItemList(
         Class       => 'ITSM::ConfigItem::DeploymentState',
         Preferences => {
-
-            # KIX4OTRS-capeIT
-            # Functionality => [ 'preproductive', 'productive' ],
             Functionality => \@Functionality,
-
-            # EO KIX4OTRS-capeIT
         },
     );
 
-    # KIX4OTRS-capeIT
     # remove excluded deployment states from state list
     my %DeplStateList = %{$StateList};
     if ( $Kernel::OM->Get('Kernel::Config')->Get('ConfigItemOverview::ExcludedDeploymentStates') ) {
         my @ExcludedStates = split( /,/,
             $Kernel::OM->Get('Kernel::Config')->Get('ConfigItemOverview::ExcludedDeploymentStates') );
         for my $Item ( keys %DeplStateList ) {
-            next if !( grep( /$DeplStateList{$Item}/, @ExcludedStates ) );
+            next if !( grep( {/$DeplStateList{$Item}/} @ExcludedStates ) );
             delete $DeplStateList{$Item};
         }
     }
 
-    # EO KIX4OTRS-capeIT
-
     # set the deployment state IDs parameter for the search
     my $DeplStateIDs;
 
-    # KIX4OTRS-capeIT
     # for my $DeplStateKey ( sort keys %StateList ) {
     for my $DeplStateKey ( sort keys %DeplStateList ) {
-
-        # EO KIX4OTRS-capeIT
-        push @{$DeplStateIDs}, $DeplStateKey;
+        push( @{$DeplStateIDs}, $DeplStateKey );
     }
 
     # to store the default class
@@ -299,19 +284,12 @@ sub Run {
 
     # find out which columns should be shown
     my @ShowColumns;
-
-    # KIX4OTRS-capeIT
     my %PossibleColumn = ();
 
-    # EO KIX4OTRS-capeIT
     if ( $Self->{Config}->{ShowColumns} ) {
 
         # get all possible columns from config
-        # KIX4OTRS-capeIT
-        # my %PossibleColumn = %{ $Self->{Config}->{ShowColumns} };
         %PossibleColumn = %{ $Self->{Config}->{ShowColumns} };
-
-        # EO KIX4OTRS-capeIT
 
         # show column "Class" if filter 'All' is selected
         if ( $Self->{Filter} eq 'All' ) {
@@ -331,8 +309,7 @@ sub Run {
         IsArrayRefWithData( $Self->{Config}->{ShowColumnsByClass} )
         && $Self->{Filter}
         && $Self->{Filter} ne 'All'
-        )
-    {
+    ) {
 
         my %ColumnByClass;
         NAME:
@@ -370,31 +347,22 @@ sub Run {
 
     # show config item list
     $Output .= $LayoutObject->ITSMConfigItemListShow(
-
-        # KIX4OTRS-capeIT
         ConfigItemObject => $ConfigItemObject,
-
-        # EO KIX4OTRS-capeIT
-        ConfigItemIDs => $ConfigItemIDs,
-        Total         => scalar @{$ConfigItemIDs},
-        View          => $Self->{View},
-        Filter        => $Self->{Filter},
-        Filters       => \%NavBarFilter,
-        FilterLink    => $LinkFilter,
-        TitleName     => $LayoutObject->{LanguageObject}->Translate('Overview')
-            . ': ' . $LayoutObject->{LanguageObject}->Translate('ITSM ConfigItem'),
-        TitleValue  => $Filters{ $Self->{Filter} }->{Name},
-        Env         => $Self,
-        LinkPage    => $LinkPage,
-        LinkSort    => $LinkSort,
-        ShowColumns => \@ShowColumns,
-        SortBy      => $LayoutObject->Ascii2Html( Text => $SortBy ),
-        OrderBy     => $LayoutObject->Ascii2Html( Text => $OrderBy ),
-
-        # KIX4OTRS-capeIT
-        PossibleColumns => \%PossibleColumn,
-
-        # EO KIX4OTRS-capeIT
+        ConfigItemIDs    => $ConfigItemIDs,
+        Total            => scalar @{$ConfigItemIDs},
+        View             => $Self->{View},
+        Filter           => $Self->{Filter},
+        Filters          => \%NavBarFilter,
+        FilterLink       => $LinkFilter,
+        TitleName        => $LayoutObject->{LanguageObject}->Translate('Overview') . ': ' . $LayoutObject->{LanguageObject}->Translate('ITSM ConfigItem'),
+        TitleValue       => $Filters{ $Self->{Filter} }->{Name},
+        Env              => $Self,
+        LinkPage         => $LinkPage,
+        LinkSort         => $LinkSort,
+        ShowColumns      => \@ShowColumns,
+        SortBy           => $LayoutObject->Ascii2Html( Text => $SortBy ),
+        OrderBy          => $LayoutObject->Ascii2Html( Text => $OrderBy ),
+        PossibleColumns  => \%PossibleColumn,
     );
 
     # add footer

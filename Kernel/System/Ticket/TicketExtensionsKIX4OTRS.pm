@@ -338,8 +338,7 @@ sub GetTotalNonEscalationRelevantBusinessTime {
         if (
             $HistoryHash->{HistoryType} eq 'StateUpdate'
             || $HistoryHash->{HistoryType} eq 'NewTicket'
-            )
-        {
+        ) {
             if ( $RelevantStates{ $HistoryHash->{StateID} } && $PendStartTime == 0 ) {
 
                 # datetime to unixtime
@@ -364,8 +363,7 @@ sub GetTotalNonEscalationRelevantBusinessTime {
                 || $HistoryHash->{HistoryType} eq 'EmailAgent'
             )
             && $Param{Type} eq 'Response'
-            )
-        {
+        ) {
             if ( $PendStartTime != 0 ) {
                 my $UnixEndTime = $CreateTime;
                 my $WorkingTime = $Self->{TimeObject}->WorkingTime(
@@ -783,8 +781,7 @@ sub ArticleFlagDataSet {
     if (
         defined( $ArticleFlagData{ $Param{ArticleID} } )
         && defined( $ArticleFlagData{ $Param{Key} } )
-        )
-    {
+    ) {
         return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
             SQL =>
                 'UPDATE kix_article_flag SET note = ?, subject = ?, keywords = ? '
@@ -1317,7 +1314,7 @@ sub TicketChecklistUpdate {
                     Task     => $Task,
                     Position => $Position
                 );
-                $Checklist->{Data}->{$ChangedTask}->{Task} = $Task,
+                $Checklist->{Data}->{$ChangedTask}->{Task} = $Task;
                 my %TempTaskHash = %{ $Checklist->{Data}->{$ChangedTask} };
                 $NewTaskDataHash{$Position} = \%TempTaskHash;
                 delete $Checklist->{Data}->{$ChangedTask};
@@ -1534,9 +1531,9 @@ sub TicketChecklistGet {
 
     # if order by given
     if (
-        !defined $Param{Sort} || ( $Param{Sort} ne 'id' && $Param{Sort} ne 'position' )
-        )
-    {
+        !defined $Param{Sort}
+        || ( $Param{Sort} ne 'id' && $Param{Sort} ne 'position' )
+    ) {
         $Param{Sort} = 'position';
     }
 
@@ -1659,10 +1656,10 @@ sub _GetUserInfoString {
         for my $Attribute ( sort keys %{ $AgentConfig->{DisplayAttributes} } ) {
             next if !$AgentConfig->{DisplayAttributes}->{$Attribute};
 
-            $Attribute =~ m/^User(.*)$/;
+            my $AttributeDisplay = $Attribute =~ m/^User(.*)$/;
             my @TempArray = ();
             push @TempArray, $Attribute;
-            push @TempArray, $1 || $Attribute;
+            push @TempArray, $AttributeDisplay || $Attribute;
             push @TempArray, '';
             push @TempArray, 1;
             push @TempArray, 0;

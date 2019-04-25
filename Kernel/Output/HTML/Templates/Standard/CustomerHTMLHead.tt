@@ -15,7 +15,6 @@
 # set viewport for mobile mode, do not set viewport for DesktopMode
     <script>
         (function(doc, win) {
-            // #rbo - T2016121190001552 - renamed OTRS to KIX
             var viewport = doc.getElementById('viewport'),
                 isIFrame = (win.top.location.href !== win.location.href),
                 isPopup = (win.name.search(/^(OTRS|KIX)Popup_/) != -1);
@@ -35,7 +34,6 @@
 [% RenderBlockEnd("MetaLink") %]
     <link rel="shortcut icon" href="[% Config("Frontend::ImagePath") %][% Config("ProductIcon") %]" type="image/ico" />
     <link rel="apple-touch-icon" href="[% Config("Frontend::ImagePath") %][% Config("ProductIcon") %]" />
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("CommonCSS") %]
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Customer/[% Data.Skin | uri %]/[% Data.CSSDirectory | html %]/[% Data.Filename | html %]" />
 [% RenderBlockEnd("CommonCSS") %]

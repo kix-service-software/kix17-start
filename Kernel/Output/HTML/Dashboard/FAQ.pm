@@ -27,8 +27,7 @@ sub new {
     bless( $Self, $Type );
 
     # get needed params
-    for my $Needed (qw(Config Name UserID))
-    {
+    for my $Needed (qw(Config Name UserID)) {
         die "Got no $Needed!" if ( !$Self->{$Needed} );
     }
 

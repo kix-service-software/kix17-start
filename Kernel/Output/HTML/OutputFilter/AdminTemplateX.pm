@@ -70,13 +70,11 @@ sub Run {
     if (
         $GetParam{Subaction}
         && $GetParam{Subaction} =~ m/(Add|Change)Action$/
-        )
-    {
+    ) {
         if (
             !$GetParam{ID}
             && $GetParam{Name}
-            )
-        {
+        ) {
             $GetParam{ID} = $Self->{StandardTemplateObject}->StandardTemplateLookup(
                 StandardTemplate => $GetParam{Name},
             );
@@ -84,8 +82,7 @@ sub Run {
 
         if (
             $GetParam{ID}
-            )
-        {
+        ) {
             # prepare params
             for (qw(To Cc Bcc)) {
                 my @Addresses = $Self->{ParserObject}->SplitAddressLine(
@@ -133,20 +130,18 @@ sub Run {
                     && !$GetParam{Bcc}
                     && !$GetParam{StateID}
                     && !$GetParam{PendingTime}
-                    )
-                {
+                ) {
                     $Self->{DBObject}->Do(
-                        SQL => '
-                            DELETE FROM standard_templatex
-                            WHERE ' . $QueryCondition,
+                        SQL => 'DELETE'
+                            . ' FROM standard_templatex'
+                            . ' WHERE ' . $QueryCondition,
                     );
                 }
                 elsif ( !$Check ) {
                     $Self->{DBObject}->Do(
-                        SQL => '
-                            INSERT INTO standard_templatex
-                            (template_id, t_to, t_cc, t_bcc, t_ticket_state_id, t_pending_time, t_pending_type)
-                            VALUES (?, ?, ?, ?, ?, ?, ?)',
+                        SQL => 'INSERT INTO standard_templatex'
+                            . ' (template_id, t_to, t_cc, t_bcc, t_ticket_state_id, t_pending_time, t_pending_type)'
+                            . ' VALUES (?, ?, ?, ?, ?, ?, ?)',
                         Bind => [
                             \$GetParam{ID}, \$GetParam{To}, \$GetParam{Cc}, \$GetParam{Bcc},
                             \$GetParam{StateID}, \$GetParam{PendingTime}, \$GetParam{PendingType},
@@ -155,10 +150,9 @@ sub Run {
                 }
                 else {
                     $Self->{DBObject}->Do(
-                        SQL => '
-                            UPDATE standard_templatex
-                            SET t_to=?, t_cc=?, t_bcc=?, t_ticket_state_id=?, t_pending_time=?, t_pending_type=?
-                            WHERE ' . $QueryCondition,
+                        SQL => 'UPDATE standard_templatex'
+                            . ' SET t_to=?, t_cc=?, t_bcc=?, t_ticket_state_id=?, t_pending_time=?, t_pending_type=?'
+                            . ' WHERE ' . $QueryCondition,
                         Bind => [
                             \$GetParam{To}, \$GetParam{Cc}, \$GetParam{Bcc}, \$GetParam{StateID},
                             \$GetParam{PendingTime}, \$GetParam{PendingType},

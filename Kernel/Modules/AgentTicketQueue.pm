@@ -18,6 +18,8 @@ use Kernel::System::VariableCheck qw(:all);
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -43,7 +45,6 @@ sub Run {
     # get config of AgentTicketSearch for fulltext search
     my $AgentTicketSearchConfig = $ConfigObject->Get("Ticket::Frontend::AgentTicketSearch");
 
-    # KIX4OTRS-capeIT
     my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
     my $LockObject          = $Kernel::OM->Get('Kernel::System::Lock');
@@ -73,9 +74,6 @@ sub Run {
         $Self->{SearchPermission} = 'ro';
     }
 
-    # my $SortBy = $ParamObject->GetParam( Param => 'SortBy' )
-    #     || $Config->{'SortBy::Default'}
-    #     || 'Age';
     my $SortBy;
     if ( $ParamObject->GetParam( Param => 'SortBy' ) ) {
         $SortBy = $ParamObject->GetParam( Param => 'SortBy' );
@@ -85,8 +83,6 @@ sub Run {
             Value  => $SortBy,
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     # Determine the default ordering to be used. Observe the QueueSort setting.
     my $DefaultOrderBy = $Config->{'Order::Default'}
@@ -102,10 +98,7 @@ sub Run {
         }
     }
 
-    # KIX4OTRS-capeIT
     # Set the sort order from the request parameters, or take the default.
-    # my $OrderBy = $ParamObject->GetParam( Param => 'OrderBy' )
-    #     || $DefaultOrderBy;
     my $OrderBy;
     if ( $ParamObject->GetParam( Param => 'OrderBy' ) ) {
         $OrderBy = $ParamObject->GetParam( Param => 'OrderBy' );
@@ -128,8 +121,6 @@ sub Run {
             || $Config->{'OrderBy::Default'}
             || 'Up';
     }
-
-    # EO KIX4OTRS-capeIT    # EO KIX4OTRS-capeIT
 
     # get session object
     my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
@@ -158,12 +149,6 @@ sub Run {
         Value     => $URL,
     );
 
-    # get user object
-    # KIX4OTRS-capeIT
-    # moved content upwards
-    # my $UserObject = $Kernel::OM->Get('Kernel::System::User');
-    # EO KIX4OTRS-capeIT
-
     # get filters stored in the user preferences
     my %Preferences = $UserObject->GetPreferences(
         UserID => $Self->{UserID},
@@ -185,8 +170,7 @@ sub Run {
     COLUMNNAME:
     for my $ColumnName (
         qw(Owner Responsible State Queue Priority Type Lock Service SLA CustomerID CustomerUserID)
-        )
-    {
+    ) {
         # get column filter from web request
         my $FilterValue = $ParamObject->GetParam( Param => 'ColumnFilter' . $ColumnName )
             || '';
@@ -259,12 +243,6 @@ sub Run {
         $Refresh = 60 * $Self->{UserRefreshTime};
     }
 
-    # get layout object
-    # KIX4OTRS-capeIT
-    # moved content upwards
-    # my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    # EO KIX4OTRS-capeIT
-
     my $Output;
     if ( $Self->{Subaction} ne 'AJAXFilterUpdate' ) {
         $Output = $LayoutObject->Header(
@@ -283,14 +261,7 @@ sub Run {
     );
 
     # get permissions
-    # KIX4OTRS-capeIT
-    # my $Permission = 'rw';
-    # if ( $Config->{ViewAllPossibleTickets} ) {
-    #     $Permission = 'ro';
-    # }
     my $Permission = $Self->{SearchPermission};
-
-    # EO KIX4OTRS-capeIT
 
     # sort on default by using both (Priority, Age) else use only one sort argument
     my %Sort;
@@ -318,7 +289,6 @@ sub Run {
         );
     }
 
-    # KIX4OTRS-capeIT
     elsif ( $Self->{QueueID} =~ m/^SearchProfile_(.*)/ ) {
         $Self->{ViewSearchProfile} = $1;
 
@@ -340,20 +310,17 @@ sub Run {
         $Config->{IndividualViewParameterAND} &&
         ref( $Config->{IndividualViewParameterAND} ) eq 'HASH' &&
         $Config->{IndividualViewParameterAND}->{ $Self->{QueueID} }
-        )
-    {
+    ) {
         $Self->{IndividualViewAND} = $Config->{IndividualViewParameterAND};
     }
     elsif (
         $Config->{IndividualViewParameterOR} &&
         ref( $Config->{IndividualViewParameterOR} ) eq 'HASH' &&
         $Config->{IndividualViewParameterOR}->{ $Self->{QueueID} }
-        )
-    {
+    ) {
         $Self->{IndividualViewOR} = $Config->{IndividualViewParameterOR};
     }
 
-    # EO KIX4OTRS-capeIT
     else {
         @ViewableQueueIDs = ( $Self->{QueueID} );
     }
@@ -390,11 +357,7 @@ sub Run {
     );
 
     my $Filter = $ParamObject->GetParam( Param => 'Filter' )
-
-        # KIX4OTRS-capeIT
         || $Self->{UserPreferences}->{UserViewAllTickets}
-
-        # EO KIX4OTRS-capeIT
         || 'Unlocked';
 
     # check if filter is valid
@@ -458,8 +421,7 @@ sub Run {
                     $HeaderColumn eq 'CustomerUserID'
                 )
             )
-            )
-        {
+        ) {
             @OriginalViewableTickets = $TicketObject->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
                 Limit  => $Limit,
@@ -477,7 +439,6 @@ sub Run {
         }
     }
 
-    # KIX4OTRS-capeIT
     # search tickets based on individual queue view options
     elsif ( $Self->{ViewSearchProfile} ) {
 
@@ -539,8 +500,7 @@ sub Run {
                     $Search{ $TimeType . 'TimeStartDay' }
                     && $Search{ $TimeType . 'TimeStartMonth' }
                     && $Search{ $TimeType . 'TimeStartYear' }
-                    )
-                {
+                ) {
                     $Search{ $TimeType . 'TimeNewerDate' } = $Search{ $TimeType . 'TimeStartYear' } . '-'
                         . $Search{ $TimeType . 'TimeStartMonth' } . '-'
                         . $Search{ $TimeType . 'TimeStartDay' }
@@ -550,8 +510,7 @@ sub Run {
                     $Search{ $TimeType . 'TimeStopDay' }
                     && $Search{ $TimeType . 'TimeStopMonth' }
                     && $Search{ $TimeType . 'TimeStopYear' }
-                    )
-                {
+                ) {
                     $Search{ $TimeType . 'TimeOlderDate' } = $Search{ $TimeType . 'TimeStopYear' } . '-'
                         . $Search{ $TimeType . 'TimeStopMonth' } . '-'
                         . $Search{ $TimeType . 'TimeStopDay' }
@@ -563,8 +522,7 @@ sub Run {
                     $Search{ $TimeType . 'TimePoint' }
                     && $Search{ $TimeType . 'TimePointStart' }
                     && $Search{ $TimeType . 'TimePointFormat' }
-                    )
-                {
+                ) {
                     my $Time = 0;
                     if ( $Search{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
                         $Time = $Search{ $TimeType . 'TimePoint' };
@@ -655,8 +613,7 @@ sub Run {
         if ( defined $Search{SearchInArchive} && $Search{SearchInArchive} eq 'AllTickets' ) {
             $Search{ArchiveFlags} = [ 'y', 'n' ];
         }
-        elsif ( defined $Search{SearchInArchive} && $Search{SearchInArchive} eq 'ArchivedTickets' )
-        {
+        elsif ( defined $Search{SearchInArchive} && $Search{SearchInArchive} eq 'ArchivedTickets' ) {
             $Search{ArchiveFlags} = ['y'];
         }
 
@@ -761,12 +718,11 @@ sub Run {
                 for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
                     next DYNAMICFIELDFULLTEXT
                         if !(
-                                $AgentTicketSearchConfig->{FulltextSearchInDynamicFields}
-                                ->{ $DynamicFieldConfig->{Name} }
+                            $AgentTicketSearchConfig->{FulltextSearchInDynamicFields}->{ $DynamicFieldConfig->{Name} }
                         );
                     next DYNAMICFIELDFULLTEXT if !IsHashRefWithData($DynamicFieldConfig);
 
-                    my %DynamicFieldSearchParameters;
+                    my %DFSearchParameters;
 
                     # get search field preferences
                     my $SearchFieldPreferences = $DynamicFieldBackendObject->SearchFieldPreferences(
@@ -791,9 +747,7 @@ sub Run {
 
                         # set search parameter
                         if ( defined $SearchParameter ) {
-                            $DynamicFieldSearchParameters{ 'DynamicField_'
-                                    . $DynamicFieldConfig->{Name} }
-                                = $SearchParameter->{Parameter};
+                            $DFSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $SearchParameter->{Parameter};
                         }
                     }
 
@@ -806,7 +760,7 @@ sub Run {
                         UserID          => $Self->{UserID},
                         ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
                         ArchiveFlags    => $Filters{ $Filter }->{Search}->{ArchiveFlags},
-                        %DynamicFieldSearchParameters,
+                        %DFSearchParameters,
                     );
 
                     if (@ViewableTicketIDsThisDF) {
@@ -886,13 +840,12 @@ sub Run {
         if (
             $Config->{IndividualViewPermission}
             && $Config->{IndividualViewPermission}->{$TmpSelQueueID}
-            )
-        {
+        ) {
             $Permission = $Config->{IndividualViewPermission}->{$TmpSelQueueID};
         }
 
         # "unlocked" shows all tickets; "all" observes lock state
-        # this names are used due to OTRS compatibility
+        # this names are used due to KIX compatibility
         %Filters = (
             All => {
                 Name   => 'All tickets',
@@ -962,13 +915,12 @@ sub Run {
         if (
             $Config->{IndividualViewPermission}
             && $Config->{IndividualViewPermission}->{$TmpSelQueueID}
-            )
-        {
+        ) {
             $Permission = $Config->{IndividualViewPermission}->{$TmpSelQueueID};
         }
 
         # "unlocked" shows all tickets; "all" observes lock state
-        # this names are used due to OTRS compatibility
+        # this names are used due to KIX compatibility
         %Filters = (
             All => {
                 Name     => 'All tickets',
@@ -1004,8 +956,6 @@ sub Run {
         push @ViewableQueueIDs, 0;
     }
 
-    # EO KIX4OTRS-capeIT
-
     if ( $Self->{Subaction} eq 'AJAXFilterUpdate' ) {
 
         my $FilterContent = $LayoutObject->TicketListShow(
@@ -1036,13 +986,12 @@ sub Run {
     else {
 
         # store column filters
-        my $StoredFilters = \%ColumnFilter;
+        my $NewStoredFilters = \%ColumnFilter;
 
-        my $StoredFiltersKey = 'UserStoredFilterColumns-' . $Self->{Action};
         $UserObject->SetPreferences(
             UserID => $Self->{UserID},
             Key    => $StoredFiltersKey,
-            Value  => $JSONObject->Encode( Data => $StoredFilters ),
+            Value  => $JSONObject->Encode( Data => $NewStoredFilters ),
         );
     }
 
@@ -1052,7 +1001,6 @@ sub Run {
         my $Count = 0;
         if (@ViewableQueueIDs) {
 
-            # KIX4OTRS-capeIT
             if ( $Filters{ $FilterColumn }->{SearchOR} ) {
                 $Count = $TicketObject->TicketSearchOR(
                     %{ $Filters{$FilterColumn}->{SearchOR} },
@@ -1130,7 +1078,7 @@ sub Run {
                                 );
                             next DYNAMICFIELDFULLTEXT if !IsHashRefWithData($DynamicFieldConfig);
 
-                            my %DynamicFieldSearchParameters;
+                            my %DFSearchParameters;
 
                             # get search field preferences
                             my $SearchFieldPreferences = $DynamicFieldBackendObject->SearchFieldPreferences(
@@ -1155,9 +1103,7 @@ sub Run {
 
                                 # set search parameter
                                 if ( defined $SearchParameter ) {
-                                    $DynamicFieldSearchParameters{ 'DynamicField_'
-                                            . $DynamicFieldConfig->{Name} }
-                                        = $SearchParameter->{Parameter};
+                                    $DFSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $SearchParameter->{Parameter};
                                 }
                             }
 
@@ -1169,7 +1115,7 @@ sub Run {
                                 UserID          => $Self->{UserID},
                                 ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
                                 ArchiveFlags    => $Filters{ $FilterColumn }->{Search}->{ArchiveFlags},
-                                %DynamicFieldSearchParameters,
+                                %DFSearchParameters,
                             );
 
                             if (@CountTicketIDsThisDF) {
@@ -1211,18 +1157,13 @@ sub Run {
                     $Count = scalar( @CountTickets ) || 0;
                 }
                 else {
-                # EO KIX4OTRS-capeIT
-                $Count = $TicketObject->TicketSearch(
-                    %{ $Filters{$FilterColumn}->{Search} },
-                    %ColumnFilter,
-                    Result => 'COUNT',
-                );
-
-                # KIX4OTRS-capeIT
+                    $Count = $TicketObject->TicketSearch(
+                        %{ $Filters{$FilterColumn}->{Search} },
+                        %ColumnFilter,
+                        Result => 'COUNT',
+                    );
                 }
             }
-
-            # EO KIX4OTRS-capeIT
         }
 
         if ( $FilterColumn eq $Filter ) {
@@ -1292,15 +1233,11 @@ sub Run {
     }
 
     my %NavBar = $Self->BuildQueueView(
-        QueueIDs     => \@ViewableQueueIDs,
-        Filter       => $Filter,
-        UseSubQueues => $UseSubQueues,
-
-        # KIX4OTRS-capeIT
+        QueueIDs         => \@ViewableQueueIDs,
+        Filter           => $Filter,
+        UseSubQueues     => $UseSubQueues,
         ViewableLockIDs  => \@ViewableLockIDs,
         ViewableStateIDs => \@ViewableStateIDs,
-
-        # EO KIX4OTRS-capeIT
     );
 
     my $SubQueueIndicatorTitle = '';
@@ -1312,22 +1249,10 @@ sub Run {
     }
 
     # show tickets
-    # KIX4OTRS-capeIT
-    # $Output .= $LayoutObject->TicketListShow(
     my $TicketList = $LayoutObject->TicketListShow(
-
-        # EO KIX4OTRS-capeIT
         Filter     => $Filter,
         Filters    => \%NavBarFilter,
-
-        # KIX4OTRS-capeIT
-        # DataInTheMiddle => $LayoutObject->Output(
-        #     TemplateFile => 'AgentTicketQueue',
-        #     Data         => \%NavBar,
-        # ),
-        # EO KIX4OTRS-capeIT
-
-        TicketIDs => \@ViewableTickets,
+        TicketIDs  => \@ViewableTickets,
 
         OriginalTicketIDs => \@OriginalViewableTickets,
         GetColumnFilter   => \%GetColumnFilter,
@@ -1357,23 +1282,15 @@ sub Run {
         },
 
         # do not print the result earlier, but return complete content
-        Output => 1,
-
-        # KIX4OTRS-capeIT
+        Output             => 1,
         Output             => 1,
         DynamicFieldConfig => $Self->{DynamicField},
-
-        #        ),
-        # EO KIX4OTRS-capeIT
     );
 
-    # KIX4OTRS-capeIT
     $Output .= $LayoutObject->Output(
         TemplateFile => 'AgentTicketQueue' . $Self->{UserPreferences}->{UserQueueViewLayout},
         Data => { %NavBar, TicketList => $TicketList }
     );
-
-    # EO KIX4OTRS-capeIT
 
     # get page footer
     $Output .= $LayoutObject->Footer() if $Self->{Subaction} ne 'AJAXFilterUpdate';
@@ -1383,7 +1300,6 @@ sub Run {
 sub BuildQueueView {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
     $Param{SelectedQueueID} = $Self->{QueueID};
 
     my $DBObject         = $Kernel::OM->Get('Kernel::System::DB');
@@ -1400,21 +1316,14 @@ sub BuildQueueView {
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # EO KIX4OTRS-capeIT
-
     my %Data = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcceleratorIndex(
-        UserID        => $Self->{UserID},
-        QueueID       => $Self->{QueueID},
-        ShownQueueIDs => $Param{QueueIDs},
-
-        # KIX4OTRS-capeIT
+        UserID          => $Self->{UserID},
+        QueueID         => $Self->{QueueID},
+        ShownQueueIDs   => $Param{QueueIDs},
         Filter          => $Param{Filter},
         ViewableLockIDs => \@ViewableLockIDs,
-
-        # EO KIX4OTRS-capeIT
     );
 
-    # KIX4OTRS-capeIT
     my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
     my $Config                  = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
     my $AgentTicketSearchConfig = $ConfigObject->Get("Ticket::Frontend::AgentTicketSearch");
@@ -1473,8 +1382,7 @@ sub BuildQueueView {
                         $SearchProfileData{ $TimeType . 'TimeStartDay' }
                         && $SearchProfileData{ $TimeType . 'TimeStartMonth' }
                         && $SearchProfileData{ $TimeType . 'TimeStartYear' }
-                        )
-                    {
+                    ) {
                         $SearchProfileData{ $TimeType . 'TimeNewerDate' } = $SearchProfileData{ $TimeType . 'TimeStartYear' } . '-'
                             . $SearchProfileData{ $TimeType . 'TimeStartMonth' } . '-'
                             . $SearchProfileData{ $TimeType . 'TimeStartDay' }
@@ -1484,8 +1392,7 @@ sub BuildQueueView {
                         $SearchProfileData{ $TimeType . 'TimeStopDay' }
                         && $SearchProfileData{ $TimeType . 'TimeStopMonth' }
                         && $SearchProfileData{ $TimeType . 'TimeStopYear' }
-                        )
-                    {
+                    ) {
                         $SearchProfileData{ $TimeType . 'TimeOlderDate' } = $SearchProfileData{ $TimeType . 'TimeStopYear' } . '-'
                             . $SearchProfileData{ $TimeType . 'TimeStopMonth' } . '-'
                             . $SearchProfileData{ $TimeType . 'TimeStopDay' }
@@ -1497,8 +1404,7 @@ sub BuildQueueView {
                         $SearchProfileData{ $TimeType . 'TimePoint' }
                         && $SearchProfileData{ $TimeType . 'TimePointStart' }
                         && $SearchProfileData{ $TimeType . 'TimePointFormat' }
-                        )
-                    {
+                    ) {
                         my $Time = 0;
                         if ( $SearchProfileData{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
                             $Time = $SearchProfileData{ $TimeType . 'TimePoint' };
@@ -1607,15 +1513,13 @@ sub BuildQueueView {
             if (
                 defined $SearchProfileData{SearchInArchive}
                 && $SearchProfileData{SearchInArchive} eq 'AllTickets'
-                )
-            {
+            ) {
                 $SearchProfileData{ArchiveFlags} = [ 'y', 'n' ];
             }
             elsif (
                 defined $SearchProfileData{SearchInArchive}
                 && $SearchProfileData{SearchInArchive} eq 'ArchivedTickets'
-                )
-            {
+            ) {
                 $SearchProfileData{ArchiveFlags} = ['y'];
             }
 
@@ -1687,7 +1591,7 @@ sub BuildQueueView {
                             );
                         next DYNAMICFIELDFULLTEXT if !IsHashRefWithData($DynamicFieldConfig);
 
-                        my %DynamicFieldSearchParameters;
+                        my %DFSearchParameters;
 
                         # get search field preferences
                         my $SearchFieldPreferences = $DynamicFieldBackendObject->SearchFieldPreferences(
@@ -1712,9 +1616,7 @@ sub BuildQueueView {
 
                             # set search parameter
                             if ( defined $SearchParameter ) {
-                                $DynamicFieldSearchParameters{ 'DynamicField_'
-                                        . $DynamicFieldConfig->{Name} }
-                                    = $SearchParameter->{Parameter};
+                                $DFSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $SearchParameter->{Parameter};
                             }
                         }
 
@@ -1727,7 +1629,7 @@ sub BuildQueueView {
                             UserID          => $Self->{UserID},
                             ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
                             ArchiveFlags    => $SearchProfileData{ArchiveFlags},
-                            %DynamicFieldSearchParameters,
+                            %DFSearchParameters,
                         );
 
                         if (@ViewableTicketIDsThisDF) {
@@ -1848,7 +1750,7 @@ sub BuildQueueView {
                             );
                         next DYNAMICFIELDFULLTEXT if !IsHashRefWithData($DynamicFieldConfig);
 
-                        my %DynamicFieldSearchParameters;
+                        my %DFSearchParameters;
 
                         # get search field preferences
                         my $SearchFieldPreferences = $DynamicFieldBackendObject->SearchFieldPreferences(
@@ -1873,9 +1775,7 @@ sub BuildQueueView {
 
                             # set search parameter
                             if ( defined $SearchParameter ) {
-                                $DynamicFieldSearchParameters{ 'DynamicField_'
-                                        . $DynamicFieldConfig->{Name} }
-                                    = $SearchParameter->{Parameter};
+                                $DFSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} }  = $SearchParameter->{Parameter};
                             }
                         }
 
@@ -1889,7 +1789,7 @@ sub BuildQueueView {
                             UserID          => $Self->{UserID},
                             ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
                             ArchiveFlags    => $SearchProfileData{ArchiveFlags},
-                            %DynamicFieldSearchParameters,
+                            %DFSearchParameters,
                         );
 
                         if (@ViewableTicketIDsThisDF) {
@@ -1952,8 +1852,7 @@ sub BuildQueueView {
     if (
         $Config->{IndividualViews} &&
         ref( $Config->{IndividualViews} ) eq 'HASH'
-        )
-    {
+    ) {
         my $QueueViews          = $Config->{IndividualViews};
         my $QueueViewName       = $Config->{IndividualViewNames};
         my $QueueViewParamAND   = $Config->{IndividualViewParameterAND};
@@ -2068,32 +1967,21 @@ sub BuildQueueView {
         }
     }
 
-    # EO KIX4OTRS-capeIT
-
     # build output ...
     my %AllQueues = $Kernel::OM->Get('Kernel::System::Queue')->QueueList( Valid => 0 );
 
-    # KIX4OTRS-capeIT
     my $ViewLayoutFunction = '_MaskQueueView' . $Self->{UserPreferences}->{UserQueueViewLayout};
 
     # return $Self->_MaskQueueView(
     return $Self->$ViewLayoutFunction(
-
-        # EO KIX4OTRS-capeIT
-
         %Data,
         QueueID         => $Self->{QueueID},
         AllQueues       => \%AllQueues,
         ViewableTickets => $Self->{ViewableTickets},
-
-        # KIX4OTRS-capeIT
-        SelectedQueue => $Param{SelectedQueue} || '',
+        SelectedQueue   => $Param{SelectedQueue} || '',
         SelectedQueueID => $Param{SelectedQueueID},
         Filter          => $Param{Filter},
-
-        # EO KIX4OTRS-capeIT
-
-        UseSubQueues => $Param{UseSubQueues},
+        UseSubQueues    => $Param{UseSubQueues},
     );
 }
 
@@ -2106,9 +1994,9 @@ sub _MaskQueueView {
     my %AllQueues       = %{ $Param{AllQueues} };
     my %Counter;
     my %Totals;
-    my $HaveTotals = 0;    # flag for "Total" in index backend
     my %UsedQueue;
     my @ListedQueues;
+    my $HaveTotals   = 0;    # flag for "Total" in index backend
     my $Level        = 0;
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $CustomQueues = $ConfigObject->Get('Ticket::CustomQueue') || '???';
@@ -2119,13 +2007,9 @@ sub _MaskQueueView {
     $Self->{HighlightAge2} = $Config->{HighlightAge2};
     $Self->{Blink}         = $Config->{Blink};
 
-    # KIX4OTRS-capeIT
-    #    $Param{SelectedQueue} = $AllQueues{$QueueID} || $CustomQueue;
     if ( !$Param{SelectedQueue} ) {
         $Param{SelectedQueue} = $AllQueues{$QueueID} || $CustomQueue;
     }
-
-    # EO KIX4OTRS-capeIT
 
     my @MetaQueue = split /::/, $Param{SelectedQueue};
     $Level = $#MetaQueue + 2;
@@ -2161,8 +2045,7 @@ sub _MaskQueueView {
                 ( $Counter{$QueueName} || $Totals{$QueueName} )
                 && !$Queue{$QueueName}
                 && !$UsedQueue{$QueueName}
-                )
-            {
+            ) {
 
                 # IMHO, this is purely pathological--TicketAcceleratorIndex
                 # sorts queues by name, so we should never stumble across one
@@ -2211,8 +2094,7 @@ sub _MaskQueueView {
 
             # always show 'my queues'
             && $Queue{QueueID} != 0
-            )
-        {
+        ) {
             next QUEUE;
         }
 
@@ -2231,11 +2113,7 @@ sub _MaskQueueView {
 
         # should i highlight this queue
         # the oldest queue
-        # KIX4OTRS
-        # if ( $Queue{QueueID} == $QueueIDOfMaxAge && $Self->{Blink} ) {
         if ( $Queue{QueueID} eq $QueueIDOfMaxAge && $Self->{Blink} ) {
-
-            # EO KIX4OTRS
             $QueueStrg .= 'Oldest';
         }
         elsif ( $Queue{MaxAge} >= $Self->{HighlightAge2} ) {
@@ -2251,8 +2129,7 @@ sub _MaskQueueView {
             $Level > scalar @QueueName
             && scalar @MetaQueue >= scalar @QueueName
             && $Param{SelectedQueue} =~ m{ \A \Q$QueueName[0]\E }xms
-            )
-        {
+        ) {
             my $CheckLevel = 0;
             CHECKLEVEL:
             for ( $CheckLevel = 0; $CheckLevel < scalar @QueueName; ++$CheckLevel ) {
@@ -2290,7 +2167,7 @@ sub _MaskQueueView {
 
         $QueueStrg .= '</a></li>';
 
-        if ( scalar @QueueName eq 1 ) {
+        if ( scalar( @QueueName ) == 1 ) {
             $Param{QueueStrg} .= $QueueStrg;
         }
         elsif ( $Level >= scalar @QueueName ) {
@@ -2329,7 +2206,6 @@ sub _MaskQueueView {
     );
 }
 
-# KIX4OTRS-capeIT
 sub _MaskQueueViewTree {
     my ( $Self, %Param ) = @_;
 
@@ -2386,11 +2262,10 @@ sub _MaskQueueViewTree {
         if (
             defined $Queue{QueueID}
             && $Queue{QueueID} =~ m/^SearchProfile_(.*)/
-            )
-        {
+        ) {
             if ( defined $Param{SelectedSearchProfileQueue}
-                && $Param{SelectedSearchProfileQueue} eq $1 )
-            {
+                && $Param{SelectedSearchProfileQueue} eq $1
+            ) {
                 $Param{SelectedSearchProfileQueueName} = $Queue{Queue};
                 $Param{SelectedQueue}                  = $Self->{SearchProfileQueue} . ' - ' . $Queue{Queue};
 
@@ -2431,11 +2306,9 @@ sub _MaskQueueViewTree {
             if ( !$AllQueuesData{$QueueName4Sort} ) {
                 my @QueueSplit = split( /::/, $QueueName );
                 $AllQueuesData{$QueueName4Sort} = {
-                    Count   => 0,
-                    Queue   => $Queue[$_],
-                    QueueID => $AllQueuesReverse{$QueueName},
-
-                    #QueueSplit => [ $Queue[0] .. $Queue[$_] ],
+                    Count      => 0,
+                    Queue      => $Queue[$_],
+                    QueueID    => $AllQueuesReverse{$QueueName},
                     QueueSplit => \@QueueSplit,    # prevent strange behaviour and freezes
                     MaxAge     => 0,
                     Name       => $QueueName,
@@ -2460,11 +2333,10 @@ sub _MaskQueueViewTree {
         my @QueueName = @{ $Queue{QueueSplit} };
 
         # not CustomQueue and nothing to show?
-        next
-            if (
+        next if (
             ( defined $Queue{Total} && !$Queue{Total} )
             && $Queue{Queue} !~ /^\Q$CustomQueue\E/
-            );
+        );
 
         # set relevant html container
         my $QueuePlace = ( $AllQueuesReverse{$Current} ) ? 'QueueRealStrg' : 'QueueVirtStrg';
@@ -2506,8 +2378,7 @@ sub _MaskQueueViewTree {
 
         # should i highlight this queue
         # the oldest queue
-        if ( defined $Queue{QueueID} && $Queue{QueueID} eq $QueueIDOfMaxAge && $Self->{Blink} )
-        {
+        if ( defined $Queue{QueueID} && $Queue{QueueID} eq $QueueIDOfMaxAge && $Self->{Blink} ) {
             $ListClass .= 'Oldest';
         }
         elsif ( $Queue{MaxAge} >= $Self->{HighlightAge2} ) {
@@ -2518,7 +2389,6 @@ sub _MaskQueueViewTree {
         }
 
         # should I focus and expand this queue
-
         if ( $Param{SelectedQueue} =~ /^\Q$QueueName[0]\E/ && $Level - 1 >= $#QueueName ) {
             if ( $#MetaQueue >= $#QueueName ) {
                 my $CompareString = $MetaQueue[0];
@@ -2530,8 +2400,8 @@ sub _MaskQueueViewTree {
         }
         elsif ($QueueName[0] eq $Self->{SearchProfileQueue}
             && $#QueueName == 1
-            && $QueueName[1] eq $Param{SelectedSearchProfileQueueName} )
-        {
+            && $QueueName[1] eq $Param{SelectedSearchProfileQueueName}
+        ) {
             $DataJSTree = '{"opened":true,"selected":true}';
         }
 
@@ -2582,7 +2452,6 @@ sub _MaskQueueViewTree {
 sub _MaskQueueViewDropDown {
     my ( $Self, %Param ) = @_;
 
-    # get needed objects
     # get needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
@@ -2637,11 +2506,9 @@ sub _MaskQueueViewDropDown {
             if ( !$AllQueuesData{$QueueName} ) {
                 my @QueueSplit = split( /::/, $QueueName );
                 $AllQueuesData{$QueueName} = {
-                    Count   => 0,
-                    Queue   => $Queue[$_],
-                    QueueID => $AllQueuesReverse{$QueueName},
-
-                    #QueueSplit => [ $Queue[0] .. $Queue[$_] ],
+                    Count      => 0,
+                    Queue      => $Queue[$_],
+                    QueueID    => $AllQueuesReverse{$QueueName},
                     QueueSplit => \@QueueSplit,    # prevent strange behaviour and freezes
                     MaxAge     => 0,
                 };
@@ -2748,8 +2615,6 @@ sub _MaskQueueViewDropDown {
         Total         => $Param{TicketsShown},
     );
 }
-
-# EO KIX4OTRS-capeIT
 
 1;
 

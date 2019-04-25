@@ -136,8 +136,7 @@ sub FormDataGet {
         if (
             !$Self->{ParamObject}->GetParam( Param => $Param{Key} . '::Search' )
             && defined $FormData{Value}
-            )
-        {
+        ) {
             $FormData{Value} = '';
         }
 
@@ -293,8 +292,7 @@ sub InputCreate {
                 ( ref($CurrVersionData) eq 'HASH' ) &&
                 $CurrVersionData->{Name} &&
                 $CurrVersionData->{Number}
-                )
-            {
+            ) {
                 $CISearchList{$SearchResult} = $CurrVersionData->{Name}
                     . " ("
                     . $CurrVersionData->{Number}
@@ -320,8 +318,7 @@ sub InputCreate {
                 ( ref($CurrVersionData) eq 'HASH' ) &&
                 $CurrVersionData->{Name} &&
                 $CurrVersionData->{Number}
-                )
-            {
+            ) {
                 $CISearchList{$SearchResult} = $CurrVersionData->{Name}
                     . " ("
                     . $CurrVersionData->{Number}
@@ -366,8 +363,7 @@ sub InputCreate {
                 ( ref($CIVersionDataRef) eq 'HASH' ) &&
                 $CIVersionDataRef->{Name} &&
                 $CIVersionDataRef->{Number}
-                )
-            {
+            ) {
                 $CIName = $CIVersionDataRef->{Name}
                     . " ("
                     . $CIVersionDataRef->{Number}
@@ -398,8 +394,7 @@ sub InputCreate {
             ( ref($CIVersionDataRef) eq 'HASH' ) &&
             $CIVersionDataRef->{Name} &&
             $CIVersionDataRef->{Number}
-            )
-        {
+        ) {
             $CIName = $CIVersionDataRef->{Name}
                 . " ("
                 . $CIVersionDataRef->{Number}
@@ -423,8 +418,7 @@ sub InputCreate {
         $AutoCompleteConfig
         && ref($AutoCompleteConfig) eq 'HASH'
         && $AutoCompleteConfig->{Active}
-        )
-    {
+    ) {
         my $ItemId = $Param{ItemId} || '';
 
         $Self->{LayoutObject}->Block(
@@ -543,7 +537,7 @@ sub SearchFormDataGet {
                     ClassID => $ClassID,
                     UserID  => $Self->{UserID} || 1,
                 );
-        
+
                 delete $ClassList->{$ClassID} if !$HasAccess;
             }
 

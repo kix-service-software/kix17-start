@@ -59,8 +59,7 @@ sub PreRun {
             !$DaemonModuleConfig->{$DaemonName}
             || ref $DaemonModuleConfig->{$DaemonName} ne 'HASH'
             || !$DaemonModuleConfig->{$DaemonName}->{Module}
-            )
-        {
+        ) {
             die "Daemon $DaemonName configuration is invalid";
         }
 

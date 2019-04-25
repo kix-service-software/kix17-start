@@ -84,8 +84,7 @@ sub new {
             # check if module can be loaded
             if (
                 !$Kernel::OM->Get('Kernel::System::Main')->RequireBaseClass( $Extension->{Module} )
-                )
-            {
+            ) {
                 die "Can't load dynamic fields backend module"
                     . " $Extension->{Module}! $@";
             }
@@ -230,17 +229,18 @@ sub EditFieldRender {
     # set values from ParamObject if present
     if ( defined $FieldValue && IsHashRefWithData($FieldValue) ) {
         if (
-            !defined $FieldValue->{FieldValue} &&
-            defined $FieldValue->{UsedValue}   && $FieldValue->{UsedValue} eq '1'
-            )
-        {
+            !defined $FieldValue->{FieldValue}
+            && defined $FieldValue->{UsedValue}
+            && $FieldValue->{UsedValue} eq '1'
+        ) {
             $Value = '0';
         }
         elsif (
-            defined $FieldValue->{FieldValue} && $FieldValue->{FieldValue} eq '1' &&
-            defined $FieldValue->{UsedValue} && $FieldValue->{UsedValue} eq '1'
-            )
-        {
+            defined $FieldValue->{FieldValue}
+            && $FieldValue->{FieldValue} eq '1'
+            && defined $FieldValue->{UsedValue}
+            && $FieldValue->{UsedValue} eq '1'
+        ) {
             $Value = '1';
         }
     }
@@ -355,12 +355,12 @@ sub EditFieldValueGet {
 
     # check if there is a Template and retrieve the dynamic field value from there
     if (
-        IsHashRefWithData( $Param{Template} ) && (
+        IsHashRefWithData( $Param{Template} )
+        && (
             defined $Param{Template}->{$FieldName}
             || defined $Param{Template}->{ $FieldName . 'Used' }
         )
-        )
-    {
+    ) {
         # get dynamic field value form Template
         $Data{FieldValue} = $Param{Template}->{$FieldName};
 
@@ -372,8 +372,7 @@ sub EditFieldValueGet {
     elsif (
         defined $Param{ParamObject}
         && ref $Param{ParamObject} eq 'Kernel::System::Web::Request'
-        )
-    {
+    ) {
 
         # get dynamic field value from param
         $Data{FieldValue} = $Param{ParamObject}->GetParam( Param => $FieldName );
@@ -429,7 +428,7 @@ sub EditFieldValueValidate {
     }
 
     # validate only 0 or 1 as possible values
-    if ( $Value && $Value ne 1 ) {
+    if ( $Value && $Value ne "1" ) {
         $ServerError  = 1;
         $ErrorMessage = 'The field content is invalid';
     }
@@ -457,7 +456,7 @@ sub DisplayValueRender {
 
     # convert value to user friendly string
     my $Value = 'Checked';
-    if ( $Param{Value} ne 1 ) {
+    if ( $Param{Value} ne "1" ) {
         $Value = 'Unchecked';
     }
 
@@ -576,7 +575,7 @@ sub SearchFieldValueGet {
         return;
     }
 
-    if ( defined $Param{ReturnProfileStructure} && $Param{ReturnProfileStructure} eq 1 ) {
+    if ( defined $Param{ReturnProfileStructure} && $Param{ReturnProfileStructure} eq "1" ) {
         return {
             'Search_DynamicField_' . $Param{DynamicFieldConfig}->{Name} => $Value,
         };
@@ -605,9 +604,9 @@ sub SearchFieldParameterBuild {
             for my $Item ( @{$Value} ) {
 
                 # set the display value
-                my $DisplayItem = $Item eq 1
+                my $DisplayItem = $Item eq "1"
                     ? 'Checked'
-                    : $Item eq -1 ? 'Unchecked'
+                    : $Item eq "-1" ? 'Unchecked'
                     :               '';
 
                 # translate the value
@@ -618,7 +617,7 @@ sub SearchFieldParameterBuild {
                 push @DisplayItemList, $DisplayItem;
 
                 # set the correct value for "unchecked" (-1) search options
-                if ( $Item && $Item eq -1 ) {
+                if ( $Item && $Item eq "-1" ) {
                     $Item = '0';
                 }
             }
@@ -630,9 +629,9 @@ sub SearchFieldParameterBuild {
         else {
 
             # set the display value
-            $DisplayValue = $Value eq 1
+            $DisplayValue = $Value eq "1"
                 ? 'Checked'
-                : $Value eq -1 ? 'Unchecked'
+                : $Value eq "-1" ? 'Unchecked'
                 :                '';
 
             # translate the value
@@ -642,7 +641,7 @@ sub SearchFieldParameterBuild {
         }
 
         # set the correct value for "unchecked" (-1) search options
-        if ( $Value && $Value eq -1 ) {
+        if ( $Value && $Value eq "-1" ) {
             $Value = '0';
         }
     }

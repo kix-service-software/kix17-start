@@ -13,6 +13,8 @@ package Kernel::Output::HTML::ImportExport::LayoutTT;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::System::Log',
 );

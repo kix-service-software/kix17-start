@@ -70,8 +70,6 @@ sub new {
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    # ddoerffel - some business code removed
-
     return $Self;
 }
 
@@ -90,8 +88,6 @@ sub CheckSessionID {
 
     return $Self->{Backend}->CheckSessionID(%Param);
 }
-
-# ddoerffel - some business code removed
 
 =item SessionIDErrorMessage()
 
@@ -164,8 +160,6 @@ sub CreateSessionID {
         return;
     }
 
-    # ddoerffel - some business code removed
-
     return $Self->{Backend}->CreateSessionID(%Param);
 }
 
@@ -180,8 +174,6 @@ session can't get deleted)
 
 sub RemoveSessionID {
     my ( $Self, %Param ) = @_;
-
-    # ddoerffel - some business code removed
 
     return $Self->{Backend}->RemoveSessionID(%Param);
 }
@@ -302,8 +294,6 @@ cleanup of sessions in your system
 
 sub CleanUp {
     my ( $Self, %Param ) = @_;
-
-    # ddoerffel - some business code removed
 
     return $Self->{Backend}->CleanUp(%Param);
 }

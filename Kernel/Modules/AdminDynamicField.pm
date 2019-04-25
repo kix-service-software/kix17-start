@@ -150,29 +150,16 @@ sub _ShowOverview {
         next FIELDTYPE if !$FieldTypeConfig->{$FieldType};
         next FIELDTYPE if $FieldTypeConfig->{$FieldType}->{DisabledAdd};
 
-        # KIX4OTRS-capeIT
         my $Key = $FieldType;
-        if ( $FieldTypeConfig->{$FieldType}->{ConfigDialog} eq 'AdminDynamicFieldObjectReference' )
-        {
+        if ( $FieldTypeConfig->{$FieldType}->{ConfigDialog} eq 'AdminDynamicFieldObjectReference' ) {
             $Key = 'ObjectReference';
         }
 
-        # EO KIX4OTRS-capeIT
-
         # add the field type to the list
-        # KIX4OTRS-capeIT
-        # $FieldTypes{$FieldType} = $FieldTypeConfig->{$FieldType}->{DisplayName};
         $FieldTypes{$Key} = $FieldTypeConfig->{$FieldType}->{DisplayName};
 
-        # EO KIX4OTRS-capeIT
-
         # get the config dialog
-        # KIX4OTRS-capeIT
-        # $FieldDialogs{$FieldType} =
-        $FieldDialogs{$Key} =
-
-            # EO KIX4OTRS-capeIT
-            $FieldTypeConfig->{$FieldType}->{ConfigDialog};
+        $FieldDialogs{$Key} = $FieldTypeConfig->{$FieldType}->{ConfigDialog};
     }
 
     my $ObjectTypeConfig = $ConfigObject->Get('DynamicFields::ObjectType');
@@ -193,8 +180,7 @@ sub _ShowOverview {
             ( int $ObjectTypeConfig{$a}->{Prio} || 0 )
                 <=> ( int $ObjectTypeConfig{$b}->{Prio} || 0 )
         } keys %ObjectTypeConfig
-        )
-    {
+    ) {
         next OBJECTTYPE if !$ObjectTypeConfig->{$ObjectType};
 
         my $SelectName = $ObjectType . 'DynamicField';

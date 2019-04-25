@@ -119,8 +119,7 @@ sub Run {
     if (
         defined $Param{Config}->{LockID}
         && $Param{Config}->{LockID} eq $Param{Ticket}->{LockID}
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -129,8 +128,7 @@ sub Run {
     elsif (
         defined $Param{Config}->{LockID}
         && $Param{Config}->{LockID} ne $Param{Ticket}->{LockID}
-        )
-    {
+    ) {
 
         # get ticket object
         my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
@@ -158,8 +156,7 @@ sub Run {
     elsif (
         defined $Param{Config}->{Lock}
         && $Param{Config}->{Lock} eq $Param{Ticket}->{Lock}
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -168,8 +165,7 @@ sub Run {
     elsif (
         defined $Param{Config}->{Lock}
         && $Param{Config}->{Lock} ne $Param{Ticket}->{Lock}
-        )
-    {
+    ) {
         # get ticket object
         my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 

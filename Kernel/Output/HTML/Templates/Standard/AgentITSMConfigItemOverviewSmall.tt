@@ -85,10 +85,7 @@
             </tr>
 [% RenderBlockEnd("NoDataFoundMsg") %]
 [% RenderBlockStart("Record") %]
-# KIX4OTRS-capeIT
-#            <tr id="ConfigItemID_[% Data.ConfigItemID | html %]" class="MasterAction">
             <tr id="ConfigItemID_[% Data.ConfigItemID | html %]" class="MasterAction" style="[% Data.LineStyle | html %]">
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("RecordBulkAction") %]
                 <td class="Checkbox Fixed NonTextContent">
                     <input class="Checkbox SelectItem" type="checkbox" name="ConfigItemID" value="[% Data.ConfigItemID | html %]"  autocomplete="off" [% Data.ItemChecked %]]/>
@@ -111,10 +108,7 @@
 [% RenderBlockStart("RecordNumber") %]
                 <td>
 [% RenderBlockStart("RecordNumberLinkStart") %]
-# KIX4OTRS-capeIT
-#                    <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %]" title="[% Data.Number | uri %]" class="MasterActionLink">
                     <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %]" title="[% Data.Number | uri %]" class="MasterActionLink" style="[% Data.LineStyle | html %]">
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("RecordNumberLinkStart") %]
                         [% Data.Number | html %]
 [% RenderBlockStart("RecordNumberLinkEnd") %]
@@ -125,10 +119,7 @@
 [% RenderBlockStart("RecordName") %]
                 <td>
 [% RenderBlockStart("RecordNameLinkStart") %]
-# KIX4OTRS-capeIT
-#                    <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %]" title="[% Data.Name | uri %]" class="MasterActionLink">
                     <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %]" title="[% Data.Name | uri %]" class="MasterActionLink" style="[% Data.LineStyle | html %]">
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("RecordNameLinkStart") %]
                         <div title="[% Data.Name | html %]">[% Data.Name | truncate(40) | html %]</div>
 [% RenderBlockStart("RecordNameLinkEnd") %]

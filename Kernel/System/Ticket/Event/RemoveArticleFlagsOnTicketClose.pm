@@ -99,8 +99,7 @@ sub Run {
         if (
             defined $Config->{ArticleFlagsRemoveOnTicketClose}->{$Flag}
             && $Config->{ArticleFlagsRemoveOnTicketClose}->{$Flag} =~ m/^1$/i
-            )
-        {
+        ) {
 
             for my $ArticleID (@ArticleIDs) {
 
@@ -125,8 +124,7 @@ sub Run {
         elsif (
             !defined $Config->{ArticleFlagsRemoveOnTicketClose}->{$Flag}
             || $Config->{ArticleFlagsRemoveOnTicketClose}->{$Flag} =~ m/^0$/i
-            )
-        {
+        ) {
 
             # keep flag data
             delete $ArticleFlags{$Flag};
@@ -168,8 +166,7 @@ sub Run {
             if (
                 defined $UserPreferences{ArticleFlagsRemoveOnClose}
                 && $UserPreferences{ArticleFlagsRemoveOnClose}
-                )
-            {
+            ) {
                 @ArticleFlagsDeleteOnCloseArray
                     = split( /\;/, $UserPreferences{ArticleFlagsRemoveOnClose} );
             }

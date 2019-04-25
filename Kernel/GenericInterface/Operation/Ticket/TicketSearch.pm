@@ -378,8 +378,7 @@ sub _GetParams {
         ArticleTimeSearchType SearchInArchive
         Fulltext ContentSearch ShownAttributes AttachmentName
         )
-        )
-    {
+    ) {
 
         # get search string params (get submitted params)
         if ( IsStringWithData( $Param{$Item} ) ) {
@@ -403,8 +402,7 @@ sub _GetParams {
         CreatedPriorityIDs CreatedStates CreatedStateIDs
         CreatedQueues CreatedQueueIDs StateType CustomerID
         CustomerUserLogin )
-        )
-    {
+    ) {
 
         # get search array params
         my @Values;
@@ -518,9 +516,6 @@ sub _GetDynamicFields {
     # dynamic fields search parameters for ticket search
     my %DynamicFieldSearchParameters;
 
-    # get single params
-    my %AttributeLookup;
-
     # get the dynamic fields for ticket object
     $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid      => 1,
@@ -593,8 +588,7 @@ sub _CreateTimeSettings {
             $GetParam{TicketChangeTimeStartDay}
             && $GetParam{TicketChangeTimeStartMonth}
             && $GetParam{TicketChangeTimeStartYear}
-            )
-        {
+        ) {
             $GetParam{TicketChangeTimeNewerDate} = $GetParam{TicketChangeTimeStartYear} . '-'
                 . $GetParam{TicketChangeTimeStartMonth} . '-'
                 . $GetParam{TicketChangeTimeStartDay}
@@ -604,8 +598,7 @@ sub _CreateTimeSettings {
             $GetParam{TicketChangeTimeStopDay}
             && $GetParam{TicketChangeTimeStopMonth}
             && $GetParam{TicketChangeTimeStopYear}
-            )
-        {
+        ) {
             $GetParam{TicketChangeTimeOlderDate} = $GetParam{TicketChangeTimeStopYear} . '-'
                 . $GetParam{TicketChangeTimeStopMonth} . '-'
                 . $GetParam{TicketChangeTimeStopDay}
@@ -617,8 +610,7 @@ sub _CreateTimeSettings {
             $GetParam{TicketChangeTimePoint}
             && $GetParam{TicketChangeTimePointStart}
             && $GetParam{TicketChangeTimePointFormat}
-            )
-        {
+        ) {
             my $Time = 0;
             if ( $GetParam{TicketChangeTimePointFormat} eq 'minute' ) {
                 $Time = $GetParam{TicketChangeTimePoint};
@@ -663,8 +655,7 @@ sub _CreateTimeSettings {
             $GetParam{TicketLastChangeTimeStartDay}
             && $GetParam{TicketLastChangeTimeStartMonth}
             && $GetParam{TicketLastChangeTimeStartYear}
-            )
-        {
+        ) {
             $GetParam{TicketLastChangeTimeNewerDate} = $GetParam{TicketLastChangeTimeStartYear} . '-'
                 . $GetParam{TicketLastChangeTimeStartMonth} . '-'
                 . $GetParam{TicketLastChangeTimeStartDay}
@@ -674,8 +665,7 @@ sub _CreateTimeSettings {
             $GetParam{TicketLastChangeTimeStopDay}
             && $GetParam{TicketLastChangeTimeStopMonth}
             && $GetParam{TicketLastChangeTimeStopYear}
-            )
-        {
+        ) {
             $GetParam{TicketLastChangeTimeOlderDate} = $GetParam{TicketLastChangeTimeStopYear} . '-'
                 . $GetParam{TicketLastChangeTimeStopMonth} . '-'
                 . $GetParam{TicketLastChangeTimeStopDay}
@@ -687,8 +677,7 @@ sub _CreateTimeSettings {
             $GetParam{TicketLastChangeTimePoint}
             && $GetParam{TicketLastChangeTimePointStart}
             && $GetParam{TicketLastChangeTimePointFormat}
-            )
-        {
+        ) {
             my $Time = 0;
             if ( $GetParam{TicketLastChangeTimePointFormat} eq 'minute' ) {
                 $Time = $GetParam{TicketLastChangeTimePoint};
@@ -733,8 +722,7 @@ sub _CreateTimeSettings {
             $GetParam{TicketCloseTimeStartDay}
             && $GetParam{TicketCloseTimeStartMonth}
             && $GetParam{TicketCloseTimeStartYear}
-            )
-        {
+        ) {
             $GetParam{TicketCloseTimeNewerDate} = $GetParam{TicketCloseTimeStartYear} . '-'
                 . $GetParam{TicketCloseTimeStartMonth} . '-'
                 . $GetParam{TicketCloseTimeStartDay}
@@ -744,8 +732,7 @@ sub _CreateTimeSettings {
             $GetParam{TicketCloseTimeStopDay}
             && $GetParam{TicketCloseTimeStopMonth}
             && $GetParam{TicketCloseTimeStopYear}
-            )
-        {
+        ) {
             $GetParam{TicketCloseTimeOlderDate} = $GetParam{TicketCloseTimeStopYear} . '-'
                 . $GetParam{TicketCloseTimeStopMonth} . '-'
                 . $GetParam{TicketCloseTimeStopDay}
@@ -757,8 +744,7 @@ sub _CreateTimeSettings {
             $GetParam{TicketCloseTimePoint}
             && $GetParam{TicketCloseTimePointStart}
             && $GetParam{TicketCloseTimePointFormat}
-            )
-        {
+        ) {
             my $Time = 0;
             if ( $GetParam{TicketCloseTimePointFormat} eq 'minute' ) {
                 $Time = $GetParam{TicketCloseTimePoint};
@@ -812,6 +798,8 @@ sub _CreateTimeSettings {
 
     return %GetParam;
 }
+
+1;
 
 =end Internal:
 

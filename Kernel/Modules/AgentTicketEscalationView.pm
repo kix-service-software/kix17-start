@@ -34,7 +34,6 @@ sub Run {
     # get session object
     my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
 
-    # KIX4OTRS-capeIT
     # get needed objects
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
@@ -74,8 +73,6 @@ sub Run {
             || 'Up';
     }
 
-    # EO KIX4OTRS-capeIT
-
     # create URL to store last screen
     my $URL = "Action=AgentTicketEscalationView;"
         . ";View="          . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'View')        || '' )
@@ -99,12 +96,6 @@ sub Run {
         Value     => $URL,
     );
 
-    # get user object
-    # KIX4OTRS-capeIT
-    # moved upwards
-    # my $UserObject = $Kernel::OM->Get('Kernel::System::User');
-    # EO KIX4OTRS-capeIT
-
     # get filters stored in the user preferences
     my %Preferences = $UserObject->GetPreferences(
         UserID => $Self->{UserID},
@@ -114,12 +105,6 @@ sub Run {
     my $StoredFilters    = $JSONObject->Decode(
         Data => $Preferences{$StoredFiltersKey},
     );
-
-    # get param object
-    # KIX4OTRS-capeIT
-    # moved upwards
-    # my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-    # EO KIX4OTRS-capeIT
 
     # delete stored filters if needed
     if ( $ParamObject->GetParam( Param => 'DeleteFilters' ) ) {
@@ -132,8 +117,7 @@ sub Run {
     COLUMNNAME:
     for my $ColumnName (
         qw(Owner Responsible State Queue Priority Type Lock Service SLA CustomerID CustomerUserID)
-        )
-    {
+    ) {
         # get column filter from web request
         my $FilterValue = $ParamObject->GetParam( Param => 'ColumnFilter' . $ColumnName )
             || '';
@@ -232,13 +216,6 @@ sub Run {
     );
     my $TimeStampToday = "$Year-$Month-$Day 23:59:59";
 
-    # get config object
-    # KIX4OTRS-capeIT
-    # moved upwards
-    # my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    # my $Config       = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
-    # EO KIX4OTRS-capeIT
-
     # get params
     my $SortBy = $ParamObject->GetParam( Param => 'SortBy' )
         || $Config->{'SortBy::Default'}
@@ -317,8 +294,7 @@ sub Run {
                 $HeaderColumn eq 'CustomerUserID'
             )
         )
-        )
-    {
+    ) {
 
         @OriginalViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
@@ -366,26 +342,25 @@ sub Run {
     else {
 
         # store column filters
-        my $StoredFilters = \%ColumnFilter;
+        my $NewStoredFilters = \%ColumnFilter;
 
-        my $StoredFiltersKey = 'UserStoredFilterColumns-' . $Self->{Action};
         $UserObject->SetPreferences(
             UserID => $Self->{UserID},
             Key    => $StoredFiltersKey,
-            Value  => $JSONObject->Encode( Data => $StoredFilters ),
+            Value  => $JSONObject->Encode( Data => $NewStoredFilters ),
         );
     }
 
     my %NavBarFilter;
     for my $FilterColumn ( sort keys %Filters ) {
-        my @ViewableTickets = $TicketObject->TicketSearch(
+        my @NavViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{$FilterColumn}->{Search} },
             %ColumnFilter,
             Result => 'ARRAY',
             Limit  => $Limit,
         );
         $NavBarFilter{ $Filters{$FilterColumn}->{Prio} } = {
-            Count  => scalar @ViewableTickets,
+            Count  => scalar @NavViewableTickets,
             Filter => $FilterColumn,
             %{ $Filters{$FilterColumn} },
         };

@@ -11,6 +11,8 @@ package Kernel::Output::HTML::KIXSidebar::Ticket;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout'
 );
@@ -35,8 +37,8 @@ sub Run {
 
     my $AdditionalClasses = '';
     if (   $Param{Config}->{'InitialCollapsed'}
-        && $Param{Action} =~ /$Param{Config}->{'InitialCollapsed'}/ )
-    {
+        && $Param{Action} =~ /$Param{Config}->{'InitialCollapsed'}/
+    ) {
         $AdditionalClasses .= 'Collapsed';
     }
 

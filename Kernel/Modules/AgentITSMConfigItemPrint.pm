@@ -685,8 +685,7 @@ sub _PDFOutputVersionInfos {
         && ref $Param{Version}->{XMLData}->[1] eq 'HASH'
         && $Param{Version}->{XMLData}->[1]->{Version}
         && ref $Param{Version}->{XMLData}->[1]->{Version} eq 'ARRAY'
-        )
-    {
+    ) {
         $Self->_PDFOutputXMLOutput(
             XMLDefinition => $Param{Version}->{XMLDefinition},
             XMLData       => $Param{Version}->{XMLData}->[1]->{Version}->[1],

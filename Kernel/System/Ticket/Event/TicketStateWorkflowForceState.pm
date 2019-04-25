@@ -30,8 +30,8 @@ sub new {
     bless( $Self, $Type );
 
     # create needed objects
-    $Self->{LogObject}           = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{TicketObject}        = $Kernel::OM->Get('Kernel::System::Ticket');
+    $Self->{LogObject}    = $Kernel::OM->Get('Kernel::System::Log');
+    $Self->{TicketObject} = $Kernel::OM->Get('Kernel::System::Ticket');
 
     return $Self;
 }
@@ -74,9 +74,8 @@ sub Run {
         if (
             $Param{Config}->{ $Ticket{Type} . ':::' . $Ticket{State} }
             || $Param{Config}->{ $Ticket{State} }
-            )
-        {
-            $Self->{TicketObject}->StateSet(
+        ) {
+            $Self->{TicketObject}->TicketStateSet(
                 TicketID => $Param{Data}->{TicketID},
                 State    => $Param{Config}->{ $Ticket{Type} . ':::' . $Ticket{State} }
                     || $Param{Config}->{ $Ticket{State} },

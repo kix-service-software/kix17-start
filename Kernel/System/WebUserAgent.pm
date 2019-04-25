@@ -151,8 +151,7 @@ sub Request {
     if (
         $Param{SkipSSLVerification}
         || $Kernel::OM->Get('Kernel::Config')->Get('WebUserAgent::DisableSSLVerification')
-        )
-    {
+    ) {
         $UserAgent->ssl_opts(
             verify_hostname => 0,
         );

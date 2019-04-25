@@ -364,7 +364,6 @@ sub _HTTP {
         $URL =~ s/<$Key>/$Ticket{$Key}/g;
     }
 
-#rbo - T2016121190001552 - added KIX placeholders
     # replace config tags
     $URL =~ s{<CONFIG_(.+?)>}{$Self->{ConfigObject}->Get($1)}egx;
     $URL =~ s{<(KIX|OTRS)_CONFIG_(.+?)>}{$Self->{ConfigObject}->Get($2)}egx;

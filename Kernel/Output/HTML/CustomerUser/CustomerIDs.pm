@@ -11,6 +11,8 @@ package Kernel::Output::HTML::CustomerUser::CustomerIDs;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our $ObjectManagerDisabled = 1;
 
 sub new {

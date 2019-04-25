@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AdminSelectBox;
-## nofilter(TidyAll::Plugin::OTRS::Perl::DBObject)
 
 use strict;
 use warnings;
@@ -92,8 +91,7 @@ sub Run {
                     SQL   => $Param{SQL},
                     Limit => $Param{Max}
                 )
-                )
-            {
+            ) {
 
                 my @Data;
                 my $MatchesFound;
@@ -124,8 +122,7 @@ sub Run {
                     if (
                         $Param{ResultFormat} eq 'CSV'
                         || $Param{ResultFormat} eq 'Excel'
-                        )
-                    {
+                    ) {
                         push @Data, \@Row;
                         next ROW;
                     }

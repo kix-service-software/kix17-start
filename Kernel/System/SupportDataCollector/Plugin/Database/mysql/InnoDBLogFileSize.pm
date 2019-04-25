@@ -41,11 +41,10 @@ sub Run {
         if (
             !$Row[1]
             || $Row[1] < 1024 * 1024 * 256
-            )
-        {
+        ) {
             $Self->AddResultProblem(
                 Label => Translatable('InnoDB Log File Size'),
-                Value => $Row[1] / 1024 / 1024 . ' MB',
+                Value => ($Row[1] / 1024 / 1024) . ' MB',
                 Message =>
                     Translatable("The setting innodb_log_file_size must be at least 256 MB."),
             );
@@ -53,7 +52,7 @@ sub Run {
         else {
             $Self->AddResultOk(
                 Label => Translatable('InnoDB Log File Size'),
-                Value => $Row[1] / 1024 / 1024 . ' MB',
+                Value => ($Row[1] / 1024 / 1024) . ' MB',
             );
         }
     }

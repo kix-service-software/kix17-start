@@ -30,9 +30,7 @@ sub Param {
 
     # create needed objects
     my $GeneralCatalogObject;
-    if ( $Kernel::OM->Get('Kernel::System::Main')
-        ->Require( 'Kernel::System::GeneralCatalog', Silent => 1 ) )
-    {
+    if ( $Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::GeneralCatalog', Silent => 1 ) ) {
         $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
     }
     my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
@@ -48,7 +46,6 @@ sub Param {
             : $Self->{ConfigItem}->{DataSelected};
     }
 
-    # KIX4OTRS-capeIT
     my %SelectionList = ();
     if ( $Self->{ConfigItem}->{SelectionSource} eq 'QueueList' ) {
         %SelectionList = $QueueObject->QueueList();
@@ -61,8 +58,7 @@ sub Param {
         &&
         ( $Self->{ConfigItem}->{GeneralCatalogClass} ) &&
         $GeneralCatalogObject
-        )
-    {
+    ) {
         my $ItemListRef = $GeneralCatalogObject->ItemList(
             Class => $Self->{ConfigItem}->{GeneralCatalogClass},
         );
@@ -71,21 +67,15 @@ sub Param {
         }
     }
 
-    # EO KIX4OTRS-capeIT
-
     push(
         @Params,
         {
             %Param,
-            Name => $Self->{ConfigItem}->{PrefKey},
-            SelectedID => $GetParam || '',
-
-            # KIX4OTRS-capeIT
+            Name         => $Self->{ConfigItem}->{PrefKey},
+            SelectedID   => $GetParam || '',
             Data         => \%SelectionList,
             Title        => $Self->{ConfigItem}->{ToolTip},
             PossibleNone => $Self->{ConfigItem}->{PossibleNone},
-
-            # EO KIX4OTRS-capeIT
         },
     );
 

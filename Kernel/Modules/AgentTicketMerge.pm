@@ -107,8 +107,7 @@ sub Run {
                     UserID    => $Self->{UserID},
                     NewUserID => $Self->{UserID},
                 )
-                )
-            {
+            ) {
 
                 # show lock state
                 $LayoutObject->Block(
@@ -126,7 +125,7 @@ sub Run {
                 OwnerID  => $Self->{UserID},
             );
             if ( !$AccessOk ) {
-                my $Output = $LayoutObject->Header(
+                $Output = $LayoutObject->Header(
                     Value     => $Ticket{Number},
                     Type      => 'Small',
                     BodyClass => 'Popup',
@@ -242,7 +241,7 @@ sub Run {
         }
 
         if (%Error) {
-            my $Output = $LayoutObject->Header(
+            $Output = $LayoutObject->Header(
                 Type      => 'Small',
                 BodyClass => 'Popup',
             );
@@ -265,7 +264,12 @@ sub Run {
 
             $Output .= $LayoutObject->Output(
                 TemplateFile => 'AgentTicketMerge',
-                Data         => { %Param, %GetParam, %Ticket, %Error },
+                Data         => {
+                    %Param,
+                    %GetParam,
+                    %Ticket,
+                    %Error
+                },
             );
             $Output .= $LayoutObject->Footer(
                 Type => 'Small',
@@ -277,14 +281,14 @@ sub Run {
         $LayoutObject->ChallengeTokenCheck();
 
         # check permissions
-        my $Access = $TicketObject->TicketPermission(
+        my $HasAccess = $TicketObject->TicketPermission(
             Type     => $Config->{Permission},
             TicketID => $MainTicketID,
             UserID   => $Self->{UserID},
         );
 
         # error screen, don't show ticket
-        if ( !$Access ) {
+        if ( !$HasAccess ) {
             return $LayoutObject->NoPermission( WithHeader => 'yes' );
         }
 
@@ -292,13 +296,12 @@ sub Run {
         if (
             $Self->{TicketID} == $MainTicketID
             || !$TicketObject->TicketMerge(
-                MainTicketID  => $MainTicketID,
-                MergeTicketID => $Self->{TicketID},
-                UserID        => $Self->{UserID},
-            )
-            )
-        {
-            my $Output .= $LayoutObject->Header(
+                    MainTicketID  => $MainTicketID,
+                    MergeTicketID => $Self->{TicketID},
+                    UserID        => $Self->{UserID},
+                )
+        ) {
+            $Output = $LayoutObject->Header(
                 Type      => 'Small',
                 BodyClass => 'Popup',
             );
@@ -319,7 +322,10 @@ sub Run {
 
             $Output .= $LayoutObject->Output(
                 TemplateFile => 'AgentTicketMerge',
-                Data         => { %Param, %Ticket },
+                Data         => {
+                    %Param,
+                    %Ticket
+                },
             );
             $Output .= $LayoutObject->Footer(
                 Type => 'Small',
@@ -339,8 +345,6 @@ sub Run {
                         String => $GetParam{Body},
                     );
                 }
-                my %Ticket = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
-                #rbo - T2016121190001552 - added KIX placeholders
                 $GetParam{Body} =~ s/(&lt;|<)KIX_TICKET(&gt;|>)/$Ticket{TicketNumber}/g;
                 $GetParam{Body}
                     =~ s/(&lt;|<)KIX_MERGE_TO_TICKET(&gt;|>)/$GetParam{'MainTicketNumber'}/g;
@@ -373,7 +377,6 @@ sub Run {
         }
     }
 
-    # KIX4OTRS-capeIT
     elsif ( $Self->{Subaction} eq 'SearchTicketID' ) {
 
         # get params
@@ -420,23 +423,16 @@ sub Run {
         for my $TicketID (
             sort { $ResultHash{$a} cmp $ResultHash{$b} }
             keys %ResultHash
-            )
-        {
-            my %Ticket = $TicketObject->TicketGet(
+        ) {
+            my %TicketData = $TicketObject->TicketGet(
                 TicketID => $TicketID,
             );
 
-            next if $Ticket{StateType} eq 'merged';
+            next if $TicketData{StateType} eq 'merged';
 
             push @Data, {
-
-                # KIX4OTRS-capeIT
-                # SearchObjectKey   => $Ticket{Title},
-                # SearchObjectValue => $Ticket{TicketNumber},
-                SearchObjectKey   => $Ticket{TicketNumber},
-                SearchObjectValue => $Ticket{Title},
-
-                # EO KIX4OTRS-capeIT
+                SearchObjectKey   => $TicketData{TicketNumber},
+                SearchObjectValue => $TicketData{Title},
             };
             $MaxResultCount--;
             last if $MaxResultCount == 0;
@@ -456,7 +452,6 @@ sub Run {
         );
     }
 
-    # EO KIX4OTRS-capeIT
     else {
 
         # get last article
@@ -466,7 +461,7 @@ sub Run {
         );
 
         # merge box
-        my $Output = $LayoutObject->Header(
+        $Output = $LayoutObject->Header(
             Value     => $Ticket{TicketNumber},
             Type      => 'Small',
             BodyClass => 'Popup',
@@ -498,7 +493,6 @@ sub Run {
         # prepare from ...
         $Article{To} = $Article{From};
 
-        # KIX4OTRS-capeIT
         # overwrite "To" with customer email, because "To" could be system adress, external...
         if ( $Article{CustomerUserID} ) {
             my %CustomerData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
@@ -515,8 +509,6 @@ sub Run {
                 $Article{To} = $Article{CustomerUserID};
             }
         }
-
-        # EO KIX4OTRS-capeIT
 
         my %Address = $Kernel::OM->Get('Kernel::System::Queue')
             ->GetSystemAddress( QueueID => $Ticket{QueueID} );

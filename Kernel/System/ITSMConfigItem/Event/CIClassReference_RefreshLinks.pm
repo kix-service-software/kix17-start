@@ -129,8 +129,7 @@ sub Run {
                 if (
                     $CIReferenceAttrDataRef->{$CurrKeyname}
                     && ref( $CIReferenceAttrDataRef->{$CurrKeyname} ) eq 'ARRAY'
-                    )
-                {
+                ) {
                     for my $CurrPrevPartnerID ( @{ $CIReferenceAttrDataRef->{$CurrKeyname} } ) {
                         $Self->{LinkObject}->LinkDelete(
                             Object1 => 'ITSMConfigItem',
@@ -219,8 +218,7 @@ sub _CreateCIReferencesHash {
         || ( !$Param{XMLDefinition} )
         || ( ref $Param{XMLData} ne 'HASH' )
         || ( ref $Param{XMLDefinition} ne 'ARRAY' )
-        )
-    {
+    ) {
         return;
     }
 
@@ -248,8 +246,7 @@ sub _CreateCIReferencesHash {
                 if ( $Item->{Key} eq $Key ) {
                     for my $ParamRef (
                         qw(ReferencedCIClassLinkType ReferencedCIClassLinkDirection)
-                        )
-                    {
+                    ) {
                         $RetHash{$ParamRef} = $Item->{Input}->{$ParamRef};
                     }
                 }

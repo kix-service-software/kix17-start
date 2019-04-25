@@ -15,6 +15,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 =head1 NAME
 
 Kernel::System::ITSMConfigItem::Number::AutoIncrement - config item number backend module

@@ -16,17 +16,13 @@
         <input type="hidden" name="Subaction" value="Search"/>
         <input type="hidden" name="EmptySearch" value="[% Data.EmptySearch | html %]" id="EmptySearch"/>
         <input type="hidden" name="ShownAttributes" value="" id="ShownAttributes">
-# KIX4OTRS-capeIT
         <input type="hidden" name="UserLogin" value="[% Data.UserLogin | html %]" id="UserLogin">
-# EO KIX4OTRS-capeIT
         <fieldset class="TableLike">
             <legend><span>[% Translate("Templates") | html %]</span></legend>
             <label for="SearchProfile">[% Translate("Search template") | html %]:</label>
             <div class="Field">
                 [% Data.ProfilesStrg %]
 
-# KIX4OTRS-capeIT
-#                <button id="SearchProfileNew" value="[% Translate("Create New") | html %]">[% Translate("Create New") | html %]</button>
                 <button id="SearchProfileNew" value="[% Translate("Create New") | html %]" title="[% Translate("Start creating a new search template") | html %]">[% Translate("Create New") | html %]</button>
                 <button id="SearchProfileDelete" class="Hidden" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
                 <div id="SearchProfileSaveBlock" class="SearchProfileAdmin">
@@ -39,9 +35,7 @@
                     <label for="ShowProfileAsQueue">[% Translate("Show template as queue") | html %]</label>
                     <div class="Clear"></div>
                 </div>
-# EO KIX4OTRS-capeIT
                 <div id="SearchProfileAddBlock" class="SearchProfileAdmin SearchProfileAdd">
-# KIX4OTRS-capeIT
                     Name: <input type="text" name="Name" id="SearchProfileAddName" title="[% Translate("Name for new search template") | html %]"/>
                     <div class="Clear"></div>
                 </div>
@@ -60,17 +54,10 @@
                     </div>
                 </div>
                 <div id="SearchProfileSaveBlock" class="SearchProfileAdmin SearchProfileSave">
-# EO KIX4OTRS-capeIT
                     <button type="button" title="[% Translate("Create Template") | html %]" id="SearchProfileAddAction" class="CallForAction"><span>[% Translate("Add") | html %]</span></button>
                 </div>
             </div>
             <div class="Clear"></div>
-# KIX4OTRS-capeIT
-#            <label>[% Translate("Save changes in template") | html %]:</label>
-#            <div class="Field">
-#                <input type="checkbox" name="SaveProfile" id="SaveProfile" value="1"/>
-#            </div>
-# EO KIX4OTRS-capeIT
         </fieldset>
         <fieldset class="TableLike" id="SearchInsert">
             <legend><span>[% Translate("Filters in use") | html %]</span></legend>
@@ -89,7 +76,6 @@
             </div>
         </fieldset>
     </form>
-
 
     <fieldset class="TableLike Hidden" id="SearchAttributesHidden">
         <div class="Clear"></div>
@@ -126,14 +112,12 @@
             <a class="RemoveButton" href="#" title="[% Translate("Remove this entry") | html %]"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove") | html %]</span></a>
         </div>
         <div class="Clear"></div>
-# rkaiser - T#2017020290001194 - changed customer user to contact
         <label for="CustomerUserLogin" id="LabelCustomerUserLogin">[% Translate("Contact login (complex search)") | html %]:</label>
         <div class="Field">
             <input type="text" name="CustomerUserLogin" placeholder="[% Translate("(e. g. U5150)") | html %]" value="[% Data.CustomerUserLogin | html %]" class="W50pc"/>
             <a class="RemoveButton" href="#" title="[% Translate("Remove this entry") | html %]"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove") | html %]</span></a>
         </div>
         <div class="Clear"></div>
-# rkaiser - T#2017020290001194 - changed customer user to contact
         <label for="CustomerUserLoginRaw" id="LabelCustomerUserLoginRaw">[% Translate("Contact login (exact match)") | html %]:</label>
         <div class="Field">
             <input type="text" name="CustomerUserLoginRaw" placeholder="[% Translate("(e. g. U5150)") | html %]" value="[% Data.CustomerUserLoginRaw | html %]" class="W50pc"/>
@@ -182,14 +166,12 @@
             <a class="RemoveButton" href="#" title="[% Translate("Remove this entry") | html %]"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove") | html %]</span></a>
         </div>
         <div class="Clear"></div>
-# KIX4OTRS-capeIT
         <label for="Notes" id="LabelTicketNotes">[% Translate("Remarks") | html %]:</label>
         <div class="Field">
             <input type="text" name="TicketNotes" value="[% Data.TicketNotes | html %]" class="W50pc"/>
             <a class="RemoveButton" href="#" title="[% Translate("Remove this entry") | html %]"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove") | html %]</span></a>
         </div>
         <div class="Clear"></div>
-# EO KIX4OTRS-capeIT
 
 [% RenderBlockStart("DynamicField") %]
         [% Data.Label %]
@@ -335,7 +317,6 @@
             [% Data.TicketCloseTimeStart %] [% Translate("and") | html %] [% Data.TicketCloseTimeStop %]
             <a class="RemoveButton" href="#" title="[% Translate("Remove this entry") | html %]"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove") | html %]</span></a>
         </div>
-# KIX4OTRS-capeIT
         <div class="Clear"></div>
         <label for="TicketPendingTimePoint" id="LabelTicketPendingTimePoint">[% Translate("Ticket Pending Time (before/after)") | html %]:</label>
         <div class="Field">
@@ -350,7 +331,6 @@
             [% Data.TicketPendingTimeStart %] [% Translate("and") | html %] [% Data.TicketPendingTimeStop %]
             <a class="RemoveButton" href="#" title="[% Translate("Remove this entry") | html %]"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove") | html %]</span></a>
         </div>
-# EO KIX4OTRS-capeIT
 
         <div class="Clear"></div>
         <label for="TicketEscalationTimePoint" id="LabelTicketEscalationTimePoint">[% Translate("Ticket Escalation Time (before/after)") | html %]:</label>
@@ -367,14 +347,12 @@
             <a class="RemoveButton" href="#" title="[% Translate("Remove this entry") | html %]"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove") | html %]</span></a>
         </div>
 
-# KIX4OTRS-capeIT
         <div class="Clear"></div>
         <label for="ArticleFlag" id="LabelArticleFlag">[% Translate("Article Flag") | html %]:</label>
         <div class="Field">
             [% Data.ArticleFlagStrg %]
             <a class="RemoveButton" href="#" title="[% Translate("Remove this entry") | html %]"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove") | html %]</span></a>
         </div>
-# EO KIX4OTRS-capeIT
         <div class="Clear"></div>
         <label for="SearchInArchive" id="LabelSearchInArchive">[% Translate("Archive Search") | html %]:</label>
         <div class="Field">

@@ -18,9 +18,7 @@
     <input type="hidden" name="ReplyToArticle" value="[% Data.ReplyToArticle | html %]"/>
     <input type="hidden" name="Expand" id="Expand" value=""/>
     <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
-# KIX4OTRS-capeIT
     <input type="hidden" name="PretendAction" value="[% Data.PretendAction | html %]"/>
-# EO KIX4OTRS-capeIT
 # ---
 # ITSM
 # ---
@@ -31,23 +29,15 @@
     <div class="LayoutPopup ARIARoleMain">
         <div class="Header">
             <p class="AsteriskExplanation">[% Translate("All fields marked with an asterisk (*) are mandatory.") | html %]</p>
-# KIX4OTRS-capeIT
-# some other blocks removed
-# KIX4OTRS-capeIT
         </div>
         <div class="Content">
-# KIX4OTRS-capeIT
             <div class="LayoutFixedSidebar SidebarLast">
                 <div class="SidebarColumn SidebarColumnTab">
                     [% Data.KIXSidebarContent %]
                 </div>
             <div class="ContentColumn">
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("WidgetTicketActions") %]
                 <div class="WidgetSimple Expanded">
-# KIX4OTRS-capeIT
-# toggle header removed
-# EO KIX4OTRS-capeIT
                     <div class="Content">
                         <fieldset class="TableLike FixedLabel">
 [% RenderBlockStart("Title") %]
@@ -104,10 +94,7 @@ $('#TypeID').bind('change', function (Event) {
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#ServiceID').bind('change', function (Event) {
-# KIX4OTRS-capeIT
-#         Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'ServiceID', [ 'TypeID', 'SLAID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
         Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'ServiceID', [ 'TypeID', 'SLAID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID', 'NewQueueID' [% Data.DynamicFieldNamesStrg %] ], function() { Core.KIX4OTRS.ServiceAssignedQueue(); });
-# EO KIX4OTRS-capeIT
 # ---
 # ITSM
 # ---
@@ -128,13 +115,6 @@ $('#TypeID').bind('change', function (Event) {
 # ITSM
 # ---
                         <label for="ServiceIncidentStateContainer" style="display: none;">[% Translate("Service Incident State") | html %]:</label>
-# KIX4OTRS-capeIT
-#                    <div id="ServiceIncidentStateContainer" class="Value" style="display:none;">
-#                        <div class="Flag Small">
-#                            <span id="ServiceIncidentStateSignal"></span>
-#                        </div>
-#                        <span id="ServiceIncidentState">&nbsp;</span>
-#                    </div>
                     <div id="ServiceIncidentStateContainer" class="Field" style="display:none;">
                         <div class="Value">
                             <div class="Flag Small">
@@ -143,7 +123,6 @@ $('#TypeID').bind('change', function (Event) {
                             <span id="ServiceIncidentState">&nbsp;</span>
                         </div>
                     </div>
-# EO KIX4OTRS-capeIT
                         <div class="Clear"></div>
 # ---
 [% RenderBlockEnd("Service") %]
@@ -159,10 +138,7 @@ $('#TypeID').bind('change', function (Event) {
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#ServiceID').bind('change', function (Event) {
-# KIX4OTRS-capeIT
-#         Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'ServiceID', [ 'TypeID', 'SLAID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID' [% Data.DynamicFieldNamesStrg %] ]);
         Core.AJAX.FormUpdate($('#Compose'), 'AJAXUpdate', 'ServiceID', [ 'TypeID', 'SLAID', 'NewOwnerID', 'NewResponsibleID', 'NewStateID', 'NewPriorityID', 'NewQueueID' [% Data.DynamicFieldNamesStrg %] ], function() { Core.KIX4OTRS.ServiceAssignedQueue(); });
-# EO KIX4OTRS-capeIT
 # ---
 # ITSM
 # ---
@@ -228,9 +204,7 @@ $('#TypeID').bind('change', function (Event) {
                         <label for="NewOwnerID">[% Translate("New Owner") | html %]:</label>
                         <div class="Field">
                             [% Data.OwnerStrg %]
-# KIX4OTRS-capeIT
                             <div id="NewOwnerIDError" class="TooltipErrorMessage"><p>[% Translate("Please set a new owner!") | html %]</p></div>
-# EO KIX4OTRS-capeIT
                             <div id="NewOwnerIDServerError" class="TooltipErrorMessage"><p>[% Translate("Please set a new owner!") | html %]</p></div>
                         </div>
                         <div class="Clear"></div>
@@ -297,10 +271,7 @@ $('#TypeID').bind('change', function (Event) {
 [% END %]
 
 [% RenderBlockStart("StatePending") %]
-# KIX4OTRS-capeIT
-#                         <label>[% Translate("Pending date") | html %]:</label>
                         <label for="Date">[% Translate("Pending date") | html %]:</label>
-# EO KIX4OTRS-capeIT
                         <div class="Field">
                     [% Data.DateString %]
                             <div id="DayServerError" class="TooltipErrorMessage"><p>[% Translate("Date invalid!") | html %]</p></div>
@@ -340,9 +311,7 @@ $('#TypeID').bind('change', function (Event) {
 //]]></script>
 [% END %]
 [% RenderBlockEnd("Priority") %]
-# KIX4OTRS-capeIT
                        <div class="EndOfForm"></div>
-# EO KIX4OTRS-capeIT
                         </fieldset>
                     </div>
                 </div>
@@ -350,16 +319,10 @@ $('#TypeID').bind('change', function (Event) {
 
 [% RenderBlockStart("WidgetDynamicFields") %]
                 <div class="WidgetSimple Expanded">
-# KIX4OTRS-capeIT
-# toggle header removed
-# EO KIX4OTRS-capeIT
                     <div class="Content">
                         <fieldset class="TableLike FixedLabel">
 [% RenderBlockStart("DynamicField") %]
-# KIX4OTRS-capeIT
-#                            <div class="Row Row_DynamicField_[% Data.Name | html %]">
                             <div class="Row Row_DynamicField_[% Data.Name | html %][% Data.Class | html %]">
-# EO KIX4OTRS-capeIT
                             [% Data.Label %]
                                 <div class="Field">
                                 [% Data.Field %]
@@ -367,22 +330,14 @@ $('#TypeID').bind('change', function (Event) {
                                 <div class="Clear"></div>
                             </div>
 [% RenderBlockEnd("DynamicField") %]
-# KIX4OTRS-capeIT
-# example removed
-# KIX4OTRS-capeIT
-# KIX4OTRS-capeIT
                        <div class="EndOfForm"></div>
-# EO KIX4OTRS-capeIT
                         </fieldset>
                     </div>
                 </div>
 [% RenderBlockEnd("WidgetDynamicFields") %]
 
 [% RenderBlockStart("WidgetArticle") %]
-# KIX4OTRS-capeIT
-# toggle header removed
             <div class="WidgetSimple Expanded">
-# EO KIX4OTRS-capeIT
                 <div class="Content">
 [% RenderBlockStart("InformAdditionalAgents") %]
                         <fieldset class="TableLike FixedLabel">
@@ -420,9 +375,6 @@ $('#TypeID').bind('change', function (Event) {
                         </fieldset>
 [% RenderBlockEnd("InformAgentsWithoutSelection") %]
                     <fieldset class="TableLike FixedLabel">
-# KIX4OTRS-capeIT
-# toggle header removed
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("SubjectLabel") %]
                             <label for="Subject">[% Translate("Subject") | html %]:</label>
 [% RenderBlockEnd("SubjectLabel") %]
@@ -436,12 +388,8 @@ $('#TypeID').bind('change', function (Event) {
                             </div>
                             <div class="Clear"></div>
 [% RenderBlockStart("TicketOptions") %]
-# KIX4OTRS-capeIT
-#                         <label>[% Translate("Options") | html %]:</label>
-#                         <div class="Field">
                         <label for="Options">[% Translate("Options") | html %]:</label>
                         <div class="Options Field">
-# EO KIX4OTRS-capeIT
 
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
@@ -493,39 +441,13 @@ $('#TypeID').bind('change', function (Event) {
                             </div>
                             <div class="Clear"></div>
 
-# KIX4OTRS-capeIT
-#                         <label>[% Translate("Attachment") | html %]:</label>
-#                         <div class="Field">
                         <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
                         <div class="Field FileUpload">
-# EO KIX4OTRS-capeIT
                             <ul>
-# KIX4OTRS-capeIT
-#[% RenderBlockStart("Attachment") %]
-#                                <li>
-#                                    [% Data.Filename | html %] ([% Data.Filesize | html %])
-#                                    <button type="button" id="AttachmentDeleteButton[% Data.FileID | html %]" name="AttachmentDeleteButton[% Data.FileID | html %]" value="[% Translate("Delete") | html %]" class="SpacingLeft">[% Translate("Delete") | html %]</button>
-#                                    <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
-#[% WRAPPER JSOnDocumentComplete %]
-#<script type="text/javascript">//<![CDATA[
-#    $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
-#        var $Form = $('#AttachmentDeleteButton[% Data.FileID | html %]').closest('form');
-#        $('#AttachmentDelete[% Data.FileID | html %]').val(1);
-#        Core.Form.Validate.DisableValidation($Form);
-#        $Form.trigger('submit');
-#    });
-#//]]></script>
-#[% END %]
-#                                </li>
-#[% RenderBlockEnd("Attachment") %]
-# EO KIX4OTRS-capeIT
                                <li>
-# KIX4OTRS-capeIT
-#                                     <input id="FileUpload" name="FileUpload" type="file" size="40" />
                                     <input name="FileUpload" id="FileUpload" type="file" size="30" />
-# EO KIX4OTRS-capeIT
                                     <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
-                            <input type="hidden" id="UploadFinish" name="UploadFinish" value="0" />
+                                    <input type="hidden" id="UploadFinish" name="UploadFinish" value="0" />
                                 </li>
                             </ul>
                     <ul>
@@ -594,7 +516,6 @@ $('#TypeID').bind('change', function (Event) {
             });
         });
     });
-# EO KIX4OTRS-capeIT
 //]]></script>
 [% END %]
                             </div>
@@ -622,21 +543,13 @@ $('#TypeID').bind('change', function (Event) {
                             </div>
                             <div class="Clear"></div>
 [% RenderBlockEnd("TimeUnits") %]
-# KIX4OTRS-capeIT
                        <div class="EndOfForm"></div>
-# EO KIX4OTRS-capeIT
                     </fieldset>
-# KIX4OTRS-capeIT
-# end of ContentColumn
                     </div>
-# EO KIX4OTRS-capeIT
                 </div>
             </div>
 [% RenderBlockEnd("WidgetArticle") %]
 
-# KIX4OTRS-capeIT
-#            </div>
-# EO KIX4OTRS-capeIT
         <div class="Footer">
             <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check-square-o"></i> [% Translate("Submit") | html %]</span></button>
         </div>
@@ -648,13 +561,11 @@ $('#TypeID').bind('change', function (Event) {
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Config.Set('Localization.Delete', '[% Translate("Delete") | html %]');
-# KIX4OTRS-capeIT
     if ( Core.Agent.TicketAction && Core.KIX4OTRS.TicketZoomTabs && Core.KIX4OTRS.KIXSidebar ) {
         Core.Agent.TicketAction.Init();
         Core.KIX4OTRS.TicketZoomTabs.PopUpInit();
         Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentTicketZoomTabActionCommonSidebarWidth") %]','[% Env("Action") %]','TicketID=[% Data.TicketID | uri %]');
     }
-# EO KIX4OTRS-capeIT
 # ---
 # ITSM
 # ---

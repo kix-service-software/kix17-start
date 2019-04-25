@@ -45,8 +45,8 @@ sub Run {
 
     # generate manual link
     my $ManualVersion = $ConfigObject->Get('Version');
-    $ManualVersion =~ m{^(\d{1,2}).+};
-    $ManualVersion = $1;
+    my $Version       = $ManualVersion =~ m{^(\d{1,2}).+};
+    $ManualVersion = $Version;
 
     $LayoutObject->Block(
         Name => 'AdminNavBar',
@@ -64,8 +64,7 @@ sub Run {
         if (
             $Hash{NavBarModule}
             && $Hash{NavBarModule}->{Module} eq 'Kernel::Output::HTML::NavBar::ModuleAdmin'
-            )
-        {
+        ) {
 
             # check permissions (only show accessable modules)
             my $Shown = 0;
@@ -78,8 +77,7 @@ sub Run {
                         if (
                             $LayoutObject->{$Key}
                             && $LayoutObject->{$Key} eq 'Yes'
-                            )
-                        {
+                        ) {
                             $Shown = 1;
                         }
 

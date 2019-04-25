@@ -101,8 +101,7 @@ sub Run {
         && $CallingAction
         && $CallingAction =~ /$TIDSearchMaskRegexp/
         && $TicketID      =~ m/^\d+$/
-        )
-    {
+    ) {
         my %TicketData = $Self->{TicketObject}->TicketGet(
             TicketID => $TicketID,
             UserID   => 1,
@@ -174,8 +173,7 @@ sub Run {
                 || $ResultHash->{$a}->{'Title'} cmp $ResultHash->{$b}->{'Title'}
         }
         keys %{$ResultHash}
-        )
-    {
+    ) {
 
         $Self->{LayoutObject}->Block(
             Name => 'KIXSidebarTicketSearchResultRow',

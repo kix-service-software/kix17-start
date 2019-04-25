@@ -16,6 +16,8 @@ use Kernel::System::VariableCheck qw(:all);
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(TestingAndDebugging::ProhibitNoWarnings)
+
 # disable redefine warnings in this scope
 {
     no warnings 'redefine';
@@ -44,7 +46,6 @@ our $ObjectManagerDisabled = 1;
             return;
         }
 
-        # KIX4OTRS-capeIT
         if (
             (
                 $Kernel::OM->Get('Kernel::Config')->Get('Ticket::TypeTranslation')
@@ -58,12 +59,9 @@ our $ObjectManagerDisabled = 1;
                 $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SLATranslation')
                 && ( $Param{Name} eq 'SLAID' || $Param{Name} eq 'SLAIDs' )
             )
-            )
-        {
+        ) {
             $Param{Translation} = 1;
         }
-
-        # EO KIX4OTRS-capeIT
 
         # set OnChange if AJAX is used
         if ( $Param{Ajax} ) {
@@ -111,8 +109,7 @@ our $ObjectManagerDisabled = 1;
                 if (
                     $Param{Filters}->{$Filter}->{Name}
                     && $Param{Filters}->{$Filter}->{Values}
-                    )
-                {
+                ) {
                     my $FilterData = $Self->_BuildSelectionDataRefCreate(
                         Data         => $Param{Filters}->{$Filter}->{Values},
                         AttributeRef => $AttributeRef,
@@ -138,7 +135,6 @@ our $ObjectManagerDisabled = 1;
             @Filters = sort { $a->{Name} cmp $b->{Name} } @Filters;
         }
 
-        # KIX4OTRS-capeIT
         # get disabled selections
         if ( defined $Param{DisabledOptions} && ref $Param{DisabledOptions} eq 'HASH' ) {
             my $DisabledOptions = $Param{DisabledOptions};
@@ -162,8 +158,7 @@ our $ObjectManagerDisabled = 1;
             ->Get('Ticket::Frontend::GenericAutoCompleteSearch') eq 'HASH'
             && defined $Self->{UserID}
             && $Self->{Action} !~ /^Customer/
-            )
-        {
+        ) {
             my $AutoCompleteConfig
                 = $Kernel::OM->Get('Kernel::Config')
                 ->Get('Ticket::Frontend::GenericAutoCompleteSearch');
@@ -180,8 +175,7 @@ our $ObjectManagerDisabled = 1;
             if (
                 $SearchTypeMappingKey
                 && defined $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey}
-                )
-            {
+            ) {
                 $SearchType = $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey};
             }
 
@@ -190,8 +184,7 @@ our $ObjectManagerDisabled = 1;
                 $SearchType
                 && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
                 && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
-                )
-            {
+            ) {
                 my $AutoCompleteString
                     = '<input id="'
                     . $Param{Name}
@@ -214,21 +207,16 @@ EOF
             }
         }
 
-        # EO KIX4OTRS-capeIT
         # generate output
         my $String = $Self->_BuildSelectionOutput(
-            AttributeRef  => $AttributeRef,
-            DataRef       => $DataRef,
-            OptionTitle   => $Param{OptionTitle},
-            TreeView      => $Param{TreeView},
-            FiltersRef    => \@Filters,
-            FilterActive  => $FilterActive,
-            ExpandFilters => $Param{ExpandFilters},
-
-            # KIX4OTRS-capeIT
+            AttributeRef    => $AttributeRef,
+            DataRef         => $DataRef,
+            OptionTitle     => $Param{OptionTitle},
+            TreeView        => $Param{TreeView},
+            FiltersRef      => \@Filters,
+            FilterActive    => $FilterActive,
+            ExpandFilters   => $Param{ExpandFilters},
             DisabledOptions => $Param{DisabledOptions},
-
-            # EO KIX4OTRS-capeIT
         );
         return $String;
     }
@@ -254,7 +242,6 @@ EOF
                 }
             }
 
-            # KIX4OTRS-capeIT
             if (
                 (
                     $Kernel::OM->Get('Kernel::Config')->Get('Ticket::TypeTranslation')
@@ -268,8 +255,7 @@ EOF
                     $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SLATranslation')
                     && ( $Param{Name} eq 'SLAID' || $Param{Name} eq 'SLAIDs' )
                 )
-                )
-            {
+            ) {
                 $Param{Translation} = 1;
             }
 
@@ -279,8 +265,6 @@ EOF
                 $Disabled        = 1;
                 $DisabledOptions = $Param{DisabledOptions};
             }
-
-            # EO KIX4OTRS-capeIT
 
             if ( !defined( $Param{Data} ) ) {
                 if ( !$Param{PossibleNone} ) {
@@ -294,7 +278,6 @@ EOF
             }
             elsif ( ref $Param{Data} eq '' ) {
 
-                # KIX4OTRS-capeIT
                 if ( defined $Param{FieldDisabled} && $Param{FieldDisabled} ) {
                     my @DataArray;
                     push @DataArray, $Param{Data};
@@ -304,8 +287,6 @@ EOF
                 else {
                     $DataHash{ $Param{Name} } = $Param{Data};
                 }
-
-                # EO KIX4OTRS-capeIT
             }
             else {
 
@@ -341,23 +322,16 @@ EOF
                         # DefaultSelected parameter for JavaScript New Option
                         my $DefaultSelected = Kernel::System::JSON::False();
 
-                      # KIX4OTRS-capeIT
-                      # to set a disabled option (Disabled is not included in JavaScript New Option)
-                      # my $Disabled = Kernel::System::JSON::False();
+                        # to set a disabled option (Disabled is not included in JavaScript New Option)
+                        # my $Disabled = Kernel::System::JSON::False();
                         my $DisabledOption = Kernel::System::JSON::False();
 
-                        # EO KIX4OTRS-capeIT
                         if ( $Row->{Selected} ) {
                             $DefaultSelected = Kernel::System::JSON::True();
                         }
                         elsif ( $Row->{Disabled} ) {
                             $DefaultSelected = Kernel::System::JSON::False();
-
-                            # KIX4OTRS-capeIT
-                            # $Disabled        = Kernel::System::JSON::True();
                             $DisabledOption = Kernel::System::JSON::True();
-
-                            # EO KIX4OTRS-capeIT
                         }
 
                         if ($Disabled) {
@@ -372,12 +346,10 @@ EOF
                             [ $Key, $Value, $DefaultSelected, $Selected, $DisabledOption ];
                     }
 
-                    # KIX4OTRS-capeIT
                     if ( defined $Param{FieldDisabled} && $Param{FieldDisabled} ) {
                         push @DataArray, Kernel::System::JSON::False();
                     }
 
-                    # EO KIX4OTRS-capeIT
                     $DataHash{ $AttributeRef->{name} } = \@DataArray;
                 }
             }

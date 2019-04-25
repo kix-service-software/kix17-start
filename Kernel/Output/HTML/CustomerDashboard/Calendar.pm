@@ -10,8 +10,6 @@
 
 package Kernel::Output::HTML::CustomerDashboard::Calendar;
 
-# EO KIX4OTRS-capeIT
-
 use strict;
 use warnings;
 
@@ -52,7 +50,6 @@ sub Config {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
     my %TicketSearch;
     if ( defined $Param{CustomerID} && $Param{CustomerID} ) {
         $TicketSearch{CustomerID} = $Param{CustomerID}
@@ -60,8 +57,6 @@ sub Run {
     elsif ( $Param{CustomerUserLogin} ) {
         $TicketSearch{CustomerUserLogin} = $Param{CustomerUserLogin};
     }
-
-    # EO KIX4OTRS-capeIT
 
     # find tickets with reached times in near future
     my $PendingReminderStateTypes = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::PendingReminderStateType');
@@ -116,9 +111,9 @@ sub Run {
     my %Date;
     for my $Type ( sort keys %Map ) {
 
-        my $UID;
+        my $UserID;
         if ( $Self->{Config}->{OwnerOnly} ) {
-            $UID = $Self->{UserID};
+            $UserID = $Self->{UserID};
         }
 
         # search tickets
@@ -130,14 +125,9 @@ sub Run {
             Result     => 'ARRAY',
             Permission => $Self->{Config}->{Permission} || 'ro',
             UserID     => $Self->{UserID},
-            OwnerID    => $UID,
+            OwnerID    => $UserID,
             Limit      => 25,
-
-            # KIX4OTRS-capeIT
             %TicketSearch,
-
-            # EO KIX4OTRS-capeIT
-
         );
 
         # get ticket attributes
@@ -165,8 +155,7 @@ sub Run {
                 if (
                     $Ticket{OwnerID} ne $Self->{UserID}
                     && $Ticket{ResponsibleID} ne $Self->{UserID}
-                    )
-                {
+                ) {
                     next TICKETID;
                 }
 
@@ -221,13 +210,8 @@ sub Run {
 
     # render content
     my $Content = $LayoutObject->Output(
-
-        # KIX4OTRS-capeIT
-        # TemplateFile => 'AgentDashboardCalendarOverview',
         TemplateFile => 'AgentCustomerDashboardCalendarOverview',
-
-        # EO KIX4OTRS-capeIT
-        Data => {
+        Data         => {
             %{ $Self->{Config} },
         },
     );

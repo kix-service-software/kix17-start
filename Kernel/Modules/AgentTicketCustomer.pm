@@ -59,8 +59,7 @@ sub Run {
             TicketID => $Self->{TicketID},
             UserID   => $Self->{UserID}
         )
-        )
-    {
+    ) {
 
         # error screen, don't show ticket
         return $LayoutObject->NoPermission(
@@ -77,8 +76,7 @@ sub Run {
                 TicketID => $Self->{TicketID},
                 UserID   => $Self->{UserID}
             )
-            )
-        {
+        ) {
 
             # no permission screen, don't show ticket
             return $LayoutObject->NoPermission( WithHeader => 'yes' );
@@ -201,7 +199,10 @@ sub Run {
         }
 
         if (%Error) {
-            return $Self->Form( { %Param, %Error } );
+            return $Self->Form(
+                %Param,
+                %Error
+            );
         }
 
         # update customer user data
@@ -212,8 +213,7 @@ sub Run {
                 User     => $Param{CustomerUserID},
                 UserID   => $Self->{UserID},
             )
-            )
-        {
+        ) {
 
             # redirect
             return $LayoutObject->PopupClose(
@@ -227,7 +227,6 @@ sub Run {
         }
     }
 
-    # KIX4OTRS-capeIT
     # update position
     elsif ( $Self->{Subaction} eq 'UpdatePosition' ) {
 
@@ -266,8 +265,6 @@ sub Run {
             Content     => '',
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     # show form
     else {
@@ -308,16 +305,9 @@ sub Form {
         $TicketCustomerID = $TicketData{CustomerID};
         $Param{SelectedCustomerUser} = $TicketData{CustomerUserID};
 
-        # KIX4OTRS-capeIT
         # load KIXSidebar
         $Param{KIXSidebarContent} =
             $LayoutObject->AgentKIXSidebar( %Param, CustomerData => \%CustomerUserData );
-
-        # $Param{Table} = $LayoutObject->AgentCustomerViewTable(
-        #     Data => \%CustomerUserData,
-        #     Max  => $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),
-        # );
-        # EO KIX4OTRS-capeIT
 
         # show customer field as "FirstName Lastname" <MailAddress>
         if (%CustomerUserData) {

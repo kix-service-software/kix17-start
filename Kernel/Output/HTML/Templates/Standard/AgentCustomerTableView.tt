@@ -38,39 +38,16 @@
 [% RenderBlockStart("CustomerRowCustomerCompanyInvalid") %]
         <em class="Error">[% Translate("Note: Customer is invalid!") | html %]</em>
 [% RenderBlockEnd("CustomerRowCustomerCompanyInvalid") %]
-[% RenderBlockStart("CustomerRowChatIcons") %]
-        <span class="UserChatIcons Block Hidden">
-            <a href="#" title="[% Translate('Start chat') | html %]" type="button" class="UserChatStart"
-                data-user-id="[% Data.UserID | html %]" data-user-type="Customer" [% IF Data.TicketID %]data-ticket-id="[% Data.TicketID | html %]"[% END %]
-                data-user-fullname="[% Data.UserFullname | html %]">
-                <i class="fa fa-comments"></i>
-            </a>
-            [% IF Data.VideoChatEnabled %]
-            <a href="#" title="[% Translate('Video call') | html %]" type="button" class="UserVideoCallStart[% IF !Data.VideoChatAvailable %] Unavailable[% ELSIF !Data.VideoChatSupport %] Unsupported[% END %]"
-                data-user-id="[% Data.UserID | html %]" data-user-type="Customer" [% IF Data.TicketID %]data-ticket-id="[% Data.TicketID | html %]"[% END %]
-                data-user-fullname="[% Data.UserFullname | html %]">
-                <i class="fa fa-video-camera"></i>
-            </a>
-            <a href="#" title="[% Translate('Audio call') | html %]" type="button" class="UserAudioCallStart[% IF !Data.VideoChatAvailable %] Unavailable[% ELSIF !Data.VideoChatSupport %] Unsupported[% END %]"
-                data-user-id="[% Data.UserID | html %]" data-user-type="Customer" [% IF Data.TicketID %]data-ticket-id="[% Data.TicketID | html %]"[% END %]
-                data-user-fullname="[% Data.UserFullname | html %]">
-                <i class="fa fa-microphone"></i>
-            </a>
-            [% END %]
-        </span>
-[% RenderBlockEnd("CustomerRowChatIcons") %]
     </p>
     <div class="Clear"></div>
 [% RenderBlockEnd("CustomerRow") %]
 
-# KIX4OTRS-capeIT
 [% RenderBlockStart("CustomerInfoString") %]
     <p>
     [% Data.CustomerInfoString %]
     </p>
     <div class="Clear SpacingBottomSmall"></div>
 [% RenderBlockEnd("CustomerInfoString") %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("CustomerItem") %]
     <ul class="ItemRow">
 [% RenderBlockStart("CustomerItemRow") %]
@@ -83,7 +60,6 @@
 [% RenderBlockEnd("CustomerItemRow") %]
     </ul>
 
-# KIX4OTRS-capeIT
 [% RenderBlockStart("CustomerIDsSelection") %]
     <div class="SpacingTop">
         [% Data.CustomerIDsStrg %]
@@ -94,13 +70,11 @@
         [% Data.AssignedConfigItemStrg %]
     </div>
 [% RenderBlockEnd("CustomerAssignedConfigItem") %]
-# EO KIX4OTRS-capeIT
 
 [% RenderBlockEnd("CustomerItem") %]
 </fieldset>
 [% RenderBlockEnd("Customer") %]
 
-# KIX4OTRS-capeIT
 [% RenderBlockStart("CustomerDetails") %]
 <fieldset class="TableLike FixedLabelSmall">
 [% RenderBlockStart("CustomerDetailsRow") %]
@@ -112,15 +86,3 @@
 [% RenderBlockEnd("CustomerDetailsRow") %]
 </fieldset>
 [% RenderBlockEnd("CustomerDetails") %]
-# EO KIX4OTRS-capeIT
-<script type="text/javascript">//<![CDATA[
-    if (
-        typeof Core.Agent !== 'undefined'
-        && typeof Core.Agent.Chat !== 'undefined'
-        && typeof Core.Agent.Chat.Toolbar !== 'undefined'
-        && typeof Core.Agent.Chat.Toolbar.InitChatButtons !== 'undefined'
-        )
-    {
-        Core.Agent.Chat.Toolbar.InitChatButtons();
-    }
-//]]></script>

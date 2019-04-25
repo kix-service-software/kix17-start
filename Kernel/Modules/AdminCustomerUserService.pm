@@ -541,8 +541,7 @@ sub _Overview {
     for my $ID (
         sort { uc( $CustomerUserData{$a} ) cmp uc( $CustomerUserData{$b} ) }
         keys %CustomerUserData
-        )
-    {
+    ) {
 
         # output user row block
         $LayoutObject->Block(
@@ -567,8 +566,7 @@ sub _Overview {
         for my $ID (
             sort { uc( $ServiceDataSort{$a} ) cmp uc( $ServiceDataSort{$b} ) }
             keys %ServiceDataSort
-            )
-        {
+        ) {
 
             # output service row block
             $LayoutObject->Block(

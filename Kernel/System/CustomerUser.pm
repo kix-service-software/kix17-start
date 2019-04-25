@@ -430,8 +430,7 @@ sub CustomerUserDataGet {
         if (
             $ConfigObject->Get("CustomerCompany")
             && $ConfigObject->Get("CustomerUser$Count")->{CustomerCompanySupport}
-            )
-        {
+        ) {
             %Company = $CustomerCompanyObject->CustomerCompanyGet(
                 CustomerID => $Customer{UserCustomerID},
             );

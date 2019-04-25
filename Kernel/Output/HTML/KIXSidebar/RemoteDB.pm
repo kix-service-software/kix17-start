@@ -11,6 +11,8 @@ package Kernel::Output::HTML::KIXSidebar::RemoteDB;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout'
 );

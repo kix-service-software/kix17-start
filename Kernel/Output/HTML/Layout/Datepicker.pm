@@ -15,6 +15,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+use Kernel::System::ObjectManager;
+
 =head1 NAME
 
 Kernel::Output::HTML::Layout::Datepicker - Datepicker data

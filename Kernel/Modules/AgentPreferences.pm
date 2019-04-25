@@ -130,8 +130,7 @@ sub Run {
                     GetParam => \%GetParam,
                     UserData => \%UserData
                 )
-                )
-            {
+            ) {
                 $Message .= $Object->Message();
             }
             else {

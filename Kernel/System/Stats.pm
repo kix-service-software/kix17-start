@@ -15,8 +15,7 @@ use warnings;
 
 use MIME::Base64;
 
-use Date::Pcalc
-    qw(Add_Delta_YMD Add_Delta_DHMS Add_Delta_Days Days_in_Month Day_of_Week Day_of_Week_Abbreviation Day_of_Week_to_Text Monday_of_Week Week_of_Year);
+use Date::Pcalc qw(Add_Delta_YMD Add_Delta_DHMS Add_Delta_Days Days_in_Month Day_of_Week Day_of_Week_Abbreviation Day_of_Week_to_Text Monday_of_Week Week_of_Year);
 use POSIX qw(ceil);
 use Storable qw();
 
@@ -36,10 +35,10 @@ our @ObjectDependencies = (
     'Kernel::System::Time',
     'Kernel::System::User',
     'Kernel::System::XML',
-    # KIXCore-capeIT
     'Kernel::System::KIXUtils',
-    # EO KIXCore-capeIT
 );
+
+## no critic qw(InputOutput::RequireBriefOpen TestingAndDebugging::ProhibitNoWarnings InputOutput::RequireEncodingWithUTF8Layer)
 
 =head1 NAME
 
@@ -245,8 +244,7 @@ sub StatsGet {
         Cache StatType Valid ObjectModule CreatedBy ChangedBy Created Changed
         ShowAsDashboardWidget
         )
-        )
-    {
+    ) {
         if ( defined $StatsXML->{$Key}->[1]->{Content} ) {
             $Stat{$Key} = $StatsXML->{$Key}->[1]->{Content};
         }
@@ -256,8 +254,7 @@ sub StatsGet {
     if (
         !$Kernel::OM->Get('Kernel::System::Time')->ServerLocalTimeOffsetSeconds()
         && $Kernel::OM->Get('Kernel::Config')->Get('TimeZoneUser')
-        )
-    {
+    ) {
         if ( defined $StatsXML->{TimeZone}->[1]->{Content} ) {
             $Stat{TimeZone} = $StatsXML->{TimeZone}->[1]->{Content};
         }
@@ -381,8 +378,7 @@ sub StatsGet {
                             qw(TimeStop TimeStart TimeRelativeUnit
                             TimeRelativeCount TimeRelativeUpcomingCount TimeScaleCount
                             )
-                            )
-                        {
+                        ) {
                             if ( defined $Ref->{$_} && ( !$Attribute->{$_} || $Ref->{Fixed} ) ) {
                                 $Attribute->{$_} = $Ref->{$_};
                             }
@@ -502,8 +498,7 @@ sub StatsUpdate {
                 }
 
                 # stetting for working with time elements
-                for (qw(TimeStop TimeStart TimeRelativeUnit TimeRelativeCount TimeRelativeUpcomingCount TimeScaleCount))
-                {
+                for (qw(TimeStop TimeStart TimeRelativeUnit TimeRelativeCount TimeRelativeUpcomingCount TimeScaleCount)) {
                     if ( defined $Ref->{$_} ) {
                         $StatXML{$Key}->[$Index]->{$_} = $Ref->{$_};
                     }
@@ -1041,7 +1036,6 @@ sub GetStaticFiles {
     }
     closedir(DIR);
 
-    # KIXCore-capeIT
     my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
     if ( $Home !~ m{^.*\/$}x ) {
         $Home .= '/';
@@ -1055,15 +1049,19 @@ sub GetStaticFiles {
         while ( defined( my $Filename = readdir DIR ) ) {
             next if $Filename eq '.';
             next if $Filename eq '..';
-            next if $Filename !~ m{^(.*)\.pm$}x;
-            next if defined $StaticFiles{$1};
+            my $FileWithoutExt;
+            if ( $Filename =~ m{^(.*)\.pm$}x ) {
+                $FileWithoutExt = $1;
+                next if defined $StaticFiles{$FileWithoutExt};
+            }
+            else {
+                next;
+            }
 
-            $Filelist{$1} = $1;
+            $Filelist{$FileWithoutExt} = $FileWithoutExt;
         }
         closedir(DIR);
     }
-
-    # EO KIXCore-capeIT
 
     return \%Filelist;
 }
@@ -1244,16 +1242,12 @@ sub Export {
     if (
         $StatsXML->{StatType}->[1]->{Content}
         && $StatsXML->{StatType}->[1]->{Content} eq 'static'
-        )
-    {
+    ) {
         my $FileLocation = $StatsXML->{ObjectModule}->[1]->{Content};
         $FileLocation =~ s{::}{\/}xg;
         $FileLocation .= '.pm';
         my $File        = $Kernel::OM->Get('Kernel::Config')->Get('Home') . "/$FileLocation";
 
-        # KIXCore-capeIT
-        # my $File        = $Kernel::OM->Get('Kernel::Config')->Get('Home') . "/$FileLocation";
-        # my $File = '';
         my $KIXFile = '';
         my $Home    = $Kernel::OM->Get('Kernel::Config')->Get('Home');
         if ( $Home !~ m{^.*\/$}x ) {
@@ -1262,8 +1256,6 @@ sub Export {
         my @KIXPackages = $Kernel::OM->Get('Kernel::System::KIXUtils')->GetRegisteredCustomPackages( Result => 'ARRAY' );
         for my $CurrPrefix (@KIXPackages) {
 
-            # $File = $Home . $CurrPrefix . '/' . $FileLocation;
-            # if ( -e $File ) {
             $KIXFile = $Home . $CurrPrefix . '/' . $FileLocation;
             if ( -e $KIXFile ) {
                 $File         = $KIXFile;
@@ -1272,11 +1264,9 @@ sub Export {
             }
         }
 
-        # EO KIXCore-capeIT
-
         my $FileContent = '';
 
-        open my $Filehandle, '<', $File || die "Can't open: $File: $!";    ## no critic
+        open my $Filehandle, '<', $File || die "Can't open: $File: $!";
 
         # set bin mode
         binmode $Filehandle;
@@ -1381,8 +1371,7 @@ sub Import {
     # check if the required elements are available
     for my $Element (
         qw( Description Format Object ObjectModule Permission StatType SumCol SumRow Title Valid)
-        )
-    {
+    ) {
         if ( !defined $StatsXML->{$Element}->[1]->{Content} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -1447,8 +1436,7 @@ sub Import {
     if (
         $StatsXML->{Object}->[1]->{Content}
         && !$DynamicFiles->{ $StatsXML->{Object}->[1]->{Content} }
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "Object $StatsXML->{Object}->[1]->{Content} doesn't exist!"
@@ -1460,8 +1448,7 @@ sub Import {
     if (
         $StatsXML->{StatType}->[1]->{Content}
         && $StatsXML->{StatType}->[1]->{Content} eq 'static'
-        )
-    {
+    ) {
         my $FileLocation = $StatsXML->{ObjectModule}[1]{Content};
         $FileLocation =~ s{::}{\/}gx;
         $FileLocation = $ConfigObject->Get('Home') . '/' . $FileLocation . '.pm';
@@ -1477,13 +1464,13 @@ sub Import {
         }
 
         # write file if it is included in the stats definition
-        ## no critic
         elsif ( open my $Filehandle, '>', $FileLocation ) {
-            ## use critic
 
             print STDERR "Notice: Install $FileLocation ($StatsXML->{File}[1]{Permission})!\n";
-            if ( $StatsXML->{File}->[1]->{Encode} && $StatsXML->{File}->[1]->{Encode} eq 'Base64' )
-            {
+            if (
+                $StatsXML->{File}->[1]->{Encode}
+                && $StatsXML->{File}->[1]->{Encode} eq 'Base64'
+            ) {
                 $StatsXML->{File}->[1]->{Content} = decode_base64( $StatsXML->{File}->[1]->{Content} );
                 $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput(
                     \$StatsXML->{File}->[1]->{Content}
@@ -1492,7 +1479,7 @@ sub Import {
 
             # set utf8 or bin mode
             if ( $StatsXML->{File}->[1]->{Content} =~ /use\sutf8;/ ) {
-                open $Filehandle, '>:utf8', $FileLocation;    ## no critic
+                open $Filehandle, '>:utf8', $FileLocation or die "Can't open '$FileLocation': ?!";
             }
             else {
                 binmode $Filehandle;
@@ -1644,48 +1631,52 @@ sub StatsRun {
     my %GetParam = %{ $Param{GetParam} };
     my @Result;
 
-    # Perform calculations on the slave DB, if configured.
-    local $Kernel::System::DB::UseSlaveDB = 1;
+    {
+        no warnings 'once';
 
-    # get data if it is a static stats
-    if ( $Stat->{StatType} eq 'static' ) {
+        # Perform calculations on the slave DB, if configured.
+        local $Kernel::System::DB::UseSlaveDB = 1;
 
-        return if $Param{Preview};    # not supported for static stats
+        # get data if it is a static stats
+        if ( $Stat->{StatType} eq 'static' ) {
 
-        @Result = $Self->_GenerateStaticStats(
-            ObjectModule => $Stat->{ObjectModule},
-            GetParam     => $Param{GetParam},
-            Title        => $Stat->{Title},
-            StatID       => $Stat->{StatID},
-            Cache        => $Stat->{Cache},
-            UserID       => $Param{UserID},
-        );
-    }
+            return if $Param{Preview};    # not supported for static stats
 
-    # get data if it is a dynaymic stats
-    elsif ( $Stat->{StatType} eq 'dynamic' ) {
-        @Result = $Self->_GenerateDynamicStats(
-            ObjectModule     => $Stat->{ObjectModule},
-            Object           => $Stat->{Object},
-            UseAsXvalue      => $GetParam{UseAsXvalue},
-            UseAsValueSeries => $GetParam{UseAsValueSeries} || [],
-            UseAsRestriction => $GetParam{UseAsRestriction} || [],
-            Title            => $Stat->{Title},
-            StatID           => $Stat->{StatID},
-            TimeZone         => $GetParam{TimeZone},
-            Cache            => $Stat->{Cache},
-            Preview          => $Param{Preview},
-            UserID           => $Param{UserID},
-        );
-    }
+            @Result = $Self->_GenerateStaticStats(
+                ObjectModule => $Stat->{ObjectModule},
+                GetParam     => $Param{GetParam},
+                Title        => $Stat->{Title},
+                StatID       => $Stat->{StatID},
+                Cache        => $Stat->{Cache},
+                UserID       => $Param{UserID},
+            );
+        }
 
-    # build sum in row or col
-    if ( @Result && ( $Stat->{SumRow} || $Stat->{SumCol} ) && $Stat->{Format} !~ m{^GD::Graph\.*}x ) {
-        return $Self->SumBuild(
-            Array  => \@Result,
-            SumRow => $Stat->{SumRow},
-            SumCol => $Stat->{SumCol},
-        );
+        # get data if it is a dynaymic stats
+        elsif ( $Stat->{StatType} eq 'dynamic' ) {
+            @Result = $Self->_GenerateDynamicStats(
+                ObjectModule     => $Stat->{ObjectModule},
+                Object           => $Stat->{Object},
+                UseAsXvalue      => $GetParam{UseAsXvalue},
+                UseAsValueSeries => $GetParam{UseAsValueSeries} || [],
+                UseAsRestriction => $GetParam{UseAsRestriction} || [],
+                Title            => $Stat->{Title},
+                StatID           => $Stat->{StatID},
+                TimeZone         => $GetParam{TimeZone},
+                Cache            => $Stat->{Cache},
+                Preview          => $Param{Preview},
+                UserID           => $Param{UserID},
+            );
+        }
+
+        # build sum in row or col
+        if ( @Result && ( $Stat->{SumRow} || $Stat->{SumCol} ) && $Stat->{Format} !~ m{^GD::Graph\.*}x ) {
+            return $Self->SumBuild(
+                Array  => \@Result,
+                SumRow => $Stat->{SumRow},
+                SumCol => $Stat->{SumCol},
+            );
+        }
     }
 
     return \@Result;
@@ -2000,7 +1991,7 @@ sub StatsInstall {
     for my $File ( sort @StatsFileList ) {
 
         next FILE if !-f $File;
-        next FILE if -e $File . $InstalledPostfix;
+        next FILE if -e ($File . $InstalledPostfix);
 
         # read file content
         my $XMLContentRef = $MainObject->FileRead(
@@ -2500,10 +2491,7 @@ sub _GenerateDynamicStats {
 
     # get the selected Xvalue
     my $Xvalue = {};
-    my (
-        $VSYear,     $VSMonth,     $VSDay,     $VSHour,     $VSMinute,     $VSSecond,
-        $VSStopYear, $VSStopMonth, $VSStopDay, $VSStopHour, $VSStopMinute, $VSStopSecond
-    );
+    my ($VSYear, $VSMonth, $VSDay, $VSHour, $VSMinute, $VSSecond);
     my $TimeAbsolutStopUnixTime = 0;
     my $Count                   = 0;
     my $MonthArrayRef           = _MonthArray();
@@ -2537,8 +2525,7 @@ sub _GenerateDynamicStats {
             && $Param{UseAsValueSeries}[0]{Block}
             && $Param{UseAsValueSeries}[0]{Block} eq 'Time'
             && $Element->{SelectedValues}[0] eq 'Day'
-            )
-        {
+        ) {
             $Count = 1;
         }
 
@@ -2597,10 +2584,8 @@ sub _GenerateDynamicStats {
         # FIXME Timeheader zusammenbauen
         while (
             !$TimeStop
-            || $TimeObject->TimeStamp2SystemTime( String => $TimeStop )
-            < $TimeAbsolutStopUnixTime
-            )
-        {
+            || $TimeObject->TimeStamp2SystemTime( String => $TimeStop ) < $TimeAbsolutStopUnixTime
+        ) {
             $TimeStart = sprintf(
                 "%04d-%02d-%02d %02d:%02d:%02d",
                 $Year, $Month, $Day, $Hour, $Minute, $Second
@@ -2959,9 +2944,9 @@ sub _GenerateDynamicStats {
             $ColumnName = 'Minute';
         }
 
-        my $TimeStart     = 0;
-        my $TimeStop      = 0;
-        my $MonthArrayRef = _MonthArray();
+        my $TimeStart           = 0;
+        my $TimeStop            = 0;
+        my $MonthArrayHeaderRef = _MonthArray();
 
         $Count = 1;
 
@@ -2970,10 +2955,8 @@ sub _GenerateDynamicStats {
 
         if ( $Ref1->{SelectedValues}[0] eq 'Year' ) {
             while (
-                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop )
-                < $TimeAbsolutStopUnixTime
-                )
-            {
+                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop ) < $TimeAbsolutStopUnixTime
+            ) {
                 $TimeStart = sprintf( "%04d-01-01 00:00:00", $VSYear );
                 ( $ToYear, $ToMonth, $ToDay ) = Add_Delta_YMD( $VSYear, $VSMonth, $VSDay, $Count, 0, 0 );
                 ( $ToYear, $ToMonth, $ToDay, $ToHour, $ToMinute, $ToSecond ) = Add_Delta_DHMS(
@@ -2995,10 +2978,8 @@ sub _GenerateDynamicStats {
         }
         elsif ( $Ref1->{SelectedValues}[0] eq 'Month' ) {
             while (
-                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop )
-                < $TimeAbsolutStopUnixTime
-                )
-            {
+                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop ) < $TimeAbsolutStopUnixTime
+            ) {
                 $TimeStart = sprintf( "%04d-%02d-01 00:00:00", $VSYear, $VSMonth );
                 ( $ToYear, $ToMonth, $ToDay ) = Add_Delta_YMD( $VSYear, $VSMonth, $VSDay, 0, $Count, 0 );
                 ( $ToYear, $ToMonth, $ToDay, $ToHour, $ToMinute, $ToSecond ) = Add_Delta_DHMS(
@@ -3007,7 +2988,7 @@ sub _GenerateDynamicStats {
                 );
                 $TimeStop = sprintf( "%04d-%02d-%02d 23:59:59", $ToYear, $ToMonth, $ToDay );
 
-                my $TranslateMonth = $LanguageObject->Translate( $MonthArrayRef->[$VSMonth] );
+                my $TranslateMonth = $LanguageObject->Translate( $MonthArrayHeaderRef->[$VSMonth] );
 
                 $ValueSeries{
                     $VSYear . '-'
@@ -3029,10 +3010,8 @@ sub _GenerateDynamicStats {
         }
         elsif ( $Ref1->{SelectedValues}[0] eq 'Week' ) {
             while (
-                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop )
-                < $TimeAbsolutStopUnixTime
-                )
-            {
+                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop ) < $TimeAbsolutStopUnixTime
+            ) {
                 my @Monday = Monday_of_Week( Week_of_Year( $VSYear, $VSMonth, $VSDay ) );
 
                 $TimeStart = sprintf( "%04d-%02d-%02d 00:00:00", @Monday );
@@ -3062,10 +3041,8 @@ sub _GenerateDynamicStats {
         }
         elsif ( $Ref1->{SelectedValues}[0] eq 'Day' ) {
             while (
-                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop )
-                < $TimeAbsolutStopUnixTime
-                )
-            {
+                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop ) < $TimeAbsolutStopUnixTime
+            ) {
                 $TimeStart = sprintf( "%04d-%02d-%02d 00:00:00", $VSYear, $VSMonth, $VSDay );
                 ( $ToYear, $ToMonth, $ToDay, $ToHour, $ToMinute, $ToSecond ) = Add_Delta_DHMS(
                     $VSYear, $VSMonth, $VSDay, $VSHour, $VSMinute, $VSSecond,
@@ -3086,10 +3063,8 @@ sub _GenerateDynamicStats {
         }
         elsif ( $Ref1->{SelectedValues}[0] eq 'Hour' ) {
             while (
-                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop )
-                < $TimeAbsolutStopUnixTime
-                )
-            {
+                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop ) < $TimeAbsolutStopUnixTime
+            ) {
                 $TimeStart = sprintf( "%04d-%02d-%02d %02d:00:00", $VSYear, $VSMonth, $VSDay, $VSHour );
                 ( $ToYear, $ToMonth, $ToDay, $ToHour, $ToMinute, $ToSecond ) = Add_Delta_DHMS(
                     $VSYear, $VSMonth, $VSDay, $VSHour, $VSMinute, $VSSecond, 0,
@@ -3114,10 +3089,8 @@ sub _GenerateDynamicStats {
 
         elsif ( $Ref1->{SelectedValues}[0] eq 'Minute' ) {
             while (
-                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop )
-                < $TimeAbsolutStopUnixTime
-                )
-            {
+                !$TimeStop || $TimeObject->TimeStamp2SystemTime( String => $TimeStop ) < $TimeAbsolutStopUnixTime
+            ) {
                 $TimeStart = sprintf(
                     "%04d-%02d-%02d %02d:%02d:00",
                     $VSYear, $VSMonth, $VSDay, $VSHour, $VSMinute
@@ -3261,8 +3234,7 @@ sub _GenerateDynamicStats {
                         < $TimeObject->TimeStamp2SystemTime(
                             String => $ValueSeries{$Row}{$TimeStart}
                         )
-                        )
-                    {
+                    ) {
                         next CELL;
                     }
                 }
@@ -3652,7 +3624,7 @@ sub _AutomaticSampleImport {
         if ( $Filename =~ m{^.*\.$Language\.xml$}x ) {
 
             my $Filehandle;
-            if ( !open $Filehandle, '<', $Directory . $Filename ) {    ## no critic
+            if ( !open $Filehandle, '<', $Directory . $Filename ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
                     Message  => "Can not open File: " . $Directory . $Filename,

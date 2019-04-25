@@ -168,8 +168,6 @@ sub Run {
         # replace text
         if ( $Data{Comment} ) {
 
-            my %Info;
-
             $Data{Comment} =~ s{ \A %% }{}xmsg;
             my @Values = split /%%/, $Data{Comment};
 

@@ -26,6 +26,8 @@ our @ObjectDependencies = (
     'Kernel::System::CheckItem',
 );
 
+## no critic qw(Variables::RequireLocalizedPunctuationVars)
+
 =head1 NAME
 
 Kernel::System::Crypt::SMIME - smime crypt backend lib
@@ -274,8 +276,7 @@ sub Decrypt {
         $Param{SearchingNeededKey}
         && $LogMessage =~ m{PKCS7_dataDecode:no recipient matches certificate}
         && $LogMessage =~ m{PKCS7_decrypt:decrypt error}
-        )
-    {
+    ) {
         return (
             Successful => 0,
             Message    => 'Impossible to decrypt with installed private keys!',
@@ -621,8 +622,7 @@ sub CertificateSearch {
             $Self->FetchFromCustomer(
                 Search => $Search,
             )
-            )
-        {
+        ) {
             # 4 - if found, get its details and add them to the @Results
             @CertList = $Self->CertificateList();
             if (@CertList) {
@@ -923,9 +923,7 @@ sub CertificateAdd {
         }
 
         my $File = "$Self->{CertPath}/$Attributes{Hash}.$Count";
-        ## no critic
         if ( open( my $OUT, '>', $File ) ) {
-            ## use critic
             print $OUT $Param{Certificate};
             close($OUT);
             %Result = (
@@ -1372,12 +1370,10 @@ sub PrivateAdd {
     );
     if ( $CertificateAttributes{Hash} ) {
         my $File = "$Self->{PrivatePath}/$Certificates[0]->{Filename}";
-        ## no critic
         if ( open( my $PrivKeyFH, '>', "$File" ) ) {
-            ## use critic
             print $PrivKeyFH $Param{Private};
             close $PrivKeyFH;
-            open( my $PassFH, '>', "$File.P" );    ## no critic
+            open( my $PassFH, '>', "$File.P" )or die "Can't open '$File.P': $!";
             print $PassFH $Param{Secret};
             close $PassFH;
             %Result = (
@@ -2134,7 +2130,7 @@ sub _Init {
     }
 
     # ensure that there is a random state file that we can write to (otherwise openssl will bail)
-    $ENV{RANDFILE} = $ConfigObject->Get('TempDir') . '/.rnd';    ## no critic
+    $ENV{RANDFILE} = $ConfigObject->Get('TempDir') . '/.rnd';
 
     # prepend RANDFILE declaration to openssl cmd
     $Self->{Cmd} = "HOME=" . $ConfigObject->Get('Home') . " RANDFILE=$ENV{RANDFILE} $Self->{Cmd}";
@@ -2254,10 +2250,8 @@ sub _FetchAttributesFromCert {
     for my $DateType ( 'StartDate', 'EndDate' ) {
         if (
             $AttributesRef->{$DateType}
-            &&
-            $AttributesRef->{$DateType} =~ /(.+?)\s(.+?)\s(\d\d:\d\d:\d\d)\s(\d\d\d\d)/
-            )
-        {
+            && $AttributesRef->{$DateType} =~ /(.+?)\s(.+?)\s(\d\d:\d\d:\d\d)\s(\d\d\d\d)/
+        ) {
             my $Day   = $2;
             my $Month = '';
             my $Year  = $4;
@@ -2430,8 +2424,10 @@ sub _NormalizePrivateSecretFiles {
     for my $File (@WrongPrivateSecretList) {
 
         # build the correct file name
-        $File =~ m{(.+) \. P}smxi;
-        my $Hash = $1;
+        my $Hash = '';
+        if ( $File =~ m{(.+) \. P}smxi ) {
+            $Hash = $1;
+        }
 
         my $CorrectFile;
         my @UsedPrivateSecretFiles;
@@ -2598,9 +2594,12 @@ sub _ReHashCertificates {
         );
 
         # split filename into Hash.Index (12345678.0 -> 12345678 / 0)
-        $File =~ m{ (.+) \. (\d) }smx;
-        my $Hash  = $1;
-        my $Index = $2;
+        my $Hash  = '';
+        my $Index = '';
+        if ( $File =~ m{ (.+) \. (\d) }smx ) {
+            $Hash  = $1;
+            $Index = $2;
+        }
 
         # get new hash from certificate attributes
         my $NewHash     = $CertificateAttributes{Hash};

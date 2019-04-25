@@ -150,8 +150,7 @@ sub AgentCustomerViewTable {
             if (
                 $Param{Data}->{Config}->{CustomerCompanySupport}
                 && $Field->[0] eq 'CustomerCompanyName'
-                )
-            {
+            ) {
                 my $CompanyValidID = $Param{Data}->{CustomerCompanyValidID};
 
                 if ($CompanyValidID) {
@@ -161,108 +160,6 @@ sub AgentCustomerViewTable {
                     if ( !$CompanyIsValid ) {
                         $Self->Block(
                             Name => 'CustomerRowCustomerCompanyInvalid',
-                        );
-                    }
-                }
-            }
-
-            if (
-                $ConfigObject->Get('ChatEngine::Active')
-                && $Field->[0] eq 'UserLogin'
-                )
-            {
-                # Check if agent has permission to start chats with the customer users.
-                my $EnableChat = 1;
-                my $ChatStartingAgentsGroup
-                    = $ConfigObject->Get('ChatEngine::PermissionGroup::ChatStartingAgents') || 'users';
-
-                if (
-                    !defined $Self->{"UserIsGroup[$ChatStartingAgentsGroup]"}
-                    || $Self->{"UserIsGroup[$ChatStartingAgentsGroup]"} ne 'Yes'
-                    )
-                {
-                    $EnableChat = 0;
-                }
-                if (
-                    $EnableChat
-                    && !$ConfigObject->Get('ChatEngine::ChatDirection::AgentToCustomer')
-                    )
-                {
-                    $EnableChat = 0;
-                }
-
-                if ($EnableChat) {
-                    my $VideoChatEnabled = 0;
-                    my $VideoChatAgentsGroup
-                        = $ConfigObject->Get('ChatEngine::PermissionGroup::VideoChatAgents') || 'users';
-
-                    # Enable the video chat feature if system is entitled and agent is a member of configured group.
-                    if (
-                        defined $Self->{"UserIsGroup[$VideoChatAgentsGroup]"}
-                        && $Self->{"UserIsGroup[$VideoChatAgentsGroup]"} eq 'Yes'
-                        )
-                    {
-                        if ( $Kernel::OM->Get('Kernel::System::Main')
-                            ->Require( 'Kernel::System::VideoChat', Silent => 1 ) )
-                        {
-                            $VideoChatEnabled = $Kernel::OM->Get('Kernel::System::VideoChat')->IsEnabled();
-                        }
-                    }
-
-                    my $CustomerEnableChat = 0;
-                    my $ChatAccess         = 0;
-                    my $VideoChatAvailable = 0;
-                    my $VideoChatSupport   = 0;
-
-                    # Default status is offline.
-                    my $UserState            = Translatable('Offline');
-                    my $UserStateDescription = $Self->{LanguageObject}->Translate('User is currently offline.');
-
-                    my $CustomerChatAvailability = $Kernel::OM->Get('Kernel::System::Chat')->CustomerAvailabilityGet(
-                        UserID => $Param{Data}->{UserID},
-                    );
-
-                    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
-
-                    my %CustomerUser = $CustomerUserObject->CustomerUserDataGet(
-                        User => $Param{Data}->{UserID},
-                    );
-                    $CustomerUser{UserFullname} = $CustomerUserObject->CustomerName(
-                        UserLogin => $Param{Data}->{UserID},
-                    );
-                    $VideoChatSupport = 1 if $CustomerUser{VideoChatHasWebRTC};
-
-                    if ( $CustomerChatAvailability == 3 ) {
-                        $UserState            = Translatable('Active');
-                        $CustomerEnableChat   = 1;
-                        $UserStateDescription = $Self->{LanguageObject}->Translate('User is currently active.');
-                        $VideoChatAvailable   = 1;
-                    }
-                    elsif ( $CustomerChatAvailability == 2 ) {
-                        $UserState            = Translatable('Away');
-                        $CustomerEnableChat   = 1;
-                        $UserStateDescription = $Self->{LanguageObject}->Translate('User was inactive for a while.');
-                    }
-
-                    $Self->Block(
-                        Name => 'CustomerRowUserStatus',
-                        Data => {
-                            %CustomerUser,
-                            UserState            => $UserState,
-                            UserStateDescription => $UserStateDescription,
-                        },
-                    );
-
-                    if ($CustomerEnableChat) {
-                        $Self->Block(
-                            Name => 'CustomerRowChatIcons',
-                            Data => {
-                                %{ $Param{Data} },
-                                %CustomerUser,
-                                VideoChatEnabled   => $VideoChatEnabled,
-                                VideoChatAvailable => $VideoChatAvailable,
-                                VideoChatSupport   => $VideoChatSupport,
-                            },
                         );
                     }
                 }
@@ -384,7 +281,7 @@ sub AgentQueueListOption {
         # find index of first element in array @QueueDataArray for displaying in frontend
         # at the top should be element with ' $QueueDataArray[$_]->{Key} = 0' like "- Move -"
         # when such element is found, it is moved at the top
-        my ($FirstElementIndex) = grep $QueueDataArray[$_]->{Key} == 0, 0 .. $#QueueDataArray || 0;
+        my ($FirstElementIndex) = grep( {$QueueDataArray[$_]->{Key} == 0} 0 .. $#QueueDataArray || 0 );
         splice( @QueueDataArray, 0, 0, splice( @QueueDataArray, $FirstElementIndex, 1 ) );
         $Param{Data} = \@QueueDataArray;
 
@@ -420,8 +317,8 @@ sub AgentQueueListOption {
     # add suffix for correct sorting
     my $KeyNoQueue;
     my $ValueNoQueue;
-    my $MoveStr = $Self->{LanguageObject}->Translate('Move');
-    my $ValueOfQueueNoKey .= "- " . $MoveStr . " -";
+    my $MoveStr           = $Self->{LanguageObject}->Translate('Move');
+    my $ValueOfQueueNoKey = "- " . $MoveStr . " -";
     DATA:
     for ( sort { $Data{$a} cmp $Data{$b} } keys %Data ) {
 
@@ -430,8 +327,7 @@ sub AgentQueueListOption {
         if (
             $Data{$_} eq "-"
             || $Data{$_} eq $ValueOfQueueNoKey
-            )
-        {
+        ) {
             $KeyNoQueue   = $_;
             $ValueNoQueue = $Data{$_};
             next DATA;
@@ -536,8 +432,7 @@ sub AgentQueueListOption {
                 $SelectedID eq $_
                 || $Selected eq $Param{Data}->{$_}
                 || $Param{SelectedIDRefArrayOK}->{$_}
-                )
-            {
+            ) {
                 $Param{MoveQueuesStrg}
                     .= '<option selected="selected" value="'
                     . $HTMLValue . '"'
@@ -545,8 +440,7 @@ sub AgentQueueListOption {
                     . $String
                     . "</option>\n";
             }
-            elsif ( $CurrentQueueID eq $_ )
-            {
+            elsif ( $CurrentQueueID eq $_ ) {
                 $Param{MoveQueuesStrg}
                     .= '<option value="-" disabled="disabled"'
                     . $OptionTitleHTMLValue . '>'
@@ -838,7 +732,7 @@ sub ArticleQuote {
         $Article{ContentType} = 'text/plain';
     }
 
-    if ( $Article{ContentType} !~ /text\/(plain|html)/i ) {
+    if ( $Article{ContentType} !~ /text\/(?:plain|html)/i ) {
         $Article{Body}        = '-> no quotable message <-';
         $Article{ContentType} = 'text/plain';
     }
@@ -890,10 +784,7 @@ sub ArticleQuote {
 sub TicketListShow {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-
-    # EO KIX4OTRS-capeIT
 
     # take object ref to local, remove it from %Param (prevent memory leak)
     my $Env = $Param{Env};
@@ -914,8 +805,7 @@ sub TicketListShow {
             $Env->{Action} eq 'AgentTicketQueue'
             || $Env->{Action} eq 'AgentTicketService'
         )
-        )
-    {
+    ) {
         $View = 'Preview';
     }
 
@@ -932,13 +822,11 @@ sub TicketListShow {
     # update preferences if needed
     my $Key = 'UserTicketOverview' . $Env->{Action};
 
-    # KIX4OTRS-capeIT
     my $LastView = $Self->{$Key} || '';
 
     # if ( !$ConfigObject->Get('DemoSystem') && $Self->{$Key} ne $View ) {
     if ( !$ConfigObject->Get('DemoSystem') && $LastView ne $View ) {
 
-        # EO KIX4OTRS-capeIT
         $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
             UserID => $Self->{UserID},
             Key    => $Key,
@@ -1034,8 +922,8 @@ sub TicketListShow {
     my @UnselectedItems     = split(',', $UnselectedItemStrg);
 
     for my $TicketID ( @{$Param{TicketIDs}} ) {
-        if ( !grep(/^$TicketID$/, @UnselectedItems)
-            && !grep(/^$TicketID$/, @SelectedItems)
+        if ( !grep({/^$TicketID$/} @UnselectedItems)
+            && !grep({/^$TicketID$/} @SelectedItems)
         ) {
             push(@UnselectedItems, $TicketID);
         }
@@ -1061,14 +949,11 @@ sub TicketListShow {
     );
 
     # build shown ticket per page
-    # KIX4OTRS-capeIT
     # this results in a re-open of the search dialog if someone uses the context settings after a ticket search
-    # $Param{RequestedURL}    = "Action=$Self->{Action}";
     $Param{RequestedURL}
         = $Kernel::OM->Get('Kernel::System::Web::Request')->{Query}->url( -query_string => 1 )
         || "Action=$Self->{Action}";
 
-    # EO KIX4OTRS-capeIT
     $Param{Group}           = $Group;
     $Param{PreferencesKey}  = $PageShownPreferencesKey;
     $Param{PageShownString} = $Self->BuildSelection(
@@ -1144,8 +1029,7 @@ sub TicketListShow {
     for my $Backend (
         sort { $Backends->{$a}->{ModulePriority} <=> $Backends->{$b}->{ModulePriority} }
         keys %{$Backends}
-        )
-    {
+    ) {
 
         $Self->Block(
             Name => 'OverviewNavBarViewMode',
@@ -1218,11 +1102,9 @@ sub TicketListShow {
 
                 my %Columns;
 
-                # KIX4OTRS-capeIT
                 # for my $ColumnName ( sort @ColumnsAvailable ) {
                 for my $ColumnName (@ColumnsAvailable) {
 
-                    # EO KIX4OTRS-capeIT
                     $Columns{Columns}->{$ColumnName}
                         = ( grep { $ColumnName eq $_ } @ColumnsEnabled ) ? 1 : 0;
                 }
@@ -1348,8 +1230,7 @@ sub TicketMetaItems {
         if (
             $Self->{UserID} == $Param{Ticket}->{OwnerID}
             || $Self->{UserID} == $Param{Ticket}->{ResponsibleID}
-            )
-        {
+        ) {
             $ShowMeta = 1;
         }
         if ( !$ShowMeta && $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Watcher') ) {

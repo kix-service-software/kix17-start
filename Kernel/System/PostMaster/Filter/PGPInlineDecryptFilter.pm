@@ -17,10 +17,9 @@ our @ObjectDependencies = (
 );
 
 sub new {
-    my $Type  = shift;
-    my %Param = @_;
+    my ( $Type, %Param ) = @_;
 
-    # allocate new hash for object
+    # Allocate new hash for object.
     my $Self = {};
     bless( $Self, $Type );
 
@@ -36,9 +35,7 @@ sub new {
 }
 
 sub Run {
-    my $Self  = shift;
-    my %Param = @_;
-    my $inBody;
+    my ( $Self, %Param ) = @_;
 
     # get config options
     my %Config = ();

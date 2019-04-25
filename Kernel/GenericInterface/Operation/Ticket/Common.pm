@@ -122,8 +122,7 @@ sub ValidateQueue {
         $Param{Queue}
         && $Param{Queue} ne ''
         && !$Param{QueueID}
-        )
-    {
+    ) {
         %QueueData = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet(
             Name => $Param{Queue},
         );
@@ -146,10 +145,8 @@ sub ValidateQueue {
     # return false if queue is not valid
 
     if (
-        $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $QueueData{ValidID} ) ne
-        'valid'
-        )
-    {
+        $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $QueueData{ValidID} ) ne 'valid'
+    ) {
         return;
     }
 
@@ -184,8 +181,7 @@ sub ValidateLock {
         $Param{Lock}
         && $Param{Lock} ne ''
         && !$Param{LockID}
-        )
-    {
+    ) {
         my $LockID = $Kernel::OM->Get('Kernel::System::Lock')->LockLookup(
             Lock => $Param{Lock},
         );
@@ -236,8 +232,7 @@ sub ValidateType {
         $Param{Type}
         && $Param{Type} ne ''
         && !$Param{TypeID}
-        )
-    {
+    ) {
         %TypeData = $Kernel::OM->Get('Kernel::System::Type')->TypeGet(
             Name => $Param{Type},
         );
@@ -260,8 +255,7 @@ sub ValidateType {
     if (
         $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $TypeData{ValidID} ) ne
         'valid'
-        )
-    {
+    ) {
         return;
     }
 
@@ -297,8 +291,7 @@ sub ValidateCustomer {
     if (
         $Param{CustomerUser}
         && $Param{CustomerUser} ne ''
-        )
-    {
+    ) {
         %CustomerData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
             User => $Param{CustomerUser},
         );
@@ -318,8 +311,7 @@ sub ValidateCustomer {
         # return false if customer is not valid
         if (
             $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $CustomerData{ValidID} ) ne 'valid'
-            )
-        {
+        ) {
             return;
         }
     }
@@ -363,8 +355,7 @@ sub ValidateService {
         $Param{Service}
         && $Param{Service} ne ''
         && !$Param{ServiceID}
-        )
-    {
+    ) {
         %ServiceData = $ServiceObject->ServiceGet(
             Name   => $Param{Service},
             UserID => 1,
@@ -387,10 +378,8 @@ sub ValidateService {
 
     # return false if service is not valid
     if (
-        $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $ServiceData{ValidID} )
-        ne 'valid'
-        )
-    {
+        $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $ServiceData{ValidID} ) ne 'valid'
+    ) {
         return;
     }
 
@@ -443,8 +432,7 @@ sub ValidateSLA {
         $Param{SLA}
         && $Param{SLA} ne ''
         && !$Param{SLAID}
-        )
-    {
+    ) {
         my $SLAID = $SLAObject->SLALookup(
             Name => $Param{SLA},
         );
@@ -470,10 +458,8 @@ sub ValidateSLA {
 
     # return false if SLA is not valid
     if (
-        $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $SLAData{ValidID} )
-        ne 'valid'
-        )
-    {
+        $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $SLAData{ValidID} ) ne 'valid'
+    ) {
         return;
     }
 
@@ -483,8 +469,7 @@ sub ValidateSLA {
         $Param{Service}
         && $Param{Service} ne ''
         && !$Param{ServiceID}
-        )
-    {
+    ) {
         $ServiceID = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup( Name => $Param{Service} )
             || 0;
     }
@@ -542,8 +527,7 @@ sub ValidateState {
         $Param{State}
         && $Param{State} ne ''
         && !$Param{StateID}
-        )
-    {
+    ) {
         %StateData = $Kernel::OM->Get('Kernel::System::State')->StateGet(
             Name => $Param{State},
         );
@@ -565,10 +549,8 @@ sub ValidateState {
 
     # return false if queue is not valid
     if (
-        $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $StateData{ValidID} )
-        ne 'valid'
-        )
-    {
+        $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $StateData{ValidID} ) ne 'valid'
+    ) {
         return;
     }
 
@@ -608,8 +590,7 @@ sub ValidatePriority {
         $Param{Priority}
         && $Param{Priority} ne ''
         && !$Param{PriorityID}
-        )
-    {
+    ) {
         my $PriorityID = $PriorityObject->PriorityLookup(
             Priority => $Param{Priority},
         );
@@ -635,10 +616,8 @@ sub ValidatePriority {
 
     # return false if priority is not valid
     if (
-        $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $PriorityData{ValidID} )
-        ne 'valid'
-        )
-    {
+        $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $PriorityData{ValidID} ) ne 'valid'
+    ) {
         return;
     }
 
@@ -832,8 +811,7 @@ sub ValidateArticleType {
         $Param{ArticleType}
         && $Param{ArticleType} ne ''
         && !$Param{ArticleTypeID}
-        )
-    {
+    ) {
         my $ArticleTypeID = $TicketObject->ArticleTypeLookup(
             ArticleType => $Param{ArticleType},
         );
@@ -885,8 +863,7 @@ sub ValidateFrom {
     for my $Email ( Mail::Address->parse( $Param{From} ) ) {
         if (
             !$Kernel::OM->Get('Kernel::System::CheckItem')->CheckEmail( Address => $Email->address() )
-            )
-        {
+        ) {
             return;
         }
     }
@@ -929,8 +906,7 @@ sub ValidateSenderType {
         $Param{SenderType}
         && $Param{SenderType} ne ''
         && !$Param{SenderTypeID}
-        )
-    {
+    ) {
         my $SenderTypeID = $TicketObject->ArticleSenderTypeLookup(
             SenderType => $Param{SenderType},
         );
@@ -1031,8 +1007,7 @@ sub ValidateHistoryType {
     if (
         $Param{HistoryType}
         && $Param{HistoryType} ne ''
-        )
-    {
+    ) {
         my $HistoryTypeID = $Kernel::OM->Get('Kernel::System::Ticket')->HistoryTypeLookup(
             Type => $Param{HistoryType},
         );
@@ -1065,7 +1040,7 @@ sub ValidateTimeUnit {
     return if !$Param{TimeUnit};
 
     # TimeUnit must be positive
-    return if $Param{TimeUnit} !~ m{\A \d+([.,]\d+)? \z}xms;
+    return if $Param{TimeUnit} !~ m{\A \d+(?:[.,]\d+)? \z}xms;
 
     return 1;
 }
@@ -1172,8 +1147,7 @@ sub ValidateDynamicFieldValue {
             IsArrayRefWithData( $DynamicFieldConfig->{Config}->{PossibleValues} )
             || IsHashRefWithData( $DynamicFieldConfig->{Config}->{PossibleValues} )
         )
-        )
-    {
+    ) {
         my @Values;
         if ( ref $Param{Value} eq 'ARRAY' ) {
             @Values = @{ $Param{Value} };
@@ -1494,8 +1468,7 @@ sub _ValidateUser {
         $Param{User}
         && $Param{User} ne ''
         && !$Param{UserID}
-        )
-    {
+    ) {
         %UserData = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
             User  => $Param{User},
             Valid => 1,
@@ -1517,45 +1490,6 @@ sub _ValidateUser {
     return if !IsHashRefWithData( \%UserData );
 
     return 1;
-}
-
-=item _CharsetList()
-
-DEPRECATED: This function will be removed in further versions of KIX.
-
-returns a list of all available charsets.
-
-    my $CharsetList = $CommonObject->_CharsetList(
-        UserID => 123,
-    );
-
-    returns
-    $Success = {
-        #...
-        iso-8859-1  => 1,
-        iso-8859-15 => 1,
-        MacRoman    => 1,
-        utf8        => 1,
-        #...
-    }
-
-=cut
-
-sub _CharsetList {
-    my ( $Self, %Param ) = @_;
-
-    # get charset array
-    use Encode;
-    my @CharsetList = Encode->encodings(":all");
-
-    my %CharsetHash;
-
-    # create a charset lookup table
-    for my $Charset (@CharsetList) {
-        $CharsetHash{$Charset} = 1;
-    }
-
-    return \%CharsetHash;
 }
 
 1;

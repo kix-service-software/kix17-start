@@ -153,7 +153,7 @@ sub Run {
 
         my ( $LinkType, $LinkDirection ) = split( '::', $Param{TypeIdentifier} );
 
-        my $Result = $QuickLinkObject->AddLink(
+        $Result = $QuickLinkObject->AddLink(
             %Param,
             TargetKey     => $Param{QuickLinkAttribute},
             UserID        => $Self->{UserID},

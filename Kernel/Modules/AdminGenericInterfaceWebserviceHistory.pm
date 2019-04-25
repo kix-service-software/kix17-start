@@ -185,8 +185,7 @@ sub _GetWebserviceHistoryDetails {
     for my $CommunicationType (qw(Provider Requester)) {
         if (
             defined $LogData->{Config}->{$CommunicationType}->{Transport}->{Config}->{Authentication}->{Password}
-            )
-        {
+        ) {
             $LogData->{Config}->{$CommunicationType}->{Transport}->{Config}->{Authentication}->{Password}
                 = $PasswordMask;
         }

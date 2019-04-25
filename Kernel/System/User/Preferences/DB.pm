@@ -72,19 +72,14 @@ sub SetPreferences {
 
     # delete old data
     return if !$DBObject->Do(
-        SQL => "
-            DELETE FROM $Self->{PreferencesTable}
-            WHERE $Self->{PreferencesTableUserID} = ?
-                AND $Self->{PreferencesTableKey} = ?",
+        SQL  => "DELETE FROM $Self->{PreferencesTable} WHERE $Self->{PreferencesTableUserID} = ? AND $Self->{PreferencesTableKey} = ?",
         Bind => [ \$Param{UserID}, \$Param{Key} ],
     );
 
     # insert new data
     return if !$DBObject->Do(
-        SQL => "
-            INSERT INTO $Self->{PreferencesTable}
-            ($Self->{PreferencesTableUserID}, $Self->{PreferencesTableKey}, $Self->{PreferencesTableValue})
-            VALUES (?, ?, ?)",
+        SQL  => "INSERT INTO $Self->{PreferencesTable} ($Self->{PreferencesTableUserID}, $Self->{PreferencesTableKey}, $Self->{PreferencesTableValue})"
+              . " VALUES (?, ?, ?)",
         Bind => [ \$Param{UserID}, \$Param{Key}, \$Value ],
     );
 
@@ -122,10 +117,9 @@ sub GetPreferences {
 
     # get preferences
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT $Self->{PreferencesTableKey}, $Self->{PreferencesTableValue}
-            FROM $Self->{PreferencesTable}
-            WHERE $Self->{PreferencesTableUserID} = ?",
+        SQL  => "SELECT $Self->{PreferencesTableKey}, $Self->{PreferencesTableValue}"
+              . " FROM $Self->{PreferencesTable}"
+              . " WHERE $Self->{PreferencesTableUserID} = ?",
         Bind => [ \$Param{UserID} ],
     );
 
@@ -159,10 +153,9 @@ sub SearchPreferences {
         $Lower = 'LOWER';
     }
 
-    my $SQL = "
-        SELECT $Self->{PreferencesTableUserID}, $Self->{PreferencesTableValue}
-        FROM $Self->{PreferencesTable}
-        WHERE $Self->{PreferencesTableKey} = ?";
+    my $SQL = "SELECT $Self->{PreferencesTableUserID}, $Self->{PreferencesTableValue}"
+            . " FROM $Self->{PreferencesTable}"
+            . " WHERE $Self->{PreferencesTableKey} = ?";
     my @Bind = ( \$Key );
 
     if ($Value) {

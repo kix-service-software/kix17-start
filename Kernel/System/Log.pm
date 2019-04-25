@@ -9,10 +9,6 @@
 # --
 
 package Kernel::System::Log;
-## nofilter(TidyAll::Plugin::OTRS::Perl::PODSpelling)
-## nofilter(TidyAll::Plugin::OTRS::Perl::Time)
-## nofilter(TidyAll::Plugin::OTRS::Perl::Dumper)
-## nofilter(TidyAll::Plugin::OTRS::Perl::Require)
 
 use strict;
 use warnings;
@@ -70,6 +66,7 @@ sub new {
         Carp::confess('$Kernel::OM is not defined, please initialize your object manager')
     }
 
+    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     $Self->{ProductVersion} = $ConfigObject->Get('Product') . ' ';
     $Self->{ProductVersion} .= $ConfigObject->Get('Version');
@@ -88,7 +85,7 @@ sub new {
 
     # load log backend
     my $GenericModule = $ConfigObject->Get('LogModule') || 'Kernel::System::Log::SysLog';
-    if ( !eval "require $GenericModule" ) {    ## no critic
+    if ( !$MainObject->Require($GenericModule) ) {
         die "Can't load log backend module $GenericModule! $@";
     }
 
@@ -97,7 +94,7 @@ sub new {
         %Param,
     );
 
-    return $Self if !eval "require IPC::SysV";    ## no critic
+    return $Self if !$MainObject->Require('IPC::SysV');
 
     # create the IPC options
     $Self->{IPCKey} = '444423' . $SystemID;       # This name is used to identify the shared memory segment.
@@ -192,10 +189,8 @@ sub Log {
     # if error, write it to STDERR
     if ( $Priority =~ /^error/i ) {
 
-        ## no critic
         my $Error = sprintf "ERROR: $Self->{LogPrefix} Perl: %vd OS: $^O Time: "
             . localtime() . "\n\n", $^V;
-        ## use critic
 
         $Error .= " Message: $Message\n\n";
 
@@ -213,28 +208,28 @@ sub Log {
         COUNT:
         for ( my $Count = 0; $Count < 30; $Count++ ) {
 
-            my ( $Package1, $Filename1, $Line1, $Subroutine1 ) = caller( $Caller + $Count );
+            my ( $TracePackage1, $TraceFilename1, $TraceLine1, $TraceSubroutine1 ) = caller( $Caller + $Count );
 
-            last COUNT if !$Line1;
+            last COUNT if !$TraceLine1;
 
-            my ( $Package2, $Filename2, $Line2, $Subroutine2 ) = caller( $Caller + 1 + $Count );
+            my ( $TracePackage2, $TraceFilename2, $TraceLine2, $TraceSubroutine2 ) = caller( $Caller + 1 + $Count );
 
             # if there is no caller module use the file name
-            $Subroutine2 ||= $0;
+            $TraceSubroutine2 ||= $0;
 
             # print line if upper caller module exists
             my $VersionString = '';
 
-            eval { $VersionString = $Package1->VERSION || ''; };    ## no critic
+            eval { $VersionString = $TracePackage1->VERSION || ''; };
 
             # version is present
             if ($VersionString) {
                 $VersionString = ' (v' . $VersionString . ')';
             }
 
-            $Error .= "   Module: $Subroutine2$VersionString Line: $Line1\n";
+            $Error .= "   Module: $TraceSubroutine2$VersionString Line: $TraceLine1\n";
 
-            last COUNT if !$Line2;
+            last COUNT if !$TraceLine2;
         }
 
         $Error .= "\n";
@@ -255,7 +250,7 @@ sub Log {
 
         $Priority = lc $Priority;
 
-        my $Data   = localtime() . ";;$Priority;;$Self->{LogPrefix};;$Message\n";    ## no critic
+        my $Data   = localtime() . ";;$Priority;;$Self->{LogPrefix};;$Message\n";
         my $String = $Self->GetLog();
 
         shmwrite( $Self->{IPCSHMKey}, $Data . $String, 0, $Self->{IPCSize} ) || die $!;
@@ -339,7 +334,7 @@ dump a perl variable to log
 sub Dumper {
     my ( $Self, @Data ) = @_;
 
-    require Data::Dumper;    ## no critic
+    require Data::Dumper;
 
     # returns the context of the current subroutine and sub-subroutine!
     my ( $Package1, $Filename1, $Line1, $Subroutine1 ) = caller(0);
@@ -350,7 +345,7 @@ sub Dumper {
     # log backend
     $Self->{Backend}->Log(
         Priority  => 'debug',
-        Message   => substr( Data::Dumper::Dumper(@Data), 0, 600600600 ),    ## no critic
+        Message   => substr( Data::Dumper::Dumper(@Data), 0, 600600600 ),
         LogPrefix => $Self->{LogPrefix},
         Module    => $Subroutine2,
         Line      => $Line1,

@@ -206,31 +206,6 @@ sub DocumentCheckPermission {
     return $Result;
 }
 
-sub _DocumentPathGet {
-    my ( $Self, %Param ) = @_;
-
-    # check needed stuff
-    for (qw(DocumentID)) {
-        if ( !$Param{$_} ) {
-            $Self->{LogObject}->Log(
-                Priority => 'error',
-                Message  => "_DocumentPathGet: Need $_!"
-            );
-            return {};
-        }
-    }
-
-    # db quote
-    for (qw(DocumentID)) {
-        $Param{$_} = $Self->{DBObject}->Quote( $Param{$_}, 'Integer' );
-    }
-    my %Data = ();
-    my $SQL  = "SELECT path FROM kix_file_watcher WHERE id=$Param{DocumentID}";
-    $Self->{DBObject}->Prepare( SQL => $SQL );
-    my @Row = $Self->{DBObject}->FetchrowArray();
-    return $Row[0];
-}
-
 sub DocumentNameSearch {
     my ( $Self, %Param ) = @_;
 
@@ -327,8 +302,7 @@ sub _DirectorySearch {
             )
             && $NameMatch
             && ( !$Param{SearchLimit} || $Counter <= $Param{SearchLimit} )
-            )
-        {
+        ) {
             $Counter++;
             my $FilePath = $Param{FilePath} || $File::Find::dir;     # path of File
             my $FileName = $_;                                       # filename
@@ -346,8 +320,7 @@ sub _DirectorySearch {
             if (%FileData) {
 
                 # file already exists in database, check if the stored one is identical
-                if ( $FileData{FingerPrint} eq $FileFinger && $FileData{LastMod} == $FileMod )
-                {
+                if ( $FileData{FingerPrint} eq $FileFinger && $FileData{LastMod} == $FileMod ) {
 
                     # ok it is identical, let's just update its lastseen time
                     $Self->_MetaUpdate(
@@ -427,7 +400,7 @@ sub _DirectorySearch {
     return @FoundFiles;
 }
 
-sub _MetaImport {
+sub MetaImport {
     my ( $Self, %Param ) = @_;
     my $FileCount = 0;
     if ( $Self->{ConfigFS}->{SyncType} eq 'DirectorySearch' ) {
@@ -451,65 +424,17 @@ sub _MetaImport {
 
         # read metadata files
         for my $MetaFile ( @{MetaFiles} ) {
-            open( my $Handle, "<", $MetaFile );
-            while ( my $Line = <$Handle> ) {
-                chop($Line);
-                $Line =~ s/^{//g;
-                $Line =~ s/}$//g;
-                my ( $FileFinger, $FullPath, $FileSize, $FileMod ) = split( /}::{/, $Line );
-                $FileCount++;
-                my $FileName = basename($FullPath);
-                my $FilePath = dirname($FullPath);
-
-                # look for the file in our database
-                my %FileData = $Self->_MetaGet(
-                    Name => $FileName,
-                    Path => $FilePath,
-                );
-                my $WatcherID = $FileData{FileID};
-                if (%FileData) {
-
-                    # file already exists in database, check if the stored one is identical
-                    if (
-                        $FileData{FingerPrint} ne $FileFinger
-                        || $FileData{LastMod} != $FileMod
-                        )
-                    {
-
-                      # hmmm...fingerprint and/or modtime are different but the file is still there,
-                      # so just update the meta data
-                        $WatcherID = $Self->_MetaUpdate(
-                            FileID      => $FileData{FileID},
-                            Name        => $FileName,
-                            Path        => $FilePath,
-                            FingerPrint => $FileFinger,
-                            Size        => $FileSize,
-                            LastMod     => $FileMod,
-                            LastSeen    => time(),
-                        );
-                    }
-                }
-                else {
-
-                    # file is not in database, just add it
-                    $WatcherID = $Self->_MetaAdd(
-                        Name        => $FileName,
-                        Path        => $FilePath,
-                        FingerPrint => $FileFinger,
-                        Size        => $FileSize,
-                        LastMod     => $FileMod,
-                        FirstSeen   => time(),
-                        LastSeen    => time(),
-                    );
-                }
-            }
+            open( my $Handle, "<", $MetaFile ) or die "Can't open '$MetaFile': $!";
+            $FileCount += $Self->_ReadMetaImportFile(
+                FileHandle => $Handle,
+            );
             close($Handle);
         }
     }
     return $FileCount;
 }
 
-sub _MetaSync {
+sub MetaSync {
     my ( $Self, %Param ) = @_;
     my $WeightThreshold = 100;
 
@@ -808,8 +733,7 @@ sub _MetaLookupPossible {
 
                 # calc percentual diff of file sizes
                 my $SizeDiff = $FileData{Size} / $Param{Size};
-                my $Weight
-                    += $WeightDef{$Key} * ( $SizeDiff < 1 ) ? $SizeDiff : ( 1 / $SizeDiff );
+                my $Weight = $WeightDef{$Key} * ( $SizeDiff < 1 ) ? $SizeDiff : ( 1 / $SizeDiff );
 
                 $FileData{Weight} += $Weight;
             }
@@ -863,8 +787,7 @@ sub _DirectoryListGet {
                     Source => $Source,
                     UserID => $Param{UserID}
                 )
-                )
-            {
+            ) {
                 for my $Dir ( @{ $Parameters{RootDir} } ) {
                     push( @PathList, $Dir );
                 }
@@ -878,15 +801,22 @@ sub _DirectoryListGet {
     }
     if ( !$Param{HashResult} ) {
 
-        # delete subpaths
+        # delete subpaths and double entries
+        my %Paths = ();
+        DIR:
         for my $Dir (@PathList) {
-            @PathList = map { s/^$Dir.*$/$Dir/i; $_; } @PathList;
+            for my $Path ( keys( %Paths ) ) {
+                if ( $Dir =~ m/^$Path.*$/ ) {
+                    next DIR;
+                }
+                if ( $Path =~ m/^$Dir.*$/ ) {
+                    delete( $Paths{$Path} );
+                }
+            }
+            $Paths{$Dir} = 0;
         }
-
-        # delete double entries
-        my %Paths;
-        $Paths{$_} = 0 for @PathList;
         @PathList = keys %Paths;
+
         return @PathList;
     }
     else {
@@ -897,7 +827,7 @@ sub _DirectoryListGet {
 sub _CalcMD5 {
     my ( $Self, %Param ) = @_;
     my $Result = '';
-    open( my $FH, '<', $Param{File} );
+    open( my $FH, '<', $Param{File} ) or die "Can't open '$Param{File}': $!";
     my $ctx = Digest::MD5->new;
     $ctx->addfile(*$FH);
     $Result = $ctx->hexdigest;
@@ -935,8 +865,7 @@ sub _GetSourceParameters {
         if (
             scalar( @{ $Tmp{$Key} } ) > 1
             || ( exists( $ParameterTypes{$Key} ) && $ParameterTypes{$Key} eq 'ARRAY' )
-            )
-        {
+        ) {
             $Parameters{$Key} = $Tmp{$Key};
         }
         else {
@@ -978,8 +907,7 @@ sub _GetSourceAccess {
         if (
             scalar( @{ $Tmp{$Key} } ) > 1
             || ( exists( $ParameterTypes{$Key} ) && $ParameterTypes{$Key} eq 'ARRAY' )
-            )
-        {
+        ) {
             $Parameters{$Key} = $Tmp{$Key};
         }
         else {
@@ -1089,6 +1017,65 @@ sub _CalcStringDistance {
     return $d{$len1}{$len2};
 }
 
+sub _ReadMetaImportFile {
+    my ( $Self, %Param ) = @_;
+
+    my $FileCount = 0;
+
+    while ( my $Line = <$Param{FileHandle}> ) {
+        chop($Line);
+        $Line =~ s/^{//g;
+        $Line =~ s/}$//g;
+        my ( $FileFinger, $FullPath, $FileSize, $FileMod ) = split( /\}::\{/, $Line );
+        $FileCount++;
+        my $FileName = basename($FullPath);
+        my $FilePath = dirname($FullPath);
+
+        # look for the file in our database
+        my %FileData = $Self->_MetaGet(
+            Name => $FileName,
+            Path => $FilePath,
+        );
+        my $WatcherID = $FileData{FileID};
+        if (%FileData) {
+
+            # file already exists in database, check if the stored one is identical
+            if (
+                $FileData{FingerPrint} ne $FileFinger
+                || $FileData{LastMod} != $FileMod
+            ) {
+
+              # hmmm...fingerprint and/or modtime are different but the file is still there,
+              # so just update the meta data
+                $WatcherID = $Self->_MetaUpdate(
+                    FileID      => $FileData{FileID},
+                    Name        => $FileName,
+                    Path        => $FilePath,
+                    FingerPrint => $FileFinger,
+                    Size        => $FileSize,
+                    LastMod     => $FileMod,
+                    LastSeen    => time(),
+                );
+            }
+        }
+        else {
+
+            # file is not in database, just add it
+            $WatcherID = $Self->_MetaAdd(
+                Name        => $FileName,
+                Path        => $FilePath,
+                FingerPrint => $FileFinger,
+                Size        => $FileSize,
+                LastMod     => $FileMod,
+                FirstSeen   => time(),
+                LastSeen    => time(),
+            );
+        }
+    }
+
+    return $FileCount
+
+}
 1;
 
 =back

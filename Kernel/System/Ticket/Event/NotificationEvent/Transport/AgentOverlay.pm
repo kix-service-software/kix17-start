@@ -7,8 +7,6 @@
 # --
 
 package Kernel::System::Ticket::Event::NotificationEvent::Transport::AgentOverlay;
-## nofilter(TidyAll::Plugin::OTRS::Perl::LayoutObject)
-## nofilter(TidyAll::Plugin::OTRS::Perl::ParamObject)
 
 use strict;
 use warnings;
@@ -150,11 +148,11 @@ sub SendNotification {
         Popup     => $Param{Notification}->{Data}->{RecipientPopup}->[0],
     );
     if ( !$Success ) {
-        my $Message = "Could not add overlay for user_id $Recipient{UserID}!";
+        my $ErrorMessage = "Could not add overlay for user_id $Recipient{UserID}!";
 
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => $Message,
+            Message  => $ErrorMessage,
         );
 
         return;

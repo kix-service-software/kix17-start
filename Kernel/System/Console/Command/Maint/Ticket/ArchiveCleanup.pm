@@ -64,12 +64,11 @@ sub Run {
 
         # Find all archived tickets which have ticket seen flags set
         return if !$DBObject->Prepare(
-            SQL => "
-                SELECT DISTINCT(ticket.id)
-                FROM ticket
-                    INNER JOIN ticket_flag ON ticket.id = ticket_flag.ticket_id
-                WHERE ticket.archive_flag = 1
-                    AND ticket_flag.ticket_key = 'Seen'",
+            SQL => "SELECT DISTINCT(ticket.id)"
+                 . " FROM ticket"
+                 . "  INNER JOIN ticket_flag ON ticket.id = ticket_flag.ticket_id"
+                 . " WHERE ticket.archive_flag = 1"
+                 . "  AND ticket_flag.ticket_key = 'Seen'",
             Limit => 1_000_000,
         );
 
@@ -95,13 +94,12 @@ sub Run {
 
         # Find all articles of archived tickets which have ticket seen flags set
         return if !$DBObject->Prepare(
-            SQL => "
-                SELECT DISTINCT(article.id)
-                FROM article
-                    INNER JOIN ticket ON ticket.id = article.ticket_id
-                    INNER JOIN article_flag ON article.id = article_flag.article_id
-                WHERE ticket.archive_flag = 1
-                    AND article_flag.article_key = 'Seen'",
+            SQL => "SELECT DISTINCT(article.id)"
+                 . " FROM article"
+                 . "  INNER JOIN ticket ON ticket.id = article.ticket_id"
+                 . "  INNER JOIN article_flag ON article.id = article_flag.article_id"
+                 . " WHERE ticket.archive_flag = 1"
+                 . "  AND article_flag.article_key = 'Seen'",
             Limit => 1_000_000,
         );
 
@@ -128,18 +126,16 @@ sub Run {
     if (
         $ConfigObject->Get('Ticket::ArchiveSystem::RemoveTicketWatchers')
         && $ConfigObject->Get('Ticket::Watcher')
-        )
-    {
+    ) {
 
         $Self->Print("<yellow>Checking for archived tickets with ticket watcher entries...</yellow>\n");
 
         # Find all archived tickets which have ticket seen flags set
         return if !$DBObject->Prepare(
-            SQL => "
-                SELECT DISTINCT(ticket.id)
-                FROM ticket
-                    INNER JOIN ticket_watcher ON ticket.id = ticket_watcher.ticket_id
-                WHERE ticket.archive_flag = 1",
+            SQL => "SELECT DISTINCT(ticket.id)"
+                 . " FROM ticket"
+                 . "  INNER JOIN ticket_watcher ON ticket.id = ticket_watcher.ticket_id"
+                 . " WHERE ticket.archive_flag = 1",
             Limit => 1_000_000,
         );
 

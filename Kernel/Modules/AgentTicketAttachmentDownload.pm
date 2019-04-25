@@ -28,8 +28,6 @@ sub new {
 
 sub Run {
     my ( $Self, %Param ) = @_;
-    my @Articles;
-    my @Attachments;
 
     # create needed objects
     my $LogObject    = $Kernel::OM->Get('Kernel::System::Log');
@@ -91,7 +89,7 @@ sub Run {
         next if ( $Attachment{Filename} eq 'file-2' );
 
         if ( !$ZipObject ) {
-            $ZipObject = new IO::Compress::Zip(
+            $ZipObject = IO::Compress::Zip->new(
                 \$ZipResult,
                 BinModeIn => 1,
                 Name      => $Attachment{Filename},
@@ -124,9 +122,7 @@ sub Run {
         ContentType => 'application/unknown',
         Content     => $ZipResult,
         Type        => 'attachment',
-
     );
-
 }
 
 1;

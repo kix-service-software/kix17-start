@@ -156,8 +156,7 @@ sub TableCreate {
         if (
             ( $Tag->{Tag} eq 'Table' || $Tag->{Tag} eq 'TableCreate' )
             && $Tag->{TagType} eq 'Start'
-            )
-        {
+        ) {
             if ( $ConfigObject->Get('Database::ShellOutput') ) {
                 $SQLStart .= $Self->{'DB::Comment'}
                     . "----------------------------------------------------------\n";
@@ -169,16 +168,14 @@ sub TableCreate {
         if (
             ( $Tag->{Tag} eq 'Table' || $Tag->{Tag} eq 'TableCreate' )
             && $Tag->{TagType} eq 'Start'
-            )
-        {
+        ) {
             $SQLStart .= "CREATE TABLE $Tag->{Name} (\n";
             $TableName = $Tag->{Name};
         }
         if (
             ( $Tag->{Tag} eq 'Table' || $Tag->{Tag} eq 'TableCreate' )
             && $Tag->{TagType} eq 'End'
-            )
-        {
+        ) {
             $SQLEnd .= ')';
         }
         elsif ( $Tag->{Tag} eq 'Column' && $Tag->{TagType} eq 'Start' ) {
@@ -493,7 +490,7 @@ sub TableAlter {
 
             # remove possible default
             push @SQL, sprintf(
-                <<END
+                <<"END"
                 DECLARE \@defname%s VARCHAR(200), \@cmd%s VARCHAR(2000)
                 SET \@defname%s = (
                     SELECT name FROM sysobjects so JOIN sysconstraints sc ON so.id = sc.constid
@@ -511,7 +508,7 @@ END
 
             # remove all possible constrains
             push @SQL, sprintf(
-                <<HEREDOC
+                <<"HEREDOC"
                     DECLARE \@sql%s NVARCHAR(4000)
 
                     WHILE 1=1

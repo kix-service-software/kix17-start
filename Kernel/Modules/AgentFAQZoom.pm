@@ -138,10 +138,9 @@ sub Run {
         # build base URL for in-line images
         my $SessionID = '';
         if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
-            $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
-            $FieldContent =~ s{
-                (Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)
-            }{$1$SessionID}gmsx;
+            $SessionID  = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+            my $Pattern = '(?:Action=AgentFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)';
+            $FieldContent =~ s{ $Pattern }{$1$SessionID}gmsx;
         }
 
         # convert content to HTML if needed
@@ -149,8 +148,7 @@ sub Run {
             $Kernel::OM->Get('Kernel::Config')->Get('FAQ::Item::HTML')
             && $LayoutObject->{BrowserRichText}
             && $FAQData{ContentType} ne 'text/html'
-            )
-        {
+        ) {
             $FieldContent = $HTMLUtilsObject->ToHTML(
                 String => $FieldContent,
             ) || '';
@@ -754,8 +752,7 @@ sub Run {
             if (
                 defined $TicketComposeConfig->{InsertMethod}
                 && $TicketComposeConfig->{InsertMethod} eq 'Full'
-                )
-            {
+            ) {
                 $LayoutObject->Block(
                     Name => 'InsertFull',
                     Data => {},
@@ -799,8 +796,7 @@ sub Run {
                 if (
                     defined $TicketComposeConfig->{InsertMethod}
                     && $TicketComposeConfig->{InsertMethod} eq 'Full'
-                    )
-                {
+                ) {
                     $LayoutObject->Block(
                         Name => 'InsertFullAndLink',
                         Data => {},

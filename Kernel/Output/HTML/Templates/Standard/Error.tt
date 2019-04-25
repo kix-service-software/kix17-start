@@ -22,20 +22,6 @@
                     [% Translate(Data.Comment) | html %]
                 </p>
 
-# KIX4OTRS-capeIT
-#                <form action="http://bugs.otrs.org/enter_bug.cgi">
-#
-#                    <textarea class="Hidden" name="comment" rows="1" cols="1"><![CDATA[
-#Message:
-#[% Data.Message | html %]
-#
-#Comment:
-#[% Data.Comment | html %]
-#
-#Traceback:
-#[% Data.BackendTraceback | html %]"
-#                    ]]></textarea>
-#                    <input type="hidden" name="bug_file_loc" value="[% Env("SERVER_NAME") | html %][% Env("REQUEST_URI") | html %]"/>
                 <form action="https://support.cape-it.de/helpdesk/customer.pl">
                     <input type="hidden" name="Action" value="CustomerTicketMessage"/>
                     <input type="hidden" name="Subaction" value="StoreNew"/>
@@ -49,7 +35,6 @@ Traceback:
 System Information:
 [% Config("Product") %] [% Config("Version") %]
                     ]]></textarea>
-# EO KIX4OTRS-capeIT
 
                     <p class="SpacingTop">
                         <button type="submit" class="Primary CallForAction" value="[% Translate("Send a bugreport") | html %]"><span>[% Translate("Send a bugreport") | html %]</span></button>
@@ -93,13 +78,10 @@ $('#GoBack').bind('click', function (Event) {
                 <h2 class="PaddingLeft15px"><span>[% Translate("Error Details") | html %]</span></h2>
             </div>
             <div class="Content">
-# KIX4OTRS-capeIT
-#                <code>Backend [% Data.BackendTraceback | html %]</code>
                 <code>Backend [% Data.BackendTraceback | html %]
 System information:
 [% Config("Product") %] [% Config("Version") %]
 </code>
-# EO KIX4OTRS-capeIT
             </div>
         </div>
 [% RenderBlockEnd("ShowBackendTraceback") %]

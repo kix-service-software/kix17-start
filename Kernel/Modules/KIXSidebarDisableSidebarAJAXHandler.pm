@@ -187,8 +187,7 @@ sub Run {
                 elsif (
                     ( $Restriction[0] eq 'NextState' || $Restriction[0] eq 'State' )
                     && defined $Param{NextStateID}
-                    )
-                {
+                ) {
                     $ConditionElement = $StateList{ $Param{NextStateID} } || '';
                 }
 
@@ -206,8 +205,7 @@ sub Run {
                         && !$ConditionElement
                     )
                     || ( $RegExpPatternCondition && $ConditionElement =~ /$RegExpPatternCondition/ )
-                    )
-                {
+                ) {
                     $ValueMatched = 1;
                     last RESTRICTEDVALUE;
                 }
@@ -224,7 +222,7 @@ sub Run {
         if ( scalar @RestrictedSidebarNames ) {
             SIDEBAR:
             for my $Sidebar (@RestrictedSidebarNames) {
-                next SIDEBAR if grep(/^$Sidebar$/, @SidebarAJAX);
+                next SIDEBAR if grep({/^$Sidebar$/} @SidebarAJAX);
                 push @SidebarAJAX, $Sidebar;
             }
         }

@@ -12,7 +12,6 @@ Content-Type: text/html; charset=utf-8;
 Content-Disposition: [% Data.ContentDisposition %]
 [% END -%]
 [% IF !Config('Secure::DisableBanner') -%]
-#rbo - T2016121190001552 - replaced OTRS wording
 X-Powered-By: [% Config("Product") %] [% Config("Version") %] (https://www.kixdesk.com/)
 [% END -%]
 X-UA-Compatible: IE=edge,chrome=1
@@ -21,7 +20,6 @@ X-Frame-Options: SAMEORIGIN
 [% END -%]
 [% IF Data.XLoginHeader -%]
 # With this X-Header, Core.AJAX can recognize that the AJAX request returned the login page (session timeout) and perform a redirect.
-#rbo - T2016121190001552 - renamed X-OTRS headers
 X-KIX-Login: [% Env("Baselink") %]
 [% END -%]
 Expires: Tue, 1 Jan 1980 12:00:00 GMT

@@ -98,7 +98,7 @@ sub Run {
         my $TaskID = $ParamObject->GetParam( Param => 'TaskID' );
 
         # task state update
-        my $Result = $TicketObject->TicketChecklistTaskStateUpdate(
+        $Result = $TicketObject->TicketChecklistTaskStateUpdate(
             TaskID => $TaskID,
             State  => $TaskState,
         );

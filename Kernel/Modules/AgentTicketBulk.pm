@@ -65,7 +65,6 @@ sub Run {
 
     elsif ( $Self->{Subaction} eq 'CancelandUnlock' ) {
 
-        my @TicketIDs;
         for my $Item (@ContentItems) {
             next if $Item->{Filename} ne 'LockedItemIDs';
             $Item->{Content} = $EncodeObject->Convert(
@@ -173,7 +172,7 @@ sub Run {
                 push @QueueIDs, $QueueID;
             }
             else {
-                my @TicketIDs = grep {$_} $ParamObject->GetArray( Param => 'TicketID' );
+                @TicketIDs = grep {$_} $ParamObject->GetArray( Param => 'TicketID' );
                 for my $TicketID (@TicketIDs) {
                     my %Ticket = $TicketObject->TicketGet(
                         TicketID      => $TicketID,
@@ -212,8 +211,7 @@ sub Run {
         if (
             $ConfigObject->Get('Ticket::Responsible')
             && $ConfigObject->Get("Ticket::Frontend::$Self->{Action}")->{Responsible}
-            )
-        {
+        ) {
             push @JSONData, {
                 Name         => 'ResponsibleID',
                 Data         => \%AllGroupsMembers,
@@ -247,11 +245,6 @@ sub Run {
                 URL => $DestURL,
             );
         } else {
-
-            my @ContentItems = $UploadCacheObject->FormIDGetAllFilesData(
-                FormID => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID},
-            );
-
             for my $Item (@ContentItems) {
                 $Item->{Content} = $EncodeObject->Convert(
                     Text => $Item->{Content},
@@ -404,8 +397,7 @@ sub Run {
             Body ArticleTypeID ArticleType TypeID StateID State MergeToSelection MergeTo LinkTogether
             EmailSubject EmailBody EmailTimeUnits
             LinkTogetherParent Unlock MergeToChecked MergeToOldestChecked)
-            )
-        {
+        ) {
             $GetParam{$Key} = $ParamObject->GetParam( Param => $Key ) || '';
         }
 
@@ -414,7 +406,7 @@ sub Run {
         }
 
         # get time stamp based on user time zone
-        %Time = $LayoutObject->TransfromDateSelection(
+        %Time = $LayoutObject->TransformDateSelection(
             Year   => $ParamObject->GetParam( Param => 'Year' ),
             Month  => $ParamObject->GetParam( Param => 'Month' ),
             Day    => $ParamObject->GetParam( Param => 'Day' ),
@@ -435,8 +427,7 @@ sub Run {
             && $ConfigObject->Get('Ticket::Frontend::AccountTime')
             && $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
             && $GetParam{TimeUnits} eq ''
-            )
-        {
+        ) {
             $Error{'TimeUnitsInvalid'} = 'ServerError';
         }
 
@@ -445,8 +436,7 @@ sub Run {
             && $ConfigObject->Get('Ticket::Frontend::AccountTime')
             && $ConfigObject->Get('Ticket::Frontend::NeedAccountedTime')
             && $GetParam{EmailTimeUnits} eq ''
-            )
-        {
+        ) {
             $Error{'EmailTimeUnitsInvalid'} = 'ServerError';
         }
 
@@ -490,8 +480,7 @@ sub Run {
                 if (
                     $TimeObject->Date2SystemTime( %Time, Second => 0 )
                     < $TimeObject->SystemTime()
-                    )
-                {
+                ) {
                     $Error{'DateInvalid'} = 'ServerError';
                 }
             }
@@ -851,17 +840,8 @@ sub _Mask {
 
         # get state object
         my $StateObject = $Kernel::OM->Get('Kernel::System::State');
-
-        # KIX4OTRS-capeIT
-        # my %StateList = $StateObject->StateGetStatesByType(
-        #     StateType => $Config->{StateType},
-        #     Result    => 'HASH',
-        #     Action    => $Self->{Action},
-        #     UserID    => $Self->{UserID},
-        # );
-
-        my %StateList = ();
-        my $TSWFConfig = $ConfigObject->Get('TicketStateWorkflow') || '';
+        my %StateList   = ();
+        my $TSWFConfig  = $ConfigObject->Get('TicketStateWorkflow') || '';
         if ( $TSWFConfig && ref($TSWFConfig) eq 'HASH' ) {
             %StateList = $TicketObject->TSWFCommonNextStates(
                 TicketIDs => $Param{TicketIDs},
@@ -882,9 +862,7 @@ sub _Mask {
             );
         }
 
-        # if ( !$Config->{StateDefault} ) {
         if ( !$Config->{StateDefault} && !( defined( $StateList{''} ) ) ) {
-        # EO KIX4OTRS-capeIT
             $StateList{''} = '-';
         }
         if ( !$Param{StateID} ) {
@@ -1040,7 +1018,7 @@ sub _Mask {
     }
 
     # build move queue string
-    my %MoveQueues = $TicketObject->MoveList(
+    my %MoveQueues = $TicketObject->TicketMoveList(
         UserID => $Self->{UserID},
         Action => $Self->{Action},
         Type   => 'move_into',

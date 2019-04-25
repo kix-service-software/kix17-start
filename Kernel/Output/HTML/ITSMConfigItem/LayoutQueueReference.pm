@@ -134,8 +134,7 @@ sub FormDataGet {
         if (
             !$Self->{ParamObject}->GetParam( Param => $Param{Key} . '::Search' )
             && defined $FormData{Value}
-            )
-        {
+        ) {
             $FormData{Value} = '';
         }
 
@@ -202,17 +201,7 @@ sub InputCreate {
     # QueueReference search...
     if ( $Param{Item}->{Form}->{ $Param{Key} }->{Search} ) {
 
-        my $Search = $Param{Item}->{Form}->{ $Param{Key} }->{Search} || '';
-
-        # workaround, all auto completion requests get posted by utf8 anyway
-        # convert any to 8bit string if application is not running in utf8
-#        if ( !$Self->{EncodeObject}->EncodeInternalUsed() ) {
-#            $Search = $Self->{EncodeObject}->Convert(
-#                Text => $Search,
-#                From => 'utf-8',
-#                To   => $Self->{LayoutObject}->{UserCharset},
-#            );
-#        }
+        $Search = $Param{Item}->{Form}->{ $Param{Key} }->{Search} || '';
 
         $Search =~ s/\_/\./g;
         $Search =~ s/\%/\.\*/g;
@@ -307,8 +296,7 @@ sub InputCreate {
         $AutoCompleteConfig
         && ref($AutoCompleteConfig) eq 'HASH'
         && $AutoCompleteConfig->{Active}
-        )
-    {
+    ) {
 
         $Self->{LayoutObject}->Block(
             Name => 'QueueSearchAutoComplete',

@@ -105,7 +105,6 @@ sub LoadDefaults {
     # root directory
     $Self->{Home} = '/opt/kix';
 
-    #rbo - T2016121190001552 - added KIX placeholders
     # tmp dir
     $Self->{TempDir} = '<KIX_CONFIG_Home>/var/tmp';
     # article dir
@@ -134,7 +133,6 @@ sub LoadDefaults {
     # (The password of database user.)
     $Self->{DatabasePw} = 'some-pass';
 
-    #rbo - T2016121190001552 - added KIX placeholders
     # DatabaseDSN
     # The database DSN for MySQL ==> more: "perldoc DBD::mysql"
     $Self->{DatabaseDSN} = "DBI:mysql:database=<KIX_CONFIG_Database>;host=<KIX_CONFIG_DatabaseHost>;";
@@ -207,17 +205,14 @@ sub LoadDefaults {
     # (URL base path of icons, CSS and Java Script.)
     $Self->{'Frontend::WebPath'} = '/kix-web/';
 
-    #rbo - T2016121190001552 - added KIX placeholders
     # Frontend::JavaScriptPath
     # (URL JavaScript path.)
     $Self->{'Frontend::JavaScriptPath'} =  '<KIX_CONFIG_Frontend::WebPath>js/';
 
-    #rbo - T2016121190001552 - added KIX placeholders
     # Frontend::CSSPath
     # (URL CSS path.)
     $Self->{'Frontend::CSSPath'} =  '<KIX_CONFIG_Frontend::WebPath>css/';
 
-    #rbo - T2016121190001552 - added KIX placeholders
     # Frontend::ImagePath
     # (URL image path of icons for navigation.)
     $Self->{'Frontend::ImagePath'} = '<KIX_CONFIG_Frontend::WebPath>skins/Agent/default/img/';
@@ -633,7 +628,6 @@ sub LoadDefaults {
     # agent interface notification module to check the admin user id
     # (don't work with user id 1 notification)
     $Self->{'Frontend::NotifyModule'} = {
-        #rbo - T2016121190001552 - CloudServices and BusinessSolution removed
         '200-UID-Check' => {
           'Module' => 'Kernel::Output::HTML::Notification::UIDCheck',
         },
@@ -706,7 +700,6 @@ sub LoadDefaults {
     # (store cookies in browser after closing a browser) [0|1]
     $Self->{SessionUseCookieAfterBrowserClose} = 0;
 
-    #rbo - T2016121190001552 - added KIX placeholders
     # SessionDir
     # directory for all sessen id information (just needed if
     # $Self->{SessionModule}='Kernel::System::AuthSession::FS)
@@ -1406,7 +1399,6 @@ via the Preferences button after logging in.
             [ 'UserLogin',      Translatable('Username'),   'login',      1, 1, 'var', '', 0 ],
             [ 'UserPassword',   Translatable('Password'),   'pw',         0, 0, 'var', '', 0 ],
             [ 'UserEmail',      Translatable('Email'),      'email',      1, 1, 'var', '', 0 ],
-#rbo - T2016121190001552 - renamed OTRS to KIX
 #            [ 'UserEmail',      Translatable('Email'), 'email',           1, 1, 'var', '[% Env("CGIHandle") %]?Action=AgentTicketCompose;ResponseID=1;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %]', 0, '', 'AsPopup KIXPopup_TicketAction' ],
             [ 'UserCustomerID', Translatable('CustomerID'), 'customer_id', 0, 1, 'var', '', 0 ],
 #            [ 'UserCustomerIDs', Translatable('CustomerIDs'), 'customer_ids', 1, 0, 'var', '', 0 ],
@@ -1860,7 +1852,6 @@ sub new {
         }
     }
 
-    #rbo - T2016121190001552 - extended handling of RELEASE file
     # load basic RELEASE file to check integrity of installation
     if ( -e ! "$Self->{Home}/RELEASE" ) {
         print STDERR "ERROR: $Self->{Home}/RELEASE does not exist! This file is needed by central system parts of KIX, the system will not work without this file.\n";
@@ -1922,7 +1913,6 @@ sub new {
         for my $Key ( sort keys %{$Self} ) {
             next KEY if !defined $Key;
             if ( defined $Self->{$Key} ) {
-                #rbo - T2016121190001552 - added KIX placeholders
                 $Self->{$Key} =~ s/\<(KIX|OTRS)_CONFIG_(.+?)\>/$Self->{$2}/g;
             }
             else {
@@ -1982,8 +1972,6 @@ sub Set {
     }
     return 1;
 }
-
-## nofilter(TidyAll::Plugin::OTRS::Perl::Translatable)
 
 # This is a no-op to mark a text as translatable in the Perl code.
 #   We use our own version here instead of importing Language::Translatable to not add a dependency.

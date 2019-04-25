@@ -39,8 +39,7 @@ sub KIXSidebarRemoteDBViewSearch {
         DatabaseTable DatabaseFields
         DatabaseFieldKey Key
         )
-        )
-    {
+    ) {
         if ( !$Param{$_} ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',

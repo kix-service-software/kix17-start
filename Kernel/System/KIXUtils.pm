@@ -94,8 +94,7 @@ sub RegisterCustomPackage {
             if (
                 $CustomPackages->{$CurrPrio}
                 && ( $CustomPackages->{$CurrPrio} eq $Param{PackageName} )
-                )
-            {
+            ) {
                 delete( $CustomPackages->{$CurrPrio} );
             }
         }
@@ -136,8 +135,7 @@ sub UnRegisterCustomPackage {
         if (
             $CustomPackages->{$CurrPrio}
             && ( $CustomPackages->{$CurrPrio} eq $Param{PackageName} )
-            )
-        {
+        ) {
             delete( $CustomPackages->{$CurrPrio} );
         }
     }
@@ -171,8 +169,9 @@ sub GetRegisteredCustomPackages {
         while (<$FH>) {
             my $Line = $_;
             chomp($Line);
-            next if ( $Line !~ /(.+)::(.+)/ );
-            $RetVal{$Line} = $2;
+            if ( $Line =~ /(.+)::(.+)/ ) {
+                $RetVal{$Line} = $2;
+            }
         }
         close($FH);
     }
@@ -651,8 +650,7 @@ sub _UpdateApachePerlStartup {
                 open(
                     $OUT, '>', "$Apache2PerlStartUp.PreCustomPackageRegistration.$TimestampSuffix"
                 )
-                )
-            {
+            ) {
                 binmode($OUT);
                 print $OUT $Apache2PerlStartUpContentOrig;
                 close($OUT);
@@ -780,8 +778,7 @@ sub _UpdateCGIScripts {
                 my $TimestampSuffix = "$Y-$M-$D" . "_$h-$m";
                 if (
                     open( $OUT, '>', "$ScriptFile.PreCustomPackageRegistration.$TimestampSuffix" )
-                    )
-                {
+                ) {
                     binmode($OUT);
                     print $OUT $ScriptFileContentOrig;
                     close($OUT);

@@ -90,7 +90,7 @@ sub Run {
             }
         }
         my $JSONStrg    = $Self->{JSONObject}->Encode(Data => \%Data);
-        my $JSDocument  = <<END;
+        my $JSDocument  = <<"END";
     \$('#Year').parent('div').addClass('HidePendingTimeInput');
     \$('#Year').parent('div').prev('label').addClass('HidePendingTimeInput');
     Core.Agent.HidePendingTimeInput.Init($JSONStrg,'$StateField');

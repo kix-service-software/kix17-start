@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::Email;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Require)
 
 use strict;
 use warnings;
@@ -290,7 +289,6 @@ sub Send {
     }
     else {
         $Header{'X-Mailer'}     = "$Product Mail Service ($Version)";
-#rbo - T2016121190001552 - renamed OTRS to KIX
         $Header{'X-Powered-By'} = 'KIX (https://www.kixdesk.com/)';
     }
     $Header{Type} = $Param{MimeType} || 'text/plain';
@@ -393,8 +391,7 @@ sub Send {
                             !defined $Upload->{Disposition}
                             || $Upload->{Disposition} ne 'inline'
                         )
-                        )
-                    {
+                    ) {
                         push @NewAttachments, \%{$Upload};
                         next ATTACHMENT;
                     }
@@ -469,8 +466,7 @@ sub Send {
                 if (
                     $Upload->{ContentType} =~ m{ \A text/  }xmsi
                     && $Upload->{ContentType} !~ m{ \A text/ (?: plain | html ) ; }xmsi
-                    )
-                {
+                ) {
                     $Encoding = 'base64';
                 }
                 else {
@@ -565,7 +561,7 @@ sub Send {
             $Head->delete('Content-Type');
             $Head->delete('Content-Disposition');
             $Head->delete('Content-Transfer-Encoding');
-            my $Header = $Head->as_string();
+            my $SMIMEHeader = $Head->as_string();
 
             # get string to sign
             my $T = $EntityCopy->parts(0)->as_string();
@@ -590,20 +586,18 @@ sub Send {
                 $Parser->output_to_core('ALL');
 
                 $Parser->output_dir( $ConfigObject->Get('TempDir') );
-                $Entity = $Parser->parse_data( $Header . $Sign );
+                $Entity = $Parser->parse_data( $SMIMEHeader . $Sign );
             }
         }
     }
 
     # crypt detached!
-    #my $NotCryptedBody = $Entity->body_as_string();
     if (
         $Param{Crypt}
         && $Param{Crypt}->{Type}
         && $Param{Crypt}->{Type} eq 'PGP'
         && $Param{Crypt}->{SubType} eq 'Detached'
-        )
-    {
+    ) {
         my $CryptObject = $Kernel::OM->Get('Kernel::System::Crypt::PGP');
 
         return if !$CryptObject;
@@ -672,7 +666,7 @@ sub Send {
         $Head->delete('Content-Type');
         $Head->delete('Content-Disposition');
         $Head->delete('Content-Transfer-Encoding');
-        my $Header = $Head->as_string();
+        my $SMIMEHeader = $Head->as_string();
 
         my $T = $Entity->parts(0)->as_string();
 
@@ -689,7 +683,7 @@ sub Send {
         my $Parser = MIME::Parser->new();
 
         $Parser->output_dir( $ConfigObject->Get('TempDir') );
-        $Entity = $Parser->parse_data( $Header . $Crypt );
+        $Entity = $Parser->parse_data( $SMIMEHeader . $Crypt );
     }
 
     # get header from Entity

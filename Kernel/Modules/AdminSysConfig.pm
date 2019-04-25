@@ -120,8 +120,8 @@ sub Run {
         # challenge token check for write action
         $LayoutObject->ChallengeTokenCheck();
 
+       $Group        = $ParamObject->GetParam( Param => 'SysConfigGroup' );
         my $SubGroup = $ParamObject->GetParam( Param => 'SysConfigSubGroup' );
-        my $Group    = $ParamObject->GetParam( Param => 'SysConfigGroup' );
         my @List     = $SysConfigObject->ConfigSubGroupConfigItemList(
             Group    => $Group,
             SubGroup => $SubGroup,
@@ -155,8 +155,7 @@ sub Run {
                     $ParamObject->GetParam( Param => $_ . 'ItemActive' )
                     && $ParamObject->GetParam( Param => $_ . 'ItemActive' ) == 1
                 )
-                )
-            {
+            ) {
                 $Active = 1;
             }
 
@@ -313,8 +312,7 @@ sub Run {
                         !$ParamObject->GetParam(
                             Param => $ItemHash{Name} . '#DeleteHashElement' . $DeleteNumber[$Index],
                         )
-                        )
-                    {
+                    ) {
                         $Content{ $Keys[$Index] } = $Values[$Index];
                     }
                     else {
@@ -513,14 +511,14 @@ sub Run {
                         );
 
                         # New Group(Ro)Element
-                        my $New = $ParamObject->GetParam(
+                        my $NewGroup = $ParamObject->GetParam(
                             Param => $ItemHash{Name}
                                 . '#NavBar'
                                 . ( $Index + 1 ) . '#New'
                                 . $Type
                                 . 'Element'
                         );
-                        if ($New) {
+                        if ($NewGroup) {
                             push @Group, '';
                             $Anker = $ItemHash{Name};
                         }
@@ -547,8 +545,7 @@ sub Run {
                     }
                     for (
                         qw(Description Name Link LinkOption Type Prio Block NavBar AccessKey)
-                        )
-                    {
+                    ) {
                         if ( defined $NavBarParams{$_}->[$Index] ) {
                             $Content{NavBar}->[$Index]->{$_} = $NavBarParams{$_}->[$Index];
                         }
@@ -586,8 +583,7 @@ sub Run {
                         if (
                             defined $NavBarModuleParams{$_}->[0]
                             && $NavBarModuleParams{$_}->[0] ne ''
-                            )
-                        {
+                        ) {
                             $Content{NavBarModule}->{$_} = $NavBarModuleParams{$_}->[0];
                         }
                     }
@@ -707,8 +703,7 @@ sub Run {
             # ConfigElement TimeWorkingHours
             elsif ( defined $ItemHash{Setting}->[1]->{TimeWorkingHours} ) {
                 my %Content;
-                for my $Index ( 1 .. $#{ $ItemHash{Setting}->[1]->{TimeWorkingHours}->[1]->{Day} } )
-                {
+                for my $Index ( 1 .. $#{ $ItemHash{Setting}->[1]->{TimeWorkingHours}->[1]->{Day} } ) {
                     my $Weekday = $ItemHash{Setting}->[1]->{TimeWorkingHours}->[1]->{Day}->[$Index]->{Name};
                     my @Hours = $ParamObject->GetArray( Param => $_ . $Weekday . '[]' );
                     $Content{$Weekday} = \@Hours;
@@ -756,8 +751,7 @@ sub Run {
         if (
             exists $ENV{'GATEWAY_INTERFACE'}
             && $ENV{'GATEWAY_INTERFACE'} eq "CGI-PerlEx"
-            )
-        {
+        ) {
             PerlEx::ReloadAll();
         }
 
@@ -772,8 +766,8 @@ sub Run {
     # edit config
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'Edit' ) {
+        $Group       = $ParamObject->GetParam( Param => 'SysConfigGroup' );
         my $SubGroup = $ParamObject->GetParam( Param => 'SysConfigSubGroup' );
-        my $Group    = $ParamObject->GetParam( Param => 'SysConfigGroup' );
         my @List     = $SysConfigObject->ConfigSubGroupConfigItemList(
             Group    => $Group,
             SubGroup => $SubGroup
@@ -1176,7 +1170,7 @@ sub ListConfigItem {
     # ConfigElement PulldownMenu
     if ( defined $Item->{Option} ) {
         my %Hash;
-        my $Default = '';
+        $Default = '';
 
         # build option list
         my $Option = $Item->{Option}->[1];
@@ -1482,28 +1476,27 @@ sub ListConfigItem {
 
         # NavBar
         for my $Index ( 1 .. $#{ $FrontendModuleReg->{NavBar} } ) {
-            my %Data = ();
+            my %NavBarData = ();
             for my $Key (
                 qw(Description Name Link LinkOption Type Prio Block NavBar AccessKey)
-                )
-            {
-                $Data{ 'Key' . $Key }     = $Key;
-                $Data{ 'Content' . $Key } = '';
+            ) {
+                $NavBarData{ 'Key' . $Key }     = $Key;
+                $NavBarData{ 'Content' . $Key } = '';
                 if ( defined $FrontendModuleReg->{NavBar}->[1]->{$Key}->[1]->{Content} ) {
-                    $Data{ 'Content' . $Key } = $FrontendModuleReg->{NavBar}->[$Index]->{$Key}->[1]->{Content};
+                    $NavBarData{ 'Content' . $Key } = $FrontendModuleReg->{NavBar}->[$Index]->{$Key}->[1]->{Content};
                 }
             }
-            $Data{ElementKey} = $ItemHash{Name} . '#NavBar';
+            $NavBarData{ElementKey} = $ItemHash{Name} . '#NavBar';
 
             # Generate an ID that is valid XHTML for use in id attribute
-            $Data{ElementKeyID} = $Data{ElementKey};
-            $Data{ElementKeyID} =~ s{\#}{_}gsm;
-            $Data{ReadOnlyAttribute} = $ReadOnlyAttribute;
+            $NavBarData{ElementKeyID} = $NavBarData{ElementKey};
+            $NavBarData{ElementKeyID} =~ s{\#}{_}gsm;
+            $NavBarData{ReadOnlyAttribute} = $ReadOnlyAttribute;
 
-            $Data{Index} = $Index;
+            $NavBarData{Index} = $Index;
             $LayoutObject->Block(
                 Name => 'ConfigElementFrontendModuleRegContentNavBar',
-                Data => \%Data,
+                Data => \%NavBarData,
             );
 
             # Array Element Group
@@ -1528,50 +1521,50 @@ sub ListConfigItem {
         # NavBarModule
         if ( ref $FrontendModuleReg->{NavBarModule} eq 'ARRAY' ) {
             for my $Index ( 1 .. $#{ $FrontendModuleReg->{NavBarModule} } ) {
-                my %Data;
+                my %NavBarData;
                 for my $Key (qw(Module Name Block Pri)) {
-                    $Data{ 'Key' . $Key }     = $Key;
-                    $Data{ 'Content' . $Key } = '';
+                    $NavBarData{ 'Key' . $Key }     = $Key;
+                    $NavBarData{ 'Content' . $Key } = '';
                     if ( defined $FrontendModuleReg->{NavBarModule}->[1]->{$Key}->[1]->{Content} ) {
-                        $Data{ 'Content' . $Key } = $FrontendModuleReg->{NavBarModule}->[1]->{$Key}->[1]->{Content};
+                        $NavBarData{ 'Content' . $Key } = $FrontendModuleReg->{NavBarModule}->[1]->{$Key}->[1]->{Content};
                     }
                 }
-                $Data{ElementKey} = $ItemHash{Name} . '#NavBarModule';
+                $NavBarData{ElementKey} = $ItemHash{Name} . '#NavBarModule';
 
                 # Generate an ID that is valid XHTML for use in id attribute
-                $Data{ElementKeyID} = $Data{ElementKey};
-                $Data{ElementKeyID} =~ s{\#}{_}gsm;
+                $NavBarData{ElementKeyID} = $NavBarData{ElementKey};
+                $NavBarData{ElementKeyID} =~ s{\#}{_}gsm;
 
-                $Data{Index}             = $Index;
-                $Data{ReadOnlyAttribute} = $ReadOnlyAttribute;
+                $NavBarData{Index}             = $Index;
+                $NavBarData{ReadOnlyAttribute} = $ReadOnlyAttribute;
 
                 $LayoutObject->Block(
                     Name => 'ConfigElementFrontendModuleRegContentNavBarModule',
-                    Data => \%Data,
+                    Data => \%NavBarData,
                 );
             }
         }
         elsif ( defined $FrontendModuleReg->{NavBarModule} ) {
-            my %Data;
+            my %NavBarData;
             for my $Key (qw(Module Name Description Block Prio)) {
-                $Data{ 'Key' . $Key }     = $Key;
-                $Data{ 'Content' . $Key } = '';
+                $NavBarData{ 'Key' . $Key }     = $Key;
+                $NavBarData{ 'Content' . $Key } = '';
                 if ( defined $FrontendModuleReg->{NavBarModule}->{$Key}->[1]->{Content} ) {
-                    $Data{ 'Content' . $Key } = $FrontendModuleReg->{NavBarModule}->{$Key}->[1]->{Content};
+                    $NavBarData{ 'Content' . $Key } = $FrontendModuleReg->{NavBarModule}->{$Key}->[1]->{Content};
                 }
             }
-            $Data{ElementKey} = $ItemHash{Name} . '#NavBarModule';
+            $NavBarData{ElementKey} = $ItemHash{Name} . '#NavBarModule';
 
             # Generate an ID that is valid XHTML for use in id attribute
-            $Data{ElementKeyID} = $Data{ElementKey};
-            $Data{ElementKeyID} =~ s{\#}{_}gsm;
+            $NavBarData{ElementKeyID} = $NavBarData{ElementKey};
+            $NavBarData{ElementKeyID} =~ s{\#}{_}gsm;
 
-            $Data{Index}             = 0;
-            $Data{ReadOnlyAttribute} = $ReadOnlyAttribute;
+            $NavBarData{Index}             = 0;
+            $NavBarData{ReadOnlyAttribute} = $ReadOnlyAttribute;
 
             $LayoutObject->Block(
                 Name => 'ConfigElementFrontendModuleRegContentNavBarModule',
-                Data => \%Data,
+                Data => \%NavBarData,
             );
         }
         return 1;
@@ -1621,8 +1614,7 @@ sub ListConfigItem {
                 $Item->{TimeVacationDaysOneTime}[1]{Item}[$Index]{Year}
                 && $Item->{TimeVacationDaysOneTime}[1]{Item}[$Index]{Year}
                 !~ /^\d\d\d\d$/
-                )
-            {
+            ) {
                 $LayoutObject->Block(
                     Name => 'ConfigElementTimeVacationDaysOneTimeContentInvalidYear'
                 );
@@ -1630,9 +1622,8 @@ sub ListConfigItem {
             if (
                 $Item->{TimeVacationDaysOneTime}[1]{Item}[$Index]{Month}
                 && $Item->{TimeVacationDaysOneTime}[1]{Item}[$Index]{Month}
-                !~ /^(1[0-2]|[1-9])$/
-                )
-            {
+                !~ /^(?:1[0-2]|[1-9])$/
+            ) {
                 $LayoutObject->Block(
                     Name => 'ConfigElementTimeVacationDaysOneTimeContentInvalidMonth'
                 );
@@ -1640,9 +1631,8 @@ sub ListConfigItem {
             if (
                 $Item->{TimeVacationDaysOneTime}[1]{Item}[$Index]{Day}
                 && $Item->{TimeVacationDaysOneTime}[1]{Item}[$Index]{Day}
-                !~ /^([1-3][0-9]|[1-9])$/
-                )
-            {
+                !~ /^(?:[1-3][0-9]|[1-9])$/
+            ) {
                 $LayoutObject->Block(
                     Name => 'ConfigElementTimeVacationDaysOneTimeContentInvalidDay'
                 );
@@ -1690,9 +1680,8 @@ sub ListConfigItem {
             if (
                 $Item->{TimeVacationDays}[1]{Item}[$Index]{Month}
                 && $Item->{TimeVacationDays}[1]{Item}[$Index]{Month}
-                !~ /^(1[0-2]|[1-9])$/
-                )
-            {
+                !~ /^(?:1[0-2]|[1-9])$/
+            ) {
                 $LayoutObject->Block(
                     Name => 'ConfigElementTimeVacationDaysContentInvalidMonth'
                 );
@@ -1701,9 +1690,8 @@ sub ListConfigItem {
             if (
                 $Item->{TimeVacationDays}[1]{Item}[$Index]{Day}
                 && $Item->{TimeVacationDays}[1]{Item}[$Index]{Day}
-                !~ /^([1-3][0-9]|[1-9])$/
-                )
-            {
+                !~ /^(?:[1-3][0-9]|[1-9])$/
+            ) {
                 $LayoutObject->Block(
                     Name => 'ConfigElementTimeVacationDaysContentInvalidDay'
                 );
@@ -1803,7 +1791,7 @@ sub ListConfigItem {
         );
 
         # transform time stamp based on user time zone
-        %DateHash = $LayoutObject->TransfromDateSelection(
+        %DateHash = $LayoutObject->TransformDateSelection(
             %DateHash,
             Prefix => $Prefix,
         );

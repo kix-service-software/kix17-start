@@ -171,8 +171,7 @@ sub TableCreateComplex {
     if (
         defined $Param{EnabledColumns}->{Document}
         && scalar @{ $Param{EnabledColumns}->{Document} }
-        )
-    {
+    ) {
         for my $Column ( @{ $Param{EnabledColumns}->{Document} } ) {
             $DisplayedColumns{$Column} = 1;
         }
@@ -356,8 +355,7 @@ sub ContentStringCreate {
         ref( $Param{ContentData} ) eq "HASH"
         && $Param{ContentData}->{ObjectType}
         && $Param{ContentData}->{ObjectType} eq 'Document'
-        )
-    {
+    ) {
 
         my %CData = %{ $Param{ContentData} };
         my $Css   = '';

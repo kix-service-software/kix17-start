@@ -98,8 +98,7 @@ sub Run {
         my %GetParam;
         for my $Parameter (
             qw(ID Name Comment ValidID Events ArticleSubjectMatch ArticleBodyMatch ArticleTypeID ArticleSenderTypeID Transports)
-            )
-        {
+        ) {
             $GetParam{$Parameter} = $ParamObject->GetParam( Param => $Parameter ) || '';
         }
         PARAMETER:
@@ -110,8 +109,7 @@ sub Run {
             ArticleTypeID ArticleSubjectMatch ArticleBodyMatch ArticleAttachmentInclude
             ArticleSenderTypeID Transports OncePerDay MarkAsSeenForAgents SendOnOutOfOffice
             VisibleForAgent VisibleForAgentTooltip LanguageID AgentEnabledByDefault)
-            )
-        {
+        ) {
             my @Data = $ParamObject->GetArray( Param => $Parameter );
             next PARAMETER if !@Data;
             $GetParam{Data}->{$Parameter} = \@Data;
@@ -203,15 +201,13 @@ sub Run {
         if (
             grep { $_ eq 'ArticleCreate' || $_ eq 'ArticleSend' }
             @{ $GetParam{Data}->{Events} || [] }
-            )
-        {
+        ) {
             if (
                 !$GetParam{ArticleTypeID}
                 && !$GetParam{ArticleSenderTypeID}
                 && $GetParam{ArticleSubjectMatch} eq ''
                 && $GetParam{ArticleBodyMatch} eq ''
-                )
-            {
+            ) {
                 $ArticleFilterMissing = 1;
             }
         }
@@ -239,6 +235,7 @@ sub Run {
 
             return $Output;
         }
+
         else {
             for my $Needed (qw(Name Events Transports)) {
                 $GetParam{ $Needed . "ServerError" } = "";
@@ -310,8 +307,7 @@ sub Run {
         my %GetParam;
         for my $Parameter (
             qw(Name Comment ValidID Events ArticleSubjectMatch ArticleBodyMatch ArticleTypeID ArticleSenderTypeID Transports)
-            )
-        {
+        ) {
             $GetParam{$Parameter} = $ParamObject->GetParam( Param => $Parameter ) || '';
         }
         PARAMETER:
@@ -321,8 +317,7 @@ sub Run {
             ArticleTypeID ArticleSubjectMatch ArticleBodyMatch ArticleAttachmentInclude
             ArticleSenderTypeID Transports OncePerDay MarkAsSeenForAgents SendOnOutOfOffice
             VisibleForAgent VisibleForAgentTooltip LanguageID AgentEnabledByDefault)
-            )
-        {
+        ) {
             my @Data = $ParamObject->GetArray( Param => $Parameter );
             next PARAMETER if !@Data;
             $GetParam{Data}->{$Parameter} = \@Data;
@@ -414,15 +409,13 @@ sub Run {
         if (
             grep { $_ eq 'ArticleCreate' || $_ eq 'ArticleSend' }
             @{ $GetParam{Data}->{Events} || [] }
-            )
-        {
+        ) {
             if (
                 !$GetParam{ArticleTypeID}
                 && !$GetParam{ArticleSenderTypeID}
                 && $GetParam{ArticleSubjectMatch} eq ''
                 && $GetParam{ArticleBodyMatch} eq ''
-                )
-            {
+            ) {
                 $ArticleFilterMissing = 1;
             }
         }
@@ -453,6 +446,7 @@ sub Run {
 
             return $Output;
         }
+
         else {
             for my $Needed (qw(Name Events Transports)) {
                 $GetParam{ $Needed . "ServerError" } = "";
@@ -645,7 +639,7 @@ sub Run {
         if ( !$NotificationImport->{Success} ) {
             my $Message = $NotificationImport->{Message}
                 || Translatable(
-                'Notifications could not be Imported due to a unknown error, please check OTRS logs for more information'
+                'Notifications could not be Imported due to a unknown error, please check KIX logs for more information'
                 );
             return $LayoutObject->ErrorScreen(
                 Message => $Message,
@@ -696,24 +690,22 @@ sub Run {
             Data         => \%Param,
         );
         $Output .= $LayoutObject->Footer();
+        return $Output;
     }
 
     # ------------------------------------------------------------
     # overview
     # ------------------------------------------------------------
-    else {
-        $Self->_Overview();
-        my $Output = $LayoutObject->Header();
-        $Output .= $LayoutObject->NavigationBar();
-        $Output .= $LayoutObject->Output(
-            TemplateFile => 'AdminNotificationEvent',
-            Data         => \%Param,
-        );
-        $Output .= $LayoutObject->Footer();
+    $Self->_Overview();
+    my $Output = $LayoutObject->Header();
+    $Output .= $LayoutObject->NavigationBar();
+    $Output .= $LayoutObject->Output(
+        TemplateFile => 'AdminNotificationEvent',
+        Data         => \%Param,
+    );
+    $Output .= $LayoutObject->Footer();
 
-        return $Output;
-    }
-
+    return $Output;
 }
 
 sub _Edit {
@@ -746,12 +738,9 @@ sub _Edit {
             AgentMyQueues           => Translatable('All agents subscribed to the ticket\'s queue'),
             AgentMyServices         => Translatable('All agents subscribed to the ticket\'s service'),
             AgentMyQueuesMyServices => Translatable('All agents subscribed to both the ticket\'s queue and service'),
-            # KIX4OTRS-capeIT
             LinkedPersonAgent       => Translatable('All agents who are linked with this ticket and have been selected (Linked Persons)'),
-            # rkaiser - T#2017020290001194 - changed customer user to contact
             LinkedPersonCustomer    => Translatable('All customer contacts who are linked with this ticket and have been selected (Linked Persons)'),
             LinkedPerson3rdPerson   => Translatable('All 3rd person contacts who are linked with this ticket and have been selected (Linked Persons)'),
-            # EO KIX4OTRS-capeIT
             Customer                => Translatable('Customer of the ticket'),
         },
         Name       => 'Recipients',
@@ -1102,8 +1091,7 @@ sub _Edit {
             if (
                 $Param{Message}->{$LanguageID}->{ContentType}
                 && $Param{Message}->{$LanguageID}->{ContentType} =~ m{text\/plain}xmsi
-                )
-            {
+            ) {
                 $Param{Message}->{$LanguageID}->{Body} = $HTMLUtilsObject->ToHTML(
                     String => $Param{Message}->{$LanguageID}->{Body},
                 );
@@ -1116,8 +1104,7 @@ sub _Edit {
                 $Param{Message}->{$LanguageID}->{ContentType}
                 && $Param{Message}->{$LanguageID}->{ContentType} =~ m{text\/html}xmsi
                 && $Param{Message}->{$LanguageID}->{Body}
-                )
-            {
+            ) {
                 $Param{Message}->{$LanguageID}->{Body} = $HTMLUtilsObject->ToAscii(
                     String => $Param{Message}->{$LanguageID}->{Body},
                 );
@@ -1209,8 +1196,7 @@ sub _Edit {
     KEY:
     for my $Key (
         qw(VisibleForAgent VisibleForAgentTooltip CustomerID CustomerUserID ArticleSubjectMatch ArticleBodyMatch)
-        )
-    {
+    ) {
         next KEY if !$Param{Data}->{$Key};
         next KEY if !defined $Param{Data}->{$Key}->[0];
         $Param{$Key} = $Param{Data}->{$Key}->[0];
@@ -1254,8 +1240,7 @@ sub _Edit {
         for my $Transport (
             sort { $RegisteredTransports{$a}->{Prio} <=> $RegisteredTransports{$b}->{Prio} }
             keys %RegisteredTransports
-            )
-        {
+        ) {
 
             next TRANSPORT if !IsHashRefWithData( $RegisteredTransports{$Transport} );
             next TRANSPORT if !$RegisteredTransports{$Transport}->{Module};

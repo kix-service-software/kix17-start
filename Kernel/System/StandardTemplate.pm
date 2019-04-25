@@ -97,10 +97,11 @@ sub StandardTemplateAdd {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO standard_template (name, valid_id, comments, text,
-                content_type, create_time, create_by, change_time, change_by, template_type)
-            VALUES (?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?, ?)',
+        SQL  => <<'END',
+INSERT INTO standard_template (name, valid_id, comments, text,
+    content_type, create_time, create_by, change_time, change_by, template_type)
+VALUES (?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?, ?)
+END
         Bind => [
             \$Param{Name},        \$Param{ValidID}, \$Param{Comment}, \$Param{Template},
             \$Param{ContentType}, \$Param{UserID},  \$Param{UserID},  \$Param{TemplateType},
@@ -168,11 +169,12 @@ sub StandardTemplateGet {
 
     # sql
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT name, valid_id, comments, text, content_type, create_time, create_by,
-                change_time, change_by ,template_type
-            FROM standard_template
-            WHERE id = ?',
+        SQL  => <<'END',
+SELECT name, valid_id, comments, text, content_type, create_time, create_by,
+    change_time, change_by ,template_type
+FROM standard_template
+WHERE id = ?
+END
         Bind => [ \$Param{ID} ],
     );
 
@@ -283,8 +285,7 @@ sub StandardTemplateUpdate {
             Name => $Param{Name},
             ID   => $Param{ID}
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "A standard template with name '$Param{Name}' already exists!"
@@ -294,11 +295,12 @@ sub StandardTemplateUpdate {
 
     # sql
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            UPDATE standard_template
-            SET name = ?, text = ?, content_type = ?, comments = ?, valid_id = ?,
-                change_time = current_timestamp, change_by = ? ,template_type = ?
-            WHERE id = ?',
+        SQL  => <<'END',
+UPDATE standard_template
+SET name = ?, text = ?, content_type = ?, comments = ?, valid_id = ?,
+    change_time = current_timestamp, change_by = ?, template_type = ?
+WHERE id = ?
+END
         Bind => [
             \$Param{Name},    \$Param{Template}, \$Param{ContentType},  \$Param{Comment},
             \$Param{ValidID}, \$Param{UserID},   \$Param{TemplateType}, \$Param{ID},
@@ -342,8 +344,10 @@ sub StandardTemplateLookup {
     }
 
     # check if we ask the same request?
-    if ( $Param{StandardTemplateID} && $Self->{"StandardTemplateLookup$Param{StandardTemplateID}"} )
-    {
+    if (
+        $Param{StandardTemplateID}
+        && $Self->{"StandardTemplateLookup$Param{StandardTemplateID}"}
+    ) {
         return $Self->{"StandardTemplateLookup$Param{StandardTemplateID}"};
     }
     if ( $Param{StandardTemplate} && $Self->{"StandardTemplateLookup$Param{StandardTemplate}"} ) {
@@ -437,9 +441,7 @@ sub StandardTemplateList {
         $Valid = 0;
     }
 
-    my $SQL = '
-        SELECT id, name
-        FROM standard_template';
+    my $SQL = 'SELECT id, name FROM standard_template';
 
     if ($Valid) {
         $SQL .= ' WHERE valid_id IN (' . join ', ',

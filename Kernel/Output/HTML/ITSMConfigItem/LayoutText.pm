@@ -145,8 +145,7 @@ sub FormDataGet {
         $FormData{Value}
         && $Param{Item}->{Input}->{RegEx}
         && $FormData{Value} !~ m{ $Param{Item}->{Input}->{RegEx} }xms
-        )
-    {
+    ) {
 
         $FormData{Invalid}                                         = 1;
         $Param{Item}->{Form}->{ $Param{Key} }->{Invalid}           = 1;

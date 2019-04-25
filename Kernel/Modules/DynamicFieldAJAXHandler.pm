@@ -38,8 +38,7 @@ sub Run {
 
     for (
         qw{ObjectID Value DynamicField}
-        )
-    {
+    ) {
         $Param{$_} = $Self->{ParamObject}->GetParam( Param => $_ ) || '';
     }
 

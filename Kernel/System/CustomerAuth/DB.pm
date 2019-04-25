@@ -113,10 +113,7 @@ sub Auth {
 
     # sql query
     $Self->{DBObject}->Prepare(
-        SQL => "
-            SELECT $Self->{Pw}, $Self->{Key} FROM $Self->{Table} WHERE
-            $Self->{Key} = ?
-            ",
+        SQL => "SELECT $Self->{Pw}, $Self->{Key} FROM $Self->{Table} WHERE $Self->{Key} = ?",
         Bind => [ \$Param{User} ],
     );
 
@@ -153,8 +150,10 @@ sub Auth {
         if ( $GetPw =~ m{\A \$.+? \$.+? \$.* \z}xms ) {
 
             # strip Salt
-            $Salt =~ s/^(\$.+?\$)(.+?)\$.*$/$2/;
-            my $Magic = $1;
+            my $Magic = '';
+            if ( $Salt =~ s/^(\$.+?\$)(.+?)\$.*$/$2/ ) {
+                $Magic = $1;
+            }
 
             # encode output, needed by unix_md5_crypt() only non utf8 signs
             $EncodeObject->EncodeOutput( \$Pw );
@@ -185,18 +184,16 @@ sub Auth {
         elsif ( $GetPw =~ m{^BCRYPT:} ) {
 
             # require module, log errors if module was not found
-            if ( !$Kernel::OM->Get('Kernel::System::Main')->Require('Crypt::Eksblowfish::Bcrypt') )
-            {
+            if ( !$Kernel::OM->Get('Kernel::System::Main')->Require('Crypt::Eksblowfish::Bcrypt') ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
-                    Message =>
-                        "User: '$User' tried to authenticate with bcrypt but 'Crypt::Eksblowfish::Bcrypt' is not installed!",
+                    Message  => "User: '$User' tried to authenticate with bcrypt but 'Crypt::Eksblowfish::Bcrypt' is not installed!",
                 );
                 return;
             }
 
             # get salt and cost from stored PW string
-            my ( $Cost, $Salt, $Base64Hash ) = $GetPw =~ m{^BCRYPT:(\d+):(.{16}):(.*)$}xms;
+            my ( $Cost, $BCryptSalt, $Base64Hash ) = $GetPw =~ m{^BCRYPT:(\d+):(.{16}):(.*)$}xms;
 
             # remove UTF8 flag, required by Crypt::Eksblowfish::Bcrypt
             $EncodeObject->EncodeOutput( \$Pw );
@@ -206,12 +203,12 @@ sub Auth {
                 {
                     key_nul => 1,
                     cost    => $Cost,
-                    salt    => $Salt,
+                    salt    => $BCryptSalt,
                 },
                 $Pw
             );
 
-            $CryptedPw = "BCRYPT:$Cost:$Salt:" . Crypt::Eksblowfish::Bcrypt::en_base64($Octets);
+            $CryptedPw = "BCRYPT:$Cost:$BCryptSalt:" . Crypt::Eksblowfish::Bcrypt::en_base64($Octets);
         }
 
         # sha1 pw

@@ -102,8 +102,7 @@ sub Run {
             ValidID                => 1,
             UserID                 => 1,
         )
-        )
-    {
+    ) {
         $Self->PrintError("Can't add customer company.");
         return $Self->ExitCodeError();
     }

@@ -65,8 +65,7 @@ sub Run {
         || defined $RelevantLinkTypes
         || defined $MaxSearchDepth
         || defined $UsedStrength
-        )
-    {
+    ) {
         $DoGraphNow = 1;
     }
 

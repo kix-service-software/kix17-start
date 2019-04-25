@@ -65,9 +65,7 @@ sub StateAdd {
     }
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            INSERT INTO faq_state (name, type_id)
-            VALUES ( ?, ? )',
+        SQL  => 'INSERT INTO faq_state (name, type_id) VALUES ( ?, ? )',
         Bind => [ \$Param{Name}, \$Param{TypeID} ],
     );
 
@@ -113,10 +111,7 @@ sub StateGet {
 
     # SQL
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name, type_id
-            FROM faq_state
-            WHERE id = ?',
+        SQL   => 'SELECT id, name, type_id FROM faq_state WHERE id = ?',
         Bind  => [ \$Param{StateID} ],
         Limit => 1,
     );
@@ -169,9 +164,7 @@ sub StateList {
 
     # SQL
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name
-            FROM faq_state'
+        SQL => 'SELECT id, name FROM faq_state'
     );
 
     my %List;
@@ -216,10 +209,7 @@ sub StateUpdate {
 
     # SQL
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            UPDATE faq_state
-            SET name = ?, type_id = ?,
-            WHERE id = ?',
+        SQL => 'UPDATE faq_state SET name = ?, type_id = ? WHERE id = ?',
         Bind => [ \$Param{Name}, \$Param{TypeID}, \$Param{StateID} ],
     );
 
@@ -264,10 +254,7 @@ sub StateTypeGet {
         return;
     }
 
-    my $SQL = '
-        SELECT id, name
-        FROM faq_state_type
-        WHERE';
+    my $SQL = 'SELECT id, name FROM faq_state_type WHERE';
     my @Bind;
     my $CacheKey = 'StateTypeGet::';
     if ( defined $Param{StateID} ) {
@@ -359,9 +346,7 @@ sub StateTypeList {
     }
 
     # build SQL
-    my $SQL = '
-        SELECT id, name
-        FROM faq_state_type';
+    my $SQL = 'SELECT id, name FROM faq_state_type';
 
     # types are given
     if ( $Param{Types} ) {

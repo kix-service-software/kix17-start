@@ -232,8 +232,7 @@ sub SearchFormDataGet {
         $Used
         && $StartDay && $StartMonth && $StartYear
         && $StopDay  && $StopMonth  && $StopYear
-        )
-    {
+    ) {
         my $StartDate = sprintf '%02d-%02d-%02d', $StartYear, $StartMonth, $StartDay;
         my $StopDate  = sprintf '%02d-%02d-%02d', $StopYear,  $StopMonth,  $StopDay;
 

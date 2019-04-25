@@ -101,7 +101,6 @@ sub new {
         $Self->{PreferencesObject} = $GeneratorModule->new( %{$Self} );
     }
 
-    # KIX4OTRS-capeIT
     # load service extension modules
     my $CustomModule = $Kernel::OM->Get('Kernel::Config')->Get('Service::CustomModule');
     if ($CustomModule) {
@@ -119,8 +118,6 @@ sub new {
             next MODULEKEY if !$Kernel::OM->Get('Kernel::System::Main')->RequireBaseClass($Module);
         }
     }
-
-    # EO KIX4OTRS-capeIT
 
     return $Self;
 }
@@ -202,8 +199,7 @@ sub ServiceList {
 
     my %ServiceInvalidList;
     SERVICEID:
-    for my $ServiceID ( sort { $ServiceListTmp{$a} cmp $ServiceListTmp{$b} } keys %ServiceListTmp )
-    {
+    for my $ServiceID ( sort { $ServiceListTmp{$a} cmp $ServiceListTmp{$b} } keys %ServiceListTmp ) {
 
         my $Valid = scalar grep { $_ eq $ServiceValidList{$ServiceID} } @ValidIDs;
 
@@ -1155,8 +1151,7 @@ sub CustomerUserServiceMemberList {
         && $Param{DefaultServices}
         && !$Param{ServiceID}
         && !$Param{CustomerUserLogin}
-        )
-    {
+    ) {
         $Param{CustomerUserLogin} = '<DEFAULT>';
     }
 
@@ -1234,22 +1229,18 @@ sub CustomerUserServiceMemberList {
         && $Param{CustomerUserLogin} ne '<DEFAULT>'
         && $Param{DefaultServices}
         && !keys(%Data)
-        )
-    {
+    ) {
         %Data = $Self->CustomerUserServiceMemberList(
             CustomerUserLogin => '<DEFAULT>',
             Result            => 'HASH',
             DefaultServices   => 0,
         );
     }
-
-    # KIX4OTRS-capeIT
     # offers subsumption of individual and default services for given customers
     elsif (
         $Kernel::OM->Get('Kernel::Config')->Get('Service::DefaultServices::ForceShow')
         && $Param{DefaultServices}
-        )
-    {
+    ) {
         my %TmpData = $Self->CustomerUserServiceMemberList(
             CustomerUserLogin => '<DEFAULT>',
             Result            => 'HASH',
@@ -1260,8 +1251,6 @@ sub CustomerUserServiceMemberList {
             $Data{$HashKey} = $TmpData{$HashKey};
         }
     }
-
-    # EO KIX4OTRS-capeIT
 
     # return result
     if ( $Param{Result} eq 'HASH' ) {
@@ -1359,9 +1348,9 @@ set service preferences
 =cut
 
 sub ServicePreferencesSet {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    $Self->{PreferencesObject}->ServicePreferencesSet(@_);
+    $Self->{PreferencesObject}->ServicePreferencesSet(%Param);
 
     $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
         Type => $Self->{CacheType},
@@ -1381,9 +1370,9 @@ get service preferences
 =cut
 
 sub ServicePreferencesGet {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return $Self->{PreferencesObject}->ServicePreferencesGet(@_);
+    return $Self->{PreferencesObject}->ServicePreferencesGet(%Param);
 }
 
 =item ServiceParentsGet()
@@ -1506,10 +1495,11 @@ sub GetAllCustomServices {
 
     # search all custom services
     return if !$Self->{DBObject}->Prepare(
-        SQL => '
-            SELECT service_id
-            FROM personal_services
-            WHERE user_id = ?',
+        SQL  => <<'END',
+SELECT service_id
+FROM personal_services
+WHERE user_id = ?
+END
         Bind => [ \$Param{UserID} ],
     );
 

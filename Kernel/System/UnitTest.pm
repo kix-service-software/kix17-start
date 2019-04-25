@@ -18,7 +18,6 @@ use SOAP::Lite;
 use FileHandle;
 
 use Kernel::System::ObjectManager;
-## nofilter(TidyAll::Plugin::OTRS::Perl::ObjectManagerCreation)
 
 # UnitTest helper must be loaded to override the builtin time functions!
 use Kernel::System::UnitTest::Helper;
@@ -32,6 +31,8 @@ our @ObjectDependencies = (
     'Kernel::System::Main',
     'Kernel::System::Time',
 );
+
+## no critic qw(InputOutput::RequireEncodingWithUTF8Layer)
 
 =head1 NAME
 
@@ -72,18 +73,17 @@ sub new {
     $Self->{ANSI} = $Param{ANSI};
 
     if ( $Self->{Output} eq 'HTML' ) {
-        print "
-<html>
-<head>
-    <title>"
-            . $Kernel::OM->Get('Kernel::Config')->Get('Product') . " "
+        print "\n"
+            . "<html>\n"
+            . "<head>\n"
+            . "    <title>"
+            . $Kernel::OM->Get('Kernel::Config')->Get('Product')
+            . " "
             . $Kernel::OM->Get('Kernel::Config')->Get('Version')
-            . " - Test Summary</title>
-</head>
-<a name='top'></a>
-<body>
-
-\n";
+            . " - Test Summary</title>\n"
+            . "</head>\n"
+            . "<body>\n"
+            . "    <a name='top'></a>\n";
     }
 
     $Self->{XML}     = undef;
@@ -191,21 +191,17 @@ sub Run {
                 if ( !$Param{Verbose} ) {
                     undef *STDOUT;
                     undef *STDERR;
-                    open STDOUT, '>:utf8', \$Self->{OutputBuffer};    ## no critic
-                    open STDERR, '>:utf8', \$Self->{OutputBuffer};    ## no critic
+                    open STDOUT, '>:utf8', \$Self->{OutputBuffer} or die "Error: ?!";
+                    open STDERR, '>:utf8', \$Self->{OutputBuffer} or die "Error: ?!";
                 }
 
                 # HERE the actual tests are run!!!
-                if ( !eval ${$UnitTestFile} ) {                       ## no critic
+                if ( !eval( { ${$UnitTestFile} } ) ) {
                     if ($@) {
                         $Self->True( 0, "ERROR: Error in $File: $@" );
-
-                        #print STDERR "ERROR: Error in $File: $@\n";
                     }
                     else {
                         $Self->True( 0, "ERROR: $File did not return a true value." );
-
-                        #print STDERR "ERROR: $File did not return a true value.\n";
                     }
                 }
             }

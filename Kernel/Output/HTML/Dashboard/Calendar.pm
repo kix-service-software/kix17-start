@@ -112,10 +112,8 @@ sub Run {
             Result            => 'ARRAY',
             Permission        => $Self->{Config}->{Permission} || 'ro',
             UserID            => $Self->{UserID},
-            # KIX4OTRS-capeIT
             CustomerUserLogin => $Param{CustomerUserLogin},
             CustomerID        => $Param{CustomerID},
-            # EO KIX4OTRS-capeIT
             Limit             => 25,
         );
 
@@ -144,8 +142,7 @@ sub Run {
                 if (
                     $Ticket{OwnerID} ne $Self->{UserID}
                     && $Ticket{ResponsibleID} ne $Self->{UserID}
-                    )
-                {
+                ) {
                     next TICKETID;
                 }
 

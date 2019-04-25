@@ -47,8 +47,7 @@ sub Run {
     if (
         $Self->{Subaction} eq 'Switch'
         && $ConfigObject->Get('SwitchToUser')
-        )
-    {
+    ) {
 
         # challenge token check for write action
         $LayoutObject->ChallengeTokenCheck();
@@ -155,7 +154,6 @@ sub Run {
         return $Output;
     }
 
-    # KIX4OTRS-capeIT
     # ------------------------------------------------------------ #
     # clone
     # ------------------------------------------------------------ #
@@ -186,8 +184,6 @@ sub Run {
         return $Output;
     }
 
-    # EO KIX4OTRS-capeIT
-
     # ------------------------------------------------------------ #
     # change action
     # ------------------------------------------------------------ #
@@ -200,8 +196,7 @@ sub Run {
         my ( %GetParam, %Errors );
         for my $Parameter (
             qw(UserID UserTitle UserLogin UserFirstname UserLastname UserEmail UserPw UserMobile ValidID Search)
-            )
-        {
+        ) {
             $GetParam{$Parameter} = $ParamObject->GetParam( Param => $Parameter ) || '';
         }
         $GetParam{Preferences} = $ParamObject->GetParam( Param => 'Preferences' ) || '';
@@ -216,8 +211,7 @@ sub Run {
         if (
             $GetParam{UserEmail}
             && !$CheckItemObject->CheckEmail( Address => $GetParam{UserEmail} )
-            )
-        {
+        ) {
             $Errors{UserEmailInvalid} = 'ServerError';
             $Errors{ErrorType}        = $CheckItemObject->CheckErrorType();
         }
@@ -233,8 +227,7 @@ sub Run {
         }
 
         # if no errors occurred
-        if ( !%Errors )
-        {
+        if ( !%Errors ) {
 
             # update user
             my $Update = $UserObject->UserUpdate(
@@ -273,20 +266,19 @@ sub Run {
                     );
                     my @Params = $Object->Param( %{ $Preferences{$Group} }, UserData => \%UserData );
                     if (@Params) {
-                        my %GetParam;
+                        my %GetPrefParam;
                         for my $ParamItem (@Params) {
                             my @Array = $ParamObject->GetArray( Param => $ParamItem->{Name} );
                             if (@Array) {
-                                $GetParam{ $ParamItem->{Name} } = \@Array;
+                                $GetPrefParam{ $ParamItem->{Name} } = \@Array;
                             }
                         }
                         if (
                             !$Object->Run(
-                                GetParam => \%GetParam,
+                                GetParam => \%GetPrefParam,
                                 UserData => \%UserData
                             )
-                            )
-                        {
+                        ) {
                             $Note .= $LayoutObject->Notify(
                                 Info     => $Object->Error(),
                                 Priority => 'Error'
@@ -369,8 +361,7 @@ sub Run {
         my ( %GetParam, %Errors );
         for my $Parameter (
             qw(UserTitle UserLogin UserFirstname UserLastname UserEmail UserPw UserMobile ValidID Search)
-            )
-        {
+        ) {
             $GetParam{$Parameter} = $ParamObject->GetParam( Param => $Parameter ) || '';
         }
         $GetParam{Preferences} = $ParamObject->GetParam( Param => 'Preferences' ) || '';
@@ -385,8 +376,7 @@ sub Run {
         if (
             $GetParam{UserEmail}
             && !$CheckItemObject->CheckEmail( Address => $GetParam{UserEmail} )
-            )
-        {
+        ) {
             $Errors{UserEmailInvalid} = 'ServerError';
             $Errors{ErrorType}        = $CheckItemObject->CheckErrorType();
         }
@@ -399,8 +389,7 @@ sub Run {
         }
 
         # if no errors occurred
-        if ( !%Errors )
-        {
+        if ( !%Errors ) {
 
             # add user
             my $UserID = $UserObject->UserAdd(
@@ -437,21 +426,20 @@ sub Run {
                         my @Params = $Object->Param( UserData => \%UserData );
 
                         if (@Params) {
-                            my %GetParam = ();
+                            my %GetPrefParam = ();
                             PARAMITEM:
                             for my $ParamItem (@Params) {
                                 next PARAMITEM if !$ParamItem->{Name};
                                 my @Array = $ParamObject->GetArray( Param => $ParamItem->{Name} );
 
-                                $GetParam{ $ParamItem->{Name} } = \@Array;
+                                $GetPrefParam{ $ParamItem->{Name} } = \@Array;
                             }
                             if (
                                 !$Object->Run(
-                                    GetParam => \%GetParam,
+                                    GetParam => \%GetPrefParam,
                                     UserData => \%UserData,
                                 )
-                                )
-                            {
+                            ) {
                                 $Note .= $LayoutObject->Notify( Info => $Object->Error() );
                             }
                         }
@@ -465,8 +453,7 @@ sub Run {
                 if (
                     !$ConfigObject->Get('Frontend::Module')->{AdminUserGroup}
                     && $ConfigObject->Get('Frontend::Module')->{AdminRoleUser}
-                    )
-                {
+                ) {
                     return $LayoutObject->Redirect(
                         OP => "Action=AdminRoleUser;Subaction=User;ID=$UserID",
                     );
@@ -534,15 +521,12 @@ sub _Edit {
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # KIX4OTRS-capeIT
     if ( $Param{Action} eq 'Clone' ) {
         $Param{UserLogin}    = '';
         $Param{UserPassword} = '';
         $Param{Action}       = 'Add';
         $Param{UserID}       = '';
     }
-
-    # EO KIX4OTRS-capeIT
 
     $LayoutObject->Block(
         Name => 'Overview',
@@ -551,14 +535,12 @@ sub _Edit {
     $LayoutObject->Block( Name => 'ActionList' );
     $LayoutObject->Block( Name => 'ActionOverview' );
 
-    # KIX4OTRS-capeIT
     if ( $Self->{Subaction} ne 'Add' ) {
         $LayoutObject->Block(
                 Name => 'ActionClone',
                 Data => \%Param,
             );
     }
-    # EO KIX4OTRS-capeIT
 
     # get valid list
     my %ValidList        = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
@@ -679,8 +661,7 @@ sub _Edit {
                         if (
                             ref( $ParamItem->{Data} ) eq 'HASH'
                             || ref( $Preference{Data} ) eq 'HASH'
-                            )
-                        {
+                        ) {
                             my %BuildSelectionParams = (
                                 %Preference,
                                 %{$ParamItem},
@@ -716,15 +697,12 @@ sub _Overview {
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # KIX4OTRS-capeIT
     if ( $Param{Action} && $Param{Action} eq 'Clone' ) {
         $Param{UserLogin}    = '';
         $Param{UserPassword} = '';
         $Param{Action}       = 'Add';
         $Param{ID}           = '';
     }
-
-    # EO KIX4OTRS-capeIT
 
     # when there is no data to show, a message is displayed on the table with this colspan
     my $ColSpan = 7;

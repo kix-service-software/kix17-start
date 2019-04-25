@@ -57,7 +57,7 @@ sub Run {
         my %CustomerCompanySearchList = $Self->{CustomerCompanyObject}->CustomerCompanyGet(
             CustomerID => $CurrKey,
         );
-        my $Search = $CustomerCompanyList{$CurrKey};
+        my $NewSearch = $CustomerCompanyList{$CurrKey};
 
         my $CustomerCompanyStr = '';
         if ( $CustCompanyMapRef && ref($CustCompanyMapRef) eq 'HASH' ) {
@@ -79,7 +79,7 @@ sub Run {
 
         push @Data, {
             CustomerCompanyKey   => $CurrKey,
-            CustomerCompanyValue => $Search,
+            CustomerCompanyValue => $NewSearch,
         };
     }
 

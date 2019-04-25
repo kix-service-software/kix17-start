@@ -112,7 +112,6 @@ sub Run {
         }
     }
 
-#rbo - T2016121190001552 - added KIX placeholders
     # replace KIX_CONFIG tags
     for my $Key ( keys %{ $Self->{Config} } ) {
         $Self->{Config}->{$Key} =~ s{<(KIX|OTRS)_CONFIG_(.+?)>}{$Self->{Config}->Get($2)}egx;
@@ -337,8 +336,7 @@ sub _MailParse {
             if (
                 $Self->{Config}->{ $Item . 'RegExp' }
                 && $Line =~ /$Self->{Config}->{ $Item . 'RegExp' }/
-                )
-            {
+            ) {
                 $Self->{$Item} = $1;
             }
         }
@@ -528,7 +526,6 @@ sub _TicketUpdate {
         Subject      => $Param->{GetParam}->{Subject},
     );
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
     # set sender type and article type
     $Param->{GetParam}->{'X-KIX-FollowUp-SenderType'}  = $Self->{Config}->{OTRSCreateSenderType};
     $Param->{GetParam}->{'X-KIX-FollowUp-ArticleType'} = $Self->{Config}->{OTRSCreateArticleType};
@@ -539,7 +536,6 @@ sub _TicketUpdate {
     # ArticleDFNumber is a number
     if ( $ArticleDFNumber =~ /^\d+$/ ) {
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
         $Param->{GetParam}->{ 'X-KIX-FollowUp-ArticleKey' . $ArticleDFNumber } = 'State';
         $Param->{GetParam}->{ 'X-KIX-FollowUp-ArticleValue' . $ArticleDFNumber }
             = $Self->{State};
@@ -557,10 +553,8 @@ sub _TicketUpdate {
                 $Self->{Config}->{CloseNotIfLocked}
                 && $TicketObject->TicketLockGet( TicketID => $TicketID )
             )
-            )
-        {
+        ) {
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
             $Param->{GetParam}->{'X-KIX-FollowUp-State'} = $Self->{Config}->{CloseActionState};
 
             # get time object
@@ -570,7 +564,6 @@ sub _TicketUpdate {
                 SystemTime => $TimeObject->SystemTime()
                     + $Self->{Config}->{ClosePendingTime},
             );
-#rbo - T2016121190001552 - renamed X-OTRS headers
             $Param->{GetParam}->{'X-KIX-State-PendingTime'} = $TimeStamp;
         }
 
@@ -638,7 +631,6 @@ sub _TicketCreate {
                     . " does not exists or missnamed.",
             );
         }
-#rbo - T2016121190001552 - renamed X-OTRS headers
         $Param->{GetParam}->{ 'X-KIX-DynamicField-' . $TicketDFNumber }
             = $Self->{$ConfiguredDynamicField};
     }
@@ -648,8 +640,6 @@ sub _TicketCreate {
 
     # ArticleDFNumber is a number
     if ( $ArticleDFNumber =~ /^\d+$/ ) {
-
-#rbo - T2016121190001552 - renamed X-OTRS headers
         $Param->{GetParam}->{ 'X-KIX-ArticleKey' . $ArticleDFNumber }   = 'State';
         $Param->{GetParam}->{ 'X-KIX-ArticleValue' . $ArticleDFNumber } = $Self->{State};
     }
@@ -658,7 +648,6 @@ sub _TicketCreate {
             = $Self->{State};
     }
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
     # set sender type and article type
     $Param->{GetParam}->{'X-KIX-SenderType'} = $Self->{Config}->{OTRSCreateSenderType}
         || $Param->{GetParam}->{'X-KIX-SenderType'};
@@ -697,7 +686,6 @@ sub _TicketCreate {
                 );
             }
             else {
-#rbo - T2016121190001552 - renamed X-OTRS headers
                 $Param->{GetParam}->{ 'X-KIX-DynamicField-' . $AcknowledgeNameField }
                     = $Self->{Config}->{AcknowledgeName} || 'Nagios';
             }
@@ -721,7 +709,6 @@ sub _TicketDrop {
     my ( $Self, $Param ) = @_;
 
     # No existing ticket and no open condition -> drop silently
-#rbo - T2016121190001552 - renamed X-OTRS headers
     $Param->{GetParam}->{'X-KIX-Ignore'} = 'yes';
     $Self->_LogMessage(
         MessageText => 'Mail Dropped, no matching ticket found, no open on this state ',

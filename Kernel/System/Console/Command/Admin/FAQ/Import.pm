@@ -50,9 +50,9 @@ sub Configure {
     );
 
     $Self->AdditionalHelp(
-        "<yellow>Format of the CSV file:\n
-            title;category;language;statetype;field1;field2;field3;field4;field5;field6;keywords
-        </yellow>\n"
+          "<yellow>Format of the CSV file:\n"
+        . "    title;category;language;statetype;field1;field2;field3;field4;field5;field6;keywords"
+        . "</yellow>\n"
     );
 
     return;

@@ -79,8 +79,7 @@ sub KIXSidebarTicketLinkCISearch {
                 && ( ref($VersionRef) eq 'HASH' )
                 && $VersionRef->{Name}
                 && $VersionRef->{Number}
-                )
-            {
+            ) {
                 $Result{$ID} = $VersionRef;
                 $Result{$ID}->{'Link'} = ( $TicketLinkKeyList{$ID} ? 1 : 0 );
 

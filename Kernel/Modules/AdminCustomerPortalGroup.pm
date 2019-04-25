@@ -45,7 +45,7 @@ sub Run {
     # ------------------------------------------------------------
     if ( $Self->{Subaction} eq 'Delete' ) {
         my @SelectedIDs = $Self->{ParamObject}->GetArray( Param => 'PortalGroupID' );
-        
+
         if (@SelectedIDs) {
             my $Result = $Self->{CustomerPortalGroupObject}->PortalGroupDelete(
                 PortalGroupIDs => \@SelectedIDs,
@@ -58,7 +58,7 @@ sub Run {
 
         my $Output = $Self->{LayoutObject}->Header();
         $Output .= $Self->{LayoutObject}->NavigationBar();
-        
+
         $Output .= $Self->{LayoutObject}->Output(
             TemplateFile => 'AdminCustomerPortalGroup',
             Data         => \%Param,
@@ -81,7 +81,7 @@ sub Run {
 
         my $Output = $Self->{LayoutObject}->Header();
         $Output .= $Self->{LayoutObject}->NavigationBar();
-        
+
         $Output .= $Self->{LayoutObject}->Output(
             TemplateFile => 'AdminCustomerPortalGroup',
             Data         => \%Param,
@@ -171,27 +171,25 @@ sub Run {
             Data         => \%Param,
         );
         $Output .= $Self->{LayoutObject}->Footer();
-
+        return $Output;
     }
 
     # ------------------------------------------------------------
     # overview
     # ------------------------------------------------------------
-    else {
-        $Self->_Overview(
-            Search => $GetParam{Search},
-        );
-        my $Output = $Self->{LayoutObject}->Header();
-        $Output .= $Self->{LayoutObject}->NavigationBar();
+    $Self->_Overview(
+        Search => $GetParam{Search},
+    );
+    my $Output = $Self->{LayoutObject}->Header();
+    $Output .= $Self->{LayoutObject}->NavigationBar();
 
-        $Output .= $Self->{LayoutObject}->Output(
-            TemplateFile => 'AdminCustomerPortalGroup',
-            Data         => \%Param,
-        );
+    $Output .= $Self->{LayoutObject}->Output(
+        TemplateFile => 'AdminCustomerPortalGroup',
+        Data         => \%Param,
+    );
 
-        $Output .= $Self->{LayoutObject}->Footer();
-        return $Output;
-    }
+    $Output .= $Self->{LayoutObject}->Footer();
+    return $Output;
 }
 
 sub _Overview {
@@ -202,7 +200,7 @@ sub _Overview {
         Data => \%Param,
     );
 
-    $Self->{LayoutObject}->Block( 
+    $Self->{LayoutObject}->Block(
         Name => 'ActionOverview',
         Data => \%Param,
     );
@@ -291,7 +289,7 @@ sub _AddEdit {
         }
     );
 
-    $Self->{LayoutObject}->Block( 
+    $Self->{LayoutObject}->Block(
         Name => 'ActionAddEdit',
         Data => \%Param,
     );
@@ -301,7 +299,7 @@ sub _AddEdit {
             Name => 'HeaderEdit',
             Data => \%Param,
         );
-        
+
         if ($PortalGroup{Icon}) {
             $Self->{LayoutObject}->Block(
                 Name => 'DisplayIcon',

@@ -84,8 +84,7 @@ sub ValueValidate {
     if (
         IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{RegExList} )
         && IsStringWithData( $Param{Value} )
-        )
-    {
+    ) {
         # check regular expressions
         my @RegExList = @{ $Param{DynamicFieldConfig}->{Config}->{RegExList} };
 
@@ -268,8 +267,7 @@ sub EditFieldValueGet {
     elsif (
         defined $Param{ParamObject}
         && ref $Param{ParamObject} eq 'Kernel::System::Web::Request'
-        )
-    {
+    ) {
         $Value = $Param{ParamObject}->GetParam( Param => $FieldName );
     }
 
@@ -305,8 +303,7 @@ sub EditFieldValueValidate {
     elsif (
         IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{RegExList} )
         && ( $Param{Mandatory} || ( !$Param{Mandatory} && $Value ne '' ) )
-        )
-    {
+    ) {
 
         # check regular expressions
         my @RegExList = @{ $Param{DynamicFieldConfig}->{Config}->{RegExList} };
@@ -458,7 +455,7 @@ sub SearchFieldValueGet {
         return;
     }
 
-    if ( defined $Param{ReturnProfileStructure} && $Param{ReturnProfileStructure} eq 1 ) {
+    if ( defined $Param{ReturnProfileStructure} && $Param{ReturnProfileStructure} eq "1" ) {
         return {
             'Search_DynamicField_' . $Param{DynamicFieldConfig}->{Name} => $Value,
         };

@@ -14,6 +14,7 @@ use strict;
 use warnings;
 
 use Net::SMTP;
+use Time::HiRes qw (sleep);
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -71,7 +72,7 @@ sub Check {
         last TRY if $SMTP;
 
         # sleep 0,3 seconds;
-        select( undef, undef, undef, 0.3 );    ## no critic
+        sleep( 0.3 );
     }
 
     # return if no connect was possible

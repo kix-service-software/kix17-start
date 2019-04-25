@@ -20,6 +20,8 @@ our @ObjectDependencies = (
 
 use base qw(Kernel::System::SupportDataCollector::PluginBase);
 
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 sub _GetAsynchronousData {
     my ( $Self, %Param ) = @_;
 

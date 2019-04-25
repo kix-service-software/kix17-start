@@ -19,6 +19,8 @@ our @ObjectDependencies = (
     'Kernel::System::Main',
 );
 
+## no critic qw(InputOutput::RequireBriefOpen Subroutines::ProtectPrivateSubs)
+
 =head1 NAME
 
 Kernel::System::ImportExport::FormatBackend::CSV - import/export backend for CSV
@@ -275,17 +277,16 @@ sub ImportDataGet {
 
     # create an in memory temp file and open it
     my $FileContent = '';
-    open my $FH, '+<', \$FileContent;    ## no critic
+    my $LineCount = 1;
+    my @ImportData;
+
+    open my $FH, '+<', \$FileContent or die "Can't open file handle: $!";
 
     # write source content
     print $FH ${ $Param{SourceContent} };
 
     # rewind file handle
     seek $FH, 0, 0;
-
-    # parse the content
-    my $LineCount = 1;
-    my @ImportData;
 
     # it is important to use this syntax "while ( !eof($FH) )"
     # as the CPAN module Text::CSV_XS might show errors if the
@@ -297,6 +298,9 @@ sub ImportDataGet {
         $LineCount++;
     }
 
+    # close the in memory file handle
+    close $FH;
+
     # error handling
     my ( $ParseErrorCode, $ParseErrorString ) = $ParseObject->error_diag();
     if ($ParseErrorCode) {
@@ -306,9 +310,6 @@ sub ImportDataGet {
                 . "ErrorCode: $ParseErrorCode '$ParseErrorString' ",
         );
     }
-
-    # close the in memory file handle
-    close $FH;
 
     return \@ImportData if $Charset ne 'UTF-8';
 

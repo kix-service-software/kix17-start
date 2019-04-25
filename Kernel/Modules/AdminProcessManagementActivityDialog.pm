@@ -207,8 +207,7 @@ sub Run {
 
             my %PermissionLookup = map { $_ => 1 } @{$PermissionList};
 
-            if ( !$PermissionLookup{ $GetParam->{Permission} } )
-            {
+            if ( !$PermissionLookup{ $GetParam->{Permission} } ) {
 
                 # add server error error class
                 $Error{PermissionServerError} = 'ServerError';
@@ -216,7 +215,10 @@ sub Run {
         }
 
         # check if required lock exists
-        if ( $GetParam->{RequiredLock} && $GetParam->{RequiredLock} ne 1 ) {
+        if (
+            $GetParam->{RequiredLock}
+            && $GetParam->{RequiredLock} ne '1'
+        ) {
 
             # add server error error class
             $Error{RequiredLockServerError} = 'ServerError';
@@ -233,28 +235,28 @@ sub Run {
         }
 
         # generate entity ID
-        my $EntityID = $EntityObject->EntityIDGenerate(
+        my $NewEntityID = $EntityObject->EntityIDGenerate(
             EntityType => 'ActivityDialog',
             UserID     => $Self->{UserID},
         );
 
         # show error if can't generate a new EntityID
-        if ( !$EntityID ) {
+        if ( !$NewEntityID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable("There was an error generating a new EntityID for this ActivityDialog"),
             );
         }
 
         # otherwise save configuration and return process screen
-        my $ActivityDialogID = $ActivityDialogObject->ActivityDialogAdd(
+        my $NewActivityDialogID = $ActivityDialogObject->ActivityDialogAdd(
             Name     => $ActivityDialogData->{Name},
-            EntityID => $EntityID,
+            EntityID => $NewEntityID,
             Config   => $ActivityDialogData->{Config},
             UserID   => $Self->{UserID},
         );
 
         # show error if can't create
-        if ( !$ActivityDialogID ) {
+        if ( !$NewActivityDialogID ) {
             return $LayoutObject->ErrorScreen(
                 Message => Translatable("There was an error creating the ActivityDialog"),
             );
@@ -263,7 +265,7 @@ sub Run {
         # set entity sync state
         my $Success = $EntityObject->EntitySyncStateSet(
             EntityType => 'ActivityDialog',
-            EntityID   => $EntityID,
+            EntityID   => $NewEntityID,
             SyncState  => 'not_sync',
             UserID     => $Self->{UserID},
         );
@@ -273,7 +275,7 @@ sub Run {
             return $LayoutObject->ErrorScreen(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'There was an error setting the entity sync status for ActivityDialog entity: %s',
-                    $EntityID
+                    $NewEntityID
                 ),
             );
         }
@@ -285,7 +287,7 @@ sub Run {
 
         # get latest config data to send it back to main window
         my $ActivityDialogConfig = $Self->_GetActivityDialogConfig(
-            EntityID => $EntityID,
+            EntityID => $NewEntityID,
         );
 
         my $ConfigJSON = $LayoutObject->JSONEncode( Data => $ActivityDialogConfig );
@@ -294,7 +296,7 @@ sub Run {
         if ( $Redirect && $Redirect eq '1' ) {
 
             $Self->_PushSessionScreen(
-                ID        => $ActivityDialogID,
+                ID        => $NewActivityDialogID,
                 EntityID  => $ActivityDialogData->{EntityID},
                 Subaction => 'ActivityDialogEdit'               # always use edit screen
             );
@@ -473,8 +475,7 @@ sub Run {
 
             my %PermissionLookup = map { $_ => 1 } @{$PermissionList};
 
-            if ( !$PermissionLookup{ $GetParam->{Permission} } )
-            {
+            if ( !$PermissionLookup{ $GetParam->{Permission} } ) {
 
                 # add server error error class
                 $Error{PermissionServerError} = 'ServerError';
@@ -482,7 +483,10 @@ sub Run {
         }
 
         # check if required lock exists
-        if ( $GetParam->{RequiredLock} && $GetParam->{RequiredLock} ne 1 ) {
+        if (
+            $GetParam->{RequiredLock}
+            && $GetParam->{RequiredLock} ne '1'
+        ) {
 
             # add server error error class
             $Error{RequiredLockServerError} = 'ServerError';
@@ -752,8 +756,7 @@ sub _ShowEdit {
         for my $Field (
             sort { $AvailableFieldsTranslated{$a} cmp $AvailableFieldsTranslated{$b} }
             keys %AvailableFieldsTranslated
-            )
-        {
+        ) {
             $LayoutObject->Block(
                 Name => 'AvailableFieldRow',
                 Data => {
@@ -816,8 +819,7 @@ sub _ShowEdit {
         for my $Field (
             sort { $AvailableFieldsTranslated{$a} cmp $AvailableFieldsTranslated{$b} }
             keys %AvailableFieldsTranslated
-            )
-        {
+        ) {
             $LayoutObject->Block(
                 Name => 'AvailableFieldRow',
                 Data => {
@@ -982,8 +984,7 @@ sub _GetParams {
     for my $ParamName (
         qw( Name EntityID Interface DescriptionShort DescriptionLong Permission RequiredLock SubmitAdviceText
         SubmitButtonText )
-        )
-    {
+    ) {
         $GetParam->{$ParamName} = $ParamObject->GetParam( Param => $ParamName ) || '';
     }
 
@@ -1079,7 +1080,10 @@ sub _PopupResponse {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    if ( $Param{Redirect} && $Param{Redirect} eq 1 ) {
+    if (
+        defined $Param{Redirect}
+        && $Param{Redirect} eq '1'
+    ) {
         $LayoutObject->Block(
             Name => 'Redirect',
             Data => {
@@ -1088,7 +1092,11 @@ sub _PopupResponse {
             },
         );
     }
-    elsif ( $Param{ClosePopup} && $Param{ClosePopup} eq 1 ) {
+
+    elsif (
+        defined $Param{ClosePopup}
+        && $Param{ClosePopup} eq '1'
+    ) {
         $LayoutObject->Block(
             Name => 'ClosePopup',
             Data => {

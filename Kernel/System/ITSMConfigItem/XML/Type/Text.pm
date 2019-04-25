@@ -13,6 +13,8 @@ package Kernel::System::ITSMConfigItem::XML::Type::Text;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::System::Log',
 );

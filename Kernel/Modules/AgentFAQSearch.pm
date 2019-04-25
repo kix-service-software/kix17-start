@@ -66,7 +66,7 @@ sub Run {
 
     # build output for open search description by FAQ number
     if ( $Self->{Subaction} eq 'OpenSearchDescriptionFAQNumber' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'AgentFAQSearchOpenSearchDescriptionFAQNumber',
             Data         => \%Param,
         );
@@ -80,7 +80,7 @@ sub Run {
 
     # build output for open search description by full-text
     if ( $Self->{Subaction} eq 'OpenSearchDescriptionFulltext' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'AgentFAQSearchOpenSearchDescriptionFulltext',
             Data         => \%Param,
         );
@@ -139,8 +139,7 @@ sub Run {
             ItemChangeTimeStop ItemChangeTimeStopDay ItemChangeTimeStopMonth
             ItemChangeTimeStopYear
             )
-            )
-        {
+        ) {
             $GetParam{$ParamName} = $ParamObject->GetParam( Param => $ParamName );
 
             # remove whitespace on the start and end
@@ -153,8 +152,7 @@ sub Run {
         # get array search params
         for my $SearchParam (
             qw(CategoryIDs LanguageIDs ValidIDs StateIDs CreatedUserIDs LastChangedUserIDs)
-            )
-        {
+        ) {
             my @Array = $ParamObject->GetArray( Param => $SearchParam );
             if (@Array) {
                 $GetParam{$SearchParam} = \@Array;
@@ -312,8 +310,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStartDay' }
                     && $GetParam{ $TimeType . 'TimeStartMonth' }
                     && $GetParam{ $TimeType . 'TimeStartYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeNewerDate' } = $GetParam{ $TimeType . 'TimeStartYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartDay' }
@@ -323,8 +320,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStopDay' }
                     && $GetParam{ $TimeType . 'TimeStopMonth' }
                     && $GetParam{ $TimeType . 'TimeStopYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeOlderDate' } = $GetParam{ $TimeType . 'TimeStopYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopDay' }
@@ -336,8 +332,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimePoint' }
                     && $GetParam{ $TimeType . 'TimePointStart' }
                     && $GetParam{ $TimeType . 'TimePointFormat' }
-                    )
-                {
+                ) {
                     my $Time = 0;
                     if ( $GetParam{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
                         $Time = $GetParam{ $TimeType . 'TimePoint' };
@@ -953,7 +948,7 @@ sub Run {
         else {
 
             # start HTML page
-            my $Output = $LayoutObject->Header();
+            $Output = $LayoutObject->Header();
             $Output .= $LayoutObject->NavigationBar();
             $LayoutObject->Print(
                 Output => \$Output,
@@ -1042,7 +1037,6 @@ sub Run {
     }
 
     elsif ( $Self->{Subaction} eq 'AJAXProfileDelete' ) {
-        my $Profile = $ParamObject->GetParam( Param => 'Profile' );
 
         # remove old profile stuff
         $SearchProfileObject->SearchProfileDelete(
@@ -1050,7 +1044,7 @@ sub Run {
             Name      => $Profile,
             UserLogin => $Self->{UserLogin},
         );
-        my $Output = $LayoutObject->JSONEncode(
+        $Output = $LayoutObject->JSONEncode(
             Data => 1,
         );
         return $LayoutObject->Attachment(
@@ -1064,7 +1058,7 @@ sub Run {
     elsif ( $Self->{Subaction} eq 'AJAX' ) {
 
         # create output
-        my $Output = $Self->_MaskForm(
+        $Output = $Self->_MaskForm(
             %GetParam,
         );
 

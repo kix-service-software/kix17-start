@@ -15,6 +15,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 =head1 NAME
 
 Kernel::System::ITSMConfigItem::XML - sub module of Kernel::System::ITSMConfigItem
@@ -618,10 +620,8 @@ sub _XMLHashSearch {
                 # As a workaround we cast the CLOB to a VARCHAR2 with TO_CHAR().
                 my $XMLContentValueColumn = 'xml_content_value';
                 if (
-                    $Kernel::OM->Get('Kernel::System::DB')->GetDatabaseFunction('Type') eq
-                    'oracle'
-                    )
-                {
+                    $Kernel::OM->Get('Kernel::System::DB')->GetDatabaseFunction('Type') eq 'oracle'
+                ) {
                     $XMLContentValueColumn = 'TO_CHAR(xml_content_value)';
                 }
 

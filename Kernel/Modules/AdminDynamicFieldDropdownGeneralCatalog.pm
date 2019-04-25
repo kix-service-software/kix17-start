@@ -66,14 +66,11 @@ sub Run {
         );
     }
 
-    # KIX4OTRS-capeIT
     if ( $Self->{Subaction} eq 'AJAXUpdate' ) {
         return $Self->_AJAXUpdate(
             %Param,
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     return $LayoutObject->ErrorScreen(
         Message => "Undefined subaction.",
@@ -113,7 +110,6 @@ sub _Add {
     );
 }
 
-# KIX4OTRS-capeIT
 sub _AJAXUpdate {
     my ( $Self, %Param ) = @_;
 
@@ -149,8 +145,6 @@ sub _AJAXUpdate {
         NoCache     => 1,
     );
 }
-
-# EO KIX4OTRS-capeIT
 
 sub _AddAction {
     my ( $Self, %Param ) = @_;
@@ -214,8 +208,7 @@ sub _AddAction {
         ObjectType ObjectTypeName FieldType FieldTypeName DefaultValue PossibleNone
         TranslatableValues ValidID Link GeneralCatalogClass
         )
-        )
-    {
+    ) {
         $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 
@@ -242,25 +235,13 @@ sub _AddAction {
         );
     }
 
-    # KIX4OTRS-capeIT
-    # removed possible values error check
-    # EO KIX4OTRS-capeIT
-
     # set specific config
     my $FieldConfig = {
-
-        # KIX4OTRS-capeIT
-        # PossibleValues      => $GetParam{PossibleValues},
-        # EO KIX4OTRS-capeIT
-        DefaultValue       => $GetParam{DefaultValue},
-        PossibleNone       => $GetParam{PossibleNone},
-        TranslatableValues => $GetParam{TranslatableValues},
-        Link               => $GetParam{Link},
-
-        # KIX4OTRS-capeIT
+        DefaultValue        => $GetParam{DefaultValue},
+        PossibleNone        => $GetParam{PossibleNone},
+        TranslatableValues  => $GetParam{TranslatableValues},
+        Link                => $GetParam{Link},
         GeneralCatalogClass => $GetParam{GeneralCatalogClass},
-
-        # EO KIX4OTRS-capeIT
     };
 
     # get ValueTTL config
@@ -342,15 +323,8 @@ sub _Change {
     # extract configuration
     if ( IsHashRefWithData( $DynamicFieldData->{Config} ) ) {
 
-        # set PossibleValues
-        # KIX4OTRS-capeIT
-        # $Config{PossibleValues} = {};
-        # if ( IsHashRefWithData( $DynamicFieldData->{Config}->{PossibleValues} ) ) {
-        #     $Config{PossibleValues} = $DynamicFieldData->{Config}->{PossibleValues};
-        # }
+        # set GeneralCatalogClass
         $Config{GeneralCatalogClass} = $DynamicFieldData->{Config}->{GeneralCatalogClass};
-
-        # EO KIX4OTRS-capeIT
 
         # set DefaultValue
         $Config{DefaultValue} = $DynamicFieldData->{Config}->{DefaultValue};
@@ -360,11 +334,6 @@ sub _Change {
 
         # set TranslatableValues
         $Config{TranslatableValues} = $DynamicFieldData->{Config}->{TranslatableValues};
-
-        # set Link
-        # KIX4OTRS-capeIT
-        # $Config{Link} = $DynamicFieldData->{Config}->{Link};
-        # EO KIX4OTRS-capeIT
     }
 
     return $Self->_ShowScreen(
@@ -441,8 +410,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldsList{ $GetParam{Name} } &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -453,8 +421,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldData->{InternalField} &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -479,8 +446,7 @@ sub _ChangeAction {
         ObjectType ObjectTypeName FieldType FieldTypeName DefaultValue PossibleNone
         TranslatableValues ValidID Link GeneralCatalogClass
         )
-        )
-    {
+    ) {
         $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 
@@ -505,26 +471,13 @@ sub _ChangeAction {
         );
     }
 
-    # KIX4OTRS-capeIT
-    # removed possible values error check
-    # EO KIX4OTRS-capeIT
-
     # set specific config
     my $FieldConfig = {
-
-        # KIX4OTRS-capeIT
-        # PossibleValues     => $PossibleValues,
-        # EO KIX4OTRS-capeIT
-
-        DefaultValue       => $GetParam{DefaultValue},
-        PossibleNone       => $GetParam{PossibleNone},
-        TranslatableValues => $GetParam{TranslatableValues},
-        Link               => $GetParam{Link},
-
-        # KIX4OTRS-capeIT
+        DefaultValue        => $GetParam{DefaultValue},
+        PossibleNone        => $GetParam{PossibleNone},
+        TranslatableValues  => $GetParam{TranslatableValues},
+        Link                => $GetParam{Link},
         GeneralCatalogClass => $GetParam{GeneralCatalogClass},
-
-        # EO KIX4OTRS-capeIT
     };
 
     # get ValueTTL config
@@ -566,14 +519,9 @@ sub _ShowScreen {
         $Param{DisplayFieldName} = $Param{Name};
     }
 
-    # KIX4OTRS-capeIT
-    # $Param{DeletedString} = $Self->{DeletedString};
-
+    # get needed objects
     my $GeneralCatalogObject = $Kernel::OM->Get('Kernel::System::GeneralCatalog');
-
-    # EO KIX4OTRS-capeIT
-
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # header
     my $Output = $LayoutObject->Header();
@@ -637,11 +585,6 @@ sub _ShowScreen {
         Class        => 'Modernize W50pc',
     );
 
-    # KIX4OTRS-capeIT
-    # some content: add new possible values
-    # EO KIX4OTRS-capeIT
-
-    # KIX4OTRS-capeIT
     # create the general catalog class list
     my $ClassList = $GeneralCatalogObject->ClassList();
 
@@ -655,12 +598,8 @@ sub _ShowScreen {
         Class        => 'Modernize W50pc',
     );
 
-    # EO KIX4OTRS-capeIT
-
     # check and build the default value list based on general catalog class values
     my %DefaultValuesList;
-
-    # KIX4OTRS-capeIT
     my $ItemList;
     if ( $Param{GeneralCatalogClass} ) {
         $ItemList = $GeneralCatalogObject->ItemList( Class => $Param{GeneralCatalogClass} );
@@ -669,8 +608,6 @@ sub _ShowScreen {
     else {
         %DefaultValuesList = ();
     }
-
-    # EO KIX4OTRS-capeIT
 
     my $DefaultValue = ( defined $Param{DefaultValue} ? $Param{DefaultValue} : '' );
 
@@ -716,10 +653,6 @@ sub _ShowScreen {
         Class      => 'Modernize W50pc',
     );
 
-    # KIX4OTRS-capeIT
-    # my $Link = $Param{Link} || '';
-    # EO KIX4OTRS-capeIT
-
     my $ReadonlyInternalField = '';
 
     # Internal fields can not be deleted and name should not change.
@@ -748,41 +681,23 @@ sub _ShowScreen {
 
     # generate output
     $Output .= $LayoutObject->Output(
-
-        # KIX4OTRS-capeIT
-        # TemplateFile => 'AdminDynamicFieldDropdown',
         TemplateFile => 'AdminDynamicFieldDropdownGeneralCatalog',
-
-        # EO KIX4OTRS-capeIT
-        Data => {
+        Data         => {
             %Param,
-            ValidityStrg          => $ValidityStrg,
-            DynamicFieldOrderStrg => $DynamicFieldOrderStrg,
-
-            # KIX4OTRS-capeIT
-            # ValueCounter           => $ValueCounter,
+            ValidityStrg            => $ValidityStrg,
+            DynamicFieldOrderStrg   => $DynamicFieldOrderStrg,
             GeneralCatalogClassStrg => $GeneralCatalogClassStrg,
-
-            # EO KIX4OTRS-capeIT
-            DefaultValueStrg       => $DefaultValueStrg,
-            PossibleNoneStrg       => $PossibleNoneStrg,
-            TranslatableValuesStrg => $TranslatableValuesStrg,
-            ReadonlyInternalField  => $ReadonlyInternalField,
-
-            # KIX4OTRS-capeIT
-            # Link                   => $Link,
-            # EO KIX4OTRS-capeIT
-            }
+            DefaultValueStrg        => $DefaultValueStrg,
+            PossibleNoneStrg        => $PossibleNoneStrg,
+            TranslatableValuesStrg  => $TranslatableValuesStrg,
+            ReadonlyInternalField   => $ReadonlyInternalField,
+        }
     );
 
     $Output .= $LayoutObject->Footer();
 
     return $Output;
 }
-
-# KIX4OTRS-capeIT
-# sub GetPossibleValues() removed
-# EO KIX4OTRS-capeIT
 
 1;
 

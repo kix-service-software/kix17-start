@@ -219,7 +219,7 @@ sub Run {
                             next if ( ref($CatalogEntry) ne 'HASH' );
                             next if ( %ServiceHash && !$ServiceHash{$CatalogEntry->{ServiceID}} );
                             if ( $CatalogEntry->{SLAID} ) {
-                                $SLAsForCustomerCompany{ $CatalogEntry->{SLAID} } = 1,
+                                $SLAsForCustomerCompany{ $CatalogEntry->{SLAID} } = 1;
                             }
                         }
 
@@ -258,7 +258,7 @@ sub Run {
                 next if ( ref($CatalogEntry) ne 'HASH' );
                 next if ( %ServiceHash && !$ServiceHash{$CatalogEntry->{ServiceID}} );
                 if ( $CatalogEntry->{SLAID} ) {
-                    $SLAsForDefaultServices{ $CatalogEntry->{SLAID} } = $AllValidSLAs{ $CatalogEntry->{SLAID} },
+                    $SLAsForDefaultServices{ $CatalogEntry->{SLAID} } = $AllValidSLAs{ $CatalogEntry->{SLAID} };
                 }
             }
             %SLAs = ( %SLAs, %SLAsForDefaultServices );

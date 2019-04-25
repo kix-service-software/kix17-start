@@ -26,16 +26,10 @@ our @ObjectDependencies = (
 
 =head1 NAME
 
-# BPMX-capeIT
-#Kernel::System::ProcessManagement::TransitionAction::TicketArticleCreate - A module to create an article
 Kernel::System::ProcessManagement::TransitionAction::TicketArticleSend - A module to create an article to send
-# EO BPMX-capeIT
 
 =head1 SYNOPSIS
-# BPMX-capeIT
-#All TicketArticleCreate functions.
 All TicketArticleSend functions.
-# EO BPMX-capeIT
 =head1 PUBLIC INTERFACE
 
 =over 4
@@ -48,10 +42,7 @@ create an object. Do not use it directly, instead use:
 
     use Kernel::System::ObjectManager;
     local $Kernel::OM = Kernel::System::ObjectManager->new();
-# BPMX-capeIT
-#    my $TicketArticleCreateObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::TransitionAction::TicketArticleCreate');
     my $TicketArticleCreateObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::TransitionAction::TicketArticleSend');
-# EO BPMX-capeIT
 =cut
 
 sub new {
@@ -67,10 +58,7 @@ sub new {
 =item Run()
 
     Run Data
-# BPMX-capeIT
-#    my $TicketArticleCreateResult = $TicketArticleCreateActionObject->Run(
     my $TicketArticleSendResult = $TicketArticleSendActionObject->Run(
-# EO BPMX-capeIT
         UserID                   => 123,
         Ticket                   => \%Ticket,   # required
         ProcessEntityID          => 'P123',
@@ -79,11 +67,7 @@ sub new {
         TransitionActionEntityID => 'TA123',
         Config                   => {
             # required:
-# BPMX-capeIT
-#            ArticleType      => 'note-internal',                        # note-external|phone|fax|sms|...
-#                                                                        #   excluding any email type
             ArticleType      => 'email-internal',                       # email-external | email-internal
-# EO BPMX-capeIT
             SenderType       => 'agent',                                # agent|system|customer
             ContentType      => 'text/plain; charset=ISO-8859-15',      # or optional Charset & MimeType
             Subject          => 'some short description',               # required
@@ -118,10 +102,7 @@ sub new {
     Config is the Config Hash stored in a Process::TransitionAction's  Config key
     Returns:
 
-# BPMX-capeIT
-#    $TicketArticleCreateResult = 1; # 0
     $TicketArticleSendResult = 1; # 0
-# EO BPMX-capeIT
     );
 
 =cut
@@ -152,8 +133,7 @@ sub Run {
         qw(ForceNotificationToUserID ExcludeNotificationToUserID
         ExcludeMuteNotificationToUserID
         )
-        )
-    {
+    ) {
         if ( IsStringWithData( $Param{Config}->{$Attribute} ) ) {
             $Param{Config}->{$Attribute} = $Self->_ConvertScalar2ArrayRef(
                 Data => $Param{Config}->{$Attribute},

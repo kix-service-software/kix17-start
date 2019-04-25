@@ -15,6 +15,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(InputOutput::ProhibitBacktickOperators)
+
 sub new {
     my ( $Type, %Param ) = @_;
 

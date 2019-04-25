@@ -19,6 +19,8 @@ use Storable;
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(BuiltinFunctions::ProhibitStringyEval)
+
 =head1 NAME
 
 Kernel::System::ITSMConfigItem::Version - sub module of Kernel::System::ITSMConfigItem
@@ -202,9 +204,9 @@ sub VersionListAll {
     my ( $Self, %Param ) = @_;
 
     # build sql
-    my $SQL = 'SELECT id, configitem_id, name, definition_id,
-        depl_state_id, inci_state_id, create_time, create_by
-        FROM configitem_version WHERE 1=1';
+    my $SQL = 'SELECT id, configitem_id, name, definition_id,'
+            . ' depl_state_id, inci_state_id, create_time, create_by'
+            . ' FROM configitem_version WHERE 1=1';
 
     # if we got ConfigItemIDs make sure we just have numeric ids,
     # extract those and use it for the query
@@ -800,7 +802,6 @@ sub VersionAdd {
     my $ReturnVersionID = scalar @{$VersionList} ? $VersionList->[-1] : 0;
     return $ReturnVersionID if !( $Events && keys %{$Events} );
 
-    # KIX4OTRS-capeIT
     my $Result = 0;
 
     # trigger Pre-VersionCreate event
@@ -977,8 +978,6 @@ sub VersionAdd {
             }
         }
     }
-
-    # EO KIX4OTRS-capeIT
 
     # insert new version
     my $Success = $Kernel::OM->Get('Kernel::System::DB')->Do(
@@ -1205,7 +1204,6 @@ sub VersionDelete {
 
     return 1 if !scalar @{$VersionList};
 
-    # KIX4OTRS-capeIT
     my $Result = $Self->PreEventHandler(
         Event => 'VersionDelete',
         Data  => {
@@ -1226,8 +1224,6 @@ sub VersionDelete {
             $Param{$ResultKey} = $Result->{$ResultKey};
         }
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get config item id for version (needed for event handling)
     my $ConfigItemID = $Param{ConfigItemID};
@@ -1356,8 +1352,7 @@ sub VersionSearch {
         OrderBy
         OrderByDirection
         )
-        )
-    {
+    ) {
         if ( !defined $Param{$Argument} ) {
             $Param{$Argument} ||= [];
 
@@ -1401,42 +1396,21 @@ sub VersionSearch {
     # check if OrderBy contains only unique valid values
     my %OrderBySeen;
 
-    # KIX4OTRS-capeIT
     my @TempArray = ();
 
-    # EO KIX4OTRS-capeIT
-
     for my $OrderBy ( @{ $Param{OrderBy} } ) {
-
-        # KIX4OTRS-capeIT
-        # if ( !$OrderBy || !$OrderByTable{$OrderBy} || $OrderBySeen{$OrderBy} ) {
-        #
-        # # found an error
-        #     $Kernel::OM->Get('Kernel::System::Log')->Log(
-        #         Priority => 'error',
-        #         Message  => "OrderBy contains invalid value '$OrderBy' "
-        #             . 'or the value is used more than once!',
-        #     );
-        #     return;
-        # }
-
         if ( $OrderBy && $OrderByTable{$OrderBy} && !$OrderBySeen{$OrderBy} ) {
             push @TempArray, $OrderBy;
         }
-
-        # EO KIX4OTRS-capeIT
 
         # remember the value to check if it appears more than once
         $OrderBySeen{$OrderBy} = 1;
     }
 
-    # KIX4OTRS-capeIT
     if ( !scalar @TempArray ) {
         push @TempArray, 'Number';
     }
     $Param{OrderBy} = \@TempArray;
-
-    # EO KIX4OTRS-capeIT
 
     # check if OrderByDirection array contains only 'Up' or 'Down'
     DIRECTION:
@@ -1502,7 +1476,7 @@ sub VersionSearch {
         else {
             # quote
             $Name = $Kernel::OM->Get('Kernel::System::DB')->Quote($Name);
-            
+
             push @SQLWhere, "LOWER(vr.name) = LOWER('$Name')";
         }
     }
@@ -1563,10 +1537,6 @@ sub VersionSearch {
     }
 
     # build SQL
-    # KIX4OTRS-capeIT
-    # my $SQL = 'SELECT DISTINCT(vr.configitem_id) '
-    #     . 'FROM configitem ci, configitem_version vr '
-    #     . $WhereString;
     my $SQL = 'SELECT DISTINCT(vr.configitem_id) ';
     if (@SQLOrderBy) {
         my $SQLOrderBy = join ', ', @SQLOrderBy;
@@ -1576,8 +1546,6 @@ sub VersionSearch {
     }
     $SQL .= 'FROM configitem ci, configitem_version vr '
         . $WhereString;
-
-    # EO KIX4OTRS-capeIT
 
     # add the ORDER BY clause
     if (@SQLOrderBy) {
@@ -1816,8 +1784,8 @@ sub _FindChangedXMLValues {
     # do the check
     my %UpdateValues;
     for my $TagKey ( sort keys %UniqueTagKeys ) {
-        my $NewContent = eval '$NewXMLData->' . $TagKey . '->{Content}' || '';    ## no critic
-        my $OldContent = eval '$OldXMLData->' . $TagKey . '->{Content}' || '';    ## no critic
+        my $NewContent = eval( '$NewXMLData->' . $TagKey . '->{Content}' ) || '';
+        my $OldContent = eval( '$OldXMLData->' . $TagKey . '->{Content}' ) || '';
 
         if ( $NewContent ne $OldContent ) {
 
@@ -1873,8 +1841,6 @@ sub _GrabTagKeys {
     return @TagKeys;
 }
 
-# KIX4OTRS-capeIT
-
 =item _PreEventHandlerForChangedXMLValues()
 
     my $Events = $CIObject->_PreEventHandlerForChangedXMLValues(
@@ -1929,7 +1895,6 @@ sub _PreEventHandlerForChangedXMLValues {
     return 1;
 }
 
-# EO KIX4OTRS-capeIT
 1;
 
 =end Internal:

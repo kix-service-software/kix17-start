@@ -31,8 +31,6 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my $Result;
-
     for my $Needed (qw(Subaction SearchProfile)) {
         $Param{$Needed} = $ParamObject->GetParam( Param => $Needed ) || '';
         if ( !$Param{$Needed} ) {
@@ -43,18 +41,18 @@ sub Run {
     my $Config = $ConfigObject->Get('ToolbarSearchProfile');
     my %SearchProfileData;
 
-    $Param{SearchProfile} =~ /(.*?)Search(.*?)::(.*)/;
-    my @Module = split( /::/, $Config->{$1}->{Module} );
-    $SearchProfileData{Action}    = $Module[2];
-    $SearchProfileData{Subaction} = $Config->{$1}->{Subaction};
-    $SearchProfileData{Profile}   = $3;
+    my ( $Module, $ClassID, $Profile ) = $Param{SearchProfile} =~ /(.*?)Search(.*?)::(.*)/;
+    my @Modules = split( /::/, $Config->{$Module}->{Module} );
+    $SearchProfileData{Action}    = $Modules[2];
+    $SearchProfileData{Subaction} = $Config->{$Module}->{Subaction};
+    $SearchProfileData{Profile}   = $Profile;
 
-    if ($2) {
-        $SearchProfileData{ClassID} = $2;
+    if ($ClassID) {
+        $SearchProfileData{ClassID} = $ClassID;
     }
 
-    if ( $1 ne 'Ticket' ) {
-        my @TmpArray = split( /::/, $3 );
+    if ( $Module ne 'Ticket' ) {
+        my @TmpArray = split( /::/, $Profile );
         pop(@TmpArray);
         $SearchProfileData{Profile} = join( "::", @TmpArray );
     }

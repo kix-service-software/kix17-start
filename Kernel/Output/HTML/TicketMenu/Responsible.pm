@@ -80,8 +80,7 @@ sub Run {
         if ( $Config->{RequiredLock} ) {
             if (
                 $TicketObject->TicketLockGet( TicketID => $Param{Ticket}->{TicketID} )
-                )
-            {
+            ) {
                 my $AccessOk = $TicketObject->OwnerCheck(
                     TicketID => $Param{Ticket}->{TicketID},
                     OwnerID  => $Self->{UserID},

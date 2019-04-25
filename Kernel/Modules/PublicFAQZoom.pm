@@ -88,8 +88,7 @@ sub Run {
         !$FAQData{Approved}
         || !$ValidIDLookup{ $FAQData{ValidID} }
         || !$InterfaceStates->{ $FAQData{StateTypeID} }
-        )
-    {
+    ) {
         return $LayoutObject->CustomerNoPermission(
             WithHeader => 'yes',
         );
@@ -122,13 +121,11 @@ sub Run {
         );
 
         # rewrite handle and action
-        $FieldContent
-            =~ s{ index[.]pl [?] Action=AgentFAQZoom }{public.pl?Action=PublicFAQZoom}gxms;
+        $FieldContent =~ s{ index[.]pl [?] Action=AgentFAQZoom }{public.pl?Action=PublicFAQZoom}gxms;
 
         # take care of old style before FAQ 2.0.x
-        $FieldContent =~ s{
-            index[.]pl [?] Action=AgentFAQ [&](amp;)? Subaction=Download [&](amp;)?
-        }{public.pl?Action=PublicFAQZoom;Subaction=DownloadAttachment;}gxms;
+        my $FieldPattern = 'index[.]pl [?] Action=AgentFAQ [&](amp;)? Subaction=Download [&](amp;)?';
+        $FieldContent =~ s{$FieldPattern}{public.pl?Action=PublicFAQZoom;Subaction=DownloadAttachment;}gxms;
 
         my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
 
@@ -137,8 +134,7 @@ sub Run {
             $Kernel::OM->Get('Kernel::Config')->Get('FAQ::Item::HTML')
             && $LayoutObject->{BrowserRichText}
             && $FAQData{ContentType} ne 'text/html'
-            )
-        {
+        ) {
             $FieldContent = $HTMLUtilsObject->ToHTML(
                 String => $FieldContent,
             ) || '';
@@ -154,9 +150,8 @@ sub Run {
         my $SessionID = '';
         if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
             $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
-            $FieldContent =~ s{
-                (Action=PublicFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)
-            }{$1$SessionID}gmsx;
+            $FieldPattern = '(Action=PublicFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)';
+            $FieldContent =~ s{$FieldPattern}{$1$SessionID}gmsx;
         }
 
         # return complete HTML as an attachment
@@ -212,6 +207,7 @@ sub Run {
     );
 
     # prepare fields data
+    my $FieldPattern = 'index[.]pl [?] Action=AgentFAQ [&](amp;)? Subaction=Download [&](amp;)?';
     FIELD:
     for my $Field (qw(Field1 Field2 Field3 Field4 Field5 Field6)) {
         next FIELD if !$FAQData{$Field};
@@ -220,13 +216,10 @@ sub Run {
         if ( $Interface->{Name} eq 'public' ) {
 
             # rewrite handle and action
-            $FAQData{$Field}
-                =~ s{ index[.]pl [?] Action=AgentFAQZoom }{public.pl?Action=PublicFAQZoom}gxms;
+            $FAQData{$Field} =~ s{ index[.]pl [?] Action=AgentFAQZoom }{public.pl?Action=PublicFAQZoom}gxms;
 
             # take care of old style before FAQ 2.0.x
-            $FAQData{$Field} =~ s{
-                index[.]pl [?] Action=AgentFAQ [&](amp;)? Subaction=Download [&](amp;)?
-            }{public.pl?Action=PublicFAQZoom;Subaction=DownloadAttachment;}gxms;
+            $FAQData{$Field} =~ s{$FieldPattern}{public.pl?Action=PublicFAQZoom;Subaction=DownloadAttachment;}gxms;
         }
 
         # no quoting if HTML view is enabled

@@ -58,8 +58,7 @@ sub Run {
     my %GetParam;
     for my $ParamName (
         qw(Title CategoryID StateID LanguageID ValidID Keywords Approved Field1 Field2 Field3 Field4 Field5 Field6)
-        )
-    {
+    ) {
         $GetParam{$ParamName} = $ParamObject->GetParam( Param => $ParamName );
     }
 
@@ -77,8 +76,7 @@ sub Run {
         !$UserCategoriesLongNames
         || ref $UserCategoriesLongNames ne 'HASH'
         || !%{$UserCategoriesLongNames}
-        )
-    {
+    ) {
         return $LayoutObject->ErrorScreen(
             Message => 'No categories found where user has read/write permissions!',
             Comment => 'Please contact the admin.',
@@ -216,10 +214,12 @@ sub Run {
         }
 
         # check if an attachment must be deleted
-        my @AttachmentIDs = map {
-            my ($ID) = $_ =~ m{ \A AttachmentDelete (\d+) \z }xms;
-            $ID ? $ID : ();
-        } $ParamObject->GetParamNames();
+        my @AttachmentIDs = ();
+        for my $Name ( $ParamObject->GetParamNames() ) {
+            if ( $Name =~ m{ \A AttachmentDelete (\d+) \z }xms ) {
+                push (@AttachmentIDs, $1);
+            };
+        }
 
         COUNT:
         for my $Count ( reverse sort @AttachmentIDs ) {

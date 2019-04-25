@@ -24,7 +24,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerTicketTemplates###UserAttributeRestriction" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines restrictions for the viewability of templates for contacts. Key contains the template key followed by double colon and a contact attribute, while value contains a regexp which must match the given user attribute in order to have access to the template.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Customer::TicketTemplates</SubGroup>
@@ -635,7 +634,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUser::EventModulePost###120-UpdateTickets" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Event module that updates tickets after an update of the Contact.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::CustomerCompany</SubGroup>
@@ -648,7 +646,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DynamicFieldFromCustomerUser::Mapping" Required="0" Valid="0">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Define a mapping between variables of the contact data (keys) and dynamic fields of a ticket (values). The purpose is to store contact data in ticket dynamic fields. The dynamic fields must be present in the system and should be enabled for AgentTicketFreeText, so that they can be set/updated manually by the agent. They mustn't be enabled for AgentTicketPhone, AgentTicketEmail and AgentTicketCustomer. If they were, they would have precedence over the automatically set values. To use this mapping, you have to also activate the next setting below.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
@@ -1682,7 +1679,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::Overview###Small" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Allows having a small format ticket overview (CustomerInfo =&gt; 1 - shows also the contact information).</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::TicketOverview</SubGroup>
@@ -1708,7 +1704,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::Overview###Medium" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Allows having a medium format ticket overview (CustomerInfo =&gt; 1 - shows also the contact information).</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::TicketOverview</SubGroup>
@@ -2061,7 +2056,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerInfoCompose" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Shows the contact information (phone and email) in the compose screen.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent</SubGroup>
@@ -2073,7 +2067,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerInfoComposeMaxSize" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Max size (in characters) of the contact information table (phone and email) in the compose screen.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent</SubGroup>
@@ -2082,7 +2075,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerInfoZoom" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Shows the contact's info in the ticket zoom view.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent</SubGroup>
@@ -2094,7 +2086,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerInfoZoomMaxSize" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Maximum size (in characters) of the contact information table in the ticket zoom view.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent</SubGroup>
@@ -6194,9 +6185,7 @@
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::ToolBar::Generic</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Description" Translatable="1">Contact search</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Name" Translatable="1">Contact search</Item>
                 <Item Key="Block">ToolBarCICSearchCustomerUser</Item>
                 <Item Key="Size">10</Item>
@@ -6264,7 +6253,6 @@
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="Target">_blank</Item>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Item Key="Text" Translatable="1">Open tickets (contact)</Item>
                     <Item Key="Action">AgentTicketSearch</Item>
                     <Item Key="Subaction">Search</Item>
@@ -6307,7 +6295,6 @@
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="Target">_blank</Item>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Item Key="Text" Translatable="1">Closed tickets (contact)</Item>
                     <Item Key="Action">AgentTicketSearch</Item>
                     <Item Key="Subaction">Search</Item>
@@ -7910,7 +7897,6 @@
         <Setting>
             <Hash>
                 <Item Key="CustomerID" Translatable="1">Customer ID</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="CustomerUserID" Translatable="1">Contact</Item>
                 <Item Key="Priority" Translatable="1">Priority</Item>
                 <Item Key="Queue" Translatable="1">Queue</Item>
@@ -8504,7 +8490,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###ServiceMandatory" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Sets if service must be selected by the contact.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
@@ -8516,7 +8501,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::CustomerTicketMessage###SLAMandatory" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Sets if SLA must be selected by the contact.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Customer::Ticket::ViewNew</SubGroup>
@@ -11011,7 +10995,6 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PostMaster::PreFilterModule###000-SMIMEFetchFromCustomer" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Module to fetch contacts SMIME certificates of incoming messages.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::PostMaster</SubGroup>
@@ -12639,9 +12622,7 @@ Thanks for your help!
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::KIXSidebar::CustomerInfo</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Title">Contact Information</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Description">Show or hide the contact information</Item>
                 <Item Key="Prio">0100</Item>
                 <Item Key="Actions">AgentTicket(Compose|Customer|Email|EmailQuick|Forward|Note|Phone|PhoneQuick|PhoneOutbound|PhoneInbound|PhoneQuick|Close|Pending|Zoom)</Item>
@@ -12934,16 +12915,13 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0500-CIC-CustomerInfo" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Parameters for the dashboard backend of the contact login status widget of the agent interface . "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Dashboard::CustomerInfo</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Title" Translatable="1">Contact information</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Description" Translatable="1">Contact information</Item>
                 <Item Key="Attributes"></Item>
                 <Item Key="Permission">ro</Item>
@@ -16420,9 +16398,7 @@ Thanks for your help!
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::ToolBar::Generic</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Description" Translatable="1">Contact search</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Name" Translatable="1">Contact search</Item>
                 <Item Key="Block">ToolBarCICSearchCustomerUser</Item>
                 <Item Key="Size">15</Item>
@@ -16550,9 +16526,7 @@ Thanks for your help!
             <Hash>
                 <Item Key="Actions">AgentTicket(Phone|Email|Zoom)</Item>
                 <Item Key="Module">Kernel::Output::HTML::KIXSidebar::RemoteDB</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Title">Contact Person</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Description">Shows customers marked as contacts.</Item>
                 <Item Key="Prio">0550</Item>
                 <Item Key="InitialCollapsed"></Item>
@@ -16575,7 +16549,6 @@ Thanks for your help!
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="RestrictedOTRSAttributes">Contact</Item>
                 <Item Key="RestrictedDBAttributes">comments</Item>
                 <Item Key="RestrictedMandatory">0</Item>
@@ -16585,7 +16558,6 @@ Thanks for your help!
                 <Item Key="IdentifierAttribute"></Item>
                 <Item Key="ShowAttributes">login,last_name,city</Item>
                 <Item Key="ShowAttributesHead">Login,Last Name,City</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="DynamicFields">Contact</Item>
                 <Item Key="DynamicFieldAttributes">login</Item>
                 <Item Key="PopupAttributes">tn,title,create_time,change_time</Item>
@@ -16767,7 +16739,6 @@ Thanks for your help!
                 <Item Key="Actions">AgentTicket(Phone|Email|Zoom)</Item>
                 <Item Key="Module">Kernel::Output::HTML::KIXSidebar::RemoteDBView</Item>
                 <Item Key="Title">Customer Data</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Description">Shows data of contact.</Item>
                 <Item Key="Prio">0570</Item>
                 <Item Key="InitialCollapsed"></Item>
@@ -16808,7 +16779,6 @@ Thanks for your help!
                 <Item Key="Actions">CustomerTicketZoom</Item>
                 <Item Key="Module">Kernel::Output::HTML::KIXSidebar::RemoteDBView</Item>
                 <Item Key="Title">Customer Data</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Description">Shows data of contact.</Item>
                 <Item Key="Prio">0570</Item>
                 <Item Key="InitialCollapsed"></Item>

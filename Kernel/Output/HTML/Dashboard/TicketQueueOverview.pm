@@ -30,7 +30,6 @@ sub new {
     $Self->{PrefKey}  = 'UserDashboardPref' . $Self->{Name} . '-Shown';
     $Self->{CacheKey} = $Self->{Name} . '-' . $Self->{UserID};
 
-    # KIX4OTRS-capeIT
     my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $StateObject   = $Kernel::OM->Get('Kernel::System::State');
@@ -139,23 +138,18 @@ sub new {
         if (
             !@SelectedValArr
             && ( $CurrAttribute eq $LayoutObject->{ $Self->{PrefKey} . '-Row' } )
-            )
-        {
+        ) {
             my @DefRowValues = keys( %{ $Self->{RowValueList} } );
             $Self->{$CurrAttribute} = \@DefRowValues;
         }
         if (
             !@SelectedValArr
             && ( $CurrAttribute eq $LayoutObject->{ $Self->{PrefKey} . '-Column' } )
-            )
-        {
+        ) {
             my @DefColValues = keys( %{ $Self->{ColValueList} } );
             $Self->{$CurrAttribute} = \@DefColValues;
         }
-
     }
-
-    # EO KIX4OTRS-capeIT
 
     return $Self;
 }
@@ -163,7 +157,6 @@ sub new {
 sub Preferences {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
     my @Params = ();
 
     # get needed objects
@@ -298,15 +291,11 @@ sub Preferences {
         push( @Params, \%TypeSelection );
     }
 
-    # EO KIX4OTRS-capeIT
-
     return @Params;
 }
 
 sub Config {
     my ( $Self, %Param ) = @_;
-
-    # KIX4OTRS-capeIT
 
     # check if frontend module of link is used
     if ( $Self->{Config}->{Link} && $Self->{Config}->{Link} =~ /Action=(.+?)(&.+?|)$/ ) {
@@ -315,8 +304,6 @@ sub Config {
             $Self->{Config}->{Link} = '';
         }
     }
-
-    # EO KIX4OTRS-capeIT
 
     return (
         %{ $Self->{Config} },
@@ -350,18 +337,24 @@ sub Run {
     # get all search base attributes
     my %TicketSearch;
     my %DynamicFieldsParameters;
-    my @Params = split( ';', $Self->{Config}->{Attributes} );
+    my @Params     = split( ';', $Self->{Config}->{Attributes} );
+    my @Attributes = qw(
+        StateType StateTypeIDs States StateIDs
+        Queues QueueIDs
+        Types TypeIDs
+        Priorities PriorityIDs
+        Services ServiceIDs SLAs SLAIDs
+        Locks LockIDs
+        OwnerIDs ResponsibleIDs WatchUserIDs
+        ArchiveFlags
+    );
 
     for my $String (@Params) {
         next if !$String;
         my ( $Key, $Value ) = split( '=', $String );
 
         # push ARRAYREF attributes directly in an ARRAYREF
-        if (
-            $Key
-            =~ /^(StateType|StateTypeIDs|Queues|QueueIDs|Types|TypeIDs|States|StateIDs|Priorities|PriorityIDs|Services|ServiceIDs|SLAs|SLAIDs|Locks|LockIDs|OwnerIDs|ResponsibleIDs|WatchUserIDs|ArchiveFlags)$/
-            )
-        {
+        if ( grep( { $Key eq $_ } @Attributes ) ) {
             push @{ $TicketSearch{$Key} }, $Value;
         }
         elsif ( $Key =~ m{\A (DynamicField_.+?) _ (.+?) \z}sxm ) {
@@ -454,10 +447,8 @@ sub Run {
         my $RowTotal     = 0;
         for my $CurrCol (@CurrRowArr) {
 
-            # KIX4OTRS-capeIT
             next if !defined($CurrCol);
 
-            # EO KIX4OTRS-capeIT
             $ColCount++;
             if ( $ColCount < 2 ) {
                 $CurrColLabel = $CurrCol;

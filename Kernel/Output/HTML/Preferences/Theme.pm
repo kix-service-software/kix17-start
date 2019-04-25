@@ -51,8 +51,8 @@ sub Param {
 
     # prepare the list of active themes
     for my $PossibleTheme ( sort keys %PossibleThemes ) {
-        if ( $PossibleThemes{$PossibleTheme} == 1 )
-        {    # only add a theme if it is set to 1 in sysconfig
+        if ( $PossibleThemes{$PossibleTheme} == 1 ) {
+            # only add a theme if it is set to 1 in sysconfig
             my $ThemeDir = $Home . "/Kernel/Output/HTML/Templates/" . $PossibleTheme;
             if ( -d $ThemeDir ) {    # .. and if the theme dir exists
                 $ActiveThemes{$PossibleTheme} = $PossibleTheme;

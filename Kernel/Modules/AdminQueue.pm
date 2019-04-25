@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AdminQueue;
-## nofilter(TidyAll::Plugin::OTRS::Perl::DBObject)
 
 use strict;
 use warnings;
@@ -146,8 +145,7 @@ sub Run {
         # check needed data
         for my $Needed (
             qw(Name GroupID SystemAddressID SalutationID SignatureID ValidID FollowUpID)
-            )
-        {
+        ) {
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'Invalid' } = 'ServerError';
             }
@@ -175,7 +173,7 @@ sub Run {
             if ($QueueUpdate) {
 
                 # update preferences
-                my %QueueData = $QueueObject->QueueGet( ID => $GetParam{QueueID} );
+                my %NewQueueData = $QueueObject->QueueGet( ID => $GetParam{QueueID} );
 
                 my %Preferences;
                 if ( $ConfigObject->Get('QueuePreferences') ) {
@@ -197,26 +195,25 @@ sub Run {
                         Debug      => $Self->{Debug},
                     );
 
-                    my @Params = $Object->Param( QueueData => \%QueueData );
+                    my @PrefParams = $Object->Param( QueueData => \%NewQueueData );
 
-                    if (@Params) {
+                    if (@PrefParams) {
 
-                        my %GetParam;
-                        for my $ParamItem (@Params) {
+                        my %GetPrefParam;
+                        for my $ParamItem (@PrefParams) {
 
                             my @Array = $ParamObject->GetArray(
                                 Param => $ParamItem->{Name},
                             );
-                            $GetParam{ $ParamItem->{Name} } = \@Array;
+                            $GetPrefParam{ $ParamItem->{Name} } = \@Array;
                         }
 
                         if (
                             !$Object->Run(
-                                GetParam  => \%GetParam,
-                                QueueData => \%QueueData
+                                GetParam  => \%GetPrefParam,
+                                QueueData => \%NewQueueData
                             )
-                            )
-                        {
+                        ) {
                             $Note .= $LayoutObject->Notify( Info => $Object->Error() );
                         }
                     }
@@ -321,8 +318,7 @@ sub Run {
         # check needed data
         for my $Needed (
             qw(Name GroupID SystemAddressID SalutationID SignatureID ValidID FollowUpID)
-            )
-        {
+        ) {
             if ( !$GetParam{$Needed} ) {
                 $Errors{ $Needed . 'Invalid' } = 'ServerError';
             }
@@ -331,8 +327,7 @@ sub Run {
         # check if some fields must be set with default values
         for my $Optional (
             qw(UnlockTimeout FirstResponseTime FirstResponseNotify UpdateTime UpdateNotify SolutionTime SolutionNotify FollowUpLock Calendar)
-            )
-        {
+        ) {
 
             # add default values
             if ( !$GetParam{$Optional} ) {
@@ -360,7 +355,7 @@ sub Run {
             if ($ID) {
 
                 # update preferences
-                my %QueueData = $QueueObject->QueueGet( ID => $ID );
+                my %NewQueueData = $QueueObject->QueueGet( ID => $ID );
 
                 my %Preferences;
                 if ( $ConfigObject->Get('QueuePreferences') ) {
@@ -383,27 +378,26 @@ sub Run {
                         Debug      => $Self->{Debug},
                     );
 
-                    my @Params = $Object->Param( QueueData => \%QueueData );
+                    my @PrefParams = $Object->Param( QueueData => \%NewQueueData );
 
                     if (@Params) {
 
-                        my %GetParam;
-                        for my $ParamItem (@Params) {
+                        my %GetPrefParam;
+                        for my $ParamItem (@PrefParams) {
 
                             my @Array = $ParamObject->GetArray(
                                 Param => $ParamItem->{Name},
                             );
 
-                            $GetParam{ $ParamItem->{Name} } = \@Array;
+                            $GetPrefParam{ $ParamItem->{Name} } = \@Array;
                         }
 
                         if (
                             !$Object->Run(
-                                GetParam  => \%GetParam,
-                                QueueData => \%QueueData
+                                GetParam  => \%GetPrefParam,
+                                QueueData => \%NewQueueData
                             )
-                            )
-                        {
+                        ) {
                             $Note .= $LayoutObject->Notify( Info => $Object->Error() );
                         }
                     }
@@ -502,7 +496,7 @@ sub _Edit {
             }
             $ParentQueue .= $Queue[$i];
         }
-        $Param{Name} = $Queue[$#Queue];
+        $Param{Name} = $Queue[-1];
     }
 
     my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
@@ -551,8 +545,8 @@ sub _Edit {
         # leave only queues with $MaxQueueLevel levels, because max allowed level is $MaxQueueLevel + 1:
         # new queue + $MaxQueueLevel levels of parent queue = $MaxQueueLevel + 1 levels
         for my $Key ( sort keys %CleanHash ) {
-            my $QueueName      = $CleanHash{$Key};
-            my @QueueNameLevel = split( ::, $QueueName );
+            my $CleanQueueName = $CleanHash{$Key};
+            my @QueueNameLevel = split( ::, $CleanQueueName );
             my $QueueLevel     = $#QueueNameLevel + 1;
             if ( $QueueLevel > $MaxParentLevel ) {
                 delete $CleanHash{$Key};
@@ -757,8 +751,7 @@ sub _Edit {
                 if (
                     ref $ParamItem->{Data} eq 'HASH'
                     || ref $Preferences{$Item}->{Data} eq 'HASH'
-                    )
-                {
+                ) {
                     my %BuildSelectionParams = (
                         %{ $Preferences{$Item} },
                         %{$ParamItem},

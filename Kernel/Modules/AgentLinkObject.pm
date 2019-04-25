@@ -32,10 +32,6 @@ sub Run {
 
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # KIX4OTRS-capeIT
-    # removed - KIX4OTRS already including preferences settings
-    # KIX4OTRS-capeIT
-
     # ------------------------------------------------------------ #
     # close
     # ------------------------------------------------------------ #
@@ -52,12 +48,9 @@ sub Run {
     $Form{SourceKey}    = $ParamObject->GetParam( Param => 'SourceKey' );
     $Form{Mode}         = $ParamObject->GetParam( Param => 'Mode' ) || 'Normal';
 
-    # KIX4OTRS-capeIT
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     $Self->{Subaction} = $ParamObject->GetParam( Param => 'SubAction' )
         if ( !$Self->{Subaction} );
-
-    # EO KIX4OTRS-capeIT
 
     # check needed stuff
     if ( !$Form{SourceObject} || !$Form{SourceKey} ) {
@@ -75,8 +68,7 @@ sub Run {
         $Form{Mode} eq 'Temporary'
         && $Form{SourceObject} eq 'Ticket'
         && $Form{SourceKey} =~ m{ \A \d+ \. \d+ }xms
-        )
-    {
+    ) {
         $TemporarySourceTicketLink = 1;
     }
 
@@ -99,13 +91,9 @@ sub Run {
     }
 
     # get form params
-# KIXSidebarTools-capeIT
     $Form{TargetKey}        = $ParamObject->GetParam( Param => 'TargetKey' ) || '';
-# EO KIXSidebarTools-capeIT
     $Form{TargetIdentifier} = $ParamObject->GetParam( Param => 'TargetIdentifier' )
-# KIXSidebarTools-capeIT
         || $ParamObject->GetParam( Param => 'TargetObject' )
-# EO KIXSidebarTools-capeIT
         || $Form{SourceObject};
 
     # investigate the target object
@@ -149,11 +137,7 @@ sub Run {
     # ------------------------------------------------------------ #
     # link delete
     # ------------------------------------------------------------ #
-    # KIX4OTRS-capeIT
-    # if ( $Self->{Subaction} eq 'LinkDelete' ) {
     if ( $Self->{Subaction} && $Self->{Subaction} eq 'LinkDelete' ) {
-
-        # EO KIX4OTRS-capeIT
 
         # output header
         my $Output = $LayoutObject->Header( Type => 'Small' );
@@ -178,29 +162,15 @@ sub Run {
             # delete links from database
             IDENTIFIER:
             for my $Identifier (@LinkDeleteIdentifier) {
-
-                # KIX4OTRS-capeIT
-                # my @Target = $Identifier =~ m{^ ( [^:]+? ) :: (.+?) :: ( [^:]+? ) $}smx;
-                #
-                # next IDENTIFIER if !$Target[0];    # TargetObject
-                # next IDENTIFIER if !$Target[1];    # TargetKey
-                # next IDENTIFIER if !$Target[2];    # LinkType
-
-                my @Target = $Identifier =~
-                    m{^ ( [^:]+? ) :: (.+?) :: ( [^:]+? ) :: (.+?) :: ( [^:]+? ) $}smx;
+                my @Target = $Identifier =~ m{^ ( [^:]+? ) :: (.+?) :: ( [^:]+? ) :: (.+?) :: ( [^:]+? ) $}smx;
 
                 next IDENTIFIER if !$Target[2];    # TargetObject
                 next IDENTIFIER if !$Target[3];    # TargetKey
                 next IDENTIFIER if !$Target[4];    # LinkType
-                # EO KIX4OTRS-capeIT
 
                 my $DeletePermission = $LinkObject->ObjectPermission(
-                    # KIX4OTRS-capeIT
-                    # Object => $Target[0],
-                    # Key    => $Target[1],
                     Object => $Target[2],
                     Key    => $Target[3],
-                    # EO KIX4OTRS-capeIT
                     UserID => $Self->{UserID},
                 );
 
@@ -210,16 +180,9 @@ sub Run {
                 my $Success = $LinkObject->LinkDelete(
                     Object1 => $Form{SourceObject},
                     Key1    => $Form{SourceKey},
-
-                    # KIX4OTRS-capeIT
-                    # Object2 => $Target[0],
-                    # Key2    => $Target[1],
-                    # Type    => $Target[2],
                     Object2 => $Target[2],
                     Key2    => $Target[3],
                     Type    => $Target[4],
-
-                    # EO KIX4OTRS-capeIT
                     UserID => $Self->{UserID},
                 );
 
@@ -227,14 +190,8 @@ sub Run {
 
                 # get target object description
                 my %TargetObjectDescription = $LinkObject->ObjectDescriptionGet(
-
-                    # KIX4OTRS-capeIT
-                    # Object => $Target[0],
-                    # Key    => $Target[1],
                     Object => $Target[2],
                     Key    => $Target[3],
-
-                    # EO KIX4OTRS-capeIT
                     Mode   => $Form{Mode},
                     UserID => $Self->{UserID},
                 );
@@ -310,8 +267,6 @@ sub Run {
         return $Output;
     }
 
-    # KIX4OTRS-capeIT
-
     # ------------------------------------------------------------ #
     # delete one single link
     # ------------------------------------------------------------ #
@@ -329,54 +284,32 @@ sub Run {
         # Ticket comes as target
         if (
             $ParamObject->GetParam( Param => 'TargetKey' )
-            &&
-# KIXSidebarTools-capeIT
-#            $ParamObject->GetParam( Param => 'TargetObject' )
-            $Form{TargetObject}
-# EO KIXSidebarTools-capeIT
-            )
-        {
+            && $Form{TargetObject}
+        ) {
 
             my $LinkListWithData = $LinkObject->LinkListWithData(
-                # KIXSidebarTools-capeIT
-                #Object => 'Ticket',
-                #Key    => $ParamObject->GetParam( Param => 'TargetKey' ),
                 Object => $Form{TargetObject},
                 Key    => $Form{TargetKey},
-                # EO KIXSidebarTools-capeIT
                 State  => $Form{State},
-                UserID => 1,  # $Self->{UserID},
+                UserID => 1,
             );
             for my $LinkedObject ( keys %{$LinkListWithData} ) {
-# KIXSidebarTools-capeIT
-#                next if $LinkedObject ne "ITSMConfigItem";
                 next if $LinkedObject ne $Form{SourceObject};
-# EO KIXSidebarTools-capeIT
                 for my $LinkType ( keys %{ $LinkListWithData->{$LinkedObject} } ) {
                     for my $LinkDirection (
                         keys %{ $LinkListWithData->{$LinkedObject}->{$LinkType} }
-                        )
-                    {
+                    ) {
                         for my $LinkItem (
                             keys
                             %{ $LinkListWithData->{$LinkedObject}->{$LinkType}->{$LinkDirection} }
-                            )
-                        {
+                        ) {
                             my $DelKey1    = $Form{SourceKey};
                             my $DelObject1 = $Form{SourceObject};
                             my $DelKey2    = $ParamObject->GetParam( Param => 'TargetKey' );
-                            my $DelObject2 =
-# KIXSidebarTools-capeIT
-#                                $ParamObject->GetParam( Param => 'Targetobject' );
-                                $Form{TargetObject};
-# EO KIXSidebarTools-capeIT
+                            my $DelObject2 = $Form{TargetObject};
                             if ( $LinkDirection eq "Source" ) {
-                                $DelKey1 = $ParamObject->GetParam( Param => 'TargetKey' );
-                                $DelObject1 =
-# KIXSidebarTools-capeIT
-#                                    $ParamObject->GetParam( Param => 'Targetobject' );
-                                    $Form{TargetObject};
-# EO KIXSidebarTools-capeIT
+                                $DelKey1    = $ParamObject->GetParam( Param => 'TargetKey' );
+                                $DelObject1 = $Form{TargetObject};
                                 $DelKey2    = $Form{SourceKey};
                                 $DelObject2 = $Form{SourceObject};
                             }
@@ -385,14 +318,10 @@ sub Run {
                             $DelResult = $LinkObject->LinkDelete(
                                 Object1 => $Form{SourceObject},
                                 Key1    => $Form{SourceKey},
-                                Object2 =>
-# KIXSidebarTools-capeIT
-#                                    $ParamObject->GetParam( Param => 'TargetObject' ),
-                                    $Form{TargetObject},
-# EO KIXSidebarTools-capeIT
-                                Key2 => $ParamObject->GetParam( Param => 'TargetKey' ),
-                                Type => $LinkType,
-                                UserID => $Self->{UserID},
+                                Object2 => $Form{TargetObject},
+                                Key2    => $ParamObject->GetParam( Param => 'TargetKey' ),
+                                Type    => $LinkType,
+                                UserID  => $Self->{UserID},
                             );
                         }
                     }
@@ -405,8 +334,6 @@ sub Run {
             Type        => 'inline',
             NoCache     => 1,
         );
-
-        return 1;
     }
 
     # ------------------------------------------------------------ #
@@ -414,11 +341,8 @@ sub Run {
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} && $Self->{Subaction} eq 'SingleLinkAdd' ) {
 
-# KIXSidebarTools-capeIT
-#        my $LinkType = $ConfigObject->Get('KIXSidebarConfigItemLink::LinkType')
         my $LinkType = $ParamObject->GetParam( Param => 'LinkType' )
             || $ConfigObject->Get('KIXSidebarConfigItemLink::LinkType')
-# EO KIXSidebarTools-capeIT
             || 'Normal';
 
         my $AddResult = 0;
@@ -426,21 +350,13 @@ sub Run {
         # Ticket comes as target
         if (
             $ParamObject->GetParam( Param => 'TargetKey' )
-            &&
-# KIXSidebarTools-capeIT
-#            $ParamObject->GetParam( Param => 'TargetObject' )
-            $Form{TargetObject}
-# EO KIXSidebarTools-capeIT
-            )
-        {
+            && $Form{TargetObject}
+        ) {
 
             $AddResult = $LinkObject->LinkAdd(
                 SourceObject => $Form{SourceObject},
                 SourceKey    => $Form{SourceKey},
-# KIXSidebarTools-capeIT
-#                TargetObject => $ParamObject->GetParam( Param => 'TargetObject' ),
                 TargetObject => $Form{TargetObject},
-# EO KIXSidebarTools-capeIT
                 TargetKey    => $ParamObject->GetParam( Param => 'TargetKey' ),
                 Type         => $LinkType,
                 State        => $Form{State},
@@ -455,20 +371,13 @@ sub Run {
         );
     }
 
-    # EO KIX4OTRS-capeIT
-
     # ------------------------------------------------------------ #
     # overview
     # ------------------------------------------------------------ #
     else {
 
         # get the type
-        # KIX4OTRS-capeIT
-        # OTRS-bug: prevent use of uninitialized value
-        # my $TypeIdentifier = $ParamObject->GetParam( Param => 'TypeIdentifier' );
         my $TypeIdentifier = $ParamObject->GetParam( Param => 'TypeIdentifier' ) || '';
-
-        # EO KIX4OTRS-capeIT
 
         # output header
         my $Output = $LayoutObject->Header( Type => 'Small' );
@@ -587,8 +496,7 @@ sub Run {
                         $Form{Mode} eq 'Temporary'
                         && $TargetObject eq 'Ticket'
                         && $TargetKey =~ m{ \A \d+ \. \d+ }xms
-                        )
-                    {
+                    ) {
                         $TemporaryTargetTicketLink = 1;
                     }
 
@@ -706,13 +614,8 @@ sub Run {
         if (
             %SearchParam
             || $Kernel::OM->Get('Kernel::Config')->Get('Frontend::AgentLinkObject::WildcardSearch')
-
-            # KIX4OTRS-capeIT
             || $Kernel::OM->Get('Kernel::Config')->Get('LinkObject::PerformEmptySearch')
-
-            # EO KIX4OTRS-capeIT
-            )
-        {
+        ) {
 
             $SearchList = $LinkObject->ObjectSearch(
                 Object       => $Form{TargetObject},
@@ -752,8 +655,7 @@ sub Run {
             my %SearchListObjectKeys;
             for my $Key (
                 sort keys %{ $SearchList->{ $Form{TargetObject} }->{NOTLINKED}->{Source} }
-                )
-            {
+            ) {
                 $SearchListObjectKeys{$Key} = 1;
             }
 
@@ -800,7 +702,6 @@ sub Run {
             UserID  => $Self->{UserID},
         );
 
-        # KIX4OTRS-capeIT
         if ( $SearchParam{PersonType}[0] && $SearchParam{PersonType}[0] eq 'Agent' ) {
             for my $Key ( keys %PossibleTypesList ) {
                 if ( $Key ne 'Agent' ) {
@@ -815,8 +716,6 @@ sub Run {
                 }
             }
         }
-
-        # EO KIX4OTRS-capeIT
 
         # define blank line entry
         my %BlankLine = (
@@ -889,16 +788,11 @@ sub Run {
             LinkListWithData => {
                 $Form{TargetObject} => $LinkListWithData->{ $Form{TargetObject} },
             },
-            ViewMode     => 'ComplexAdd',
-            LinkTypeStrg => $LinkTypeStrg,
-
-            # KIX4OTRS-capeIT
+            ViewMode       => 'ComplexAdd',
+            LinkTypeStrg   => $LinkTypeStrg,
             GetPreferences => 0,
-
-            # EO KIX4OTRS-capeIT
         );
 
-        # KIX4OTRS-capeIT
         # create the link table preferences
         my $PreferencesLinkTableStrg = $LayoutObject->LinkObjectTableCreateComplex(
             LinkListWithData => {
@@ -908,8 +802,6 @@ sub Run {
             LinkTypeStrg   => $LinkTypeStrg,
             GetPreferences => 1,
         );
-
-        # EO KIX4OTRS-capeIT
 
         # output the link table
         $LayoutObject->Block(
@@ -922,13 +814,9 @@ sub Run {
         # start template output
         $Output .= $LayoutObject->Output(
             TemplateFile => 'AgentLinkObject',
-
-            # KIX4OTRS-capeIT
-            Data => {
+            Data         => {
                 PreferencesLinkTableStrg => $PreferencesLinkTableStrg,
             },
-
-            # EO KIX4OTRS-capeIT
         );
 
         $Output .= $LayoutObject->Footer( Type => 'Small' );

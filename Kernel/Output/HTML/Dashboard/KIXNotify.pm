@@ -49,47 +49,24 @@ sub Config {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    # get config object
+    # get needed object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
-    # KIX4OTRS-capeIT
-    # Cloud content removed
-    # EO KIX4OTRS-capeIT
+    my $CacheObject  = $Kernel::OM->Get('Kernel::System::Cache');
 
     # check cache
-    # KIX4OTRS-capeIT
-    # my $CacheKey = "CloudService::" . $CloudService . "::Operation::" . $Operation . "::Language::"
-    #    . $LayoutObject->{UserLanguage} . "::Product::" . $Product . "::Version::$Version";
-    my $CacheKey
-        = $Self->{Config}->{URL} . '-' . $LayoutObject->{UserLanguage} . '-capeIT-Modules';
-
-    # EO KIX4OTRS-capeIT
-
-    # get cache object
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-
-    my $Content = $Kernel::OM->Get('Kernel::System::Cache')->Get(
-
-        # KIX4OTRS-capeIT
-        # Type => 'DashboardProductNotify',
+    my $CacheKey = $Self->{Config}->{URL} . '-' . $LayoutObject->{UserLanguage} . '-capeIT-Modules';
+    my $Content  = $CacheObject->Get(
         Type => 'DashboardKIXNotify',
-
-        # EO KIX4OTRS-capeIT
-        Key => $CacheKey,
+        Key  => $CacheKey,
     );
 
-    # KIX4OTRS-capeIT
     # load c.a.p.e. IT modules information
     my %KIXVersions = ();
     for my $Package ( $Kernel::OM->Get('Kernel::System::Package')->RepositoryList() ) {
         next if $Package->{Vendor}->{Content} ne 'c.a.p.e. IT GmbH';
         $KIXVersions{ $Package->{Name}->{Content} } = $Package->{Version}->{Content};
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get content
     my %Response = $Kernel::OM->Get('Kernel::System::WebUserAgent')->Request(
