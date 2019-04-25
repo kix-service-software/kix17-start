@@ -1,6 +1,12 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.6.0-RC2 (2019/04/25)
+ * (2019/04/16) - CR: T2019040890001201 (code clean up) (fjacquemin)
+ * (2019/04/15) - Bugfix: T2019032290001187 (fixed incorrect display of the sender in the ticket lists) (fjacquemin)
+ * (2019/04/15) - Bugfix: T2019041290000436 (fixed missing error message of the dynamic field RemoteDB and ITSMConfigitem when used Mandatory) (fjacquemin)
+ * (2019/04/05) - Bugfix: T2017040890000546 (old OTRS stuff removed) (ddoerffel)
+
 # 17.6.0-RC1 (2019/04/12)
  * (2019/04/11) - CR: T2018020190001023 (added copy of generic agent jobs) (fjacquemin)
  * (2019/04/04) - Bugfix: T2019032590000879 (subject not shown in smime certificates) (ddoerffel)
