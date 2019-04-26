@@ -299,13 +299,9 @@ Core.UI.InputFields = (function (TargetNS) {
      *      and disabled the field if that is not the case.
      */
     function CheckAvailability($SelectObj, $SearchObj, $InputContainerObj) {
-
-        console.log($SelectObj);
-
         // Handle form <select> elements that are disabled and elements that were
         //  disabled with Core.Form.DisableForm();
         if ($SelectObj.attr('disabled') || $SearchObj.data('form-disabled')) {
-            console.log($SelectObj.attr('disabled'));
             $SearchObj.attr('disabled', 'disabled');
             // Make background grey and elements white.
             $SearchObj.attr('readonly', 'readonly');
@@ -1045,7 +1041,6 @@ Core.UI.InputFields = (function (TargetNS) {
                 Searching = false;
                 Focused = null;
 
-                console.log($SelectObj);
                 // Get width now, since we will hide the element
                 SelectWidth = $SelectObj.outerWidth();
 
