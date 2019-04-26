@@ -20,12 +20,20 @@ use lib dirname($RealBin) . '/Custom';
 
 use Kernel::System::Environment;
 use Kernel::System::VariableCheck qw( :all );
+use Kernel::System::Main;
+use Kernel::System::ObjectManager;
 
 use Linux::Distribution;
 use ExtUtils::MakeMaker;
 use File::Path;
 use Getopt::Long;
 use Term::ANSIColor;
+
+local $Kernel::OM = Kernel::System::ObjectManager->new(
+    'Kernel::System::Log' => {
+        LogPrefix => 'kixpro.CheckModules.pl',
+    },
+);
 
 our %InstTypeToCMD = (
 
@@ -522,7 +530,10 @@ sub _Check {
             'Apache2::Reload' => 1,    # is not needed / working on systems without mod_perl (like Plack etc.)
         );
 
-        if ( !$DontRequire{ $Module->{Module} } && !eval( {"require $Module->{Module}"} ) ) {
+        if (
+            !$DontRequire{ $Module->{Module} }
+            && !$Kernel::OM->Get('Kernel::System::Main')->Require( $Module->{Module})
+        ) {
             $ErrorMessage .= 'Not all prerequisites for this module correctly installed. ';
         }
 
