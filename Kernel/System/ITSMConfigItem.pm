@@ -88,7 +88,7 @@ sub new {
         Kernel::System::PreEventHandler
     );
 
-    # load ticket extension modules
+    # load itsm config item extension modules
     my $CustomModule = $ConfigObject->Get('ITSMConfigItem::CustomModules');
     if ($CustomModule) {
 
