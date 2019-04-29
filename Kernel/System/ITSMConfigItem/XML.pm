@@ -589,6 +589,7 @@ sub _XMLHashSearch {
             my $NotLikeKey  = $Key;
 
             $NotLikeKey =~ s/(%]\{\'Content\'\})/%]{%}[$1}/i;
+            $NotLikeKey =~ s/(\d+]\{\'Content\'\})/%]{%}[$1}/i;
 
             $Self->_PrepareLikeString( \$Key );
             $Self->_PrepareLikeString( \$NotLikeKey );
