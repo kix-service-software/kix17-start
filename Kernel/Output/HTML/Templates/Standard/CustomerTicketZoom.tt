@@ -97,23 +97,6 @@
                                 <div class="Clear"></div>
                             </div>
 [% RenderBlockEnd("ArticleDynamicField") %]
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("ArticleDynamicField_Field1") %]
-#                            <div>
-#                                <div class="Label" title="[% Data.Label | html %]">[% Translate(Data.Label) | html %]:</div>
-#                                <span title="[% Data.Title | html %]">[% Data.Value %]</span>
-#                                <div class="Clear"></div>
-#                            </div>
-#[% RenderBlockEnd("ArticleDynamicField_Field1") %]
-#[% RenderBlockStart("ArticleDynamicField_Field2") %]
-#                            <div>
-#                                <div class="Label" title="[% Data.Label | html %]">[% Translate(Data.Label) | html %]:</div>
-#                                <span title="[% Data.Title | html %]">[% Data.Value %]</span>
-#                                <div class="Clear"></div>
-#                            </div>
-#[% RenderBlockEnd("ArticleDynamicField_Field2") %]
 
 [% RenderBlockStart("ArticleAttachment") %]
                             <div class="Attachments">
@@ -148,7 +131,7 @@
 # to open the links in a new window without the security permissions given to the iframe
                             <div class="MessageBrowser">
                                 <p>
-        [% Translate("To open links in the following article, you might need to press Ctrl or Cmd or Shift key while clicking the link (depending on your browser and OS).") | html %]
+                                    [% Translate("To open links in the following article, you might need to press Ctrl or Cmd or Shift key while clicking the link (depending on your browser and OS).") | html %]
                                 </p>
                                 <a class="Close" title="[% Translate("Close this message") | html %]" href="#"><i class="fa fa-times"></i></a>
                             </div>
@@ -328,7 +311,7 @@
 [% RenderBlockEnd("FollowUpPriority") %]
 
 [% RenderBlockStart("FollowUpDynamicField") %]
-                        <div class="Row Row_DynamicField_[% Data.Name | html %]">
+                        <div class="Row Row_DynamicField_[% Data.Name | html %] [% Data.Class %]">
                             [% Data.Label %]
                             <div class="Field">
                                 [% Data.Field %]

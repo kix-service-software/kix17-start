@@ -141,12 +141,11 @@ sub Run {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # extract the dynamic field value form the web request
-        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } =
-            $BackendObject->EditFieldValueGet(
+        $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldValueGet(
             DynamicFieldConfig => $DynamicFieldConfig,
             ParamObject        => $ParamObject,
             LayoutObject       => $LayoutObject,
-            );
+        );
     }
 
     # convert dynamic field values into a structure for ACLs
@@ -264,14 +263,13 @@ sub Run {
 
         # get shown or hidden fields
         $Self->_GetShownDynamicFields(
-            DynamicFieldConfig => $Self->{FollowUpDynamicField},
+            DynamicFieldConfig => $FollowUpDynamicField,
         );
-
 
         # use only dynamic fields which passed the acl
         my %Output;
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{ $Self->{FollowUpDynamicField} } ) {
+        for my $DynamicFieldConfig ( @{ $FollowUpDynamicField } ) {
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             if ( $DynamicFieldConfig->{Shown} == 1 ) {
@@ -324,7 +322,6 @@ sub Run {
             NoCache     => 1,
         );
     }
-
     #   end AJAX Update
 
     # save, if browser link message was closed
@@ -494,9 +491,7 @@ sub Run {
                     DynamicFieldConfig   => $DynamicFieldConfig,
                     PossibleValuesFilter => $PossibleValuesFilter,
                     ParamObject          => $ParamObject,
-                    Mandatory =>
-                        $Config->{FollowUpDynamicField}->{ $DynamicFieldConfig->{Name} }
-                        == 2,
+                    Mandatory            => $Config->{FollowUpDynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
                 );
 
                 if ( !IsHashRefWithData($ValidationResult) ) {
@@ -520,19 +515,17 @@ sub Run {
             }
 
             # get field html
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-                $BackendObject->EditFieldRender(
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $PossibleValuesFilter,
-                Mandatory =>
-                    $Config->{FollowUpDynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                ServerError  => $ValidationResult->{ServerError}  || '',
-                ErrorMessage => $ValidationResult->{ErrorMessage} || '',
-                LayoutObject => $LayoutObject,
-                ParamObject  => $ParamObject,
-                AJAXUpdate   => 1,
-                UpdatableFields => $Self->_GetFieldsToUpdate(),
-                );
+                Mandatory            => $Config->{FollowUpDynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                ServerError          => $ValidationResult->{ServerError}  || '',
+                ErrorMessage         => $ValidationResult->{ErrorMessage} || '',
+                LayoutObject         => $LayoutObject,
+                ParamObject          => $ParamObject,
+                AJAXUpdate           => 1,
+                UpdatableFields      => $Self->_GetFieldsToUpdate(),
+            );
         }
 
         # show edit again
@@ -813,24 +806,21 @@ sub Run {
         }
 
         # get field html
-        $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } =
-            $BackendObject->EditFieldRender(
+        $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
             DynamicFieldConfig   => $DynamicFieldConfig,
             PossibleValuesFilter => $PossibleValuesFilter,
-            Mandatory =>
-                $Config->{FollowUpDynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-            LayoutObject    => $LayoutObject,
-            ParamObject     => $ParamObject,
-            AJAXUpdate      => 1,
-            UpdatableFields => $Self->_GetFieldsToUpdate(),
-            Value           => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-
-            );
+            Mandatory            => $Config->{FollowUpDynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            LayoutObject         => $LayoutObject,
+            ParamObject          => $ParamObject,
+            AJAXUpdate           => 1,
+            UpdatableFields      => $Self->_GetFieldsToUpdate(),
+            Value                => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
+        );
     }
 
     # get shown or hidden fields
     $Self->_GetShownDynamicFields(
-        DynamicFieldConfig => $Self->{FollowUpDynamicField},
+        DynamicFieldConfig => $FollowUpDynamicField,
     );
 
     # generate output
@@ -1741,9 +1731,7 @@ sub _Mask {
         my %InitialSelected;
         if (
             $ConfigObject->Get("Ticket::ProcessingOptions::InitialDataShown")
-            &&
-            $ConfigObject->Get("Ticket::ProcessingOptions::InitialDataShown")
-            ->{ $Self->{Action} }
+            && $ConfigObject->Get("Ticket::ProcessingOptions::InitialDataShown")->{ $Self->{Action} }
         ) {
             $InitialSelected{State} = $State{Name};
         }
@@ -1853,6 +1841,7 @@ sub _Mask {
                     Name  => $DynamicFieldConfig->{Name},
                     Label => $DynamicFieldHTML->{Label},
                     Field => $DynamicFieldHTML->{Field},
+                    Class => $Class,
                 },
             );
         }
