@@ -797,6 +797,7 @@ sub FAQSearch {
                 my $ValidateSuccess = $DynamicFieldBackendObject->ValueValidate(
                     DynamicFieldConfig => $DynamicField,
                     Value              => $Text,
+                    SearchValidation   => 1,
                     UserID             => $Param{UserID},
                 );
                 if ( !$ValidateSuccess ) {

@@ -1366,6 +1366,7 @@ sub TicketSearch {
                 my $ValidateSuccess = $DynamicFieldBackendObject->ValueValidate(
                     DynamicFieldConfig => $DynamicField,
                     Value              => $Text,
+                    SearchValidation   => 1,
                     UserID             => $Param{UserID} || 1,
                 );
                 if ( !$ValidateSuccess ) {
@@ -3443,6 +3444,7 @@ sub TicketSearchOR {
                 my $ValidateSuccess = $DynamicFieldBackendObject->ValueValidate(
                     DynamicFieldConfig => $DynamicField,
                     Value              => $Text,
+                    SearchValidation   => 1,
                     UserID             => $Param{UserID} || 1,
                 );
                 if ( !$ValidateSuccess ) {
