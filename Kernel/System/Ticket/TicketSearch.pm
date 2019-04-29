@@ -522,9 +522,10 @@ sub TicketSearch {
     }
 
     # use also history table if required
+    my $PatternArg = '^(Ticket(Close|Change)Time(Newer|Older)(Date|Minutes)|Created.+?)';
     ARGUMENT:
     for my $Key ( sort keys %Param ) {
-        if ( $Param{$Key} && $Key =~ /^(Ticket(Close|Change)Time(Newer|Older)(Date|Minutes)|Created.+?)/ ) {
+        if ( $Param{$Key} && $Key =~ /$PatternArg/ ) {
             $SQLFrom .= 'INNER JOIN ticket_history th ON st.id = th.ticket_id ';
             last ARGUMENT;
         }
@@ -2681,9 +2682,10 @@ sub TicketSearchOR {
     }
 
     # use also history table if required
+    my $PatternArg = '^(Ticket(Close|Change)Time(Newer|Older)(Date|Minutes)|Created.+?)';
     ARGUMENT:
     for my $Key ( sort keys %Param ) {
-        if ( $Key =~ /^(Ticket(Close|Change)Time(Newer|Older)(Date|Minutes)|Created.+?)/ ) {
+        if ( $Key =~ /$PatternArg/ ) {
             $SQLFrom .= 'INNER JOIN ticket_history th ON st.id = th.ticket_id ';
             last ARGUMENT;
         }
