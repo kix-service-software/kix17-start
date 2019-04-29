@@ -27,6 +27,7 @@ use Kernel::System::VariableCheck qw(:all);
 
 our @ObjectDependencies = (
     'Kernel::Config',
+    'Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor',
     'Kernel::System::Cache',
     'Kernel::System::CustomerUser',
     'Kernel::System::DB',
@@ -6526,52 +6527,7 @@ sub TicketMergeLinkedObjects {
     }
 
 # T2017062090000715/OTRS Bug 12994
-#    # lookup the object id of a ticket
-#    my $TicketObjectID = $Kernel::OM->Get('Kernel::System::LinkObject')->ObjectLookup(
-#        Name => 'Ticket',
-#    );
-#
-#    # update links from old ticket to new ticket where the old ticket is the source
-#    $Kernel::OM->Get('Kernel::System::DB')->Do(
-#        SQL => '
-#            UPDATE link_relation
-#            SET source_key = ?
-#            WHERE source_object_id = ?
-#              AND source_key = ?',
-#        Bind => [
-#            \$Param{MainTicketID},
-#            \$TicketObjectID,
-#            \$Param{MergeTicketID},
-#        ],
-#    );
-#
-#    # update links from old ticket to new ticket where the old ticket is the target
-#    $Kernel::OM->Get('Kernel::System::DB')->Do(
-#        SQL => '
-#            UPDATE link_relation
-#            SET target_key = ?
-#            WHERE target_object_id = ?
-#              AND target_key = ?',
-#        Bind => [
-#            \$Param{MainTicketID},
-#            \$TicketObjectID,
-#            \$Param{MergeTicketID},
-#        ],
-#    );
-#
-#    # delete all links between tickets where source and target object are the same
-#    $Kernel::OM->Get('Kernel::System::DB')->Do(
-#        SQL => '
-#            DELETE FROM link_relation
-#            WHERE source_object_id = ?
-#                AND target_object_id = ?
-#                AND source_key = target_key
-#        ',
-#        Bind => [
-#            \$TicketObjectID,
-#            \$TicketObjectID,
-#        ],
-#    );
+# removed code
     my $LinkObject = $Kernel::OM->Get('Kernel::System::LinkObject');
     my $LinkList   = $LinkObject->LinkList(
         Object    => 'Ticket',
@@ -6594,26 +6550,37 @@ sub TicketMergeLinkedObjects {
                             && $Key eq $Param{MainTicketID}
                         );
 
-                        if ($Direction eq 'Source') {
-                            $LinkObject->LinkAdd(
-                                SourceObject => $Object,
-                                SourceKey    => $Key,
-                                TargetObject => 'Ticket',
-                                TargetKey    => $Param{MainTicketID},
-                                Type         => $Type,
-                                State        => 'Valid',
-                                UserID       => $Param{UserID},
-                            );
-                        } else {
-                            $LinkObject->LinkAdd(
-                                SourceObject => 'Ticket',
-                                SourceKey    => $Param{MainTicketID},
-                                TargetObject => $Object,
-                                TargetKey    => $Key,
-                                Type         => $Type,
-                                State        => 'Valid',
-                                UserID       => $Param{UserID},
-                            );
+                        if ($Object eq 'Person') {
+                             $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::LinkedTicketPersonExecutor')->AsyncCall(
+                                 TicketID      => $Param{MainTicketID},
+                                 PersonID      => $Key,
+                                 PersonHistory => $Key,
+                                 LinkType      => $Type,
+                                 UserID        => $Param{UserID},
+                             );
+                        }
+                        else {
+                            if ($Direction eq 'Source') {
+                                $LinkObject->LinkAdd(
+                                    SourceObject => $Object,
+                                    SourceKey    => $Key,
+                                    TargetObject => 'Ticket',
+                                    TargetKey    => $Param{MainTicketID},
+                                    Type         => $Type,
+                                    State        => 'Valid',
+                                    UserID       => $Param{UserID},
+                                );
+                            } else {
+                                $LinkObject->LinkAdd(
+                                    SourceObject => 'Ticket',
+                                    SourceKey    => $Param{MainTicketID},
+                                    TargetObject => $Object,
+                                    TargetKey    => $Key,
+                                    Type         => $Type,
+                                    State        => 'Valid',
+                                    UserID       => $Param{UserID},
+                                );
+                            }
                         }
                     }
                 }
