@@ -82,7 +82,8 @@ sub ValueValidate {
     );
 
     if (
-        IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{RegExList} )
+        !$Param{SearchValidation}
+        && IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{RegExList} )
         && IsStringWithData( $Param{Value} )
     ) {
         # check regular expressions
