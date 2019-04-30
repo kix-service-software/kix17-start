@@ -610,10 +610,10 @@ sub Run {
             }
 
             # get needed objects
-            my $TypeObject = $Kernel::OM->Get('Kernel::System::Type');
-            my $StateObject = $Kernel::OM->Get('Kernel::System::State');
-            my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
-            my $SLAObject = $Kernel::OM->Get('Kernel::System::SLA');
+            my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
+            my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
+            my $ServiceObject      = $Kernel::OM->Get('Kernel::System::Service');
+            my $SLAObject          = $Kernel::OM->Get('Kernel::System::SLA');
             my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
 
             # get customer from quick ticket
@@ -626,17 +626,24 @@ sub Run {
                     && $CustomerData{UserID}
                     && $CustomerData{UserEmail}
                 ) {
-                    my $CustomerName = $CustomerUserObject
-                        ->CustomerName( UserLogin => $CustomerData{UserID} );
-                    $GetParam{To}
-                        = '"' . $CustomerName . '" '
-                        . '<' . $CustomerData{UserEmail} . '>';
+                    my $CustomerName = $CustomerUserObject->CustomerName( UserLogin => $CustomerData{UserID} );
+                    $GetParam{To} = '"' . $CustomerName . '" '
+                                  . '<' . $CustomerData{UserEmail} . '>';
                     $GetParam{CustomerID}            = $CustomerData{UserCustomerID};
                     $GetParam{CustomerUserID}        = $CustomerData{UserID};
                     $CustomerData{CustomerUserLogin} = $CustomerData{UserID};
                 }
                 else {
                     $GetParam{To} = $GetParam{QuickTicketCustomer};
+                }
+            }
+            elsif ( $Self->{DefaultSet} ) {
+                my $CustomerUser = $ParamObject->GetParam( Param => 'SelectedCustomerUser' );
+                if ( $CustomerUser ) {
+                    %CustomerData = $CustomerUserObject->CustomerUserDataGet(
+                        User => $CustomerUser,
+                    );
+                    $CustomerData{CustomerUserLogin} = $CustomerData{UserID};
                 }
             }
 
@@ -941,7 +948,7 @@ sub Run {
             my $Services = $Self->_GetServices(
                 QueueID => $Self->{QueueID} || 1,
                 %GetParam,
-                CustomerUserID => $CustomerData{CustomerUserLogin} || '',
+                CustomerUserID => $CustomerData{CustomerUserLogin} ||'',
                 TypeID         => $GetParam{TypeID}                || $GetParam{DefaultTypeID},
             );
             my $SLAs = $Self->_GetSLAs(

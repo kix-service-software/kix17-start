@@ -816,17 +816,23 @@ sub Run {
                 && $CustomerData{UserID}
                 && $CustomerData{UserEmail}
             ) {
-                my $CustomerName = $CustomerUserObject
-                    ->CustomerName( UserLogin => $CustomerData{UserID} );
-                $Article{From}
-                    = '"' . $CustomerName . '" '
-                    . '<' . $CustomerData{UserEmail} . '>';
+                my $CustomerName = $CustomerUserObject->CustomerName( UserLogin => $CustomerData{UserID} );
+                $Article{From} = '"' . $CustomerName . '" '
+                               . '<' . $CustomerData{UserEmail} . '>';
                 $Article{CustomerID}             = $CustomerData{UserCustomerID};
                 $Article{CustomerUserID}         = $CustomerData{UserID};
                 $CustomerData{CustomerUserLogin} = $CustomerData{UserID};
             }
             else {
                 $Article{From} = $GetParam{QuickTicketCustomer};
+            }
+        }
+        elsif ( $Self->{DefaultSet} ) {
+            my $CustomerUser = $ParamObject->GetParam( Param => 'SelectedCustomerUser' );
+            if ( $CustomerUser ) {
+                %CustomerData = $CustomerUserObject->CustomerUserDataGet(
+                    User => $CustomerUser,
+                );
             }
         }
 
