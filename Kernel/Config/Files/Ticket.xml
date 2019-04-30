@@ -16449,8 +16449,8 @@ Thanks for your help!
                 <Item Key="NoActionWithoutSelection"></Item>
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
-                <Item Key="RestrictedOTRSObjects">CustomerUser,Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">UserLogin,1</Item>
+                <Item Key="RestrictedKIXObjects">CustomerUser,Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">UserLogin,1</Item>
                 <Item Key="RestrictedDBAttributes">customer_user_id,responsible_user_id</Item>
                 <Item Key="RestrictedMandatory">1,0</Item>
                 <Item Key="RestrictedArrayHandling">OR</Item>
@@ -16499,8 +16499,8 @@ Thanks for your help!
                 <Item Key="NoActionWithoutSelection"></Item>
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
-                <Item Key="RestrictedOTRSObjects">CustomerUser</Item>
-                <Item Key="RestrictedOTRSAttributes">UserLogin</Item>
+                <Item Key="RestrictedKIXObjects">CustomerUser</Item>
+                <Item Key="RestrictedKIXAttributes">UserLogin</Item>
                 <Item Key="RestrictedDBAttributes">customer_user_id</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="RestrictedArrayHandling">OR</Item>
@@ -16548,8 +16548,8 @@ Thanks for your help!
                 <Item Key="NoActionWithoutSelection"></Item>
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">Contact</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">Contact</Item>
                 <Item Key="RestrictedDBAttributes">comments</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="RestrictedArrayHandling">OR</Item>
@@ -16597,8 +16597,8 @@ Thanks for your help!
                 <Item Key="NoActionWithoutSelection"></Item>
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">ITSM::Core::IncidentState</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">ITSM::Core::IncidentState</Item>
                 <Item Key="RestrictedDBAttributes">general_catalog_class</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="RestrictedArrayHandling">OR</Item>

@@ -1014,8 +1014,8 @@
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="RestrictedDBAttributeCustomerLogin">customer_user_id</Item>
                 <Item Key="RestrictedDBAttributeCustomerUserID">customer_id</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">1</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">1</Item>
                 <Item Key="RestrictedDBAttributes">responsible_user_id</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="IdentifierAttribute">id</Item>
@@ -1058,8 +1058,8 @@
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="RestrictedDBAttributeCustomerLogin">customer_user_id</Item>
                 <Item Key="RestrictedDBAttributeCustomerUserID">customer_id</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">1</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">1</Item>
                 <Item Key="RestrictedDBAttributes">responsible_user_id</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="IdentifierAttribute">id</Item>
@@ -1102,8 +1102,8 @@
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="RestrictedDBAttributeCustomerLogin">customer_user_id</Item>
                 <Item Key="RestrictedDBAttributeCustomerUserID">customer_id</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">1</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">1</Item>
                 <Item Key="RestrictedDBAttributes">responsible_user_id</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="IdentifierAttribute">id</Item>
@@ -1146,8 +1146,8 @@
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="RestrictedDBAttributeCustomerLogin">customer_user_id</Item>
                 <Item Key="RestrictedDBAttributeCustomerUserID">customer_id</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">1</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">1</Item>
                 <Item Key="RestrictedDBAttributes">responsible_user_id</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="IdentifierAttribute">id</Item>
