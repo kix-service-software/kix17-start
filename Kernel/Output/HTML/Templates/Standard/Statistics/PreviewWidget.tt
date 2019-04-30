@@ -3,9 +3,12 @@
 # based on the original work of:
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 
@@ -37,7 +40,7 @@
             [% PROCESS ErrorText %]
             [% FOR Error IN Data.StatsConfigurationErrors.GeneralSpecificationFieldErrors.pairs %]
                 <p class="Error">
-                    [% Error.key | html %]: [% Error.value %]
+                    [% Error.key | html %]: [% Translate(Error.value) | html %]
                 </p>
             [% END %]
 
@@ -51,7 +54,7 @@
                 [% PROCESS ErrorText %]
                 [% FOR Error IN Data.StatsConfigurationErrors.XAxisGeneralErrors %]
                     <p class="Error">
-                        [% Error | html %]
+                        [% Translate(Error) | html %]
                     </p>
                 [% END %]
             [% ELSE %]
@@ -70,7 +73,7 @@
             [% FOR Error IN Data.StatsConfigurationErrors.XAxisFieldErrors.pairs %]
                 <p class="Error">
                     <i class="fa fa-times"></i>
-                    [% Error.key | html%]: [% Error.value %]
+                    [% Error.key | html%]: [% Translate(Error.value) | html %]
                 </p>
             [% END %]
 
@@ -82,7 +85,7 @@
             [% PROCESS ErrorText %]
             [% FOR Error IN Data.StatsConfigurationErrors.YAxisGeneralErrors %]
                 <p class="Error">
-                    [% Error | html %]
+                    [% Translate(Error) | html %]
                 </p>
             [% END %]
 
@@ -95,7 +98,7 @@
             [% PROCESS ErrorText %]
             [% FOR Error IN Data.StatsConfigurationErrors.YAxisFieldErrors.pairs %]
                 <p class="Error">
-                    [% Error.key | html%]: [% Error.value %]
+                    [% Error.key | html%]: [% Translate(Error.value) | html %]
                 </p>
             [% END %]
 
@@ -106,7 +109,7 @@
             [% PROCESS ErrorText %]
             [% FOR Error IN Data.StatsConfigurationErrors.RestrictionsFieldErrors.pairs %]
                 <p class="Error">
-                    [% Error.key | html%]: [% Error.value %]
+                    [% Error.key | html%]: [% Translate(Error.value) | html %]
                 </p>
             [% END %]
 
@@ -133,7 +136,9 @@
         <div class="PreviewSettings">
             [% Translate('Preview format:') | html %]
             [% FOREACH Format IN PreviewFormats.sort %]
-            <button class="CallForAction SwitchPreviewFormat" data-format="[% Format %]"><span>[% FormatConfig.item(Format) %]</span></button>
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+            <button class="CallForAction SwitchPreviewFormat" data-format="[% Format | html %]"><span>[% Translate(FormatConfig.item(Format)) | html %]</span></button>
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
             [% END %]
             <span class="Warning">
                 [% Translate('Please note that the preview uses random data and does not consider data filters.') | html %]
@@ -141,6 +146,14 @@
         </div>
         [% WRAPPER JSOnDocumentComplete %]
         <script type="text/javascript">
+
+        // Add translations for statistic previews.
+        Core.Config.Set('Grouped', [% Translate("Grouped") | JSON %]);
+        Core.Config.Set('Stacked', [% Translate("Stacked") | JSON %]);
+        Core.Config.Set('Expanded', [% Translate("Expanded") | JSON %]);
+        Core.Config.Set('Stream', [% Translate("Stream") | JSON %]);
+        Core.Config.Set('NoDataAvailable', [% Translate("No Data Available.") | JSON %]);
+
         $('.SwitchPreviewFormat').on('click', function() {
             var Format = $(this).data('format'),
                 FormatCleaned = Format.replace('::', '');
@@ -148,12 +161,16 @@
             $(this).addClass('Active');
             $('.PreviewContent:visible').hide();
             $('svg.PreviewContent').empty();
-            $('#PreviewContent' + FormatCleaned).show();
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+            $('#PreviewContent' + Core.App.EscapeSelector(FormatCleaned)).show();
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
             if (Format.match(/D3/)) {
                 Core.UI.AdvancedChart.Init(
                     Format,
                     [% JSON(Data.PreviewResult) %],
-                    'svg#PreviewContent' + FormatCleaned,
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+                    'svg#PreviewContent' + Core.App.EscapeSelector(FormatCleaned),
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
                     {
                         HideLegend: true
                     }
@@ -192,7 +209,9 @@
             </table>
         </div>
             [% ELSE %]
-        <svg class="PreviewContent PreviewCanvas" id="PreviewContent[% Format.replace('::', '') %]" style="display: none;"></svg>
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+        <svg class="PreviewContent PreviewCanvas" id="PreviewContent[% Format.replace('::', '') | html %]" style="display: none;"></svg>
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
             [% END %]
         [% END %]
     [% END %]
