@@ -28,7 +28,7 @@ our @ObjectDependencies = (
     'Kernel::System::User',
 );
 
-## no critic qw(Variables::RequireLocalizedPunctuationVars TestingAdnDebugging::ProhibitNoWarnings)
+## no critic qw(Variables::RequireLocalizedPunctuationVars TestingAndDebugging::ProhibitNoWarnings)
 
 =head1 NAME
 
