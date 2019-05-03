@@ -514,6 +514,7 @@ sub _RenderAjax {
     # run acl to prepare TicketAclFormData
     my $ACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %{ $Param{GetParam} },
+        Action        => $Self->{Action},
         ReturnType    => 'Ticket',
         ReturnSubType => '-',
         Data          => {},
@@ -1361,6 +1362,7 @@ sub _GetParam {
     # run acl to prepare TicketAclFormData
     my $ACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %GetParam,
+        Action        => $Self->{Action},
         DynamicField  => \%DynamicFieldCheckParam,
         ReturnType    => 'Ticket',
         ReturnSubType => '-',

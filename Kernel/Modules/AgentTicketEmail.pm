@@ -48,10 +48,9 @@ sub new {
 
     # handle for quick ticket templates
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-    $Self->{DefaultSet} = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
-    $Self->{DefaultSetTypeChanged} =
-        $ParamObject->GetParam( Param => 'DefaultSetTypeChanged' ) || 0;
-    $Self->{ActionReal} = $Self->{Action};
+    $Self->{DefaultSet}            = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
+    $Self->{DefaultSetTypeChanged} = $ParamObject->GetParam( Param => 'DefaultSetTypeChanged' ) || 0;
+    $Self->{ActionReal}            = $Self->{Action};
 
     return $Self;
 }
@@ -542,6 +541,20 @@ sub Run {
         @MultipleCustomerBcc    = @{ $TemplateData{MultipleCustomerBcc} } if defined $TemplateData{MultipleCustomerBcc} && ref $TemplateData{MultipleCustomerBcc}  eq 'ARRAY';
     }
 
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %GetParam,
+        %ACLCompatGetParam,
+        Action        => $Self->{Action},
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
+
     if ( !$Self->{Subaction} || $Self->{Subaction} eq 'Created' ) {
 
         # header
@@ -890,8 +903,6 @@ sub Run {
                     Template             => $GetParam{QuickTicketDynamicFieldHash},
                 );
             }
-
-            $Self->_GetShownDynamicFields();
 
             # run compose modules
             if (
@@ -1250,9 +1261,6 @@ sub Run {
                 }
             }
         }
-
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
@@ -1774,6 +1782,7 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             # set the value
@@ -1924,6 +1933,7 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Article';
 
             # set the value
@@ -2338,7 +2348,6 @@ sub Run {
                 %ACLCompatGetParam,
                 CustomerUserID => $CustomerUser || '',
                 Action         => $Self->{Action},
-                TicketID       => $Self->{TicketID},
                 QueueID        => $QueueID      || 0,
                 ReturnType     => 'Ticket',
                 ReturnSubType  => 'DynamicField_' . $DynamicFieldConfig->{Name},

@@ -67,7 +67,7 @@ sub Run {
     my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
 
     # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    my $DynamicFieldList = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => [ 'Ticket', 'Article' ],
         FieldFilter => $Config->{DynamicField} || {},
@@ -79,7 +79,7 @@ sub Run {
     # reduce the dynamic fields to only the ones that are designed for customer interface
     my @CustomerDynamicFields;
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{$DynamicFieldList} ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         my $IsCustomerInterfaceCapable = $BackendObject->HasBehavior(
@@ -90,10 +90,10 @@ sub Run {
 
         push @CustomerDynamicFields, $DynamicFieldConfig;
     }
-    $DynamicField = \@CustomerDynamicFields;
+    $DynamicFieldList = \@CustomerDynamicFields;
 
     # save dynamic field config to $Self for use with show and hide acl
-    $Self->{DynamicField} = $DynamicField;
+    $Self->{DynamicField} = $DynamicFieldList;
 
     # handle for ticket templates
     $Self->{DefaultSet} = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
@@ -186,6 +186,20 @@ sub Run {
         }
     }
 
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %GetParam,
+        %ACLCompatGetParam,
+        Action         => $Self->{Action},
+        ReturnType     => 'Ticket',
+        ReturnSubType  => '-',
+        Data           => {},
+        CustomerUserID => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
+
     if ( !$Self->{Subaction} ) {
 
         #Get default Queue ID if none is set
@@ -203,8 +217,7 @@ sub Run {
             # warn if there is no (valid) default queue and the customer can't select one
             elsif ( !$Config->{'Queue'} ) {
                 $LayoutObject->CustomerFatalError(
-                    Message => $LayoutObject->{LanguageObject}
-                        ->Translate( 'Check SysConfig setting for %s::QueueDefault.', $Self->{Action} ),
+                    Message => $LayoutObject->{LanguageObject}->Translate( 'Check SysConfig setting for %s::QueueDefault.', $Self->{Action} ),
                     Comment => Translatable('Please contact your administrator'),
                 );
                 return;
@@ -316,9 +329,6 @@ sub Run {
                 Template             => $GetParam{QuickTicketDynamicFieldHash},
             );
         }
-
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
 
         # print form ...
         my $Output = $LayoutObject->CustomerHeader();
@@ -454,7 +464,6 @@ sub Run {
                     my $ACL = $TicketObject->TicketAcl(
                         %GetParam,
                         Action         => $Self->{Action},
-                        TicketID       => $Self->{TicketID},
                         ReturnType     => 'Ticket',
                         ReturnSubType  => 'DynamicField_' . $DynamicFieldConfig->{Name},
                         Data           => \%AclData,
@@ -470,9 +479,6 @@ sub Run {
                 }
             }
         }
-
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
@@ -680,8 +686,8 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-            next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
             next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
+            next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             # set the value
             my $Success = $BackendObject->ValueSet(
@@ -1030,9 +1036,6 @@ sub Run {
                 UpdatableFields      => $Self->_GetFieldsToUpdate(),
             );
         }
-
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
 
         # use only dynamic fields which passed the acl
         my %Output;
@@ -1711,18 +1714,8 @@ sub _GetFieldsToUpdate {
         @UpdatableFields = qw( Dest ServiceID SLAID PriorityID );
     }
 
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
-
-    # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-        Valid       => 1,
-        ObjectType  => [ 'Ticket', 'Article' ],
-        FieldFilter => $Config->{DynamicField} || {},
-    );
-
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    # for my $DynamicFieldConfig ( @{$DynamicField} ) {
     for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 

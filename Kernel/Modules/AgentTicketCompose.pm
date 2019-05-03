@@ -375,7 +375,7 @@ sub Run {
     my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => [ 'Ticket', 'Article' ],
         FieldFilter => $Config->{DynamicField} || {},
@@ -383,7 +383,7 @@ sub Run {
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # extract the dynamic field value form the web request
@@ -421,6 +421,20 @@ sub Run {
     # get needed objects
     my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
     my $MainObject        = $Kernel::OM->Get('Kernel::System::Main');
+
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %GetParam,
+        Action        => $Self->{Action},
+        TicketID      => $Self->{TicketID},
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
 
     # send email
     if ( $Self->{Subaction} eq 'SendEmail' ) {
@@ -634,7 +648,7 @@ sub Run {
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $IsACLReducible = $BackendObject->HasBehavior(
@@ -678,12 +692,9 @@ sub Run {
             }
         }
 
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
-
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $ValidationResult;
@@ -884,8 +895,9 @@ sub Run {
         # set dynamic fields
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
 
             # set the object ID (TicketID or ArticleID) depending on the field configration
             my $ObjectID = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Self->{TicketID};
@@ -1023,7 +1035,7 @@ sub Run {
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $IsACLReducible = $BackendObject->HasBehavior(
@@ -1099,16 +1111,13 @@ sub Run {
             );
         }
 
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
-
         # use only dynamic fields which passed the acl
         my %TicketAclFormData = $TicketObject->TicketAclFormData();
 
         # use only dynamic fields which passed the acl
         my %Output;
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             if ( $DynamicFieldConfig->{Shown} == 1 ) {
@@ -1317,88 +1326,6 @@ sub Run {
             }
         }
 
-        if ( $LayoutObject->{BrowserRichText} ) {
-
-            # prepare body, subject, ReplyTo ...
-            # rewrap body if exists
-            if ( $Data{Body} ) {
-                $Data{Body} =~ s/\t/ /g;
-                my $Quote = $LayoutObject->Ascii2Html(
-                    Text => $ConfigObject->Get('Ticket::Frontend::Quote') || '',
-                    HTMLResultMode => 1,
-                );
-                if ($Quote) {
-
-                    # quote text
-                    $Data{Body} = "<blockquote type=\"cite\">$Data{Body}</blockquote>\n";
-
-                    # cleanup not compat. tags
-                    $Data{Body} = $LayoutObject->RichTextDocumentCleanup(
-                        String => $Data{Body},
-                    );
-
-                }
-                else {
-                    $Data{Body} = "<br/>" . $Data{Body};
-
-                    if ( $Data{Created} ) {
-                        $Data{Body} = $LayoutObject->{LanguageObject}->Translate('Date') .
-                            ": $Data{Created}<br/>" . $Data{Body};
-                    }
-
-                    for (qw(Subject ReplyTo Reply-To Cc To From)) {
-                        if ( $Data{$_} ) {
-                            $Data{Body} = $LayoutObject->{LanguageObject}->Translate($_) .
-                                ": $Data{$_}<br/>" . $Data{Body};
-                        }
-                    }
-
-                    my $From = $LayoutObject->Ascii2RichText(
-                        String => $Data{From},
-                    );
-
-                    my $MessageFrom = $LayoutObject->{LanguageObject}->Translate('Message from');
-                    my $EndMessage  = $LayoutObject->{LanguageObject}->Translate('End message');
-
-                    $Data{Body} = "<br/>---- $MessageFrom $From ---<br/><br/>" . $Data{Body};
-                    $Data{Body} .= "<br/>---- $EndMessage ---<br/>";
-                }
-            }
-        }
-        else {
-
-            # prepare body, subject, ReplyTo ...
-            # rewrap body if exists
-            if ( $Data{Body} ) {
-                $Data{Body} =~ s/\t/ /g;
-                my $Quote = $ConfigObject->Get('Ticket::Frontend::Quote');
-                if ($Quote) {
-                    $Data{Body} =~ s/\n/\n$Quote /g;
-                    $Data{Body} = "\n$Quote " . $Data{Body};
-                }
-                else {
-                    $Data{Body} = "\n" . $Data{Body};
-                    if ( $Data{Created} ) {
-                        $Data{Body} = $LayoutObject->{LanguageObject}->Translate('Date') .
-                            ": $Data{Created}\n" . $Data{Body};
-                    }
-
-                    for (qw(Subject ReplyTo Reply-To Cc To From)) {
-                        if ( $Data{$_} ) {
-                            $Data{Body} = $LayoutObject->{LanguageObject}->Translate($_) .
-                                ": $Data{$_}\n" . $Data{Body};
-                        }
-                    }
-
-                    my $MessageFrom = $LayoutObject->{LanguageObject}->Translate('Message from');
-                    my $EndMessage  = $LayoutObject->{LanguageObject}->Translate('End message');
-
-                    $Data{Body} = "\n---- $MessageFrom $Data{From} ---\n\n" . $Data{Body};
-                    $Data{Body} .= "\n---- $EndMessage ---\n";
-                }
-            }
-        }
-
         # check if Cc recipients should be used
         if ( $ConfigObject->Get('Ticket::Frontend::ComposeExcludeCcRecipients') ) {
             $Data{Cc} = '';
@@ -1585,6 +1512,88 @@ sub Run {
             UserID    => $Self->{UserID},
         );
 
+        if ( $LayoutObject->{BrowserRichText} ) {
+
+            # prepare body, subject, ReplyTo ...
+            # rewrap body if exists
+            if ( $Data{Body} ) {
+                $Data{Body} =~ s/\t/ /g;
+                my $Quote = $LayoutObject->Ascii2Html(
+                    Text => $ConfigObject->Get('Ticket::Frontend::Quote') || '',
+                    HTMLResultMode => 1,
+                );
+                if ($Quote) {
+
+                    # quote text
+                    $Data{Body} = "<blockquote type=\"cite\">$Data{Body}</blockquote>\n";
+
+                    # cleanup not compat. tags
+                    $Data{Body} = $LayoutObject->RichTextDocumentCleanup(
+                        String => $Data{Body},
+                    );
+
+                }
+                else {
+                    $Data{Body} = "<br/>" . $Data{Body};
+
+                    if ( $Data{Created} ) {
+                        $Data{Body} = $LayoutObject->{LanguageObject}->Translate('Date') .
+                            ": $Data{Created}<br/>" . $Data{Body};
+                    }
+
+                    for (qw(Subject ReplyTo Reply-To Cc To From)) {
+                        if ( $Data{$_} ) {
+                            $Data{Body} = $LayoutObject->{LanguageObject}->Translate($_) .
+                                ": $Data{$_}<br/>" . $Data{Body};
+                        }
+                    }
+
+                    my $From = $LayoutObject->Ascii2RichText(
+                        String => $Data{From},
+                    );
+
+                    my $MessageFrom = $LayoutObject->{LanguageObject}->Translate('Message from');
+                    my $EndMessage  = $LayoutObject->{LanguageObject}->Translate('End message');
+
+                    $Data{Body} = "<br/>---- $MessageFrom $From ---<br/><br/>" . $Data{Body};
+                    $Data{Body} .= "<br/>---- $EndMessage ---<br/>";
+                }
+            }
+        }
+        else {
+
+            # prepare body, subject, ReplyTo ...
+            # rewrap body if exists
+            if ( $Data{Body} ) {
+                $Data{Body} =~ s/\t/ /g;
+                my $Quote = $ConfigObject->Get('Ticket::Frontend::Quote');
+                if ($Quote) {
+                    $Data{Body} =~ s/\n/\n$Quote /g;
+                    $Data{Body} = "\n$Quote " . $Data{Body};
+                }
+                else {
+                    $Data{Body} = "\n" . $Data{Body};
+                    if ( $Data{Created} ) {
+                        $Data{Body} = $LayoutObject->{LanguageObject}->Translate('Date') .
+                            ": $Data{Created}\n" . $Data{Body};
+                    }
+
+                    for (qw(Subject ReplyTo Reply-To Cc To From)) {
+                        if ( $Data{$_} ) {
+                            $Data{Body} = $LayoutObject->{LanguageObject}->Translate($_) .
+                                ": $Data{$_}\n" . $Data{Body};
+                        }
+                    }
+
+                    my $MessageFrom = $LayoutObject->{LanguageObject}->Translate('Message from');
+                    my $EndMessage  = $LayoutObject->{LanguageObject}->Translate('End message');
+
+                    $Data{Body} = "\n---- $MessageFrom $Data{From} ---\n\n" . $Data{Body};
+                    $Data{Body} .= "\n---- $EndMessage ---\n";
+                }
+            }
+        }
+
         my $ResponseFormat = $ConfigObject->Get('Ticket::Frontend::ResponseFormat') || <<'END';
 [% Data.Salutation | html %]
 [% Data.StdResponse | html %]
@@ -1674,7 +1683,7 @@ END
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $IsACLReducible = $BackendObject->HasBehavior(
@@ -1740,9 +1749,6 @@ END
                 UpdatableFields      => $Self->_GetFieldsToUpdate(),
             );
         }
-
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
 
         # build references if exist
         my $References = ( $Data{MessageID} || '' ) . ( $Data{References} || '' );
@@ -2090,17 +2096,10 @@ sub _Mask {
         },
     );
 
-    # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-        Valid       => 1,
-        ObjectType  => [ 'Ticket', 'Article' ],
-        FieldFilter => $Config->{DynamicField} || {},
-    );
-
     # Dynamic fields
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # skip fields that HTML could not be retrieved
@@ -2253,18 +2252,9 @@ sub _GetFieldsToUpdate {
         @UpdatableFields = qw( StateID );
     }
 
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
-
-    # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-        Valid       => 1,
-        ObjectType  => [ 'Ticket', 'Article' ],
-        FieldFilter => $Config->{DynamicField} || {},
-    );
-
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         my $IsACLReducible = $Kernel::OM->Get('Kernel::System::DynamicField::Backend')->HasBehavior(
@@ -2285,18 +2275,8 @@ sub _GetShownDynamicFields {
     # use only dynamic fields which passed the acl
     my %TicketAclFormData = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAclFormData();
 
-    # get config of frontend module
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
-
-    # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-        Valid       => 1,
-        ObjectType  => [ 'Ticket', 'Article' ],
-        FieldFilter => $Config->{DynamicField} || {},
-    );
-
     # cycle through dynamic fields to get shown or hidden fields
-    for my $DynamicField ( @{$DynamicField} ) {
+    for my $DynamicField ( @{ $Self->{DynamicField} } ) {
 
         # if field was not configured initially set it as not visible
         if ( $Self->{NotShownDynamicFields}->{ $DynamicField->{Name} } ) {
