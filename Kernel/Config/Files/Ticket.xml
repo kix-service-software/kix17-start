@@ -12725,7 +12725,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::KIXSidebarBackend###DynamicField" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the KIXSidebar backend DynamicField.</Description>
+        <Description Translatable="1">Parameters for the KIXSidebar backend DynamicField. You need to configure the dynamic fields at Ticket::Frontend::KIXSidebarDynamicField###DynamicField</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
         <Setting>
@@ -12737,7 +12737,7 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::KIXSidebarDynamicField###DynamicField" Required="0" Valid="0">
+    <ConfigItem Name="Ticket::Frontend::KIXSidebarDynamicField###DynamicField" Required="0" Valid="1">
         <Description Translatable="1">Dynamic fields shown in the quick ticket configurator screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
