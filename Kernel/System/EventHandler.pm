@@ -220,6 +220,52 @@ sub EventHandler {
             # load event module
             next MODULE if !$MainObject->Require( $Modules->{$Module}->{Module} );
 
+            # check unique event
+            my %UniqueHash;
+            if ( $Modules->{$Module}->{Unique} ) {
+                my @UniqueChecks = split( ',', $Modules->{$Module}->{Unique} );
+                my $MemoryMatch  = 0;
+
+                # prepare data for check and memory
+                for my $UniqueCheck ( @UniqueChecks ) {
+                    $UniqueCheck =~ s/(?:^\s+|\s+$)//g;
+
+                    if ( $UniqueCheck =~ m/(.+)::(.+)/ ) {
+                        next MODULE if ( !defined( $Param{$1}->{$2} ) );
+
+                        $UniqueHash{$UniqueCheck} = $Param{$1}->{$2};
+                    }
+                    else {
+                        next MODULE if ( !defined( $Param{$UniqueCheck} ) );
+
+                        $UniqueHash{$UniqueCheck} = $Param{$UniqueCheck};
+                    }
+                }
+
+                # only check if there is an entry for this module
+                if ( ref($Self->{EventHandlerMemory}->{$Module}) eq 'ARRAY' ) {
+                    UNIQUEMEMORY:
+                    for my $EventHandlerMemory ( @{ $Self->{EventHandlerMemory}->{$Module} } ) {
+                        for my $UniqueCheck ( keys( %UniqueHash ) ) {
+                            next UNIQUEMEMORY if (
+                                !defined( $EventHandlerMemory->{$UniqueCheck} )
+                                || $EventHandlerMemory->{$UniqueCheck} ne $UniqueHash{$UniqueCheck}
+                            );
+                        }
+
+                        $MemoryMatch = 1;
+                        last UNIQUEMEMORY;
+                    }
+                }
+
+                next MODULE if ( $MemoryMatch );
+            }
+
+            # remember event
+            if ( %UniqueHash ) {
+                push( @{ $Self->{EventHandlerMemory}->{$Module} }, \%UniqueHash );
+            }
+
             # execute event backend
             my $Generic = $Modules->{$Module}->{Module}->new();
 
