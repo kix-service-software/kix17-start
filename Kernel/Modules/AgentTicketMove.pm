@@ -169,7 +169,7 @@ sub Run {
     }
 
     # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => $ObjectType,
         FieldFilter => $Config->{DynamicField} || {},
@@ -180,7 +180,7 @@ sub Run {
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # extract the dynamic field value form the web request
@@ -257,6 +257,21 @@ sub Run {
     # get upload cache object
     my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
 
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %GetParam,
+        %ACLCompatGetParam,
+        Action        => $Self->{Action},
+        TicketID      => $Self->{TicketID},
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
+
     # Ajax update
     if ( $Self->{Subaction} eq 'AJAXUpdate' ) {
         my $ElementChanged = $ParamObject->GetParam( Param => 'ElementChanged' ) || '';
@@ -288,7 +303,7 @@ sub Run {
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
@@ -367,15 +382,10 @@ sub Run {
             );
         }
 
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields(
-            DynamicFields => $DynamicField
-        );
-
         # use only dynamic fields which passed the acl
         my %Output;
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{ $DynamicField } ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             if ( $DynamicFieldConfig->{Shown} == 1 ) {
@@ -563,7 +573,7 @@ sub Run {
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
@@ -606,11 +616,6 @@ sub Run {
                 }
             }
         }
-
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields(
-            DynamicFields => $DynamicField
-        );
 
         # to store dynamic field value from database (or undefined)
         my $Value;
@@ -708,7 +713,7 @@ sub Run {
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
@@ -753,14 +758,9 @@ sub Run {
             }
         }
 
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields(
-            DynamicFields => $DynamicField
-        );
-
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{ $DynamicField } ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $ValidationResult;
@@ -1147,8 +1147,9 @@ sub Run {
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
 
             # set the object ID (TicketID or ArticleID) depending on the field configration
             my $ObjectID = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Self->{TicketID};
@@ -1392,7 +1393,7 @@ sub AgentMove {
     # Dynamic fields
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # skip fields that HTML could not be retrieved
@@ -1758,7 +1759,7 @@ sub _GetFieldsToUpdate {
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         my $IsACLReducible = $Kernel::OM->Get('Kernel::System::DynamicField::Backend')->HasBehavior(
@@ -1813,11 +1814,8 @@ sub _GetShownDynamicFields {
     # use only dynamic fields which passed the acl
     my %TicketAclFormData = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAclFormData();
 
-    # get config of frontend module
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
-
     # cycle through dynamic fields to get shown or hidden fields
-    for my $DynamicField ( @{ $Param{DynamicFields} } ) {
+    for my $DynamicField ( @{ $Self->{DynamicField} } ) {
 
         # if field was not configured initially set it as not visible
         if ( $Self->{NotShownDynamicFields}->{ $DynamicField->{Name} } ) {
