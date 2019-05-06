@@ -554,7 +554,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::EventModulePost###500-NotificationEvent" Required="0" Valid="1">
+    <ConfigItem Name="Ticket::EventModulePost###999-NotificationEvent" Required="0" Valid="1">
         <Description Translatable="1">Sends the notifications which are configured in the admin interface under "Notfication (Event)".</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
@@ -563,6 +563,7 @@
                 <Item Key="Module">Kernel::System::Ticket::Event::NotificationEvent</Item>
                 <Item Key="Transaction">1</Item>
                 <Item Key="Event"></Item>
+                <Item Key="Unique">Event,Data::TicketID</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -12724,7 +12725,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::KIXSidebarBackend###DynamicField" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the KIXSidebar backend DynamicField.</Description>
+        <Description Translatable="1">Parameters for the KIXSidebar backend DynamicField. You need to configure the dynamic fields at Ticket::Frontend::KIXSidebarDynamicField###DynamicField</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
         <Setting>
@@ -12736,7 +12737,7 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::KIXSidebarDynamicField###DynamicField" Required="0" Valid="0">
+    <ConfigItem Name="Ticket::Frontend::KIXSidebarDynamicField###DynamicField" Required="0" Valid="1">
         <Description Translatable="1">Dynamic fields shown in the quick ticket configurator screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::KIXSidebarBackend</SubGroup>
@@ -16449,8 +16450,8 @@ Thanks for your help!
                 <Item Key="NoActionWithoutSelection"></Item>
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
-                <Item Key="RestrictedOTRSObjects">CustomerUser,Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">UserLogin,1</Item>
+                <Item Key="RestrictedKIXObjects">CustomerUser,Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">UserLogin,1</Item>
                 <Item Key="RestrictedDBAttributes">customer_user_id,responsible_user_id</Item>
                 <Item Key="RestrictedMandatory">1,0</Item>
                 <Item Key="RestrictedArrayHandling">OR</Item>
@@ -16499,8 +16500,8 @@ Thanks for your help!
                 <Item Key="NoActionWithoutSelection"></Item>
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
-                <Item Key="RestrictedOTRSObjects">CustomerUser</Item>
-                <Item Key="RestrictedOTRSAttributes">UserLogin</Item>
+                <Item Key="RestrictedKIXObjects">CustomerUser</Item>
+                <Item Key="RestrictedKIXAttributes">UserLogin</Item>
                 <Item Key="RestrictedDBAttributes">customer_user_id</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="RestrictedArrayHandling">OR</Item>
@@ -16548,8 +16549,8 @@ Thanks for your help!
                 <Item Key="NoActionWithoutSelection"></Item>
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">Contact</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">Contact</Item>
                 <Item Key="RestrictedDBAttributes">comments</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="RestrictedArrayHandling">OR</Item>
@@ -16597,8 +16598,8 @@ Thanks for your help!
                 <Item Key="NoActionWithoutSelection"></Item>
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">ITSM::Core::IncidentState</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">ITSM::Core::IncidentState</Item>
                 <Item Key="RestrictedDBAttributes">general_catalog_class</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="RestrictedArrayHandling">OR</Item>

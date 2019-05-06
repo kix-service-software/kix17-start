@@ -45,7 +45,6 @@ Core.Agent.ServiceSearch = (function (TargetNS) {
                         Term: Request.term,
                         MaxResults: Core.Config.Get('Autocomplete.MaxResultsDisplayed')
                     };
-                    console.log(URL);
                     Core.AJAX.FunctionCall(URL, Data, function (Result) {
                         var Data = [];
                         $.each(Result, function () {

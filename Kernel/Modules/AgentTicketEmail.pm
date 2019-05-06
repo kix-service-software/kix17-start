@@ -48,10 +48,9 @@ sub new {
 
     # handle for quick ticket templates
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-    $Self->{DefaultSet} = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
-    $Self->{DefaultSetTypeChanged} =
-        $ParamObject->GetParam( Param => 'DefaultSetTypeChanged' ) || 0;
-    $Self->{ActionReal} = $Self->{Action};
+    $Self->{DefaultSet}            = $ParamObject->GetParam( Param => 'DefaultSet' ) || 0;
+    $Self->{DefaultSetTypeChanged} = $ParamObject->GetParam( Param => 'DefaultSetTypeChanged' ) || 0;
+    $Self->{ActionReal}            = $Self->{Action};
 
     return $Self;
 }
@@ -542,6 +541,20 @@ sub Run {
         @MultipleCustomerBcc    = @{ $TemplateData{MultipleCustomerBcc} } if defined $TemplateData{MultipleCustomerBcc} && ref $TemplateData{MultipleCustomerBcc}  eq 'ARRAY';
     }
 
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %GetParam,
+        %ACLCompatGetParam,
+        Action        => $Self->{Action},
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
+
     if ( !$Self->{Subaction} || $Self->{Subaction} eq 'Created' ) {
 
         # header
@@ -610,10 +623,10 @@ sub Run {
             }
 
             # get needed objects
-            my $TypeObject = $Kernel::OM->Get('Kernel::System::Type');
-            my $StateObject = $Kernel::OM->Get('Kernel::System::State');
-            my $ServiceObject = $Kernel::OM->Get('Kernel::System::Service');
-            my $SLAObject = $Kernel::OM->Get('Kernel::System::SLA');
+            my $TypeObject         = $Kernel::OM->Get('Kernel::System::Type');
+            my $StateObject        = $Kernel::OM->Get('Kernel::System::State');
+            my $ServiceObject      = $Kernel::OM->Get('Kernel::System::Service');
+            my $SLAObject          = $Kernel::OM->Get('Kernel::System::SLA');
             my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
 
             # get customer from quick ticket
@@ -626,17 +639,24 @@ sub Run {
                     && $CustomerData{UserID}
                     && $CustomerData{UserEmail}
                 ) {
-                    my $CustomerName = $CustomerUserObject
-                        ->CustomerName( UserLogin => $CustomerData{UserID} );
-                    $GetParam{To}
-                        = '"' . $CustomerName . '" '
-                        . '<' . $CustomerData{UserEmail} . '>';
+                    my $CustomerName = $CustomerUserObject->CustomerName( UserLogin => $CustomerData{UserID} );
+                    $GetParam{To} = '"' . $CustomerName . '" '
+                                  . '<' . $CustomerData{UserEmail} . '>';
                     $GetParam{CustomerID}            = $CustomerData{UserCustomerID};
                     $GetParam{CustomerUserID}        = $CustomerData{UserID};
                     $CustomerData{CustomerUserLogin} = $CustomerData{UserID};
                 }
                 else {
                     $GetParam{To} = $GetParam{QuickTicketCustomer};
+                }
+            }
+            elsif ( $Self->{DefaultSet} ) {
+                my $CustomerUser = $ParamObject->GetParam( Param => 'SelectedCustomerUser' );
+                if ( $CustomerUser ) {
+                    %CustomerData = $CustomerUserObject->CustomerUserDataGet(
+                        User => $CustomerUser,
+                    );
+                    $CustomerData{CustomerUserLogin} = $CustomerData{UserID};
                 }
             }
 
@@ -884,8 +904,6 @@ sub Run {
                 );
             }
 
-            $Self->_GetShownDynamicFields();
-
             # run compose modules
             if (
                 ref $ConfigObject->Get('Ticket::Frontend::ArticleComposeModule') eq
@@ -941,7 +959,7 @@ sub Run {
             my $Services = $Self->_GetServices(
                 QueueID => $Self->{QueueID} || 1,
                 %GetParam,
-                CustomerUserID => $CustomerData{CustomerUserLogin} || '',
+                CustomerUserID => $CustomerData{CustomerUserLogin} ||'',
                 TypeID         => $GetParam{TypeID}                || $GetParam{DefaultTypeID},
             );
             my $SLAs = $Self->_GetSLAs(
@@ -1243,9 +1261,6 @@ sub Run {
                 }
             }
         }
-
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
@@ -1767,6 +1782,7 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             # set the value
@@ -1917,6 +1933,7 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Article';
 
             # set the value
@@ -2331,7 +2348,6 @@ sub Run {
                 %ACLCompatGetParam,
                 CustomerUserID => $CustomerUser || '',
                 Action         => $Self->{Action},
-                TicketID       => $Self->{TicketID},
                 QueueID        => $QueueID      || 0,
                 ReturnType     => 'Ticket',
                 ReturnSubType  => 'DynamicField_' . $DynamicFieldConfig->{Name},

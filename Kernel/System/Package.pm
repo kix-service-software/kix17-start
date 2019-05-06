@@ -38,7 +38,7 @@ our @ObjectDependencies = (
     'Kernel::System::XML',
 );
 
-## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+## no critic qw(BuiltinFunctions::ProhibitStringyEval Subroutines::ProhibitUnusedPrivateSubroutines)
 
 =head1 NAME
 
@@ -2534,7 +2534,7 @@ sub _Code {
 
         print STDERR "Code: $Code->{Content}\n";
 
-        if ( !eval( { $Code->{Content} . "\n1;" } ) ) {
+        if ( !eval( $Code->{Content} . "\n1;" ) ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Code: $@",

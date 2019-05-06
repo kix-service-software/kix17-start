@@ -26,13 +26,21 @@ sub new {
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
 
-    $Self->{DynamicFieldFilter} = $ConfigObject->Get("Ticket::Frontend::KIXSidebarDynamicField")->{DynamicField} || {};
+    $Self->{DynamicFieldFilter} = {};
+    my $Config = $ConfigObject->Get("Ticket::Frontend::KIXSidebarDynamicField");
+    if (
+        ref( $Config ) eq 'HASH'
+        && defined( $Config->{DynamicField} )
+        && ref( $Config->{DynamicField} ) eq 'HASH'
+    ) {
+        $Self->{DynamicFieldFilter} = $Config->{DynamicField};
+    }
 
     # get the dynamic fields for this screen
     $Self->{DynamicField} = $DynamicFieldObject->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => ['Ticket'],
-        FieldFilter => $Self->{DynamicFieldFilter} || {},
+        FieldFilter => $Self->{DynamicFieldFilter},
     );
 
     return $Self;

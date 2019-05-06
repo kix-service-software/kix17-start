@@ -59,7 +59,7 @@ create an object
 
     use Kernel::System::ObjectManager;
     local $Kernel::OM = Kernel::System::ObjectManager->new();
-    my $ConfigItemObject = $Kernel::OM->Get('Kernel::System::ConfigItem');
+    my $ConfigItemObject = $Kernel::OM->Get('Kernel::System::ITSMConfigItem');
 
 =cut
 
@@ -71,7 +71,7 @@ sub new {
     bless( $Self, $Type );
 
     $Self->{CacheType} = 'ITSMConfigurationManagement';
-    $Self->{CacheTTL}  = 60 * 60 * 24 * 20;
+    $Self->{CacheTTL}  = 60 * 60 * 24 * 25;     # 25 days - don't exceed 29 days here, because memcached can't handle TTLs above 30 days
 
     # get needed objects
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -88,7 +88,7 @@ sub new {
         Kernel::System::PreEventHandler
     );
 
-    # load ticket extension modules
+    # load itsm config item extension modules
     my $CustomModule = $ConfigObject->Get('ITSMConfigItem::CustomModules');
     if ($CustomModule) {
 

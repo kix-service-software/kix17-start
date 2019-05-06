@@ -274,7 +274,7 @@ sub Run {
         NewStateID NewPriorityID TimeUnits ArticleTypeID Title Body Subject NewQueueID
         Year Month Day Hour Minute NewOwnerID NewResponsibleID TypeID ServiceID SLAID
         Expand ReplyToArticle StandardTemplateID CreateArticle
-        TypeID ServiceID SLAID DestQueue  NewOwnerType OldOwnerID NewResponsibleID ElementChanged
+        DestQueue  NewOwnerType OldOwnerID ElementChanged
         )
     ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
@@ -307,7 +307,7 @@ sub Run {
     }
 
     # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+    $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => $ObjectType,
         FieldFilter => $Config->{DynamicField} || {},
@@ -318,7 +318,7 @@ sub Run {
 
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         # extract the dynamic field value form the web request
@@ -463,6 +463,21 @@ sub Run {
 
     # get upload cache object
     my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
+
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %GetParam,
+        %ACLCompatGetParam,
+        Action        => $Self->{Action},
+        TicketID      => $Self->{TicketID},
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
 
     if ( $Self->{Subaction} eq 'Store' ) {
 
@@ -642,7 +657,7 @@ sub Run {
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
@@ -687,12 +702,9 @@ sub Run {
             }
         }
 
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
-
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{ $DynamicField } ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $ValidationResult;
@@ -1087,8 +1099,9 @@ sub Run {
         # set dynamic fields
         # cycle through the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
 
             # set the object ID (TicketID or ArticleID) depending on the field configration
             my $ObjectID = $DynamicFieldConfig->{ObjectType} eq 'Article' ? $ArticleID : $Self->{TicketID};
@@ -1330,7 +1343,7 @@ sub Run {
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
@@ -1367,7 +1380,7 @@ sub Run {
                 %ACLCompatGetParam,
                 Action        => $Self->{Action},
                 TicketID      => $Self->{TicketID},
-                QueueID       => $QueueID,
+                QueueID       => $GetParam{NewQueueID} || $QueueID || 0,,
                 ReturnType    => 'Ticket',
                 ReturnSubType => 'DynamicField_' . $DynamicFieldConfig->{Name},
                 Data          => \%AclData,
@@ -1411,13 +1424,10 @@ sub Run {
             );
         }
 
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
-
         # if we have DynamicFields use just those that are OK by ACL Rules
         my %Output;
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{ $DynamicField } ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
 
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
@@ -1782,7 +1792,7 @@ sub Run {
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{$DynamicField} ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             my $IsACLReducible = $DynamicFieldBackendObject->HasBehavior(
@@ -1807,6 +1817,7 @@ sub Run {
                     # set possible values filter from ACLs
                     $ACL = $TicketObject->TicketAcl(
                         %GetParam,
+                        %ACLCompatGetParam,
                         Action        => $Self->{Action},
                         TicketID      => $Self->{TicketID},
                         ReturnType    => 'Ticket',
@@ -1825,12 +1836,9 @@ sub Run {
             }
         }
 
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
-
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{ $DynamicField } ) {
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
             # to store dynamic field value from database (or undefined)
@@ -2408,23 +2416,8 @@ sub _Mask {
 
     # End Widget Ticket Actions
 
-    # define the dynamic fields to show based on the object type
-    my $ObjectType = ['Ticket'];
-
-    # only screens that add notes can modify Article dynamic fields
-    if ( $Config->{Note} ) {
-        $ObjectType = [ 'Ticket', 'Article' ];
-    }
-
-    # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-        Valid       => 1,
-        ObjectType  => $ObjectType,
-        FieldFilter => $Config->{DynamicField} || {},
-    );
-
     # Widget Dynamic Fields
-    if ( IsArrayRefWithData($DynamicField) ) {
+    if ( IsArrayRefWithData($Self->{DynamicField}) ) {
         $LayoutObject->Block(
             Name => 'WidgetDynamicFields',
         );
@@ -2438,7 +2431,7 @@ sub _Mask {
     # Dynamic fields
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
 
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
@@ -3147,27 +3140,9 @@ sub _GetFieldsToUpdate {
         );
     }
 
-    # define the dynamic fields to show based on the object type
-    my $ObjectType = ['Ticket'];
-
-    # get config of frontend module
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
-
-    # only screens that add notes can modify Article dynamic fields
-    if ( $Config->{Note} ) {
-        $ObjectType = [ 'Ticket', 'Article' ];
-    }
-
-    # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-        Valid       => 1,
-        ObjectType  => $ObjectType,
-        FieldFilter => $Config->{DynamicField} || {},
-    );
-
     # cycle through the activated Dynamic Fields for this screen
     DYNAMICFIELD:
-    for my $DynamicFieldConfig ( @{$DynamicField} ) {
+    for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
         next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
         my $IsACLReducible = $Kernel::OM->Get('Kernel::System::DynamicField::Backend')->HasBehavior(
@@ -3346,26 +3321,8 @@ sub _GetShownDynamicFields {
     # use only dynamic fields which passed the acl
     my %TicketAclFormData = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAclFormData();
 
-    # get config of frontend module
-    my $Config = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::$Self->{Action}");
-
-    # define the dynamic fields to show based on the object type
-    my $ObjectType = ['Ticket'];
-
-    # only screens that add notes can modify Article dynamic fields
-    if ( $Config->{Note} ) {
-        $ObjectType = [ 'Ticket', 'Article' ];
-    }
-
-    # get the dynamic fields for this screen
-    my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
-        Valid       => 1,
-        ObjectType  => $ObjectType,
-        FieldFilter => $Config->{DynamicField} || {},
-    );
-
     # cycle through dynamic fields to get shown or hidden fields
-    for my $DynamicField ( @{ $DynamicField } ) {
+    for my $DynamicField ( @{ $Self->{DynamicField} } ) {
 
         # if field was not configured initially set it as not visible
         if ( $Self->{NotShownDynamicFields}->{ $DynamicField->{Name} } ) {

@@ -391,6 +391,20 @@ sub Run {
                 && ref $TemplateData{MultipleCustomer} eq 'ARRAY';
     }
 
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %GetParam,
+        %ACLCompatGetParam,
+        Action        => $Self->{Action},
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
+
     if ( !$Self->{Subaction} || $Self->{Subaction} eq 'Created' ) {
 
         # header
@@ -797,9 +811,6 @@ sub Run {
             );
         }
 
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
-
         # get needed objects
         my $TypeObject = $Kernel::OM->Get('Kernel::System::Type');
         my $StateObject = $Kernel::OM->Get('Kernel::System::State');
@@ -816,17 +827,23 @@ sub Run {
                 && $CustomerData{UserID}
                 && $CustomerData{UserEmail}
             ) {
-                my $CustomerName = $CustomerUserObject
-                    ->CustomerName( UserLogin => $CustomerData{UserID} );
-                $Article{From}
-                    = '"' . $CustomerName . '" '
-                    . '<' . $CustomerData{UserEmail} . '>';
+                my $CustomerName = $CustomerUserObject->CustomerName( UserLogin => $CustomerData{UserID} );
+                $Article{From} = '"' . $CustomerName . '" '
+                               . '<' . $CustomerData{UserEmail} . '>';
                 $Article{CustomerID}             = $CustomerData{UserCustomerID};
                 $Article{CustomerUserID}         = $CustomerData{UserID};
                 $CustomerData{CustomerUserLogin} = $CustomerData{UserID};
             }
             else {
                 $Article{From} = $GetParam{QuickTicketCustomer};
+            }
+        }
+        elsif ( $Self->{DefaultSet} ) {
+            my $CustomerUser = $ParamObject->GetParam( Param => 'SelectedCustomerUser' );
+            if ( $CustomerUser ) {
+                %CustomerData = $CustomerUserObject->CustomerUserDataGet(
+                    User => $CustomerUser,
+                );
             }
         }
 
@@ -1331,9 +1348,6 @@ sub Run {
                 }
             }
         }
-
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
@@ -2360,9 +2374,6 @@ sub Run {
                 }
             );
         }
-
-        # get shown or hidden fields
-        $Self->_GetShownDynamicFields();
 
         # use only dynamic fields which passed the acl
         my %Output;

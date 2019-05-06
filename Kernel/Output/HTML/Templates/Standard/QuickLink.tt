@@ -83,7 +83,7 @@ $('#QuickLinkSubmit').bind('click',function(){
             if ( TabUrl.match(/ZoomTabLinkedObjects\;/g) ) {
                 TabIndex = $(this).attr('aria-controls');
             }
-        })
+        });
 
         // reload tab content
         Core.AJAX.ContentUpdate($('#'+TabIndex), URL , function () {});

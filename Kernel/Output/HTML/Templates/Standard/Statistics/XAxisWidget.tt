@@ -3,9 +3,12 @@
 # based on the original work of:
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 
@@ -56,7 +59,9 @@
 [% RenderBlockEnd("Time") %]
         <label></label>
         <div class="Field">
-            <input type="checkbox" name="Fixed[% Data.Element %]" value="1" [% Data.Fixed %]/>
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+            <input type="checkbox" name="Fixed[% Data.Element | html %]" value="1" [% Data.Fixed %]/>
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
             [% Translate("Do not allow changes to this element when the statistic is generated.") | html %]
         </div>
         <div class="Clear"></div>

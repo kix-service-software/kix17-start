@@ -27,8 +27,7 @@ sub new {
     $Self->{Identifier} = $ParamObject->GetParam( Param => 'Identifier' )
         || 'CustomerDashboardRemoteDB';
 
-    my $CustomerDashboardConfig
-        = $ConfigObject->Get('AgentCustomerInformationCenter::Backend');
+    my $CustomerDashboardConfig = $ConfigObject->Get('AgentCustomerInformationCenter::Backend');
     for my $Config ( keys %{$CustomerDashboardConfig} ) {
         next if $Config !~ /$Self->{Identifier}/;
         $Self->{DashletConfig} = $CustomerDashboardConfig->{$Config};
@@ -53,8 +52,8 @@ sub Run {
     my $CallingAction  = $ParamObject->GetParam( Param => 'CallingAction' )  || '';
     my $CustomerUserID = $ParamObject->GetParam( Param => 'CustomerUserID' ) || '';
     my $CustomerLogin  = $ParamObject->GetParam( Param => 'CustomerLogin' )  || '';
-    my $Identifier = $Self->{DashletConfig}->{Identifier} || '';
-    my $Frontend = 'Agent';
+    my $Identifier     = $Self->{DashletConfig}->{Identifier}                || '';
+    my $Frontend       = 'Agent';
 
     my @RestrictedDBAttributes = ();
     if ( defined( $Self->{DashletConfig}->{RestrictedDBAttributes} ) ) {
@@ -68,10 +67,17 @@ sub Run {
     if ( defined( $Self->{DashletConfig}->{RestrictedKIXObjects} ) ) {
         @RestrictedKIXObjects = split( ",", $Self->{DashletConfig}->{RestrictedKIXObjects} );
     }
+    # DEPRECATED: This option is no longer supported, but due to current use at customers for the time being still necessary.
+    elsif ( defined( $Self->{DashletConfig}->{RestrictedOTRSObjects} ) ) {
+        @RestrictedKIXObjects = split( ",", $Self->{DashletConfig}->{RestrictedOTRSObjects} );
+    }
     my @RestrictedKIXAttributes = ();
     if ( defined( $Self->{DashletConfig}->{RestrictedKIXAttributes} ) ) {
-        @RestrictedKIXAttributes
-            = split( ",", $Self->{DashletConfig}->{RestrictedKIXAttributes} );
+        @RestrictedKIXAttributes = split( ",", $Self->{DashletConfig}->{RestrictedKIXAttributes} );
+    }
+    # DEPRECATED:  This option is no longer supported, but due to current use at customers for the time being still necessary.
+    elsif ( defined( $Self->{DashletConfig}->{RestrictedOTRSAttributes} ) ) {
+        @RestrictedKIXAttributes = split( ",", $Self->{DashletConfig}->{RestrictedOTRSAttributes} );
     }
     my @RestrictedValues = ();
 
@@ -119,7 +125,10 @@ sub Run {
     }
 
     # add customer user restrictions
-    if ($CustomerLogin) {
+    if (
+        $CustomerLogin
+        && $Self->{DashletConfig}->{RestrictedDBAttributeCustomerLogin}
+    ) {
         my %CustomerUserData = $CustomerUserObject->CustomerUserDataGet(
             User => $CustomerLogin,
         );
@@ -129,7 +138,11 @@ sub Run {
             $Self->{DashletConfig}->{RestrictedDBAttributeCustomerLogin}
         );
     }
-    elsif ( defined $CustomerUserID && $CustomerUserID ) {
+    elsif (
+        defined $CustomerUserID
+        && $CustomerUserID
+        && $Self->{DashletConfig}->{RestrictedDBAttributeCustomerUserID}
+    ) {
         push( @RestrictedValues, $CustomerUserID );
         push(
             @RestrictedDBAttributes,
@@ -159,7 +172,11 @@ sub Run {
         );
     }
 
-    if ( $ResultArray && ref($ResultArray) eq 'ARRAY' && scalar( @{$ResultArray} > 0 ) ) {
+    if (
+        $ResultArray
+        && ref($ResultArray) eq 'ARRAY'
+        && scalar( @{$ResultArray} > 0 )
+    ) {
         my $Style = '';
         my $MaxResultDisplay = $Self->{DashletConfig}->{'MaxResultDisplay'} || 10;
 
