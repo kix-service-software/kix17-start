@@ -1,6 +1,20 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.6.0-RC3 (2019/05/06)
+ * (2019/05/03) - Bugfix: T2019022890001025 (fixed handling of acl disabled dynamic fields) (millinger)
+ * (2019/05/03) - Bugfix: T2019032290000866 (fixed error if dynamic field sidebar configuration is inavtive) (millinger)
+ * (2019/05/02) - Bugfix: T2016081790001424 (prevent multiple executions of event handler modules) (millinger)
+ * (2019/04/29) - Bugfix: T2019041790000589 (fixed service from ticket template isn't set when a customer user is selected) (fjacquemin)
+ * (2019/04/29) - Bugfix: T2019042990000575 (merged security fixes from OTRS) (millinger)
+ * (2019/04/29) - Bugfix: T2019042990000557 (merged security fixes from OTRS) (millinger)
+ * (2019/04/29) - Bugfix: T2019032790001016 (fixed missing check of restricted db attributes if use RemoteDB sidebar in customer information center) (fjacquemin)
+ * (2019/04/29) - Bugfix: T2019021290001019 (fixed dynamic fields are not hidden when an ACL disbales this field) (fjacquemin)
+ * (2019/04/25) - Bugfix: T2019032890000971 (search profile can not be executed from toolbar) (millinger)
+ * (2019/04/25) - Bugfix: T2019041290000865 (duplicate entry for linked persons on ticket merge) (millinger)
+ * (2019/04/25) - Bugfix: T2018122090000774 (config item import does not recognize xml attribute identifier) (millinger)
+ * (2019/04/25) - Bugfix: T2019032090000413 (dynamic field 'DateTime' could not search for restricted values) (millinger)
+
 # 17.6.0-RC2 (2019/04/25)
  * (2019/04/16) - CR: T2019040890001201 (code clean up) (fjacquemin)
  * (2019/04/15) - Bugfix: T2019032290001187 (fixed incorrect display of the sender in the ticket lists) (fjacquemin)
