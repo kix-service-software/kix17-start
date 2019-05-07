@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.6.0-RC4 (2019/05/07)
+ * (2019/05/07) - Bugfix: T2019040890001201 (fixed load wrong plugin by installing KIX) (fjacquemin)
+
 # 17.6.0-RC3 (2019/05/06)
  * (2019/05/03) - Bugfix: T2019022890001025 (fixed handling of acl disabled dynamic fields) (millinger)
  * (2019/05/03) - Bugfix: T2019032290000866 (fixed error if dynamic field sidebar configuration is inavtive) (millinger)
