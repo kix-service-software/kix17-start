@@ -89,6 +89,20 @@ sub Run {
             $Errors{ErrorType}   = $CheckItemObject->CheckErrorType();
         }
 
+        my $ExistsID = $SystemAddressObject->SystemAddressLookup(
+            Name    => $GetParam{Name},
+            Silence => 1
+        );
+
+        if (
+            defined $ExistsID
+            && $ExistsID
+            && $GetParam{ID} != $ExistsID
+        ) {
+            $Errors{NameInvalid} = 'ServerError';
+            $Errors{ErrorType}   = 'Duplicate';
+        }
+
         # if no errors occurred
         if ( !%Errors ) {
 
@@ -179,6 +193,19 @@ sub Run {
         ) {
             $Errors{NameInvalid} = 'ServerError';
             $Errors{ErrorType}   = $CheckItemObject->CheckErrorType();
+        }
+
+        my $ExistsID = $SystemAddressObject->SystemAddressLookup(
+            Name    => $GetParam{Name},
+            Silence => 1
+        );
+
+        if (
+            defined $ExistsID
+            && $ExistsID
+        ) {
+            $Errors{NameInvalid} = 'ServerError';
+            $Errors{ErrorType}   = 'Duplicate';
         }
 
         # if no errors occurred

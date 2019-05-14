@@ -897,6 +897,7 @@ sub Data {
         'DNS problem, please check your configuration and the error log.' =>
             'DNS-Problem, bitte prüfen Sie ihre Konfiguration und das Fehlerprotokoll.',
         'The syntax of this email address is incorrect.' => 'Die Syntax dieser E-Mail-Adresse ist fehlerhaft.',
+        'The email address you entered already exists.'  => 'Die von Ihnen eingegebene E-Mail-Adresse existiert bereits.',
 
         # Template: AdminCustomerUserGroup
         'Manage Customer-Group Relations' => 'Kunden-Gruppen-Zuordnung verwalten',
