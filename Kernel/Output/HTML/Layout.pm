@@ -1166,6 +1166,20 @@ sub Notify {
         $BoxClass = 'Info';
     }
 
+    if ( $Self->{Baselink} =~ /\/index.pl/ ) {
+        my ( $CallerPackage, $CallerFilename, $CallerLine ) = caller;
+        my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
+
+        my $CallerInfo = ( $CallerPackage || '' ) . '_' . ( $CallerLine || '' ) . '_' . ( $Param{Info} || '');
+        $CallerInfo = Digest::MD5::md5_hex(utf8::is_utf8($CallerInfo) ? Encode::encode_utf8($CallerInfo) : $CallerInfo);
+
+        $Param{NotifyID} = md5_hex($CallerInfo);
+        return "" if (
+            $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
+            && $Self->{SessionID} eq $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
+        );
+    }
+
     if ( $Param{Link} ) {
         $Self->Block(
             Name => 'LinkStart',
@@ -2200,6 +2214,23 @@ sub BuildSelection {
         return;
     }
 
+    if (
+        (
+            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::TypeTranslation')
+            && ( $Param{Name} eq 'TypeID' || $Param{Name} eq 'TypeIDs' )
+        )
+        || (
+            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ServiceTranslation')
+            && ( $Param{Name} eq 'ServiceID' || $Param{Name} eq 'ServiceIDs' )
+        )
+        || (
+            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SLATranslation')
+            && ( $Param{Name} eq 'SLAID' || $Param{Name} eq 'SLAIDs' )
+        )
+    ) {
+        $Param{Translation} = 1;
+    }
+
     # set OnChange if AJAX is used
     if ( $Param{Ajax} ) {
         if ( !$Param{Ajax}->{Depend} ) {
@@ -2272,15 +2303,83 @@ sub BuildSelection {
         @Filters = sort { $a->{Name} cmp $b->{Name} } @Filters;
     }
 
+    # get disabled selections
+    if ( defined $Param{DisabledOptions} && ref $Param{DisabledOptions} eq 'HASH' ) {
+        my $DisabledOptions = $Param{DisabledOptions};
+        for my $Item ( keys %{ $Param{DisabledOptions} } ) {
+            my $ItemValue = $Param{DisabledOptions}->{$Item};
+            my @ItemArray = split( '::', $ItemValue );
+            for ( my $Index = 0; $Index < scalar @{$DataRef}; $Index++ ) {
+                next
+                    if (
+                    $DataRef->[$Index]->{Value} !~ m/$ItemArray[-1]$/
+                    || $DataRef->[$Index]->{Key} ne $Item
+                    );
+                $DataRef->[$Index]->{Disabled} = 1;
+            }
+        }
+    }
+
+    # get UserPreferences
+    if (
+        ref $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::GenericAutoCompleteSearch') eq 'HASH'
+        && defined( $Self->{UserID} )
+        && $Self->{Action} !~ /^Customer/
+    ) {
+        my $AutoCompleteConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::GenericAutoCompleteSearch');
+        my %UserPreferences    = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
+
+        my $SearchTypeMappingKey;
+        if ( $Self->{Action} && $Param{Name} ) {
+            $SearchTypeMappingKey = $Self->{Action} . ":::" . $Param{Name};
+        }
+
+        my $SearchType;
+        if (
+            $SearchTypeMappingKey
+            && defined $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey}
+        ) {
+            $SearchType = $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey};
+        }
+
+        # create string for autocomplete
+        if (
+            $SearchType
+            && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
+            && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
+        ) {
+            my $AutoCompleteString
+                = '<input id="'
+                . $Param{Name}
+                . '" type="hidden" name="'
+                . $Param{Name}
+                . '" value=""/>'
+                . '<input id="'
+                . $Param{Name}
+                . 'autocomplete" type="text" name="'
+                . $Param{Name}
+                . 'autocomplete" value="" class=" W75pc AutocompleteOff Validate_Required"/>';
+
+            $Self->AddJSOnDocumentComplete( Code => <<"EOF");
+    Core.Config.Set("GenericAutoCompleteSearch.MinQueryLength",$AutoCompleteConfig->{MinQueryLength});
+    Core.Config.Set("GenericAutoCompleteSearch.QueryDelay",$AutoCompleteConfig->{QueryDelay});
+    Core.Config.Set("GenericAutoCompleteSearch.MaxResultsDisplayed",$AutoCompleteConfig->{MaxResultsDisplayed});
+    Core.KIX4OTRS.GenericAutoCompleteSearch.Init(\$("#$Param{Name}autocomplete"),\$("#$Param{Name}"));
+EOF
+            return $AutoCompleteString;
+        }
+    }
+
     # generate output
     my $String = $Self->_BuildSelectionOutput(
-        AttributeRef  => $AttributeRef,
-        DataRef       => $DataRef,
-        OptionTitle   => $Param{OptionTitle},
-        TreeView      => $Param{TreeView},
-        FiltersRef    => \@Filters,
-        FilterActive  => $FilterActive,
-        ExpandFilters => $Param{ExpandFilters},
+        AttributeRef    => $AttributeRef,
+        DataRef         => $DataRef,
+        OptionTitle     => $Param{OptionTitle},
+        TreeView        => $Param{TreeView},
+        FiltersRef      => \@Filters,
+        FilterActive    => $FilterActive,
+        ExpandFilters   => $Param{ExpandFilters},
+        DisabledOptions => $Param{DisabledOptions},
     );
     return $String;
 }
@@ -3167,6 +3266,32 @@ sub BuildDateSelection {
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
+    my ( $SmartStyleDate, $SmartStyleTime, $MinuteInterval );
+    my $TimeIntervalConfig = $ConfigObject->Get('DateSelection::Layout::TimeInputIntervall');
+
+    # get default values
+    if ( $Self->{Action} ne 'AgentTicketSearch' && $Self->{Action} ne 'AgentITSMConfigItemSearch' ) {
+        $SmartStyleDate
+            = ( defined $Param{SmartDateInput} )
+            ? $Param{SmartDateInput}
+            : $ConfigObject->Get('DateSelection::Layout::SmartDateInput');
+        $SmartStyleTime
+            = ( defined $Param{SmartTimeInput} )
+            ? $Param{SmartTimeInput}
+            : $ConfigObject->Get('DateSelection::Layout::SmartTimeInput');
+        $MinuteInterval
+            = ( defined $Param{TimeInputIntervall} )
+            ? $Param{TimeInputIntervall}
+            : 30;
+    }
+
+    # set time input interval from sysconfig if defined
+    for my $Action ( keys %{$TimeIntervalConfig} ) {
+        next if $Self->{Action} !~ /$Action/;
+        $MinuteInterval = $TimeIntervalConfig->{$Action};
+        last;
+    }
+
     my $DateInputStyle = $ConfigObject->Get('TimeInputFormat');
     my $Prefix         = $Param{Prefix} || '';
     my $DiffTime       = $Param{DiffTime} || 0;
@@ -3175,7 +3300,32 @@ sub BuildDateSelection {
     my $Optional       = $Param{ $Prefix . 'Optional' } || 0;
     my $Required       = $Param{ $Prefix . 'Required' } || 0;
     my $Used           = $Param{ $Prefix . 'Used' } || 0;
-    my $Class          = $Param{ $Prefix . 'Class' } || '';
+    my $Class          = '';
+    my $ClassDate      = '';
+    my $ClassTime      = '';
+    if ( !$SmartStyleDate && !$SmartStyleTime ) {
+        $Class          = $Param{ $Prefix . 'Class' } || '';
+    }
+    elsif ( $SmartStyleDate && !$SmartStyleTime ) {
+        if ( $Param{ $Prefix . 'Class' } ) {
+            $ClassDate = $Param{ $Prefix . 'Class' } . ' Modernize';
+            $ClassTime = $Param{ $Prefix . 'Class' };
+        }
+        else {
+            $ClassDate = 'Modernize';
+            $ClassTime = '';
+        }
+    }
+    else {
+        if ( $Param{ $Prefix . 'Class' } ) {
+            $ClassDate = $Param{ $Prefix . 'Class' } . ' Modernize';
+            $ClassTime = $Param{ $Prefix . 'Class' } . ' Modernize';
+        }
+        else {
+            $ClassDate = 'Modernize';
+            $ClassTime = 'Modernize';
+        }
+    }
 
     # Defines, if the date selection should be validated on client side with JS
     my $Validate = $Param{Validate} || 0;
@@ -3220,8 +3370,62 @@ sub BuildDateSelection {
         ) = $Self->{UserTimeObject}->SystemTime2Date( SystemTime => $TimeStamp );
     }
 
+    my $DateValidateClasses = '';
+    if ($Validate) {
+        $DateValidateClasses
+            .= "Validate_DateDay Validate_DateYear_${Prefix}Year Validate_DateMonth_${Prefix}Month";
+
+        if ( $Format eq 'DateInputFormatLong' ) {
+            $DateValidateClasses
+                .= " Validate_DateHour_${Prefix}Hour Validate_DateMinute_${Prefix}Minute";
+        }
+
+        if ($ValidateDateInFuture) {
+            $DateValidateClasses .= " Validate_DateInFuture";
+        }
+        if ($ValidateDateNotInFuture) {
+            $DateValidateClasses .= " Validate_DateNotInFuture";
+        }
+    }
+    if ($SmartStyleDate) {
+        $DateValidateClasses = "Validate_DateFull";
+        if ($ValidateDateInFuture) {
+            $DateValidateClasses .= " Validate_DateFullInFuture";
+        }
+    }
+    my $DateFormat = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->{DateInputFormat};
+    $DateFormat =~ s/\%D/dd/g;
+    $DateFormat =~ s/\%M/mm/g;
+    $DateFormat =~ s/\%Y/yy/g;
+
     # year
-    if ( $DateInputStyle eq 'Option' ) {
+    if ($SmartStyleDate) {
+        my $Date = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}
+            ->FormatTimeString(
+            sprintf( "%04d", ( $Param{ $Prefix . 'Year' } || $Y ) ) .
+                '-' .
+                sprintf( "%02d", ( $Param{ $Prefix . 'Month' } || $M ) ) .
+                '-' .
+                sprintf( "%02d", ( $Param{ $Prefix . 'Day' } || $D ) ) .
+                ' 00:00:00',
+            'DateFormatShort',
+            );
+        $Param{DateStr} = "<input type=\"text\" "
+            . ( $Validate ? "class=\"$DateValidateClasses $ClassDate\" " : "class=\"$ClassDate\" " )
+            . "name=\"${Prefix}Date\" id=\"${Prefix}Date\" size=\"10\" maxlength=\"10\" "
+            . "title=\""
+            . $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->Get('Date')
+            . "\" value=\""
+            . ( $Param{ $Prefix . 'Date' } || $Date ) . "\" " . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) ."/>";
+        $Param{DateStr} .= "<input type=\"hidden\" "
+            . "class=\"$Class\" "
+            . "name=\"${Prefix}Year\" id=\"${Prefix}Year\" size=\"4\" maxlength=\"4\" "
+            . "value=\""
+            . sprintf( "%04d", ( $Param{ $Prefix . 'Year' } || $Y ) ) . "\"/>";
+    }
+
+    elsif ( $DateInputStyle eq 'Option' ) {
+
         my %Year;
         if ( defined $Param{YearPeriodPast} && defined $Param{YearPeriodFuture} ) {
             for ( $Y - $Param{YearPeriodPast} .. $Y + $Param{YearPeriodFuture} ) {
@@ -3247,9 +3451,9 @@ sub BuildDateSelection {
             Data        => \%Year,
             SelectedID  => int( $Param{ $Prefix . 'Year' } || $Y ),
             Translation => 0,
-            Class       => $Validate ? "Validate_DateYear $Class" : $Class,
+            Class       => $Validate ? 'Validate_DateYear' : '',
             Title       => $Self->{LanguageObject}->Translate('Year'),
-            Disabled    => $Param{Disabled},
+            Disabled    =>  $Param{Disabled} || 0,
         );
     }
     else {
@@ -3264,14 +3468,23 @@ sub BuildDateSelection {
     }
 
     # month
-    if ( $DateInputStyle eq 'Option' ) {
+    if ($SmartStyleDate) {
+        $Param{DateStr} .= "<input type=\"hidden\" "
+            . "class=\"$ClassDate\" "
+            . "name=\"${Prefix}Month\" id=\"${Prefix}Month\" size=\"2\" maxlength=\"2\" "
+            . "value=\""
+            . sprintf( "%02d", ( $Param{ $Prefix . 'Month' } || $M ) ) . "\"/>";
+    }
+
+    elsif ( $DateInputStyle eq 'Option' ) {
+
         my %Month = map { $_ => sprintf( "%02d", $_ ); } ( 1 .. 12 );
         $Param{Month} = $Self->BuildSelection(
             Name        => $Prefix . 'Month',
             Data        => \%Month,
             SelectedID  => int( $Param{ $Prefix . 'Month' } || $M ),
             Translation => 0,
-            Class       => $Validate ? "Validate_DateMonth $Class" : $Class,
+            Class       => $Validate ? 'Validate_DateMonth' : '',
             Title       => $Self->{LanguageObject}->Translate('Month'),
             Disabled    => $Param{Disabled},
         );
@@ -3287,26 +3500,17 @@ sub BuildDateSelection {
             . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) . "/>";
     }
 
-    my $DateValidateClasses = '';
-    if ($Validate) {
-        $DateValidateClasses
-            .= "Validate_DateDay Validate_DateYear_${Prefix}Year Validate_DateMonth_${Prefix}Month";
-
-        if ( $Format eq 'DateInputFormatLong' ) {
-            $DateValidateClasses
-                .= " Validate_DateHour_${Prefix}Hour Validate_DateMinute_${Prefix}Minute";
-        }
-
-        if ($ValidateDateInFuture) {
-            $DateValidateClasses .= " Validate_DateInFuture";
-        }
-        if ($ValidateDateNotInFuture) {
-            $DateValidateClasses .= " Validate_DateNotInFuture";
-        }
+    # day
+    if ($SmartStyleDate) {
+        $Param{DateStr} .= "<input type=\"hidden\" "
+            . "class=\"$ClassDate\" "
+            . "name=\"${Prefix}Day\" id=\"${Prefix}Day\" size=\"2\" maxlength=\"2\" "
+            . "value=\""
+            . sprintf( "%02d", ( $Param{ $Prefix . 'Day' } || $D ) ) . "\"/>";
     }
 
-    # day
-    if ( $DateInputStyle eq 'Option' ) {
+    elsif ( $DateInputStyle eq 'Option' ) {
+
         my %Day = map { $_ => sprintf( "%02d", $_ ); } ( 1 .. 31 );
         $Param{Day} = $Self->BuildSelection(
             Name        => $Prefix . 'Day',
@@ -3332,7 +3536,70 @@ sub BuildDateSelection {
     if ( $Format eq 'DateInputFormatLong' ) {
 
         # hour
-        if ( $DateInputStyle eq 'Option' ) {
+        if ($SmartStyleTime) {
+            $h =
+                defined( $Param{ $Prefix . 'Hour' } )
+                ? int( $Param{ $Prefix . 'Hour' } )
+                : $h;
+            $m
+                = defined( $Param{ $Prefix . 'Minute' } )
+                ? int( $Param{ $Prefix . 'Minute' } )
+                : $m;
+
+            if ( $m != 0 && ( $m % $MinuteInterval ) != 0 ) {
+                my $Minute = $MinuteInterval;
+                while ( ( $Minute / $m ) < 1 && ( $Minute < 60 ) ) {
+                    $Minute += $MinuteInterval;
+                }
+                if ( $Minute >= 60 && $h >= 23 ) {
+                    $h = 23;
+                    $m = 59;
+                }
+                elsif ( $Minute >= 60 ) {
+                    $h = $h + 1;
+                    $m = 0;
+                }
+                else {
+                    $m = $Minute;
+                }
+            }
+            $h = sprintf( "%02d", $h );
+            $m = sprintf( "%02d", $m );
+            my %TimeDef = (
+                '23:59' => '23:59',
+            );
+            my $HourParts = 60 / $MinuteInterval - 1;
+            for my $CurrHour ( 0 .. 23 ) {
+                for my $CurrPart ( 0 .. $HourParts ) {
+                    my $Tmp
+                        = sprintf(
+                        "%02d:%02d", $CurrHour,
+                        ( $MinuteInterval * $CurrPart )
+                        );
+                    $TimeDef{$Tmp} = $Tmp;
+                }
+            }
+            $Param{TimeStr} = $Self->BuildSelection(
+                Name                => $Prefix . 'Time',
+                Data                => \%TimeDef,
+                SelectedID          => $h . ':' . $m,
+                LanguageTranslation => 0,
+                Class               => $Validate ? ( 'Validate_DateTime ' . $ClassTime ) : $ClassTime,
+                Title => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}
+                    ->Get('Time'),
+            );
+            $Param{TimeStr} .= "<input type=\"hidden\" "
+                . (
+                $Validate ? "class=\"Validate_DateHour $Class\" " : "class=\"$Class\" "
+                )
+                . "name=\"${Prefix}Hour\" id=\"${Prefix}Hour\" size=\"2\" maxlength=\"2\" "
+                . "value=\""
+                . $h
+                . "\"/>";
+        }
+
+        elsif ( $DateInputStyle eq 'Option' ) {
+
             my %Hour = map { $_ => sprintf( "%02d", $_ ); } ( 0 .. 23 );
             $Param{Hour} = $Self->BuildSelection(
                 Name       => $Prefix . 'Hour',
@@ -3363,7 +3630,19 @@ sub BuildDateSelection {
         }
 
         # minute
-        if ( $DateInputStyle eq 'Option' ) {
+        if ($SmartStyleTime) {
+            $Param{TimeStr} .= "<input type=\"hidden\" "
+                . (
+                $Validate ? "class=\"Validate_DateMinute $Class\" " : "class=\"$Class\" "
+                )
+                . "name=\"${Prefix}Minute\" id=\"${Prefix}Minute\" size=\"2\" maxlength=\"2\" "
+                . " value=\""
+                . $m
+                . "\"/>";
+        }
+
+        elsif ( $DateInputStyle eq 'Option' ) {
+
             my %Minute = map { $_ => sprintf( "%02d", $_ ); } ( 0 .. 59 );
             $Param{Minute} = $Self->BuildSelection(
                 Name       => $Prefix . 'Minute',
@@ -3427,16 +3706,32 @@ sub BuildDateSelection {
             . "/>&nbsp;";
     }
 
-    # remove 'Second' because it is never used and bug #9441
+    # remove 'Second' because it is never used and otrs bug #9441
     delete $Param{ $Prefix . 'Second' };
 
     # date format
-    $Output .= $Self->{LanguageObject}->Time(
-        Action => 'Return',
-        Format => 'DateInputFormat',
-        Mode   => 'NotNumeric',
-        %Param,
-    );
+    if ($SmartStyleDate) {
+        $Output .= $Param{DateStr};
+        if ( $Param{TimeStr} || $Param{Hour} ) {
+            $Output .= ' - ';
+            $Output .= $Param{TimeStr} || ( $Param{Hour} . ':' . $Param{Minute} );
+        }
+    }
+    elsif ( !$SmartStyleDate && $SmartStyleTime ) {
+        $Output .= $Param{Day} . $Param{Month} . $Param{Year};
+        if ( $Param{TimeStr} || $Param{Hour} ) {
+            $Output .= ' - ';
+            $Output .= $Param{TimeStr} || ( $Param{Hour} . ':' . $Param{Minute} );
+        }
+    }
+    else {
+        $Output .= $Self->{LanguageObject}->Time(
+            Action => 'Return',
+            Format => 'DateInputFormat',
+            Mode   => 'NotNumeric',
+            %Param,
+        );
+    }
 
     # prepare datepicker for specific calendar
     my $VacationDays = '';
@@ -3462,6 +3757,9 @@ sub BuildDateSelection {
     # Add Datepicker JS to output.
     my $DatepickerJS = <<"END";
     Core.UI.Datepicker.Init({
+        Date: \$("#" + Core.App.EscapeSelector("$Prefix") + "Date"),
+        Time: \$("#" + Core.App.EscapeSelector("$Prefix") + "Time"),
+        Format: "$DateFormat",
         Day: \$("#" + Core.App.EscapeSelector("$Prefix") + "Day"),
         Month: \$("#" + Core.App.EscapeSelector("$Prefix") + "Month"),
         Year: \$("#" + Core.App.EscapeSelector("$Prefix") + "Year"),
@@ -3473,6 +3771,16 @@ sub BuildDateSelection {
         WeekDayStart: $WeekDayStart
     });
 END
+
+    if ( $Self->{Action} eq 'AgentStatistics' ) {
+        $DatepickerJS .= <<"END";
+    Core.Config.Set($Prefix + "Format", "$DateFormat");
+    Core.Config.Set($Prefix + "VacationDays", $VacationDaysJSON);
+    Core.Config.Set($Prefix + "DateInFuture", $DateInFuture);
+    Core.Config.Set($Prefix + "DateNotInFuture", $DateNotInFuture);
+    Core.Config.Set($Prefix + "WeekDayStart", '$WeekDayStart);
+END
+    }
 
     $Self->AddJSOnDocumentComplete( Code => $DatepickerJS );
     $Self->{HasDatepicker} = 1;    # Call some Datepicker init code.

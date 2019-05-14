@@ -6,7 +6,7 @@
 # did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::Output::HTML::Layout::KIX4OTRSITSMConfigManagement;
+package Kernel::Output::HTML::Layout::KIXITSMConfigManagement;
 
 use strict;
 use warnings;
@@ -21,8 +21,6 @@ our @ObjectDependencies = (
     'Kernel::System::Ticket',
     'Kernel::System::User',
 );
-
-## no critic qw(TestingAndDebugging::ProhibitNoWarnings)
 
 sub KIXSideBarAssignedConfigItemsTable {
     my ( $Self, %Param ) = @_;
@@ -111,8 +109,7 @@ sub KIXSideBarAssignedConfigItemsTable {
     my @AssignedCIIDs = ();
     CUSTOMER:
     for my $Customer ( keys %Customers ) {
-        my $SearchInClassesRef
-            = $ConfigObject->Get('KIXSidebarConfigItemLink::CISearchInClasses');
+        my $SearchInClassesRef = $ConfigObject->Get('KIXSidebarConfigItemLink::CISearchInClasses');
 
         # perform CMDB search and link results...
         CICLASS:
@@ -182,7 +179,7 @@ sub KIXSideBarAssignedConfigItemsTable {
                             SearchData    => \%SearchData,
                         );
 
-              # if this CI class doesn't contain all the search attributes then we have to ignore it
+                        # if this CI class doesn't contain all the search attributes then we have to ignore it
                         next CICLASS if scalar(@SearchParamsWhat) < scalar( keys %SearchData );
 
                         # build search hash...
@@ -213,10 +210,8 @@ sub KIXSideBarAssignedConfigItemsTable {
     }
     return '' if !scalar(@AssignedCIIDs);
 
-    my $CIExcludeDeploymentStates
-        = $ConfigObject->Get('KIXSidebarConfigItemLink::CIExcludeDeploymentStates');
-    my $CIExcludeIncidentStates
-        = $ConfigObject->Get('KIXSidebarConfigItemLink::CIExcludeIncidentStates');
+    my $CIExcludeDeploymentStates = $ConfigObject->Get('KIXSidebarConfigItemLink::CIExcludeDeploymentStates');
+    my $CIExcludeIncidentStates   = $ConfigObject->Get('KIXSidebarConfigItemLink::CIExcludeIncidentStates');
 
     my @AssignedCIIDsCheck = @AssignedCIIDs;
     @AssignedCIIDs = ();
@@ -604,10 +599,8 @@ sub CustomerDashboardAssignedConfigItemsTable {
     }
     return '' if !scalar(@AssignedCIIDs);
 
-    my $CIExcludeDeploymentStates
-        = $ConfigObject->Get('CustomerDashboardConfigItemLink::CIExcludeDeploymentStates');
-    my $CIExcludeIncidentStates
-        = $ConfigObject->Get('CustomerDashboardConfigItemLink::CIExcludeIncidentStates');
+    my $CIExcludeDeploymentStates = $ConfigObject->Get('CustomerDashboardConfigItemLink::CIExcludeDeploymentStates');
+    my $CIExcludeIncidentStates   = $ConfigObject->Get('CustomerDashboardConfigItemLink::CIExcludeIncidentStates');
 
     my %AssignedCheck = %Assigned;
     %Assigned = ();
@@ -639,12 +632,10 @@ sub CustomerDashboardAssignedConfigItemsTable {
 
     $Self->Block(
         Name => 'LinkConfigItemTable',
-        Data => {
-        },
+        Data => {},
     );
 
-    my $ShownAttributes
-        = $ConfigObject->Get('CustomerDashboardConfigItemLink::ShownAttributes');
+    my $ShownAttributes = $ConfigObject->Get('CustomerDashboardConfigItemLink::ShownAttributes');
 
     # fixed number of shown CIs (for now)
     my $ShownCILinks = 10;
@@ -726,9 +717,7 @@ sub CustomerDashboardAssignedConfigItemsTable {
                     Class  => $VersionRef->{Class},
                     Name   => $VersionRef->{Name},
                     Number => $ConfigItem->{Number},
-
-                    # IsChecked => $ConfigItemList{$ConfigItemID} || '',
-                    ID => $ConfigItemID,
+                    ID     => $ConfigItemID,
                 },
             );
 
@@ -832,9 +821,8 @@ sub CountConfigItemImages {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # get file and path info
-    my $Home = $ConfigObject->Get('Home');
-    my $Config
-        = $ConfigObject->Get("ITSMConfigItem::Frontend::AgentITSMConfigItemZoomTabImages");
+    my $Home      = $ConfigObject->Get('Home');
+    my $Config    = $ConfigObject->Get("ITSMConfigItem::Frontend::AgentITSMConfigItemZoomTabImages");
     my $Path      = $Config->{ImageSavePath};
     my $Directory = $Home . $Path . $Param{ConfigItemID};
 
@@ -914,11 +902,6 @@ sub _ExportXMLSearchDataPrepare {
         );
     }
     return 1;
-}
-
-# disable redefine warnings in this scope
-{
-    no warnings 'redefine';
 }
 
 1;

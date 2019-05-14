@@ -73,6 +73,33 @@ sub BuildSelectionJSON {
             }
         }
 
+        if (
+            (
+                $Kernel::OM->Get('Kernel::Config')->Get('Ticket::TypeTranslation')
+                && ( $Param{Name} eq 'TypeID' || $Param{Name} eq 'TypeIDs' )
+            )
+            || (
+                $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ServiceTranslation')
+                && ( $Param{Name} eq 'ServiceID' || $Param{Name} eq 'ServiceIDs' )
+            )
+            || (
+                $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SLATranslation')
+                && ( $Param{Name} eq 'SLAID' || $Param{Name} eq 'SLAIDs' )
+            )
+        ) {
+            $Param{Translation} = 1;
+        }
+
+        my $Disabled = 0;
+        my $DisabledOptions;
+        if (
+            defined( $Param{DisabledOptions} )
+            && ref( $Param{DisabledOptions} ) eq 'HASH'
+        ) {
+            $Disabled        = 1;
+            $DisabledOptions = $Param{DisabledOptions};
+        }
+
         if ( !defined( $Param{Data} ) ) {
             if ( !$Param{PossibleNone} ) {
                 $LogObject->Log(
@@ -83,8 +110,17 @@ sub BuildSelectionJSON {
             }
             $DataHash{''} = '-';
         }
-        elsif ( ref $Param{Data} eq '' ) {
-            $DataHash{ $Param{Name} } = $Param{Data};
+        elsif ( ref( $Param{Data} ) eq '' ) {
+
+            if ( defined $Param{FieldDisabled} && $Param{FieldDisabled} ) {
+                my @DataArray;
+                push @DataArray, $Param{Data};
+                push @DataArray, Kernel::System::JSON::False();
+                $DataHash{ $Param{Name} } = \@DataArray;
+            }
+            else {
+                $DataHash{ $Param{Name} } = $Param{Data};
+            }
         }
         elsif ( defined $Param{KeepData} && $Param{KeepData} ) {
             $DataHash{ $Param{Name} } = $Param{Data};
@@ -124,20 +160,31 @@ sub BuildSelectionJSON {
                     my $DefaultSelected = Kernel::System::JSON::False();
 
                     # to set a disabled option (Disabled is not included in JavaScript New Option)
-                    my $Disabled = Kernel::System::JSON::False();
+                    my $DisabledOption = Kernel::System::JSON::False();
 
                     if ( $Row->{Selected} ) {
                         $DefaultSelected = Kernel::System::JSON::True();
                     }
                     elsif ( $Row->{Disabled} ) {
                         $DefaultSelected = Kernel::System::JSON::False();
-                        $Disabled        = Kernel::System::JSON::True();
+                        $DisabledOption  = Kernel::System::JSON::True();
+                    }
+
+                    if ($Disabled) {
+                        if ( $DisabledOptions->{$Key} ) {
+                            $DisabledOption = Kernel::System::JSON::True();
+                        }
                     }
 
                     # Selected parameter for JavaScript NewOption
                     my $Selected = $DefaultSelected;
-                    push @DataArray, [ $Key, $Value, $DefaultSelected, $Selected, $Disabled ];
+                    push( @DataArray, [ $Key, $Value, $DefaultSelected, $Selected, $DisabledOption ] );
                 }
+
+                if ( defined $Param{FieldDisabled} && $Param{FieldDisabled} ) {
+                    push @DataArray, Kernel::System::JSON::False();
+                }
+
                 $DataHash{ $AttributeRef->{name} } = \@DataArray;
             }
         }

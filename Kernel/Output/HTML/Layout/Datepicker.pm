@@ -80,6 +80,12 @@ sub DatepickerGetVacationDays {
     };
 }
 
+sub HasDatepickerDirectSet {
+    my ( $Self, %Param ) = @_;
+    $Self->{HasDatepicker} = 1;
+    return;
+}
+
 1;
 
 =back
