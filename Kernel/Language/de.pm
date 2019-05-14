@@ -1637,7 +1637,6 @@ sub Data {
         'Module documentation' => 'Moduldokumentation',
         'Upgrade' => 'Upgrade',
         'Local Repository' => 'Lokales Verzeichnis',
-        'This package is verified by OTRSverify (tm)' => 'Dieses Paket wurde von OTRSVerify (tm) geprüft',
         'Uninstall' => 'Deinstallieren',
         'Reinstall' => 'Erneut installieren',
         'Features for %s customers only' => 'Exklusiv: Features für %s Kunden',
@@ -2399,8 +2398,8 @@ sub Data {
             'Stellen Sie sicher, dass die Datei \'%s\' existiert (ohne die Endung .dist). Dieser Cronjob wird alle 5 Minuten prüfen, ob der KIX Daemon läuft, und ihn ggf. starten.',
         'Execute \'%s start\' to make sure the cron jobs of the \'otrs\' user are active.' =>
             'Führen Sie \'%s start\' aus um sicherzustellen, dass die Cronjobs des \'otrs\'-Nutzers aktiv sind.',
-        'After 5 minutes, check that the KIX Daemon is running in the system (\'bin/otrs.Daemon.pl status\').' =>
-            'Prüfen Sie nach 5 Minuten, ob der KIX Daemon läuft  (\'bin/otrs.Daemon.pl status\').',
+        'After 5 minutes, check that the KIX Daemon is running in the system (\'bin/kix.Daemon.pl status\').' =>
+            'Prüfen Sie nach 5 Minuten, ob der KIX Daemon läuft  (\'bin/kix.Daemon.pl status\').',
 
         # Template: AgentDashboard
         'Dashboard' => 'Übersicht',

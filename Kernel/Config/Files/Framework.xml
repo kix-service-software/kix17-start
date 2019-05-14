@@ -5635,7 +5635,7 @@
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
-            <String Regex="">http://host.example.com/thanks-for-using-otrs.html</String>
+            <String Regex="">http://host.example.com/login.html</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PreApplicationModule###AgentInfo" Required="0" Valid="0" ConfigLevel="300">

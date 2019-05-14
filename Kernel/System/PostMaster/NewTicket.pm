@@ -635,7 +635,7 @@ sub Run {
             Priority => 'error',
             Message  => "Can't process email with MessageID <$GetParam{'Message-ID'}>! "
                 . "Please create a bug report with this email (From: $GetParam{From}, Located "
-                . "under var/spool/problem-email*) on http://bugs.otrs.org/!",
+                . "under var/spool/problem-email*) on http://kixdesk.com/!",
         );
         return;
     }

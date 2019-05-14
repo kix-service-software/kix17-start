@@ -894,16 +894,6 @@ p.IntroInstall {
     margin-bottom: 7px;
 }
 
-.OTRSVerifyLogoBig {
-    float: right;
-}
-
-.OTRSVerifyLogo {
-    display: block;
-    float: right;
-    margin: 3px 0px 0px 3px;
-}
-
 /**
  * @subsection  Icons in tables
  */

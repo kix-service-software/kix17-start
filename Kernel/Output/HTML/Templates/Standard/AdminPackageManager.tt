@@ -158,9 +158,6 @@
                      <h2><span>[% Translate(Data.Title) | html %]</span></h2>
                 </div>
                 <div class="Content">
-[% RenderBlockStart("OTRSVerifyLogo") %]
-                    <img src="[% Config("Frontend::ImagePath") %]/otrs-verify.png" class="OTRSVerifyLogoBig" />
-[% RenderBlockEnd("OTRSVerifyLogo") %]
                     <h3>[% Data.Name | html %] [% Data.Version | html %]</h3>
                     <p class="IntroInstall">
                         [% Data.Description %]
@@ -319,9 +316,6 @@
 [% RenderBlockStart("ShowLocalPackage") %]
                             <tr>
                                 <td>
-[% RenderBlockStart("ShowLocalPackageVerifyLogo") %]
-                                    <img src="[% Config("Frontend::ImagePath") %]/otrs-verify-small.png" class="OTRSVerifyLogo" alt="[% Translate("This package is verified by OTRSverify (tm)") | html %]" />
-[% RenderBlockEnd("ShowLocalPackageVerifyLogo") %]
                                     <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=View;Name=[% Data.Name | uri %];Version=[% Data.Version | uri %]">[% Data.Name | html %]</a>
                                 </td>
                                 <td>
