@@ -914,6 +914,11 @@ sub Login {
         }
     }
 
+    # Build the customized footer
+    $Self->_BuildCustomFooter(
+        Frontend => 'User'
+    );
+
     # create & return output
     $Output .= $Self->Output(
         TemplateFile => 'Login',
@@ -1607,6 +1612,12 @@ sub Footer {
 
     # Banner
     if ( !$ConfigObject->Get('Secure::DisableBanner') ) {
+        if ( !$Type ) {
+            $Self->_BuildCustomFooter(
+                Frontend => 'User'
+            );
+        }
+
         $Self->Block(
             Name => 'Banner',
         );
@@ -3989,6 +4000,11 @@ sub CustomerLogin {
         }
     }
 
+    # Build the customized footer
+    $Self->_BuildCustomFooter(
+        Frontend => 'Customer'
+    );
+
     # create & return output
     $Output .= $Self->Output(
         TemplateFile => 'CustomerLogin',
@@ -4219,6 +4235,12 @@ sub CustomerFooter {
 
     # Banner
     if ( !$ConfigObject->Get('Secure::DisableBanner') ) {
+        if ( !$Type ) {
+            $Self->_BuildCustomFooter(
+                Frontend => 'Customer'
+            );
+        }
+
         $Self->Block(
             Name => 'Banner',
         );
@@ -6024,6 +6046,75 @@ sub _BuildSystemMessage {
                 Name => 'SystemMessageTeaser',
                 Data => \%MessageData
             );
+        }
+    }
+
+    return 1;
+}
+
+=item _BuildCustomFooter()
+    This function generates a custom footer from a configured link list.
+    The link list can be defined via the configuration CustomerFooter###Title and CustomFooter###URL.
+
+    return $LayoutObject->ProgressBar(
+        Frontend => 'User'  # User|Customer|Public
+                            # Default 'User'
+                            # Public and Customer are the same
+    );
+
+    return string of html output
+=cut
+
+sub _BuildCustomFooter{
+    my ($Self, %Param) = @_;
+
+    # get needed objects
+    my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
+    my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
+
+    my $CustomFooter = $ConfigObject->Get('CustomFooter');
+    my $IsNotShow    = 1;
+    my $Frontend     = $Param{Frontend} =~ /^(?:Customer|Public)$/ ? '3' : '2';
+
+    if (
+        defined $CustomFooter->{Title}
+        && defined $CustomFooter->{URL}
+    ) {
+        for my $Entry ( sort keys %{$CustomFooter->{Title}} ) {
+            next if !$CustomFooter->{Title}->{$Entry};
+            if (
+                $CustomFooter->{Title}->{$Entry}
+                && $CustomFooter->{Title}->{$Entry} ne '1'
+                && $CustomFooter->{Title}->{$Entry} ne $Frontend
+            ) {
+                next;
+            }
+
+            my ($Prio, $Title) = split('::', $Entry);
+
+            if ( $CustomFooter->{URL}->{$Title} ) {
+                my $URL = $TemplateGeneratorObject->ReplacePlaceHolder(
+                    Text     => $CustomFooter->{URL}->{$Title},
+                    Data     => {},
+                    RichText => 0,
+                    UserID   => 1
+                );
+
+                if ( $IsNotShow ) {
+                    $Self->Block(
+                        Name => 'CustomFooter',
+                    );
+                    $IsNotShow = 0;
+                }
+
+                $Self->Block(
+                    Name => 'CustomFooterEntry',
+                    Data => {
+                        Title => $Title,
+                        URL   => $URL
+                    }
+                );
+            }
         }
     }
 

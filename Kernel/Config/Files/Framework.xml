@@ -13736,4 +13736,27 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <!-- EO SystemMessage -->
+
+    <!-- CustomFooter -->
+    <ConfigItem Name="CustomFooter###Title" Required="0" Valid="0">
+        <Description Translatable="1">Defines a link list that can be added in the footer. The links can be assigned separately to the frontends. (Key: &lt;priority&gt;::&lt;link title&gt;; Value: 0 => deactivated, 1 => show everywhere, 2 => only agent frontend, 3 => only customer frontend)</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::CustomFooter</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="000::Dummy">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomFooter###URL" Required="0" Valid="0">
+        <Description Translatable="1">Defines the associated URL for each link title. It is possible to use KIX placeholder.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::CustomFooter</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Dummy">&lt;AKIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentDashboard</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO CustomFooter -->
 </otrs_config>
