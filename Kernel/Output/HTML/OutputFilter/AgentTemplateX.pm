@@ -63,6 +63,13 @@ sub Run {
     my $TemplateID = $Self->{ParamObject}->GetParam( Param => $CheckParam );
     return if !$TemplateID;
 
+    # nothing to do if AttachmentDelete or AttachmentUpload is given
+    for my $Name ( $Self->{ParamObject}->GetParamNames() ) {
+        if ( $Name =~ /Attachment(?:Delete|Upload)/ ) {
+            return 1;
+        };
+    }
+
     my $TemplateTo  = "";
     my $TemplateCc  = "";
     my $TemplateBcc = "";
