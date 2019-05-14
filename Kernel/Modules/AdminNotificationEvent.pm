@@ -1234,7 +1234,7 @@ sub _Edit {
 
     if ( IsHashRefWithData( \%RegisteredTransports ) ) {
 
-        my $MainObject         = $Kernel::OM->Get('Kernel::System::Main');
+        my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
 
         TRANSPORT:
         for my $Transport (

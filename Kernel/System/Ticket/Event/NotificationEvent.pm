@@ -427,7 +427,7 @@ sub _NotificationFilter {
         next KEY if $Key eq 'NotificationType';
 
         # check recipient fields from transport methods
-        if ( $Key =~ m{\A Recipient}xms ) {
+        if ( $Key =~ m{\A (?:AgentOverlay|Recipient)}xms ) {
             next KEY;
         }
 
