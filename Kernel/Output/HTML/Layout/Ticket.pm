@@ -117,50 +117,79 @@ sub AgentCustomerViewTable {
         }
     }
 
-    # build table
-    for my $Field (@MapNew) {
-        if ( $Field->[3] && $Field->[3] >= $ShownType && $Param{Data}->{ $Field->[0] } ) {
-            my %Record = (
+    # use CustomerInfoString
+    my $CustomerInfoString = $Param{Data}->{Config}->{CustomerInfoString}
+        || $ConfigObject->Get('DefaultCustomerInfoString') || '';
+
+    if ($CustomerInfoString) {
+        $CustomerInfoString = $Self->Output(
+            Template => $CustomerInfoString,
+            Data     => {},
+        );
+        my $CustomerData = $Param{Data};
+        while ( $CustomerInfoString =~ /\$CustomerData\-\>\{(.+?)}/ ) {
+            my $Tag = $1;
+            if ( $CustomerData->{$Tag} ) {
+                $CustomerInfoString =~ s/\$CustomerData\-\>\{$Tag\}/$CustomerData->{$Tag}/;
+            }
+            else {
+                $CustomerInfoString =~ s/\$CustomerData\-\>\{$Tag\}//;
+            }
+        }
+        $Self->Block(
+            Name => 'CustomerInfoString',
+            Data => {
+                CustomerInfoString => $CustomerInfoString,
                 %{ $Param{Data} },
-                Key   => $Field->[1],
-                Value => $Param{Data}->{ $Field->[0] },
-            );
-            if ( $Field->[6] ) {
-                $Record{LinkStart} = "<a href=\"$Field->[6]\"";
-                if ( $Field->[8] ) {
-                    $Record{LinkStart} .= " target=\"$Field->[8]\"";
                 }
-                if ( $Field->[9] ) {
-                    $Record{LinkStart} .= " class=\"$Field->[9]\"";
-                }
-                $Record{LinkStart} .= ">";
-                $Record{LinkStop} = "</a>";
-            }
-            if ( $Field->[0] ) {
-                $Record{ValueShort} = $Self->Ascii2Html(
-                    Text => $Record{Value},
-                    Max  => $Param{Max}
+        );
+    }
+    else {
+        # build table
+        for my $Field (@MapNew) {
+            if ( $Field->[3] && $Field->[3] >= $ShownType && $Param{Data}->{ $Field->[0] } ) {
+                my %Record = (
+                    %{ $Param{Data} },
+                    Key   => $Field->[1],
+                    Value => $Param{Data}->{ $Field->[0] },
                 );
-            }
-            $Self->Block(
-                Name => 'CustomerRow',
-                Data => \%Record,
-            );
+                if ( $Field->[6] ) {
+                    $Record{LinkStart} = "<a href=\"$Field->[6]\"";
+                    if ( $Field->[8] ) {
+                        $Record{LinkStart} .= " target=\"$Field->[8]\"";
+                    }
+                    if ( $Field->[9] ) {
+                        $Record{LinkStart} .= " class=\"$Field->[9]\"";
+                    }
+                    $Record{LinkStart} .= ">";
+                    $Record{LinkStop} = "</a>";
+                }
+                if ( $Field->[0] ) {
+                    $Record{ValueShort} = $Self->Ascii2Html(
+                        Text => $Record{Value},
+                        Max  => $Param{Max}
+                    );
+                }
+                $Self->Block(
+                    Name => 'CustomerRow',
+                    Data => \%Record,
+                );
 
-            if (
-                $Param{Data}->{Config}->{CustomerCompanySupport}
-                && $Field->[0] eq 'CustomerCompanyName'
-            ) {
-                my $CompanyValidID = $Param{Data}->{CustomerCompanyValidID};
+                if (
+                    $Param{Data}->{Config}->{CustomerCompanySupport}
+                    && $Field->[0] eq 'CustomerCompanyName'
+                ) {
+                    my $CompanyValidID = $Param{Data}->{CustomerCompanyValidID};
 
-                if ($CompanyValidID) {
-                    my @ValidIDs = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
-                    my $CompanyIsValid = grep { $CompanyValidID == $_ } @ValidIDs;
+                    if ($CompanyValidID) {
+                        my @ValidIDs = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
+                        my $CompanyIsValid = grep { $CompanyValidID == $_ } @ValidIDs;
 
-                    if ( !$CompanyIsValid ) {
-                        $Self->Block(
-                            Name => 'CustomerRowCustomerCompanyInvalid',
-                        );
+                        if ( !$CompanyIsValid ) {
+                            $Self->Block(
+                                Name => 'CustomerRowCustomerCompanyInvalid',
+                            );
+                        }
                     }
                 }
             }
@@ -191,8 +220,9 @@ sub AgentCustomerViewTable {
             next MODULE if !$Object;
 
             my $Run = $Object->Run(
-                Config => $Modules{$Module},
-                Data   => $Param{Data},
+                Config        => $Modules{$Module},
+                Data          => $Param{Data},
+                CallingAction => $Param{CallingAction}
             );
 
             next MODULE if !$Run;
@@ -203,25 +233,26 @@ sub AgentCustomerViewTable {
 
     # create & return output
     return $Self->Output(
-        TemplateFile => 'AgentCustomerTableView',
-        Data         => \%Param
+        TemplateFile   => 'AgentCustomerTableView',
+        Data           => \%Param,
+        KeepScriptTags => $Param{Data}->{AJAX} || 0,
     );
 }
 
 sub AgentQueueListOption {
     my ( $Self, %Param ) = @_;
 
-    my $Size           = $Param{Size}                      ? "size='$Param{Size}'"  : '';
-    my $MaxLevel       = defined( $Param{MaxLevel} )       ? $Param{MaxLevel}       : 10;
-    my $SelectedID     = defined( $Param{SelectedID} )     ? $Param{SelectedID}     : '';
-    my $Selected       = defined( $Param{Selected} )       ? $Param{Selected}       : '';
-    my $CurrentQueueID = defined( $Param{CurrentQueueID} ) ? $Param{CurrentQueueID} : '';
-    my $Class          = defined( $Param{Class} )          ? $Param{Class}          : '';
+    my $Size               = $Param{Size}                      ? "size='$Param{Size}'"   : '';
+    my $MaxLevel           = defined( $Param{MaxLevel} )       ? $Param{MaxLevel}        : 10;
+    my $SelectedID         = defined( $Param{SelectedID} )     ? $Param{SelectedID}      : '';
+    my $Selected           = defined( $Param{Selected} )       ? $Param{Selected}        : '';
+    my $CurrentQueueID     = defined( $Param{CurrentQueueID} ) ? $Param{CurrentQueueID}  : '';
+    my $Class              = defined( $Param{Class} )          ? $Param{Class}           : '';
+    my $Multiple           = $Param{Multiple}                  ? 'multiple = "multiple"' : '';
+    my $TreeView           = $Param{TreeView}                  ? $Param{TreeView}        : 0;
+    my $OptionTitle        = defined( $Param{OptionTitle} )    ? $Param{OptionTitle}     : 0;
+    my $OnChangeSubmit     = defined( $Param{OnChangeSubmit} ) ? $Param{OnChangeSubmit}  : '';
     my $SelectedIDRefArray = $Param{SelectedIDRefArray} || '';
-    my $Multiple       = $Param{Multiple}                  ? 'multiple = "multiple"' : '';
-    my $TreeView       = $Param{TreeView}                  ? $Param{TreeView}        : 0;
-    my $OptionTitle    = defined( $Param{OptionTitle} )    ? $Param{OptionTitle}     : 0;
-    my $OnChangeSubmit = defined( $Param{OnChangeSubmit} ) ? $Param{OnChangeSubmit}  : '';
     if ($OnChangeSubmit) {
         $OnChangeSubmit = " onchange=\"submit();\"";
     }
@@ -261,9 +292,25 @@ sub AgentQueueListOption {
         $OnChangeSubmit = " onchange=\"$Param{OnChange}\"";
     }
 
-    # just show a simple list
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::ListType') eq 'list' ) {
+    my %UserPreferences;
+    my $AutoCompleteConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::GenericAutoCompleteSearch');
+    my $SearchType         = $AutoCompleteConfig->{SearchTypeMapping}->{ $Self->{Action} . ":::" . $Param{Name} } || '';
 
+    if ($SearchType) {
+
+        # get UserPreferences
+        %UserPreferences = $Kernel::OM->Get('Kernel::System::User')
+            ->GetPreferences( UserID => $Self->{UserID} );
+    }
+
+    # just show a simple list
+    if (
+        $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::ListType') eq 'list'
+        || (
+            $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
+            && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
+        )
+    ) {
         # transform data from Hash in Array because of ordering in frontend by Queue name
         # it was a problem wit name like '(some_queue)'
         # see bug#10621 http://bugs.otrs.org/show_bug.cgi?id=10621
@@ -1189,6 +1236,24 @@ sub TicketMetaItemsCount {
 sub TicketMetaItems {
     my ( $Self, %Param ) = @_;
 
+    my %ActiveColums = (
+        'Priority'    => 1,
+        'New Article' => 1,
+        'Locked'      => 0,
+        'Watcher'     => 0,
+    );
+
+    if ( $Param{ViewableColumns} && ref( $Param{ViewableColumns} ) eq 'ARRAY' ) {
+        my @ViewableColumns = @{ $Param{ViewableColumns} };
+        $ActiveColums{'Priority'}    = 0;
+        $ActiveColums{'New Article'} = 0;
+        $ActiveColums{'Locked'}      = 0;
+        $ActiveColums{'Watcher'}     = 0;
+        for my $Columns (@ViewableColumns) {
+            $ActiveColums{$Columns} = 1;
+        }
+    }
+
     if ( ref $Param{Ticket} ne 'HASH' ) {
         $Self->FatalError( Message => 'Need Hash ref in Ticket param!' );
     }
@@ -1197,14 +1262,14 @@ sub TicketMetaItems {
     my @Result;
 
     # show priority
-    push @Result, {
-
-        #            Image => $Image,
-        Title      => $Param{Ticket}->{Priority},
-        Class      => 'Flag',
-        ClassSpan  => 'PriorityID-' . $Param{Ticket}->{PriorityID},
-        ClassTable => 'Flags',
-    };
+    if ( $ActiveColums{'Priority'} ) {
+        push( @Result, {
+            Title      => $Param{Ticket}->{Priority},
+            Class      => 'Flag',
+            ClassSpan  => 'PriorityID-' . $Param{Ticket}->{PriorityID},
+            ClassTable => 'Flags',
+        });
+    }
 
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
@@ -1220,10 +1285,16 @@ sub TicketMetaItems {
         );
     }
 
-    if ( $Ticket{ArchiveFlag} eq 'y' || $TicketFlag{Seen} ) {
-        push @Result, undef;
+    if (
+        $ActiveColums{'New Article'}
+        && (
+            $Ticket{ArchiveFlag} eq 'y'
+            || $TicketFlag{Seen}
+        )
+    ) {
+        push( @Result, undef );
     }
-    else {
+    elsif ( $Ticket{ArchiveFlag} ne 'y' && $ActiveColums{'New Article'} ) {
 
         # just show ticket flags if agent belongs to the ticket
         my $ShowMeta;
