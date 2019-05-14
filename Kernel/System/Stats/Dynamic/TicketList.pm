@@ -1554,9 +1554,9 @@ sub _TicketAttributes {
         NumberOfArticles    => 'Number of Articles',
 
         #GroupID        => 'GroupID',
-        StateType => 'StateType',
+        StateType => 'State Type',
         UntilTime => 'UntilTime',
-        Closed    => 'Close Time',
+        Closed    => 'First Close Time',
         FirstLock => 'First Lock',
 
         EscalationResponseTime => 'EscalationResponseTime',
