@@ -7,26 +7,26 @@
 # --
 
 
-<label for="RecipientDecay">[% Translate("Decay") | html %]: </label>
+<label for="AgentOverlayRecipientDecay">[% Translate("Decay") | html %]: </label>
 <div class="Field">
-    <input type="text" name="RecipientDecay" id="RecipientDecay" class="W50pc" value="[% Data.RecipientDecay | html %]"/>
+    <input type="text" name="AgentOverlayRecipientDecay" id="AgentOverlayRecipientDecay" class="W50pc" value="[% Data.AgentOverlayRecipientDecay | html %]"/>
 </div>
 <div class="Clear"></div>
 
-<label for="RecipientBusinessTime">[% Translate("BusinessTime") | html %]: </label>
+<label for="AgentOverlayRecipientBusinessTime">[% Translate("BusinessTime") | html %]: </label>
 <div class="Field">
-    <input type="checkbox" name="RecipientBusinessTime" id="RecipientBusinessTime" value="1" [% Data.RecipientBusinessTime | html %] />
+    <input type="checkbox" name="AgentOverlayRecipientBusinessTime" id="AgentOverlayRecipientBusinessTime" value="1" [% Data.AgentOverlayRecipientBusinessTime | html %] />
 </div>
 <div class="Clear"></div>
 
-<label for="RecipientPopup">[% Translate("Popup") | html %]: </label>
+<label for="AgentOverlayRecipientPopup">[% Translate("Popup") | html %]: </label>
 <div class="Field">
-    <input type="checkbox" name="RecipientPopup" id="RecipientPopup" value="1" [% Data.RecipientPopup | html %] />
+    <input type="checkbox" name="AgentOverlayRecipientPopup" id="AgentOverlayRecipientPopup" value="1" [% Data.AgentOverlayRecipientPopup | html %] />
 </div>
 <div class="Clear"></div>
 
-<label for="RecipientSubject">[% Translate("Subject") | html %]: </label>
+<label for="AgentOverlayRecipientSubject">[% Translate("Subject") | html %]: </label>
 <div class="Field">
-    [% Data.RecipientSubjectStrg %]
+    [% Data.AgentOverlayRecipientSubjectStrg %]
 </div>
 <div class="Clear"></div>
