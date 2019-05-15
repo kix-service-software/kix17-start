@@ -1,6 +1,18 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.6.0-RC5 (2019/05/15)
+ * (2019/05/15) - Bugfix: T2017040890000546 (old otrs stuff removed) (ddoerffel)
+ * (2019/05/14) - Bugfix: T2017090790000601 (merged extended layout methods to base code) (millinger)
+ * (2019/05/14) - CR: T2018121890001063 (Clarify 'Close Time' as 'First Close Time' in ticket list statistic) (millinger)
+ * (2019/05/14) - Bugfix: T2019020690000479 (fixed loading of template recipient after attachment upload) (millinger)
+ * (2019/05/14) - Bugfix: T2018121790000521 (fixed column preferences for config item link object tables) (millinger)
+ * (2019/05/14) - Bugfix: T2019012890000537 (missing function import for country2code) (millinger)
+ * (2019/05/13) - Bugfix: T2019021290000771 (fixed greedy wildcards prevent matches for configured patterns in TicketAutoLinkConfigItem) (fjacquemin)
+ * (2019/05/13) - Bugfix: T2019031490001228 (fixed missing check for duplicated system address) (fjacquemin)
+ * (2019/05/13) - Bugfix: T2019032590000584 (fixed notification option subject "with/without ticket number" not individually adjustable) (fjacquemin)
+ * (2019/05/10) - CR: T2019051090000376 (added custom footer to show special links) (fjacquemin)
+
 # 17.6.0-RC4 (2019/05/07)
  * (2019/05/07) - Bugfix: T2019040890001201 (fixed load wrong plugin by installing KIX) (fjacquemin)
 
