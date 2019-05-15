@@ -254,16 +254,16 @@ Return example:
 
     %QueueAddressData(
         #Auto Response Data
-        'Text'            => 'Your OTRS TeamOTRS! answered by a human asap.',
+        'Text'            => 'Your KIX TeamKIX! answered by a human asap.',
         'Subject'         => 'New ticket has been created! (RE: <KIX_CUSTOMER_SUBJECT[24]>)',
         'ContentType'     => 'text/plain',
         'SystemAddressID' => '1',
 
         #System Address Data
         'ID'              => '1',
-        'Name'            => 'otrs@localhost',
-        'Address'         => 'otrs@localhost',  #Compatibility with OTRS 2.1
-        'Realname'        => 'OTRS System',
+        'Name'            => 'kix@localhost',
+        'Address'         => 'kix@localhost',  #Compatibility with OTRS 2.1
+        'Realname'        => 'KIX System',
         'Comment'         => 'Standard Address.',
         'ValidID'         => '1',
         'QueueID'         => '1',

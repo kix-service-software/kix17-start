@@ -50,11 +50,10 @@
     right: 38px;
     width: 244px;
     height: 100%;
-    background: url(../img/logo_bg.png) no-repeat;
     background-size: contain;
     position: absolute;
 }
-
+ 
 .RTL #Header #Logo {
     right: auto;
     left: 38px;

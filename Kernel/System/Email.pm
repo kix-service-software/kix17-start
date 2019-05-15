@@ -164,7 +164,7 @@ sub Send {
 
     # check from
     if ( !$Param{From} ) {
-        $Param{From} = $ConfigObject->Get('AdminEmail') || 'otrs@localhost';
+        $Param{From} = $ConfigObject->Get('AdminEmail') || 'kix@localhost';
     }
 
     # replace all br tags with br tags with a space to show newlines in Lotus Notes

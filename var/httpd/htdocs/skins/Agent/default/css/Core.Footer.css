@@ -29,53 +29,61 @@
 
 @media screen,projection,tv,handheld {
 
-#Footer {
+#Footer, .CustomFooterLogin {
     margin-top: 1px;
     min-height: 15px;
     padding: 12px 9px 8px;
     font-size: 10px;
-    clear: both;
-    border-top: 1px solid #eee;
     text-align: center;
     position: relative;
 }
 
+#Footer {
+    clear: both;
+    border-top: 1px solid #eee;
+}
+
+.CustomFooterLogin ul {
+    display: inline-block;
+}
+
+.CustomFooterLogin a,
+.CustomFooterLogin ul li a,
 #Footer a,
 #Footer ul li a {
-    color: #bbb;
+    color: #707070;
 }
 
+.CustomFooterLogin a:hover,
+.CustomFooterLogin ul li a:hover,
 #Footer a:hover,
 #Footer ul li a:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color: #1491D2;
 }
 
-#Footer ul {
-    position: absolute;
-    top: 12px;
-    left: 212px;
-    right: auto;
-}
-
-.RTL #Footer ul {
-    left: auto;
-    right: 212px;
-}
-
+.CustomFooterLogin ul li,
 #Footer ul li {
     float: left;
     padding: 0 4px 0 4px;
     border-left: 1px solid #9E9E9E;
 }
 
+.RTL .CustomFooterLogin ul li,
 .RTL #Footer ul li {
     float: right;
     border-left: none;
     border-right: 1px solid #9E9E9E;
 }
 
+.CustomFooterLogin ul li:first-child,
 #Footer ul li:first-child {
     border: none;
+}
+
+.CustomFooter{
+    display: inline-block;
+    margin-bottom: 10px;
 }
 
 } /* end @media */

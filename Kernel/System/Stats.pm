@@ -1583,7 +1583,7 @@ sub GetParams {
     my $Stat = $Self->StatsGet( StatID => $Param{StatID} );
 
     # static
-    # don't remove this if clause, because is required for otrs.GenerateStats.pl
+    # don't remove this if clause, because is required for kix.GenerateStats.pl
     my @Params;
     if ( $Stat->{StatType} eq 'static' ) {
 
@@ -2440,7 +2440,7 @@ sub _GenerateDynamicStats {
                 $TitleTimeStop  = $Element->{TimeStop};
             }
 
-            # Select All function needed from otrs.GenerateStats.pl and fixed values of the frontend
+            # Select All function needed from kix.GenerateStats.pl and fixed values of the frontend
             elsif ( !$Element->{SelectedValues}[0] ) {
                 my @Values = keys( %{ $Element->{Values} } );
                 $Element->{SelectedValues} = \@Values;
