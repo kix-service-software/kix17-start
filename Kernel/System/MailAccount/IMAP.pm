@@ -226,7 +226,7 @@ sub _Fetch {
                         $Kernel::OM->Get('Kernel::System::Log')->Log(
                             Priority => 'error',
                             Message  => "$AuthType: Can't process mail, see log sub system ("
-                                . "$File, report it on http://bugs.otrs.org/)!",
+                                . "$File, report it on http://kixdesk.com/)!",
                         );
                     }
 

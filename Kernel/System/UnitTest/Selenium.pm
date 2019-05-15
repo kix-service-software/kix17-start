@@ -438,7 +438,7 @@ use this method to handle any Selenium exceptions.
     $SeleniumObject->HandleError($@);
 
 It will create a failing test result and store a screenshot of the page
-for analysis (in folder /var/otrs-unittest if it exists, in /tmp otherwise).
+for analysis (in folder /var/kix-unittest if it exists, in /tmp otherwise).
 
 =cut
 
@@ -452,7 +452,7 @@ sub HandleError {
     return if !$Data;
     $Data = MIME::Base64::decode_base64($Data);
 
-    my $TmpDir = -d '/var/otrs-unittest/' ? '/var/otrs-unittest/' : '/tmp/';
+    my $TmpDir = -d '/var/kix-unittest/' ? '/var/kix-unittest/' : '/tmp/';
     $TmpDir .= 'SeleniumScreenshots/';
     mkdir $TmpDir || return $Self->False( 1, "Could not create $TmpDir." );
 

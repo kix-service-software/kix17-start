@@ -17,8 +17,8 @@ The installation of KIX4OTRS requires that the user which installs the packer (i
 
 After the installation you should delete your KIX-cache and rebuild your configuration before you continue the use of this OTRS installation.
 
-    "bin/otrs.DeleteCache.pl"
-    "bin/otrs.RebuildConfig.pl"
+    "bin/kix.DeleteCache.pl"
+    "bin/kix.RebuildConfig.pl"
 
 If you are using OTRS with modperl, the webserver must be restarted as well. Please ensure that the apache2-perl-startup.pl script has been modifed and is in use.
 

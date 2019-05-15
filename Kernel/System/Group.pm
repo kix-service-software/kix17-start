@@ -775,7 +775,7 @@ the result looks like
     %Roles = (
         '1' => 'role_helpdesk_agent',
         '2' => 'role_systemsmanagement_agent',
-        '3' => 'role_otrs_admin',
+        '3' => 'role_kix_admin',
         '4' => 'role_faq_manager',
     );
 

@@ -84,8 +84,6 @@
                                 <div id="NameSpaceServerError" class="TooltipErrorMessage"><p>[% Translate(Data.NameSpaceServerErrorMessage) | html %]</p></div>
                                 <p class="FieldExplanation">
                                     [% Translate("URI to give SOAP methods a context, reducing ambiguities.") | html %]
-                                    <br/>
-                                    [% Translate("e.g urn:otrs-com:soap:functions or http://www.otrs.com/GenericInterface/actions") | html %]
                                 </p>
                             </div>
                             <div class="Clear"></div>

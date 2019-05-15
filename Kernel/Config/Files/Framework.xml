@@ -5029,7 +5029,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DefaultTheme" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Defines the default front-end (HTML) theme to be used by the agents and customers. If you like, you can add your own theme. Please refer the administrator manual located at http://otrs.github.io/doc/.</Description>
+        <Description Translatable="1">Defines the default front-end (HTML) theme to be used by the agents and customers. If you like, you can add your own theme.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -5089,7 +5089,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/logo_bg.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5103,7 +5103,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/logo_bg.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5117,7 +5117,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/logo_bg.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5131,7 +5131,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/logo_bg.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5145,7 +5145,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/loginlogo_default.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
                 <Item Key="StyleHeight">100px</Item>
             </Hash>
         </Setting>
@@ -5156,7 +5156,7 @@
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Customer/default/img/loginlogo_default.png</Item>
+                <Item Key="URL">skins/Customer/default/img/KIX_logo.png</Item>
                 <Item Key="StyleHeight">100px</Item>
             </Hash>
         </Setting>
@@ -5635,7 +5635,7 @@
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
-            <String Regex="">http://host.example.com/thanks-for-using-otrs.html</String>
+            <String Regex="">http://host.example.com/login.html</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PreApplicationModule###AgentInfo" Required="0" Valid="0" ConfigLevel="300">

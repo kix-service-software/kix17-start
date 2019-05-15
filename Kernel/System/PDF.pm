@@ -360,7 +360,7 @@ sub PageNew {
 
     # get logofile
     my $LogoFile = $Self->{Document}->{LogoFile}
-        || $Kernel::OM->Get('Kernel::Config')->Get('Home') . '/var/logo-otrs.png';
+        || $Kernel::OM->Get('Kernel::Config')->Get('Home') . '/var/logo.png';
 
     if (
         defined( $Param{LogoFile} )
