@@ -13,7 +13,7 @@ package Kernel::System::ReferenceData;
 use strict;
 use warnings;
 
-use Locale::Country qw(all_country_names);
+use Locale::Country qw(all_country_names country2code);
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -56,6 +56,8 @@ sub new {
 }
 
 =item CountryList()
+
+DEPRECATED: This function will be removed in further versions of KIX
 
 return a list of countries as a hash reference. The countries are based on ISO
 3166-2 and are provided by the Perl module Locale::Code::Country, or optionally

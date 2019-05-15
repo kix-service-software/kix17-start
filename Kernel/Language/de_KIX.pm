@@ -4498,6 +4498,12 @@ sub Data {
     $Lang->{'Message deleted!'}     = 'Neuigkeit gelöscht!';
     $Lang->{'Read this message'}    = 'Diese Neuigkeit lesen';
     $Lang->{'Messages'}             = 'Neuigkeiten';
+
+    # CUSTOM FOOTER
+    $Lang->{'Defines a link list that can be added in the footer. The links can be assigned separately to the frontends. (Key: <priority>::<link title>; Value: 0 => deactivated, 1 => show everywhere, 2 => only agent frontend, 3 => only customer frontend)'}
+        = 'Definiert eine Liste von Links, welche im Footer zusätzlich hinzugefügt werden können. Die Links können den Frontends separat zugewiesen werden. (Schlüssel: <Priorität>::<Linktitel>; Wert: 0 => deaktiviert, 1 => Überall anzeigen, 2 => nur Agentenfrontend, 3 => nur Kundenfrontend)';
+    $Lang->{'Defines the associated URL for each link title. It is possible to use KIX placeholder.'}
+        = 'Definiert zu den jeweiligen Linktitel die dazugehörige URL. Es ist möglich KIX-Platzhalter zu verwenden.';
     # $$STOP$$
 
     return 0;

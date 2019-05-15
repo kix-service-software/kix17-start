@@ -21,9 +21,6 @@ our @ObjectDependencies = (
     'Kernel::System::LinkObject',
 );
 
-use vars qw($VERSION);
-$VERSION = qw($Revision$) [1];
-
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -202,15 +199,16 @@ sub Run {
 
             if (
                 $SearchPatternRegExp
-                && $TicketData{$Key} =~ /.*($SearchPatternRegExp).*/
+                && $TicketData{$Key} =~ /$SearchPatternRegExp/
             ) {
                 $SearchString = $1;
                 $SearchString =~ s/^\s+//g;
                 $SearchString =~ s/\s+$//g;
-                push( @SearchStrings, $SearchString );
-            }
 
-            #            }
+                if ( length($SearchString) ) {
+                    push( @SearchStrings, $SearchString );
+                }
+            }
         }
     }
 

@@ -81,13 +81,13 @@ X-KIX-Login: [% Env("Baselink") %]
           try {
               if (((!isIFrame && !isPopup) || (isIFrame && isPopup)) && (!localStorage.getItem("DesktopMode") || parseInt(localStorage.getItem("DesktopMode"), 10) <= 0)) {
                 var ResponsiveCSS;
-    [% RenderBlockStart("ResponsiveCSS") %]
+[% RenderBlockStart("ResponsiveCSS") %]
                 ResponsiveCSS = doc.createElement("link");
                 ResponsiveCSS.setAttribute("rel", "stylesheet");
                 ResponsiveCSS.setAttribute("type", "text/css");
                 ResponsiveCSS.setAttribute("href", "[% Config("Frontend::WebPath") %]skins/Agent/[% Data.Skin | uri %]/[% Data.CSSDirectory %]/[% Data.Filename %]");
                 doc.getElementsByTagName("head")[0].appendChild(ResponsiveCSS);
-    [% RenderBlockEnd("ResponsiveCSS") %]
+[% RenderBlockEnd("ResponsiveCSS") %]
               }
           }
           catch (Exception) {}
@@ -299,15 +299,28 @@ X-KIX-Login: [% Env("Baselink") %]
             </div>
 [% RenderBlockEnd("LostPassword") %]
 
-<div class="BackToLogin Hidden">
-    <a href="" id="BackToLogin">&larr; [% Translate("Back to login") | html %]</a>
-</div>
+            <div class="BackToLogin Hidden">
+                <a href="" id="BackToLogin">&larr; [% Translate("Back to login") | html %]</a>
+            </div>
 
 # --
 # Message of the day data!
 # --
 [% Data.Motd %]
 
+[% RenderBlockStart("CustomFooter") %]
+            <div class="CustomFooterLogin">
+                <ul>
+[% RenderBlockStart("CustomFooterEntry") %]
+                    <li>
+                        <a href="[% Data.URL %]" title="[% Data.Title %]">
+                            [% Data.Title %]
+                        </a>
+                    </li>
+[% RenderBlockEnd("CustomFooterEntry") %]
+                </ul>
+            </div>
+[% RenderBlockEnd("CustomFooter") %]
         </div>
     </div>
 [% WRAPPER JSOnDocumentComplete %]

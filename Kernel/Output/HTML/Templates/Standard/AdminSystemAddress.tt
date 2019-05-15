@@ -140,6 +140,9 @@ $('.MasterAction').bind('click', function (Event) {
 [% RenderBlockStart("EmailInvalidSyntaxServerErrorMsg") %]
                                 <p>[% Translate("The syntax of this email address is incorrect.") | html %]</p>
 [% RenderBlockEnd("EmailInvalidSyntaxServerErrorMsg") %]
+[% RenderBlockStart("EmailDuplicateServerErrorMsg") %]
+                                <p>[% Translate("The email address you entered already exists.") | html %]</p>
+[% RenderBlockEnd("EmailDuplicateServerErrorMsg") %]
                             </div>
                         </div>
 

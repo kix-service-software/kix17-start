@@ -255,7 +255,7 @@ sub LinkObjectTableCreateComplex {
         my ( $Placeholder1, $Placeholder2, $Class ) = ( '', '', '' );
 
         if ( $Block->{Object} eq 'ITSMConfigItem' ) {
-            my $CIClass = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
+            my ( $CIClass ) = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
             ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $CIClass );
             $Class =~ s/[^A-Za-z0-9_-]/_/g;
         }
@@ -410,7 +410,7 @@ sub LinkObjectTableCreateComplex {
 
         my ( $Placeholder1, $Placeholder2, $Class ) = ( '', '', '' );
         if ( $Block->{Object} eq 'ITSMConfigItem' ) {
-            my $CIClass = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
+            my ( $CIClass ) = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
             ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $CIClass );
             $Class =~ s/[^A-Za-z0-9_-]/_/g;
         }
@@ -1169,7 +1169,7 @@ sub _PreferencesLinkObject {
                 = $ConfigObject->Get('ITSMConfigItem::Frontend::AgentITSMConfigItem');
 
             # get class
-            my $CIClass = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
+            my ( $CIClass ) = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
             ( $Class, $Placeholder1, $Placeholder2 ) = ( $CIClass , '-', '_' );
             my $RealClass = $Class;
             $Class =~ s/[^A-Za-z0-9_-]/_/g;

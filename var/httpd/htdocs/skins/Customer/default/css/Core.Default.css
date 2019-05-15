@@ -215,40 +215,64 @@ textarea.cke_dialog_ui_input_textarea:focus {
 /**
  * @subsection  Footer
  */
-#Footer {
-    width: 100%;
-    margin-top: 3px;
-    color: #CCC;
-    overflow: hidden;
+#Footer, .CustomFooterLogin {
+    margin-top: 1px;
+    min-height: 15px;
+    padding: 12px 9px 8px;
+    font-size: 10px;
     text-align: center;
+    position: relative;
 }
 
-#Footer ul {
-    float: left;
+#Footer {
+    clear: both;
+    border-top: 1px solid #eee;
 }
 
-.RTL #Footer ul {
-    float: right;
+.CustomFooterLogin ul {
+    display: inline-block;
 }
 
+#Footer a,
+#Footer ul li a,
+.CustomFooterLogin a,
+.CustomFooterLogin ul li a
+{
+    color: #707070;
+    cursor: pointer;
+}
+
+.CustomFooterLogin a:hover,
+.CustomFooterLogin ul li a:hover,
+#Footer a:hover,
+#Footer ul li a:hover,
+#Footer div.TopOfPage a:hover {
+    text-decoration: none;
+    color: #1491D2;
+}
+
+.CustomFooterLogin ul li,
 #Footer ul li {
     float: left;
-    padding: 0 4px 0 0;
+    padding: 0 4px 0 4px;
+    border-left: 1px solid #9E9E9E;
 }
 
+.RTL .CustomFooterLogin ul li,
 .RTL #Footer ul li {
     float: right;
-    padding: 0 0 0 4px;
+    border-left: none;
+    border-right: 1px solid #9E9E9E;
 }
 
-#Footer a {
-    margin: 8px 8px 7px;
-    color: #CCC;
-    font-size: 11px;
+.CustomFooterLogin ul li:first-child,
+#Footer ul li:first-child {
+    border: none;
 }
 
-#Footer a:hover {
-    color: #F92;
+.CustomFooter{
+    display: inline-block;
+    margin-bottom: 10px;
 }
 
 /**
