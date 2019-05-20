@@ -1334,8 +1334,6 @@ sub Data {
         'e.g. http://local.otrs.com:8000/Webservice/Example' => 'z. B. http://local.otrs.com:8000/Webservice/Example',
         'Namespace' => 'Namespace',
         'URI to give SOAP methods a context, reducing ambiguities.' => 'URI, die SOAP-Methoden einen Kontext gibt und damit Mehrdeutigkeiten auflöst.',
-        'e.g urn:otrs-com:soap:functions or http://www.otrs.com/GenericInterface/actions' =>
-            'z. B. urn:otrs-com:soap:functions oder http://www.otrs.com/GenericInterface/actions',
         'Request name scheme' => 'Anfragen-Namensschema',
         'Select how SOAP request function wrapper should be constructed.' =>
             'Wählen Sie, wie der SOAP-Funktionsaufruf konstruiert werden soll.',
@@ -1638,7 +1636,6 @@ sub Data {
         'Module documentation' => 'Moduldokumentation',
         'Upgrade' => 'Upgrade',
         'Local Repository' => 'Lokales Verzeichnis',
-        'This package is verified by OTRSverify (tm)' => 'Dieses Paket wurde von OTRSVerify (tm) geprüft',
         'Uninstall' => 'Deinstallieren',
         'Reinstall' => 'Erneut installieren',
         'Features for %s customers only' => 'Exklusiv: Features für %s Kunden',
@@ -2398,10 +2395,10 @@ sub Data {
         'Starting the KIX Daemon' => 'Den KIX Daemon starten',
         'Make sure that the file \'%s\' exists (without .dist extension). This cron job will check every 5 minutes if the KIX Daemon is running and start it if needed.' =>
             'Stellen Sie sicher, dass die Datei \'%s\' existiert (ohne die Endung .dist). Dieser Cronjob wird alle 5 Minuten prüfen, ob der KIX Daemon läuft, und ihn ggf. starten.',
-        'Execute \'%s start\' to make sure the cron jobs of the \'otrs\' user are active.' =>
-            'Führen Sie \'%s start\' aus um sicherzustellen, dass die Cronjobs des \'otrs\'-Nutzers aktiv sind.',
-        'After 5 minutes, check that the KIX Daemon is running in the system (\'bin/otrs.Daemon.pl status\').' =>
-            'Prüfen Sie nach 5 Minuten, ob der KIX Daemon läuft  (\'bin/otrs.Daemon.pl status\').',
+        'Execute \'%s start\' to make sure the cron jobs of the \'kix\' user are active.' =>
+            'Führen Sie \'%s start\' aus um sicherzustellen, dass die Cronjobs des \'kix\'-Nutzers aktiv sind.',
+        'After 5 minutes, check that the KIX Daemon is running in the system (\'bin/kix.Daemon.pl status\').' =>
+            'Prüfen Sie nach 5 Minuten, ob der KIX Daemon läuft  (\'bin/kix.Daemon.pl status\').',
 
         # Template: AgentDashboard
         'Dashboard' => 'Übersicht',
@@ -4585,8 +4582,8 @@ Ihr Helpdesk-Team
         'Configure which screen should be shown after a new ticket has been created.' =>
             'Konfigurieren Sie, welche Oberfläche angezeigt werden soll, nachdem ein neues Ticket erstellt wurde.',
         'Configure your own log text for PGP.' => 'Konfigurieren Sie Ihren eigenen Log-Text für PGP.',
-        'Configures a default TicketDynamicField setting. "Name" defines the dynamic field which should be used, "Value" is the data that will be set, and "Event" defines the trigger event. Please check the developer manual (http://otrs.github.io/doc/), chapter "Ticket Event Module".' =>
-            'Konfiguriert eine Standardeinstellung für ein dynamisches Ticketfeld. "Name" beschreibt das dynamische Feld, das genutzt werden soll, "Value" die Daten, mit denen das Feld befüllt werden soll. "Event" enthält das auslösende Ereignis. Weitere Informationen finden Sie im Entwicklerhandbuch (http://otrs.github.io/doc/) im Kapitel "Ticket-Eventmodule".',
+        'Configures a default TicketDynamicField setting. "Name" defines the dynamic field which should be used, "Value" is the data that will be set, and "Event" defines the trigger event. Please check the developer manual, chapter "Ticket Event Module".' =>
+            'Konfiguriert eine Standardeinstellung für ein dynamisches Ticketfeld. "Name" beschreibt das dynamische Feld, das genutzt werden soll, "Value" die Daten, mit denen das Feld befüllt werden soll. "Event" enthält das auslösende Ereignis. Weitere Informationen finden Sie im Entwicklerhandbuch im Kapitel "Ticket-Eventmodule".',
         'Controls how to display the ticket history entries as readable values.' =>
             'Kontrolliert wie die Ticket-Historie in lesbaren Werten dargestellt wird.',
         'Controls if CutomerID is editable in the agent interface.' => 'Bestimmt, ob CustomerID im Agenten-Interface bearbeitet werden kann.',
@@ -4863,8 +4860,8 @@ Ihr Helpdesk-Team
             'Definiert den Standard-Auto-Antwort-Typ des Artikels für diese Operation.',
         'Defines the default body of a note in the ticket free text screen of the agent interface.' =>
             'Definiert den Standard-Inhalt einer Notiz in der TicketFreeText-Oberfläche im Agenten-Interface.',
-        'Defines the default front-end (HTML) theme to be used by the agents and customers. If you like, you can add your own theme. Please refer the administrator manual located at http://otrs.github.io/doc/.' =>
-            'Steuert das standardmäßig verwendete Theme (HTML) für das Frontend für Agenten und Kunden. Hinweis: Sie können Ihre eigenen Themes hinzufügen und verwenden (siehe http://otrs.github.io/doc/).',
+        'Defines the default front-end (HTML) theme to be used by the agents and customers. If you like, you can add your own theme.' =>
+            'Steuert das standardmäßig verwendete Theme (HTML) für das Frontend für Agenten und Kunden. Hinweis: Sie können Ihre eigenen Themes hinzufügen und verwenden.',
         'Defines the default front-end language. All the possible values are determined by the available language files on the system (see the next setting).' =>
             'Definiert die Standard-Frontend-Sprache. Die möglichen Werte werden durch die verfügbaren Sprachdateien auf dem System bestimmt (siehe nächste Einstellung).',
         'Defines the default history type in the customer interface.' => 'Definiert den Standard-Historientyp im Kunden-Interface.',

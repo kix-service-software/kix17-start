@@ -93,7 +93,7 @@ sub new {
             || die "Found no '$Option' option in configuration!";
     }
 
-    # should I use x-otrs headers?
+    # should I use x-kix headers?
     $Self->{Trusted} = defined $Param{Trusted} ? $Param{Trusted} : 1;
 
     if ( $Self->{Trusted} ) {
@@ -605,7 +605,7 @@ sub GetEmailParams {
     HEADER:
     for my $Param ( @{ $Self->{'PostmasterX-Header'} } ) {
 
-        # do not scan x-otrs headers if mailbox is not marked as trusted
+        # do not scan x-kix headers if mailbox is not marked as trusted
         next HEADER if ( !$Self->{Trusted} && $Param =~ /^(x-otrs|x-kix)/i );
         if ( $Self->{Debug} > 2 ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(

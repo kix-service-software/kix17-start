@@ -78,7 +78,7 @@ returns:
                         "#1 SMP Debian 3.2.46-1",
                         "i686",
                       ],
-        User         => "otrs",
+        User         => "kix",
     );
 
 =cut
@@ -305,9 +305,9 @@ collect database information
 returns
 
     %DBInfo = (
-        Database => "otrsproduction",
+        Database => "kixproduction",
         Host     => "dbserver.example.com",
-        User     => "otrsuser",
+        User     => "kixuser",
         Type     => "mysql",
         Version  => "MySQL 5.5.31-0+wheezy1",
     )
