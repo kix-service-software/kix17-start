@@ -13,6 +13,8 @@ package Kernel::Output::HTML::Layout;
 use strict;
 use warnings;
 
+use Digest::MD5 qw(md5_hex);
+use Encode;
 use Storable;
 use URI::Escape qw();
 
