@@ -13,6 +13,8 @@ package Kernel::Output::HTML::Layout;
 use strict;
 use warnings;
 
+use Digest::MD5 qw(md5_hex);
+use Encode;
 use Storable;
 use URI::Escape qw();
 
@@ -3785,11 +3787,11 @@ END
 
     if ( $Self->{Action} eq 'AgentStatistics' ) {
         $DatepickerJS .= <<"END";
-    Core.Config.Set($Prefix + "Format", "$DateFormat");
-    Core.Config.Set($Prefix + "VacationDays", $VacationDaysJSON);
-    Core.Config.Set($Prefix + "DateInFuture", $DateInFuture);
-    Core.Config.Set($Prefix + "DateNotInFuture", $DateNotInFuture);
-    Core.Config.Set($Prefix + "WeekDayStart", '$WeekDayStart);
+    Core.Config.Set("$Prefix" + "Format", "$DateFormat");
+    Core.Config.Set("$Prefix" + "VacationDays", $VacationDaysJSON);
+    Core.Config.Set("$Prefix" + "DateInFuture", $DateInFuture);
+    Core.Config.Set("$Prefix" + "DateNotInFuture", $DateNotInFuture);
+    Core.Config.Set("$Prefix" + "WeekDayStart", $WeekDayStart);
 END
     }
 
