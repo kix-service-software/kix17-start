@@ -28,7 +28,7 @@ use File::stat;
 use Digest::MD5;
 
 use Exporter qw(import);
-our @EXPORT = qw(Translatable);
+our @EXPORT_OK = qw(Translatable);
 
 our @ObjectDependencies = ();
 
