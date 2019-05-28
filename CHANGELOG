@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.6.0-RC6 (2019/05/28)
+ * (2019/05/27) - Bugfix: T2019040990000611 (fixed incorret naming of status "Service Request") (fjacquemin)
+
 # 17.6.0-RC5 (2019/05/15)
  * (2019/05/15) - Bugfix: T2017040890000546 (old otrs stuff removed) (ddoerffel)
  * (2019/05/14) - Bugfix: T2017090790000601 (merged extended layout methods to base code) (millinger)
