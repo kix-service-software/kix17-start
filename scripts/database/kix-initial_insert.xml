@@ -870,7 +870,7 @@ Your KIX Team
     </Insert>
     <Insert Table="ticket_type">
         <Data Key="id" Type="AutoIncrement">4</Data>
-        <Data Key="name" Type="Quote">ServiceRequest</Data>
+        <Data Key="name" Type="Quote">Service Request</Data>
         <Data Key="valid_id">1</Data>
         <Data Key="create_time">current_timestamp</Data>
         <Data Key="create_by">1</Data>
