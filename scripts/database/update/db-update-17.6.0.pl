@@ -33,6 +33,9 @@ use vars qw(%INC);
 # migrate configuration of AgentOverlay with a prefix
 _MigrateDBNotificationEvents();
 
+# remove obsolete perl files
+_RemoveObsoleteFiles();
+
 exit 0;
 
 sub _MigrateDBNotificationEvents {
@@ -74,6 +77,63 @@ sub _MigrateDBNotificationEvents {
             }
             $Count++;
         }
+    }
+
+    return 1;
+}
+
+sub _RemoveObsoleteFiles {
+
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
+
+    # get home path
+    my $HomePath = $ConfigObject->Get('Home');
+
+    # prepare file list
+    my @FilesList = (
+        'Kernel/Output/HTML/Layout/KIX4OTRS.pm',
+        'Kernel/Output/HTML/Layout/KIX4OTRSITSMConfigManagement.pm',
+        'Kernel/Output/HTML/Layout/KIXBase.pm',
+        'Kernel/Output/HTML/Templates/Standard/ChatDisplay.tt',
+        'Kernel/Output/HTML/Templates/Standard/ChatStartForm.tt',
+        'Kernel/Output/Template/Plugin/OTRS.pm',
+        'var/httpd/htdocs/skins/Agent/default/img/kix4otrs_logo.png',
+        'var/httpd/htdocs/skins/Agent/default/img/loginlogo_default.png',
+        'var/httpd/htdocs/skins/Agent/default/img/logo-business.png',
+        'var/httpd/htdocs/skins/Agent/default/img/logo_bg.png',
+        'var/httpd/htdocs/skins/Agent/default/img/otrs-verify-small.png',
+        'var/httpd/htdocs/skins/Agent/default/img/otrs-verify.png',
+        'var/httpd/htdocs/skins/Agent/default/img/logo.psd',
+        'var/httpd/htdocs/skins/Agent/default/img/logo_bg.psd',
+        'var/httpd/htdocs/skins/Customer/default/img/logo.png',
+        'var/stats/ITSMStats-400-ITSMChangeManagement.xml',
+        'var/stats/ITSMStats-401-ITSMChangeManagement.xml',
+        'var/stats/ITSMStats-402-ITSMChangeManagement.xml',
+        'var/stats/ITSMStats-403-ITSMChangeManagement.xml',
+        'var/stats/ITSMStats-404-ITSMChangeManagement.xml',
+        'var/stats/ITSMStats-405-ITSMChangeManagement.xml',
+        'var/stats/ITSMStats-406-ITSMChangeManagement.xml',
+        'var/stats/ListOfOpenTicketsSortedByTimeLeftUntilEscalationDeadlineExpires.hu.xml',
+        'var/stats/ListOfOpenTicketsSortedByTimeLeftUntilResponseDeadlineExpires.hu.xml',
+        'var/stats/ListOfOpenTicketsSortedByTimeLeftUntilSolutionDeadlineExpires.hu.xml',
+        'var/stats/ListOfTheMostTimeConsumingTickets.hu.xml',
+        'var/stats/ListOfTicketsClosedLastMonth.hu.xml',
+        'var/stats/ListOfTicketsClosedSortedByResponseTime.hu.xml',
+        'var/stats/ListOfTicketsClosedSortedBySolutionTime.hu.xml',
+        'var/stats/ListOfTicketsCreatedLastMonth.hu.xml',
+        'var/stats/Stats.NewTickets.hu.xml',
+        'var/stats/Stats.StatusActionOverview.hu.xml',
+        'var/stats/Stats.TicketOverview.hu.xml'
+    );
+
+    for my $File ( @FilesList ) {
+        my $Success = $MainObject->FileDelete(
+            Location        => $HomePath . '/' . $File,
+            Type            => 'Local',
+            DisableWarnings => 1,
+        );
     }
 
     return 1;
