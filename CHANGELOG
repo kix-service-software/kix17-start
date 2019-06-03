@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.6.0 (2019/06/03)
+ * (2019/06/03) - productive release
+
 # 17.6.0-RC6 (2019/05/28)
  * (2019/05/27) - Bugfix: T2019040990000611 (fixed incorret naming of status "Service Request") (fjacquemin)
 
