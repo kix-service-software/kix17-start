@@ -1,5 +1,64 @@
 # Change log of KIX
-* Copyright (C) 2006-2019 c.a.p.e. IT GmbH, http://www.cape-it.de/
+* Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
+
+# 17.6.0 (2019/06/03)
+ * (2019/06/03) - productive release
+
+# 17.6.0-RC6 (2019/05/28)
+ * (2019/05/27) - Bugfix: T2019040990000611 (fixed incorret naming of status "Service Request") (fjacquemin)
+
+# 17.6.0-RC5 (2019/05/15)
+ * (2019/05/15) - Bugfix: T2017040890000546 (old otrs stuff removed) (ddoerffel)
+ * (2019/05/14) - Bugfix: T2017090790000601 (merged extended layout methods to base code) (millinger)
+ * (2019/05/14) - CR: T2018121890001063 (Clarify 'Close Time' as 'First Close Time' in ticket list statistic) (millinger)
+ * (2019/05/14) - Bugfix: T2019020690000479 (fixed loading of template recipient after attachment upload) (millinger)
+ * (2019/05/14) - Bugfix: T2018121790000521 (fixed column preferences for config item link object tables) (millinger)
+ * (2019/05/14) - Bugfix: T2019012890000537 (missing function import for country2code) (millinger)
+ * (2019/05/13) - Bugfix: T2019021290000771 (fixed greedy wildcards prevent matches for configured patterns in TicketAutoLinkConfigItem) (fjacquemin)
+ * (2019/05/13) - Bugfix: T2019031490001228 (fixed missing check for duplicated system address) (fjacquemin)
+ * (2019/05/13) - Bugfix: T2019032590000584 (fixed notification option subject "with/without ticket number" not individually adjustable) (fjacquemin)
+ * (2019/05/10) - CR: T2019051090000376 (added custom footer to show special links) (fjacquemin)
+
+# 17.6.0-RC4 (2019/05/07)
+ * (2019/05/07) - Bugfix: T2019040890001201 (fixed load wrong plugin by installing KIX) (fjacquemin)
+
+# 17.6.0-RC3 (2019/05/06)
+ * (2019/05/03) - Bugfix: T2019022890001025 (fixed handling of acl disabled dynamic fields) (millinger)
+ * (2019/05/03) - Bugfix: T2019032290000866 (fixed error if dynamic field sidebar configuration is inavtive) (millinger)
+ * (2019/05/02) - Bugfix: T2016081790001424 (prevent multiple executions of event handler modules) (millinger)
+ * (2019/04/29) - Bugfix: T2019041790000589 (fixed service from ticket template isn't set when a customer user is selected) (fjacquemin)
+ * (2019/04/29) - Bugfix: T2019042990000575 (merged security fixes from OTRS) (millinger)
+ * (2019/04/29) - Bugfix: T2019042990000557 (merged security fixes from OTRS) (millinger)
+ * (2019/04/29) - Bugfix: T2019032790001016 (fixed missing check of restricted db attributes if use RemoteDB sidebar in customer information center) (fjacquemin)
+ * (2019/04/29) - Bugfix: T2019021290001019 (fixed dynamic fields are not hidden when an ACL disbales this field) (fjacquemin)
+ * (2019/04/25) - Bugfix: T2019032890000971 (search profile can not be executed from toolbar) (millinger)
+ * (2019/04/25) - Bugfix: T2019041290000865 (duplicate entry for linked persons on ticket merge) (millinger)
+ * (2019/04/25) - Bugfix: T2018122090000774 (config item import does not recognize xml attribute identifier) (millinger)
+ * (2019/04/25) - Bugfix: T2019032090000413 (dynamic field 'DateTime' could not search for restricted values) (millinger)
+
+# 17.6.0-RC2 (2019/04/25)
+ * (2019/04/16) - CR: T2019040890001201 (code clean up) (fjacquemin)
+ * (2019/04/15) - Bugfix: T2019032290001187 (fixed incorrect display of the sender in the ticket lists) (fjacquemin)
+ * (2019/04/15) - Bugfix: T2019041290000436 (fixed missing error message of the dynamic field RemoteDB and ITSMConfigitem when used Mandatory) (fjacquemin)
+ * (2019/04/05) - Bugfix: T2017040890000546 (old OTRS stuff removed) (ddoerffel)
+
+# 17.6.0-RC2 (2019/04/25)
+ * (2019/04/16) - CR: T2019040890001201 (code clean up) (fjacquemin)
+ * (2019/04/15) - Bugfix: T2019032290001187 (fixed incorrect display of the sender in the ticket lists) (fjacquemin)
+ * (2019/04/15) - Bugfix: T2019041290000436 (fixed missing error message of the dynamic field RemoteDB and ITSMConfigitem when used Mandatory) (fjacquemin)
+ * (2019/04/05) - Bugfix: T2017040890000546 (old OTRS stuff removed) (ddoerffel)
+
+# 17.6.0-RC1 (2019/04/12)
+ * (2019/04/11) - CR: T2018020190001023 (added copy of generic agent jobs) (fjacquemin)
+ * (2019/04/04) - Bugfix: T2019032590000879 (subject not shown in smime certificates) (ddoerffel)
+ * (2019/04/03) - Bugfix: T2019021990000669 (fixed incomplete profile duplicate check of generic agent jobs) (fjacquemin)
+ * (2019/04/02) - CR: T2019021190001306 (added function to clone postmaster filter) (fjacquemin)
+
+# 17.6.0-RC1 (2019/04/12)
+ * (2019/04/11) - CR: T2018020190001023 (added copy of generic agent jobs) (fjacquemin)
+ * (2019/04/04) - Bugfix: T2019032590000879 (subject not shown in smime certificates) (ddoerffel)
+ * (2019/04/03) - Bugfix: T2019021990000669 (fixed incomplete profile duplicate check of generic agent jobs) (fjacquemin)
+ * (2019/04/02) - CR: T2019021190001306 (added function to clone postmaster filter) (fjacquemin)
 
 # 17.5.0 (2019/03/20)
  * (2019/03/20) - productive release
