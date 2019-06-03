@@ -334,7 +334,6 @@
     </ForeignKey>
 </Table>
 
-
 <!-- system_address - all email addresses of the system -->
 <Table Name="system_address">
     <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="SMALLINT"/>
@@ -349,6 +348,9 @@
     <Column Name="create_by" Required="true" Type="INTEGER"/>
     <Column Name="change_time" Required="true" Type="DATE"/>
     <Column Name="change_by" Required="true" Type="INTEGER"/>
+    <Unique Name="system_address_value0">
+        <UniqueColumn Name="value0"/>
+    </Unique>
     <ForeignKey ForeignTable="valid">
         <Reference Local="valid_id" Foreign="id"/>
     </ForeignKey>
@@ -1981,7 +1983,7 @@
 </Table>
 
 <!--
-    THIS TABLE IS DEPRECATED AND WILL BE REMOVED IN A FUTURE VERSION OF OTRS.
+    THIS TABLE IS DEPRECATED AND WILL BE REMOVED IN A FUTURE VERSION OF KIX.
     PLEASE DON'T USE IT IN NEW CODE.
     This table was restored in the course of the KIX Bug T#2018021590000481.
 -->

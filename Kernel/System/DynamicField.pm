@@ -398,7 +398,7 @@ sub DynamicFieldUpdate {
     }
 
     my $Reorder;
-    if ( !exists $Param{Reorder} || $Param{Reorder} eq 1 ) {
+    if ( !exists $Param{Reorder} || $Param{Reorder} eq "1" ) {
         $Reorder = 1;
     }
 
@@ -656,7 +656,7 @@ sub DynamicFieldList {
             next FIELDNAME if !IsHashRefWithData($FieldConfig);
             next FIELDNAME if !$FieldConfig->{ID};
 
-            $AllowedFieldIDs{ $FieldConfig->{ID} } = 1,
+            $AllowedFieldIDs{ $FieldConfig->{ID} } = 1;
         }
     }
 
@@ -762,8 +762,7 @@ sub DynamicFieldList {
                 elsif ( IsArrayRefWithData( $Param{ObjectType} ) ) {
                     my $ObjectTypeString =
                         join ',',
-                        map "'" . $DBObject->Quote($_) . "'",
-                        @{ $Param{ObjectType} };
+                        map( {"'" . $DBObject->Quote($_) . "'" } @{ $Param{ObjectType} } );
                     $SQL .= " AND object_type IN ($ObjectTypeString)";
 
                 }
@@ -779,8 +778,7 @@ sub DynamicFieldList {
                 elsif ( IsArrayRefWithData( $Param{ObjectType} ) ) {
                     my $ObjectTypeString =
                         join ',',
-                        map "'" . $DBObject->Quote($_) . "'",
-                        @{ $Param{ObjectType} };
+                        map( { "'" . $DBObject->Quote($_) . "'" } @{ $Param{ObjectType} } );
                     $SQL .= " WHERE object_type IN ($ObjectTypeString)";
                 }
             }
@@ -1011,8 +1009,7 @@ sub DynamicFieldListGet {
             elsif ( IsArrayRefWithData( $Param{ObjectType} ) ) {
                 my $ObjectTypeString =
                     join ',',
-                    map "'" . $DBObject->Quote($_) . "'",
-                    @{ $Param{ObjectType} };
+                    map( { "'" . $DBObject->Quote($_) . "'" } @{ $Param{ObjectType} } );
                 $SQL .= " AND object_type IN ($ObjectTypeString)";
 
             }
@@ -1027,8 +1024,7 @@ sub DynamicFieldListGet {
             elsif ( IsArrayRefWithData( $Param{ObjectType} ) ) {
                 my $ObjectTypeString =
                     join ',',
-                    map "'" . $DBObject->Quote($_) . "'",
-                    @{ $Param{ObjectType} };
+                    map( { "'" . $DBObject->Quote($_) . "'" } @{ $Param{ObjectType} } );
                 $SQL .= " WHERE object_type IN ($ObjectTypeString)";
             }
         }
@@ -1405,6 +1401,8 @@ sub _DynamicFieldReorder {
 
     return 1;
 }
+
+1;
 
 =end Internal:
 

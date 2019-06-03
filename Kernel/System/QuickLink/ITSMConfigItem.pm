@@ -148,7 +148,6 @@ sub Search {
     }
 
     # get class
-    my $ClassName;
     my $ClassID = '';
     if ( $Param{TargetObject} =~ /(.*)::(.*)/ ) {
         $ClassID = $2;
@@ -171,24 +170,6 @@ sub Search {
         = $Self->{Config}->{ 'SearchAttribute::' . $Item->{Name} }
         || $Self->{Config}->{SearchAttribute};
     @SearchAttributes = split( ',', $SearchAttribute );
-
-    #    # get list of already linked CIs
-    #    my $LinkList = $Self->{LinkObject}->LinkList(
-    #        Object    => $Param{SourceObject},
-    #        Key       => $Param{SourceKey},
-    #        Object2   => 'ITSMConfigItem',
-    #        State     => 'Valid',
-    #        Type      => $Param{LinkType},
-    #        Direction => $Param{LinkDirection},
-    #        UserID    => $Param{UserID},
-    #    );
-    #    my %LinkedCIs;
-    #    for my $ConfigItemID (
-    #        keys %{ $LinkList->{ITSMConfigItem}->{ $Param{LinkType} }->{ $Param{LinkDirection} } }
-    #        )
-    #    {
-    #        $LinkedCIs{$ConfigItemID} = 1;
-    #    }
 
     # do search
     for my $Filter (@SearchAttributes) {
@@ -220,10 +201,7 @@ sub Search {
                     ) || 0;
                     next if !$ROCheck;
 
-                    # disabled - remove doubles
-                    # next if $LinkedCIs{$ConfigItemID};
-                    $SearchList{$ConfigItemID}
-                        = $LinkTypeList->{$Direction}->{$ConfigItemID}->{Name};
+                    $SearchList{$ConfigItemID} = $LinkTypeList->{$Direction}->{$ConfigItemID}->{Name};
                 }
             }
         }
@@ -236,8 +214,7 @@ sub Search {
     for my $ConfigItemID (
         sort { $SearchList{$a} cmp $SearchList{$b} }
         keys %SearchList
-        )
-    {
+    ) {
         my $ConfigItem = $Self->{ConfigItemObject}->ConfigItemGet(
             ConfigItemID => $ConfigItemID,
         );

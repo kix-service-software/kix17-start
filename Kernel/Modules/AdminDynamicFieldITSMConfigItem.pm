@@ -368,8 +368,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldsList{ $GetParam{Name} } &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -380,8 +379,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldData->{InternalField} &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';

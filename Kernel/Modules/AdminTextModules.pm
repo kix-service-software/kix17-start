@@ -57,8 +57,7 @@ sub Run {
         Language LanguageEdit ValidID FormID Limit Show Download
         XMLUploadDoNotAdd XMLResultFileID XMLResultFileName
         SelectedCategoryID DownloadType UploadType)
-        )
-    {
+    ) {
         $GetParam{$_} = $ParamObject->GetParam( Param => $_ ) || '';
     }
 
@@ -191,8 +190,7 @@ sub Run {
     if (
         defined $Self->{Subaction}
         && ( ( $Self->{Subaction} eq 'Change' && $GetParam{ID} ) || $Self->{Subaction} eq 'New' )
-        )
-    {
+    ) {
 
         my %TextModuleData = ();
 
@@ -500,7 +498,6 @@ sub Run {
                 $QueueIndex++;
             }
 
-            my $TypeSize = ( scalar keys %TicketTypeData < 10 ) ? keys %TicketTypeData : 10;
             $Param{TicketTypeTextModuleStrg} = $LayoutObject->BuildSelection(
                 Data        => \%TicketTypeData,
                 Name        => 'AssignedTicketTypeIDs',
@@ -653,8 +650,7 @@ sub Run {
                         && $Char    ne "\n"
                         && $Char    ne "\r"
                         && $OldChar ne '"'
-                        )
-                    {
+                    ) {
                         $PreparedContent .= '"';
                         $InQuote    = 1;
                         $AddedQuote = 1;
@@ -663,8 +659,7 @@ sub Run {
                         $InQuote
                         && $AddedQuote
                         && ( $Char eq "\n" || $Char eq "\r" || $Char eq ';' )
-                        )
-                    {
+                    ) {
                         $PreparedContent .= '"';
                         $InQuote    = 0;
                         $AddedQuote = 0;
@@ -744,8 +739,7 @@ sub Run {
         defined $Self->{Subaction}
         && $Self->{Subaction} eq 'DownloadResult'
         && $GetParam{XMLResultFileID}
-        )
-    {
+    ) {
         my @Data = $UploadCacheObject->FormIDGetAllFilesData(
             FormID => $GetParam{FormID},
         );
@@ -870,8 +864,7 @@ sub Run {
         for my $CurrHashID (
             sort { $TextModuleData{$a}->{Name} cmp $TextModuleData{$b}->{Name} }
             keys %TextModuleData
-            )
-        {
+        ) {
             $LayoutObject->Block(
                 Name => 'OverviewListRow',
                 Data => {

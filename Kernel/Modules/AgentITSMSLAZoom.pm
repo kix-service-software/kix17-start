@@ -136,8 +136,7 @@ sub Run {
         for my $ServiceID (
             sort { $ServiceList{$a}->{Name} cmp $ServiceList{$b}->{Name} }
             keys %ServiceList
-            )
-        {
+        ) {
 
             # set output object
             $CssClass = $CssClass eq 'searchpassive' ? 'searchactive' : 'searchpassive';

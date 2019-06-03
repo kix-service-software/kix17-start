@@ -123,9 +123,10 @@ Core.Exception = (function (TargetNS) {
      */
     TargetNS.HandleFinalError = function (ErrorObject, Trace) {
         var UserErrorMessage = 'An error occurred! Do you want to see the complete error message?',
-            ErrorType = ErrorObject.GetType();
+            ErrorType;
 
         if (ErrorObject instanceof TargetNS.ApplicationError) {
+            ErrorType = ErrorObject.GetType();
             // Suppress AJAX errors which were raised by leaving the page while the AJAX call was still running.
             if (TargetNS.AboutToLeave && (ErrorType === 'CommunicationError' || ErrorType === 'ConnectionError')) {
                 return false;

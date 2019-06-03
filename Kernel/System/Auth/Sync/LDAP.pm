@@ -355,7 +355,7 @@ sub Sync {
     # variable to store group permissions from ldap
     my %GroupPermissionsFromLDAP;
 
-    # sync ldap group 2 otrs group permissions
+    # sync ldap group 2 kix group permissions
     my $UserSyncGroupsDefinition = $ConfigObject->Get(
         'AuthSyncModule::LDAP::UserSyncGroupsDefinition' . $Self->{Count}
     );
@@ -366,28 +366,28 @@ sub Sync {
         for my $GroupDN ( sort keys %{$UserSyncGroupsDefinition} ) {
 
             # search if we are allowed to
-            my $Filter;
+            my $GroupFilter;
             if ( $Self->{UserAttr} eq 'DN' ) {
-                $Filter = "($Self->{AccessAttr}=" . escape_filter_value($UserDN) . ')';
+                $GroupFilter = "($Self->{AccessAttr}=" . escape_filter_value($UserDN) . ')';
             }
             else {
-                $Filter = "($Self->{AccessAttr}=" . escape_filter_value( $Param{User} ) . ')';
+                $GroupFilter = "($Self->{AccessAttr}=" . escape_filter_value( $Param{User} ) . ')';
             }
-            my $Result = $LDAP->search(
+            my $GroupResult = $LDAP->search(
                 base   => $GroupDN,
-                filter => $Filter,
+                filter => $GroupFilter,
             );
-            if ( $Result->code() ) {
+            if ( $GroupResult->code() ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
-                    Message  => "Search failed! ($GroupDN) filter='$Filter' " . $Result->error(),
+                    Message  => "Search failed! ($GroupDN) filter='$GroupFilter' " . $GroupResult->error(),
                 );
                 next GROUPDN;
             }
 
             # extract it
             my $Valid;
-            for my $Entry ( $Result->all_entries() ) {
+            for my $Entry ( $GroupResult->all_entries() ) {
                 $Valid = $Entry->dn();
             }
 
@@ -398,7 +398,7 @@ sub Sync {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'notice',
                     Message  => "User: $Param{User} not in "
-                        . "GroupDN='$GroupDN', Filter='$Filter'! (REMOTE_ADDR: $RemoteAddr).",
+                        . "GroupDN='$GroupDN', Filter='$GroupFilter'! (REMOTE_ADDR: $RemoteAddr).",
                 );
                 next GROUPDN;
             }
@@ -439,24 +439,24 @@ sub Sync {
         }
     }
 
-    # sync ldap attribute 2 otrs group permissions
+    # sync ldap attribute 2 kix group permissions
     my $UserSyncAttributeGroupsDefinition = $ConfigObject->Get(
         'AuthSyncModule::LDAP::UserSyncAttributeGroupsDefinition' . $Self->{Count}
     );
     if ($UserSyncAttributeGroupsDefinition) {
 
         # build filter
-        my $Filter = "($Self->{UID}=" . escape_filter_value( $Param{User} ) . ')';
+        my $SyncFilter = "($Self->{UID}=" . escape_filter_value( $Param{User} ) . ')';
 
         # perform search
         $Result = $LDAP->search(
             base   => $Self->{BaseDN},
-            filter => $Filter,
+            filter => $SyncFilter,
         );
         if ( $Result->code() ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "Search failed! ($Self->{BaseDN}) filter='$Filter' " . $Result->error(),
+                Message  => "Search failed! ($Self->{BaseDN}) filter='$SyncFilter' " . $Result->error(),
             );
         }
         else {
@@ -574,7 +574,7 @@ sub Sync {
     # variable to store role permissions from ldap
     my %RolePermissionsFromLDAP;
 
-    # sync ldap group 2 otrs role permissions
+    # sync ldap group 2 kix role permissions
     my $UserSyncRolesDefinition = $ConfigObject->Get(
         'AuthSyncModule::LDAP::UserSyncRolesDefinition' . $Self->{Count}
     );
@@ -585,28 +585,28 @@ sub Sync {
         for my $GroupDN ( sort keys %{$UserSyncRolesDefinition} ) {
 
             # search if we're allowed to
-            my $Filter;
+            my $GroupFilter;
             if ( $Self->{UserAttr} eq 'DN' ) {
-                $Filter = "($Self->{AccessAttr}=" . escape_filter_value($UserDN) . ')';
+                $GroupFilter = "($Self->{AccessAttr}=" . escape_filter_value($UserDN) . ')';
             }
             else {
-                $Filter = "($Self->{AccessAttr}=" . escape_filter_value( $Param{User} ) . ')';
+                $GroupFilter = "($Self->{AccessAttr}=" . escape_filter_value( $Param{User} ) . ')';
             }
-            my $Result = $LDAP->search(
+            my $GroupResult = $LDAP->search(
                 base   => $GroupDN,
-                filter => $Filter,
+                filter => $GroupFilter,
             );
-            if ( $Result->code() ) {
+            if ( $GroupResult->code() ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'error',
-                    Message  => "Search failed! ($GroupDN) filter='$Filter' " . $Result->error(),
+                    Message  => "Search failed! ($GroupDN) filter='$GroupFilter' " . $GroupResult->error(),
                 );
                 next GROUPDN;
             }
 
             # extract it
             my $Valid;
-            for my $Entry ( $Result->all_entries() ) {
+            for my $Entry ( $GroupResult->all_entries() ) {
                 $Valid = $Entry->dn();
             }
 
@@ -617,7 +617,7 @@ sub Sync {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
                     Priority => 'notice',
                     Message  => "User: $Param{User} not in "
-                        . "GroupDN='$GroupDN', Filter='$Filter'! (REMOTE_ADDR: $RemoteAddr).",
+                        . "GroupDN='$GroupDN', Filter='$GroupFilter'! (REMOTE_ADDR: $RemoteAddr).",
                 );
                 next GROUPDN;
             }
@@ -646,24 +646,24 @@ sub Sync {
         }
     }
 
-    # sync ldap attribute 2 otrs role permissions
+    # sync ldap attribute 2 kix role permissions
     my $UserSyncAttributeRolesDefinition = $ConfigObject->Get(
         'AuthSyncModule::LDAP::UserSyncAttributeRolesDefinition' . $Self->{Count}
     );
     if ($UserSyncAttributeRolesDefinition) {
 
         # build filter
-        my $Filter = "($Self->{UID}=" . escape_filter_value( $Param{User} ) . ')';
+        my $SyncFilter = "($Self->{UID}=" . escape_filter_value( $Param{User} ) . ')';
 
         # perform search
         $Result = $LDAP->search(
             base   => $Self->{BaseDN},
-            filter => $Filter,
+            filter => $SyncFilter,
         );
         if ( $Result->code() ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => "Search failed! ($Self->{BaseDN}) filter='$Filter' " . $Result->error(),
+                Message  => "Search failed! ($Self->{BaseDN}) filter='$SyncFilter' " . $Result->error(),
             );
         }
         else {
@@ -729,10 +729,8 @@ sub Sync {
             # if old and new permission for role matches, do nothing
             if (
                 ( $UserRoles{$RoleID} && $RolePermissionsFromLDAP{$RoleID} )
-                ||
-                ( !$UserRoles{$RoleID} && !$RolePermissionsFromLDAP{$RoleID} )
-                )
-            {
+                || ( !$UserRoles{$RoleID} && !$RolePermissionsFromLDAP{$RoleID} )
+            ) {
                 next ROLEID;
             }
 

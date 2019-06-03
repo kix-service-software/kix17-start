@@ -132,11 +132,11 @@ sub Run {
         my $DeplStateColor = lc $Preferences{Color};
 
         # add to style classes string
-        $StyleClasses .= "
-            .Flag span.$DeplState {
-                background-color: #$DeplStateColor;
-            }
-        ";
+        $StyleClasses .= <<"END";
+.Flag span.$DeplState {
+    background-color: #$DeplStateColor;
+}
+END
     }
 
     # wrap into style tags

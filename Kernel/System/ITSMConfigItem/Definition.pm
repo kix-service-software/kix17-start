@@ -17,6 +17,8 @@ use Kernel::Language qw(Translatable);
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(BuiltinFunctions::ProhibitStringyEval)
+
 =head1 NAME
 
 Kernel::System::ITSMConfigItem::Definition - sub module of Kernel::System::ITSMConfigItem
@@ -191,7 +193,7 @@ sub DefinitionGet {
         $Definition{CreateTime}   = $Row[4];
         $Definition{CreateBy}     = $Row[5];
 
-        $Definition{DefinitionRef} = eval $Definition{Definition};    ## no critic
+        $Definition{DefinitionRef} = eval( $Definition{Definition} );
     }
 
     return {} if !$Definition{DefinitionID};
@@ -268,7 +270,6 @@ sub DefinitionAdd {
     }
 
     #---------------------------------------------------------------------------
-    # KIX4OTRS-capeIT
     # trigger Pre-DefinitionCreate event
     my $Result = $Self->PreEventHandler(
         Event => 'DefinitionCreate',
@@ -292,8 +293,6 @@ sub DefinitionAdd {
             $Param{$ResultKey} = $Result->{$ResultKey};
         }
     }
-
-    # EO KIX4OTRS-capeIT
     #---------------------------------------------------------------------------
 
     # set version
@@ -370,7 +369,7 @@ sub DefinitionCheck {
         $Definition = $Param{Definition};
     }
     else {
-        $Definition = eval $Param{Definition};    ## no critic
+        $Definition = eval( $Param{Definition} );
     }
 
     # check if definition exists at all

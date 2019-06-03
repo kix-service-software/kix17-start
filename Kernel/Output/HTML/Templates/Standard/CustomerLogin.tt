@@ -257,6 +257,19 @@
             <a href="" id="BackToLogin">&larr; [% Translate("Back to login") | html %]</a>
         </div>
 
+[% RenderBlockStart("CustomFooter") %]
+        <div class="CustomFooterLogin">
+            <ul>
+[% RenderBlockStart("CustomFooterEntry") %]
+                <li>
+                    <a href="[% Data.URL %]" title="[% Data.Title %]">
+                        [% Data.Title %]
+                    </a>
+                </li>
+[% RenderBlockEnd("CustomFooterEntry") %]
+            </ul>
+        </div>
+[% RenderBlockEnd("CustomFooter") %]
     </div>
 </div>
 <!-- stop login -->

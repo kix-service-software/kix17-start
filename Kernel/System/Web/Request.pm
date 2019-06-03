@@ -72,7 +72,7 @@ sub new {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # max 5 MB posts
-    $CGI::POST_MAX = $ConfigObject->Get('WebMaxFileUpload') || 1024 * 1024 * 5;    ## no critic
+    $CGI::POST_MAX = $ConfigObject->Get('WebMaxFileUpload') || 1024 * 1024 * 5;
 
     # query object (in case use already existing WebRequest, e. g. fast cgi)
     $Self->{Query} = $Param{WebRequest} || CGI->new();
@@ -100,9 +100,7 @@ sub Error {
     }
 
     return if !$Self->{Query}->cgi_error();
-    ## no critic
     return $Self->{Query}->cgi_error() . ' - POST_MAX=' . ( $CGI::POST_MAX / 1024 ) . 'KB';
-    ## use critic
 }
 
 =item GetParam()
@@ -316,7 +314,7 @@ set a cookie
         Key     => ID,
         Value   => 123456,
         Expires => '+3660s',
-        Path    => 'otrs/',     # optional, only allow cookie for given path
+        Path    => 'kix/',     # optional, only allow cookie for given path
         Secure  => 1,           # optional, set secure attribute to disable cookie on HTTP (HTTPS only)
         HTTPOnly => 1,          # optional, sets HttpOnly attribute of cookie to prevent access via JavaScript
     );

@@ -74,13 +74,13 @@ sub Run {
         return 1 if !$Param{Data}->{TicketID};
 
         # get defaultticketstate...
-        if ( $Self->{TicketObject}->LockIsTicketLocked( TicketID => $Param{Data}->{TicketID} ) ) {
+        if ( $Self->{TicketObject}->TicketLockGet( TicketID => $Param{Data}->{TicketID} ) ) {
 
             $DefaultState           = $TicketStateAutoUpdate->{DefaultTicketStateOnLock};
             $NonOverrideTicketState = $TicketStateAutoUpdate->{NonOverridableTicketStateOnLock};
 
         }
-        elsif ( !$Self->{TicketObject}->LockIsTicketLocked( TicketID => $Param{Data}->{TicketID} ) ) {
+        elsif ( !$Self->{TicketObject}->TicketLockGet( TicketID => $Param{Data}->{TicketID} ) ) {
 
             $DefaultState           = $TicketStateAutoUpdate->{DefaultTicketStateOnUnlock};
             $NonOverrideTicketState = $TicketStateAutoUpdate->{NonOverridableTicketStateOnUnlock};
@@ -131,8 +131,7 @@ sub Run {
         if (
             ref($DefaultState) eq 'HASH'
             && $DefaultState->{ $TicketData{Type} }
-            )
-        {
+        ) {
             $Self->{TicketObject}->TicketStateSet(
                 State    => $DefaultState->{ $TicketData{Type} },
                 TicketID => $TicketData{TicketID},

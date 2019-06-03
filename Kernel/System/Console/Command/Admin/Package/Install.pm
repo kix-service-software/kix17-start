@@ -22,7 +22,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Install an OTRS package.');
+    $Self->Description('Install an KIX package.');
     $Self->AddOption(
         Name        => 'force',
         Description => 'Force package installation even if validation fails.',
@@ -32,7 +32,7 @@ sub Configure {
     $Self->AddArgument(
         Name => 'location',
         Description =>
-            "Specify a file path, a remote repository (http://ftp.otrs.org/pub/otrs/packages/:Package-1.0.0.opm) or just any online repository (online:Package).",
+            "Specify a file path, a remote repository or just any online repository (online:Package).",
         Required   => 1,
         ValueRegex => qr/.*/smx,
     );

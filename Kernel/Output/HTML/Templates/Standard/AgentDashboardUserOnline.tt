@@ -42,11 +42,6 @@
 [% RenderBlockStart("ContentSmallUserOnlineRow") %]
         <tr class="UserRow">
             <td>
-                [% IF Data.ChatAccess %]
-                <span class="UserStatusIcon Inline [% Data.UserState | html %]">
-                    <i class="fa fa-circle" title="[% Data.UserStateDescription | html %]"></i>
-                </span>
-                [% END %]
                 <p title="[% Data.UserEmail | html %]">
                 [% IF Data.UserCustomerID %]
                     <a href="[% Env("Baselink") %]Action=AgentCustomerInformationCenter;CustomerID=[% Data.UserCustomerID | uri %]">
@@ -66,28 +61,6 @@
                     </span>
                 [% END %]
                 </p>
-
-                [% IF Data.AgentEnableChat && Data.UserID != Env('UserID') || Data.CustomerEnableChat %]
-                <span class="UserChatIcons Hidden">
-                    <a href="#" title="[% Translate('Start chat') | html %]" type="button" class="UserChatStart"
-                        data-user-id="[% Data.UserID | html %]" data-user-type="[% Data.UserType.replace('Agent', 'User') | html %]"
-                        data-user-fullname="[% Data.UserFullname | html %]">
-                        <i class="fa fa-comments"></i>
-                    </a>
-                    [% IF Data.VideoChatEnabled %]
-                    <a href="#" title="[% Translate('Video call') | html %]" type="button" class="UserVideoCallStart[% IF !Data.VideoChatAvailable %] Unavailable[% ELSIF !Data.VideoChatSupport %] Unsupported[% END %]"
-                        data-user-id="[% Data.UserID | html %]" data-user-type="[% Data.UserType.replace('Agent', 'User') | html %]"
-                        data-user-fullname="[% Data.UserFullname | html %]">
-                        <i class="fa fa-video-camera"></i>
-                    </a>
-                    <a href="#" title="[% Translate('Audio call') | html %]" type="button" class="UserAudioCallStart[% IF !Data.VideoChatAvailable %] Unavailable[% ELSIF !Data.VideoChatSupport %] Unsupported[% END %]"
-                        data-user-id="[% Data.UserID | html %]" data-user-type="[% Data.UserType.replace('Agent', 'User') | html %]"
-                        data-user-fullname="[% Data.UserFullname | html %]">
-                        <i class="fa fa-microphone"></i>
-                    </a>
-                    [% END %]
-                </span>
-                [% END %]
             </td>
         </tr>
 [% RenderBlockEnd("ContentSmallUserOnlineRow") %]
@@ -100,20 +73,6 @@
 [% RenderBlockEnd("ContentSmallUserOnlineNone") %]
     </tbody>
 </table>
-
-[% WRAPPER JSOnDocumentComplete %]
-<script type="text/javascript">//<![CDATA[
-    if (
-        typeof Core.Agent !== 'undefined'
-        && typeof Core.Agent.Chat !== 'undefined'
-        && typeof Core.Agent.Chat.Toolbar !== 'undefined'
-        && typeof Core.Agent.Chat.Toolbar.InitChatButtons !== 'undefined'
-        )
-    {
-        Core.Agent.Chat.Toolbar.InitChatButtons();
-    }
-//]]></script>
-[% END %]
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[

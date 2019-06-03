@@ -47,7 +47,6 @@
                         </a>
                     </li>
 [% RenderBlockEnd("ActionAdd") %]
-# KIX4OTRS-capeIT
 [% RenderBlockStart("ActionClone") %]
                     <li>
                         <form action="[% Env("CGIHandle") %]" method="post">
@@ -63,7 +62,6 @@
                         </form>
                     </li>
 [% RenderBlockEnd("ActionClone") %]
-# EO KIX4OTRS-capeIT
                 </ul>
             </div>
         </div>
@@ -319,7 +317,6 @@
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("OutOfOffice") %]
-# KIX4OTRS-capeIT
 [% RenderBlockStart("OutOfOfficeSubstitute") %]
                         <label for="OutOfOfficeSubstitute">[% Translate("Substitute") | html %]:</label>
                         <div class="Field">
@@ -338,7 +335,6 @@
                             <span id="[% Data.Key | html %]_UpdateElement">[% Data.OptionStrg %]</span>
                         </div>
 [% RenderBlockEnd("SearchProfileAutoSubscribe") %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("RawHTML") %]
                         <label>[% Translate(Data.Label) | html %]:</label>
                         <div class="Field">

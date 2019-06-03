@@ -66,7 +66,7 @@ EOF
         my %SubList = $SysConfigObject->ConfigSubGroupList( Name => $Group );
         print "<section id=\"ConfigReference_$Group\"><title>$Group</title>\n";
         for my $SubGroup ( sort keys %SubList ) {
-            print <<EOF;
+            print <<"EOF";
 <variablelist id="ConfigReference_$Group:$SubGroup">
     <title>$Group → $SubGroup</title>
 EOF
@@ -81,7 +81,7 @@ EOF
                 $Link =~ s/[ ]/_/g;
                 $Link =~ s/\///g;
 
-                print <<EOF;
+                print <<"EOF";
 <varlistentry id="ConfigReference_$Group:$SubGroup:$Link">
     <term>$Name</term>
     <listitem>

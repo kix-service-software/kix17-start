@@ -72,6 +72,8 @@ sub GetQueueID {
 
         next EMAIL if !$Address;
 
+        $Address =~ s/("|')//g;
+
         # lookup queue id if recipiend address
         $QueueID = $SystemAddressObject->SystemAddressQueueID(
             Address => $Address,

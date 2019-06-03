@@ -13,6 +13,8 @@ package Kernel::System::ITSMConfigItem::XML::Type::Date;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::System::Log',
 );

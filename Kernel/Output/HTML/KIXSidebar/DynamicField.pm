@@ -26,13 +26,21 @@ sub new {
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
 
-    $Self->{DynamicFieldFilter} = $ConfigObject->Get("Ticket::Frontend::KIXSidebarDynamicField")->{DynamicField} || {};
+    $Self->{DynamicFieldFilter} = {};
+    my $Config = $ConfigObject->Get("Ticket::Frontend::KIXSidebarDynamicField");
+    if (
+        ref( $Config ) eq 'HASH'
+        && defined( $Config->{DynamicField} )
+        && ref( $Config->{DynamicField} ) eq 'HASH'
+    ) {
+        $Self->{DynamicFieldFilter} = $Config->{DynamicField};
+    }
 
     # get the dynamic fields for this screen
     $Self->{DynamicField} = $DynamicFieldObject->DynamicFieldListGet(
         Valid       => 1,
         ObjectType  => ['Ticket'],
-        FieldFilter => $Self->{DynamicFieldFilter} || {},
+        FieldFilter => $Self->{DynamicFieldFilter},
     );
 
     return $Self;
@@ -49,12 +57,9 @@ sub Run {
     my $LayoutObject  = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $ParamObject   = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my $Content;
-
     # get values
     my %GetParam = %Param;
-    for my $Key (qw(TicketID))
-    {
+    for my $Key (qw(TicketID)) {
         $GetParam{$Key} = $GetParam{$Key} || $Self->{ParamObject}->GetParam( Param => $Key ) || '';
     }
 
@@ -280,8 +285,7 @@ sub Run {
             if (
                 !defined $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
                 || !$Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
-                )
-            {
+            ) {
                 $LayoutObject->Block(
                     Name => 'DynamicFieldContentNotSet',
                     Data => {
@@ -302,8 +306,7 @@ sub Run {
                 || $DynamicFieldConfig->{FieldType} eq 'Multiselect'
                 || $DynamicFieldConfig->{FieldType} eq 'MultiselectGeneralCatalog'
                 || $DynamicFieldConfig->{FieldType} eq 'DropdownGeneralCatalog'
-                )
-            {
+            ) {
                 $LayoutObject->Block(
                     Name => 'DynamicFieldContentQuoted',
                     Data => {

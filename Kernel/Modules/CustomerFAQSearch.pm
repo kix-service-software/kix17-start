@@ -96,7 +96,7 @@ sub Run {
 
     # build output for open search description by FAQ number
     if ( $Self->{Subaction} eq 'OpenSearchDescriptionFAQNumber' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'CustomerFAQSearchOpenSearchDescriptionFAQNumber',
             Data         => \%Param,
         );
@@ -110,7 +110,7 @@ sub Run {
 
     # build output for open search description by full-text
     if ( $Self->{Subaction} eq 'OpenSearchDescriptionFulltext' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'CustomerFAQSearchOpenSearchDescriptionFullText',
             Data         => \%Param,
         );
@@ -153,8 +153,7 @@ sub Run {
             ItemCreateTimeStop ItemCreateTimeStopDay ItemCreateTimeStopMonth
             ItemCreateTimeStopYear
             )
-            )
-        {
+        ) {
 
             # get search string params (get submitted params)
             $GetParam{$ParamName} = $ParamObject->GetParam( Param => $ParamName );
@@ -254,7 +253,7 @@ sub Run {
 
     # check request
     if ( $Self->{Subaction} eq 'OpenSearchDescription' ) {
-        my $Output = $LayoutObject->Output(
+        $Output = $LayoutObject->Output(
             TemplateFile => 'CustomerFAQSearchOpenSearchDescription',
             Data         => {%Param},
         );
@@ -419,8 +418,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStartDay' }
                     && $GetParam{ $TimeType . 'TimeStartMonth' }
                     && $GetParam{ $TimeType . 'TimeStartYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeNewerDate' } = $GetParam{ $TimeType . 'TimeStartYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStartDay' }
@@ -430,8 +428,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimeStopDay' }
                     && $GetParam{ $TimeType . 'TimeStopMonth' }
                     && $GetParam{ $TimeType . 'TimeStopYear' }
-                    )
-                {
+                ) {
                     $GetParam{ $TimeType . 'TimeOlderDate' } = $GetParam{ $TimeType . 'TimeStopYear' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopMonth' } . '-'
                         . $GetParam{ $TimeType . 'TimeStopDay' }
@@ -443,8 +440,7 @@ sub Run {
                     $GetParam{ $TimeType . 'TimePoint' }
                     && $GetParam{ $TimeType . 'TimePointStart' }
                     && $GetParam{ $TimeType . 'TimePointFormat' }
-                    )
-                {
+                ) {
                     my $Time = 0;
                     if ( $GetParam{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
                         $Time = $GetParam{ $TimeType . 'TimePoint' };
@@ -942,8 +938,7 @@ sub Run {
                             $SortBy eq
                             ( 'DynamicField_' . $DynamicFieldConfig->{Name} )
                         )
-                        )
-                    {
+                    ) {
                         if ( $Self->{Order} && ( $Self->{Order} eq 'Up' ) ) {
                             $Order = 'Down';
                             $CSS .= ' SortAscending';
@@ -999,8 +994,7 @@ sub Run {
                 if (
                     $Counter >= $StartHit
                     && $Counter < ( $SearchPageShown + $StartHit )
-                    )
-                {
+                ) {
 
                     # get FAQ data details
                     my %FAQData = $FAQObject->FAQGet(
@@ -1269,7 +1263,7 @@ sub Run {
         }
 
         # start HTML page
-        my $Output = $LayoutObject->CustomerHeader();
+        $Output = $LayoutObject->CustomerHeader();
         $Output .= $LayoutObject->CustomerNavigationBar();
 
         # Set the SortBy Class
@@ -1371,7 +1365,7 @@ sub Run {
         }
 
         # generate search mask
-        my $Output = $LayoutObject->CustomerHeader();
+        $Output = $LayoutObject->CustomerHeader();
         $Output .= $LayoutObject->CustomerNavigationBar();
         $Output .= $Self->MaskForm(
             %GetParam,

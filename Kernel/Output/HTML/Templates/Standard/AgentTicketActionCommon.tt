@@ -18,9 +18,7 @@
     <input type="hidden" name="ReplyToArticle" value="[% Data.ReplyToArticle | html %]"/>
     <input type="hidden" name="Expand" id="Expand" value=""/>
     <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
-# KIX4OTRS-capeIT
     <input type="hidden" name="PretendAction" value="[% Data.PretendAction | html %]"/>
-# EO KIX4OTRS-capeIT
 # ---
 # ITSMIncidentProblemManagement
 # ---
@@ -53,11 +51,9 @@
 [% Translate("Change Responsible of %s%s%s", Config('Ticket::Hook'), Config('Ticket::HookDivider'), Data.TicketNumber) | html %]
 [% RenderBlockEnd("HeaderAgentTicketResponsible") %]
 
-# KIX4OTRS-capeIT
 [% RenderBlockStart("HeaderPretendAction") %]
                 [% Translate(Data.Text) | html %]
 [% RenderBlockEnd("HeaderPretendAction") %]
-# EO KIX4OTRS-capeIT
 # ---
 # ITSMIncidentProblemManagement
 # ---
@@ -78,7 +74,6 @@
             </p>
 [% RenderBlockEnd("TicketBack") %]
 [% RenderBlockStart("PropertiesLock") %]
-#rbo - T2017022490001394 - optimized visualization
             <p class="TicketLockMessage">
                 [% Translate("The ticket has been locked") | html %].
                 <a class="UndoClosePopup" href="[% Env("Baselink") %]Action=AgentTicketLock;Subaction=Unlock;TicketID=[% Data.TicketID %];[% Env("ChallengeTokenParam") | html %]">
@@ -89,13 +84,11 @@
 
         </div>
         <div class="Content">
-# KIX4OTRS-capeIT
              <div class="LayoutFixedSidebar SidebarLast">
                  <div class="SidebarColumn">
                      [% Data.KIXSidebarContent %]
                  </div>
              <div class="ContentColumn">
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("WidgetTicketActions") %]
             <div class="WidgetSimple Expanded">
                 <div class="Header">
@@ -181,22 +174,14 @@ $('#TypeID').bind('change', function (Event) {
 # ITSMIncidentProblemManagement
 # ---
                         <label for="ServiceIncidentStateContainer" style="display: none;">[% Translate("Service Incident State") | html %]:</label>
-# KIX4OTRS-capeIT
-#                    <div id="ServiceIncidentStateContainer" class="Value" style="display:none;">
-#                        <div class="Flag Small">
-#                            <span id="ServiceIncidentStateSignal"></span>
-#                        </div>
-#                        <span id="ServiceIncidentState">&nbsp;</span>
-#                    </div>
-                    <div id="ServiceIncidentStateContainer" class="Field" style="display:none;">
-                        <div class="Value">
-                            <div class="Flag Small">
-                                <span id="ServiceIncidentStateSignal"></span>
+                        <div id="ServiceIncidentStateContainer" class="Field" style="display:none;">
+                            <div class="Value">
+                                <div class="Flag Small">
+                                    <span id="ServiceIncidentStateSignal"></span>
+                                </div>
+                                <span id="ServiceIncidentState">&nbsp;</span>
                             </div>
-                            <span id="ServiceIncidentState">&nbsp;</span>
                         </div>
-                    </div>
-# EO KIX4OTRS-capeIT
                         <div class="Clear"></div>
 # ---
 [% RenderBlockEnd("Service") %]
@@ -278,9 +263,7 @@ $('#TypeID').bind('change', function (Event) {
                         <label for="NewOwnerID">[% Translate("New Owner") | html %]:</label>
                         <div class="Field">
                             [% Data.OwnerStrg %]
-# KIX4OTRS-capeIT
                             <div id="NewOwnerIDError" class="TooltipErrorMessage"><p>[% Translate("Please set a new owner!") | html %]</p></div>
-# EO KIX4OTRS-capeIT
                             <div id="NewOwnerIDServerError" class="TooltipErrorMessage"><p>[% Translate("Please set a new owner!") | html %]</p></div>
                         </div>
                         <div class="Clear"></div>
@@ -342,12 +325,9 @@ $('#TypeID').bind('change', function (Event) {
 [% END %]
 
 [% RenderBlockStart("StatePending") %]
-# KIX4OTRS-capeIT
-#                         <label>[% Translate("Pending date") | html %]:</label>
                         <label for="Date">[% Translate("Pending date") | html %]:</label>
-# EO KIX4OTRS-capeIT
                         <div class="Field">
-                    [% Data.DateString %]
+                            [% Data.DateString %]
                             <div id="DayServerError" class="TooltipErrorMessage"><p>[% Translate("Date invalid!") | html %]</p></div>
                             <div id="HourServerError" class="TooltipErrorMessage"><p>[% Translate("Date invalid!") | html %]</p></div>
                             <p class="FieldExplanation">[% Translate("For all pending* states.") | html %]</p>
@@ -385,9 +365,7 @@ $('#TypeID').bind('change', function (Event) {
 //]]></script>
 [% END %]
 [% RenderBlockEnd("Priority") %]
-# KIX4OTRS-capeIT
                         <div class="EndOfForm"></div>
-# EO KIX4OTRS-capeIT
                     </fieldset>
                     </div>
                 </div>
@@ -404,10 +382,7 @@ $('#TypeID').bind('change', function (Event) {
                     <div class="Content">
                         <fieldset class="TableLike FixedLabel">
 [% RenderBlockStart("DynamicField") %]
-# KIX4OTRS-capeIT
-#                            <div class="Row Row_DynamicField_[% Data.Name | html %]">
                             <div class="Row Row_DynamicField_[% Data.Name | html %][% Data.Class | html %]">
-# EO KIX4OTRS-capeIT
                             [% Data.Label %]
                                 <div class="Field">
                                 [% Data.Field %]
@@ -415,28 +390,6 @@ $('#TypeID').bind('change', function (Event) {
                                 <div class="Clear"></div>
                             </div>
 [% RenderBlockEnd("DynamicField") %]
-
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("DynamicField_Field1") %]
-#                <div class="Row Row_DynamicField_[% Data.Name | html %]">
-#                    [% Data.Label %]
-#                    <div class="Field">
-#                        [% Data.Field %]
-#                    </div>
-#                    <div class="Clear"></div>
-#                </div>
-#[% RenderBlockEnd("DynamicField_Field1") %]
-#[% RenderBlockStart("DynamicField_Field2") %]
-#                <div class="Row Row_DynamicField_[% Data.Name | html %]">
-#                    [% Data.Label %]
-#                    <div class="Field">
-#                        [% Data.Field %]
-#                    </div>
-#                    <div class="Clear"></div>
-#                </div>
-#[% RenderBlockEnd("DynamicField_Field2") %]
                         </fieldset>
                     </div>
                 </div>
@@ -513,12 +466,8 @@ $('#TypeID').bind('change', function (Event) {
                             </div>
                             <div class="Clear"></div>
 [% RenderBlockStart("TicketOptions") %]
-# KIX4OTRS-capeIT
-#                         <label>[% Translate("Options") | html %]:</label>
-#                         <div class="Field">
                         <label for="Options">[% Translate("Options") | html %]:</label>
                         <div class="Options Field">
-# EO KIX4OTRS-capeIT
 
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
@@ -570,12 +519,8 @@ $('#TypeID').bind('change', function (Event) {
                             </div>
                             <div class="Clear"></div>
 
-# KIX4OTRS-capeIT
-#                         <label>[% Translate("Attachment") | html %]:</label>
-#                         <div class="Field">
-                        <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
-                        <div class="Field FileUpload">
-# EO KIX4OTRS-capeIT
+                            <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
+                            <div class="Field FileUpload">
                                 <ul>
 [% RenderBlockStart("Attachment") %]
                                     <li>
@@ -595,10 +540,7 @@ $('#TypeID').bind('change', function (Event) {
                                     </li>
 [% RenderBlockEnd("Attachment") %]
                                     <li>
-# KIX4OTRS-capeIT
-#                                         <input id="FileUpload" name="FileUpload" type="file" size="40" />
                                         <input name="FileUpload" id="FileUpload" type="file" size="30" />
-# EO KIX4OTRS-capeIT
                                         <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
                                     </li>
                                 </ul>
@@ -636,21 +578,13 @@ $('#TypeID').bind('change', function (Event) {
                             </div>
                             <div class="Clear"></div>
 [% RenderBlockEnd("TimeUnits") %]
-# KIX4OTRS-capeIT
                        <div class="EndOfForm"></div>
-# EO KIX4OTRS-capeIT
                     </fieldset>
-# KIX4OTRS-capeIT
-# end of ContentColumn
                     </div>
-# EO KIX4OTRS-capeIT
                 </div>
             </div>
 [% RenderBlockEnd("WidgetArticle") %]
 
-# KIX4OTRS-capeIT
-#            </div>
-# EO KIX4OTRS-capeIT
         <div class="Footer">
             <button class="CallForAction Primary" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]"><span><i class="fa fa-check-square-o"></i> [% Translate("Submit") | html %]</span></button>
         </div>
@@ -662,7 +596,6 @@ $('#TypeID').bind('change', function (Event) {
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Config.Set('Localization.Delete', '[% Translate("Delete") | html %]');
-# KIX4OTRS-capeIT
     if ( Core.UI && Core.KIX4OTRS.KIXSidebar ) {
         Core.KIX4OTRS.KIXSidebar.Init('[% Data.SidebarWidthString %]','[% Env("Action") %]','TicketID=[% Data.TicketID | uri %]');
     }
@@ -670,7 +603,6 @@ $('#TypeID').bind('change', function (Event) {
     if ( $(".ContentColumn .WidgetSimple").length == 1 ) {
         $(".ContentColumn .WidgetSimple").removeClass('Collapsed').addClass('Expanded');
     }
-# EO KIX4OTRS-capeIT
     Core.Agent.TicketAction.Init();
 # ---
 # ITSMIncidentProblemManagement

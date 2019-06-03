@@ -289,8 +289,7 @@ sub FAQSearch {
             !$OrderBy
             || ( !$OrderByTable{$OrderBy} && !$ValidDynamicFieldParams{$OrderBy} )
             || $OrderBySeen{$OrderBy}
-            )
-        {
+        ) {
 
             # found an error
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -355,8 +354,7 @@ sub FAQSearch {
                     $FieldState eq 'internal'
                     || $FieldState eq 'external'
                     || $FieldState eq 'public'
-                    )
-                {
+                ) {
                     push @SearchFields, 'i.f_field' . $Number;
                 }
             }
@@ -535,8 +533,7 @@ sub FAQSearch {
         $Param{CreatedUserIDs}
         && ref $Param{CreatedUserIDs} eq 'ARRAY'
         && @{ $Param{CreatedUserIDs} }
-        )
-    {
+    ) {
 
         my $InString = $Self->_InConditionGet(
             TableColumn => 'i.created_by',
@@ -554,8 +551,7 @@ sub FAQSearch {
         $Param{LastChangedUserIDs}
         && ref $Param{LastChangedUserIDs} eq 'ARRAY'
         && @{ $Param{LastChangedUserIDs} }
-        )
-    {
+    ) {
 
         my $InString = $Self->_InConditionGet(
             TableColumn => 'i.changed_by',
@@ -606,11 +602,7 @@ sub FAQSearch {
     if ( $Param{ItemCreateTimeOlderDate} ) {
 
         # check time format
-        if (
-            $Param{ItemCreateTimeOlderDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+        if ( $Param{ItemCreateTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/ ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{ItemCreateTimeOlderDate}'!",
@@ -639,11 +631,7 @@ sub FAQSearch {
 
     # get Items changed newer than xxxx-xx-xx xx:xx date
     if ( $Param{ItemCreateTimeNewerDate} ) {
-        if (
-            $Param{ItemCreateTimeNewerDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+        if ( $Param{ItemCreateTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/ ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{ItemCreateTimeNewerDate}'!",
@@ -706,11 +694,7 @@ sub FAQSearch {
     if ( $Param{ItemChangeTimeOlderDate} ) {
 
         # check time format
-        if (
-            $Param{ItemChangeTimeOlderDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+        if ( $Param{ItemChangeTimeOlderDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/ ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{ItemChangeTimeOlderDate}'!",
@@ -739,11 +723,7 @@ sub FAQSearch {
 
     # get Items changed newer than xxxx-xx-xx xx:xx date
     if ( $Param{ItemChangeTimeNewerDate} ) {
-        if (
-            $Param{ItemChangeTimeNewerDate}
-            !~ /\d\d\d\d-(\d\d|\d)-(\d\d|\d) (\d\d|\d):(\d\d|\d):(\d\d|\d)/
-            )
-        {
+        if ( $Param{ItemChangeTimeNewerDate} !~ /\d\d\d\d-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}:\d{1,2}/ ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Invalid time format '$Param{ItemChangeTimeNewerDate}'!",
@@ -817,6 +797,7 @@ sub FAQSearch {
                 my $ValidateSuccess = $DynamicFieldBackendObject->ValueValidate(
                     DynamicFieldConfig => $DynamicField,
                     Value              => $Text,
+                    SearchValidation   => 1,
                     UserID             => $Param{UserID},
                 );
                 if ( !$ValidateSuccess ) {
@@ -855,10 +836,11 @@ sub FAQSearch {
         if ($NeedJoin) {
 
             # Join the table for this dynamic field
-            $SQL .= " INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                ON (i.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
-                    AND dfv$DynamicFieldJoinCounter.field_id = " .
-                $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
+            $SQL .= " INNER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter"
+                  . " ON (i.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}"
+                  . "    AND dfv$DynamicFieldJoinCounter.field_id = "
+                  . $DBObject->Quote( $DynamicField->{ID}, 'Integer' )
+                  . ") ";
 
             $DynamicFieldJoinTables{ $DynamicField->{Name} } = "dfv$DynamicFieldJoinCounter";
 
@@ -867,8 +849,7 @@ sub FAQSearch {
     }
 
     # add GROUP BY
-    $Ext
-        .= ' GROUP BY i.id, i.f_subject, i.f_language_id, i.created, i.changed, s.name, v.item_id ';
+    $Ext .= ' GROUP BY i.id, i.f_subject, i.f_language_id, i.created, i.changed, s.name, v.item_id ';
 
     # add HAVING clause ( Votes and Rate are aggregated columns, they can't be in the WHERE clause)
     # defined voting parameters (for Votes and Rate)
@@ -969,11 +950,11 @@ sub FAQSearch {
                 # Join the table for this dynamic field; use a left outer join in this case.
                 # With an INNER JOIN we'd limit the result set to tickets which have an entry
                 #   for the DF which is used for sorting.
-                $SQL
-                    .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter
-                    ON (i.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}
-                        AND dfv$DynamicFieldJoinCounter.field_id = " .
-                    $DBObject->Quote( $DynamicField->{ID}, 'Integer' ) . ") ";
+                $SQL .= " LEFT OUTER JOIN dynamic_field_value dfv$DynamicFieldJoinCounter"
+                      . " ON (i.id = dfv$DynamicFieldJoinCounter.$DynamicField->{IdentifierDBAttribute}"
+                      . "    AND dfv$DynamicFieldJoinCounter.field_id = "
+                      . $DBObject->Quote( $DynamicField->{ID}, 'Integer' )
+                      . ") ";
 
                 $DynamicFieldJoinTables{ $DynamicField->{Name} } = "dfv$DynamicFieldJoinCounter";
 

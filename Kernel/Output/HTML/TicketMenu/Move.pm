@@ -65,7 +65,7 @@ sub Run {
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Param{Config}->{Action}");
     if ($Config) {
         if ( $Config->{Permission} ) {
-            my $AccessOk = $TicketObject->Permission(
+            my $AccessOk = $TicketObject->TicketPermission(
                 Type     => $Config->{Permission},
                 TicketID => $Param{Ticket}->{TicketID},
                 UserID   => $Self->{UserID},
@@ -127,7 +127,7 @@ sub Run {
         my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
         # get move queues
-        my %MoveQueues = $TicketObject->MoveList(
+        my %MoveQueues = $TicketObject->TicketMoveList(
             TicketID => $Param{Ticket}->{TicketID},
             UserID   => $Self->{UserID},
             Action   => $LayoutObject->{Action},

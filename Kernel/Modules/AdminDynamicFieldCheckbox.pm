@@ -150,8 +150,7 @@ sub _AddAction {
         }
     }
 
-    for my $ConfigParam (qw(ObjectType ObjectTypeName FieldType FieldTypeName DefaultValue ValidID))
-    {
+    for my $ConfigParam (qw(ObjectType ObjectTypeName FieldType FieldTypeName DefaultValue ValidID)) {
         $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 
@@ -344,8 +343,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldsList{ $GetParam{Name} } &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -356,8 +354,7 @@ sub _ChangeAction {
         if (
             $DynamicFieldData->{InternalField} &&
             $DynamicFieldsList{ $GetParam{Name} } ne $FieldID
-            )
-        {
+        ) {
 
             # add server error class
             $Errors{NameServerError}        = 'ServerError';
@@ -377,8 +374,7 @@ sub _ChangeAction {
         }
     }
 
-    for my $ConfigParam (qw(ObjectType ObjectTypeName FieldType FieldTypeName DefaultValue ValidID))
-    {
+    for my $ConfigParam (qw(ObjectType ObjectTypeName FieldType FieldTypeName DefaultValue ValidID)) {
         $GetParam{$ConfigParam} = $ParamObject->GetParam( Param => $ConfigParam );
     }
 

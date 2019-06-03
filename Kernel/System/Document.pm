@@ -79,10 +79,13 @@ sub DocumentGet {
         }
     }
 
-    return if $Param{DocumentID} !~ /^(.+):(.+)$/;
-
-    $Param{DocumentBackendID} = $1;
-    $Param{DocumentID}        = $2;
+    if ( $Param{DocumentID} =~ /^(.+):(.+)$/ ) {
+        $Param{DocumentBackendID} = $1;
+        $Param{DocumentID}        = $2;
+    }
+    else {
+        return;
+    }
 
     my $BackendObject = $Self->_LoadBackend(
         Backend => $Param{DocumentBackendID}
@@ -114,10 +117,13 @@ sub DocumentMetaGet {
         }
     }
 
-    return if $Param{DocumentID} !~ /^(.+):(.+)$/;
-
-    $Param{DocumentBackendID} = $1;
-    $Param{DocumentID}        = $2;
+    if ( $Param{DocumentID} =~ /^(.+):(.+)$/ ) {
+        $Param{DocumentBackendID} = $1;
+        $Param{DocumentID}        = $2;
+    }
+    else {
+        return;
+    }
 
     my $BackendObject = $Self->_LoadBackend(
         Backend => $Param{DocumentBackendID}
@@ -149,10 +155,13 @@ sub DocumentLinkGet {
         }
     }
 
-    return if $Param{DocumentID} !~ /^(.+):(.+)$/;
-
-    $Param{DocumentBackendID} = $1;
-    $Param{DocumentID}        = $2;
+    if ( $Param{DocumentID} =~ /^(.+):(.+)$/ ) {
+        $Param{DocumentBackendID} = $1;
+        $Param{DocumentID}        = $2;
+    }
+    else {
+        return;
+    }
 
     my $BackendObject = $Self->_LoadBackend(
         Backend => $Param{DocumentBackendID}
@@ -236,10 +245,13 @@ sub DocumentCheckPermission {
         }
     }
 
-    return if $Param{DocumentID} !~ /^(.+):(.+)$/;
-
-    $Param{DocumentBackendID} = $1;
-    $Param{DocumentID}        = $2;
+    if ( $Param{DocumentID} =~ /^(.+):(.+)$/ ) {
+        $Param{DocumentBackendID} = $1;
+        $Param{DocumentID}        = $2;
+    }
+    else {
+        return;
+    }
 
     my $BackendObject = $Self->_LoadBackend(
         Backend => $Param{DocumentBackendID}

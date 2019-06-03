@@ -155,7 +155,6 @@
             </div>
             <div class="Content">
 
-#rbo - T2016121190001552 - added KIX placeholders
                 <p>[% Translate("You can use the following tags") | html %]:</p>
                 <dl>
                     <dt><code>&lt;KIX_OWNER_*&gt;</code></dt>

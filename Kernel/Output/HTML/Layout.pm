@@ -13,12 +13,13 @@ package Kernel::Output::HTML::Layout;
 use strict;
 use warnings;
 
+use Digest::MD5 qw(md5_hex);
+use Encode;
 use Storable;
 use URI::Escape qw();
 
 use vars qw(@ISA);
 
-use Kernel::System::Time;
 use Kernel::System::VariableCheck qw(:all);
 use Kernel::Language qw(Translatable);
 
@@ -26,19 +27,18 @@ our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::Language',
     'Kernel::System::AuthSession',
-    'Kernel::System::Chat',
     'Kernel::System::Encode',
     'Kernel::System::HTMLUtils',
     'Kernel::System::JSON',
     'Kernel::System::Log',
     'Kernel::System::Main',
-    # ddoerffel - T2016121190001552 - BusinessSolution code removed    'Kernel::System::SystemMaintenance',
     'Kernel::System::Time',
     'Kernel::System::User',
-    'Kernel::System::VideoChat',
     'Kernel::System::Web::Request',
     'Kernel::System::Group',
 );
+
+## no critic qw(ClassHierarchies::ProhibitExplicitISA Subroutines::ProhibitUnusedPrivateSubroutines)
 
 =head1 NAME
 
@@ -186,7 +186,7 @@ sub new {
 
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
-                Message  => <<EOF,
+                Message  => <<"EOF",
 $FilterConfig->{Module} will be ignored because it wants to operate on all templates or does not specify a template list.
 EOF
             );
@@ -240,8 +240,7 @@ EOF
         elsif (
             $HttpUserAgent =~ /msie\s([0-9.]+)/
             || $HttpUserAgent =~ /internet\sexplorer\/([0-9.]+)/
-            )
-        {
+        ) {
             $Self->{Browser} = 'MSIE';
 
             if ( $1 =~ /(\d+)\.(\d+)/ ) {
@@ -355,8 +354,7 @@ EOF
         && $Self->{Platform} ne 'iOS'
         && $Self->{Platform} ne 'Android'
         && $Self->{Platform} ne 'Windows Phone'
-        )
-    {
+    ) {
         $Self->{BrowserRichText} = 0;
     }
 
@@ -417,7 +415,6 @@ EOF
         );
     }
 
-    # KIXCore-capeIT
     my $ThemePath   = $Self->{TemplateDir};
     my $HomeDir     = $ConfigObject->Get('Home');
     my $ThemeKIXDir = '';
@@ -428,15 +425,14 @@ EOF
         last if ( -e $ThemeKIXDir )
     }
 
-    # if ( !-e $Self->{TemplateDir} ) {
     if ( !-e ( $ThemeKIXDir || $Self->{TemplateDir} ) ) {
 
-        # EO KIXCore-capeIT
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message =>
-                "No existing template directory found ('$Self->{TemplateDir}')!.
-                Default theme used instead.",
+            Message => <<"END",
+No existing template directory found ('$Self->{TemplateDir}')!
+Default theme used instead.
+END
         );
 
         # Set TemplateDir to 'Standard' as a fallback.
@@ -451,7 +447,6 @@ EOF
     my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
 
     # load sub layout files
-    # KIXCore-capeIT
     my $LayoutPath    = $ConfigObject->Get('TemplateDir') . '/HTML/Layout';
     my $Home          = $ConfigObject->Get('Home');
     my $LayoutPathKIX = $LayoutPath;
@@ -478,13 +473,11 @@ EOF
                         );
                     }
                     $LayoutFiles{$NewFile} = $NewFile;
-                    push @ISA, "Kernel::Output::HTML::Layout::$NewFile";
+                    push( @ISA, "Kernel::Output::HTML::Layout::$NewFile" );
                 }
             }
         }
     }
-
-    # EO KIXCore-capeIT
 
     my $NewDir = $ConfigObject->Get('TemplateDir') . '/HTML/Layout';
     if ( -e $NewDir ) {
@@ -494,11 +487,7 @@ EOF
         );
         for my $NewFile (@NewFiles) {
 
-            # KIXCore-capeIT
-            # if ( $NewFile !~ /Layout.pm$/ ) {
             if ( ( $NewFile !~ /Layout.pm$/ ) && !exists( $LayoutFiles{$NewFile} ) ) {
-
-                # EO KIXCore-capeIT
 
                 $NewFile =~ s{\A.*\/(.+?).pm\z}{$1}xms;
                 my $NewClassName = "Kernel::Output::HTML::Layout::$NewFile";
@@ -508,11 +497,8 @@ EOF
                     );
                 }
 
-                # KIXCore-capeIT
                 $LayoutFiles{$NewFile} = $NewFile;
-                push @ISA, "Kernel::Output::HTML::Layout::$NewFile";
-
-                # EO KIXCore-capeIT
+                push( @ISA, "Kernel::Output::HTML::Layout::$NewFile" );
             }
         }
     }
@@ -563,11 +549,14 @@ sub Block {
         );
         return;
     }
-    push @{ $Self->{BlockData} },
+    push( @{ $Self->{BlockData} },
         {
-        Name => $Param{Name},
-        Data => $Param{Data},
-        };
+            Name => $Param{Name},
+            Data => $Param{Data},
+        }
+    );
+
+    return 1;
 }
 
 =item JSONEncode()
@@ -749,7 +738,6 @@ sub Login {
             # Restrict Cookie to HTTPS if it is used.
             $CookieSecureAttribute = 1;
         }
-        # ddoerffel - T2016121190001552 - BusinessSolution code removed
         $Self->{SetCookies}->{KIXBrowserHasCookie} = $Kernel::OM->Get('Kernel::System::Web::Request')->SetCookie(
             Key      => 'KIXBrowserHasCookie',
             Value    => 1,
@@ -787,7 +775,7 @@ sub Login {
         for my $CSSStatement ( sort keys %AgentLogo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = '';
-                if ( $AgentLogo{$CSSStatement} !~ /(http|ftp|https):\//i ) {
+                if ( $AgentLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
                     $WebPath = $ConfigObject->Get('Frontend::WebPath');
                 }
                 $Data{'URL'} = 'url(' . $WebPath . $AgentLogo{$CSSStatement} . ')';
@@ -915,8 +903,7 @@ sub Login {
         if (
             $ConfigObject->Get('LostPassword')
             && $ConfigObject->Get('AuthModule') eq 'Kernel::System::Auth::DB'
-            )
-        {
+        ) {
             $Self->Block(
                 Name => 'LostPasswordLink',
                 Data => \%Param,
@@ -928,6 +915,11 @@ sub Login {
             );
         }
     }
+
+    # Build the customized footer
+    $Self->_BuildCustomFooter(
+        Frontend => 'User'
+    );
 
     # create & return output
     $Output .= $Self->Output(
@@ -1071,8 +1063,6 @@ sub Error {
 
     if ( !$Param{Message} ) {
         $Param{Message} = $Param{BackendMessage};
-
-        # ddoerffel - T2016121190001552 - BusinessSolution code removed
     }
 
     if ( $Param{BackendTraceback} ) {
@@ -1183,6 +1173,20 @@ sub Notify {
         $BoxClass = 'Info';
     }
 
+    if ( $Self->{Baselink} =~ /\/index.pl/ ) {
+        my ( $CallerPackage, $CallerFilename, $CallerLine ) = caller;
+        my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
+
+        my $CallerInfo = ( $CallerPackage || '' ) . '_' . ( $CallerLine || '' ) . '_' . ( $Param{Info} || '');
+        $CallerInfo = Digest::MD5::md5_hex(utf8::is_utf8($CallerInfo) ? Encode::encode_utf8($CallerInfo) : $CallerInfo);
+
+        $Param{NotifyID} = md5_hex($CallerInfo);
+        return "" if (
+            $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
+            && $Self->{SessionID} eq $UserPreferences{ 'UserAgentDoNotShowNotifiyMessage_' . $Param{NotifyID} }
+        );
+    }
+
     if ( $Param{Link} ) {
         $Self->Block(
             Name => 'LinkStart',
@@ -1282,8 +1286,7 @@ sub Header {
         && $AgentLogoCustom
         && IsHashRefWithData($AgentLogoCustom)
         && $AgentLogoCustom->{ $Self->{SkinSelected} }
-        )
-    {
+    ) {
         %AgentLogo = %{ $AgentLogoCustom->{ $Self->{SkinSelected} } };
     }
 
@@ -1298,7 +1301,7 @@ sub Header {
         for my $CSSStatement ( sort keys %AgentLogo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = '';
-                if ( $AgentLogo{$CSSStatement} !~ /(http|ftp|https):\//i ) {
+                if ( $AgentLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
                     $WebPath = $ConfigObject->Get('Frontend::WebPath');
                 }
                 $Data{'URL'} = 'url(' . $WebPath . $AgentLogo{$CSSStatement} . ')';
@@ -1482,7 +1485,7 @@ sub Header {
             # enforce default if empty
             if (!$UserPreferences{UserToolbarPosition}) {
                 $UserPreferences{UserToolbarPosition} = 'ToolbarRight';
-                my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
+                my $Success = $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
                     Key    => 'UserToolbarPosition',
                     Value  => $UserPreferences{UserToolbarPosition},
                     UserID => $Self->{UserID},
@@ -1509,8 +1512,7 @@ sub Header {
         if (
             $Param{ShowLogoutButton}
             && $ConfigObject->Get('Frontend::Module')->{Logout}
-            )
-        {
+        ) {
             $Self->Block(
                 Name => 'Logout',
                 Data => \%Param,
@@ -1611,17 +1613,16 @@ sub Footer {
     );
 
     # Banner
-    # ddoerffel - T2016121190001552 - BusinessSolution code removed
     if ( !$ConfigObject->Get('Secure::DisableBanner') ) {
+        if ( !$Type ) {
+            $Self->_BuildCustomFooter(
+                Frontend => 'User'
+            );
+        }
+
         $Self->Block(
             Name => 'Banner',
         );
-    }
-
-    # Check if video chat is enabled.
-    if ( $Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::VideoChat', Silent => 1 ) ) {
-        $Param{VideoChatEnabled} = $Kernel::OM->Get('Kernel::System::VideoChat')->IsEnabled()
-            || $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'UnitTestMode' ) // 0;
     }
 
     # create & return output
@@ -2226,6 +2227,23 @@ sub BuildSelection {
         return;
     }
 
+    if (
+        (
+            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::TypeTranslation')
+            && ( $Param{Name} eq 'TypeID' || $Param{Name} eq 'TypeIDs' )
+        )
+        || (
+            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ServiceTranslation')
+            && ( $Param{Name} eq 'ServiceID' || $Param{Name} eq 'ServiceIDs' )
+        )
+        || (
+            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SLATranslation')
+            && ( $Param{Name} eq 'SLAID' || $Param{Name} eq 'SLAIDs' )
+        )
+    ) {
+        $Param{Translation} = 1;
+    }
+
     # set OnChange if AJAX is used
     if ( $Param{Ajax} ) {
         if ( !$Param{Ajax}->{Depend} ) {
@@ -2272,8 +2290,7 @@ sub BuildSelection {
             if (
                 $Param{Filters}->{$Filter}->{Name}
                 && $Param{Filters}->{$Filter}->{Values}
-                )
-            {
+            ) {
                 my $FilterData = $Self->_BuildSelectionDataRefCreate(
                     Data         => $Param{Filters}->{$Filter}->{Values},
                     AttributeRef => $AttributeRef,
@@ -2299,15 +2316,83 @@ sub BuildSelection {
         @Filters = sort { $a->{Name} cmp $b->{Name} } @Filters;
     }
 
+    # get disabled selections
+    if ( defined $Param{DisabledOptions} && ref $Param{DisabledOptions} eq 'HASH' ) {
+        my $DisabledOptions = $Param{DisabledOptions};
+        for my $Item ( keys %{ $Param{DisabledOptions} } ) {
+            my $ItemValue = $Param{DisabledOptions}->{$Item};
+            my @ItemArray = split( '::', $ItemValue );
+            for ( my $Index = 0; $Index < scalar @{$DataRef}; $Index++ ) {
+                next
+                    if (
+                    $DataRef->[$Index]->{Value} !~ m/$ItemArray[-1]$/
+                    || $DataRef->[$Index]->{Key} ne $Item
+                    );
+                $DataRef->[$Index]->{Disabled} = 1;
+            }
+        }
+    }
+
+    # get UserPreferences
+    if (
+        ref $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::GenericAutoCompleteSearch') eq 'HASH'
+        && defined( $Self->{UserID} )
+        && $Self->{Action} !~ /^Customer/
+    ) {
+        my $AutoCompleteConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::GenericAutoCompleteSearch');
+        my %UserPreferences    = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
+
+        my $SearchTypeMappingKey;
+        if ( $Self->{Action} && $Param{Name} ) {
+            $SearchTypeMappingKey = $Self->{Action} . ":::" . $Param{Name};
+        }
+
+        my $SearchType;
+        if (
+            $SearchTypeMappingKey
+            && defined $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey}
+        ) {
+            $SearchType = $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey};
+        }
+
+        # create string for autocomplete
+        if (
+            $SearchType
+            && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
+            && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
+        ) {
+            my $AutoCompleteString
+                = '<input id="'
+                . $Param{Name}
+                . '" type="hidden" name="'
+                . $Param{Name}
+                . '" value=""/>'
+                . '<input id="'
+                . $Param{Name}
+                . 'autocomplete" type="text" name="'
+                . $Param{Name}
+                . 'autocomplete" value="" class=" W75pc AutocompleteOff Validate_Required"/>';
+
+            $Self->AddJSOnDocumentComplete( Code => <<"EOF");
+    Core.Config.Set("GenericAutoCompleteSearch.MinQueryLength",$AutoCompleteConfig->{MinQueryLength});
+    Core.Config.Set("GenericAutoCompleteSearch.QueryDelay",$AutoCompleteConfig->{QueryDelay});
+    Core.Config.Set("GenericAutoCompleteSearch.MaxResultsDisplayed",$AutoCompleteConfig->{MaxResultsDisplayed});
+    Core.KIX4OTRS.GenericAutoCompleteSearch.Init(\$("#$Param{Name}autocomplete"),\$("#$Param{Name}"));
+EOF
+            return $AutoCompleteString;
+        }
+    }
+
     # generate output
     my $String = $Self->_BuildSelectionOutput(
-        AttributeRef  => $AttributeRef,
-        DataRef       => $DataRef,
-        OptionTitle   => $Param{OptionTitle},
-        TreeView      => $Param{TreeView},
-        FiltersRef    => \@Filters,
-        FilterActive  => $FilterActive,
-        ExpandFilters => $Param{ExpandFilters},
+        AttributeRef    => $AttributeRef,
+        DataRef         => $DataRef,
+        OptionTitle     => $Param{OptionTitle},
+        TreeView        => $Param{TreeView},
+        FiltersRef      => \@Filters,
+        FilterActive    => $FilterActive,
+        ExpandFilters   => $Param{ExpandFilters},
+        DisabledOptions => $Param{DisabledOptions},
     );
     return $String;
 }
@@ -2873,8 +2958,7 @@ sub NavigationBar {
             if (
                 ( $Item->{Type} && $Item->{Type} eq 'Menu' )
                 && ( $Item->{NavBar} && $Item->{NavBar} eq $Param{Type} )
-                )
-            {
+            ) {
                 $Item->{CSS} .= ' Selected';
             }
 
@@ -3195,6 +3279,32 @@ sub BuildDateSelection {
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
+    my ( $SmartStyleDate, $SmartStyleTime, $MinuteInterval );
+    my $TimeIntervalConfig = $ConfigObject->Get('DateSelection::Layout::TimeInputIntervall');
+
+    # get default values
+    if ( $Self->{Action} ne 'AgentTicketSearch' && $Self->{Action} ne 'AgentITSMConfigItemSearch' ) {
+        $SmartStyleDate
+            = ( defined $Param{SmartDateInput} )
+            ? $Param{SmartDateInput}
+            : $ConfigObject->Get('DateSelection::Layout::SmartDateInput');
+        $SmartStyleTime
+            = ( defined $Param{SmartTimeInput} )
+            ? $Param{SmartTimeInput}
+            : $ConfigObject->Get('DateSelection::Layout::SmartTimeInput');
+        $MinuteInterval
+            = ( defined $Param{TimeInputIntervall} )
+            ? $Param{TimeInputIntervall}
+            : 30;
+    }
+
+    # set time input interval from sysconfig if defined
+    for my $Action ( keys %{$TimeIntervalConfig} ) {
+        next if $Self->{Action} !~ /$Action/;
+        $MinuteInterval = $TimeIntervalConfig->{$Action};
+        last;
+    }
+
     my $DateInputStyle = $ConfigObject->Get('TimeInputFormat');
     my $Prefix         = $Param{Prefix} || '';
     my $DiffTime       = $Param{DiffTime} || 0;
@@ -3203,7 +3313,32 @@ sub BuildDateSelection {
     my $Optional       = $Param{ $Prefix . 'Optional' } || 0;
     my $Required       = $Param{ $Prefix . 'Required' } || 0;
     my $Used           = $Param{ $Prefix . 'Used' } || 0;
-    my $Class          = $Param{ $Prefix . 'Class' } || '';
+    my $Class          = '';
+    my $ClassDate      = '';
+    my $ClassTime      = '';
+    if ( !$SmartStyleDate && !$SmartStyleTime ) {
+        $Class          = $Param{ $Prefix . 'Class' } || '';
+    }
+    elsif ( $SmartStyleDate && !$SmartStyleTime ) {
+        if ( $Param{ $Prefix . 'Class' } ) {
+            $ClassDate = $Param{ $Prefix . 'Class' } . ' Modernize';
+            $ClassTime = $Param{ $Prefix . 'Class' };
+        }
+        else {
+            $ClassDate = 'Modernize';
+            $ClassTime = '';
+        }
+    }
+    else {
+        if ( $Param{ $Prefix . 'Class' } ) {
+            $ClassDate = $Param{ $Prefix . 'Class' } . ' Modernize';
+            $ClassTime = $Param{ $Prefix . 'Class' } . ' Modernize';
+        }
+        else {
+            $ClassDate = 'Modernize';
+            $ClassTime = 'Modernize';
+        }
+    }
 
     # Defines, if the date selection should be validated on client side with JS
     my $Validate = $Param{Validate} || 0;
@@ -3228,8 +3363,7 @@ sub BuildDateSelection {
         && $Param{ $Prefix . 'Month' }
         && $Param{ $Prefix . 'Day' }
         && !$Param{OverrideTimeZone}
-        )
-    {
+    ) {
         my $TimeStamp = $Self->{TimeObject}->TimeStamp2SystemTime(
             String => $Param{ $Prefix . 'Year' } . '-'
                 . $Param{ $Prefix . 'Month' } . '-'
@@ -3249,8 +3383,62 @@ sub BuildDateSelection {
         ) = $Self->{UserTimeObject}->SystemTime2Date( SystemTime => $TimeStamp );
     }
 
+    my $DateValidateClasses = '';
+    if ($Validate) {
+        $DateValidateClasses
+            .= "Validate_DateDay Validate_DateYear_${Prefix}Year Validate_DateMonth_${Prefix}Month";
+
+        if ( $Format eq 'DateInputFormatLong' ) {
+            $DateValidateClasses
+                .= " Validate_DateHour_${Prefix}Hour Validate_DateMinute_${Prefix}Minute";
+        }
+
+        if ($ValidateDateInFuture) {
+            $DateValidateClasses .= " Validate_DateInFuture";
+        }
+        if ($ValidateDateNotInFuture) {
+            $DateValidateClasses .= " Validate_DateNotInFuture";
+        }
+    }
+    if ($SmartStyleDate) {
+        $DateValidateClasses = "Validate_DateFull";
+        if ($ValidateDateInFuture) {
+            $DateValidateClasses .= " Validate_DateFullInFuture";
+        }
+    }
+    my $DateFormat = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->{DateInputFormat};
+    $DateFormat =~ s/\%D/dd/g;
+    $DateFormat =~ s/\%M/mm/g;
+    $DateFormat =~ s/\%Y/yy/g;
+
     # year
-    if ( $DateInputStyle eq 'Option' ) {
+    if ($SmartStyleDate) {
+        my $Date = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}
+            ->FormatTimeString(
+            sprintf( "%04d", ( $Param{ $Prefix . 'Year' } || $Y ) ) .
+                '-' .
+                sprintf( "%02d", ( $Param{ $Prefix . 'Month' } || $M ) ) .
+                '-' .
+                sprintf( "%02d", ( $Param{ $Prefix . 'Day' } || $D ) ) .
+                ' 00:00:00',
+            'DateFormatShort',
+            );
+        $Param{DateStr} = "<input type=\"text\" "
+            . ( $Validate ? "class=\"$DateValidateClasses $ClassDate\" " : "class=\"$ClassDate\" " )
+            . "name=\"${Prefix}Date\" id=\"${Prefix}Date\" size=\"10\" maxlength=\"10\" "
+            . "title=\""
+            . $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->Get('Date')
+            . "\" value=\""
+            . ( $Param{ $Prefix . 'Date' } || $Date ) . "\" " . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) ."/>";
+        $Param{DateStr} .= "<input type=\"hidden\" "
+            . "class=\"$Class\" "
+            . "name=\"${Prefix}Year\" id=\"${Prefix}Year\" size=\"4\" maxlength=\"4\" "
+            . "value=\""
+            . sprintf( "%04d", ( $Param{ $Prefix . 'Year' } || $Y ) ) . "\"/>";
+    }
+
+    elsif ( $DateInputStyle eq 'Option' ) {
+
         my %Year;
         if ( defined $Param{YearPeriodPast} && defined $Param{YearPeriodFuture} ) {
             for ( $Y - $Param{YearPeriodPast} .. $Y + $Param{YearPeriodFuture} ) {
@@ -3276,9 +3464,9 @@ sub BuildDateSelection {
             Data        => \%Year,
             SelectedID  => int( $Param{ $Prefix . 'Year' } || $Y ),
             Translation => 0,
-            Class       => $Validate ? "Validate_DateYear $Class" : $Class,
+            Class       => $Validate ? 'Validate_DateYear' : '',
             Title       => $Self->{LanguageObject}->Translate('Year'),
-            Disabled    => $Param{Disabled},
+            Disabled    =>  $Param{Disabled} || 0,
         );
     }
     else {
@@ -3293,14 +3481,23 @@ sub BuildDateSelection {
     }
 
     # month
-    if ( $DateInputStyle eq 'Option' ) {
+    if ($SmartStyleDate) {
+        $Param{DateStr} .= "<input type=\"hidden\" "
+            . "class=\"$ClassDate\" "
+            . "name=\"${Prefix}Month\" id=\"${Prefix}Month\" size=\"2\" maxlength=\"2\" "
+            . "value=\""
+            . sprintf( "%02d", ( $Param{ $Prefix . 'Month' } || $M ) ) . "\"/>";
+    }
+
+    elsif ( $DateInputStyle eq 'Option' ) {
+
         my %Month = map { $_ => sprintf( "%02d", $_ ); } ( 1 .. 12 );
         $Param{Month} = $Self->BuildSelection(
             Name        => $Prefix . 'Month',
             Data        => \%Month,
             SelectedID  => int( $Param{ $Prefix . 'Month' } || $M ),
             Translation => 0,
-            Class       => $Validate ? "Validate_DateMonth $Class" : $Class,
+            Class       => $Validate ? 'Validate_DateMonth' : '',
             Title       => $Self->{LanguageObject}->Translate('Month'),
             Disabled    => $Param{Disabled},
         );
@@ -3316,26 +3513,17 @@ sub BuildDateSelection {
             . ( $Param{Disabled} ? 'readonly="readonly"' : '' ) . "/>";
     }
 
-    my $DateValidateClasses = '';
-    if ($Validate) {
-        $DateValidateClasses
-            .= "Validate_DateDay Validate_DateYear_${Prefix}Year Validate_DateMonth_${Prefix}Month";
-
-        if ( $Format eq 'DateInputFormatLong' ) {
-            $DateValidateClasses
-                .= " Validate_DateHour_${Prefix}Hour Validate_DateMinute_${Prefix}Minute";
-        }
-
-        if ($ValidateDateInFuture) {
-            $DateValidateClasses .= " Validate_DateInFuture";
-        }
-        if ($ValidateDateNotInFuture) {
-            $DateValidateClasses .= " Validate_DateNotInFuture";
-        }
+    # day
+    if ($SmartStyleDate) {
+        $Param{DateStr} .= "<input type=\"hidden\" "
+            . "class=\"$ClassDate\" "
+            . "name=\"${Prefix}Day\" id=\"${Prefix}Day\" size=\"2\" maxlength=\"2\" "
+            . "value=\""
+            . sprintf( "%02d", ( $Param{ $Prefix . 'Day' } || $D ) ) . "\"/>";
     }
 
-    # day
-    if ( $DateInputStyle eq 'Option' ) {
+    elsif ( $DateInputStyle eq 'Option' ) {
+
         my %Day = map { $_ => sprintf( "%02d", $_ ); } ( 1 .. 31 );
         $Param{Day} = $Self->BuildSelection(
             Name        => $Prefix . 'Day',
@@ -3361,7 +3549,70 @@ sub BuildDateSelection {
     if ( $Format eq 'DateInputFormatLong' ) {
 
         # hour
-        if ( $DateInputStyle eq 'Option' ) {
+        if ($SmartStyleTime) {
+            $h =
+                defined( $Param{ $Prefix . 'Hour' } )
+                ? int( $Param{ $Prefix . 'Hour' } )
+                : $h;
+            $m
+                = defined( $Param{ $Prefix . 'Minute' } )
+                ? int( $Param{ $Prefix . 'Minute' } )
+                : $m;
+
+            if ( $m != 0 && ( $m % $MinuteInterval ) != 0 ) {
+                my $Minute = $MinuteInterval;
+                while ( ( $Minute / $m ) < 1 && ( $Minute < 60 ) ) {
+                    $Minute += $MinuteInterval;
+                }
+                if ( $Minute >= 60 && $h >= 23 ) {
+                    $h = 23;
+                    $m = 59;
+                }
+                elsif ( $Minute >= 60 ) {
+                    $h = $h + 1;
+                    $m = 0;
+                }
+                else {
+                    $m = $Minute;
+                }
+            }
+            $h = sprintf( "%02d", $h );
+            $m = sprintf( "%02d", $m );
+            my %TimeDef = (
+                '23:59' => '23:59',
+            );
+            my $HourParts = 60 / $MinuteInterval - 1;
+            for my $CurrHour ( 0 .. 23 ) {
+                for my $CurrPart ( 0 .. $HourParts ) {
+                    my $Tmp
+                        = sprintf(
+                        "%02d:%02d", $CurrHour,
+                        ( $MinuteInterval * $CurrPart )
+                        );
+                    $TimeDef{$Tmp} = $Tmp;
+                }
+            }
+            $Param{TimeStr} = $Self->BuildSelection(
+                Name                => $Prefix . 'Time',
+                Data                => \%TimeDef,
+                SelectedID          => $h . ':' . $m,
+                LanguageTranslation => 0,
+                Class               => $Validate ? ( 'Validate_DateTime ' . $ClassTime ) : $ClassTime,
+                Title => $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}
+                    ->Get('Time'),
+            );
+            $Param{TimeStr} .= "<input type=\"hidden\" "
+                . (
+                $Validate ? "class=\"Validate_DateHour $Class\" " : "class=\"$Class\" "
+                )
+                . "name=\"${Prefix}Hour\" id=\"${Prefix}Hour\" size=\"2\" maxlength=\"2\" "
+                . "value=\""
+                . $h
+                . "\"/>";
+        }
+
+        elsif ( $DateInputStyle eq 'Option' ) {
+
             my %Hour = map { $_ => sprintf( "%02d", $_ ); } ( 0 .. 23 );
             $Param{Hour} = $Self->BuildSelection(
                 Name       => $Prefix . 'Hour',
@@ -3392,7 +3643,19 @@ sub BuildDateSelection {
         }
 
         # minute
-        if ( $DateInputStyle eq 'Option' ) {
+        if ($SmartStyleTime) {
+            $Param{TimeStr} .= "<input type=\"hidden\" "
+                . (
+                $Validate ? "class=\"Validate_DateMinute $Class\" " : "class=\"$Class\" "
+                )
+                . "name=\"${Prefix}Minute\" id=\"${Prefix}Minute\" size=\"2\" maxlength=\"2\" "
+                . " value=\""
+                . $m
+                . "\"/>";
+        }
+
+        elsif ( $DateInputStyle eq 'Option' ) {
+
             my %Minute = map { $_ => sprintf( "%02d", $_ ); } ( 0 .. 59 );
             $Param{Minute} = $Self->BuildSelection(
                 Name       => $Prefix . 'Minute',
@@ -3456,16 +3719,32 @@ sub BuildDateSelection {
             . "/>&nbsp;";
     }
 
-    # remove 'Second' because it is never used and bug #9441
+    # remove 'Second' because it is never used and otrs bug #9441
     delete $Param{ $Prefix . 'Second' };
 
     # date format
-    $Output .= $Self->{LanguageObject}->Time(
-        Action => 'Return',
-        Format => 'DateInputFormat',
-        Mode   => 'NotNumeric',
-        %Param,
-    );
+    if ($SmartStyleDate) {
+        $Output .= $Param{DateStr};
+        if ( $Param{TimeStr} || $Param{Hour} ) {
+            $Output .= ' - ';
+            $Output .= $Param{TimeStr} || ( $Param{Hour} . ':' . $Param{Minute} );
+        }
+    }
+    elsif ( !$SmartStyleDate && $SmartStyleTime ) {
+        $Output .= $Param{Day} . $Param{Month} . $Param{Year};
+        if ( $Param{TimeStr} || $Param{Hour} ) {
+            $Output .= ' - ';
+            $Output .= $Param{TimeStr} || ( $Param{Hour} . ':' . $Param{Minute} );
+        }
+    }
+    else {
+        $Output .= $Self->{LanguageObject}->Time(
+            Action => 'Return',
+            Format => 'DateInputFormat',
+            Mode   => 'NotNumeric',
+            %Param,
+        );
+    }
 
     # prepare datepicker for specific calendar
     my $VacationDays = '';
@@ -3478,19 +3757,43 @@ sub BuildDateSelection {
         Data => $VacationDays,
     );
 
+    my $DateInFuture    = 'false';
+    my $DateNotInFuture = 'false';
+    if ( $ValidateDateInFuture ) {
+        $DateInFuture = 'true';
+    }
+
+    if ( $ValidateDateNotInFuture ) {
+        $DateNotInFuture = 'true';
+    }
+
     # Add Datepicker JS to output.
-    my $DatepickerJS = '
+    my $DatepickerJS = <<"END";
     Core.UI.Datepicker.Init({
-        Day: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Day"),
-        Month: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Month"),
-        Year: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Year"),
-        Hour: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Hour"),
-        Minute: $("#" + Core.App.EscapeSelector("' . $Prefix . '") + "Minute"),
-        VacationDays: ' . $VacationDaysJSON . ',
-        DateInFuture: ' .    ( $ValidateDateInFuture    ? 'true' : 'false' ) . ',
-        DateNotInFuture: ' . ( $ValidateDateNotInFuture ? 'true' : 'false' ) . ',
-        WeekDayStart: ' . $WeekDayStart . '
-    });';
+        Date: \$("#" + Core.App.EscapeSelector("$Prefix") + "Date"),
+        Time: \$("#" + Core.App.EscapeSelector("$Prefix") + "Time"),
+        Format: "$DateFormat",
+        Day: \$("#" + Core.App.EscapeSelector("$Prefix") + "Day"),
+        Month: \$("#" + Core.App.EscapeSelector("$Prefix") + "Month"),
+        Year: \$("#" + Core.App.EscapeSelector("$Prefix") + "Year"),
+        Hour: \$("#" + Core.App.EscapeSelector("$Prefix") + "Hour"),
+        Minute: \$("#" + Core.App.EscapeSelector("$Prefix") + "Minute"),
+        VacationDays: $VacationDaysJSON,
+        DateInFuture: $DateInFuture,
+        DateNotInFuture: $DateNotInFuture,
+        WeekDayStart: $WeekDayStart
+    });
+END
+
+    if ( $Self->{Action} eq 'AgentStatistics' ) {
+        $DatepickerJS .= <<"END";
+    Core.Config.Set("$Prefix" + "Format", "$DateFormat");
+    Core.Config.Set("$Prefix" + "VacationDays", $VacationDaysJSON);
+    Core.Config.Set("$Prefix" + "DateInFuture", $DateInFuture);
+    Core.Config.Set("$Prefix" + "DateNotInFuture", $DateNotInFuture);
+    Core.Config.Set("$Prefix" + "WeekDayStart", $WeekDayStart);
+END
+    }
 
     $Self->AddJSOnDocumentComplete( Code => $DatepickerJS );
     $Self->{HasDatepicker} = 1;    # Call some Datepicker init code.
@@ -3522,7 +3825,6 @@ sub CustomerLogin {
             # Restrict Cookie to HTTPS if it is used.
             $CookieSecureAttribute = 1;
         }
-        # ddoerffel - T2016121190001552 - BusinessSolution code removed
         $Self->{SetCookies}->{KIXBrowserHasCookie} = $Kernel::OM->Get('Kernel::System::Web::Request')->SetCookie(
             Key      => 'KIXBrowserHasCookie',
             Value    => 1,
@@ -3561,7 +3863,7 @@ sub CustomerLogin {
         for my $CSSStatement ( sort keys %CustomerLogo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = '';
-                if ( $CustomerLogo{$CSSStatement} !~ /(http|ftp|https):\//i ) {
+                if ( $CustomerLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
                     $WebPath = $ConfigObject->Get('Frontend::WebPath');
                 }
                 $Data{'URL'} = 'url(' . $WebPath . $CustomerLogo{$CSSStatement} . ')';
@@ -3672,8 +3974,7 @@ sub CustomerLogin {
             $ConfigObject->Get('CustomerPanelLostPassword')
             && $ConfigObject->Get('Customer::AuthModule') eq
             'Kernel::System::CustomerAuth::DB'
-            )
-        {
+        ) {
             $Self->Block(
                 Name => 'LostPasswordLink',
                 Data => \%Param,
@@ -3689,9 +3990,7 @@ sub CustomerLogin {
             $ConfigObject->Get('CustomerPanelCreateAccount')
             && $ConfigObject->Get('Customer::AuthModule') eq
             'Kernel::System::CustomerAuth::DB'
-            )
-
-        {
+        ) {
             $Self->Block(
                 Name => 'CreateAccountLink',
                 Data => \%Param,
@@ -3702,6 +4001,11 @@ sub CustomerLogin {
             );
         }
     }
+
+    # Build the customized footer
+    $Self->_BuildCustomFooter(
+        Frontend => 'Customer'
+    );
 
     # create & return output
     $Output .= $Self->Output(
@@ -3739,32 +4043,28 @@ sub CustomerHeader {
     if (
         !$Param{Area}
         && $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }
-        )
-    {
+    ) {
         $Param{Area} = $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }
             ->{NavBarName} || '';
     }
     if (
         !$Param{Title}
         && $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }
-        )
-    {
+    ) {
         $Param{Title} = $ConfigObject->Get('CustomerFrontend::Module')->{ $Self->{Action} }->{Title}
             || '';
     }
     if (
         !$Param{Area}
         && $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }
-        )
-    {
+    ) {
         $Param{Area} = $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }
             ->{NavBarName} || '';
     }
     if (
         !$Param{Title}
         && $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }
-        )
-    {
+    ) {
         $Param{Title} = $ConfigObject->Get('PublicFrontend::Module')->{ $Self->{Action} }->{Title}
             || '';
     }
@@ -3869,7 +4169,7 @@ sub CustomerHeader {
         for my $CSSStatement ( sort keys %CustomerLogo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = '';
-                if ( $CustomerLogo{$CSSStatement} !~ /(http|ftp|https):\//i ) {
+                if ( $CustomerLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
                     $WebPath = $ConfigObject->Get('Frontend::WebPath');
                 }
                 $Data{'URL'} = 'url(' . $WebPath . $CustomerLogo{$CSSStatement} . ')';
@@ -3936,8 +4236,13 @@ sub CustomerFooter {
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # Banner
-    # ddoerffel - T2016121190001552 - added on code merge
     if ( !$ConfigObject->Get('Secure::DisableBanner') ) {
+        if ( !$Type ) {
+            $Self->_BuildCustomFooter(
+                Frontend => 'Customer'
+            );
+        }
+
         $Self->Block(
             Name => 'Banner',
         );
@@ -3961,12 +4266,6 @@ sub CustomerFooter {
             AutocompleteConfig => $AutocompleteConfigJSON,
         },
     );
-
-    # Check if video chat is enabled.
-    if ( $Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::VideoChat', Silent => 1 ) ) {
-        $Param{VideoChatEnabled} = $Kernel::OM->Get('Kernel::System::VideoChat')->IsEnabled()
-            || $Kernel::OM->Get('Kernel::System::Web::Request')->GetParam( Param => 'UnitTestMode' ) // 0;
-    }
 
     # create & return output
     return $Self->Output(
@@ -4146,8 +4445,7 @@ sub CustomerNavigationBar {
                 !$SelectedFlag
                 && $NavBarModule{$Item}->{Link} =~ /Action=$Self->{Action}/
                 && $NavBarModule{$Item}->{Link} =~ /$Self->{Subaction}/    # Subaction can be empty
-                )
-            {
+            ) {
                 $NavBarModule{$Item}->{Class} .= ' Selected';
                 $SelectedFlag = 1;
             }
@@ -4177,8 +4475,7 @@ sub CustomerNavigationBar {
                 if (
                     $ItemSub->{Link} =~ /Action=$Self->{Action}/
                     && $ItemSub->{Link} =~ /$Self->{Subaction}/    # Subaction can be empty
-                    )
-                {
+                ) {
                     $NavBarModule{$Item}->{Class} .= ' Selected';
                     $ItemSub->{Class} .= ' SubSelected';
                     $SelectedFlag = 1;
@@ -4247,30 +4544,6 @@ sub CustomerNavigationBar {
                 Name => 'Preferences',
                 Data => \%Param,
             );
-        }
-
-        # Show open chat requests (if chat engine is active).
-        if ( $Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::Chat', Silent => 1 ) ) {
-            if ( $ConfigObject->Get('ChatEngine::Active') ) {
-                my $ChatObject = $Kernel::OM->Get('Kernel::System::Chat');
-                my $Chats      = $ChatObject->ChatList(
-                    Status        => 'request',
-                    TargetType    => 'Customer',
-                    ChatterID     => $Self->{UserID},
-                    ChatterType   => 'Customer',
-                    ChatterActive => 0,
-                );
-
-                my $Count = scalar $Chats;
-
-                $Self->Block(
-                    Name => 'ChatRequests',
-                    Data => {
-                        Count => $Count,
-                        Class => ($Count) ? '' : 'Hidden',
-                    },
-                );
-            }
         }
     }
 
@@ -4618,7 +4891,7 @@ sub RichTextDocumentServe {
 
             # Strip out external images, but show a confirmation button to
             #   load them explicitly.
-            my %SafetyCheckResult = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            my %SafetyCheckResultNoExt = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
                 String       => $Param{Data}->{Content},
                 NoApplet     => 1,
                 NoObject     => 1,
@@ -4630,9 +4903,9 @@ sub RichTextDocumentServe {
                 Debug        => $Self->{Debug},
             );
 
-            $Param{Data}->{Content} = $SafetyCheckResult{String};
+            $Param{Data}->{Content} = $SafetyCheckResultNoExt{String};
 
-            if ( $SafetyCheckResult{Replace} ) {
+            if ( $SafetyCheckResultNoExt{Replace} ) {
 
                 # Generate blocker message.
                 my $Message = $Self->Output( TemplateFile => 'AttachmentBlocker' );
@@ -4819,7 +5092,10 @@ sub _BuildSelectionOptionRefCreate {
 
     # set Translation option
     $OptionRef->{Translation} = 1;
-    if ( defined $Param{Translation} && $Param{Translation} eq 0 ) {
+    if (
+        defined $Param{Translation}
+        && $Param{Translation} eq '0'
+    ) {
         $OptionRef->{Translation} = 0;
     }
 
@@ -4828,8 +5104,7 @@ sub _BuildSelectionOptionRefCreate {
         $OptionRef->{Translation}
         && $OptionRef->{SelectedValue}
         && ref $OptionRef->{SelectedValue} eq 'HASH'
-        )
-    {
+    ) {
         my %SelectedValueNew;
         for my $OriginalKey ( sort keys %{ $OptionRef->{SelectedValue} } ) {
             my $TranslatedKey = $Self->{LanguageObject}->Translate($OriginalKey);
@@ -5210,8 +5485,7 @@ sub _BuildSelectionDataRefCreate {
         }
 
         # sort array
-        if ( $OptionRef->{Sort} eq 'AlphanumericKey' || $OptionRef->{Sort} eq 'AlphanumericValue' )
-        {
+        if ( $OptionRef->{Sort} eq 'AlphanumericKey' || $OptionRef->{Sort} eq 'AlphanumericValue' ) {
             my @SortArray = sort( @{$DataLocal} );
             $DataLocal = \@SortArray;
         }
@@ -5238,8 +5512,7 @@ sub _BuildSelectionDataRefCreate {
     if (
         ref $DataLocal eq 'HASH'
         || ( ref $DataLocal eq 'ARRAY' && ref $DataLocal->[0] ne 'HASH' )
-        )
-    {
+    ) {
         for my $Row ( @{$DataRef} ) {
             if ( $DisabledElements{ $Row->{Value} } ) {
                 $Row->{Key}      = '-';
@@ -5268,8 +5541,7 @@ sub _BuildSelectionDataRefCreate {
                     || $OptionRef->{SelectedValue}->{ $Row->{Value} }
                 )
                 && !$DisabledElements{ $Row->{Value} }
-                )
-            {
+            ) {
                 $Row->{Selected} = 1;
             }
         }
@@ -5485,9 +5757,8 @@ sub _DisableBannerCheck {
     return   if !$Param{OutputRef};
 
     # remove the version tag from the header
-    ${ $Param{OutputRef} } =~ s{
-                ^ X-Powered-By: .+? Open \s Ticket \s Request \s System \s \(http .+? \)$ \n
-            }{}smx;
+    my $Pattern = '^ X-Powered-By: .+? Open \s Ticket \s Request \s System \s \(http .+? \)$ \n';
+    ${ $Param{OutputRef} } =~ s{$Pattern}{}smx;
 
     return 1;
 }
@@ -5593,13 +5864,6 @@ sub WrapPlainText {
     $WorkString =~ s/\r\n?/\n/g;
     $WorkString =~ s/(^>.+|.{4,$Param{MaxCharacters}})(?:\s|\z)/$1\n/gm;
     return $WorkString;
-}
-
-#COMPAT: to 3.0.x and lower (can be removed later)
-sub TransfromDateSelection {
-    my $Self = shift;
-
-    return $Self->TransformDateSelection(@_);
 }
 
 =item ProgressBar()
@@ -5784,6 +6048,75 @@ sub _BuildSystemMessage {
                 Name => 'SystemMessageTeaser',
                 Data => \%MessageData
             );
+        }
+    }
+
+    return 1;
+}
+
+=item _BuildCustomFooter()
+    This function generates a custom footer from a configured link list.
+    The link list can be defined via the configuration CustomerFooter###Title and CustomFooter###URL.
+
+    return $LayoutObject->ProgressBar(
+        Frontend => 'User'  # User|Customer|Public
+                            # Default 'User'
+                            # Public and Customer are the same
+    );
+
+    return string of html output
+=cut
+
+sub _BuildCustomFooter{
+    my ($Self, %Param) = @_;
+
+    # get needed objects
+    my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
+    my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
+
+    my $CustomFooter = $ConfigObject->Get('CustomFooter');
+    my $IsNotShow    = 1;
+    my $Frontend     = $Param{Frontend} =~ /^(?:Customer|Public)$/ ? '3' : '2';
+
+    if (
+        defined $CustomFooter->{Title}
+        && defined $CustomFooter->{URL}
+    ) {
+        for my $Entry ( sort keys %{$CustomFooter->{Title}} ) {
+            next if !$CustomFooter->{Title}->{$Entry};
+            if (
+                $CustomFooter->{Title}->{$Entry}
+                && $CustomFooter->{Title}->{$Entry} ne '1'
+                && $CustomFooter->{Title}->{$Entry} ne $Frontend
+            ) {
+                next;
+            }
+
+            my ($Prio, $Title) = split('::', $Entry);
+
+            if ( $CustomFooter->{URL}->{$Title} ) {
+                my $URL = $TemplateGeneratorObject->ReplacePlaceHolder(
+                    Text     => $CustomFooter->{URL}->{$Title},
+                    Data     => {},
+                    RichText => 0,
+                    UserID   => 1
+                );
+
+                if ( $IsNotShow ) {
+                    $Self->Block(
+                        Name => 'CustomFooter',
+                    );
+                    $IsNotShow = 0;
+                }
+
+                $Self->Block(
+                    Name => 'CustomFooterEntry',
+                    Data => {
+                        Title => $Title,
+                        URL   => $URL
+                    }
+                );
+            }
         }
     }
 

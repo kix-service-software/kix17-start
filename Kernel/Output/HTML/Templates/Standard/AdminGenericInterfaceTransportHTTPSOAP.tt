@@ -84,8 +84,6 @@
                                 <div id="NameSpaceServerError" class="TooltipErrorMessage"><p>[% Translate(Data.NameSpaceServerErrorMessage) | html %]</p></div>
                                 <p class="FieldExplanation">
                                     [% Translate("URI to give SOAP methods a context, reducing ambiguities.") | html %]
-                                    <br/>
-                                    [% Translate("e.g urn:otrs-com:soap:functions or http://www.otrs.com/GenericInterface/actions") | html %]
                                 </p>
                             </div>
                             <div class="Clear"></div>
@@ -373,7 +371,7 @@ $('#UseSSL').on('change', function(){
                                         <p class="FieldExplanation">
                                             [% Translate("The full path and name of the SSL certificate file (must be in .p12 format).") | html %]
                                             <br/>
-                                            [% Translate("e.g. /opt/otrs/var/certificates/SOAP/certificate.p12") | html %]
+                                            [% Translate("e.g. /opt/kix/var/certificates/SOAP/certificate.p12") | html %]
                                         </p>
                                     </div>
                                     <div class="Clear"></div>
@@ -395,7 +393,7 @@ $('#UseSSL').on('change', function(){
                                         <p class="FieldExplanation">
                                             [% Translate("The full path and name of the certification authority certificate file that validates SSL certificate.") | html %]
                                             <br/>
-                                            [% Translate("e.g. /opt/otrs/var/certificates/SOAP/CA/ca.pem") | html %]
+                                            [% Translate("e.g. /opt/kix/var/certificates/SOAP/CA/ca.pem") | html %]
                                         </p>
                                     </div>
                                     <div class="Clear"></div>
@@ -406,7 +404,7 @@ $('#UseSSL').on('change', function(){
                                         <p class="FieldExplanation">
                                             [% Translate("The full path of the certification authority directory where the CA certificates are stored in the file system.") | html %]
                                             <br/>
-                                            [% Translate("e.g. /opt/otrs/var/certificates/SOAP/CA") | html %]
+                                            [% Translate("e.g. /opt/kix/var/certificates/SOAP/CA") | html %]
                                         </p>
                                     </div>
                                     <div class="Clear"></div>

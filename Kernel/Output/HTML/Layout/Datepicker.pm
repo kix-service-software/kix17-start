@@ -15,6 +15,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+use Kernel::System::ObjectManager;
+
 =head1 NAME
 
 Kernel::Output::HTML::Layout::Datepicker - Datepicker data
@@ -76,6 +78,12 @@ sub DatepickerGetVacationDays {
         'TimeVacationDays'        => $TimeVacationDays,
         'TimeVacationDaysOneTime' => $TimeVacationDaysOneTime,
     };
+}
+
+sub HasDatepickerDirectSet {
+    my ( $Self, %Param ) = @_;
+    $Self->{HasDatepicker} = 1;
+    return;
 }
 
 1;

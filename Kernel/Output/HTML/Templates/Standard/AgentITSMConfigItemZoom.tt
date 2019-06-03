@@ -24,12 +24,9 @@
         [% Data.StyleClasses %]
 
         <div class="SidebarColumn">
-# KIX4OTRS-capeIT
-# moved content for change info into separate module
 [% RenderBlockStart("Sidebar") %]
           [% Data.KIXSidebarContent %]
 [% RenderBlockEnd("Sidebar") %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("LinkTableSimple") %]
             <div class="WidgetSimple DontPrint">
                 <div class="Header">
@@ -75,8 +72,6 @@
 [% RenderBlockEnd("Menu") %]
                 </ul>
             </div>
-# KIX4OTRS-capeIT
-# moved original content to tabs
             <div id="ContentItemTabs">
                 <ul>
 [% RenderBlockStart("DataTabDataLink") %]
@@ -92,7 +87,6 @@
                 </div>
 [% RenderBlockEnd("DataTabContentPreloaded") %]
             </div>
-# EO KIX4OTRS-capeIT
         </div>
         <div class="Clear"></div>
     </div>
@@ -101,21 +95,14 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 /*global ITSM: true */
-# KIX4OTRS-capeIT
-# moved content to tab
-# EO KIX4OTRS-capeIT
 
     $('ul.Actions a.AsPopup').bind('click', function (Event) {
-# KIX4OTRS-capeIT
         if ( $(this).attr('href').match(/AgentTicket(Phone|Email)/) ) {
             window.open($(this).attr('href'),'_blank');
         }
         else {
-# EO KIX4OTRS-capeIT
             Core.UI.Popup.OpenPopup($(this).attr('href'), 'Action');
-# KIX4OTRS-capeIT
         }
-# EO KIX4OTRS-capeIT
         return false;
     });
 
@@ -124,15 +111,6 @@
         return false;
     });
 
-# KIX4OTRS-capeIT
-#    $('.MasterAction').bind('click', function (Event) {
-#        var $MasterActionLink = $(this).find('.MasterActionLink');
-#        // only act if the link was not clicked directly
-#        if (Event.target !== $MasterActionLink.get(0)) {
-#            window.location = $MasterActionLink.attr('href');
-#            return false;
-#        }
-#    });
     // disable ajax/tab caching
     $.ajaxSetup({ cache: false });
 
@@ -156,6 +134,5 @@
     });
 
     Core.UI.InitWidgetActionToggle();
-# EO KIX4OTRS-capeIT
 //]]></script>
 [% END %]

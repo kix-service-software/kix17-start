@@ -62,11 +62,12 @@ sub Run {
     $Options{UserID} = $Self->GetOption('user-id');
     $Options{All}    = $Self->GetOption('all');
 
-    if (   !defined( $Options{Key} )
+    if (
+        !defined( $Options{Key} )
         && !defined( $Options{Value} )
         && !defined( $Options{UserID} )
-        && !$Options{All} )
-    {
+        && !$Options{All}
+    ) {
         $Self->Print("<red>At least one option must be given.</red>\n");
         return $Self->ExitCodeError();
     }

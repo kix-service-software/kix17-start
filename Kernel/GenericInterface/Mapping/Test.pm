@@ -67,8 +67,7 @@ sub new {
     if (
         defined $Param{MappingConfig}->{Config}
         && !IsHashRefWithData( $Param{MappingConfig}->{Config} )
-        )
-    {
+    ) {
 
         return $Self->{DebuggerObject}->Error(
             Summary => 'Got MappingConfig with Data, but Data is no hash ref with content!',
@@ -129,8 +128,7 @@ sub Map {
     if (
         !defined $Self->{MappingConfig}->{Config}
         || !defined $Self->{MappingConfig}->{Config}->{TestOption}
-        )
-    {
+    ) {
 
         return {
             Success => 1,

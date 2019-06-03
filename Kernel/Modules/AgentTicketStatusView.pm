@@ -25,7 +25,6 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    # KIX4OTRS-capeIT
     my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
     $Self->{UserPreferences} = \%UserPreferences;
 
@@ -39,18 +38,10 @@ sub Run {
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
 
     # get config
-    my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
-
-    # KIX4OTRS-capeIT
-    # my $SortBy = $ParamObject->GetParam( Param => 'SortBy' )
-    #     || $Config->{'SortBy::Default'}
-    #     || 'Age';
-    # my $OrderBy = $ParamObject->GetParam( Param => 'OrderBy' )
-    #     || $Config->{'Order::Default'}
-    #     || 'Up';
-    my $UserObject  = $Kernel::OM->Get('Kernel::System::User');
+    my $Config =  $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     my $SortBy;
     if ( $ParamObject->GetParam( Param => 'SortBy' ) ) {
@@ -84,8 +75,6 @@ sub Run {
             || 'Up';
     }
 
-    # EO KIX4OTRS-capeIT
-
     # create URL to store last screen
     my $URL = "Action=AgentTicketStatusView;"
         . ";View="          . $LayoutObject->LinkEncode( $ParamObject->GetParam(Param => 'View')        || '' )
@@ -101,12 +90,6 @@ sub Run {
         Key       => 'LastScreenOverview',
         Value     => $URL,
     );
-
-    # get user object
-    # KIX4OTRS-capeIT
-    # moved content upwards
-    # my $UserObject = $Kernel::OM->Get('Kernel::System::User');
-    # EO KIX4OTRS-capeIT
 
     # get filters stored in the user preferences
     my %Preferences = $UserObject->GetPreferences(
@@ -130,8 +113,7 @@ sub Run {
     COLUMNNAME:
     for my $ColumnName (
         qw(Owner Responsible State Queue Priority Type Lock Service SLA CustomerID CustomerUserID)
-        )
-    {
+    ) {
         # get column filter from web request
         my $FilterValue = $ParamObject->GetParam( Param => 'ColumnFilter' . $ColumnName )
             || '';
@@ -271,8 +253,7 @@ sub Run {
                 $HeaderColumn eq 'CustomerUserID'
             )
         )
-        )
-    {
+    ) {
         @OriginalViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Limit  => $Limit,
@@ -325,13 +306,12 @@ sub Run {
     else {
 
         # store column filters
-        my $StoredFilters = \%ColumnFilter;
+        my $NewStoredFilters = \%ColumnFilter;
 
-        my $StoredFiltersKey = 'UserStoredFilterColumns-' . $Self->{Action};
         $UserObject->SetPreferences(
             UserID => $Self->{UserID},
             Key    => $StoredFiltersKey,
-            Value  => $JSONObject->Encode( Data => $StoredFilters ),
+            Value  => $JSONObject->Encode( Data => $NewStoredFilters ),
         );
     }
 

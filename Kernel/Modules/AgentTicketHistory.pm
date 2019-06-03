@@ -54,8 +54,7 @@ sub Run {
             TicketID => $Self->{TicketID},
             UserID   => $Self->{UserID},
         )
-        )
-    {
+    ) {
 
         # error screen, don't show ticket
         return $LayoutObject->NoPermission( WithHeader => 'yes' );

@@ -46,19 +46,34 @@ sub Run {
     my %Result = $Self->_GetAllAvailableFrontendModules( Name => $Name );
     my %AvailableFrontends = %{ $Result{AvailableFrontends} };
 
+    FRONTEND:
     for my $Frontend ( keys %AvailableFrontends ) {
 
         # get all set attributes for this frontend
         my %ItemHash;
+        my $ItemKey = '';
+
+        # exception for FollowUpDynamicField
         if ( $Frontend eq 'CustomerTicketZoomFollowUp' ) {
-            %ItemHash = $SysConfigObject
-                ->ConfigItemGet(
-                Name => 'Ticket::Frontend::CustomerTicketZoom###FollowUpDynamicField' );
+            $ItemKey  = 'Ticket::Frontend::CustomerTicketZoom###FollowUpDynamicField';
+            %ItemHash = $SysConfigObject->ConfigItemGet( Name => $ItemKey );
         }
         else {
-            %ItemHash = $SysConfigObject
-                ->ConfigItemGet( Name => 'Ticket::Frontend::' . $Frontend . '###DynamicField' );
+            $ItemKey  = 'Ticket::Frontend::' . $Frontend . '###DynamicField';
+            %ItemHash = $SysConfigObject->ConfigItemGet( Name => $ItemKey );
         }
+
+        # if frontend not found try admin frontend
+        if ( !keys %ItemHash ) {
+            for my $Item (qw(Admin Agent)) {
+                $ItemKey = $Item . '::Frontend::' . $Frontend . '###DynamicField';
+                %ItemHash = $SysConfigObject->ConfigItemGet( Name => $ItemKey );
+                last if keys %ItemHash;
+            }
+        }
+
+        # try next frontend if no hash detected
+        next FRONTEND if !keys %ItemHash;
 
         # create hash from old values
         my %Content;
@@ -81,21 +96,11 @@ sub Run {
         }
 
         # update sysconfig settings
-        my $Update = 0;
-        if ( $Frontend eq 'CustomerTicketZoomFollowUp' ) {
-            $Update = $SysConfigObject->ConfigItemUpdate(
-                Key   => 'Ticket::Frontend::CustomerTicketZoom###FollowUpDynamicField',
-                Value => \%Content,
-                Valid => 1,
-            );
-        }
-        else {
-            $Update = $SysConfigObject->ConfigItemUpdate(
-                Key   => 'Ticket::Frontend::' . $Frontend . '###DynamicField',
-                Value => \%Content,
-                Valid => 1,
-            );
-        }
+        my $Update = $SysConfigObject->ConfigItemUpdate(
+            Key   => $ItemKey,
+            Value => \%Content,
+            Valid => 1,
+        );
 
         if ( !$Update ) {
             $LayoutObject->FatalError( Message => "Can't write ConfigItem!" );
@@ -109,8 +114,7 @@ sub Run {
     if (
         exists $ENV{'GATEWAY_INTERFACE'}
         && $ENV{'GATEWAY_INTERFACE'} eq "CGI-PerlEx"
-        )
-    {
+    ) {
         PerlEx::ReloadAll();
     }
 
@@ -146,11 +150,12 @@ sub _GetAllAvailableFrontendModules {
         next if !defined $ConfigHashTabs->{$Item}->{Link};
 
         # look for PretendAction
-        $ConfigHashTabs->{$Item}->{Link} =~ /^(.*?)\;PretendAction=(.*?)\;(.*)$/;
-        next if ( !$2 || $ConfigHash{$2} );
+        if ( $ConfigHashTabs->{$Item}->{Link} =~ /^(.*?)\;PretendAction=(.*?)\;(.*)$/ ) {
+            next if ( !$2 || $ConfigHash{$2} );
 
-     # if given and not already registered as frontend module - add width empty value to config hash
-        $ConfigHash{$2} = '';
+            # if given and not already registered as frontend module - add width empty value to config hash
+            $ConfigHash{$2} = '';
+        }
     }
 
     # ticket overview - add width empty value to config hash
@@ -184,15 +189,22 @@ sub _GetAllAvailableFrontendModules {
     for my $Item ( keys %ConfigHash ) {
         my $ItemConfig = $ConfigObject->Get( "Ticket::Frontend::" . $Item );
 
-        # if dynamic field config exists
+        # if dynamic field config not exists try admin and agent frontend for other modules
+        # integration of CustomerUserDynamicField and CustomerCompanyDynamicField
+        $ItemConfig = $Kernel::OM->Get('Kernel::Config')->Get( "Agent::Frontend::" . $Item )
+            if !( defined $ItemConfig && defined $ItemConfig->{DynamicField} );
+        $ItemConfig = $Kernel::OM->Get('Kernel::Config')->Get( "Admin::Frontend::" . $Item )
+            if !( defined $ItemConfig && defined $ItemConfig->{DynamicField} );
+
+        # next if no config found
         next if !( defined $ItemConfig && defined $ItemConfig->{DynamicField} );
         $AvailableFrontends{$Item} = $Item;
 
         # if dynamic field is activated
         # for CustomerTicketZoom check also FollowUpDynamicFields
         if ( $Item eq 'CustomerTicketZoom'
-            && defined $ItemConfig->{FollowUpDynamicField}->{ $Param{Name} } )
-        {
+            && defined $ItemConfig->{FollowUpDynamicField}->{ $Param{Name} }
+        ) {
             if ( $ItemConfig->{FollowUpDynamicField}->{ $Param{Name} } eq '1' ) {
                 push @SelectedFrontends, 'CustomerTicketZoomFollowUp';
             }

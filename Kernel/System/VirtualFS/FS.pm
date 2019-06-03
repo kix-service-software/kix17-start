@@ -49,7 +49,6 @@ sub new {
     }
     else {
         my $Error = $!;
-#rbo - T2016121190001552 - replaced OTRS wording
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'notice',
             Message  => "Can't create $Path: $Error!",

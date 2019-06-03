@@ -1,9 +1,43 @@
 stages:
+- prepare
+- pretest
 - build
 - deploy
 
+prepare:Archive:
+  allow_failure: false
+  artifacts:
+    expire_in: 1 day
+    paths: 
+    - "ARCHIVE"
+    when: on_success
+  script:
+  - cd $CI_PROJECT_DIR
+  - perl ./bin/kix.CheckSum.pl -a create -b ARCHIVE -d .
+  stage: prepare
+  tags:
+  - Shell
+
+pretest:PerlCritic:
+  allow_failure: false
+  dependencies:
+  - prepare:Archive
+  except:
+    changes:
+    - CHANGELOG
+  only:
+  - /^rel-[0-9]+_TEST$/
+  script:
+  - perlcriticcheck $CI_PROJECT_DIR
+  stage: pretest
+  tags:
+  - Shell
+  when: on_success
+
 build:TARBuild:
   allow_failure: false
+  dependencies:
+  - prepare:Archive
   artifacts:
     paths: 
     - "*.tar.gz"
@@ -15,6 +49,7 @@ build:TARBuild:
   stage: build
   tags:
   - Shell
+  when: on_success
 
 deploy:TARBuild:Branch:
   allow_failure: false
@@ -26,7 +61,7 @@ deploy:TARBuild:Branch:
   except:
   - tags
   only:
-  - /^(Branch_Pub_|rel-)\d+(_\d+)?(_(BUGFIX|FEATURE|TEST)|)$/
+  - /^(Branch_Pub_|rel-)\d+(_\d+)?(_(DEVELOPMENT|TEST)|)$/
   script:
   - mkdir -p /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME
   - cp -f $CI_PROJECT_DIR/$CI_PROJECT_NAME.tar.gz /opt/opmbuild/builds/$CI_PROJECT_PATH/$CI_BUILD_REF_NAME/

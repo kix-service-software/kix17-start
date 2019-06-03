@@ -38,10 +38,9 @@ sub Run {
 
     my @Tickets;
     $Kernel::OM->Get('Kernel::System::DB')->Prepare(
-        SQL => "
-            SELECT st.tn, st.id
-            FROM ticket st
-            WHERE st.ticket_lock_id NOT IN ( ${\(join ', ', @ViewableLockIDs)} ) ",
+        SQL => "SELECT st.tn, st.id"
+             . " FROM ticket st"
+             . " WHERE st.ticket_lock_id NOT IN ( ${\(join ', ', @ViewableLockIDs)} ) ",
     );
 
     while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
@@ -50,7 +49,7 @@ sub Run {
     for (@Tickets) {
         my @Row = @{$_};
         $Self->Print(" Unlocking ticket id $Row[0]... ");
-        my $Unlock = $Kernel::OM->Get('Kernel::System::Ticket')->LockSet(
+        my $Unlock = $Kernel::OM->Get('Kernel::System::Ticket')->TicketLockSet(
             TicketID => $Row[1],
             Lock     => 'unlock',
             UserID   => 1,

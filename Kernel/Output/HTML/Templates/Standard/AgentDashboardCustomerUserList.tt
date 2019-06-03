@@ -21,18 +21,12 @@
 <table class="DataTable">
     <thead>
         <tr>
-# KIX4OTRS-capeIT
 [% RenderBlockStart("OverviewResultCustomerLogin") %]
-# EO KIX4OTRS-capeIT
-# rkaiser - T#2017020290001194 - changed customer user to contact
             <th>[% Translate("Contact login") | html %]</th>
-# KIX4OTRS-capeIT
 [% RenderBlockEnd("OverviewResultCustomerLogin") %]
 [% RenderBlockStart("OverviewResultCustomerCompany") %]
             <th>[% Translate("Customer company") | html %]</th>
 [% RenderBlockEnd("OverviewResultCustomerCompany") %]
-# EO KIX4OTRS-capeIT
-# rkaiser - T#2017020290001194 - changed customer user to contact
             <th>[% Translate("Contact information") | html %]</th>
             <th>[% Translate("Open") | html %]</th>
             <th>[% Translate("Closed") | html %]</th>
@@ -42,11 +36,9 @@
 [% RenderBlockStart("OverviewResultNewAgentTicketEmail") %]
             <th>[% Translate("Email ticket") | html %]</th>
 [% RenderBlockEnd("OverviewResultNewAgentTicketEmail") %]
-# KIX4OTRS-capeIT
 [% RenderBlockStart("OverviewResultEditCustomer") %]
             <th>[% Translate("Edit") | html %]</th>
 [% RenderBlockEnd("OverviewResultEditCustomer") %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("OverviewResultSwitchToCustomer") %]
             <th>[% Translate("Login as") | html %]</th>
 [% RenderBlockEnd("OverviewResultSwitchToCustomer") %]
@@ -62,38 +54,18 @@
                 </span>
 [% RenderBlockEnd("ContentLargeCustomerUserListRowUserStatus") %]
 [% RenderBlockStart("ContentLargeCustomerUserListRowCustomerKeyLink") %]
-# KIX4OTRS-capeIT
-#                <a href="[% Env("Baselink") %]Action=AdminCustomerUser;Subaction=Change;ID=[% Data.CustomerKey | uri %];Nav=Agent" class="AsBlock MasterActionLink">
                 <a href="[% Env("Baselink") %]Action=AgentCustomerInformationCenter;CustomerLogin=[% Data.CustomerKey | uri %];Nav=Agent" class="AsBlock MasterActionLink">
-# EO KIX4OTRS-capeIT
                     [% Data.CustomerKey | html %]
                 </a>
 [% RenderBlockEnd("ContentLargeCustomerUserListRowCustomerKeyLink") %]
-# KIX4OTRS-capeIT
 [% RenderBlockStart("ContentLargeCustomerUserListRowCompanyKeyLink") %]
                 <a href="[% Env("Baselink") %]Action=AgentCustomerInformationCenter;CustomerID=[% Data.CustomerCompanyKey | uri %];Nav=Agent" class="AsBlock MasterActionLink">
                     [% Data.CustomerCompanyKey | html %]
                 </a>
 [% RenderBlockEnd("ContentLargeCustomerUserListRowCompanyKeyLink") %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("ContentLargeCustomerUserListRowCustomerKeyText") %]
                 [% Data.CustomerKey | html %]
 [% RenderBlockEnd("ContentLargeCustomerUserListRowCustomerKeyText") %]
-[% RenderBlockStart("ContentLargeCustomerUserListRowChatIcons") %]
-                <span class="UserChatIcons Hidden">
-                    <a href="#" title="[% Translate("Start chat") %]" type="button" class="UserChatStart" data-user-type="Customer" data-user-id="[% Data.UserID | html %]" data-user-fullname="[% Data.UserFullname | html %]">
-                        <i class="fa fa-comments"></i>
-                    </a>
-                    [% IF Data.VideoChatEnabled %]
-                    <a href="#" title="[% Translate("Video call") | html %]" type="button" class="UserVideoCallStart[% IF !Data.VideoChatAvailable %] Unavailable[% END %][% IF !Data.VideoChatSupport %] Unsupported[% END %]" data-user-id="[% Data.UserID | html %]" data-user-type="Customer" data-user-fullname="[% Data.UserFullname | html %]">
-                        <i class="fa fa-video-camera"></i>
-                    </a>
-                    <a href="#" title="[% Translate("Audio call") | html %]" type="button" class="UserAudioCallStart[% IF !Data.VideoChatAvailable %] Unavailable[% END %][% IF !Data.VideoChatSupport %] Unsupported[% END %]" data-user-id="[% Data.UserID | html %]" data-user-type="Customer" data-user-fullname="[% Data.UserFullname | html %]">
-                        <i class="fa fa-microphone"></i>
-                    </a>
-                    [% END %]
-                </span>
-[% RenderBlockEnd("ContentLargeCustomerUserListRowChatIcons") %]
             </td>
             <td>
                 [% Data.CustomerListEntry | html %]
@@ -126,7 +98,6 @@
                 </a>
             </td>
 [% RenderBlockEnd("ContentLargeCustomerUserListNewAgentTicketEmail") %]
-# KIX4OTRS-capeIT
 [% RenderBlockStart("ContentLargeCustomerUserListRowCustomerEditLink") %]
             <td>
                 <a href="[% Env("Baselink") %]Action=AdminCustomerUser;Subaction=Change;ID=[% Data.CustomerKey | uri %];Nav=Agent" class="AsBlock MasterActionLink">
@@ -134,7 +105,6 @@
                 </a>
             </td>
 [% RenderBlockEnd("ContentLargeCustomerUserListRowCustomerEditLink") %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("OverviewResultRowSwitchToCustomer") %]
             <td>
                 <a class="AsBlock" href="[% Env("Baselink") %]Action=AdminCustomerUser;Subaction=Switch;ID=[% Data.CustomerKey | uri %];[% Env("ChallengeTokenParam") | html %]" target="_blank">[% Translate("Switch to customer") | html %]</a>
@@ -152,40 +122,6 @@
     </tbody>
 </table>
 
-[% INCLUDE "ChatStartForm.tt" %]
-
-[% WRAPPER JSOnDocumentComplete %]
-<script type="text/javascript">//<![CDATA[
-    $('a.CreateChatRequest').bind('click', function() {
-        var UserID = $(this).data('user-id'),
-            $Dialog = $('#DashboardUserOnlineChatStartDialog').clone();
-
-        $Dialog.find('input[name=ChatStartUserID]').val($(this).data('user-id'));
-        $Dialog.find('input[name=ChatStartUserType]').val($(this).data('user-type'));
-        $Dialog.find('input[name=ChatStartUserFullname]').val($(this).data('user-fullname'));
-
-        Core.UI.Dialog.ShowContentDialog($Dialog.html(), [% Translate('Start chat') | JSON %], '100px', 'Center', true);
-
-        // Only enable button if there is a message
-        $('.Dialog textarea[name="ChatStartFirstMessage"]').on('keyup', function(){
-            $('.Dialog button').prop('disabled', $(this).val().length ? false : true );
-        });
-
-        $('.Dialog form').on('submit', function(){
-            if (!$('.Dialog textarea[name=ChatStartFirstMessage]').val().length) {
-                return false;
-            }
-            // Close after submit
-            window.setTimeout(function(){
-                Core.UI.Dialog.CloseDialog($('.Dialog'));
-            }, 1);
-        });
-
-        return false;
-    });
-//]]></script>
-[% END %]
-
 [% RenderBlockStart("ContentLargeTicketGenericRefresh") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
@@ -196,10 +132,7 @@ if (Core.Config.Get('RefreshSeconds_[% Data.NameHTML | html %]')) {
         // get active filter
         var Filter = $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + '-box').find('.Tab.Actions li.Selected a').attr('data-filter');
         $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + '-box').addClass('Loading');
-# KIX4OTRS-capeIT
-#         Core.AJAX.ContentUpdate($('#Dashboard[% Data.Name | html %]'), '[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Element;Name=[% Data.Name | html %];Filter=' + Filter + ';CustomerID=[% Data.CustomerID | html %];SortBy=' + SortBy + ';OrderBy=' + OrderBy, function () {
         Core.AJAX.ContentUpdate($('#Dashboard[% Data.Name | html %]'), '[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Element;Name=[% Data.Name | html %];Filter=' + Filter + ';CustomerID=[% Data.CustomerID | html %];CustomerLogin=[% Data.CustomerUserLogin | html %]', function () {
-# EO KIX4OTRS-capeIT
             $('#Dashboard' + Core.App.EscapeSelector('[% Data.Name | html %]') + '-box').removeClass('Loading');
         });
         clearTimeout(Core.Config.Get('Timer_[% Data.NameHTML | html %]'));
@@ -208,17 +141,3 @@ if (Core.Config.Get('RefreshSeconds_[% Data.NameHTML | html %]')) {
 //]]></script>
 [% END %]
 [% RenderBlockEnd("ContentLargeTicketGenericRefresh") %]
-
-[% WRAPPER JSOnDocumentComplete %]
-<script type="text/javascript">//<![CDATA[
-    if (
-        typeof Core.Agent !== 'undefined'
-        && typeof Core.Agent.Chat !== 'undefined'
-        && typeof Core.Agent.Chat.Toolbar !== 'undefined'
-        && typeof Core.Agent.Chat.Toolbar.InitChatButtons !== 'undefined'
-        )
-    {
-        Core.Agent.Chat.Toolbar.InitChatButtons();
-    }
-//]]></script>
-[% END %]

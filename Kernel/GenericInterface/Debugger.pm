@@ -90,7 +90,7 @@ sub new {
     }
 
     # check correct DebugThreshold
-    if ( $Self->{DebugThreshold} !~ /^(debug|info|notice|error)/i ) {
+    if ( $Self->{DebugThreshold} !~ /^(?:debug|info|notice|error)/i ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'DebugThreshold is not allowed.',
@@ -100,7 +100,7 @@ sub new {
     }
 
     # check correct CommunicationType
-    if ( lc $Self->{CommunicationType} !~ /^(provider|requester)/i ) {
+    if ( lc $Self->{CommunicationType} !~ /^(?:provider|requester)/i ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'CommunicationType is not allowed.',
@@ -164,7 +164,7 @@ sub DebugLog {
     $Param{DebugLevel} = $Param{DebugLevel} || $Self->{DebugLevel};
 
     # check correct DebugLevel
-    if ( $Param{DebugLevel} !~ /^(debug|info|notice|error)/i ) {
+    if ( $Param{DebugLevel} !~ /^(?:debug|info|notice|error)/i ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'DebugLevel is not allowed.',
@@ -336,7 +336,7 @@ sub DESTROY {
     my $Self = shift;
 
     #TODO: implement storing of the debug messages
-
+    return;
 }
 
 1;

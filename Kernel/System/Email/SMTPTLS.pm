@@ -21,6 +21,8 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
 );
 
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
+
 sub _Connect {
     my ( $Self, %Param ) = @_;
 

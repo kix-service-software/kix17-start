@@ -35,20 +35,15 @@ sub Run {
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    # KIX4OTRS-capeIT
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    # EO KIX4OTRS-capeIT
 
     # don't show ticket search links in the print views
     if ( $LayoutObject->{Action} =~ m{Print$}smx ) {
         return;
     }
 
-    # KIX4OTRS-capeIT
     # get ticket search config
     my $AgentTicketSearchConfig = $ConfigObject->Get("Ticket::Frontend::AgentTicketSearch");
-
-    # EO KIX4OTRS-capeIT
 
     # lookup map
     my %Lookup = (
@@ -144,16 +139,12 @@ sub Run {
     my $Subaction = $Param{Config}->{Subaction};
     my $URL       = $LayoutObject->{Baselink} . "Action=$Action;Subaction=$Subaction";
 
-    # KIX4OTRS-capeIT
-    # $URL .= ';CustomerID=' . $LayoutObject->LinkEncode($CustomerIDRaw);
     if ( $ConfigObject->Get("Frontend::CustomerUser::CustomerInfoTicketCount") ) {
         $TicketSearch{CustomerID} = $Param{Data}->{UserCustomerID} || '';
     }
     else {
         $TicketSearch{CustomerUserLogin} = $Param{Data}->{UserLogin} || '';
     }
-
-    # EO KIX4OTRS-capeIT
 
     for my $Key ( sort keys %TicketSearch ) {
         if ( ref $TicketSearch{$Key} eq 'ARRAY' ) {
@@ -248,8 +239,7 @@ sub Run {
                 $TicketSearch{ $TimeType . 'TimeStartDay' }
                 && $TicketSearch{ $TimeType . 'TimeStartMonth' }
                 && $TicketSearch{ $TimeType . 'TimeStartYear' }
-                )
-            {
+            ) {
                 $TicketSearch{ $TimeType . 'TimeNewerDate' } = $TicketSearch{ $TimeType . 'TimeStartYear' } . '-'
                     . $TicketSearch{ $TimeType . 'TimeStartMonth' } . '-'
                     . $TicketSearch{ $TimeType . 'TimeStartDay' }
@@ -259,8 +249,7 @@ sub Run {
                 $TicketSearch{ $TimeType . 'TimeStopDay' }
                 && $TicketSearch{ $TimeType . 'TimeStopMonth' }
                 && $TicketSearch{ $TimeType . 'TimeStopYear' }
-                )
-            {
+            ) {
                 $TicketSearch{ $TimeType . 'TimeOlderDate' } = $TicketSearch{ $TimeType . 'TimeStopYear' } . '-'
                     . $TicketSearch{ $TimeType . 'TimeStopMonth' } . '-'
                     . $TicketSearch{ $TimeType . 'TimeStopDay' }
@@ -272,8 +261,7 @@ sub Run {
                 $TicketSearch{ $TimeType . 'TimePoint' }
                 && $TicketSearch{ $TimeType . 'TimePointStart' }
                 && $TicketSearch{ $TimeType . 'TimePointFormat' }
-                )
-            {
+            ) {
                 my $Time = 0;
                 if ( $TicketSearch{ $TimeType . 'TimePointFormat' } eq 'minute' ) {
                     $Time = $TicketSearch{ $TimeType . 'TimePoint' };
@@ -323,14 +311,9 @@ sub Run {
         Result        => 'COUNT',
         Permission    => 'ro',
         UserID        => $Self->{UserID},
-
-        # KIX4OTRS-capeIT
-        Limit => $AgentTicketSearchConfig->{SearchLimit} || 10000,
-
-        # EO KIX4OTRS-capeIT
+        Limit         => $AgentTicketSearchConfig->{SearchLimit} || 10000,
     ) || 0;
 
-    # KIX4OTRS-capeIT
     if ( $TicketSearch{LinkedTickets} ) {
 
         my @LinkedTicketIDs = $Kernel::OM->Get('Kernel::System::Ticket')->GetLinkedTickets(
@@ -369,8 +352,6 @@ sub Run {
         $URL .= ';CustomerUser=' . $UserLogin;
     }
 
-    # EO KIX4OTRS-capeIT
-
     my $CSSClass = $Param{Config}->{CSSClassNoOpenTicket};
     if ($Count) {
         $CSSClass = $Param{Config}->{CSSClassOpenTicket};
@@ -386,14 +367,9 @@ sub Run {
         Name => 'CustomerItemRow',
         Data => {
             %{ $Param{Config} },
-            CSSClass => $CSSClass,
-
-            # KIX4OTRS
-            # Extension => " ($Count)",
+            CSSClass  => $CSSClass,
             Extension => " (" . ( $Count || '0' ) . ")",
-            Count => $Count,
-
-            # EO KIX4OTRS
+            Count     => $Count,
             URL       => $URL,
             IconName  => $IconName,
         },

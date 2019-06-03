@@ -131,7 +131,7 @@ sub Run {
         local *STDERR;
 
         # Redirect the standard error to a variable.
-        open STDERR, ">>", \$ErrorMessage;
+        open STDERR, ">>", \$ErrorMessage or die "Can't open STDERR: $!";
 
         if ( ref $Param{Data}->{Params} eq 'ARRAY' ) {
             $LocalObject->$Function(

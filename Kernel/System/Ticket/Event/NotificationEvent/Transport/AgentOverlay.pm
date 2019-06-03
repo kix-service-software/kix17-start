@@ -7,8 +7,6 @@
 # --
 
 package Kernel::System::Ticket::Event::NotificationEvent::Transport::AgentOverlay;
-## nofilter(TidyAll::Plugin::OTRS::Perl::LayoutObject)
-## nofilter(TidyAll::Plugin::OTRS::Perl::ParamObject)
 
 use strict;
 use warnings;
@@ -58,6 +56,9 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
+    # get needed prefix
+    $Self->{Prefix} = 'AgentOverlay';
+
     return $Self;
 }
 
@@ -98,9 +99,15 @@ sub SendNotification {
     my $AgentOverlayObject = $Kernel::OM->Get('Kernel::System::AgentOverlay');
     my $HTMLUtilsObject    = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
+
+    my %SettingData;
+    for my $Key ( qw(Subject Decay BusinessTime Popup) ) {
+        $SettingData{$Key} = $Param{Notification}->{Data}->{$Self->{Prefix} . 'Recipient' . $Key};
+    }
 
     # prepare subject
-    if (!$Param{Notification}->{Data}->{RecipientSubject}) {
+    if (!$SettingData{Subject}) {
         my $TicketNumber = $TicketObject->TicketNumberLookup(
             TicketID => $Param{TicketID},
         );
@@ -113,14 +120,13 @@ sub SendNotification {
     }
 
     # prepare message
-    my $HTML = $Param{Notification}->{Subject} . '<br /><br />' . $Param{Notification}->{Body};
+    my $HTML    = $Param{Notification}->{Subject} . '<br /><br />' . $Param{Notification}->{Body};
     my $Message = $HTMLUtilsObject->ToAscii( String => $HTML );
     $Message =~ s/\n/\\n/g;
 
     # prepare decay
-    my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
-    my $Decay = $TimeObject->SystemTime() + ($Param{Notification}->{Data}->{RecipientDecay}->[0] * 60);
-    if ($Param{Notification}->{Data}->{RecipientBusinessTime}->[0]) {
+    my $Decay = $TimeObject->SystemTime() + ($SettingData{Decay}->[0] * 60);
+    if ($SettingData{BusinessTime}->[0]) {
 
         # get ticket
         my %Ticket = $TicketObject->TicketGet(
@@ -136,7 +142,7 @@ sub SendNotification {
         # calculate target
         $Decay = $TimeObject->DestinationTime(
             StartTime => $TimeObject->SystemTime(),
-            Time      => $Param{Notification}->{Data}->{RecipientDecay}->[0] * 60,
+            Time      => $SettingData{Decay}->[0] * 60,
             Calendar  => $Escalation{Calendar},
         );
     }
@@ -147,14 +153,15 @@ sub SendNotification {
         Message   => $Message,
         Decay     => $Decay,
         UserID    => $Recipient{UserID},
-        Popup     => $Param{Notification}->{Data}->{RecipientPopup}->[0],
+        Popup     => $SettingData{Popup}->[0],
     );
+
     if ( !$Success ) {
-        my $Message = "Could not add overlay for user_id $Recipient{UserID}!";
+        my $ErrorMessage = "Could not add overlay for user_id $Recipient{UserID}!";
 
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => $Message,
+            Message  => $ErrorMessage,
         );
 
         return;
@@ -185,14 +192,14 @@ sub TransportSettingsDisplayGet {
 
     KEY:
     for my $Key (qw(RecipientDecay RecipientBusinessTime RecipientPopup)) {
-        next KEY if !$Param{Data}->{$Key};
-        next KEY if !defined $Param{Data}->{$Key}->[0];
-        $Param{$Key} = $Param{Data}->{$Key}->[0];
+        next KEY if !$Param{Data}->{$Self->{Prefix} . $Key};
+        next KEY if !defined $Param{Data}->{$Self->{Prefix} . $Key}->[0];
+        $Param{$Key} = $Param{Data}->{$Self->{Prefix} . $Key}->[0];
     }
 
-    $Param{RecipientDecay}         = $Param{RecipientDecay} || 1440;
-    $Param{RecipientBusinessTime}  = ($Param{RecipientBusinessTime} || 0) ? 'checked=checked' : '';
-    $Param{RecipientPopup}         = ($Param{RecipientPopup} || 0) ? 'checked=checked' : '';
+    $Param{$Self->{Prefix} . 'RecipientDecay'}         = $Param{RecipientDecay}         || 1440;
+    $Param{$Self->{Prefix} . 'RecipientBusinessTime'}  = ($Param{RecipientBusinessTime} || 0) ? 'checked=checked' : '';
+    $Param{$Self->{Prefix} . 'RecipientPopup'}         = ($Param{RecipientPopup}        || 0) ? 'checked=checked' : '';
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
@@ -201,11 +208,11 @@ sub TransportSettingsDisplayGet {
         0 => 'Without Ticketnumber',
         1 => 'With Ticketnumber',
     );
-    $Param{RecipientSubjectStrg} .= $LayoutObject->BuildSelection(
+    $Param{$Self->{Prefix} . 'RecipientSubjectStrg'} .= $LayoutObject->BuildSelection(
         Data        => \%SubjectSelection,
-        Name        => 'RecipientSubject',
+        Name        => $Self->{Prefix} . 'RecipientSubject',
         Translation => 1,
-        SelectedID  => $Param{Data}->{RecipientSubject} || '1',
+        SelectedID  => $Param{Data}->{$Self->{Prefix} . 'RecipientSubject'} || '1',
         Sort        => 'AlphanumericID',
     );
 
@@ -235,15 +242,10 @@ sub TransportParamSettingsGet {
 
     PARAMETER:
     for my $Parameter (qw(RecipientDecay RecipientBusinessTime RecipientPopup RecipientSubject)) {
-        my @Data = $ParamObject->GetArray( Param => $Parameter );
+        my @Data = $ParamObject->GetArray( Param => $Self->{Prefix} . $Parameter );
         next PARAMETER if !@Data;
-        $Param{GetParam}->{Data}->{$Parameter} = \@Data;
+        $Param{GetParam}->{Data}->{$Self->{Prefix} . $Parameter} = \@Data;
     }
-
-    # Note: Example how to set errors and use them
-    # on the normal AdminNotificationEvent screen
-    # # set error
-    # $Param{GetParam}->{$Parameter.'ServerError'} = 'ServerError';
 
     return 1;
 }

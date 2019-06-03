@@ -107,8 +107,7 @@ sub Run {
                     UserID    => $Self->{UserID},
                     NewUserID => $Self->{UserID},
                 )
-                )
-            {
+            ) {
 
                 $LayoutObject->Block(
                     Name => 'PropertiesLock',
@@ -224,7 +223,6 @@ sub Run {
         # make sure body is rich text
         if ( $LayoutObject->{BrowserRichText} ) {
 
-#rbo - T2016121190001552 - added KIX placeholders
             # prepare bounce tags
             $Param{BounceText} =~ s/<KIX_TICKET>/&lt;KIX_TICKET&gt;/g;
             $Param{BounceText} =~ s/<KIX_BOUNCE_TO>/&lt;KIX_BOUNCE_TO&gt;/g;
@@ -236,18 +234,22 @@ sub Run {
 
         # build InformationFormat
         if ( $LayoutObject->{BrowserRichText} ) {
-            $Param{InformationFormat} = "$Param{Salutation}<br/>
+            $Param{InformationFormat} = <<"END";
+$Param{Salutation}<br/>
 <br/>
 $Param{BounceText}<br/>
 <br/>
-$Param{Signature}";
+$Param{Signature}
+END
         }
         else {
-            $Param{InformationFormat} = "$Param{Salutation}
+            $Param{InformationFormat} = <<"END";
+$Param{Salutation}
 
 $Param{BounceText}
 
-$Param{Signature}";
+$Param{Signature}
+END
         }
 
         # prepare sender of bounce email
@@ -268,7 +270,6 @@ $Param{Signature}";
             $NextStates{''} = '-';
         }
 
-        # KIX4OTRS-capeIT
         # offer empty selection if default state is not availible
         else {
             my %StateListTmp = reverse(%NextStates);
@@ -277,7 +278,6 @@ $Param{Signature}";
             }
         }
 
-        # EO KIX4OTRS-capeIT
         $Param{NextStatesStrg} = $LayoutObject->BuildSelection(
             Data          => \%NextStates,
             Name          => 'BounceStateID',
@@ -432,7 +432,6 @@ $Param{Signature}";
             # prepare bounce tags if body is rich text
             if ( $LayoutObject->{BrowserRichText} ) {
 
-#rbo - T2016121190001552 - added KIX placeholders
                 # prepare bounce tags
                 $Param{Body} =~ s/&lt;KIX_TICKET&gt;/&amp;lt;KIX_TICKET&amp;gt;/gi;
                 $Param{Body} =~ s/&lt;KIX_BOUNCE_TO&gt;/&amp;lt;KIX_BOUNCE_TO&amp;gt;/gi;
@@ -492,7 +491,6 @@ $Param{Signature}";
                 );
             }
 
-#rbo - T2016121190001552 - added KIX placeholders
             # replace placeholders
             $Param{Body} =~ s/(&lt;|<)KIX_TICKET(&gt;|>)/$Ticket{TicketNumber}/g;
             $Param{Body} =~ s/(&lt;|<)KIX_BOUNCE_TO(&gt;|>)/$Param{BounceTo}/g;
@@ -523,12 +521,10 @@ $Param{Signature}";
             }
         }
 
-        # KIX4OTRS-capeIT
         # create internal notice for bounce action
         else {
             my $Body = $ConfigObject->Get('Frontend::Agent::AutomaticBounceText')
                 || 'Bounced';
-#rbo - T2016121190001552 - added KIX placeholders
             $Body =~ s/(&lt;|<)KIX_TICKET(&gt;|>)/$Ticket{TicketNumber}/g;
             $Body =~ s/(&lt;|<)KIX_BOUNCE_TO(&gt;|>)/$Param{BounceTo}/g;
 
@@ -565,8 +561,6 @@ $Param{Signature}";
                 );
             }
         }
-
-        # EO KIX4OTRS-capeIT
 
         # check if there is a chosen bounce state id
         if ( $Param{BounceStateID} ) {

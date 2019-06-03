@@ -160,7 +160,7 @@ Core.UI.AdvancedChart = (function (TargetNS) {
             var Chart = nv.models.OTRSlineChart(),
                 ShowLegend = Options.HideLegend ? false : true;
 
-            // don't let nv/d3 exceptions block the rest of OTRS JavaScript
+            // don't let nv/d3 exceptions block the rest of KIX JavaScript
             try {
 
                 Chart.staggerLabels(true);
@@ -298,7 +298,7 @@ Core.UI.AdvancedChart = (function (TargetNS) {
             var Chart = nv.models.OTRSlineChart(),
                 ShowLegend = Options.HideLegend ? false : true;
 
-            // don't let nv/d3 exceptions block the rest of OTRS JavaScript
+            // don't let nv/d3 exceptions block the rest of KIX JavaScript
             try {
 
                 Chart.margin({
@@ -448,7 +448,7 @@ Core.UI.AdvancedChart = (function (TargetNS) {
             var Chart = nv.models.OTRSmultiBarChart(),
                 ShowLegend = Options.HideLegend ? false : true;
 
-            // don't let nv/d3 exceptions block the rest of OTRS JavaScript
+            // don't let nv/d3 exceptions block the rest of KIX JavaScript
             try {
 
                 Chart.staggerLabels(true);
@@ -596,7 +596,7 @@ Core.UI.AdvancedChart = (function (TargetNS) {
             var Chart = nv.models.OTRSstackedAreaChart(),
                 ShowLegend = Options.HideLegend ? false : true;
 
-            // don't let nv/d3 exceptions block the rest of OTRS JavaScript
+            // don't let nv/d3 exceptions block the rest of KIX JavaScript
             try {
 
                 Chart.staggerLabels(true);

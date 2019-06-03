@@ -122,9 +122,8 @@ sub Run {
             if ( $GroupMember{ $Queue{GroupID} } ) {
 
                 $DBObject->Do(
-                    SQL => "
-                        INSERT INTO personal_queues (queue_id, user_id)
-                        VALUES (?, ?)",
+                    SQL => "INSERT INTO personal_queues (queue_id, user_id)"
+                        . " VALUES (?, ?)",
                     Bind => [ \$ID, \$Param{UserData}->{UserID} ]
                 );
             }

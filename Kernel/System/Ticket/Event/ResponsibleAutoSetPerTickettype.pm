@@ -101,7 +101,7 @@ sub Run {
         }
 
         if ($UserID) {
-            $Self->{TicketObject}->ResponsibleSet(
+            $Self->{TicketObject}->TicketResponsibleSet(
                 TicketID           => $Param{Data}->{TicketID},
                 NewUserID          => $UserID,
                 SendNoNotification => 1,

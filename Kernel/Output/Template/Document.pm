@@ -18,6 +18,8 @@ use base qw (Template::Document);
 
 our $ObjectManagerDisabled = 1;
 
+use Kernel::System::ObjectManager;
+
 =head1 NAME
 
 Kernel::Output::Template::Document - Template Toolkit document extension package
@@ -39,33 +41,33 @@ and processing.
 sub process {
     my ( $Self, $Context ) = @_;
 
-    $Self->_InstallOTRSExtensions($Context);
+    $Self->_InstallKIXExtensions($Context);
     $Self->_PrecalculateBlockStructure($Context);
     $Self->_PrecalculateBlockHookSubscriptions($Context);
 
     return $Self->SUPER::process($Context);
 }
 
-=item _InstallOTRSExtensions()
+=item _InstallKIXExtensions()
 
-adds some OTRS specific extensions to Template::Toolkit.
+adds some KIX specific extensions to Template::Toolkit.
 
 =cut
 
-sub _InstallOTRSExtensions {
+sub _InstallKIXExtensions {
     my ( $Self, $Context ) = @_;
 
     # Already installed, nothing to do.
-    return if $Context->stash()->get('OTRS');
+    return if $Context->stash()->get('KIX');
 
     #
-    # Load the OTRS plugin. This will register some filters and functions.
+    # Load the KIX plugin. This will register some filters and functions.
     #
-    $Context->stash()->set( 'OTRS', $Context->plugin('OTRS') );
+    $Context->stash()->set( 'KIX', $Context->plugin('KIX') );
 
     #
     # The RenderBlock macro makes it possible to use the old dtl:block-Style block calls
-    #   that are still used by OTRS with Template::Toolkit.
+    #   that are still used by KIX with Template::Toolkit.
     #
     # The block data is passed to the template, and this macro processes it and calls the relevant
     #   blocks.
@@ -238,8 +240,7 @@ sub _PrecalculateBlockStructure {
             if (
                 !exists $BlockPointer->{Children}
                 || !exists $BlockPointer->{Children}->{$ParentBlock}
-                )
-            {
+            ) {
                 # Parent node was not found. That means we dan discard this block.
                 splice @{$BlockData}, $BlockIndex, 1;
                 next BLOCK;

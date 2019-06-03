@@ -97,8 +97,8 @@ sub Run {
     my $Directory  = $Home . $Path . $ConfigItemID;
     my $ImageTypes = $Self->{Config}->{ImageTypes};
 
-    if ( !( -e $Home . $Path ) ) {
-        if ( !mkpath( $Home . $Path, 0, 0755 ) ) {
+    if ( !( -e ($Home . $Path) ) ) {
+        if ( !mkpath( $Home . $Path, 0, oct(755) ) ) {
             $LogObject->Log(
                 Priority => 'error',
                 Message  => "Can't create directory '$Home.$Path'!",
@@ -108,7 +108,7 @@ sub Run {
     }
 
     if ( !( -e $Directory ) ) {
-        if ( !mkpath( $Directory, 0, 0755 ) ) {
+        if ( !mkpath( $Directory, 0, oct(755) ) ) {
             $LogObject->Log(
                 Priority => 'error',
                 Message  => "Can't create directory '$Directory'!",
@@ -171,7 +171,7 @@ sub Run {
         my %TmpHash;
 
         return if !$ImageID && !$ImageType;
-        return if ( $ImageType !~ m/^($ImageTypes)$/i );
+        return if ( $ImageType !~ m/^(?:$ImageTypes)$/i );
 
         $TmpHash{Filename} = $ImageID . "." . $ImageType;
 
@@ -223,14 +223,14 @@ sub Run {
     ################################################################
     elsif ( $Self->{Subaction} eq 'ImageDelete' ) {
 
-        if ( -e $Directory . "/" . $ImageID . "." . $ImageType ) {
+        if ( -e ($Directory . "/" . $ImageID . "." . $ImageType) ) {
             my $OK = $MainObject->FileDelete(
                 Directory => $Directory,
                 Filename  => $ImageID . "." . $ImageType,
             );
         }
 
-        if ( -e $Directory . "/" . $ImageID . ".txt" ) {
+        if ( -e ($Directory . "/" . $ImageID . ".txt") ) {
             my $OK = $MainObject->FileDelete(
                 Directory => $Directory,
                 Filename  => $ImageID . ".txt",
@@ -259,19 +259,23 @@ sub Run {
 
         # get all source files
         opendir( DIR, $Directory );
-        my @Files = grep { !/^(.|..)$/g } readdir(DIR);
+        my @Files = grep( { !/^(?:.|..)$/g } readdir(DIR) );
         closedir(DIR);
 
         for my $File (@Files) {
 
-            next if $File !~ m/(.*?)\.($ImageTypes)$/i;
-
-            my $CurrentImageID   = $1;
-            my $CurrentImageType = $2;
+            my $CurrentImageID   = '';
+            my $CurrentImageType = '';
+            if ( $File =~ m/(.*?)\.($ImageTypes)$/i ) {
+                $CurrentImageID   = $1;
+                $CurrentImageType = $2;
+            } else {
+                next;
+            }
 
             # get text
             my $Text;
-            if ( -e $Directory . "/" . $1 . ".txt" ) {
+            if ( -e ($Directory . "/" . $CurrentImageID . ".txt") ) {
                 my $Content = $MainObject->FileRead(
                     Location => $Directory . "/" . $CurrentImageID . ".txt",
                     Mode     => 'utf8',
@@ -314,7 +318,7 @@ sub Run {
     my $UserLanguage = $LayoutObject->{UserLanguage};
 
     # start template output
-    my $Output .= $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'AgentITSMConfigItemZoomTabImages',
         Data         => {
             UserLanguage => $UserLanguage,

@@ -68,8 +68,7 @@ sub Run {
         PriorityID OwnerID QueueID From Subject Body StateID TimeUnits Cc Bcc FormID
         PendingOffset LinkType LinkDirection ArticleType ArticleSenderType
         ResponsibleID ResponsibleAll OwnerAll TypeID ServiceID ServiceAll SLAID KIXSidebarChecklistTextField CustomerPortalGroupID)
-        )
-    {
+    ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key ) || '';
         $GetParam{ $Key . 'Empty' } = $ParamObject->GetParam( Param => $Key . 'Empty' )
             || '';
@@ -77,8 +76,7 @@ sub Run {
             || '';
     }
 
-    for my $Key (qw(Agent Customer))
-    {
+    for my $Key (qw(Agent Customer)) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key ) || 0;
     }
 
@@ -243,8 +241,7 @@ sub Run {
                 $CustomerData{UserCustomerID}
                 && $CustomerData{UserID}
                 && $CustomerData{UserEmail}
-                )
-            {
+            ) {
                 my $CustomerName = $CustomerUserObject
                     ->CustomerName( UserLogin => $CustomerData{UserID} );
                 $TicketTemplateData{From}
@@ -866,8 +863,7 @@ sub Run {
         Result => 'Name',
     );
     my %TicketTemplateData;
-    for my $Template (@Templates)
-    {
+    for my $Template (@Templates) {
         my %Hash = $TicketObject->TicketTemplateGet(
             Name => $Template,
         );
@@ -924,8 +920,7 @@ sub Run {
         for my $CurrHashID (
             sort { $TicketTemplateData{$a}->{Name} cmp $TicketTemplateData{$b}->{Name} }
             keys %TicketTemplateData
-            )
-        {
+        ) {
 
             # create Frontend-Info-String
             my @FrontendInfoArray;
@@ -1224,7 +1219,7 @@ sub _GetTos {
         # SelectionType Queue or SystemAddress?
         my %Tos;
         if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') eq 'Queue' ) {
-            %Tos = $Kernel::OM->Get('Kernel::System::Ticket')->MoveList(
+            %Tos = $Kernel::OM->Get('Kernel::System::Ticket')->TicketMoveList(
                 %Param,
                 Type    => 'create',
                 Action  => $Self->{Action},
@@ -1260,8 +1255,7 @@ sub _GetTos {
                 || '<Realname> <<Email>> - Queue: <Queue>';
             $String =~ s/<Queue>/$QueueData{Name}/g;
             $String =~ s/<QueueComment>/$QueueData{Comment}/g;
-            if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' )
-            {
+            if ( $ConfigObject->Get('Ticket::Frontend::NewQueueSelectionType') ne 'Queue' ) {
                 my %SystemAddressData = $Kernel::OM->Get('Kernel::System::SystemAddress')->SystemAddressGet(
                     ID => $Tos{$QueueID},
                 );
@@ -1490,8 +1484,7 @@ sub _MaskNew {
     if (
         $ConfigObject->Get('Ticket::Responsible')
         && $ConfigObject->Get('Ticket::Frontend::NewResponsibleSelection')
-        )
-    {
+    ) {
         $Param{ResponsibleUsers}->{''} = '-';
         $Param{ResponsibleStrg} = $LayoutObject->BuildSelection(
             Data       => $Param{ResponsibleUsers},
@@ -1566,8 +1559,7 @@ sub _MaskNew {
             )
             || $DynamicFieldConfig->{FieldType} !~ m/Dropdown/i
             || $DynamicFieldConfig->{Config}->{PossibleNone}
-            )
-        {
+        ) {
             my $Checked;
             if ( $Param{ 'DynamicField_' . $DynamicFieldConfig->{Name} . 'Empty' } ) {
                 $Checked = 'checked="checked"';

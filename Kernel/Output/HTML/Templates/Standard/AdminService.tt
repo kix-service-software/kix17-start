@@ -35,7 +35,6 @@
             </div>
 [% RenderBlockEnd("ActionList") %]
         </div>
-# KIX4OTRS-capeIT
         <div class="WidgetSimple">
             <div class="Header">
                  <h2><span><label for="FilterServices">[% Translate("Filter for Services") | html %]</label></span></h2>
@@ -44,7 +43,6 @@
                 <input type="text" id="FilterServices" class="W50pc" name="FilterServices" value="" title="[% Translate("Filter for Services") | html %]" />
             </div>
         </div>
-# EO KIX4OTRS-capeIT
     </div>
 
     <div class="ContentColumn">
@@ -66,13 +64,11 @@
                         </tr>
                     </thead>
                     <tbody>
-# KIX4OTRS-capeIT
                         <tr class="FilterMessage Hidden">
                             <td colspan="5">
                                 [% Translate("No matches found.") | html %]
                             </td>
                         </tr>
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("NoDataFoundMsg") %]
                         <tr>
                             <td colspan="5">
@@ -216,11 +212,9 @@
     </div>
     <div class="Clear"></div>
 </div>
-# KIX4OTRS-capeIT
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.UI.Table.InitTableFilter($('#FilterServices'), $('.DataTable'));
 //]]></script>
 [% END %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("Overview") %]

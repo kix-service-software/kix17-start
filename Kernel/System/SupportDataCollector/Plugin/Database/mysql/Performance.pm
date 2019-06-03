@@ -42,8 +42,7 @@ sub Run {
             !$Row[1]
             || $Row[1] < 1024 * 1024 * 10
             || $Row[1] > 1024 * 1024 * 600
-            )
-        {
+        ) {
             $Self->AddResultWarning(
                 Identifier => 'QueryCacheSize',
                 Label      => Translatable('Query Cache Size'),

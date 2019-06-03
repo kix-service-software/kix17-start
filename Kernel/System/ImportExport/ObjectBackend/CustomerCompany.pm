@@ -628,8 +628,7 @@ sub ImportDataSave {
         if (
             $CustomerCompanyData{Source}
             && $CustomerCompanyData{Source} eq $ObjectData->{CustomerCompanyBackend}
-            )
-        {
+        ) {
             $Result = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyUpdate(
                 %CustomerCompanyData,
                 Source => $ObjectData->{CustomerCompanyBackend},
@@ -662,8 +661,7 @@ sub ImportDataSave {
             while (
                 $CustomerCompanyData{Source}
                 && $CustomerCompanyData{Source} ne $ObjectData->{CustomerCompanyBackend}
-                )
-            {
+            ) {
                 $BackendRef{ $CustomerCompanyData{Source} } =
                     $Kernel::OM->Get('Kernel::System::CustomerCompany')->{ $CustomerCompanyData{Source} };
                 delete( $Kernel::OM->Get('Kernel::System::CustomerCompany')->{ $CustomerCompanyData{Source} } );
@@ -682,8 +680,7 @@ sub ImportDataSave {
             if (
                 $CustomerCompanyData{Source}
                 && $CustomerCompanyData{Source} eq $ObjectData->{CustomerCompanyBackend}
-                )
-            {
+            ) {
                 $CustomerCompanyData{ID} = $NewCustomerCompanyData{$CustomerCompanyKey};
                 $Result = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyUpdate(
                     %CustomerCompanyData,

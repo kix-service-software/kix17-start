@@ -22,7 +22,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Uninstall an OTRS package.');
+    $Self->Description('Uninstall an KIX package.');
     $Self->AddOption(
         Name        => 'force',
         Description => 'Force package Uninstallation even if validation fails.',
@@ -32,7 +32,7 @@ sub Configure {
     $Self->AddArgument(
         Name => 'location',
         Description =>
-            "Specify a file path, a remote repository (http://ftp.otrs.org/pub/otrs/packages/:Package-1.0.0.opm) or just any online repository (online:Package).",
+            "Specify a file path, a remote repository or just any online repository (online:Package).",
         Required   => 1,
         ValueRegex => qr/.*/smx,
     );
@@ -58,16 +58,14 @@ sub Run {
     if (
         defined $Structure{PackageIsRemovable}
         && !$Structure{PackageIsRemovable}->{Content}
-        )
-    {
+    ) {
         my $Error = "Not possible to remove this package!\n";
 
         # exchange message if package should not be visible
         if (
             defined $Structure{PackageIsVisible}
             && !$Structure{PackageIsVisible}->{Content}
-            )
-        {
+        ) {
             $Error = "No such package!\n";
         }
         $Self->PrintError($Error);

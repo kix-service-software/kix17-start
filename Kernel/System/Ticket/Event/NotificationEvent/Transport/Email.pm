@@ -9,8 +9,6 @@
 # --
 
 package Kernel::System::Ticket::Event::NotificationEvent::Transport::Email;
-## nofilter(TidyAll::Plugin::OTRS::Perl::LayoutObject)
-## nofilter(TidyAll::Plugin::OTRS::Perl::ParamObject)
 
 use strict;
 use warnings;
@@ -23,7 +21,10 @@ use base qw(Kernel::System::Ticket::Event::NotificationEvent::Transport::Base);
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::Output::HTML::Layout',
+    'Kernel::System::Crypt::PGP',
+    'Kernel::System::Crypt::SMIME',
     'Kernel::System::CustomerUser',
+    'Kernel::System::DynamicField',
     'Kernel::System::Email',
     'Kernel::System::Log',
     'Kernel::System::Main',
@@ -32,11 +33,6 @@ our @ObjectDependencies = (
     'Kernel::System::Ticket',
     'Kernel::System::User',
     'Kernel::System::Web::Request',
-    'Kernel::System::Crypt::PGP',
-    'Kernel::System::Crypt::SMIME',
-# NotificationEventX-capeIT
-    'Kernel::System::DynamicField',
-# EO NotificationEventX-capeIT
 );
 
 =head1 NAME
@@ -98,7 +94,6 @@ sub SendNotification {
     # get recipient data
     my %Recipient = %{ $Param{Recipient} };
 
-# NotificationEventX-capeIT
     # Verify a customer have an email
     # check if recipient hash has DynamicField
     if (
@@ -180,7 +175,6 @@ sub SendNotification {
         # done
         return 1;
     }
-# EO NotificationEventX-capeIT
 
     # Verify a customer have an email
     if ( $Recipient{Type} eq 'Customer' && $Recipient{UserID} && !$Recipient{UserEmail} ) {
@@ -244,7 +238,6 @@ sub SendNotification {
         );
     }
 
-# NotificationEventX-capeIT
     if (
         $Notification{Data}->{RecipientAttachmentDF}
         && ref($Notification{Data}->{RecipientAttachmentDF}) eq 'ARRAY'
@@ -295,7 +288,6 @@ sub SendNotification {
             # add attachment
             push( @{ $Param{Attachments} }, \%Data );
         }
-
     }
 
     # send notification
@@ -315,7 +307,6 @@ sub SendNotification {
             Size         => 0,
         );
     }
-# EO NotificationEventX-capeIT
 
     # send notification
     if ( $Recipient{Type} eq 'Agent' ) {
@@ -365,21 +356,15 @@ sub SendNotification {
         $Self->{EventData} = {
             Event => 'ArticleAgentNotification',
             Data  => {
-                TicketID => $Param{TicketID},
-
-                # KIX4OTRS-capeIT
-                # out of office-substitute notification
+                TicketID      => $Param{TicketID},
                 RecipientMail => $Recipient{UserEmail},
                 Notification  => \%Notification,
                 Attachment    => $Param{Attachments},
-
-                # EO KIX4OTRS-capeIT
             },
             UserID => $Param{UserID},
         };
     }
     else {
-
         # get queue object
         my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
 
@@ -526,7 +511,6 @@ sub GetTransportRecipients {
         }
     }
 
-# NotificationEventX-capeIT
     # get object
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
 
@@ -579,7 +563,6 @@ sub GetTransportRecipients {
             push (@Recipients, \%Recipient);
         }
     }
-# EO NotificationEventX-capeIT
 
     return @Recipients;
 }
@@ -645,7 +628,6 @@ sub TransportSettingsDisplayGet {
     );
 
     # security fields
-
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
@@ -728,7 +710,6 @@ sub TransportSettingsDisplayGet {
         Disabled    => $Param{SecurityDisabled},
     );
 
-# NotificationEventX-capeIT
     # get objects
     my $DynamicFieldObject  = $Kernel::OM->Get('Kernel::System::DynamicField');
 
@@ -787,8 +768,8 @@ sub TransportSettingsDisplayGet {
         );
 
         if ( scalar( keys( %AttachmentDynamicFieldHash ) ) ) {
-            my %BlockData;
-            $BlockData{RecipientAttachmentDFStrg} .= $LayoutObject->BuildSelection(
+            my %AttachmentBlockData;
+            $AttachmentBlockData{RecipientAttachmentDFStrg} .= $LayoutObject->BuildSelection(
                 Data        => \%AttachmentDynamicFieldHash,
                 Name        => 'RecipientAttachmentDF',
                 Translation => 0,
@@ -799,7 +780,7 @@ sub TransportSettingsDisplayGet {
             );
             $LayoutObject->Block(
                 Name => 'EmailDFAttachmentDynamicField',
-                Data => \%BlockData,
+                Data => \%AttachmentBlockData,
             );
         }
     }
@@ -815,7 +796,6 @@ sub TransportSettingsDisplayGet {
         SelectedID  => $Param{Data}->{RecipientSubject} || '1',
         Sort        => 'AlphanumericID',
     );
-# EO NotificationEventX-capeIT
 
     # generate HTML
     my $Output = $LayoutObject->Output(
@@ -843,10 +823,6 @@ sub TransportParamSettingsGet {
 
     PARAMETER:
     for my $Parameter (
-# NotificationEventX-capeIT
-#        qw(RecipientEmail NotificationArticleTypeID TransportEmailTemplate
-#        EmailSigningCrypting EmailMissingSigningKeys EmailMissingCryptingKeys
-#        EmailSecuritySettings)
         qw(RecipientEmail NotificationArticleTypeID TransportEmailTemplate
         EmailSigningCrypting EmailMissingSigningKeys EmailMissingCryptingKeys
         EmailSecuritySettings
@@ -854,9 +830,7 @@ sub TransportParamSettingsGet {
         RecipientSubject
         RecipientAttachmentDF
         )
-# EO NotificationEventX-capeIT
-        )
-    {
+    ) {
         my @Data = $ParamObject->GetArray( Param => $Parameter );
         next PARAMETER if !@Data;
         $Param{GetParam}->{Data}->{$Parameter} = \@Data;

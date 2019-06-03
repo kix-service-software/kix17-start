@@ -152,7 +152,6 @@
             </div>
             <div class="Content">
                 <p>[% Translate("You can use the following tags") | html %]:</p>
-#rbo - T2016121190001552 - added KIX placeholders
                 <dl>
                     <dt><code>&lt;KIX_OWNER_*&gt;</code></dt>
                     <dd>
@@ -194,7 +193,7 @@
                     [% Translate("Example signature") | html %]:
                 </p>
                 <textarea rows="5" cols="60" name="Response">
-Your OTRS-Team
+Your KIX-Team
 
 &lt;KIX_CURRENT_UserFirstname&gt; &lt;KIX_CURRENT_UserLastname&gt;
 

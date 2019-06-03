@@ -125,10 +125,10 @@ If you need to set credentials
         Type         => 'POST',
         Data         => [ Attribute => 'Value', Attribute => 'OtherValue' ],
         Credentials  => {
-            User     => 'otrs_user',
-            Password => 'otrs_password',
-            Realm    => 'OTRS Unittests',
-            Location => 'ftp.otrs.org:80',
+            User     => 'kix_user',
+            Password => 'kix_password',
+            Realm    => 'KIX Unittests',
+            Location => 'ftp.kixdesk.com:80',
         },
         SkipSSLVerification => 1, # (optional)
     );
@@ -151,8 +151,7 @@ sub Request {
     if (
         $Param{SkipSSLVerification}
         || $Kernel::OM->Get('Kernel::Config')->Get('WebUserAgent::DisableSSLVerification')
-        )
-    {
+    ) {
         $UserAgent->ssl_opts(
             verify_hostname => 0,
         );

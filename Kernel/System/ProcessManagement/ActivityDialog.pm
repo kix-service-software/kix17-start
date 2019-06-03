@@ -149,8 +149,7 @@ sub ActivityDialogGet {
         && !IsArrayRefWithData(
             $ActivityDialog->{ $Param{ActivityDialogEntityID} }->{Interface}
         )
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "No Interface for ActivityDialog '$Param{ActivityDialogEntityID}' found!"
@@ -164,8 +163,7 @@ sub ActivityDialogGet {
             if (
                 grep { $CurrentInterface eq $_ }
                 @{ $ActivityDialog->{ $Param{ActivityDialogEntityID} }->{Interface} }
-                )
-            {
+            ) {
                 $Success = 1;
                 last INTERFACE;
             }

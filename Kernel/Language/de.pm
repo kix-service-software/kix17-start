@@ -155,7 +155,6 @@ sub Data {
         'customer' => 'Kunde',
         'agent' => 'Agent',
         'system' => 'System',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact info' => 'Ansprechpartner-Info',
         'Customer Companies' => 'Kunden',
         'Company' => 'Firma',
@@ -272,8 +271,8 @@ sub Data {
         'Facility' => 'Einrichtung',
         'Time Zone' => 'Zeitzone',
         'Pending till' => 'Warten bis',
-        'Don\'t use the Superuser account to work with OTRS! Create new Agents and work with these accounts instead.' =>
-            'Bitte nicht mit dem Superuser-Account in OTRS arbeiten! Bitte legen Sie neue Agenten an und nutzen Sie diese!',
+        'Don\'t use the Superuser account to work with KIX! Create new Agents and work with these accounts instead.' =>
+            'Bitte nicht mit dem Superuser-Account in KIX arbeiten! Bitte legen Sie neue Agenten an und nutzen Sie diese!',
         'Dispatching by email To: field.' => 'Verteilung nach To: Feld.',
         'Dispatching by selected Queue.' => 'Verteilung nach ausgewählter Queue.',
         'No entry found!' => 'Kein Eintrag gefunden!',
@@ -290,7 +289,7 @@ sub Data {
         'Check to activate this date' => 'Auswählen, um dieses Datum zu aktivieren',
         'You have Out of Office enabled, would you like to disable it?' =>
             'Sie haben die Abwesenheitszeit eingeschaltet, möchten Sie diese deaktivieren?',
-        'News about OTRS releases!' => 'Neuigkeiten zu OTRS-Releases!',
+        'News about KIX releases!' => 'Neuigkeiten zu KIX-Releases!',
         'Go to dashboard!' => 'Zur Übersicht gehen!',
         'Customer %s added' => 'Kunde %s hinzugefügt',
         'Role added!' => 'Rolle hinzugefügt!',
@@ -375,16 +374,15 @@ sub Data {
         'more' => 'mehr',
         'Collapse' => 'Zuklappen',
         'Shown' => 'Angezeigt',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Shown contacts' => 'Angezeigte Ansprechpartner',
         'News' => 'Neues',
         'Product News' => 'Produkt-Neuigkeiten',
-        'OTRS News' => 'OTRS-Neuigkeiten',
+        'OTRS News' => 'KIX-Neuigkeiten',
         '7 Day Stats' => '7-Tage-Statistik',
         'Process Management information from database is not in sync with the system configuration, please synchronize all processes.' =>
             'Die Konfiguration des Prozessmanagements in der Datenbank ist nicht synchron mit der Systemkonfiguration, bitte synchronisieren Sie alle Prozesse.',
-        'Package not verified by the OTRS Group! It is recommended not to use this package.' =>
-            'Paket wurde nicht von der OTRS-Gruppe verifiziert! Es wird empfohlen, dieses Paket nicht zu nutzen.',
+        'Package not verified by the KIX Group! It is recommended not to use this package.' =>
+            'Paket wurde nicht von der KIX-Gruppe verifiziert! Es wird empfohlen, dieses Paket nicht zu nutzen.',
         '<br>If you continue to install this package, the following issues may occur!<br><br>&nbsp;-Security problems<br>&nbsp;-Stability problems<br>&nbsp;-Performance problems<br><br>Please note that issues that are caused by working with this package are not covered by OTRS service contracts!<br><br>' =>
             '<br>Wenn Sie die Installation dieses Pakets fortführen, können folgende Probleme auftreten!<br><br>&nbsp;-Sicherheitsprobleme<br>&nbsp;-Stabilitätsprobleme<br>&nbsp;-Performanceprobleme<br><br>Bitte beachten Sie, dass Probleme im Zusammenhang mit diesem Paket nicht durch einen OTRS Servicevertrag abgedeckt sind!<br><br>',
         'Mark' => 'Markieren',
@@ -411,7 +409,7 @@ sub Data {
         'SHIFT' => 'Umschalt',
         'Undo' => 'Rückgängig',
         'Redo' => 'Wiederholen',
-        'OTRS Daemon is not running.' => 'Der OTRS Daemon läuft nicht.',
+        'KIX Daemon is not running.' => 'Der KIX Daemon läuft nicht.',
         'Can\'t contact registration server. Please try again later.' => 'Registrierungs-Server konnte nicht erreicht werden. Bitte versuchen Sie es später noch einmal.',
         'No content received from registration server. Please try again later.' =>
             'Registrierungs-Server lieferte keinen Inhalt. Bitte versuchen Sie es später noch einmal.',
@@ -432,7 +430,7 @@ sub Data {
         'There was a problem during the upgrade of %s.' => 'Es gab ein Problem bei der Aktualisierung Ihrer %s.',
         '%s was correctly uninstalled.' => 'Die %s wurde korrekt de-installiert.',
         'There was a problem uninstalling %s.' => 'Es gab ein Problem beim De-Installieren der %s.',
-        'Enable cloud services to unleash all OTRS features!' => 'Aktivieren Sie die Cloud Services, um alle OTRS-Funktionen nutzen zu können!',
+        'Enable cloud services to unleash all OTRS features!' => 'Aktivieren Sie die Cloud Services, um alle KIX-Funktionen nutzen zu können!',
 
         # Template: AAACalendar
         'New Year\'s Day' => 'Neujahr',
@@ -543,9 +541,7 @@ sub Data {
         'Ticket Types' => 'Ticket-Typen',
         'Compose' => 'Verfassen',
         'Pending' => 'Warten',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Owner' => 'Bearbeiter',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Owner Update' => 'Bearbeiter aktualisiert',
         'Responsible' => 'Verantwortlicher',
         'Responsible Update' => 'Verantwortlichen aktualisiert',
@@ -638,9 +634,7 @@ sub Data {
         'No such Ticket Number "%s"! Can\'t link it!' => 'Ticketnummer "%s" nicht gefunden! Ticket konnte nicht verknüpft werden!',
         'You don\'t have write access to this ticket.' => 'Sie haben keinen Schreibzugriff auf dieses Ticket.',
         'Sorry, you need to be the ticket owner to perform this action.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Entschuldigung, Sie müssen Ticket-Bearbeiter sein, um diese Aktion ausführen zu können.',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Please change the owner first.' => 'Bitte ändern Sie zunächst den Bearbeiter.',
         'Ticket selected.' => 'Ticket ausgewählt.',
         'Ticket is locked by another agent.' => 'Das Ticket ist für einen anderen Agenten gesperrt.',
@@ -657,7 +651,6 @@ sub Data {
         'Search Tickets' => 'Ticket-Suche',
         'Customer Realname' => 'Kundenname',
         'Customer History' => 'Kundenhistorie',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Edit contacts' => 'Ansprechpartner bearbeiten',
         'Edit Customer' => 'Kunde bearbeiten',
         'Bulk Action' => 'Sammel-Aktion',
@@ -666,7 +659,6 @@ sub Data {
         'Create new Email Ticket and send this out (Outbound)' => 'Neues Ticket wird erstellt und E-Mail versendet',
         'Create new Phone Ticket (Inbound)' => 'Neues Ticket wird über einkommenden Anruf erstellt',
         'Address %s replaced with registered customer address.' => 'Adresse %s wurde durch die Adresse des eingetragenen Kunden ersetzt.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact automatically added in Cc.' => 'Ansprechpartner wurde automatisch ins Cc eingetragen.',
         'Overview of all open Tickets' => 'Übersicht über alle offenen Tickets',
         'Locked Tickets' => 'Gesperrte Tickets',
@@ -688,7 +680,6 @@ sub Data {
         'Change the ticket priority' => 'Ticket-Priorität ändern',
         'Change the ticket free fields!' => 'Ändern der freien Felder des Tickets.',
         'Link this ticket to other objects' => 'Dieses Ticket mit anderen Objekten verknüpfen',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Change the owner for this ticket' => 'Bearbeiter dieses Tickets ändern',
         'Change the  customer for this ticket' => 'Kunden dieses Tickets ändern',
         'Add a note to this ticket' => 'Eine Notiz zu diesem Ticket hinzufügen',
@@ -719,7 +710,6 @@ sub Data {
         'Send new ticket notifications' => 'Benachrichtigung über neue Tickets senden',
         'Ticket follow up notification' => 'Benachrichtigung über Folgeaktionen',
         'Send me a notification if a customer sends a follow up and I\'m the owner of the ticket or the ticket is unlocked and is in one of my subscribed queues.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Sende mir eine Benachrichtigung, wenn ein Kunde eine Rückmeldung gibt und ich der Bearbeiter des Tickets bin, oder das Ticket nicht gesperrt ist und in einer meiner Queues liegt.',
         'Send ticket follow up notifications' => 'Benachrichtigung bei Rückmeldung verschicken',
         'Ticket lock timeout notification' => 'Mitteilung bei Überschreiten der Sperrzeit',
@@ -750,7 +740,6 @@ sub Data {
         'Ticket limit per page for Ticket Overview "Preview"' => 'Maximale Anzahl Tickets pro Seite für Ticketübersicht "Vorschau"',
         'Ticket watch notification' => 'Benachrichtigung über Ticket-Überwachungen',
         'Send me the same notifications for my watched tickets that the ticket owners will get.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Für meine überwachten Tickets die gleiche Nachricht, die die Bearbeiter eines Tickets erhalten, an mich senden.',
         'Send ticket watch notifications' => 'Benachrichtigung über Ticket-Überwachungen senden',
         'Out Of Office Time' => 'Abwesenheitszeit',
@@ -865,14 +854,11 @@ sub Data {
         'You can use the following tags' => 'Die folgenden Tags können benutzt werden',
         'To get the first 20 character of the subject.' => 'Die ersten 20 Zeichen des Betreffs',
         'To get the first 5 lines of the email.' => 'Die ersten fünf Zeilen der Nachricht',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'To get the realname of the ticket\'s contact (if given).' =>
             'Der Name des Ticket-Ansprechpartners (wenn angegeben).',
         'To get the article attribute' => 'Die Artikel-Attribute',
         ' e. g.' => 'z. B.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Options of the current contact data' => 'Attribute des aktuellen Ansprechpartner',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Ticket owner options' => 'Attribute des Ticket-Bearbeiters',
         'Ticket responsible options' => 'Attribute des Ticket-Verantwortlichen',
         'Options of the current user who requested this action' => 'Attribute des aktuellen Benutzers, der die Aktion angefordert hat',
@@ -894,14 +880,10 @@ sub Data {
         'Add Customer' => 'Kunden hinzufügen',
 
         # Template: AdminCustomerUser
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact Management' => 'Ansprechpartnerverwaltung',
         'Back to search results' => 'Zurück zum Suchergebnis',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Add contact'  => 'Ansprechpartner hinzufügen',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Edit contact' => 'Ansprechpartner bearbeiten',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact are needed to have a customer history and to login via customer panel.' =>
             'Ansprechpartner werden für die Bereitstellung einer Kundenhistorie und für die Anmeldung über den Kundenzugang benötigt.',
         'Last Login' => 'Letzte Anmeldung',
@@ -915,6 +897,7 @@ sub Data {
         'DNS problem, please check your configuration and the error log.' =>
             'DNS-Problem, bitte prüfen Sie ihre Konfiguration und das Fehlerprotokoll.',
         'The syntax of this email address is incorrect.' => 'Die Syntax dieser E-Mail-Adresse ist fehlerhaft.',
+        'The email address you entered already exists.'  => 'Die von Ihnen eingegebene E-Mail-Adresse existiert bereits.',
 
         # Template: AdminCustomerUserGroup
         'Manage Customer-Group Relations' => 'Kunden-Gruppen-Zuordnung verwalten',
@@ -1108,7 +1091,6 @@ sub Data {
         'Select Tickets' => 'Tickets selektieren',
         '(e. g. 10*5155 or 105658*)' => '(z .B. 10*5155 oder 105658*)',
         '(e. g. 234321)' => '(z. B. 234321)',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact' => 'Ansprechpartner',
         '(e. g. U5150)' => '(z. B. U5150)',
         'Fulltext-search in article (e. g. "Mar*in" or "Baue*").' => 'Volltextsuche in Artikeln (z. B. "Mar*in" oder "Baue*").',
@@ -1156,11 +1138,9 @@ sub Data {
         'Set new state' => 'Neuen Status setzen',
         'Pending date' => 'Warten bis',
         'Set new agent' => 'Neuen Agenten setzen',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'new owner' => 'Neuer Bearbeiter',
         'new responsible' => 'Neuer Verantwortlicher',
         'Set new ticket lock' => 'Neue Ticketsperre setzen',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'New contact' => 'Neuer Ansprechpartner',
         'New customer ID' => 'Neue Kundennummer',
         'New title' => 'Neuer Titel',
@@ -1232,10 +1212,10 @@ sub Data {
             'Dieses Invoker-Backend-Modul wird aufgerufen, um die Daten zum Versand an das entfernte System sowie die zurückgelieferten Daten aufzubereiten.',
         'Mapping for outgoing request data' => 'Mapping für ausgehende Anfragedaten',
         'Configure' => 'Konfigurieren',
-        'The data from the invoker of OTRS will be processed by this mapping, to transform it to the kind of data the remote system expects.' =>
+        'The data from the invoker of KIX will be processed by this mapping, to transform it to the kind of data the remote system expects.' =>
             'Die Daten des Invokers von OTRS werden von diesem Mapping verarbeitet, um sie so umzuformen, wie das entfernte System die Daten benötigt.',
         'Mapping for incoming response data' => 'Mapping für eingehende Antwortdaten',
-        'The response data will be processed by this mapping, to transform it to the kind of data the invoker of OTRS expects.' =>
+        'The response data will be processed by this mapping, to transform it to the kind of data the invoker of KIX expects.' =>
             'Die Antwort-Daten des entfernten Systems werden von diesem Mapping verarbeitet, um sie so umzuformen, wie der Invoker von OTRS sie benötigt.',
         'Asynchronous' => 'Asynchron',
         'This invoker will be triggered by the configured events.' => 'Dieser Invoker wird von den konfigurierten Events ausgelöst.',
@@ -1290,7 +1270,7 @@ sub Data {
         'Please provide a unique name for this web service.' => 'Bitte geben Sie einen eindeutigen Namen für diesen Webservice an.',
         'Mapping for incoming request data' => 'Mapping für eingehende Anfragedaten',
         'The request data will be processed by this mapping, to transform it to the kind of data OTRS expects.' =>
-            'Die Daten der eingehenden Anfrage werden von diesem Mapping verarbeitet, um sie so umzuformen, wie die OTRS-Operation sie benötigt.',
+            'Die Daten der eingehenden Anfrage werden von diesem Mapping verarbeitet, um sie so umzuformen, wie die KIX-Operation sie benötigt.',
         'Operation backend' => 'Operation-Backend',
         'This OTRS operation backend module will be called internally to process the request, generating data for the response.' =>
             'Das Operation-Backend-Modul wird intern aufgerufen um die Anfrage zu verarbeiten, und erzeugt dabei Antwortdaten.',
@@ -1337,14 +1317,14 @@ sub Data {
         'Show or hide SSL options to connect to the remote system.' => 'Optionen für die Verwendung von SSL zum Zugriff auf das entfernte System anzeigen oder verbergen.',
         'Certificate File' => 'Zertifikatsdatei',
         'The full path and name of the SSL certificate file.' => 'Der vollständige Pfad und Name der SSL-Zertifikats-Datei.',
-        'e.g. /opt/otrs/var/certificates/REST/ssl.crt' => 'Zum Beispiel: /opt/otrs/var/certificates/REST/ssl.crt',
+        'e.g. /opt/kix/var/certificates/REST/ssl.crt' => 'Zum Beispiel: /opt/kix/var/certificates/REST/ssl.crt',
         'Certificate Password File' => 'Passwortdatei für Zertifikat',
         'The full path and name of the SSL key file.' => 'Der vollständige Pfad und Name der SSL-Schlüsseldatei.',
-        'e.g. /opt/otrs/var/certificates/REST/ssl.key' => 'Zum Beispiel: /opt/otrs/var/certificates/REST/ssl.key',
+        'e.g. /opt/kix/var/certificates/REST/ssl.key' => 'Zum Beispiel: /opt/kix/var/certificates/REST/ssl.key',
         'Certification Authority (CA) File' => 'Datei der Certification Authority (CA)',
         'The full path and name of the certification authority certificate file that validates the SSL certificate.' =>
             'Der vollständige Pfad und Name der Zertifizierungsstellen-Zertifikatsdatei, die das SSL-Zertifikat bestätigt.',
-        'e.g. /opt/otrs/var/certificates/REST/CA/ca.file' => 'Zum Beispiel: /opt/otrs/var/certificates/REST/CA/ca.file',
+        'e.g. /opt/kix/var/certificates/REST/CA/ca.file' => 'Zum Beispiel: /opt/kix/var/certificates/REST/CA/ca.file',
 
         # Template: AdminGenericInterfaceTransportHTTPSOAP
         'GenericInterface Transport HTTP::SOAP for Web Service %s' => 'GenericInterface Transport HTTP::SOAP für Webservice %s',
@@ -1354,8 +1334,6 @@ sub Data {
         'e.g. http://local.otrs.com:8000/Webservice/Example' => 'z. B. http://local.otrs.com:8000/Webservice/Example',
         'Namespace' => 'Namespace',
         'URI to give SOAP methods a context, reducing ambiguities.' => 'URI, die SOAP-Methoden einen Kontext gibt und damit Mehrdeutigkeiten auflöst.',
-        'e.g urn:otrs-com:soap:functions or http://www.otrs.com/GenericInterface/actions' =>
-            'z. B. urn:otrs-com:soap:functions oder http://www.otrs.com/GenericInterface/actions',
         'Request name scheme' => 'Anfragen-Namensschema',
         'Select how SOAP request function wrapper should be constructed.' =>
             'Wählen Sie, wie der SOAP-Funktionsaufruf konstruiert werden soll.',
@@ -1392,15 +1370,15 @@ sub Data {
         'The password for the proxy user.' => 'Passwort des Proxy-Benutzers.',
         'The full path and name of the SSL certificate file (must be in .p12 format).' =>
             'Voller Pfad und Dateiname des SSL-Zertifikats (muss im .p12-Format vorliegen).',
-        'e.g. /opt/otrs/var/certificates/SOAP/certificate.p12' => 'z. B. /opt/otrs/var/certificates/SOAP/certificate.p12',
+        'e.g. /opt/kix/var/certificates/SOAP/certificate.p12' => 'z. B. /opt/kix/var/certificates/SOAP/certificate.p12',
         'The password to open the SSL certificate.' => 'Das Passwort für den Zugriff auf das SSL-Zertifikat.',
         'The full path and name of the certification authority certificate file that validates SSL certificate.' =>
             'Voller Pfad und Dateiname der Datei der Certification Authority (CA), welche das Zertifikat signiert hat.',
-        'e.g. /opt/otrs/var/certificates/SOAP/CA/ca.pem' => 'z. B. /opt/otrs/var/certificates/SOAP/CA/ca.pem',
+        'e.g. /opt/kix/var/certificates/SOAP/CA/ca.pem' => 'z. B. /opt/kix/var/certificates/SOAP/CA/ca.pem',
         'Certification Authority (CA) Directory' => 'Verzeichnis mit Certification Autorities (CA)',
         'The full path of the certification authority directory where the CA certificates are stored in the file system.' =>
             'Voller Pfad und Dateiname des CA-Verzeichnisses, in dem CA-Zertifikate gespeichert sind.',
-        'e.g. /opt/otrs/var/certificates/SOAP/CA' => 'z. B. /opt/otrs/var/certificates/SOAP/CA',
+        'e.g. /opt/kix/var/certificates/SOAP/CA' => 'z. B. /opt/kix/var/certificates/SOAP/CA',
         'Sort options' => 'Sortierungsoptionen',
         'Add new first level element' => 'Neues Element auf der obersten Ebene hinzufügen',
         'Element' => 'Element',
@@ -1590,9 +1568,7 @@ sub Data {
             'Die ersten 20 Zeichen des Betreffs (des letzten Kunden-Artikels)',
         'To get the first 5 lines of the body (of the latest customer article).' =>
             'Die ersten fünf Zeilen der Nachricht (des letzten Kunden-Artikels).',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Attributes of the current contact data' => 'Attribute des aktuellen Ansprechpartner-Datensatzes',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Attributes of the current ticket owner user data' => 'Attribute der Nutzerdaten des aktuellen Ticket-Bearbeiters',
         'Attributes of the current ticket responsible user data' => 'Attribute der Nutzerdaten des aktuellen Ticket-Verantwortlichem',
         'Attributes of the current agent user who requested this action' =>
@@ -1620,7 +1596,7 @@ sub Data {
         # Template: AdminPGP
         'PGP Management' => 'PGP-Verwaltung',
         'PGP support is disabled' => 'Unterstützung für PGP ist deaktiviert',
-        'To be able to use PGP in OTRS, you have to enable it first.' => 'Um PGP in OTRS verwenden zu können, müssen Sie es zuerst aktivieren.',
+        'To be able to use PGP in KIX, you have to enable it first.' => 'Um PGP in KIX verwenden zu können, müssen Sie es zuerst aktivieren.',
         'Enable PGP support' => 'PGP-Unterstützung aktivieren',
         'Faulty PGP configuration' => 'Fehlerhafte PGP-Konfiguration',
         'PGP support is enabled, but the relevant configuration contains errors. Please check the configuration using the button below.' =>
@@ -1660,7 +1636,6 @@ sub Data {
         'Module documentation' => 'Moduldokumentation',
         'Upgrade' => 'Upgrade',
         'Local Repository' => 'Lokales Verzeichnis',
-        'This package is verified by OTRSverify (tm)' => 'Dieses Paket wurde von OTRSVerify (tm) geprüft',
         'Uninstall' => 'Deinstallieren',
         'Reinstall' => 'Erneut installieren',
         'Features for %s customers only' => 'Exklusiv: Features für %s Kunden',
@@ -1783,9 +1758,7 @@ sub Data {
         # Template: AdminProcessManagementActivityDialog
         'Please note that changing this activity dialog will affect the following activities' =>
             'Veränderungen an diesem Aktivitäts-Dialog werden sich auf folgende Aktivitäten auswirken',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Please note that contacts will not be able to see or use the following fields: Owner, Responsible, Lock, PendingTime and CustomerID.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bitte beachten Sie, dass Ansprechpartner die folgenden Felder nicht sehen oder benutzen können: Bearbeiter (Owner), Verantwortlicher (Responsible), Sperre (Lock), Warten bis (PendingTime) und Kundennummer (CustomerID).',
         'The Queue field can only be used by customers when creating a new ticket.' =>
             'Das Queue-Feld kann nur von Kunden ausgewählt werden, wenn diese ein neues Ticket erstellen.',
@@ -1955,7 +1928,6 @@ sub Data {
             'Gibt an, ob eine Rückmeldung zu einem geschlossenen Ticket diese Ticket erneut öffnet, abgelehnt wird oder zu einem neuen Ticket führt.',
         'Ticket lock after a follow up' => 'Ticket sperren nach einer Rückmeldung',
         'If a ticket is closed and the customer sends a follow up the ticket will be locked to the old owner.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Wenn ein Ticket geschlossen wird und der Kunde eine Rückmeldung schickt, wird es für den letzten Bearbeiter gesperrt.',
         'System address' => 'Systemadresse',
         'Will be the sender address of this queue for email answers.' => 'Absenderadresse für E-Mails aus dieser Queue.',
@@ -1987,45 +1959,45 @@ sub Data {
         'Show transmitted data' => 'Übertragene Daten anzeigen',
         'Deregister system' => 'System deregistrieren',
         'Overview of registered systems' => 'Übersicht der registrieren Systeme',
-        'This system is registered with OTRS Group.' => 'Dieses System ist bei der OTRS Gruppe registriert.',
+        'This system is registered with KIX Group.' => 'Dieses System ist bei der KIX Gruppe registriert.',
         'System type' => 'System Typ',
         'Unique ID' => 'Unique ID',
         'Last communication with registration server' => 'Letzte Kommunikation mit dem Registrierungsserver',
         'System registration not possible' => 'Systemregistrierung nicht möglich',
-        'Please note that you can\'t register your system if OTRS Daemon is not running correctly!' =>
-            'Bitte beachten Sie, dass Sie ihr System nicht registrieren können, wenn der OTRS Daemon nicht läuft!',
+        'Please note that you can\'t register your system if KIX Daemon is not running correctly!' =>
+            'Bitte beachten Sie, dass Sie ihr System nicht registrieren können, wenn der KIX Daemon nicht läuft!',
         'Instructions' => 'Anweisungen',
         'System deregistration not possible' => 'Deregistrierung des Systems nicht möglich',
         'Please note that you can\'t deregister your system if you\'re using the %s or having a valid service contract.' =>
             'Sie können dieses System nicht deregistrieren wenn Sie %s einsetzen oder einen gültigen Servicevertrag besitzen.',
-        'OTRS-ID Login' => 'OTRS-ID Login',
+        'KIX-ID Login' => 'KIX-ID Login',
         'Read more' => 'Mehr erfahren',
-        'You need to log in with your OTRS-ID to register your system.' =>
-            'Um Ihr System zu registrieren, loggen Sie sich bitte mit Ihrer OTRS-ID ein.',
-        'Your OTRS-ID is the email address you used to sign up on the OTRS.com webpage.' =>
+        'You need to log in with your KIX-ID to register your system.' =>
+            'Um Ihr System zu registrieren, loggen Sie sich bitte mit Ihrer KIX-ID ein.',
+        'Your KIX-ID is the email address you used to sign up on the OTRS.com webpage.' =>
             'Verwenden Sie dazu die E-Mail-Adresse, mit der Sie sich auf der OTRS Webseite angemeldet haben.',
         'Data Protection' => 'Datenschutz',
         'What are the advantages of system registration?' => 'Welche Vorteile bietet die Systemregistrierung?',
         'You will receive updates about relevant security releases.' => 'Bei sicherheitsrelevanten Releases werden Sie benachrichtigt.',
         'With your system registration we can improve our services for you, because we have all relevant information available.' =>
-            'Die Registrierung Ihres Systems ermöglicht es der OTRS Gruppe, Sie schneller und effizienter zu betreuen, weil uns wichtige Informationen über Ihr System bereits vorliegen, die ein mehrmaliges Nachfragen unnötig machen.',
+            'Die Registrierung Ihres Systems ermöglicht es der KIX Gruppe, Sie schneller und effizienter zu betreuen, weil uns wichtige Informationen über Ihr System bereits vorliegen, die ein mehrmaliges Nachfragen unnötig machen.',
         'This is only the beginning!' => 'Und das ist erst der Anfang!',
         'We will inform you about our new services and offerings soon.' =>
             'Seien Sie gespannt auf weitere Möglichkeiten, die wir Ihnen vorstellen werden.',
-        'Can I use OTRS without being registered?' => 'Kann ich OTRS auch ohne Registrierung nutzen?',
+        'Can I use KIX without being registered?' => 'Kann ich KIX auch ohne Registrierung nutzen?',
         'System registration is optional.' => 'Die Systemregistrierung ist optional.',
-        'You can download and use OTRS without being registered.' => 'Sie können OTRS auch ohne Registrierung im vollen Umfang downloaden und nutzen.',
+        'You can download and use KIX without being registered.' => 'Sie können KIX auch ohne Registrierung im vollen Umfang downloaden und nutzen.',
         'Is it possible to deregister?' => 'Kann ich meine Registrierung rückgängig machen?',
         'You can deregister at any time.' => 'Sie können Ihr System jederzeit deregistrieren.',
         'Which data is transfered when registering?' => 'Welche Daten werden bei der Registrierung übertragen?',
-        'A registered system sends the following data to OTRS Group:' => 'Ein registriertes System überträgt folgende Daten an die OTRS Gruppe:',
-        'Fully Qualified Domain Name (FQDN), OTRS version, Database, Operating System and Perl version.' =>
-            'Fully Qualified Domain Name (FQDN), OTRS Version, Datenbank, Betriebssystem und Perl Version.',
+        'A registered system sends the following data to KIX Group:' => 'Ein registriertes System überträgt folgende Daten an die KIX Gruppe:',
+        'Fully Qualified Domain Name (FQDN), KIX version, Database, Operating System and Perl version.' =>
+            'Fully Qualified Domain Name (FQDN), KIX Version, Datenbank, Betriebssystem und Perl Version.',
         'Why do I have to provide a description for my system?' => 'Warum muss das System beschrieben werden?',
         'The description of the system is optional.' => 'Die Beschreibung des Systems ist optional.',
         'The description and system type you specify help you to identify and manage the details of your registered systems.' =>
             'Der Systemtyp und die Beschreibung hilft Ihnen, Ihre Systeme zu identifizieren und die Systemregistrierung zu verwalten.',
-        'How often does my OTRS system send updates?' => 'Wie oft sendet mein OTRS Updates?',
+        'How often does my KIX system send updates?' => 'Wie oft sendet mein KIX Updates?',
         'Your system will send updates to the registration server at regular intervals.' =>
             'Ihr System sendet in regelmäßigen Abständen Updates an den Registrierungsserver.',
         'Typically this would be around once every three days.' => 'In der Regel findet eine Übertragung an jedem dritten Tag statt.',
@@ -2036,25 +2008,25 @@ sub Data {
         'and file a request.' => 'um eine Anfrage zu stellen.',
         'If you deregister your system, you will lose these benefits:' =>
             'Wenn Sie ihre Systemregistrierung löschen, verlieren Sie folgende Vorteile:',
-        'You need to log in with your OTRS-ID to deregister your system.' =>
-            'Um Ihr System zu deregistrieren, loggen Sie sich bitte mit Ihrer OTRS-ID ein.',
-        'OTRS-ID' => 'OTRS-ID',
-        'You don\'t have an OTRS-ID yet?' => 'Sie haben noch keine OTRS-ID?',
+        'You need to log in with your KIX-ID to deregister your system.' =>
+            'Um Ihr System zu deregistrieren, loggen Sie sich bitte mit Ihrer KIX-ID ein.',
+        'KIX-ID' => 'KIX-ID',
+        'You don\'t have an KIX-ID yet?' => 'Sie haben noch keine KIX-ID?',
         'Sign up now' => 'Registrieren Sie sich jetzt',
         'Forgot your password?' => 'Passwort vergessen?',
         'Retrieve a new one' => 'Neues anfordern',
-        'This data will be frequently transferred to OTRS Group when you register this system.' =>
-            'Wenn Sie dieses System registrieren, werden folgende Daten in regelmäßigen Abständen an die OTRS Gruppe übertragen.',
+        'This data will be frequently transferred to KIX Group when you register this system.' =>
+            'Wenn Sie dieses System registrieren, werden folgende Daten in regelmäßigen Abständen an die KIX Gruppe übertragen.',
         'Attribute' => 'Attribut',
         'FQDN' => 'FQDN',
-        'OTRS Version' => 'OTRS-Version',
+        'KIX Version' => 'KIX-Version',
         'Operating System' => 'Betriebssystem',
         'Perl Version' => 'Perl Version',
         'Optional description of this system.' => 'Optionale Beschreibung für dieses System.',
         'Register' => 'Registrieren',
         'Deregister System' => 'System deregistrieren',
-        'Continuing with this step will deregister the system from OTRS Group.' =>
-            'Wenn Sie fortfahren, wird dieses System bei der OTRS Gruppe deregistriert.',
+        'Continuing with this step will deregister the system from KIX Group.' =>
+            'Wenn Sie fortfahren, wird dieses System bei der KIX Gruppe deregistriert.',
         'Deregister' => 'Deregistrieren',
         'You can modify registration settings here.' => 'Sie können ihre Registrierungseinstellungen hier bearbeiten.',
         'Overview of transmitted data' => 'Übersicht der übertragenen Daten',
@@ -2092,10 +2064,8 @@ sub Data {
         'Permissions to create tickets in this group/queue.' => 'Rechte, um in einer Gruppe/Queue Tickets zu erstellen.',
         'note' => 'Notiz',
         'Permissions to add notes to tickets in this group/queue.' => 'Berechtigung zum Hinzufügen von Notizen zu Tickets dieser Gruppe/Queue.',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'owner' => 'Bearbeiter',
         'Permissions to change the owner of tickets in this group/queue.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Berechtigung zum Ändern des Bearbeiters von Tickets dieser Gruppe/Queue.',
         'priority' => 'Priorität',
         'Permissions to change the ticket priority in this group/queue.' =>
@@ -2119,8 +2089,8 @@ sub Data {
         # Template: AdminSMIME
         'S/MIME Management' => 'S/MIME-Verwaltung',
         'SMIME support is disabled' => 'SMIME-Unterstützung ist deaktiviert',
-        'To be able to use SMIME in OTRS, you have to enable it first.' =>
-            'Um SMIME in OTRS zu verwenden, müssen Sie es zunächst aktivieren.',
+        'To be able to use SMIME in KIX, you have to enable it first.' =>
+            'Um SMIME in KIX zu verwenden, müssen Sie es zunächst aktivieren.',
         'Enable SMIME support' => 'SMIME-Unterstützung aktivieren',
         'Faulty SMIME configuration' => 'Fehlerhafte SMIME-Konfiguration',
         'SMIME support is enabled, but the relevant configuration contains errors. Please check the configuration using the button below.' =>
@@ -2220,10 +2190,10 @@ sub Data {
         'State type' => 'Status-Typ',
 
         # Template: AdminSupportDataCollector
-        'Sending support data to OTRS Group is not possible!' => 'Das Senden von Support-Daten an die OTRS-Gruppe ist nicht möglich!',
+        'Sending support data to KIX Group is not possible!' => 'Das Senden von Support-Daten an die KIX-Gruppe ist nicht möglich!',
         'Enable Cloud Services' => 'Cloud-Services aktivieren',
-        'This data is sent to OTRS Group on a regular basis. To stop sending this data please update your system registration.' =>
-            'Diese Daten werden regelmäßig an die OTRS Gruppe gesendet. Falls Sie das Senden der Daten beenden möchten, aktualisieren Sie bitte ihre Systemregistrierung.',
+        'This data is sent to KIX Group on a regular basis. To stop sending this data please update your system registration.' =>
+            'Diese Daten werden regelmäßig an die KIX Gruppe gesendet. Falls Sie das Senden der Daten beenden möchten, aktualisieren Sie bitte ihre Systemregistrierung.',
         'You can manually trigger the Support Data sending by pressing this button:' =>
             'Sie können den Versand der Supportdaten manuell auslösen, indem Sie diesen Knopf verwenden:',
         'Send Update' => 'Update senden',
@@ -2248,11 +2218,9 @@ sub Data {
         'The email address for this user is invalid, this option has been disabled.' =>
             'Die E-Mailadresse für diesen Benutzer ist ungültig, Die Auswahl wurde deaktivert.',
         'Sending' => 'Wird gesendet',
-        #rbo - T2016121190001552 - replaced text
         'The support bundle will be sent to the c.a.p.e. IT GmbH Support via email automatically' =>
             'Das Supportpaket wird automatisch per E-Mail an den Support der c.a.p.e. IT GmbH gesendet.',
         'Download File' => 'Datei herunterladen',
-        #rbo - T2016121190001552 - replaced text
         'A file containing the support bundle will be downloaded to the local system. Please save the file and send it to the c.a.p.e. IT GmbH Support, using an alternate method.' =>
             'Das Supportpaket wird als Datei ins lokale Dateisystem heruntergeladen. Bitte speichern Sie die Datei und senden Sie diese auf anderen Wegen an den Support der c.a.p.e. IT GmbH.',
         'Error: Support data could not be collected (%s).' => 'Fehler: Supportdaten konnten nicht ermittelt werden (%s).',
@@ -2409,7 +2377,6 @@ sub Data {
         'Customer Information Center' => 'Kunden-Informationszentrum',
 
         # Template: AgentCustomerInformationCenterSearch
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact' => 'Ansprechpartner',
 
         # Template: AgentCustomerSearch
@@ -2419,22 +2386,19 @@ sub Data {
 
         # Template: AgentCustomerTableView
         'Note: Customer is invalid!' => 'Hinweis: Kunde ist ungültig!',
-        'Start chat' => 'Chat starten',
-        'Video call' => 'Video-Anruf',
-        'Audio call' => 'Audio-Anruf',
 
         # Template: AgentDaemonInfo
-        'The OTRS Daemon is a daemon process that performs asynchronous tasks, e.g. ticket escalation triggering, email sending, etc.' =>
-            'Der OTRS Daemon ist ein Daemon-Prozess, welcher asynchrone Aufgaben übernimmt, z.B. das Auslösen von Ticket-Eskalationen oder das Versenden von E-Mails.',
-        'A running OTRS Daemon is mandatory for correct system operation.' =>
-            'Ein laufender OTRS Daemon ist für die korrekte Funktion des Systems erforderlich.',
-        'Starting the OTRS Daemon' => 'Den OTRS Daemon starten',
-        'Make sure that the file \'%s\' exists (without .dist extension). This cron job will check every 5 minutes if the OTRS Daemon is running and start it if needed.' =>
-            'Stellen Sie sicher, dass die Datei \'%s\' existiert (ohne die Endung .dist). Dieser Cronjob wird alle 5 Minuten prüfen, ob der OTRS Daemon läuft, und ihn ggf. starten.',
-        'Execute \'%s start\' to make sure the cron jobs of the \'otrs\' user are active.' =>
-            'Führen Sie \'%s start\' aus um sicherzustellen, dass die Cronjobs des \'otrs\'-Nutzers aktiv sind.',
-        'After 5 minutes, check that the OTRS Daemon is running in the system (\'bin/otrs.Daemon.pl status\').' =>
-            'Prüfen Sie nach 5 Minuten, ob der OTRS Daemon läuft  (\'bin/otrs.Daemon.pl status\').',
+        'The KIX Daemon is a daemon process that performs asynchronous tasks, e.g. ticket escalation triggering, email sending, etc.' =>
+            'Der KIX Daemon ist ein Daemon-Prozess, welcher asynchrone Aufgaben übernimmt, z.B. das Auslösen von Ticket-Eskalationen oder das Versenden von E-Mails.',
+        'A running KIX Daemon is mandatory for correct system operation.' =>
+            'Ein laufender KIX Daemon ist für die korrekte Funktion des Systems erforderlich.',
+        'Starting the KIX Daemon' => 'Den KIX Daemon starten',
+        'Make sure that the file \'%s\' exists (without .dist extension). This cron job will check every 5 minutes if the KIX Daemon is running and start it if needed.' =>
+            'Stellen Sie sicher, dass die Datei \'%s\' existiert (ohne die Endung .dist). Dieser Cronjob wird alle 5 Minuten prüfen, ob der KIX Daemon läuft, und ihn ggf. starten.',
+        'Execute \'%s start\' to make sure the cron jobs of the \'kix\' user are active.' =>
+            'Führen Sie \'%s start\' aus um sicherzustellen, dass die Cronjobs des \'kix\'-Nutzers aktiv sind.',
+        'After 5 minutes, check that the KIX Daemon is running in the system (\'bin/kix.Daemon.pl status\').' =>
+            'Prüfen Sie nach 5 Minuten, ob der KIX Daemon läuft  (\'bin/kix.Daemon.pl status\').',
 
         # Template: AgentDashboard
         'Dashboard' => 'Übersicht',
@@ -2451,7 +2415,6 @@ sub Data {
         'Escalated tickets' => 'Eskalierte Tickets',
 
         # Template: AgentDashboardCustomerUserList
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact information' => 'Ansprechpartner-Information',
         'Phone ticket' => 'Telefon-Ticket',
         'Email ticket' => 'E-Mail-Ticket',
@@ -2579,7 +2542,6 @@ sub Data {
 
         # Template: AgentTicketActionCommon
         'Change Free Text of %s%s%s' => 'Den Freitext von %s%s%s ändern',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Change Owner of %s%s%s' => 'Bearbeiter von %s%s%s wechseln',
         'Close %s%s%s' => '%s%s%s schließen',
         'Add Note to %s%s%s' => 'Notiz zu %s%s%s hinzufügen',
@@ -2588,9 +2550,7 @@ sub Data {
         'Change Responsible of %s%s%s' => 'Verantwortlichen von %s%s%s ändern',
         'All fields marked with an asterisk (*) are mandatory.' => 'Alle mit * gekennzeichneten Felder sind Pflichtfelder.',
         'Service invalid.' => 'Ungültiger Service',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'New Owner' => 'Neuer Bearbeiter',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Please set a new owner!' => 'Bitte einen neuen Bearbeiter angeben',
         'New Responsible' => 'Wechsel des Verantwortlichen',
         'Next state' => 'Nächster Status',
@@ -2648,12 +2608,9 @@ sub Data {
         'Create New Email Ticket' => 'Neues E-Mail-Ticket anlegen',
         'Example Template' => 'Beispielvorlage',
         'From queue' => 'Aus Queue',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'To contact' => 'An Ansprechpartner',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Please include at least one contact for the ticket.' => 'Bitte tragen Sie wenigstens einen Ansprechpartner für das Ticket ein',
         'Select this customer as the main customer.' => 'Diesen Kunden als Hauptkunden auswählen.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Remove Ticket contact' => 'Ansprechpartner des Tickets entfernen',
         'Get all' => 'Alles holen',
 
@@ -2709,12 +2666,9 @@ sub Data {
 
         # Template: AgentTicketPhone
         'Split Into New Phone Ticket' => 'In ein neues Telefonticket splitten',
-        'Save Chat Into New Phone Ticket' => 'Chat als neues Telefonticket speichern',
         'Create New Phone Ticket' => 'Neues Telefon-Ticket anlegen',
         'Please include at least one customer for the ticket.' => 'Bitte geben Sie mindestens einen Kunden für das Ticket an.',
         'To queue' => 'An Queue',
-        'Chat protocol' => 'Chat Protokoll',
-        'The chat will be appended as a separate article.' => 'Der Chat wird als separater Artikel angefügt.',
 
         # Template: AgentTicketPhoneCommon
         'Phone Call for %s%s%s' => 'Anruf für %s%s%s',
@@ -2747,9 +2701,7 @@ sub Data {
             'Sucht in den Attributen Von, Cc, Betreff, Artikelinhalt und überschreibt Attribute mit dem selben Namen.',
         'CustomerID (complex search)' => 'Kundennummer (komplexe Suche)',
         'CustomerID (exact match)' => 'Kundennummer (genaue Übereinstimmung)',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact login (complex search)' => 'Ansprechpartner (komplexe Suche)',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact login (exact match)' => 'Ansprechpartner (genaue Übereinstimmung)',
         'Attachment Name' => 'Name der Anlage',
         '(e. g. m*file or myfi*)' => '(z.B. m*file oder myfi*)',
@@ -2789,7 +2741,6 @@ sub Data {
         'There are no dialogs available at this point in the process.' =>
             'Für diesen Prozess stehen derzeit keine Dialoge zur Verfügung.',
         'This item has no articles yet.' => 'Dieser Eintrag hat noch keine Artikel',
-        'Ticket Timeline View' => 'Ansicht des Ticket-Verlaufs',
         'Article Overview' => 'Artikelübersicht',
         'Article(s)' => 'Beitrag/Beiträge',
         'Page' => 'Seite',
@@ -2798,7 +2749,6 @@ sub Data {
         'Reset Filter' => 'Filter zurücksetzen',
         'Show one article' => 'Einen Beitrag anzeigen',
         'Show all articles' => 'Alle Beiträge anzeigen',
-        'Show Ticket Timeline View' => 'Ticket-Verlauf-Ansicht anzeigen',
         'Unread articles' => 'Ungelesene Beiträge',
         'No.' => 'Nr.',
         'Important' => 'Wichtig',
@@ -2827,9 +2777,6 @@ sub Data {
         # Template: AttachmentBlocker
         'To protect your privacy, remote content was blocked.' => 'Zum Schutz Ihrer Privatsphäre wurden entfernte Inhalte blockiert.',
         'Load blocked content.' => 'Blockierte Inhalte laden.',
-
-        # Template: ChatStartForm
-        'First message' => 'Erste Nachricht',
 
         # Template: CustomerError
         'An Error Occurred' => 'Ein Fehler ist aufgetreten',
@@ -2864,7 +2811,6 @@ sub Data {
         'and %s more...' => 'und %s weitere...',
         'Filters' => 'Filter',
         'Confirm' => 'Bestätigen',
-        'You have unanswered chat requests' => 'Sie haben unbeantwortete Chatanfragen',
         'Accept' => 'Annehmen',
         'Decline' => 'Ablehnen',
         'An internal error occurred.' => 'Ein interner Fehler ist aufgetreten.',
@@ -2895,7 +2841,6 @@ sub Data {
         'Your email address (this will become your username)' => 'Ihre E-Mail-Adresse (das wird Ihr Benutzername)',
 
         # Template: CustomerNavigationBar
-        'Incoming Chat Requests' => 'Eingehende Chatanfragen',
         'Edit personal preferences' => 'Persönliche Einstellungen vornehmen',
         'Logout %s %s' => '%s %s abmelden',
 
@@ -2940,12 +2885,10 @@ sub Data {
         'Remove this Search Term.' => 'Entferne diesen Suchbegriff',
 
         # Template: CustomerTicketZoom
-        'Start a chat from this ticket' => 'Von diesem Ticket aus einen Chat starten',
         'Expand article' => 'Artikel aufklappen',
         'Information' => 'Information',
         'Next Steps' => 'Nächste Schritte',
         'Reply' => 'Antworten',
-        'Chat Protocol' => 'Chatprotokoll',
 
         # Template: DashboardEventsTicketCalendar
         'All-day' => 'Ganztägig',
@@ -2975,7 +2918,7 @@ sub Data {
 
         # Template: Error
         'An error occurred.' => 'Ein Fehler ist aufgetreten.',
-        'Really a bug? 5 out of 10 bug reports result from a wrong or incomplete installation of OTRS.' =>
+        'Really a bug? 5 out of 10 bug reports result from a wrong or incomplete installation of KIX.' =>
             'Wirklich ein Bug? 5 von 10 Bugmeldungen resultieren aus einer falschen oder unvollständigen Installation von OTRS.',
         'With %s, our experts take care of correct installation and cover your back with support and periodic security updates.' =>
             'Mit der %s übernehmen unsere Experten die korrekte Installation und halten Ihnen mit Support und regelmäßigen Sicherheitsupdates den Rücken frei.',
@@ -2990,22 +2933,10 @@ sub Data {
         'Please check the fields marked as red for valid inputs.' => 'Bitte prüfen Sie die rot markierten Felder auf gültige Eingaben.',
         'Please perform a spell check on the the text first.' => 'Bitte führen Sie zuerst eine Rechtschreibprüfung aus.',
         'Slide the navigation bar' => 'Verschieben Sie die Navigationsleiste',
-        'Unavailable for chat' => 'Nicht für den Chat verfügbar',
-        'Available for internal chats only' => 'Nur für interne Chats verfügbar',
-        'Available for chats' => 'Verfügbar für Chats',
-        'Please visit the chat manager' => 'Bitte rufen Sie den Chat-Manager auf',
-        'New personal chat request' => 'Neue persönliche Chatanfrage',
         'New customer chat request' => 'Neue Kundenchatanfrage',
-        'New public chat request' => 'Neue öffentliche Chatanfrage',
-        'Selected user is not available for chat.' => 'Der ausgewählte Nutzer ist nicht zum Chatten verfügbar.',
         'New activity' => 'Neue Aktivität',
-        'New activity on one of your monitored chats.' => 'Neue Aktivitäten in einem ihrer beobachteten Chats.',
-        'Your browser does not support video and audio calling.' => 'Ihr Browser unterstützt keine Video- und Audio-Anrufe.',
-        'Selected user is not available for video and audio call.' => 'Der ausgewählte Nutzer ist nicht für Video- und Audio-Anrufe verfügbar.',
-        'Target user\'s browser does not support video and audio calling.' =>
-            'Der Browser des anderen Benutzers unterstützt keine Video- und Audio-Anrufe.',
         'Do you really want to continue?' => 'Möchten Sie wirklich fortfahren?',
-        'Information about the OTRS Daemon' => 'Informationen über den OTRS Daemon',
+        'Information about the KIX Daemon' => 'Informationen über den KIX Daemon',
         'This feature is part of the %s.  Please contact us at %s for an upgrade.' =>
             'Diese Funktion ist Teil von %s. Bitte kontaktieren Sie uns unter %s bezüglich eines Upgrades.',
         'Find out more about the %s' => 'Erfahren Sie mehr über die %s',
@@ -3067,7 +2998,7 @@ sub Data {
         'Database User' => 'Datenbankbenutzer',
         'New' => 'Neu',
         'A new database user with limited permissions will be created for this OTRS system.' =>
-            'Ein neuer Datenbank-Benutzer mit beschränkten Rechten wird für dieses OTRS-System erstellt.',
+            'Ein neuer Datenbank-Benutzer mit beschränkten Rechten wird für dieses KIX-System erstellt.',
         'Repeat Password' => 'Passwort wiederholen',
         'Generated password' => 'Generiertes Passwort',
 
@@ -3079,12 +3010,12 @@ sub Data {
         'Port' => 'Port',
 
         # Template: InstallerFinish
-        'To be able to use OTRS you have to enter the following line in your command line (Terminal/Shell) as root.' =>
+        'To be able to use KIX you have to enter the following line in your command line (Terminal/Shell) as root.' =>
             'Um OTRS nutzen zu können, müssen die die folgenden Zeilen als root in die Befehlszeile (Terminal/Shell) eingeben.',
         'Restart your webserver' => 'Starten Sie ihren Webserver neu.',
         'After doing so your OTRS is up and running.' => 'Danach ist OTRS startklar.',
         'Start page' => 'Startseite',
-        'Your OTRS Team' => 'Ihr OTRS-Team',
+        'Your OTRS Team' => 'Ihr KIX-Team',
 
         # Template: InstallerLicense
         'Don\'t accept license' => 'Lizenz _nicht_ akzeptieren',
@@ -3122,7 +3053,7 @@ sub Data {
 
         # Template: MobileNotAvailableWidget
         'Feature not available' => 'Funktion nicht verfügbar',
-        'Sorry, but this feature of OTRS is currently not available for mobile devices. If you\'d like to use it, you can either switch to desktop mode or use your regular desktop device.' =>
+        'Sorry, but this feature of KIX is currently not available for mobile devices. If you\'d like to use it, you can either switch to desktop mode or use your regular desktop device.' =>
             'Entschuldigung, aber dieses Feature von OTRS ist derzeit nicht für Mobilgeräte verfügbar. Bitte wechseln sie in die Desktopansicht oder nutzen sie ein normales Desktopgerät, wenn Sie diese Funktion verwenden möchten.',
 
         # Template: Motd
@@ -3166,7 +3097,7 @@ sub Data {
 
         # Template: PublicDefault
         'Welcome' => 'Willkommen',
-        'This is the default public interface of OTRS! There was no action parameter given.' =>
+        'This is the default public interface of KIX! There was no action parameter given.' =>
             'Dies ist die öffentliche Standard-Benutzerschnittstelle von OTRS. Es wurde kein Action-Parameter übergeben.',
         'You could install a custom public module (via the package manager), for example the FAQ module, which has a public interface.' =>
             'Sie könnten (mithilfe des Paketmanagers) ein eigenes Modul für den öffentlichen Bereich von OTRS installieren, beispielsweise das FAQ-Modul.',
@@ -3256,12 +3187,12 @@ sub Data {
         'Update and extend your system with software packages.' => 'System mit Softwarepaketen aktualisieren und erweitern.',
 
         # Perl Module: Kernel/Modules/AdminACL.pm
-        'ACLs could not be Imported due to a unknown error, please check OTRS logs for more information' =>
-            'ACLs konnten aufgrund eines unbekannten Fehlers nicht importiert werden, bitte prüfen Sie das OTRS-Log für mehr Information.',
+        'ACLs could not be Imported due to a unknown error, please check KIX logs for more information' =>
+            'ACLs konnten aufgrund eines unbekannten Fehlers nicht importiert werden, bitte prüfen Sie das KIX-Log für mehr Information.',
         'The following ACLs have been added successfully: %s' => 'Die folgenden ACLs wurden erfolgreich hinzugefügt: %s',
         'The following ACLs have been updated successfully: %s' => 'Die folgenden ACLs wurden erfolgreich aktualisiert: %s',
         'There where errors adding/updating the following ACLs: %s. Please check the log file for more information.' =>
-            'Beim Hinzufügen/Aktualisieren der folgenden ACLs sind Fehler aufgetreten: %s. Bitte prüfen Sie das OTRS-Log für mehr Informationen.',
+            'Beim Hinzufügen/Aktualisieren der folgenden ACLs sind Fehler aufgetreten: %s. Bitte prüfen Sie das KIX-Log für mehr Informationen.',
         'This field is required' => 'Dieses Feld wird benötigt',
         'There was an error creating the ACL' => 'Es gab einen Fehler beim Erstellen der ACL',
         'Need ACLID!' => 'ACLID benötigt!',
@@ -3369,8 +3300,8 @@ sub Data {
         'Need ExampleWebService!' => 'Benötige ExampleWebService!',
         'Could not read %s!' => 'Konnte %s nicht lesen!',
         'Need a file to import!' => 'Benötige eine zu importierende Datei!',
-        'The imported file has not valid YAML content! Please check OTRS log for details' =>
-            'Die importierte Datei enthält ungültigen YAML-Inhalt. Bitte prüfen Sie das OTRS-Log für mehr Informationen.',
+        'The imported file has not valid YAML content! Please check KIX log for details' =>
+            'Die importierte Datei enthält ungültigen YAML-Inhalt. Bitte prüfen Sie das KIX-Log für mehr Informationen.',
         'Web service "%s" deleted!' => 'Web Service "%s" gelöscht!',
 
         # Perl Module: Kernel/Modules/AdminGenericInterfaceWebserviceHistory.pm
@@ -3384,14 +3315,14 @@ sub Data {
             'Beim Ermitteln der Daten für die Benachrichtigung mit der ID %s ist ein Fehler aufgetreten!',
         'Unknown Notification %s!' => 'Unbekannte Benachrichtigung %s!',
         'There was an error creating the Notification' => 'Beim Erstellen der Benachrichtigung ist ein Fehler aufgetreten',
-        'Notifications could not be Imported due to a unknown error, please check OTRS logs for more information' =>
-            'Benachrichtigungen konnten aufgrund eines unbekannten Fehlers nicht importiert werden. Bitte prüfen Sie das OTRS-Log für mehr Informationen.',
+        'Notifications could not be Imported due to a unknown error, please check KIX logs for more information' =>
+            'Benachrichtigungen konnten aufgrund eines unbekannten Fehlers nicht importiert werden. Bitte prüfen Sie das KIX-Log für mehr Informationen.',
         'The following Notifications have been added successfully: %s' =>
             'Folgende Benachrichtigungen wurden erfolgreich importiert: %s',
         'The following Notifications have been updated successfully: %s' =>
             'Folgende Benachrichtigungen wurden erfolgreich aktualisiert: %s',
         'There where errors adding/updating the following Notifications: %s. Please check the log file for more information.' =>
-            'Beim Hinzufügen/Aktualisieren der folgenden Benachrichtigungen sind Fehler aufgetreten: %s. Bitte prüfen Sie das OTRS-Log für mehr Informationen.',
+            'Beim Hinzufügen/Aktualisieren der folgenden Benachrichtigungen sind Fehler aufgetreten: %s. Bitte prüfen Sie das KIX-Log für mehr Informationen.',
         'Agent who owns the ticket' => 'Agent, dem das Ticket gehört',
         'Agent who is responsible for the ticket' => 'Agent, der für das Ticket verantwortlich ist',
         'All agents watching the ticket' => 'Alle Agenten beobachten das Ticket',
@@ -3608,7 +3539,6 @@ sub Data {
         'You need %s permissions!' => 'Sie benötigen die %s-Berechtigung!',
         'Could not perform validation on field %s!' => 'Konnte Validierung auf Feld %s nicht ausführen!',
         'No subject' => 'Kein Betreff',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Previous Owner' => 'Vorheriger Bearbeiter',
 
         # Perl Module: Kernel/Modules/AgentTicketBounce.pm
@@ -3647,12 +3577,9 @@ sub Data {
 
         # Perl Module: Kernel/Modules/AgentTicketLock.pm
         'Can\'t lock Ticket, no TicketID is given!' => 'Kann Ticket nicht sperren, keine TicketID empfangen!',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Sorry, the current owner is %s!' => 'Entschuldigung, der aktuelle Bearbeiter ist %s!',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Please become the owner first.' => 'Bitte werden Sie zuerst der Bearbeiter.',
         'Ticket (ID=%s) is locked by %s!' => 'Ticket (ID=%s) ist durch %s gesperrt!',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Change the owner!' => 'Ändern Sie den Bearbeiter!',
 
         # Perl Module: Kernel/Modules/AgentTicketMerge.pm
@@ -3662,10 +3589,7 @@ sub Data {
         'You need move permissions!' => 'Sie benötigen die move-Berechtigung!',
 
         # Perl Module: Kernel/Modules/AgentTicketPhone.pm
-        'Chat is not active.' => 'Der Chat ist nicht aktiv.',
         'No permission.' => 'Keine Berechtigung.',
-        '%s has left the chat.' => '%s hat den Chat verlassen.',
-        'This chat has been closed and will be removed in %s hours.' => 'Dieser Chat wurde geschlossen und wird in %s Stunden entfernt.',
 
         # Perl Module: Kernel/Modules/AgentTicketPlain.pm
         'No ArticleID!' => 'Keine ArticleID!!',
@@ -3779,8 +3703,6 @@ sub Data {
         'Automatic Follow-Up Sent' => 'Automatische Rückfrage gesendet',
         'Automatic Reply Sent' => 'Automatische Antwort gesendet',
         'Time Accounted' => 'Zeit erfasst',
-        'External Chat' => 'Chat (extern)',
-        'Internal Chat' => 'Chat (intern)',
         'We are sorry, you do not have permissions anymore to access this ticket in its current state. ' =>
             'Entschuldigung, Sie haben keine Berechtigung, auf dieses Ticket in seinem aktuellen Status zuzugreifen.',
         'Can\'t get for ArticleID %s!' => 'Konnte Artikel-ID %s nicht ermitteln!',
@@ -3834,7 +3756,7 @@ sub Data {
         'Database %s' => 'Datenbank %s',
         'Unknown database type "%s".' => 'Unbekannter Datenbank-Typ "%s".',
         'Please go back' => 'Bitte gehen Sie zurück',
-        'Install OTRS - Error' => 'OTRS-Installation - Fehler',
+        'Install OTRS - Error' => 'KIX-Installation - Fehler',
         'File "%s/%s.xml" not found!' => 'Datei "%s/%s.xml" nicht gefunden!',
         'Contact your Admin!' => 'Kontaktieren Sie Ihren Administrator!',
         'Can\'t write Config file!' => 'Kann Konfigurationsdatei nicht schreiben!',
@@ -3954,68 +3876,63 @@ sub Data {
         'Can\'t get Token from sever' => 'Kann Token nicht vom Server ermitteln!',
 
         # Perl Module: Kernel/System/Stats/Dynamic/Ticket.pm
-        'State Type' => 'Statustyp',
-        'Created Priority' => 'Erstellt mit der Priorität',
-        'Created State' => 'Erstellt mit dem Status',
-        'Create Time' => 'Erstellzeit',
-        'Close Time' => 'Schließzeit',
+        'State Type'                       => 'Statustyp',
+        'Created Priority'                 => 'Erstellt mit der Priorität',
+        'Created State'                    => 'Erstellt mit dem Status',
+        'Create Time'                      => 'Erstellzeit',
+        'Close Time'                       => 'Schließzeit',
+        'First Close Time'                 => 'Schließzeit',
         'Escalation - First Response Time' => 'Eskalation - Zeit für die erste Reaktion',
-        'Escalation - Update Time' => 'Eskalation - Aktualisierungszeit',
-        'Escalation - Solution Time' => 'Eskalation - Lösungszeit',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
-        'Agent/Owner' => 'Agent/Bearbeiter',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
-        'Created by Agent/Owner' => 'Erstellt von Agent/Bearbeiter',
+        'Escalation - Update Time'         => 'Eskalation - Aktualisierungszeit',
+        'Escalation - Solution Time'       => 'Eskalation - Lösungszeit',
+        'Agent/Owner'                      => 'Agent/Bearbeiter',
+        'Created by Agent/Owner'           => 'Erstellt von Agent/Bearbeiter',
 
         # Perl Module: Kernel/System/Stats/Dynamic/TicketAccountedTime.pm
-        'Evaluation by' => 'Auswertung nach',
+        'Evaluation by'                 => 'Auswertung nach',
         'Ticket/Article Accounted Time' => 'Zeit zugewiesen',
-        'Ticket Create Time' => 'Ticket-Erstellzeit',
-        'Ticket Close Time' => 'Ticket-Schließzeit',
-        'Accounted time by Agent' => 'Zeit zugewiesen von Agent',
-        'Total Time' => 'Gesamtzeit',
-        'Ticket Average' => 'Durchschnittszeit pro Ticket',
-        'Ticket Min Time' => 'Ticket Minimalzeit',
-        'Ticket Max Time' => 'Ticket Maximalzeit',
-        'Number of Tickets' => 'Anzahl der Tickets',
-        'Article Average' => 'Durchschnittszeit pro Artikel',
-        'Article Min Time' => 'Artikel Minimalzeit',
-        'Article Max Time' => 'Artikel Maximalzeit',
-        'Number of Articles' => 'Anzahl der Artikel',
+        'Ticket Create Time'            => 'Ticket-Erstellzeit',
+        'Ticket Close Time'             => 'Ticket-Schließzeit',
+        'Accounted time by Agent'       => 'Zeit zugewiesen von Agent',
+        'Total Time'                    => 'Gesamtzeit',
+        'Ticket Average'                => 'Durchschnittszeit pro Ticket',
+        'Ticket Min Time'               => 'Ticket Minimalzeit',
+        'Ticket Max Time'               => 'Ticket Maximalzeit',
+        'Number of Tickets'             => 'Anzahl der Tickets',
+        'Article Average'               => 'Durchschnittszeit pro Artikel',
+        'Article Min Time'              => 'Artikel Minimalzeit',
+        'Article Max Time'              => 'Artikel Maximalzeit',
+        'Number of Articles'            => 'Anzahl der Artikel',
 
         # Perl Module: Kernel/System/Stats/Dynamic/TicketList.pm
-        'unlimited' => 'unbeschränkt',
-        'ascending' => 'aufsteigend',
-        'descending' => 'absteigend',
+        'unlimited'                => 'unbeschränkt',
+        'ascending'                => 'aufsteigend',
+        'descending'               => 'absteigend',
         'Attributes to be printed' => 'Auszugebene Attribute',
-        'Sort sequence' => 'Sortierreihenfolge',
-        'State Historic' => 'Statuschronik',
-        'State Type Historic' => 'Statustypchronik',
-        'Historic Time Range' => 'Historischer Zeitbereich',
+        'Sort sequence'            => 'Sortierreihenfolge',
+        'State Historic'           => 'Statuschronik',
+        'State Type Historic'      => 'Statustypchronik',
+        'Historic Time Range'      => 'Historischer Zeitbereich',
+        'First Close Time'         => 'Erste Schließzeit',
+        'First Lock'               => 'Erste Sperre',
 
         # Perl Module: Kernel/System/Stats/Dynamic/TicketSolutionResponseTime.pm
-        'Solution Average' => 'Durchschnittliche Lösungszeit',
+        'Solution Average'  => 'Durchschnittliche Lösungszeit',
         'Solution Min Time' => 'Minimale Lösungszeit',
         'Solution Max Time' => 'Maximale Lösungszeit',
-        'Solution Average (affected by escalation configuration)' => 'Durchschnitts-Lösungszeit (wird durch Eskalations-Konfiguration beeinflusst)',
+        'Solution Average (affected by escalation configuration)'  => 'Durchschnitts-Lösungszeit (wird durch Eskalations-Konfiguration beeinflusst)',
         'Solution Min Time (affected by escalation configuration)' => 'Minimale Lösungszeit (wird durch Eskalations-Konfiguration beeinflusst)',
         'Solution Max Time (affected by escalation configuration)' => 'Maximale Lösungszeit (wird durch Eskalations-Konfiguration beeinflusst)',
-        'Solution Working Time Average (affected by escalation configuration)' =>
-            '',
-        'Solution Min Working Time (affected by escalation configuration)' =>
-            '',
-        'Solution Max Working Time (affected by escalation configuration)' =>
-            '',
-        'Response Average (affected by escalation configuration)' => '',
-        'Response Min Time (affected by escalation configuration)' => '',
-        'Response Max Time (affected by escalation configuration)' => '',
-        'Response Working Time Average (affected by escalation configuration)' =>
-            '',
-        'Response Min Working Time (affected by escalation configuration)' =>
-            '',
-        'Response Max Working Time (affected by escalation configuration)' =>
-            '',
-        'Number of Tickets (affected by escalation configuration)' => '',
+        'Solution Working Time Average (affected by escalation configuration)' => '',
+        'Solution Min Working Time (affected by escalation configuration)'     => '',
+        'Solution Max Working Time (affected by escalation configuration)'     => '',
+        'Response Average (affected by escalation configuration)'              => '',
+        'Response Min Time (affected by escalation configuration)'             => '',
+        'Response Max Time (affected by escalation configuration)'             => '',
+        'Response Working Time Average (affected by escalation configuration)' => '',
+        'Response Min Working Time (affected by escalation configuration)'     => '',
+        'Response Max Working Time (affected by escalation configuration)'     => '',
+        'Number of Tickets (affected by escalation configuration)'             => '',
 
         # Perl Module: Kernel/System/Stats/Static/StateAction.pm
         'Days' => 'Tage',
@@ -4086,7 +4003,7 @@ sub Data {
         'PostgreSQL 8.x or higher is required.' => 'PostgreSQL 8.x oder höher wird benötigt.',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/OS/DiskPartitionOTRS.pm
-        'OTRS Disk Partition' => 'OTRS-Festplattenpartition',
+        'OTRS Disk Partition' => 'KIX-Festplattenpartition',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/OS/DiskSpace.pm
         'Disk Usage' => 'Festplatten-Verwendung',
@@ -4120,17 +4037,17 @@ sub Data {
         'There should be more than 60% free swap space.' => 'Es sollten mehr als 60% Auslagerungsspeicher verfügbar sein.',
         'There should be no more than 200 MB swap space used.' => 'Es sollten nicht mehr als 200 MB Auslagerungsspeicher verwendet werden.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/ConfigSettings.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/ConfigSettings.pm
         'OTRS' => 'OTRS',
         'Config Settings' => 'Konfigurationseinstellungen',
         'Could not determine value.' => 'Konnte Wert nicht ermitteln.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/DaemonRunning.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/DaemonRunning.pm
         'Daemon' => 'Daemon',
         'Daemon is running.' => 'Daemon läuft.',
         'Daemon is not running.' => 'Daemon läuft nicht.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/DatabaseRecords.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/DatabaseRecords.pm
         'Database Records' => 'Datenbankeinträge',
         'Tickets' => 'Tickets',
         'Ticket History Entries' => 'Ticket-Historien-Einträge',
@@ -4145,77 +4062,77 @@ sub Data {
         'Months Between First And Last Ticket' => 'Monate zwischen erstem und letztem Ticket',
         'Tickets Per Month (avg)' => 'Tickets pro Monat (Durchschnitt)',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/DefaultSOAPUser.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/DefaultSOAPUser.pm
         'Default SOAP Username And Password' => 'Standard-Benutzername und -Passwort für SOAP',
         'Security risk: you use the default setting for SOAP::User and SOAP::Password. Please change it.' =>
             'Sicherheitsrisiko: Sie verwenden den Standard-SOAP-Benutzernamen und das Standardpasswort. Bitte ändern Sie diese Einstellungen.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/DefaultUser.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/DefaultUser.pm
         'Default Admin Password' => 'Standard-Admin-Passwort',
         'Security risk: the agent account root@localhost still has the default password. Please change it or invalidate the account.' =>
             'Sicherheitsrisiko: Das Agentenpasswort für root@localhost ist das Standardpasswort. Bitte ändern Sie es oder deaktivieren Sie diesen Nutzer.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/ErrorLog.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/ErrorLog.pm
         'Error Log' => 'Fehlerprotokoll',
         'There are error reports in your system log.' => 'Im System wurden Einträge im Fehlerprotokoll gefunden.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/FQDN.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/FQDN.pm
         'FQDN (domain name)' => 'FQDN (Domainname)',
         'Please configure your FQDN setting.' => 'Bitte konfigurieren Sie ihre FQDN Einstellungen.',
         'Domain Name' => 'Domainname',
         'Your FQDN setting is invalid.' => 'Ihre Einstellung FQDN ist ungültig.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/FileSystemWritable.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/FileSystemWritable.pm
         'File System Writable' => 'Schreibbarkeit Dateisystem',
-        'The file system on your OTRS partition is not writable.' => 'Das Dateisystem auf Ihrer OTRS-Partition ist nicht schreibbar.',
+        'The file system on your OTRS partition is not writable.' => 'Das Dateisystem auf Ihrer KIX-Partition ist nicht schreibbar.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/PackageDeployment.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/PackageDeployment.pm
         'Package Installation Status' => 'Paketinstallationsstatus',
         'Some packages have locally modified files.' => 'Einige Pakete enthalten lokal angepasste Dateien.',
         'Some packages are not correctly installed.' => 'Es wurden Pakete gefunden, die nicht korrekt installiert sind.',
         'Package Verification Status' => 'Status Paketverifikation',
-        'Some packages are not verified by the OTRS Group! It is recommended not to use this packages.' =>
-            'Einige Pakete wurden nicht von der OTRS Gruppe verifiziert! Es wird empfohlen, diese Pakete nicht zu nutzen.',
+        'Some packages are not verified by the KIX Group! It is recommended not to use this packages.' =>
+            'Einige Pakete wurden nicht von der KIX Gruppe verifiziert! Es wird empfohlen, diese Pakete nicht zu nutzen.',
         'Package Framework Version Status' => 'Status Paket-Frameworkversion',
         'Some packages are not allowed for the current framework version.' =>
             'Einige Pakete sind für die aktuelle Framework-Version nicht geeignet.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/PackageList.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/PackageList.pm
         'Package List' => 'Paketliste',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/SpoolMails.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/SpoolMails.pm
         'Spooled Emails' => '',
         'There are emails in var/spool that OTRS could not process.' => '',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/SystemID.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/SystemID.pm
         'Your SystemID setting is invalid, it should only contain digits.' =>
             'Ihre Einstellung SystemID ist ungültig, sie sollte nur Ziffern enthalten.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/Ticket/DefaultType.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/Ticket/DefaultType.pm
         'Default Ticket Type' => 'Standard-Ticket-Typ',
         'The configured default ticket type is invalid or missing. Please change the setting Ticket::Type::Default and select a valid ticket type.' =>
             'Der konfigurierte Standard-Ticket-Typ fehlt oder ist ungültig. Bitte ändern Sie die Einstellung Ticket::Type::Default und wählen Sie einen gültigen Ticket-Typ.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/Ticket/IndexModule.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/Ticket/IndexModule.pm
         'Ticket Index Module' => 'Ticket-Index-Modul',
         'You have more than 60,000 tickets and should use the StaticDB backend. See admin manual (Performance Tuning) for more information.' =>
             'Sie haben mehr als 60.000 Tickets und sollten das StaticDB-Backend verwenden. Bitte schauen Sie im Administratorhandbuch (Performance Tuning) nach.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/Ticket/InvalidUsersWithLockedTickets.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/Ticket/InvalidUsersWithLockedTickets.pm
         'Invalid Users with Locked Tickets' => 'Ungültige Benutzer mit gesperrten Tickets',
         'There are invalid users with locked tickets.' => 'Es existierten ungültige Benutzer mit gesperrten Tickets.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/Ticket/OpenTickets.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/Ticket/OpenTickets.pm
         'Open Tickets' => 'Offene Tickets',
         'You should not have more than 8,000 open tickets in your system.' =>
             'Sie sollten nicht mehr als 8.000 offene Tickets im System haben.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/Ticket/SearchIndexModule.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/Ticket/SearchIndexModule.pm
         'Ticket Search Index Module' => 'Ticket-Suchindex-Modul',
         'You have more than 50,000 articles and should use the StaticDB backend. See admin manual (Performance Tuning) for more information.' =>
             'Sie haben mehr als 50.000 Artikel und sollten das StaticDB-Backend verwenden. Bitte schauen Sie im Administratorhandbuch (Performance Tuning) nach.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/Ticket/StaticDBOrphanedRecords.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/Ticket/StaticDBOrphanedRecords.pm
         'Orphaned Records In ticket_lock_index Table' => 'Verwaiste Einträge in der Tabelle ticket_lock_index',
         'Table ticket_lock_index contains orphaned records. Please run bin/kix.Console.pl "Maint::Ticket::QueueIndexCleanup" to clean the StaticDB index.' =>
             'Die Tabelle ticket_lock_index enthält verwaiste Einträge. Bitte führen Sie bin/kix.Console.pl "Maint::Ticket::QueueIndexCleanup" aus, um den StaticDB-Index zu bereinigen.',
@@ -4223,16 +4140,16 @@ sub Data {
         'Table ticket_index contains orphaned records. Please run bin/kix.Console.pl "Maint::Ticket::QueueIndexCleanup" to clean the StaticDB index.' =>
             'Die Tabelle ticket_index enthält verwaiste Einträge. Bitte führen Sie "Maint::Ticket::QueueIndexCleanup" aus, um sie zu entfernen.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OTRS/TimeSettings.pm
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/TimeSettings.pm
         'Time Settings' => 'Zeiteinstellungen',
         'Server time zone' => 'Serverzeitzone',
         'Computed server time offset' => 'Berechneter Serverzeitversatz',
-        'OTRS TimeZone setting (global time offset)' => 'OTRS-Zeitzoneneinstellung (globaler Zeitversatz)',
+        'OTRS TimeZone setting (global time offset)' => 'KIX-Zeitzoneneinstellung (globaler Zeitversatz)',
         'TimeZone may only be activated for systems running in UTC.' => 'Die TimeZone sollte nur für Systeme aktiviert werden, die auf Basis von UTC laufen.',
         'OTRS TimeZoneUser setting (per-user time zone support)' => 'OTRS TimeZoneUser-Einstellung (Benutzerbasierte Zeitzonen-Unterstützung).',
         'TimeZoneUser may only be activated for systems running in UTC that don\'t have an OTRS TimeZone set.' =>
             'Die TimeZoneUser sollte nur für Systeme aktiviert werden, die auf Basis von UTC laufen und TimeZone nicht aktiviert haben.',
-        'OTRS TimeZone setting for calendar ' => 'OTRS-Zeitzoneneinstellung für Kalender',
+        'OTRS TimeZone setting for calendar ' => 'KIX-Zeitzoneneinstellung für Kalender',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/Webserver/Apache/LoadedModules.pm
         'Webserver' => 'Webserver',
@@ -4267,7 +4184,7 @@ sub Data {
         'Webserver Version' => 'Webserver-Version',
         'Could not determine webserver version.' => 'Konnte Webserver-Version nicht ermitteln.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/PluginAsynchronous/OTRS/ConcurrentUsers.pm
+        # Perl Module: Kernel/System/SupportDataCollector/PluginAsynchronous/KIX/ConcurrentUsers.pm
         'Concurrent Users Details' => 'Details der gleichzeitigen Nutzer',
         'Concurrent Users' => 'Gleichzeitige Nutzer',
 
@@ -4303,7 +4220,6 @@ sub Data {
         'Reset password unsuccessful. Please contact your administrator' =>
             'Passwort zurücksetzen fehlgeschlagen. Bitte kontaktieren Sie Ihren Administrator.',
         'Added via Customer Panel (%s)' => 'Mittels Kundenbereich hinzugefügt (%s)',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact can\'t be added!' => 'Ansprechpartner kann nicht angelegt werden!',
         'Can\'t send account info!' => 'Kann Zugangsinformation nicht senden!',
 
@@ -4313,7 +4229,7 @@ sub Data {
             'Wenn Sie den Installer erneut ausführen wollen, schalten Sie "SecureMode" in der SysConfig ab',
         'Action "%s" not found!' => 'Aktion "%s" nicht gefunden!',
 
-        # Database XML Definition: scripts/database/otrs-initial_insert.xml
+        # Database XML Definition: scripts/database/kix-initial_insert.xml
         'Group for default access.' => 'Gruppe für den Standardzugriff.',
         'Group of all administrators.' => 'Gruppe aller Administratoren.',
         'Group for statistics access.' => 'Gruppe für den Statistikzugriff.',
@@ -4356,7 +4272,6 @@ sub Data {
             'Automatische Bestätigung, die gesendet wird, nachdem eine Rückantwort für ein Ticket empfangen wurde (falls die Rückantworts-Einstellung der Queue "Möglich" ist).',
         'Automatic response which will be sent out after a follow-up has been rejected and a new ticket has been created (in case queue follow-up option is "new ticket").' =>
             'Automatische Antwort, die gesendet wird, nachdem eine Rückantwort abgelehnt und ein neues Ticket erstellt wurde (falls die Rückantworts-Einstellung der Queue "Neues Ticket" ist).',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Auto remove will be sent out after a customer contact removed the request.' =>
             'Auto Remove wird versendet, nachdem ein Kunden-Ansprechpartner die Anfrage entfernt hat.',
         'default reply (after new ticket has been created)' => 'Standardantwort (nachdem ein neues Ticket erstellt wurde)',
@@ -4377,12 +4292,9 @@ sub Data {
             'Sie erhalten eine Benachrichtigung, wenn ein Kunde eine Rückmeldung zu einem Ticket sendet, das in Ihren unter "Meine Queues" oder "Meine Services" ausgewählten Queues oder Services erstellt wurde.',
         'Ticket follow-up notification (locked)' => 'Benachrichtigung über Folgeaktionen (gesperrtes Ticket)',
         'You will receive a notification if a customer sends a follow-up to a locked ticket of which you are the ticket owner or responsible.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Sie erhalten eine Benachrichtigung, wenn ein Kunde eine Rückmeldung zu einem Ticket sendet, dessen Bearbeiter oder Verantwortlicher Sie sind.',
         'You will receive a notification as soon as a ticket owned by you is automatically unlocked.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Sie erhalten eine Benachrichtigung, wenn ein Ticket, dessen Bearbeiter Sie sind, automatisch entsperrt wurde.',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Ticket owner update notification' => 'Benachrichtigung über Änderung des Ticket-Bearbeiters',
         'Ticket responsible update notification' => 'Benachrichtigung über Änderung des  Ticket Verantwortlichen',
         'Ticket new note notification' => 'Benachrichtigung über neue Notiz',
@@ -4464,7 +4376,6 @@ Ihr Helpdesk-Team
         'Added link to ticket "%s".' => 'Verknüpfung zu "%s" hergestellt.',
         'Added note (%s)' => 'Notiz hinzugefügt (%s)',
         'Added subscription for user "%s".' => 'Abo für Benutzer "%s" eingetragen.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Address book of contact sources.' => 'Adressbuch für Ansprechpartner-Quellen.',
         'Adds a suffix with the actual year and month to the KIX log file. A logfile for every month will be created.' =>
             'Fügt einen Suffix mit dem aktuellen Jahr und Monat in die KIX-Protokolldatei hinzu. Für jeden Monat wird eine eigene Log-Datei erstellt.',
@@ -4509,7 +4420,6 @@ Ihr Helpdesk-Team
         'AgentUserSearch.' => 'AgentUserSearch.',
         'Agents <-> Groups' => 'Agent <-> Gruppen',
         'Agents <-> Roles' => 'Agent <-> Rollen',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'All contacts of a CustomerID' => 'Alle Ansprechpartner einer Kundennummer',
         'Allows adding notes in the close ticket screen of the agent interface. Can be overwritten by Ticket::Frontend::NeedAccountedTime.' =>
             'Erlaubt in der Agentenoberfläche das Hinzufügen von Notizen im  \'Schließen\'-Bildschirm. Kann durch Ticket::Frontend::NeedAccountedTime überschrieben werden.',
@@ -4518,7 +4428,6 @@ Ihr Helpdesk-Team
         'Allows adding notes in the ticket note screen of the agent interface. Can be overwritten by Ticket::Frontend::NeedAccountedTime.' =>
             'Erlaubt in der Agentenoberfläche das Hinzufügen von Notizen im \'Notiz\'-Bildschirm. Kann durch Ticket::Frontend::NeedAccountedTime überschrieben werden.',
         'Allows adding notes in the ticket owner screen of a zoomed ticket in the agent interface. Can be overwritten by Ticket::Frontend::NeedAccountedTime.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Erlaubt in der Agentenoberfläche in einem geöffneten Ticket das Hinzufügen von Notizen im \'Bearbeiter\'-Bildschirm. Kann durch Ticket::Frontend::NeedAccountedTime überschrieben werden.',
         'Allows adding notes in the ticket pending screen of a zoomed ticket in the agent interface. Can be overwritten by Ticket::Frontend::NeedAccountedTime.' =>
             'Erlaubt in der Agentenoberfläche in einem geöffneten Ticket das Hinzufügen von Notizen im \'Warten\'-Bildschirm. Kann durch Ticket::Frontend::NeedAccountedTime überschrieben werden.',
@@ -4580,16 +4489,12 @@ Ihr Helpdesk-Team
         'Automated line break in text messages after x number of chars.' =>
             'Automatischer Zeilenumbruch in Textnachrichten nach x-Zeichen.',
         'Automatically lock and set owner to current Agent after opening the move ticket screen of the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Automatisches Sperren und setzen des aktuellen Agenten als Bearbeiter nachdem der Verschieben-Bildschirm im Agenten-Interface geöffnet wurde.',
         'Automatically lock and set owner to current Agent after selecting for an Bulk Action.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Automatisches Sperren und setzen des aktuellen Agenten als Bearbeiter nachdem der Sammelaktion-Bildschirm gewählt wurde.',
         'Automatically sets the owner of a ticket as the responsible for it (if ticket responsible feature is enabled). This will only work by manually actions of the logged in user. It does not work for automated actions e.g. GenericAgent, Postmaster and GenericInterface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter eines Tickets automatisch auch als Verantwortlichen (wenn das Verantwortlicher-Feature aktiviert ist). Dies wird nur durch manuelle Aktionen des eingeloggten Benutzers ausgelöst, nicht durch automatische wie GenericAgent, Postmaster oder GenericInterface.',
         'Automatically sets the responsible of a ticket (if it is not set yet) after the first owner update.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Automatisches setzen eines Ticket-Verantwortlichen (wenn er noch nicht gesetzt wurde) nach dem ersten Bearbeiter-Update.',
         'Balanced white skin by Felix Niklas (slim version).' => 'Balanced White-Skin von Felix Niklas (slim)',
         'Balanced white skin by Felix Niklas.' => 'Balanced White Skin von Felix Niklas.',
@@ -4623,21 +4528,19 @@ Ihr Helpdesk-Team
         'Change the responsible for this ticket' => 'Verantwortlichen für dieses Tickets ändern',
         'Changed priority from "%s" (%s) to "%s" (%s).' => 'Priorität aktualisiert von "%s" (%s) nach "%s" (%s).',
         'Changes the owner of tickets to everyone (useful for ASP). Normally only agent with rw permissions in the queue of the ticket will be shown.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Ändert den Bearbeiter der Tickets auf Alle (nützlich für ASP). In der Regel werden nur Agenten mit rw-Berechtigungen auf die Queue angezeigt.',
         'Checkbox' => 'Kontrollkästchen',
         'Checks if an E-Mail is a followup to an existing ticket by searching the subject for a valid ticket number.' =>
             'Prüft, ob eine E-Mail ein Follow-Up zu einem bestehenden Ticket ist, indem der Betreff nach einer gültigen Ticketnummer durchsucht wird.',
         'Checks the SystemID in ticket number detection for follow-ups (use "No" if SystemID has been changed after using the system).' =>
             'Überprüft die System-ID in der Ticketnummer-Erkennung bei FolloUps (Wählen Sie "Nein" wenn die System-ID während der Nutzung geändert wurde).',
-        'Checks the availability of OTRS Business Solution™ for this system.' =>
+        'Checks the availability of KIX Business Solution™ for this system.' =>
             'Überprüfe die Verfügbarkeit der OTRS Business Solution™ für dieses System.',
-        'Checks the entitlement status of OTRS Business Solution™.' => 'Überprüfe den Berechtigungsstatus der OTRS Business Solution™ für dieses System.',
+        'Checks the entitlement status of KIX Business Solution™.' => 'Überprüfe den Berechtigungsstatus der OTRS Business Solution™ für dieses System.',
         'Chinese (Simplified)' => 'Chinesisch (vereinfacht)',
         'Chinese (Traditional)' => 'Chinesisch (traditionell)',
         'Choose for which kind of ticket changes you want to receive notifications.' =>
             'Für welche Veränderungen an Tickets möchten Sie Benachrichtigungen erhalten?',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Closed tickets (contact)' => 'Geschlossene Tickets (Ansprechpartner)',
         'Closed tickets (customer)' => 'Geschlossene Tickets (Kunden)',
         'Cloud Services' => 'Cloud-Service',
@@ -4674,13 +4577,13 @@ Ihr Helpdesk-Team
         'Configure and manage ACLs.' => 'ACLs konfigurieren und verwalten.',
         'Configure any additional readonly mirror databases that you want to use.' =>
             'Konfigurieren Sie alle weiteren Readonly-Spiegeldatenbanken, die Sie verwenden möchten.',
-        'Configure sending of support data to OTRS Group for improved support.' =>
-            'Konfigurieren Sie das Senden von Support Daten an die OTRS-Group für eine bessere Unterstützung.',
+        'Configure sending of support data to KIX Group for improved support.' =>
+            'Konfigurieren Sie das Senden von Support Daten an die KIX-Group für eine bessere Unterstützung.',
         'Configure which screen should be shown after a new ticket has been created.' =>
             'Konfigurieren Sie, welche Oberfläche angezeigt werden soll, nachdem ein neues Ticket erstellt wurde.',
         'Configure your own log text for PGP.' => 'Konfigurieren Sie Ihren eigenen Log-Text für PGP.',
-        'Configures a default TicketDynamicField setting. "Name" defines the dynamic field which should be used, "Value" is the data that will be set, and "Event" defines the trigger event. Please check the developer manual (http://otrs.github.io/doc/), chapter "Ticket Event Module".' =>
-            'Konfiguriert eine Standardeinstellung für ein dynamisches Ticketfeld. "Name" beschreibt das dynamische Feld, das genutzt werden soll, "Value" die Daten, mit denen das Feld befüllt werden soll. "Event" enthält das auslösende Ereignis. Weitere Informationen finden Sie im Entwicklerhandbuch (http://otrs.github.io/doc/) im Kapitel "Ticket-Eventmodule".',
+        'Configures a default TicketDynamicField setting. "Name" defines the dynamic field which should be used, "Value" is the data that will be set, and "Event" defines the trigger event. Please check the developer manual, chapter "Ticket Event Module".' =>
+            'Konfiguriert eine Standardeinstellung für ein dynamisches Ticketfeld. "Name" beschreibt das dynamische Feld, das genutzt werden soll, "Value" die Daten, mit denen das Feld befüllt werden soll. "Event" enthält das auslösende Ereignis. Weitere Informationen finden Sie im Entwicklerhandbuch im Kapitel "Ticket-Eventmodule".',
         'Controls how to display the ticket history entries as readable values.' =>
             'Kontrolliert wie die Ticket-Historie in lesbaren Werten dargestellt wird.',
         'Controls if CutomerID is editable in the agent interface.' => 'Bestimmt, ob CustomerID im Agenten-Interface bearbeitet werden kann.',
@@ -4699,7 +4602,6 @@ Ihr Helpdesk-Team
         'Create and manage Service Level Agreements (SLAs).' => 'Service-Level-Abkommen (SLAs) erzeugen und verwalten.',
         'Create and manage agents.' => 'Agents erzeugen und verwalten.',
         'Create and manage attachments.' => 'Anlagen erzeugen und verwalten.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Create and manage contacts.' => 'Ansprechpartner erzeugen und verwalten.',
         'Create and manage customers.' => 'Kunden erzeugen und verwalten.',
         'Create and manage dynamic fields.' => 'Dynamische Felder erzeugen und verwalten.',
@@ -4731,13 +4633,9 @@ Ihr Helpdesk-Team
         'Customer Information Center Search.' => 'Kunden-Informationszentrum-Suche.',
         'Customer Information Center.' => 'Kunden-Informationszentrum.',
         'Customer Ticket Print Module.' => 'Kunden-Ticketdruck-Modul.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact <-> Groups' => 'Ansprechpartner <-> Gruppen',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact <-> Services' => 'Ansprechpartner <-> Services',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact Administration' => 'Ansprechpartnerverwaltung',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contacts' => 'Ansprechpartner',
         'Customer called us.' => 'Kunde hat angerufen.',
         'Customer item (icon) which shows the closed tickets of this customer as info block. Setting CustomerUserLogin to 1 searches for tickets based on login name rather than CustomerID.' =>
@@ -4749,7 +4647,6 @@ Ihr Helpdesk-Team
         'Customer ticket overview' => 'Kunden-Ticket-Übersicht',
         'Customer ticket search.' => 'Kunden-Ticketsuche.',
         'Customer ticket zoom' => 'Ticketansicht für Kunden',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Contact search' => 'Ansprechpartner-Suche',
         'CustomerID search' => 'Kundennummernsuche',
         'CustomerName' => 'Kundenname',
@@ -4791,7 +4688,6 @@ Ihr Helpdesk-Team
             'Definieren Sie Actions, in denen im Verknüpfte-Objekte-Widget ein Einstellungen-Knopf verfügbar sein soll (LinkObject::ViewMode = "complex"). Bitte beachten Sie, dass für diese Actions die folgenden JS- und CSS-Dateien registriert sein müssen: Core.AllocationList.css, Core.UI.AllocationList.js, Core.UI.Table.Sort.js, Core.Agent.TableFilters.js.',
         'Define a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.' =>
             'Definiert einen Filter für die HTML-Ausgabe um Links hinter einer bestimmten Zeichenfolge hinzufügen. Dieses Element erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der OTRS-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Define a mapping between variables of the contact data (keys) and dynamic fields of a ticket (values). The purpose is to store contact data in ticket dynamic fields. The dynamic fields must be present in the system and should be enabled for AgentTicketFreeText, so that they can be set/updated manually by the agent. They mustn\'t be enabled for AgentTicketPhone, AgentTicketEmail and AgentTicketCustomer. If they were, they would have precedence over the automatically set values. To use this mapping, you have to also activate the next setting below.' =>
             'Definiert eine Zuordnung zwischen Variablen der Ansprechpartner-Daten (Schlüssel) und dynamischen Feldern eines Ticket (Werte). Somit können Sie Ansprechpartner-Daten eines Tickets in dynamische Felder speichern. Die dynamischen Felder müssen im System vorhanden sein und sollten für AgentTicketFreeText aktiviert werden, damit sie eingestellt / manuell durch den Agenten aktualisiert werden können. Sie dürfen nicht für AgentTicketPhone, AgentTicketEmail und AgentTicketCustomer aktiviert werden. Wenn sie in diesen Masken aktiviert werden, werden später automatisch gesetzte Werte überschrieben werden. Um dieses Mapping zu verwenden, müssen Sie auch Sie die nächste Einstellung aktivieren.',
         'Define dynamic field name for end time. This field has to be manually added to the system as Ticket: "Date / Time" and must be activated in ticket creation screens and/or in any other ticket action screens.' =>
@@ -4817,14 +4713,14 @@ Ihr Helpdesk-Team
             'Definiert einen Punkt, welcher ein Google-Maps-Symbol am Endes der Kundeninformation hinzufügt.',
         'Defines a default list of words, that are ignored by the spell checker.' =>
             'Definiert eine Standardliste von Wörtern, die von der Rechtschreibprüfung ignoriert werden.',
-        'Defines a filter for html output to add links behind CVE numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.' =>
-            'Definiert einen Filter für die HTML-Ausgabe um Links hinter CVE-Nummern hinzufügen. Das Element Bild erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der OTRS-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
-        'Defines a filter for html output to add links behind MSBulletin numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.' =>
-            'Definiert einen Filter für die HTML-Ausgabe um Links hinter einer MSBulletin-Nummer hinzufügen. Das Element Bild erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der OTRS-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
-        'Defines a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.' =>
-            'Definiert einen Filter für die HTML-Ausgabe um Links hinter einer bestimmten Zeichenfolge hinzufügen. Das Element Bild erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der OTRS-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
-        'Defines a filter for html output to add links behind bugtraq numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.' =>
-            'Definiert einen Filter für die HTML-Ausgabe um Links hinter Bugtraq-Nummern hinzufügen. Das Element Bild erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der OTRS-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
+        'Defines a filter for html output to add links behind CVE numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.' =>
+            'Definiert einen Filter für die HTML-Ausgabe um Links hinter CVE-Nummern hinzufügen. Das Element Bild erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der KIX-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
+        'Defines a filter for html output to add links behind MSBulletin numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.' =>
+            'Definiert einen Filter für die HTML-Ausgabe um Links hinter einer MSBulletin-Nummer hinzufügen. Das Element Bild erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der KIX-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
+        'Defines a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.' =>
+            'Definiert einen Filter für die HTML-Ausgabe um Links hinter einer bestimmten Zeichenfolge hinzufügen. Das Element Bild erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der KIX-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
+        'Defines a filter for html output to add links behind bugtraq numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.' =>
+            'Definiert einen Filter für die HTML-Ausgabe um Links hinter Bugtraq-Nummern hinzufügen. Das Element Bild erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der KIX-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
         'Defines a filter to collect CVE numbers from article texts in AgentTicketZoom. The results will be displayed in a meta box next to the article. Fill in URLPreview if you would like to see a preview when moving your mouse cursor above the link element. This could be the same URL as in URL, but also an alternate one. Please note that some websites deny being displayed within an iframe (e.g. Google) and thus won\'t work with the preview mode.' =>
             'Definiert einen Filter zum Sammeln von CVE-Nummern von Artikel-Texten im AgentTicketZoom. Das Ergebnis wird in einer Meta-Box neben dem Artikel angezeigt. Füllen Sie URLPreview aus, wenn Sie beim halten des Cursors über dem Linkelement eine Vorschau sehen möchten. Das kann dieselbe URL wie in "URL", aber auch eine andere. Bitte beachten Sie, dass einige Webseiten es verbieten in einem iframe (z.B. Google) angezeigt zu werden. Diese würden mit dem Vorschau-Modus nicht funktionieren.',
         'Defines a filter to process the text in the articles, in order to highlight predefined keywords.' =>
@@ -4867,49 +4763,34 @@ Ihr Helpdesk-Team
         'Defines if a pre-sorting by priority should be done in the service view.' =>
             'Bestimmt, ob in der Service-Ansicht eine Vorsortierung anhand der Priorität vorgenommen werden soll.',
         'Defines if a ticket lock is required in the close ticket screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the email outbound screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket bounce screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket compose screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket forward screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket free text screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket merge screen of a zoomed ticket in the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket note screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket owner screen of a zoomed ticket in the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket pending screen of a zoomed ticket in the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket phone inbound screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket phone outbound screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket priority screen of a zoomed ticket in the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required in the ticket responsible screen of the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if a ticket lock is required to change the customer of a ticket in the agent interface (if the ticket isn\'t locked yet, the ticket gets locked and the current agent will be set automatically as its owner).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if agents should be allowed to login if they have no shared secret stored in their preferences and therefore are not using two-factor authentication.' =>
             'Steuert, ob Agenten, die die Zweifaktor-Authentifizierung nicht nutzen, sich im System einloggen dürfen.',
@@ -4933,8 +4814,8 @@ Ihr Helpdesk-Team
             'Definiert "Nicht im Büro"-Nachrichten-Templates. Zwei String-Parameter (%s) stehen zur Verfügung: Enddatum und Anzahl der übrigen Tage.',
         'Defines queues that\'s tickets are used for displaying as calendar events.' =>
             'Bestimmt die Queues, deren Tickets für die Anzeige als Kalender-Ereignisse berücksichtigt werden sollen.',
-        'Defines the HTTP hostname for the support data collection with the public module \'PublicSupportDataCollector\' (e.g. used from the OTRS Daemon).' =>
-            'Legt den HTTP-Hostnamen fest, der für die Sammlung von Supportdaten über das freie Modul \'PublicSupportDataCollector\' genutzt wird (z. B. durch den OTRS-Daemon).',
+        'Defines the HTTP hostname for the support data collection with the public module \'PublicSupportDataCollector\' (e.g. used from the KIX Daemon).' =>
+            'Legt den HTTP-Hostnamen fest, der für die Sammlung von Supportdaten über das freie Modul \'PublicSupportDataCollector\' genutzt wird (z. B. durch den KIX-Daemon).',
         'Defines the IP regular expression for accessing the local repository. You need to enable this to have access to your local repository and the package::RepositoryList is required on the remote host.' =>
             'Definiert die Regular Expressions für IPs für den Zugriff auf das lokale Repository. Sie müssen diese Einstellungen aktivieren um Zugang zu Ihrem lokalen Repository zu haben, ebenfalls muss das Paket package::RepositoryList auf dem Remote-Host installiert sein.',
         'Defines the URL CSS path.' => 'Definiert den URL-CSS-Pfad',
@@ -4958,8 +4839,8 @@ Ihr Helpdesk-Team
             'Definiert den Text im Hauptteil für Benachrichtigungs-Emails für Kunden, inklusive eines Tokens für die Passwortänderungsanfrage (nachdem dieser Link benutzt wird, wird das neue Passwort gesendet).',
         'Defines the body text for rejected emails.' => 'Definiert den Body-Text für abgelehnte E-Mails.',
         'Defines the calendar width in percent. Default is 95%.' => 'Definiert die Kalenderbreite in Prozent. Standard ist 95%',
-        'Defines the cluster node identifier. This is only used in cluster configurations where there is more than one OTRS frontend system. Note: only values from 1 to 99 are allowed.' =>
-            'Definiert den Identifizierer für den Clusterknoten. Wird nur in Clusterkonfigurationen genutzt, in denen mehr als ein OTRS-Frontendsystem vorhanden ist. Hinweis: Es sind nur Werte von 1-99 erlaubt.',
+        'Defines the cluster node identifier. This is only used in cluster configurations where there is more than one KIX frontend system. Note: only values from 1 to 99 are allowed.' =>
+            'Definiert den Identifizierer für den Clusterknoten. Wird nur in Clusterkonfigurationen genutzt, in denen mehr als ein KIX-Frontendsystem vorhanden ist. Hinweis: Es sind nur Werte von 1-99 erlaubt.',
         'Defines the column to store the keys for the preferences table.' =>
             'Definiert die Spalte um die Schlüssel in der Eigenschaften-Tabelle zu speichern',
         'Defines the config options for the autocompletion feature.' => 'Definiert die Konfigurationsoptionen für die Autovervollständigung.',
@@ -4979,8 +4860,8 @@ Ihr Helpdesk-Team
             'Definiert den Standard-Auto-Antwort-Typ des Artikels für diese Operation.',
         'Defines the default body of a note in the ticket free text screen of the agent interface.' =>
             'Definiert den Standard-Inhalt einer Notiz in der TicketFreeText-Oberfläche im Agenten-Interface.',
-        'Defines the default front-end (HTML) theme to be used by the agents and customers. If you like, you can add your own theme. Please refer the administrator manual located at http://otrs.github.io/doc/.' =>
-            'Steuert das standardmäßig verwendete Theme (HTML) für das Frontend für Agenten und Kunden. Hinweis: Sie können Ihre eigenen Themes hinzufügen und verwenden (siehe http://otrs.github.io/doc/).',
+        'Defines the default front-end (HTML) theme to be used by the agents and customers. If you like, you can add your own theme.' =>
+            'Steuert das standardmäßig verwendete Theme (HTML) für das Frontend für Agenten und Kunden. Hinweis: Sie können Ihre eigenen Themes hinzufügen und verwenden.',
         'Defines the default front-end language. All the possible values are determined by the available language files on the system (see the next setting).' =>
             'Definiert die Standard-Frontend-Sprache. Die möglichen Werte werden durch die verfügbaren Sprachdateien auf dem System bestimmt (siehe nächste Einstellung).',
         'Defines the default history type in the customer interface.' => 'Definiert den Standard-Historientyp im Kunden-Interface.',
@@ -4999,7 +4880,6 @@ Ihr Helpdesk-Team
         'Defines the default next state of a ticket after adding a note, in the ticket note screen of the agent interface.' =>
             'Bestimmt den Folgestatus für Tickets, für die im Notiz-Bildschirm im Agenten-Interface eine Notiz hinzugefügt wurde.',
         'Defines the default next state of a ticket after adding a note, in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt den Folgestatus für Tickets, für die im Bearbeiter-Bildschirm im Agenten-Interface eine Notiz hinzugefügt wurde.',
         'Defines the default next state of a ticket after adding a note, in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Bestimmt den Folgestatus für Tickets, für die im Warten bis-Bildschirm im Agenten-Interface eine Notiz hinzugefügt wurde.',
@@ -5111,7 +4991,6 @@ Ihr Helpdesk-Team
         'Defines the default ticket priority in the ticket note screen of the agent interface.' =>
             'Definiert die Standard-Ticketpriorität in der \'Notiz\'-Oberfläche im Agenten-Interface.',
         'Defines the default ticket priority in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert die Standard-Ticketpriorität in der \'Bearbeiter\'-Oberfläche im TicketZoom im Agenten-Interface.',
         'Defines the default ticket priority in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Definiert die Standard-Ticketpriorität in der \'Warten\'-Oberfläche im TicketZoom im Agenten-Interface.',
@@ -5138,7 +5017,6 @@ Ihr Helpdesk-Team
         'Defines the default type of the note in the ticket note screen of the agent interface.' =>
             'Definiert den Standard-Notiztyp in der \'Notiz\'-Oberfläche im Agenten-Interface.',
         'Defines the default type of the note in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert den Standard-Notiztyp in der \'Bearbeiter\'-Oberfläche im TicketZoom im Agenten-Interface.',
         'Defines the default type of the note in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Definiert den Standard-Notiztyp in der \'Warten\'-Oberfläche im TicketZoom im Agenten-Interface.',
@@ -5170,7 +5048,6 @@ Ihr Helpdesk-Team
             'Steuert das Format von Antworten im Ticket erstellen-Bildschirm im Agentenbereich ([% Data.OrigFrom | html %] entspricht genau dem Absender, [% Data.OrigFromName | html %] enthält nur den realen Namen des Absenders).',
         'Defines the fully qualified domain name of the system. This setting is used as a variable, KIX_CONFIG_FQDN which is found in all forms of messaging used by the application, to build links to the tickets within your system.' =>
             'Definiert den Full Qualified Domain Name des OTRS Systems. Diese Einstellung wird als Variable KIX_CONFIG_FQDN genutzt, welche in allen Nachrichten-Formularen zu finden ist oder um Links zu Tickets in Ihrem OTRS System zu generieren.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Defines the groups every contact will be in (if CustomerGroupSupport is enabled and you don\'t want to manage every user for these groups).' =>
             'Steuert die Gruppen, in denen sich ein Ansprechpartner standardmäßig befinden soll (wenn CustomerGroupSupport aktiviert ist und Sie nicht jede Gruppenbeziehung für die Nutzer einzeln steuern möchten).',
         'Defines the height for the rich text editor component for this screen. Enter number (pixels) or percent value (relative).' =>
@@ -5188,7 +5065,6 @@ Ihr Helpdesk-Team
         'Defines the history comment for the ticket note screen action, which gets used for ticket history in the agent interface.' =>
             'Steuert den Historien-Kommentar für die Ticketnotiz-Aktion im Agentenbereich.',
         'Defines the history comment for the ticket owner screen action, which gets used for ticket history in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert den Historien-Kommentar für die Aktion "Ticket-Bearbeiter" welcher in der Ticket-Historie in der Agenten-Oberfläche angezeigt wird.',
         'Defines the history comment for the ticket pending screen action, which gets used for ticket history in the agent interface.' =>
             'Definiert den Historien-Kommentar für die Aktion "Warten auf Erinnerung" welcher in der Ticket-Historie in der Agenten-Oberfläche angezeigt wird.',
@@ -5215,7 +5091,6 @@ Ihr Helpdesk-Team
         'Defines the history type for the ticket note screen action, which gets used for ticket history in the agent interface.' =>
             'Definiert den Historien-Typ für die Aktion "Ticket Notiz" welcher für die Ticket-Historie in der Agenten-Oberfläche benutzt wird.',
         'Defines the history type for the ticket owner screen action, which gets used for ticket history in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert den Historien-Typ für die Aktion "Ticket-Bearbeiter" welcher für die Ticket-Historie in der Agenten-Oberfläche benutzt wird.',
         'Defines the history type for the ticket pending screen action, which gets used for ticket history in the agent interface.' =>
             'Definiert den Historien-Typ für die Aktion "Warten auf Erinnerung" welcher für die Ticket-Historie in der Agenten-Oberfläche benutzt wird.',
@@ -5244,8 +5119,8 @@ Ihr Helpdesk-Team
             'Definiert den Link-Typ \'ParentChild\'. Wenn der Quell- und der Zielname den selben Wert beinhalten, ist der Link nicht-direktional. Ansonsten ist das Ergebnis ein direktionaler Link.',
         'Defines the link type groups. The link types of the same group cancel one another. Example: If ticket A is linked per a \'Normal\' link with ticket B, then these tickets could not be additionally linked with link of a \'ParentChild\' relationship.' =>
             'Definition der verschiedenen Verknüpfungsmöglichkeiten. Verknüpfungstpyen der selben Gruppe schließen sich gegenseitig aus. Beispiel: Wenn Ticket A mit dem Typ \'Normal\' mit Ticket B verlinkt wird, dann können diese beiden Tickets nicht noch zusätzlich mit dem Typ \'ElternKind\' miteinander verlinkt werden.',
-        'Defines the list of online repositories. Another installations can be used as repository, for example: Key="http://example.com/otrs/public.pl?Action=PublicRepository;File=" and Content="Some Name".' =>
-            'Definiert eine Liste von Online-Quellen. Andere Installationen können als Quelle genutzt werden z.B. Key="http://example.com/otrs/public.pl?Action=PublicRepository;File=" and Content="Irgendein Name". ',
+        'Defines the list of online repositories. Another installations can be used as repository, for example: Key="http://example.com/kix/public.pl?Action=PublicRepository;File=" and Content="Some Name".' =>
+            'Definiert eine Liste von Online-Quellen. Andere Installationen können als Quelle genutzt werden z.B. Key="http://example.com/kix/public.pl?Action=PublicRepository;File=" and Content="Irgendein Name". ',
         'Defines the list of possible next actions on an error screen, a full path is required, then is possible to add external links if needed.' =>
             'Definiert die Liste der möglichen Folgeaktionen in einer Fehleranzeige. Mit einem vollständigen Pfad kann man bei Bedarf externe Links einfügen.',
         'Defines the list of types for templates.' => 'Definiert die Typenliste für Templates.',
@@ -5253,8 +5128,8 @@ Ihr Helpdesk-Team
             'Definiert die Adresse der Online-Repository-Liste für zusätzliche Pakete. Das erste verfügbare Ergebnis wird genutzt.',
         'Defines the log module for the system. "File" writes all messages in a given logfile, "SysLog" uses the syslog daemon of the system, e.g. syslogd.' =>
             'Definiert das Log Module für das System. "Datei" schreibt alle Meldungen in das angegebene Logfile, "SysLog" nutzt den Syslog Deamon des Systems, z.B. syslogd.',
-        'Defines the maximal size (in bytes) for file uploads via the browser. Warning: Setting this option to a value which is too low could cause many masks in your OTRS instance to stop working (probably any mask which takes input from the user).' =>
-            'Definiert die maximale Größe (in Bytes) für das Hochladen von Dateien mit dem Browser. Achtung: Wenn man die Größe zu klein wählt können viele Eingabemasken in ihrer OTRS-Instanz nicht mehr funktionieren (vermutlich jede Maske die Benutzereingaben erwartet).',
+        'Defines the maximal size (in bytes) for file uploads via the browser. Warning: Setting this option to a value which is too low could cause many masks in your KIX instance to stop working (probably any mask which takes input from the user).' =>
+            'Definiert die maximale Größe (in Bytes) für das Hochladen von Dateien mit dem Browser. Achtung: Wenn man die Größe zu klein wählt können viele Eingabemasken in ihrer KIX-Instanz nicht mehr funktionieren (vermutlich jede Maske die Benutzereingaben erwartet).',
         'Defines the maximal valid time (in seconds) for a session id.' =>
             'Definiert die maximale Gültigkeitsdauer (in Sekunden) für eine Session-ID.',
         'Defines the maximum number of affected tickets per job.' => 'Definiert the maximale Anzahl der betroffenen Tickets pro Job',
@@ -5281,8 +5156,8 @@ Ihr Helpdesk-Team
             'Legt das Modul fest, das eine Benachrichtigung anzeigt, wenn Cloud-Services abgeschaltet sind.',
         'Defines the module to display a notification in different interfaces on different occasions for OTRS Business Solution™.' =>
             'Legt das Modul fest, das zu unterschiedlichen Gelegenheiten eine Benachrichtigung zur OTRS Business Solution™ anzeigt,',
-        'Defines the module to display a notification in the agent interface if the OTRS Daemon is not running.' =>
-            'Definiert das Modul, dass eine Benachrichtigung im Agentenbereich anzeigt, wenn der OTRS Daemon nicht läuft.',
+        'Defines the module to display a notification in the agent interface if the KIX Daemon is not running.' =>
+            'Definiert das Modul, dass eine Benachrichtigung im Agentenbereich anzeigt, wenn der KIX Daemon nicht läuft.',
         'Defines the module to display a notification in the agent interface, if the agent is logged in while having out-of-office active.' =>
             'Definiert das Modul das eine Benachrichtigung im Agenten-Interface anzeigt, wenn ein Agent angemeldet ist, während er die "Out of Office"-Funktion aktiviert hat.',
         'Defines the module to display a notification in the agent interface, if the agent is logged in while having system maintenance active.' =>
@@ -5326,7 +5201,6 @@ Ihr Helpdesk-Team
         'Defines the next state of a ticket after adding a note, in the ticket note screen of the agent interface.' =>
             'Definiert den nächsten Ticket Status nach dem hinzufügen einer Notiz im "Ticket Notiz" Ansicht der Agenten-Oberfläche.',
         'Defines the next state of a ticket after adding a note, in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert den nächsten Ticket Status nach dem hinzufügen einer Notiz im "Ticket-Bearbeiter" Ansicht der Agenten-Oberfläche.',
         'Defines the next state of a ticket after adding a note, in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Definiert den nächsten Ticket Status nach dem hinzufügen einer Notiz in der "Warten auf Erinnerung" Ansicht der Agenten-Oberfläche.',
@@ -5410,7 +5284,7 @@ Ihr Helpdesk-Team
         'Defines the subject for rejected emails.' => 'Bestimmt den Betreff von abgelehnten E-Mails.',
         'Defines the system administrator\'s email address. It will be displayed in the error screens of the application.' =>
             'Definiert die E-Mail-Adresse des System-Administrators. Sie wird in den Fehleranzeigen des Programms angezeigt.',
-        'Defines the system identifier. Every ticket number and http session string contains this ID. This ensures that only tickets which belong to your system will be processed as follow-ups (useful when communicating between two instances of OTRS).' =>
+        'Defines the system identifier. Every ticket number and http session string contains this ID. This ensures that only tickets which belong to your system will be processed as follow-ups (useful when communicating between two instances of KIX).' =>
             'Definiert die System ID. Jede Ticketnummer und HTTP Sitzung enthält diese ID. Das stellt sicher, dass nur Tickets in das Ticketsystem aufgenommen werden, welche zum eigenen Ticketsystem gehören (nützlich, wenn zwischen zwei Instanzen von OTRS kommuniziert wird).',
         'Defines the target attribute in the link to external customer database. E.g. \'AsPopup PopupType_TicketAction\'.' =>
             '',
@@ -5492,15 +5366,15 @@ Ihr Helpdesk-Team
             '',
         'Disable HTTP header "Content-Security-Policy" to allow loading of external script contents. Disabling this HTTP header can be a security issue! Only disable it, if you know what you are doing!' =>
             '',
-        'Disable HTTP header "X-Frame-Options: SAMEORIGIN" to allow OTRS to be included as an IFrame in other websites. Disabling this HTTP header can be a security issue! Only disable it, if you know what you are doing!' =>
+        'Disable HTTP header "X-Frame-Options: SAMEORIGIN" to allow KIX to be included as an IFrame in other websites. Disabling this HTTP header can be a security issue! Only disable it, if you know what you are doing!' =>
             '',
         'Disable restricted security for IFrames in IE. May be required for SSO to work in IE.' =>
             '',
         'Disables sending reminder notifications to the responsible agent of a ticket (Ticket::Responsible needs to be activated).' =>
             '',
-        'Disables the communication between this system and OTRS Group servers that provides cloud services. If active, some functionality will be lost such as system registration, support data sending, upgrading to and use of OTRS Business Solution™, OTRS Verify™, OTRS News and product News dashboard widgets, among others.' =>
+        'Disables the communication between this system and KIX Group servers that provides cloud services. If active, some functionality will be lost such as system registration, support data sending, upgrading to and use of KIX Business Solution™, OTRS Verify™, OTRS News and product News dashboard widgets, among others.' =>
             '',
-        'Disables the web installer (http://yourhost.example.com/otrs/installer.pl), to prevent the system from being hijacked. If set to "No", the system can be reinstalled and the current basic configuration will be used to pre-populate the questions within the installer script. If not active, it also disables the GenericAgent, PackageManager and SQL Box.' =>
+        'Disables the web installer (http://yourhost.example.com/kix/installer.pl), to prevent the system from being hijacked. If set to "No", the system can be reinstalled and the current basic configuration will be used to pre-populate the questions within the installer script. If not active, it also disables the GenericAgent, PackageManager and SQL Box.' =>
             '',
         'Display a warning and prevent search when using stop words within fulltext search.' =>
             'Zeigt eine Warnung an und verhindert die Suche, wenn Stop-Wörter in der Volltextsuche eingegeben werden.',
@@ -5551,7 +5425,6 @@ Ihr Helpdesk-Team
         'Dynamic fields shown in the ticket overview screen of the customer interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.' =>
             'Dynamische Felder die in der Ticket Übersicht in der Kunden-Oberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.',
         'Dynamic fields shown in the ticket owner screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Dynamische Felder die in der "Ticket-Bearbeiter" Ansicht in der Agenten-Oberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.',
         'Dynamic fields shown in the ticket pending screen of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.' =>
             'Dynamische Felder die in der "Warten auf Erinnerung" Ansicht in der Agenten-Oberfläche angezeigt werden. Mögliche Einstellungen: 0 = deaktiviert, 1 = aktiviert, 2 = aktiviert und benötigt.',
@@ -5586,7 +5459,6 @@ Ihr Helpdesk-Team
         'DynamicField object registration.' => 'DynamischesFeld Objektregistrierung.',
         'E-Mail Outbound' => 'Ausgehende E-Mail',
         'Edit Customer Companies.' => 'Kundenfirmen bearbeiten.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Edit contacts.' => 'Ansprechpartner bearbeiten.',
         'Edit customer company' => 'Kundenunternehmen bearbeiten',
         'Email Addresses' => 'E-Mail-Adressen',
@@ -5595,8 +5467,8 @@ Ihr Helpdesk-Team
         'Email sent to customer.' => 'E-Mail an Kunden versandt.',
         'Enable keep-alive connection header for SOAP responses.' => 'Keep-Alive-Verbindungsheader für SOAP-Responses aktivieren.',
         'Enabled filters.' => 'Filter aktiviert.',
-        'Enables PGP support. When PGP support is enabled for signing and encrypting mail, it is HIGHLY recommended that the web server runs as the OTRS user. Otherwise, there will be problems with the privileges when accessing .gnupg folder.' =>
-            'Aktiviert PGP-Support. Wenn PGP-Support für das signieren und verschlüsseln von Mails eingeschaltet ist, wird dringend empfohlen, den Webserver unter dem OTRS-Benutzer zu betreiben. Andernfalls werden Probleme mit den Berechtigungen auftreten, wenn auf das .gnupg-Verzeichnis zugegriffen wird.',
+        'Enables PGP support. When PGP support is enabled for signing and encrypting mail, it is HIGHLY recommended that the web server runs as the KIX user. Otherwise, there will be problems with the privileges when accessing .gnupg folder.' =>
+            'Aktiviert PGP-Support. Wenn PGP-Support für das signieren und verschlüsseln von Mails eingeschaltet ist, wird dringend empfohlen, den Webserver unter dem KIX-Benutzer zu betreiben. Andernfalls werden Probleme mit den Berechtigungen auftreten, wenn auf das .gnupg-Verzeichnis zugegriffen wird.',
         'Enables S/MIME support.' => 'Aktiviert unterstützung für S/MIME.',
         'Enables customers to create their own accounts.' => 'Erlaubt Kunden, eigene Konten anzulegen.',
         'Enables fetch S/MIME from CustomerUser backend support.' => '',
@@ -5605,7 +5477,6 @@ Ihr Helpdesk-Team
             'Schaltet das Caching von Templates an oder aus. Warnung: Schalten Sie auf Produktivsystemen das Template-Caching nicht ab, da hierdurch massive Performance-Beeinträchtigungen auftreten werden. Diese Einstellung sollte nur zur Fehlerbehebung abgeschaltet werden.',
         'Enables or disables the debug mode over frontend interface.' => 'Aktiviert oder deaktiviert den Debug-Modus für das Frontend.',
         'Enables or disables the ticket watcher feature, to keep track of tickets without being the owner nor the responsible.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Aktiviert oder deaktiviert das Ticket beobachten-Feature, das das beobachten von Tickets erlaubt, ohne der Bearbeiter oder Verantwortliche zu sein.',
         'Enables performance log (to log the page response time). It will affect the system performance. Frontend::Module###AdminPerformanceLog must be enabled.' =>
             'Aktiviert den Performance-Log zum erfassen der Seiten-Antwortzeiten. Diese Einstellung beeinflusst die Gesamtperformance des Systems. Frontend::Module###AdminPerformanceLog muss aktiviert sein.',
@@ -5645,16 +5516,12 @@ Ihr Helpdesk-Team
             'Eventmodul-Registierung. Für höhere Performancen können Sie ein Trigger-Event definieren (z.B. Event => TicketCreate). Dies ist nur möglich, wenn alle dynamischen Ticketfelder das gleiche Event benötigen.',
         'Event module that performs an update statement on TicketIndex to rename the queue name there if needed and if StaticDB is actually used.' =>
             'Ereignismodul, das ein Update-Statement auf TicketIndex ausführt, um die Queue umzubenennen (wenn nötig und wenn StaticDB genutzt wird).',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Event module that updates contact search profiles if login changes.' =>
             'Eventmodul, das Suchprofile von Ansprechpartner aktualisiert, wenn sich Loginnamen ändern.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Event module that updates contact service membership if login changes.' =>
             'Eventmodul, das Service-Zuordnungen von Ansprechpartner aktualisiert, wenn sich Loginnamen ändern.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Event module that updates contacts after an update of the Customer.' =>
             'Ereignis-Modul, das Ansprechpartner aktualisiert nach einem Update des Kunden.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Event module that updates tickets after an update of the contact.' =>
             'Ereignis-Modul, das ein Ticket aktualisiert nach einem Update des Ansprechpartner.',
         'Event module that updates tickets after an update of the Customer.' =>
@@ -5803,8 +5670,8 @@ Ihr Helpdesk-Team
             'Wenn "LDAP" als Customer::AuthModule ausgewählt ist, können hier Zugangs-Attribute bestimmt werden.',
         'If "LDAP" was selected for Customer::AuthModule, you can specify if the applications will stop if e. g. a connection to a server can\'t be established due to network problems.' =>
             'Wenn "LDAP" als Customer::AuthModule ausgewählt ist, können Sie hier festlegen, ob Anwendungen stoppen sollen, wenn z.B. die Verbindung zum Server aufgrund von Netzwerkproblemen nicht hergestellt werden kann.',
-        'If "LDAP" was selected for Customer::Authmodule, you can check if the user is allowed to authenticate because he is in a posixGroup, e.g. user needs to be in a group xyz to use OTRS. Specify the group, who may access the system.' =>
-            'Wenn "LDAP" als Customer::AuthModule ausgewählt ist, können Sie prüfen, ob der Benutzer aufgrund seiner Mitgliedschaft in einer posixGroup Authentifizierungsberechtigt (z.B. wenn ein Nutzer Mitglied der Gruppe xyz sein muss, um OTRS nutzen zu dürfen). Legen Sie diese Gruppe hier fest.',
+        'If "LDAP" was selected for Customer::Authmodule, you can check if the user is allowed to authenticate because he is in a posixGroup, e.g. user needs to be in a group xyz to use KIX. Specify the group, who may access the system.' =>
+            'Wenn "LDAP" als Customer::AuthModule ausgewählt ist, können Sie prüfen, ob der Benutzer aufgrund seiner Mitgliedschaft in einer posixGroup Authentifizierungsberechtigt (z.B. wenn ein Nutzer Mitglied der Gruppe xyz sein muss, um KIX nutzen zu dürfen). Legen Sie diese Gruppe hier fest.',
         'If "LDAP" was selected, you can add a filter to each LDAP query, e.g. (mail=*), (objectclass=user) or (!objectclass=computer).' =>
             'Wenn "LDAP" als Customer::AuthModule ausgewählt ist, können Sie hier Filter für jede LDAP-Anfrage festlegen, z.B. (mail=*), (objectclass=user) oder (!objectclass=computer).',
         'If "Radius" was selected for Customer::AuthModule, the password to authenticate to the radius host must be specified.' =>
@@ -5834,7 +5701,6 @@ Ihr Helpdesk-Team
         'If a note is added by an agent, sets the state of a ticket in the ticket responsible screen of the agent interface.' =>
             'Ermöglicht das Ändern des Ticket-Status beim Hinzufügen einer Notiz innerhalb des Verantwortlicher-Bildschirms.',
         'If a note is added by an agent, sets the state of the ticket in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Ermöglicht das Ändern des Ticket-Status beim Hinzufügen einer Notiz innerhalb des Bearbeiter-Bildschirms.',
         'If a note is added by an agent, sets the state of the ticket in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Ermöglicht das Ändern des Ticket-Status beim Hinzufügen einer Notiz innerhalb des Wartezeit-Bildschirms.',
@@ -5858,14 +5724,14 @@ Ihr Helpdesk-Team
             'Aktivieren um die Fehler-Ausgabe des Daemons in eine Log-Datei umzuleiten.',
         'If enabled the daemon will redirect the standard output stream to a log file.' =>
             'Aktivieren um die Standard-Ausgabe des Daemons in eine Log-Datei umzuleiten.',
-        'If enabled, OTRS will deliver all CSS files in minified form. WARNING: If you turn this off, there will likely be problems in IE 7, because it cannot load more than 32 CSS files.' =>
+        'If enabled, KIX will deliver all CSS files in minified form. WARNING: If you turn this off, there will likely be problems in IE 7, because it cannot load more than 32 CSS files.' =>
             'Wenn akiviert, liefert OTRS alle CSS-Dateien in minifizierter Form aus. WARNUNG: Das Abschalten dieser Einstellung wird im IE 7 wahrscheinlich Probleme verursachen, weil dieser Browser nicht mehr als 32 CSS-Dateien für eine Seite laden kann.',
-        'If enabled, OTRS will deliver all JavaScript files in minified form.' =>
+        'If enabled, KIX will deliver all JavaScript files in minified form.' =>
             'Wenn aktiviert, liefert OTRS JavaScript-Dateien in minifizierter Form aus.',
         'If enabled, TicketPhone and TicketEmail will be open in new windows.' =>
             'Wenn aktiviert, werden TicketPhone und TicketEmail in neuen Fenstern geöffnet.',
-        'If enabled, the OTRS version tag will be removed from the Webinterface, the HTTP headers and the X-Headers of outgoing mails.' =>
-            'Wenn aktiviert, werden OTRS-Versionsinformationen aus der Oberfläche und HTTP-Headern und X-Headern entfernt.',
+        'If enabled, the KIX version tag will be removed from the Webinterface, the HTTP headers and the X-Headers of outgoing mails.' =>
+            'Wenn aktiviert, werden KIX-Versionsinformationen aus der Oberfläche und HTTP-Headern und X-Headern entfernt.',
         'If enabled, the customer can search for tickets in all services (regardless what services are assigned to the customer).' =>
             'Wenn aktiviert, können Kunden nach Tickets mit allen Services suchen (unabhängig davon, welche Services dem jeweiligen Kunden zugewiesen sind).',
         'If enabled, the different overviews (Dashboard, LockedView, QueueView) will automatically refresh after the specified time.' =>
@@ -5924,9 +5790,7 @@ Ihr Helpdesk-Team
         'Link agents to groups.' => 'Agenten zu Gruppen zuordnen.',
         'Link agents to roles.' => 'Agenten zu Rollen zuordnen.',
         'Link attachments to templates.' => 'Anhänge zu Vorlagen zuordnen.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Link contact to groups.' => 'Ansprechpartner zu Gruppen zuordnen.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Link contact to services.' => 'Ansprechpartner zu Services zuordnen.',
         'Link queues to auto responses.' => 'Automatische Antworten zu Queues zuordnen.',
         'Link roles to groups.' => 'Rollen zu Gruppen zuordnen.',
@@ -5943,7 +5807,6 @@ Ihr Helpdesk-Team
             'Liste der JavaScript-Dateien, die immer im Kunden-Interface geladen werden sollen.',
         'List of all CustomerCompany events to be displayed in the GUI.' =>
             'Liste aller Kundenereignisse, welche in der grafischen Benutzeroberfläche angezeigt werden sollen.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'List of all contact events to be displayed in the GUI.' => 'Liste aller Ansprechpartner-Ereignisse, welche in der grafischen Benutzeroberfläche angezeigt werden sollen.',
         'List of all DynamicField events to be displayed in the GUI.' => 'Liste aller DynamischesFeld-Ereignisse, welche in der grafischen Benutzeroberfläche angezeigt werden sollen.',
         'List of all Package events to be displayed in the GUI.' => 'Liste aller Paket-Ereignisse, welche in der grafischen Benutzeroberfläche angezeigt werden sollen.',
@@ -5973,7 +5836,7 @@ Ihr Helpdesk-Team
         'Makes the session management use html cookies. If html cookies are disabled or if the client browser disabled html cookies, then the system will work as usual and append the session id to the links.' =>
             'Benutzt für das Session-Management HTML-Cookies. Wenn HTML-Cookies deaktiviert sind oder im Browser HTML-Cookies deaktiviert sind, arbeitet das System wie immer und fügt die Session-ID and Links an.',
         'Malay' => 'Malaysisch',
-        'Manage OTRS Group cloud services.' => 'Verwaltet die Cloud-Services der OTRS Gruppe.',
+        'Manage KIX Group cloud services.' => 'Verwaltet die Cloud-Services der KIX Gruppe.',
         'Manage PGP keys for email encryption.' => 'PGP-Schlüssel für E-Mail-Verschlüsselung verwalten.',
         'Manage POP3 or IMAP accounts to fetch email from.' => 'POP3- oder IMAP-Konten für das Abholen von E-Mail verwalten.',
         'Manage S/MIME certificates for email encryption.' => 'S/MIME-Zertifikate für E-Mail-Verschlüsselung verwalten.',
@@ -6020,7 +5883,6 @@ Ihr Helpdesk-Team
             'Modul zur Prüfung von Gruppen-Berechtigungen für den Zugriff auf Tickets.',
         'Module to compose signed messages (PGP or S/MIME).' => 'Modul um signierte Nachrichten zu verfassen (PGP oder S/MIME).',
         'Module to crypt composed messages (PGP or S/MIME).' => 'Modul um verschlüsselte Nachrichten zu verassen (PGP oder S/MIME).',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Module to fetch contacts SMIME certificates of incoming messages.' =>
             'Modul zum Ermitteln von SMIME-Zertifikaten des Ansprechpartner bei eingehenden Nachrichten.',
         'Module to filter and manipulate incoming messages. Block/ignore all spam email with From: noreply@ address.' =>
@@ -6045,7 +5907,6 @@ Ihr Helpdesk-Team
         'Module to grant access to the agent responsible of a ticket.' =>
             'Modul zum Gestatten des Zugriffs auf ein Ticket durch den verantwortlichen Agenten.',
         'Module to grant access to the creator of a ticket.' => 'Modul zum Gestatten des Zugriffs auf ein Ticket durch den Agenten, der das Ticket ursprünglich erstellt hat.',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Module to grant access to the owner of a ticket.' => 'Modul zum Gestatten des Zugriffs auf ein Ticket durch den Agenten, der Bearbeiter des Tickets ist.',
         'Module to grant access to the watcher agents of a ticket.' => 'Modul zum Gestatten des Zugriffs auf ein Ticket durch Agenten, die das Ticket beobachten.',
         'Module to show notifications and escalations (ShownMax: max. shown escalations, EscalationInMinutes: Show ticket which will escalation in, CacheTime: Cache of calculated escalations in seconds).' =>
@@ -6062,7 +5923,6 @@ Ihr Helpdesk-Team
         'Nederlands' => 'Niederländisch',
         'New Ticket [%s] created (Q=%s;P=%s;S=%s).' => 'Neues Ticket [%s] erstellt (Q=%s;P=%s;S=%s).',
         'New Window' => 'Neues Fenster',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'New owner is "%s" (ID=%s).' => 'Neuer Bearbeiter ist "%s" (ID=%s).',
         'New process ticket' => 'Neues Prozess-Ticket',
         'New responsible is "%s" (ID=%s).' => 'Neuer Verantwortlicher ist "%s" (ID=%s).',
@@ -6084,7 +5944,6 @@ Ihr Helpdesk-Team
             'OTRS kann eine oder mehrere Spiegeldatenbanken für aufwändige Operationen wie Volltextsuchen oder Statistikgenerierungen nutzen. Hier können Sie die DSN für die erste Spiegeldatenbank hinterlegen.',
         'Old: "%s" New: "%s"' => 'Alt: "%s" Neu: "%s"',
         'Online' => 'Online',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Open tickets (contact)' => 'Offene Tickets (Ansprechpartner)',
         'Open tickets (customer)' => 'Offene Tickets (Kunde)',
         'Option' => 'Option',
@@ -6123,7 +5982,6 @@ Ihr Helpdesk-Team
             'Parameter für das Dashboard-Backend des Kunden-Informations-Widgets im Agentenbereich. Über "Group" kann der Zugriff auf das Plugin beschränkt werden (z. B. Group: admin;group1;group2;). "Default" gibt an, ob das Plugin standardmäßig aktiviert sein soll oder ob der Nutzer es manuell aktivieren muss. "CacheTTLLocal" bestimmt die Laufzeit des Plugin-Caches in Minuten.',
         'Parameters for the dashboard backend of the customer id status widget of the agent interface . "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.' =>
             'Parameter für das Dashboard-Backend des Kundennummer-Status-Widgets im Agentenbereich. Über "Group" kann der Zugriff auf das Plugin beschränkt werden (z. B. Group: admin;group1;group2;). "Default" gibt an, ob das Plugin standardmäßig aktiviert sein soll oder ob der Nutzer es manuell aktivieren muss. "CacheTTLLocal" bestimmt die Laufzeit des Plugin-Caches in Minuten.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Parameters for the dashboard backend of the contact list overview of the agent interface . "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.' =>
             'Parameter für das Dashboard-Backend des Ansprechpartner-Listen-Widgets im Agentenbereich. "Limit" bestimmt die Anzahl der standardmäßig angezeigten Einträge. Über "Group" kann der Zugriff auf das Plugin beschränkt werden (z. B. Group: admin;group1;group2;). "Default" gibt an, ob das Plugin standardmäßig aktiviert sein soll oder ob der Nutzer es manuell aktivieren muss. "CacheTTLLocal" bestimmt die Laufzeit des Plugin-Caches in Minuten.',
         'Parameters for the dashboard backend of the new tickets overview of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.' =>
@@ -6221,7 +6079,6 @@ Ihr Helpdesk-Team
         'Required permissions to use the ticket note screen in the agent interface.' =>
             'Benötigte Rechte um den "Notiz"-Dialog eines Tickets im Agenten-Interface aufzurufen.',
         'Required permissions to use the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Benötigte Rechte um den "Bearbeiter"-Dialog eines Tickets im Agenten-Interface aufzurufen.',
         'Required permissions to use the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Benötigte Rechte um den "Warten"-Dialog eines Tickets im Agenten-Interface aufzurufen.',
@@ -6234,7 +6091,6 @@ Ihr Helpdesk-Team
         'Required permissions to use the ticket responsible screen in the agent interface.' =>
             'Benötigte Rechte um den "Verantwortlicher"-Dialog eines Tickets im Agenten-Interface aufzurufen.',
         'Resets and unlocks the owner of a ticket if it was moved to another queue.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter eines TIckets zurück und entsperrt es, wenn das Ticket in eine andere Queue verschoben wird.',
         'Responsible Tickets' => '',
         'Responsible Tickets.' => '',
@@ -6249,7 +6105,6 @@ Ihr Helpdesk-Team
         'Running Process Tickets' => 'Aktive Prozesstickets',
         'Runs an initial wildcard search of the existing customer company when accessing the AdminCustomerCompany module.' =>
             'Führt eine initiale Wildcard-Suche für bestehende Kundenfirmen aus, wenn auf AdminCustomerCompany zugegriffen wird.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Runs an initial wildcard search of the existing contacts when accessing the AdminCustomerUser module.' =>
             'Führt eine initiale Wildcard-Suche für bestehende Ansprechpartner aus, wenn auf AdminCustomerUser zugegriffen wird.',
         'Runs the system in "Demo" mode. If set to "Yes", agents can change preferences, such as selection of language and theme via the agent web interface. These changes are only valid for the current session. It will not be possible for agents to change their passwords.' =>
@@ -6259,8 +6114,8 @@ Ihr Helpdesk-Team
         'SMS' => 'SMS',
         'SMS (Short Message Service)' => 'SMS (Short Message Service)',
         'Sample command output' => 'Beispielhafte Kommando-Ausgabe',
-        'Saves the attachments of articles. "DB" stores all data in the database (not recommended for storing big attachments). "FS" stores the data on the filesystem; this is faster but the webserver should run under the OTRS user. You can switch between the modules even on a system that is already in production without any loss of data. Note: Searching for attachment names is not supported when "FS" is used.' =>
-            'Speicherung von Artikel-Anlagen. "DB" legt alle Daten in der Datenbank ab (nicht empfohlen für große Anlagen). "FS" legt alle Daten im Dateisystem ab; dies ist schneller, jedoch sollte der Webserver mit dem OTRS-Benutzer betrieben werden. Sie können im laufenden Betrieb ohne Datenverlust zwischen den Modulen wechseln. Bitte beachten Sie, dass das Suchen nach Anlagen für "FS" nicht unterstützt wird.',
+        'Saves the attachments of articles. "DB" stores all data in the database (not recommended for storing big attachments). "FS" stores the data on the filesystem; this is faster but the webserver should run under the KIX user. You can switch between the modules even on a system that is already in production without any loss of data. Note: Searching for attachment names is not supported when "FS" is used.' =>
+            'Speicherung von Artikel-Anlagen. "DB" legt alle Daten in der Datenbank ab (nicht empfohlen für große Anlagen). "FS" legt alle Daten im Dateisystem ab; dies ist schneller, jedoch sollte der Webserver mit dem KIX-Benutzer betrieben werden. Sie können im laufenden Betrieb ohne Datenverlust zwischen den Modulen wechseln. Bitte beachten Sie, dass das Suchen nach Anlagen für "FS" nicht unterstützt wird.',
         'Schedule a maintenance period.' => 'Systemwartung planen',
         'Screen' => 'Bildschirm',
         'Search Customer' => 'Kunden suchen',
@@ -6281,12 +6136,11 @@ Ihr Helpdesk-Team
         'Send notifications to users.' => 'Benachrichtigungen an Agenten verschicken.',
         'Sender type for new tickets from the customer inteface.' => 'Absender Typ für neue Tickets aus der Kunden-Oberfläche.',
         'Sends agent follow-up notification only to the owner, if a ticket is unlocked (the default is to send the notification to all agents).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Sendet Rückfrage Benachrichtigungen für Agenten nur an den Ticket-Bearbeiter, wenn das Ticket entsperrt ist (standardmäßig werden die Benachrichtigungen an alle Agenten gesendet).',
         'Sends all outgoing email via bcc to the specified address. Please use this only for backup reasons.' =>
             'Versendet alle ausgehenden E-Mails via BCC zu der angegebenen Adresse. Bitte nutzen Sie dies ausschließlich für Backups.',
         'Sends customer notifications just to the mapped customer.' => 'Versendet Kundenbenachrichtigungen nur für den gemappten Kunden.',
-        'Sends registration information to OTRS group.' => 'Übermitteln der Registrierungsinformationen an die OTRS Group.',
+        'Sends registration information to KIX Group.' => 'Übermitteln der Registrierungsinformationen an die KIX Gruppe.',
         'Sends reminder notifications of unlocked ticket after reaching the reminder date (only sent to ticket owner).' =>
             '',
         'Sends the notifications which are configured in the admin interface under "Notfication (Event)".' =>
@@ -6307,14 +6161,11 @@ Ihr Helpdesk-Team
         'Set this to yes if you trust in all your public and private pgp keys, even if they are not certified with a trusted signature.' =>
             'Setzen Sie diese Einstellung auf "Ja", wenn Sie allen öffentlichen und privaten PGP-Schlüsseln auch dann vertrauen möchten, wenn diese nicht mit einer vertrauenswürdigen Signatur zertifiziert sind.',
         'Sets if SLA must be selected by the agent.' => 'Gibt an, ob ein SLA durch einen Agenten ausgewählt sein muss.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Sets if SLA must be selected by the contact.' => 'Gibt an, ob ein SLA durch einen Ansprechpartner ausgewählt sein muss.',
         'Sets if note must be filled in by the agent. Can be overwritten by Ticket::Frontend::NeedAccountedTime.' =>
             'Setzt ob eine Notiz vom Agenten ausgefüllt werden muss. Kann durch Ticket::Frontend::NeedAccountedTime überschrieben werden.',
         'Sets if service must be selected by the agent.' => 'Gibt an, ob ein Service durch einen Agenten ausgewählt sein muss.',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Sets if service must be selected by the contact.' => 'Gibt an, ob ein Service durch einen Ansprechpartner ausgewählt sein muss.',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Sets if ticket owner must be selected by the agent.' => 'Gibt an, ob ein Ticket-Bearbeiter durch einen Agenten ausgewählt sein muss.',
         'Sets the PendingTime of a ticket to 0 if the state is changed to a non-pending state.' =>
             'Setzt die Wartezeit eines Tickets auf 0, wenn der Status auf einen nicht warten-Status gesetzt wird.',
@@ -6337,7 +6188,6 @@ Ihr Helpdesk-Team
         'Sets the default body text for notes added in the ticket note screen of the agent interface.' =>
             'Definiert den Standard Body-Text für Notizen in der "Ticket Notiz" Ansicht in der Agenten-Oberfläche.',
         'Sets the default body text for notes added in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Definiert den Standard Body-Text für Notizen in der "Ticket-Bearbeiter" Ansicht in der Agenten-Oberfläche.',
         'Sets the default body text for notes added in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Definiert den Standard Body-Text für Notizen in der "Warten auf Erinnerung" Ansicht in der Agenten-Oberfläche.',
@@ -6378,7 +6228,6 @@ Ihr Helpdesk-Team
         'Sets the default subject for notes added in the ticket note screen of the agent interface.' =>
             'Bestimmt den Standard-Betreff für Notizen, die im Ticketnotiz-Bildschirm im Agentenbereich hinzugefügt werden.',
         'Sets the default subject for notes added in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Bestimmt den Standard-Betreff für Notizen, die im Ticket-Bearbeiter-Bildschirm im Agentenbereich hinzugefügt werden.',
         'Sets the default subject for notes added in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Bestimmt den Standard-Betreff für Notizen, die im Wartezeit für Ticket setzen-Bildschirm im Agentenbereich hinzugefügt werden.',
@@ -6423,7 +6272,6 @@ Ihr Helpdesk-Team
         'Sets the queue in the ticket note screen of a zoomed ticket in the agent interface.' =>
             'Setzt die Queue im Notiz-Bildschirm von Tickets im Agentenbereich.',
         'Sets the queue in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt die Queue im Bearbeiter-Bildschirm von Tickets im Agentenbereich.',
         'Sets the queue in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Setzt die Queue im Wartezeit setzen-Bildschirm von Tickets im Agentenbereich.',
@@ -6440,7 +6288,6 @@ Ihr Helpdesk-Team
         'Sets the responsible agent of the ticket in the ticket note screen of the agent interface.' =>
             'Setzt den verantwortlichen Agenten im Notiz-Bildschirm für Tickets im Agentenbereich.',
         'Sets the responsible agent of the ticket in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den verantwortlichen Agenten im Bearbeiter-Bildschirm für Tickets im Agentenbereich.',
         'Sets the responsible agent of the ticket in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Setzt den verantwortlichen Agenten im Wartezeit setzen-Bildschirm für Tickets im Agentenbereich.',
@@ -6455,7 +6302,6 @@ Ihr Helpdesk-Team
         'Sets the service in the ticket note screen of the agent interface (Ticket::Service needs to be activated).' =>
             'Setzt den Service im Notiz-Bildschirm für Tickets im Agentenbereich (Ticket::Service muss aktiviert sein).',
         'Sets the service in the ticket owner screen of a zoomed ticket in the agent interface (Ticket::Service needs to be activated).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Service im Bearbeiter-Bildschirm für Tickets im Agentenbereich (Ticket::Service muss aktiviert sein).',
         'Sets the service in the ticket pending screen of a zoomed ticket in the agent interface (Ticket::Service needs to be activated).' =>
             'Setzt den Service im Wartezeit setzen-Bildschirm für Tickets im Agentenbereich (Ticket::Service muss aktiviert sein).',
@@ -6467,28 +6313,20 @@ Ihr Helpdesk-Team
         'Sets the system time zone (required a system with UTC as system time). Otherwise this is a diff time to the local time.' =>
             'Legt die Zeitzone des Systems fest (benötigt ein System mit UTC als Systemzeit). Andernfalls ist dies die Differenzzeit zur lokalen Zeit.',
         'Sets the ticket owner in the close ticket screen of the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Schließen-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket bulk screen of the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Stapelverarbeitungs-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket free text screen of the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Freitext-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket note screen of the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Notiz-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Bearbeiter-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket pending screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Wartezeit setzen-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket priority screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Priorität-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket owner in the ticket responsible screen of the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Bearbeiter im Verantwortlicher-Bildschirm für Tickets im Agentenbereich.',
         'Sets the ticket type in the close ticket screen of the agent interface (Ticket::Type needs to be activated).' =>
             'Setzt den Ticket-Typ im Schließen-Bildschirm für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).',
@@ -6499,7 +6337,6 @@ Ihr Helpdesk-Team
         'Sets the ticket type in the ticket note screen of the agent interface (Ticket::Type needs to be activated).' =>
             'Setzt den Ticket-Typ im Notiz-Bildschirm für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).',
         'Sets the ticket type in the ticket owner screen of a zoomed ticket in the agent interface (Ticket::Type needs to be activated).' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Setzt den Ticket-Typ im Bearbeiter-Bildschirm für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).',
         'Sets the ticket type in the ticket pending screen of a zoomed ticket in the agent interface (Ticket::Type needs to be activated).' =>
             'Setzt den Ticket-Typ im Wartezeit setzen-Bildschirm für Tickets im Agentenbereich (Ticket::Type muss aktiviert sein).',
@@ -6525,7 +6362,6 @@ Ihr Helpdesk-Team
         'Show article as rich text even if rich text writing is disabled.' =>
             'Steuert, ob der Artikel als Richtext angezeigt werden soll, auch wenn das Schreiben von Richtext abgeschaltet ist.',
         'Show queues even when only locked tickets are in.' => 'Queues auch dann anzeigen, wenn sich darin nur gesperrte Tickets befinden.',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Show the current owner in the customer interface.' => 'Steuert, ob der aktuelle Bearbeiter im Kundenbereich angezeigt werden soll.',
         'Show the current queue in the customer interface.' => 'Steuert, ob die aktuelle Queue im Kundenbereich angezeigt werden soll.',
         'Show the history for this ticket' => 'Zeige die Historie für dieses Ticket an',
@@ -6570,7 +6406,6 @@ Ihr Helpdesk-Team
         'Shows a link in the menu to see the history of a ticket in every ticket overview of the agent interface.' =>
             'Zeigt einen Link zum Anzeigen der Historie von Tickets in den Ticketübersichten im Agentenbereich an.',
         'Shows a link in the menu to see the owner of a ticket in the ticket zoom view of the agent interface. Additional access control to show or not show this link can be done by using Key "Group" and Content like "rw:group1;move_into:group2". To cluster menu items use for Key "ClusterName" and for the Content any name you want to see in the UI. Use "ClusterPriority" to configure the order of a certain cluster within the toolbar.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Zeigt einen Link zum Anzeigen des Bearbeiters eines Tickets im Ticket-Zoom des Agentenbereichs an. Zusätzliche Zugriffskontrolle auf diesen Link kann durch Angabe von "Group" als Schlüssel und Inhalten wie "rw:group1;move_into:group2" als Wert konfiguriert werden. Um Elemente des Ticketmenüs zu gruppieren, kann "ClusterName" als Schlüssel und ein beliebiger Name als Wert verwendet werden, unter dem diese Gruppe im Benutzer interface angezeigt werden soll. Verwenden Sie "ClusterPriority", um die Anzeigereihenfolge der verschiedenen Gruppen innerhalb des Ticketmenüs zu steuern.',
         'Shows a link in the menu to see the priority of a ticket in the ticket zoom view of the agent interface. Additional access control to show or not show this link can be done by using Key "Group" and Content like "rw:group1;move_into:group2". To cluster menu items use for Key "ClusterName" and for the Content any name you want to see in the UI. Use "ClusterPriority" to configure the order of a certain cluster within the toolbar.' =>
             'Zeigt einen Link zum Anzeigen der Priorität eines Tickets im Ticket-Zoom des Agentenbereichs an. Zusätzliche Zugriffskontrolle auf diesen Link kann durch Angabe von "Group" als Schlüssel und Inhalten wie "rw:group1;move_into:group2" als Wert konfiguriert werden. Um Elemente des Ticketmenüs zu gruppieren, kann "ClusterName" als Schlüssel und ein beliebiger Name als Wert verwendet werden, unter dem diese Gruppe im Benutzer interface angezeigt werden soll. Verwenden Sie "ClusterPriority", um die Anzeigereihenfolge der verschiedenen Gruppen innerhalb des Ticketmenüs zu steuern.',
@@ -6600,7 +6435,6 @@ Ihr Helpdesk-Team
         'Shows a list of all the involved agents on this ticket, in the ticket note screen of the agent interface.' =>
             'Zeigt in der "Ticket Notiz" Ansicht der Agenten-Oberfläche eine Liste aller am Ticket beteiligten Agenten.',
         'Shows a list of all the involved agents on this ticket, in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Zeigt in der "Ticket-Bearbeiter" Ansicht der Agenten-Oberfläche eine Liste aller am Ticket beteiligten Agenten.',
         'Shows a list of all the involved agents on this ticket, in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Zeigt in der "Warten auf Erinnerung" Ansicht der Agenten-Oberfläche eine Liste aller am Ticket beteiligten Agenten.',
@@ -6615,7 +6449,6 @@ Ihr Helpdesk-Team
         'Shows a list of all the possible agents (all agents with note permissions on the queue/ticket) to determine who should be informed about this note, in the ticket note screen of the agent interface.' =>
             'Zeigt in der "Ticket Notiz" Ansicht der Agenten-Oberfläche eine Liste aller möglichen Agenten (alle Agenten mit Berechtigung für Notizen in diesem Ticket/ dieser Queue) die informiert werden sollen.',
         'Shows a list of all the possible agents (all agents with note permissions on the queue/ticket) to determine who should be informed about this note, in the ticket owner screen of a zoomed ticket in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Zeigt in der "Ticket-Bearbeiter" Ansicht der Agenten-Oberfläche eine Liste aller möglichen Agenten (alle Agenten mit Berechtigung für Notizen in diesem Ticket/ dieser Queue) die informiert werden sollen.',
         'Shows a list of all the possible agents (all agents with note permissions on the queue/ticket) to determine who should be informed about this note, in the ticket pending screen of a zoomed ticket in the agent interface.' =>
             'Zeigt in der "Warten auf Erinnerung" Ansicht der Agenten-Oberfläche eine Liste aller möglichen Agenten (alle Agenten mit Berechtigung für Notizen in diesem Ticket/ dieser Queue) die informiert werden sollen.',
@@ -6638,7 +6471,6 @@ Ihr Helpdesk-Team
         'Shows all the customer identifiers in a multi-select field (not useful if you have a lot of customer identifiers).' =>
             '',
         'Shows an owner selection in phone and email tickets in the agent interface.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Zeigt eine Bearbeiterauswahl in Telefon- und E-Mail-Tickets im Agentenbereich an.',
         'Shows colors for different article types in the article table.' =>
             'Zeigt die Farben für die verschiedenen Artikeltypen in der Artikeltabelle an.',
@@ -6648,15 +6480,13 @@ Ihr Helpdesk-Team
             '',
         'Shows existing parent/child queue lists in the system in the form of a tree or a list.' =>
             '',
-        'Shows information on how to start OTRS Daemon' => 'Informationen über das Starten des OTRS Daemons anzeigen',
+        'Shows information on how to start KIX Daemon' => 'Informationen über das Starten des KIX Daemons anzeigen',
         'Shows the activated ticket attributes in the customer interface (0 = Disabled and 1 = Enabled).' =>
             '',
         'Shows the articles sorted normally or in reverse, under ticket zoom in the agent interface.' =>
             '',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Shows the contact information (phone and email) in the compose screen.' =>
             '',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'Shows the contact\'s info in the ticket zoom view.' => 'Zeigt die Ansprechpartner-Informationen im Ticket-Inhalt',
         'Shows the message of the day (MOTD) in the agent dashboard. "Group" is used to restrict access to the plugin (e. g. Group: admin;group1;group2;). "Default" indicates if the plugin is enabled by default or if the user needs to enable it manually.' =>
             '',
@@ -6845,7 +6675,7 @@ Ihr Helpdesk-Team
         'This is the default orange - black skin.' => '',
         'This module and its PreRun() function will be executed, if defined, for every request. This module is useful to check some user options or to display news about new applications.' =>
             '',
-        'This module is part of the admin area of OTRS.' => '',
+        'This module is part of the admin area of KIX.' => '',
         'This option defines the dynamic field in which a Process Management activity entity id is stored.' =>
             '',
         'This option defines the dynamic field in which a Process Management process entity id is stored.' =>
@@ -6854,7 +6684,6 @@ Ihr Helpdesk-Team
         'This option defines the process tickets default priority.' => 'Diese Option setzt die Prozess-Ticket Standardpriorität',
         'This option defines the process tickets default queue.' => 'Diese Option setzt die Prozess-Ticket Standard-Queue.',
         'This option defines the process tickets default state.' => 'Diese Option setzt den Prozess-Ticket Standardstatus',
-        # rkaiser - T#2017020290001194 - changed customer user to contact
         'This option will deny the access to customer company tickets, which are not created by the contact.' =>
             'Diese Option verweigert den Zugriff auf Tickets von anderen Ansprechpartner mit der selben Kundenfirma.',
         'This setting allows you to override the built-in country list with your own list of countries. This is particularly handy if you just want to use a small select group of countries.' =>
@@ -6873,7 +6702,6 @@ Ihr Helpdesk-Team
         'Ticket Note.' => 'Ticket-Notiz.',
         'Ticket Notifications' => 'Ticket-Benachrichtigungen',
         'Ticket Outbound Email.' => 'Ausgehende Ticket-E-Mail.',
-        # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
         'Ticket Owner.' => 'Ticket-Bearbeiter.',
         'Ticket Pending.' => 'Ticket in Wartestatus versetzen.',
         'Ticket Print.' => 'Ticket drucken.',
@@ -6898,7 +6726,6 @@ Ihr Helpdesk-Team
         'Title updated: Old: "%s", New: "%s"' => 'Titel geändert: Alt: "%s", Neu: "%s"',
         'To accept login information, such as an EULA or license.' => 'Um Login-Informationen zu akzeptieren, wie EULAs oder Lizenzen.',
         'To download attachments.' => 'Zum Herunterladen von Anhängen.',
-        #rbo - T2016121190001552 - removed FeatureAddOns
         'Toolbar Item for a shortcut. Additional access control to show or not show this link can be done by using Key "Group" and Content like "rw:group1;move_into:group2".' =>
             '',
         'Transport selection for ticket notifications.' => '',
@@ -6916,7 +6743,6 @@ Ihr Helpdesk-Team
         'Ukrainian' => 'Ukrainisch',
         'Unlock tickets that are past their unlock timeout.' => 'Geben Sie Tickets frei, deren Freigabe-Timeout abgelaufen ist.',
         'Unlock tickets whenever a note is added and the owner is out of office.' =>
-            # rkaiser - T#2017020290001194 - changed 'Besitzer' to 'Bearbeiter'
             'Geben Sie tickets frei, wenn eine Notiz hinzugefügt wurde und der Bearbeiter nicht im Büro ist.',
         'Unlocked ticket.' => 'Ticketsperre aufgehoben.',
         'Update Ticket "Seen" flag if every article got seen or a new Article got created.' =>

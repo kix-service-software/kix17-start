@@ -13,6 +13,8 @@ package Kernel::Modules::AgentZoom;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our $ObjectManagerDisabled = 1;
 
 sub new {

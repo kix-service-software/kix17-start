@@ -49,8 +49,8 @@ sub Run {
     my $EditAccess = 0;
     if (   !$Self->{Config}->{NonEditableTicketStateTypes}->{ $Ticket{StateType} }
         && !$Self->{Config}->{NonEditableTicketStates}->{ $Ticket{State} }
-        && ( $Ticket{OwnerID} == $Self->{UserID} || $Ticket{ResponsibleID} == $Self->{UserID} ) )
-    {
+        && ( $Ticket{OwnerID} == $Self->{UserID} || $Ticket{ResponsibleID} == $Self->{UserID} )
+    ) {
         $EditAccess = 1;
     }
 

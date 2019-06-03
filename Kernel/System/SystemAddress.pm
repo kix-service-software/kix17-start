@@ -290,10 +290,7 @@ sub SystemAddressList {
 
     # get system address
     return if !$Self->{DBObject}->Prepare(
-        SQL => "
-            SELECT id, value0
-            FROM system_address
-            $ValidSQL",
+        SQL => "SELECT id, value0 FROM system_address $ValidSQL",
     );
 
     my %List;
@@ -411,6 +408,96 @@ sub SystemAddressQueueID {
     );
 
     return $QueueID;
+}
+
+=item SystemAddressLookup()
+
+get id or name for system address
+
+    my $Name = $SystemAddressObject->SystemAddressLookup(
+        ID      => $SystemAddressID,
+        Valid   => 1,               # not required -> 0|1 (default 0)
+        Silence => 1,               # not required -> 0|1 (default 0)
+    );
+
+    my $ID = $SystemAddressObject->SystemAddressLookup(
+        Name    => $SystemAddress,
+        Valid   => 1,               # not required -> 0|1 (default 0)
+        Silence => 1,               # not required -> 0|1 (default 0)
+    );
+
+=cut
+
+sub SystemAddressLookup {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    if ( !$Param{Name} && !$Param{ID} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => 'Got no Name or ID!'
+        );
+        return;
+    }
+
+    # set silence option
+    my $Silence = $Param{Silence};
+    if ( $Silence ) {
+        $Silence = 1;
+    }
+    else {
+        $Silence = 0;
+    }
+
+    # set valid option
+    my $Valid = $Param{Valid};
+    if ( $Valid ) {
+        $Valid = 1;
+    }
+    else {
+        $Valid = 0;
+    }
+
+    # get system address data
+    my %SystemAddressList = $Self->SystemAddressList(
+        Valid => $Valid,
+    );
+
+    my $Key;
+    my $Value;
+    my $ReturnData;
+    if ( $Param{ID} ) {
+        $Key        = 'ID';
+        $Value      = $Param{ID};
+        $ReturnData = $SystemAddressList{ $Param{ID} };
+    }
+    else {
+        $Key   = 'Name';
+        $Value = $Param{Name};
+        my %SystemAddressListReverse = reverse %SystemAddressList;
+        $ReturnData = $SystemAddressListReverse{ $Param{Name} };
+    }
+
+    # check if data exists
+    if ( !$ReturnData ) {
+        if ( !$Silence ) {
+            if ( $Valid ) {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "Found no valid $Key for $Value!",
+                );
+            }
+            else {
+                $Kernel::OM->Get('Kernel::System::Log')->Log(
+                    Priority => 'error',
+                    Message  => "Found no $Key for $Value!",
+                );
+            }
+        }
+        return;
+    }
+
+    return $ReturnData;
 }
 
 1;

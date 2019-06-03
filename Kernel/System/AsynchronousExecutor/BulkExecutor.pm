@@ -28,8 +28,7 @@ our @ObjectDependencies = (
 );
 
 sub new {
-    my $Type  = shift;
-    my %Param = @_;
+    my ( $Type, %Param ) = @_;
 
     # allocate new hash for object
     my $Self = {};
@@ -179,8 +178,7 @@ sub _BulkDo {
         $Self->{ConfigObject}->Get('Ticket::Responsible')
         && $Config->{Responsible}
         && ( $GetParam{'ResponsibleID'} || $GetParam{'Responsible'} )
-        )
-    {
+    ) {
         $Self->{TicketObject}->TicketResponsibleSet(
             TicketID  => $Param{TicketID},
             UserID    => $Param{UserID},
@@ -193,8 +191,7 @@ sub _BulkDo {
     if (
         $Config->{Priority}
         && ( $GetParam{'PriorityID'} || $GetParam{'Priority'} )
-        )
-    {
+    ) {
         $Self->{TicketObject}->TicketPrioritySet(
             TicketID   => $Param{TicketID},
             UserID     => $Param{UserID},
@@ -229,8 +226,7 @@ sub _BulkDo {
     if (
         $GetParam{'EmailSubject'}
         && $GetParam{'EmailBody'}
-        )
-    {
+    ) {
         my $MimeType = 'text/plain';
         if ( $Self->{LayoutObject}->{BrowserRichText} ) {
             $MimeType = 'text/html';
@@ -316,8 +312,7 @@ sub _BulkDo {
         $GetParam{'Subject'}
         && $GetParam{'Body'}
         && ( $GetParam{'ArticleTypeID'} || $GetParam{'ArticleType'} )
-        )
-    {
+    ) {
         my $MimeType = 'text/plain';
         if ( $Self->{LayoutObject}->{BrowserRichText} ) {
             $MimeType = 'text/html';
@@ -351,16 +346,16 @@ sub _BulkDo {
             State    => $GetParam{'State'},
             UserID   => $Param{UserID},
         );
-        my %Ticket = $Self->{TicketObject}->TicketGet(
+        my %UpdatedTicket = $Self->{TicketObject}->TicketGet(
             TicketID      => $Param{TicketID},
             DynamicFields => 0,
         );
         my %StateData = $Self->{StateObject}->StateGet(
-            ID => $Ticket{StateID},
+            ID => $UpdatedTicket{StateID},
         );
 
         # should i set the pending date?
-        if ( $Ticket{StateType} =~ /^pending/i ) {
+        if ( $UpdatedTicket{StateType} =~ /^pending/i ) {
 
             # set pending time
             $Self->{TicketObject}->TicketPendingTimeSet(
@@ -371,7 +366,7 @@ sub _BulkDo {
         }
 
         # should I set an unlock?
-        if ( $Ticket{StateType} =~ /^close/i ) {
+        if ( $UpdatedTicket{StateType} =~ /^close/i ) {
             $Self->{TicketObject}->TicketLockSet(
                 TicketID => $Param{TicketID},
                 Lock     => 'unlock',
@@ -393,8 +388,7 @@ sub _BulkDo {
         elsif (
             !$Self->{ConfigObject}->Get('Ticket::Frontend::BulkAccountedTime')
             && $Param{Counter} == 1
-            )
-        {
+        ) {
             $Self->{TicketObject}->TicketAccountTime(
                 TicketID  => $Param{TicketID},
                 ArticleID => $ArticleID,
@@ -417,8 +411,7 @@ sub _BulkDo {
         elsif (
             !$Self->{ConfigObject}->Get('Ticket::Frontend::BulkAccountedTime')
             && $Param{Counter} == 1
-            )
-        {
+        ) {
             $Self->{TicketObject}->TicketAccountTime(
                 TicketID  => $Param{TicketID},
                 ArticleID => $EmailArticleID,

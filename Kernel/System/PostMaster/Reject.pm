@@ -66,7 +66,6 @@ sub Run {
     # do db insert
     my $ArticleID = $TicketObject->ArticleCreate(
         TicketID         => $Param{TicketID},
-#rbo - T2016121190001552 - renamed X-KIX headers
         ArticleType      => $GetParam{'X-KIX-ArticleType'} || $GetParam{'X-OTRS-ArticleType'},
         SenderType       => $GetParam{'X-KIX-SenderType'} || $GetParam{'X-OTRS-SenderType'},
         From             => $GetParam{From},
@@ -137,7 +136,7 @@ sub Run {
     for my $DynamicFieldID ( sort keys %{$DynamicFieldList} ) {
         next DYNAMICFIELDID if !$DynamicFieldID;
         next DYNAMICFIELDID if !$DynamicFieldList->{$DynamicFieldID};
-#rbo - T2016121190001552 - renamed X-KIX headers
+
         my $Key = 'X-KIX-FollowUp-DynamicField-' . $DynamicFieldList->{$DynamicFieldID};
         if ( !defined $GetParam{$Key} || !length $GetParam{$Key} ) {
             # fallback
@@ -168,14 +167,12 @@ sub Run {
     my %DynamicFieldListReversed = reverse %{$DynamicFieldList};
 
     # set free article text
-    my %Values =
-        (
-#rbo - T2016121190001552 - renamed X-KIX headers
-        'X-KIX-FollowUp-ArticleKey'   => 'ArticleFreeKey',
-        'X-KIX-FollowUp-ArticleValue' => 'ArticleFreeText',
+    my %Values = (
+        'X-KIX-FollowUp-ArticleKey'    => 'ArticleFreeKey',
+        'X-KIX-FollowUp-ArticleValue'  => 'ArticleFreeText',
         'X-OTRS-FollowUp-ArticleKey'   => 'ArticleFreeKey',
         'X-OTRS-FollowUp-ArticleValue' => 'ArticleFreeText',
-        );
+    );
     for my $Item ( sort keys %Values ) {
         for my $Count ( 1 .. 16 ) {
             my $Key = $Item . $Count;
@@ -183,8 +180,7 @@ sub Run {
                 defined $GetParam{$Key}
                 && length $GetParam{$Key}
                 && $DynamicFieldListReversed{ $Values{$Item} . $Count }
-                )
-            {
+            ) {
                 # get dynamic field config
                 my $DynamicFieldGet = $DynamicFieldObject->DynamicFieldGet(
                     ID => $DynamicFieldListReversed{ $Values{$Item} . $Count },

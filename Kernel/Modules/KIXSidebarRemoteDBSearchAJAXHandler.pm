@@ -90,8 +90,7 @@ sub Run {
         && $CallingAction
         && $CallingAction =~ /$TIDSearchMaskRegexp/
         && $TicketID      =~ /^\d+$/
-        )
-    {
+    ) {
         %TicketData = $Self->{TicketObject}->TicketGet(
             TicketID      => $TicketID,
             DynamicFields => 1,
@@ -117,59 +116,62 @@ sub Run {
     if ( defined( $Self->{SidebarConfig}->{RestrictedMandatory} ) ) {
         @RestrictedMandatory = split( ",", $Self->{SidebarConfig}->{RestrictedMandatory} );
     }
-    my @RestrictedOTRSObjects = ();
-    if ( defined( $Self->{SidebarConfig}->{RestrictedOTRSObjects} ) ) {
-        @RestrictedOTRSObjects = split( ",", $Self->{SidebarConfig}->{RestrictedOTRSObjects} );
+    my @RestrictedKIXObjects = ();
+    if ( defined( $Self->{SidebarConfig}->{RestrictedKIXObjects} ) ) {
+        @RestrictedKIXObjects = split( ",", $Self->{SidebarConfig}->{RestrictedKIXObjects} );
     }
-    my @RestrictedOTRSAttributes = ();
-    if ( defined( $Self->{SidebarConfig}->{RestrictedOTRSAttributes} ) ) {
-        @RestrictedOTRSAttributes
-            = split( ",", $Self->{SidebarConfig}->{RestrictedOTRSAttributes} );
+    # DEPRECATED:  This option is no longer supported, but due to current use at customers for the time being still necessary.
+    elsif ( defined( $Self->{DashletConfig}->{RestrictedOTRSObjects} ) ) {
+        @RestrictedKIXObjects = split( ",", $Self->{DashletConfig}->{RestrictedOTRSObjects} );
+    }
+    my @RestrictedKIXAttributes = ();
+    if ( defined( $Self->{SidebarConfig}->{RestrictedKIXAttributes} ) ) {
+        @RestrictedKIXAttributes = split( ",", $Self->{SidebarConfig}->{RestrictedKIXAttributes} );
+    }
+    # DEPRECATED:  This option is no longer supported, but due to current use at customers for the time being still necessary.
+    elsif ( defined( $Self->{DashletConfig}->{RestrictedOTRSAttributes} ) ) {
+        @RestrictedKIXAttributes = split( ",", $Self->{DashletConfig}->{RestrictedOTRSAttributes} );
     }
 
     my @RestrictedValues = ();
     if (
         @RestrictedDBAttributes
-        && @RestrictedOTRSObjects
-        && @RestrictedOTRSAttributes
+        && @RestrictedKIXObjects
+        && @RestrictedKIXAttributes
         && @RestrictedMandatory
-        && scalar(@RestrictedOTRSAttributes) == scalar(@RestrictedOTRSObjects)
-        && scalar(@RestrictedOTRSAttributes) == scalar(@RestrictedDBAttributes)
-        && scalar(@RestrictedOTRSAttributes) == scalar(@RestrictedMandatory)
-        )
-    {
-        for ( my $Index = 0; $Index < scalar(@RestrictedOTRSObjects); $Index++ ) {
+        && scalar(@RestrictedKIXAttributes) == scalar(@RestrictedKIXObjects)
+        && scalar(@RestrictedKIXAttributes) == scalar(@RestrictedDBAttributes)
+        && scalar(@RestrictedKIXAttributes) == scalar(@RestrictedMandatory)
+    ) {
+        for ( my $Index = 0; $Index < scalar(@RestrictedKIXObjects); $Index++ ) {
             my $RestrictedValue = '';
             if (
-                $RestrictedOTRSObjects[$Index] eq 'Configuration'
-                && $RestrictedOTRSAttributes[$Index]
-                )
-            {
-                my @RestrictedValueArray = split( ";", $RestrictedOTRSAttributes[$Index] );
+                $RestrictedKIXObjects[$Index] eq 'Configuration'
+                && $RestrictedKIXAttributes[$Index]
+            ) {
+                my @RestrictedValueArray = split( ";", $RestrictedKIXAttributes[$Index] );
                 if (@RestrictedValueArray) {
                     $RestrictedValue = \@RestrictedValueArray;
                 }
             }
             elsif (
-                $RestrictedOTRSObjects[$Index] eq 'Ticket'
-                )
-            {
+                $RestrictedKIXObjects[$Index] eq 'Ticket'
+            ) {
                 $RestrictedValue = '';
                 my @RestrictedValueArray
-                    = $Self->{ParamObject}->GetArray( Param => $RestrictedOTRSAttributes[$Index] );
+                    = $Self->{ParamObject}->GetArray( Param => $RestrictedKIXAttributes[$Index] );
                 if (@RestrictedValueArray) {
                     $RestrictedValue = \@RestrictedValueArray;
                 }
-                if ( $TicketData{ $RestrictedOTRSAttributes[$Index] } ) {
-                    $RestrictedValue = $TicketData{ $RestrictedOTRSAttributes[$Index] };
+                if ( $TicketData{ $RestrictedKIXAttributes[$Index] } ) {
+                    $RestrictedValue = $TicketData{ $RestrictedKIXAttributes[$Index] };
                 }
             }
             elsif (
-                $RestrictedOTRSObjects[$Index] eq 'CustomerUser'
-                && $CustomerUserData{ $RestrictedOTRSAttributes[$Index] }
-                )
-            {
-                $RestrictedValue = $CustomerUserData{ $RestrictedOTRSAttributes[$Index] };
+                $RestrictedKIXObjects[$Index] eq 'CustomerUser'
+                && $CustomerUserData{ $RestrictedKIXAttributes[$Index] }
+            ) {
+                $RestrictedValue = $CustomerUserData{ $RestrictedKIXAttributes[$Index] };
             }
 
             if ( !$RestrictedValue && $RestrictedMandatory[$Index] ) {
@@ -180,11 +182,10 @@ sub Run {
     }
     elsif (
         !@RestrictedDBAttributes
-        && !@RestrictedOTRSObjects
-        && !@RestrictedOTRSAttributes
+        && !@RestrictedKIXObjects
+        && !@RestrictedKIXAttributes
         && !@RestrictedMandatory
-        )
-    {
+    ) {
 
         # do nothing
     }
@@ -344,8 +345,7 @@ sub Run {
                 if (
                     $DynamicFieldString
                     && @DynamicFields
-                    )
-                {
+                ) {
                     my $DFTicketValueString = '';
                     for my $DynamicField (@DynamicFields) {
                         if ($DFTicketValueString) {
@@ -421,8 +421,7 @@ sub Run {
                 my $ResultIndex = $ResultOffset;
                 $ResultIndex < scalar( @{$ResultRow} );
                 $ResultIndex++
-                )
-            {
+            ) {
 
                 my $Result = $ResultRow->[$ResultIndex] || '';
                 my $ResultShort = $Result;

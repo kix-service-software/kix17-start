@@ -191,8 +191,7 @@ sub ValidateInputText {
         defined $Param{Input}->{MaxLength}
         && $Param{Input}->{MaxLength}
         && length $Param{Value} > $Param{Input}->{MaxLength}
-        )
-    {
+    ) {
         return;
     }
 
@@ -747,8 +746,7 @@ sub CheckXMLData {
                 && $DefItem->{Input}->{Required}
             )
             && ( !defined $XMLData->{$ItemKey} || !$XMLData->{$ItemKey} )
-            )
-        {
+        ) {
             return {
                 ErrorCode => "$Self->{OperationName}.MissingParameter",
                 ErrorMessage =>
@@ -820,13 +818,11 @@ sub CheckXMLData {
         }
 
         # check if exists more elements than the ones they should
-        if ( defined $DefItem->{CountMax} )
-        {
+        if ( defined $DefItem->{CountMax} ) {
             if (
                 ref $XMLData->{$ItemKey} eq 'ARRAY'
                 && scalar @{ $XMLData->{$ItemKey} } > $DefItem->{CountMax}
-                )
-            {
+            ) {
                 return {
                     ErrorCode => "$Self->{OperationName}.InvalidParameter",
                     ErrorMessage =>
@@ -1106,7 +1102,7 @@ sub FormatXMLData {
                 {
                     Content => $XMLData->{$RootKey},
                 }
-                ],
+            ];
         }
     }
 
@@ -1261,8 +1257,7 @@ sub InvertReplaceXMLData {
             IsHashRefWithData($XMLData)
             && $XMLData->{$ItemKey}
             && ref $XMLData->{$ItemKey} eq 'ARRAY'
-            )
-        {
+        ) {
 
             for my $ArrayItem ( @{ $XMLData->{$ItemKey} } ) {
 
@@ -1297,8 +1292,7 @@ sub InvertReplaceXMLData {
             IsHashRefWithData($XMLData)
             && $XMLData->{$ItemKey}
             && ref $XMLData->{$ItemKey} eq 'HASH'
-            )
-        {
+        ) {
             $NewValue = $Self->_InvertReplaceValue(
                 Value   => $XMLData->{$ItemKey}->{$ItemKey},
                 Input   => $DefItem->{Input},
@@ -1449,9 +1443,10 @@ sub _CheckValue {
     my $ItemKey = $Param{ItemKey};
 
     if (
-        defined $Param{Input}->{Required} && $Param{Input}->{Required} && !$Param{Value}
-        )
-    {
+        defined $Param{Input}->{Required}
+        && $Param{Input}->{Required}
+        && !$Param{Value}
+    ) {
         return {
             ErrorCode => "$Self->{OperationName}.MissingParameter",
             ErrorMessage =>

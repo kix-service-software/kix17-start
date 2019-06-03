@@ -118,8 +118,7 @@ sub Run {
         || !$FAQData{Approved}
         || !$ValidIDLookup{ $FAQData{ValidID} }
         || !$InterfaceStates->{ $FAQData{StateTypeID} }
-        )
-    {
+    ) {
         return $LayoutObject->CustomerNoPermission( WithHeader => 'yes' );
     }
 
@@ -157,21 +156,18 @@ sub Run {
         );
 
         # rewrite handle and action
-        $FieldContent
-            =~ s{ index[.]pl [?] Action=AgentFAQZoom }{customer.pl?Action=CustomerFAQZoom}gxms;
+        $FieldContent =~ s{ index[.]pl [?] Action=AgentFAQZoom }{customer.pl?Action=CustomerFAQZoom}gxms;
 
         # take care of old style before FAQ 2.0.x
-        $FieldContent =~ s{
-            index[.]pl [?] Action=AgentFAQ [&](amp;)? Subaction=Download [&](amp;)?
-        }{customer.pl?Action=CustomerFAQZoom;Subaction=DownloadAttachment;}gxms;
+        my $FieldPattern = 'index[.]pl [?] Action=AgentFAQ [&](amp;)? Subaction=Download [&](amp;)?';
+        $FieldContent =~ s{$FieldPattern}{customer.pl?Action=CustomerFAQZoom;Subaction=DownloadAttachment;}gxms;
 
         # build base URL for inline images
         my $SessionID = '';
         if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
             $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
-            $FieldContent =~ s{
-                (Action=CustomerFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)
-            }{$1$SessionID}gmsx;
+            $FieldPattern = '(Action=CustomerFAQZoom;Subaction=DownloadAttachment;ItemID=\d+;FileID=\d+)';
+            $FieldContent =~ s{$FieldPattern}{$1$SessionID}gmsx;
         }
 
         my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
@@ -181,8 +177,7 @@ sub Run {
             $Kernel::OM->Get('Kernel::Config')->Get('FAQ::Item::HTML')
             && $LayoutObject->{BrowserRichText}
             && $FAQData{ContentType} ne 'text/html'
-            )
-        {
+        ) {
             $FieldContent = $HTMLUtilsObject->ToHTML(
                 String => $FieldContent,
             ) || '';
@@ -348,6 +343,7 @@ sub Run {
         }
     }
 
+    my $FAQPattern = 'index[.]pl [?] Action=AgentFAQ [&](amp;)? Subaction=Download [&](amp;)?';
     # prepare fields data (Still needed for PlainText)
     FIELD:
     for my $Field (qw(Field1 Field2 Field3 Field4 Field5 Field6)) {
@@ -357,13 +353,10 @@ sub Run {
         if ( $Interface->{Name} eq 'external' ) {
 
             # rewrite handle and action
-            $FAQData{$Field}
-                =~ s{ index[.]pl [?] Action=AgentFAQZoom }{customer.pl?Action=CustomerFAQZoom}gxms;
+            $FAQData{$Field} =~ s{ index[.]pl [?] Action=AgentFAQZoom }{customer.pl?Action=CustomerFAQZoom}gxms;
 
             # take care of old style before FAQ 2.0.x
-            $FAQData{$Field} =~ s{
-                index[.]pl [?] Action=AgentFAQ [&](amp;)? Subaction=Download [&](amp;)?
-            }{customer.pl?Action=CustomerFAQZoom;Subaction=DownloadAttachment;}gxms;
+            $FAQData{$Field} =~ s{$FAQPattern}{customer.pl?Action=CustomerFAQZoom;Subaction=DownloadAttachment;}gxms;
         }
 
         # no quoting if HTML view is enabled

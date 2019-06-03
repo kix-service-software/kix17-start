@@ -49,7 +49,7 @@ This package provides additional functions for QueuesGroupsRoles. Following you'
 =head3 Permission-Shortcut-Mapping
 
     <ConfigItem Name="QueuesGroupsRoles###ShortcutMappings" Required="0" Valid="1">
-        <Description Translatable="1">Maps the permissions of OTRS to better readable shortcuts in CSV-Files. In the key is the OTRS-Permission and the value describes the shortcut. The Mapping should include all configured System::Permissions included the 'rw'-Permission. Please be shure that there are no duble shortcuts inside.</Description>
+        <Description Translatable="1">Maps the permissions of KIX to better readable shortcuts in CSV-Files. In the key is the KIX-Permission and the value describes the shortcut. The Mapping should include all configured System::Permissions included the 'rw'-Permission. Please be shure that there are no duble shortcuts inside.</Description>
         <Group>QueuesGroupsRoles</Group>
         <SubGroup>Frontend::Admin::ViewQueuesGroupsRoles</SubGroup>
         <Setting>

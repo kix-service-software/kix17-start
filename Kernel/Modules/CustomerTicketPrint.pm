@@ -58,8 +58,7 @@ sub Run {
             TicketID => $Self->{TicketID},
             UserID   => $Self->{UserID}
         )
-        )
-    {
+    ) {
 
         # error screen, don't show ticket
         return $LayoutObject->CustomerNoPermission( WithHeader => 'yes' );
@@ -301,8 +300,7 @@ sub _PDFOutputTicketInfos {
         $ConfigObject->Get('Ticket::Responsible')
         &&
         $Config->{AttributesView}->{Responsible}
-        )
-    {
+    ) {
         my $Row = {
             Key   => $LayoutObject->{LanguageObject}->Translate('Responsible') . ':',
             Value => $Ticket{Responsible},
@@ -323,8 +321,7 @@ sub _PDFOutputTicketInfos {
     if (
         $ConfigObject->Get('Ticket::Service')
         && $Config->{AttributesView}->{Service}
-        )
-    {
+    ) {
         my $RowService = {
             Key   => $LayoutObject->{LanguageObject}->Translate('Service') . ':',
             Value => $Ticket{Service} || '-',
@@ -333,8 +330,7 @@ sub _PDFOutputTicketInfos {
     }
 
     # add sla row, if feature is enabled
-    if ( $ConfigObject->Get('Ticket::Service') && $Config->{AttributesView}->{SLA} )
-    {
+    if ( $ConfigObject->Get('Ticket::Service') && $Config->{AttributesView}->{SLA} ) {
         my $RowSLA = {
             Key   => $LayoutObject->{LanguageObject}->Translate('SLA') . ':',
             Value => $Ticket{SLA} || '-',
@@ -633,7 +629,6 @@ sub _PDFOutputCustomerInfos {
 
         # output headline
         $PDFObject->Text(
-            # rkaiser - T#2017020290001194 - changed customer user to contact
             Text     => $LayoutObject->{LanguageObject}->Translate('Contact information'),
             Height   => 10,
             Type     => 'Cut',
@@ -747,14 +742,9 @@ sub _PDFOutputArticles {
         }
         $TableParam1{CellData}[$Row][0]{Content} = $LayoutObject->{LanguageObject}->Translate('Created') . ':';
         $TableParam1{CellData}[$Row][0]{Font}    = 'ProportionalBold';
-        $TableParam1{CellData}[$Row][1]{Content} = $LayoutObject->{LanguageObject}->FormatTimeString(
-            $Article{Created},
-            'DateFormat',
-            ),
-            $TableParam1{CellData}[$Row][1]{Content}
-            .= ' ' . $LayoutObject->{LanguageObject}->Translate('by');
-        $TableParam1{CellData}[$Row][1]{Content}
-            .= ' ' . $LayoutObject->{LanguageObject}->Translate( $Article{SenderType} );
+        $TableParam1{CellData}[$Row][1]{Content} = $LayoutObject->{LanguageObject}->FormatTimeString( $Article{Created}, 'DateFormat' )
+            . ' ' . $LayoutObject->{LanguageObject}->Translate('by')
+            . ' ' . $LayoutObject->{LanguageObject}->Translate( $Article{SenderType} );
         $Row++;
 
         # get the dynamic fields for ticket object
@@ -859,31 +849,6 @@ sub _PDFOutputArticles {
                 );
                 $Page{PageCount}++;
             }
-        }
-
-        if ( $Article{ArticleType} eq 'chat-external' || $Article{ArticleType} eq 'chat-internal' )
-        {
-            $Article{Body} = $Kernel::OM->Get('Kernel::System::JSON')->Decode(
-                Data => $Article{Body}
-            );
-            my $Lines;
-            if ( IsArrayRefWithData( $Article{Body} ) ) {
-                for my $Line ( @{ $Article{Body} } ) {
-                    my $CreateTime
-                        = $LayoutObject->{LanguageObject}->FormatTimeString( $Line->{CreateTime}, 'DateFormat' );
-                    if ( $Line->{SystemGenerated} ) {
-                        $Lines .= '[' . $CreateTime . '] ' . $Line->{MessageText} . "\n";
-                    }
-                    else {
-                        $Lines
-                            .= '['
-                            . $CreateTime . '] '
-                            . $Line->{ChatterName} . ' '
-                            . $Line->{MessageText} . "\n";
-                    }
-                }
-            }
-            $Article{Body} = $Lines;
         }
 
         # table params (article body)

@@ -13,9 +13,7 @@ package Kernel::System::Ticket::Acl::ProcessProgressAfterClosedChilds;
 use strict;
 use warnings;
 
-# BPMX-capeIT
 use utf8;
-# EO BPMX-capeIT
 
 our @ObjectDependencies = (
     'Kernel::System::LinkObject',
@@ -78,7 +76,7 @@ sub Run {
             DynamicFields => 0,
         );
 
-        if ( $Ticket{StateType} !~ m{ \A (close|merge|remove) }xms ) {
+        if ( $Ticket{StateType} !~ m{ \A (?:close|merge|remove) }xms ) {
             $OpenSubTickets = 1;
             last TICKETID;
         }
@@ -86,10 +84,7 @@ sub Run {
 
     # generate acl
     if ($OpenSubTickets) {
-# BPMX-capeIT
-#        $Param{Acl}->{CloseParentAfterClosedChilds} = {
         $Param{Acl}->{ProcessProgressAfterClosedChilds} = {
-# EO BPMX-capeIT
             # match properties
             Properties => {
 
@@ -103,13 +98,7 @@ sub Run {
             PossibleNot => {
 
                 # possible ticket options (black list)
-# BPMX-capeIT
-#                Ticket => {
-#                    State => $Param{Config}->{State},
-#                },
-#                Action => ['AgentTicketClose'],
                 ActivityDialog => $Param{Config}->{ActivityDialog},
-# EO BPMX-capeIT
             },
         };
     }

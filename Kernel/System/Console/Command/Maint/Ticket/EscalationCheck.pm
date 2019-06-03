@@ -130,8 +130,7 @@ sub Run {
         for my $Type (
             qw(FirstResponseTimeEscalation UpdateTimeEscalation SolutionTimeEscalation
             FirstResponseTimeNotification UpdateTimeNotification SolutionTimeNotification)
-            )
-        {
+        ) {
             next TYPE if !$Ticket{$Type};
 
             my @ReversedHistoryLines = reverse @HistoryLines;

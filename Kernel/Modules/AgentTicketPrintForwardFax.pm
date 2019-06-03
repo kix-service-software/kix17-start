@@ -71,13 +71,12 @@ sub Run {
 
     # check permissions
     if (
-        !$Self->{TicketObject}->Permission(
+        !$Self->{TicketObject}->TicketPermission(
             Type     => 'ro',
             TicketID => $Self->{TicketID},
             UserID   => $Self->{UserID}
         )
-        )
-    {
+    ) {
 
         # error screen, don't show ticket
         return $Self->{LayoutObject}->NoPermission( WithHeader => 'yes' );
@@ -144,13 +143,10 @@ sub Run {
             $Self->{ParamObject}->GetParam(
                 Param => 'Print_' . $Article->{ArticleID},
             )
-            )
-        {
+        ) {
             push( @ArticleBox, $Article );
         }
     }
-
-    #    $ArticleBox[0] = \%FirstArticleData;
 
     # user info
     my %UserInfo = $Self->{UserObject}->GetUserData(
@@ -308,7 +304,7 @@ sub Run {
         );
 
         return $Self->{LayoutObject}->Error(
-            Message => 'Function not available - contact your OTRS-Admin '
+            Message => 'Function not available - contact your KIX-Admin '
                 . 'to have PDF-print enabled.',
         );
 
@@ -317,8 +313,7 @@ sub Run {
 }
 
 sub _PDFOutputFaxHeader {
-    my $Self  = shift;
-    my %Param = @_;
+    my ($Self, %Param) = @_;
 
     # check needed stuff
     foreach (qw(PageData TicketData)) {
@@ -492,8 +487,7 @@ sub _PDFOutputFaxHeader {
 }
 
 sub _PDFOutputTicketInfos {
-    my $Self  = shift;
-    my %Param = @_;
+    my ( $Self, %Param ) = @_;
 
     # check needed stuff
     foreach (qw(PageData TicketData UserData)) {
@@ -693,15 +687,13 @@ sub _PDFOutputTicketDynamicFields {
         $PDFOutputTicketDynamicFields
         && ( ref($PDFOutputTicketDynamicFields) eq 'HASH' )
         && %{$PDFOutputTicketDynamicFields}
-        )
-    {
+    ) {
         foreach my $DField ( keys %{$PDFOutputTicketDynamicFields} ) {
             if (
                 $PDFOutputTicketDynamicFields->{$DField}
                 && $Ticket{"DynamicField_$DField"}
                 && $Ticket{"DynamicField_$DField"} ne ""
-                )
-            {
+            ) {
                 my $DynamicField = $Self->{DynamicFieldObject}->DynamicFieldGet(
                     Name => $DField,
                 );
@@ -870,7 +862,6 @@ sub _PDFOutputCustomerInfos {
 
         # output headline
         $Self->{PDFObject}->Text(
-            # rkaiser - T#2017020290001194 - changed customer user to contact
             Text     => $Self->{LayoutObject}->{LanguageObject}->Translate('Contact information'),
             Height   => 7,
             Type     => 'Cut',
@@ -1084,8 +1075,7 @@ sub _PDFOutputArticles {
 }
 
 sub _PDFOutputLinkedCIData {
-    my $Self  = shift;
-    my %Param = @_;
+    my ( $Self, %Param ) = @_;
 
     # check needed stuff
     foreach (qw(PageData TicketID)) {
@@ -1150,173 +1140,6 @@ sub _PDFOutputLinkedCIData {
         }
     }
     return 1;
-}
-
-sub _HTMLMask {
-    my $Self  = shift;
-    my %Param = @_;
-
-    # output responible, if feature is enabled
-    if ( $Self->{ConfigObject}->Get('Ticket::Responsible') ) {
-        my $Responsible = '-';
-        if ( $Param{Responsible} ) {
-            $Responsible =
-                $Param{Responsible} . ' ('
-                . $Param{ResponsibleData}->{UserFirstname} . ' '
-                . $Param{ResponsibleData}->{UserLastname} . ')';
-        }
-        $Self->{LayoutObject}->Block(
-            Name => 'Responsible',
-            Data => {
-                ResponsibleString => $Responsible,
-            },
-        );
-    }
-
-    # output type, if feature is enabled
-    if ( $Self->{ConfigObject}->Get('Ticket::Type') ) {
-        $Self->{LayoutObject}->Block(
-            Name => 'TicketType',
-            Data => {
-                %Param,
-            },
-        );
-    }
-
-    # output service and sla, if feature is enabled
-    if ( $Self->{ConfigObject}->Get('Ticket::Service') ) {
-        $Self->{LayoutObject}->Block(
-            Name => 'TicketService',
-            Data => {
-                Service => $Param{Service} || '-',
-                SLA     => $Param{SLA}     || '-',
-            },
-        );
-    }
-
-    # output first response time
-    if ( defined( $Param{FirstResponseTime} ) ) {
-        $Self->{LayoutObject}->Block(
-            Name => 'FirstResponseTime',
-            Data => {
-                %Param,
-            },
-        );
-    }
-
-    # output update time
-    if ( defined( $Param{UpdateTime} ) ) {
-        $Self->{LayoutObject}->Block(
-            Name => 'UpdateTime',
-            Data => {
-                %Param,
-            },
-        );
-    }
-
-    # output solution time
-    if ( defined( $Param{SolutionTime} ) ) {
-        $Self->{LayoutObject}->Block(
-            Name => 'SolutionTime',
-            Data => {
-                %Param,
-            },
-        );
-    }
-
-    # build article stuff
-    my $SelectedArticleID = $Param{ArticleID} || '';
-    my @ArticleBox = @{ $Param{ArticleBox} };
-
-    # get last customer article
-    foreach my $ArticleTmp (@ArticleBox) {
-        my %Article = %{$ArticleTmp};
-
-        # get attacment string
-        my %AtmIndex = ();
-        if ( $Article{Atms} ) {
-            %AtmIndex = %{ $Article{Atms} };
-        }
-        $Param{"Article::ATM"} = '';
-        foreach my $FileID ( keys %AtmIndex ) {
-            my %File = %{ $AtmIndex{$FileID} };
-            $File{Filename} = $Self->{LayoutObject}->Ascii2Html( Text => $File{Filename} );
-            $Param{"Article::ATM"} .= '<a href="$Env{"Baselink"}Action=AgentTicketAttachment&' .
-                "ArticleID=$Article{ArticleID}&FileID=$FileID\" target=\"attachment\" " .
-                "onmouseover=\"window.status='\$Text{\"Download\"}: $File{Filename}';" .
-                ' return true;" onmouseout="window.status=\'\';">' .
-                "$File{Filename}</a> $File{Filesize}<br>";
-        }
-
-        # check if just a only html email
-        if (
-            my $MimeTypeText =
-            $Self->{LayoutObject}->CheckMimeType( %Param, %Article, Action => 'AgentTicketZoom' )
-            )
-        {
-            $Param{"TextNote"} = $MimeTypeText;
-            $Article{"Body"}   = '';
-        }
-        else {
-
-            # html quoting
-            $Article{Body} = $Self->{LayoutObject}->Ascii2Html(
-                NewLine => $Self->{ConfigObject}->Get('DefaultViewNewLine'),
-                Text    => $Article{Body},
-                VMax    => $Self->{ConfigObject}->Get('DefaultViewLines') || 5000,
-            );
-        }
-        $Self->{LayoutObject}->Block(
-            Name => 'Article',
-            Data => {
-                %Param,
-                %Article
-            },
-        );
-
-        # do some strips && quoting
-        foreach (qw(From To Cc Subject)) {
-            if ( $Article{$_} ) {
-                $Self->{LayoutObject}->Block(
-                    Name => 'Row',
-                    Data => {
-                        Key   => $_,
-                        Value => $Article{$_},
-                    },
-                );
-            }
-        }
-
-        # show accounted article time
-        if ( $Self->{ConfigObject}->Get('Ticket::ZoomTimeDisplay') ) {
-            my $ArticleTime = $Self->{TicketObject}->ArticleAccountedTimeGet(
-                ArticleID => $Article{ArticleID},
-            );
-            $Self->{LayoutObject}->Block(
-                Name => "Row",
-                Data => {
-                    Key   => 'Time',
-                    Value => $ArticleTime,
-                },
-            );
-        }
-
-        # show article free text
-        foreach ( 1 .. 3 ) {
-            if ( $Article{"ArticleFreeText$_"} ) {
-                $Self->{LayoutObject}->Block(
-                    Name => 'ArticleFreeText',
-                    Data => {
-                        Key   => $Article{"ArticleFreeKey$_"},
-                        Value => $Article{"ArticleFreeText$_"},
-                    },
-                );
-            }
-        }
-    }
-
-    # return output
-    return $Self->{LayoutObject}->Output( TemplateFile => 'AgentTicketPrint', Data => {%Param} );
 }
 
 sub _Mask {

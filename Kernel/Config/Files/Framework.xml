@@ -31,16 +31,13 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0050-CIC-CustomerUserList" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Parameters for the dashboard backend of the contact list overview of the agent interface . "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::Dashboard</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Dashboard::CustomerUserList</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Title" Translatable="1">Contacts</Item>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Item Key="Description" Translatable="1">All contacts of a CustomerID</Item>
                 <Item Key="Attributes"></Item>
                 <Item Key="Limit">10</Item>
@@ -59,7 +56,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields GUI</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
@@ -110,7 +107,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Text Backend GUI</Title>
                 <Loader>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
@@ -126,7 +123,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Checkbox Backend GUI</Title>
                 <Loader>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
@@ -141,7 +138,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Drop-down Backend GUI</Title>
                 <Loader>
                     <CSS>Core.Agent.Admin.DynamicField.css</CSS>
@@ -158,7 +155,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Date Time Backend GUI</Title>
                 <Loader>
                     <CSS>Core.Agent.Admin.DynamicField.css</CSS>
@@ -175,7 +172,7 @@
         <Setting>
             <FrontendModuleReg>
                 <Group>admin</Group>
-                <Description Translatable="1">This module is part of the admin area of OTRS.</Description>
+                <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Multiselect Backend GUI</Title>
                 <Loader>
                     <CSS>Core.Agent.Admin.DynamicField.css</CSS>
@@ -1017,8 +1014,8 @@
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="RestrictedDBAttributeCustomerLogin">customer_user_id</Item>
                 <Item Key="RestrictedDBAttributeCustomerUserID">customer_id</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">1</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">1</Item>
                 <Item Key="RestrictedDBAttributes">responsible_user_id</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="IdentifierAttribute">id</Item>
@@ -1061,8 +1058,8 @@
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="RestrictedDBAttributeCustomerLogin">customer_user_id</Item>
                 <Item Key="RestrictedDBAttributeCustomerUserID">customer_id</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">1</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">1</Item>
                 <Item Key="RestrictedDBAttributes">responsible_user_id</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="IdentifierAttribute">id</Item>
@@ -1105,8 +1102,8 @@
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="RestrictedDBAttributeCustomerLogin">customer_user_id</Item>
                 <Item Key="RestrictedDBAttributeCustomerUserID">customer_id</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">1</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">1</Item>
                 <Item Key="RestrictedDBAttributes">responsible_user_id</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="IdentifierAttribute">id</Item>
@@ -1149,8 +1146,8 @@
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="RestrictedDBAttributeCustomerLogin">customer_user_id</Item>
                 <Item Key="RestrictedDBAttributeCustomerUserID">customer_id</Item>
-                <Item Key="RestrictedOTRSObjects">Configuration</Item>
-                <Item Key="RestrictedOTRSAttributes">1</Item>
+                <Item Key="RestrictedKIXObjects">Configuration</Item>
+                <Item Key="RestrictedKIXAttributes">1</Item>
                 <Item Key="RestrictedDBAttributes">responsible_user_id</Item>
                 <Item Key="RestrictedMandatory">0</Item>
                 <Item Key="IdentifierAttribute">id</Item>
@@ -1180,7 +1177,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentCustomerInformationCenter::Backend###0270-CIC-FurtherInformation" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Parameters for the customer dashboard backend to provide and save further information for contact or customer company. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;).  "RwGroup" is used to restrict the writing access to the plugin. "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::CustomerDashboard</SubGroup>
@@ -1239,7 +1235,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ExternalSupplierForwarding::ForwardFaxQueues" Required="1" Valid="1">
-        <Description Translatable="1">Defines mapping of OTRS queues to be fax-forwarded and corresponding fax-numbers.</Description>
+        <Description Translatable="1">Defines mapping of KIX queues to be fax-forwarded and corresponding fax-numbers.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -1314,7 +1310,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ExternalSupplierForwarding::ForwardQueues" Required="1" Valid="1">
-        <Description Translatable="1">Defines mapping of OTRS queues to be forwarded and corresponding email-addresses.</Description>
+        <Description Translatable="1">Defines mapping of KIX queues to be forwarded and corresponding email-addresses.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -1372,7 +1368,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ExternalSupplierForwarding::CustomerUserAttrBlacklist" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines contact attributes which should not be shown in forwarded documents.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
@@ -1406,7 +1401,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUserImport::DefaultCustomerID" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines which customer ID to use if no company defined - only relevant for new contacts.</Description>
         <Group>Framework</Group>
         <SubGroup>CustomerUserImportExport</SubGroup>
@@ -1668,7 +1662,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerPanelPreApplicationModule###CustomerTicketCustomerIDSelection" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">This module and its PreRun() function will be executed, if defined, for every request. This module checks if contact has multiple customer ids and presents selection of one of them for a new ticket creation.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -2040,12 +2033,12 @@
             <FrontendModuleReg>
                 <Group>admin</Group>
                 <Description>Admin</Description>
-                <Title Translatable="1">Shows information on how to start OTRS Daemon</Title>
+                <Title Translatable="1">Shows information on how to start KIX Daemon</Title>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::NotifyModule###800-Daemon-Check" Required="0" Valid="1">
-        <Description Translatable="1">Defines the module to display a notification in the agent interface if the OTRS Daemon is not running.</Description>
+        <Description Translatable="1">Defines the module to display a notification in the agent interface if the KIX Daemon is not running.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent::ModuleNotify</SubGroup>
         <Setting>
@@ -2883,7 +2876,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="QueuesGroupsRoles###ShortcutMappings" Required="0" Valid="1">
-        <Description Translatable="1">Maps the permissions of OTRS to better readable shortcuts in CSV-Files. In the key is the OTRS-Permission and the value describes the shortcut. The Mapping should include all configured System::Permissions included the 'rw'-Permission. Please be shure that there are no double shortcuts inside.</Description>
+        <Description Translatable="1">Maps the permissions of KIX to better readable shortcuts in CSV-Files. In the key is the KIX-Permission and the value describes the shortcut. The Mapping should include all configured System::Permissions included the 'rw'-Permission. Please be shure that there are no double shortcuts inside.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Admin::ViewQueuesGroupsRoles</SubGroup>
         <Setting>
@@ -3498,7 +3491,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="TicketStateWorkflow::PostmasterFollowUpCheckCustomerIDFrom" Required="0" Valid="1">
-        <Description Translatable="1">Checks if the sender of a follow-up message is contained in customer database an has an identical customer-ID as the ticket. If so, the email is considered as email-external, otherwise it is considered as email-internal. Default OTRS-behavior if disabled.</Description>
+        <Description Translatable="1">Checks if the sender of a follow-up message is contained in customer database an has an identical customer-ID as the ticket. If so, the email is considered as email-external, otherwise it is considered as email-internal. Default KIX-behavior if disabled.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::PostMaster</SubGroup>
         <Setting>
@@ -3986,7 +3979,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4030,7 +4023,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4074,7 +4067,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4118,7 +4111,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4162,7 +4155,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4206,7 +4199,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4250,7 +4243,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4294,7 +4287,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4338,7 +4331,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4382,7 +4375,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4426,7 +4419,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4470,7 +4463,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4514,7 +4507,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4558,7 +4551,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4602,7 +4595,7 @@
                 <Item Key="AddressRegExp">\s*Address:\s+(.*)\s*</Item>
                 <Item Key="AliasRegExp">\s*Alias:\s+(.*)\s*</Item>
                 <Item Key="FromAddressRegExp">nagios@example.com</Item>
-                <Item Key="ToAddressRegExp">otrs@example.com</Item>
+                <Item Key="ToAddressRegExp">kix@example.com</Item>
                 <Item Key="StateRegExp">\s*State:\s+(\S+)</Item>
                 <Item Key="HostRegExp">\s*Host:\s+(.*)\s*</Item>
                 <Item Key="ServiceRegExp">\s*Service:\s+(.*)\s*</Item>
@@ -4939,7 +4932,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SystemID" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Defines the system identifier. Every ticket number and http session string contains this ID. This ensures that only tickets which belong to your system will be processed as follow-ups (useful when communicating between two instances of OTRS).</Description>
+        <Description Translatable="1">Defines the system identifier. Every ticket number and http session string contains this ID. This ensures that only tickets which belong to your system will be processed as follow-ups (useful when communicating between two instances of KIX).</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -4955,7 +4948,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SupportDataCollector::HTTPHostname" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">Defines the HTTP hostname for the support data collection with the public module 'PublicSupportDataCollector' (e.g. used from the OTRS Daemon).</Description>
+        <Description Translatable="1">Defines the HTTP hostname for the support data collection with the public module 'PublicSupportDataCollector' (e.g. used from the KIX Daemon).</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -4963,7 +4956,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="NodeID" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">Defines the cluster node identifier. This is only used in cluster configurations where there is more than one OTRS frontend system. Note: only values from 1 to 99 are allowed.</Description>
+        <Description Translatable="1">Defines the cluster node identifier. This is only used in cluster configurations where there is more than one KIX frontend system. Note: only values from 1 to 99 are allowed.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -5036,7 +5029,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DefaultTheme" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Defines the default front-end (HTML) theme to be used by the agents and customers. If you like, you can add your own theme. Please refer the administrator manual located at http://otrs.github.io/doc/.</Description>
+        <Description Translatable="1">Defines the default front-end (HTML) theme to be used by the agents and customers. If you like, you can add your own theme.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -5096,7 +5089,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/logo_bg.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5110,7 +5103,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/logo_bg.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5124,7 +5117,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/logo_bg.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5138,7 +5131,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/logo_bg.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5152,7 +5145,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/loginlogo_default.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
                 <Item Key="StyleHeight">100px</Item>
             </Hash>
         </Setting>
@@ -5163,7 +5156,7 @@
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Customer/default/img/loginlogo_default.png</Item>
+                <Item Key="URL">skins/Customer/default/img/KIX_logo.png</Item>
                 <Item Key="StyleHeight">100px</Item>
             </Hash>
         </Setting>
@@ -5277,7 +5270,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="DisableIFrameOriginRestricted" Required="0" Valid="1">
-        <Description Translatable="1">Disable HTTP header "X-Frame-Options: SAMEORIGIN" to allow OTRS to be included as an IFrame in other websites. Disabling this HTTP header can be a security issue! Only disable it, if you know what you are doing!</Description>
+        <Description Translatable="1">Disable HTTP header "X-Frame-Options: SAMEORIGIN" to allow KIX to be included as an IFrame in other websites. Disabling this HTTP header can be a security issue! Only disable it, if you know what you are doing!</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -5642,7 +5635,7 @@
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
-            <String Regex="">http://host.example.com/thanks-for-using-otrs.html</String>
+            <String Regex="">http://host.example.com/login.html</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PreApplicationModule###AgentInfo" Required="0" Valid="0" ConfigLevel="300">
@@ -7610,7 +7603,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="WebMaxFileUpload" Required="1" Valid="1" ConfigLevel="200">
-        <Description Translatable="1">Defines the maximal size (in bytes) for file uploads via the browser. Warning: Setting this option to a value which is too low could cause many masks in your OTRS instance to stop working (probably any mask which takes input from the user).</Description>
+        <Description Translatable="1">Defines the maximal size (in bytes) for file uploads via the browser. Warning: Setting this option to a value which is too low could cause many masks in your KIX instance to stop working (probably any mask which takes input from the user).</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -7701,7 +7694,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="SwitchToCustomer" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Allows the administrators to login as other customers, via the contact administration panel.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
@@ -7842,7 +7834,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Package::RepositoryList" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">Defines the list of online repositories. Another installations can be used as repository, for example: Key="http://example.com/otrs/public.pl?Action=PublicRepository;File=" and Content="Some Name".</Description>
+        <Description Translatable="1">Defines the list of online repositories. Another installations can be used as repository, for example: Key="http://example.com/kix/public.pl?Action=PublicRepository;File=" and Content="Some Name".</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Package</SubGroup>
         <Setting>
@@ -8062,7 +8054,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PGP" Required="1" Valid="1">
-        <Description Translatable="1">Enables PGP support. When PGP support is enabled for signing and encrypting mail, it is HIGHLY recommended that the web server runs as the OTRS user. Otherwise, there will be problems with the privileges when accessing .gnupg folder.</Description>
+        <Description Translatable="1">Enables PGP support. When PGP support is enabled for signing and encrypting mail, it is HIGHLY recommended that the web server runs as the KIX user. Otherwise, there will be problems with the privileges when accessing .gnupg folder.</Description>
         <Group>Framework</Group>
         <SubGroup>Crypt::PGP</SubGroup>
         <Setting>
@@ -8085,7 +8077,7 @@
         <Group>Framework</Group>
         <SubGroup>Crypt::PGP</SubGroup>
         <Setting>
-            <String Regex="">--homedir /opt/otrs/.gnupg/ --batch --no-tty --yes</String>
+            <String Regex="">--homedir /opt/kix/.gnupg/ --batch --no-tty --yes</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PGP::Key::Password" Required="1" Valid="1">
@@ -8254,7 +8246,7 @@ If you did not request a new password, please ignore this email.
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
-            <String Regex="">New OTRS password</String>
+            <String Regex="">New KIX password</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="NotificationBodyLostPassword" Required="1" Valid="1">
@@ -8634,7 +8626,6 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerGroupAlwaysGroups" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines the groups every contact will be in (if CustomerGroupSupport is enabled and you don't want to manage every user for these groups).</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -8704,7 +8695,6 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###1-GoogleMaps" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines a customer item, which generates a google maps icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -8723,7 +8713,6 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###2-Google" Required="0" Valid="0">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines a customer item, which generates a google icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -8742,7 +8731,6 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###2-LinkedIn" Required="0" Valid="0">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines a customer item, which generates a LinkedIn icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -8761,7 +8749,6 @@ You can log in via the following URL:
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###3-XING" Required="0" Valid="0">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Defines a customer item, which generates a XING icon at the end of a contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -8850,7 +8837,7 @@ You can log in via the following URL:
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
-            <String Regex="">New OTRS password request</String>
+            <String Regex="">New KIX password request</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerPanelBodyLostPasswordToken" Required="1" Valid="1">
@@ -8860,7 +8847,7 @@ You can log in via the following URL:
         <Setting>
             <TextArea>Hi &lt;KIX_USERFIRSTNAME&gt;,
 
-You or someone impersonating you has requested to change your OTRS
+You or someone impersonating you has requested to change your KIX
 password.
 
 If you want to do this, click on this link. You will receive another email containing the password.
@@ -8898,7 +8885,7 @@ New password: &lt;KIX_NEWPW&gt;
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
-            <String Regex="">New OTRS Account!</String>
+            <String Regex="">New KIX Account!</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerPanelBodyNewAccount" Required="1" Valid="1">
@@ -9043,7 +9030,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Customer::AuthModule::LDAP::GroupDN" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">If "LDAP" was selected for Customer::Authmodule, you can check if the user is allowed to authenticate because he is in a posixGroup, e.g. user needs to be in a group xyz to use OTRS. Specify the group, who may access the system.</Description>
+        <Description Translatable="1">If "LDAP" was selected for Customer::Authmodule, you can check if the user is allowed to authenticate because he is in a posixGroup, e.g. user needs to be in a group xyz to use KIX. Specify the group, who may access the system.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer::Auth</SubGroup>
         <Setting>
@@ -9094,7 +9081,6 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Customer::AuthModule::LDAP::UserSuffix" Required="0" Valid="0" ConfigLevel="200">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">If "LDAP" was selected for Customer::AuthModule and if you want to add a suffix to every contact login name, specifiy it here, e. g. you just want to write the username user but in your LDAP directory exists user@domain.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer::Auth</SubGroup>
@@ -9541,7 +9527,6 @@ via the Preferences button after logging in.
         <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
         <Setting>
             <FrontendModuleReg>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Description Translatable="1">Address book of contact sources.</Description>
                 <Title Translatable="1">Address Book</Title>
                 <NavBarName></NavBarName>
@@ -9730,18 +9715,14 @@ via the Preferences button after logging in.
                 <GroupRo></GroupRo>
                 <Group>admin</Group>
                 <Group>users</Group>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Description Translatable="1">Edit contacts.</Description>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Title Translatable="1">Contacts</Title>
                 <NavBarName>Customer Management</NavBarName>
                 <NavBar>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Name Translatable="1">Contact Administration</Name>
                     <Link>Action=AdminCustomerUser;Nav=Agent</Link>
                     <LinkOption></LinkOption>
                     <NavBar>Customer Management</NavBar>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Description Translatable="1">Contact Administration</Description>
                     <Type></Type>
                     <Block></Block>
@@ -9749,7 +9730,6 @@ via the Preferences button after logging in.
                     <Prio>900</Prio>
                 </NavBar>
                 <NavBar>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Description Translatable="1">Contact Administration</Description>
                     <Type>Menu</Type>
                     <Block>ItemArea</Block>
@@ -9762,10 +9742,8 @@ via the Preferences button after logging in.
                 </NavBar>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Name Translatable="1">Contact</Name>
                     <Block>Customer</Block>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Description Translatable="1">Create and manage contacts.</Description>
                     <Prio>300</Prio>
                 </NavBarModule>
@@ -9830,9 +9808,7 @@ via the Preferences button after logging in.
                 <NavBarName>Admin</NavBarName>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Name Translatable="1">Contact &lt;-&gt; Groups</Name>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Description Translatable="1">Link contact to groups.</Description>
                     <Block>Customer</Block>
                     <Prio>400</Prio>
@@ -9869,7 +9845,6 @@ via the Preferences button after logging in.
             <FrontendModuleReg>
                 <Group>admin</Group>
                 <Description>Admin</Description>
-                <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                 <Title Translatable="1">Contact &lt;-&gt; Services</Title>
                 <NavBarName>Admin</NavBarName>
                 <NavBar>
@@ -9885,9 +9860,7 @@ via the Preferences button after logging in.
                 </NavBar>
                 <NavBarModule>
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Name Translatable="1">Contact &lt;-&gt; Services</Name>
-                    <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
                     <Description Translatable="1">Link contact to services.</Description>
                     <Block>Customer</Block>
                     <Prio>500</Prio>
@@ -10553,7 +10526,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Core::MirrorDB::DSN" Required="0" Valid="0" ConfigLevel="200">
-        <Description Translatable="1">OTRS can use one or more readonly mirror databases for expensive operations like fulltext search or statistics generation. Here you can specify the DSN for the first mirror database.</Description>
+        <Description Translatable="1">KIX can use one or more readonly mirror databases for expensive operations like fulltext search or statistics generation. Here you can specify the DSN for the first mirror database.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::MirrorDB</SubGroup>
         <Setting>
@@ -10813,7 +10786,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###CVE" Required="0" Valid="0">
-        <Description Translatable="1">Defines a filter for html output to add links behind CVE numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.</Description>
+        <Description Translatable="1">Defines a filter for html output to add links behind CVE numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -10856,7 +10829,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###Bugtraq" Required="0" Valid="0">
-        <Description Translatable="1">Defines a filter for html output to add links behind bugtraq numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.</Description>
+        <Description Translatable="1">Defines a filter for html output to add links behind bugtraq numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <!-- Example strings: BugTraq ID: 23862 | BugTraq ID: 8945 | Bugtraq ID 140 | BUGTRAQ:20070425 | BID 20799 -->
@@ -10898,7 +10871,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###MSBulletins" Required="0" Valid="0">
-        <Description Translatable="1">Defines a filter for html output to add links behind MSBulletin numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.</Description>
+        <Description Translatable="1">Defines a filter for html output to add links behind MSBulletin numbers. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <!-- Example strings: MS07-021 | MS04-028 | MS-07-002 -->
@@ -10935,7 +10908,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###Setting1" Required="0" Valid="0">
-        <Description Translatable="1">Define a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.</Description>
+        <Description Translatable="1">Define a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -10970,7 +10943,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Output::OutputFilterTextAutoLink###Setting2" Required="0" Valid="0">
-        <Description Translatable="1">Defines a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.</Description>
+        <Description Translatable="1">Defines a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -11013,7 +10986,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Secure::DisableBanner" Required="1" Valid="1">
-        <Description Translatable="1">If enabled, the OTRS version tag will be removed from the Webinterface, the HTTP headers and the X-Headers of outgoing mails.</Description>
+        <Description Translatable="1">If enabled, the KIX version tag will be removed from the Webinterface, the HTTP headers and the X-Headers of outgoing mails.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
@@ -11024,7 +10997,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Loader::Enabled::CSS" Required="1" Valid="1">
-        <Description Translatable="1">If enabled, OTRS will deliver all CSS files in minified form. WARNING: If you turn this off, there will likely be problems in IE 7, because it cannot load more than 32 CSS files.</Description>
+        <Description Translatable="1">If enabled, KIX will deliver all CSS files in minified form. WARNING: If you turn this off, there will likely be problems in IE 7, because it cannot load more than 32 CSS files.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -11035,7 +11008,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Loader::Enabled::JS" Required="1" Valid="1">
-        <Description Translatable="1">If enabled, OTRS will deliver all JavaScript files in minified form.</Description>
+        <Description Translatable="1">If enabled, KIX will deliver all JavaScript files in minified form.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
@@ -11264,7 +11237,7 @@ via the Preferences button after logging in.
                 <Item Key="InternalName">default</Item>
                 <Item Key="VisibleName" Translatable="1">Default</Item>
                 <Item Key="Description" Translatable="1">This is the default orange - black skin.</Item>
-                <Item Key="HomePage">www.otrs.org</Item>
+                <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -11277,7 +11250,7 @@ via the Preferences button after logging in.
                 <Item Key="InternalName">slim</Item>
                 <Item Key="VisibleName" Translatable="1">Default (Slim)</Item>
                 <Item Key="Description" Translatable="1">"Slim" skin which tries to save screen space for power users.</Item>
-                <Item Key="HomePage">www.otrs.org</Item>
+                <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -11335,7 +11308,7 @@ via the Preferences button after logging in.
                 <Item Key="InternalName">default</Item>
                 <Item Key="VisibleName" Translatable="1">Default</Item>
                 <Item Key="Description" Translatable="1">This is the default orange - black skin for the customer interface.</Item>
-                <Item Key="HomePage">www.otrs.org</Item>
+                <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -11425,7 +11398,6 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerCompany::EventModulePost###100-UpdateCustomerUsers" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Event module that updates contacts after an update of the Customer.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::CustomerCompany</SubGroup>
@@ -11438,7 +11410,6 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUser::EventModulePost###100-UpdateSearchProfiles" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Event module that updates contact search profiles if login changes.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::CustomerUser</SubGroup>
@@ -11451,7 +11422,6 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerUser::EventModulePost###100-UpdateServiceMembership" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Event module that updates contact service membership if login changes.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::CustomerUser</SubGroup>
@@ -12884,7 +12854,6 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::CustomerInfoTicketCount" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Sets the search paramater for the ticket count in contact info block.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -12956,7 +12925,6 @@ via the Preferences button after logging in.
             </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::CustomerUser::Item###98-CustomerIDsSelection" Required="0" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">A contact info block, which shows all customer IDs assigned to this customer. Depending on the calling action it allows you to select the relevant customer ID for the ticket, which will be created.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
@@ -13768,4 +13736,27 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <!-- EO SystemMessage -->
+
+    <!-- CustomFooter -->
+    <ConfigItem Name="CustomFooter###Title" Required="0" Valid="0">
+        <Description Translatable="1">Defines a link list that can be added in the footer. The links can be assigned separately to the frontends. (Key: &lt;priority&gt;::&lt;link title&gt;; Value: 0 => deactivated, 1 => show everywhere, 2 => only agent frontend, 3 => only customer frontend)</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::CustomFooter</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="000::Dummy">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomFooter###URL" Required="0" Valid="0">
+        <Description Translatable="1">Defines the associated URL for each link title. It is possible to use KIX placeholder.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::CustomFooter</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Dummy">&lt;AKIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentDashboard</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO CustomFooter -->
 </otrs_config>

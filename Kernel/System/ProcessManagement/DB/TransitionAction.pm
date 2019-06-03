@@ -105,10 +105,7 @@ sub TransitionActionAdd {
 
     # check if EntityID already exists
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT id
-            FROM pm_transition_action
-            WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)",
+        SQL   => "SELECT id FROM pm_transition_action WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)",
         Bind  => [ \$Param{EntityID} ],
         Limit => 1,
     );
@@ -169,10 +166,8 @@ sub TransitionActionAdd {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO pm_transition_action ( entity_id, name, config, create_time,
-                create_by, change_time, change_by )
-            VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => 'INSERT INTO pm_transition_action ( entity_id, name, config, create_time, create_by, change_time, change_by )'
+              . ' VALUES (?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{EntityID}, \$Param{Name}, \$Config, \$Param{UserID}, \$Param{UserID},
         ],
@@ -313,20 +308,18 @@ sub TransitionActionGet {
     # sql
     if ( $Param{ID} ) {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id, entity_id, name, config, create_time, change_time
-                FROM pm_transition_action
-                WHERE id = ?',
+            SQL   => 'SELECT id, entity_id, name, config, create_time, change_time'
+                   . ' FROM pm_transition_action'
+                   . ' WHERE id = ?',
             Bind  => [ \$Param{ID} ],
             Limit => 1,
         );
     }
     else {
         return if !$DBObject->Prepare(
-            SQL => '
-                SELECT id, entity_id, name, config, create_time, change_time
-                FROM pm_transition_action
-                WHERE entity_id = ?',
+            SQL   => 'SELECT id, entity_id, name, config, create_time, change_time'
+                   . ' FROM pm_transition_action'
+                   . ' WHERE entity_id = ?',
             Bind  => [ \$Param{EntityID} ],
             Limit => 1,
         );
@@ -400,10 +393,9 @@ sub TransitionActionUpdate {
 
     # check if EntityID already exists
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT id FROM pm_transition_action
-            WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)
-            AND id != ?",
+        SQL   => "SELECT id FROM pm_transition_action"
+               . " WHERE $Self->{Lower}(entity_id) = $Self->{Lower}(?)"
+               . "AND id != ?",
         Bind  => [ \$Param{EntityID}, \$Param{ID} ],
         LIMIT => 1,
     );
@@ -464,10 +456,7 @@ sub TransitionActionUpdate {
 
     # check if need to update db
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT entity_id, name, config
-            FROM pm_transition_action
-            WHERE id = ?',
+        SQL   => 'SELECT entity_id, name, config FROM pm_transition_action WHERE id = ?',
         Bind  => [ \$Param{ID} ],
         Limit => 1,
     );
@@ -490,11 +479,9 @@ sub TransitionActionUpdate {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE pm_transition_action
-            SET entity_id = ?, name = ?,  config = ?, change_time = current_timestamp,
-                change_by = ?
-            WHERE id = ?',
+        SQL => 'UPDATE pm_transition_action'
+             . ' SET entity_id = ?, name = ?,  config = ?, change_time = current_timestamp, change_by = ?'
+             . ' WHERE id = ?',
         Bind => [
             \$Param{EntityID}, \$Param{Name}, \$Config, \$Param{UserID}, \$Param{ID},
         ],
@@ -564,9 +551,7 @@ sub TransitionActionList {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    my $SQL = '
-            SELECT id, entity_id, name
-            FROM pm_transition_action';
+    my $SQL = 'SELECT id, entity_id, name FROM pm_transition_action';
 
     return if !$DBObject->Prepare( SQL => $SQL );
 
@@ -651,10 +636,7 @@ sub TransitionActionListGet {
 
     # sql
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, entity_id
-            FROM pm_transition_action
-            ORDER BY id',
+        SQL => 'SELECT id, entity_id FROM pm_transition_action ORDER BY id',
     );
 
     my @TransitionActionIDs;

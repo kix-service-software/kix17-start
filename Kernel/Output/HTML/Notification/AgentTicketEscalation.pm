@@ -19,11 +19,7 @@ our @ObjectDependencies = (
     'Kernel::Output::HTML::Layout',
     'Kernel::System::Cache',
     'Kernel::System::Ticket',
-
-    # KIX4OTRS-capeIT
     'Kernel::System::Queue',
-
-    # EO KIX4OTRS-capeIT
 );
 
 sub new {
@@ -46,9 +42,8 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # only show the escalations on ticket overviews
-    return ''
-        if $LayoutObject->{Action}
-        !~ /^AgentTicket(Queue|Service|(Status|Locked|Watch|Responsible)View)/;
+    my $Pattern = '^AgentTicket(?:Queue|Service|(?:Status|Locked|Watch|Responsible)View)';
+    return '' if $LayoutObject->{Action} !~ /$Pattern/;
 
     # get cache object
     my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
@@ -66,7 +61,6 @@ sub Run {
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-    # KIX4OTRS-capeIT
     # get queue object
     my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
 
@@ -79,13 +73,10 @@ sub Run {
         $SearchAdd{QueueIDs} = \@AgentsCustomQueues;
     }
 
-    # EO KIX4OTRS-capeIT
-
     # get all overtime tickets
     my $ShownMax            = $Param{Config}->{ShownMax}            || 25;
     my $EscalationInMinutes = $Param{Config}->{EscalationInMinutes} || 120;
 
-    # KIX4OTRS-capeIT
     my @TicketIDs;
     if ( ref $SearchAdd{QueueIDs} eq 'ARRAY' && @{ $SearchAdd{QueueIDs} } ) {
         @TicketIDs = $TicketObject->TicketSearch(
@@ -97,8 +88,6 @@ sub Run {
             %SearchAdd,
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     # get escalations
     my $ResponseTime = '';

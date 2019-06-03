@@ -258,6 +258,11 @@ Core.Agent.TableFilters = (function (TargetNS) {
      *      Initialize allocation list.
      */
     TargetNS.SetAllocationList = function () {
+        // replace _ by - because of sub _PreferencesLinkObject() given Name and PreferencesID (used in LinkedObject table preferences in tab and popup)
+        if (typeof ElementID !== 'undefined') {
+            ElementID = ElementID.replace("_", "-");
+        }
+
         $('.AllocationListContainer').each(function() {
 
             var $ContainerObj = $(this),
@@ -267,7 +272,17 @@ Core.Agent.TableFilters = (function (TargetNS) {
                 DataAvailable,
                 Translation,
                 $FieldObj,
-                IDString = '#' + $ContainerObj.find('.AssignedFields').attr('id') + ', #' + $ContainerObj.find('.AvailableFields').attr('id');
+                IDString = '#' + $ContainerObj.find('.AssignedFields').attr('id') + ', #' + $ContainerObj.find('.AvailableFields').attr('id'),
+                RegEx;
+
+            // Skip to the next container if content shouldn't be updated.
+            if (typeof ElementID !== 'undefined') {
+                RegEx = new RegExp(ElementID.replace('Widget',''));
+
+                if (!IDString.match(RegEx)) {
+                    return true;
+                }
+            }
 
             if (DataEnabledJSON) {
                 DataEnabled = Core.JSON.Parse(DataEnabledJSON);
@@ -276,10 +291,8 @@ Core.Agent.TableFilters = (function (TargetNS) {
                 DataAvailable = Core.JSON.Parse(DataAvailableJSON);
             }
 
-            // KIX4OTRS-capeIT
             $ContainerObj.find('.AssignedFields').html('');
             $ContainerObj.find('.AvailableFields').html('');
-            // EO KIX4OTRS-capeIT
 
             $.each(DataEnabled, function(Index, Field) {
 

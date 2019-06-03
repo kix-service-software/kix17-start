@@ -24,7 +24,7 @@ Kernel::System::GenericInterface::ObjectLockState - lock state backend
 
 =head1 SYNOPSIS
 
-THIS PACKAGE IS DEPRECATED AND WILL BE REMOVED IN A FUTURE VERSION OF OTRS.
+THIS PACKAGE IS DEPRECATED AND WILL BE REMOVED IN A FUTURE VERSION OF KIX.
 PLEASE DON'T USE IT IN NEW CODE.
 
 =head1 PUBLIC INTERFACE
@@ -87,10 +87,9 @@ sub ObjectLockStateSet {
     # create new
     if ( !%{ $Self->ObjectLockStateGet(%Param) || {} } ) {
         return if !$DBObject->Do(
-            SQL => '
-                INSERT INTO gi_object_lock_state
-                    (webservice_id, object_type, object_id, lock_state, lock_state_counter, create_time, change_time)
-                VALUES (?, ?, ?, ?, ?, current_timestamp, current_timestamp)',
+            SQL  => 'INSERT INTO gi_object_lock_state'
+                  . ' (webservice_id, object_type, object_id, lock_state, lock_state_counter, create_time, change_time)'
+                  . ' VALUES (?, ?, ?, ?, ?, current_timestamp, current_timestamp)',
             Bind => [
                 \int( $Param{WebserviceID} ),
                 \$Param{ObjectType},
@@ -103,12 +102,11 @@ sub ObjectLockStateSet {
     else {    # update existing
 
         return if !$DBObject->Do(
-            SQL => '
-                UPDATE gi_object_lock_state
-                SET lock_state = ?, lock_state_counter = ?, change_time = current_timestamp
-                WHERE webservice_id = ?
-                    AND object_type = ?
-                    AND object_id = ?',
+            SQL  => 'UPDATE gi_object_lock_state'
+                  . ' SET lock_state = ?, lock_state_counter = ?, change_time = current_timestamp'
+                  . ' WHERE webservice_id = ?'
+                  . '  AND object_type = ?'
+                  . '  AND object_id = ?',
             Bind => [
                 \$Param{LockState},
                 \int( $Param{LockStateCounter} || 0 ),
@@ -167,12 +165,11 @@ sub ObjectLockStateGet {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT webservice_id, object_type, object_id, lock_state, lock_state_counter, create_time, change_time
-            FROM gi_object_lock_state
-            WHERE webservice_id =?
-                AND object_type = ?
-                AND object_id = ?',
+        SQL  => 'SELECT webservice_id, object_type, object_id, lock_state, lock_state_counter, create_time, change_time'
+              . ' FROM gi_object_lock_state'
+              . ' WHERE webservice_id =?'
+              . '  AND object_type = ?'
+              . '  AND object_id = ?',
         Bind => [
             \int( $Param{WebserviceID} ),
             \$Param{ObjectType},
@@ -229,11 +226,10 @@ sub ObjectLockStateDelete {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     return if !$DBObject->Do(
-        SQL => '
-            DELETE FROM gi_object_lock_state
-            WHERE webservice_id = ?
-                AND object_type = ?
-                AND object_id = ?',
+        SQL  => 'DELETE FROM gi_object_lock_state'
+              . ' WHERE webservice_id = ?'
+              . '  AND object_type = ?'
+              . '  AND object_id = ?',
         Bind => [
             \int( $Param{WebserviceID} ),
             \$Param{ObjectType},
@@ -272,9 +268,7 @@ sub ObjectLockStatePurge {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     return if !$DBObject->Do(
-        SQL => '
-            DELETE FROM gi_object_lock_state
-            WHERE webservice_id = ?',
+        SQL  => 'DELETE FROM gi_object_lock_state WHERE webservice_id = ?',
         Bind => [
             \int( $Param{WebserviceID} ),
         ],
@@ -324,11 +318,10 @@ sub ObjectLockStateList {
         }
     }
 
-    my $SQL = '
-        SELECT webservice_id, object_type, object_id, lock_state, lock_state_counter, create_time, change_time
-        FROM gi_object_lock_state
-        WHERE webservice_id = ?
-            AND object_type = ?';
+    my $SQL = 'SELECT webservice_id, object_type, object_id, lock_state, lock_state_counter, create_time, change_time'
+            . ' FROM gi_object_lock_state'
+            . ' WHERE webservice_id = ?'
+            . '  AND object_type = ?';
 
     my @Bind = (
         \int( $Param{WebserviceID} ),

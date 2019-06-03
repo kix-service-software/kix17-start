@@ -132,8 +132,7 @@ sub Run {
                 || $ResultHash->{$a}->{'Name'} cmp $ResultHash->{$b}->{'Name'}
         }
         keys %{$ResultHash}
-        )
-    {
+    ) {
 
         $Self->{LayoutObject}->Block(
             Name => 'KIXSidebarTicketLinkCISearchResultRow',

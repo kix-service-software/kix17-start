@@ -169,8 +169,7 @@ sub FormDataGet {
         if (
             !$Self->{ParamObject}->GetParam( Param => $Param{Key} . '::Search' )
             && defined $FormData{Value}
-            )
-        {
+        ) {
             $FormData{Value} = '';
         }
 
@@ -307,8 +306,7 @@ sub InputCreate {
         $AutoCompleteConfig
         && ref($AutoCompleteConfig) eq 'HASH'
         && $AutoCompleteConfig->{Active}
-        )
-    {
+    ) {
 
         $Self->{LayoutObject}->Block(
             Name => 'ITSMCITicketSearchAutoComplete',

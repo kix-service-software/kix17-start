@@ -193,8 +193,7 @@ sub DoPreparations {
         qw( ObjectID RelevantLinkTypes
         RelevantObjectTypes RelevantObjectSubTypes MaxSearchDepth
         SavedGraphID GraphLayout GraphConfig UsedStrength)
-        )
-    {
+    ) {
         $Param{$CurrKey} = $ParamObject->GetParam( Param => $CurrKey ) || '';
     }
 
@@ -281,8 +280,7 @@ sub LookForNeighbours {
                         for my $DestID (
                             keys
                             %{ $LinkList->{ $Param{ObjectType} }->{$LinkType}->{$NodePosition} }
-                            )
-                        {
+                        ) {
                             my $FullTargetID
                                 = $Param{CurrentObjectType} . '-' . $Param{CurrentObjectID};
                             my $FullSourceID = $CurrObjectType . '-' . $DestID;
@@ -306,8 +304,7 @@ sub LookForNeighbours {
                                 &&
                                 !$Param{DiscoveredEdges}
                                 ->{ $FullTargetID . '==' . $LinkType . '==' . $FullSourceID }
-                                )
-                            {
+                            ) {
                                 $Param{DiscoveredEdges}
                                     ->{ $FullSourceID . '==' . $LinkType . '==' . $FullTargetID } =
                                     1;
@@ -318,8 +315,7 @@ sub LookForNeighbours {
                         for my $DestID (
                             keys
                             %{ $LinkList->{ $Param{ObjectType} }->{$LinkType}->{$NodePosition} }
-                            )
-                        {
+                        ) {
                             my $FullSourceID
                                 = $Param{CurrentObjectType} . '-' . $Param{CurrentObjectID};
                             my $FullTargetID = $CurrObjectType . '-' . $DestID;
@@ -343,8 +339,7 @@ sub LookForNeighbours {
                                 &&
                                 !$Param{DiscoveredEdges}
                                 ->{ $FullTargetID . '==' . $LinkType . '==' . $FullSourceID }
-                                )
-                            {
+                            ) {
                                 $Param{DiscoveredEdges}
                                     ->{ $FullSourceID . '==' . $LinkType . '==' . $FullTargetID }
                                     = 1;
@@ -436,6 +431,8 @@ sub GetSavedGraphs {
         Class        => 'Modernize'
     );
     $Param->{SavedGraphs} = \%SavedGraphs;
+
+    return 1;
 }
 
 sub ShowServices {
@@ -481,8 +478,7 @@ sub ShowServices {
         if ( $LinkList && ref($LinkList) eq 'HASH' ) {
             for my $LinkType ( keys %{ $LinkList->{Service} } ) {
                 for my $Position ( keys %{ $LinkList->{Service}->{$LinkType} } ) {
-                    for my $DestID ( keys %{ $LinkList->{Service}->{$LinkType}->{$Position} } )
-                    {
+                    for my $DestID ( keys %{ $LinkList->{Service}->{$LinkType}->{$Position} } ) {
                         my $Type =
                             $LayoutObject->{LanguageObject}
                             ->Get( $PossibleLinkTypesList{ $LinkType . '::' . $Position } );
@@ -631,7 +627,9 @@ sub SaveGraph {
     }
 
     $Param->{LastChangedBy} = substr( $Self->{UserLogin}, 0, 15 )
-        . " (" . substr( $Self->{UserFirstname} . " " . $Self->{UserLastname}, 0, 15 ) . ")",
+        . " (" . substr( $Self->{UserFirstname} . " " . $Self->{UserLastname}, 0, 15 ) . ")";
+
+    return 1;
 }
 
 sub SaveCon {
@@ -719,6 +717,8 @@ sub _SeperateGraphConfig {
     $Param{GraphConfig}->{SubTypes}  = $GraphConfig[3];
     $Param{GraphConfig}->{Depth}     = $GraphConfig[0];
     $Param{GraphConfig}->{Strength}  = $Strength;
+
+    return 1;
 }
 
 1;

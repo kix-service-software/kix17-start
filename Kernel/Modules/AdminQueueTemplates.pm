@@ -312,8 +312,7 @@ sub _Overview {
         for my $StandardTemplateID (
             sort { uc( $StandardTemplateData{$a} ) cmp uc( $StandardTemplateData{$b} ) }
             keys %StandardTemplateData
-            )
-        {
+        ) {
 
             # set output class
             $LayoutObject->Block(

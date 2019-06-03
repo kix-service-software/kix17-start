@@ -139,8 +139,7 @@ sub Run {
         qw(ForceNotificationToUserID ExcludeNotificationToUserID
         ExcludeMuteNotificationToUserID
         )
-        )
-    {
+    ) {
         if ( IsStringWithData( $Param{Config}->{$Attribute} ) ) {
             $Param{Config}->{$Attribute} = $Self->_ConvertScalar2ArrayRef(
                 Data => $Param{Config}->{$Attribute},

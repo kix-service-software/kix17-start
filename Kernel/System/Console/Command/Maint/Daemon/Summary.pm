@@ -36,7 +36,7 @@ sub Configure {
     $Self->AdditionalHelp(<<"EOF");
 If no daemon-name is specified as:
 
- <green>otrs.console.pl $Self->{Name}</green>
+ <green>kix.console.pl $Self->{Name}</green>
 
 The command will get the summary of all daemon modules available.
 EOF
@@ -59,8 +59,7 @@ sub PreRun {
             !$DaemonModuleConfig->{$DaemonName}
             || ref $DaemonModuleConfig->{$DaemonName} ne 'HASH'
             || !$DaemonModuleConfig->{$DaemonName}->{Module}
-            )
-        {
+        ) {
             die "Daemon $DaemonName configuration is invalid";
         }
 

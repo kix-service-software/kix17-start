@@ -159,10 +159,8 @@ sub EntitySyncStateSet {
     # create new
     if ( !%{ $Self->EntitySyncStateGet(%Param) || {} } ) {
         return if !$DBObject->Do(
-            SQL => '
-                INSERT INTO pm_entity_sync
-                    (entity_type, entity_id, sync_state, create_time, change_time)
-                VALUES (?, ?, ?, current_timestamp, current_timestamp)',
+            SQL  => 'INSERT INTO pm_entity_sync (entity_type, entity_id, sync_state, create_time, change_time)'
+                  . ' VALUES (?, ?, ?, current_timestamp, current_timestamp)',
             Bind => [
                 \$Param{EntityType}, \$Param{EntityID}, \$Param{SyncState},
             ],
@@ -171,11 +169,10 @@ sub EntitySyncStateSet {
     else {    # update existing
 
         return if !$DBObject->Do(
-            SQL => '
-                UPDATE pm_entity_sync
-                SET sync_state = ?, change_time = current_timestamp
-                WHERE entity_type = ?
-                    AND entity_id = ?',
+            SQL => 'UPDATE pm_entity_sync'
+                 . ' SET sync_state = ?, change_time = current_timestamp'
+                 . ' WHERE entity_type = ?'
+                 . '  AND entity_id = ?',
             Bind => [
                 \$Param{SyncState}, \$Param{EntityType}, \$Param{EntityID},
             ],
@@ -238,11 +235,10 @@ sub EntitySyncStateGet {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT entity_type, entity_id, sync_state, create_time, change_time
-            FROM pm_entity_sync
-            WHERE entity_type =?
-                AND entity_id = ?',
+        SQL => 'SELECT entity_type, entity_id, sync_state, create_time, change_time'
+             . ' FROM pm_entity_sync'
+             . ' WHERE entity_type = ?'
+             . '  AND entity_id = ?',
         Bind => [
             \$Param{EntityType}, \$Param{EntityID},
         ],
@@ -306,10 +302,7 @@ sub EntitySyncStateDelete {
     return if ( !%{ $Self->EntitySyncStateGet(%Param) || {} } );
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            DELETE FROM pm_entity_sync
-            WHERE entity_type = ?
-                AND entity_id = ?',
+        SQL  => 'DELETE FROM pm_entity_sync WHERE entity_type = ? AND entity_id = ?',
         Bind => [
             \$Param{EntityType}, \$Param{EntityID},
         ],
@@ -343,8 +336,7 @@ sub EntitySyncStatePurge {
     }
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            DELETE FROM pm_entity_sync',
+        SQL  => 'DELETE FROM pm_entity_sync',
         Bind => [],
     );
 
@@ -404,9 +396,8 @@ sub EntitySyncStateList {
         }
     }
 
-    my $SQL = '
-        SELECT entity_type, entity_id, sync_state, create_time, change_time
-        FROM pm_entity_sync';
+    my $SQL = 'SELECT entity_type, entity_id, sync_state, create_time, change_time'
+            . ' FROM pm_entity_sync';
 
     my @Bind;
 

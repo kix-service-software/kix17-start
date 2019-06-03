@@ -9,6 +9,7 @@
 package Kernel::System::Ticket::Event::ExternalSupplierForwarding;
 
 use strict;
+use warnings;
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -19,8 +20,7 @@ our @ObjectDependencies = (
 );
 
 sub new {
-    my $Type  = shift;
-    my %Param = @_;
+    my ( $Type, %Param ) = @_;
 
     # allocate new hash for object
     my $Self = {};
@@ -95,8 +95,7 @@ sub Run {
                 ( $Articles[0] )
                 && ( ref( $Articles[0] ) eq 'HASH' )
                 && ( $Param{Data}->{ArticleID} != $Articles[0]->{ArticleID} )
-                )
-            {
+            ) {
 
                 # check if article is in list of relevant articles...
                 return if ( !( grep { $_ eq $Param{Data}->{ArticleID} } @ArticleIDs ) );

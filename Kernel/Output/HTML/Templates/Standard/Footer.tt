@@ -11,6 +11,20 @@
 
 [% IF !Config("Secure::DisableBanner") %]
 <div id="Footer" class="ARIARoleContentinfo">
+[% RenderBlockStart("CustomFooter") %]
+    <div class="CustomFooter">
+        <ul>
+[% RenderBlockStart("CustomFooterEntry") %]
+            <li>
+                <a href="[% Data.URL %]" title="[% Data.Title %]">
+                    [% Data.Title %]
+                </a>
+            </li>
+[% RenderBlockEnd("CustomFooterEntry") %]
+        </ul>
+    </div>
+    <div class="Clear">
+[% RenderBlockEnd("CustomFooter") %]
     <span>
         [% Config("Product") %] [% Config("Version") %]
     </span>

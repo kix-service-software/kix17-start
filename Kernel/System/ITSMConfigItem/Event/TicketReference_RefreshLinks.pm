@@ -176,11 +176,8 @@ sub Run {
                     if ( $CurrCIReferenceID && $Param{ConfigItemID} ) {
                         if (
                             $RelAttr{$CurrKeyname}->[0]->{ReferencedTicketLinkDirection}
-                            &&
-                            $RelAttr{$CurrKeyname}->[0]->{ReferencedTicketLinkDirection} eq
-                            'Reverse'
-                            )
-                        {
+                            && $RelAttr{$CurrKeyname}->[0]->{ReferencedTicketLinkDirection} eq 'Reverse'
+                        ) {
                             $Self->{LinkObject}->LinkAdd(
                                 SourceObject => 'Ticket',
                                 SourceKey    => $CurrCIReferenceID,
@@ -225,8 +222,7 @@ sub _CreateTicketReferencesHash {
         ( !$Param{XMLDefinition} ) ||
         ( ref $Param{XMLData} ne 'HASH' ) ||
         ( ref $Param{XMLDefinition} ne 'ARRAY' )
-        )
-    {
+    ) {
         return;
     }
 
@@ -254,8 +250,7 @@ sub _CreateTicketReferencesHash {
 
                     foreach my $ParamRef (
                         qw(ReferencedTicketLinkType ReferencedTicketLinkDirection)
-                        )
-                    {
+                    ) {
                         $RetHash{$ParamRef} = $Item->{Input}->{$ParamRef};
 
                     }
@@ -345,8 +340,11 @@ sub GetLinkedObjects {
     my @IDArr = qw{};
 
     # check required params...
-    if ( ( !$Param{ToObject} ) || ( !$Param{FromObject} ) || ( !$Param{FromObjectID} ) )
-    {
+    if (
+        ( !$Param{ToObject} )
+        || ( !$Param{FromObject} )
+        || ( !$Param{FromObjectID} )
+    ) {
         return \@IDArr;
     }
 
@@ -355,8 +353,7 @@ sub GetLinkedObjects {
         ( $Param{ToObject} ne 'ITSMConfigItem' )
         && ( $Param{ToObject} ne 'Ticket' )
         && ( $Param{ToObject} ne 'Ticket' )
-        )
-    {
+    ) {
         $Self->{LogObject}->Log(
             Priority => 'notice',
             Message  => "LinkObject::GetLinkedObjects: "
@@ -390,14 +387,11 @@ sub GetLinkedObjects {
             #if linked object is a source
             if (
                 ( defined( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) )
-                &&
-                ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) eq 'HASH' )
-                )
-            {
+                && ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) eq 'HASH' )
+            ) {
                 for my $CurrCIID (
                     keys( %{ $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} } )
-                    )
-                {
+                ) {
                     my $CurrCI =
                         $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source}->{$CurrCIID};
 
@@ -413,14 +407,11 @@ sub GetLinkedObjects {
             #if linked object is target
             if (
                 ( defined( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) )
-                &&
-                ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) eq 'HASH' )
-                )
-            {
+                && ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) eq 'HASH' )
+            ) {
                 for my $CurrCIID (
                     keys( %{ $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} } )
-                    )
-                {
+                ) {
                     my $CurrCI = $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target}
                         ->{$CurrCIID};
 
@@ -450,16 +441,12 @@ sub GetLinkedObjects {
             #if linked object is a source
             if (
                 ( defined( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) )
-                &&
-                ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) eq 'HASH' )
-                )
-            {
+                && ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) eq 'HASH' )
+            ) {
                 for my $TicketID (
                     keys( %{ $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} } )
-                    )
-                {
-                    my $CurrTicket = $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source}
-                        ->{$TicketID};
+                ) {
+                    my $CurrTicket = $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source}->{$TicketID};
 
                     if ( $Param{ToSubObject} && ( $CurrTicket->{Type} eq $Param{ToSubObject} ) ) {
                         push( @IDArr, $TicketID );
@@ -473,14 +460,11 @@ sub GetLinkedObjects {
             #if linked object is target
             if (
                 ( defined( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) )
-                &&
-                ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) eq 'HASH' )
-                )
-            {
+                && ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) eq 'HASH' )
+            ) {
                 for my $TicketID (
                     keys( %{ $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} } )
-                    )
-                {
+                ) {
                     my $CurrTicket = $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target}
                         ->{$TicketID};
 
@@ -510,16 +494,12 @@ sub GetLinkedObjects {
             #if linked object is a source
             if (
                 ( defined( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) )
-                &&
-                ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) eq 'HASH' )
-                )
-            {
+                && ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} ) eq 'HASH' )
+            ) {
                 for my $TicketID (
                     keys( %{ $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source} } )
-                    )
-                {
-                    my $CurrTicket = $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source}
-                        ->{$TicketID};
+                ) {
+                    my $CurrTicket = $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Source}->{$TicketID};
 
                     if ( $Param{ToSubObject} && ( $CurrTicket->{Type} eq $Param{ToSubObject} ) ) {
                         push( @IDArr, $TicketID );
@@ -533,14 +513,11 @@ sub GetLinkedObjects {
             #if linked object is target
             if (
                 ( defined( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) )
-                &&
-                ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) eq 'HASH' )
-                )
-            {
+                && ( ref( $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} ) eq 'HASH' )
+            ) {
                 for my $TicketID (
                     keys( %{ $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target} } )
-                    )
-                {
+                ) {
                     my $CurrTicket = $PartnerLinkList->{ $Param{ToObject} }->{$LinkType}->{Target}
                         ->{$TicketID};
 

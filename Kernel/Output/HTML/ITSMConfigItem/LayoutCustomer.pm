@@ -127,8 +127,7 @@ sub FormDataGet {
         if (
             !$ParamObject->GetParam( Param => $Param{Key} . '::Search' )
             && defined $FormData{Value}
-            )
-        {
+        ) {
             $FormData{Value} = '';
         }
 
@@ -178,8 +177,8 @@ sub InputCreate {
     my $Class    = 'W50pc ITSMCustomerSearch';
     my $Search   = '';
     my $Required = $Param{Required} || '';
-    my $Invalid  = $Param{Invalid} || '';
-    my $ItemId   = $Param{ItemId} || '';
+    my $Invalid  = $Param{Invalid}  || '';
+    my $ItemId   = $Param{ItemId}   || '';
 
     if ($Required) {
         $Class .= ' Validate_Required';
@@ -201,7 +200,9 @@ sub InputCreate {
         my %AddressList = $Kernel::OM->Get('Kernel::System::AddressBook')->AddressList(
             Search => '*'.$Value.'*',
         );
-        map { $CustomerSearchList{$_} = $_ } values %AddressList;
+        for my $Address ( values %AddressList ) {
+            $CustomerSearchList{$Address} = $Address;
+        }
 
         # transform ascii to html
         $Search = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->Ascii2Html(

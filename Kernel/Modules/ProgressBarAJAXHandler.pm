@@ -32,8 +32,6 @@ sub Run {
     my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
     my $SchedulerDBObject   = $Kernel::OM->Get('Kernel::System::Daemon::SchedulerDB');
 
-    my $Result;
-
     for my $Parameter ( qw(TaskType TaskName) ) {
         $Param{$Parameter} = $ParamObject->GetParam( Param => $Parameter );
     }

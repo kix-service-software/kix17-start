@@ -16,7 +16,7 @@ use warnings;
 use vars qw(@ISA);
 
 use Exporter qw(import);
-our @EXPORT_OK = qw(Translatable);    ## no critic
+our @EXPORT_OK = qw(Translatable);
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -27,6 +27,8 @@ our @ObjectDependencies = (
 
 my @DAYS = qw/Sun Mon Tue Wed Thu Fri Sat/;
 my @MONS = qw/Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec/;
+
+## no critic qw(ClassHierarchies::ProhibitExplicitISA)
 
 =head1 NAME
 
@@ -128,12 +130,6 @@ sub new {
     if ( !$Param{TranslationFile} ) {
 
         # looking to addition translation files
-        # KIXCore-capeIT
-        # my $Home  = $ConfigObject->Get('Home') . '/';
-        # my @Files = $MainObject->DirectoryRead(
-        #     Directory => $Home . "Kernel/Language/",
-        #     Filter    => "$Self->{UserLanguage}_*.pm",
-        # );
         my @Files;
         for my $Dir ( reverse @INC ) {
             my $LangDir = "$Dir/Kernel/Language/";
@@ -148,17 +144,11 @@ sub new {
             }
         }
 
-        # EO KIXCore-capeIT
-
         FILE:
         for my $File (@Files) {
 
             # get module name based on file name
-            # KIXCore-capeIT
-            # $File =~ s/^$Home(.*)\.pm$/$1/g;
             $ File =~ s/.*(Kernel\/Language\/.*)\.pm$/$1/g;
-
-            # EO KIXCore-capeIT
 
             $File =~ s/\/\//\//g;
             $File =~ s/\//::/g;
@@ -268,7 +258,7 @@ sub Translate {
 
 =item Get()
 
-WARNING: THIS METHOD IS DEPRECATED AND WILL BE REMOVED IN FUTURE VERSION OF OTRS! USE Translate() INSTEAD.
+WARNING: THIS METHOD IS DEPRECATED AND WILL BE REMOVED IN FUTURE VERSION OF KIX! USE Translate() INSTEAD.
 
 Translate a string.
 
@@ -439,7 +429,7 @@ sub FormatTimeString {
     }
 
     # Invalid string passed? (don't log for ISO dates)
-    if ( $String !~ /^(\d{2}:\d{2}:\d{2})$/ ) {
+    if ( $String !~ /^\d{2}:\d{2}:\d{2}$/ ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'notice',
             Message  => "No FormatTimeString() translation found for '$String' string!",

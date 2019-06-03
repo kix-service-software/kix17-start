@@ -248,7 +248,7 @@ $('#UseX509').bind('change', function(){
                                         <p class="FieldExplanation">
                                             [% Translate("The full path and name of the SSL certificate file.") | html %]
                                             <br/>
-                                            [% Translate("e.g. /opt/otrs/var/certificates/REST/ssl.crt") | html %]
+                                            [% Translate("e.g. /opt/kix/var/certificates/REST/ssl.crt") | html %]
                                         </p>
                                     </div>
                                     <div class="Clear"></div>
@@ -261,7 +261,7 @@ $('#UseX509').bind('change', function(){
                                         <p class="FieldExplanation">
                                             [% Translate("The full path and name of the SSL key file.") | html %]
                                             <br/>
-                                            [% Translate("e.g. /opt/otrs/var/certificates/REST/ssl.key") | html %]
+                                            [% Translate("e.g. /opt/kix/var/certificates/REST/ssl.key") | html %]
                                         </p>
                                     </div>
                                     <div class="Clear"></div>
@@ -272,7 +272,7 @@ $('#UseX509').bind('change', function(){
                                         <p class="FieldExplanation">
                                             [% Translate("The full path and name of the certification authority certificate file that validates the SSL certificate.") | html %]
                                             <br/>
-                                            [% Translate("e.g. /opt/otrs/var/certificates/REST/CA/ca.file") | html %]
+                                            [% Translate("e.g. /opt/kix/var/certificates/REST/CA/ca.file") | html %]
                                         </p>
                                     </div>
                                     <div class="Clear"></div>

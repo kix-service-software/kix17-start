@@ -45,9 +45,7 @@ sub Run {
         || $Config->{'Order::Default'}
         || 'Up';
 
-    # KIX4OTRS-capeIT
     my $ArticleFlag = $ParamObject->GetParam( Param => 'ArticleFlag' );
-    # EO KIX4OTRS-capeIT
 
     # create URL to store last screen
     my $URL = "Action=AgentTicketArticleFlagView;"
@@ -97,8 +95,7 @@ sub Run {
     COLUMNNAME:
     for my $ColumnName (
         qw(Owner Responsible State Queue Priority Type Lock Service SLA CustomerID CustomerUserID)
-        )
-    {
+    ) {
         # get column filter from web request
         my $FilterValue = $ParamObject->GetParam( Param => 'ColumnFilter' . $ColumnName )
             || '';
@@ -187,101 +184,51 @@ sub Run {
             Name   => 'All',
             Prio   => 1000,
             Search => {
-
-                # KIX4OTRS-capeIT
-                # Locks      => [ 'lock', 'tmp_lock' ],
-                # OwnerIDs   => [ $Self->{UserID} ],
                 ArticleFlag => $ArticleFlag,
-
-                # EO KIX4OTRS-capeIT
-                OrderBy => $OrderBy,
-                SortBy  => $SortByS,
-
-                # KIX4OTRS-capeIT
-                # UserID     => 1,
-                UserID => $Self->{UserID},
-
-                # EO KIX4OTRS-capeIT
-                Permission => 'ro',
+                OrderBy     => $OrderBy,
+                SortBy      => $SortByS,
+                UserID      => $Self->{UserID},
+                Permission  => 'ro',
             },
         },
         New => {
             Name   => 'New Article',
             Prio   => 1001,
             Search => {
-
-                # KIX4OTRS-capeIT
-                # Locks         => [ 'lock', 'tmp_lock' ],
-                # OwnerIDs      => [ $Self->{UserID} ],
-                ArticleFlag => $ArticleFlag,
-
-                # EO KIX4OTRS-capeIT
+                ArticleFlag   => $ArticleFlag,
                 NotTicketFlag => {
                     Seen => 1,
                 },
                 TicketFlagUserID => $Self->{UserID},
                 OrderBy          => $OrderBy,
                 SortBy           => $SortByS,
-
-                # KIX4OTRS-capeIT
-                # UserID     => 1,
-                UserID => $Self->{UserID},
-
-                # EO KIX4OTRS-capeIT
-                Permission => 'ro',
+                UserID           => $Self->{UserID},
+                Permission       => 'ro',
             },
         },
         Reminder => {
             Name   => 'Pending',
             Prio   => 1002,
             Search => {
-
-                # KIX4OTRS-capeIT
-                # Locks      => [ 'lock',             'tmp_lock' ],
                 ArticleFlag => $ArticleFlag,
-
-                # EO KIX4OTRS-capeIT
-                StateType => [ 'pending reminder', 'pending auto' ],
-
-                # KIX4OTRS-capeIT
-                # OwnerIDs   => [ $Self->{UserID} ],
-                # EO KIX4OTRS-capeIT
-                OrderBy => $OrderBy,
-                SortBy  => $SortByS,
-
-                # KIX4OTRS-capeIT
-                # UserID     => 1,
-                UserID => $Self->{UserID},
-
-                # EO KIX4OTRS-capeIT
-                Permission => 'ro',
+                StateType   => [ 'pending reminder', 'pending auto' ],
+                OrderBy     => $OrderBy,
+                SortBy      => $SortByS,
+                UserID      => $Self->{UserID},
+                Permission  => 'ro',
             },
         },
         ReminderReached => {
             Name   => 'Reminder Reached',
             Prio   => 1003,
             Search => {
-
-                # KIX4OTRS-capeIT
-                # Locks                         => [ 'lock', 'tmp_lock' ],
-                ArticleFlag => $ArticleFlag,
-
-                # EO KIX4OTRS-capeIT
+                ArticleFlag                   => $ArticleFlag,
                 StateType                     => ['pending reminder'],
                 TicketPendingTimeOlderMinutes => 1,
-
-                # KIX4OTRS-capeIT
-                # OwnerIDs                      => [ $Self->{UserID} ],
-                # EO KIX4OTRS-capeIT
-                OrderBy => $OrderBy,
-                SortBy  => $SortByS,
-
-                # KIX4OTRS-capeIT
-                # UserID     => 1,
-                UserID => $Self->{UserID},
-
-                # EO KIX4OTRS-capeIT
-                Permission => 'ro',
+                OrderBy                       => $OrderBy,
+                SortBy                        => $SortByS,
+                UserID                        => $Self->{UserID},
+                Permission                    => 'ro',
             },
         },
     );
@@ -317,8 +264,7 @@ sub Run {
                 $HeaderColumn eq 'CustomerUserID'
             )
         )
-        )
-    {
+    ) {
         @OriginalViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{$Filter}->{Search} },
             Limit  => $Limit,
@@ -364,13 +310,11 @@ sub Run {
     else {
 
         # store column filters
-        my $StoredFilters = \%ColumnFilter;
-
-        my $StoredFiltersKey = 'UserStoredFilterColumns-' . $Self->{Action};
+        my $NewStoredFilters = \%ColumnFilter;
         $UserObject->SetPreferences(
             UserID => $Self->{UserID},
             Key    => $StoredFiltersKey,
-            Value  => $JSONObject->Encode( Data => $StoredFilters ),
+            Value  => $JSONObject->Encode( Data => $NewStoredFilters ),
         );
     }
 
@@ -410,31 +354,19 @@ sub Run {
         . ';View=' . $LayoutObject->Ascii2Html( Text => $View )
         . ';SortBy=' . $LayoutObject->Ascii2Html( Text => $SortBy )
         . ';OrderBy=' . $LayoutObject->Ascii2Html( Text => $OrderBy )
-
-        # KIX4OTRS-capeIT
         . ';ArticleFlag=' . $LayoutObject->Ascii2Html( Text => $ArticleFlag )
-
-        # EO KIX4OTRS-capeIT
         . $ColumnFilterLink
         . ';';
     my $LinkSort = 'Filter='
         . $LayoutObject->Ascii2Html( Text => $Filter )
         . ';View=' . $LayoutObject->Ascii2Html( Text => $View )
-
-        # KIX4OTRS-capeIT
         . ';ArticleFlag=' . $LayoutObject->Ascii2Html( Text => $ArticleFlag )
-
-        # EO KIX4OTRS-capeIT
         . $ColumnFilterLink
         . ';';
     my $LinkFilter = 'SortBy=' . $LayoutObject->Ascii2Html( Text => $SortBy )
         . ';OrderBy=' . $LayoutObject->Ascii2Html( Text => $OrderBy )
         . ';View=' . $LayoutObject->Ascii2Html( Text => $View )
-
-        # KIX4OTRS-capeIT
         . ';ArticleFlag=' . $LayoutObject->Ascii2Html( Text => $ArticleFlag )
-
-        # EO KIX4OTRS-capeIT
         . ';';
     my $LastColumnFilter = $ParamObject->GetParam( Param => 'LastColumnFilter' ) || '';
 
@@ -445,46 +377,31 @@ sub Run {
     }
 
     $Output .= $LayoutObject->TicketListShow(
-        TicketIDs         => \@ViewableTickets,
-        OriginalTicketIDs => \@OriginalViewableTickets,
-        GetColumnFilter   => \%GetColumnFilter,
-        LastColumnFilter  => $LastColumnFilter,
-        Action            => 'AgentTicketLockedView',
-        RequestedURL      => $Self->{RequestedURL},
-
-        Total => scalar @ViewableTickets,
-
-        View => $View,
-
-        Filter     => $Filter,
-        Filters    => \%NavBarFilter,
-
-        # KIX4OTRS-capeIT
-        # TitleName  => 'My Locked Tickets',
-        TitleName => 'My Flagged Tickets',
-
-        # EO KIX4OTRS-capeIT
-        TitleValue => $Filters{$Filter}->{Name},
-        Bulk       => 1,
-
-        Env        => $Self,
-        LinkPage   => $LinkPage,
-        LinkSort   => $LinkSort,
-        LinkFilter => $LinkFilter,
-
+        TicketIDs           => \@ViewableTickets,
+        OriginalTicketIDs   => \@OriginalViewableTickets,
+        GetColumnFilter     => \%GetColumnFilter,
+        LastColumnFilter    => $LastColumnFilter,
+        Action              => 'AgentTicketLockedView',
+        RequestedURL        => $Self->{RequestedURL},
+        Total               => scalar @ViewableTickets,
+        View                => $View,
+        Filter              => $Filter,
+        Filters             => \%NavBarFilter,
+        TitleName           => 'My Flagged Tickets',
+        TitleValue          => $Filters{$Filter}->{Name},
+        Bulk                => 1,
+        Env                 => $Self,
+        LinkPage            => $LinkPage,
+        LinkSort            => $LinkSort,
+        LinkFilter          => $LinkFilter,
         OrderBy             => $OrderBy,
         SortBy              => $SortBy,
         EnableColumnFilters => 1,
         ColumnFilterForm    => {
-            # KIX4OTRS-capeIT
             ArticleFlag => $ArticleFlag || '',
-
-            # EO KIX4OTRS-capeIT
-            Filter => $Filter || '',
+            Filter      => $Filter      || '',
         },
-
-        # do not print the result earlier, but return complete content
-        Output => 1,
+        Output => 1, # do not print the result earlier, but return complete content
     );
 
     # get page footer

@@ -13,6 +13,7 @@ package Kernel::Output::HTML::ArticleCheck::SMIME;
 use strict;
 use warnings;
 
+use MIME::Parser;
 use Kernel::System::EmailParser;
 use Kernel::Language qw(Translatable);
 
@@ -108,7 +109,6 @@ sub Check {
             Email => \@Email,
         );
 
-        use MIME::Parser;
         my $Parser = MIME::Parser->new();
         $Parser->decode_headers(0);
         $Parser->extract_nested_messages(0);
@@ -123,8 +123,7 @@ sub Check {
             $ContentType
             && $ContentType =~ /application\/(x-pkcs7|pkcs7)-mime/i
             && $ContentType !~ /signed/i
-            )
-        {
+        ) {
 
             # check if article is already decrypted
             if ( $Param{Article}->{Body} ne '- no text message => see attachment -' ) {
@@ -242,10 +241,10 @@ sub Check {
                 }
 
                 # parse the decrypted email body
-                my $ParserObject = Kernel::System::EmailParser->new(
+                my $CryptParserObject = Kernel::System::EmailParser->new(
                     Email => $EmailContent
                 );
-                my $Body = $ParserObject->GetMessageBody();
+                my $Body = $CryptParserObject->GetMessageBody();
 
                 # from RFC 3850
                 # 3.  Using Distinguished Names for Internet Mail
@@ -273,7 +272,7 @@ sub Check {
                     Email => \@OrigEmail,
                 );
 
-                my $OrigFrom = $ParserObjectOrig->GetParam( WHAT => 'From' );
+                my $OrigFrom   = $ParserObjectOrig->GetParam( WHAT => 'From' );
                 my $OrigSender = $ParserObjectOrig->GetEmailAddress( Email => $OrigFrom );
 
                 # compare sender email to signer email
@@ -314,7 +313,7 @@ sub Check {
                     );
 
                     # write attachments to the storage
-                    for my $Attachment ( $ParserObject->GetAttachments() ) {
+                    for my $Attachment ( $CryptParserObject->GetAttachments() ) {
                         $TicketObject->ArticleWriteAttachment(
                             %{$Attachment},
                             ArticleID => $Self->{ArticleID},
@@ -341,8 +340,7 @@ sub Check {
             $ContentType
             && $ContentType =~ /application\/(x-pkcs7|pkcs7)/i
             && $ContentType =~ /signed/i
-            )
-        {
+        ) {
 
             # check sign and get clear content
             %SignCheck = $SMIMEObject->Verify(
@@ -352,20 +350,20 @@ sub Check {
             # parse and update clear content
             if ( %SignCheck && $SignCheck{Successful} && $SignCheck{Content} ) {
 
-                my @Email = ();
-                my @Lines = split( /\n/, $SignCheck{Content} );
-                for (@Lines) {
-                    push( @Email, $_ . "\n" );
+                my @SignEmail = ();
+                my @SignLines = split( /\n/, $SignCheck{Content} );
+                for (@SignLines) {
+                    push( @SignEmail, $_ . "\n" );
                 }
-                my $ParserObject = Kernel::System::EmailParser->new(
-                    Email => \@Email,
+                my $SignParserObject = Kernel::System::EmailParser->new(
+                    Email => \@SignEmail,
                 );
-                my $Body = $ParserObject->GetMessageBody();
+                my $Body = $SignParserObject->GetMessageBody();
 
                 # from RFC 3850
                 # 3.  Using Distinguished Names for Internet Mail
                 #
-                #   End-entity certificates MAY contain ...
+                #   End-entity certi$SignParserObjectficates MAY contain ...
                 #
                 #    ...
                 #
@@ -388,7 +386,7 @@ sub Check {
                     Email => \@OrigEmail,
                 );
 
-                my $OrigFrom = $ParserObjectOrig->GetParam( WHAT => 'From' );
+                my $OrigFrom   = $ParserObjectOrig->GetParam( WHAT => 'From' );
                 my $OrigSender = $ParserObjectOrig->GetEmailAddress( Email => $OrigFrom );
 
                 # compare sender email to signer email
@@ -429,7 +427,7 @@ sub Check {
                     );
 
                     # write attachments to the storage
-                    for my $Attachment ( $ParserObject->GetAttachments() ) {
+                    for my $Attachment ( $SignParserObject->GetAttachments() ) {
                         $TicketObject->ArticleWriteAttachment(
                             %{$Attachment},
                             ArticleID => $Self->{ArticleID},
@@ -445,8 +443,7 @@ sub Check {
                 && !$SignCheck{SignatureFound}
                 && !$SignCheck{Successful}
                 && !$SignCheck{Content}
-                )
-            {
+            ) {
 
                 # return result
                 push(

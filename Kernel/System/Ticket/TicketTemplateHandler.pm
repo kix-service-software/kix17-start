@@ -163,7 +163,6 @@ Returns data of one ticket template
 
 sub TicketTemplateGet {
     my ( $Self, %Param ) = @_;
-    my %DynamicFields;
 
     # check needed stuff
     if ( !$Param{ID} && !$Param{Name} ) {
@@ -412,7 +411,6 @@ sub TicketTemplateCreate {
         );
 
         # set keys
-        my %Data = %{ $Param{Data} };
         for my $Key ( keys %Data ) {
 
             # ignore empty and core preferences
@@ -772,23 +770,19 @@ sub _ImportTicketTemplateXML {
     );
 
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-    my @UpdateArray;
 
     if (
         $XMLHash[1]
-        &&
-        ref( $XMLHash[1] ) eq 'HASH'
+        && ref( $XMLHash[1] ) eq 'HASH'
         && $XMLHash[1]->{'TicketTemplateList'}
         && ref( $XMLHash[1]->{'TicketTemplateList'} ) eq 'ARRAY'
         && $XMLHash[1]->{'TicketTemplateList'}->[1]
         && ref( $XMLHash[1]->{'TicketTemplateList'}->[1] ) eq 'HASH'
         && $XMLHash[1]->{'TicketTemplateList'}->[1]->{'TicketTemplateEntry'}
         && ref( $XMLHash[1]->{'TicketTemplateList'}->[1]->{'TicketTemplateEntry'} ) eq 'ARRAY'
-        )
-    {
+    ) {
         my $TMArrIndex = 0;
-        for my $TMArrRef ( @{ $XMLHash[1]->{'TicketTemplateList'}->[1]->{'TicketTemplateEntry'} } )
-        {
+        for my $TMArrRef ( @{ $XMLHash[1]->{'TicketTemplateList'}->[1]->{'TicketTemplateEntry'} } ) {
             next if ( !defined($TMArrRef) || ref($TMArrRef) ne 'HASH' );
 
             $TMArrIndex++;
@@ -798,8 +792,7 @@ sub _ImportTicketTemplateXML {
                     ref( $TMArrRef->{$Key} ) eq 'ARRAY'
                     && $TMArrRef->{$Key}->[1]
                     && ref( $TMArrRef->{$Key}->[1] ) eq 'HASH'
-                    )
-                {
+                ) {
                     next if !$TMArrRef->{$Key}->[1]->{Content};
 
                     if ( $Key eq 'Queue' ) {
@@ -862,8 +855,7 @@ sub _ImportTicketTemplateXML {
                                 defined $DynamicField->{Config}->{DisplayFieldType}
                                 && $DynamicField->{Config}->{DisplayFieldType} eq 'Multiselect'
                             )
-                            )
-                        {
+                        ) {
                             for my $Item ( @{ $TMArrRef->{$Key} } ) {
                                 next if ref $Item ne 'HASH';
                                 push @{ $UpdateData{DynamicField}->{$Key} }, $Item->{Content};

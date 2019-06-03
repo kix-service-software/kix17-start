@@ -28,7 +28,6 @@ use base qw(Kernel::System::EventHandler);
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::Cache',
-#rbo - T2016121190001552 - removed CloudServices
     'Kernel::System::DB',
     'Kernel::System::Encode',
     'Kernel::System::JSON',
@@ -38,6 +37,8 @@ our @ObjectDependencies = (
     'Kernel::System::Time',
     'Kernel::System::XML',
 );
+
+## no critic qw(BuiltinFunctions::ProhibitStringyEval Subroutines::ProhibitUnusedPrivateSubroutines)
 
 =head1 NAME
 
@@ -98,7 +99,6 @@ sub new {
         PackageIsVisible        => 'SCALAR',
         PackageIsDownloadable   => 'SCALAR',
         PackageIsRemovable      => 'SCALAR',
-        #rbo - T2016121190001552 - added separate package attribute
         PackageIsRemovableInGUI => 'SCALAR',
 
         # *(Pre|Post) - just for compat. to 2.2
@@ -120,8 +120,6 @@ sub new {
         File => 'ARRAY',
     };
 
-    #rbo - T2016121190001552 - removed CloudServices
-
     $Self->{Home} = $Self->{ConfigObject}->Get('Home');
 
     # init of event handler
@@ -131,8 +129,6 @@ sub new {
 
     # reserve space for merged packages
     $Self->{MergedPackages} = {};
-
-    #rbo - T2016121190001552 - removed CloudServices
 
     return $Self;
 }
@@ -174,9 +170,11 @@ sub RepositoryList {
 
     # get repository list
     $DBObject->Prepare(
-        SQL => 'SELECT name, version, install_status, content, vendor
-                FROM package_repository
-                ORDER BY name, create_time',
+        SQL => <<'END',
+SELECT name, version, install_status, content, vendor
+FROM package_repository
+ORDER BY name, create_time
+END
     );
 
     # fetch the data
@@ -869,21 +867,21 @@ sub PackageUpgrade {
             if ( $Part->{Version} ) {
 
                 # skip code upgrade block if its version is bigger than the new package version
-                my $CheckVersion = $Self->_CheckVersion(
+                my $CheckCodeVersion = $Self->_CheckVersion(
                     VersionNew       => $Part->{Version},
                     VersionInstalled => $Structure{Version}->{Content},
                     Type             => 'Max',
                 );
 
-                next PART if $CheckVersion;
+                next PART if $CheckCodeVersion;
 
-                $CheckVersion = $Self->_CheckVersion(
+                $CheckCodeVersion = $Self->_CheckVersion(
                     VersionNew       => $Part->{Version},
                     VersionInstalled => $InstalledVersion,
                     Type             => 'Min',
                 );
 
-                if ( !$CheckVersion ) {
+                if ( !$CheckCodeVersion ) {
                     push @Parts, $Part;
                 }
             }
@@ -916,8 +914,7 @@ sub PackageUpgrade {
                     $Part->{TagType} eq 'End'
                     && ( defined $NotUseTag      && $Part->{Tag} eq $NotUseTag )
                     && ( defined $NotUseTagLevel && $Part->{TagLevel} eq $NotUseTagLevel )
-                    )
-                {
+                ) {
                     $UseInstalled = 1;
                 }
 
@@ -937,8 +934,7 @@ sub PackageUpgrade {
                         || $Self->PackageIsInstalled( Name => $Part->{IfNotPackage} )
                     )
                 )
-                )
-            {
+            ) {
                 # store Tag and TagLevel to be used later and found the end of this level
                 $NotUseTag      = $Part->{Tag};
                 $NotUseTagLevel = $Part->{TagLevel};
@@ -950,13 +946,13 @@ sub PackageUpgrade {
 
             if ( $Part->{TagLevel} == 3 && $Part->{Version} ) {
 
-                my $CheckVersion = $Self->_CheckVersion(
+                my $CheckDBVersion = $Self->_CheckVersion(
                     VersionNew       => $Part->{Version},
                     VersionInstalled => $InstalledVersion,
                     Type             => 'Min',
                 );
 
-                if ( !$CheckVersion ) {
+                if ( !$CheckDBVersion ) {
                     $Use   = 1;
                     @Parts = ();
                     push @Parts, $Part;
@@ -996,8 +992,10 @@ sub PackageUpgrade {
     $Self->{SysConfigObject}->WriteDefault();
 
     # upgrade database (post)
-    if ( $Structure{DatabaseUpgrade}->{post} && ref $Structure{DatabaseUpgrade}->{post} eq 'ARRAY' )
-    {
+    if (
+        $Structure{DatabaseUpgrade}->{post}
+        && ref $Structure{DatabaseUpgrade}->{post} eq 'ARRAY'
+    ) {
 
         my @Parts;
         my $Use          = 0;
@@ -1013,8 +1011,7 @@ sub PackageUpgrade {
                     $Part->{TagType} eq 'End'
                     && ( defined $NotUseTag      && $Part->{Tag} eq $NotUseTag )
                     && ( defined $NotUseTagLevel && $Part->{TagLevel} eq $NotUseTagLevel )
-                    )
-                {
+                ) {
                     $UseInstalled = 1;
                 }
 
@@ -1033,8 +1030,7 @@ sub PackageUpgrade {
                         || $Self->PackageIsInstalled( Name => $Part->{IfNotPackage} )
                     )
                 )
-                )
-            {
+            ) {
                 # store Tag and TagLevel to be used later and found the end of this level
                 $NotUseTag      = $Part->{Tag};
                 $NotUseTagLevel = $Part->{TagLevel};
@@ -1046,13 +1042,13 @@ sub PackageUpgrade {
 
             if ( $Part->{TagLevel} == 3 && $Part->{Version} ) {
 
-                my $CheckVersion = $Self->_CheckVersion(
+                my $CheckDBVersion = $Self->_CheckVersion(
                     VersionNew       => $Part->{Version},
                     VersionInstalled => $InstalledVersion,
                     Type             => 'Min',
                 );
 
-                if ( !$CheckVersion ) {
+                if ( !$CheckDBVersion ) {
                     $Use   = 1;
                     @Parts = ();
                     push @Parts, $Part;
@@ -1080,21 +1076,21 @@ sub PackageUpgrade {
             if ( $Part->{Version} ) {
 
                 # skip code upgrade block if its version is bigger than the new package version
-                my $CheckVersion = $Self->_CheckVersion(
+                my $CheckCodeVersion = $Self->_CheckVersion(
                     VersionNew       => $Part->{Version},
                     VersionInstalled => $Structure{Version}->{Content},
                     Type             => 'Max',
                 );
 
-                next PART if $CheckVersion;
+                next PART if $CheckCodeVersion;
 
-                $CheckVersion = $Self->_CheckVersion(
+                $CheckCodeVersion = $Self->_CheckVersion(
                     VersionNew       => $Part->{Version},
                     VersionInstalled => $InstalledVersion,
                     Type             => 'Min',
                 );
 
-                if ( !$CheckVersion ) {
+                if ( !$CheckCodeVersion ) {
                     push @Parts, $Part;
                 }
             }
@@ -1336,7 +1332,7 @@ sub PackageOnlineList {
     my $Filelist;
     if ( !$Param{FromCloud} ) {
 
-        my $XML = $Self->_Download( URL => $Param{URL} . '/otrs.xml' );
+        my $XML = $Self->_Download( URL => $Param{URL} . '/kix.xml' );
         return if !$XML;
 
         my @XMLARRAY = $Kernel::OM->Get('Kernel::System::XML')->XMLParse( String => $XML );
@@ -1438,8 +1434,7 @@ sub PackageOnlineList {
                     Framework => $Package->{Framework},
                     NoLog     => 1
                 )
-                )
-            {
+            ) {
                 $FWCheckOk                    = 1;
                 $PackageForRequestedFramework = 1;
             }
@@ -1508,8 +1503,7 @@ sub PackageOnlineList {
                     VersionInstalled => $Package->{Version}->{Content},
                     Type             => 'Min',
                 )
-                )
-            {
+            ) {
                 $Newest{$Data}->{Upgrade} = 1;
             }
 
@@ -1520,8 +1514,7 @@ sub PackageOnlineList {
                     VersionInstalled => $Package->{Version}->{Content},
                     Type             => 'Max',
                 )
-                )
-            {
+            ) {
                 $InstalledSameVersion = 1;
             }
         }
@@ -1571,8 +1564,6 @@ sub PackageOnlineGet {
             return;
         }
     }
-
-    #rbo - T2016121190001552 - removed CloudServices
 
     return $Self->_Download( URL => $Param{Source} . '/' . $Param{File} );
 }
@@ -1689,8 +1680,6 @@ sub DeployCheckInfo {
     return ();
 }
 
-#rbo - T2016121190001552 - removed CloudServices and PackageVerify
-
 =item PackageBuild()
 
 build an opm package
@@ -1783,8 +1772,7 @@ sub PackageBuild {
         IntroInstall IntroUninstall IntroReinstall IntroUpgrade
         PackageIsVisible PackageIsDownloadable PackageIsRemovable PackageMerge
         PackageRequired ModuleRequired CodeInstall CodeUpgrade CodeUninstall CodeReinstall)
-        )
-    {
+    ) {
 
         # don't use CodeInstall CodeUpgrade CodeUninstall CodeReinstall in index mode
         if ( $Param{Type} && $Tag =~ /(Code|Intro)(Install|Upgrade|Uninstall|Reinstall)/ ) {
@@ -1818,8 +1806,7 @@ sub PackageBuild {
 
                 for my $HashParam (
                     qw(Content Encode TagType Tag TagLevel TagCount TagKey TagLastLevel)
-                    )
-                {
+                ) {
                     $OldParam{$HashParam} = $Hash{$HashParam} || '';
                     delete $Hash{$HashParam};
                 }
@@ -1885,8 +1872,12 @@ sub PackageBuild {
                 $XML .= "        <FileDoc";
             }
             for my $Item ( sort keys %{$File} ) {
-                if ( $Item ne 'Tag' && $Item ne 'Content' && $Item ne 'TagType' && $Item ne 'Size' )
-                {
+                if (
+                    $Item ne 'Tag'
+                    && $Item ne 'Content'
+                    && $Item ne 'TagType'
+                    && $Item ne 'Size'
+                ) {
                     $XML
                         .= " "
                         . $Self->_Encode($Item) . "=\""
@@ -1956,8 +1947,7 @@ sub PackageBuild {
                                 && $Key ne 'TagCount'
                                 && $Key ne 'TagKey'
                                 && $Key ne 'TagLastLevel'
-                                )
-                            {
+                            ) {
                                 if ( defined( $Tag->{$Key} ) ) {
                                     $XML .= ' '
                                         . $Self->_Encode($Key) . '="'
@@ -1975,15 +1965,14 @@ sub PackageBuild {
                     if (
                         defined( $Tag->{Content} )
                         && $Tag->{TagLevel} >= 4
-                        && $Tag->{Tag} !~ /(Foreign|Reference|Index)/
-                        )
-                    {
+                        && $Tag->{Tag} !~ /(?:Foreign|Reference|Index)/
+                    ) {
                         $XML .= $Self->_Encode( $Tag->{Content} );
                     }
                     if ( $Tag->{TagType} eq 'End' ) {
 
                         $Counter = $Counter - 1;
-                        if ( $Tag->{TagLevel} > 3 && $Tag->{Tag} !~ /(Foreign|Reference|Index)/ ) {
+                        if ( $Tag->{TagLevel} > 3 && $Tag->{Tag} !~ /(?:Foreign|Reference|Index)/ ) {
                             $XML .= "</$Tag->{Tag}>\n";
                         }
                         else {
@@ -2539,14 +2528,13 @@ sub _Code {
                     || $Self->PackageIsInstalled( Name => $Code->{IfNotPackage} )
                 )
             )
-            )
-        {
+        ) {
             next CODE;
         }
 
         print STDERR "Code: $Code->{Content}\n";
 
-        if ( !eval $Code->{Content} . "\n1;" ) {    ## no critic
+        if ( !eval( $Code->{Content} . "\n1;" ) ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Code: $@",
@@ -2708,10 +2696,8 @@ sub _CheckFramework {
                         next COUNT if $VersionParts{CurrentFramework}->[$Count] =~ /x/;
 
                         if (
-                            $VersionParts{CurrentFramework}->[$Count]
-                            > $VersionParts{MinimumFrameworkRequired}->[$Count]
-                            )
-                        {
+                            $VersionParts{CurrentFramework}->[$Count] > $VersionParts{MinimumFrameworkRequired}->[$Count]
+                        ) {
                             $FWCheck = 1;
                             last COUNT;
                         }
@@ -2742,10 +2728,8 @@ sub _CheckFramework {
                         next COUNT if $VersionParts{CurrentFramework}->[$Count] =~ /x/;
 
                         if (
-                            $VersionParts{CurrentFramework}->[$Count]
-                            < $VersionParts{MaximumFrameworkRequired}->[$Count]
-                            )
-                        {
+                            $VersionParts{CurrentFramework}->[$Count] < $VersionParts{MaximumFrameworkRequired}->[$Count]
+                        ) {
 
                             $FWCheck = 1;
                             last COUNT;
@@ -2962,7 +2946,7 @@ sub _CheckModuleRequired {
                 $Installed = 1;
 
                 # check version if installed module
-                $InstalledVersion = $Module->{Content}->VERSION;    ## no critic
+                $InstalledVersion = $Module->{Content}->VERSION;
             }
             if ( !$Installed ) {
                 $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -3023,8 +3007,7 @@ sub _CheckPackageDepends {
             && ref $Local->{PackageRequired} eq 'ARRAY'
             && $Local->{Name}->{Content} ne $Param{Name}
             && $Local->{Status} eq 'installed'
-            )
-        {
+        ) {
             for my $Module ( @{ $Local->{PackageRequired} } ) {
                 if ( $Param{Name} eq $Module->{Content} && !$Param{Force} ) {
                     $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -3362,8 +3345,7 @@ sub _FileSystemCheck {
     # create test files in following directories
     for my $Filepath (
         qw(/bin/ /Kernel/ /Kernel/System/ /Kernel/Output/ /Kernel/Output/HTML/ /Kernel/Modules/)
-        )
-    {
+    ) {
         my $Location = $Home . $Filepath . "check_permissions.$$";
         my $Content  = 'test';
 
@@ -3377,7 +3359,7 @@ sub _FileSystemCheck {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "ERROR: Need write permissions for directory $Home$Filepath\n"
-                    . " Try: $Home/bin/otrs.SetPermissions.pl!",
+                    . " Try: $Home/bin/kix.SetPermissions.pl!",
             );
             return;
         }
@@ -3416,7 +3398,7 @@ CodeUninstall are not called.
 
     $Success = $PackageObject->_PackageUninstallMerged(
         Name        => 'some package name',
-        Home        => 'OTRS Home path',      # Optional
+        Home        => 'KIX Home path',      # Optional
         DeleteSaved => 1,                     # or 0, 1 Default, Optional: if set to 1 it also
                                               # delete .save files
     );
@@ -3612,8 +3594,7 @@ sub _MergedPackages {
             if (
                 $Param{Structure}->{CodeUpgrade}
                 && ref $Param{Structure}->{CodeUpgrade} eq 'ARRAY'
-                )
-            {
+            ) {
 
                 my @Parts;
                 PART:
@@ -3648,8 +3629,7 @@ sub _MergedPackages {
             if (
                 $Param{Structure}->{DatabaseUpgrade}->{merge}
                 && ref $Param{Structure}->{DatabaseUpgrade}->{merge} eq 'ARRAY'
-                )
-            {
+            ) {
 
                 my @Parts;
                 my $Use = 0;
@@ -3730,14 +3710,13 @@ sub _CheckDBMerged {
     PART:
     for my $Part ( @{ $Param{Database} } ) {
 
-        if ( $Use eq 0 ) {
+        if ( $Use eq "0" ) {
 
             if (
                 $Part->{TagType} eq 'End'
                 && ( defined $NotUseTag      && $Part->{Tag} eq $NotUseTag )
                 && ( defined $NotUseTagLevel && $Part->{TagLevel} eq $NotUseTagLevel )
-                )
-            {
+            ) {
                 $Use = 1;
             }
 
@@ -3753,8 +3732,7 @@ sub _CheckDBMerged {
                 defined $Part->{IfNotPackage}
                 && defined $Self->{MergedPackages}->{ $Part->{IfNotPackage} }
             )
-            )
-        {
+        ) {
             # store Tag and TagLevel to be used later and found the end of this level
             $NotUseTag      = $Part->{Tag};
             $NotUseTagLevel = $Part->{TagLevel};
@@ -3813,8 +3791,6 @@ sub RepositoryCloudList {
 
     return $RepositoryResult;
 }
-
-#rbo - T2016121190001552 - removed CloudServices
 
 sub DESTROY {
     my $Self = shift;

@@ -100,8 +100,7 @@ sub Run {
     if (
         $Job{ScheduleLastRunUnixTime}
         && $StartSystemTime - $Job{ScheduleLastRunUnixTime} < 60
-        )
-    {
+    ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "GenericAgent Job: $Job{Name}, was already executed less than 1 minute ago!",
@@ -132,7 +131,7 @@ sub Run {
         local *STDERR;
 
         # Redirect the standard error to a variable.
-        open STDERR, ">>", \$ErrorMessage;
+        open STDERR, ">>", \$ErrorMessage or die "Can't open STDERR: $!";
 
         $Success = $Kernel::OM->Get('Kernel::System::GenericAgent')->JobRun(
             Job       => $Job{Name},

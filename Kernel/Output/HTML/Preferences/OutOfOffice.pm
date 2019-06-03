@@ -108,8 +108,7 @@ sub Run {
 
     for my $Key (
         qw(OutOfOffice OutOfOfficeStartYear OutOfOfficeStartMonth OutOfOfficeStartDay OutOfOfficeEndYear OutOfOfficeEndMonth OutOfOfficeEndDay)
-        )
-    {
+    ) {
         $Param{$Key} = $ParamObject->GetParam( Param => $Key );
     }
 
@@ -123,8 +122,7 @@ sub Run {
     if ( $OutOfOfficeStartTime <= $OutOfOfficeEndTime ) {
         for my $Key (
             qw(OutOfOffice OutOfOfficeStartYear OutOfOfficeStartMonth OutOfOfficeStartDay OutOfOfficeEndYear OutOfOfficeEndMonth OutOfOfficeEndDay)
-            )
-        {
+        ) {
             if ( defined $Param{$Key} ) {
 
                 # pref update db

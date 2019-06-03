@@ -158,7 +158,6 @@
             </div>
         </div>
 [% RenderBlockEnd("ActionList") %]
-# ddoerffel - some business code removed
 [% RenderBlockStart("Hint") %]
         <div class="WidgetSimple">
             <div class="Header">

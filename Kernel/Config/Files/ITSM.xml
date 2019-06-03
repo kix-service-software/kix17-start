@@ -296,7 +296,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AttachmentStorageFS::StorageDirectory" Required="1" Valid="1">
-        <Description Translatable="1">The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the OTRS-Home.</Description>
+        <Description Translatable="1">The path to the directory where the file system backend stores new attachments. The path needs to be specified relative to the KIX-Home.</Description>
         <Group>ITSM</Group>
         <SubGroup>Core::AttachmentStorage</SubGroup>
         <Setting>
@@ -348,7 +348,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ITSM::Core::IncidentLinkTypeDirection" Required="1" Valid="1">
-        <Description Translatable="1">Set the type and direction of links to be used to calculate the incident state. The key is the name of the link type (as defined in LinkObject::Type), and the value is the direction of the IncidentLinkType that should be followed to calculate the incident state. For example if the IncidentLinkType is set to 'DependsOn', and the Direction is 'Source', only 'Depends on' links will be followed (and not the opposite link 'Required for') to calculate the incident state. You can add more link types ad directions as you like, e.g. 'Includes' with the direction 'Target'. All link types defined in the sysconfig options LinkObject::Type are possible and the direction can be 'Source', 'Target', or 'Both'. IMPORTANT: AFTER YOU MAKE CHANGES TO THIS SYSCONFIG OPTION YOU NEED TO RUN THE SCRIPT bin/otrs.ITSMConfigItemIncidentStateRecalculate.pl SO THAT ALL INCIDENT STATES WILL BE RECALCULATED BASED ON THE NEW SETTINGS!</Description>
+        <Description Translatable="1">Set the type and direction of links to be used to calculate the incident state. The key is the name of the link type (as defined in LinkObject::Type), and the value is the direction of the IncidentLinkType that should be followed to calculate the incident state. For example if the IncidentLinkType is set to 'DependsOn', and the Direction is 'Source', only 'Depends on' links will be followed (and not the opposite link 'Required for') to calculate the incident state. You can add more link types ad directions as you like, e.g. 'Includes' with the direction 'Target'. All link types defined in the sysconfig options LinkObject::Type are possible and the direction can be 'Source', 'Target', or 'Both'. IMPORTANT: AFTER YOU MAKE CHANGES TO THIS SYSCONFIG OPTION YOU NEED TO RUN THE SCRIPT bin/kix.ITSMConfigItemIncidentStateRecalculate.pl SO THAT ALL INCIDENT STATES WILL BE RECALCULATED BASED ON THE NEW SETTINGS!</Description>
         <Group>ITSM</Group>
         <SubGroup>Core::ITSMCore</SubGroup>
         <Setting>
@@ -1579,7 +1579,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="UniqueCIName::EnableUniquenessCheck" Required="0" Valid="1">
-        <Description Translatable="1">Enables/disables the functionality to check ConfigItems for unique names. Before enabling this option you should check your system for already existing config items with duplicate names. You can do this with the script bin/otrs.ITSMConfigItemListDuplicates.pl.</Description>
+        <Description Translatable="1">Enables/disables the functionality to check ConfigItems for unique names. Before enabling this option you should check your system for already existing config items with duplicate names. You can do this with the script bin/kix.ITSMConfigItemListDuplicates.pl.</Description>
         <Group>ITSM</Group>
         <SubGroup>Core::ITSMConfigItem</SubGroup>
         <Setting>
@@ -1716,14 +1716,6 @@
                 <Item Key="Rows">5</Item>
                 <Item Key="PrefKey">Comment2</Item>
             </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="ITSMConfigItem::CustomModules###030-CustomModule" Required="0" Valid="1">
-        <Description Translatable="1">Overloads (redefines) existing functions in Kernel::System::ITSMConfigItem. Used to easily add customizations.</Description>
-        <Group>ITSM</Group>
-        <SubGroup>Core::ITSMConfigItem</SubGroup>
-        <Setting>
-            <String Regex="">Kernel::System::PreEventHandler</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ITSMConfigItem::CILinkDirection" Required="0" Valid="1">
@@ -2223,7 +2215,6 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="KIXSidebarConfigItemLink::KIXSidebarLinkedCIsParams" Required="1" Valid="1">
-        <!-- rkaiser - T#2017020290001194 - changed customer user to contact -->
         <Description Translatable="1">Common Parameters for the KIXSidebarLinkedCIs backend. You can use CI class specific contact attributes (SearchAttribute:::&lt;CIClass&gt;) as well as multiple customer user attributes, separated by comma.</Description>
         <Group>ITSM</Group>
         <SubGroup>Frontend::Customer</SubGroup>

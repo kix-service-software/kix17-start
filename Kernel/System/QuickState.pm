@@ -98,11 +98,11 @@ sub QuickStateAdd {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO kix_quick_state (
-                name, state_id, valid_id, config, create_time, create_by, change_time, change_by
-            )
-            VALUES (?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => <<'END',
+INSERT INTO kix_quick_state
+    (name, state_id, valid_id, config, create_time, create_by, change_time, change_by)
+VALUES (?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)
+END
         Bind => [
             \$Param{Name},    \$Param{StateID},
             \$Param{ValidID}, \$Param{Config},
@@ -170,16 +170,17 @@ sub QuickStateUpdate {
 
     # sql
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE kix_quick_state
-            SET
-                name = ?,
-                state_id = ?,
-                valid_id = ?,
-                config   = ?,
-                change_time = current_timestamp,
-                change_by = ?
-            WHERE id = ?',
+        SQL => <<'END',
+UPDATE kix_quick_state
+SET
+    name = ?,
+    state_id = ?,
+    valid_id = ?,
+    config   = ?,
+    change_time = current_timestamp,
+    change_by = ?
+WHERE id = ?
+END
         Bind => [
             \$Param{Name},    \$Param{StateID},
             \$Param{ValidID}, \$Param{Config},
@@ -218,17 +219,13 @@ sub QuickStateDelete {
 
     # delete attachment<->std template relation
     return if !$DBObject->Do(
-        SQL  => 'DELETE
-            FROM kix_quick_state_attachment
-            WHERE quick_state_id = ?',
+        SQL  => 'DELETE FROM kix_quick_state_attachment WHERE quick_state_id = ?',
         Bind => [ \$Param{ID} ],
     );
 
     # sql
     return if !$DBObject->Do(
-        SQL  => 'DELETE
-            FROM kix_quick_state
-            WHERE id = ?',
+        SQL  => 'DELETE FROM kix_quick_state WHERE id = ?',
         Bind => [ \$Param{ID} ],
     );
 
@@ -276,14 +273,12 @@ sub QuickStateList {
         $Valid = 0;
     }
 
-    my $SQL = '
-        SELECT id, name
-        FROM kix_quick_state';
+    my $SQL = 'SELECT id, name FROM kix_quick_state';
 
     if ($Valid) {
         $SQL .= ' WHERE valid_id IN ('
-            . join( ', ', $ValidObject->ValidIDsGet())
-            . ')';
+              . join( ', ', $ValidObject->ValidIDsGet())
+              . ')';
     }
 
     my @Bind;
@@ -394,22 +389,19 @@ sub QuickStateSearch {
     }
 
     my $SQLWhere = '';
-    my $SQL      = '
-        SELECT id, name
-        FROM kix_quick_state
-        WHERE';
+    my $SQL      = 'SELECT id, name FROM kix_quick_state WHERE';
 
     if ($Valid) {
         $SQLWhere .= ' valid_id IN ('
-            . join( ', ', $ValidObject->ValidIDsGet())
-            . ')';
+                   . join( ', ', $ValidObject->ValidIDsGet())
+                   . ')';
     }
 
     if ( scalar(@StateIDs) ) {
         $SQLWhere .= ' AND' if $SQLWhere;
         $SQLWhere .= ' state_id IN ('
-            . join( ', ', @StateIDs )
-            . ')';
+                   . join( ', ', @StateIDs )
+                   . ')';
     }
 
     if ( $Param{Search} ) {
@@ -507,9 +499,7 @@ sub QuickStateGet {
     my @Bind;
     my $SQLWhere  = '';
     my $SQLSelect = 'SELECT id, name, state_id, valid_id, create_time, change_time';
-    my $SQLFrom   = '
-            FROM kix_quick_state
-            WHERE ';
+    my $SQLFrom   = ' FROM kix_quick_state WHERE ';
 
     if ( !$Param{MetaOnly} ) {
         $SQLSelect .= ', config';
@@ -638,14 +628,13 @@ sub QuickStateWriteAttachment {
 
     # write attachment to db
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO kix_quick_state_attachment
-            (
-                quick_state_id, filename, content_type, content_size,
-                content, content_id, disposition, create_time, create_by,
-                change_time, change_by
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => <<'END',
+INSERT INTO kix_quick_state_attachment
+    (quick_state_id, filename, content_type, content_size,
+    content, content_id, disposition, create_time, create_by,
+    change_time, change_by)
+VALUES (?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)
+END
         Bind => [
             \$Param{QuickStateID}, \$Param{Filename},
             \$Param{ContentType}, \$Param{Filesize},
@@ -700,11 +689,12 @@ sub QuickStateAttachmentIndex {
     my $Counter = 0;
     # try database
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, filename, content_type, content_size, content_id, disposition
-            FROM kix_quick_state_attachment
-            WHERE quick_state_id = ?
-            ORDER BY filename, id',
+        SQL => <<'END',
+SELECT id, filename, content_type, content_size, content_id, disposition
+FROM kix_quick_state_attachment
+WHERE quick_state_id = ?
+ORDER BY filename, id
+END
         Bind => [ \$Param{QuickStateID} ],
     );
 
@@ -802,11 +792,12 @@ sub QuickStateAttachmentList {
 
     # try database
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT filename, content_type, content_size, content_id, disposition, content
-            FROM kix_quick_state_attachment
-            WHERE quick_state_id = ?
-            ORDER BY filename, id',
+        SQL  => <<'END',
+SELECT filename, content_type, content_size, content_id, disposition, content
+FROM kix_quick_state_attachment
+WHERE quick_state_id = ?
+ORDER BY filename, id
+END
         Bind => [ \$Param{QuickStateID} ],
     );
 
@@ -867,10 +858,11 @@ sub QuickStateAttachmentGet{
     }
 
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, filename, content_type, content_size, content_id, disposition, content
-            FROM kix_quick_state_attachment
-            WHERE quick_state_id = ? AND id = ?',
+        SQL  => <<'END',
+SELECT id, filename, content_type, content_size, content_id, disposition, content
+FROM kix_quick_state_attachment
+WHERE quick_state_id = ? AND id = ?
+END
         Bind => [ \$Param{QuickStateID}, \$Param{FileID} ],
     );
 
@@ -923,9 +915,7 @@ sub QuickStateAttachmentDelete{
     }
 
     my @Bind;
-    my $SQL = 'DELETE
-        FROM kix_quick_state_attachment
-        WHERE quick_state_id = ?';
+    my $SQL = 'DELETE FROM kix_quick_state_attachment WHERE quick_state_id = ?';
     push(@Bind, \$Param{QuickStateID});
 
     if ( $Param{FileID} ) {

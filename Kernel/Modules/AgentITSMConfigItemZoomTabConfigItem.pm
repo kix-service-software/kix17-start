@@ -108,8 +108,6 @@ sub Run {
         $Param{VersionID} = $VersionID;
     }
 
-    # KIX4OTRS-capeIT
-    # menu modules content removed
     # set incident signal
     my %InciSignals = (
         operational => 'greenled',
@@ -156,11 +154,11 @@ sub Run {
         my $DeplStateColor = lc $Preferences{Color};
 
         # add to style classes string
-        $StyleClasses .= "
-            .Flag span.$DeplState {
-                background-color: #$DeplStateColor;
-            }
-        ";
+        $StyleClasses .= <<"END";
+.Flag span.$DeplState {
+    background-color: #$DeplStateColor;
+}
+END
     }
 
     # wrap into style tags
@@ -179,8 +177,6 @@ sub Run {
         },
     );
 
-    # EO KIX4OTRS-capeIT
-
     # build version tree
     $LayoutObject->Block( Name => 'Tree' );
     my $Counter = 1;
@@ -188,10 +184,6 @@ sub Run {
         $Counter     = @{$VersionList};
         $VersionList = [ $VersionList->[-1] ];
     }
-
-    # KIX4OTRS-capeIT
-    # moved get last versions and incident signals upwards
-    # EO KIX4OTRS-capeIT
 
     # output version tree header
     if ( $Param{ShowVersions} ) {
@@ -217,35 +209,21 @@ sub Run {
     # output version tree
     for my $VersionHash ( @{$VersionList} ) {
 
-        # KIX4OTRS-capeIT
         my %UserInfo = $UserObject->GetUserData(
-
-            # EO KIX4OTRS-capeIT
             UserID => $VersionHash->{CreateBy},
-
-            # KIX4OTRS-capeIT
             Cached => 1,
-
-            # EO KIX4OTRS-capeIT
         );
 
-        # KIX4OTRS-capeIT
         $ConfigItem->{'CreateByUserFullName'}
             = $UserInfo{UserLogin} . ' ('
             . $UserInfo{UserFirstname} . ' '
             . $UserInfo{UserLastname} . ')';
 
-        # EO KIX4OTRS-capeIT
-
         $LayoutObject->Block(
             Name => 'TreeItem',
             Data => {
                 %Param,
-
-                # KIX4OTRS-capeIT
                 %UserInfo,
-
-                # EO KIX4OTRS-capeIT
                 %{$ConfigItem},
                 %{$VersionHash},
                 Count      => $Counter,
@@ -257,12 +235,6 @@ sub Run {
 
         $Counter++;
     }
-
-    # output header
-    # KIX4OTRS-capeIT
-    # my $Output = $LayoutObject->Header( Value => $ConfigItem->{Number} );
-    # $Output .= $LayoutObject->NavigationBar();
-    # EO KIX4OTRS-capeIT
 
     # get version
     my $Version = $ConfigItemObject->VersionGet(
@@ -280,8 +252,7 @@ sub Run {
         && ref $Version->{XMLData}->[1] eq 'HASH'
         && $Version->{XMLData}->[1]->{Version}
         && ref $Version->{XMLData}->[1]->{Version} eq 'ARRAY'
-        )
-    {
+    ) {
 
         # transform ascii to html
         $Version->{Name} = $LayoutObject->Ascii2Html(
@@ -333,10 +304,6 @@ sub Run {
             XMLData       => $Version->{XMLData}->[1]->{Version}->[1],
         );
     }
-
-    # KIX4OTRS-capeIT
-    # link table moved to tab
-    # EO KIX4OTRS-capeIT
 
     my @Attachments = $ConfigItemObject->ConfigItemAttachmentList(
         ConfigItemID => $ConfigItemID,
@@ -410,7 +377,6 @@ sub Run {
     }
 
     # store last screen
-    # KIX4OTRS-capeIT
     # add session information
     if ( $Self->{CallingAction} ) {
         $Self->{RequestedURL} =~ s/DirectLinkAnchor=.+?(;|$)//;
@@ -430,8 +396,6 @@ sub Run {
         $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
     }
 
-    # EO KIX4OTRS-capeIT
-
     $Kernel::OM->Get('Kernel::System::AuthSession')->UpdateSessionID(
         SessionID => $Self->{SessionID},
         Key       => 'LastScreenView',
@@ -439,31 +403,19 @@ sub Run {
     );
 
     # start template output
-    # KIX4OTRS-capeIT
-    # $Output .= $LayoutObject->Output(
-    #     TemplateFile => 'AgentITSMConfigItemZoom',
-    my $Output .= $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'AgentITSMConfigItemZoomTabConfigItem',
 
-        # EO KIX4OTRS-capeIT
         Data => {
             %{$LastVersion},
             %{$ConfigItem},
             CurInciSignal => $InciSignals{ $LastVersion->{CurInciStateType} },
-
-            # KIX4OTRS-capeIT
-            Session => $SessionID,
-
-            # EO KIX4OTRS-capeIT
+            Session       => $SessionID,
         },
     );
 
-    # KIX4OTRS-capeIT
     # add footer
-    # $Output .= $LayoutObject->Footer();
     $Output .= $LayoutObject->Footer( Type => 'TicketZoomTab' );
-
-    # EO KIX4OTRS-capeIT
 
     return $Output;
 }

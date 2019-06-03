@@ -15,6 +15,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+## no critic qw(RegularExpressions::ProhibitComplexRegexes)
+
 sub new {
     my ( $Type, %Param ) = @_;
 

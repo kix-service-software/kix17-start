@@ -83,8 +83,7 @@ sub GetObjectAttributes {
     if (
         defined $ConfigObject->Get('Stats::UseInvalidAgentInStats')
         && ( $ConfigObject->Get('Stats::UseInvalidAgentInStats') == 0 )
-        )
-    {
+    ) {
         $ValidAgent = 1;
     }
 
@@ -684,7 +683,6 @@ sub GetStatTablePreview {
     my ( $Self, %Param ) = @_;
 
     my @StatArray;
-    my $Count;
 
     if ( $Param{XValue}{Element} && $Param{XValue}{Element} eq 'KindsOfReporting' ) {
         for my $Row ( sort keys %{ $Param{TableStructure} } ) {
@@ -855,8 +853,7 @@ sub ExportWrapper {
                 $ElementName eq 'OwnerIDs'
                 || $ElementName eq 'CreatedUserIDs'
                 || $ElementName eq 'ResponsibleIDs'
-                )
-            {
+            ) {
                 ID:
                 for my $ID ( @{$Values} ) {
                     next ID if !$ID;
@@ -950,8 +947,7 @@ sub ImportWrapper {
                 $ElementName eq 'OwnerIDs'
                 || $ElementName eq 'CreatedUserIDs'
                 || $ElementName eq 'ResponsibleIDs'
-                )
-            {
+            ) {
                 ID:
                 for my $ID ( @{$Values} ) {
                     next ID if !$ID;
@@ -1039,8 +1035,7 @@ sub _ReportingValues {
     for my $ParameterName ( sort keys %TicketSearch ) {
         if (
             $ParameterName =~ m{ \A DynamicField_ ( [a-zA-Z\d]+ ) (?: _ ( [a-zA-Z\d]+ ) )? \z }xms
-            )
-        {
+        ) {
             my $FieldName = $1;
             my $Operator  = $2;
 
@@ -1307,8 +1302,7 @@ sub _ReportingValues {
         qw(ResponseMaxTime ResponseMinTime SolutionMaxTime SolutionMinTime SolutionMaxTimeAllOver
         SolutionMinTimeAllOver SolutionAverageAllOver SolutionAverage ResponseAverage
         )
-        )
-    {
+    ) {
         if ( defined $Reporting{$Key} ) {
             $Reporting{$Key} = int( $Reporting{$Key} / 60 + 0.5 );
         }

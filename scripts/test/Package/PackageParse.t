@@ -19,7 +19,7 @@ use Kernel::System::VariableCheck qw(:all);
 # get package object
 my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
 
-# get OTRS Version
+# get KIX Version
 my $OTRSVersion = $Kernel::OM->Get('Kernel::Config')->Get('Version');
 
 # leave only major and minor level versions

@@ -250,8 +250,7 @@ sub Check {
             $ContentType
             && $ContentType =~ /multipart\/encrypted/i
             && $ContentType =~ /application\/pgp/i
-            )
-        {
+        ) {
 
             # check sender (don't decrypt sent emails)
             if ( $Param{Article}->{SenderType} =~ /(agent|system)/i ) {
@@ -275,10 +274,10 @@ sub Check {
             );
             if ( $Decrypt{Successful} ) {
                 $Entity = $Parser->parse_data( $Decrypt{Data} );
-                my $Head = $Entity->head();
-                $Head->unfold();
-                $Head->combine('Content-Type');
-                $ContentType = $Head->get('Content-Type');
+                my $NewHead = $Entity->head();
+                $NewHead->unfold();
+                $NewHead->combine('Content-Type');
+                $ContentType = $NewHead->get('Content-Type');
 
                 # use a copy of the Entity to get the body, otherwise the original mail content
                 # could be altered and a signature verify could fail. See Bug#9954
@@ -341,8 +340,7 @@ sub Check {
             $ContentType
             && $ContentType =~ /multipart\/signed/i
             && $ContentType =~ /application\/pgp/i
-            )
-        {
+        ) {
 
             my $SignedText    = $Entity->parts(0)->as_string();
             my $SignatureText = $Entity->parts(1)->body_as_string();
@@ -378,12 +376,14 @@ sub Filter {
     # remove signature if one is found
     if ( $Self->{Result}->{SignatureFound} ) {
 
+        my $PatternMsg  = '^-----BEGIN\sPGP\sSIGNED\sMESSAGE-----.+?Hash:\s.+?$';
+        my $PatternSign = '^-----BEGIN\sPGP\sSIGNATURE-----.+?-----END\sPGP\sSIGNATURE-----';
+
         # remove pgp begin signed message
-        $Param{Article}->{Body} =~ s/^-----BEGIN\sPGP\sSIGNED\sMESSAGE-----.+?Hash:\s.+?$//sm;
+        $Param{Article}->{Body} =~ s/$PatternMsg//sm;
 
         # remove pgp inline sign
-        $Param{Article}->{Body}
-            =~ s/^-----BEGIN\sPGP\sSIGNATURE-----.+?-----END\sPGP\sSIGNATURE-----//sm;
+        $Param{Article}->{Body} =~ s/$PatternSign//sm;
     }
     return 1;
 }

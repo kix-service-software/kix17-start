@@ -117,153 +117,79 @@ sub AgentCustomerViewTable {
         }
     }
 
-    # build table
-    for my $Field (@MapNew) {
-        if ( $Field->[3] && $Field->[3] >= $ShownType && $Param{Data}->{ $Field->[0] } ) {
-            my %Record = (
+    # use CustomerInfoString
+    my $CustomerInfoString = $Param{Data}->{Config}->{CustomerInfoString}
+        || $ConfigObject->Get('DefaultCustomerInfoString') || '';
+
+    if ($CustomerInfoString) {
+        $CustomerInfoString = $Self->Output(
+            Template => $CustomerInfoString,
+            Data     => {},
+        );
+        my $CustomerData = $Param{Data};
+        while ( $CustomerInfoString =~ /\$CustomerData\-\>\{(.+?)}/ ) {
+            my $Tag = $1;
+            if ( $CustomerData->{$Tag} ) {
+                $CustomerInfoString =~ s/\$CustomerData\-\>\{$Tag\}/$CustomerData->{$Tag}/;
+            }
+            else {
+                $CustomerInfoString =~ s/\$CustomerData\-\>\{$Tag\}//;
+            }
+        }
+        $Self->Block(
+            Name => 'CustomerInfoString',
+            Data => {
+                CustomerInfoString => $CustomerInfoString,
                 %{ $Param{Data} },
-                Key   => $Field->[1],
-                Value => $Param{Data}->{ $Field->[0] },
-            );
-            if ( $Field->[6] ) {
-                $Record{LinkStart} = "<a href=\"$Field->[6]\"";
-                if ( $Field->[8] ) {
-                    $Record{LinkStart} .= " target=\"$Field->[8]\"";
                 }
-                if ( $Field->[9] ) {
-                    $Record{LinkStart} .= " class=\"$Field->[9]\"";
-                }
-                $Record{LinkStart} .= ">";
-                $Record{LinkStop} = "</a>";
-            }
-            if ( $Field->[0] ) {
-                $Record{ValueShort} = $Self->Ascii2Html(
-                    Text => $Record{Value},
-                    Max  => $Param{Max}
+        );
+    }
+    else {
+        # build table
+        for my $Field (@MapNew) {
+            if ( $Field->[3] && $Field->[3] >= $ShownType && $Param{Data}->{ $Field->[0] } ) {
+                my %Record = (
+                    %{ $Param{Data} },
+                    Key   => $Field->[1],
+                    Value => $Param{Data}->{ $Field->[0] },
                 );
-            }
-            $Self->Block(
-                Name => 'CustomerRow',
-                Data => \%Record,
-            );
-
-            if (
-                $Param{Data}->{Config}->{CustomerCompanySupport}
-                && $Field->[0] eq 'CustomerCompanyName'
-                )
-            {
-                my $CompanyValidID = $Param{Data}->{CustomerCompanyValidID};
-
-                if ($CompanyValidID) {
-                    my @ValidIDs = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
-                    my $CompanyIsValid = grep { $CompanyValidID == $_ } @ValidIDs;
-
-                    if ( !$CompanyIsValid ) {
-                        $Self->Block(
-                            Name => 'CustomerRowCustomerCompanyInvalid',
-                        );
+                if ( $Field->[6] ) {
+                    $Record{LinkStart} = "<a href=\"$Field->[6]\"";
+                    if ( $Field->[8] ) {
+                        $Record{LinkStart} .= " target=\"$Field->[8]\"";
                     }
+                    if ( $Field->[9] ) {
+                        $Record{LinkStart} .= " class=\"$Field->[9]\"";
+                    }
+                    $Record{LinkStart} .= ">";
+                    $Record{LinkStop} = "</a>";
                 }
-            }
-
-            if (
-                $ConfigObject->Get('ChatEngine::Active')
-                && $Field->[0] eq 'UserLogin'
-                )
-            {
-                # Check if agent has permission to start chats with the customer users.
-                my $EnableChat = 1;
-                my $ChatStartingAgentsGroup
-                    = $ConfigObject->Get('ChatEngine::PermissionGroup::ChatStartingAgents') || 'users';
+                if ( $Field->[0] ) {
+                    $Record{ValueShort} = $Self->Ascii2Html(
+                        Text => $Record{Value},
+                        Max  => $Param{Max}
+                    );
+                }
+                $Self->Block(
+                    Name => 'CustomerRow',
+                    Data => \%Record,
+                );
 
                 if (
-                    !defined $Self->{"UserIsGroup[$ChatStartingAgentsGroup]"}
-                    || $Self->{"UserIsGroup[$ChatStartingAgentsGroup]"} ne 'Yes'
-                    )
-                {
-                    $EnableChat = 0;
-                }
-                if (
-                    $EnableChat
-                    && !$ConfigObject->Get('ChatEngine::ChatDirection::AgentToCustomer')
-                    )
-                {
-                    $EnableChat = 0;
-                }
+                    $Param{Data}->{Config}->{CustomerCompanySupport}
+                    && $Field->[0] eq 'CustomerCompanyName'
+                ) {
+                    my $CompanyValidID = $Param{Data}->{CustomerCompanyValidID};
 
-                if ($EnableChat) {
-                    my $VideoChatEnabled = 0;
-                    my $VideoChatAgentsGroup
-                        = $ConfigObject->Get('ChatEngine::PermissionGroup::VideoChatAgents') || 'users';
+                    if ($CompanyValidID) {
+                        my @ValidIDs = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
+                        my $CompanyIsValid = grep { $CompanyValidID == $_ } @ValidIDs;
 
-                    # Enable the video chat feature if system is entitled and agent is a member of configured group.
-                    if (
-                        defined $Self->{"UserIsGroup[$VideoChatAgentsGroup]"}
-                        && $Self->{"UserIsGroup[$VideoChatAgentsGroup]"} eq 'Yes'
-                        )
-                    {
-                        if ( $Kernel::OM->Get('Kernel::System::Main')
-                            ->Require( 'Kernel::System::VideoChat', Silent => 1 ) )
-                        {
-                            $VideoChatEnabled = $Kernel::OM->Get('Kernel::System::VideoChat')->IsEnabled();
+                        if ( !$CompanyIsValid ) {
+                            $Self->Block(
+                                Name => 'CustomerRowCustomerCompanyInvalid',
+                            );
                         }
-                    }
-
-                    my $CustomerEnableChat = 0;
-                    my $ChatAccess         = 0;
-                    my $VideoChatAvailable = 0;
-                    my $VideoChatSupport   = 0;
-
-                    # Default status is offline.
-                    my $UserState            = Translatable('Offline');
-                    my $UserStateDescription = $Self->{LanguageObject}->Translate('User is currently offline.');
-
-                    my $CustomerChatAvailability = $Kernel::OM->Get('Kernel::System::Chat')->CustomerAvailabilityGet(
-                        UserID => $Param{Data}->{UserID},
-                    );
-
-                    my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
-
-                    my %CustomerUser = $CustomerUserObject->CustomerUserDataGet(
-                        User => $Param{Data}->{UserID},
-                    );
-                    $CustomerUser{UserFullname} = $CustomerUserObject->CustomerName(
-                        UserLogin => $Param{Data}->{UserID},
-                    );
-                    $VideoChatSupport = 1 if $CustomerUser{VideoChatHasWebRTC};
-
-                    if ( $CustomerChatAvailability == 3 ) {
-                        $UserState            = Translatable('Active');
-                        $CustomerEnableChat   = 1;
-                        $UserStateDescription = $Self->{LanguageObject}->Translate('User is currently active.');
-                        $VideoChatAvailable   = 1;
-                    }
-                    elsif ( $CustomerChatAvailability == 2 ) {
-                        $UserState            = Translatable('Away');
-                        $CustomerEnableChat   = 1;
-                        $UserStateDescription = $Self->{LanguageObject}->Translate('User was inactive for a while.');
-                    }
-
-                    $Self->Block(
-                        Name => 'CustomerRowUserStatus',
-                        Data => {
-                            %CustomerUser,
-                            UserState            => $UserState,
-                            UserStateDescription => $UserStateDescription,
-                        },
-                    );
-
-                    if ($CustomerEnableChat) {
-                        $Self->Block(
-                            Name => 'CustomerRowChatIcons',
-                            Data => {
-                                %{ $Param{Data} },
-                                %CustomerUser,
-                                VideoChatEnabled   => $VideoChatEnabled,
-                                VideoChatAvailable => $VideoChatAvailable,
-                                VideoChatSupport   => $VideoChatSupport,
-                            },
-                        );
                     }
                 }
             }
@@ -294,8 +220,9 @@ sub AgentCustomerViewTable {
             next MODULE if !$Object;
 
             my $Run = $Object->Run(
-                Config => $Modules{$Module},
-                Data   => $Param{Data},
+                Config        => $Modules{$Module},
+                Data          => $Param{Data},
+                CallingAction => $Param{CallingAction}
             );
 
             next MODULE if !$Run;
@@ -306,25 +233,26 @@ sub AgentCustomerViewTable {
 
     # create & return output
     return $Self->Output(
-        TemplateFile => 'AgentCustomerTableView',
-        Data         => \%Param
+        TemplateFile   => 'AgentCustomerTableView',
+        Data           => \%Param,
+        KeepScriptTags => $Param{Data}->{AJAX} || 0,
     );
 }
 
 sub AgentQueueListOption {
     my ( $Self, %Param ) = @_;
 
-    my $Size           = $Param{Size}                      ? "size='$Param{Size}'"  : '';
-    my $MaxLevel       = defined( $Param{MaxLevel} )       ? $Param{MaxLevel}       : 10;
-    my $SelectedID     = defined( $Param{SelectedID} )     ? $Param{SelectedID}     : '';
-    my $Selected       = defined( $Param{Selected} )       ? $Param{Selected}       : '';
-    my $CurrentQueueID = defined( $Param{CurrentQueueID} ) ? $Param{CurrentQueueID} : '';
-    my $Class          = defined( $Param{Class} )          ? $Param{Class}          : '';
+    my $Size               = $Param{Size}                      ? "size='$Param{Size}'"   : '';
+    my $MaxLevel           = defined( $Param{MaxLevel} )       ? $Param{MaxLevel}        : 10;
+    my $SelectedID         = defined( $Param{SelectedID} )     ? $Param{SelectedID}      : '';
+    my $Selected           = defined( $Param{Selected} )       ? $Param{Selected}        : '';
+    my $CurrentQueueID     = defined( $Param{CurrentQueueID} ) ? $Param{CurrentQueueID}  : '';
+    my $Class              = defined( $Param{Class} )          ? $Param{Class}           : '';
+    my $Multiple           = $Param{Multiple}                  ? 'multiple = "multiple"' : '';
+    my $TreeView           = $Param{TreeView}                  ? $Param{TreeView}        : 0;
+    my $OptionTitle        = defined( $Param{OptionTitle} )    ? $Param{OptionTitle}     : 0;
+    my $OnChangeSubmit     = defined( $Param{OnChangeSubmit} ) ? $Param{OnChangeSubmit}  : '';
     my $SelectedIDRefArray = $Param{SelectedIDRefArray} || '';
-    my $Multiple       = $Param{Multiple}                  ? 'multiple = "multiple"' : '';
-    my $TreeView       = $Param{TreeView}                  ? $Param{TreeView}        : 0;
-    my $OptionTitle    = defined( $Param{OptionTitle} )    ? $Param{OptionTitle}     : 0;
-    my $OnChangeSubmit = defined( $Param{OnChangeSubmit} ) ? $Param{OnChangeSubmit}  : '';
     if ($OnChangeSubmit) {
         $OnChangeSubmit = " onchange=\"submit();\"";
     }
@@ -364,9 +292,25 @@ sub AgentQueueListOption {
         $OnChangeSubmit = " onchange=\"$Param{OnChange}\"";
     }
 
-    # just show a simple list
-    if ( $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::ListType') eq 'list' ) {
+    my %UserPreferences;
+    my $AutoCompleteConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::GenericAutoCompleteSearch');
+    my $SearchType         = $AutoCompleteConfig->{SearchTypeMapping}->{ $Self->{Action} . ":::" . $Param{Name} } || '';
 
+    if ($SearchType) {
+
+        # get UserPreferences
+        %UserPreferences = $Kernel::OM->Get('Kernel::System::User')
+            ->GetPreferences( UserID => $Self->{UserID} );
+    }
+
+    # just show a simple list
+    if (
+        $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::ListType') eq 'list'
+        || (
+            $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
+            && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
+        )
+    ) {
         # transform data from Hash in Array because of ordering in frontend by Queue name
         # it was a problem wit name like '(some_queue)'
         # see bug#10621 http://bugs.otrs.org/show_bug.cgi?id=10621
@@ -384,7 +328,7 @@ sub AgentQueueListOption {
         # find index of first element in array @QueueDataArray for displaying in frontend
         # at the top should be element with ' $QueueDataArray[$_]->{Key} = 0' like "- Move -"
         # when such element is found, it is moved at the top
-        my ($FirstElementIndex) = grep $QueueDataArray[$_]->{Key} == 0, 0 .. $#QueueDataArray || 0;
+        my ($FirstElementIndex) = grep( {$QueueDataArray[$_]->{Key} == 0} 0 .. $#QueueDataArray || 0 );
         splice( @QueueDataArray, 0, 0, splice( @QueueDataArray, $FirstElementIndex, 1 ) );
         $Param{Data} = \@QueueDataArray;
 
@@ -420,8 +364,8 @@ sub AgentQueueListOption {
     # add suffix for correct sorting
     my $KeyNoQueue;
     my $ValueNoQueue;
-    my $MoveStr = $Self->{LanguageObject}->Translate('Move');
-    my $ValueOfQueueNoKey .= "- " . $MoveStr . " -";
+    my $MoveStr           = $Self->{LanguageObject}->Translate('Move');
+    my $ValueOfQueueNoKey = "- " . $MoveStr . " -";
     DATA:
     for ( sort { $Data{$a} cmp $Data{$b} } keys %Data ) {
 
@@ -430,8 +374,7 @@ sub AgentQueueListOption {
         if (
             $Data{$_} eq "-"
             || $Data{$_} eq $ValueOfQueueNoKey
-            )
-        {
+        ) {
             $KeyNoQueue   = $_;
             $ValueNoQueue = $Data{$_};
             next DATA;
@@ -536,8 +479,7 @@ sub AgentQueueListOption {
                 $SelectedID eq $_
                 || $Selected eq $Param{Data}->{$_}
                 || $Param{SelectedIDRefArrayOK}->{$_}
-                )
-            {
+            ) {
                 $Param{MoveQueuesStrg}
                     .= '<option selected="selected" value="'
                     . $HTMLValue . '"'
@@ -545,8 +487,7 @@ sub AgentQueueListOption {
                     . $String
                     . "</option>\n";
             }
-            elsif ( $CurrentQueueID eq $_ )
-            {
+            elsif ( $CurrentQueueID eq $_ ) {
                 $Param{MoveQueuesStrg}
                     .= '<option value="-" disabled="disabled"'
                     . $OptionTitleHTMLValue . '>'
@@ -838,7 +779,7 @@ sub ArticleQuote {
         $Article{ContentType} = 'text/plain';
     }
 
-    if ( $Article{ContentType} !~ /text\/(plain|html)/i ) {
+    if ( $Article{ContentType} !~ /text\/(?:plain|html)/i ) {
         $Article{Body}        = '-> no quotable message <-';
         $Article{ContentType} = 'text/plain';
     }
@@ -890,10 +831,7 @@ sub ArticleQuote {
 sub TicketListShow {
     my ( $Self, %Param ) = @_;
 
-    # KIX4OTRS-capeIT
     my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-
-    # EO KIX4OTRS-capeIT
 
     # take object ref to local, remove it from %Param (prevent memory leak)
     my $Env = $Param{Env};
@@ -914,8 +852,7 @@ sub TicketListShow {
             $Env->{Action} eq 'AgentTicketQueue'
             || $Env->{Action} eq 'AgentTicketService'
         )
-        )
-    {
+    ) {
         $View = 'Preview';
     }
 
@@ -932,13 +869,11 @@ sub TicketListShow {
     # update preferences if needed
     my $Key = 'UserTicketOverview' . $Env->{Action};
 
-    # KIX4OTRS-capeIT
     my $LastView = $Self->{$Key} || '';
 
     # if ( !$ConfigObject->Get('DemoSystem') && $Self->{$Key} ne $View ) {
     if ( !$ConfigObject->Get('DemoSystem') && $LastView ne $View ) {
 
-        # EO KIX4OTRS-capeIT
         $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
             UserID => $Self->{UserID},
             Key    => $Key,
@@ -1034,8 +969,8 @@ sub TicketListShow {
     my @UnselectedItems     = split(',', $UnselectedItemStrg);
 
     for my $TicketID ( @{$Param{TicketIDs}} ) {
-        if ( !grep(/^$TicketID$/, @UnselectedItems)
-            && !grep(/^$TicketID$/, @SelectedItems)
+        if ( !grep({/^$TicketID$/} @UnselectedItems)
+            && !grep({/^$TicketID$/} @SelectedItems)
         ) {
             push(@UnselectedItems, $TicketID);
         }
@@ -1061,14 +996,11 @@ sub TicketListShow {
     );
 
     # build shown ticket per page
-    # KIX4OTRS-capeIT
     # this results in a re-open of the search dialog if someone uses the context settings after a ticket search
-    # $Param{RequestedURL}    = "Action=$Self->{Action}";
     $Param{RequestedURL}
         = $Kernel::OM->Get('Kernel::System::Web::Request')->{Query}->url( -query_string => 1 )
         || "Action=$Self->{Action}";
 
-    # EO KIX4OTRS-capeIT
     $Param{Group}           = $Group;
     $Param{PreferencesKey}  = $PageShownPreferencesKey;
     $Param{PageShownString} = $Self->BuildSelection(
@@ -1144,8 +1076,7 @@ sub TicketListShow {
     for my $Backend (
         sort { $Backends->{$a}->{ModulePriority} <=> $Backends->{$b}->{ModulePriority} }
         keys %{$Backends}
-        )
-    {
+    ) {
 
         $Self->Block(
             Name => 'OverviewNavBarViewMode',
@@ -1218,11 +1149,9 @@ sub TicketListShow {
 
                 my %Columns;
 
-                # KIX4OTRS-capeIT
                 # for my $ColumnName ( sort @ColumnsAvailable ) {
                 for my $ColumnName (@ColumnsAvailable) {
 
-                    # EO KIX4OTRS-capeIT
                     $Columns{Columns}->{$ColumnName}
                         = ( grep { $ColumnName eq $_ } @ColumnsEnabled ) ? 1 : 0;
                 }
@@ -1307,6 +1236,24 @@ sub TicketMetaItemsCount {
 sub TicketMetaItems {
     my ( $Self, %Param ) = @_;
 
+    my %ActiveColums = (
+        'Priority'    => 1,
+        'New Article' => 1,
+        'Locked'      => 0,
+        'Watcher'     => 0,
+    );
+
+    if ( $Param{ViewableColumns} && ref( $Param{ViewableColumns} ) eq 'ARRAY' ) {
+        my @ViewableColumns = @{ $Param{ViewableColumns} };
+        $ActiveColums{'Priority'}    = 0;
+        $ActiveColums{'New Article'} = 0;
+        $ActiveColums{'Locked'}      = 0;
+        $ActiveColums{'Watcher'}     = 0;
+        for my $Columns (@ViewableColumns) {
+            $ActiveColums{$Columns} = 1;
+        }
+    }
+
     if ( ref $Param{Ticket} ne 'HASH' ) {
         $Self->FatalError( Message => 'Need Hash ref in Ticket param!' );
     }
@@ -1315,14 +1262,14 @@ sub TicketMetaItems {
     my @Result;
 
     # show priority
-    push @Result, {
-
-        #            Image => $Image,
-        Title      => $Param{Ticket}->{Priority},
-        Class      => 'Flag',
-        ClassSpan  => 'PriorityID-' . $Param{Ticket}->{PriorityID},
-        ClassTable => 'Flags',
-    };
+    if ( $ActiveColums{'Priority'} ) {
+        push( @Result, {
+            Title      => $Param{Ticket}->{Priority},
+            Class      => 'Flag',
+            ClassSpan  => 'PriorityID-' . $Param{Ticket}->{PriorityID},
+            ClassTable => 'Flags',
+        });
+    }
 
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
@@ -1338,18 +1285,23 @@ sub TicketMetaItems {
         );
     }
 
-    if ( $Ticket{ArchiveFlag} eq 'y' || $TicketFlag{Seen} ) {
-        push @Result, undef;
+    if (
+        $ActiveColums{'New Article'}
+        && (
+            $Ticket{ArchiveFlag} eq 'y'
+            || $TicketFlag{Seen}
+        )
+    ) {
+        push( @Result, undef );
     }
-    else {
+    elsif ( $Ticket{ArchiveFlag} ne 'y' && $ActiveColums{'New Article'} ) {
 
         # just show ticket flags if agent belongs to the ticket
         my $ShowMeta;
         if (
             $Self->{UserID} == $Param{Ticket}->{OwnerID}
             || $Self->{UserID} == $Param{Ticket}->{ResponsibleID}
-            )
-        {
+        ) {
             $ShowMeta = 1;
         }
         if ( !$ShowMeta && $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Watcher') ) {

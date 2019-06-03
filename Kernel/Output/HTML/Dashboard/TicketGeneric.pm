@@ -127,8 +127,7 @@ sub new {
                     if (
                         grep { $Self->{ColumnFilter}->{$Column}->{$_} eq 'DeleteFilter' }
                         keys %{ $Self->{ColumnFilter}->{$Column} }
-                        )
-                    {
+                    ) {
                         $DeleteFilter = 1;
                     }
                 }
@@ -163,7 +162,7 @@ sub new {
 
     if ($PreferencesColumnFilters) {
         $Self->{GetColumnFilterSelect} = $PreferencesColumnFilters;
-        my @ColumnFilters = keys %{$PreferencesColumnFilters};    ## no critic
+        my @ColumnFilters = keys %{$PreferencesColumnFilters};
         for my $Field (@ColumnFilters) {
             $Self->{GetColumnFilter}->{ $Field . $Self->{Name} } = $PreferencesColumnFilters->{$Field};
         }
@@ -178,7 +177,7 @@ sub new {
     }
 
     if ($PreferencesColumnFiltersRealKeys) {
-        my @ColumnFiltersReal = keys %{$PreferencesColumnFiltersRealKeys};    ## no critic
+        my @ColumnFiltersReal = keys %{$PreferencesColumnFiltersRealKeys};
         for my $Field (@ColumnFiltersReal) {
             $Self->{ColumnFilter}->{$Field} = $PreferencesColumnFiltersRealKeys->{$Field};
         }
@@ -225,7 +224,7 @@ sub new {
     $Self->{SearchTemplateName} = $LayoutObject->{ $Self->{PrefKeySearchTemplate} } || '';
 
     for my $Item ( keys %{ $Kernel::OM->Get('Kernel::Output::HTML::Layout') } ) {
-        next if $Item !~ m/^UserDashboard(.*)Template(.*)/i;
+        next if $Item !~ m/^UserDashboard(?:.*)Template(?:.*)/i;
     }
 
     # define filterable columns
@@ -347,8 +346,7 @@ sub Preferences {
     if (
         $Self->{Config}->{DefaultColumns}
         && IsHashRefWithData( $Self->{Config}->{DefaultColumns} )
-        )
-    {
+    ) {
         @ColumnsAvailable = grep { $Self->{Config}->{DefaultColumns}->{$_} }
             keys %{ $Self->{Config}->{DefaultColumns} };
         @ColumnsEnabled = grep { $Self->{Config}->{DefaultColumns}->{$_} eq '2' }
@@ -768,8 +766,7 @@ sub Run {
         if (
             $SearchProfileData{ShownAttributes}
             && ref $SearchProfileData{ShownAttributes} eq 'ARRAY'
-            )
-        {
+        ) {
             $SearchProfileData{ShownAttributes} = join ';',
                 @{ $SearchProfileData{ShownAttributes} };
         }
@@ -793,8 +790,7 @@ sub Run {
                 $SearchProfileData{ArticleCreateTimeStartDay}
                 && $SearchProfileData{ArticleCreateTimeStartMonth}
                 && $SearchProfileData{ArticleCreateTimeStartYear}
-                )
-            {
+            ) {
                 $SearchProfileData{ArticleCreateTimeNewerDate}
                     = $SearchProfileData{ArticleCreateTimeStartYear} . '-'
                     . $SearchProfileData{ArticleCreateTimeStartMonth} . '-'
@@ -805,8 +801,7 @@ sub Run {
                 $SearchProfileData{ArticleCreateTimeStopDay}
                 && $SearchProfileData{ArticleCreateTimeStopMonth}
                 && $SearchProfileData{ArticleCreateTimeStopYear}
-                )
-            {
+            ) {
                 $SearchProfileData{ArticleCreateTimeOlderDate}
                     = $SearchProfileData{ArticleCreateTimeStopYear} . '-'
                     . $SearchProfileData{ArticleCreateTimeStopMonth} . '-'
@@ -819,8 +814,7 @@ sub Run {
                 $SearchProfileData{ArticleCreateTimePoint}
                 && $SearchProfileData{ArticleCreateTimePointStart}
                 && $SearchProfileData{ArticleCreateTimePointFormat}
-                )
-            {
+            ) {
                 my $Time = 0;
                 if ( $SearchProfileData{ArticleCreateTimePointFormat} eq 'minute' ) {
                     $Time = $SearchProfileData{ArticleCreateTimePoint};
@@ -867,8 +861,7 @@ sub Run {
                 $SearchProfileData{TicketCreateTimeStartDay}
                 && $SearchProfileData{TicketCreateTimeStartMonth}
                 && $SearchProfileData{TicketCreateTimeStartYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketCreateTimeNewerDate}
                     = $SearchProfileData{TicketCreateTimeStartYear} . '-'
                     . $SearchProfileData{TicketCreateTimeStartMonth} . '-'
@@ -879,8 +872,7 @@ sub Run {
                 $SearchProfileData{TicketCreateTimeStopDay}
                 && $SearchProfileData{TicketCreateTimeStopMonth}
                 && $SearchProfileData{TicketCreateTimeStopYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketCreateTimeOlderDate}
                     = $SearchProfileData{TicketCreateTimeStopYear} . '-'
                     . $SearchProfileData{TicketCreateTimeStopMonth} . '-'
@@ -893,8 +885,7 @@ sub Run {
                 $SearchProfileData{TicketCreateTimePoint}
                 && $SearchProfileData{TicketCreateTimePointStart}
                 && $SearchProfileData{TicketCreateTimePointFormat}
-                )
-            {
+            ) {
                 my $Time = 0;
                 if ( $SearchProfileData{TicketCreateTimePointFormat} eq 'minute' ) {
                     $Time = $SearchProfileData{TicketCreateTimePoint};
@@ -941,8 +932,7 @@ sub Run {
                 $SearchProfileData{TicketChangeTimeStartDay}
                 && $SearchProfileData{TicketChangeTimeStartMonth}
                 && $SearchProfileData{TicketChangeTimeStartYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketChangeTimeNewerDate}
                     = $SearchProfileData{TicketChangeTimeStartYear} . '-'
                     . $SearchProfileData{TicketChangeTimeStartMonth} . '-'
@@ -953,8 +943,7 @@ sub Run {
                 $SearchProfileData{TicketChangeTimeStopDay}
                 && $SearchProfileData{TicketChangeTimeStopMonth}
                 && $SearchProfileData{TicketChangeTimeStopYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketChangeTimeOlderDate}
                     = $SearchProfileData{TicketChangeTimeStopYear} . '-'
                     . $SearchProfileData{TicketChangeTimeStopMonth} . '-'
@@ -967,8 +956,7 @@ sub Run {
                 $SearchProfileData{TicketChangeTimePoint}
                 && $SearchProfileData{TicketChangeTimePointStart}
                 && $SearchProfileData{TicketChangeTimePointFormat}
-                )
-            {
+            ) {
                 my $Time = 0;
                 if ( $SearchProfileData{TicketChangeTimePointFormat} eq 'minute' ) {
                     $Time = $SearchProfileData{TicketChangeTimePoint};
@@ -1015,8 +1003,7 @@ sub Run {
                 $SearchProfileData{TicketCloseTimeStartDay}
                 && $SearchProfileData{TicketCloseTimeStartMonth}
                 && $SearchProfileData{TicketCloseTimeStartYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketCloseTimeNewerDate}
                     = $SearchProfileData{TicketCloseTimeStartYear} . '-'
                     . $SearchProfileData{TicketCloseTimeStartMonth} . '-'
@@ -1027,8 +1014,7 @@ sub Run {
                 $SearchProfileData{TicketCloseTimeStopDay}
                 && $SearchProfileData{TicketCloseTimeStopMonth}
                 && $SearchProfileData{TicketCloseTimeStopYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketCloseTimeOlderDate}
                     = $SearchProfileData{TicketCloseTimeStopYear} . '-'
                     . $SearchProfileData{TicketCloseTimeStopMonth} . '-'
@@ -1041,8 +1027,7 @@ sub Run {
                 $SearchProfileData{TicketCloseTimePoint}
                 && $SearchProfileData{TicketCloseTimePointStart}
                 && $SearchProfileData{TicketCloseTimePointFormat}
-                )
-            {
+            ) {
                 my $Time = 0;
                 if ( $SearchProfileData{TicketCloseTimePointFormat} eq 'minute' ) {
                     $Time = $SearchProfileData{TicketCloseTimePoint};
@@ -1089,8 +1074,7 @@ sub Run {
                 $SearchProfileData{TicketLastChangeTimeStartDay}
                 && $SearchProfileData{TicketLastChangeTimeStartMonth}
                 && $SearchProfileData{TicketLastChangeTimeStartYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketLastChangeTimeNewerDate}
                     = $SearchProfileData{TicketLastChangeTimeStartYear} . '-'
                     . $SearchProfileData{TicketLastChangeTimeStartMonth} . '-'
@@ -1101,8 +1085,7 @@ sub Run {
                 $SearchProfileData{TicketLastChangeTimeStopDay}
                 && $SearchProfileData{TicketLastChangeTimeStopMonth}
                 && $SearchProfileData{TicketLastChangeTimeStopYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketLastChangeTimeOlderDate}
                     = $SearchProfileData{TicketLastChangeTimeStopYear} . '-'
                     . $SearchProfileData{TicketLastChangeTimeStopMonth} . '-'
@@ -1115,8 +1098,7 @@ sub Run {
                 $SearchProfileData{TicketLastChangeTimePoint}
                 && $SearchProfileData{TicketLastChangeTimePointStart}
                 && $SearchProfileData{TicketLastChangeTimePointFormat}
-                )
-            {
+            ) {
                 my $Time = 0;
                 if ( $SearchProfileData{TicketLastChangeTimePointFormat} eq 'minute' ) {
                     $Time = $SearchProfileData{TicketLastChangeTimePoint};
@@ -1163,8 +1145,7 @@ sub Run {
                 $SearchProfileData{TicketPendingTimeStartDay}
                 && $SearchProfileData{TicketPendingTimeStartMonth}
                 && $SearchProfileData{TicketPendingTimeStartYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketPendingTimeNewerDate}
                     = $SearchProfileData{TicketPendingTimeStartYear} . '-'
                     . $SearchProfileData{TicketPendingTimeStartMonth} . '-'
@@ -1175,8 +1156,7 @@ sub Run {
                 $SearchProfileData{TicketPendingTimeStopDay}
                 && $SearchProfileData{TicketPendingTimeStopMonth}
                 && $SearchProfileData{TicketPendingTimeStopYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketPendingTimeOlderDate}
                     = $SearchProfileData{TicketPendingTimeStopYear} . '-'
                     . $SearchProfileData{TicketPendingTimeStopMonth} . '-'
@@ -1189,8 +1169,7 @@ sub Run {
                 $SearchProfileData{TicketPendingTimePoint}
                 && $SearchProfileData{TicketPendingTimePointStart}
                 && $SearchProfileData{TicketPendingTimePointFormat}
-                )
-            {
+            ) {
                 my $Time = 0;
                 if ( $SearchProfileData{TicketPendingTimePointFormat} eq 'minute' ) {
                     $Time = $SearchProfileData{TicketPendingTimePoint};
@@ -1238,8 +1217,7 @@ sub Run {
                 $SearchProfileData{TicketEscalationTimeStartDay}
                 && $SearchProfileData{TicketEscalationTimeStartMonth}
                 && $SearchProfileData{TicketEscalationTimeStartYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketEscalationTimeNewerDate}
                     = $SearchProfileData{TicketEscalationTimeStartYear} . '-'
                     . $SearchProfileData{TicketEscalationTimeStartMonth} . '-'
@@ -1250,8 +1228,7 @@ sub Run {
                 $SearchProfileData{TicketEscalationTimeStopDay}
                 && $SearchProfileData{TicketEscalationTimeStopMonth}
                 && $SearchProfileData{TicketEscalationTimeStopYear}
-                )
-            {
+            ) {
                 $SearchProfileData{TicketEscalationTimeOlderDate}
                     = $SearchProfileData{TicketEscalationTimeStopYear} . '-'
                     . $SearchProfileData{TicketEscalationTimeStopMonth} . '-'
@@ -1264,8 +1241,7 @@ sub Run {
                 $SearchProfileData{TicketEscalationTimePoint}
                 && $SearchProfileData{TicketEscalationTimePointStart}
                 && $SearchProfileData{TicketEscalationTimePointFormat}
-                )
-            {
+            ) {
                 my $Time = 0;
                 if ( $SearchProfileData{TicketEscalationTimePointFormat} eq 'minute' ) {
                     $Time = $SearchProfileData{TicketEscalationTimePoint};
@@ -1325,15 +1301,13 @@ sub Run {
         if (
             defined $SearchProfileData{SearchInArchive}
             && $SearchProfileData{SearchInArchive} eq 'AllTickets'
-            )
-        {
+        ) {
             $SearchProfileData{ArchiveFlags} = [ 'y', 'n' ];
         }
         elsif (
             defined $SearchProfileData{SearchInArchive}
             && $SearchProfileData{SearchInArchive} eq 'ArchivedTickets'
-            )
-        {
+        ) {
             $SearchProfileData{ArchiveFlags} = ['y'];
         }
 
@@ -1792,7 +1766,7 @@ sub Run {
                     Name => 'ContentLargeTicketGenericHeaderTicketNumberColumn',
                     Data => {
                         %Param,
-                        CSS => $CSS || '',
+                        CSS     => $CSS || '',
                         Name    => $Self->{Name},
                         OrderBy => $OrderBy || 'Up',
                         Filter  => $Self->{Filter},
@@ -1804,8 +1778,7 @@ sub Run {
 
             my $FilterTitle     = $TranslatedWord;
             my $FilterTitleDesc = Translatable('filter not active');
-            if ( $Self->{GetColumnFilterSelect} && $Self->{GetColumnFilterSelect}->{$HeaderColumn} )
-            {
+            if ( $Self->{GetColumnFilterSelect} && $Self->{GetColumnFilterSelect}->{$HeaderColumn} ) {
                 $CSS .= ' FilterActive';
                 $FilterTitleDesc = Translatable('filter active');
             }
@@ -1970,9 +1943,10 @@ sub Run {
             my $Label            = $DynamicFieldConfig->{Label};
             my $TranslatedLabel  = $LayoutObject->{LanguageObject}->Translate($Label);
             my $DynamicFieldName = 'DynamicField_' . $DynamicFieldConfig->{Name};
-            my $CSS              = '';
             my $FilterTitle      = $Label;
             my $FilterTitleDesc  = Translatable('filter not active');
+
+            $CSS = '';
 
             if (
                 $Self->{GetColumnFilterSelect}
@@ -2004,7 +1978,7 @@ sub Run {
             );
 
             if ($IsSortable) {
-                my $OrderBy;
+                $OrderBy = '';
                 if (
                     $Self->{SortBy}
                     && ( $Self->{SortBy} eq ( 'DynamicField_' . $DynamicFieldConfig->{Name} ) )
@@ -2052,7 +2026,7 @@ sub Run {
                             CSS                  => $CSS,
                             HeaderNameTranslated => $TranslatedLabel || $DynamicFieldName,
                             ColumnFilterStrg     => $ColumnFilterHTML,
-                            OrderBy              => $OrderBy || 'Up',
+                            OrderBy              => $OrderBy        || 'Up',
                             SortBy               => $Self->{SortBy} || 'Age',
                             Name                 => $Self->{Name},
                             Title                => $Title,
@@ -2187,9 +2161,7 @@ sub Run {
             );
         }
 
-        my $StateHighlighting
-            = $Kernel::OM->Get('Kernel::Config')
-            ->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
+        my $StateHighlighting = $ConfigObject->Get('KIX4OTRSTicketOverviewSmallHighlightMapping');
         if (
             $StateHighlighting
             && ref($StateHighlighting) eq 'HASH'
@@ -2239,7 +2211,6 @@ sub Run {
 
         # get needed objects
         my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-        my $UserObject    = $Kernel::OM->Get('Kernel::System::User');
 
         # show all needed columns
         COLUMN:
@@ -2319,20 +2290,15 @@ sub Run {
                             Age   => $EscalationData{EscalationTimeWorkingTime},
                             Space => ' ',
                         );
-                        if ( defined $Ticket{EscalationTime} && $Ticket{EscalationTime} < 60 * 60 * 1 )
-                        {
+                        if ( defined $Ticket{EscalationTime} && $Ticket{EscalationTime} < 60 * 60 * 1 ) {
                             $EscalationData{EscalationClass} = 'Warning';
                         }
                         $LayoutObject->Block(
                             Name => 'ContentLargeTicketGenericEscalationTime',
                             Data => {%EscalationData},
                         );
-                        next COLUMN;
 
-                        $DataValue = $LayoutObject->CustomerAge(
-                            Age   => $Ticket{'EscalationTime'},
-                            Space => ' '
-                        );
+                        next COLUMN;
                     }
                 }
                 elsif ( $Column eq 'Age' ) {
@@ -2381,8 +2347,7 @@ sub Run {
                         if (
                             defined $Ticket{FirstResponseTime}
                             && $Ticket{FirstResponseTime} < 60 * 60 * 1
-                            )
-                        {
+                        ) {
                             $CSSClass = 'Warning';
                         }
                     }
@@ -2816,8 +2781,7 @@ sub _ColumnFilterJSON {
         $Param{ColumnName} eq 'State'
         || $Param{ColumnName} eq 'Lock'
         || $Param{ColumnName} eq 'Priority'
-        )
-    {
+    ) {
         $TranslationOption = 1;
     }
 
@@ -2860,8 +2824,7 @@ sub _SearchParamsGet {
     if (
         defined $Preferences{ $Self->{PrefKeyColumns} }
         && $Preferences{ $Self->{PrefKeyColumns} }
-        )
-    {
+    ) {
 
         my $ColumnPreferences = $Preferences{ $Self->{PrefKeyColumns} };
         my @OldConfigArray = split( /;/, $ColumnPreferences );
@@ -2895,8 +2858,7 @@ sub _SearchParamsGet {
     if (
         $Self->{Config}->{DefaultColumns}
         && IsHashRefWithData( $Self->{Config}->{DefaultColumns} )
-        )
-    {
+    ) {
         @Columns = grep { $Self->{Config}->{DefaultColumns}->{$_} eq '2' }
             sort { $Self->_DefaultColumnSort() } keys %{ $Self->{Config}->{DefaultColumns} };
     }
@@ -3011,6 +2973,20 @@ sub _SearchParamsGet {
     # get queue object
     my $QueueObject = $Kernel::OM->Get('Kernel::System::Queue');
 
+    my @Attributes = qw(
+        StateType StateTypeIDs States StateIDs
+        Queues QueueIDs
+        Types TypeIDs
+        Priorities PriorityIDs
+        Services ServiceIDs SLAs SLAIDs
+        Locks LockIDs
+        OwnerIDs ResponsibleIDs WatchUserIDs
+        ArchiveFlags
+        CreatedUserIDs CreatedTypes CreatedTypeIDs CreatedPriorities
+        CreatedPriorityIDs CreatedStates CreatedStateIDs
+        CreatedQueues CreatedQueueIDs
+    );
+
     STRING:
     for my $String (@Params) {
         next STRING if !$String;
@@ -3021,11 +2997,7 @@ sub _SearchParamsGet {
         }
 
         # push ARRAYREF attributes directly in an ARRAYREF
-        if (
-            $Key
-            =~ /^(StateType|StateTypeIDs|Queues|QueueIDs|Types|TypeIDs|States|StateIDs|Priorities|PriorityIDs|Services|ServiceIDs|SLAs|SLAIDs|Locks|LockIDs|OwnerIDs|ResponsibleIDs|WatchUserIDs|ArchiveFlags|CreatedUserIDs|CreatedTypes|CreatedTypeIDs|CreatedPriorities|CreatedPriorityIDs|CreatedStates|CreatedStateIDs|CreatedQueues|CreatedQueueIDs)$/
-            )
-        {
+        if ( grep( { $Key eq $_ } @Attributes ) ) {
             if ( $Value =~ m{,}smx ) {
                 push @{ $TicketSearch{$Key} }, split( /,/, $Value );
             }
@@ -3061,8 +3033,7 @@ sub _SearchParamsGet {
                 $Key eq 'SortBy'
                 && $Self->{SortBy}
                 && $Self->{ValidSortableColumns}->{ $Self->{SortBy} }
-                )
-            {
+            ) {
                 $Value = $Self->{SortBy};
             }
             elsif ( $Key eq 'SortBy' && !$Self->{ValidSortableColumns}->{$Value} ) {

@@ -146,11 +146,10 @@ sub TaskAdd {
         # insert the task (initially locked with lock_key = 1 so it will not be taken by any worker
         #   at this moment)
         last TRY if $DBObject->Do(
-            SQL => '
-                INSERT INTO scheduler_task
-                    (ident, name, task_type, task_data, attempts, lock_key, create_time)
-                VALUES
-                    (?, ?, ?, ?, ?, 1, current_timestamp)',
+            SQL  => 'INSERT INTO scheduler_task'
+                  . ' (ident, name, task_type, task_data, attempts, lock_key, create_time)'
+                  . ' VALUES'
+                  . ' (?, ?, ?, ?, ?, 1, current_timestamp)',
             Bind => [
                 \$Identifier,
                 \$Param{Name},
@@ -175,10 +174,7 @@ sub TaskAdd {
 
     # unlock the task, for now on the task can be taken by any worker
     $DBObject->Do(
-        SQL => '
-            UPDATE scheduler_task
-            SET lock_key = 0
-            WHERE lock_key = 1 AND id = ?',
+        SQL  => 'UPDATE scheduler_task SET lock_key = 0 WHERE lock_key = 1 AND id = ?',
         Bind => [
             \$TaskID,
         ],
@@ -234,11 +230,9 @@ sub TaskGet {
 
     # get task from database
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT name, task_type, task_data, attempts, lock_key, lock_time, lock_update_time,
-                create_time
-            FROM scheduler_task
-            WHERE id = ?',
+        SQL  => 'SELECT name, task_type, task_data, attempts, lock_key, lock_time, lock_update_time, create_time'
+              . ' FROM scheduler_task'
+              . ' WHERE id = ?',
         Bind => [ \$Param{TaskID} ],
     );
 
@@ -470,7 +464,6 @@ sub TaskLock {
     # create the lock key
     my $LockKeyNodeID = sprintf "%03d", $Param{NodeID};
     my $LockKeyPID    = sprintf "%08d", $Param{PID};
-    #rbo - T2016021990000594 - special handling due to negative windows PIDs
     my $LockKey       = '1' . $LockKeyNodeID . abs($LockKeyPID);
 
     # get database object
@@ -492,10 +485,9 @@ sub TaskLock {
 
     # lock the task in database
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE scheduler_task
-            SET lock_key = ?, lock_time = current_timestamp, lock_update_time = current_timestamp
-            WHERE lock_key = 0 AND id = ?',
+        SQL => 'UPDATE scheduler_task'
+             . ' SET lock_key = ?, lock_time = current_timestamp, lock_update_time = current_timestamp'
+             . ' WHERE lock_key = 0 AND id = ?',
         Bind => [
             \$LockKey,
             \$Param{TaskID},
@@ -532,10 +524,7 @@ sub TaskLock {
 
         # decrement number of attempts
         $DBObject->Do(
-            SQL => '
-                UPDATE scheduler_task
-                SET attempts = ?
-                WHERE lock_key = ? AND id = ?',
+            SQL  => 'UPDATE scheduler_task SET attempts = ? WHERE lock_key = ? AND id = ?',
             Bind => [
                 \$Attempts,
                 \$LockKey,
@@ -626,10 +615,9 @@ sub TaskSummary {
 
     # ask the database
     return () if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name, task_type, lock_key, lock_time, create_time
-            FROM scheduler_task
-            ORDER BY id ASC',
+        SQL => 'SELECT id, name, task_type, lock_key, lock_time, create_time'
+             . ' FROM scheduler_task'
+             . ' ORDER BY id ASC',
     );
 
     # fetch the result
@@ -779,10 +767,7 @@ sub TaskLockUpdate {
 
     # set lock update time in database
     return if !$DBObject->Do(
-        SQL => "
-            UPDATE scheduler_task
-            SET lock_update_time = current_timestamp
-            WHERE id IN ( $TaskIDs )",
+        SQL => "UPDATE scheduler_task SET lock_update_time = current_timestamp WHERE id IN ( $TaskIDs )",
     );
 
     return 1;
@@ -805,12 +790,11 @@ sub TaskUnlockExpired {
 
     # ask the database (get all worker tasks with a lock key different than 0)
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name, lock_update_time
-            FROM scheduler_task
-            WHERE lock_key <> 0
-                AND lock_key <> 1
-            ORDER BY id ASC',
+        SQL => 'SELECT id, name, lock_update_time'
+             . ' FROM scheduler_task'
+             . ' WHERE lock_key <> 0'
+             . '   AND lock_key <> 1'
+             . ' ORDER BY id ASC',
     );
 
     # fetch the result
@@ -853,10 +837,7 @@ sub TaskUnlockExpired {
 
         # unlock all the task that has been locked for more than 1 minute
         return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-            SQL => '
-                UPDATE scheduler_task
-                SET lock_key = 0, lock_time = NULL, lock_update_time = NULL
-                WHERE id = ?',
+            SQL  => 'UPDATE scheduler_task SET lock_key = 0, lock_time = NULL, lock_update_time = NULL WHERE id = ?',
             Bind => [ \$Task->{TaskID}, ],
         );
     }
@@ -961,11 +942,10 @@ sub FutureTaskAdd {
         # insert the future task (initially locked with lock_key = 1 so it will not be taken by any
         #    moved into worker task list at this moment)
         last TRY if $DBObject->Do(
-            SQL => '
-                INSERT INTO scheduler_future_task
-                    (ident, execution_time, name, task_type, task_data, attempts, lock_key, create_time)
-                VALUES
-                    (?, ?, ?, ?, ?, ?, 1, current_timestamp)',
+            SQL  => 'INSERT INTO scheduler_future_task'
+                  . ' (ident, execution_time, name, task_type, task_data, attempts, lock_key, create_time)'
+                  . ' VALUES'
+                  . ' (?, ?, ?, ?, ?, ?, 1, current_timestamp)',
             Bind => [
                 \$Identifier,
                 \$Param{ExecutionTime},
@@ -991,10 +971,7 @@ sub FutureTaskAdd {
 
     # unlock the task, for now on the task can be moved to the worker task list
     $DBObject->Do(
-        SQL => '
-            UPDATE scheduler_future_task
-            SET lock_key = 0
-            WHERE lock_key = 1 AND id = ?',
+        SQL  => 'UPDATE scheduler_future_task SET lock_key = 0 WHERE lock_key = 1 AND id = ?',
         Bind => [
             \$TaskID,
         ],
@@ -1050,10 +1027,9 @@ sub FutureTaskGet {
 
     # get task from database
     return if !$DBObject->Prepare(
-        SQL =>
-            'SELECT execution_time, name, task_type, task_data, attempts, lock_key, lock_time, create_time
-            FROM scheduler_future_task
-            WHERE id = ?',
+        SQL  => 'SELECT execution_time, name, task_type, task_data, attempts, lock_key, lock_time, create_time'
+              . ' FROM scheduler_future_task'
+              . ' WHERE id = ?',
         Bind => [ \$Param{TaskID} ],
     );
 
@@ -1244,10 +1220,7 @@ sub FutureTaskToExecute {
 
     # lock the task in database
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE scheduler_future_task
-            SET lock_key = ?, lock_time = current_timestamp
-            WHERE lock_key = 0 AND execution_time <= ?',
+        SQL  => 'UPDATE scheduler_future_task SET lock_key = ?, lock_time = current_timestamp WHERE lock_key = 0 AND execution_time <= ?',
         Bind => [
             \$LockKey,
             \$CurrentTime,
@@ -1256,11 +1229,10 @@ sub FutureTaskToExecute {
 
     # get all locked future tasks
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name, task_type, task_data, attempts
-            FROM scheduler_future_task
-            WHERE lock_key = ?
-            ORDER BY execution_time ASC',
+        SQL  => 'SELECT id, name, task_type, task_data, attempts'
+              . ' FROM scheduler_future_task'
+              . ' WHERE lock_key = ?'
+              . ' ORDER BY execution_time ASC',
         Bind => [ \$LockKey ],
     );
 
@@ -1829,9 +1801,9 @@ sub RecurrentTaskGet {
 
     # get task from database
     return if !$DBObject->Prepare(
-        SQL => 'SELECT name, task_type, last_execution_time, lock_key, lock_time, create_time, change_time
-            FROM scheduler_recurrent_task
-            WHERE id = ?',
+        SQL  => 'SELECT name, task_type, last_execution_time, lock_key, lock_time, create_time, change_time'
+              . ' FROM scheduler_recurrent_task'
+              . ' WHERE id = ?',
         Bind => [ \$Param{TaskID} ],
     );
 
@@ -1892,10 +1864,8 @@ Returns:
 sub RecurrentTaskList {
     my ( $Self, %Param ) = @_;
 
-    my $SQL = '
-        SELECT id, name, task_type, last_execution_time, lock_key, lock_time, create_time,
-            change_time
-        FROM scheduler_recurrent_task';
+    my $SQL = 'SELECT id, name, task_type, last_execution_time, lock_key, lock_time, create_time, change_time'
+            . ' FROM scheduler_recurrent_task';
     my @Bind;
 
     # add type
@@ -2049,14 +2019,13 @@ sub RecurrentTaskExecute {
     for my $Try ( 1 .. 10 ) {
 
         # insert entry if not exists
-        if ( $Try ne 1 ) {
+        if ( $Try != 1 ) {
 
             return if !$DBObject->Do(
-                SQL => "
-                    INSERT INTO scheduler_recurrent_task
-                        (name, task_type, last_execution_time, lock_key, create_time, change_time)
-                    VALUES
-                        (?, ?, ?, 0, current_timestamp, current_timestamp)",
+                SQL => "INSERT INTO scheduler_recurrent_task"
+                     . " (name, task_type, last_execution_time, lock_key, create_time, change_time)"
+                     . " VALUES"
+                     . " (?, ?, ?, 0, current_timestamp, current_timestamp)",
                 Bind => [
                     \$Param{TaskName},
                     \$Param{TaskType},
@@ -2067,10 +2036,9 @@ sub RecurrentTaskExecute {
 
         # get entry id
         next TRY if !$DBObject->Prepare(
-            SQL => "
-                SELECT id, last_execution_time
-                FROM scheduler_recurrent_task
-                WHERE task_type = ? AND name = ?",
+            SQL  => "SELECT id, last_execution_time"
+                  . " FROM scheduler_recurrent_task"
+                  . " WHERE task_type = ? AND name = ?",
             Bind => [
                 \$Param{TaskType},
                 \$Param{TaskName},
@@ -2120,10 +2088,7 @@ sub RecurrentTaskExecute {
 
     # lock the entry in database
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE scheduler_recurrent_task
-            SET lock_key = ?, lock_time = current_timestamp, change_time = current_timestamp
-            WHERE lock_key = 0 AND id = ?',
+        SQL  => 'UPDATE scheduler_recurrent_task SET lock_key = ?, lock_time = current_timestamp, change_time = current_timestamp WHERE lock_key = 0 AND id = ?',
         Bind => [
             \$LockKey,
             \$EntryID,
@@ -2166,11 +2131,9 @@ sub RecurrentTaskExecute {
     # unlock the task
     if ( IsPositiveInteger($TaskID) ) {
         $DBObject->Do(
-            SQL => '
-                UPDATE scheduler_recurrent_task
-                SET lock_key = 0, lock_time = NULL, last_execution_time = ?, last_worker_task_id = ?,
-                    change_time = current_timestamp
-                WHERE lock_key = ? AND id = ?',
+            SQL => 'UPDATE scheduler_recurrent_task'
+                 . ' SET lock_key = 0, lock_time = NULL, last_execution_time = ?, last_worker_task_id = ?, change_time = current_timestamp'
+                 . ' WHERE lock_key = ? AND id = ?',
             Bind => [
                 \$PreviousEventTime,
                 \$TaskID,
@@ -2181,10 +2144,7 @@ sub RecurrentTaskExecute {
     }
     else {
         $DBObject->Do(
-            SQL => '
-                UPDATE scheduler_recurrent_task
-                SET lock_key = 0, lock_time = NULL, change_time = current_timestamp
-                WHERE lock_key = ? AND id = ?',
+            SQL  => 'UPDATE scheduler_recurrent_task SET lock_key = 0, lock_time = NULL, change_time = current_timestamp WHERE lock_key = ? AND id = ?',
             Bind => [
                 \$LockKey,
                 \$EntryID,
@@ -2247,11 +2207,10 @@ sub RecurrentTaskSummary {
 
     # ask the database
     return () if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name, task_type, last_execution_time, last_worker_status, last_worker_running_time
-            FROM scheduler_recurrent_task
-            WHERE task_type = ?
-            ORDER BY id ASC',
+        SQL => 'SELECT id, name, task_type, last_execution_time, last_worker_status, last_worker_running_time'
+             . ' FROM scheduler_recurrent_task'
+             . ' WHERE task_type = ?'
+             . ' ORDER BY id ASC',
         Bind => [ \$Param{Type} ],
     );
 
@@ -2365,10 +2324,7 @@ sub RecurrentTaskWorkerInfoSet {
     my $LastWorkerRunningTime = $Param{LastWorkerRunningTime} // 0;
 
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            UPDATE scheduler_recurrent_task
-            SET last_worker_status = ?, last_worker_running_time = ?, change_time = current_timestamp
-            WHERE last_worker_task_id = ?',
+        SQL  => 'UPDATE scheduler_recurrent_task SET last_worker_status = ?, last_worker_running_time = ?, change_time = current_timestamp WHERE last_worker_task_id = ?',
         Bind => [
             \$LastWorkerStatus,
             \$LastWorkerRunningTime,
@@ -2406,12 +2362,11 @@ sub RecurrentTaskUnlockExpired {
 
     # ask the database (get all recurrent tasks for the given type with a lock key different than 0)
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name, lock_time
-            FROM scheduler_recurrent_task
-            WHERE task_type = ?
-                AND lock_key <> 0
-            ORDER BY id ASC',
+        SQL => 'SELECT id, name, lock_time'
+             . ' FROM scheduler_recurrent_task'
+             . ' WHERE task_type = ?'
+             . '  AND lock_key <> 0'
+             . ' ORDER BY id ASC',
         Bind => [ \$Param{Type} ],
     );
 
@@ -2445,10 +2400,7 @@ sub RecurrentTaskUnlockExpired {
 
         # unlock all the task that has been locked for more than 1 minute
         return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-            SQL => '
-                UPDATE scheduler_recurrent_task
-                SET lock_key = 0, lock_time = NULL, change_time = current_timestamp
-                WHERE id = ?',
+            SQL  => 'UPDATE scheduler_recurrent_task SET lock_key = 0, lock_time = NULL, change_time = current_timestamp WHERE id = ?',
             Bind => [ \$Task->{TaskID}, ],
         );
     }

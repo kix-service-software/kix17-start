@@ -206,8 +206,7 @@ sub TableCreateComplex {
         && IsHashRefWithData($ComplexTableData)
         && $ComplexTableData->{FAQ}
         && IsHashRefWithData( $ComplexTableData->{FAQ} )
-        )
-    {
+    ) {
         $DefaultColumns = $ComplexTableData->{"FAQ"}->{"DefaultColumns"};
     }
 
@@ -247,8 +246,7 @@ sub TableCreateComplex {
     if (
         $ComplexTableData->{"FAQ"}->{"Priority"}
         && IsHashRefWithData( $ComplexTableData->{"FAQ"}->{"Priority"} )
-        )
-    {
+    ) {
         %SortOrder = %{ $ComplexTableData->{"FAQ"}->{"Priority"} };
     }
 
@@ -265,8 +263,7 @@ sub TableCreateComplex {
             && IsHashRefWithData($ColumnsEnabled)
             && $ColumnsEnabled->{Order}
             && IsArrayRefWithData( $ColumnsEnabled->{Order} )
-            )
-        {
+        ) {
             # Clear sort order.
             %SortOrder = ();
 

@@ -55,7 +55,7 @@ click an element that causes a page get/reload/submit and wait for the page to b
 
 =cut
 
-sub VerifiedClick {    ## no critic
+sub VerifiedClick {
     my $Self = shift;
 
     $Self->SUPER::click(@_);

@@ -55,12 +55,10 @@
 
 [% RenderBlockStart("ContextSettings") %]
                 <ul class="ContextFunctions">
-# KIX4OTRS-capeIT
                     <li class="ContextSettings ITSMConfigItemOverview">
                         <i class="fa fa-reorder"></i>
                         <a href="#" id="ShowContextSettingsDialogTLV" title="[% Translate("Settings for custom ticket list view") | html %]"><span>[% Translate("Settings for custom ticket list view") | html %]</span></a>
                     </li>
-# EO KIX4OTRS-capeIT
                     <li class="ContextSettings ITSMConfigItemOverview">
                         <i class="fa fa-cog"></i>
                         <a href="#" id="ShowContextSettingsDialog" title="[% Translate("Context Settings") | html %]"><span>[% Translate("Context Settings") | html %]</span></a>
@@ -83,7 +81,6 @@
                     </form>
                 </div>
 
-# KIX4OTRS-capeIT
                 <div id="ContextSettingsDialogContainerTLV" class="Hidden">
                     <form action="[% Env("CGIHandle") %]" method="post" id="ContextSettingsDialogTLV">
                         <input type="hidden" name="Action" value="AgentPreferences"/>
@@ -98,7 +95,6 @@
 [% RenderBlockEnd("OverviewNavSettingCustomCILV") %]
                     </form>
                 </div>
-# EO KIX4OTRS-capeIT
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     // bind the ContextSettingsDialogContainer
@@ -117,7 +113,6 @@
         return false;
     });
 
-# KIX4OTRS-capeIT
 $('#ShowContextSettingsDialogTLV').bind('click', function (Event) {
     Core.UI.Dialog.ShowContentDialog($('#ContextSettingsDialogContainerTLV'), [% Translate("Column Settings") | JSON %], '20%', 'Center', true,
         [
@@ -157,7 +152,6 @@ $('#ShowContextSettingsDialogTLV').bind('click', function (Event) {
     Event.stopPropagation();
     return false;
 });
-# EO KIX4OTRS-capeIT
 
 //]]></script>
 [% END %]

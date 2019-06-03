@@ -299,7 +299,6 @@ Core.UI.InputFields = (function (TargetNS) {
      *      and disabled the field if that is not the case.
      */
     function CheckAvailability($SelectObj, $SearchObj, $InputContainerObj) {
-
         // Handle form <select> elements that are disabled and elements that were
         //  disabled with Core.Form.DisableForm();
         if ($SelectObj.attr('disabled') || $SearchObj.data('form-disabled')) {

@@ -55,8 +55,7 @@ sub Run {
     if (
         $Param{Data}->{OldData}->{UserCustomerID} ne $Param{Data}->{NewData}->{UserCustomerID}
         || $Param{Data}->{OldData}->{UserLogin} ne $Param{Data}->{NewData}->{UserLogin}
-        )
-    {
+    ) {
 
         # get ticket object
         my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');

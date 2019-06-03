@@ -55,19 +55,22 @@ sub Run {
 
     return if $AgentData{UserPrintBehaviour} eq 'standard';
 
+    # get translation
+    my $OverlayTitle  = $LayoutObject->{LanguageObject}->Translate("Print");
+    my $OverlayHTML   = $LayoutObject->{LanguageObject}->Translate("Please select the type of printout");
+    my $PrintStandard = $LayoutObject->{LanguageObject}->Translate("Print Standard");
+    my $PrintRichtext = $LayoutObject->{LanguageObject}->Translate("Print Richtext");
+
     if ( $AgentData{UserPrintBehaviour} eq 'ask' ) {
-        my $AppendString = '
+        my $AppendString = <<"END";
 <script type="text/javascript">//<![CDATA[
     function TicketPrintRichtextInit(Element) {
-        var OverlayTitle  = \'' . $LayoutObject->{LanguageObject}->Translate("Print") . '\',
-            OverlayHTML   = \''
-            . $LayoutObject->{LanguageObject}->Translate("Please select the type of printout")
-            . '...\',
-            URL           = Element.attr(\'href\');
+        var OverlayTitle  = '$OverlayTitle',
+            OverlayHTML   = '$OverlayHTML...',
+            URL           = Element.attr('href'),
+            URLRichtext   = URL.replace("Action=AgentTicketPrint", "Action=AgentTicketPrintRichtext");
 
-        var URLRichtext = URL.replace("Action=AgentTicketPrint", "Action=AgentTicketPrintRichtext");
-
-        OverlayHTML = \'<div class="FieldOverlay">\' + OverlayHTML + \'</div>\';
+        OverlayHTML = '<div class="FieldOverlay">' + OverlayHTML + '</div>';
 
         Core.UI.Dialog.ShowDialog({
             Modal: true,
@@ -78,18 +81,18 @@ sub Run {
             CloseOnEscape: true,
             Buttons: [
                 {
-                    Label: \'' . $LayoutObject->{LanguageObject}->Translate("Print Standard") . '\',
+                    Label: '$PrintStandard',
                     Function: function() {
-                        Core.UI.Dialog.CloseDialog($(\'.Dialog:visible\'));
-                        Core.UI.Popup.OpenPopup(URL, \'TicketAction\');
+                        Core.UI.Dialog.CloseDialog(\$('.Dialog:visible'));
+                        Core.UI.Popup.OpenPopup(URL, 'TicketAction');
                         return false;
                     },
                 },
                 {
-                    Label: \'' . $LayoutObject->{LanguageObject}->Translate('Print Richtext') . '\',
+                    Label: '$PrintRichtext',
                     Function: function() {
-                        Core.UI.Dialog.CloseDialog($(\'.Dialog:visible\'));
-                        Core.UI.Popup.OpenPopup(URLRichtext, \'TicketAction\');
+                        Core.UI.Dialog.CloseDialog(\$('.Dialog:visible'));
+                        Core.UI.Popup.OpenPopup(URLRichtext, 'TicketAction');
                         return false;
                     },
                 },
@@ -99,7 +102,7 @@ sub Run {
         return false;
     }
 //]]></script>
-';
+END
 
         if ( $Param{Data} !~ /function TicketPrintRichtextInit/ ) {
             ${ $Param{Data} } .= $AppendString;
@@ -113,8 +116,8 @@ sub Run {
         }
     }
     elsif ( $AgentData{UserPrintBehaviour} eq 'printrichtext'
-        && ${ $Param{Data} } !~ /AgentTicketPrintRichtext/ )
-    {
+        && ${ $Param{Data} } !~ /AgentTicketPrintRichtext/
+    ) {
         ${ $Param{Data} } =~ s/AgentTicketPrint;/AgentTicketPrintRichtext;/g;
     }
 

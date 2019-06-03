@@ -55,11 +55,13 @@ sub Run {
     my $PreviousWord = $Self->GetArgument('previous-word');
 
     # We are looking for the command name
-    if ( $PreviousWord =~ m/otrs\.Console\.pl/xms ) {
+    if ( $PreviousWord =~ m/kix\.Console\.pl/xms ) {
 
         # Get all matching commands
         my @CommandList = $Self->ListAllCommands();
-        @CommandList = map { my $T = $_; $T =~ s/^Kernel::System::Console::Command:://xms; $T } @CommandList;
+        for my $Command ( @CommandList ) {
+            $Command =~ s/^Kernel::System::Console::Command:://xms;
+        }
         if ($CurrentWord) {
             @CommandList = grep { $_ =~ m/\Q$CurrentWord\E/xms } @CommandList;
         }
@@ -70,10 +72,10 @@ sub Run {
     else {
         # We need to extract the command name from the command line if present.
         my $CompLine = $ENV{COMP_LINE};
-        if ( !$CompLine || !$CompLine =~ m/otrs\.Console\.pl/ ) {
+        if ( !$CompLine || !$CompLine =~ m/kix\.Console\.pl/ ) {
             $Self->ExitCodeError()
         }
-        $CompLine =~ s/.*otrs\.Console\.pl\s*//xms;
+        $CompLine =~ s/.*kix\.Console\.pl\s*//xms;
         my @Elements = split( m/\s+/, $CompLine );
 
         # Try to create the command object to get its options
@@ -92,7 +94,7 @@ sub Run {
         }
 
         # Hide options that are already on the commandline
-        @Options = grep { $CompLine !~ m/(^|\s)\Q$_\E(\s|=|$)/xms } @Options;
+        @Options = grep { $CompLine !~ m/(?:^|\s)\Q$_\E(?:\s|=|$)/xms } @Options;
 
         print join( "\n", @Options );
     }

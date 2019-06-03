@@ -98,8 +98,7 @@ sub Run {
                 $Config->{ $Ticket{Type} . ':::' . $Ticket{State} }
                 || $Config->{ $Ticket{State} }
             )
-            )
-        {
+        ) {
             my $ConfigTicketValue = $Config->{ $Ticket{Type} . ':::' . $Ticket{State} }
                 || $Config->{ $Ticket{State} };
 

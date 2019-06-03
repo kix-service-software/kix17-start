@@ -3,13 +3,15 @@
 # based on the original work of:
 # Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file LICENSE for license information (AGPL). If you
-# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# This software comes with ABSOLUTELY NO WARRANTY. This program is
+# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
+# For details, see the enclosed files LICENSE (AGPL) and
+# LICENSE-GPL3 (GPL3) for license information. If you did not receive
+# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
+# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
 # --
 
 package Kernel::System::XML;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Require)
 
 use strict;
 use warnings;
@@ -21,7 +23,10 @@ our @ObjectDependencies = (
     'Kernel::System::DB',
     'Kernel::System::Encode',
     'Kernel::System::Log',
+    'Kernel::System::Main',
 );
+
+## no critic qw(BuiltinFunctions::ProhibitStringyEval)
 
 =head1 NAME
 
@@ -242,7 +247,7 @@ sub XMLHashGet {
         }
         $Content .= '$XMLHash' . $Data[0] . " = '$Data[1]';\n 1;\n";
     }
-    if ( $Content && !eval $Content ) {    ## no critic
+    if ( $Content && !eval( $Content ) ) {
         print STDERR "ERROR: XML.pm $@\n";
     }
 
@@ -763,8 +768,9 @@ sub XMLParse {
     # check cache
     if ($Checksum) {
         my $Cache = $CacheObject->Get(
-            Type => 'XMLParse',
-            Key  => $Checksum,
+            Type          => 'XMLParse',
+            Key           => $Checksum,
+            CacheInMemory => 0,
         );
         return @{$Cache} if $Cache;
     }
@@ -793,12 +799,15 @@ sub XMLParse {
     # load parse package and parse
     my $UseFallback = 1;
 
-    if ( eval 'require XML::Parser' ) {    ## no critic
+    if ( $Kernel::OM->Get('Kernel::System::Main')->Require('XML::Parser') ) {
         my $Parser = XML::Parser->new(
             Handlers => {
-                Start => sub { $Self->_HS(@_); },
-                End   => sub { $Self->_ES(@_); },
-                Char  => sub { $Self->_CS(@_); },
+                Start     => sub { $Self->_HS(@_); },
+                End       => sub { $Self->_ES(@_); },
+                Char      => sub { $Self->_CS(@_); },
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+                ExternEnt => sub { return '' },         # suppress loading of external entities
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
             },
         );
 
@@ -826,13 +835,16 @@ sub XMLParse {
     }
 
     if ($UseFallback) {
-        require XML::Parser::Lite;    ## no critic
+        require XML::Parser::Lite;
 
         my $Parser = XML::Parser::Lite->new(
             Handlers => {
-                Start => sub { $Self->_HS(@_); },
-                End   => sub { $Self->_ES(@_); },
-                Char  => sub { $Self->_CS(@_); },
+                Start     => sub { $Self->_HS(@_); },
+                End       => sub { $Self->_ES(@_); },
+                Char      => sub { $Self->_CS(@_); },
+### Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
+                ExternEnt => sub { return '' },         # suppress loading of external entities
+### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2019 OTRS AG, https://otrs.com/ ###
             },
         );
         $Parser->parse( $Param{String} );
@@ -849,10 +861,11 @@ sub XMLParse {
     # set cache
     if ($Checksum) {
         $CacheObject->Set(
-            Type  => 'XMLParse',
-            Key   => $Checksum,
-            Value => $Self->{XMLARRAY},
-            TTL   => 30 * 24 * 60 * 60,
+            Type          => 'XMLParse',
+            Key           => $Checksum,
+            Value         => $Self->{XMLARRAY},
+            TTL           => 30 * 24 * 60 * 60,
+            CacheInMemory => 0,
         );
     }
 

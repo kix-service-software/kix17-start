@@ -93,14 +93,15 @@ sub Run {
     );
 
     # do some highlightings
-    $Plain
-        =~ s/^((From|To|Cc|Bcc|Subject|Reply-To|Organization|X-Company|Content-Type|Content-Transfer-Encoding):.*)/<span class="Error">$1<\/span>/gmi;
+    my $PatternAttr    = '^((From|To|Cc|Bcc|Subject|Reply-To|Organization|X-Company|Content-Type|Content-Transfer-Encoding):.*)';
+    my $PatternBrowser = '^((X-Mailer|User-Agent|X-OS):.*(Mozilla|Win?|Outlook|Microsoft|Internet Mail Service).*)';
+
+    $Plain =~ s/$PatternAttr/<span class="Error">$1<\/span>/gmi;
     $Plain =~ s/^(Date:.*)/<span class="Error">$1<\/span>/m;
-    $Plain
-        =~ s/^((X-Mailer|User-Agent|X-OS):.*(Mozilla|Win?|Outlook|Microsoft|Internet Mail Service).*)/<span class="Error">$1<\/span>/gmi;
+    $Plain =~ s/$PatternBrowser/<span class="Error">$1<\/span>/gmi;
     $Plain =~ s/^((Resent-.*):.*)/<span class="Error">$1<\/span>/gmi;
     $Plain =~ s/^(From .*)/<span class="Error">$1<\/span>/gm;
-    $Plain =~ s/^(X-OTRS.*)/<span class="Error">$1<\/span>/gmi;
+    $Plain =~ s/^(X-OTRS.*|X-KIX.*)/<span class="Error">$1<\/span>/gmi;
 
     my $Output = $LayoutObject->Header(
         Type => 'Small',

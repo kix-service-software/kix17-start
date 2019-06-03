@@ -67,9 +67,9 @@ create a new Form ID
 =cut
 
 sub FormIDCreate {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return $Self->{Backend}->FormIDCreate(@_);
+    return $Self->{Backend}->FormIDCreate(%Param);
 }
 
 =item FormIDRemove()
@@ -81,9 +81,9 @@ remove all data for a provided Form ID
 =cut
 
 sub FormIDRemove {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return $Self->{Backend}->FormIDRemove(@_);
+    return $Self->{Backend}->FormIDRemove(%Param);
 }
 
 =item FormIDAddFile()
@@ -112,9 +112,9 @@ ContentID is optional (automatically generated if not given on disposition = inl
 =cut
 
 sub FormIDAddFile {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return $Self->{Backend}->FormIDAddFile(@_);
+    return $Self->{Backend}->FormIDAddFile(%Param);
 }
 
 =item FormIDRemoveFile()
@@ -129,9 +129,9 @@ removes a file from a form id
 =cut
 
 sub FormIDRemoveFile {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return $Self->{Backend}->FormIDRemoveFile(@_);
+    return $Self->{Backend}->FormIDRemoveFile(%Param);
 }
 
 =item FormIDGetAllFilesData()
@@ -147,9 +147,9 @@ returns an array with a hash ref of all files for a Form ID
 =cut
 
 sub FormIDGetAllFilesData {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return @{ $Self->{Backend}->FormIDGetAllFilesData(@_) };
+    return @{ $Self->{Backend}->FormIDGetAllFilesData(%Param) };
 }
 
 =item FormIDGetAllFilesMeta()
@@ -167,9 +167,9 @@ Note: returns no content, only meta data.
 =cut
 
 sub FormIDGetAllFilesMeta {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return @{ $Self->{Backend}->FormIDGetAllFilesMeta(@_) };
+    return @{ $Self->{Backend}->FormIDGetAllFilesMeta(%Param) };
 }
 
 =item FormIDCleanUp()
@@ -183,9 +183,9 @@ Each file older than 1 day will be removed.
 =cut
 
 sub FormIDCleanUp {
-    my $Self = shift;
+    my ( $Self, %Param ) = @_;
 
-    return $Self->{Backend}->FormIDCleanUp(@_);
+    return $Self->{Backend}->FormIDCleanUp(%Param);
 }
 
 1;

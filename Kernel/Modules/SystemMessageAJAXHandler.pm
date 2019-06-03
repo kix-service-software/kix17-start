@@ -61,15 +61,17 @@ sub Run {
 
     # get user preferences
     my %Preferences;
-    if ( $Self->{UserType} eq 'Customer' ) {
-        %Preferences = $CustomerUserObject->GetPreferences(
-            UserID => $Self->{UserID},
-        );
-    }
-    elsif ( $Self->{UserType} eq 'User' ) {
-        %Preferences = $UserObject->GetPreferences(
-            UserID => $Self->{UserID},
-        );
+    if ( defined( $Self->{UserType} ) ) {
+        if ( $Self->{UserType} eq 'Customer' ) {
+            %Preferences = $CustomerUserObject->GetPreferences(
+                UserID => $Self->{UserID},
+            );
+        }
+        elsif ( $Self->{UserType} eq 'User' ) {
+            %Preferences = $UserObject->GetPreferences(
+                UserID => $Self->{UserID},
+            );
+        }
     }
 
     my %UserReads;

@@ -56,15 +56,13 @@ sub Run {
     # execute prog
     my $TmpFile = $Kernel::OM->Get('Kernel::Config')->Get('TempDir') . "/PostMaster.Filter.CMD.$$";
 
-    ## no critic
     if ( open my $Prog, '|-', "$Config{CMD} > $TmpFile" ) {
-        ## use critic
         print $Prog $Self->{ParserObject}->GetPlainEmail();
         close $Prog;
     }
 
     if ( -s $TmpFile ) {
-        open my $In, '<', $TmpFile;    ## no critic
+        open my $In, '<', $TmpFile or die "Can't open '$TmpFile': ?!";
         my $Ret = <$In>;
         close $In;
 

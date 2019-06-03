@@ -119,14 +119,14 @@ sub StatsParamsWidget {
     my $Format = $Param{Formats} || $ConfigObject->Get('Stats::Format');
 
     my $LocalGetParam = sub {
-        my (%Param) = @_;
-        my $Param = $Param{Param};
+        my (%LocalParam) = @_;
+        my $Param = $LocalParam{Param};
         return $HasUserGetParam ? $UserGetParam{$Param} : $ParamObject->GetParam( Param => $Param );
     };
 
     my $LocalGetArray = sub {
-        my (%Param) = @_;
-        my $Param = $Param{Param};
+        my (%LocalParam) = @_;
+        my $Param = $LocalParam{Param};
         if ($HasUserGetParam) {
             if ( $UserGetParam{$Param} && ref $UserGetParam{$Param} eq 'ARRAY' ) {
                 return @{ $UserGetParam{$Param} };
@@ -183,13 +183,12 @@ sub StatsParamsWidget {
         return;    # no possible output format
     }
 
-# provide the time zone field only, if the system use UTC as system time, the TimeZoneUser is active and for dynamic statistics
+    # provide the time zone field only, if the system use UTC as system time, the TimeZoneUser is active and for dynamic statistics
     if (
         !$Kernel::OM->Get('Kernel::System::Time')->ServerLocalTimeOffsetSeconds()
         && $ConfigObject->Get('TimeZoneUser')
         && $Stat->{StatType} eq 'dynamic'
-        )
-    {
+    ) {
         my %TimeZoneBuildSelection = $Self->_TimeZoneBuildSelection();
 
         my %Frontend;
@@ -235,11 +234,9 @@ sub StatsParamsWidget {
         PARAMITEM:
         for my $ParamItem ( @{$Params} ) {
 
-            # KIX4OTRS-capeIT
             # include type 'Date' for date selection in static stats...
             my $Prefix = $ParamItem->{Name};
-            if ( $ParamItem->{Name} && $ParamItem->{Format} && $ParamItem->{Format} =~ m/Date/ )
-            {
+            if ( $ParamItem->{Name} && $ParamItem->{Format} && $ParamItem->{Format} =~ m/Date/ ) {
                 $Prefix =~ s/Date$//g;
                 $LayoutObject->Block(
                     Name => 'ItemParam',
@@ -261,8 +258,7 @@ sub StatsParamsWidget {
                 $ParamItem->{Name}
                 && $ParamItem->{Format}
                 && $ParamItem->{Format} =~ m/String/
-                )
-            {
+            ) {
                 $LayoutObject->Block(
                     Name => 'ItemParam',
                     Data => {
@@ -277,34 +273,23 @@ sub StatsParamsWidget {
             # include select box
             elsif ( !$ParamItem->{Format} || $ParamItem->{Format} ne 'Hidden' ) {
 
-                # EO KIX4OTRS-capeIT
-
                 $LayoutObject->Block(
                     Name => 'ItemParam',
                     Data => {
                         Param => $ParamItem->{Frontend},
                         Name  => $ParamItem->{Name},
                         Field => $LayoutObject->BuildSelection(
-
-                            # KIX4OTRS-capeIT
                             %{$ParamItem},
-
-                            # EO KIX4OTRS-capeIT
-
                             Data       => $ParamItem->{Data},
                             Name       => $ParamItem->{Name},
                             SelectedID => $LocalGetParam->( Param => $ParamItem->{Name} ) // $ParamItem->{SelectedID} || '',
-                            Multiple => $ParamItem->{Multiple} || 0,
-                            Size     => $ParamItem->{Size}     || '',
-                            Class    => 'Modernize',
+                            Multiple   => $ParamItem->{Multiple} || 0,
+                            Size       => $ParamItem->{Size}     || '',
+                            Class      => 'Modernize',
                         ),
                     },
                 );
-
-                # KIX4OTRS-capeIT
             }
-
-            # EO KIX4OTRS-capeIT
         }
     }
 
@@ -334,8 +319,7 @@ sub StatsParamsWidget {
                 if ( !$ObjectAttribute->{SelectedValues}[0] ) {
                     if (
                         $ObjectAttribute->{Values} && ref $ObjectAttribute->{Values} ne 'HASH'
-                        )
-                    {
+                    ) {
                         $Kernel::OM->Get('Kernel::System::Log')->Log(
                             Priority => 'error',
                             Message  => 'Values needs to be a hash reference!'
@@ -846,8 +830,7 @@ sub GeneralSpecificationsWidget {
             ( $Stat->{StatType} && $Stat->{StatType} eq 'dynamic' )
             || ( $Frontend{StatType} && $Frontend{StatType} eq 'dynamic' )
         )
-        )
-    {
+    ) {
 
         my %TimeZoneBuildSelection = $Self->_TimeZoneBuildSelection();
 
@@ -859,7 +842,7 @@ sub GeneralSpecificationsWidget {
         );
     }
 
-    my $Output .= $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'Statistics/GeneralSpecificationsWidget',
         Data         => {
             %Frontend,
@@ -960,7 +943,7 @@ sub XAxisWidget {
         );
     }
 
-    my $Output .= $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'Statistics/XAxisWidget',
         Data         => {
             %{$Stat},
@@ -1056,7 +1039,7 @@ sub YAxisWidget {
         );
     }
 
-    my $Output .= $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'Statistics/YAxisWidget',
         Data         => {
             %{$Stat},
@@ -1099,8 +1082,7 @@ sub RestrictionsWidget {
         if (
             $ObjectAttribute->{Block} eq 'MultiSelectField'
             || $ObjectAttribute->{Block} eq 'SelectField'
-            )
-        {
+        ) {
             my $DFTreeClass = ( $ObjectAttribute->{ShowAsTree} && $ObjectAttribute->{IsDynamicField} )
                 ? 'DynamicFieldWithTreeView' : '';
 
@@ -1153,7 +1135,7 @@ sub RestrictionsWidget {
         );
     }
 
-    my $Output .= $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'Statistics/RestrictionsWidget',
         Data         => {
             %{$Stat},
@@ -1187,7 +1169,7 @@ sub PreviewWidget {
         );
     }
 
-    my $Output .= $LayoutObject->Output(
+    my $Output = $LayoutObject->Output(
         TemplateFile => 'Statistics/PreviewWidget',
         Data         => {
             %{$Stat},
@@ -1212,14 +1194,14 @@ sub StatsParamsGet {
     my $TimeObject   = $Kernel::OM->Get('Kernel::System::Time');
 
     my $LocalGetParam = sub {
-        my (%Param) = @_;
-        my $Param = $Param{Param};
+        my (%LocalParam) = @_;
+        my $Param = $LocalParam{Param};
         return $HasUserGetParam ? $UserGetParam{$Param} : $ParamObject->GetParam( Param => $Param );
     };
 
     my $LocalGetArray = sub {
-        my (%Param) = @_;
-        my $Param = $Param{Param};
+        my (%LocalParam) = @_;
+        my $Param = $LocalParam{Param};
         if ($HasUserGetParam) {
             if ( $UserGetParam{$Param} && ref $UserGetParam{$Param} eq 'ARRAY' ) {
                 return @{ $UserGetParam{$Param} };
@@ -1236,8 +1218,7 @@ sub StatsParamsGet {
         !$TimeObject->ServerLocalTimeOffsetSeconds()
         && $ConfigObject->Get('TimeZoneUser')
         && length $LocalGetParam->( Param => 'TimeZone' )
-        )
-    {
+    ) {
         $GetParam{TimeZone} = $LocalGetParam->( Param => 'TimeZone' ) // $Stat->{TimeZone};
     }
 
@@ -1313,16 +1294,14 @@ sub StatsParamsGet {
                             !IsArrayRefWithData( $Element->{SelectedValues} )
                             || scalar @{ $Element->{SelectedValues} } > 1
                         )
-                        )
-                    {
+                    ) {
 
                         my @Values = sort keys %{ $Element->{Values} };
 
                         if (
                             IsArrayRefWithData( $Element->{SelectedValues} )
                             && scalar @{ $Element->{SelectedValues} } > 1
-                            )
-                        {
+                        ) {
                             @Values = @{ $Element->{SelectedValues} };
                         }
 
@@ -1349,10 +1328,6 @@ sub StatsParamsGet {
 
                         # Check if it is an absolute time period
                         if ( $Element->{TimeStart} ) {
-
-                            # get time object
-                            my $TimeObject = $Kernel::OM->Get('Kernel::System::Time');
-
                             if ( $LocalGetParam->( Param => $ElementName . 'StartYear' ) ) {
                                 for my $Limit (qw(Start Stop)) {
                                     for my $Unit (qw(Year Month Day Hour Minute Second)) {
@@ -1478,8 +1453,7 @@ sub StatsParamsGet {
                     && $GetParam{UseAsValueSeries}[0]{Block} ne 'Time'
                 )
             )
-            )
-        {
+        ) {
 
             my $ScalePeriod = $Self->_TimeInSeconds(
                 TimeUnit => $GetParam{UseAsXvalue}[0]{SelectedValues}[0]
@@ -1490,8 +1464,7 @@ sub StatsParamsGet {
             if (
                 ( $TimePeriod + $TimeUpcomingPeriod ) / ( $ScalePeriod * $GetParam{UseAsXvalue}[0]{TimeScaleCount} )
                 > $MaxAttr
-                )
-            {
+            ) {
                 push @Errors, Translatable('The selected time period is larger than the allowed time period.');
             }
         }
@@ -1590,7 +1563,7 @@ sub StatsResultRender {
             );
             $UserCSVSeparator = $UserData{UserCSVSeparator} if $UserData{UserCSVSeparator};
         }
-        my $Output .= $CSVObject->Array2CSV(
+        my $Output = $CSVObject->Array2CSV(
             Head      => $HeadArrayRef,
             Data      => \@StatArray,
             Separator => $UserCSVSeparator,
@@ -1605,7 +1578,7 @@ sub StatsResultRender {
 
     # generate excel output
     elsif ( $Param{Format} eq 'Excel' ) {
-        my $Output .= $CSVObject->Array2CSV(
+        my $Output = $CSVObject->Array2CSV(
             Head   => $HeadArrayRef,
             Data   => \@StatArray,
             Format => 'Excel',
@@ -1717,8 +1690,7 @@ sub StatsConfigurationValidate {
                     elsif (
                         !$Xvalue->{TimeRelativeUnit}
                         || ( !$Xvalue->{TimeRelativeCount} && !$Xvalue->{TimeRelativeUpcomingCount} )
-                        )
-                    {
+                    ) {
                         $XAxisFieldErrors{ $Xvalue->{Element} }
                             = Translatable('There is something wrong with your time selection.');
                     }
@@ -1867,8 +1839,7 @@ sub StatsConfigurationValidate {
                     elsif (
                         !$Restriction->{TimeRelativeUnit}
                         || ( !$Restriction->{TimeRelativeCount} && !$Restriction->{TimeRelativeUpcomingCount} )
-                        )
-                    {
+                    ) {
                         $RestrictionsFieldErrors{ $Restriction->{Element} }
                             = Translatable('There is something wrong with your time selection.');
                     }
@@ -1945,8 +1916,7 @@ sub StatsConfigurationValidate {
         && !%YAxisFieldErrors
         && !@YAxisGeneralErrors
         && !%RestrictionsFieldErrors
-        )
-    {
+    ) {
         return 1;
     }
 
@@ -2037,8 +2007,7 @@ sub _TimeOutput {
                 if (
                     $Param{ 'Time' . $_ }
                     && $Param{ 'Time' . $_ } =~ m{^(\d\d\d\d)-(\d\d)-(\d\d)\s(\d\d):(\d\d):(\d\d)$}xi
-                    )
-                {
+                ) {
                     $TimeConfig{ $Element . $_ . 'Year' }   = $1;
                     $TimeConfig{ $Element . $_ . 'Month' }  = $2;
                     $TimeConfig{ $Element . $_ . 'Day' }    = $3;
@@ -2369,8 +2338,7 @@ sub _ColumnAndRowTranslation {
             $Param{StatRef}->{StatType} eq 'dynamic'
             && $Param{StatRef}->{$Use}
             && ref( $Param{StatRef}->{$Use} ) eq 'ARRAY'
-            )
-        {
+        ) {
             my @Array = @{ $Param{StatRef}->{$Use} };
 
             ELEMENT:
@@ -2391,8 +2359,7 @@ sub _ColumnAndRowTranslation {
                     $Element->{Translation}
                     && $Element->{Block} ne 'Time'
                     && !$Element->{SortIndividual}
-                    )
-                {
+                ) {
                     $Sort{$Use} = 1;
                 }
                 last ELEMENT;

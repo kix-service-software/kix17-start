@@ -61,8 +61,7 @@ sub Run {
     if (
         !defined $Param{SignKeyID}
         || ( $Param{ExpandCustomerName} && $Param{ExpandCustomerName} == 3 )
-        )
-    {
+    ) {
 
         # get default signing key
         if ( $Param{QueueID} ) {

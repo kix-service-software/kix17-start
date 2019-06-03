@@ -104,8 +104,7 @@ sub _MovePossible {
         %ServiceData
         && $ServiceData{AssignedQueueID}
         && $ServiceData{AssignedQueueID}
-        )
-    {
+    ) {
         $Result = '0';
     }
 

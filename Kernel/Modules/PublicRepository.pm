@@ -52,7 +52,7 @@ sub Run {
     my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
 
     # get repository index
-    if ( $File =~ /otrs.xml$/ ) {
+    if ( $File =~ /kix.xml$/ ) {
 
         # get repository index
         my $Index = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>";
@@ -67,7 +67,7 @@ sub Run {
         $Index .= "</otrs_package_list>\n";
         return $LayoutObject->Attachment(
             Type        => 'inline',     # inline|attachment
-            Filename    => 'otrs.xml',
+            Filename    => 'kix.xml',
             ContentType => 'text/xml',
             Content     => $Index,
         );

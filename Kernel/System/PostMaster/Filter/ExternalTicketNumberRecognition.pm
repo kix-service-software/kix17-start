@@ -56,8 +56,10 @@ sub Run {
     # check if sender is of interest
     return 1 if !$Param{GetParam}->{From};
 
-    if ( defined $Param{JobConfig}->{FromAddressRegExp} && $Param{JobConfig}->{FromAddressRegExp} )
-    {
+    if (
+        defined $Param{JobConfig}->{FromAddressRegExp}
+        && $Param{JobConfig}->{FromAddressRegExp}
+    ) {
 
         if ( $Param{GetParam}->{From} !~ /$Param{JobConfig}->{FromAddressRegExp}/i ) {
             return 1;
@@ -208,7 +210,6 @@ sub Run {
         my $TicketHookDivider = $ConfigObject->Get('Ticket::HookDivider');
         $Param{GetParam}->{Subject} .= " [$TicketHook$TicketHookDivider$TicketNumber]";
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
         # set sender type and article type.
         $Param{GetParam}->{'X-KIX-FollowUp-SenderType'}  = $Param{JobConfig}->{SenderType};
         $Param{GetParam}->{'X-KIX-FollowUp-ArticleType'} = $Param{JobConfig}->{ArticleType};
@@ -227,7 +228,6 @@ sub Run {
             );
         }
 
-#rbo - T2016121190001552 - renamed X-OTRS headers
         # get the dynamic field name and description from JobConfig, set as headers
         my $TicketDynamicFieldName = $Param{JobConfig}->{'DynamicFieldName'};
         $Param{GetParam}->{ 'X-KIX-DynamicField-' . $TicketDynamicFieldName } = $Self->{Number};

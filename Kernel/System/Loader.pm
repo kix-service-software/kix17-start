@@ -13,11 +13,7 @@ package Kernel::System::Loader;
 use strict;
 use warnings;
 
-# KIX4OTRS-capeIT
-use vars qw(@ISA);
 use File::Find;
-
-# EO KIX4OTRS-capeIT
 
 use CSS::Minifier qw();
 use JavaScript::Minifier qw();
@@ -407,7 +403,6 @@ sub CacheGenerate {
     my @Result;
 
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    ## nofilter(TidyAll::Plugin::OTRS::Perl::LayoutObject)
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     my %AgentFrontends = %{ $ConfigObject->Get('Frontend::Module') // {} };
@@ -488,11 +483,6 @@ sub CacheDelete {
     for my $FolderToDelete (@CacheFoldersList) {
         next FOLDERTODELETE if ( !-d $FolderToDelete );
 
-        # KIX4OTRS-capeIT
-        #        my @FilesList = $Self->{MainObject}->DirectoryRead(
-        #            Directory => $FolderToDelete,
-        #            Filter    => \@FileTypes,
-        #        );
         my $DirectorySearchSubRef = sub {
             my $File = $File::Find::name;
             return if !-f $File;
@@ -508,8 +498,6 @@ sub CacheDelete {
             }
         };
         File::Find::find( $DirectorySearchSubRef, $FolderToDelete );
-
-        # EO KIX4OTRS-capeIT
     }
 
     # finally, also clean up the internal perl cache files

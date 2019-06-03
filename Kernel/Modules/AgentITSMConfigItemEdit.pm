@@ -51,10 +51,7 @@ sub Run {
     # get config of frontend module
     $Self->{Config} = $ConfigObject->Get("ITSMConfigItem::Frontend::$Self->{Action}");
 
-    # KIX4OTRS-capeIT
     $Param{PreEventErrorScreen} = '';
-
-    # EO KIX4OTRS-capeIT
 
     # get needed data
     if ( $ConfigItem->{ConfigItemID} && $ConfigItem->{ConfigItemID} ne 'NEW' ) {
@@ -72,11 +69,8 @@ sub Run {
             ConfigItemID => $ConfigItem->{ConfigItemID},
         );
 
-        # KIX4OTRS-capeIT
         # remember do not show header and footer on pre event error
         $Param{PreEventErrorScreen} = $ParamObject->GetParam( Param => 'PreEventErrorScreen' ) || 'Without';
-
-        # EO KIX4OTRS-capeIT
     }
     elsif ($DuplicateID) {
 
@@ -252,8 +246,7 @@ sub Run {
         if (
             IsStringWithData( $Version->{Name} )
             && $ConfigObject->Get('UniqueCIName::EnableUniquenessCheck')
-            )
-        {
+        ) {
 
             if ( $ConfigObject->{Debug} > 0 ) {
                 $LogObject->Log(
@@ -318,12 +311,6 @@ sub Run {
 
             if ( $ConfigItem->{ConfigItemID} eq 'NEW' ) {
 
-                # KIX4OTRS-capeIT
-                #     $ConfigItem->{ConfigItemID} = $ConfigItemObject->ConfigItemAdd(
-                #         ClassID => $ConfigItem->{ClassID},
-                #         UserID  => $Self->{UserID},
-                #     );
-
                 my $Result = $ConfigItemObject->ConfigItemAdd(
                     ClassID => $ConfigItem->{ClassID},
                     UserID  => $Self->{UserID},
@@ -347,9 +334,6 @@ sub Run {
                 else {
                     $AllRequired = 0;
                 }
-
-                # EO KIX4OTRS-capeIT
-
             }
 
             # get all attachments from upload cache
@@ -432,14 +416,6 @@ sub Run {
             }
 
             # add version
-            # KIX4OTRS-capeIT
-            # $ConfigItemObject->VersionAdd(
-            #     %{$Version},
-            #     ConfigItemID => $ConfigItem->{ConfigItemID},
-            #     DefinitionID => $XMLDefinition->{DefinitionID},
-            #     UserID       => $Self->{UserID},
-            # );
-
             if ( $AllRequired && $ConfigItem->{ConfigItemID} ) {
                 my $Result = $ConfigItemObject->VersionAdd(
                     %{$Version},
@@ -462,58 +438,30 @@ sub Run {
                 }
                 else {
 
-                    # EO KIX4OTRS-capeIT
                     # redirect to zoom mask
                     my $ScreenType = $ParamObject->GetParam( Param => 'ScreenType' ) || 0;
                     if ($ScreenType) {
 
-                my $URL = "Action=AgentITSMConfigItemZoom;ConfigItemID=$ConfigItem->{ConfigItemID}";
+                        my $URL = "Action=AgentITSMConfigItemZoom;ConfigItemID=$ConfigItem->{ConfigItemID}";
 
                         # return to overview or search results instead if called Duplicate from row action
                         if (
                             $Self->{LastScreenView} eq 'Action=AgentITSMConfigItem'
-                    || $Self->{LastScreenView} =~ m{\A Action=AgentITSMConfigItem(?: Search)?;}msx
-                            )
-                        {
+                            || $Self->{LastScreenView} =~ m{\A Action=AgentITSMConfigItem(?: Search)?;}msx
+                        ) {
                             $URL = $Self->{LastScreenView};
                         }
-                return $LayoutObject->PopupClose(
+                        return $LayoutObject->PopupClose(
                             URL => $URL,
                         );
                     }
                     else {
-                return $LayoutObject->Redirect(
-                    OP => "Action=AgentITSMConfigItemZoom;ConfigItemID=$ConfigItem->{ConfigItemID}",
+                        return $LayoutObject->Redirect(
+                            OP => "Action=AgentITSMConfigItemZoom;ConfigItemID=$ConfigItem->{ConfigItemID}",
                         );
                     }
-
-                    # KIX4OTRS-capeIT
                 }
             }
-
-          # redirect to zoom mask
-          # my $ScreenType = $ParamObject->GetParam( Param => 'ScreenType' ) || 0;
-          # if ($ScreenType) {
-          #     my $URL = "Action=AgentITSMConfigItemZoom;ConfigItemID=$ConfigItem->{ConfigItemID}";
-          #
-          #     # return to overview or search results instead if called Duplicate from row action
-          #     if (
-          #         $Self->{LastScreenView} eq 'Action=AgentITSMConfigItem'
-          #         || $Self->{LastScreenView} =~ m{\A Action=AgentITSMConfigItem(?: Search)?;}msx
-          #         )
-          #     {
-          #         $URL = $Self->{LastScreenView};
-          #     }
-          #     return $LayoutObject->PopupClose(
-          #         URL => $URL,
-          #     );
-          # }
-          # else {
-          #     return $LayoutObject->Redirect(
-          #         OP => "Action=AgentITSMConfigItemZoom;ConfigItemID=$ConfigItem->{ConfigItemID}",
-          #     );
-          # }
-          # EO KIX4OTRS-capeIT
         }
     }
     elsif ($DuplicateID) {
@@ -575,8 +523,7 @@ sub Run {
         IsStringWithData($RowNameInvalid)
         && !IsArrayRefWithData($NameDuplicates)
         && !$CINameRegexErrorMessage
-        )
-    {
+    ) {
 
         if ( $ConfigObject->{Debug} > 0 ) {
             $LogObject->Log(
@@ -718,7 +665,6 @@ sub Run {
         );
     }
 
-    # KIX4OTRS-capeIT
     # load KIXSidebar
     $Param{KIXSidebarContent} = $LayoutObject->AgentKIXSidebar(
         %Param,
@@ -726,15 +672,10 @@ sub Run {
         Action => $Self->{Action}
     );
 
-    # EO KIX4OTRS-capeIT
-
     my $Output = '';
 
-    # KIX4OTRS-capeIT
-    # if ( ( $ConfigItem->{ConfigItemID} && $ConfigItem->{ConfigItemID} ne 'NEW' ) || $DuplicateID ) {
     if ( ( $ConfigItem->{ConfigItemID} && $ConfigItem->{ConfigItemID} ne 'NEW' && $Param{PreEventErrorScreen} eq 'Without' ) || $DuplicateID ) {
 
-        # EO KIX4OTRS-capeIT
         # output block
         $LayoutObject->Block(
             Name => 'StartSmall',
@@ -764,11 +705,8 @@ sub Run {
         $Output .= $LayoutObject->Footer( Type => 'Small' );
     }
     else {
-        # KIX4OTRS-capeIT
         # remember header and footer should be shown if pre event error
         $Param{PreEventErrorScreen} = 'With';
-
-        # EO KIX4OTRS-capeIT
 
         # Necessary stuff for Add New
         # get class list
@@ -778,14 +716,14 @@ sub Run {
 
         # check for access rights
         for my $ClassID ( sort keys %{$ClassList} ) {
-            my $HasAccess = $ConfigItemObject->Permission(
+            my $AccessOK = $ConfigItemObject->Permission(
                 Type    => $Self->{Config}->{Permission},
                 Scope   => 'Class',
                 ClassID => $ClassID,
                 UserID  => $Self->{UserID},
             );
 
-            delete $ClassList->{$ClassID} if !$HasAccess;
+            delete $ClassList->{$ClassID} if !$AccessOK;
         }
 
         # generate ClassOptionStrg
@@ -1124,8 +1062,7 @@ sub _XMLFormOutput {
                 if (
                     $DataPresentMode
                     && defined $Param{XMLData}->{ $Item->{Key} }->[$Counter]->{Content}
-                    )
-                {
+                ) {
                     $XMLFormOutputParam{XMLData} = $Param{XMLData}->{ $Item->{Key} }->[$Counter];
                 }
 

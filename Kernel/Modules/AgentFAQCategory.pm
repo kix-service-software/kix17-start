@@ -480,7 +480,7 @@ sub Run {
                 for my $CategoryID ( @{$AffectedSubCategories} ) {
 
                     # get category
-                    my %CategoryData = $FAQObject->CategoryGet(
+                    my %SubCategoryData = $FAQObject->CategoryGet(
                         CategoryID => $CategoryID,
                         UserID     => $Self->{UserID},
                     );
@@ -489,12 +489,12 @@ sub Run {
                     $CategoryData{LongName} = $CategoryLongNames->{$CategoryID};
 
                     # check category
-                    next CATEGORYID if !%CategoryData;
+                    next CATEGORYID if !%SubCategoryData;
 
                     $LayoutObject->Block(
                         Name => 'AffectedSubCategoriesRow',
                         Data => {
-                            %CategoryData,
+                            %SubCategoryData,
                             %Param,
                         },
                     );

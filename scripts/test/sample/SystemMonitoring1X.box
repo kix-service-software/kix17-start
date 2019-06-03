@@ -1,5 +1,5 @@
 Return-Path: <nagios@example.com>
-To: otrs@example.com
+To: kix@example.com
 Subject: ** PROBLEM alert 1 - ANDROMEDA host is DOWN **
 Message-Id: <20070317231546.0DFD55DC00F@h53795.example.com>
 Date: Sun, 18 Mar 2007 00:15:46 +0100 (CET)

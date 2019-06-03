@@ -310,8 +310,7 @@ sub Upload {
                             && $QGRConfig->{ShortcutMappings}
                             && ref( $QGRConfig->{ShortcutMappings} ) eq 'HASH'
                             && $QGRConfig->{ShortcutMappings}->{'rw'}
-                            )
-                        {
+                        ) {
                             %ShortcutMappings = %{ $QGRConfig->{ShortcutMappings} };
                             for my $SystemPermission ( keys %ShortcutMappings ) {
                                 $Permission{$SystemPermission} =
@@ -405,8 +404,7 @@ sub QGRShow {
         && $QGRConfig->{ShortcutMappings}
         && ref( $QGRConfig->{ShortcutMappings} ) eq 'HASH'
         && $QGRConfig->{ShortcutMappings}->{'rw'}
-        )
-    {
+    ) {
         %ShortcutMappings = %{ $QGRConfig->{ShortcutMappings} };
     }
 

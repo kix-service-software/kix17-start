@@ -195,8 +195,7 @@ sub TableCreateComplex {
 
     # create the column list
     my @EnabledColumns = ();
-    if ( defined $Param{EnabledColumns}->{Person} && scalar @{ $Param{EnabledColumns}->{Person} } )
-    {
+    if ( defined $Param{EnabledColumns}->{Person} && scalar @{ $Param{EnabledColumns}->{Person} } ) {
         # create config from enabled columns
         @EnabledColumns = @{ $Param{EnabledColumns}->{Person} };
     }
@@ -228,8 +227,7 @@ sub TableCreateComplex {
     for my $PersonID (
         sort { $LinkList{$a}{Data}->{UserLastname} cmp $LinkList{$b}{Data}->{UserLastname} }
         keys %LinkList
-        )
-    {
+    ) {
 
         # extract persons data
         my %Person = %{ $LinkList{$PersonID}{Data} };
@@ -390,8 +388,7 @@ sub ContentStringCreate {
         ref( $Param{ContentData} ) eq "HASH"
         && $Param{ContentData}->{ObjectType}
         && $Param{ContentData}->{ObjectType} eq 'Person'
-        )
-    {
+    ) {
         my %CData = %{ $Param{ContentData} };
         my $Css   = '';
         if ( $CData{LinkInfo} && $CData{LinkInfo} eq "NoLink" ) {

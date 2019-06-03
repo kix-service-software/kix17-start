@@ -119,8 +119,7 @@ sub Run {
     if (
         defined $Param{Config}->{Queue}
         && $Param{Config}->{Queue} ne $Param{Ticket}->{Queue}
-        )
-    {
+    ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketQueueSet(
             Queue    => $Param{Config}->{Queue},
             TicketID => $Param{Ticket}->{TicketID},
@@ -130,8 +129,7 @@ sub Run {
     elsif (
         defined $Param{Config}->{QueueID}
         && $Param{Config}->{QueueID} ne $Param{Ticket}->{QueueID}
-        )
-    {
+    ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketQueueSet(
             QueueID  => $Param{Config}->{QueueID},
             TicketID => $Param{Ticket}->{TicketID},

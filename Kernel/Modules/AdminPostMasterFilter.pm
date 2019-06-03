@@ -61,6 +61,24 @@ sub Run {
     }
 
     # ------------------------------------------------------------ #
+    # clone
+    # ------------------------------------------------------------ #
+    elsif ( $Self->{Subaction} eq 'Clone' ) {
+
+        # get filter data
+        my %Data = $PostMasterFilter->FilterGet( Name => $Name );
+        if ( !%Data ) {
+            return $LayoutObject->ErrorScreen(
+                Message => $LayoutObject->{LanguageObject}->Translate( 'No such filter: %s', $Name ),
+            );
+        }
+        $Data{Name} = '';
+        return $Self->_MaskUpdate(
+            Data => \%Data,
+        );
+    }
+
+    # ------------------------------------------------------------ #
     # add action
     # ------------------------------------------------------------ #
     elsif ( $Self->{Subaction} eq 'AddAction' ) {
@@ -78,8 +96,9 @@ sub Run {
             );
         }
         return $Self->_MaskUpdate(
-            Name => $Name,
-            Data => \%Data,
+            Name    => $Name,
+            OldName => $Name,
+            Data    => \%Data,
         );
     }
 
@@ -142,11 +161,21 @@ sub Run {
             $Errors{"NameInvalid"} = 'ServerError';
         }
 
+        # If it's not edit action, verify there is no filters with same name.
+        if ( $Name ne $OldName ) {
+            my %Data = $PostMasterFilter->FilterGet( Name => $Name );
+            if (%Data) {
+                $Errors{"NameInvalid"} = 'ServerError';
+                $Errors{"Duplicate"}   = 1;
+            }
+        }
+
         if (%Errors) {
             return $Self->_MaskUpdate(
                 Name => $Name,
                 Data => {
                     %Errors,
+                    OldName        => $OldName,
                     Name           => $Name,
                     Set            => \%Set,
                     Match          => \%Match,
@@ -246,6 +275,13 @@ sub _MaskUpdate {
     $LayoutObject->Block( Name => 'ActionList' );
     $LayoutObject->Block( Name => 'ActionOverview' );
 
+    if ( $Param{Name} ) {
+        $LayoutObject->Block(
+            Name => 'ActionClone',
+            Data => \%Param,
+        );
+    }
+
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # all headers
@@ -258,7 +294,6 @@ sub _MaskUpdate {
         ResultType => 'HASH',
     );
     for my $DynamicField ( values %$DynamicFields ) {
-        #rbo - T2016121190001552 - renamed X-OTRS headers
         push @Headers, 'X-KIX-DynamicField-' . $DynamicField;
         push @Headers, 'X-KIX-FollowUp-DynamicField-' . $DynamicField;
     }
@@ -267,7 +302,7 @@ sub _MaskUpdate {
     $Header{''} = '-';
     $Header{Body} = 'Body';
 
-    # otrs header
+    # kix header
     my %SetHeader = ();
     for my $HeaderKey ( sort keys %Header ) {
         if ( $HeaderKey =~ /^x-(otrs|kix)/i ) {
@@ -311,12 +346,24 @@ sub _MaskUpdate {
         Name => 'OverviewUpdate',
         Data => {
             %Param, %Data,
-            OldName => $Data{Name},
         },
     );
 
+    if ( $Param{Data}->{Duplicate} ) {
+        $LayoutObject->Block(
+            Name => 'ExistNameServerError',
+        );
+    } elsif ( $Param{Data}->{NameInvalid} ) {
+        $LayoutObject->Block(
+            Name => 'NameServerError',
+        );
+    }
+
     # shows header
-    if ( $Self->{Subaction} eq 'AddAction' ) {
+    if (
+        $Self->{Subaction} eq 'AddAction'
+        || $Self->{Subaction} eq 'Clone'
+    ) {
         $LayoutObject->Block( Name => 'HeaderAdd' );
     }
     else {

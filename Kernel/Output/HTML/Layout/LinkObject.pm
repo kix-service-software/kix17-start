@@ -59,11 +59,7 @@ sub LinkObjectTableCreate {
     if ( $Param{ViewMode} =~ m{ \A Simple }xms ) {
 
         return $Self->LinkObjectTableCreateSimple(
-
-            # KIX4OTRS-capeIT
             %Param,
-
-            # EO KIX4OTRS-capeIT
             LinkListWithData => $Param{LinkListWithData},
             ViewMode         => $Param{ViewMode},
         );
@@ -71,11 +67,7 @@ sub LinkObjectTableCreate {
     else {
 
         return $Self->LinkObjectTableCreateComplex(
-
-            # KIX4OTRS-capeIT
             %Param,
-
-            # EO KIX4OTRS-capeIT
             LinkListWithData => $Param{LinkListWithData},
             ViewMode         => $Param{ViewMode},
             AJAX             => $Param{AJAX},
@@ -127,7 +119,6 @@ sub LinkObjectTableCreateComplex {
     # convert the link list
     my %LinkList;
 
-    # KIX4OTRS-capeIT
     # get user data
     my %UserData
         = $Kernel::OM->Get('Kernel::System::User')->GetUserData( UserID => $Self->{UserID} );
@@ -137,8 +128,6 @@ sub LinkObjectTableCreateComplex {
             = split( /;/, $UserData{ 'UserLinkObjectTablePosition-' . $Self->{Action} } );
     }
     my %DirectionTypeList;
-
-    # EO KIX4OTRS-capeIT
 
     for my $Object ( sort keys %{ $Param{LinkListWithData} } ) {
 
@@ -153,47 +142,38 @@ sub LinkObjectTableCreateComplex {
                 my $DirectionList = $Param{LinkListWithData}->{$Object}->{$LinkType}->{$Direction};
 
                 for my $ObjectKey ( sort keys %{$DirectionList} ) {
-
-                    $LinkList{$Object}->{$ObjectKey}->{$LinkType} = $Direction;
-
-                    # KIX4OTRS-capeIT
+                    $LinkList{$Object}->{$ObjectKey}->{$LinkType}          = $Direction;
                     $DirectionTypeList{$Object}->{$ObjectKey}->{Direction} = $Direction;
                     $DirectionTypeList{$Object}->{$ObjectKey}->{Type}      = $LinkType;
-
-                    # EO KIX4OTRS-capeIT
-
                 }
             }
         }
     }
 
     my @OutputData;
-
-    # KIX4OTRS-capeIT
     my %EnabledColumns;
     my @LinkObjects = ();
 
-    # EO KIX4OTRS-capeIT
     OBJECT:
     for my $Object ( sort { lc $a cmp lc $b } keys %{ $Param{LinkListWithData} } ) {
 
-        # KIX4OTRS-capeIT
         # get enabled columns for each object
         for my $Item ( keys %UserData ) {
-            next if $Item !~ /^UserFilterColumnsEnabled-$Self->{Action}-$Object(-?)(.*?)$/;
-            my $Enabled = $Kernel::OM->Get('Kernel::System::JSON')->Decode(
-                Data => $UserData{
-                    'UserFilterColumnsEnabled-'
-                        . $Self->{Action} . '-'
-                        . $Object
-                        . $1
-                        . $2
-                },
-            );
-            $EnabledColumns{ $Object . $1 . $2 } = $Enabled;
+            if( $Item =~ /^UserFilterColumnsEnabled-$Self->{Action}-$Object(-?)(.*?)$/ ) {
+                my $FilterObject = $1;
+                my $FilterColumn = $2;
+                my $Enabled      = $Kernel::OM->Get('Kernel::System::JSON')->Decode(
+                    Data => $UserData{
+                        'UserFilterColumnsEnabled-'
+                            . $Self->{Action} . '-'
+                            . $Object
+                            . $FilterObject
+                            . $FilterColumn
+                    },
+                );
+                $EnabledColumns{ $Object . $FilterObject . $FilterColumn } = $Enabled;
+            }
         }
-
-        # EO KIX4OTRS-capeIT
 
         # load backend
         my $BackendObject = $Self->_LoadLinkObjectLayoutBackend(
@@ -207,11 +187,7 @@ sub LinkObjectTableCreateComplex {
             ObjectLinkListWithData => $Param{LinkListWithData}->{$Object},
             Action                 => $Self->{Action},
             ObjectID               => $Param{ObjectID},
-
-            # KIX4OTRS-capeIT
-            EnabledColumns => \%EnabledColumns,
-
-            # EO KIX4OTRS-capeIT
+            EnabledColumns         => \%EnabledColumns,
         );
 
         next OBJECT if !@BlockData;
@@ -219,7 +195,6 @@ sub LinkObjectTableCreateComplex {
         push @OutputData, @BlockData;
     }
 
-    # KIX4OTRS-capeIT
     # create new instance of the layout object
     my $LayoutObject  = Kernel::Output::HTML::Layout->new( %{$Self} );
     my $LayoutObject2 = Kernel::Output::HTML::Layout->new( %{$Self} );
@@ -231,17 +206,11 @@ sub LinkObjectTableCreateComplex {
         LayoutObject   => $LayoutObject,
     ) if $Param{GetPreferences};
 
-    # EO KIX4OTRS-capeIT
-
     # error handling
     for my $Block (@OutputData) {
-
-        # KIX4OTRS-capeIT
         if ( !grep { $_ eq $Block->{Blockname} } @LinkObjects ) {
             push @LinkObjects, $Block->{Blockname};
         }
-
-        # EO KIX4OTRS-capeIT
 
         ITEM:
         for my $Item ( @{ $Block->{ItemList} } ) {
@@ -264,7 +233,6 @@ sub LinkObjectTableCreateComplex {
         }
     }
 
-    # KIX4OTRS-capeIT
     for my $Object (@LinkObjects) {
         next if grep { $_ eq $Object } @UserLinkObjectTablePosition;
         push @UserLinkObjectTablePosition, $Object;
@@ -281,17 +249,14 @@ sub LinkObjectTableCreateComplex {
         @OutputData = @BlockDataTmp;
     }
 
-    # EO KIX4OTRS-capeIT
-
     # add "linked as" column to the table
     for my $Block (@OutputData) {
 
-        # KIX4OTRS-capeIT
         my ( $Placeholder1, $Placeholder2, $Class ) = ( '', '', '' );
 
         if ( $Block->{Object} eq 'ITSMConfigItem' ) {
-            $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
-            ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $1 );
+            my ( $CIClass ) = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
+            ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $CIClass );
             $Class =~ s/[^A-Za-z0-9_-]/_/g;
         }
 
@@ -306,10 +271,7 @@ sub LinkObjectTableCreateComplex {
                 @{ $EnabledColumns{ $Block->{Object} . $Placeholder1 . $Class } }
             )
             || $NoColumnsEnabled
-            )
-        {
-
-            # EO KIX4OTRS-capeIT
+        ) {
 
             # define the headline column
             my $Column = {
@@ -333,11 +295,7 @@ sub LinkObjectTableCreateComplex {
                 # add check-box cell to item
                 push @{$Item}, $CheckboxCell;
             }
-
-            # KIX4OTRS-capeIT
         }
-
-        # EO KIX4OTRS-capeIT
     }
 
     return @OutputData if $Param{ViewMode} && $Param{ViewMode} eq 'ComplexRaw';
@@ -371,10 +329,7 @@ sub LinkObjectTableCreateComplex {
 
     if ( $Param{ViewMode} eq 'ComplexDelete' ) {
 
-        # KIX4OTRS-capeIT
         my $LinkListWithData = $Param{LinkListWithData};
-
-        # EO KIX4OTRS-capeIT
 
         for my $Block (@OutputData) {
 
@@ -387,8 +342,6 @@ sub LinkObjectTableCreateComplex {
             unshift @{ $Block->{Headline} }, $Column;
 
             for my $Item ( @{ $Block->{ItemList} } ) {
-
-                # KIX4OTRS-capeIT
                 my $ObjectID     = $Item->[0]->{Key};
                 my $SourceObject = $LinkListWithData->{ $Block->{Object} }
                     ->{ $DirectionTypeList{ $Block->{Object} }->{$ObjectID}->{Type} }
@@ -401,8 +354,6 @@ sub LinkObjectTableCreateComplex {
                     ->{$ObjectID}
                     ->{SourceKey};
 
-                # EO KIX4OTRS-capeIT
-
                 # define check-box delete cell
                 my $CheckboxCell = {
                     Type         => 'CheckboxDelete',
@@ -411,15 +362,10 @@ sub LinkObjectTableCreateComplex {
                     Key          => $Item->[0]->{Key},
                     LinkTypeList => $LinkList{ $Block->{Object} }->{ $Item->[0]->{Key} },
                     Translate    => 1,
-
-                    # KIX4OTRS-capeIT
                     SourceObject => $SourceObject,
                     SourceKey    => $SourceKey
-
-                        # EO KIX4OTRS-capeIT
                 };
 
-                # KIX4OTRS-capeIT
                 if (
                     $Block->{Object} eq 'ITSMConfigItem'
                     && (
@@ -432,14 +378,11 @@ sub LinkObjectTableCreateComplex {
                         ->{ $DirectionTypeList{ $Block->{Object} }->{$ObjectID}->{Direction} }
                         ->{$ObjectID}->{Access}
                     )
-                    )
-                {
+                ) {
                     $CheckboxCell = {
                         Type => 'Text'
                         }
                 }
-
-                # EO KIX4OTRS-capeIT
 
                 # add checkbox cell to item
                 unshift @{$Item}, $CheckboxCell;
@@ -458,11 +401,6 @@ sub LinkObjectTableCreateComplex {
 
     my $BlockCounter = 0;
 
-    # KIX4OTRS-capeIT
-    # OTRS complex table settings
-    # disabled because KIX4OTRS brings own link object table preferences settings
-    # EO KIX4OTRS-capeIT
-
     BLOCK:
     for my $Block (@OutputData) {
 
@@ -470,15 +408,12 @@ sub LinkObjectTableCreateComplex {
         next BLOCK if ref $Block->{ItemList} ne 'ARRAY';
         next BLOCK if !@{ $Block->{ItemList} };
 
-        # KIX4OTRS-capeIT
         my ( $Placeholder1, $Placeholder2, $Class ) = ( '', '', '' );
         if ( $Block->{Object} eq 'ITSMConfigItem' ) {
-            $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
-            ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $1 );
+            my ( $CIClass ) = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
+            ( $Placeholder1, $Placeholder2, $Class ) = ( '-', '_', $CIClass );
             $Class =~ s/[^A-Za-z0-9_-]/_/g;
         }
-
-        # EO KIX4OTRS-capeIT
 
         # output the block
         $LayoutObject->Block(
@@ -489,19 +424,10 @@ sub LinkObjectTableCreateComplex {
                 Name             => $Block->{Blockname},
                 NameForm         => $Block->{Blockname},
                 AJAX             => $Param{AJAX},
-
-                # KIX4OTRS-capeIT
-                LinkType      => $Block->{Object},
-                PreferencesID => $Block->{Object} . $Placeholder2 . $Class,
-
-                # EO KIX4OTRS-capeIT
+                LinkType         => $Block->{Object},
+                PreferencesID    => $Block->{Object} . $Placeholder2 . $Class,
             },
         );
-
-        # KIX4OTRS-capeIT
-        # OTRS complex table settings
-        # disabled because KIX4OTRS brings own link object table preferences settings
-        # EO KIX4OTRS-capeIT
 
         # output table headline
         for my $HeadlineColumn ( @{ $Block->{Headline} } ) {
@@ -816,7 +742,6 @@ sub LinkObjectSelectableObjectList {
         unshift @SelectableObjectList, \%BlankLine;
     }
 
-    # KIX4OTRS-capeIT
     if ( $Param{FilterModule} && $Param{FilterMethod} ) {
         my $FilterMethod = $Param{FilterMethod};
         @SelectableObjectList = $Param{FilterModule}->$FilterMethod(
@@ -824,8 +749,6 @@ sub LinkObjectSelectableObjectList {
             List => \@SelectableObjectList,
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     # create new instance of the layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
@@ -878,11 +801,6 @@ sub LinkObjectSearchOptionList {
 
     return @SearchOptionList;
 }
-
-# KIX4OTRS-capeIT
-# ComplexTablePreferencesGet()
-# disabled because KIX4OTRS brings own link object table preferences settings
-# EO KIX4OTRS-capeIT
 
 =begin Internal:
 
@@ -1012,29 +930,21 @@ sub _LinkObjectContentStringCreate {
                 $LinkName = $Param{LayoutObject}->{LanguageObject}->Translate($LinkName);
             }
 
-            # KIX4OTRS-capeIT
             my $SourceObject = $Content->{SourceObject} || '-';
             my $SourceKey    = $Content->{SourceKey}    || '-';
-
-            # EO KIX4OTRS-capeIT
 
             # run checkbox block
             $Param{LayoutObject}->Block(
                 Name => 'Checkbox',
                 Data => {
                     %{$Content},
-                    Name  => 'LinkDeleteIdentifier',
-                    Title => $LinkName,
-
-                    # KIX4OTRS-capeIT
-                    # Content => $Content->{Object} . '::' . $Content->{Key} . '::' . $LinkType,
+                    Name    => 'LinkDeleteIdentifier',
+                    Title   => $LinkName,
                     Content => $SourceObject . '::'
                         . $SourceKey . '::'
                         . $Content->{Object} . '::'
                         . $Content->{Key} . '::'
                         . $LinkType,
-
-                    # EO KIX4OTRS-capeIT
                 },
             );
         }
@@ -1130,7 +1040,6 @@ sub _LoadLinkObjectLayoutBackend {
     return $BackendObject;
 }
 
-# KIX4OTRS-capeIT
 sub _PreferencesLinkObject {
     my ( $Self, %Param ) = @_;
 
@@ -1143,7 +1052,6 @@ sub _PreferencesLinkObject {
     my %EnabledColumns = %{ $Param{EnabledColumns} };
     my $LayoutObject   = $Param{LayoutObject};
 
-    # KIX4OTRS-capeIT
     # create preferences settings
     for my $Block (@OutputData) {
 
@@ -1174,8 +1082,7 @@ sub _PreferencesLinkObject {
             if (
                 !defined $EnabledColumns{ $Block->{Object} }
                 || !scalar @{ $EnabledColumns{ $Block->{Object} } }
-                )
-            {
+            ) {
                 @{ $EnabledColumns{ $Block->{Object} } }
                     = ( "TicketNumber", "Title", "Type", "Queue", "State", "Created" );
 
@@ -1200,8 +1107,7 @@ sub _PreferencesLinkObject {
             if (
                 !defined $EnabledColumns{ $Block->{Object} }
                 || !scalar @{ $EnabledColumns{ $Block->{Object} } }
-                )
-            {
+            ) {
                 @{ $EnabledColumns{ $Block->{Object} } } = (
                     'ChangeStateSignal', 'ChangeNumber', 'ChangeTitle', 'ChangeState',
                     'ChangeTime'
@@ -1227,8 +1133,7 @@ sub _PreferencesLinkObject {
             if (
                 !defined $EnabledColumns{ $Block->{Object} }
                 || !scalar @{ $EnabledColumns{ $Block->{Object} } }
-                )
-            {
+            ) {
                 @{ $EnabledColumns{ $Block->{Object} } } = (
                     'WorkOrderStateSignal', 'ChangeNumber',
                     'WorkOrderTitle',       'ChangeTitle',
@@ -1264,8 +1169,8 @@ sub _PreferencesLinkObject {
                 = $ConfigObject->Get('ITSMConfigItem::Frontend::AgentITSMConfigItem');
 
             # get class
-            $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
-            ( $Class, $Placeholder1, $Placeholder2 ) = ( $1, '-', '_' );
+            my ( $CIClass ) = $Block->{Blockname} =~ /^ConfigItem\s\((.*?)\)$/;
+            ( $Class, $Placeholder1, $Placeholder2 ) = ( $CIClass , '-', '_' );
             my $RealClass = $Class;
             $Class =~ s/[^A-Za-z0-9_-]/_/g;
 
@@ -1273,8 +1178,7 @@ sub _PreferencesLinkObject {
             if (
                 !defined $EnabledColumns{ $Block->{Object} . $Placeholder1 . $Class }
                 || !scalar @{ $EnabledColumns{ $Block->{Object} . $Placeholder1 . $Class } }
-                )
-            {
+            ) {
                 for my $Col ( %{ $ConfigHash->{ShowColumns} } ) {
                     next if !$ConfigHash->{ShowColumns}->{$Col};
                     push @{ $EnabledColumns{ $Block->{Object} . $Placeholder1 . $Class } }, $Col;
@@ -1301,7 +1205,6 @@ sub _PreferencesLinkObject {
                 = $ConfigObject->Get('LinkObject::ITSMConfigItem::ShowColumnsByClass');
 
             # get the configered columns and reorganize them by class name
-            my %ColumnByClass;
             if ( $ColumnConfig && ref $ColumnConfig eq 'ARRAY' && @{$ColumnConfig} ) {
                 for my $Name ( @{$ColumnConfig} ) {
 
@@ -1343,8 +1246,7 @@ sub _PreferencesLinkObject {
             if (
                 !defined $EnabledColumns{ $Block->{Object} }
                 || !scalar @{ $EnabledColumns{ $Block->{Object} } }
-                )
-            {
+            ) {
                 $UserColumnsEnabled = 0;
             }
 
@@ -1364,15 +1266,14 @@ sub _PreferencesLinkObject {
 
         # for document object
         elsif ( $Block->{Object} eq 'Document' ) {
-            my $ConfigHash = $ConfigObject->Get('Document::DefaultColumns');
+            $ConfigHash = $ConfigObject->Get('Document::DefaultColumns');
 
             # check if user columns enabled
             my $UserColumnsEnabled = 1;
             if (
                 !defined $EnabledColumns{ $Block->{Object} }
                 || !scalar @{ $EnabledColumns{ $Block->{Object} } }
-                )
-            {
+            ) {
                 $UserColumnsEnabled = 0;
             }
 
@@ -1416,8 +1317,7 @@ sub _PreferencesLinkObject {
         for my $Col (
             sort { $DefaultColumnHash{$a} cmp $DefaultColumnHash{$b} }
             keys %DefaultColumnHash
-            )
-        {
+        ) {
             push @ColumnsAvailable, $Col;
             $ColumnTranslations{$Col} = $DefaultColumnHash{$Col};
         }
@@ -1442,8 +1342,8 @@ sub _PreferencesLinkObject {
         # get requested url
         my $RequestURL = $Self->{RequestedURL};
         if ( defined $RequestURL && $RequestURL ) {
-            $RequestURL
-                =~ s/Agent(.*?)ZoomTabLinkedObjects;(.*?)DirectLinkAnchor=(.*?);?(.*)/Agent$1Zoom;$2$4/;
+            my $URLPattern = 'Agent(.*?)ZoomTabLinkedObjects;(.*?)DirectLinkAnchor=(.*?);?(.*)';
+            $RequestURL =~ s/$URLPattern/Agent$1Zoom;$2$4/;
             if ( defined $1 && $1 eq 'Ticket' ) {
                 $Param{RequestedURL} = $RequestURL . ';SelectedTab=2;';
             }
@@ -1493,8 +1393,6 @@ sub _PreferencesLinkObject {
         TemplateFile => 'PreferencesLinkObject',
     );
 }
-
-# EO KIX4OTRS-capeIT
 
 =end Internal:
 

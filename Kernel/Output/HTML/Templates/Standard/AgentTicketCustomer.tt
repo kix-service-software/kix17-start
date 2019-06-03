@@ -23,21 +23,9 @@
 
     <div class="Content">
         <div class="LayoutFixedSidebar SidebarLast">
-
-# KIX4OTRS-capeIT
-#            <div id="CustomerInfo" class="SidebarColumn WidgetSimple">
-#                <div class="Header">
-#                     <h2><span>[% Translate("Customer Data") | html %]: [% Data.CustomerID | html %]</span></h2>
-#                </div>
-#                <div class="Content">
-#                    [% Data.Table %]
-#                </div>
-#            </div>
-
             <div class="SidebarColumn">
                 [% Data.KIXSidebarContent %]
             </div>
-# EO KIX4OTRS-capeIT
 
             <div class="ContentColumn">
                 <div class="Content">
@@ -47,7 +35,6 @@
                         <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
                         <input type="hidden" name="SelectedCustomerUser" id="SelectedCustomerUser" value="[% Data.SelectedCustomerUser | html %]"/>
                         <fieldset class="TableLike FixedLabel">
-# rkaiser - T#2017020290001194 - changed customer user to contact
                             <label for="CustomerAutoComplete" class="Mandatory"><span class="Marker">*</span> [% Translate("Contact") | html %]:</label>
                             <div class="Field">
                                 <input id="CustomerAutoComplete" type="text" name="CustomerUserID" value="[% Data.CustomerUserID | html %]" class="W75pc Validate_Required [% Data.CustomerUserIDInvalid | html %]" autocomplete="off" />
@@ -80,11 +67,9 @@
     <div class="Footer"></div>
 </div>
 [% RenderBlockEnd("Customer") %]
-# KIX4OTRS-capeIT
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentTicketCustomerSidebarWidth") %]','[% Env("Action") %]','TicketID=[% Data.TicketID | uri %]');
 
     //]]></script>
 [% END %]
-# EO KIX4OTRS-capeIT

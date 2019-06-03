@@ -99,8 +99,7 @@ sub Run {
             ( ref($CurrVersionData) eq 'HASH' ) &&
             $CurrVersionData->{Name} &&
             $CurrVersionData->{Number}
-            )
-        {
+        ) {
             push @Data, {
                 CIClassKey   => $SearchResult,
                 CIClassValue => $CurrVersionData->{Name} . ' (' . $CurrVersionData->{Number} . ')',
@@ -131,8 +130,7 @@ sub Run {
             ( ref($CurrVersionData) eq 'HASH' ) &&
             $CurrVersionData->{Name} &&
             $CurrVersionData->{Number}
-            )
-        {
+        ) {
             push @Data, {
                 CIClassKey   => $SearchResult,
                 CIClassValue => $CurrVersionData->{Name} . ' (' . $CurrVersionData->{Number} . ')',

@@ -93,7 +93,7 @@ sub new {
             || die "Found no '$Option' option in configuration!";
     }
 
-    # should I use x-otrs headers?
+    # should I use x-kix headers?
     $Self->{Trusted} = defined $Param{Trusted} ? $Param{Trusted} : 1;
 
     if ( $Self->{Trusted} ) {
@@ -112,14 +112,12 @@ sub new {
         my %HeaderLookup = map { $_ => 1 } @{ $Self->{'PostmasterX-Header'} };
 
         for my $DynamicField ( values %$DynamicFields ) {
-#rbo - T2016121190001552 - renamed X-KIX headers
             for my $Header (
                 'X-KIX-DynamicField-' . $DynamicField,
                 'X-KIX-FollowUp-DynamicField-' . $DynamicField,
                 'X-OTRS-DynamicField-' . $DynamicField,
                 'X-OTRS-FollowUp-DynamicField-' . $DynamicField,
-                )
-            {
+            ) {
 
                 # only add the header if is not alreday in the conifg
                 if ( !$HeaderLookup{$Header} ) {
@@ -246,7 +244,6 @@ sub Run {
     }
 
     # should I ignore the incoming mail?
-#rbo - T2016121190001552 - renamed X-KIX headers
     $GetParam->{'X-KIX-Ignore'} = $GetParam->{'X-KIX-Ignore'} || $GetParam->{'X-OTRS-Ignore'};
     if ( $GetParam->{'X-KIX-Ignore'} && $GetParam->{'X-KIX-Ignore'} =~ /(yes|true)/i ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -288,6 +285,9 @@ sub Run {
                 Email => $EmailAddress
             );
             next if ( !$MailAddress );
+
+            $MailAddress =~ s/("|')//g;
+
             $EmailsHash{$MailAddress} = '1';
         }
 
@@ -605,7 +605,7 @@ sub GetEmailParams {
     HEADER:
     for my $Param ( @{ $Self->{'PostmasterX-Header'} } ) {
 
-        # do not scan x-otrs headers if mailbox is not marked as trusted
+        # do not scan x-kix headers if mailbox is not marked as trusted
         next HEADER if ( !$Self->{Trusted} && $Param =~ /^(x-otrs|x-kix)/i );
         if ( $Self->{Debug} > 2 ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
@@ -631,7 +631,6 @@ sub GetEmailParams {
         $GetParam{'ReplyTo'} = $GetParam{'Reply-To'};
     }
     if (
-#rbo - T2016121190001552 - renamed X-KIX headers
         $GetParam{'Mailing-List'}
         || $GetParam{'Precedence'}
         || $GetParam{'X-Loop'}
@@ -642,8 +641,7 @@ sub GetEmailParams {
             $GetParam{'Auto-Submitted'}
             && substr( $GetParam{'Auto-Submitted'}, 0, 5 ) eq 'auto-'
         )
-        )
-    {
+    ) {
         $GetParam{'X-KIX-Loop'} = 'yes';
     }
     if ( !$GetParam{'X-Sender'} ) {
@@ -662,7 +660,6 @@ sub GetEmailParams {
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-#rbo - T2016121190001552 - renamed X-KIX headers
     # set sender type if not given
     for my $Key (qw(X-KIX-SenderType X-KIX-FollowUp-SenderType X-OTRS-SenderType X-OTRS-FollowUp-SenderType)) {
 
@@ -680,7 +677,6 @@ sub GetEmailParams {
         }
     }
 
-#rbo - T2016121190001552 - renamed X-KIX headers
     # set article type if not given
     for my $Key (qw(X-KIX-ArticleType X-KIX-FollowUp-ArticleType X-OTRS-ArticleType X-OTRS-FollowUp-ArticleType)) {
         if ( !$GetParam{$Key} ) {

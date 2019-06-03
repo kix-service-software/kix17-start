@@ -91,14 +91,9 @@
 [% RenderBlockStart("OverviewNavBarPageFlag") %]
                     <th class="OverviewHeader [% Data.CSS | html %]">
 [% RenderBlockStart("OverviewNavBarPageFlagLink") %]
-# KIX4OTRS-capeIT
-#                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=[% Data.Name | uri %];OrderBy=[% Data.OrderBy | uri %]" title="[% Translate(Data.Title) | html %]">
-#                            <em class="PrintOnly">[% Data.Title %]</em>
-#                        </a>
                         <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=[% Data.Name | uri %];OrderBy=[% Data.OrderBy | uri %]" title="[% Translate(Data.Name) | html %]">
                             <em class="PrintOnly">Text{"[% Data.Name %]"}</em>
                         </a>
-# EO KIX4OTRS-capeIT
 [% RenderBlockEnd("OverviewNavBarPageFlagLink") %]
 [% RenderBlockStart("OverviewNavBarPageFlagEmpty") %]
                         <span title="[% Translate(Data.Name) | html %]">
@@ -327,10 +322,7 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
 [% RenderBlockStart("TableBody") %]
             <tbody>
 [% RenderBlockStart("Record") %]
-# KIX4OTRS-capeIT
-#                <tr id="TicketID_[% Data.TicketID | html %]" class="MasterAction">
                 <tr id="TicketID_[% Data.TicketID | html %]" class="MasterAction TicketOverviewHighlightClass" style="[% Data.LineStyle | html %]">
-# EO KIX4OTRS-capeIT
 
 [% RenderBlockStart("GeneralOverviewRow") %]
 
@@ -381,7 +373,6 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
                         </a>
                     </td>
 [% RenderBlockEnd("RecordCustomerID") %]
-# KIX4OTRS-capeIT
 [% RenderBlockStart("RecordFrom") %]
                     <td>
                         <div title="[% Data.From | html %]">[% Data.FromRealname | truncate(30) | html %]</div>
@@ -424,7 +415,6 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
 [% RenderBlockEnd("RecordMarkedAsFlag") %]
                     </td>
 [% RenderBlockEnd("RecordMarkedAs") %]
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("RecordTicketColumn") %]
                     <td>
                         <div title="[% Data.GenericValue | html %]">[% Data.GenericValue | truncate(30) | html %]</div>
@@ -481,9 +471,7 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
 [% RenderBlockEnd("OverviewTable") %]
     </form>
 </div>
-# KIX4OTRS-capeIT
 <div class="ArticleFlagIconTooltip Hidden"></div>
-# EO KIX4OTRS-capeIT
 [% RenderBlockStart("DocumentReadyStart") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
@@ -539,7 +527,6 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
-# KIX4OTRS-capeIT
 // Show and hide article flag icon tooltips
 $('.ArticleFlagIcon').bind('mouseover',function(event) {
     if ( $(this).children('span').html() != '' ) {
@@ -554,7 +541,6 @@ $('.ArticleFlagIcon').bind('mouseover',function(event) {
 $('.ArticleFlagIcon').bind('mouseout',function(){
     $('.ArticleFlagIconTooltip').addClass('Hidden');
 });
-# EO KIX4OTRS-capeIT
 
 $('#SelectAllTickets').bind('click', function (Event) {
     var $Element = $(this);

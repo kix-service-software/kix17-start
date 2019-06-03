@@ -120,8 +120,7 @@ sub Run {
     if (
         defined $Param{Config}->{Responsible}
         && $Param{Config}->{Responsible} ne $Param{Ticket}->{Responsible}
-        )
-    {
+    ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketResponsibleSet(
             TicketID => $Param{Ticket}->{TicketID},
             NewUser  => $Param{Config}->{Responsible},
@@ -131,8 +130,7 @@ sub Run {
     elsif (
         defined $Param{Config}->{ResponsibleID}
         && $Param{Config}->{ResponsibleID} ne $Param{Ticket}->{ResponsibleID}
-        )
-    {
+    ) {
         $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketResponsibleSet(
             TicketID  => $Param{Ticket}->{TicketID},
             NewUserID => $Param{Config}->{ResponsibleID},

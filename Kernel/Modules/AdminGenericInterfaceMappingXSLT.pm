@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Modules::AdminGenericInterfaceMappingXSLT;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Require)
 
 use strict;
 use warnings;

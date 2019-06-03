@@ -70,9 +70,8 @@ sub Run {
 
         # get data of given dynamic field - used to get DynamicFieldID
         my $DynamicFieldName = $1;
-        my $DynamicFieldData
-            = $Self->{DynamicFieldObject}->DynamicFieldGet( Name => $DynamicFieldName );
-        my $DynamicFieldID = $DynamicFieldData->{ID};
+        my $DynamicFieldData = $Self->{DynamicFieldObject}->DynamicFieldGet( Name => $DynamicFieldName );
+        my $DynamicFieldID   = $DynamicFieldData->{ID};
 
         # get config
         if ( $Param{Action} ) {
@@ -146,8 +145,7 @@ sub Run {
         my $Count = 0;
         while (
             $Count < scalar @{ $Param{DynamicFieldList} }
-            )
-        {
+        ) {
 
             # get branches of given dynamic field, e.g. (1 -> 3 -> 2) = [2,3,1]
             my @DependencyList
@@ -173,10 +171,7 @@ sub Run {
         }
 
         # dynamic field found in dependency list
-        if ( $DynamicFieldData && ref $DynamicFieldData eq 'HASH' )
-        {
-            my $DynamicFieldID = $DynamicFieldData->{ID};
-
+        if ( $DynamicFieldData && ref $DynamicFieldData eq 'HASH' ) {
             # get config
             if ( $Param{Action} ) {
 
@@ -206,8 +201,7 @@ sub Run {
                         defined $Hash->{Config}->{DisplayFieldType}
                         && $Hash->{Config}->{DisplayFieldType} ne 'Multiselect'
                     )
-                    )
-                {
+                ) {
                     push @UsedDynamicFields, $Hash->{ID};
                 }
             }
@@ -235,8 +229,7 @@ sub Run {
     for my $DynamicField ( keys %PossibleValues ) {
 
         # get name
-        $DynamicField =~ /^DynamicField_(.*)/;
-        my $DynamicFieldName = $1;
+        my $DynamicFieldName = $DynamicField =~ /^DynamicField_(.*)/;
 
         # get all possible values
         my $AllPossibleValues;
@@ -341,10 +334,8 @@ sub _GetChild {
                 # add '-' value if 'possible none' active
                 if (
                     !$Param{NextEmpty}
-                    && $DynamicFieldData{ 'DynamicField_' . $Field->{Name} }->{Config}
-                    ->{PossibleNone}
-                    )
-                {
+                    && $DynamicFieldData{ 'DynamicField_' . $Field->{Name} }->{Config}->{PossibleNone}
+                ) {
                     push @{ $TmpResultHash{ 'DynamicField_' . $Field->{Name} } }, '-';
                 }
 
@@ -372,11 +363,9 @@ sub _GetChild {
             # check if item is selected
             if (
                 defined $Param{SelectedValues}->{ 'DynamicField_' . $Field->{Name} }
-                && $Param{SelectedValues}->{ 'DynamicField_' . $Field->{Name} } eq
-                $Field->{Value}
+                && $Param{SelectedValues}->{ 'DynamicField_' . $Field->{Name} } eq $Field->{Value}
                 && !$Param{NextEmpty}
-                )
-            {
+            ) {
                 %ChildHash =
                     %{
                     $Self->_GetChild(
@@ -405,8 +394,7 @@ sub _GetChild {
                     !defined $ChildHash{$HashItem}
                     || ref $ChildHash{$HashItem} ne 'ARRAY'
                     || !scalar @{ $ChildHash{$HashItem} }
-                    )
-                {
+                ) {
                     $ChildHash{$HashItem} = $TmpChildHash{$HashItem};
                 }
             }
@@ -419,8 +407,7 @@ sub _GetChild {
                 !defined $ResultHash{$HashItem}
                 || ref $ResultHash{$HashItem} ne 'ARRAY'
                 || !scalar @{ $ResultHash{$HashItem} }
-                )
-            {
+            ) {
                 $ResultHash{$HashItem} = $TmpResultHash{$HashItem};
             }
         }

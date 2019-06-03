@@ -15,6 +15,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
+use Kernel::System::ObjectManager;
+
 sub new {
     my ( $Type, %Param ) = @_;
 

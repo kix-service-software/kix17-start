@@ -104,10 +104,11 @@ sub SystemMaintenanceAdd {
 
     # SQL
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO system_maintenance ( start_date, stop_date, comments, login_message,
-                show_login_message, notify_message, valid_id, create_time, create_by, change_time, change_by )
-            VALUES (?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => <<'END',
+INSERT INTO system_maintenance ( start_date, stop_date, comments, login_message,
+    show_login_message, notify_message, valid_id, create_time, create_by, change_time, change_by )
+VALUES (?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)
+END
         Bind => [
             \$Param{StartDate}, \$Param{StopDate}, \$Param{Comment}, \$Param{LoginMessage},
             \$Param{ShowLoginMessage}, \$Param{NotifyMessage}, \$Param{ValidID},
@@ -116,10 +117,10 @@ sub SystemMaintenanceAdd {
     );
 
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id FROM system_maintenance
-            WHERE start_date = ? and stop_date = ? and comments = ?
-        ',
+        SQL  => <<'END',
+SELECT id FROM system_maintenance
+WHERE start_date = ? and stop_date = ? and comments = ?
+END
         Bind => [
             \$Param{StartDate}, \$Param{StopDate}, \$Param{Comment},
         ],
@@ -230,12 +231,13 @@ sub SystemMaintenanceGet {
 
     # SQL
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, start_date, stop_date, comments, login_message,
-                show_login_message, notify_message, valid_id, create_time,
-                change_time, create_by, change_by
-            FROM system_maintenance
-            WHERE id = ?',
+        SQL   => <<'END',
+SELECT id, start_date, stop_date, comments, login_message,
+    show_login_message, notify_message, valid_id, create_time,
+    change_time, create_by, change_by
+FROM system_maintenance
+WHERE id = ?
+END
         Bind  => [ \$Param{ID} ],
         Limit => 1,
     );
@@ -309,11 +311,12 @@ sub SystemMaintenanceUpdate {
 
     # SQL
     return if !$DBObject->Do(
-        SQL => '
-            UPDATE system_maintenance
-            SET start_date = ?, stop_date = ?, comments = ?, login_message = ?, show_login_message = ?,
-                notify_message = ?, valid_id = ?, change_time = current_timestamp,  change_by = ?
-            WHERE id = ?',
+        SQL  => <<'END',
+UPDATE system_maintenance
+SET start_date = ?, stop_date = ?, comments = ?, login_message = ?, show_login_message = ?,
+    notify_message = ?, valid_id = ?, change_time = current_timestamp,  change_by = ?
+WHERE id = ?
+END
         Bind => [
             \$Param{StartDate}, \$Param{StopDate}, \$Param{Comment}, \$Param{LoginMessage},
             \$Param{ShowLoginMessage}, \$Param{NotifyMessage},
@@ -367,9 +370,7 @@ sub SystemMaintenanceList {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    my $SQL = '
-            SELECT id
-            FROM system_maintenance ';
+    my $SQL = 'SELECT id FROM system_maintenance ';
 
     if ( $ValidIDsStrg ne 'ALL' ) {
 
@@ -440,11 +441,11 @@ sub SystemMaintenanceListGet {
         return;
     }
 
-    my $SystemMaintenanceData = $Self->SystemMaintenanceList(
+    my $SystemMaintenanceList = $Self->SystemMaintenanceList(
         %Param,
     );
 
-    my @SystemMaintenanceIDs = sort keys %{$SystemMaintenanceData};
+    my @SystemMaintenanceIDs = sort keys %{$SystemMaintenanceList};
 
     my @Data;
     for my $ItemID (@SystemMaintenanceIDs) {
@@ -479,11 +480,11 @@ sub SystemMaintenanceIsActive {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    my $SQL = "
-            SELECT id
-            FROM system_maintenance
-            WHERE start_date <= $SystemTime and stop_date >= $SystemTime
-    ";
+    my $SQL = <<"END";
+SELECT id
+FROM system_maintenance
+WHERE start_date <= $SystemTime and stop_date >= $SystemTime
+END
 
     my @ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
     if ( scalar @ValidList ) {
@@ -532,11 +533,11 @@ sub SystemMaintenanceIsComming {
     # get database object
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
-    my $SQL = "
-            SELECT start_date
-            FROM system_maintenance
-            WHERE start_date > $SystemTime and start_date <= $TargetTime
-    ";
+    my $SQL = <<"END";
+SELECT start_date
+FROM system_maintenance
+WHERE start_date > $SystemTime and start_date <= $TargetTime
+END
 
     my @ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
     if ( scalar @ValidList ) {

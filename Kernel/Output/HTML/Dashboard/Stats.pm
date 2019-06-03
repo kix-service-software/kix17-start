@@ -187,12 +187,12 @@ sub Run {
 
     my $Format = $StatsSettings->{Format};
     if ( !$Format ) {
-        my $Stat = $Kernel::OM->Get('Kernel::System::Stats')->StatsGet(
+        my $StatData = $Kernel::OM->Get('Kernel::System::Stats')->StatsGet(
             StatID => $StatID,
             UserID => $Self->{UserID},
         );
         STATFORMAT:
-        for my $StatFormat ( @{ $Stat->{Format} || [] } ) {
+        for my $StatFormat ( @{ $StatData->{Format} || [] } ) {
             if ( $StatFormat =~ m{^D3}smx ) {
                 $Format = $StatFormat;
                 last STATFORMAT;

@@ -91,8 +91,7 @@ sub ActionRow {
     if (
         $Param{Config}->{OverviewMenuModules}
         && ref $ConfigObject->Get('Ticket::Frontend::OverviewMenuModule') eq 'HASH'
-        )
-    {
+    ) {
 
         my %Menus = %{ $ConfigObject->Get('Ticket::Frontend::OverviewMenuModule') };
         MENUMODULE:
@@ -256,8 +255,8 @@ sub Run {
         my $BulkSelectedAll = 0;
 
         for my $TicketID ( @{ $Param{TicketIDs} } ) {
-            if ( !grep(/^$TicketID$/, @UnselectedItems)
-                && !grep(/^$TicketID$/, @SelectedItems)
+            if ( !grep({/^$TicketID$/} @UnselectedItems)
+                && !grep({/^$TicketID$/} @SelectedItems)
             ) {
                 push(@UnselectedItems, $TicketID);
             }
@@ -270,9 +269,8 @@ sub Run {
             if (
                 $Counter >= $Param{StartHit}
                 && $Counter < ( $Param{PageShown} + $Param{StartHit} )
-                )
-            {
-                if ( grep( /^$TicketID$/, @SelectedItems ) ) {
+            ) {
+                if ( grep( {/^$TicketID$/} @SelectedItems ) ) {
                     $ItemChecked = ' checked="checked"';
                 }
 
@@ -289,7 +287,7 @@ sub Run {
                 }
 
                 push @TicketIDsShown, $TicketID;
-                my $Output = $Self->_Show(
+                $Output = $Self->_Show(
                     TicketID        => $TicketID,
                     Counter         => $CounterOnSite,
                     Bulk            => $BulkFeature,
@@ -339,7 +337,7 @@ sub Run {
                 Data => \%Param,
             );
         }
-        my $OutputMeta = $LayoutObject->Output(
+        $OutputMeta = $LayoutObject->Output(
             TemplateFile => 'AgentTicketOverviewPreview',
             Data         => \%Param,
         );
@@ -584,7 +582,6 @@ sub _Show {
             $Output =~ s/\s+/ /g;
             $Output =~ s/<\!--.+?-->//g;
 
-            # KIX4OTRS-capeIT
             # check if the browser sends the session id cookie
             # if not, add the session id to the url
             my $SessionID = '';
@@ -592,18 +589,11 @@ sub _Show {
                 $SessionID = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
             }
 
-            # EO KIX4OTRS-capeIT
-
             push @ActionItems, {
                 HTML        => $Output,
                 ID          => $Item->{ID},
                 Name        => $Item->{Name},
-
-                # KIX4OTRS-capeIT
-                # Link        => $LayoutObject->{Baselink} . $Item->{Link},
-                Link => $LayoutObject->{Baselink} . $Item->{Link} . $SessionID,
-
-                # EO KIX4OTRS-capeIT
+                Link        => $LayoutObject->{Baselink} . $Item->{Link} . $SessionID,
                 Target      => $Item->{Target},
                 PopupType   => $Item->{PopupType},
                 Description => $Item->{Description},
@@ -718,15 +708,13 @@ sub _Show {
         }
     }
 
-    # KIX4OTRS-capeIT
     my $StateHighlighting
         = $ConfigObject->Get('KIX4OTRSTicketOverviewLargeHighlightMapping');
     if (
         $StateHighlighting
         && ref($StateHighlighting) eq 'HASH'
         && $StateHighlighting->{ $Article{State} }
-        )
-    {
+    ) {
         $LayoutObject->Block(
             Name => 'MetaIcon',
             Data => {
@@ -736,8 +724,6 @@ sub _Show {
             },
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     # run article modules
     if ( $Article{ArticleID} ) {
@@ -793,12 +779,11 @@ sub _Show {
     if (
         $ConfigObject->Get('Frontend::Module')->{AgentTicketCompose}
         && ( !defined $AclAction{AgentTicketCompose} || $AclAction{AgentTicketCompose} )
-        )
-    {
+    ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketCompose');
         if ( $Config->{Permission} ) {
-            my $Ok = $TicketObject->Permission(
+            my $Ok = $TicketObject->TicketPermission(
                 Type     => $Config->{Permission},
                 TicketID => $Param{TicketID},
                 UserID   => $Self->{UserID},
@@ -821,12 +806,11 @@ sub _Show {
             !defined $AclAction{AgentTicketPhoneOutbound}
             || $AclAction{AgentTicketPhoneOutbound}
         )
-        )
-    {
+    ) {
         my $Access = 1;
         my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketPhoneOutbound');
         if ( $Config->{Permission} ) {
-            my $OK = $TicketObject->Permission(
+            my $OK = $TicketObject->TicketPermission(
                 Type     => $Config->{Permission},
                 TicketID => $Param{TicketID},
                 UserID   => $Self->{UserID},
@@ -866,7 +850,6 @@ sub _Show {
         }
     }
 
-    # KIX4OTRS-capeIT
     # responsible info
     if ( $ConfigObject->Get('Ticket::Responsible') ) {
         my %RespInfo = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
@@ -877,8 +860,6 @@ sub _Show {
             Data => { %Param, %Article, %RespInfo },
         );
     }
-
-    # EO KIX4OTRS-capeIT
 
     # CustomerID and CustomerName
     if ( defined $Article{CustomerID} ) {
@@ -897,7 +878,7 @@ sub _Show {
             # test access to ticket
             my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketCustomer');
             if ( $Config->{Permission} ) {
-                my $OK = $TicketObject->Permission(
+                my $OK = $TicketObject->TicketPermission(
                     Type     => $Config->{Permission},
                     TicketID => $Param{TicketID},
                     UserID   => $Self->{UserID},
@@ -1300,7 +1281,7 @@ sub _Show {
         );
 
         # show actions
-        if ( $ArticleItem->{ArticleType} !~ /^(note|email-noti)/i ) {
+        if ( $ArticleItem->{ArticleType} !~ /^(?:note|email-noti)/i ) {
 
             # check if compose link should be shown
             if (
@@ -1309,12 +1290,11 @@ sub _Show {
                     !defined $AclAction{AgentTicketCompose}
                     || $AclAction{AgentTicketCompose}
                 )
-                )
-            {
+            ) {
                 my $Access = 1;
                 my $Config = $ConfigObject->Get('Ticket::Frontend::AgentTicketCompose');
                 if ( $Config->{Permission} ) {
-                    my $Ok = $TicketObject->Permission(
+                    my $Ok = $TicketObject->TicketPermission(
                         Type     => $Config->{Permission},
                         TicketID => $Article{TicketID},
                         UserID   => $Self->{UserID},
@@ -1325,7 +1305,7 @@ sub _Show {
                     }
                 }
                 if ( $Config->{RequiredLock} ) {
-                    my $Locked = $TicketObject->LockIsTicketLocked(
+                    my $Locked = $TicketObject->TicketLockGet(
                         TicketID => $Article{TicketID},
                     );
                     if ($Locked) {
@@ -1347,14 +1327,14 @@ sub _Show {
                     );
 
                     # fetch all std. responses
-                    my %StandardTemplates = $QueueObject->QueueStandardTemplateMemberList(
+                    my %QueueStandardTemplates = $QueueObject->QueueStandardTemplateMemberList(
                         QueueID       => $Article{QueueID},
                         TemplateTypes => 1,
                     );
 
                     my %StandardResponses;
-                    if ( IsHashRefWithData( $StandardTemplates{Answer} ) ) {
-                        %StandardResponses = %{ $StandardTemplates{Answer} };
+                    if ( IsHashRefWithData( $QueueStandardTemplates{Answer} ) ) {
+                        %StandardResponses = %{ $QueueStandardTemplates{Answer} };
                     }
 
                     # get StandardResponsesStrg

@@ -93,12 +93,8 @@ sub AutoResponseAdd {
 
     # insert into database
     return if !$DBObject->Do(
-        SQL => '
-            INSERT INTO auto_response
-                (name, valid_id, comments, text0, text1, type_id, system_address_id,
-                content_type, create_time, create_by, change_time, change_by)
-            VALUES
-                (?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
+        SQL  => 'INSERT INTO auto_response (name, valid_id, comments, text0, text1, type_id, system_address_id, content_type, create_time, create_by, change_time, change_by)'
+              . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, current_timestamp, ?, current_timestamp, ?)',
         Bind => [
             \$Param{Name}, \$Param{ValidID}, \$Param{Comment}, \$Param{Response},
             \$Param{Subject},     \$Param{TypeID}, \$Param{AddressID},
@@ -108,15 +104,14 @@ sub AutoResponseAdd {
 
     # get id
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id
-            FROM auto_response
-            WHERE name = ?
-                AND type_id = ?
-                AND system_address_id = ?
-                AND content_type = ?
-                AND create_by = ?',
-        Bind => [
+        SQL   => 'SELECT id'
+               . ' FROM auto_response'
+               . ' WHERE name = ?'
+               . '  AND type_id = ?'
+               . '  AND system_address_id = ?'
+               . '  AND content_type = ?'
+               . '  AND create_by = ?',
+        Bind  => [
             \$Param{Name}, \$Param{TypeID}, \$Param{AddressID},
             \$Param{ContentType}, \$Param{UserID},
         ],
@@ -159,10 +154,8 @@ sub AutoResponseGet {
 
     # select
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT id, name, valid_id, comments, text0, text1, type_id, system_address_id,
-                content_type, create_time, create_by, change_time, change_by
-            FROM auto_response WHERE id = ?',
+        SQL   => 'SELECT id, name, valid_id, comments, text0, text1, type_id, system_address_id, content_type, create_time, create_by, change_time, change_by'
+               . ' FROM auto_response WHERE id = ?',
         Bind  => [ \$Param{ID} ],
         Limit => 1,
     );
@@ -233,12 +226,11 @@ sub AutoResponseUpdate {
 
     # update the database
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
-        SQL => '
-            UPDATE auto_response
-            SET name = ?, text0 = ?, comments = ?, text1 = ?, type_id = ?,
-                system_address_id = ?, content_type = ?, valid_id = ?,
-                change_time = current_timestamp, change_by = ?
-            WHERE id = ?',
+        SQL  => 'UPDATE auto_response'
+              . ' SET name = ?, text0 = ?, comments = ?, text1 = ?, type_id = ?,'
+              . '  system_address_id = ?, content_type = ?, valid_id = ?,'
+              . '  change_time = current_timestamp, change_by = ?'
+              . ' WHERE id = ?',
         Bind => [
             \$Param{Name}, \$Param{Response}, \$Param{Comment}, \$Param{Subject}, \$Param{TypeID},
             \$Param{AddressID}, \$Param{ContentType}, \$Param{ValidID},
@@ -262,16 +254,16 @@ Return example:
 
     %QueueAddressData(
         #Auto Response Data
-        'Text'            => 'Your OTRS TeamOTRS! answered by a human asap.',
+        'Text'            => 'Your KIX TeamKIX! answered by a human asap.',
         'Subject'         => 'New ticket has been created! (RE: <KIX_CUSTOMER_SUBJECT[24]>)',
         'ContentType'     => 'text/plain',
         'SystemAddressID' => '1',
 
         #System Address Data
         'ID'              => '1',
-        'Name'            => 'otrs@localhost',
-        'Address'         => 'otrs@localhost',  #Compatibility with OTRS 2.1
-        'Realname'        => 'OTRS System',
+        'Name'            => 'kix@localhost',
+        'Address'         => 'kix@localhost',  #Compatibility with OTRS 2.1
+        'Realname'        => 'KIX System',
         'Comment'         => 'Standard Address.',
         'ValidID'         => '1',
         'QueueID'         => '1',
@@ -300,15 +292,14 @@ sub AutoResponseGetByTypeQueueID {
 
     # SQL query
     return if !$DBObject->Prepare(
-        SQL => "
-            SELECT ar.text0, ar.text1, ar.content_type, ar.system_address_id
-            FROM auto_response_type art, auto_response ar, queue_auto_response qar
-            WHERE ar.valid_id IN ( ${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())} )
-                AND qar.queue_id = ?
-                AND art.id = ar.type_id
-                AND qar.auto_response_id = ar.id
-                AND art.name = ?",
-        Bind => [
+        SQL   => "SELECT ar.text0, ar.text1, ar.content_type, ar.system_address_id"
+               . " FROM auto_response_type art, auto_response ar, queue_auto_response qar"
+               . " WHERE ar.valid_id IN ( ${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())} )"
+               . "  AND qar.queue_id = ?"
+               . "  AND art.id = ar.type_id"
+               . "  AND qar.auto_response_id = ar.id"
+               . "  AND art.name = ?",
+        Bind  => [
             \$Param{QueueID},
             \$Param{Type},
         ],
@@ -364,12 +355,10 @@ sub AutoResponseWithoutQueue {
 
     # SQL query
     return if !$DBObject->Prepare(
-        SQL =>
-            'SELECT q.id, q.name
-             FROM queue q
-             LEFT OUTER JOIN queue_auto_response qar on q.id = qar.queue_id
-             WHERE qar.queue_id IS NULL '
-            . "AND q.valid_id IN (${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())})"
+        SQL => 'SELECT q.id, q.name FROM queue q'
+             . '  LEFT OUTER JOIN queue_auto_response qar on q.id = qar.queue_id'
+             . ' WHERE qar.queue_id IS NULL'
+             . "  AND q.valid_id IN (${\(join ', ', $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet())})"
     );
 
     # fetch the result
@@ -479,11 +468,8 @@ sub AutoResponseQueue {
         next NEWID if !$NewID;
 
         $DBObject->Do(
-            SQL => '
-                INSERT INTO queue_auto_response (queue_id, auto_response_id,
-                    create_time, create_by, change_time, change_by)
-                VALUES
-                    (?, ?, current_timestamp, ?, current_timestamp, ?)',
+            SQL  => 'INSERT INTO queue_auto_response (queue_id, auto_response_id, create_time, create_by, change_time, change_by)'
+                  . ' VALUES (?, ?, current_timestamp, ?, current_timestamp, ?)',
             Bind => [
                 \$Param{QueueID},
                 \$NewID,

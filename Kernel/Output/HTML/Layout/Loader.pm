@@ -15,11 +15,8 @@ use warnings;
 
 our $ObjectManagerDisabled = 1;
 
-# KIXCore-capeIT
 use File::Copy;
 use File::Path qw(mkpath);
-
-# EO KIXCore-capeIT
 
 =head1 NAME
 
@@ -176,8 +173,6 @@ sub LoaderCreateAgentCSSCalls {
         );
     }
 
-    #print STDERR "Time: " . Time::HiRes::tv_interval([$t0]);
-
     return 1;
 }
 
@@ -192,9 +187,6 @@ taking a list from the Loader::Agent::CommonJS config item.
 
 sub LoaderCreateAgentJSCalls {
     my ( $Self, %Param ) = @_;
-
-    #use Time::HiRes;
-    #my $t0 = Time::HiRes::gettimeofday();
 
     # get config object
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
@@ -349,8 +341,6 @@ sub LoaderCreateCustomerCSSCalls {
         );
     }
 
-    #print STDERR "Time: " . Time::HiRes::tv_interval([$t0]);
-
     return 1;
 }
 
@@ -415,39 +405,29 @@ sub LoaderCreateCustomerJSCalls {
 
     }
 
-    #print STDERR "Time: " . Time::HiRes::tv_interval([$t0]);
+    return 1;
 }
 
 sub _HandleCSSList {
     my ( $Self, %Param ) = @_;
 
-    my @Skins = ('default');
-
-    # KIXCore-capeIT
+    my @Skins    = ('default');
     my %SkinsMap = map { $_ => 1 } @Skins;
 
-    # EO KIXCore-capeIT
-
     # validating selected custom skin, if any
-    # KIXCore-capeIT
-    # if ( $Param{Skin} && $Param{Skin} ne 'default' && $Self->SkinValidate(%Param) ) {
     if ( $Param{Skin} && !$SkinsMap{ $Param{Skin} } && $Self->SkinValidate(%Param) ) {
-
-        # EO KIXCore-capeIT
         push @Skins, $Param{Skin};
     }
 
-    # KIXCore-capeIT
     # get paths
-    my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
-    $Param{SkinHome} =~ m/^$Home(.*)/;
-    my $SkinHomeShort = $1;
+    my $Home              = $Kernel::OM->Get('Kernel::Config')->Get('Home');
+    my ( $SkinHomeShort ) = $Param{SkinHome} =~ m/^$Home(.*)/;
 
     # get installed packages
     my @PackagesPaths;
     for my $Package (@INC) {
-        next if ( $Package !~ m/^$Home(.*)/ || $Package =~ m/^$Home\/bin/ );
-        push @PackagesPaths, $Package;
+        next if ( $Package !~ m/^$Home(?:.*)/ || $Package =~ m/^$Home\/bin/ );
+        push( @PackagesPaths, $Package );
     }
 
     # push standard path
@@ -484,7 +464,7 @@ sub _HandleCSSList {
 
                         # get all source files
                         opendir( DIR, $Directory );
-                        my @Files = grep { !/^(.|..|icons|thirdparty)$/g } readdir(DIR);
+                        my @Files = grep( { !/^(?:.|..|icons|thirdparty)$/g } readdir(DIR) );
                         closedir(DIR);
 
                         # check filelist for changes
@@ -492,7 +472,7 @@ sub _HandleCSSList {
 
                             # check if new directory exists
                             if ( !( -e $SkinDirectory ) ) {
-                                if ( !mkpath( $SkinDirectory, 0, 0755 ) ) {
+                                if ( !mkpath( $SkinDirectory, 0, oct(755) ) ) {
                                     $Kernel::OM->Get('Kernel::System::Log')->Log(
                                         Priority => 'error',
                                         Message  => "Can't create directory '$SkinDirectory': $!",
@@ -502,14 +482,14 @@ sub _HandleCSSList {
                             }
 
                             # check if file does not exist
-                            if ( !-e $SkinDirectory . $File ) {
+                            if ( !-e ($SkinDirectory . $File) ) {
                                 copy( $Directory . $File, $SkinDirectory . $File );
                             }
 
                             # check if file has changed
                             else {
-                                my $TargetFileSize = -s $SkinDirectory . $File;
-                                my $SourceFileSize = -s $Directory . $File;
+                                my $TargetFileSize = -s ($SkinDirectory . $File);
+                                my $SourceFileSize = -s ($Directory . $File);
 
                                 # copy file if changed
                                 if ( $SourceFileSize && $TargetFileSize != $SourceFileSize ) {
@@ -536,7 +516,7 @@ sub _HandleCSSList {
                 if ( -e $DirectoryTP ) {
 
                     opendir( DIR, $DirectoryTP );
-                    my @Files = grep { !/^(.|..)$/g } readdir(DIR);
+                    my @Files = grep( { !/^(?:.|..)$/g } readdir(DIR) );
                     closedir(DIR);
 
                     $Self->_CopyThirdPartyFiles(
@@ -549,8 +529,6 @@ sub _HandleCSSList {
         }
     }
 
-    # EO KIXCore-capeIT
-
     # load default css files
     for my $Skin (@Skins) {
         my @FileList;
@@ -558,10 +536,7 @@ sub _HandleCSSList {
         CSSFILE:
         for my $CSSFile ( @{ $Param{List} } ) {
 
-            # KIXCore-capeIT
-            # my $SkinFile = "$Param{SkinHome}/$Param{SkinType}/$Skin/css/$CSSFile";
             my $SkinFile;
-            my $CSSDirectory;
 
             $SkinFile =
                 $Param{SkinHome} . "/"
@@ -572,8 +547,6 @@ sub _HandleCSSList {
 
             next CSSFILE if !( -e $SkinFile );
 
-            # EO KIXCore-capeIT
-
             if ( $Param{DoMinify} ) {
                 push @FileList, $SkinFile;
             }
@@ -581,27 +554,21 @@ sub _HandleCSSList {
                 $Self->Block(
                     Name => $Param{BlockName},
                     Data => {
-                        Skin => $Skin,
-
-                        # KIXCore-capeIT
-                        # CSSDirectory => 'css',
+                        Skin         => $Skin,
                         CSSDirectory => "css-cache/css",
-
-                        # EO KIXCore-capeIT
-                        Filename => $CSSFile,
+                        Filename     => $CSSFile,
                     },
                 );
             }
         }
 
-        # KIXCore-capeIT
         if ( $Param{DoMinify} ) {
 
             # create cache directory for package skins (stored in subdirectory)
             my $KIXCacheDirectory =
                 $Param{SkinHome} . "/" . $Param{SkinType} . "/" . $Skin . "/css-cache/css/";
             if ( !-e $KIXCacheDirectory ) {
-                if ( !mkpath( $KIXCacheDirectory, 0, 0755 ) ) {
+                if ( !mkpath( $KIXCacheDirectory, 0, oct(755) ) ) {
                     $Kernel::OM->Get('Kernel::System::Log')->Log(
                         Priority => 'error',
                         Message  => "Can't create directory '$KIXCacheDirectory': $!",
@@ -612,44 +579,28 @@ sub _HandleCSSList {
 
             if ( ref \@FileList eq 'ARRAY' && scalar @FileList ) {
 
-                # EO KIXCore-capeIT
                 my $MinifiedFile = $Kernel::OM->Get('Kernel::System::Loader')->MinifyFiles(
-                    List => \@FileList,
-                    Type => 'CSS',
-
-                    # KIXCore-capeIT
-                    # TargetDirectory      => "$Param{SkinHome}/$Param{SkinType}/$Skin/css-cache/",
-                    TargetDirectory => $KIXCacheDirectory,
-
-                    # EO KIXCore-capeIT
+                    List                 => \@FileList,
+                    Type                 => 'CSS',
+                    TargetDirectory      => $KIXCacheDirectory,
                     TargetFilenamePrefix => $Param{BlockName},
                 );
 
                 $Self->Block(
                     Name => $Param{BlockName},
                     Data => {
-                        Skin => $Skin,
-
-                        # KIXCore-capeIT
-                        # CSSDirectory => 'css-cache',
+                        Skin         => $Skin,
                         CSSDirectory => 'css-cache/css',
-
-                        # EO KIXCore-capeIT
-                        Filename => $MinifiedFile,
+                        Filename     => $MinifiedFile,
                     },
                 );
-
-                # KIXCore-capeIT
             }
-
-            # EO KIXCore-capeIT
         }
     }
 
     return 1;
 }
 
-# KIXCore-capeIT
 sub _CopyThirdPartyFiles {
     my ( $Self, %Param ) = @_;
 
@@ -658,17 +609,17 @@ sub _CopyThirdPartyFiles {
     my $TargetPath = $Param{TargetPath};
 
     for my $File (@FileList) {
-        if ( -d $SourcePath . $File ) {
+        if ( -d ($SourcePath . $File) ) {
             my $NewSourcePath = $SourcePath . $File . "/";
             my $NewTargetPath = $TargetPath . $File . "/";
 
             opendir( DIR, $NewSourcePath );
-            my @Files = grep { !/^(.|..)$/g } readdir(DIR);
+            my @Files = grep { !/^(?:.|..)$/g } readdir(DIR);
             closedir(DIR);
 
             if ( !( -e $NewTargetPath ) ) {
 
-                if ( !mkpath( $NewTargetPath, 0, 0755 ) ) {
+                if ( !mkpath( $NewTargetPath, 0, oct(755) ) ) {
                     $Kernel::OM->Get('Kernel::System::Log')->Log(
                         Priority => 'error',
                         Message  => "Can't create directory '$NewTargetPath': $!",
@@ -686,14 +637,14 @@ sub _CopyThirdPartyFiles {
         else {
 
             # check if file does not exist
-            if ( !-e $TargetPath . $File ) {
+            if ( !-e ($TargetPath . $File) ) {
                 copy( $SourcePath . $File, $TargetPath . $File );
             }
 
             # check if file has changed
             else {
-                my $TargetFileSize = -s $TargetPath . $File;
-                my $SourceFileSize = -s $SourcePath . $File;
+                my $TargetFileSize = -s ($TargetPath . $File);
+                my $SourceFileSize = -s ($SourcePath . $File);
 
                 # copy file if changed
                 if ( $TargetFileSize != $SourceFileSize ) {
@@ -706,49 +657,35 @@ sub _CopyThirdPartyFiles {
     return 1;
 }
 
-# EO KIXCore-capeIT
-
 sub _HandleJSList {
     my ( $Self, %Param ) = @_;
 
     my @FileList;
-
-    # KIXCore-capeIT
     my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
 
     my @PackagesPaths;
     for my $Package (@INC) {
-        next if ( $Package !~ m/^$Home(.*)/ || $Package =~ m/^$Home\/bin/ );
+        next if ( $Package !~ m/^$Home(?:.*)/ || $Package =~ m/^$Home\/bin/ );
         push @PackagesPaths, $Package;
     }
 
     my @UsedFiles = ();
 
-    # EO KIXCore-capeIT
-
     for my $JSFile ( @{ $Param{List} } ) {
 
-        # KIXCore-capeIT
         next if grep { $_ eq $JSFile } @UsedFiles;
 
         # check packages
         my $JSHome = $Param{JSHome};
         for my $Path (@PackagesPaths) {
-            next if ( !-e $Path . '/var/httpd/htdocs/js/' . $JSFile );
+            next if ( !-e ($Path . '/var/httpd/htdocs/js/' . $JSFile) );
             $JSHome = $Path . '/var/httpd/htdocs/js';
             last;
         }
         push @UsedFiles, $JSFile;
 
-        # EO KIXCore-capeIT
-
         if ( $Param{DoMinify} ) {
-
-            # KIXCore-capeIT
-            # push @FileList, "$Param{JSHome}/$JSFile";
             push @FileList, "$JSHome/$JSFile";
-
-            # EO KIXCore-capeIT
         }
         else {
             $Self->Block(
@@ -814,7 +751,6 @@ sub SkinValidate {
     my $SkinType      = $Param{SkinType};
     my $PossibleSkins = $ConfigObject->Get("Loader::${SkinType}::Skin") || {};
     my $Home          = $ConfigObject->Get('Home');
-    my %ActiveSkins;
 
     # prepare the list of active skins
     for my $PossibleSkin ( values %{$PossibleSkins} ) {
@@ -825,19 +761,16 @@ sub SkinValidate {
                 return 1;
             }
 
-            # KIXCore-capeIT
             # check custom packages
             else {
                 for my $Path (@INC) {
-                    next if ( $Path !~ m/^$Home(.*)/ || $Path =~ m/^$Home\/bin/ );
-                    if ( -d $Path . "/var/httpd/htdocs/skins/$SkinType/" . $PossibleSkin->{InternalName} ) {
+                    next if ( $Path !~ m/^$Home(?:.*)/ || $Path =~ m/^$Home\/bin/ );
+                    if ( -d ($Path . "/var/httpd/htdocs/skins/$SkinType/" . $PossibleSkin->{InternalName}) ) {
                         $Self->{SkinValidateCache}->{ $Param{SkinType} . '::' . $Param{Skin} } = 1;
                         return 1;
                     }
                 }
             }
-
-            # EO KIXCore-capeIT
         }
     }
 

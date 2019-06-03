@@ -338,7 +338,7 @@ sub _WorkerPIDsCheck {
     # Check pid directory.
     if ( !-e $Self->{PIDDir} ) {
 
-        File::Path::mkpath( $Self->{PIDDir}, 0, 0770 );    ## no critic
+        File::Path::mkpath( $Self->{PIDDir}, 0, oct(770) );
 
         if ( !-e $Self->{PIDDir} ) {
 

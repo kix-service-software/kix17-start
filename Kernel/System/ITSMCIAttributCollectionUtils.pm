@@ -11,6 +11,8 @@ package Kernel::System::ITSMCIAttributCollectionUtils;
 use strict;
 use warnings;
 
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::System::ITSMConfigItem'
 );
@@ -28,8 +30,7 @@ sub new {
 }
 
 #-------------------------------------------------------------------------------
-# capeIT
-# Thefollowing methods are meant to ease the handling of the XML-LIKE data hash.
+# The following methods are meant to ease the handling of the XML-LIKE data hash.
 # They do not replace any internal/original methods.
 
 =item GetAttributeValuesByKey()
@@ -49,13 +50,11 @@ sub GetAttributeValuesByKey {
     # check required params...
     if (
         !$Param{KeyName}
-        ||
-        ( !$Param{XMLData} ) ||
-        ( !$Param{XMLDefinition} ) ||
-        ( ref $Param{XMLData} ne 'HASH' ) ||
-        ( ref $Param{XMLDefinition} ne 'ARRAY' )
-        )
-    {
+        || ( !$Param{XMLData} )
+        || ( !$Param{XMLDefinition} )
+        || ( ref $Param{XMLData} ne 'HASH' )
+        || ( ref $Param{XMLDefinition} ne 'ARRAY' )
+    ) {
         return \@RetArray;
     }
 
@@ -121,13 +120,11 @@ sub GetAttributeContentsByKey {
     # check required params...
     if (
         !$Param{KeyName}
-        ||
-        ( !$Param{XMLData} ) ||
-        ( !$Param{XMLDefinition} ) ||
-        ( ref $Param{XMLData} ne 'HASH' ) ||
-        ( ref $Param{XMLDefinition} ne 'ARRAY' )
-        )
-    {
+        || ( !$Param{XMLData} )
+        || ( !$Param{XMLDefinition} )
+        || ( ref $Param{XMLData} ne 'HASH' )
+        || ( ref $Param{XMLDefinition} ne 'ARRAY' )
+    ) {
         return \@RetArray;
     }
 
@@ -250,49 +247,6 @@ sub GetKeyNamesByType {
 
             my @SubResult = @{
                 $Self->GetKeyNamesByType(
-                    AttributeType => $Param{AttributeType},
-                    XMLDefinition => $AttrDef->{Sub},
-                    )
-                };
-
-            @Keys = ( @Keys, @SubResult );
-        }
-
-    }
-
-    return \@Keys;
-}
-
-=item _GetKeyNamesByType()
-
-    Sames as GetKeyNamesByType - returns an array of keynames which are of a
-    specified data type. => use GetKeyNamesByType instead !
-    !!! DEPRECATED - ONLY FOR COMPATIBILITY - WILL BE REMOVED !!!
-
-    $ConfigItemObject->_GetKeyNamesByType(
-        XMLDefinition => $XMLDefinition,
-        AttributeType => $AttributeType,
-    );
-
-=cut
-
-sub _GetKeyNamesByType {
-    my ( $Self, %Param ) = @_;
-
-    my @Keys = ();
-    my %Result;
-
-    if ( defined( $Param{XMLDefinition} ) ) {
-
-        for my $AttrDef ( @{ $Param{XMLDefinition} } ) {
-            if ( $AttrDef->{Input}->{Type} eq $Param{AttributeType} ) {
-                push( @Keys, $AttrDef->{Key} )
-            }
-
-            next if !$AttrDef->{Sub};
-
-            my @SubResult = @{
-                $Self->_GetKeyNamesByType(
                     AttributeType => $Param{AttributeType},
                     XMLDefinition => $AttrDef->{Sub},
                     )
@@ -451,14 +405,12 @@ sub SetAttributeContentsByKey {
     # check required params...
     if (
         !$Param{KeyName}
-        ||
-        !length( $Param{NewContent} ) ||
-        ( !$Param{XMLData} ) ||
-        ( !$Param{XMLDefinition} ) ||
-        ( ref $Param{XMLData} ne 'HASH' ) ||
-        ( ref $Param{XMLDefinition} ne 'ARRAY' )
-        )
-    {
+        || !length( $Param{NewContent} )
+        || ( !$Param{XMLData} )
+        || ( !$Param{XMLDefinition} )
+        || ( ref $Param{XMLData} ne 'HASH' )
+        || ( ref $Param{XMLDefinition} ne 'ARRAY' )
+    ) {
         return 0;
     }
 
@@ -491,8 +443,6 @@ sub SetAttributeContentsByKey {
 
     return 0;
 }
-
-# EO capeIT
 #-------------------------------------------------------------------------------
 
 1;

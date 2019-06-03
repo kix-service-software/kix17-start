@@ -12,22 +12,17 @@
 [% InsertTemplate("AgentCustomerSearch.tt") %]
 <div class="MainBox ARIARoleMain FormScreen">
 
-# KIX4OTRS-capeIT
-#    <h1>[% Translate("Create New Phone Ticket") | html %]</h1>
     <h1>
 [% RenderBlockStart("MaskHeader") %]
       [% Translate(Data.Text) | html %]
 [% RenderBlockEnd("MaskHeader") %]
     </h1>
-# EO KIX4OTRS-capeIT
     <p class="AsteriskExplanation">[% Translate("All fields marked with an asterisk (*) are mandatory.") | html %]</p>
 
     <div class="LayoutFixedSidebar SidebarLast">
 
        <div class="SidebarColumn">
-# KIX4OTRS-capeIT
           [% Data.KIXSidebarContent %]
-# EO KIX4OTRS-capeIT
        </div>
 
         <div class="ContentColumn">
@@ -35,11 +30,9 @@
                 <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                 <input type="hidden" name="Subaction" value="StoreNew"/>
                 <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
-# KIX4OTRS-capeIT
                 <input type="hidden" name="DefaultSetTypeChanged" id="DefaultSetTypeChanged" value="[% Data.DefaultSetTypeChanged | html %]"/>
                 <input type="hidden" name="DefaultSet" id="DefaultSet" value="[% Data.DefaultSet | html %]"/>
                 <input type="hidden" name="SelectedConfigItemIDs" id="SelectedConfigItemIDs" value="[% Data.SelectedConfigItemIDs | html %]"/>
-# EO KIX4OTRS-capeIT
                 <input type="hidden" name="ExpandCustomerName" id="ExpandCustomerName" value="0"/>
 # ---
 # ITSMIncidentProblemManagement
@@ -53,18 +46,9 @@
                 <input type="hidden" name="SelectedCustomerUser" id="SelectedCustomerUser" value="[% Data.CustomerUser | html %]"/>
                 <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]"/>
                 <input type="hidden" name="LinkTicketID" value="[% Data.LinkTicketID | html %]"/>
-                <input type="hidden" name="FromChatID" value="[% Data.FromChatID | html %]"/>
 
                 <fieldset class="TableLike">
 
-# example template for customizations, see hidden form at the end of the file
-#                    <label>[% Translate("Templates") | html %]:</label>
-#                    <div class="Field">
-#                        <button type="button" onclick="$('#Template1').submit()" value="[% Translate("Example Template") | html %]">[% Translate("Example Template") | html %]</button>
-#                    </div>
-#                    <div class="Clear"></div>
-
-# KIX4OTRS-capeIT
 [% RenderBlockStart("DefaultSetSelection") %]
                     <label class="" for="DefaultSetSelection">[% Translate("Ticket-Template selection") | html %]:</label>
                     <div class="Field">
@@ -92,7 +76,6 @@
                     </div>
                     <div class="Clear"></div>
 [% RenderBlockEnd("DefaultSetSelection") %]
-# EO KIX4OTRS-capeIT
 
 [% RenderBlockStart("TicketType") %]
                     <label class="Mandatory" for="TypeID"><span class="Marker">*</span> [% Translate("Type") | html %]:</label>
@@ -111,7 +94,6 @@
                     <div class="Clear"></div>
 [% RenderBlockEnd("TicketType") %]
 
-# rkaiser - T#2017020290001194 - changed customer user to contact
                     <label for="FromCustomer" class="Mandatory"><span class="Marker">*</span>[% Translate("Contact") | html %]:</label>
                     <div class="Field">
                         <input id="FromCustomer" type="text" name="FromCustomer" value="" class="CustomerAutoComplete W75pc [% Data.FromInvalid | html %]" autocomplete="off" />
@@ -127,7 +109,6 @@
                         <div class="CustomerTicketTemplateFromCustomer SpacingTopSmall Hidden">
                             <input name="CustomerSelected" title="[% Translate("Select this customer as the main customer.") | html %]" id="CustomerSelected" class="CustomerTicketRadio" type="radio" value=""/>
                             <input name="CustomerKey" id="CustomerKey" class="CustomerKey" type="hidden" value=""/>
-# rkaiser - T#2017020290001194 - changed customer user to contact
                             <input class="CustomerTicketText Radio" title="[% Translate("Contact") | html %]" name="CustomerTicketText" id="CustomerTicketText" type="text" value="" readonly="readonly" />
                             <a href="#" id="RemoveCustomerTicket" class="RemoveButton CustomerTicketRemove">
                                 <i class="fa fa-minus-square-o"></i>
@@ -140,11 +121,9 @@
                             <div class="SpacingTopSmall ">
                                 <input name="CustomerSelected" title="[% Translate("Select this customer as the main customer.") | html %]" id="CustomerSelected" class="CustomerTicketRadio" type="radio" value="[% Data.Count | html %]" [% Data.CustomerSelected | html %]  [% Data.CustomerDisabled | html %] />
                                 <input name="CustomerKey_[% Data.Count | html %]" id="CustomerKey_[% Data.Count | html %]" class="CustomerKey" type="hidden" value="[% Data.CustomerKey | html %]"/>
-# rkaiser - T#2017020290001194 - changed customer user to contact
                                 <input class="CustomerTicketText Radio [% Data.CustomerError | html %]" title="[% Translate("Contact") | html %]" name="CustomerTicketText_[% Data.Count %]" id="CustomerTicketText_[% Data.Count %]" type="text" value="[% Data.CustomerElement | html %]" readonly="readonly" />
                                 <a href="#" id="RemoveCustomerTicket_[% Data.Count %]" class="RemoveButton CustomerTicketRemove">
                                     <i class="fa fa-minus-square-o"></i>
-# rkaiser - T#2017020290001194 - changed customer user to contact
                                     <span class="InvisibleText">[% Translate("Remove Ticket contact") | html %]</span>
                                 </a>
 
@@ -185,10 +164,7 @@
 <script type="text/javascript">//<![CDATA[
     $('.CustomerTicketRadio').bind('change', function () {
         var CustomerKey;
-# KIX4OTRS-capeIT
-#         if ( $(this).attr('checked') ){
         if ( $(this).prop('checked') ){
-# EO KIX4OTRS-capeIT
 
             CustomerKey = $( '#CustomerKey_' +$(this).val() ).val();
             // get customer tickets
@@ -263,13 +239,6 @@
 # ITSMIncidentProblemManagement
 # ---
                     <label for="ServiceIncidentStateContainer" style="display:none;">[% Translate("Service Incident State") | html %]:</label>
-# KIX4OTRS-capeIT
-#                    <div id="ServiceIncidentStateContainer" class="Value" style="display:none;">
-#                        <div class="Flag Small">
-#                            <span id="ServiceIncidentStateSignal"></span>
-#                        </div>
-#                        <span id="ServiceIncidentState">&nbsp;</span>
-#                    </div>
                     <div id="ServiceIncidentStateContainer" class="Field" style="display:none;">
                         <div class="Value">
                             <div class="Flag Small">
@@ -279,7 +248,6 @@
                         </div>
                     </div>
                     <div class="Clear"></div>
-# EO KIX4OTRS-capeIT
 # ---
 [% RenderBlockEnd("TicketService") %]
 
@@ -313,14 +281,6 @@
 # ---
 # ITSMIncidentProblemManagement
 # ---
-# KIX4OTRS-capeIT
-#                     <label for="ServiceIncidentStateContainer" style="display:none;">[% Translate("Service Incident State") | html %]:</label>
-#                     <div id="ServiceIncidentStateContainer" class="Value" style="display:none;">
-#                         <div class="Flag Small">
-#                             <span id="ServiceIncidentStateSignal"></span>
-#                         </div>
-#                         <span id="ServiceIncidentState">&nbsp;</span>
-#                     </div>
                     <div id="ServiceIncidentStateContainer" class="Field" style="display:none;">
                         <div class="Value">
                             <div class="Flag Small">
@@ -330,7 +290,6 @@
                         </div>
                     </div>
                     <div class="Clear"></div>
-# EO KIX4OTRS-capeIT
 # ---
 [% RenderBlockEnd("TicketServiceMandatory") %]
 
@@ -433,12 +392,8 @@
                     <div class="Clear"></div>
 
 [% RenderBlockStart("TicketOptions") %]
-# KIX4OTRS-capeIT
-#                    <label>[% Translate("Options") | html %]:</label>
-#                    <div class="Field">
                     <label for="Options">[% Translate("Options") | html %]:</label>
                     <div class="Options Field">
-# EO KIX4OTRS-capeIT
 
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
@@ -447,7 +402,6 @@
 [% RenderBlockEnd("SpellCheck") %]
 
 [% RenderBlockStart("OptionCustomer") %]
-# rkaiser - T#2017020290001194 - changed customer user to contact
                         <a href="#" id="OptionCustomer">[ [% Translate("Contact") | html %] ]</a>
 [% RenderBlockEnd("OptionCustomer") %]
 # ---
@@ -499,12 +453,8 @@
                     </div>
                     <div class="Clear"></div>
 
-# KIX4OTRS-capeIT
-#                    <label>[% Translate("Attachment") | html %]:</label>
-#                    <div class="Field">
                     <label for="FileUpload">[% Translate("Attachment") | html %]:</label>
                     <div class="Field FileUpload">
-# EO KIX4OTRS-capeIT
                         <ul>
 [% RenderBlockStart("Attachment") %]
                             <li>
@@ -540,18 +490,6 @@
                     </div>
                     <div class="Clear"></div>
 
-[% RenderBlockStart("ChatArticlePreview") %]
-                    <label>[% Translate("Chat protocol") | html %]:</label>
-                    <div class="Field">
-                        <div class="ChatProtocol">
-[% INCLUDE "ChatDisplay.tt" %]
-                        </div>
-                        <p class="FieldExplanation">[% Translate('The chat will be appended as a separate article.') | html %]
-                        </div>
-                        <div class="Clear"></div>
-[% RenderBlockEnd("ChatArticlePreview") %]
-
-
                         <label for="NextStateID">[% Translate("Next ticket state") | html %]:</label>
                         <div class="Field">
                         [% Data.NextStatesStrg %]
@@ -565,10 +503,7 @@
                         </div>
                         <div class="Clear"></div>
 
-# KIX4OTRS-capeIT
-#                    <label>[% Translate("Pending date") | html %]:</label>
                     <label for="Date">[% Translate("Pending date") | html %]:</label>
-# EO KIX4OTRS-capeIT
                     <div class="Field">
                         [% Data.PendingDateString %]
                             <div id="DayError" class="TooltipErrorMessage"><p>[% Translate("Date invalid!") | html %]</p></div>
@@ -606,10 +541,7 @@
                         <div class="Clear"></div>
 
 [% RenderBlockStart("DynamicField") %]
-# KIX4OTRS-capeIT
-#                        <div class="Row Row_DynamicField_[% Data.Name | html %]">
                         <div class="Row Row_DynamicField_[% Data.Name | html %] [% Data.Class | html %]">
-# EO KIX4OTRS-capeIT
                         [% Data.Label %]
                             <div class="Field">
                             [% Data.Field %]
@@ -617,28 +549,6 @@
                             <div class="Clear"></div>
                         </div>
 [% RenderBlockEnd("DynamicField") %]
-
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("DynamicField_Field1") %]
-#                    <div class="Row Row_DynamicField_[% Data.Name | html %]">
-#                        [% Data.Label %]
-#                        <div class="Field">
-#                            [% Data.Field %]
-#                        </div>
-#                        <div class="Clear"></div>
-#                    </div>
-#[% RenderBlockEnd("DynamicField_Field1") %]
-#[% RenderBlockStart("DynamicField_Field2") %]
-#                    <div class="Row Row_DynamicField_[% Data.Name | html %]">
-#                        [% Data.Label %]
-#                        <div class="Field">
-#                            [% Data.Field %]
-#                        </div>
-#                        <div class="Clear"></div>
-#                    </div>
-#[% RenderBlockEnd("DynamicField_Field2") %]
 
 [% RenderBlockStart("TimeUnitsLabel") %]
                         <label for="TimeUnits">[% Translate("Time units") | html %] [% Translate(Config("Ticket::Frontend::TimeUnits")) | html %]:</label>
@@ -654,10 +564,7 @@
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("TimeUnits") %]
-# KIX4OTRS-capeIT
-#                    <div class="Field SpacingTop">
                     <div class="Field SpacingTop EndOfForm">
-# EO KIX4OTRS-capeIT
                         <button class="Primary CallForAction" id="submitRichText" accesskey="g" title="[% Translate("Create") | html %] (g)" type="submit" value="[% Translate("Create") | html %]"><span><i class="fa fa-check"></i> [% Translate("Create") | html %]</span></button>
                     </div>
                     </fieldset>
@@ -672,9 +579,7 @@
 <script type="text/javascript">//<![CDATA[
     Core.Agent.TicketAction.Init();
     Core.Config.Set('Localization.Delete', [% Translate("Delete") | JSON %]);
-# KIX4OTRS-capeIT
     Core.KIX4OTRS.KIXSidebar.Init('[% Env("AgentTicketPhoneSidebarWidth") %]','[% Env("Action") %]');
-# EO KIX4OTRS-capeIT
 # ---
 # ITSMIncidentProblemManagement
 # ---
@@ -687,8 +592,6 @@
             ServiceID: $('#ServiceID').val()
         });
 # ---
-# KIX4OTRS-capeIT
-#    // get linked config items
     Core.Form.Validate.SetSubmitFunction( $('#NewPhoneTicket'), function (Form) {
         var SelectedConfigItemString = $('#SelectedConfigItemIDs').val();
 
@@ -716,18 +619,5 @@
             }
         }
     }
-# EO KIX4OTRS-capeIT
 //]]></script>
 [% END %]
-
-# example template form for customizations
-#<form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" id="Template1">
-#    <input type="hidden" name="Action" value="[% Env("Action") %]"/>
-#    <input type="hidden" name="Subaction" value="StoreNew"/>
-#    <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
-#    <input type="hidden" name="ExpandCustomerName" value="1"/>
-#    <input type="hidden" name="Subject" value="Example Subject"/>
-#    <input type="hidden" name="Body" value="Name:
-#Product:
-#Comment:"/>
-#</form>

@@ -9,9 +9,6 @@
 # --
 
 package Kernel::System::ObjectManager;
-## nofilter(TidyAll::Plugin::OTRS::Perl::PodSpelling)
-## nofilter(TidyAll::Plugin::OTRS::Perl::Require)
-## nofilter(TidyAll::Plugin::OTRS::Perl::SyntaxCheck)
 
 use strict;
 use warnings;
@@ -40,6 +37,8 @@ use Kernel::System::User;
 # used to generate better error messages.
 our $CurrentObject;
 
+## no critic qw(Subroutines::RequireArgUnpacking TestingAndDebugging::ProhibitNoStrict)
+
 =head1 NAME
 
 Kernel::System::ObjectManager - object and dependency manager
@@ -61,7 +60,7 @@ The ObjectManager must always be provided to OTRS by the toplevel script like th
     local $Kernel::OM = Kernel::System::ObjectManager->new(
         # options for module constructors here
         LogObject {
-            LogPrefix => 'OTRS-MyTestScript',
+            LogPrefix => 'KIX-MyTestScript',
         },
     );
 
@@ -116,7 +115,7 @@ The hash reference will be flattened and passed to the constructor of the object
 
     local $Kernel::OM = Kernel::System::ObjectManager->new(
         Kernel::System::Log => {
-            LogPrefix => 'OTRS-MyTestScript',
+            LogPrefix => 'KIX-MyTestScript',
         },
     );
 
@@ -210,7 +209,7 @@ sub _ObjectBuild {
     my $Dependencies = [];
 
     if ( $Package ne 'Kernel::Config' ) {
-        no strict 'refs';    ## no critic
+        no strict 'refs';
         if ( !exists ${ $Package . '::' }{ObjectDependencies} ) {
             $Self->_DieWithError( Error => "$Package does not declare its object dependencies!" );
         }
@@ -397,7 +396,7 @@ sub ObjectsDiscard {
         push @AllObjects, $Object;
     }
 
-    # During an OTRS package upgrade the packagesetup code module has just
+    # During an KIX package upgrade the packagesetup code module has just
     # recently been copied to it's location in the file system.
     # In a persistent Perl environment an old version of the module might still be loaded,
     # as watchdogs like Apache2::Reload haven't had a chance to reload it.
@@ -549,6 +548,8 @@ sub DESTROY {
     # Make sure $Kernel::OM is still available in the destructor
     local $Kernel::OM = $Self;
     $Self->ObjectsDiscard();
+
+    return 1;
 }
 
 

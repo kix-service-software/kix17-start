@@ -126,19 +126,16 @@ sub new {
     # add time attributes
     for my $Type (
         qw(Time ChangeTime CloseTime TimePending EscalationTime EscalationResponseTime EscalationUpdateTime EscalationSolutionTime)
-        )
-    {
+    ) {
         my $Key = $Type . 'SearchType';
         $Map{$Key} = 'SCALAR';
     }
     for my $Type (
         qw(TicketCreate TicketChange TicketClose TicketLastChange TicketPending TicketEscalation TicketEscalationResponse TicketEscalationUpdate TicketEscalationSolution)
-        )
-    {
+    ) {
         for my $Attribute (
             qw(PointFormat Point PointStart Start StartDay StartMonth StartYear Stop StopDay StopMonth StopYear)
-            )
-        {
+        ) {
             my $Key = $Type . 'Time' . $Attribute;
             $Map{$Key} = 'SCALAR';
         }
@@ -433,7 +430,7 @@ sub JobRun {
             # check min. one search arg
             my $Count = 0;
             for ( sort keys %Job ) {
-                if ( $_ !~ /^(New|Name|Valid|Schedule|Event)/ && $Job{$_} ) {
+                if ( $_ !~ /^(?:New|Name|Valid|Schedule|Event)/ && $Job{$_} ) {
                     $Count++;
                 }
             }
@@ -597,10 +594,11 @@ sub JobGet {
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
 
     return if !$DBObject->Prepare(
-        SQL => '
-            SELECT job_key, job_value
-            FROM generic_agent_jobs
-            WHERE job_name = ?',
+        SQL  => <<'END',
+SELECT job_key, job_value
+FROM generic_agent_jobs
+WHERE job_name = ?
+END
         Bind => [ \$Param{Name} ],
     );
 
@@ -629,8 +627,7 @@ sub JobGet {
 
     for my $Type (
         qw(TicketCreate TicketChange TicketClose TicketLastChange TicketPending TicketEscalation TicketEscalationResponse TicketEscalationUpdate TicketEscalationSolution)
-        )
-    {
+    ) {
         my $SearchType = $Map{$Type} . 'SearchType';
 
         if ( !$Data{$SearchType} || $Data{$SearchType} eq 'None' ) {
@@ -640,8 +637,7 @@ sub JobGet {
                 qw(TimeStartMonth TimeStopMonth TimeStopDay
                 TimeStartDay TimeStopYear TimePoint
                 TimeStartYear TimePointFormat TimePointStart)
-                )
-            {
+            ) {
                 delete $Data{ $Type . $_ };
             }
         }
@@ -657,8 +653,7 @@ sub JobGet {
                 $Data{ $Type . 'TimeStartDay' }
                 && $Data{ $Type . 'TimeStartMonth' }
                 && $Data{ $Type . 'TimeStartYear' }
-                )
-            {
+            ) {
                 $Data{ $Type . 'TimeNewerDate' } = $Data{ $Type . 'TimeStartYear' } . '-'
                     . $Data{ $Type . 'TimeStartMonth' } . '-'
                     . $Data{ $Type . 'TimeStartDay' }
@@ -668,8 +663,7 @@ sub JobGet {
                 $Data{ $Type . 'TimeStopDay' }
                 && $Data{ $Type . 'TimeStopMonth' }
                 && $Data{ $Type . 'TimeStopYear' }
-                )
-            {
+            ) {
                 $Data{ $Type . 'TimeOlderDate' } = $Data{ $Type . 'TimeStopYear' } . '-'
                     . $Data{ $Type . 'TimeStopMonth' } . '-'
                     . $Data{ $Type . 'TimeStopDay' }
@@ -680,16 +674,14 @@ sub JobGet {
             for (
                 qw(TimeStartMonth TimeStopMonth TimeStopDay
                 TimeStartDay TimeStopYear TimeStartYear)
-                )
-            {
+            ) {
                 delete $Data{ $Type . $_ };
             }
             if (
                 $Data{ $Type . 'TimePoint' }
                 && $Data{ $Type . 'TimePointStart' }
                 && $Data{ $Type . 'TimePointFormat' }
-                )
-            {
+            ) {
                 my $Time = 0;
                 if ( $Data{ $Type . 'TimePointFormat' } eq 'minute' ) {
                     $Time = $Data{ $Type . 'TimePoint' };
@@ -1054,8 +1046,7 @@ sub _JobRunTicket {
         $Param{Config}->{New}->{PendingTime}
         && !$Param{Config}->{New}->{State}
         && !$Param{Config}->{New}->{StateID}
-        )
-    {
+    ) {
         # if pending time is provided, but there is no new ticket state provided,
         # check if ticket is already in pending state
         my %Ticket = $TicketObject->TicketGet(
@@ -1109,7 +1100,6 @@ sub _JobRunTicket {
         if ( $Param{Config}->{New}->{CustomerUserLogin} ) {
             if ( $Self->{NoticeSTDOUT} ) {
                 print
-                    # rkaiser - T#2017020290001194 - changed customer user to contact
                     "  - set contact id of Ticket $Ticket to '$Param{Config}->{New}->{CustomerUserLogin}'\n";
             }
         }
@@ -1407,8 +1397,7 @@ sub _JobRunTicket {
             );
         }
 
-        if ( $Kernel::OM->Get('Kernel::System::Main')->Require( $Param{Config}->{New}->{Module} ) )
-        {
+        if ( $Kernel::OM->Get('Kernel::System::Main')->Require( $Param{Config}->{New}->{Module} ) ) {
 
             # protect parent process
             eval {
@@ -1436,8 +1425,7 @@ sub _JobRunTicket {
     if (
         $Param{Config}->{New}->{ArchiveFlag}
         && $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ArchiveSystem')
-        )
-    {
+    ) {
         if ( $Self->{NoticeSTDOUT} ) {
             print
                 "  - set archive flag of Ticket $Ticket to '$Param{Config}->{New}->{ArchiveFlag}'\n";
@@ -1460,7 +1448,7 @@ sub _JobRunTicket {
         );
         system("$Param{Config}->{New}->{CMD} $Param{TicketNumber} $Param{TicketID} ");
 
-        if ( $? ne 0 ) {
+        if ( $? != 0 ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'notice',
                 Message  => "Command returned a nonzero return code: rc=$?, err=$!",

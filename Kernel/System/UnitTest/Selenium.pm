@@ -9,7 +9,6 @@
 # --
 
 package Kernel::System::UnitTest::Selenium;
-## nofilter(TidyAll::Plugin::OTRS::Perl::Goto)
 
 use strict;
 use warnings;
@@ -28,6 +27,8 @@ our @ObjectDependencies = (
     'Kernel::System::Time',
     'Kernel::System::UnitTest',
 );
+
+## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
 
 =head1 NAME
 
@@ -149,18 +150,17 @@ Errors will cause an exeption and be caught elsewhere.
 
 =cut
 
-sub _execute_command {    ## no critic
+sub _execute_command {
     my ( $Self, $Res, $Params ) = @_;
 
     my $Result = $Self->SUPER::_execute_command( $Res, $Params );
 
     my $TestName = 'Selenium command success: ';
-    $TestName .= $Kernel::OM->Get('Kernel::System::Main')->Dump(
-        {
-            %{ $Res    || {} },
-            %{ $Params || {} },
-        }
-    );
+    my $ResultRef = {
+        %{ $Res    || {} },
+        %{ $Params || {} },
+    };
+    $TestName .= $Kernel::OM->Get('Kernel::System::Main')->Dump( $ResultRef );
 
     if ( $Self->{SuppressCommandRecording} ) {
         print $TestName;
@@ -182,7 +182,7 @@ Override get method of base class to prepend the correct base URL.
 
 =cut
 
-sub get {    ## no critic
+sub get {
     my ( $Self, $URL ) = @_;
 
     if ( $URL !~ m{http[s]?://}smx ) {
@@ -438,7 +438,7 @@ use this method to handle any Selenium exceptions.
     $SeleniumObject->HandleError($@);
 
 It will create a failing test result and store a screenshot of the page
-for analysis (in folder /var/otrs-unittest if it exists, in /tmp otherwise).
+for analysis (in folder /var/kix-unittest if it exists, in /tmp otherwise).
 
 =cut
 
@@ -452,7 +452,7 @@ sub HandleError {
     return if !$Data;
     $Data = MIME::Base64::decode_base64($Data);
 
-    my $TmpDir = -d '/var/otrs-unittest/' ? '/var/otrs-unittest/' : '/tmp/';
+    my $TmpDir = -d '/var/kix-unittest/' ? '/var/kix-unittest/' : '/tmp/';
     $TmpDir .= 'SeleniumScreenshots/';
     mkdir $TmpDir || return $Self->False( 1, "Could not create $TmpDir." );
 
@@ -475,6 +475,8 @@ sub HandleError {
         1,
         "Saved screenshot in file://$TmpDir/$Filename",
     );
+
+    return 1;
 }
 
 =item DESTROY()
@@ -494,6 +496,8 @@ sub DESTROY {
     if ( $Self->{SeleniumTestsActive} ) {
         $Self->SUPER::DESTROY();
     }
+
+    return 1;
 }
 
 1;

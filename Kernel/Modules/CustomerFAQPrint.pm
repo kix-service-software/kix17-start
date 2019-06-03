@@ -87,8 +87,7 @@ sub Run {
         !$Permission
         || !$FAQData{Approved}
         || !$InterfaceStates->{ $FAQData{StateTypeID} }
-        )
-    {
+    ) {
         return $LayoutObject->CustomerNoPermission( WithHeader => 'yes' );
     }
 
