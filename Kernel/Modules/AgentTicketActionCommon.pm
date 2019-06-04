@@ -1429,8 +1429,6 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
 
-            next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
-
             for my $DynamicFieldHTMLKey ( ('Label', 'Field') ) {
                 my $CurrentDynamicFieldHTML
                     = $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }->{ $DynamicFieldHTMLKey };
@@ -2451,14 +2449,15 @@ sub _Mask {
             push @IndividualDynamicFields, $DynamicFieldConfig;
             next DYNAMICFIELD;
         }
-
         # ---
 
-        my $Class = "";
         if ( !$DynamicFieldConfig->{Shown} ) {
-            $Class = " Hidden";
-            $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
-            $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
+            $LayoutObject->Block(
+                Name => 'DynamicFieldNotShown',
+                Data => {
+                    Name  => $DynamicFieldConfig->{Name},
+                },
+            );
         }
 
         $LayoutObject->Block(
@@ -2467,7 +2466,6 @@ sub _Mask {
                 Name  => $DynamicFieldConfig->{Name},
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},
-                Class => $Class,
             },
         );
 

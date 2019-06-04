@@ -2393,40 +2393,11 @@ sub Run {
             );
         }
 
-        # use only dynamic fields which passed the acl
-        my %TicketAclFormData = $TicketObject->TicketAclFormData();
         my %Output;
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
 
-            next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
-
-            # hide DynamicFields only if we have ACL's
-            if (
-                IsHashRefWithData( \%TicketAclFormData )
-                && defined $TicketAclFormData{ $DynamicFieldConfig->{Name} }
-            ) {
-                $DynamicFieldConfig->{Shown} = 0;
-
-                if ( $TicketAclFormData{ $DynamicFieldConfig->{Name} } ) {
-                    $DynamicFieldConfig->{Shown} = 1;
-                }
-            }
-
-            # else show them by default
-            else {
-                $DynamicFieldConfig->{Shown} = 1;
-
-                # if the field is set in config as 1 (show) or 2 (mandatory) it is shown
-                if (
-                    defined $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} }
-                    && $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} }
-                ) {
-                    $DynamicFieldConfig->{Shown} = 1;
-                }
-            }
-
-            if ( defined $DynamicFieldConfig->{Shown} && $DynamicFieldConfig->{Shown} == 1 && $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } ) {
+            if ( $DynamicFieldConfig->{Shown} == 1 ) {
 
                 $Output{ ( "DynamicField_" . $DynamicFieldConfig->{Name} ) } = (
                     $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }->{Label}
@@ -3572,11 +3543,14 @@ sub _MaskEmailNew {
             next DYNAMICFIELD;
         }
 # ---
-        my $Class = "";
+
         if ( !$DynamicFieldConfig->{Shown} ) {
-            $Class = " Hidden";
-            $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
-            $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
+            my $DynamicFieldName = $DynamicFieldConfig->{Name};
+
+            $LayoutObject->AddJSOnDocumentComplete( Code => <<"END");
+Core.Form.Validate.DisableValidation(\$('.Row_DynamicField_$DynamicFieldName'));
+\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden');
+END
         }
 
         $LayoutObject->Block(
@@ -3585,7 +3559,6 @@ sub _MaskEmailNew {
                 Name  => $DynamicFieldConfig->{Name},
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},
-                Class => $Class,
             },
         );
 
