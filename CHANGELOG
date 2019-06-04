@@ -1,6 +1,15 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC1 (2019/06/04)
+ * (2019/06/04) - Bugfix: T2019042490000708 (fixed initial disabled dynamic fields) (millinger)
+ * (2019/06/04) - Bugfix: T2019050290000926 (customer company dashboard further information shown for missing company) (millinger)
+ * (2019/06/03) - Bugfix: T2019041190000831 (fixed missing handling of non-ticket dynamic fields during form updates) (fjacquemin)
+ * (2019/06/03) - Bugfix: T2019050890000317 (fixed unnecessary quotation of the CustomerID in the complex search) (fjacquemin)
+ * (2019/06/03) - Bugfix: T2019032690000699 (fixed missing filtering of possible values of dynamic field object references) (fjacquemin)
+ * (2019/06/03) - Bugfix: T2019020190000461 (fixed incorrect filter preparation when using dynamic field in search) (fjacquemin)
+ * (2019/06/03) - Bugfix: T2019040290001052 (fixed unusable GUI after using RequiereLock in AgentTicketZoomTabActionCommon) (fjacquemin)
+
 # 17.6.0 (2019/06/03)
  * (2019/06/03) - productive release
 
