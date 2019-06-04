@@ -55,11 +55,21 @@ sub Run {
     # get preferences
     my %Preferences;
     if ( defined $Param{CustomerID} && $Param{CustomerID} ) {
+        my %CustomerCompany = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
+            CustomerID => $Param{CustomerID},
+        );
+        return if ( !%CustomerCompany );
+
         %Preferences = $Kernel::OM->Get('Kernel::System::CustomerCompany')->GetPreferences(
             CustomerID => $Param{CustomerID},
         );
     }
     elsif ( defined $Param{CustomerUserLogin} && $Param{CustomerUserLogin} ) {
+        my %CustomerUser = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
+            User => $Param{CustomerUserLogin},
+        );
+        return if ( !%CustomerUser );
+
         %Preferences = $Kernel::OM->Get('Kernel::System::CustomerUser')->GetPreferences(
             UserID => $Param{CustomerUserLogin},
         );
