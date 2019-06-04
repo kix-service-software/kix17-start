@@ -381,6 +381,9 @@ EOF
             }
         }
 
+        # set PossibleValues, use PossibleValuesFilter if defined
+        my $PossibleValues = $Param{PossibleValuesFilter} // \%UserHash;
+
         # multiselect or dropdown
         my $Multiple = 0;
         if ( $DisplayFieldType eq 'Multiselect' ) {
@@ -389,7 +392,7 @@ EOF
 
         # create HTML string
         $HTMLString = $Param{LayoutObject}->BuildSelection(
-            Data => \%UserHash || {},
+            Data         => $PossibleValues || {},
             SelectedID   => $Value,
             Name         => $FieldName,
             Class        => $FieldClass,
@@ -815,9 +818,12 @@ EOF
             }
         }
 
+        # set PossibleValues, use PossibleValuesFilter if defined
+        my $PossibleValues = $Param{PossibleValuesFilter} // \%UserHash;
+
         # create HTML string
         $HTMLString = $Param{LayoutObject}->BuildSelection(
-            Data => \%UserHash || {},
+            Data         => $PossibleValues || {},
             SelectedID   => $Value,
             Name         => $FieldName,
             Class        => $FieldClass,
