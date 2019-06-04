@@ -234,18 +234,13 @@ sub Run {
                 OwnerID  => $Self->{UserID},
             );
             if ( !$AccessOk ) {
-                my $Output = $LayoutObject->Header(
-                    Type  => 'Small',
-                    Value => $Ticket{Number},
-                );
-                $Output .= $LayoutObject->Warning(
+                my $Output = $LayoutObject->Warning(
                     Message => Translatable('Sorry, you need to be the ticket owner to perform this action.'),
                     Comment => Translatable('Please change the owner first.'),
                 );
                 $Output .= $LayoutObject->Footer(
-                    Type => 'Small',
+                    Type => 'TicketZoomTab',
                 );
-                return $Output;
             }
 
             # show back link
