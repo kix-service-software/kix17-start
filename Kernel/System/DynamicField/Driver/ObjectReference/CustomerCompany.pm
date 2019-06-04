@@ -395,9 +395,12 @@ EOF
             $Multiple = 1;
         }
 
+        # set PossibleValues, use PossibleValuesFilter if defined
+        my $PossibleValues = $Param{PossibleValuesFilter} // \%ObjectList;
+
         # create HTML string
         $HTMLString = $Param{LayoutObject}->BuildSelection(
-            Data => \%ObjectList || {},
+            Data         => $PossibleValues || {},
             SelectedID   => $Value,
             Name         => $FieldName,
             Class        => $FieldClass,
@@ -820,9 +823,12 @@ EOF
             $ObjectList{$Company} = $Company;
         }
 
+        # set PossibleValues, use PossibleValuesFilter if defined
+        my $PossibleValues = $Param{PossibleValuesFilter} // \%ObjectList;
+
         # create HTML string
         $HTMLString = $Param{LayoutObject}->BuildSelection(
-            Data => \%ObjectList || {},
+            Data         => $PossibleValues || {},
             SelectedID   => $Value,
             Name         => $FieldName,
             Class        => $FieldClass,
