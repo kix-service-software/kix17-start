@@ -1373,12 +1373,6 @@ sub Run {
         $PerformSearch
         && !$TicketIDs
     ) {
-        # quote all CustomerIDs
-        if ( $TicketSearch{CustomerID} ) {
-            $TicketSearch{CustomerID} = $Kernel::OM->Get('Kernel::System::DB')->QueryStringEscape(
-                QueryString => $TicketSearch{CustomerID},
-            );
-        }
 
         # add sort by parameter to the search
         if (
