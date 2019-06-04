@@ -146,7 +146,6 @@ Core.AJAX = (function (TargetNS) {
         }
     }
 
-    // KIX4OTRS-capeIT
     /**
      * @private
      * @param
@@ -159,7 +158,6 @@ Core.AJAX = (function (TargetNS) {
             Core.Form.EnableForm($FormElement);
         }
     }
-    // EO KIX4OTRS-capeIT
 
     /**
      * @private
@@ -229,18 +227,13 @@ Core.AJAX = (function (TargetNS) {
      * @description
      *      Collects additional data that are needed for the ajax requests.
      */
-    // KIX4OTRS-capeIT
-    // function GetAdditionalDefaultData() {
     function GetAdditionalDefaultData(Action) {
-        // EO KIX4OTRS-capeIT
         var Data = {};
         Data = GetSessionInformation();
-        // KIX4OTRS-capeIT
         if (!Action)
             Data.Action = Core.Config.Get('Action');
         else
             Data.Action = Action
-        // EO KIX4OTRS-capeIT
         return Data;
     }
 
@@ -283,7 +276,6 @@ Core.AJAX = (function (TargetNS) {
         });
     }
 
-    // KIX4OTRS-capeIT
     /**
      * @private
      * @param {Object} Object with data.
@@ -300,18 +292,13 @@ Core.AJAX = (function (TargetNS) {
                     $.each( Value, function (Index, Value) {
                         var $Element = $('div.Row_'+Value[0]);
                         if ( Value[1] == "" ) {
-                            $Element.children('.Field').children().each(function(){
-                                if ( $(this).hasClass('Validate_Required') )
-                                    $(this).removeClass('Validate_Required');
-                            })
+                            Core.Form.Validate.DisableValidation($Element);
                             $Element.addClass('Hidden');
                         }
                         else {
                             $Element.removeClass('Hidden hiddenFormField');
                             $Element.css({"display" : ""});
-                            $Element.children('.Field').children().each(function(){
-                                $(this).removeAttr("disabled");
-                            });
+                            Core.Form.Validate.EnableValidation($Element);
                         }
                     });
                     Core.UI.InputFields.Activate();
@@ -320,7 +307,6 @@ Core.AJAX = (function (TargetNS) {
         })
         delete Data.DeleteFormData;
     }
-    // EO KIX4OTRS-capeIT
 
     /**
      * @private
@@ -434,23 +420,15 @@ Core.AJAX = (function (TargetNS) {
                 $Element.empty();
                 $.each(DataValue, function (Index, Value) {
 
-                    // KIX4OTRS-capeIT
                     if ( $('.Row_' + DataKey).length && $('.Row_' + DataKey).hasClass('Hidden') ) {
 
                         // hide dynamic fields which are marked as disabled
                         $Element.removeAttr('readonly', 'readonly');
-                        $('.Row_' + DataKey).children('div.Field').children().each(function() {
-                            if ($(this).hasClass('Validate_Required')) {
-                                $(this).removeClass('Validate_Required');
-                                $(this).removeAttr('aria-required');
-                            }
-                        });
-                        $Element.attr('disabled', 'disabled');
+                        Core.Form.Validate.DisableValidation($('.Row_' + DataKey));
                         $('.Row_' + DataKey).css({
                             "display" : "none"
                         }).addClass('hiddenFormField');
                     }
-                    // EO KIX4OTRS-capeIT
 
                     var NewOption,
                         OptionText = Core.App.EscapeHTML(Value[1]);
@@ -483,7 +461,6 @@ Core.AJAX = (function (TargetNS) {
                 return;
             }
 
-            // KIX4OTRS-capeIT
             // direct container replacing
             else if ($Element.is('div,label,p,li') && DataValue) {
                 $Element.html(DataValue);
@@ -495,13 +472,7 @@ Core.AJAX = (function (TargetNS) {
                         // hide dynamic fields which are marked as disabled
                         if (!($.isArray(DataValue))) {
                             $Element.removeAttr('readonly', 'readonly');
-                            $Element.attr('disabled', 'disabled');
-                            $('.Row_' + Key).children('div.Field').children().each(function() {
-                                if ($(this).hasClass('Validate_Required')) {
-                                    $(this).removeClass('Validate_Required');
-                                    $(this).removeAttr('aria-required');
-                                }
-                            });
+                            Core.Form.Validate.DisableValidation($('.Row_' + Key));
                             $('.Row_' + Key).css({
                                 "display" : "none"
                             }).addClass('hiddenFormField');
@@ -513,19 +484,17 @@ Core.AJAX = (function (TargetNS) {
                         }
                     });
                 } else {
-                    if ($Element.is('input'))
+                    if ($Element.is('input')) {
                         $Element.val(DataValue);
-                    // KIX4OTRS-capeIT
+                    }
                     // text area elements like the ticket body
                     if ($Element.is('textarea')) {
                         UpdateTextarea($Element, DataValue);
                         return;
                     }
-                    // EO KIX4OTRS-capeIT
                 }
                 return;
             }
-            // EO KIX4OTRS-capeIT
             // Other form elements
             $Element.val(DataValue);
 
@@ -621,22 +590,14 @@ Core.AJAX = (function (TargetNS) {
      * @description
      *      Submits a special form via ajax and updates the form with the data returned from the server
      */
-    // KIX4OTRS-capeIT
-    // TargetNS.FormUpdate = function ($EventElement, Subaction, ChangedElement, FieldsToUpdate, SuccessCallback) {
     TargetNS.FormUpdate = function($EventElement, Subaction, ChangedElement, FieldsToUpdate, SuccessCallback, Action, Async) {
-        // EO KIX4OTRS-capeIT
-        var URL = Core.Config.Get('Baselink'),
-        // KIX4OTRS-capeIT
-        // Data = GetAdditionalDefaultData(),
-        Data = GetAdditionalDefaultData(Action),
-        // EO KIX4OTRS-capeIT
-        QueryString;
+        var URL  = Core.Config.Get('Baselink'),
+            Data = GetAdditionalDefaultData(Action),
+            QueryString;
 
-        // KIX4OTRS-capeIT
         if ( $EventElement.attr('id') == 'KIXSidebarDynamicFieldEdit' ) {
             Data.Action = 'KIXSidebarDynamicFieldAJAXHandler';
         }
-        // EO KIX4OTRS-capeIT
 
         Data.Subaction = Subaction;
         Data.ElementChanged = ChangedElement;
@@ -653,9 +614,7 @@ Core.AJAX = (function (TargetNS) {
             url: URL,
             data: QueryString,
             dataType: 'json',
-            // KIX4OTRS-capeIT
-            async : (typeof Async === 'undefined') ? true : Async,
-            // EO KIX4OTRS-capeIT
+            async: (typeof Async === 'undefined') ? true : Async,
             success: function (Response, Status, XHRObject) {
 
                 Core.App.Publish('Core.App.AjaxErrorResolved');
@@ -669,9 +628,7 @@ Core.AJAX = (function (TargetNS) {
                     Core.Exception.HandleFinalError(new Core.Exception.ApplicationError("Invalid JSON from: " + URL, 'CommunicationError'));
                 }
                 else {
-                    // KIX4OTRS-capeIT
                     DeleteFormData(Response);
-                    // EO KIX4OTRS-capeIT
                     UpdateFormElements(Response,$EventElement);
                     if (typeof SuccessCallback === 'function') {
                         SuccessCallback();
@@ -715,10 +672,7 @@ Core.AJAX = (function (TargetNS) {
      * @description
      *      Calls an URL via Ajax and updates a html element with the answer html of the server.
      */
-    // KIX4OTRS-capeIT
-    // TargetNS.ContentUpdate = function ($ElementToUpdate, URL, Callback) {
     TargetNS.ContentUpdate = function ($ElementToUpdate, URL, Callback, Async) {
-    // EO KIX4OTRS-capeIT
         var QueryString, QueryIndex = URL.indexOf("?"), GlobalResponse;
 
         if (QueryIndex >= 0) {
@@ -732,9 +686,7 @@ Core.AJAX = (function (TargetNS) {
             url: URL,
             data: QueryString,
             dataType: 'html',
-            // KIX4OTRS-capeIT
-            async : (typeof Async === 'undefined') ? true : Async,
-            // EO KIX4OTRS-capeIT
+            async: (typeof Async === 'undefined') ? true : Async,
             success: function (Response, Status, XHRObject) {
 
                 Core.App.Publish('Core.App.AjaxErrorResolved');
@@ -793,10 +745,7 @@ Core.AJAX = (function (TargetNS) {
      * @description
      *      Calls an URL via Ajax and executes a given function after the request returned from the server.
      */
-    // KIX4OTRS-capeIT
-    // TargetNS.FunctionCall = function (URL, Data, Callback, DataType) {
     TargetNS.FunctionCall = function(URL, Data, Callback, DataType, Async) {
-    // EO KIX4OTRS-capeIT
 
         if (typeof Data === 'string') {
             Data += SerializeData(GetSessionInformation());
@@ -809,9 +758,7 @@ Core.AJAX = (function (TargetNS) {
             url: URL,
             data: Data,
             dataType: (typeof DataType === 'undefined') ? 'json' : DataType,
-            // KIX4OTRS-capeIT
-            async : (typeof Async === 'undefined') ? true : Async,
-            // EO KIX4OTRS-capeIT
+            async: (typeof Async === 'undefined') ? true : Async,
             success: function (Response, Status, XHRObject) {
 
                 Core.App.Publish('Core.App.AjaxErrorResolved');
