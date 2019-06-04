@@ -3543,11 +3543,14 @@ sub _MaskEmailNew {
             next DYNAMICFIELD;
         }
 # ---
-        my $Class = "";
+
         if ( !$DynamicFieldConfig->{Shown} ) {
-            $Class = " Hidden";
-            $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
-            $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
+            my $DynamicFieldName = $DynamicFieldConfig->{Name};
+
+            $LayoutObject->AddJSOnDocumentComplete( Code => <<"END");
+Core.Form.Validate.DisableValidation(\$('.Row_DynamicField_$DynamicFieldName'));
+\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden');
+END
         }
 
         $LayoutObject->Block(
@@ -3556,7 +3559,6 @@ sub _MaskEmailNew {
                 Name  => $DynamicFieldConfig->{Name},
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},
-                Class => $Class,
             },
         );
 

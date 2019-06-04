@@ -2591,18 +2591,19 @@ sub _RenderDynamicField {
     );
 
     # set class for dynamic field depending on shown or not
-    my $Class = "";
     if ( !$DynamicFieldConfig->{Shown} ) {
-        $Class = " Hidden";
-        $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
-        $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
+        my $DynamicFieldName = $DynamicFieldConfig->{Name};
+
+        $LayoutObject->AddJSOnDocumentComplete( Code => <<"END");
+Core.Form.Validate.DisableValidation(\$('.Row_DynamicField_$DynamicFieldName'));
+\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden');
+END
     }
 
     my %Data = (
         Name    => $DynamicFieldConfig->{Name},
         Label   => $DynamicFieldHTML->{Label},
         Content => $DynamicFieldHTML->{Field},
-        Class   => $Class,
     );
 
     $LayoutObject->Block(

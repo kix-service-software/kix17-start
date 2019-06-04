@@ -2449,14 +2449,15 @@ sub _Mask {
             push @IndividualDynamicFields, $DynamicFieldConfig;
             next DYNAMICFIELD;
         }
-
         # ---
 
-        my $Class = "";
         if ( !$DynamicFieldConfig->{Shown} ) {
-            $Class = " Hidden";
-            $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
-            $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
+            $LayoutObject->Block(
+                Name => 'DynamicFieldNotShown',
+                Data => {
+                    Name  => $DynamicFieldConfig->{Name},
+                },
+            );
         }
 
         $LayoutObject->Block(
@@ -2465,7 +2466,6 @@ sub _Mask {
                 Name  => $DynamicFieldConfig->{Name},
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},
-                Class => $Class,
             },
         );
 
