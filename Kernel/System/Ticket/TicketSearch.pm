@@ -4475,7 +4475,7 @@ sub FilterPrepare {
                     push(@{$Prepared{$Attribute}}, @{$Filter->{$Attribute}});
                 }
 
-                elsif ( ref $Filter->{$Attribute} ne 'HASH' ) {
+                else {
                     $Prepared{$Attribute} = $Filter->{$Attribute};
                 }
             }
