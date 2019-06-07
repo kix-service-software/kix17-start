@@ -24,7 +24,7 @@ use Kernel::System::ObjectManager;
 # create object manager
 local $Kernel::OM = Kernel::System::ObjectManager->new(
     'Kernel::System::Log' => {
-        LogPrefix => 'db-update-17.6.0.pl',
+        LogPrefix => 'db-update-17.6.1.pl',
     },
 );
 
