@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.6.1 (2019/06/07)
+ * (2019/06/07) - Bugfix: T2019060790000657 (fixed migration of notification data) (millinger)
+ * (2019/06/07) - Bugfix: T2019060690000775 (fixed 'Undefined subroutine &Kernel::Config::Translatable') (millinger)
+
 # 17.6.0 (2019/06/03)
  * (2019/06/03) - productive release
 
