@@ -49,9 +49,27 @@ sub Run {
     # ------------------------------------------------------------ #
     if ( $Self->{Subaction} eq 'Change' ) {
         my $CustomerID = $ParamObject->GetParam( Param => 'CustomerID' ) || '';
+
+        # check needed stuff
+        if ( !$CustomerID ) {
+            return $LayoutObject->ErrorScreen(
+                Message => Translatable('No CustomerID is given!'),
+                Comment => Translatable('Please contact the administrator.'),
+            );
+        }
+
         my %Data = $CustomerCompanyObject->CustomerCompanyGet(
             CustomerID => $CustomerID,
         );
+
+        # check needed stuff
+        if ( !%Data ) {
+            return $LayoutObject->ErrorScreen(
+                Message => Translatable('Invalid CustomerID is given!'),
+                Comment => Translatable('Please contact the administrator.'),
+            );
+        }
+
         $Data{CustomerCompanyID} = $CustomerID;
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar(
