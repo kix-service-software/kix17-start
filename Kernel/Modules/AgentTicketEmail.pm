@@ -2393,6 +2393,21 @@ sub Run {
             );
         }
 
+        # run acl to prepare TicketAclFormData
+        my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+            %GetParam,
+            %ACLCompatGetParam,
+            QueueID       => $QueueID || 0,
+            Action        => $Self->{Action},
+            ReturnType    => 'Ticket',
+            ReturnSubType => '-',
+            Data          => {},
+            UserID        => $Self->{UserID},
+        );
+
+        # update 'Shown' for $Self->{DynamicField}
+        $Self->_GetShownDynamicFields();
+
         my %Output;
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
@@ -3514,6 +3529,21 @@ sub _MaskEmailNew {
             Data => \%Param,
         );
     }
+
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %Param,
+        TypeID        => $Param{TypeID} || $Param{DefaultTypeID} || '',
+        Action        => $Self->{Action},
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
+
 # ---
 # ITSMIncidentProblemManagement
 # ---

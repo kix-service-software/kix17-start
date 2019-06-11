@@ -1764,6 +1764,7 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             # set the value
@@ -1899,6 +1900,7 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Article';
 
             # set the value
@@ -2374,6 +2376,21 @@ sub Run {
                 }
             );
         }
+
+        # run acl to prepare TicketAclFormData
+        my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+            %GetParam,
+            %ACLCompatGetParam,
+            QueueID       => $QueueID || 0,
+            Action        => $Self->{Action},
+            ReturnType    => 'Ticket',
+            ReturnSubType => '-',
+            Data          => {},
+            UserID        => $Self->{UserID},
+        );
+
+        # update 'Shown' for $Self->{DynamicField}
+        $Self->_GetShownDynamicFields();
 
         # use only dynamic fields which passed the acl
         my %Output;
@@ -3318,6 +3335,21 @@ sub _MaskPhoneNew {
             Data => \%Param,
         );
     }
+
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %Param,
+        TypeID        => $Param{TypeID} || $Param{DefaultTypeID} || '',
+        Action        => $Self->{Action},
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
+
 # ---
 # ITSMIncidentProblemManagement
 # ---
