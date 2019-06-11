@@ -218,12 +218,15 @@ $('#TypeID').bind('change', function (Event) {
 # ITSMIncidentProblemManagement
 # ---
                         <label for="ServiceIncidentStateContainer" style="display: none;">[% Translate("Service Incident State") | html %]:</label>
-                        <div id="ServiceIncidentStateContainer" class="Value" style="display: none;">
-                            <div class="Flag Small">
-                                <span id="ServiceIncidentStateSignal"></span>
+                        <div id="ServiceIncidentStateContainer" class="Field" style="display: none;">
+                            <div class="Value">
+                                <div class="Flag Small">
+                                    <span id="ServiceIncidentStateSignal"></span>
+                                </div>
+                                <span id="ServiceIncidentState">&nbsp;</span>
                             </div>
-                            <span id="ServiceIncidentState">&nbsp;</span>
                         </div>
+                        <div class="Clear"></div>
 # ---
 [% RenderBlockEnd("ServiceMandatory") %]
 
