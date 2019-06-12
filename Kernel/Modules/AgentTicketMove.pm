@@ -40,9 +40,10 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
     my $StateObject  = $Kernel::OM->Get('Kernel::System::State');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
     # check needed stuff
     for my $Needed (qw(TicketID)) {
@@ -52,6 +53,9 @@ sub Run {
             );
         }
     }
+
+    # get config of frontend module
+    my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     # check permissions
     my $Access = $TicketObject->TicketPermission(
@@ -92,40 +96,91 @@ sub Run {
         }
     }
 
-    # check if ticket is locked
-    if ( $TicketObject->TicketLockGet( TicketID => $Self->{TicketID} ) ) {
-        my $AccessOk = $TicketObject->OwnerCheck(
-            TicketID => $Self->{TicketID},
-            OwnerID  => $Self->{UserID},
-        );
-        if ( !$AccessOk ) {
-            my $Output = $LayoutObject->Header(
-                Type      => 'Small',
-                BodyClass => 'Popup',
-            );
-            $Output .= $LayoutObject->Warning(
-                Message => Translatable('Sorry, you need to be the ticket owner to perform this action.'),
-                Comment => Translatable('Please change the owner first.'),
-            );
-
-            # show back link
-            $LayoutObject->Block(
-                Name => 'TicketBack',
-                Data => { %Param, TicketID => $Self->{TicketID} },
-            );
-
-            $Output .= $LayoutObject->Footer(
-                Type => 'Small',
-            );
-            return $Output;
-        }
-    }
-
     # ticket attributes
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Self->{TicketID},
         DynamicFields => 1,
     );
+
+    # prepare output
+    my $OutputType      = '';
+    my $OutputBodyClass = '';
+    if ( $ConfigObject->Get('Ticket::Frontend::MoveType') eq 'link' ) {
+        $OutputType      = 'Small';
+        $OutputBodyClass = 'Popup';
+    }
+
+    # get lock state
+    if ( $Config->{RequiredLock} ) {
+        if ( !$TicketObject->TicketLockGet( TicketID => $Self->{TicketID} ) ) {
+            $TicketObject->TicketLockSet(
+                TicketID => $Self->{TicketID},
+                Lock     => 'lock',
+                UserID   => $Self->{UserID}
+            );
+            my $Success = $TicketObject->TicketOwnerSet(
+                TicketID  => $Self->{TicketID},
+                UserID    => $Self->{UserID},
+                NewUserID => $Self->{UserID},
+            );
+
+            # show lock state
+            if ($Success) {
+
+                %Ticket = $TicketObject->TicketGet(
+                    TicketID      => $Self->{TicketID},
+                    DynamicFields => 1,
+                );
+
+                $LayoutObject->Block(
+                    Name => 'PropertiesLock',
+                    Data => {
+                        %Param,
+                        TicketID => $Self->{TicketID},
+                    },
+                );
+            }
+        }
+        else {
+            my $AccessOk = $TicketObject->OwnerCheck(
+                TicketID => $Self->{TicketID},
+                OwnerID  => $Self->{UserID},
+            );
+            if ( !$AccessOk ) {
+                my $Output = $LayoutObject->Header(
+                    Type      => $OutputType,
+                    Value     => $Ticket{Number},
+                    BodyClass => $OutputBodyClass,
+                );
+                $Output .= $LayoutObject->Warning(
+                    Message => Translatable('Sorry, you need to be the ticket owner to perform this action.'),
+                    Comment => Translatable('Please change the owner first.'),
+                );
+                $Output .= $LayoutObject->Footer(
+                    Type => $OutputType,
+                );
+                return $Output;
+            }
+
+            # show back link
+            $LayoutObject->Block(
+                Name => 'TicketBack',
+                Data => {
+                    %Param,
+                    TicketID => $Self->{TicketID},
+                },
+            );
+        }
+    }
+    else {
+        $LayoutObject->Block(
+            Name => 'TicketBack',
+            Data => {
+                %Param,
+                %Ticket,
+            },
+        );
+    }
 
     # get param object
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
@@ -156,12 +211,6 @@ sub Run {
 
     # define the dynamic fields to show based on the object type
     my $ObjectType = ['Ticket'];
-
-    # get config object
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # get config for frontend module
-    my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     # only screens that add notes can modify Article dynamic fields
     if ( $Config->{Note} ) {
@@ -818,82 +867,6 @@ sub Run {
             Type      => 'Small',
             BodyClass => 'Popup',
         );
-
-        # check if lock is required
-        if ( $Config->{RequiredLock} ) {
-
-            # get lock state && write (lock) permissions
-            if ( !$TicketObject->TicketLockGet( TicketID => $Self->{TicketID} ) ) {
-
-                # set owner
-                $TicketObject->TicketOwnerSet(
-                    TicketID  => $Self->{TicketID},
-                    UserID    => $Self->{UserID},
-                    NewUserID => $Self->{UserID},
-                );
-
-                # set lock
-                my $Success = $TicketObject->TicketLockSet(
-                    TicketID => $Self->{TicketID},
-                    Lock     => 'lock',
-                    UserID   => $Self->{UserID}
-                );
-
-                # show lock state
-                if ($Success) {
-
-                    %Ticket = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
-
-                    $LayoutObject->Block(
-                        Name => 'PropertiesLock',
-                        Data => { %Param, TicketID => $Self->{TicketID} },
-                    );
-                    $TicketUnlock = 1;
-                }
-            }
-            else {
-                my $AccessOk = $TicketObject->OwnerCheck(
-                    TicketID => $Self->{TicketID},
-                    OwnerID  => $Self->{UserID},
-                );
-                if ( !$AccessOk ) {
-
-                    $Output = $LayoutObject->Header(
-                        Type      => 'Small',
-                        BodyClass => 'Popup',
-                    );
-                    $Output .= $LayoutObject->Warning(
-                        Message => Translatable('Sorry, you need to be the ticket owner to perform this action.'),
-                        Comment => Translatable('Please change the owner first.'),
-                    );
-
-                    # show back link
-                    $LayoutObject->Block(
-                        Name => 'TicketBack',
-                        Data => { %Param, TicketID => $Self->{TicketID} },
-                    );
-
-                    $Output .= $LayoutObject->Footer(
-                        Type => 'Small',
-                    );
-                    return $Output;
-                }
-
-                # show back link
-                $LayoutObject->Block(
-                    Name => 'TicketBack',
-                    Data => { %Param, TicketID => $Self->{TicketID} },
-                );
-            }
-        }
-        else {
-
-            # show back link
-            $LayoutObject->Block(
-                Name => 'TicketBack',
-                Data => { %Param, TicketID => $Self->{TicketID} },
-            );
-        }
 
         # fetch all queues
         my %MoveQueues = $TicketObject->TicketMoveList(

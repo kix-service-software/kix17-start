@@ -27,8 +27,10 @@ use lib dirname($Bin) . '/Custom';
 use File::stat;
 use Digest::MD5;
 
+## no critic qw(Modules::ProhibitAutomaticExportation)
+
 use Exporter qw(import);
-our @EXPORT_OK = qw(Translatable);
+our @EXPORT = qw(Translatable);
 
 our @ObjectDependencies = ();
 

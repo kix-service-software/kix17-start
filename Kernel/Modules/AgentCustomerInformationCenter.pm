@@ -41,8 +41,12 @@ sub Run {
     }
 
     # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $SessionObject      = $Kernel::OM->Get('Kernel::System::AuthSession');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
+    my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # load backends
     my $Config = $ConfigObject->Get($BackendConfigKey);
@@ -51,9 +55,6 @@ sub Run {
             Message => 'No such config for ' . $BackendConfigKey,
         );
     }
-
-    # get needed objects
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     $Self->{CustomerID}    = $ParamObject->GetParam( Param => 'CustomerID' ) || undef;
     $Self->{CustomerLogin} = $ParamObject->GetParam( Param => 'CustomerLogin' ) || undef;
@@ -76,11 +77,6 @@ sub Run {
             return $Output;
         }
     }
-
-    # get needed objects
-    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-    my $SessionObject      = $Kernel::OM->Get('Kernel::System::AuthSession');
-    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
 
     # update/close item
     if ( $Self->{Subaction} eq 'UpdateRemove' ) {
@@ -647,7 +643,7 @@ sub Run {
                 Name => 'MainMenuItem',
                 Data => {
                     %{ $MainMenuConfig->{$MainMenuItem} },
-                    CustomerID    => $Self->{CustomerID},
+                    CustomerID    => $Self->{CustomerID} || $CustomerUserData{UserCustomerID},
                     CustomerLogin => $Self->{CustomerLogin},
                 },
             );

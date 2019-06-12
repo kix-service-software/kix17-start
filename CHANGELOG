@@ -10,6 +10,10 @@
  * (2019/06/03) - Bugfix: T2019020190000461 (fixed incorrect filter preparation when using dynamic field in search) (fjacquemin)
  * (2019/06/03) - Bugfix: T2019040290001052 (fixed unusable GUI after using RequiereLock in AgentTicketZoomTabActionCommon) (fjacquemin)
 
+# 17.6.1 (2019/06/07)
+ * (2019/06/07) - Bugfix: T2019060790000657 (fixed migration of notification data) (millinger)
+ * (2019/06/07) - Bugfix: T2019060690000775 (fixed 'Undefined subroutine &Kernel::Config::Translatable') (millinger)
+
 # 17.6.0 (2019/06/03)
  * (2019/06/03) - productive release
 
