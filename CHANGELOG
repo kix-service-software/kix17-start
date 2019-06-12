@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC2 (2019/06/12)
+ * (2019/06/11) - Bugfix: T2019060490000948 (added AUTHORS.md) (ddoerffel)
+ * (2019/06/11) - Bugfix: T2018090890000482 (fixed widget display for mandatory service) (millinger)
+ * (2019/06/11) - Bugfix: T2019042390000531 (fixed link to customer company administration at information center) (millinger)
+ * (2019/06/11) - Bugfix: T2018051590000681 (AgentTicketMove does not consider 'RequiredLock') (millinger)
+ * (2019/06/11) - Bugfix: T2019041190000831 (fixed initial hidden dynamic fields with default ticket type) (millinger)
+
 # 17.7.0-RC1 (2019/06/04)
  * (2019/06/04) - Bugfix: T2019042490000708 (fixed initial disabled dynamic fields) (millinger)
  * (2019/06/04) - Bugfix: T2019050290000926 (customer company dashboard further information shown for missing company) (millinger)
