@@ -904,7 +904,7 @@ sub SetPassword {
             %Param,
             OldData => \%User,
         },
-        UserID => $Param{UserID},
+        UserID => $Self->{UserID} || $Param{UserID} || 1,
     );
 
     return 1;
@@ -1213,6 +1213,9 @@ set user preferences
 sub SetPreferences {
     my ( $Self, %Param ) = @_;
 
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
     # check needed stuff
     for (qw(Key UserID)) {
         if ( !$Param{$_} ) {
@@ -1244,22 +1247,20 @@ sub SetPreferences {
 ### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
 
     # get current setting
-    my %User = $Self->GetUserData(
-        UserID        => $Param{UserID},
-        NoOutOfOffice => 1,
+    my %Preferences = $Self->GetPreferences(
+        UserID => $Param{UserID},
     );
 
     # no updated needed
     return 1
-        if defined $User{ $Param{Key} }
+        if defined $Preferences{ $Param{Key} }
         && defined $Param{Value}
-        && $User{ $Param{Key} } eq $Param{Value};
+        && $Preferences{ $Param{Key} } eq $Param{Value};
 
     $Self->_UserCacheClear( UserID => $Param{UserID} );
 
     # get user preferences config
-    my $GeneratorModule = $Kernel::OM->Get('Kernel::Config')->Get('User::PreferencesModule')
-        || 'Kernel::System::User::Preferences::DB';
+    my $GeneratorModule = $ConfigObject->Get('User::PreferencesModule') || 'Kernel::System::User::Preferences::DB';
 
     # get generator preferences module
     my $PreferencesObject = $Kernel::OM->Get($GeneratorModule);
@@ -1272,8 +1273,10 @@ sub SetPreferences {
             Event => 'UserSetPreferences',
             Data  => {
                 %Param,
-                UserData => \%User,
-                Result   => $Result,
+                OldData => {
+                    $Param{Key} => $Preferences{$Param{Key}}
+                },
+                Result  => $Result,
             },
             UserID => 1,
         );
