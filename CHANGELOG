@@ -1,6 +1,18 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC3 (2019/06/18)
+ * (2019/06/18) - Bugfix: T2019061290000496 (fixed default template for custom footer url) (millinger)
+ * (2019/06/18) - Bugfix: T2018121190000513 (removed ticket note tab as default faq sidebar action) (millinger)
+ * (2019/06/18) - Bugfix: T2019052390001252 (check permission for faq sidebar entries) (millinger)
+ * (2019/06/18) - Bugfix: T2019061490000554 (fixed cron schedule generation of generic agent jobs) (millinger)
+ * (2019/06/18) - Bugfix: T2019052090001034 (fixed displaying of the ToolBar in responsive-design of the position right or left) (fjacquemin)
+ * (2019/06/17) - Bugfix: T2019051790000961 (fixed filling dynamic fields with integer values from Sidebar causes error) (fjacquemin)
+ * (2019/06/17) - Bugfix: T2019051390000923 (fixed missing save of the UserEmail in the user preferences) (fjacquemin)
+ * (2019/06/17) - Bugfix: T2019051390000709 (fixed multiple display of linked configuration items in view mode "simple") (fjacquemin)
+ * (2019/06/17) - Bugfix: T2019051090002294 (fixed unwanted reaction of the action QueueMove without selected Queue) (fjacquemin)
+ * (2019/06/17) - Bugfix: T2017080290000746 (fixed no action of a selected response-template with active modernize) (fjacquemin)
+
 # 17.7.0-RC2 (2019/06/12)
  * (2019/06/11) - Bugfix: T2019060490000948 (added AUTHORS.md) (ddoerffel)
  * (2019/06/11) - Bugfix: T2018090890000482 (fixed widget display for mandatory service) (millinger)
