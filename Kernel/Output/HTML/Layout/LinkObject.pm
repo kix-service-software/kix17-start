@@ -58,6 +58,7 @@ sub LinkObjectTableCreate {
 
     if ( $Param{ViewMode} =~ m{ \A Simple }xms ) {
 
+        return '' if ( $Param{GetPreferences} );
         return $Self->LinkObjectTableCreateSimple(
             %Param,
             LinkListWithData => $Param{LinkListWithData},
