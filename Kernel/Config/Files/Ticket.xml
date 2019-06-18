@@ -14560,6 +14560,17 @@ Thanks for your help!
             </Option>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleMenuModernize" Required="1" Valid="1">
+        <Description Translatable="1">Determines whether the selection fields in the action bar should be displayed as "Modernize".</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabProcess###DynamicField" Required="0" Valid="1">
         <Description Translatable="1">Dynamic fields shown in the process tab of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
         <Group>Ticket</Group>
