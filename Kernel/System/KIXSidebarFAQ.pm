@@ -14,8 +14,10 @@ use warnings;
 use utf8;
 
 our @ObjectDependencies = (
+    'Kernel::Config',
     'Kernel::System::FAQ',
-    'Kernel::System::LinkObject'
+    'Kernel::System::LinkObject',
+    'Kernel::System::Valid',
 );
 
 sub new {
@@ -25,8 +27,9 @@ sub new {
     my $Self = {%Param};
     bless( $Self, $Type );
 
-    $Self->{FAQObject}  = $Kernel::OM->Get('Kernel::System::FAQ');
-    $Self->{LinkObject} = $Kernel::OM->Get('Kernel::System::LinkObject');
+    $Self->{ConfigObject} = $Kernel::OM->Get('Kernel::Config');
+    $Self->{FAQObject}    = $Kernel::OM->Get('Kernel::System::FAQ');
+    $Self->{LinkObject}   = $Kernel::OM->Get('Kernel::System::LinkObject');
 
     return $Self;
 }
@@ -47,6 +50,16 @@ sub KIXSidebarFAQSearch {
         }
     }
 
+    # get interface state list
+    my $CustomerInterfaceStates = $Self->{FAQObject}->StateTypeList(
+        Types  => $Self->{ConfigObject}->Get('FAQ::Customer::StateTypes'),
+        UserID => 1,
+    );
+
+    # get the valid ids
+    my @ValidIDs = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
+    my %ValidIDLookup = map { $_ => 1 } @ValidIDs;
+
     my %Result;
 
     if ( $Param{TicketID} && $Param{LinkMode} ) {
@@ -64,6 +77,36 @@ sub KIXSidebarFAQSearch {
                 UserID => 1,
             );
             if ( %FAQ && $FAQ{StateTypeID} && $StateTypes{ $FAQ{StateTypeID} } ) {
+                if ( $Param{Interface} eq 'internal' ) {
+                    # check user permission
+                    my $Permission = $Self->{FAQObject}->CheckCategoryUserPermission(
+                        UserID     => $Param{UserID},
+                        CategoryID => $FAQ{CategoryID},
+                    );
+
+                    # skip entry
+                    next if (
+                        !$Permission
+                        || !$ValidIDLookup{ $FAQ{ValidID} }
+                    );
+                }
+                elsif ( $Param{Interface} eq 'external' ) {
+                    # check user permission
+                    my $Permission = $Self->{FAQObject}->CheckCategoryCustomerPermission(
+                        CustomerUser => $Param{UserLogin},
+                        CategoryID   => $FAQ{CategoryID},
+                        UserID       => 1,
+                    );
+
+                    # skip entry
+                    next if (
+                        !$Permission
+                        || !$FAQ{Approved}
+                        || !$ValidIDLookup{ $FAQ{ValidID} }
+                        || !$CustomerInterfaceStates->{ $FAQ{StateTypeID} }
+                    );
+                }
+
                 $Result{$ID}->{'Title'} = $FAQ{Title};
                 $Result{$ID}->{'Link'}  = 1;
 
@@ -106,7 +149,6 @@ sub KIXSidebarFAQSearch {
                 Name => $Param{Interface},
             },
             UserID => 1,
-            Limit  => $Param{Limit},
         );
 
         for my $ID (@IDs) {
@@ -119,6 +161,36 @@ sub KIXSidebarFAQSearch {
                 UserID => 1,
             );
             if (%FAQ) {
+                if ( $Param{Interface} eq 'internal' ) {
+                    # check user permission
+                    my $Permission = $Self->{FAQObject}->CheckCategoryUserPermission(
+                        UserID     => $Param{UserID},
+                        CategoryID => $FAQ{CategoryID},
+                    );
+
+                    # skip entry
+                    next if (
+                        !$Permission
+                        || !$ValidIDLookup{ $FAQ{ValidID} }
+                    );
+                }
+                elsif ( $Param{Interface} eq 'external' ) {
+                    # check user permission
+                    my $Permission = $Self->{FAQObject}->CheckCategoryCustomerPermission(
+                        CustomerUser => $Param{UserLogin},
+                        CategoryID   => $FAQ{CategoryID},
+                        UserID       => 1,
+                    );
+
+                    # skip entry
+                    next if (
+                        !$Permission
+                        || !$FAQ{Approved}
+                        || !$ValidIDLookup{ $FAQ{ValidID} }
+                        || !$CustomerInterfaceStates->{ $FAQ{StateTypeID} }
+                    );
+                }
+
                 $Result{$ID}->{'Title'} = $FAQ{Title};
                 $Result{$ID}->{'Link'}  = 0;
 

@@ -127,6 +127,8 @@ sub Run {
         TicketID         => $TicketID,
         LinkMode         => $LinkMode,
         Limit            => $Self->{SidebarConfig}->{'MaxResultCount'},
+        UserID           => $Self->{UserID},
+        UserLogin        => $Self->{UserLogin},
     );
 
     my $Style             = '';
