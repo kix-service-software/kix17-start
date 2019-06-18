@@ -98,7 +98,7 @@ $('#[% Data.FormID | html %] select[name=[% Data.PhoneElementID | html %]]').bin
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#DestQueueID').bind('change', function (Event) {
-        if ($('#DestQueueID option:selected').val()) {
+        if ($('#DestQueueID option:selected').val() !== '0' ) {
             $(this).closest('form').submit();
         }
     });

@@ -13754,7 +13754,7 @@ via the Preferences button after logging in.
         <SubGroup>Core::CustomFooter</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="Dummy">&lt;AKIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentDashboard</Item>
+                <Item Key="Dummy">&lt;KIX_CONFIG_HttpType&gt;://&lt;KIX_CONFIG_FQDN&gt;/&lt;KIX_CONFIG_ScriptAlias&gt;index.pl?Action=AgentDashboard</Item>
             </Hash>
         </Setting>
     </ConfigItem>

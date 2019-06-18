@@ -114,6 +114,40 @@
         display: inline;
     }
 
+    #Header.ToolbarLeft > #ToolBar,
+    #Header.ToolbarRight > #ToolBar {
+        padding-right: 300px;
+        height: 31px;
+        overflow: hidden;
+        left: 100px;
+        top: 10px;
+    }
+
+    #Header.ToolbarLeft,
+    #Header.ToolbarRight {
+        margin-bottom: 0;
+    }
+
+    #Header.ToolbarRight > #ToolBarToggle.Show {
+        padding-left: 15px;
+        padding-right: 0;
+    }
+
+    #Header.ToolbarRight > #ToolBarToggle.Hide {
+        background-position: left -26px;
+        padding-left: 20px;
+    }
+
+    #Header.ToolbarRight > #ToolBarToggle,
+    #Header.ToolbarLeft > #ToolBarToggle {
+        background: url(../img/toggle_side_arrow.png) no-repeat left 0px;
+        left: 90px;
+        top: 15px;
+        width: 200px;
+        height: 12px;
+        text-align: left;
+    }
+
     #Header #Logo {
         width: 208px !important;
         background-size: 100%;

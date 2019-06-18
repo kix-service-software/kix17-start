@@ -342,7 +342,7 @@ sub GenericAgentSchedule2CronTab {
 
     # convert week days (Sunday needs to be changed from 0 to 7)
     my @ScheduleDays = map {
-        ( $_ == 0 ) ? {7} : {$_}
+        ( $_ == 0 ) ? 7 : $_
     } @{ $Param{ScheduleDays} };
 
     $Schedule .= join ',', sort { $a <=> $b } @ScheduleDays;

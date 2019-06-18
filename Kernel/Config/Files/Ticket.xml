@@ -14560,6 +14560,17 @@ Thanks for your help!
             </Option>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabArticle###ArticleMenuModernize" Required="1" Valid="1">
+        <Description Translatable="1">Determines whether the selection fields in the action bar should be displayed as "Modernize".</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabArticle</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoomTabProcess###DynamicField" Required="0" Valid="1">
         <Description Translatable="1">Dynamic fields shown in the process tab of the agent interface. Possible settings: 0 = Disabled, 1 = Enabled, 2 = Enabled and required.</Description>
         <Group>Ticket</Group>
@@ -14650,7 +14661,7 @@ Thanks for your help!
         <SubGroup>Frontend::Agent::KIXSidebarFAQ</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="Actions">AgentTicket(Zoom|Phone|PhoneInbound|PhoneOutbound|Note|Compose|ZoomTabActionCommon)</Item>
+                <Item Key="Actions">AgentTicket(Zoom|Phone|PhoneInbound|PhoneOutbound|Note|Compose)</Item>
                 <Item Key="Module">Kernel::Output::HTML::KIXSidebar::FAQ</Item>
                 <Item Key="Title">Relevant FAQ items</Item>
                 <Item Key="Description">Shows FAQ items relevant to current ticket.</Item>
@@ -14671,7 +14682,7 @@ Thanks for your help!
                 <Item Key="SearchMode">Fulltext</Item>
                 <Item Key="SearchStateTypes">internal</Item>
                 <Item Key="SearchSubject">1</Item>
-                <Item Key="TicketIDSearchMaskRegExp">AgentTicket(Zoom|PhoneInbound|PhoneOutbound|Note|Compose|ZoomTabActionCommon)</Item>
+                <Item Key="TicketIDSearchMaskRegExp">AgentTicket(Zoom|PhoneInbound|PhoneOutbound|Note|Compose)</Item>
             </Hash>
         </Setting>
     </ConfigItem>
