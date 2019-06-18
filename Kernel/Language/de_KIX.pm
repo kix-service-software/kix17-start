@@ -1101,6 +1101,8 @@ sub Data {
         = 'Definiert Anzeige der Artikelfreitextoptionen in der Artikelbearbeitenansicht. Mögliche Werte: 0 = inaktiv, 1 = aktiviert, 2 = aktiviert und Pflicht.';
     $Lang->{'Only ticket responsible can edit articles of the ticket.'}
         = 'Nur der Ticketverantwortlicher darf Artikel des Tickets bearbeiten.';
+    $Lang->{'Determines whether the selection fields in the action bar should be displayed as "Modernize".'}
+        = 'Legt fest, ob die Auswahlfelder in der Aktionsleiste als "Modernize" dargestellt werden sollen.';
 
     # KIX4OTRS_AgentArticleEdit.xml
     $Lang->{'History type for this action.'} = 'Historientyp für diese Aktion.';
