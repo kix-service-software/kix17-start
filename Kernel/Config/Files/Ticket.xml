@@ -14661,7 +14661,7 @@ Thanks for your help!
         <SubGroup>Frontend::Agent::KIXSidebarFAQ</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="Actions">AgentTicket(Zoom|Phone|PhoneInbound|PhoneOutbound|Note|Compose|ZoomTabActionCommon)</Item>
+                <Item Key="Actions">AgentTicket(Zoom|Phone|PhoneInbound|PhoneOutbound|Note|Compose)</Item>
                 <Item Key="Module">Kernel::Output::HTML::KIXSidebar::FAQ</Item>
                 <Item Key="Title">Relevant FAQ items</Item>
                 <Item Key="Description">Shows FAQ items relevant to current ticket.</Item>
@@ -14682,7 +14682,7 @@ Thanks for your help!
                 <Item Key="SearchMode">Fulltext</Item>
                 <Item Key="SearchStateTypes">internal</Item>
                 <Item Key="SearchSubject">1</Item>
-                <Item Key="TicketIDSearchMaskRegExp">AgentTicket(Zoom|PhoneInbound|PhoneOutbound|Note|Compose|ZoomTabActionCommon)</Item>
+                <Item Key="TicketIDSearchMaskRegExp">AgentTicket(Zoom|PhoneInbound|PhoneOutbound|Note|Compose)</Item>
             </Hash>
         </Setting>
     </ConfigItem>
