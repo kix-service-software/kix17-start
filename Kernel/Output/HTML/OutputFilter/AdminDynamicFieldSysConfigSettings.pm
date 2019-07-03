@@ -187,7 +187,7 @@ sub _GetAllAvailableFrontendModules {
         next if !defined $ConfigHashTabs->{$Item}->{Link};
 
         # look for PretendAction
-        my $PretendAction = $ConfigHashTabs->{$Item}->{Link} =~ /^(?:.*?)\;PretendAction=(.*?)\;(?:.*)$/;
+        my ($PretendAction) = $ConfigHashTabs->{$Item}->{Link} =~ /^(?:.*?)\;PretendAction=(.*?)\;(?:.*)$/;
         next if ( !$PretendAction || $ConfigHash{$PretendAction} );
 
      # if given and not already registered as frontend module - add width empty value to config hash
