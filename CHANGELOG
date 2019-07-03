@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC4 (2019/07/03)
+ * (2019/07/02) - Bugfix: T2019060590001221 (dynamic field administration does not show all actions) (millinger)
+ * (2019/07/02) - Bugfix: T2019060390000931 (fixed output of CheckModules script) (millinger)
+ * (2019/07/02) - Bugfix: T2019052090001034 (fixed incorrect hide/show of the tool bar in responsive design) (fjacquemin)
+
 # 17.7.0-RC3 (2019/06/18)
  * (2019/06/18) - Bugfix: T2019061290000496 (fixed default template for custom footer url) (millinger)
  * (2019/06/18) - Bugfix: T2018121190000513 (removed ticket note tab as default faq sidebar action) (millinger)
