@@ -4458,11 +4458,19 @@ sub FilterPrepare {
             if ( $Prepared{$Attribute} ) {
                 if ( ref $Filter->{$Attribute} eq 'ARRAY' ) {
                     my @Force = @{$Filter->{$Attribute}};
-                    my @Curr  = @{$Prepared{$Attribute}};
+                    my @Curr;
                     my @NewArray;
 
+                    if ( ref $Prepared{$Attribute} eq 'ARRAY' ) {
+                        @Curr = @{$Prepared{$Attribute}};
+                    }
+
+                    else {
+                        push(@Curr, $Prepared{$Attribute});
+                    }
+
                     for my $Item ( @Force ) {
-                        if ( grep({$Item eq $_} @Curr) ) {
+                        if ( grep({$Item =~ /$_/ } @Curr) ) {
                             push(@NewArray, $Item);
                         }
                     }
