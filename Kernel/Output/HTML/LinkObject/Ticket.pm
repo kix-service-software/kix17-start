@@ -171,9 +171,10 @@ sub TableCreateComplex {
     }
 
     # get user object
-    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
     my $TimeObject   = $Kernel::OM->Get('Kernel::System::Time');
+    my $UserObject   = $Kernel::OM->Get('Kernel::System::User');
 
     # get user preferences
     my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
@@ -262,70 +263,35 @@ sub TableCreateComplex {
 
             if ( $TmpHash{Content} ) {
 
-                if ( $Column eq 'Age' || $Column eq 'EscalationTime' ) {
-                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::User')->TicketEscalationDisabledCheck(
+                if ( $Column =~ /^(?:Age|Escalation(!?|Update|Solution|Response)Time)$/ ) {
+                    my $Prefix                   = $1 || 'Age';
+                    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
                         TicketID => $TicketID,
                         UserID   => $Self->{UserID},
                     );
 
+                    # return 'suspended' if escalation is disabled
                     if ($TicketEscalationDisabled) {
                         $TmpHash{Translate} = 1;
                         $TmpHash{Content}   = 'suspended';
                     }
-                    else {
+                    # return CustomAge for column 'Age'
+                    elsif ( $Prefix eq 'Age' ) {
                         $TmpHash{Content} = $LayoutObject->CustomerAge(
                             Age   => $Ticket->{Age},
                             Space => ' ',
                         );
                     }
-                }
-                elsif ( $Column eq 'EscalationSolutionTime' ) {
-                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::User')->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
-                        $TmpHash{Translate} = 1;
-                        $TmpHash{Content}   = 'suspended';
-                    }
+                    # return CustomerAgeInHours for escalation columns
                     else {
-                        $TmpHash{Content} = $LayoutObject->CustomerAgeInHours(
-                            Age => $Ticket->{SolutionTime} || 0,
-                            Space => ' ',
-                        );
-                    }
-                }
-                elsif ( $Column eq 'EscalationResponseTime' ) {
-                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::User')->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
+                        my $Attr = $Prefix . 'Time';
 
-                    if ($TicketEscalationDisabled) {
-                        $TmpHash{Translate} = 1;
-                        $TmpHash{Content}   = 'suspended';
-                    }
-                    else {
-                        $TmpHash{Content} = $LayoutObject->CustomerAgeInHours(
-                            Age => $Ticket->{FirstResponseTime} || 0,
-                            Space => ' ',
-                        );
-                    }
-                }
-                elsif ( $Column eq 'EscalationUpdateTime' ) {
-                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::User')->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
+                        if ( $Prefix eq 'Response' ) {
+                            $Attr = 'First' . $Prefix . 'Time';
+                        }
 
-                    if ($TicketEscalationDisabled) {
-                        $TmpHash{Translate} = 1;
-                        $TmpHash{Content}   = 'suspended';
-                    }
-                    else {
                         $TmpHash{Content} = $LayoutObject->CustomerAgeInHours(
-                            Age => $Ticket->{UpdateTime} || 0,
+                            Age => $Ticket->{$Attr} || 0,
                             Space => ' ',
                         );
                     }
@@ -344,8 +310,7 @@ sub TableCreateComplex {
                         $TmpHash{Content} = $TimeObject->SystemTime2TimeStamp(
                             SystemTime => $Ticket->{RealTillTimeNotUsed},
                         );
-                        $TmpHash{Content} = $LayoutObject->{LanguageObject}
-                            ->FormatTimeString( $TmpHash{Content}, 'DateFormat' );
+                        $TmpHash{Content} = $LayoutObject->{LanguageObject}->FormatTimeString( $TmpHash{Content}, 'DateFormat' );
                     }
                     else {
                         $TmpHash{Content} = '';
