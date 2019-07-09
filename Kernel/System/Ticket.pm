@@ -16,6 +16,7 @@ use warnings;
 use File::Path;
 use utf8;
 use Encode ();
+use vars qw(@ISA);
 
 use Kernel::Language qw(Translatable);
 use Kernel::System::EventHandler;
@@ -92,7 +93,7 @@ sub new {
     $Self->{CacheType} = 'Ticket';
     $Self->{CacheTTL}  = 60 * 60 * 24 * 20;
 
-    use base qw(
+    @ISA = qw(
         Kernel::System::Ticket::Article
         Kernel::System::Ticket::TicketACL
         Kernel::System::Ticket::TicketSearch
