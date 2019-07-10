@@ -1521,7 +1521,8 @@ sub _Replace {
 
             # prepare body (insert old email) <KIX_CUSTOMER_EMAIL[n]>, <KIX_CUSTOMER_NOTE[n]>
             #   <KIX_CUSTOMER_BODY[n]>, <KIX_AGENT_EMAIL[n]>..., <KIX_COMMENT>
-            if ( $Param{Text} =~ /$Start(?:(?:$DataType(EMAIL|NOTE|BODY)\[(.+?)\])|(?:KIX_COMMENT))$End/g ) {
+            my $Pattern = "$Start(?:(?:$DataType(EMAIL|NOTE|BODY)\\[(.+?)\\])|(?:KIX_COMMENT))$End";
+            if ( $Param{Text} =~ /$Pattern/g ) {
 
                 my $Line       = $2 || 2500;
                 my $NewOldBody = '';
@@ -1569,8 +1570,7 @@ sub _Replace {
                 }
 
                 # replace tag
-                $Param{Text}
-                    =~ s/$Start(?:(?:$DataType(EMAIL|NOTE|BODY)\[(.+?)\])|(?:KIX_COMMENT))$End/$NewOldBody/g;
+                $Param{Text} =~ s/$Pattern/$NewOldBody/g;
             }
 
             # replace <KIX_CUSTOMER_SUBJECT[]>  and  <KIX_AGENT_SUBJECT[]> tags
