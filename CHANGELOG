@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC5 (2019/07/10)
+ * (2019/07/09) - Bugfix: T2019061390001064 (fixed creation of complex link table) (millinger)
+ * (2019/07/09) - Bugfix: T2019060490001161 (fixed search template with complex customer search) (millinger)
+ * (2019/07/09) - Bugfix: T2019060690000891 (fixed ticket placeholder KIX_CUSTOMER_BODY[]) (millinger)
+ * (2019/07/09) - Bugfix: T2019062490000633 (fixed TicketArticleStorageSwitch) (millinger)
+ * (2019/07/09) - Bugfix: T2019070190000844 (fixed creation of excel sheets) (millinger)
+
 # 17.7.0-RC4 (2019/07/03)
  * (2019/07/02) - Bugfix: T2019060590001221 (dynamic field administration does not show all actions) (millinger)
  * (2019/07/02) - Bugfix: T2019060390000931 (fixed output of CheckModules script) (millinger)
