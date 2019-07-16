@@ -1,0 +1,69 @@
+# --
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+# --
+
+KIX_HOME=/opt/kix/
+
+SHELL=/bin/sh
+PATH=/bin:/usr/bin:/usr/local/bin
+MONTHFOLDER=`date +%Y-%m`
+LOGFILE=$KIX_HOME/var/log/procmail-$MONTHFOLDER.log
+VERBOSE=on
+COMSAT=no
+
+
+# Remove all X-KIX Header if not from trusted email
+# e. g. from *@localhost
+
+:0 fhw :
+* !^From.*@localhost
+| grep -vi '^X-KIX-'
+
+# Examples for queue presorting by Spamassassin
+
+#:0fw
+#| /usr/bin/spamc
+#:0
+#* ^X-Spam-Status: Yes
+#| formail -I "X-KIX-Queue: Junk"
+
+
+# Example for assigning a dynamic field
+
+#:0 fhw :
+#* TO:.*@example.com
+#| formail -I "X-KIX-DynamicField-ITSMCriticality: 1 very low"
+
+
+# Example for assigning the tickets customer based on the emails domain
+
+#:0hc
+#CUSTOMERID=|formail -X "From:"|perl -e '$i=<STDIN>; $i=~s/^From: //;$i=~s/\(.*?\)//;$i=~s/<(.*?)>/$1/;$i=~s/ //g;$i=~s/.*@(.*)/$1/;print $i'
+#
+#:0 fhw :
+#| formail -I "X-KIX-CustomerNo: $CUSTOMERID"
+
+
+# Optional: Backup of all incoming emails
+
+#:0 c :
+#$KIX_HOME/var/INBOX.Backup.$MONTHFOLDER
+
+
+# Pipe prepared email to console command 'Maint::Postmaster::Read'
+
+:0 w
+| $KIX_HOME/bin/kix.Console.pl Maint::PostMaster::Read
+
+
+# If console command 'Maint::PostMaster::Read' does not return success, spool the email!
+
+:0 :
+$KIX_HOME/var/spool/.
+
+
+# end of .procmailrc
