@@ -31,9 +31,14 @@ sub new {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
+    # get needed objects
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ParamObject        = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     # disable output of customer company tickets
     my $DisableCompanyTickets = $ConfigObject->Get('Ticket::Frontend::CustomerDisableCompanyTicketAccess');
@@ -110,8 +115,6 @@ sub Run {
         },
     );
 
-    my $UserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
-
     # add filter for customer company if not disabled
     if ( !$DisableCompanyTickets ) {
         $Filters{CompanyTickets} = {
@@ -180,37 +183,53 @@ sub Run {
     }
 
     my %NavBarFilter;
-    my $Counter         = 0;
+    my %Results;
     my $AllTickets      = 0;
     my $AllTicketsTotal = 0;
-    my $TicketObject    = $Kernel::OM->Get('Kernel::System::Ticket');
 
-    for my $Filter ( sort keys %{ $Filters{ $Self->{Subaction} } } ) {
-        $Counter++;
+    for my $Filter ( sort( keys( %{ $Filters{ $Self->{Subaction} } } ) ) ) {
 
-        my $Count = $TicketObject->TicketSearch(
-            %{ $Filters{ $Self->{Subaction} }->{$Filter}->{Search} },
+        my @TmpResult = $TicketObject->TicketSearch(
+            %{ $Filters{ $Self->{Subaction} }->{ $Filter }->{Search} },
             %SearchInArchive,
-            Result => 'COUNT',
+            Result => 'ARRAY',
         );
+
+        # check customer ticket permission
+        for my $TicketID ( @TmpResult ) {
+            my $Access = $TicketObject->TicketCustomerPermission(
+                Type     => 'ro',
+                TicketID => $TicketID,
+                LogNo    => 1,
+                UserID   => $Self->{UserID},
+            );
+            if ( $Access ) {
+                push( @{$Results{$Filter}}, $TicketID );
+            }
+        }
+
+        # init as empty array ref if undefined
+        if ( !defined( $Results{$Filter} ) ) {
+            $Results{$Filter} = [];
+        }
 
         my $ClassA = '';
         if ( $Filter eq $FilterCurrent ) {
             $ClassA     = 'Selected';
-            $AllTickets = $Count;
+            $AllTickets = scalar( @{$Results{$Filter}} );
         }
         if ( $Filter eq 'All' ) {
-            $AllTicketsTotal = $Count;
+            $AllTicketsTotal = scalar( @{$Results{$Filter}} );
         }
         $NavBarFilter{ $Filters{ $Self->{Subaction} }->{$Filter}->{Prio} } = {
             %{ $Filters{ $Self->{Subaction} }->{$Filter} },
-            Count  => $Count,
+            Count  => scalar( @{$Results{$Filter}} ),
             Filter => $Filter,
             ClassA => $ClassA,
         };
     }
 
-    my $StartHit = int( $ParamObject->GetParam( Param => 'StartHit' ) || 1 );
+    my $StartHit  = int( $ParamObject->GetParam( Param => 'StartHit' ) || 1 );
     my $PageShown = $Self->{UserShowTickets} || 1;
 
     if ( !$AllTicketsTotal ) {
@@ -382,10 +401,6 @@ sub Run {
             }
         }
 
-        # get the dynamic fields for this screen
-        my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-        my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-
         # get dynamic field config for frontend module
         my $DynamicFieldFilter = $ConfigObject->Get("Ticket::Frontend::CustomerTicketOverview")->{DynamicField};
         my $DynamicField       = $DynamicFieldObject->DynamicFieldListGet(
@@ -518,15 +533,9 @@ sub Run {
             }
         }
 
-        my @ViewableTickets = $TicketObject->TicketSearch(
-            %{ $Filters{ $Self->{Subaction} }->{$FilterCurrent}->{Search} },
-            %SearchInArchive,
-            Result => 'ARRAY',
-        );
-
         # show tickets
-        $Counter = 0;
-        for my $TicketID (@ViewableTickets) {
+        my $Counter = 0;
+        for my $TicketID ( @{$Results{$FilterCurrent}} ) {
             $Counter++;
             if (
                 $Counter >= $StartHit
@@ -572,9 +581,14 @@ sub Run {
 sub ShowTicketStatus {
     my ( $Self, %Param ) = @_;
 
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $TicketID     = $Param{TicketID} || return;
+    # get needed objects
+    my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
+    my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    my $TicketID = $Param{TicketID} || return;
 
     # contains last article (non-internal)
     my %Article;
@@ -622,7 +636,6 @@ sub ShowTicketStatus {
     );
 
     my $Subject;
-    my $ConfigObject          = $Kernel::OM->Get('Kernel::Config');
     my $SmallViewColumnHeader = $ConfigObject->Get('Ticket::Frontend::CustomerTicketOverview')->{ColumnHeader};
 
     # check if last customer subject or ticket title should be shown
@@ -702,10 +715,6 @@ sub ShowTicketStatus {
             },
         );
     }
-
-    # get the dynamic fields for this screen
-    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
     # get dynamic field config for frontend module
     my $DynamicFieldFilter = $ConfigObject->Get("Ticket::Frontend::CustomerTicketOverview")->{DynamicField};
