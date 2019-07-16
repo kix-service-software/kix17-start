@@ -482,6 +482,21 @@ sub Run {
             %DynamicFieldSearchParameters,
         );
 
+        # check customer ticket permission
+        my @AccessibleTicketIDs;
+        for my $TicketID ( @ViewableTicketIDs ) {
+            my $Access = $TicketObject->TicketCustomerPermission(
+                Type     => 'ro',
+                TicketID => $TicketID,
+                LogNo    => 1,
+                UserID   => $Self->{UserID},
+            );
+            if ( $Access ) {
+                push( @AccessibleTicketIDs, $TicketID );
+            }
+        }
+        @ViewableTicketIDs = @AccessibleTicketIDs;
+
         # get needed objects
         my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
         my $CustomerUserObject = $Kernel::OM->Get('Kernel::System::CustomerUser');
