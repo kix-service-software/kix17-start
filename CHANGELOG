@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC6 (2019/07/16)
+ * (2019/07/16) - CR: T2018091490000578 (added example files for procmail and fetchmail) (millinger)
+ * (2019/07/16) - Bugfix: T2019070390000742 (fixed setting of session cookie for switch button) (millinger)
+ * (2019/07/16) - Bugfix: T2019070990001571 (customer ticket overviews do not check customer ticket permission) (millinger)
+
 # 17.7.0-RC5 (2019/07/10)
  * (2019/07/09) - Bugfix: T2019061390001064 (fixed creation of complex link table) (millinger)
  * (2019/07/09) - Bugfix: T2019060490001161 (fixed search template with complex customer search) (millinger)
