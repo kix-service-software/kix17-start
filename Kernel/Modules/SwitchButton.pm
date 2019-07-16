@@ -138,8 +138,7 @@ sub Run {
         # log event
         $LogObject->Log(
             Priority => 'notice',
-            Message =>
-                "Switched from Agent to Customer ($Self->{UserLogin} -=> $CustomerData{UserLogin})",
+            Message  => "Switched from Agent to Customer ($Self->{UserLogin} -=> $CustomerData{UserLogin})",
         );
 
         # build URL to customer interface
@@ -156,7 +155,7 @@ sub Run {
         }
 
         # redirect to customer interface with new session id
-        return $LayoutObject->Redirect( ExtURL => $URL );
+        return $SessionLayoutObject->Redirect( ExtURL => $URL );
 
     }
 
@@ -245,16 +244,14 @@ sub Run {
                     HTTPOnly => 1,
                 ),
             },
-            SessionID => $NewSessionID,
+            SessionID   => $NewSessionID,
             SessionName => $Param{SessionName} || $SessionName,
-            %{$Self},
         );
 
         # log event
         $LogObject->Log(
             Priority => 'notice',
-            Message =>
-                "Switched from Customer to Agent ($Self->{UserID} -=> $AgentData{UserLogin})",
+            Message  => "Switched from Customer to Agent ($Self->{UserID} -=> $AgentData{UserLogin})",
         );
 
         # build URL to customer interface
@@ -271,8 +268,7 @@ sub Run {
         }
 
         # redirect to customer interface with new session id
-        return $LayoutObject->Redirect( ExtURL => $URL );
-
+        return $SessionLayoutObject->Redirect( ExtURL => $URL );
     }
 }
 
