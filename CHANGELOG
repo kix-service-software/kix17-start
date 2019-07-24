@@ -4,6 +4,9 @@
 # 17.7.0-RC7 (2019/07/24)
  * (2019/07/24) - CR: T2019072490000588 (added config item attribute GeoCoordinate) (fjacquemin)
 
+# 17.7.0-RC7 (2019/07/24)
+ * (2019/07/24) - CR: T2019072490000588 (added config item attribute GeoCoordinate) (fjacquemin)
+
 # 17.7.0-RC6 (2019/07/16)
  * (2019/07/16) - CR: T2018091490000578 (added example files for procmail and fetchmail) (millinger)
  * (2019/07/16) - Bugfix: T2019070390000742 (fixed setting of session cookie for switch button) (millinger)
