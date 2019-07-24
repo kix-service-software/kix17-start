@@ -945,6 +945,10 @@
                 <Description>Config Item Edit</Description>
                 <Title>Edit</Title>
                 <NavBarName>Config Item</NavBarName>
+                <Loader>
+                    <JavaScript>Core.UI.GeoCoordinate.js</JavaScript>
+                    <CSS>Core.GeoCoordinate.css</CSS>
+                </Loader>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -2394,6 +2398,48 @@
         <SubGroup>GenericInterface::Operation::ConfigItemDelete</SubGroup>
         <Setting>
             <String Regex="">rw</String>
+        </Setting>
+    </ConfigItem>
+
+   <ConfigItem Name="ITSMConfigItem::GeoCoordinate###InputFormat" Required="0" Valid="0">
+        <Description Translatable="1">Defines a fallback input format for the form if the format is not set in the config item attribute definition.</Description>
+        <Group>ITSM</Group>
+        <SubGroup>Core::GeoCoordinate</SubGroup>
+        <Setting>
+            <Option SelectedID="DecimalDegree">
+                <Item Key="DecimalDegree">Decimal Degree</Item>
+                <Item Key="Degree">Degree</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMConfigItem::GeoCoordinate###ExportFormat" Required="0" Valid="0">
+        <Description Translatable="1">Defines a fallback export format for the csv export if the format is not set in the config item attribute definition.</Description>
+        <Group>ITSM</Group>
+        <SubGroup>Core::GeoCoordinate</SubGroup>
+        <Setting>
+            <Option SelectedID="DecimalDegree">
+                <Item Key="DecimalDegree">Decimal Degree</Item>
+                <Item Key="Degree">Degree</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMConfigItem::GeoCoordinate###DisplayFormat" Required="0" Valid="0">
+        <Description Translatable="1">Defines a fallback display format for the view if the format is not set in the config item attribute definition.</Description>
+        <Group>ITSM</Group>
+        <SubGroup>Core::GeoCoordinate</SubGroup>
+        <Setting>
+            <Option SelectedID="DecimalDegree">
+                <Item Key="DecimalDegree">Decimal Degree</Item>
+                <Item Key="Degree">Degree</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ITSMConfigItem::GeoCoordinate###Link" Required="0" Valid="0">
+        <Description Translatable="1">Defines a fallback link for the view if the link is not set in the attribute definition of the configuration item. It is possible to use two placeholders to set latitude and longitude. (&lt;LATITUDE&gt;, &lt;LONGITUDE&gt;)</Description>
+        <Group>ITSM</Group>
+        <SubGroup>Core::GeoCoordinate</SubGroup>
+        <Setting>
+            <String Regex="">http://maps.google.com/maps?z=17&amp;t=m&amp;q=loc:&lt;LATITUDE&gt;&lt;LONGITUDE&gt;</String>
         </Setting>
     </ConfigItem>
 </otrs_config>
