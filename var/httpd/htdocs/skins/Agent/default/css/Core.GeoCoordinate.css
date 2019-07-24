@@ -1,0 +1,49 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+ @media screen,projection,tv,handheld {
+     .CoordinateBox {
+        margin-bottom: 5px;
+        overflow: hidden;
+        display: inline-block;
+    }
+    .CoordinateBox label {
+        width: 70px;
+        float: left;
+        line-height: 22px;
+    }
+    .CoordinateBox input {
+        float: left;
+    }
+    .CoordinateBox span {
+        float: left;
+        width: 10px;
+        padding-left: 2px;
+        height: 7px;
+        font-weight: bold;
+    }
+    .CoorSymDecimal {
+        padding-top: 11px;
+    }
+    .CoorSymDegree{
+        padding-bottom: 15px;
+    }
+    .CoorSymSeconds {
+        padding-bottom: 15px;
+    }
+    .CoorSymMinutes {
+        padding-bottom: 15px;
+    }
+ }
+/* end @media */
