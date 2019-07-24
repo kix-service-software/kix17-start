@@ -4506,6 +4506,18 @@ sub Data {
         = 'Definiert eine Liste von Links, welche im Footer zusätzlich hinzugefügt werden können. Die Links können den Frontends separat zugewiesen werden. (Schlüssel: <Priorität>::<Linktitel>; Wert: 0 => deaktiviert, 1 => Überall anzeigen, 2 => nur Agentenfrontend, 3 => nur Kundenfrontend)';
     $Lang->{'Defines the associated URL for each link title. It is possible to use KIX placeholder.'}
         = 'Definiert zu den jeweiligen Linktitel die dazugehörige URL. Es ist möglich KIX-Platzhalter zu verwenden.';
+
+    # GEOCOORDINATES
+    $Lang->{'Decimal Degree'} = 'Dezimalgrad';
+    $Lang->{'Degree'}         = 'Grad';
+    $Lang->{'Defines a fallback input format for the form if the format is not set in the config item attribute definition.'}
+        = 'Definiert ein Fallback-Eingabeformat für das Formular, wenn das Format nicht in der Attributdefinition des Konfigurationselements festgelegt ist.';
+    $Lang->{'Defines a fallback export format for the csv export if the format is not set in the config item attribute definition.'}
+        = 'Definiert ein Fallback-Exportformat für den CSV-Export, wenn das Format nicht in der Attributdefinition des Konfigurationselements festgelegt ist.';
+    $Lang->{'Defines a fallback display format for the view if the format is not set in the config item attribute definition.'}
+        = 'Definiert ein Fallback-Anzeigeformat für die Ansicht, wenn das Format nicht in der Attributdefinition des Konfigurationselements festgelegt ist.';
+    $Lang->{'Defines a fallback link for the view if the link is not set in the attribute definition of the configuration item. It is possible to use two placeholders to set latitude and longitude. (<LATITUDE>, <LONGITUDE>)'}
+        = 'Definiert einen Fallback-Link für die Ansicht, wenn der Link nicht in der Attributdefinition des Konfigurationselements festgelegt ist. Es ist möglich, zwei Platzhalter zum Festlegen von Breiten- und Längegrad zu verwenden. (<LATITUDE>, <LONGITUDE>)';
     # $$STOP$$
 
     return 0;
