@@ -2294,12 +2294,22 @@ sub _ArticleItem {
         );
     }
 
+    # check if the browser sends the session id cookie
+    # if not, add the session id to the url
+    my $Session = '';
+    if ( $LayoutObject->{SessionID} && !$LayoutObject->{SessionIDCookie} ) {
+        $Session = ';' . $LayoutObject->{SessionName} . '=' . $LayoutObject->{SessionID};
+    }
+
     # show body
     # Create a reference to an anonymous copy of %Article and pass it to
     # the LayoutObject, because %Article may be modified afterwards.
     $LayoutObject->Block(
         Name => $ViewMode,
-        Data => {%Article},
+        Data => {
+            %Article,
+            Session => $Session,
+        },
     );
 
     # show message about links in iframes, if user didn't close it already

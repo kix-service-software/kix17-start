@@ -146,19 +146,32 @@ sub FormDataGet {
             Long Lat
         )
     ) {
-        for my $Key (
-            qw(
-                Degree Minute Second DecimalSec DecimalDeg
-            )
-        ) {
-            $Values{$Prefix . $Key} = $ParamObject->GetParam( Param => $Param{Key} . '::' . $Prefix . $Key ) // 0;
+        if ( $Format eq 'Degree' ) {
+            for my $Key (
+                qw(
+                    Degree Minute Second DecimalSec
+                )
+            ) {
+                $Values{$Prefix . $Key} = $ParamObject->GetParam( Param => $Param{Key} . '::' . $Prefix . $Key );
+                return if ( !defined ($Values{$Prefix . $Key}) );
+            }
+        } elsif ( $Format eq 'DecimalDegree' ) {
+
+            for my $Key (
+                qw(
+                    Degree DecimalDeg
+                )
+            ) {
+                $Values{$Prefix . $Key} = $ParamObject->GetParam( Param => $Param{Key} . '::' . $Prefix . $Key );
+                return if ( !defined ($Values{$Prefix . $Key}) );
+            }
         }
     }
 
     $FormData{Value} = $GeoCoordinateObject->ToDecimalDegree(
-        OutputFormat => 'Store',
-        Values       => \%Values,
-        Format       => $Format
+        Result => 'Store',
+        Values => \%Values,
+        Format => $Format
     );
 
     return \%FormData;
