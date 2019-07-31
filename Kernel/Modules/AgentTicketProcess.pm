@@ -4500,7 +4500,8 @@ sub _RenderType {
 sub _StoreActivityDialog {
     my ( $Self, %Param ) = @_;
 
-    my $TicketID = $Param{GetParam}->{TicketID};
+    my $TicketID       = $Param{GetParam}->{TicketID};
+    my $UpdateTicketID = $Param{GetParam}->{TicketID};
     my $ProcessStartpoint;
     my %Ticket;
     my $ProcessEntityID;
@@ -5033,7 +5034,7 @@ sub _StoreActivityDialog {
         $ProcessEntityID = $Param{ProcessEntityID};
 
         # Check if we deal with a Ticket Update
-        my $UpdateTicketID = $TicketID;
+        $UpdateTicketID = $TicketID;
     }
 
     # If we had a TicketID, get the Ticket
@@ -5125,9 +5126,6 @@ sub _StoreActivityDialog {
         );
     }
 
-    # Check if we deal with a Ticket Update
-    my $UpdateTicketID = $Param{GetParam}->{TicketID};
-
     # We save only once, no matter if one or more configurations are set for the same param
     my %StoredFields;
 
@@ -5206,7 +5204,7 @@ sub _StoreActivityDialog {
             }
         }
 
-        elsif ( $CurrentField eq 'Article' && $UpdateTicketID ) {
+        elsif ( $CurrentField eq 'Article' ) {
 
             if ( $Param{GetParam}->{Subject} && $Param{GetParam}->{Body} ) {
 
@@ -5504,7 +5502,7 @@ sub _StoreActivityDialog {
 
         # load new URL in parent window and close pop-up
         return $LayoutObject->PopupClose(
-            URL => "Action=AgentTicketZoom;TicketID=$UpdateTicketID",
+            URL => "Action=AgentTicketZoom;TicketID=$TicketID",
         );
     }
 
