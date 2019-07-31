@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC8 (2019/07/31)
+ * (2019/07/30) - CR: T2019060490000519 (configuration for display name of external notes in customer frontend) (millinger)
+ * (2019/07/30) - Bugfix: T2019071590000694 (skip date validation if date is not used) (millinger)
+ * (2019/07/30) - Bugfix: T2019072590000899 (could not create article on process ticket creation) (millinger)
+ * (2019/07/30) - Bugfix: T2019071590000621 (removed session information from iframe source if cookie is used) (millinger)
+ * (2019/07/29) - Bugfix: T2019072490000588 (fixed input of fast typing and incorrect add/remove of the attribute GeoCoordinate) (fjacquemin)
+
 # 17.7.0-RC7 (2019/07/24)
  * (2019/07/24) - CR: T2019072490000588 (added config item attribute GeoCoordinate) (fjacquemin)
 
