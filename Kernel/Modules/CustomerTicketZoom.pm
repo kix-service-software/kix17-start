@@ -1360,6 +1360,35 @@ sub _Mask {
 
         $LastSenderType = $Article{SenderType};
 
+        # prepare display name of note from agent
+        if (
+            $Config->{DisplayNoteFrom}
+            && $Article{SenderType} eq 'agent'
+            && $Article{ArticleType} eq 'note-external'
+        ) {
+            if ( $Config->{DisplayNoteFrom} eq 'QueueMapping' ) {
+                my $QueueDisplayNoteFrom;
+                if (
+                    $Config->{DisplayNoteFromQueueMapping}
+                    && ref($Config->{DisplayNoteFromQueueMapping}) eq 'HASH'
+                    && $Config->{DisplayNoteFromQueueMapping}->{$Article{Queue}}
+                ) {
+                    $QueueDisplayNoteFrom = $Config->{DisplayNoteFromQueueMapping}->{$Article{Queue}};
+                }
+                else {
+                    $QueueDisplayNoteFrom = $Config->{DisplayNoteFromStatic} || '-';
+                }
+                $QueueDisplayNoteFrom  = $LayoutObject->{LanguageObject}->Translate( $QueueDisplayNoteFrom );
+                $Article{From}         = $QueueDisplayNoteFrom;
+                $Article{FromRealname} = $QueueDisplayNoteFrom;
+            }
+            elsif ( $Config->{DisplayNoteFrom} eq 'Static' ) {
+                my $StaticDisplayNoteFrom = $LayoutObject->{LanguageObject}->Translate( $Config->{DisplayNoteFromStatic} || '-' );
+                $Article{From}            = $StaticDisplayNoteFrom;
+                $Article{FromRealname}    = $StaticDisplayNoteFrom;
+            }
+        }
+
         $LayoutObject->Block(
             Name => 'Article',
             Data => \%Article,
