@@ -281,10 +281,10 @@ sub ToDecimalDegree {
             for my $Key ( qw(Long Lat) ) {
                 my $Value = '';
                 if ( $Format eq 'Degree' ) {
-                    my $Second     = sprintf( '%.3f', $Values->{$Key . 'Second'} . '.' . $Values->{$Key . 'DecimalSec'});
-                    my $Minute     = int($Values->{$Key . 'Minute'});
-                    my $Degree     = int($Values->{$Key . 'Degree'});
-                    my ($Operator) = $Values->{$Key . 'Degree'} =~ /^(\+|-)/;
+                    my ($Operator, $Degree) = $Values->{$Key . 'Degree'} =~ /^(\+|-)(.*)/;
+                    my $Second              = sprintf( '%.3f', $Values->{$Key . 'Second'} . '.' . $Values->{$Key . 'DecimalSec'});
+                    my $Minute              = int($Values->{$Key . 'Minute'});
+                    $Degree                 = int($Degree);
 
                     if ( !$Operator ) {
                         $Operator = '+';
@@ -297,9 +297,9 @@ sub ToDecimalDegree {
                 }
 
                 elsif ( $Format eq 'DecimalDegree' ) {
-                    my $Degree     = int($Values->{$Key . 'Degree'});
-                    my $DecimalDeg = int($Values->{$Key . 'DecimalDeg'});
-                    my ($Operator) = $Values->{$Key . 'Degree'} =~ /^(\+|-)/;
+                    my ($Operator, $Degree) = $Values->{$Key . 'Degree'} =~ /^(\+|-)(.*)/;
+                    my $DecimalDeg          = int($Values->{$Key . 'DecimalDeg'});
+                    $Degree                 = int($Degree);
 
                     if ( !$Operator ) {
                         $Operator = '+';
