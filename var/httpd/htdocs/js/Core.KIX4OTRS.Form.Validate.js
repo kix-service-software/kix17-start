@@ -26,7 +26,13 @@ Core.KIX4OTRS.Form.Validate = (function(TargetNS) {
             MonthValue  = $('#' + Prefix + 'Month').val(),
             DayValue    = $('#' + Prefix + 'Day').val(),
             HourValue   = $('#' + Prefix + 'Hour').val(),
-            MinuteValue = $('#' + Prefix + 'Minute').val();
+            MinuteValue = $('#' + Prefix + 'Minute').val(),
+            $UsedObject = $('#' + Prefix + 'Used');
+
+        // Skip validation if field is not used
+        if ($UsedObject.length > 0 && $UsedObject.is(':checked') === false) {
+            return true;
+        }
 
         if (YearValue && MonthValue && DayValue) {
             DateObject = new Date(YearValue, MonthValue - 1, DayValue);
