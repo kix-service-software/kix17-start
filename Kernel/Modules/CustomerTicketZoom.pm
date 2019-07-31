@@ -1494,6 +1494,13 @@ sub _Mask {
             }
         }
 
+        # check if the browser sends the session id cookie
+        # if not, add the session id to the url
+        my $Session = '';
+        if ( $LayoutObject->{SessionID} && !$LayoutObject->{SessionIDCookie} ) {
+            $Session = ';' . $LayoutObject->{SessionName} . '=' . $LayoutObject->{SessionID};
+        }
+
         # in case show plain article body (if no html body as attachment exists of if rich
         # text is not enabled)
         my $RichText = $LayoutObject->{BrowserRichText};
@@ -1504,6 +1511,7 @@ sub _Mask {
                     Data => {
                         %Param,
                         %Article,
+                        Session => $Session,
                     },
                 );
 
@@ -1515,20 +1523,13 @@ sub _Mask {
                 }
             }
             else {
-                my $SessionInformation;
-
-                # Append session information to URL if needed
-                if ( !$LayoutObject->{SessionIDCookie} ) {
-                    $SessionInformation = $LayoutObject->{SessionName} . '='
-                        . $LayoutObject->{SessionID};
-                }
 
                 $LayoutObject->Block(
                     Name => 'BodyHTMLPlaceholder',
                     Data => {
                         %Param,
                         %Article,
-                        SessionInformation => $SessionInformation,
+                        Session => $Session,
                     },
                 );
 

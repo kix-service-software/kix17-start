@@ -441,6 +441,13 @@ sub FAQContentShow {
 
     my $FullContent;
 
+    # check if the browser sends the session id cookie
+    # if not, add the session id to the url
+    my $Session = '';
+    if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
+        $Session = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+    }
+
     # sort shown fields by priority
     FIELD:
     for my $Field ( sort { $Fields{$a}->{Prio} <=> $Fields{$b}->{Prio} } keys %Fields ) {
@@ -490,8 +497,9 @@ sub FAQContentShow {
             $Self->Block(
                 Name => 'FAQContentHTML',
                 Data => {
-                    ItemID => $Param{FAQData}->{ItemID},
-                    Field  => $Field,
+                    ItemID  => $Param{FAQData}->{ItemID},
+                    Field   => $Field,
+                    Session => $Session,
                 },
             );
         }
