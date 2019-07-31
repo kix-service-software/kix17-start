@@ -42,7 +42,7 @@ Core.UI.GeoCoordinate = (function (TargetNS) {
         $('input[data-id="CoordDegree"]').off('focus').on('focus', function() {
             $(this).select();
         });
-        $('input[data-id="CoordDegree"]').off('keyup').on("keyup", function(event) {
+        $('input[data-id="CoordDegree"]').off('input').on("input", function(event) {
             var maxLength = $(this).attr('maxlength'),
                 nextField = $(this).attr('data-followup');
 
@@ -90,7 +90,7 @@ Core.UI.GeoCoordinate = (function (TargetNS) {
                 $(this).off('focus').on('focus', function() {
                     $(this).select();
                 });
-                $(this).off('keyup').on("keyup", function(event) {
+                $(this).off('input').on("input", function(event) {
                     var maxLength = $(this).attr('maxlength'),
                     nextField = $(this).attr('data-followup');
 
