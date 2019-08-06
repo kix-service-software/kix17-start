@@ -52,7 +52,16 @@ sub Run {
     );
 
     my $TIDSearchMaskRegexp = $Self->{Config}->{'TicketIDSearchMaskRegExp'} || '';
-    if ( $Param{Config}->{'SearchSubject'} ) {
+    if ( $Param{Config}->{'SearchAll'} ) {
+        $Self->{LayoutObject}->Block(
+            Name => 'SearchAll',
+            Data => {
+                %{$Param{Ticket} || {}},
+                %{$Param{Config}},
+            },
+        );
+    }
+    elsif ( $Param{Config}->{'SearchSubject'} ) {
         $Self->{LayoutObject}->Block(
             Name => 'SearchSubject',
             Data => {

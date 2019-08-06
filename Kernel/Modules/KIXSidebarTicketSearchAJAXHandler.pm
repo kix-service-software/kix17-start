@@ -11,6 +11,8 @@ package Kernel::Modules::KIXSidebarTicketSearchAJAXHandler;
 use strict;
 use warnings;
 
+use Kernel::System::VariableCheck qw(:all);
+
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::Output::HTML::Layout',
@@ -96,16 +98,18 @@ sub Run {
     }
 
     my $TIDSearchMaskRegexp = $Self->{SidebarConfig}->{'TicketIDSearchMaskRegExp'} || '';
+    my %TicketData;
     if (
         $TIDSearchMaskRegexp
         && $CallingAction
         && $CallingAction =~ /$TIDSearchMaskRegexp/
         && $TicketID      =~ m/^\d+$/
     ) {
-        my %TicketData = $Self->{TicketObject}->TicketGet(
-            TicketID => $TicketID,
-            UserID   => 1,
-            Silent   => 1,
+        %TicketData = $Self->{TicketObject}->TicketGet(
+            TicketID      => $TicketID,
+            DynamicFields => 1,
+            UserID        => 1,
+            Silent        => 1,
         );
         if (%TicketData) {
             $SearchString = $TicketData{Title};
@@ -128,22 +132,96 @@ sub Run {
         $LinkMode = 'Temporary';
     }
 
-    my $ResultHash = $Self->{KIXSidebarTicketObject}->KIXSidebarTicketSearch(
-        SearchString   => $SearchString,
-        SearchCustomer => $Self->{SidebarConfig}->{'SearchCustomer'},
-        SearchStates   => $Self->{SidebarConfig}->{'SearchStates'},
-        SearchQueues   => $Self->{SidebarConfig}->{'SearchQueues'},
-        SearchTypes    => $Self->{SidebarConfig}->{'SearchTypes'},
-        SearchExtended => $Self->{SidebarConfig}->{'SearchExtended'},
-        TicketID       => $TicketID,
-        LinkMode       => $LinkMode,
-        CustomerUser   => $CustomerUser,
-        CustomerID     => $CustomerID,
-        Frontend       => $Frontend,
-        UserID         => $Self->{UserID},
-        Limit          => $Self->{SidebarConfig}->{'MaxResultCount'},
-    );
+    # prepare ticket search parameter based on dynamic field values
+    my $ProcessSearch = 1;
+    my %DFSearchHash = ();
+     my @DFSearchFields = ();
+    if ( defined( $Self->{SidebarConfig}->{SearchDFFields} ) ) {
+        @DFSearchFields = split( ",", $Self->{SidebarConfig}->{SearchDFFields} );
+    }
+    my @DFSearchMandatory = ();
+    if ( defined( $Self->{SidebarConfig}->{SearchDFMandatory} ) ) {
+        @DFSearchMandatory = split( ",", $Self->{SidebarConfig}->{SearchDFMandatory} );
+    }
+    if (
+        @DFSearchFields
+        && @DFSearchMandatory
+        && scalar(@DFSearchFields) == scalar(@DFSearchMandatory)
+    ) {
+        # get needed objects
+        my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
+        my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
+        DYNAMICFIELD:
+        for ( my $Index = 0; $Index < scalar(@DFSearchFields); $Index++ ) {
+            my $DynamicFieldConfig = $DynamicFieldObject->DynamicFieldGet(
+                Name => $DFSearchFields[$Index],
+            );
+            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+
+            # extract the dynamic field value form the web request
+            my $DynamicFieldValue = $DynamicFieldBackendObject->EditFieldValueGet(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                ParamObject        => $Self->{ParamObject},
+                LayoutObject       => $Self->{LayoutObject},
+            );
+
+            # no value from web request, but TicketID given =>
+            # retrieve value from existing ticket
+            if(
+                !$DynamicFieldValue
+                && %TicketData
+            ) {
+                if( $TicketData{'DynamicField_' . $DFSearchFields[$Index]} ) {
+                    $DynamicFieldValue = $TicketData{'DynamicField_' . $DFSearchFields[$Index]},
+                }
+            }
+
+            # prepare search parameter hash
+            if(
+                $DynamicFieldValue
+                && (
+                    ref($DynamicFieldValue) ne 'ARRAY'
+                    || scalar( @{ $DynamicFieldValue } )
+                )
+            ) {
+                $DFSearchHash{ 'DynamicField_' . $DFSearchFields[$Index] } = {
+                    'Equals' => $DynamicFieldValue,
+                };
+            }
+            elsif( $DFSearchMandatory[$Index] ) {
+                $ProcessSearch = 0;
+                last DYNAMICFIELD;
+            }
+        }
+    }
+
+    # execute ticket search in the system module
+    my $ResultHash;
+    if ( $ProcessSearch ) {
+        $ResultHash = $Self->{KIXSidebarTicketObject}->KIXSidebarTicketSearch(
+            SearchString        => $SearchString,
+            SearchCustomer      => $Self->{SidebarConfig}->{'SearchCustomer'},
+            SearchStates        => $Self->{SidebarConfig}->{'SearchStates'},
+            SearchStateType     => $Self->{SidebarConfig}->{'SearchStateType'},
+            SearchQueues        => $Self->{SidebarConfig}->{'SearchQueues'},
+            SearchTypes         => $Self->{SidebarConfig}->{'SearchTypes'},
+            SearchExtended      => $Self->{SidebarConfig}->{'SearchExtended'},
+            SearchDynamicFields => \%DFSearchHash,
+            TicketID            => $TicketID,
+            LinkMode            => $LinkMode,
+            CustomerUser        => $CustomerUser,
+            CustomerID          => $CustomerID,
+            Frontend            => $Frontend,
+            UserID              => $Self->{UserID},
+            Limit               => $Self->{SidebarConfig}->{'MaxResultCount'},
+        );
+    }
+    else {
+        $ResultHash = {};
+    }
+
+    # prepare result display
     my $Style             = '';
     my $MaxResultDisplay = $Self->{SidebarConfig}->{'MaxResultDisplay'} || 10;
     my $SearchResultCount = scalar keys %{$ResultHash};

@@ -15907,7 +15907,7 @@ Thanks for your help!
              </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Frontend::KIXSidebarBackend###KIXSBSimilarTickets" Required="0" Valid="0">
+    <ConfigItem Name="Frontend::KIXSidebarBackend###KIXSBSimilarTickets001" Required="0" Valid="0">
         <Description Translatable="1">Sidebar module registration for the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::KIXSidebarTicket</SubGroup>
@@ -15919,7 +15919,7 @@ Thanks for your help!
                 <Item Key="Description">Shows similar tickets to current ticket.</Item>
                 <Item Key="Prio">0600</Item>
                 <Item Key="InitialCollapsed"></Item>
-                <Item Key="Identifier">KIXSBSimilarTickets</Item>
+                <Item Key="Identifier">KIXSBSimilarTickets001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
                 <Item Key="LinkType">ParentChild</Item>
@@ -15929,9 +15929,13 @@ Thanks for your help!
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="SearchCustomer">0</Item>
+                <Item Key="SearchDFFields"></Item>
+                <Item Key="SearchDFMandatory"></Item>
                 <Item Key="SearchExtended">0</Item>
                 <Item Key="SearchQueues"></Item>
                 <Item Key="SearchStates">new,open</Item>
+                <Item Key="SearchStateType"></Item>
+                <Item Key="SearchAll">0</Item>
                 <Item Key="SearchSubject">1</Item>
                 <Item Key="SearchTypes"></Item>
                 <Item Key="SelectionDisabled">1</Item>
@@ -15940,7 +15944,155 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="CustomerFrontend::KIXSidebarBackend###KIXSBSimilarTickets" Required="0" Valid="0">
+    <ConfigItem Name="Frontend::KIXSidebarBackend###KIXSBSimilarTickets002" Required="0" Valid="0">
+        <Description Translatable="1">Sidebar module registration for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::KIXSidebarTicket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Actions">AgentTicket(Phone|Email|Zoom)</Item>
+                <Item Key="Module">Kernel::Output::HTML::KIXSidebar::Ticket</Item>
+                <Item Key="Title">Similar Tickets</Item>
+                <Item Key="Description">Shows similar tickets to current ticket.</Item>
+                <Item Key="Prio">0601</Item>
+                <Item Key="InitialCollapsed"></Item>
+                <Item Key="Identifier">KIXSBSimilarTickets002</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Callback"></Item>
+                <Item Key="LinkType">ParentChild</Item>
+                <Item Key="MaxResultCount">20</Item>
+                <Item Key="MaxResultDisplay">5</Item>
+                <Item Key="MaxResultSize"></Item>
+                <Item Key="QueryDelay">1000</Item>
+                <Item Key="QueryMinLength">1</Item>
+                <Item Key="SearchCustomer">0</Item>
+                <Item Key="SearchDFFields"></Item>
+                <Item Key="SearchDFMandatory"></Item>
+                <Item Key="SearchExtended">0</Item>
+                <Item Key="SearchQueues"></Item>
+                <Item Key="SearchStates">new,open</Item>
+                <Item Key="SearchStateType"></Item>
+                <Item Key="SearchAll">0</Item>
+                <Item Key="SearchSubject">1</Item>
+                <Item Key="SearchTypes"></Item>
+                <Item Key="SelectionDisabled">1</Item>
+                <Item Key="ShowColumns">TicketNumber,Title</Item>
+                <Item Key="TicketIDSearchMaskRegExp">^(?:(?!(AgentTicketPhone$|AgentTicketEmail$)).)*$</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::KIXSidebarBackend###KIXSBSimilarTickets003" Required="0" Valid="0">
+        <Description Translatable="1">Sidebar module registration for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::KIXSidebarTicket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Actions">AgentTicket(Phone|Email|Zoom)</Item>
+                <Item Key="Module">Kernel::Output::HTML::KIXSidebar::Ticket</Item>
+                <Item Key="Title">Similar Tickets</Item>
+                <Item Key="Description">Shows similar tickets to current ticket.</Item>
+                <Item Key="Prio">0602</Item>
+                <Item Key="InitialCollapsed"></Item>
+                <Item Key="Identifier">KIXSBSimilarTickets003</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Callback"></Item>
+                <Item Key="LinkType">ParentChild</Item>
+                <Item Key="MaxResultCount">20</Item>
+                <Item Key="MaxResultDisplay">5</Item>
+                <Item Key="MaxResultSize"></Item>
+                <Item Key="QueryDelay">1000</Item>
+                <Item Key="QueryMinLength">1</Item>
+                <Item Key="SearchCustomer">0</Item>
+                <Item Key="SearchDFFields"></Item>
+                <Item Key="SearchDFMandatory"></Item>
+                <Item Key="SearchExtended">0</Item>
+                <Item Key="SearchQueues"></Item>
+                <Item Key="SearchStates">new,open</Item>
+                <Item Key="SearchStateType"></Item>
+                <Item Key="SearchAll">0</Item>
+                <Item Key="SearchSubject">1</Item>
+                <Item Key="SearchTypes"></Item>
+                <Item Key="SelectionDisabled">1</Item>
+                <Item Key="ShowColumns">TicketNumber,Title</Item>
+                <Item Key="TicketIDSearchMaskRegExp">^(?:(?!(AgentTicketPhone$|AgentTicketEmail$)).)*$</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::KIXSidebarBackend###KIXSBSimilarTickets004" Required="0" Valid="0">
+        <Description Translatable="1">Sidebar module registration for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::KIXSidebarTicket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Actions">AgentTicket(Phone|Email|Zoom)</Item>
+                <Item Key="Module">Kernel::Output::HTML::KIXSidebar::Ticket</Item>
+                <Item Key="Title">Similar Tickets</Item>
+                <Item Key="Description">Shows similar tickets to current ticket.</Item>
+                <Item Key="Prio">0603</Item>
+                <Item Key="InitialCollapsed"></Item>
+                <Item Key="Identifier">KIXSBSimilarTickets004</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Callback"></Item>
+                <Item Key="LinkType">ParentChild</Item>
+                <Item Key="MaxResultCount">20</Item>
+                <Item Key="MaxResultDisplay">5</Item>
+                <Item Key="MaxResultSize"></Item>
+                <Item Key="QueryDelay">1000</Item>
+                <Item Key="QueryMinLength">1</Item>
+                <Item Key="SearchCustomer">0</Item>
+                <Item Key="SearchDFFields"></Item>
+                <Item Key="SearchDFMandatory"></Item>
+                <Item Key="SearchExtended">0</Item>
+                <Item Key="SearchQueues"></Item>
+                <Item Key="SearchStates">new,open</Item>
+                <Item Key="SearchStateType"></Item>
+                <Item Key="SearchAll">0</Item>
+                <Item Key="SearchSubject">1</Item>
+                <Item Key="SearchTypes"></Item>
+                <Item Key="SelectionDisabled">1</Item>
+                <Item Key="ShowColumns">TicketNumber,Title</Item>
+                <Item Key="TicketIDSearchMaskRegExp">^(?:(?!(AgentTicketPhone$|AgentTicketEmail$)).)*$</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::KIXSidebarBackend###KIXSBSimilarTickets005" Required="0" Valid="0">
+        <Description Translatable="1">Sidebar module registration for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::KIXSidebarTicket</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Actions">AgentTicket(Phone|Email|Zoom)</Item>
+                <Item Key="Module">Kernel::Output::HTML::KIXSidebar::Ticket</Item>
+                <Item Key="Title">Similar Tickets</Item>
+                <Item Key="Description">Shows similar tickets to current ticket.</Item>
+                <Item Key="Prio">0604</Item>
+                <Item Key="InitialCollapsed"></Item>
+                <Item Key="Identifier">KIXSBSimilarTickets005</Item>
+                <Item Key="Group"></Item>
+                <Item Key="Callback"></Item>
+                <Item Key="LinkType">ParentChild</Item>
+                <Item Key="MaxResultCount">20</Item>
+                <Item Key="MaxResultDisplay">5</Item>
+                <Item Key="MaxResultSize"></Item>
+                <Item Key="QueryDelay">1000</Item>
+                <Item Key="QueryMinLength">1</Item>
+                <Item Key="SearchCustomer">0</Item>
+                <Item Key="SearchDFFields"></Item>
+                <Item Key="SearchDFMandatory"></Item>
+                <Item Key="SearchExtended">0</Item>
+                <Item Key="SearchQueues"></Item>
+                <Item Key="SearchStates">new,open</Item>
+                <Item Key="SearchStateType"></Item>
+                <Item Key="SearchAll">0</Item>
+                <Item Key="SearchSubject">1</Item>
+                <Item Key="SearchTypes"></Item>
+                <Item Key="SelectionDisabled">1</Item>
+                <Item Key="ShowColumns">TicketNumber,Title</Item>
+                <Item Key="TicketIDSearchMaskRegExp">^(?:(?!(AgentTicketPhone$|AgentTicketEmail$)).)*$</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerFrontend::KIXSidebarBackend###KIXSBSimilarTickets001" Required="0" Valid="0">
         <Description Translatable="1">Sidebar module registration for the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Customer::KIXSidebarTicket</SubGroup>
@@ -15952,7 +16104,7 @@ Thanks for your help!
                 <Item Key="Description">Shows similar tickets to current ticket.</Item>
                 <Item Key="Prio">0600</Item>
                 <Item Key="InitialCollapsed"></Item>
-                <Item Key="Identifier">KIXSBSimilarTickets</Item>
+                <Item Key="Identifier">KIXSBSimilarTickets001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
                 <Item Key="LinkType">ParentChild</Item>
@@ -15962,9 +16114,13 @@ Thanks for your help!
                 <Item Key="QueryDelay">1000</Item>
                 <Item Key="QueryMinLength">1</Item>
                 <Item Key="SearchCustomer">0</Item>
+                <Item Key="SearchDFFields"></Item>
+                <Item Key="SearchDFMandatory"></Item>
                 <Item Key="SearchExtended">0</Item>
                 <Item Key="SearchQueues"></Item>
                 <Item Key="SearchStates">new,open</Item>
+                <Item Key="SearchStateType"></Item>
+                <Item Key="SearchAll">0</Item>
                 <Item Key="SearchSubject">1</Item>
                 <Item Key="SearchTypes"></Item>
                 <Item Key="SelectionDisabled">1</Item>
