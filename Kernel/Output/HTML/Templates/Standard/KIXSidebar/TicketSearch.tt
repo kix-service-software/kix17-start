@@ -36,6 +36,11 @@
 [% RenderBlockStart("SearchJS") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
     $('#SearchString[% Data.Identifier | html %]').bind('keyup', function (Event) {
         if ( (Event.keyCode !== 13) && ($('#SearchString[% Data.Identifier | html %]').val().length >= [% Data.QueryMinLength | html %]) ) {
             var TicketID = '';
@@ -57,9 +62,7 @@
                 'KIXSidebarTicketSearchAJAXHandler',
                 '[% Data.Identifier | html %]',
                 Data,
-                function (Response) {
-                    [% Data.Callback %]
-                },
+                window.KIXSidebarCallback[% Data.Identifier | html %],
                 [% Data.QueryDelay | html %]
             );
          } else {
@@ -89,9 +92,7 @@
             'KIXSidebarTicketSearchAJAXHandler',
             '[% Data.Identifier | html %]',
             Data,
-            function (Response) {
-                [% Data.Callback %]
-            }
+            window.KIXSidebarCallback[% Data.Identifier | html %]
         );
     }
     $('#SearchButton[% Data.Identifier | html %]').bind('click', function (Event) {
@@ -110,6 +111,11 @@
 [% RenderBlockEnd("SearchJS") %]
 [% RenderBlockStart("SearchSubject") %]
 <script type="text/javascript">//<![CDATA[
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
     function KIXSidebarTicketAJAXSearchSubject[% Data.Identifier | html %]() {
         var TicketID = '';
         var FormID = '';
@@ -130,9 +136,7 @@
             'KIXSidebarTicketSearchAJAXHandler',
             '[% Data.Identifier | html %]',
             Data,
-            function (Response) {
-                [% Data.Callback %]
-            }
+            window.KIXSidebarCallback[% Data.Identifier | html %]
         );
     }
 //]]>
@@ -151,6 +155,11 @@
 [% RenderBlockEnd("SearchSubject") %]
 [% RenderBlockStart("SearchAll") %]
 <script type="text/javascript">//<![CDATA[
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
     function KIXSidebarTicketAJAXSearchAll[% Data.Identifier | html %]() {
         var TicketID = '';
         var FormID = '';
@@ -171,9 +180,7 @@
             'KIXSidebarTicketSearchAJAXHandler',
             '[% Data.Identifier | html %]',
             Data,
-            function (Response) {
-                [% Data.Callback %]
-            }
+            window.KIXSidebarCallback[% Data.Identifier | html %]
         );
     }
 //]]>
@@ -189,6 +196,11 @@
 [% RenderBlockEnd("SearchAll") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
+    if (typeof KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %];
+    } else if(typeof window.KIXSidebarCallback[% Data.Identifier | html %] === typeof undefined) {
+        window.KIXSidebarCallback[% Data.Identifier | html %] = KIXSidebarCallback[% Data.Identifier | html %];
+    }
     KIXSidebarTools.Init('[% Data.Identifier | html %]');
 
     var TicketID = '';
@@ -209,13 +221,17 @@
         'KIXSidebarTicketSearchAJAXHandler',
         '[% Data.Identifier | html %]',
         Data,
-        function (Response) {
-            [% Data.Callback %]
-        }
+        window.KIXSidebarCallback[% Data.Identifier | html %]
     );
 //]]>
 </script>
 [% END %]
+<script type="text/javascript">//<![CDATA[
+    var KIXSidebarCallback[% Data.Identifier | html %] = function (Response) {
+        [% Data.Callback %]
+    }
+//]]>
+</script>
 [% RenderBlockEnd("SidebarFrame") %]
 
 [% RenderBlockStart("KIXSidebarTicketSearchResult") %]
