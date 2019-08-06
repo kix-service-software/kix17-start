@@ -173,7 +173,7 @@ sub Run {
                 && %TicketData
             ) {
                 if( $TicketData{'DynamicField_' . $DFSearchFields[$Index]} ) {
-                    $DynamicFieldValue = $TicketData{'DynamicField_' . $DFSearchFields[$Index]},
+                    $DynamicFieldValue = $TicketData{'DynamicField_' . $DFSearchFields[$Index]};
                 }
             }
 
