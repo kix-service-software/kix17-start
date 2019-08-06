@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC9 (2019/08/06)
+ * (2019/08/06) - CR: T2019031590000496 (extended ticket search sidebar to filter by dynamic fields) (millinger)
+
 # 17.7.0-RC8 (2019/07/31)
  * (2019/07/30) - CR: T2019060490000519 (configuration for display name of external notes in customer frontend) (millinger)
  * (2019/07/30) - Bugfix: T2019071590000694 (skip date validation if date is not used) (millinger)
