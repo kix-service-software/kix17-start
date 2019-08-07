@@ -2439,7 +2439,7 @@
         <Group>ITSM</Group>
         <SubGroup>Core::GeoCoordinate</SubGroup>
         <Setting>
-            <String Regex="">http://maps.google.com/maps?z=17&amp;t=m&amp;q=loc:&lt;LATITUDE&gt;&lt;LONGITUDE&gt;</String>
+            <String Regex="">http://maps.google.com/maps?z=17&amp;t=m&amp;q=loc:&lt;LATITUDE&gt;,&lt;LONGITUDE&gt;</String>
         </Setting>
     </ConfigItem>
 </otrs_config>
