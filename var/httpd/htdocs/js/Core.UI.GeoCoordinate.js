@@ -37,6 +37,11 @@ Core.UI.GeoCoordinate = (function (TargetNS) {
         return str.length < max ? addLeadingZeros("0" + str, max) : str;
     }
 
+    function addTrailingZeros (str, max) {
+        str = str.toString();
+        return str.length < max ? addTrailingZeros(str + "0", max) : str;
+    }
+
     TargetNS.CoordinateInputInit = function() {
 
         $('input[data-id="CoordDegree"]').off('focus').on('focus', function() {
@@ -116,9 +121,19 @@ Core.UI.GeoCoordinate = (function (TargetNS) {
                         || $(this).val() === ''
                         || $(this).val() === undefined
                     ) {
-                        $(this).val(addLeadingZeros('0', maxLength));
+                        if ( /CoordDecimal/g.exec($(this).attr('data-id')) ) {
+                            $(this).val(addTrailingZeros('0', maxLength));
+                        }
+                        else {
+                            $(this).val(addLeadingZeros('0', maxLength));
+                        }
                     } else {
-                        $(this).val(addLeadingZeros($(this).val(), maxLength));
+                        if ( /CoordDecimal/g.exec($(this).attr('data-id')) ) {
+                            $(this).val(addTrailingZeros($(this).val(), maxLength));
+                        }
+                        else {
+                            $(this).val(addLeadingZeros($(this).val(), maxLength));
+                        }
                     }
                 });
             }

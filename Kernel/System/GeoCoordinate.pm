@@ -113,7 +113,7 @@ sub ToDegree {
     my %Result;
 
     for my $Coord( @Coordinates ) {
-        my $Key                     = !$Counter ? 'Long' : 'Lat';
+        my $Key                     = !$Counter ? 'Lat' : 'Long';
         my ($Operator, $Coordinate) = $Coord =~ /^(\+|-)(.*)/;
         my $Degree                  = int($Coordinate);
         my $TmpMin                  = sprintf( '%f', ($Coordinate - $Degree) * 60);
@@ -138,7 +138,7 @@ sub ToDegree {
     if ( $Result eq 'Display' ) {
         my $Value = '';
 
-        for my $Key ( qw(Long Lat) ) {
+        for my $Key ( qw(Lat Long) ) {
             $Value .= ' ' if $Value;
             $Value .= $Result{$Key}->{Degree}
                 . '° '
@@ -278,7 +278,7 @@ sub ToDecimalDegree {
 
         if ( $Param{Values} ) {
             my $Values = $Param{Values};
-            for my $Key ( qw(Long Lat) ) {
+            for my $Key ( qw(Lat Long) ) {
                 my $Value = '';
                 if ( $Format eq 'Degree' ) {
                     my ($Operator, $Degree) = $Values->{$Key . 'Degree'} =~ /^(\+|-)(.*)/;
@@ -290,10 +290,18 @@ sub ToDecimalDegree {
                         $Operator = '+';
                     }
 
-                    $Value = $Operator . sprintf(
-                        '%011.7f',
-                        (($Second/60)+$Minute)/60+$Degree
-                    );
+                    if ( $Key eq 'Lat' ) {
+                        $Value = $Operator . sprintf(
+                            '%010.7f',
+                            (($Second/60)+$Minute)/60+$Degree
+                        );
+                    }
+                    else {
+                        $Value = $Operator . sprintf(
+                            '%011.7f',
+                            (($Second/60)+$Minute)/60+$Degree
+                        );
+                    }
                 }
 
                 elsif ( $Format eq 'DecimalDegree' ) {
@@ -305,10 +313,18 @@ sub ToDecimalDegree {
                         $Operator = '+';
                     }
 
-                    $Value = $Operator . sprintf(
-                        '%010.6f',
-                        $Degree . '.' . $DecimalDeg
-                    );
+                    if ( $Key eq 'Lat' ) {
+                        $Value = $Operator . sprintf(
+                            '%09.6f',
+                            $Degree . '.' . $DecimalDeg
+                        );
+                    }
+                    else {
+                        $Value = $Operator . sprintf(
+                            '%010.6f',
+                            $Degree . '.' . $DecimalDeg
+                        );
+                    }
 
                 }
 
@@ -321,8 +337,10 @@ sub ToDecimalDegree {
             if ( $Format eq 'Degree' ) {
                 $Param{Coordinates} =~ s/(°|\')\s+/$1/g;
 
+                my $Counter     = 0;
                 my @Coordinates = split(' ', $Param{Coordinates});
                 for my $Coord ( @Coordinates ) {
+                    my $Key                     = !$Counter ? 'Lat' : 'Long';
                     my ($Operator, $Coordinate) = $Coord =~ /^(\+|-)(.*)/;
                     $Coordinate =~ s/(°|\')/ /g;
                     $Coordinate =~ s/\"//g;
@@ -333,13 +351,24 @@ sub ToDecimalDegree {
 
                     my ($Degree, $Minute, $Second) = split(' ', $Coordinate);
 
-                    my $Value = sprintf(
-                        '%011.7f',
-                        (($Second/60)+$Minute)/60+$Degree
-                    );
+                    my $Value;
+                    if ( $Key eq 'Lat' ) {
+                        $Value = sprintf(
+                            '%010.7f',
+                            (($Second/60)+$Minute)/60+$Degree
+                        );
+                    }
+                    else {
+                        $Value = sprintf(
+                            '%011.7f',
+                            (($Second/60)+$Minute)/60+$Degree
+                        );
+                    }
 
                     $Output .= ' ' if $Output;
                     $Output .= $Operator . $Value;
+
+                    $Counter++;
                 }
             }
             elsif ( $Format eq 'DecimalDegree' ) {
@@ -357,7 +386,7 @@ sub ToDecimalDegree {
     my $Counter      = 0;
     my @Coordinates  = split(' ', $Param{Coordinates});
     for my $Coord( @Coordinates ) {
-        my $Key                     = !$Counter ? 'Long' : 'Lat';
+        my $Key                     = !$Counter ? 'Lat' : 'Long';
         my ($Operator, $Coordinate) = $Coord =~ /^(\+|-)(.*)/;
         my ($Degree, $DecimalDeg)   = split('\.', $Coordinate);
 
@@ -365,10 +394,20 @@ sub ToDecimalDegree {
             $Operator = '+';
         }
 
-        $Result{$Key} = {
-            Degree     => $Operator . sprintf('%03d', $Degree),
-            DecimalDeg => sprintf('%06d', $DecimalDeg),
-        };
+        if ( $Key eq 'Lat' ) {
+            $Result{$Key} = {
+                Degree     => $Operator . sprintf('%02d', $Degree),
+                DecimalDeg => sprintf('%06d', $DecimalDeg),
+                MaxLength  => 3
+            };
+        }
+        else {
+            $Result{$Key} = {
+                Degree     => $Operator . sprintf('%03d', $Degree),
+                DecimalDeg => sprintf('%06d', $DecimalDeg),
+                MaxLength  => 4
+            };
+        }
 
         $Counter++;
     }
@@ -380,7 +419,7 @@ sub ValueLookup {
     my ($Self, %Param) = @_;
 
     my $DegPattern = '^[+-]?\d{1,2}\°(?:|\s)\d{1,2}\'(?:|\s)\d{1,2}\.\d{1,3}\"\s[-+]?\d{1,3}\°(?:|\s)\d{1,2}\'(?:|\s)\d{1,2}\.\d{1,3}\"$';
-    my $DecPattern = '^[+-]?\d{1,3}\.\d+\s[-+]?\d{1,3}\.\d+$';
+    my $DecPattern = '^[+-]?\d{1,2}\.\d+\s[-+]?\d{1,3}\.\d+$';
 
     if (
         $Param{Coordinates} =~ /$DegPattern/g
