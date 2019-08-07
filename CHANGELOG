@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC10 (2019/08/07)
+ * (2019/08/07) - Bugfix: T2019072490000588 (switched order of latitude and longitude) (millinger)
+
 # 17.7.0-RC9 (2019/08/06)
  * (2019/08/06) - CR: T2019031590000496 (extended ticket search sidebar to filter by dynamic fields) (millinger)
 
