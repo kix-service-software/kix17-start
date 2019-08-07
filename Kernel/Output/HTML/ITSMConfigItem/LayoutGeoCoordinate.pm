@@ -94,8 +94,8 @@ sub OutputStringCreate {
 
     if ( $Link ) {
         my @Coordinates = split(' ', $Param{Value});
-        $Link =~ s/<LONGITUDE>/$Coordinates[0]/g;
-        $Link =~ s/<LATITUDE>/$Coordinates[1]/g;
+        $Link =~ s/<LATITUDE>/$Coordinates[0]/g;
+        $Link =~ s/<LONGITUDE>/$Coordinates[1]/g;
 
         my $LinkStrg = '<a href="' . $Link . '" target="_blank">' . $Value . '</a>';
 
@@ -143,7 +143,7 @@ sub FormDataGet {
 
     for my $Prefix (
         qw(
-            Long Lat
+            Lat Long
         )
     ) {
         if ( $Format eq 'Degree' ) {
@@ -221,7 +221,7 @@ sub InputCreate {
     }
 
     if ( !$Value ) {
-        $Value = '+000.000000 +000.000000';
+        $Value = '+00.000000 +000.000000';
     }
 
     my %Coordinates = $GeoCoordinateObject->$Function(
@@ -231,7 +231,7 @@ sub InputCreate {
 
     return if !%Coordinates;
 
-    for my $CoordKey ( qw(Long Lat) ) {
+    for my $CoordKey ( qw(Lat Long) ) {
         my $Label      = $CoordKey . 'itude:';
         my $MaxLength  = $Coordinates{$CoordKey}->{MaxLength}  || 4;
         my $Degree     = $Coordinates{$CoordKey}->{Degree};
