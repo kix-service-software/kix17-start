@@ -1,0 +1,88 @@
+[
+    {
+        Key => 'Description',
+        Name => 'Description',
+        Searchable => 1,
+        Input => {
+            Type => 'TextArea',
+        },
+    },
+    {
+        Key => 'Type',
+        Name => 'Type',
+        Searchable => 1,
+        Input => {
+            Type => 'GeneralCatalog',
+            Class => 'ITSM::ConfigItem::Network::Type',
+            Translation => 1,
+        },
+    },
+    {
+        Key        => 'Location',
+        Name       => 'Asset Location',
+        Searchable => 1,
+        Input => {
+            Type                           => 'CIClassReference',
+            ReferencedCIClassName          => 'Location',
+            ReferencedCIClassLinkType      => 'Includes',
+            ReferencedCIClassLinkDirection => 'Reverse',
+            #ReferencedCIClassReferenceAttributeKey => '',
+            SearchInputType                => 'AutoComplete',
+        },
+    },
+    {
+        Key => 'NetworkAddress',
+        Name => 'Network Address',
+        Searchable => 1,
+        Input => {
+            Type => 'Text',
+            Size => 30,
+            MaxLength => 20,
+            Required => 1,
+        },
+        CountMin => 0,
+        CountMax => 100,
+        CountDefault => 1,
+        Sub => [
+            {
+                Key => 'SubnetMask',
+                Name => 'Subnet Mask',
+                Input => {
+                    Type => 'Text',
+                    Size => 30,
+                    MaxLength => 20,
+                    ValueDefault => '255.255.255.0',
+                    Required => 1,
+                },
+                CountMin => 0,
+                CountMax => 1,
+                CountDefault => 0,
+            },
+            {
+                Key => 'Gateway',
+                Name => 'Gateway',
+                Input => {
+                    Type => 'Text',
+                    Size => 30,
+                    MaxLength => 20,
+                    Required => 1,
+                },
+                CountMin => 0,
+                CountMax => 10,
+                CountDefault => 0,
+            },
+        ],
+    },
+    {
+        Key => 'Note',
+        Name => 'Note',
+        Searchable => 1,
+        Input => {
+            Type => 'TextArea',
+            Required => 1,
+        },
+        CountMin => 0,
+        CountMax => 1,
+        CountDefault => 0,
+    },
+];
