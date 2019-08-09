@@ -4529,6 +4529,19 @@ TreeView: '0'
         },
     },
     {
+        Key        => 'Location',
+        Name       => 'Asset Location',
+        Searchable => 1,
+        Input => {
+            Type                           => 'CIClassReference',
+            ReferencedCIClassName          => 'Location',
+            ReferencedCIClassLinkType      => 'Includes',
+            ReferencedCIClassLinkDirection => 'Reverse',
+            #ReferencedCIClassReferenceAttributeKey => '',
+            SearchInputType                => 'AutoComplete',
+        },
+    },
+    {
         Key => 'Owner',
         Name => 'Assigned owner',
         Searchable => 1,
@@ -4745,6 +4758,19 @@ TreeView: '0'
         },
     },
     {
+        Key        => 'Location',
+        Name       => 'Asset Location',
+        Searchable => 1,
+        Input => {
+            Type                           => 'CIClassReference',
+            ReferencedCIClassName          => 'Location',
+            ReferencedCIClassLinkType      => 'Includes',
+            ReferencedCIClassLinkDirection => 'Reverse',
+            #ReferencedCIClassReferenceAttributeKey => '',
+            SearchInputType                => 'AutoComplete',
+        },
+    },
+    {
         Key => 'Owner',
         Name => 'Assigned owner',
         Searchable => 1,
@@ -4815,6 +4841,22 @@ TreeView: '0'
             Class => 'ITSM::ConfigItem::Location::Type',
             Translation => 1,
         },
+    },
+    {
+        Key        => 'Location',
+        Name       => 'Parent Location',
+        Searchable => 1,
+        Input => {
+            Type                           => 'CIClassReference',
+            ReferencedCIClassName          => 'Location',
+            ReferencedCIClassLinkType      => 'Includes',
+            ReferencedCIClassLinkDirection => 'Reverse',
+            #ReferencedCIClassReferenceAttributeKey => '',
+            SearchInputType                => 'AutoComplete',
+        },
+        CountMin => 0,
+        CountMax => 1,
+        CountDefault => 0,
     },
     {
         Key => 'Phone1',
@@ -4899,6 +4941,19 @@ TreeView: '0'
             Type => 'GeneralCatalog',
             Class => 'ITSM::ConfigItem::Network::Type',
             Translation => 1,
+        },
+    },
+    {
+        Key        => 'Location',
+        Name       => 'Asset Location',
+        Searchable => 1,
+        Input => {
+            Type                           => 'CIClassReference',
+            ReferencedCIClassName          => 'Location',
+            ReferencedCIClassLinkType      => 'Includes',
+            ReferencedCIClassLinkDirection => 'Reverse',
+            #ReferencedCIClassReferenceAttributeKey => '',
+            SearchInputType                => 'AutoComplete',
         },
     },
     {

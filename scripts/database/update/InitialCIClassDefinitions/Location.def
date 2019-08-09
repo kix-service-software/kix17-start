@@ -1,0 +1,87 @@
+[
+    {
+        Key => 'Type',
+        Name => 'Type',
+        Searchable => 1,
+        Input => {
+            Type => 'GeneralCatalog',
+            Class => 'ITSM::ConfigItem::Location::Type',
+            Translation => 1,
+        },
+    },
+    {
+        Key        => 'Location',
+        Name       => 'Parent Location',
+        Searchable => 1,
+        Input => {
+            Type                           => 'CIClassReference',
+            ReferencedCIClassName          => 'Location',
+            ReferencedCIClassLinkType      => 'Includes',
+            ReferencedCIClassLinkDirection => 'Reverse',
+            #ReferencedCIClassReferenceAttributeKey => '',
+            SearchInputType                => 'AutoComplete',
+        },
+        CountMin => 0,
+        CountMax => 1,
+        CountDefault => 0,
+    },
+    {
+        Key => 'Phone1',
+        Name => 'Phone 1',
+        Searchable => 1,
+        Input => {
+            Type => 'Text',
+            Size => 50,
+            MaxLength => 100,
+        },
+    },
+    {
+        Key => 'Phone2',
+        Name => 'Phone 2',
+        Searchable => 1,
+        Input => {
+            Type => 'Text',
+            Size => 50,
+            MaxLength => 100,
+        },
+    },
+    {
+        Key => 'Fax',
+        Name => 'Fax',
+        Searchable => 1,
+        Input => {
+            Type => 'Text',
+            Size => 50,
+            MaxLength => 100,
+        },
+    },
+    {
+        Key => 'E-Mail',
+        Name => 'E-Mail',
+        Searchable => 1,
+        Input => {
+            Type => 'Text',
+            Size => 50,
+            MaxLength => 100,
+        },
+    },
+    {
+        Key => 'Address',
+        Name => 'Address',
+        Searchable => 1,
+        Input => {
+            Type => 'TextArea',
+        },
+    },
+    {
+        Key => 'Note',
+        Name => 'Note',
+        Searchable => 1,
+        Input => {
+            Type => 'TextArea',
+            Required => 1,
+        },
+        CountMin => 0,
+        CountDefault => 0,
+    },
+];

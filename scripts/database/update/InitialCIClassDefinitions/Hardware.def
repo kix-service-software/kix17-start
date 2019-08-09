@@ -1,0 +1,107 @@
+[
+    {
+        Key => 'Vendor',
+        Name => 'Vendor',
+        Searchable => 1,
+        Input => {
+            Type => 'Text',
+            Size => 50,
+            MaxLength => 50,
+        },
+    },
+    {
+        Key => 'Model',
+        Name => 'Model',
+        Searchable => 1,
+        Input => {
+            Type => 'Text',
+            Size => 50,
+            MaxLength => 50,
+        },
+    },
+    {
+        Key => 'Description',
+        Name => 'Description',
+        Searchable => 1,
+        Input => {
+            Type => 'TextArea',
+        },
+    },
+    {
+        Key => 'Type',
+        Name => 'Type',
+        Searchable => 1,
+        Input => {
+            Type => 'GeneralCatalog',
+            Class => 'ITSM::ConfigItem::Hardware::Type',
+            Translation => 1,
+        },
+    },
+    {
+        Key        => 'Location',
+        Name       => 'Asset Location',
+        Searchable => 1,
+        Input => {
+            Type                           => 'CIClassReference',
+            ReferencedCIClassName          => 'Location',
+            ReferencedCIClassLinkType      => 'Includes',
+            ReferencedCIClassLinkDirection => 'Reverse',
+            #ReferencedCIClassReferenceAttributeKey => '',
+            SearchInputType                => 'AutoComplete',
+        },
+    },
+    {
+        Key => 'Owner',
+        Name => 'Assigned owner',
+        Searchable => 1,
+        Input => {
+            Type => 'Customer',
+        },
+    },
+    {
+        Key => 'SerialNumber',
+        Name => 'Serial Number',
+        Searchable => 1,
+        Input => {
+            Type => 'Text',
+            Size => 50,
+            MaxLength => 100,
+        },
+    },
+    {
+        Key => 'WarrantyExpirationDate',
+        Name => 'Warranty Expiration Date',
+        Searchable => 1,
+        Input => {
+            Type => 'Date',
+            YearPeriodPast => 20,
+            YearPeriodFuture => 10,
+        },
+    },
+    {
+        Key => 'InstallDate',
+        Name => 'Install Date',
+        Searchable => 1,
+        Input => {
+            Type => 'Date',
+            Required => 1,
+            YearPeriodPast => 20,
+            YearPeriodFuture => 10,
+        },
+        CountMin => 0,
+        CountMax => 1,
+        CountDefault => 0,
+    },
+    {
+        Key => 'Note',
+        Name => 'Note',
+        Searchable => 1,
+        Input => {
+            Type => 'TextArea',
+            Required => 1,
+        },
+        CountMin => 0,
+        CountMax => 1,
+        CountDefault => 0,
+    },
+];
