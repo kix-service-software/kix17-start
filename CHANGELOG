@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC12 (2019/08/12)
+ * (2019/08/12) - Bugfix: T2019032790000553 (fixed initial disabled dynamic fields in AgentTicketActionCommon) (millinger)
+
 # 17.7.0-RC11 (2019/08/09)
  * (2019/08/09) - release candidate
 
