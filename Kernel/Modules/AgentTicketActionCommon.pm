@@ -2452,12 +2452,12 @@ sub _Mask {
         # ---
 
         if ( !$DynamicFieldConfig->{Shown} ) {
-            $LayoutObject->Block(
-                Name => 'DynamicFieldNotShown',
-                Data => {
-                    Name  => $DynamicFieldConfig->{Name},
-                },
-            );
+            my $DynamicFieldName = $DynamicFieldConfig->{Name};
+
+            $LayoutObject->AddJSOnDocumentComplete( Code => <<"END");
+Core.Form.Validate.DisableValidation(\$('.Row_DynamicField_$DynamicFieldName'));
+\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden');
+END
         }
 
         $LayoutObject->Block(
