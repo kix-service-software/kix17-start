@@ -1101,6 +1101,8 @@ sub Data {
         = 'Definiert Anzeige der Artikelfreitextoptionen in der Artikelbearbeitenansicht. Mögliche Werte: 0 = inaktiv, 1 = aktiviert, 2 = aktiviert und Pflicht.';
     $Lang->{'Only ticket responsible can edit articles of the ticket.'}
         = 'Nur der Ticketverantwortlicher darf Artikel des Tickets bearbeiten.';
+    $Lang->{'Determines whether the selection fields in the action bar should be displayed as "Modernize".'}
+        = 'Legt fest, ob die Auswahlfelder in der Aktionsleiste als "Modernize" dargestellt werden sollen.';
 
     # KIX4OTRS_AgentArticleEdit.xml
     $Lang->{'History type for this action.'} = 'Historientyp für diese Aktion.';
@@ -1274,6 +1276,9 @@ sub Data {
     $Lang->{'Select Class'} = 'Klasse auswählen';
     $Lang->{'Settings for custom ticket list view'}
         = 'Einstellungen für persönliche Ticketlistendarstellung';
+    $Lang->{'Asset Location'} = 'Asset Lokation';
+    $Lang->{'Parent Location'} = 'Übergeordnete Lokation';
+            
 
     # graph visualization related translations...
     $Lang->{'CI-Classes to consider'} = 'Zu betrachtende CI-Klassen';
@@ -4504,6 +4509,18 @@ sub Data {
         = 'Definiert eine Liste von Links, welche im Footer zusätzlich hinzugefügt werden können. Die Links können den Frontends separat zugewiesen werden. (Schlüssel: <Priorität>::<Linktitel>; Wert: 0 => deaktiviert, 1 => Überall anzeigen, 2 => nur Agentenfrontend, 3 => nur Kundenfrontend)';
     $Lang->{'Defines the associated URL for each link title. It is possible to use KIX placeholder.'}
         = 'Definiert zu den jeweiligen Linktitel die dazugehörige URL. Es ist möglich KIX-Platzhalter zu verwenden.';
+
+    # GEOCOORDINATES
+    $Lang->{'Decimal Degree'} = 'Dezimalgrad';
+    $Lang->{'Degree'}         = 'Grad';
+    $Lang->{'Defines a fallback input format for the form if the format is not set in the config item attribute definition.'}
+        = 'Definiert ein Fallback-Eingabeformat für das Formular, wenn das Format nicht in der Attributdefinition des Konfigurationselements festgelegt ist.';
+    $Lang->{'Defines a fallback export format for the csv export if the format is not set in the config item attribute definition.'}
+        = 'Definiert ein Fallback-Exportformat für den CSV-Export, wenn das Format nicht in der Attributdefinition des Konfigurationselements festgelegt ist.';
+    $Lang->{'Defines a fallback display format for the view if the format is not set in the config item attribute definition.'}
+        = 'Definiert ein Fallback-Anzeigeformat für die Ansicht, wenn das Format nicht in der Attributdefinition des Konfigurationselements festgelegt ist.';
+    $Lang->{'Defines a fallback link for the view if the link is not set in the attribute definition of the configuration item. It is possible to use two placeholders to set latitude and longitude. (<LATITUDE>, <LONGITUDE>)'}
+        = 'Definiert einen Fallback-Link für die Ansicht, wenn der Link nicht in der Attributdefinition des Konfigurationselements festgelegt ist. Es ist möglich, zwei Platzhalter zum Festlegen von Breiten- und Längegrad zu verwenden. (<LATITUDE>, <LONGITUDE>)';
     # $$STOP$$
 
     return 0;

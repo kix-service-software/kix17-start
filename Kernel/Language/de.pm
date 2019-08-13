@@ -5038,6 +5038,8 @@ Ihr Helpdesk-Team
             'Definiert den Standard-Wert für den Action-Paramenter im Public-Frontend. Der Action-Paramter wird in System-Skripten vewendet.',
         'Defines the default viewable sender types of a ticket (default: customer).' =>
             'Definiert die standardmäßigen sichtbaren Sendertypen eines Tickets (Standard: Kunde).',
+        'Defines the displayed style of the From field in notes that are visible for customers.' =>
+            'Definiert den Anzeigestil des \'Von\'-Feldes für kundensichtbare Notizen',
         'Defines the dynamic fields that are used for displaying on calendar events.' =>
             'Definiert die dynamischen Felder, die benutzt werden um Kalender-Events anzuzeigen.',
         'Defines the fall-back path to open fetchmail binary. Note: The name of the binary needs to be \'fetchmail\', if it is different please use a symbolic link.' =>
@@ -5378,6 +5380,7 @@ Ihr Helpdesk-Team
             '',
         'Display a warning and prevent search when using stop words within fulltext search.' =>
             'Zeigt eine Warnung an und verhindert die Suche, wenn Stop-Wörter in der Volltextsuche eingegeben werden.',
+        'Display name based on current ticket queue' => 'Anzeigename basierend auf aktueller Ticketqueue',
         'Display settings to override defaults for Process Tickets.' => '',
         'Displays the accounted time for an article in the ticket zoom view.' =>
             'Zeigt die bisher benötigte Zeit für einen Artikel in der TicketZoomView an.',
@@ -6610,6 +6613,7 @@ Ihr Helpdesk-Team
         'Starts a wildcard search of the active object after the link object mask is started.' =>
             '',
         'Stat#' => 'Statistik Nr.',
+        'Static display name' => 'Statischer Anzeigename',
         'Status view' => 'Ansicht nach Status',
         'Stores cookies after the browser has been closed.' => 'Speichert Cookies nach dem Schließen des Browsers.',
         'Strips empty lines on the ticket preview in the queue view.' => 'Entfernt leere Zeilen in der Ticket-Vorschau in der Queue-Ansicht.',
@@ -6668,6 +6672,8 @@ Ihr Helpdesk-Team
             'Der Text am Anfang des Betreffs einer E-Mail Antwort, z.B. RE, AW oder AS.',
         'The text at the beginning of the subject when an email is forwarded, e.g. FW, Fwd, or WG.' =>
             'Der Text am Anfang des Betreffs, wenn eine E-Mail weitergeleitet wird, z.B. FW, Fwd oder WG.',
+        'The value of the From field' =>
+            'Der Wert des \'Von\'-Feldes',
         'This event module stores attributes from CustomerUser as DynamicFields tickets. Please see the setting above for how to configure the mapping.' =>
             '',
         'This is the default orange - black skin for the customer interface.' =>
@@ -6759,6 +6765,10 @@ Ihr Helpdesk-Team
             'Nutzen Sie einen neuen Typ von Auswahl- und Autovervollständigen-Feldern in der Agenten-Schnittstelle, wo sie anwendbar sind (InputFields = Eingabefelder).',
         'Use new type of select and autocomplete fields in customer interface, where applicable (InputFields).' =>
             '',
+        'Used if \'Ticket::Frontend::CustomerTicketZoom###DisplayNoteFrom\' is set to \'QueueMapping\'. Uses \'Ticket::Frontend::CustomerTicketZoom###DisplayNoteFromStatic\' if mapping does not match the current ticket queue.' =>
+            'Wird verwendet, wenn \'Ticket::Frontend::CustomerTicketZoom###DisplayNoteFrom\' auf \'QueueMapping\' gesetzt ist. Verwendet \'Ticket::Frontend::CustomerTicketZoom###DisplayNoteFromStatic\' wenn es kein passendes Mapping zur aktuellen Ticketqueue gibt.',
+        'Used if \'Ticket::Frontend::CustomerTicketZoom###DisplayNoteFrom\' is set to \'Static\'.' =>
+            'Wird verwendet, wenn \'Ticket::Frontend::CustomerTicketZoom###DisplayNoteFrom\' auf \'Static\' gesetzt ist.',
         'UserFirstname' => 'Benutzervorname',
         'UserLastname' => 'Benutzernachname',
         'Uses Cc recipients in reply Cc list on compose an email answer in the ticket compose screen of the agent interface.' =>

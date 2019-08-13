@@ -20,7 +20,6 @@ use lib dirname($RealBin) . '/Custom';
 
 use Kernel::System::Environment;
 use Kernel::System::VariableCheck qw( :all );
-use Kernel::System::Main;
 use Kernel::System::ObjectManager;
 
 use Linux::Distribution;
@@ -31,9 +30,11 @@ use Term::ANSIColor;
 
 local $Kernel::OM = Kernel::System::ObjectManager->new(
     'Kernel::System::Log' => {
-        LogPrefix => 'kixpro.CheckModules.pl',
+        LogPrefix => 'kix.CheckModules.pl',
     },
 );
+
+## no critic qw(BuiltinFunctions::ProhibitStringyEval)
 
 our %InstTypeToCMD = (
 
@@ -532,7 +533,7 @@ sub _Check {
 
         if (
             !$DontRequire{ $Module->{Module} }
-            && !$Kernel::OM->Get('Kernel::System::Main')->Require( $Module->{Module})
+            && !eval( "require $Module->{Module}" )
         ) {
             $ErrorMessage .= 'Not all prerequisites for this module correctly installed. ';
         }

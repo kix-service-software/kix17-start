@@ -1764,6 +1764,7 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             # set the value
@@ -1899,6 +1900,7 @@ sub Run {
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
             next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+            next DYNAMICFIELD if !$DynamicFieldConfig->{Shown};
             next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Article';
 
             # set the value
@@ -2375,11 +2377,25 @@ sub Run {
             );
         }
 
+        # run acl to prepare TicketAclFormData
+        my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+            %GetParam,
+            %ACLCompatGetParam,
+            QueueID       => $QueueID || 0,
+            Action        => $Self->{Action},
+            ReturnType    => 'Ticket',
+            ReturnSubType => '-',
+            Data          => {},
+            UserID        => $Self->{UserID},
+        );
+
+        # update 'Shown' for $Self->{DynamicField}
+        $Self->_GetShownDynamicFields();
+
         # use only dynamic fields which passed the acl
         my %Output;
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-            next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             if ( $DynamicFieldConfig->{Shown} == 1 ) {
 
@@ -3319,6 +3335,21 @@ sub _MaskPhoneNew {
             Data => \%Param,
         );
     }
+
+    # run acl to prepare TicketAclFormData
+    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+        %Param,
+        TypeID        => $Param{TypeID} || $Param{DefaultTypeID} || '',
+        Action        => $Self->{Action},
+        ReturnType    => 'Ticket',
+        ReturnSubType => '-',
+        Data          => {},
+        UserID        => $Self->{UserID},
+    );
+
+    # update 'Shown' for $Self->{DynamicField}
+    $Self->_GetShownDynamicFields();
+
 # ---
 # ITSMIncidentProblemManagement
 # ---
@@ -3349,11 +3380,13 @@ sub _MaskPhoneNew {
         }
 # ---
 
-        my $Class = "";
         if ( !$DynamicFieldConfig->{Shown} ) {
-            $Class = " Hidden";
-            $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
-            $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
+            my $DynamicFieldName = $DynamicFieldConfig->{Name};
+
+            $LayoutObject->AddJSOnDocumentComplete( Code => <<"END");
+Core.Form.Validate.DisableValidation(\$('.Row_DynamicField_$DynamicFieldName'));
+\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden');
+END
         }
 
         $LayoutObject->Block(
@@ -3362,7 +3395,6 @@ sub _MaskPhoneNew {
                 Name  => $DynamicFieldConfig->{Name},
                 Label => $DynamicFieldHTML->{Label},
                 Field => $DynamicFieldHTML->{Field},
-                Class => $Class,
             },
         );
 

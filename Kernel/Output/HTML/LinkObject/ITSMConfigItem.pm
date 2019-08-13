@@ -675,7 +675,7 @@ sub TableCreateSimple {
                 # define item data
                 my %Item = (
                     Type    => 'Link',
-                    Content => 'CI:' . $Version->{Number},
+                    Content => 'CI:' . $Version->{Number} . ' - ' . $Version->{Name},
                     Title   => "ConfigItem# $Version->{Number} ($Version->{Class}): $Version->{Name}",
                     Link    => $Self->{LayoutObject}->{Baselink}
                         . 'Action=AgentITSMConfigItemZoom;ConfigItemID='

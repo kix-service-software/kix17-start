@@ -85,32 +85,6 @@
                         <div class="Clear"></div>
 [% RenderBlockEnd("FAQDynamicField") %]
 
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("FAQDynamicField_Field1") %]
-#                        <label>[% Translate(Data.Label) | html %]:</label>
-#                        <p class="Value">
-#[% RenderBlockStart("FAQDynamicField_Field1_Link") %]
-#                            <span title="[% Data.Title | html %]"><a href="[% Data.Link %]" target="_blank">[% Data.Value %]</a></span>
-#[% RenderBlockEnd("FAQDynamicField_Field1_Link") %]
-#[% RenderBlockStart("FAQDynamicField_Field1_Plain") %]
-#                            <span title="[% Data.Title | html %]">[% Data.Value %]</span>
-#[% RenderBlockEnd("FAQDynamicField_Field1_Plain") %]
-#                        </p>
-#[% RenderBlockEnd("FAQDynamicField_Field1") %]
-#[% RenderBlockStart("FAQDynamicField_Field2") %]
-#                        <label>[% Translate(Data.Label) | html %]:</label>
-#                        <p class="Value">
-#[% RenderBlockStart("FAQDynamicField_Field2_Link") %]
-#                            <span title="[% Data.Title | html %]"><a href="[% Data.Link %]" target="_blank">[% Data.Value %]</a></span>
-#[% RenderBlockEnd("FAQDynamicField_Field2_Link") %]
-#[% RenderBlockStart("FAQDynamicField_Field2_Plain") %]
-#                            <span title="[% Data.Title | html %]">[% Data.Value %]</span>
-#[% RenderBlockEnd("FAQDynamicField_Field2_Plain") %]
-#                        </p>
-#[% RenderBlockEnd("FAQDynamicField_Field2") %]
-
 [% RenderBlockStart("ViewRating") %]
                         <label>[% Translate("Rating") | html %]:</label>
                         <div class="Value" title="[% Translate("Rating") | html %] [% Data.VoteResult %]%">
@@ -270,7 +244,7 @@ function CheckIFrameHeight(IFrameID) {
 # Use the HTML5 sandbox attribute to prevent plugins and scripts from being executed in the browser.
 # Append session info to URL because IE will not send cookies.
 # Set 'allow-popups' to allow IE10+ to open links. ref: http://www.w3.org/html/wg/wiki/ChangeProposals/sandbox_allow_popups
-                            <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" class="FAQField" id="IframeFAQ[% Data.Field | html %]" onload="window.setTimeout( function (){ CheckIFrameHeight('IframeFAQ[% Data.Field | html %]'); }, 500);" src="[% Env("Baselink") %]Action=AgentFAQZoom;Subaction=HTMLView;ItemID=[% Data.ItemID | html %];Field=[% Data.Field | html %];[% Env("SessionName") | html %]=[% Env("SessionID") | html %]"></iframe>
+                            <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" class="FAQField" id="IframeFAQ[% Data.Field | html %]" onload="window.setTimeout( function (){ CheckIFrameHeight('IframeFAQ[% Data.Field | html %]'); }, 500);" src="[% Env("Baselink") %]Action=AgentFAQZoom;Subaction=HTMLView;ItemID=[% Data.ItemID | html %];Field=[% Data.Field | html %][% Data.Session | html %]"></iframe>
                         </div>
 [% RenderBlockEnd("FAQContentHTML") %]
 [% WRAPPER JSOnDocumentComplete %]

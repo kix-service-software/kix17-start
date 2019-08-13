@@ -280,7 +280,6 @@ sub Run {
         my %Output;
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{FollowUpDynamicField} } ) {
-            next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
 
             if ( $DynamicFieldConfig->{Shown} == 1 ) {
 
@@ -1361,6 +1360,35 @@ sub _Mask {
 
         $LastSenderType = $Article{SenderType};
 
+        # prepare display name of note from agent
+        if (
+            $Config->{DisplayNoteFrom}
+            && $Article{SenderType} eq 'agent'
+            && $Article{ArticleType} eq 'note-external'
+        ) {
+            if ( $Config->{DisplayNoteFrom} eq 'QueueMapping' ) {
+                my $QueueDisplayNoteFrom;
+                if (
+                    $Config->{DisplayNoteFromQueueMapping}
+                    && ref($Config->{DisplayNoteFromQueueMapping}) eq 'HASH'
+                    && $Config->{DisplayNoteFromQueueMapping}->{$Article{Queue}}
+                ) {
+                    $QueueDisplayNoteFrom = $Config->{DisplayNoteFromQueueMapping}->{$Article{Queue}};
+                }
+                else {
+                    $QueueDisplayNoteFrom = $Config->{DisplayNoteFromStatic} || '-';
+                }
+                $QueueDisplayNoteFrom  = $LayoutObject->{LanguageObject}->Translate( $QueueDisplayNoteFrom );
+                $Article{From}         = $QueueDisplayNoteFrom;
+                $Article{FromRealname} = $QueueDisplayNoteFrom;
+            }
+            elsif ( $Config->{DisplayNoteFrom} eq 'Static' ) {
+                my $StaticDisplayNoteFrom = $LayoutObject->{LanguageObject}->Translate( $Config->{DisplayNoteFromStatic} || '-' );
+                $Article{From}            = $StaticDisplayNoteFrom;
+                $Article{FromRealname}    = $StaticDisplayNoteFrom;
+            }
+        }
+
         $LayoutObject->Block(
             Name => 'Article',
             Data => \%Article,
@@ -1495,6 +1523,13 @@ sub _Mask {
             }
         }
 
+        # check if the browser sends the session id cookie
+        # if not, add the session id to the url
+        my $Session = '';
+        if ( $LayoutObject->{SessionID} && !$LayoutObject->{SessionIDCookie} ) {
+            $Session = ';' . $LayoutObject->{SessionName} . '=' . $LayoutObject->{SessionID};
+        }
+
         # in case show plain article body (if no html body as attachment exists of if rich
         # text is not enabled)
         my $RichText = $LayoutObject->{BrowserRichText};
@@ -1505,6 +1540,7 @@ sub _Mask {
                     Data => {
                         %Param,
                         %Article,
+                        Session => $Session,
                     },
                 );
 
@@ -1516,20 +1552,13 @@ sub _Mask {
                 }
             }
             else {
-                my $SessionInformation;
-
-                # Append session information to URL if needed
-                if ( !$LayoutObject->{SessionIDCookie} ) {
-                    $SessionInformation = $LayoutObject->{SessionName} . '='
-                        . $LayoutObject->{SessionID};
-                }
 
                 $LayoutObject->Block(
                     Name => 'BodyHTMLPlaceholder',
                     Data => {
                         %Param,
                         %Article,
-                        SessionInformation => $SessionInformation,
+                        Session => $Session,
                     },
                 );
 
@@ -1789,11 +1818,13 @@ sub _Mask {
             # get the html strings form $Param
             my $DynamicFieldHTML = $Param{DynamicFieldHTML}->{ $DynamicFieldConfig->{Name} };
 
-            my $Class = "";
             if ( !$DynamicFieldConfig->{Shown} ) {
-                $Class = " Hidden";
-                $DynamicFieldHTML->{Field} =~ s/Validate_Required//ig;
-                $DynamicFieldHTML->{Field} =~ s/<(input|select|textarea)(.*?)(!?|\/)>/<$1$2 disabled="disabled"$3>/g;
+                my $DynamicFieldName = $DynamicFieldConfig->{Name};
+
+                $LayoutObject->AddJSOnDocumentComplete( Code => <<"END");
+Core.Form.Validate.DisableValidation(\$('.Row_DynamicField_$DynamicFieldName'));
+\$('.Row_DynamicField_$DynamicFieldName').addClass('Hidden');
+END
             }
 
             $LayoutObject->Block(
@@ -1802,7 +1833,6 @@ sub _Mask {
                     Name  => $DynamicFieldConfig->{Name},
                     Label => $DynamicFieldHTML->{Label},
                     Field => $DynamicFieldHTML->{Field},
-                    Class => $Class,
                 },
             );
 
@@ -1813,7 +1843,6 @@ sub _Mask {
                     Name  => $DynamicFieldConfig->{Name},
                     Label => $DynamicFieldHTML->{Label},
                     Field => $DynamicFieldHTML->{Field},
-                    Class => $Class,
                 },
             );
         }

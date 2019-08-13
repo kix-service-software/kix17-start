@@ -236,26 +236,31 @@ var KIXSidebarTools = (function (TargetNS) {
      * @return nothing
      */
     TargetNS.UpdateDynamicField = function (DynamicFields, Value, ObjectID) {
-        var Reload = 0;
-        var SplitDynamicField = DynamicFields.split(",");
-        var SplitValue = Value.split(",");
+        var Reload            = 0,
+            SplitDynamicField = DynamicFields.split(","),
+            SplitValue        = ("" + Value).split(",");
+
         for(var i = 0; i < SplitDynamicField.length; i++) {
-            var EntryDynamicField = SplitDynamicField[i];
-            var EntryValue = '';
+            var EntryDynamicField = SplitDynamicField[i],
+                EntryValue        = '';
+
             if (SplitValue[i]) {
                 EntryValue = SplitValue[i];
             }
+
             if ( $('#DynamicField_' + EntryDynamicField).length > 0 ) {
                 $('#DynamicField_' + EntryDynamicField).val(decodeURIComponent(EntryValue));
                 $('#DynamicField_' + EntryDynamicField).trigger('change');
-            } else if ( EntryDynamicField && ObjectID ) {
-                var URL = 'Action=DynamicFieldAJAXHandler;DynamicField=' + EntryDynamicField + ';Value=' + EntryValue + ';ObjectID=' + ObjectID;
+            }
+            else if ( EntryDynamicField && ObjectID ) {
+                var URL         = 'Action=DynamicFieldAJAXHandler;DynamicField=' + EntryDynamicField + ';Value=' + EntryValue + ';ObjectID=' + ObjectID,
+                    SessionData = {};
 
-                var SessionData = {};
                 if (!Core.Config.Get('SessionIDCookie')) {
                     SessionData[Core.Config.Get('SessionName')] = Core.Config.Get('SessionID');
                     SessionData[Core.Config.Get('CustomerPanelSessionName')] = Core.Config.Get('SessionID');
                 }
+
                 SessionData.ChallengeToken = Core.Config.Get('ChallengeToken');
                 $.each(SessionData, function (Key, Value) {
                     URL += ';' + encodeURIComponent(Key) + '=' + encodeURIComponent(Value);

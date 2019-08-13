@@ -20,6 +20,8 @@ our @ObjectDependencies = (
     'Kernel::System::Log',
 );
 
+## no critic qw(InputOutput::RequireBriefOpen)
+
 =head1 NAME
 
 Kernel::System::CSV - CSV lib
@@ -115,8 +117,6 @@ sub Array2CSV {
             return;
         }
         my $Workbook     = Excel::Writer::XLSX->new($FileHandle);
-        close $FileHandle;
-
         my $Worksheet    = $Workbook->add_worksheet();
         my $HeaderFormat = $Workbook->add_format(
             bold       => 1,
@@ -170,6 +170,7 @@ sub Array2CSV {
         }
 
         $Workbook->close();
+        close $FileHandle;
     }
     else {
         # get separator

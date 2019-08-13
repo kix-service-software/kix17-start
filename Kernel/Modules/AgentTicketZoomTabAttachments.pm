@@ -88,8 +88,8 @@ sub Run {
     # check if the browser sends the session id cookie
     # if not, add the session id to the url
     my $Session = '';
-    if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
-        $Session = ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+    if ( $LayoutObject->{SessionID} && !$LayoutObject->{SessionIDCookie} ) {
+        $Session = ';' . $LayoutObject->{SessionName} . '=' . $LayoutObject->{SessionID};
     }
 
     # get all attachments

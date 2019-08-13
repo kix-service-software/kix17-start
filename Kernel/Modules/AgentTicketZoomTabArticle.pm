@@ -2294,12 +2294,22 @@ sub _ArticleItem {
         );
     }
 
+    # check if the browser sends the session id cookie
+    # if not, add the session id to the url
+    my $Session = '';
+    if ( $LayoutObject->{SessionID} && !$LayoutObject->{SessionIDCookie} ) {
+        $Session = ';' . $LayoutObject->{SessionName} . '=' . $LayoutObject->{SessionID};
+    }
+
     # show body
     # Create a reference to an anonymous copy of %Article and pass it to
     # the LayoutObject, because %Article may be modified afterwards.
     $LayoutObject->Block(
         Name => $ViewMode,
-        Data => {%Article},
+        Data => {
+            %Article,
+            Session => $Session,
+        },
     );
 
     # show message about links in iframes, if user didn't close it already
@@ -2327,6 +2337,7 @@ sub _ArticleMenu {
     my @MenuItems;
 
     my %AclActionLookup = reverse %AclAction;
+    my $IsModernize     = $Self->{Config}->{ArticleMenuModernize} // 1;
 
     # get needed objects
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
@@ -2439,7 +2450,7 @@ sub _ArticleMenu {
             my $StandardResponsesStrg = $LayoutObject->BuildSelection(
                 Name  => 'ResponseID',
                 ID    => 'ResponseID',
-                Class => 'Modernize Small',
+                Class => 'Small' . ($IsModernize ? ' Modernize' : ''),
                 Data  => \@StandardResponseArray,
             );
 
@@ -2504,7 +2515,7 @@ sub _ArticleMenu {
                 $StandardResponsesStrg = $LayoutObject->BuildSelection(
                     Name  => 'ResponseID',
                     ID    => 'ResponseIDAll' . $Article{ArticleID},
-                    Class => 'Modernize Small',
+                    Class => 'Small' . ($IsModernize ? ' Modernize' : ''),
                     Data  => \@StandardResponseArrayReplyAll,
                 );
 
@@ -2589,7 +2600,7 @@ sub _ArticleMenu {
                 my $StandardForwardsStrg = $LayoutObject->BuildSelection(
                     Name  => 'ForwardTemplateID',
                     ID    => 'ForwardTemplateID',
-                    Class => 'Modernize Small',
+                    Class => 'Small' . ($IsModernize ? ' Modernize' : ''),
                     Data  => \@StandardForwardArray,
                 );
 
@@ -3023,6 +3034,7 @@ sub _ArticleFlagSelectionString {
 
     # get all available article flags
     my $ArticleFlags = $Self->{Config}->{ArticleFlags};
+    my $IsModernize  = $Self->{Config}->{ArticleMenuModernize} // 1;
 
     my $ArticleFlagStrg = '';
     if ( ref $ArticleFlags eq 'HASH' && keys %{$ArticleFlags} ) {
@@ -3043,7 +3055,7 @@ sub _ArticleFlagSelectionString {
                 Translation  => 1,
                 PossibleNone => 0,
                 Sort         => 'AlphanumericValue',
-                Class        => 'ArticleFlagSelection Modernize',
+                Class        => 'ArticleFlagSelection' . ($IsModernize ? ' Modernize' : ''),
             );
         }
     }

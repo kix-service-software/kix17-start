@@ -1,6 +1,82 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0 (2019/08/13)
+ * (2019/08/13) - productive release
+
+# 17.7.0-RC13 (2019/08/13)
+ * (2019/08/13) - CR: T2019031590000496 (added net attributes to config item classes) (ddoerffel)
+
+# 17.7.0-RC12 (2019/08/12)
+ * (2019/08/12) - Bugfix: T2019032790000553 (fixed initial disabled dynamic fields in AgentTicketActionCommon) (millinger)
+
+# 17.7.0-RC11 (2019/08/09)
+ * (2019/08/09) - release candidate
+
+# 17.7.0-RC10 (2019/08/07)
+ * (2019/08/07) - Bugfix: T2019072490000588 (switched order of latitude and longitude) (millinger)
+
+# 17.7.0-RC9 (2019/08/06)
+ * (2019/08/06) - CR: T2019031590000496 (extended ticket search sidebar to filter by dynamic fields) (millinger)
+
+# 17.7.0-RC9 (2019/08/06)
+ * (2019/08/06) - CR: T2019031590000496 (extended ticket search sidebar to filter by dynamic fields) (millinger)
+
+# 17.7.0-RC8 (2019/07/31)
+ * (2019/07/30) - CR: T2019060490000519 (configuration for display name of external notes in customer frontend) (millinger)
+ * (2019/07/30) - Bugfix: T2019071590000694 (skip date validation if date is not used) (millinger)
+ * (2019/07/30) - Bugfix: T2019072590000899 (could not create article on process ticket creation) (millinger)
+ * (2019/07/30) - Bugfix: T2019071590000621 (removed session information from iframe source if cookie is used) (millinger)
+ * (2019/07/29) - Bugfix: T2019072490000588 (fixed input of fast typing and incorrect add/remove of the attribute GeoCoordinate) (fjacquemin)
+
+# 17.7.0-RC7 (2019/07/24)
+ * (2019/07/24) - CR: T2019072490000588 (added config item attribute GeoCoordinate) (fjacquemin)
+
+# 17.7.0-RC6 (2019/07/16)
+ * (2019/07/16) - CR: T2018091490000578 (added example files for procmail and fetchmail) (millinger)
+ * (2019/07/16) - Bugfix: T2019070390000742 (fixed setting of session cookie for switch button) (millinger)
+ * (2019/07/16) - Bugfix: T2019070990001571 (customer ticket overviews do not check customer ticket permission) (millinger)
+
+# 17.7.0-RC5 (2019/07/10)
+ * (2019/07/09) - Bugfix: T2019061390001064 (fixed creation of complex link table) (millinger)
+ * (2019/07/09) - Bugfix: T2019060490001161 (fixed search template with complex customer search) (millinger)
+ * (2019/07/09) - Bugfix: T2019060690000891 (fixed ticket placeholder KIX_CUSTOMER_BODY[]) (millinger)
+ * (2019/07/09) - Bugfix: T2019062490000633 (fixed TicketArticleStorageSwitch) (millinger)
+ * (2019/07/09) - Bugfix: T2019070190000844 (fixed creation of excel sheets) (millinger)
+
+# 17.7.0-RC4 (2019/07/03)
+ * (2019/07/02) - Bugfix: T2019060590001221 (dynamic field administration does not show all actions) (millinger)
+ * (2019/07/02) - Bugfix: T2019060390000931 (fixed output of CheckModules script) (millinger)
+ * (2019/07/02) - Bugfix: T2019052090001034 (fixed incorrect hide/show of the tool bar in responsive design) (fjacquemin)
+
+# 17.7.0-RC3 (2019/06/18)
+ * (2019/06/18) - Bugfix: T2019061290000496 (fixed default template for custom footer url) (millinger)
+ * (2019/06/18) - Bugfix: T2018121190000513 (removed ticket note tab as default faq sidebar action) (millinger)
+ * (2019/06/18) - Bugfix: T2019052390001252 (check permission for faq sidebar entries) (millinger)
+ * (2019/06/18) - Bugfix: T2019061490000554 (fixed cron schedule generation of generic agent jobs) (millinger)
+ * (2019/06/18) - Bugfix: T2019052090001034 (fixed displaying of the ToolBar in responsive-design of the position right or left) (fjacquemin)
+ * (2019/06/17) - Bugfix: T2019051790000961 (fixed filling dynamic fields with integer values from Sidebar causes error) (fjacquemin)
+ * (2019/06/17) - Bugfix: T2019051390000923 (fixed missing save of the UserEmail in the user preferences) (fjacquemin)
+ * (2019/06/17) - Bugfix: T2019051390000709 (fixed multiple display of linked configuration items in view mode "simple") (fjacquemin)
+ * (2019/06/17) - Bugfix: T2019051090002294 (fixed unwanted reaction of the action QueueMove without selected Queue) (fjacquemin)
+ * (2019/06/17) - Bugfix: T2017080290000746 (fixed no action of a selected response-template with active modernize) (fjacquemin)
+
+# 17.7.0-RC2 (2019/06/12)
+ * (2019/06/11) - Bugfix: T2019060490000948 (added AUTHORS.md) (ddoerffel)
+ * (2019/06/11) - Bugfix: T2018090890000482 (fixed widget display for mandatory service) (millinger)
+ * (2019/06/11) - Bugfix: T2019042390000531 (fixed link to customer company administration at information center) (millinger)
+ * (2019/06/11) - Bugfix: T2018051590000681 (AgentTicketMove does not consider 'RequiredLock') (millinger)
+ * (2019/06/11) - Bugfix: T2019041190000831 (fixed initial hidden dynamic fields with default ticket type) (millinger)
+
+# 17.7.0-RC1 (2019/06/04)
+ * (2019/06/04) - Bugfix: T2019042490000708 (fixed initial disabled dynamic fields) (millinger)
+ * (2019/06/04) - Bugfix: T2019050290000926 (customer company dashboard further information shown for missing company) (millinger)
+ * (2019/06/03) - Bugfix: T2019041190000831 (fixed missing handling of non-ticket dynamic fields during form updates) (fjacquemin)
+ * (2019/06/03) - Bugfix: T2019050890000317 (fixed unnecessary quotation of the CustomerID in the complex search) (fjacquemin)
+ * (2019/06/03) - Bugfix: T2019032690000699 (fixed missing filtering of possible values of dynamic field object references) (fjacquemin)
+ * (2019/06/03) - Bugfix: T2019020190000461 (fixed incorrect filter preparation when using dynamic field in search) (fjacquemin)
+ * (2019/06/03) - Bugfix: T2019040290001052 (fixed unusable GUI after using RequiereLock in AgentTicketZoomTabActionCommon) (fjacquemin)
+
 # 17.6.1 (2019/06/07)
  * (2019/06/07) - Bugfix: T2019060790000657 (fixed migration of notification data) (millinger)
  * (2019/06/07) - Bugfix: T2019060690000775 (fixed 'Undefined subroutine &Kernel::Config::Translatable') (millinger)
@@ -45,18 +121,6 @@
  * (2019/04/15) - Bugfix: T2019032290001187 (fixed incorrect display of the sender in the ticket lists) (fjacquemin)
  * (2019/04/15) - Bugfix: T2019041290000436 (fixed missing error message of the dynamic field RemoteDB and ITSMConfigitem when used Mandatory) (fjacquemin)
  * (2019/04/05) - Bugfix: T2017040890000546 (old OTRS stuff removed) (ddoerffel)
-
-# 17.6.0-RC2 (2019/04/25)
- * (2019/04/16) - CR: T2019040890001201 (code clean up) (fjacquemin)
- * (2019/04/15) - Bugfix: T2019032290001187 (fixed incorrect display of the sender in the ticket lists) (fjacquemin)
- * (2019/04/15) - Bugfix: T2019041290000436 (fixed missing error message of the dynamic field RemoteDB and ITSMConfigitem when used Mandatory) (fjacquemin)
- * (2019/04/05) - Bugfix: T2017040890000546 (old OTRS stuff removed) (ddoerffel)
-
-# 17.6.0-RC1 (2019/04/12)
- * (2019/04/11) - CR: T2018020190001023 (added copy of generic agent jobs) (fjacquemin)
- * (2019/04/04) - Bugfix: T2019032590000879 (subject not shown in smime certificates) (ddoerffel)
- * (2019/04/03) - Bugfix: T2019021990000669 (fixed incomplete profile duplicate check of generic agent jobs) (fjacquemin)
- * (2019/04/02) - CR: T2019021190001306 (added function to clone postmaster filter) (fjacquemin)
 
 # 17.6.0-RC1 (2019/04/12)
  * (2019/04/11) - CR: T2018020190001023 (added copy of generic agent jobs) (fjacquemin)
@@ -199,18 +263,6 @@
  * (2018/08/16) - Bugfix: T2018073090000596 (PostMaster filter can create tickets in invalid queues) (millinger)
  * (2018/08/14) - Bugfix: T2018072390000608 (fixed problems with usernames with capital letters) (ddoerffel)
  * (2018/08/07) - Bugfix: T2018080390000591 (fixed wrong data entry in imexport_object table for customer company mapping) (fjacquemin)
- * (2018/08/07) - Bugfix: T2018032790001134 (show html of dynamicfield richtext in process zoom tab) (millinger)
- * (2018/08/01) - CR: T2018031990000651 (increased possible size of article 'to' and 'cc' field) (millinger)
- * (2018/07/19) - CR: T2017120690000614 (added method to delete or empty of a ticket attribute or dynamic field in generic agent) (fjacquemin)
- * (2018/07/17) - CR: T2018012690001023 (added function to delete customer user preferences) (fjacquemin)
- * (2018/07/16) - CR: T2018040390000491 (implemented TTL for dynamic field values) (millinger)
- * (2018/05/30) - CR: T2018020590001203 (configurable split pattern for static ticket search in) (millinger)
-
-# 17.4.0-RC1 (2018/09/07)
- * (2018/09/06) - CR: T2016120290000801 (implemented new sidebar to show information of linked config items) (millinger)
- * (2018/08/30) - Bugfix: T2018031290000958 (fixed simultaneous adding of linked persons on ticket merge) (millinger)
- * (2018/08/16) - Bugfix: T2018073090000596 (PostMaster filter can create tickets in invalid queues) (millinger)
- * (2018/08/14) - Bugfix: T2018072390000608 (fixed problems with usernames with capital letters) (ddoerffel)
  * (2018/08/07) - Bugfix: T2018032790001134 (show html of dynamicfield richtext in process zoom tab) (millinger)
  * (2018/08/01) - CR: T2018031990000651 (increased possible size of article 'to' and 'cc' field) (millinger)
  * (2018/07/19) - CR: T2017120690000614 (added method to delete or empty of a ticket attribute or dynamic field in generic agent) (fjacquemin)

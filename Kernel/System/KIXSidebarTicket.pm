@@ -52,9 +52,46 @@ sub KIXSidebarTicketSearch {
         return;
     }
 
+    # ------------------------
+    # prepare search parameter
+    my %Search = ();
+    if ( $Param{Frontend} =~ /agent/i ) {
+        $Search{UserID} = $Param{UserID};
+    }
+    elsif ( $Param{Frontend} =~ /customer/i ) {
+        $Search{CustomerUserID} = $Param{UserID};
+    }
+    else {
+        return;
+    }
+
+    if ( $Param{'SearchCustomer'} == 1 ) {
+        $Search{CustomerID} = $Param{CustomerID};
+    }
+    elsif ( $Param{'SearchCustomer'} == 2 ) {
+        $Search{CustomerUserLogin} = $Param{CustomerUser};
+    }
+
+    if ( $Param{SearchStateType} ) {
+        $Search{StateType} = $Param{SearchStateType};
+    }
+
     my @States = split( ',', $Param{'SearchStates'} || '' );
     my @Queues = split( ',', $Param{'SearchQueues'} || '' );
     my @Types  = split( ',', $Param{'SearchTypes'}  || '' );
+
+    if ( scalar(@States) > 0 ) {
+        $Search{States} = \@States;
+    }
+
+    if ( scalar(@Queues) > 0 ) {
+        $Search{Queues} = \@Queues;
+    }
+
+    if ( scalar(@Types) > 0 ) {
+        $Search{Types} = \@Types;
+    }
+
 
     if ( scalar(@States) == 1 && $States[0] eq '' ) {
         @States = undef;
@@ -65,6 +102,15 @@ sub KIXSidebarTicketSearch {
     if ( scalar(@Types) == 1 && $Types[0] eq '' ) {
         @Types = undef;
     }
+
+    if ( ref($Param{'SearchDynamicFields'}) eq 'HASH' ) {
+        DYNAMICFIELD:
+        for my $DynamicField ( keys( %{ $Param{'SearchDynamicFields'} } ) ) {
+            $Search{$DynamicField} = $Param{'SearchDynamicFields'}->{$DynamicField};
+        }
+    }
+    # EO prepare search parameter
+    # ---------------------------
 
     my %Result;
 
@@ -79,6 +125,16 @@ sub KIXSidebarTicketSearch {
 
         ID:
         for my $ID ( keys %LinkKeyList ) {
+            # check search filter
+            my $Match = $Self->{TicketObject}->TicketSearch(
+                %Search,
+                TicketID   => $ID,
+                Permission => 'ro',
+                Result     => 'COUNT',
+            );
+            next ID if ( !$Match );
+
+            # check ticket permission
             if ( $Param{Frontend} =~ /agent/i ) {
                 my $Access = $Self->{TicketObject}->TicketPermission(
                     Type     => 'ro',
@@ -100,6 +156,8 @@ sub KIXSidebarTicketSearch {
             else {
                 next ID;
             }
+
+            # get ticket data
             my %Ticket = $Self->{TicketObject}->TicketGet(
                 TicketID      => $ID,
                 DynamicFields => 1,
@@ -108,34 +166,6 @@ sub KIXSidebarTicketSearch {
                 Silent        => 1,
             );
             next ID if ( !%Ticket );
-
-            if ( @States ) {
-                my $MatchState = 0;
-                for my $State (@States) {
-                    if ( $Ticket{State} eq $State ) {
-                        $MatchState = 1;
-                    }
-                }
-                next ID if ( !$MatchState );
-            }
-            if ( @Queues ) {
-                my $MatchQueue = 0;
-                for my $Queue (@Queues) {
-                    if ( $Ticket{Queue} eq $Queue ) {
-                        $MatchQueue = 1;
-                    }
-                }
-                next ID if ( !$MatchQueue );
-            }
-            if ( @Types ) {
-                my $MatchType = 0;
-                for my $Type (@Types) {
-                    if ( $Ticket{Type} eq $Type ) {
-                        $MatchType = 1;
-                    }
-                }
-                next ID if ( !$MatchType );
-            }
 
             $Result{$ID} = \%Ticket;
             $Result{$ID}->{'Link'} = 1;
@@ -159,37 +189,6 @@ sub KIXSidebarTicketSearch {
             $Param{SearchString} =~ s/\s/||/g;
         }
 
-        my %Search = ();
-
-        if ( $Param{Frontend} =~ /agent/i ) {
-            $Search{UserID} = $Param{UserID};
-        }
-        elsif ( $Param{Frontend} =~ /customer/i ) {
-            $Search{CustomerUserID} = $Param{UserID};
-        }
-        else {
-            return;
-        }
-
-        if ( $Param{'SearchCustomer'} == 1 ) {
-            $Search{CustomerID} = $Param{CustomerID};
-        }
-        elsif ( $Param{'SearchCustomer'} == 2 ) {
-            $Search{CustomerUserLogin} = $Param{CustomerUser};
-        }
-
-        if ( scalar(@States) > 0 ) {
-            $Search{States} = \@States;
-        }
-
-        if ( scalar(@Queues) > 0 ) {
-            $Search{Queues} = \@Queues;
-        }
-
-        if ( scalar(@Types) > 0 ) {
-            $Search{Types} = \@Types;
-        }
-
         my @IDs = $Self->{TicketObject}->TicketSearch(
             From    => $Param{SearchString},
             To      => $Param{SearchString},
@@ -209,14 +208,38 @@ sub KIXSidebarTicketSearch {
             Result     => 'ARRAY',
         );
 
+        RESULT:
         for my $ID (@IDs) {
-
             # Skip entries added by LinkKeyList
-            next if ( $Result{$ID} );
+            next RESULT if ( $Result{$ID} );
 
             # Skip current TicketID
-            next if ( $Param{TicketID} && "$Param{TicketID}" eq "$ID" );
+            next RESULT if ( $Param{TicketID} && "$Param{TicketID}" eq "$ID" );
 
+            # check ticket permission
+            if ( $Param{Frontend} =~ /agent/i ) {
+                my $Access = $Self->{TicketObject}->TicketPermission(
+                    Type     => 'ro',
+                    TicketID => $ID,
+                    LogNo    => 1,
+                    UserID   => $Param{UserID},
+                );
+                next RESULT if ( !$Access );
+            }
+            elsif ( $Param{Frontend} =~ /customer/i ) {
+                my $Access = $Self->{TicketObject}->TicketCustomerPermission(
+                    Type     => 'ro',
+                    TicketID => $ID,
+                    LogNo    => 1,
+                    UserID   => $Param{UserID},
+                );
+                next RESULT if ( !$Access );
+            }
+            else {
+                next RESULT;
+            }
+
+            # get ticket data
             my %Ticket = $Self->{TicketObject}->TicketGet(
                 TicketID      => $ID,
                 DynamicFields => 1,
