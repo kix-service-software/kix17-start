@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.7.0-RC13 (2019/08/13)
+ * (2019/08/13) - CR: T2019031590000496 (added net attributes to config item classes) (ddoerffel)
+
 # 17.7.0-RC12 (2019/08/12)
  * (2019/08/12) - Bugfix: T2019032790000553 (fixed initial disabled dynamic fields in AgentTicketActionCommon) (millinger)
 
