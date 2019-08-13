@@ -1276,6 +1276,9 @@ sub Data {
     $Lang->{'Select Class'} = 'Klasse auswählen';
     $Lang->{'Settings for custom ticket list view'}
         = 'Einstellungen für persönliche Ticketlistendarstellung';
+    $Lang->{'Asset Location'} = 'Asset Lokation';
+    $Lang->{'Parent Location'} = 'Übergeordnete Lokation';
+            
 
     # graph visualization related translations...
     $Lang->{'CI-Classes to consider'} = 'Zu betrachtende CI-Klassen';
