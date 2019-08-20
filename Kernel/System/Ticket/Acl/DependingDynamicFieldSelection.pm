@@ -32,14 +32,13 @@ sub new {
     bless( $Self, $Type );
 
     # create required objects
-    $Self->{CacheObject}               = Kernel::System::Cache->new( %{$Self} );
-    $Self->{ConfigObject}              = $Kernel::OM->Get('Kernel::Config');
-    $Self->{DynamicFieldObject}        = $Kernel::OM->Get('Kernel::System::DynamicField');
-    $Self->{DynamicFieldBackendObject} = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-    $Self->{DependingDynamicFieldObject}
-        = $Kernel::OM->Get('Kernel::System::DependingDynamicField');
-    $Self->{LogObject}    = $Kernel::OM->Get('Kernel::System::Log');
-    $Self->{TicketObject} = $Kernel::OM->Get('Kernel::System::Ticket');
+    $Self->{CacheObject}                 = Kernel::System::Cache->new( %{$Self} );
+    $Self->{ConfigObject}                = $Kernel::OM->Get('Kernel::Config');
+    $Self->{DependingDynamicFieldObject} = $Kernel::OM->Get('Kernel::System::DependingDynamicField');
+    $Self->{DynamicFieldObject}          = $Kernel::OM->Get('Kernel::System::DynamicField');
+    $Self->{DynamicFieldBackendObject}   = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    $Self->{LogObject}                   = $Kernel::OM->Get('Kernel::System::Log');
+    $Self->{TicketObject}                = $Kernel::OM->Get('Kernel::System::Ticket');
 
     $Self->{CacheType} = 'DependingDynamicFieldACL';
 
@@ -229,7 +228,7 @@ sub Run {
     for my $DynamicField ( keys %PossibleValues ) {
 
         # get name
-        my $DynamicFieldName = $DynamicField =~ /^DynamicField_(.*)/;
+        my ($DynamicFieldName) = $DynamicField =~ /^DynamicField_(.*)/;
 
         # get all possible values
         my $AllPossibleValues;
