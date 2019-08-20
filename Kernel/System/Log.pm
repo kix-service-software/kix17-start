@@ -20,6 +20,8 @@ our @ObjectDependencies = (
     'Kernel::System::Encode',
 );
 
+## no critic qw(BuiltinFunctions::ProhibitStringyEval)
+
 =head1 NAME
 
 Kernel::System::Log - global log interface
@@ -66,7 +68,6 @@ sub new {
         Carp::confess('$Kernel::OM is not defined, please initialize your object manager')
     }
 
-    my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     $Self->{ProductVersion} = $ConfigObject->Get('Product') . ' ';
     $Self->{ProductVersion} .= $ConfigObject->Get('Version');
@@ -85,7 +86,7 @@ sub new {
 
     # load log backend
     my $GenericModule = $ConfigObject->Get('LogModule') || 'Kernel::System::Log::SysLog';
-    if ( !$MainObject->Require($GenericModule) ) {
+    if ( !eval "require $GenericModule" ) {
         die "Can't load log backend module $GenericModule! $@";
     }
 
@@ -94,7 +95,7 @@ sub new {
         %Param,
     );
 
-    return $Self if !$MainObject->Require('IPC::SysV');
+    return $Self if ( !eval "require IPC::SysV" );
 
     # create the IPC options
     $Self->{IPCKey} = '444423' . $SystemID;       # This name is used to identify the shared memory segment.
