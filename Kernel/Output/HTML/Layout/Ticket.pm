@@ -968,8 +968,9 @@ sub TicketListShow {
     my @SelectedItems       = split(',', $SelectedItemStrg);
     my @UnselectedItems     = split(',', $UnselectedItemStrg);
 
-    for my $TicketID ( @{$Param{TicketIDs}} ) {
-        if ( !grep({/^$TicketID$/} @UnselectedItems)
+    for my $TicketID ( @{$Param{OriginalTicketIDs}} ) {
+        if (
+            !grep({/^$TicketID$/} @UnselectedItems)
             && !grep({/^$TicketID$/} @SelectedItems)
         ) {
             push(@UnselectedItems, $TicketID);
