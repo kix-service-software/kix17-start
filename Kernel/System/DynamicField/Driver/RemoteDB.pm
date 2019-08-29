@@ -517,7 +517,7 @@ END
 
     $HTMLString .= <<"END";
         </div>
-        <input id="$ValidateFieldName" type="text" class="$FieldClass" value="$ValidValue" style="display:none;" />
+        <input id="$ValidateFieldName" name="$ValidateFieldName" type="text" class="$FieldClass" value="$ValidValue" style="display:none;" />
         <div class="Clear"></div>
     </div>
 END

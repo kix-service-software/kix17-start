@@ -184,7 +184,7 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    for (qw(TicketIDs PageShown StartHit)) {
+    for (qw(OriginalTicketIDs TicketIDs PageShown StartHit)) {
         if ( !$Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -253,8 +253,9 @@ sub Run {
         my $SelectedAll     = 0;
         my $BulkSelectedAll = 0;
 
-        for my $TicketID ( @{ $Param{TicketIDs} } ) {
-            if ( !grep({/^$TicketID$/} @UnselectedItems)
+        for my $TicketID ( @{ $Param{OriginalTicketIDs} } ) {
+            if (
+                !grep({/^$TicketID$/} @UnselectedItems)
                 && !grep({/^$TicketID$/} @SelectedItems)
             ) {
                 push(@UnselectedItems, $TicketID);
