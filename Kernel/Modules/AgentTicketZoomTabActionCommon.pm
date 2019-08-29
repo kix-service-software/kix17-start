@@ -157,15 +157,6 @@ sub Run {
         DynamicFields => 1,
     );
 
-    # load KIXSidebar
-    $Param{KIXSidebarContent} = $LayoutObject->AgentKIXSidebar(
-        %Param,
-        %Ticket,
-        Action => $Self->{Action}
-    );
-
-    $Param{SidebarWidthString} = $Self->{Action} . 'SidebarWidth';
-
     $LayoutObject->Block(
         Name => 'Properties',
         Data => {
@@ -1954,13 +1945,28 @@ sub _Mask {
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-    my %Ticket = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
+    my %Ticket = $TicketObject->TicketGet(
+        TicketID      => $Self->{TicketID},
+        DynamicFields => 1,
+    );
 
     # get config of frontend module
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    # load KIXSidebar
+    $Param{KIXSidebarContent} = $LayoutObject->AgentKIXSidebar(
+        %Param,
+        %Ticket,
+        Action => $Self->{Action}
+    );
+    $Param{SidebarWidthString} = $Self->{Action} . 'SidebarWidth';
+    $LayoutObject->Block(
+        Name => 'KIXSidebar',
+        Data => \%Param,
+    );
 
     # Widget Ticket Actions
     if (
