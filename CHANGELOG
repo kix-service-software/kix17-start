@@ -1,6 +1,15 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.8.0-RC1 (2019/08/29)
+ * (2019/08/27) - Bugfix: T2019080890000857 (missing client side validation for autocomplete dynamic fields) (millinger)
+ * (2019/08/27) - Bugfix: T2018052290000506 (linked config item sidebar keeps ticket action popup open) (millinger)
+ * (2019/08/27) - Bugfix: T2019080590000577 ('Select All' only selects previous pages) (millinger)
+ * (2019/08/20) - Bugfix: T2019080590000442 (fixed deep recursion on subroutine) (millinger)
+ * (2019/08/20) - Bugfix: T2019072690000861 (fixed acl for depending dynamic fields) (millinger)
+ * (2019/08/20) - Bugfix: T2019062890000868 (fixed sql quoting for faq sidebar search) (millinger)
+ * (2019/08/20) - Bugfix: T2018110190000721 (fixed log entry for uninitialized value) (millinger)
+
 # 17.7.0 (2019/08/13)
  * (2019/08/13) - productive release
 
