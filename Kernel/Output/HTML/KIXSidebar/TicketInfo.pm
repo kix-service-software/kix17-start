@@ -143,6 +143,18 @@ sub Run {
                 },
             );
         }
+        elsif ( $ValueStrg->{Link} ) {
+            $LayoutObject->Block(
+                Name => 'DynamicFieldContentLink',
+                Data => {
+                    %Ticket,
+                    Value                       => $ValueStrg->{Value},
+                    Title                       => $ValueStrg->{Title},
+                    Link                        => $ValueStrg->{Link},
+                    $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
+                },
+            );
+        }
         elsif (
             $DynamicFieldConfig->{FieldType} eq 'Dropdown'
             || $DynamicFieldConfig->{FieldType} eq 'Multiselect'
@@ -167,18 +179,6 @@ sub Run {
                 Data => {
                     Value => $Checked,
                     Title => $ValueStrg->{Title},
-                },
-            );
-        }
-        elsif ( $ValueStrg->{Link} ) {
-            $LayoutObject->Block(
-                Name => 'DynamicFieldContentLink',
-                Data => {
-                    %Ticket,
-                    Value                       => $ValueStrg->{Value},
-                    Title                       => $ValueStrg->{Title},
-                    Link                        => $ValueStrg->{Link},
-                    $DynamicFieldConfig->{Name} => $ValueStrg->{Title},
                 },
             );
         }
