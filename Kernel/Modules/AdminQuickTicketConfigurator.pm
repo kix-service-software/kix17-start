@@ -64,10 +64,12 @@ sub Run {
 
     # get form values
     for my $Key (
-        qw(ID  Name CustomerLogin CcCustomerLogin BccCustomerLogin ElementChanged
-        PriorityID OwnerID QueueID From Subject Body StateID TimeUnits Cc Bcc FormID
-        PendingOffset LinkType LinkDirection ArticleType ArticleSenderType
-        ResponsibleID ResponsibleAll OwnerAll TypeID ServiceID ServiceAll SLAID KIXSidebarChecklistTextField CustomerPortalGroupID)
+        qw(
+            ID  Name CustomerLogin CcCustomerLogin BccCustomerLogin ElementChanged
+            PriorityID OwnerID QueueID From Subject Body StateID TimeUnits Cc Bcc FormID
+            PendingOffset LinkType LinkDirection ArticleType ArticleSenderType
+            ResponsibleID ResponsibleAll OwnerAll TypeID ServiceID ServiceAll SLAID KIXSidebarChecklistTextField CustomerPortalGroupID
+        )
     ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key ) || '';
         $GetParam{ $Key . 'Empty' } = $ParamObject->GetParam( Param => $Key . 'Empty' )
@@ -162,8 +164,6 @@ sub Run {
             for my $DataKey ( keys %TicketTemplateData ) {
                 $GetParam{$DataKey} = $TicketTemplateData{$DataKey};
             }
-            $TicketTemplateData{Agent}    = 'checked="checked"' if $TicketTemplateData{Agent};
-            $TicketTemplateData{Customer} = 'checked="checked"' if $TicketTemplateData{Customer};
         }
 
         # output backlink
@@ -217,8 +217,7 @@ sub Run {
             }
 
             # get field html
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }
-                = $BackendObject->EditFieldRender(
+            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $PossibleValuesFilter,
                 Value                => $Value,
@@ -226,8 +225,8 @@ sub Run {
                 ParamObject          => $ParamObject,
                 AJAXUpdate           => 1,
                 UpdatableFields      => $Self->_GetFieldsToUpdate(),
-                Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                );
+                Mandatory            => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            );
         }
 
         # get customer from quick ticket
@@ -242,11 +241,10 @@ sub Run {
                 && $CustomerData{UserID}
                 && $CustomerData{UserEmail}
             ) {
-                my $CustomerName = $CustomerUserObject
-                    ->CustomerName( UserLogin => $CustomerData{UserID} );
-                $TicketTemplateData{From}
-                    = '"' . $CustomerName . '" '
-                    . '<' . $CustomerData{UserEmail} . '>';
+                my $CustomerName = $CustomerUserObject->CustomerName(
+                    UserLogin => $CustomerData{UserID}
+                );
+                $TicketTemplateData{From}           = '"' . $CustomerName . '" ' . '<' . $CustomerData{UserEmail} . '>';
                 $TicketTemplateData{CustomerID}     = $CustomerData{UserCustomerID};
                 $TicketTemplateData{CustomerUserID} = $CustomerData{UserID};
                 $CustomerData{CustomerUserLogin}    = $CustomerData{UserID};
@@ -256,20 +254,10 @@ sub Run {
             }
         }
 
-        # empty customer / cc / bcc
-        $TicketTemplateData{FromEmpty} = 'checked="checked"' if $TicketTemplateData{FromEmpty};
-        $TicketTemplateData{CcEmpty}   = 'checked="checked"' if $TicketTemplateData{CcEmpty};
-        $TicketTemplateData{BccEmpty}  = 'checked="checked"' if $TicketTemplateData{BccEmpty};
-
         # queue id
         if ( !defined $TicketTemplateData{QueueID} ) {
             $TicketTemplateData{QueueID} = '';
         }
-
-        # subject and body
-        $TicketTemplateData{SubjectEmpty} = 'checked="checked"'
-            if $TicketTemplateData{SubjectEmpty};
-        $TicketTemplateData{BodyEmpty} = 'checked="checked"' if $TicketTemplateData{BodyEmpty};
 
         # get services
         my $Services = $Self->_GetServices(
@@ -293,6 +281,7 @@ sub Run {
 
         # html output
         $Output .= $Self->_MaskNew(
+            %TicketTemplateData,
             Users => $Self->_GetUsers(
                 QueueID  => $TicketTemplateData{QueueID},
                 AllUsers => $TicketTemplateData{OwnerAll},
@@ -313,10 +302,9 @@ sub Run {
                 CustomerUserID => $TicketTemplateData{CustomerUserID} || '',
                 QueueID        => $TicketTemplateData{QueueID}        || 1,
             ),
-            Services => $Services,
-            SLAs     => $SLAs,
-            CustomerID =>
-                $LayoutObject->Ascii2Html( Text => $TicketTemplateData{CustomerID} ),
+            Services         => $Services,
+            SLAs             => $SLAs,
+            CustomerID       => $LayoutObject->Ascii2Html( Text => $TicketTemplateData{CustomerID} ),
             CustomerData     => \%CustomerData,
             FromList         => $Self->_GetTos(),
             Subject          => $LayoutObject->Ascii2Html( Text => $TicketTemplateData{Subject} ),
@@ -324,8 +312,7 @@ sub Run {
             Errors           => \%Error,
             DynamicFieldHTML => \%DynamicFieldHTML,
             UserGroups       => \@UserGroupIDs,
-            %TicketTemplateData,
-            FormID => $Param{FormID},
+            FormID           => $Param{FormID},
         );
         $Output .= $LayoutObject->Footer();
         return $Output;
@@ -350,6 +337,19 @@ sub Run {
             if ( !$GetParam{$Key} ) {
                 $Error{ $Key . 'Invalid' } = 'ServerError';
             }
+        }
+
+        # check CustomerPortalGroupID if Customer is set
+        if (
+            $GetParam{'Customer'}
+            && !$GetParam{'CustomerPortalGroupID'}
+        ) {
+            $Error{'CustomerPortalGroupIDInvalid'} = 'ServerError';
+        }
+
+        # reset CustomerPortalGroupID if Customer is not set
+        if ( !$GetParam{'Customer'} ) {
+            $GetParam{'CustomerPortalGroupID'} = '';
         }
 
         # some sort of error handling...
@@ -405,8 +405,7 @@ sub Run {
                 }
 
                 # get field html
-                $DynamicFieldHTML{ $DynamicFieldConfig->{Name} }
-                    = $BackendObject->EditFieldRender(
+                $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                     DynamicFieldConfig   => $DynamicFieldConfig,
                     PossibleValuesFilter => $PossibleValuesFilter,
                     Value                => $Value,
@@ -414,9 +413,8 @@ sub Run {
                     ParamObject          => $ParamObject,
                     AJAXUpdate           => 1,
                     UpdatableFields      => $Self->_GetFieldsToUpdate(),
-                    Mandatory => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} }
-                        == 2,
-                    );
+                    Mandatory            => $Self->{Config}->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+                );
             }
 
             # get and format default subject and body
@@ -431,13 +429,14 @@ sub Run {
                 AllServices    => $GetParam{ServiceAll},
             );
             my $SLAs = $Self->_GetSLAs(
-                QueueID => $GetParam{QueueID} || 1,
+                QueueID  => $GetParam{QueueID} || 1,
                 Services => $Services,
                 %GetParam,
             );
 
             # html output
             $Output .= $Self->_MaskNew(
+                %GetParam,
                 Users => $Self->_GetUsers(
                     QueueID  => $GetParam{QueueID},
                     AllUsers => $GetParam{OwnerAll},
@@ -446,7 +445,7 @@ sub Run {
                     QueueID  => $GetParam{QueueID},
                     AllUsers => $GetParam{ResponsibleAll},
                 ),
-                States => $Self->_GetNextStates(
+                NextStates => $Self->_GetNextStates(
                     %GetParam,
                     CustomerUserID => $GetParam{CustomerUserID} || '',
                     QueueID        => $GetParam{QueueID}        || 1,
@@ -470,8 +469,7 @@ sub Run {
                 Errors           => \%Error,
                 DynamicFieldHTML => \%DynamicFieldHTML,
                 UserGroups       => \@UserGroupIDs,
-                %GetParam,
-                FormID => $Param{FormID},
+                FormID           => $Param{FormID},
             );
             $Output .= $LayoutObject->Footer();
             return $Output;
@@ -1297,6 +1295,22 @@ sub _MaskNew {
         }
     }
 
+    # prepare checkboxes except dynamic fields
+    for my $Checkbox (
+        qw(
+            Agent Customer FromEmpty CcEmpty BccEmpty SubjectEmpty BodyEmpty
+            OwnerIDEmpty ResponsibleIDEmpty TimeUnitsEmpty
+            StateIDEmpty QueueIDEmpty PriorityIDEmpty TypeIDEmpty ServiceIDEmpty SLAIDEmpty
+        )
+    ) {
+        if ( $Param{ $Checkbox } ) {
+            $Param{ $Checkbox } = 'checked="checked"';
+        }
+        else {
+            $Param{ $Checkbox } = '';
+        }
+    }
+
     # get list type
     my $TreeView = 0;
     if ( $ConfigObject->Get('Ticket::Frontend::ListType') eq 'tree' ) {
@@ -1316,7 +1330,7 @@ sub _MaskNew {
         Translation  => 1,
         Name         => 'CustomerPortalGroupID',
         PossibleNone => 1,
-        Class        => 'Modernize Validate_Required',
+        Class        => 'Modernize Validate_Required ' . ( $Param{Errors}->{CustomerPortalGroupIDInvalid} || '' ),
     );
 
     # build user group selection string
@@ -1339,9 +1353,6 @@ sub _MaskNew {
         PossibleNone => 1,
         Class        => 'Modernize',
     );
-    if ( $Param{OwnerIDEmpty} ) {
-        $Param{OwnerIDEmpty} = 'checked="checked"';
-    }
 
     # build next states string
     $Param{StatesStrg} = $LayoutObject->BuildSelection(
@@ -1352,9 +1363,6 @@ sub _MaskNew {
         PossibleNone => 1,
         Class        => 'Modernize',
     );
-    if ( $Param{StateIDEmpty} ) {
-        $Param{StateIDEmpty} = 'checked="checked"';
-    }
 
     # build to string
     $Param{FromList}->{''} = '-';
@@ -1369,9 +1377,6 @@ sub _MaskNew {
         OnChangeSubmit => 0,
         TreeView       => $TreeView,
     );
-    if ( $Param{QueueIDEmpty} ) {
-        $Param{QueueIDEmpty} = 'checked="checked"';
-    }
 
     # build priority string
     $Param{PriorityStrg} = $LayoutObject->BuildSelection(
@@ -1382,9 +1387,6 @@ sub _MaskNew {
         PossibleNone => 1,
         Class        => 'Modernize',
     );
-    if ( $Param{PriorityIDEmpty} ) {
-        $Param{PriorityIDEmpty} = 'checked="checked"';
-    }
 
     # prepare errors!
     if ( $Param{Errors} ) {
@@ -1426,15 +1428,12 @@ sub _MaskNew {
         $Param{TypeStrg} = $LayoutObject->BuildSelection(
             Data         => $Param{Types},
             Name         => 'TypeID',
-            Class        => 'Validate_Required Modernize ' . ( $Param{Errors}->{TypeInvalid} || ' ' ),
+            Class        => 'Modernize',
             SelectedID   => $Param{TypeID},
             PossibleNone => 1,
             Sort         => 'AlphanumericValue',
             Translation  => 0,
         );
-        if ( $Param{TypeIDEmpty} ) {
-            $Param{TypeIDEmpty} = 'checked="checked"';
-        }
         $LayoutObject->Block(
             Name => 'TicketType',
             Data => {%Param},
@@ -1446,7 +1445,7 @@ sub _MaskNew {
         $Param{ServiceStrg} = $LayoutObject->BuildSelection(
             Data         => $Param{Services},
             Name         => 'ServiceID',
-            Class        => 'Modernize ' . ( $Param{Errors}->{ServiceInvalid} || ' ' ),
+            Class        => 'Modernize',
             SelectedID   => $Param{ServiceID},
             PossibleNone => 1,
             TreeView     => $TreeView,
@@ -1454,9 +1453,6 @@ sub _MaskNew {
             Translation  => 0,
             Max          => 200,
         );
-        if ( $Param{ServiceIDEmpty} ) {
-            $Param{ServiceIDEmpty} = 'checked="checked"';
-        }
         $LayoutObject->Block(
             Name => 'TicketService',
             Data => {%Param},
@@ -1471,9 +1467,6 @@ sub _MaskNew {
             Translation  => 0,
             Max          => 200,
         );
-        if ( $Param{SLAIDEmpty} ) {
-            $Param{SLAIDEmpty} = 'checked="checked"';
-        }
         $LayoutObject->Block(
             Name => 'TicketSLA',
             Data => {%Param},
@@ -1492,9 +1485,6 @@ sub _MaskNew {
             Name       => 'ResponsibleID',
             Class      => 'Modernize',
         );
-        if ( $Param{ResponsibleIDEmpty} ) {
-            $Param{ResponsibleIDEmpty} = 'checked="checked"';
-        }
         $LayoutObject->Block(
             Name => 'Responsible',
             Data => \%Param,
@@ -1560,7 +1550,7 @@ sub _MaskNew {
             || $DynamicFieldConfig->{FieldType} !~ m/Dropdown/i
             || $DynamicFieldConfig->{Config}->{PossibleNone}
         ) {
-            my $Checked;
+            my $Checked = '';
             if ( $Param{ 'DynamicField_' . $DynamicFieldConfig->{Name} . 'Empty' } ) {
                 $Checked = 'checked="checked"';
             }
@@ -1581,9 +1571,6 @@ sub _MaskNew {
             Name => 'TimeUnits',
             Data => \%Param,
         );
-        if ( $Param{TimeUnitsEmpty} ) {
-            $Param{TimeUnitsEmpty} = 'checked="checked"';
-        }
     }
 
     # build article type selection
