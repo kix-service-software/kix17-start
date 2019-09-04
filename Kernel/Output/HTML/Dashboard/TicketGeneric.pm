@@ -2200,6 +2200,16 @@ sub Run {
             }
         }
 
+        # get ticket escalation preferences
+        my $TicketEscalation = $TicketObject->TicketEscalationCheck(
+            TicketID => $TicketID,
+            UserID   => $Self->{UserID},
+        );
+        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+            TicketID => $TicketID,
+            UserID   => $Self->{UserID},
+        );
+
         # save column content
         my $DataValue;
 
@@ -2262,12 +2272,14 @@ sub Run {
                 }
 
                 elsif ( $Column eq 'EscalationTime' ) {
-                    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && (
+                            $TicketEscalation->{'FirstResponse'}
+                            || $TicketEscalation->{'Update'}
+                            || $TicketEscalation->{'Solution'}
+                        )
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
@@ -2302,12 +2314,10 @@ sub Run {
                     );
                 }
                 elsif ( $Column eq 'EscalationSolutionTime' ) {
-                    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && $TicketEscalation->{'Solution'}
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
@@ -2323,12 +2333,10 @@ sub Run {
                     }
                 }
                 elsif ( $Column eq 'EscalationResponseTime' ) {
-                    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && $TicketEscalation->{'FirstResponse'}
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
@@ -2347,12 +2355,10 @@ sub Run {
                     }
                 }
                 elsif ( $Column eq 'EscalationUpdateTime' ) {
-                    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && $TicketEscalation->{'Update'}
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }

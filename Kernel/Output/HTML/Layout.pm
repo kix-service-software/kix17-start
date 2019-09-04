@@ -2740,6 +2740,51 @@ sub PageNavBar {
     my $Baselink = "$Self->{Baselink}$Action;$Link";
     my $i        = 0;
 
+    # prepare session information if cookie is not used
+    if ( !$Self->{SessionIDCookie} ) {
+        if (
+            $Link !~ /$Self->{SessionName}/g
+            && !$Param{$Self->{SessionName}}
+        ) {
+            if ( $Param{AJAXReplace} ) {
+                $Baselink .= ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+            }
+            else {
+                $Self->Block(
+                    Name => 'PageHiddenGeneric',
+                    Data => {
+                        Name  => $Self->{SessionName},
+                        Value => $Self->{SessionID},
+                    }
+                );
+            }
+        }
+
+        elsif (
+            $Link =~ /$Self->{SessionName}/g
+            && !$Param{$Self->{SessionName}}
+        ) {
+            if ( !$Param{AJAXReplace} ) {
+                $Self->Block(
+                    Name => 'PageHiddenGeneric',
+                    Data => {
+                        Name  => $Self->{SessionName},
+                        Value => $Self->{SessionID},
+                    }
+                );
+            }
+        }
+
+        elsif (
+            $Link !~ /$Self->{SessionName}/g
+            && $Param{$Self->{SessionName}}
+        ) {
+            if ( $Param{AJAXReplace} ) {
+                $Baselink .= ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
+            }
+        }
+    }
+
     while ( $i <= ( $Pages - 1 ) ) {
         $i++;
 

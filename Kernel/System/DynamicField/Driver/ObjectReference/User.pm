@@ -362,7 +362,8 @@ EOF
 
         # get data
         my %ObjectList = $Self->{UserObject}->UserList(
-            Valid => 1,
+            NoOutOfOffice => 1,
+            Valid         => 1,
         );
 
         # create user hash
