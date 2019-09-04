@@ -321,14 +321,21 @@ sub TicketTemplateCreate {
     # check needed stuff
     for my $Needed (qw(UserID Name Data)) {
         if ( !defined( $Param{$Needed} ) ) {
-            $Kernel::OM->Get('Kernel::System::Log')
-                ->Log( Priority => 'error', Message => "TicketTemplateCreate: Need $Needed!" );
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "TicketTemplateCreate: Need $Needed!"
+            );
             return;
         }
     }
 
     # prepare CustomerPortalGroupID
     $Param{Data}->{CustomerPortalGroupID} ||= 0;
+
+    # reset CustomerPortalGroupID if ticket template is not activated for customer frontend
+    if ( !$Param{Data}->{Customer} ) {
+        $Param{Data}->{CustomerPortalGroupID} = 0;
+    }
 
     # create YAML object
     my $YAMLObject = $Kernel::OM->Get('Kernel::System::YAML');
@@ -489,27 +496,35 @@ sub TicketTemplateUpdate {
     # check needed stuff
     for my $Needed (qw(UserID Data)) {
         if ( !$Param{$Needed} ) {
-            $Kernel::OM->Get('Kernel::System::Log')
-                ->Log( Priority => 'error', Message => "TicketTemplateUpdate: Need $Needed!" );
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "TicketTemplateUpdate: Need $Needed!"
+            );
             return;
         }
     }
     if ( ref $Param{Data} ne 'HASH' ) {
-        $Kernel::OM->Get('Kernel::System::Log')
-            ->Log(
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => "TicketTemplateUpdate: Given data needs to be a hash element!"
-            );
+        );
         return;
     }
     if ( !$Param{ID} && !$Param{Name} ) {
-        $Kernel::OM->Get('Kernel::System::Log')
-            ->Log( Priority => 'error', Message => "TicketTemplateUpdate: Need Name or ID!" );
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "TicketTemplateUpdate: Need Name or ID!"
+        );
         return;
     }
 
     # prepare CustomerPortalGroupID
     $Param{Data}->{CustomerPortalGroupID} ||= 0; 
+
+    # reset CustomerPortalGroupID if ticket template is not activated for customer frontend
+    if ( !$Param{Data}->{Customer} ) {
+        $Param{Data}->{CustomerPortalGroupID} = 0;
+    }
 
     # create YAML object
     my $YAMLObject = $Kernel::OM->Get('Kernel::System::YAML');
