@@ -255,16 +255,19 @@ Core.KIX4OTRS = (function(TargetNS) {
 
     function SaveDraft() {
         var $Form = $('#SaveAsDraft').closest('form'),
-            Data = Core.AJAX.SerializeForm($Form);
+            Data;
 
         // some special handling for CKEDITOR
         if ( typeof(CKEDITOR) !== "undefined" && CKEDITOR.instances.RichText) {
-            Data += encodeURIComponent('Body') + '=' + encodeURIComponent(CKEDITOR.instances.RichText.getData() || '');
+            CKEDITOR.instances.RichText.updateElement();
         }
 
-        // create URL
+        // prepare data
+        Data = Core.AJAX.SerializeForm($Form);
         Data = Data.replace(/Action=/g, 'CallingAction=');
         Data = Data.replace(/Subaction=(.*?)\;/g, '');
+
+        // prepare url
         URL = 'Action=SaveAsDraftAJAXHandler;Subaction=SaveFormContent;' + Data;
 
         // save content and do not submit form
@@ -350,104 +353,6 @@ Core.KIX4OTRS = (function(TargetNS) {
             // initial call to check for loadable content (necessary for Ticket Tabs)
             TargetNS.LoadDraft(Action, TicketID, Question);
         }
-    }
-
-    /**
-     * @function Saves form content as draft, deletes old drafts
-     * @param {String}
-     *            calling action
-     * @param {String}
-     *            dialog question
-     * @param {String}
-     *            save interval in milliseconds
-     */
-
-    TargetNS.SaveAsDraft = function(Action, Question, Interval) {
-        // get form
-        var $Form = $('#SaveAsDraft').closest('form'),
-            ActiveInterval,
-            Attributes = Core.Config.Get('Attributes').split(","),
-            AttributeString = '',
-            TicketID = $Form.find('input[name="TicketID"]').val() || '';
-
-        // on submit stop timer
-        $Form.submit(function() {
-            clearInterval(ActiveInterval);
-        });
-
-        // delete draft when clicking on Cancel link
-        $('div.Header a.CancelClosePopup').bind('click', function() {
-            DeleteDraft(Action, TicketID);
-        });
-
-        // save content after clicking the "Save As Draft" button
-        $('#SaveAsDraft').on('click', function(event) {
-            SaveContent();
-        });
-
-        // reset intervall if keypressed in RichTextEditor
-        if (window.CKEDITOR && CKEDITOR.instances.RichText) {
-            CKEDITOR.instances.RichText.on('key', function() {
-                window.clearTimeout(ActiveInterval);
-                ActiveInterval = window.setTimeout(function() {
-                    SaveContent();
-                }, Interval);
-            });
-        }
-
-        // reset intervall if keypressed in other input fields
-        $.each(Attributes, function(Key, Value) {
-            Attributes[Key] = '#' + Value;
-        });
-        AttributeString = Attributes.join(', ');
-        $(AttributeString).bind('keydown', function(event) {
-            window.clearTimeout(ActiveInterval);
-            ActiveInterval = window.setTimeout(function() {
-                SaveContent();
-            }, Interval);
-        });
-
-        // show dialog on load if saved form is available
-        $(window).load(function() {
-            // get saved form
-            var URL = Core.Config.Get('Baselink'),
-                Data = {
-                    Action : 'SaveAsDraftAJAXHandler',
-                    Subaction : 'GetFormContent',
-                    CallingAction : Action,
-                    TicketID : TicketID
-                },
-                ContentExists = false,
-                Content;
-
-            Core.AJAX.FunctionCall(URL, Data, function(Result) {
-                Content = Result;
-                $.each(Result, function() {
-                    if (this.Label == 'Body' && window.CKEDITOR && CKEDITOR.instances.RichText) {
-                        ContentExists = ContentExists || (this.Value != '');
-                    } else {
-                        ContentExists = ContentExists || (($('#' + this.Label).length) && (this.Value != ''));
-                    }
-                });
-
-                // if form exists, ask to use or to delete it
-                if (ContentExists === true) {
-                    Core.KIX4OTRS.Dialog.ShowQuestion(Core.Config.Get('Question'), Question, Core.Config.Get('Yes'), function() {
-                        // Yes - load form content from WebUpload Cache
-                        Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
-                        $.each(Content, function() {
-                            if ($('#' + this.Label).length) {
-                                $('#' + this.Label).val(this.Value);
-                            } else if (this.Label == 'Body' && window.CKEDITOR && CKEDITOR.instances.RichText) {
-                                CKEDITOR.instances.RichText.setData(this.Value);
-                            }
-                        });
-                    }, Core.Config.Get('Delete'), function() {
-                        DeleteDraft(Action, TicketID);
-                    });
-                }
-            }, 'json');
-        });
     }
 
     /**
