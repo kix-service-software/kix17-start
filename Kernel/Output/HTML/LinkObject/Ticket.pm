@@ -253,6 +253,16 @@ sub TableCreateComplex {
 
         my @ItemColumns;
 
+        # get ticket escalation preferences
+        my $TicketEscalation = $TicketObject->TicketEscalationCheck(
+            TicketID => $TicketID,
+            UserID   => $Self->{UserID},
+        );
+        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+            TicketID => $TicketID,
+            UserID   => $Self->{UserID},
+        );
+
         for my $Column (@ColumnsEnabled) {
 
             my %TmpHash;
@@ -265,30 +275,28 @@ sub TableCreateComplex {
 
                 if ( $Column =~ /^(?:Age|Escalation(!?|Update|Solution|Response)Time)$/ ) {
                     my $Prefix                   = $1 || 'Age';
-                    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
-
-                    # return 'suspended' if escalation is disabled
-                    if ($TicketEscalationDisabled) {
-                        $TmpHash{Translate} = 1;
-                        $TmpHash{Content}   = 'suspended';
+                    if ( $Prefix eq 'Response' ) {
+                        $Prefix = 'FirstResponse';
                     }
+
                     # return CustomAge for column 'Age'
-                    elsif ( $Prefix eq 'Age' ) {
+                    if ( $Prefix eq 'Age' ) {
                         $TmpHash{Content} = $LayoutObject->CustomerAge(
                             Age   => $Ticket->{Age},
                             Space => ' ',
                         );
                     }
+                    # return 'suspended' if escalation is disabled
+                    elsif (
+                        $TicketEscalationDisabled
+                        && $TicketEscalation->{ $Prefix }
+                    ) {
+                        $TmpHash{Translate} = 1;
+                        $TmpHash{Content}   = 'suspended';
+                    }
                     # return CustomerAgeInHours for escalation columns
                     else {
                         my $Attr = $Prefix . 'Time';
-
-                        if ( $Prefix eq 'Response' ) {
-                            $Attr = 'First' . $Prefix . 'Time';
-                        }
 
                         $TmpHash{Content} = $LayoutObject->CustomerAgeInHours(
                             Age => $Ticket->{$Attr} || 0,

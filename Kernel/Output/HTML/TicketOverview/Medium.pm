@@ -813,12 +813,18 @@ sub _Show {
         }
     }
 
+    # get ticket escalation preferences
+    my $TicketEscalation = $TicketObject->TicketEscalationCheck(
+        TicketID => $Param{TicketID},
+        UserID   => $Self->{UserID},
+    );
+    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+        TicketID => $Param{TicketID},
+        UserID   => $Self->{UserID},
+    );
+
     # show first response time if needed
-    if ( defined $Article{FirstResponseTime} ) {
-        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-            TicketID => $Param{TicketID},
-            UserID   => $Self->{UserID},
-        );
+    if ( $TicketEscalation->{'FirstResponse'} ) {
 
         if ($TicketEscalationDisabled) {
             $Article{FirstResponseTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
@@ -831,7 +837,7 @@ sub _Show {
         }
         else {
             $Article{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Article{FirstResponseTime},
+                Age   => $Article{FirstResponseTime} || 0,
                 Space => ' ',
             );
             $Article{FirstResponseTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
@@ -849,12 +855,7 @@ sub _Show {
     }
 
     # show update time if needed
-    if ( defined $Article{UpdateTime} ) {
-        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-            TicketID => $Param{TicketID},
-            UserID   => $Self->{UserID},
-        );
-
+    if ( $TicketEscalation->{'Update'} ) {
         if ($TicketEscalationDisabled) {
             $Article{UpdateTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
             $Article{UpdateTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
@@ -866,7 +867,7 @@ sub _Show {
         }
         else {
             $Article{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Article{UpdateTime},
+                Age   => $Article{UpdateTime} || 0,
                 Space => ' ',
             );
             $Article{UpdateTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
@@ -884,12 +885,7 @@ sub _Show {
     }
 
     # show solution time if needed
-    if ( defined $Article{SolutionTime} ) {
-        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-            TicketID => $Param{TicketID},
-            UserID   => $Self->{UserID},
-        );
-
+    if ( $TicketEscalation->{'Solution'} ) {
         if ($TicketEscalationDisabled) {
             $Article{SolutionTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
             $Article{SolutionTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
@@ -901,7 +897,7 @@ sub _Show {
         }
         else {
             $Article{SolutionTimeHuman} = $LayoutObject->CustomerAgeInHours(
-                Age   => $Article{SolutionTime},
+                Age   => $Article{SolutionTime} || 0,
                 Space => ' ',
             );
             $Article{SolutionTimeWorkingTime} = $LayoutObject->CustomerAgeInHours(
