@@ -1896,6 +1896,178 @@ sub TicketEscalationDisabledCheck {
     return 0;
 }
 
+=item TicketEscalationCheck()
+
+check if escalations are relevant for this ticket
+
+    my $Check = $TicketObject->TicketEscalationCheck(
+        TicketID => $Param{TicketID},
+        UserID   => $Param{UserID},
+    );
+
+=cut
+
+sub TicketEscalationCheck {
+    my ( $Self, %Param ) = @_;
+
+    # check needed stuff
+    for my $Needed (qw(TicketID UserID)) {
+        if ( !defined $Param{$Needed} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!"
+            );
+            return;
+        }
+    }
+
+    my %Ticket = $Self->TicketGet(
+        TicketID      => $Param{TicketID},
+        DynamicFields => 1,
+        UserID        => $Param{UserID},
+    );
+
+    # get database object
+    my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
+
+    # init result
+    my %Result = (
+        FirstResponse => 0,
+        Update        => 0,
+        Solution      => 0,
+        
+    );
+    # do no escalations on (merge|close|remove) tickets
+    if ( $Ticket{StateType} =~ /^(?:merge|close|remove)/i ) {
+        return \%Result;
+    }
+
+    # get escalation properties
+    my %Escalation;
+    if (%Ticket) {
+        %Escalation = $Self->TicketEscalationPreferences(
+            Ticket => \%Ticket,
+            UserID => $Param{UserID},
+        );
+    }
+
+    # check first response escalation (if not responded till now)
+    if ( $Escalation{FirstResponseTime} ) {
+        # check if first response is already done
+        my %FirstResponseDone = $Self->_TicketGetFirstResponse(
+            TicketID => $Ticket{TicketID},
+            Ticket   => \%Ticket,
+        );
+
+        # find solution time / first close time
+        my %SolutionDone = $Self->_TicketGetClosed(
+            TicketID => $Ticket{TicketID},
+            Ticket   => \%Ticket,
+        );
+
+        # first response can escalate
+        if (
+            !%FirstResponseDone
+            && !%SolutionDone
+        ) {
+            $Result{'FirstResponse'} = 1;
+        }
+    }
+
+    # check update escalation (if not in pending state)
+    if (
+        $Escalation{UpdateTime}
+        && $Ticket{StateType} !~ /^(pending)/i
+    ) {
+
+        # check if update escalation should be set
+        my @SenderHistory;
+        return if !$DBObject->Prepare(
+            SQL  => 'SELECT article_sender_type_id, article_type_id, create_time FROM '
+                  . 'article WHERE ticket_id = ? ORDER BY create_time ASC',
+            Bind => [ \$Param{TicketID} ],
+        );
+        while ( my @Row = $DBObject->FetchrowArray() ) {
+            push @SenderHistory, {
+                SenderTypeID  => $Row[0],
+                ArticleTypeID => $Row[1],
+                Created       => $Row[2],
+            };
+        }
+
+        # fill up lookups
+        for my $Row (@SenderHistory) {
+
+            # get sender type
+            $Row->{SenderType} = $Self->ArticleSenderTypeLookup(
+                SenderTypeID => $Row->{SenderTypeID},
+            );
+
+            # get article type
+            $Row->{ArticleType} = $Self->ArticleTypeLookup(
+                ArticleTypeID => $Row->{ArticleTypeID},
+            );
+        }
+
+        # get latest customer contact time
+        my $LastSenderTime;
+        my $LastSenderType = '';
+        ROW:
+        for my $Row ( reverse @SenderHistory ) {
+
+            # fill up latest sender time (as initial value)
+            if ( !$LastSenderTime ) {
+                $LastSenderTime = $Row->{Created};
+            }
+
+            # do not use internal article types for calculation
+            next ROW if $Row->{ArticleType} =~ /-int/i;
+
+            # only use 'agent' and 'customer' sender types for calculation
+            next ROW if $Row->{SenderType} !~ /^(?:agent|customer)$/;
+
+            # last ROW if latest was customer and the next was not customer
+            # otherwise use also next, older customer article as latest
+            # customer followup for starting escalation
+            if ( $Row->{SenderType} eq 'agent' && $LastSenderType eq 'customer' ) {
+                last ROW;
+            }
+
+            # start escalation on latest customer article
+            if ( $Row->{SenderType} eq 'customer' ) {
+                $LastSenderType = 'customer';
+                $LastSenderTime = $Row->{Created};
+            }
+
+            # start escalation on latest agent article
+            if ( $Row->{SenderType} eq 'agent' ) {
+                $LastSenderTime = $Row->{Created};
+                last ROW;
+            }
+        }
+        if ($LastSenderTime) {
+            $Result{'Update'} = 1;
+        }
+    }
+
+    # check solution escalation
+    if ( $Escalation{SolutionTime} ) {
+
+        # find solution time / first close time
+        my %SolutionDone = $Self->_TicketGetClosed(
+            TicketID => $Ticket{TicketID},
+            Ticket   => \%Ticket,
+        );
+
+        # update solution time to 0
+        if ( !%SolutionDone ) {
+            $Result{'Solution'} = 1;
+        }
+    }
+
+    return \%Result;
+}
+
 1;
 
 =back

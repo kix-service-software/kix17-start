@@ -326,23 +326,29 @@ sub Run {
 
     }
 
-    # show first response time if needed
-    if ( defined $Ticket{FirstResponseTime} ) {
-        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-            TicketID => $Param{TicketID},
-            UserID   => $Self->{UserID},
-        );
+    # get ticket escalation preferences
+    my $TicketEscalation = $TicketObject->TicketEscalationCheck(
+        TicketID => $Param{TicketID},
+        UserID   => $Self->{UserID},
+    );
+    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+        TicketID => $Param{TicketID},
+        UserID   => $Self->{UserID},
+    );
 
+    # show first response time if needed
+    if ( $TicketEscalation->{'FirstResponse'} ) {
         if ($TicketEscalationDisabled) {
-            $Ticket{FirstResponseTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
-            $Ticket{FirstResponseTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{FirstResponseTimeHuman}           = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{FirstResponseTimeWorkingTime}     = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{FirstResponseTimeDestinationDate} = '';
 
             $LayoutObject->Block(
                 Name => 'FirstResponseTime',
                 Data => { %Ticket, %AclAction },
             );
         }
-        else {
+        elsif( $Ticket{FirstResponseTime} ) {
             $Ticket{FirstResponseTimeHuman} = $LayoutObject->CustomerAgeInHours(
                 Age   => $Ticket{FirstResponseTime},
                 Space => ' ',
@@ -362,22 +368,18 @@ sub Run {
     }
 
     # show update time if needed
-    if ( defined $Ticket{UpdateTime} ) {
-        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-            TicketID => $Param{TicketID},
-            UserID   => $Self->{UserID},
-        );
-
+    if ( $TicketEscalation->{'Update'} ) {
         if ($TicketEscalationDisabled) {
-            $Ticket{UpdateTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
-            $Ticket{UpdateTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{UpdateTimeHuman}           = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{UpdateTimeWorkingTime}     = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{UpdateTimeDestinationDate} = '';
 
             $LayoutObject->Block(
                 Name => 'UpdateTime',
                 Data => { %Ticket, %AclAction },
             );
         }
-        else {
+        elsif( $Ticket{UpdateTime} ) {
             $Ticket{UpdateTimeHuman} = $LayoutObject->CustomerAgeInHours(
                 Age   => $Ticket{UpdateTime},
                 Space => ' ',
@@ -398,22 +400,18 @@ sub Run {
     }
 
     # show solution time if needed
-    if ( defined $Ticket{SolutionTime} ) {
-        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-            TicketID => $Param{TicketID},
-            UserID   => $Self->{UserID},
-        );
-
+    if ( $TicketEscalation->{'Solution'} ) {
         if ($TicketEscalationDisabled) {
-            $Ticket{SolutionTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
-            $Ticket{SolutionTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{SolutionTimeHuman}           = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{SolutionTimeWorkingTime}     = $LayoutObject->{LanguageObject}->Translate('suspended');
+            $Ticket{SolutionTimeDestinationDate} = '';
 
             $LayoutObject->Block(
                 Name => 'SolutionTime',
                 Data => { %Ticket, %AclAction },
             );
         }
-        else {
+        elsif( $Ticket{SolutionTime} ) {
             $Ticket{SolutionTimeHuman} = $LayoutObject->CustomerAgeInHours(
                 Age   => $Ticket{SolutionTime},
                 Space => ' ',
