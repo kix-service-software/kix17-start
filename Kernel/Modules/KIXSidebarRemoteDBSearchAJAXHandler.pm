@@ -121,16 +121,16 @@ sub Run {
         @RestrictedKIXObjects = split( ",", $Self->{SidebarConfig}->{RestrictedKIXObjects} );
     }
     # DEPRECATED:  This option is no longer supported, but due to current use at customers for the time being still necessary.
-    elsif ( defined( $Self->{DashletConfig}->{RestrictedOTRSObjects} ) ) {
-        @RestrictedKIXObjects = split( ",", $Self->{DashletConfig}->{RestrictedOTRSObjects} );
+    elsif ( defined( $Self->{SidebarConfig}->{RestrictedOTRSObjects} ) ) {
+        @RestrictedKIXObjects = split( ",", $Self->{SidebarConfig}->{RestrictedOTRSObjects} );
     }
     my @RestrictedKIXAttributes = ();
     if ( defined( $Self->{SidebarConfig}->{RestrictedKIXAttributes} ) ) {
         @RestrictedKIXAttributes = split( ",", $Self->{SidebarConfig}->{RestrictedKIXAttributes} );
     }
     # DEPRECATED:  This option is no longer supported, but due to current use at customers for the time being still necessary.
-    elsif ( defined( $Self->{DashletConfig}->{RestrictedOTRSAttributes} ) ) {
-        @RestrictedKIXAttributes = split( ",", $Self->{DashletConfig}->{RestrictedOTRSAttributes} );
+    elsif ( defined( $Self->{SidebarConfig}->{RestrictedOTRSAttributes} ) ) {
+        @RestrictedKIXAttributes = split( ",", $Self->{SidebarConfig}->{RestrictedOTRSAttributes} );
     }
 
     my @RestrictedValues = ();
