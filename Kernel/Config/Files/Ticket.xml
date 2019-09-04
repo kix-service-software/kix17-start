@@ -14652,9 +14652,9 @@ Thanks for your help!
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::ViewTicketZoomTabLinkedObjects</SubGroup>
         <Setting>
-            <Option SelectedID="true">
-                <Item Key="false">No</Item>
-                <Item Key="true">Yes</Item>
+            <Option SelectedID="1">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
             </Option>
         </Setting>
     </ConfigItem>
