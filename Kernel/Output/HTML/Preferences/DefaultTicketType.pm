@@ -21,8 +21,7 @@ sub new {
     bless( $Self, $Type );
 
     # get config
-    $Self->{Config}
-        = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::CustomerTicketMessage");
+    $Self->{Config} = $Kernel::OM->Get('Kernel::Config')->Get("Ticket::Frontend::CustomerTicketMessage");
 
     return $Self;
 }
@@ -32,9 +31,10 @@ sub Param {
 
     # get needed objects
     my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
     my %Type = $TicketObject->TicketTypeList(
+        Action         => $Self->{Action},
         CustomerUserID => $Self->{UserID},
     );
 
@@ -55,11 +55,11 @@ sub Param {
             Translation => 0,
             Data        => \%Type,
             HTMLQuote   => 0,
+            Block       => 'Option',
+            Max         => 100,
             SelectedID  => $ParamObject->GetParam( Param => 'UserDefaultTicketType' )
                 || $Param{UserData}->{UserDefaultTicketType}
                 || $Self->{Config}->{TicketTypeDefault},
-            Block => 'Option',
-            Max   => 100,
         },
     );
     return @Params;
@@ -69,9 +69,9 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
     my $SessionObject = $Kernel::OM->Get('Kernel::System::AuthSession');
-    my $UserObject = $Param{UserObject} || $Kernel::OM->Get('Kernel::System::CustomerUser');
+    my $UserObject    = $Param{UserObject} || $Kernel::OM->Get('Kernel::System::CustomerUser');
 
     for my $Key ( keys %{ $Param{GetParam} } ) {
         my @Array = @{ $Param{GetParam}->{$Key} };
