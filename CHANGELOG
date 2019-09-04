@@ -1,6 +1,21 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.8.0-RC2 (2019/09/04)
+ * (2019/09/03) - Bugfix: T2019073190001082 (customer information center displays not all config item attributes) (millinger)
+ * (2019/09/03) - Bugfix: T2019041690001124 (get user list without out of office note for object reference field) (millinger)
+ * (2019/09/03) - Bugfix: T2019062790000879 (reset customer portal group if customer frontend is deactivated) (millinger)
+ * (2019/09/03) - Bugfix: T2019062690000835 (fixed otrs configuration fallback for remote db sidebar) (millinger)
+ * (2019/09/03) - Bugfix: T2019032290000722 (fixed session handling for paginations) (millinger)
+ * (2019/09/03) - Bugfix: T2019040390001149 (draft of body was not saved without blur) (millinger)
+ * (2019/09/03) - Bugfix: T2019070190000853 (could not restrict default ticket type in customer user preferences) (millinger)
+ * (2019/09/03) - Bugfix: T2019052890002877 (quick link could not be disabled in ticket tab) (millinger)
+ * (2019/09/03) - Bugfix: T2018121090000793 (changing results per page of config item search does not reload result) (millinger)
+ * (2019/09/03) - Bugfix: T2019010990000644 (Similiar faq sidebar depends on ticket title in agent ticket note) (millinger)
+ * (2019/09/03) - Bugfix: T2019010990000804 (fixed display of suspended escalations) (millinger)
+ * (2019/09/03) - Bugfix: T2019020790000753 (ticket information sidebar does not provide link for dropdown fields) (millinger)
+ * (2019/09/03) - Bugfix: T2018061190000454 (mandatory customer portal group not validated) (millinger)
+
 # 17.8.0-RC1 (2019/08/29)
  * (2019/08/27) - Bugfix: T2019080890000857 (missing client side validation for autocomplete dynamic fields) (millinger)
  * (2019/08/27) - Bugfix: T2018052290000506 (linked config item sidebar keeps ticket action popup open) (millinger)
