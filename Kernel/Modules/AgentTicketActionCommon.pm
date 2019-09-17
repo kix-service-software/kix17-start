@@ -701,7 +701,10 @@ sub Run {
             my $ValidationResult;
 
             # do not validate on attachment upload or if field is disabled
-            if ( !$IsUpload && $DynamicFieldConfig->{Shown} ) {
+            if (
+                !$IsUpload
+                && $DynamicFieldConfig->{Shown}
+            ) {
 
                 $ValidationResult = $DynamicFieldBackendObject->EditFieldValueValidate(
                     DynamicFieldConfig   => $DynamicFieldConfig,
@@ -712,12 +715,10 @@ sub Run {
 
                 if ( !IsHashRefWithData($ValidationResult) ) {
                     return $LayoutObject->ErrorScreen(
-                        Message =>
-                            $LayoutObject->{LanguageObject}
-                            ->Translate(
+                        Message => $LayoutObject->{LanguageObject}->Translate(
                             'Could not perform validation on field %s!',
                             $DynamicFieldConfig->{Label}
-                            ),
+                        ),
                         Comment => Translatable('Please contact the administrator.'),
                     );
                 }

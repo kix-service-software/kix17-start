@@ -1006,47 +1006,48 @@ sub SendEmail {
 
         my $ValidationResult;
 
-        # do not validate if field is disabled
-        if ( !$DynamicFieldConfig->{Shown} ) {
+        # do not validate on attachment upload or if field is disabled
+        if (
+            !$IsUpload
+            && $DynamicFieldConfig->{Shown}
+        ) {
 
-            if ( !$IsUpload ) {
-
-                $ValidationResult = $BackendObject->EditFieldValueValidate(
-                    DynamicFieldConfig   => $DynamicFieldConfig,
-                    PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
-                    ParamObject          => $ParamObject,
-                    Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                );
-
-                if ( !IsHashRefWithData($ValidationResult) ) {
-
-                    return $LayoutObject->ErrorScreen(
-                        Message =>
-                            $LayoutObject->{LanguageObject}
-                            ->Translate( 'Could not perform validation on field %s!', $DynamicFieldConfig->{Label} ),
-                        Comment => Translatable('Please contact the admin.'),
-                    );
-                }
-
-                # propagate validation error to the Error variable to be detected by the frontend
-                if ( $ValidationResult->{ServerError} ) {
-                    $Error{ $DynamicFieldConfig->{Name} } = ' ServerError';
-                }
-            }
-
-            # get field HTML
-            $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
+            $ValidationResult = $BackendObject->EditFieldValueValidate(
                 DynamicFieldConfig   => $DynamicFieldConfig,
                 PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
-                Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
-                ServerError          => $ValidationResult->{ServerError}  || '',
-                ErrorMessage         => $ValidationResult->{ErrorMessage} || '',
-                LayoutObject         => $LayoutObject,
                 ParamObject          => $ParamObject,
-                AJAXUpdate           => 1,
-                UpdatableFields      => $Self->_GetFieldsToUpdate(),
+                Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
             );
+
+            if ( !IsHashRefWithData($ValidationResult) ) {
+
+                return $LayoutObject->ErrorScreen(
+                    Message => $LayoutObject->{LanguageObject}->Translate(
+                        'Could not perform validation on field %s!',
+                        $DynamicFieldConfig->{Label}
+                    ),
+                    Comment => Translatable('Please contact the admin.'),
+                );
+            }
+
+            # propagate validation error to the Error variable to be detected by the frontend
+            if ( $ValidationResult->{ServerError} ) {
+                $Error{ $DynamicFieldConfig->{Name} } = ' ServerError';
+            }
         }
+
+        # get field HTML
+        $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
+            DynamicFieldConfig   => $DynamicFieldConfig,
+            PossibleValuesFilter => $DynamicFieldConfig->{ShownPossibleValues},
+            Mandatory            => $Config->{DynamicField}->{ $DynamicFieldConfig->{Name} } == 2,
+            ServerError          => $ValidationResult->{ServerError}  || '',
+            ErrorMessage         => $ValidationResult->{ErrorMessage} || '',
+            LayoutObject         => $LayoutObject,
+            ParamObject          => $ParamObject,
+            AJAXUpdate           => 1,
+            UpdatableFields      => $Self->_GetFieldsToUpdate(),
+        );
     }
 
     # transform pending time, time stamp based on user time zone
