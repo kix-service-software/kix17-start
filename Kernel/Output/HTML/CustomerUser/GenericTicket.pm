@@ -133,14 +133,14 @@ sub Run {
 
     # note:
     # "special characters" in customer id have to be escaped, so that DB::QueryCondition works
-    my $CustomerIDRaw = $Param{Data}->{UserCustomerID};
+    my $CustomerIDRaw = $Param{Data}->{CustomerID} || $Param{Data}->{UserCustomerID};
 
     my $Action    = $Param{Config}->{Action};
     my $Subaction = $Param{Config}->{Subaction};
     my $URL       = $LayoutObject->{Baselink} . "Action=$Action;Subaction=$Subaction";
 
     if ( $ConfigObject->Get("Frontend::CustomerUser::CustomerInfoTicketCount") ) {
-        $TicketSearch{CustomerID} = $Param{Data}->{UserCustomerID} || '';
+        $TicketSearch{CustomerID} = $Param{Data}->{CustomerID} || $Param{Data}->{UserCustomerID} || '';
     }
     else {
         $TicketSearch{CustomerUserLogin} = $Param{Data}->{UserLogin} || '';

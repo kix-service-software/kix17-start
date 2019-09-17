@@ -118,13 +118,14 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      * @description
      *      This function gets customer data for customer info table.
      */
-    function GetCustomerInfo(CustomerUserID, CallingAction) {
+    function GetCustomerInfo(CustomerUserID, CustomerID, CallingAction) {
         var MagnifierString = '<i class="fa fa-search"></i>',
             Async             = true,
             Data              = {
-                Action: 'AgentCustomerSearch',
-                Subaction: 'CustomerInfo',
+                Action:         'AgentCustomerSearch',
+                Subaction:      'CustomerInfo',
                 CustomerUserID: CustomerUserID,
+                CustomerID:     CustomerID,
                 CallingAction : CallingAction || ''
             };
 
@@ -140,9 +141,6 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             // set CustomerID
             $('#CustomerID').val(Response.CustomerID);
             $('#ShowCustomerID').html(Response.CustomerID);
-
-            // Publish information for subscribers
-            Core.App.Publish('Event.Agent.CustomerSearch.GetCustomerInfo.Callback', [Response.CustomerID]);
 
             // show customer info
             $('#CustomerInfo .Content').html(Response.CustomerTableHTMLString);
@@ -168,6 +166,9 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 // update services (trigger ServiceID change event)
                 Core.AJAX.FormUpdate($('#CustomerID').closest('form'), 'AJAXUpdate', 'ServiceID', Core.Config.Get('ProcessManagement.UpdatableFields'));
             }
+
+            // Publish information for subscribers
+            Core.App.Publish('Event.Agent.CustomerSearch.GetCustomerInfo.Callback', [Response.CustomerID]);
 
             Core.KIXBase.Agent.AutoToggleSidebars();
         },'',Async);
@@ -245,7 +246,11 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      */
     TargetNS.Init = function ($Element) {
 
-        if (Core.Config.Get('Action') != 'AgentBook' && $Element.attr('name') != undefined && $Element.attr('name').substr(0, 13) !== 'DynamicField_') {
+        if (
+            Core.Config.Get('Action') !== 'AgentBook'
+            && $Element.attr('name') != undefined
+            && $Element.attr('name').substr(0, 13) !== 'DynamicField_'
+        ) {
             // get customer tickets for AgentTicketCustomer
             if (Core.Config.Get('Action') === 'AgentTicketCustomer') {
                 GetCustomerTickets($('#CustomerAutoComplete').val(), $('#CustomerID').val());
@@ -259,16 +264,20 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             }
 
             // get customer tickets for AgentTicketPhone and AgentTicketEmail
-            if ( (Core.Config.Get('Action') === 'AgentTicketEmail'
-                 || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
-                 || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
-                 || Core.Config.Get('Action') === 'AgentTicketForward'
-                 || Core.Config.Get('Action') === 'AgentTicketPhoneQuick'
-                 || Core.Config.Get('Action') === 'AgentTicketPhoneOutbound'
-                 || Core.Config.Get('Action') === 'AgentTicketPhoneInbound'
-                 || Core.Config.Get('Action') === 'AgentTicketPhone' )
-               && $('#SelectedCustomerUser').val() !== '') {
-                GetCustomerTickets($('#SelectedCustomerUser').val());
+            if (
+                (
+                    Core.Config.Get('Action') === 'AgentTicketEmail'
+                    || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
+                    || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
+                    || Core.Config.Get('Action') === 'AgentTicketForward'
+                    || Core.Config.Get('Action') === 'AgentTicketPhoneQuick'
+                    || Core.Config.Get('Action') === 'AgentTicketPhoneOutbound'
+                    || Core.Config.Get('Action') === 'AgentTicketPhoneInbound'
+                    || Core.Config.Get('Action') === 'AgentTicketPhone'
+                )
+                && $('#SelectedCustomerUser').val() !== ''
+            ) {
+                GetCustomerTickets($('#SelectedCustomerUser').val(), $('#CustomerID').val());
             }
 
             // just save the initial state of the customer info
@@ -329,25 +338,29 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
 
                     $Element.val(CustomerValue);
 
-                    if (Core.Config.Get('Action') === 'AgentTicketEmail'
-                       || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
-                       || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
-                       || Core.Config.Get('Action') === 'AgentTicketForward'
-                       || Core.Config.Get('Action') === 'AgentTicketCompose'
-                       || Core.Config.Get('Action') === 'AgentTicketEmailQuick') {
+                    if (
+                        Core.Config.Get('Action') === 'AgentTicketEmail'
+                        || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
+                        || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
+                        || Core.Config.Get('Action') === 'AgentTicketForward'
+                        || Core.Config.Get('Action') === 'AgentTicketCompose'
+                        || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
+                    ) {
                         $Element.val('');
                     }
 
-                    if (Core.Config.Get('Action') !== 'AgentTicketPhone'
-                       && Core.Config.Get('Action') !== 'AgentTicketPhoneQuick'
-                       && Core.Config.Get('Action') !== 'AgentTicketPhoneOutbound'
-                       && Core.Config.Get('Action') !== 'AgentTicketPhoneInbound'
-                       && Core.Config.Get('Action') !== 'AgentTicketEmailQuick'
-                       && Core.Config.Get('Action') !== 'AgentTicketEmail'
-                       && Core.Config.Get('Action') !== 'AgentTicketEmailOutbound'
-                       && Core.Config.Get('Action') !== 'AgentTicketCompose'
-                       && Core.Config.Get('Action') !== 'AgentTicketForward'
-                       && Core.Config.Get('Action') !== 'AdminQuickTicketConfigurator') {
+                    if (
+                        Core.Config.Get('Action') !== 'AgentTicketPhone'
+                        && Core.Config.Get('Action') !== 'AgentTicketPhoneQuick'
+                        && Core.Config.Get('Action') !== 'AgentTicketPhoneOutbound'
+                        && Core.Config.Get('Action') !== 'AgentTicketPhoneInbound'
+                        && Core.Config.Get('Action') !== 'AgentTicketEmailQuick'
+                        && Core.Config.Get('Action') !== 'AgentTicketEmail'
+                        && Core.Config.Get('Action') !== 'AgentTicketEmailOutbound'
+                        && Core.Config.Get('Action') !== 'AgentTicketCompose'
+                        && Core.Config.Get('Action') !== 'AgentTicketForward'
+                        && Core.Config.Get('Action') !== 'AdminQuickTicketConfigurator'
+                    ) {
 
                         // set hidden field SelectedCustomerUser
                         // trigger change-event to allow event handler after selecting the customer
@@ -370,7 +383,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                         GetCustomerTickets(CustomerKey);
 
                         // get customer data for customer info table
-                        GetCustomerInfo(CustomerKey, Core.Config.Get('Action'));
+                        GetCustomerInfo(CustomerKey, $('#CustomerID').val(), Core.Config.Get('Action'));
                     }
                     else if (Core.Config.Get('Action') === 'AdminQuickTicketConfigurator') {
                         if ($Element.attr('id') == 'ToCustomer') {
@@ -378,7 +391,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                                 $('#SelectedCustomerUser').val(CustomerKey).trigger('change');
                             }
                             $('#CustomerLogin').val(CustomerKey);
-                            GetCustomerInfo(CustomerKey);
+                            GetCustomerInfo(CustomerKey, $('#CustomerID').val());
                             Core.AJAX.FormUpdate($('#TicketTemplateForm'), 'AJAXUpdate', 'From', [ 'ServiceID', 'SLAID' ] );
                         }
                         if ($Element.attr('id') == 'CcCustomer') {
@@ -399,7 +412,10 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 return false;
             }, 'CustomerSearch');
 
-            if ( Core.Config.Get('Action') != 'AgentBook' && $Element.attr('name') != undefined && $Element.attr('name').substr(0, 13) !== 'DynamicField_'
+            if (
+                $Element.attr('name') != undefined 
+                && $Element.attr('name').substr(0, 13) !== 'DynamicField_'
+                && Core.Config.Get('Action') !== 'AgentBook'
                 && Core.Config.Get('Action') !== 'AgentTicketCustomer'
                 && Core.Config.Get('Action') !== 'AgentTicketPhone'
                 && Core.Config.Get('Action') !== 'AgentTicketEmail'
@@ -410,10 +426,14 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 && Core.Config.Get('Action') !== 'AgentTicketEmailQuick'
                 && Core.Config.Get('Action') !== 'AgentTicketCompose'
                 && Core.Config.Get('Action') !== 'AgentTicketForward'
-                && Core.Config.Get('Action') !== 'AdminQuickTicketConfigurator') {
+                && Core.Config.Get('Action') !== 'AdminQuickTicketConfigurator'
+            ) {
                 $Element.blur(function () {
                     var FieldValue = $(this).val();
-                    if (FieldValue !== BackupData.CustomerEmail && FieldValue !== BackupData.CustomerKey) {
+                    if (
+                        FieldValue !== BackupData.CustomerEmail
+                        && FieldValue !== BackupData.CustomerKey
+                    ) {
                         $('#SelectedCustomerUser').val('');
                         $('#CustomerUserID').val('');
                         $('#CustomerID').val('');
@@ -566,7 +586,17 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
 
         // set new value for CustomerTicketCounter
         $('#CustomerTicketCounter' + Field).val(CustomerTicketCounter);
-        if ((CustomerKey !== '' && TicketCustomerIDs === 0 && (Field === 'ToCustomer' || Field === 'FromCustomer')) || SetAsTicketCustomer) {
+        if (
+            (
+                CustomerKey !== ''
+                && TicketCustomerIDs === 0
+                && (
+                    Field === 'ToCustomer'
+                    || Field === 'FromCustomer'
+                )
+            )
+            || SetAsTicketCustomer
+        ) {
             if (SetAsTicketCustomer) {
                 $('#CustomerSelected_' + CustomerTicketCounter).prop('checked', true).trigger('change');
             }
@@ -581,12 +611,16 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
         CheckPhoneCustomerCountLimit();
 
         // reload Crypt options on AgentTicketEMail, AgentTicketCompose and AgentTicketForward
-        if ((Core.Config.Get('Action') === 'AgentTicketEmail'
-            || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
-            || Core.Config.Get('Action') === 'AgentTicketCompose'
-            || Core.Config.Get('Action') === 'AgentTicketForward'
-            || Core.Config.Get('Action') === 'AgentTicketEmailOutbound')
-            && $('#CryptKeyID').length) {
+        if (
+            (
+                Core.Config.Get('Action') === 'AgentTicketEmail'
+                || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
+                || Core.Config.Get('Action') === 'AgentTicketCompose'
+                || Core.Config.Get('Action') === 'AgentTicketForward'
+                || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
+            )
+            && $('#CryptKeyID').length
+        ) {
             Core.AJAX.FormUpdate($('#' + Field).closest('form'), 'AJAXUpdate', '', [ 'CryptKeyID' ]);
         }
 
@@ -617,7 +651,8 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
         $Field = Object.closest('.Field'),
         $Form;
 
-        if (Core.Config.Get('Action') === 'AgentTicketEmail'
+        if (
+            Core.Config.Get('Action') === 'AgentTicketEmail'
             || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
             || Core.Config.Get('Action') === 'AgentTicketCompose'
             || Core.Config.Get('Action') === 'AgentTicketForward'
@@ -628,18 +663,24 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
         Object.parent().remove();
         TicketCustomerIDs = $('.CustomerContainer input[type="radio"]').length;
 
-        if (TicketCustomerIDs === 0 && Core.Config.Get('Action') !== 'AgentTicketCompose'
-            && Core.Config.Get('Action') !== 'AgentTicketPhoneOutbound' && Core.Config.Get('Action') !== 'AgentTicketPhoneInbound'
+        if (
+            TicketCustomerIDs === 0
+            && Core.Config.Get('Action') !== 'AgentTicketCompose'
+            && Core.Config.Get('Action') !== 'AgentTicketPhoneOutbound'
+            && Core.Config.Get('Action') !== 'AgentTicketPhoneInbound'
         ) {
             TargetNS.ResetCustomerInfo();
         }
 
         // reload Crypt options on AgentTicketEMail, AgentTicketCompose and AgentTicketForward
-        if ( (Core.Config.Get('Action') === 'AgentTicketEmail'
-            || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
-            || Core.Config.Get('Action') === 'AgentTicketCompose'
-            || Core.Config.Get('Action') === 'AgentTicketForward'
-            || Core.Config.Get('Action') === 'AgentTicketEmailOutbound')
+        if (
+            (
+                Core.Config.Get('Action') === 'AgentTicketEmail'
+                || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
+                || Core.Config.Get('Action') === 'AgentTicketCompose'
+                || Core.Config.Get('Action') === 'AgentTicketForward'
+                || Core.Config.Get('Action') === 'AgentTicketEmailOutbound'
+            )
             && $('#CryptKeyID').length
         ) {
             Core.AJAX.FormUpdate($Form, 'AJAXUpdate', '', ['CryptKeyID']);
@@ -687,11 +728,15 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
      */
     TargetNS.ReloadCustomerInfo = function (CustomerKey,CallingAction,Type) {
 
-        if (Type == 'Agent'
+        if (
+            Type == 'Agent'
             && !ExistsCustomerUser(CustomerKey)
         ) {
             var Action = Core.Config.Get('Action');
-            if ( CallingAction !== undefined && CallingAction != '' ) {
+            if (
+                CallingAction !== undefined
+                && CallingAction != ''
+            ) {
                 Action = CallingAction;
             }
             GetUserInfo(CustomerKey,Action);
@@ -704,7 +749,7 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
             if ( CallingAction !== undefined && CallingAction != '' ) {
                 Action = CallingAction;
             }
-            GetCustomerInfo(CustomerKey,Action);
+            GetCustomerInfo(CustomerKey, $('#CustomerID').val(), Action);
 
             // set hidden field SelectedCustomerUser
             if ($('#SelectedCustomerUser').val() != CustomerKey) {
@@ -723,7 +768,10 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
     TargetNS.InitCustomerField = function () {
 
         // SelectedCustomerUser set and customer info empty - set customer info again
-        if ( $('#SelectedCustomerUser').length && $('#SelectedCustomerUser').val() != "") {
+        if (
+            $('#SelectedCustomerUser').length
+            && $('#SelectedCustomerUser').val() != ""
+        ) {
             TargetNS.ReloadCustomerInfo($('#SelectedCustomerUser').val());
         }
 

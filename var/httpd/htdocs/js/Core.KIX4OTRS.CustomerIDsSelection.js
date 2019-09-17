@@ -34,7 +34,12 @@ Core.KIX4OTRS.CustomerIDsSelection = (function(TargetNS) {
             $CustomerID.val($(this).val());
             if ($Form.length) {
                 Core.AJAX.FormUpdate($Form, 'AJAXUpdate', 'CustomerID', ['TypeID', 'Dest', 'NewUserID', 'NewResponsibleID', 'NextStateID', 'PriorityID', 'ServiceID', 'SLAID']);
+                Core.Agent.CustomerSearch.ReloadCustomerInfo($('#SelectedCustomerUser').val());
             }
+        });
+
+        Core.App.Subscribe('Event.Agent.CustomerSearch.GetCustomerInfo.Callback', function(){
+            $('#SelectedCustomerIDRadio' + $('#CustomerID').val()).prop("checked", true);
         });
     };
 

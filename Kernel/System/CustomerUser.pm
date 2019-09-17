@@ -432,7 +432,7 @@ sub CustomerUserDataGet {
             && $ConfigObject->Get("CustomerUser$Count")->{CustomerCompanySupport}
         ) {
             %Company = $CustomerCompanyObject->CustomerCompanyGet(
-                CustomerID => $Customer{UserCustomerID},
+                CustomerID => $Param{CustomerID} || $Customer{UserCustomerID},
             );
 
             $Company{CustomerCompanyValidID} = $Company{ValidID};
