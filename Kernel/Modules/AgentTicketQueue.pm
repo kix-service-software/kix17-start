@@ -45,20 +45,17 @@ sub Run {
     # get config of AgentTicketSearch for fulltext search
     my $AgentTicketSearchConfig = $ConfigObject->Get("Ticket::Frontend::AgentTicketSearch");
 
-    my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $UserObject          = $Kernel::OM->Get('Kernel::System::User');
-    my $LockObject          = $Kernel::OM->Get('Kernel::System::Lock');
-    my $StateObject         = $Kernel::OM->Get('Kernel::System::State');
-    my $SearchProfileObject = $Kernel::OM->Get('Kernel::System::SearchProfile');
-    my $DynamicFieldObject  = $Kernel::OM->Get('Kernel::System::DynamicField');
-    my $DynamicFieldBackendObject
-        = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $LayoutObject              = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $UserObject                = $Kernel::OM->Get('Kernel::System::User');
+    my $LockObject                = $Kernel::OM->Get('Kernel::System::Lock');
+    my $StateObject               = $Kernel::OM->Get('Kernel::System::State');
+    my $SearchProfileObject       = $Kernel::OM->Get('Kernel::System::SearchProfile');
+    my $DynamicFieldObject        = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
-    $Self->{SearchProfileQueue}
-        = $LayoutObject->{LanguageObject}->Get( $ConfigObject->Get('Ticket::SearchProfileQueue') )
-        || '???';
+    $Self->{SearchProfileQueue} = $LayoutObject->{LanguageObject}->Get( $ConfigObject->Get('Ticket::SearchProfileQueue') ) || '???';
 
-    my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+    my %UserPreferences      = $UserObject->GetPreferences( UserID => $Self->{UserID} );
     $Self->{UserPreferences} = \%UserPreferences;
 
     if ( !defined( $Self->{UserPreferences}->{UserQueueViewLayout} ) ) {
@@ -424,6 +421,7 @@ sub Run {
         ) {
             @OriginalViewableTickets = $TicketObject->TicketSearch(
                 %{ $Filters{$Filter}->{Search} },
+                %ColumnFilter,
                 Limit  => $Limit,
                 Result => 'ARRAY',
             );
@@ -659,17 +657,16 @@ sub Run {
             }
         }
 
-        my $Start = $ParamObject->GetParam( Param => 'StartHit' ) || 1;
-        @ViewableTickets = $TicketObject->TicketSearch(
+        @OriginalViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{ $Filter }->{Search} },
             %ColumnFilter,
-            Limit  => $Start + 50,
-            Result => 'ARRAY',
+            SortBy  => $Self->{SortBy},
+            OrderBy => $Self->{OrderBy},
+            Limit   => $Limit,
+            Result  => 'ARRAY',
         );
 
         if ( $Filters{ $Filter }->{Search}->{Fulltext} ) {
-            my @ViewableTicketIDsDF = ();
-
             # search tickets with TicketNumber
             # (we have to do this here, because TicketSearch concatenates TN and Title with AND condition)
             # clear additional parameters
@@ -682,35 +679,47 @@ sub Run {
             $FulltextSearchParam =~ s/$TicketHook//g;
             $Filters{ $Filter }->{Search}->{TicketNumber} = '*' . $FulltextSearchParam . '*';
 
-            my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
+            my @OriginalViewableTicketIDsTN = $TicketObject->TicketSearch(
                 %{ $Filters{ $Filter }->{Search} },
                 %ColumnFilter,
-                Limit  => $Start + 50,
-                Result => 'ARRAY',
+                SortBy  => $Self->{SortBy},
+                OrderBy => $Self->{OrderBy},
+                Limit   => $Limit,
+                Result  => 'ARRAY',
             );
+
+            delete $Filters{ $Filter }->{Search}->{TicketNumber};
 
             # search tickets with Title
-            delete $Filters{ $Filter }->{Search}->{TicketNumber};
             $Filters{ $Filter }->{Search}->{Title} = $Filters{ $Filter }->{Search}->{Fulltext};
-            my @ViewableTicketIDsTitle = $TicketObject->TicketSearch(
+
+            my @OriginalViewableTicketIDsTitle = $TicketObject->TicketSearch(
                 %{ $Filters{ $Filter }->{Search} },
                 %ColumnFilter,
-                Limit  => $Start + 50,
-                Result => 'ARRAY',
+                SortBy  => $Self->{SortBy},
+                OrderBy => $Self->{OrderBy},
+                Limit   => $Limit,
+                Result  => 'ARRAY',
             );
 
-            # search tickets with remarks (TicketNotes)
             delete $Filters{ $Filter }->{Search}->{Title};
+
+            # search tickets with remarks (TicketNotes)
             $Filters{ $Filter }->{Search}->{TicketNotes} = $Filters{ $Filter }->{Search}->{Fulltext};
-            my @ViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
+
+            my @OriginalViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
                 %{ $Filters{ $Filter }->{Search} },
                 %ColumnFilter,
-                Limit  => $Start + 50,
-                Result => 'ARRAY',
+                SortBy  => $Self->{SortBy},
+                OrderBy => $Self->{OrderBy},
+                Limit   => $Limit,
+                Result  => 'ARRAY',
             );
+
             delete $Filters{ $Filter }->{Search}->{TicketNotes};
 
             # search ticket with DF if configured
+            my @OriginalViewableTicketIDsDF = ();
             if ( $AgentTicketSearchConfig->{FulltextSearchInDynamicFields} ) {
 
                 # prepare fulltext serach in DFs
@@ -751,58 +760,76 @@ sub Run {
                         }
                     }
 
-                    # search tickets
-                    my @ViewableTicketIDsThisDF = $TicketObject->TicketSearch(
+                    # search all tickets
+                    my @OriginalViewableTicketIDsThisDF = $TicketObject->TicketSearch(
                         Result          => 'ARRAY',
                         SortBy          => $Self->{SortBy},
                         OrderBy         => $Self->{OrderBy},
-                        Limit           => $Start + 50,
+                        Limit           => $Limit,
                         UserID          => $Self->{UserID},
                         ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
                         ArchiveFlags    => $Filters{ $Filter }->{Search}->{ArchiveFlags},
                         %DFSearchParameters,
                     );
 
-                    if (@ViewableTicketIDsThisDF) {
+                    if (@OriginalViewableTicketIDsThisDF) {
 
                         # join arrays
-                        @ViewableTicketIDsDF = (
-                            @ViewableTicketIDsDF,
-                            @ViewableTicketIDsThisDF,
+                        @OriginalViewableTicketIDsDF = (
+                            @OriginalViewableTicketIDsDF,
+                            @OriginalViewableTicketIDsThisDF,
                         );
                     }
                 }
             }
 
-            # merge arrays
-            my @MergeArray;
+            # merge original arrays
+            my @OriginalMergeArray;
             push(
-                @MergeArray,
-                @ViewableTickets,
-                @ViewableTicketIDsTitle,
-                @ViewableTicketIDsTicketNotes,
-                @ViewableTicketIDsTN,
-                @ViewableTicketIDsDF
+                @OriginalMergeArray,
+                @OriginalViewableTickets,
+                @OriginalViewableTicketIDsTitle,
+                @OriginalViewableTicketIDsTicketNotes,
+                @OriginalViewableTicketIDsTN,
+                @OriginalViewableTicketIDsDF
             );
 
-            if ( scalar(@MergeArray) > 1 ) {
-                # sort merged tickets
-                @ViewableTickets = $TicketObject->TicketSearch(
+            if ( scalar(@OriginalMergeArray) > 1 ) {
+                # sort original merged tickets
+                @OriginalViewableTickets = $TicketObject->TicketSearch(
                     Result       => 'ARRAY',
                     SortBy       => $Self->{SortBy},
                     OrderBy      => $Self->{OrderBy},
                     UserID       => $Self->{UserID},
-                    TicketID     => \@MergeArray,
+                    TicketID     => \@OriginalMergeArray,
                     ArchiveFlags => $Filters{ $Filter }->{Search}->{ArchiveFlags},
-                    Limit        => $Start + 50,
+                    Limit        => $Limit,
                 );
             }
             else {
-                @ViewableTickets = @MergeArray;
+                @OriginalViewableTickets = @OriginalMergeArray;
             }
         }
 
-        push @ViewableQueueIDs, 0;
+        if ( scalar(@OriginalViewableTickets) > 1 ) {
+            my $Start = $ParamObject->GetParam( Param => 'StartHit' ) || 1;
+
+            # get page tickets
+            @ViewableTickets = $TicketObject->TicketSearch(
+                Result       => 'ARRAY',
+                SortBy       => $Self->{SortBy},
+                OrderBy      => $Self->{OrderBy},
+                UserID       => $Self->{UserID},
+                TicketID     => \@OriginalViewableTickets,
+                ArchiveFlags => $Filters{ $Filter }->{Search}->{ArchiveFlags},
+                Limit        => $Start + 50,
+            );
+        }
+        else {
+            @ViewableTickets = @OriginalViewableTickets;
+        }
+
+        push( @ViewableQueueIDs, 0 );
 
     }
     elsif ( $Self->{IndividualViewAND} ) {
@@ -872,14 +899,23 @@ sub Run {
             },
         );
 
+        @OriginalViewableTickets = $TicketObject->TicketSearch(
+            %{ $Filters{ $Filter }->{Search} },
+            %ColumnFilter,
+            Limit  => $Limit,
+            Result => 'ARRAY',
+        );
+
         my $Start = $ParamObject->GetParam( Param => 'StartHit' ) || 1;
+
         @ViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{ $Filter }->{Search} },
             %ColumnFilter,
             Limit  => $Start + 50,
             Result => 'ARRAY',
         );
-        push @ViewableQueueIDs, 0;
+
+        push( @ViewableQueueIDs, 0);
     }
     elsif ( $Self->{IndividualViewOR} ) {
         my %Search;
@@ -947,13 +983,21 @@ sub Run {
             },
         );
 
+        @OriginalViewableTickets = $TicketObject->TicketSearchOR(
+             %{ $Filters{ $Filter }->{SearchOR} },
+            Limit  => $Limit,
+            Result => 'ARRAY',
+        );
+
         my $Start = $ParamObject->GetParam( Param => 'StartHit' ) || 1;
+
         @ViewableTickets = $TicketObject->TicketSearchOR(
             %{ $Filters{ $Filter }->{SearchOR} },
             Limit  => $Start + 50,
             Result => 'ARRAY',
         );
-        push @ViewableQueueIDs, 0;
+
+        push( @ViewableQueueIDs, 0 );
     }
 
     if ( $Self->{Subaction} eq 'AJAXFilterUpdate' ) {
