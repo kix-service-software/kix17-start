@@ -274,7 +274,8 @@ sub EditFieldRender {
     }
 
     # check and set class if necessary
-    my $FieldClass = 'DynamicFieldObjectReference Modernize';
+    my $FieldClass       = 'DynamicFieldObjectReference Modernize';
+    my $HiddenFieldClass = 'Hidden';
 
     if ( defined $Param{Class} && $Param{Class} ne '' ) {
         $FieldClass .= ' ' . $Param{Class};
@@ -282,12 +283,14 @@ sub EditFieldRender {
 
     # set field as mandatory
     if ( $Param{Mandatory} ) {
-        $FieldClass .= ' Validate_Required';
+        $FieldClass       .= ' Validate_Required';
+        $HiddenFieldClass .= ' Validate_Required';
     }
 
     # set error css class
     if ( $Param{ServerError} ) {
-        $FieldClass .= ' ServerError';
+        $FieldClass       .= ' ServerError';
+        $HiddenFieldClass .= ' ServerError';
     }
 
     # set TreeView class
@@ -335,7 +338,7 @@ sub EditFieldRender {
         }
 
         $HTMLString = <<"EOF";
-<input type="text" class="Hidden" id="$FieldName" name="$FieldName" title="$FieldLabel" value="$Value" />
+<input type="text" class="$HiddenFieldClass" id="$FieldName" name="$FieldName" title="$FieldLabel" value="$Value" />
 <input type="text" class="$FieldClass" id="$FieldNameKey" name="$FieldNameKey" title="$FieldLabel" value="$UserDataString" />
 EOF
 
