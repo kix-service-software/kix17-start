@@ -122,39 +122,51 @@ sub Run {
                 DynamicFields => 1,
                 UserID        => $Self->{UserID} || 1,
             );
-        }
-
-        # get params
-        my $CustomerUserID = $ParamObject->GetParam( Param => 'CustomerUserID' ) || '';
-
-        my $CustomerID                     = '';
-        my $CustomerTableHTMLString        = '';
-        my $CustomerDetailsTableHTMLString = '';
-
-        # get customer data
-        my %CustomerData = $CustomerUserObject->CustomerUserDataGet(
-            User => $CustomerUserID,
-        );
-
-        # get customer id
-        if ( $CustomerData{UserCustomerID} ) {
-            $CustomerID = $CustomerData{UserCustomerID};
 
             delete $TicketData{CustomerID};
             delete $TicketData{CustomerUserID};
         }
 
+        # get params
+        my $CustomerUserID = $ParamObject->GetParam( Param => 'CustomerUserID' ) || '';
+        my $CustomerID     = $ParamObject->GetParam( Param => 'CustomerID' )     || $TicketData{CustomerID} || '';
+
+        my $CustomerTableHTMLString        = '';
+        my $CustomerDetailsTableHTMLString = '';
+
+        # get customer data
+        my %CustomerData = $CustomerUserObject->CustomerUserDataGet(
+            User       => $CustomerUserID,
+            CustomerID => $CustomerID,
+        );
+
+        # get customer id
+        if (
+            !$CustomerID
+            && $CustomerData{UserCustomerID}
+        ) {
+            $CustomerID = $CustomerData{UserCustomerID};
+        }
+
         # build html for customer info table
         if ( %CustomerData && $ConfigObject->Get('Ticket::Frontend::CustomerInfoCompose') ) {
             $CustomerTableHTMLString = $LayoutObject->AgentCustomerViewTable(
-                Data          => { %CustomerData, AJAX => 1 },
+                Data          => {
+                    %CustomerData,
+                    CustomerID => $CustomerID,
+                    AJAX       => 1
+                },
                 Ticket        => \%TicketData,
                 CallingAction => $CallingAction,
                 Max           => $ConfigObject->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),
             );
 
             $CustomerDetailsTableHTMLString = $LayoutObject->AgentCustomerDetailsViewTable(
-                Data          => { %CustomerData, AJAX => 1 },
+                Data          => {
+                    %CustomerData,
+                    CustomerID => $CustomerID,
+                    AJAX       => 1
+                },
                 Ticket        => \%TicketData,
                 CallingAction => $CallingAction,
                 Max           => $ConfigObject->Get('Ticket::Frontend::CustomerInfoComposeMaxSize'),

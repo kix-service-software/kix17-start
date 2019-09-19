@@ -684,7 +684,7 @@ sub _PagingListShow {
                         ValidFrom => $MessageData{ValidFrom} || '-',
                         ValidTo   => $MessageData{ValidTo}   || '-',
                         Username  => $UserData{UserFirstname} . ' ' . $UserData{UserLastname},
-                        Valid     => $ValidList{ $Data{ValidID} },
+                        Valid     => $ValidList{ $MessageData{ValidID} },
                         Session   => $Session
                     },
                 );

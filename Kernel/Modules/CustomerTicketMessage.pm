@@ -186,6 +186,25 @@ sub Run {
         }
     }
 
+    # prepare queue compat data
+    if ( !$GetParam{Dest} && !$Param{ToSelected} && !$GetParam{DefaultQueueSelected} ) {
+        my $QueueDefault = $Config->{'QueueDefault'} || '';
+        if ($QueueDefault) {
+            my $QueueDefaultID = $QueueObject->QueueLookup( Queue => $QueueDefault );
+            $ACLCompatGetParam{QueueID} = $QueueDefaultID;
+        }
+    }
+    elsif ( $GetParam{Dest} || $GetParam{DefaultQueueSelected} ) {
+        if ( !$GetParam{Dest} ) {
+            $GetParam{Dest} = $GetParam{DefaultQueueSelected};
+        }
+        my ( $QueueIDParam, $QueueParam ) = split( /\|\|/, $GetParam{Dest} );
+        my $QueueIDLookup = $QueueObject->QueueLookup( Queue => $QueueParam );
+        if ( $QueueIDLookup && $QueueIDLookup eq $QueueIDParam ) {
+            $ACLCompatGetParam{QueueID} = $QueueIDLookup;
+        }
+    }
+
     # run acl to prepare TicketAclFormData
     my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %GetParam,
@@ -211,7 +230,6 @@ sub Run {
                 if ($QueueDefaultID) {
                     $Param{ToSelected} = $QueueDefaultID . '||' . $QueueDefault;
                 }
-                $ACLCompatGetParam{QueueID} = $QueueDefaultID;
             }
 
             # warn if there is no (valid) default queue and the customer can't select one
@@ -238,7 +256,6 @@ sub Run {
                 else {
                     $Param{ToSelected} = $GetParam{Dest};
                 }
-                $ACLCompatGetParam{QueueID} = $QueueIDLookup;
             }
         }
 
