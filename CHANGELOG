@@ -1,6 +1,18 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.8.0-RC3 (2019/09/19)
+ * (2019/09/18) - Bugfix: T2019041690001124 (get user list without out of office note for object reference field) (millinger)
+ * (2019/09/17) - Bugfix: T2019090690000804 (label of object reference is not marked on error) (millinger)
+ * (2019/09/17) - Bugfix: T2019082890000962 (CustomerTicketMessage does not handle queue for field visibility) (millinger)
+ * (2019/09/17) - Bugfix: KIX17-294 (fix preselection of 'Select all' in queue view) (millinger)
+ * (2019/09/17) - Bugfix: T2019080890001141 (dashboard does not handle date dynamic fields from search templates) (millinger)
+ * (2019/09/17) - Bugfix: T2019081290001348 (fixed display of system message validity) (millinger)
+ * (2019/09/17) - Bugfix: T2019081690000869 (fixed visibility handling of dynamic fields in AgentTicketEmailOutbound) (millinger)
+ * (2019/09/10) - Bugfix: T2018070390000511 (fixed selection of specific customer company) (millinger)
+ * (2019/09/10) - Bugfix: T2019062590000721 (provide legacy configuration for itsm config item extension) (millinger)
+ * (2019/08/21) - Bugfix: T2019031590000496 (added missing translation) (millinger)
+
 # 17.8.0-RC2 (2019/09/04)
  * (2019/09/03) - Bugfix: T2019073190001082 (customer information center displays not all config item attributes) (millinger)
  * (2019/09/03) - Bugfix: T2019041690001124 (get user list without out of office note for object reference field) (millinger)
