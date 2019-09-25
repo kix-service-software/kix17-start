@@ -448,7 +448,7 @@ sub Run {
     }
 
     # check needed stuff
-    for (qw(TicketIDs PageShown StartHit)) {
+    for (qw(OriginalTicketIDs TicketIDs PageShown StartHit)) {
         if ( !$Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -466,8 +466,9 @@ sub Run {
     my @SelectedItems     = split(',', $Param{SelectedItems});
     my @UnselectedItems   = split(',', $Param{UnselectedItems});
 
-    for my $TicketID ( @{$Param{TicketIDs}} ) {
-        if ( !grep({/^$TicketID$/} @UnselectedItems)
+    for my $TicketID ( @{$Param{OriginalTicketIDs}} ) {
+        if (
+            !grep({/^$TicketID$/} @UnselectedItems)
             && !grep({/^$TicketID$/} @SelectedItems)
         ) {
             push(@UnselectedItems, $TicketID);
@@ -1444,13 +1445,22 @@ sub Run {
         # get last customer article
         my %Article = %{$ArticleRef};
 
-        # escalation human times
-        if ( $Article{EscalationTime} ) {
-            my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
-                TicketID => $Article{TicketID},
-                UserID   => $Self->{UserID},
-            );
+        # get ticket escalation preferences
+        my $TicketEscalation = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationCheck(
+            TicketID => $Article{TicketID},
+            UserID   => $Self->{UserID},
+        );
+        my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
+            TicketID => $Article{TicketID},
+            UserID   => $Self->{UserID},
+        );
 
+        # escalation human times
+        if (
+            $TicketEscalation->{'FirstResponse'}
+            || $TicketEscalation->{'Update'}
+            || $TicketEscalation->{'Solution'}
+        ) {
             if ($TicketEscalationDisabled) {
                 $Article{EscalationTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
                 $Article{EscalationTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
@@ -1658,12 +1668,15 @@ sub Run {
                 # escalation column
                 my %EscalationData;
                 if ( $TicketColumn eq 'EscalationTime' ) {
-                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
-                        TicketID => $Article{TicketID},
-                        UserID   => $Self->{UserID},
-                    );
 
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && (
+                            $TicketEscalation->{'FirstResponse'}
+                            || $TicketEscalation->{'Update'}
+                            || $TicketEscalation->{'Solution'}
+                        )
+                    ) {
                         $LayoutObject->Block(
                             Name => "RecordTicketColumnTranslatable",
                             Data => {
@@ -1674,8 +1687,8 @@ sub Run {
                         next TICKETCOLUMN;
                     }
                     else {
-                        $EscalationData{EscalationTime}            = $Article{EscalationTime};
-                        $EscalationData{EscalationDestinationDate} = $Article{EscalationDestinationDate};
+                        $EscalationData{EscalationTime}            = $Article{EscalationTime}            || 0;
+                        $EscalationData{EscalationDestinationDate} = $Article{EscalationDestinationDate} || 0;
 
                         $EscalationData{EscalationTimeHuman} = $LayoutObject->CustomerAgeInHours(
                             Age   => $EscalationData{EscalationTime},
@@ -1702,12 +1715,10 @@ sub Run {
                 my $BlockType = '';
                 my $CSSClass  = '';
                 if ( $TicketColumn eq 'EscalationSolutionTime' ) {
-                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
-                        TicketID => $Article{TicketID},
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && $TicketEscalation->{'Solution'}
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
@@ -1723,12 +1734,10 @@ sub Run {
                     }
                 }
                 elsif ( $TicketColumn eq 'EscalationResponseTime' ) {
-                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
-                        TicketID => $Article{TicketID},
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && $TicketEscalation->{'FirstResponse'}
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
@@ -1747,12 +1756,10 @@ sub Run {
                     }
                 }
                 elsif ( $TicketColumn eq 'EscalationUpdateTime' ) {
-                    my $TicketEscalationDisabled = $Kernel::OM->Get('Kernel::System::Ticket')->TicketEscalationDisabledCheck(
-                        TicketID => $Article{TicketID},
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && $TicketEscalation->{'Update'}
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }

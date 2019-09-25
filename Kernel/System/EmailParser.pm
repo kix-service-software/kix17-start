@@ -971,7 +971,7 @@ sub _DecodeString {
     # get encode object
     my $EncodeObject = $Kernel::OM->Get('Kernel::System::Encode');
 
-    my $DecodedString;
+    my $DecodedString = '';
     my $BufferedString;
     my $PrevEncoding;
 

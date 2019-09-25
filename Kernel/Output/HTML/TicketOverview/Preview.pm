@@ -185,7 +185,7 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    for (qw(TicketIDs PageShown StartHit)) {
+    for (qw(OriginalTicketIDs TicketIDs PageShown StartHit)) {
         if ( !$Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -254,8 +254,9 @@ sub Run {
         my $SelectedAll     = 0;
         my $BulkSelectedAll = 0;
 
-        for my $TicketID ( @{ $Param{TicketIDs} } ) {
-            if ( !grep({/^$TicketID$/} @UnselectedItems)
+        for my $TicketID ( @{ $Param{OriginalTicketIDs} } ) {
+            if (
+                !grep({/^$TicketID$/} @UnselectedItems)
                 && !grep({/^$TicketID$/} @SelectedItems)
             ) {
                 push(@UnselectedItems, $TicketID);
@@ -906,13 +907,18 @@ sub _Show {
         }
     }
 
-    # show first response time if needed
-    if ( defined $Article{FirstResponseTime} ) {
-        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-            TicketID => $Param{TicketID},
-            UserID   => $Self->{UserID},
-        );
+    # get ticket escalation preferences
+    my $TicketEscalation = $TicketObject->TicketEscalationCheck(
+        TicketID => $Param{TicketID},
+        UserID   => $Self->{UserID},
+    );
+    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+        TicketID => $Param{TicketID},
+        UserID   => $Self->{UserID},
+    );
 
+    # show first response time if needed
+    if ( $TicketEscalation->{'FirstResponse'} ) {
         if ($TicketEscalationDisabled) {
             $Article{FirstResponseTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
             $Article{FirstResponseTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
@@ -942,12 +948,7 @@ sub _Show {
     }
 
     # show update time if needed
-    if ( defined $Article{UpdateTime} ) {
-        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-            TicketID => $Param{TicketID},
-            UserID   => $Self->{UserID},
-        );
-
+    if ( $TicketEscalation->{'Update'} ) {
         if ($TicketEscalationDisabled) {
             $Article{UpdateTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
             $Article{UpdateTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');
@@ -977,12 +978,7 @@ sub _Show {
     }
 
     # show solution time if needed
-    if ( defined $Article{SolutionTime} ) {
-        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-            TicketID => $Param{TicketID},
-            UserID   => $Self->{UserID},
-        );
-
+    if ( $TicketEscalation->{'Solution'} ) {
         if ($TicketEscalationDisabled) {
             $Article{SolutionTimeHuman}       = $LayoutObject->{LanguageObject}->Translate('suspended');
             $Article{SolutionTimeWorkingTime} = $LayoutObject->{LanguageObject}->Translate('suspended');

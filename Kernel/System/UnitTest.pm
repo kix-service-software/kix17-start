@@ -32,7 +32,7 @@ our @ObjectDependencies = (
     'Kernel::System::Time',
 );
 
-## no critic qw(InputOutput::RequireEncodingWithUTF8Layer)
+## no critic qw(InputOutput::RequireEncodingWithUTF8Layer BuiltinFunctions::ProhibitStringyEval)
 
 =head1 NAME
 
@@ -196,7 +196,7 @@ sub Run {
                 }
 
                 # HERE the actual tests are run!!!
-                if ( !eval( { ${$UnitTestFile} } ) ) {
+                if ( !eval( ${$UnitTestFile} ) ) {
                     if ($@) {
                         $Self->True( 0, "ERROR: Error in $File: $@" );
                     }

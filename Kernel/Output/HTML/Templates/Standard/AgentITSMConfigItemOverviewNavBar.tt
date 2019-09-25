@@ -70,7 +70,7 @@
                         <input type="hidden" name="Action" value="AgentPreferences"/>
                         <input type="hidden" name="Subaction" value="Update"/>
                         <input type="hidden" name="Group" value="[% Data.Group | html %]"/>
-                        <input type="hidden" name="RedirectURL" value="[% Data.RequestedURL | html %]"/>
+                        <input type="hidden" name="RedirectURL" value="[% Data.RequestedURL | html %];ClassID=[% Data.ClassID | html %];TakeLastSearch=1;Subaction=Search;Profile=[% Data.Profile | html %]"/>
                         <fieldset class="TableLike">
                             <label for="[% Data.PreferencesKey | html %]">[% Translate("Config Items per page") | html %]:</label>
                             <div class="Field">

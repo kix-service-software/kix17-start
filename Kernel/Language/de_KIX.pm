@@ -2636,7 +2636,7 @@ sub Data {
     $Lang->{'Show one version'}               = 'Zeige nur eine Version';
     $Lang->{'Show all versions'}              = 'Zeige alle Versionen';
     $Lang->{'Version Incident State'}         = 'Versions-Vorfallstatus';
-    $Lang->{'Version Deployment State'}       = '';
+    $Lang->{'Version Deployment State'}       = 'Versions-Verwendungsstatus';
     $Lang->{'Version Number'}                 = 'Versionsnummer';
     $Lang->{'Configuration Item Version Details'}
         = 'Configuration Item Versions-Details';

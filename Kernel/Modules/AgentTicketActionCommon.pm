@@ -155,15 +155,6 @@ sub Run {
         DynamicFields => 1,
     );
 
-    # load KIXSidebar
-    $Param{KIXSidebarContent} = $LayoutObject->AgentKIXSidebar(
-        %Param,
-        %Ticket,
-        Action => $Self->{Action}
-    );
-
-    $Param{SidebarWidthString} = $Self->{Action} . 'SidebarWidth';
-
     $LayoutObject->Block(
         Name => 'Properties',
         Data => {
@@ -710,7 +701,10 @@ sub Run {
             my $ValidationResult;
 
             # do not validate on attachment upload or if field is disabled
-            if ( !$IsUpload && $DynamicFieldConfig->{Shown} ) {
+            if (
+                !$IsUpload
+                && $DynamicFieldConfig->{Shown}
+            ) {
 
                 $ValidationResult = $DynamicFieldBackendObject->EditFieldValueValidate(
                     DynamicFieldConfig   => $DynamicFieldConfig,
@@ -721,12 +715,10 @@ sub Run {
 
                 if ( !IsHashRefWithData($ValidationResult) ) {
                     return $LayoutObject->ErrorScreen(
-                        Message =>
-                            $LayoutObject->{LanguageObject}
-                            ->Translate(
+                        Message => $LayoutObject->{LanguageObject}->Translate(
                             'Could not perform validation on field %s!',
                             $DynamicFieldConfig->{Label}
-                            ),
+                        ),
                         Comment => Translatable('Please contact the administrator.'),
                     );
                 }
@@ -1904,13 +1896,28 @@ sub _Mask {
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-    my %Ticket = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
+    my %Ticket = $TicketObject->TicketGet(
+        TicketID      => $Self->{TicketID},
+        DynamicFields => 1,
+    );
 
     # get config of frontend module
     my $Config = $ConfigObject->Get("Ticket::Frontend::$Self->{Action}");
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    # load KIXSidebar
+    $Param{KIXSidebarContent} = $LayoutObject->AgentKIXSidebar(
+        %Param,
+        %Ticket,
+        Action => $Self->{Action}
+    );
+    $Param{SidebarWidthString} = $Self->{Action} . 'SidebarWidth';
+    $LayoutObject->Block(
+        Name => 'KIXSidebar',
+        Data => \%Param,
+    );
 
     # Widget Ticket Actions
     if (

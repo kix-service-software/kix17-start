@@ -188,7 +188,7 @@
                  <h2><span>[% Translate("Ticket Template") | html %]</span></h2>
             </div>
             <div class="Content">
-                <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="TicketTemplateForm" class="PreventMultipleSubmits">
+                <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="compose" id="TicketTemplateForm" class="Validate PreventMultipleSubmits">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="Save" />
                     <input type="hidden" name="ExpandCustomerName" id="ExpandCustomerName" value="0" />
@@ -227,6 +227,8 @@
                         <label id="CustomerPortalGroupIDLabel" class="Mandatory" for="CustomerPortalGroupID"><span class="Marker">*</span> [% Translate("Customer Portal Group") | html %]:</label>
                         <div class="Field">
                             [% Data.CustomerPortalGroupStrg %]
+                            <div id="CustomerPortalGroupIDError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="CustomerPortalGroupIDError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                         </div>
                         <div class="Clear"></div>
                         <label for="Frontend">[% Translate("Available for user groups") | html %]:</label>

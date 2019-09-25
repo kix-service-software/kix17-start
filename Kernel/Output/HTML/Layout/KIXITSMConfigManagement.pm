@@ -734,6 +734,7 @@ sub CustomerDashboardAssignedConfigItemsTable {
                     $Value = $VersionRef->{$ConfigItemKey};
                 }
                 else {
+                    # GetAttributeValuesByKey gets lookup value of xml attribute
                     my $Result = $ConfigItemObject->GetAttributeValuesByKey(
                         KeyName       => $ConfigItemKey,
                         XMLData       => $VersionRef->{XMLData}->[1]->{Version}->[1],
@@ -747,21 +748,6 @@ sub CustomerDashboardAssignedConfigItemsTable {
 
                     # join the result
                     $Value = join( ", ", @{$Result} );
-                }
-
-                # get sub definition hast for this attribute
-                my %DefinitionHash = ();
-                for my $Definition ( @{$DefinitionRef} ) {
-                    next if !( $Definition->{Key} eq $ConfigItemKey );
-                    %DefinitionHash = %{$Definition};
-                }
-
-                # get value to display
-                if ( %DefinitionHash && keys %DefinitionHash ) {
-                    $Value = $ConfigItemObject->XMLValueLookup(
-                        Item  => \%DefinitionHash,
-                        Value => $Value,
-                    );
                 }
 
                 # output

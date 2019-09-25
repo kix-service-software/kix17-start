@@ -436,8 +436,7 @@ sub Preferences {
         if ( $Column =~ m/^DynamicField_(.*?)$/ ) {
 
             # get dynamic field config
-            my $DynamicField
-                = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet( Name => $1 );
+            my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet( Name => $1 );
 
             # remove field if not valid
             if ( $DynamicField->{ValidID} != 1 ) {
@@ -454,16 +453,12 @@ sub Preferences {
             }
 
             # set translated value
-            $ColumnsAvailableTranslated{$Column}
-                = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}
-                ->Translate( $DynamicField->{Label} );
+            $ColumnsAvailableTranslated{$Column} = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->Translate( $DynamicField->{Label} );
         }
 
         # translate other columns
         else {
-            $ColumnsAvailableTranslated{$Column}
-                = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}
-                ->Translate($Column);
+            $ColumnsAvailableTranslated{$Column} = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{LanguageObject}->Translate($Column);
         }
     }
 
@@ -718,11 +713,10 @@ sub Run {
         );
 
         # add dynamic fields search criteria
-        $Self->{DynamicField} =
-            $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
+        $Self->{DynamicField} = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldListGet(
             Valid      => 1,
             ObjectType => ['Ticket','Article'],
-            );
+        );
 
         # create attibute lookup table
         my %AttributeLookup;
@@ -739,26 +733,41 @@ sub Run {
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:
         for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-            next DYNAMICFIELD if ( ref($DynamicFieldConfig) ne 'HASH' );
-            next DYNAMICFIELD if ( !%{$DynamicFieldConfig} );
-            next DYNAMICFIELD
-                if !$AttributeLookup{
-                'LabelSearch_DynamicField_'
-                    . $DynamicFieldConfig->{Name}
-                };
+            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
 
-            # extract the dynamic field value form the profile
-            my $SearchParameter = $DynamicFieldBackendObject->SearchFieldParameterBuild(
+            # get search field preferences
+            my $SearchFieldPreferences = $DynamicFieldBackendObject->SearchFieldPreferences(
                 DynamicFieldConfig => $DynamicFieldConfig,
-                Profile            => \%SearchProfileData,
-                LayoutObject       => $LayoutObject,
             );
 
-            # set search parameter
-            if ( defined $SearchParameter ) {
+            next DYNAMICFIELD if !IsArrayRefWithData($SearchFieldPreferences);
 
-                $DynamicFieldSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
-                    = $SearchParameter->{Parameter};
+            PREFERENCE:
+            for my $Preference ( @{$SearchFieldPreferences} ) {
+
+                if (
+                    !$AttributeLookup{
+                        'LabelSearch_DynamicField_'
+                            . $DynamicFieldConfig->{Name}
+                            . $Preference->{Type}
+                    }
+                ) {
+                    next PREFERENCE;
+                }
+
+                # extract the dynamic field value from the profile
+                my $SearchParameter = $DynamicFieldBackendObject->SearchFieldParameterBuild(
+                    DynamicFieldConfig => $DynamicFieldConfig,
+                    Profile            => \%SearchProfileData,
+                    LayoutObject       => $LayoutObject,
+                    Type               => $Preference->{Type},
+                );
+
+                # set search parameter
+                if ( defined $SearchParameter ) {
+                    $DynamicFieldSearchParameters{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
+                        = $SearchParameter->{Parameter};
+                }
             }
         }
 
@@ -2200,6 +2209,16 @@ sub Run {
             }
         }
 
+        # get ticket escalation preferences
+        my $TicketEscalation = $TicketObject->TicketEscalationCheck(
+            TicketID => $TicketID,
+            UserID   => $Self->{UserID},
+        );
+        my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
+            TicketID => $TicketID,
+            UserID   => $Self->{UserID},
+        );
+
         # save column content
         my $DataValue;
 
@@ -2262,12 +2281,14 @@ sub Run {
                 }
 
                 elsif ( $Column eq 'EscalationTime' ) {
-                    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && (
+                            $TicketEscalation->{'FirstResponse'}
+                            || $TicketEscalation->{'Update'}
+                            || $TicketEscalation->{'Solution'}
+                        )
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
@@ -2302,12 +2323,10 @@ sub Run {
                     );
                 }
                 elsif ( $Column eq 'EscalationSolutionTime' ) {
-                    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && $TicketEscalation->{'Solution'}
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
@@ -2323,12 +2342,10 @@ sub Run {
                     }
                 }
                 elsif ( $Column eq 'EscalationResponseTime' ) {
-                    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && $TicketEscalation->{'FirstResponse'}
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }
@@ -2347,12 +2364,10 @@ sub Run {
                     }
                 }
                 elsif ( $Column eq 'EscalationUpdateTime' ) {
-                    my $TicketEscalationDisabled = $TicketObject->TicketEscalationDisabledCheck(
-                        TicketID => $TicketID,
-                        UserID   => $Self->{UserID},
-                    );
-
-                    if ($TicketEscalationDisabled) {
+                    if (
+                        $TicketEscalationDisabled
+                        && $TicketEscalation->{'Update'}
+                    ) {
                         $BlockType = 'Translatable';
                         $DataValue = 'suspended';
                     }

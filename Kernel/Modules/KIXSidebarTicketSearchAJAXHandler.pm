@@ -169,12 +169,17 @@ sub Run {
             # no value from web request, but TicketID given =>
             # retrieve value from existing ticket
             if(
-                !$DynamicFieldValue
+                (
+                    !$DynamicFieldValue
+                    || (
+                        ref($DynamicFieldValue) eq 'ARRAY'
+                        && !scalar( @{$DynamicFieldValue} )
+                    )
+                )
                 && %TicketData
+                && $TicketData{'DynamicField_' . $DFSearchFields[$Index]}
             ) {
-                if( $TicketData{'DynamicField_' . $DFSearchFields[$Index]} ) {
-                    $DynamicFieldValue = $TicketData{'DynamicField_' . $DFSearchFields[$Index]};
-                }
+                $DynamicFieldValue = $TicketData{'DynamicField_' . $DFSearchFields[$Index]};
             }
 
             # prepare search parameter hash
