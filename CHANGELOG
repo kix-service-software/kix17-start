@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.8.0 (2019/09/25)
+ * (2019/09/25) - productive release
+
 # 17.8.0-RC4 (2019/09/25)
  * (2019/09/24) - Bugfix: T2019062690000835 (removed otrs from sidebar default configuration) (millinger)
 
