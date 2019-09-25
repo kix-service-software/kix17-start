@@ -16639,11 +16639,11 @@ Thanks for your help!
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="CustomerDependend">AgentTicket(Phone|Email)</Item>
                 <Item Key="DatabaseCacheTTL"></Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
+                <Item Key="DatabasePw">PASSWORD</Item>
                 <Item Key="DatabaseTable">ticket</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="MaxResultCount">30</Item>
                 <Item Key="MaxResultDisplay">10</Item>
@@ -16689,11 +16689,11 @@ Thanks for your help!
                 <Item Key="AutoSearch">CustomerTicket(Message|Zoom)</Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
+                <Item Key="DatabasePw">PASSWORD</Item>
                 <Item Key="DatabaseTable">ticket</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="MaxResultCount">30</Item>
                 <Item Key="MaxResultDisplay">10</Item>
@@ -16738,11 +16738,11 @@ Thanks for your help!
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
+                <Item Key="DatabasePw">PASSWORD</Item>
                 <Item Key="DatabaseTable">customer_user</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="MaxResultCount">30</Item>
                 <Item Key="MaxResultDisplay">10</Item>
@@ -16787,11 +16787,11 @@ Thanks for your help!
                 <Item Key="AutoSearch">AgentTicket(Phone|Email|Zoom)</Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
+                <Item Key="DatabasePw">PASSWORD</Item>
                 <Item Key="DatabaseTable">general_catalog</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="MaxResultCount">30</Item>
                 <Item Key="MaxResultDisplay">10</Item>
@@ -16948,7 +16948,7 @@ Thanks for your help!
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
                 <Item Key="DatabaseCacheTTL">3600</Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
                 <Item Key="DatabaseField::00::first_name::Firstname"></Item>
                 <Item Key="DatabaseField::01::last_name::Lastname"></Item>
                 <Item Key="DatabaseField::02::street"></Item>
@@ -16960,10 +16960,10 @@ Thanks for your help!
                 <Item Key="DatabaseField::08::login">index.pl?Action=AdminCustomerUser;Subaction=Change;ID=$LQData{"Value"};Search=*;Nav=Agent</Item>
                 <Item Key="DatabaseField::09::customer_id::CustomerID">index.pl?Action=AdminCustomerCompany;Subaction=Change;CustomerID=$LQData{"Value"};Nav=Agent</Item>
                 <Item Key="DatabaseFieldKey">login</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabasePw">PASSWORD</Item>
                 <Item Key="DatabaseTable">customer_user</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="DynamicField">Contact</Item>
                 <Item Key="DynamicFieldArrayHandling">OR</Item>
@@ -16988,7 +16988,7 @@ Thanks for your help!
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
                 <Item Key="DatabaseCacheTTL">3600</Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
                 <Item Key="DatabaseField::00::first_name::Firstname"></Item>
                 <Item Key="DatabaseField::01::last_name::Lastname"></Item>
                 <Item Key="DatabaseField::02::street"></Item>
@@ -16998,10 +16998,10 @@ Thanks for your help!
                 <Item Key="DatabaseField::06::phone"></Item>
                 <Item Key="DatabaseField::07::fax"></Item>
                 <Item Key="DatabaseFieldKey">login</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabasePw">PASSWORD</Item>
                 <Item Key="DatabaseTable">customer_user</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="DynamicField">Contact</Item>
                 <Item Key="DynamicFieldArrayHandling">OR</Item>
