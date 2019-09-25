@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.8.0-RC4 (2019/09/25)
+ * (2019/09/24) - Bugfix: T2019062690000835 (removed otrs from sidebar default configuration) (millinger)
+
 # 17.8.0-RC3 (2019/09/19)
  * (2019/09/18) - Bugfix: T2019041690001124 (get user list without out of office note for object reference field) (millinger)
  * (2019/09/17) - Bugfix: T2019090690000804 (label of object reference is not marked on error) (millinger)
