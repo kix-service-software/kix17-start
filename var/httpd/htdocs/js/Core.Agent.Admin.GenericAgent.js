@@ -45,7 +45,7 @@ Core.Agent.Admin.GenericAgent = (function (TargetNS) {
 
             // Only handle select fields with a size > 1, leave all single-dropdown fields untouched
             if (isNaN(Size) || Size <= 1) {
-                return false;
+                return true;
             }
 
             // If select field has a tree selection icon already,
@@ -69,7 +69,7 @@ Core.Agent.Admin.GenericAgent = (function (TargetNS) {
             }
 
             // Clear field value
-            $SelectField.val('');
+            $SelectField.val('').trigger('redraw.InputField');
             $(this).blur();
 
             return false;
