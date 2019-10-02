@@ -291,7 +291,7 @@ sub Data {
             'Sie haben die Abwesenheitszeit eingeschaltet, möchten Sie diese deaktivieren?',
         'News about KIX releases!' => 'Neuigkeiten zu KIX-Releases!',
         'Go to dashboard!' => 'Zur Übersicht gehen!',
-        'Customer %s added' => 'Kunde %s hinzugefügt',
+        'Contact %s added' => 'Ansprechpartner %s hinzugefügt',
         'Role added!' => 'Rolle hinzugefügt!',
         'Role updated!' => 'Rolle aktualisiert!',
         'Attachment added!' => 'Anlage hinzugefügt!',
@@ -305,7 +305,7 @@ sub Data {
         'State updated!' => 'Status aktualisiert!',
         'Type added!' => 'Typ hinzugefügt!',
         'Type updated!' => 'Typ aktualisiert!',
-        'Customer updated!' => 'Kunde aktualisiert!',
+        'Contact updated!' => 'Ansprechpartner aktualisiert!',
         'Customer company added!' => 'Kundenfirma hinzugefügt!',
         'Customer company updated!' => 'Kundenfirma aktualisiert!',
         'Note: Company is invalid!' => 'Hinweis: Firma ist ungültig!',
@@ -877,7 +877,6 @@ sub Data {
         'List (only %s shown - more available)' => 'Liste (nur %s angezeigt - mehr verfügbar)',
         'List (%s total)' => 'Liste (%s insgesamt)',
         'Please enter a search term to look for customers.' => 'Bitte geben Sie einen Suchbegriff ein, um nach Kunden zu suchen.',
-        'Add Customer' => 'Kunden hinzufügen',
 
         # Template: AdminCustomerUser
         'Contact Management' => 'Ansprechpartnerverwaltung',
