@@ -95,7 +95,7 @@ sub LoadDefaults {
     # Organization
     # (If this is anything other than '', then the email will have an
     # Organization X-Header)
-    $Self->{Organization} = 'Example Company';
+    $Self->{Organization} = '';
 
     # ProductName
     # (Application name displayed in frontend.)
@@ -950,9 +950,7 @@ sub LoadDefaults {
 
     # Package::RepositoryRoot
     # (get online repository list, use the fist availabe result)
-    $Self->{'Package::RepositoryRoot'} = [
-        'http://ftp.otrs.org/pub/otrs/misc/packages/repository.xml',
-    ];
+    $Self->{'Package::RepositoryRoot'} = [];
 
     # Package::RepositoryList
     # (repository list)
