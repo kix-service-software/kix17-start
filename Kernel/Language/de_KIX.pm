@@ -45,6 +45,7 @@ sub Data {
     $Lang->{'fax'}                      = 'Fax (sichtbar für Kunde)';
 
     # other translations...
+    $Lang->{'Hint'}                            = 'Hinweis';
     $Lang->{'Address Book'}                    = 'Adressbuch';
     $Lang->{'Manage address book.'}            = 'Adressbuch verwalten.';
     $Lang->{'Address Book Management'}         = 'Adressbuchverwaltung';
@@ -114,7 +115,7 @@ sub Data {
         = 'Möchten Sie die ausgewählten Verlinkungen wirklich löschen ?';
     $Lang->{'Search Template'}         = 'Suchvorlage';
     $Lang->{'My Search Profiles'}      = 'Meine Suchvorlagen';
-    $Lang->{'Clone customer'}          = 'Kunde kopieren';
+    $Lang->{'Clone contact'}           = 'Ansprechpartner kopieren';
     $Lang->{'Search Profile Category'} = 'Kategorie der Suchvorlage';
     $Lang->{'Search Profile'}          = 'Suchvorlage';
     $Lang->{'Please select a category to add the shared search profile. Or enter a new category.'}
@@ -1278,7 +1279,7 @@ sub Data {
         = 'Einstellungen für persönliche Ticketlistendarstellung';
     $Lang->{'Asset Location'} = 'Asset Lokation';
     $Lang->{'Parent Location'} = 'Übergeordnete Lokation';
-            
+
 
     # graph visualization related translations...
     $Lang->{'CI-Classes to consider'} = 'Zu betrachtende CI-Klassen';
@@ -3903,8 +3904,6 @@ sub Data {
     $Lang->{'MinQueryLength'}      = 'Mindeste Querylänge';
     $Lang->{'QueryDelay'}          = 'Queryverzögerung';
     $Lang->{'MaxQueryResult'}      = 'Maximale Queryergebnisse';
-    $Lang->{'for Agent'}           = 'für Agent';
-    $Lang->{'for Customer'}        = 'für Kunde';
     $Lang->{'MaxArraySize'}        = 'Anzahl Einträge';
     $Lang->{'ItemSeparator'}       = 'Anzeigetrenner';
     $Lang->{'Default values'}      = 'Standardwerte';
