@@ -93,6 +93,15 @@ sub new {
 
     $Self->{ArticleFilterActive} = $ConfigObject->Get('Ticket::Frontend::TicketArticleFilter');
 
+    # get usage of article colors
+    $Self->{UseArticleColors} = 0;
+    if (
+        $ConfigObject->Get('Ticket::UseArticleColors')
+        && $UserPreferences{UserUseArticleColors}
+    ) {
+        $Self->{UseArticleColors} = 1;
+    }
+
     # define if rich text should be used
     $Self->{RichText} = $ConfigObject->Get('Ticket::Frontend::ZoomRichTextForce')
         || $LayoutObject->{BrowserRichText}
@@ -1308,10 +1317,6 @@ sub MaskAgentZoom {
     # number of articles
     $Param{ArticleCount} = $Count;
 
-    if ( $ConfigObject->Get('Ticket::UseArticleColors') ) {
-        $Param{UseArticleColors} = 1;
-    }
-
     $LayoutObject->Block(
         Name => 'Header',
         Data => { %Param, %Ticket, %AclAction },
@@ -1500,7 +1505,12 @@ sub _ArticleTree {
     my @ArticleBox      = @{ $Param{ArticleBox} };
     my $ArticleMaxLimit = $Param{ArticleMaxLimit};
     my $ArticleID       = $Param{ArticleID};
+
+    # prepare table classes
     my $TableClasses;
+    if ( $Self->{UseArticleColors} ) {
+        $TableClasses = 'UseArticleColors';
+    }
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
@@ -1510,7 +1520,6 @@ sub _ArticleTree {
         Name => 'Tree',
         Data => {
             %Param,
-            TableClasses => $TableClasses,
         },
     );
 
