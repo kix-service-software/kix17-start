@@ -39,6 +39,11 @@ for my $ModuleFile (@BackendModuleFiles) {
         Value => "Kernel::System::Cache::$Module",
     );
 
+    # discard cache object from internally stored objects
+    $Kernel::OM->ObjectsDiscard(
+        Objects => ['Kernel::System::Cache'],
+    );
+
     # create a local cache object
     my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
 
@@ -55,7 +60,7 @@ for my $ModuleFile (@BackendModuleFiles) {
                 Value => 'A',
                 TTL   => 60 * 60 * 24 * 20,
             ),
-            "Set A/A",
+            "$Module: Set A/A",
         );
 
         $Self->True(
@@ -65,7 +70,7 @@ for my $ModuleFile (@BackendModuleFiles) {
                 Value => 'B',
                 TTL   => 60 * 60 * 24 * 20,
             ),
-            "Set B/B",
+            "$Module: Set B/B",
         );
     };
 
@@ -73,7 +78,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     $Self->True(
         $CacheObject->CleanUp( Type => 'C' ),
-        "Inexistent cache type removed",
+        "$Module: Inexistent cache type removed",
     );
 
     $Self->Is(
@@ -82,7 +87,7 @@ for my $ModuleFile (@BackendModuleFiles) {
             Key  => 'A'
         ),
         'A',
-        "Cache A/A is present",
+        "$Module: Cache A/A is present",
     );
 
     $Self->Is(
@@ -91,14 +96,14 @@ for my $ModuleFile (@BackendModuleFiles) {
             Key  => 'B'
         ),
         'B',
-        "Cache B/B is present",
+        "$Module: Cache B/B is present",
     );
 
     $SetCaches->();
 
     $Self->True(
         $CacheObject->CleanUp( Type => 'A' ),
-        "Cache type A removed",
+        "$Module: Cache type A removed",
     );
 
     $Self->False(
@@ -106,7 +111,7 @@ for my $ModuleFile (@BackendModuleFiles) {
             Type => 'A',
             Key  => 'A'
         ),
-        "Cache A/A is not present",
+        "$Module: Cache A/A is not present",
     );
 
     $Self->Is(
@@ -115,14 +120,14 @@ for my $ModuleFile (@BackendModuleFiles) {
             Key  => 'B'
         ),
         'B',
-        "Cache B/B is present",
+        "$Module: Cache B/B is present",
     );
 
     $SetCaches->();
 
     $Self->True(
         $CacheObject->CleanUp( KeepTypes => ['A'] ),
-        "All cache types removed except A",
+        "$Module: All cache types removed except A",
     );
 
     $Self->Is(
@@ -131,7 +136,7 @@ for my $ModuleFile (@BackendModuleFiles) {
             Key  => 'A'
         ),
         'A',
-        "Cache A/A is present",
+        "$Module: Cache A/A is present",
     );
 
     $Self->False(
@@ -139,14 +144,14 @@ for my $ModuleFile (@BackendModuleFiles) {
             Type => 'B',
             Key  => 'B'
         ),
-        "Cache B/B is not present",
+        "$Module: Cache B/B is not present",
     );
 
     $SetCaches->();
 
     $Self->True(
         $CacheObject->CleanUp(),
-        "All cache types removed",
+        "$Module: All cache types removed",
     );
 
     $Self->False(
@@ -154,7 +159,7 @@ for my $ModuleFile (@BackendModuleFiles) {
             Type => 'A',
             Key  => 'A'
         ),
-        "Cache A/A is not present",
+        "$Module: Cache A/A is not present",
     );
 
     $Self->False(
@@ -162,7 +167,7 @@ for my $ModuleFile (@BackendModuleFiles) {
             Type => 'B',
             Key  => 'B'
         ),
-        "Cache B/B is not present",
+        "$Module: Cache B/B is not present",
     );
 
     # flush the cache

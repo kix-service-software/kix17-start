@@ -4936,7 +4936,7 @@
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
-            <String Regex="^\d+$">10</String>
+            <String Regex="^\d+$">17</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="FQDN" Required="1" Valid="1" ConfigLevel="200">
@@ -8409,15 +8409,14 @@ You can log in via the following URL:
                 <Item Key="Column">User Profile</Item>
                 <Item Key="Label" Translatable="1">Change password</Item>
                 <Item Key="Prio">0500</Item>
-                <Item Key="Area">Agent</Item>
-                <!-- <Item Key="PasswordRegExp">[a-z]|[A-z]|[0-9]|\.|;|,|:|-|\+|#|!|\$|&|\?</Item> -->
-                <Item Key="PasswordRegExp"></Item>
-                <Item Key="PasswordMinSize">0</Item>
-                <Item Key="PasswordMin2Lower2UpperCharacters">0</Item>
-                <Item Key="PasswordMin2Characters">0</Item>
-                <Item Key="PasswordNeedDigit">0</Item>
-                <Item Key="PasswordMaxLoginFailed">0</Item>
                 <Item Key="Active">1</Item>
+                <Item Key="Area">Agent</Item>
+                <Item Key="PasswordMaxLoginFailed">0</Item>
+                <Item Key="PasswordMin2Characters">0</Item>
+                <Item Key="PasswordMin2Lower2UpperCharacters">0</Item>
+                <Item Key="PasswordMinSize">0</Item>
+                <Item Key="PasswordNeedDigit">0</Item>
+                <Item Key="PasswordRegExp"></Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -11064,45 +11063,45 @@ via the Preferences button after logging in.
             <Array>
                 <Item>thirdparty/jquery-2.1.4/jquery.js</Item>
                 <Item>thirdparty/jquery-browser-detection/jquery-browser-detection.js</Item>
+                <Item>thirdparty/jquery-jstree-3.1.1/jquery.jstree.js</Item>
+                <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
                 <Item>thirdparty/jquery-ui-1.11.4/jquery-ui.js</Item>
                 <Item>thirdparty/jquery-ui-touch-punch-0.2.3/jquery.ui.touch-punch.js</Item>
                 <Item>thirdparty/jquery-validate-1.14.0/jquery.validate.js</Item>
                 <Item>thirdparty/stacktrace-0.6.4/stacktrace.js</Item>
-                <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
-                <Item>thirdparty/jquery-jstree-3.1.1/jquery.jstree.js</Item>
-                <Item>Core.JavaScriptEnhancements.js</Item>
-                <Item>Core.Debug.js</Item>
-                <Item>Core.Exception.js</Item>
-                <Item>Core.Data.js</Item>
-                <Item>Core.Config.js</Item>
-                <Item>Core.JSON.js</Item>
+                <Item>Core.Agent.js</Item>
+                <Item>Core.Agent.CustomerInformationCenterSearch.js</Item>
+                <Item>Core.Agent.Responsive.js</Item>
+                <Item>Core.Agent.Search.js</Item>
+                <Item>Core.AJAX.js</Item>
                 <Item>Core.App.js</Item>
                 <Item>Core.App.Responsive.js</Item>
-                <Item>Core.AJAX.js</Item>
-                <Item>Core.UI.js</Item>
-                <Item>Core.UI.InputFields.js</Item>
-                <Item>Core.UI.Accordion.js</Item>
-                <Item>Core.UI.Datepicker.js</Item>
-                <Item>Core.UI.DnD.js</Item>
-                <Item>Core.UI.Floater.js</Item>
-                <Item>Core.UI.Resizable.js</Item>
-                <Item>Core.UI.Table.js</Item>
-                <Item>Core.UI.Accessibility.js</Item>
-                <Item>Core.UI.RichTextEditor.js</Item>
-                <Item>Core.UI.Dialog.js</Item>
-                <Item>Core.UI.ActionRow.js</Item>
-                <Item>Core.UI.Pagination.js</Item>
-                <Item>Core.UI.Popup.js</Item>
-                <Item>Core.UI.TreeSelection.js</Item>
-                <Item>Core.UI.Autocomplete.js</Item>
+                <Item>Core.Config.js</Item>
+                <Item>Core.Data.js</Item>
+                <Item>Core.Debug.js</Item>
+                <Item>Core.Exception.js</Item>
                 <Item>Core.Form.js</Item>
                 <Item>Core.Form.ErrorTooltips.js</Item>
                 <Item>Core.Form.Validate.js</Item>
-                <Item>Core.Agent.js</Item>
-                <Item>Core.Agent.Search.js</Item>
-                <Item>Core.Agent.CustomerInformationCenterSearch.js</Item>
+                <Item>Core.JavaScriptEnhancements.js</Item>
+                <Item>Core.JSON.js</Item>
+                <Item>Core.UI.js</Item>
+                <Item>Core.UI.Accessibility.js</Item>
+                <Item>Core.UI.Accordion.js</Item>
+                <Item>Core.UI.ActionRow.js</Item>
+                <Item>Core.UI.Autocomplete.js</Item>
+                <Item>Core.UI.Datepicker.js</Item>
+                <Item>Core.UI.Dialog.js</Item>
+                <Item>Core.UI.DnD.js</Item>
+                <Item>Core.UI.Floater.js</Item>
+                <Item>Core.UI.InputFields.js</Item>
                 <Item>Core.UI.Notification.js</Item>
-                <Item>Core.Agent.Responsive.js</Item>
+                <Item>Core.UI.Pagination.js</Item>
+                <Item>Core.UI.Popup.js</Item>
+                <Item>Core.UI.Resizable.js</Item>
+                <Item>Core.UI.RichTextEditor.js</Item>
+                <Item>Core.UI.Table.js</Item>
+                <Item>Core.UI.TreeSelection.js</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -11155,35 +11154,35 @@ via the Preferences button after logging in.
             <Array>
                 <Item>thirdparty/jquery-2.1.4/jquery.js</Item>
                 <Item>thirdparty/jquery-browser-detection/jquery-browser-detection.js</Item>
-                <Item>thirdparty/jquery-validate-1.14.0/jquery.validate.js</Item>
-                <Item>thirdparty/jquery-ui-1.11.4/jquery-ui.js</Item>
-                <Item>thirdparty/stacktrace-0.6.4/stacktrace.js</Item>
-                <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
                 <Item>thirdparty/jquery-jstree-3.1.1/jquery.jstree.js</Item>
-                <Item>Core.Debug.js</Item>
-                <Item>Core.Exception.js</Item>
-                <Item>Core.Data.js</Item>
-                <Item>Core.JSON.js</Item>
-                <Item>Core.JavaScriptEnhancements.js</Item>
-                <Item>Core.Config.js</Item>
+                <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
+                <Item>thirdparty/jquery-ui-1.11.4/jquery-ui.js</Item>
+                <Item>thirdparty/jquery-validate-1.14.0/jquery.validate.js</Item>
+                <Item>thirdparty/stacktrace-0.6.4/stacktrace.js</Item>
+                <Item>Core.AJAX.js</Item>
                 <Item>Core.App.js</Item>
                 <Item>Core.App.Responsive.js</Item>
-                <Item>Core.AJAX.js</Item>
-                <Item>Core.UI.js</Item>
-                <Item>Core.UI.InputFields.js</Item>
-                <Item>Core.UI.Accessibility.js</Item>
-                <Item>Core.UI.Dialog.js</Item>
-                <Item>Core.UI.RichTextEditor.js</Item>
-                <Item>Core.UI.Datepicker.js</Item>
-                <Item>Core.UI.Pagination.js</Item>
-                <Item>Core.UI.Popup.js</Item>
-                <Item>Core.UI.TreeSelection.js</Item>
-                <Item>Core.UI.Autocomplete.js</Item>
+                <Item>Core.Config.js</Item>
+                <Item>Core.Customer.js</Item>
+                <Item>Core.Customer.Responsive.js</Item>
+                <Item>Core.Data.js</Item>
+                <Item>Core.Debug.js</Item>
+                <Item>Core.Exception.js</Item>
                 <Item>Core.Form.js</Item>
                 <Item>Core.Form.ErrorTooltips.js</Item>
                 <Item>Core.Form.Validate.js</Item>
-                <Item>Core.Customer.js</Item>
-                <Item>Core.Customer.Responsive.js</Item>
+                <Item>Core.JavaScriptEnhancements.js</Item>
+                <Item>Core.JSON.js</Item>
+                <Item>Core.UI.js</Item>
+                <Item>Core.UI.Accessibility.js</Item>
+                <Item>Core.UI.Autocomplete.js</Item>
+                <Item>Core.UI.Datepicker.js</Item>
+                <Item>Core.UI.Dialog.js</Item>
+                <Item>Core.UI.InputFields.js</Item>
+                <Item>Core.UI.Pagination.js</Item>
+                <Item>Core.UI.Popup.js</Item>
+                <Item>Core.UI.RichTextEditor.js</Item>
+                <Item>Core.UI.TreeSelection.js</Item>
             </Array>
         </Setting>
     </ConfigItem>

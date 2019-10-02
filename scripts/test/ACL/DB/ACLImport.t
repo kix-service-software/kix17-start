@@ -43,7 +43,12 @@ my $CheckACL = sub {
     my $ACL           = $Param{ACL};
 
     # update ACL reference from 3.3.x style if needed
-    if ( ref $ACLDataLookup{$ACLName}->{ConfigChange}->{Possible}->{Action} eq 'HASH' ) {
+    if (
+        ref $ACLDataLookup{$ACLName}->{ConfigChange}
+        && ref $ACLDataLookup{$ACLName}->{ConfigChange}->{Possible}
+        && $ACLDataLookup{$ACLName}->{ConfigChange}->{Possible}->{Action}
+        && ref $ACLDataLookup{$ACLName}->{ConfigChange}->{Possible}->{Action} eq 'HASH'
+    ) {
         my %ActionList = %{ $ACLDataLookup{$ACLName}->{ConfigChange}->{Possible}->{Action} };
         my @PossibleNotActions;
 
