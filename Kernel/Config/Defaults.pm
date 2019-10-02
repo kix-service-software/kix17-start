@@ -95,7 +95,11 @@ sub LoadDefaults {
     # Organization
     # (If this is anything other than '', then the email will have an
     # Organization X-Header)
+<<<<<<< HEAD
     $Self->{Organization} = '';
+=======
+    $Self->{Organization} = ' ';
+>>>>>>> branch 'rel-17_DEVELOPMENT' of git@git.intra.cape-it.de:Softwareentwicklung/KIX/KIX.git
 
     # ProductName
     # (Application name displayed in frontend.)
