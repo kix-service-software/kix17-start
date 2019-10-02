@@ -1484,7 +1484,8 @@ sub Header {
             );
             # enforce default if empty
             if (!$UserPreferences{UserToolbarPosition}) {
-                $UserPreferences{UserToolbarPosition} = 'ToolbarRight';
+                my $PreferencesGroups = $ConfigObject->Get('PreferencesGroups');
+                $UserPreferences{UserToolbarPosition} = $PreferencesGroups->{ToolbarPosition}->{DataSelected} || 'ToolbarRight';
                 my $Success = $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
                     Key    => 'UserToolbarPosition',
                     Value  => $UserPreferences{UserToolbarPosition},
@@ -5614,7 +5615,7 @@ sub _BuildSelectionDataRefCreate {
 
             next ROW if !$Row->{Value};
 
-            my @Fragment = split '::', $Row->{Value};
+            my @Fragment = split( '::', $Row->{Value});
             $Row->{Value} = pop @Fragment;
 
             # TODO: Here we are combining Max with HTMLQuote, check below for the REMARK:

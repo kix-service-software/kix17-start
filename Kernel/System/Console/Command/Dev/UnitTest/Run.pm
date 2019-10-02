@@ -40,10 +40,10 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'output',
-        Description => "Select output format (ASCII|HTML|XML).",
+        Description => "Select output format (ASCII|HTML|xUnit|XML).",
         Required    => 0,
         HasValue    => 1,
-        ValueRegex  => qr/^(ASCII|HTML|XML)$/smx,
+        ValueRegex  => qr/^(ASCII|HTML|xUnit|XML)$/smx,
     );
     $Self->AddOption(
         Name        => 'submit-url',

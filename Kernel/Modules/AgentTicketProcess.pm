@@ -30,10 +30,10 @@ sub new {
         Title           => 'Title',
         State           => 'StateID',
         StateID         => 'StateID',
-        Priority        => 'PriorityID',
-        PriorityID      => 'PriorityID',
         Lock            => 'LockID',
         LockID          => 'LockID',
+        Priority        => 'PriorityID',
+        PriorityID      => 'PriorityID',
         Queue           => 'QueueID',
         QueueID         => 'QueueID',
         Customer        => 'CustomerID',
@@ -260,7 +260,7 @@ sub Run {
     );
     my $ProcessObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process');
 
-    # get processes
+    # get the list of processes that an agent can start
     my $ProcessList = $ProcessObject->ProcessList(
         ProcessState => \@ProcessStates,
         Interface    => ['AgentInterface'],
@@ -362,7 +362,7 @@ sub Run {
         );
     }
 
-    # if invalid process is detected on a ActivityDilog pop-up screen show an error message
+    # if invalid process is detected on a ActivityDilog popup screen show an error message
     elsif (
         $Self->{Subaction} eq 'DisplayActivityDialog'
         && !$FollowupProcessList->{$ProcessEntityID}
@@ -475,7 +475,6 @@ sub _RenderAjax {
 
     my %FieldsProcessed;
     my @JSONCollector;
-
     my $Services;
 
     # All submitted DynamicFields
@@ -915,8 +914,9 @@ sub _GetParam {
 
     #my $IsAJAXUpdate = $Param{AJAX} || '';
 
-    # get layout object
+    # get needed objects
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $ParamObject  = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     for my $Needed (qw(ProcessEntityID)) {
         if ( !$Param{$Needed} ) {
@@ -926,10 +926,6 @@ sub _GetParam {
             );
         }
     }
-
-    # get param object
-    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
-
     my %GetParam;
     my %Ticket;
     my $ProcessEntityID        = $Param{ProcessEntityID};
@@ -1412,8 +1408,10 @@ sub _OutputActivityDialog {
     %ErrorMessages = %{ $Param{ErrorMessages} } if ( IsHashRefWithData( $Param{ErrorMessages} ) );
 
     # get needed objects
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
     my $ActivityObject       = $Kernel::OM->Get('Kernel::System::ProcessManagement::Activity');
     my $ActivityDialogObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog');
+    my $TicketObject         = $Kernel::OM->Get('Kernel::System::Ticket');
 
     # create process object
     $Kernel::OM->ObjectParamAdd(
@@ -1426,9 +1424,6 @@ sub _OutputActivityDialog {
     );
     my $ProcessObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process');
 
-    # get needed object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     if ( !$TicketID || $Self->{IsProcessEnroll} ) {
         $ActivityActivityDialog = $ProcessObject->ProcessStartpointGet(
@@ -1581,7 +1576,7 @@ sub _OutputActivityDialog {
                 Name =>
                     $LayoutObject->{LanguageObject}->Translate( $ActivityDialog->{Name} )
                     || '',
-                }
+            },
         );
     }
     elsif (
@@ -1677,7 +1672,7 @@ sub _OutputActivityDialog {
                 DescriptionLong
                     => $LayoutObject->{LanguageObject}->Translate(
                     $ActivityDialog->{DescriptionLong},
-                    ),
+                ),
             },
         );
     }
@@ -1698,7 +1693,6 @@ sub _OutputActivityDialog {
                 Name => 'CancelLink',
             );
         }
-
     }
 
     $Output .= $LayoutObject->Output(
@@ -2477,7 +2471,7 @@ sub _RenderPendingTime {
 sub _RenderDynamicField {
     my ( $Self, %Param ) = @_;
 
-    # get layout object
+    # get layout objects
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     for my $Needed (qw(FormID FieldName)) {
@@ -2559,6 +2553,7 @@ sub _RenderDynamicField {
     }
 
     my $ServerError;
+    my $ErrorMessage;
     if ( IsHashRefWithData( $Param{Error} ) ) {
         if (
             defined $Param{Error}->{ $Param{FieldName} }
@@ -2567,7 +2562,6 @@ sub _RenderDynamicField {
             $ServerError = 1;
         }
     }
-    my $ErrorMessage = '';
     if ( IsHashRefWithData( $Param{ErrorMessages} ) ) {
         if (
             defined $Param{ErrorMessages}->{ $Param{FieldName} }
@@ -2645,16 +2639,21 @@ sub _RenderHorizontalLine {
         if ( !$Param{$Needed} ) {
             return {
                 Success => 0,
-                Message => $LayoutObject->{LanguageObject}
-                    ->Translate( 'Parameter %s is missing in %s.', $Needed, '_RenderHorizontalLine' ),
+                Message => $LayoutObject->{LanguageObject}->Translate(
+                    'Parameter %s is missing in %s.',
+                    $Needed, '_RenderHorizontalLine'
+                ),
             };
         }
     }
     if ( !IsHashRefWithData( $Param{ActivityDialogField} ) ) {
         return {
             Success => 0,
-            Message => $LayoutObject->{LanguageObject}
-                ->Translate( 'Parameter %s is missing in %s.', 'ActivityDialogField', '_RenderHorizontalLine' ),
+            Message => $LayoutObject->{LanguageObject}->Translate(
+                'Parameter %s is missing in %s.',
+                'ActivityDialogField',
+                '_RenderHorizontalLine'
+            ),
         };
     }
 
@@ -3001,8 +3000,11 @@ sub _RenderCustomer {
         if ( !$Param{$Needed} ) {
             return {
                 Success => 0,
-                Message => $LayoutObject->{LanguageObject}
-                    ->Translate( 'Parameter %s is missing in %s.', $Needed, '_RenderCustomer' ),
+                Message => $LayoutObject->{LanguageObject}->Translate(
+                    'Parameter %s is missing in %s.',
+                    $Needed,
+                    '_RenderCustomer',
+                ),
             };
         }
     }
@@ -4598,7 +4600,7 @@ sub _StoreActivityDialog {
                 if ( !IsHashRefWithData($DynamicFieldConfig) ) {
 
                     my $Message
-                        = "DynamicFieldConfig missing for field: $Param{FieldName}, or is not a Ticket Dynamic Field!";
+                        = "DynamicFieldConfig missing for field: $DynamicFieldName, or is not a Ticket Dynamic Field!";
 
                     # log error but does not stop the execution as it could be an old Article
                     # DynamicField, see bug#11666
@@ -4752,17 +4754,23 @@ sub _StoreActivityDialog {
 
                 my $Result = $Self->_CheckField(
                     Field => $Self->{NameToID}->{$CurrentField},
-                    %{ $ActivityDialog->{Fields}{$CurrentField} },
+                    %{ $ActivityDialog->{Fields}->{$CurrentField} },
                 );
 
                 if ( !$Result ) {
+
+                    # special case for Article (Subject & Body)
                     if ( $CurrentField eq 'Article' ) {
                         for my $ArticlePart (qw(Subject Body)) {
                             if ( !$Param{GetParam}->{$ArticlePart} ) {
+
+                                # set error for each part (if any)
                                 $Error{ 'Article' . $ArticlePart } = 1;
                             }
                         }
                     }
+
+                    # all other fields
                     elsif ( $ActivityDialog->{Fields}->{$CurrentField}->{Display} == 2 ) {
                         $Error{ $Self->{NameToID}->{$CurrentField} } = 1;
                     }
@@ -4788,7 +4796,8 @@ sub _StoreActivityDialog {
         }
     }
 
-    # create process object
+    # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
     $Kernel::OM->ObjectParamAdd(
         'Kernel::System::ProcessManagement::Process' => {
             ActivityObject         => $Kernel::OM->Get('Kernel::System::ProcessManagement::Activity'),
@@ -4798,9 +4807,7 @@ sub _StoreActivityDialog {
             }
     );
     my $ProcessObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process');
-
-    # get ticket object
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
 
     my @Notify;
 
@@ -4868,7 +4875,7 @@ sub _StoreActivityDialog {
             # if StartActivityDialog does not provide a ticket title set a default value
             if ( !$TicketParam{Title} ) {
 
-                # get the current server Time-stamp
+                # get the current server Timestamp
                 my $CurrentTimeStamp = $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp();
                 $TicketParam{Title} = "$Param{ProcessName} - $CurrentTimeStamp";
 
@@ -5056,9 +5063,6 @@ sub _StoreActivityDialog {
             );
         }
 
-        # get config object
-        my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
         $ActivityEntityID = $Ticket{
             'DynamicField_'
                 . $ConfigObject->Get('Process::DynamicFieldProcessManagementActivityID')
@@ -5133,7 +5137,7 @@ sub _StoreActivityDialog {
     DIALOGFIELD:
     for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
 
-        if ( !IsHashRefWithData( $ActivityDialog->{Fields}{$CurrentField} ) ) {
+        if ( !IsHashRefWithData( $ActivityDialog->{Fields}->{$CurrentField} ) ) {
             $LayoutObject->FatalError(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'Can\'t get data for Field "%s" of ActivityDialog "%s"!',
@@ -5242,8 +5246,8 @@ sub _StoreActivityDialog {
                     UserID                    => $Self->{UserID},
                     HistoryType               => $HistoryType,
                     HistoryComment            => '%%' . $HistoryComment,
-                    Body                      => $Param{GetParam}{Body},
-                    Subject                   => $Param{GetParam}{Subject},
+                    Body                      => $Param{GetParam}->{Body},
+                    Subject                   => $Param{GetParam}->{Subject},
                     ArticleType               => $ArticleType,
                     ForceNotificationToUserID => $ActivityDialog->{Fields}->{Article}->{Config}->{InformAgents}
                     ? $Param{GetParam}{InformUserID}
@@ -5496,11 +5500,11 @@ sub _StoreActivityDialog {
 
     # Transitions will be handled by ticket event module (TicketProcessTransitions.pm).
 
-    # if we were updating a ticket, close the pop-up and return to zoom
+    # if we were updating a ticket, close the popup and return to zoom
     # else (new ticket) just go to zoom to show the new ticket
     if ($UpdateTicketID) {
 
-        # load new URL in parent window and close pop-up
+        # load new URL in parent window and close popup
         return $LayoutObject->PopupClose(
             URL => "Action=AgentTicketZoom;TicketID=$TicketID",
         );
@@ -5712,6 +5716,7 @@ sub _CheckField {
         # check if the given field param is valid
         if ( $Param{Field} eq 'Article' ) {
 
+            # in case of article fields we need to fake a value
             $Value = 1;
 
             my ( $Body, $Subject, $AttachmentDelete1, $TimeUnits ) = (

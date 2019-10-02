@@ -10,7 +10,7 @@
 
 
 [% RenderBlockStart("Header") %]
-<div class="MainBox ARIARoleMain TicketZoom [% IF Data.UseArticleColors %]UseArticleColors[% END %]">
+<div class="MainBox ARIARoleMain TicketZoom">
     <div class="ClearLeft"></div>
     <div class="Headline">
         <div class="Flag" title="[% Translate(Data.Priority) | html %]"><span class="PriorityID-[% Data.PriorityID | html %]">[% Translate(Data.Priority) | html %]</span></div>

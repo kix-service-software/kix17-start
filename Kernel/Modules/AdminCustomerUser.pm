@@ -378,7 +378,7 @@ sub Run {
                         Search => $Search,
                     );
                     my $Output = $NavBar . $Note;
-                    $Output .= $LayoutObject->Notify( Info => Translatable('Customer updated!') );
+                    $Output .= $LayoutObject->Notify( Info => Translatable('Contact updated!') );
                     $Output .= $LayoutObject->Output(
                         TemplateFile => 'AdminCustomerUser',
                         Data         => \%Param,
@@ -586,7 +586,7 @@ sub Run {
                         $Output
                             .= $LayoutObject->Notify(
                             Data => $LayoutObject->{LanguageObject}->Translate(
-                                'Customer %s added',
+                                'Contact %s added',
                                 $UserQuote,
                                 )
                                 . " ( $URL )!",
@@ -596,7 +596,7 @@ sub Run {
                         $Output
                             .= $LayoutObject->Notify(
                             Data => $LayoutObject->{LanguageObject}->Translate(
-                                'Customer %s added',
+                                'Contact %s added',
                                 $UserQuote,
                                 )
                                 . "!",

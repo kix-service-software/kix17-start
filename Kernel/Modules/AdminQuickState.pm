@@ -1091,14 +1091,14 @@ sub _PagingListShow {
                 );
 
                 if ( $ValidList{ $StateData{ValidID} } ne 'valid' ) {
-                    $Data{Invalid} = 'Invalid';
+                    $StateData{Invalid} = 'Invalid';
                 }
 
                 $LayoutObject->Block(
                     Name => 'OverviewResultRow',
                     Data => {
                         %StateData,
-                        Valid   => $ValidList{ $Data{ValidID} },
+                        Valid   => $ValidList{ $StateData{ValidID} },
                         Session => $Session
                     },
                 );
