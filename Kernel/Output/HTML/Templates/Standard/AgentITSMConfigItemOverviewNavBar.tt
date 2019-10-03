@@ -56,12 +56,16 @@
 [% RenderBlockStart("ContextSettings") %]
                 <ul class="ContextFunctions">
                     <li class="ContextSettings ITSMConfigItemOverview">
-                        <i class="fa fa-reorder"></i>
-                        <a href="#" id="ShowContextSettingsDialogTLV" title="[% Translate("Settings for custom ticket list view") | html %]"><span>[% Translate("Settings for custom ticket list view") | html %]</span></a>
+                        <a href="#" id="ShowContextSettingsDialogTLV" title="[% Translate("Settings for custom ticket list view") | html %]">
+                            <i class="fa fa-reorder"></i>
+                            <span>[% Translate("Settings for custom ticket list view") | html %]</span>
+                        </a>
                     </li>
                     <li class="ContextSettings ITSMConfigItemOverview">
-                        <i class="fa fa-cog"></i>
-                        <a href="#" id="ShowContextSettingsDialog" title="[% Translate("Context Settings") | html %]"><span>[% Translate("Context Settings") | html %]</span></a>
+                        <a href="#" id="ShowContextSettingsDialog" title="[% Translate("Context Settings") | html %]">
+                            <i class="fa fa-cog"></i>
+                            <span>[% Translate("Context Settings") | html %]</span>
+                        </a>
                     </li>
                 </ul>
 

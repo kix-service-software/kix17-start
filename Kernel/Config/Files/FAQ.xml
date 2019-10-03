@@ -467,7 +467,6 @@ Your KIX Notification Master
                     <Prio>910</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>FAQ.Agent.Detail.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -502,9 +501,6 @@ Your KIX Notification Master
                     <Prio>710</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>FAQ.Customer.Detail.css</CSS>
-                    <CSS>FAQ.Customer.Default.css</CSS>
-                    <CSS>FAQ.Widget.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -578,9 +574,6 @@ Your KIX Notification Master
                     <Prio>400</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>FAQ.Customer.Detail.css</CSS>
-                    <CSS>FAQ.Customer.Default.css</CSS>
-                    <CSS>FAQ.Widget.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -762,7 +755,6 @@ Your KIX Notification Master
                     <Prio>920</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>FAQ.Agent.Detail.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -778,7 +770,6 @@ Your KIX Notification Master
                 <Title Translatable="1">Edit</Title>
                 <NavBarName>FAQ</NavBarName>
                 <Loader>
-                    <CSS>FAQ.Agent.Detail.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -1053,8 +1044,6 @@ Your KIX Notification Master
                 <Title Translatable="1">FAQ</Title>
                 <NavBarName>FAQ</NavBarName>
                 <Loader>
-                    <CSS>FAQ.Agent.Detail.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>FAQ.Agent.ConfirmationDialog.js</JavaScript>
                     <JavaScript>FAQ.Agent.TicketCompose.js</JavaScript>
                     <JavaScript>FAQ.Agent.FAQZoom.js</JavaScript>
@@ -1182,9 +1171,6 @@ Your KIX Notification Master
                 <Description Translatable="1">Customer FAQ Zoom.</Description>
                 <NavBarName>FAQ</NavBarName>
                 <Loader>
-                    <CSS>FAQ.Customer.Detail.css</CSS>
-                    <CSS>FAQ.Customer.Default.css</CSS>
-                    <CSS>FAQ.FAQZoom.css</CSS>
                     <JavaScript>FAQ.Customer.FAQZoom.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -1302,7 +1288,6 @@ Your KIX Notification Master
                     <Prio>600</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>FAQ.Customer.Default.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -1358,9 +1343,6 @@ Your KIX Notification Master
                 <Description Translatable="1">Public FAQ Zoom.</Description>
                 <NavBarName>FAQ</NavBarName>
                 <Loader>
-                    <CSS>FAQ.Customer.Default.css</CSS>
-                    <CSS>FAQ.Customer.Detail.css</CSS>
-                    <CSS>FAQ.FAQZoom.css</CSS>
                     <JavaScript>FAQ.Customer.FAQZoom.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -1605,16 +1587,6 @@ Your KIX Notification Master
         <SubGroup>Core</SubGroup>
         <Setting>
             <String>en</String>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Loader::Agent::CommonCSS###200-FAQ" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
-        <Group>FAQ</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>FAQ.Agent.Default.css</Item>
-            </Array>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Loader::Agent::CommonJS###200-FAQ" Required="1" Valid="1">
@@ -2190,4 +2162,3 @@ Your KIX Notification Master
         </Setting>
     </ConfigItem>
 </otrs_config>
-    

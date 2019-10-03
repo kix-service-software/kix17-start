@@ -15,7 +15,7 @@
                 <i class="fa fa-caret-down"></i>
             </a>
         </div>
-        <h2 class="PaddingLeft15px"><span>[% Translate(Data.Title) | html %]</span></h2>
+        <h2 class="WithToggle"><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
     <div class="Content">
 [% RenderBlockStart("TicketDirectData") %]
@@ -24,7 +24,7 @@
             <p class="Value">
                 <a href="[% Config("CustomerDBLink") | Interpolate %]" class="[% Config("CustomerDBLinkClass") %]" [% Config("CustomerDBLinkTarget") %]>[% Data.CustomerID | html %]</a>
             </p>
-            <div class="Clear">&nbsp;</div>
+            <div class="Clear"></div>
 [% RenderBlockStart("KeyContent") %]
             <label>[% Translate(Data.Label) | html %]:</label>
 [% RenderBlockStart("KeyContentTranslated") %]
@@ -49,9 +49,7 @@
                 </div>
             </p>
 [% RenderBlockEnd("KeyContentLinked") %]
-            <div class="Clear">
-                &nbsp;
-            </div>
+            <div class="Clear"></div>
 [% RenderBlockEnd("KeyContent") %]
 [% RenderBlockStart("FirstResponseTime") %]
             <label>[% Translate("First Response Time") | html %]:</label>
@@ -62,7 +60,7 @@
                     [% Data.FirstResponseTimeDestinationDate | Localize("TimeShort") %]
                 </p>
             </div>
-            <div class="Clear">&nbsp;</div>
+            <div class="Clear"></div>
 [% RenderBlockEnd("FirstResponseTime") %]
 [% RenderBlockStart("UpdateTime") %]
             <label>[% Translate("Update Time") | html %]:</label>
@@ -73,7 +71,7 @@
                     [% Data.UpdateTimeDestinationDate | Localize("TimeShort") %]
                 </p>
             </div>
-            <div class="Clear">&nbsp;</div>
+            <div class="Clear"></div>
 [% RenderBlockEnd("UpdateTime") %]
 [% RenderBlockStart("SolutionTime") %]
             <label>[% Translate("Solution Time") | html %]:</label>
@@ -84,7 +82,7 @@
                     [% Data.SolutionTimeDestinationDate | Localize("TimeShort") %]
                 </p>
             </div>
-            <div class="Clear">&nbsp;</div>
+            <div class="Clear"></div>
 [% RenderBlockEnd("SolutionTime") %]
         </fieldset>
 
@@ -92,7 +90,7 @@
 [% RenderBlockStart("TotalAccountedTime") %]
                         <label>[% Translate("Accounted time") | html %]:</label>
                         <p class="Value">[% Data.TicketTimeUnits %]</p>
-                        <div class="Clear">&nbsp;</div>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("TotalAccountedTime") %]
 [% RenderBlockStart("PendingUntil") %]
                         <label>[% Translate("Pending till") | html %]:</label>
@@ -101,7 +99,7 @@
                             <br/>
                             [% Data.UntilTimeHuman | Localize("TimeShort") %]
                         </p>
-                        <div class="Clear">&nbsp;</div>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("PendingUntil") %]
         </fieldset>
 
@@ -141,9 +139,7 @@
 [% RenderBlockStart("DynamicFieldContentTime") %]
             <p class="Value" title="[% Data.Title %]">[% Data.Value | Localize("TimeLong") %]</p>
 [% RenderBlockEnd("DynamicFieldContentTime") %]
-            <div class="Clear">
-                &nbsp;
-            </div>
+            <div class="Clear"></div>
 [% RenderBlockEnd("DynamicFieldContent") %]
         </fieldset>
 [% RenderBlockEnd("TicketDirectData") %]

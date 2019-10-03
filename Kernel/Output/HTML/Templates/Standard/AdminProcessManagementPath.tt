@@ -45,7 +45,7 @@
                         <div class="WidgetAction Toggle">
                             <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                         </div>
-                        <h2 class="PaddingLeft15px"><span>[% Translate("Path") | html %]</span></h2>
+                        <h2 class="WithToggle"><span>[% Translate("Path") | html %]</span></h2>
                     </div>
                     <div class="Content">
                         <ul class="Path">
@@ -65,7 +65,7 @@
                         <div class="WidgetAction Toggle">
                             <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                         </div>
-                        <h2 class="PaddingLeft15px"><span>[% Translate("Transition Actions") | html %]</span></h2>
+                        <h2 class="WithToggle"><span>[% Translate("Transition Actions") | html %]</span></h2>
                     </div>
                     <div class="Content LayoutGrid">
                         <div class="Size1of1 SpacingBottom">

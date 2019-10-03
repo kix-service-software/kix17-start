@@ -20,10 +20,6 @@
                 <Title>Zoom</Title>
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
-                    <CSS>ITSM.Agent.Detail.css</CSS>
-                    <CSS>ITSM.Agent.Default.css</CSS>
-                    <CSS>ITSM.Print.css</CSS>
-                    <CSS>KIX4OTRS.ITSM.Agent.Detail.css</CSS>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
                     <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
@@ -41,9 +37,6 @@
                 <Title>Zoom</Title>
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
-                    <CSS>ITSM.Agent.Detail.css</CSS>
-                    <CSS>ITSM.Agent.Default.css</CSS>
-                    <CSS>ITSM.Print.css</CSS>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
                     <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
@@ -61,9 +54,6 @@
                 <Title>Zoom</Title>
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
-                    <CSS>ITSM.Agent.Detail.css</CSS>
-                    <CSS>ITSM.Agent.Default.css</CSS>
-                    <CSS>KIX4OTRS.AgentITSMConfigItemZoomTab.css</CSS>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
                     <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                 </Loader>
@@ -81,8 +71,6 @@
                 <Title>Zoom</Title>
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
-                    <CSS>ITSM.Agent.Detail.css</CSS>
-                    <CSS>ITSM.Agent.Default.css</CSS>
                     <JavaScript>Core.KIX4OTRS.ConfigItemZoomTabs.js</JavaScript>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
                     <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
@@ -351,7 +339,6 @@
                     <Prio>430</Prio>
                 </NavBarModule>
                 <Loader>
-                    <CSS>ITSM.Table.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -487,7 +474,6 @@
                 <Title Translatable="1">Zoom</Title>
                 <NavBarName>Service</NavBarName>
                 <Loader>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
                     <JavaScript>Core.Agent.LinkObject.js</JavaScript>
                 </Loader>
@@ -908,7 +894,6 @@
                     <Prio>100</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>ITSM.Agent.Default.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -924,11 +909,6 @@
                 <Title>Zoom</Title>
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
-                    <CSS>ITSM.Agent.Default.css</CSS>
-                    <CSS>ITSM.Agent.Detail.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
-                    <CSS>ITSM.Print.css</CSS>
-                    <CSS>KIX4OTRS.AgentITSMConfigItemZoomTab.css</CSS>
                     <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
                     <JavaScript>thirdparty/jquery-ui-tabs-1.10.3/jquery.ui.tabs.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.AgentZoomTabLinkGraph.js</JavaScript>
@@ -956,7 +936,6 @@
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
                     <JavaScript>Core.UI.GeoCoordinate.js</JavaScript>
-                    <CSS>Core.GeoCoordinate.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -1032,9 +1011,6 @@
                     <Prio>300</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>ITSM.Agent.Detail.css</CSS>
-                    <CSS>ITSM.Table.css</CSS>
-                    <CSS>ITSM.Print.css</CSS>
                     <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
                     <JavaScript>Core.UI.Table.Sort.js</JavaScript>
                     <JavaScript>ITSM.Agent.Zoom.js</JavaScript>
@@ -1754,7 +1730,6 @@
                 <Title>Compare</Title>
                 <NavBarName>Config Item</NavBarName>
                 <Loader>
-                    <CSS>KIX4OTRS.ITSM.Agent.Detail.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -1975,7 +1950,6 @@
                     <JavaScript>thirdparty/jsplumb-1.6.4/jsplumb.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.AgentLinkGraphITSMConfigItem.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.AgentLinkGraph.js</JavaScript>
-                    <CSS>KIX4OTRS.AgentLinkGraph.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>

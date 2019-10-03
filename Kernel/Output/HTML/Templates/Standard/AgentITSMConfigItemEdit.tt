@@ -10,7 +10,7 @@
 
 
 [% RenderBlockStart("StartNormal") %]
-<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarLast">
+<div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarLast FormScreen">
     <h1>[% Translate("Edit") | html %]: [% Translate("Config Item") | html %]: [% Data.Number | html %] - [% Translate("Class") | html %]: [% Translate(Data.Class) | html %]</h1>
 
     <div class="Content">
@@ -47,6 +47,7 @@
                     <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
                     <input type="hidden" name="SubmitSave" value="[% Data.SubmitSave | html %]"/>
                     <input type="hidden" name="PreEventErrorScreen" value="[% Data.PreEventErrorScreen | html %]"/>
+                    <input type="hidden" id="ButtonClick" name="" value=""/>
 [% RenderBlockStart("PlausiCheckNote") %]
                       <div class="MessageBox Notice">
                           <p>[% Translate(Data.Text) | html %]&nbsp;[% Data.Code %]</p>
@@ -104,7 +105,9 @@
                         <div class="[% Data.Class %] Field">
                             [% Data.InputString %]
 [% RenderBlockStart("XMLRowValueContentDelete") %]
-                            <button class="DisableValidation Remove" type="submit" name="[% Data.InputKey | html %]::Delete" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
+                            <button class="DisableValidation Remove" type="submit" name="[% Data.InputKey | html %]::Delete" value="[% Translate("Delete") | html %]" alt="[% Translate("Delete") | html %]">
+                                <span><i class="fa fa-minus-square-o"></i></span>
+                            </button>
 [% RenderBlockEnd("XMLRowValueContentDelete") %]
                             <div id="[% Data.ItemID | html %]Error" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
 [% RenderBlockStart("XMLRowValueServerError") %]
@@ -119,7 +122,9 @@
 [% RenderBlockStart("XMLRowAddContent") %]
                         <label [% Data.Class %] for="[% Data.ItemID | html %]">[% Translate(Data.Name) | html %]: </label>
                         <div class="Field">
-                            <button class="DisableValidation Add" id="[% Data.ItemID | html %]" type="submit" name="[% Data.InputKey | html %]::Add" value="[% Translate("Add") | html %]" title="[% Translate(Data.Description) | html %]" ></button>
+                            <button class="DisableValidation Add" id="[% Data.ItemID | html %]" type="submit" name="[% Data.InputKey | html %]::Add" value="[% Translate("Add") | html %]" title="[% Translate(Data.Description) | html %]" >
+                                <span><i class="fa fa-plus-square-o"></i></span>
+                            </button>
                         </div>
 [% RenderBlockEnd("XMLRowAddContent") %]
 
@@ -194,6 +199,10 @@
 
             $('.DisableValidation').bind('click', function (Event) {
                 $('input[name=SubmitSave]').val('0');
+                $('#ButtonClick').attr({
+                    name: $(this).attr('name'),
+                    value: '1'
+                });
                 Core.Form.Validate.DisableValidation($('#ClassItem'));
                 // fix for Safari: race condition with submit in Core.Form.Validate.js
                 // fixed in OTRS 3.0.5, this line remains here for backwards compatibility reasons

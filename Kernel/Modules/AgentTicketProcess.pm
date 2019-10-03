@@ -2313,7 +2313,7 @@ sub _OutputActivityDialog {
             Data => {},
         );
 
-        $FooterCSSClass = 'Centered';
+        $FooterCSSClass = 'Center';
     }
 
     # set submit button data

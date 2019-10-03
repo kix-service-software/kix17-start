@@ -15,67 +15,71 @@
         <form action="[% Env("CGIHandle") %]" method="get">
             <input type="hidden" name="Action" value="[% Env("Action") %]"/>
             <input type="hidden" name="Subaction" value="LoadProfile"/>
-            <fieldset>
-                 <h2><span>[% Translate("Profile") | html %]</span></h2>
-                <div>
-                    <label for="Profile">[% Translate("Search template") | html %]</label>
+            <fieldset class="TableLike">
+                <legend><span>[% Translate("Profile") | html %]</span></legend>
+                <label for="Profile">[% Translate("Search template") | html %]</label>
+                <div class="Field">
                     [% Data.ProfilesStrg %]
                 </div>
+                <div class="Field Row">
+                    <button name="SelectTemplate" type="submit" value="[% Translate("Select") | html %]">[% Translate("Select") | html %]</button>
+                    <button name="EraseTemplate" type="submit" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
+                    <button name="SearchTemplate" type="submit" value="[% Translate("Search") | html %]">[% Translate("Search") | html %]</button>
+                </div>
             </fieldset>
-            <div class="Row">
-                <button name="SelectTemplate" type="submit" value="[% Translate("Select") | html %]">[% Translate("Select") | html %]</button>
-                <button name="EraseTemplate" type="submit" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
-                <button name="SearchTemplate" type="submit" value="[% Translate("Search") | html %]">[% Translate("Search") | html %]</button>
-            </div>
         </form>
 
         <form action="[% Env("CGIHandle") %]" method="post" name="compose">
             <input type="hidden" name="Action" value="[% Env("Action") %]"/>
             <input type="hidden" name="Subaction" value="Search"/>
-            <fieldset>
-                 <h2><span>[% Config("Ticket::Hook") %]</span></h2>
-                <div>
-                    <label for="TicketNumber">[% Config("Ticket::Hook") %]</label>
+            <fieldset class="TableLike">
+                <legend><span>[% Config("Ticket::Hook") %]</span></legend>
+                <label for="TicketNumber">[% Config("Ticket::Hook") %]</label>
+                <div class="Field">
                     <input title="[% Config("Ticket::Hook") | html %]" type="text" name="TicketNumber"id="TicketNumber" size="30" value="[% Data.TicketNumber | html %]"/>
-                    <p>[% Translate("e. g. 10*5155 or 105658*") | html %]</p>
+                    <p class="FieldExplanation">[% Translate("e. g. 10*5155 or 105658*") | html %]</p>
                 </div>
-                <div>
-                    <label for="CustomerID">[% Translate("CustomerID") | html %]</label>
+                <label for="CustomerID">[% Translate("CustomerID") | html %]</label>
+                <div class="Field">
                     <input title="[% Translate("Customer ID") | html %]" type="text" id="CustomerID" name="CustomerID" value="[% Data.CustomerID | html %]" size="20" />
                 </div>
             </fieldset>
-            <fieldset>
-                 <h2><span>[% Translate("Fulltext search in tickets (e. g. \"John*n\" or \"Will*\")") | html %]</span></h2>
-                <div>
-                    <label for="From">[% Translate("From") | html %]</label>
+            <fieldset class="TableLike">
+                <legend><span>[% Translate("Fulltext search in tickets (e. g. \"John*n\" or \"Will*\")") | html %]</span></legend>
+                <label for="From">[% Translate("From") | html %]</label>
+                <div class="Field">
                     <input title="[% Translate("Sender") | html %]" type="text" id="From" name="From" value="[% Data.From | html %]" size="20" class="[% Data.FromInvalid | html %]" />
                     <div id="FromServerError" class="TooltipErrorMessage">
                         <p>[% Data.FromInvalidTooltip | html %]</p>
                     </div>
                 </div>
-                <div>
-                    <label for="To">[% Translate("To") | html %]</label>
+                <div class="Clear"></div>
+                <label for="To">[% Translate("To") | html %]</label>
+                <div class="Field">
                     <input title="[% Translate("Recipient") | html %]" type="text" id="To" name="To" value="[% Data.To | html %]" size="20" class="[% Data.ToInvalid | html %]" />
                     <div id="ToServerError" class="TooltipErrorMessage">
                         <p>[% Data.ToInvalidTooltip | html %]</p>
                     </div>
                 </div>
-                <div>
-                    <label for="Cc">[% Translate("Cc") | html %]</label>
+                <div class="Clear"></div>
+                <label for="Cc">[% Translate("Cc") | html %]</label>
+                <div class="Field">
                     <input title="[% Translate("Carbon Copy") | html %]" type="text" id="Cc" name="Cc" value="[% Data.Cc | html %]" size="20" class="[% Data.CcInvalid | html %]" />
                     <div id="CcServerError" class="TooltipErrorMessage">
                         <p>[% Data.CcInvalidTooltip | html %]</p>
                     </div>
                 </div>
-                <div>
-                    <label for="Subject">[% Translate("Subject") | html %]</label>
+                <div class="Clear"></div>
+                <label for="Subject">[% Translate("Subject") | html %]</label>
+                <div class="Field">
                     <input title="[% Translate("Subject") | html %]" type="text" id="Subject" name="Subject" value="[% Data.Subject | html %]" size="20" class="[% Data.SubjectInvalid | html %]" />
                     <div id="SubjectServerError" class="TooltipErrorMessage">
                         <p>[% Data.SubjectInvalidTooltip | html %]</p>
                     </div>
                 </div>
-                <div>
-                    <label for="Body">[% Translate("Text") | html %]</label>
+                <div class="Clear"></div>
+                <label for="Body">[% Translate("Text") | html %]</label>
+                <div class="Field">
                     <input title="[% Translate("Text") | html %]" type="text" id="Body" name="Body" value="[% Data.Body | html %]" size="20" class="[% Data.BodyInvalid | html %]" />
                     <div id="BodyServerError" class="TooltipErrorMessage">
                         <p>[% Data.BodyInvalidTooltip | html %]</p>
@@ -91,87 +95,79 @@
             </fieldset>
 
 [% RenderBlockStart("Attachment") %]
-            <fieldset>
-                 <h2><span>[% Translate("Attachments") | html %]</span></h2>
-                <div>
-                    <label for="AttachmentName">[% Translate("Attachment Name") | html %]:</label>
+            <fieldset class="TableLike">
+                <legend><span>[% Translate("Attachments") | html %]</span></legend>
+                <label for="AttachmentName">[% Translate("Attachment Name") | html %]:</label>
+                <div class="Field">
                     <input title="[% Translate("Attachment Name") | html %]" type="text" name="AttachmentName" value="[% Data.AttachmentName | html %]" size="20" />
-                    <p>[% Translate("e. g. m*file or myfi*") | html %]</p>
+                    <p class="FieldExplanation">[% Translate("e. g. m*file or myfi*") | html %]</p>
                 </div>
             </fieldset>
 [% RenderBlockEnd("Attachment") %]
 
+            <fieldset class="TableLike">
+                <legend><span>[% Translate("Ticket Attributes") | html %]</span></legend>
 [% IF Config('Ticket::Service') || Config('Ticket::Type') %]
-            <fieldset class="Columns">
 [% IF Config('Ticket::Service') %]
-                <div class="Column">
-                     <h2><span><label for="ServiceIDs">[% Translate("Services") | html %]:</label></span></h2>
-                    <div>
-                        [% Data.ServicesStrg %]
-                    </div>
+                <label for="ServiceIDs">[% Translate("Services") | html %]:</label>
+                <div class="Field">
+                    [% Data.ServicesStrg %]
                 </div>
 [% END %]
 [% IF Config('Ticket::Type') %]
-                <div class="Column">
-                     <h2><span><label for="TypeIDs">[% Translate("Types") | html %]:</label></span></h2>
-                    <div>
-                        [% Data.TypesStrg %]
-                    </div>
+                <label for="TypeIDs">[% Translate("Types") | html %]:</label>
+                <div class="Field">
+                    [% Data.TypesStrg %]
                 </div>
 [% END %]
                 <div class="Clear"></div>
-            </fieldset>
 [% END %]
 
-            <fieldset class="Columns">
-                <div class="Column">
-                     <h2><span><label for="PriorityIDs">[% Translate("Priority") | html %]:</label></span></h2>
-                    <div>
-                        [% Data.PrioritiesStrg %]
-                    </div>
+                <label for="PriorityIDs">[% Translate("Priority") | html %]:</label>
+                <div class="Field">
+                    [% Data.PrioritiesStrg %]
                 </div>
-                <div class="Column">
-                     <h2><span><label for="StateIDs">[% Translate("State") | html %]:</label></span></h2>
-                    <div>
-                        [% Data.StatesStrg %]
-                    </div>
+                <div class="Clear"></div>
+                <label for="StateIDs">[% Translate("State") | html %]:</label>
+                <div class="Field">
+                    [% Data.StatesStrg %]
                 </div>
                 <div class="Clear"></div>
             </fieldset>
-            <fieldset class="TimeSearchType">
-                 <h2><span>[% Translate("Time restrictions") | html %]</span></h2>
-                <div>
+            <fieldset class="TableLike">
+                <legend><span>[% Translate("Time restrictions") | html %]</span></legend>
+                <div class="Field">
                     <input title="[% Translate("No time settings") | html %]" type="radio"  id="NoTimeSet" name="TimeSearchType" value="" [% Data.item("TimeSearchType::None") %] />
                     <label for="NoTimeSet">[% Translate("All") | html %]</label>
                 </div>
-                <div>
+                <div class="Field">
                     <input title="[% Translate("Specific date") | html %]" type="radio" id="Date" name="TimeSearchType"  value="TimePoint" [% Data.item("TimeSearchType::TimePoint") %] />
                     <label for="Date">[% Translate("Only tickets created") | html %]</label>
                     [% Data.TicketCreateTimePointStart %] [% Data.TicketCreateTimePoint %] [% Data.TicketCreateTimePointFormat %]
                 </div>
-                <div>
+                <div class="Field">
                     <input title="[% Translate("Date range") | html %]" type="radio" id="DateRange" name="TimeSearchType" value="TimeSlot" [% Data.item("TimeSearchType::TimeSlot") %] />
                     <label for="DateRange">[% Translate("Only tickets created between") | html %]</label>
                     [% Data.TicketCreateTimeStart %] [% Translate("and") | html %] [% Data.TicketCreateTimeStop %]
                 </div>
             </fieldset>
 [% RenderBlockStart("SearchInArchive") %]
-            <fieldset>
-                 <h2><span>[% Translate("Ticket archive system") | html %]</span></h2>
+            <fieldset class="TableLike">
+                <legend><span>[% Translate("Ticket archive system") | html %]</span></legend>
                 <div>
                     <label for="SearchInArchive">[% Translate("Archive Search") | html %]:</label>
                     [% Data.SearchInArchiveStrg %]
                 </div>
             </fieldset>
 [% RenderBlockEnd("SearchInArchive") %]
-            <fieldset>
-                 <h2><span>[% Translate("Save search as template?") | html %]</span></h2>
-                <div>
-                    <label for="SaveProfile">[% Translate("Save as Template?") | html %]</label>
+            <fieldset class="TableLike">
+                <legend><span>[% Translate("Save search as template?") | html %]</span></legend>
+                <label for="SaveProfile">[% Translate("Save as Template?") | html %]</label>
+                <div class="Field">
                     <input title="[% Translate("Save as Template") | html %]" type="checkbox" id="SaveProfile" name="SaveProfile" />
                 </div>
-                <div>
-                    <label for="Profile">[% Translate("Template Name") | html %]</label>
+                <label for="Profile">[% Translate("Template Name") | html %]</label>
+                <div class="Field">
                     <input title="[% Translate("Pick a profile name") | html %]" type="text" id="Profile" name="Profile" size="30" value="[% Data.Profile | html %]" />
                 </div>
             </fieldset>

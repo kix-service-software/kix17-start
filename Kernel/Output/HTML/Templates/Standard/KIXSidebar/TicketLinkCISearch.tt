@@ -16,7 +16,7 @@
                 <i class="fa fa-caret-down"></i>
             </a>
         </div>
-        <h2 class="PaddingLeft15px"><span>[% Translate(Data.Title) | html %]</span></h2>
+        <h2 class="WithToggle"><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
     <div id="Content[% Data.Identifier %]" class="Content">
         <div id="SearchResult[% Data.Identifier %]">

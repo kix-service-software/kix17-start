@@ -24,15 +24,18 @@
 
 [% RenderBlockStart("ActionOverview") %]
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Back">
-                            <span>[% Translate("Go to overview") | html %]</span>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center Back">
+                            <span>
+                                <i class="fa fa-caret-left"></i>
+                                [% Translate("Go to overview") | html %]
+                            </span>
                         </a>
                     </li>
 [% RenderBlockEnd("ActionOverview") %]
 
 [% RenderBlockStart("DependingFieldList") %]
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Add" class="CallForAction Back">
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Add" class="CallForAction Fullsize Center Back">
                             <span>[% Translate("Add Depending Field") | html %]</span>
                         </a>
                     </li>
@@ -131,7 +134,7 @@ $('.Collaps').bind('click',function(event){
                     <fieldset class="TableLike">
                         <label for="DynamicFieldSource">[% Translate("Selected Field From Source Field") | html %]:</label>
                         <div class="Field">
-                            [% Data.DynamicFieldSourceString %]
+                            <span>[% Data.DynamicFieldSourceString %]</span>
                         </div>
                         <div class="Clear"></div>
                     </fieldset>
@@ -145,7 +148,10 @@ $('.Collaps').bind('click',function(event){
                         <label for="DynamicFieldTargetValue_[% Data.Counter %]">[% Translate("Available Target Values") | html %]:</label>
                         <div class="Field">
                             [% Data.DynamicFieldTargetValueString %]
-                            <button id="RemoveDynamicField_[% Data.Counter %]" class="Remove" value="" title="[% Translate("Remove Dynamic Field") | html %]" name="" type="submit">[% Translate("Remove Dynamic Field") | html %]</button>
+                            <button id="RemoveDynamicField_[% Data.Counter %]" class="Remove" value="" title="[% Translate("Remove Dynamic Field") | html %]" name="" type="submit">
+                                <i class="fa fa-minus-square-o"></i>
+                                <span class="InvisibleText">[% Translate("Remove Dynamic Field") | html %]</span>
+                            </button>
                         </div>
                         <div class="Clear"></div>
                     <input type="hidden" value="[% Data.OldTargetKey %]" name="OldTargetKey_[% Data.Counter %]"/>
@@ -182,7 +188,10 @@ $('#RemoveDynamicField_[% Data.Counter %]').bind('click',function(){
                     <fieldset class="TableLike">
                         <label for="FieldAdd">[% Translate("Add Dynamic Field") | html %]:</label>
                         <div class="Field">
-                            <button id="AddDynamicField" class="Add" value="" title="Add Dynamic Field" name="" type="submit">Add Dynamic Field</button>
+                            <button id="AddDynamicField" class="Add" value="" title="[% Translate("Add Dynamic Field") %]" name="" type="submit">
+                                <i class="fa fa-plus-square-o"></i>
+                                <span class="InvisibleText">[% Translate("Add Dynamic Field") %]</span>
+                            </button>
                         </div>
                         <div class="Clear"></div>
                     <input type="hidden" value="[% Data.CountMax %]" name="CountMax" id="CountMax" />

@@ -1,0 +1,440 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+    .WidgetSimple {
+        margin-bottom: 30px;
+        border: none;
+    }
+    .WidgetSimple.Size1of2 {
+        float: left;
+        width: 48%;
+        margin-left: 1%;
+        margin-right: 1%;
+    }
+    .WidgetSimple.MobileNotAvailableWidget {
+        display: none;
+    }
+    .WidgetSimple > .Header {
+        background: none;
+        position: relative;
+        top: 1px;
+    }
+    .WidgetSimple > .Header > .ActionMenu,
+    .WidgetSimple.CanDrag > .Header > .ActionMenu {
+        padding-left: 0px;
+    }
+    .WidgetAction {
+        height: 19px;
+        width: 16px;
+        padding-right: 1px;
+        float: left;
+        text-align: center;
+    }
+    .WidgetAction a {
+        font-size: 14px;
+        height: 20px;
+        display: block;
+    }
+    .WidgetAction.Toggle,
+    .Expanded.AnimationRunning > .Header > .WidgetAction.Toggle {
+        height: 13px;
+        width: 12px;
+        margin: 0px 5px 0px 0px;
+        float: left;
+    }
+    .WidgetSimple.SettingsWidget > .Header > .WidgetAction {
+        background-image: none;
+    }
+    .WidgetAction.Toggle a {
+        height: 100%;
+        width: 20%;
+        top: 1px;
+        left: 0;
+        position: absolute;
+    }
+    .WidgetAction i {
+        display: block;
+        margin: 2px 0px 0px 2px;
+        vertical-align: middle;
+    }
+    .WidgetAction.Toggle i {
+        font-size: 17px;
+        position: absolute;
+        left: 7px;
+    }
+    .WidgetAction:hover i {
+        cursor: pointer;
+    }
+    .Collapsed > .Header > .WidgetAction.Toggle i.fa-caret-down,
+    .Expanded > .Header > .WidgetAction.Toggle i.fa-caret-right {
+        display: none;
+    }
+    .Expanded > .Header > .WidgetAction.Toggle i.fa-caret-down {
+        left: 4px;
+    }
+    .WidgetSimple > .Header > .WidgetAction {
+        content: "";
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        z-index: 5;
+    }
+    .WidgetSimple > .Header h2,
+    .MessageHeader h3 {
+        padding: 4px 3px;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
+    }
+    .WidgetSimple > .Header h2,
+    .MessageHeader h3 {
+        font-size: 12px;
+        min-width: 150px;
+    }
+    .WidgetSimple > .Header h3 {
+        font-size: 13px;
+    }
+    .WidgetSimple > .Header h2,
+    .MessageHeader h3,
+    .WidgetSimple.CanDrag > .Header h2,
+    .WidgetSimple > .Header h2 > label {
+        text-decoration: none;
+        overflow: visible;
+        vertical-align: top;
+        padding: 5px 10px;
+        vertical-align: top;
+        display: inline-block;
+        border-bottom: 0;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+    }
+    .WidgetSimple > .Header h2.WithToggle,
+    .WidgetSimple.CanDrag > .Header h2.WithToggle,
+    .WidgetSimple > .Header h2.WithToggle > label {
+        padding-left: 20px;
+    }
+    .WidgetSimple > .Header h2::after,
+    .MessageHeader h3::after {
+        content: "";
+        border: 1px solid #82c826;
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        bottom: 0;
+        right: -6px;
+        border-radius: 0 0 0 5px;
+        border-width: 0 0 1px 1px;
+        background-color: #fff;
+    }
+    .WidgetSimple > .Header h2::before,
+    .MessageHeader h3::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background-color: #F0F0F0;
+        position: absolute;
+        bottom: 0px;
+        right: -5px;
+    }
+    .WidgetSimple > .Header h2 > span {
+        position: relative;
+        font-weight: bold;
+    }
+    .MessageHeader h3 > span {
+        padding: 0px 10px;
+        height: 12px;
+        line-height: 12px;
+    }
+    .WidgetSimple > .Header h2 .FieldExplanation {
+        margin-left: 10px;
+    }
+    .WidgetNotice .Content {
+        font-weight: bold;
+        padding-bottom: 8px;
+        line-height: 140%;
+    }
+    .WidgetSimple .WidgetSimple .Content {
+        padding: 5px 10px 10px 10px;
+    }
+    .WidgetSimple .Content.TransportsContent {
+        padding: 10px 10% 20px 10%;
+    }
+    .WidgetSimple .Content .ActionRow {
+        padding: 0;
+        background: none;
+        border-bottom: 0px;
+    }
+    .WidgetSimple fieldset.Separated {
+        margin: 9px 0px;
+        padding: 4px;
+    }
+    .TransportsContent legend span {
+        padding-left: 20px;
+        border-bottom: none;
+    }
+    #TransitionForm .WidgetSimple .WidgetSimple,
+    .NotificationLanguage > .WidgetSimple {
+        padding: 5px;
+        margin: 15px 10px;
+    }
+
+    /**
+    *   @Subsection SettingWidget
+    */
+    .WidgetSimple.SettingsWidget > .Header,
+    .WidgetSimple.SettingsWidget.CanDrag > .Header {
+        display: block;
+        padding: 0px;
+    }
+    .WidgetSimple.SettingsWidget > .Header h2,
+    .WidgetSimple.SettingsWidget.CanDrag > .Header h2 {
+        padding-left: 20px;
+        border: none;
+    }
+    .WidgetSimple.SettingsWidget > .Header h2::before,
+    .WidgetSimple.SettingsWidget > .Header h2::after {
+        display: none;
+    }
+    .WidgetSimple.SettingsWidget > .Header h2 > span {
+        top: 0px;
+    }
+    .SettingsWidget label {
+        position: relative;
+        display: block;
+        padding: 2px 2px 2px 25px;
+        margin-bottom: 3px;
+        line-height: 150%;
+        -webkit-border-radius-: 3px;
+        -moz-border-radius-: 3px;
+        -ms-border-radius-: 3px;
+        -o-border-radius-: 3px;
+        border-radius-: 3px;
+    }
+    .SettingsWidget label input {
+        position: absolute;
+        left: 1px;
+        top: 1px;
+    }
+    .WidgetSimple > .Content {
+        padding: 8px 8px 10px;
+        overflow: auto;
+        min-height: 0%;
+    }
+    .WidgetSimple.Collapsed > .Content {
+        display: none;
+    }
+    .WidgetSimple .Buttons {
+        margin: 15px -8px -10px -8px;
+        padding: 10px 10px 9px 10px;
+        text-align: center;
+        font-size: 11px;
+    }
+    .WidgetSimple .Buttons.NoMargin {
+        margin-top: 5px;
+    }
+    .WidgetSimple .ActionList select {
+        margin: 0px auto;
+        padding: 2px 3px;
+        display: block;
+        width: 240px;
+    }
+    .Header:hover .ActionMenu {
+        display: block;
+    }
+    .ActionMenu.PublicMenu {
+        display: block;
+    }
+
+    .Tab.Actions li {
+        height: auto;
+        padding: 0;
+    }
+    .Tab.Actions li:last-child {
+        background: none;
+    }
+    .Tab.Actions li a {
+        padding: 5px 5px 8px 2px;
+    }
+    .Tab.Actions li:first-child a {
+        padding-left: 3px;
+    }
+    .Tab.Actions li a:hover {
+        background: none;
+        text-decoration: none;
+        border-bottom: 0px;
+    }
+    .Tab.Actions li.Selected a {
+        font-weight: bold;
+    }
+    .WidgetSimple .WidgetSettingsForm fieldset {
+        margin-bottom: 0px;
+    }
+    .ZoomSidebarKIX,
+    .ZoomSidebar {
+        width: 18%;
+        min-width: 200px;
+        box-sizing: border-box;
+        float: right;
+        margin-bottom: 20px;
+    }
+    .ZoomSidebarKIX {
+        margin: 0;
+    }
+    .ZoomSidebar > .Content > .TableLike.FixedLabelSmall a {
+        cursor: pointer;
+        padding: 5px 11px;
+        display: inline-block;
+        min-width: 100px;
+        margin: 0px 0px 8px 0px;
+        text-align: center;
+    }
+    .ZoomSidebar > .Content {
+        padding: 8px 15px;
+    }
+
+    /**
+    * @subsection PreferencesScreen
+    */
+    .LayoutGrid {
+        overflow: hidden;
+    }
+    .LayoutGrid > .Size1of3 {
+        width: 33.333%;
+    }
+    .LayoutGrid.ColumnsWithSpacing > div > div {
+        margin: 0 0 10px 10px;
+    }
+    .LayoutGrid.ColumnsWithSpacing > div:first-child > div,
+    .LayoutGrid.ColumnsWithSpacing > div.Clear + div > div {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .WidgetSimple, .LayoutGrid.ColumnsWithSpacing > div > div {
+        border: none;
+    }
+    .PreferencesScreen {
+        padding-top: 20px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple {
+        background: none;
+        margin: 0px 10px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header {
+        background: none;
+        text-align: center;
+        padding: 0px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header h2 {
+        background: none;
+        display: block;
+        padding: 5px;
+        border-left: none;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header h2 span {
+        top: 0px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header h2::before,
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header h2::after,
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header .WidgetAction {
+        display: none;
+    }
+    .PreferencesScreen .Content {
+        padding: 0px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Content {
+        border: none;
+    }
+    .PreferencesScreen .Content form {
+        margin: 10px 0px 15px 0px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Content .WidgetSimple {
+        margin-bottom: 30px;
+        background: none;
+    }
+    .PreferencesScreen .FieldExplanation {
+        font-size: 11px;
+        line-height: 140%;
+    }
+    .PreferencesScreen .Content form .Field {
+        margin-left: 30%;
+        padding: 4px 0px 3px 5px;
+    }
+    .PreferencesScreen .Content form .Field.NoMargin {
+        margin: 0px;
+        padding: 0px;
+    }
+    .PreferencesScreen .Content form .Field.NoMargin select {
+        min-width: inherit;
+        width: 97%;
+    }
+    .PreferencesScreen .Content form .Field.NoMargin select[multiple="multiple"] {
+        height: 100px;
+    }
+    .PreferencesScreen .Content form .Field.ButtonOnly {
+        margin: 10px -10px 0px -10px;
+        text-align: center;
+        padding: 10px 0px 0px 0px;
+    }
+
+    /**
+    *   @subsection CanDrag
+    */
+    .CanDrag .Header h2 {
+        cursor: move;
+    }
+    .DropPlaceholder {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    /**
+    *   @subsection ItemRow
+    */
+    .ItemRow {
+        margin-left: 15px;
+    }
+    .ItemRow li {
+        padding: 3px 0 5px 8px;
+    }
+    .ItemRow a {
+        line-height: 14px;
+        text-decoration: underline;
+    }
+
+
+    /**
+    * @subsection WidgetPopup
+    */
+    div.WidgetPopup {
+        display: none;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        z-index: 100;
+        width: 500px;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        border: 1px solid #CCC;
+        background: #eee url(../img/widget_bg_100.png) repeat-x;
+        -moz-box-shadow: 4px 4px 4px #666;
+        -webkit-box-shadow: 4px 4px 4px #666;
+        box-shadow: 4px 4px 4px #666;
+    }
+}

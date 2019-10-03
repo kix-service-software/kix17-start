@@ -75,7 +75,7 @@ $('#GoBack').bind('click', function (Event) {
                 <div class="WidgetAction Toggle">
                     <a href="#" title="[% Translate("Expand") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                 </div>
-                <h2 class="PaddingLeft15px"><span>[% Translate("Error Details") | html %]</span></h2>
+                <h2 class="WithToggle"><span>[% Translate("Error Details") | html %]</span></h2>
             </div>
             <div class="Content">
                 <code>Backend [% Data.BackendTraceback | html %]

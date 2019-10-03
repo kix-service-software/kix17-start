@@ -147,7 +147,7 @@
 
                             <div class="Field SpacingTopSmall">
                                 <button type="submit" class="Primary CallForAction" value="[% Translate("Log In") | html %]">
-                                    [% Translate("Log In") | html %]
+                                    <span>[% Translate("Log In") | html %]</span>
                                 </button>
                             </div>
                             <div class="Clear"></div>
@@ -183,7 +183,7 @@
 
                             <div class="Field SpacingTopSmall">
                                 <button type="submit" class="Primary CallForAction" value="[% Translate("Request New Password") | html %]">
-                                    [% Translate("Request New Password") | html %]
+                                    <span>[% Translate("Request New Password") | html %]</span>
                                 </button>
                             </div>
                             <div class="Clear"></div>
@@ -242,7 +242,7 @@
 
                             <div class="Field SpacingTopSmall">
                                 <button id="CreateAccount" type="submit" class="Primary CallForAction" value="[% Translate("Create Account") | html %]">
-                                    [% Translate("Create Account") | html %]
+                                    <span>[% Translate("Create Account") | html %]</span>
                                 </button>
                             </div>
                             <div class="Clear"></div>

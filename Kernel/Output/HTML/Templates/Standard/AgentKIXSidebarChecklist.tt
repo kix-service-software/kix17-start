@@ -24,7 +24,7 @@
             </div>
         </div>
 [% RenderBlockEnd("Edit") %]
-        <h2 class="PaddingLeft15px"><span>[% Translate(Data.Title) | html %]</span></h2>
+        <h2 class="WithToggle"><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
 
     <div class="Content" id="KIXSidebarChecklistDisplay">

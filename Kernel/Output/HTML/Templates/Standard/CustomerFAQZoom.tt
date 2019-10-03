@@ -80,7 +80,7 @@
             <li>
                 <div class="FAQMessageBrowser">
                     <p>
-        [% Translate("To open links in the following description blocks, you might need to press Ctrl or Cmd or Shift key while clicking the link (depending on your browser and OS).") | html %]
+                        [% Translate("To open links in the following description blocks, you might need to press Ctrl or Cmd or Shift key while clicking the link (depending on your browser and OS).") | html %]
                     </p>
                     <a class="Close" title="[% Translate("Close this message") | html %]" href="#"><i class="fa fa-times"></i></a>
                 </div>
@@ -132,6 +132,43 @@ function CheckIFrameHeight(IFrameID) {
             </li>
 [% RenderBlockEnd("FAQContent") %]
 
+[% RenderBlockStart("FAQVoting") %]
+            <li id="FAQVoting" class="Customer Visible">
+                <div class="MessageHeader">
+                    <h3>[% Translate("Rating") | html %]:</h3>
+                </div>
+                <div class="MessageBody">
+                    <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="FAQVote" class="PreventMultipleSubmits">
+                        <span class="VotingQuestion">[% Translate("How helpful was this article? Please give us your rating and help to improve the FAQ Database. Thank You!") | html %]</span>
+                        <div>
+                            <span class="RateLabelBefore">[% Translate("not helpful") | html %]</span>
+                        </div>
+
+[% RenderBlockStart("FAQVotingRateRow") %]
+                        <div id="RateButton[% Data.Value %]">
+                            <span class="RateButton RateUnChecked">
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star"></i>
+                                [% Data.Title | html %]
+                            </span>
+                            </div>
+[% RenderBlockEnd("FAQVotingRateRow") %]
+
+                        <div>
+                            <span class="RateLabelAfter">[% Translate("very helpful") | html %]</span>
+                        </div>
+                        <input type="hidden" name="Action" value="CustomerFAQZoom"/>
+                        <input type="hidden" name="Subaction" value="Vote"/>
+                        <input type="hidden" name="CategoryID" value="[% Data.CategoryID | html %]"/>
+                        <input type="hidden" name="ItemID" value="[% Data.ItemID | html %]"/>
+                        <div class="ActionRow VotingActionRow Center">
+                            <button type="submit"  id="RateSubmitButton" class="Hidden" value="[% Translate("Submit") | html %]">[% Translate("Submit") | html %]</button>
+                            <input type="hidden" name="Rate" value="[% Data.SelectedRate | html %]"id="RateValue"/>
+                        </div>
+                    </form>
+                </div>
+            </li>
+[% RenderBlockEnd("FAQVoting") %]
         </ul>
         <div id="ZoomSidebar">
             <ul id="Metadata">
@@ -164,22 +201,6 @@ function CheckIFrameHeight(IFrameID) {
                     <span title="[% Data.Title | html %]">[% Data.Value %]</span>
                 </li>
 [% RenderBlockEnd("FAQDynamicField") %]
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("FAQDynamicField_Field1") %]
-#                <li>
-#                    <span class="Key">[% Translate(Data.Label) | html %]:</span>
-#                    <span title="[% Data.Title1 | html %]">[% Data.Value %]</span>
-#                </li>
-#[% RenderBlockEnd("FAQDynamicField_Field1") %]
-#[% RenderBlockStart("FAQDynamicField_Field2") %]
-#                <li>
-#                    <span class="Key">[% Translate(Data.Label) | html %]:</span>
-#                    <span title="[% Data.Title2 | html %]">[% Data.Value %]</span>
-#                </li>
-#[% RenderBlockEnd("FAQDynamicField_Field2") %]
-
 [% RenderBlockStart("ViewRating") %]
                 <li>
                     <span class="Key RatingLabel">[% Translate("Rating") | html %]:</span>
@@ -199,52 +220,6 @@ function CheckIFrameHeight(IFrameID) {
 [% RenderBlockEnd("ViewVotes") %]
             </ul>
         </div>
-
-[% RenderBlockStart("FAQVoting") %]
-        <form action="[% Env("CGIHandle") %]" method="post" enctype="multipart/form-data" name="FAQVote" class="PreventMultipleSubmits">
-            <div class="VotingContainer">
-                <div class="VotingBox Visible">
-                    <div id="FAQVoting" class="FAQVoting">
-                        <div class="MessageHeader">
-                            <h3>[% Translate("Rating") | html %]:</h3>
-                            <div class="Clear"></div>
-                        </div>
-                        <div id="Messenger">
-                            <div class="SpacingTop"></div>
-                            <span class="VotingQuestion">[% Translate("How helpful was this article? Please give us your rating and help to improve the FAQ Database. Thank You!") | html %]</span>
-                            <div class="SpacingTop"></div>
-                            <div>
-                                <span class="RateLabelBefore">[% Translate("not helpful") | html %]</span>
-                            </div>
-
-[% RenderBlockStart("FAQVotingRateRow") %]
-                            <div id="RateButton[% Data.Value %]">
-                                <span class="RateButton RateUnChecked">
-                                    <i class="fa fa-star-o"></i>
-                                    <i class="fa fa-star"></i>
-                                    [% Data.Title | html %]
-                                </span>
-                            </div>
-[% RenderBlockEnd("FAQVotingRateRow") %]
-
-                            <div>
-                                <span class="RateLabelAfter">[% Translate("very helpful") | html %]</span>
-                            </div>
-                            <input type="hidden" name="Action" value="CustomerFAQZoom"/>
-                            <input type="hidden" name="Subaction" value="Vote"/>
-                            <input type="hidden" name="CategoryID" value="[% Data.CategoryID | html %]"/>
-                            <input type="hidden" name="ItemID" value="[% Data.ItemID | html %]"/>
-                            <div class="ActionRow VotingActionRow">
-                                <button type="submit"  id="RateSubmitButton" class="Hidden" value="[% Translate("Submit") | html %]">[% Translate("Submit") | html %]</button>
-                                <input type="hidden" name="Rate" value="[% Data.SelectedRate | html %]"id="RateValue"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-[% RenderBlockEnd("FAQVoting") %]
-
     </div>
 </div>
 

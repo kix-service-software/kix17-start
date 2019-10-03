@@ -9,7 +9,7 @@
 # --
 
 
-<fieldset class="TableLike FixedLabel">
+<fieldset class="TableLike FixedLabelLarge">
 
 [% RenderBlockStart("ContentSmallCustomerIDStatusEscalatedTickets") %]
     <label>[% Translate("Escalated tickets") | html %]:</label>

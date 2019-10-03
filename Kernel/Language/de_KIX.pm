@@ -4100,6 +4100,8 @@ sub Data {
     $Lang->{'show Toolbar'}       = 'Toolbar anzeigen';
     $Lang->{'Toolbar Position'}   = 'Toolbar-Position';
     $Lang->{'Select the position of the toolbar.'} = 'Position der Toolbar auswählen.';
+    $Lang->{'Defines for the Toolbar Top a specific CSS for adjusting the position. It is only possible to use the CSS rules Left and Top.'}
+        = 'Definiert für die Toolbar Top eine spezifische CSS zur Anpassung der Position. Es ist nur möglich die CSS-Regeln Left und Top zu verwenden.';
     $Lang->{'Right'}              = 'Rechts';
     $Lang->{'Left'}               = 'Links';
     $Lang->{'Above Menu'}         = 'Oberhalb des Menüs';

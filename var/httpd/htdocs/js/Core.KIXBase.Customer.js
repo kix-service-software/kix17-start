@@ -47,7 +47,7 @@ Core.KIXBase.Customer = (function(TargetNS) {
         // add padding to WidgetSimple Header h2 and h3 if Toggle element exists before
         $('.WidgetSimple > .Header > h2, .WidgetSimple > .Header > h3, .VotingBox .MessageHeader h3').each(function () {
             if ($(this).parent('.Header').children().index($(this)) > 0 && $(this).parent('.Header').children('.Toggle').length == 1) {
-                $(this).addClass('PaddingLeft15px');
+                $(this).addClass('WithToggle');
             }
 
             // enclose text into span element for positioning (we have to check html() here, because otherwise it won't work in FAQ)
@@ -71,8 +71,6 @@ Core.KIXBase.Customer = (function(TargetNS) {
                 $(this).html('<span>' + $(this).html() + '</span>');
             }
         });
-
-        $('#Messages').addClass('MessageContent');
 
         // move sidebar header to div
         var Counter = 0;
@@ -100,7 +98,7 @@ Core.KIXBase.Customer = (function(TargetNS) {
                         $(this).find('span.Keyword').each(function(){
                            $('#MetadataFieldset_'+Counter).append('<p class="Value" title="'+$(this).text().trim()+'"><span>'+$(this).html()+'</span></p>');
                         });
-                        $('#MetadataFieldset_'+Counter).append('<div class="Clear">&nbsp;</div>');
+                        $('#MetadataFieldset_'+Counter).append('<div class="Clear"></div>');
                     } else {
                         var Key             = $(this).find('span.Key').html(),
                             IsRatingLabel   = $(this).find('span.Key').hasClass('RatingLabel'),
@@ -115,7 +113,7 @@ Core.KIXBase.Customer = (function(TargetNS) {
                                 Title = NextValue.html().trim();
                             }
                         }
-                        $('#MetadataFieldset_'+Counter).append('<label>'+Key+'</label><p class="Value" title="'+Title+'"><span>'+Value+'</span></p><div class="Clear">&nbsp;</div>');
+                        $('#MetadataFieldset_'+Counter).append('<label>'+Key+'</label><p class="Value" title="'+Title+'"><span>'+Value+'</span></p><div class="Clear"></div>');
                     }
                     $(this).remove();
                 });
@@ -123,7 +121,7 @@ Core.KIXBase.Customer = (function(TargetNS) {
             else {
                 $(this).find('li').each(function(){
                     var Value = $(this).html();
-                    $('#MetadataFieldset_'+Counter).append(Value+'<div class="Clear">&nbsp;</div>');
+                    $('#MetadataFieldset_'+Counter).append(Value+'<div class="Clear"></div>');
                     $(this).remove();
                 });
             }

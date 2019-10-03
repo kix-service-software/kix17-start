@@ -172,7 +172,7 @@ Core.Agent.Admin.GenericInterfaceDebugger = (function (TargetNS) {
                         $Content = $('<div class="Content"></div>');
 
                     $Header.append('<div class="WidgetAction Toggle"><a href="#" title="' + TargetNS.Localization.ToggleContentMsg + '"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a></div>');
-                    $Header.append('<h3 class="DebugLevel_' + this.DebugLevel + '">' + this.Summary + ' (' + this.Created + ', ' + this.DebugLevel + ')</h3>');
+                    $Header.append('<h2 class="WithToggle DebugLevel_' + this.DebugLevel + '"><span>' + this.Summary + ' (' + this.Created + ', ' + this.DebugLevel + ')</span></h2>');
                     $Container.append($Header);
 
                     if (this.Data && this.Data.length) {

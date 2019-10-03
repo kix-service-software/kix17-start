@@ -24,7 +24,7 @@
                 <ul class="ActionList">
 [% RenderBlockStart("ActionAddDynamicField") %]
                     <li>
-                        <h4><label for="[% Data.SelectName | html %]">[% Translate(Data.ObjectType) | html %]</label></h4>
+                        <h4>[% Translate(Data.ObjectType) | html %]</h4>
                         [% Data.AddDynamicFieldStrg %]
                         <div class="FieldExplanation">
                             <p>[% Translate("Add new field for object") | html %]: [% Translate(Data.ObjectType) | html %]</p>
@@ -61,11 +61,9 @@ $('#[% Data.SelectName %]').bind('change', function() {
                 <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
-                <div class="FieldExplanation">
-                    <p>
-                        [% Translate("To add a new field, select the field type from one of the object's list, the object defines the boundary of the field and it can't be changed after the field creation.") | html %]
-                    </p>
-                </div>
+                <p class="FieldExplanation">
+                    [% Translate("To add a new field, select the field type from one of the object's list, the object defines the boundary of the field and it can't be changed after the field creation.") | html %]
+                </p>
             </div>
         </div>
 [% RenderBlockEnd("Hint") %]
@@ -118,19 +116,15 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
 //]]></script>
 [% END %]
 [% RenderBlockEnd("ContextSettings") %]
-
             </div>
-            <div class="DynamicFieldsPagination">
+            <div class="Clear"></div>
+            <div class="Content">
                 <span class="Pagination">
 [% RenderBlockStart("OverviewNavBarPageNavBar") %]
                     [% Data.ResultLong %]
                     [% Data.SiteNavBarLong %]
 [% RenderBlockEnd("OverviewNavBarPageNavBar") %]
                 </span>
-            </div>
-            <div class="Clear"></div>
-
-            <div class="DynamicFieldsContent">
                 <table class="DataTable" id="DynamicFieldsTable" summary="List of all registered Dynamic Fields">
                     <thead>
                         <tr>

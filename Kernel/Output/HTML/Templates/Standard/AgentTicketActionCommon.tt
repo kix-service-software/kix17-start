@@ -89,7 +89,7 @@
                             <div class="WidgetAction Toggle">
                                 <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                             </div>
-                            <h2 class="PaddingLeft15px"><span>[% Translate("Ticket Settings") | html %]</span></h2>
+                            <h2 class="WithToggle"><span>[% Translate("Ticket Settings") | html %]</span></h2>
                         </div>
                         <div class="Content">
                             <fieldset class="TableLike FixedLabel">
@@ -348,7 +348,7 @@ $('#NewPriorityID').bind('change', function (Event) {
                             <div class="WidgetAction Toggle">
                                 <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                             </div>
-                            <h2 class="PaddingLeft15px"><span>[% Translate("Dynamic Fields") | html %]</span></h2>
+                            <h2 class="WithToggle"><span>[% Translate("Dynamic Fields") | html %]</span></h2>
                         </div>
                         <div class="Content">
                             <fieldset class="TableLike FixedLabel">
@@ -372,7 +372,7 @@ $('#NewPriorityID').bind('change', function (Event) {
                             <div class="WidgetAction Toggle">
                                 <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                             </div>
-                            <h2 class="PaddingLeft15px"><span>[% Translate("Add Article") | html %]</span></h2>
+                            <h2 class="WithToggle"><span>[% Translate("Add Article") | html %]</span></h2>
                         </div>
                         <div class="Content">
                             <fieldset class="TableLike FixedLabel">

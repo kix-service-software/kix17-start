@@ -219,7 +219,7 @@
                         <div class="WidgetAction Toggle">
                             <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                         </div>
-                        <h2 class="PaddingLeft15px"><span>
+                        <h2 class="WithToggle"><span>
                             [% Translate(Data.Caption) | html %]
                             <span class="FAQStateName">([% Translate(Data.StateName) | html %])</span>
                         </span></h2>
@@ -271,7 +271,7 @@ function CheckIFrameHeight(IFrameID) {
                         <div class="WidgetAction Toggle">
                             <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                         </div>
-                        <h2 class="PaddingLeft15px"><span>[% Translate("Rating") | html %]</span></h2>
+                        <h2 class="WithToggle"><span>[% Translate("Rating") | html %]</span></h2>
                     </div>
                     <div class="FAQVoting Content" id="FAQVoting">
                         <div class="Content">

@@ -106,7 +106,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">GenericInterface Debugger GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.GenericInterface.css</CSS>
                     <JavaScript>Core.Agent.Admin.GenericInterfaceDebugger.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -130,7 +129,6 @@
                     <Prio>1000</Prio>
                 </NavBarModule>
                 <Loader>
-                    <CSS>Core.Agent.Admin.GenericInterface.css</CSS>
                     <JavaScript>Core.Agent.Admin.GenericInterfaceWebservice.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -146,8 +144,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">GenericInterface TransportHTTPSOAP GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.GenericInterface.css</CSS>
-                    <CSS>Core.Agent.SortedTree.css</CSS>
                     <JavaScript>Core.Agent.SortedTree.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -163,7 +159,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">GenericInterface TransportHTTPREST GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.GenericInterface.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -178,7 +173,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">GenericInterface Webservice History GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.GenericInterface.css</CSS>
                     <JavaScript>Core.Agent.Admin.GenericInterfaceWebserviceHistory.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -194,7 +188,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">GenericInterface Operation GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.GenericInterface.css</CSS>
                     <JavaScript>Core.Agent.Admin.GenericInterfaceOperation.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -210,7 +203,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">GenericInterface Invoker GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.GenericInterface.css</CSS>
                     <JavaScript>Core.Agent.Admin.GenericInterfaceInvoker.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -308,7 +300,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">GenericInterface Webservice Mapping GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.GenericInterface.css</CSS>
                     <JavaScript>Core.Agent.Admin.GenericInterfaceMappingSimple.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -334,7 +325,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">GenericInterface Webservice Mapping GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.GenericInterface.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -516,4 +506,3 @@
         </Setting>
     </ConfigItem>
 </otrs_config>
-    
