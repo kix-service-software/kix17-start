@@ -83,10 +83,10 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
      *         contents the article flag icons
      */
     TargetNS.SetArticleFlagColumnWidth = function() {
-        var CounterArray = new Array(), CountMax = 0, IconWidth = 25; // used space for one icon (pixel)
+        var CounterArray = new Array(), CountMax = 0, IconWidth = 16; // used space for one icon (pixel)
 
         // count flag icons for each article
-        $('.UnreadArticles').find('.FlagIcon').each(function() {
+        $(' td .UnreadArticles').find('.FlagIcon').each(function() {
             var InformationArray = $(this).attr('id').split("_"), ArticleID = InformationArray[1];
 
             if (CounterArray[ArticleID]) {
@@ -105,7 +105,7 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
         // set new width for column
         if (CountMax) {
             var TdWidth = CountMax * IconWidth;
-            $('.UnreadArticles').css({
+            $('td .UnreadArticles').css({
                 "width" : TdWidth
             });
         }

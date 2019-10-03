@@ -1484,7 +1484,8 @@ sub Header {
             );
             # enforce default if empty
             if (!$UserPreferences{UserToolbarPosition}) {
-                $UserPreferences{UserToolbarPosition} = 'ToolbarRight';
+                my $PreferencesGroups = $ConfigObject->Get('PreferencesGroups');
+                $UserPreferences{UserToolbarPosition} = $PreferencesGroups->{ToolbarPosition}->{DataSelected} || 'ToolbarRight';
                 my $Success = $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
                     Key    => 'UserToolbarPosition',
                     Value  => $UserPreferences{UserToolbarPosition},
@@ -1492,6 +1493,25 @@ sub Header {
                 );
             }
             $Param{UserToolbarPosition} = $UserPreferences{UserToolbarPosition};
+
+            my $CustomCSSTop = $ConfigObject->Get('ToolbarPosition::CustomCSSTop');
+            if (
+                defined $CustomCSSTop
+                && ref $CustomCSSTop eq 'HASH'
+                && $Param{UserToolbarPosition} eq 'ToolbarTop'
+            ) {
+                for my $Elem ( qw(Toolbar Toggle) ) {
+                    for my $Key ( qw(Top Left) ) {
+                        my $Value = $CustomCSSTop->{$Elem . '::' . $Key};
+                        if (
+                            defined $Value
+                            && $Value ne ''
+                        ) {
+                            $Param{'CustomCSSTop' . $Elem} .= lc($Key) . ': ' . $Value . '; '
+                        }
+                    }
+                }
+            }
         }
 
         # show logged in notice
@@ -5614,7 +5634,7 @@ sub _BuildSelectionDataRefCreate {
 
             next ROW if !$Row->{Value};
 
-            my @Fragment = split '::', $Row->{Value};
+            my @Fragment = split( '::', $Row->{Value});
             $Row->{Value} = pop @Fragment;
 
             # TODO: Here we are combining Max with HTMLQuote, check below for the REMARK:

@@ -41,6 +41,11 @@ for my $ModuleFile (@BackendModuleFiles) {
         Value => "Kernel::System::Cache::$Module",
     );
 
+    # discard cache object from internally stored objects
+    $Kernel::OM->ObjectsDiscard(
+        Objects => ['Kernel::System::Cache'],
+    );
+
     # create a local cache object
     my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
     $CacheObject->Configure(
@@ -69,7 +74,7 @@ for my $ModuleFile (@BackendModuleFiles) {
             CacheInBackend => 0,
         ),
         1,
-        "Cached value from memory",
+        "$Module: Cached value from memory",
     );
 
     # get value from backend only
@@ -80,7 +85,7 @@ for my $ModuleFile (@BackendModuleFiles) {
             CacheInMemory => 0,
         ),
         1,
-        "Cached value from backend",
+        "$Module: Cached value from backend",
     );
 
     # disable both options
@@ -92,7 +97,7 @@ for my $ModuleFile (@BackendModuleFiles) {
             CacheInBackend => 0,
         ),
         undef,
-        "Cached value from no backend",
+        "$Module: Cached value from no backend",
     );
 
     # Set value, but in no backend. Subsequent tests make sure it is
@@ -114,7 +119,7 @@ for my $ModuleFile (@BackendModuleFiles) {
             CacheInBackend => 0,
         ),
         undef,
-        "Removed value from memory",
+        "$Module: Removed value from memory",
     );
 
     # get value from backend only
@@ -125,7 +130,7 @@ for my $ModuleFile (@BackendModuleFiles) {
             CacheInMemory => 0,
         ),
         undef,
-        "Removed value from backend",
+        "$Module: Removed value from backend",
     );
 
     # flush the cache

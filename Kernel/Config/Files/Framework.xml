@@ -67,7 +67,6 @@
                     <Prio>1000</Prio>
                 </NavBarModule>
                 <Loader>
-                    <CSS>Core.Agent.Admin.DynamicField.css</CSS>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -141,7 +140,6 @@
                 <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Drop-down Backend GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.DynamicField.css</CSS>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
@@ -158,7 +156,6 @@
                 <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Date Time Backend GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.DynamicField.css</CSS>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDateTime.js</JavaScript>
                 </Loader>
@@ -175,7 +172,6 @@
                 <Description Translatable="1">This module is part of the admin area of KIX.</Description>
                 <Title Translatable="1">Dynamic Fields Multiselect Backend GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.DynamicField.css</CSS>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldMultiselect.js</JavaScript>
                 </Loader>
@@ -1689,26 +1685,6 @@
             </Array>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Loader::Agent::CommonCSS###108-KIXSidebarDisableSidebar" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>KIXSidebarTools.KIXSidebarDisableSidebar.css</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Loader::Customer::CommonCSS###108-KIXSidebarDisableSidebar" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the customer interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>KIXSidebarTools.KIXSidebarDisableSidebar.css</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="FAQWorkflow::Basic" Required="1" Valid="1">
         <Description Translatable="1">Basic settings for FAQ edit workflow.</Description>
         <Group>Framework</Group>
@@ -1877,7 +1853,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">Dynamic Fields Dropdown General Catalog Backend GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.DynamicField.css</CSS>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
@@ -1906,7 +1881,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">Dynamic Fields Multiselect General Catalog Backend GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.DynamicField.css</CSS>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
@@ -2045,16 +2019,6 @@
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::Notification::DaemonCheck</Item>
             </Hash>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Loader::Agent::CommonCSS###001-Daemon" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>Core.Agent.DaemonInfo.css</Item>
-            </Array>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Loader::Agent::CommonJS###001-Daemon" Required="1" Valid="1">
@@ -3233,17 +3197,6 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Loader::Agent::CommonCSS###100-ITSM" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>ITSM.Agent.Default.css</Item>
-                <Item>ITSM.Agent.Search.css</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Loader::Agent::CommonJS###100-ITSM" Required="1" Valid="1">
         <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
         <Group>Framework</Group>
@@ -3255,21 +3208,6 @@
             </Array>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Loader::Agent::CommonCSS###9000-KIXBase" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>KIXBase.Default.css</Item>
-                <Item>KIXBase.Form.css</Item>
-                <Item>KIXBase.Header.css</Item>
-                <Item>KIXBase.JSTree.css</Item>
-                <Item>KIXBase.Table.css</Item>
-                <Item>KIXBase.TicketDetail.css</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Loader::Agent::CommonJS###9000-KIXBase" Required="1" Valid="1">
         <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
         <Group>Framework</Group>
@@ -3277,21 +3215,6 @@
         <Setting>
             <Array>
                 <Item>Core.KIXBase.Agent.js</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Loader::Customer::CommonCSS###9000-KIXBase" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>KIXBase.Default.css</Item>
-                <Item>KIXBase.Form.css</Item>
-                <Item>KIXBase.Header.css</Item>
-                <Item>KIXBase.JSTree.css</Item>
-                <Item>KIXBase.Table.css</Item>
-                <Item>KIXBase.TicketDetail.css</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -3376,21 +3299,10 @@
                 <Item Key="Module">Kernel::Output::HTML::OutputFilter::TicketPrintRichtext</Item>
                 <Item Key="Templates">
                     <Hash>
-<!--
-                        <Item Key="Footer">1</Item>
--->
                         <Item Key="AgentTicketZoom">1</Item>
                         <Item Key="AgentTicketZoomTabArticle">1</Item>
                     </Hash>
                 </Item>
-<!--
-                <Item Key="Actions">
-                    <Array>
-                        <Item>AgentTicketZoom</Item>
-                        <Item>AgentTicketZoomTabArticle</Item>
-                    </Array>
-                </Item>
--->
             </Hash>
         </Setting>
     </ConfigItem>
@@ -3815,7 +3727,6 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">Dynamic Fields Reference ConfigItem Backend GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.DynamicField.css</CSS>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
@@ -4936,7 +4847,7 @@
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
-            <String Regex="^\d+$">10</String>
+            <String Regex="^\d+$">17</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="FQDN" Required="1" Valid="1" ConfigLevel="200">
@@ -5061,7 +4972,7 @@
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Customer/default/css-cache/img/KIX_logo.png</Item>
+                <Item Key="URL">skins/Customer/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
                 <Item Key="StyleRight">17px</Item>
                 <Item Key="StyleHeight">60px</Item>
@@ -5075,7 +4986,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/css-cache/img/KIX_logo.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
                 <Item Key="StyleRight">17px</Item>
                 <Item Key="StyleHeight">60px</Item>
@@ -5089,7 +5000,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5103,7 +5014,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5117,7 +5028,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5131,7 +5042,7 @@
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">4px</Item>
                 <Item Key="StyleRight">38px</Item>
                 <Item Key="StyleHeight">67px</Item>
@@ -5139,25 +5050,31 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="AgentLoginLogo" Required="0" Valid="0">
+    <ConfigItem Name="AgentLoginLogo" Required="0" Valid="1">
         <Description Translatable="1">The logo shown on top of the login box of the agent interface. The URL to the image must be relative URL to the skin image directory.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Agent/default/img/KIX_logo.png</Item>
-                <Item Key="StyleHeight">100px</Item>
+                <Item Key="URL">skins/Agent/default/img/KIX17_Logo.png</Item>
+                <Item Key="StyleHeight">60px</Item>
+                <Item Key="StyleWidth">60px</Item>
+                <Item Key="margin">15px auto auto;</Item>
+                <Item Key="display">block</Item>
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="CustomerLoginLogo" Required="0" Valid="0">
+    <ConfigItem Name="CustomerLoginLogo" Required="0" Valid="1">
         <Description Translatable="1">The logo shown on top of the login box of the customer interface. The URL to the image must be relative URL to the skin image directory.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="URL">skins/Customer/default/img/KIX_logo.png</Item>
-                <Item Key="StyleHeight">100px</Item>
+                <Item Key="URL">skins/Customer/default/img/KIX17_Logo.png</Item>
+                <Item Key="StyleHeight">60px</Item>
+                <Item Key="StyleWidth">60px</Item>
+                <Item Key="margin">15px auto auto;</Item>
+                <Item Key="display">block</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -7877,18 +7794,6 @@
             </Option>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Package::EventModulePost###99-SupportDataSend" Required="0" Valid="0">
-        <Description Translatable="1">Package event module file a scheduler task for update registration.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Package</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Module">Kernel::System::Package::Event::SupportDataSend</Item>
-                <Item Key="Event">(PackageInstall|PackageReinstall|PackageUpgrade|PackageUninstall)</Item>
-                <Item Key="Transaction">1</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Events###Package" Required="1" Valid="1">
         <Description Translatable="1">List of all Package events to be displayed in the GUI.</Description>
         <Group>Framework</Group>
@@ -7946,7 +7851,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::PDF</SubGroup>
         <Setting>
-            <String Regex="">&lt;KIX_CONFIG_Home&gt;/var/KIX-printlogo.png</String>
+            <String Regex="">&lt;KIX_CONFIG_Home&gt;/var/KIX17_PrintLogo.png</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PDF::PageSize" Required="1" Valid="1">
@@ -8409,15 +8314,14 @@ You can log in via the following URL:
                 <Item Key="Column">User Profile</Item>
                 <Item Key="Label" Translatable="1">Change password</Item>
                 <Item Key="Prio">0500</Item>
-                <Item Key="Area">Agent</Item>
-                <!-- <Item Key="PasswordRegExp">[a-z]|[A-z]|[0-9]|\.|;|,|:|-|\+|#|!|\$|&|\?</Item> -->
-                <Item Key="PasswordRegExp"></Item>
-                <Item Key="PasswordMinSize">0</Item>
-                <Item Key="PasswordMin2Lower2UpperCharacters">0</Item>
-                <Item Key="PasswordMin2Characters">0</Item>
-                <Item Key="PasswordNeedDigit">0</Item>
-                <Item Key="PasswordMaxLoginFailed">0</Item>
                 <Item Key="Active">1</Item>
+                <Item Key="Area">Agent</Item>
+                <Item Key="PasswordMaxLoginFailed">0</Item>
+                <Item Key="PasswordMin2Characters">0</Item>
+                <Item Key="PasswordMin2Lower2UpperCharacters">0</Item>
+                <Item Key="PasswordMinSize">0</Item>
+                <Item Key="PasswordNeedDigit">0</Item>
+                <Item Key="PasswordRegExp"></Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -8599,7 +8503,7 @@ You can log in via the following URL:
                         <Item Key="\t">tab</Item>
                     </Hash>
                 </Item>
-                <Item Key="DataSelected">0</Item>
+                <Item Key="DataSelected">;</Item>
                 <Item Key="PrefKey">UserCSVSeparator</Item>
                 <Item Key="Prio">4000</Item>
                 <Item Key="Active">1</Item>
@@ -8703,7 +8607,7 @@ You can log in via the following URL:
                 <Item Key="Module">Kernel::Output::HTML::CustomerUser::Generic</Item>
                 <Item Key="Required">UserStreet;UserCity;</Item>
                 <Item Key="Attributes">UserStreet;UserCity;UserCountry;</Item>
-                <Item Key="CSS">Core.Agent.CustomerUser.GoogleMaps.css</Item>
+                <Item Key="CSS"></Item>
                 <Item Key="CSSClass">GoogleMaps</Item>
                 <Item Key="Target">_blank</Item>
                 <Item Key="Text">Location</Item>
@@ -8721,7 +8625,7 @@ You can log in via the following URL:
                 <Item Key="Module">Kernel::Output::HTML::CustomerUser::Generic</Item>
                 <Item Key="Required">UserFirstname;UserLastname;</Item>
                 <Item Key="Attributes">UserFirstname;UserLastname;</Item>
-                <Item Key="CSS">Core.Agent.CustomerUser.Google.css</Item>
+                <Item Key="CSS"></Item>
                 <Item Key="CSSClass">Google</Item>
                 <Item Key="Target">_blank</Item>
                 <Item Key="Text">Google</Item>
@@ -8739,7 +8643,7 @@ You can log in via the following URL:
                 <Item Key="Module">Kernel::Output::HTML::CustomerUser::Generic</Item>
                 <Item Key="Required">UserFirstname;UserLastname;</Item>
                 <Item Key="Attributes">UserFirstname;UserLastname;</Item>
-                <Item Key="CSS">Core.Agent.CustomerUser.LinkedIn.css</Item>
+                <Item Key="CSS"></Item>
                 <Item Key="CSSClass">LinkedIn</Item>
                 <Item Key="Target">_blank</Item>
                 <Item Key="Text">LinkedIn</Item>
@@ -8757,7 +8661,7 @@ You can log in via the following URL:
                 <Item Key="Module">Kernel::Output::HTML::CustomerUser::Generic</Item>
                 <Item Key="Required">UserFirstname;UserLastname;</Item>
                 <Item Key="Attributes">UserFirstname;UserLastname;</Item>
-                <Item Key="CSS">Core.Agent.CustomerUser.Xing.css</Item>
+                <Item Key="CSS"></Item>
                 <Item Key="CSSClass">Xing</Item>
                 <Item Key="Target">_blank</Item>
                 <Item Key="Text">XING</Item>
@@ -9357,8 +9261,6 @@ via the Preferences button after logging in.
                     <Prio>50</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>Core.Agent.Dashboard.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
                     <CSS>thirdparty/fullcalendar-2.4.0/fullcalendar.min.css</CSS>
                     <CSS>thirdparty/nvd3-1.7.1/nv.d3.css</CSS>
                     <JavaScript>thirdparty/momentjs-2.10.6/moment.min.js</JavaScript>
@@ -9400,8 +9302,6 @@ via the Preferences button after logging in.
                     <Prio>890</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>Core.Agent.Dashboard.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
                     <CSS>thirdparty/fullcalendar-2.4.0/fullcalendar.min.css</CSS>
                     <CSS>thirdparty/nvd3-1.7.1/nv.d3.css</CSS>
                     <JavaScript>thirdparty/momentjs-2.10.6/moment.min.js</JavaScript>
@@ -9424,7 +9324,6 @@ via the Preferences button after logging in.
                     <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
                     <JavaScript>Core.Agent.TicketAction.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.Agent.CustomerDashboard.js</JavaScript>
-                    <CSS>KIX4OTRS.AgentCustomerDashboard.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -9477,7 +9376,6 @@ via the Preferences button after logging in.
                 <Title></Title>
                 <NavBarName>Preferences</NavBarName>
                 <Loader>
-                    <CSS>Core.Agent.Preferences.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -9606,7 +9504,6 @@ via the Preferences button after logging in.
                     <Module>Kernel::Output::HTML::NavBar::ModuleAdmin</Module>
                 </NavBarModule>
                 <Loader>
-                    <CSS>Core.Agent.Admin.css</CSS>
                     <JavaScript>Core.Agent.Admin.SysConfig.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -10066,7 +9963,6 @@ via the Preferences button after logging in.
                     <Prio>550</Prio>
                 </NavBarModule>
                 <Loader>
-                    <CSS>Core.Agent.Admin.PerformanceLog.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -10089,7 +9985,6 @@ via the Preferences button after logging in.
                     <Prio>350</Prio>
                 </NavBarModule>
                 <Loader>
-                    <CSS>Core.Agent.Admin.Registration.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -10112,7 +10007,6 @@ via the Preferences button after logging in.
                     <Prio>370</Prio>
                 </NavBarModule>
                 <Loader>
-                    <CSS>Core.Agent.Admin.SupportDataCollector.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -10324,7 +10218,6 @@ via the Preferences button after logging in.
                 <Description Translatable="1">HTML Reference.</Description>
                 <NavBarName></NavBarName>
                 <Loader>
-                    <CSS>Core.Agent.HTMLReference.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -10388,7 +10281,6 @@ via the Preferences button after logging in.
                     <JavaScript>Core.Agent.Statistics.js</JavaScript>
                     <JavaScript>Core.UI.AdvancedChart.js</JavaScript>
                     <CSS>thirdparty/nvd3-1.7.1/nv.d3.css</CSS>
-                    <CSS>Core.Agent.Statistics.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -11024,24 +10916,21 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
-                <Item>Core.Reset.css</Item>
-                <Item>Core.Default.css</Item>
-                <Item>Core.Header.css</Item>
-                <Item>Core.OverviewControl.css</Item>
-                <Item>Core.OverviewSmall.css</Item>
-                <Item>Core.OverviewMedium.css</Item>
-                <Item>Core.OverviewLarge.css</Item>
-                <Item>Core.Footer.css</Item>
-                <Item>Core.PageLayout.css</Item>
-                <Item>Core.Form.css</Item>
-                <Item>Core.Table.css</Item>
-                <Item>Core.Widget.css</Item>
-                <Item>Core.WidgetMenu.css</Item>
-                <Item>Core.TicketDetail.css</Item>
-                <Item>Core.Tooltip.css</Item>
-                <Item>Core.Dialog.css</Item>
-                <Item>Core.InputFields.css</Item>
-                <Item>Core.Print.css</Item>
+                <Item>Base.ColorTheme.css</Item>
+                <Item>Base.css</Item>
+                <Item>Base.Header.css</Item>
+                <Item>Base.Footer.css</Item>
+                <Item>Base.Modernize.css</Item>
+                <Item>Base.Overview.css</Item>
+                <Item>Base.Widget.css</Item>
+                <Item>Base.Table.css</Item>
+                <Item>Base.Dialog.css</Item>
+                <Item>Base.Form.css</Item>
+                <Item>Base.Sidebar.css</Item>
+                <Item>Base.Tooltip.css</Item>
+                <Item>Base.LinkGraph.css</Item>
+                <Item>Base.Statistics.css</Item>
+                <Item>Base.Login.css</Item>
                 <Item>thirdparty/fontawesome/font-awesome.css</Item>
             </Array>
         </Setting>
@@ -11052,7 +10941,7 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
-                <Item>Core.Responsive.css</Item>
+                <Item>Base.Responsive.css</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -11064,45 +10953,45 @@ via the Preferences button after logging in.
             <Array>
                 <Item>thirdparty/jquery-2.1.4/jquery.js</Item>
                 <Item>thirdparty/jquery-browser-detection/jquery-browser-detection.js</Item>
+                <Item>thirdparty/jquery-jstree-3.1.1/jquery.jstree.js</Item>
+                <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
                 <Item>thirdparty/jquery-ui-1.11.4/jquery-ui.js</Item>
                 <Item>thirdparty/jquery-ui-touch-punch-0.2.3/jquery.ui.touch-punch.js</Item>
                 <Item>thirdparty/jquery-validate-1.14.0/jquery.validate.js</Item>
                 <Item>thirdparty/stacktrace-0.6.4/stacktrace.js</Item>
-                <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
-                <Item>thirdparty/jquery-jstree-3.1.1/jquery.jstree.js</Item>
-                <Item>Core.JavaScriptEnhancements.js</Item>
-                <Item>Core.Debug.js</Item>
-                <Item>Core.Exception.js</Item>
-                <Item>Core.Data.js</Item>
-                <Item>Core.Config.js</Item>
-                <Item>Core.JSON.js</Item>
+                <Item>Core.Agent.js</Item>
+                <Item>Core.Agent.CustomerInformationCenterSearch.js</Item>
+                <Item>Core.Agent.Responsive.js</Item>
+                <Item>Core.Agent.Search.js</Item>
+                <Item>Core.AJAX.js</Item>
                 <Item>Core.App.js</Item>
                 <Item>Core.App.Responsive.js</Item>
-                <Item>Core.AJAX.js</Item>
-                <Item>Core.UI.js</Item>
-                <Item>Core.UI.InputFields.js</Item>
-                <Item>Core.UI.Accordion.js</Item>
-                <Item>Core.UI.Datepicker.js</Item>
-                <Item>Core.UI.DnD.js</Item>
-                <Item>Core.UI.Floater.js</Item>
-                <Item>Core.UI.Resizable.js</Item>
-                <Item>Core.UI.Table.js</Item>
-                <Item>Core.UI.Accessibility.js</Item>
-                <Item>Core.UI.RichTextEditor.js</Item>
-                <Item>Core.UI.Dialog.js</Item>
-                <Item>Core.UI.ActionRow.js</Item>
-                <Item>Core.UI.Pagination.js</Item>
-                <Item>Core.UI.Popup.js</Item>
-                <Item>Core.UI.TreeSelection.js</Item>
-                <Item>Core.UI.Autocomplete.js</Item>
+                <Item>Core.Config.js</Item>
+                <Item>Core.Data.js</Item>
+                <Item>Core.Debug.js</Item>
+                <Item>Core.Exception.js</Item>
                 <Item>Core.Form.js</Item>
                 <Item>Core.Form.ErrorTooltips.js</Item>
                 <Item>Core.Form.Validate.js</Item>
-                <Item>Core.Agent.js</Item>
-                <Item>Core.Agent.Search.js</Item>
-                <Item>Core.Agent.CustomerInformationCenterSearch.js</Item>
+                <Item>Core.JavaScriptEnhancements.js</Item>
+                <Item>Core.JSON.js</Item>
+                <Item>Core.UI.js</Item>
+                <Item>Core.UI.Accessibility.js</Item>
+                <Item>Core.UI.Accordion.js</Item>
+                <Item>Core.UI.ActionRow.js</Item>
+                <Item>Core.UI.Autocomplete.js</Item>
+                <Item>Core.UI.Datepicker.js</Item>
+                <Item>Core.UI.Dialog.js</Item>
+                <Item>Core.UI.DnD.js</Item>
+                <Item>Core.UI.Floater.js</Item>
+                <Item>Core.UI.InputFields.js</Item>
                 <Item>Core.UI.Notification.js</Item>
-                <Item>Core.Agent.Responsive.js</Item>
+                <Item>Core.UI.Pagination.js</Item>
+                <Item>Core.UI.Popup.js</Item>
+                <Item>Core.UI.Resizable.js</Item>
+                <Item>Core.UI.RichTextEditor.js</Item>
+                <Item>Core.UI.Table.js</Item>
+                <Item>Core.UI.TreeSelection.js</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -11122,17 +11011,19 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
-                <Item>Core.Reset.css</Item>
-                <Item>Core.Default.css</Item>
-                <Item>Core.Form.css</Item>
-                <Item>Core.Dialog.css</Item>
-                <Item>Core.Tooltip.css</Item>
-                <Item>Core.Login.css</Item>
-                <Item>Core.Control.css</Item>
-                <Item>Core.Table.css</Item>
-                <Item>Core.TicketZoom.css</Item>
-                <Item>Core.InputFields.css</Item>
-                <Item>Core.Print.css</Item>
+                <Item>Base.ColorTheme.css</Item>
+                <Item>Base.css</Item>
+                <Item>Base.Header.css</Item>
+                <Item>Base.Footer.css</Item>
+                <Item>Base.Modernize.css</Item>
+                <Item>Base.Overview.css</Item>
+                <Item>Base.Widget.css</Item>
+                <Item>Base.Table.css</Item>
+                <Item>Base.Dialog.css</Item>
+                <Item>Base.Form.css</Item>
+                <Item>Base.Sidebar.css</Item>
+                <Item>Base.Tooltip.css</Item>
+                <Item>Base.Login.css</Item>
                 <Item>thirdparty/fontawesome/font-awesome.css</Item>
             </Array>
         </Setting>
@@ -11143,7 +11034,7 @@ via the Preferences button after logging in.
         <SubGroup>Core::Web</SubGroup>
         <Setting>
             <Array>
-                <Item>Core.Responsive.css</Item>
+                <Item>Base.Responsive.css</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -11155,35 +11046,35 @@ via the Preferences button after logging in.
             <Array>
                 <Item>thirdparty/jquery-2.1.4/jquery.js</Item>
                 <Item>thirdparty/jquery-browser-detection/jquery-browser-detection.js</Item>
-                <Item>thirdparty/jquery-validate-1.14.0/jquery.validate.js</Item>
-                <Item>thirdparty/jquery-ui-1.11.4/jquery-ui.js</Item>
-                <Item>thirdparty/stacktrace-0.6.4/stacktrace.js</Item>
-                <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
                 <Item>thirdparty/jquery-jstree-3.1.1/jquery.jstree.js</Item>
-                <Item>Core.Debug.js</Item>
-                <Item>Core.Exception.js</Item>
-                <Item>Core.Data.js</Item>
-                <Item>Core.JSON.js</Item>
-                <Item>Core.JavaScriptEnhancements.js</Item>
-                <Item>Core.Config.js</Item>
+                <Item>thirdparty/jquery-pubsub/pubsub.js</Item>
+                <Item>thirdparty/jquery-ui-1.11.4/jquery-ui.js</Item>
+                <Item>thirdparty/jquery-validate-1.14.0/jquery.validate.js</Item>
+                <Item>thirdparty/stacktrace-0.6.4/stacktrace.js</Item>
+                <Item>Core.AJAX.js</Item>
                 <Item>Core.App.js</Item>
                 <Item>Core.App.Responsive.js</Item>
-                <Item>Core.AJAX.js</Item>
-                <Item>Core.UI.js</Item>
-                <Item>Core.UI.InputFields.js</Item>
-                <Item>Core.UI.Accessibility.js</Item>
-                <Item>Core.UI.Dialog.js</Item>
-                <Item>Core.UI.RichTextEditor.js</Item>
-                <Item>Core.UI.Datepicker.js</Item>
-                <Item>Core.UI.Pagination.js</Item>
-                <Item>Core.UI.Popup.js</Item>
-                <Item>Core.UI.TreeSelection.js</Item>
-                <Item>Core.UI.Autocomplete.js</Item>
+                <Item>Core.Config.js</Item>
+                <Item>Core.Customer.js</Item>
+                <Item>Core.Customer.Responsive.js</Item>
+                <Item>Core.Data.js</Item>
+                <Item>Core.Debug.js</Item>
+                <Item>Core.Exception.js</Item>
                 <Item>Core.Form.js</Item>
                 <Item>Core.Form.ErrorTooltips.js</Item>
                 <Item>Core.Form.Validate.js</Item>
-                <Item>Core.Customer.js</Item>
-                <Item>Core.Customer.Responsive.js</Item>
+                <Item>Core.JavaScriptEnhancements.js</Item>
+                <Item>Core.JSON.js</Item>
+                <Item>Core.UI.js</Item>
+                <Item>Core.UI.Accessibility.js</Item>
+                <Item>Core.UI.Autocomplete.js</Item>
+                <Item>Core.UI.Datepicker.js</Item>
+                <Item>Core.UI.Dialog.js</Item>
+                <Item>Core.UI.InputFields.js</Item>
+                <Item>Core.UI.Pagination.js</Item>
+                <Item>Core.UI.Popup.js</Item>
+                <Item>Core.UI.RichTextEditor.js</Item>
+                <Item>Core.UI.TreeSelection.js</Item>
             </Array>
         </Setting>
     </ConfigItem>
@@ -11622,7 +11513,6 @@ via the Preferences button after logging in.
                     <Prio>710</Prio>
                 </NavBarModule>
                 <Loader>
-                    <CSS>ITSM.ImportExport.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -11666,7 +11556,7 @@ via the Preferences button after logging in.
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>
-            <String Regex="">icons/kix.ico</String>
+            <String Regex="">icons/KIX17.ico</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Loader::Agent::Skin###100-KIX4OTRS" Required="0" Valid="0">
@@ -11796,35 +11686,6 @@ via the Preferences button after logging in.
             </Array>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Loader::Agent::CommonCSS###100-KIX4OTRS" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>KIX4OTRS.Agent.Admin.css</Item>
-                <Item>KIX4OTRS.Default.css</Item>
-                <Item>KIX4OTRS.Footer.css</Item>
-                <Item>KIX4OTRS.Form.css</Item>
-                <Item>KIX4OTRS.Header.css</Item>
-                <Item>KIX4OTRS.JSTree.css</Item>
-                <Item>KIX4OTRS.OverviewControl.css</Item>
-                <Item>KIX4OTRS.TicketDetail.css</Item>
-                <Item>KIX4OTRS.Table.css</Item>
-                <Item>KIX4OTRS.TextModules.css</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Loader::Agent::CommonCSS::IE8###100-KIX4OTRS" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the customer interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>KIX4OTRS.Header.IE8.css</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Frontend::Output::FilterElementPre###OverrideQDataDisplayLimits" Required="0" Valid="1">
         <Description Translatable="1">Replaces the default Data character limits.</Description>
         <Group>Framework</Group>
@@ -11895,26 +11756,6 @@ via the Preferences button after logging in.
             </Array>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Loader::Agent::CommonCSS###105-KIXSidebarTools" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>KIXSidebarTools.css</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Loader::Customer::CommonCSS###105-KIXSidebarTools" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the customer interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>KIXSidebarTools.css</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="CustomerFrontend::Module###CustomerLinkObject" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the customer interface.</Description>
         <Group>Framework</Group>
@@ -11925,33 +11766,6 @@ via the Preferences button after logging in.
                 <Title>Link Object</Title>
                 <NavBarName></NavBarName>
             </FrontendModuleReg>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Loader::Agent::CommonCSS###998-CIC-LinkedCIs" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the agent interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>KIX4OTRS.ITSM.Agent.Detail.css</Item>
-            </Array>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Loader::Customer::CommonCSS###100-KIX4OTRS" Required="1" Valid="1">
-        <Description Translatable="1">List of CSS files to always be loaded for the customer interface.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Core::Web</SubGroup>
-        <Setting>
-            <Array>
-                <Item>KIX4OTRS.Control.css</Item>
-                <Item>KIX4OTRS.Default.css</Item>
-                <Item>KIX4OTRS.Form.css</Item>
-                <Item>KIX4OTRS.JSTree.css</Item>
-                <Item>KIX4OTRS.PageLayout.css</Item>
-                <Item>KIX4OTRS.Table.css</Item>
-                <Item>KIX4OTRS.Widget.css</Item>
-                <Item>KIX4OTRS.TextModules.css</Item>
-            </Array>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="CustomerPreferencesGroups###DefaultTicketType" Required="0" Valid="1">
@@ -12299,7 +12113,7 @@ via the Preferences button after logging in.
                         <Item Key="0">No</Item>
                     </Hash>
                 </Item>
-                <Item Key="DataSelected">No</Item>
+                <Item Key="DataSelected">0</Item>
                 <Item Key="PrefKey">UserUseArticleColors</Item>
                 <Item Key="Prio">1310</Item>
                 <Item Key="Active">1</Item>
@@ -12342,10 +12156,23 @@ via the Preferences button after logging in.
                         <Item Key="ToolbarTop">Above Menu</Item>
                     </Hash>
                 </Item>
-                <Item Key="DataSelected">Right</Item>
+                <Item Key="DataSelected">ToolbarRight</Item>
                 <Item Key="PrefKey">UserToolbarPosition</Item>
                 <Item Key="Prio">3100</Item>
                 <Item Key="Active">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="ToolbarPosition::CustomCSSTop" Required="0" Valid="0">
+        <Description Translatable="1">Defines for the Toolbar Top a specific CSS for adjusting the position. It is only possible to use the CSS rules Left and Top.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Agent::Preferences</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Toolbar::Top">10px</Item>
+                <Item Key="Toolbar::Left">100px</Item>
+                <Item Key="Toggle::Top">15px</Item>
+                <Item Key="Toggle::Left">90px</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -12872,7 +12699,7 @@ via the Preferences button after logging in.
                 <Hash>
                     <Item Key="Module">Kernel::Output::HTML::CustomerUser::GenericTicket</Item>
                     <Item Key="Attributes"></Item>
-                    <Item Key="CSS">Core.Agent.CustomerUser.OpenTicket.css</Item>
+                    <Item Key="CSS"></Item>
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="IconNameNoOpenTicket">fa-check-circle</Item>
@@ -12892,7 +12719,7 @@ via the Preferences button after logging in.
                 <Hash>
                     <Item Key="Module">Kernel::Output::HTML::CustomerUser::GenericTicket</Item>
                     <Item Key="Attributes">StateType=Open;LinkedTickets=1;</Item>
-                    <Item Key="CSS">Core.Agent.CustomerUser.OpenTicket.css</Item>
+                    <Item Key="CSS"></Item>
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="IconNameNoOpenTicket">fa-check-circle</Item>
@@ -12912,7 +12739,7 @@ via the Preferences button after logging in.
                 <Hash>
                     <Item Key="Module">Kernel::Output::HTML::CustomerUser::GenericTicket</Item>
                     <Item Key="Attributes">LinkedTickets=1;</Item>
-                    <Item Key="CSS">Core.Agent.CustomerUser.OpenTicket.css</Item>
+                    <Item Key="CSS"></Item>
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="IconNameNoOpenTicket">fa-check-circle</Item>
@@ -13161,7 +12988,6 @@ via the Preferences button after logging in.
                     <Prio>1050</Prio>
                 </NavBarModule>
                 <Loader>
-                    <CSS>KIX4OTRS.DependingDynamicFields.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>

@@ -15,7 +15,7 @@
                 <i class="fa fa-caret-down"></i>
             </a>
         </div>
-        <h2 class="PaddingLeft15px"><span>[% Translate("Configuration Item Information") | html %]</span></h2>
+        <h2 class="WithToggle"><span>[% Translate("Configuration Item Information") | html %]</span></h2>
     </div>
     <div class="Content">
         <fieldset class="TableLike FixedLabelSmall Tight">

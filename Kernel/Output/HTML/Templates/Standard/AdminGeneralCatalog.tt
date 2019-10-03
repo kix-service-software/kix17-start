@@ -29,7 +29,7 @@
                             <input type="hidden" name="Subaction" value="ItemEdit"/>
                             <input type="hidden" name="Class" value="[% Data.Class | html %]"/>
                             <input type="hidden" name="ItemID" value="NEW"/>
-                            <button class="CallForAction Plus" type="submit" value="[% Translate("Add") | html %]">
+                            <button class="CallForAction Fullsize Center Plus" type="submit" value="[% Translate("Add") | html %]">
                                 <span>[% Translate("Add Catalog Item") | html %]</span>
                             </button>
                         </form>
@@ -42,7 +42,7 @@
                             <input type="hidden" name="Subaction" value="ItemEdit"/>
                             <input type="hidden" name="ItemID" value="NEW"/>
                             <input type="hidden" name="Class" value="NEW"/>
-                            <button class="CallForAction Plus" type="submit" value="[% Translate("Add") | html %]">
+                            <button class="CallForAction  Fullsize Center Plus" type="submit" value="[% Translate("Add") | html %]">
                                 <span>[% Translate("Add Catalog Class") | html %]</span>
                             </button>
                         </form>
@@ -50,7 +50,12 @@
 [% RenderBlockEnd("ActionAddClass") %]
 [% RenderBlockStart("ActionOverview") %]
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction"><span>[% Translate("Go to overview") | html %]</span></a>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center ">
+                            <span>
+                                <i class="fa fa-caret-left"></i>
+                                [% Translate("Go to overview") | html %]
+                            </span>
+                        </a>
                     </li>
 [% RenderBlockEnd("ActionOverview") %]
                 </ul>
@@ -134,7 +139,7 @@
 [% RenderBlockStart("ItemEditClassExist") %]
                         <label>[% Translate("Catalog Class") | html %]: </label>
                         <div class="Field">
-                            [% Data.Class | html %]
+                            <span>[% Data.Class | html %]</span>
                             <input type="hidden" name="Class" value="[% Data.Class | html %]">
                         </div>
                         <div class="Clear"></div>

@@ -102,8 +102,8 @@ X-KIX-Login: [% Env("Baselink") %]
 <!-- end header -->
 <body class="[% Data.BodyClass | html %] LoginScreen">
 
-    <div class="MainBox ARIARoleMain SpacingTopLarge">
-        <div class="W33pc SpacingBottomLarge CenterBox">
+    <div class="MainBox ARIARoleMain">
+        <div class="CenterBox">
             <div class="[% IF Data.MessageType == 'Success' %]SuccessBox[% ELSE %]ErrorBox[% END %]">
                 <span>[% Data.Message | html %]</span>
             </div>

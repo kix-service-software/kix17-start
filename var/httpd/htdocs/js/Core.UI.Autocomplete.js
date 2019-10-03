@@ -158,7 +158,7 @@ Core.UI.Autocomplete = (function (TargetNS) {
         }
 
         AutocompleteConfig = InitConfig(Type, Options);
-        var posDefault = { my : "right top", at: "right bottom" };
+        var posDefault = { my : "left top", at: "left bottom" };
         if (!AutocompleteConfig.hasOwnProperty('position')) {
             AutocompleteConfig.position = posDefault;
         }
@@ -189,7 +189,7 @@ Core.UI.Autocomplete = (function (TargetNS) {
                 },
                 open: function() {
                     // force a higher z-index than the overlay/dialog
-                    $SingleElement.autocomplete('widget').addClass('ui-overlay-autocomplete');
+                    $SingleElement.autocomplete('widget').addClass('ui-overlay-autocomplete ui-autocomplete-width500');
                     return false;
                 },
                 source: function (Request, Response) {

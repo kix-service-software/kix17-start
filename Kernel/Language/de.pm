@@ -291,7 +291,7 @@ sub Data {
             'Sie haben die Abwesenheitszeit eingeschaltet, möchten Sie diese deaktivieren?',
         'News about KIX releases!' => 'Neuigkeiten zu KIX-Releases!',
         'Go to dashboard!' => 'Zur Übersicht gehen!',
-        'Customer %s added' => 'Kunde %s hinzugefügt',
+        'Contact %s added' => 'Ansprechpartner %s hinzugefügt',
         'Role added!' => 'Rolle hinzugefügt!',
         'Role updated!' => 'Rolle aktualisiert!',
         'Attachment added!' => 'Anlage hinzugefügt!',
@@ -305,7 +305,7 @@ sub Data {
         'State updated!' => 'Status aktualisiert!',
         'Type added!' => 'Typ hinzugefügt!',
         'Type updated!' => 'Typ aktualisiert!',
-        'Customer updated!' => 'Kunde aktualisiert!',
+        'Contact updated!' => 'Ansprechpartner aktualisiert!',
         'Customer company added!' => 'Kundenfirma hinzugefügt!',
         'Customer company updated!' => 'Kundenfirma aktualisiert!',
         'Note: Company is invalid!' => 'Hinweis: Firma ist ungültig!',
@@ -430,7 +430,6 @@ sub Data {
         'There was a problem during the upgrade of %s.' => 'Es gab ein Problem bei der Aktualisierung Ihrer %s.',
         '%s was correctly uninstalled.' => 'Die %s wurde korrekt de-installiert.',
         'There was a problem uninstalling %s.' => 'Es gab ein Problem beim De-Installieren der %s.',
-        'Enable cloud services to unleash all OTRS features!' => 'Aktivieren Sie die Cloud Services, um alle KIX-Funktionen nutzen zu können!',
 
         # Template: AAACalendar
         'New Year\'s Day' => 'Neujahr',
@@ -877,7 +876,6 @@ sub Data {
         'List (only %s shown - more available)' => 'Liste (nur %s angezeigt - mehr verfügbar)',
         'List (%s total)' => 'Liste (%s insgesamt)',
         'Please enter a search term to look for customers.' => 'Bitte geben Sie einen Suchbegriff ein, um nach Kunden zu suchen.',
-        'Add Customer' => 'Kunden hinzufügen',
 
         # Template: AdminCustomerUser
         'Contact Management' => 'Ansprechpartnerverwaltung',
@@ -1629,9 +1627,6 @@ sub Data {
         'Install' => 'Installieren',
         'Install Package' => 'Paket installieren',
         'Update repository information' => 'Verzeichnis aktualisieren',
-        'Cloud services are currently disabled.' => 'Cloud-Services sind derzeit deaktiviert.',
-        'OTRS Verify™ can not continue!' => 'OTRS Verify™ kann nicht fortgesetzt werden!',
-        'Enable cloud services' => 'Cloud-Services aktivieren',
         'Online Repository' => 'Online-Verzeichnis',
         'Module documentation' => 'Moduldokumentation',
         'Upgrade' => 'Upgrade',
@@ -2191,7 +2186,6 @@ sub Data {
 
         # Template: AdminSupportDataCollector
         'Sending support data to KIX Group is not possible!' => 'Das Senden von Support-Daten an die KIX-Gruppe ist nicht möglich!',
-        'Enable Cloud Services' => 'Cloud-Services aktivieren',
         'This data is sent to KIX Group on a regular basis. To stop sending this data please update your system registration.' =>
             'Diese Daten werden regelmäßig an die KIX Gruppe gesendet. Falls Sie das Senden der Daten beenden möchten, aktualisieren Sie bitte ihre Systemregistrierung.',
         'You can manually trigger the Support Data sending by pressing this button:' =>
@@ -4543,9 +4537,6 @@ Ihr Helpdesk-Team
             'Für welche Veränderungen an Tickets möchten Sie Benachrichtigungen erhalten?',
         'Closed tickets (contact)' => 'Geschlossene Tickets (Ansprechpartner)',
         'Closed tickets (customer)' => 'Geschlossene Tickets (Kunden)',
-        'Cloud Services' => 'Cloud-Service',
-        'Cloud service admin module registration for the transport layer.' =>
-            'Cloud-Service-Admin-Modulregistrierung für den Transport-Layer.',
         'Collect support data for asynchronous plug-in modules.' => 'Sammelt Support Daten für asynchrone Erweiterungen.',
         'Column ticket filters for Ticket Overviews type "Small".' => 'Ticket-Filter-Spalte für Ticketübersichten vom Typ "Klein".',
         'Columns that can be filtered in the escalation view of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. Note: Only Ticket attributes, Dynamic Fields (DynamicField_NameX) and Customer attributes (e.g. CustomerUserPhone, CustomerCompanyName, ...) are allowed.' =>
@@ -5154,8 +5145,6 @@ Ihr Helpdesk-Team
         'Defines the module that shows the currently loged in customers in the customer interface.' =>
             'Definiert das Modul das alle zur Zeit angemeldeten Kunden im Kunden-Interface anzeigt.',
         'Defines the module to authenticate customers.' => 'Definiert das Modul um Kunden zu authentifizieren.',
-        'Defines the module to display a notification if cloud services are disabled.' =>
-            'Legt das Modul fest, das eine Benachrichtigung anzeigt, wenn Cloud-Services abgeschaltet sind.',
         'Defines the module to display a notification in different interfaces on different occasions for OTRS Business Solution™.' =>
             'Legt das Modul fest, das zu unterschiedlichen Gelegenheiten eine Benachrichtigung zur OTRS Business Solution™ anzeigt,',
         'Defines the module to display a notification in the agent interface if the KIX Daemon is not running.' =>
@@ -5839,7 +5828,6 @@ Ihr Helpdesk-Team
         'Makes the session management use html cookies. If html cookies are disabled or if the client browser disabled html cookies, then the system will work as usual and append the session id to the links.' =>
             'Benutzt für das Session-Management HTML-Cookies. Wenn HTML-Cookies deaktiviert sind oder im Browser HTML-Cookies deaktiviert sind, arbeitet das System wie immer und fügt die Session-ID and Links an.',
         'Malay' => 'Malaysisch',
-        'Manage KIX Group cloud services.' => 'Verwaltet die Cloud-Services der KIX Gruppe.',
         'Manage PGP keys for email encryption.' => 'PGP-Schlüssel für E-Mail-Verschlüsselung verwalten.',
         'Manage POP3 or IMAP accounts to fetch email from.' => 'POP3- oder IMAP-Konten für das Abholen von E-Mail verwalten.',
         'Manage S/MIME certificates for email encryption.' => 'S/MIME-Zertifikate für E-Mail-Verschlüsselung verwalten.',

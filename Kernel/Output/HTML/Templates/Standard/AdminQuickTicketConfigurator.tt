@@ -21,7 +21,7 @@
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
     <h1>[% Translate("Ticket Template Configurator") | html %]</h1>
 
-    <div class="SidebarColumn" style="width:350px">
+    <div class="SidebarColumn" style="width:300px">
 [% RenderBlockStart("ActionOverview") %]
         <div class="WidgetSimple">
             <div class="Header">
@@ -30,8 +30,11 @@
             <div class="Content">
                 <ul class="ActionList">
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Back">
-                            <span>[% Translate("Go to overview") | html %]</span>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction OverFullsize280 Center Back">
+                            <span>
+                                <i class="fa fa-caret-left"></i>
+                                [% Translate("Go to overview") | html %]
+                            </span>
                         </a>
                     </li>
                 </ul>
@@ -50,7 +53,7 @@
                     <input type="hidden" name="Subaction" value="New" />
                     <fieldset class="TableLike FixedLabelSmall">
                         <label class="nowrap">
-                            <button type="submit" name="New" value="[% Translate("Click here to add a ticket template") | html %]" class="CallForAction Plus">
+                            <button type="submit" name="New" value="[% Translate("Click here to add a ticket template") | html %]" class="CallForAction OverFullsize280 Center Plus">
                                 <span>[% Translate("Add ticket template") | html %]</span>
                             </button>
                         </label>
@@ -70,10 +73,10 @@
                     <input type="hidden" name="Subaction" value="Download" />
                     <fieldset class="TableLike FixedLabelSmall">
                         <label>
-                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction Download">
+                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction OverFullsize280 Center">
                                 <span>
                                     <i class="fa fa-download"></i>
-                                    [% Data.DownloadType %]-Download
+                                    [% Data.DownloadType %] [% Translate("Download") %]
                                 </span>
                             </button>
                         </label>
@@ -96,10 +99,10 @@
                     <input name="file_upload" type="file" size="25" />
                     <fieldset class="TableLike FixedLabelSmall">
                         <label>
-                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction Upload">
+                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction OverFullsize280 Center">
                                 <span>
                                     <i class="fa fa-upload"></i>
-                                    [% Data.UploadType %]-Upload
+                                    [% Data.UploadType %] [% Translate("Upload") %]
                                 </span>
                             </button>
                         </label>

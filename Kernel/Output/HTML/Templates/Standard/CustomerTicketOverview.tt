@@ -9,7 +9,7 @@
 # --
 
 
-<div id="MainBox" class="TicketView ARIARoleMain [% Config("Ticket::Frontend::CustomerTicketOverviewSortable") %]">
+<div id="MainBox" class="MainBox TicketView ARIARoleMain [% Config("Ticket::Frontend::CustomerTicketOverviewSortable") %]">
 [% RenderBlockStart("Filled") %]
     <div class="ActionRow">
         <ul class="Filter Tabs">
@@ -27,7 +27,7 @@
         <div class="Clear"></div>
     </div>
     <div class="Content">
-        <table class="Overview">
+        <table class="OverviewTable">
             <thead>
                 <tr>
                     <th class="Ticket [% Data.TicketSort | uri %]">
@@ -69,29 +69,6 @@
 [% RenderBlockEnd("OverviewNavBarPageDynamicFieldNotSortable") %]
                     </th>
 [% RenderBlockEnd("OverviewNavBarPageDynamicField") %]
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field1") %]
-#                    <th class="DynamicField Last [% Data.CSS | html %]">
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field1_Sortable") %]
-#                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=[% Env("Subaction") %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %];Filter=[% Data.Filter | uri %]">[% Translate(Data.Label) | html %]</a>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field1_Sortable") %]
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field1_NotSortable") %]
-#                        <span>[% Translate(Data.Label) | html %]</span>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field1_NotSortable") %]
-#                    </th>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field1") %]
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field2") %]
-#                    <th class="DynamicField Last [% Data.CSS | html %]">
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field2_Sortable") %]
-#                        <a name="OverviewControl" href="[% Env("Baselink") %]Action=[% Env("Action") %];[% Data.LinkSort %];SortBy=DynamicField_[% Data.DynamicFieldName | uri %];OrderBy=[% Data.OrderBy | uri %]">[% Translate(Data.Label) | html %]</a>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field2_Sortable") %]
-#[% RenderBlockStart("OverviewNavBarPageDynamicField_Field2_NotSortable") %]
-#                        <span>[% Translate(Data.Label) | html %]</span>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field2_NotSortable") %]
-#                    </th>
-#[% RenderBlockEnd("OverviewNavBarPageDynamicField_Field2") %]
                     <th class="Age [% Data.AgeSort | uri %]">
                         <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=[% Env("Subaction") %];SortBy=Age;OrderBy=[% Data.OrderBy | uri %];Filter=[% Data.Filter | uri %]">
                             [% Translate("Age") | html %]
@@ -130,33 +107,6 @@
                         </div>
                     </td>
 [% RenderBlockEnd("RecordDynamicField") %]
-# example of how to use fixed dynamic field blocks for customizations
-# Note: Field1 and Field2 are the names of the fields and had to be replaced with the actual
-# field names
-#[% RenderBlockStart("RecordDynamicField_Field1") %]
-#                    <td>
-#                        <div title="[% Data.Title | html %]">
-#[% RenderBlockStart("RecordDynamicField1Link") %]
-#                            <a href="[% Data.Link | Interpolate %]" class="DynamicFieldLink">[% Data.Value %]</a>
-#[% RenderBlockEnd("RecordDynamicField1Link") %]
-#[% RenderBlockStart("RecordDynamicField1Plain") %]
-#                            [% Data.Value %]
-#[% RenderBlockEnd("RecordDynamicField1Plain") %]
-#                        </div>
-#                    </td>
-#[% RenderBlockEnd("RecordDynamicField_Field1") %]
-#[% RenderBlockStart("RecordDynamicField_Field2") %]
-#                    <td>
-#                        <div title="[% Data.Title | html %]">
-#[% RenderBlockEnd("RecordDynamicField1Link") %]
-#                            <a href="[% Data.Link | Interpolate %]" class="DynamicFieldLink">[% Data.Value %]</a>
-#[% RenderBlockEnd("RecordDynamicField1Link") %]
-#[% RenderBlockEnd("RecordDynamicField1Plain") %]
-#                            [% Data.Value %]
-#[% RenderBlockEnd("RecordDynamicField1Plain") %]
-#                        </div>
-#                    </td>
-#[% RenderBlockEnd("RecordDynamicField_Field2") %]
                     <td class="Age" title="[% Data.Created | Localize("TimeShort") | html %]">[% Data.CustomerAge | truncate(20) | html %]</td>
                 </tr>
 [% RenderBlockEnd("Record") %]
@@ -174,6 +124,7 @@
 [% END %]
             </tbody>
         </table>
+    </div>
     </div>
 [% RenderBlockStart("FilterFooter") %]
     <div id="BottomActionRow" class="ActionRow BigButtons">

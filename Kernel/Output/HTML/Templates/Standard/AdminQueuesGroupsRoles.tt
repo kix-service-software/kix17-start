@@ -19,7 +19,7 @@
                 <form name="ShowForm" action="[% Env("CGIHandle") %]" method="get">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="Show"/>
-                        <button type="submit" name="Show" value="[% Translate("Show") | html %]" class="CallForAction"><span>[% Translate("Show") | html %]</span></button>
+                    <button type="submit" name="Show" value="[% Translate("Show") | html %]" class="CallForAction OverFullsize"><span>[% Translate("Show") | html %]</span></button>
                 </form>
                 <br/>[% Translate("Attention: Depending on the number of queues, groups and roles, this process may take several minutes!") | html %]
             </div>
@@ -36,7 +36,12 @@
                     <input type="hidden" name="Subaction" value="Download"/>
                     <fieldset class="TableLike FixedLabelSmall">
                         <label>
-                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction Download"><span>[% Translate("Download") | html %]</span></button>
+                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction OverFullsize">
+                                <span>
+                                    <i class="fa fa-download"></i>
+                                    [% Translate("Download") | html %]
+                                </span>
+                            </button>
                         </label>
                     </fieldset>
                 </form>
@@ -56,7 +61,12 @@
                     <input name="file_upload" type="file" size="25"/>
                     <fieldset class="TableLike FixedLabelSmall">
                         <label>
-                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction Upload"><span>[% Translate("Upload") | html %]</span></button>
+                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction OverFullsize">
+                                <span>
+                                    <i class="fa fa-upload"></i>
+                                    [% Translate("Upload") | html %]
+                                </span>
+                            </button>
                         </label>
                     </fieldset>
                 </form>

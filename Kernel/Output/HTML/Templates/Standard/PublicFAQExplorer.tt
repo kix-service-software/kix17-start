@@ -9,7 +9,7 @@
 # --
 
 
-<div id="MainBox" class="ARIARoleMain">
+<div id="MainBox" class="MainBox ARIARoleMain">
 
     <div class="Content">
         <div class="FAQHeader">
@@ -68,7 +68,11 @@
                     <div class="Header">
                          <h2><span>[% Translate(Data.Header) | html %]</span></h2>
 [% RenderBlockStart("InfoBoxFAQMiniListNewsRSS") %]
-                        <a target="_blank" href="[% Env("Baselink") %]Action=PublicFAQRSS;Type=[% Data.Type | uri %]" title="[% Translate(Data.Title) | html %]" class="RSSIcon AsBlock"><i class="fa fa-rss"></i></a>
+                        <div class="ActionMenu PublicMenu">
+                            <div class="WidgetAction RSSFeed">
+                                <a target="_blank" href="[% Env("Baselink") %]Action=PublicFAQRSS;Type=[% Data.Type | uri %]" title="[% Translate(Data.Title) | html %]" class="RSSIcon AsBlock"><i class="fa fa-rss"></i></a>
+                            </div>
+                        </div>
 [% RenderBlockEnd("InfoBoxFAQMiniListNewsRSS") %]
                         <div class="Clear"></div>
                     </div>
@@ -108,7 +112,7 @@
 
                     <div class="Content">
 
-                        <table class="Overview" summary="FAQ categories">
+                        <table class="DataTable Sortable" summary="FAQ categories">
                             <thead>
                                 <tr>
                                     <th><a href="#">[% Translate("Name") | html %]</a></th>
@@ -155,7 +159,7 @@
                     </div>
 
                     <div class="Content">
-                        <table class="Overview">
+                        <table class="DataTable Sortable">
                             <thead>
                                 <tr>
                                     <th class="FAQNumber [% Data.FAQIDSort %]">

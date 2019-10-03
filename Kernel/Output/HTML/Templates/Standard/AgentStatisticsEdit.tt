@@ -44,7 +44,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Statistics Preview") | html %]</span></h2>
+                    <h2 class="WithToggle"><span>[% Translate("Statistics Preview") | html %]</span></h2>
                 </div>
                 <div class="Content PreviewContainer">
                     [% Data.PreviewWidget %]
@@ -57,7 +57,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("General Specification") | html %]</span></h2>
+                    <h2 class="WithToggle"><span>[% Translate("General Specification") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     [% Data.GeneralSpecificationsWidget %]

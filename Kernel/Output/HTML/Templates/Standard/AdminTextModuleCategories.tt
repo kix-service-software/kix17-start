@@ -19,8 +19,11 @@
             <div class="Content">
                 <ul class="ActionList">
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Back">
-                            <span>[% Translate("Go to overview") | html %]</span>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction OverFullsize330 Center Back">
+                            <span>
+                                <i class="fa fa-caret-left"></i>
+                                [% Translate("Go to overview") | html %]
+                            </span>
                         </a>
                     </li>
                 </ul>
@@ -35,7 +38,7 @@
             <div class="Content">
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
-                    <fieldset class="TableLike FixedLabelSmall">
+                    <fieldset class="TableLike">
                         <label for="SearchName">[% Translate("Name") | html %]:</label>
                         <p class="Value">
                             <input type="text" id="SearchName" name="Name" value="[% Data.Name %]"/>
@@ -70,7 +73,7 @@
                     <input type="hidden" name="Subaction" value="New" />
                     <fieldset class="TableLike FixedLabelSmall">
                         <label class="nowrap">
-                            <button type="submit" name="New" value="[% Translate("Click here to add a text module category") | html %]" class="CallForAction Plus">
+                            <button type="submit" name="New" value="[% Translate("Click here to add a text module category") | html %]" class="CallForAction OverFullsize330 Plus">
                                 <span>[% Translate("Add category") | html %]</span>
                             </button>
                         </label>
@@ -91,7 +94,7 @@
                     <input type="hidden" name="Subaction" value="Download" />
                     <fieldset class="TableLike FixedLabelSmall">
                         <label>
-                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction Download">
+                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction OverFullsize330">
                                 <span>
                                     <i class="fa fa-download"></i>
                                     [% Data.DownloadType %]-Download
@@ -117,7 +120,7 @@
                     <input name="file_upload" type="file" size="25" />
                     <fieldset class="TableLike FixedLabelSmall">
                         <label>
-                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction Upload">
+                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction OverFullsize330">
                                 <span>
                                     <i class="fa fa-upload"></i>
                                     [% Data.UploadType %]-Upload
@@ -162,7 +165,7 @@
                     <div class="Clear">
                     </div>
                     <br />
-                    <a class="CallForAction Download" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DownloadResult;XMLResultFileID=[% Data.XMLResultFileID | html %];FormID=[% Data.FormID | html %]" title="[% Translate("Download complete result of your upload") | html %]">
+                    <a class="CallForAction OverFullsize330 Center" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DownloadResult;XMLResultFileID=[% Data.XMLResultFileID | html %];FormID=[% Data.FormID | html %]" title="[% Translate("Download complete result of your upload") | html %]">
                         <span>
                             <i class="fa fa-download"></i>
                             [% Translate("Download result as XML") | html %]
@@ -263,9 +266,10 @@ $('.Collaps').bind('click',function(event){
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="Save" />
                     <input type="hidden" name="ID" value="[% Data.ID | html %]"/>
-                    <fieldset class="TableLike FixedLabelSmall">
+                    <fieldset class="TableLike">
                         <label class="Mandatory" for="Name">
-                            <span class="Marker">*</span> [% Translate("Name") | html %]:</label>
+                            <span class="Marker">*</span> [% Translate("Name") | html %]:
+                        </label>
                         <p class="Value">
                             <input type="text" id="Name" name="Name" value="[% Data.Name | html %]" size="35" class="Validate_Required Validate_MaxLength Validate_Length_80 [% Data.NameInvalid | html %]" maxlength="80"/>
                             <div id="NameError" class="TooltipErrorMessage">
@@ -279,28 +283,16 @@ $('.Collaps').bind('click',function(event){
                         <p class="Value">
                             [% Data.ParentCategoryStrg %]
                         </p>
-                        <div class="Clear">
+                        <div class="Clear"></div>
+                        <div class="Field SpacingTop">
+                            <button class="Primary CallForAction" type="submit" value="[% Translate("Submit") | html %]"/>
+                                <span>[% Translate("Submit") | html %]</span>
+                            </button>
                         </div>
                     </fieldset>
-
-                    <table width="100%" cellspacing="0" cellpadding="4">
-                        <tr>
-                            <td colspan="2" class="contentfooter">
-                                <table width="100%" border="0" cellspacing="0" cellpadding="3">
-                                    <tr>
-                                        <td width="100%" align="right" class="contentfooter">
-                                            <button class="CallForAction" type="submit" value="[% Translate("Submit") | html %]"/>
-                                            <span>[% Translate("Submit") | html %]</span>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
 [% RenderBlockEnd("Edit") %]
 </div>
 </div>

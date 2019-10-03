@@ -1,0 +1,380 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+
+    #Header {
+        height: 80px;
+        position: relative;
+        z-index: 10;
+        box-shadow: none;
+        padding: 0px;
+        margin-bottom: 40px;
+    }
+
+    #Logo {
+        right: 0px;
+        left: 10px;
+        top: 10px;
+        width: 64px;
+        height: 100%;
+        position: relative;
+        background-size: contain;
+        position: absolute;
+    }
+
+    /**
+    *   @subsection popup
+    */
+    .LayoutPopup > .Header {
+        padding: 7px 20px;
+    }
+
+    .LayoutPopup > .Header h1 {
+        font-size: 14px;
+        font-weight: bold;
+        padding: 0px 5px 0 0;
+        margin-bottom: 0px;
+        line-height: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .LayoutPopup > .Header p {
+        padding: 5px 5px 0 0;
+    }
+    .LayoutPopup > .Content {
+        padding: 20px;
+    }
+    .LayoutPopup > .Footer {
+        padding: 5px;
+        text-align: center;
+        min-height: 28px;
+    }
+    .CancelClosePopup {
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .TicketLockMessage {
+        display: inline-block;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        transform: translate(0,0);
+        margin: 5px 0 0 0;
+        width: 100%;
+    }
+    .TicketLockMessage::before {
+        content: "\f071";
+        font: normal normal normal 14px/1 FontAwesome;
+        padding-right: 5px;
+    }
+    .LayoutPopup > .Header p.TicketLockMessage {
+        padding: 5px;
+    }
+    .LayoutPopup > .Footer .CallForAction {
+        display: inline-block;
+        margin: 10px 0px 5px 0px;
+        min-width: 150px;
+    }
+    /**
+    * @subsection Toolbar
+    */
+    #Header.ToolbarTop {
+        margin-bottom: 0;
+    }
+    #ToolBar {
+        left: 10px;
+        top: 10px;
+        position: absolute;
+        z-index: 20;
+    }
+    #ToolBar .InputField_Search,
+    #ToolBar .InputField_Autocomplete {
+        min-width: 65px;
+    }
+    #ToolBar li {
+        width: 24px;
+        height: 34px;
+        margin: 0 5px;
+        float: left;
+        position: relative;
+    }
+    #ToolBar li.Extended {
+        width: auto;
+    }
+    #ToolBar li a {
+        height: 20px;
+        width: 24px;
+        text-indent: -9999px;
+        position: relative;
+        display: block;
+    }
+    #ToolBar li a i {
+        display: block;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: normal;
+        padding: 0;
+        text-align: center;
+        text-indent: 0;
+        width: 24px;
+        position: relative;
+        top: -9px;
+    }
+    #ToolBar li a i.icon-small {
+        font-size: 12px;
+        position: absolute;
+        right: -7px;
+        text-align: center;
+        top: 0px;
+        width: 15px;
+        display: none;
+    }
+
+    #ToolBarToggle {
+        cursor: pointer;
+        z-index: -10;
+        position: absolute;
+        font-size: 11px;
+        padding-top: 1px;
+    }
+    #ToolBarToggle::after {
+        content: "\f04b";
+        font: normal normal normal 12px/1 FontAwesome;
+        position: absolute;
+        color: #0A6491;
+    }
+    #ToolBarToggle.Show::after {
+        transform: rotate(180deg);
+    }
+    .ToolbarRight > #ToolBarToggle.Hide::after {
+        right: 0;
+        top: 0;
+    }
+    .ToolbarRight > #ToolBarToggle.Show::after {
+        right: 0;
+        top: 1px;
+    }
+    #ToolBarToggle.Show {
+        white-space: nowrap;
+    }
+    .ToolbarRight > #ToolBar {
+        left: inherit;
+        right: 20px;
+        top: 85px;
+    }
+    .ToolbarLeft > #ToolBar {
+        left: 20px;
+        top: 85px;
+    }
+    .ToolbarLeft > #ToolBarToggle {
+        left: 10px;
+        top: 90px;
+        width: 200px;
+        height: 12px;
+        text-align: left;
+        padding-left: 15px;
+    }
+    .ToolbarTop > #ToolBar {
+        left: 100px;
+        top: 10px;
+        padding-right: 300px;
+        height: 31px;
+        overflow: hidden;
+    }
+    .ToolbarTop > #ToolBarToggle {
+        left: 90px;
+        top: 15px;
+        width: 200px;
+        height: 12px;
+        text-align: left;
+        padding-left: 15px;
+    }
+
+    .ToolbarLeft > #ToolBarToggle.Hide::after,
+    .ToolbarTop > #ToolBarToggle.Hide::after {
+        left: 0;
+        top: 0;
+    }
+    .ToolbarLeft > #ToolBarToggle.Show::after,
+    .ToolbarTop > #ToolBarToggle.Show::after {
+        left: 0;
+        top: 1px;
+    }
+    .ToolbarRight > #ToolBarToggle {
+        right: 10px;
+        top: 90px;
+        width: 200px;
+        height: 12px;
+        text-align: right;
+    }
+    .ToolbarRight > #ToolBarToggle.Show {
+        padding-right: 15px;
+    }
+
+    .ToolbarLeft > #ToolBarToggle.Hide,
+    .ToolbarTop > #ToolBarToggle.Hide {
+        padding-left: 20px;
+    }
+    .ToolbarRight > #ToolBarToggle.Hide {
+        padding-right: 20px;
+    }
+    #ToolBar a span.Counter {
+        bottom: -10px;
+        display: block;
+        font-size: 10px;
+        left: 50%;
+        margin-left: -12px;
+        position: absolute;
+        text-align: center;
+        text-indent: 0;
+        width: 24px;
+    }
+
+    #ToolBar li.SearchFulltext Input {
+        height: 15px;
+        vertical-align: bottom;
+    }
+
+    /**
+    * @subsection UserInfo
+    */
+    #UserInfo {
+        padding: 5px 115px 0 0;
+        top: 10px;
+        right: 17px;
+        font-size: 11px;
+        position: absolute;
+        cursor: default;
+        z-index: 999;
+    }
+    #UserInfo a {
+        top: 0px;
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+        position: absolute;
+    }
+    #UserInfo a.PreferencesButton {
+        right: 83px;
+    }
+    #UserInfo a.SwitchButton {
+        right: 54px;
+    }
+    #UserInfo a.KIXHelp {
+        right: 25px;
+    }
+    #UserInfo a.LogoutButton {
+        right: -4px;
+    }
+    #UserInfo .fa {
+        font-size: 18px;
+    }
+
+    /**
+    * @subsection Navigation
+    */
+    #NavigationContainer {
+        position: absolute;
+        top: 47px;
+        left: 10px;
+        z-index: 20;
+        width: 93%;
+        height: 35px;
+        overflow: hidden;
+    }
+
+    #NavigationContainer #Navigation {
+        left: 0px;
+        position: absolute;
+    }
+
+    #Navigation > li {
+        font-weight: bold;
+        float: left;
+        position: relative;
+        background: none;
+        margin-right: 10px;
+    }
+    #Navigation > li > a {
+        float: left;
+        line-height: 25px;
+        position: relative;
+        text-decoration: none;
+        padding: 0px 5px;
+        display: block;
+        font-size: 12px;
+        margin-top: 8px;
+    }
+    #Navigation > li > a#GlobalSearchNav i {
+        font-size: 15px;
+    }
+    #Navigation > li > ul {
+        top: 34px;
+        display: none;
+    }
+    #Navigation > .Active > ul {
+        position: absolute;
+        top: 34px;
+        left: 0px;
+        display: block;
+        min-width: 240px;
+        z-index: 99;
+    }
+    #Navigation > .Active > ul > li {
+        font-size: 11px;
+        line-height: 11px;
+        margin-top: -1px;
+        position: relative;
+    }
+    #Navigation > .Active > ul > li > a {
+        display: block;
+        position: relative;
+        padding: 6px 10px 7px 8px;
+    }
+
+    #Navigation .Search {
+        width: 16px;
+    }
+
+    #Navigation > .Selected {
+        z-index: 90;
+    }
+    #Navigation > .Selected > a {
+        z-index: 3;
+    }
+    #Navigation > .Selected > a,
+    .ui-tabs .ui-tabs-nav li.ui-state-active a,
+    .ui-tabs .ui-tabs-nav li.ui-state-active a:link,
+    .ui-tabs .ui-tabs-nav li.ui-state-active a:visited {
+        height: auto;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        border-bottom: 0;
+    }
+
+    #Navigation > li > a.ScreenL,
+    #Navigation > li > a.ScreenM,
+    #Navigation > li > a.ScreenS,
+    #Navigation > li > a.ScreenXS,
+    #Navigation > li > a.SmallerOrEqualScreenL,
+    #Navigation > li > a.SmallerOrEqualScreenM,
+    #Navigation > li > a.SmallerOrEqualScreenS,
+    #Navigation > li > a.SmallerOrEqualScreenXS {
+        display: none;
+    }
+}

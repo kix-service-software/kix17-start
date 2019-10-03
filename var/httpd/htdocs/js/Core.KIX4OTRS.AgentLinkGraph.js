@@ -533,7 +533,7 @@ Core.KIX4OTRS.AgentLinkGraph = (function(TargetNS) {
         $ContextObjectNode = $objectNode;
         ContextObjectName = objectName;
 
-        $Elements.Context.find('.Header > h2').html(ContextObjectName);
+        $Elements.Context.find('.Header > h2 > span').html(ContextObjectName);
         // get context menu position
         var ContextPos = {
             x: e.pageX + $Elements.GraphBody.scrollLeft() - 5,

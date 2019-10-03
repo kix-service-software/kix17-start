@@ -15,7 +15,7 @@
 
 [% RenderBlockStart("LinkConfigItemCustomerTable") %]
 <div id="LinkedCIPageDiv[% Data.DivCount | html %]" class="LinkedCIPageDiv" style="[% Data.Style | html %]" >
-    <table id="AvailableCIItemList" class="CIDataTable">
+    <table id="AvailableCIItemList" class="DataTable">
         <thead>
             <tr>
 [% RenderBlockStart("LinkConfigItemRowCheckboxHeaderCustomer") %]

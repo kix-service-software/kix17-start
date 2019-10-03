@@ -95,7 +95,11 @@ sub LoadDefaults {
     # Organization
     # (If this is anything other than '', then the email will have an
     # Organization X-Header)
-    $Self->{Organization} = 'Example Company';
+<<<<<<< HEAD
+    $Self->{Organization} = '';
+=======
+    $Self->{Organization} = ' ';
+>>>>>>> branch 'rel-17_DEVELOPMENT' of git@git.intra.cape-it.de:Softwareentwicklung/KIX/KIX.git
 
     # ProductName
     # (Application name displayed in frontend.)
@@ -177,19 +181,19 @@ sub LoadDefaults {
     $Self->{DefaultCharset} = 'utf-8';
 
     # default language
-    # (the default frontend language) [default: en]
-    $Self->{DefaultLanguage} = 'en';
+    # (the default frontend language) [default: de]
+    $Self->{DefaultLanguage} = 'de';
 
     # used languages
     # (short name = long name and file)
     $Self->{DefaultUsedLanguages} = {
         'de' => 'German',
-        'en' => 'English (United States)',
+        'en' => 'English',
     };
 
     $Self->{DefaultUsedLanguagesNative} = {
         'de' => 'Deutsch',
-        'en' => 'English (United States)',
+        'en' => 'English',
     };
 
     # default theme
@@ -664,7 +668,7 @@ sub LoadDefaults {
 
     # SessionName
     # (Name of the session key. E. g. Session, SessionID, KIX)
-    $Self->{SessionName} = 'KIXAgentInterface';
+    $Self->{SessionName} = 'KIXAgentSession';
 
     # SessionCheckRemoteIP
     # (If the application is used via a proxy-farm then the
@@ -868,78 +872,80 @@ sub LoadDefaults {
     $Self->{'Loader::Customer::CommonJS'}->{'000-Framework'} =  [
         'thirdparty/jquery-2.1.4/jquery.js',
         'thirdparty/jquery-browser-detection/jquery-browser-detection.js',
-        'thirdparty/jquery-validate-1.14.0/jquery.validate.js',
-        'thirdparty/jquery-ui-1.11.4/jquery-ui.js',
-        'thirdparty/stacktrace-0.6.4/stacktrace.js',
-        'thirdparty/jquery-pubsub/pubsub.js',
         'thirdparty/jquery-jstree-3.1.1/jquery.jstree.js',
-        'Core.Debug.js',
-        'Core.Exception.js',
-        'Core.Data.js',
-        'Core.JSON.js',
-        'Core.JavaScriptEnhancements.js',
-        'Core.Config.js',
+        'thirdparty/jquery-pubsub/pubsub.js',
+        'thirdparty/jquery-ui-1.11.4/jquery-ui.js',
+        'thirdparty/jquery-validate-1.14.0/jquery.validate.js',
+        'thirdparty/stacktrace-0.6.4/stacktrace.js',
+        'Core.AJAX.js',
         'Core.App.js',
         'Core.App.Responsive.js',
-        'Core.AJAX.js',
-        'Core.UI.js',
-        'Core.UI.InputFields.js',
-        'Core.UI.Accessibility.js',
-        'Core.UI.Dialog.js',
-        'Core.UI.RichTextEditor.js',
-        'Core.UI.Datepicker.js',
-        'Core.UI.Popup.js',
-        'Core.UI.TreeSelection.js',
-        'Core.UI.Autocomplete.js',
+        'Core.Config.js',
+        'Core.Customer.js',
+        'Core.Customer.Responsive.js',
+        'Core.Data.js',
+        'Core.Debug.js',
+        'Core.Exception.js',
         'Core.Form.js',
         'Core.Form.ErrorTooltips.js',
         'Core.Form.Validate.js',
-        'Core.Customer.js',
-        'Core.Customer.Responsive.js'
+        'Core.JavaScriptEnhancements.js',
+        'Core.JSON.js',
+        'Core.UI.js',
+        'Core.UI.Accessibility.js',
+        'Core.UI.Autocomplete.js',
+        'Core.UI.Datepicker.js',
+        'Core.UI.Dialog.js',
+        'Core.UI.InputFields.js',
+        'Core.UI.Pagination.js',
+        'Core.UI.Popup.js',
+        'Core.UI.RichTextEditor.js',
+        'Core.UI.TreeSelection.js',
     ];
 
     # Agent Common JS
     $Self->{'Loader::Agent::CommonJS'}->{'000-Framework'} =  [
         'thirdparty/jquery-2.1.4/jquery.js',
         'thirdparty/jquery-browser-detection/jquery-browser-detection.js',
+        'thirdparty/jquery-jstree-3.1.1/jquery.jstree.js',
+        'thirdparty/jquery-pubsub/pubsub.js',
         'thirdparty/jquery-ui-1.11.4/jquery-ui.js',
         'thirdparty/jquery-ui-touch-punch-0.2.3/jquery.ui.touch-punch.js',
         'thirdparty/jquery-validate-1.14.0/jquery.validate.js',
         'thirdparty/stacktrace-0.6.4/stacktrace.js',
-        'thirdparty/jquery-pubsub/pubsub.js',
-        'thirdparty/jquery-jstree-3.1.1/jquery.jstree.js',
-        'Core.JavaScriptEnhancements.js',
-        'Core.Debug.js',
-        'Core.Exception.js',
-        'Core.Data.js',
-        'Core.Config.js',
-        'Core.JSON.js',
+        'Core.Agent.js',
+        'Core.Agent.CustomerInformationCenterSearch.js',
+        'Core.Agent.Responsive.js',
+        'Core.Agent.Search.js',
+        'Core.AJAX.js',
         'Core.App.js',
         'Core.App.Responsive.js',
-        'Core.AJAX.js',
-        'Core.UI.js',
-        'Core.UI.InputFields.js',
-        'Core.UI.Accordion.js',
-        'Core.UI.Datepicker.js',
-        'Core.UI.DnD.js',
-        'Core.UI.Floater.js',
-        'Core.UI.Resizable.js',
-        'Core.UI.Table.js',
-        'Core.UI.Accessibility.js',
-        'Core.UI.RichTextEditor.js',
-        'Core.UI.Dialog.js',
-        'Core.UI.ActionRow.js',
-        'Core.UI.Popup.js',
-        'Core.UI.TreeSelection.js',
-        'Core.UI.Autocomplete.js',
+        'Core.Config.js',
+        'Core.Data.js',
+        'Core.Debug.js',
+        'Core.Exception.js',
         'Core.Form.js',
         'Core.Form.ErrorTooltips.js',
         'Core.Form.Validate.js',
-        'Core.Agent.js',
-        'Core.Agent.Search.js',
-        'Core.Agent.CustomerInformationCenterSearch.js',
+        'Core.JavaScriptEnhancements.js',
+        'Core.JSON.js',
+        'Core.UI.js',
+        'Core.UI.Accessibility.js',
+        'Core.UI.Accordion.js',
+        'Core.UI.ActionRow.js',
+        'Core.UI.Autocomplete.js',
+        'Core.UI.Datepicker.js',
+        'Core.UI.Dialog.js',
+        'Core.UI.DnD.js',
+        'Core.UI.Floater.js',
+        'Core.UI.InputFields.js',
         'Core.UI.Notification.js',
-        'Core.Agent.Responsive.js',
+        'Core.UI.Pagination.js',
+        'Core.UI.Popup.js',
+        'Core.UI.Resizable.js',
+        'Core.UI.RichTextEditor.js',
+        'Core.UI.Table.js',
+        'Core.UI.TreeSelection.js',
     ];
 
     # --------------------------------------------------- #
@@ -950,9 +956,7 @@ sub LoadDefaults {
 
     # Package::RepositoryRoot
     # (get online repository list, use the fist availabe result)
-    $Self->{'Package::RepositoryRoot'} = [
-        'http://ftp.otrs.org/pub/otrs/misc/packages/repository.xml',
-    ];
+    $Self->{'Package::RepositoryRoot'} = [];
 
     # Package::RepositoryList
     # (repository list)
@@ -973,7 +977,7 @@ sub LoadDefaults {
     # --------------------------------------------------- #
     $Self->{PGP}          = 0;
     $Self->{'PGP::Bin'}     = '/usr/bin/gpg';
-    $Self->{'PGP::Options'} = '--homedir /opt/otrs/.gnupg/ --batch --no-tty --yes';
+    $Self->{'PGP::Options'} = '--homedir /opt/kix/.gnupg/ --batch --no-tty --yes';
 
 #    $Self->{'PGP::Options'} = '--batch --no-tty --yes';
 #    $Self->{'PGP::Key::Password'}->{'D2DF79FA'} = 1234;
@@ -1122,7 +1126,7 @@ You can log in via the following URL:
 
     # SessionName
     # (Name of the session key. E. g. Session, SessionID, KIX)
-    $Self->{CustomerPanelSessionName} = 'KIXCustomerInterface';
+    $Self->{CustomerPanelSessionName} = 'KIXCustomerSession';
 
     # CustomerPanelUserID
     # (The customer panel db-uid.) [default: 1]

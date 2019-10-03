@@ -117,7 +117,7 @@ $Self->Is(
 
 $Self->Is(
     $XPoweredByHeader,
-    "OTRS (https://otrs.com/)",
+    "KIX (https://www.kixdesk.com/)",
     "Default X-Powered-By header",
 );
 

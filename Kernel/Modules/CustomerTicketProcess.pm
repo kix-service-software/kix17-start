@@ -18,8 +18,6 @@ use Kernel::System::VariableCheck qw(:all);
 
 our $ObjectManagerDisabled = 1;
 
-## no critic qw(Subroutines::ProhibitUnusedPrivateSubroutines)
-
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -29,27 +27,41 @@ sub new {
 
     # global config hash for id dissolution
     $Self->{NameToID} = {
-        Title          => 'Title',
-        State          => 'StateID',
-        StateID        => 'StateID',
-        Lock           => 'LockID',
-        LockID         => 'LockID',
-        Priority       => 'PriorityID',
-        PriorityID     => 'PriorityID',
-        Queue          => 'QueueID',
-        QueueID        => 'QueueID',
-        Customer       => 'CustomerID',
-        CustomerID     => 'CustomerID',
-        CustomerNo     => 'CustomerID',
-        CustomerUserID => 'CustomerUserID',
-        Type           => 'TypeID',
-        TypeID         => 'TypeID',
-        SLA            => 'SLAID',
-        SLAID          => 'SLAID',
-        Service        => 'ServiceID',
-        ServiceID      => 'ServiceID',
-        Article        => 'Article',
+        Title           => 'Title',
+        State           => 'StateID',
+        StateID         => 'StateID',
+        Priority        => 'PriorityID',
+        PriorityID      => 'PriorityID',
+        Queue           => 'QueueID',
+        QueueID         => 'QueueID',
+        Type            => 'TypeID',
+        TypeID          => 'TypeID',
+        SLA             => 'SLAID',
+        SLAID           => 'SLAID',
+        Service         => 'ServiceID',
+        ServiceID       => 'ServiceID',
+        Article         => 'Article',
+        HorizontalLine  => 'horizontalline',
+        HorizontalLine1 => 'horizontalline',
+        HorizontalLine2 => 'horizontalline',
+        HorizontalLine3 => 'horizontalline',
+        HorizontalLine4 => 'horizontalline',
+        HorizontalLine5 => 'horizontalline',
+        HorizontalLine6 => 'horizontalline',
+        HorizontalLine7 => 'horizontalline',
+        HorizontalLine8 => 'horizontalline',
+        HorizontalLine9 => 'horizontalline',
     };
+
+    # some fields should be skipped for the customer interface
+    $Self->{SkipFields} = [
+        'Customer', 'CustomerID', 'CustomerNo',
+        'CustomerUserID',
+        'Owner', 'OwnerID',
+        'Responsible', 'ResponsibleID',
+        'Lock', 'LockID',
+        'PendingTime'
+    ];
 
     return $Self;
 }
@@ -65,19 +77,11 @@ sub Run {
     my $ActivityDialogHashRef;
 
     # get needed objects
+    my $ActivityDialogObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog');
     my $LayoutObject         = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject         = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $ActivityDialogObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog');
-
-    # some fields should be skipped for the customer interface
-    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime', 'CustomerID' ];
 
     if ($TicketID) {
-
-        # include extra fields should be skipped
-        for my $Item (qw(Service SLA Queue)) {
-            push @{$SkipFields}, $Item;
-        }
 
         # check if there is a configured required permission
         # for the ActivityDialog (if there is one)
@@ -90,8 +94,10 @@ sub Run {
 
             if ( !IsHashRefWithData($ActivityDialogHashRef) ) {
                 return $LayoutObject->CustomerErrorScreen(
-                    Message => $LayoutObject->{LanguageObject}
-                        ->Translate( 'Couldn\'t get ActivityDialogEntityID "%s"!', $ActivityDialogEntityID ),
+                    Message => $LayoutObject->{LanguageObject}->Translate(
+                        'Couldn\'t get ActivityDialogEntityID "%s"!',
+                        $ActivityDialogEntityID,
+                    ),
                     Comment => Translatable('Please contact the administrator.'),
                 );
             }
@@ -160,7 +166,7 @@ sub Run {
                 %{$PossibleActivityDialogs} = $TicketObject->TicketAclData();
             }
 
-            # check if ACL resctictions exist
+            # check if ACL restrictions exist
             if ( !IsHashRefWithData($PossibleActivityDialogs) ) {
                 return $LayoutObject->CustomerNoPermission( WithHeader => 'yes' );
             }
@@ -180,17 +186,25 @@ sub Run {
         push @ProcessStates, 'FadeAway'
     }
 
-    # get process object
+    # create process object
+    $Kernel::OM->ObjectParamAdd(
+        'Kernel::System::ProcessManagement::Process' => {
+            ActivityObject         => $Kernel::OM->Get('Kernel::System::ProcessManagement::Activity'),
+            ActivityDialogObject   => $ActivityDialogObject,
+            TransitionObject       => $Kernel::OM->Get('Kernel::System::ProcessManagement::Transition'),
+            TransitionActionObject => $Kernel::OM->Get('Kernel::System::ProcessManagement::TransitionAction'),
+            }
+    );
     my $ProcessObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process');
 
-    # get the list of processes that customer can start
+    # get the list of processes that a customer can start
     my $ProcessList = $ProcessObject->ProcessList(
         ProcessState => \@ProcessStates,
         Interface    => ['CustomerInterface'],
     );
 
-    # also get the list of processes initiated by agents, as an activity dialog might be configured
-    # for the customer interface
+    # also get the list of processes initiated by agents, as an activity dialog might be
+    # configured for the customer interface
     my $FollowupProcessList = $ProcessObject->ProcessList(
         ProcessState => \@ProcessStates,
         Interface    => [ 'AgentInterface', 'CustomerInterface' ],
@@ -258,7 +272,7 @@ sub Run {
         return $Self->_DisplayProcessList(
             %Param,
             ProcessList     => $ProcessList,
-            ProcessEntityID => $ProcessEntityID
+            ProcessEntityID => $ProcessEntityID,
         );
     }
 
@@ -274,7 +288,7 @@ sub Run {
         # translate the error message (as it will be injected in the HTML)
         my $ErrorMessage = $LayoutObject->{LanguageObject}->Translate("The selected process is invalid!");
 
-        # return a predefined HTML sctructure as the AJAX call is expecting and HTML response
+        # return a predefined HTML structure as the AJAX call is expecting and HTML response
         return $LayoutObject->Attachment(
             ContentType => 'text/html; charset=' . $LayoutObject->{Charset},
             Content     => '<div class="ServerError" data-message="' . $ErrorMessage . '"></div>',
@@ -354,10 +368,6 @@ sub Run {
 }
 
 sub _RenderAjax {
-
-    # FatalError is safe because a JSON structure is expecting, then it will result into a
-    # communications error
-
     my ( $Self, %Param ) = @_;
 
     # get layout object
@@ -385,8 +395,10 @@ sub _RenderAjax {
 
     if ( !IsHashRefWithData($ActivityDialog) ) {
         $LayoutObject->CustomerFatalError(
-            Message => $LayoutObject->{LanguageObject}
-                ->Translate( 'No ActivityDialog configured for %s in _RenderAjax!', $ActivityDialogEntityID ),
+            Message => $LayoutObject->{LanguageObject}->Translate(
+                'No ActivityDialog configured for %s in _RenderAjax!',
+                $ActivityDialogEntityID,
+            ),
         );
     }
 
@@ -446,9 +458,6 @@ sub _RenderAjax {
     # update 'Shown' for $Self->{DynamicField}
     $Self->_GetShownDynamicFields();
 
-    # some fields should be skipped for the customer interface
-    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime', 'CustomerID' ];
-
     my %DynamicFieldHTML;
     my $AJAXUpdatableFields = $Self->_GetAJAXUpdatableFields(
         ActivityDialogFields => $ActivityDialog->{Fields},
@@ -459,7 +468,7 @@ sub _RenderAjax {
     for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
 
         # some fields should be skipped for the customer interface
-        next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{$SkipFields} );
+        next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{ $Self->{SkipFields} } );
 
         # Skip if we're working on a field that was already done with or without ID
         if (
@@ -814,20 +823,33 @@ sub _GetParam {
     my %ValuesGotten;
     my $Value;
 
+    # get activity dialog object
+    my $ActivityDialogObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog');
+
+    # create process object
+    $Kernel::OM->ObjectParamAdd(
+        'Kernel::System::ProcessManagement::Process' => {
+            ActivityObject         => $Kernel::OM->Get('Kernel::System::ProcessManagement::Activity'),
+            ActivityDialogObject   => $ActivityDialogObject,
+            TransitionObject       => $Kernel::OM->Get('Kernel::System::ProcessManagement::Transition'),
+            TransitionActionObject => $Kernel::OM->Get('Kernel::System::ProcessManagement::TransitionAction'),
+            }
+    );
+    my $ProcessObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process');
+
     # If we got no ActivityDialogEntityID and no TicketID
     # we have to get the Processes' Startpoint
     if ( !$ActivityDialogEntityID && !$TicketID ) {
-        my $ActivityActivityDialog
-            = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process')->ProcessStartpointGet(
+        my $ActivityActivityDialog = $ProcessObject->ProcessStartpointGet(
             ProcessEntityID => $ProcessEntityID,
-            );
+        );
         if (
             !$ActivityActivityDialog->{ActivityDialog}
             || !$ActivityActivityDialog->{Activity}
         ) {
             my $Message = $LayoutObject->{LanguageObject}->Translate(
                 'Got no Start ActivityEntityID or Start ActivityDialogEntityID for Process: %s in _GetParam!',
-                $ProcessEntityID
+                $ProcessEntityID,
             );
 
             # does not show header and footer again
@@ -845,15 +867,17 @@ sub _GetParam {
         $ActivityEntityID       = $ActivityActivityDialog->{Activity};
     }
 
-    my $ActivityDialog = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog')->ActivityDialogGet(
+    my $ActivityDialog = $ActivityDialogObject->ActivityDialogGet(
         ActivityDialogEntityID => $ActivityDialogEntityID,
         Interface              => 'CustomerInterface',
     );
 
     if ( !IsHashRefWithData($ActivityDialog) ) {
         return $LayoutObject->CustomerErrorScreen(
-            Message => $LayoutObject->{LanguageObject}
-                ->Translate( 'Couldn\'t get ActivityDialogEntityID "%s"!', $ActivityDialogEntityID ),
+            Message => $LayoutObject->{LanguageObject}->Translate(
+                'Couldn\'t get ActivityDialogEntityID "%s"!',
+                $ActivityDialogEntityID,
+            ),
             Comment => Translatable('Please contact the administrator.'),
         );
     }
@@ -872,8 +896,10 @@ sub _GetParam {
         %GetParam = %Ticket;
         if ( !IsHashRefWithData( \%GetParam ) ) {
             $LayoutObject->CustomerFatalError(
-                Message => $LayoutObject->{LanguageObject}
-                    ->Translate( 'Couldn\'t get Ticket for TicketID: %s in _GetParam!', $TicketID ),
+                Message => $LayoutObject->{LanguageObject}->Translate(
+                    'Couldn\'t get Ticket for TicketID: %s in _GetParam!',
+                    $TicketID,
+                ),
             );
         }
 
@@ -883,8 +909,9 @@ sub _GetParam {
         };
         if ( !$ActivityEntityID ) {
             $LayoutObject->CustomerFatalError(
-                Message =>
-                    Translatable('Couldn\'t determine ActivityEntityID. DynamicField or Config isn\'t set properly!'),
+                Message => Translatable(
+                    'Couldn\'t determine ActivityEntityID. DynamicField or Config isn\'t set properly!'
+                ),
             );
         }
 
@@ -921,18 +948,15 @@ sub _GetParam {
         );
         next DYNAMICFIELD if !$IsCustomerInterfaceCapable;
 
-        push( @{$Self->{DynamicField}}, $DynamicFieldConfig);
+        push(@{$Self->{DynamicField}}, $DynamicFieldConfig);
     }
-
-    # some fields should be skipped for the customer interface
-    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime', 'CustomerID' ];
 
     # Get the activitydialogs's Submit Param's or Config Params
     DIALOGFIELD:
     for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
 
         # some fields should be skipped for the customer interface
-        next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{$SkipFields} );
+        next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{ $Self->{SkipFields} } );
 
         # Skip if we're working on a field that was already done with or without ID
         if ( $Self->{NameToID}{$CurrentField} && $ValuesGotten{ $Self->{NameToID}{$CurrentField} } ) {
@@ -1046,15 +1070,6 @@ sub _GetParam {
             $ValuesGotten{Article} = 1 if ( $GetParam{Subject} && $GetParam{Body} );
         }
 
-        if ( $CurrentField eq 'CustomerID' ) {
-            $GetParam{Customer} = $ParamObject->GetParam(
-                Param => 'SelectedCustomerUser',
-            ) || '';
-            $GetParam{CustomerUserID} = $ParamObject->GetParam(
-                Param => 'SelectedCustomerUser',
-            ) || '';
-        }
-
         # Non DynamicFields
         # 1. try to get the required param
         $Value = $ParamObject->GetParam( Param => $Self->{NameToID}{$CurrentField} );
@@ -1079,9 +1094,7 @@ sub _GetParam {
         }
 
         # if no Submitted nore Ticket Param get ActivityDialog Config's Param
-        if ( $CurrentField ne 'CustomerID' ) {
-            $Value = $ActivityDialog->{Fields}{$CurrentField}{DefaultValue};
-        }
+        $Value = $ActivityDialog->{Fields}{$CurrentField}{DefaultValue};
         if ($Value) {
             $ValuesGotten{ $Self->{NameToID}{$CurrentField} } = 1;
             $GetParam{$CurrentField} = $Value;
@@ -1089,14 +1102,16 @@ sub _GetParam {
         }
     }
     REQUIREDFIELDLOOP:
-    for my $CurrentField (qw(Queue State Lock Priority)) {
+    for my $CurrentField (qw(Queue State Priority)) {
         $Value = undef;
         if ( !$ValuesGotten{ $Self->{NameToID}{$CurrentField} } ) {
             $Value = $ConfigObject->Get("Process::Default$CurrentField");
             if ( !$Value ) {
 
-                my $Message = $LayoutObject->{LanguageObject}
-                    ->Translate( 'Process::Default%s Config Value missing!', $CurrentField );
+                my $Message = $LayoutObject->{LanguageObject}->Translate(
+                    'Process::Default%s Config Value missing!',
+                    $CurrentField,
+                );
 
                 # does not show header and footer again
                 if ( $Self->{IsMainWindow} ) {
@@ -1121,9 +1136,6 @@ sub _GetParam {
     if ( $GetParam{State} && !$GetParam{StateID} ) {
         $GetParam{StateID} = $Kernel::OM->Get('Kernel::System::State')->StateLookup( State => $GetParam{State} );
     }
-    if ( $GetParam{Lock} && !$GetParam{LockID} ) {
-        $GetParam{LockID} = $Kernel::OM->Get('Kernel::System::Lock')->LockLookup( Lock => $GetParam{Lock} );
-    }
     if ( $GetParam{Priority} && !$GetParam{PriorityID} ) {
         $GetParam{PriorityID} = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
             Priority => $GetParam{Priority},
@@ -1131,13 +1143,7 @@ sub _GetParam {
     }
 
     # and finally we'll have the special parameters:
-    $GetParam{ResponsibleAll} = $ParamObject->GetParam( Param => 'ResponsibleAll' );
-    $GetParam{OwnerAll}       = $ParamObject->GetParam( Param => 'OwnerAll' );
-# ---
-# ITSMIncidentProblemManagement
-# ---
     $GetParam{ElementChanged} = $ParamObject->GetParam( Param => 'ElementChanged' );
-# ---
 
     # All Ticket DynamicFields
     # used for ACL checking
@@ -1189,16 +1195,29 @@ sub _OutputActivityDialog {
 
     my $ActivityActivityDialog;
     my %Ticket;
-    my %Error        = ();
-    my %ErrorMessage = ();
+    my %Error         = ();
+    my %ErrorMessages = ();
 
-    # If we had Errors, we got an Error hash
-    %Error        = %{ $Param{Error} }        if ( IsHashRefWithData( $Param{Error} ) );
-    %ErrorMessage = %{ $Param{ErrorMessage} } if ( IsHashRefWithData( $Param{ErrorMessage} ) );
+    # If we had Errors, we got an Errorhash
+    %Error         = %{ $Param{Error} }         if ( IsHashRefWithData( $Param{Error} ) );
+    %ErrorMessages = %{ $Param{ErrorMessages} } if ( IsHashRefWithData( $Param{ErrorMessages} ) );
 
-    # get process object
+    # get needed objects
+    my $ConfigObject         = $Kernel::OM->Get('Kernel::Config');
+    my $ActivityObject       = $Kernel::OM->Get('Kernel::System::ProcessManagement::Activity');
+    my $ActivityDialogObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog');
+    my $TicketObject         = $Kernel::OM->Get('Kernel::System::Ticket');
+
+    # create process object
+    $Kernel::OM->ObjectParamAdd(
+        'Kernel::System::ProcessManagement::Process' => {
+            ActivityObject         => $ActivityObject,
+            ActivityDialogObject   => $ActivityDialogObject,
+            TransitionObject       => $Kernel::OM->Get('Kernel::System::ProcessManagement::Transition'),
+            TransitionActionObject => $Kernel::OM->Get('Kernel::System::ProcessManagement::TransitionAction'),
+            }
+    );
     my $ProcessObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process');
-    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
 
     if ( !$TicketID ) {
         $ActivityActivityDialog = $ProcessObject->ProcessStartpointGet(
@@ -1208,7 +1227,7 @@ sub _OutputActivityDialog {
         if ( !IsHashRefWithData($ActivityActivityDialog) ) {
             my $Message = $LayoutObject->{LanguageObject}->Translate(
                 'Can\'t get StartActivityDialog and StartActivityDialog for the ProcessEntityID "%s"!',
-                $Param{ProcessEntityID}
+                $Param{ProcessEntityID},
             );
 
             # does not show header and footer again
@@ -1226,7 +1245,7 @@ sub _OutputActivityDialog {
     else {
 
         # no AJAX update in this part
-        %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
+        %Ticket = $TicketObject->TicketGet(
             TicketID      => $TicketID,
             UserID        => $ConfigObject->Get('CustomerPanelUserID'),
             DynamicFields => 1,
@@ -1245,9 +1264,10 @@ sub _OutputActivityDialog {
 
         if ( !$Ticket{$DynamicFieldProcessID} || !$Ticket{$DynamicFieldActivityID} ) {
             $LayoutObject->CustomerFatalError(
-                Message =>
-                    $LayoutObject->{LanguageObject}
-                    ->Translate( 'Can\'t get ProcessEntityID or ActivityEntityID for Ticket "%s"!', $Param{TicketID} ),
+                Message => $LayoutObject->{LanguageObject}->Translate(
+                    'Can\'t get ProcessEntityID or ActivityEntityID for Ticket "%s"!',
+                    $Param{TicketID},
+                ),
             );
         }
 
@@ -1257,14 +1277,14 @@ sub _OutputActivityDialog {
         };
     }
 
-    my $Activity = $Kernel::OM->Get('Kernel::System::ProcessManagement::Activity')->ActivityGet(
+    my $Activity = $ActivityObject->ActivityGet(
         Interface        => 'CustomerInterface',
         ActivityEntityID => $ActivityActivityDialog->{Activity}
     );
     if ( !$Activity ) {
         my $Message = $LayoutObject->{LanguageObject}->Translate(
             'Can\'t get Activity configuration for ActivityEntityID "%s"!',
-            $ActivityActivityDialog->{Activity}
+            $ActivityActivityDialog->{Activity},
         );
 
         # does not show header and footer again
@@ -1279,14 +1299,14 @@ sub _OutputActivityDialog {
         );
     }
 
-    my $ActivityDialog = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog')->ActivityDialogGet(
+    my $ActivityDialog = $ActivityDialogObject->ActivityDialogGet(
         ActivityDialogEntityID => $ActivityActivityDialog->{ActivityDialog},
         Interface              => 'CustomerInterface',
     );
     if ( !IsHashRefWithData($ActivityDialog) ) {
         my $Message = $LayoutObject->{LanguageObject}->Translate(
             'Can\'t get ActivityDialog configuration for ActivityDialogEntityID "%s"!',
-            $ActivityActivityDialog->{ActivityDialog}
+            $ActivityActivityDialog->{ActivityDialog},
         );
 
         # does not show header and footer again
@@ -1384,7 +1404,7 @@ sub _OutputActivityDialog {
             );
         }
 
-        # display complete header and nav bar in ajax dialogs when there is a server error
+        # display complete header and navigation bar in AJAX dialogs when there is a server error
         $Output = $LayoutObject->CustomerHeader();
         $Output .= $LayoutObject->CustomerNavigationBar();
 
@@ -1418,7 +1438,7 @@ sub _OutputActivityDialog {
                     DescriptionLong
                         => $LayoutObject->{LanguageObject}->Translate(
                         $ActivityDialog->{DescriptionLong},
-                        ),
+                    ),
                 },
             );
         }
@@ -1470,20 +1490,18 @@ sub _OutputActivityDialog {
         ActivityDialogFields => $ActivityDialog->{Fields},
     );
 
-    # some fields should be skipped for the customer interface
-    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime', 'CustomerID' ];
-
     # Loop through ActivityDialogFields and render their output
     DIALOGFIELD:
     for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
 
         # some fields should be skipped for the customer interface
-        next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{$SkipFields} );
+        next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{ $Self->{SkipFields} } );
 
         if ( !IsHashRefWithData( $ActivityDialog->{Fields}{$CurrentField} ) ) {
             my $Message = $LayoutObject->{LanguageObject}->Translate(
                 'Can\'t get data for Field "%s" of ActivityDialog "%s"!',
-                $CurrentField, $ActivityActivityDialog->{ActivityDialog}
+                $CurrentField,
+                $ActivityActivityDialog->{ActivityDialog},
             );
 
             # does not show header and footer again
@@ -1513,7 +1531,7 @@ sub _OutputActivityDialog {
                 DescriptionLong     => $ActivityDialog->{Fields}{$CurrentField}{DescriptionLong},
                 Ticket              => \%Ticket || {},
                 Error               => \%Error || {},
-                ErrorMessage        => \%ErrorMessage || {},
+                ErrorMessages       => \%ErrorMessages || {},
                 FormID              => $Self->{FormID},
                 GetParam            => $Param{GetParam},
                 AJAXUpdatableFields => $AJAXUpdatableFields,
@@ -1544,7 +1562,7 @@ sub _OutputActivityDialog {
 
             # We don't render Fields twice,
             # if there was already a Config without ID, skip this field
-            # next DIALOGFIELD if $RenderedFields{ $Self->{NameToID}->{$CurrentField} };
+            next DIALOGFIELD if $RenderedFields{ $Self->{NameToID}->{$CurrentField} };
 
             my $Response = $Self->_RenderState(
                 ActivityDialogField => $ActivityDialog->{Fields}{$CurrentField},
@@ -1645,6 +1663,37 @@ sub _OutputActivityDialog {
             $Output .= $Response->{HTML};
 
             $RenderedFields{ $Self->{NameToID}->{$CurrentField} } = 1;
+        }
+
+        # render HorizontalLine
+        elsif ( $Self->{NameToID}->{$CurrentField} eq 'horizontalline' ) {
+            my $Response = $Self->_RenderHorizontalLine(
+                ActivityDialogField => $ActivityDialog->{Fields}{$CurrentField},
+                FieldName           => $CurrentField,
+                DescriptionShort    => $ActivityDialog->{Fields}{$CurrentField}{DescriptionShort},
+                DescriptionLong     => $ActivityDialog->{Fields}{$CurrentField}{DescriptionLong},
+                Ticket              => \%Ticket || {},
+                Error               => \%Error || {},
+                FormID              => $Self->{FormID},
+                GetParam            => $Param{GetParam},
+                AJAXUpdatableFields => $AJAXUpdatableFields,
+            );
+
+            if ( !$Response->{Success} ) {
+
+                # does not show header and footer again
+                if ( $Self->{IsMainWindow} ) {
+                    return $LayoutObject->CustomerError(
+                        Message => $Response->{Message},
+                    );
+                }
+
+                $LayoutObject->CustomerFatalError(
+                    Message => $Response->{Message},
+                );
+            }
+
+            $Output .= $Response->{HTML};
         }
 
         # render Service
@@ -1841,7 +1890,7 @@ sub _OutputActivityDialog {
             Data => {},
         );
 
-        $FooterCSSClass = 'Centered';
+        $FooterCSSClass = 'Center';
     }
 
     # set submit button data
@@ -1985,12 +2034,14 @@ sub _RenderDynamicField {
             && $Param{Error}->{ $Param{FieldName} } ne ''
         ) {
             $ServerError = 1;
-            if (
-                defined $Param{ErrorMessage}->{ $Param{FieldName} }
-                && $Param{ErrorMessage}->{ $Param{FieldName} } ne ''
-            ) {
-                $ErrorMessage = $Param{ErrorMessage}->{ $Param{FieldName} };
-            }
+        }
+    }
+    if ( IsHashRefWithData( $Param{ErrorMessages} ) ) {
+        if (
+            defined $Param{ErrorMessages}->{ $Param{FieldName} }
+            && $Param{ErrorMessages}->{ $Param{FieldName} } ne ''
+        ) {
+            $ErrorMessage = $Param{ErrorMessages}->{ $Param{FieldName} };
         }
     }
 
@@ -2049,6 +2100,81 @@ END
     return {
         Success => 1,
         HTML    => $LayoutObject->Output( TemplateFile => 'ProcessManagement/DynamicField' ),
+    };
+}
+
+sub _RenderHorizontalLine {
+    my ( $Self, %Param ) = @_;
+
+    # get layout object
+    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+
+    for my $Needed (qw(FormID)) {
+        if ( !$Param{$Needed} ) {
+            return {
+                Success => 0,
+                Message => $LayoutObject->{LanguageObject}->Translate(
+                    'Parameter %s is missing in %s.',
+                    $Needed, '_RenderHorizontalLine'
+                ),
+            };
+        }
+    }
+    if ( !IsHashRefWithData( $Param{ActivityDialogField} ) ) {
+        return {
+            Success => 0,
+            Message => $LayoutObject->{LanguageObject}->Translate(
+                'Parameter %s is missing in %s.',
+                'ActivityDialogField',
+                '_RenderHorizontalLine'
+            ),
+        };
+    }
+
+    my %Data = (
+        Label            => $LayoutObject->{LanguageObject}->Translate(""),
+        FieldID          => 'HorizontalLine',
+        FormID           => $Param{FormID},
+        Value            => '',
+        Name             => 'HorizontalLine',
+        MandatoryClass   => '',
+        ValidateRequired => '',
+    );
+
+    $LayoutObject->Block(
+        Name => $Param{ActivityDialogField}->{LayoutBlock} || 'HorizontalLine',
+        Data => \%Data,
+    );
+
+    # set mandatory label marker
+    if ( $Data{MandatoryClass} && $Data{MandatoryClass} ne '' ) {
+        $LayoutObject->Block(
+            Name => 'LabelSpan',
+            Data => {},
+        );
+    }
+
+    if ( $Param{DescriptionShort} ) {
+        $LayoutObject->Block(
+            Name => $Param{ActivityDialogField}->{LayoutBlock} || 'HorizontalLine:DescriptionShort',
+            Data => {
+                DescriptionShort => $Param{DescriptionShort},
+            },
+        );
+    }
+
+    if ( $Param{DescriptionLong} ) {
+        $LayoutObject->Block(
+            Name => $Param{ActivityDialogField}->{LayoutBlock} || 'HorizontalLine:DescriptionLong',
+            Data => {
+                DescriptionLong => $Param{DescriptionLong},
+            },
+        );
+    }
+
+    return {
+        Success => 1,
+        HTML    => $LayoutObject->Output( TemplateFile => 'ProcessManagement/HorizontalLine' ),
     };
 }
 
@@ -2241,11 +2367,9 @@ sub _RenderArticle {
             Valid => 1,
         );
         my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{Ticket}->{QueueID} );
-        my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->GroupMemberList(
+        my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
             GroupID => $GID,
             Type    => 'note',
-            Result  => 'HASH',
-            Cached  => 1,
         );
         for my $UserID ( sort keys %MemberList ) {
             $ShownUsers{$UserID} = $AllGroupsMembers{$UserID};
@@ -2302,8 +2426,11 @@ sub _RenderCustomer {
         if ( !$Param{$Needed} ) {
             return {
                 Success => 0,
-                Message => $LayoutObject->{LanguageObject}
-                    ->Translate( 'Parameter %s is missing in %s.', $Needed, '_RenderResponsible' ),
+                Message => $LayoutObject->{LanguageObject}->Translate(
+                    'Parameter %s is missing in %s.',
+                    $Needed,
+                    '_RenderCustomer',
+                ),
             };
         }
     }
@@ -3056,7 +3183,7 @@ sub _RenderState {
         };
     }
 
-    my $States = $Self->_GetStates( %{ $Param{Ticket} } );
+    my $States = $Self->_GetStates( %{ $Param{GetParam} } );
 
     my %Data = (
         Label            => $LayoutObject->{LanguageObject}->Translate("Next ticket state"),
@@ -3327,7 +3454,7 @@ sub _StoreActivityDialog {
     my $ProcessEntityID;
     my $ActivityEntityID;
     my %Error;
-    my %ErrorMessage;
+    my %ErrorMessages;
 
     my %TicketParam;
 
@@ -3341,15 +3468,19 @@ sub _StoreActivityDialog {
         );
     }
 
-    my $ActivityDialog = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog')->ActivityDialogGet(
+    # get activity dialog object
+    my $ActivityDialogObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::ActivityDialog');
+    my $ActivityDialog       = $ActivityDialogObject->ActivityDialogGet(
         ActivityDialogEntityID => $ActivityDialogEntityID,
         Interface              => 'CustomerInterface',
     );
 
     if ( !IsHashRefWithData($ActivityDialog) ) {
         $LayoutObject->CustomerFatalError(
-            Message => $LayoutObject->{LanguageObject}
-                ->Translate( 'Couldn\'t get Config for ActivityDialogEntityID "%s"!', $ActivityDialogEntityID ),
+            Message => $LayoutObject->{LanguageObject}->Translate(
+                'Couldn\'t get Config for ActivityDialogEntityID "%s"!',
+                $ActivityDialogEntityID,
+            ),
         );
     }
 
@@ -3374,20 +3505,16 @@ sub _StoreActivityDialog {
     for my $Count ( reverse sort @AttachmentIDs ) {
         my $Delete = $ParamObject->GetParam( Param => "AttachmentDelete$Count" );
         next COUNT if !$Delete;
-        %Error = ();
-        $Error{AttachmentDelete} = 1;
         $UploadCacheObject->FormIDRemoveFile(
             FormID => $Self->{FormID},
             FileID => $Count,
         );
         $IsUpload = 1;
+        $Error{AttachmentDelete} = 1;
     }
 
     # attachment upload
     if ( $ParamObject->GetParam( Param => 'AttachmentUpload' ) ) {
-        $IsUpload                = 1;
-        %Error                   = ();
-        $Error{AttachmentUpload} = 1;
         my %UploadStuff = $ParamObject->GetUploadAll(
             Param => 'FileUpload',
         );
@@ -3396,10 +3523,9 @@ sub _StoreActivityDialog {
             Disposition => 'attachment',
             %UploadStuff,
         );
+        $IsUpload = 1;
+        $Error{AttachmentUpload} = 1;
     }
-
-    # some fields should be skipped for the customer interface
-    my $SkipFields = [ 'Owner', 'Responsible', 'Lock', 'PendingTime', 'CustomerID' ];
 
     # get dynamic field backend object
     my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
@@ -3412,7 +3538,7 @@ sub _StoreActivityDialog {
         for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
 
             # some fields should be skipped for the customer interface
-            next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{$SkipFields} );
+            next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{ $Self->{SkipFields} } );
 
             if ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
                 my $DynamicFieldName = $1;
@@ -3438,10 +3564,17 @@ sub _StoreActivityDialog {
                 # Will be extended later on for ACL Checking:
                 my $PossibleValuesFilter;
 
-                # if we have an invisible field, use configuration default value
-                if ( $ActivityDialog->{Fields}->{$CurrentField}{Display} == 0 ) {
-                    $TicketParam{$CurrentField} = $ActivityDialog->{Fields}->{$CurrentField}->{DefaultValue}
-                        || '';
+                # if we have an invisible field, use config's default value
+                if ( $ActivityDialog->{Fields}->{$CurrentField}->{Display} == 0 ) {
+                    if (
+                        defined $ActivityDialog->{Fields}->{$CurrentField}->{DefaultValue}
+                        && length $ActivityDialog->{Fields}->{$CurrentField}->{DefaultValue}
+                    ) {
+                        $TicketParam{$CurrentField} = $ActivityDialog->{Fields}->{$CurrentField}->{DefaultValue};
+                    }
+                    else {
+                        $TicketParam{$CurrentField} = '';
+                    }
 # ---
 # ITSMIncidentProblemManagement
 # ---
@@ -3469,16 +3602,16 @@ sub _StoreActivityDialog {
 
                     if ( !IsHashRefWithData($ValidationResult) ) {
                         $LayoutObject->CustomerFatalError(
-                            Message =>
-                                $LayoutObject->{LanguageObject}->Translate(
-                                'Could not perform validation on field %s!', $DynamicFieldConfig->{Label}
-                                ),
+                            Message => $LayoutObject->{LanguageObject}->Translate(
+                                'Could not perform validation on field %s!',
+                                $DynamicFieldConfig->{Label},
+                            ),
                         );
                     }
 
                     if ( $ValidationResult->{ServerError} ) {
-                        $Error{ $DynamicFieldConfig->{Name} }        = 1;
-                        $ErrorMessage{ $DynamicFieldConfig->{Name} } = $ValidationResult->{ErrorMessage} || '';
+                        $Error{ $DynamicFieldConfig->{Name} }         = 1;
+                        $ErrorMessages{ $DynamicFieldConfig->{Name} } = $ValidationResult->{ErrorMessage} || '';
                     }
 
                     $TicketParam{$CurrentField} =
@@ -3492,35 +3625,6 @@ sub _StoreActivityDialog {
                 # In case of DynamicFields there is no NameToID translation
                 # so just take the DynamicField name
                 $CheckedFields{$CurrentField} = 1;
-            }
-            elsif (
-                $Self->{NameToID}->{$CurrentField} eq 'CustomerID'
-                || $Self->{NameToID}->{$CurrentField} eq 'CustomerUserID'
-            ) {
-
-                next DIALOGFIELD if $CheckedFields{ $Self->{NameToID}->{'CustomerID'} };
-
-                my $CustomerID = $Param{GetParam}->{CustomerID} || $Self->{UserCustomerID};
-                if ( !$CustomerID ) {
-                    $Error{'CustomerID'} = 1;
-                }
-                $TicketParam{CustomerID} = $CustomerID;
-
-                # Unfortunately TicketCreate needs 'CustomerUser' as param instead of 'CustomerUserID'
-                my $CustomerUserID = $ParamObject->GetParam( Param => 'SelectedCustomerUser' )
-                    || $Self->{UserID};
-                if ( !$CustomerUserID ) {
-                    $CustomerUserID = $ParamObject->GetParam( Param => 'SelectedUserID' );
-                }
-                if ( !$CustomerUserID ) {
-                    $Error{'CustomerUserID'} = 1;
-                }
-                else {
-                    $TicketParam{CustomerUser} = $CustomerUserID;
-                }
-                $CheckedFields{ $Self->{NameToID}->{'CustomerID'} }     = 1;
-                $CheckedFields{ $Self->{NameToID}->{'CustomerUserID'} } = 1;
-
             }
             else {
 
@@ -3559,8 +3663,16 @@ sub _StoreActivityDialog {
     }
 
     # get needed objects
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+    $Kernel::OM->ObjectParamAdd(
+        'Kernel::System::ProcessManagement::Process' => {
+            ActivityObject         => $Kernel::OM->Get('Kernel::System::ProcessManagement::Activity'),
+            ActivityDialogObject   => $ActivityDialogObject,
+            TransitionObject       => $Kernel::OM->Get('Kernel::System::ProcessManagement::Transition'),
+            TransitionActionObject => $Kernel::OM->Get('Kernel::System::ProcessManagement::TransitionAction'),
+            }
+    );
     my $ProcessObject = $Kernel::OM->Get('Kernel::System::ProcessManagement::Process');
-    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
     my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
 
     my @Notify;
@@ -3586,7 +3698,7 @@ sub _StoreActivityDialog {
             $LayoutObject->CustomerFatalError(
                 Message => $LayoutObject->{LanguageObject}->Translate(
                     'No StartActivityDialog or StartActivityDialog for Process "%s" configured!',
-                    $Param{ProcessEntityID}
+                    $Param{ProcessEntityID},
                 ),
             );
         }
@@ -3651,7 +3763,7 @@ sub _StoreActivityDialog {
                 $LayoutObject->CustomerFatalError(
                     Message => $LayoutObject->{LanguageObject}->Translate(
                         'Couldn\'t create ticket for Process with ProcessEntityID "%s"!',
-                        $Param{ProcessEntityID}
+                        $Param{ProcessEntityID},
                     ),
                 );
             }
@@ -3665,7 +3777,8 @@ sub _StoreActivityDialog {
                 $LayoutObject->CustomerFatalError(
                     Message => $LayoutObject->{LanguageObject}->Translate(
                         'Couldn\'t set ProcessEntityID "%s" on TicketID "%s"!',
-                        $Param{ProcessEntityID}, $TicketID
+                        $Param{ProcessEntityID},
+                        $TicketID,
                     ),
                 );
             }
@@ -3683,7 +3796,8 @@ sub _StoreActivityDialog {
                 $LayoutObject->CustomerFatalError(
                     Message => $LayoutObject->{LanguageObject}->Translate(
                         'Couldn\'t set ActivityEntityID "%s" on TicketID "%s"!',
-                        $Param{ProcessEntityID}, $TicketID
+                        $Param{ProcessEntityID},
+                        $TicketID,
                     ),
                     Comment => Translatable('Please contact the administrator.'),
                 );
@@ -3697,11 +3811,14 @@ sub _StoreActivityDialog {
 
             if ( !IsHashRefWithData( \%Ticket ) ) {
                 $LayoutObject->CustomerFatalError(
-                    Message => $LayoutObject->{LanguageObject}
-                        ->Translate( 'Could not store ActivityDialog, invalid TicketID: %s!', $TicketID ),
+                    Message => $LayoutObject->{LanguageObject}->Translate(
+                        'Could not store ActivityDialog, invalid TicketID: %s!',
+                        $TicketID,
+                    ),
                     Comment => Translatable('Please contact the administrator.'),
                 );
             }
+
             for my $FieldName ( @{ $ActivityDialog->{FieldOrder} } ) {
                 if ( $FieldName =~ m/^DynamicField_(.*)/xms ) {
                     my $Field = $1;
@@ -3735,8 +3852,10 @@ sub _StoreActivityDialog {
 
         if ( !IsHashRefWithData( \%Ticket ) ) {
             $LayoutObject->CustomerFatalError(
-                Message => $LayoutObject->{LanguageObject}
-                    ->Translate( 'Could not store ActivityDialog, invalid TicketID: %s!', $TicketID ),
+                Message => $LayoutObject->{LanguageObject}->Translate(
+                    'Could not store ActivityDialog, invalid TicketID: %s!',
+                    $TicketID,
+                ),
             );
         }
 
@@ -3794,14 +3913,15 @@ sub _StoreActivityDialog {
     }
 
     # if we got errors go back to displaying the ActivityDialog
-    if ( IsHashRefWithData( \%Error ) ) {
+    if ( $IsUpload || IsHashRefWithData( \%Error ) ) {
         return $Self->_OutputActivityDialog(
             ProcessEntityID        => $ProcessEntityID,
             TicketID               => $TicketID || undef,
             ActivityDialogEntityID => $ActivityDialogEntityID,
             Error                  => \%Error,
-            ErrorMessage           => \%ErrorMessage,
+            ErrorMessages          => \%ErrorMessages,
             GetParam               => $Param{GetParam},
+            IsUpload               => $IsUpload,
             Notify                 => \@Notify,
         );
     }
@@ -3814,16 +3934,19 @@ sub _StoreActivityDialog {
     for my $CurrentField ( @{ $ActivityDialog->{FieldOrder} } ) {
 
         # some fields should be skipped for the customer interface
-        next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{$SkipFields} );
+        next DIALOGFIELD if ( grep { $_ eq $CurrentField } @{ $Self->{SkipFields} } );
 
         if ( !IsHashRefWithData( $ActivityDialog->{Fields}->{$CurrentField} ) ) {
             $LayoutObject->CustomerFatalError(
                 Message => $LayoutObject->{LanguageObject}->Translate(
-                    'Can\'t get data for Field "%s" of ActivityDialog "%s"!', $CurrentField,
-                    $ActivityDialogEntityID
+                    'Can\'t get data for Field "%s" of ActivityDialog "%s"!',
+                    $CurrentField,
+                    $ActivityDialogEntityID,
                 ),
             );
         }
+
+        next DIALOGFIELD if defined $Self->{NameToID}{$CurrentField} && $Self->{NameToID}{$CurrentField} eq 'horizontalline';
 
         if ( $CurrentField =~ m{^DynamicField_(.*)}xms ) {
             my $DynamicFieldName = $1;
@@ -3855,7 +3978,9 @@ sub _StoreActivityDialog {
                 $LayoutObject->CustomerFatalError(
                     Message => $LayoutObject->{LanguageObject}->Translate(
                         'Could not set DynamicField value for %s of Ticket with ID "%s" in ActivityDialog "%s"!',
-                        $CurrentField, $TicketID, $ActivityDialogEntityID
+                        $CurrentField,
+                        $TicketID,
+                        $ActivityDialogEntityID,
                     ),
                 );
             }
@@ -3891,7 +4016,7 @@ sub _StoreActivityDialog {
                     $HistoryComment = 'Note';
                 }
 
-                my $From = "$Self->{UserFirstname} $Self->{UserLastname} <$Self->{UserEmail}>";
+                my $From = "\"$Self->{UserFirstname} $Self->{UserLastname}\" <$Self->{UserEmail}>";
                 $ArticleID = $TicketObject->ArticleCreate(
                     TicketID                  => $TicketID,
                     SenderType                => 'customer',
@@ -4091,7 +4216,9 @@ sub _StoreActivityDialog {
                 $LayoutObject->CustomerFatalError(
                     Message => $LayoutObject->{LanguageObject}->Translate(
                         'Could not set %s for Ticket with ID "%s" in ActivityDialog "%s"!',
-                        $CurrentField, $TicketID, $ActivityDialogEntityID
+                        $CurrentField,
+                        $TicketID,
+                        $ActivityDialogEntityID,
                     ),
                 );
             }
@@ -4268,8 +4395,10 @@ sub _CheckField {
 
             if ( !$Value ) {
                 $LayoutObject->CustomerFatalError(
-                    Message => $LayoutObject->{LanguageObject}
-                        ->Translate( 'Default Config for Process::Default%s missing!', $FieldWithoutID ),
+                    Message => $LayoutObject->{LanguageObject}->Translate(
+                        'Default Config for Process::Default%s missing!',
+                        $FieldWithoutID,
+                    ),
                 );
             }
             else {
@@ -4281,8 +4410,10 @@ sub _CheckField {
                 );
                 if ( !$Value ) {
                     $LayoutObject->CustomerFatalError(
-                        Message => $LayoutObject->{LanguageObject}
-                            ->Translate( 'Default Config for Process::Default%s invalid!', $FieldWithoutID ),
+                        Message => $LayoutObject->{LanguageObject}->Translate(
+                            'Default Config for Process::Default%s invalid!',
+                            $FieldWithoutID,
+                        ),
                     );
                 }
             }
@@ -4424,12 +4555,13 @@ sub _LookupValue {
         $FunctionName    = $FieldWithoutID . 'Lookup';
     }
 
-    my $Value;
-
+    # get appropriate object of field
     my $FieldObject;
     if ( $Kernel::OM->Get('Kernel::System::Main')->Require( 'Kernel::System::' . $ObjectName, Silent => 1 ) ) {
         $FieldObject = $Kernel::OM->Get( 'Kernel::System::' . $ObjectName );
     }
+
+    my $Value;
 
     # check if the backend module has the needed *Lookup sub
     if ( $FieldObject && $FieldObject->can($FunctionName) ) {
@@ -4654,12 +4786,9 @@ sub _GetAJAXUpdatableFields {
     my %DefaultUpdatableFields = (
         PriorityID    => 1,
         QueueID       => 1,
-        ResponsibleID => 1,
         ServiceID     => 1,
         SLAID         => 1,
         StateID       => 1,
-        OwnerID       => 1,
-        LockID        => 1,
         TypeID        => 1,
     );
 

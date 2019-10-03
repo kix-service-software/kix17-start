@@ -94,13 +94,14 @@ sub Run {
         my $DynamicFieldString = $LayoutObject->BuildSelection(
             Data         => \%DynamicFieldHash,
             Name         => 'DynamicField',
+            Class        => 'Modernize',
             Translation  => 0,
             PossibleNone => 1,
         );
 
         # build target value string
         my $DynamicFieldValueString
-            = '<select id="DynamicFieldValue" name="DynamicFieldValue" class="TargetValueSelect" size="5" multiple></select>';
+            = '<select id="DynamicFieldValue" name="DynamicFieldValue" class="Modernize TargetValueSelect" size="5" multiple></select>';
 
         # build valid string
         my %ValidList = $ValidObject->ValidList();
@@ -110,6 +111,7 @@ sub Run {
             Data         => \%ValidList,
             Name         => 'ValidID',
             SelectedID   => $Param{ValidID} || 1,
+            Class        => 'Modernize',
             PossibleNone => 0,
             Translation  => 1,
         );
@@ -178,7 +180,7 @@ sub Run {
                     Multiple   => 1,
                     Size       => 5,
                     SelectedID => \@SelectedValues,
-                    Class      => 'DynamicFieldValue'
+                    Class      => 'Modernize DynamicFieldValue'
                 );
             }
 
@@ -189,6 +191,7 @@ sub Run {
             my $ValidityStrg = $LayoutObject->BuildSelection(
                 Data         => \%ValidList,
                 Name         => 'ValidID',
+                Class        => 'Modernize',
                 SelectedID   => $TreeData->{ValidID} || 1,
                 PossibleNone => 0,
                 Translation  => 1,
@@ -206,9 +209,9 @@ sub Run {
                 Data => {
                     %Param,
                     DynamicFieldID          => $DynamicFieldData->{ID},
-                    TreeNameString          => $TreeData->{Name} || '',
+                    TreeNameString          => '<span>' . $TreeData->{Name} . '</span>' || '',
                     ValidityStrg            => $ValidityStrg,
-                    DynamicFieldString      => $DynamicFieldData->{Label} || '',
+                    DynamicFieldString      => '<span>' . $DynamicFieldData->{Label} . '</span>'  || '',
                     DynamicFieldValueString => $DynamicFieldValueString,
                 },
             );
@@ -305,6 +308,7 @@ sub Run {
                     Data         => \%TargetDataHash,
                     Name         => 'DynamicFieldTarget_' . $Counter,
                     SelectedID   => $ChildNodeDynamicFieldID,
+                    Class        => 'Modernize',
                     Translation  => 0,
                     PossibleNone => 1
                 );
@@ -316,7 +320,7 @@ sub Run {
                     . $Counter
                     . '" name="DynamicFieldTargetValue_'
                     . $Counter
-                    . '" class="TargetValueSelect" size="5" multiple></select>';
+                    . '" class="Modernize TargetValueSelect" size="5" multiple></select>';
 
                 # if target dynamic field selected
                 if ($ChildNodeDynamicFieldID) {
@@ -347,7 +351,7 @@ sub Run {
                         Multiple   => 1,
                         Size       => 5,
                         SelectedID => \@SelectedTargetValues,
-                        Class      => 'TargetValueSelect'
+                        Class      => 'Modernize TargetValueSelect'
                     );
                 }
                 $LayoutObject->Block(
@@ -376,6 +380,7 @@ sub Run {
                 my $DynamicFieldTargetString = $LayoutObject->BuildSelection(
                     Data         => \%TargetDataHash,
                     Name         => 'DynamicFieldTarget_' . $Counter,
+                    Class        => 'Modernize',
                     Translation  => 0,
                     PossibleNone => 1
                 );
@@ -387,7 +392,7 @@ sub Run {
                     . $Counter
                     . '" name="DynamicFieldTargetValue_'
                     . $Counter
-                    . '" class="TargetValueSelect" size="5" multiple></select>';
+                    . '" class="Modernize TargetValueSelect" size="5" multiple></select>';
                 $LayoutObject->Block(
                     Name => 'DependingFieldEditItem',
                     Data => {
@@ -439,6 +444,7 @@ sub Run {
                     Data         => $TargetValueHash,
                     Translation  => 0,
                     PossibleNone => 0,
+                    Class        => 'Modernize'
                 },
             ],
         );
@@ -482,6 +488,7 @@ sub Run {
                     Data         => $DynamicFieldValueHash,
                     Translation  => 0,
                     PossibleNone => 0,
+                    Class        => 'Modernize'
                 },
             ],
         );

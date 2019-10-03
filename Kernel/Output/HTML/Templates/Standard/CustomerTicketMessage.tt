@@ -9,8 +9,7 @@
 # --
 
 
-<div id="MainBox" class="TicketCompose ARIARoleMain">
-  <div class="Content">
+<div id="MainBox" class="MainBox FormScreen ARIARoleMain">
     <div class="LayoutFixedSidebar SidebarLast">
       <div class="SidebarColumn">
         [% Data.KIXSidebarContent %]
@@ -23,24 +22,27 @@
             <input type="hidden" name="FormID" value="[% Data.FormID | html %]" />
             <input type="hidden" name="SelectedConfigItemIDs" id="SelectedConfigItemIDs" value=""/>
             <input type="hidden" name="DefaultSet" value="[% Data.DefaultSet | html %]" />
-            <fieldset>
+            <fieldset class="TableLike">
 
 [% RenderBlockStart("SelectedCustomer") %]
-                <div>
-                    <label for="SelectedCustomerID">[% Translate("Selected customer ID") | html %]</label>
+                <label for="SelectedCustomerID">[% Translate("Selected customer ID") | html %]</label>
+                <div class="Field">
                     <input type="text" id="SelectedCustomerID" name="SelectedCustomerID" readonly="true" value="[% Data.SelectedCustomerID | html %]" />
-                    <div class="Clear"></div>
                 </div>
+                <div class="Clear"></div>
 [% RenderBlockEnd("SelectedCustomer") %]
 
 [% RenderBlockStart("TicketType") %]
-                <div>
-                    <label for="TypeID" class="Mandatory"><span class="Marker">*</span>[% Translate("Type") | html %]:</label>
+                <label for="TypeID" class="Mandatory">
+                    <span class="Marker">*</span>
+                    [% Translate("Type") | html %]:
+                </label>
+                <div class="Field">
                     [% Data.TypeStrg %]
                     <div id="TypeIDError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
                     <div id="TypeIDServerError" class="TooltipErrorMessage NoJavaScriptMessage[% Data.TypeIDInvalid | html %]" ><p>[% Translate("This field is required.") | html %]</p></div>
-                    <div class="Clear"></div>
                 </div>
+                <div class="Clear"></div>
 
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
@@ -52,16 +54,16 @@
 [% RenderBlockEnd("TicketType") %]
 
 [% RenderBlockStart("Queue") %]
-                <div>
-                    <label for="Dest" class="Mandatory">
-                        <span class="Marker">*</span>
-                        [% Translate("To") | html %]:
-                    </label>
+                <label for="Dest" class="Mandatory">
+                    <span class="Marker">*</span>
+                    [% Translate("To") | html %]:
+                </label>
+                <div class="Field">
                     [% Data.ToStrg %]
                     <div id="DestError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
                     <div id="DestServerError" class="TooltipErrorMessage NoJavaScriptMessage[% Data.QueueInvalid | html %]" ><p>[% Translate("This field is required.") | html %]</p></div>
-                    <div class="Clear"></div>
                 </div>
+                <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#Dest').bind('change', function (Event) {
@@ -72,11 +74,11 @@
 [% RenderBlockEnd("Queue") %]
 
 [% RenderBlockStart("TicketService") %]
-                <div>
-                    <label for="ServiceID">[% Translate("Service") | html %]:</label>
+                <label for="ServiceID">[% Translate("Service") | html %]:</label>
+                <div class="Field">
                     [% Data.ServiceStrg %]
-                    <div class="Clear"></div>
                 </div>
+                <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#ServiceID').bind('change', function (Event) {
@@ -87,13 +89,13 @@
 [% RenderBlockEnd("TicketService") %]
 
 [% RenderBlockStart("TicketServiceMandatory") %]
-                <div>
-                    <label for="ServiceID" class="Mandatory"><span class="Marker">*</span> [% Translate("Service") | html %]:</label>
+                <label for="ServiceID" class="Mandatory"><span class="Marker">*</span> [% Translate("Service") | html %]:</label>
+                <div class="Field">
                     [% Data.ServiceStrg %]
                     <div id="ServiceIDError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
                     <div id="ServiceIDServerError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
-                    <div class="Clear"></div>
                 </div>
+                <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#ServiceID').bind('change', function (Event) {
@@ -104,11 +106,11 @@
 [% RenderBlockEnd("TicketServiceMandatory") %]
 
 [% RenderBlockStart("TicketSLA") %]
-                <div>
-                    <label for="SLAID" title="[% Translate("Service level agreement") | html %]">[% Translate("SLA") | html %]:</label>
+                <label for="SLAID" title="[% Translate("Service level agreement") | html %]">[% Translate("SLA") | html %]:</label>
+                <div class="Field">
                     [% Data.SLAStrg %]
-                    <div class="Clear"></div>
                 </div>
+                <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#SLAID').bind('change', function (Event) {
@@ -119,13 +121,13 @@
 [% RenderBlockEnd("TicketSLA") %]
 
 [% RenderBlockStart("TicketSLAMandatory") %]
-                <div>
-                    <label for="SLAID" title="[% Translate("Service level agreement") | html %]" class="Mandatory"><span class="Marker">*</span> [% Translate("SLA") | html %]:</label>
+                <label for="SLAID" title="[% Translate("Service level agreement") | html %]" class="Mandatory"><span class="Marker">*</span> [% Translate("SLA") | html %]:</label>
+                <div class="Field">
                     [% Data.SLAStrg %]
                     <div id="SLAIDError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
                     <div id="SLAIDServerError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
-                    <div class="Clear"></div>
                 </div>
+                <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#SLAID').bind('change', function (Event) {
@@ -135,31 +137,31 @@
 [% END %]
 [% RenderBlockEnd("TicketSLAMandatory") %]
 
-                <div>
-                    <label for="Subject" class="Mandatory">
-                        <span class="Marker">*</span>
-                        [% Translate("Subject") | html %]:
-                    </label>
-                    <input title="[% Translate("Subject") | html %]" type="text" id="Subject" name="Subject" value="[% Data.Subject | html %]" class="Validate_Required [% Data.SubjectInvalid | html %]" />
+                <label for="Subject" class="Mandatory">
+                    <span class="Marker">*</span>
+                    [% Translate("Subject") | html %]:
+                </label>
+                <div class="Field">
+                    <input title="[% Translate("Subject") | html %]" type="text" id="Subject" name="Subject" value="[% Data.Subject | html %]" class="W75pc Validate_Required [% Data.SubjectInvalid | html %]" />
                     <div id="SubjectError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
                     <div id="SubjectServerError" class="TooltipErrorMessage NoJavaScriptMessage[% Data.SubjectInvalid | html %]" ><p>[% Translate("This field is required.") | html %]</p></div>
-                    <div class="Clear"></div>
                 </div>
-                <div class="RichTextHolder">
-                    <label for="RichText" class="Mandatory">
-                        <span class="Marker">*</span>
-                        [% Translate("Text") | html %]:
-                    </label>
+                <div class="Clear"></div>
+                <label for="RichText" class="Mandatory">
+                    <span class="Marker">*</span>
+                    [% Translate("Text") | html %]:
+                </label>
+                <div class="RichTextField">
 [% RenderBlockStart("RichText") %]
 [% InsertTemplate("CustomerRichTextEditor.tt") %]
 [% RenderBlockEnd("RichText") %]
                     <textarea id="RichText" class="RichText Validate_Required [% Data.BodyInvalid | html %]" name="Body" rows="15" cols="[% Config("Ticket::Frontend::TextAreaNote") %]">[% Data.Body | html %]</textarea>
                     <div id="RichTextError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
                     <div id="RichTextServerError" class="TooltipErrorMessage NoJavaScriptMessage[% Data.BodyInvalid | html %]" ><p>[% Translate("This field is required.") | html %]</p></div>
-                    <div class="Clear"></div>
                 </div>
-                <div>
-                    <label for="Attachment">[% Translate("Attachment") | html %]:</label>
+                <div class="Clear"></div>
+                <label for="Attachment">[% Translate("Attachment") | html %]:</label>
+                <div class="Field">
                     <input name="file_upload" id="Attachment" title="[% Translate("Attachment") | html %]" type="file" size="40" />
                     <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
 [% WRAPPER JSOnDocumentComplete %]
@@ -189,14 +191,14 @@
                     </div>
 [% RenderBlockEnd("Attachment") %]
 
-                    <div class="Clear"></div>
                 </div>
+                <div class="Clear"></div>
 [% RenderBlockStart("Priority") %]
-                <div>
-                    <label for="PriorityID">[% Translate("Priority") | html %]:</label>
+                <label for="PriorityID">[% Translate("Priority") | html %]:</label>
+                <div class="Field">
                     [% Data.PriorityStrg %]
-                    <div class="Clear"></div>
                 </div>
+                <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#PriorityID').bind('change', function (Event) {
@@ -215,20 +217,19 @@
                     <div class="Clear"></div>
                 </div>
 [% RenderBlockEnd("DynamicField") %]
-
-                <div class="EndOfForm"></div>
-            </fieldset>
-
 [% RenderBlockStart("CustomerAssignedConfigItem") %]
-            <div>
-            <h4>[% Translate("Please check the config item which is affected by your request") | html %]:</h4>
-            </div>
-            <div class="Clear"></div>
-            [% Data.AssignedConfigItemStrg %]
+                <div>
+                    <h4>[% Translate("Please check the config item which is affected by your request") | html %]:</h4>
+                </div>
+                <div class="Clear"></div>
+                [% Data.AssignedConfigItemStrg %]
 [% RenderBlockEnd("CustomerAssignedConfigItem") %]
-            <div id="BottomActionRow" class="ActionRow">
-                <button id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]">[% Translate("Submit") | html %]</button>
-            </div>
+                <div class="Field SpacingTop EndOfForm">
+                    <button class="Primary CallForAction" id="submitRichText" accesskey="g" title="[% Translate("Submit") | html %] (g)" type="submit" value="[% Translate("Submit") | html %]">
+                        <span>[% Translate("Submit") | html %]</span>
+                    </button>
+                </div>
+            </fieldset>
         </form>
     </div>
     </div>
