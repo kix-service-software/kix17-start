@@ -19,34 +19,34 @@
             [% Data.ClassOptionStrg %]
         </div>
     </fieldset>
-</div>
 
-<div class="InnerContent" id="AJAXUpdate">
+    <div id="AJAXUpdate">
 
-    <form action="[% Env("CGIHandle") %]" method="post" id="SearchForm">
-        <input type="hidden" name="Action" value="[% Env("Action") %]"/>
-        <input type="hidden" name="Subaction" value="Search"/>
+        <form action="[% Env("CGIHandle") %]" method="post" id="SearchForm">
+            <input type="hidden" name="Action" value="[% Env("Action") %]"/>
+            <input type="hidden" name="Subaction" value="Search"/>
 
-        <fieldset class="TableLike Hidden" id='ITSMSearchProfile'>
-            <div class="Clear"></div>
-            <legend><span>[% Translate("Templates") | html %]</span></legend>
-            <label>[% Translate("Search template") | html %]</label>
-            <div class="Field">
-                <input type="hidden" id="SearchProfile" name="SearchProfile" value="[% Data.Profile | html %]"/>
+            <fieldset class="TableLike Hidden" id='ITSMSearchProfile'>
+                <div class="Clear"></div>
+                <legend><span>[% Translate("Templates") | html %]</span></legend>
+                <label>[% Translate("Search template") | html %]</label>
+                <div class="Field">
+                    <input type="hidden" id="SearchProfile" name="SearchProfile" value="[% Data.Profile | html %]"/>
 
-                <button id="SearchProfileNew" value="[% Translate("Create New") | html %]">[% Translate("Create New") | html %]</button>
+                    <button id="SearchProfileNew" value="[% Translate("Create New") | html %]">[% Translate("Create New") | html %]</button>
 
-                <button id="SearchProfileDelete" class="Hidden" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
+                    <button id="SearchProfileDelete" class="Hidden" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
 
-                <div id="SearchProfileAddBlock">
-                    <input type="text" name="ProfileName" id="SearchProfileAddName"/>
-                    <button type="submit" title="[% Translate("Create Template") | html %]" id="SearchProfileAddAction">[% Translate("Create New Template") | html %]</button>
-                    <input type="hidden" name="SaveProfile" value="1"/>
+                    <div id="SearchProfileAddBlock">
+                        <input type="text" name="ProfileName" id="SearchProfileAddName"/>
+                        <button type="submit" title="[% Translate("Create Template") | html %]" id="SearchProfileAddAction">[% Translate("Create New Template") | html %]</button>
+                        <input type="hidden" name="SaveProfile" value="1"/>
+                    </div>
                 </div>
-            </div>
-        </fieldset>
+            </fieldset>
 
-    </form>
+        </form>
+    </div>
 </div>
 
 <div class="ContentFooter Center">

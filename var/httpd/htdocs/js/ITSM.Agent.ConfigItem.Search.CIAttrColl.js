@@ -413,7 +413,7 @@ ITSM.Agent.ConfigItem.Search = (function (TargetNS) {
                     return;
                 }
 
-                Core.UI.Dialog.ShowContentDialog(HTML, Core.Config.Get('SearchMsg'), '10px', 'Center', true, [], true);
+                Core.UI.Dialog.ShowContentDialog(HTML, Core.Config.Get('SearchMsg'), '10px', 'Center', true, undefined, true);
                 TargetNS.SetSearchDialog();
             }, 'html'
         );

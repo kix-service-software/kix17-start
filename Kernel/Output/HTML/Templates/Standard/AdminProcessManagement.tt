@@ -54,7 +54,7 @@
                             <input name="FileUpload" id="FileUpload" type="file" size="18" class="Fixed W100pc Validate_Required [% Data.FileUploadInvalid | html %]"/>
                             <div id="FileUploadError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                             <div id="FileUploadServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
-                            <fieldset class="SpacingTop">
+                            <fieldset class="Separated SpacingTop">
                                 <input type="checkbox" id="OverwriteExistingEntitiesImport" name="OverwriteExistingEntities" value="1" checked="checked" />
                                 <label for="OverwriteExistingEntitiesImport">[% Translate("Overwrite existing entities") | html %]</label>
                             </fieldset>
@@ -84,7 +84,7 @@
                             [% Data.ExampleProcessList %]
                             <div id="ExampleProcessError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                             <div id="ExampleProcessServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
-                            <fieldset class="SpacingTop">
+                            <fieldset class="Separated SpacingTop">
                                 <input type="checkbox" id="OverwriteExistingEntitiesExample" name="OverwriteExistingEntities" value="1" checked="checked" />
                                 <label for="OverwriteExistingEntitiesExample">[% Translate("Overwrite existing entities") | html %]</label>
                             </fieldset>

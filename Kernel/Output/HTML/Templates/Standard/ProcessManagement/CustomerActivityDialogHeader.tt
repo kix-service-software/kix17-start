@@ -21,7 +21,7 @@
             <input type="hidden" name="FormID" value="[% Data.FormID | html %]"/>
             <div class="LayoutPopup">
 [% RenderBlockStart("Header") %]
-                <div class="PopupHeader">
+                <div class="Header">
                     <h1>
                         [% Data.Name | html %]
 [% RenderBlockStart("DescriptionShort") %]

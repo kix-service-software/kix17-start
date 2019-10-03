@@ -22,7 +22,12 @@
                 <ul class="ActionList">
 [% RenderBlockStart("ActionOverview") %]
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction"><span>[% Translate("Go to overview") | html %]</span></a>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center">
+                            <span>
+                                <i class="fa fa-caret-left"></i>
+                                [% Translate("Go to overview") | html %]
+                            </span>
+                        </a>
                     </li>
 [% RenderBlockEnd("ActionOverview") %]
                 </ul>
@@ -36,7 +41,7 @@
                  <h2><span><label for="FilterTextModules">[% Translate("Filter for text modules") | html %]</label></span></h2>
             </div>
             <div class="Content">
-                <input type="text" id="FilterTextModules" class="W50pc" name="FilterTextModules" value="" title="[% Translate("Filter for text modules") | html %]" />
+                <input type="text" id="FilterTextModules" class="W95pc" name="FilterTextModules" value="" title="[% Translate("Filter for text modules") | html %]" />
             </div>
         </div>
 [% RenderBlockEnd("FilterTextModule") %]
@@ -46,7 +51,7 @@
                  <h2><span><label for="FilterQueues">[% Translate("Filter for queues") | html %]</label></span></h2>
             </div>
             <div class="Content">
-                <input type="text" id="FilterQueues" class="W50pc" name="FilterQueues" value="" title="[% Translate("Filter for queues") | html %]" />
+                <input type="text" id="FilterQueues" class="W95pc" name="FilterQueues" value="" title="[% Translate("Filter for queues") | html %]" />
             </div>
         </div>
 [% RenderBlockEnd("FilterQueue") %]

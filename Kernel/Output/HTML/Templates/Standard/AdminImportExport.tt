@@ -24,12 +24,19 @@
                 <ul class="ActionList">
 [% RenderBlockStart("ActionOverview") %]
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction"><span>[% Translate("Go to overview") | html %]</span></a>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center">
+                            <span>
+                                <i class="fa fa-caret-left"></i>
+                                [% Translate("Go to overview") | html %]
+                            </span>
+                        </a>
                     </li>
 [% RenderBlockEnd("ActionOverview") %]
 [% RenderBlockStart("ActionAdd") %]
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=TemplateEdit1" class="CallForAction Plus"><span>[% Translate("Add template") | html %]</span></a>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=TemplateEdit1" class="CallForAction Fullsize Center">
+                            <span>[% Translate("Add template") | html %]</span>
+                        </a>
                     </li>
 [% RenderBlockEnd("ActionAdd") %]
                 </ul>
@@ -54,7 +61,7 @@
             <div class="Header">
                  <h2><span>[% Translate(Data.ObjectName) | html %]</span></h2>
             </div>
-            <div class="Content">
+            <div class="Content SpacingBottom">
                 <table class="DataTable">
                     <thead>
                         <tr>

@@ -175,7 +175,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Edit Process Information") | html %]</span></h2>
+                    <h2 class="WithToggle"><span>[% Translate("Edit Process Information") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
@@ -243,7 +243,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
                     </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Add and Edit Activities, Activity Dialogs and Transitions") | html %]</span></h2>
+                    <h2 class="WithToggle"><span>[% Translate("Add and Edit Activities, Activity Dialogs and Transitions") | html %]</span></h2>
                     <div class="CanvasActions">
                         <a href="#" id="ShowEntityIDs">[% Translate("Show EntityIDs") | html %]</a>
                         <a href="#" id="ExtendCanvasWidth" title="[% Translate("Extend the width of the Canvas") | html %]"><i class="fa fa-arrows-h"></i></a>
@@ -263,7 +263,7 @@
                     <div class="WidgetAction Toggle">
                         <a href="#" title="[% Translate("Save settings") | html %]"></a>
                     </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Save Activities, Activity Dialogs and Transitions") | html %]</span></h2>
+                    <h2 class="WithToggle"><span>[% Translate("Save Activities, Activity Dialogs and Transitions") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">

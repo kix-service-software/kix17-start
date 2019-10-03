@@ -26,14 +26,19 @@
                             <input type="hidden" name="Subaction" value="DefinitionChange"/>
 
                             <div>[% Data.ClassOptionStrg %]</div>
-                            <button class="CallForAction" type="submit" value="[% Translate("Add") | html %]">
+                            <button class="CallForAction Fullsize Center" type="submit" value="[% Translate("Add") | html %]">
                                 <span>[% Translate("Change class definition") | html %]</span>
                             </button>
                         </form>
                     </li>
 [% RenderBlockStart("ActionOverview") %]
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction"><span>[% Translate("Go to overview") | html %]</span></a>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center">
+                            <span>
+                                <i class="fa fa-caret-left"></i>
+                                [% Translate("Go to overview") | html %]
+                            </span>
+                        </a>
                     </li>
 [% RenderBlockEnd("ActionOverview") %]
                 </ul>

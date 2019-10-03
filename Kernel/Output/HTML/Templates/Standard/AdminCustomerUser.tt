@@ -63,7 +63,9 @@
                             <input type="hidden" name="Nav" value="[% Data.Nav | html %]"/>
                             <input type="hidden" name="ID" value="[% Data.ID | html %]"/>
 
-                            <button class="CallForAction Plus" type="submit"><span>[% Translate("Clone customer") | html %]</span></button>
+                            <button class="CallForAction Fullsize Plus" type="submit">
+                                <span><i class="fa fa-copy"></i> [% Translate("Clone contact") | html %]</span>
+                            </button>
                             <br/>
                             <label class="InvisibleText" for="Source">[% Translate("Select") | html %]</label>
                             [% Data.SourceOption %]

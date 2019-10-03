@@ -161,25 +161,25 @@
                             </td>
                         </tr>
                         <tr class="Middle">
-                            <td>
 [% RenderBlockStart("FirstResponseTime") %]
+                            <td>
                                 <label>[% Translate("First Response Time") | html %]</label>
                                 <div title="[% Translate("Service Time") | html %]: [% Data.FirstResponseTimeWorkingTime | html %]" class="[% Data.FirstResponseTimeClass | html %]">[% Data.FirstResponseTimeHuman | html %] / [% Data.FirstResponseTimeDestinationDate | Localize("TimeShort") %]</div>
-[% RenderBlockEnd("FirstResponseTime") %]
                             </td>
+[% RenderBlockEnd("FirstResponseTime") %]
+[% RenderBlockStart("UpdateTime") %]
+                            <td>
+                                <label>[% Translate("Update Time") | html %]</label>
+                                <div title="[% Translate("Service Time") | html %]: [% Data.UpdateTimeWorkingTime | html %]" class="[% Data.UpdateTimeClass | html %]">[% Data.UpdateTimeHuman | html %] / [% Data.UpdateTimeDestinationDate | Localize("TimeShort") %]</div>
+                            </td>
+[% RenderBlockEnd("UpdateTime") %]
                         </tr>
-                        <tr>
+                        <tr class="Middle">
                             <td>
                                 <label>[% Translate("Owner") | html %]</label><div title="[% Data.UserFirstname | html %] [% Data.UserLastname | html %] ([% Data.Owner | html %])">[% Data.UserFirstname | truncate(15) | html %] [% Data.UserLastname | truncate(15) | html %]</div>
                             </td>
                             <td>
                                 <label>[% Translate("Lock") | html %]</label><div title="[% Translate(Data.Lock) | html %]">[% Translate(Data.Lock) | html %]</div>
-                            </td>
-                            <td>
-[% RenderBlockStart("UpdateTime") %]
-                                <label>[% Translate("Update Time") | html %]</label>
-                                <div title="[% Translate("Service Time") | html %]: [% Data.UpdateTimeWorkingTime | html %]" class="[% Data.UpdateTimeClass | html %]">[% Data.UpdateTimeHuman | html %] / [% Data.UpdateTimeDestinationDate | Localize("TimeShort") %]</div>
-[% RenderBlockEnd("UpdateTime") %]
                             </td>
                         </tr>
                         <tr>

@@ -47,13 +47,13 @@ Core.KIXBase.Agent = (function(TargetNS) {
                         $('#ToolBar').show('fast').addClass('toggle');
                         $('#ToolBarToggle').removeClass('Show').addClass('Hide');
 
-                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=1', null, 'text');
+                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=1', function() {}, 'text');
                     }
                     else {
                         $('#ToolBar').hide('fast').removeClass('toggle');
                         $('#ToolBarToggle').removeClass('Hide').addClass('Show');
 
-                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=0', null, 'text');
+                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=0', function() {}, 'text');
                     }
                 });
             }

@@ -25,7 +25,9 @@
             <label for="KIXSidebarLinkedCIAttribute">[% Translate("Attribute") | html %]:</label>
             <div class="Field">
                 [% Data.AttributesStrg %]
-                <button id="KIXSidebarAddAttribute" class="Add" value="Add" title="Add entry">[% Translate("Add") | html %]</button>
+                <button id="KIXSidebarAddAttribute" class="Add" value="Add" title="[% Translate("Add entry") %]" alt="[% Translate("Add") | html %]">
+                    <i class="fa fa-plus-square-o"></i>
+                </button>
             </div>
             <div class="Clear"></div>
         </fieldset>
@@ -40,7 +42,7 @@
                 <i class="fa fa-caret-down"></i>
             </a>
         </div>
-        <h2 class="PaddingLeft15px"><span>[% Translate(Data.Title) | html %]</span></h2>
+        <h2 class="WithToggle"><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
     <div id="CIClassSelection" class="Content">
         <input type="hidden" id="KIXSidebarCustomerUserID" value="[% Data.CustomerUserID %]">
@@ -84,11 +86,13 @@
                 }
                 Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), URL, function () {}, 'text', false);
             }
-    });
+        });
     }
-//]]></script>
+//]]>
+</script>
 
 [% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
 
     initLinkedCICheckboxes();
 
@@ -251,4 +255,6 @@
         $('#CIClassSelection').addClass('Hidden');
     }
 
+//]]>
+</script>
 [% END %]

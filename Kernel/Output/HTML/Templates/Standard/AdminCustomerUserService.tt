@@ -40,9 +40,7 @@
 [% RenderBlockEnd("SearchAllocateService") %]
                             <button class="Primary" type="submit" value="[% Translate("Search") | html %]" title="[% Translate("Search") | html %]"><span><i class="fa fa-search"></i></span></button>
                             <p class="FieldExplanation">
-                                <label for="CustomerUserSearch">
-                                    [% Translate("Wildcards like '*' are allowed.") | html %]
-                                </label>
+                                [% Translate("Wildcards like '*' are allowed.") | html %]
                             </p>
                         </form>
                     </li>

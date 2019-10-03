@@ -1493,6 +1493,25 @@ sub Header {
                 );
             }
             $Param{UserToolbarPosition} = $UserPreferences{UserToolbarPosition};
+
+            my $CustomCSSTop = $ConfigObject->Get('ToolbarPosition::CustomCSSTop');
+            if (
+                defined $CustomCSSTop
+                && ref $CustomCSSTop eq 'HASH'
+                && $Param{UserToolbarPosition} eq 'ToolbarTop'
+            ) {
+                for my $Elem ( qw(Toolbar Toggle) ) {
+                    for my $Key ( qw(Top Left) ) {
+                        my $Value = $CustomCSSTop->{$Elem . '::' . $Key};
+                        if (
+                            defined $Value
+                            && $Value ne ''
+                        ) {
+                            $Param{'CustomCSSTop' . $Elem} .= lc($Key) . ': ' . $Value . '; '
+                        }
+                    }
+                }
+            }
         }
 
         # show logged in notice

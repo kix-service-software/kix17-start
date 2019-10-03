@@ -60,8 +60,9 @@ sub Run {
             . '<input id="' . $Param{Name} . '" type="text" name="' . $Param{Name} . '" value="" />'
             . '<button type="button" class="Remove" value="'
             . $LayoutObject->{LanguageObject}->Translate('Remove')
-            . '" title="">'
-            . $LayoutObject->{LanguageObject}->Translate('Remove')
+            . '" title="'
+            . $LayoutObject->{LanguageObject}->Translate('Remove Entry')
+            . '"><i class="fa fa-minus-square-o"></i>'
             . '</button>'
             . '<div class="Clear"></div>';
 

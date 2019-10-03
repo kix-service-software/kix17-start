@@ -12,6 +12,7 @@
         <div class="WidgetSimple SpacingTop SpacingLeft">
             <div id="ServiceTreeToggle">
                 <a title="[% Translate("Hide or show service selection") | html %]" href="#">
+                    <i class="fa fa-play"></i>
                 </a>
             </div>
             <div id="ServiceTreeControl" class="Header">
