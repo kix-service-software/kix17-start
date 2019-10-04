@@ -24,7 +24,6 @@ my $SupportBundleGeneratorObject = $Kernel::OM->Get('Kernel::System::SupportBund
 my $PackageObject                = $Kernel::OM->Get('Kernel::System::Package');
 my $CSVObject                    = $Kernel::OM->Get('Kernel::System::CSV');
 my $JSONObject                   = $Kernel::OM->Get('Kernel::System::JSON');
-my $RegistrationObject           = $Kernel::OM->Get('Kernel::System::Registration');
 my $SupportDataCollectorObject   = $Kernel::OM->Get('Kernel::System::SupportDataCollector');
 my $TempObject                   = $Kernel::OM->Get('Kernel::System::FileTemp');
 
@@ -64,7 +63,7 @@ if ( !-e $Home . '/ARCHIVE' ) {
 
 # create an ARCHIVE file on developer systems to continue working
 if ($IsDevelopmentSystem) {
-    my $ArchiveGeneratorTool = $Home . '/bin/otrs.CheckSum.pl';
+    my $ArchiveGeneratorTool = $Home . '/bin/kix.CheckSum.pl';
 
     # if tool is not present we can't continue
     if ( !-e $ArchiveGeneratorTool ) {
@@ -116,27 +115,25 @@ if ($IsDevelopmentSystem) {
 
 }
 
-# get OTRS Version
-my $OTRSVersion = $ConfigObject->Get('Version');
+# get KIX Version
+my $KIXVersion = $ConfigObject->Get('Version');
 
 # leave only mayor and minor level versions
-$OTRSVersion =~ s{ (\d+ \. \d+) .+ }{$1}msx;
+$KIXVersion =~ s{ (\d+ \. \d+) .+ }{$1}msx;
 
 # add x as patch level version
-$OTRSVersion .= '.x';
+$KIXVersion .= '.x';
 
 my $TestPackage = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
-  <ChangeLog>2005-11-10 New package (some test &lt; &gt; &amp;).</ChangeLog>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+  <ChangeLog>2019-10-02 New package (some test &lt; &gt; &amp;).</ChangeLog>
   <Description Lang="en">A test package (some test &lt; &gt; &amp;).</Description>
-  <Framework>' . $OTRSVersion . '</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>' . $KIXVersion . '</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
     <File Location="var/Test" Permission="644" Encode="Base64">aGVsbG8K</File>
@@ -401,8 +398,6 @@ for my $Test (@Tests) {
     }
 }
 
-#rbo - T2016121190001552 - removed Registration tests
-
 # GenerateSupportData tests
 my %OriginalResult = $SupportDataCollectorObject->Collect(
     WebTimeout => 40,
@@ -535,7 +530,7 @@ my @FileList = $TarObject->get_files();
 my %FileListLookup = map { $_->name() => 1 } sort @FileList;
 
 # check for files that must be in the tar file
-my @ExpectedFiles   = qw(InstalledPackages.csv RegistrationInfo.json SupportData.json);
+my @ExpectedFiles   = qw(InstalledPackages.csv SupportData.json);
 my $ApplicationFile = 'application.tar';
 if ( $Result->{Data}->{Filename} =~ m{\.gz} ) {
     $ApplicationFile .= '.gz';
