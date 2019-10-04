@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.9.0-RC2 (2019/10/04)
+ * (2019/10/04) - release candidate
+
 # 17.9.0-RC1 (2019/10/03)
  * (2019/10/01) - Bugfix: T2018120790000423 (implemented horizontal line for customer process dialog) (millinger)
  * (2019/09/30) - Bugfix: T2019072290000895 (fixed missing output of validity of the quick state in the overview) (fjacquemin)
