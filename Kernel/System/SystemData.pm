@@ -67,7 +67,7 @@ Result is true if adding was OK, and false if it failed, for instance because
 the key already existed.
 
 If your keys contain '::' this will be used as a separator. This allows you to
-later for instance fetch all keys that start with 'SystemRegistration::' in
+later for instance fetch all keys that start with 'System::' in
 one go, using SystemDataGetGroup().
 
     my $Result = $SystemDataObject->SystemDataAdd(
@@ -77,7 +77,7 @@ one go, using SystemDataGetGroup().
     );
 
     my $Result = $SystemDataObject->SystemDataAdd(
-        Key    => 'SystemRegistration::Version',
+        Key    => 'System::Version',
         Value  => 'Some Value',
         UserID => 123,
     );
