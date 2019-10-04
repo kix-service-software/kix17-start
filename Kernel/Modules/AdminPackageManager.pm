@@ -523,8 +523,6 @@ sub Run {
             return $LayoutObject->ErrorScreen( Message => 'No such package!' );
         }
         elsif ( substr( $Package, 0, length('ErrorMessage:') ) eq 'ErrorMessage:' ) {
-
-            # an error from the Package::CloudFileGet function
             return $LayoutObject->ErrorScreen( Message => $Package );
         }
         my %Structure = $PackageObject->PackageParse( String => $Package );
@@ -1513,8 +1511,7 @@ sub Run {
     for my $ReinstallKey ( sort keys %NeedReinstall ) {
 
         my $Priority = 'Error';
-        my $Message  = $LayoutObject->{LanguageObject}
-            ->Translate("Package not correctly deployed! Please reinstall the package.");
+        my $Message  = $LayoutObject->{LanguageObject}->Translate("Package not correctly deployed! Please reinstall the package.");
         if ( $Kernel::OM->Get('Kernel::Config')->Get('Package::AllowLocalModifications') ) {
             $Priority = 'Notice';
             $Message  = $LayoutObject->{LanguageObject}->Translate("Package has locally modified files.");
@@ -1672,42 +1669,12 @@ sub _InstallHandling {
         return $LayoutObject->Redirect( OP => "Action=$Self->{Action}" );
     }
 
-    my $IntroInstallPre    = $ParamObject->GetParam( Param => 'IntroInstallPre' )    || '';
-    my $IntroInstallVendor = $ParamObject->GetParam( Param => 'IntroInstallVendor' ) || '';
+    my $IntroInstallPre = $ParamObject->GetParam( Param => 'IntroInstallPre' )    || '';
 
     my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
 
     # parse package
     my %Structure = $PackageObject->PackageParse( String => $Param{Package} );
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # vendor screen
-    if ( !$IntroInstallVendor && !$IntroInstallPre ) {
-
-        $LayoutObject->Block(
-            Name => 'Intro',
-            Data => {
-                %Param,
-                Subaction => $Self->{Subaction},
-                Type      => 'IntroInstallVendor',
-                Name      => $Structure{Name}->{Content},
-                Version   => $Structure{Version}->{Content},
-            },
-        );
-
-        $LayoutObject->Block(
-            Name => 'IntroCancel',
-        );
-
-        my $Output = $LayoutObject->Header();
-        $Output .= $LayoutObject->NavigationBar();
-        $Output .= $LayoutObject->Output(
-            TemplateFile => 'AdminPackageManager',
-        );
-        $Output .= $LayoutObject->Footer();
-        return $Output;
-    }
 
     # intro screen
     my %Data;

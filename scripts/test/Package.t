@@ -71,26 +71,21 @@ my $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
-  <ChangeLog>2005-11-10 New package (some test &lt; &gt; &amp;).</ChangeLog>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+  <ChangeLog>2019-10-02 New package (some test &lt; &gt; &amp;).</ChangeLog>
   <Description Lang="en">A test package (some test &lt; &gt; &amp;).</Description>
   <Description Lang="de">Ein Test Paket (some test &lt; &gt; &amp;).</Description>
   <ModuleRequired Version="1.112">Encode</ModuleRequired>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <CodeInstall>
    # just a test &lt;some&gt; plus some &amp; text
   </CodeInstall>
@@ -126,26 +121,21 @@ my $StringSecond = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>TestSecond</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
-  <ChangeLog>2005-11-10 New package (some test &lt; &gt; &amp;).</ChangeLog>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+  <ChangeLog>2005-10-02 New package (some test &lt; &gt; &amp;).</ChangeLog>
   <Description Lang="en">A test package (some test &lt; &gt; &amp;).</Description>
   <Description Lang="de">Ein Test Paket (some test &lt; &gt; &amp;).</Description>
   <ModuleRequired Version="1.112">Encode</ModuleRequired>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="TestSecond" Permission="644" Encode="Base64">aGVsbG8K</File>
     <File Location="var/TestSecond" Permission="644" Encode="Base64">aGVsbG8K</File>
@@ -334,16 +324,14 @@ $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
-  <ChangeLog>2005-11-10 New package (some test &lt; &gt; &amp;).</ChangeLog>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+  <ChangeLog>2019-10-02 New package (some test &lt; &gt; &amp;).</ChangeLog>
   <Description Lang="en">A test package (some test &lt; &gt; &amp;).</Description>
   <Description Lang="de">Ein Test Paket (some test &lt; &gt; &amp;).</Description>
   <ModuleRequired Version="1.112">Encode</ModuleRequired>
   <Framework>99.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
   <CodeInstall>
    # just a test &lt;some&gt; plus some &amp; text
   </CodeInstall>
@@ -397,25 +385,20 @@ $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test2</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
   <PackageRequired Version="0.1">SomeNotExistingModule</PackageRequired>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -432,25 +415,20 @@ $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>TestOSDetection1</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
   <OS>NonExistingOS</OS>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -467,28 +445,23 @@ $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>TestOSDetection2</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
   <OS>darwin</OS>
   <OS>linux</OS>
   <OS>freebsd</OS>
   <OS>MSWin32</OS>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -512,25 +485,20 @@ $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test2</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
   <ModuleRequired Version="0.1">SomeNotExistingModule</ModuleRequired>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -546,25 +514,20 @@ $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test2</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
   <ModuleRequired Version="12.999">Encode</ModuleRequired>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -582,24 +545,19 @@ my $String1 = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test2</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -614,24 +572,19 @@ my $String2 = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test3</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -647,24 +600,19 @@ my $String3 = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test3</Name>
   <Version>0.0.2</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test3" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -675,24 +623,19 @@ my $String3a = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test3</Name>
   <Version>0.0.3</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -711,24 +654,19 @@ my $String3b = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test3</Name>
   <Version>0.0.3</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <CodeUpgrade Type="pre" Version="0.0.4">
         my $Content = "test";
         $Kernel::OM-&gt;Get(\'Kernel::System::Main\')-&gt;FileWrite(
@@ -822,14 +760,12 @@ $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test2</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
   <OS>_non_existing_</OS>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
 </otrs_package>
 ';
 $PackageInstall = $PackageObject->PackageInstall( String => $String );
@@ -844,14 +780,12 @@ $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test2</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
   <Framework>99.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
 </otrs_package>
 ';
 $PackageInstall = $PackageObject->PackageInstall( String => $String );
@@ -866,24 +800,19 @@ $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test2</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -940,24 +869,19 @@ $String = '<?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.0">
   <Name>Test2</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 110101</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang="en">A test package.</Description>
   <Description Lang="de">Ein Test Paket.</Description>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <Framework>2.5.x</Framework>
-  <Framework>2.4.x</Framework>
-  <Framework>2.3.x</Framework>
-  <Framework>2.2.x</Framework>
-  <Framework>2.1.x</Framework>
-  <Framework>2.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>
     <File Location="Test" Permission="644" Encode="Base64">aGVsbG8K</File>
   </Filelist>
@@ -1024,18 +948,19 @@ my $FileNotAllowedString = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>
 <otrs_package version=\"1.0\">
   <Name>FilesNotAllowed</Name>
   <Version>0.0.1</Version>
-  <Vendor>OTRS AG</Vendor>
-  <URL>http://otrs.org/</URL>
-  <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+  <Vendor>c.a.p.e. IT GmbH</Vendor>
+  <URL>http://www.cape-it.de/</URL>
+  <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
   <Description Lang=\"en\">A test package.</Description>
   <Description Lang=\"de\">Ein Test Paket.</Description>
-  <Framework>5.0.x</Framework>
-  <Framework>3.3.x</Framework>
-  <Framework>3.2.x</Framework>
-  <Framework>3.1.x</Framework>
-  <Framework>3.0.x</Framework>
-  <BuildDate>2005-11-10 21:17:16</BuildDate>
-  <BuildHost>yourhost.example.com</BuildHost>
+  <Framework>17.0.x</Framework>
+  <Framework>17.2.x</Framework>
+  <Framework>17.3.x</Framework>
+  <Framework>17.4.x</Framework>
+  <Framework>17.5.x</Framework>
+  <Framework>17.6.x</Framework>
+  <Framework>17.7.x</Framework>
+  <Framework>17.8.x</Framework>
   <Filelist>\n";
 for my $FileNotAllowed ( @{$FilesNotAllowed} ) {
     $FileNotAllowedString .=
@@ -1102,24 +1027,19 @@ if ( !$DeveloperSystem ) {
     <otrs_package version="1.0">
       <Name>TestFrameworkFileCheck</Name>
       <Version>0.0.1</Version>
-      <Vendor>OTRS AG</Vendor>
-      <URL>http://otrs.org/</URL>
-      <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+      <Vendor>c.a.p.e. IT GmbH</Vendor>
+      <URL>http://www.cape-it.de/</URL>
+      <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
       <Description Lang="en">A test package.</Description>
       <Description Lang="de">Ein Test Paket.</Description>
-      <Framework>5.0.x</Framework>
-      <Framework>3.3.x</Framework>
-      <Framework>3.2.x</Framework>
-      <Framework>3.1.x</Framework>
-      <Framework>3.0.x</Framework>
-      <Framework>2.5.x</Framework>
-      <Framework>2.4.x</Framework>
-      <Framework>2.3.x</Framework>
-      <Framework>2.2.x</Framework>
-      <Framework>2.1.x</Framework>
-      <Framework>2.0.x</Framework>
-      <BuildDate>2005-11-10 21:17:16</BuildDate>
-      <BuildHost>yourhost.example.com</BuildHost>
+      <Framework>17.0.x</Framework>
+      <Framework>17.2.x</Framework>
+      <Framework>17.3.x</Framework>
+      <Framework>17.4.x</Framework>
+      <Framework>17.5.x</Framework>
+      <Framework>17.6.x</Framework>
+      <Framework>17.7.x</Framework>
+      <Framework>17.8.x</Framework>
       <Filelist>
         <File Location="bin/kix.CheckSum.pl" Permission="644" Encode="Base64">aGVsbG8K</File>
       </Filelist>
@@ -1186,24 +1106,19 @@ if ( !$DeveloperSystem ) {
     <otrs_package version="1.0">
       <Name>TestFrameworkFileCheck</Name>
       <Version>0.0.1</Version>
-      <Vendor>OTRS AG</Vendor>
-      <URL>http://otrs.org/</URL>
-      <License>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</License>
+      <Vendor>c.a.p.e. IT GmbH</Vendor>
+      <URL>http://www.cape-it.de/</URL>
+      <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
       <Description Lang="en">A test package.</Description>
       <Description Lang="de">Ein Test Paket.</Description>
-      <Framework>5.0.x</Framework>
-      <Framework>3.3.x</Framework>
-      <Framework>3.2.x</Framework>
-      <Framework>3.1.x</Framework>
-      <Framework>3.0.x</Framework>
-      <Framework>2.5.x</Framework>
-      <Framework>2.4.x</Framework>
-      <Framework>2.3.x</Framework>
-      <Framework>2.2.x</Framework>
-      <Framework>2.1.x</Framework>
-      <Framework>2.0.x</Framework>
-      <BuildDate>2005-11-10 21:17:16</BuildDate>
-      <BuildHost>yourhost.example.com</BuildHost>
+      <Framework>17.0.x</Framework>
+      <Framework>17.2.x</Framework>
+      <Framework>17.3.x</Framework>
+      <Framework>17.4.x</Framework>
+      <Framework>17.5.x</Framework>
+      <Framework>17.6.x</Framework>
+      <Framework>17.7.x</Framework>
+      <Framework>17.8.x</Framework>
       <Filelist>
         <File Location="bin/kix.CheckSum.pl" Permission="644" Encode="Base64">aGVsbG8K</File>
       </Filelist>

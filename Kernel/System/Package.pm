@@ -306,7 +306,6 @@ add a package to local repository
 
     $PackageObject->RepositoryAdd(
         String => $FileString,
-        FromCloud => 0, # optional 1 or 0, it indicates if package came from Cloud or not
     );
 
 =cut
@@ -322,9 +321,6 @@ sub RepositoryAdd {
         );
         return;
     }
-
-    # get from cloud flag
-    $Param{FromCloud} //= 0;
 
     # get package attributes
     my %Structure = $Self->PackageParse(%Param);
@@ -449,7 +445,6 @@ install a package
 
     $PackageObject->PackageInstall(
         String    => $FileString
-        FromCloud => 1, # optional 1 or 0, it indicates if package's origin is Cloud or not
     );
 
 =cut
@@ -465,9 +460,6 @@ sub PackageInstall {
         );
         return;
     }
-
-    # get from cloud flag
-    my $FromCloud = $Param{FromCloud} || 0;
 
     # conflict check
     my %Structure = $Self->PackageParse(%Param);
@@ -573,8 +565,7 @@ sub PackageInstall {
 
     # add package
     return if !$Self->RepositoryAdd(
-        String    => $Param{String},
-        FromCloud => $FromCloud
+        String => $Param{String},
     );
 
     # update package status
@@ -1285,8 +1276,6 @@ returns a list of available on-line packages
         URL  => '',
         Lang => 'en',
         Cache => 0,   # (optional) do not use cached data
-        FromCloud => 1, # optional 1 or 0, it indicates if a Cloud Service
-                        # should be used for getting the packages list
     );
 
 =cut
@@ -1330,90 +1319,58 @@ sub PackageOnlineList {
     my @Packages;
     my %Package;
     my $Filelist;
-    if ( !$Param{FromCloud} ) {
 
-        my $XML = $Self->_Download( URL => $Param{URL} . '/kix.xml' );
-        return if !$XML;
+    my $XML = $Self->_Download( URL => $Param{URL} . '/kix.xml' );
+    return if !$XML;
 
-        my @XMLARRAY = $Kernel::OM->Get('Kernel::System::XML')->XMLParse( String => $XML );
+    my @XMLARRAY = $Kernel::OM->Get('Kernel::System::XML')->XMLParse( String => $XML );
 
-        if ( !@XMLARRAY ) {
-            $Kernel::OM->Get('Kernel::System::Log')->Log(
-                Priority => 'error',
-                Message  => Translatable('Unable to parse repository index document.'),
-            );
-            return;
-        }
-
-        TAG:
-        for my $Tag (@XMLARRAY) {
-
-            # remember package
-            if ( $Tag->{TagType} eq 'End' && $Tag->{Tag} eq 'Package' ) {
-                if (%Package) {
-                    push @Packages, {%Package};
-                }
-                next TAG;
-            }
-
-            # just use start tags
-            next TAG if $Tag->{TagType} ne 'Start';
-
-            # reset package data
-            if ( $Tag->{Tag} eq 'Package' ) {
-                %Package  = ();
-                $Filelist = 0;
-            }
-            elsif ( $Tag->{Tag} eq 'Framework' ) {
-                push @{ $Package{Framework} }, $Tag;
-            }
-            elsif ( $Tag->{Tag} eq 'Filelist' ) {
-                $Filelist = 1;
-            }
-            elsif ( $Filelist && $Tag->{Tag} eq 'FileDoc' ) {
-                push @{ $Package{Filelist} }, $Tag;
-            }
-            elsif ( $Tag->{Tag} eq 'Description' ) {
-                if ( !$Package{Description} ) {
-                    $Package{Description} = $Tag->{Content};
-                }
-                if ( $Tag->{Lang} eq $Param{Lang} ) {
-                    $Package{Description} = $Tag->{Content};
-                }
-            }
-            else {
-                $Package{ $Tag->{Tag} } = $Tag->{Content};
-            }
-        }
-
-    }
-    else {
-
-        # On this case a cloud service is used, a URL is not
-        # needed, instead a operation name, present on the URL
-        # parameter in order to match with the previous structure
-        my $Operation = $Param{URL};
-
-        # get list from cloud
-        my $ListResult = $Self->CloudFileGet(
-            Operation => $Operation,
+    if ( !@XMLARRAY ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => Translatable('Unable to parse repository index document.'),
         );
+        return;
+    }
 
-        # check result structure
-        return if !IsHashRefWithData($ListResult);
+    TAG:
+    for my $Tag (@XMLARRAY) {
 
-        my $CurrentFramework = $Kernel::OM->Get('Kernel::Config')->Get('Version');
-        FRAMEWORKVERSION:
-        for my $FrameworkVersion ( sort keys %{$ListResult} ) {
-            my $FrameworkVersionMatch = $FrameworkVersion;
-            $FrameworkVersionMatch =~ s/\./\\\./g;
-            $FrameworkVersionMatch =~ s/x/.+?/gi;
-
-            if ( $CurrentFramework =~ m{ \A $FrameworkVersionMatch }xms ) {
-
-                @Packages = @{ $ListResult->{$FrameworkVersion} };
-                last FRAMEWORKVERSION;
+        # remember package
+        if ( $Tag->{TagType} eq 'End' && $Tag->{Tag} eq 'Package' ) {
+            if (%Package) {
+                push @Packages, {%Package};
             }
+            next TAG;
+        }
+
+        # just use start tags
+        next TAG if $Tag->{TagType} ne 'Start';
+
+        # reset package data
+        if ( $Tag->{Tag} eq 'Package' ) {
+            %Package  = ();
+            $Filelist = 0;
+        }
+        elsif ( $Tag->{Tag} eq 'Framework' ) {
+            push @{ $Package{Framework} }, $Tag;
+        }
+        elsif ( $Tag->{Tag} eq 'Filelist' ) {
+            $Filelist = 1;
+        }
+        elsif ( $Filelist && $Tag->{Tag} eq 'FileDoc' ) {
+            push @{ $Package{Filelist} }, $Tag;
+        }
+        elsif ( $Tag->{Tag} eq 'Description' ) {
+            if ( !$Package{Description} ) {
+                $Package{Description} = $Tag->{Content};
+            }
+            if ( $Tag->{Lang} eq $Param{Lang} ) {
+                $Package{Description} = $Tag->{Content};
+            }
+        }
+        else {
+            $Package{ $Tag->{Tag} } = $Tag->{Content};
         }
     }
 
@@ -3745,51 +3702,6 @@ sub _CheckDBMerged {
     }
 
     return \@Parts;
-}
-
-=item RepositoryCloudList()
-
-returns a list of available cloud repositories
-
-    my $List = $PackageObject->RepositoryCloudList();
-
-=cut
-
-sub RepositoryCloudList {
-    my ( $Self, %Param ) = @_;
-
-    # get cache object
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
-
-    # check cache
-    my $CacheKey = "Repository::List::From::Cloud";
-    my $Cache    = $CacheObject->Get(
-        Type => 'RepositoryCloudList',
-        Key  => $CacheKey,
-    );
-
-    $Param{NoCache} //= 0;
-
-    # check if use cache is needed
-    if ( !$Param{NoCache} ) {
-        return $Cache if IsHashRefWithData($Cache);
-    }
-
-    my $RepositoryResult = $Self->CloudFileGet(
-        Operation => 'RepositoryListAvailable',
-    );
-
-    return if !IsHashRefWithData($RepositoryResult);
-
-    # set cache
-    $CacheObject->Set(
-        Type  => 'RepositoryCloudList',
-        Key   => $CacheKey,
-        Value => $RepositoryResult,
-        TTL   => 60 * 60,
-    );
-
-    return $RepositoryResult;
 }
 
 sub DESTROY {
