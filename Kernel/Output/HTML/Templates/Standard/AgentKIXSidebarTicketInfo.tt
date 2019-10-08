@@ -136,9 +136,6 @@
                 </input>
             </p>
 [% RenderBlockEnd("DynamicFieldContentCheckbox") %]
-[% RenderBlockStart("DynamicFieldContentTime") %]
-            <p class="Value" title="[% Data.Title %]">[% Data.Value | Localize("TimeLong") %]</p>
-[% RenderBlockEnd("DynamicFieldContentTime") %]
             <div class="Clear"></div>
 [% RenderBlockEnd("DynamicFieldContent") %]
         </fieldset>
