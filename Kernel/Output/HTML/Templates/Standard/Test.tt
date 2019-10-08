@@ -9,7 +9,7 @@
 # --
 
 
-<h1>[% Translate("OTRS Test Page") | html %]</h1>
+<h1>[% Translate("KIX Test Page") | html %]</h1>
 <hr/>
 # translation test
 <b>translation test</b><br/>

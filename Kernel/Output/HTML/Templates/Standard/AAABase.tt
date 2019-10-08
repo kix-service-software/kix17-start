@@ -236,7 +236,6 @@
 [% Translate("System Settings") | html %]
 [% Translate("Mail Configuration") | html %]
 [% Translate("Finished") | html %]
-[% Translate("Install OTRS") | html %]
 [% Translate("Intro") | html %]
 [% Translate("License") | html %]
 [% Translate("Error") | html %]
@@ -372,11 +371,11 @@
 [% Translate("Shown contacts") | html %]
 [% Translate("News") | html %]
 [% Translate("Product News") | html %]
-[% Translate("OTRS News") | html %]
+[% Translate("KIX News") | html %]
 [% Translate("7 Day Stats") | html %]
 [% Translate("Process Management information from database is not in sync with the system configuration, please synchronize all processes.") | html %]
 [% Translate("Package not verified by the KIX Group! It is recommended not to use this package.") | html %]
-[% Translate("<br>If you continue to install this package, the following issues may occur!<br><br>&nbsp;-Security problems<br>&nbsp;-Stability problems<br>&nbsp;-Performance problems<br><br>Please note that issues that are caused by working with this package are not covered by OTRS service contracts!<br><br>") | html %]
+[% Translate("<br>If you continue to install this package, the following issues may occur!<br><br>&nbsp;-Security problems<br>&nbsp;-Stability problems<br>&nbsp;-Performance problems<br><br>Please note that issues that are caused by working with this package are not covered by KIX service contracts!<br><br>") | html %]
 [% Translate("Mark") | html %]
 [% Translate("Unmark") | html %]
 
@@ -416,7 +415,7 @@
 # process management
 [% Translate("The selected process is invalid!") | html %]
 
-# OTRS Business Solution™
+# obsolete
 [% Translate("Upgrade to %s now!") | html %]
 [% Translate("%s Go to the upgrade center %s") | html %]
 [% Translate("The license for your %s is about to expire. Please make contact with %s to renew your contract!") | html %]

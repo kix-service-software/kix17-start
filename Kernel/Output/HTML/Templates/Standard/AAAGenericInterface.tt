@@ -9,7 +9,7 @@
 # --
 
 
-[% Translate("OTRS as requester") | html %]
-[% Translate("OTRS as provider") | html %]
+[% Translate("KIX as requester") | html %]
+[% Translate("KIX as provider") | html %]
 [% Translate("Webservice \"%s\" created!") | html %]
 [% Translate("Webservice \"%s\" updated!") | html %]
