@@ -215,7 +215,7 @@ sub Run {
     }
 
     # get current user groups as array
-    my %GroupList = $GroupObject->PermissionUserGroupGet(
+    my %GroupList = $GroupObject->PermissionUserGet(
         UserID => $Self->{UserID},
         Type   => $Self->{Config}->{Permission}
     );
