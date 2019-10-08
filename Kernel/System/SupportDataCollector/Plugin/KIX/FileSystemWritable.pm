@@ -57,7 +57,7 @@ sub Run {
         $Self->AddResultProblem(
             Label   => Translatable('File System Writable'),
             Value   => join( ', ', @ReadonlyDirectories ),
-            Message => Translatable('The file system on your OTRS partition is not writable.'),
+            Message => Translatable('The file system on your KIX partition is not writable.'),
         );
     }
     else {

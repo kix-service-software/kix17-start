@@ -45,7 +45,7 @@
                     [% Translate("All incoming emails with one account will be dispatched in the selected queue!") | html %]
                 </p>
                 <p class="FieldExplanation">
-                    [% Translate("If your account is trusted, the already existing X-OTRS header at arrival time (for priority, ...) will be used! PostMaster filter will be used anyway.") | html %]
+                    [% Translate("If your account is trusted, the already existing X-KIX header at arrival time (for priority, ...) will be used! PostMaster filter will be used anyway.") | html %]
                 </p>
             </div>
         </div>
