@@ -64,7 +64,7 @@ sub Run {
             Identifier => 'MPMModel',
             Label      => Translatable('MPM model'),
             Value      => $MPMModel,
-            Message    => Translatable("OTRS requires apache to be run with the 'prefork' MPM model."),
+            Message    => Translatable("KIX requires apache to be run with the 'prefork' MPM model."),
         );
     }
 

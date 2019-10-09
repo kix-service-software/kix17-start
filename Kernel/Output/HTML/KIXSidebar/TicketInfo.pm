@@ -134,16 +134,7 @@ sub Run {
             },
         );
 
-        if ( $DynamicFieldConfig->{FieldType} eq 'DateTime' ) {
-            $LayoutObject->Block(
-                Name => 'DynamicFieldContentTime',
-                Data => {
-                    Value => $ValueStrg->{Value},
-                    Title => $ValueStrg->{Title},
-                },
-            );
-        }
-        elsif ( $ValueStrg->{Link} ) {
+        if ( $ValueStrg->{Link} ) {
             $LayoutObject->Block(
                 Name => 'DynamicFieldContentLink',
                 Data => {

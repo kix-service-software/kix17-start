@@ -33,7 +33,6 @@ sub Run {
     my $PackageObject = $Kernel::OM->Get('Kernel::System::Package');
 
     my @InvalidPackages;
-    my @NotVerifiedPackages;
     my @WrongFrameworkVersion;
     for my $Package ( $PackageObject->RepositoryList() ) {
 
@@ -86,36 +85,6 @@ sub Run {
         $Self->AddResultOk(
             Label => Translatable('Package Installation Status'),
             Value => '',
-        );
-    }
-
-    if (@NotVerifiedPackages) {
-        if ( $Kernel::OM->Get('Kernel::Config')->Get('Package::AllowLocalModifications') ) {
-            $Self->AddResultInformation(
-                Identifier => 'Verification',
-                Label      => Translatable('Package Verification Status'),
-                Value      => join( ', ', @NotVerifiedPackages ),
-                Message    => Translatable(
-                    'Some packages are not verified by the KIX Group! It is recommended not to use this packages.'
-                ),
-            );
-        }
-        else {
-            $Self->AddResultProblem(
-                Identifier => 'Verification',
-                Label      => Translatable('Package Verification Status'),
-                Value      => join( ', ', @NotVerifiedPackages ),
-                Message    => Translatable(
-                    'Some packages are not verified by the KIX Group! It is recommended not to use this packages.'
-                ),
-            );
-        }
-    }
-    else {
-        $Self->AddResultOk(
-            Identifier => 'Verification',
-            Label      => Translatable('Package Verification Status'),
-            Value      => '',
         );
     }
 

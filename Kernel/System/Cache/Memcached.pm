@@ -68,6 +68,12 @@ sub Set {
         }
     }
 
+    # Memcached may not exceed 2592000 (30 days)
+    # set zero (infinite ttl) if exceeded
+    if ( $TTL > 2592000 ) {
+        $TTL = 0;
+    }
+
     if ($Self->{Config}->{CacheMetaInfo}) {
         # update indexes
         my $Result = $Self->{MemcachedObject}->get_multi(

@@ -77,7 +77,7 @@ Core.App.Ready(function () {
         NoElementsToSelectFromMsg: [% Translate("There are currently no elements available to select from.") | JSON %],
         TurnOffCompatibilityModeMsg: [% Translate("Please turn off Compatibility Mode in Internet Explorer!") | JSON %],
         BrowserTooOldMsg: [% Translate("The browser you are using is too old.") | JSON %],
-        BrowserListMsg: [% Translate("OTRS runs with a huge lists of browsers, please upgrade to one of these.") | JSON %],
+        BrowserListMsg: [% Translate("KIX runs with a huge lists of browsers, please upgrade to one of these.") | JSON %],
         BrowserDocumentationMsg: [% Translate("Please see the documentation or ask your admin for further information.") | JSON %],
         ViewModeSwitchMobile:  [% Translate("Switch to mobile mode") | JSON %],
         ViewModeSwitchDesktop: [% Translate("Switch to desktop mode") | JSON %],

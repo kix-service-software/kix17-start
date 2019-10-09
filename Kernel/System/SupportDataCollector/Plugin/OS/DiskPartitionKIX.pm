@@ -8,7 +8,7 @@
 # did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::System::SupportDataCollector::Plugin::OS::DiskPartitionOTRS;
+package Kernel::System::SupportDataCollector::Plugin::OS::DiskPartitionKIX;
 
 use strict;
 use warnings;
@@ -33,15 +33,15 @@ sub Run {
         return $Self->GetResults();
     }
 
-    # find OTRS partition
+    # find KIX partition
     my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
 
-    my $OTRSPartition = `df -P $Home | tail -1 | cut -d' ' -f 1`;
-    chomp $OTRSPartition;
+    my $KIXPartition = `df -P $Home | tail -1 | cut -d' ' -f 1`;
+    chomp $KIXPartition;
 
     $Self->AddResultInformation(
-        Label => Translatable('OTRS Disk Partition'),
-        Value => $OTRSPartition,
+        Label => Translatable('KIX Disk Partition'),
+        Value => $KIXPartition,
     );
 
     return $Self->GetResults();
