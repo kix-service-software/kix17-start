@@ -329,7 +329,9 @@
         left: -9999px;
         top: -9999px;
     }
-
+    .AdditionalInformationResponsive {
+        display: none;
+    }
 
     /**
     *   @Subsection SettingWidget

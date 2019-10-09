@@ -298,6 +298,19 @@
         overflow: hidden;
     }
 
+    #NavigationContainer > a {
+        background: #82C826;
+        color: #FFFFFF;
+        font-weight: bold;
+        font-size: 13px;
+        height: 34px;
+        line-height: 28px;
+        position: absolute;
+        text-align: center;
+        width: 20px;
+        z-index: 100;
+    }
+
     #NavigationContainer #Navigation {
         left: 0px;
         position: absolute;
@@ -365,16 +378,5 @@
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         border-bottom: 0;
-    }
-
-    #Navigation > li > a.ScreenL,
-    #Navigation > li > a.ScreenM,
-    #Navigation > li > a.ScreenS,
-    #Navigation > li > a.ScreenXS,
-    #Navigation > li > a.SmallerOrEqualScreenL,
-    #Navigation > li > a.SmallerOrEqualScreenM,
-    #Navigation > li > a.SmallerOrEqualScreenS,
-    #Navigation > li > a.SmallerOrEqualScreenXS {
-        display: none;
     }
 }

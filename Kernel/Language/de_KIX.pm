@@ -4098,6 +4098,7 @@ sub Data {
 
     $Lang->{'Welcome to KIX'}     = 'Willkommen bei KIX';
     $Lang->{'show Toolbar'}       = 'Toolbar anzeigen';
+    $Lang->{'hide Toolbar'}       = 'Toolbar ausblenden';
     $Lang->{'Toolbar Position'}   = 'Toolbar-Position';
     $Lang->{'Select the position of the toolbar.'} = 'Position der Toolbar auswählen.';
     $Lang->{'Defines for the Toolbar Top a specific CSS for adjusting the position. It is only possible to use the CSS rules Left and Top.'}
