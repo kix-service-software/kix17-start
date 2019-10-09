@@ -381,7 +381,7 @@ Core.Agent = (function (TargetNS) {
                 .append('<a href="#" title="' + Core.Config.Get('SlideNavigationText') + '" class="Hidden NavigationBarNavigate' + Direction + '"><i class="fa fa-chevron-' + Direction.toLowerCase() + '"></i></a>')
                 .find('.NavigationBarNavigate' + Direction)
                 .delay(Delay)
-                .fadeIn()
+                //.fadeIn()
                 .bind('click', function() {
                     if (Direction === 'Right') {
 

@@ -391,20 +391,6 @@ sub Run {
                 && ref $TemplateData{MultipleCustomer} eq 'ARRAY';
     }
 
-    # run acl to prepare TicketAclFormData
-    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
-        %GetParam,
-        %ACLCompatGetParam,
-        Action        => $Self->{Action},
-        ReturnType    => 'Ticket',
-        ReturnSubType => '-',
-        Data          => {},
-        UserID        => $Self->{UserID},
-    );
-
-    # update 'Shown' for $Self->{DynamicField}
-    $Self->_GetShownDynamicFields();
-
     if ( !$Self->{Subaction} || $Self->{Subaction} eq 'Created' ) {
 
         # header
@@ -1348,6 +1334,21 @@ sub Run {
                 }
             }
         }
+
+        # run acl to prepare TicketAclFormData
+        my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+            %GetParam,
+            %ACLCompatGetParam,
+            QueueID       => $NewQueueID || 0,
+            Action        => $Self->{Action},
+            ReturnType    => 'Ticket',
+            ReturnSubType => '-',
+            Data          => {},
+            UserID        => $Self->{UserID},
+        );
+
+        # update 'Shown' for $Self->{DynamicField}
+        $Self->_GetShownDynamicFields();
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:

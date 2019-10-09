@@ -677,6 +677,10 @@
         width: 22px;
         height: 12px;
     }
+    .OverviewLarge div.Flag.TicketOverviewHighlightClass,
+    .OverviewMedium div.Flag.TicketOverviewHighlightClass {
+        top: 90px;
+    }
     .OverviewMedium div.UnreadArticles {
         position: absolute;
         left: 4px;

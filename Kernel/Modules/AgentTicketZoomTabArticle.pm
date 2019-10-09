@@ -1933,6 +1933,10 @@ sub _ArticleItem {
             Name => 'ArticleCreatedBy',
             Data => {%Article},
         );
+        $LayoutObject->Block(
+            Name => 'ArticleMailCreatedBy',
+            Data => {%Article},
+        );
     }
 
     # always show archived tickets as seen

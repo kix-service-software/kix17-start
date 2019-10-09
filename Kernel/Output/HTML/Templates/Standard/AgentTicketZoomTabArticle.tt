@@ -454,6 +454,13 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
 
             <div class="ArticleMailHeader">
                 <fieldset class="TableLike FixedLabelSmall">
+                    <label class="AdditionalInformationResponsive">[% Translate("Created") | html %]:</label>
+                    <p class="Value AdditionalInformationResponsive">[% Data.Created | Localize("TimeShort") %]
+[% RenderBlockStart("ArticleMailCreatedBy") %]
+                        [% Translate("by") | html %] [% Data.CreatedByUser | html %]
+[% RenderBlockEnd("ArticleMailCreatedBy") %]
+                    </p>
+                    <div class="Clear"></div>
 [% RenderBlockStart("RowRecipient") %]
                     <label class="Switchable">[% Translate(Data.Key) | html %]:</label>
                     <p class="Value" title="[% Data.Value | html %]">

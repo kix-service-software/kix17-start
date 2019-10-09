@@ -98,7 +98,9 @@ Core.App.Ready(function () {
         DeleteLinksQuestion: [% Translate("Do you really want to delete the selected links?") | JSON %],
         Question: [% Translate("Question") | JSON %],
         Yes: [% Translate("Yes") | JSON %],
-        No: [% Translate("No") | JSON %]
+        No: [% Translate("No") | JSON %],
+        ShowToolbar: '[% Translate("show Toolbar") | html %]',
+        HideToolbar: '[% Translate("hide Toolbar") | html %]'
     });
 
     Core.KIX4OTRS.TicketZoomTabs.Init();
@@ -128,6 +130,9 @@ Core.App.Ready(function () {
     // responsive initialization must run as late as possible to include all event subscriptions
     // at the initialization process
     Core.App.Responsive.Init();
+    if (Core.App.Responsive.IsSmallerOrEqual(Core.App.Responsive.GetScreenSize(), 'ScreenL')) {
+        Core.App.Publish('Event.App.Responsive.SmallerOrEqualScreenL');
+    }
 });
 //]]></script>
 

@@ -26,12 +26,14 @@ Core.KIXBase.Agent = (function(TargetNS) {
         // hide Toolbar
         if ($('#ToolBarToggle').length > 0 && $('#ToolBar').length > 0) {
 
-            var Class = 'Show';
+            var Class = 'Show',
+                Text  = Core.Config.Get('ShowToolbar');
 
             Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=GetToolBarToggleState', function(Result) {
                 if (Result == 1) {
                     $('#ToolBar').removeClass('Hidden');
                     Class = 'Hide';
+                    Text  = Core.Config.Get('HideToolbar');
                 }
                 else {
                     $('#ToolBar').addClass('Hidden');
@@ -41,17 +43,17 @@ Core.KIXBase.Agent = (function(TargetNS) {
 
             var Action = Core.Config.Get('Action');
             if ( !Action.match(/^AgentTicketZoom(.+)/) && !Action.match(/^AgentITSM(.*?)Zoom(.+)/) ) {
-                $('#ToolBarToggle').addClass(Class);
+                $('#ToolBarToggle').addClass(Class).html(Text);
                 $('#ToolBarToggle').click(function() {
                     if ($('#ToolBarToggle').hasClass('Show')) {
-                        $('#ToolBar').show('fast').addClass('toggle');
-                        $('#ToolBarToggle').removeClass('Show').addClass('Hide');
+                        $('#ToolBar').show().addClass('toggle');
+                        $('#ToolBarToggle').removeClass('Show').addClass('Hide').html(Core.Config.Get('ShowToolbar'));
 
                         Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=1', function() {}, 'text');
                     }
                     else {
-                        $('#ToolBar').hide('fast').removeClass('toggle');
-                        $('#ToolBarToggle').removeClass('Hide').addClass('Show');
+                        $('#ToolBar').hide().removeClass('toggle');
+                        $('#ToolBarToggle').removeClass('Hide').addClass('Show').html(Core.Config.Get('HideToolbar'));
 
                         Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=0', function() {}, 'text');
                     }
@@ -179,7 +181,7 @@ Core.KIXBase.Agent = (function(TargetNS) {
                 // add padding to WidgetSimple Header h2 if Toggle element exists before
                 $('#ArticleItems .WidgetSimple > .Header > h2').each(function () {
                     if ($(this).parent('.Header').children().index($(this)) > 0 && $(this).parent('.Header').children('.Toggle').length == 1) {
-                        $(this).addClass('PaddingLeft15px');
+                        $(this).addClass('WithToggle');
                     }
                     // enclose text into span element for positioning (we have to check html() here, because otherwise it won't work in FAQ)
                     if ($(this).html().length > 0 && !$(this).html().indexOf('<span') == 0) {
