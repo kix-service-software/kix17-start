@@ -273,9 +273,16 @@ sub Run {
         # head of xunit xml
         my $XUnitXML = '<?xml version="1.0" encoding="utf-8" ?>' . "\n";
 
+        # prepare testsuites name
+        my $TestSuitesName = $ResultSummary{Product} . '//' . $ResultSummary{OS} . ' ' . $ResultSummary{Vendor} . '//' . $ResultSummary{Database} . '//Perl ' . $ResultSummary{Perl} . '//' . $ResultSummary{Time};
+        $TestSuitesName    =~ s/&/&amp;/g;
+        $TestSuitesName    =~ s/</&lt;/g;
+        $TestSuitesName    =~ s/>/&gt;/g;
+        $TestSuitesName    =~ s/"/&quot;/g;
+
         # prepare summary for tag testsuites
         $XUnitXML .= '<testsuites';
-        $XUnitXML .= ' name="' . $ResultSummary{Product} . '//' . $ResultSummary{OS} . ' ' . $ResultSummary{Vendor} . '//' . $ResultSummary{Database} . '//Perl ' . $ResultSummary{Perl} . '//' . $ResultSummary{Time} . '"';
+        $XUnitXML .= ' name="' . $TestSuitesName . '"';
         $XUnitXML .= ' tests="' . ( $ResultSummary{TestOk} + $ResultSummary{TestNotOk} ) . '"';
         $XUnitXML .= ' failures="' . $ResultSummary{TestNotOk} . '"';
         $XUnitXML .= ' errors="0"';
@@ -301,6 +308,10 @@ sub Run {
             # generate testsuite name
             my $TestSuiteName = $Key;
             $TestSuiteName    =~ s/^.+\/scripts\/test\/(.+)\.t$/$1/;
+            $TestSuiteName    =~ s/&/&amp;/g;
+            $TestSuiteName    =~ s/</&lt;/g;
+            $TestSuiteName    =~ s/>/&gt;/g;
+            $TestSuiteName    =~ s/"/&quot;/g;
 
             # prepare summary for tag testsuite
             $XUnitXML .= '  <testsuite';
@@ -334,6 +345,9 @@ sub Run {
             for my $TestCount ( sort { $a <=> $b } keys %{ $Self->{XML}->{Test}->{$Key} } ) {
                 # generate testcase name
                 my $TestCaseName = $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Name};
+                $TestCaseName    =~ s/&/&amp;/g;
+                $TestCaseName    =~ s/</&lt;/g;
+                $TestCaseName    =~ s/>/&gt;/g;
                 $TestCaseName    =~ s/"/&quot;/g;
                 
                 # prepare summary for tag testcase
@@ -345,15 +359,16 @@ sub Run {
 
                 if ( $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Result} eq 'not ok' ) {
                     my $Content = $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Message};
-                    $Content =~ s/&/&amp;/g;
-                    $Content =~ s/</&lt;/g;
-                    $Content =~ s/>/&gt;/g;
+                    $Content    =~ s/&/&amp;/g;
+                    $Content    =~ s/</&lt;/g;
+                    $Content    =~ s/>/&gt;/g;
+                    $Content    =~ s/"/&quot;/g;
 
                     # Replace characters that are invalid in XML (https://www.w3.org/TR/REC-xml/#charsets)
                     $Content =~ s/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/"\x{FFFD}"/eg;
 
                     $XUnitXML .= '<failure';
-                    $XUnitXML .= ' message="' . qq|$Content| . '"';
+                    $XUnitXML .= ' message="' . $Content . '"';
                     $XUnitXML .= ' type="failure"';
                     $XUnitXML .= '></failure>';
                 }
