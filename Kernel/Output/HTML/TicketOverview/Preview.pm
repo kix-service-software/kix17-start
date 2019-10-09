@@ -720,7 +720,7 @@ sub _Show {
             Name => 'MetaIcon',
             Data => {
                 Class => 'Flag TicketOverviewHighlightClass',
-                Style => $StateHighlighting->{ $Article{State} } . ' ; top: 90px; ',
+                Style => $StateHighlighting->{ $Article{State} } . ' ;',
                 Title => $Article{State}
             },
         );

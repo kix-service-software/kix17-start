@@ -59,7 +59,20 @@ Core.Agent.Responsive = (function (TargetNS) {
         if (!$('#NavigationContainer').closest('.ResponsiveSidebarContainer').length) {
             $('#NavigationContainer').wrap('<div class="ResponsiveSidebarContainer" />');
         }
-
+        // wrap sidebar modules with an additional container
+        if ($('.ContentColumn > .ActionRow').children().length && !$('.ContentColumn > .ActionRow').closest('.ResponsiveSidebarContainer').length) {
+            $('.ContentColumn > .ActionRow').wrap('<div class="ResponsiveSidebarContainer" />');
+        }
+        // wrap sidebar modules with an additional container
+        if ($('#ArticleItems .LightRow').length) {
+            var ResponsiveCount = 0;
+            $.each($('#ArticleItems .LightRow'), function () {
+                if ( $(this).children().length && !$(this).closest('.ResponsiveSidebarContainer').length) {
+                    $(this).wrap('<div id="ResponsiveMenu_' + ResponsiveCount + '" class="ResponsiveSidebarContainer ResponsiveArticleMenu" />');
+                    ResponsiveCount++;
+                }
+            });
+        }
         // make sure the relevant sidebar is being collapsed on clicking
         // on the background
         $('.ResponsiveSidebarContainer').off().on('click', function(Event) {
@@ -78,6 +91,14 @@ Core.Agent.Responsive = (function (TargetNS) {
         }
         if (!$('#ResponsiveNavigationHandle').length) {
             $('#NavigationContainer').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle" id="ResponsiveNavigationHandle"><i class="fa fa-navicon"></i></span>');
+        }
+        if (!$('#ResponsiveTicketMenuHandle').length) {
+            $('.ContentColumn .ActionRow').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle ResponsiveMenuHandle" id="ResponsiveTicketMenuHandle"><i class="fa fa-ellipsis-v"></i></span>');
+        }
+        if (!$('.ResponsibleMenuHandle').length) {
+            $.each($('div[id^=ResponsiveMenu_'), function () {
+                $(this).before('<span class="ResponsiveHandle ResponsiveMenuHandle"><i class="fa fa-ellipsis-v"></i></span>');
+            });
         }
 
         // add navigation sidebar expansion handling
@@ -99,7 +120,7 @@ Core.Agent.Responsive = (function (TargetNS) {
             }
             else {
                 $('#ResponsiveSidebarHandle').animate({
-                    'right': '0px'
+                    'right': '15px'
                 });
                 $('#NavigationContainer').closest('.ResponsiveSidebarContainer').fadeOut();
                 $('html').removeClass('NoScroll');
@@ -124,11 +145,51 @@ Core.Agent.Responsive = (function (TargetNS) {
             }
             else {
                 $('#ResponsiveNavigationHandle').animate({
-                    'left': '0px'
+                    'left': '15px'
                 });
                 $('.SidebarColumn').closest('.ResponsiveSidebarContainer').fadeOut();
                 $('html').removeClass('NoScroll');
                 $('.SidebarColumn').animate({
+                    'right': '-300px'
+                });
+            }
+            return false;
+        });
+
+        // add sidebar column expansion handling
+        $('.ResponsiveMenuHandle').off().on('click', function() {
+            var $Element = $(this).next('.ResponsiveSidebarContainer').children('div');
+            if (parseInt($Element.css('right'), 10) < 0) {
+                $('#ResponsiveNavigationHandle').animate({
+                    'left': '-45px'
+                });
+                $('#ResponsiveSidebarHandle').animate({
+                    'right': '-45px'
+                });
+                $Element.closest('.ResponsiveSidebarContainer').fadeIn();
+                $('html').addClass('NoScroll');
+                $Element.animate({
+                    'right': '0px'
+                });
+                $Element.find('.MenuClusterIcon, .ClusterLink').off().on('click', function(){
+                    if ($(this).closest('li').hasClass('ClusterSelect') ) {
+                        $(this).closest('li').removeClass('ClusterSelect');
+                    } else {
+                        $('.ResponsiveSidebarContainer .ActionRow li').removeClass('ClusterSelect');
+                        $(this).closest('li').addClass('ClusterSelect');
+                    }
+                });
+            }
+            else {
+                $('#ResponsiveNavigationHandle').animate({
+                    'left': '15px'
+                });
+                $('#ResponsiveSidebarHandle').animate({
+                    'right': '15px'
+                });
+                $Element.closest('.ResponsiveSidebarContainer').fadeOut();
+                $('html').removeClass('NoScroll');
+                $Element.animate({
                     'right': '-300px'
                 });
             }
@@ -150,7 +211,7 @@ Core.Agent.Responsive = (function (TargetNS) {
         $('#NavigationContainer').css('left', '-280px');
 
         // move toolbar to navigation container
-        $('#ToolBar').detach().prependTo('body');
+        $('#ToolBar').detach().prependTo('#AppWrapper');
 
         // make fields which have a following icon not as wide as other fields
         $('.FormScreen select').each(function() {
@@ -172,7 +233,7 @@ Core.Agent.Responsive = (function (TargetNS) {
         $('.D3GraphMessage, .D3GraphCanvas').closest('.WidgetSimple').show();
 
         // remove the additional container again
-        $('.ResponsiveSidebarContainer').children('.SidebarColumn, #NavigationContainer').unwrap();
+        $('.ResponsiveSidebarContainer').children('.SidebarColumn, #NavigationContainer, .ActionRow, .LightRow').unwrap();
 
         $('#OptionCustomer').closest('.Field').show().prev('label').show();
 

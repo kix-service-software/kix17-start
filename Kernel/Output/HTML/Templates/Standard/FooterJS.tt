@@ -98,7 +98,9 @@ Core.App.Ready(function () {
 
         ConnectionErrorTitle: [% Translate('Connection error') | JSON %],
         ConnectionErrorReloadButton: [% Translate('Reload page') | JSON %],
-        StatsMsg: [% Translate("Stats") | JSON %]
+        StatsMsg: [% Translate("Stats") | JSON %],
+        ShowToolbar: '[% Translate("show Toolbar") | html %]',
+        HideToolbar: '[% Translate("hide Toolbar") | html %]'
     });
 
     Core.Agent.Init();
