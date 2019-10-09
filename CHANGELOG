@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.9.0-RC3 (2019/10/09)
+ * (2019/10/09) - CR: T2019081490001077 (updated resposive layout) (fjacquemin)
+ * (2019/10/08) - Bugfix: T2019100290000792 (initial disabled dynamic field values not saved on ticket create) (millinger)
+ * (2019/10/08) - Bugfix: T2019093090001026 (include role based groups for article edit permissions) (millinger)
+ * (2019/10/08) - Bugfix: T2019041290000991 (replaced otrs wordings and translations) (millinger)
+ * (2019/09/26) - Bugfix: T2019080890000839 (prevent log message 'No FormatTimeString() translation found') (millinger)
+
 # 17.9.0-RC2 (2019/10/04)
  * (2019/10/04) - release candidate
 
