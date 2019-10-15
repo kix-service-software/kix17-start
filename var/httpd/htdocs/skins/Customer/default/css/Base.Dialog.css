@@ -27,6 +27,48 @@
         filter: alpha(opacity=50);
         z-index: 3500;
     }
+    .OverlayTreeSelector {
+        width: 400px;
+        height: 300px;
+        text-align: center;
+    }
+
+    /*
+    *   @subsection Tree
+    */
+    #TreeContainer #TreeSearch {
+        position: relative;
+    }
+    #TreeContainer #TreeSearch input {
+        display: block;
+        margin: 10px 12px 0px 12px;
+        width: 92%;
+    }
+    #TreeContainer input.CallForAction {
+        padding: 3px 10px;
+    }
+    #TreeContainer #TreeSearch span {
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        height: 12px;
+        position: absolute;
+        right: 13px;
+        top: 1px;
+        width: 12px;
+        background-color: #DDDDDD;
+        padding: 4px 2px;
+        text-align: center;
+        color: #777777;
+    }
+    #JSTree {
+        border: 1px solid #CCCCCC;
+        height: 72%;
+        margin: 10px 12px;
+        overflow: auto;
+        padding: 0px 10px 10px 10px;
+        text-align: left;
+    }
 
     /**
      * @subsection  Dialog

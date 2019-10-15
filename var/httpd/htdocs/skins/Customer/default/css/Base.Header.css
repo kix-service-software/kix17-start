@@ -32,6 +32,7 @@
         position: relative;
         background-size: contain;
         position: absolute;
+        background-repeat: no-repeat;
     }
 
     .CompanyName {
@@ -158,9 +159,11 @@
         position: relative;
         text-decoration: none;
         padding: 0px 5px;
-        display: block;
         font-size: 12px;
         margin-top: 8px;
+    }
+    .Visible-ScreenXL #Navigation > li > a {
+        display: block;
     }
     #Navigation > li > a#GlobalSearchNav i {
         font-size: 15px;
@@ -168,18 +171,6 @@
     #Navigation > li > ul {
         top: 34px;
         display: none;
-        position: absolute;
-        top: 34px;
-        left: 0px;
-        display: none;
-        border-top: 0px;
-        min-width: 240px;
-    }
-    #Navigation > li:hover ul,
-    #Navigation > li a:focus + ul,
-    #Navigation > li ul.Expanded {
-        display: block;
-        z-index: 1000;
     }
     #Navigation > .Active > ul {
         position: absolute;
@@ -188,11 +179,11 @@
         display: block;
         min-width: 240px;
         z-index: 99;
+        border-width: 0 1px;
     }
     #Navigation > .Active > ul > li {
         font-size: 11px;
         line-height: 11px;
-        margin-top: -1px;
         position: relative;
     }
     #Navigation > .Active > ul > li > a {
@@ -231,16 +222,5 @@
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
         border-bottom: 0;
-    }
-
-    #Navigation > li > a.ScreenL,
-    #Navigation > li > a.ScreenM,
-    #Navigation > li > a.ScreenS,
-    #Navigation > li > a.ScreenXS,
-    #Navigation > li > a.SmallerOrEqualScreenL,
-    #Navigation > li > a.SmallerOrEqualScreenM,
-    #Navigation > li > a.SmallerOrEqualScreenS,
-    #Navigation > li > a.SmallerOrEqualScreenXS {
-        display: none;
     }
 }

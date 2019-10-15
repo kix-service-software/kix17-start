@@ -324,9 +324,7 @@ sub TableCreateComplex {
                         $TmpHash{Content} = '';
                     }
                 }
-
-                # type
-                if ( $Column eq 'TicketNumber' ) {
+                elsif ( $Column eq 'TicketNumber' ) {
                     $TmpHash{Type} = 'Link';
                     $TmpHash{Link} = $LayoutObject->{Baselink}
                     . 'Action=AgentTicketZoom;TicketID='
@@ -335,13 +333,20 @@ sub TableCreateComplex {
                 elsif ( $Column =~ /(Created|Changed|Time)/ ) {
                     $TmpHash{Type} = 'TimeLong';
                 }
-
-                if ( $Column eq 'Title' ) {
+                elsif ( $Column eq 'Title' ) {
                     $TmpHash{MaxLength} = 50;
                 }
-
-                if ( $Column eq 'State' ) {
+                elsif ( $Column eq 'State' ) {
                     $TmpHash{Translate} = 1;
+                }
+                elsif ( $Column eq 'Type' ) {
+                    $TmpHash{Translate} = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::TypeTranslation') || 0;
+                }
+                elsif ( $Column eq 'Service' ) {
+                    $TmpHash{Translate} = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::ServiceTranslation') || 0;
+                }
+                elsif ( $Column eq 'SLA' ) {
+                    $TmpHash{Translate} = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SLATranslation') || 0;
                 }
             }
             push( @ItemColumns, \%TmpHash );

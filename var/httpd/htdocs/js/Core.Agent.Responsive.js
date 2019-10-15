@@ -58,6 +58,7 @@ Core.Agent.Responsive = (function (TargetNS) {
         }
         if (!$('#NavigationContainer').closest('.ResponsiveSidebarContainer').length) {
             $('#NavigationContainer').wrap('<div class="ResponsiveSidebarContainer" />');
+            $('#NavigationContainer').css('height', '100%');
         }
         // wrap sidebar modules with an additional container
         if ($('.ContentColumn > .ActionRow').children().length && !$('.ContentColumn > .ActionRow').closest('.ResponsiveSidebarContainer').length) {
@@ -103,7 +104,10 @@ Core.Agent.Responsive = (function (TargetNS) {
 
         // add navigation sidebar expansion handling
         $('#ResponsiveNavigationHandle').off().on('click', function() {
-            if (parseInt($('#NavigationContainer').css('left'), 10) < 0 || parseInt($('#NavigationContainer').css('left'), 10) === 10) {
+            if (
+                parseInt($('#NavigationContainer').css('left'), 10) < 0
+                || parseInt($('#NavigationContainer').css('left'), 10) === 10
+            ) {
                 $('#ResponsiveSidebarHandle').animate({
                     'right': '-45px'
                 });
@@ -113,10 +117,12 @@ Core.Agent.Responsive = (function (TargetNS) {
                     'left': '0px'
                 });
 
-                // KIXBase-capeIT
-                $('.ResponsiveSidebarContainer').children('div').children('ul').children('li').children('a').css({"border":"0px","float":"none"});
-                // EO KIXBase-capeIT
-
+                $('.ResponsiveSidebarContainer > div > ul > li > a').css(
+                    {
+                        "border":"0px",
+                        "float":"none"
+                    }
+                );
             }
             else {
                 $('#ResponsiveSidebarHandle').animate({
@@ -139,7 +145,7 @@ Core.Agent.Responsive = (function (TargetNS) {
                 });
                 $('.SidebarColumn').closest('.ResponsiveSidebarContainer').fadeIn();
                 $('html').addClass('NoScroll');
-                $('.SidebarColumn').animate({
+                $('.ResponsiveSidebarContainer .SidebarColumn').animate({
                     'right': '0px'
                 });
             }
@@ -149,7 +155,7 @@ Core.Agent.Responsive = (function (TargetNS) {
                 });
                 $('.SidebarColumn').closest('.ResponsiveSidebarContainer').fadeOut();
                 $('html').removeClass('NoScroll');
-                $('.SidebarColumn').animate({
+                $('.ResponsiveSidebarContainer .SidebarColumn').animate({
                     'right': '-300px'
                 });
             }
@@ -233,12 +239,25 @@ Core.Agent.Responsive = (function (TargetNS) {
         $('.D3GraphMessage, .D3GraphCanvas').closest('.WidgetSimple').show();
 
         // remove the additional container again
-        $('.ResponsiveSidebarContainer').children('.SidebarColumn, #NavigationContainer, .ActionRow, .LightRow').unwrap();
+        $('.ResponsiveSidebarContainer').children('#NavigationContainer').unwrap();
+        $.each($('.ResponsiveSidebarContainer').children('.SidebarColumn, .ActionRow, .LightRow'), function() {
+            if ( $(this).css('left') === '-300px' ) {
+                $(this).css('left', '0px');
+            } else if ( $(this).css('right') === '-300px' ) {
+                $(this).css('right', '0px');
+            }
+            $(this).unwrap();
+        });
 
         $('#OptionCustomer').closest('.Field').show().prev('label').show();
 
         // reset navigation container position
-        $('#NavigationContainer').css('left', '100px');
+        $('#NavigationContainer').css(
+            {
+                'left': '100px',
+                'height': '35px'
+            }
+        );
 
         // re-add toolbar to header
         $('#ToolBar').detach().prependTo('#Header');

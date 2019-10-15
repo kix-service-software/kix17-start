@@ -18,147 +18,8 @@
         <div class="Clear"></div>
     </div>
 [% RenderBlockEnd("Back") %]
-    <div class="Content">
-        <div class="TicketHeader">
-            <h2 title="[% Data.Title | html %]">
-[% RenderBlockStart("PriorityFlag") %]
-                <div class="Flag" title="[% Translate(Data.Priority) | html %]"><span class="PriorityID-[% Data.PriorityID | html %]">[% Translate(Data.Priority) | html %]</span></div>
-[% RenderBlockEnd("PriorityFlag") %]
-                [% Data.Title | html %]
-            </h2>
-            <ul id="TicketOptions">
-[% RenderBlockStart("Print") %]
-                <li>
-                    <a href="[% Env("Baselink") %]Action=CustomerTicketPrint;TicketID=[% Data.TicketID | uri %]" class="Print AsPopup" title="[% Translate("Print") | html %]">
-                        <i class="fa fa-print"></i>
-                        <span>[% Translate("Print") | html %]</span>
-                    </a>
-                </li>
-[% RenderBlockEnd("Print") %]
-
-[% RenderBlockStart("Expand") %]
-                <li>
-                    <a href="[% Env("Baselink") %]Action=CustomerTicketZoom;TicketID=[% Data.TicketID | uri %];ZoomExpand=[% Data.ZoomExpand | uri %]" class="ZoomExpand Expand[% Data.ExpandOption %]" title="[% Translate(Data.ExpandText) | html %]">
-                        <i class="fa fa-bars"></i>
-                        <i class="fa fa-minus"></i>
-                        <span>[% Translate(Data.ExpandText) | html %]</span>
-                    </a>
-                    <input type="hidden" name="ZoomExpand" id="ZoomExpand" value="[% Data.ZoomExpand | html %]" />
-                </li>
-[% RenderBlockEnd("Expand") %]
-            </ul>
-            <div class="Clear"></div>
-        </div>
-        <form action="[% Env("CGIHandle") %]#FollowUp" method="post" enctype="multipart/form-data" name="compose" id="ReplyCustomerTicket" class="Validate PreventMultipleSubmits">
-            <input type="hidden" name="Action" value="CustomerTicketZoom" />
-            <input type="hidden" name="Subaction" value="Store" />
-            <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]" />
-            <input type="hidden" name="ArticleID" value="[% Data.ArticleID | html %]" />
-            <input type="hidden" name="FormID" value="[% Data.FormID | html %]" />
-            <ul id="Messages">
-[% RenderBlockStart("Article") %]
-                <li class="[% Data.SenderType | html %]-[% Data.ArticleType | html %] [% Data.Class | html %]">
-                    <div class="MessageHeader">
-
-[% RenderBlockStart("ArticleContracted") %]
-                        <h3><a href="[% Env("Baselink") %]Action=[% Env("Action") %];TicketNumber=[% Data.TicketNumber | uri %];ArticleID=[% Data.ArticleID | uri %]">[% Data.FromRealname | html %] &ndash; <span title="[% Translate("Expand article") | html %]...">[% Data.Subject | html %]</span></a></h3>
-[% RenderBlockEnd("ArticleContracted") %]
-
-[% RenderBlockStart("ArticleExpanded") %]
-                        <h3><a href="[% Env("Baselink") %]Action=[% Env("Action") %];TicketNumber=[% Data.TicketNumber | uri %];ArticleID=[% Data.ArticleID | uri %]">[% Data.FromRealname | html %] &ndash; <span title="[% Data.Subject | html %]">[% Data.Subject | html %]</span></a></h3>
-[% RenderBlockEnd("ArticleExpanded") %]
-
-                        <span class="Age" title="[% Data.Created | Localize("TimeLong") | html %]">[% Data.Age %]</span>
-                        <div class="Clear"></div>
-                    </div>
-                    <input type="hidden" name="ArticleState" value="untouched" />
-                    <div class="MessageBody">
-                        <div class="Details SeperatorRow">
-[% RenderBlockStart("ArticleRow") %]
-                            <div>
-                                <div class="Label Switchable">[% Translate(Data.Key) | html %]:</div>
-                                <span title="[% Data.Value | html %]">
-                                    <span class="Switch [% Data.ValueHidden | html %]">[% Data.Value | html %]</span>
-                                    <span class="Switch [% Data.RealnameHidden | html %]">[% Data.Realname | html %]</span>
-                                </span>
-                                <div class="Clear"></div>
-                            </div>
-[% RenderBlockEnd("ArticleRow") %]
-                            <div>
-                                <div class="Label">[% Translate("Subject") | html %]:</div> <span title="[% Data.Subject | html %]">[% Data.Subject | html %]</span>
-                                <div class="Clear"></div>
-                            </div>
-
-# show article dynamic fields
-[% RenderBlockStart("ArticleDynamicField") %]
-                            <div>
-                                <div class="Label" title="[% Data.Label | html %]">[% Translate(Data.Label) | html %]:</div>
-                                <span title="[% Data.Title | html %]">[% Data.Value %]</span>
-                                <div class="Clear"></div>
-                            </div>
-[% RenderBlockEnd("ArticleDynamicField") %]
-
-[% RenderBlockStart("ArticleAttachment") %]
-                            <div class="Attachments">
-                                <div class="Label">[% Translate(Data.Key) | html %]:</div>
-                                <div>
-[% RenderBlockStart("ArticleAttachmentRow") %]
-                                    <i class="fa fa-paperclip"></i>
-                                    <span class="DownloadAttachment" title="[% Data.Filename | html %] - [% Data.Filesize | html %]">
-[% RenderBlockStart("ArticleAttachmentRowLink") %]
-                                        <a href="[% Data.Link %]" [% Data.Target %] title="[% Translate(Data.Action) | html %]">[% Data.Filename | html %]</a>, [% Data.Filesize | html %]
-[% RenderBlockEnd("ArticleAttachmentRowLink") %]
-[% RenderBlockStart("ArticleAttachmentRowNoLink") %]
-                                        [% Data.Filename | html %], [% Data.Filesize | html %]
-[% RenderBlockEnd("ArticleAttachmentRowNoLink") %]
-                                    </span>
-[% RenderBlockEnd("ArticleAttachmentRow") %]
-                                </div>
-                                <div class="Clear"></div>
-                            </div>
-[% RenderBlockEnd("ArticleAttachment") %]
-                        </div>
-[% RenderBlockStart("BodyPlain") %]
-                        <div class="MessageContent">
-                            [% Data.BodyNote %]
-                            <div class="ArticleBody">
-                                [% Data.Body %]
-                            </div>
-[% RenderBlockEnd("BodyPlain") %]
-[% RenderBlockStart("BodyHTMLLoad") %]
-[% RenderBlockStart("BrowserLinkMessage") %]
-# Show info, that links within the iframe must be clicked with strg/cmd/shift (depending on the used browser and os)
-# to open the links in a new window without the security permissions given to the iframe
-                        <div class="MessageBrowser">
-                            <p>
-                                [% Translate("To open links in the following article, you might need to press Ctrl or Cmd or Shift key while clicking the link (depending on your browser and OS).") | html %]
-                            </p>
-                            <a class="Close" title="[% Translate("Close this message") | html %]" href="#"><i class="fa fa-times"></i></a>
-                        </div>
-[% RenderBlockEnd("BrowserLinkMessage") %]
-                        <div class="MessageContent">
-# Use the HTML5 sandbox attribute to prevent plugins and scripts from being executed in the browser.
-# Use IE's (non-standard) security attribute to achieve something similar in older IE browsers. Append session info to URL because IE will not send cookies.
-# Set 'allow-popups' to allow IE10+ to open links. ref: http://www.w3.org/html/wg/wiki/ChangeProposals/sandbox_allow_popups
-                            <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" title="about:blank" frameborder="0" id="VisibleFrame" class="VisibleFrame" src="[% Env("Baselink") %]Action=CustomerTicketAttachment;Subaction=HTMLView;ArticleID=[% Data.ArticleID | html %];FileID=[% Data.AttachmentIDOfHTMLBody | html %][% Data.Session | html %]"></iframe>
-[% RenderBlockEnd("BodyHTMLLoad") %]
-[% RenderBlockStart("BodyHTMLPlaceholder") %]
-                        <div class="MessageContent">
-#                           <!-- Here we need to append the session info if cookies are disabled, because the layout object cannot automatically do that here, like in the other iframe (only for src attribute). -->
-                            <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" src="about:blank" frameborder="0" title="[% Env("Baselink") %]Action=CustomerTicketAttachment;Subaction=HTMLView;ArticleID=[% Data.ArticleID | html %];FileID=[% Data.AttachmentIDOfHTMLBody | html %][% Data.Session | html %]"></iframe>
-[% RenderBlockEnd("BodyHTMLPlaceholder") %]
-                        </div>
-                    </div>
-                </li>
-[% RenderBlockEnd("Article") %]
-            </ul> <!-- /Messages -->
-[% RenderBlockStart("NoArticles") %]
-            <ul id="NoArticles">
-                <li>
-                    [% Translate("This item has no articles yet.") | html %]
-                </li>
-            </ul>
-[% RenderBlockEnd("NoArticles") %]
+    <div class="LayoutFixedSidebar SidebarLast">
+        <div class="SidebarColumn">
             <div id="ZoomSidebar">
                 <ul id="Metadata">
                     <li class="Header">
@@ -225,40 +86,185 @@
                 </ul>
 [% RenderBlockEnd("NextActivities") %]
             </div>
-[% RenderBlockStart("FollowUp") %]
-            <div id="FollowUp" class="[% Data.FollowUpVisible | html %]">
-                <div id="Messenger" class="LayoutFixedSidebar SidebarLast">
-                    <div class="SidebarColumn">
-                        [% Data.KIXSidebarContent %]
+        </div>
+        <div class="ContentColumn">
+            <div class="TicketHeader">
+                <h2 title="[% Data.Title | html %]">
+[% RenderBlockStart("PriorityFlag") %]
+                    <div class="Flag" title="[% Translate(Data.Priority) | html %]">
+                        <span class="PriorityID-[% Data.PriorityID | html %]">[% Translate(Data.Priority) | html %]</span>
                     </div>
-                    <div class="ContentColumn">
-                        <fieldset class="TableLike DontPrint">
-                            <label class="Mandatory" for="Subject">
-                                <span class="Marker">*</span>
-                                [% Translate("Subject") | html %]:
-                            </label>
-                            <div class="Field">
-                                <input class="W75pc DontPrint Validate_Required" type="text" name="Subject" id="Subject" title="[% Translate("Subject") | html %]" value="[% Data.Subject | html %]" />
-                            </div>
+[% RenderBlockEnd("PriorityFlag") %]
+                    [% Data.Title | html %]
+                </h2>
+                <ul id="TicketOptions">
+[% RenderBlockStart("Print") %]
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=CustomerTicketPrint;TicketID=[% Data.TicketID | uri %]" class="Print AsPopup" title="[% Translate("Print") | html %]">
+                            <i class="fa fa-print"></i>
+                            <span>[% Translate("Print") | html %]</span>
+                        </a>
+                    </li>
+[% RenderBlockEnd("Print") %]
+
+[% RenderBlockStart("Expand") %]
+                    <li>
+                        <a href="[% Env("Baselink") %]Action=CustomerTicketZoom;TicketID=[% Data.TicketID | uri %];ZoomExpand=[% Data.ZoomExpand | uri %]" class="ZoomExpand Expand[% Data.ExpandOption %]" title="[% Translate(Data.ExpandText) | html %]">
+                            <i class="fa fa-bars"></i>
+                            <i class="fa fa-minus"></i>
+                            <span>[% Translate(Data.ExpandText) | html %]</span>
+                        </a>
+                        <input type="hidden" name="ZoomExpand" id="ZoomExpand" value="[% Data.ZoomExpand | html %]" />
+                    </li>
+[% RenderBlockEnd("Expand") %]
+                </ul>
+                <div class="Clear"></div>
+            </div>
+            <form action="[% Env("CGIHandle") %]#FollowUp" method="post" enctype="multipart/form-data" name="compose" id="ReplyCustomerTicket" class="Validate PreventMultipleSubmits">
+                <input type="hidden" name="Action" value="CustomerTicketZoom" />
+                <input type="hidden" name="Subaction" value="Store" />
+                <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]" />
+                <input type="hidden" name="ArticleID" value="[% Data.ArticleID | html %]" />
+                <input type="hidden" name="FormID" value="[% Data.FormID | html %]" />
+                <ul id="Messages">
+[% RenderBlockStart("Article") %]
+                    <li class="[% Data.SenderType | html %]-[% Data.ArticleType | html %] [% Data.Class | html %]">
+                        <div class="MessageHeader">
+
+[% RenderBlockStart("ArticleContracted") %]
+                            <h3><a href="[% Env("Baselink") %]Action=[% Env("Action") %];TicketNumber=[% Data.TicketNumber | uri %];ArticleID=[% Data.ArticleID | uri %]">[% Data.FromRealname | html %] &ndash; <span title="[% Translate("Expand article") | html %]...">[% Data.Subject | html %]</span></a></h3>
+[% RenderBlockEnd("ArticleContracted") %]
+
+[% RenderBlockStart("ArticleExpanded") %]
+                            <h3><a href="[% Env("Baselink") %]Action=[% Env("Action") %];TicketNumber=[% Data.TicketNumber | uri %];ArticleID=[% Data.ArticleID | uri %]">[% Data.FromRealname | html %] &ndash; <span title="[% Data.Subject | html %]">[% Data.Subject | html %]</span></a></h3>
+[% RenderBlockEnd("ArticleExpanded") %]
+
+                            <span class="Age" title="[% Data.Created | Localize("TimeLong") | html %]">[% Data.Age %]</span>
                             <div class="Clear"></div>
-                            <label class="Mandatory" for="RichText"><span class="Marker">*</span> [% Translate("Text") | html %]:</label>
-                            <div class="RichTextField">
+                        </div>
+                        <input type="hidden" name="ArticleState" value="untouched" />
+                        <div class="MessageBody">
+                            <div class="Details SeperatorRow">
+[% RenderBlockStart("ArticleRow") %]
+                                <div>
+                                    <div class="Label Switchable">[% Translate(Data.Key) | html %]:</div>
+                                    <span title="[% Data.Value | html %]">
+                                        <span class="Switch [% Data.ValueHidden | html %]">[% Data.Value | html %]</span>
+                                        <span class="Switch [% Data.RealnameHidden | html %]">[% Data.Realname | html %]</span>
+                                    </span>
+                                    <div class="Clear"></div>
+                                </div>
+[% RenderBlockEnd("ArticleRow") %]
+                                <div>
+                                    <div class="Label">[% Translate("Subject") | html %]:</div> <span title="[% Data.Subject | html %]">[% Data.Subject | html %]</span>
+                                    <div class="Clear"></div>
+                                </div>
+
+# show article dynamic fields
+[% RenderBlockStart("ArticleDynamicField") %]
+                                <div>
+                                    <div class="Label" title="[% Data.Label | html %]">[% Translate(Data.Label) | html %]:</div>
+                                    <span title="[% Data.Title | html %]">[% Data.Value %]</span>
+                                    <div class="Clear"></div>
+                                </div>
+[% RenderBlockEnd("ArticleDynamicField") %]
+
+[% RenderBlockStart("ArticleAttachment") %]
+                                <div class="Attachments">
+                                    <div class="Label">[% Translate(Data.Key) | html %]:</div>
+                                    <div>
+[% RenderBlockStart("ArticleAttachmentRow") %]
+                                        <i class="fa fa-paperclip"></i>
+                                        <span class="DownloadAttachment" title="[% Data.Filename | html %] - [% Data.Filesize | html %]">
+[% RenderBlockStart("ArticleAttachmentRowLink") %]
+                                            <a href="[% Data.Link %]" [% Data.Target %] title="[% Translate(Data.Action) | html %]">[% Data.Filename | html %]</a>, [% Data.Filesize | html %]
+[% RenderBlockEnd("ArticleAttachmentRowLink") %]
+[% RenderBlockStart("ArticleAttachmentRowNoLink") %]
+                                            [% Data.Filename | html %], [% Data.Filesize | html %]
+[% RenderBlockEnd("ArticleAttachmentRowNoLink") %]
+                                        </span>
+[% RenderBlockEnd("ArticleAttachmentRow") %]
+                                    </div>
+                                    <div class="Clear"></div>
+                                </div>
+[% RenderBlockEnd("ArticleAttachment") %]
+                            </div>
+[% RenderBlockStart("BodyPlain") %]
+                            <div class="MessageContent">
+                                [% Data.BodyNote %]
+                                <div class="ArticleBody">
+                                    [% Data.Body %]
+                                </div>
+[% RenderBlockEnd("BodyPlain") %]
+[% RenderBlockStart("BodyHTMLLoad") %]
+[% RenderBlockStart("BrowserLinkMessage") %]
+# Show info, that links within the iframe must be clicked with strg/cmd/shift (depending on the used browser and os)
+# to open the links in a new window without the security permissions given to the iframe
+                            <div class="MessageBrowser">
+                                <p>
+                                    [% Translate("To open links in the following article, you might need to press Ctrl or Cmd or Shift key while clicking the link (depending on your browser and OS).") | html %]
+                                </p>
+                                <a class="Close" title="[% Translate("Close this message") | html %]" href="#"><i class="fa fa-times"></i></a>
+                            </div>
+[% RenderBlockEnd("BrowserLinkMessage") %]
+                            <div class="MessageContent">
+# Use the HTML5 sandbox attribute to prevent plugins and scripts from being executed in the browser.
+# Use IE's (non-standard) security attribute to achieve something similar in older IE browsers. Append session info to URL because IE will not send cookies.
+# Set 'allow-popups' to allow IE10+ to open links. ref: http://www.w3.org/html/wg/wiki/ChangeProposals/sandbox_allow_popups
+                                <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" title="about:blank" frameborder="0" id="VisibleFrame" class="VisibleFrame" src="[% Env("Baselink") %]Action=CustomerTicketAttachment;Subaction=HTMLView;ArticleID=[% Data.ArticleID | html %];FileID=[% Data.AttachmentIDOfHTMLBody | html %][% Data.Session | html %]"></iframe>
+[% RenderBlockEnd("BodyHTMLLoad") %]
+[% RenderBlockStart("BodyHTMLPlaceholder") %]
+                            <div class="MessageContent">
+#                                <!-- Here we need to append the session info if cookies are disabled, because the layout object cannot automatically do that here, like in the other iframe (only for src attribute). -->
+                                <iframe sandbox="allow-same-origin allow-popups ms-allow-popups allow-popups-to-escape-sandbox" src="about:blank" frameborder="0" title="[% Env("Baselink") %]Action=CustomerTicketAttachment;Subaction=HTMLView;ArticleID=[% Data.ArticleID | html %];FileID=[% Data.AttachmentIDOfHTMLBody | html %][% Data.Session | html %]"></iframe>
+[% RenderBlockEnd("BodyHTMLPlaceholder") %]
+                            </div>
+                        </div>
+                    </li>
+[% RenderBlockEnd("Article") %]
+                </ul> <!-- /Messages -->
+[% RenderBlockStart("NoArticles") %]
+                <ul id="NoArticles">
+                    <li>
+                        [% Translate("This item has no articles yet.") | html %]
+                    </li>
+                </ul>
+[% RenderBlockEnd("NoArticles") %]
+
+[% RenderBlockStart("FollowUp") %]
+                <div id="FollowUp" class="[% Data.FollowUpVisible | html %]">
+                    <div id="Messenger" class="LayoutFixedSidebar SidebarLast">
+                        <div class="SidebarColumn">
+                            [% Data.KIXSidebarContent %]
+                        </div>
+                        <div class="ContentColumn">
+                            <fieldset class="TableLike DontPrint">
+                                <label class="Mandatory" for="Subject">
+                                    <span class="Marker">*</span>
+                                    [% Translate("Subject") | html %]:
+                                </label>
+                                <div class="Field">
+                                    <input class="W75pc DontPrint Validate_Required" type="text" name="Subject" id="Subject" title="[% Translate("Subject") | html %]" value="[% Data.Subject | html %]" />
+                                </div>
+                                <div class="Clear"></div>
+                                <label class="Mandatory" for="RichText"><span class="Marker">*</span> [% Translate("Text") | html %]:</label>
+                                <div class="RichTextField">
 [% RenderBlockStart("RichText") %]
-                                [% InsertTemplate("CustomerRichTextEditor.tt") %]
+                                    [% InsertTemplate("CustomerRichTextEditor.tt") %]
 [% RenderBlockEnd("RichText") %]
-                                <textarea title="[% Translate("Reply") | html %]" id="RichText" class="RichText DontPrint Validate_RequiredRichText [% Data.RichTextInvalid | html %]" name="Body" rows="15" cols="[% Config("Ticket::Frontend::TextAreaNote") %]">[% Data.Body | html %]</textarea>
-                                <div id="RichTextError" class="TooltipErrorMessage">
-                                    <p>[% Translate("This field is required.") | html %]</p>
+                                    <textarea title="[% Translate("Reply") | html %]" id="RichText" class="RichText DontPrint Validate_RequiredRichText [% Data.RichTextInvalid | html %]" name="Body" rows="15" cols="[% Config("Ticket::Frontend::TextAreaNote") %]">[% Data.Body | html %]</textarea>
+                                    <div id="RichTextError" class="TooltipErrorMessage">
+                                        <p>[% Translate("This field is required.") | html %]</p>
+                                    </div>
+                                    <div id="RichTextServerError" class="TooltipErrorMessage NoJavaScriptMessage[% Data.RichTextInvalid | html %]">
+                                        <p>[% Translate("This field is required.") | html %]</p>
+                                    </div>
                                 </div>
-                                <div id="RichTextServerError" class="TooltipErrorMessage NoJavaScriptMessage[% Data.RichTextInvalid | html %]">
-                                    <p>[% Translate("This field is required.") | html %]</p>
-                                </div>
-                            </div>
-                            <div class="Clear"></div>
-                            <label for="Attachment">[% Translate("Attachment") | html %]:</label>
-                            <div id="AttachmentHolder" class="Field">
-                                <input name="file_upload" title="[% Translate("Attachment") | html %]" id="Attachment" type="file" size="30" />
-                                <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
+                                <div class="Clear"></div>
+                                <label for="Attachment">[% Translate("Attachment") | html %]:</label>
+                                <div id="AttachmentHolder" class="Field">
+                                    <input name="file_upload" title="[% Translate("Attachment") | html %]" id="Attachment" type="file" size="30" />
+                                    <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#Attachment').bind('change', function (Event) {
@@ -270,10 +276,10 @@
 [% END %]
 
 [% RenderBlockStart("FollowUpAttachment") %]
-                                <div class="Attachment" title="[% Data.Filename | html %] - [% Data.Filesize | html %]">
-                                    [% Data.Filename | html %] ([% Data.Filesize | html %])
-                                    <button type="button" id="AttachmentDeleteButton[% Data.FileID | html %]" name="AttachmentDeleteButton[% Data.FileID | html %]" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
-                                    <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
+                                    <div class="Attachment" title="[% Data.Filename | html %] - [% Data.Filesize | html %]">
+                                        [% Data.Filename | html %] ([% Data.Filesize | html %])
+                                        <button type="button" id="AttachmentDeleteButton[% Data.FileID | html %]" name="AttachmentDeleteButton[% Data.FileID | html %]" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
+                                        <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
@@ -284,17 +290,16 @@
     });
 //]]></script>
 [% END %]
-                                </div>
+                                    </div>
 [% RenderBlockEnd("FollowUpAttachment") %]
-
-                            </div>
-                            <div class="Clear"></div>
+                                </div>
+                                <div class="Clear"></div>
 [% RenderBlockStart("FollowUpState") %]
-                            <label for="StateID">[% Translate("Next state") | html %]:</label>
-                            <div class="Field">
-                                [% Data.NextStatesStrg %]
-                            </div>
-                            <div class="Clear"></div>
+                                <label for="StateID">[% Translate("Next state") | html %]:</label>
+                                <div class="Field">
+                                    [% Data.NextStatesStrg %]
+                                </div>
+                                <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#StateID').bind('change', function (Event) {
@@ -304,11 +309,11 @@
 [% END %]
 [% RenderBlockEnd("FollowUpState") %]
 [% RenderBlockStart("FollowUpPriority") %]
-                            <label for="PriorityID">[% Translate("Priority") | html %]:</label>
-                            <div class="Field">
-                                [% Data.PriorityStrg %]
-                            </div>
-                            <div class="Clear"></div>
+                                <label for="PriorityID">[% Translate("Priority") | html %]:</label>
+                                <div class="Field">
+                                    [% Data.PriorityStrg %]
+                                </div>
+                                <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#PriorityID').bind('change', function (Event) {
@@ -319,27 +324,27 @@
 [% RenderBlockEnd("FollowUpPriority") %]
 
 [% RenderBlockStart("FollowUpDynamicField") %]
-                            <div class="Row Row_DynamicField_[% Data.Name | html %] [% Data.Class %]">
-                                [% Data.Label %]
-                                <div class="Field">
-                                    [% Data.Field %]
+                                <div class="Row Row_DynamicField_[% Data.Name | html %] [% Data.Class %]">
+                                    [% Data.Label %]
+                                    <div class="Field">
+                                        [% Data.Field %]
+                                    </div>
+                                    <div class="Clear"></div>
                                 </div>
                                 <div class="Clear"></div>
-                            </div>
-                            <div class="Clear"></div>
 [% RenderBlockEnd("FollowUpDynamicField") %]
-
-                        </fieldset>
+                            </fieldset>
+                        </div>
+                        <div class="ActionRow">
+                            <button type="submit" class="Primary CallingAction" value="[% Translate("Submit") | html %]">[% Translate("Submit") | html %]</button> [% Translate("or") | html %] <a id="CloseButton" href="">[% Translate("Cancel") | html %]</a>
+                        </div>
                     </div>
-                    <div class="ActionRow">
-                        <button type="submit" class="Primary CallingAction" value="[% Translate("Submit") | html %]">[% Translate("Submit") | html %]</button> [% Translate("or") | html %] <a id="CloseButton" href="">[% Translate("Cancel") | html %]</a>
-                    </div>
+                    <a id="ReplyButton" class="DontPrint" href="">[% Translate("Reply") | html %]</a>
                 </div>
-                <a id="ReplyButton" class="DontPrint" href="">[% Translate("Reply") | html %]</a>
-            </div>
 [% RenderBlockEnd("FollowUp") %]
-            <div class="Clear"></div>
-        </form>
+                <div class="Clear"></div>
+            </form>
+        </div>
     </div>
 </div>
 [% WRAPPER JSOnDocumentComplete %]

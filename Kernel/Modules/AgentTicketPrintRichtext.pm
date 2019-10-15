@@ -479,6 +479,15 @@ sub _HTMLMask {
 
                 my $HTMLUtilsObject = $Kernel::OM->Get('Kernel::System::HTMLUtils');
 
+                # check if external sources should be removed from body
+                if ( $ConfigObject->Get('Frontend::RemoveExternalSource') ) {
+                    my %SafetyCheckResultNoExt = $HTMLUtilsObject->Safety(
+                        String       => $Body,
+                        NoExtSrcLoad => 1,
+                    );
+                    $Body = $SafetyCheckResultNoExt{String};
+                }
+
                 # add url quoting
                 $Body = $HTMLUtilsObject->LinkQuote(
                     String => $Body,

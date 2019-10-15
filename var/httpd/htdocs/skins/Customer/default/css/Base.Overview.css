@@ -22,9 +22,6 @@
         padding: 5px 15px 20px 15px;
         overflow: hidden;
     }
-    .MainBox.Admin {
-        padding-top: 20px;
-    }
     .MainBox > h1 {
         margin: 0;
         padding: 10px 8px 15px 8px;
@@ -32,7 +29,7 @@
     }
     .TicketZoom {
         overflow: hidden;
-        padding-bottom: 20px;
+        padding: 5px 15px 20px 15px;
     }
     .LayoutFixedSidebar {
         display: block;
@@ -346,11 +343,7 @@
     /**
     * @subsection ticket zoom
     */
-    .TicketZoom .Content {
-        padding: 8px 15px 0;
-    }
     .TicketHeader {
-        width: 80%;
         overflow: hidden;
         position: relative;
     }
@@ -393,8 +386,7 @@
     #Messages {
         position: relative;
         z-index: 10;
-        width: 80%;
-        float: left;
+        display: block;
     }
     #Messages li {
         margin-top: 10px;
@@ -485,8 +477,6 @@
     #FollowUp {
         top: -1px;
         position: relative;
-        width: 80%;
-        float: left;
     }
     #FollowUp:not(.Visible) #Messenger {
         height: 0;
@@ -573,8 +563,6 @@
     *   @subsection FAQ
     */
     .FAQHeader {
-        width: 80%;
-        overflow: hidden;
         position: relative;
         margin-bottom: 10px;
     }

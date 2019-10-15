@@ -110,7 +110,7 @@
         <div class="WidgetSimple" style="margin-top:20px;">
             <div class="Header">
                 <h2><span>
-                    [% Translate("Compare of") | html %] ConfigItem:[% Data.Number | html %] [% Translate("Version") | html %] [% Data.Version1 | html %] [% Translate("with version") | html %] [% Data.Version2 | html %]
+                    [% Translate("Compare of") | html %] [% Translate("ConfigItem") | html %]:[% Data.Number | html %] [% Translate("Version") | html %] [% Data.Version1 | html %] [% Translate("with version") | html %] [% Data.Version2 | html %]
                 </span></h2>
             </div>
             <div class="Content">
@@ -125,11 +125,11 @@
                         </thead>
                         <tbody>
 [% RenderBlockStart("CompareItemLeft") %]
-                            <tr style="[% Data.Css %]">
-                                <td class="W25pc" style="padding-left: [% Data.Indentation %]px;" title="[% Translate(Data.Description) | html %]">
+                            <tr>
+                                <td class="W25pc" style="[% Data.Css %] padding-left: [% Data.Indentation %]px;" title="[% Translate(Data.Description) | html %]">
                                     [% Translate(Data.Name) | html %]:
                                 </td>
-                                <td style="padding-left: [% Data.Indentation %]px;">
+                                <td style="[% Data.Css %] padding-left: [% Data.Indentation %]px;">
                                     [% Data.Value %]
                                 </td>
                             </tr>
@@ -148,11 +148,11 @@
                         </thead>
                         <tbody>
 [% RenderBlockStart("CompareItemRight") %]
-                            <tr style="[% Data.Css %]">
-                                    <td class="W25pc" style="padding-left: [% Data.Indentation %]px;" title="[% Translate(Data.Description) | html %]">
+                            <tr>
+                                    <td class="W25pc" style="[% Data.Css %] padding-left: [% Data.Indentation %]px;" title="[% Translate(Data.Description) | html %]">
                                         [% Translate(Data.Name) | html %]:
                                     </td>
-                                    <td style="padding-left: [% Data.Indentation %]px;">
+                                    <td style="[% Data.Css %] padding-left: [% Data.Indentation %]px;">
                                         [% Data.Value %]
                                     </td>
                             </tr>

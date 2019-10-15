@@ -37,6 +37,250 @@ Core.Customer = (function (TargetNS) {
     }
 
     /**
+     * @private
+     * @name InitNavigation
+     * @memberof Core.Customer
+     * @function
+     * @description
+     *      This function initializes the main navigation.
+     */
+    function InitNavigation() {
+        /*
+         * private variables for navigation
+         */
+        var NavigationTimer = {},
+            NavigationDuration = 500,
+            NavigationHoverTimer = {},
+            NavigationHoverDuration = 350,
+            InitialNavigationContainerHeight = $('#NavigationContainer').css('height'),
+            NavigationResizeTimeout;
+
+        /**
+         * @private
+         * @name CreateSubnavCloseTimeout
+         * @memberof Core.Customer.InitNavigation
+         * @function
+         * @param {jQueryObject} $Element
+         * @param {Function} TimeoutFunction
+         * @description
+         *      This function sets the Timeout for closing a subnav.
+         */
+        function CreateSubnavCloseTimeout($Element, TimeoutFunction) {
+            NavigationTimer[$Element.attr('id')] = setTimeout(TimeoutFunction, NavigationDuration);
+        }
+
+        /**
+         * @private
+         * @name ClearSubnavCloseTimeout
+         * @memberof Core.Customer.InitNavigation
+         * @function
+         * @param {jQueryObject} $Element
+         * @description
+         *      This function clears the Timeout for a subnav.
+         */
+        function ClearSubnavCloseTimeout($Element) {
+            if (typeof NavigationTimer[$Element.attr('id')] !== 'undefined') {
+                clearTimeout(NavigationTimer[$Element.attr('id')]);
+            }
+        }
+
+        /**
+         * @private
+         * @name CreateSubnavOpenTimeout
+         * @memberof Core.Customer.InitNavigation
+         * @function
+         * @param {jQueryObject} $Element
+         * @param {Function} TimeoutFunction
+         * @description
+         *      This function sets the Timeout for closing a subnav.
+         */
+        function CreateSubnavOpenTimeout($Element, TimeoutFunction) {
+            NavigationHoverTimer[$Element.attr('id')] = setTimeout(TimeoutFunction, NavigationHoverDuration);
+        }
+
+        /**
+         * @private
+         * @name ClearSubnavOpenTimeout
+         * @memberof Core.Customer.InitNavigation
+         * @function
+         * @param {jQueryObject} $Element
+         * @description
+         *      This function clears the Timeout for a subnav.
+         */
+        function ClearSubnavOpenTimeout($Element) {
+            if (typeof NavigationHoverTimer[$Element.attr('id')] !== 'undefined') {
+                clearTimeout(NavigationHoverTimer[$Element.attr('id')]);
+            }
+        }
+
+        /**
+         * @private
+         * @name SetNavContainerHeight
+         * @memberof Core.Customer.InitNavigation
+         * @function
+         * @param {jQueryObject} $ParentElement
+         * @description
+         *      This function sets the nav container height according to the required height of the currently expanded sub menu
+         *      Due to the needed overflow: hidden property of the container, they would be hidden otherwise
+         */
+        function SetNavContainerHeight($ParentElement) {
+            if ($ParentElement.find('ul').length) {
+                $('#NavigationContainer').css('height', parseInt(InitialNavigationContainerHeight, 10) + parseInt($ParentElement.find('ul').outerHeight(), 10));
+            }
+        }
+
+        $('#Navigation > li')
+            .filter(function () {
+                return $('ul', this).length;
+            })
+            .bind('mouseenter', function () {
+                var $Element = $(this);
+
+                // clear close timeout on mouseenter, even if OpenMainMenuOnHover is not enabled
+                // this makes sure, that leaving the subnav for a short time and coming back
+                // will leave the subnav opened
+                ClearSubnavCloseTimeout($Element);
+
+                // special treatment for the first menu level: by default this opens submenus only via click,
+                //  but the config setting "OpenMainMenuOnHover" also activates opening on hover for it.
+                if (
+                    $('body').hasClass('Visible-ScreenXL')
+                    && !Core.App.Responsive.IsTouchDevice()
+                    && (
+                        $Element.parent().attr('id') !== 'Navigation'
+                        || Core.Config.Get('OpenMainMenuOnHover')
+                    )
+                ) {
+
+                    // Set Timeout for opening nav
+                    CreateSubnavOpenTimeout($Element, function () {
+                        $Element.addClass('Active').attr('aria-expanded', true)
+                            .siblings().removeClass('Active');
+
+                        // resize the nav container
+                        SetNavContainerHeight($Element);
+
+                        // If Timeout is set for this nav element, clear it
+                        ClearSubnavCloseTimeout($Element);
+                    });
+                }
+            })
+            .bind('mouseleave', function () {
+
+                var $Element = $(this);
+
+                if ($('body').hasClass('Visible-ScreenXL')) {
+
+                    // Clear Timeout for opening items on hover. Submenus should only be opened intentional,
+                    // so if the user doesn't hover long enough, he probably doesn't want the submenu to be opened.
+                    // If Timeout is set for this nav element, clear it
+                    ClearSubnavOpenTimeout($Element);
+
+                    if (!$Element.hasClass('Active')) {
+                        return false;
+                    }
+
+                    // Set Timeout for closing nav
+                    CreateSubnavCloseTimeout($Element, function () {
+                        $Element.removeClass('Active').attr('aria-expanded', false);
+                        if (!$('#Navigation > li.Active').length) {
+                            $('#NavigationContainer').css('height', InitialNavigationContainerHeight);
+                        }
+                    });
+                }
+            })
+            .bind('click', function (Event) {
+
+                var $Element = $(this),
+                    $Target = $(Event.target);
+
+                // if an onclick attribute is present, the attribute should win
+                if ($Target.attr('onclick')) {
+                    return false;
+                }
+
+                // if OpenMainMenuOnHover is enabled, clicking the item
+                // should lead to the link as regular
+                if ($('body').hasClass('Visible-ScreenXL') && !Core.App.Responsive.IsTouchDevice() && Core.Config.Get('OpenMainMenuOnHover')) {
+                    return true;
+                }
+
+                // ddoerffel - business code removed
+
+                // Workaround for Windows Phone IE
+                // In Windows Phone IE the event does not bubble up like in other browsers
+                // That means that a subnavigation in mobile mode is still collapsed/expanded,
+                // although the link to the new page is clicked
+                // we force the redirect with this workaround
+                if (navigator && navigator.userAgent && navigator.userAgent.match(/Windows Phone/i) && $Target.closest('ul').attr('id') !== 'Navigation') {
+                    window.location.href = $Target.closest('a').attr('href');
+                    Event.stopPropagation();
+                    Event.preventDefault();
+                    return true;
+                }
+
+                if ($Element.hasClass('Active')) {
+                    $Element.removeClass('Active').attr('aria-expanded', false);
+
+                    if ($('body').hasClass('Visible-ScreenXL')) {
+                        // restore initial container height
+                        $('#NavigationContainer').css('height', InitialNavigationContainerHeight);
+                    }
+                }
+                else {
+                    $Element.addClass('Active').attr('aria-expanded', true)
+                        .siblings().removeClass('Active');
+
+                    if ($('body').hasClass('Visible-ScreenXL')) {
+
+                        // resize the nav container
+                        SetNavContainerHeight($Element);
+
+                        // If Timeout is set for this nav element, clear it
+                        ClearSubnavCloseTimeout($Element);
+                    }
+                }
+
+                // If element has subnavigation, prevent the link
+                if ($Target.closest('li').find('ul').length) {
+                    Event.preventDefault();
+                    Event.stopPropagation();
+                    return false;
+                }
+            })
+            /*
+             * Accessibility support code
+             *      Initialize each <li> with subnavigation with aria-controls and
+             *      aria expanded to indicate what will be opened by that element.
+             */
+            .each(function () {
+                var $Li = $(this),
+                    ARIAControlsID = $Li.children('ul').attr('id');
+
+                if (ARIAControlsID && ARIAControlsID.length) {
+                    $Li.attr('aria-controls', ARIAControlsID).attr('aria-expanded', false);
+                }
+            });
+
+            // disable sortable on smaller screens
+            Core.App.Subscribe('Event.App.Responsive.SmallerOrEqualScreenL', function () {
+                if ($('#Navigation').sortable("instance")) {
+                    $('#Navigation').sortable("destroy");
+                    $('#NavigationContainer').css('height', '100%');
+                }
+            });
+        /*
+         * The navigation elements don't have a class "ARIAHasPopup" which automatically generates the aria-haspopup attribute,
+         * because of some code limitation while generating the nav data.
+         * Therefore, the aria-haspopup attribute for the navigation is generated manually.
+         */
+        $('#Navigation li').filter(function () {
+            return $('ul', this).length;
+        }).attr('aria-haspopup', 'true');
+
+    }
+
+    /**
      * @name SupportedBrowser
      * @memberof Core.Customer
      * @member {Boolean}
@@ -80,6 +324,7 @@ Core.Customer = (function (TargetNS) {
             );
         }
 
+        InitNavigation();
         Core.Exception.Init();
 
         Core.Form.Validate.Init();
@@ -94,16 +339,6 @@ Core.Customer = (function (TargetNS) {
         // Init tree selection/tree view for dynamic fields
         Core.UI.TreeSelection.InitTreeSelection();
         Core.UI.TreeSelection.InitDynamicFieldTreeViewRestore();
-
-        // Initialize customer chat request checks in the background.
-        if (
-            typeof Core.Customer.Chat !== 'undefined'
-            && typeof Core.Customer.Chat.Toolbar !== 'undefined'
-            && typeof Core.Customer.Chat.Toolbar.Init !== 'undefined'
-            )
-        {
-            Core.Customer.Chat.Toolbar.Init();
-        }
 
         // unveil full error details only on click
         $('.TriggerFullErrorDetails').on('click', function() {

@@ -463,6 +463,9 @@
         text-transform: uppercase;
         background-color: transparent;
     }
+    ul.Tablelike li.Header:hover {
+        color: inherit;
+    }
     .LayoutGrid > div > div,
     .LayoutGrid > li > div {
         overflow: hidden;

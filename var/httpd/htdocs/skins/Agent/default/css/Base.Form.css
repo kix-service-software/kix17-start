@@ -90,6 +90,10 @@
     fieldset.TableLike > .Row > .Field > :first-child {
         margin-top: -5px;
     }
+    fieldset.TableLike > .Field > .Size1of2,
+    fieldset.TableLike > .Row > .Field > .Size1of2 {
+        margin-top: 0;
+    }
     fieldset.TableLike > .Field.SubElement{
         margin-left: 40%;
     }

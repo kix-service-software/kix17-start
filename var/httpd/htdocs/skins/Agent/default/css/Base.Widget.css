@@ -329,7 +329,12 @@
         left: -9999px;
         top: -9999px;
     }
-    .AdditionalInformationResponsive {
+    .Field .ShowTreeSelection,
+    .WidgetSettingsForm .ShowTreeSelection {
+        display: inline-block;
+    }
+    fieldset.TableLike > label.AdditionalInformationResponsive,
+    fieldset.TableLike > p.AdditionalInformationResponsive {
         display: none;
     }
 
@@ -457,7 +462,6 @@
         background: none;
         display: block;
         padding: 5px;
-        border-left: none;
     }
     .PreferencesScreen .Size1of3 > .WidgetSimple > .Header h2 span {
         top: 0px;
@@ -636,7 +640,6 @@
         float: left;
         padding-right: 5px;
         margin-top: 0;
-        padding-left: 20px;
         position: relative;
         line-height: 20px;
     }
@@ -717,10 +720,8 @@
         border-bottom: none;
     }
     #AdminSysConfig input[type="checkbox"] {
-        margin: 0;
-        position: absolute;
-        left: 0;
-        top: 2px;
+        margin: 2px 5px 0 0;
+        float: left;
     }
     #AdminSysConfig .FrontendModuleRegistration label.SingleKey {
         float: left;

@@ -169,13 +169,19 @@ sub Run {
         # set filename for inline viewing
         $Data{Filename} = "Ticket-$Article{TicketNumber}-ArticleID-$Article{ArticleID}.html";
 
-        my $LoadExternalImages = $ParamObject->GetParam(
-            Param => 'LoadExternalImages'
-        ) || 0;
-
-        # safety check only on customer article
-        if ( !$LoadExternalImages && $Article{SenderType} ne 'customer' ) {
-            $LoadExternalImages = 1;
+        # check if external sources should be removed from body
+        my $LoadExternalImages = 0;
+        if ( !$ConfigObject->Get('Frontend::RemoveExternalSource') ) {
+            # safety check only on customer article
+            if ( $Article{SenderType} ne 'customer' ) {
+                $LoadExternalImages = 1;
+            }
+            # check web request
+            else {
+                $LoadExternalImages = $ParamObject->GetParam(
+                    Param => 'LoadExternalImages'
+                ) || 0;
+            }
         }
 
         # generate base url

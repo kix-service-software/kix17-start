@@ -32,6 +32,7 @@
         position: relative;
         background-size: contain;
         position: absolute;
+        background-repeat: no-repeat;
     }
 
     /**
@@ -115,6 +116,10 @@
     }
     #ToolBar li.Extended {
         width: auto;
+    }
+    #ToolBar li.Extended form * {
+        float: left;
+        top: 0;
     }
     #ToolBar li a {
         height: 20px;
@@ -293,9 +298,10 @@
         top: 47px;
         left: 10px;
         z-index: 20;
-        width: 93%;
+        width: 90%;
         height: 35px;
         overflow: hidden;
+        box-sizing: border-box;
     }
 
     #NavigationContainer > a {
@@ -303,14 +309,20 @@
         color: #FFFFFF;
         font-weight: bold;
         font-size: 13px;
-        height: 34px;
+        height: 28px;
         line-height: 28px;
         position: absolute;
         text-align: center;
         width: 20px;
         z-index: 100;
+        bottom: 1px;
     }
-
+    #NavigationContainer > a.NavigationBarNavigateRight {
+        right: 0px;
+    }
+    #NavigationContainer > a.NavigationBarNavigateLeft {
+        left: 0px;
+    }
     #NavigationContainer #Navigation {
         left: 0px;
         position: absolute;
@@ -329,9 +341,14 @@
         position: relative;
         text-decoration: none;
         padding: 0px 5px;
-        display: block;
         font-size: 12px;
         margin-top: 8px;
+    }
+    .Visible-ScreenXL #Navigation > li > a {
+        display: block;
+    }
+    .Visible-ScreenXL #Navigation > li > a.SmallerOrEqualScreenL {
+        display: none;
     }
     #Navigation > li > a#GlobalSearchNav i {
         font-size: 15px;
@@ -347,19 +364,19 @@
         display: block;
         min-width: 240px;
         z-index: 99;
+        border-width: 0 1px;
     }
     #Navigation > .Active > ul > li {
         font-size: 11px;
         line-height: 11px;
-        margin-top: -1px;
         position: relative;
     }
     #Navigation > .Active > ul > li > a {
         display: block;
         position: relative;
-        padding: 6px 10px 7px 8px;
+        padding: 7px 10px 7px 8px;
+        box-sizing: border-box;
     }
-
     #Navigation .Search {
         width: 16px;
     }
