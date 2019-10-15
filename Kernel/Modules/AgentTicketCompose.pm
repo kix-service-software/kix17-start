@@ -1306,6 +1306,15 @@ sub Run {
             );
         }
 
+        # check if external sources should be removed from body
+        if ( $ConfigObject->Get('Frontend::RemoveExternalSource') ) {
+            my %SafetyCheckResultNoExt = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                String       => $Data{Body},
+                NoExtSrcLoad => 1,
+            );
+            $Data{Body} = $SafetyCheckResultNoExt{String};
+        }
+
         # restrict number of body lines if configured
         if (
             $Data{Body}

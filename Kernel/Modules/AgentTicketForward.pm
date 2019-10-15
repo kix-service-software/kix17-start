@@ -361,6 +361,15 @@ sub Form {
         AttachmentsInclude => 1,
     );
 
+    # check if external sources should be removed from body
+    if ( $ConfigObject->Get('Frontend::RemoveExternalSource') ) {
+        my %SafetyCheckResultNoExt = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            String       => $Data{Body},
+            NoExtSrcLoad => 1,
+        );
+        $Data{Body} = $SafetyCheckResultNoExt{String};
+    }
+
     if ( $LayoutObject->{BrowserRichText} ) {
 
         # prepare body, subject, ReplyTo ...

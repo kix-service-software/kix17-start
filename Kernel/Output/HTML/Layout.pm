@@ -4956,8 +4956,7 @@ sub RichTextDocumentServe {
 
         if ( !$Param{LoadExternalImages} ) {
 
-            # Strip out external images, but show a confirmation button to
-            #   load them explicitly.
+            # Strip out external images
             my %SafetyCheckResultNoExt = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
                 String       => $Param{Data}->{Content},
                 NoApplet     => 1,
@@ -4972,7 +4971,11 @@ sub RichTextDocumentServe {
 
             $Param{Data}->{Content} = $SafetyCheckResultNoExt{String};
 
-            if ( $SafetyCheckResultNoExt{Replace} ) {
+            # show a confirmation button to load external images explicitly, if not removed by sysconfig
+            if (
+                $SafetyCheckResultNoExt{Replace}
+                && !$Kernel::OM->Get('Kernel::Config')->Get('Frontend::RemoveExternalSource')
+            ) {
 
                 # Generate blocker message.
                 my $Message = $Self->Output( TemplateFile => 'AttachmentBlocker' );
