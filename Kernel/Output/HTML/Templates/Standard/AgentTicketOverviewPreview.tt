@@ -117,7 +117,7 @@
                             </td>
                             <td>
 [% RenderBlockStart("Type") %]
-                                <label>[% Translate("Type") | html %]</label><div title="[% Data.Type | html %]">[% Data.Type | html %]</div>
+                                <label>[% Translate("Type") | html %]</label><div title="[% IF Data.TypeTranslation %][% Translate(Data.Type) | html %][% ELSE %][% Data.Type | html %][% END %]">[% IF Data.TypeTranslation %][% Translate(Data.Type) | html %][% ELSE %][% Data.Type | html %][% END %]</div>
 [% RenderBlockEnd("Type") %]
                             </td>
                         </tr>
@@ -132,11 +132,11 @@
 [% RenderBlockStart("Service") %]
                         <tr>
                             <td>
-                                <label>[% Translate("Service") | html %]</label><div title="[% Data.Service | html %]">[% Data.Service | truncate(26) | html %]</div>
+                                <label>[% Translate("Service") | html %]</label><div title="[% IF Data.ServiceTranslation %][% Translate(Data.Service) | html %][% ELSE %][% Data.Service | html %][% END %]">[% IF Data.ServiceTranslation %][% Translate(Data.Service) | truncate(26) | html %][% ELSE %][% Data.Service | truncate(26) | html %][% END %]</div>
                             </td>
                             <td>
 [% RenderBlockStart("SLA") %]
-                                <label>[% Translate("Service Level Agreement") | html %]</label><div title="[% Data.SLA | html %]">[% Data.SLA | truncate(26) | html %]</div>
+                                <label>[% Translate("Service Level Agreement") | html %]</label><div title="[% IF Data.SLATranslation %][% Translate(Data.SLA) | html %][% ELSE %][% Data.SLA | html %][% END %]">[% IF Data.SLATranslation %][% Translate(Data.SLA) | truncate(26) | html %][% ELSE %][% Data.SLA | truncate(26) | html %][% END %]</div>
 [% RenderBlockEnd("SLA") %]
                             </td>
                         </tr>
