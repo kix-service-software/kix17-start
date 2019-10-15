@@ -1511,6 +1511,17 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Frontend::RemoveExternalSource" Required="1" Valid="1">
+        <Description Translatable="1">Removes external sources in content.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Loader::Agent::CommonJS###200-KIX4OTRSLinkedPersons" Required="1" Valid="1">
         <Description Translatable="1">List of JS files to always be loaded for the agent interface.</Description>
         <Group>Framework</Group>

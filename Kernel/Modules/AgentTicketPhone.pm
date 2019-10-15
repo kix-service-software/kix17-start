@@ -522,6 +522,15 @@ sub Run {
                 $Article{ContentType} = 'text/plain';
             }
 
+            # check if external sources should be removed from body
+            if ( $ConfigObject->Get('Frontend::RemoveExternalSource') ) {
+                my %SafetyCheckResultNoExt = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                    String       => $Article{Body},
+                    NoExtSrcLoad => 1,
+                );
+                $Article{Body} = $SafetyCheckResultNoExt{String};
+            }
+
             # show customer info
             if ( $ConfigObject->Get('Ticket::Frontend::CustomerInfoCompose') ) {
                 if ( $Article{CustomerUserID} ) {

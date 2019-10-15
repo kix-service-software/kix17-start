@@ -464,6 +464,12 @@ sub FAQContentShow {
         my $Caption = $Fields{$Field}->{'Caption'};
         my $Content = $Param{FAQData}->{$Field} || '';
 
+        # check if external sources should be removed from field content
+        my $NoExtSrcLoad = 0;
+        if ( $Kernel::OM->Get('Kernel::Config')->Get('Frontend::RemoveExternalSource') ) {
+            $NoExtSrcLoad = 1;
+        }
+
         # remove active HTML content (scripts, applets, etc...)
         my %SafeContent = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
             String       => $Content,
@@ -471,7 +477,7 @@ sub FAQContentShow {
             NoObject     => 1,
             NoEmbed      => 1,
             NoIntSrcLoad => 0,
-            NoExtSrcLoad => 0,
+            NoExtSrcLoad => $NoExtSrcLoad,
             NoJavaScript => 1,
         );
 
