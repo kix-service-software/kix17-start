@@ -13,7 +13,9 @@
  */
 
 @media screen,projection,tv,handheld {
-
+    #LoginLogo {
+        background-repeat: no-repeat;
+    }
    .LoginScreen {
         height: 100%;
     }

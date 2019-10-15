@@ -362,6 +362,25 @@
     }
 
     /**
+    *   @subsection ShowTreeSelection
+    */
+    .ShowTreeSelection {
+        width: 16px;
+        height: 16px;
+        margin-left: 3px;
+        display: none;
+    }
+    .ShowTreeSelection span {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+    }
+    .Field .ShowTreeSelection,
+    .WidgetSettingsForm .ShowTreeSelection {
+        display: inline-block;
+    }
+
+    /**
     *   @subsection Datepicker
     */
     .DatepickerIcon {

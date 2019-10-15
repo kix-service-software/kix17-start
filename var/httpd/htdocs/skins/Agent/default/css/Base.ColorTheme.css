@@ -209,7 +209,8 @@
     .PreferencesScreen .NotificationList td,
     #AdminSysConfig fieldset.Invalid,
     #AdminSysConfig fieldset.Invalid *,
-    ul#ProcessElements li.AccordionElement div.Content ul li > span a {
+    ul#ProcessElements li.AccordionElement div.Content ul li > span a,
+    #TreeContainer #TreeSearch span {
         color: #777777;
     }
     span.UnreadArticles.Remarkable i:nth-child(2n),
@@ -550,7 +551,8 @@
     .ACLFieldGroup li ul li ul li ul li.DataItem,
     .ACLFieldGroup .LastLevel li.DataItem,
     #DiagramTooltip li,
-    ul.FAQMiniList li:hover {
+    ul.FAQMiniList li:hover,
+    #TreeContainer #TreeSearch span {
         background-color: #DDDDDD;
     }
     #Canvas .Activity.Highlighted.ReadyToDrop,
@@ -597,56 +599,56 @@
     /*
     * Agent article types
     */
-    .UseArticleColors .agent-phone > td,
-    .UseArticleColors .agent-phone .Header {
+    .UseArticleColors tr.agent-phone > td,
+    .UseArticleColors tr.agent-phone .Header {
         background-color: #D1E8D1;
     }
-    .UseArticleColors .agent-email-external > td,
-    .UseArticleColors .agent-email-external .Header {
+    .UseArticleColors tr.agent-email-external > td,
+    .UseArticleColors tr.agent-email-external .Header {
         background-color: #D3E5B5;
     }
-    .UseArticleColors .agent-email-internal > td,
-    .UseArticleColors .agent-email-internal .Header {
+    .UseArticleColors tr.agent-email-internal > td,
+    .UseArticleColors tr.agent-email-internal .Header {
         background-color: #FFD1D1;
     }
-    .UseArticleColors .agent-note-external > td,
-    .UseArticleColors .agent-note-external .Header {
+    .UseArticleColors tr.agent-note-external > td,
+    .UseArticleColors tr.agent-note-external .Header {
         background-color: #D1D1D1 ;
     }
-    .UseArticleColors .agent-note-internal > td,
-    .UseArticleColors .agent-note-internal .Header {
+    .UseArticleColors tr.agent-note-internal > td,
+    .UseArticleColors tr.agent-note-internal .Header {
         background-color: #FFCCCC;
     }
     /*
     * System article types
     */
-    .UseArticleColors .system-note-internal > td,
-    .UseArticleColors .system-note-internal .Header,
-    .UseArticleColors .system-note-external > td,
-    .UseArticleColors .system-note-external .Header,
-    .UseArticleColors .system-note-report > td,
-    .UseArticleColors .system-note-report .Header,
-    .UseArticleColors .system-email-external > td,
-    .UseArticleColors .system-email-external .Header,
-    .UseArticleColors .system-email-internal > td,
-    .UseArticleColors .system-email-internal .Header,
-    .UseArticleColors .system-email-notification-int > td,
-    .UseArticleColors .system-email-notification-int .Header,
-    .UseArticleColors .system-email-notification-ext > td,
-    .UseArticleColors .system-email-notification-ext .Header {
+    .UseArticleColors tr.system-note-internal > td,
+    .UseArticleColors tr.system-note-internal .Header,
+    .UseArticleColors tr.system-note-external > td,
+    .UseArticleColors tr.system-note-external .Header,
+    .UseArticleColors tr.system-note-report > td,
+    .UseArticleColors tr.system-note-report .Header,
+    .UseArticleColors tr.system-email-external > td,
+    .UseArticleColors tr.system-email-external .Header,
+    .UseArticleColors tr.system-email-internal > td,
+    .UseArticleColors tr.system-email-internal .Header,
+    .UseArticleColors tr.system-email-notification-int > td,
+    .UseArticleColors tr.system-email-notification-int .Header,
+    .UseArticleColors tr.system-email-notification-ext > td,
+    .UseArticleColors tr.system-email-notification-ext .Header {
         background-color: #FFFFD1;
     }
     /*
     * Customer artcle types
     */
-    .UseArticleColors .customer-webrequest > td,
-    .UseArticleColors .customer-webrequest .Header,
-    .UseArticleColors .customer-email-external > td,
-    .UseArticleColors .customer-email-external .Header,
-    .UseArticleColors .customer-note-external > td,
-    .UseArticleColors .customer-note-external .Header,
-    .UseArticleColors .customer-phone > td,
-    .UseArticleColors .customer-phone .Header {
+    .UseArticleColors tr.customer-webrequest > td,
+    .UseArticleColors tr.customer-webrequest .Header,
+    .UseArticleColors tr.customer-email-external > td,
+    .UseArticleColors tr.customer-email-external .Header,
+    .UseArticleColors tr.customer-note-external > td,
+    .UseArticleColors tr.customer-note-external .Header,
+    .UseArticleColors tr.customer-phone > td,
+    .UseArticleColors tr.customer-phone .Header {
         background-color: #D4DEFC;
     }
 
@@ -655,7 +657,7 @@
     */
     .LoginBox,
     .SystemMessageLoginBox,
-    #Navigation > .Active > ul > li,
+    #Navigation > .Active > ul,
     input[type="text"],
     input[type="password"],
     input[type="email"],
@@ -729,7 +731,8 @@
     .ACLNote,
     .EntityDrag,
     ul#ProcessElements,
-    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer {
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer,
+    #JSTree {
         border: 1px solid #CCCCCC;
     }
     .DataTable,
@@ -796,6 +799,8 @@
     *   @subsection border bottom
     */
     #Header,
+    #Navigation > .Active > ul > li > a,
+    .ResponsiveSidebarContainer #Navigation .Active > ul > li,
     .Dialog > .Header,
     .WidgetSimple.Collapsed > .Header,
     .PreferencesScreen .Size1of3 > .WidgetSimple > .Header,
@@ -805,9 +810,6 @@
     #ArticleItems .WidgetSimple .LightRow.Bottom,
     .KIXSBRDBPopupBoxHead {
         border-bottom: 1px solid #82C826;
-    }
-    #Navigation > .Active > ul > li > a {
-        border-bottom: 1px solid transparent;
     }
     ul#ProcessElements li.AccordionElement:last-child div.Content {
         border-bottom: 1px solid #FFFFFF;
