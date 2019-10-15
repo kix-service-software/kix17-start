@@ -833,7 +833,11 @@ sub _Show {
     if ( $ConfigObject->Get('Ticket::Type') ) {
         $LayoutObject->Block(
             Name => 'Type',
-            Data => { %Param, %Article },
+            Data => {
+                %Param,
+                %Article,
+                TypeTranslation => $ConfigObject->Get('Ticket::TypeTranslation'),
+            },
         );
     }
 
@@ -841,12 +845,20 @@ sub _Show {
     if ( $ConfigObject->Get('Ticket::Service') && $Article{Service} ) {
         $LayoutObject->Block(
             Name => 'Service',
-            Data => { %Param, %Article },
+            Data => {
+                %Param,
+                %Article,
+                ServiceTranslation => $ConfigObject->Get('Ticket::ServiceTranslation'),
+            },
         );
         if ( $Article{SLA} ) {
             $LayoutObject->Block(
                 Name => 'SLA',
-                Data => { %Param, %Article },
+                Data => {
+                    %Param,
+                    %Article,
+                    SLATranslation => $ConfigObject->Get('Ticket::SLATranslation'),
+                },
             );
         }
     }
