@@ -14423,7 +14423,7 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="AgentTicketZoomBackend###0260-DynamicFields" Required="0" Valid="1">
+    <ConfigItem Name="AgentTicketZoomBackend###0260-DynamicFields" Required="0" Valid="0">
         <Description Translatable="1">Defines parameters for the AgentTicketZoomTab "Dynamic Fields".</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::AgentTicketZoomTab</SubGroup>
@@ -15011,7 +15011,7 @@ Thanks for your help!
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::MenuModule###315-AddtlITSMField" Required="0" Valid="1">
+    <ConfigItem Name="Ticket::Frontend::MenuModule###315-AddtlITSMField" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to modify additional ITSM fields in the ticket zoom view of the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::MenuModule</SubGroup>
