@@ -179,7 +179,8 @@
     .DataTable thead th.DashboardHeader .ColumnSettingsTrigger i,
     .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger i,
     .SettingsWidget label,
-    .PreferencesScreen .NotificationList td {
+    .PreferencesScreen .NotificationList td,
+    #TreeContainer #TreeSearch span {
         color: #777777;
     }
     fieldset.TableLike > .Field label,
@@ -440,7 +441,8 @@
     .Dialog .Buttons,
     .MessageBrowser p,
     ul.FAQMiniList li:hover,
-    .ActionRow.VotingActionRow {
+    .ActionRow.VotingActionRow,
+    #TreeContainer #TreeSearch span {
         background-color: #DDDDDD;
     }
     .Flag span.Escalated,
@@ -471,56 +473,56 @@
     /*
     * Agent article types
     */
-    .UseArticleColors .agent-phone > td,
-    .UseArticleColors .agent-phone .Header {
+    .UseArticleColors tr.agent-phone > td,
+    .UseArticleColors tr.agent-phone .Header {
         background-color: #D1E8D1;
     }
-    .UseArticleColors .agent-email-external > td,
-    .UseArticleColors .agent-email-external .Header {
+    .UseArticleColors tr.agent-email-external > td,
+    .UseArticleColors tr.agent-email-external .Header {
         background-color: #D3E5B5;
     }
-    .UseArticleColors .agent-email-internal > td,
-    .UseArticleColors .agent-email-internal .Header {
+    .UseArticleColors tr.agent-email-internal > td,
+    .UseArticleColors tr.agent-email-internal .Header {
         background-color: #FFD1D1;
     }
-    .UseArticleColors .agent-note-external > td,
-    .UseArticleColors .agent-note-external .Header {
+    .UseArticleColors tr.agent-note-external > td,
+    .UseArticleColors tr.agent-note-external .Header {
         background-color: #D1D1D1 ;
     }
-    .UseArticleColors .agent-note-internal > td,
-    .UseArticleColors .agent-note-internal .Header {
+    .UseArticleColors tr.agent-note-internal > td,
+    .UseArticleColors tr.agent-note-internal .Header {
         background-color: #FFCCCC;
     }
     /*
     * System article types
     */
-    .UseArticleColors .system-note-internal > td,
-    .UseArticleColors .system-note-internal .Header,
-    .UseArticleColors .system-note-external > td,
-    .UseArticleColors .system-note-external .Header,
-    .UseArticleColors .system-note-report > td,
-    .UseArticleColors .system-note-report .Header,
-    .UseArticleColors .system-email-external > td,
-    .UseArticleColors .system-email-external .Header,
-    .UseArticleColors .system-email-internal > td,
-    .UseArticleColors .system-email-internal .Header,
-    .UseArticleColors .system-email-notification-int > td,
-    .UseArticleColors .system-email-notification-int .Header,
-    .UseArticleColors .system-email-notification-ext > td,
-    .UseArticleColors .system-email-notification-ext .Header {
+    .UseArticleColors tr.system-note-internal > td,
+    .UseArticleColors tr.system-note-internal .Header,
+    .UseArticleColors tr.system-note-external > td,
+    .UseArticleColors tr.system-note-external .Header,
+    .UseArticleColors tr.system-note-report > td,
+    .UseArticleColors tr.system-note-report .Header,
+    .UseArticleColors tr.system-email-external > td,
+    .UseArticleColors tr.system-email-external .Header,
+    .UseArticleColors tr.system-email-internal > td,
+    .UseArticleColors tr.system-email-internal .Header,
+    .UseArticleColors tr.system-email-notification-int > td,
+    .UseArticleColors tr.system-email-notification-int .Header,
+    .UseArticleColors tr.system-email-notification-ext > td,
+    .UseArticleColors tr.system-email-notification-ext .Header {
         background-color: #FFFFD1;
     }
     /*
     * Customer artcle types
     */
-    .UseArticleColors .customer-webrequest > td,
-    .UseArticleColors .customer-webrequest .Header,
-    .UseArticleColors .customer-email-external > td,
-    .UseArticleColors .customer-email-external .Header,
-    .UseArticleColors .customer-note-external > td,
-    .UseArticleColors .customer-note-external .Header,
-    .UseArticleColors .customer-phone > td,
-    .UseArticleColors .customer-phone .Header {
+    .UseArticleColors tr.customer-webrequest > td,
+    .UseArticleColors tr.customer-webrequest .Header,
+    .UseArticleColors tr.customer-email-external > td,
+    .UseArticleColors tr.customer-email-external .Header,
+    .UseArticleColors tr.customer-note-external > td,
+    .UseArticleColors tr.customer-note-external .Header,
+    .UseArticleColors tr.customer-phone > td,
+    .UseArticleColors tr.customer-phone .Header {
         background-color: #D4DEFC;
     }
 
@@ -529,8 +531,7 @@
     */
     .LoginBox,
     .SystemMessageLoginBox,
-    #Navigation > li:hover > ul > li,
-    #Navigation > .Active > ul > li,
+    #Navigation > .Active > ul,
     input[type="text"],
     input[type="password"],
     input[type="email"],
@@ -593,7 +594,8 @@
     div.InputField_ToolbarContainer,
     .WidgetSimple fieldset.Separated,
     .NotificationLanguage > .WidgetSimple,
-    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer {
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer,
+    #JSTree {
         border: 1px solid #CCCCCC;
     }
     .DataTable,
@@ -640,6 +642,8 @@
     *   @subsection border bottom
     */
     #Header,
+    #Navigation > .Active > ul > li > a,
+    .ResponsiveSidebarContainer #Navigation .Active > ul > li,
     .Dialog > .Header,
     .WidgetSimple.Collapsed > .Header,
     .PreferencesScreen .Size1of3 > .WidgetSimple > .Header,
@@ -648,10 +652,7 @@
     tr.Active td,
     #Messages li:not(.Visible):last-child,
     .KIXSBRDBPopupBoxHead {
-        border-b: 25px solid transparent;
-    }
-    #Navigation > .Active > ul > li > a {
-        border-bottom: 1px solid transparent;
+        border-bottom: 1px solid #82C826;
     }
     ul#ProcessElements li.AccordionElement:last-child div.Content {
         border-bottom: 1px solid #FFF;
@@ -670,7 +671,6 @@
     #Context > .Content > ul > li > a {
         border-bottom: 1px solid #DDDDDD;
     }
-
 
     /**
     *   @subsection border top
@@ -716,7 +716,7 @@
 
 
     /**
-    *
+    *   @subsection border right
     */
     .FilterInputContainer,
     .DataTable thead th,

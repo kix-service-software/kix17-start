@@ -31,7 +31,7 @@ Core.KIXBase.Agent = (function(TargetNS) {
 
             Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=GetToolBarToggleState', function(Result) {
                 if (Result == 1) {
-                    $('#ToolBar').removeClass('Hidden');
+                    $('#ToolBar').removeClass('Hidden').addClass('toggle');
                     Class = 'Hide';
                     Text  = Core.Config.Get('HideToolbar');
                 }
@@ -46,14 +46,14 @@ Core.KIXBase.Agent = (function(TargetNS) {
                 $('#ToolBarToggle').addClass(Class).html(Text);
                 $('#ToolBarToggle').click(function() {
                     if ($('#ToolBarToggle').hasClass('Show')) {
-                        $('#ToolBar').show().addClass('toggle');
-                        $('#ToolBarToggle').removeClass('Show').addClass('Hide').html(Core.Config.Get('ShowToolbar'));
+                        $('#ToolBar').removeClass('Hidden').addClass('toggle');
+                        $('#ToolBarToggle').removeClass('Show').addClass('Hide').html(Core.Config.Get('HideToolbar'));
 
                         Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=1', function() {}, 'text');
                     }
                     else {
-                        $('#ToolBar').hide().removeClass('toggle');
-                        $('#ToolBarToggle').removeClass('Hide').addClass('Show').html(Core.Config.Get('HideToolbar'));
+                        $('#ToolBar').addClass('Hidden').removeClass('toggle');
+                        $('#ToolBarToggle').removeClass('Hide').addClass('Show').html(Core.Config.Get('ShowToolbar'));
 
                         Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=0', function() {}, 'text');
                     }

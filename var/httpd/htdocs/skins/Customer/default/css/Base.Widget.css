@@ -287,14 +287,15 @@
     }
     .ZoomSidebarKIX,
     .ZoomSidebar {
-        width: 18%;
         min-width: 200px;
         box-sizing: border-box;
-        float: right;
         margin-bottom: 20px;
     }
     .ZoomSidebarKIX {
         margin: 0;
+    }
+    .ZoomSidebarKIX:first-child {
+        margin-top: 20px;
     }
     .ZoomSidebar > .Content > .TableLike.FixedLabelSmall a {
         cursor: pointer;

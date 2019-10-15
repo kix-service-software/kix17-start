@@ -20,9 +20,14 @@
         display: block;
     }
 
-    .ScreenL, .ScreenM, .ScreenS, .ScreenXS,
-    .SmallerOrEqualScreenL, .SmallerOrEqualScreenM,
-    .SmallerOrEqualScreenS, .SmallerOrEqualScreenXS {
+    .ScreenL,
+    .ScreenM,
+    .ScreenS,
+    .ScreenXS,
+    .SmallerOrEqualScreenL,
+    .SmallerOrEqualScreenM,
+    .SmallerOrEqualScreenS,
+    .SmallerOrEqualScreenXS {
         display: none;
     }
 
@@ -104,12 +109,10 @@
         border: 0px;
         background-color: #F0F0F0;
         overflow: auto;
-        height: 0px;
         top: 60px ;
         margin-top: 0;
         transition: height .5s;
         position: fixed;
-        display: block;
         right: 0;
         left: 0;
     }
@@ -119,7 +122,8 @@
     }
 
     #ToolBar.toggle ~ .MainBox,
-    #ToolBar.toggle ~ .LayoutFixedSidebar {
+    #ToolBar.toggle ~ .LayoutFixedSidebar,
+    #ToolBar.toggle ~ .OverviewBox {
         margin-top: 130px;
     }
 
@@ -260,7 +264,7 @@
     #UserInfo {
         top: 0;
         right: 25px;
-        z-index: 10;
+        z-index: 9;
     }
 
     .ResponsiveSidebarContainer {
@@ -327,16 +331,18 @@
         margin-top: 80px;
     }
 
-    #NavigationContainer > a {
+    #NavigationContainer > a,
+    #NavigationContainer > a.NavigationBarNavigateRight,
+    #NavigationContainer > a.NavigationBarNavigateLeft {
         display: none;
     }
-
     #Navigation > li,
     .ResponsiveSidebarContainer .Actions > li {
         background: none;
         float: none;
         border: none;
         border-top: 1px solid #444;
+        margin: 0;
     }
     .ResponsiveSidebarContainer .Actions > li {
         display: block;
@@ -349,6 +355,7 @@
         padding: 5px 15px;
         height: auto;
         margin-top: 0;
+        display: block;
     }
     .ResponsiveSidebarContainer .Actions > li > a {
         padding: 8px 15px;
@@ -393,6 +400,7 @@
         position: static;
         min-width: 0px;
         background: none;
+        border: none;
     }
 
     #Navigation > .Active > ul li a,
@@ -481,19 +489,11 @@
     }
 
     .WidgetSimple .ActionMenu {
-        margin-right: 10px;
-        border: 0px;
-    }
-
-    .WidgetSimple .WidgetAction {
-        display: inline-block;
-        margin-right: 5px;
+        display: block
     }
 
     .WidgetSimple .WidgetAction a {
-        font-size: 22px;
-        display: inline-block;
-        margin-right: 5px;
+        font-size: 16px;
     }
 
     /* Ticket creation screens */
@@ -520,20 +520,50 @@
         display: none;
     }
 
+    fieldset.TableLike > label,
+    fieldset.TableLike > .Row > label {
+        text-align: left;
+        float: none;
+        width: auto;
+    }
     fieldset.TableLike > .Field,
-    fieldset.TableLike > .Row > .Field {
+    fieldset.TableLike > .Row > .Field,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Field,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field {
         padding: 0px;
+        margin-left: 2px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field > input.DateSelection,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field > select.DateSelection {
+        width: auto;
+    }
+
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > label,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > label {
+        float: none;
+        width: auto;
+        text-align: left;
+        font-size: 0.9em;
     }
 
     fieldset.TableLike > .Field input[type=file],
-    fieldset.TableLike > .Row > .Field input[type=file] {
+    fieldset.TableLike > .Row > .Field input[type=file],
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Field input[type=file],
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field input[type=file] {
         width: 95%;
     }
 
     fieldset.TableLike > .RichTextField,
     fieldset.TableLike > .Row > .RichTextField,
     fieldset.TableLike > .FloatingField,
-    fieldset.TableLike > .Row > .FloatingField {
+    fieldset.TableLike > .Row > .FloatingField,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .RichTextField,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .RichTextField,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .FloatingField,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .FloatingField {
         padding: 0px;
         float: none;
     }
@@ -541,12 +571,23 @@
     fieldset.TableLike > .Field > select,
     fieldset.TableLike > .Row > .Field > select,
     fieldset.TableLike > .Field > input,
-    fieldset.TableLike > .Row > .Field > input {
+    fieldset.TableLike > .Row > .Field > input,
+    fieldset.TableLike > .Field > textarea,
+    fieldset.TableLike > .Row > .Field > textarea,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Field > select,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field > select,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Field > input,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field > input,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Field > textarea,
+    .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field > textarea {
         padding: 3px;
         font-size: 0.9em;
         width: 97%;
     }
-
+    fieldset.TableLike > .Field input[id$=Date],
+    fieldset.TableLike > .Row > .Field input[id$=Date] {
+        witdh: auto;
+    }
     fieldset.TableLike > .Field > input[type=radio],
     fieldset.TableLike > .Row > .Field > input[type=checkbox] {
         width: auto;
@@ -605,42 +646,11 @@
         width: auto;
     }
 
-    fieldset.TableLike > .Row > .Field > input.DateSelection,
-    fieldset.TableLike > .Row > .Field > select.DateSelection {
-        width: auto;
-    }
-
-    fieldset.TableLike > label,
-    fieldset.TableLike > .Row > label {
-        float: none;
-        width: auto;
-        text-align: left;
-        font-size: 0.9em;
-    }
-
-    .ResponsiveSidebarContainer fieldset.TableLike > label,
-    .ResponsiveSidebarContainer fieldset.TableLike > .Row > label {
-        float: none;
-        display: inline;
-        margin: 0px;
-        padding: 0px;
-    }
-
-    .ResponsiveSidebarContainer fieldset.TableLike.FixedLabel > .Field,
-    .ResponsiveSidebarContainer fieldset.TableLike.FixedLabel > .Row > .Field,
-    .ResponsiveSidebarContainer fieldset.TableLike.FixedLabel > .Value,
-    .ResponsiveSidebarContainer fieldset.TableLike.FixedLabel > .Row > .Value {
-        float: none;
-        display: inline;
-        margin: 0px;
-        padding: 0px;
-    }
-
-    fieldset.TableLike > .Field,
-    fieldset.TableLike > .Row > .Field {
-        margin-left: 2px;
-        margin-bottom: 10px;
-        position: relative;
+    .ArticleMailHeader fieldset.TableLike > label,
+    .ArticleMailHeader fieldset.TableLike > .Row > label {
+        float: left;
+        text-align: right;
+        font-size: inherit;
     }
 
     .RichTextField > .cke {
@@ -652,7 +662,6 @@
         font-size: 15px;
     }
 
-    .CallForAction,
     .cke_dialog_footer_buttons a.cke_dialog_ui_button {
         margin: 0px auto;
     }
@@ -787,38 +796,22 @@
     }
 
     /* Login */
-    .LoginScreen .W33pc {
-        width: 80%;
-        text-align: center;
-    }
-
     .LoginScreen fieldset.TableLike > label,
-    .LoginScreen fieldset.TableLike > .Row > label,
-    .LoginScreen fieldset.TableLike.FixedLabelSmall > label,
-    .LoginScreen fieldset.TableLike.FixedLabelSmall > .Row > label {
-        text-align: center;
-        margin-right: 0px;
+    .LoginScreen fieldset.TableLike > .Row > label {
+        float: left;
+        text-align: right;
+        width: 30%;
+        font-size: 13px;
     }
-
-    .LoginScreen fieldset.TableLike input {
-        padding: 7px;
+    .LoginScreen fieldset.TableLike > .Field,
+    .LoginScreen fieldset.TableLike > .Row > .Field {
+        margin-left: 30%;
+        margin-bottom: 0;
+        padding: 3px 0 3px 5px;
     }
-
-    .LoginScreen .WidgetSimple {
-        background: none;
-    }
-
-    .LoginScreen .WidgetSimple .Header {
-        display: none;
-    }
-
-    .LoginScreen fieldset button.Primary.CallForAction {
-        margin-top: 10px;
-    }
-
-    .LoginScreen fieldset button.Primary.CallForAction span {
-        padding: 10px;
-        font-size: 15px;
+    .LoginScreen fieldset.TableLike > .Field input,
+    .LoginScreen fieldset.TableLike > .Row > .Field input {
+        width: 75%;
     }
 
     /* Dialogs */
@@ -835,29 +828,6 @@
         width: 100%;
     }
 
-    /* Ticket zoom */
-    fieldset.TableLike.FixedLabelSmall > .Field,
-    fieldset.TableLike.FixedLabelSmall > .Row > .Field,
-    fieldset.TableLike.FixedLabelSmall > .Value,
-    fieldset.TableLike.FixedLabelSmall > .Row > .Value {
-        margin-left: 0px;
-        font-size: 1.2em;
-    }
-
-    fieldset.TableLike > label,
-    fieldset.TableLike > .Row > label,
-    fieldset.TableLike.FixedLabelSmall > label,
-    fieldset.TableLike.FixedLabelSmall > .Row > label {
-        width: auto;
-        margin-right: 5px;
-    }
-
-    fieldset.TableLike.FixedLabel > label,
-    fieldset.TableLike.FixedLabel > .Row > label {
-        width: auto;
-        min-height: 0px;
-        padding: 0px;
-    }
     .ContentColumn .ControlRow .AdditionalInformation {
         right: 30px;
     }
@@ -891,8 +861,9 @@
     #ArticleItems .WidgetSimple .Content {
         position: relative;
     }
-    .AdditionalInformationResponsive {
-        display: inline-block;
+    fieldset.TableLike > label.AdditionalInformationResponsive,
+    fieldset.TableLike > p.AdditionalInformationResponsive {
+        display: block;
     }
 
     #ArticleTableBody .Scroller {
@@ -908,17 +879,6 @@
         padding: 0px;
     }
 
-    .TicketZoom fieldset.TableLike.FixedLabelSmall > label,
-    .TicketZoom fieldset.TableLike.FixedLabelSmall > .Row > label,
-    .TicketZoom fieldset.TableLike.FixedLabelSmall > .Row .FixedValueSmall {
-        float: left;
-    }
-
-    .TicketZoom fieldset.TableLike.FixedLabelSmall > .FixedValueSmall,
-    .TicketZoom fieldset.TableLike.FixedLabelSmall > .Row > .FixedValueSmall {
-        width: auto;
-    }
-
     .TicketZoom .ResponsiveSidebarContainer .ItemRow {
         margin: 10px 0px 0px 0px;
     }
@@ -932,20 +892,12 @@
     }
 
     .ResponsiveSidebarContainer fieldset.TableLike > label,
-    .ResponsiveSidebarContainer fieldset.TableLike > .Row > label,
-    .ResponsiveSidebarContainer fieldset.TableLike.FixedLabelSmall > .Field,
-    .ResponsiveSidebarContainer fieldset.TableLike.FixedLabelSmall > .Row > .Field,
-    .ResponsiveSidebarContainer fieldset.TableLike.FixedLabelSmall > .Value,
-    .ResponsiveSidebarContainer fieldset.TableLike.FixedLabelSmall > .Row > .Value {
-        font-size: 1em;
-        float: none;
-        padding: 0px;
-        margin: 0px;
-        display: inline;
+    .ResponsiveSidebarContainer fieldset.TableLike > .Row > label {
+        float: left;
+        text-align: right;
     }
 
     .ResponsiveSidebarContainer fieldset.TableLike {
-        margin-bottom: 10px;
         line-height: 1.7em;
     }
 
@@ -1039,7 +991,9 @@
     .PreferencesScreen .WidgetSimple .Content form table.DataTable {
         min-width: 0px;
     }
-
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header h2 {
+        border: none;
+    }
     .PreferencesScreen .Size1of3 > .WidgetSimple > .Header .WidgetAction {
         display: block;
     }
@@ -1286,6 +1240,7 @@
         background-color: #DDDDDD;
         display: block;
         font-size: 12pt;
+        z-index: 1;
     }
     .ResponsiveSidebarContainer .LightRow ul {
         padding: 0;
@@ -1444,13 +1399,6 @@
         height: 100%;
         z-index: 9999;
     }
-
-}
-@media only screen and (min-width: 0px) and (max-width: 420px) {
-    .ContentColumn button.CallForAction {
-        width: 100%;
-        margin-top: 5px;
-    }
 }
 
 /*
@@ -1472,6 +1420,7 @@
     }
 
     .ScreenXL,
+    #Navigation > li > a.ScreenXL,
     .ScreenM,
     .ScreenS,
     .ScreenXS,
@@ -1517,6 +1466,10 @@
 */
 @media only screen and (min-width: 0px) and (max-width: 767px) {
 
+    #ContentItemTabs .SidebarColumn {
+        display: none;
+    }
+
     .MainBox > h1,
     .OverviewBox > h1 {
         font-size: 20px;
@@ -1556,6 +1509,69 @@
     }
 }
 
+@media only screen and (min-width: 0px) and (max-width: 539px) {
+    .LoginScreen .CenterBox {
+        margin: 0;
+        width: 100%;
+    }
+
+    .LoginScreen .LoginBox,
+    .SystemMessageLoginBox {
+        background: none;
+        border-width: 1px 0;
+        box-shadow: none;
+
+    }
+
+    .SystemMessageLoginBox {
+        width: 100%;
+        border-bottom: 0;
+        box-sizing: border-box;
+        overflow: auto;
+    }
+    .LoginScreen .MainBox {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .ErrorBox,
+    .SuccessBox,
+    .WarningBox {
+        margin: 0;
+        padding: 10px 0;
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 0px) and (max-width: 420px) {
+    .ContentColumn button.CallForAction,
+    .LoginScreen button.CallForAction {
+        width: 100%;
+        margin-top: 5px;
+    }
+    .LoginScreen button.CallForAction {
+        width: 98%;
+    }
+
+    .LoginScreen fieldset.TableLike > label,
+    .LoginScreen fieldset.TableLike > .Row > label {
+        float: none;
+        text-align: left;
+        width: 100%;
+        font-size: 0.9em;
+    }
+    .LoginScreen fieldset.TableLike > .Field,
+    .LoginScreen fieldset.TableLike > .Row > .Field {
+        margin-left: 2px;
+        margin-bottom: 10px;
+        padding: 0;
+    }
+    .LoginScreen fieldset.TableLike > .Field input,
+    .LoginScreen fieldset.TableLike > .Row > .Field input {
+        width: 97%;
+    }
+}
+
 /*
 * Tablet portrait
 */
@@ -1567,6 +1583,7 @@
         margin-right: 0;
     }
 }
+
 /*
 * Tablet portrait
 */
@@ -1585,6 +1602,7 @@
     }
 
     .ScreenXL,
+    #Navigation > li > a.ScreenXL,
     .ScreenL,
     .ScreenS,
     .ScreenXS,
@@ -1626,7 +1644,6 @@
     }
 }
 
-
 /*
 * Smartphone landscape
 */
@@ -1649,9 +1666,6 @@
     .ScreenM,
     .ScreenXS,
     #Navigation > li > a.ScreenXL,
-    #Navigation > li > a.ScreenL,
-    #Navigation > li > a.ScreenM,
-    #Navigation > li > a.ScreenXS,
     .SmallerOrEqualScreenXS {
         display: none;
     }

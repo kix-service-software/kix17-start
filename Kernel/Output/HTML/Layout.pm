@@ -4502,6 +4502,8 @@ sub CustomerNavigationBar {
         if ( $NavBarModule{$Item}->{NavBar} ) {
             $Sub = $NavBarModule{Sub}->{ $NavBarModule{$Item}->{NavBar} };
         }
+        $NavBarModule{$Item}->{NameForID} = $NavBarModule{$Item}->{Name};
+        $NavBarModule{$Item}->{NameForID} =~ s/[ &;]//ig;
 
         # highlight active link
         $NavBarModule{$Item}->{Class} = '';
@@ -4527,7 +4529,7 @@ sub CustomerNavigationBar {
         next ITEM if !$Sub;
         $Self->Block(
             Name => 'ItemAreaSub',
-            Data => $Item,
+            Data => $NavBarModule{$Item},
         );
         for my $Key ( sort keys %{$Sub} ) {
             my $ItemSub = $Sub->{$Key};

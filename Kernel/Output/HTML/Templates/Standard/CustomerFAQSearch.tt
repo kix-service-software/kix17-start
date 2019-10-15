@@ -136,7 +136,7 @@
                 </div>
             </fieldset>
             <div id="BottomActionRow" class="ActionRow">
-                <button id="Submit" type="submit" value="[% Translate("Search") | html %]">[% Translate("Search") | html %]</button>
+                <button id="Submit" type="submit" class="Primary CallForAction" value="[% Translate("Search") | html %]">[% Translate("Search") | html %]</button>
                 <span>[% Translate("Output to") | html %]</span>
                 [% Data.ResultFormStrg %]
             </div>
