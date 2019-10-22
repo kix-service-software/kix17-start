@@ -26,15 +26,6 @@
  * (2019/09/24) - Bugfix: T2019070390000733 (article colors are not shown) (millinger)
  * (2019/09/19) - CR: T2019081490001077 (updated CSS-Consolidation and CSS-CleanUp) (fjacquemin)
 
-# 17.9.0-RC1 (2019/10/03)
- * (2019/10/01) - Bugfix: T2018120790000423 (implemented horizontal line for customer process dialog) (millinger)
- * (2019/09/30) - Bugfix: T2019072290000895 (fixed missing output of validity of the quick state in the overview) (fjacquemin)
- * (2019/09/30) - Bugfix: T2019021490001221 (fixed reset of selection without modernize in generic agent) (fjacquemin)
- * (2019/09/30) - Bugfix: T2018110290000747 (fixed incorrect set of DataSelected of preferences groups) (fjacquemin)
- * (2019/09/30) - Bugfix: T2018100190000063 (fixed incorrect output of contact notify include translation) (fjacquemin)
- * (2019/09/24) - Bugfix: T2019070390000733 (article colors are not shown) (millinger)
- * (2019/09/19) - CR: T2019081490001077 (updated CSS-Consolidation and CSS-CleanUp) (fjacquemin)
-
 # 17.8.0 (2019/09/25)
  * (2019/09/25) - productive release
 
