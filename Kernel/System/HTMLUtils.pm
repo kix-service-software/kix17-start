@@ -977,9 +977,11 @@ sub Safety {
 
     # check ref
     my $StringScalar;
+    my $StringIsRef = 1;
     if ( !ref $String ) {
         $StringScalar = $String;
         $String       = \$StringScalar;
+        $StringIsRef  = 0;
     }
 
     my %Safety;
@@ -1191,7 +1193,7 @@ END
     } while ($Replaced);
 
     # check ref && return result like called
-    if ($StringScalar) {
+    if ( !$StringIsRef ) {
         $Safety{String} = ${$String};
     }
     else {
