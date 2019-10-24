@@ -183,6 +183,33 @@ sub Run {
             ) || '';
         }
 
+        # check if external sources should be removed from field content
+        my $NoExtSrcLoad = 0;
+        if ( $Kernel::OM->Get('Kernel::Config')->Get('Frontend::RemoveExternalSource') ) {
+            $NoExtSrcLoad = 1;
+        }
+
+        # remove active HTML content (scripts, applets, etc...)
+        my %SafeContent = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+            String       => $FieldContent,
+            NoApplet     => 1,
+            NoObject     => 1,
+            NoEmbed      => 1,
+            NoIntSrcLoad => 0,
+            NoExtSrcLoad => $NoExtSrcLoad,
+            NoJavaScript => 1,
+        );
+
+        # take the safe content if necessary
+        if ( $SafeContent{Replace} ) {
+            $FieldContent = $SafeContent{String};
+        }
+
+        # detect all plain text links and put them into an HTML <a> tag
+        $FieldContent = $HTMLUtilsObject->LinkQuote(
+            String => $FieldContent,
+        );
+
         # add needed HTML headers
         $FieldContent = $HTMLUtilsObject->DocumentComplete(
             String  => $FieldContent,
