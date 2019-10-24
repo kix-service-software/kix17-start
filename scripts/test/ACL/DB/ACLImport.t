@@ -12,6 +12,7 @@ use strict;
 use warnings;
 use utf8;
 
+use Time::HiRes;
 use vars (qw($Self));
 
 use Kernel::System::VariableCheck qw(:all);
@@ -33,6 +34,7 @@ my $Helper = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
 my $RandomID = $Helper->GetRandomID();
 my $Home     = $ConfigObject->Get('Home');
 my $UserID   = 1;
+my $StartTime;
 
 my $CheckACL = sub {
     my %Param = @_;
@@ -67,10 +69,12 @@ my $CheckACL = sub {
         )
     {
         if ( $Attribute eq 'ConfigMatch' || $Attribute eq 'ConfigChange' ) {
+            $StartTime = Time::HiRes::time();
             $Self->IsDeeply(
                 $ACL->{$Attribute},
                 $ACLDataLookup{$ACLName}->{$Attribute},
                 "ACLImport() $Test->{Name} - $ACLName Expected Attribute $Attribute",
+                $StartTime,
             );
         }
         else {
@@ -78,10 +82,12 @@ my $CheckACL = sub {
             # set undefined values as empty (quick fix for ORACLE)
             $ACL->{$Attribute} //= '';
 
+            $StartTime = Time::HiRes::time();
             $Self->Is(
                 $ACL->{$Attribute},
                 $ACLDataLookup{$ACLName}->{$Attribute},
                 "ACLImport() $Test->{Name} - $ACLName Expected Attribute $Attribute",
+                $StartTime,
             );
         }
     }
@@ -222,6 +228,7 @@ my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
 my %ACLToDelete;
 for my $Test (@Tests) {
 
+    $StartTime = Time::HiRes::time();
     # read process for yml file if needed
     my $ACLData;
     my $FileRef;
@@ -255,13 +262,16 @@ for my $Test (@Tests) {
         $Self->True(
             $ACLImport->{Success},
             "ACLImport() $Test->{Name} - return value with true",
+            $StartTime,
         );
 
         for my $ResultKey ( sort keys %{ $Test->{ExpectedResults} } ) {
+            $StartTime = Time::HiRes::time();
             $Self->Is(
                 $ACLImport->{$ResultKey},
                 $Test->{ExpectedResults}->{$ResultKey},
                 "ACLImport() $Test->{Name} - Expected $ResultKey",
+                $StartTime,
             );
         }
 
@@ -309,6 +319,7 @@ for my $Test (@Tests) {
         $Self->False(
             $ACLImport->{Success},
             "ACLImport() $Test->{Name} - return value with false",
+            $StartTime,
         );
 
     }
