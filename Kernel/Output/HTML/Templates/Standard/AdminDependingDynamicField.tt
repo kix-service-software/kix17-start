@@ -67,8 +67,6 @@
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
 
-var StyleSheetURL = Core.Config.Get('WebPath') + 'skins/Agent/default/css-cache/css/KIX4OTRS.JSTree.css';
-
 // create tree
 $('#DependingFieldContainer').jstree({
     core: {
