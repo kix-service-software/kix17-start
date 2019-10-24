@@ -96,11 +96,23 @@ sub Set {
         }
         $Result->{"Memcached::CacheIndex::$Param{Type}"}->{$PreparedKey} = 1;
 
-        return $Self->{MemcachedObject}->set_multi(
+        my $Success = $Self->{MemcachedObject}->set_multi(
             [ $PreparedKey, $Param{Value}, $TTL, ],
             [ "Memcached::CacheIndex::$Param{Type}", $Result->{"Memcached::CacheIndex::$Param{Type}"} ],
             [ "Memcached::CachedObjects",          $Result->{"Memcached::CachedObjects"} ],
         );
+        if ( ref($Success) eq 'ARRAY' ) {
+            my $SuccessResult = 1;
+            RESULT:
+            for my $SuccessEntry ( @{ $Success } ) {
+                if ( !$SuccessEntry ) {
+                    $SuccessResult = 0;
+                    last RESULT;
+                }
+            }
+            return $SuccessResult;
+        }
+        return $Success;
     }
     else {
         # update indexes
@@ -114,10 +126,22 @@ sub Set {
         }
         $Result->{$PreparedKey} = 1;
 
-        return $Self->{MemcachedObject}->set_multi(
+        my $Success = $Self->{MemcachedObject}->set_multi(
             [ $PreparedKey, $Param{Value}, $TTL, ],
             [ "Memcached::CacheIndex::$Param{Type}", $Result ],
         );
+        if ( ref($Success) eq 'ARRAY' ) {
+            my $SuccessResult = 1;
+            RESULT:
+            for my $SuccessEntry ( @{ $Success } ) {
+                if ( !$SuccessEntry ) {
+                    $SuccessResult = 0;
+                    last RESULT;
+                }
+            }
+            return $SuccessResult;
+        }
+        return $Success;
     }
 }
 

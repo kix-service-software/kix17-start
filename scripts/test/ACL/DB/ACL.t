@@ -12,6 +12,7 @@ use strict;
 use warnings;
 use utf8;
 
+use Time::HiRes;
 use vars (qw($Self));
 
 use Kernel::System::VariableCheck qw(:all);
@@ -33,6 +34,7 @@ $Helper->FixedTimeSet();
 # define needed variables
 my $RandomID = $Helper->GetRandomID();
 my $UserID   = 1;
+my $StartTime;
 
 # get original ACL list
 my $OriginalACLList = $ACLObject->ACLList( UserID => $UserID ) || {};
@@ -138,6 +140,7 @@ my @Tests = (
 
 my %AddedACL;
 for my $Test (@Tests) {
+    $StartTime = Time::HiRes::time();
     my $ACLID = $ACLObject->ACLAdd( %{ $Test->{Config} } );
 
     if ( $Test->{Success} ) {
@@ -145,29 +148,38 @@ for my $Test (@Tests) {
             $ACLID,
             0,
             "$Test->{Name} | ACLID should not be 0",
+            $StartTime,
         );
         $AddedACL{$ACLID} = $Test->{Config};
 
+        $StartTime = Time::HiRes::time();
         $Self->True(
             $ACLObject->ACLsNeedSync(),
             "$Test->{Name} sync flag set after AclAdd",
+            $StartTime,
         );
 
+        $StartTime = Time::HiRes::time();
         $Self->True(
             $ACLObject->ACLsNeedSyncReset(),
             "$Test->{Name} sync flag reset",
+            $StartTime,
         );
 
+        $StartTime = Time::HiRes::time();
         $Self->False(
             $ACLObject->ACLsNeedSync(),
             "$Test->{Name} sync flag not set after reset",
+            $StartTime,
         );
     }
     else {
+        $StartTime = Time::HiRes::time();
         $Self->Is(
             $ACLID,
             undef,
             "$Test->{Name} | ACLID should be undef",
+            $StartTime,
         );
     }
 }
@@ -229,6 +241,7 @@ my @AddedACLList = map {$_} sort keys %AddedACL;
 );
 
 for my $Test (@Tests) {
+    $StartTime = Time::HiRes::time();
     my $ACL = $ACLObject->ACLGet( %{ $Test->{Config} } );
 
     if ( $Test->{Success} ) {
@@ -236,10 +249,14 @@ for my $Test (@Tests) {
             ref $ACL,
             'HASH',
             "$Test->{Name} | ACL structure is HASH",
+            $StartTime,
         );
+
+        $StartTime = Time::HiRes::time();
         $Self->True(
             IsHashRefWithData($ACL),
             "$Test->{Name} | ACL structure is non empty HASH",
+            $StartTime,
         );
 
         # check cache
@@ -251,6 +268,7 @@ for my $Test (@Tests) {
             $CacheKey = 'ACLGet::Name::' . $Test->{Config}->{Name};
         }
 
+        $StartTime = Time::HiRes::time();
         my $Cache = $CacheObject->Get(
             Type => 'ACLEditor_ACL',
             Key  => $CacheKey,
@@ -259,7 +277,8 @@ for my $Test (@Tests) {
         $Self->IsDeeply(
             $Cache,
             $ACL,
-            "$Test->{Name} | ACL cache"
+            "$Test->{Name} | ACL cache",
+            $StartTime,
         );
 
         # remove not need parameters
@@ -270,10 +289,12 @@ for my $Test (@Tests) {
             qw(ID CreateTime ChangeTime Comment)
             )
         {
+            $StartTime = Time::HiRes::time();
             $Self->IsNot(
                 $ACL->{$Attribute},
                 undef,
                 "$Test->{Name} | ACL->{$Attribute} should not be undef",
+                $StartTime,
             );
         }
 
@@ -285,21 +306,27 @@ for my $Test (@Tests) {
             delete $ACL->{$Attribute};
         }
 
+        $StartTime = Time::HiRes::time();
         $Self->IsDeeply(
             $ACL,
             \%ExpectedACL,
-            "$Test->{Name} | ACL"
+            "$Test->{Name} | ACL",
+            $StartTime,
         );
     }
     else {
         $Self->False(
             ref $ACL eq 'HASH',
             "$Test->{Name} | ACL structure is not HASH",
+            $StartTime,
         );
+
+        $StartTime = Time::HiRes::time();
         $Self->Is(
             $ACL,
             undef,
             "$Test->{Name} | ACL should be undefined",
+            $StartTime,
         );
     }
 }
@@ -394,6 +421,7 @@ $Helper->FixedTimeAddSeconds(2);
 TEST:
 for my $Test (@Tests) {
 
+    $StartTime = Time::HiRes::time();
     # get the old ACL (if any)
     my $OldACL = $ACLObject->ACLGet(
         ID => $Test->{Config}->{ID} || 0,
@@ -407,13 +435,15 @@ for my $Test (@Tests) {
         $Self->IsNot(
             $Success,
             0,
-            "$Test->{Name} | Result should be 1"
+            "$Test->{Name} | Result should be 1",
+            $StartTime,
         );
 
         # check cache
         my $CacheKey = 'ACLGet::ID::'
             . $Test->{Config}->{ID};
 
+        $StartTime = Time::HiRes::time();
         my $Cache = $CacheObject->Get(
             Type => 'ACLEditor_ACL',
             Key  => $CacheKey,
@@ -424,6 +454,7 @@ for my $Test (@Tests) {
                 $Cache,
                 undef,
                 "$Test->{Name} | Cache should be deleted after update, should be undef",
+                $StartTime,
             );
         }
         else {
@@ -431,9 +462,11 @@ for my $Test (@Tests) {
                 $Cache,
                 undef,
                 "$Test->{Name} | Cache should not be deleted after update, since no update needed",
+                $StartTime,
             );
         }
 
+        $StartTime = Time::HiRes::time();
         # get the new ACL
         my $NewACL = $ACLObject->ACLGet(
             ID     => $Test->{Config}->{ID},
@@ -450,25 +483,33 @@ for my $Test (@Tests) {
             $Cache,
             $NewACL,
             "$Test->{Name} | Cache is equal to updated ACL",
+            $StartTime,
         );
 
         if ( $Test->{UpdateDB} ) {
+            $StartTime = Time::HiRes::time();
             $Self->IsNotDeeply(
                 $NewACL,
                 $OldACL,
                 "$Test->{Name} | Updated ACL is different than original",
+                $StartTime,
             );
 
+            $StartTime = Time::HiRes::time();
             # check create and change times
             $Self->Is(
                 $NewACL->{CreateTime},
                 $OldACL->{CreateTime},
                 "$Test->{Name} | Updated ACL create time should not change",
+                $StartTime,
             );
+
+            $StartTime = Time::HiRes::time();
             $Self->IsNot(
                 $NewACL->{ChangeTime},
                 $OldACL->{ChangeTime},
                 "$Test->{Name} | Updated ACL change time should be different",
+                $StartTime,
             );
 
             # remove not need parameters
@@ -482,32 +523,42 @@ for my $Test (@Tests) {
                 delete $NewACL->{$Attribute};
             }
 
+            $StartTime = Time::HiRes::time();
             $Self->IsDeeply(
                 $NewACL,
                 \%ExpectedACL,
-                "$Test->{Name} | ACL"
+                "$Test->{Name} | ACL",
+                $StartTime,
             );
 
+            $StartTime = Time::HiRes::time();
             $Self->True(
                 $ACLObject->ACLsNeedSync(),
                 "$Test->{Name} sync flag set after ACLUpdate",
+                $StartTime,
             );
 
+            $StartTime = Time::HiRes::time();
             $Self->True(
                 $ACLObject->ACLsNeedSyncReset(),
                 "$Test->{Name} sync flag reset",
+                $StartTime,
             );
 
+            $StartTime = Time::HiRes::time();
             $Self->False(
                 $ACLObject->ACLsNeedSync(),
                 "$Test->{Name} sync flag not set after reset",
+                $StartTime,
             );
         }
         else {
+            $StartTime = Time::HiRes::time();
             $Self->IsDeeply(
                 $NewACL,
                 $OldACL,
                 "$Test->{Name} | Updated ACL is equal than original",
+                $StartTime,
             );
         }
     }
@@ -517,6 +568,7 @@ for my $Test (@Tests) {
         $Self->False(
             $Success,
             "$Test->{Name} | Result should fail",
+            $StartTime,
         );
     }
 }
@@ -525,6 +577,7 @@ for my $Test (@Tests) {
 # ACLList() tests
 #
 
+$StartTime = Time::HiRes::time();
 # no params
 my $TestACLList = $ACLObject->ACLList();
 
@@ -532,8 +585,10 @@ $Self->Is(
     $TestACLList,
     undef,
     "ACLList Test 1: No Params | Should be undef",
+    $StartTime,
 );
 
+$StartTime = Time::HiRes::time();
 # normal ACL list
 $TestACLList = $ACLObject->ACLList( UserID => $UserID );
 
@@ -541,19 +596,25 @@ $Self->Is(
     ref $TestACLList,
     'HASH',
     "ACLList Test 2: All ACL | Should be a HASH",
+    $StartTime,
 );
 
+$StartTime = Time::HiRes::time();
 $Self->True(
     IsHashRefWithData($TestACLList),
     "ACLList Test 2: All ACL | Should be not empty HASH",
+    $StartTime,
 );
 
+$StartTime = Time::HiRes::time();
 $Self->IsNotDeeply(
     $TestACLList,
     $OriginalACLList,
     "ACLList Test 2: All ACL | Should be different than the original",
+    $StartTime,
 );
 
+$StartTime = Time::HiRes::time();
 # delete original ACL
 for my $ACLID ( sort keys %{$OriginalACLList} ) {
     delete $TestACLList->{$ACLID};
@@ -563,18 +624,22 @@ $Self->Is(
     scalar keys %{$TestACLList},
     scalar @AddedACLList,
     "ACLList Test 2: All ACL | Number of ACLs match added ACLs",
+    $StartTime,
 );
 
 my $Counter = 0;
 for my $ACLID ( sort { $a <=> $b } keys %{$TestACLList} ) {
+    $StartTime = Time::HiRes::time();
     $Self->Is(
         $ACLID,
         $AddedACLList[$Counter],
         "ACLList Test 2: All ACL | ACLID match AddedACLID",
-        ),
-        $Counter++;
+        $StartTime,
+    ),
+    $Counter++;
 }
 
+$StartTime = Time::HiRes::time();
 # prepare ACL for listing
 my $ACL = $ACLObject->ACLGet(
     ID     => $AddedACLList[0],
@@ -591,10 +656,12 @@ $Self->IsNot(
     $Success,
     0,
     "ACLList | Updated ACL for ACLID:'$AddedACLList[0]' result should be 1",
+    $StartTime,
 );
 
 for my $Index ( 1, 2 ) {
 
+    $StartTime = Time::HiRes::time();
     my $ACL = $ACLObject->ACLGet(
         ID     => $AddedACLList[$Index],
         UserID => $UserID,
@@ -612,6 +679,7 @@ for my $Index ( 1, 2 ) {
         $Success,
         0,
         "ACLList | Updated ACL for ACLID:'$AddedACLListIndex' result should be 1",
+        $StartTime,
     );
 }
 
@@ -651,11 +719,13 @@ for my $Index ( 1, 2 ) {
 );
 
 for my $Test (@Tests) {
+    $StartTime = Time::HiRes::time();
     my $Success = $ACLObject->ACLDelete( %{ $Test->{Config} } );
 
     $Self->False(
         $Success,
         "$Test->{Name} | ACL delete with false",
+        $StartTime,
     );
 }
 
@@ -663,6 +733,7 @@ for my $Test (@Tests) {
 # ACLListGet() tests
 #
 
+$StartTime = Time::HiRes::time();
 my $FullList = $ACLObject->ACLListGet(
     UserID => undef,
 );
@@ -671,8 +742,10 @@ $Self->IsNot(
     ref $FullList,
     'ARRAY',
     "ACLListGet Test 1: No UserID | List Should not be an array",
+    $StartTime,
 );
 
+$StartTime = Time::HiRes::time();
 # get the List of ACLs with all details
 $FullList = $ACLObject->ACLListGet(
     UserID => $UserID,
@@ -698,19 +771,25 @@ $Self->Is(
     ref $FullList,
     'ARRAY',
     "ACLListGet Test 2: Correct List | Should be an array",
+    $StartTime,
 );
 
+$StartTime = Time::HiRes::time();
 $Self->True(
     IsArrayRefWithData($FullList),
     "ACLListGet Test 2: Correct List | The list is not empty",
+    $StartTime,
 );
 
+$StartTime = Time::HiRes::time();
 $Self->IsDeeply(
     $FullList,
     $ExpectedACLList,
     "ACLListGet Test 2: Correct List | ACL List",
+    $StartTime,
 );
 
+$StartTime = Time::HiRes::time();
 # check cache
 my $CacheKey = 'ACLListGet::ValidIDs::ALL';
 
@@ -723,6 +802,7 @@ $Self->IsDeeply(
     $Cache,
     $FullList,
     "ACLListGet Test 2: Correct List | Cache",
+    $StartTime,
 );
 
 # cleanup done by RestoreDatabase
