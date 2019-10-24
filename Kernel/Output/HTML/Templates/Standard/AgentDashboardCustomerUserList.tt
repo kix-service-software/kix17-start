@@ -31,7 +31,7 @@
             <th>[% Translate("Open") | html %]</th>
             <th>[% Translate("Closed") | html %]</th>
 [% RenderBlockStart("OverviewResultNewAgentTicketPhone") %]
-            <th>[% Translate("Phone ticket") | html %]</th>
+            <th>[% Translate("Ticket") | html %]</th>
 [% RenderBlockEnd("OverviewResultNewAgentTicketPhone") %]
 [% RenderBlockStart("OverviewResultNewAgentTicketEmail") %]
             <th>[% Translate("Email ticket") | html %]</th>
