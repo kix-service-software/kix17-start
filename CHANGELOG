@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.9.0-RC5 (2019/10/24)
+ * (2019/10/22) - Bugfix: T2019031590000496 (fixed translation of ticket column for CIC CustomerUserList) (millinger)
+ * (2019/10/22) - Bugfix: T2019060490000519 (Safety content returns ref for empty string) (millinger)
+ * (2019/10/22) - CR: T2019060490000519 (security configuration to remove external src in faq zoom) (millinger)
+ * (2019/10/22) - Bugfix: T2019031590000496 (hide default tab only if empty) (millinger)
+ * (2019/10/22) - Bugfix: T2018120790000423 (fixed handling of lock param for customer process tickets) (millinger)
+ * (2019/10/17) - Bugfix: T2019100290000961 (update customer id for selected customer user) (millinger)
+
 # 17.9.0-RC4 (2019/10/15)
  * (2019/10/15) - CR: T2019031590000496 (deactivated empty default ticket tab) (millinger)
  * (2019/10/15) - CR: T2019031590000496 (implemented ticket type translation for medium and preview overview) (millinger)
