@@ -30,6 +30,8 @@ sub new {
         Title           => 'Title',
         State           => 'StateID',
         StateID         => 'StateID',
+        Lock            => 'LockID',
+        LockID          => 'LockID',
         Priority        => 'PriorityID',
         PriorityID      => 'PriorityID',
         Queue           => 'QueueID',
