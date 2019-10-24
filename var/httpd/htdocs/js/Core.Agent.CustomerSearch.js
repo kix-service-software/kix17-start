@@ -338,6 +338,9 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
 
                     $Element.val(CustomerValue);
 
+                    // reset selected customer id
+                    $('#CustomerID').val('');
+
                     if (
                         Core.Config.Get('Action') === 'AgentTicketEmail'
                         || Core.Config.Get('Action') === 'AgentTicketEmailQuick'
@@ -361,6 +364,11 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                         && Core.Config.Get('Action') !== 'AgentTicketForward'
                         && Core.Config.Get('Action') !== 'AdminQuickTicketConfigurator'
                     ) {
+                        // get customer data for customer info table
+                        GetCustomerInfo(CustomerKey, '', Core.Config.Get('Action'));
+
+                        // get customer tickets
+                        GetCustomerTickets(CustomerKey);
 
                         // set hidden field SelectedCustomerUser
                         // trigger change-event to allow event handler after selecting the customer
@@ -378,12 +386,6 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                                 $('<input type="hidden" name="CustomerUserOption" id="CustomerUserOption">').val(CustomerKey).appendTo($Element.closest('form'));
                             }
                         }
-
-                        // get customer tickets
-                        GetCustomerTickets(CustomerKey);
-
-                        // get customer data for customer info table
-                        GetCustomerInfo(CustomerKey, $('#CustomerID').val(), Core.Config.Get('Action'));
                     }
                     else if (Core.Config.Get('Action') === 'AdminQuickTicketConfigurator') {
                         if ($Element.attr('id') == 'ToCustomer') {
@@ -400,6 +402,11 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                         if ($Element.attr('id') == 'BccCustomer') {
                             $('#BccCustomerLogin').val(CustomerKey);
                         }
+                    } else if (Core.Config.Get('Action') === 'AgentTicketCustomer') {
+                        TargetNS.AddTicketCustomer($(Event.target).attr('id'), CustomerValue, CustomerKey);
+
+                        // get customer tickets
+                        GetCustomerTickets(CustomerKey);
                     } else {
                         TargetNS.AddTicketCustomer($(Event.target).attr('id'), CustomerValue, CustomerKey);
                     }
@@ -548,6 +555,10 @@ Core.Agent.CustomerSearch = (function (TargetNS) {
                 $(this).bind('change', function () {
                     // remove row
                     if ($(this).prop('checked')){
+                        // reset selected customer id
+                        $('#CustomerID').val('');
+
+                        // reload information
                         TargetNS.ReloadCustomerInfo(CustomerKey);
                     }
                     return false;

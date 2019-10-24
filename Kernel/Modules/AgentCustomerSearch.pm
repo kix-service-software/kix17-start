@@ -129,7 +129,7 @@ sub Run {
 
         # get params
         my $CustomerUserID = $ParamObject->GetParam( Param => 'CustomerUserID' ) || '';
-        my $CustomerID     = $ParamObject->GetParam( Param => 'CustomerID' )     || $TicketData{CustomerID} || '';
+        my $CustomerID     = $ParamObject->GetParam( Param => 'CustomerID' )     || '';
 
         my $CustomerTableHTMLString        = '';
         my $CustomerDetailsTableHTMLString = '';

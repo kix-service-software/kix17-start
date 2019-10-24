@@ -118,8 +118,9 @@ sub Run {
         Recursive => 1,
     );
 
-    my $StartTime = Time::HiRes::time();
-    my $Product   = $Param{Product}
+    my $StartTime      = Time::HiRes::time();
+    my $StartTimestamp = $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp();
+    my $Product        = $Param{Product}
         || $Kernel::OM->Get('Kernel::Config')->Get('Product') . " "
         . $Kernel::OM->Get('Kernel::Config')->Get('Version');
 
@@ -227,21 +228,24 @@ sub Run {
         }
     }
 
-    my $Time   = Time::HiRes::time() - $StartTime;
+    my $TimeDiff = Time::HiRes::time() - $StartTime;
+    my $Time     = sprintf("%.3f", $TimeDiff);
+    
     my %OSInfo = $Kernel::OM->Get('Kernel::System::Environment')->OSInfoGet();
 
-    $ResultSummary{Time}      = $Kernel::OM->Get('Kernel::System::Time')->SystemTime2TimeStamp(
-        SystemTime => $Kernel::OM->Get('Kernel::System::Time')->SystemTime(),
-    );
-    $ResultSummary{TimeTaken} = $Time;
-    $ResultSummary{Product}   = $Product;
-    $ResultSummary{Host}      = $Kernel::OM->Get('Kernel::Config')->Get('FQDN');
-    $ResultSummary{Perl}      = sprintf "%vd", $^V;
-    $ResultSummary{OS}        = $OSInfo{OS};
-    $ResultSummary{Vendor}    = $OSInfo{OSName};
-    $ResultSummary{Database}  = lc $Kernel::OM->Get('Kernel::System::DB')->Version();
-    $ResultSummary{TestOk}    = $Self->{TestCountOk};
-    $ResultSummary{TestNotOk} = $Self->{TestCountNotOk};
+    $ResultSummary{Time}          = $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp();
+    $ResultSummary{Timestamp}     = $StartTimestamp;
+    $ResultSummary{TimeTaken}     = $Time;
+    $ResultSummary{Product}       = $Product;
+    $ResultSummary{ConfigProduct} = $Kernel::OM->Get('Kernel::Config')->Get('Product');
+    $ResultSummary{ConfigVersion} = $Kernel::OM->Get('Kernel::Config')->Get('Version');
+    $ResultSummary{Host}          = $Kernel::OM->Get('Kernel::Config')->Get('FQDN');
+    $ResultSummary{Perl}          = sprintf "%vd", $^V;
+    $ResultSummary{OS}            = $OSInfo{OS};
+    $ResultSummary{Vendor}        = $OSInfo{OSName};
+    $ResultSummary{Database}      = lc $Kernel::OM->Get('Kernel::System::DB')->Version();
+    $ResultSummary{TestOk}        = $Self->{TestCountOk};
+    $ResultSummary{TestNotOk}     = $Self->{TestCountNotOk};
 
     $Self->_PrintSummary(%ResultSummary);
 
@@ -310,6 +314,10 @@ sub Run {
         $TestSuitesName    =~ s/>/&gt;/g;
         $TestSuitesName    =~ s/"/&quot;/g;
 
+        # prepare testsuites timestamp
+        my $TestSuitesTimestamp = $ResultSummary{Timestamp} || '';
+        $TestSuitesTimestamp    =~ s/\s/T/;
+
         # prepare summary for tag testsuites
         $Self->{Content} .= '<testsuites';
         $Self->{Content} .= ' name="' . $TestSuitesName . '"';
@@ -317,6 +325,7 @@ sub Run {
         $Self->{Content} .= ' failures="' . $ResultSummary{TestNotOk} . '"';
         $Self->{Content} .= ' errors="0"';
         $Self->{Content} .= ' disabled="0"';
+        $Self->{Content} .= ' timestamp="' . $TestSuitesTimestamp . '"';
         $Self->{Content} .= ' time="' . $ResultSummary{TimeTaken} . '"';
         $Self->{Content} .= '>' . "\n";
 
@@ -326,6 +335,13 @@ sub Run {
 
             # extract duration time
             my $Duration = $Self->{Duration}->{$Key};
+
+            # prepare timestamp
+            my $Timestamp = $Self->{Timestamp}->{$Key} || '';
+            $Timestamp    =~ s/\s/T/;
+
+            # prepare test count
+            my $Tests = keys( %{ $Self->{XML}->{Test}->{$Key} } );
 
             # prepare failures count
             my $Failures = 0;
@@ -348,16 +364,25 @@ sub Run {
             $Self->{Content} .= ' id="' . $TestSuiteID . '"';
             $Self->{Content} .= ' name="' . $TestSuiteName . '"';
             $Self->{Content} .= ' hostname="' . $ResultSummary{Host} . '"';
-            $Self->{Content} .= ' tests="' . keys( %{ $Self->{XML}->{Test}->{$Key} } ) . '"';
+            $Self->{Content} .= ' tests="' . $Tests . '"';
             $Self->{Content} .= ' failures="' . $Failures . '"';
             $Self->{Content} .= ' errors="0"';
             $Self->{Content} .= ' disabled="0"';
             $Self->{Content} .= ' skipped="0"';
+            $Self->{Content} .= ' timestamp="' . $Timestamp . '"';
             $Self->{Content} .= ' time="' . $Duration . '"';
             $Self->{Content} .= '>' . "\n";
 
             # add properties
             $Self->{Content} .= '    <properties>' . "\n";
+            $Self->{Content} .= '      <property';
+            $Self->{Content} .= ' name="Product"';
+            $Self->{Content} .= ' value="' . $ResultSummary{Product} . '"';
+            $Self->{Content} .= '/>' . "\n";
+            $Self->{Content} .= '      <property';
+            $Self->{Content} .= ' name="Software"';
+            $Self->{Content} .= ' value="' . $ResultSummary{ConfigProduct} . ' ' . $ResultSummary{ConfigVersion} . '"';
+            $Self->{Content} .= '/>' . "\n";
             $Self->{Content} .= '      <property';
             $Self->{Content} .= ' name="OS"';
             $Self->{Content} .= ' value="' . $ResultSummary{OS} . ' ' . $ResultSummary{Vendor} . '"';
@@ -382,9 +407,12 @@ sub Run {
                 
                 # prepare summary for tag testcase
                 $Self->{Content} .= '    <testcase';
-                $Self->{Content} .= ' name="' . $TestCaseName . '"';
+                $Self->{Content} .= ' name="' . sprintf("%05d-%s", $TestCount, $TestCaseName) . '"';
                 $Self->{Content} .= ' classname="' . $TestSuiteName . '"';
                 $Self->{Content} .= ' status="' . $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Result} . '"';
+                if ( $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Duration} ) {
+                    $Self->{Content} .= ' time="' . $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Duration} . '"';
+                }
                 $Self->{Content} .= '>';
 
                 if ( $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Result} eq 'not ok' ) {
@@ -457,23 +485,23 @@ if it's true, returning 1 in this case or undef, otherwise.
 =cut
 
 sub True {
-    my ( $Self, $True, $Name, $Duration ) = @_;
+    my ( $Self, $True, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. True(\$A, \'Test Name\')!'
         );
-        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. True(\$A, \'Test Name\')', $Duration );
+        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. True(\$A, \'Test Name\')', $StartTime );
         return;
     }
 
     if ($True) {
-        $Self->_Print( 1, $Name, 'is \'True\'', $Duration );
+        $Self->_Print( 1, $Name, 'is \'True\'', $StartTime );
         return 1;
     }
     else {
-        $Self->_Print( 0, $Name, 'is \'False\', should be \'True\'', $Duration );
+        $Self->_Print( 0, $Name, 'is \'False\', should be \'True\'', $StartTime );
         return;
     }
 }
@@ -488,23 +516,23 @@ for a false value instead.
 =cut
 
 sub False {
-    my ( $Self, $False, $Name, $Duration ) = @_;
+    my ( $Self, $False, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. False(\$A, \'Test Name\')!'
         );
-        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. False(\$A, \'Test Name\')', $Duration );
+        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. False(\$A, \'Test Name\')', $StartTime );
         return;
     }
 
     if ( !$False ) {
-        $Self->_Print( 1, $Name, 'is \'False\'', $Duration );
+        $Self->_Print( 1, $Name, 'is \'False\'', $StartTime );
         return 1;
     }
     else {
-        $Self->_Print( 0, $Name, 'is \'True\', should be \'False\'', $Duration );
+        $Self->_Print( 0, $Name, 'is \'True\', should be \'False\'', $StartTime );
         return;
     }
 }
@@ -530,35 +558,35 @@ Returns 1 if the values were equal, or undef otherwise.
 =cut
 
 sub Is {
-    my ( $Self, $Test, $ShouldBe, $Name, $Duration ) = @_;
+    my ( $Self, $Test, $ShouldBe, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. Is(\$A, \$B, \'Test Name\')!'
         );
-        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. Is(\$A, \$B, \'Test Name\')', $Duration );
+        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. Is(\$A, \$B, \'Test Name\')', $StartTime );
         return;
     }
 
     if ( !defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 1, $Name, 'is \'undef\'', $Duration );
+        $Self->_Print( 1, $Name, 'is \'undef\'', $StartTime );
         return 1;
     }
     elsif ( !defined $Test && defined $ShouldBe ) {
-        $Self->_Print( 0, $Name, 'is \'undef\', should be \'' . $ShouldBe . '\'', $Duration );
+        $Self->_Print( 0, $Name, 'is \'undef\', should be \'' . $ShouldBe . '\'', $StartTime );
         return;
     }
     elsif ( defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 0, $Name, 'is \'' . $Test . '\', should be \'undef\'', $Duration );
+        $Self->_Print( 0, $Name, 'is \'' . $Test . '\', should be \'undef\'', $StartTime );
         return;
     }
     elsif ( $Test eq $ShouldBe ) {
-        $Self->_Print( 1, $Name, 'is \'' . $ShouldBe . '\'', $Duration );
+        $Self->_Print( 1, $Name, 'is \'' . $ShouldBe . '\'', $StartTime );
         return 1;
     }
     else {
-        $Self->_Print( 0, $Name, 'is \'' . $Test . '\', should be \'' . $ShouldBe . '\'', $Duration );
+        $Self->_Print( 0, $Name, 'is \'' . $Test . '\', should be \'' . $ShouldBe . '\'', $StartTime );
         return;
     }
 }
@@ -573,35 +601,35 @@ for inequality instead.
 =cut
 
 sub IsNot {
-    my ( $Self, $Test, $ShouldBe, $Name, $Duration ) = @_;
+    my ( $Self, $Test, $ShouldBe, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')!'
         );
-        $Self->_Print( 0, '->>No Name!<<-' , 'ERROR: Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')', $Duration );
+        $Self->_Print( 0, '->>No Name!<<-' , 'ERROR: Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')', $StartTime );
         return;
     }
 
     if ( !defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 0, $Name, 'is \'undef\'', $Duration );
+        $Self->_Print( 0, $Name, 'is \'undef\'', $StartTime );
         return;
     }
     elsif ( !defined $Test && defined $ShouldBe ) {
-        $Self->_Print( 1, $Name. 'is \'undef\'', $Duration );
+        $Self->_Print( 1, $Name. 'is \'undef\'', $StartTime );
         return 1;
     }
     elsif ( defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 1, $Name, 'is \'' . $Test . '\'', $Duration );
+        $Self->_Print( 1, $Name, 'is \'' . $Test . '\'', $StartTime );
         return 1;
     }
     if ( $Test ne $ShouldBe ) {
-        $Self->_Print( 1, $Name, 'is \'' . $Test . '\'', $Duration );
+        $Self->_Print( 1, $Name, 'is \'' . $Test . '\'', $StartTime );
         return 1;
     }
     else {
-        $Self->_Print( 0, $Name, 'is \'' . $Test . '\', should not be \'' . $ShouldBe . '\'', $Duration );
+        $Self->_Print( 0, $Name, 'is \'' . $Test . '\', should not be \'' . $ShouldBe . '\'', $StartTime );
         return;
     }
 }
@@ -629,14 +657,14 @@ Returns 1 if the data structures are the same, or undef otherwise.
 =cut
 
 sub IsDeeply {
-    my ( $Self, $Test, $ShouldBe, $Name, $Duration ) = @_;
+    my ( $Self, $Test, $ShouldBe, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. Is(\$A, \$B, \'Test Name\')!'
         );
-        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. Is(\$A, \$B, \'Test Name\')', $Duration );
+        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. Is(\$A, \$B, \'Test Name\')', $StartTime );
         return;
     }
 
@@ -646,25 +674,25 @@ sub IsDeeply {
     );
 
     if ( !defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 1, $Name, 'is \'undef\'', $Duration );
+        $Self->_Print( 1, $Name, 'is \'undef\'', $StartTime );
         return 1;
     }
     elsif ( !defined $Test && defined $ShouldBe ) {
-        $Self->_Print( 0, $Name, 'is \'undef\', should be defined', $Duration );
+        $Self->_Print( 0, $Name, 'is \'undef\', should be defined', $StartTime );
         return;
     }
     elsif ( defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 0, $Name, 'is defined, should be \'undef\'', $Duration );
+        $Self->_Print( 0, $Name, 'is defined, should be \'undef\'', $StartTime );
         return;
     }
     elsif ( !$Diff ) {
-        $Self->_Print( 1, $Name, 'matches expected value', $Duration );
+        $Self->_Print( 1, $Name, 'matches expected value', $StartTime );
         return 1;
     }
     else {
         my $ShouldBeDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($ShouldBe);
         my $TestDump     = $Kernel::OM->Get('Kernel::System::Main')->Dump($Test);
-        $Self->_Print( 0, $Name, 'is \'' . $TestDump . '\', should be \'' . $ShouldBeDump . '\'', $Duration );
+        $Self->_Print( 0, $Name, 'is \'' . $TestDump . '\', should be \'' . $ShouldBeDump . '\'', $StartTime );
         return;
     }
 }
@@ -679,14 +707,14 @@ for inequality instead.
 =cut
 
 sub IsNotDeeply {
-    my ( $Self, $Test, $ShouldBe, $Name, $Duration ) = @_;
+    my ( $Self, $Test, $ShouldBe, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')!'
         );
-        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')', $Duration );
+        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')', $StartTime );
         return;
     }
 
@@ -696,25 +724,25 @@ sub IsNotDeeply {
     );
 
     if ( !defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 0, $Name, 'is \'undef\'', $Duration );
+        $Self->_Print( 0, $Name, 'is \'undef\'', $StartTime );
         return;
     }
     elsif ( !defined $Test && defined $ShouldBe ) {
-        $Self->_Print( 1, $Name, 'is \'undef\'', $Duration );
+        $Self->_Print( 1, $Name, 'is \'undef\'', $StartTime );
         return 1;
     }
     elsif ( defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 1, $Name, 'differs from expected value', $Duration );
+        $Self->_Print( 1, $Name, 'differs from expected value', $StartTime );
         return 1;
     }
 
     if ($Diff) {
-        $Self->_Print( 1, $Name, 'the structures are not equal', $Duration );
+        $Self->_Print( 1, $Name, 'the structures are not equal', $StartTime );
         return 1;
     }
     else {
         my $TestDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Test);
-        $Self->_Print( 0, $Name, 'the structures are equal: \'' . $TestDump . '\'', $Duration );
+        $Self->_Print( 0, $Name, 'the structures are equal: \'' . $TestDump . '\'', $StartTime );
         return;
     }
 }
@@ -883,9 +911,10 @@ sub _PrintSummary {
             else {
                 $Self->{Content} .= "<tr><td bgcolor='green' colspan='2'>Summary</td></tr>\n";
             }
-            $Self->{Content} .= "<tr><td>Product: </td><td>$ResultSummary{Product}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>Product:  </td><td>$ResultSummary{Product}</td></tr>\n";
             $Self->{Content} .= "<tr><td>Test Time:</td><td>$ResultSummary{TimeTaken} s</td></tr>\n";
-            $Self->{Content} .= "<tr><td>Time:     </td><td> $ResultSummary{Time}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>Time:     </td><td>$ResultSummary{Time}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>Timestamp:</td><td>$ResultSummary{Timestamp}</td></tr>\n";
             $Self->{Content} .= "<tr><td>Host:     </td><td>$ResultSummary{Host}</td></tr>\n";
             $Self->{Content} .= "<tr><td>Perl:     </td><td>$ResultSummary{Perl}</td></tr>\n";
             $Self->{Content} .= "<tr><td>OS:       </td><td>$ResultSummary{OS}</td></tr>\n";
@@ -903,9 +932,10 @@ sub _PrintSummary {
             else {
                 print "<tr><td bgcolor='green' colspan='2'>Summary</td></tr>\n";
             }
-            print "<tr><td>Product: </td><td>$ResultSummary{Product}</td></tr>\n";
+            print "<tr><td>Product:  </td><td>$ResultSummary{Product}</td></tr>\n";
             print "<tr><td>Test Time:</td><td>$ResultSummary{TimeTaken} s</td></tr>\n";
-            print "<tr><td>Time:     </td><td> $ResultSummary{Time}</td></tr>\n";
+            print "<tr><td>Time:     </td><td>$ResultSummary{Time}</td></tr>\n";
+            print "<tr><td>Timestamp:</td><td>$ResultSummary{Timestamp}</td></tr>\n";
             print "<tr><td>Host:     </td><td>$ResultSummary{Host}</td></tr>\n";
             print "<tr><td>Perl:     </td><td>$ResultSummary{Perl}</td></tr>\n";
             print "<tr><td>OS:       </td><td>$ResultSummary{OS}</td></tr>\n";
@@ -919,16 +949,17 @@ sub _PrintSummary {
     elsif ( $Self->{Output} eq 'ASCII' ) {
         if ( $Self->{Filename} ) {
             $Self->{Content} .= "=====================================================================\n";
-            $Self->{Content} .= " Product:     $ResultSummary{Product}\n";
-            $Self->{Content} .= " Test Time:   $ResultSummary{TimeTaken} s\n";
-            $Self->{Content} .= " Time:        $ResultSummary{Time}\n";
-            $Self->{Content} .= " Host:        $ResultSummary{Host}\n";
-            $Self->{Content} .= " Perl:        $ResultSummary{Perl}\n";
-            $Self->{Content} .= " OS:          $ResultSummary{OS}\n";
-            $Self->{Content} .= " Vendor:      $ResultSummary{Vendor}\n";
-            $Self->{Content} .= " Database:    $ResultSummary{Database}\n";
-            $Self->{Content} .= " TestOk:      $ResultSummary{TestOk}\n";
-            $Self->{Content} .= " TestNotOk:   $ResultSummary{TestNotOk}\n";
+            $Self->{Content} .= " Product:   $ResultSummary{Product}\n";
+            $Self->{Content} .= " Test Time: $ResultSummary{TimeTaken} s\n";
+            $Self->{Content} .= " Time:      $ResultSummary{Time}\n";
+            $Self->{Content} .= " Timestamp: $ResultSummary{Timestamp}\n";
+            $Self->{Content} .= " Host:      $ResultSummary{Host}\n";
+            $Self->{Content} .= " Perl:      $ResultSummary{Perl}\n";
+            $Self->{Content} .= " OS:        $ResultSummary{OS}\n";
+            $Self->{Content} .= " Vendor:    $ResultSummary{Vendor}\n";
+            $Self->{Content} .= " Database:  $ResultSummary{Database}\n";
+            $Self->{Content} .= " TestOk:    $ResultSummary{TestOk}\n";
+            $Self->{Content} .= " TestNotOk: $ResultSummary{TestNotOk}\n";
             if ( $ResultSummary{TestNotOk} ) {
                 $Self->{Content} .= " FailedTests:\n";
                 FAILEDFILE:
@@ -942,16 +973,17 @@ sub _PrintSummary {
         }
         else {
             print "=====================================================================\n";
-            print " Product:     $ResultSummary{Product}\n";
-            print " Test Time:   $ResultSummary{TimeTaken} s\n";
-            print " Time:        $ResultSummary{Time}\n";
-            print " Host:        $ResultSummary{Host}\n";
-            print " Perl:        $ResultSummary{Perl}\n";
-            print " OS:          $ResultSummary{OS}\n";
-            print " Vendor:      $ResultSummary{Vendor}\n";
-            print " Database:    $ResultSummary{Database}\n";
-            print " TestOk:      $ResultSummary{TestOk}\n";
-            print " TestNotOk:   $ResultSummary{TestNotOk}\n";
+            print " Product:   $ResultSummary{Product}\n";
+            print " Test Time: $ResultSummary{TimeTaken} s\n";
+            print " Time:      $ResultSummary{Time}\n";
+            print " Timestamp: $ResultSummary{Timestamp}\n";
+            print " Host:      $ResultSummary{Host}\n";
+            print " Perl:      $ResultSummary{Perl}\n";
+            print " OS:        $ResultSummary{OS}\n";
+            print " Vendor:    $ResultSummary{Vendor}\n";
+            print " Database:  $ResultSummary{Database}\n";
+            print " TestOk:    $ResultSummary{TestOk}\n";
+            print " TestNotOk: $ResultSummary{TestNotOk}\n";
             if ( $ResultSummary{TestNotOk} ) {
                 print " FailedTests:\n";
                 FAILEDFILE:
@@ -995,6 +1027,9 @@ sub _PrintHeadlineStart {
     # set duration start time
     $Self->{DurationStartTime}->{$Name} = Time::HiRes::time();
 
+    # set start timestamp
+    $Self->{Timestamp}->{$Name} = $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp();
+
     return 1;
 }
 
@@ -1019,8 +1054,9 @@ sub _PrintHeadlineEnd {
     # calculate duration time
     my $Duration = '';
     if ( $Self->{DurationStartTime}->{$Name} ) {
+        my $Diff = Time::HiRes::time() - $Self->{DurationStartTime}->{$Name};
 
-        $Duration = Time::HiRes::time() - $Self->{DurationStartTime}->{$Name};
+        $Duration = sprintf("%.3f", $Diff);
 
         delete $Self->{DurationStartTime}->{$Name};
     }
@@ -1030,7 +1066,15 @@ sub _PrintHeadlineEnd {
 }
 
 sub _Print {
-    my ( $Self, $Test, $Name, $Message, $Duration ) = @_;
+    my ( $Self, $Test, $Name, $Message, $StartTime ) = @_;
+
+    # prepare duration
+    my $Duration = '';
+    if ( $StartTime ) {
+        my $Diff = Time::HiRes::time() - $StartTime;
+
+        $Duration = sprintf("%.3f", $Diff);
+    }
 
     $Name ||= '->>No Name!<<-';
 
@@ -1049,7 +1093,7 @@ sub _Print {
  
     $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Name}     = $Name;
     $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Message}  = $Message;
-    $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Duration} = $Duration || '-';
+    $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Duration} = $Duration;
  
     if ($Test) {
         $Self->{TestCountOk}++;

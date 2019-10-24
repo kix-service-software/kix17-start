@@ -823,40 +823,39 @@ sub LoadDefaults {
 
     # Customer Common CSS
     $Self->{'Loader::Customer::CommonCSS'}->{'000-Framework'} =  [
-        'Core.Reset.css',
-        'Core.Default.css',
-        'Core.Form.css',
-        'Core.Dialog.css',
-        'Core.Tooltip.css',
-        'Core.Login.css',
-        'Core.Control.css',
-        'Core.Table.css',
-        'Core.TicketZoom.css',
-        'Core.InputFields.css',
-        'Core.Print.css',
+        'Base.ColorTheme.css',
+        'Base.css',
+        'Base.Header.css',
+        'Base.Footer.css',
+        'Base.Modernize.css',
+        'Base.Overview.css',
+        'Base.Widget.css',
+        'Base.Table.css',
+        'Base.Dialog.css',
+        'Base.Form.css',
+        'Base.Sidebar.css',
+        'Base.Tooltip.css',
+        'Base.Login.css',
         'thirdparty/fontawesome/font-awesome.css'
     ];
 
     # Agent Common CSS
     $Self->{'Loader::Agent::CommonCSS'}->{'000-Framework'} =  [
-        'Core.Reset.css',
-        'Core.Default.css',
-        'Core.Header.css',
-        'Core.OverviewControl.css',
-        'Core.OverviewSmall.css',
-        'Core.OverviewMedium.css',
-        'Core.OverviewLarge.css',
-        'Core.Footer.css',
-        'Core.PageLayout.css',
-        'Core.Form.css',
-        'Core.Table.css',
-        'Core.Widget.css',
-        'Core.WidgetMenu.css',
-        'Core.TicketDetail.css',
-        'Core.Tooltip.css',
-        'Core.Dialog.css',
-        'Core.InputFields.css',
-        'Core.Print.css',
+        'Base.ColorTheme.css',
+        'Base.css',
+        'Base.Header.css',
+        'Base.Footer.css',
+        'Base.Modernize.css',
+        'Base.Overview.css',
+        'Base.Widget.css',
+        'Base.Table.css',
+        'Base.Dialog.css',
+        'Base.Form.css',
+        'Base.Sidebar.css',
+        'Base.Tooltip.css',
+        'Base.LinkGraph.css',
+        'Base.Statistics.css',
+        'Base.Login.css',
         'thirdparty/fontawesome/font-awesome.css',
     ];
 
@@ -1590,10 +1589,7 @@ via the Preferences button after logging in.
             'admin'
         ],
         'Loader' => {
-            'CSS' => [
-                'Core.Agent.Admin.css'
-            ],
-                'JavaScript' => [
+            'JavaScript' => [
                 'Core.Agent.Admin.SysConfig.js'
             ]
         },
@@ -1652,9 +1648,6 @@ via the Preferences button after logging in.
             Prio        => 800,
         },
         Loader       => {
-            CSS => [
-                'Core.Agent.Admin.SysConfig.css',
-            ],
             JavaScript => [
                 'Core.Agent.Admin.SysConfig.js',
             ],

@@ -12,6 +12,7 @@ use strict;
 use warnings;
 use utf8;
 
+use Time::HiRes;
 use vars (qw($Self));
 
 use Kernel::Config::Files::ZZZAAuto;
@@ -34,7 +35,7 @@ my @ConfigFiles = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
     Filter    => "*.xml",
 );
 
-#rbo - T2016121190001552 - replaced list of XML files with KIX files
+# define list of allowed XML files
 my %AllowedConfigFiles = (
     'FAQ.xml'            	=> 1,
     'Framework.xml'         => 1,
@@ -43,6 +44,9 @@ my %AllowedConfigFiles = (
     'ProcessManagement.xml' => 1,
     'Ticket.xml'            => 1,
 );
+
+# define needed variables
+my $StartTime;
 
 for my $ConfigFile (@ConfigFiles) {
 
@@ -98,19 +102,23 @@ for my $DefaultConfigEntry ( sort keys %{$DefaultConfig} ) {
             next DEFAULTCONFIGSUBENTRY
                 if !exists $ZZZAAutoConfig->{$DefaultConfigEntry}->{$DefaultConfigSubEntry};
 
+            $StartTime = Time::HiRes::time();
             $Self->IsDeeply(
                 \$DefaultConfig->{$DefaultConfigEntry}->{$DefaultConfigSubEntry},
                 \$ZZZAAutoConfig->{$DefaultConfigEntry}->{$DefaultConfigSubEntry},
                 "$DefaultConfigEntry->$DefaultConfigSubEntry must be the same in Defaults.pm and ZZZAAuto.pm",
+                $StartTime,
             );
         }
     }
     else {
 
+        $StartTime = Time::HiRes::time();
         $Self->IsDeeply(
             \$DefaultConfig->{$DefaultConfigEntry},
             \$ZZZAAutoConfig->{$DefaultConfigEntry},
             "$DefaultConfigEntry must be the same in Defaults.pm and ZZZAAuto.pm",
+            $StartTime,
         );
     }
 }

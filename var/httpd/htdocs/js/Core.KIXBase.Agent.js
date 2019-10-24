@@ -164,9 +164,6 @@ Core.KIXBase.Agent = (function(TargetNS) {
 
         // move navigation left
         $('#NavigationContainer').css({"left":"100px"});
-
-        // Change text from "phone ticket" to "ticket"
-        $('#Dashboard0050-CIC-CustomerUserList table th:nth-of-type(5)').text('Ticket');
     }
 
     // hook Core.AJAX.ContentUpdate method
@@ -188,14 +185,6 @@ Core.KIXBase.Agent = (function(TargetNS) {
                         $(this).html('<span>' + $(this).html() + '</span>');
                     }
                 });
-
-                /*
-                 * deactivated 01-12-2016 (Ticket #2016111790000633)
-                 * // add color to article body
-                 * $('#ArticleItems .WidgetSimple > .Content iframe').load(function() {
-                 *     $(this).contents().find('body').css('color', '#0A6491');
-                 * });
-                 */
 
                 Core.KIXBase.Agent.AutoToggleSidebars();
 
