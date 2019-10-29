@@ -58,6 +58,7 @@
         position: absolute;
         height: 10px;
         width: 10px;
+        z-index: 1;
     }
 
     #Print {
@@ -170,7 +171,7 @@
 
     #Context .ContextFooter {
         width: 100%;
-        height: 8px;
+        height: auto;
     }
 
     #Context > .Content > ul {
@@ -181,7 +182,6 @@
         font-size: 12px;
         line-height: 14px;
         position: relative;
-        padding: 0px 2px 0px 2px;
     }
 
     #Context > .Content > ul > li > a {

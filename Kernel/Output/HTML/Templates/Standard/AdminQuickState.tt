@@ -332,10 +332,8 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
 
             <div class="WidgetSimple SpacingTop Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Tag Reference") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2><span>[% Translate("Tag Reference") | html %]</span></h2>
                 </div>
 
                 <div class="Content">

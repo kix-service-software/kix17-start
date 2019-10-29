@@ -44,10 +44,8 @@
 
                 <div class="WidgetSimple Expanded">
                     <div class="Header">
-                        <div class="WidgetAction Toggle">
-                            <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                        </div>
-                        <h2 class="WithToggle"><span>[% Translate("Transition") | html %]</span></h2>
+                        <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                        <h2><span>[% Translate("Transition") | html %]</span></h2>
                     </div>
                     <div class="Content">
                         <fieldset class="TableLike">
@@ -68,10 +66,8 @@
 
                 <div class="WidgetSimple Expanded">
                     <div class="Header">
-                        <div class="WidgetAction Toggle">
-                            <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                        </div>
-                        <h2 class="WithToggle"><span>[% Translate("Conditions") | html %]</span></h2>
+                        <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                        <h2><span>[% Translate("Conditions") | html %]</span></h2>
                     </div>
                     <div class="Content LayoutGrid">
                         <fieldset class="TableLike FixedLabel" id="PresentConditionsContainer">

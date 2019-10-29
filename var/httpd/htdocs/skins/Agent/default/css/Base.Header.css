@@ -23,9 +23,11 @@
         margin-bottom: 40px;
     }
 
+    #ResponsiveLogo {
+        display: none;
+    }
     #Logo {
-        right: 0px;
-        left: 10px;
+        left: 0px;
         top: 10px;
         width: 64px;
         height: 100%;
@@ -119,7 +121,6 @@
     }
     #ToolBar li.Extended form * {
         float: left;
-        top: 0;
     }
     #ToolBar li a {
         height: 20px;
@@ -161,7 +162,6 @@
         content: "\f04b";
         font: normal normal normal 12px/1 FontAwesome;
         position: absolute;
-        color: #0A6491;
     }
     #ToolBarToggle.Show::after {
         transform: rotate(180deg);
@@ -180,15 +180,15 @@
     .ToolbarRight > #ToolBar {
         left: inherit;
         right: 20px;
-        top: 85px;
+        top: 90px;
     }
     .ToolbarLeft > #ToolBar {
         left: 20px;
-        top: 85px;
+        top: 90px;
     }
     .ToolbarLeft > #ToolBarToggle {
         left: 10px;
-        top: 90px;
+        top: 95px;
         width: 200px;
         height: 12px;
         text-align: left;
@@ -222,7 +222,7 @@
     }
     .ToolbarRight > #ToolBarToggle {
         right: 10px;
-        top: 90px;
+        top: 95px;
         width: 200px;
         height: 12px;
         text-align: right;
@@ -305,8 +305,6 @@
     }
 
     #NavigationContainer > a {
-        background: #82C826;
-        color: #FFFFFF;
         font-weight: bold;
         font-size: 13px;
         height: 28px;
@@ -354,17 +352,16 @@
         font-size: 15px;
     }
     #Navigation > li > ul {
-        top: 34px;
+        top: 37px;
         display: none;
     }
     #Navigation > .Active > ul {
         position: absolute;
-        top: 34px;
         left: 0px;
         display: block;
         min-width: 240px;
         z-index: 99;
-        border-width: 0 1px;
+        border-width: 0 1px 1px 1px;
     }
     #Navigation > .Active > ul > li {
         font-size: 11px;

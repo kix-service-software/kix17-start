@@ -116,10 +116,8 @@
 [% RenderBlockStart("KeyTemplate") %]
                         <div class="WidgetSimple Expanded WidgetKey [% Data.Classes | html %]">
                             <div class="Header">
-                                <div class="WidgetAction Toggle">
-                                    <a href="#" title=[% Translate("Show or hide the content") | JSON %]><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                                </div>
-                                <h2 class="WithToggle Title"><span>[% Translate("Mapping for Key ") | html %] [% Data.KeyMapNew | html %]</span></h2>
+                                <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                                <h2 class="Title"><span>[% Translate("Mapping for Key ") | html %] [% Data.KeyMapNew | html %]</span></h2>
                                 <div class="AdditionalInformation">
                                     <a href="" id="RemoveKeyMapping[% Data.KeyIndex | html %]" class="RemoveButton KeyMapRemove" value="Remove key mapping"><i class="fa fa-minus-square-o"></i><span class="InvisibleText">[% Translate("Remove key mapping") | html %]</span></a>
                                 </div>

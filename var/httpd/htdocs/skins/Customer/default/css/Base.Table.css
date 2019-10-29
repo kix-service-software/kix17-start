@@ -128,8 +128,8 @@
         font-size: 12px;
     }
     .TableSmall thead th {
-        border-right: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
+        border-width: 0 1px 0 0;
+        border-style: solid;
         vertical-align: bottom;
         padding: 4px 6px 3px;
         font-weight: bold;
@@ -155,8 +155,6 @@
     }
     .TableSmall td {
         padding: 0 5px;
-        background-color: #FDFDFD;
-        border-right: 1px dotted #CCC;
         line-height: 15px;
         vertical-align: middle;
     }
@@ -198,6 +196,7 @@
         text-transform: uppercase;
         vertical-align: bottom;
         white-space: nowrap;
+        position: relative;
     }
     .DataTable thead th.UnreadArticles {
         padding: 4px 0px 3px 0px;
@@ -207,6 +206,7 @@
     .TableSmall thead th.OverviewHeader {
         padding: 0px 20px 0px 1px;
     }
+    .TableSmall thead th:last-child,
     .DataTable thead th:last-child {
         border-right: none;
     }
@@ -263,38 +263,18 @@
     }
     .DataTable thead th.DashboardHeader .ColumnSettingsTrigger,
     .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger {
-        display: block;
-        width: 17px;
-        height: 17px;
-        float: right;
-        opacity: 0.5;
+        width: 18px;
+        height: 18px;
         padding: 0px;
-        margin: 0px -19px 0px 0px;
-        position: relative;
+        position: absolute;
         z-index: 2;
-    }
-    .DataTable thead th.DashboardHeader.FilterActive .ColumnSettingsTrigger,
-    .DataTable thead th.DashboardHeader .ColumnSettingsTrigger:hover,
-    .DataTable thead th.DashboardHeader .ColumnSettingsTrigger.Active,
-    .TableSmall thead th.OverviewHeader.FilterActive .ColumnSettingsTrigger,
-    .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger:hover,
-    .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger.Active {
-        border-radius: 2px;
-        -moz-border-radius: 2px;
-        -webkit-border-radius: 2px;
-        opacity: 1.0;
-        box-shadow: 1px 1px 1px #a9a9a9 inset,-1px -1px 1px #a9a9a9 inset;
+        right: 0;
+        top: 0;
+        text-align: center;
     }
     .DataTable thead th.DashboardHeader .ColumnSettingsTrigger i,
     .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger i {
-        margin-left: 4px;
         vertical-align: middle;
-    }
-    .DataTable thead th.DashboardHeader.FilterActive .ColumnSettingsTrigger i,
-    .DataTable thead th.DashboardHeader .ColumnSettingsTrigger.Active i,
-    .TableSmall thead th.OverviewHeader.FilterActive .ColumnSettingsTrigger i,
-    .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger.Active i {
-        color: #333333;
     }
     .DataTable thead th.DashboardHeader .ColumnSettingsTrigger::after,
     .TableSmall thead th.OverviewHeader .ColumnSettingsTrigger::after {
@@ -345,7 +325,6 @@
         -moz-border-radius: 3px;
         -webkit-border-radius: 3px;
         border-radius: 3px;
-        box-shadow: 1px 1px 3px #CCCCCC,-1px -1px 3px #CCCCCC;
         display: none;
         padding: 4px;
         position: absolute;
@@ -384,6 +363,7 @@
     .DataTable tbody td > img {
         padding-top: 6px;
     }
+    .TableSmall tbody td:last-child,
     .DataTable tbody td:last-child {
         border-right: none;
     }
@@ -429,6 +409,9 @@
         line-height: 20px;
         text-transform: uppercase;
         background-color: transparent;
+    }
+    ul.Tablelike li.Header:hover {
+        color: inherit;
     }
     .LayoutGrid > div > div,
     .LayoutGrid > li > div {
@@ -504,9 +487,6 @@
         clear: both;
         position: relative;
     }
-    table.OverviewTable thead {
-        display: none;
-    }
     .OverviewTable thead a {
         padding: 1px 13px 4px 8px;
         height: 10px;
@@ -517,20 +497,17 @@
         white-space: nowrap;
     }
     table.OverviewTable thead th {
-        background-color: #eee;
-        border-top: 1px solid #c0c0c0;
-        border-bottom: 1px solid #ddd;
-        border-right: 1px solid #ddd;
         padding: 5px 6px 3px;
         font-weight: bold;
         font-size: 12px;
         vertical-align: bottom;
     }
+    table.OverviewTable thead th:last-child,
+    table.OverviewTable tbody td:last-child {
+        border-width: 0;
+    }
     .OverviewTable thead th.Title {
         padding: 1px 13px 4px 8px;
-    }
-    .OverviewTable tbody tr td {
-        background-color: #FBFBFB;
     }
     .OverviewTable tbody td {
         padding: 6px 8px 3px;

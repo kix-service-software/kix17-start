@@ -95,6 +95,7 @@
 [% RenderBlockStart("LoginBox") %]
         <div id="LoginBox" class="LoginBox">
             <div class="LoginLogo"></div>
+            <div id="LoginResponsiveLogo"></div>
             <div class="Welcome">
                 <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
             </div>
@@ -161,6 +162,7 @@
 [% RenderBlockStart("LostPassword") %]
         <div id="PasswordBox" class="LoginBox Hidden">
             <div class="LoginLogo"></div>
+            <div id="LoginResponsiveLogo"></div>
             <div class="Welcome">
                 <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
             </div>
@@ -200,6 +202,7 @@
 [% RenderBlockStart("CreateAccount") %]
         <div id="SignUpBox" class="LoginBox Hidden">
             <div class="LoginLogo"></div>
+            <div id="LoginResponsiveLogo"></div>
             <div class="Welcome">
                 <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
             </div>

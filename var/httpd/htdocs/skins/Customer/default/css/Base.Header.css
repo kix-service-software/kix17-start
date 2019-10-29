@@ -23,9 +23,11 @@
         margin-bottom: 20px;
     }
 
+    #ResponsiveLogo {
+        display: none;
+    }
     #Logo {
-        right: 0px;
-        left: 10px;
+        left: 0px;
         top: 10px;
         width: 64px;
         height: 100%;
@@ -41,7 +43,6 @@
         top: 10px;
         bottom: 5px;
         width: 100%;
-        padding-left: 10px;
     }
 
     /**
@@ -138,7 +139,7 @@
         top: 47px;
         left: 100px;
         z-index: 20;
-        width: 93%;
+        width: 90%;
     }
 
     #NavigationContainer #Navigation {
@@ -165,21 +166,24 @@
     .Visible-ScreenXL #Navigation > li > a {
         display: block;
     }
+    .Visible-ScreenXL #Navigation > li > a.SmallerOrEqualScreenL {
+        display: none;
+    }
     #Navigation > li > a#GlobalSearchNav i {
         font-size: 15px;
     }
     #Navigation > li > ul {
-        top: 34px;
+        top: 37px;
         display: none;
     }
     #Navigation > .Active > ul {
         position: absolute;
-        top: 34px;
+        top: 37px;
         left: 0px;
         display: block;
         min-width: 240px;
         z-index: 99;
-        border-width: 0 1px;
+        border-width: 0 1px 1px 1px;
     }
     #Navigation > .Active > ul > li {
         font-size: 11px;

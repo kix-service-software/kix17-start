@@ -10,13 +10,8 @@
 [% RenderBlockStart("SidebarFrame") %]
 <div id="[% Data.Identifier %]" class="KIXSidebarTools WidgetSimple CanDrag [% Data.AdditionalClasses | html %]">
     <div class="Header">
-        <div class="WidgetAction Toggle">
-            <a href="#" title="[% Translate(Data.Description) | html %]">
-                <i class="fa fa-caret-right"></i>
-                <i class="fa fa-caret-down"></i>
-            </a>
-        </div>
-        <h2 class="WithToggle"><span>[% Translate(Data.Title) | html %]</span></h2>
+        <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+        <h2><span>[% Translate(Data.Title) | html %]</span></h2>
     </div>
     <div id="Content[% Data.Identifier %]" class="Content">
         <div id="SearchResult[% Data.Identifier | html %]">

@@ -201,12 +201,6 @@
         padding: 0px;
         margin-left: 0;
     }
-    .Actions li::after {
-        content: " | ";
-        display: block;
-        float: right;
-        margin: 5px 3px;
-    }
     .ActionRow .Actions li.AlwaysPresent span {
         border: none;
         background: inherit;
@@ -226,7 +220,6 @@
     .LightRow .Actions li a,
     .Actions li.Inactive a:hover,
     .Actions li.Inactive:hover a {
-        margin: 3px;
         cursor: pointer;
     }
     .ActionMenu {
@@ -235,6 +228,7 @@
         padding-left: 3px;
         position: absolute;
         display: none;
+        z-index: 1;
     }
     .Actions li span.ClusterLink {
         padding: 2px 5px;
@@ -245,7 +239,7 @@
     }
     .Cluster ul ul {
         position: absolute;
-        top: 25px;
+        top: 23px;
         left: 0;
         z-index: 999;
         min-width: 110%;
@@ -268,16 +262,14 @@
         text-align: center;
         background-color: #E8E8E8;
     }
-    .Cluster > ul > li:hover .ClusterLink {
-        background-color: #82C826;
-        color: white;
-    }
+
     .Cluster ul ul li {
         display: block;
         float: none;
         padding: 0px;
         border-bottom: none;
         white-space: nowrap;
+        margin: 0;
     }
     .Cluster ul ul li a {
         padding: 3px 10px;
@@ -319,6 +311,9 @@
     .Filter a {
         padding: 5px;
         display: block;
+    }
+    .Filter.Tabs a.Selected {
+        font-weight: bold;
     }
     /**
     * @subsection pagination
@@ -391,13 +386,12 @@
     #Messages li {
         margin-top: 10px;
         position: relative;
+        border-radius: 5px;
+        overflow: hidden;
     }
     #Messages li .MessageHeader {
         line-height: 0;
         height: 22px;
-        color: #6A6A6A;
-        background-color: #fff;
-        border-bottom: 1px solid #82c826;
         position: relative;
     }
     #Messages li:not(.Visible) .MessageHeader {
@@ -432,20 +426,12 @@
     .JavaScriptAvailable .MessageHeader {
         cursor: pointer;
     }
-    #Messages li:last-child .MessageHeader,
-    #Messages li.Visible:last-child .MessageContent {
-        border-width: 0;
-    }
-    #Messages li.Visible:last-child .MessageHeader {
-        border-width: 1px;
-    }
     .MessageBody {
         border: none;
         height: 0;
         overflow: hidden;
     }
     #Messages > li.Visible > .MessageBody {
-        border: 1px solid #82c826;
         border-top: none;
         height: auto;
     }
@@ -480,29 +466,32 @@
     }
     #FollowUp:not(.Visible) #Messenger {
         height: 0;
+        border-width: 0;
         overflow: hidden;
+        margin: 0;
     }
     #FollowUp.Visible #Messenger {
         height: auto;
         overflow: auto;
-        padding: 10px;
     }
     .JavaScriptAvailable #FollowUp {
+        margin-top: 20px;
         margin-bottom: 30px;
     }
     #Messenger .ActionRow {
         border-top: 1px solid #c0c0c0;
         padding: 8px 13px;
-        background-position: -30px;
         text-shadow: none;
-        margin: 0 -10px -10px;
+        margin: 0 -8px -8px;
         text-align: center;
     }
     #ReplyButton {
         padding: 7px 8px 7px 8px;
         margin: 20px 0 0 30px;
         font-weight: bold;
-        float: left;
+        float: right;
+        border-style: solid;
+        border-width: 1px;
     }
     #FollowUp.Visible #ReplyButton {
         display: none;
@@ -528,35 +517,36 @@
     }
     #BottomActionRow {
         padding: 5px 10px;
-        margin-top: 20px;
+        margin: 20px 0;
+        text-align: right;
     }
     #BottomActionRow > button {
-        margin-right: 20px;
-        padding: 4px 11px;
+        margin: -2px 0 0px 20px;
+        padding: 0;
+        float: right;
+        box-sizing: border-box;
     }
-
+    #BottomActionRow > span {
+        margin-right: 5px;
+    }
     /**
     *   @subsection Search overview
     */
     .SearchTerms {
         padding: 4px 7px;
+        margin: 10px 0;
     }
     .SearchTerms h2 {
         margin: 0;
-        color: #222;
         font-size: 15px;
         display: inline;
-        text-shadow: 0 1px 0 #EEE;
     }
     .SearchTerms span {
         padding: 1px 8px 0;
         margin: 0 3px;
-        color: #666;
-        background: #FFF;
-        border: 1px solid #BBB;
-        border-radius: 8px;
-        -webkit-box-shadow: 0 1px 2px #DDD inset,0 1px 0 #E8E8E8;
-        box-shadow: 0 1px 2px #DDD inset,0 1px 0 #E8E8E8;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 5px;
     }
 
     /**
@@ -592,7 +582,6 @@
         text-indent: -9999px;
     }
     .FAQMessageBrowser {
-        margin-bottom: 10px;
         border-radius: 2px;
         position: relative;
     }

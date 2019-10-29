@@ -41,26 +41,18 @@
         display: inline-block;
     }
 
-    .CustomFooterLogin a,
-    .CustomFooterLogin ul li a,
-    #Footer a,
-    #Footer ul li a {
-        color: #0A6491;
-    }
 
     .CustomFooterLogin a:hover,
     .CustomFooterLogin ul li a:hover,
     #Footer a:hover,
     #Footer ul li a:hover {
         text-decoration: none;
-        color: #1491D2;
     }
 
     .CustomFooterLogin ul li,
     #Footer ul li {
         float: left;
         padding: 0 4px 0 4px;
-        border-left: 1px solid #9E9E9E;
     }
 
     .CustomFooterLogin ul li:first-child,

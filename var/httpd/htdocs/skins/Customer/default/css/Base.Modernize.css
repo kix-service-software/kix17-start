@@ -46,10 +46,15 @@
     }
     .ModernizeFieldIcon {
         position: absolute;
-        z-index: 2;
+        z-index: 1;
         vertical-align: middle;
-        top: 5px;
-        right: 5px;
+        top: 1px;
+        right: 1px;
+        width: 15px;
+        padding: 4px 1px;
+        text-align: center;
+        font-size: 10px;
+        cursor: pointer;
     }
     div.InputField_ListContainer {
         position: absolute;
@@ -356,9 +361,8 @@
     }
     div.ui-datepicker,
     div.ui-widget {
-        border: 0px;
         font-size: 12px;
-        background: #fff;
+        border-radius: 5px;
     }
     div.ui-tabs > div {
         padding: 5px;

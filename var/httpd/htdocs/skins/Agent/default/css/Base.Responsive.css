@@ -127,7 +127,7 @@
         margin-top: 130px;
     }
 
-    #ToolBar li {
+    #ToolBar > li {
         float: none;
         display: inline-block;
         padding: 8px;
@@ -135,7 +135,7 @@
         margin-top: 10px;
     }
 
-    #ToolBar li i {
+    #ToolBar > li > i {
         text-shadow: none;
         font-size: 20px;
         top: 1px;
@@ -247,15 +247,26 @@
         white-space: normal;
     }
 
-    #Header #Logo {
+    #ToolBar .ModernizeFieldIcon {
+        right: -5px;
+        padding: 3px 1px;
+    }
+    .ModernizeFieldIcon {
+        right: -7px;
+    }
+    #Header #Logo,
+    #Header #ResponsiveLogo {
         position: static;
         background-position: center;
         max-height: 100%;
         background-size: auto 90%;
         background-repeat: no-repeat;
         margin: 0 auto;
+        display: block;
     }
-
+    #Header #Logo {
+        display: none;
+    }
     .MainBox {
         padding: 20px 15px 5px;
         display: block;
@@ -566,6 +577,7 @@
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .FloatingField {
         padding: 0px;
         float: none;
+        margin: 0;
     }
 
     fieldset.TableLike > .Field > select,
@@ -760,7 +772,9 @@
     .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow {
         padding: 0;
     }
-
+    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer .ModernizeFieldIcon {
+        padding: 4px 1px 3px 1px;
+    }
     .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn > :first-child,
     .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn > :first-child {
         margin-top: 60px;
@@ -1510,6 +1524,15 @@
 }
 
 @media only screen and (min-width: 0px) and (max-width: 539px) {
+    #LoginResponsiveLogo {
+        display: block;
+    }
+    #LoginLogo {
+        display: none;
+    }
+    .LoginBox .Welcome {
+        margin-top: 20px;
+    }
     .LoginScreen .CenterBox {
         margin: 0;
         width: 100%;
@@ -1708,8 +1731,6 @@
 *    Smartphone
 */
 @media only screen and (max-width: 319px) {
-
-
 
     /*
      * @subsection Responsive classes
