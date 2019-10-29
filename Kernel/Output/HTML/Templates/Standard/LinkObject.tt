@@ -87,15 +87,8 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
             </div>
             <div class="Clear"></div>
         </div>
-        <div class="WidgetAction Toggle">
-            <a href="#" title="[% Translate("Show or hide the content") | html %]">
-                <i class="fa fa-caret-right">
-                </i>
-                <i class="fa fa-caret-down">
-                </i>
-            </a>
-        </div>
-        <h2 class="WithToggle"><span>[% Translate(Data.BlockDescription) | html %]: [% Translate(Data.Blockname) | html %]</span></h2>
+        <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+        <h2><span>[% Translate(Data.BlockDescription) | html %]: [% Translate(Data.Blockname) | html %]</span></h2>
     </div>
     <div class="Content AutoHeight ">
 [% RenderBlockStart("TableComplexBlockActionRow") %]

@@ -791,6 +791,30 @@ sub Login {
         );
     }
 
+    # Add header responsive logo, if configured
+    if ( defined $ConfigObject->Get('AgentResponsiveLogo') ) {
+        my %AgentResponsiveLogo = %{ $ConfigObject->Get('AgentResponsiveLogo') };
+        my %Data;
+
+        for my $CSSStatement ( sort keys %AgentResponsiveLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = '';
+                if ( $AgentResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
+                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                }
+                $Data{'URL'} = 'url(' . $WebPath . $AgentResponsiveLogo{$CSSStatement} . ')';
+            }
+            else {
+                $Data{$CSSStatement} = $AgentResponsiveLogo{$CSSStatement};
+            }
+        }
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogoCSS',
+            Data => \%Data,
+        );
+    }
+
     # add login logo, if configured
     if ( defined $ConfigObject->Get('AgentLoginLogo') ) {
         my %AgentLoginLogo = %{ $ConfigObject->Get('AgentLoginLogo') };
@@ -811,6 +835,33 @@ sub Login {
         if ( $CSS ) {
             $Self->Block(
                 Name => 'LoginLogoCSS',
+                Data => {
+                    CSSAttr => $CSS
+                }
+            );
+        }
+    }
+
+    # add responsive login logo, if configured
+    if ( defined $ConfigObject->Get('AgentResponsiveLoginLogo') ) {
+        my %AgentRLLogo = %{ $ConfigObject->Get('AgentResponsiveLoginLogo') };
+        my $CSS         = '';
+
+        for my $CSSStatement ( sort keys %AgentRLLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                $CSS .= 'background-image: url(' . $WebPath . $AgentRLLogo{$CSSStatement} . '); ';
+            }
+            else {
+                my $Attr = $CSSStatement;
+                $Attr =~ s/^Style//;
+                $CSS .= lc($Attr) . ': ' . $AgentRLLogo{$CSSStatement} . '; ';
+            }
+        }
+
+        if ( $CSS ) {
+            $Self->Block(
+                Name => 'LoginResponsiveLogoCSS',
                 Data => {
                     CSSAttr => $CSS
                 }
@@ -1313,6 +1364,29 @@ sub Header {
 
         $Self->Block(
             Name => 'HeaderLogoCSS',
+            Data => \%Data,
+        );
+    }
+
+    if ( defined $ConfigObject->Get('AgentResponsiveLogo') ) {
+        my %AgentResponsiveLogo = %{ $ConfigObject->Get('AgentResponsiveLogo') };
+
+        my %Data;
+        for my $CSSStatement ( sort keys %AgentResponsiveLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = '';
+                if ( $AgentResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
+                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                }
+                $Data{'URL'} = 'url(' . $WebPath . $AgentResponsiveLogo{$CSSStatement} . ')';
+            }
+            else {
+                $Data{$CSSStatement} = $AgentResponsiveLogo{$CSSStatement};
+            }
+        }
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogoCSS',
             Data => \%Data,
         );
     }
@@ -3948,6 +4022,34 @@ sub CustomerLogin {
         );
     }
 
+    # Add header responsive logo, if configured
+    if ( defined $ConfigObject->Get('CustomerResponsiveLogo') ) {
+        my %CustomerResponsiveLogo = %{ $ConfigObject->Get('CustomerResponsiveLogo') };
+        my %Data;
+
+        for my $CSSStatement ( sort keys %CustomerResponsiveLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = '';
+                if ( $CustomerResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
+                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                }
+                $Data{'URL'} = 'url(' . $WebPath . $CustomerResponsiveLogo{$CSSStatement} . ')';
+            }
+            else {
+                $Data{$CSSStatement} = $CustomerResponsiveLogo{$CSSStatement};
+            }
+        }
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogoCSS',
+            Data => \%Data,
+        );
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogo',
+        );
+    }
+
     # add login logo, if configured
     if ( defined $ConfigObject->Get('CustomerLoginLogo') ) {
         my %CustomerLoginLogo = %{ $ConfigObject->Get('CustomerLoginLogo') };
@@ -3968,6 +4070,33 @@ sub CustomerLogin {
         if ( $CSS ) {
             $Self->Block(
                 Name => 'LoginLogoCSS',
+                Data => {
+                    CSSAttr => $CSS
+                }
+            );
+        }
+    }
+
+    # add responsive login logo, if configured
+    if ( defined $ConfigObject->Get('CustomerResponsiveLoginLogo') ) {
+        my %CustomerRLLogo = %{ $ConfigObject->Get('CustomerResponsiveLoginLogo') };
+        my $CSS            = '';
+
+        for my $CSSStatement ( sort keys %CustomerRLLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                $CSS .= 'background-image: url(' . $WebPath . $CustomerRLLogo{$CSSStatement} . '); ';
+            }
+            else {
+                my $Attr = $CSSStatement;
+                $Attr =~ s/^Style//;
+                $CSS .= lc($Attr) . ': ' . $CustomerRLLogo{$CSSStatement} . '; ';
+            }
+        }
+
+        if ( $CSS ) {
+            $Self->Block(
+                Name => 'LoginResponsiveLogoCSS',
                 Data => {
                     CSSAttr => $CSS
                 }
@@ -4251,6 +4380,33 @@ sub CustomerHeader {
 
         $Self->Block(
             Name => 'HeaderLogo',
+        );
+    }
+
+    if ( defined $ConfigObject->Get('CustomerResponsiveLogo') ) {
+        my %CustomerResponsiveLogo = %{ $ConfigObject->Get('CustomerResponsiveLogo') };
+
+        my %Data;
+        for my $CSSStatement ( sort keys %CustomerResponsiveLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = '';
+                if ( $CustomerResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
+                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                }
+                $Data{'URL'} = 'url(' . $WebPath . $CustomerResponsiveLogo{$CSSStatement} . ')';
+            }
+            else {
+                $Data{$CSSStatement} = $CustomerResponsiveLogo{$CSSStatement};
+            }
+        }
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogoCSS',
+            Data => \%Data,
+        );
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogo',
         );
     }
 

@@ -56,19 +56,17 @@
         right: 13px;
         top: 1px;
         width: 12px;
-        background-color: #DDDDDD;
         padding: 4px 2px;
         text-align: center;
-        color: #777777;
     }
     #JSTree {
-        border: 1px solid #CCCCCC;
         height: 72%;
         margin: 10px 12px;
         overflow: auto;
         padding: 0px 10px 10px 10px;
         text-align: left;
     }
+
 
     /**
      * @subsection  Dialog
@@ -77,7 +75,8 @@
         position: absolute;
         z-index: 3501;
         min-width: 150px;
-        box-shadow: 3px 3px 10px #a0a0a0;
+        border-radius: 5px;
+        overflow: hidden;
     }
 
     .Dialog.Fullsize {
@@ -382,5 +381,45 @@
     }
     .KIXSBRDBPopupBoxFooter {
         height: 20px;
+    }
+
+    /**
+    *   @subsection field help container
+    */
+    .FieldHelpContainer {
+        position: relative;
+    }
+    .FieldHelpContainer .FieldHelpTrigger {
+        cursor: default;
+        z-index: 1;
+        color: #bbb;
+    }
+    .FieldHelpContainer > span {
+        background: #444444;
+        color: #fff;
+        font-size: 12px;
+        left: 15px;
+        line-height: 110%;
+        padding: 10px;
+        position: absolute;
+        z-index: 2;
+        text-align: left;
+        text-shadow: 1px 1px 1px #000;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        -ms-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;
+        top: 5px;
+        width: 200px;
+        display: none;
+        -webkit-opacity: 0.8;
+        -moz-opacity: 0.8;
+        -ms-opacity: 0.8;
+        -o-opacity: 0.8;
+        opacity: 0.8;
+    }
+    .FieldHelpContainer:hover > span {
+        display: block;
     }
 }

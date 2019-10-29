@@ -47,10 +47,8 @@
 [% RenderBlockEnd("UsedTicketID") %]
                 <div class="WidgetSimple SpacingTop Collapsed">
                     <div class="Header">
-                        <div class="WidgetAction Toggle">
-                            <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                        </div>
-                        <h2 class="WithToggle"><span>[% Translate("Add Note") | html %]</span></h2>
+                        <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+                        <h2><span>[% Translate("Add Note") | html %]</span></h2>
                     </div>
                     <div class="Content">
 
@@ -65,8 +63,8 @@
 
 [% RenderBlockStart("SpellCheck") %]
                             <label>[% Translate("Options") | html %]:</label>
-                            <div class="Field">
-                                <a href="#" id="OptionSpellCheck">[ [% Translate("Spell check") | html %] ]</a>
+                            <div class="Options Field">
+                                <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
                             </div>
                             <div class="Clear"></div>
 [% RenderBlockEnd("SpellCheck") %]
@@ -107,10 +105,8 @@
 
                 <div class="WidgetSimple SpacingTop Collapsed">
                     <div class="Header">
-                        <div class="WidgetAction Toggle">
-                            <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                        </div>
-                        <h2 class="WithToggle"><span>[% Translate("Send Email") | html %]</span></h2>
+                        <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+                        <h2><span>[% Translate("Send Email") | html %]</span></h2>
                     </div>
                     <div class="Content">
 

@@ -56,15 +56,32 @@
         }
     </style>
 [% RenderBlockEnd("HeaderLogoCSS") %]
+[% RenderBlockStart("HeaderResponsiveLogoCSS") %]
+    <style type="text/css">
+        #Header #ResponsiveLogo {
+            background-image: [% Data.URL | html %];
+            top: [% Data.StyleTop | html %];
+            right: [% Data.StyleRight | html %];
+            width: [% Data.StyleWidth | html %];
+            height: [% Data.StyleHeight | html %];
+        }
+    </style>
+[% RenderBlockEnd("HeaderResponsiveLogoCSS") %]
 
 [% RenderBlockStart("LoginLogoCSS") %]
     <style type="text/css">
         #LoginLogo {
-            background-image: [% Data.URL | html %];
-            height: [% Data.StyleHeight | html %];
+            [% Data.CSSAttr | html %]
         }
     </style>
 [% RenderBlockEnd("LoginLogoCSS") %]
+[% RenderBlockStart("LoginResponsiveLogoCSS") %]
+    <style type="text/css">
+        #LoginResponsiveLogo {
+            [% Data.CSSAttr | html %]
+        }
+    </style>
+[% RenderBlockEnd("LoginResponsiveLogoCSS") %]
 
     <style type="text/css">
         @font-face {
@@ -96,13 +113,13 @@
       (function(doc, win) {
           try {
               var ResponsiveCSS;
-  [% RenderBlockStart("ResponsiveCSS") %]
+[% RenderBlockStart("ResponsiveCSS") %]
               ResponsiveCSS = doc.createElement("link");
               ResponsiveCSS.setAttribute("rel", "stylesheet");
               ResponsiveCSS.setAttribute("type", "text/css");
               ResponsiveCSS.setAttribute("href", "[% Config("Frontend::WebPath") %]skins/Agent/[% Data.Skin | uri %]/[% Data.CSSDirectory %]/[% Data.Filename %]");
               doc.getElementsByTagName("head")[0].appendChild(ResponsiveCSS);
-  [% RenderBlockEnd("ResponsiveCSS") %]
+[% RenderBlockEnd("ResponsiveCSS") %]
           }
           catch (Exception) {}
       }(document, window));

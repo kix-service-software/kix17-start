@@ -103,14 +103,21 @@
         z-index: 11;
     }
 
-
-    #Header #Logo {
+    .ModernizeFieldIcon {
+        right: -7px;
+    }
+    #Header #Logo,
+    #Header #ResponsiveLogo {
         position: static;
         background-position: center;
         max-height: 100%;
         background-size: auto 90%;
         background-repeat: no-repeat;
         margin: 0 auto;
+        display: block;
+    }
+    #Header #Logo {
+        display: none;
     }
 
     .CustomerTicketTemplates,
@@ -161,18 +168,13 @@
     }
     #FollowUp.Visible #Messenger .ResponsiveHandle {
         position: absolute;
-        top: 1px;
+        top: 0px;
         right: 1px;
-        background-color: #DDD;
-        font-size: 21px;
+        font-size: 20px;
         width: 16px;
-        height: 21px;
-        color: #777;
+        height: 20px;
+        padding: 3px 10px;
         z-index: 1;
-    }
-
-    #FollowUp.Visible #Messenger {
-        padding-top: 20px;
     }
 
     #ResponsiveNavigationHandle {
@@ -396,6 +398,10 @@
         text-align: center;
     }
 
+    .GetAllAJAX span {
+        display: none;
+    }
+
     .MainBox.FormScreen > .AsteriskExplanation {
         margin: -10px 0px 10px 0px;
     }
@@ -410,7 +416,6 @@
         float: none;
         width: auto;
     }
-
     fieldset.TableLike > .Field,
     fieldset.TableLike > .Row > .Field,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Field,
@@ -451,6 +456,7 @@
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .FloatingField {
         padding: 0px;
         float: none;
+        margin: 0;
     }
 
     fieldset.TableLike > .Field > select,
@@ -469,7 +475,10 @@
         font-size: 0.9em;
         width: 97%;
     }
-
+    fieldset.TableLike > .Field input[id$=Date],
+    fieldset.TableLike > .Row > .Field input[id$=Date] {
+        witdh: auto;
+    }
     fieldset.TableLike > .Field > input[type=radio],
     fieldset.TableLike > .Row > .Field > input[type=checkbox] {
         width: auto;
@@ -499,9 +508,6 @@
         top: -25px;
         right: 3px;
         font-size: 13px;
-    }
-    .GetAllAJAX span {
-        display: none;
     }
     .CustomerContainer,
     .CcCustomerContainer,
@@ -651,7 +657,9 @@
     .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow {
         padding: 0;
     }
-
+    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer .ModernizeFieldIcon {
+        padding: 4px 1px 3px 1px;
+    }
     .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn > :first-child,
     .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn > :first-child {
         margin-top: 60px;
@@ -1156,6 +1164,15 @@
 }
 
 @media only screen and (min-width: 0px) and (max-width: 539px) {
+    #LoginResponsiveLogo {
+        display: block;
+    }
+    .LoginLogo {
+        display: none;
+    }
+    .LoginBox .Welcome {
+        margin-top: 20px;
+    }
     .LoginScreen .CenterBox {
         margin: 0;
         width: 100%;

@@ -10,6 +10,11 @@
 
 
 <div id="MainBox" class="MainBox FormScreen ARIARoleMain">
+    <h1>
+      [% Translate("Create new ticket") | html %]
+    </h1>
+    <p class="AsteriskExplanation">[% Translate("All fields marked with an asterisk (*) are mandatory.") | html %]</p>
+
     <div class="LayoutFixedSidebar SidebarLast">
       <div class="SidebarColumn">
         [% Data.KIXSidebarContent %]

@@ -234,13 +234,8 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
 [% RenderBlockStart("Tree") %]
 <div class="WidgetSimple">
     <div class="Header">
-        <div class="WidgetAction Toggle">
-            <a href="#" title="[% Translate("Show or hide the content") | html %]">
-                <i class="fa fa-caret-right"></i>
-                <i class="fa fa-caret-down"></i>
-            </a>
-        </div>
-        <h2 class="WithToggle"><span>
+        <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+        <h2><span>
             [% Translate("Article Overview") | html %] - [% Data.ArticleCount | html %] [% Translate("Article(s)") | html %]
         </span></h2>
         <div class="AdditionalInformation ControlRow">
@@ -436,10 +431,8 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
     <a name="Article[% Data.ArticleID | html %]"></a>
     <div class="WidgetSimple Expanded [% Data.SenderType | html %]-[% Data.ArticleType | html %]">
         <div class="Header">
-            <div class="WidgetAction Toggle">
-                <a href="[% Env("Baselink") %]Action=AgentTicketZoom;TicketID=[% Data.TicketID | uri %];ArticleID=[% Data.ArticleID | uri %]" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-            </div>
-            <h2 class="WithToggle"><span>[% Translate("Article") | html %] #[% Data.Count | html %] &ndash; [% Data.Subject | html %]</span></h2>
+            <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+            <h2><span>[% Translate("Article") | html %] #[% Data.Count | html %] &ndash; [% Data.Subject | html %]</span></h2>
             <div class="AdditionalInformation SpacingLoader">
                 [% Translate("Created") | html %]: [% Data.Created | Localize("TimeShort") %]
 [% RenderBlockStart("ArticleCreatedBy") %]

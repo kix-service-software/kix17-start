@@ -56,6 +56,17 @@
         }
     </style>
 [% RenderBlockEnd("HeaderLogoCSS") %]
+[% RenderBlockStart("HeaderResponsiveLogoCSS") %]
+    <style type="text/css">
+        #Header #ResponsiveLogo {
+            background-image: [% Data.URL | html %];
+            top: [% Data.StyleTop | html %];
+            right: [% Data.StyleRight | html %];
+            width: [% Data.StyleWidth | html %];
+            height: [% Data.StyleHeight | html %];
+        }
+    </style>
+[% RenderBlockEnd("HeaderResponsiveLogoCSS") %]
 
 [% RenderBlockStart("LoginLogoCSS") %]
     <style type="text/css">
@@ -64,6 +75,13 @@
         }
     </style>
 [% RenderBlockEnd("LoginLogoCSS") %]
+[% RenderBlockStart("LoginResponsiveLogoCSS") %]
+    <style type="text/css">
+        #LoginResponsiveLogo {
+            [% Data.CSSAttr | html %]
+        }
+    </style>
+[% RenderBlockEnd("LoginResponsiveLogoCSS") %]
 
     <style type="text/css">
         @font-face {

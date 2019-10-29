@@ -39,61 +39,9 @@ Core.UI = (function (TargetNS) {
      *      This function initializes the toggle mechanism for all widgets with a WidgetAction toggle icon.
      */
     TargetNS.InitWidgetActionToggle = function () {
-        $(".WidgetAction.Toggle > a")
-            .each(function () {
-                var $WidgetElement = $(this).closest("div.Header").parent('div'),
-                    ContentDivID = TargetNS.GetID($WidgetElement.children('.Content'));
-
-                // fallback to Expanded if default state was not given
-                if (!$WidgetElement.hasClass('Expanded') && !$WidgetElement.hasClass('Collapsed')){
-                    $WidgetElement.addClass('Expanded');
-                }
-
-                $(this)
-                    .attr('aria-controls', ContentDivID)
-                    .attr('aria-expanded', $WidgetElement.hasClass('Expanded'));
-            })
-            .unbind('click.WidgetToggle')
-            .bind('click.WidgetToggle', function (Event) {
-                var $WidgetElement = $(this).closest("div.Header").parent('div'),
-                    Animate = $WidgetElement.hasClass('Animate'),
-                    $that = $(this);
-
-                function ToggleWidget() {
-                    $WidgetElement
-                        .toggleClass('Collapsed')
-                        .toggleClass('Expanded')
-                        .end()
-                        .end()
-                        .attr('aria-expanded', $that.closest("div.Header").parent('div').hasClass('Expanded'));
-                        Core.App.Publish('Event.UI.ToggleWidget', [$WidgetElement]);
-                }
-
-                if (Animate && Core.Config.Get('AnimationEnabled')) {
-                    $WidgetElement.addClass('AnimationRunning').find('.Content').slideToggle("fast", function () {
-                        ToggleWidget();
-                        $WidgetElement.removeClass('AnimationRunning');
-                    });
-                } else {
-                    ToggleWidget();
-                }
-
-                Event.preventDefault();
-            });
-    };
-
-    // KIX4OTRS-capeIT
-    /**
-     * @name InitWidgetActionTabToggle
-     * @memberof Core.UI
-     * @function
-     * @description
-     *      This function initializes the toggle mechanism for all widgets with a WidgetAction toggle icon in tabs.
-     */
-    TargetNS.InitWidgetActionTabToggle = function () {
-        $("#ContentItemTabs .WidgetAction.Toggle > a").each(function () {
+        $(".WidgetAction.Toggle").each(function () {
             var $WidgetElement = $(this).closest("div.Header").parent('div'),
-                ContentDivID = Core.UI.GetID($WidgetElement.children('.Content'));
+                ContentDivID   = TargetNS.GetID($WidgetElement.children('.Content'));
 
             // fallback to Expanded if default state was not given
             if (!$WidgetElement.hasClass('Expanded') && !$WidgetElement.hasClass('Collapsed')){
@@ -102,13 +50,66 @@ Core.UI = (function (TargetNS) {
 
             $(this)
                 .attr('aria-controls', ContentDivID)
-                .attr('aria-expanded', $WidgetElement.hasClass('Expanded'));
+                .attr('aria-expanded', $WidgetElement.hasClass('Expanded'))
+                .closest("div.Header").children('h2').addClass('WithToggle');
         })
-        .unbind('click.WidgetToggle')
-        .bind('click.WidgetToggle', function () {
+        .off('click.WidgetToggle')
+        .on('click.WidgetToggle', function (Event) {
             var $WidgetElement = $(this).closest("div.Header").parent('div'),
-                Animate = $WidgetElement.hasClass('Animate'),
-                $that = $(this);
+                Animate        = $WidgetElement.hasClass('Animate'),
+                $that          = $(this);
+
+            function ToggleWidget() {
+                $WidgetElement
+                    .toggleClass('Collapsed')
+                    .toggleClass('Expanded')
+                    .end()
+                    .end()
+                    .attr('aria-expanded', $that.closest("div.Header").parent('div').hasClass('Expanded'));
+                    Core.App.Publish('Event.UI.ToggleWidget', [$WidgetElement]);
+            }
+
+            if (Animate && Core.Config.Get('AnimationEnabled')) {
+                $WidgetElement.addClass('AnimationRunning').find('.Content').slideToggle("fast", function () {
+                    ToggleWidget();
+                    $WidgetElement.removeClass('AnimationRunning');
+                });
+            } else {
+                ToggleWidget();
+            }
+
+            Event.preventDefault();
+        });
+    };
+
+    /**
+     * @name InitWidgetActionTabToggle
+     * @memberof Core.UI
+     * @function
+     * @description
+     *      This function initializes the toggle mechanism for all widgets with a WidgetAction toggle icon in tabs.
+     */
+    TargetNS.InitWidgetActionTabToggle = function () {
+        console.log('test');
+        $("#ContentItemTabs .WidgetAction.Toggle").each(function () {
+            var $WidgetElement = $(this).closest("div.Header").parent('div'),
+                ContentDivID   = Core.UI.GetID($WidgetElement.children('.Content'));
+
+            // fallback to Expanded if default state was not given
+            if (!$WidgetElement.hasClass('Expanded') && !$WidgetElement.hasClass('Collapsed')){
+                $WidgetElement.addClass('Expanded');
+            }
+
+            $(this)
+                .attr('aria-controls', ContentDivID)
+                .attr('aria-expanded', $WidgetElement.hasClass('Expanded'))
+                .closest("div.Header").children('h2').addClass('WithToggle');
+        })
+        .off('click.WidgetToggle')
+        .on('click.WidgetToggle', function () {
+            var $WidgetElement = $(this).closest("div.Header").parent('div'),
+                Animate        = $WidgetElement.hasClass('Animate'),
+                $that          = $(this);
 
             function ToggleWidget() {
                 $WidgetElement
@@ -132,7 +133,6 @@ Core.UI = (function (TargetNS) {
             return false;
         });
     }
-    // EO KIX4OTRS-capeIT
 
     /**
      * @name InitMessageBoxClose
@@ -145,12 +145,8 @@ Core.UI = (function (TargetNS) {
         $(".MessageBox > a.Close")
             .unbind('click.MessageBoxClose')
             .bind('click.MessageBoxClose', function (Event) {
-                // KIX4OTRS-capeIT
-                // $(this).parent().remove();
-                // Event.preventDefault();
                 $(this).parent().fadeOut("slow");
                 Core.Agent.PreferencesUpdate('UserAgentDoNotShowNotifiyMessage_' + $(this).parent('div').attr('id') , Core.Config.Get('SessionID'));
-                // EO KIX4OTRS-capeIT
             });
     };
 

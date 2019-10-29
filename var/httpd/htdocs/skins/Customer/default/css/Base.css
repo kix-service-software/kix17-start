@@ -47,7 +47,6 @@
         overflow: auto;
         height: 100%;
     }
-
     a {
         text-decoration: none;
     }
@@ -60,7 +59,7 @@
     em {
         font-style: italic;
     }
-    td i, td a i {
+    td > i, td > a > i {
         margin-right: 3px;
     }
     th.Checkbox,
@@ -111,6 +110,7 @@
     h5 {
         margin-bottom: 5px;
     }
+
 
     /**
      * @subsection  Standard Widths
@@ -191,7 +191,6 @@
         font-size: 12px;
         margin: 0px;
     }
-
     input[type="text"]:focus,
     input[type="password"]:focus,
     input[type="email"]:focus,
@@ -400,6 +399,18 @@
         margin: 2px;
         vertical-align: bottom;
     }
+    .AJAXLoader::after,
+    .Loader::after,
+    .KIXSidebarTools.Request .Header::after {
+        content: "\f110";
+        line-height: 16px;
+        animation: fa-spin 2s infinite linear;
+        -webkit-animation: fa-spin 2s infinite linear;
+        -moz-animation: fa-spin 2s infinite linear;
+        font: normal normal normal 14px/1 FontAwesome;
+        display: inline-block;
+    }
+
     .FieldExplanation {
         margin: 5px 0;
     }
@@ -551,6 +562,7 @@
         position: absolute;
         pointer-events: none;
         border-width: 20px;
+        border-style: solid;
         margin-top: -20px;
     }
     .BreadCrumb li::after {

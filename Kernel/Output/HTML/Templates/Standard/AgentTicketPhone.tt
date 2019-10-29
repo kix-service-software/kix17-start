@@ -96,7 +96,7 @@
 
                     <label for="FromCustomer" class="Mandatory"><span class="Marker">*</span>[% Translate("Contact") | html %]:</label>
                     <div class="Field">
-                        <input id="FromCustomer" type="text" name="FromCustomer" value="" class="CustomerAutoComplete W75pc [% Data.FromInvalid | html %]" autocomplete="off" />
+                        <input id="FromCustomer" type="text" name="FromCustomer" value="" class="CustomerAutoComplete W95pc [% Data.FromInvalid | html %]" autocomplete="off" />
                         <div id="FromCustomerServerError" class="TooltipErrorMessage">
 [% RenderBlockStart("FromServerErrorMsg") %]
                             <p>[% Translate("Please include at least one customer for the ticket.") | html %]</p>
@@ -190,7 +190,7 @@
 
                     <label for="CustomerID">[% Translate("CustomerID") | html %]:</label>
                     <div class="Field">
-                        <input type="text" name="CustomerID" id="CustomerID" value="[% Data.CustomerID | html %]" [% IF Config("Ticket::Frontend::AgentTicketPhone::CustomerIDReadOnly") %] readonly [% END %] class="W75pc"/>
+                        <input type="text" name="CustomerID" id="CustomerID" value="[% Data.CustomerID | html %]" [% IF Config("Ticket::Frontend::AgentTicketPhone::CustomerIDReadOnly") %] readonly [% END %] class="W95pc"/>
                     </div>
                     <div class="Clear"></div>
 
@@ -381,7 +381,7 @@
 
                     <label class="Mandatory" for="Subject"><span class="Marker">*</span> [% Translate("Subject") | html %]:</label>
                     <div class="Field">
-                        <input class="W75pc Validate_Required [% Data.SubjectInvalid | html %]" type="text" name="Subject" id="Subject" value="[% Data.Subject | html %]"/>
+                        <input class="W95pc Validate_Required [% Data.SubjectInvalid | html %]" type="text" name="Subject" id="Subject" value="[% Data.Subject | html %]"/>
                         <div id="SubjectError" class="TooltipErrorMessage">
                             <p>[% Translate("This field is required.") | html %]</p>
                         </div>
@@ -398,16 +398,16 @@
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
 [% RenderBlockStart("SpellCheck") %]
-                        <a href="#" id="OptionSpellCheck">[ [% Translate("Spell check") | html %] ]</a>
+                        <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
 [% RenderBlockEnd("SpellCheck") %]
 
 [% RenderBlockStart("OptionCustomer") %]
-                        <a href="#" id="OptionCustomer">[ [% Translate("Contact") | html %] ]</a>
+                        <a href="#" id="OptionCustomer">[% Translate("Contact") | html %]</a>
 [% RenderBlockEnd("OptionCustomer") %]
 # ---
 # ITSMIncidentProblemManagement
 # ---
-                        <a href="[% Env("Baselink") %]Action=AgentLinkObject;Mode=Temporary;SourceObject=Ticket;SourceKey=[% Data.FormID | uri %];TargetIdentifier=ITSMConfigItem" id="OptionLinkTicket" class="AsPopup">[ [% Translate("Link ticket") | html %] ]</a>
+                        <a href="[% Env("Baselink") %]Action=AgentLinkObject;Mode=Temporary;SourceObject=Ticket;SourceKey=[% Data.FormID | uri %];TargetIdentifier=ITSMConfigItem" id="OptionLinkTicket" class="AsPopup">[% Translate("Link ticket") | html %]</a>
 # ---
 
 <!-- OutputFilterHook_TicketOptionsEnd -->

@@ -292,7 +292,10 @@ sub Run {
             Link      => $Link,
             IDPrefix  => 'CustomerTicketOverview',
         );
-
+        my $Title   = 'My Tickets';
+        if ( $Self->{Subaction} eq 'CompanyTickets' ) {
+            $Title   = 'Company Tickets';
+        }
         my $OrderBy = 'Down';
         if ( $OrderByCurrent eq 'Down' ) {
             $OrderBy = 'Up';
@@ -342,6 +345,7 @@ sub Run {
                 TitleSort  => $TitleSort,
                 AgeSort    => $AgeSort,
                 Filter     => $FilterCurrent,
+                Title      => $Title
             },
         );
 

@@ -86,6 +86,11 @@
         padding: 3px 0 3px 5px;
         min-height: 20px;
     }
+    fieldset.TableLike > .EndOfForm,
+    fieldset.TableLike > .Row > .EndOfForm {
+        margin-top: 20px;
+        text-align: center;
+    }
     fieldset.TableLike > .Field > :first-child,
     fieldset.TableLike > .Row > .Field > :first-child {
         margin-top: -5px;
@@ -403,7 +408,6 @@
         margin: 0 0 10px 5px;
         float: left;
     }
-    #cke_RichText,
     .cke_toolbar > .cke_toolgroup,
     .cke_toolbar .cke_combo_button,
     .cke_inner .cke_contents,

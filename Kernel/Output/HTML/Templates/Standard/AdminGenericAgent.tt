@@ -160,10 +160,8 @@ $('.TaskDelete').bind('click', function (Event) {
 
             <div class="WidgetSimple Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Automatic execution (multiple tickets)") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Toggle this widget") | html %]"></div>
+                    <h2><span>[% Translate("Automatic execution (multiple tickets)") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">
@@ -203,10 +201,8 @@ $('.TaskDelete').bind('click', function (Event) {
 
             <div class="WidgetSimple SpacingTop Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Event based execution (single ticket)") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Toggle this widget") | html %]"></div>
+                    <h2><span>[% Translate("Event based execution (single ticket)") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">
@@ -309,10 +305,8 @@ Core.Agent.Admin.GenericAgent.Init({
 
             <div class="WidgetSimple SpacingTop Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Select Tickets") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Toggle this widget") | html %]"></div>
+                    <h2><span>[% Translate("Select Tickets") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">
@@ -658,10 +652,8 @@ Core.Agent.Admin.GenericAgent.Init({
 <!-- new options -->
             <div class="WidgetSimple SpacingTop Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Update/Add Ticket Attributes") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Toggle this widget") | html %]"></div>
+                    <h2><span>[% Translate("Update/Add Ticket Attributes") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">
@@ -770,10 +762,8 @@ Core.Agent.Admin.GenericAgent.Init({
             </div>
             <div class="WidgetSimple SpacingTop Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Delete/Empty Ticket Attributes") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Toggle this widget") | html %]"></div>
+                    <h2><span>[% Translate("Delete/Empty Ticket Attributes") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">
@@ -794,10 +784,8 @@ Core.Agent.Admin.GenericAgent.Init({
             </div>
             <div class="WidgetSimple SpacingTop Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Add Note") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Toggle this widget") | html %]"></div>
+                    <h2><span>[% Translate("Add Note") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">
@@ -829,10 +817,8 @@ Core.Agent.Admin.GenericAgent.Init({
             </div>
             <div class="WidgetSimple SpacingTop Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Execute Ticket Commands") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Toggle this widget") | html %]"></div>
+                    <h2><span>[% Translate("Execute Ticket Commands") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">
@@ -865,10 +851,8 @@ Core.Agent.Admin.GenericAgent.Init({
 
             <div class="WidgetSimple SpacingTop Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Execute Custom Module") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Toggle this widget") | html %]"></div>
+                    <h2><span>[% Translate("Execute Custom Module") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">

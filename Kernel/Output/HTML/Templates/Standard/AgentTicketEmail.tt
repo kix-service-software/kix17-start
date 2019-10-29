@@ -554,18 +554,18 @@ $('#NewResponsibleID').bind('change', function (Event) {
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
 [% RenderBlockStart("SpellCheck") %]
-                        <a href="#" id="OptionSpellCheck">[ [% Translate("Spell check") | html %] ]</a>
+                        <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
 [% RenderBlockEnd("SpellCheck") %]
 [% RenderBlockStart("AddressBook") %]
-                        <a href="#" id="OptionAddressBook">[ [% Translate("Address book") | html %] ]</a>
+                        <a href="#" id="OptionAddressBook">[% Translate("Address book") | html %]</a>
 [% RenderBlockEnd("AddressBook") %]
 [% RenderBlockStart("OptionCustomer") %]
-                        <a href="#" id="OptionCustomer">[ [% Translate("Contact") | html %] ]</a>
+                        <a href="#" id="OptionCustomer">[% Translate("Contact") | html %]</a>
 [% RenderBlockEnd("OptionCustomer") %]
 # ---
 # ITSMIncidentProblemManagement
 # ---
-                        <a href="[% Env("Baselink") %]Action=AgentLinkObject;Mode=Temporary;SourceObject=Ticket;SourceKey=[% Data.FormID | uri %];TargetIdentifier=ITSMConfigItem" id="OptionLinkTicket" class="AsPopup">[ [% Translate("Link ticket") | html %] ]</a>
+                        <a href="[% Env("Baselink") %]Action=AgentLinkObject;Mode=Temporary;SourceObject=Ticket;SourceKey=[% Data.FormID | uri %];TargetIdentifier=ITSMConfigItem" id="OptionLinkTicket" class="AsPopup">[% Translate("Link ticket") | html %]</a>
 # ---
 
 <!-- OutputFilterHook_TicketOptionsEnd -->
