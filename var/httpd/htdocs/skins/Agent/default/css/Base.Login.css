@@ -16,7 +16,9 @@
     #LoginLogo {
         background-repeat: no-repeat;
     }
-
+    #LoginResponsiveLogo {
+        display: none;
+    }
    .LoginScreen {
         height: 100%;
     }
@@ -31,17 +33,18 @@
 
     .LoginBox {
         height: auto;
-        box-shadow: 3px 3px 10px #A0A0A0;
-        background-size: cover;
+        border-radius: 5px;
+        position: relative;
     }
 
     .LoginBox .WidgetSimple {
         background: transparent;
         margin-bottom: 0px;
+        border: none;
     }
 
     .LoginBox .Welcome {
-        margin: 15px auto auto;
+        margin: 40px auto auto;
         text-align: center;
         width: 100%;
         display: block;
@@ -60,7 +63,6 @@
         background: transparent;
         padding: 0px;
         text-align: center;
-        min-height: 21px;
         border: 0px solid transparent;
     }
 
@@ -78,6 +80,7 @@
     .LoginBox .WidgetSimple .Content {
         border: none;
         background: transparent;
+        padding-bottom: 20px;
     }
 
     .LoginBox #LostPasswordLink {
@@ -91,9 +94,8 @@
     .SystemMessageLoginBox {
         margin-bottom: 10px;
         padding: 10px;
-        width: 480px;
         height: auto;
-        box-shadow: 3px 3px 10px #A0A0A0;
+        border-radius: 5px;
     }
 
 }

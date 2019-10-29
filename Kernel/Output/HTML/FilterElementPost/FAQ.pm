@@ -71,7 +71,7 @@ sub Run {
 
         my $FinishPattern = '</div>';
         my $Replace       = <<"END";
-                        <a  href=\"#\" id=\"OptionFAQ\">[ $FAQTranslatable ]</a>
+                        <a  href=\"#\" id=\"OptionFAQ\">$FAQTranslatable</a>
                     </div>
 END
         ${ $Param{Data} } =~ s{ ($StartPattern) $FinishPattern }{$1$Replace}ixms;
@@ -97,7 +97,7 @@ EOF
 <!-- OutputFilterHook_NoTicketOptionsFallback -->
                     <label for=\"Options\">$OptionsTranslatable:</label>
                     <div class="Options Field">
-                        <a  href=\"#\" id=\"OptionFAQ\">[ $FAQTranslatable ]</a>
+                        <a  href=\"#\" id=\"OptionFAQ\">$FAQTranslatable</a>
                     </div>
                     <div class=\"Clear\"></div>
 END

@@ -233,38 +233,43 @@
 
 [% RenderBlockStart("FollowUp") %]
                 <div id="FollowUp" class="[% Data.FollowUpVisible | html %]">
-                    <div id="Messenger" class="LayoutFixedSidebar SidebarLast">
-                        <div class="SidebarColumn">
-                            [% Data.KIXSidebarContent %]
+                    <div id="Messenger" class="WidgetSimple">
+                        <div class="Header">
+                            <h2><span>[% Translate("Reply")%]</span></h2>
                         </div>
-                        <div class="ContentColumn">
-                            <fieldset class="TableLike DontPrint">
-                                <label class="Mandatory" for="Subject">
-                                    <span class="Marker">*</span>
-                                    [% Translate("Subject") | html %]:
-                                </label>
-                                <div class="Field">
-                                    <input class="W75pc DontPrint Validate_Required" type="text" name="Subject" id="Subject" title="[% Translate("Subject") | html %]" value="[% Data.Subject | html %]" />
+                        <div class="Content">
+                            <div class="LayoutFixedSidebar SidebarLast">
+                                <div class="SidebarColumn">
+                                    [% Data.KIXSidebarContent %]
                                 </div>
-                                <div class="Clear"></div>
-                                <label class="Mandatory" for="RichText"><span class="Marker">*</span> [% Translate("Text") | html %]:</label>
-                                <div class="RichTextField">
+                                <div class="ContentColumn">
+                                    <fieldset class="TableLike DontPrint">
+                                        <label class="Mandatory" for="Subject">
+                                            <span class="Marker">*</span>
+                                            [% Translate("Subject") | html %]:
+                                        </label>
+                                        <div class="Field">
+                                            <input class="W75pc DontPrint Validate_Required" type="text" name="Subject" id="Subject" title="[% Translate("Subject") | html %]" value="[% Data.Subject | html %]" />
+                                        </div>
+                                        <div class="Clear"></div>
+                                        <label class="Mandatory" for="RichText"><span class="Marker">*</span> [% Translate("Text") | html %]:</label>
+                                        <div class="RichTextField">
 [% RenderBlockStart("RichText") %]
-                                    [% InsertTemplate("CustomerRichTextEditor.tt") %]
+                                            [% InsertTemplate("CustomerRichTextEditor.tt") %]
 [% RenderBlockEnd("RichText") %]
-                                    <textarea title="[% Translate("Reply") | html %]" id="RichText" class="RichText DontPrint Validate_RequiredRichText [% Data.RichTextInvalid | html %]" name="Body" rows="15" cols="[% Config("Ticket::Frontend::TextAreaNote") %]">[% Data.Body | html %]</textarea>
-                                    <div id="RichTextError" class="TooltipErrorMessage">
-                                        <p>[% Translate("This field is required.") | html %]</p>
-                                    </div>
-                                    <div id="RichTextServerError" class="TooltipErrorMessage NoJavaScriptMessage[% Data.RichTextInvalid | html %]">
-                                        <p>[% Translate("This field is required.") | html %]</p>
-                                    </div>
-                                </div>
-                                <div class="Clear"></div>
-                                <label for="Attachment">[% Translate("Attachment") | html %]:</label>
-                                <div id="AttachmentHolder" class="Field">
-                                    <input name="file_upload" title="[% Translate("Attachment") | html %]" id="Attachment" type="file" size="30" />
-                                    <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
+                                            <textarea title="[% Translate("Reply") | html %]" id="RichText" class="RichText DontPrint Validate_RequiredRichText [% Data.RichTextInvalid | html %]" name="Body" rows="15" cols="[% Config("Ticket::Frontend::TextAreaNote") %]">[% Data.Body | html %]</textarea>
+                                            <div id="RichTextError" class="TooltipErrorMessage">
+                                                <p>[% Translate("This field is required.") | html %]</p>
+                                            </div>
+                                            <div id="RichTextServerError" class="TooltipErrorMessage NoJavaScriptMessage[% Data.RichTextInvalid | html %]">
+                                                <p>[% Translate("This field is required.") | html %]</p>
+                                            </div>
+                                        </div>
+                                        <div class="Clear"></div>
+                                        <label for="Attachment">[% Translate("Attachment") | html %]:</label>
+                                        <div id="AttachmentHolder" class="Field">
+                                            <input name="file_upload" title="[% Translate("Attachment") | html %]" id="Attachment" type="file" size="30" />
+                                            <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#Attachment').bind('change', function (Event) {
@@ -276,10 +281,10 @@
 [% END %]
 
 [% RenderBlockStart("FollowUpAttachment") %]
-                                    <div class="Attachment" title="[% Data.Filename | html %] - [% Data.Filesize | html %]">
-                                        [% Data.Filename | html %] ([% Data.Filesize | html %])
-                                        <button type="button" id="AttachmentDeleteButton[% Data.FileID | html %]" name="AttachmentDeleteButton[% Data.FileID | html %]" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
-                                        <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
+                                            <div class="Attachment" title="[% Data.Filename | html %] - [% Data.Filesize | html %]">
+                                                [% Data.Filename | html %] ([% Data.Filesize | html %])
+                                                <button type="button" id="AttachmentDeleteButton[% Data.FileID | html %]" name="AttachmentDeleteButton[% Data.FileID | html %]" value="[% Translate("Delete") | html %]">[% Translate("Delete") | html %]</button>
+                                                <input type="hidden" id="AttachmentDelete[% Data.FileID | html %]" name="AttachmentDelete[% Data.FileID | html %]" />
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#AttachmentDeleteButton[% Data.FileID | html %]').bind('click', function () {
@@ -290,16 +295,16 @@
     });
 //]]></script>
 [% END %]
-                                    </div>
+                                            </div>
 [% RenderBlockEnd("FollowUpAttachment") %]
-                                </div>
-                                <div class="Clear"></div>
+                                        </div>
+                                        <div class="Clear"></div>
 [% RenderBlockStart("FollowUpState") %]
-                                <label for="StateID">[% Translate("Next state") | html %]:</label>
-                                <div class="Field">
-                                    [% Data.NextStatesStrg %]
-                                </div>
-                                <div class="Clear"></div>
+                                        <label for="StateID">[% Translate("Next state") | html %]:</label>
+                                        <div class="Field">
+                                            [% Data.NextStatesStrg %]
+                                        </div>
+                                        <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#StateID').bind('change', function (Event) {
@@ -309,11 +314,11 @@
 [% END %]
 [% RenderBlockEnd("FollowUpState") %]
 [% RenderBlockStart("FollowUpPriority") %]
-                                <label for="PriorityID">[% Translate("Priority") | html %]:</label>
-                                <div class="Field">
-                                    [% Data.PriorityStrg %]
-                                </div>
-                                <div class="Clear"></div>
+                                        <label for="PriorityID">[% Translate("Priority") | html %]:</label>
+                                        <div class="Field">
+                                            [% Data.PriorityStrg %]
+                                        </div>
+                                        <div class="Clear"></div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     $('#PriorityID').bind('change', function (Event) {
@@ -324,19 +329,21 @@
 [% RenderBlockEnd("FollowUpPriority") %]
 
 [% RenderBlockStart("FollowUpDynamicField") %]
-                                <div class="Row Row_DynamicField_[% Data.Name | html %] [% Data.Class %]">
-                                    [% Data.Label %]
-                                    <div class="Field">
-                                        [% Data.Field %]
-                                    </div>
-                                    <div class="Clear"></div>
-                                </div>
-                                <div class="Clear"></div>
+                                        <div class="Row Row_DynamicField_[% Data.Name | html %] [% Data.Class %]">
+                                            [% Data.Label %]
+                                            <div class="Field">
+                                                [% Data.Field %]
+                                            </div>
+                                            <div class="Clear"></div>
+                                        </div>
+                                        <div class="Clear"></div>
 [% RenderBlockEnd("FollowUpDynamicField") %]
-                            </fieldset>
-                        </div>
-                        <div class="ActionRow">
-                            <button type="submit" class="Primary CallingAction" value="[% Translate("Submit") | html %]">[% Translate("Submit") | html %]</button> [% Translate("or") | html %] <a id="CloseButton" href="">[% Translate("Cancel") | html %]</a>
+                                    </fieldset>
+                                </div>
+                                <div class="ActionRow">
+                                    <button type="submit" class="Primary CallingAction" value="[% Translate("Submit") | html %]">[% Translate("Submit") | html %]</button> [% Translate("or") | html %] <a id="CloseButton" href="">[% Translate("Cancel") | html %]</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <a id="ReplyButton" class="DontPrint" href="">[% Translate("Reply") | html %]</a>

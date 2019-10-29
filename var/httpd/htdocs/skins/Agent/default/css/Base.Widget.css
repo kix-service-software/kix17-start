@@ -14,16 +14,15 @@
 
 @media screen,projection,tv,handheld {
     .WidgetSimple {
-        margin-bottom: 30px;
-        border: none;
+        margin-bottom: 20px;
+        border-radius: 3px;
+        overflow: hidden;
     }
     .WidgetSimple.MobileNotAvailableWidget {
         display: none;
     }
     .WidgetSimple > .Header {
-        background: none;
         position: relative;
-        top: 1px;
     }
     .WidgetSimple > .Header > .ActionMenu,
     .WidgetSimple.CanDrag > .Header > .ActionMenu {
@@ -47,6 +46,19 @@
         width: 12px;
         margin: 0px 5px 0px 0px;
         float: left;
+        cursor: pointer;
+    }
+    .WidgetAction.Toggle::after {
+        content: "\f0d7";
+        font: normal normal normal 14px/1 FontAwesome;
+        text-align: center;
+        vertical-align: middle;
+        padding: 3px;
+        display: block;
+    }
+    .Expanded > .Header .WidgetAction.Toggle::after {
+        content: "\f0d8";
+        font: normal normal normal 14px/1 FontAwesome;
     }
     .WidgetSimple.SettingsWidget > .Header > .WidgetAction {
         background-image: none;
@@ -107,40 +119,15 @@
     .WidgetSimple.CanDrag > .Header h2,
     .WidgetSimple > .Header h2 > label {
         text-decoration: none;
-        overflow: visible;
+        overflow: hidden;
+        padding: 5px 60px 5px 10px;
         vertical-align: top;
-        padding: 5px 10px;
-        vertical-align: top;
-        display: inline-block;
-        border-bottom: 0;
-        border-top-right-radius: 5px;
-        border-top-left-radius: 5px;
+        display: block;
     }
     .WidgetSimple > .Header h2.WithToggle,
     .WidgetSimple.CanDrag > .Header h2.WithToggle,
     .WidgetSimple > .Header h2.WithToggle > label {
         padding-left:20px;
-    }
-    .WidgetSimple > .Header h2::after {
-        content: "";
-        border: 1px solid #82c826;
-        position: absolute;
-        width: 5px;
-        height: 5px;
-        bottom: 0;
-        right: -6px;
-        border-radius: 0 0 0 5px;
-        border-width: 0 0 1px 1px;
-        background-color: #fff;
-    }
-    .WidgetSimple > .Header h2::before {
-        content: "";
-        width: 6px;
-        height: 6px;
-        background-color: #F0F0F0;
-        position: absolute;
-        bottom: 0px;
-        right: -5px;
     }
     .WidgetSimple > .Header h2 > span {
         position: relative;
@@ -443,14 +430,12 @@
         margin-left: 0;
         margin-right: 0;
     }
-    .WidgetSimple, .LayoutGrid.ColumnsWithSpacing > div > div {
-        border: none;
-    }
     .PreferencesScreen {
         padding-top: 20px;
     }
     .PreferencesScreen .Size1of3 > .WidgetSimple {
         background: none;
+        border: none;
         margin: 0px 10px;
     }
     .PreferencesScreen .Size1of3 > .WidgetSimple > .Header {
@@ -481,7 +466,7 @@
         margin: 10px 0px 15px 0px;
     }
     .PreferencesScreen .Size1of3 > .WidgetSimple > .Content .WidgetSimple {
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         background: none;
     }
     .PreferencesScreen .FieldExplanation {
@@ -586,10 +571,10 @@
     }
     .CITabLinkGraph #IFrameParam .WidgetSimple.TableCell {
         background: none;
-        border: 0px solid #ddd;
+        border: none;
     }
     .CITabLinkGraph #IFrameParam .WidgetSimple.TableCell .Header {
-        top: 5px;
+        background-color: transparent;
     }
     .CITabLinkGraph #IFrameParam .WidgetSimple.TableCell .Header h2 {
         border: none;

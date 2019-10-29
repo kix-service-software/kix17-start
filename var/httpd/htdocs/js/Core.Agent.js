@@ -136,7 +136,7 @@ Core.Agent = (function (TargetNS) {
          */
         function SetNavContainerHeight($ParentElement) {
             if ($ParentElement.find('ul').length) {
-                $('#NavigationContainer').css('height', parseInt(InitialNavigationContainerHeight, 10) + parseInt($ParentElement.find('ul').outerHeight(), 10));
+                $('#NavigationContainer').css('height', parseInt(InitialNavigationContainerHeight, 10) + parseInt($ParentElement.find('ul').outerHeight(), 10) + 5);
             }
         }
 

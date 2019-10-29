@@ -72,24 +72,20 @@
 
     .PreviewContainer .Preview {
         width: 70%;
-        background: #eee;
         height: 300px;
         padding: 10px 0px;
         margin: 20px auto;
-        border: 1px solid #ddd;
     }
 
     .PreviewContainer .Preview .Error,
     .PreviewContainer .Preview .Hint {
         text-align: center;
-        color: #777;
     }
 
     .PreviewContainer .Preview .Error i,
     .PreviewContainer .Preview .Hint i {
         display: block;
         font-size: 30px;
-        color: #bbb;
         margin-bottom: 5px;
     }
 
@@ -103,14 +99,9 @@
         text-align: center;
     }
 
-    .PreviewContainer .PreviewSettings a.Active {
-        border-bottom: 1px solid #000;
-    }
-
     .PreviewContainer .PreviewSettings .Warning {
         display: block;
         margin-top: 15px;
-        color: #aaa;
     }
 
     .PreviewContainer .CallForAction {
@@ -119,11 +110,6 @@
 
     .PreviewSettings .CallForAction {
         width: auto;
-    }
-
-    .PreviewSettings .CallForAction.Active {
-        background-color: #e0e0e0;
-        border-color: #777;
     }
 
     .PreviewContainer .CallForAction span {

@@ -18,6 +18,7 @@
     <div id="AppWrapper">
     <div id="Header" class="ARIARoleBanner [% Data.UserToolbarPosition | html %]">
         <div id="Logo"></div>
+        <div id="ResponsiveLogo"></div>
         <div id="ToolBarToggle" style="[% Data.CustomCSSTopToggle %]"></div>
         <ul id="ToolBar" style="[% Data.CustomCSSTopToolbar %]">
 [% RenderBlockStart("ToolBar") %]

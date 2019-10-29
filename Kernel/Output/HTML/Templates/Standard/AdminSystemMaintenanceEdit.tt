@@ -32,10 +32,8 @@
         <form action="[% Env("CGIHandle") %]" method="post" id="SystemMaintenanceForm" class="Validate PreventMultipleSubmits">
             <div class="WidgetSimple Expanded">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Edit System Maintenance information") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2><span>[% Translate("Edit System Maintenance information") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
@@ -113,10 +111,8 @@
 
             <div class="WidgetSimple [% Data.SessionVisibility | html %]">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="WithToggle"><span>[% Translate("Manage Sessions") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2><span>[% Translate("Manage Sessions") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike SpacingTop">
