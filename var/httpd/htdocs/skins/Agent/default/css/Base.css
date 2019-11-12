@@ -181,6 +181,12 @@
     */
     input[type="text"],
     input[type="password"],
+    input[type="email"] {
+        height: 14px;
+    }
+
+    input[type="text"],
+    input[type="password"],
     input[type="email"],
     textarea,
     select,
@@ -189,6 +195,9 @@
         padding: 3px;
         font-size: 12px;
         margin: 0px;
+    }
+    select {
+        padding: 3px 3px 2px 3px;
     }
     input[type="text"]:focus,
     input[type="password"]:focus,
@@ -410,7 +419,16 @@
         font: normal normal normal 14px/1 FontAwesome;
         display: inline-block;
     }
-
+    .ui-widget-content > .AJAXLoader {
+        text-align: center;
+        width: 100%;
+        height: auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    .ui-widget-content > .AJAXLoader::after {
+        font-size: 5em;
+    }
     .FieldExplanation {
         margin: 5px 0;
     }
@@ -435,6 +453,9 @@
     iframe.TextOption.FAQ {
         width: 900px;
         min-height: 600px;
+    }
+    iframe.FAQField {
+        width: 100%;
     }
     .NothingAvailableMsg {
         margin: 10px;

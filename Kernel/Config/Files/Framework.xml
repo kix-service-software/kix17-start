@@ -4991,7 +4991,7 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="AgentResponsiveLogo" Required="0" Valid="1">
+    <ConfigItem Name="CustomerResponsiveLogo" Required="0" Valid="1">
         <Description Translatable="1">The logo shown in the header of the agent interface for the responsive mode. See "CustomerLogo" for further description.</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
@@ -5074,6 +5074,7 @@
                 <Item Key="top">20px</Item>
                 <Item Key="left">0</Item>
                 <Item Key="background-size">contain</Item>
+                <Item Key="background-repeat">no-repeat</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -5103,6 +5104,7 @@
                 <Item Key="top">20px</Item>
                 <Item Key="left">0</Item>
                 <Item Key="background-size">contain</Item>
+                <Item Key="background-repeat">no-repeat</Item>
             </Hash>
         </Setting>
     </ConfigItem>

@@ -47,7 +47,7 @@
 [% RenderBlockStart("Record") %]
             <tr id="ConfigItemID_[% Data.ConfigItemID | html %]" class="MasterAction" style="[% Data.LineStyle | html %]">
 [% RenderBlockStart("RecordBulkAction") %]
-                <td class="Checkbox Fixed NonTextContent">
+                <td class="Checkbox Fixed">
                     <input class="Checkbox SelectItem" type="checkbox" name="ConfigItemID" value="[% Data.ConfigItemID | html %]"  autocomplete="off" [% Data.ItemChecked %]]/>
                 </td>
 [% RenderBlockEnd("RecordBulkAction") %]

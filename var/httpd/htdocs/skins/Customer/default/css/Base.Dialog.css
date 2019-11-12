@@ -31,6 +31,7 @@
         width: 400px;
         height: 300px;
         text-align: center;
+        padding: 15px;
     }
 
     /*
@@ -40,9 +41,8 @@
         position: relative;
     }
     #TreeContainer #TreeSearch input {
-        display: block;
-        margin: 10px 12px 0px 12px;
-        width: 92%;
+        width: 100%;
+        box-sizing: border-box;
     }
     #TreeContainer input.CallForAction {
         padding: 3px 10px;
@@ -53,7 +53,7 @@
         font-weight: bold;
         height: 12px;
         position: absolute;
-        right: 13px;
+        right: 1px;
         top: 1px;
         width: 12px;
         padding: 4px 2px;
@@ -61,7 +61,7 @@
     }
     #JSTree {
         height: 72%;
-        margin: 10px 12px;
+        margin: 10px 0;
         overflow: auto;
         padding: 0px 10px 10px 10px;
         text-align: left;

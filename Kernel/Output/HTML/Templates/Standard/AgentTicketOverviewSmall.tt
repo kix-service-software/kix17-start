@@ -327,7 +327,7 @@ $('.OverviewHeader').off('click').on('click', '.ColumnSettingsTrigger', function
 [% RenderBlockStart("GeneralOverviewRow") %]
 
 [% RenderBlockStart("Bulk") %]
-                    <td class="Checkbox NonTextContent">
+                    <td class="Checkbox">
                         <input class="Checkbox SelectItem" type="checkbox" name="TicketID" title="[% Translate("Select this ticket") | html %]" value="[% Data.TicketID | html %]"  autocomplete="off" [% Data.ItemChecked %]]/>
                     </td>
 [% RenderBlockEnd("Bulk") %]

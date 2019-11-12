@@ -175,7 +175,6 @@ $('#Dest').bind('change', function (Event) {
                         </div>
 
                         <div id="TicketCustomerContentToCustomer" class="CustomerContainer">
-                            <span class="BoxLabel">[% Translate("To") | html %]</span>
 [% RenderBlockStart("MultipleCustomer") %]
                             <div>
                                 <input name="CustomerSelected" title="[% Translate("Select this customer as the main customer.") | html %]" id="CustomerSelected" class="CustomerTicketRadio" type="radio" value="[% Data.Count | html %]" [% Data.CustomerSelected | html %]  [% Data.CustomerDisabled | html %] />
@@ -243,7 +242,6 @@ $('#Dest').bind('change', function (Event) {
                         </div>
 
                         <div id="TicketCustomerContentCcCustomer" class="CcCustomerContainer">
-                            <span class="BoxLabel">[% Translate("Cc") | html %]</span>
 [% RenderBlockStart("CcMultipleCustomer") %]
                             <div>
                                 <input name="CcCustomerKey_[% Data.Count | html %]" id="CcCustomerKey_[% Data.Count | html %]" class="CustomerKey" type="hidden" value="[% Data.CustomerKey | html %]"/>
@@ -310,7 +308,6 @@ $('#Dest').bind('change', function (Event) {
                         </div>
 
                         <div id="TicketCustomerContentBccCustomer" class="BccCustomerContainer">
-                            <span class="BoxLabel">[% Translate("Bcc") | html %]</span>
 [% RenderBlockStart("BccMultipleCustomer") %]
                             <div>
                                 <input name="BccCustomerKey_[% Data.Count | html %]" id="BccCustomerKey_[% Data.Count | html %]" class="CustomerKey" type="hidden" value="[% Data.CustomerKey | html %]"/>
