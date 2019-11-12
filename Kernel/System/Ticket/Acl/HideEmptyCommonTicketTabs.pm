@@ -91,9 +91,24 @@ sub Run {
                         || !%{ $PretendConfig->{$Attribute} }
                     );
                 }
+
+                my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+                
                 # check dynamic field config
                 for my $DynamicField ( keys( %{ $PretendConfig->{'DynamicField'} } ) ) {
-                    next ACTION if ( $PretendConfig->{'DynamicField'}->{$DynamicField} );
+
+                    # check if dynamic field is not deleted
+                    my $Deleted = 0;
+                    if ( $PretendConfig->{'DynamicField'}->{$DynamicField} ) {
+                        my $DynamicFieldObject = $DynamicFieldObject->DynamicFieldGet(
+                            Name => $DynamicField,
+                        );
+                        if (!keys %{$DynamicFieldObject}) {
+                            $Deleted = 1;
+                        }
+                    }
+                    
+                    next ACTION if ( $PretendConfig->{'DynamicField'}->{$DynamicField} && !$Deleted);
                 }
 
                 # add action to blacklist
