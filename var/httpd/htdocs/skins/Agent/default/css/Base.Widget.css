@@ -16,13 +16,13 @@
     .WidgetSimple {
         margin-bottom: 20px;
         border-radius: 3px;
-        overflow: hidden;
     }
     .WidgetSimple.MobileNotAvailableWidget {
         display: none;
     }
     .WidgetSimple > .Header {
         position: relative;
+        border-radius: 3px 3px 0 0;
     }
     .WidgetSimple > .Header > .ActionMenu,
     .WidgetSimple.CanDrag > .Header > .ActionMenu {
@@ -366,6 +366,7 @@
         padding: 8px 8px 10px;
         overflow: auto;
         min-height: 0%;
+        border-radius: 0 0 3px 3px;
     }
     .WidgetSimple.Collapsed > .Content {
         display: none;

@@ -6577,9 +6577,9 @@ Ihr Helpdesk-Team
             'Der Wert des \'Von\'-Feldes',
         'This event module stores attributes from CustomerUser as DynamicFields tickets. Please see the setting above for how to configure the mapping.' =>
             '',
-        'This is the default orange - black skin for the customer interface.' =>
-            '',
-        'This is the default orange - black skin.' => '',
+        'This is the default green skin for the customer interface.' =>
+            'Das ist die grüne Standardoberfläche für das Kundenfrontend.',
+        'This is the default green skin.' => 'Das ist die grüne Standardoberfläche.',
         'This module and its PreRun() function will be executed, if defined, for every request. This module is useful to check some user options or to display news about new applications.' =>
             '',
         'This module is part of the admin area of KIX.' => '',

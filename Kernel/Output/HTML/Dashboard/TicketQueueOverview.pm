@@ -446,6 +446,7 @@ sub Run {
         my $CurrColLabel = "";
         my $RowTotal     = 0;
         for my $CurrCol (@CurrRowArr) {
+            print STDERR $CurrCol."\n";
 
             next if !defined($CurrCol);
 
@@ -490,6 +491,10 @@ sub Run {
                 Data => {
                     'cssClass' => '',
                     'Number'   => $RowTotal,
+                    'SearchPattern' => $RowAttribute
+                        . "="
+                        . $Self->{RowValueListReverse}->{$CurrColLabel}
+                        . ";",
                 },
             );
         }

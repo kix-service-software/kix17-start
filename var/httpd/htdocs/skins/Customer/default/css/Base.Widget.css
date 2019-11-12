@@ -14,9 +14,8 @@
 
 @media screen,projection,tv,handheld {
     .WidgetSimple {
-        margin-bottom: 30px;
-        border-radius: 5px;
-        overflow: hidden;
+        margin-bottom: 20px;
+        border-radius: 3px;
     }
     .WidgetSimple.Size1of2 {
         float: left;
@@ -30,6 +29,7 @@
     }
     .WidgetSimple > .Header {
         position: relative;
+        border-radius: 3px 3px 0 0;
     }
     .WidgetSimple > .Header > .ActionMenu,
     .WidgetSimple.CanDrag > .Header > .ActionMenu {
@@ -63,7 +63,7 @@
         padding: 3px;
         display: block;
     }
-    .Expanded .WidgetAction.Toggle::after {
+    .Expanded > .Header .WidgetAction.Toggle::after {
         content: "\f0d8";
         font: normal normal normal 14px/1 FontAwesome;
     }
@@ -221,6 +221,7 @@
         padding: 8px 8px 10px;
         overflow: auto;
         min-height: 0%;
+        border-radius: 0 0 3px 3px;
     }
     .WidgetSimple.Collapsed > .Content {
         display: none;

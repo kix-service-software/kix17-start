@@ -23,6 +23,35 @@ Core.Customer = Core.Customer || {};
 Core.Customer.Responsive = (function (TargetNS) {
 
     Core.App.Subscribe('Event.App.Responsive.SmallerOrEqualScreenL', function () {
+        Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady',function(Editor) {
+            var ContentWidth = Core.Config.Get('RichText.Width', 620);
+            if ( $('#cke_' + Editor.editor.name).closest('.Content').length ) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.Content').width();
+            }
+            else if ($('#cke_' + Editor.editor.name).closest('.ContentColumn').length) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.ContentColumn').width();
+            }
+            if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                Editor.editor.resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+            }
+        });
+
+        $(window).resize(function() {
+            if ( typeof CKEDITOR !== 'undefined' ) {
+                $.each( CKEDITOR.instances, function(ID) {
+                    var ContentWidth = Core.Config.Get('RichText.Width', 620);
+                    if ( $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').length ) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').width();
+                    }
+                    else if ($('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').length) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').width();
+                    }
+                    if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                        CKEDITOR.instances[ID].resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+                    }
+                });
+            }
+        });
 
         // Add switch for Desktopmode
         if (!$('#ViewModeSwitch').length) {
@@ -39,7 +68,7 @@ Core.Customer.Responsive = (function (TargetNS) {
             $('#NavigationContainer').wrap('<div class="ResponsiveSidebarContainer" />');
         }
         // wrap sidebar modules with an additional container
-        if ($('.SidebarColumn').length) {
+        if (!$('.SidebarColumn').closest('.ResponsiveSidebarContainer').length) {
             $('.SidebarColumn').wrap('<div class="ResponsiveSidebarContainer" />');
         }
         // make sure the relevant sidebar is being collapsed on clicking
@@ -58,7 +87,7 @@ Core.Customer.Responsive = (function (TargetNS) {
         if (!$('#ResponsiveNavigationHandle').length) {
             $('#NavigationContainer').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle" id="ResponsiveNavigationHandle"><i class="fa fa-navicon"></i></span>');
         }
-        if (!$('[id^="ResponsiveSidebarHandle_"]').length) {
+        if (!$('[id^="ResponsiveSidebarHandle"]').length) {
             var ResponsiveCount = 0;
             $.each($('.SidebarColumn'), function () {
                 var ID =  'ResponsiveSidebarHandle_' + ResponsiveCount;
@@ -146,6 +175,49 @@ Core.Customer.Responsive = (function (TargetNS) {
     });
 
     Core.App.Subscribe('Event.App.Responsive.ScreenXL', function () {
+        Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady',function(Editor) {
+            var ContentWidth = Core.Config.Get('RichText.Width', 620),
+                LabelWidth   = 0;
+            if ( $('#cke_' + Editor.editor.name).closest('.Content').length ) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.Content').width();
+                LabelWidth   = $('#cke_' + Editor.editor.name).closest('.Content').find('label').first().width();
+            }
+            else if ($('#cke_' + Editor.editor.name).closest('.ContentColumn').length) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.ContentColumn').width();
+                LabelWidth   = $('#cke_' + Editor.editor.name).closest('.ContentColumn').find('label').first().width();
+            }
+            // real content = content - padding - label;
+            ContentWidth = ContentWidth - 25 - LabelWidth;
+            if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                Editor.editor.resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+            } else {
+                Editor.editor.resize(Core.Config.Get('RichText.Width', 620), Core.Config.Get('RichText.Height', 320), true);
+            }
+        });
+
+        $(window).resize(function() {
+            if ( typeof CKEDITOR !== 'undefined' ) {
+                $.each( CKEDITOR.instances, function(ID) {
+                    var ContentWidth = Core.Config.Get('RichText.Width', 620),
+                        LabelWidth   = 0;
+                    if ( $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').length ) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').width();
+                        LabelWidth   = $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').first('label').width();
+                    }
+                    else if ($('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').length) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').width();
+                        LabelWidth   = $('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').first('label').width();
+                    }
+                    // real content = content - padding - label;
+                    ContentWidth = ContentWidth - 25 - LabelWidth;
+                    if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                        CKEDITOR.instances[ID].resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+                    } else {
+                        CKEDITOR.instances[ID].resize(Core.Config.Get('RichText.Width', 620), Core.Config.Get('RichText.Height', 320), true);
+                    }
+                });
+            }
+        });
 
         // remove view mode switch
         $('#ViewModeSwitch').remove();

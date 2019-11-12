@@ -18,8 +18,8 @@
         border: none;
     }
     legend {
-        margin-top: 20px;
-        margin-bottom: 10px;
+        margin-top: 10px;
+        margin-bottom: 20px;
         font-weight: bold;
         font-size: 14px;
     }
@@ -89,11 +89,14 @@
     fieldset.TableLike > .EndOfForm,
     fieldset.TableLike > .Row > .EndOfForm {
         margin-top: 20px;
-        text-align: center;
     }
     fieldset.TableLike > .Field > :first-child,
     fieldset.TableLike > .Row > .Field > :first-child {
         margin-top: -5px;
+    }
+    fieldset.TableLike > .Field > .Size1of2,
+    fieldset.TableLike > .Row > .Field > .Size1of2 {
+        margin-top: 0;
     }
     fieldset.TableLike > .Field.SubElement{
         margin-left: 40%;
@@ -104,13 +107,42 @@
     fieldset.TableLike > .Field.Options {
         padding-top: 8px;
     }
+    fieldset.TableLike > .Field.Options a {
+        border-width: 1px;
+        border-style: solid;
+        padding: 3px 8px;
+        margin-right: 5px;
+    }
+    fieldset.TableLike > .Field > input[id$='Date'],
+    fieldset.TableLike > .Row > .Field > input[id$='Date'] {
+        width: 80px;
+    }
+
     fieldset.TableLike > .Field > select,
     fieldset.TableLike > .Row > .Field > select,
     fieldset.TableLike > .Field > input,
     fieldset.TableLike > .Row > .Field > input {
         max-width: 100%;
     }
-   fieldset.TableLike div.Value .Flag {
+    fieldset.TableLike > .Field > select[id$='DateTime'],
+    fieldset.TableLike > .Row > .Field > select[id$='DateTime'] {
+        width: 25%;
+    }
+    fieldset.TableLike > .Field > select[id$="TimePointStart"],
+    fieldset.TableLike > .Field > select[id$="TimePointFormat"],
+    fieldset.TableLike > .Field > select[id$="TimePointValue"],
+    fieldset.TableLike > .Field > select[id$="TimePoint"],
+    fieldset.TableLike > .Row > .Field > select[id$="TimePointStart"],
+    fieldset.TableLike > .Row > .Field > select[id$="TimePointFormat"],
+    fieldset.TableLike > .Row > .Field > select[id$="TimePointValue"],
+    fieldset.TableLike > .Row > .Field > select[id$="TimePoint"] {
+        width: 30.5%;
+    }
+    fieldset.TableLike > .Field > select[id$="Time"],
+    fieldset.TableLike > .Row > .Field > select[id$="Time"] {
+        width: 25%;
+    }
+    fieldset.TableLike div.Value .Flag {
         float: left;
         margin-right: 5px;
         margin-top: 3px;
@@ -163,6 +195,23 @@
         margin-right: 7px;
         word-wrap: break-word;
     }
+    fieldset.TableLike.FixedLabelLarge > label,
+    fieldset.TableLike.FixedLabelLarge > .Row > label {
+        width: 170px;
+        padding-top: 5px;
+    }
+    fieldset.TableLike.FixedLabelLarge > .Field,
+    fieldset.TableLike.FixedLabelLarge > .Row > .Field,
+    fieldset.TableLike.FixedLabelLarge > .Value,
+    fieldset.TableLike.FixedLabelLarge > .Row > .Value {
+        margin-left: 170px;
+        margin-right: 7px;
+        word-wrap: break-word;
+    }
+    fieldset.TableLike.FixedLabelLarge > .Field,
+    fieldset.TableLike.FixedLabelLarge > .Row > .Field {
+        margin-top: 2px;
+    }
     .CallForAction,
     body .cke_dialog_footer_buttons a.cke_dialog_ui_button {
         padding: 0px;
@@ -174,7 +223,18 @@
     body textarea.cke_dialog_ui_input_textarea:focus {
         box-shadow: none;
     }
-
+    body .cke_notification {
+        padding: 5px 20px;
+        width: auto;
+        border-radius: 5px;
+        position: relative;
+        z-index: 100;
+    }
+    body .cke_notification_close {
+        position: absolute;
+        top: 8px;
+        right: 5px;
+    }
     .LayoutPopup > .Footer .CallForAction,
     .CallForAction {
         margin-right: 5px;
@@ -182,7 +242,6 @@
     .LayoutPopup > .Footer .SaveAsDraftButton, .SaveAsDraftButton {
         min-width: 280px;
     }
-
     .SaveAsDraftButton span i {
         margin-right: 5px;
     }
@@ -195,7 +254,7 @@
     .CallForAction span,
     body .cke_dialog_footer_buttons td a.cke_dialog_ui_button span {
         min-height: 12px;
-        padding: 3px 7px 6px;
+        padding: 3px 7px;
         line-height: 14px;
         vertical-align: middle;
         font-size: 11px;
@@ -405,9 +464,12 @@
     fieldset.TableLike > .Row > .RichTextField,
     fieldset.TableLike > .FloatingField,
     fieldset.TableLike > .Row > .FloatingField {
-        margin: 0 0 10px 5px;
-        float: left;
+        line-height: 1.0em;
+        margin: 5px 0 0 30%;
+        padding: 3px 0 3px 5px;
+        min-height: 20px;
     }
+    #cke_RichText,
     .cke_toolbar > .cke_toolgroup,
     .cke_toolbar .cke_combo_button,
     .cke_inner .cke_contents,
@@ -415,7 +477,7 @@
     input.cke_dialog_ui_input_password,
     input.cke_dialog_ui_input_text,
     textarea.cke_dialog_ui_input_textarea {
-        border-radius: 0px;
+        border-radius: 5px;
     }
 
     a.CertificateRelationAdd,
