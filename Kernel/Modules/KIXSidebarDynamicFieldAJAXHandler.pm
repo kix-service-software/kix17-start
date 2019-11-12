@@ -65,6 +65,12 @@ sub Run {
         DynamicFields => 1
     );
 
+    # get user preferences
+    my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+    my $View                  = $UserPreferences{UserKIXSidebarDynamicFieldView} || 'Collapsed';
+    my $DynamicFieldSelected  = $UserPreferences{UserKIXSidebarDynamicFieldSelection};
+    my @DynamicFieldSelection = split( /,/, $DynamicFieldSelected );
+
     if ( $Self->{Subaction} eq 'SelectDynamicFields' ) {
 
         # get shown dynamic fields
@@ -90,13 +96,6 @@ sub Run {
                 Value     => $DisplayedDynamicFieldsStrg,
             );
         }
-
-        # get dynamic field sidebar content
-        # get user preferences
-        my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
-        my $View                  = $UserPreferences{UserKIXSidebarDynamicFieldView} || 'Collapsed';
-        my $DynamicFieldSelected  = $UserPreferences{UserKIXSidebarDynamicFieldSelection};
-        my @DynamicFieldSelection = split( /,/, $DynamicFieldSelected );
 
         # check permissions
         my $AccessRW = $TicketObject->TicketPermission(
@@ -250,6 +249,7 @@ sub Run {
                 next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
                 next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
                 next DYNAMICFIELD if $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} } eq '';
+                next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
 
                 # get print string for this dynamic field
                 my $ValueStrg = $BackendObject->DisplayValueRender(
@@ -360,6 +360,7 @@ sub Run {
             DYNAMICFIELD:
             for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
                 next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+                next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
 
                 # set the value
                 my $Success = $BackendObject->ValueSet(
@@ -380,6 +381,7 @@ sub Run {
             for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
                 next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
                 next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
+                next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
 
                 my $IsACLReducible = $BackendObject->HasBehavior(
                     DynamicFieldConfig => $DynamicFieldConfig,
