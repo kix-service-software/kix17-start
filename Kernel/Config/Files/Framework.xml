@@ -11170,7 +11170,7 @@ via the Preferences button after logging in.
             <Hash>
                 <Item Key="InternalName">default</Item>
                 <Item Key="VisibleName" Translatable="1">Default</Item>
-                <Item Key="Description" Translatable="1">This is the default orange - black skin.</Item>
+                <Item Key="Description" Translatable="1">This is the default green skin.</Item>
                 <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
@@ -11215,7 +11215,7 @@ via the Preferences button after logging in.
             <Hash>
                 <Item Key="InternalName">default</Item>
                 <Item Key="VisibleName" Translatable="1">Default</Item>
-                <Item Key="Description" Translatable="1">This is the default orange - black skin for the customer interface.</Item>
+                <Item Key="Description" Translatable="1">This is the default green skin for the customer interface.</Item>
                 <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
