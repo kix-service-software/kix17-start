@@ -11,182 +11,157 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <style type="text/css">
-    body {
-        width: 100% !important;
-        -webkit-text-size-adjust: none;
-        margin: 0px;
-        padding: 0px;
-    }
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            body {
+                width: 70%;
+                -webkit-text-size-adjust: none;
+                margin: auto;
+                padding: 0px;
+                align: center;
+                background-color: #FAFAFA;
+                color: #434242;
+            }
 
-    table td {
-        border-collapse: collapse;
-    }
+            table td {
+                border-collapse: collapse;
+            }
 
-    #backgroundTable {
-        height: 100% !important;
-        margin: 0;
-        padding: 0;
-        width: 100% !important;
-    }
+            #templateContainer {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+            }
 
-    h1, h2, h3, h4, h5, h6 {
-        color:#0A6491;
-        display:block;
-        font-family:Arial;
-        font-weight:bold;
-        line-height:100%;
-        margin-top:0;
-        margin-right:0;
-        margin-bottom:5px;
-        margin-left:0;
-        text-align:left;
-    }
+            h1, h2, h3, h4, h5, h6 {
+                display:block;
+                font-family:Arial;
+                font-weight:bold;
+                line-height:100%;
+                margin: 0 0 5px 0;
+                text-align:left;
+            }
 
-    h1 {
-        font-size: 34px;
-    }
+            h1 {
+                font-size: 32px;
+            }
 
-    h2, h3, h4, h5, h6 {
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
+            h2, h3, h4, h5, h6 {
+                margin: 5px 0 5px 0;
+            }
 
-    h2 {
-        font-size: 28px;
-    }
+            h2 {
+                font-size: 28px;
+            }
 
-    h3 {
-        font-size: 24px;
-    }
+            h3 {
+                font-size: 24px;
+            }
 
-    h4 {
-        font-size: 22px;
-    }
+            h4 {
+                font-size: 22px;
+            }
 
-    h5 {
-        font-size: 18px;
-    }
+            h5 {
+                font-size: 18px;
+            }
 
-    h6 {
-        font-size: 16px;
-    }
+            h6 {
+                font-size: 16px;
+            }
 
-    #templateContainer, .bodyContent{
-        background-color: #FFFFFF;
-    }
+            .headerContent {
+                background-color: #C6C6C6;
+                border-radius: 10px 10px 0 0;
+                padding: 20px;
+            }
+            .headerContent > h1{
+                line-height: 120%;
+                margin: 0px;
+                font-size: 18px;
+            }
 
-    .bodyContent, .bodyContent * {
-        color: #0A6491;
-        font-family: Arial;
-        font-size: 13px;
-        line-height: 150%;
-        text-align: left;
-    }
+            .headerContent,
+            .bodyContent,
+            .bodyContent * {
+                font-family: Arial;
+                font-size: 13px;
+                line-height: 150%;
+                text-align: left;
+            }
+            .bodyContent {
+                padding: 15px 10px;
+                background-color: #FFFFFF;
+                border-radius: 0 0 10px 10px;
+            }
+            .bodyContent a {
+                color: #008DD2;
+            }
+            .bodyContent a:link,
+            .bodyContent a:visited,
+            .footerContent div a:link,
+            .footerContent div a:visited {
+                font-weight: normal;
+                text-decoration: none
+            }
 
-    .bodyContent div {
-        padding-bottom: 5px;
-    }
+            #links {
+                background-color: #FAFAFA;
+                color: #008DD2;
+                border: 0;
+            }
 
-    .bodyContent a:link,
-    .bodyContent a:visited,
-    .footerContent div a:link,
-    .footerContent div a:visited {
-        color: #1491D2;
-        font-weight: normal;
-        text-decoration: none
-    }
+            #links div {
+                text-align: center;
+            }
 
-    #templateFooter {
-        background-color: #FFFFFF;
-        border-top: 0px;
-    }
+            .bodyContent a.CallForAction {
+                background-color: #FAFAFA;
+                border: 1px solid #434242;
+                color: #434242;
+                padding: 4px 8px;
+            }
 
-    .footerContent div {
-        color:#707070;
-        font-family:Arial;
-        font-size:13px;
-        line-height:125%;
-        text-align:left;
-    }
+            .bodyContent a.CallForAction:active,
+            .bodyContent a.CallForAction:hover {
+                background-color: #C6C6C6;
+                border-color: #C6C6C6;
+                color: #FFFFFF;
+            }
 
-    #links {
-        background-color: #FAFAFA;
-        border: 0;
-    }
-
-    #links div {
-        text-align: center;
-    }
-
-    .CallForAction {
-        border-color: #82C826;
-        color: #0A6491;
-    }
-
-    .CallForAction:active,
-    .CallForAction:hover {
-        background-color: #82C826;
-        border-color: #82C826;
-        color: white;
-    }
-
-    .bodyContent a {
-        color: #1491D2 !important;
-    }
-
-    .im {
-        color: #555 !important;
-    }
-    </style>
-</head>
-<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
-    <center>
-        <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="backgroundTable" style="background-color:#FAFAFA">
-            <tbody>
-                <tr>
-                    <td align="center" valign="top">
-                        <br />
-                        <table border="0" cellpadding="0" cellspacing="0" id="templateContainer" style="border: 1px solid #82C826;">
-                            <tbody>
-                                <tr>
-                                    <td align="center" valign="top">
-                                        <table border="0" cellpadding="0" cellspacing="0" id="templateBody">
-                                            <tbody>
-                                                <tr>
-                                                    <td valign="top" class="bodyContent">
-                                                        <h1 style="background: #cdeaaa; border-bottom: 1px solid #82C826; padding: 20px; line-height: 130%; color: #0A6491; margin: 0px; font-size: 20px;">
-                                                            [% Data.Subject | html %]
-                                                        </h1>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td valign="top" class="bodyContent" style="border-bottom: 1px solid #eee; background-color: #fff; padding: 15px; font-size: 13px;">
+            .im {
+                color: #555555;
+            }
+        </style>
+    </head>
+    <body>
+        <center>
+            <table margin="50px" border="0" cellpadding="0" cellspacing="0" id="templateContainer" style="padding:1.5em;">
+                <tbody>
+                    <tr>
+                        <td valign="top" class="headerContent">
+                            <h1>
+                                [% Data.Subject | html %]
+                            </h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="bodyContent">
 # We need to perform some postprocessing on the notification content as it is neccessary to use inline CSS styles
 #   for best mail client compatibility. In particular, OTRS uses <div> elements with inline CSS instead of <blockquote>.
 #   Here we also change the inline style of this <div> to match with the current design.
-                                                        [% Data.Body
-                                                        .replace('<p>', '<div>')
-                                                        .replace('</p>', '</div>')
-                                                        .replace('<div\s+type="cite"[^>]*>', '<div type="cite" style="background: #f5f5f5; border: 1px solid #e0e0e0 !important; color: #555; margin: 10px 0px 0px 0px; padding: 10px;">')
-                                                        .replace('border:none;border-left:solid\s+blue\s+1.5pt;padding:0cm\s+0cm\s+0cm\s+4.0pt', 'border: none; border-left: 1px solid #f92 !important; color: #555; margin: 10px 5px 10px 0px; padding: 0px 10px;')
-                                                        %]
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <br />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </center>
-</body>
-
+                            [% Data.Body
+                            .replace('<p>', '<div>')
+                            .replace('</p>', '</div>')
+                            .replace('<div\s+type="cite"[^>]*>', '<div type="cite" style="background: #f5f5f5; border: 1px solid #e0e0e0; color: #555; margin: 10px 0px 0px 0px; padding: 10px;">')
+                            .replace('border:none;border-left:solid\s+blue\s+1.5pt;padding:0cm\s+0cm\s+0cm\s+4.0pt', 'border: none; border-left: 1px solid #f92; color: #555; margin: 10px 5px 10px 0px; padding: 0px 10px;')
+                            %]
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </center>
+    </body>
 </html>

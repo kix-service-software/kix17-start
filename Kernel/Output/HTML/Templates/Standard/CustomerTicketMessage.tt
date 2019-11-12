@@ -166,7 +166,7 @@
                 </div>
                 <div class="Clear"></div>
                 <label for="Attachment">[% Translate("Attachment") | html %]:</label>
-                <div class="Field">
+                <div class="Field Attachment">
                     <input name="file_upload" id="Attachment" title="[% Translate("Attachment") | html %]" type="file" size="40" />
                     <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
 [% WRAPPER JSOnDocumentComplete %]

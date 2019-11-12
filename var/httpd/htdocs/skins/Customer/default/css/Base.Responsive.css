@@ -89,14 +89,14 @@
     }
 
     .MessageBox {
-        margin: 0px;
+        margin: 0;
     }
 
     #Header {
         height: 60px;
         overflow: hidden;
-        padding: 0px;
-        border-bottom: 0px;
+        padding: 0;
+        border-bottom: 0;
         position: fixed;
         width: 100%;
         top: 0;
@@ -105,6 +105,7 @@
 
     .ModernizeFieldIcon {
         right: -7px;
+        height: 0.9em;
     }
     #Header #Logo,
     #Header #ResponsiveLogo {
@@ -135,19 +136,17 @@
         z-index: 9;
         position: fixed;
         text-align: right;
-        background-color: #FFF;
         width: 100%;
     }
 
     .ResponsiveSidebarContainer {
         height: 100%;
         position: fixed;
-        left: 0px;
-        top: 0px;
+        left: 0;
+        top: 0;
         width: 100%;
         display: none;
         z-index: 998;
-        background-color: rgba(22,22,22,0.7);
     }
 
     .ResponsiveHandle {
@@ -168,7 +167,7 @@
     }
     #FollowUp.Visible #Messenger .ResponsiveHandle {
         position: absolute;
-        top: 0px;
+        top: 0;
         right: 1px;
         font-size: 20px;
         width: 16px;
@@ -196,10 +195,9 @@
     #NavigationContainer {
         left: -280px;
         right: auto;
-        top: 0px;
+        top: 0;
         height: 100%;
         position: fixed;
-        background-color: #FFFFFF;
         width: 280px;
         overflow: auto;
     }
@@ -220,8 +218,8 @@
     .ResponsiveSidebarContainer .Actions > li {
         background: none;
         float: none;
-        border: none;
-        border-top: 1px solid #444;
+        border: 1px 0 0 0;
+        border-style: solid;
         margin: 0;
     }
     .ResponsiveSidebarContainer .Actions > li {
@@ -256,10 +254,6 @@
         background: none;
         width: 3%;
     }
-    .ResponsiveSidebarContainer li.ClusterSelect > span.ClusterLink,
-    .ResponsiveSidebarContainer li.ClusterSelect > span.MenuClusterIcon {
-        background-color: #82C826;
-    }
     #Navigation > .Active > ul > li > a,
     .ResponsiveSidebarContainer .Actions > .Active > ul > li > a {
         font-size: 14px;
@@ -272,13 +266,13 @@
 
     #Navigation > li:first-child,
     .ResponsiveSidebarContainer .Actions > li:first-child {
-        border-top: 0px;
+        border-top: 0;
     }
 
     #Navigation > .Active > ul,
     .ResponsiveSidebarContainer .Actions > .Active > ul {
         position: static;
-        min-width: 0px;
+        min-width: 0;
         background: none;
         border: none;
     }
@@ -286,7 +280,7 @@
     #Navigation > .Active > ul li a,
     .ResponsiveSidebarContainer .Actions > .Active > ul li a {
         padding: 7px 10px;
-        border: 0px;
+        border: 0;
     }
     #Navigation > .Active > ul > li,
     .ResponsiveSidebarContainer .Actions > .Active > ul > li {
@@ -313,7 +307,7 @@
     .WidgetSimple .AllocationListContainer,
     .WidgetSimple .AllocationListContainer ul,
     .WidgetSimple .AllocationListContainer .FilterInputContainer {
-        margin: 0px auto;
+        margin: 0 auto;
     }
 
     .WidgetSimple span.Pagination {
@@ -322,14 +316,12 @@
 
     .WidgetSimple span.Pagination.AsBlock {
         display: block;
-        margin: 10px 0px;
+        margin: 10px 0;
     }
 
     .WidgetSimple span.Pagination a,
     .OverviewActions span.Pagination a {
         display: inline-block;
-        background-color: #aaa;
-        color: #fff;
         font-size: 12px;
         padding: 5px 7px;
         float: none;
@@ -338,7 +330,6 @@
     .WidgetSimple span.Pagination a.Selected,
     .OverviewActions span.Pagination a.Selected {
         font-weight: normal;
-        background-color: #555;
     }
 
     .WidgetSimple > .Header  {
@@ -350,7 +341,7 @@
     }
 
     .WidgetSimple .Buttons {
-        margin: 0px;
+        margin: 0;
     }
 
     .WidgetSimple .Buttons span {
@@ -394,7 +385,7 @@
 
     .MainBox.FormScreen > h1,
     .MainBox.FormScreen > .AsteriskExplanation {
-        margin-left: 0px;
+        margin-left: 0;
         text-align: center;
     }
 
@@ -403,7 +394,7 @@
     }
 
     .MainBox.FormScreen > .AsteriskExplanation {
-        margin: -10px 0px 10px 0px;
+        margin: -10px 0 10px 0;
     }
 
     fieldset.TableLike.Hidden {
@@ -420,7 +411,7 @@
     fieldset.TableLike > .Row > .Field,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Field,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field {
-        padding: 0px;
+        padding: 0;
         margin-left: 2px;
         margin-bottom: 10px;
         position: relative;
@@ -450,11 +441,15 @@
     fieldset.TableLike > .Row > .RichTextField,
     fieldset.TableLike > .FloatingField,
     fieldset.TableLike > .Row > .FloatingField,
+    fieldset.TableLike.FixedLabel > .RichTextField,
+    fieldset.TableLike.FixedLabel > .Row > .RichTextField,
+    fieldset.TableLike.FixedLabel > .FloatingField,
+    fieldset.TableLike.FixedLabel > .Row > .FloatingField,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .RichTextField,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .RichTextField,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .FloatingField,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .FloatingField {
-        padding: 0px;
+        padding: 0;
         float: none;
         margin: 0;
     }
@@ -465,6 +460,12 @@
     fieldset.TableLike > .Row > .Field > input,
     fieldset.TableLike > .Field > textarea,
     fieldset.TableLike > .Row > .Field > textarea,
+    fieldset.TableLike.FixedLabel > .Field > select,
+    fieldset.TableLike.FixedLabel > .Row > .Field > select,
+    fieldset.TableLike.FixedLabel > .Field > input,
+    fieldset.TableLike.FixedLabel > .Row > .Field > input,
+    fieldset.TableLike.FixedLabel > .Field > textarea,
+    fieldset.TableLike.FixedLabel > .Row > .Field > textarea,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Field > select,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field > select,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Field > input,
@@ -480,6 +481,8 @@
         witdh: auto;
     }
     fieldset.TableLike > .Field > input[type=radio],
+    fieldset.TableLike > .Field > input[type=checkbox],
+    fieldset.TableLike > .Row > .Field > input[type=radio],
     fieldset.TableLike > .Row > .Field > input[type=checkbox] {
         width: auto;
     }
@@ -516,10 +519,16 @@
         margin-top: 15px;
     }
 
+    .Popup > #AppWrapper {
+        margin: 0;
+    }
     .LayoutPopup .CustomerContainer,
     .LayoutPopup .CcCustomerContainer,
     .LayoutPopup .BccCustomerContainer {
         margin-left: 30px;
+    }
+    .LayoutPopup #ResponsiveSidebarHandle {
+        position: absolute;
     }
 
     .ui-overlay-autocomplete li.ui-menu-item {
@@ -545,8 +554,8 @@
     }
 
     .RichTextField > .cke {
-        width: auto !important;
-        max-width: 100% !important;
+        width: auto;
+        max-width: 100%;
     }
 
     #submitRichText span {
@@ -554,7 +563,7 @@
     }
 
     .cke_dialog_footer_buttons a.cke_dialog_ui_button {
-        margin: 0px auto;
+        margin: 0 auto;
     }
 
     .CallForAction span,
@@ -631,9 +640,6 @@
     .ContentColumn {
         position: relative;
     }
-    .ResponsiveSidebarContainer .WidgetSimple {
-        background: #fff;
-    }
 
     .ResponsiveSidebarContainer .SettingsWidget label {
         font-size: 14px;
@@ -645,13 +651,12 @@
     .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow  {
         position: fixed;
         height: 100%;
-        top: 0px;
+        top: 0;
         z-index: 999;
         width: 280px;
         right: -300px;
         overflow: auto;
-        background-color: #FFFFFF;
-        padding: 0px 10px;
+        padding: 0 10px;
     }
     .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
     .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow {
@@ -712,6 +717,11 @@
     .LoginScreen fieldset.TableLike > .Row > .Field input {
         width: 75%;
     }
+    #SignUpLink,
+    #LostPasswordLink {
+        font-size: 12px;
+    }
+
 
     /* Dialogs */
     .Dialog > .Content > .ContentFooter button {
@@ -775,15 +785,15 @@
 
     .ArticleMailHeader label,
     .ArticleMailHeader .Value {
-        padding: 0px;
+        padding: 0;
     }
 
     .TicketZoom .ResponsiveSidebarContainer .ItemRow {
-        margin: 10px 0px 0px 0px;
+        margin: 10px 0 0 0;
     }
 
     .ResponsiveSidebarContainer fieldset.Narrow {
-        padding: 0px 10px;
+        padding: 0 10px;
     }
 
     .ResponsiveSidebarContainer div.Content {
@@ -805,7 +815,7 @@
     }
 
     .TicketZoom .Actions form {
-        padding: 0px;
+        padding: 0;
         display: inline-block;
         margin-bottom: -4px;
     }
@@ -863,8 +873,8 @@
     .LayoutPopup fieldset.TableLike.FixedLabel > .Row > .Field,
     .LayoutPopup fieldset.TableLike.FixedLabel > .Value,
     .LayoutPopup fieldset.TableLike.FixedLabel > .Row > .Value {
-        margin-left: 0px;
-        padding-left: 0px;
+        margin-left: 0;
+        padding-left: 0;
     }
 
     .LayoutPopup fieldset.TableLike > .Field > select,
@@ -875,7 +885,7 @@
     /* Process dialogs */
 
     #ActivityDialogContent .LayoutPopup > .Content {
-        padding: 0px;
+        padding: 0;
         border-top: 1px solid #ccc;
     }
 
@@ -885,13 +895,11 @@
         position: absolute;
         width: 15px;
         height: 15px;
-        right: 0px;
+        right: 0;
         text-align: center;
         vertical-align: middle;
-        color: #777777;
         padding: 5px;
         top: 0;
-        background-color: #DDDDDD;
         display: block;
         font-size: 12pt;
         z-index: 1;
@@ -899,7 +907,6 @@
     .ResponsiveSidebarContainer .LightRow ul {
         padding: 0;
     }
-
     .ResponsiveSidebarContainer .Actions {
         white-space: normal;
         overflow: hidden;
@@ -907,7 +914,6 @@
     .ResponsiveSidebarContainer .Actions li::after {
         display: none;
     }
-
     .ResponsiveSidebarContainer .Cluster ul li.ClusterSelect ul {
         opacity: 100;
         visibility: visible;
@@ -915,27 +921,15 @@
         position: static;
         height: auto;
         background: none;
-        box-shadow: none;
-        min-width: 0px;
+        min-width: 0;
     }
-
-    .ResponsiveSidebarContainer .Cluster ul li.ClusterSelect > a,
-    .ResponsiveSidebarContainer .Cluster ul li.ClusterSelect > span {
-        color: #FFFFFF;
-    }
-
     .ResponsiveSidebarContainer .Cluster ul ul li {
         display: block;
         padding-left: 20px;
-        border-bottom: 1px solid #82C826;
-    }
-    .ResponsiveSidebarContainer .Cluster > ul > li:hover > span {
-        background-color: #82C826;
     }
     .ResponsiveSidebarContainer .Cluster ul ul li:last-child {
         border: none;
     }
-
     .ResponsiveSidebarContainer .Cluster ul ul li a {
         padding: 5px 2px;
         background: none;
@@ -944,7 +938,6 @@
     .ResponsiveSidebarContainer .Cluster > ul > li > ul > li:last-child > a {
         border: none;
     }
-
     .ResponsiveSidebarContainer .Cluster ul ul li:after {
         display: none;
     }
@@ -962,53 +955,47 @@
     }
 
     /* Input Fields */
-
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        height: 1.111em;
+    }
     div.InputField_Container {
         width: 97%;
     }
-
     div.InputField_InputContainer {
         width: 100%;
     }
-
     div.InputField_InputContainer input.InputField_Search {
         padding: 3px;
         font-size: 0.9em;
         width: 100% !important;
     }
-
     div.InputField_ListContainer {
         margin-top: -1px;
     }
-
     div.InputField_Selection {
         height: 1.4em;
         line-height: 0.8em;
     }
-
     div.InputField_Selection div,
     div.InputField_FiltersList,
     div.InputField_ToolbarContainer ul li a {
         font-size: 0.8em;
     }
-
     div.InputField_More {
         top: 8px;
     }
-
     div.InputField_FiltersList span {
         vertical-align: 10%;
     }
-
     .jstree-InputField {
         font-size: 0.9em;
     }
-
     div.InputField_TreeContainer {
         max-height: 103px;
         line-height: 1.4em;
     }
-
     .jstree-InputField-Tree .jstree-node,
     .jstree-InputField-Tree .jstree-anchor,
     .jstree-InputField-NoTree .jstree-node,
@@ -1016,18 +1003,20 @@
     .jstree-InputField-Tree .jstree-icon:empty {
         line-height: 1.4em;
     }
-
     .jstree-InputField-Tree .jstree-wholerow,
     .jstree-InputField-NoTree .jstree-wholerow {
         line-height: 1.4em;
         height: 1.5em;
+    }
+    .OverlayTreeSelector {
+        width: auto;
     }
 
     /* Breadcrumb */
 
     .BreadCrumb {
         overflow-x: scroll;
-        padding: 7px 0px;
+        padding: 7px 0;
     }
 
     .BreadCrumb li,
@@ -1158,7 +1147,7 @@
         display: block;
         width: 100%;
         border: none;
-        padding-left: 0px;
+        padding-left: 0;
         padding-bottom: 10px;
     }
 }
@@ -1182,7 +1171,6 @@
     .SystemMessageLoginBox {
         background: none;
         border-width: 1px 0;
-        box-shadow: none;
 
     }
 
@@ -1384,10 +1372,12 @@
         display: block;
     }
 
-    .ScreenXL, .ScreenL, .ScreenM, .ScreenS {
+    .ScreenXL,
+    .ScreenL,
+    .ScreenM,
+    .ScreenS {
         display: none;
     }
-
     /*
      * @subsection Responsive classes
      * @description Special treatment of screen sizes in real popup

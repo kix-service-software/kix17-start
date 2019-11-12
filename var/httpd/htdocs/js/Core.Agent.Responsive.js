@@ -23,6 +23,48 @@ Core.Agent = Core.Agent || {};
 Core.Agent.Responsive = (function (TargetNS) {
 
     Core.App.Subscribe('Event.App.Responsive.SmallerOrEqualScreenL', function () {
+        Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady',function(Editor) {
+            var ContentWidth = Core.Config.Get('RichText.Width', 620);
+            if ( $('#cke_' + Editor.editor.name).closest('.Content').length ) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.Content').width();
+            }
+            else if ($('#cke_' + Editor.editor.name).closest('.ContentColumn').length) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.ContentColumn').width();
+            }
+            if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                Editor.editor.resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+            }
+        });
+
+        $(window).resize(function() {
+            if ( typeof CKEDITOR !== 'undefined' ) {
+                $.each( CKEDITOR.instances, function(ID) {
+                    var ContentWidth = Core.Config.Get('RichText.Width', 620);
+                    if ( $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').length ) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').width();
+                    }
+                    else if ($('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').length) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').width();
+                    }
+                    if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                        CKEDITOR.instances[ID].resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+                    }
+                });
+            }
+        });
+
+        // Add class to toolbar
+        $('#ToolBarToggle').addClass('ResponsiveToolbar');
+        $('.ResponsiveToolbar').off('.ResponsiveToolbar').on('click.ResponsiveToolbar', function() {
+            $('body').removeClass('OpenToolbar');
+            if ( $(this).hasClass('Hide') ) {
+                $('body').addClass('OpenToolbar');
+            }
+        });
+        if ( $('#ToolBarToggle').hasClass('Hide') ) {
+            $('body').addClass('OpenToolbar');
+        }
+
         // Add switch for Desktopmode
         if (!$('#ViewModeSwitch').length) {
             $('#Footer').append('<div id="ViewModeSwitch"><a href="#">' + Core.Config.Get('ViewModeSwitchDesktop') + '</a></div>');
@@ -231,6 +273,54 @@ Core.Agent.Responsive = (function (TargetNS) {
     });
 
     Core.App.Subscribe('Event.App.Responsive.ScreenXL', function () {
+        // remove class to toolbar
+        $('.ResponsiveToolbar').off('.ResponsiveToolbar');
+        $('#ToolBarToggle').removeClass('ResponsiveToolbar');
+        $('body').removeClass('OpenToolbar');
+
+        Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady',function(Editor) {
+            var ContentWidth = Core.Config.Get('RichText.Width', 620),
+                LabelWidth   = 0;
+            if ( $('#cke_' + Editor.editor.name).closest('.Content').length ) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.Content').width();
+                LabelWidth   = $('#cke_' + Editor.editor.name).closest('.Content').find('label').first().width();
+            }
+            else if ($('#cke_' + Editor.editor.name).closest('.ContentColumn').length) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.ContentColumn').width();
+                LabelWidth   = $('#cke_' + Editor.editor.name).closest('.ContentColumn').find('label').first().width();
+            }
+            // real content = content - padding - label;
+            ContentWidth = ContentWidth - 25 - LabelWidth;
+            if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                Editor.editor.resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+            } else {
+                Editor.editor.resize(Core.Config.Get('RichText.Width', 620), Core.Config.Get('RichText.Height', 320), true);
+            }
+        });
+
+        $(window).resize(function() {
+            if ( typeof CKEDITOR !== 'undefined' ) {
+                $.each( CKEDITOR.instances, function(ID) {
+                    var ContentWidth = Core.Config.Get('RichText.Width', 620),
+                        LabelWidth   = 0;
+                    if ( $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').length ) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').width();
+                        LabelWidth   = $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').first('label').width();
+                    }
+                    else if ($('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').length) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').width();
+                        LabelWidth   = $('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').first('label').width();
+                    }
+                    // real content = content - padding - label;
+                    ContentWidth = ContentWidth - 25 - LabelWidth;
+                    if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                        CKEDITOR.instances[ID].resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+                    } else {
+                        CKEDITOR.instances[ID].resize(Core.Config.Get('RichText.Width', 620), Core.Config.Get('RichText.Height', 320), true);
+                    }
+                });
+            }
+        });
 
         // remove show pagination trigger icons
         $('.WidgetAction.ShowPagination, #ViewModeSwitch').remove();

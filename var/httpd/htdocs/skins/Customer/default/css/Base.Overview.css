@@ -65,7 +65,7 @@
 
     .Headline {
         height: 24px;
-        margin: 15px 0px 5px 0px;
+        margin: 15px 0 5px 0;
         position: relative;
     }
     .Headline h1 {
@@ -83,7 +83,7 @@
         position: relative;
     }
     .OverviewBox > h1 {
-        margin: 10px 0px;
+        margin: 10px 0;
         padding: 8px 11px 7px;
         position: relative;
     }
@@ -158,7 +158,7 @@
     ul.ContextFunctions li.ContextSettings .fa {
         display: block;
         font-size: 14px;
-        padding: 5px 0px 5px 3px;
+        padding: 5px 0 5px 3px;
     }
 
     ul.ContextFunctions li.ContextHelp a span,
@@ -198,7 +198,7 @@
         display: inline-block;
     }
     .Actions li:first-child {
-        padding: 0px;
+        padding: 0;
         margin-left: 0;
     }
     .ActionRow .Actions li.AlwaysPresent span {
@@ -243,7 +243,7 @@
         left: 0;
         z-index: 999;
         min-width: 110%;
-        height: 0px;
+        height: 0;
         opacity: 0;
         overflow: hidden;
         transition: all 0.2s linear;
@@ -266,7 +266,7 @@
     .Cluster ul ul li {
         display: block;
         float: none;
-        padding: 0px;
+        padding: 0;
         border-bottom: none;
         white-space: nowrap;
         margin: 0;
@@ -286,7 +286,7 @@
         border-bottom: none;
     }
     .ActionRow.Cluster > ul > li > ul > li > a {
-        margin: 0px;
+        margin: 0;
     }
 
     .Tabs {
@@ -322,7 +322,7 @@
         float: right;
         margin-right: 0;
         font-size: 11px;
-        padding: 3px 0px 5px 0px;
+        padding: 3px 0 5px 0;
     }
     .PageLink {
         cursor: pointer;
@@ -344,7 +344,7 @@
     }
     .TicketHeader h2 {
         margin: 3px 70px 0 0;
-        padding: 10px 0px 15px 36px;
+        padding: 10px 0 15px 36px;
         font-size: 24px;
         line-height: 24px;
         position: relative;
@@ -364,7 +364,7 @@
     }
     #TicketOptions {
         position: absolute;
-        right: 0px;
+        right: 0;
         top: 20px;
         overflow: hidden;
     }
@@ -521,7 +521,7 @@
         text-align: right;
     }
     #BottomActionRow > button {
-        margin: -2px 0 0px 20px;
+        margin: 0 0 0 20px;
         padding: 0;
         float: right;
         box-sizing: border-box;
@@ -566,7 +566,7 @@
     #FAQOptions {
         overflow: hidden;
         position: absolute;
-        right: 0px;
+        right: 0;
         top: 10px;
     }
     #FAQOptions li {
@@ -638,7 +638,7 @@
     div.Headline .Flag {
         position: absolute;
         top: 5px;
-        left: 0px;
+        left: 0;
         width: 20px;
         height: 15px;
     }
@@ -655,7 +655,7 @@
     }
     .AdditionalInformation.ControlRow {
         top: 1px;
-        right: 0px;
+        right: 0;
         background: none;
     }
     #ArticleTree {
@@ -704,22 +704,20 @@
     }
 
     .TemplateSelectionArea > div {
-        margin: 0px 0px 80px 0px;
+        margin: 0 0 80px 0;
         width: 900px;
         margin-left: auto;
         margin-right: auto;
     }
     .FilterArea {
-        margin: 20px 0px 30px 5px;
+        margin: 20px 0 30px 5px;
     }
     #PortalGroupFilter,
     #TicketTemplateFilter {
         width: 250px;
-        margin: 0px 15px 0px 15px;
-        border-width: 0px;
-        border-bottom-width: 1px;
-        padding-left: 5px;
-        padding-right: 20px;
+        margin: 0 15px 10px 15px;
+        border-width: 0 0 1px 0;
+        padding: 0 20px 0 5px;
         box-sizing: border-box;
     }
     #PortalGroupFilterClear,
@@ -746,7 +744,6 @@
         width: 64px;
         height: 64px;
         padding: 5px;
-        box-shadow: 2px 2px 2px #a0a0a0;
     }
     .TicketTemplateElement a:hover > img {
         -webkit-filter: none;
