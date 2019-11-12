@@ -191,6 +191,7 @@
         line-height: 15px;
         vertical-align: middle;
     }
+    .DataTable td.NonTextContent,
     .TableSmall td.NonTextContent {
         padding-left: 0;
         padding-right: 0;

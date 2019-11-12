@@ -47,7 +47,7 @@
                 <tbody>
 [% RenderBlockStart("Attachment") %]
                     <tr>
-                        <td class="Checkbox Fixed NonTextContent" style="width: 36px;">
+                        <td class="Checkbox Fixed" style="width: 36px;">
                             <input class="Checkbox AutocompleteOff" type="checkbox" value="[% Data.ArticleID | html %]::[% Data.Filename | html %]" name="AttachmentID" autocomplete="off">
                             <input type="hidden" name="TicketID" value="[% Data.TicketID | html %]">
                         </td>

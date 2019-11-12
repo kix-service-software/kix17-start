@@ -14,6 +14,17 @@
 
 @media screen,projection,tv,handheld {
     /**
+    *   Colors
+    *
+    *   Main:               #0A7CB3
+    *   Widget Header:      #CBE1ED
+    *   Sidebar Header:     #D5D5D5
+    *   Login Button:       #0A7CB3
+    *   Login Button-Hover: #086391
+    */
+
+
+    /**
     *   @subsection primare color
     */
     html, body, a {
@@ -150,6 +161,7 @@
         color: #0A7CB3;
     }
 
+
     /**
     *   @subsection widget
     */
@@ -184,11 +196,11 @@
     */
     .SidebarColumn .WidgetSimple {
         border: 1px solid #D5D5D5;
-        background-color: #F0F0F0;
+        background-color: #D5D5D5;
     }
     .SidebarColumn .ZoomSidebar {
         border: 1px solid #D5D5D5;
-        background-color: #F0F0F0;
+        background-color: #D5D5D5;
     }
     .SidebarColumn .WidgetSimple > .Header,
     .SidebarColumn .WidgetSimple.SettingsWidget > .Header,
@@ -495,17 +507,10 @@
     .CustomerContainer,
     .CcCustomerContainer,
     .BccCustomerContainer {
-        -moz-box-shadow: inset 1px 1px 5px #CCCCCC;
-        -webkit-box-shadow: inset 1px 1px 5px #CCCCCC;
-        box-shadow: inset 1px 1px 5px #CCCCCC;
         background-color: #F2F2F2;
-        border: 1px solid #CCCCCC;
+        border-color: #9E9E9E;
     }
-    .CustomerContainer .BoxLabel,
-    .CcCustomerContainer .BoxLabel,
-    .BccCustomerContainer .BoxLabel {
-        background-color: #CCCCCC;
-    }
+
 
     /**
     *   @subsection ul table like
@@ -666,7 +671,7 @@
     }
     .FAQ .OverviewControl,
     .FAQ #OverviewBody  {
-        border: 1px solid #0A7CB3;
+        border-color: #0A7CB3;
     }
     ul.FAQMiniList li:hover {
         background-color: inherit;
@@ -734,6 +739,9 @@
     }
     .TicketLockMessage::before {
         color: #F80010;
+    }
+    .TicketLockMessage > a:hover {
+        color: #FFFFFF;
     }
 
 
@@ -1081,12 +1089,29 @@
     /**
     *   @subsection layout popup
     */
+    .PopupIframe {
+        background-color: #FFFFFF;
+    }
     .LayoutPopup > .Header {
         background-color: #F6F6F6;
         border-bottom: 1px solid #DDDDDD;
     }
     .LayoutPopup > .Footer {
         border-top: 1px solid #EEEEEE;
+    }
+    .CancelClosePopup {
+            color: #0A7CB3;
+    }
+    .CancelClosePopup:hover {
+            color: #5FA441;
+    }
+
+
+    /**
+    *   @subsection history
+    */
+    .LinkZoomView {
+        color: #0A7CB3;
     }
 
 
@@ -1095,8 +1120,9 @@
     */
     .MessageBox {
         background-color: #0A7CB3;
+        color: #FFFFFF;
     }
-    .MessageBox p {
+    .MessageBox p a {
         color: #FFFFFF;
     }
     .MessageBox a:hover {
@@ -1104,6 +1130,7 @@
     }
     .MessageBox.Error {
         background: #E31E24;
+        color: #FFFFFF;
     }
 
 
@@ -1133,5 +1160,58 @@
         color: #E31E24;
     }
 
-
+    /**
+    *   @subsection Responsive
+    */
+    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
+    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
+    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
+    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow  {
+        background-color: #FFFFFF;
+    }
+    #ResponsiveTicketMenuHandle,
+    .ResponsiveMenuHandle {
+        color: #777777;
+        background-color: #DDDDDD;
+    }
+    .ResponsiveSidebarContainer {
+        background-color: rgba(22,22,22,0.7);
+    }
+    .ResponsiveSidebarContainer > #NavigationContainer {
+        background-color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer #Navigation > li,
+    .ResponsiveSidebarContainer .Actions > li {
+        border-color: #444444;
+    }
+    .ResponsiveSidebarContainer .WidgetSimple {
+        background-color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer .Cluster ul li.ClusterSelect > a,
+    .ResponsiveSidebarContainer .Cluster ul li.ClusterSelect > span {
+        color: #FFFFFF;
+        background-color: #0A7CB3;
+    }
+    .ResponsiveSidebarContainer .Cluster ul ul li {
+        border-bottom: 1px solid #0A7CB3;
+    }
+    .ResponsiveSidebarContainer .Cluster > ul > li:hover > span {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    body:not(.Visible-ScreenXL) #ToolBar {
+        background-color: #F0F0F0;
+    }
+    body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a,
+    body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a {
+        background-color: #AAAAAA;
+        color: #FFFFFF;
+    }
+    body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a.Selected,
+    body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a.Selected {
+        background-color: #555555;
+    }
+    body:not(.Visible-ScreenXL) #UserInfo {
+        background-color: #FFFFFF;
+    }
 }

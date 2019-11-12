@@ -90,7 +90,6 @@ Core.UI = (function (TargetNS) {
      *      This function initializes the toggle mechanism for all widgets with a WidgetAction toggle icon in tabs.
      */
     TargetNS.InitWidgetActionTabToggle = function () {
-        console.log('test');
         $("#ContentItemTabs .WidgetAction.Toggle").each(function () {
             var $WidgetElement = $(this).closest("div.Header").parent('div'),
                 ContentDivID   = Core.UI.GetID($WidgetElement.children('.Content'));

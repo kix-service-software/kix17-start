@@ -129,7 +129,7 @@
         position: relative;
         display: block;
     }
-    #ToolBar li a i {
+    #ToolBar li > a > i {
         display: block;
         font-size: 18px;
         font-style: normal;
@@ -141,6 +141,17 @@
         position: relative;
         top: -9px;
     }
+    #ToolBar .ShowTreeSelection > i {
+        display: block;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: normal;
+        padding: 0;
+        text-align: center;
+        text-indent: 0;
+        width: 24px;
+        position: relative;
+    }
     #ToolBar li a i.icon-small {
         font-size: 12px;
         position: absolute;
@@ -150,7 +161,12 @@
         width: 15px;
         display: none;
     }
-
+    #ToolBar .Reached .icon-small.icon-show-reached {
+        display: block;
+    }
+    #ToolBar .New .icon-small.icon-show-new {
+        display: block;
+    }
     #ToolBarToggle {
         cursor: pointer;
         z-index: -10;
@@ -251,7 +267,7 @@
     }
 
     #ToolBar li.SearchFulltext Input {
-        height: 15px;
+        height: 14px;
         vertical-align: bottom;
     }
 

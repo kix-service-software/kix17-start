@@ -91,7 +91,7 @@
     .ControlRow {
         position: relative;
         overflow: hidden;
-        min-height: 24px;
+        min-height: 25px;
     }
     .ControlRow h2 {
         padding-top: 1px;
@@ -206,11 +206,20 @@
     }
     .Actions li a,
     .Actions li span {
-        padding: 2px 2px;
+        padding: 2px 2px 0px 2px;
         display: inline-block;
         border-bottom: 0;
     }
-
+    .Actions > li {
+        margin-bottom: 5px;
+    }
+    .Bottom:not(.LightRow) {
+        padding-left: 6px;
+    }
+    .Bottom:not(.LightRow) > .Actions li a,
+    .Bottom:not(.LightRow) > .Actions li span {
+        padding-left: 0;
+    }
     .Actions li.Inactive a {
         cursor: default;
     }
@@ -230,7 +239,7 @@
         z-index: 1;
     }
     .Actions li span.ClusterLink {
-        padding: 2px 5px;
+        padding: 2px 5px 0px 5px;
     }
 
     .Cluster {
@@ -238,7 +247,7 @@
     }
     .Cluster ul ul {
         position: absolute;
-        top: 23px;
+        top: 21px;
         left: 0;
         z-index: 999;
         min-width: 110%;
