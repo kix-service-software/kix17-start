@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.9.0-RC7 (2019/11/12)
+ * (2019/11/11) - Bugfix: T2019111190000782 (added search attributes) (ddoerffel)
+ * (2019/11/11) - CR: T2019081490001077 (Fixed several display errors of the new design) (fjacquemin)
+ * (2019/11/08) - Bugfix: T2019103090000579 (wrong description for skin) (ddoerffel)
+ * (2019/11/08) - Bugfix: T2019092690001132 (missing check for user preferences) (ddoerffel)
+ * (2019/11/07) - Bugfix: T2019100890000469 (wrong format for body and subject in ticket template editor) (ddoerffel)
+
 # 17.9.0-RC6 (2019/10/29)
  * (2019/10/29) - CR: T2019081490001077 (implemented new design) (fjacquemin)
 
