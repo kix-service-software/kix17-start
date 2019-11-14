@@ -38,6 +38,8 @@ Core.KIX4OTRS.KIXSidebarDynamicField = (function(TargetNS) {
                     $('#KIXSidebarDynamicFieldEdit').addClass('Hidden');
                 else
                     $('#KIXSidebarDynamicFieldDisplay').addClass('Hidden');
+                if ( $('#DynamicField').hasClass('Collapsed') )
+                    $('#DynamicField').removeClass('Collapsed').addClass('Expanded');
             }
             // show edit fields hide settings
             else {
