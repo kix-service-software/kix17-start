@@ -66,7 +66,7 @@ sub Run {
     );
 
     # get user preferences
-    my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+    my %UserPreferences       = $UserObject->GetPreferences( UserID => $Self->{UserID} );
     my $View                  = $UserPreferences{UserKIXSidebarDynamicFieldView} || 'Collapsed';
     my $DynamicFieldSelected  = $UserPreferences{UserKIXSidebarDynamicFieldSelection};
     my @DynamicFieldSelection = split( /,/, $DynamicFieldSelected );
@@ -87,6 +87,9 @@ sub Run {
             Key    => 'UserKIXSidebarDynamicFieldSelection',
             Value  => $DisplayedDynamicFieldsStrg,
         );
+
+        # reset selection to new values
+        @DynamicFieldSelection = split( /,/, $DisplayedDynamicFieldsStrg );
 
         # update session
         if ($Success) {
@@ -129,11 +132,12 @@ sub Run {
                 next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
 
                 # extract the dynamic field value from the web request
-                $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldValueGet(
+                $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
+                    = $BackendObject->EditFieldValueGet(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     ParamObject        => $ParamObject,
                     LayoutObject       => $LayoutObject,
-                );
+                    );
             }
 
             # convert dynamic field values into a structure for ACLs
@@ -192,7 +196,8 @@ sub Run {
                             my %Filter = $TicketObject->TicketAclData();
 
                             # convert Filer key => key back to key => value using map
-                            %{$PossibleValuesFilter} = map( { $_ => $PossibleValues->{$_} } keys %Filter );
+                            %{$PossibleValuesFilter}
+                                = map( { $_ => $PossibleValues->{$_} } keys %Filter );
                         }
                     }
                 }
@@ -201,11 +206,11 @@ sub Run {
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                     DynamicFieldConfig   => $DynamicFieldConfig,
                     PossibleValuesFilter => $PossibleValuesFilter,
-                    Value                => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-                    LayoutObject         => $LayoutObject,
-                    ParamObject          => $ParamObject,
-                    AJAXUpdate           => 1,
-                    UpdatableFields      => $Self->_GetFieldsToUpdate(),
+                    Value           => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
+                    LayoutObject    => $LayoutObject,
+                    ParamObject     => $ParamObject,
+                    AJAXUpdate      => 1,
+                    UpdatableFields => $Self->_GetFieldsToUpdate(),
                 );
             }
 
@@ -255,8 +260,10 @@ sub Run {
                 my $ValueStrg = $BackendObject->DisplayValueRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-                    ValueMaxChars      => $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{TicketDataLength} || '',
-                    LayoutObject       => $LayoutObject,
+                    ValueMaxChars =>
+                        $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{TicketDataLength}
+                        || '',
+                    LayoutObject => $LayoutObject,
                 );
 
                 $JSON .= '<label id="LabelDynamicField_'
@@ -269,7 +276,8 @@ sub Run {
                 if (
                     !defined $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
                     || !$Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
-                ) {
+                    )
+                {
                     $LayoutObject->Block(
                         Name => 'DynamicFieldContentNotSet',
                     );
@@ -280,11 +288,12 @@ sub Run {
                         . '">$TimeLong{"$Data{"Value"}"}</p>';
                 }
                 elsif (
-                    $DynamicFieldConfig->{FieldType}    eq 'Dropdown'
+                    $DynamicFieldConfig->{FieldType} eq 'Dropdown'
                     || $DynamicFieldConfig->{FieldType} eq 'Multiselect'
                     || $DynamicFieldConfig->{FieldType} eq 'MultiselectGeneralCatalog'
                     || $DynamicFieldConfig->{FieldType} eq 'DropdownGeneralCatalog'
-                ) {
+                    )
+                {
                     $JSON .= '<p class="Value" title="'
                         . $ValueStrg->{Title} . '">'
                         . $ValueStrg->{Value} . '</p>';
