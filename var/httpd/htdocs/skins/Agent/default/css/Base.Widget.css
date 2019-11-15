@@ -553,12 +553,10 @@
         -moz-border-radius: 2px;
         -webkit-border-radius: 2px;
         border-radius: 2px;
-        border: 1px solid #CCC;
-        background: #eee url(../img/widget_bg_100.png) repeat-x;
-        -moz-box-shadow: 4px 4px 4px #666;
-        -webkit-box-shadow: 4px 4px 4px #666;
-        box-shadow: 4px 4px 4px #666;
+        border-style: solid;
+        border-width: 1px;
     }
+
 
     /**
     *   @subsection LinkGraph

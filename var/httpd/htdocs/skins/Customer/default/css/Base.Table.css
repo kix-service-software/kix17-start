@@ -14,16 +14,15 @@
 
 @media screen,projection,tv,handheld {
     .SortableList {
-        border: 1px solid #ddd;
+        border-width: 1px;
+        border-style: solid;
         padding: 10px 10px 3px 10px;
         width: 80%;
-        background: #eee;
     }
     .SortableList li {
         margin-bottom: 7px;
     }
     .SortableList li span {
-        background-color: #ddd;
         font-size: 11px;
         line-height: 12px;
         margin-bottom: 5px;
@@ -37,12 +36,8 @@
     .SortableList li span input {
         border: 0px;
         font-size: 11px;
-        background-color: #ddd;
-        box-shadow: none;
-        color: #777;
     }
     .SortableList li span i {
-        color: #bbb;
         font-size: 14px;
         position: absolute;
         left: 6px;
@@ -51,12 +46,7 @@
         width: 10px;
         display: block;
     }
-    .SortableList li span:hover i {
-        color: #777;
-    }
     .SortableList li span strong {
-        background-color: #bbb;
-        color: #eee;
         cursor: pointer;
         display: block;
         font-size: 11px;
@@ -76,7 +66,6 @@
         top: -1px;
         display: none;
         background: none;
-        color: #000;
     }
     .SortableList li ul{
         margin-left: 20px;
@@ -86,8 +75,8 @@
         display: none;
     }
     div.AddElement {
-        background: #ddd;
-        border: 1px solid #ddd;
+        border-width: 1px;
+        border-style: solid;
         font-size: 11px;
         padding: 3px 10px;
         width: 80%;
@@ -548,7 +537,6 @@
     .OverviewTable thead th > span {
         padding: 1px 13px 4px 8px;
         height: 10px;
-        color: #444;
         font-size: 11px;
         text-transform: uppercase;
         display: block;

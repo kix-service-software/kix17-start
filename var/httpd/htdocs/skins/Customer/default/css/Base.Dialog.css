@@ -22,7 +22,6 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: #000;
         opacity: 0.5;
         filter: alpha(opacity=50);
         z-index: 3500;
@@ -392,11 +391,8 @@
     .FieldHelpContainer .FieldHelpTrigger {
         cursor: default;
         z-index: 1;
-        color: #bbb;
     }
     .FieldHelpContainer > span {
-        background: #444444;
-        color: #fff;
         font-size: 12px;
         left: 15px;
         line-height: 110%;
@@ -404,7 +400,6 @@
         position: absolute;
         z-index: 2;
         text-align: left;
-        text-shadow: 1px 1px 1px #000;
         -webkit-border-radius: 5px;
         -moz-border-radius: 5px;
         -ms-border-radius: 5px;

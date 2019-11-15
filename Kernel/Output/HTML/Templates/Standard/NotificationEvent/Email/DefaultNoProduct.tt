@@ -15,11 +15,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <style type="text/css">
             body {
-                width: 70%;
+                width: auto;
+                height: auto;
                 -webkit-text-size-adjust: none;
-                margin: auto;
-                padding: 0px;
-                align: center;
+                padding: 1.5em;
+                margin: 0;
+                text-align: center;
                 background-color: #FAFAFA;
                 color: #434242;
             }
@@ -30,9 +31,10 @@
 
             #templateContainer {
                 height: 100%;
-                margin: 0;
+                margin: auto;
                 padding: 0;
                 width: 100%;
+                display: inline;
             }
 
             h1, h2, h3, h4, h5, h6 {
@@ -138,7 +140,7 @@
     </head>
     <body>
         <center>
-            <table margin="50px" border="0" cellpadding="0" cellspacing="0" id="templateContainer" style="padding:1.5em;">
+            <table margin="50px" border="0" cellpadding="0" cellspacing="0" id="templateContainer">
                 <tbody>
                     <tr>
                         <td valign="top" class="headerContent">

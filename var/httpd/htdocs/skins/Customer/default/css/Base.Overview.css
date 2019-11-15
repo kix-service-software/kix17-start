@@ -260,7 +260,6 @@
         border-left: none;
         width: 10px;
         text-align: center;
-        background-color: #E8E8E8;
     }
 
     .Cluster ul ul li {
@@ -574,7 +573,6 @@
         margin-left: 5px;
     }
     #FAQOptions .Print {
-        color: #777;
         font-size: 15px;
     }
     #FAQOptions .Print span {

@@ -146,6 +146,39 @@
 
 
     /**
+    *   @subsection sortable
+    */
+    .SortableList {
+        border-color: #DDDDDD;
+        background: #EEEEEE;
+    }
+    .SortableList li span {
+        background-color: #DDDDDD;
+    }
+    .SortableList li span input {
+        background-color: #DDDDDD;
+        color: #777777;
+    }
+    .SortableList li span i {
+        color: #BBBBBB;
+    }
+    .SortableList li span:hover i {
+        color: #777777;
+    }
+    .SortableList li span strong {
+        background-color: #BBBBBB;
+        color: #EEEEEE;
+    }
+    .SortableList li span.Icon {
+        color: #000000;
+    }
+    div.AddElement {
+        background-color: #DDDDDD;
+        border-color: #DDDDDD;
+    }
+
+
+    /**
     *   @subsection control row
     */
     .ControlRow,
@@ -198,9 +231,13 @@
         border: 1px solid #D5D5D5;
         background-color: #D5D5D5;
     }
-    .SidebarColumn .ZoomSidebar {
+    .SidebarColumn .ZoomSidebarKIX {
         border: 1px solid #D5D5D5;
         background-color: #D5D5D5;
+    }
+    .SidebarColumn .ZoomSidebar {
+        border: 1px solid #D5D5D5;
+        background-color: #F5F5F5;
     }
     .SidebarColumn .WidgetSimple > .Header,
     .SidebarColumn .WidgetSimple.SettingsWidget > .Header,
@@ -451,8 +488,14 @@
         background-color: #FFFFFF;
         border: 1px solid #CCCCCC;
     }
+    div.InputField_Selection div.Text {
+        background: #DDDDDD;
+    }
     div.InputField_Selection div.Remove {
         background-color: #BBBBBB;
+    }
+    div.InputField_ToolbarContainer ul li::after {
+        color: #BBBBBB;
     }
     div.InputField_ToolbarContainer ul li:hover {
         background-color: #0A7CB3;
@@ -600,6 +643,9 @@
     table.OverviewTable thead th {
         background-color: #EEEEEE;
     }
+    .OverviewTable thead th > span {
+        color: #444444;
+    }
     .OverviewTable tbody tr:nth-child(2n) {
         background-color: #F5F5F5;
     }
@@ -624,7 +670,6 @@
     .LightRow .Actions > li > ul {
         border: 1px solid #9E9E9E;
     }
-
     .ActionRow .Actions li span,
     .LightRow .Actions li span {
         background-color: #EEEEEE;
@@ -654,6 +699,11 @@
         background-color: #0A7CB3;
         color: #FFFFFF;
     }
+    .ActionRow .Actions li span.MenuClusterIcon,
+    .LightRow .Actions li span.MenuClusterIcon,
+    .Actions li.Inactive span.MenuClusterIcon:hover {
+        background-color: #E8E8E8;
+    }
 
 
     /**
@@ -680,6 +730,9 @@
     ul.FAQMiniList li:hover a {
         color: #0A7CB3;
         background-color: inherit;
+    }
+    #FAQOptions .Print {
+        color: #777777;
     }
 
 
@@ -986,6 +1039,18 @@
 
 
     /**
+    *   @subsection field help container
+    */
+    .FieldHelpContainer .FieldHelpTrigger {
+        color: #BBBBBB;
+    }
+    .FieldHelpContainer > span {
+        background: #444444;
+        color: #FFFFFF;
+    }
+
+
+    /**
     *   @subsection ITSM
     */
     #ITSMTable > .ControlRow {
@@ -1050,6 +1115,17 @@
 
 
     /**
+    * @subsection WidgetPopup
+    */
+    div.WidgetPopup {
+        border-color: #CCCCCC;
+        background-color: #EEEEEE;
+        background-image: url(../img/widget_bg_100.png);
+        background-repeat: repeat-x;
+    }
+
+
+    /**
     *   @subsection KIXSidebar
     */
     .KIXSBRDBPopupBox  {
@@ -1075,6 +1151,9 @@
     }
     span[class$="Magnifier"]:hover {
         color: #0A7CB3;
+    }
+    .ActionList p {
+        color: #888888;
     }
     .ZoomSidebar > .Content > .TableLike.FixedLabelSmall a {
         border: 1px solid #9E9E9E;
@@ -1122,6 +1201,9 @@
         background-color: #0A7CB3;
         color: #FFFFFF;
     }
+    .MessageBox.Notice p {
+        color: #FFF;
+    }
     .MessageBox p a {
         color: #FFFFFF;
     }
@@ -1133,6 +1215,14 @@
         color: #FFFFFF;
     }
 
+
+    /**
+    *   @subsection daemon
+    */
+    .DaemonInfoContent legend {
+        border-color: #CCCCCC;
+        color: #333333;
+    }
 
     /**
     *   @subsection field errors
@@ -1159,10 +1249,16 @@
     .ItemRow i.OpenTicket {
         color: #E31E24;
     }
+}
 
-    /**
-    *   @subsection Responsive
-    */
+
+/**
+*   @subsection Responsive
+*/
+@media only screen and (min-width: 0px) and (max-width: 1024px) {
+    #ResponsiveSidebarNotification {
+        color: #CCCCCC;
+    }
     .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
     .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
     .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
