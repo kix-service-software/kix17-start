@@ -4913,6 +4913,8 @@ Ihr Helpdesk-Team
         'Defines the default ticket type for new customer tickets in the customer interface.' =>
             'Definiert den Standard-Ticket-Typ für neue Kundentickets in der  Kundenoberfläche.',
         'Defines the default ticket type.' => 'Definiert den Standardtyp für ein Ticket.',
+        'Defines the default ticket unlock state in the ticket bulk screen of the agent interface.' =>
+            'Definiert die Standard-Ticketentsperrung in der \'Sammelaktion\'-Oberfläche im Agenten-Interface.',
         'Defines the default type for article in the customer interface.' =>
             'Definiert den Standard-Typ für Artikel im Kunden-Interface.',
         'Defines the default type of forwarded message in the ticket forward screen of the agent interface.' =>
