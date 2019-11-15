@@ -100,6 +100,14 @@ sub Quote {
                 ${$Text}
                     =~ s/_/$Self->{'DB::QuoteUnderscoreStart'}_$Self->{'DB::QuoteUnderscoreEnd'}/g;
             }
+
+            ## From PostgreSQL manual for LIKE:
+            # Note that the backslash already has a special meaning in string literals, so to write a pattern constant
+            # that contains a backslash you must write two backslashes in an SQL statement (assuming escape string syntax is used, see Section 4.1.2.1).
+            # Thus, writing a pattern that actually matches a literal backslash means writing four backslashes in the statement.
+            # You can avoid this by selecting a different escape character with ESCAPE; then a backslash is not special to LIKE anymore.
+            # (But backslash is still special to the string literal parser, so you still need two of them to match a backslash.)
+            ${$Text} =~ s/\\/\\\\/g;
         }
     }
     return $Text;

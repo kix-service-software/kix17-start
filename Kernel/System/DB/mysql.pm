@@ -135,6 +135,13 @@ sub Quote {
                 ${$Text}
                     =~ s/_/$Self->{'DB::QuoteUnderscoreStart'}_$Self->{'DB::QuoteUnderscoreEnd'}/g;
             }
+
+            ## From MySQL manual for LIKE:
+            # Because MySQL uses C escape syntax in strings (for example, \n to represent a newline character),
+            # you must double any \ that you use in LIKE strings. For example, to search for \n, specify it as \\n.
+            # To search for \, specify it as \\\\; this is because the backslashes are stripped once by the parser
+            # and again when the pattern match is made, leaving a single backslash to be matched against.
+            ${$Text} =~ s/\\/\\\\/g;
         }
     }
     return $Text;
