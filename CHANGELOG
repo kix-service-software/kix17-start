@@ -1,6 +1,15 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.9.0-RC8 (2019/11/15)
+ * (2019/11/14) - Bugfix: T2019061190000587 (unable to search for config item with backslash in name) (millinger)
+ * (2019/11/14) - CR: T2019081490001077 (changed layout of the new design) (fjacquemin)
+ * (2019/11/14) - Bugfix: T2019102890000912 (acl module ProcessProgressAfterClosedChilds did not work for customer frontend) (millinger)
+ * (2019/11/14) - Bugfix: T2019100190000945 (ticket could not be deleted if article was moved) (millinger)
+ * (2019/11/14) - CR: T2019111490000482 (configurable unlock state for AgentTicketBulk) (millinger)
+ * (2019/11/14) - Bugfix: T2019092690001132 (click on settings does not show list if collapsed) (ddoerffel)
+ * (2019/11/12) - Bugfix: T2019031590000496 (tab shown if dynamic field deleted) (ddoerffel)
+
 # 17.9.0-RC7 (2019/11/12)
  * (2019/11/11) - Bugfix: T2019111190000782 (added search attributes) (ddoerffel)
  * (2019/11/11) - CR: T2019081490001077 (Fixed several display errors of the new design) (fjacquemin)
