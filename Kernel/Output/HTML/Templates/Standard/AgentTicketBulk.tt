@@ -26,7 +26,7 @@
 [% RenderBlockStart("UndoClosePopup") %]
             <p class="TicketLockMessage">
                 [% Translate("The ticket has been locked") | html %].
-                <a class="PopupUndoClose" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelandUnlock;FormID=[% Data.FormID %];[% Env("ChallengeTokenParam") | html %]">
+                <a class="PopupUndoClose" href="[% Env("Baselink") %]Action=AgentTicketBulk;Subaction=CancelAndUnlock;FormID=[% Data.FormID %];[% Env("ChallengeTokenParam") | html %]">
                     [% Translate("Undo & close") | html %]
                 </a>
             </p>

@@ -501,6 +501,12 @@ sub ArticleMove {
         Bind => [ \$Param{TicketID}, \$Param{UserID}, \$Param{ArticleID} ],
     );
 
+    # update article history
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+        SQL  => 'UPDATE ticket_history SET ticket_id = ? WHERE article_id = ?',
+        Bind => [ \$Param{TicketID}, \$Param{ArticleID} ],
+    );
+
     # clear ticket cache
     delete $Self->{ 'Cache::GetTicket' . $Param{TicketID} };
 

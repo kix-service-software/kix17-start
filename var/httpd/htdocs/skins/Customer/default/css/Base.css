@@ -290,9 +290,6 @@
     .MessageBox.Info {
         margin-right: 10px;
     }
-    .MessageBox.Notice p {
-        color: #FFF;
-    }
     .MessageBox a.Close {
         position: absolute;
         top: 7px;

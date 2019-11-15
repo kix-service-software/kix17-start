@@ -31,14 +31,14 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # get needed objects
-    my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $LayoutObject        = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TicketObject        = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $ConfigObject        = $Kernel::OM->Get('Kernel::Config');
-    my $UploadCacheObject   = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
-    my $EncodeObject        = $Kernel::OM->Get('Kernel::System::Encode');
-    my $JSONObject          = $Kernel::OM->Get('Kernel::System::JSON');
-    my $BulkExecutor        = $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::BulkExecutor');
+    my $ParamObject       = $Kernel::OM->Get('Kernel::System::Web::Request');
+    my $LayoutObject      = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $TicketObject      = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ConfigObject      = $Kernel::OM->Get('Kernel::Config');
+    my $UploadCacheObject = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
+    my $EncodeObject      = $Kernel::OM->Get('Kernel::System::Encode');
+    my $JSONObject        = $Kernel::OM->Get('Kernel::System::JSON');
+    my $BulkExecutor      = $Kernel::OM->Get('Kernel::System::AsynchronousExecutor::BulkExecutor');
 
     my @TicketIDs;
     my %GetTickets;
@@ -46,7 +46,7 @@ sub Run {
     my %Time;
     my %GetParam;
 
-    $Param{FormID}   = $ParamObject->GetParam( Param => 'FormID' );
+    $Param{FormID} = $ParamObject->GetParam( Param => 'FormID' );
     if ( !$Param{FormID} ) {
         $Param{FormID} = $UploadCacheObject->FormIDCreate();
     }
@@ -55,6 +55,7 @@ sub Run {
         FormID => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID},
     );
 
+    # subaction CancelAndClose
     if ( $Self->{Subaction} eq 'CancelAndClose' ) {
         $UploadCacheObject->FormIDRemove( FormID => $Param{FormID}.'.'.$Self->{Action}.'.'.$Self->{UserID} );
 
@@ -62,8 +63,8 @@ sub Run {
             Reload => 1,
         );
     }
-
-    elsif ( $Self->{Subaction} eq 'CancelandUnlock' ) {
+    # subaction CancelAndUnlock
+    elsif ( $Self->{Subaction} eq 'CancelAndUnlock' ) {
 
         for my $Item (@ContentItems) {
             next if $Item->{Filename} ne 'LockedItemIDs';
@@ -91,11 +92,11 @@ sub Run {
         for my $TicketID (@TicketIDs) {
 
             my %JobParam = (
-                CallAction              => 'BulkCancel',
-                FormID                  => $Param{FormID},
-                TicketID                => $TicketID,
-                Action                  => $Self->{Action},
-                UserID                  => $Self->{UserID},
+                CallAction => 'BulkCancel',
+                FormID     => $Param{FormID},
+                TicketID   => $TicketID,
+                Action     => $Self->{Action},
+                UserID     => $Self->{UserID},
             );
             my $Success = $BulkExecutor->AsyncCall(
                 ObjectName     => 'Kernel::System::AsynchronousExecutor::BulkExecutor',
@@ -120,15 +121,15 @@ sub Run {
 
             Title        => 'Ticket Bulk Action',
             EndParam     => {
-                Subaction    => 'CancelandUnlockEnd',
+                Subaction    => 'CancelAndUnlockEnd',
                 UserID       => $Self->{UserID}
             },
             FooterType   => 'Small',
             HeaderType   => 'Small',
         );
     }
-
-    elsif ( $Self->{Subaction} eq 'CancelandUnlockEnd' ) {
+    # subaction CancelAndUnlockEnd
+    elsif ( $Self->{Subaction} eq 'CancelAndUnlockEnd' ) {
         my @CancelErrorID;
 
         for my $Item (@ContentItems) {
@@ -151,19 +152,18 @@ sub Run {
         return $LayoutObject->PopupClose(
             Reload => 1,
         );
-
     }
-
+    # subaction AJAXUpdate
     elsif ( $Self->{Subaction} eq 'AJAXUpdate' ) {
         my $QueueID = $ParamObject->GetParam( Param => 'QueueID' ) || '';
 
-        # Get all users.
+        # get all users
         my %AllGroupsMembers = $Kernel::OM->Get('Kernel::System::User')->UserList(
             Type  => 'Long',
             Valid => 1
         );
 
-        # Put only possible rw agents to owner list.
+        # put only possible rw agents to owner list
         if ( !$ConfigObject->Get('Ticket::ChangeOwnerToEveryone') ) {
             my %AllGroupsMembersNew;
             my @QueueIDs;
@@ -228,7 +228,7 @@ sub Run {
             NoCache     => 1,
         );
     }
-
+    # subaction DoEnd
     elsif ( $Self->{Subaction} eq 'DoEnd') {
         # redirect
         my $ActionFlag   = $ParamObject->GetParam( Param => 'ActionFlag' );
@@ -296,6 +296,7 @@ sub Run {
     my @IgnoreLockedTicketIDs;
     my @ValidTicketIDs;
 
+    # subaction TicketLocking
     if ( $Self->{Subaction} eq 'TicketLocking' ) {
         # check if only locked tickets have been selected
         if ( $Config->{RequiredLock} ) {
@@ -371,7 +372,7 @@ sub Run {
             next MODULECONFIG;
         }
 
-        if ( ref $ModuleObject ne $Module ) {
+        if ( ref( $ModuleObject ) ne $Module ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
                 Message  => "Object for $Module is invalid!",
@@ -379,7 +380,7 @@ sub Run {
             next MODULECONFIG;
         }
 
-        push @BulkModules, $ModuleObject;
+        push(@BulkModules, $ModuleObject);
     }
 
     # get needed objects
@@ -441,23 +442,38 @@ sub Run {
         }
 
         # Body and Subject must both be filled in or both be empty
-        if ( $GetParam{Subject} eq '' && $GetParam{Body} ne '' ) {
+        if (
+            $GetParam{Subject} eq ''
+            && $GetParam{Body} ne ''
+        ) {
             $Error{'SubjectInvalid'} = 'ServerError';
         }
-        if ( $GetParam{Subject} ne '' && $GetParam{Body} eq '' ) {
+        if (
+            $GetParam{Subject} ne ''
+            && $GetParam{Body} eq ''
+        ) {
             $Error{'BodyInvalid'} = 'ServerError';
         }
 
         # Email Body and Email Subject must both be filled in or both be empty
-        if ( $GetParam{EmailSubject} eq '' && $GetParam{EmailBody} ne '' ) {
+        if (
+            $GetParam{EmailSubject} eq ''
+            && $GetParam{EmailBody} ne ''
+        ) {
             $Error{'EmailSubjectInvalid'} = 'ServerError';
         }
-        if ( $GetParam{EmailSubject} ne '' && $GetParam{EmailBody} eq '' ) {
+        if (
+            $GetParam{EmailSubject} ne ''
+            && $GetParam{EmailBody} eq ''
+        ) {
             $Error{'EmailBodyInvalid'} = 'ServerError';
         }
 
         # check if pending date must be validated
-        if ( $GetParam{StateID} || $GetParam{State} ) {
+        if (
+            $GetParam{StateID}
+            || $GetParam{State}
+        ) {
             my %StateData;
             if ( $GetParam{StateID} ) {
                 %StateData = $StateObject->StateGet(
@@ -541,14 +557,19 @@ sub Run {
     my @TicketIDSelected;
     my @LockedTicketIDs;
     my $MainTicketID;
-    my $ActionFlag    = 0;
-    my $Counter       = 1;
+    my $ActionFlag            = 0;
+    my $Counter               = 1;
     $Param{TicketsWereLocked} = 0;
 
-    if ( ( $Self->{Subaction} eq 'Do' ) && ( !%Error ) ) {
-
+    if (
+        $Self->{Subaction} eq 'Do'
+        && !%Error
+    ) {
         # merge to
-        if ( $GetParam{'MergeToSelection'} eq 'OptionMergeTo' && $GetParam{'MergeTo'} ) {
+        if (
+            $GetParam{'MergeToSelection'} eq 'OptionMergeTo'
+            && $GetParam{'MergeTo'}
+        ) {
             $MainTicketID = $TicketObject->TicketIDLookup(
                 TicketNumber => $GetParam{'MergeTo'},
             );
@@ -605,12 +626,12 @@ sub Run {
         else {
             if ( $Self->{Subaction} eq 'TicketLocking' ) {
                 my %JobParam = (
-                    CallAction              => 'BulkLock',
-                    FormID                  => $Param{FormID},
-                    TicketID                => $TicketID,
-                    Action                  => $Self->{Action},
-                    UserID                  => $Self->{UserID},
-                    IgnoreLockedTicketIDs   => \@IgnoreLockedTicketIDs
+                    CallAction            => 'BulkLock',
+                    FormID                => $Param{FormID},
+                    TicketID              => $TicketID,
+                    Action                => $Self->{Action},
+                    UserID                => $Self->{UserID},
+                    IgnoreLockedTicketIDs => \@IgnoreLockedTicketIDs
                 );
                 my $Success = $BulkExecutor->AsyncCall(
                     ObjectName     => 'Kernel::System::AsynchronousExecutor::BulkExecutor',
@@ -625,12 +646,14 @@ sub Run {
                 if ( $GetTickets{$TicketID}->{Locked} ) {
                     push(@LockedTicketIDs, $TicketID);
                 }
-                if ( $GetTickets{$TicketID}->{TicketsWereLocked}
+                if (
+                    $GetTickets{$TicketID}->{TicketsWereLocked}
                     && !$Param{TicketsWereLocked}
                 ) {
                     $Param{TicketsWereLocked} = $GetTickets{$TicketID}->{TicketsWereLocked};
                 }
-                if ( $GetTickets{$TicketID}->{Priority}
+                if (
+                    $GetTickets{$TicketID}->{Priority}
                     && $GetTickets{$TicketID}->{Notify}
                 ) {
                     push( @{$Notify{$GetTickets{$TicketID}->{Priority}}}, $GetTickets{$TicketID}->{Notify});
@@ -642,27 +665,30 @@ sub Run {
         push @TicketIDSelected, $TicketID;
 
         # do some actions on tickets
-        if ( ( $Self->{Subaction} eq 'Do' ) && ( !%Error ) ) {
+        if (
+            $Self->{Subaction} eq 'Do'
+            && !%Error
+        ) {
 
             # challenge token check for write action
             $LayoutObject->ChallengeTokenCheck();
 
             my %JobParam = (
-                CallAction      => 'BulkDo',
-                Ticket          => \%Ticket,
-                Time            => \%Time,
-                FormID          => $Param{FormID},
-                TicketID        => $TicketID,
-                Action          => $Self->{Action},
-                UserID          => $Self->{UserID},
-                UserFirstname   => $Self->{UserFirstname},
-                UserLastname    => $Self->{UserLastname},
-                UserEmail       => $Self->{UserEmail},
-                BulkModules     => \@BulkModules,
-                GetParam        => \%GetParam,
-                Counter         => $Counter,
-                MainTicketID    => $MainTicketID,
-                TicketIDs       => \@TicketIDs,
+                CallAction    => 'BulkDo',
+                Ticket        => \%Ticket,
+                Time          => \%Time,
+                FormID        => $Param{FormID},
+                TicketID      => $TicketID,
+                Action        => $Self->{Action},
+                UserID        => $Self->{UserID},
+                UserFirstname => $Self->{UserFirstname},
+                UserLastname  => $Self->{UserLastname},
+                UserEmail     => $Self->{UserEmail},
+                BulkModules   => \@BulkModules,
+                GetParam      => \%GetParam,
+                Counter       => $Counter,
+                MainTicketID  => $MainTicketID,
+                TicketIDs     => \@TicketIDs,
             );
             my $Success = $BulkExecutor->AsyncCall(
                 ObjectName     => 'Kernel::System::AsynchronousExecutor::BulkExecutor',
@@ -685,57 +711,58 @@ sub Run {
         );
     }
 
-    if ( $Config->{RequiredLock}
+    if (
+        $Config->{RequiredLock}
          && $Self->{Subaction} eq 'TicketLocking'
     ) {
         return $LayoutObject->ProgressBar(
-            FormID          => $Param{FormID},
-            MaxCount        => scalar @TicketIDSelected,
-            IgnoredCount    => scalar @IgnoreLockedTicketIDs,
-            ItemCount       => scalar @TicketIDs,
+            FormID         => $Param{FormID},
+            MaxCount       => scalar @TicketIDSelected,
+            IgnoredCount   => scalar @IgnoreLockedTicketIDs,
+            ItemCount      => scalar @TicketIDs,
 
-            TaskName        => $Self->{Action} . '-' . $Param{FormID} . '-BulkLock',
-            TaskType        => 'AsynchronousExecutor',
+            TaskName       => $Self->{Action} . '-' . $Param{FormID} . '-BulkLock',
+            TaskType       => 'AsynchronousExecutor',
 
-            AbortCheck      => 2,
-            AbortSubaction  => 'CancelAndClose',
-            Action          => $Self->{Action},
+            AbortCheck     => 2,
+            AbortSubaction => 'CancelAndClose',
+            Action         => $Self->{Action},
 
-            LoaderText      => 'Locking the tickets, please wait a moment...',
-            Title           => 'Ticket Bulk Action',
-            EndParam        => {
-                UserID       => $Self->{UserID}
+            LoaderText     => 'Locking the tickets, please wait a moment...',
+            Title          => 'Ticket Bulk Action',
+            FooterType     => 'Small',
+            HeaderType     => 'Small',
+            EndParam       => {
+                UserID => $Self->{UserID}
             },
-            FooterType      => 'Small',
-            HeaderType      => 'Small',
         );
     }
 
     elsif ( $Self->{Subaction} eq 'Do' ) {
         return $LayoutObject->ProgressBar(
-            FormID          => $Param{FormID},
-            MaxCount        => scalar @TicketIDSelected,
-            IgnoredCount    => scalar @IgnoreLockedTicketIDs,
-            ItemCount       => scalar @TicketIDs,
+            FormID         => $Param{FormID},
+            MaxCount       => scalar @TicketIDSelected,
+            IgnoredCount   => scalar @IgnoreLockedTicketIDs,
+            ItemCount      => scalar @TicketIDs,
 
-            TaskName        => $Self->{Action} . '-' . $Param{FormID} . '-BulkDo',
-            TaskType        => 'AsynchronousExecutor',
+            TaskName       => $Self->{Action} . '-' . $Param{FormID} . '-BulkDo',
+            TaskType       => 'AsynchronousExecutor',
 
-            AbortCheck      => 1,
-            AbortSubaction  => 'DoEnd',
-            Action          => $Self->{Action},
+            AbortCheck     => 1,
+            AbortSubaction => 'DoEnd',
+            Action         => $Self->{Action},
 
-            LoaderText      => 'Tickets will be saved, please wait a moment...',
-            Title           => 'Ticket Bulk Action',
-            EndParam        => {
-                TicketID     => $MainTicketID,
-                ActionFlag   => $ActionFlag,
-                FormID       => $Param{FormID},
-                Subaction    => 'DoEnd',
-                UserID       => $Self->{UserID}
+            LoaderText     => 'Tickets will be saved, please wait a moment...',
+            Title          => 'Ticket Bulk Action',
+            HeaderType     => 'Small',
+            FooterType     => 'Small',
+            EndParam       => {
+                TicketID   => $MainTicketID,
+                ActionFlag => $ActionFlag,
+                FormID     => $Param{FormID},
+                Subaction  => 'DoEnd',
+                UserID     => $Self->{UserID}
             },
-            FooterType      => 'Small',
-            HeaderType      => 'Small',
         );
     }
 
@@ -743,10 +770,10 @@ sub Run {
         %Param,
         %GetParam,
         %Time,
-        Notify        => \%Notify,
-        TicketIDs     => \@TicketIDSelected,
-        Errors        => \%Error,
-        BulkModules   => \@BulkModules,
+        Notify      => \%Notify,
+        TicketIDs   => \@TicketIDSelected,
+        Errors      => \%Error,
+        BulkModules => \@BulkModules,
     );
     $Output .= $LayoutObject->Footer(
         Type => 'Small',
@@ -762,8 +789,10 @@ sub _Mask {
 
     # prepare errors!
     if ( $Param{Errors} ) {
-        for my $KeyError ( sort keys %{ $Param{Errors} } ) {
-            $Param{$KeyError} = $LayoutObject->Ascii2Html( Text => $Param{Errors}->{$KeyError} );
+        for my $KeyError ( sort( keys( %{ $Param{Errors} } ) ) ) {
+            $Param{$KeyError} = $LayoutObject->Ascii2Html(
+                Text => $Param{Errors}->{$KeyError}
+            );
         }
     }
 
@@ -842,7 +871,10 @@ sub _Mask {
         my $StateObject = $Kernel::OM->Get('Kernel::System::State');
         my %StateList   = ();
         my $TSWFConfig  = $ConfigObject->Get('TicketStateWorkflow') || '';
-        if ( $TSWFConfig && ref($TSWFConfig) eq 'HASH' ) {
+        if (
+            $TSWFConfig
+            && ref($TSWFConfig) eq 'HASH'
+        ) {
             %StateList = $TicketObject->TSWFCommonNextStates(
                 TicketIDs => $Param{TicketIDs},
                 StateType => $Config->{StateType},
@@ -862,7 +894,10 @@ sub _Mask {
             );
         }
 
-        if ( !$Config->{StateDefault} && !( defined( $StateList{''} ) ) ) {
+        if (
+            !$Config->{StateDefault}
+            && !defined( $StateList{''} )
+        ) {
             $StateList{''} = '-';
         }
         if ( !$Param{StateID} ) {
@@ -886,10 +921,12 @@ sub _Mask {
         );
 
         STATE_ID:
-        for my $StateID ( sort keys %StateList ) {
-            next STATE_ID if !$StateID;
+        for my $StateID ( sort( keys( %StateList ) ) ) {
+            next STATE_ID if( !$StateID );
+
             my %StateData = $StateObject->StateGet( ID => $StateID );
-            next STATE_ID if $StateData{TypeName} !~ /pending/i;
+            next STATE_ID if( $StateData{TypeName} !~ /pending/i );
+
             $Param{DateString} = $LayoutObject->BuildDateSelection(
                 %Param,
                 Format               => 'DateInputFormatLong',
@@ -953,6 +990,7 @@ sub _Mask {
                     GroupID => $GroupID,
                     Type    => 'rw',
                 );
+
                 USER_ID:
                 for my $UserID ( sort keys %GroupMember ) {
                     next USER_ID if !$AllGroupsMembers{$UserID};
@@ -1051,9 +1089,9 @@ sub _Mask {
             $Priority{SelectedID} = $Param{PriorityID};
         }
         $Param{PriorityStrg} = $LayoutObject->BuildSelection(
-            Data => \%PriorityList,
-            Name => 'PriorityID',
             %Priority,
+            Data  => \%PriorityList,
+            Name  => 'PriorityID',
             Class => 'Modernize',
 
         );
@@ -1116,7 +1154,7 @@ sub _Mask {
     $Param{UnlockYesNoOption} = $LayoutObject->BuildSelection(
         Data       => $ConfigObject->Get('YesNoOptions'),
         Name       => 'Unlock',
-        SelectedID => $Param{Unlock} // 1,
+        SelectedID => $Param{Unlock} // $Config->{Unlock} // 1,
         Class      => 'Modernize',
     );
 
@@ -1147,7 +1185,10 @@ sub _Mask {
         my $URL = $Self->{LastScreenOverview};
 
         # add session if no cookies are enabled
-        if ( $Self->{SessionID} && !$Self->{SessionIDCookie} ) {
+        if (
+            $Self->{SessionID}
+            && !$Self->{SessionIDCookie}
+        ) {
             $URL .= ';' . $Self->{SessionName} . '=' . $Self->{SessionID};
         }
 

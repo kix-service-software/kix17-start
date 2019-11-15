@@ -45,30 +45,34 @@ sub Run {
         }
     }
 
-    # check if child tickets are not closed
-    return 1 if !$Param{TicketID} || !$Param{UserID};
+    # check if ticket id is given
+    return 1 if !$Param{TicketID};
 
-    # link tickets
+    # get linked tickets for ticket
     my $Links = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkList(
-        Object => 'Ticket',
-        Key    => $Param{TicketID},
-        State  => 'Valid',
-        Type   => 'ParentChild',
-        UserID => $Param{UserID},
+        Object  => 'Ticket',
+        Key     => $Param{TicketID},
+        Object2 => 'Ticket',
+        State   => 'Valid',
+        Type    => 'ParentChild',
+        UserID  => 1,
     );
 
-    return 1 if !$Links;
-    return 1 if ref $Links ne 'HASH';
-    return 1 if !$Links->{Ticket};
-    return 1 if ref $Links->{Ticket} ne 'HASH';
-    return 1 if !$Links->{Ticket}->{ParentChild};
-    return 1 if ref $Links->{Ticket}->{ParentChild} ne 'HASH';
-    return 1 if !$Links->{Ticket}->{ParentChild}->{Target};
-    return 1 if ref $Links->{Ticket}->{ParentChild}->{Target} ne 'HASH';
+    # check if any linked ticket exist
+    return 1 if(
+        !$Links
+        || ref( $Links ) ne 'HASH'
+        || !$Links->{Ticket}
+        || ref( $Links->{Ticket} ) ne 'HASH'
+        || !$Links->{Ticket}->{ParentChild}
+        || ref( $Links->{Ticket}->{ParentChild} ) ne 'HASH'
+        || !$Links->{Ticket}->{ParentChild}->{Target}
+        || ref( $Links->{Ticket}->{ParentChild}->{Target} ) ne 'HASH'
+    );
 
     my $OpenSubTickets = 0;
     TICKETID:
-    for my $TicketID ( sort keys %{ $Links->{Ticket}->{ParentChild}->{Target} } ) {
+    for my $TicketID ( sort( keys( %{ $Links->{Ticket}->{ParentChild}->{Target} } ) ) ) {
 
         # get ticket
         my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(

@@ -1277,8 +1277,8 @@ sub Data {
     $Lang->{'Select Class'} = 'Klasse auswählen';
     $Lang->{'Settings for custom ticket list view'}
         = 'Einstellungen für persönliche Ticketlistendarstellung';
-    $Lang->{'Asset Location'} = 'Asset Lokation';
-    $Lang->{'Parent Location'} = 'Übergeordnete Lokation';
+    $Lang->{'Asset Location'} = 'Asset-Standort';
+    $Lang->{'Parent Location'} = 'Übergeordneter Standort';
 
 
     # graph visualization related translations...

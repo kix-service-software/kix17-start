@@ -1527,33 +1527,24 @@ sub _TicketAttributes {
         Number       => 'Number',                             # only a counter for a better readability
         TicketNumber => $ConfigObject->Get('Ticket::Hook'),
 
-        #TicketID       => 'TicketID',
         Age   => 'Age',
         Title => 'Title',
         Queue => 'Queue',
-
-        #QueueID        => 'QueueID',
         State => 'State',
 
-        #StateID        => 'StateID',
         Priority => 'Priority',
 
-        #PriorityID     => 'PriorityID',
-        CustomerID => 'CustomerID',
-        Changed    => 'Changed',
-        Created    => 'Created',
-
-        #CreateTimeUnix => 'CreateTimeUnix',
+        CustomerID     => 'CustomerID',
+        Changed        => 'Changed',
+        Created        => 'Created',
         CustomerUserID => 'Contact',
         Lock           => 'lock',
 
-        #LockID         => 'LockID',
         UnlockTimeout       => 'UnlockTimeout',
         AccountedTime       => 'Accounted time',        # the same wording is in AgentTicketPrint.tt
         RealTillTimeNotUsed => 'RealTillTimeNotUsed',
         NumberOfArticles    => 'Number of Articles',
 
-        #GroupID        => 'GroupID',
         StateType => 'State Type',
         UntilTime => 'UntilTime',
         Closed    => 'First Close Time',
@@ -1563,9 +1554,7 @@ sub _TicketAttributes {
         EscalationUpdateTime   => 'EscalationUpdateTime',
         EscalationSolutionTime => 'EscalationSolutionTime',
 
-        EscalationDestinationIn => 'EscalationDestinationIn',
-
-        # EscalationDestinationTime => 'EscalationDestinationTime',
+        EscalationDestinationIn   => 'EscalationDestinationIn',
         EscalationDestinationDate => 'EscalationDestinationDate',
         EscalationTimeWorkingTime => 'EscalationTimeWorkingTime',
         EscalationTime            => 'EscalationTime',
@@ -1600,26 +1589,17 @@ sub _TicketAttributes {
 
     if ( $ConfigObject->Get('Ticket::Service') ) {
         $TicketAttributes{Service} = 'Service';
-
-        #$TicketAttributes{ServiceID} = 'ServiceID',
-        $TicketAttributes{SLA}   = 'SLA';
-        $TicketAttributes{SLAID} = 'SLAID';
+        $TicketAttributes{SLA}     = 'SLA';
+        $TicketAttributes{SLAID}   = 'SLAID';
     }
 
     if ( $ConfigObject->Get('Ticket::Type') ) {
         $TicketAttributes{Type} = 'Type';
-
-        #$TicketAttributes{TypeID} = 'TypeID';
     }
 
     if ( $ConfigObject->Get('Stats::UseAgentElementInStats') ) {
-        $TicketAttributes{Owner} = 'Agent/Owner';
-
-        #$TicketAttributes{OwnerID}        = 'OwnerID';
-        # ? $TicketAttributes{CreatedUserIDs}  = 'Created by Agent/Owner';
+        $TicketAttributes{Owner}       = 'Agent/Owner';
         $TicketAttributes{Responsible} = 'Responsible';
-
-        #$TicketAttributes{ResponsibleID}  = 'ResponsibleID';
     }
 
     DYNAMICFIELD:

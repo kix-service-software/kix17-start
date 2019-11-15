@@ -265,7 +265,7 @@ sub Run {
         NewStateID NewPriorityID TimeUnits ArticleTypeID Title Body Subject NewQueueID
         Year Month Day Hour Minute NewOwnerID NewResponsibleID TypeID ServiceID SLAID
         Expand ReplyToArticle StandardTemplateID CreateArticle
-        DestQueue  NewOwnerType OldOwnerID ElementChanged
+        DestQueue NewOwnerType OldOwnerID ElementChanged
         )
     ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
