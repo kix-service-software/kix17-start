@@ -41,7 +41,6 @@
         display: block;
     }
     div.InputField_Selection div.Text {
-        background: #ddd;
         padding: 2px 4px;
     }
     .ModernizeFieldIcon {
@@ -84,7 +83,6 @@
         text-align: center;
     }
     div.InputField_ToolbarContainer ul li::after {
-        color: #bbb;
         content: "|";
         display: inline-block;
         float: right;

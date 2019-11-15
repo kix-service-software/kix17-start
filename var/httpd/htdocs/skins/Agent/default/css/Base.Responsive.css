@@ -146,7 +146,6 @@
         bottom: -16px;
         font-weight: normal;
         font-size: 12px;
-        color: #aaa;
     }
     #ToolBar li > a > i {
         top: -15px;
@@ -318,7 +317,6 @@
         top: 60px;
         left: -45px;
         display: none;
-        color: #ccc;
         cursor: default;
     }
 
@@ -978,7 +976,6 @@
     }
 
     .PreferencesScreen .Size1of3 > .WidgetSimple > .Header {
-        background: #E8E8E8;
         border-bottom: 0px;
         margin: 10px 0px 0px 0px;
         padding: 5px 0px;

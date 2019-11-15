@@ -268,7 +268,6 @@
         border-left: none;
         width: 10px;
         text-align: center;
-        background-color: #E8E8E8;
     }
 
     .Cluster ul ul li {
@@ -475,7 +474,6 @@
         text-overflow: ellipsis;
     }
     .OverviewLarge h2 a {
-        color: #000;
         display: block;
         overflow: hidden;
         white-space: nowrap;
@@ -695,7 +693,6 @@
         width: 97%;
     }
     .OverviewMedium h2 a {
-        color: #000;
         display: block;
     }
     .OverviewMedium table.Infos {
@@ -704,7 +701,6 @@
         table-layout: fixed;
         width: 97%;
     }
-
     .OverviewMedium table.Infos td {
         width: 16.67%;
         padding: 0 10px 5px 10px;
