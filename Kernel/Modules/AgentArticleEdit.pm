@@ -1111,7 +1111,6 @@ sub Run {
                     . " $Article{TicketNumber} to ticket $GetParam{NewTicketNumber} ",
                 HistoryType  => 'Misc',
                 TicketID     => $GetParam{TicketID},
-                ArticleID    => $GetParam{ArticleID},
                 CreateUserID => $Self->{UserID},
             );
         }
