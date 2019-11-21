@@ -46,6 +46,12 @@ sub LoadPreferences {
     $Self->{'DB::CaseSensitive'}        = 0;
     $Self->{'DB::LikeEscapeString'}     = '';
 
+    # check if backslash should be double quoted at like statements
+    $Self->{'DB::LikeQuoteBack'}        = '';
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('Database::LikeQuoteBack') ) {
+        $Self->{'DB::LikeQuoteBack'}    = '\\';
+    }
+
     # mysql needs to proprocess the data to fix UTF8 issues
     $Self->{'DB::PreProcessSQL'}      = 1;
     $Self->{'DB::PreProcessBindData'} = 1;
@@ -54,8 +60,7 @@ sub LoadPreferences {
     # version can have package prefix, we need to extract that
     # example of VERSION() output: '5.5.32-0ubuntu0.12.04.1'
     # if VERSION() contains 'MariaDB', add MariaDB, otherwise MySQL.
-    $Self->{'DB::Version'}
-        = "SELECT CONCAT( IF (INSTR( VERSION(),'MariaDB'),'MariaDB ','MySQL '), SUBSTRING_INDEX(VERSION(),'-',1))";
+    $Self->{'DB::Version'} = "SELECT CONCAT( IF (INSTR( VERSION(),'MariaDB'),'MariaDB ','MySQL '), SUBSTRING_INDEX(VERSION(),'-',1))";
 
     # DBI/DBD::mysql attributes
     # disable automatic reconnects as they do not execute DB::Connect, which will
@@ -131,17 +136,17 @@ sub Quote {
             ${$Text} =~ s/;/$Self->{'DB::QuoteSemicolon'};/g;
         }
         if ( $Type && $Type eq 'Like' ) {
-            if ( $Self->{'DB::QuoteUnderscoreStart'} || $Self->{'DB::QuoteUnderscoreEnd'} ) {
-                ${$Text}
-                    =~ s/_/$Self->{'DB::QuoteUnderscoreStart'}_$Self->{'DB::QuoteUnderscoreEnd'}/g;
+            if ( $Self->{'DB::LikeQuoteBack'} ) {
+                ## From MySQL manual for LIKE:
+                # Because MySQL uses C escape syntax in strings (for example, \n to represent a newline character),
+                # you must double any \ that you use in LIKE strings. For example, to search for \n, specify it as \\n.
+                # To search for \, specify it as \\\\; this is because the backslashes are stripped once by the parser
+                # and again when the pattern match is made, leaving a single backslash to be matched against.
+                ${$Text} =~ s/\\/$Self->{'DB::LikeQuoteBack'}\\/g;
             }
-
-            ## From MySQL manual for LIKE:
-            # Because MySQL uses C escape syntax in strings (for example, \n to represent a newline character),
-            # you must double any \ that you use in LIKE strings. For example, to search for \n, specify it as \\n.
-            # To search for \, specify it as \\\\; this is because the backslashes are stripped once by the parser
-            # and again when the pattern match is made, leaving a single backslash to be matched against.
-            ${$Text} =~ s/\\/\\\\/g;
+            if ( $Self->{'DB::QuoteUnderscoreStart'} || $Self->{'DB::QuoteUnderscoreEnd'} ) {
+                ${$Text} =~ s/_/$Self->{'DB::QuoteUnderscoreStart'}_$Self->{'DB::QuoteUnderscoreEnd'}/g;
+            }
         }
     }
     return $Text;
