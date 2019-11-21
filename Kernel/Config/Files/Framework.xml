@@ -127,6 +127,7 @@
                 <Loader>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -143,6 +144,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -159,6 +161,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDateTime.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -175,6 +178,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldMultiselect.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -1867,6 +1871,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -1895,6 +1900,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -3741,6 +3747,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -12460,6 +12467,7 @@ via the Preferences button after logging in.
                 <Loader>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -13016,6 +13024,7 @@ via the Preferences button after logging in.
                 <Loader>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -13099,7 +13108,7 @@ via the Preferences button after logging in.
             <FrontendModuleReg>
                 <Description>AJAX handler</Description>
                 <Title>AJAX handler</Title>
-                <NavBarName>Ticket</NavBarName>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
