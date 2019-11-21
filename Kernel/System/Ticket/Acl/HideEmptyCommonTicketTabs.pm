@@ -97,18 +97,29 @@ sub Run {
                 # check dynamic field config
                 for my $DynamicField ( keys( %{ $PretendConfig->{'DynamicField'} } ) ) {
 
-                    # check if dynamic field is not deleted
-                    my $Deleted = 0;
+                    # check if dynamic field is valid
+                    my $Valid = 1;
                     if ( $PretendConfig->{'DynamicField'}->{$DynamicField} ) {
+                        # get data of dynamic field
                         my $DynamicFieldObject = $DynamicFieldObject->DynamicFieldGet(
                             Name => $DynamicField,
                         );
-                        if (!keys %{$DynamicFieldObject}) {
-                            $Deleted = 1;
+
+                        # check if its a hash with data
+                        if (
+                            ref( $DynamicFieldObject ) ne 'HASH'
+                            || !keys( %{$DynamicFieldObject} )
+                        ) {
+                            $Valid = 0;
+                        }
+
+                        # check if the field is valid
+                        if ( $DynamicFieldObject->{ValidID} != 1 ) {
+                            $Valid = 0;
                         }
                     }
                     
-                    next ACTION if ( $PretendConfig->{'DynamicField'}->{$DynamicField} && !$Deleted);
+                    next ACTION if ( $PretendConfig->{'DynamicField'}->{$DynamicField} && $Valid);
                 }
 
                 # add action to blacklist
