@@ -90,7 +90,7 @@ Run all tests located in scripts/test/*.t and print result to stdout.
 
     $UnitTestObject->Run(
         Name      => 'JSON:User:Auth',  # optional, control which tests to select
-        Directory => 'Selenium',        # optional, control which directory to select
+        Directory => 'Cache',           # optional, control which directory to select
         Verbose   => 1,                 # optional (default 0), only show result details for all tests, not just failing
     );
 
@@ -124,7 +124,7 @@ sub Run {
         || $Kernel::OM->Get('Kernel::Config')->Get('Product') . " "
         . $Kernel::OM->Get('Kernel::Config')->Get('Version');
 
-    $Self->{Product} = $Product;    # we need this in the Selenium object
+    $Self->{Product} = $Product;
 
     my @Names = split( /:/, $Param{Name} || '' );
 
