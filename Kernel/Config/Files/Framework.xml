@@ -1781,7 +1781,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Cache</SubGroup>
         <Setting>
-            <String Regex="">localhost:6479</String>
+            <String Regex="">localhost:6379</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Cache::Module::Redis###Parameters" Required="0" Valid="1">
