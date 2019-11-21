@@ -73,7 +73,10 @@ sub Run {
         my $DynamicFieldID   = $DynamicFieldData->{ID};
 
         # get config
-        if ( $Param{Action} ) {
+        if (
+            $Param{Action}
+            && $Param{Action} !~ /(?:Agent|Customer)TicketProcess/
+        ) {
 
             # only get DFs configure for this action
             $Self->{Config}       = $Self->{ConfigObject}->Get("Ticket::Frontend::$Param{Action}");
@@ -172,7 +175,10 @@ sub Run {
         # dynamic field found in dependency list
         if ( $DynamicFieldData && ref $DynamicFieldData eq 'HASH' ) {
             # get config
-            if ( $Param{Action} ) {
+            if (
+                $Param{Action}
+                && $Param{Action} !~ /(?:Agent|Customer)TicketProcess$/
+            ) {
 
                 # only get DFs configure for this action
                 my $Config = $Self->{ConfigObject}->Get("Ticket::Frontend::$Param{Action}");
