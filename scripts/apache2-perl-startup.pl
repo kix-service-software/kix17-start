@@ -54,6 +54,7 @@ use Apache::DBI;
 # enable this if you use oracle
 #use DBD::Oracle ();
 #use Kernel::System::DB::oracle;
+#$ENV{NLS_LANG} = "AMERICAN_AMERICA.AL32UTF8";
 
 # preload Net::DNS if it is installed. It is important to preload Net::DNS because otherwise it
 # can be that loading of Net::DNS tooks more than 30 seconds.
