@@ -36,6 +36,9 @@ sub KIXSideBarReuseArticleAttachmentsTable {
         );
     }
 
+    my $SearchString = $Param{SearchString} || '';
+    $SearchString =~ s/\*+/.*/gm;
+
     my %AttachmentList;
     foreach my $Article (@ArticleList) {
         my %AtmIndex = %{ $Article->{Atms} };
@@ -43,8 +46,8 @@ sub KIXSideBarReuseArticleAttachmentsTable {
         foreach my $FileID ( sort keys %AtmIndex ) {
             next
                 if (
-                $Param{SearchString}
-                && $AtmIndex{$FileID}->{Filename} !~ /$Param{SearchString}/
+                $SearchString
+                && $AtmIndex{$FileID}->{Filename} !~ /$SearchString/
                 );
             $AttachmentList{ $Article->{ArticleID} . '::' . $FileID } = $AtmIndex{$FileID};
         }

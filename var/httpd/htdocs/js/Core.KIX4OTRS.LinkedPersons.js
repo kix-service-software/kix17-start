@@ -87,10 +87,9 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
     function RefreshLinkedPersons() {
         var TicketID,
             URL,
-            Frontend = 'Agent',
-            loaderImage = '<img src="' + Core.Config.Get('Images') + 'loader.gif">';
+            Frontend = 'Agent';
 
-        $('#LinkedPersonsTable').html(loaderImage);
+        $('#LinkedPersonsTable').html('<div class="Loader Center"></div>');
 
         // determine TicketID
         if ($('#LinkedPersons').closest('form').find('input[name=TicketID]').length) {
@@ -103,7 +102,7 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
         }
 
         // do linked persons update
-        $('#LinkedPersonsTable').html('<center><img style="margin-top:5px" src="' + Core.Config.Get('Images') + 'loader.gif"></center>');
+        $('#LinkedPersonsTable').html('<div class="Loader Center"></div>');
         URL = Core.Config.Get('CGIHandle') + '?Action=KIXSidebarLinkedPersonsAJAXHandler;CallingAction=' + $('input[name=Action]').val() + ';Subaction=LoadLinkedPersons;TicketID=' + TicketID + ';Frontend=' + Frontend;
 
         // check if call contact is active
@@ -145,7 +144,7 @@ Core.KIX4OTRS.LinkedPersons = (function(TargetNS) {
     }
 
     TargetNS.Init = function() {
-        $('#LinkedPersons .WidgetAction.Toggle a').bind('click', function() {
+        $('#LinkedPersons .WidgetAction.Toggle').bind('click', function() {
             // load linked persons on first expand
             if ($('#LinkedPersons').hasClass('Collapsed') && $('#LinkedPersons').find('#LinkedPersonsTable tbody').length == 0)
                 RefreshLinkedPersons();

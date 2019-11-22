@@ -45,7 +45,7 @@ Kernel::System::ObjectManager - object and dependency manager
 
 =head1 SYNOPSIS
 
-The ObjectManager is the central place to create and access singleton OTRS objects.
+The ObjectManager is the central place to create and access singleton KIX objects.
 
 =head2 How does it work?
 
@@ -54,7 +54,7 @@ are destroyed in the correct order, based on their dependencies (see below).
 
 =head2 How to use it?
 
-The ObjectManager must always be provided to OTRS by the toplevel script like this:
+The ObjectManager must always be provided to KIX by the toplevel script like this:
 
     use Kernel::System::ObjectManager;
     local $Kernel::OM = Kernel::System::ObjectManager->new(

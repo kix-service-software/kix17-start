@@ -772,7 +772,7 @@ sub PartsAttachments {
 
     # For multipart/mixed emails, we check for all text/plain or text/html MIME parts which are
     #   body elements, and concatenate them into the first relevant attachment, to stay in line
-    #   with OTRS file-1 and file-2 attachment handling.
+    #   with KIX file-1 and file-2 attachment handling.
     # HTML parts will just be concatenated, so that the attachment has two complete HTML documents
     #   inside. Browsers tolerate this.
     if (

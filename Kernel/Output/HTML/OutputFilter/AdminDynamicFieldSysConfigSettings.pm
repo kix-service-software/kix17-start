@@ -114,7 +114,6 @@ END
     }
 
     # add some javascript / jquery to move selected fields into mandatory fields
-    my $ImagePath      = $Kernel::OM->Get('Kernel::Config')->Get('Frontend::ImagePath') . 'loader.gif';
     $SearchPattern     = 'Core\.Agent\.Admin\.DynamicField\.ValidationInit';
     $ReplacementString = <<"END";
     \$('#AvailableFrontends').bind('click',function(){
@@ -139,7 +138,7 @@ END
             .parents('fieldset')
             .find('div.Clear')
             .parent()
-            .append('<div class="Field">[% Translate("Saving module assignments in SysConfig") %]...<img src="$ImagePath"></div><div class="Clear"></div>');
+            .append('<div class="Field">[% Translate("Saving module assignments in SysConfig") %]...<span class="Loader"></span></div><div class="Clear"></div>');
         \$Action.val('AdminDynamicFieldSysConfigSettingsAJAXHandler');
         Core.AJAX.FunctionCall(Core.Config.Get('Baselink'),Core.AJAX.SerializeForm(\$(Form)),function(){
             Core.Form.EnableForm(\$(Form));

@@ -1295,7 +1295,7 @@ sub PackageOnlineList {
     }
     if ( !defined $Param{Cache} ) {
 
-        if ( $Param{URL} =~ m{ \.otrs\.org\/ }xms ) {
+        if ( $Param{URL} =~ m{ \.kixdesk\.com\/ }xms ) {
             $Param{Cache} = 1;
         }
         else {
@@ -1649,10 +1649,10 @@ build an opm package
             Content => '1.0',
         },
         Vendor => {
-            Content => 'OTRS AG',
+            Content => 'c.a.p.e. IT GmbH',
         },
         URL => {
-            Content => 'L<http://otrs.org/>',
+            Content => 'L<https://www.cape-it.de/>',
         },
         License => {
             Content => 'GNU GENERAL PUBLIC LICENSE Version 2, June 1991',

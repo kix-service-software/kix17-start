@@ -127,6 +127,7 @@
                 <Loader>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -143,6 +144,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -159,6 +161,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDateTime.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -175,6 +178,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldMultiselect.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -997,11 +1001,11 @@
                 <Item Key="Identifier">RemoteDBList001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
+                <Item Key="DatabasePw">kix</Item>
                 <Item Key="DatabaseTable">ticket</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="MaxResultCount">30</Item>
                 <Item Key="MaxResultDisplay">10</Item>
@@ -1041,11 +1045,11 @@
                 <Item Key="Identifier">RemoteDBList002</Item>
                 <Item Key="Group"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
+                <Item Key="DatabasePw">kix</Item>
                 <Item Key="DatabaseTable">ticket</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="MaxResultCount">30</Item>
                 <Item Key="MaxResultDisplay">10</Item>
@@ -1228,6 +1232,17 @@
                 <Title>Print</Title>
                 <NavBarName>Ticket</NavBarName>
             </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Database::LikeQuoteBack" Required="1" Valid="1">
+        <Description Translatable="1">Defines if backslash should be double quoted for LIKE-statements.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0">No</Item>
+                <Item Key="1">Yes</Item>
+            </Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="ExternalSupplierForwarding::ForwardFaxQueues" Required="1" Valid="1">
@@ -1777,7 +1792,7 @@
         <Group>Framework</Group>
         <SubGroup>Core::Cache</SubGroup>
         <Setting>
-            <String Regex="">localhost:6479</String>
+            <String Regex="">localhost:6379</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Cache::Module::Redis###Parameters" Required="0" Valid="1">
@@ -1867,6 +1882,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -1895,6 +1911,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -3741,6 +3758,7 @@
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                     <JavaScript>Core.Agent.Admin.DynamicFieldDropdown.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -5070,9 +5088,8 @@
                 <Item Key="URL">skins/Agent/default/img/KIX17_Login.png</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">110px</Item>
-                <Item Key="position">absolute</Item>
-                <Item Key="top">20px</Item>
-                <Item Key="left">0</Item>
+                <Item Key="float">left</Item>
+                <Item Key="margin-top">20px</Item>
                 <Item Key="background-size">contain</Item>
                 <Item Key="background-repeat">no-repeat</Item>
             </Hash>
@@ -5100,9 +5117,8 @@
                 <Item Key="URL">skins/Customer/default/img/KIX17_Login.png</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">110px</Item>
-                <Item Key="position">absolute</Item>
-                <Item Key="top">20px</Item>
-                <Item Key="left">0</Item>
+                <Item Key="float">left</Item>
+                <Item Key="margin-top">20px</Item>
                 <Item Key="background-size">contain</Item>
                 <Item Key="background-repeat">no-repeat</Item>
             </Hash>
@@ -5696,7 +5712,7 @@
                 <Item Key="Priority">Warning</Item>
                 <Item Key="Text">The KIX Website</Item>
                 <Item Key="File">&lt;KIX_CONFIG_Home&gt;/var/notify.txt</Item>
-                <Item Key="Link">http://www.otrs.com</Item>
+                <Item Key="Link">http://www.kixdesk.com</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -11169,7 +11185,7 @@ via the Preferences button after logging in.
         <Setting>
             <Hash>
                 <Item Key="InternalName">default</Item>
-                <Item Key="VisibleName" Translatable="1">Default</Item>
+                <Item Key="VisibleName" Translatable="1">Default (green)</Item>
                 <Item Key="Description" Translatable="1">This is the default green skin.</Item>
                 <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
@@ -11182,7 +11198,7 @@ via the Preferences button after logging in.
         <Setting>
             <Hash>
                 <Item Key="InternalName">blue</Item>
-                <Item Key="VisibleName" Translatable="1">Default (Blue)</Item>
+                <Item Key="VisibleName" Translatable="1">Default (blue)</Item>
                 <Item Key="Description" Translatable="1">"Blue" skin which tries to save screen space for power users.</Item>
                 <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
@@ -11214,20 +11230,20 @@ via the Preferences button after logging in.
         <Setting>
             <Hash>
                 <Item Key="InternalName">default</Item>
-                <Item Key="VisibleName" Translatable="1">Default</Item>
+                <Item Key="VisibleName" Translatable="1">Default (green)</Item>
                 <Item Key="Description" Translatable="1">This is the default green skin for the customer interface.</Item>
                 <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Loader::Customer::Skin###001-blue" Required="0" Valid="1">
-        <Description Translatable="1">Default skin for the customer interface.</Description>
+        <Description Translatable="1">Default skin for the customer interface (blue version).</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="InternalName">blue</Item>
-                <Item Key="VisibleName" Translatable="1">Default (Blue)</Item>
+                <Item Key="VisibleName" Translatable="1">Default (blue)</Item>
                 <Item Key="Description" Translatable="1">"Blue" skin which tries to save screen space for power users.</Item>
                 <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
@@ -12460,6 +12476,7 @@ via the Preferences button after logging in.
                 <Loader>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -13016,6 +13033,7 @@ via the Preferences button after logging in.
                 <Loader>
                     <JavaScript>Core.Agent.Admin.DynamicField.js</JavaScript>
                 </Loader>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -13099,7 +13117,7 @@ via the Preferences button after logging in.
             <FrontendModuleReg>
                 <Description>AJAX handler</Description>
                 <Title>AJAX handler</Title>
-                <NavBarName>Ticket</NavBarName>
+                <NavBarName>Admin</NavBarName>
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>

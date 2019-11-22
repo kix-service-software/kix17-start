@@ -1295,6 +1295,18 @@
     }
 }
 
+
+/*
+* Smartphone landscape
+*/
+@media only screen and (min-width: 0px) and (max-width: 359px) {
+
+    .ContentColumn.OverflowVisible > .ControlRow > h2 {
+        display: none;
+    }
+}
+
+
 /*
 * Smartphone landscape
 */

@@ -40,6 +40,11 @@
         height: 12px;
         background: url(../img/NoRe.png) no-repeat left top;
     }
+    label.SubjectNoFwdIcon {
+        padding-left: 30px;
+        height: 12px;
+        background: url(../img/NoFwd.png) no-repeat left top;
+    }
     fieldset > legend {
         display: block;
         width: 100%;

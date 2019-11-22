@@ -61,7 +61,6 @@ if ( typeof FieldOrderString != 'undefined' && FieldOrderString != '' ) {
 
             $(this).find('input[type=file]').each(
                 function(){
-                    console.log('attachment');
                     GetSortOrder( $(this),FieldOrderArray,DefaultPriority );
                 }
             );

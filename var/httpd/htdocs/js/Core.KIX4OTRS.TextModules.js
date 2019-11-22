@@ -163,11 +163,11 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         var $Title = $TMPreviewContainer.find('.Header').find('#TMTitle'),
             $Subject = $TMPreviewContainer.find('.Content').find('#TMSubject'),
             $Body = $TMPreviewContainer.find('.Content').find('#TMBody'),
-            loaderImage = '<img src="' + Core.Config.Get('Images') + 'loader.gif">';
+            loader = '<span class="Loader"></span>';
 
-        $Title.html(loaderImage);
-        $Subject.html(loaderImage);
-        $Body.html(loaderImage);
+        $Title.html(loader);
+        $Subject.html(loader);
+        $Body.html(loader);
 
         PreviewPosition = Core.KIX4OTRS.GetWidgetPopupPosition($TMPreviewContainer.parent(), Event);
 
@@ -211,9 +211,9 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
             CustomerUserID,
             URL,
             Frontend = 'Agent',
-            loaderImage = '<img src="' + Core.Config.Get('Images') + 'loader.gif">';
+            loader = '<span class="Loader"></span>';
 
-        $('#TextModulesSelectionContainer').html(loaderImage);
+        $('#TextModulesSelectionContainer').addClass('Center').html(loader);
 
         // determine QueueID
         if ($('#NewQueueID').length) {
@@ -255,7 +255,7 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         }
 
         // do textmodule update
-        $('#TextModulesSelectionContainer').html('<center><img style="margin-top:115px" src="' + Core.Config.Get('Images') + 'loader.gif"></center>');
+        $('#TextModulesSelectionContainer').addClass('Center').html(loader);
         URL = Core.Config.Get('CGIHandle') + '?Action=TextModuleAJAXHandler;Subaction=LoadTextModules;TicketID=' + TicketID + ';TypeID=' + TypeID + ';QueueID='
             + QueueID + ';StateID=' + StateID + ';CustomerUserID=' + CustomerUserID + ';Frontend=' + Frontend;
         Core.AJAX.ContentUpdate($TMTree, URL, function() {
@@ -529,7 +529,7 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
                 });
             }
 
-            $('#TextModules .WidgetAction.Toggle a').bind('click', function() {
+            $('#TextModules .WidgetAction.Toggle').bind('click', function() {
                 // load text modules on first expand
                 if ($('#TextModules').hasClass('Collapsed') && $TMTable.find('div.TextModule').length == 0)
                     RefreshTextmodules();

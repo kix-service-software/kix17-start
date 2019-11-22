@@ -101,7 +101,7 @@ sub Run {
     for my $Attr ( grep { defined $Ticket{$_} } sort keys %TicketAttr2Event ) {
 
         # the decay time is configured in minutes
-        my $DecayTimeInSeconds = $Kernel::OM->Get('Kernel::Config')->Get('OTRSEscalationEvents::DecayTime') || 0;
+        my $DecayTimeInSeconds = $Kernel::OM->Get('Kernel::Config')->Get('KIXEscalationEvents::DecayTime') || 0;
 
         $DecayTimeInSeconds *= 60;
 

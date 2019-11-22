@@ -1295,8 +1295,8 @@ sub Data {
             'Bestimmt, ob eingehende Verbindungen geschlossen oder am Leben erhalten werden sollen.',
         'Host' => 'Host',
         'Remote host URL for the REST requests.' => 'URL des Remote-Hosts für REST-Anfragen.',
-        'e.g https://www.otrs.com:10745/api/v1.0 (without trailing backslash)' =>
-            'z. B. https://www.otrs.com:10745/api/v1.0 (ohne abschließenden Backslash)',
+        'e.g https://www.kixdesk.com:10745/api/v1.0 (without trailing backslash)' =>
+            'z. B. https://www.kixdesk.com:10745/api/v1.0 (ohne abschließenden Backslash)',
         'Controller mapping for Invoker' => 'Controller-Mapping für Invoker',
         'The controller that the invoker should send requests to. Variables marked by a \':\' will get replaced by the data value and passed along with the request. (e.g. /Ticket/:TicketID?UserLogin=:UserLogin&Password=:Password).' =>
             'Der Controller, an den der Invoker Anfragen senden soll. Variablen, die mit einem \':\' markiert sind, werden durch den Datenwert ersetzt und mit dem Request übergeben. (z.B.: /Ticket/:TicketID?UserLogin=:UserLogin&Password=:Password)',
@@ -4706,6 +4706,8 @@ Ihr Helpdesk-Team
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if agents should be allowed to login if they have no shared secret stored in their preferences and therefore are not using two-factor authentication.' =>
             'Steuert, ob Agenten, die die Zweifaktor-Authentifizierung nicht nutzen, sich im System einloggen dürfen.',
+        'Defines if backslash should be double quoted for LIKE-statements.' =>
+            'Steuert, ob Backslash in LIKE-Statements doppelt gequotet werden sollen',
         'Defines if composed messages have to be spell checked in the agent interface.' =>
             'Bestimmt, ob im Agenten-Interface eine Rechtschreibprüfung für Nachrichten vorgenommen werden muss.',
         'Defines if customers should be allowed to login if they have no shared secret stored in their preferences and therefore are not using two-factor authentication.' =>

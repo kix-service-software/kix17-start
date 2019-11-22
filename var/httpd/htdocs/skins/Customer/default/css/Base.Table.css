@@ -174,6 +174,7 @@
     }
     .DataTable tr td {
         line-height: 20px;
+        height: 26px;
     }
     .DataTable td,
     .TableSmall td {
@@ -368,6 +369,7 @@
     .DataTableNoHighlight tbody tr td select {
         width: 85%;
     }
+
 
     /**
     * @subsection LayoutGrid TableLike

@@ -398,34 +398,6 @@
         opacity: 0;
         z-index: -10000;
     }
-    .AJAXLoader {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        margin: 2px;
-        vertical-align: bottom;
-    }
-    .AJAXLoader::after,
-    .Loader::after,
-    .KIXSidebarTools.Request .Header::after {
-        content: "\f110";
-        line-height: 16px;
-        animation: fa-spin 2s infinite linear;
-        -webkit-animation: fa-spin 2s infinite linear;
-        -moz-animation: fa-spin 2s infinite linear;
-        font: normal normal normal 14px/1 FontAwesome;
-        display: inline-block;
-    }
-    .ui-widget-content > .AJAXLoader {
-        text-align: center;
-        width: 100%;
-        height: auto;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-    .ui-widget-content > .AJAXLoader::after {
-        font-size: 5em;
-    }
     .FieldExplanation {
         margin: 5px 0;
     }
@@ -471,6 +443,51 @@
         left: 0px;
         top: 4px;
     }
+
+
+    /**
+    *   @subsection loader
+    */
+    .AJAXLoader {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin: 2px;
+        vertical-align: bottom;
+    }
+    .AJAXLoader::after,
+    .Loader::after,
+    .KIXSidebarTools.Request .Header::after {
+        content: "\f110";
+        line-height: 16px;
+        animation: fa-spin 2s infinite linear;
+        -webkit-animation: fa-spin 2s infinite linear;
+        -moz-animation: fa-spin 2s infinite linear;
+        font: normal normal normal 14px/1 FontAwesome;
+        display: inline-block;
+    }
+    .ui-widget-content > .AJAXLoader {
+        text-align: center;
+        width: 100%;
+        height: auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    .ui-widget-content > .AJAXLoader::after {
+        font-size: 5em;
+    }
+    #LinkedPersonsTable > .Loader::after {
+        font-size: 3em;
+    }
+    #TextModulesSelectionContainer > .Loader::after {
+        font-size: 4em;
+        line-height: 5em;
+    }
+    #ArticleAttachmentStrgContainer > .Loader::after {
+        font-size: 3em;
+        line-height: 2em;
+    }
+
 
     /**
      * @subsection  Handle for resizing tables
