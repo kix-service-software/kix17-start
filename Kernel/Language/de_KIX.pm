@@ -4523,6 +4523,17 @@ sub Data {
         = 'Definiert ein Fallback-Anzeigeformat für die Ansicht, wenn das Format nicht in der Attributdefinition des Konfigurationselements festgelegt ist.';
     $Lang->{'Defines a fallback link for the view if the link is not set in the attribute definition of the configuration item. It is possible to use two placeholders to set latitude and longitude. (<LATITUDE>, <LONGITUDE>)'}
         = 'Definiert einen Fallback-Link für die Ansicht, wenn der Link nicht in der Attributdefinition des Konfigurationselements festgelegt ist. Es ist möglich, zwei Platzhalter zum Festlegen von Breiten- und Längegrad zu verwenden. (<LATITUDE>, <LONGITUDE>)';
+
+    # NEW SKINS
+    $Lang->{'Default (green)'} = 'Standard (Grün)';
+    $Lang->{'Default (blue)'}  = 'Standard (Blau)';
+    $Lang->{'"Blue" skin which tries to save screen space for power users.'} =
+        '"Standard-Blau"-Skin, der weniger Bildschirmfläche zum Darstellen von Informationen benötigt.';
+    $Lang->{'Default skin for the agent interface (blue version).'} =
+         'Standard-Skin für die Agentenoberfläche (Blau)';
+    $Lang->{'Default skin for the customer interface (blue version).'} =
+         'Standard-Skin für die Kundenoberfläche (Blau)';
+
     # $$STOP$$
 
     return 0;

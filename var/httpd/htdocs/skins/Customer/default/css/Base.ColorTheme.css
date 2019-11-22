@@ -286,6 +286,11 @@
         background-color: #78BE5A;
         color: #FFFFFF;
     }
+    #NoArticles {
+        border-color: #E9E9E9;
+    }
+
+
 
     /*
     *   @subsection content column widget
@@ -365,6 +370,10 @@
     .TableSmall > tbody td {
         border-right: 1px solid #CCCCCC;
     }
+    .DataTable > tbody td > a,
+    .TableSmall > tbody td > a {
+        color: inherit;
+    }
     .DataTable > tbody > tr:hover > td,
     .TableSmall > tbody > tr:hover > td {
         background-color: #78BE5A;
@@ -375,6 +384,22 @@
     .DataTable > tbody > tr:hover > td *,
     .TableSmall > tbody > tr:hover > td * {
         color: #FFFFFF;
+    }
+    .DataTable > tbody > tr:hover > td input,
+    .DataTable > tbody > tr:hover > td select,
+    .DataTable > tbody > tr:hover > td textarea,
+    .DataTable > tbody > tr:hover > td div.Text,
+    .DataTable > tbody > tr:hover > td i.ModernizeFieldIcon,
+    .TableSmall > tbody > tr:hover > td i.ModernizeFieldIcon,
+    .TableSmall > tbody > tr:hover > td input,
+    .TableSmall > tbody > tr:hover > td select,
+    .TableSmall > tbody > tr:hover > td textarea,
+    .TableSmall > tbody > tr:hover > td div.Text {
+        color: #5B5B5B;
+    }
+    .DataTable > tbody > tr:hover > td i.ModernizeFieldIconDisable,
+    .TableSmall > tbody > tr:hover > td i.ModernizeFieldIconDisable {
+        color: #CCCCCC;
     }
     .DataTable > tbody > tr:active > td.Clickable,
     .TableSmall > tbody > tr:active > td.Clickable {
@@ -388,7 +413,7 @@
     .TableSmall > tbody > tr.Active:hover > td,
     .DataTable > tbody > tr.Active:hover > td *,
     .TableSmall > tbody > tr.Active:hover > td * {
-        color: #222222;
+        color: #5B5B5B;
     }
     .Handle a {
         background: transparent url(../img/handle.png) no-repeat;
@@ -1214,7 +1239,7 @@
         color: #FFFFFF;
     }
     .MessageBox.Notice p {
-        color: #FFF;
+        color: #FFFFFF;
     }
     .MessageBox p a {
         color: #FFFFFF;

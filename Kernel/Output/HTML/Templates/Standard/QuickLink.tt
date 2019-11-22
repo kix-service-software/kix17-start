@@ -34,7 +34,7 @@
         <span id="QuickLinkLinkType">
         </span>
         <button type="submit" name="" value="[% Translate("Submit") | html %]" id="QuickLinkSubmit" class="Hidden CallForAction"><span>[% Translate("Submit") | html %]</span></button>
-        <img src="[% Config("Frontend::ImagePath") %]loader.gif" border="2" alt="[% Translate("Loading") | html %]" class="Hidden" id="QuickLinkLoading"/>
+        <span alt="[% Translate("Loading") | html %]" class="Loader Hidden" id="QuickLinkLoading"></span>
     </form>
 
 [% WRAPPER JSOnDocumentComplete %]
