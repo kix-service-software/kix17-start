@@ -119,7 +119,7 @@
                                 <p class="FieldExplanation">
                                     [% Translate("Remote host URL for the REST requests.") | html %]
                                     <br/>
-                                    [% Translate("e.g https://www.otrs.com:10745/api/v1.0 (without trailing backslash)") | html %]
+                                    [% Translate("e.g https://www.kixdesk.com:10745/api/v1.0 (without trailing backslash)") | html %]
                                 </p>
                             </div>
                             <div class="Clear"></div>

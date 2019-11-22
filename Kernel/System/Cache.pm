@@ -107,7 +107,7 @@ store a value in the cache.
     );
 
 The Type here refers to the group of entries that should be cached and cleaned up together,
-usually this will represent the OTRS object that is supposed to be cached, like 'Ticket'.
+usually this will represent the KIX object that is supposed to be cached, like 'Ticket'.
 
 The Key identifies the entry (together with the type) for retrieval and deletion of this value.
 

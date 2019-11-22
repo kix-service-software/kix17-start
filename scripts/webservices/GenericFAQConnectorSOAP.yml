@@ -21,7 +21,7 @@ Provider:
   Transport:
     Config:
       MaxLength: '10000000'
-      NameSpace: http://www.otrs.org/FAQConnector
+      NameSpace: http://www.kixdesk.com/FAQConnector
       RequestNameFreeText: ''
       RequestNameScheme: ''
       ResponseNameFreeText: ''

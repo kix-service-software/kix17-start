@@ -464,7 +464,7 @@ sub CustomerSearch {
         if ( $Result->code() == 4 ) {
 
             # Result code 4 (LDAP_SIZELIMIT_EXCEEDED) is normal if there
-            # are more items in LDAP than search limit defined in OTRS or
+            # are more items in LDAP than search limit defined in KIX or
             # in LDAP server. Avoid spamming logs with such errors.
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'debug',
@@ -697,7 +697,7 @@ sub CustomerIDList {
         if ( $Result->code() == 4 ) {
 
             # Result code 4 (LDAP_SIZELIMIT_EXCEEDED) is normal if there
-            # are more items in LDAP than search limit defined in OTRS or
+            # are more items in LDAP than search limit defined in KIX or
             # in LDAP server. Avoid spamming logs with such errors.
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'debug',

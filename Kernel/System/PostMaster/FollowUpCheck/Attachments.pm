@@ -37,7 +37,7 @@ sub Run {
 
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
-    # The first attachment in a MIME email in OTRS is currently the body,
+    # The first attachment in a MIME email in KIX is currently the body,
     my @Attachments = $Self->{ParserObject}->GetAttachments();
     @Attachments = grep { defined $_->{ContentDisposition} && $_->{ContentDisposition} ne 'inline' } @Attachments;
 

@@ -25,7 +25,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Convert OTRS database XML to SQL.');
+    $Self->Description('Convert KIX database XML to SQL.');
     $Self->AddOption(
         Name        => 'database-type',
         Description => "Specify the database to generate SQL for (mysql|postgresql|oracle|all).",

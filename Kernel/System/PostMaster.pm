@@ -54,7 +54,7 @@ create an object. Do not use it directly, instead use:
     local $Kernel::OM = Kernel::System::ObjectManager->new(
         'Kernel::System::PostMaster' => {
             Email        => \@ArrayOfEmailContent,
-            Trusted      => 1, # 1|0 ignore X-OTRS header if false
+            Trusted      => 1, # 1|0 ignore X-KIX header if false
         },
     );
     my $PostMasterObject = $Kernel::OM->Get('Kernel::System::PostMaster');

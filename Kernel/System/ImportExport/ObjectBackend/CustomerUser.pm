@@ -585,7 +585,7 @@ sub ImportDataSave {
             $Param{ImportDataRow}->[$Counter];
         } 
         else {
-            # Sanitize country if it isn't found in OTRS to increase the chance it will
+            # Sanitize country if it isn't found in KIX to increase the chance it will
             # Note that standardizing against the ISO 3166-1 list might be a better approach...
             my $CountryList = $Kernel::OM->Get('Kernel::System::ReferenceData')->CountryList();
             if ( exists $CountryList->{$Param{ImportDataRow}->[$Counter]} ) {
