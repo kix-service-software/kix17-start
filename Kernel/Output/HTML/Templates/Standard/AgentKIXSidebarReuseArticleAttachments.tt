@@ -46,8 +46,8 @@
             var TicketID     = $("input[name=TicketID]").val(),
                 FormID       = $("input[name=FormID]").val(),
                 SearchString = $("#ReuseArticleAttachments input[name=SearchString]").val(),
-                URL      = '';
-            $('#ArticleAttachmentStrgContainer').html('<center><img src="'+Core.Config.Get('Images')+'loader.gif"></center>');
+                URL          = '';
+            $('#ArticleAttachmentStrgContainer').html('<div class="Loader Center"></div>');
             URL = '[% Env("Baselink") %]Action=ReuseArticleAttachmentsAJAXHandler;Subaction=LoadAttachments;TicketID=' + TicketID + ";SearchString=" + SearchString + ';FormID=' + FormID;
             Core.AJAX.ContentUpdate($('#ArticleAttachmentStrgContainer'), URL, function () {
                 initReuseArticleAttachments();
@@ -60,13 +60,13 @@
 
     initReuseArticleAttachments();
 
-    $('#ReuseArticleAttachments .WidgetAction.Toggle a').bind('click', function() {
+    $('#ReuseArticleAttachments .WidgetAction.Toggle').bind('click', function() {
         // load attachments on first expand
         if ($('#ReuseArticleAttachments').hasClass('Expanded')) {
             var TicketID = $("input[name=TicketID]").val(),
                 FormID   = $("input[name=FormID]").val(),
                 URL      = '';
-            $('#ArticleAttachmentStrgContainer').html('<center><img src="'+Core.Config.Get('Images')+'loader.gif"></center>');
+            $('#ArticleAttachmentStrgContainer').html('<div class="Loader Center"></div>');
             URL = '[% Env("Baselink") %]Action=ReuseArticleAttachmentsAJAXHandler;Subaction=LoadAttachments;TicketID=' + TicketID + ';FormID=' + FormID;
             Core.AJAX.ContentUpdate($('#ArticleAttachmentStrgContainer'), URL, function () {
                 initReuseArticleAttachments();

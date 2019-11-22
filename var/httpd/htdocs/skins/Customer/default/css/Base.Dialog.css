@@ -77,20 +77,17 @@
         border-radius: 5px;
         overflow: hidden;
     }
-
     .Dialog.Fullsize {
         width: 100%;
         height: 100%;
         left: 0px;
     }
-
     .Dialog > .Header {
         cursor: move;
         display: block;
         position: relative;
         height: 25px;
     }
-
     .Dialog > .Header .Close {
         display: block;
         position: absolute;
@@ -99,18 +96,15 @@
         right: 8px;
         top: 7px;
     }
-
     .Dialog > .Header h1 {
         padding: 5px 25px 10px 10px;
         font-weight: normal;
         font-size: 14px;
     }
-
     .Dialog > .Content {
         position: relative;
         overflow: hidden;
     }
-
     .Dialog > .Content > .InnerContent {
         padding: 10px 25px 10px 10px;
         overflow-y: auto;
@@ -118,48 +112,47 @@
         max-height: 200px;
         position: relative;
     }
-
+    .Dialog > .Content .InnerContent {
+        height: auto;
+        display: block;
+    }
     .Dialog > .Content > .ContentFooter {
         padding: 6px 0 5px;
         min-height: 20px;
     }
-
     .Dialog > .Footer {
         padding: 6px 0 5px;
         display: block;
         position: relative;
     }
-
     .Dialog > .Footer.ContentFooter {
         display: none;
     }
 
+
     /**
      * subsection Alert
      */
-
     .Dialog.Alert .InnerContent .fa {
         display: block;
         font-size: 25px;
         text-align: center;
         margin-bottom: 10px;
     }
-
     .Dialog.Alert h2,
     .Dialog.Alert p {
         text-align: center;
     }
-
     .Dialog.Alert {
         width: 450px;
         top: 100px;
         left: 300px;
     }
 
+
     /**
      * subsection Settings
      */
-
     .Dialog fieldset {
         margin-bottom: 15px;
     }
@@ -381,6 +374,16 @@
     .KIXSBRDBPopupBoxFooter {
         height: 20px;
     }
+
+
+    /**
+    *   @subsection article filter
+    */
+    #ArticleFilterDialogForm {
+        width: 480px;
+        max-height: 300px;
+    }
+
 
     /**
     *   @subsection field help container

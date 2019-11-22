@@ -207,6 +207,7 @@
     }
     .DataTable tr td {
         line-height: 20px;
+        height: 26px;
     }
     .DataTable td,
     .TableSmall td {
@@ -401,6 +402,33 @@
     .DataTableNoHighlight tbody tr td select {
         width: 85%;
     }
+
+
+    /**
+    *   @subsection article table
+    */
+    .ArticleView,
+    .ArticlePage,
+    .ArticleFilter {
+        float: left;
+    }
+    #ArticleTableBody {
+        position: relative;
+        overflow: hidden;
+        border-bottom: none;
+        cursor: pointer;
+        margin: 0px;
+    }
+    #ArticleTableBody .Scroller {
+        height: 82px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        margin-bottom: 10px;
+    }
+    #ArticleTableBody .Scroller .DataTable {
+        border: 0px;
+    }
+
 
     /**
     * @subsection LayoutGrid TableLike

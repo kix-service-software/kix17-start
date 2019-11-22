@@ -44,10 +44,11 @@
     }
 
     .LoginBox .Welcome {
-        margin: 40px auto auto;
+        margin: 40px 0 0;
         text-align: center;
         width: 100%;
         display: block;
+        min-height: 40px;
     }
 
     .LoginBox .Welcome h2 {

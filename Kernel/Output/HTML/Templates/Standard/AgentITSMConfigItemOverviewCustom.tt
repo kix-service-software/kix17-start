@@ -45,7 +45,7 @@
             </tr>
 [% RenderBlockEnd("NoDataFoundMsg") %]
 [% RenderBlockStart("Record") %]
-            <tr id="ConfigItemID_[% Data.ConfigItemID | html %]" class="MasterAction" style="[% Data.LineStyle | html %]">
+            <tr id="ConfigItemID_[% Data.ConfigItemID | html %]" class="MasterAction TicketOverviewHighlightClass" style="[% Data.LineStyle | html %]">
 [% RenderBlockStart("RecordBulkAction") %]
                 <td class="Checkbox Fixed">
                     <input class="Checkbox SelectItem" type="checkbox" name="ConfigItemID" value="[% Data.ConfigItemID | html %]"  autocomplete="off" [% Data.ItemChecked %]]/>
@@ -54,7 +54,7 @@
 [% RenderBlockStart("RecordCustom") %]
                 <td style="vertical-align:top">
 [% RenderBlockStart("RecordCustomLinkStart") %]
-                    <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %]" title="[% Data.Title %]" class="MasterActionLink" style="[% Data.LineStyle | html %]">
+                    <a href="[% Env("Baselink") %]Action=AgentITSMConfigItemZoom;ConfigItemID=[% Data.ConfigItemID | uri %]" title="[% Data.Title %]" class="MasterActionLink">
 [% RenderBlockEnd("RecordCustomLinkStart") %]
                         [% Data.Value %]
 [% RenderBlockStart("RecordCustomLinkEnd") %]
