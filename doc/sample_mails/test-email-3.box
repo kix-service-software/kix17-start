@@ -1,4 +1,4 @@
-From skywalker@otrs.org Sat Jun  8 21:30:55 2002
+From skywalker@kixdesk.com Sat Jun  8 21:30:55 2002
 Date: Sat, 8 Jun 2002 21:30:55 +0200
 From: Skywalker Attachment <skywalker@kixdesk.com>
 To: darthvader@kixdesk.com
@@ -48,7 +48,7 @@ just a email with an attachment and an very long http link in this body.
 
 --OgqxwSJOaUobr8KG
 Content-Type: image/jpeg
-Content-Disposition: attachment; filename="otrs.jpg"
+Content-Disposition: attachment; filename="image.jpg"
 Content-Transfer-Encoding: base64
 
 /9j/4AAQSkZJRgABAQEASABIAAD//gAXQ3JlYXRlZCB3aXRoIFRoZSBHSU1Q/9sAQwAEAgMD

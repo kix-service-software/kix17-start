@@ -33,7 +33,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Insert random data into the OTRS database for testing purposes.');
+    $Self->Description('Insert random data into the KIX database for testing purposes.');
     $Self->AddOption(
         Name        => 'generate-tickets',
         Description => "Specify how many tickets should be generated.",

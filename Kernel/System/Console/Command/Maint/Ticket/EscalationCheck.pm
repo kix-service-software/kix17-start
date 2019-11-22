@@ -53,7 +53,7 @@ sub Configure {
 #
 #
 # NotificationEvents are alway triggered, and Escalation events just
-# base on the 'OTRSEscalationEvents::DecayTime'.
+# base on the 'KIXEscalationEvents::DecayTime'.
 #
 # =cut
 
@@ -67,7 +67,7 @@ sub Run {
     my $TimeObject   = $Kernel::OM->Get('Kernel::System::Time');
 
     # the decay time is configured in minutes
-    my $DecayTimeInSeconds = $Kernel::OM->Get('Kernel::Config')->Get('OTRSEscalationEvents::DecayTime') || 0;
+    my $DecayTimeInSeconds = $Kernel::OM->Get('Kernel::Config')->Get('KIXEscalationEvents::DecayTime') || 0;
     $DecayTimeInSeconds *= 60;
 
     # check if it's a escalation or escalation notification

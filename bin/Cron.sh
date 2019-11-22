@@ -28,7 +28,7 @@ if test -z "$CRON_USER"; then
     fi
 fi
 
-# find otrs root
+# find kix root
 cd "`dirname $0`/../"
 KIX_HOME="`pwd`"
 cd -
@@ -37,12 +37,12 @@ if test -e $KIX_HOME/var/cron; then
     KIX_ROOT=$KIX_HOME
 else
     echo "No cronjobs in $KIX_HOME/var/cron found!";
-    echo " * Check the \$HOME (/etc/passwd) of the KIX user. It must be the root dir of your KIX system (e. g. /opt/otrs). ";
+    echo " * Check the \$HOME (/etc/passwd) of the KIX user. It must be the root dir of your KIX system (e. g. /opt/kix). ";
     exit 5;
 fi
 
 CRON_DIR=$KIX_ROOT/var/cron
-CRON_TMP_FILE=$KIX_ROOT/var/tmp/otrs-cron-tmp.$$
+CRON_TMP_FILE=$KIX_ROOT/var/tmp/kix-cron-tmp.$$
 
 echo "Cron.sh - start/stop KIX cronjobs"
 

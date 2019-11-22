@@ -1001,11 +1001,11 @@
                 <Item Key="Identifier">RemoteDBList001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
+                <Item Key="DatabasePw">kix</Item>
                 <Item Key="DatabaseTable">ticket</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="MaxResultCount">30</Item>
                 <Item Key="MaxResultDisplay">10</Item>
@@ -1045,11 +1045,11 @@
                 <Item Key="Identifier">RemoteDBList002</Item>
                 <Item Key="Group"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
+                <Item Key="DatabasePw">kix</Item>
                 <Item Key="DatabaseTable">ticket</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="MaxResultCount">30</Item>
                 <Item Key="MaxResultDisplay">10</Item>
@@ -5714,7 +5714,7 @@
                 <Item Key="Priority">Warning</Item>
                 <Item Key="Text">The KIX Website</Item>
                 <Item Key="File">&lt;KIX_CONFIG_Home&gt;/var/notify.txt</Item>
-                <Item Key="Link">http://www.otrs.com</Item>
+                <Item Key="Link">http://www.kixdesk.com</Item>
             </Hash>
         </Setting>
     </ConfigItem>

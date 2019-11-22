@@ -663,7 +663,7 @@ get a list of ticket owners within the given ticket is list
     returns
 
     $Values = {
-        1 => 'Admin OTRS',
+        1 => 'Admin KIX',
     };
 
 =cut
@@ -751,7 +751,7 @@ get a list of ticket responsibles within the given ticket is list
     returns
 
     $Values = {
-        1 => 'Admin OTRS',
+        1 => 'Admin KIX',
     };
 
 =cut

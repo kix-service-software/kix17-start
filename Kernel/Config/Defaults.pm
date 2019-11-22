@@ -322,11 +322,11 @@ sub LoadDefaults {
 
     # --------------------------------------------------- #
     # authentication settings                             #
-    # (enable what you need, auth against otrs db,        #
+    # (enable what you need, auth against kix db,        #
     # against LDAP directory, against HTTP basic auth     #
     # or against Radius server)                           #
     # --------------------------------------------------- #
-    # This is the auth. module against the otrs db
+    # This is the auth. module against the kix db
     $Self->{AuthModule} = 'Kernel::System::Auth::DB';
 
     # defines AuthSyncBackend (AuthSyncModule) for AuthModule
@@ -345,8 +345,8 @@ sub LoadDefaults {
 #    $Self->{'AuthModule::LDAP::UID'} = 'uid';
 
     # Check if the user is allowed to auth in a posixGroup
-    # (e. g. user needs to be in a group xyz to use otrs)
-#    $Self->{'AuthModule::LDAP::GroupDN'} = 'cn=otrsallow,ou=posixGroups,dc=example,dc=com';
+    # (e. g. user needs to be in a group xyz to use kix)
+#    $Self->{'AuthModule::LDAP::GroupDN'} = 'cn=kixallow,ou=posixGroups,dc=example,dc=com';
 #    $Self->{'AuthModule::LDAP::AccessAttr'} = 'memberUid';
     # for ldap posixGroups objectclass (just uid)
 #    $Self->{'AuthModule::LDAP::UserAttr'} = 'UID';
@@ -375,7 +375,7 @@ sub LoadDefaults {
     # is not in use.
 #    $Self->{'AuthModule::LDAP::UserLowerCase'} = 0;
 
-    # In case you need to use OTRS in iso-charset, you can define this
+    # In case you need to use KIX in iso-charset, you can define this
     # by using this option (converts utf-8 data from LDAP to iso).
 #    $Self->{'AuthModule::LDAP::Charset'} = 'iso-8859-1';
 
@@ -403,8 +403,8 @@ sub LoadDefaults {
     # Note:
     # If you use this module, you should use as fallback the following
     # config settings if user isn't login through apache ($ENV{REMOTE_USER}).
-#    $Self->{LoginURL} = 'http://host.example.com/not-authorised-for-otrs.html';
-#    $Self->{LogoutURL} = 'http://host.example.com/thanks-for-using-otrs.html';
+#    $Self->{LoginURL} = 'http://host.example.com/not-authorised-for-kix.html';
+#    $Self->{LogoutURL} = 'http://host.example.com/thanks-for-using-kix.html';
 
     # This is example configuration to auth. agents against a radius server.
 #    $Self->{'AuthModule'} = 'Kernel::System::Auth::Radius';
@@ -468,7 +468,7 @@ sub LoadDefaults {
 #        UserEmail     => 'mail',
 #    };
 
-    # In case you need to use OTRS in iso-charset, you can define this
+    # In case you need to use KIX in iso-charset, you can define this
     # by using this option (converts utf-8 data from LDAP to iso).
 #    $Self->{'AuthSyncModule::LDAP::Charset'} = 'iso-8859-1';
 
@@ -499,11 +499,11 @@ sub LoadDefaults {
 
     # AuthSyncModule::LDAP::UserSyncGroupsDefinition
     # (If "LDAP" was selected for AuthModule and you want to sync LDAP
-    # groups to otrs groups, define the following.)
+    # groups to kix groups, define the following.)
 #    $Self->{'AuthSyncModule::LDAP::UserSyncGroupsDefinition'} = {
 #        # ldap group
-#        'cn=agent,o=otrs' => {
-#            # otrs group
+#        'cn=agent,o=kix' => {
+#            # kix group
 #            'admin' => {
 #                # permission
 #                rw => 1,
@@ -514,7 +514,7 @@ sub LoadDefaults {
 #                ro => 1,
 #            },
 #        },
-#        'cn=agent2,o=otrs' => {
+#        'cn=agent2,o=kix' => {
 #            'users' => {
 #                rw => 1,
 #                ro => 1,
@@ -524,28 +524,28 @@ sub LoadDefaults {
 
     # AuthSyncModule::LDAP::UserSyncRolesDefinition
     # (If "LDAP" was selected for AuthModule and you want to sync LDAP
-    # groups to otrs roles, define the following.)
+    # groups to kix roles, define the following.)
 #    $Self->{'AuthSyncModule::LDAP::UserSyncRolesDefinition'} = {
 #        # ldap group
-#        'cn=agent,o=otrs' => {
-#            # otrs role
+#        'cn=agent,o=kix' => {
+#            # kix role
 #            'role1' => 1,
 #            'role2' => 0,
 #        },
-#        'cn=agent2,o=otrs' => {
+#        'cn=agent2,o=kix' => {
 #            'role3' => 1,
 #        }
 #    };
 
     # AuthSyncModule::LDAP::UserSyncAttributeGroupsDefinition
     # (If "LDAP" was selected for AuthModule and you want to sync LDAP
-    # attributes to otrs groups, define the following.)
+    # attributes to kix groups, define the following.)
 #    $Self->{'AuthSyncModule::LDAP::UserSyncAttributeGroupsDefinition'} = {
 #        # ldap attribute
 #        'LDAPAttribute' => {
 #            # ldap attribute value
 #            'LDAPAttributeValue1' => {
-#                # otrs group
+#                # kix group
 #                'admin' => {
 #                    # permission
 #                    rw => 1,
@@ -569,13 +569,13 @@ sub LoadDefaults {
 
     # AuthSyncModule::LDAP::UserSyncAttributeRolesDefinition
     # (If "LDAP" was selected for AuthModule and you want to sync LDAP
-    # attributes to otrs roles, define the following.)
+    # attributes to kix roles, define the following.)
 #    $Self->{'AuthSyncModule::LDAP::UserSyncAttributeRolesDefinition'} = {
 #        # ldap attribute
 #        'LDAPAttribute' => {
 #            # ldap attribute value
 #            'LDAPAttributeValue1' => {
-#                # otrs role
+#                # kix role
 #                'role1' => 1,
 #                'role2' => 1,
 #            },
@@ -955,7 +955,7 @@ sub LoadDefaults {
     # Package::RepositoryList
     # (repository list)
 #    $Self->{'Package::RepositoryList'} = {
-#        'ftp://ftp.example.com/pub/otrs/misc/packages/' => '[Example] ftp://ftp.example.com/',
+#        'ftp://ftp.example.com/pub/kix/misc/packages/' => '[Example] ftp://ftp.example.com/',
 #    };
 
     # Package::Timeout
@@ -1126,9 +1126,9 @@ You can log in via the following URL:
     # (The customer panel db-uid.) [default: 1]
     $Self->{CustomerPanelUserID} = 1;
 
-    # CustomerGroupSupport (0 = compat. to OTRS 1.1 or lower)
+    # CustomerGroupSupport (0 = deactivated group support)
     # (if this is 1, the you need to set the group <-> customer user
-    # relations! http://host/otrs/index.pl?Action=AdminCustomerUserGroup
+    # relations! http://host/kix/index.pl?Action=AdminCustomerUserGroup
     # otherway, each user is ro/rw in each group!)
     $Self->{CustomerGroupSupport} = 0;
 
@@ -1215,11 +1215,11 @@ via the Preferences button after logging in.
 
     # --------------------------------------------------- #
     # customer authentication settings                    #
-    # (enable what you need, auth against otrs db,        #
+    # (enable what you need, auth against kix db,        #
     # against a LDAP directory, against HTTP basic        #
     # authentication and against Radius server)           #
     # --------------------------------------------------- #
-    # This is the auth. module for the otrs db
+    # This is the auth. module for the kix db
     # you can also configure it using a remote database
     $Self->{'Customer::AuthModule'}                       = 'Kernel::System::CustomerAuth::DB';
     $Self->{'Customer::AuthModule::DB::Table'}            = 'customer_user';
@@ -1244,8 +1244,8 @@ via the Preferences button after logging in.
 #    $Self->{'Customer::AuthModule::LDAP::UID'} = 'uid';
 
     # Check if the user is allowed to auth in a posixGroup
-    # (e. g. user needs to be in a group xyz to use otrs)
-#    $Self->{'Customer::AuthModule::LDAP::GroupDN'} = 'cn=otrsallow,ou=posixGroups,dc=example,dc=com';
+    # (e. g. user needs to be in a group xyz to use kix)
+#    $Self->{'Customer::AuthModule::LDAP::GroupDN'} = 'cn=kixallow,ou=posixGroups,dc=example,dc=com';
 #    $Self->{'Customer::AuthModule::LDAP::AccessAttr'} = 'memberUid';
     # for ldap posixGroups objectclass (just uid)
 #    $Self->{'Customer::AuthModule::LDAP::UserAttr'} = 'UID';
@@ -1291,8 +1291,8 @@ via the Preferences button after logging in.
 #    $Self->{'Customer::AuthModule::HTTPBasicAuth::ReplaceRegExp'} = '^(.+?)@.+?$';
     # If you use this module, you should use as fallback the following
     # config settings if user isn't login through apache ($ENV{REMOTE_USER})
-#    $Self->{CustomerPanelLoginURL} = 'http://host.example.com/not-authorised-for-otrs.html';
-#    $Self->{CustomerPanelLogoutURL} = 'http://host.example.com/thanks-for-using-otrs.html';
+#    $Self->{CustomerPanelLoginURL} = 'http://host.example.com/not-authorised-for-kix.html';
+#    $Self->{CustomerPanelLogoutURL} = 'http://host.example.com/thanks-for-using-kix.html';
 
     # This is example configuration to auth. agents against a radius server
 #    $Self->{'Customer::AuthModule'} = 'Kernel::System::Auth::Radius';

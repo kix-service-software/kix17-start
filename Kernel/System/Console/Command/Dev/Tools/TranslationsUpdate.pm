@@ -34,7 +34,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Update the OTRS translation files.');
+    $Self->Description('Update the KIX translation files.');
     $Self->AddOption(
         Name        => 'language',
         Description => "Which language to use, omit to update all languages.",
@@ -44,7 +44,7 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'module-directory',
-        Description => "Translate the OTRS module in the given directory.",
+        Description => "Translate the KIX module in the given directory.",
         Required    => 0,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
@@ -61,7 +61,7 @@ sub Configure {
 
     $Self->AdditionalHelp(<<"EOF");
 
-<yellow>Translating OTRS</yellow>
+<yellow>Translating KIX</yellow>
 
 Make sure that you have a clean system with a current configuration. No modules may be installed or linked into the system!
 
@@ -412,7 +412,7 @@ sub HandleLanguage {
         );
     }
 
-    # Language file, which only contains the OTRS core translations
+    # Language file, which only contains the KIX core translations
     my $LanguageCoreObject = Kernel::Language->new(
         UserLanguage    => $Language,
         TranslationFile => 1,
@@ -607,7 +607,7 @@ sub WritePOTFile {
 
     $Kernel::OM->Get('Kernel::System::Main')->Require('Locale::PO') || die "Could not load Locale::PO";
 
-    my $Package = $Param{Module} // 'OTRS';
+    my $Package = $Param{Module} // 'KIX';
 
     my $TimeObject   = $Kernel::OM->Get('Kernel::System::Time');
     my $CreationDate = $TimeObject->SystemTime2TimeStamp(
@@ -712,11 +712,11 @@ sub WritePerlLanguageFile {
 
         $NewOut = <<"EOF";
 $Separator
-# Copyright (C) 2001-2016 OTRS AG, http://otrs.com/
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 $Separator
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (AGPL). If you
-# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 $Separator
 
 package Kernel::Language::$Param{Language}_$Param{Module};

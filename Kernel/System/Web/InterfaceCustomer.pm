@@ -384,7 +384,7 @@ sub Run {
             Name                     => 'PluginAsynchronous::ConcurrentUser',
             MaximumParallelInstances => 1,
             Data                     => {
-                Object   => 'Kernel::System::SupportDataCollector::PluginAsynchronous::OTRS::ConcurrentUsers',
+                Object   => 'Kernel::System::SupportDataCollector::PluginAsynchronous::KIX::ConcurrentUsers',
                 Function => 'RunAsynchronous',
             },
         );
@@ -861,7 +861,7 @@ sub Run {
         my $Body        = $ConfigObject->Get('CustomerPanelBodyNewAccount')
             || 'No Config Option found!';
         my $Subject = $ConfigObject->Get('CustomerPanelSubjectNewAccount')
-            || 'New OTRS Account!';
+            || 'New KIX Account!';
         for ( sort keys %GetParams ) {
             $Body =~ s/<(KIX|OTRS)_$_>/$GetParams{$_}/gi;
         }

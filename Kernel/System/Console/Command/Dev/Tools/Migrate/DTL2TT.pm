@@ -26,7 +26,7 @@ sub Configure {
     $Self->Description('Migrate DTL files to Template::Toolkit.');
     $Self->AddArgument(
         Name        => 'directory',
-        Description => "Toplevel OTRS or module directory where DTL files need to be converted.",
+        Description => "Toplevel KIX or module directory where DTL files need to be converted.",
         Required    => 1,
         ValueRegex  => qr/.*/smx,
     );

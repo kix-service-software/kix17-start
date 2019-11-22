@@ -2,10 +2,10 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:func="http://exslt.org/functions"
-                xmlns:otrs="http://otrs.org"
-                extension-element-prefixes="func otrs">
+                xmlns:kix="http://kixdesk.com"
+                extension-element-prefixes="func kix">
 
-<func:function name="otrs:date-xsd-to-iso">
+<func:function name="kix:date-xsd-to-iso">
     <xsl:param name="date-time" />
     <xsl:variable name="formatted">
         <xsl:value-of select="substring($date-time, 1, 10)" />
@@ -15,7 +15,7 @@
    <func:result select="string($formatted)" />
 </func:function>
 
-<func:function name="otrs:date-iso-to-xsd">
+<func:function name="kix:date-iso-to-xsd">
     <xsl:param name="date-time" />
     <xsl:variable name="formatted">
         <xsl:value-of select="substring($date-time, 1, 10)" />

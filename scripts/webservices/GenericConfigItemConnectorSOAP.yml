@@ -34,7 +34,7 @@ Provider:
   Transport:
     Config:
       MaxLength: 100000000
-      NameSpace: http://www.otrs.org/ConfigItemConnector
+      NameSpace: http://www.kixdesk.com/ConfigItemConnector
       RequestNameFreeText: ''
       RequestNameScheme: Plain
       ResponseNameFreeText: ''

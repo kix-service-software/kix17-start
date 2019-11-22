@@ -22,12 +22,12 @@ our @ObjectDependencies = (
 
 =head1 NAME
 
-Kernel::System::AsynchronousExecutor - base class to delegate tasks to the OTRS Scheduler Daemon
+Kernel::System::AsynchronousExecutor - base class to delegate tasks to the KIX Scheduler Daemon
 
 =head1 SYNOPSIS
 
 ObjectManager controlled modules can add this base class to execute some time consuming tasks in the
-background using the separate process OTRS Scheduler Daemon.
+background using the separate process KIX Scheduler Daemon.
 
 =head1 PUBLIC INTERFACE
 

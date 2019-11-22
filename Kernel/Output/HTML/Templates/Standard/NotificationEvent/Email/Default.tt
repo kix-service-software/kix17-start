@@ -164,7 +164,7 @@
                     <tr>
                         <td valign="top" class="bodyContent">
 # We need to perform some postprocessing on the notification content as it is neccessary to use inline CSS styles
-#   for best mail client compatibility. In particular, OTRS uses <div> elements with inline CSS instead of <blockquote>.
+#   for best mail client compatibility. In particular, KIX uses <div> elements with inline CSS instead of <blockquote>.
 #   Here we also change the inline style of this <div> to match with the current design.
                             [% Data.Body
                             .replace('<p>', '<div>')

@@ -22,7 +22,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Deletes cache files created by OTRS.');
+    $Self->Description('Deletes cache files created by KIX.');
     $Self->AddOption(
         Name        => 'expired',
         Description => 'Delete only caches which are expired by TTL.',

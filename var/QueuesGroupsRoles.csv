@@ -1,4 +1,4 @@
-"Queue";"Gruppe";"SalutationID";"SignatureID";"FollowUpID";"FollowUpLock";"UnlockTimeout";"FirstResponseTime";"FirstResponseNotify";"UpdateTime";"UpdateNotify";"SolutionTime";"SolutionNotify";"Calendar";"Validity";"SystemAddress";"OTRS-Admin";"FAQ-Redaktion";"MA_Support";"MA_Beschaffung";"MA_CMDB-Pflege";"Problemmanager"
+"Queue";"Gruppe";"SalutationID";"SignatureID";"FollowUpID";"FollowUpLock";"UnlockTimeout";"FirstResponseTime";"FirstResponseNotify";"UpdateTime";"UpdateNotify";"SolutionTime";"SolutionNotify";"Calendar";"Validity";"SystemAddress";"KIX-Admin";"FAQ-Redaktion";"MA_Support";"MA_Beschaffung";"MA_CMDB-Pflege";"Problemmanager"
 ;"admin";;;;;;;;;;;;;;;"RO,MO,CR,OW,PR,NO,RW";;;;;
 ;"faq";;;;;;;;;;;;;;;"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW";"RO, ";"RO, ";"RO, ";
 ;"faq_admin";;;;;;;;;;;;;;;"RO,MO,CR,OW,PR,NO,RW";"RO,MO,CR,OW,PR,NO,RW";"RO, ";"RO, ";;

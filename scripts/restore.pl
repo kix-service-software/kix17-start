@@ -29,8 +29,8 @@ my $DBDump = '';
 getopt( 'hbd', \%Opts );
 if ( exists $Opts{h} ) {
     print "restore.pl - restore script\n";
-    print "Copyright (C) 2001-2017 OTRS AG, http://otrs.com/\n";
-    print "usage: restore.pl -b /data_backup/<TIME>/ -d /opt/otrs/\n";
+    print "Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de\n";
+    print "usage: restore.pl -b /data_backup/<TIME>/ -d /opt/kix17/\n";
     exit 1;
 }
 if ( !$Opts{b} ) {
@@ -60,7 +60,7 @@ if ( -e "$Opts{b}/Config.tar.gz" ) {
 # create common objects
 local $Kernel::OM = Kernel::System::ObjectManager->new(
     'Kernel::System::Log' => {
-        LogPrefix => 'OTRS-restore.pl',
+        LogPrefix => 'KIX-restore.pl',
     },
 );
 
@@ -123,7 +123,7 @@ if ( $DB =~ m/mysql/i ) {
 else {
     $Kernel::OM->Get('Kernel::System::DB')->Prepare(
         SQL =>
-            "SELECT table_name FROM information_schema.tables WHERE table_catalog = 'otrs' AND table_schema = 'public'",
+            "SELECT table_name FROM information_schema.tables WHERE table_catalog = 'kix17' AND table_schema = 'public'",
     );
     my $Check = 0;
     while ( my @RowTmp = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {

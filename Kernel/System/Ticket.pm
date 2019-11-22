@@ -7222,7 +7222,7 @@ sub TicketArticleStorageSwitch {
     for my $ArticleID (@ArticleIndex) {
 
         # create source object
-        # We have to create it for every article because of the way OTRS uses base classes here.
+        # We have to create it for every article because of the way KIX uses base classes here.
         # We cannot have two ticket objects with different base classes.
         $ConfigObject->Set(
             Key   => 'Ticket::StorageModule',
