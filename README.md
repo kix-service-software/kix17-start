@@ -9,7 +9,7 @@ KIX17 Start does come with community support which you may request in our [forum
 
 # License
 
-For licenses see files [COPYING](COPYING), [LICENSE](LICENSE), [LICENSE-GPL3](LICENSE-GPL3) and [LICENSE-Third-Party](LICENSE-Third-Party).
+The relevant license information can be found the files [LICENSE](LICENSE) (for AGPL), [LICENSE-GPL3](LICENSE-GPL3) (for GPL v3) and [LICENSE-Third-Party](LICENSE-Third-Party) (List of included third party libraries).
 
 
 # Documentation
@@ -21,7 +21,7 @@ You can find documentation on our [website](https://kixdesk.com/dokumentation.ht
 
 If you require professional services like consulting, support or maintenance for your KIX installation, just contact us. [cape IT](https://www.cape-it.de) offers all of theses services as well as custom extensions for KIX and training for you as the upcoming KIX administrator and power user.
 
-The more grown up sibling of KIX17 Start is [KIX Pro](https://kixdesk.com/kix-pro.html). It provides extended functionalities, included services as training support and bug escalation (depending on your desired support level). Furthermore you may choose to add some addtional [functionalities](https://kixdesk.com/module.html), as Kanban-Board, maintenance planner, JIRA-, IDoIT- or other Connectors, etc.
+The more grown up sibling of KIX17 Start is [KIX Pro](https://kixdesk.com/kix-pro.html). It provides extended functionalities, included services as training support and bug escalation (depending on your desired support level). Furthermore you may choose to add some addtional [functionalities](https://kixdesk.com/module.html), as Kanban-Board, maintenance planner, JIRA-, i-doit- or other Connectors, etc.
 
 
 # Software requirements
@@ -29,10 +29,9 @@ The more grown up sibling of KIX17 Start is [KIX Pro](https://kixdesk.com/kix-pr
   - Perl 5.16.0 or higher
 - Webserver
   - Apache2 + mod_perl2 or higher
-  - Webserver with CGI support (CGI not recommended)
 - Databases
   - MariaDB
-  - MySQL 5.0 or higher
-  - PostgreSQL 9.2 or higher
+  - MySQL 5.5 or higher
+  - PostgreSQL 9.1 or higher
 - Browsers
   - just use a current, up-to-date web browser
