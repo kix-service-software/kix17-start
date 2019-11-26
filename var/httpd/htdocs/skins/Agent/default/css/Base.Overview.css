@@ -728,6 +728,7 @@
     .Overview thead tr th {
         height: 19px;
         padding-top: 0;
+        position: relative;
     }
     #EmptyMessageMedium {
         min-height: 0px;

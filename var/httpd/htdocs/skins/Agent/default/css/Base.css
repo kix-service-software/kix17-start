@@ -215,6 +215,9 @@
     select[multiple="multiple"] {
         min-width: 300px;
     }
+    .SidebarColumn select[multiple="multiple"] {
+        min-width: 240px;
+    }
     select[multiple="multiple"] option {
         padding: 2px;
     }
