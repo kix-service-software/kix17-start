@@ -1024,6 +1024,31 @@
         line-height: 150%;
     }
 
+    /* itsm */
+    #ITMSConfigItemCompareLeft {
+        float: none;
+        width: 100%;
+        margin-bottom: 2rem;
+    }
+    #ITMSConfigItemCompareRight {
+        float: none;
+        width: 100%;
+    }
+    .CompareTable .CellOutside .DataTable {
+        width: 50%;
+    }
+    .CompareTable .CellOutside {
+        min-width: auto;
+    }
+
+    .CompareTable .CellMiddle {
+        display: none;
+    }
+
+    .CompareTable .CellOutside .DataTable tr td {
+        white-space: unset;
+    }
+    
     /* Admin Screen */
 
     .Admin > h1 {
