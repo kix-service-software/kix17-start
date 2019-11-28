@@ -762,7 +762,7 @@ sub AutoResponse {
 
 =item NotificationEvent()
 
-replace all OTRS smart tags in the notification body and subject
+replace all KIX smart tags in the notification body and subject
 
     my %NotificationEvent = $TemplateGeneratorObject->NotificationEvent(
         TicketID              => 123,

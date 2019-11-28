@@ -265,7 +265,7 @@ sub Run {
         NewStateID NewPriorityID TimeUnits ArticleTypeID Title Body Subject NewQueueID
         Year Month Day Hour Minute NewOwnerID NewResponsibleID TypeID ServiceID SLAID
         Expand ReplyToArticle StandardTemplateID CreateArticle
-        DestQueue  NewOwnerType OldOwnerID ElementChanged
+        DestQueue NewOwnerType OldOwnerID ElementChanged
         )
     ) {
         $GetParam{$Key} = $ParamObject->GetParam( Param => $Key );
@@ -1705,6 +1705,15 @@ sub Run {
 
         # set Body var to calculated content
         $GetParam{Body} = $Body;
+
+        # check if external sources should be removed from body
+        if ( $ConfigObject->Get('Frontend::RemoveExternalSource') ) {
+            my %SafetyCheckResultNoExt = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                String       => $GetParam{Body},
+                NoExtSrcLoad => 1,
+            );
+            $GetParam{Body} = $SafetyCheckResultNoExt{String};
+        }
 
         if ( $Self->{ReplyToArticle} ) {
             my $TicketSubjectRe = $ConfigObject->Get('Ticket::SubjectRe') || 'Re';

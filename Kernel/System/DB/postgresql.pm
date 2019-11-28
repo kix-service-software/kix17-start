@@ -50,6 +50,12 @@ sub LoadPreferences {
     $Self->{'DB::CaseSensitive'}        = 1;
     $Self->{'DB::LikeEscapeString'}     = '';
 
+    # check if backslash should be double quoted at like statements
+    $Self->{'DB::LikeQuoteBack'}        = '';
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('Database::LikeQuoteBack') ) {
+        $Self->{'DB::LikeQuoteBack'}    = '\\';
+    }
+
     # how to determine server version
     # version string can contain a suffix, we only need what's on the left of it
     # example of full string: "PostgreSQL 9.2.4, compiled by Visual C++ build 1600, 64-bit"
@@ -90,15 +96,22 @@ sub Quote {
             ${$Text} =~ s/;/$Self->{'DB::QuoteSemicolon'};/g;
         }
         if ( $Type && $Type eq 'Like' ) {
-
+            if ( $Self->{'DB::LikeQuoteBack'} ) {
+                ## From PostgreSQL manual for LIKE:
+                # Note that the backslash already has a special meaning in string literals, so to write a pattern constant
+                # that contains a backslash you must write two backslashes in an SQL statement (assuming escape string syntax is used, see Section 4.1.2.1).
+                # Thus, writing a pattern that actually matches a literal backslash means writing four backslashes in the statement.
+                # You can avoid this by selecting a different escape character with ESCAPE; then a backslash is not special to LIKE anymore.
+                # (But backslash is still special to the string literal parser, so you still need two of them to match a backslash.)
+                ${$Text} =~ s/\\/$Self->{'DB::LikeQuoteBack'}\\/g;
+            }
             # if $Text contains only backslashes, add a % at the end.
             # newer versions of postgres do not allow an escape character (backslash)
             # at the end of a pattern: "LIKE pattern must not end with escape character"
             ${$Text} =~ s{ \A ( \\+ ) \z }{$1%}xms;
 
             if ( $Self->{'DB::QuoteUnderscoreStart'} || $Self->{'DB::QuoteUnderscoreEnd'} ) {
-                ${$Text}
-                    =~ s/_/$Self->{'DB::QuoteUnderscoreStart'}_$Self->{'DB::QuoteUnderscoreEnd'}/g;
+                ${$Text} =~ s/_/$Self->{'DB::QuoteUnderscoreStart'}_$Self->{'DB::QuoteUnderscoreEnd'}/g;
             }
         }
     }

@@ -45,6 +45,7 @@ sub Data {
     $Lang->{'fax'}                      = 'Fax (sichtbar für Kunde)';
 
     # other translations...
+    $Lang->{'Hint'}                            = 'Hinweis';
     $Lang->{'Address Book'}                    = 'Adressbuch';
     $Lang->{'Manage address book.'}            = 'Adressbuch verwalten.';
     $Lang->{'Address Book Management'}         = 'Adressbuchverwaltung';
@@ -114,7 +115,7 @@ sub Data {
         = 'Möchten Sie die ausgewählten Verlinkungen wirklich löschen ?';
     $Lang->{'Search Template'}         = 'Suchvorlage';
     $Lang->{'My Search Profiles'}      = 'Meine Suchvorlagen';
-    $Lang->{'Clone customer'}          = 'Kunde kopieren';
+    $Lang->{'Clone contact'}           = 'Ansprechpartner kopieren';
     $Lang->{'Search Profile Category'} = 'Kategorie der Suchvorlage';
     $Lang->{'Search Profile'}          = 'Suchvorlage';
     $Lang->{'Please select a category to add the shared search profile. Or enter a new category.'}
@@ -1276,9 +1277,9 @@ sub Data {
     $Lang->{'Select Class'} = 'Klasse auswählen';
     $Lang->{'Settings for custom ticket list view'}
         = 'Einstellungen für persönliche Ticketlistendarstellung';
-    $Lang->{'Asset Location'} = 'Asset Lokation';
-    $Lang->{'Parent Location'} = 'Übergeordnete Lokation';
-            
+    $Lang->{'Asset Location'} = 'Asset-Standort';
+    $Lang->{'Parent Location'} = 'Übergeordneter Standort';
+
 
     # graph visualization related translations...
     $Lang->{'CI-Classes to consider'} = 'Zu betrachtende CI-Klassen';
@@ -3903,8 +3904,6 @@ sub Data {
     $Lang->{'MinQueryLength'}      = 'Mindeste Querylänge';
     $Lang->{'QueryDelay'}          = 'Queryverzögerung';
     $Lang->{'MaxQueryResult'}      = 'Maximale Queryergebnisse';
-    $Lang->{'for Agent'}           = 'für Agent';
-    $Lang->{'for Customer'}        = 'für Kunde';
     $Lang->{'MaxArraySize'}        = 'Anzahl Einträge';
     $Lang->{'ItemSeparator'}       = 'Anzeigetrenner';
     $Lang->{'Default values'}      = 'Standardwerte';
@@ -4099,8 +4098,11 @@ sub Data {
 
     $Lang->{'Welcome to KIX'}     = 'Willkommen bei KIX';
     $Lang->{'show Toolbar'}       = 'Toolbar anzeigen';
+    $Lang->{'hide Toolbar'}       = 'Toolbar ausblenden';
     $Lang->{'Toolbar Position'}   = 'Toolbar-Position';
     $Lang->{'Select the position of the toolbar.'} = 'Position der Toolbar auswählen.';
+    $Lang->{'Defines for the Toolbar Top a specific CSS for adjusting the position. It is only possible to use the CSS rules Left and Top.'}
+        = 'Definiert für die Toolbar Top eine spezifische CSS zur Anpassung der Position. Es ist nur möglich die CSS-Regeln Left und Top zu verwenden.';
     $Lang->{'Right'}              = 'Rechts';
     $Lang->{'Left'}               = 'Links';
     $Lang->{'Above Menu'}         = 'Oberhalb des Menüs';
@@ -4521,6 +4523,17 @@ sub Data {
         = 'Definiert ein Fallback-Anzeigeformat für die Ansicht, wenn das Format nicht in der Attributdefinition des Konfigurationselements festgelegt ist.';
     $Lang->{'Defines a fallback link for the view if the link is not set in the attribute definition of the configuration item. It is possible to use two placeholders to set latitude and longitude. (<LATITUDE>, <LONGITUDE>)'}
         = 'Definiert einen Fallback-Link für die Ansicht, wenn der Link nicht in der Attributdefinition des Konfigurationselements festgelegt ist. Es ist möglich, zwei Platzhalter zum Festlegen von Breiten- und Längegrad zu verwenden. (<LATITUDE>, <LONGITUDE>)';
+
+    # NEW SKINS
+    $Lang->{'Default (green)'} = 'Standard (Grün)';
+    $Lang->{'Default (blue)'}  = 'Standard (Blau)';
+    $Lang->{'"Blue" skin which tries to save screen space for power users.'} =
+        '"Standard-Blau"-Skin, der weniger Bildschirmfläche zum Darstellen von Informationen benötigt.';
+    $Lang->{'Default skin for the agent interface (blue version).'} =
+         'Standard-Skin für die Agentenoberfläche (Blau)';
+    $Lang->{'Default skin for the customer interface (blue version).'} =
+         'Standard-Skin für die Kundenoberfläche (Blau)';
+
     # $$STOP$$
 
     return 0;

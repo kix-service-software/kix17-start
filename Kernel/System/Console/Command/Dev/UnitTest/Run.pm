@@ -40,24 +40,17 @@ sub Configure {
     );
     $Self->AddOption(
         Name        => 'output',
-        Description => "Select output format (ASCII|HTML|XML).",
+        Description => "Select output format (ASCII|HTML|XML|xUnit).",
         Required    => 0,
         HasValue    => 1,
-        ValueRegex  => qr/^(ASCII|HTML|XML)$/smx,
+        ValueRegex  => qr/^(ASCII|HTML|XML|xUnit)$/smx,
     );
     $Self->AddOption(
-        Name        => 'submit-url',
-        Description => "Send unit test results to a server (url).",
+        Name        => 'filename',
+        Description => "Write output to file instead of STDOUT",
         Required    => 0,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
-    );
-    $Self->AddOption(
-        Name => 'submit-result-as-exit-code',
-        Description =>
-            "Specify if command return code should not indicate if tests were ok/not ok, but if submission was successful instead.",
-        Required => 0,
-        HasValue => 0,
     );
     $Self->AddOption(
         Name        => 'product',
@@ -79,9 +72,6 @@ sub Configure {
 sub PreRun {
     my ( $Self, %Param ) = @_;
 
-    if ( $Self->GetOption('submit-result-as-exit-code') && !$Self->GetOption('submit-url') ) {
-        die "Please specify a valid 'submit-url'.";
-    }
     return;
 }
 
@@ -90,18 +80,17 @@ sub Run {
 
     $Kernel::OM->ObjectParamAdd(
         'Kernel::System::UnitTest' => {
-            Output => $Self->GetOption('output') || '',
-            ANSI => $Self->{ANSI},
+            Output   => $Self->GetOption('output')   || '',
+            Filename => $Self->GetOption('filename') || '',
+            ANSI     => $Self->{ANSI},
         },
     );
 
     my $FunctionResult = $Kernel::OM->Get('Kernel::System::UnitTest')->Run(
-        Name                   => $Self->GetOption('test')                       || '',
-        Directory              => $Self->GetOption('directory')                  || '',
-        Product                => $Self->GetOption('product')                    || '',
-        SubmitURL              => $Self->GetOption('submit-url')                 || '',
-        SubmitResultAsExitCode => $Self->GetOption('submit-result-as-exit-code') || '',
-        Verbose                => $Self->GetOption('verbose')                    || '',
+        Name      => $Self->GetOption('test')      || '',
+        Directory => $Self->GetOption('directory') || '',
+        Product   => $Self->GetOption('product')   || '',
+        Verbose   => $Self->GetOption('verbose')   || '',
     );
 
     if ($FunctionResult) {

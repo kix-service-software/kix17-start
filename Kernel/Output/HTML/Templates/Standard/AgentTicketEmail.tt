@@ -175,7 +175,6 @@ $('#Dest').bind('change', function (Event) {
                         </div>
 
                         <div id="TicketCustomerContentToCustomer" class="CustomerContainer">
-                            <span class="BoxLabel">[% Translate("To") | html %]</span>
 [% RenderBlockStart("MultipleCustomer") %]
                             <div>
                                 <input name="CustomerSelected" title="[% Translate("Select this customer as the main customer.") | html %]" id="CustomerSelected" class="CustomerTicketRadio" type="radio" value="[% Data.Count | html %]" [% Data.CustomerSelected | html %]  [% Data.CustomerDisabled | html %] />
@@ -243,7 +242,6 @@ $('#Dest').bind('change', function (Event) {
                         </div>
 
                         <div id="TicketCustomerContentCcCustomer" class="CcCustomerContainer">
-                            <span class="BoxLabel">[% Translate("Cc") | html %]</span>
 [% RenderBlockStart("CcMultipleCustomer") %]
                             <div>
                                 <input name="CcCustomerKey_[% Data.Count | html %]" id="CcCustomerKey_[% Data.Count | html %]" class="CustomerKey" type="hidden" value="[% Data.CustomerKey | html %]"/>
@@ -310,7 +308,6 @@ $('#Dest').bind('change', function (Event) {
                         </div>
 
                         <div id="TicketCustomerContentBccCustomer" class="BccCustomerContainer">
-                            <span class="BoxLabel">[% Translate("Bcc") | html %]</span>
 [% RenderBlockStart("BccMultipleCustomer") %]
                             <div>
                                 <input name="BccCustomerKey_[% Data.Count | html %]" id="BccCustomerKey_[% Data.Count | html %]" class="CustomerKey" type="hidden" value="[% Data.CustomerKey | html %]"/>
@@ -554,18 +551,18 @@ $('#NewResponsibleID').bind('change', function (Event) {
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
 [% RenderBlockStart("SpellCheck") %]
-                        <a href="#" id="OptionSpellCheck">[ [% Translate("Spell check") | html %] ]</a>
+                        <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
 [% RenderBlockEnd("SpellCheck") %]
 [% RenderBlockStart("AddressBook") %]
-                        <a href="#" id="OptionAddressBook">[ [% Translate("Address book") | html %] ]</a>
+                        <a href="#" id="OptionAddressBook">[% Translate("Address book") | html %]</a>
 [% RenderBlockEnd("AddressBook") %]
 [% RenderBlockStart("OptionCustomer") %]
-                        <a href="#" id="OptionCustomer">[ [% Translate("Contact") | html %] ]</a>
+                        <a href="#" id="OptionCustomer">[% Translate("Contact") | html %]</a>
 [% RenderBlockEnd("OptionCustomer") %]
 # ---
 # ITSMIncidentProblemManagement
 # ---
-                        <a href="[% Env("Baselink") %]Action=AgentLinkObject;Mode=Temporary;SourceObject=Ticket;SourceKey=[% Data.FormID | uri %];TargetIdentifier=ITSMConfigItem" id="OptionLinkTicket" class="AsPopup">[ [% Translate("Link ticket") | html %] ]</a>
+                        <a href="[% Env("Baselink") %]Action=AgentLinkObject;Mode=Temporary;SourceObject=Ticket;SourceKey=[% Data.FormID | uri %];TargetIdentifier=ITSMConfigItem" id="OptionLinkTicket" class="AsPopup">[% Translate("Link ticket") | html %]</a>
 # ---
 
 <!-- OutputFilterHook_TicketOptionsEnd -->

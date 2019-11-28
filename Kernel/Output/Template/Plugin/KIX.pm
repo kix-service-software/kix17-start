@@ -23,7 +23,7 @@ use Kernel::System::ObjectManager;
 
 =head1 NAME
 
-Kernel::Output::Template::Plugin::OTRS - Template Toolkit extension plugin
+Kernel::Output::Template::Plugin::KIX - Template Toolkit extension plugin
 
 =head1 PUBLIC INTERFACE
 

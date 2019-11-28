@@ -130,7 +130,7 @@ Core.Agent.Admin.NotificationEvent = (function (TargetNS) {
         $Clone.removeClass('Hidden Template');
 
         // add title
-        $Clone.find('.Title').html(Language);
+        $Clone.find('.Title > span').html(Language);
 
         // update remove link
         $Clone.find('#Template_Language_Remove').attr('name', LanguageID + '_Language_Remove');

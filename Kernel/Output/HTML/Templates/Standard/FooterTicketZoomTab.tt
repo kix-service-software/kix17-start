@@ -77,7 +77,7 @@ Core.App.Ready(function () {
         NoElementsToSelectFromMsg: [% Translate("There are currently no elements available to select from.") | JSON %],
         TurnOffCompatibilityModeMsg: [% Translate("Please turn off Compatibility Mode in Internet Explorer!") | JSON %],
         BrowserTooOldMsg: [% Translate("The browser you are using is too old.") | JSON %],
-        BrowserListMsg: [% Translate("OTRS runs with a huge lists of browsers, please upgrade to one of these.") | JSON %],
+        BrowserListMsg: [% Translate("KIX runs with a huge lists of browsers, please upgrade to one of these.") | JSON %],
         BrowserDocumentationMsg: [% Translate("Please see the documentation or ask your admin for further information.") | JSON %],
         ViewModeSwitchMobile:  [% Translate("Switch to mobile mode") | JSON %],
         ViewModeSwitchDesktop: [% Translate("Switch to desktop mode") | JSON %],
@@ -98,7 +98,9 @@ Core.App.Ready(function () {
         DeleteLinksQuestion: [% Translate("Do you really want to delete the selected links?") | JSON %],
         Question: [% Translate("Question") | JSON %],
         Yes: [% Translate("Yes") | JSON %],
-        No: [% Translate("No") | JSON %]
+        No: [% Translate("No") | JSON %],
+        ShowToolbar: '[% Translate("show Toolbar") | html %]',
+        HideToolbar: '[% Translate("hide Toolbar") | html %]'
     });
 
     Core.KIX4OTRS.TicketZoomTabs.Init();
@@ -128,6 +130,9 @@ Core.App.Ready(function () {
     // responsive initialization must run as late as possible to include all event subscriptions
     // at the initialization process
     Core.App.Responsive.Init();
+    if (Core.App.Responsive.IsSmallerOrEqual(Core.App.Responsive.GetScreenSize(), 'ScreenL')) {
+        Core.App.Publish('Event.App.Responsive.SmallerOrEqualScreenL');
+    }
 });
 //]]></script>
 

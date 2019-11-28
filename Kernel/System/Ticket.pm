@@ -6040,7 +6040,7 @@ sub HistoryDelete {
     # delete ticket history entries from db
     return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
         SQL =>
-            'DELETE FROM ticket_history WHERE ticket_id = ? AND (article_id IS NULL OR article_id = 0)',
+            'DELETE FROM ticket_history WHERE ticket_id = ?',
         Bind => [ \$Param{TicketID} ],
     );
 
@@ -7222,7 +7222,7 @@ sub TicketArticleStorageSwitch {
     for my $ArticleID (@ArticleIndex) {
 
         # create source object
-        # We have to create it for every article because of the way OTRS uses base classes here.
+        # We have to create it for every article because of the way KIX uses base classes here.
         # We cannot have two ticket objects with different base classes.
         $ConfigObject->Set(
             Key   => 'Ticket::StorageModule',

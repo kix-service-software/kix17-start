@@ -62,7 +62,7 @@ sub new {
         || 'Kernel::System::Cache::FileStorable';
 
     # Store backend in $Self for fastest access.
-    $Self->{CacheObject}    = $Kernel::OM->Get($CacheModule);
+    $Self->{CacheObject}    = $Kernel::OM->GetNew($CacheModule);
     $Self->{CacheInMemory}  = $Kernel::OM->Get('Kernel::Config')->Get('Cache::InMemory') // 1;
     $Self->{CacheInBackend} = $Kernel::OM->Get('Kernel::Config')->Get('Cache::InBackend') // 1;
 
@@ -107,7 +107,7 @@ store a value in the cache.
     );
 
 The Type here refers to the group of entries that should be cached and cleaned up together,
-usually this will represent the OTRS object that is supposed to be cached, like 'Ticket'.
+usually this will represent the KIX object that is supposed to be cached, like 'Ticket'.
 
 The Key identifies the entry (together with the type) for retrieval and deletion of this value.
 

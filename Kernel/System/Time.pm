@@ -69,7 +69,7 @@ system considers to be the epoch (that's 00:00:00, January 1, 1904
 for Mac OS, and 00:00:00 UTC, January 1, 1970 for most other systems).
 
 This will the time that the server considers to be the local time (based on
-time zone configuration) plus the configured OTRS "TimeZone" diff (only recommended
+time zone configuration) plus the configured KIX "TimeZone" diff (only recommended
 for systems running in UTC).
 
     my $SystemTime = $TimeObject->SystemTime();
@@ -415,7 +415,7 @@ sub MailTimeStamp {
 
     # Here we cannot use the KIX "TimeZone" because KIXs uses localtime()
     #   and does not know if that is UTC or another time zone.
-    #   Therefore OTRS cannot generate the correct offset for the mail timestamp.
+    #   Therefore KIX cannot generate the correct offset for the mail timestamp.
     #   So we need to use the real time configuration of the server to determine this properly.
 
     my $ServerTime = time();

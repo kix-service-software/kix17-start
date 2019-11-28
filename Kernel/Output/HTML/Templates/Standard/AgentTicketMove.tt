@@ -42,10 +42,8 @@
         <div class="Content">
             <div class="WidgetSimple Expanded">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Ticket Settings") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+                    <h2><span>[% Translate("Ticket Settings") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabel">
@@ -142,10 +140,8 @@
 [% RenderBlockStart("WidgetDynamicFields") %]
             <div class="WidgetSimple Expanded">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Dynamic Fields") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+                    <h2><span>[% Translate("Dynamic Fields") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabel">
@@ -168,10 +164,8 @@
 [% RenderBlockStart("WidgetArticle") %]
             <div class="WidgetSimple [% Data.WidgetStatus | html %]" id="WidgetArticle">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Add Article") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+                    <h2><span>[% Translate("Add Article") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabel">
@@ -199,11 +193,11 @@
                         <div class="Clear"></div>
 [% RenderBlockStart("TicketOptions") %]
                         <label>[% Translate("Options") | html %]:</label>
-                        <div class="Field">
+                        <div class="Options Field">
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
 [% RenderBlockStart("SpellCheck") %]
-                            <a href="#" id="OptionSpellCheck">[ [% Translate("Spell check") | html %] ]</a>
+                            <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
 [% RenderBlockEnd("SpellCheck") %]
 
 <!-- OutputFilterHook_TicketOptionsEnd -->

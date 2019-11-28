@@ -14,15 +14,15 @@
 [% RenderBlockEnd("Plain") %]
 
 [% RenderBlockStart("Text") %]
-<label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | html %]" class="[% Data.Class | html %]">[% Data.Content | truncate(Data.MaxLength) | html %]</label>
+<label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | html %]" class="[% Data.Class | html %]" [% Data.CssStyle %]>[% Data.Content | truncate(Data.MaxLength) | html %]</label>
 [% RenderBlockEnd("Text") %]
 
 [% RenderBlockStart("TextTranslate") %]
-<label for="Checkbox[% Data.Key | html %]" title="[% Translate(Data.Content) | html %]" class="[% Data.Class | html %]">[% Data.Content | Translate | truncate(Data.MaxLength) | html %]</label>
+<label for="Checkbox[% Data.Key | html %]" title="[% Translate(Data.Content) | html %]" class="[% Data.Class | html %]" [% Data.CssStyle %]>[% Data.Content | Translate | truncate(Data.MaxLength) | html %]</label>
 [% RenderBlockEnd("TextTranslate") %]
 
 [% RenderBlockStart("Link") %]
-<a class="AsBlock LinkObjectLink" href="[% Data.Link %]" title="[% Data.Title | html %]" >[% Data.Content | truncate(Data.MaxLength) | html %]</a>
+<a class="AsBlock LinkObjectLink" href="[% Data.Link %]" title="[% Data.Title | html %]" [% Data.CssStyle %] >[% Data.Content | truncate(Data.MaxLength) | html %]</a>
 [% RenderBlockEnd("Link") %]
 
 [% WRAPPER JSOnDocumentComplete %]
@@ -36,7 +36,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 
 
 [% RenderBlockStart("TimeLong") %]
-<label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | Localize("TimeLong") %]" class="[% Data.Class | html %]">[% Data.Content | Localize("TimeLong") %]</label>
+<label for="Checkbox[% Data.Key | html %]" title="[% Data.Content | Localize("TimeLong") %]" class="[% Data.Class | html %]" [% Data.CssStyle %]>[% Data.Content | Localize("TimeLong") %]</label>
 [% RenderBlockEnd("TimeLong") %]
 
 [% RenderBlockStart("Date") %]
@@ -87,15 +87,8 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
             </div>
             <div class="Clear"></div>
         </div>
-        <div class="WidgetAction Toggle">
-            <a href="#" title="[% Translate("Show or hide the content") | html %]">
-                <i class="fa fa-caret-right">
-                </i>
-                <i class="fa fa-caret-down">
-                </i>
-            </a>
-        </div>
-        <h2 class="PaddingLeft15px"><span>[% Translate(Data.BlockDescription) | html %]: [% Translate(Data.Blockname) | html %]</span></h2>
+        <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+        <h2><span>[% Translate(Data.BlockDescription) | html %]: [% Translate(Data.Blockname) | html %]</span></h2>
     </div>
     <div class="Content AutoHeight ">
 [% RenderBlockStart("TableComplexBlockActionRow") %]
@@ -125,7 +118,7 @@ if (Core.UI.Popup.CurrentIsPopupWindow()) {
 [% RenderBlockStart("TableComplexBlockRow") %]
                 <tr>
 [% RenderBlockStart("TableComplexBlockRowColumn") %]
-                    <td class="LinkedObjects [% Data.Css | html %]" [% Data.CssStyle %]>
+                    <td class="LinkedObjects [% Data.Css | html %]" >
                         [% Data.Content %]
                     </td>
 [% RenderBlockEnd("TableComplexBlockRowColumn") %]

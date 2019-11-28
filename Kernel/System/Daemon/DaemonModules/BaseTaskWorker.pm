@@ -42,7 +42,7 @@ Creates a system error message and sends an email with the error messages form a
     my $Success = $TaskWorkerObject->_HandleError(
         TaskName     => 'some name',
         TaksTye      => 'some type',
-        LogMessage   => 'some message',       # message to set in the OTRS error log
+        LogMessage   => 'some message',       # message to set in the KIX error log
         ErrorMessage => 'some message',       # message to be sent ad a body of the email, usually contains
                                               #     all messages from STDERR including tracebacks
     );
@@ -69,7 +69,7 @@ sub _HandleError {
         my $Sent = $Kernel::OM->Get('Kernel::System::Email')->Send(
             From     => $From,
             To       => $To,
-            Subject  => "OTRS Scheduler Daemon $Param{TaskType}: $Param{TaskName}",
+            Subject  => "KIX Scheduler Daemon $Param{TaskType}: $Param{TaskName}",
             Charset  => 'utf-8',
             MimeType => 'text/plain',
             Body     => $Param{ErrorMessage},

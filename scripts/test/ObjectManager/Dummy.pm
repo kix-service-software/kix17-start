@@ -13,6 +13,9 @@ package scripts::test::ObjectManager::Dummy;    ## no critic
 use strict;
 use warnings;
 
+# prevent 'Used once' warning for Kernel::OM
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = ();                   # we want to use an undeclared dependency for testing
 
 sub new {

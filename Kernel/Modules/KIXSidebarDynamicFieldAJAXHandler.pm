@@ -65,6 +65,12 @@ sub Run {
         DynamicFields => 1
     );
 
+    # get user preferences
+    my %UserPreferences       = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+    my $View                  = $UserPreferences{UserKIXSidebarDynamicFieldView} || 'Collapsed';
+    my $DynamicFieldSelected  = $UserPreferences{UserKIXSidebarDynamicFieldSelection};
+    my @DynamicFieldSelection = split( /,/, $DynamicFieldSelected );
+
     if ( $Self->{Subaction} eq 'SelectDynamicFields' ) {
 
         # get shown dynamic fields
@@ -82,6 +88,9 @@ sub Run {
             Value  => $DisplayedDynamicFieldsStrg,
         );
 
+        # reset selection to new values
+        @DynamicFieldSelection = split( /,/, $DisplayedDynamicFieldsStrg );
+
         # update session
         if ($Success) {
             $SessionObject->UpdateSessionID(
@@ -90,13 +99,6 @@ sub Run {
                 Value     => $DisplayedDynamicFieldsStrg,
             );
         }
-
-        # get dynamic field sidebar content
-        # get user preferences
-        my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
-        my $View                  = $UserPreferences{UserKIXSidebarDynamicFieldView} || 'Collapsed';
-        my $DynamicFieldSelected  = $UserPreferences{UserKIXSidebarDynamicFieldSelection};
-        my @DynamicFieldSelection = split( /,/, $DynamicFieldSelected );
 
         # check permissions
         my $AccessRW = $TicketObject->TicketPermission(
@@ -130,11 +132,12 @@ sub Run {
                 next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
 
                 # extract the dynamic field value from the web request
-                $DynamicFieldValues{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldValueGet(
+                $DynamicFieldValues{ $DynamicFieldConfig->{Name} }
+                    = $BackendObject->EditFieldValueGet(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     ParamObject        => $ParamObject,
                     LayoutObject       => $LayoutObject,
-                );
+                    );
             }
 
             # convert dynamic field values into a structure for ACLs
@@ -193,7 +196,8 @@ sub Run {
                             my %Filter = $TicketObject->TicketAclData();
 
                             # convert Filer key => key back to key => value using map
-                            %{$PossibleValuesFilter} = map( { $_ => $PossibleValues->{$_} } keys %Filter );
+                            %{$PossibleValuesFilter}
+                                = map( { $_ => $PossibleValues->{$_} } keys %Filter );
                         }
                     }
                 }
@@ -202,11 +206,11 @@ sub Run {
                 $DynamicFieldHTML{ $DynamicFieldConfig->{Name} } = $BackendObject->EditFieldRender(
                     DynamicFieldConfig   => $DynamicFieldConfig,
                     PossibleValuesFilter => $PossibleValuesFilter,
-                    Value                => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-                    LayoutObject         => $LayoutObject,
-                    ParamObject          => $ParamObject,
-                    AJAXUpdate           => 1,
-                    UpdatableFields      => $Self->_GetFieldsToUpdate(),
+                    Value           => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
+                    LayoutObject    => $LayoutObject,
+                    ParamObject     => $ParamObject,
+                    AJAXUpdate      => 1,
+                    UpdatableFields => $Self->_GetFieldsToUpdate(),
                 );
             }
 
@@ -250,13 +254,16 @@ sub Run {
                 next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
                 next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
                 next DYNAMICFIELD if $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} } eq '';
+                next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
 
                 # get print string for this dynamic field
                 my $ValueStrg = $BackendObject->DisplayValueRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Value              => $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} },
-                    ValueMaxChars      => $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{TicketDataLength} || '',
-                    LayoutObject       => $LayoutObject,
+                    ValueMaxChars =>
+                        $ConfigObject->Get("Ticket::Frontend::AgentTicketZoom")->{TicketDataLength}
+                        || '',
+                    LayoutObject => $LayoutObject,
                 );
 
                 $JSON .= '<label id="LabelDynamicField_'
@@ -269,7 +276,8 @@ sub Run {
                 if (
                     !defined $Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
                     || !$Ticket{ 'DynamicField_' . $DynamicFieldConfig->{Name} }
-                ) {
+                    )
+                {
                     $LayoutObject->Block(
                         Name => 'DynamicFieldContentNotSet',
                     );
@@ -280,11 +288,12 @@ sub Run {
                         . '">$TimeLong{"$Data{"Value"}"}</p>';
                 }
                 elsif (
-                    $DynamicFieldConfig->{FieldType}    eq 'Dropdown'
+                    $DynamicFieldConfig->{FieldType} eq 'Dropdown'
                     || $DynamicFieldConfig->{FieldType} eq 'Multiselect'
                     || $DynamicFieldConfig->{FieldType} eq 'MultiselectGeneralCatalog'
                     || $DynamicFieldConfig->{FieldType} eq 'DropdownGeneralCatalog'
-                ) {
+                    )
+                {
                     $JSON .= '<p class="Value" title="'
                         . $ValueStrg->{Title} . '">'
                         . $ValueStrg->{Value} . '</p>';
@@ -360,6 +369,7 @@ sub Run {
             DYNAMICFIELD:
             for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
                 next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+                next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
 
                 # set the value
                 my $Success = $BackendObject->ValueSet(
@@ -380,6 +390,7 @@ sub Run {
             for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
                 next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
                 next DYNAMICFIELD if $DynamicFieldConfig->{ObjectType} ne 'Ticket';
+                next if !grep { $_ eq $DynamicFieldConfig->{Name} } @DynamicFieldSelection;
 
                 my $IsACLReducible = $BackendObject->HasBehavior(
                     DynamicFieldConfig => $DynamicFieldConfig,

@@ -52,7 +52,8 @@ sub Run {
     # get all possible search profiles
     my $Config = $ConfigObject->Get('ToolbarSearchProfile');
     my @Bases = $SearchProfileObject->SearchProfilesBasesGet();
-    my %SearchProfiles;
+    my %SearchProfilesHash;
+    my @SearchProfilesData;
     for my $Base (@Bases) {
 
         next if $Base =~ /(.*?)Search(.*)/ && !defined $Config->{$1};
@@ -62,11 +63,22 @@ sub Run {
             UserLogin        => $User{UserLogin},
             WithSubscription => 1
         );
+        next if ( !keys( %Profiles ) );
 
         my $DisplayBase = $Base;
         my $Extended    = '';
         if ( $Base =~ /(.*?)Search(.*)/ ) {
             if ( $2 && $1 eq 'ConfigItem' ) {
+                # add config item base to data
+                if ( !$SearchProfilesHash{'ConfigItemSearch'} ) {
+                    $SearchProfilesHash{'ConfigItemSearch'} = 1;
+                    push(@SearchProfilesData, {
+                        Key      => 'ConfigItemSearch',
+                        Value    => 'ConfigItem',
+                        Disabled => 1,
+                    });
+                }
+
                 my $Classes
                     = $GeneralCatalogObject->ItemList(
                     Class => 'ITSM::ConfigItem::Class'
@@ -85,18 +97,33 @@ sub Run {
             }
         }
 
-        for my $Profile ( keys %Profiles ) {
+        # add display base to data
+        if ( !$SearchProfilesHash{$DisplayBase} ) {
+            $SearchProfilesHash{$DisplayBase} = 1;
+            push(@SearchProfilesData, {
+                Key      => $Base,
+                Value    => $DisplayBase,
+                Disabled => 1,
+            });
+        }
+
+        for my $Profile ( keys( %Profiles ) ) {
             if ( $Profile =~ /(.*?)::(.*)/ ) {
-                $SearchProfiles{ $Base . '::' . $Profile } = $DisplayBase . '::' . $LayoutObject->{LanguageObject}->Get($1) . $Extended;
+                # add profile to data
+                if ( !$SearchProfilesHash{$DisplayBase . '::' . $LayoutObject->{LanguageObject}->Get($1) . $Extended} ) {
+                    $SearchProfilesHash{$DisplayBase . '::' . $LayoutObject->{LanguageObject}->Get($1) . $Extended} = 1;
+                    push(@SearchProfilesData, {
+                        Key      => $Base . '::' . $Profile,
+                        Value    => $DisplayBase . '::' . $LayoutObject->{LanguageObject}->Get($1) . $Extended,
+                    });
+                }
             }
         }
     }
 
     # create search profiles string
     my $ProfilesStrg = $LayoutObject->BuildSelection(
-        Data => {
-            %SearchProfiles
-        },
+        Data         => \@SearchProfilesData,
         Name         => 'SearchProfile',
         ID           => 'ToolBarSearchProfiles',
         Title        => $LayoutObject->{LanguageObject}->Translate('Search template'),

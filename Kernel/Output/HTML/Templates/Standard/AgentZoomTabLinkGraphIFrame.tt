@@ -67,7 +67,7 @@
 
     <div class="WidgetSimple Hidden Context" id="Context">
         <div class="Header Context">
-            <h2></h2>
+            <h2><span></span></h2>
         </div>
         <div class="Content">
             <ul>
@@ -284,7 +284,7 @@
         $Elements.ContextNodeZoom = $Elements.Context.find('#NodeZoom');
         $Elements.ContextPresentNode = $Elements.Context.find('#PresentNode');
         $Elements.ContextNotPresentNode = $Elements.Context.find('#NotPresentNode');
- 
+
         // init graph
         Core.KIX4OTRS.AgentLinkGraph.InitGraph('[% Data.NodesString | html %]', '[% Data.Links | html %]', '[% Data.LinkColors %]', '[% Data.LinkTypes %]', $Elements, '[% Data.Layout | html %]', GraphConfig);
 

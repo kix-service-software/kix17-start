@@ -38,9 +38,7 @@
                                 <span><i class="fa fa-search"></i></span>
                             </button>
                             <p class="FieldExplanation">
-                                <label for="SysConfigSearch">
-                                    [% Translate("Navigate by searching in %s settings", Data.ConfigCounter) | html %]
-                                </label>
+                                [% Translate("Navigate by searching in %s settings", Data.ConfigCounter) | html %]
                             </p>
                         </form>
                     </li>
@@ -63,9 +61,7 @@ $('#SysConfigGroup').bind('change', function(){
 //]]></script>
 [% END %]
                             <p class="FieldExplanation">
-                                <label for="SysConfigGroup">
-                                    [% Translate("Navigate by selecting config groups") | html %]
-                                </label>
+                                [% Translate("Navigate by selecting config groups") | html %]
                             </p>
                         </form>
                     </li>

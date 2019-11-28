@@ -1,0 +1,67 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+    #Footer, .CustomFooterLogin {
+        margin-top: 1px;
+        min-height: 15px;
+        padding: 12px 9px 8px;
+        font-size: 10px;
+        text-align: center;
+        position: relative;
+    }
+
+    #Footer {
+        clear: both;
+    }
+
+    #Footer div.TopOfPage {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
+    #Footer div.TopOfPage > a > i {
+        position: relative;
+        font-size: 16px;
+        right: -5px;
+        top: 2px;
+    }
+    .CustomFooterLogin ul {
+        display: inline-block;
+    }
+
+
+    .CustomFooterLogin a:hover,
+    .CustomFooterLogin ul li a:hover,
+    #Footer a:hover,
+    #Footer ul li a:hover {
+        text-decoration: none;
+    }
+
+    .CustomFooterLogin ul li,
+    #Footer ul li {
+        float: left;
+        padding: 0 4px 0 4px;
+    }
+
+    .CustomFooterLogin ul li:first-child,
+    #Footer ul li:first-child {
+        border: none;
+    }
+
+    .CustomFooter{
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+}

@@ -1,0 +1,800 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+    .WidgetSimple {
+        margin-bottom: 20px;
+        border-radius: 3px;
+    }
+    .WidgetSimple.MobileNotAvailableWidget {
+        display: none;
+    }
+    .WidgetSimple > .Header {
+        position: relative;
+        border-radius: 3px 3px 0 0;
+    }
+    .WidgetSimple > .Header > .ActionMenu,
+    .WidgetSimple.CanDrag > .Header > .ActionMenu {
+        padding-left: 0px;
+    }
+    .WidgetAction {
+        height: 19px;
+        width: 16px;
+        padding-right: 1px;
+        float: left;
+        text-align: center;
+    }
+    .WidgetAction a {
+        font-size: 14px;
+        height: 20px;
+        display: block;
+    }
+    .WidgetAction.Toggle,
+    .Expanded.AnimationRunning > .Header > .WidgetAction.Toggle {
+        height: 13px;
+        width: 12px;
+        margin: 0px 5px 0px 0px;
+        float: left;
+        cursor: pointer;
+    }
+    .WidgetAction.Toggle::after {
+        content: "\f0d7";
+        font: normal normal normal 14px/1 FontAwesome;
+        text-align: center;
+        vertical-align: middle;
+        padding: 3px;
+        display: block;
+    }
+    .Expanded > .Header .WidgetAction.Toggle::after {
+        content: "\f0d8";
+        font: normal normal normal 14px/1 FontAwesome;
+    }
+    .WidgetSimple.SettingsWidget > .Header > .WidgetAction {
+        background-image: none;
+    }
+    .WidgetAction.Toggle a {
+        height: 100%;
+        width: 20%;
+        top: 1px;
+        left: 0;
+        position: absolute;
+    }
+    .WidgetAction i {
+        display: block;
+        margin: 2px 0px 0px 2px;
+        vertical-align: middle;
+    }
+    .WidgetAction.Toggle i {
+        font-size: 17px;
+        position: absolute;
+        left: 7px;
+    }
+    .WidgetAction:hover i {
+        cursor: pointer;
+    }
+    .Collapsed > .Header > .WidgetAction.Toggle i.fa-caret-down,
+    .Expanded > .Header > .WidgetAction.Toggle i.fa-caret-right {
+        display: none;
+    }
+    .Expanded > .Header > .WidgetAction.Toggle i.fa-caret-down {
+        left: 4px;
+    }
+    .WidgetSimple > .Header > .WidgetAction {
+        content: "";
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        z-index: 5;
+    }
+    .WidgetSimple > .Header h2,
+    .WidgetSimple > .Header h3 {
+        padding: 4px 3px;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
+    }
+    .WidgetSimple > .Header h2 {
+        font-size: 12px;
+        min-width: 150px;
+    }
+    .WidgetSimple > .Header h3 {
+        font-size: 13px;
+    }
+    .WidgetSimple > .Header h2,
+    .WidgetSimple.CanDrag > .Header h2,
+    .WidgetSimple > .Header h2 > label {
+        text-decoration: none;
+        overflow: hidden;
+        padding: 5px 60px 5px 10px;
+        vertical-align: top;
+        display: block;
+    }
+    .WidgetSimple > .Header h2.WithToggle,
+    .WidgetSimple.CanDrag > .Header h2.WithToggle,
+    .WidgetSimple > .Header h2.WithToggle > label {
+        padding-left:20px;
+    }
+    .WidgetSimple > .Header h2 > span {
+        position: relative;
+        font-weight: bold;
+    }
+    .WidgetSimple > .Header h2 .FieldExplanation {
+        margin-left: 10px;
+    }
+    .WidgetNotice .Content {
+        font-weight: bold;
+        padding-bottom: 8px;
+        line-height: 140%;
+    }
+    .WidgetSimple .WidgetSimple .Content {
+        padding: 5px 10px 10px 10px;
+    }
+    .WidgetSimple .Content.TransportsContent {
+        padding: 10px 10% 20px 10%;
+    }
+    .WidgetSimple .Content .ActionRow {
+        padding: 0;
+        background: none;
+        border-bottom: 0px;
+    }
+    .WidgetSimple fieldset.Separated {
+        margin: 9px 0px;
+        padding: 4px;
+    }
+    .TransportsContent legend span {
+        padding-left: 20px;
+        border-bottom: none;
+    }
+    #TransitionForm .WidgetSimple .WidgetSimple,
+    .NotificationLanguage > .WidgetSimple {
+        padding: 5px;
+        margin: 15px 10px;
+    }
+
+    /**
+    *   @subsection CanDrag
+    */
+    .CanDrag .Header h2 {
+        cursor: move;
+    }
+    .DropPlaceholder {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+
+    /**
+    *   @subsection ACL
+    */
+    .ACLNote {
+        margin-bottom: 10px;
+        padding: 5px 10px;
+    }
+    .ACLStructure {
+        padding-bottom: 20px;
+    }
+    .ACLFields {
+        width: 600px;
+        margin: 0px auto;
+    }
+    .ACLFields > h4 {
+        font-size: 13px;
+        margin-top: 10px;
+    }
+    fieldset:first-child .ACLFields > h4 {
+        margin-top: 0px;
+    }
+    .ACLFieldGroup {
+        padding: 5px 0px;
+    }
+    .ACLFieldGroup input {
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+    .ACLFieldGroup li {
+        line-height: 30px;
+        position: relative;
+    }
+    .ACLFieldGroup > li.DataItem:first-child {
+        margin-top: -3px;
+    }
+    .ACLFieldGroup li .Trigger {
+        position: absolute;
+        width: 12px;
+        height: 13px;
+        left: -17px;
+        top: -1px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+    .ACLFieldGroup ul li .Trigger {
+        left: 2px;
+        top: 0px;
+    }
+    .ACLFieldGroup > li .Trigger .fa-caret-down {
+        display: none;
+    }
+    .ACLFieldGroup > li .Trigger .fa-caret-right {
+        display: inline-block;
+    }
+    .ACLFieldGroup > li .Trigger.Collapse .fa-caret-down {
+        display: inline-block;
+    }
+    .ACLFieldGroup > li .Trigger.Collapse .fa-caret-right {
+        display: none;
+    }
+    .ACLFieldGroup .DataItem strong {
+        cursor: pointer;
+    }
+    .ACLFieldGroup li ul li {
+        line-height: 25px;
+        padding-left: 20px;
+    }
+    .ACLFieldGroup > li > ul > li > ul {
+        margin-bottom: 3px;
+        margin-top: 3px;
+    }
+    .ACLFieldGroup > li > ul > li > ul > li > ul {
+        margin-left: 22px;
+        margin-bottom: 2px;
+    }
+    .ACLFieldGroup li ul li ul li ul li,
+    .ACLFieldGroup .LastLevel li {
+        display: inline-block;
+        padding: 0px;
+    }
+    .ACLFieldGroup li ul li ul li ul li.DataItem,
+    .ACLFieldGroup .LastLevel li.DataItem {
+        padding: 5px 25px 5px 7px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        line-height: 12px;
+        font-size: 11px;
+        position: relative;
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+    .ACLFieldGroup li ul li ul li ul li em,
+    .ACLFieldGroup .LastLevel li em {
+        display: block;
+        position: absolute;
+        -moz-border-radius: 0px 5px 5px 0px;
+        border-radius: 0px 5px 5px 0px;
+        right: 0px;
+        top: 0px;
+        font-style: normal;
+        padding: 4px 6px 6px 6px;
+        font-size: 11px;
+        cursor: pointer;
+    }
+    .ACLFieldGroup .LastLevel {
+        margin-left: 23px;
+        margin-top: 5px;
+    }
+    .Icon {
+        width: 16px;
+        padding: 1px;
+        margin-top: -1px;
+        margin-right: -2px;
+        border-style: none;
+        display: inline-block;
+        vertical-align: top;
+        cursor: pointer;
+    }
+    .ItemAddLevel1 {
+        min-width: 150px;
+    }
+    .ItemPrefix {
+        width: 140px;
+    }
+    .ShowTreeSelection {
+        width: 16px;
+        height: 16px;
+        margin-left: 3px;
+        display: none;
+    }
+    .ShowTreeSelection span {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+    }
+    .Field .ShowTreeSelection,
+    .WidgetSettingsForm .ShowTreeSelection {
+        display: inline-block;
+    }
+    fieldset.TableLike > label.AdditionalInformationResponsive,
+    fieldset.TableLike > p.AdditionalInformationResponsive {
+        display: none;
+    }
+
+    /**
+    *   @Subsection SettingWidget
+    */
+    .WidgetSimple.SettingsWidget > .Header,
+    .WidgetSimple.SettingsWidget.CanDrag > .Header {
+        display: block;
+        padding: 0px;
+    }
+    .WidgetSimple.SettingsWidget > .Header h2,
+    .WidgetSimple.SettingsWidget.CanDrag > .Header h2 {
+        padding-left: 20px;
+        border: none;
+    }
+    .WidgetSimple.SettingsWidget > .Header h2::before,
+    .WidgetSimple.SettingsWidget > .Header h2::after {
+        display: none;
+    }
+    .WidgetSimple.SettingsWidget > .Header h2 > span {
+        top: 0px;
+    }
+    .SettingsWidget label {
+        position: relative;
+        display: block;
+        padding: 2px 2px 2px 25px;
+        margin-bottom: 3px;
+        line-height: 150%;
+        -webkit-border-radius-: 3px;
+        -moz-border-radius-: 3px;
+        -ms-border-radius-: 3px;
+        -o-border-radius-: 3px;
+        border-radius-: 3px;
+    }
+    .SettingsWidget label input {
+        position: absolute;
+        left: 1px;
+        top: 1px;
+    }
+    .WidgetSimple > .Content {
+        padding: 8px 8px 10px;
+        overflow: auto;
+        min-height: 0%;
+        border-radius: 0 0 3px 3px;
+    }
+    .WidgetSimple.Collapsed > .Content {
+        display: none;
+    }
+    .WidgetSimple .Buttons {
+        margin: 15px -8px -10px -8px;
+        padding: 10px 10px 9px 10px;
+        text-align: center;
+        font-size: 11px;
+    }
+    .WidgetSimple .Buttons.NoMargin {
+        margin-top: 5px;
+    }
+    .WidgetSimple .ActionList select {
+        margin: 0px auto;
+        padding: 2px 3px;
+        display: block;
+        width: 240px;
+    }
+    .Header:hover .ActionMenu {
+        display: block;
+    }
+    .Tab.Actions li {
+        height: auto;
+        padding: 0;
+    }
+    .Tab.Actions li:last-child {
+        background: none;
+    }
+    .Tab.Actions li a {
+        padding: 5px 5px 8px 2px;
+    }
+    .Tab.Actions li:first-child a {
+        padding-left: 3px;
+    }
+    .Tab.Actions li a:hover {
+        background: none;
+        text-decoration: none;
+        border-bottom: 0px;
+    }
+    .Tab.Actions li.Selected a {
+        font-weight: bold;
+    }
+    .WidgetSimple .WidgetSettingsForm fieldset {
+        margin-bottom: 0px;
+    }
+
+    /**
+    * @subsection PreferencesScreen
+    */
+    .LayoutGrid {
+        overflow: hidden;
+    }
+    .LayoutGrid > .Size1of3 {
+        width: 33.333%;
+    }
+    .LayoutGrid.ColumnsWithSpacing > div > div {
+        margin: 0 0 10px 10px;
+    }
+    .LayoutGrid.ColumnsWithSpacing > div:first-child > div,
+    .LayoutGrid.ColumnsWithSpacing > div.Clear + div > div {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .PreferencesScreen {
+        padding-top: 20px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple {
+        background: none;
+        border: none;
+        margin: 0px 10px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header {
+        background: none;
+        text-align: center;
+        padding: 0px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header h2 {
+        background: none;
+        display: block;
+        padding: 5px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header h2 span {
+        top: 0px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header h2::before,
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header h2::after,
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header .WidgetAction {
+        display: none;
+    }
+    .PreferencesScreen .Content {
+        padding: 0px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Content {
+        border: none;
+    }
+    .PreferencesScreen .Content form {
+        margin: 10px 0px 15px 0px;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Content .WidgetSimple {
+        margin-bottom: 20px;
+        background: none;
+    }
+    .PreferencesScreen .FieldExplanation {
+        font-size: 11px;
+        line-height: 140%;
+    }
+    .PreferencesScreen .Content form .Field {
+        margin-left: 30%;
+        padding: 4px 0px 3px 5px;
+    }
+    .PreferencesScreen .Content form .Field.NoMargin {
+        margin: 0px;
+        padding: 0px;
+    }
+    .PreferencesScreen .Content form .Field.NoMargin select {
+        min-width: inherit;
+        width: 97%;
+    }
+    .PreferencesScreen .Content form .Field.NoMargin select[multiple="multiple"] {
+        height: 100px;
+    }
+    .PreferencesScreen .Content form .Field.ButtonOnly {
+        margin: 10px -10px 0px -10px;
+        text-align: center;
+        padding: 10px 0px 0px 0px;
+    }
+
+    .Admin .Size1of2 {
+        margin-bottom: 3px;
+        position: relative;
+    }
+    .Admin .Size1of2 h4 {
+        margin: 0 2px 0 0;
+        padding: 5px 5px 4px;
+        border-bottom: none;
+        -webkit-border-top-left-radius: 2px;
+        -webkit-border-top-right-radius: 2px;
+        -moz-border-radius-topleft: 2px;
+        -moz-border-radius-topright: 2px;
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+        font-weight: normal;
+    }
+    .Admin .Size1of2 .AsBlock {
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        text-indent: -9999px;
+        position: absolute;
+    }
+    .Admin .Size1of2 p {
+        margin: 0 2px 0 0;
+        padding: 0 5px 5px;
+        line-height: 14px;
+    }
+
+    /**
+    *   @subsection ItemRow
+    */
+    .ItemRow {
+        margin-left: 15px;
+    }
+    .ItemRow li {
+        padding: 3px 0 5px 8px;
+    }
+    .ItemRow a {
+        line-height: 14px;
+        text-decoration: underline;
+    }
+
+
+    /**
+    * @subsection WidgetPopup
+    */
+    div.WidgetPopup {
+        display: none;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        z-index: 100;
+        width: 500px;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        border-style: solid;
+        border-width: 1px;
+    }
+
+
+    /**
+    *   @subsection LinkGraph
+    */
+    .CITabLinkGraph .Table {
+        display: table;
+        border-spacing: 10px;
+    }
+    .CITabLinkGraph .TableCell {
+        display: table-cell;
+    }
+    .CITabLinkGraph #IFrameParam .WidgetSimple.TableCell {
+        background: none;
+        border: none;
+    }
+    .CITabLinkGraph #IFrameParam .WidgetSimple.TableCell .Header {
+        background-color: transparent;
+    }
+    .CITabLinkGraph #IFrameParam .WidgetSimple.TableCell .Header h2 {
+        border: none;
+        background: none;
+        padding-left: 5px;
+    }
+    .CITabLinkGraph #IFrameParam .WidgetSimple.TableCell .Header h2::after {
+        display: none;
+    }
+
+    .CITabLinkGraph #IFrameParam .WidgetSimple.TableCell .Content {
+        border: none;
+        padding: 0px;
+    }
+    .CIImage {
+        display: block;
+        float: left;
+        margin: 10px 0px 0px 10px;
+        height: 250px;
+    }
+    .CIImagePreview {
+        width: 200px;
+        height: 200px;
+        overflow: hidden;
+        margin: 5px 5px 5px 5px;
+        position: relative;
+    }
+    .CIImageText {
+        margin: 5px 5px 5px 5px;
+        width: 200px;
+        height: 50px;
+    }
+    .CIImagePreview:hover .ActionMenu {
+        display: block;
+    }
+
+    /**
+    *   @subsection SysConfig
+    */
+    #AdminSysConfig input {
+        margin-bottom: 3px;
+    }
+    #AdminSysConfig fieldset {
+        margin: 0;
+        padding: 13px 3px 21px;
+    }
+    #AdminSysConfig h3 {
+        float: left;
+        padding-right: 5px;
+        margin-top: 0;
+        position: relative;
+        line-height: 20px;
+    }
+    #AdminSysConfig .Setting {
+        float: right;
+        width: 74%;
+    }
+    #AdminSysConfig .Setting .DateTime,
+    #AdminSysConfig .Setting .String,
+    #AdminSysConfig .Setting .Array,
+    #AdminSysConfig .Setting .Hash {
+        margin: 8px 0;
+    }
+    #AdminSysConfig .Setting .String input {
+        width: 200px;
+    }
+    #AdminSysConfig .Setting .DefaultValue {
+        margin: 2px;
+        font-size: 11px;
+    }
+    #AdminSysConfig .Description {
+        width: 25%;
+        margin: 0 4px;
+        float: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    #AdminSysConfig .Setting .Hash label.Key,
+    #AdminSysConfig .Setting .Hash label.Content {
+        float: left;
+        width: 40%;
+        margin: 0 5px 7px 0;
+        font-size: 13px;
+        font-weight: bold;
+    }
+    #AdminSysConfig .Setting .Array input.Entry {
+        width: 60%;
+    }
+    #AdminSysConfig .Setting .Hash label.Key {
+        padding: 0 6px 0 0;
+    }
+    #AdminSysConfig .Setting .Hash label.Content {
+        padding: 0 0 0 3px;
+    }
+    #AdminSysConfig .Setting .Hash input.Content,
+    #AdminSysConfig .Setting .Hash select.Content {
+        width: 40%;
+    }
+    #AdminSysConfig .Setting .Hash input.Key {
+        width: 40%;
+        margin-left: 0;
+        margin-right: 5px;
+    }
+    #AdminSysConfig .RemoveButton,
+    #AdminSysConfig .AddButton {
+        border: none;
+        background-color: inherit;
+        padding: 0;
+    }
+    #AdminSysConfig .ResetButton {
+        padding: 1px 4px;
+        vertical-align: middle;
+        margin: 0 3px;
+    }
+    #AdminSysConfig .RemoveButton:hover,
+    #AdminSysConfig .AddButton:hover {
+        border: none;
+        background-color: inherit;
+    }
+    #AdminSysConfig .Setting label.KeyWithComplexValue {
+        display: block;
+        margin: 8px 0px 8px 0px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+    #AdminSysConfig fieldset.Last {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+    #AdminSysConfig input[type="checkbox"] {
+        margin: 2px 5px 0 0;
+        float: left;
+    }
+    #AdminSysConfig .FrontendModuleRegistration label.SingleKey {
+        float: left;
+        width: 20%;
+        margin-left: 0;
+        margin-right: 5px;
+        text-align: right;
+        line-height: 22px;
+    }
+    #AdminSysConfig .FrontendModuleRegistration input.SingleContent {
+        width: 60%;
+        margin-bottom: 3px;
+    }
+    #AdminSysConfig .FrontendModuleRegistration .NavBarListEntry {
+        padding-bottom: 8px;
+        margin-bottom: 8px;
+    }
+
+    /**
+    *   @subsection import export
+    */
+    .MapHeaderRow .Header,
+    .MapHeaderRow .Field {
+        display: inline;
+        margin-right: 15px;
+        padding-left: 2px;
+    }
+    button.ArrowUp[disabled="disabled"] {
+        cursor: default;
+    }
+    button.ArrowUp, button.ArrowDown {
+        height: 16px;
+        width: 16px;
+        padding: 1px;
+        margin-top: 0;
+        margin-bottom: 1px;
+        border-style: none;
+        text-indent: -9999px;
+        display: inline-block;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+
+    /**
+    *   @subsection process widget
+    */
+    #DynamicFieldsWidget .Actions li:first-child::after {
+        content: "";
+    }
+    .FieldSetSeparator {
+        float: none;
+        clear: both;
+        padding-bottom: 7px;
+        font-size: 12px;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer {
+        float: left;
+        width: 255px;
+        margin: 0px 10px 10px 0px;
+        line-height: 150%;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label {
+        padding: 2px 7px;
+        position: relative;
+        display: block;
+        font-size: 11px;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label .ShowFieldInfoOverlay {
+        display: block;
+        position: absolute;
+        right: 0px;
+        top: 2px;
+        font-size: 12px;
+        width: 19px;
+        height: 18px;
+        text-align: center;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p {
+        padding: 4px 7px 2px 7px;
+        font-size: 11px;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p.CutValue {
+        text-overflow: ellipsis;
+        height: 17px;
+        overflow: hidden;
+        display: block;
+        white-space: nowrap;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p.ValueLong {
+        display: none;
+    }
+}

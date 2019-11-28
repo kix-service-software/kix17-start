@@ -490,6 +490,10 @@ sub Run {
                 Data => {
                     'cssClass' => '',
                     'Number'   => $RowTotal,
+                    'SearchPattern' => $RowAttribute
+                        . "="
+                        . $Self->{RowValueListReverse}->{$CurrColLabel}
+                        . ";",
                 },
             );
         }

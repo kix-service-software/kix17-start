@@ -12,19 +12,21 @@ use strict;
 use warnings;
 use utf8;
 
+use Time::HiRes;
 use vars (qw($Self));
 
 # get needed objects
 my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
+# define needed variables
+my $CacheType          = "UnitTest_Cache_Configure";
 my $HomeDir            = $ConfigObject->Get('Home');
 my @BackendModuleFiles = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
     Directory => $HomeDir . '/Kernel/System/Cache/',
     Filter    => '*.pm',
     Silent    => 1,
 );
-
-my $CacheType = "UnitTest_Cache_Configure";
+my $StartTime;
 
 MODULEFILE:
 for my $ModuleFile (@BackendModuleFiles) {
@@ -42,7 +44,7 @@ for my $ModuleFile (@BackendModuleFiles) {
     );
 
     # create a local cache object
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $CacheObject = $Kernel::OM->GetNew('Kernel::System::Cache');
     $CacheObject->Configure(
         CacheInMemory  => 1,
         CacheInBackend => 1,
@@ -53,6 +55,7 @@ for my $ModuleFile (@BackendModuleFiles) {
     # flush the cache to have a clear test environment
     $CacheObject->CleanUp();
 
+    $StartTime = Time::HiRes::time();
     # set value in memory and in backend
     $CacheObject->Set(
         Type  => $CacheType,
@@ -69,9 +72,11 @@ for my $ModuleFile (@BackendModuleFiles) {
             CacheInBackend => 0,
         ),
         1,
-        "Cached value from memory",
+        "$Module: Cached value from memory",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     # get value from backend only
     $Self->Is(
         scalar $CacheObject->Get(
@@ -80,9 +85,11 @@ for my $ModuleFile (@BackendModuleFiles) {
             CacheInMemory => 0,
         ),
         1,
-        "Cached value from backend",
+        "$Module: Cached value from backend",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     # disable both options
     $Self->Is(
         scalar $CacheObject->Get(
@@ -92,9 +99,11 @@ for my $ModuleFile (@BackendModuleFiles) {
             CacheInBackend => 0,
         ),
         undef,
-        "Cached value from no backend",
+        "$Module: Cached value from no backend",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     # Set value, but in no backend. Subsequent tests make sure it is
     #   actually removed.
     $CacheObject->Set(
@@ -106,6 +115,7 @@ for my $ModuleFile (@BackendModuleFiles) {
         CacheInBackend => 0,
     );
 
+    $StartTime = Time::HiRes::time();
     # get value from memory only
     $Self->Is(
         scalar $CacheObject->Get(
@@ -114,9 +124,11 @@ for my $ModuleFile (@BackendModuleFiles) {
             CacheInBackend => 0,
         ),
         undef,
-        "Removed value from memory",
+        "$Module: Removed value from memory",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     # get value from backend only
     $Self->Is(
         scalar $CacheObject->Get(
@@ -125,7 +137,8 @@ for my $ModuleFile (@BackendModuleFiles) {
             CacheInMemory => 0,
         ),
         undef,
-        "Removed value from backend",
+        "$Module: Removed value from backend",
+        $StartTime,
     );
 
     # flush the cache

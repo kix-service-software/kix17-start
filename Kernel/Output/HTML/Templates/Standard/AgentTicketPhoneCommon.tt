@@ -138,7 +138,7 @@
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
 [% RenderBlockStart("SpellCheck") %]
-                        <a href="#" id="OptionSpellCheck">[ [% Translate("Spell check") | html %] ]</a>
+                        <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
 [% RenderBlockEnd("SpellCheck") %]
 
 <!-- OutputFilterHook_TicketOptionsEnd -->

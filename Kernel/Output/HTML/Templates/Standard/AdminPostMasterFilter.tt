@@ -171,10 +171,8 @@ $('.FilterDelete').bind('click', function (Event) {
 
             <div class="WidgetSimple">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px">[% Translate("Filter Condition") | html %] <span class="FieldExplanation">([% Translate("AND Condition") | html %])</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2>[% Translate("Filter Condition") | html %] <span class="FieldExplanation">([% Translate("AND Condition") | html %])</span></h2>
                 </div>
                 <div class="Content">
                 [% FOREACH [ 1 .. Config("PostmasterHeaderFieldCount") ]  %]
@@ -201,10 +199,8 @@ $('.FilterDelete').bind('click', function (Event) {
 
             <div class="WidgetSimple">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Set Email Headers") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2><span>[% Translate("Set Email Headers") | html %]</span></h2>
                 </div>
                 <div class="Content">
 

@@ -248,7 +248,6 @@ sub Data {
         'System Settings' => 'System-Einstellungen',
         'Mail Configuration' => 'Mail-Konfiguration',
         'Finished' => 'Fertig',
-        'Install OTRS' => 'OTRS installieren',
         'Intro' => 'Einführung',
         'License' => 'Lizenz',
         'Database' => 'Datenbank',
@@ -291,7 +290,7 @@ sub Data {
             'Sie haben die Abwesenheitszeit eingeschaltet, möchten Sie diese deaktivieren?',
         'News about KIX releases!' => 'Neuigkeiten zu KIX-Releases!',
         'Go to dashboard!' => 'Zur Übersicht gehen!',
-        'Customer %s added' => 'Kunde %s hinzugefügt',
+        'Contact %s added' => 'Ansprechpartner %s hinzugefügt',
         'Role added!' => 'Rolle hinzugefügt!',
         'Role updated!' => 'Rolle aktualisiert!',
         'Attachment added!' => 'Anlage hinzugefügt!',
@@ -305,7 +304,7 @@ sub Data {
         'State updated!' => 'Status aktualisiert!',
         'Type added!' => 'Typ hinzugefügt!',
         'Type updated!' => 'Typ aktualisiert!',
-        'Customer updated!' => 'Kunde aktualisiert!',
+        'Contact updated!' => 'Ansprechpartner aktualisiert!',
         'Customer company added!' => 'Kundenfirma hinzugefügt!',
         'Customer company updated!' => 'Kundenfirma aktualisiert!',
         'Note: Company is invalid!' => 'Hinweis: Firma ist ungültig!',
@@ -377,14 +376,14 @@ sub Data {
         'Shown contacts' => 'Angezeigte Ansprechpartner',
         'News' => 'Neues',
         'Product News' => 'Produkt-Neuigkeiten',
-        'OTRS News' => 'KIX-Neuigkeiten',
+        'KIX News' => 'KIX-Neuigkeiten',
         '7 Day Stats' => '7-Tage-Statistik',
         'Process Management information from database is not in sync with the system configuration, please synchronize all processes.' =>
             'Die Konfiguration des Prozessmanagements in der Datenbank ist nicht synchron mit der Systemkonfiguration, bitte synchronisieren Sie alle Prozesse.',
         'Package not verified by the KIX Group! It is recommended not to use this package.' =>
             'Paket wurde nicht von der KIX-Gruppe verifiziert! Es wird empfohlen, dieses Paket nicht zu nutzen.',
-        '<br>If you continue to install this package, the following issues may occur!<br><br>&nbsp;-Security problems<br>&nbsp;-Stability problems<br>&nbsp;-Performance problems<br><br>Please note that issues that are caused by working with this package are not covered by OTRS service contracts!<br><br>' =>
-            '<br>Wenn Sie die Installation dieses Pakets fortführen, können folgende Probleme auftreten!<br><br>&nbsp;-Sicherheitsprobleme<br>&nbsp;-Stabilitätsprobleme<br>&nbsp;-Performanceprobleme<br><br>Bitte beachten Sie, dass Probleme im Zusammenhang mit diesem Paket nicht durch einen OTRS Servicevertrag abgedeckt sind!<br><br>',
+        '<br>If you continue to install this package, the following issues may occur!<br><br>&nbsp;-Security problems<br>&nbsp;-Stability problems<br>&nbsp;-Performance problems<br><br>Please note that issues that are caused by working with this package are not covered by KIX service contracts!<br><br>' =>
+            '<br>Wenn Sie die Installation dieses Pakets fortführen, können folgende Probleme auftreten!<br><br>&nbsp;-Sicherheitsprobleme<br>&nbsp;-Stabilitätsprobleme<br>&nbsp;-Performanceprobleme<br><br>Bitte beachten Sie, dass Probleme im Zusammenhang mit diesem Paket nicht durch einen KIX Servicevertrag abgedeckt sind!<br><br>',
         'Mark' => 'Markieren',
         'Unmark' => 'Markierung entfernen',
         'Bold' => 'Fett',
@@ -430,7 +429,6 @@ sub Data {
         'There was a problem during the upgrade of %s.' => 'Es gab ein Problem bei der Aktualisierung Ihrer %s.',
         '%s was correctly uninstalled.' => 'Die %s wurde korrekt de-installiert.',
         'There was a problem uninstalling %s.' => 'Es gab ein Problem beim De-Installieren der %s.',
-        'Enable cloud services to unleash all OTRS features!' => 'Aktivieren Sie die Cloud Services, um alle KIX-Funktionen nutzen zu können!',
 
         # Template: AAACalendar
         'New Year\'s Day' => 'Neujahr',
@@ -441,8 +439,8 @@ sub Data {
         'New Year\'s Eve' => 'Silvester',
 
         # Template: AAAGenericInterface
-        'OTRS as requester' => 'OTRS als Requester',
-        'OTRS as provider' => 'OTRS als Provider',
+        'KIX as requester' => 'KIX als Requester',
+        'KIX as provider' => 'KIX als Provider',
         'Webservice "%s" created!' => 'Webservice "%s" erstellt!',
         'Webservice "%s" updated!' => 'Webservice "%s" aktualisiert!',
 
@@ -877,7 +875,6 @@ sub Data {
         'List (only %s shown - more available)' => 'Liste (nur %s angezeigt - mehr verfügbar)',
         'List (%s total)' => 'Liste (%s insgesamt)',
         'Please enter a search term to look for customers.' => 'Bitte geben Sie einen Suchbegriff ein, um nach Kunden zu suchen.',
-        'Add Customer' => 'Kunden hinzufügen',
 
         # Template: AdminCustomerUser
         'Contact Management' => 'Ansprechpartnerverwaltung',
@@ -1208,19 +1205,19 @@ sub Data {
             'Der Name wird typischerweise genutzt, um eine Operation eines entfernten Webservice aufzurufen.',
         'Please provide a unique name for this web service invoker.' => 'Bitte geben sie einen eindeutigen Namen für diesen Webservice-Invoker an.',
         'Invoker backend' => 'Invoker-Backend',
-        'This OTRS invoker backend module will be called to prepare the data to be sent to the remote system, and to process its response data.' =>
+        'This KIX invoker backend module will be called to prepare the data to be sent to the remote system, and to process its response data.' =>
             'Dieses Invoker-Backend-Modul wird aufgerufen, um die Daten zum Versand an das entfernte System sowie die zurückgelieferten Daten aufzubereiten.',
         'Mapping for outgoing request data' => 'Mapping für ausgehende Anfragedaten',
         'Configure' => 'Konfigurieren',
         'The data from the invoker of KIX will be processed by this mapping, to transform it to the kind of data the remote system expects.' =>
-            'Die Daten des Invokers von OTRS werden von diesem Mapping verarbeitet, um sie so umzuformen, wie das entfernte System die Daten benötigt.',
+            'Die Daten des Invokers von KIX werden von diesem Mapping verarbeitet, um sie so umzuformen, wie das entfernte System die Daten benötigt.',
         'Mapping for incoming response data' => 'Mapping für eingehende Antwortdaten',
         'The response data will be processed by this mapping, to transform it to the kind of data the invoker of KIX expects.' =>
-            'Die Antwort-Daten des entfernten Systems werden von diesem Mapping verarbeitet, um sie so umzuformen, wie der Invoker von OTRS sie benötigt.',
+            'Die Antwort-Daten des entfernten Systems werden von diesem Mapping verarbeitet, um sie so umzuformen, wie der Invoker von KIX sie benötigt.',
         'Asynchronous' => 'Asynchron',
         'This invoker will be triggered by the configured events.' => 'Dieser Invoker wird von den konfigurierten Events ausgelöst.',
-        'Asynchronous event triggers are handled by the OTRS Scheduler Daemon in background (recommended).' =>
-            'Asynchrone Ereignisauslöser werden vom OTRS Scheduler Daemon im Hintergrund verarbeitet (empfohlen).',
+        'Asynchronous event triggers are handled by the KIX Scheduler Daemon in background (recommended).' =>
+            'Asynchrone Ereignisauslöser werden vom KIX Scheduler Daemon im Hintergrund verarbeitet (empfohlen).',
         'Synchronous event triggers would be processed directly during the web request.' =>
             'Synchrone Event-Trigger werden direkt während des laufenden Web-Requests verarbeitet.',
         'Save and continue' => 'Speichern und weiter',
@@ -1269,10 +1266,10 @@ sub Data {
             'Der Name wird typischerweise benutzt, um die Webservice-Operation von einem entfernten System aus aufzurufen.',
         'Please provide a unique name for this web service.' => 'Bitte geben Sie einen eindeutigen Namen für diesen Webservice an.',
         'Mapping for incoming request data' => 'Mapping für eingehende Anfragedaten',
-        'The request data will be processed by this mapping, to transform it to the kind of data OTRS expects.' =>
+        'The request data will be processed by this mapping, to transform it to the kind of data KIX expects.' =>
             'Die Daten der eingehenden Anfrage werden von diesem Mapping verarbeitet, um sie so umzuformen, wie die KIX-Operation sie benötigt.',
         'Operation backend' => 'Operation-Backend',
-        'This OTRS operation backend module will be called internally to process the request, generating data for the response.' =>
+        'This KIX operation backend module will be called internally to process the request, generating data for the response.' =>
             'Das Operation-Backend-Modul wird intern aufgerufen um die Anfrage zu verarbeiten, und erzeugt dabei Antwortdaten.',
         'Mapping for outgoing response data' => 'Mapping für ausgehende Antwortdaten',
         'The response data will be processed by this mapping, to transform it to the kind of data the remote system expects.' =>
@@ -1291,15 +1288,15 @@ sub Data {
             'Beschränken Sie diese Operation auf bestimmte Anfrage-Methoden. Wenn keine Methode ausgewählt ist, werden alle Anfragen akzeptiert.',
         'Maximum message length' => 'Maximale Nachrichtenlänge',
         'This field should be an integer number.' => 'Dieses Feld sollte eine Ganzzahl beinhalten.',
-        'Here you can specify the maximum size (in bytes) of REST messages that OTRS will process.' =>
-            'Bestimmen Sie die maximale Größe (in Bytes) für REST-Nachrichten, die OTRS akzeptieren soll.',
+        'Here you can specify the maximum size (in bytes) of REST messages that KIX will process.' =>
+            'Bestimmen Sie die maximale Größe (in Bytes) für REST-Nachrichten, die KIX akzeptieren soll.',
         'Send Keep-Alive' => 'Keep-Alive senden',
         'This configuration defines if incoming connections should get closed or kept alive.' =>
             'Bestimmt, ob eingehende Verbindungen geschlossen oder am Leben erhalten werden sollen.',
         'Host' => 'Host',
         'Remote host URL for the REST requests.' => 'URL des Remote-Hosts für REST-Anfragen.',
-        'e.g https://www.otrs.com:10745/api/v1.0 (without trailing backslash)' =>
-            'z. B. https://www.otrs.com:10745/api/v1.0 (ohne abschließenden Backslash)',
+        'e.g https://www.kixdesk.com:10745/api/v1.0 (without trailing backslash)' =>
+            'z. B. https://www.kixdesk.com:10745/api/v1.0 (ohne abschließenden Backslash)',
         'Controller mapping for Invoker' => 'Controller-Mapping für Invoker',
         'The controller that the invoker should send requests to. Variables marked by a \':\' will get replaced by the data value and passed along with the request. (e.g. /Ticket/:TicketID?UserLogin=:UserLogin&Password=:Password).' =>
             'Der Controller, an den der Invoker Anfragen senden soll. Variablen, die mit einem \':\' markiert sind, werden durch den Datenwert ersetzt und mit dem Request übergeben. (z.B.: /Ticket/:TicketID?UserLogin=:UserLogin&Password=:Password)',
@@ -1349,8 +1346,8 @@ sub Data {
         'Response name scheme' => 'Antwort-Namensschema',
         'Select how SOAP response function wrapper should be constructed.' =>
             'Wählen Sie, wie die SOAP-Antwort konstruiert werden soll.',
-        'Here you can specify the maximum size (in bytes) of SOAP messages that OTRS will process.' =>
-            'Hier können Sie eine Maximalgröße für SOAP-Nachrichten (in Bytes) angeben, die OTRS verarbeitet.',
+        'Here you can specify the maximum size (in bytes) of SOAP messages that KIX will process.' =>
+            'Hier können Sie eine Maximalgröße für SOAP-Nachrichten (in Bytes) angeben, die KIX verarbeitet.',
         'Encoding' => 'Kodierung',
         'The character encoding for the SOAP message contents.' => 'Die Zeichenkodierung für SOAP-Nachrichteninhalte.',
         'e.g utf-8, latin1, iso-8859-1, cp1250, Etc.' => 'z. B. utf-8, latin1, iso-8859-1, cp1250, usw.',
@@ -1478,8 +1475,8 @@ sub Data {
         'Add mail account' => 'E-Mailkonto hinzufügen',
         'All incoming emails with one account will be dispatched in the selected queue!' =>
             'Einkommende E-Mails von POP3-Konten werden in die ausgewählte Queue einsortiert!',
-        'If your account is trusted, the already existing X-OTRS header at arrival time (for priority, ...) will be used! PostMaster filter will be used anyway.' =>
-            'Wird dem Konto vertraut, werden die eingehenden X-OTRS Header benutzt! PostMaster Filter werden in jedem Fall verwendet.',
+        'If your account is trusted, the already existing X-KIX header at arrival time (for priority, ...) will be used! PostMaster filter will be used anyway.' =>
+            'Wird dem Konto vertraut, werden die eingehenden X-KIX Header benutzt! PostMaster Filter werden in jedem Fall verwendet.',
         'Delete account' => 'E-Mailkonto löschen',
         'Fetch mail' => 'E-Mails abholen',
         'Add Mail Account' => 'E-Mailkonto hinzufügen',
@@ -1629,9 +1626,6 @@ sub Data {
         'Install' => 'Installieren',
         'Install Package' => 'Paket installieren',
         'Update repository information' => 'Verzeichnis aktualisieren',
-        'Cloud services are currently disabled.' => 'Cloud-Services sind derzeit deaktiviert.',
-        'OTRS Verify™ can not continue!' => 'OTRS Verify™ kann nicht fortgesetzt werden!',
-        'Enable cloud services' => 'Cloud-Services aktivieren',
         'Online Repository' => 'Online-Verzeichnis',
         'Module documentation' => 'Moduldokumentation',
         'Upgrade' => 'Upgrade',
@@ -1954,69 +1948,25 @@ sub Data {
         'Change Template Relations for Queue' => 'Vorlagen-Zuordnungen für Queue verändern',
 
         # Template: AdminRegistration
-        'System Registration Management' => 'Systemregistrierungs-Verwaltung',
         'Edit details' => 'Details bearbeiten',
         'Show transmitted data' => 'Übertragene Daten anzeigen',
         'Deregister system' => 'System deregistrieren',
-        'Overview of registered systems' => 'Übersicht der registrieren Systeme',
-        'This system is registered with KIX Group.' => 'Dieses System ist bei der KIX Gruppe registriert.',
         'System type' => 'System Typ',
         'Unique ID' => 'Unique ID',
-        'Last communication with registration server' => 'Letzte Kommunikation mit dem Registrierungsserver',
-        'System registration not possible' => 'Systemregistrierung nicht möglich',
-        'Please note that you can\'t register your system if KIX Daemon is not running correctly!' =>
-            'Bitte beachten Sie, dass Sie ihr System nicht registrieren können, wenn der KIX Daemon nicht läuft!',
         'Instructions' => 'Anweisungen',
-        'System deregistration not possible' => 'Deregistrierung des Systems nicht möglich',
-        'Please note that you can\'t deregister your system if you\'re using the %s or having a valid service contract.' =>
-            'Sie können dieses System nicht deregistrieren wenn Sie %s einsetzen oder einen gültigen Servicevertrag besitzen.',
         'KIX-ID Login' => 'KIX-ID Login',
         'Read more' => 'Mehr erfahren',
-        'You need to log in with your KIX-ID to register your system.' =>
-            'Um Ihr System zu registrieren, loggen Sie sich bitte mit Ihrer KIX-ID ein.',
-        'Your KIX-ID is the email address you used to sign up on the OTRS.com webpage.' =>
-            'Verwenden Sie dazu die E-Mail-Adresse, mit der Sie sich auf der OTRS Webseite angemeldet haben.',
         'Data Protection' => 'Datenschutz',
-        'What are the advantages of system registration?' => 'Welche Vorteile bietet die Systemregistrierung?',
-        'You will receive updates about relevant security releases.' => 'Bei sicherheitsrelevanten Releases werden Sie benachrichtigt.',
-        'With your system registration we can improve our services for you, because we have all relevant information available.' =>
-            'Die Registrierung Ihres Systems ermöglicht es der KIX Gruppe, Sie schneller und effizienter zu betreuen, weil uns wichtige Informationen über Ihr System bereits vorliegen, die ein mehrmaliges Nachfragen unnötig machen.',
-        'This is only the beginning!' => 'Und das ist erst der Anfang!',
-        'We will inform you about our new services and offerings soon.' =>
-            'Seien Sie gespannt auf weitere Möglichkeiten, die wir Ihnen vorstellen werden.',
-        'Can I use KIX without being registered?' => 'Kann ich KIX auch ohne Registrierung nutzen?',
-        'System registration is optional.' => 'Die Systemregistrierung ist optional.',
-        'You can download and use KIX without being registered.' => 'Sie können KIX auch ohne Registrierung im vollen Umfang downloaden und nutzen.',
-        'Is it possible to deregister?' => 'Kann ich meine Registrierung rückgängig machen?',
-        'You can deregister at any time.' => 'Sie können Ihr System jederzeit deregistrieren.',
-        'Which data is transfered when registering?' => 'Welche Daten werden bei der Registrierung übertragen?',
-        'A registered system sends the following data to KIX Group:' => 'Ein registriertes System überträgt folgende Daten an die KIX Gruppe:',
         'Fully Qualified Domain Name (FQDN), KIX version, Database, Operating System and Perl version.' =>
             'Fully Qualified Domain Name (FQDN), KIX Version, Datenbank, Betriebssystem und Perl Version.',
-        'Why do I have to provide a description for my system?' => 'Warum muss das System beschrieben werden?',
-        'The description of the system is optional.' => 'Die Beschreibung des Systems ist optional.',
-        'The description and system type you specify help you to identify and manage the details of your registered systems.' =>
-            'Der Systemtyp und die Beschreibung hilft Ihnen, Ihre Systeme zu identifizieren und die Systemregistrierung zu verwalten.',
-        'How often does my KIX system send updates?' => 'Wie oft sendet mein KIX Updates?',
-        'Your system will send updates to the registration server at regular intervals.' =>
-            'Ihr System sendet in regelmäßigen Abständen Updates an den Registrierungsserver.',
-        'Typically this would be around once every three days.' => 'In der Regel findet eine Übertragung an jedem dritten Tag statt.',
-        'In case you would have further questions we would be glad to answer them.' =>
-            'Sollten Sie weitere Fragen haben, freuen wir uns, diese zu beantworten.',
         'Please visit our' => 'Besuchen Sie einfach unser',
         'portal' => 'Portal,',
         'and file a request.' => 'um eine Anfrage zu stellen.',
-        'If you deregister your system, you will lose these benefits:' =>
-            'Wenn Sie ihre Systemregistrierung löschen, verlieren Sie folgende Vorteile:',
-        'You need to log in with your KIX-ID to deregister your system.' =>
-            'Um Ihr System zu deregistrieren, loggen Sie sich bitte mit Ihrer KIX-ID ein.',
         'KIX-ID' => 'KIX-ID',
         'You don\'t have an KIX-ID yet?' => 'Sie haben noch keine KIX-ID?',
         'Sign up now' => 'Registrieren Sie sich jetzt',
         'Forgot your password?' => 'Passwort vergessen?',
         'Retrieve a new one' => 'Neues anfordern',
-        'This data will be frequently transferred to KIX Group when you register this system.' =>
-            'Wenn Sie dieses System registrieren, werden folgende Daten in regelmäßigen Abständen an die KIX Gruppe übertragen.',
         'Attribute' => 'Attribut',
         'FQDN' => 'FQDN',
         'KIX Version' => 'KIX-Version',
@@ -2025,17 +1975,7 @@ sub Data {
         'Optional description of this system.' => 'Optionale Beschreibung für dieses System.',
         'Register' => 'Registrieren',
         'Deregister System' => 'System deregistrieren',
-        'Continuing with this step will deregister the system from KIX Group.' =>
-            'Wenn Sie fortfahren, wird dieses System bei der KIX Gruppe deregistriert.',
         'Deregister' => 'Deregistrieren',
-        'You can modify registration settings here.' => 'Sie können ihre Registrierungseinstellungen hier bearbeiten.',
-        'Overview of transmitted data' => 'Übersicht der übertragenen Daten',
-        'There is no data regularly sent from your system to %s.' => 'Von Ihrem System werden keine Daten regelmäßig an %s übertragen.',
-        'The following data is sent at minimum every 3 days from your system to %s.' =>
-            'Folgende Daten werden mindestens alle 3 Tage von Ihrem System an %s übertragen.',
-        'The data will be transferred in JSON format via a secure https connection.' =>
-            'Die Daten werden im JSON-Format über eine sichere https-Verbindung übertragen.',
-        'System Registration Data' => 'Daten der Systemregistrierung',
         'Support Data' => 'Supportdaten',
 
         # Template: AdminRole
@@ -2191,7 +2131,6 @@ sub Data {
 
         # Template: AdminSupportDataCollector
         'Sending support data to KIX Group is not possible!' => 'Das Senden von Support-Daten an die KIX-Gruppe ist nicht möglich!',
-        'Enable Cloud Services' => 'Cloud-Services aktivieren',
         'This data is sent to KIX Group on a regular basis. To stop sending this data please update your system registration.' =>
             'Diese Daten werden regelmäßig an die KIX Gruppe gesendet. Falls Sie das Senden der Daten beenden möchten, aktualisieren Sie bitte ihre Systemregistrierung.',
         'You can manually trigger the Support Data sending by pressing this button:' =>
@@ -2487,7 +2426,6 @@ sub Data {
 
         # Template: AgentPreferences
         'Edit your preferences' => 'Persönliche Einstellungen bearbeiten',
-        'Did you know? You can help translating OTRS at %s.' => 'Haben Sie gewusst, dass Sie bei der Übersetzung von OTRS unter %s helfen können?',
 
         # Template: AgentSpelling
         'Spell Checker' => 'Rechtschreibprüfung',
@@ -2798,8 +2736,6 @@ sub Data {
         'There are currently no elements available to select from.' => 'Derzeit sind keine Elemente für die Auswahl vorhanden.',
         'Please turn off Compatibility Mode in Internet Explorer!' => 'Bitte schalten Sie den Kompatibilitätsmodus im Internet Explorer aus!',
         'The browser you are using is too old.' => 'Sie verwenden leider einen (stark) veralteten Browser.',
-        'OTRS runs with a huge lists of browsers, please upgrade to one of these.' =>
-            'OTRS funktioniert mit einer großen Auswahl an Browsern, aus denen Sie wählen können. Bitte installieren Sie einen neueren Browser oder upgraden Sie Ihren vorhandenen.',
         'Please see the documentation or ask your admin for further information.' =>
             'Bitte lesen Sie auch die Dokumentation oder fragen Sie Ihren Systemadministrator.',
         'Switch to mobile mode' => 'Zur mobilen Ansicht wechseln',
@@ -2817,8 +2753,6 @@ sub Data {
 
         # Template: CustomerLogin
         'JavaScript Not Available' => 'JavaScript nicht aktiviert oder nicht unterstützt.',
-        'In order to experience OTRS, you\'ll need to enable JavaScript in your browser.' =>
-            'Um alle Möglichkeiten von OTRS voll ausschöpfen zu können, müssen Sie JavaScript in Ihrem Browser aktivieren.',
         'Browser Warning' => 'Browser-Warnung',
         'One moment please, you are being redirected...' => 'Einen Moment bitte, Sie werden weitergeleitet...',
         'Login' => 'Anmeldung',
@@ -2919,7 +2853,7 @@ sub Data {
         # Template: Error
         'An error occurred.' => 'Ein Fehler ist aufgetreten.',
         'Really a bug? 5 out of 10 bug reports result from a wrong or incomplete installation of KIX.' =>
-            'Wirklich ein Bug? 5 von 10 Bugmeldungen resultieren aus einer falschen oder unvollständigen Installation von OTRS.',
+            'Wirklich ein Bug? 5 von 10 Bugmeldungen resultieren aus einer falschen oder unvollständigen Installation von KIX.',
         'With %s, our experts take care of correct installation and cover your back with support and periodic security updates.' =>
             'Mit der %s übernehmen unsere Experten die korrekte Installation und halten Ihnen mit Support und regelmäßigen Sicherheitsupdates den Rücken frei.',
         'Contact our service team now.' => 'Kontaktieren Sie jetzt unser Service-Team.',
@@ -2982,13 +2916,8 @@ sub Data {
         'Check mail configuration' => 'E-Mail-Konfiguration prüfen',
         'Skip this step' => 'Diesen Schritt überspringen',
 
-        # Template: InstallerDBResult
-        'Database setup successful!' => 'Datenbank erfolgreich erstellt!',
-
         # Template: InstallerDBStart
         'Install Type' => 'Installationstyp',
-        'Create a new database for OTRS' => 'Neue Datenbank für OTRS erstellen',
-        'Use an existing database for OTRS' => 'Bestehende Datenbank für OTRS nutzen',
 
         # Template: InstallerDBmssql
         'Database name' => 'Datenbankname',
@@ -2997,8 +2926,6 @@ sub Data {
         'Database check successful.' => 'Datenbankprüfung erfolgreich.',
         'Database User' => 'Datenbankbenutzer',
         'New' => 'Neu',
-        'A new database user with limited permissions will be created for this OTRS system.' =>
-            'Ein neuer Datenbank-Benutzer mit beschränkten Rechten wird für dieses KIX-System erstellt.',
         'Repeat Password' => 'Passwort wiederholen',
         'Generated password' => 'Generiertes Passwort',
 
@@ -3010,12 +2937,9 @@ sub Data {
         'Port' => 'Port',
 
         # Template: InstallerFinish
-        'To be able to use KIX you have to enter the following line in your command line (Terminal/Shell) as root.' =>
-            'Um OTRS nutzen zu können, müssen die die folgenden Zeilen als root in die Befehlszeile (Terminal/Shell) eingeben.',
         'Restart your webserver' => 'Starten Sie ihren Webserver neu.',
-        'After doing so your OTRS is up and running.' => 'Danach ist OTRS startklar.',
         'Start page' => 'Startseite',
-        'Your OTRS Team' => 'Ihr KIX-Team',
+        'Your KIX Team' => 'Ihr KIX-Team',
 
         # Template: InstallerLicense
         'Don\'t accept license' => 'Lizenz _nicht_ akzeptieren',
@@ -3054,7 +2978,7 @@ sub Data {
         # Template: MobileNotAvailableWidget
         'Feature not available' => 'Funktion nicht verfügbar',
         'Sorry, but this feature of KIX is currently not available for mobile devices. If you\'d like to use it, you can either switch to desktop mode or use your regular desktop device.' =>
-            'Entschuldigung, aber dieses Feature von OTRS ist derzeit nicht für Mobilgeräte verfügbar. Bitte wechseln sie in die Desktopansicht oder nutzen sie ein normales Desktopgerät, wenn Sie diese Funktion verwenden möchten.',
+            'Entschuldigung, aber dieses Feature von KIX ist derzeit nicht für Mobilgeräte verfügbar. Bitte wechseln sie in die Desktopansicht oder nutzen sie ein normales Desktopgerät, wenn Sie diese Funktion verwenden möchten.',
 
         # Template: Motd
         'Message of the Day' => 'Nachricht des Tages',
@@ -3098,9 +3022,9 @@ sub Data {
         # Template: PublicDefault
         'Welcome' => 'Willkommen',
         'This is the default public interface of KIX! There was no action parameter given.' =>
-            'Dies ist die öffentliche Standard-Benutzerschnittstelle von OTRS. Es wurde kein Action-Parameter übergeben.',
+            'Dies ist die öffentliche Standard-Benutzerschnittstelle von KIX. Es wurde kein Action-Parameter übergeben.',
         'You could install a custom public module (via the package manager), for example the FAQ module, which has a public interface.' =>
-            'Sie könnten (mithilfe des Paketmanagers) ein eigenes Modul für den öffentlichen Bereich von OTRS installieren, beispielsweise das FAQ-Modul.',
+            'Sie könnten (mithilfe des Paketmanagers) ein eigenes Modul für den öffentlichen Bereich von KIX installieren, beispielsweise das FAQ-Modul.',
 
         # Template: RichTextEditor
         'Remove Quote' => 'Zitat entfernen',
@@ -3175,7 +3099,7 @@ sub Data {
             'Bitte beachten Sie, dass die Skalierung der Y-Achse größer sein muss als die Skalierung der X-Achse (z. B. X-Achse => Monat, Y-Achse => Jahr).',
 
         # Template: Test
-        'OTRS Test Page' => 'OTRS Testseite',
+        'KIX Test Page' => 'KIX Testseite',
         'Welcome %s %s' => '%s %s willkommen',
         'Counter' => 'Zähler',
 
@@ -3351,11 +3275,6 @@ sub Data {
         'Package has locally modified files.' => 'Das Paket enthält lokal angepasste Dateien.',
         'No packages or no new packages found in selected repository.' =>
             'Keine (neuen) Pakete im ausgewählten Verzeichnis gefunden.',
-        'Package not verified due a communication issue with verification server!' =>
-            'Paket nicht verifiziert aufgrund eines Kommunikationsproblems mit dem Verifikationsserver!',
-        'Can\'t connect to OTRS Feature Add-on list server!' => 'Kann nicht zum OTRS Feature-Addon-Listenserver verbinden!',
-        'Can\'t get OTRS Feature Add-on list from server!' => 'Kann OTRS Feature-Add-on-Listen nicht vom Server laden!',
-        'Can\'t get OTRS Feature Add-on from server!' => 'Kann OTRS Feature-Add-on nicht vom Server laden!',
 
         # Perl Module: Kernel/Modules/AdminPostMasterFilter.pm
         'No such filter: %s' => 'Kein solcher Filter: %s',
@@ -3756,7 +3675,6 @@ sub Data {
         'Database %s' => 'Datenbank %s',
         'Unknown database type "%s".' => 'Unbekannter Datenbank-Typ "%s".',
         'Please go back' => 'Bitte gehen Sie zurück',
-        'Install OTRS - Error' => 'KIX-Installation - Fehler',
         'File "%s/%s.xml" not found!' => 'Datei "%s/%s.xml" nicht gefunden!',
         'Contact your Admin!' => 'Kontaktieren Sie Ihren Administrator!',
         'Can\'t write Config file!' => 'Kann Konfigurationsdatei nicht schreiben!',
@@ -4002,14 +3920,14 @@ sub Data {
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/Database/postgresql/Version.pm
         'PostgreSQL 8.x or higher is required.' => 'PostgreSQL 8.x oder höher wird benötigt.',
 
-        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OS/DiskPartitionOTRS.pm
-        'OTRS Disk Partition' => 'KIX-Festplattenpartition',
+        # Perl Module: Kernel/System/SupportDataCollector/Plugin/OS/DiskPartitionKIX.pm
+        'KIX Disk Partition' => 'KIX-Festplattenpartition',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/OS/DiskSpace.pm
         'Disk Usage' => 'Festplatten-Verwendung',
-        'The partition where OTRS is located is almost full.' => 'Die Partition, auf der OTRS sich befindet, ist fast voll.',
-        'The partition where OTRS is located has no disk space problems.' =>
-            'Die Partition, auf der OTRS sich befindet, hat keine Platzprobleme.',
+        'The partition where KIX is located is almost full.' => 'Die Partition, auf der KIX sich befindet, ist fast voll.',
+        'The partition where KIX is located has no disk space problems.' =>
+            'Die Partition, auf der KIX sich befindet, hat keine Platzprobleme.',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/OS/DiskSpacePartitions.pm
         'Disk Partitions Usage' => 'Belegung der Festplatten-Partitionen',
@@ -4038,7 +3956,7 @@ sub Data {
         'There should be no more than 200 MB swap space used.' => 'Es sollten nicht mehr als 200 MB Auslagerungsspeicher verwendet werden.',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/ConfigSettings.pm
-        'OTRS' => 'OTRS',
+        'KIX' => 'KIX',
         'Config Settings' => 'Konfigurationseinstellungen',
         'Could not determine value.' => 'Konnte Wert nicht ermitteln.',
 
@@ -4084,7 +4002,7 @@ sub Data {
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/FileSystemWritable.pm
         'File System Writable' => 'Schreibbarkeit Dateisystem',
-        'The file system on your OTRS partition is not writable.' => 'Das Dateisystem auf Ihrer KIX-Partition ist nicht schreibbar.',
+        'The file system on your KIX partition is not writable.' => 'Das Dateisystem auf Ihrer KIX-Partition ist nicht schreibbar.',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/PackageDeployment.pm
         'Package Installation Status' => 'Paketinstallationsstatus',
@@ -4102,7 +4020,7 @@ sub Data {
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/SpoolMails.pm
         'Spooled Emails' => '',
-        'There are emails in var/spool that OTRS could not process.' => '',
+        'There are emails in var/spool that KIX could not process.' => '',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/KIX/SystemID.pm
         'Your SystemID setting is invalid, it should only contain digits.' =>
@@ -4144,12 +4062,12 @@ sub Data {
         'Time Settings' => 'Zeiteinstellungen',
         'Server time zone' => 'Serverzeitzone',
         'Computed server time offset' => 'Berechneter Serverzeitversatz',
-        'OTRS TimeZone setting (global time offset)' => 'KIX-Zeitzoneneinstellung (globaler Zeitversatz)',
+        'KIX TimeZone setting (global time offset)' => 'KIX-Zeitzoneneinstellung (globaler Zeitversatz)',
         'TimeZone may only be activated for systems running in UTC.' => 'Die TimeZone sollte nur für Systeme aktiviert werden, die auf Basis von UTC laufen.',
-        'OTRS TimeZoneUser setting (per-user time zone support)' => 'OTRS TimeZoneUser-Einstellung (Benutzerbasierte Zeitzonen-Unterstützung).',
-        'TimeZoneUser may only be activated for systems running in UTC that don\'t have an OTRS TimeZone set.' =>
+        'KIX TimeZoneUser setting (per-user time zone support)' => 'KIX TimeZoneUser-Einstellung (Benutzerbasierte Zeitzonen-Unterstützung).',
+        'TimeZoneUser may only be activated for systems running in UTC that don\'t have an KIX TimeZone set.' =>
             'Die TimeZoneUser sollte nur für Systeme aktiviert werden, die auf Basis von UTC laufen und TimeZone nicht aktiviert haben.',
-        'OTRS TimeZone setting for calendar ' => 'KIX-Zeitzoneneinstellung für Kalender',
+        'KIX TimeZone setting for calendar ' => 'KIX-Zeitzoneneinstellung für Kalender',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/Webserver/Apache/LoadedModules.pm
         'Webserver' => 'Webserver',
@@ -4157,8 +4075,8 @@ sub Data {
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/Webserver/Apache/MPMModel.pm
         'MPM model' => 'MPM-Modell',
-        'OTRS requires apache to be run with the \'prefork\' MPM model.' =>
-            'OTRS benötigt das Apache \'prefork\' MPM Modul',
+        'KIX requires apache to be run with the \'prefork\' MPM model.' =>
+            'KIX benötigt das Apache \'prefork\' MPM Modul',
 
         # Perl Module: Kernel/System/SupportDataCollector/Plugin/Webserver/Apache/Performance.pm
         'CGI Accelerator Usage' => 'Verwendung CGI-Beschleuniger',
@@ -4209,7 +4127,7 @@ sub Data {
         'Send unencrypted notification' => 'Unverschlüsselte Benachrichtigung senden',
 
         # Perl Module: Kernel/System/Web/InterfaceAgent.pm
-        'Panic, user authenticated but no user data can be found in OTRS DB!! Perhaps the user is invalid.' =>
+        'Panic, user authenticated but no user data can be found in KIX DB!! Perhaps the user is invalid.' =>
             'Achtung, der Benutzer wurde authentifiziert, aber es konnten keine Benutzerdaten in der Datenbank gefunden worden. Möglicherweise ist der Benutzer ungültig.',
         'Can`t remove SessionID' => 'Kann SessionID nicht enfernen',
         'Logout successful.' => 'Abmeldung erfolgreich.',
@@ -4534,18 +4452,12 @@ Ihr Helpdesk-Team
             'Prüft, ob eine E-Mail ein Follow-Up zu einem bestehenden Ticket ist, indem der Betreff nach einer gültigen Ticketnummer durchsucht wird.',
         'Checks the SystemID in ticket number detection for follow-ups (use "No" if SystemID has been changed after using the system).' =>
             'Überprüft die System-ID in der Ticketnummer-Erkennung bei FolloUps (Wählen Sie "Nein" wenn die System-ID während der Nutzung geändert wurde).',
-        'Checks the availability of KIX Business Solution™ for this system.' =>
-            'Überprüfe die Verfügbarkeit der OTRS Business Solution™ für dieses System.',
-        'Checks the entitlement status of KIX Business Solution™.' => 'Überprüfe den Berechtigungsstatus der OTRS Business Solution™ für dieses System.',
         'Chinese (Simplified)' => 'Chinesisch (vereinfacht)',
         'Chinese (Traditional)' => 'Chinesisch (traditionell)',
         'Choose for which kind of ticket changes you want to receive notifications.' =>
             'Für welche Veränderungen an Tickets möchten Sie Benachrichtigungen erhalten?',
         'Closed tickets (contact)' => 'Geschlossene Tickets (Ansprechpartner)',
         'Closed tickets (customer)' => 'Geschlossene Tickets (Kunden)',
-        'Cloud Services' => 'Cloud-Service',
-        'Cloud service admin module registration for the transport layer.' =>
-            'Cloud-Service-Admin-Modulregistrierung für den Transport-Layer.',
         'Collect support data for asynchronous plug-in modules.' => 'Sammelt Support Daten für asynchrone Erweiterungen.',
         'Column ticket filters for Ticket Overviews type "Small".' => 'Ticket-Filter-Spalte für Ticketübersichten vom Typ "Klein".',
         'Columns that can be filtered in the escalation view of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. Note: Only Ticket attributes, Dynamic Fields (DynamicField_NameX) and Customer attributes (e.g. CustomerUserPhone, CustomerCompanyName, ...) are allowed.' =>
@@ -4675,19 +4587,19 @@ Ihr Helpdesk-Team
         'Default display type for sender (From) names in AgentTicketZoom and CustomerTicketZoom.' =>
             'Standard-Anzeigetyp für Absender-Namen (Von) in AgentTicketZoom und CustomerTicketZoom.',
         'Default loop protection module.' => 'Standard "Loop Protection"-Modul',
-        'Default queue ID used by the system in the agent interface.' => 'Standard-Queue-ID welche von OTRS in der Agentenoberfläche verwendet wird.',
+        'Default queue ID used by the system in the agent interface.' => 'Standard-Queue-ID welche vom System in der Agentenoberfläche verwendet wird.',
         'Default skin for the agent interface (slim version).' => 'Standard-Skin für die Agentenoberfläche (Slim)',
         'Default skin for the agent interface.' => 'Standard-Skin für die Agentenoberfläche',
         'Default skin for the customer interface.' => 'Standard-Skin für das Kunden Interface.',
         'Default ticket ID used by the system in the agent interface.' =>
-            'Standard-Ticket-ID welche von OTRS in der Agentenoberfläche verwendet wird.',
+            'Standard-Ticket-ID welche vom System in der Agentenoberfläche verwendet wird.',
         'Default ticket ID used by the system in the customer interface.' =>
-            'Standard-Ticket-ID welche von OTRS in der Kundenoberfläche verwendet wird.',
+            'Standard-Ticket-ID welche vom System in der Kundenoberfläche verwendet wird.',
         'Default value for NameX' => 'Standardwert für NameX',
         'Define Actions where a settings button is available in the linked objects widget (LinkObject::ViewMode = "complex"). Please note that these Actions must have registered the following JS and CSS files: Core.AllocationList.css, Core.UI.AllocationList.js, Core.UI.Table.Sort.js, Core.Agent.TableFilters.js.' =>
             'Definieren Sie Actions, in denen im Verknüpfte-Objekte-Widget ein Einstellungen-Knopf verfügbar sein soll (LinkObject::ViewMode = "complex"). Bitte beachten Sie, dass für diese Actions die folgenden JS- und CSS-Dateien registriert sein müssen: Core.AllocationList.css, Core.UI.AllocationList.js, Core.UI.Table.Sort.js, Core.Agent.TableFilters.js.',
-        'Define a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the OTRS image path will be used. The second possiblity is to insert the link to the image.' =>
-            'Definiert einen Filter für die HTML-Ausgabe um Links hinter einer bestimmten Zeichenfolge hinzufügen. Dieses Element erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der OTRS-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
+        'Define a filter for html output to add links behind a defined string. The element Image allows two input kinds. At once the name of an image (e.g. faq.png). In this case the KIX image path will be used. The second possiblity is to insert the link to the image.' =>
+            'Definiert einen Filter für die HTML-Ausgabe um Links hinter einer bestimmten Zeichenfolge hinzufügen. Dieses Element erlaubt zwei Eingabearten. Zum einem den Namen eines Bildes (Beispielsweise faq.png). In diesem Fall wird der KIX-Bildpfad verwendet. Die zweite Möglichkeit ist, den Link zu dem Bild einzufügen.',
         'Define a mapping between variables of the contact data (keys) and dynamic fields of a ticket (values). The purpose is to store contact data in ticket dynamic fields. The dynamic fields must be present in the system and should be enabled for AgentTicketFreeText, so that they can be set/updated manually by the agent. They mustn\'t be enabled for AgentTicketPhone, AgentTicketEmail and AgentTicketCustomer. If they were, they would have precedence over the automatically set values. To use this mapping, you have to also activate the next setting below.' =>
             'Definiert eine Zuordnung zwischen Variablen der Ansprechpartner-Daten (Schlüssel) und dynamischen Feldern eines Ticket (Werte). Somit können Sie Ansprechpartner-Daten eines Tickets in dynamische Felder speichern. Die dynamischen Felder müssen im System vorhanden sein und sollten für AgentTicketFreeText aktiviert werden, damit sie eingestellt / manuell durch den Agenten aktualisiert werden können. Sie dürfen nicht für AgentTicketPhone, AgentTicketEmail und AgentTicketCustomer aktiviert werden. Wenn sie in diesen Masken aktiviert werden, werden später automatisch gesetzte Werte überschrieben werden. Um dieses Mapping zu verwenden, müssen Sie auch Sie die nächste Einstellung aktivieren.',
         'Define dynamic field name for end time. This field has to be manually added to the system as Ticket: "Date / Time" and must be activated in ticket creation screens and/or in any other ticket action screens.' =>
@@ -4794,6 +4706,8 @@ Ihr Helpdesk-Team
             'Bestimmt, ob dieser Screen im Agenten-Interface das Sperren des Tickets voraussetzt. Das Ticket wird (falls nötig) gesperrt und der aktuelle Agent wird als Bearbeiter gesetzt.',
         'Defines if agents should be allowed to login if they have no shared secret stored in their preferences and therefore are not using two-factor authentication.' =>
             'Steuert, ob Agenten, die die Zweifaktor-Authentifizierung nicht nutzen, sich im System einloggen dürfen.',
+        'Defines if backslash should be double quoted for LIKE-statements.' =>
+            'Steuert, ob Backslash in LIKE-Statements doppelt gequotet werden sollen',
         'Defines if composed messages have to be spell checked in the agent interface.' =>
             'Bestimmt, ob im Agenten-Interface eine Rechtschreibprüfung für Nachrichten vorgenommen werden muss.',
         'Defines if customers should be allowed to login if they have no shared secret stored in their preferences and therefore are not using two-factor authentication.' =>
@@ -5001,6 +4915,8 @@ Ihr Helpdesk-Team
         'Defines the default ticket type for new customer tickets in the customer interface.' =>
             'Definiert den Standard-Ticket-Typ für neue Kundentickets in der  Kundenoberfläche.',
         'Defines the default ticket type.' => 'Definiert den Standardtyp für ein Ticket.',
+        'Defines the default ticket unlock state in the ticket bulk screen of the agent interface.' =>
+            'Definiert die Standard-Ticketentsperrung in der \'Sammelaktion\'-Oberfläche im Agenten-Interface.',
         'Defines the default type for article in the customer interface.' =>
             'Definiert den Standard-Typ für Artikel im Kunden-Interface.',
         'Defines the default type of forwarded message in the ticket forward screen of the agent interface.' =>
@@ -5049,7 +4965,7 @@ Ihr Helpdesk-Team
         'Defines the format of responses in the ticket compose screen of the agent interface ([% Data.OrigFrom | html %] is From 1:1, [% Data.OrigFromName | html %] is only realname of From).' =>
             'Steuert das Format von Antworten im Ticket erstellen-Bildschirm im Agentenbereich ([% Data.OrigFrom | html %] entspricht genau dem Absender, [% Data.OrigFromName | html %] enthält nur den realen Namen des Absenders).',
         'Defines the fully qualified domain name of the system. This setting is used as a variable, KIX_CONFIG_FQDN which is found in all forms of messaging used by the application, to build links to the tickets within your system.' =>
-            'Definiert den Full Qualified Domain Name des OTRS Systems. Diese Einstellung wird als Variable KIX_CONFIG_FQDN genutzt, welche in allen Nachrichten-Formularen zu finden ist oder um Links zu Tickets in Ihrem OTRS System zu generieren.',
+            'Definiert den Full Qualified Domain Name des Systems. Diese Einstellung wird als Variable KIX_CONFIG_FQDN genutzt, welche in allen Nachrichten-Formularen zu finden ist oder um Links zu Tickets in Ihrem System zu generieren.',
         'Defines the groups every contact will be in (if CustomerGroupSupport is enabled and you don\'t want to manage every user for these groups).' =>
             'Steuert die Gruppen, in denen sich ein Ansprechpartner standardmäßig befinden soll (wenn CustomerGroupSupport aktiviert ist und Sie nicht jede Gruppenbeziehung für die Nutzer einzeln steuern möchten).',
         'Defines the height for the rich text editor component for this screen. Enter number (pixels) or percent value (relative).' =>
@@ -5154,10 +5070,6 @@ Ihr Helpdesk-Team
         'Defines the module that shows the currently loged in customers in the customer interface.' =>
             'Definiert das Modul das alle zur Zeit angemeldeten Kunden im Kunden-Interface anzeigt.',
         'Defines the module to authenticate customers.' => 'Definiert das Modul um Kunden zu authentifizieren.',
-        'Defines the module to display a notification if cloud services are disabled.' =>
-            'Legt das Modul fest, das eine Benachrichtigung anzeigt, wenn Cloud-Services abgeschaltet sind.',
-        'Defines the module to display a notification in different interfaces on different occasions for OTRS Business Solution™.' =>
-            'Legt das Modul fest, das zu unterschiedlichen Gelegenheiten eine Benachrichtigung zur OTRS Business Solution™ anzeigt,',
         'Defines the module to display a notification in the agent interface if the KIX Daemon is not running.' =>
             'Definiert das Modul, dass eine Benachrichtigung im Agentenbereich anzeigt, wenn der KIX Daemon nicht läuft.',
         'Defines the module to display a notification in the agent interface, if the agent is logged in while having out-of-office active.' =>
@@ -5182,8 +5094,8 @@ Ihr Helpdesk-Team
             'Definiert den Namen der Spalte, unter der die Benutzer-Identifier in der Eigenschaften-Tabelle gespeichert werden.',
         'Defines the name of the indicated calendar.' => 'Definiert den Namen des angezeigten Kalenders.',
         'Defines the name of the key for customer sessions.' => 'Definiert den Namen des Schlüssels für die Kunden-Sessions.',
-        'Defines the name of the session key. E.g. Session, SessionID or OTRS.' =>
-            'Definiert den Namen des Session-Schlüssels. Zum Beispiel: Session, SessionID oder OTRS',
+        'Defines the name of the session key. E.g. Session, SessionID or KIX.' =>
+            'Definiert den Namen des Session-Schlüssels. Zum Beispiel: Session, SessionID oder KIX',
         'Defines the name of the table where the user preferences are stored.' =>
             'Legt den Namen der Tabelle fest, in der Benutzereinstellungen gespeichert werden.',
         'Defines the next possible states after composing / answering a ticket in the ticket compose screen of the agent interface.' =>
@@ -5287,7 +5199,7 @@ Ihr Helpdesk-Team
         'Defines the system administrator\'s email address. It will be displayed in the error screens of the application.' =>
             'Definiert die E-Mail-Adresse des System-Administrators. Sie wird in den Fehleranzeigen des Programms angezeigt.',
         'Defines the system identifier. Every ticket number and http session string contains this ID. This ensures that only tickets which belong to your system will be processed as follow-ups (useful when communicating between two instances of KIX).' =>
-            'Definiert die System ID. Jede Ticketnummer und HTTP Sitzung enthält diese ID. Das stellt sicher, dass nur Tickets in das Ticketsystem aufgenommen werden, welche zum eigenen Ticketsystem gehören (nützlich, wenn zwischen zwei Instanzen von OTRS kommuniziert wird).',
+            'Definiert die System ID. Jede Ticketnummer und HTTP Sitzung enthält diese ID. Das stellt sicher, dass nur Tickets in das Ticketsystem aufgenommen werden, welche zum eigenen Ticketsystem gehören (nützlich, wenn zwischen zwei Instanzen von KIX kommuniziert wird).',
         'Defines the target attribute in the link to external customer database. E.g. \'AsPopup PopupType_TicketAction\'.' =>
             '',
         'Defines the target attribute in the link to external customer database. E.g. \'target="cdb"\'.' =>
@@ -5337,7 +5249,6 @@ Ihr Helpdesk-Team
         'Deletes requested sessions if they have timed out.' => 'Löscht die angefragte Session, wenn ein Timeout vorliegt.',
         'Delivers extended debugging information in the frontend in case any AJAX errors occur, if enabled.' =>
             '',
-        'Deploy and manage OTRS Business Solution™.' => 'Bereitstellung und Verwaltung der OTRS Business Solution ™.',
         'Determines if the list of possible queues to move to ticket into should be displayed in a dropdown list or in a new window in the agent interface. If "New Window" is set you can add a move note to the ticket.' =>
             '',
         'Determines if the statistics module may generate ticket lists.' =>
@@ -5373,8 +5284,6 @@ Ihr Helpdesk-Team
         'Disable restricted security for IFrames in IE. May be required for SSO to work in IE.' =>
             '',
         'Disables sending reminder notifications to the responsible agent of a ticket (Ticket::Responsible needs to be activated).' =>
-            '',
-        'Disables the communication between this system and KIX Group servers that provides cloud services. If active, some functionality will be lost such as system registration, support data sending, upgrading to and use of KIX Business Solution™, OTRS Verify™, OTRS News and product News dashboard widgets, among others.' =>
             '',
         'Disables the web installer (http://yourhost.example.com/kix/installer.pl), to prevent the system from being hijacked. If set to "No", the system can be reinstalled and the current basic configuration will be used to pre-populate the questions within the installer script. If not active, it also disables the GenericAgent, PackageManager and SQL Box.' =>
             '',
@@ -5728,9 +5637,9 @@ Ihr Helpdesk-Team
         'If enabled the daemon will redirect the standard output stream to a log file.' =>
             'Aktivieren um die Standard-Ausgabe des Daemons in eine Log-Datei umzuleiten.',
         'If enabled, KIX will deliver all CSS files in minified form. WARNING: If you turn this off, there will likely be problems in IE 7, because it cannot load more than 32 CSS files.' =>
-            'Wenn akiviert, liefert OTRS alle CSS-Dateien in minifizierter Form aus. WARNUNG: Das Abschalten dieser Einstellung wird im IE 7 wahrscheinlich Probleme verursachen, weil dieser Browser nicht mehr als 32 CSS-Dateien für eine Seite laden kann.',
+            'Wenn akiviert, liefert KIX alle CSS-Dateien in minifizierter Form aus. WARNUNG: Das Abschalten dieser Einstellung wird im IE 7 wahrscheinlich Probleme verursachen, weil dieser Browser nicht mehr als 32 CSS-Dateien für eine Seite laden kann.',
         'If enabled, KIX will deliver all JavaScript files in minified form.' =>
-            'Wenn aktiviert, liefert OTRS JavaScript-Dateien in minifizierter Form aus.',
+            'Wenn aktiviert, liefert KIX JavaScript-Dateien in minifizierter Form aus.',
         'If enabled, TicketPhone and TicketEmail will be open in new windows.' =>
             'Wenn aktiviert, werden TicketPhone und TicketEmail in neuen Fenstern geöffnet.',
         'If enabled, the KIX version tag will be removed from the Webinterface, the HTTP headers and the X-Headers of outgoing mails.' =>
@@ -5839,7 +5748,6 @@ Ihr Helpdesk-Team
         'Makes the session management use html cookies. If html cookies are disabled or if the client browser disabled html cookies, then the system will work as usual and append the session id to the links.' =>
             'Benutzt für das Session-Management HTML-Cookies. Wenn HTML-Cookies deaktiviert sind oder im Browser HTML-Cookies deaktiviert sind, arbeitet das System wie immer und fügt die Session-ID and Links an.',
         'Malay' => 'Malaysisch',
-        'Manage KIX Group cloud services.' => 'Verwaltet die Cloud-Services der KIX Gruppe.',
         'Manage PGP keys for email encryption.' => 'PGP-Schlüssel für E-Mail-Verschlüsselung verwalten.',
         'Manage POP3 or IMAP accounts to fetch email from.' => 'POP3- oder IMAP-Konten für das Abholen von E-Mail verwalten.',
         'Manage S/MIME certificates for email encryption.' => 'S/MIME-Zertifikate für E-Mail-Verschlüsselung verwalten.',
@@ -5943,8 +5851,8 @@ Ihr Helpdesk-Team
             'Anzahl von Tickets pro Seite in Suchergebnissen im Agentenbereich.',
         'Number of tickets to be displayed in each page of a search result in the customer interface.' =>
             'Anzahl der anzuzeigenen Tickets pro Seite in einem Suchergebnis in der Kundenoberfläche.',
-        'OTRS can use one or more readonly mirror databases for expensive operations like fulltext search or statistics generation. Here you can specify the DSN for the first mirror database.' =>
-            'OTRS kann eine oder mehrere Spiegeldatenbanken für aufwändige Operationen wie Volltextsuchen oder Statistikgenerierungen nutzen. Hier können Sie die DSN für die erste Spiegeldatenbank hinterlegen.',
+        'KIX can use one or more readonly mirror databases for expensive operations like fulltext search or statistics generation. Here you can specify the DSN for the first mirror database.' =>
+            'KIX kann eine oder mehrere Spiegeldatenbanken für aufwändige Operationen wie Volltextsuchen oder Statistikgenerierungen nutzen. Hier können Sie die DSN für die erste Spiegeldatenbank hinterlegen.',
         'Old: "%s" New: "%s"' => 'Alt: "%s" Neu: "%s"',
         'Online' => 'Online',
         'Open tickets (contact)' => 'Offene Tickets (Ansprechpartner)',
@@ -6060,7 +5968,6 @@ Ihr Helpdesk-Team
         'Replaces the original sender with current customer\'s email address on compose answer in the ticket compose screen of the agent interface.' =>
             '',
         'Reports' => 'Berichte',
-        'Reports (OTRS Business Solution™)' => 'Berichte (OTRS Business Solution™)',
         'Reprocess mails from spool directory that could not be imported in the first place.' =>
             '',
         'Required permissions to change the customer of a ticket in the agent interface.' =>
@@ -6599,8 +6506,6 @@ Ihr Helpdesk-Team
             '',
         'Specify how many sub directory levels to use when creating cache files. This should prevent too many cache files being in one directory.' =>
             '',
-        'Specify the channel to be used to fetch OTRS Business Solution™ updates. Warning: Development releases might not be complete, your system might experience unrecoverable errors and on extreme cases could become unresponsive!' =>
-            '',
         'Specify the password to authenticate for the first mirror database.' =>
             'Geben Sie das Kennwort für die Authentifikation mit der ersten Spiegeldatenbank an.',
         'Specify the username to authenticate for the first mirror database.' =>
@@ -6676,9 +6581,9 @@ Ihr Helpdesk-Team
             'Der Wert des \'Von\'-Feldes',
         'This event module stores attributes from CustomerUser as DynamicFields tickets. Please see the setting above for how to configure the mapping.' =>
             '',
-        'This is the default orange - black skin for the customer interface.' =>
-            '',
-        'This is the default orange - black skin.' => '',
+        'This is the default green skin for the customer interface.' =>
+            'Das ist die grüne Standardoberfläche für das Kundenfrontend.',
+        'This is the default green skin.' => 'Das ist die grüne Standardoberfläche.',
         'This module and its PreRun() function will be executed, if defined, for every request. This module is useful to check some user options or to display news about new applications.' =>
             '',
         'This module is part of the admin area of KIX.' => '',

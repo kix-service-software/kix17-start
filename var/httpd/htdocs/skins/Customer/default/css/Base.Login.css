@@ -1,0 +1,106 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+    #LoginLogo {
+        background-repeat: no-repeat;
+    }
+    #LoginResponsiveLogo {
+        display: none;
+    }
+   .LoginScreen {
+        height: 100%;
+    }
+   .LoginScreen > .MainBox {
+        padding-top: 100px;
+    }
+
+    .LoginScreen .CenterBox {
+        width: 500px;
+        margin: auto;
+    }
+
+    .LoginBox {
+        height: auto;
+        border-radius: 5px;
+        position: relative;
+    }
+    .LoginBox input[type="text"],
+    .LoginBox input[type="email"],
+    .LoginBox input[type="password"] {
+        width: 250px;
+    }
+    .LoginBox .WidgetSimple {
+        background: transparent;
+        margin-bottom: 0px;
+        border: none;
+    }
+
+    .LoginBox .Welcome {
+        margin: 40px 0 0;
+        text-align: center;
+        width: 100%;
+        display: block;
+        min-height: 40px;
+    }
+
+    .LoginBox .Welcome h2 {
+       font-size: 24px;
+       font-weight: bold;
+    }
+
+    .LoginBox #LostPasswordLink {
+        padding-top: 2px;
+    }
+
+    .LoginBox .WidgetSimple > .Header {
+        background: transparent;
+        padding: 0px;
+        text-align: center;
+        border: 0px solid transparent;
+    }
+
+    .LoginBox .WidgetSimple .Header > h2 {
+        background: none;
+        font-size: 16px;
+        border: none;
+    }
+
+    .LoginBox .WidgetSimple .Header > h2:before,
+    .LoginBox .WidgetSimple .Header > h2:after {
+        display: none;
+    }
+
+    .LoginBox .WidgetSimple .Content {
+        border: none;
+        background: transparent;
+        padding-bottom: 20px;
+    }
+
+    .LoginBox #LostPasswordLink {
+        padding-top: 2px;
+    }
+
+    .BackToLogin {
+        margin-top: 10px;
+    }
+
+    .SystemMessageLoginBox {
+        margin-bottom: 10px;
+        padding: 10px;
+        height: auto;
+        border-radius: 5px;
+    }
+
+}

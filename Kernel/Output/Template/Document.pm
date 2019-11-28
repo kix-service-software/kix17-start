@@ -9,7 +9,6 @@
 # --
 
 package Kernel::Output::Template::Document;
-## no critic(Perl::Critic::Policy::OTRS::RequireCamelCase)
 
 use strict;
 use warnings;

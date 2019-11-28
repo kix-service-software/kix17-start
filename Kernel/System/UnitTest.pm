@@ -16,6 +16,7 @@ use warnings;
 use Term::ANSIColor();
 use SOAP::Lite;
 use FileHandle;
+use Time::HiRes;
 
 use Kernel::System::ObjectManager;
 
@@ -70,21 +71,9 @@ sub new {
 
     $Self->{Output} = $Param{Output} || 'ASCII';
 
-    $Self->{ANSI} = $Param{ANSI};
+    $Self->{Filename} = $Param{Filename};
 
-    if ( $Self->{Output} eq 'HTML' ) {
-        print "\n"
-            . "<html>\n"
-            . "<head>\n"
-            . "    <title>"
-            . $Kernel::OM->Get('Kernel::Config')->Get('Product')
-            . " "
-            . $Kernel::OM->Get('Kernel::Config')->Get('Version')
-            . " - Test Summary</title>\n"
-            . "</head>\n"
-            . "<body>\n"
-            . "    <a name='top'></a>\n";
-    }
+    $Self->{ANSI} = $Param{ANSI};
 
     $Self->{XML}     = undef;
     $Self->{XMLUnit} = '';
@@ -100,12 +89,9 @@ sub new {
 Run all tests located in scripts/test/*.t and print result to stdout.
 
     $UnitTestObject->Run(
-        Name                   => 'JSON:User:Auth',  # optional, control which tests to select
-        Directory              => 'Selenium',        # optional, control which tests to select
-        SubmitURL              => $URL,              # optional, send results to unit test result server
-        SubmitResultAsExitCode => $URL,              # optional, specify if exit code should not indicate if
-                                                     #   tests were ok/not ok, but if submission was successful instead.
-        Verbose                => 1,                 # optional (default 0), only show result details for all tests, not just failing
+        Name      => 'JSON:User:Auth',  # optional, control which tests to select
+        Directory => 'Cache',           # optional, control which directory to select
+        Verbose   => 1,                 # optional (default 0), only show result details for all tests, not just failing
     );
 
 =cut
@@ -132,14 +118,46 @@ sub Run {
         Recursive => 1,
     );
 
-    my $StartTime = $Kernel::OM->Get('Kernel::System::Time')->SystemTime();
-    my $Product   = $Param{Product}
+    my $StartTime      = Time::HiRes::time();
+    my $StartTimestamp = $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp();
+    my $Product        = $Param{Product}
         || $Kernel::OM->Get('Kernel::Config')->Get('Product') . " "
         . $Kernel::OM->Get('Kernel::Config')->Get('Version');
 
-    $Self->{Product} = $Product;    # we need this in the Selenium object
+    $Self->{Product} = $Product;
 
     my @Names = split( /:/, $Param{Name} || '' );
+
+    $Self->{Content}     = '';
+    $Self->{HTMLContent} = '';
+    if ( $Self->{Output} eq 'HTML' ) {
+        if ( $Self->{Filename} ) {
+            $Self->{Content} = "<!DOCTYPE html>\n"
+                . "<html>\n"
+                . "<head>\n"
+                . "    <title>"
+                . $Kernel::OM->Get('Kernel::Config')->Get('Product')
+                . " "
+                . $Kernel::OM->Get('Kernel::Config')->Get('Version')
+                . " - Test Summary</title>\n"
+                . "</head>\n"
+                . "<body>\n"
+                . "    <a name='top'></a>\n";
+        }
+        else {
+            print "\n"
+                . "<html>\n"
+                . "<head>\n"
+                . "    <title>"
+                . $Kernel::OM->Get('Kernel::Config')->Get('Product')
+                . " "
+                . $Kernel::OM->Get('Kernel::Config')->Get('Version')
+                . " - Test Summary</title>\n"
+                . "</head>\n"
+                . "<body>\n"
+                . "    <a name='top'></a>\n";
+        }
+    }
 
     $Self->{TestCountOk}    = 0;
     $Self->{TestCountNotOk} = 0;
@@ -172,7 +190,7 @@ sub Run {
                 # Make sure every UT uses its own clean environment.
                 local $Kernel::OM = Kernel::System::ObjectManager->new(
                     'Kernel::System::Log' => {
-                        LogPrefix => 'OTRS-otrs.UnitTest',
+                        LogPrefix => 'KIX-UnitTest',
                     },
                 );
 
@@ -210,84 +228,237 @@ sub Run {
         }
     }
 
-    my $Time = $Kernel::OM->Get('Kernel::System::Time')->SystemTime() - $StartTime;
-    $ResultSummary{TimeTaken} = $Time;
-    $ResultSummary{Time}      = $Kernel::OM->Get('Kernel::System::Time')->SystemTime2TimeStamp(
-        SystemTime => $Kernel::OM->Get('Kernel::System::Time')->SystemTime(),
-    );
-    $ResultSummary{Product} = $Product;
-    $ResultSummary{Host}    = $Kernel::OM->Get('Kernel::Config')->Get('FQDN');
-    $ResultSummary{Perl}    = sprintf "%vd", $^V;
+    my $TimeDiff = Time::HiRes::time() - $StartTime;
+    my $Time     = sprintf("%.3f", $TimeDiff);
+    
     my %OSInfo = $Kernel::OM->Get('Kernel::System::Environment')->OSInfoGet();
-    $ResultSummary{OS}        = $OSInfo{OS};
-    $ResultSummary{Vendor}    = $OSInfo{OSName};
-    $ResultSummary{Database}  = lc $Kernel::OM->Get('Kernel::System::DB')->Version();
-    $ResultSummary{TestOk}    = $Self->{TestCountOk};
-    $ResultSummary{TestNotOk} = $Self->{TestCountNotOk};
+
+    $ResultSummary{Time}          = $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp();
+    $ResultSummary{Timestamp}     = $StartTimestamp;
+    $ResultSummary{TimeTaken}     = $Time;
+    $ResultSummary{Product}       = $Product;
+    $ResultSummary{ConfigProduct} = $Kernel::OM->Get('Kernel::Config')->Get('Product');
+    $ResultSummary{ConfigVersion} = $Kernel::OM->Get('Kernel::Config')->Get('Version');
+    $ResultSummary{Host}          = $Kernel::OM->Get('Kernel::Config')->Get('FQDN');
+    $ResultSummary{Perl}          = sprintf "%vd", $^V;
+    $ResultSummary{OS}            = $OSInfo{OS};
+    $ResultSummary{Vendor}        = $OSInfo{OSName};
+    $ResultSummary{Database}      = lc $Kernel::OM->Get('Kernel::System::DB')->Version();
+    $ResultSummary{TestOk}        = $Self->{TestCountOk};
+    $ResultSummary{TestNotOk}     = $Self->{TestCountNotOk};
 
     $Self->_PrintSummary(%ResultSummary);
-    if ( $Self->{Content} ) {
-        print $Self->{Content};
-    }
 
-    my $XML = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n";
-    $XML .= "<otrs_test>\n";
-    $XML .= "<Summary>\n";
-    for my $Key ( sort keys %ResultSummary ) {
-        $ResultSummary{$Key} =~ s/&/&amp;/g;
-        $ResultSummary{$Key} =~ s/</&lt;/g;
-        $ResultSummary{$Key} =~ s/>/&gt;/g;
-        $ResultSummary{$Key} =~ s/"/&quot;/g;
-        $XML .= "  <Item Name=\"$Key\">$ResultSummary{$Key}</Item>\n";
-    }
-    $XML .= "</Summary>\n";
-    for my $Key ( sort keys %{ $Self->{XML}->{Test} } ) {
-
-        # extract duration time
-        my $Duration = $Self->{Duration}->{$Key};
-
-        $XML .= "<Unit Name=\"$Key\" Duration=\"$Duration\">\n";
-
-        for my $TestCount ( sort { $a <=> $b } keys %{ $Self->{XML}->{Test}->{$Key} } ) {
-            my $Result  = $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Result};
-            my $Content = $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Name};
-            $Content =~ s/&/&amp;/g;
-            $Content =~ s/</&lt;/g;
-            $Content =~ s/>/&gt;/g;
-
-            # Replace characters that are invalid in XML (https://www.w3.org/TR/REC-xml/#charsets)
-            $Content =~ s/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/"\x{FFFD}"/eg;
-            $XML .= qq|  <Test Result="$Result" Count="$TestCount">$Content</Test>\n|;
+    if ( $Self->{Output} eq 'HTML' ) {
+        if ( $Self->{Filename} ) {
+            $Self->{Content} .= $Self->{HTMLContent}. "\n"
+                . "</body>\n"
+                . "</html>";
         }
-
-        $XML .= "</Unit>\n";
+        else {
+            print $Self->{HTMLContent} . "\n"
+                . "</body>\n"
+                . "</html>";
+        }
     }
-    $XML .= "</otrs_test>\n";
 
     if ( $Self->{Output} eq 'XML' ) {
-        print $XML;
+        $Self->{Content}  = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n";
+        $Self->{Content} .= "<kix_test>\n";
+        $Self->{Content} .= "<Summary>\n";
+        for my $Key ( sort keys %ResultSummary ) {
+            $ResultSummary{$Key} =~ s/&/&amp;/g;
+            $ResultSummary{$Key} =~ s/</&lt;/g;
+            $ResultSummary{$Key} =~ s/>/&gt;/g;
+            $ResultSummary{$Key} =~ s/"/&quot;/g;
+            $Self->{Content} .= "  <Item Name=\"$Key\">$ResultSummary{$Key}</Item>\n";
+        }
+        $Self->{Content} .= "</Summary>\n";
+        for my $Key ( sort keys %{ $Self->{XML}->{Test} } ) {
+
+            # extract duration time
+            my $Duration = $Self->{Duration}->{$Key};
+
+            $Self->{Content} .= "<Unit Name=\"$Key\" Duration=\"$Duration\">\n";
+
+            for my $TestCount ( sort { $a <=> $b } keys %{ $Self->{XML}->{Test}->{$Key} } ) {
+                my $Result  = $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Result};
+                my $Content = $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Name} . ' (' . $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Message} . ')';
+                $Content =~ s/&/&amp;/g;
+                $Content =~ s/</&lt;/g;
+                $Content =~ s/>/&gt;/g;
+
+                # Replace characters that are invalid in XML (https://www.w3.org/TR/REC-xml/#charsets)
+                $Content =~ s/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/"\x{FFFD}"/eg;
+                $Self->{Content} .= qq|  <Test Result="$Result" Count="$TestCount">$Content</Test>\n|;
+            }
+
+            $Self->{Content} .= "</Unit>\n";
+        }
+        $Self->{Content} .= "</kix_test>\n";
+
+        # print xml to console if now filename is given
+        if ( !$Self->{Filename} ) {
+            print $Self->{Content};
+        }
     }
 
-    if ( $Param{SubmitURL} ) {
-        $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput( \$XML );
+    if ( $Self->{Output} eq 'xUnit' ) {
+        # head of xunit xml
+        $Self->{Content} = '<?xml version="1.0" encoding="utf-8" ?>' . "\n";
 
-        my $RPC = SOAP::Lite->new(
-            proxy => $Param{SubmitURL},
-            uri   => 'http://localhost/Core',
+        # prepare testsuites name
+        my $TestSuitesName = $ResultSummary{Product} . '//' . $ResultSummary{OS} . ' ' . $ResultSummary{Vendor} . '//' . $ResultSummary{Database} . '//Perl ' . $ResultSummary{Perl} . '//' . $ResultSummary{Time};
+        $TestSuitesName    =~ s/&/&amp;/g;
+        $TestSuitesName    =~ s/</&lt;/g;
+        $TestSuitesName    =~ s/>/&gt;/g;
+        $TestSuitesName    =~ s/"/&quot;/g;
+
+        # prepare testsuites timestamp
+        my $TestSuitesTimestamp = $ResultSummary{Timestamp} || '';
+        $TestSuitesTimestamp    =~ s/\s/T/;
+
+        # prepare summary for tag testsuites
+        $Self->{Content} .= '<testsuites';
+        $Self->{Content} .= ' name="' . $TestSuitesName . '"';
+        $Self->{Content} .= ' tests="' . ( $ResultSummary{TestOk} + $ResultSummary{TestNotOk} ) . '"';
+        $Self->{Content} .= ' failures="' . $ResultSummary{TestNotOk} . '"';
+        $Self->{Content} .= ' errors="0"';
+        $Self->{Content} .= ' disabled="0"';
+        $Self->{Content} .= ' timestamp="' . $TestSuitesTimestamp . '"';
+        $Self->{Content} .= ' time="' . $ResultSummary{TimeTaken} . '"';
+        $Self->{Content} .= '>' . "\n";
+
+        # process test units
+        my $TestSuiteID = 0;
+        for my $Key ( sort keys %{ $Self->{XML}->{Test} } ) {
+
+            # extract duration time
+            my $Duration = $Self->{Duration}->{$Key};
+
+            # prepare timestamp
+            my $Timestamp = $Self->{Timestamp}->{$Key} || '';
+            $Timestamp    =~ s/\s/T/;
+
+            # prepare test count
+            my $Tests = keys( %{ $Self->{XML}->{Test}->{$Key} } );
+
+            # prepare failures count
+            my $Failures = 0;
+            for my $TestCount ( keys( %{ $Self->{XML}->{Test}->{$Key} } ) ) {
+                if ( $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Result} eq 'not ok' ) {
+                    $Failures += 1;
+                }
+            }
+
+            # generate testsuite name
+            my $TestSuiteName = $Key;
+            $TestSuiteName    =~ s/^.+\/scripts\/test\/(.+)\.t$/$1/;
+            $TestSuiteName    =~ s/&/&amp;/g;
+            $TestSuiteName    =~ s/</&lt;/g;
+            $TestSuiteName    =~ s/>/&gt;/g;
+            $TestSuiteName    =~ s/"/&quot;/g;
+
+            # prepare summary for tag testsuite
+            $Self->{Content} .= '  <testsuite';
+            $Self->{Content} .= ' id="' . $TestSuiteID . '"';
+            $Self->{Content} .= ' name="' . $TestSuiteName . '"';
+            $Self->{Content} .= ' hostname="' . $ResultSummary{Host} . '"';
+            $Self->{Content} .= ' tests="' . $Tests . '"';
+            $Self->{Content} .= ' failures="' . $Failures . '"';
+            $Self->{Content} .= ' errors="0"';
+            $Self->{Content} .= ' disabled="0"';
+            $Self->{Content} .= ' skipped="0"';
+            $Self->{Content} .= ' timestamp="' . $Timestamp . '"';
+            $Self->{Content} .= ' time="' . $Duration . '"';
+            $Self->{Content} .= '>' . "\n";
+
+            # add properties
+            $Self->{Content} .= '    <properties>' . "\n";
+            $Self->{Content} .= '      <property';
+            $Self->{Content} .= ' name="Product"';
+            $Self->{Content} .= ' value="' . $ResultSummary{Product} . '"';
+            $Self->{Content} .= '/>' . "\n";
+            $Self->{Content} .= '      <property';
+            $Self->{Content} .= ' name="Software"';
+            $Self->{Content} .= ' value="' . $ResultSummary{ConfigProduct} . ' ' . $ResultSummary{ConfigVersion} . '"';
+            $Self->{Content} .= '/>' . "\n";
+            $Self->{Content} .= '      <property';
+            $Self->{Content} .= ' name="OS"';
+            $Self->{Content} .= ' value="' . $ResultSummary{OS} . ' ' . $ResultSummary{Vendor} . '"';
+            $Self->{Content} .= '/>' . "\n";
+            $Self->{Content} .= '      <property';
+            $Self->{Content} .= ' name="Perl"';
+            $Self->{Content} .= ' value="' . $ResultSummary{Perl} . '"';
+            $Self->{Content} .= '/>' . "\n";
+            $Self->{Content} .= '      <property';
+            $Self->{Content} .= ' name="Database"';
+            $Self->{Content} .= ' value="' . $ResultSummary{Database} . '"';
+            $Self->{Content} .= '/>' . "\n";
+            $Self->{Content} .= '    </properties>' . "\n";
+
+            for my $TestCount ( sort { $a <=> $b } keys %{ $Self->{XML}->{Test}->{$Key} } ) {
+                # generate testcase name
+                my $TestCaseName = $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Name};
+                $TestCaseName    =~ s/&/&amp;/g;
+                $TestCaseName    =~ s/</&lt;/g;
+                $TestCaseName    =~ s/>/&gt;/g;
+                $TestCaseName    =~ s/"/&quot;/g;
+                
+                # prepare summary for tag testcase
+                $Self->{Content} .= '    <testcase';
+                $Self->{Content} .= ' name="' . sprintf("%05d-%s", $TestCount, $TestCaseName) . '"';
+                $Self->{Content} .= ' classname="' . $TestSuiteName . '"';
+                $Self->{Content} .= ' status="' . $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Result} . '"';
+                if ( $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Duration} ) {
+                    $Self->{Content} .= ' time="' . $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Duration} . '"';
+                }
+                $Self->{Content} .= '>';
+
+                if ( $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Result} eq 'not ok' ) {
+                    my $Content = $Self->{XML}->{Test}->{$Key}->{$TestCount}->{Message};
+                    $Content    =~ s/&/&amp;/g;
+                    $Content    =~ s/</&lt;/g;
+                    $Content    =~ s/>/&gt;/g;
+                    $Content    =~ s/"/&quot;/g;
+
+                    # Replace characters that are invalid in XML (https://www.w3.org/TR/REC-xml/#charsets)
+                    $Content =~ s/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/"\x{FFFD}"/eg;
+
+                    $Self->{Content} .= '<failure';
+                    $Self->{Content} .= ' message="' . $Content . '"';
+                    $Self->{Content} .= ' type="failure"';
+                    $Self->{Content} .= '></failure>';
+                }
+
+                # close tag testcase
+                $Self->{Content} .= '</testcase>' . "\n";
+            }
+
+            # close tag testsuite
+            $Self->{Content} .= '  </testsuite>' . "\n";
+
+            # increment testsuite id
+            $TestSuiteID += 1;
+        }
+
+        # close tag testsuites
+        $Self->{Content} .= '</testsuites>' . "\n";
+
+        # print xunit to console if now filename is given
+        if ( !$Self->{Filename} ) {
+            print $Self->{Content};
+        }
+    }
+
+    if ( $Self->{Filename} ) {
+        my $FileLocation = $Kernel::OM->Get('Kernel::System::Main')->FileWrite(
+            Location   => $Self->{Filename},
+            Content    => \$Self->{Content},
+            Mode       => 'utf8',
+            Type       => 'Local',
+            Permission => '644',
         );
-
-        eval {
-            my $Key = $RPC->Submit( '', '', $XML )->result();
-        };
-        if ($@) {
-            die "Could not submit results to server: $@";
-        }
-
-        print "Sent results to $Param{SubmitURL}.\n";
-
-        if ( $Param{SubmitResultAsExitCode} ) {
-            return 1;
-        }
     }
 
     return $ResultSummary{TestNotOk} ? 0 : 1;
@@ -314,23 +485,23 @@ if it's true, returning 1 in this case or undef, otherwise.
 =cut
 
 sub True {
-    my ( $Self, $True, $Name ) = @_;
+    my ( $Self, $True, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. True(\$A, \'Test Name\')!'
         );
-        $Self->_Print( 0, 'ERROR: Need Name! E. g. True(\$A, \'Test Name\')' );
+        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. True(\$A, \'Test Name\')', $StartTime );
         return;
     }
 
     if ($True) {
-        $Self->_Print( 1, $Name );
+        $Self->_Print( 1, $Name, 'is \'True\'', $StartTime );
         return 1;
     }
     else {
-        $Self->_Print( 0, $Name );
+        $Self->_Print( 0, $Name, 'is \'False\', should be \'True\'', $StartTime );
         return;
     }
 }
@@ -345,23 +516,23 @@ for a false value instead.
 =cut
 
 sub False {
-    my ( $Self, $False, $Name ) = @_;
+    my ( $Self, $False, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. False(\$A, \'Test Name\')!'
         );
-        $Self->_Print( 0, 'ERROR: Need Name! E. g. False(\$A, \'Test Name\')' );
+        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. False(\$A, \'Test Name\')', $StartTime );
         return;
     }
 
     if ( !$False ) {
-        $Self->_Print( 1, $Name );
+        $Self->_Print( 1, $Name, 'is \'False\'', $StartTime );
         return 1;
     }
     else {
-        $Self->_Print( 0, $Name );
+        $Self->_Print( 0, $Name, 'is \'True\', should be \'False\'', $StartTime );
         return;
     }
 }
@@ -387,35 +558,35 @@ Returns 1 if the values were equal, or undef otherwise.
 =cut
 
 sub Is {
-    my ( $Self, $Test, $ShouldBe, $Name ) = @_;
+    my ( $Self, $Test, $ShouldBe, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. Is(\$A, \$B, \'Test Name\')!'
         );
-        $Self->_Print( 0, 'ERROR: Need Name! E. g. Is(\$A, \$B, \'Test Name\')' );
+        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. Is(\$A, \$B, \'Test Name\')', $StartTime );
         return;
     }
 
     if ( !defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 1, "$Name (is 'undef')" );
+        $Self->_Print( 1, $Name, 'is \'undef\'', $StartTime );
         return 1;
     }
     elsif ( !defined $Test && defined $ShouldBe ) {
-        $Self->_Print( 0, "$Name (is 'undef' should be '$ShouldBe')" );
+        $Self->_Print( 0, $Name, 'is \'undef\', should be \'' . $ShouldBe . '\'', $StartTime );
         return;
     }
     elsif ( defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 0, "$Name (is '$Test' should be 'undef')" );
+        $Self->_Print( 0, $Name, 'is \'' . $Test . '\', should be \'undef\'', $StartTime );
         return;
     }
     elsif ( $Test eq $ShouldBe ) {
-        $Self->_Print( 1, "$Name (is '$ShouldBe')" );
+        $Self->_Print( 1, $Name, 'is \'' . $ShouldBe . '\'', $StartTime );
         return 1;
     }
     else {
-        $Self->_Print( 0, "$Name (is '$Test' should be '$ShouldBe')" );
+        $Self->_Print( 0, $Name, 'is \'' . $Test . '\', should be \'' . $ShouldBe . '\'', $StartTime );
         return;
     }
 }
@@ -430,35 +601,35 @@ for inequality instead.
 =cut
 
 sub IsNot {
-    my ( $Self, $Test, $ShouldBe, $Name ) = @_;
+    my ( $Self, $Test, $ShouldBe, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')!'
         );
-        $Self->_Print( 0, 'ERROR: Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')' );
+        $Self->_Print( 0, '->>No Name!<<-' , 'ERROR: Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')', $StartTime );
         return;
     }
 
     if ( !defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 0, "$Name (is 'undef')" );
+        $Self->_Print( 0, $Name, 'is \'undef\'', $StartTime );
         return;
     }
     elsif ( !defined $Test && defined $ShouldBe ) {
-        $Self->_Print( 1, "$Name (is 'undef')" );
+        $Self->_Print( 1, $Name. 'is \'undef\'', $StartTime );
         return 1;
     }
     elsif ( defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 1, "$Name (is '$Test')" );
+        $Self->_Print( 1, $Name, 'is \'' . $Test . '\'', $StartTime );
         return 1;
     }
     if ( $Test ne $ShouldBe ) {
-        $Self->_Print( 1, "$Name (is '$Test')" );
+        $Self->_Print( 1, $Name, 'is \'' . $Test . '\'', $StartTime );
         return 1;
     }
     else {
-        $Self->_Print( 0, "$Name (is '$Test' should not be '$ShouldBe')" );
+        $Self->_Print( 0, $Name, 'is \'' . $Test . '\', should not be \'' . $ShouldBe . '\'', $StartTime );
         return;
     }
 }
@@ -486,14 +657,14 @@ Returns 1 if the data structures are the same, or undef otherwise.
 =cut
 
 sub IsDeeply {
-    my ( $Self, $Test, $ShouldBe, $Name ) = @_;
+    my ( $Self, $Test, $ShouldBe, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. Is(\$A, \$B, \'Test Name\')!'
         );
-        $Self->_Print( 0, 'ERROR: Need Name! E. g. Is(\$A, \$B, \'Test Name\')' );
+        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. Is(\$A, \$B, \'Test Name\')', $StartTime );
         return;
     }
 
@@ -503,25 +674,25 @@ sub IsDeeply {
     );
 
     if ( !defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 1, "$Name (is 'undef')" );
+        $Self->_Print( 1, $Name, 'is \'undef\'', $StartTime );
         return 1;
     }
     elsif ( !defined $Test && defined $ShouldBe ) {
-        $Self->_Print( 0, "$Name (is 'undef' should be defined)" );
+        $Self->_Print( 0, $Name, 'is \'undef\', should be defined', $StartTime );
         return;
     }
     elsif ( defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 0, "$Name (is defined should be 'undef')" );
+        $Self->_Print( 0, $Name, 'is defined, should be \'undef\'', $StartTime );
         return;
     }
     elsif ( !$Diff ) {
-        $Self->_Print( 1, "$Name matches expected value" );
+        $Self->_Print( 1, $Name, 'matches expected value', $StartTime );
         return 1;
     }
     else {
         my $ShouldBeDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($ShouldBe);
         my $TestDump     = $Kernel::OM->Get('Kernel::System::Main')->Dump($Test);
-        $Self->_Print( 0, "$Name (is '$TestDump' should be '$ShouldBeDump')" );
+        $Self->_Print( 0, $Name, 'is \'' . $TestDump . '\', should be \'' . $ShouldBeDump . '\'', $StartTime );
         return;
     }
 }
@@ -536,14 +707,14 @@ for inequality instead.
 =cut
 
 sub IsNotDeeply {
-    my ( $Self, $Test, $ShouldBe, $Name ) = @_;
+    my ( $Self, $Test, $ShouldBe, $Name, $StartTime ) = @_;
 
     if ( !$Name ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
             Message  => 'Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')!'
         );
-        $Self->_Print( 0, 'ERROR: Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')' );
+        $Self->_Print( 0, '->>No Name!<<-', 'ERROR: Need Name! E. g. IsNot(\$A, \$B, \'Test Name\')', $StartTime );
         return;
     }
 
@@ -553,28 +724,25 @@ sub IsNotDeeply {
     );
 
     if ( !defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 0, "$Name (is 'undef')" );
+        $Self->_Print( 0, $Name, 'is \'undef\'', $StartTime );
         return;
     }
     elsif ( !defined $Test && defined $ShouldBe ) {
-        $Self->_Print( 1, "$Name (is 'undef')" );
+        $Self->_Print( 1, $Name, 'is \'undef\'', $StartTime );
         return 1;
     }
     elsif ( defined $Test && !defined $ShouldBe ) {
-        $Self->_Print( 1, "$Name (differs from expected value)" );
+        $Self->_Print( 1, $Name, 'differs from expected value', $StartTime );
         return 1;
     }
 
     if ($Diff) {
-        $Self->_Print( 1, "$Name (The structures are not equal.)" );
+        $Self->_Print( 1, $Name, 'the structures are not equal', $StartTime );
         return 1;
     }
     else {
-
-        #        $Self->_Print( 0, "$Name (matches the expected value)" );
         my $TestDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Test);
-        $Self->_Print( 0, "$Name (The structures are equal: '$TestDump')" );
-
+        $Self->_Print( 0, $Name, 'the structures are equal: \'' . $TestDump . '\'', $StartTime );
         return;
     }
 }
@@ -735,49 +903,98 @@ sub _PrintSummary {
 
     # show result
     if ( $Self->{Output} eq 'HTML' ) {
-        print "<table width='600' border='1'>\n";
-        if ( $ResultSummary{TestNotOk} ) {
-            print "<tr><td bgcolor='red' colspan='2'>Summary</td></tr>\n";
+        if ( $Self->{Filename} ) {
+            $Self->{Content} .= "<table width='600' border='1'>\n";
+            if ( $ResultSummary{TestNotOk} ) {
+                $Self->{Content} .= "<tr><td bgcolor='red' colspan='2'>Summary</td></tr>\n";
+            }
+            else {
+                $Self->{Content} .= "<tr><td bgcolor='green' colspan='2'>Summary</td></tr>\n";
+            }
+            $Self->{Content} .= "<tr><td>Product:  </td><td>$ResultSummary{Product}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>Test Time:</td><td>$ResultSummary{TimeTaken} s</td></tr>\n";
+            $Self->{Content} .= "<tr><td>Time:     </td><td>$ResultSummary{Time}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>Timestamp:</td><td>$ResultSummary{Timestamp}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>Host:     </td><td>$ResultSummary{Host}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>Perl:     </td><td>$ResultSummary{Perl}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>OS:       </td><td>$ResultSummary{OS}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>Vendor:   </td><td>$ResultSummary{Vendor}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>Database: </td><td>$ResultSummary{Database}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>TestOk:   </td><td>$ResultSummary{TestOk}</td></tr>\n";
+            $Self->{Content} .= "<tr><td>TestNotOk:</td><td>$ResultSummary{TestNotOk}</td></tr>\n";
+            $Self->{Content} .= "</table><br>\n";
         }
         else {
-            print "<tr><td bgcolor='green' colspan='2'>Summary</td></tr>\n";
+            print "<table width='600' border='1'>\n";
+            if ( $ResultSummary{TestNotOk} ) {
+                print "<tr><td bgcolor='red' colspan='2'>Summary</td></tr>\n";
+            }
+            else {
+                print "<tr><td bgcolor='green' colspan='2'>Summary</td></tr>\n";
+            }
+            print "<tr><td>Product:  </td><td>$ResultSummary{Product}</td></tr>\n";
+            print "<tr><td>Test Time:</td><td>$ResultSummary{TimeTaken} s</td></tr>\n";
+            print "<tr><td>Time:     </td><td>$ResultSummary{Time}</td></tr>\n";
+            print "<tr><td>Timestamp:</td><td>$ResultSummary{Timestamp}</td></tr>\n";
+            print "<tr><td>Host:     </td><td>$ResultSummary{Host}</td></tr>\n";
+            print "<tr><td>Perl:     </td><td>$ResultSummary{Perl}</td></tr>\n";
+            print "<tr><td>OS:       </td><td>$ResultSummary{OS}</td></tr>\n";
+            print "<tr><td>Vendor:   </td><td>$ResultSummary{Vendor}</td></tr>\n";
+            print "<tr><td>Database: </td><td>$ResultSummary{Database}</td></tr>\n";
+            print "<tr><td>TestOk:   </td><td>$ResultSummary{TestOk}</td></tr>\n";
+            print "<tr><td>TestNotOk:</td><td>$ResultSummary{TestNotOk}</td></tr>\n";
+            print "</table><br>\n";
         }
-        print "<tr><td>Product: </td><td>$ResultSummary{Product}</td></tr>\n";
-        print "<tr><td>Test Time:</td><td>$ResultSummary{TimeTaken} s</td></tr>\n";
-        print "<tr><td>Time:     </td><td> $ResultSummary{Time}</td></tr>\n";
-        print "<tr><td>Host:     </td><td>$ResultSummary{Host}</td></tr>\n";
-        print "<tr><td>Perl:     </td><td>$ResultSummary{Perl}</td></tr>\n";
-        print "<tr><td>OS:       </td><td>$ResultSummary{OS}</td></tr>\n";
-        print "<tr><td>Vendor:   </td><td>$ResultSummary{Vendor}</td></tr>\n";
-        print "<tr><td>Database: </td><td>$ResultSummary{Database}</td></tr>\n";
-        print "<tr><td>TestOk:   </td><td>$ResultSummary{TestOk}</td></tr>\n";
-        print "<tr><td>TestNotOk:</td><td>$ResultSummary{TestNotOk}</td></tr>\n";
-        print "</table><br>\n";
     }
     elsif ( $Self->{Output} eq 'ASCII' ) {
-        print "=====================================================================\n";
-        print " Product:     $ResultSummary{Product}\n";
-        print " Test Time:   $ResultSummary{TimeTaken} s\n";
-        print " Time:        $ResultSummary{Time}\n";
-        print " Host:        $ResultSummary{Host}\n";
-        print " Perl:        $ResultSummary{Perl}\n";
-        print " OS:          $ResultSummary{OS}\n";
-        print " Vendor:      $ResultSummary{Vendor}\n";
-        print " Database:    $ResultSummary{Database}\n";
-        print " TestOk:      $ResultSummary{TestOk}\n";
-        print " TestNotOk:   $ResultSummary{TestNotOk}\n";
-
-        if ( $ResultSummary{TestNotOk} ) {
-            print " FailedTests:\n";
-            FAILEDFILE:
-            for my $FailedFile ( @{ $Self->{NotOkInfo} || [] } ) {
-                my ( $File, @Tests ) = @{ $FailedFile || [] };
-                next FAILEDFILE if !@Tests;
-                print sprintf "  %s #%s\n", $File, join ", ", @Tests;
+        if ( $Self->{Filename} ) {
+            $Self->{Content} .= "=====================================================================\n";
+            $Self->{Content} .= " Product:   $ResultSummary{Product}\n";
+            $Self->{Content} .= " Test Time: $ResultSummary{TimeTaken} s\n";
+            $Self->{Content} .= " Time:      $ResultSummary{Time}\n";
+            $Self->{Content} .= " Timestamp: $ResultSummary{Timestamp}\n";
+            $Self->{Content} .= " Host:      $ResultSummary{Host}\n";
+            $Self->{Content} .= " Perl:      $ResultSummary{Perl}\n";
+            $Self->{Content} .= " OS:        $ResultSummary{OS}\n";
+            $Self->{Content} .= " Vendor:    $ResultSummary{Vendor}\n";
+            $Self->{Content} .= " Database:  $ResultSummary{Database}\n";
+            $Self->{Content} .= " TestOk:    $ResultSummary{TestOk}\n";
+            $Self->{Content} .= " TestNotOk: $ResultSummary{TestNotOk}\n";
+            if ( $ResultSummary{TestNotOk} ) {
+                $Self->{Content} .= " FailedTests:\n";
+                FAILEDFILE:
+                for my $FailedFile ( @{ $Self->{NotOkInfo} || [] } ) {
+                    my ( $File, @Tests ) = @{ $FailedFile || [] };
+                    next FAILEDFILE if !@Tests;
+                    $Self->{Content} .= sprintf "  %s #%s\n", $File, join ", ", @Tests;
+                }
             }
+            $Self->{Content} .= "=====================================================================\n";
         }
-
-        print "=====================================================================\n";
+        else {
+            print "=====================================================================\n";
+            print " Product:   $ResultSummary{Product}\n";
+            print " Test Time: $ResultSummary{TimeTaken} s\n";
+            print " Time:      $ResultSummary{Time}\n";
+            print " Timestamp: $ResultSummary{Timestamp}\n";
+            print " Host:      $ResultSummary{Host}\n";
+            print " Perl:      $ResultSummary{Perl}\n";
+            print " OS:        $ResultSummary{OS}\n";
+            print " Vendor:    $ResultSummary{Vendor}\n";
+            print " Database:  $ResultSummary{Database}\n";
+            print " TestOk:    $ResultSummary{TestOk}\n";
+            print " TestNotOk: $ResultSummary{TestNotOk}\n";
+            if ( $ResultSummary{TestNotOk} ) {
+                print " FailedTests:\n";
+                FAILEDFILE:
+                for my $FailedFile ( @{ $Self->{NotOkInfo} || [] } ) {
+                    my ( $File, @Tests ) = @{ $FailedFile || [] };
+                    next FAILEDFILE if !@Tests;
+                    print sprintf "  %s #%s\n", $File, join ", ", @Tests;
+                }
+            }
+            print "=====================================================================\n";
+        }
     }
     return 1;
 }
@@ -789,19 +1006,29 @@ sub _PrintHeadlineStart {
     $Name ||= '->>No Name!<<-';
 
     if ( $Self->{Output} eq 'HTML' ) {
-        $Self->{Content} .= "<table width='600' border='1'>\n";
-        $Self->{Content} .= "<tr><td colspan='2'>$Name</td></tr>\n";
+        $Self->{HTMLContent} .= "<table width='600' border='1'>\n";
+        $Self->{HTMLContent} .= "<tr><td colspan='2'>$Name</td></tr>\n";
     }
     elsif ( $Self->{Output} eq 'ASCII' ) {
-        print "+-------------------------------------------------------------------+\n";
-        print "$Name:\n";
-        print "+-------------------------------------------------------------------+\n";
+        if ( $Self->{Filename} ) {
+            $Self->{Content} .= "+-------------------------------------------------------------------+\n";
+            $Self->{Content} .= "$Name:\n";
+            $Self->{Content} .= "+-------------------------------------------------------------------+\n";
+        }
+        else {
+            print "+-------------------------------------------------------------------+\n";
+            print "$Name:\n";
+            print "+-------------------------------------------------------------------+\n";
+        }
     }
 
     $Self->{XMLUnit} = $Name;
 
     # set duration start time
-    $Self->{DurationStartTime}->{$Name} = $Kernel::OM->Get('Kernel::System::Time')->SystemTime();
+    $Self->{DurationStartTime}->{$Name} = Time::HiRes::time();
+
+    # set start timestamp
+    $Self->{Timestamp}->{$Name} = $Kernel::OM->Get('Kernel::System::Time')->CurrentTimestamp();
 
     return 1;
 }
@@ -813,18 +1040,23 @@ sub _PrintHeadlineEnd {
     $Name ||= '->>No Name!<<-';
 
     if ( $Self->{Output} eq 'HTML' ) {
-        $Self->{Content} .= "</table><br>\n";
+        $Self->{HTMLContent} .= "</table><br>\n";
     }
     elsif ( $Self->{Output} eq 'ASCII' ) {
-        print "\n";
+        if ( $Self->{Filename} ) {
+            $Self->{Content} .= "\n";
+        }
+        else {
+            print "\n";
+        }
     }
 
     # calculate duration time
     my $Duration = '';
     if ( $Self->{DurationStartTime}->{$Name} ) {
+        my $Diff = Time::HiRes::time() - $Self->{DurationStartTime}->{$Name};
 
-        $Duration = $Kernel::OM->Get('Kernel::System::Time')->SystemTime()
-            - $Self->{DurationStartTime}->{$Name};
+        $Duration = sprintf("%.3f", $Diff);
 
         delete $Self->{DurationStartTime}->{$Name};
     }
@@ -834,13 +1066,22 @@ sub _PrintHeadlineEnd {
 }
 
 sub _Print {
-    my ( $Self, $Test, $Name ) = @_;
+    my ( $Self, $Test, $Name, $Message, $StartTime ) = @_;
+
+    # prepare duration
+    my $Duration = '';
+    if ( $StartTime ) {
+        my $Diff = Time::HiRes::time() - $StartTime;
+
+        $Duration = sprintf("%.3f", $Diff);
+    }
 
     $Name ||= '->>No Name!<<-';
 
-    my $PrintName = $Name;
-    if ( length $PrintName > 1000 ) {
-        $PrintName = substr( $PrintName, 0, 1000 ) . "...";
+    my $NameMessage  = $Name . ' (' . $Message . ')';
+    my $PrintMessage = $NameMessage;
+    if ( length $PrintMessage > 1000 ) {
+        $PrintMessage = substr( $PrintMessage, 0, 1000 ) . "...";
     }
 
     if ( $Self->{Output} eq 'ASCII' && ( $Self->{Verbose} || !$Test ) ) {
@@ -849,54 +1090,72 @@ sub _Print {
     $Self->{OutputBuffer} = '';
 
     $Self->{TestCount}++;
+ 
+    $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Name}     = $Name;
+    $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Message}  = $Message;
+    $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Duration} = $Duration;
+ 
     if ($Test) {
         $Self->{TestCountOk}++;
         if ( $Self->{Output} eq 'HTML' ) {
-            $Self->{Content}
-                .= "<tr><td width='70' bgcolor='green'>ok $Self->{TestCount}</td><td>$Name</td></tr>\n";
+            $Self->{HTMLContent} .= "<tr><td width='70' bgcolor='green'>ok $Self->{TestCount}</td><td>$NameMessage</td></tr>\n";
         }
         elsif ( $Self->{Output} eq 'ASCII' ) {
-            if ( $Self->{Verbose} ) {
-                print { $Self->{OriginalSTDOUT} } " "
-                    . $Self->_Color( 'green', "ok" )
-                    . " $Self->{TestCount} - $PrintName\n";
+            if ( $Self->{Filename} ) {
+                if ( $Self->{Verbose} ) {
+                   $Self->{Content} .=  " ok $Self->{TestCount} - $PrintMessage\n";
+                }
+                else {
+                    $Self->{Content} .=  ".";
+                }
             }
             else {
-                print { $Self->{OriginalSTDOUT} } $Self->_Color( 'green', "." );
+                if ( $Self->{Verbose} ) {
+                    print { $Self->{OriginalSTDOUT} } " "
+                        . $Self->_Color( 'green', "ok" )
+                        . " $Self->{TestCount} - $PrintMessage\n";
+                }
+                else {
+                    print { $Self->{OriginalSTDOUT} } $Self->_Color( 'green', "." );
+                }
             }
         }
-        $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Result} = 'ok';
-        $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Name}   = $Name;
+        $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Result}   = 'ok';
+ 
         return 1;
     }
     else {
         $Self->{TestCountNotOk}++;
         if ( $Self->{Output} eq 'HTML' ) {
-            $Self->{Content}
-                .= "<tr><td width='70' bgcolor='red'>not ok $Self->{TestCount}</td><td>$Name</td></tr>\n";
+            $Self->{HTMLContent} .= "<tr><td width='70' bgcolor='red'>not ok $Self->{TestCount}</td><td>$NameMessage</td></tr>\n";
         }
         elsif ( $Self->{Output} eq 'ASCII' ) {
-            if ( !$Self->{Verbose} ) {
-                print { $Self->{OriginalSTDOUT} } "\n";
+            if ( $Self->{Filename} ) {
+                if ( !$Self->{Verbose} ) {
+                    $Self->{Content} .= "\n";
+                }
+                $Self->{Content} .= " not ok $Self->{TestCount} - $PrintMessage\n";
             }
-            print { $Self->{OriginalSTDOUT} } " "
-                . $Self->_Color( 'red', "not ok" )
-                . " $Self->{TestCount} - $PrintName\n";
+            else {
+                if ( !$Self->{Verbose} ) {
+                    print { $Self->{OriginalSTDOUT} } "\n";
+                }
+                print { $Self->{OriginalSTDOUT} } " "
+                    . $Self->_Color( 'red', "not ok" )
+                    . " $Self->{TestCount} - $PrintMessage\n";
+            }
         }
-        $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Result} = 'not ok';
-        $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Name}   = $Name;
-
-        my $TestFailureDetails = $Name;
-        $TestFailureDetails =~ s{\(.+\)$}{};
-        if ( length $TestFailureDetails > 200 ) {
-            $TestFailureDetails = substr( $TestFailureDetails, 0, 200 ) . "...";
-        }
+        $Self->{XML}->{Test}->{ $Self->{XMLUnit} }->{ $Self->{TestCount} }->{Result}   = 'not ok';
 
         # Store information about failed tests, but only if we are running in a toplevel unit test object
         #   that is actually processing filed, and not in an embedded object that just runs individual tests.
         if ( ref $Self->{NotOkInfo} eq 'ARRAY' ) {
-            push @{ $Self->{NotOkInfo}->[-1] }, sprintf "%s - %s", $Self->{TestCount},
-                $TestFailureDetails;
+            my $TestFailureDetails = $NameMessage;
+            $TestFailureDetails =~ s{\(.+\)$}{};
+            if ( length $TestFailureDetails > 200 ) {
+                $TestFailureDetails = substr( $TestFailureDetails, 0, 200 ) . "...";
+            }
+            push( @{ $Self->{NotOkInfo}->[-1] }, sprintf( "%s - %s", $Self->{TestCount}, $TestFailureDetails ) );
         }
 
         return;
@@ -917,16 +1176,6 @@ sub _Color {
 
     return $Text if !$Self->{ANSI};
     return Term::ANSIColor::color($Color) . $Text . Term::ANSIColor::color('reset');
-}
-
-sub DESTROY {
-    my $Self = shift;
-
-    if ( $Self->{Output} eq 'HTML' ) {
-        print "</body>\n";
-        print "</html>\n";
-    }
-    return;
 }
 
 1;

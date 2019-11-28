@@ -29,7 +29,6 @@ Core.KIX4OTRS.TicketOverviewHighlight = (function(TargetNS) {
         if (CurrTicketState) {
             // reformat style of all child elements
             $(this).children().attr('style', CurrTicketState);
-            $(this).find('a').attr('style', CurrTicketState);
         }
     });
 

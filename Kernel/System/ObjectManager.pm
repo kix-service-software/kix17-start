@@ -45,7 +45,7 @@ Kernel::System::ObjectManager - object and dependency manager
 
 =head1 SYNOPSIS
 
-The ObjectManager is the central place to create and access singleton OTRS objects.
+The ObjectManager is the central place to create and access singleton KIX objects.
 
 =head2 How does it work?
 
@@ -54,7 +54,7 @@ are destroyed in the correct order, based on their dependencies (see below).
 
 =head2 How to use it?
 
-The ObjectManager must always be provided to OTRS by the toplevel script like this:
+The ObjectManager must always be provided to KIX by the toplevel script like this:
 
     use Kernel::System::ObjectManager;
     local $Kernel::OM = Kernel::System::ObjectManager->new(
@@ -160,12 +160,14 @@ For example C<< ->Get('TicketObject') >> retrieves a L<Kernel::System::Ticket> o
 =cut
 
 sub Get {
-
     # No param unpacking for increased performance
+
+    # check for singelton object
     if ( $_[1] && $_[0]->{Objects}->{ $_[1] } ) {
         return $_[0]->{Objects}->{ $_[1] };
     }
 
+    # check parameter
     if ( !$_[1] ) {
         $_[0]->_DieWithError(
             Error => "Error: Missing parameter (object name)",
@@ -178,6 +180,46 @@ sub Get {
     # is local to the scope of the 'if'-block
     local $CurrentObject = $_[1] if !$CurrentObject;
 
+    # build new object
+    my $NewObject = $_[0]->_ObjectBuild( Package => $_[1] );
+
+    # save as singelton object
+    $_[0]->{Objects}->{ $_[1] } = $NewObject;
+
+    # return object
+    return $NewObject;
+}
+
+=item GetNew()
+
+Creates a new object for you.
+
+    my $ConfigObject = $Kernel::OM->GetNew('Kernel::Config');
+
+DEPRECATED: For backwards compatibility reasons, object aliases can be defined in L<Kernel::Config::Defaults>.
+For example C<< ->Get('TicketObject') >> retrieves a L<Kernel::System::Ticket> object.
+
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config'); # returns the same ConfigObject as above
+
+=cut
+
+sub GetNew {
+    # No param unpacking for increased performance
+
+    # check parameter
+    if ( !$_[1] ) {
+        $_[0]->_DieWithError(
+            Error => "Error: Missing parameter (object name)",
+        );
+    }
+
+    # record the object we are about to retrieve to potentially
+    # build better error messages
+    # needs to be a statement-modifying 'if', otherwise 'local'
+    # is local to the scope of the 'if'-block
+    local $CurrentObject = $_[1] if !$CurrentObject;
+
+    # build and return object
     return $_[0]->_ObjectBuild( Package => $_[1] );
 }
 
@@ -240,8 +282,6 @@ sub _ObjectBuild {
             );
         }
     }
-
-    $Self->{Objects}->{$Package} = $NewObject;
 
     return $NewObject;
 }

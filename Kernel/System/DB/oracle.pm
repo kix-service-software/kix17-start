@@ -44,6 +44,12 @@ sub LoadPreferences {
     $Self->{'DB::CaseSensitive'}        = 1;
     $Self->{'DB::LikeEscapeString'}     = q{ESCAPE '\\'};
 
+    # check if backslash should be double quoted at like statements
+    $Self->{'DB::LikeQuoteBack'}        = '';
+    if ( $Kernel::OM->Get('Kernel::Config')->Get('Database::LikeQuoteBack') ) {
+        $Self->{'DB::LikeQuoteBack'}    = '\\';
+    }
+
     # how to determine server version
     $Self->{'DB::Version'}
         = "SELECT CONCAT('Oracle ', version) FROM product_component_version WHERE product LIKE 'Oracle Database%'";
@@ -85,6 +91,9 @@ sub Quote {
             ${$Text} =~ s/;/$Self->{'DB::QuoteSemicolon'};/g;
         }
         if ( $Type && $Type eq 'Like' ) {
+            if ( $Self->{'DB::LikeQuoteBack'} ) {
+                ${$Text} =~ s/\\/$Self->{'DB::LikeQuoteBack'}\\/g;
+            }
             if ( $Self->{'DB::QuoteUnderscoreStart'} || $Self->{'DB::QuoteUnderscoreEnd'} ) {
                 ${$Text}
                     =~ s/_/$Self->{'DB::QuoteUnderscoreStart'}_$Self->{'DB::QuoteUnderscoreEnd'}/g;

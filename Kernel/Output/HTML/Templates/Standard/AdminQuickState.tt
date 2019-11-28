@@ -68,7 +68,7 @@
                             <input name="FileUpload" id="FileUpload" type="file" size="18" class="Fixed W100pc SpacingTop Validate_Required [% Data.FileUploadInvalid | html %]"/>
                             <div id="FileUploadError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                             <div id="FileUploadServerError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
-                            <fieldset class="SpacingTop">
+                            <fieldset class="Separated SpacingTop">
                                 <input type="checkbox" id="OverwriteExistingEntitiesImport" name="OverwriteExistingEntities" value="1" checked="checked" />
                                 <label for="OverwriteExistingEntitiesImport">[% Translate("Overwrite existing entities") | html %]</label>
                             </fieldset>
@@ -274,8 +274,8 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
                             </div>
                         </div>
                         <div class="Clear"></div>
-                        <label class="SpacingTop" for="UsedArticle">[% Translate("Add Article") | html %]:</label>
-                        <div class="Field SpacingTop">
+                        <label class="" for="UsedArticle">[% Translate("Add Article") | html %]:</label>
+                        <div class="Field ">
                             <input type="checkbox" id="UsedArticle" name="UsedArticle" value="1" [% Data.UsedArticleChecked %] />
                         </div>
                         <div class="Clear"></div>
@@ -332,10 +332,8 @@ $('#ShowContextSettingsDialog').bind('click', function (Event) {
 
             <div class="WidgetSimple SpacingTop Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Tag Reference") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2><span>[% Translate("Tag Reference") | html %]</span></h2>
                 </div>
 
                 <div class="Content">

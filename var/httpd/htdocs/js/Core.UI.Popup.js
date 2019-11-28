@@ -157,14 +157,14 @@ Core.UI.Popup = (function (TargetNS) {
      * @function
      * @returns {String} Returns the type of popup if one, undefined otherwise.
      * @description
-     *      Checks if current window is an OTRS popup.
+     *      Checks if current window is an KIX popup.
      */
     function CurrentIsPopupWindow() {
         var PopupType;
 
         // #rbo - T2016121190001552 - renamed OTRS to KIX
         if (window.name.match(/(OTRS|KIX)Popup_([^_]+)_.+/)) {
-            PopupType = RegExp.$1;
+            PopupType = RegExp.$2;
         }
 
         return PopupType;
@@ -176,7 +176,7 @@ Core.UI.Popup = (function (TargetNS) {
      * @function
      * @returns {String} Returns the type of popup if one, undefined otherwise.
      * @description
-     *      Checks if current window is an OTRS popup.
+     *      Checks if current window is an KIX popup.
      */
     TargetNS.CurrentIsPopupWindow = function () {
         return CurrentIsPopupWindow();
@@ -263,7 +263,7 @@ Core.UI.Popup = (function (TargetNS) {
         CheckOpenPopups();
         $.each(OpenPopups, function (Key, Value) {
             // IE(7) treats windows in new tabs (opened with right-click) also as popups
-            // Therefore we check if the popup is a real OTRS popup.
+            // Therefore we check if the popup is a real KIX popup.
             // IE9 can't read the WindowType property from the window object,
             // so we check for the correct popup window name now.
 
@@ -288,7 +288,7 @@ Core.UI.Popup = (function (TargetNS) {
         CheckOpenPopups();
         $.each(OpenPopups, function (Key, Value) {
             // IE(7) treats windows in new tabs (opened with right-click) also as popups
-            // Therefore we check if the popup is a real OTRS popup.
+            // Therefore we check if the popup is a real KIX popup.
             // IE9 can't read the WindowType property from the window object,
             // so we check for the correct popup window name now.
 
@@ -313,7 +313,7 @@ Core.UI.Popup = (function (TargetNS) {
 
         // #rbo - T2016121190001552 - renamed OTRS to KIX
         /(OTRS|KIX)Popup_([^_]+)_.*/.exec(WindowObject.name);
-        Type = RegExp.$1;
+        Type = RegExp.$2;
 
         if (typeof OpenPopups[Type] === 'undefined') {
             OpenPopups[Type] = WindowObject;
@@ -622,7 +622,7 @@ Core.UI.Popup = (function (TargetNS) {
                 // we can now find out the type of the popup based on the popup object
                 // #rbo - T2016121190001552 - renamed OTRS to KIX
                 if (PopupObject && typeof PopupObject.name !== 'undefined' && PopupObject.name.match(/(OTRS|KIX)Popup_([^_]+)_.+/)) {
-                    PopupType = RegExp.$1;
+                    PopupType = RegExp.$2;
                 }
 
                 // we are still in the parent window
@@ -731,7 +731,7 @@ Core.UI.Popup = (function (TargetNS) {
      */
     TargetNS.InitClosedBulkHandler = function (CallAction, FormID, Submit, Task) {
 
-        $(window).unbind('beforunload.Popup').bind('beforeunload.Popup', function() {
+        $(window).unbind('beforeunload.Popup').bind('beforeunload.Popup', function() {
             if ( Task !== null) {
                 window.opener.Core.AJAX.FunctionCall(
                     Core.Config.Get('Baselink'),

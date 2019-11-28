@@ -41,10 +41,8 @@
             [% IF Data.StatType == 'dynamic' %]
             <div class="WidgetSimple PreviewWidget">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Statistics Preview") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+                    <h2><span>[% Translate("Statistics Preview") | html %]</span></h2>
                 </div>
                 <div class="Content PreviewContainer">
                     [% Data.PreviewWidget %]
@@ -54,10 +52,8 @@
 
             <div class="WidgetSimple Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("General Specification") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Show or hide the content.") | html %]" ></div>
+                    <h2><span>[% Translate("General Specification") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     [% Data.GeneralSpecificationsWidget %]

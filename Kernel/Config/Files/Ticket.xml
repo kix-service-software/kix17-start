@@ -69,7 +69,6 @@
                     <Prio>1050</Prio>
                 </NavBarModule>
                 <Loader>
-                    <CSS>Core.AdminQuickTicketConfigurator.css</CSS>
                     <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
                     <JavaScript>Core.Agent.TicketAction.js</JavaScript>
                 </Loader>
@@ -479,7 +478,7 @@
             <String Regex="">&lt;KIX_CONFIG_Home&gt;/var/article</String>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="OTRSEscalationEvents::DecayTime" Required="0" Valid="1">
+    <ConfigItem Name="KIXEscalationEvents::DecayTime" Required="0" Valid="1">
         <Description Translatable="1">The duration in minutes after emitting an event, in which the new escalation notify and start events are suppressed.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
@@ -5389,6 +5388,18 @@
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketBulk###Unlock" Required="0" Valid="1">
+        <Description Translatable="1">Defines the default ticket unlock state in the ticket bulk screen of the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewBulk</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    
     <ConfigItem Name="Ticket::Frontend::MoveType" Required="1" Valid="1">
         <Description Translatable="1">Determines if the list of possible queues to move to ticket into should be displayed in a dropdown list or in a new window in the agent interface. If "New Window" is set you can add a move note to the ticket.</Description>
         <Group>Ticket</Group>
@@ -6158,7 +6169,7 @@
                 <Item Key="Name" Translatable="1">Fulltext search</Item>
                 <Item Key="Block">ToolBarSearchFulltext</Item>
                 <Item Key="Size">10</Item>
-                <Item Key="CSS">Core.Agent.Toolbar.FulltextSearch.css</Item>
+                <Item Key="CSS"></Item>
                 <Item Key="Priority">1990020</Item>
             </Hash>
         </Setting>
@@ -6174,7 +6185,7 @@
                 <Item Key="Name" Translatable="1">CustomerID search</Item>
                 <Item Key="Block">ToolBarCICSearchCustomerID</Item>
                 <Item Key="Size">10</Item>
-                <Item Key="CSS">Core.Agent.Toolbar.CICSearch.css</Item>
+                <Item Key="CSS"></Item>
                 <Item Key="Priority">1990030</Item>
             </Hash>
         </Setting>
@@ -6190,7 +6201,7 @@
                 <Item Key="Name" Translatable="1">Contact search</Item>
                 <Item Key="Block">ToolBarCICSearchCustomerUser</Item>
                 <Item Key="Size">10</Item>
-                <Item Key="CSS">Core.Agent.Toolbar.CICSearch.css</Item>
+                <Item Key="CSS"></Item>
                 <Item Key="Priority">1990040</Item>
             </Hash>
         </Setting>
@@ -6229,7 +6240,7 @@
                     <Item Key="Module">Kernel::Output::HTML::CustomerUser::GenericTicket</Item>
                     <Item Key="Attributes">StateType=Open;</Item>
                     <Item Key="CustomerUserLogin">0</Item>
-                    <Item Key="CSS">Core.Agent.CustomerUser.OpenTicket.css</Item>
+                    <Item Key="CSS"></Item>
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="Target">_blank</Item>
@@ -6250,7 +6261,7 @@
                     <Item Key="Module">Kernel::Output::HTML::CustomerUser::GenericTicket</Item>
                     <Item Key="Attributes">StateType=Open;</Item>
                     <Item Key="CustomerUserLogin">1</Item>
-                    <Item Key="CSS">Core.Agent.CustomerUser.OpenTicket.css</Item>
+                    <Item Key="CSS"></Item>
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="Target">_blank</Item>
@@ -6271,7 +6282,7 @@
                     <Item Key="Module">Kernel::Output::HTML::CustomerUser::GenericTicket</Item>
                     <Item Key="Attributes">StateType=Closed;</Item>
                     <Item Key="CustomerUserLogin">0</Item>
-                    <Item Key="CSS">Core.Agent.CustomerUser.OpenTicket.css</Item>
+                    <Item Key="CSS"></Item>
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="Target">_blank</Item>
@@ -6292,7 +6303,7 @@
                     <Item Key="Module">Kernel::Output::HTML::CustomerUser::GenericTicket</Item>
                     <Item Key="Attributes">StateType=Closed;</Item>
                     <Item Key="CustomerUserLogin">1</Item>
-                    <Item Key="CSS">Core.Agent.CustomerUser.OpenTicket.css</Item>
+                    <Item Key="CSS"></Item>
                     <Item Key="CSSClassOpenTicket">OpenTicket</Item>
                     <Item Key="CSSClassNoOpenTicket">NoOpenTicket</Item>
                     <Item Key="Target">_blank</Item>
@@ -8958,8 +8969,6 @@
                     <Prio>200</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>Core.AgentTicketQueue.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                 </Loader>
@@ -8987,8 +8996,6 @@
                     <Prio>105</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>Core.AgentTicketService.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                 </Loader>
@@ -9119,8 +9126,6 @@
                 <Title Translatable="1">Locked Tickets</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
-                    <CSS>Core.AgentTicketQueue.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                 </Loader>
@@ -9137,7 +9142,6 @@
                 <Title Translatable="1">Responsible Tickets</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                 </Loader>
@@ -9154,8 +9158,6 @@
                 <Title Translatable="1">Watched Tickets</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
-                    <CSS>Core.AgentTicketQueue.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                 </Loader>
@@ -9206,7 +9208,6 @@
                     <Prio>110</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                 </Loader>
@@ -9234,7 +9235,6 @@
                     <Prio>120</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                 </Loader>
@@ -9263,9 +9263,6 @@
                 <Title Translatable="1">Zoom</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
-                    <CSS>Core.Agent.TicketProcess.css</CSS>
-                    <CSS>Core.Agent.TicketMenuModuleCluster.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>thirdparty/jquery-tablesorter-2.0.5/jquery.tablesorter.js</JavaScript>
                     <JavaScript>Core.Agent.TicketZoom.js</JavaScript>
                     <JavaScript>Core.KIX4OTRS.TicketZoomTabs.js</JavaScript>
@@ -9633,7 +9630,6 @@
                 <Title Translatable="1">Access Control Lists (ACL)</Title>
                 <NavBarName>Admin</NavBarName>
                 <Loader>
-                    <CSS>Core.Agent.Admin.ACL.css</CSS>
                     <JavaScript>Core.Agent.Admin.ACL.js</JavaScript>
                 </Loader>
                 <NavBarModule>
@@ -9864,7 +9860,6 @@
                     <Prio>400</Prio>
                 </NavBarModule>
                 <Loader>
-                    <CSS>Core.Agent.Admin.NotificationEvent.css</CSS>
                     <JavaScript>Core.Agent.Admin.NotificationEvent.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -13976,7 +13971,6 @@ Thanks for your help!
                 <Title>AgentTicketMergeToCustomer</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
-                    <CSS>KIX4OTRS.AgentTicketMergeToCustomer.css</CSS>
                     <JavaScript>Core.KIX4OTRS.Agent.TicketMergeToCustomer.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -14306,7 +14300,6 @@ Thanks for your help!
                 <Title>Zoom</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
-                    <CSS>Core.Agent.TicketProcess.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -14669,6 +14662,17 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::Acl::Module###996_HideEmptyCommonTicketTabs" Required="0" Valid="1">
+        <Description Translatable="1">Ticket-ACLs to define shown tabs if ticket is process ticket.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::AgentTicketZoom</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Ticket::Acl::HideEmptyCommonTicketTabs</Item>
+                <Item Key="ReturnType">Action</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketZoom###TicketDataLength" Required="0" Valid="1">
         <Description Translatable="1">Defines how many chars should be shown for dynamic fields in ticket info sidebar. Disable this key to show all chars.</Description>
         <Group>Ticket</Group>
@@ -14804,11 +14808,6 @@ Thanks for your help!
                 <Description>Ticket Print Richtext</Description>
                 <Title>Print Richtext</Title>
                 <NavBarName>Ticket</NavBarName>
-<!--
-                <Loader>
-                    <CSS>Core.AgentTicketPrintRichtext.css</CSS>
-                </Loader>
--->
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
@@ -15035,7 +15034,7 @@ Thanks for your help!
             </FrontendModuleReg>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::Frontend::MenuModule###315-AddtlITSMField" Required="0" Valid="1">
+    <ConfigItem Name="Ticket::Frontend::MenuModule###315-AddtlITSMField" Required="0" Valid="0">
         <Description Translatable="1">Shows a link in the menu to modify additional ITSM fields in the ticket zoom view of the agent interface.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::Ticket::MenuModule</SubGroup>
@@ -16572,7 +16571,7 @@ Thanks for your help!
                 <Item Key="Name" Translatable="1">Fulltext search</Item>
                 <Item Key="Block">ToolBarSearchFulltext</Item>
                 <Item Key="Size">40</Item>
-                <Item Key="CSS">Core.Agent.Toolbar.FulltextSearch.css</Item>
+                <Item Key="CSS"></Item>
                 <Item Key="Priority">1990020</Item>
             </Hash>
         </Setting>
@@ -16588,7 +16587,7 @@ Thanks for your help!
                 <Item Key="Name" Translatable="1">CustomerID search</Item>
                 <Item Key="Block">ToolBarCICSearchCustomerID</Item>
                 <Item Key="Size">15</Item>
-                <Item Key="CSS">Core.Agent.Toolbar.CICSearch.css</Item>
+                <Item Key="CSS"></Item>
                 <Item Key="Priority">1990030</Item>
             </Hash>
         </Setting>
@@ -16604,7 +16603,7 @@ Thanks for your help!
                 <Item Key="Name" Translatable="1">Contact search</Item>
                 <Item Key="Block">ToolBarCICSearchCustomerUser</Item>
                 <Item Key="Size">15</Item>
-                <Item Key="CSS">Core.Agent.Toolbar.CICSearch.css</Item>
+                <Item Key="CSS"></Item>
                 <Item Key="Priority">1990040</Item>
             </Hash>
         </Setting>
@@ -17345,8 +17344,6 @@ Here you may define a default text for the forward function. You find this confi
                 <Title>Flagged Tickets</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
-                    <CSS>Core.AgentTicketQueue.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
                     <JavaScript>Core.Agent.TableFilters.js</JavaScript>
                 </Loader>

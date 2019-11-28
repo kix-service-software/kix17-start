@@ -1,0 +1,423 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+    /**
+     * @subsection  Overlay
+     */
+    #Overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        z-index: 3500;
+    }
+    .OverlayTreeSelector {
+        width: 400px;
+        height: 300px;
+        text-align: center;
+        padding: 15px;
+    }
+
+    /*
+    *   @subsection Tree
+    */
+    #TreeContainer #TreeSearch {
+        position: relative;
+    }
+    #TreeContainer #TreeSearch input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    #TreeContainer input.CallForAction {
+        padding: 3px 10px;
+    }
+    #TreeContainer #TreeSearch span {
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        height: 12px;
+        position: absolute;
+        right: 1px;
+        top: 1px;
+        width: 12px;
+        padding: 4px 2px;
+        text-align: center;
+    }
+    #JSTree {
+        height: 72%;
+        margin: 10px 0;
+        overflow: auto;
+        padding: 0px 10px 10px 10px;
+        text-align: left;
+    }
+
+
+    /**
+     * @subsection  Dialog
+     */
+    .Dialog {
+        position: absolute;
+        z-index: 3501;
+        min-width: 150px;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .Dialog.Fullsize {
+        width: 100%;
+        height: 100%;
+        left: 0px;
+    }
+    .Dialog > .Header {
+        cursor: move;
+        display: block;
+        position: relative;
+        height: 25px;
+    }
+    .Dialog > .Header .Close {
+        display: block;
+        position: absolute;
+        height: 12px;
+        width: 12px;
+        right: 8px;
+        top: 7px;
+    }
+    .Dialog > .Header h1 {
+        padding: 5px 25px 10px 10px;
+        font-weight: normal;
+        font-size: 14px;
+    }
+    .Dialog > .Content {
+        position: relative;
+        overflow: hidden;
+    }
+    .Dialog > .Content > .InnerContent {
+        padding: 10px 25px 10px 10px;
+        overflow-y: auto;
+        overflow-x: auto;
+        max-height: 200px;
+        position: relative;
+    }
+    .Dialog > .Content .InnerContent {
+        height: auto;
+        display: block;
+    }
+    .Dialog > .Content > .ContentFooter {
+        padding: 6px 0 5px;
+        min-height: 20px;
+    }
+    .Dialog > .Footer {
+        padding: 6px 0 5px;
+        display: block;
+        position: relative;
+    }
+    .Dialog > .Footer.ContentFooter {
+        display: none;
+    }
+
+
+    /**
+     * subsection Alert
+     */
+    .Dialog.Alert .InnerContent .fa {
+        display: block;
+        font-size: 25px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .Dialog.Alert h2,
+    .Dialog.Alert p {
+        text-align: center;
+    }
+    .Dialog.Alert {
+        width: 450px;
+        top: 100px;
+        left: 300px;
+    }
+
+
+    /**
+     * subsection Settings
+     */
+    .Dialog fieldset {
+        margin-bottom: 15px;
+    }
+
+    .Dialog .WidgetSettingsForm fieldset {
+        margin-bottom: 0px;
+    }
+
+    .Dialog .Field.LayoutGrid {
+        padding-top: 7px;
+    }
+
+    .Dialog .Field.LayoutGrid .Tablelike {
+        width: 98%;
+    }
+
+    .Dialog .Field .FocusField {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        z-index: -1;
+    }
+
+    .Dialog .Buttons {
+        margin: 15px -8px -8px;
+        padding: 10px 10px 9px 10px;
+        text-align: center;
+    }
+
+    .Dialog .Field.LayoutGrid .AllocationList {
+        max-height: 192px;
+        overflow: auto;
+    }
+
+    .Dialog .Field.LayoutGrid .AllocationList.AvailableFields {
+        max-height: 155px;
+    }
+
+    .Dialog .Field.LayoutGrid .AllocationList.OrderNumbers {
+        list-style: decimal inside;
+    }
+
+    #ContextSettingsDialog,
+    #ContextSettingsDialogOverviewSmall {
+        min-width: 450px;
+        max-width: 950px;
+        max-height: 100%;
+    }
+
+    /* Pure continuous text dialogs */
+
+    .TextDialog {
+        padding: 15px;
+        line-height: 150%;
+        width: 550px;
+        font-size: 13px;
+        max-height: 450px;
+        overflow: scroll;
+    }
+
+    .TextDialog p,
+    .TextDialog li,
+    .TextDialog a {
+        font-size: 12px;
+    }
+
+    .TextDialog ul {
+        list-style-type: square;
+        margin: 0px 0px 7px 20px;
+    }
+
+    .TextDialog ul li {
+        margin-bottom: 5px;
+        line-height: 130%;
+    }
+
+    .TextDialog h1 {
+        margin-bottom: 4px;
+        margin-top: 7px;
+        font-size: 14px;
+    }
+
+    .TextDialog > p {
+        margin-bottom: 12px;
+        margin-left: 8px;
+    }
+
+    /**
+    *   @subsection
+    */
+    .ui-state-active,
+    .ui-state-default,
+    .ui-widget-content .ui-state-default,
+    .ui-widget-content .ui-state-active,
+    .ui-widget-header .ui-state-default,
+    .ui-widget-header .ui-state-active {
+        border: none;
+    }
+    ul.ColumnOrder {
+        list-style-type: none;
+        margin: 0;
+        padding: 5px;
+        overflow: auto;
+        height: 300px;
+    }
+    ul.ColumnOrder li {
+        margin: 5px 5px 5px 5px;
+        padding: 8px 20px 4px 4px;
+        min-height: 16px;
+        position: relative;
+    }
+    ul.ColumnOrder li span {
+        position: absolute;
+        top: 6px;
+        right: 4px;
+        vertical-align: middle;
+    }
+    .SortableColumns {
+        float: left;
+        width: 50%;
+    }
+    .SortableColumnsDescription {
+        display: block;
+        margin: 10px 2px 5px 5px;
+        font-weight: bold;
+    }
+    #SortableSelected,
+    #SortablePossible {
+        list-style-type: none;
+        margin: 0;
+        padding: 0 0 2.5em;
+        margin-right: 10px;
+    }
+
+    /**
+    *  @subsection SystemMessage
+    */
+    .SystemMessageDialog {
+        min-width: 30vw;
+        max-width: 50vw;
+        min-height: 5vw;
+        padding-bottom: 30px;
+        position: relative;
+    }
+    .SystemMessageDialog > h3 {
+        border-bottom: 1px solid #D5D5D5;
+        padding-bottom: 5px;
+    }
+    .SystemMessageDialog > div {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        font-size: 8pt;
+        font-style: italic;
+        width: 100%;
+        height: 25px;
+        border-top: 1px solid #D5D5D5;
+    }
+    .SystemMessageDialog > div > span {
+        line-height: 25px;
+        height: 100%;
+        float: right;
+    }
+    .SystemMessageDialog > div > span:first-child {
+        float: left;
+    }
+
+    .SystemMessageMarkAsRead,
+    .SystemMessageOpenDialog {
+        cursor: pointer;
+    }
+
+    .SystemMessageWidget {
+        margin: 0 18px;
+    }
+
+    /**
+     *  @subsection KIXSidebarTools Remote Popup
+     */
+    .KIXSBRDBPopupBlock {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(45, 45, 45, 0.46);
+        left: 0;
+        top: 0;
+        z-index: 1000;
+        display:none;
+    }
+    .KIXSBRDBPopupBox {
+        min-width: 300px;
+        min-height: 70px;
+        position: fixed;
+        left: 42%;
+        top: 30%;
+    }
+    .KIXSBRDBPopupBox > .Spacing{
+        max-width: 700px;
+        max-height: 500px;
+        overflow: auto;
+    }
+    .KIXSBRDBPopupBoxHead {
+        position: relative;
+    }
+    .KIXSBRDBPopupBoxHead h3 {
+        padding: 5px;
+        margin: 0;
+    }
+    .KIXSBRDBPopupBoxHead i {
+        display: block;
+        position: absolute;
+        height: 12px;
+        width: 12px;
+        right: 8px;
+        top: 7px;
+        font-size: 12px;
+        cursor: pointer;
+    }
+    .KIXSBRDBPopupBoxFooter {
+        height: 20px;
+    }
+
+
+    /**
+    *   @subsection article filter
+    */
+    #ArticleFilterDialogForm {
+        width: 480px;
+        max-height: 300px;
+    }
+
+
+    /**
+    *   @subsection field help container
+    */
+    .FieldHelpContainer {
+        position: relative;
+    }
+    .FieldHelpContainer .FieldHelpTrigger {
+        cursor: default;
+        z-index: 1;
+    }
+    .FieldHelpContainer > span {
+        font-size: 12px;
+        left: 15px;
+        line-height: 110%;
+        padding: 10px;
+        position: absolute;
+        z-index: 2;
+        text-align: left;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        -ms-border-radius: 5px;
+        -o-border-radius: 5px;
+        border-radius: 5px;
+        top: 5px;
+        width: 200px;
+        display: none;
+        -webkit-opacity: 0.8;
+        -moz-opacity: 0.8;
+        -ms-opacity: 0.8;
+        -o-opacity: 0.8;
+        opacity: 0.8;
+    }
+    .FieldHelpContainer:hover > span {
+        display: block;
+    }
+}

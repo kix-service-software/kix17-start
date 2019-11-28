@@ -337,7 +337,7 @@ sub DBInfoGet {
 
 collect information about KIX installation
 
-    my %OTRSInfo = $EnvironmentObject->KIXInfoGet();
+    my %KIXInfo = $EnvironmentObject->KIXInfoGet();
 
 returns:
 

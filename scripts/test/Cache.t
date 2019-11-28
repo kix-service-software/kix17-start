@@ -51,16 +51,13 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     for my $SubdirLevels ( 0 .. 3 ) {
 
-        # make sure that the CacheObject gets recreated for each loop.
-        $Kernel::OM->ObjectsDiscard( Objects => ['Kernel::System::Cache'] );
-
         $ConfigObject->Set(
             Key   => 'Cache::SubdirLevels',
             Value => $SubdirLevels,
         );
 
         # get a new cache object
-        my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+        my $CacheObject = $Kernel::OM->GetNew('Kernel::System::Cache');
 
         next MODULEFILE if !$CacheObject;
 

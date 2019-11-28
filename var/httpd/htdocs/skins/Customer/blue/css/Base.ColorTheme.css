@@ -1,0 +1,1748 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+    /**
+    *   Colors
+    *
+    *   Main:               #0A7CB3
+    *   Widget Header:      #CBE1ED
+    *   Sidebar Header:     #D5D5D5
+    *   Login Button:       #0A7CB3
+    *   Login Button-Hover: #086391
+    */
+
+
+    /**
+    *   @subsection primare color
+    */
+    html, body, a {
+        color: #5B5B5B;
+    }
+    a:hover {
+        color: #0A7CB3;
+    }
+
+
+    /**
+    *   @subsection dialog
+    */
+    .Dialog {
+        border: 1px solid #9E9E9E;
+        background-color: #FFFFFF;
+    }
+    .Dialog > .Header {
+        border-bottom: 1px solid #9E9E9E;
+        background-color: #F0F0F0;
+    }
+    .Dialog > .Footer {
+        border-top: 1px solid #9E9E9E;
+        background-color: #F0F0F0;
+    }
+    .Dialog > .Content > .ContentFooter {
+        border-top: 1px solid #9E9E9E;
+        background-color: #F0F0F0;
+    }
+    .Dialog .Buttons {
+        border-top: 1px solid #CCCCCC;
+    }
+    .Dialog.Alert .InnerContent .fa {
+        color: #E31E24;
+    }
+    ul.ColumnOrder {
+        background-color: #F7F8E0;
+        border: 1px solid #9E9E9E;
+    }
+
+
+    /**
+    *   @subsection overlay
+    */
+    #Overlay {
+        background-color: #000000;
+    }
+
+
+    /**
+    *   @subsection page header
+    */
+    #Header {
+        background-color: #E3E3E3;
+        border-bottom: 4px solid #0A7CB3;
+    }
+
+
+    /**
+    *   @subsection page footer
+    */
+    #Footer {
+        border-top: 2px solid #0A7CB3;
+        color: #A0A0A0;
+    }
+
+
+    /*
+    *   @subsection navigation
+    */
+    #Navigation > .Active > ul {
+        background-color: #E3E3E3;
+        border: 1px solid #0A7CB3;
+    }
+    #Navigation > li > ul a:hover,
+    #Navigation > .Active > ul a:hover,
+    #Navigation > .Selected > a {
+        background-color: #0A7CB3;
+    }
+    #NavigationContainer > a {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    #Navigation > .Active > ul > li:hover > a,
+    #Navigation > .Selected > a,
+    #Navigation > li.Selected > a:hover,
+    #Navigation > li.Selected:hover > a,
+    #Navigation > li > ul a:hover,
+    #Navigation > .Active > ul a:hover {
+        color: #FFFFFF;
+    }
+
+    /**
+    *   @subsection tabs
+    */
+    div.ui-datepicker.ui-widget {
+        background: #FFFFFF;
+        border: 1px solid #9E9E9E;
+    }
+    .ui-state-default,
+    .ui-widget-content .ui-state-default,
+    .ui-widget-header .ui-state-default {
+        background: #F2F2F2;
+    }
+    .ui-state-hover,
+    .ui-widget-content .ui-state-hover,
+    .ui-widget-header .ui-state-hover,
+    .ui-state-focus,
+    .ui-widget-content .ui-state-focus,
+    .ui-widget-header .ui-state-focus {
+        background: #DDDDDD;
+    }
+    .ui-widget-header,
+    .ui-tabs .ui-tabs-nav li {
+        background: #FFFFFF;
+    }
+    .ui-widget-content {
+        border: 1px solid #9E9E9E;
+        color: #5B5B5B;
+    }
+    div.ui-tabs > div {
+        border: 1px solid #9E9E9E;
+    }
+    .ui-tabs .ui-tabs-nav li.ui-state-active a,
+    .ui-tabs .ui-tabs-nav li.ui-state-active a:link,
+    .ui-tabs .ui-tabs-nav li.ui-state-active a:visited {
+        color: #FFFFFF;
+        background-color: #0A7CB3;
+    }
+
+
+    /**
+    *   @subsection toolbar
+    */
+    #ToolBarToggle::after {
+        color: #5B5B5B;
+    }
+
+    #ToolBarToggle:hover::after {
+        color: #0A7CB3;
+    }
+    #ToolBarToggle.Hide {
+        color: transparent;
+    }
+
+
+    /**
+    *   @subsection control row
+    */
+    .ControlRow,
+    .ControlRow h2 {
+        background-color: #F0F0F0;
+    }
+    .ControlRow li.Active,
+    .ControlRow li.Active:hover,
+    .ControlRow li.Active:active,
+    .ControlRow li.Active a,
+    .ControlRow li.Active:hover a,
+    .ControlRow li.Active:active a {
+        color: #0A7CB3;
+    }
+
+
+    /**
+    *   @subsection widget
+    */
+    .WidgetSimple {
+        border: 1px solid #9E9E9E;
+        background-color: #F5F5F5;
+    }
+    .WidgetSimple > .Header {
+        background-color: #CBE1ED;
+    }
+    .WidgetSimple > .Content {
+        background-color: #F0F0F0;
+    }
+    WidgetSimple fieldset.Separated {
+        background-color: #E8E8E8;
+        border: 1px solid #CCCCCC;
+    }
+    .WidgetSimple > .DynamicFieldsContent,
+    .WidgetSimple > .DynamicFieldsPagination {
+        background-color: #F0F0F0;
+        border: 1px solid #0A7CB3;
+    }
+    .WidgetSimple .Buttons {
+        border-top: 1px solid #9E9E9E;
+    }
+    .ContentColumn > .ControlRow {
+        border-bottom: 1px solid #9E9E9E;
+    }
+
+    /*
+    *   @subsection sidebar column widget
+    */
+    .SidebarColumn .WidgetSimple {
+        border: 1px solid #D5D5D5;
+        background-color: #D5D5D5;
+    }
+    .SidebarColumn .WidgetSimple > .Header,
+    .SidebarColumn .WidgetSimple.SettingsWidget > .Header,
+    .SidebarColumn .WidgetSimple.SettingsWidget.CanDrag > .Header {
+        background-color: #D5D5D5;
+    }
+    .SidebarColumn .WidgetSimple .Buttons {
+        border-top: 1px solid #D5D5D5
+    }
+
+
+    /*
+    *   @subsection content column widget
+    */
+    .SettingsWidget label:not(.Checked) {
+        color: #777777;
+    }
+
+
+    /*
+    *   @subsection preferences widget
+    */
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header {
+        border-bottom: 1px solid #9E9E9E;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Content {
+        background-color: #FFFFFF;
+    }
+    .PreferencesScreen .Content form .Field.ButtonOnly {
+        border-top: 1px solid #9E9E9E;
+    }
+    .PreferencesScreen .WidgetSimple .WidgetSimple {
+        border: 1px solid #9E9E9E;
+        background-color: #F5F5F5;
+    }
+    .PreferencesScreen .WidgetSimple .WidgetSimple > .Header {
+        background-color: #CBE1ED;
+    }
+
+
+    /*
+    *   @subsection admin widget
+    */
+    .Admin .WidgetSimple {
+        border: 1px solid #9E9E9E;
+        background-color: #F5F5F5;
+    }
+    .Admin .WidgetSimple > .Header {
+        background-color: #CBE1ED;
+    }
+    .Admin .Size1of2:hover {
+        background-color: #FDFDFD;
+    }
+
+
+    /*
+    *   @subsection DataTable and TableSmall
+    */
+    .ColumnFilter + .AJAXLoader {
+        background-color: #EEEEEE;
+    }
+    .DataTable,
+    .TableSmall {
+        background-color: #FDFDFD;
+    }
+    .DataTable > thead,
+    .TableSmall > thead {
+        background-color: #F0F0F0;
+    }
+    .DataTable > thead th,
+    .TableSmall > thead th {
+        border-right: 1px solid #CCCCCC;
+    }
+    .DataTable > thead th .ColumnSettingsBox,
+    .TableSmall > thead th .ColumnSettingsBox {
+        border: 1px solid #C0C0C0;
+        background-color: #EEEEEE;
+    }
+    .DataTable thead th .ColumnSettingsTrigger,
+    .TableSmall thead th .ColumnSettingsTrigger {
+        color: #A9A9A9;
+    }
+    .DataTable thead th.FilterActive .ColumnSettingsTrigger,
+    .TableSmall thead th.FilterActive .ColumnSettingsTrigger,
+    .DataTable thead th .ColumnSettingsTrigger:hover,
+    .TableSmall thead th .ColumnSettingsTrigger:hover,
+    .DataTable thead th .ColumnSettingsTrigger.Active,
+    .TableSmall thead th .ColumnSettingsTrigger.Active {
+        color: #0A7CB3;
+    }
+    .TableSmall > tbody > tr:nth-child(2n),
+    .DataTable > tbody > tr:nth-child(2n) {
+        background-color: #F5F5F5;
+    }
+    .DataTable > tbody td,
+    .TableSmall > tbody td {
+        border-right: 1px solid #CCCCCC;
+    }
+    .DataTable > tbody td > a,
+    .TableSmall > tbody td > a {
+        color: inherit;
+    }
+    .DataTable > tbody > tr:hover > td,
+    .TableSmall > tbody > tr:hover > td {
+        background-color: #0A7CB3;
+        border-right-color: #FFFFFF;
+    }
+    .DataTable > tbody > tr:hover > td,
+    .TableSmall > tbody > tr:hover > td,
+    .DataTable > tbody > tr:hover > td *,
+    .TableSmall > tbody > tr:hover > td * {
+        color: #FFFFFF;
+    }
+    .DataTable > tbody > tr:hover > td input,
+    .DataTable > tbody > tr:hover > td select,
+    .DataTable > tbody > tr:hover > td textarea,
+    .DataTable > tbody > tr:hover > td div.Text,
+    .DataTable > tbody > tr:hover > td i.ModernizeFieldIcon,
+    .TableSmall > tbody > tr:hover > td i.ModernizeFieldIcon,
+    .TableSmall > tbody > tr:hover > td input,
+    .TableSmall > tbody > tr:hover > td select,
+    .TableSmall > tbody > tr:hover > td textarea,
+    .TableSmall > tbody > tr:hover > td div.Text {
+        color: #5B5B5B;
+    }
+    .DataTable > tbody > tr:hover > td i.ModernizeFieldIconDisable,
+    .TableSmall > tbody > tr:hover > td i.ModernizeFieldIconDisable {
+        color: #CCCCCC;
+    }
+    .DataTable > tbody > tr:active > td.Clickable,
+    .TableSmall > tbody > tr:active > td.Clickable {
+        background-color: #0A7CB3;
+    }
+    .TableSmall > tbody > tr.Active > td,
+    .DataTable > tbody > tr.Active > td {
+        background-color: #E8E8E8;
+    }
+    .DataTable > tbody > tr.Active:hover > td,
+    .TableSmall > tbody > tr.Active:hover > td,
+    .DataTable > tbody > tr.Active:hover > td *,
+    .TableSmall > tbody > tr.Active:hover > td * {
+        color: #5B5B5B;
+    }
+    .Handle a {
+        background: transparent url(../img/handle.png) no-repeat;
+    }
+
+
+    /*
+    *   @subsection form fields
+    */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    select,
+    textarea {
+        border: 1px solid #9E9E9E;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+        background-color: #FAFFC8;
+    }
+    select {
+        background-color: #FFFFFF;
+    }
+    select[multiple="multiple"] option:nth-child(2n+1) {
+        background-color: #F5F5F5;
+    }
+    select[multiple="multiple"] option:hover,
+    select[multiple="multiple"] option:checked {
+        background: #0A7CB3 linear-gradient(0deg, #0A7CB3 0%, #0A7CB3 100%);
+        color: #FFFFFF;
+    }
+    .ModernizeFieldIcon {
+        border-left: 1px solid #9E9E9E;
+        background-color: #E1E1E1;
+    }
+    input[type="text"][readonly],
+    input[type="password"][readonly],
+    input[type="email"][readonly],
+    textarea[readonly] {
+        border-color: #C6C6C6;
+        background-color: #F5F5F5;
+    }
+    .ModernizeFieldIconDisable {
+        border-color: #C6C6C6;
+        background-color: #F5F5F5;
+        color: #CCCCCC;
+    }
+    button {
+        background-color: #F0F0F0;
+        border: 1px solid #9E9E9E;
+    }
+    .CallForAction {
+        background-color: #F0F0F0;
+        border: 1px solid #9E9E9E;
+    }
+    .CallForAction span i.fa-plus-square {
+        color: #0A7CB3;
+    }
+    button:hover {
+        background-color: #0A7CB3;
+        border: 1px solid #0A7CB3;
+        color: #FFFFFF;
+    }
+    .CallForAction:hover {
+        background-color: #0A7CB3;
+        border-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    .CallForAction:active span,
+    .CallForAction:hover span,
+    .CallForAction:hover span i,
+    .CallForAction:hover span i.fa-plus-square {
+        color: #FFFFFF;
+    }
+    .CallForAction span i.fa-rocket {
+        color: #C4632F;
+    }
+    .CallForAction:disabled {
+        border-color: #C6C6C6;
+        background-color: #F5F5F5;
+        color: #CCCCCC;
+    }
+    .CallForAction:disabled:hover span,
+    .CallForAction:disabled:hover span i {
+        color: #CCCCCC;
+    }
+    button.Add:hover,
+    button.Remove:hover,
+    button.Reset:hover,
+    .RemoveButton:hover,
+    .AddButton:hover {
+        color: #0A7CB3;
+    }
+    tr.Active td {
+        border-bottom: 1px solid #0A7CB3;
+        border-top: 1px solid #0A7CB3;
+    }
+
+    /**
+    *   @subsection input fields
+    */
+    .ExpandToTop div.InputField_TreeContainer {
+        border-top: 1px solid #CCCCCC;
+    }
+    div.InputField_ToolbarContainer {
+        background-color: #F0F0F0;
+        border: 1px solid #CCCCCC;
+    }
+    div.InputField_TreeContainer {
+        background-color: #FFFFFF;
+        border: 1px solid #CCCCCC;
+    }
+    div.InputField_Selection div.Text {
+        background: #DDDDDD;
+    }
+    div.InputField_Selection div.Remove {
+        background-color: #BBBBBB;
+    }
+    div.InputField_ToolbarContainer ul li::after {
+        color: #BBBBBB;
+    }
+    div.InputField_ToolbarContainer ul li:hover {
+        background-color: #0A7CB3;
+    }
+    div.InputField_Selection div.Remove > a,
+    div.InputField_ToolbarContainer ul li:hover a,
+    div.InputField_ToolbarContainer ul li a:hover,
+    div.InputField_ToolbarContainer ul li:hover a i,
+    div.InputField_ToolbarContainer ul li a:hover i {
+        color: #FFFFFF;
+    }
+    .FilterInputContainer {
+        border-left: 1px solid #CCCCCC;
+        border-right: 1px solid #CCCCCC;
+        background-color: #EEEEEE;
+    }
+
+
+    /**
+    *   @subsection fieldset table like
+    */
+    legend {
+        color: #A0A0A0;
+    }
+    fieldset > legend > span {
+        border-bottom: 1px solid #DDDDDD;
+    }
+    fieldset.TableLike > .RichTextField > div,
+    fieldset.TableLike > .Row > .RichTextField > div,
+    fieldset.TableLike > .FloatingField > div,
+    fieldset.TableLike > .Row > .FloatingField > div {
+        border: 1px solid #9E9E9E;
+    }
+    fieldset.TableLike > .Field label,
+    fieldset.TableLike > .Row > .Field label {
+        color: #9E9E9E;
+    }
+    fieldset.TableLike > .Field.Options a {
+        border-color: #9E9E9E;
+        background-color: #F0F0F0;
+    }
+    fieldset.TableLike > .Field.Options a:hover {
+        border-color: #0A7CB3;
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+
+
+    /**
+    *   @subsection form fields customer
+    */
+    .CustomerContainer,
+    .CcCustomerContainer,
+    .BccCustomerContainer {
+        background-color: #F2F2F2;
+        border-color: #9E9E9E;
+    }
+
+    /**
+    *   @subsection ul table like
+    */
+    ul.Tablelike {
+        background-color: #F0F0F0;
+        border: 1px solid #CCCCCC;
+    }
+    ul.Tablelike li {
+        background-color: #FFFFFF;
+    }
+    ul.Tablelike li:nth-child(2n) {
+        background-color: #F5F5F5;
+    }
+
+    ul.Tablelike li:hover,
+    ul.Tablelike li:hover a {
+        color: #FFFFFF;
+        background-color: #0A7CB3;
+    }
+
+
+    /**
+    *   @subsection jstree
+    */
+    #JSTree {
+        border: 1px solid #CCCCCC;
+    }
+    .ServiceTreeContent .jstree-anchor.jstree-hovered,
+    .jstree-node.Active > .jstree-anchor,
+    .jstree-node:hover > .jstree-anchor,
+    .jstree-anchor.jstree-clicked,
+    .jstree-anchor.jstree-clicked:focus,
+    .jstree-wholerow-clicked,
+    .jstree-InputField .jstree-wholerow-ul .jstree-wholerow:hover,
+    .jstree-InputField .jstree-wholerow-ul .jstree-wholerow-hovered,
+    .jstree-InputField .jstree-focused > .jstree-wholerow {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    #TreeContainer #TreeSearch span {
+        color: #777777;
+        background-color: #DDDDDD;
+    }
+
+
+    /**
+    *   @subsection overview zoom
+    */
+    .OverviewZoom a:hover {
+        background-color: #F0F0F0;
+    }
+    .OverviewZoom .Active a,
+    .OverviewZoom .Active a:hover {
+        color: #FFFFFF;
+        background-color: #0A7CB3;
+    }
+
+
+    /**
+    *   @subsection overview
+    */
+    .OverviewControl {
+        background-color: #FFFFFF;
+    }
+    .Overview thead tr {
+        background-color: #EAEAEA;
+    }
+    #EmptyMessageSmall {
+        border: 1px solid #9E9E9E;
+    }
+    .Gray {
+        color: #444444;
+    }
+
+
+    /**
+    *   @subsection overview medium
+    */
+    .OverviewMedium > li {
+        border-left: 1px solid #DDDDDD;
+        border-bottom: 1px solid #DDDDDD;
+        border-right: 1px solid #DDDDDD;
+    }
+    .OverviewMedium h2 a {
+        color: #000000;
+    }
+    .OverviewMedium .Content {
+        border-left: 5px solid #FFFFFF;
+    }
+    .OverviewMedium li:nth-child(2n) {
+        background-color: #F5F5F5;
+    }
+    .OverviewMedium > li:nth-child(2n) .Content {
+        border-left: 5px solid #F5F5F5;
+    }
+    .OverviewMedium > li:nth-child(2n) .Content:hover,
+    .OverviewMedium .Content:hover {
+        border-left: 5px solid #FCB24B;
+    }
+    .OverviewMedium > li:first-child {
+        border-top: 1px solid #DDDDDD;
+    }
+    .OverviewMedium div.Flag {
+        border: 1px solid #BBBBBB;
+    }
+    .OverviewMedium table.Infos td {
+        border-right: 1px dotted #CCCCCC;
+    }
+    #EmptyMessageMedium {
+        border: 1px solid #9E9E9E;
+    }
+
+
+    /**
+    *   @subsection overview large
+    */
+    .OverviewLarge .Content {
+        border-left: 5px solid #FFFFFF;
+    }
+    .OverviewLarge h2 a {
+        color: #000000;
+    }
+    .OverviewLarge > li {
+        border-right: 1px solid #DDDDDD;
+        border-left: 1px solid #DDDDDD;
+        border-bottom: 1px solid #DDDDDD;
+    }
+    .OverviewLarge > li:first-child {
+        border-top: 1px solid #DDDDDD;
+    }
+    .OverviewLarge .Preview > ul {
+        border: 1px solid #CCCCCC;
+    }
+    .OverviewLarge .Preview h3 {
+        background-color: #E8E8E8;
+        border: 1px solid #E1E1E1;
+    }
+    .OverviewLarge .Preview h3 .Subject {
+        color: #111111;
+    }
+    .OverviewLarge .Preview li div.HiddenBlock {
+        border-right: 1px solid #E8E8E8;
+    }
+    .OverviewLarge .Preview li.Active h3 {
+        border: 1px solid #D7D7D7;
+        background-color: #E0E0E0;
+    }
+    .OverviewLarge .Infos table tr.Middle {
+        border-top: 1px dotted #CCCCCC;
+    }
+    .OverviewLarge .Infos table td {
+        border-left: 1px dotted #CCCCCC;
+    }
+    .OverviewLarge > li:nth-child(2n) {
+        background-color: #F5F5F5;
+    }
+    .OverviewLarge > li:nth-child(2n) .Content {
+        border-left: 5px solid #F5F5F5;
+    }
+    .OverviewLarge > li:nth-child(2n) .Content:hover,
+    .OverviewLarge .Content:hover {
+        border-left: 5px solid #FCB24B;
+    }
+    .OverviewLarge div.Flag {
+        border: 1px solid #BBBBBB;
+    }
+    .OverviewLarge li:hover .Preview h3 a,
+    .OverviewLarge li:hover .Preview h3 a > span {
+        color: #5E584F;
+    }
+    .OverviewLarge li:hover .Preview li.Active h3 a,
+    .OverviewLarge li:hover .Preview li.Active h3 a  > span {
+        color: #0E0E0E;
+    }
+    #EmptyMessageLarge {
+        border: 1px solid #9E9E9E;
+    }
+
+
+    /**
+    *   @subsection sortable
+    */
+    .SortableList {
+        border-color: #DDDDDD;
+        background: #EEEEEE;
+    }
+    .SortableList li span {
+        background-color: #DDDDDD;
+    }
+    .SortableList li span input {
+        background-color: #DDDDDD;
+        color: #777777;
+    }
+    .SortableList li span i {
+        color: #BBBBBB;
+    }
+    .SortableList li span:hover i {
+        color: #777777;
+    }
+    .SortableList li span strong {
+        background-color: #BBBBBB;
+        color: #EEEEEE;
+    }
+    .SortableList li span.Icon {
+        color: #000000;
+    }
+    div.AddElement {
+        background-color: #DDDDDD;
+        border-color: #DDDDDD;
+    }
+
+
+    /**
+    *   @subsection overview queue
+    */
+    .WidgetSimple > .QueueTreeContent,
+    .QueueTreeContent {
+        background-color: #FFFFFF;
+    }
+    .QueueOverview .OlderLevel1 {
+        color: #FFA500;
+    }
+    .QueueOverview .Oldest,
+    .QueueOverview .Oldest .jstree-anchor,
+    .QueueOverview .OlderLevel2 {
+        color: #E31E24;
+    }
+
+
+    /**
+    *   @subsection overview service
+    */
+    .ServiceOverview .OlderLevel1 {
+        color: #FFA500;
+    }
+    .ServiceOverview .OlderLevel2 {
+        color: #F80010;
+    }
+    .WidgetSimple > .ServiceTreeContent,
+    .ServiceTreeContent {
+        background-color: #FFFFFF;
+    }
+    .Node.Oldest,
+    .Node.Oldest .jstree-anchor {
+        color: #E31E24;
+    }
+
+
+    /**
+    *   @subsection actions
+    */
+    .ActionRow .Actions > li > a,
+    .ActionRow .Actions > li > span,
+    .ActionRow .Actions > li > ul,
+    .LightRow .Actions > li > a,
+    .LightRow .Actions > li > span,
+    .LightRow .Actions > li > ul {
+        border: 1px solid #9E9E9E;
+    }
+
+    .ActionRow .Actions li span,
+    .LightRow .Actions li span {
+        background-color: #EEEEEE;
+    }
+    .ActionRow .Actions li a,
+    .LightRow .Actions li a,
+    .ActionRow .Actions li span,
+    .LightRow .Actions li span {
+        background-color: #EEEEEE;
+    }
+    .ActionRow .Actions li a:hover,
+    .LightRow .Actions li a:hover {
+        color: #FFFFFF;
+        background-color: #0A7CB3;
+    }
+    .Actions li.Inactive a,
+    .Actions li.Inactive a:hover,
+    .Actions li.Inactive:hover a,
+    .Actions li.Inactive span:hover {
+        background-color: #F5F5F5;
+        color: #9E9E9E;
+    }
+    #ArticleItems .WidgetSimple .LightRow.Bottom {
+        border-bottom: 1px solid #9E9E9E;
+    }
+    .Cluster > ul > li:hover .ClusterLink {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    .ActionRow .Actions li span.MenuClusterIcon,
+    .LightRow .Actions li span.MenuClusterIcon,
+    .Actions li.Inactive span.MenuClusterIcon:hover {
+        background-color: #E8E8E8;
+    }
+
+
+    /**
+    *   @subsection bulk action
+    */
+    .TaskAbort {
+        border: 1px solid #9E9E9E;
+        background-color: #FCFCFC;
+    }
+    .TaskAbort a {
+        background-color: #F0F0F0;
+        border: 1px solid #9E9E9E;
+    }
+    .TaskAbort a:hover {
+        background-color: #0A7CB3;
+        border: 1px solid #0A7CB3;
+        color: #FFFFFF;
+    }
+    .TaskBarColor {
+        background-color: #0A7CB3;
+    }
+    .TaskNotify > p:nth-child(2n) {
+        background-color: #EEEEEE;
+    }
+    .BulkNotify,
+    .WINotify {
+        border: 1px solid #9E9E9E;
+    }
+    .BulkNotify p.Error,
+    .WINotify p.Error {
+        background-color: #E31E24;
+        color: #FFFFFF;
+    }
+    .BulkNotify p.Info,
+    .BulkNotify p.Notice,
+    .WINotify p.Info,
+    .WINotify p.Notice {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+
+    /**
+    *   @subsection faq
+    */
+    .FAQMessageBrowser {
+        background-color: #E8E8E8;
+    }
+    .FAQ .OverviewControl,
+    .FAQ #OverviewBody  {
+        border-color: #0A7CB3;
+    }
+    ul.FAQMiniList li:hover {
+        background-color: inherit;
+        color: inherit;
+    }
+    ul.FAQMiniList li:hover a {
+        color: #0A7CB3;
+        background-color: inherit;
+    }
+
+
+    /**
+    *   @subsection login
+    */
+    .LoginBox,
+    .SystemMessageLoginBox {
+        background: #F5F5F5;
+        border: 1px solid #0A7CB3;
+    }
+    .LoginBox input[type="text"],
+    .LoginBox input[type="password"],
+    .LoginBox input[type="email"] {
+        border: 1px solid #0A7CB3;
+    }
+    .LoginBox .CallForAction {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+        border-color: #0A7CB3;
+    }
+    .LoginBox .CallForAction:hover {
+        background-color: #086391;
+        border-color: #086391;
+    }
+    .LoginBox .CallForAction:disabled,
+    .LoginBox .CallForAction:disabled:hover {
+        border-color: #C6C6C6;
+        background-color: #F5F5F5;
+        color: #CCCCCC;
+    }
+    .LoginBox .CallForAction:disabled:hover span,
+    .LoginBox .CallForAction:disabled:hover span i {
+        color: #CCCCCC;
+    }
+
+
+    /**
+    *   @subsection data collector
+    */
+    .AdminSupportDataCollector .CheckResultProblem p {
+        background-color: #EDD3D3;
+    }
+    .AdminSupportDataCollector .CheckResults > li.CheckResultUnknown span.Value,
+    .AdminSupportDataCollector .CheckResults > li.CheckResultOK span.Value,
+    .AdminSupportDataCollector .CheckResults > li.CheckResultInformation span.Value,
+    .AdminSupportDataCollector .CheckResults > li.CheckResultOK > p {
+        color: #9E9E9E;
+    }
+
+
+    /**
+    *   @subsection package manager
+    */
+    .IconNotReady {
+        color: #E31E24;
+    }
+
+    .IconReady::before {
+        color: #00FF00;
+    }
+    tr:hover .IconReady::before {
+        color: #FFFFFF;
+    }
+
+
+    /**
+    *   @subsection checklist
+    */
+    .ChecklistIconList {
+        background-color: #F0F0F0;
+        border: 1px solid #C0C0C0;
+    }
+    .ChecklistIconList > span:hover {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+
+
+    /**
+    *   @subsection ticket
+    */
+    .TicketLockMessage {
+        background-color: #F7AE40;
+        border: 1px dotted #000000;
+    }
+    .TicketLockMessage::before {
+        color: #F80010;
+    }
+    .TicketLockMessage > a:hover {
+        color: #FFFFFF;
+    }
+
+
+    /**
+    *   @subsection article
+    */
+    .ArticleBody,
+    .ArticleMailContent iframe  {
+        background-color: #FFFFFF;
+        border: 1px solid #E0E0E0;
+    }
+    .MessageBrowser {
+        border: 1px solid #999999;
+    }
+    .MessageBrowser p {
+        background-color: #DDDDDD;
+    }
+
+
+    /*
+    * Agent article types
+    */
+    .UseArticleColors tr.agent-phone > td,
+    .UseArticleColors tr.agent-phone .Header {
+        background-color: #D1E8D1;
+    }
+    .UseArticleColors tr.agent-email-external > td,
+    .UseArticleColors tr.agent-email-external .Header {
+        background-color: #D3E5B5;
+    }
+    .UseArticleColors tr.agent-email-internal > td,
+    .UseArticleColors tr.agent-email-internal .Header {
+        background-color: #FFD1D1;
+    }
+    .UseArticleColors tr.agent-note-external > td,
+    .UseArticleColors tr.agent-note-external .Header {
+        background-color: #D1D1D1 ;
+    }
+    .UseArticleColors tr.agent-note-internal > td,
+    .UseArticleColors tr.agent-note-internal .Header {
+        background-color: #FFCCCC;
+    }
+
+
+    /*
+    * System article types
+    */
+    .UseArticleColors tr.system-note-internal > td,
+    .UseArticleColors tr.system-note-internal .Header,
+    .UseArticleColors tr.system-note-external > td,
+    .UseArticleColors tr.system-note-external .Header,
+    .UseArticleColors tr.system-note-report > td,
+    .UseArticleColors tr.system-note-report .Header,
+    .UseArticleColors tr.system-email-external > td,
+    .UseArticleColors tr.system-email-external .Header,
+    .UseArticleColors tr.system-email-internal > td,
+    .UseArticleColors tr.system-email-internal .Header,
+    .UseArticleColors tr.system-email-notification-int > td,
+    .UseArticleColors tr.system-email-notification-int .Header,
+    .UseArticleColors tr.system-email-notification-ext > td,
+    .UseArticleColors tr.system-email-notification-ext .Header {
+        background-color: #FFFFD1;
+    }
+
+
+    /*
+    * Customer artcle types
+    */
+    .UseArticleColors tr.customer-webrequest > td,
+    .UseArticleColors tr.customer-webrequest .Header,
+    .UseArticleColors tr.customer-email-external > td,
+    .UseArticleColors tr.customer-email-external .Header,
+    .UseArticleColors tr.customer-note-external > td,
+    .UseArticleColors tr.customer-note-external .Header,
+    .UseArticleColors tr.customer-phone > td,
+    .UseArticleColors tr.customer-phone .Header {
+        background-color: #D4DEFC;
+    }
+
+
+    /**
+    *   @subsection flags
+    */
+    .Headline .Flag  {
+        border: 1px solid #0A7CB3;
+    }
+    .Flag span {
+        background-color: #CCCCCC;
+    }
+    .Flag span.Escalated,
+    .Flag.Problem span {
+        background-color: #F80800;
+    }
+    .Flag span.PriorityID-1 {
+        background-color: #15D100;
+    }
+    .Flag span.PriorityID-2 {
+        background-color: #A6FC00;
+    }
+    .Flag span.PriorityID-3 {
+        background-color: #F2F200;
+    }
+    .Flag.OK span {
+        background-color: #008000;
+    }
+    .Flag span.PriorityID-4 {
+        background-color: #FF9000;
+    }
+    .Flag span.PriorityID-5 {
+        background-color: #FA0700;
+    }
+    .Flag span.greenled {
+        background-color: #8bef4d;
+    }
+
+
+    /**
+    *   @subsection unread article
+    */
+    span.UnreadArticles.Ordinary,
+    div.UnreadArticles.Ordinary {
+        color: #DDDDDD;
+    }
+    span.UnreadArticles i,
+    div.UnreadArticles i {
+        color: #CCCCCC;
+    }
+    span.UnreadArticles i:first-child,
+    div.UnreadArticles i:first-child {
+        color: #777777;
+    }
+    span.UnreadArticles.Remarkable i:nth-child(2n),
+    div.UnreadArticles.Remarkable i:nth-child(2n) {
+        color: #F2BD0E;
+    }
+
+
+    /**
+    *   @subsection bread crumb
+    */
+    .BreadCrumb {
+        background-color: #EEEEEE;
+    }
+    .BreadCrumb li::after {
+        border-color: transparent;
+        border-left-color: #FFFFFF;
+    }
+    .BreadCrumb li::before {
+        border-color: transparent;
+        border-left-color: #EEEEEE;
+    }
+
+
+    /**
+    *   @subsection ck editor
+    */
+    body .cke_notification {
+        background-color: #F0F0F0;
+        border: 1px solid #9E9E9E;
+    }
+    body .cke_dialog_footer_buttons a.cke_dialog_ui_button {
+        background-color: #F0F0F0;
+        border: 1px solid #9E9E9E;
+        color: #5B5B5B;
+    }
+    body .cke_dialog_footer_buttons a.cke_dialog_ui_button:hover span {
+        color: #FFFFFF;
+    }
+    body .cke_dialog_footer_buttons a.cke_dialog_ui_button:hover {
+        background-color: #0A7CB3;
+        border: 1px solid #0A7CB3;
+    }
+
+    body input.cke_dialog_ui_input_password:focus,
+    body input.cke_dialog_ui_input_text:focus,
+    body textarea.cke_dialog_ui_input_textarea:focus {
+        border: 1px solid #0A7CB3;
+    }
+    body .cke_notification.cke_notification_success {
+        border: 1px solid #0A7CB3;
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    body .cke_notification.cke_notification_error {
+        border: 1px solid #E31E24;
+        background-color: #E31E24;
+        color: #FFFFFF;
+    }
+    body .cke_notification.cke_notification_warning {
+        border: 1px solid #FF9050;
+        background-color: #FF9050;
+    }
+    body .cke_notification.cke_notification_success .cke_notification_close,
+    body .cke_notification.cke_notification_error .cke_notification_close {
+        color: #FFFFFF;
+    }
+
+
+    /**
+    *   @subsection ACL
+    */
+    .ACLNote {
+        background-color: #FFFFFF;
+        border: 1px solid #CCCCCC;
+    }
+    .ACLFieldGroup li ul li ul li ul li em,
+    .ACLFieldGroup .LastLevel li em {
+        color: #FFFFFF;
+        background-color: #BBBBBB;
+    }
+    .ACLFieldGroup li ul li ul li ul li.DataItem,
+    .ACLFieldGroup .LastLevel li.DataItem {
+        background-color: #DDDDDD;
+    }
+    .ACLStructure:first-child {
+        border-bottom: 1px solid #CCCCCC;
+    }
+    .ACLFieldGroup li ul li ul li ul li em:hover {
+        background-color: #777777;
+    }
+
+
+    /**
+    *   @subsection link objects
+    */
+    #ContentItemTabs .MainBox > div.AddQuickLink {
+        border-top: 1px solid #0A7CB3;
+    }
+    div.AddQuickLink:first-child {
+        background-color: #F0F0F0;
+    }
+    .DropPlaceholder {
+        background: #EEEEEE url(../img/dnd_placeholder_bg.png);
+        border: 1px dashed #DDDDDD;
+    }
+
+
+    /**
+    *   @subsection process tab
+    */
+    .ProcessInfo > .Bottom > .Actions li a {
+        background-color: #EEEEEE;
+        border: 1px solid #9E9E9E;
+    }
+    .ProcessInfo > .Bottom > .Actions li a:hover {
+        background-color: #0A7CB3;
+        border: 1px solid #0A7CB3;
+        color: #FFFFFF;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer {
+        background-color: #EEEEEE;
+        border: 1px solid #CCCCCC;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer p  {
+        background-color: #FFFFFF;
+    }
+    .WidgetSimple > .Content.ProcessInfo fieldset .FieldContainer label {
+        border-bottom: 1px solid #CCCCCC;
+    }
+    .FieldSeparator {
+        border-top: 1px dotted #CCCCCC;
+    }
+    .FieldSetSeparator {
+        border-bottom: 1px solid #CCCCCC;
+    }
+
+
+    /**
+    *   @subsection field help container
+    */
+    .FieldHelpContainer .FieldHelpTrigger {
+        color: #BBBBBB;
+    }
+    .FieldHelpContainer > span {
+        background: #444444;
+        color: #FFFFFF;
+    }
+
+
+    /**
+    *   @subsection process manager
+    */
+    .EntityDrag {
+        border: 1px solid #CCCCCC;
+    }
+    .AvailableIn {
+        color: #444444;
+        background-color: #CCCCCC;
+    }
+    em.EntityID input {
+        background-color: #0A7CB3;
+    }
+    em.EntityID:after {
+        border: solid transparent;
+        border-top: 5px solid #0A7CB3;
+    }
+    #TransitionForm .WidgetSimple .WidgetSimple {
+        border: 1px solid #CCCCCC;
+        background-color: #FFFFFF;
+    }
+    .WidgetNotice .Content {
+        color: #444444;
+    }
+    ul#ProcessElements {
+        border: 1px solid #CCCCCC;
+    }
+    ul#ProcessElements li.AccordionElement h2 {
+        border-bottom: 1px solid #CCCCCC;
+        color: #999999;
+    }
+    ul#ProcessElements li.AccordionElement div.Content {
+        border-bottom: 1px solid #CCCCCC;
+    }
+    ul#ProcessElements li.AccordionElement:last-child div.Content {
+        border-bottom: 1px solid #FFFFFF;
+    }
+    ul#ProcessElements li.AccordionElement div.Content ul li > span a {
+        color: #777777;
+    }
+    ul#ProcessElements li.AccordionElement.Active,
+    ul#ProcessElements li.AccordionElement div.Content {
+        background-color: #FFFFFF;
+        border: 1px solid #FFFFFF;
+    }
+    ul#ProcessElements li.AccordionElement.Active:last-child h2 {
+        border-bottom: 1px solid #CCCCCC;
+    }
+    #Canvas .Activity.Highlighted,
+    #Canvas .TransitionLabel.Highlighted {
+        color: #FFFFFF;
+        background-color: #5D5D5D;
+    }
+    #Canvas .Activity .Success,
+    #Canvas .TransitionLabel .Success {
+        background-image: url(../img/icons/tick.png);
+    }
+    #Canvas .TransitionLabel a,
+    #Canvas .TransitionLabel {
+        border: 1px solid #BBBBBB;
+        background-color: #FFFFFF;
+    }
+    #Canvas .Activity,
+    #Canvas #StartEvent,
+    #Canvas .TransitionLabel .Icon  {
+        background-color: #FFFFFF;
+    }
+    #Canvas .Activity.Highlighted.ReadyToDrop,
+    #Canvas .TransitionLabel.Highlighted.ReadyToDrop {
+        background-color: #A9BF6E;
+    }
+    #Canvas .Activity.Hovered,
+    #Canvas .TransitionLabel.Hovered {
+        border: 1px solid #FF9922;
+    }
+    #Canvas #StartEvent {
+        border: 1px solid #000000;
+    }
+    #Canvas .Activity {
+        border: 1px solid #999999;
+    }
+    .DiagramDeleteLink a,
+    .DiagramEditLink a {
+        background-color: #FFFFFF;
+        border: 1px solid #BBBBBB;
+    }
+    #DiagramTooltip {
+        background-color: #FFFFFF;
+        border: 1px solid #BBBBBB;
+    }
+    #DiagramTooltip h4 {
+        background-color: #F6F6F6;
+        border-bottom: 1px solid #A0A0A0;
+    }
+    #DiagramTooltip li {
+        background-color: #DDDDDD;
+    }
+    #DiagramTooltip li .AvailableIn {
+        color: #FFFFFF;
+        background-color: #999999;
+    }
+
+
+    /**
+    *   @subsection ITSM
+    */
+    #ITSMTable > .ControlRow {
+        background-color: #FFFFFF;
+    }
+
+
+    /**
+    *   @subsection ITSM tab image
+    */
+    .CIImage {
+        border: 1px solid #CCCCCC;
+        background-color: #EEEEEE;
+    }
+    .CIImagePreview {
+        border: 1px solid #CCCCCC;
+    }
+
+    /**
+    *   @subsection ITSM tab graph
+    */
+    #ZoomNotice {
+        color: #E31E24;
+    }
+    #Shield {
+        background-color: #000000;
+    }
+    #ZoomArea {
+        border: 1px dotted #0A7CB3;
+    }
+    #GraphBody  {
+        background-color: #FFFFFF;
+    }
+    #GraphSaved  {
+        border: 1px solid #0A7CB3;
+        background-color: #FFFFFF;
+    }
+    #Context {
+        border: 1px solid #D5D5D5;
+    }
+    #Context > .Header {
+        background-color: #D5D5D5;
+    }
+    #Context > .Content > ul > li > a {
+        border-bottom: 1px solid #DDDDDD;
+    }
+    #Context > .Content > ul > li:hover > a {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    .Magnifier_active {
+        color: #FFFFFF;
+        background-color: #0A7CB3;
+    }
+
+
+    /**
+    *   @subsection SysConfig
+    */
+    #AdminSysConfig .Description {
+        color: #444444;
+    }
+    #AdminSysConfig fieldset {
+        border-bottom: 1px solid #CCCCCC;
+    }
+    #AdminSysConfig fieldset.Invalid,
+    #AdminSysConfig fieldset.Invalid * {
+        color: #777777;
+    }
+    #AdminSysConfig fieldset.Invalid .ResetButton:hover * {
+        color: #FFFFFF;
+    }
+    #AdminSysConfig .FrontendModuleRegistration .NavBarListEntry {
+        border-bottom: 1px solid #888888;
+    }
+    #AdminSysConfig .Setting .DefaultValue {
+        color: #A0A0A0;
+    }
+
+
+    /**
+    *   @subsection field notes
+    */
+    .FieldExplanation,
+    .FieldExplanation strong {
+        color: #9E9E9E;
+    }
+    .AsteriskExplanation {
+        color: #9E9E9E;
+    }
+
+
+    /**
+    *   @subsection vote
+    */
+    .RateButton i {
+        color: #5B5B5B;
+    }
+    .RateButton.RateChecked i.fa-star {
+        color: #E97D34;
+    }
+
+
+    /**
+    *   @subsection static
+    */
+    .BigButtons a {
+        border: 1px solid #CCCCCC;
+    }
+    .BigButtons a span {
+        color: #888888;
+    }
+    .BigButtons a.Disabled strong,
+    .BigButtons a.Disabled span {
+        color: #CCCCCC;
+    }
+    .BigButtons a:not(.Disabled):hover,
+    .BigButtons a.Active {
+        background-color: #E5E5E5;
+        border: 1px solid #999999;
+    }
+    .PreviewContainer .Preview {
+        background-color: #FFFFFF;
+        border: 1px solid #CCCCCC;
+    }
+    .PreviewContainer .Preview .Error,
+    .PreviewContainer .Preview .Hint {
+        color: #777777;
+    }
+    .PreviewContainer .Preview .Error i,
+    .PreviewContainer .Preview .Hint i {
+        color: #BBBBBB;
+    }
+    .PreviewContainer .PreviewSettings a.Active {
+        border-bottom: 1px solid #000000;
+    }
+    .PreviewContainer .PreviewSettings .Warning {
+        color: #AAAAAA;
+    }
+    .PreviewSettings .CallForAction.Active {
+        background-color: #0A7CB3;
+        border-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+
+
+
+    /**
+    *   @subsection import/export
+    */
+    .MapHeaderRow label {
+        color: #999999;
+    }
+    button.ArrowUp[disabled="disabled"] {
+        background: url(../img/icons/importexport_arrow_up_disabled.png);
+    }
+    button.ArrowUp {
+        background: url(../img/icons/importexport_arrow_up.png);
+    }
+    button.ArrowDown[disabled="disabled"] {
+        background: url(../img/icons/importexport_arrow_down_disabled.png);
+    }
+    button.ArrowDown {
+        background: url(../img/icons/importexport_arrow_down.png);
+    }
+
+
+    /**
+    *   @subsection quick ticket template
+    */
+    .LimitTemplateSelectionIcon_NotFixed {
+        color: #CCCCCC;
+    }
+    .LimitTemplateSelectionIcon_NotFixed:hover,
+    .LimitTemplateSelectionIcon_Fixed {
+        color: #444444;
+    }
+
+
+    /**
+    *   @subsection notification event
+    */
+    .NotificationLanguage > .WidgetSimple {
+        background-color: #FFFFFF;
+        border: 1px solid #CCCCCC;
+    }
+    .TransportsContent legend {
+        border-bottom: 1px solid #A0A0A0;
+    }
+
+    /**
+    * @subsection WidgetPopup
+    */
+    div.WidgetPopup {
+        border-color: #CCCCCC;
+        background-color: #EEEEEE;
+        background-image: url(../img/widget_bg_100.png);
+        background-repeat: repeat-x;
+    }
+
+
+    /**
+    *   @subsection KIXSidebar
+    */
+    .KIXSBRDBPopupBox  {
+        background-color: #FFFFFF;
+        border: 1px solid #0A7CB3;
+    }
+    .KIXSBRDBPopupBoxHead {
+        border-bottom: 1px solid #0A7CB3;
+        background-color: #EEEEEE;
+    }
+    .KIXSBRDBPopupBoxFooter {
+        background-color: #EEEEEE;
+        border-top: 1px solid #0A7CB3;
+    }
+    .KIXSidebarCustomerEmailSelection {
+        background-color: #F0F0F0;
+    }
+    .NoActionWithoutSelectionHit {
+        border: 1px solid #FF505E;
+    }
+    .NoActionWithoutSelectionHit .Header h2 {
+        color: #F80010;
+    }
+    span[class$="Magnifier"]:hover {
+        color: #0A7CB3;
+    }
+    .ActionList p {
+        color: #888888;
+    }
+
+
+    /**
+    *   @subsection layout popup
+    */
+    .PopupIframe {
+        background-color: #FFFFFF;
+    }
+    .LayoutPopup > .Header {
+        background-color: #F6F6F6;
+        border-bottom: 1px solid #DDDDDD;
+    }
+    .LayoutPopup > .Footer {
+        border-top: 1px solid #EEEEEE;
+    }
+    .CancelClosePopup {
+            color: #0A7CB3;
+    }
+    .CancelClosePopup:hover {
+            color: #5FA441;
+    }
+
+
+    /**
+    *   @subsection history
+    */
+    .LinkZoomView {
+        color: #0A7CB3;
+    }
+
+
+    /**
+    *   @subsection message box
+    */
+    .MessageBox {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    .MessageBox.Notice p {
+        color: #FFFFFF;
+    }
+    .MessageBox p a {
+        color: #FFFFFF;
+    }
+    .MessageBox a:hover {
+        color: #FFFFFF;
+    }
+    .MessageBox.Error {
+        background: #E31E24;
+        color: #FFFFFF;
+    }
+
+
+    /**
+    *   @subsection field errors
+    */
+    form input.Error,
+    form textarea.Error {
+        border: 1px solid #E31E24;
+    }
+    form label.LabelError,
+    form label.LabelError .Marker {
+        color: #E31E24;
+    }
+    .Error,
+    tr.Error td {
+        color: #E31E24;
+    }
+    .Warning,
+    tr.Warning td {
+        color: #FF9050;
+    }
+    .ErrorBox {
+        color: #E31E24;
+    }
+    .ItemRow i.OpenTicket {
+        color: #E31E24;
+    }
+}
+
+
+/**
+*   Colors for responsive
+**/
+@media only screen and (min-width: 0px) and (max-width: 1024px) {
+    #ToolBar li a span.Counter {
+        color: #AAAAAA;
+    }
+    #ResponsiveSidebarNotification {
+        color: #CCCCCC;
+    }
+    .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
+    .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
+    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
+    .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .LightRow  {
+        background-color: #FFFFFF;
+    }
+    #ResponsiveTicketMenuHandle,
+    .ResponsiveMenuHandle {
+        color: #777777;
+        background-color: #DDDDDD;
+    }
+    .ResponsiveSidebarContainer {
+        background-color: rgba(22,22,22,0.7);
+    }
+    .ResponsiveSidebarContainer > #NavigationContainer {
+        background-color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer #Navigation > li,
+    .ResponsiveSidebarContainer .Actions > li {
+        border-color: #444444;
+    }
+    .ResponsiveSidebarContainer .WidgetSimple {
+        background-color: #FFFFFF;
+    }
+    .ResponsiveSidebarContainer .Cluster ul li.ClusterSelect > a,
+    .ResponsiveSidebarContainer .Cluster ul li.ClusterSelect > span {
+        color: #FFFFFF;
+        background-color: #0A7CB3;
+    }
+    .ResponsiveSidebarContainer .Cluster ul ul li {
+        border-bottom: 1px solid #0A7CB3;
+    }
+    .ResponsiveSidebarContainer .Cluster > ul > li:hover > span {
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    body:not(.Visible-ScreenXL) #ToolBar {
+        background-color: #F0F0F0;
+    }
+    body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a,
+    body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a {
+        background-color: #AAAAAA;
+        color: #FFFFFF;
+    }
+
+    body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a.Selected,
+    body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a.Selected {
+        background-color: #555555;
+    }
+    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header {
+        background: #E8E8E8;
+    }
+}

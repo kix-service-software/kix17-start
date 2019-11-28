@@ -112,9 +112,9 @@
                  <h2><span>[% Translate("Overview") | html %]</span></h2>
             </div>
 
-[% RenderBlockStart("OverviewTable") %]
-            <h3 class="Spacing">[% Translate("Range") | html %] ([% Translate("last") | html %] [% Data.Age | html %])</h3>
             <div class="Content">
+[% RenderBlockStart("OverviewTable") %]
+                <h3 class="SpacingTop">[% Translate("Range") | html %] ([% Translate("last") | html %] [% Data.Age | html %])</h3>
 
                 <table class="DataTable">
                     <thead>
@@ -157,8 +157,8 @@
 [% RenderBlockEnd("OverviewInterface") %]
                     </tbody>
                 </table>
-            </div>
 [% RenderBlockEnd("OverviewTable") %]
+            </div>
         </div>
     </div>
 [% RenderBlockEnd("Overview") %]

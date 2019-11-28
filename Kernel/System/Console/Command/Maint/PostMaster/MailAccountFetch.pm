@@ -70,7 +70,7 @@ sub PreRun {
     if ($Debug) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'debug',
-            Message  => "OTRS email handle ($Name) started.",
+            Message  => "KIX email handle ($Name) started.",
         );
     }
 
@@ -131,7 +131,7 @@ sub PostRun {
     if ($Debug) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'debug',
-            Message  => "OTRS email handle ($Name) stopped.",
+            Message  => "KIX email handle ($Name) stopped.",
         );
     }
 

@@ -1,0 +1,179 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld,print {
+
+    .PrintContainer .Logo {
+        float: right;
+        height: 55px;
+    }
+
+    .PrintContainer ul.Attributes {
+        border: 1px solid #ccc;
+        padding: 5px;
+        font-size: 12px;
+        margin: 0px 0px 10px 0px;
+    }
+
+    .PrintContainer {
+        padding: 15px;
+        font-size: 14px;
+    }
+
+    .PrintContainer #Path {
+        border: 1px solid #ccc;
+        padding: 15px 15px 0px 15px;
+    }
+
+    .PrintContainer #Path li {
+        width: 500px;
+        display: block;
+        margin: 0px auto 15px auto;
+    }
+
+    .PrintContainer #Path li > span {
+        display: inline-block;
+        border: 1px solid #ccc;
+        padding: 5px;
+        background-color: #eee;
+    }
+
+    .PrintContainer #Path li > strong {
+        position: relative;
+        display: inline-block;
+        width: 392px;
+        text-align: center;
+        font-weight: normal;
+        font-size: 11px;
+    }
+
+    .PrintContainer #Path li > strong span {
+        width: 400px;
+        border-bottom: 2px solid #aaa;
+        display: block;
+        position: absolute;
+        left: 50%;
+        margin-left: -200px;
+        top: 9px;
+        z-index: 1;
+    }
+
+    .PrintContainer #Path li > strong em {
+        background-color: #f2f2f2;
+        display: inline-block;
+        position: relative;
+        z-index: 2;
+        padding: 4px;
+        border: 1px solid #aaa;
+    }
+
+    .PrintContainer h1 {
+        font-size: 30px;
+        margin-bottom: 10px;
+    }
+
+    .PrintContainer h2 {
+        font-size: 18px;
+        border-bottom: 1px solid #ccc;
+        margin-top: 0px;
+        padding-bottom: 15px;
+        line-height: 130%;
+    }
+
+    .PrintContainer h3 {
+        margin-top: 15px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .PrintContainer h3 + ul {
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+
+    .PrintContainer h4 {
+        font-size: 15px;
+        line-height: 140%;
+        background-color: #eee;
+        padding: 5px 8px;
+    }
+
+    .PrintContainer h4 span {
+        display: block;
+        font-weight: normal;
+        font-size: 12px;
+    }
+
+    .PrintContainer h4 + strong {
+        display: block;
+        padding: 0px 5px;
+        margin-top: 10px;
+    }
+
+    .PrintContainer h4 ~ ul,
+    .PrintContainer h4 ~ ol {
+        margin: 5px 0px 15px 10px;
+    }
+
+    .PrintContainer h4 ~ ul li,
+    .PrintContainer h4 ~ ol li {
+        line-height: 150%;
+    }
+
+    .PrintContainer h4 ~ ol {
+        list-style-type: decimal;
+        padding-left: 15px;
+    }
+
+    .PrintContainer h4 ~ ol p {
+        font-size: 12px;
+        padding-left: 5px;
+        line-height: 150%;
+    }
+
+    .PrintContainer h4 ~ ol p:last-child {
+        margin-bottom: 5px;
+    }
+
+    .PrintContainer h4 ~ ol > li > ul {
+        margin-left: 5px;
+    }
+
+    .PrintContainer h4 ~ ol > li > ul ul {
+        margin-left: 5px;
+        font-size: 12px;
+        border-left: 5px solid #eee;
+        padding-left: 5px;
+        margin-bottom: 5px;
+    }
+
+    .PrintContainer h4 ~ ol > li > ul ul h6 {
+        font-style: italic;
+    }
+
+    .PrintContainer h4 ~ ol > li > ul > li h5 {
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 0px;
+    }
+
+    .PrintContainer pre {
+        margin: 10px;
+        font-family: monospace;
+        font-size: 12px;
+        line-height: 130%;
+    }
+
+}/* end @media */

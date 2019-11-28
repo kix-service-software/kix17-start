@@ -791,6 +791,30 @@ sub Login {
         );
     }
 
+    # Add header responsive logo, if configured
+    if ( defined $ConfigObject->Get('AgentResponsiveLogo') ) {
+        my %AgentResponsiveLogo = %{ $ConfigObject->Get('AgentResponsiveLogo') };
+        my %Data;
+
+        for my $CSSStatement ( sort keys %AgentResponsiveLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = '';
+                if ( $AgentResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
+                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                }
+                $Data{'URL'} = 'url(' . $WebPath . $AgentResponsiveLogo{$CSSStatement} . ')';
+            }
+            else {
+                $Data{$CSSStatement} = $AgentResponsiveLogo{$CSSStatement};
+            }
+        }
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogoCSS',
+            Data => \%Data,
+        );
+    }
+
     # add login logo, if configured
     if ( defined $ConfigObject->Get('AgentLoginLogo') ) {
         my %AgentLoginLogo = %{ $ConfigObject->Get('AgentLoginLogo') };
@@ -811,6 +835,33 @@ sub Login {
         if ( $CSS ) {
             $Self->Block(
                 Name => 'LoginLogoCSS',
+                Data => {
+                    CSSAttr => $CSS
+                }
+            );
+        }
+    }
+
+    # add responsive login logo, if configured
+    if ( defined $ConfigObject->Get('AgentResponsiveLoginLogo') ) {
+        my %AgentRLLogo = %{ $ConfigObject->Get('AgentResponsiveLoginLogo') };
+        my $CSS         = '';
+
+        for my $CSSStatement ( sort keys %AgentRLLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                $CSS .= 'background-image: url(' . $WebPath . $AgentRLLogo{$CSSStatement} . '); ';
+            }
+            else {
+                my $Attr = $CSSStatement;
+                $Attr =~ s/^Style//;
+                $CSS .= lc($Attr) . ': ' . $AgentRLLogo{$CSSStatement} . '; ';
+            }
+        }
+
+        if ( $CSS ) {
+            $Self->Block(
+                Name => 'LoginResponsiveLogoCSS',
                 Data => {
                     CSSAttr => $CSS
                 }
@@ -1317,6 +1368,29 @@ sub Header {
         );
     }
 
+    if ( defined $ConfigObject->Get('AgentResponsiveLogo') ) {
+        my %AgentResponsiveLogo = %{ $ConfigObject->Get('AgentResponsiveLogo') };
+
+        my %Data;
+        for my $CSSStatement ( sort keys %AgentResponsiveLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = '';
+                if ( $AgentResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
+                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                }
+                $Data{'URL'} = 'url(' . $WebPath . $AgentResponsiveLogo{$CSSStatement} . ')';
+            }
+            else {
+                $Data{$CSSStatement} = $AgentResponsiveLogo{$CSSStatement};
+            }
+        }
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogoCSS',
+            Data => \%Data,
+        );
+    }
+
     # add cookies if exists
     my $Output = '';
     if ( $Self->{SetCookies} && $ConfigObject->Get('SessionUseCookie') ) {
@@ -1484,7 +1558,8 @@ sub Header {
             );
             # enforce default if empty
             if (!$UserPreferences{UserToolbarPosition}) {
-                $UserPreferences{UserToolbarPosition} = 'ToolbarRight';
+                my $PreferencesGroups = $ConfigObject->Get('PreferencesGroups');
+                $UserPreferences{UserToolbarPosition} = $PreferencesGroups->{ToolbarPosition}->{DataSelected} || 'ToolbarRight';
                 my $Success = $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
                     Key    => 'UserToolbarPosition',
                     Value  => $UserPreferences{UserToolbarPosition},
@@ -1492,6 +1567,25 @@ sub Header {
                 );
             }
             $Param{UserToolbarPosition} = $UserPreferences{UserToolbarPosition};
+
+            my $CustomCSSTop = $ConfigObject->Get('ToolbarPosition::CustomCSSTop');
+            if (
+                defined $CustomCSSTop
+                && ref $CustomCSSTop eq 'HASH'
+                && $Param{UserToolbarPosition} eq 'ToolbarTop'
+            ) {
+                for my $Elem ( qw(Toolbar Toggle) ) {
+                    for my $Key ( qw(Top Left) ) {
+                        my $Value = $CustomCSSTop->{$Elem . '::' . $Key};
+                        if (
+                            defined $Value
+                            && $Value ne ''
+                        ) {
+                            $Param{'CustomCSSTop' . $Elem} .= lc($Key) . ': ' . $Value . '; '
+                        }
+                    }
+                }
+            }
         }
 
         # show logged in notice
@@ -3928,6 +4022,34 @@ sub CustomerLogin {
         );
     }
 
+    # Add header responsive logo, if configured
+    if ( defined $ConfigObject->Get('CustomerResponsiveLogo') ) {
+        my %CustomerResponsiveLogo = %{ $ConfigObject->Get('CustomerResponsiveLogo') };
+        my %Data;
+
+        for my $CSSStatement ( sort keys %CustomerResponsiveLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = '';
+                if ( $CustomerResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
+                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                }
+                $Data{'URL'} = 'url(' . $WebPath . $CustomerResponsiveLogo{$CSSStatement} . ')';
+            }
+            else {
+                $Data{$CSSStatement} = $CustomerResponsiveLogo{$CSSStatement};
+            }
+        }
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogoCSS',
+            Data => \%Data,
+        );
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogo',
+        );
+    }
+
     # add login logo, if configured
     if ( defined $ConfigObject->Get('CustomerLoginLogo') ) {
         my %CustomerLoginLogo = %{ $ConfigObject->Get('CustomerLoginLogo') };
@@ -3948,6 +4070,33 @@ sub CustomerLogin {
         if ( $CSS ) {
             $Self->Block(
                 Name => 'LoginLogoCSS',
+                Data => {
+                    CSSAttr => $CSS
+                }
+            );
+        }
+    }
+
+    # add responsive login logo, if configured
+    if ( defined $ConfigObject->Get('CustomerResponsiveLoginLogo') ) {
+        my %CustomerRLLogo = %{ $ConfigObject->Get('CustomerResponsiveLoginLogo') };
+        my $CSS            = '';
+
+        for my $CSSStatement ( sort keys %CustomerRLLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                $CSS .= 'background-image: url(' . $WebPath . $CustomerRLLogo{$CSSStatement} . '); ';
+            }
+            else {
+                my $Attr = $CSSStatement;
+                $Attr =~ s/^Style//;
+                $CSS .= lc($Attr) . ': ' . $CustomerRLLogo{$CSSStatement} . '; ';
+            }
+        }
+
+        if ( $CSS ) {
+            $Self->Block(
+                Name => 'LoginResponsiveLogoCSS',
                 Data => {
                     CSSAttr => $CSS
                 }
@@ -4234,6 +4383,33 @@ sub CustomerHeader {
         );
     }
 
+    if ( defined $ConfigObject->Get('CustomerResponsiveLogo') ) {
+        my %CustomerResponsiveLogo = %{ $ConfigObject->Get('CustomerResponsiveLogo') };
+
+        my %Data;
+        for my $CSSStatement ( sort keys %CustomerResponsiveLogo ) {
+            if ( $CSSStatement eq 'URL' ) {
+                my $WebPath = '';
+                if ( $CustomerResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
+                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                }
+                $Data{'URL'} = 'url(' . $WebPath . $CustomerResponsiveLogo{$CSSStatement} . ')';
+            }
+            else {
+                $Data{$CSSStatement} = $CustomerResponsiveLogo{$CSSStatement};
+            }
+        }
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogoCSS',
+            Data => \%Data,
+        );
+
+        $Self->Block(
+            Name => 'HeaderResponsiveLogo',
+        );
+    }
+
     # Generate the minified CSS and JavaScript files
     # and the tags referencing them (see LayoutLoader)
     $Self->LoaderCreateCustomerCSSCalls();
@@ -4482,6 +4658,8 @@ sub CustomerNavigationBar {
         if ( $NavBarModule{$Item}->{NavBar} ) {
             $Sub = $NavBarModule{Sub}->{ $NavBarModule{$Item}->{NavBar} };
         }
+        $NavBarModule{$Item}->{NameForID} = $NavBarModule{$Item}->{Name};
+        $NavBarModule{$Item}->{NameForID} =~ s/[ &;]//ig;
 
         # highlight active link
         $NavBarModule{$Item}->{Class} = '';
@@ -4507,7 +4685,7 @@ sub CustomerNavigationBar {
         next ITEM if !$Sub;
         $Self->Block(
             Name => 'ItemAreaSub',
-            Data => $Item,
+            Data => $NavBarModule{$Item},
         );
         for my $Key ( sort keys %{$Sub} ) {
             my $ItemSub = $Sub->{$Key};
@@ -4934,8 +5112,7 @@ sub RichTextDocumentServe {
 
         if ( !$Param{LoadExternalImages} ) {
 
-            # Strip out external images, but show a confirmation button to
-            #   load them explicitly.
+            # Strip out external images
             my %SafetyCheckResultNoExt = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
                 String       => $Param{Data}->{Content},
                 NoApplet     => 1,
@@ -4950,7 +5127,11 @@ sub RichTextDocumentServe {
 
             $Param{Data}->{Content} = $SafetyCheckResultNoExt{String};
 
-            if ( $SafetyCheckResultNoExt{Replace} ) {
+            # show a confirmation button to load external images explicitly, if not removed by sysconfig
+            if (
+                $SafetyCheckResultNoExt{Replace}
+                && !$Kernel::OM->Get('Kernel::Config')->Get('Frontend::RemoveExternalSource')
+            ) {
 
                 # Generate blocker message.
                 my $Message = $Self->Output( TemplateFile => 'AttachmentBlocker' );
@@ -5614,7 +5795,7 @@ sub _BuildSelectionDataRefCreate {
 
             next ROW if !$Row->{Value};
 
-            my @Fragment = split '::', $Row->{Value};
+            my @Fragment = split( '::', $Row->{Value});
             $Row->{Value} = pop @Fragment;
 
             # TODO: Here we are combining Max with HTMLQuote, check below for the REMARK:

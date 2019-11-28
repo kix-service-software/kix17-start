@@ -12,17 +12,20 @@ use strict;
 use warnings;
 use utf8;
 
+use Time::HiRes;
 use vars (qw($Self));
 
 # get needed objects
 my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
+# define needed variables
 my $HomeDir            = $ConfigObject->Get('Home');
 my @BackendModuleFiles = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
     Directory => $HomeDir . '/Kernel/System/Cache/',
     Filter    => '*.pm',
     Silent    => 1,
 );
+my $StartTime;
 
 MODULEFILE:
 for my $ModuleFile (@BackendModuleFiles) {
@@ -40,7 +43,7 @@ for my $ModuleFile (@BackendModuleFiles) {
     );
 
     # create a local cache object
-    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+    my $CacheObject = $Kernel::OM->GetNew('Kernel::System::Cache');
 
     die "Could not setup $Module" if !$CacheObject;
 
@@ -48,6 +51,7 @@ for my $ModuleFile (@BackendModuleFiles) {
     $CacheObject->CleanUp();
 
     my $SetCaches = sub {
+        $StartTime = Time::HiRes::time();
         $Self->True(
             $CacheObject->Set(
                 Type  => 'A',
@@ -55,9 +59,11 @@ for my $ModuleFile (@BackendModuleFiles) {
                 Value => 'A',
                 TTL   => 60 * 60 * 24 * 20,
             ),
-            "Set A/A",
+            "$Module: Set A/A",
+            $StartTime,
         );
 
+        $StartTime = Time::HiRes::time();
         $Self->True(
             $CacheObject->Set(
                 Type  => 'B',
@@ -65,104 +71,129 @@ for my $ModuleFile (@BackendModuleFiles) {
                 Value => 'B',
                 TTL   => 60 * 60 * 24 * 20,
             ),
-            "Set B/B",
+            "$Module: Set B/B",
+            $StartTime,
         );
     };
 
     $SetCaches->();
 
+    $StartTime = Time::HiRes::time();
     $Self->True(
         $CacheObject->CleanUp( Type => 'C' ),
-        "Inexistent cache type removed",
+        "$Module: Inexistent cache type removed",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     $Self->Is(
         $CacheObject->Get(
             Type => 'A',
             Key  => 'A'
         ),
         'A',
-        "Cache A/A is present",
+        "$Module: Cache A/A is present",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     $Self->Is(
         $CacheObject->Get(
             Type => 'B',
             Key  => 'B'
         ),
         'B',
-        "Cache B/B is present",
+        "$Module: Cache B/B is present",
+        $StartTime,
     );
 
     $SetCaches->();
 
+    $StartTime = Time::HiRes::time();
     $Self->True(
         $CacheObject->CleanUp( Type => 'A' ),
-        "Cache type A removed",
+        "$Module: Cache type A removed",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     $Self->False(
         $CacheObject->Get(
             Type => 'A',
             Key  => 'A'
         ),
-        "Cache A/A is not present",
+        "$Module: Cache A/A is not present",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     $Self->Is(
         $CacheObject->Get(
             Type => 'B',
             Key  => 'B'
         ),
         'B',
-        "Cache B/B is present",
+        "$Module: Cache B/B is present",
+        $StartTime,
     );
 
     $SetCaches->();
 
+    $StartTime = Time::HiRes::time();
     $Self->True(
         $CacheObject->CleanUp( KeepTypes => ['A'] ),
-        "All cache types removed except A",
+        "$Module: All cache types removed except A",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     $Self->Is(
         $CacheObject->Get(
             Type => 'A',
             Key  => 'A'
         ),
         'A',
-        "Cache A/A is present",
+        "$Module: Cache A/A is present",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     $Self->False(
         $CacheObject->Get(
             Type => 'B',
             Key  => 'B'
         ),
-        "Cache B/B is not present",
+        "$Module: Cache B/B is not present",
+        $StartTime,
     );
 
     $SetCaches->();
 
+    $StartTime = Time::HiRes::time();
     $Self->True(
         $CacheObject->CleanUp(),
-        "All cache types removed",
+        "$Module: All cache types removed",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     $Self->False(
         $CacheObject->Get(
             Type => 'A',
             Key  => 'A'
         ),
-        "Cache A/A is not present",
+        "$Module: Cache A/A is not present",
+        $StartTime,
     );
 
+    $StartTime = Time::HiRes::time();
     $Self->False(
         $CacheObject->Get(
             Type => 'B',
             Key  => 'B'
         ),
-        "Cache B/B is not present",
+        "$Module: Cache B/B is not present",
+        $StartTime,
     );
 
     # flush the cache

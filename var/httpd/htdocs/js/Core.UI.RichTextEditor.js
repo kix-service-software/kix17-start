@@ -115,7 +115,7 @@ Core.UI.RichTextEditor = (function (TargetNS) {
             Core.App.Publish('Event.UI.RichTextEditor.InstanceReady', [Editor]);
         });
 
-        // The format for the language is different between OTRS and CKEditor (see bug#8024)
+        // The format for the language is different between KIX and CKEditor (see bug#8024)
         // To correct this, we replace "_" with "-" in the language (e.g. zh_CN becomes zh-cn)
         UserLanguage = Core.Config.Get('UserLanguage').replace(/_/, "-");
 
@@ -138,7 +138,9 @@ Core.UI.RichTextEditor = (function (TargetNS) {
             defaultLanguage: UserLanguage,
             language: UserLanguage,
             width: Core.Config.Get('RichText.Width', 620),
-            resize_minWidth: Core.Config.Get('RichText.Width', 620),
+            resize_enabled: true,
+            resize_dir: 'both',
+            resize_minWidth: 320,
             height: Core.Config.Get('RichText.Height', 320),
             removePlugins: CheckFormID($EditorArea).length ? '' : 'image2,uploadimage',
             forcePasteAsPlainText: false,

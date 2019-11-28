@@ -358,7 +358,7 @@ sub store {
 
 this is our template pre processor.
 
-It handles some OTRS specific tags like [% InsertTemplate("TemplateName.tt") %]
+It handles some KIX specific tags like [% InsertTemplate("TemplateName.tt") %]
 and also performs compile-time code injection (ChallengeToken element into forms).
 
 Besides that, it also makes sure the template is treated as UTF8.

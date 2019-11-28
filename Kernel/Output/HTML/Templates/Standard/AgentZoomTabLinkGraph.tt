@@ -19,15 +19,8 @@
         <div class="ContentColumn">
             <div class="WidgetSimple SpacingTop SpacingLeft SpacingRight SpacingBottom">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" id="GraphSelectionBlockOpen" title="[% Translate("Graph View Configuration") | html %]" style="width:100%;">
-                            <i class="fa fa-caret-right">
-                            </i>
-                            <i class="fa fa-caret-down">
-                            </i>
-                        </a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Graph View Configuration") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Graph View Configuration") | html %]" ></div>
+                    <h2><span>[% Translate("Graph View Configuration") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <form action="" method="" enctype="" class="" name="IFrameParam" id="IFrameParam">
@@ -89,15 +82,8 @@
         <div class="ContentColumn">
             <div class="WidgetSimple SpacingTop SpacingLeft SpacingRight SpacingBottom Collapsed">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" id="GraphDisplayBlockOpen" title="[% Translate("Graph Display") | html %]">
-                            <i class="fa fa-caret-right">
-                            </i>
-                            <i class="fa fa-caret-down">
-                            </i>
-                        </a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Graph Display") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Graph Display") | html %]" ></div>
+                    <h2><span>[% Translate("Graph Display") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <iframe id="displayGraphIFrame" src="" width="[% Data.Width | html %]" height="[% Data.Height | html %]" name="[% Data.Title | html %]" marginheight="[% Data.Marginheight | html %]" marginwidth="[% Data.Marginwidth | html %]" frameborder="[% Data.Frameborder | html %]" align="[% Data.Align | html %]" scrolling="no">

@@ -23,6 +23,48 @@ Core.Agent = Core.Agent || {};
 Core.Agent.Responsive = (function (TargetNS) {
 
     Core.App.Subscribe('Event.App.Responsive.SmallerOrEqualScreenL', function () {
+        Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady',function(Editor) {
+            var ContentWidth = Core.Config.Get('RichText.Width', 620);
+            if ( $('#cke_' + Editor.editor.name).closest('.Content').length ) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.Content').width();
+            }
+            else if ($('#cke_' + Editor.editor.name).closest('.ContentColumn').length) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.ContentColumn').width();
+            }
+            if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                Editor.editor.resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+            }
+        });
+
+        $(window).resize(function() {
+            if ( typeof CKEDITOR !== 'undefined' ) {
+                $.each( CKEDITOR.instances, function(ID) {
+                    var ContentWidth = Core.Config.Get('RichText.Width', 620);
+                    if ( $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').length ) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').width();
+                    }
+                    else if ($('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').length) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').width();
+                    }
+                    if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                        CKEDITOR.instances[ID].resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+                    }
+                });
+            }
+        });
+
+        // Add class to toolbar
+        $('#ToolBarToggle').addClass('ResponsiveToolbar');
+        $('.ResponsiveToolbar').off('.ResponsiveToolbar').on('click.ResponsiveToolbar', function() {
+            $('body').removeClass('OpenToolbar');
+            if ( $(this).hasClass('Hide') ) {
+                $('body').addClass('OpenToolbar');
+            }
+        });
+        if ( $('#ToolBarToggle').hasClass('Hide') ) {
+            $('body').addClass('OpenToolbar');
+        }
+
         // Add switch for Desktopmode
         if (!$('#ViewModeSwitch').length) {
             $('#Footer').append('<div id="ViewModeSwitch"><a href="#">' + Core.Config.Get('ViewModeSwitchDesktop') + '</a></div>');
@@ -58,8 +100,22 @@ Core.Agent.Responsive = (function (TargetNS) {
         }
         if (!$('#NavigationContainer').closest('.ResponsiveSidebarContainer').length) {
             $('#NavigationContainer').wrap('<div class="ResponsiveSidebarContainer" />');
+            $('#NavigationContainer').css('height', '100%');
         }
-
+        // wrap sidebar modules with an additional container
+        if ($('.ContentColumn > .ActionRow').children().length && !$('.ContentColumn > .ActionRow').closest('.ResponsiveSidebarContainer').length) {
+            $('.ContentColumn > .ActionRow').wrap('<div class="ResponsiveSidebarContainer" />');
+        }
+        // wrap sidebar modules with an additional container
+        if ($('#ArticleItems .LightRow').length) {
+            var ResponsiveCount = 0;
+            $.each($('#ArticleItems .LightRow'), function () {
+                if ( $(this).children().length && !$(this).closest('.ResponsiveSidebarContainer').length) {
+                    $(this).wrap('<div id="ResponsiveMenu_' + ResponsiveCount + '" class="ResponsiveSidebarContainer ResponsiveArticleMenu" />');
+                    ResponsiveCount++;
+                }
+            });
+        }
         // make sure the relevant sidebar is being collapsed on clicking
         // on the background
         $('.ResponsiveSidebarContainer').off().on('click', function(Event) {
@@ -79,10 +135,21 @@ Core.Agent.Responsive = (function (TargetNS) {
         if (!$('#ResponsiveNavigationHandle').length) {
             $('#NavigationContainer').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle" id="ResponsiveNavigationHandle"><i class="fa fa-navicon"></i></span>');
         }
+        if (!$('#ResponsiveTicketMenuHandle').length) {
+            $('.ContentColumn .ActionRow').closest('.ResponsiveSidebarContainer').before('<span class="ResponsiveHandle ResponsiveMenuHandle" id="ResponsiveTicketMenuHandle"><i class="fa fa-ellipsis-v"></i></span>');
+        }
+        if (!$('.ResponsibleMenuHandle').length) {
+            $.each($('div[id^=ResponsiveMenu_'), function () {
+                $(this).before('<span class="ResponsiveHandle ResponsiveMenuHandle"><i class="fa fa-ellipsis-v"></i></span>');
+            });
+        }
 
         // add navigation sidebar expansion handling
         $('#ResponsiveNavigationHandle').off().on('click', function() {
-            if (parseInt($('#NavigationContainer').css('left'), 10) < 0 || parseInt($('#NavigationContainer').css('left'), 10) === 10) {
+            if (
+                parseInt($('#NavigationContainer').css('left'), 10) < 0
+                || parseInt($('#NavigationContainer').css('left'), 10) === 10
+            ) {
                 $('#ResponsiveSidebarHandle').animate({
                     'right': '-45px'
                 });
@@ -92,14 +159,16 @@ Core.Agent.Responsive = (function (TargetNS) {
                     'left': '0px'
                 });
 
-                // KIXBase-capeIT
-                $('.ResponsiveSidebarContainer').children('div').children('ul').children('li').children('a').css({"border":"0px","float":"none"});
-                // EO KIXBase-capeIT
-
+                $('.ResponsiveSidebarContainer > div > ul > li > a').css(
+                    {
+                        "border":"0px",
+                        "float":"none"
+                    }
+                );
             }
             else {
                 $('#ResponsiveSidebarHandle').animate({
-                    'right': '0px'
+                    'right': '15px'
                 });
                 $('#NavigationContainer').closest('.ResponsiveSidebarContainer').fadeOut();
                 $('html').removeClass('NoScroll');
@@ -118,17 +187,57 @@ Core.Agent.Responsive = (function (TargetNS) {
                 });
                 $('.SidebarColumn').closest('.ResponsiveSidebarContainer').fadeIn();
                 $('html').addClass('NoScroll');
-                $('.SidebarColumn').animate({
+                $('.ResponsiveSidebarContainer .SidebarColumn').animate({
                     'right': '0px'
                 });
             }
             else {
                 $('#ResponsiveNavigationHandle').animate({
-                    'left': '0px'
+                    'left': '15px'
                 });
                 $('.SidebarColumn').closest('.ResponsiveSidebarContainer').fadeOut();
                 $('html').removeClass('NoScroll');
-                $('.SidebarColumn').animate({
+                $('.ResponsiveSidebarContainer .SidebarColumn').animate({
+                    'right': '-300px'
+                });
+            }
+            return false;
+        });
+
+        // add sidebar column expansion handling
+        $('.ResponsiveMenuHandle').off().on('click', function() {
+            var $Element = $(this).next('.ResponsiveSidebarContainer').children('div');
+            if (parseInt($Element.css('right'), 10) < 0) {
+                $('#ResponsiveNavigationHandle').animate({
+                    'left': '-45px'
+                });
+                $('#ResponsiveSidebarHandle').animate({
+                    'right': '-45px'
+                });
+                $Element.closest('.ResponsiveSidebarContainer').fadeIn();
+                $('html').addClass('NoScroll');
+                $Element.animate({
+                    'right': '0px'
+                });
+                $Element.find('.MenuClusterIcon, .ClusterLink').off().on('click', function(){
+                    if ($(this).closest('li').hasClass('ClusterSelect') ) {
+                        $(this).closest('li').removeClass('ClusterSelect');
+                    } else {
+                        $('.ResponsiveSidebarContainer .ActionRow li').removeClass('ClusterSelect');
+                        $(this).closest('li').addClass('ClusterSelect');
+                    }
+                });
+            }
+            else {
+                $('#ResponsiveNavigationHandle').animate({
+                    'left': '15px'
+                });
+                $('#ResponsiveSidebarHandle').animate({
+                    'right': '15px'
+                });
+                $Element.closest('.ResponsiveSidebarContainer').fadeOut();
+                $('html').removeClass('NoScroll');
+                $Element.animate({
                     'right': '-300px'
                 });
             }
@@ -150,7 +259,7 @@ Core.Agent.Responsive = (function (TargetNS) {
         $('#NavigationContainer').css('left', '-280px');
 
         // move toolbar to navigation container
-        $('#ToolBar').detach().prependTo('body');
+        $('#ToolBar').detach().prependTo('#AppWrapper');
 
         // make fields which have a following icon not as wide as other fields
         $('.FormScreen select').each(function() {
@@ -164,6 +273,54 @@ Core.Agent.Responsive = (function (TargetNS) {
     });
 
     Core.App.Subscribe('Event.App.Responsive.ScreenXL', function () {
+        // remove class to toolbar
+        $('.ResponsiveToolbar').off('.ResponsiveToolbar');
+        $('#ToolBarToggle').removeClass('ResponsiveToolbar');
+        $('body').removeClass('OpenToolbar');
+
+        Core.App.Subscribe('Event.UI.RichTextEditor.InstanceReady',function(Editor) {
+            var ContentWidth = Core.Config.Get('RichText.Width', 620),
+                LabelWidth   = 0;
+            if ( $('#cke_' + Editor.editor.name).closest('.Content').length ) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.Content').width();
+                LabelWidth   = $('#cke_' + Editor.editor.name).closest('.Content').find('label').first().width();
+            }
+            else if ($('#cke_' + Editor.editor.name).closest('.ContentColumn').length) {
+                ContentWidth = $('#cke_' + Editor.editor.name).closest('.ContentColumn').width();
+                LabelWidth   = $('#cke_' + Editor.editor.name).closest('.ContentColumn').find('label').first().width();
+            }
+            // real content = content - padding - label;
+            ContentWidth = ContentWidth - 25 - LabelWidth;
+            if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                Editor.editor.resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+            } else {
+                Editor.editor.resize(Core.Config.Get('RichText.Width', 620), Core.Config.Get('RichText.Height', 320), true);
+            }
+        });
+
+        $(window).resize(function() {
+            if ( typeof CKEDITOR !== 'undefined' ) {
+                $.each( CKEDITOR.instances, function(ID) {
+                    var ContentWidth = Core.Config.Get('RichText.Width', 620),
+                        LabelWidth   = 0;
+                    if ( $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').length ) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').width();
+                        LabelWidth   = $('#cke_' + CKEDITOR.instances[ID].name).closest('.Content').first('label').width();
+                    }
+                    else if ($('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').length) {
+                        ContentWidth = $('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').width();
+                        LabelWidth   = $('#cke_' + CKEDITOR.instances[ID].name).closest('.ContentColumn').first('label').width();
+                    }
+                    // real content = content - padding - label;
+                    ContentWidth = ContentWidth - 25 - LabelWidth;
+                    if ( ContentWidth < Core.Config.Get('RichText.Width', 620)) {
+                        CKEDITOR.instances[ID].resize(ContentWidth, Core.Config.Get('RichText.Height', 320), true);
+                    } else {
+                        CKEDITOR.instances[ID].resize(Core.Config.Get('RichText.Width', 620), Core.Config.Get('RichText.Height', 320), true);
+                    }
+                });
+            }
+        });
 
         // remove show pagination trigger icons
         $('.WidgetAction.ShowPagination, #ViewModeSwitch').remove();
@@ -172,12 +329,25 @@ Core.Agent.Responsive = (function (TargetNS) {
         $('.D3GraphMessage, .D3GraphCanvas').closest('.WidgetSimple').show();
 
         // remove the additional container again
-        $('.ResponsiveSidebarContainer').children('.SidebarColumn, #NavigationContainer').unwrap();
+        $('.ResponsiveSidebarContainer').children('#NavigationContainer').unwrap();
+        $.each($('.ResponsiveSidebarContainer').children('.SidebarColumn, .ActionRow, .LightRow'), function() {
+            if ( $(this).css('left') === '-300px' ) {
+                $(this).css('left', '0px');
+            } else if ( $(this).css('right') === '-300px' ) {
+                $(this).css('right', '0px');
+            }
+            $(this).unwrap();
+        });
 
         $('#OptionCustomer').closest('.Field').show().prev('label').show();
 
         // reset navigation container position
-        $('#NavigationContainer').css('left', '100px');
+        $('#NavigationContainer').css(
+            {
+                'left': '100px',
+                'height': '35px'
+            }
+        );
 
         // re-add toolbar to header
         $('#ToolBar').detach().prependTo('#Header');

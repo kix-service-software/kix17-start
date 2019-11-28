@@ -34,7 +34,12 @@
             <div class="Content">
                 <ul class="ActionList">
                     <li>
-                        <a href="[% Env("Baselink") %]Action=AdminGenericInterfaceWebservice;Subaction=Change;WebserviceID=[% Data.WebserviceID | uri %]" class="CallForAction"><span>[% Translate("Go back to web service") | html %]</span></a>
+                        <a href="[% Env("Baselink") %]Action=AdminGenericInterfaceWebservice;Subaction=Change;WebserviceID=[% Data.WebserviceID | uri %]" class="CallForAction Fullsize Center">
+                            <span>
+                                <i class="fa fa-caret-left"></i>
+                                [% Translate("Go back to web service") | html %]
+                            </span>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -88,7 +93,7 @@
                                 <div id="MaxLengthError" class="TooltipErrorMessage"><p>[% Translate("This field should be an integer number.") | html %]</p></div>
                                 <div id="MaxLengthServerError" class="TooltipErrorMessage"><p>[% Translate(Data.MaxLengthServerErrorMessage) | html %]</p></div>
                                 <p class="FieldExplanation">
-                                    [% Translate("Here you can specify the maximum size (in bytes) of REST messages that OTRS will process.") | html %]
+                                    [% Translate("Here you can specify the maximum size (in bytes) of REST messages that KIX will process.") | html %]
                                 </p>
                             </div>
                             <div class="Clear"></div>
@@ -114,7 +119,7 @@
                                 <p class="FieldExplanation">
                                     [% Translate("Remote host URL for the REST requests.") | html %]
                                     <br/>
-                                    [% Translate("e.g https://www.otrs.com:10745/api/v1.0 (without trailing backslash)") | html %]
+                                    [% Translate("e.g https://www.kixdesk.com:10745/api/v1.0 (without trailing backslash)") | html %]
                                 </p>
                             </div>
                             <div class="Clear"></div>

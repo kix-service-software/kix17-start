@@ -347,7 +347,7 @@ Core.UI.TreeSelection = (function (TargetNS) {
             $('#TreeContainer')
                 .prepend($TreeObj)
                 .prepend('<div id="TreeSearch"><input type="text" id="TreeSearchInput" placeholder="' + Core.Config.Get('SearchMsg') + '..." /><span title="' + Core.Config.Get('DeleteMsg') + '">x</span></div>')
-                .append('<input type="button" id="SubmitTree" class="Primary" title="' + Core.Config.Get('ApplyButtonText') + '" value="' + Core.Config.Get('ApplyButtonText') + '" />');
+                .append('<input type="button" id="SubmitTree" class="Primary CallForAction" title="' + Core.Config.Get('ApplyButtonText') + '" value="' + Core.Config.Get('ApplyButtonText') + '" />');
         }
         else {
             $TreeObj

@@ -215,7 +215,7 @@ sub Run {
     }
 
     # get current user groups as array
-    my %GroupList = $GroupObject->PermissionUserGroupGet(
+    my %GroupList = $GroupObject->PermissionUserGet(
         UserID => $Self->{UserID},
         Type   => $Self->{Config}->{Permission}
     );
@@ -1111,7 +1111,6 @@ sub Run {
                     . " $Article{TicketNumber} to ticket $GetParam{NewTicketNumber} ",
                 HistoryType  => 'Misc',
                 TicketID     => $GetParam{TicketID},
-                ArticleID    => $GetParam{ArticleID},
                 CreateUserID => $Self->{UserID},
             );
         }

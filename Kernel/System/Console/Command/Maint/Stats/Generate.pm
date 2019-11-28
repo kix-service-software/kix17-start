@@ -33,7 +33,7 @@ sub Configure {
     my ( $Self, %Param ) = @_;
 
     $Self->Description(
-        'Generate (and send, optional) statistics which have been configured previously in the OTRS statistics module.'
+        'Generate (and send, optional) statistics which have been configured previously in the KIX statistics module.'
     );
     $Self->AddOption(
         Name        => 'number',
@@ -98,7 +98,7 @@ sub Configure {
     $Self->AddOption(
         Name => 'language',
         Description =>
-            "Target language (e.g. de) for which the file should be generated (will be OTRS default language or english as fallback if left empty).",
+            "Target language (e.g. de) for which the file should be generated (will be KIX default language or english as fallback if left empty).",
         Required   => 0,
         HasValue   => 1,
         ValueRegex => qr/.*/smx,

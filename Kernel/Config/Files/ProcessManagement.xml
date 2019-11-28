@@ -11,8 +11,7 @@
                 <Title Translatable="1">Process Management</Title>
                 <NavBarName>Admin</NavBarName>
                 <Loader>
-                    <CSS>Core.Agent.Admin.ProcessManagement.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
+                    <CSS>Base.ProcessManagement.css</CSS>
                     <JavaScript>thirdparty/jsplumb-1.6.4/jsplumb.js</JavaScript>
                     <JavaScript>thirdparty/farahey-0.5/farahey.js</JavaScript>
                     <JavaScript>thirdparty/jsplumb-labelspacer/label-spacer.js</JavaScript>
@@ -39,8 +38,7 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">Process Management Activity GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.ProcessManagement.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
+                    <CSS>Base.ProcessManagement.css</CSS>
                     <JavaScript>Core.Agent.Admin.ProcessManagement.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -56,8 +54,7 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">Process Management Activity Dialog GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.ProcessManagement.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
+                    <CSS>Base.ProcessManagement.css</CSS>
                     <JavaScript>Core.Agent.Admin.ProcessManagement.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -73,7 +70,7 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">Process Management Transition GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.ProcessManagement.css</CSS>
+                    <CSS>Base.ProcessManagement.css</CSS>
                     <JavaScript>Core.Agent.Admin.ProcessManagement.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -89,7 +86,7 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">Process Management Transition Action GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.ProcessManagement.css</CSS>
+                    <CSS>Base.ProcessManagement.css</CSS>
                     <JavaScript>Core.Agent.Admin.ProcessManagement.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -105,8 +102,7 @@
                 <Description>Admin</Description>
                 <Title Translatable="1">Process Management Path GUI</Title>
                 <Loader>
-                    <CSS>Core.Agent.Admin.ProcessManagement.css</CSS>
-                    <CSS>Core.AllocationList.css</CSS>
+                    <CSS>Base.ProcessManagement.css</CSS>
                     <JavaScript>Core.Agent.Admin.ProcessManagement.js</JavaScript>
                 </Loader>
             </FrontendModuleReg>
@@ -143,7 +139,6 @@
                     <Prio>220</Prio>
                 </NavBar>
                 <Loader>
-                    <CSS>Core.Agent.TicketProcess.css</CSS>
                     <JavaScript>Core.Agent.CustomerSearch.js</JavaScript>
                     <JavaScript>Core.Agent.TicketAction.js</JavaScript>
                     <JavaScript>Core.Agent.TicketProcess.js</JavaScript>
@@ -270,7 +265,6 @@
                 <NavBarName>Ticket</NavBarName>
                 <Title Translatable="1">Process ticket</Title>
                 <Loader>
-                    <CSS>Core.Customer.TicketProcess.css</CSS>
                 </Loader>
             </FrontendModuleReg>
         </Setting>
@@ -461,4 +455,3 @@
         </Setting>
     </ConfigItem>
 </otrs_config>
-    

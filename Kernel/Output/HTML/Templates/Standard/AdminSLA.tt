@@ -47,7 +47,7 @@
                  <h2><span><label for="FilterSLA">[% Translate("Filter for SLAs") | html %]</label></span></h2>
             </div>
             <div class="Content">
-                <input type="text" id="FilterSLA" class="W50pc" name="FilterSLA" value="" title="[% Translate("Filter for SLAs") | html %]" />
+                <input type="text" id="FilterSLA" class="W95pc" name="FilterSLA" value="" title="[% Translate("Filter for SLAs") | html %]" />
             </div>
         </div>
     </div>
@@ -130,7 +130,7 @@
 # ---
 # GeneralCatalog
 # ---
-                        <label for="ServiceIDs">[% Translate("Type") | html %]:</label>
+                        <label for="TypeID">[% Translate("Type") | html %]:</label>
                         <div class="Field">
                             [% Data.TypeOptionStrg %]
                         </div>

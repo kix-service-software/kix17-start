@@ -26,12 +26,14 @@ Core.KIXBase.Agent = (function(TargetNS) {
         // hide Toolbar
         if ($('#ToolBarToggle').length > 0 && $('#ToolBar').length > 0) {
 
-            var Class = 'Show';
+            var Class = 'Show',
+                Text  = Core.Config.Get('ShowToolbar');
 
             Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=GetToolBarToggleState', function(Result) {
                 if (Result == 1) {
-                    $('#ToolBar').removeClass('Hidden');
+                    $('#ToolBar').removeClass('Hidden').addClass('toggle');
                     Class = 'Hide';
+                    Text  = Core.Config.Get('HideToolbar');
                 }
                 else {
                     $('#ToolBar').addClass('Hidden');
@@ -41,19 +43,19 @@ Core.KIXBase.Agent = (function(TargetNS) {
 
             var Action = Core.Config.Get('Action');
             if ( !Action.match(/^AgentTicketZoom(.+)/) && !Action.match(/^AgentITSM(.*?)Zoom(.+)/) ) {
-                $('#ToolBarToggle').addClass(Class);
+                $('#ToolBarToggle').addClass(Class).html(Text);
                 $('#ToolBarToggle').click(function() {
                     if ($('#ToolBarToggle').hasClass('Show')) {
-                        $('#ToolBar').show('fast').addClass('toggle');
-                        $('#ToolBarToggle').removeClass('Show').addClass('Hide');
+                        $('#ToolBar').removeClass('Hidden').addClass('toggle');
+                        $('#ToolBarToggle').removeClass('Show').addClass('Hide').html(Core.Config.Get('HideToolbar'));
 
-                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=1', null, 'text');
+                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=1', function() {}, 'text');
                     }
                     else {
-                        $('#ToolBar').hide('fast').removeClass('toggle');
-                        $('#ToolBarToggle').removeClass('Hide').addClass('Show');
+                        $('#ToolBar').addClass('Hidden').removeClass('toggle');
+                        $('#ToolBarToggle').removeClass('Hide').addClass('Show').html(Core.Config.Get('ShowToolbar'));
 
-                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=0', null, 'text');
+                        Core.AJAX.FunctionCall(Core.Config.Get('CGIHandle'), 'Action=KIXBaseAJAXHandler;Subaction=SaveToolBarToggleState;ToolBarShown=0', function() {}, 'text');
                     }
                 });
             }
@@ -162,9 +164,6 @@ Core.KIXBase.Agent = (function(TargetNS) {
 
         // move navigation left
         $('#NavigationContainer').css({"left":"100px"});
-
-        // Change text from "phone ticket" to "ticket"
-        $('#Dashboard0050-CIC-CustomerUserList table th:nth-of-type(5)').text('Ticket');
     }
 
     // hook Core.AJAX.ContentUpdate method
@@ -179,21 +178,13 @@ Core.KIXBase.Agent = (function(TargetNS) {
                 // add padding to WidgetSimple Header h2 if Toggle element exists before
                 $('#ArticleItems .WidgetSimple > .Header > h2').each(function () {
                     if ($(this).parent('.Header').children().index($(this)) > 0 && $(this).parent('.Header').children('.Toggle').length == 1) {
-                        $(this).addClass('PaddingLeft15px');
+                        $(this).addClass('WithToggle');
                     }
                     // enclose text into span element for positioning (we have to check html() here, because otherwise it won't work in FAQ)
                     if ($(this).html().length > 0 && !$(this).html().indexOf('<span') == 0) {
                         $(this).html('<span>' + $(this).html() + '</span>');
                     }
                 });
-
-                /*
-                 * deactivated 01-12-2016 (Ticket #2016111790000633)
-                 * // add color to article body
-                 * $('#ArticleItems .WidgetSimple > .Content iframe').load(function() {
-                 *     $(this).contents().find('body').css('color', '#0A6491');
-                 * });
-                 */
 
                 Core.KIXBase.Agent.AutoToggleSidebars();
 

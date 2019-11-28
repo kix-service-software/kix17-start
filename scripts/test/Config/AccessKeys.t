@@ -12,6 +12,7 @@ use strict;
 use warnings;
 use utf8;
 
+use Time::HiRes;
 use vars (qw($Self));
 
 # get config object
@@ -26,6 +27,9 @@ my %AgentModules = (
     %{ $ConfigObject->Get('Frontend::ToolBarModule') }
 );
 
+# define needed variables
+my $StartTime;
+
 ACCESSKEYSAGENT:
 for my $AgentModule ( sort keys %AgentModules ) {
 
@@ -39,9 +43,11 @@ for my $AgentModule ( sort keys %AgentModules ) {
             my $NavBarName = $NavBar->{Name}      || '';
             next NAVBARITEMS if !$NavBarKey;
 
+            $StartTime = Time::HiRes::time();
             $Self->False(
                 defined $UsedAccessKeysAgent{$NavBarKey},
                 "[AGENT FRONTEND] Check if access key already exists for access key '$NavBarKey' ($NavBarName)",
+                $StartTime,
             );
 
             $UsedAccessKeysAgent{$NavBarKey} = 1;
@@ -53,9 +59,11 @@ for my $AgentModule ( sort keys %AgentModules ) {
 
     next ACCESSKEYSAGENT if !$AccessKey;
 
+    $StartTime = Time::HiRes::time();
     $Self->False(
         defined $UsedAccessKeysAgent{$AccessKey},
         "[AGENT FRONTEND] Check if access key already exists for access key '$AccessKey' ($Name)",
+        $StartTime,
     );
 
     $UsedAccessKeysAgent{$AccessKey} = 1;
@@ -80,9 +88,11 @@ for my $CustomerModule ( sort keys %CustomerModules ) {
 
         next NAVBARITEMS if !$NavBarKey;
 
+        $StartTime = Time::HiRes::time();
         $Self->False(
             defined $UsedAccessKeysCustomer{$NavBarKey},
             "[CUSTOMER FRONTEND] Check if access key already exists for access key '$NavBarKey'",
+            $StartTime,
         );
 
         $UsedAccessKeysCustomer{$NavBarKey} = 1;

@@ -1,0 +1,756 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+    #AppWrapper {
+        position: relative;
+        transition: margin-top .5s;
+    }
+    .MainBox {
+        position: relative;
+        padding: 5px 15px 20px 15px;
+        overflow: hidden;
+    }
+    .MainBox > h1 {
+        margin: 0;
+        padding: 10px 8px 15px 8px;
+        position: relative;
+    }
+    .TicketZoom {
+        overflow: hidden;
+        padding: 5px 15px 20px 15px;
+    }
+    .LayoutFixedSidebar {
+        display: block;
+    }
+    .LayoutFixedSidebar > .ContentColumn {
+        overflow: hidden;
+    }
+    .LayoutFixedSidebar > .SidebarColumn {
+        overflow-x: hidden;
+    }
+    .LayoutFixedSidebar.SidebarFirst > .SidebarColumn {
+        width: 270px;
+        float: left;
+        margin-left: 0;
+        margin-right: 10px;
+    }
+    .LayoutFixedSidebar.SidebarFirst > .SidebarColumn.Collapsed {
+        width: 35px;
+    }
+    .LayoutFixedSidebar.SidebarLast > .SidebarColumn {
+        width: 270px;
+        float: right;
+        margin-left: 16px;
+        margin-right: 0;
+    }
+
+    .LayoutFixedSidebar.SidebarLast > .SidebarColumn.Large {
+        width: 350px;
+        float: right;
+        margin-left: 16px;
+        margin-right: 0;
+    }
+
+    .Headline {
+        height: 24px;
+        margin: 15px 0 5px 0;
+        position: relative;
+    }
+    .Headline h1 {
+        font-size: 15px;
+        line-height: 24px;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /**
+    * @subsection overview
+    */
+    .OverviewBox {
+        position: relative;
+    }
+    .OverviewBox > h1 {
+        margin: 10px 0;
+        padding: 8px 11px 7px;
+        position: relative;
+    }
+    .OverviewControl > div {
+        padding: 0 16px 0 8px;
+    }
+    .ControlRow {
+        position: relative;
+        overflow: hidden;
+        min-height: 24px;
+    }
+    .ControlRow h2 {
+        padding-top: 1px;
+        margin-left: 8px;
+        height: 24px;
+        font-size: 13px;
+        line-height: 24px;
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+    .ControlRow li {
+        padding-left: 2px;
+        float: left;
+        position: relative;
+    }
+    .ControlRow li > a {
+        padding: 7px 12px 7px 11px;
+        font-size: 12px;
+        display: block;
+    }
+    .ControlRow li.Active,
+    .ControlRow li.Active:hover,
+    .ControlRow li.Active:active {
+        padding-left: 2px;
+    }
+
+    .ControlRow li.Active,
+    .ControlRow li.Active:hover,
+    .ControlRow li.Active:active,
+    .ControlRow li.Active a,
+    .ControlRow li.Active:hover a,
+    .ControlRow li.Active:active a {
+        background: inherit;
+        font-weight: bold;
+    }
+    .ControlRow li > a > span {
+        padding-left: 4px;
+    }
+
+    ul.ContextFunctions {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+    ul.ContextFunctions li {
+        padding-left: 3px;
+    }
+
+    ul.ContextFunctions li span {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+    }
+
+    ul.ContextFunctions li.ContextHelp a,
+    ul.ContextFunctions li.ContextSettings a {
+        display: block;
+        width: 22px;
+        height: 24px;
+        padding: 0;
+    }
+    ul.ContextFunctions li.ContextSettings .fa {
+        display: block;
+        font-size: 14px;
+        padding: 5px 0 5px 3px;
+    }
+
+    ul.ContextFunctions li.ContextHelp a span,
+    ul.ContextFunctions li.ContextSettings a span {
+        display: block;
+        width: 19px;
+        height: 24px;
+    }
+
+    /**
+    * @subsection action
+    */
+    .ActionRow {
+        min-height: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+    .ActionRow .Actions li span,
+    .LightRow .Actions li span,
+    .Actions li.Inactive span:hover {
+        cursor: pointer;
+    }
+    .Actions {
+        padding: 0;
+        float: left;
+    }
+    .LightRow .Actions {
+        padding: 5px;
+    }
+    .Actions form {
+        padding: 4px 4px;
+        display: inline-block;
+    }
+    .Actions li {
+        line-height: 18px;
+        font-size: 11px;
+        display: inline-block;
+    }
+    .Actions li:first-child {
+        padding: 0;
+        margin-left: 0;
+    }
+    .ActionRow .Actions li.AlwaysPresent span {
+        border: none;
+        background: inherit;
+    }
+    .Actions li a,
+    .Actions li span {
+        padding: 2px 2px;
+        display: inline-block;
+        border-bottom: 0;
+    }
+
+    .Actions li.Inactive a {
+        cursor: default;
+    }
+
+    .ActionRow .Actions li a,
+    .LightRow .Actions li a,
+    .Actions li.Inactive a:hover,
+    .Actions li.Inactive:hover a {
+        cursor: pointer;
+    }
+    .ActionMenu {
+        top: 4px;
+        right: 3px;
+        padding-left: 3px;
+        position: absolute;
+        display: none;
+        z-index: 1;
+    }
+    .Actions li span.ClusterLink {
+        padding: 2px 5px;
+    }
+
+    .Cluster {
+        overflow: visible;
+    }
+    .Cluster ul ul {
+        position: absolute;
+        top: 23px;
+        left: 0;
+        z-index: 999;
+        min-width: 110%;
+        height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: all 0.2s linear;
+    }
+    .Cluster > ul > li {
+        position: relative;
+    }
+    .Cluster ul ul li::after {
+        display: none;
+    }
+    .ActionRow .Actions li span.MenuClusterIcon,
+    .LightRow .Actions li span.MenuClusterIcon,
+    .Actions li.Inactive span.MenuClusterIcon:hover {
+        border-left: none;
+        width: 10px;
+        text-align: center;
+    }
+
+    .Cluster ul ul li {
+        display: block;
+        float: none;
+        padding: 0;
+        border-bottom: none;
+        white-space: nowrap;
+        margin: 0;
+    }
+    .Cluster ul ul li a {
+        padding: 3px 10px;
+        display: block;
+    }
+    .Cluster ul li:hover ul,
+    .Cluster ul ul.ForceVisible {
+        height: auto;
+        visibility: visible;
+        opacity: 100;
+    }
+    .ActionRow.Cluster > ul > li > ul > li > a,
+    .ActionRow.Cluster > ul > li > ul > li > a:hover {
+        border-bottom: none;
+    }
+    .ActionRow.Cluster > ul > li > ul > li > a {
+        margin: 0;
+    }
+
+    .Tabs {
+        padding: 5px 9px;
+        float: left;
+    }
+    .Tabs li {
+        float: left;
+    }
+    .Filter.Tabs {
+        padding: 0;
+        float: left;
+        overflow: hidden;
+    }
+    .Filter a::after {
+        content: "|";
+        display: inline-block;
+        font-weight: normal;
+        padding-left: 5px;
+        margin-right: -3px;
+    }
+    .Filter a {
+        padding: 5px;
+        display: block;
+    }
+    .Filter.Tabs a.Selected {
+        font-weight: bold;
+    }
+    /**
+    * @subsection pagination
+    */
+    .Pagination {
+        float: right;
+        margin-right: 0;
+        font-size: 11px;
+        padding: 3px 0 5px 0;
+    }
+    .PageLink {
+        cursor: pointer;
+    }
+    span.Pagination a.Selected {
+        font-weight: bold;
+    }
+    span.Pagination form {
+        display: inline;
+    }
+
+
+    /**
+    * @subsection ticket zoom
+    */
+    .TicketHeader {
+        overflow: hidden;
+        position: relative;
+    }
+    .TicketHeader h2 {
+        margin: 3px 70px 0 0;
+        padding: 10px 0 15px 36px;
+        font-size: 24px;
+        line-height: 24px;
+        position: relative;
+        float: left;
+    }
+
+    .Flag {
+        border: 1px solid #82c826;
+        top: 13px;
+        left: 6px;
+        width: 21px;
+        height: 16px;
+        line-height: 16px;
+        text-indent: -9999px;
+        position: absolute;
+        display: block;
+    }
+    #TicketOptions {
+        position: absolute;
+        right: 0;
+        top: 20px;
+        overflow: hidden;
+    }
+    #TicketOptions li {
+        float: right;
+        margin-right: 8px;
+        margin-left: 5px;
+    }
+
+    .MessageContent {
+        min-height: 350px;
+        overflow: auto;
+    }
+    #Messages {
+        position: relative;
+        z-index: 10;
+        display: block;
+    }
+    #Messages li {
+        margin-top: 10px;
+        position: relative;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    #Messages li .MessageHeader {
+        line-height: 0;
+        height: 22px;
+        position: relative;
+    }
+    #Messages li:not(.Visible) .MessageHeader {
+        padding-bottom: 1px;
+    }
+    .Details {
+        padding: 4px 13px;
+        font-size: 11px;
+        line-height: 16px;
+    }
+    Details > div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #Messages .Visible .MessageBody {
+        padding: 10px;
+    }
+    #Messages .MessageBody div.Label.Switchable {
+        cursor: pointer;
+    }
+    .Details .Label {
+        font-weight: bold;
+        width: 65px;
+        margin: 0 3px;
+        float: left;
+        margin-right: 8px;
+        text-align: right;
+    }
+    .JavaScriptAvailable .Overview tbody tr,
+    .JavaScriptAvailable .MessageHeader {
+        cursor: pointer;
+    }
+    .MessageBody {
+        border: none;
+        height: 0;
+        overflow: hidden;
+    }
+    #Messages > li.Visible > .MessageBody {
+        border-top: none;
+        height: auto;
+    }
+    .MessageHeader h3 span {
+        font-weight: bold;
+        text-decoration: none;
+        overflow: visible;
+        vertical-align: top;
+        display: inline-block;
+    }
+    .Age {
+        padding-right: 8px;
+        text-align: right;
+    }
+    .TicketZoom .Age {
+        width: auto;
+        padding: 0;
+    }
+    .MessageHeader .Age {
+        position: absolute;
+        top: 13px;
+        right: 8px;
+    }
+    .TicketZoom iframe {
+        width: 100%;
+        border: none;
+    }
+
+    #FollowUp {
+        top: -1px;
+        position: relative;
+    }
+    #FollowUp:not(.Visible) #Messenger {
+        height: 0;
+        border-width: 0;
+        overflow: hidden;
+        margin: 0;
+    }
+    #FollowUp.Visible #Messenger {
+        height: auto;
+        overflow: auto;
+    }
+    .JavaScriptAvailable #FollowUp {
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+    #Messenger .ActionRow {
+        border-top: 1px solid #c0c0c0;
+        padding: 8px 13px;
+        text-shadow: none;
+        margin: 0 -8px -8px;
+        text-align: center;
+    }
+    #ReplyButton {
+        padding: 7px 8px 7px 8px;
+        margin: 20px 0 0 30px;
+        font-weight: bold;
+        float: right;
+        border-style: solid;
+        border-width: 1px;
+    }
+    #FollowUp.Visible #ReplyButton {
+        display: none;
+    }
+    .ZoomExpand.ExpandAll .fa-minus {
+        display: none;
+    }
+    #TicketOptions .ZoomExpand.ExpandOne .fa-bars {
+        display: none;
+    }
+    #TicketOptions .Print span,
+    #TicketOptions .ZoomExpand span {
+        text-indent: -9999px;
+        display: none;
+    }
+    #TicketOptions .Print,
+    #TicketOptions .ZoomExpand {
+        font-size: 18px;
+    }
+    #MainBox.Search > .Content {
+        width: 60%;
+        margin: auto;
+    }
+    #BottomActionRow {
+        padding: 5px 10px;
+        margin: 20px 0;
+        text-align: right;
+    }
+    #BottomActionRow > button {
+        margin: 0 0 0 20px;
+        padding: 0;
+        float: right;
+        box-sizing: border-box;
+    }
+    #BottomActionRow > span {
+        margin-right: 5px;
+    }
+    /**
+    *   @subsection Search overview
+    */
+    .SearchTerms {
+        padding: 4px 7px;
+        margin: 10px 0;
+    }
+    .SearchTerms h2 {
+        margin: 0;
+        font-size: 15px;
+        display: inline;
+    }
+    .SearchTerms span {
+        padding: 1px 8px 0;
+        margin: 0 3px;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 5px;
+    }
+
+    /**
+    *   @subsection FAQ
+    */
+    .FAQHeader {
+        position: relative;
+        margin-bottom: 10px;
+    }
+    .FAQHeader h2 {
+        margin: 3px 0 0;
+        font-size: 24px;
+        line-height: 24px;
+        position: relative;
+        float: left;
+    }
+    #FAQOptions {
+        overflow: hidden;
+        position: absolute;
+        right: 0;
+        top: 10px;
+    }
+    #FAQOptions li {
+        float: left;
+        margin-left: 5px;
+    }
+    #FAQOptions .Print {
+        font-size: 15px;
+    }
+    #FAQOptions .Print span {
+        display: block;
+        text-indent: -9999px;
+    }
+    .FAQMessageBrowser {
+        border-radius: 2px;
+        position: relative;
+    }
+    .FAQMessageBrowser p {
+        padding: 5px 20px;
+        font-size: 11px;
+        text-align: center;
+    }
+    .FAQMessageBrowser a.Close {
+        display: block;
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        right: 4px;
+        top: 6px;
+    }
+    .RateLabelBefore {
+        float: left;
+        padding-right: 15px;
+        margin-left: 10px;
+        color: Gray;
+    }
+    .VotingQuestion {
+        margin-left: 10px;
+        margin-right: 10px;
+        display: block;
+        margin-bottom: 20px;
+    }
+    .RateLabelAfter {
+        float: left;
+        margin-left: 5px;
+        margin-right: 25px;
+        color: Gray;
+    }
+    #Messages > li#FAQVoting.Visible > .MessageBody {
+        padding-bottom: 50px;
+    }
+    .ActionRow.VotingActionRow {
+        height: 40px;
+        width: 100%;
+        float: left;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        box-sizing: border-box;
+    }
+    #RateSubmitButton {
+        margin: 7px;
+    }
+
+    /**
+    *   @subsection ticket zoom
+    */
+    div.Headline .Flag {
+        position: absolute;
+        top: 5px;
+        left: 0;
+        width: 20px;
+        height: 15px;
+    }
+    .Headline .Flag span {
+        cursor: default;
+    }
+    div.Headline .Flag + h1 {
+        margin-left: 30px;
+    }
+    .AdditionalInformation {
+        right: 7px;
+        top: 7px;
+        position: absolute;
+    }
+    .AdditionalInformation.ControlRow {
+        top: 1px;
+        right: 0;
+        background: none;
+    }
+    #ArticleTree {
+        margin-top: 10px;
+    }
+    #ArticleItems .ArticleMailHeader {
+        font-size: 11px;
+        margin-top: 10px;
+    }
+    .ArticleMailContent {
+        padding: 11px 0;
+        line-height: 1.3;
+    }
+    .ArticleMailContentHTMLWrapper {
+        -webkit-overflow-scrolling: touch;
+        overflow: auto;
+        width: 100%;
+    }
+    .ArticleBody {
+        font-size: 12px;
+        font-family: monospace,fixed;
+        word-wrap: break-word;
+        padding: 10px;
+    }
+    #NoArticles {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        float: left;
+        box-sizing: border-box;
+        border-style: solid;
+        border-width: 1px;
+    }
+    #NoArticles li {
+        line-height: 30px;
+        padding: 2px 10px;
+        position: relative;
+    }
+
+
+    /**
+    *   @subsection Template View
+    */
+    .TemplateSelectionArea {
+        text-align: center;
+        width: 100%;
+    }
+
+    .TemplateSelectionArea > div {
+        margin: 0 0 80px 0;
+        width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .FilterArea {
+        margin: 20px 0 30px 5px;
+    }
+    #PortalGroupFilter,
+    #TicketTemplateFilter {
+        width: 250px;
+        margin: 0 15px 10px 15px;
+        border-width: 0 0 1px 0;
+        padding: 0 20px 0 5px;
+        box-sizing: border-box;
+    }
+    #PortalGroupFilterClear,
+    #TicketTemplateFilterClear {
+        position: relative;
+        top: 1px;
+        right: 32px;
+        visibility: hidden;
+        display: inline-block;
+    }
+    .TemplateSelectionArea .PortalGroup {
+        margin-bottom: 50px;
+        margin-top: 20px;
+    }
+    .TemplateSelectionArea .TicketTemplateElement {
+        display: inline-block;
+        text-align: center;
+        min-width: 100px;
+        margin-left: 15px;
+        margin-right: 15px;
+        margin-top: 10px;
+    }
+    .TicketTemplateElement img {
+        width: 64px;
+        height: 64px;
+        padding: 5px;
+    }
+    .TicketTemplateElement a:hover > img {
+        -webkit-filter: none;
+        filter: none;
+    }
+    .TicketTemplateElement > .Label {
+        display: block;
+        margin-top: 10px;
+        margin-left: 1px;
+    }
+}

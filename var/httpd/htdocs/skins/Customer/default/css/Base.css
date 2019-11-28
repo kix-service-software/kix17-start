@@ -1,0 +1,611 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, font, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td, hr {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-weight: inherit;
+        font-style: inherit;
+        font-size: 100%;
+        font-family: inherit;
+        vertical-align: baseline;
+        background-image: none;
+        direction: inherit;
+    }
+
+    html {
+        height: 100%;
+        width: 100%;
+    }
+    body {
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size: 12px;
+        text-align: left;
+        position: relative;
+        line-height: 1;
+        overflow: auto;
+        height: 100%;
+    }
+    a {
+        text-decoration: none;
+    }
+    ol, ul {
+        list-style: none;
+    }
+    p {
+        line-height: 1.3em;
+    }
+    em {
+        font-style: italic;
+    }
+    td > i, td > a > i {
+        margin-right: 3px;
+    }
+    th.Checkbox,
+    td.Checkbox {
+        width: 30px;
+    }
+    strong {
+        font-weight: bold;
+    }
+    dl {
+        margin: 5px 0;
+    }
+    dt {
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 1.3em;
+        margin-top: 5px;
+    }
+    dd {
+        line-height: 1.3em;
+        margin-left: 15px;
+        margin-right: 0;
+    }
+    /**
+     * @subsection  Headings
+     */
+    h1 {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    h3 {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    h4 {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    h5 {
+        margin-bottom: 5px;
+    }
+
+
+    /**
+     * @subsection  Standard Widths
+     */
+    .W10pc {
+        width: 10%;
+    }
+
+    .W20pc {
+        width: 20%;
+    }
+
+    .W25pc {
+        width: 25%;
+    }
+
+    .W33pc {
+        width: 33%;
+    }
+
+    .W50pc {
+        width: 50%;
+    }
+
+    .W60pc {
+        width: 60%;
+    }
+
+    .W70pc {
+        width: 70%;
+    }
+
+    .W75pc {
+        width: 75%;
+    }
+
+    .W80pc {
+        width: 80%;
+    }
+
+    .W90pc {
+        width: 90%;
+    }
+
+    .W95pc {
+        width: 95%;
+    }
+
+    .W100pc {
+        width: 100%;
+    }
+
+    .W35px {
+        width: 35px;
+    }
+
+    .W50px {
+        width: 50px;
+    }
+    .W100px {
+        width: 100px;
+    }
+    .W950px {
+        width: 950px;
+    }
+
+    /**
+    * @subsection Form fields
+    */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+        height: 14px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    textarea,
+    select,
+    select[multiple="multiple"] {
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        padding: 3px;
+        font-size: 12px;
+        margin: 0px;
+    }
+    select {
+        padding: 3px 3px 2px 3px;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+    input[type="checkbox"] {
+        cursor: pointer;
+    }
+    input[type="file"] {
+        background-color: inherit;
+    }
+    select[multiple="multiple"] {
+        min-width: 300px;
+    }
+    select[multiple="multiple"] option {
+        padding: 2px;
+    }
+    select.ColumnFilter {
+        width: 100px;
+    }
+    button {
+        margin: 3px;
+        padding: 3px;
+        font-size: 11px;
+        text-shadow: none;
+        transition: none;
+    }
+
+    button.Primary {
+        font-weight: bold;
+    }
+    button:hover {
+        cursor: pointer;
+    }
+    /**
+     * @subsection  Handling Message
+     */
+    #NoJavaScript, #OldBrowser {
+        width: 490px;
+        margin-left: 5px;
+        margin-bottom: 20px;
+        padding-left: 0px;
+        text-align: justify;
+    }
+    #NoJavaScript h2, #OldBrowser h2 {
+        margin-bottom: 10px;
+        padding-left: 0px;
+        font-size: 18px;
+    }
+    #NoJavaScript p, #OldBrowser p {
+        margin: 13px 0 5px;
+    }
+
+    .ErrorBox, .SuccessBox, .WarningBox {
+        display: block;
+        padding: 10px;
+        margin: 0px;
+        cursor: default;
+        width: 400px;
+        min-height: 40px;
+        vertical-align: top;
+        background: none;
+        text-align: center;
+        margin-left: 40px;
+    }
+
+    .MessageBox {
+        margin: 5px 18px 0 10px;
+        position: relative;
+        z-index: 1;
+    }
+    .MessageBox p,
+    .MessageBox a {
+        text-decoration: none;
+    }
+    .MessageBox p {
+        width: 95%;
+        display: inline-block;
+        padding: 5px 10px 5px 5px;
+    }
+    .MessageBox p a::after {
+        content: "\2192";
+        display: inline-block;
+        font-size: 15px;
+    }
+    .MessageBox.Info {
+        margin-right: 10px;
+    }
+    .MessageBox a.Close {
+        position: absolute;
+        top: 7px;
+        right: 10px;
+    }
+    .MessageBox a:hover {
+        text-decoration: none;
+    }
+    .MessageBrowser {
+        margin: 5px 0;
+        padding: 0px;
+        border-radius: 2px;
+        position: relative;
+    }
+    .MessageBrowser p {
+        padding: 5px 25px 5px 25px;
+        font-size: 11px;
+        text-align: center;
+    }
+    .MessageBrowser a.Close {
+        display: block;
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+    }
+    /**
+    * @subsection base classes
+    */
+    .Small {
+        font-size: 90%;
+    }
+    .Hidden,
+    .PrintOnly {
+        display: none;
+    }
+    .Spacing {
+        margin: 13px;
+    }
+    .Center {
+        text-align: center;
+    }
+    .Left {
+        text-align: left;
+    }
+    .Right {
+        text-align: right;
+    }
+    #Right {
+        float: right;
+    }
+    .Clear {
+        float: none;
+        clear: both;
+    }
+    .ClearLeft {
+        clear: left;
+        float: none;
+    }
+    .ClearRight {
+        clear: right;
+        float: none;
+    }
+    .AsBlock {
+        display: block;
+    }
+    .PaddingLeft15px {
+        padding-left: 15px;
+    }
+    .SpacingTop {
+        margin-top: 15px;
+    }
+    .SpacingTopSmall {
+        margin-top: 8px;
+    }
+    .SpacingBottom {
+        margin-bottom: 13px;
+    }
+    .SpacingBottomSmall {
+        margin-bottom: 8px;
+    }
+    .SpacingLeft {
+        margin-left: 13px;
+    }
+    .SpacingRight {
+        margin-right: 13px;
+    }
+    .SpacingBottomLarge {
+        margin-bottom: 89px;
+    }
+    .CenterBox {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .CanDrag .Content div {
+        min-height: 0%;
+    }
+    .ARIAAlertMessage {
+        position: absolute;
+        left: -10000px;
+        right: auto;
+        top: -10000px;
+    }
+    .SvgInvisible {
+        position: absolute;
+        opacity: 0;
+        z-index: -10000;
+    }
+    .FieldExplanation {
+        margin: 5px 0;
+    }
+    .GetAllAJAX {
+        width: 16px;
+        height: 16px;
+        margin-left: 3px;
+        display: inline-block;
+    }
+    .GetAllAJAX span {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+    }
+    iframe.TextOption {
+        width: 500px;
+        height: 400px;
+    }
+    iframe.TextOption.Customer {
+        width: 800px;
+    }
+    iframe.TextOption.FAQ {
+        width: 900px;
+        min-height: 600px;
+    }
+    iframe.FAQField {
+        width: 100%;
+    }
+    .NothingAvailableMsg {
+        margin: 10px;
+    }
+    .Icon32 {
+        width: 32px;
+        height: 32px;
+    }
+    a.TrashCan {
+        width: 16px;
+        height: 16px;
+    }
+    a.TrashCan i.fa-trash-o {
+        text-indent: 0px;
+        position: absolute;
+        left: 0px;
+        top: 4px;
+    }
+
+
+    /**
+    *   @subsection loader
+    */
+    .AJAXLoader {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin: 2px;
+        vertical-align: bottom;
+    }
+    .AJAXLoader::after,
+    .Loader::after,
+    .KIXSidebarTools.Request .Header::after {
+        content: "\f110";
+        line-height: 16px;
+        animation: fa-spin 2s infinite linear;
+        -webkit-animation: fa-spin 2s infinite linear;
+        -moz-animation: fa-spin 2s infinite linear;
+        font: normal normal normal 14px/1 FontAwesome;
+        display: inline-block;
+    }
+    .ui-widget-content > .AJAXLoader {
+        text-align: center;
+        width: 100%;
+        height: auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    .ui-widget-content > .AJAXLoader::after {
+        font-size: 5em;
+    }
+    #LinkedPersonsTable > .Loader::after {
+        font-size: 3em;
+    }
+    #TextModulesSelectionContainer > .Loader::after {
+        font-size: 4em;
+        line-height: 5em;
+    }
+    #ArticleAttachmentStrgContainer > .Loader::after {
+        font-size: 3em;
+        line-height: 2em;
+    }
+
+
+    /**
+     * @subsection  Handle for resizing tables
+     */
+    .Handle {
+        width: 100%;
+    }
+
+    .Handle a {
+        display: block;
+        margin: auto;
+        height: 14px;
+        width: 79px;
+        text-indent: -9999px;
+        cursor: ns-resize;
+    }
+
+    .Handle.ui-resizable-s {
+        cursor:auto;
+        height:auto;
+        left:auto;
+    }
+
+    .Handle.ui-resizable-handle {
+        display: block;
+        font-size: inherit;
+        z-index: 19;
+    }
+
+    /**
+    *   @subsection rating buttons
+    */
+    .RateButtons {
+        text-align: center;
+        display: inline-block;
+    }
+    .RateButtons > li {
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .RateButtons > li:first-child,
+    .RateButtons > li:last-child {
+        font-weight: bold;
+    }
+    .RateButton {
+        position: relative;
+        text-align: center;
+        display: block;
+        height: 30px;
+        width: 25px;
+        cursor: pointer;
+        float: left;
+        text-align: center;
+    }
+    .RateButton i {
+        display: block;
+        font-size: 16px;
+        width: 100%;
+        text-align: center;
+    }
+    .RateButton i.fa-star {
+        display: none;
+    }
+    .RateButton.RateChecked i.fa-star-o {
+        display: none;
+    }
+    .RateButton.RateChecked i.fa-star {
+        display: block;
+    }
+
+    /**
+    *   @subsection breadcrumb
+    */
+    .BreadCrumb {
+        list-style-type: none;
+        margin: 0px 0px 15px 0px;
+        padding: 10px;
+        position: relative;
+        padding-left: 0px;
+        padding-right: 15px;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .BreadCrumb li {
+        display: inline-block;
+        margin: 0px 2px 0px 2px;
+        padding-left: 35px;
+        position: relative;
+        max-width: 200px;
+        white-space: normal;
+        vertical-align: middle;
+    }
+    .BreadCrumb li:first-child {
+        padding-left: 20px;
+    }
+    .BreadCrumb li:first-child::after,
+    .BreadCrumb li:first-child::before {
+        display: none;
+    }
+    .BreadCrumb li::before,
+    .BreadCrumb li::after {
+        top: 50%;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-width: 20px;
+        border-style: solid;
+        margin-top: -20px;
+    }
+    .BreadCrumb li::after {
+        left: 0px;
+    }
+    .BreadCrumb li::before {
+        left: -5px;
+        z-index: 2;
+    }
+}

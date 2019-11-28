@@ -136,7 +136,7 @@ Core.Agent = (function (TargetNS) {
          */
         function SetNavContainerHeight($ParentElement) {
             if ($ParentElement.find('ul').length) {
-                $('#NavigationContainer').css('height', parseInt(InitialNavigationContainerHeight, 10) + parseInt($ParentElement.find('ul').outerHeight(), 10));
+                $('#NavigationContainer').css('height', parseInt(InitialNavigationContainerHeight, 10) + parseInt($ParentElement.find('ul').outerHeight(), 10) + 5);
             }
         }
 
@@ -378,10 +378,10 @@ Core.Agent = (function (TargetNS) {
         if (!$('#NavigationContainer').find('.NavigationBarNavigate' + Direction).length) {
 
             $('#NavigationContainer')
-                .append('<a href="#" title="' + Core.Config.Get('SlideNavigationText') + '" class="Hidden NavigationBarNavigate' + Direction + '"><i class="fa fa-chevron-' + Direction.toLowerCase() + '"></i></a>')
-                .find('.NavigationBarNavigate' + Direction)
+                .append('<a href="#" title="' + Core.Config.Get('SlideNavigationText') + '" class="Hidden NavigationBarNavigate' + Direction + '"><i class="fa fa-chevron-' + Direction.toLowerCase() + '"></i></a>');
+            $('.NavigationBarNavigate' + Direction)
+                .removeClass('Hidden')
                 .delay(Delay)
-                .fadeIn()
                 .bind('click', function() {
                     if (Direction === 'Right') {
 
@@ -400,9 +400,7 @@ Core.Agent = (function (TargetNS) {
                                 if (HideButton) {
                                     $('#NavigationContainer')
                                         .find('.NavigationBarNavigate' + Direction)
-                                        .fadeOut(Delay, function() {
-                                            $(this).remove();
-                                        });
+                                        .remove();
                                 }
                                 NavigationBarShowSlideButton(Opposites, Difference);
                             });
@@ -423,9 +421,7 @@ Core.Agent = (function (TargetNS) {
                                 if (HideButton) {
                                     $('#NavigationContainer')
                                         .find('.NavigationBarNavigate' + Direction)
-                                        .fadeOut(Delay, function() {
-                                            $(this).remove();
-                                        });
+                                        .remove();
                                 }
                                 NavigationBarShowSlideButton(Opposites, Difference);
                             });
@@ -526,6 +522,9 @@ Core.Agent = (function (TargetNS) {
 
         // navigation resizing only possible in ScreenXL mode
         if (RealResizeEvent && !$('body').hasClass('Visible-ScreenXL')) {
+            return;
+        }
+        else if (!$('body').hasClass('Visible-ScreenXL')) {
             return;
         }
 

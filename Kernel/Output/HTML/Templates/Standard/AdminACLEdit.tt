@@ -53,10 +53,8 @@
         <form action="[% Env("CGIHandle") %]" method="post" id="ACLForm" class="Validate PreventMultipleSubmits">
             <div class="WidgetSimple Expanded">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Edit ACL information") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2><span>[% Translate("Edit ACL information") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
@@ -113,10 +111,8 @@
 
             <div class="WidgetSimple">
                 <div class="Header Expanded">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Show or hide the content") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Edit ACL structure") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2><span>[% Translate("Edit ACL structure") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike ACLStructure">
@@ -226,10 +222,7 @@
 
             <div class="WidgetSimple ScreenXL">
                 <div class="Header Expanded">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Save settings") | html %]"></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Save ACL") | html %]</span></h2>
+                    <h2><span>[% Translate("Save ACL") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike">

@@ -274,7 +274,10 @@ sub Auth {
         my $Config = $ConfigObject->Get('PreferencesGroups');
         my $PasswordMaxLoginFailed;
 
-        if ( $Config && $Config->{Password} && $Config->{Password}->{PasswordMaxLoginFailed} ) {
+        if ( $Config
+            && $Config->{Password}
+            && $Config->{Password}->{PasswordMaxLoginFailed}
+        ) {
             $PasswordMaxLoginFailed = $Config->{Password}->{PasswordMaxLoginFailed};
         }
 
@@ -296,8 +299,7 @@ sub Auth {
 
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'notice',
-            Message  => "Login failed $Count times. Set $User{UserLogin} to "
-                . "'invalid-temporarily'.",
+            Message  => "Login failed $Count times. Set $User{UserLogin} to 'invalid-temporarily'.",
         );
 
         return;

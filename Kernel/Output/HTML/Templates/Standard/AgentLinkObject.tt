@@ -14,7 +14,7 @@
 
     <div class="Header">
         <h1>
-            [% Translate("Link Object: %s", Data.SourceObjectLong) | html %]
+            [% Translate("Link Object: %s", Translate(Data.SourceObjectLong)) | html %]
         </h1>
         <p>
             <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Close" id="LinkAddCloseLink">[% Translate("Close dialog") | html %]</a>
@@ -54,7 +54,7 @@
                 <div class="Content">
                     <fieldset class="TableLike">
                         <label for="TargetIdentifier">
-                            [% Translate("Link object %s with", Data.SourceObjectNormal) | html %]:
+                            [% Translate("Link object %s with", Translate(Data.SourceObjectNormal)) | html %]:
                         </label>
                         <div class="Field">
                             [% Data.TargetObjectStrg %]

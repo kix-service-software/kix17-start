@@ -22,7 +22,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('Check OTRS database connectivity.');
+    $Self->Description('Check KIX database connectivity.');
 
     return;
 }
@@ -53,7 +53,7 @@ sub Run {
         $Self->Print("<green>Connection successful.</green>\n");
 
         # check for common MySQL issue where default storage engine is different
-        # from initial OTRS table; this can happen when MySQL is upgraded from
+        # from initial KIX table; this can happen when MySQL is upgraded from
         # 5.1 > 5.5.
         if ( $DBObject->{'DB::Type'} eq 'mysql' ) {
             $DBObject->Prepare(

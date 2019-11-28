@@ -391,20 +391,6 @@ sub Run {
                 && ref $TemplateData{MultipleCustomer} eq 'ARRAY';
     }
 
-    # run acl to prepare TicketAclFormData
-    my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
-        %GetParam,
-        %ACLCompatGetParam,
-        Action        => $Self->{Action},
-        ReturnType    => 'Ticket',
-        ReturnSubType => '-',
-        Data          => {},
-        UserID        => $Self->{UserID},
-    );
-
-    # update 'Shown' for $Self->{DynamicField}
-    $Self->_GetShownDynamicFields();
-
     if ( !$Self->{Subaction} || $Self->{Subaction} eq 'Created' ) {
 
         # header
@@ -534,6 +520,15 @@ sub Run {
             }
             else {
                 $Article{ContentType} = 'text/plain';
+            }
+
+            # check if external sources should be removed from body
+            if ( $ConfigObject->Get('Frontend::RemoveExternalSource') ) {
+                my %SafetyCheckResultNoExt = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                    String       => $Article{Body},
+                    NoExtSrcLoad => 1,
+                );
+                $Article{Body} = $SafetyCheckResultNoExt{String};
             }
 
             # show customer info
@@ -1348,6 +1343,21 @@ sub Run {
                 }
             }
         }
+
+        # run acl to prepare TicketAclFormData
+        my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
+            %GetParam,
+            %ACLCompatGetParam,
+            QueueID       => $NewQueueID || 0,
+            Action        => $Self->{Action},
+            ReturnType    => 'Ticket',
+            ReturnSubType => '-',
+            Data          => {},
+            UserID        => $Self->{UserID},
+        );
+
+        # update 'Shown' for $Self->{DynamicField}
+        $Self->_GetShownDynamicFields();
 
         # cycle trough the activated Dynamic Fields for this screen
         DYNAMICFIELD:

@@ -40,10 +40,8 @@
 [% RenderBlockStart("ArticleEdit") %]
             <div class="WidgetSimple Expanded ArticleEdit">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Edit Article") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2><span>[% Translate("Edit Article") | html %]</span></h2>
                 </div>
                 <div class="Content">
 
@@ -73,7 +71,7 @@
 <!-- OutputFilterHook_TicketOptionsBegin -->
 
 [% RenderBlockStart("SpellCheck") %]
-                            <a href="#" id="OptionSpellCheck">[ [% Translate("Spell check") | html %] ]</a>
+                            <a href="#" id="OptionSpellCheck">[% Translate("Spell check") | html %]</a>
 [% RenderBlockEnd("SpellCheck") %]
 
 <!-- OutputFilterHook_TicketOptionsEnd -->
@@ -181,10 +179,8 @@
 [% RenderBlockStart("ArticleCopyMove") %]
             <div class="WidgetSimple [% Data.WidgetClass | html %]">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate(Data.WidgetTitle) | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2><span>[% Translate(Data.WidgetTitle) | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabel">
@@ -193,11 +189,11 @@
                             [% Config("Ticket::Hook") %] [% Translate("of destination ticket") | html %]:
                         </label>
                         <div class="Value">
-                        <input id="NewTicketNumber[% Data.WidgetClass | html %]" type="hidden" name="NewTicketNumber" value=""/>
-                        <input id="NewTicketNumber[% Data.WidgetClass | html %]AutoComplete" type="text" name="NewTicketNumberAutoComplete" value="" class="AutocompleteOff"/>
+                            <input id="NewTicketNumber[% Data.WidgetClass | html %]" type="hidden" name="NewTicketNumber" value=""/>
+                            <input id="NewTicketNumber[% Data.WidgetClass | html %]AutoComplete" type="text" name="NewTicketNumberAutoComplete" value="" class="AutocompleteOff"/>
                             <div id="NewTicketNumber[% Data.WidgetClass | html %]Error" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                             <div id="NewTicketNumber[% Data.WidgetClass | html %]ServerError" class="TooltipErrorMessage"><p>[% Translate("Invalid ticket number!") | html %]</p></div>
-                        <img src="[% Config("Frontend::ImagePath") %]loader.gif" border="2" alt="[% Translate("Loading") | html %]" class="Hidden" id="QuickLinkLoading"/>
+                            <span alt="[% Translate("Loading") | html %]" class="Loader Hidden" id="QuickLinkLoading"></span>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
     Core.Config.Set("GenericAutoCompleteSearch.MinQueryLength", 3);
@@ -244,10 +240,8 @@
 [% RenderBlockStart("ArticleDelete") %]
             <div class="WidgetSimple ArticleDelete">
                 <div class="Header">
-                    <div class="WidgetAction Toggle">
-                        <a href="#" title="[% Translate("Toggle this widget") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                    </div>
-                    <h2 class="PaddingLeft15px"><span>[% Translate("Delete Article") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate(Data.Description) | html %]"></div>
+                    <h2><span>[% Translate("Delete Article") | html %]</span></h2>
                 </div>
                 <div class="Content">
                     <fieldset class="TableLike FixedLabel DeleteOptions">

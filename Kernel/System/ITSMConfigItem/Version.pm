@@ -1518,7 +1518,7 @@ sub VersionSearch {
 
     # add previous version param
     if ( !$Param{PreviousVersionSearch} ) {
-        push @SQLWhere, 'ci.last_version_id = vr.id';
+        push( @SQLWhere, 'ci.last_version_id = vr.id' );
     }
 
     # create where string
@@ -1563,7 +1563,7 @@ sub VersionSearch {
     # fetch the result
     my @ConfigItemList;
     while ( my @Row = $Kernel::OM->Get('Kernel::System::DB')->FetchrowArray() ) {
-        push @ConfigItemList, $Row[0];
+        push( @ConfigItemList, $Row[0] );
     }
 
     return \@ConfigItemList;

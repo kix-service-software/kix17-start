@@ -72,10 +72,8 @@ $('#GoBack').bind('click', function (Event) {
 [% RenderBlockStart("ShowBackendTraceback") %]
         <div class="WidgetSimple Collapsed SpacingTop">
             <div class="Header ErrorMessage">
-                <div class="WidgetAction Toggle">
-                    <a href="#" title="[% Translate("Expand") | html %]"><i class="fa fa-caret-right"></i><i class="fa fa-caret-down"></i></a>
-                </div>
-                <h2 class="PaddingLeft15px"><span>[% Translate("Error Details") | html %]</span></h2>
+                    <div class="WidgetAction Toggle" title="[% Translate("Expand") | html %]" ></div>
+                    <h2><span>[% Translate("Error Details") | html %]</span></h2>
             </div>
             <div class="Content">
                 <code>Backend [% Data.BackendTraceback | html %]

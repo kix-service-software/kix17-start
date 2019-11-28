@@ -230,7 +230,7 @@ Core.KIX4OTRS.AgentLinkGraphITSMConfigItem = (function(TargetNS) {
             var y = $CINode.offset().top + 15;
             Core.UI.Dialog.ShowDialog({
                 Modal: false,
-                Title: $Elements.ServicePopup.find('.Header > h2').html(),
+                Title: $Elements.ServicePopup.find('.Header > h2 > span').html(),
                 HTML: $Elements.ServicePopup.find('.Content').html(),
                 PositionTop: y,
                 PositionLeft: x

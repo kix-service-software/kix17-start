@@ -1,0 +1,322 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+/**
+ * @subsection  ITSM tree
+ */
+    #Options{
+        width: 99.8%;
+        margin-bottom:0px;
+        font-family: Verdana,Arial,sans-serif;
+        font-size: 1em;
+    }
+
+    #GraphBody {
+        overflow: scroll;
+        width: 100%;
+        height: 97%;
+        position: absolute;
+    }
+
+    .NoSelection {
+        -moz-user-select: none;
+        -o-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    #Scale {
+        position: absolute;
+        height: 1px;
+        width: 1px;
+    }
+
+    #ZoomNotice {
+        margin-left: 20px;
+        font-weight: bold;
+    }
+
+    #MagnifierZoom {
+        margin-right: 5px;
+    }
+
+    #ZoomArea {
+        position: absolute;
+        height: 10px;
+        width: 10px;
+        z-index: 1;
+    }
+
+    #Print {
+        font-weight: bold;
+    }
+
+    .GraphNode {
+        padding: 2px;
+        padding-top: 5px;
+        line-height: 1.8px;
+        text-align: center;
+        z-index: 10;
+        position: absolute;
+        cursor: move;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        min-width: 100px;
+        min-height: 65px;
+    }
+    .GraphNode .NodeImage {
+        width: 40px;
+    }
+    .GraphNode .IncidentImage {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 17px;
+        height: 10px;
+    }
+
+    .dragHover {
+        border-top: 1px solid silver;
+        border-left: 1px solid silver;
+        border-bottom: 0px solid white;
+        border-right: 0px solid white;
+    }
+
+    #Shield {
+        opacity: 0.5;
+        -moz-opacity: 0.5;
+        filter: alpha(opacity=50);
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        width: 100%;
+        z-index:100;
+    }
+
+    .LinkLabel {
+        padding: 0.4em;
+        z-index: 8;
+        opacity: 0.9;
+        filter: alpha(opacity=90);
+        -moz-opacity: 0.9;
+        white-space: nowrap;
+    }
+
+    .Endpoint {
+        z-index: 12;
+    }
+
+    #ConnectionDummy {
+        width: 1px;
+        height: 1px;
+        position: absolute;
+    }
+
+    ._jsPlumb_endpoint {
+        z-index: 50;
+    }
+    .DummyConnection {
+        z-index: 50;
+    }
+
+    #ConnectionDummyShow {
+        position: absolute;
+        z-index: 50;
+    }
+
+    #GraphSaved {
+        height: 20px;
+        width: 80px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 101;
+        text-align: center;
+        padding-top: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        -moz-box-shadow: 2px 2px 5px #555;
+        -webkit-box-shadow: 2px 2px 5px #555;
+        box-shadow: 2px 2px 5px #555;
+    }
+
+    #Context {
+        z-index: 16;
+        position: absolute;
+        min-width: 300px;
+    }
+
+    #Context .Content {
+        padding: 0px;
+    }
+
+    #Context .Content .ContextNoRights {
+        cursor: default;
+    }
+
+    #Context .ContextFooter {
+        width: 100%;
+        height: auto;
+    }
+
+    #Context > .Content > ul {
+        border-width: 1px 0px 1px 0px;
+    }
+
+    #Context > .Content > ul > li {
+        font-size: 12px;
+        line-height: 14px;
+        position: relative;
+    }
+
+    #Context > .Content > ul > li > a {
+        display: block;
+        position: relative;
+        padding: 8px 10px 4px 8px;
+    }
+
+    /* for printing (popup) */
+    #PrintBox {
+        font-size: 12px;
+    }
+    #PrintWindow .GraphNode {
+        cursor: default;
+    }
+    #PrintWindow {
+        height: 1000px;
+        width: 714px;
+        font-size: 12px;
+        position: absolute;
+    }
+    #PrintInfo {
+        border: 1px solid black;
+        width: 100%;
+    }
+    #PrintInfo .InfoLeft {
+        padding-right: 15px;
+    }
+    #PrintInfo table {
+        margin-right: 15px;
+        margin-left: 10px;
+    }
+    #PrintGraphBody {
+        margin-top: 2px;
+        width: 710px;
+        height: 933px;
+        border: 1px solid black;
+        padding: 2px;
+    }
+    #PrintScale {
+        position:absolute;
+        height:1px;
+        width:1px;
+    }
+
+    #PrintWindow #Print_Title {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+} /* end @media */
+
+@media print {
+/**
+ * @subsection  ITSM tree
+ */
+
+    body {
+        overflow: hidden;
+        height: 100%;
+    }
+    #PrintWindow {
+        height: 1000px;
+        width: 714px;
+        font-size: 12px;
+        position: absolute;
+    }
+    #PrintInfo {
+        border: 1px solid black;
+        width: 100%;
+    }
+    #PrintInfo .InfoLeft {
+        padding-right: 15px;
+    }
+    table, tbody, th, tr, td, td.last {
+        border: 0px !important;
+        padding: 0px !important;
+    }
+    #PrintInfo table {
+        margin-right: 15px;
+        margin-left: 10px;
+    }
+    #PrintInfo .InfoLeft {
+        padding-right: 15px !important;
+    }
+    #PrintGraphBody {
+        margin-top: 2px;
+        width: 710px;
+        height: 933px;
+        border: 1px solid black;
+        padding: 2px;
+    }
+    #PrintScale {
+        position:absolute;
+        height:1px;
+        width:1px;
+    }
+
+    #Print_Title {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .GraphNode {
+        padding: 2px;
+        padding-top: 5px;
+        line-height: 1.8px;
+        text-align: center;
+        z-index: 10;
+        position: absolute;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        min-width: 110px;
+        min-height: 85px;
+        white-space: nowrap;
+    }
+    .GraphNode .IncidentImage {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 17px;
+    }
+
+    .LinkLabel {
+        background-color:white;
+        padding: 0.4em;
+        z-index: 8;
+        border: 1px dotted black;
+        opacity: 0.9;
+        filter: alpha(opacity=90);
+        white-space: nowrap;
+    }
+
+    .Content p {
+        margin-bottom: 10px;
+    }
+
+} /* end @media */

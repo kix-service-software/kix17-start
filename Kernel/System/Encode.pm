@@ -17,6 +17,9 @@ use Encode;
 use Encode::Locale;
 use IO::Interactive qw(is_interactive);
 
+# prevent 'Used once' warning for Kernel::OM
+use Kernel::System::ObjectManager;
+
 our @ObjectDependencies = (
     'Kernel::System::Main'
 );

@@ -1,0 +1,208 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+
+    /**
+     *  @subsubsection Base
+     */
+
+    .Content.BigButtonsContainer {
+        display: block;
+        text-align: center;
+    }
+
+    .BigButtons {
+        display: inline-block;
+        text-align: center;
+        padding: 0;
+    }
+
+    .BigButtons a {
+        display: inline-block;
+        padding: 20px;
+        width: 150px;
+        cursor: pointer;
+        height: 120px;
+        float: left;
+        margin: 0 5px;
+    }
+
+    .BigButtons a.Disabled {
+        cursor: default;
+    }
+
+    .BigButtons a strong,
+    .BigButtons a span {
+        display: block;
+    }
+
+    .BigButtons a strong {
+        font-size: 15px;
+        margin: 3px 0px;
+    }
+
+    .BigButtons a i {
+        font-size: 25px;
+        margin-bottom: 5px;
+    }
+
+    .PreviewWidget {
+        position: relative;
+    }
+
+    .PreviewContainer {
+        overflow: hidden;
+    }
+
+    .PreviewContainer .nvd3 text {
+        font-size: 11px;
+    }
+
+    .PreviewContainer .Preview {
+        width: 70%;
+        height: 300px;
+        padding: 10px 0px;
+        margin: 20px auto;
+    }
+
+    .PreviewContainer .Preview .Error,
+    .PreviewContainer .Preview .Hint {
+        text-align: center;
+    }
+
+    .PreviewContainer .Preview .Error i,
+    .PreviewContainer .Preview .Hint i {
+        display: block;
+        font-size: 30px;
+        margin-bottom: 5px;
+    }
+
+    .PreviewContainer .Preview .Error:first-child,
+    .PreviewContainer .Preview .Hint:first-child {
+        margin-top: 130px;
+    }
+
+    .PreviewContainer .PreviewSettings {
+        margin: 20px auto;
+        text-align: center;
+    }
+
+    .PreviewContainer .PreviewSettings .Warning {
+        display: block;
+        margin-top: 15px;
+    }
+
+    .PreviewContainer .CallForAction {
+        width: 100px;
+    }
+
+    .PreviewSettings .CallForAction {
+        width: auto;
+    }
+
+    .PreviewContainer .CallForAction span {
+        height: auto;
+    }
+
+    .PreviewContainer .CallForAction span i {
+        display: block;
+        width: 100%;
+        margin: 3px 0px 5px 0px;
+    }
+
+    .PreviewContainer .CallForAction.Left,
+    .PreviewContainer .CallForAction.Right {
+        position: absolute;
+        top: 50%;
+        margin-top: -30px;
+        left: 50px;
+        text-align: center;
+    }
+
+    .PreviewContainer .CallForAction.Right {
+        left: auto;
+        right: 50px;
+    }
+
+    .PreviewContainer .CallForAction.Bottom {
+        display: block;
+        margin: 0px auto 20px auto;
+    }
+
+    .WidgetSimple fieldset legend {
+        padding-top: 10px;
+    }
+
+    fieldset legend {
+        position: relative;
+    }
+
+    fieldset legend a {
+        position: absolute;
+        top: 4px;
+        left: 29%;
+        margin-left: -2px;
+    }
+
+    @keyframes ButtonHint {
+        from {
+            box-shadow: none;
+            }
+        to {
+            box-shadow: 0 0 10px green;
+        }
+    }
+
+    @keyframes ButtonError {
+        from {
+            box-shadow: none;
+            }
+        to {
+            box-shadow: 0 0 10px red;
+        }
+    }
+
+    .PreviewContainer .CallForAction.HighlightHint {
+        animation: ButtonHint 0.7s infinite alternate;
+    }
+
+    .PreviewContainer .CallForAction.HighlightError {
+        animation: ButtonError 0.7s infinite alternate;
+    }
+
+    .PreviewContainer #PreviewCanvas {
+        width: 100%;
+        margin: 15px 0px;
+        height: 300px;
+    }
+
+    .PreviewContainer .PreviewTable {
+        overflow: auto;
+        height: 300px;
+        margin: 0 10px;
+    }
+
+    .PreviewContainer .PreviewTable td {
+        white-space: nowrap;
+    }
+
+    #EditDialog {
+        width: 800px;
+    }
+
+    #EditDialog .InputField_Search {
+        min-width: 500px;
+    }
+} /* end @media */

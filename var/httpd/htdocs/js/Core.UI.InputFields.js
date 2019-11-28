@@ -324,8 +324,10 @@ Core.UI.InputFields = (function (TargetNS) {
             // Disable the field, add the tooltip and dash string
             $SearchObj
                 .attr('readonly', 'readonly')
-                .attr('title', Core.Config.Get('InputFieldsNotAvailable'));
-
+                .attr('title', Core.Config.Get('InputFieldsNotAvailable'))
+                .parent()
+                .children('.ModernizeFieldIcon')
+                .addClass('ModernizeFieldIconDisable');
             // when the original field does no longer provide any valid options,
             // we also want to remove existing selections
             $InputContainerObj.find('.InputField_Selection').remove();
@@ -336,7 +338,10 @@ Core.UI.InputFields = (function (TargetNS) {
             // Enable the field, remove the tooltip and dash string
             $SearchObj
                 .removeAttr('readonly title')
-                .val('');
+                .val('')
+                .parent()
+                .children('.ModernizeFieldIcon')
+                .removeClass('ModernizeFieldIconDisable');
         }
     }
 
