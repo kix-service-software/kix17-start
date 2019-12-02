@@ -460,8 +460,11 @@ sub AgentKIXSidebar {
         for my $BackendModul (@SidebarBackend) {
 
             $Backend = '';
-            for my $BackendItem ( keys %{$Config} ) {
-                if ( $BackendItem =~ /$BackendModul/ ) {
+            for my $BackendItem ( keys %SidebarBackends ) {
+                if (
+                    $BackendItem =~ /^$BackendModul$/
+                    || $BackendItem =~ /^\d+-$BackendModul$/
+                ) {
                     $Backend = $BackendItem;
                 }
             }
