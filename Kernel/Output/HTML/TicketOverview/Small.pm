@@ -239,6 +239,16 @@ sub new {
         delete $Self->{AvailableFilterableColumns}->{Service};
     }
 
+    # remove owner from filters on AgentTicketLockedView
+    if ( $Self->{Action} eq 'AgentTicketLockedView' ) {
+        delete $Self->{AvailableFilterableColumns}->{Owner};
+    }
+
+    # remove responsible from filters on AgentTicketResponsibleView
+    if ( $Self->{Action} eq 'AgentTicketResponsibleView' ) {
+        delete $Self->{AvailableFilterableColumns}->{Responsible};
+    }
+
     # get dynamic field backend object
     my $DynamicFieldBackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
 
