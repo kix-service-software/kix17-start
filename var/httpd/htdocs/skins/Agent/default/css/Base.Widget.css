@@ -723,6 +723,11 @@
         padding-bottom: 8px;
         margin-bottom: 8px;
     }
+    #AdminSysConfig .WorkingHours .FloatBox {
+        float: left;
+        text-align: center;
+    }
+
 
     /**
     *   @subsection import export
