@@ -3144,23 +3144,36 @@ sub NavigationBar {
             }
             next ITEM if !$Shown;
 
+            # init priority with 500 if not given
+            if ( !$Item->{Prio} ) {
+                $Item->{Prio} = 500;
+            }
+
             # set prio of item
             my $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
-            COUNT:
-            for ( 1 .. 51 ) {
-                last COUNT if !$NavBar{$Key};
-
-                $Item->{Prio}++;
-                $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
-            }
 
             # show as main menu
             if ( $Item->{Type} eq 'Menu' ) {
+                # check if priority is already in use
+                while ( $NavBar{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+    
+                    # set new priority
+                    $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
+                }
                 $NavBar{$Key} = $Item;
             }
-
             # show as sub of main menu
             else {
+                # check if priority is already in use
+                while (  $NavBar{Sub}->{ $Item->{NavBar} }->{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+    
+                    # set new priority
+                    $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
+                }
                 $NavBar{Sub}->{ $Item->{NavBar} }->{$Key} = $Item;
             }
         }
@@ -4584,25 +4597,50 @@ sub CustomerNavigationBar {
             }
             next ITEM if !$Shown;
 
-            # set prio of item
-            my $Key = sprintf( "%07d", $Item->{Prio} );
-            COUNT:
-            for ( 1 .. 51 ) {
-                last COUNT if !$NavBarModule{$Key};
-
-                $Item->{Prio}++;
+            # init priority with 500 if not given
+            if ( !$Item->{Prio} ) {
+                $Item->{Prio} = 500;
             }
 
+            # set prio of item
+            my $Key = sprintf( "%07d", $Item->{Prio} );
+
+            # show as main menu
             if ( $Item->{Type} eq 'Menu' ) {
-                $NavBarModule{ sprintf( "%07d", $Item->{Prio} ) } = $Item;
+                # check if priority is already in use
+                while ( $NavBarModule{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+    
+                    # set new priority
+                    $Key = sprintf( "%07d", $Item->{Prio} );
+                }
+                $NavBarModule{ $Key } = $Item;
             }
 
             # show as sub of main menu
             elsif ( $Item->{Type} eq 'Submenu' ) {
-                $NavBarModule{Sub}->{ $Item->{NavBar} }->{ sprintf( "%07d", $Item->{Prio} ) } = $Item;
+                # check if priority is already in use
+                while ( $NavBarModule{Sub}->{ $Item->{NavBar} }->{ $Key } ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+    
+                    # set new priority
+                    $Key = sprintf( "%07d", $Item->{Prio} );
+                }
+                $NavBarModule{Sub}->{ $Item->{NavBar} }->{ $Key } = $Item;
             }
+            # fallback: show as main menu
             else {
-                $NavBarModule{ sprintf( "%07d", $Item->{Prio} ) } = $Item;
+                # check if priority is already in use
+                while ( $NavBarModule{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+    
+                    # set new priority
+                    $Key = sprintf( "%07d", $Item->{Prio} );
+                }
+                $NavBarModule{ $Key } = $Item;
             }
         }
     }
