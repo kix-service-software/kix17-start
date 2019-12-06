@@ -2,7 +2,7 @@
  * This software is part of the KIX project, https://www.kixdesk.com/
  * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
- * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Customer Frontend
  * @copyright c.a.p.e. IT GmbH
  * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
  * --
@@ -117,6 +117,7 @@
         color: #FFFFFF;
     }
 
+
     /**
     *   @subsection tabs
     */
@@ -157,17 +158,35 @@
 
 
     /**
-    *   @subsection toolbar
+    *   @subsection sortable
     */
-    #ToolBarToggle::after {
-        color: #5B5B5B;
+    .SortableList {
+        border-color: #DDDDDD;
+        background: #EEEEEE;
     }
-
-    #ToolBarToggle:hover::after {
-        color: #0A7CB3;
+    .SortableList li span {
+        background-color: #DDDDDD;
     }
-    #ToolBarToggle.Hide {
-        color: transparent;
+    .SortableList li span input {
+        background-color: #DDDDDD;
+        color: #777777;
+    }
+    .SortableList li span i {
+        color: #BBBBBB;
+    }
+    .SortableList li span:hover i {
+        color: #777777;
+    }
+    .SortableList li span strong {
+        background-color: #BBBBBB;
+        color: #EEEEEE;
+    }
+    .SortableList li span.Icon {
+        color: #000000;
+    }
+    div.AddElement {
+        background-color: #DDDDDD;
+        border-color: #DDDDDD;
     }
 
 
@@ -224,6 +243,14 @@
         border: 1px solid #D5D5D5;
         background-color: #D5D5D5;
     }
+    .SidebarColumn .ZoomSidebarKIX {
+        border: 1px solid #D5D5D5;
+        background-color: #D5D5D5;
+    }
+    .SidebarColumn .ZoomSidebar {
+        border: 1px solid #D5D5D5;
+        background-color: #F5F5F5;
+    }
     .SidebarColumn .WidgetSimple > .Header,
     .SidebarColumn .WidgetSimple.SettingsWidget > .Header,
     .SidebarColumn .WidgetSimple.SettingsWidget.CanDrag > .Header {
@@ -232,6 +259,37 @@
     .SidebarColumn .WidgetSimple .Buttons {
         border-top: 1px solid #D5D5D5
     }
+
+
+    /**
+    *   @subsection message
+    */
+    #Messages li {
+        border: 1px solid #9E9E9E;
+        background-color: #F5F5F5;
+    }
+    #Messages li .MessageHeader {
+        background-color: #CBE1ED;
+    }
+    #Messages li .MessageContent {
+        background-color: #FFFFFF;
+        border: 1px solid #DDDDDD;
+    }
+    #Messenger > .Header {
+        background-color: #CBE1ED;
+    }
+    #ReplyButton {
+        border-color: #9E9E9E;
+    }
+    #ReplyButton:hover {
+        border-color: #0A7CB3;
+        background-color: #0A7CB3;
+        color: #FFFFFF;
+    }
+    #NoArticles {
+        border-color: #E9E9E9;
+    }
+
 
 
     /*
@@ -245,21 +303,12 @@
     /*
     *   @subsection preferences widget
     */
-    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header {
-        border-bottom: 1px solid #9E9E9E;
+    .Preferences .WidgetSimple > .Header {
+        background-color: #CBE1ED;
     }
-    .PreferencesScreen .Size1of3 > .WidgetSimple > .Content {
-        background-color: #FFFFFF;
-    }
-    .PreferencesScreen .Content form .Field.ButtonOnly {
-        border-top: 1px solid #9E9E9E;
-    }
-    .PreferencesScreen .WidgetSimple .WidgetSimple {
+    .Preferences .WidgetSimple {
         border: 1px solid #9E9E9E;
         background-color: #F5F5F5;
-    }
-    .PreferencesScreen .WidgetSimple .WidgetSimple > .Header {
-        background-color: #CBE1ED;
     }
 
 
@@ -441,9 +490,6 @@
     .CallForAction:hover span i.fa-plus-square {
         color: #FFFFFF;
     }
-    .CallForAction span i.fa-rocket {
-        color: #C4632F;
-    }
     .CallForAction:disabled {
         border-color: #C6C6C6;
         background-color: #F5F5F5;
@@ -545,6 +591,7 @@
         border-color: #9E9E9E;
     }
 
+
     /**
     *   @subsection ul table like
     */
@@ -621,175 +668,31 @@
 
 
     /**
-    *   @subsection overview medium
+    *   @subsection  OverviewTable
     */
-    .OverviewMedium > li {
-        border-left: 1px solid #DDDDDD;
-        border-bottom: 1px solid #DDDDDD;
+    table.OverviewTable {
+        background-color: #FDFDFD;
+    }
+    table.OverviewTable thead th,
+    table.OverviewTable tbody td {
         border-right: 1px solid #DDDDDD;
     }
-    .OverviewMedium h2 a {
-        color: #000000;
+    table.OverviewTable thead th {
+        background-color: #EEEEEE;
     }
-    .OverviewMedium .Content {
-        border-left: 5px solid #FFFFFF;
+    .OverviewTable thead th > span {
+        color: #444444;
     }
-    .OverviewMedium li:nth-child(2n) {
+    .OverviewTable tbody tr:nth-child(2n) {
         background-color: #F5F5F5;
     }
-    .OverviewMedium > li:nth-child(2n) .Content {
-        border-left: 5px solid #F5F5F5;
+    .OverviewTable tbody tr:hover td {
+        color: #FFFFFF;
+        background-color: #0A7CB3;
+        border-color: transparent;
     }
-    .OverviewMedium > li:nth-child(2n) .Content:hover,
-    .OverviewMedium .Content:hover {
-        border-left: 5px solid #FCB24B;
-    }
-    .OverviewMedium > li:first-child {
-        border-top: 1px solid #DDDDDD;
-    }
-    .OverviewMedium div.Flag {
-        border: 1px solid #BBBBBB;
-    }
-    .OverviewMedium table.Infos td {
-        border-right: 1px dotted #CCCCCC;
-    }
-    #EmptyMessageMedium {
-        border: 1px solid #9E9E9E;
-    }
-
-
-    /**
-    *   @subsection overview large
-    */
-    .OverviewLarge .Content {
-        border-left: 5px solid #FFFFFF;
-    }
-    .OverviewLarge h2 a {
-        color: #000000;
-    }
-    .OverviewLarge > li {
-        border-right: 1px solid #DDDDDD;
-        border-left: 1px solid #DDDDDD;
-        border-bottom: 1px solid #DDDDDD;
-    }
-    .OverviewLarge > li:first-child {
-        border-top: 1px solid #DDDDDD;
-    }
-    .OverviewLarge .Preview > ul {
-        border: 1px solid #CCCCCC;
-    }
-    .OverviewLarge .Preview h3 {
-        background-color: #E8E8E8;
-        border: 1px solid #E1E1E1;
-    }
-    .OverviewLarge .Preview h3 .Subject {
-        color: #111111;
-    }
-    .OverviewLarge .Preview li div.HiddenBlock {
-        border-right: 1px solid #E8E8E8;
-    }
-    .OverviewLarge .Preview li.Active h3 {
-        border: 1px solid #D7D7D7;
-        background-color: #E0E0E0;
-    }
-    .OverviewLarge .Infos table tr.Middle {
-        border-top: 1px dotted #CCCCCC;
-    }
-    .OverviewLarge .Infos table td {
-        border-left: 1px dotted #CCCCCC;
-    }
-    .OverviewLarge > li:nth-child(2n) {
-        background-color: #F5F5F5;
-    }
-    .OverviewLarge > li:nth-child(2n) .Content {
-        border-left: 5px solid #F5F5F5;
-    }
-    .OverviewLarge > li:nth-child(2n) .Content:hover,
-    .OverviewLarge .Content:hover {
-        border-left: 5px solid #FCB24B;
-    }
-    .OverviewLarge div.Flag {
-        border: 1px solid #BBBBBB;
-    }
-    .OverviewLarge li:hover .Preview h3 a,
-    .OverviewLarge li:hover .Preview h3 a > span {
-        color: #5E584F;
-    }
-    .OverviewLarge li:hover .Preview li.Active h3 a,
-    .OverviewLarge li:hover .Preview li.Active h3 a  > span {
-        color: #0E0E0E;
-    }
-    #EmptyMessageLarge {
-        border: 1px solid #9E9E9E;
-    }
-
-
-    /**
-    *   @subsection sortable
-    */
-    .SortableList {
-        border-color: #DDDDDD;
-        background: #EEEEEE;
-    }
-    .SortableList li span {
-        background-color: #DDDDDD;
-    }
-    .SortableList li span input {
-        background-color: #DDDDDD;
-        color: #777777;
-    }
-    .SortableList li span i {
-        color: #BBBBBB;
-    }
-    .SortableList li span:hover i {
-        color: #777777;
-    }
-    .SortableList li span strong {
-        background-color: #BBBBBB;
-        color: #EEEEEE;
-    }
-    .SortableList li span.Icon {
-        color: #000000;
-    }
-    div.AddElement {
-        background-color: #DDDDDD;
-        border-color: #DDDDDD;
-    }
-
-
-    /**
-    *   @subsection overview queue
-    */
-    .WidgetSimple > .QueueTreeContent,
-    .QueueTreeContent {
-        background-color: #FFFFFF;
-    }
-    .QueueOverview .OlderLevel1 {
-        color: #FFA500;
-    }
-    .QueueOverview .Oldest,
-    .QueueOverview .Oldest .jstree-anchor,
-    .QueueOverview .OlderLevel2 {
-        color: #E31E24;
-    }
-
-
-    /**
-    *   @subsection overview service
-    */
-    .ServiceOverview .OlderLevel1 {
-        color: #FFA500;
-    }
-    .ServiceOverview .OlderLevel2 {
-        color: #F80010;
-    }
-    .WidgetSimple > .ServiceTreeContent,
-    .ServiceTreeContent {
-        background-color: #FFFFFF;
-    }
-    .Node.Oldest,
-    .Node.Oldest .jstree-anchor {
-        color: #E31E24;
+    .OverviewTable tbody tr:hover td a {
+        color: #FFFFFF;
     }
 
 
@@ -804,7 +707,6 @@
     .LightRow .Actions > li > ul {
         border: 1px solid #9E9E9E;
     }
-
     .ActionRow .Actions li span,
     .LightRow .Actions li span {
         background-color: #EEEEEE;
@@ -842,42 +744,10 @@
 
 
     /**
-    *   @subsection bulk action
+    *   @subsection search
     */
-    .TaskAbort {
-        border: 1px solid #9E9E9E;
-        background-color: #FCFCFC;
-    }
-    .TaskAbort a {
-        background-color: #F0F0F0;
-        border: 1px solid #9E9E9E;
-    }
-    .TaskAbort a:hover {
-        background-color: #0A7CB3;
-        border: 1px solid #0A7CB3;
-        color: #FFFFFF;
-    }
-    .TaskBarColor {
-        background-color: #0A7CB3;
-    }
-    .TaskNotify > p:nth-child(2n) {
-        background-color: #EEEEEE;
-    }
-    .BulkNotify,
-    .WINotify {
-        border: 1px solid #9E9E9E;
-    }
-    .BulkNotify p.Error,
-    .WINotify p.Error {
-        background-color: #E31E24;
-        color: #FFFFFF;
-    }
-    .BulkNotify p.Info,
-    .BulkNotify p.Notice,
-    .WINotify p.Info,
-    .WINotify p.Notice {
-        background-color: #0A7CB3;
-        color: #FFFFFF;
+    .SearchTerms span {
+        border-color: #BBBBBB;
     }
 
     /**
@@ -897,6 +767,9 @@
     ul.FAQMiniList li:hover a {
         color: #0A7CB3;
         background-color: inherit;
+    }
+    #FAQOptions .Print {
+        color: #777777;
     }
 
 
@@ -931,35 +804,6 @@
     .LoginBox .CallForAction:disabled:hover span,
     .LoginBox .CallForAction:disabled:hover span i {
         color: #CCCCCC;
-    }
-
-
-    /**
-    *   @subsection data collector
-    */
-    .AdminSupportDataCollector .CheckResultProblem p {
-        background-color: #EDD3D3;
-    }
-    .AdminSupportDataCollector .CheckResults > li.CheckResultUnknown span.Value,
-    .AdminSupportDataCollector .CheckResults > li.CheckResultOK span.Value,
-    .AdminSupportDataCollector .CheckResults > li.CheckResultInformation span.Value,
-    .AdminSupportDataCollector .CheckResults > li.CheckResultOK > p {
-        color: #9E9E9E;
-    }
-
-
-    /**
-    *   @subsection package manager
-    */
-    .IconNotReady {
-        color: #E31E24;
-    }
-
-    .IconReady::before {
-        color: #00FF00;
-    }
-    tr:hover .IconReady::before {
-        color: #FFFFFF;
     }
 
 
@@ -1187,30 +1031,6 @@
 
 
     /**
-    *   @subsection ACL
-    */
-    .ACLNote {
-        background-color: #FFFFFF;
-        border: 1px solid #CCCCCC;
-    }
-    .ACLFieldGroup li ul li ul li ul li em,
-    .ACLFieldGroup .LastLevel li em {
-        color: #FFFFFF;
-        background-color: #BBBBBB;
-    }
-    .ACLFieldGroup li ul li ul li ul li.DataItem,
-    .ACLFieldGroup .LastLevel li.DataItem {
-        background-color: #DDDDDD;
-    }
-    .ACLStructure:first-child {
-        border-bottom: 1px solid #CCCCCC;
-    }
-    .ACLFieldGroup li ul li ul li ul li em:hover {
-        background-color: #777777;
-    }
-
-
-    /**
     *   @subsection link objects
     */
     #ContentItemTabs .MainBox > div.AddQuickLink {
@@ -1268,109 +1088,6 @@
 
 
     /**
-    *   @subsection process manager
-    */
-    .EntityDrag {
-        border: 1px solid #CCCCCC;
-    }
-    .AvailableIn {
-        color: #444444;
-        background-color: #CCCCCC;
-    }
-    em.EntityID input {
-        background-color: #0A7CB3;
-    }
-    em.EntityID:after {
-        border: solid transparent;
-        border-top: 5px solid #0A7CB3;
-    }
-    #TransitionForm .WidgetSimple .WidgetSimple {
-        border: 1px solid #CCCCCC;
-        background-color: #FFFFFF;
-    }
-    .WidgetNotice .Content {
-        color: #444444;
-    }
-    ul#ProcessElements {
-        border: 1px solid #CCCCCC;
-    }
-    ul#ProcessElements li.AccordionElement h2 {
-        border-bottom: 1px solid #CCCCCC;
-        color: #999999;
-    }
-    ul#ProcessElements li.AccordionElement div.Content {
-        border-bottom: 1px solid #CCCCCC;
-    }
-    ul#ProcessElements li.AccordionElement:last-child div.Content {
-        border-bottom: 1px solid #FFFFFF;
-    }
-    ul#ProcessElements li.AccordionElement div.Content ul li > span a {
-        color: #777777;
-    }
-    ul#ProcessElements li.AccordionElement.Active,
-    ul#ProcessElements li.AccordionElement div.Content {
-        background-color: #FFFFFF;
-        border: 1px solid #FFFFFF;
-    }
-    ul#ProcessElements li.AccordionElement.Active:last-child h2 {
-        border-bottom: 1px solid #CCCCCC;
-    }
-    #Canvas .Activity.Highlighted,
-    #Canvas .TransitionLabel.Highlighted {
-        color: #FFFFFF;
-        background-color: #5D5D5D;
-    }
-    #Canvas .Activity .Success,
-    #Canvas .TransitionLabel .Success {
-        background-image: url(../img/icons/tick.png);
-    }
-    #Canvas .TransitionLabel a,
-    #Canvas .TransitionLabel {
-        border: 1px solid #BBBBBB;
-        background-color: #FFFFFF;
-    }
-    #Canvas .Activity,
-    #Canvas #StartEvent,
-    #Canvas .TransitionLabel .Icon  {
-        background-color: #FFFFFF;
-    }
-    #Canvas .Activity.Highlighted.ReadyToDrop,
-    #Canvas .TransitionLabel.Highlighted.ReadyToDrop {
-        background-color: #A9BF6E;
-    }
-    #Canvas .Activity.Hovered,
-    #Canvas .TransitionLabel.Hovered {
-        border: 1px solid #FF9922;
-    }
-    #Canvas #StartEvent {
-        border: 1px solid #000000;
-    }
-    #Canvas .Activity {
-        border: 1px solid #999999;
-    }
-    .DiagramDeleteLink a,
-    .DiagramEditLink a {
-        background-color: #FFFFFF;
-        border: 1px solid #BBBBBB;
-    }
-    #DiagramTooltip {
-        background-color: #FFFFFF;
-        border: 1px solid #BBBBBB;
-    }
-    #DiagramTooltip h4 {
-        background-color: #F6F6F6;
-        border-bottom: 1px solid #A0A0A0;
-    }
-    #DiagramTooltip li {
-        background-color: #DDDDDD;
-    }
-    #DiagramTooltip li .AvailableIn {
-        color: #FFFFFF;
-        background-color: #999999;
-    }
-
-
-    /**
     *   @subsection ITSM
     */
     #ITSMTable > .ControlRow {
@@ -1387,67 +1104,6 @@
     }
     .CIImagePreview {
         border: 1px solid #CCCCCC;
-    }
-
-    /**
-    *   @subsection ITSM tab graph
-    */
-    #ZoomNotice {
-        color: #E31E24;
-    }
-    #Shield {
-        background-color: #000000;
-    }
-    #ZoomArea {
-        border: 1px dotted #0A7CB3;
-    }
-    #GraphBody  {
-        background-color: #FFFFFF;
-    }
-    #GraphSaved  {
-        border: 1px solid #0A7CB3;
-        background-color: #FFFFFF;
-    }
-    #Context {
-        border: 1px solid #D5D5D5;
-    }
-    #Context > .Header {
-        background-color: #D5D5D5;
-    }
-    #Context > .Content > ul > li > a {
-        border-bottom: 1px solid #DDDDDD;
-    }
-    #Context > .Content > ul > li:hover > a {
-        background-color: #0A7CB3;
-        color: #FFFFFF;
-    }
-    .Magnifier_active {
-        color: #FFFFFF;
-        background-color: #0A7CB3;
-    }
-
-
-    /**
-    *   @subsection SysConfig
-    */
-    #AdminSysConfig .Description {
-        color: #444444;
-    }
-    #AdminSysConfig fieldset {
-        border-bottom: 1px solid #CCCCCC;
-    }
-    #AdminSysConfig fieldset.Invalid,
-    #AdminSysConfig fieldset.Invalid * {
-        color: #777777;
-    }
-    #AdminSysConfig fieldset.Invalid .ResetButton:hover * {
-        color: #FFFFFF;
-    }
-    #AdminSysConfig .FrontendModuleRegistration .NavBarListEntry {
-        border-bottom: 1px solid #888888;
-    }
-    #AdminSysConfig .Setting .DefaultValue {
-        color: #A0A0A0;
     }
 
 
@@ -1474,49 +1130,6 @@
     }
 
 
-    /**
-    *   @subsection static
-    */
-    .BigButtons a {
-        border: 1px solid #CCCCCC;
-    }
-    .BigButtons a span {
-        color: #888888;
-    }
-    .BigButtons a.Disabled strong,
-    .BigButtons a.Disabled span {
-        color: #CCCCCC;
-    }
-    .BigButtons a:not(.Disabled):hover,
-    .BigButtons a.Active {
-        background-color: #E5E5E5;
-        border: 1px solid #999999;
-    }
-    .PreviewContainer .Preview {
-        background-color: #FFFFFF;
-        border: 1px solid #CCCCCC;
-    }
-    .PreviewContainer .Preview .Error,
-    .PreviewContainer .Preview .Hint {
-        color: #777777;
-    }
-    .PreviewContainer .Preview .Error i,
-    .PreviewContainer .Preview .Hint i {
-        color: #BBBBBB;
-    }
-    .PreviewContainer .PreviewSettings a.Active {
-        border-bottom: 1px solid #000000;
-    }
-    .PreviewContainer .PreviewSettings .Warning {
-        color: #AAAAAA;
-    }
-    .PreviewSettings .CallForAction.Active {
-        background-color: #0A7CB3;
-        border-color: #0A7CB3;
-        color: #FFFFFF;
-    }
-
-
 
     /**
     *   @subsection import/export
@@ -1537,29 +1150,6 @@
         background: url(../img/icons/importexport_arrow_down.png);
     }
 
-
-    /**
-    *   @subsection quick ticket template
-    */
-    .LimitTemplateSelectionIcon_NotFixed {
-        color: #CCCCCC;
-    }
-    .LimitTemplateSelectionIcon_NotFixed:hover,
-    .LimitTemplateSelectionIcon_Fixed {
-        color: #444444;
-    }
-
-
-    /**
-    *   @subsection notification event
-    */
-    .NotificationLanguage > .WidgetSimple {
-        background-color: #FFFFFF;
-        border: 1px solid #CCCCCC;
-    }
-    .TransportsContent legend {
-        border-bottom: 1px solid #A0A0A0;
-    }
 
     /**
     * @subsection WidgetPopup
@@ -1601,6 +1191,14 @@
     }
     .ActionList p {
         color: #888888;
+    }
+    .ZoomSidebar > .Content > .TableLike.FixedLabelSmall a {
+        border: 1px solid #9E9E9E;
+    }
+    .ZoomSidebar > .Content > .TableLike.FixedLabelSmall a:hover {
+        background-color: #0A7CB3;
+        border: 1px solid #0A7CB3;
+        color: #FFFFFF;
     }
 
 
@@ -1656,6 +1254,14 @@
 
 
     /**
+    *   @subsection daemon
+    */
+    .DaemonInfoContent legend {
+        border-color: #CCCCCC;
+        color: #333333;
+    }
+
+    /**
     *   @subsection field errors
     */
     form input.Error,
@@ -1684,12 +1290,9 @@
 
 
 /**
-*   Colors for responsive
-**/
+*   @subsection Responsive
+*/
 @media only screen and (min-width: 0px) and (max-width: 1024px) {
-    #ToolBar li a span.Counter {
-        color: #AAAAAA;
-    }
     #ResponsiveSidebarNotification {
         color: #CCCCCC;
     }
@@ -1737,12 +1340,11 @@
         background-color: #AAAAAA;
         color: #FFFFFF;
     }
-
     body:not(.Visible-ScreenXL) .WidgetSimple span.Pagination a.Selected,
     body:not(.Visible-ScreenXL) .OverviewActions span.Pagination a.Selected {
         background-color: #555555;
     }
-    .PreferencesScreen .Size1of3 > .WidgetSimple > .Header {
-        background: #E8E8E8;
+    body:not(.Visible-ScreenXL) #UserInfo {
+        background-color: #FFFFFF;
     }
 }
