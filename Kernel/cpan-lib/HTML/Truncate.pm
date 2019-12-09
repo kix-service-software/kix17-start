@@ -308,7 +308,7 @@ sub truncate {
     my $p = HTML::TokeParser->new( $self->{_raw_html} );
     $p->unbroken_text(1);
 # ---
-# Patched by OTRS
+# Patched by KIX
 #    $p->utf8_mode( $self->utf8_mode );
     # the use of utf8_mode in the parser object could lead into a wide character problem, disabling
     # seams to fix the issue as scripts/test/HTMLUtils/Truncate.t seams to work even with
@@ -389,7 +389,7 @@ sub truncate {
             next TOKEN if $token->[2]; # DATA
 #            my $txt = HTML::Entities::decode($token->[1]);
 # ---
-# Patched by OTRS
+# Patched by KIX
             # my $txt = $token->[1];
             my $txt = HTML::Entities::decode($token->[1]);
 # ---
@@ -437,7 +437,7 @@ sub truncate {
                 {
                     $keep = substr($txt, 0, $chars_to_keep);
 # ---
-# Patched by OTRS
+# Patched by KIX
 
                     $keep = $self->utf8_mode ? $keep : HTML::Entities::encode($keep);
 # ---
