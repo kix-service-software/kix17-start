@@ -1089,11 +1089,11 @@
                 <Item Key="Identifier">RemoteDBList003</Item>
                 <Item Key="Group"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix;host=localhost</Item>
+                <Item Key="DatabasePw">kix</Item>
                 <Item Key="DatabaseTable">ticket</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="MaxResultCount">30</Item>
                 <Item Key="MaxResultDisplay">10</Item>
@@ -1133,11 +1133,11 @@
                 <Item Key="Identifier">RemoteDBList004</Item>
                 <Item Key="Group"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
-                <Item Key="DatabaseDSN">DBI:Pg:dbname=otrs;host=localhost</Item>
-                <Item Key="DatabasePw">otrs</Item>
+                <Item Key="DatabaseDSN">DBI:Pg:dbname=kix;host=localhost</Item>
+                <Item Key="DatabasePw">kix</Item>
                 <Item Key="DatabaseTable">ticket</Item>
                 <Item Key="DatabaseType"></Item>
-                <Item Key="DatabaseUser">otrs</Item>
+                <Item Key="DatabaseUser">kix</Item>
                 <Item Key="DatabaseCaseSensitive"></Item>
                 <Item Key="MaxResultCount">30</Item>
                 <Item Key="MaxResultDisplay">10</Item>
@@ -8997,7 +8997,7 @@ via the Preferences button after logging in.
         <Group>Framework</Group>
         <SubGroup>Frontend::Customer::Auth</SubGroup>
         <Setting>
-            <String Regex="">cn=otrsallow,ou=posixGroups,dc=example,dc=com</String>
+            <String Regex="">cn=kixallow,ou=posixGroups,dc=example,dc=com</String>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Customer::AuthModule::LDAP::AccessAttr" Required="0" Valid="0" ConfigLevel="200">
@@ -11730,7 +11730,7 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::OverrideQDataDisplayLimits" Required="0" Valid="0">
-        <Description Translatable="1">Allows overriding of Data character limits, hard coded in TTs. The key has the following format: &lt;TemplateFilePattern&gt;::(&lt;VariableNamePattern&gt;), the value is the numeric character limit that should be used. You can use RegEx, but you MUST not use any additional grouping! PLEASE NOTE: you have to execute otrs.DeleteCache.pl after activating or changing this config option.</Description>
+        <Description Translatable="1">Allows overriding of Data character limits, hard coded in TTs. The key has the following format: &lt;TemplateFilePattern&gt;::(&lt;VariableNamePattern&gt;), the value is the numeric character limit that should be used. You can use RegEx, but you MUST not use any additional grouping! PLEASE NOTE: you have to execute kix.DeleteCache.pl after activating or changing this config option.</Description>
         <Group>Framework</Group>
         <SubGroup>Core::Web</SubGroup>
         <Setting>

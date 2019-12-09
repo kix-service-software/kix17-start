@@ -187,7 +187,7 @@ END
             Vendor  => $Row[4],
         );
 
-        # correct any 'dos-style' line endings - http://bugs.otrs.org/show_bug.cgi?id=9838
+        # correct any 'dos-style' line endings
         $Row[3] =~ s{\r\n}{\n}xmsg;
         $Package{MD5sum} = $Self->{MainObject}->MD5sum( String => \$Row[3] );
 

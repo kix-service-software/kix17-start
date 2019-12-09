@@ -291,7 +291,6 @@ sub ImportDataGet {
     # it is important to use this syntax "while ( !eof($FH) )"
     # as the CPAN module Text::CSV_XS might show errors if the
     # getline call is within the while test
-    # have a look at http://bugs.otrs.org/show_bug.cgi?id=9270
     while ( !eof($FH) ) {
         my $Column = $ParseObject->getline($FH);
         push @ImportData, $Column;

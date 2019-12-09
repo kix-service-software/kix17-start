@@ -13,7 +13,7 @@
                             <input id="DatabaseDSN" class="W50pc Validate_Required [% Data.DatabaseDSNServerError | html %]" type="text"  value="[% Data.DatabaseDSN | html %]" name="DatabaseDSN">
                             <div id="DatabaseDSNError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
                             <div id="DatabaseDSNServerError" class="TooltipErrorMessage"><p>[% Translate(Data.DatabaseDSNServerErrorMessage) | html %]</p></div>
-                            <p class="FieldExplanation">[% Translate("Specify the DSN for used database.") | html %] [% Translate("Example") | html %]: DBI:mysql:database=otrs;host=localhost;</p>
+                            <p class="FieldExplanation">[% Translate("Specify the DSN for used database.") | html %] [% Translate("Example") | html %]: DBI:mysql:database=kix;host=localhost;</p>
                         </div>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[
