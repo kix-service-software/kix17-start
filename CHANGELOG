@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.9.1-RC2 (2019/12/09)
+ * (2019/12/09) - release candidate
+
 # 17.9.1-RC1 (2019/12/09)
  * (2019/12/09) - Bugfix: T2019112990001088 (fixed config item class with geo coordinate could not be exported) (fjacquemin)
  * (2019/12/06) - Bugfix: KIX17-512 (fixed Layout errors in the definitions of service times in the calendars) (fjacquemin)
