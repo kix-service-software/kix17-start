@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.9.1-RC1 (2019/12/09)
+ * (2019/12/06) - Bugfix: KIX17-512 (fixed Layout errors in the definitions of service times in the calendars) (fjacquemin)
+ * (2019/12/06) - Bugfix: KIX17-518 (fixed Use the wrong blue color theme in the customer frontend) (fjacquemin)
+ * (2019/12/05) - Bugfix: KIX17-502 (fixed undefined log object for failed prefilter) (millinger)
+
 # 17.9.0 (2019/11/28)
  * (2019/11/28) - productive release
 
