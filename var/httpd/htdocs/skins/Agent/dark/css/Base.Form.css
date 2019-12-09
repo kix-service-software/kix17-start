@@ -1,0 +1,595 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
+@media screen,projection,tv,handheld {
+    form fieldset {
+        display: block;
+        border: none;
+    }
+    legend {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    form label[for] {
+        cursor: pointer;
+    }
+    form label.Mandatory span.Marker {
+        font-size: 18px;
+        font-weight: bold;
+        position: relative;
+        top: 2px;
+        line-height: 1px;
+        right: 2px;
+        left: auto;
+    }
+    label.SubjectNoReIcon {
+        padding-left: 30px;
+        height: 12px;
+        background: url(../img/NoRe.png) no-repeat left top;
+    }
+    label.SubjectNoFwdIcon {
+        padding-left: 30px;
+        height: 12px;
+        background: url(../img/NoFwd.png) no-repeat left top;
+    }
+    fieldset > legend {
+        display: block;
+        width: 100%;
+    }
+    fieldset > legend > span {
+        display: block;
+        font-weight: bold;
+        padding: 5px 0px 5px 30%;
+        text-indent: 8px;
+        margin-bottom: 5px;
+    }
+
+    fieldset.TableLike > label,
+    fieldset.TableLike > .Row > label {
+        display: block;
+        float: left;
+        line-height: 1.0em;
+        width: 30%;
+        text-align: right;
+        min-height: 17px;
+        padding-top: 8px;
+        padding-bottom: 1px;
+        font-weight: bold;
+        position: relative;
+    }
+    fieldset.TableLike > .Row > label {
+        padding-top: 3px;
+    }
+    fieldset.TableLike > label.SubElement {
+        width: 40%;
+        margin-right: 10px;
+    }
+    fieldset.TableLike > .Value,
+    fieldset.TableLike > .Row > .Value {
+        margin-left: 30%;
+        padding: 5px 0 3px 8px;
+        line-height: 1.0em;
+    }
+
+    fieldset.TableLike > .Field,
+    fieldset.TableLike > .Row > .Field {
+        line-height: 1.0em;
+        margin: 5px 0 0 30%;
+        padding: 3px 0 3px 5px;
+        min-height: 20px;
+    }
+    fieldset.TableLike > .Field > :first-child,
+    fieldset.TableLike > .Row > .Field > :first-child {
+        margin-top: -5px;
+    }
+    fieldset.TableLike > .Field > .Size1of2,
+    fieldset.TableLike > .Row > .Field > .Size1of2 {
+        margin: 0;
+        border-style: solid;
+        border-width: 1px;
+        box-sizing: border-box;
+    }
+    fieldset.TableLike > .Field.SubElement{
+        margin-left: 40%;
+    }
+    fieldset.TableLike > .Field.SubElement input.W50pc {
+        width: 33%;
+    }
+    fieldset.TableLike > .Field.Options {
+        padding-top: 8px;
+    }
+    fieldset.TableLike > .Field.Options a {
+        border-width: 1px;
+        border-style: solid;
+        padding: 3px 8px;
+        margin-right: 5px;
+    }
+    fieldset.TableLike > .Field > input[id$='Date'],
+    fieldset.TableLike > .Row > .Field > input[id$='Date'] {
+        width: 80px;
+    }
+
+    fieldset.TableLike > .Field > select,
+    fieldset.TableLike > .Row > .Field > select,
+    fieldset.TableLike > .Field > input,
+    fieldset.TableLike > .Row > .Field > input {
+        max-width: 100%;
+    }
+    fieldset.TableLike > .Field > select[id$='DateTime'],
+    fieldset.TableLike > .Row > .Field > select[id$='DateTime'] {
+        width: 25%;
+    }
+    fieldset.TableLike > .Field > select[id$="TimePointStart"],
+    fieldset.TableLike > .Field > select[id$="TimePointFormat"],
+    fieldset.TableLike > .Field > select[id$="TimePointValue"],
+    fieldset.TableLike > .Field > select[id$="TimePoint"],
+    fieldset.TableLike > .Row > .Field > select[id$="TimePointStart"],
+    fieldset.TableLike > .Row > .Field > select[id$="TimePointFormat"],
+    fieldset.TableLike > .Row > .Field > select[id$="TimePointValue"],
+    fieldset.TableLike > .Row > .Field > select[id$="TimePoint"] {
+        width: 30.5%;
+    }
+    fieldset.TableLike > .Field > select[id$="Time"],
+    fieldset.TableLike > .Row > .Field > select[id$="Time"] {
+        width: 25%;
+    }
+    fieldset.TableLike div.Value .Flag {
+        float: left;
+        margin-right: 5px;
+        margin-top: 3px;
+    }
+    fieldset.TableLike.FixedLabel > label,
+    fieldset.TableLike.FixedLabel > .Row > label {
+        width: 20%;
+    }
+    fieldset.TableLike.FixedLabel > .Field,
+    fieldset.TableLike.FixedLabel > .Row > .Field {
+        margin-bottom: 2px;
+    }
+    fieldset.TableLike.FixedLabel > .Field,
+    fieldset.TableLike.FixedLabel > .Row > .Field,
+    fieldset.TableLike.FixedLabel > .Value,
+    fieldset.TableLike.FixedLabel > .Row > .Value {
+        margin-left: 20%;
+        margin-right: 0;
+        padding-left: 17px;
+        padding-right: 0;
+    }
+    fieldset.TableLike.FixedLabel > .RichTextField,
+    fieldset.TableLike.FixedLabel > .Row > .RichTextField,
+    fieldset.TableLike.FixedLabel > .FloatingField,
+    fieldset.TableLike.FixedLabel > .Row > .FloatingField {
+        margin: 0;
+        padding-left: 17px;
+        float: left;
+    }
+
+    .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > label,
+    .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > .Row > label {
+        width: 50%;
+    }
+    .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > .Field,
+    .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > .Row > .Field,
+    .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > .Value,
+    .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > .Row > .Value {
+        margin-left: 50%;
+    }
+
+    fieldset.TableLike.FixedLabelSmall > label,
+    fieldset.TableLike.FixedLabelSmall > .Row > label {
+        width: 100px;
+        padding-top: 5px;
+    }
+    fieldset.TableLike.FixedLabelSmall > .Field,
+    fieldset.TableLike.FixedLabelSmall > .Row > .Field,
+    fieldset.TableLike.FixedLabelSmall > .Value,
+    fieldset.TableLike.FixedLabelSmall > .Row > .Value {
+        margin-left: 100px;
+        margin-right: 7px;
+        word-wrap: break-word;
+    }
+    fieldset.TableLike.FixedLabelLarge > label,
+    fieldset.TableLike.FixedLabelLarge > .Row > label {
+        width: 170px;
+        padding-top: 5px;
+    }
+    fieldset.TableLike.FixedLabelLarge > .Field,
+    fieldset.TableLike.FixedLabelLarge > .Row > .Field,
+    fieldset.TableLike.FixedLabelLarge > .Value,
+    fieldset.TableLike.FixedLabelLarge > .Row > .Value {
+        margin-left: 170px;
+        margin-right: 7px;
+        word-wrap: break-word;
+    }
+    fieldset.TableLike.FixedLabelLarge > .Field,
+    fieldset.TableLike.FixedLabelLarge > .Row > .Field {
+        margin-top: 2px;
+    }
+    .CallForAction,
+    body .cke_dialog_footer_buttons a.cke_dialog_ui_button {
+        padding: 0px;
+        display: inline-block;
+        cursor: pointer;
+    }
+    body input.cke_dialog_ui_input_password:focus,
+    body input.cke_dialog_ui_input_text:focus,
+    body textarea.cke_dialog_ui_input_textarea:focus {
+        box-shadow: none;
+    }
+    body .cke_notification {
+        padding: 5px 20px;
+        width: auto;
+        border-radius: 5px;
+        position: relative;
+        z-index: 100;
+    }
+    body .cke_notification_close {
+        position: absolute;
+        top: 8px;
+        right: 5px;
+    }
+    .LayoutPopup > .Footer .CallForAction,
+    .CallForAction {
+        margin-right: 5px;
+    }
+    .LayoutPopup > .Footer .SaveAsDraftButton, .SaveAsDraftButton {
+        min-width: 280px;
+    }
+    .SaveAsDraftButton span i {
+        margin-right: 5px;
+    }
+    .CallForAction span,
+    body .cke_dialog_footer_buttons td a.cke_dialog_ui_button span {
+        min-height: 12px;
+        padding: 4px 7px 3px;
+        line-height: 14px;
+        vertical-align: middle;
+        font-size: 11px;
+        border: none;
+        display: block;
+        cursor: pointer;
+        position: relative;
+    }
+    .CallForAction span i {
+        position: relative;
+        left: 0px;
+        top: 1px;
+        font-size: 13px;
+        width: 15px;
+        text-align: center;
+    }
+    .CallForAction::-moz-focus-inner {
+        border: 0;
+        padding: 0;
+    }
+    .ActionList li {
+        margin-bottom: 7px;
+    }
+    .ActionList li:last-child {
+        margin-bottom: 0px;
+    }
+    .ActionList li a.Fullsize,
+    .CallForAction.Fullsize,
+    .CallForAction.OverFullsize280,
+    .CallForAction.OverFullsize330 {
+        display: block;
+    }
+    .CallForAction.Fullsize {
+        width: 248px;
+        text-align: center;
+    }
+    .CallForAction.OverFullsize280 {
+        width: 280px;
+        text-align: center;
+    }
+    .CallForAction.OverFullsize330 {
+        width: 330px;
+        text-align: center;
+    }
+    .CallForAction.OverFullsize280 span,
+    .CallForAction.OverFullsize330 span,
+    .CallForAction.Fullsize span {
+        padding: 3px 20px 5px 20px;
+    }
+
+    .CallForAction.OverFullsize280.Center span i,
+    .CallForAction.OverFullsize330.Center span i,
+    .CallForAction.Fullsize.Center span i {
+        position: absolute;
+        left: 4px;
+        top: 4px;
+    }
+    button.CallForAction.Fullsize,
+    button.CallForAction.OverFullsize280,
+    button.CallForAction.OverFullsize330 {
+        margin: 3px 0 0 0;
+        width: 250px;
+    }
+    button.CallForAction.OverFullsize280 {
+        width: 280px;
+    }
+    button.CallForAction.OverFullsize330 {
+        width: 330px;
+    }
+    button.CallForAction.OverFullsize330 span i,
+    button.CallForAction.OverFullsize280 span i,
+    button.CallForAction.Fullsize span i {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+    }
+    .CallForAction.Hidden {
+        display: none;
+    }
+    .CallForAction:disabled,
+    .CallForAction:disabled span {
+        cursor: default;
+    }
+    .CallForAction.LittleSpacingTop {
+        margin-top: 5px;
+    }
+    div.InputField_Container {
+        position: static;
+        display: inline-block;
+    }
+    div.InputField_InputContainer {
+        position: relative;
+        display: inline-block;
+        line-height: 11px;
+    }
+    .WidgetSettingsForm .InputField_Search,
+    .WidgetSettingsForm .InputField_Autocomplete {
+        min-width: 0px;
+    }
+    input.FilterBox {
+        width: 238px;
+    }
+    #SearchForm, #AgentCustomerInformationCenterSearchForm {
+        width: 560px;
+        padding-right: 20px;
+    }
+    #SearchForm legend {
+        border-bottom: none;
+        text-align: left;
+    }
+    #SearchForm legend > span {
+        padding: 5px;
+    }
+
+    .AddButton,
+    .RemoveButton {
+        font-size: 14px;
+        vertical-align: middle;
+    }
+    .InvisibleText {
+        width: 0;
+        height: 0;
+        display: inline-block;
+        text-indent: -9999px;
+        white-space: nowrap;
+        position: absolute;
+    }
+    .MainBox > h1.InvisibleText {
+        position: absolute;
+    }
+
+    .MainBox > .AsteriskExplanation {
+        padding-left: 8px;
+        margin-bottom: 10px;
+    }
+    .MainBox.FormScreen > h1,
+    .MainBox.FormScreen > .AsteriskExplanation {
+        margin-left: 24%;
+    }
+    .SearchBox input[type="text"] {
+        height: 15px;
+        margin: 0px;
+        padding: 4px 5px;
+        border-right: none;
+        vertical-align: bottom;
+        width: 213px;
+    }
+    .SearchBox button {
+        height: 25px;
+        width: 25px;
+        margin: 0 0 0 -4px;
+        padding: 3px 3px 4px;
+        vertical-align: baseline;
+    }
+    .ActionList p {
+        margin: 0;
+        padding: 2px 2px 5px;
+        font-size: 11px;
+    }
+    .FieldSeparator {
+        margin-top: 10px;
+        padding-bottom: 10px;
+    }
+    fieldset div.FieldSeparator:first-child {
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    /**
+    *   @subsection Datepicker
+    */
+    .DatepickerIcon {
+        font-size: 14px;
+        padding-top: 1px;
+        margin: 1px 0 0 4px;
+        height: 16px;
+        width: 16px;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    /**
+    *   @subsection Richtext cke
+    */
+    fieldset.TableLike > .RichTextField,
+    fieldset.TableLike > .Row > .RichTextField,
+    fieldset.TableLike > .FloatingField,
+    fieldset.TableLike > .Row > .FloatingField {
+        line-height: 1.0em;
+        margin: 5px 0 0 30%;
+        padding: 3px 0 3px 5px;
+        min-height: 20px;
+    }
+    #cke_RichText,
+    .cke_toolbar > .cke_toolgroup,
+    .cke_toolbar .cke_combo_button,
+    .cke_inner .cke_contents,
+    .cke_dialog_body,
+    input.cke_dialog_ui_input_password,
+    input.cke_dialog_ui_input_text,
+    textarea.cke_dialog_ui_input_textarea {
+        border-radius: 5px;
+    }
+
+    a.CertificateRelationAdd,
+    button.CertificateRelationAdd,
+    a.CertificateRead,
+    button.Add,
+    a.Add,
+    button.Remove,
+    a.Remove,
+    button.TrashCan,
+    a.TrashCan,
+    button.Reset,
+    a.Reset {
+        padding: 1px;
+        margin-top: 0;
+        margin-bottom: 1px;
+        border-style: none;
+        text-indent: -9999px;
+        display: inline-block;
+        vertical-align: middle;
+        cursor: pointer;
+        position: relative;
+    }
+
+    button.CertificateRelationAdd,
+    button.Add,
+    button.Remove,
+    button.TrashCan,
+    button.Reset {
+        text-indent: 0;
+        padding: 0;
+        margin: 0;
+        background: none;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+
+
+    /**
+    *   @subsection Customer Field
+    */
+    .CustomerContainer,
+    .CcCustomerContainer,
+    .BccCustomerContainer {
+        padding: 5px 7px 10px 6px;
+        width: 94%;
+        position: relative;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        box-sizing: border-box;
+        margin: -0.5em 0 0 1.5em;
+        border-width: 1px;
+        border-style: solid;
+    }
+    .CustomerContainer > div,
+    .CcCustomerContainer > div,
+    .BccCustomerContainer > div {
+        margin-top: 5px;
+    }
+    .CustomerContainer .CustomerTicketText {
+        transition: background-color 1s ease,border 1s ease;
+    }
+    .CustomerContainer .CustomerTicketText,
+    .CcCustomerContainer .CustomerTicketText,
+    .BccCustomerContainer .CustomerTicketText {
+        width: 86%;
+        margin-left: 7px;
+    }
+
+   .DynamicFieldAvailableInFrontend {
+        width: 500px;
+    }
+
+    /**
+    *   @subsection geo coordinate
+    */
+     .CoordinateBox {
+        margin-bottom: 5px;
+        overflow: hidden;
+        display: inline-block;
+    }
+    .CoordinateBox label {
+        width: 70px;
+        float: left;
+        line-height: 22px;
+    }
+    .CoordinateBox input {
+        float: left;
+    }
+    .CoordinateBox span {
+        float: left;
+        width: 10px;
+        padding-left: 2px;
+        height: 7px;
+        font-weight: bold;
+    }
+    .CoorSymDecimal {
+        padding-top: 11px;
+    }
+    .CoorSymDegree{
+        padding-bottom: 15px;
+    }
+    .CoorSymSeconds {
+        padding-bottom: 15px;
+    }
+    .CoorSymMinutes {
+        padding-bottom: 15px;
+    }
+
+    /**
+    *   @subsection process mask
+    */
+    h2.HorizontalLine {
+        border-bottom: 1px solid #82C826;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 5px 8px 4px;
+    }
+
+    /**
+    *   @subsection generic agent
+    */
+    .GenericAgentClearSelect {
+        width: 16px;
+        height: 16px;
+        margin-left: 3px;
+    }
+    .GenericAgentClearSelect span {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+    }
+
+}
