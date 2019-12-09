@@ -1531,7 +1531,6 @@ sub _Replace {
                 for my $Counter ( 0 .. $Line - 1 ) {
 
                     # 2002-06-14 patch of Pablo Ruiz Garcia
-                    # http://lists.otrs.org/pipermail/dev/2002-June/000012.html
                     if ( $#Body >= $Counter ) {
 
                         # add no quote char, do it later by using DocumentCleanup()
@@ -1596,7 +1595,7 @@ sub _Replace {
 
             if ( $DataType eq 'KIX_CUSTOMER_' ) {
 
-                # Arnold Ligtvoet - otrs@ligtvoet.org
+                # Arnold Ligtvoet
                 # get <KIX_EMAIL_DATE[]> from body and replace with received date
                 $Tag = $Start . 'KIX_EMAIL_DATE';
 
@@ -1900,7 +1899,6 @@ sub _Replace {
             for ( my $i = 0; $i < $Line; $i++ ) {
 
                 # 2002-06-14 patch of Pablo Ruiz Garcia
-                # http://lists.otrs.org/pipermail/dev/2002-June/000012.html
                 if ( $#Body >= $i ) {
 
                     # add no quote char, do it later by using DocumentCleanup()

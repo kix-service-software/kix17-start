@@ -261,7 +261,7 @@ sub Run {
         }
         my @DatabaseBuffer;
 
-        # correct any 'dos-style' line endings - http://bugs.otrs.org/show_bug.cgi?id=9838
+        # correct any 'dos-style' line endings
         ${$Package} =~ s{\r\n}{\n}xmsg;
 
         # create MD5 sum and add it into existing package structure

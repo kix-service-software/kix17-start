@@ -666,8 +666,6 @@ sub Redirect {
 
     # check if IIS is used, add absolute url for IIS workaround
     # see also:
-    #  o http://bugs.otrs.org/show_bug.cgi?id=2230
-    #  o http://bugs.otrs.org/show_bug.cgi?id=9835
     #  o http://support.microsoft.com/default.aspx?scid=kb;en-us;221154
     if ( $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis\/\d+/i ) {
         my $Host = $ENV{HTTP_HOST} || $ConfigObject->Get('FQDN');
@@ -1787,8 +1785,6 @@ sub Print {
 
     # There seems to be a bug in FastCGI that it cannot handle unicode output properly.
     #   Work around this by converting to an utf8 byte stream instead.
-    #   See also http://bugs.otrs.org/show_bug.cgi?id=6284 and
-    #   http://bugs.otrs.org/show_bug.cgi?id=9802.
     if ( $INC{'CGI/Fast.pm'} || $ENV{FCGI_ROLE} || $ENV{FCGI_SOCKET_PATH} ) {    # are we on FCGI?
         $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput( $Param{Output} );
         binmode STDOUT, ':bytes';
@@ -3871,7 +3867,7 @@ sub BuildDateSelection {
             . "/>&nbsp;";
     }
 
-    # remove 'Second' because it is never used and otrs bug #9441
+    # remove 'Second' because it is never used
     delete $Param{ $Prefix . 'Second' };
 
     # date format
