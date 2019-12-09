@@ -428,6 +428,9 @@
     #ArticleTableBody .Scroller .DataTable {
         border: 0px;
     }
+    .DataTable tr.UnreadArticles > td {
+        font-weight: bold;
+    }
 
 
     /**
