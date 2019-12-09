@@ -209,7 +209,6 @@ sub Run {
         return if !$Access;
     }
 
-    # EO TODO may be: outsourcing into LayoutKIX4OTRS.pm???
     # check if output contains logout button
     my $AgentPattern    = '<a class="LogoutButton" id="LogoutButton"';
     my $CustomerPattern = '\s*<li class="Last".*?Action=Logout';
