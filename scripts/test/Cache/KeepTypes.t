@@ -13,8 +13,8 @@ use utf8;
 use vars (qw($Self));
 
 # get needed objects
-my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
+my $ConfigObject = $Kernel::OM->GetNew('Kernel::Config');
+my $MainObject   = $Kernel::OM->GetNew('Kernel::System::Main');
 
 # define needed variables
 my $HomeDir = $ConfigObject->Get('Home');
@@ -40,8 +40,24 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     # init test case
     $Self->TestCaseStart(
-        TestCase    => $Module,
-        Description => 'Check cache module ' . $Module,
+        TestCase    => $Module . ' KeepTypes',
+        Feature     => 'Cache',
+        Story       => $Module,
+        Description => <<"END",
+Check keep types of cache module $Module
+* Set A and B
+* Remove C
+* Check A and B
+* Set A and B
+* Remove A
+* Check A and B
+* Set A and B
+* Remove all but A
+* Check A and B
+* Set A and B
+* Remove all
+* Check A and B
+END
     );
 
     # init test steps

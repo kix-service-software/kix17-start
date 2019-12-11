@@ -11,10 +11,7 @@ package Kernel::System::UnitTest::Check;
 use strict;
 use warnings;
 
-our @ObjectDependencies = (
-    'Kernel::System::Log',
-    'Kernel::System::Main',
-);
+our $ObjectManagerDisabled = 1;
 
 =item True()
 
