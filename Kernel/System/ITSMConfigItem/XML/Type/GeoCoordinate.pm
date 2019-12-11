@@ -187,7 +187,7 @@ sub _ExportValueLookup {
     my ( $Self, %Param ) = @_;
 
     my $Config   = $Kernel::OM->Get('Kernel::Config')->Get('ITSMConfigItem::GeoCoordinate');
-    my $Format   = $Param{Item}->{Input}->{ExportFormat} || $Config->ExportFormat || 'DecimalDegree';
+    my $Format   = $Param{Item}->{Input}->{ExportFormat} || $Config->{ExportFormat} || 'DecimalDegree';
     my $Function = 'To' . $Format;
 
     return $Kernel::OM->Get('Kernel::System::GeoCoordinate')->$Function(

@@ -1,6 +1,18 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.9.1 (2019/12/11)
+ * (2019/12/11) - productive release
+
+# 17.9.1-RC2 (2019/12/09)
+ * (2019/12/09) - release candidate
+
+# 17.9.1-RC1 (2019/12/09)
+ * (2019/12/09) - Bugfix: T2019112990001088 (fixed config item class with geo coordinate could not be exported) (fjacquemin)
+ * (2019/12/06) - Bugfix: KIX17-512 (fixed Layout errors in the definitions of service times in the calendars) (fjacquemin)
+ * (2019/12/06) - Bugfix: KIX17-518 (fixed Use the wrong blue color theme in the customer frontend) (fjacquemin)
+ * (2019/12/05) - Bugfix: KIX17-502 (fixed undefined log object for failed prefilter) (millinger)
+
 # 17.9.0 (2019/11/28)
  * (2019/11/28) - productive release
 
@@ -125,9 +137,6 @@
 
 # 17.7.0-RC10 (2019/08/07)
  * (2019/08/07) - Bugfix: T2019072490000588 (switched order of latitude and longitude) (millinger)
-
-# 17.7.0-RC9 (2019/08/06)
- * (2019/08/06) - CR: T2019031590000496 (extended ticket search sidebar to filter by dynamic fields) (millinger)
 
 # 17.7.0-RC9 (2019/08/06)
  * (2019/08/06) - CR: T2019031590000496 (extended ticket search sidebar to filter by dynamic fields) (millinger)
