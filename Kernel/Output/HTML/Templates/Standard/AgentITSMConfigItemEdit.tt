@@ -205,7 +205,6 @@
                 });
                 Core.Form.Validate.DisableValidation($('#ClassItem'));
                 // fix for Safari: race condition with submit in Core.Form.Validate.js
-                // fixed in OTRS 3.0.5, this line remains here for backwards compatibility reasons
                 $('#ClassItem').removeClass('PreventMultipleSubmits');
             });
         //]]></script>

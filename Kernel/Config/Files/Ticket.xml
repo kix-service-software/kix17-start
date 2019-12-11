@@ -12538,7 +12538,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::EscalationDelayed::FreeTimeField" Required="0" Valid="0">
-        <Description Translatable="1">Defines a dynamic field of type date/time which is used as start time for solution SLA-computation rather than ticket creation time, thus allowing to start SLA-countdown with begin of customer desired times. "Index" is only fallback for old configuration upgraded from OTRS 3.1 or previous to be workable. In this case dynamic field named TicketFreeTime"Index" is used.</Description>
+        <Description Translatable="1">Defines a dynamic field of type date/time which is used as start time for solution SLA-computation rather than ticket creation time, thus allowing to start SLA-countdown with begin of customer desired times. "Index" is only fallback for old configuration upgraded from KIX 4.0 or previous to be workable. In this case dynamic field named TicketFreeTime"Index" is used.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>

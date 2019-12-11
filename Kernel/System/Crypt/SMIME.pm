@@ -2063,7 +2063,7 @@ sub CheckCertPath {
 
     # normalize private secret file names
     #
-    # in kix 17 private secret files are stored in format like 12345678.p, from otrs 3.1 this
+    # in kix 17 private secret files are stored in format like 12345678.p, from kix 4.0 this
     # files must be in a format like 12345678.0.p where .0 could be from 0 to 9 depending on the
     # private key file name.
 

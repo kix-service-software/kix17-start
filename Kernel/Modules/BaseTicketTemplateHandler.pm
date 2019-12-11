@@ -244,7 +244,7 @@ sub TicketTemplateReplace {
             $Data{QuickTicketPriorityID} = $Data{PriorityID};
         }
 
-        # get frontend to replace otrs and kix-tags
+        # get frontend to replace kix-tags
         my $Frontend;
         if ( $Self->{Action} eq 'CustomerTicketMessage' ) {
             $Frontend = 'Customer';

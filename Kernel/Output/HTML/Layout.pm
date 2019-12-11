@@ -666,8 +666,6 @@ sub Redirect {
 
     # check if IIS is used, add absolute url for IIS workaround
     # see also:
-    #  o http://bugs.otrs.org/show_bug.cgi?id=2230
-    #  o http://bugs.otrs.org/show_bug.cgi?id=9835
     #  o http://support.microsoft.com/default.aspx?scid=kb;en-us;221154
     if ( $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis\/\d+/i ) {
         my $Host = $ENV{HTTP_HOST} || $ConfigObject->Get('FQDN');
@@ -1787,8 +1785,6 @@ sub Print {
 
     # There seems to be a bug in FastCGI that it cannot handle unicode output properly.
     #   Work around this by converting to an utf8 byte stream instead.
-    #   See also http://bugs.otrs.org/show_bug.cgi?id=6284 and
-    #   http://bugs.otrs.org/show_bug.cgi?id=9802.
     if ( $INC{'CGI/Fast.pm'} || $ENV{FCGI_ROLE} || $ENV{FCGI_SOCKET_PATH} ) {    # are we on FCGI?
         $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput( $Param{Output} );
         binmode STDOUT, ':bytes';
@@ -3144,23 +3140,36 @@ sub NavigationBar {
             }
             next ITEM if !$Shown;
 
+            # init priority with 500 if not given
+            if ( !$Item->{Prio} ) {
+                $Item->{Prio} = 500;
+            }
+
             # set prio of item
             my $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
-            COUNT:
-            for ( 1 .. 51 ) {
-                last COUNT if !$NavBar{$Key};
-
-                $Item->{Prio}++;
-                $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
-            }
 
             # show as main menu
             if ( $Item->{Type} eq 'Menu' ) {
+                # check if priority is already in use
+                while ( $NavBar{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+    
+                    # set new priority
+                    $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
+                }
                 $NavBar{$Key} = $Item;
             }
-
             # show as sub of main menu
             else {
+                # check if priority is already in use
+                while (  $NavBar{Sub}->{ $Item->{NavBar} }->{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+    
+                    # set new priority
+                    $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
+                }
                 $NavBar{Sub}->{ $Item->{NavBar} }->{$Key} = $Item;
             }
         }
@@ -3858,7 +3867,7 @@ sub BuildDateSelection {
             . "/>&nbsp;";
     }
 
-    # remove 'Second' because it is never used and otrs bug #9441
+    # remove 'Second' because it is never used
     delete $Param{ $Prefix . 'Second' };
 
     # date format
@@ -4584,25 +4593,50 @@ sub CustomerNavigationBar {
             }
             next ITEM if !$Shown;
 
-            # set prio of item
-            my $Key = sprintf( "%07d", $Item->{Prio} );
-            COUNT:
-            for ( 1 .. 51 ) {
-                last COUNT if !$NavBarModule{$Key};
-
-                $Item->{Prio}++;
+            # init priority with 500 if not given
+            if ( !$Item->{Prio} ) {
+                $Item->{Prio} = 500;
             }
 
+            # set prio of item
+            my $Key = sprintf( "%07d", $Item->{Prio} );
+
+            # show as main menu
             if ( $Item->{Type} eq 'Menu' ) {
-                $NavBarModule{ sprintf( "%07d", $Item->{Prio} ) } = $Item;
+                # check if priority is already in use
+                while ( $NavBarModule{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+    
+                    # set new priority
+                    $Key = sprintf( "%07d", $Item->{Prio} );
+                }
+                $NavBarModule{ $Key } = $Item;
             }
 
             # show as sub of main menu
             elsif ( $Item->{Type} eq 'Submenu' ) {
-                $NavBarModule{Sub}->{ $Item->{NavBar} }->{ sprintf( "%07d", $Item->{Prio} ) } = $Item;
+                # check if priority is already in use
+                while ( $NavBarModule{Sub}->{ $Item->{NavBar} }->{ $Key } ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+    
+                    # set new priority
+                    $Key = sprintf( "%07d", $Item->{Prio} );
+                }
+                $NavBarModule{Sub}->{ $Item->{NavBar} }->{ $Key } = $Item;
             }
+            # fallback: show as main menu
             else {
-                $NavBarModule{ sprintf( "%07d", $Item->{Prio} ) } = $Item;
+                # check if priority is already in use
+                while ( $NavBarModule{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+    
+                    # set new priority
+                    $Key = sprintf( "%07d", $Item->{Prio} );
+                }
+                $NavBarModule{ $Key } = $Item;
             }
         }
     }

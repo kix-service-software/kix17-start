@@ -331,7 +331,6 @@ sub Send {
     my $EncodeObject = $Kernel::OM->Get('Kernel::System::Encode');
 
     # build MIME::Entity, Data should be bytes, not utf-8
-    # see http://bugs.otrs.org/show_bug.cgi?id=9832
     $EncodeObject->EncodeOutput( \$Param{Body} );
     my $Entity = MIME::Entity->build( %Header, Data => $Param{Body} );
 

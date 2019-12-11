@@ -92,7 +92,7 @@ sub Run {
     my %GetColumnFilter;
     COLUMNNAME:
     for my $ColumnName (
-        qw(Owner Responsible State Queue Priority Type Lock Service SLA CustomerID CustomerUserID)
+        qw(Responsible State Queue Priority Type Lock Service SLA CustomerID CustomerUserID)
     ) {
         # get column filter from web request
         my $FilterValue = $ParamObject->GetParam( Param => 'ColumnFilter' . $ColumnName )

@@ -1,7 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
-# based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -25,43 +23,29 @@ sub Configure {
 
     $Self->Description('Executes unit tests.');
     $Self->AddOption(
-        Name        => 'test',
-        Description => "Run single test files, e.g. 'Ticket' or 'Ticket:Queue'.",
-        Required    => 0,
+        Name        => 'output',
+        Description => 'directory to write results to, without ending slash',
+        Required    => 1,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
     );
     $Self->AddOption(
         Name        => 'directory',
-        Description => "Run all test files in specified directory.",
+        Description => 'control which directory to select',
         Required    => 0,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
     );
     $Self->AddOption(
-        Name        => 'output',
-        Description => "Select output format (ASCII|HTML|XML|xUnit).",
-        Required    => 0,
-        HasValue    => 1,
-        ValueRegex  => qr/^(ASCII|HTML|XML|xUnit)$/smx,
-    );
-    $Self->AddOption(
-        Name        => 'filename',
-        Description => "Write output to file instead of STDOUT",
+        Name        => 'filter',
+        Description => 'control which tests to select',
         Required    => 0,
         HasValue    => 1,
         ValueRegex  => qr/.*/smx,
     );
     $Self->AddOption(
-        Name        => 'product',
-        Description => "Specify a different product name.",
-        Required    => 0,
-        HasValue    => 1,
-        ValueRegex  => qr/.*/smx,
-    );
-    $Self->AddOption(
-        Name        => 'verbose',
-        Description => "Show details for all tests, not just failing.",
+        Name        => 'silent',
+        Description => 'disables output of test summaries',
         Required    => 0,
         HasValue    => 0,
     );
@@ -78,19 +62,11 @@ sub PreRun {
 sub Run {
     my ( $Self, %Param ) = @_;
 
-    $Kernel::OM->ObjectParamAdd(
-        'Kernel::System::UnitTest' => {
-            Output   => $Self->GetOption('output')   || '',
-            Filename => $Self->GetOption('filename') || '',
-            ANSI     => $Self->{ANSI},
-        },
-    );
-
     my $FunctionResult = $Kernel::OM->Get('Kernel::System::UnitTest')->Run(
-        Name      => $Self->GetOption('test')      || '',
-        Directory => $Self->GetOption('directory') || '',
-        Product   => $Self->GetOption('product')   || '',
-        Verbose   => $Self->GetOption('verbose')   || '',
+        OutputDirectory => $Self->GetOption('output'),
+        Silent          => $Self->GetOption('silent')    || 0,
+        TestDirectory   => $Self->GetOption('directory') || '',
+        TestFilter      => $Self->GetOption('filter')    || '',
     );
 
     if ($FunctionResult) {

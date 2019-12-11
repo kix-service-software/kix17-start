@@ -428,9 +428,6 @@
     #ArticleTableBody .Scroller .DataTable {
         border: 0px;
     }
-    .DataTable tr.UnreadArticles > td {
-        font-weight: bold;
-    }
 
 
     /**
@@ -474,6 +471,9 @@
     }
     .WidgetSimple .Field.LayoutGrid .Tablelike {
         width: 98%;
+    }
+    .WidgetSimple .Field.LayoutGrid ul.Tablelike {
+        width: 100%;
     }
 
     ul.AllocationList {

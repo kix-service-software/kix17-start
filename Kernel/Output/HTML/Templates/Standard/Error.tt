@@ -25,7 +25,7 @@
                 <form action="https://support.cape-it.de/helpdesk/customer.pl">
                     <input type="hidden" name="Action" value="CustomerTicketMessage"/>
                     <input type="hidden" name="Subaction" value="StoreNew"/>
-                    <input type="hidden" name="Dest" value="7||Thema: OTRS"/>
+                    <input type="hidden" name="Dest" value="7||Thema: KIX"/>
                     <input type="hidden" name="TypeID" value="1"/>
                     <input type="hidden" name="PriorityID" value="3"/>
                     <textarea class="Hidden" name="Body" rows="1" cols="1"><![CDATA[

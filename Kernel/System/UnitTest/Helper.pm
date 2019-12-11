@@ -13,7 +13,7 @@ package Kernel::System::UnitTest::Helper;
 use strict;
 use warnings;
 
-use File::Path qw(rmtree);
+use Time::HiRes;
 
 use Kernel::System::SysConfig;
 
@@ -21,14 +21,8 @@ our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::DB',
     'Kernel::System::Cache',
-    'Kernel::System::CustomerUser',
-    'Kernel::System::Group',
     'Kernel::System::Main',
-    'Kernel::System::UnitTest',
-    'Kernel::System::User',
 );
-
-## no critic qw(Variables::RequireLocalizedPunctuationVars TestingAndDebugging::ProhibitNoWarnings)
 
 =head1 NAME
 
@@ -43,24 +37,10 @@ Kernel::System::UnitTest::Helper - unit test helper functions
 construct a helper object.
 
     use Kernel::System::ObjectManager;
-    local $Kernel::OM = Kernel::System::ObjectManager->new(
-        'Kernel::System::UnitTest::Helper' => {
-            RestoreSystemConfiguration => 1,        # optional, save ZZZAuto.pm
-                                                    # and restore it in the destructor
-            RestoreDatabase            => 1,        # runs the test in a transaction,
-                                                    # and roll it back in the destructor
-                                                    #
-                                                    # NOTE: Rollback does not work for
-                                                    # changes in the database layout. If you
-                                                    # want to do this in your tests, you cannot
-                                                    # use this option and must handle the rollback
-                                                    # yourself.
-        },
-    );
+
     my $Helper = $Kernel::OM->Get('Kernel::System::UnitTest::Helper');
 
 =cut
-
 sub new {
     my ( $Type, %Param ) = @_;
 
@@ -68,65 +48,7 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    $Self->{Debug} = $Param{Debug} || 0;
-
-    $Self->{UnitTestObject} = $Kernel::OM->Get('Kernel::System::UnitTest');
-
-    # make backup of system configuration if needed
-    if ( $Param{RestoreSystemConfiguration} ) {
-        $Self->{SysConfigObject} = Kernel::System::SysConfig->new();
-
-        $Self->{SysConfigBackup} = $Self->{SysConfigObject}->Download();
-
-        $Self->{UnitTestObject}->True( 1, 'Creating backup of the system configuration.' );
-    }
-
-    # remove any leftover configuration changes from aborted previous runs
-    $Self->ConfigSettingCleanup();
-
-    # set environment variable to skip SSL certificate verification if needed
-    if ( $Param{SkipSSLVerify} ) {
-
-        # remember original value
-        $Self->{PERL_LWP_SSL_VERIFY_HOSTNAME} = $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME};
-
-        # set environment value to 0
-        $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;
-
-        $Self->{RestoreSSLVerify} = 1;
-        $Self->{UnitTestObject}->True( 1, 'Skipping SSL certificates verification' );
-    }
-
-    # switch article dir to a temporary one to avoid collisions
-    if ( $Param{UseTmpArticleDir} ) {
-        $Self->UseTmpArticleDir();
-    }
-
-    if ( $Param{RestoreDatabase} ) {
-        $Self->{RestoreDatabase} = 1;
-        my $StartedTransaction = $Self->BeginWork();
-        $Self->{UnitTestObject}->True( $StartedTransaction, 'Started database transaction.' );
-
-    }
-
     return $Self;
-}
-
-=item GetRandomID()
-
-creates a random ID that can be used in tests as a unique identifier.
-
-It is guaranteed that within a test this function will never return a duplicate.
-
-Please note that these numbers are not really random and should only be used
-to create test data.
-
-=cut
-
-sub GetRandomID {
-    my ( $Self, %Param ) = @_;
-
-    return 'test' . $Self->GetRandomNumber();
 }
 
 =item GetRandomNumber()
@@ -154,156 +76,19 @@ sub GetRandomNumber {
     return $Prefix . $GetRandomNumberPrevious{$Prefix}++ || 0;
 }
 
-=item TestUserCreate()
+=item GetMilliTimeStamp()
 
-creates a test user that can be used in tests. It will
-be set to invalid automatically during the destructor. Returns
-the login name of the new user, the password is the same.
+returns the current time stamp in milliseconds
 
-    my $TestUserLogin = $Helper->TestUserCreate(
-        Groups => ['admin', 'users'],           # optional, list of groups to add this user to (rw rights)
-        Language => 'de'                        # optional, defaults to 'en' if not set
-    );
+    my $MilliTimestamp = $UnitTestObject->GetMilliTimeStamp();
 
 =cut
-
-sub TestUserCreate {
+sub GetMilliTimeStamp {
     my ( $Self, %Param ) = @_;
 
-    # disable email checks to create new user
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    local $ConfigObject->{CheckEmailAddresses} = 0;
+    my $MilliTimestamp = int(Time::HiRes::time() * 1000);
 
-    # create test user
-    my $TestUserID;
-    my $TestUserLogin;
-    COUNT:
-    for my $Count ( 1 .. 10 ) {
-
-        $TestUserLogin = $Self->GetRandomID();
-
-        $TestUserID = $Kernel::OM->Get('Kernel::System::User')->UserAdd(
-            UserFirstname => $TestUserLogin,
-            UserLastname  => $TestUserLogin,
-            UserLogin     => $TestUserLogin,
-            UserPw        => $TestUserLogin,
-            UserEmail     => $TestUserLogin . '@localunittest.com',
-            ValidID       => 1,
-            ChangeUserID  => 1,
-        );
-
-        last COUNT if $TestUserID;
-    }
-
-    die 'Could not create test user login' if !$TestUserLogin;
-    die 'Could not create test user'       if !$TestUserID;
-
-    # Remember UserID of the test user to later set it to invalid
-    #   in the destructor.
-    $Self->{TestUsers} ||= [];
-    push( @{ $Self->{TestUsers} }, $TestUserID );
-
-    $Self->{UnitTestObject}->True( 1, "Created test user $TestUserID" );
-
-    # Add user to groups
-    GROUP_NAME:
-    for my $GroupName ( @{ $Param{Groups} || [] } ) {
-
-        # get group object
-        my $GroupObject = $Kernel::OM->Get('Kernel::System::Group');
-
-        my $GroupID = $GroupObject->GroupLookup( Group => $GroupName );
-        die "Cannot find group $GroupName" if ( !$GroupID );
-
-        $GroupObject->PermissionGroupUserAdd(
-            GID        => $GroupID,
-            UID        => $TestUserID,
-            Permission => {
-                ro        => 1,
-                move_into => 1,
-                create    => 1,
-                owner     => 1,
-                priority  => 1,
-                rw        => 1,
-            },
-            UserID => 1,
-        ) || die "Could not add test user $TestUserLogin to group $GroupName";
-
-        $Self->{UnitTestObject}->True( 1, "Added test user $TestUserLogin to group $GroupName" );
-    }
-
-    # set user language
-    my $UserLanguage = $Param{Language} || 'en';
-    $Kernel::OM->Get('Kernel::System::User')->SetPreferences(
-        UserID => $TestUserID,
-        Key    => 'UserLanguage',
-        Value  => $UserLanguage,
-    );
-    $Self->{UnitTestObject}->True( 1, "Set user UserLanguage to $UserLanguage" );
-
-    return $TestUserLogin;
-}
-
-=item TestCustomerUserCreate()
-
-creates a test customer user that can be used in tests. It will
-be set to invalid automatically during the destructor. Returns
-the login name of the new customer user, the password is the same.
-
-    my $TestUserLogin = $Helper->TestCustomerUserCreate(
-        Language => 'de',   # optional, defaults to 'en' if not set
-    );
-
-=cut
-
-sub TestCustomerUserCreate {
-    my ( $Self, %Param ) = @_;
-
-    # disable email checks to create new user
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    local $ConfigObject->{CheckEmailAddresses} = 0;
-
-    # create test user
-    my $TestUser;
-    COUNT:
-    for my $Count ( 1 .. 10 ) {
-
-        my $TestUserLogin = $Self->GetRandomID();
-
-        $TestUser = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserAdd(
-            Source         => 'CustomerUser',
-            UserFirstname  => $TestUserLogin,
-            UserLastname   => $TestUserLogin,
-            UserCustomerID => $TestUserLogin,
-            UserLogin      => $TestUserLogin,
-            UserPassword   => $TestUserLogin,
-            UserEmail      => $TestUserLogin . '@localunittest.com',
-            ValidID        => 1,
-            UserID         => 1,
-        );
-
-        last COUNT if $TestUser;
-    }
-
-    die 'Could not create test user' if !$TestUser;
-
-    # Remember UserID of the test user to later set it to invalid
-    #   in the destructor.
-    $Self->{TestCustomerUsers} ||= [];
-    push( @{ $Self->{TestCustomerUsers} }, $TestUser );
-
-    $Self->{UnitTestObject}->True( 1, "Created test contact $TestUser" );
-
-    # set customer user language
-    my $UserLanguage = $Param{Language} || 'en';
-    $Kernel::OM->Get('Kernel::System::CustomerUser')->SetPreferences(
-        UserID => $TestUser,
-        Key    => 'UserLanguage',
-        Value  => $UserLanguage,
-    );
-    $Self->{UnitTestObject}->True( 1, "Set contact UserLanguage to $UserLanguage" );
-
-    return $TestUser;
+    return $MilliTimestamp;
 }
 
 =item BeginWork()
@@ -313,9 +98,9 @@ sub TestCustomerUserCreate {
 Starts a database transaction (in order to isolate the test from the static database).
 
 =cut
-
 sub BeginWork {
     my ( $Self, %Param ) = @_;
+    $Self->{RestoreDatabase} = 1;
     my $DBObject = $Kernel::OM->Get('Kernel::System::DB');
     $DBObject->Connect();
     return $DBObject->{dbh}->begin_work();
@@ -328,7 +113,6 @@ sub BeginWork {
 Rolls back the current database transaction.
 
 =cut
-
 sub Rollback {
     my ( $Self, %Param ) = @_;
     my $DatabaseHandle = $Kernel::OM->Get('Kernel::System::DB')->{dbh};
@@ -345,7 +129,6 @@ sub Rollback {
 returns a hostname for HTTP based tests, possibly including the port.
 
 =cut
-
 sub GetTestHTTPHostname {
     my ( $Self, %Param ) = @_;
 
@@ -385,7 +168,6 @@ fixed time afterwards. If this object goes out of scope, the 'normal' system
 time will be used again.
 
 =cut
-
 sub FixedTimeSet {
     my ( $Self, $TimeToSave ) = @_;
 
@@ -418,7 +200,6 @@ sub FixedTimeSet {
 restores the regular system time behaviour.
 
 =cut
-
 sub FixedTimeUnset {
     my ($Self) = @_;
 
@@ -433,7 +214,6 @@ adds a number of seconds to the fixed system time which was previously
 set by FixedTimeSet(). You can pass a negative value to go back in time.
 
 =cut
-
 sub FixedTimeAddSeconds {
     my ( $Self, $SecondsToAdd ) = @_;
 
@@ -463,108 +243,6 @@ BEGIN {
     };
 }
 
-sub DESTROY {
-    my $Self = shift;
-
-    # reset time freeze
-    FixedTimeUnset();
-
-    # restore system configuration if needed
-    if ( $Self->{SysConfigBackup} ) {
-        $Self->{SysConfigObject}->Upload( Content => $Self->{SysConfigBackup} );
-        $Self->{UnitTestObject}->True( 1, 'Restored the system configuration' );
-    }
-
-    # remove any configuration changes
-    $Self->ConfigSettingCleanup();
-
-    # restore environment variable to skip SSL certificate verification if needed
-    if ( $Self->{RestoreSSLVerify} ) {
-
-        $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = $Self->{PERL_LWP_SSL_VERIFY_HOSTNAME};
-
-        $Self->{RestoreSSLVerify} = 0;
-
-        $Self->{UnitTestObject}->True( 1, 'Restored SSL certificates verification' );
-    }
-
-    # restore database, clean caches
-    if ( $Self->{RestoreDatabase} ) {
-        my $RollbackSuccess = $Self->Rollback();
-        $Kernel::OM->Get('Kernel::System::Cache')->CleanUp();
-        $Self->{UnitTestObject}->True( $RollbackSuccess, 'Rolled back all database changes and cleaned up the cache.' );
-    }
-
-    # disable email checks to create new user
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-    local $ConfigObject->{CheckEmailAddresses} = 0;
-
-    # cleanup temporary article directory
-    if ( $Self->{TmpArticleDir} && -d $Self->{TmpArticleDir} ) {
-        File::Path::rmtree( $Self->{TmpArticleDir} );
-    }
-
-    # invalidate test users
-    if ( ref $Self->{TestUsers} eq 'ARRAY' && @{ $Self->{TestUsers} } ) {
-        TESTUSERS:
-        for my $TestUser ( @{ $Self->{TestUsers} } ) {
-
-            my %User = $Kernel::OM->Get('Kernel::System::User')->GetUserData(
-                UserID => $TestUser,
-            );
-
-            if ( !$User{UserID} ) {
-
-                # if no such user exists, there is no need to set it to invalid;
-                # happens when the test user is created inside a transaction
-                # that is later rolled back.
-                next TESTUSERS;
-            }
-
-            # make test user invalid
-            my $Success = $Kernel::OM->Get('Kernel::System::User')->UserUpdate(
-                %User,
-                ValidID      => 2,
-                ChangeUserID => 1,
-            );
-
-            $Self->{UnitTestObject}->True( $Success, "Set test user $TestUser to invalid" );
-        }
-    }
-
-    # invalidate test customer users
-    if ( ref $Self->{TestCustomerUsers} eq 'ARRAY' && @{ $Self->{TestCustomerUsers} } ) {
-        TESTCUSTOMERUSERS:
-        for my $TestCustomerUser ( @{ $Self->{TestCustomerUsers} } ) {
-
-            my %CustomerUser = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
-                User => $TestCustomerUser,
-            );
-
-            if ( !$CustomerUser{UserLogin} ) {
-
-                # if no such customer user exists, there is no need to set it to invalid;
-                # happens when the test customer user is created inside a transaction
-                # that is later rolled back.
-                next TESTCUSTOMERUSERS;
-            }
-
-            my $Success = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserUpdate(
-                %CustomerUser,
-                ID      => $CustomerUser{UserID},
-                ValidID => 2,
-                UserID  => 1,
-            );
-
-            $Self->{UnitTestObject}->True(
-                $Success, "Set test contact $TestCustomerUser to invalid"
-            );
-        }
-    }
-
-    return;
-}
-
 =item ConfigSettingChange()
 
 temporarily change a configuration setting system wide to another value,
@@ -581,7 +259,6 @@ Please note that this will not work correctly in clustered environments.
     );
 
 =cut
-
 sub ConfigSettingChange {
     my ( $Self, %Param ) = @_;
 
@@ -645,7 +322,6 @@ EOF
 remove all config setting changes from ConfigSettingChange();
 
 =cut
-
 sub ConfigSettingCleanup {
     my ( $Self, %Param ) = @_;
 
@@ -662,36 +338,29 @@ sub ConfigSettingCleanup {
     return 1;
 }
 
-=item UseTmpArticleDir()
+sub DESTROY {
+    my $Self = shift;
 
-switch the article storage directory to a temporary one to prevent collisions;
+    # reset time freeze
+    FixedTimeUnset();
 
-=cut
-
-sub UseTmpArticleDir {
-    my ( $Self, %Param ) = @_;
-
-    my $Home = $Kernel::OM->Get('Kernel::Config')->Get('Home');
-
-    my $TmpArticleDir;
-    TRY:
-    for my $Try ( 1 .. 100 ) {
-
-        $TmpArticleDir = $Home . '/var/tmp/unittest-article-' . $Self->GetRandomNumber();
-
-        next TRY if -e $TmpArticleDir;
-        last TRY;
+    # restore system configuration if needed
+    if ( $Self->{SysConfigBackup} ) {
+        $Self->{SysConfigObject}->Upload( Content => $Self->{SysConfigBackup} );
+        $Self->{UnitTestObject}->True( 1, 'Restored the system configuration' );
     }
 
-    $Self->ConfigSettingChange(
-        Valid => 1,
-        Key   => 'ArticleDir',
-        Value => $TmpArticleDir,
-    );
+    # remove any configuration changes
+    $Self->ConfigSettingCleanup();
 
-    $Self->{TmpArticleDir} = $TmpArticleDir;
+    # restore database, clean caches
+    if ( $Self->{RestoreDatabase} ) {
+        my $RollbackSuccess = $Self->Rollback();
+        $Kernel::OM->Get('Kernel::System::Cache')->CleanUp();
+        $Self->{UnitTestObject}->True( $RollbackSuccess, 'Rolled back all database changes and cleaned up the cache.' );
+    }
 
-    return 1;
+    return;
 }
 
 1;

@@ -1148,7 +1148,6 @@ sub _ReportingValues {
         # for oracle we make sure, that we don 't get more than 1000 ticket ids in a list
         # so instead of "ticket_id IN ( 1, 2, 3, ... 2001 )", we are splitting this up to
         # "ticket_id IN ( 1, 2, 3, ... 1000 ) OR ticket_id IN ( 1001, 1002, ... 2000)"
-        # see bugzilla #9723: http://bugs.otrs.org/show_bug.cgi?id=9723
         if ( $DBType eq 'oracle' ) {
 
             # save number of TicketIDs
