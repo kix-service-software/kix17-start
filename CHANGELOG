@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.10.0-RC1 (2019/12/11)
+ * (2019/12/09) - Bugfix: T2019112890001161 (fixed unread articles no longer shown bold in article list) (fjacquemin)
+ * (2019/12/06) - Bugfix: KIX17-516 (removed obsolete documentation) (ddoerffel)
+ * (2019/12/06) - Bugfix: T2018042790000821 (some otrs stuff removed) (ddoerffel)
+ * (2019/12/03) - Bugfix: T2019120390000689 (hiding dynamic field tab not working) (ddoerffel)
+ * (2019/12/03) - Bugfix: KIX17-443 (removed permission breaking filters from locked and responsible view) (millinger)
+ * (2019/12/02) - Bugfix: T2019081490001077 (fixed missing default images when using a custom skin) (fjacquemin)
+
 # 17.9.1 (2019/12/11)
  * (2019/12/11) - productive release
 
