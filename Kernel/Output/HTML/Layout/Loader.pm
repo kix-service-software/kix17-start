@@ -630,6 +630,7 @@ sub _HandleImageFiles {
         }
     }
 
+    return 1;
 }
 
 sub _CopyThirdPartyFiles {
