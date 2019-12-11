@@ -13,8 +13,8 @@ use utf8;
 use vars (qw($Self));
 
 # get needed objects
-my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
+my $ConfigObject = $Kernel::OM->GetNew('Kernel::Config');
+my $MainObject   = $Kernel::OM->GetNew('Kernel::System::Main');
 
 # define needed variables
 my $CacheType = "UnitTest_Cache_Configure";
@@ -41,28 +41,48 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     # init test case
     $Self->TestCaseStart(
-        TestCase    => $Module,
-        Description => 'Check cache module ' . $Module,
+        TestCase    => $Module . ' Configure',
+        Feature     => 'Cache',
+        Story       => $Module,
+        Description => <<"END",
+Check set and get configuration of cache module $Module
+* Set cache value
+* Check cache value from both
+* Check cache value from backend
+* Check cache value from memory
+* Set cache value only to backend, memory should be removed
+* Check cache value from backend
+* Check cache value from memory
+* Set cache value only to memory, backend should be removed
+* Check cache value from backend
+* Check cache value from memory
+* Set cache value to none, value should be removed
+* Check cache value from backend
+* Check cache value from memory
+END
     );
 
     # init test steps
     $Self->{'TestCase'}->{'PlanSteps'} = {
         '0001' => 'Module configuration',
         '0002' => 'Module creation',
-        '0003' => 'Cache set, backend and memory',
-        '0004' => 'Cache get, backend and memory',
-        '0005' => 'Cache get, backend only',
-        '0006' => 'Cache get, memory only',
-        '0007' => 'Cache get, both disabled',
-        '0008' => 'Cache set, backend only',
-        '0009' => 'Cache get from backend only',
-        '0010' => 'Removed value from memory',
-        '0011' => 'Cache set, memory only',
-        '0012' => 'Removed value from backend',
-        '0013' => 'Cache get from memory only',
-        '0014' => 'Cache set, both disabled',
-        '0015' => 'Removed value from backend',
-        '0016' => 'Removed value from memory',
+        '0003' => 'Cache cleanup',
+        '0004' => 'Cache set, backend and memory',
+        '0005' => 'Cache get, backend and memory',
+        '0006' => 'Cache get, backend only',
+        '0007' => 'Cache get, memory only',
+        '0008' => 'Cache get, both disabled',
+        '0009' => 'Cache set, backend only, remove from memory',
+        '0010' => 'Cache get from backend only',
+        '0011' => 'Removed value from memory',
+        '0012' => 'Cache set, backend and memory',
+        '0013' => 'Cache set, memory only, remove from backend',
+        '0014' => 'Removed value from backend',
+        '0015' => 'Cache get from memory only',
+        '0016' => 'Cache set, backend and memory',
+        '0017' => 'Cache set, both disabled, remove both',
+        '0018' => 'Removed value from backend',
+        '0019' => 'Removed value from memory',
     };
 
     ## TEST STEP
@@ -100,14 +120,24 @@ for my $ModuleFile (@BackendModuleFiles) {
     next MODULEFILE if ( !$Success );
     ## EO TEST STEP
 
-    # flush the cache to have a clear test environment
-    $CacheObject->CleanUp();
-
     ## TEST STEP
     # set value in memory and in backend
     delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0003'} );
     $StartTime = $Self->GetMilliTimeStamp();
-    my $SuccessSet = $CacheObject->Set(
+    my $SuccessCleanup1 = $CacheObject->CleanUp();
+    $Success = $Self->True(
+        TestName   => 'Cache cleanup',
+        TestValue  => $SuccessCleanup1,
+        StartTime  => $StartTime,
+    );
+    next MODULEFILE if ( !$Success );
+    ## EO TEST STEP
+
+    ## TEST STEP
+    # set value in memory and in backend
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0004'} );
+    $StartTime = $Self->GetMilliTimeStamp();
+    my $SuccessSet1 = $CacheObject->Set(
         Type  => $CacheType,
         Key   => "Key1",
         Value => 1,
@@ -115,7 +145,7 @@ for my $ModuleFile (@BackendModuleFiles) {
     );
     $Success = $Self->True(
         TestName   => 'Cache set, backend and memory',
-        TestValue  => $SuccessSet,
+        TestValue  => $SuccessSet1,
         StartTime  => $StartTime,
     );
     next MODULEFILE if ( !$Success );
@@ -123,7 +153,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # get value in memory and in backend
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0004'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0005'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $CacheValueBoth = $CacheObject->Get(
         Type => $CacheType,
@@ -140,7 +170,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # get value from backend only
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0005'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0006'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $CacheValueBackend = $CacheObject->Get(
         Type          => $CacheType,
@@ -158,7 +188,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # get value from memory only
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0006'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0007'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $CacheValueMemory = $CacheObject->Get(
         Type           => $CacheType,
@@ -176,7 +206,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # get value both options disabled
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0007'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0008'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $CacheValueDisabled = $CacheObject->Get(
         Type           => $CacheType,
@@ -195,7 +225,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # set value only to backend. value has to be removed from memory
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0008'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0009'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $SuccessSetBackend = $CacheObject->Set(
         Type          => $CacheType,
@@ -205,7 +235,7 @@ for my $ModuleFile (@BackendModuleFiles) {
         CacheInMemory => 0,
     );
     $Success = $Self->True(
-        TestName   => 'Cache set, backend only',
+        TestName   => 'Cache set, backend only, remove from memory',
         TestValue  => $SuccessSetBackend,
         StartTime  => $StartTime,
     );
@@ -214,7 +244,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # get value from backend only
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0009'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0010'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $CacheValueBackend3 = $CacheObject->Get(
         Type          => $CacheType,
@@ -232,7 +262,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # get value from memory only
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0010'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0011'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $CacheValueMemory3 = $CacheObject->Get(
         Type           => $CacheType,
@@ -249,8 +279,26 @@ for my $ModuleFile (@BackendModuleFiles) {
     ## EO TEST STEP
 
     ## TEST STEP
+    # set value in memory and in backend
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0012'} );
+    $StartTime = $Self->GetMilliTimeStamp();
+    my $SuccessSet2 = $CacheObject->Set(
+        Type  => $CacheType,
+        Key   => "Key1",
+        Value => 1,
+        TTL   => 60 * 60 * 24 * 3,
+    );
+    $Success = $Self->True(
+        TestName   => 'Cache set, backend and memory',
+        TestValue  => $SuccessSet2,
+        StartTime  => $StartTime,
+    );
+    next MODULEFILE if ( !$Success );
+    ## EO TEST STEP
+
+    ## TEST STEP
     # set value only to memory. value has to be removed from backend
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0011'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0013'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $SuccessSetMemory = $CacheObject->Set(
         Type           => $CacheType,
@@ -260,7 +308,7 @@ for my $ModuleFile (@BackendModuleFiles) {
         CacheInBackend => 0,
     );
     $Success = $Self->True(
-        TestName   => 'Cache set, memory only',
+        TestName   => 'Cache set, memory only, remove from backend',
         TestValue  => $SuccessSetMemory,
         StartTime  => $StartTime,
     );
@@ -269,7 +317,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # get value from backend only
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0012'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0014'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $CacheValueBackend2 = $CacheObject->Get(
         Type          => $CacheType,
@@ -287,7 +335,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # get value from memory only
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0013'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0015'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $CacheValueMemory2 = $CacheObject->Get(
         Type           => $CacheType,
@@ -304,8 +352,26 @@ for my $ModuleFile (@BackendModuleFiles) {
     ## EO TEST STEP
 
     ## TEST STEP
+    # set value in memory and in backend
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0016'} );
+    $StartTime = $Self->GetMilliTimeStamp();
+    my $SuccessSet3 = $CacheObject->Set(
+        Type  => $CacheType,
+        Key   => "Key1",
+        Value => 1,
+        TTL   => 60 * 60 * 24 * 3,
+    );
+    $Success = $Self->True(
+        TestName   => 'Cache set, backend and memory',
+        TestValue  => $SuccessSet3,
+        StartTime  => $StartTime,
+    );
+    next MODULEFILE if ( !$Success );
+    ## EO TEST STEP
+
+    ## TEST STEP
     # set value, but in no backend. value has to be removed
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0014'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0017'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $SuccessSetDisabled = $CacheObject->Set(
         Type           => $CacheType,
@@ -316,7 +382,7 @@ for my $ModuleFile (@BackendModuleFiles) {
         CacheInBackend => 0,
     );
     $Success = $Self->True(
-        TestName   => 'Cache set, both disabled',
+        TestName   => 'Cache set, both disabled, remove both',
         TestValue  => $SuccessSetDisabled,
         StartTime  => $StartTime,
     );
@@ -325,7 +391,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # get value from backend only
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0015'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0018'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $CacheValueBackend4 = $CacheObject->Get(
         Type          => $CacheType,
@@ -343,7 +409,7 @@ for my $ModuleFile (@BackendModuleFiles) {
 
     ## TEST STEP
     # get value from memory only
-    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0016'} );
+    delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0019'} );
     $StartTime = $Self->GetMilliTimeStamp();
     my $CacheValueMemory4 = $CacheObject->Get(
         Type           => $CacheType,

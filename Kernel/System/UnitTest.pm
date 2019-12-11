@@ -14,13 +14,16 @@ use warnings;
 use vars qw(@ISA);
 
 use Kernel::System::UnitTest::Check;
-use Kernel::System::UnitTest::Helper;
+use Kernel::System::UnitTest::Utils;
 
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::System::JSON',
+    'Kernel::System::Log',
     'Kernel::System::Main',
 );
+
+## no critic qw(BuiltinFunctions::ProhibitStringyEval)
 
 =head1 NAME
 
@@ -55,7 +58,7 @@ sub new {
 
     @ISA = qw(
         Kernel::System::UnitTest::Check
-        Kernel::System::UnitTest::Helper
+        Kernel::System::UnitTest::Utils
     );
 
     return $Self;
@@ -166,7 +169,8 @@ sub Run {
                         TestName  => 'File Eval',
                         Success   => 0,
                         Broken    => 1,
-                        Message   => "Error in $File: $@",
+                        Message   => "Error in $File",
+                        Trace     => "$@",
                         StartTime => $Self->GetMilliTimeStamp(),
                     );
 
@@ -658,11 +662,11 @@ sub _AddTestStep {
         # process trace
         my $Caller = $Param{'Caller'} || 0;
         my ( $TracePackage, $TraceFilename, $TraceLine ) = caller( $Caller );
-        $StepEntry{'statusDetails'}->{'trace'} = sprintf("%s:%d", $TraceFilename, $TraceLine);
+        $StepEntry{'statusDetails'}->{'trace'} = $Param{'Trace'} || sprintf("%s:%d", $TraceFilename, $TraceLine);
         # set fail data for testcase
         
         $Self->{'TestCase'}->{'Data'}->{'statusDetails'}->{'message'} = $Param{'Message'};
-        $Self->{'TestCase'}->{'Data'}->{'statusDetails'}->{'trace'}   = sprintf("%s:%d", $TraceFilename, $TraceLine);
+        $Self->{'TestCase'}->{'Data'}->{'statusDetails'}->{'trace'}   = $Param{'Trace'} || sprintf("%s:%d", $TraceFilename, $TraceLine);
         # set fail status for testcase
         if (
             $Param{'Broken'}
