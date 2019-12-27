@@ -199,6 +199,13 @@ sub Run {
             $GetParam{Dest} = $GetParam{DefaultQueueSelected};
         }
         my ( $QueueIDParam, $QueueParam ) = split( /\|\|/, $GetParam{Dest} );
+        if ( !$GetParam{DefaultQueueSelected} ) {
+            my $CustomerPanelOwnSelection = $ConfigObject->Get('CustomerPanelOwnSelection');
+            if ( ref( $CustomerPanelOwnSelection ) eq 'HASH' ) {
+                my %ReverseSelection = reverse( %{ $CustomerPanelOwnSelection } );
+                $QueueParam = $ReverseSelection{ $QueueParam } || '';
+            }
+        }
         my $QueueIDLookup = $QueueObject->QueueLookup( Queue => $QueueParam );
         if ( $QueueIDLookup && $QueueIDLookup eq $QueueIDParam ) {
             $ACLCompatGetParam{QueueID} = $QueueIDLookup;
