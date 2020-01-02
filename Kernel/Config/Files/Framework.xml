@@ -11872,23 +11872,6 @@ via the Preferences button after logging in.
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="DashboardBackend###0000-KIXNotify" Required="0" Valid="0">
-        <Description Translatable="1">Parameters for the dashboard backend. "Group" are used to restriced access to the plugin (e. g. Group: admin;group1;group2;). "Default" means if the plugin is enabled per default or if the user needs to enable it manually. "CacheTTLLocal" means the cache time in minutes for the plugin.</Description>
-        <Group>Framework</Group>
-        <SubGroup>Frontend::Agent::Dashboard</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Module">Kernel::Output::HTML::Dashboard::KIXNotify</Item>
-                <Item Key="Title">KIX News</Item>
-                <Item Key="Description">News about KIX releases!</Item>
-                <Item Key="URL">http://www.cape-it.de/files/downloads/KIX4OTRS/modules.xml</Item>
-                <Item Key="Block">ContentLarge</Item>
-                <Item Key="Group">admin</Item>
-                <Item Key="Default">1</Item>
-                <Item Key="CacheTTLLocal">2880</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="DashboardBackend###0251-TicketStats2Weeks" Required="0" Valid="1">
         <Description Translatable="1">Parameters for the dashboard backend of the 2 weeks ticket stats of the agent interface. "Limit" is the number of entries shown by default. "Group" is used to restrict the access to the plugin (e. g. Group: admin;group1;group2;). "Default" determines if the plugin is enabled by default or if the user needs to enable it manually. "CacheTTLLocal" is the cache time in minutes for the plugin.</Description>
         <Group>Framework</Group>
