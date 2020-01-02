@@ -86,31 +86,25 @@ sub _AddCIClassDefinitions {
     my %ReverseCIClassList = reverse(%CIClassList);
 
     for my $CIClassName ( keys(%Classes) ) {
-        next if ( !IsHashRefWithData( $Classes{$CIClassName} ) );
-        my $ItemID = 0;
+        next if ( !$ReverseCIClassList{$CIClassName} );
 
-        # find the class ID and get count of definitions
-        my $DefinitionCount = 0;
-        if ( $ReverseCIClassList{$CIClassName} ) {
-            $ItemID = $ReverseCIClassList{$CIClassName};
-            my $ItemDataRef = $Self->{GeneralCatalogObject}->ItemGet(
-                ItemID => $ItemID,
-            );
+        # find the class ID and data
+        my $ItemID      = $ReverseCIClassList{$CIClassName};
+        my $ItemDataRef = $Self->{GeneralCatalogObject}->ItemGet(
+            ItemID => $ItemID,
+        );
 
-            # get count of definitions
-            my $DefinitionsList = $Self->{ITSMConfigItemObject}->DefinitionList(
-                ClassID => $ItemID,
-            );
-
-            $DefinitionCount = scalar @{$DefinitionsList};
-
-        }
+        # get count of definitions
+        my $DefinitionsList = $Self->{ITSMConfigItemObject}->DefinitionList(
+            ClassID => $ItemID,
+        );
+        my $DefinitionCount = scalar @{$DefinitionsList};
 
         # open definition file
         my $CIClassNameFileName = $CIClassName;
-        $CIClassNameFileName =~ s/\W//g;
-        my $CurrDefFile = $DefFilePath . $CIClassNameFileName . '.def';
-        my $CurrDefStrg = '';
+        $CIClassNameFileName    =~ s/\W//g;
+        my $CurrDefFile         = $DefFilePath . $CIClassNameFileName . '.def';
+        my $CurrDefStrg         = '';
         if ( open( my $FH, '<', $CurrDefFile ) ) {
             while (<$FH>) {
                 $CurrDefStrg .= $_;
@@ -132,11 +126,13 @@ sub _AddCIClassDefinitions {
         );
 
         # stop update, if definition exists and is the same or more then one versions exists
-        next
-            if (
+        next if (
             $DefinitionCount > 1
-            || ( $LastDefinition->{DefinitionID} && $LastDefinition->{Definition} eq $CurrDefStrg )
-            );
+            || (
+                $LastDefinition->{DefinitionID}
+                && $LastDefinition->{Definition} eq $CurrDefStrg
+            )
+        );
 
         # add the new class-definition...
         my $Result = $Self->{ITSMConfigItemObject}->DefinitionAdd(
