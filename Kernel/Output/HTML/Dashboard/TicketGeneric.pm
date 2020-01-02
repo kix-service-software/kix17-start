@@ -472,7 +472,10 @@ sub Preferences {
                 = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet( Name => $1 );
 
             # remove field if not valid
-            if ( $DynamicField->{ValidID} != 1 ) {
+            if (
+                ref($DynamicField) ne 'HASH'
+                || $DynamicField->{ValidID} != 1
+            ) {
                 if ( grep { $_ eq $Column } @ColumnsEnabled ) {
                     my @ColumnArray = @ColumnsEnabled;
                     my @TempArray   = ();
