@@ -1052,7 +1052,8 @@ sub Run {
 
     # deliver signature
     elsif ( $Self->{Subaction} eq 'Signature' ) {
-        my $QueueID = $ParamObject->GetParam( Param => 'QueueID' );
+        my $CustomerUser = $ParamObject->GetParam( Param => 'SelectedCustomerUser' ) || '';
+        my $QueueID      = $ParamObject->GetParam( Param => 'QueueID' );
         if ( !$QueueID ) {
             my $Dest = $ParamObject->GetParam( Param => 'Dest' ) || '';
             ($QueueID) = split( /\|\|/, $Dest );
@@ -1061,7 +1062,10 @@ sub Run {
         # start with empty signature (no queue selected) - if we have a queue, get the sig.
         my $Signature = '';
         if ($QueueID) {
-            $Signature = $Self->_GetSignature( QueueID => $QueueID );
+            $Signature = $Self->_GetSignature(
+                CustomerUserID => $CustomerUser,
+                QueueID        => $QueueID,
+            );
         }
         my $MimeType = 'text/plain';
         if ( $LayoutObject->{BrowserRichText} ) {

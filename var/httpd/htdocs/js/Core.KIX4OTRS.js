@@ -395,7 +395,7 @@ Core.KIX4OTRS = (function(TargetNS) {
                                 $("#Dest").attr($(this).val());
 
                                 // prepare to set new signature
-                                var Dest = $("#Dest").val(),
+                                var Dest = $("#Dest").val() || '',
                                     Signature,
                                     OldSignature = $("#Signature").length > 0 ? $("#Signature").attr('src') : '',
                                     OldSignatureArray = OldSignature.split(";"),
