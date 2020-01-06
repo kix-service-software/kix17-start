@@ -183,8 +183,8 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         // get TextModule for preview
         var TextModule = TargetNS.GetTextmodule(ID);
 
-        $Title.html(TextModule.Name);
-        $Subject.html(TextModule.Subject);
+        $Title.text(TextModule.Name);
+        $Subject.text(TextModule.Subject);
         $Body.html(TextModule.TextModule);
 
         return;

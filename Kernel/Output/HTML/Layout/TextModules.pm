@@ -169,6 +169,10 @@ sub TextModuleCategoryTree {
         my %Object     = %{ $AllCategoriesData{$Current} };
         my @Split      = @{ $Object{Split} };
         my $ObjectName = $Object{Name};
+
+        # html quotation for category name
+        $ObjectName = $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToHTML( String => $ObjectName );
+
         my $ObjectNodeID = $ObjectName;
         $ObjectNodeID =~ s/\s//g;
 
