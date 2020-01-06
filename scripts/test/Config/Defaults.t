@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -15,8 +15,8 @@ use vars (qw($Self));
 use Kernel::Config::Files::ZZZAAuto;
 
 # get needed objects
-my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
+my $ConfigObject = $Kernel::OM->GetNew('Kernel::Config');
+my $MainObject   = $Kernel::OM->GetNew('Kernel::System::Main');
 
 # define needed variables
 my $Directory   = $ConfigObject->Get('Home') . "/Kernel/Config/Files/";
@@ -58,7 +58,12 @@ my $StartTime;
 # init test case
 $Self->TestCaseStart(
     TestCase    => 'Default configuration',
-    Description => 'Check default configuration for changes',
+    Feature     => 'Configuration',
+    Story       => 'Default',
+    Description => <<'END',
+Check default configuration for changes
+* Configurations have to be be the same in Defaults.pm and ZZZAAuto.pm
+END
 );
 
 ## TEST STEP
@@ -110,7 +115,7 @@ for my $DefaultConfigEntry ( sort( keys( %{$DefaultConfig} ) ) ) {
             # check structure of default config against ZZZAAuto
             $StartTime = $Self->GetMilliTimeStamp();
             $Self->IsDeeply(
-                TestName   => $DefaultConfigEntry . '->' . $DefaultConfigSubEntry . ' must be the same in Defaults.pm and ZZZAAuto.pm',
+                TestName   => $DefaultConfigEntry . '->' . $DefaultConfigSubEntry . ' have to be be the same in Defaults.pm and ZZZAAuto.pm',
                 CheckValue => \$DefaultConfig->{$DefaultConfigEntry}->{$DefaultConfigSubEntry},
                 TestValue  => \$ZZZAAutoConfig->{$DefaultConfigEntry}->{$DefaultConfigSubEntry},
                 StartTime  => $StartTime,
@@ -124,7 +129,7 @@ for my $DefaultConfigEntry ( sort( keys( %{$DefaultConfig} ) ) ) {
         # check structure of default config against ZZZAAuto
         $StartTime = $Self->GetMilliTimeStamp();
         $Self->IsDeeply(
-            TestName   => $DefaultConfigEntry . ' must be the same in Defaults.pm and ZZZAAuto.pm',
+            TestName   => $DefaultConfigEntry . ' have to be be the same in Defaults.pm and ZZZAAuto.pm',
             CheckValue => \$DefaultConfig->{$DefaultConfigEntry},
             TestValue  => \$ZZZAAutoConfig->{$DefaultConfigEntry},
             StartTime  => $StartTime,

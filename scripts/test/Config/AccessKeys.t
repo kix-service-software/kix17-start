@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -13,7 +13,7 @@ use utf8;
 use vars (qw($Self));
 
 # get needed objects
-my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+my $ConfigObject = $Kernel::OM->GetNew('Kernel::Config');
 
 # define needed variables
 my %AgentModules = (
@@ -34,7 +34,12 @@ my $StartTime;
 # init test case for agent modules
 $Self->TestCaseStart(
     TestCase    => 'Agent frontend',
-    Description => 'Check access keys of agent frontend modules',
+    Feature     => 'Configuration',
+    Story       => 'AccessKeys',
+    Description => <<'END',
+Check access keys of agent frontend modules
+* Each access key can only be used onces for NavBar
+END
 );
 
 # process agent modules
@@ -62,7 +67,7 @@ for my $AgentModule ( sort( keys( %AgentModules ) ) ) {
         # check that access key is not already in use
         $StartTime = $Self->GetMilliTimeStamp();
         $Self->False(
-            TestName  => $NavBarName . ': Check if access key "' $NavBarKey . '" is already in use',
+            TestName  => $NavBarName . ': Check if access key "' . $NavBarKey . '" is already in use',
             TestValue => defined( $UsedAccessKeysAgent{$NavBarKey} ),
             StartTime => $StartTime,
         );
@@ -76,7 +81,12 @@ for my $AgentModule ( sort( keys( %AgentModules ) ) ) {
 # init test case for customer modules
 $Self->TestCaseStart(
     TestCase    => 'Customer frontend',
-    Description => 'Check access keys of customer frontend modules',
+    Feature     => 'Configuration',
+    Story       => 'AccessKeys',
+    Description => <<'END',
+Check access keys of customer frontend modules
+* Each access key can only be used onces for NavBar
+END
 );
 
 # process customer modules
@@ -104,7 +114,7 @@ for my $CustomerModule ( sort( keys( %CustomerModules ) ) ) {
         # check that access key is not already in use
         $StartTime = $Self->GetMilliTimeStamp();
         $Self->False(
-            TestName  => $NavBarName . ': Check if access key "' $NavBarKey . '" is already in use',
+            TestName  => $NavBarName . ': Check if access key "' . $NavBarKey . '" is already in use',
             TestValue => defined( $UsedAccessKeysCustomer{$NavBarKey} ),
             StartTime => $StartTime,
         );
@@ -118,7 +128,12 @@ for my $CustomerModule ( sort( keys( %CustomerModules ) ) ) {
 # init test case for public modules
 $Self->TestCaseStart(
     TestCase    => 'Public frontend',
-    Description => 'Check access keys of public frontend modules',
+    Feature     => 'Configuration',
+    Story       => 'AccessKeys',
+    Description => <<'END',
+Check access keys of public frontend modules
+* Each access key can only be used onces for NavBar
+END
 );
 
 # process public modules
@@ -146,7 +161,7 @@ for my $PublicModule ( sort( keys( %PublicModules ) ) ) {
         # check that access key is not already in use
         $StartTime = $Self->GetMilliTimeStamp();
         $Self->False(
-            TestName  => $NavBarName . ': Check if access key "' $NavBarKey . '" is already in use',
+            TestName  => $NavBarName . ': Check if access key "' . $NavBarKey . '" is already in use',
             TestValue => defined( $UsedAccessKeysPublic{$NavBarKey} ),
             StartTime => $StartTime,
         );

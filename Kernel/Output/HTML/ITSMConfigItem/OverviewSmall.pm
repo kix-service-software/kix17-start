@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -125,16 +125,9 @@ END
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # get needed un-/selected Config Items for bulk feature
-    my @SelectedItems     = split(',', $Param{SelectedItems} || '' );
-    my @UnselectedItems   = split(',', $Param{UnselectedItems} || '' );
-
-    for my $ConfigItem ( @ConfigItemIDs ) {
-        if ( !grep({/^$ConfigItem$/} @UnselectedItems)
-            && !grep({/^$ConfigItem$/} @SelectedItems)
-        ) {
-            push(@UnselectedItems, $ConfigItem);
-        }
-    }
+    my @SelectedItems     = @{ $Param{SelectedItems} };
+    my %SelectedItemsHash = map( { $_ => 1 } @SelectedItems );
+    my @UnselectedItems   = @{ $Param{UnselectedItems} };
 
     # check if bulk feature is enabled
     my $BulkFeature = 0;
@@ -164,7 +157,7 @@ END
         my %Menus = %{ $ConfigObject->Get('ITSMConfigItem::Frontend::PreMenuModule') };
 
         MENU:
-        for my $MenuKey ( sort keys %Menus ) {
+        for my $MenuKey ( sort( keys( %Menus ) ) ) {
 
             # load module
             if ( $Kernel::OM->Get('Kernel::System::Main')->Require( $Menus{$MenuKey}->{Module} ) ) {
@@ -379,7 +372,7 @@ END
                     if ( $Column eq 'BulkAction') {
                         my $ItemChecked = '';
 
-                        if ( grep( {/^$ConfigItemID$/} @SelectedItems ) ) {
+                        if ( $SelectedItemsHash{ $ConfigItemID } ) {
                             $ItemChecked = ' checked="checked"';
                         }
                         $LayoutObject->Block(
@@ -522,9 +515,9 @@ END
 
             if ($Column eq 'BulkAction') {
                 my $ItemALLChecked = '';
-                my $SelectedAll      = '';
+                my $SelectedAll    = '';
 
-                if ( !scalar @UnselectedItems ) {
+                if ( !scalar( @UnselectedItems ) ) {
                     $ItemALLChecked = ' checked="checked"';
                 }
 
@@ -535,10 +528,10 @@ END
                     Name => 'Record' . $Column . 'Header',
                     Data => {
                         %Param,
-                        CSS     => $CSS,
-                        OrderBy => $OrderBy,
-                        ItemALLChecked  => $ItemALLChecked,
-                        SelectedAll     => $SelectedAll
+                        CSS            => $CSS,
+                        OrderBy        => $OrderBy,
+                        ItemALLChecked => $ItemALLChecked,
+                        SelectedAll    => $SelectedAll
                     },
                 );
             } else {

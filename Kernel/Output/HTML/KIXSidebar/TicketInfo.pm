@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -33,14 +33,15 @@ sub Run {
     my ( $Self, %Param ) = @_;
 
     # create needed objects
-    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
-    my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
-    my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
-    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
     my $ConfigObject       = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject       = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
+    my $BackendObject      = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+    my $HTMLUtilsObject    = $Kernel::OM->Get('Kernel::System::HTMLUtils');
+    my $LogObject          = $Kernel::OM->Get('Kernel::System::Log');
+    my $TicketObject       = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
+    my $UserObject         = $Kernel::OM->Get('Kernel::System::User');
 
     my %Ticket = $TicketObject->TicketGet(
         TicketID      => $Param{TicketID},
@@ -252,6 +253,12 @@ sub Run {
         elsif ( $TicketKey =~ /\d+UnquotedNewLinedBy(.+)$/ ) {
             my $Separator = $1;
             my $Content   = $Ticket{$ShortRef};
+
+            # quote service name
+            if ( $ShortRef eq 'Service' ) {
+                $Content = $HTMLUtilsObject->ToHTML( String => $Content );
+            }
+
             $Content =~ s/$Separator/<br \/>$Separator/g;
             $LayoutObject->Block(
                 Name => 'KeyContentUnquoted',

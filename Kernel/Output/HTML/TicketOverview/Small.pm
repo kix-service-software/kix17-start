@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -473,17 +473,9 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # get needed un-/selected tickets for bulk feature
-    my @SelectedItems     = split(',', $Param{SelectedItems});
-    my @UnselectedItems   = split(',', $Param{UnselectedItems});
-
-    for my $TicketID ( @{$Param{OriginalTicketIDs}} ) {
-        if (
-            !grep({/^$TicketID$/} @UnselectedItems)
-            && !grep({/^$TicketID$/} @SelectedItems)
-        ) {
-            push(@UnselectedItems, $TicketID);
-        }
-    }
+    my @SelectedItems     = @{ $Param{SelectedItems} };
+    my %SelectedItemsHash = map( { $_ => 1 } @SelectedItems );
+    my @UnselectedItems   = @{ $Param{UnselectedItems} };
 
     # check if bulk feature is enabled
     my $BulkFeature = 0;
@@ -760,7 +752,7 @@ sub Run {
             my $ItemALLChecked = '';
             my $SelectedAll      = '';
 
-            if ( !scalar @UnselectedItems ) {
+            if ( !scalar( @UnselectedItems ) ) {
                 $ItemALLChecked = ' checked="checked"';
             }
 
@@ -1535,7 +1527,7 @@ sub Run {
         if ($BulkFeature) {
             my $ItemChecked = '';
 
-            if ( grep( {/^$Article{TicketID}$/} @SelectedItems ) ) {
+            if ( $SelectedItemsHash{ $Article{TicketID} } ) {
                 $ItemChecked = ' checked="checked"';
             }
 
@@ -1551,7 +1543,8 @@ sub Run {
                 },
             );
 
-            if ( !$BulkActivate
+            if (
+                !$BulkActivate
                 && $ItemChecked
             ) {
                 $BulkActivate = 1;

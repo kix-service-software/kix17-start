@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -13,6 +13,7 @@ package Kernel::Modules::CustomerFAQSearch;
 use strict;
 use warnings;
 
+use Kernel::Language qw(Translatable);
 use Kernel::System::VariableCheck qw(:all);
 
 our $ObjectManagerDisabled = 1;
@@ -493,22 +494,117 @@ sub Run {
             UserID => $Self->{UserID},
         );
 
-        # perform FAQ search
-        my @ViewableFAQIDs = $FAQObject->FAQSearch(
-            OrderBy             => [$SortBy],
-            OrderByDirection    => [$OrderBy],
-            Limit               => $SearchLimit,
-            UserID              => $Self->{UserID},
-            States              => $InterfaceStates,
-            Interface           => $Interface,
-            ContentSearchPrefix => '*',
-            ContentSearchSuffix => '*',
-            %GetParam,
-            %DynamicFieldSearchParameters,
+        # Get UserCategoryGroup Hash.
+        # This returns a Hash of the following sample data structure:
+        #
+        # $CustomerUserCatGroup = {
+        #   '1' => {
+        #          '3' => 'MiscSub'
+        #        },
+        #   '3' => {},
+        #   '0' => {
+        #            '1' => 'Misc',
+        #            '2' => 'secret'
+        #          },
+        #   '2' => {}
+        # };
+        #
+        # Keys of the outer hash inform about subcategories.
+        #   0 Shows top level CategoryIDs.
+        #   1 Shows the SubcategoryIDs of Category 1.
+        #   2 and 3 are empty hashes because these categories don't have subcategories.
+        #
+        # Keys of the inner hashes are CategoryIDs a user is allowed to have ro access to.
+        # Values are the Category names.
+
+        my $CustomerUserCatGroup = $FAQObject->GetCustomerCategories(
+            CustomerUser => $Self->{UserLogin},
+            Type         => 'ro',
+            UserID       => $Self->{UserID},
         );
 
+        # Find CategoryIDs the current User is allowed to view.
+        my %AllowedCategoryIDs = ();
+
+        if ( $CustomerUserCatGroup && ref $CustomerUserCatGroup eq 'HASH' ) {
+
+            # So now we have to extract all Category ID's of the "inner hashes"
+            #   -> Loop through the outer category ID's.
+            for my $Level ( sort keys %{$CustomerUserCatGroup} ) {
+
+                # Check if the Value of the current hash key is a hash ref.
+                if ( $CustomerUserCatGroup->{$Level} && ref $CustomerUserCatGroup->{$Level} eq 'HASH' ) {
+
+                    # Map the keys of the inner hash to a TempIDs hash.
+                    # Original Data structure:
+                    #   {
+                    #       '1' => 'Misc',
+                    #       '2' => 'secret'
+                    #   }
+                    #
+                    #   after mapping:
+                    #
+                    #   {
+                    #       '1' => 1,
+                    #       '2' => 1'
+                    #   }
+
+                    my %TempIDs = map { $_ => 1 } keys %{ $CustomerUserCatGroup->{$Level} };
+
+                    # Put the TempIDs over the formally found AllowedCategorys to produce a hash
+                    #   that holds all CategoryID as keys and the number 1 as values.
+                    %AllowedCategoryIDs = (
+                        %AllowedCategoryIDs,
+                        %TempIDs
+                    );
+                }
+            }
+        }
+
+        # For the database query it's necessary to have an array of CategoryIDs.
+        my @CategoryIDs = ();
+
+        if (%AllowedCategoryIDs) {
+            @CategoryIDs = sort keys %AllowedCategoryIDs;
+        }
+
+        # Categories got from the web request could include a not allowed category if the user
+        #    temper with the categories drop-box, a check is needed.
+        #
+        # "Map" copy from one array to another, while "grep" will only let pass the categories
+        #    that are defined in the %AllowedCategoryIDs hash.
+        if ( IsArrayRefWithData( $GetParam{CategoryIDs} ) ) {
+            @{ $GetParam{CategoryIDs} } = map {$_} grep { $AllowedCategoryIDs{$_} } @{ $GetParam{CategoryIDs} };
+        }
+
+        # Just search if we do have categories, we have access to.
+        # If we don't have access to any category, a search with no CategoryIDs
+        #   would result in finding all categories.
+        #
+        # It is not possible to create FAQ's without categories
+        #   so at least one category has to be present
+
+        my @ViewableFAQIDs = ();
+
+        if (@CategoryIDs) {
+            # perform FAQ search
+            @ViewableFAQIDs = $FAQObject->FAQSearch(
+                OrderBy             => [$SortBy],
+                OrderByDirection    => [$OrderBy],
+                Limit               => $SearchLimit,
+                UserID              => $Self->{UserID},
+                States              => $InterfaceStates,
+                Interface           => $Interface,
+                ContentSearchPrefix => '*',
+                ContentSearchSuffix => '*',
+                CategoryIDs         => \@CategoryIDs,
+                %GetParam,
+                %DynamicFieldSearchParameters,
+            );
+        }
+
         # get needed objects
-        my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');    # get time object
+        my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
         my $TimeObject         = $Kernel::OM->Get('Kernel::System::Time');
 
         # CSV output
@@ -1180,7 +1276,7 @@ sub Run {
                                 . ' 00:00:00', 'DateFormatShort'
                         );
 
-                        $Attribute      = 'Created between';
+                        $Attribute      = Translatable('Created between');
                         $AttributeValue = $StartDate . ' '
                             . $LayoutObject->{LanguageObject}->Translate('and') . ' '
                             . $StopDate;
@@ -1188,23 +1284,25 @@ sub Run {
                     else {
 
                         my $Mapping = {
-                            'Last'   => 'Created within the last',
-                            'Before' => 'Created more than ... ago',
+                            'Last'   => Translatable('Created within the last'),
+                            'Before' => Translatable('Created more than ... ago'),
                         };
 
                         $Attribute      = $Mapping->{ $GetParam{ItemCreateTimePointStart} };
                         $AttributeValue = $GetParam{ItemCreateTimePoint} . ' '
-                            . $LayoutObject->{LanguageObject}->Get( $GetParam{ItemCreateTimePointFormat} . '(s)' );
+                            . $LayoutObject->{LanguageObject}->Translate(
+                            $GetParam{ItemCreateTimePointFormat} . '(s)'
+                            );
                     }
                 }
                 elsif ( $Attribute eq 'VoteSearchType' ) {
                     next ATTRIBUTE if !$GetParam{VoteSearchOption};
-                    $AttributeValue = $LayoutObject->{LanguageObject}->Get( $GetParam{VoteSearchType} ) . ' '
+                    $AttributeValue = $LayoutObject->{LanguageObject}->Translate( $GetParam{VoteSearchType} ) . ' '
                         . $GetParam{VoteSearch};
                 }
                 elsif ( $Attribute eq 'RateSearchType' ) {
                     next ATTRIBUTE if !$GetParam{RateSearchOption};
-                    $AttributeValue = $LayoutObject->{LanguageObject}->Get( $GetParam{RateSearchType} ) . ' '
+                    $AttributeValue = $LayoutObject->{LanguageObject}->Translate( $GetParam{RateSearchType} ) . ' '
                         . $GetParam{RateSearch} . '%';
                 }
 
@@ -1263,7 +1361,7 @@ sub Run {
         }
 
         # start HTML page
-        $Output = $LayoutObject->CustomerHeader();
+        $Output  = $LayoutObject->CustomerHeader();
         $Output .= $LayoutObject->CustomerNavigationBar();
 
         # Set the SortBy Class
@@ -1283,8 +1381,8 @@ sub Run {
         $CSSSort{$CSSSortBy} = $SortClass;
 
         my %NewOrder = (
-            Down => 'Up',
-            Up   => 'Down',
+            Down => Translatable('Up'),
+            Up   => Translatable('Down'),
         );
 
         # show language header
@@ -1365,7 +1463,7 @@ sub Run {
         }
 
         # generate search mask
-        $Output = $LayoutObject->CustomerHeader();
+        $Output  = $LayoutObject->CustomerHeader();
         $Output .= $LayoutObject->CustomerNavigationBar();
         $Output .= $Self->MaskForm(
             %GetParam,
@@ -1392,9 +1490,9 @@ sub MaskForm {
 
     # set output formats list
     my %ResultForm = (
-        Normal => 'Normal',
-        Print  => 'Print',
-        CSV    => 'CSV',
+        Normal => Translatable('Normal'),
+        Print  => Translatable('Print'),
+        CSV    => Translatable('CSV'),
     );
 
     # get layout object
@@ -1460,11 +1558,11 @@ sub MaskForm {
     );
 
     my %VotingOperators = (
-        Equals            => 'Equals',
-        GreaterThan       => 'GreaterThan',
-        GreaterThanEquals => 'GreaterThanEquals',
-        SmallerThan       => 'SmallerThan',
-        SmallerThanEquals => 'SmallerThanEquals',
+        Equals            => Translatable('Equals'),
+        GreaterThan       => Translatable('Greater than'),
+        GreaterThanEquals => Translatable('Greater than equals'),
+        SmallerThan       => Translatable('Smaller than'),
+        SmallerThanEquals => Translatable('Smaller than equals'),
     );
 
     $Param{VoteSearchTypeSelectionString} = $LayoutObject->BuildSelection(
@@ -1511,8 +1609,8 @@ sub MaskForm {
     );
     $Param{ItemCreateTimePointStart} = $LayoutObject->BuildSelection(
         Data => {
-            Last   => 'within the last ...',
-            Before => 'more than ... ago',
+            Last   => Translatable('within the last ...'),
+            Before => Translatable('more than ... ago'),
         },
         Translation => 1,
         Name        => 'ItemCreateTimePointStart',
@@ -1520,12 +1618,12 @@ sub MaskForm {
     );
     $Param{ItemCreateTimePointFormat} = $LayoutObject->BuildSelection(
         Data => {
-            minute => 'minute(s)',
-            hour   => 'hour(s)',
-            day    => 'day(s)',
-            week   => 'week(s)',
-            month  => 'month(s)',
-            year   => 'year(s)',
+            minute => Translatable('minute(s)'),
+            hour   => Translatable('hour(s)'),
+            day    => Translatable('day(s)'),
+            week   => Translatable('week(s)'),
+            month  => Translatable('month(s)'),
+            year   => Translatable('year(s)'),
         },
         Translation => 1,
         Name        => 'ItemCreateTimePointFormat',
