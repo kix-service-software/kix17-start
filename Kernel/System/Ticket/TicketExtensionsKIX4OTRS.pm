@@ -126,7 +126,7 @@ sub TicketQueueLinkGet {
         '<a href="?Action=AgentTicketQueue;QueueID='
         . $Param{'QueueID'}
         . $SessionID . '">'
-        . $Param{'Queue'} . '</a>';
+        . $Kernel::OM->Get('Kernel::System::HTMLUtils')->ToHTML( String => $Param{'Queue'} ) . '</a>';
 
     return $Output;
 }
