@@ -1,5 +1,18 @@
 # Change log of KIX
-* Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
+* Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
+
+# 17.10.0-RC2 (2020/01/06)
+ * (2020/01/02) - CR: KIX17-515 (Updated copyright) (millinger)
+ * (2020/01/02) - CR: KIX17-474 (fixed missing html quotations) (millinger)
+ * (2019/12/30) - Bugfix: T2018011790000747 (missing check for existing dynamic field at dashboard TicketGeneric) (millinger)
+ * (2019/12/30) - Bugfix: T2019092690000875 (update script did not check existence of config item class) (millinger)
+ * (2019/12/30) - Bugfix: T2019101790000719 (updating signature for empty queue fails for new email ticket) (millinger)
+ * (2019/12/27) - CR: KIX17-346 (removed dashboard module KIXNotify) (millinger)
+ * (2019/12/16) - Bugfix: KIX17-519 (fixed using case insensitive with postgres and dynamic field RemoteDB query conditions) (fjacquemin)
+ * (2019/12/11) - Bugfix: KIX17-523 (fixed performance issue for ticket and config item overviews) (millinger)
+ * (2019/12/10) - Bugfix: T2019120690004054 (customer faq search shows faq entries from categories without permission) (millinger)
+ * (2019/12/10) - Bugfix: T2019120290000716 (linked config item widget could not show items for classes with umlaut) (millinger)
+ * (2019/12/10) - Bugfix: T2019120390000492 (CustomerPanelOwnSelection disables queue based acl) (millinger)
 
 # 17.10.0-RC1 (2019/12/11)
  * (2019/12/09) - Bugfix: T2019112890001161 (fixed unread articles no longer shown bold in article list) (fjacquemin)
