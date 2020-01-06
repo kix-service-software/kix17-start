@@ -243,24 +243,20 @@ sub Run {
     my @TicketIDsShown;
 
     # get needed un-/selected tickets for bulk feature
-    my @SelectedItems     = split(',', $Param{SelectedItems});
-    my @UnselectedItems   = split(',', $Param{UnselectedItems});
+    my @SelectedItems     = @{ $Param{SelectedItems} };
+    my %SelectedItemsHash = map( { $_ => 1 } @SelectedItems );
+    my @UnselectedItems   = @{ $Param{UnselectedItems} };
 
     # check if there are tickets to show
     if ( scalar @{ $Param{TicketIDs} } ) {
 
         my $BulkActivate    = 0;
-        my $ItemALLChecked  = 0;
+        my $ItemALLChecked  = '';
         my $SelectedAll     = 0;
         my $BulkSelectedAll = 0;
 
-        for my $TicketID ( @{ $Param{OriginalTicketIDs} } ) {
-            if (
-                !grep({/^$TicketID$/} @UnselectedItems)
-                && !grep({/^$TicketID$/} @SelectedItems)
-            ) {
-                push(@UnselectedItems, $TicketID);
-            }
+        if ( !scalar( @UnselectedItems ) ) {
+            $ItemALLChecked = ' checked="checked"';
         }
 
         for my $TicketID ( @{ $Param{TicketIDs} } ) {
@@ -271,18 +267,13 @@ sub Run {
                 $Counter >= $Param{StartHit}
                 && $Counter < ( $Param{PageShown} + $Param{StartHit} )
             ) {
-                if ( grep( {/^$TicketID$/} @SelectedItems ) ) {
+                if ( $SelectedItemsHash{ $TicketID } ) {
                     $ItemChecked = ' checked="checked"';
                 }
 
-                if ( !scalar @UnselectedItems
-                    && !$ItemALLChecked
-                ) {
-                    $ItemALLChecked = 1;
-                }
-
-                if ( $Param{AllHits} > $Param{PageShown}
-                    && !$SelectedAll
+                if (
+                    !$SelectedAll
+                    && $Param{AllHits} > $Param{PageShown}
                 ) {
                     $SelectedAll = 1;
                 }
@@ -300,13 +291,15 @@ sub Run {
                     ItemALLChecked  => $ItemALLChecked,
                 );
 
-                if ( !$BulkActivate
+                if (
+                    !$BulkActivate
                     && $ItemChecked
                 ) {
                     $BulkActivate = 1;
                 }
 
-                if ( !$BulkSelectedAll
+                if (
+                    !$BulkSelectedAll
                     && $SelectedAll
                 ) {
                     $BulkSelectedAll = 1;
@@ -677,7 +670,8 @@ sub _Show {
             Data => \%Param,
         );
 
-        if ( !$Param{BulkActivate}
+        if (
+            !$Param{BulkActivate}
             && $Param{ItemChecked}
         ) {
             $LayoutObject->Block(
@@ -709,8 +703,7 @@ sub _Show {
         }
     }
 
-    my $StateHighlighting
-        = $ConfigObject->Get('KIX4OTRSTicketOverviewLargeHighlightMapping');
+    my $StateHighlighting = $ConfigObject->Get('KIX4OTRSTicketOverviewLargeHighlightMapping');
     if (
         $StateHighlighting
         && ref($StateHighlighting) eq 'HASH'

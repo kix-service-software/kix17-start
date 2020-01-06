@@ -422,18 +422,17 @@ sub ITSMConfigItemListShow {
     my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $UploadCacheObject   = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
 
-    my $SelectedItemStrg    = $ParamObject->GetParam( Param => 'SelectedItems' )   || '';
-    my $UnselectedItemStrg  = $ParamObject->GetParam( Param => 'UnselectedItems' ) || '';
-    my @SelectedItems       = split(',', $SelectedItemStrg);
-    my @UnselectedItems     = split(',', $UnselectedItemStrg);
+    my $SelectedItemStrg  = $ParamObject->GetParam( Param => 'SelectedItems' ) || '';
+    my @SelectedItems     = split(',', $SelectedItemStrg);
+    my %SelectedItemsHash = map( { $_ => 1 } @SelectedItems );
+    my @UnselectedItems   = ();
 
     for my $ConfigItem ( @{$Param{ConfigItemIDs}} ) {
-        if ( !grep({/^$ConfigItem$/} @UnselectedItems)
-            && !grep({/^$ConfigItem$/} @SelectedItems)
-        ) {
+        if ( !$SelectedItemsHash{ $ConfigItem } ) {
             push(@UnselectedItems, $ConfigItem);
         }
     }
+    my $UnselectedItemStrg = join(',', @UnselectedItems) || '';
 
     if ( !$Self->{FormID} ) {
         $Self->{FormID} = $UploadCacheObject->FormIDCreate();
@@ -448,8 +447,8 @@ sub ITSMConfigItemListShow {
         AllHits         => $Param{Total} || 0,
         Action          => 'Action=' . $Env->{Action},
         Link            => $Param{LinkPage},
-        SelectedItems   => join(',', @SelectedItems)   || '',
-        UnselectedItems => join(',', @UnselectedItems) || '',
+        SelectedItems   => $SelectedItemStrg,
+        UnselectedItems => $UnselectedItemStrg,
         FormID          => $Self->{FormID}
     );
 
@@ -684,8 +683,8 @@ sub ITSMConfigItemListShow {
         PageShown       => $PageShown,
         AllHits         => $Param{Total} || 0,
         Frontend        => $Frontend,
-        SelectedItems   => $SelectedItemStrg,
-        UnselectedItems => $UnselectedItemStrg,
+        SelectedItems   => \@SelectedItems,
+        UnselectedItems => \@UnselectedItems,
     );
 
     # create output
