@@ -164,16 +164,9 @@ END
     my $Counter = 1;
 
     # get needed un-/selected Config Items for bulk feature
-    my @SelectedItems     = split(',', $Param{SelectedItems} || '' );
-    my @UnselectedItems   = split(',', $Param{UnselectedItems} || '' );
-
-    for my $ConfigItem ( @ConfigItemIDs ) {
-        if ( !grep({/^$ConfigItem$/} @UnselectedItems)
-            && !grep({/^$ConfigItem$/} @SelectedItems)
-        ) {
-            push(@UnselectedItems, $ConfigItem);
-        }
-    }
+    my @SelectedItems     = @{ $Param{SelectedItems} };
+    my %SelectedItemsHash = map( { $_ => 1 } @SelectedItems );
+    my @UnselectedItems   = @{ $Param{UnselectedItems} };
 
     # check if bulk feature is enabled
     my $BulkFeature = 0;
@@ -203,7 +196,7 @@ END
         my %Menus = %{ $ConfigObject->Get('ITSMConfigItem::Frontend::PreMenuModule') };
 
         MENU:
-        for my $MenuKey ( sort keys %Menus ) {
+        for my $MenuKey ( sort( keys( %Menus ) ) ) {
 
             # load module
             if ( $Kernel::OM->Get('Kernel::System::Main')->Require( $Menus{$MenuKey}->{Module} ) ) {
@@ -511,7 +504,7 @@ END
                 my $ItemALLChecked = '';
                 my $SelectedAll    = '';
 
-                if ( !scalar @UnselectedItems ) {
+                if ( !scalar( @UnselectedItems ) ) {
                     $ItemALLChecked = ' checked="checked"';
                 }
 
@@ -608,7 +601,7 @@ END
                     else {
                         my $ItemChecked = '';
 
-                        if ( grep( {/^$ConfigItemID$/} @SelectedItems ) ) {
+                        if ( $SelectedItemsHash{ $ConfigItemID } ) {
                             $ItemChecked = ' checked="checked"';
                         }
 
@@ -621,7 +614,8 @@ END
                                 ItemChecked  => $ItemChecked,
                             }
                         );
-                        if ( !$BulkActivate
+                        if (
+                            !$BulkActivate
                             && $ItemChecked
                         ) {
                             $BulkActivate = 1;

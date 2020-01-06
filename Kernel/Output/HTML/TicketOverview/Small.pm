@@ -473,17 +473,9 @@ sub Run {
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     # get needed un-/selected tickets for bulk feature
-    my @SelectedItems     = split(',', $Param{SelectedItems});
-    my @UnselectedItems   = split(',', $Param{UnselectedItems});
-
-    for my $TicketID ( @{$Param{OriginalTicketIDs}} ) {
-        if (
-            !grep({/^$TicketID$/} @UnselectedItems)
-            && !grep({/^$TicketID$/} @SelectedItems)
-        ) {
-            push(@UnselectedItems, $TicketID);
-        }
-    }
+    my @SelectedItems     = @{ $Param{SelectedItems} };
+    my %SelectedItemsHash = map( { $_ => 1 } @SelectedItems );
+    my @UnselectedItems   = @{ $Param{UnselectedItems} };
 
     # check if bulk feature is enabled
     my $BulkFeature = 0;
@@ -760,7 +752,7 @@ sub Run {
             my $ItemALLChecked = '';
             my $SelectedAll      = '';
 
-            if ( !scalar @UnselectedItems ) {
+            if ( !scalar( @UnselectedItems ) ) {
                 $ItemALLChecked = ' checked="checked"';
             }
 
@@ -1535,7 +1527,7 @@ sub Run {
         if ($BulkFeature) {
             my $ItemChecked = '';
 
-            if ( grep( {/^$Article{TicketID}$/} @SelectedItems ) ) {
+            if ( $SelectedItemsHash{ $Article{TicketID} } ) {
                 $ItemChecked = ' checked="checked"';
             }
 
@@ -1551,7 +1543,8 @@ sub Run {
                 },
             );
 
-            if ( !$BulkActivate
+            if (
+                !$BulkActivate
                 && $ItemChecked
             ) {
                 $BulkActivate = 1;
