@@ -1732,7 +1732,7 @@ sub _InstallHandling {
                 Name => 'Intro',
                 Data => {
                     %Param,
-                    %Data,
+                    %MessageData,
                     Subaction => 'Install',
                     Type      => 'IntroInstallPost',
                     Name      => $Structure{Name}->{Content},
@@ -1832,7 +1832,7 @@ sub _UpgradeHandling {
                 Name => 'Intro',
                 Data => {
                     %Param,
-                    %Data,
+                    %MessageData,
                     Subaction => '',
                     Type      => 'IntroUpgradePost',
                     Name      => $Structure{Name}->{Content},
