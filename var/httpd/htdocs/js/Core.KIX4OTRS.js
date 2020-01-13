@@ -225,7 +225,7 @@ Core.KIX4OTRS = (function(TargetNS) {
                 if (!Question)
                     Question = Core.Config.Get('LoadDraftMsg');
 
-                Core.KIX4OTRS.Dialog.ShowQuestion(Core.Config.Get('Question'), Question, Core.Config.Get('Yes'), function() {
+                Core.KIX4OTRS.Dialog.ShowQuestion(Core.Config.Get('Question'), Question, Core.Config.Get('Load'), function() {
                     // Yes - load form content from WebUpload Cache
                     Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
                     $.each(Content, function() {
