@@ -473,7 +473,7 @@ sub Run {
                         Value         => $QuotedConstrictionValue,
                         SearchPrefix  => '',
                         SearchSuffix  => '',
-                        CaseSensitive => $DynamicFieldConfig->{Config}->{CaseSensitive},
+                        CaseSensitive => '1',
                     );
                     if ( $QueryConstrictionCondition ) {
                         if ( $QueryCondition ) {

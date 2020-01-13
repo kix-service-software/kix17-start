@@ -885,7 +885,7 @@ sub _DefaultValueSearch {
                         Value         => $QuotedConstrictionValue,
                         SearchPrefix  => '',
                         SearchSuffix  => '',
-                        CaseSensitive => $CaseSensitive,
+                        CaseSensitive => 1,
                     );
 
                     $QueryCondition .= ' AND ' . $QueryConstrictionCondition;
