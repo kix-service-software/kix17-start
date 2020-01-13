@@ -1404,30 +1404,31 @@ sub Run {
                 . ';TakeLastSearch=1;Subaction=Search'
                 . ';';
             $Output .= $LayoutObject->TicketListShow(
-                TicketIDs => \@ViewableTicketIDs,
-                Total     => scalar @ViewableTicketIDs,
+                TicketIDs         => \@ViewableTicketIDs,
+                OriginalTicketIDs => \@ViewableTicketIDs,
+                Total             => scalar @ViewableTicketIDs,
 
-                View => $Self->{View},
+                View              => $Self->{View},
 
-                Env        => $Self,
-                LinkPage   => $LinkPage,
-                LinkSort   => $LinkSort,
-                LinkFilter => $LinkFilter,
-                LinkBack   => $LinkBack,
-                Profile    => $Self->{Profile},
+                Env               => $Self,
+                LinkPage          => $LinkPage,
+                LinkSort          => $LinkSort,
+                LinkFilter        => $LinkFilter,
+                LinkBack          => $LinkBack,
+                Profile           => $Self->{Profile},
 
-                TitleName => Translatable('Search Results'),
-                Bulk      => 1,
-                Limit     => $Self->{SearchLimit},
+                TitleName         => Translatable('Search Results'),
+                Bulk              => 1,
+                Limit             => $Self->{SearchLimit},
 
-                Filter => $Self->{Filter},
+                Filter            => $Self->{Filter},
 
-                OrderBy      => $Self->{OrderBy},
-                SortBy       => $Self->{SortBy},
-                RequestedURL => 'Action=' . $Self->{Action} . ';' . $LinkPage,
+                OrderBy           => $Self->{OrderBy},
+                SortBy            => $Self->{SortBy},
+                RequestedURL      => 'Action=' . $Self->{Action} . ';' . $LinkPage,
 
                 # do not print the result earlier, but return complete content
-                Output => 1,
+                Output            => 1,
             );
 
             # build footer
