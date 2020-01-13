@@ -14,7 +14,7 @@ use vars (qw($Self));
 
 # get needed objects
 my $TicketObject       = $Kernel::OM->GetNew('Kernel::System::Ticket');
-my $UnitTestDataObject = $Kernel::OM->GetNew('Kernel::System::UnitTest:Data');
+my $UnitTestDataObject = $Kernel::OM->GetNew('Kernel::System::UnitTest::Data');
 
 # define needed variables
 my %TestData = (
@@ -25,12 +25,11 @@ my %TestData = (
         'Priority'      => '3 normal',
         'State'         => 'new',
         'Type'          => 'Incident',
-        'Service'       => 'Test Service',
-        'SLA'           => 'Test SLA',
         'CustomerID'    => 'TestCustomerCompany',
         'CustomerUser'  => 'test@cape-it.de',
         'OwnerID'       => 1,
         'ResponsibleID' => 1,
+        'ArchiveFlag'   => 'n',
         'UserID'        => 1,
     },
 );
@@ -43,43 +42,28 @@ $Self->TestCaseStart(
     Feature     => 'Ticket',
     Story       => 'Create Ticket',
     Description => <<"END",
-Create a new ticket with valid values of all available default ticket attributes:
+Create a new ticket with valid values of all mandatory default ticket attributes:
 * Ticket type
 * Ticket status
 * Ticket queue
 * Ticket priority
 * Ticket customer contact
 * Ticket customer company
-* Ticket service
-* Ticket service level agreement
 * Ticket owner
 * Ticket responsible
 * Ticket title
+* ticket archive flag
 END
 );
 
 # init test steps
 $Self->{'TestCase'}->{'PlanSteps'} = {
-    '0001' => 'Prepare Test Data',
-    '0002' => 'Ticket Create',
-    '0003' => 'Ticket Check',
+    '0001' => 'Ticket Create',
+    '0002' => 'Ticket Check',
 };
 
 # begin transaction on database
-$Self->Database_BeginWork();
-
-# TEST STEP
-# create test data
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0001'} );
-$StartTime = $Self->GetMilliTimeStamp();
-# prepare test data
-$Success = $Self->True(
-    TestName   => 'Prepare Test Data',
-    TestValue  => $UnitTestDataObject->Ticket_Prepare( %TestData ),
-    StartTime  => $StartTime,
-);
-return 1 if ( !$Success );
-# EO TEST STEP
+$UnitTestDataObject->Database_BeginWork();
 
 # get test data for ticket
 my %TestTicketCreateData = %{ $TestData{'Ticket'} };
@@ -87,7 +71,7 @@ my %TestTicketCheckData  = $UnitTestDataObject->Ticket_CheckPrepare( %{ $TestDat
 
 # TEST STEP
 # create test ticket
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0002'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0001'} );
 $StartTime = $Self->GetMilliTimeStamp();
 my $TicketID = $TicketObject->TicketCreate( %TestTicketCreateData );
 $Success = $Self->IsNot(
@@ -101,25 +85,28 @@ return 1 if ( !$Success );
 
 # TEST STEP
 # get and compare test ticket
-delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0003'} );
+delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0002'} );
 $StartTime = $Self->GetMilliTimeStamp();
 my %Ticket = $TicketObject->TicketGet(
     TicketID      => $TicketID,
-    DynamicFields => 1,
     UserID        => 1,
     Silent        => 1,
 );
+# clean up dynamic values
+for my $Key ( qw(TicketID TicketNumber Age Created CreateTimeUnix Changed EscalationResponseTime EscalationSolutionTime EscalationTime EscalationUpdateTime RealTillTimeNotUsed UntilTime UnlockTimeout) ) {
+    delete( $Ticket{$Key} );
+}
 $Success = $Self->IsDeeply(
-    TestName   => 'Ticket Check',
-    CheckValue => \%TestTicketCheckData,
-    TestValue  => \%Ticket,
-    StartTime  => $StartTime,
+    TestName  => 'Ticket Check',
+    CheckData => \%TestTicketCheckData,
+    TestData  => \%Ticket,
+    StartTime => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
 
 # rollback transaction on database
-$Self->Database_Rollback();
+$UnitTestDataObject->Database_Rollback();
 
 1;
 
