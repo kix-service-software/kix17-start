@@ -59,7 +59,7 @@ sub Run {
 
     # check permissions
     my $Access = $TicketObject->TicketPermission(
-        Type     => 'move',
+        Type     => 'rw',
         TicketID => $Self->{TicketID},
         UserID   => $Self->{UserID}
     );
