@@ -12,10 +12,16 @@ use strict;
 use warnings;
 
 our @ObjectDependencies = (
-    'Kernel::Config',
-    'Kernel::System::JSON',
-    'Kernel::System::Log',
-    'Kernel::System::Main',
+    'Kernel::System::Cache',
+    'Kernel::System::DB',
+    'Kernel::System::Lock',
+    'Kernel::System::Priority',
+    'Kernel::System::Queue',
+    'Kernel::System::Service',
+    'Kernel::System::SLA',
+    'Kernel::System::State',
+    'Kernel::System::Type',
+    'Kernel::System::User',
 );
 
 =head1 NAME
@@ -125,20 +131,6 @@ sub Data_Cleanup {
     return 1;
 }
 
-=item Ticket_Prepare()
-
-    $UnitTestDataObject->Ticket_Prepare( %TicketData )
-
-Prepare ticket data for ticket creation
-
-=cut
-sub Ticket_Prepare {
-    my ( $Self, %Param ) = @_;
-
-    ## TODO
-    return;
-}
-
 =item Ticket_CheckPrepare()
 
     $UnitTestDataObject->Ticket_CheckPrepare( %TicketData )
@@ -149,9 +141,187 @@ Prepare ticket data for ticket data check
 sub Ticket_CheckPrepare {
     my ( $Self, %Param ) = @_;
 
-    ## TODO
+    # init return data
+    my %Data = ();
 
-    return %Param;
+    # copy some values
+    for my $Key ( qw(Title CustomerID ArchiveFlag) ) {
+        if ( defined( $Param{ $Key } ) ) {
+            $Data{ $Key } = $Param{ $Key };
+        }
+    }
+
+    # get CustomerUserID  from CustomerUser
+    if ( $Param{'CustomerUser'} ) {
+        $Data{'CustomerUserID'} = $Param{'CustomerUser'};
+    }
+
+    # get state id from state
+    if ( $Param{'State'} ) {
+        $Data{'State'}   = $Param{'State'};
+        $Data{'StateID'} = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
+            State => $Param{'State'},
+        );
+    }
+    # get state from state id
+    elsif ( $Param{'StateID'} ) {
+        $Data{'StateID'} = $Param{'StateID'};
+        $Data{'State'}   = $Kernel::OM->Get('Kernel::System::State')->StateLookup(
+            StateID => $Param{'StateID'},
+        );
+    }
+
+    # get state type from state id
+    if ( $Data{'StateID'} ) {
+        my %State = $Kernel::OM->Get('Kernel::System::State')->StateGet(
+            ID => $Data{'StateID'},
+        );
+        $Data{'StateType'} = $State{'TypeName'};
+    }
+
+    # get priority id from priority
+    if ( $Param{'Priority'} ) {
+        $Data{'Priority'}   = $Param{'Priority'};
+        $Data{'PriorityID'} = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
+            Priority => $Param{'Priority'},
+        );
+    }
+    # get priority from priority id
+    elsif ( $Param{'PriorityID'} ) {
+        $Data{'PriorityID'} = $Param{'PriorityID'};
+        $Data{'Priority'}   = $Kernel::OM->Get('Kernel::System::Priority')->PriorityLookup(
+            PriorityID => $Param{'PriorityID'},
+        );
+    }
+
+    # get lock id from lock
+    if ( $Param{'Lock'} ) {
+        $Data{'Lock'}   = $Param{'Lock'};
+        $Data{'LockID'} = $Kernel::OM->Get('Kernel::System::Lock')->LockLookup(
+            Lock => $Param{'Lock'},
+        );
+    }
+    # get lock from lock id
+    elsif ( $Param{'LockID'} ) {
+        $Data{'LockID'} = $Param{'LockID'};
+        $Data{'Lock'}   = $Kernel::OM->Get('Kernel::System::Lock')->LockLookup(
+            LockID => $Param{'LockID'},
+        );
+    }
+
+    # get queue id from queue
+    if ( $Param{'Queue'} ) {
+        $Data{'Queue'}   = $Param{'Queue'};
+        $Data{'QueueID'} = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+            Queue => $Param{'Queue'},
+        );
+    }
+    # get queue from queue id
+    elsif ( $Param{'QueueID'} ) {
+        $Data{'QueueID'} = $Param{'QueueID'};
+        $Data{'Queue'}   = $Kernel::OM->Get('Kernel::System::Queue')->QueueLookup(
+            QueueID => $Param{'QueueID'},
+        );
+    }
+
+    # get group id from queue id
+    if ( $Data{'QueueID'} ) {
+        my %Queue = $Kernel::OM->Get('Kernel::System::Queue')->QueueGet(
+            ID => $Data{'QueueID'},
+        );
+        $Data{'GroupID'} = $Queue{'GroupID'};
+    }
+
+    # get owner id from owner
+    if ( $Param{'Owner'} ) {
+        $Data{'Owner'}   = $Param{'Owner'};
+        $Data{'OwnerID'} = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
+            UserLogin => $Param{'Owner'},
+        );
+    }
+    # get owner from owner id
+    elsif ( $Param{'OwnerID'} ) {
+        $Data{'OwnerID'} = $Param{'OwnerID'};
+        $Data{'Owner'}   = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
+            UserID => $Param{'OwnerID'},
+        );
+    }
+
+    # get responsible id from responsible
+    if ( $Param{'Responsible'} ) {
+        $Data{'Responsible'}   = $Param{'Responsible'};
+        $Data{'ResponsibleID'} = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
+            UserLogin => $Param{'Responsible'},
+        );
+    }
+    # get responsible from responsible id
+    elsif ( $Param{'ResponsibleID'} ) {
+        $Data{'ResponsibleID'} = $Param{'ResponsibleID'};
+        $Data{'Responsible'}   = $Kernel::OM->Get('Kernel::System::User')->UserLookup(
+            UserID => $Param{'ResponsibleID'},
+        );
+    }
+
+    # get type id from type
+    if ( $Param{'Type'} ) {
+        $Data{'Type'}   = $Param{'Type'};
+        $Data{'TypeID'} = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
+            Type => $Param{'Type'},
+        );
+    }
+    # get type from type id
+    elsif ( $Param{'TypeID'} ) {
+        $Data{'TypeID'} = $Param{'TypeID'};
+        $Data{'Type'}   = $Kernel::OM->Get('Kernel::System::Type')->TypeLookup(
+            TypeID => $Param{'TypeID'},
+        );
+    }
+
+    # get service id from service
+    if ( $Param{'Service'} ) {
+        $Data{'Service'}   = $Param{'Service'};
+        $Data{'ServiceID'} = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
+            Name => $Param{'Service'},
+        );
+    }
+    # get service from service id
+    elsif ( $Param{'ServiceID'} ) {
+        $Data{'ServiceID'} = $Param{'ServiceID'};
+        $Data{'Service'}   = $Kernel::OM->Get('Kernel::System::Service')->ServiceLookup(
+            ServiceID => $Param{'ServiceID'},
+        );
+    }
+    # set empty service id
+    else {
+        $Data{'ServiceID'} = '';
+    }
+
+    # get sla id from sla
+    if ( $Param{'SLA'} ) {
+        $Data{'SLA'}   = $Param{'SLA'};
+        $Data{'SLAID'} = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
+            Name => $Param{'SLA'},
+        );
+    }
+    # get sla from sla id
+    elsif ( $Param{'SLAID'} ) {
+        $Data{'SLAID'} = $Param{'SLAID'};
+        $Data{'SLA'}   = $Kernel::OM->Get('Kernel::System::SLA')->SLALookup(
+            SLAID => $Param{'SLAID'},
+        );
+    }
+    # set empty sla id
+    else {
+        $Data{'SLAID'} = '';
+    }
+
+    # get ChangeBy and CreateBy from user id
+    if ( $Param{'UserID'} ) {
+        $Data{'ChangeBy'} = $Param{'UserID'};
+        $Data{'CreateBy'} = $Param{'UserID'};
+    }
+
+    return %Data;
 }
 
 sub DESTROY {
