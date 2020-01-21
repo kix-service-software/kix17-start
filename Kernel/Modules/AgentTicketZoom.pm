@@ -700,7 +700,10 @@ sub MaskAgentZoom {
         }
     }
 
-    if ( $ConfigObject->Get('Frontend::Module')->{AgentTicketQuickState} ) {
+    if (
+        $ConfigObject->Get('Frontend::Module')->{AgentTicketQuickState}
+        && ( $AclActionLookup{AgentTicketQuickState} )
+    ) {
         my $QuickStateConfig = $ConfigObject->Get('Ticket::Frontend::AdminQuickState');
         my $Access           = $TicketObject->TicketPermission(
             Type     => $QuickStateConfig->{Permissions} || 'rw',
@@ -712,7 +715,9 @@ sub MaskAgentZoom {
         if ( $Access ) {
             my $QuickStateObject = $Kernel::OM->Get('Kernel::System::QuickState');
             my %QuickStates      = $QuickStateObject->QuickStateList(
-                Valid => 1,
+                TicketID => $Ticket{TicketID},
+                UserID   => $Self->{UserID},
+                Valid    => 1,
             );
 
             if ( %QuickStates ) {

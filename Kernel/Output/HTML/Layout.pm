@@ -6354,6 +6354,15 @@ sub _BuildCustomFooter{
 
             my ($Prio, $Title) = split('::', $Entry);
 
+            # get target
+            my $Target;
+            if (
+                ref( $CustomFooter->{Target} ) eq 'HASH'
+                && $CustomFooter->{Target}->{$Title}
+            ) {
+                $Target = $CustomFooter->{Target}->{$Title};
+            }
+
             if ( $CustomFooter->{URL}->{$Title} ) {
                 my $URL = $TemplateGeneratorObject->ReplacePlaceHolder(
                     Text     => $CustomFooter->{URL}->{$Title},
@@ -6372,8 +6381,9 @@ sub _BuildCustomFooter{
                 $Self->Block(
                     Name => 'CustomFooterEntry',
                     Data => {
-                        Title => $Title,
-                        URL   => $URL
+                        Title  => $Title,
+                        URL    => $URL,
+                        Target => $Target,
                     }
                 );
             }

@@ -13621,5 +13621,15 @@ via the Preferences button after logging in.
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="CustomFooter###Target" Required="0" Valid="0">
+        <Description Translatable="1">Defines the target-attribute for each link title.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::CustomFooter</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Dummy">_blank</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <!-- EO CustomFooter -->
 </otrs_config>

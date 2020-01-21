@@ -4481,6 +4481,8 @@ sub Data {
         = 'Definiert eine Liste von Links, welche im Footer zusätzlich hinzugefügt werden können. Die Links können den Frontends separat zugewiesen werden. (Schlüssel: <Priorität>::<Linktitel>; Wert: 0 => deaktiviert, 1 => Überall anzeigen, 2 => nur Agentenfrontend, 3 => nur Kundenfrontend)';
     $Lang->{'Defines the associated URL for each link title. It is possible to use KIX placeholder.'}
         = 'Definiert zu den jeweiligen Linktitel die dazugehörige URL. Es ist möglich KIX-Platzhalter zu verwenden.';
+    $Lang->{'Defines the target-attribute for each link title.'}
+        = 'Definiert zu den jeweiligen Linktitel das zu verwendende target-Attribut.';
 
     # GEOCOORDINATES
     $Lang->{'Decimal Degree'} = 'Dezimalgrad';
