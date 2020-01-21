@@ -330,7 +330,7 @@ X-KIX-Login: [% Env("Baselink") %]
                 <ul>
 [% RenderBlockStart("CustomFooterEntry") %]
                     <li>
-                        <a href="[% Data.URL %]" title="[% Data.Title %]">
+                        <a href="[% Data.URL %]"[% IF Data.Target %] target="[% Data.Target | html %]"[% END %] title="[% Data.Title %]">
                             [% Data.Title %]
                         </a>
                     </li>
