@@ -39,6 +39,7 @@ Core.App.Ready(function() {
         UserLanguage: '[% Env("UserLanguage") | html %]',
         CheckEmailAddresses: parseInt('[% Config("CheckEmailAddresses") %]', 10),
         AnimationEnabled: parseInt('[% Config("Frontend::AnimationEnabled") %]', 10),
+        OpenMainMenuOnHover: parseInt('[% Config("CustomerOpenMainMenuOnHover") %]', 10),
 [% RenderBlockStart("AutoCompleteConfig") %]
         Autocomplete: Core.JSON.Parse('[% Data.AutocompleteConfig %]'),
 [% RenderBlockEnd("AutoCompleteConfig") %]

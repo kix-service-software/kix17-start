@@ -5012,7 +5012,7 @@
     <ConfigItem Name="CustomerResponsiveLogo" Required="0" Valid="1">
         <Description Translatable="1">The logo shown in the header of the agent interface for the responsive mode. See "CustomerLogo" for further description.</Description>
         <Group>Framework</Group>
-        <SubGroup>Frontend::Agent</SubGroup>
+        <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="URL">skins/Customer/default/img/KIX17_Responsive_Logo.png</Item>
@@ -5021,6 +5021,17 @@
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">60px</Item>
             </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerOpenMainMenuOnHover" Required="1" Valid="1">
+        <Description Translatable="1">If enabled, the first level of the main menu opens on mouse hover (instead of click only).</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Customer</SubGroup>
+        <Setting>
+            <Option SelectedID="0">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="AgentLogo" Required="0" Valid="1">
