@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.10.0-RC4 (2020/01/21)
+ * (2020/01/20) - CR: KIX17-563 (added target-attribute configuration for CustomFooter) (dbormann)
+ * (2020/01/16) - CR: KIX17-564 (implemented acl checks for quick state action) (fjacquemin)
+ * (2020/01/13) - Bugfix: T2020010990000285 (implemented configuration to open menu on hover for customer frontend) (millinger)
+
 # 17.10.0-RC3 (2020/01/13)
  * (2020/01/13) - Bugfix: T2020011090000282 (user gets permissions from invalid roles) (millinger)
  * (2020/01/13) - Bugfix: T2019102390000618 (changed needed permission for AgentTicketMove to rw) (millinger)
