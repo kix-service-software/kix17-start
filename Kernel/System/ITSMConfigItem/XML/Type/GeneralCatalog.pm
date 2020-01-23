@@ -193,6 +193,7 @@ sub ImportSearchValuePrepare {
     my ( $Self, %Param ) = @_;
 
     return if !defined $Param{Value};
+    return '' if !$Param{Value};
 
     # get item list
     my $ItemList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
@@ -230,6 +231,7 @@ sub ImportValuePrepare {
     my ( $Self, %Param ) = @_;
 
     return if !defined $Param{Value};
+    return '' if !$Param{Value};
 
     # get item list
     my $ItemList = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
