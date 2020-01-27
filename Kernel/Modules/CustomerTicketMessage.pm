@@ -162,10 +162,8 @@ sub Run {
     # handle for quick ticket templates
     if (
         $Self->{DefaultSet}
-        && $Self->{Subaction} ne 'StoreNew'
-        && ( !$Self->{Subaction} || $Self->{Subaction} ne 'AJAXUpdate' )
+        && !$Self->{Subaction}
     ) {
-
         my %TemplateData = $Self->TicketTemplateReplace(
             IsUpload   => 0,
             Data       => \%GetParam,
@@ -178,11 +176,6 @@ sub Run {
                 $TemplateData{$1} = $TemplateData{$Key};
                 delete $GetParam{$Key};
             }
-        }
-
-        my %Ticket;
-        if ( $Self->{TicketID} ) {
-            %Ticket = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
         }
     }
 
@@ -199,16 +192,44 @@ sub Run {
             $GetParam{Dest} = $GetParam{DefaultQueueSelected};
         }
         my ( $QueueIDParam, $QueueParam ) = split( /\|\|/, $GetParam{Dest} );
-        if ( !$GetParam{DefaultQueueSelected} ) {
-            my $CustomerPanelOwnSelection = $ConfigObject->Get('CustomerPanelOwnSelection');
-            if ( ref( $CustomerPanelOwnSelection ) eq 'HASH' ) {
-                my %ReverseSelection = reverse( %{ $CustomerPanelOwnSelection } );
-                $QueueParam = $ReverseSelection{ $QueueParam } || '';
+        my $CustomerPanelOwnSelection     = $ConfigObject->Get('CustomerPanelOwnSelection');
+        # default queue is selected by default set, or CustomerPanelOwnSelection is nor used
+        if (
+            $GetParam{DefaultQueueSelected}
+            || ref( $CustomerPanelOwnSelection ) ne 'HASH'
+        ) {
+            # get queue id
+            my $QueueIDLookup = $QueueObject->QueueLookup( Queue => $QueueParam );
+
+            # check if queue id match
+            if (
+                $QueueIDLookup
+                && $QueueIDLookup eq $QueueIDParam
+            ) {
+                $ACLCompatGetParam{QueueID} = $QueueIDLookup;
             }
         }
-        my $QueueIDLookup = $QueueObject->QueueLookup( Queue => $QueueParam );
-        if ( $QueueIDLookup && $QueueIDLookup eq $QueueIDParam ) {
-            $ACLCompatGetParam{QueueID} = $QueueIDLookup;
+        # CustomerPanelOwnSelection is used
+        elsif ( ref( $CustomerPanelOwnSelection ) eq 'HASH' ) {
+            CUSTOMQUEUE:
+            for my $QueueName ( keys( %{ $CustomerPanelOwnSelection } ) ) {
+                # check for relevant entry
+                next CUSTOMQUEUE if (
+                    !$CustomerPanelOwnSelection->{$QueueName}
+                    || $CustomerPanelOwnSelection->{$QueueName} ne $QueueParam
+                );
+                # get queue id
+                my $QueueIDLookup = $QueueObject->QueueLookup( Queue => $QueueName );
+
+                # check if queue id match
+                if (
+                    $QueueIDLookup
+                    && $QueueIDLookup eq $QueueIDParam
+                ) {
+                    $ACLCompatGetParam{QueueID} = $QueueIDLookup;
+                    last CUSTOMQUEUE;
+                }
+            }
         }
     }
 
