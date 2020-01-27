@@ -5914,17 +5914,13 @@ sub _GetResponsibles {
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    # Get available permissions and set permission group type accordingly.
-    my $ConfigPermissions = $ConfigObject->Get('System::Permission');
-    my $PermissionGroupType = ( grep { $_ eq 'responsible' } @{$ConfigPermissions} ) ? 'responsible' : 'rw';
-
     # if we are updating a ticket show the full list of possible responsibles
     if ( $Param{TicketID} ) {
         if ( $Param{QueueID} && !$Param{AllUsers} ) {
             my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
-                Type    => $PermissionGroupType,
+                Type    => 'rw',
             );
             for my $UserID ( sort keys %MemberList ) {
                 $ShownUsers{$UserID} = $AllGroupsMembers{$UserID};
@@ -5969,7 +5965,7 @@ sub _GetResponsibles {
             my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
-                Type    => $PermissionGroupType,
+                Type    => 'rw',
             );
             for my $KeyMember ( sort keys %MemberList ) {
                 if ( $AllGroupsMembers{$KeyMember} ) {
