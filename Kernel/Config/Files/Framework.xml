@@ -11210,20 +11210,20 @@ via the Preferences button after logging in.
             <Hash>
                 <Item Key="InternalName">blue</Item>
                 <Item Key="VisibleName" Translatable="1">Default (blue)</Item>
-                <Item Key="Description" Translatable="1">"Blue" skin which tries to save screen space for power users.</Item>
+                <Item Key="Description" Translatable="1">This skin changes the color of the standard skin to "Blue" for the agent interface.</Item>
                 <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Loader::Agent::Skin###002-dark" Required="0" Valid="1">
-        <Description Translatable="1">Default skin for the agent interface (blue version).</Description>
+    <ConfigItem Name="Loader::Agent::Skin###002-dark" Required="0" Valid="0">
+        <Description Translatable="1">Default skin for the agent interface (dark version).</Description>
         <Group>Framework</Group>
         <SubGroup>Frontend::Agent</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="InternalName">dark</Item>
                 <Item Key="VisibleName" Translatable="1">Dark Mode (Beta)</Item>
-                <Item Key="Description" Translatable="1">"Dark" skin which tries to save screen space for power users.</Item>
+                <Item Key="Description" Translatable="1">This skin changes the color of the standard skin to "Dark" for the agent interface.</Item>
                 <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
@@ -11268,7 +11268,7 @@ via the Preferences button after logging in.
             <Hash>
                 <Item Key="InternalName">blue</Item>
                 <Item Key="VisibleName" Translatable="1">Default (blue)</Item>
-                <Item Key="Description" Translatable="1">"Blue" skin which tries to save screen space for power users.</Item>
+                <Item Key="Description" Translatable="1">This skin changes the color of the standard skin to "Blue" for the customer interface.</Item>
                 <Item Key="HomePage">www.kixdesk.com</Item>
             </Hash>
         </Setting>
