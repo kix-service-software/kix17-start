@@ -46,6 +46,25 @@ sub Run {
     # check if ticket id is given
     return 1 if !$Param{TicketID};
 
+    # check config for ticket types to exclude
+    if ( ref( $Param{Config}->{ExcludeTypes} ) eq 'HASH' ) {
+        # get ticket data
+        my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 0,
+            Silent        => 1,
+        );
+
+        # check for excluded ticket type
+        if (
+            %Ticket
+            && $Ticket{Type}
+            && $Param{Config}->{ExcludeTypes}->{ $Ticket{Type} }
+        ) {
+            return 1;
+        }
+    }
+
     # get linked tickets for ticket
     my $Links = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkList(
         Object  => 'Ticket',
