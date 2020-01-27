@@ -4499,8 +4499,12 @@ sub Data {
     # NEW SKINS
     $Lang->{'Default (green)'} = 'Standard (Grün)';
     $Lang->{'Default (blue)'}  = 'Standard (Blau)';
-    $Lang->{'"Blue" skin which tries to save screen space for power users.'} =
-        '"Standard-Blau"-Skin, der weniger Bildschirmfläche zum Darstellen von Informationen benötigt.';
+    $Lang->{'This skin changes the color of the standard skin to "Blue" for the customer interface.'} =
+        'Dieser Skin ändert die Farbe des Standard Skin in "Blau" für das Kundeninterface.';
+    $Lang->{'This skin changes the color of the standard skin to "Blue" for the agent interface.'} =
+        'Dieser Skin ändert die Farbe des Standard Skin in "Blau" für das Agenteninterface.';
+    $Lang->{'This skin changes the color of the standard skin to "Dark" for the agent interface.'} =
+        'Dieser Skin ändert die Farbe des Standard Skin in "Dark" für das Agenteninterface.';
     $Lang->{'Default skin for the agent interface (blue version).'} =
          'Standard-Skin für die Agentenoberfläche (Blau)';
     $Lang->{'Default skin for the customer interface (blue version).'} =
