@@ -10340,7 +10340,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Acl::Module###1-Ticket::Acl::Module" Required="0" Valid="0">
-        <Description Translatable="1">ACL module that allows closing parent tickets only if all its children are already closed ("State" shows which states are not available for the parent ticket until all child tickets are closed).</Description>
+        <Description Translatable="1">ACL module that allows closing parent tickets only if all its children are already closed. "State" lists ticket states which are not available for the parent ticket until all child tickets are closed. "ExcludeTypes" lists ticket types that should be ignored by the module: 0 = Do not ignore, 1 = Ignore.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::TicketACL</SubGroup>
         <Setting>
@@ -10351,6 +10351,11 @@
                         <Item Translatable="1">closed successful</Item>
                         <Item Translatable="1">closed unsuccessful</Item>
                     </Array>
+                </Item>
+                <Item Key="ExcludeTypes">
+                    <Hash>
+                        <Item Key=""></Item>
+                    </Hash>
                 </Item>
             </Hash>
         </Setting>
