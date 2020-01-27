@@ -1241,7 +1241,7 @@ sub _CheckUpdatePermissions {
     # check queue permissions
     if ( $Ticket->{Queue} || $Ticket->{QueueID} ) {
         my $Access = $TicketObject->TicketPermission(
-            Type     => 'move',
+            Type     => 'rw',
             TicketID => $TicketID,
             UserID   => $Param{UserID},
         );
@@ -1271,7 +1271,7 @@ sub _CheckUpdatePermissions {
     # check responsible permissions
     if ( $Ticket->{Responsible} || $Ticket->{ResponsibleID} ) {
         my $Access = $TicketObject->TicketPermission(
-            Type     => 'responsible',
+            Type     => 'rw',
             TicketID => $TicketID,
             UserID   => $Param{UserID},
         );
@@ -1325,7 +1325,7 @@ sub _CheckUpdatePermissions {
 
         if ( $StateData{TypeName} =~ /^close/i ) {
             $Access = $TicketObject->TicketPermission(
-                Type     => 'close',
+                Type     => 'rw',
                 TicketID => $TicketID,
                 UserID   => $Param{UserID},
             );
@@ -1334,7 +1334,7 @@ sub _CheckUpdatePermissions {
         # set pending time
         elsif ( $StateData{TypeName} =~ /^pending/i ) {
             $Access = $TicketObject->TicketPermission(
-                Type     => 'close',
+                Type     => 'rw',
                 TicketID => $TicketID,
                 UserID   => $Param{UserID},
             );

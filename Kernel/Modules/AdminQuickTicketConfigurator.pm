@@ -1074,7 +1074,7 @@ sub _GetResponsibles {
         my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{QueueID} );
         my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
             GroupID => $GID,
-            Type    => 'responsible',
+            Type    => 'rw',
         );
         for my $MemberKey ( sort keys %MemberList ) {
             if ( $AllGroupsMembers{$MemberKey} ) {

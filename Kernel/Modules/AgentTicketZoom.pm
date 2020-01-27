@@ -678,13 +678,24 @@ sub MaskAgentZoom {
         && ( $AclActionLookup{AgentTicketMove} )
     ) {
         my $Access = $TicketObject->TicketPermission(
-            Type     => 'move',
+            Type     => 'rw',
             TicketID => $Ticket{TicketID},
             UserID   => $Self->{UserID},
             LogNo    => 1,
         );
-        $Param{TicketID} = $Ticket{TicketID};
-        if ($Access) {
+        my $MoveConfig = $ConfigObject->Get("Ticket::Frontend::AgentTicketMove");
+        if (
+            $Access
+            && (
+                !$MoveConfig->{RequiredLock}
+                || !$TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} )
+                || $TicketObject->OwnerCheck(
+                    TicketID => $Ticket{TicketID},
+                    OwnerID  => $Self->{UserID},
+                )
+            )
+        ) {
+            $Param{TicketID} = $Ticket{TicketID};
             if ( $ConfigObject->Get('Ticket::Frontend::MoveType') =~ /^form$/i ) {
                 $LayoutObject->Block(
                     Name => 'MoveLink',

@@ -1117,12 +1117,23 @@ sub _Show {
         && ( !defined $AclAction{AgentTicketMove} || $AclAction{AgentTicketMove} )
     ) {
         my $HasAccess = $TicketObject->TicketPermission(
-            Type     => 'move',
+            Type     => 'rw',
             TicketID => $Param{TicketID},
             UserID   => $Self->{UserID},
             LogNo    => 1,
         );
-        if ($HasAccess) {
+        my $MoveConfig = $ConfigObject->Get("Ticket::Frontend::AgentTicketMove");
+        if (
+            $HasAccess
+            && (
+                !$MoveConfig->{RequiredLock}
+                || !$TicketObject->TicketLockGet( TicketID => $Param{TicketID} )
+                || $TicketObject->OwnerCheck(
+                    TicketID => $Param{TicketID},
+                    OwnerID  => $Self->{UserID},
+                )
+            )
+        ) {
             $LayoutObject->Block(
                 Name => 'Move',
                 Data => { %Param, %AclAction },
