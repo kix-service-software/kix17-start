@@ -17208,17 +17208,6 @@ Here you may define a default text for the forward function. You find this confi
             <String Regex="">Kernel::System::Ticket::TicketExtensionsKIX4OTRS</String>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Ticket::ACL-PossibleActionSubsumption" Required="1" Valid="1">
-        <Description Translatable="1">Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Core::Ticket</SubGroup>
-        <Setting>
-            <Option SelectedID="1">
-                <Item Key="0">No</Item>
-                <Item Key="1">Yes</Item>
-            </Option>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Ticket::ACL-PossiblePropertiesSubsumption" Required="1" Valid="1">
         <Description Translatable="1">Defines whether results of PossibleNot for tickets of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).</Description>
         <Group>Ticket</Group>
