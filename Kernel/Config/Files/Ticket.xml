@@ -10740,6 +10740,7 @@
                 <Item>X-KIX-Queue</Item>
                 <Item>X-KIX-Lock</Item>
                 <Item>X-KIX-Ignore</Item>
+                <Item>X-KIX-StrictFollowUpIgnore</Item>
                 <Item>X-KIX-State</Item>
                 <Item>X-KIX-State-PendingTime</Item>
                 <Item>X-KIX-Type</Item>
@@ -10766,7 +10767,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PostMaster::StrictFollowUp" Required="1" Valid="1">
-        <Description Translatable="1">Postmaster handles followups and new tickets based on the system address assigned queues.</Description>
+        <Description Translatable="1">Postmaster handles followups and new tickets based on the system address assigned queues. The queue, the system address has assigned for new tickets, is also considered.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::PostMaster</SubGroup>
         <Setting>
