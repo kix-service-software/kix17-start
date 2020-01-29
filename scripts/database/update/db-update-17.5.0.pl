@@ -30,6 +30,9 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 
 use vars qw(%INC);
 
+# save current SystemID
+_SaveSystemID();
+
 # migrate configuration for shown deployment states for config item link graph
 _MigrateDeploymentStateConfiguration();
 
@@ -37,6 +40,22 @@ _MigrateDeploymentStateConfiguration();
 _AddDefaultQuickState();
 
 exit 0;
+
+sub _SaveSystemID {
+    my ( $Self, %Param ) = @_;
+
+    # get SystemID from config object
+    my $SystemID = $Kernel::OM->Get('Kernel::Config')->Get('SystemID');
+
+    # update SysConfig
+    my $Result = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
+        Key   => 'SystemID',
+        Value => $SystemID,
+        Valid => 1,
+    );
+
+    return $Result;
+}
 
 sub _MigrateDeploymentStateConfiguration {
     # get needed object
