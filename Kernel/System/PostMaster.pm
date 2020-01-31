@@ -262,7 +262,10 @@ sub Run {
     # check if follow up (again, with new GetParam)
     %FollowUps = $Self->CheckFollowUp( GetParam => $GetParam );
 
-    if ( $ConfigObject->Get('PostMaster::StrictFollowUp') ) {
+    if (
+        $ConfigObject->Get('PostMaster::StrictFollowUp')
+        && !$GetParam->{'X-KIX-StrictFollowUpIgnore'}
+    ) {
         # get recipients
         my $Recipient = '';
         for my $Key (qw(Resent-To Envelope-To To Cc Bcc Delivered-To X-Original-To)) {
@@ -313,11 +316,27 @@ sub Run {
                 $QueueID = $SystemAddressObject->SystemAddressQueueID(
                     Address => $Address,
                 );
+
+                # check for create queue of system address
+                if (
+                    $QueueID
+                    && !$Queues{ $QueueID }
+                ) {
+                    # lookup queue name
+                    my $QueueName = $QueueObject->QueueLookup(
+                        QueueID => $QueueID
+                    );
+                    if ( $QueueName ) {
+                        $Queues{$QueueID} = $QueueName;
+                    }
+                }
             }
             else {
                 # get PostmasterDefaultQueue, cause a FollowUp Ticket can also be in this Queue
                 my $QueueName = $ConfigObject->Get('PostmasterDefaultQueue');
-                $QueueID = $QueueObject->QueueLookup( Queue => $QueueName );
+                $QueueID = $QueueObject->QueueLookup(
+                    Queue => $QueueName
+                );
                 if ($QueueID) {
                     $Queues{$QueueID} = $QueueName;
                 }

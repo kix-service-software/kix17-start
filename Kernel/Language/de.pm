@@ -4268,8 +4268,8 @@ Ihr Helpdesk-Team
         'A list of dynamic fields that are merged into the main ticket during a merge operation. Only dynamic fields that are empty in the main ticket will be set.' =>
             'Eine Liste der dynamischen Felder, die während einer Zusammenführung in das Haupt-Ticket ebenfalls zusammengeführt werden. Es werden nur leere dynamische Felder im Haupt-Ticket geändert.',
         'A picture' => 'Ein Bild',
-        'ACL module that allows closing parent tickets only if all its children are already closed ("State" shows which states are not available for the parent ticket until all child tickets are closed).' =>
-            'ACL Modul das erlaubt Eltern-Tickets nur dann zu schließen, wenn alle seine Kinder-Tickets geschlossen wurden. ("Status" zeigt welche Status für das Eltern-Ticket nicht verfügbar sind, bis alle Kinder-Tickets geschlossen sind).',
+        'ACL module that allows closing parent tickets only if all its children are already closed. "State" lists ticket states which are not available for the parent ticket until all child tickets are closed. "ExcludeTypes" lists ticket types that should be ignored by the module: 0 = Do not ignore, 1 = Ignore.' =>
+            'ACL Modul das erlaubt Eltern-Tickets nur dann zu schließen, wenn alle seine Kinder-Tickets geschlossen wurden. "Status" listet Ticketstatus welche für das Eltern-Ticket nicht verfügbar sind, bis alle Kinder-Tickets geschlossen sind. "ExcludeTypes" listet Tickettypen, welche vom Modul ignoriert werden sollen: 0 = Nicht ignorieren, 1 = Ignorieren.',
         'Access Control Lists (ACL)' => 'Access Control Lists (ACL)',
         'AccountedTime' => 'Erfasste Zeit',
         'Activates a blinking mechanism of the queue that contains the oldest ticket.' =>

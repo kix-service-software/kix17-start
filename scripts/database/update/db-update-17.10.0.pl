@@ -31,10 +31,29 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 
 use vars qw(%INC);
 
+# save current SystemID
+_SaveSystemID();
+
 # remove KIXNotify from sysconfig
 _RemoveKIXNotify();
 
 exit 0;
+
+sub _SaveSystemID {
+    my ( $Self, %Param ) = @_;
+
+    # get SystemID from config object
+    my $SystemID = $Kernel::OM->Get('Kernel::Config')->Get('SystemID');
+
+    # update SysConfig
+    my $Result = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
+        Key   => 'SystemID',
+        Value => $SystemID,
+        Valid => 1,
+    );
+
+    return $Result;
+}
 
 sub _RemoveKIXNotify {
     my ( $Self, %Param ) = @_;

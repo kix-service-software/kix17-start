@@ -174,7 +174,7 @@ sub AttachmentGet {
 
     my $SQL = "SELECT id, attachment_directory_id FROM attachment_storage " . $WHERE;
 
-    if ( !$Self->{DBObject}->Prepare( SQL => $SQL, Encode => [ 0, 0, 1 ] ) ) {
+    if ( !$Self->{DBObject}->Prepare( SQL => $SQL, Encode => [ 0, 0 ] ) ) {
         return \%Data;
     }
 
@@ -183,7 +183,7 @@ sub AttachmentGet {
     if (@Data) {
         my $DataSQL = "SELECT data FROM attachment_storage " . $WHERE;
 
-        if ( !$Self->{DBObject}->Prepare( SQL => $DataSQL ) ) {
+        if ( !$Self->{DBObject}->Prepare( SQL => $DataSQL, Encode => [ 0 ] ) ) {
             $Self->{LogObject}->Log(
                 Priority => 'error',
                 Message  => "Failed to prepare SQL for FetchrowArray!"

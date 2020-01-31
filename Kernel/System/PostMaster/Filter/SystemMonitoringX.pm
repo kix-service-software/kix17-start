@@ -526,6 +526,9 @@ sub _TicketUpdate {
         Subject      => $Param->{GetParam}->{Subject},
     );
 
+    # set flag to ignore strict follow up
+    $Param->{GetParam}->{'X-KIX-StrictFollowUpIgnore'} = 1;
+
     # set sender type and article type
     $Param->{GetParam}->{'X-KIX-FollowUp-SenderType'}  = $Self->{Config}->{OTRSCreateSenderType};
     $Param->{GetParam}->{'X-KIX-FollowUp-ArticleType'} = $Self->{Config}->{OTRSCreateArticleType};

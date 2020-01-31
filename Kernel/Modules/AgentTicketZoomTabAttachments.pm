@@ -180,7 +180,7 @@ sub Run {
             # check responsible permissions
             if ( $Ticket{Responsible} || $Ticket{ResponsibleID} ) {
                 $Access = $TicketObject->TicketPermission(
-                    Type     => 'responsible',
+                    Type     => 'rw',
                     TicketID => $TicketID,
                     UserID   => $Self->{UserID},
                 );

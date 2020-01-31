@@ -441,6 +441,18 @@ sub _BulkDo {
 
         for my $TicketIDPartner (@TicketIDs) {
             if ( $MainTicketID ne $Param{TicketID} ) {
+                # remove links of same link group
+                $Self->_PrepareLinkAdd(
+                    SourceObject => 'Ticket',
+                    SourceKey    => $MainTicketID,
+                    TargetObject => 'Ticket',
+                    TargetKey    => $Param{TicketID},
+                    Type         => 'ParentChild',
+                    State        => 'Valid',
+                    UserID       => $Param{UserID},
+                );
+
+                # add link
                 $LinkObject->LinkAdd(
                     SourceObject => 'Ticket',
                     SourceKey    => $MainTicketID,
@@ -458,6 +470,18 @@ sub _BulkDo {
     if ( $GetParam{'LinkTogether'} ) {
         for my $TicketIDPartner (@TicketIDs) {
             if ( $Param{TicketID} ne $TicketIDPartner ) {
+                # remove links of same link group
+                $Self->_PrepareLinkAdd(
+                    SourceObject => 'Ticket',
+                    SourceKey    => $Param{TicketID},
+                    TargetObject => 'Ticket',
+                    TargetKey    => $TicketIDPartner,
+                    Type         => 'Normal',
+                    State        => 'Valid',
+                    UserID       => $Param{UserID},
+                );
+
+                # add link
                 $LinkObject->LinkAdd(
                     SourceObject => 'Ticket',
                     SourceKey    => $Param{TicketID},
@@ -640,6 +664,57 @@ sub AsyncCall {
     }
 
     return 1;
+}
+
+sub _PrepareLinkAdd {
+    my ( $Self, %Param ) = @_;
+
+    # get link object
+    my $LinkObject = $Kernel::OM->Get('Kernel::System::LinkObject');
+
+    # get all links that the source object already has
+    my $Links = $LinkObject->LinkList(
+        Object => $Param{SourceObject},
+        Key    => $Param{SourceKey},
+        State  => $Param{State},
+        UserID => $Param{UserID},
+    );
+
+    # check type groups
+    OBJECT:
+    for my $Object ( sort keys %{$Links} ) {
+
+        next OBJECT if $Object ne $Param{TargetObject};
+
+        TYPE:
+        for my $Type ( sort keys %{ $Links->{$Object} } ) {
+
+            # extract source and target
+            my $Source = $Links->{$Object}->{$Type}->{Source} ||= {};
+            my $Target = $Links->{$Object}->{$Type}->{Target} ||= {};
+
+            # check if source and target object are already linked
+            next TYPE if !$Source->{ $Param{TargetKey} } && !$Target->{ $Param{TargetKey} };
+
+            # check the type groups
+            my $TypeGroupCheck = $LinkObject->PossibleType(
+                Type1 => $Type,
+                Type2 => $Param{Type},
+            );
+
+            next TYPE if $TypeGroupCheck;
+
+            # remove if existing link type is in a type group with the new link
+            my $Success = $LinkObject->LinkDelete(
+                Object1 => $Param{SourceObject},
+                Key1    => $Param{SourceKey},
+                Object2 => $Param{TargetObject},
+                Key2    => $Param{TargetKey},
+                Type    => $Type,
+                UserID  => $Param{UserID},
+            );
+        }
+    }
 }
 
 1;

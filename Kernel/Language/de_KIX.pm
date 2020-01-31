@@ -477,10 +477,6 @@ sub Data {
         }
         = 'Überschreibt (redefiniert) bestehende Funktionen in Kernel::System::Ticket. Dies vereinfacht das Hinzufügen von Anpassungen.';
     $Lang->{
-        'Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).'
-        }
-        = 'Definiert ob die "Possible"-Ergebnisse für Aktionen mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (KIX-Standardverhalten ist deakviert).';
-    $Lang->{
         'Defines whether results of PossibleNot for tickets of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).'
         }
         = 'Definiert ob die "PossibleNot"-Ergebnisse für Ticket-Eigenschaften mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (KIX-Standardverhalten ist deakviert).';
@@ -4499,8 +4495,12 @@ sub Data {
     # NEW SKINS
     $Lang->{'Default (green)'} = 'Standard (Grün)';
     $Lang->{'Default (blue)'}  = 'Standard (Blau)';
-    $Lang->{'"Blue" skin which tries to save screen space for power users.'} =
-        '"Standard-Blau"-Skin, der weniger Bildschirmfläche zum Darstellen von Informationen benötigt.';
+    $Lang->{'This skin changes the color of the standard skin to "Blue" for the customer interface.'} =
+        'Dieser Skin ändert die Farbe des Standard Skin in "Blau" für das Kundeninterface.';
+    $Lang->{'This skin changes the color of the standard skin to "Blue" for the agent interface.'} =
+        'Dieser Skin ändert die Farbe des Standard Skin in "Blau" für das Agenteninterface.';
+    $Lang->{'This skin changes the color of the standard skin to "Dark" for the agent interface.'} =
+        'Dieser Skin ändert die Farbe des Standard Skin in "Dark" für das Agenteninterface.';
     $Lang->{'Default skin for the agent interface (blue version).'} =
          'Standard-Skin für die Agentenoberfläche (Blau)';
     $Lang->{'Default skin for the customer interface (blue version).'} =
