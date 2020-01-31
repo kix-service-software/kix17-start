@@ -13,13 +13,6 @@
  * (2020/01/07) - Bugfix: T2019111390000886 (fixed column sorting of virtual queues) (millinger)
  * (2019/12/10) - Bugfix: T2019120490000605 (agent ticket search does not select all pages for bulk action) (millinger)
 
-# 17.10.0-RC3 (2020/01/13)
- * (2020/01/13) - Bugfix: T2020011090000282 (user gets permissions from invalid roles) (millinger)
- * (2020/01/13) - Bugfix: T2019102390000618 (changed needed permission for AgentTicketMove to rw) (millinger)
- * (2020/01/13) - Bugfix: T2019080590000595 (clarified load draft button) (millinger)
- * (2020/01/07) - Bugfix: T2019111390000886 (fixed column sorting of virtual queues) (millinger)
- * (2019/12/10) - Bugfix: T2019120490000605 (agent ticket search does not select all pages for bulk action) (millinger)
-
 # 17.10.0-RC2 (2020/01/06)
  * (2020/01/02) - CR: KIX17-515 (Updated copyright) (millinger)
  * (2020/01/02) - CR: KIX17-474 (fixed missing html quotations) (millinger)
