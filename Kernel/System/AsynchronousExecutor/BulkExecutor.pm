@@ -715,6 +715,8 @@ sub _PrepareLinkAdd {
             );
         }
     }
+
+    return;
 }
 
 1;
