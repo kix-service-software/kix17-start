@@ -1,6 +1,18 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.10.0-RC5 (2020/01/31)
+ * (2020/01/28) - Bugfix: KIX17-543 (save current SystemID before update) (millinger)
+ * (2020/01/27) - Bugfix: KIX17-574 (remove sysconfig 'Ticket::ACL-PossibleActionSubsumption') (dbormann)
+ * (2020/01/27) - Bugfix: T2019121690001967 (fixed double encoding of attachments of configuration elements) (fjacquemin)
+ * (2020/01/27) - CR: KIX17-435 (changed default configuration of the skin "Dark Mode (Beta)") (fjacquemin)
+ * (2020/01/24) - Bugfix: T2019120390000492 (fixed acl issue with duplicate custom queue names) (millinger)
+ * (2020/01/24) - Bugfix: T2019102390000618 (changed non-default permissions to rw) (millinger)
+ * (2020/01/23) - Bugfix: KIX17-569 (implemented ticket type exclusion for acl module 'CloseParentAfterClosedChilds') (fober)
+ * (2020/01/22) - Bugfix: KIX17-568 (Import always keeps current value for empty import value) (smehlig)
+ * (2020/01/13) - Bugfix: T2019121290000939 (nagios followup issue with strict followup) (millinger)
+ * (2020/01/13) - Bugfix: T2019021290001073 (fix log error for link together ticket bulk action) (millinger)
+
 # 17.10.0-RC4 (2020/01/21)
  * (2020/01/20) - CR: KIX17-563 (added target-attribute configuration for CustomFooter) (dbormann)
  * (2020/01/16) - CR: KIX17-564 (implemented acl checks for quick state action) (fjacquemin)
