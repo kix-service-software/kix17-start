@@ -1235,6 +1235,7 @@ sub Run {
                         %GetParam,
                         %ACLCompatGetParam,
                         CustomerUserID => $CustomerUser || '',
+                        QueueID        => $NewQueueID || 0,
                         Action         => $Self->{Action},
                         ReturnType     => 'Ticket',
                         ReturnSubType  => 'DynamicField_' . $DynamicFieldConfig->{Name},
@@ -1256,12 +1257,13 @@ sub Run {
         my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
             %GetParam,
             %ACLCompatGetParam,
-            QueueID       => $NewQueueID || 0,
-            Action        => $Self->{Action},
-            ReturnType    => 'Ticket',
-            ReturnSubType => '-',
-            Data          => {},
-            UserID        => $Self->{UserID},
+            CustomerUserID => $CustomerUser || '',
+            QueueID        => $NewQueueID || 0,
+            Action         => $Self->{Action},
+            ReturnType     => 'Ticket',
+            ReturnSubType  => '-',
+            Data           => {},
+            UserID         => $Self->{UserID},
         );
 
         # update 'Shown' for $Self->{DynamicField}
@@ -2402,12 +2404,13 @@ sub Run {
         my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
             %GetParam,
             %ACLCompatGetParam,
-            QueueID       => $QueueID || 0,
-            Action        => $Self->{Action},
-            ReturnType    => 'Ticket',
-            ReturnSubType => '-',
-            Data          => {},
-            UserID        => $Self->{UserID},
+            CustomerUserID => $CustomerUser || '',
+            QueueID        => $QueueID || 0,
+            Action         => $Self->{Action},
+            ReturnType     => 'Ticket',
+            ReturnSubType  => '-',
+            Data           => {},
+            UserID         => $Self->{UserID},
         );
 
         # update 'Shown' for $Self->{DynamicField}
@@ -3538,12 +3541,13 @@ sub _MaskEmailNew {
     # run acl to prepare TicketAclFormData
     my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %Param,
-        TypeID        => $Param{TypeID} || $Param{DefaultTypeID} || '',
-        Action        => $Self->{Action},
-        ReturnType    => 'Ticket',
-        ReturnSubType => '-',
-        Data          => {},
-        UserID        => $Self->{UserID},
+        CustomerUserID => $Param{CustomerUser},
+        TypeID         => $Param{TypeID} || $Param{DefaultTypeID} || '',
+        Action         => $Self->{Action},
+        ReturnType     => 'Ticket',
+        ReturnSubType  => '-',
+        Data           => {},
+        UserID         => $Self->{UserID},
     );
 
     # update 'Shown' for $Self->{DynamicField}
