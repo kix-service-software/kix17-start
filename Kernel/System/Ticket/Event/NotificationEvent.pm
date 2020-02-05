@@ -197,6 +197,7 @@ sub Run {
 
             my %ReplacedNotification = $TemplateGeneratorObject->NotificationEvent(
                 TicketID              => $Param{Data}->{TicketID},
+                ArticleID             => $Param{Data}->{ArticleID},
                 Recipient             => $Recipient,
                 Notification          => \%Notification,
                 CustomerMessageParams => $Param{Data}->{CustomerMessageParams},
@@ -336,6 +337,7 @@ sub Run {
                 # replace all notification tags for each special recipient
                 my %ReplacedNotification = $TemplateGeneratorObject->NotificationEvent(
                     TicketID              => $Param{Data}->{TicketID},
+                    ArticleID             => $Param{Data}->{ArticleID},
                     Recipient             => $Recipient,
                     Notification          => \%Notification,
                     CustomerMessageParams => $Param{Data}->{CustomerMessageParams} || {},
