@@ -1,6 +1,16 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.10.0-RC6 (2020/02/05)
+ * (2020/02/03) - Bugfix: KIX17-597 (hide/disable dynamic field at agent ticket creation by selected customer user data) (millinger)
+ * (2020/02/03) - Bugfix: KIX17-586 (fixed missing initial loading of dynamic field when ticket template used) (fjacquemin)
+ * (2020/02/03) - Bugfix: KIX17-599 (fixed initial field order for new DynamicFields) (millinger)
+ * (2020/02/03) - Bugfix: KIX17-602 (fixed missing delivery of the article ID to the NotificationEvent) (millinger)
+ * (2020/01/23) - Bugfix: KIX17-603 (fixed sorting by name for available dialogues and transition actions) (millinger)
+ * (2020/01/20) - Bugfix: KIX17-601 (fixed incorrect description texts of the console commands import/export) (millinger)
+ * (2020/01/14) - Bugfix: KIX17-600 (fixed incomplete front-end module registration with several NavBar entries) (millinger)
+ * (2020/01/07) - Bugfix: T2020010690000496 (dynamic field ITSMConfigItemReference does not check result permission) (millinger)
+
 # 17.10.0-RC5 (2020/01/31)
  * (2020/01/28) - Bugfix: KIX17-543 (save current SystemID before update) (millinger)
  * (2020/01/27) - Bugfix: KIX17-574 (remove sysconfig 'Ticket::ACL-PossibleActionSubsumption') (dbormann)
