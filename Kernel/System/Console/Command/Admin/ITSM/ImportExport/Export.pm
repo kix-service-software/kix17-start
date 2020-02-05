@@ -23,7 +23,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('The tool for exporting config items');
+    $Self->Description('The tool for exporting object data');
     $Self->AddOption(
         Name        => 'template-number',
         Description => "Specify a template number to be exported.",
@@ -33,7 +33,7 @@ sub Configure {
     );
     $Self->AddArgument(
         Name        => 'destination',
-        Description => "Specify the path to a file where config item data should be exported.",
+        Description => "Specify the path to a file where object data should be exported.",
         Required    => 1,
         ValueRegex  => qr/.*/smx,
     );

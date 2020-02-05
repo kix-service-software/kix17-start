@@ -23,17 +23,17 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('The tool for importing config items');
+    $Self->Description('The tool for importing object data');
     $Self->AddOption(
         Name        => 'template-number',
-        Description => "Specify a template number to be impoerted.",
+        Description => "Specify a template number to be imported.",
         Required    => 1,
         HasValue    => 1,
         ValueRegex  => qr/\d+/smx,
     );
     $Self->AddArgument(
         Name        => 'source',
-        Description => "Specify the path to the file which containing the config item data for importing.",
+        Description => "Specify the path to the file which containing the object data for importing.",
         Required    => 1,
         ValueRegex  => qr/.*/smx,
     );
@@ -69,7 +69,7 @@ sub Run {
         return $Self->ExitCodeError();
     }
 
-    $Self->Print("<yellow>Importing config items...</yellow>\n");
+    $Self->Print("<yellow>Importing data...</yellow>\n");
     $Self->Print( "<yellow>" . ( '=' x 69 ) . "</yellow>\n" );
 
     my $SourceContent;
