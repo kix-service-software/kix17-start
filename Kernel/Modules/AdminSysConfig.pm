@@ -1482,7 +1482,7 @@ sub ListConfigItem {
             ) {
                 $NavBarData{ 'Key' . $Key }     = $Key;
                 $NavBarData{ 'Content' . $Key } = '';
-                if ( defined $FrontendModuleReg->{NavBar}->[1]->{$Key}->[1]->{Content} ) {
+                if ( defined $FrontendModuleReg->{NavBar}->[$Index]->{$Key}->[1]->{Content} ) {
                     $NavBarData{ 'Content' . $Key } = $FrontendModuleReg->{NavBar}->[$Index]->{$Key}->[1]->{Content};
                 }
             }
@@ -1522,11 +1522,11 @@ sub ListConfigItem {
         if ( ref $FrontendModuleReg->{NavBarModule} eq 'ARRAY' ) {
             for my $Index ( 1 .. $#{ $FrontendModuleReg->{NavBarModule} } ) {
                 my %NavBarData;
-                for my $Key (qw(Module Name Block Pri)) {
+                for my $Key (qw(Module Name Description Block Prio)) {
                     $NavBarData{ 'Key' . $Key }     = $Key;
                     $NavBarData{ 'Content' . $Key } = '';
-                    if ( defined $FrontendModuleReg->{NavBarModule}->[1]->{$Key}->[1]->{Content} ) {
-                        $NavBarData{ 'Content' . $Key } = $FrontendModuleReg->{NavBarModule}->[1]->{$Key}->[1]->{Content};
+                    if ( defined $FrontendModuleReg->{NavBarModule}->[$Index]->{$Key}->[1]->{Content} ) {
+                        $NavBarData{ 'Content' . $Key } = $FrontendModuleReg->{NavBarModule}->[$Index]->{$Key}->[1]->{Content};
                     }
                 }
                 $NavBarData{ElementKey} = $ItemHash{Name} . '#NavBarModule';
