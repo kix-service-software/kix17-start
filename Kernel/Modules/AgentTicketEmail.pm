@@ -535,6 +535,15 @@ sub Run {
                 $Attribute =~ s/^QuickTicket(.*)$/$1/gm;
                 $ACLCompatGetParam{$Attribute} = $TemplateData{$Key};
             }
+
+            elsif (
+                $Key eq 'QuickTicketDynamicFieldHash'
+                && IsHashRefWithData( $TemplateData{$Key} )
+            ) {
+                for my $DynamicField ( keys %{ $TemplateData{$Key} } ) {
+                    $GetParam{$DynamicField} = $TemplateData{$Key}->{$DynamicField};
+                }
+            }
         }
         @MultipleCustomer       = @{ $TemplateData{MultipleCustomer} } if defined $TemplateData{MultipleCustomer} && ref $TemplateData{MultipleCustomer}  eq 'ARRAY';
         @MultipleCustomerCc     = @{ $TemplateData{MultipleCustomerCc} } if defined $TemplateData{MultipleCustomerCc} && ref $TemplateData{MultipleCustomerCc}  eq 'ARRAY';
@@ -966,6 +975,7 @@ sub Run {
             }
 
             $Output .= $Self->_MaskEmailNew(
+                %GetParam,
                 QueueID    => $Self->{QueueID},
                 NextStates => $Self->_GetNextStates(
                     %GetParam,

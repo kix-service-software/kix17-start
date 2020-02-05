@@ -171,10 +171,21 @@ sub Run {
         );
         for my $Key ( keys %TemplateData ) {
             $GetParam{$Key} = $TemplateData{$Key};
-            if ( $Key =~ /^QuickTicket(.*)/ ) {
+            if (
+                $Key =~ /^QuickTicket(.*)/
+                && $Key ne 'QuickTicketDynamicFieldHash'
+            ) {
                 $GetParam{$1}     = $TemplateData{$Key};
                 $TemplateData{$1} = $TemplateData{$Key};
                 delete $GetParam{$Key};
+            }
+            elsif (
+                $Key eq 'QuickTicketDynamicFieldHash'
+                && IsHashRefWithData( $TemplateData{$Key} )
+            ) {
+                for my $DynamicField ( keys %{ $TemplateData{$Key} } ) {
+                    $GetParam{$DynamicField} = $TemplateData{$Key}->{$DynamicField};
+                }
             }
         }
     }
