@@ -52,6 +52,12 @@ $('#Constrictions').bind('change', function (Event) {
 //]]></script>
 [% END %]
                         <div class="Clear"></div>
+                        <label for="PermissionCheck">[% Translate("Permission Check") | html %]:</label>
+                        <div class="Field">
+                            [% Data.PermissionCheckStrg %]
+                            <p class="FieldExplanation">[% Translate("Activates the permission check of the classes for the relevant interface.") | html %]</p>
+                        </div>
+                        <div class="Clear"></div>
                         <label class="Mandatory" for="DisplayPattern">[% Translate("Display pattern") | html %]:</label>
                         <div class="Field">
                             <input id="DisplayPattern" class="W25pc Validate_Required [% Data.DisplayPatternServerError %]" type="text" value="[% Data.DisplayPattern | html %]" name="DisplayPattern"/>
