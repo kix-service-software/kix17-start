@@ -309,7 +309,10 @@ sub _ShowEdit {
     );
 
     # display available transition actions
-    for my $EntityID ( sort keys %AvailableTransitionActionsLookup ) {
+    for my $EntityID ( 
+        sort{$AvailableTransitionActionsLookup{$a}->{Name} cmp $AvailableTransitionActionsLookup{$b}->{Name}}
+        keys %AvailableTransitionActionsLookup
+    ) {
 
         my $TransitionActionData = $AvailableTransitionActionsLookup{$EntityID};
 
