@@ -179,7 +179,7 @@ sub _AddAction {
     # get 'array' configuration params
     for my $ConfigParam (
         qw(
-            ITSMConfigItemClasses DeploymentStates DefaultValues
+            ITSMConfigItemClasses DeploymentStates DefaultValues PermissionCheck
         )
     ) {
         my @Data = $ParamObject->GetArray( Param => $ConfigParam );
@@ -213,6 +213,7 @@ sub _AddAction {
     my $FieldConfig = {
         ITSMConfigItemClasses => $GetParam{ITSMConfigItemClasses} || [],
         DeploymentStates      => $GetParam{DeploymentStates}      || [],
+        PermissionCheck       => $GetParam{PermissionCheck}       || [],
         Constrictions         => $GetParam{Constrictions}         || '',
         DisplayPattern        => $GetParam{DisplayPattern}        || '<CI_Name>',
         MaxArraySize          => $GetParam{MaxArraySize}          || '1',
@@ -422,7 +423,7 @@ sub _ChangeAction {
     # get 'array' configuration params
     for my $ConfigParam (
         qw(
-            ITSMConfigItemClasses DeploymentStates DefaultValues
+            ITSMConfigItemClasses DeploymentStates DefaultValues PermissionCheck
         )
     ) {
         my @Data = $ParamObject->GetArray( Param => $ConfigParam );
@@ -464,6 +465,7 @@ sub _ChangeAction {
     my $FieldConfig = {
         ITSMConfigItemClasses => $GetParam{ITSMConfigItemClasses} || [],
         DeploymentStates      => $GetParam{DeploymentStates}      || [],
+        PermissionCheck       => $GetParam{PermissionCheck}       || [],
         Constrictions         => $GetParam{Constrictions}         || '',
         DisplayPattern        => $GetParam{DisplayPattern}        || '<CI_Name>',
         MaxArraySize          => $GetParam{MaxArraySize}          || '1',
@@ -519,6 +521,7 @@ sub _ShowScreen {
 
     $Param{ITSMConfigItemClasses} = $Param{Config}->{ITSMConfigItemClasses} || [];
     $Param{DeploymentStates}      = $Param{Config}->{DeploymentStates}      || [];
+    $Param{PermissionCheck}       = $Param{Config}->{PermissionCheck}       || [];
     $Param{Constrictions}         = $Param{Config}->{Constrictions}         || '';
     $Param{DisplayPattern}        = $Param{Config}->{DisplayPattern}        || '<CI_Name>';
     $Param{MaxArraySize}          = $Param{Config}->{MaxArraySize}          || '1';
@@ -622,6 +625,20 @@ sub _ShowScreen {
         Class        => 'W50pc',
     );
 
+    my $PermissionCheckStrg = $LayoutObject->BuildSelection(
+        Data         => [
+            'Agent',
+            'Customer'
+        ],
+        Name         => 'PermissionCheck',
+        SelectedID   => $Param{PermissionCheck},
+        PossibleNone => 0,
+        Translation  => 1,
+        Multiple     => 1,
+        Size         => 2,
+        Class        => 'Modernize',
+    );
+
     # Constrictions
     # nothing to do
 
@@ -722,10 +739,11 @@ sub _ShowScreen {
             ValidityStrg              => $ValidityStrg,
             DynamicFieldOrderStrg     => $DynamicFieldOrderStrg,
             ITSMConfigItemClassesStrg => $ITSMConfigItemClassesStrg,
+            PermissionCheckStrg       => $PermissionCheckStrg,
             DeploymentStatesStrg      => $DeploymentStatesStrg,
             ItemSeparatorStrg         => $ItemSeparatorStrg,
             DefaultValuesCount        => $DefaultValuesCount,
-            ReadonlyInternalField => $ReadonlyInternalField,
+            ReadonlyInternalField     => $ReadonlyInternalField,
         }
     );
 
