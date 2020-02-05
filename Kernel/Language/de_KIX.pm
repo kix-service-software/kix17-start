@@ -3881,6 +3881,9 @@ sub Data {
         = 'Relevante Config Item Klassen auswählen.';
     $Lang->{'Select relevant deployment states.'}
         = 'Relevante Verwendungsstatus auswählen.';
+    $Lang->{'Permission Check'} = 'Berechtigungsprüfung';
+    $Lang->{'Activates the permission check of the classes for the relevant interface.'}
+        = 'Aktiviert die Berechtigungsprüfung der Klassen für das relevante Interface.';
     $Lang->{
         'Specify Constrictions for CI-search. [CI-Attribute]::[Object]::[Attribute/Value]::[Mandatory]'
         }
