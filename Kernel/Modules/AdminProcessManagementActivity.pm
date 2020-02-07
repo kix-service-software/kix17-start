@@ -721,8 +721,8 @@ sub _ShowEdit {
 
         # display available activity dialogs
         for my $EntityID (
-            sort{$AvailableActivityDialogsLookup{$a}->{Name} cmp $AvailableActivityDialogsLookup{$b}->{Name}} 
-            keys %AvailableActivityDialogsLookup 
+            sort{$AvailableActivityDialogsLookup{$a}->{Name} cmp $AvailableActivityDialogsLookup{$b}->{Name}}
+            keys %AvailableActivityDialogsLookup
         ) {
 
             my $ActivityDialogData = $AvailableActivityDialogsLookup{$EntityID};
@@ -815,7 +815,10 @@ sub _ShowEdit {
     else {
 
         # display available activity dialogs
-        for my $EntityID ( sort keys %AvailableActivityDialogsLookup ) {
+        for my $EntityID (
+            sort{$AvailableActivityDialogsLookup{$a}->{Name} cmp $AvailableActivityDialogsLookup{$b}->{Name}}
+            keys %AvailableActivityDialogsLookup
+        ) {
 
             my $ActivityDialogData = $AvailableActivityDialogsLookup{$EntityID};
 
