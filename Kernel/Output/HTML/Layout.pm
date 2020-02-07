@@ -2430,46 +2430,46 @@ sub BuildSelection {
         && $Self->{Action} !~ /^Customer/
     ) {
         my $AutoCompleteConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::GenericAutoCompleteSearch');
-        my %UserPreferences    = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
 
         my $SearchTypeMappingKey;
         if ( $Self->{Action} && $Param{Name} ) {
             $SearchTypeMappingKey = $Self->{Action} . ":::" . $Param{Name};
         }
 
-        my $SearchType;
+        # create string for autocomplete
         if (
             $SearchTypeMappingKey
             && defined $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey}
         ) {
-            $SearchType = $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey};
-        }
+            my $SearchType      = $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey};
+            my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
+                UserID => $Self->{UserID}
+            );
 
-        # create string for autocomplete
-        if (
-            $SearchType
-            && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
-            && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
-        ) {
-            my $AutoCompleteString
-                = '<input id="'
-                . $Param{Name}
-                . '" type="hidden" name="'
-                . $Param{Name}
-                . '" value=""/>'
-                . '<input id="'
-                . $Param{Name}
-                . 'autocomplete" type="text" name="'
-                . $Param{Name}
-                . 'autocomplete" value="" class=" W75pc AutocompleteOff Validate_Required"/>';
+            if (
+                $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
+                && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
+            ) {
+                my $AutoCompleteString
+                    = '<input id="'
+                    . $Param{Name}
+                    . '" type="hidden" name="'
+                    . $Param{Name}
+                    . '" value=""/>'
+                    . '<input id="'
+                    . $Param{Name}
+                    . 'autocomplete" type="text" name="'
+                    . $Param{Name}
+                    . 'autocomplete" value="" class=" W75pc AutocompleteOff Validate_Required"/>';
 
-            $Self->AddJSOnDocumentComplete( Code => <<"EOF");
+                $Self->AddJSOnDocumentComplete( Code => <<"EOF");
     Core.Config.Set("GenericAutoCompleteSearch.MinQueryLength",$AutoCompleteConfig->{MinQueryLength});
     Core.Config.Set("GenericAutoCompleteSearch.QueryDelay",$AutoCompleteConfig->{QueryDelay});
     Core.Config.Set("GenericAutoCompleteSearch.MaxResultsDisplayed",$AutoCompleteConfig->{MaxResultsDisplayed});
     Core.KIX4OTRS.GenericAutoCompleteSearch.Init(\$("#$Param{Name}autocomplete"),\$("#$Param{Name}"));
 EOF
-            return $AutoCompleteString;
+                return $AutoCompleteString;
+            }
         }
     }
 
@@ -3154,7 +3154,7 @@ sub NavigationBar {
                 while ( $NavBar{$Key} ) {
                     # increment item priority
                     $Item->{Prio} += 1;
-    
+
                     # set new priority
                     $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
                 }
@@ -3166,7 +3166,7 @@ sub NavigationBar {
                 while (  $NavBar{Sub}->{ $Item->{NavBar} }->{$Key} ) {
                     # increment item priority
                     $Item->{Prio} += 1;
-    
+
                     # set new priority
                     $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
                 }
@@ -4607,7 +4607,7 @@ sub CustomerNavigationBar {
                 while ( $NavBarModule{$Key} ) {
                     # increment item priority
                     $Item->{Prio} += 1;
-    
+
                     # set new priority
                     $Key = sprintf( "%07d", $Item->{Prio} );
                 }
@@ -4620,7 +4620,7 @@ sub CustomerNavigationBar {
                 while ( $NavBarModule{Sub}->{ $Item->{NavBar} }->{ $Key } ) {
                     # increment item priority
                     $Item->{Prio} += 1;
-    
+
                     # set new priority
                     $Key = sprintf( "%07d", $Item->{Prio} );
                 }
@@ -4632,7 +4632,7 @@ sub CustomerNavigationBar {
                 while ( $NavBarModule{$Key} ) {
                     # increment item priority
                     $Item->{Prio} += 1;
-    
+
                     # set new priority
                     $Key = sprintf( "%07d", $Item->{Prio} );
                 }
