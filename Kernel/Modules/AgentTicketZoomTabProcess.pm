@@ -274,6 +274,7 @@ sub MaskAgentZoom {
 
             # get ACL restrictions
             my $ACL = $TicketObject->TicketAcl(
+                Action        => $Self->{Action},
                 Data          => \%PermissionActivityDialogList,
                 TicketID      => $Ticket{TicketID},
                 ReturnType    => 'ActivityDialog',
