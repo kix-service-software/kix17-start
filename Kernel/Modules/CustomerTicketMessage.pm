@@ -184,7 +184,7 @@ sub Run {
                 && IsHashRefWithData( $TemplateData{$Key} )
             ) {
                 for my $DynamicField ( keys %{ $TemplateData{$Key} } ) {
-                    $GetParam{$DynamicField} = $TemplateData{$Key}->{$DynamicField};
+                    $GetParam{DynamicField}->{$DynamicField} = $TemplateData{$Key}->{$DynamicField};
                 }
             }
         }
