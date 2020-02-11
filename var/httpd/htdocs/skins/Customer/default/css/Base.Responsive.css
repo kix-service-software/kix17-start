@@ -121,6 +121,10 @@
         display: none;
     }
 
+    .CompanyName {
+        display:none;
+    }
+
     .CustomerTicketTemplates,
     .MainBox,
     .TicketZoom,

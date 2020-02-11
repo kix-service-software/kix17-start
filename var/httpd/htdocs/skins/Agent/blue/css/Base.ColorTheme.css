@@ -117,6 +117,7 @@
         color: #FFFFFF;
     }
 
+
     /**
     *   @subsection tabs
     */
@@ -128,6 +129,15 @@
     .ui-widget-content .ui-state-default,
     .ui-widget-header .ui-state-default {
         background: #F2F2F2;
+    }
+    td.Highlight a.ui-state-default {
+        background-color: #FFE45C;
+        background: -moz-linear-gradient(top,#FFF0A5 0%,#FFE45C 100%);
+        background: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#FFF0A5),color-stop(100%,#FFE45C));
+        background: -webkit-linear-gradient(top,#FFF0A5 0%,#FFE45C 100%);
+        background: -o-linear-gradient(top,#FFF0A5 0%,#FFE45C 100%);
+        background: -ms-linear-gradient(top,#FFF0A5 0%,#FFE45C 100%);
+        background: linear-gradient(to bottom,#FFF0A5 0%,#FFE45C 100%);
     }
     .ui-state-hover,
     .ui-widget-content .ui-state-hover,
@@ -321,6 +331,10 @@
     .TableSmall > tbody td {
         border-right: 1px solid #CCCCCC;
     }
+    .DataTable > tbody td.EscTime,
+    .TableSmall > tbody td.EscTime {
+        background-color: #CB1B10;
+    }
     .DataTable > tbody td > a,
     .TableSmall > tbody td > a {
         color: inherit;
@@ -338,12 +352,14 @@
     }
     .DataTable > tbody > tr:hover > td input,
     .DataTable > tbody > tr:hover > td select,
+    .DataTable > tbody > tr:hover > td select > option,
     .DataTable > tbody > tr:hover > td textarea,
     .DataTable > tbody > tr:hover > td div.Text,
     .DataTable > tbody > tr:hover > td i.ModernizeFieldIcon,
     .TableSmall > tbody > tr:hover > td i.ModernizeFieldIcon,
     .TableSmall > tbody > tr:hover > td input,
     .TableSmall > tbody > tr:hover > td select,
+    .TableSmall > tbody > tr:hover > td select > option,
     .TableSmall > tbody > tr:hover > td textarea,
     .TableSmall > tbody > tr:hover > td div.Text {
         color: #5B5B5B;
@@ -459,6 +475,8 @@
     .RemoveButton:hover,
     .AddButton:hover {
         color: #0A7CB3;
+        background-color: inherit;
+        border: none;
     }
     tr.Active td {
         border-bottom: 1px solid #0A7CB3;
@@ -584,6 +602,14 @@
     .jstree-InputField .jstree-focused > .jstree-wholerow {
         background-color: #0A7CB3;
         color: #FFFFFF;
+    }
+    .jstree-InputField .Disabled > .jstree-anchor {
+        color: #AAAAAA;
+    }
+    .jstree-node.Disabled:hover > .jstree-anchor,
+    .jstree-node.Disabled:hover > .jstree-anchor.jstree-hovered,
+    .jstree-node.Disabled:hover > .jstree-wholerow.jstree-wholerow-hovered {
+        background-color: #F2F2F2;
     }
     #TreeContainer #TreeSearch span {
         color: #777777;
@@ -1100,7 +1126,10 @@
         background-color: #FA0700;
     }
     .Flag span.greenled {
-        background-color: #8bef4d;
+        background-color: #8BEF4D;
+    }
+    .Flag span.redled {
+        background-color: #FF505E;
     }
 
 

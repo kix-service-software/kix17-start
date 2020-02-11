@@ -313,21 +313,6 @@
 
 
     /*
-    *   @subsection admin widget
-    */
-    .Admin .WidgetSimple {
-        border: 1px solid #9E9E9E;
-        background-color: #F5F5F5;
-    }
-    .Admin .WidgetSimple > .Header {
-        background-color: #CBE1ED;
-    }
-    .Admin .Size1of2:hover {
-        background-color: #FDFDFD;
-    }
-
-
-    /*
     *   @subsection DataTable and TableSmall
     */
     .ColumnFilter + .AJAXLoader {
@@ -511,6 +496,7 @@
         border-top: 1px solid #0A7CB3;
     }
 
+
     /**
     *   @subsection input fields
     */
@@ -670,6 +656,16 @@
     /**
     *   @subsection  OverviewTable
     */
+    .Placeholder > .Button {
+        background-color: #F0F0F0;
+        border-color: #9E9E9E;
+        color: #5B5B5B;
+    }
+    .Placeholder > .Button:hover {
+        background-color: #0A7CB3;
+        border-color: #0A7CB3;
+        color: #FFFFFF;
+    }
     table.OverviewTable {
         background-color: #FDFDFD;
     }
@@ -944,7 +940,10 @@
         background-color: #FA0700;
     }
     .Flag span.greenled {
-        background-color: #8bef4d;
+        background-color: #8BEF4D;
+    }
+    .Flag span.redled {
+        background-color: #FF505E;
     }
 
 

@@ -5003,7 +5003,6 @@
             <Hash>
                 <Item Key="URL">skins/Customer/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
-                <Item Key="StyleRight">0px</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">70px</Item>
             </Hash>
@@ -5017,7 +5016,6 @@
             <Hash>
                 <Item Key="URL">skins/Customer/default/img/KIX17_Responsive_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
-                <Item Key="StyleRight">0px</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">60px</Item>
             </Hash>
@@ -5042,7 +5040,6 @@
             <Hash>
                 <Item Key="URL">skins/Agent/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
-                <Item Key="StyleRight">0px</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">70px</Item>
             </Hash>
@@ -5056,7 +5053,6 @@
             <Hash>
                 <Item Key="URL">skins/Agent/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
-                <Item Key="StyleRight">0px</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">70px</Item>
             </Hash>
@@ -5084,7 +5080,6 @@
             <Hash>
                 <Item Key="URL">skins/Agent/default/img/KIX17_Responsive_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
-                <Item Key="StyleRight">0px</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">60px</Item>
             </Hash>
@@ -5116,6 +5111,8 @@
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">60px</Item>
                 <Item Key="margin">15px auto auto;</Item>
+                <Item Key="background-size">contain</Item>
+                <Item Key="background-repeat">no-repeat</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -5138,13 +5135,15 @@
     <ConfigItem Name="CustomerResponsiveLoginLogo" Required="1" Valid="1">
         <Description Translatable="1">The logo shown on top of the login box of the customer interface. The URL to the image must be relative URL to the skin image directory.</Description>
         <Group>Framework</Group>
-        <SubGroup>Frontend::Agent</SubGroup>
+        <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="URL">skins/Customer/default/img/KIX17_Responsive_Logo.png</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">60px</Item>
                 <Item Key="margin">15px auto auto;</Item>
+                <Item Key="background-size">contain</Item>
+                <Item Key="background-repeat">no-repeat</Item>
             </Hash>
         </Setting>
     </ConfigItem>

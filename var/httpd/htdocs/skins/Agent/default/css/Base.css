@@ -453,10 +453,8 @@
     */
     .AJAXLoader {
         display: inline-block;
-        width: 16px;
-        height: 16px;
-        margin: 2px;
-        vertical-align: bottom;
+        margin-left: 5px;
+        vertical-align: middle;
     }
     .AJAXLoader::after,
     .Loader::after,
