@@ -64,34 +64,6 @@ sub Run {
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
-    # build output for open search description by FAQ number
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionFAQNumber' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'AgentFAQSearchOpenSearchDescriptionFAQNumber',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionFAQNumber.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
-
-    # build output for open search description by full-text
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionFulltext' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'AgentFAQSearchOpenSearchDescriptionFulltext',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionFulltext.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
-
     # search with a saved template
     if ( $ParamObject->GetParam( Param => 'SearchTemplate' ) && $Profile ) {
         return $LayoutObject->Redirect(

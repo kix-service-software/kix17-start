@@ -72,32 +72,6 @@ sub Run {
     }
 
     # check request
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionTicketNumber' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'AgentTicketSearchOpenSearchDescriptionTicketNumber',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionTicketNumber.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionFulltext' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'AgentTicketSearchOpenSearchDescriptionFulltext',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionFulltext.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
-
-    # check request
     if ( $ParamObject->GetParam( Param => 'SearchTemplate' ) && $Self->{Profile} ) {
         my $Profile = $LayoutObject->LinkEncode($SearchProfileLong);
 
