@@ -95,34 +95,6 @@ sub Run {
         );
     }
 
-    # build output for open search description by FAQ number
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionFAQNumber' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'CustomerFAQSearchOpenSearchDescriptionFAQNumber',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionFAQNumber.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
-
-    # build output for open search description by full-text
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionFulltext' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'CustomerFAQSearchOpenSearchDescriptionFullText',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionFulltext.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
-
     # remember exclude attributes
     my @Excludes = $ParamObject->GetArray( Param => 'Exclude' );
 
@@ -250,20 +222,6 @@ sub Run {
     }
     if ( $GetParam{ResultForm} eq 'Print' ) {
         $SearchPageShown = $SearchLimit;
-    }
-
-    # check request
-    if ( $Self->{Subaction} eq 'OpenSearchDescription' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'CustomerFAQSearchOpenSearchDescription',
-            Data         => {%Param},
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescription.xml',
-            ContentType => 'text/xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
     }
 
     # get config object

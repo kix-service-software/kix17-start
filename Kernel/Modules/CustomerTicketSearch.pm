@@ -209,20 +209,6 @@ sub Run {
         $SearchPageShown = $SearchLimit;
     }
 
-    # check request
-    if ( $Self->{Subaction} eq 'OpenSearchDescription' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'CustomerTicketSearchOpenSearchDescription',
-            Data         => {%Param},
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescription.xml',
-            ContentType => 'text/xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
-
     # get ticket object
     my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 

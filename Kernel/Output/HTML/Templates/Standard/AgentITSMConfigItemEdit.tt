@@ -49,7 +49,7 @@
                     <input type="hidden" name="PreEventErrorScreen" value="[% Data.PreEventErrorScreen | html %]"/>
                     <input type="hidden" id="ButtonClick" name="" value=""/>
 [% RenderBlockStart("PlausiCheckNote") %]
-                      <div class="MessageBox Notice">
+                      <div class="MessageBox Error">
                           <p>[% Translate(Data.Text) | html %]&nbsp;[% Data.Code %]</p>
                       </div>
 [% RenderBlockEnd("PlausiCheckNote") %]

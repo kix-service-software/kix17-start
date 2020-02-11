@@ -60,7 +60,6 @@
         margin-left: 16px;
         margin-right: 0;
     }
-
     .Headline {
         height: 24px;
         margin: 15px 0px 5px 0px;
@@ -74,6 +73,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+
     /**
     * @subsection overview
     */
@@ -166,6 +167,7 @@
         height: 24px;
     }
 
+
     /**
     * @subsection action
     */
@@ -241,7 +243,6 @@
     .Actions li span.ClusterLink {
         padding: 2px 5px 0px 5px;
     }
-
     .Cluster {
         overflow: visible;
     }
@@ -258,6 +259,7 @@
     }
     .Cluster > ul > li {
         position: relative;
+        z-index: 1;
     }
     .Cluster ul ul li::after {
         display: none;
@@ -269,7 +271,6 @@
         width: 10px;
         text-align: center;
     }
-
     .Cluster ul ul li {
         display: block;
         float: none;
@@ -295,6 +296,8 @@
     .ActionRow.Cluster > ul > li > ul > li > a {
         margin: 0px;
     }
+
+
     /**
     * @subsection pagination
     */
@@ -313,13 +316,14 @@
     span.Pagination form {
         display: inline;
     }
+
+
     /**
     * @subsection overview zoom
     */
     .OverviewActions {
         min-height: 28px;
     }
-
     .OverviewZoom {
         float: right;
         margin: 0px 10px;
@@ -341,6 +345,7 @@
         margin-top: 5px;
         vertical-align: middle;
     }
+
 
     /**
     * @subsection queue serive overview tree|standard
@@ -398,7 +403,6 @@
         margin: 0px;
         padding: 0px 12px 5px 12px;
     }
-
     .ServiceOverviewList,
     .QueueOverviewList {
         clear: both;
@@ -457,13 +461,13 @@
         margin-left: 100px;
     }
 
+
     /**
     * @subsection Overview Large
     */
     .OverviewLarge {
         margin: 10px 16px 8px 8px;
     }
-
     .OverviewLarge h2 {
         width: 90%;
         height: 15px;
@@ -509,7 +513,6 @@
     .OverviewLarge > li ul.InlineActions.Actions li::after {
         margin: 0 3px;
     }
-
     .OverviewMedium > li ul.InlineActions li a,
     .OverviewLarge > li ul.InlineActions li a {
         padding: 1px 5px;
@@ -517,7 +520,6 @@
     .OverviewLarge > li ul.InlineActions li:last-child a {
         margin-right: 0px;
     }
-
     .OverviewLarge div.Checkbox {
         position: absolute;
         top: 0px;
@@ -582,7 +584,6 @@
         white-space: nowrap;
         text-overflow: ellipsis;
     }
-
     .OverviewLarge .Preview {
         width: 60%;
         float: right;
@@ -631,6 +632,7 @@
         padding: 7px;
         min-height: 0px;
     }
+
 
     /**
     * @subsection overview medium
@@ -735,6 +737,7 @@
         padding: 7px;
     }
 
+
     /**
     * @subsection overview small
     */
@@ -743,22 +746,19 @@
         border-left: none;
         border-right: none;
     }
-
     .Overview thead tr {
         z-index: 15;
     }
-
     .Overview table tbody tr td.Checkbox {
         cursor: default;
     }
-
     .Content.ShowInlineActions {
         padding-top: 32px;
     }
-
     #EmptyMessageSmall {
         padding: 7px;
     }
+
 
     /**
     *   @subsection FAQ
@@ -780,7 +780,6 @@
         border-radius: 0 0 5px 5px;
         overflow: hidden;
     }
-
     .FAQMessageBrowser {
         margin-bottom: 10px;
         border-radius: 2px;
@@ -800,6 +799,7 @@
         top: 6px;
     }
 
+
     /**
     *   @subsection ITSM
     */
@@ -815,6 +815,7 @@
         margin: 5px 0px 0px 0px;
         padding: 7px;
     }
+
 
     /**
     *   @subsection ticket zoom
@@ -864,6 +865,7 @@
         word-wrap: break-word;
         padding: 10px;
     }
+
 
     /**
      * @subsection  Control Row SelectAllItems
@@ -959,7 +961,6 @@
         display: block;
         padding: 2px 10px;
     }
-
     .BulkNotify,
     .WINotify {
         width: 100%;
@@ -973,5 +974,4 @@
         margin-bottom: 1px;
         display: block;
     }
-
 }

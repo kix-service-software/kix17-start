@@ -727,41 +727,27 @@ sub _Overview {
             }
         }
 
-        my %AllUsers = $CustomerUserObject->CustomerSearch(
+        # try to get more customer users than limitation allows
+        my %ListAll = $CustomerUserObject->CustomerSearch(
             Search => $Param{Search},
             Limit  => $Limit + 1,
             Valid  => 0,
         );
 
-        if ( keys %AllUsers <= $Limit ) {
-            my $ListAll = keys %AllUsers;
-            $LayoutObject->Block(
-                Name => 'OverviewHeader',
-                Data => {
-                    ListAll => $ListAll,
-                    Limit   => $Limit,
-                },
-            );
-        }
-
-        my %List = $CustomerUserObject->CustomerSearch(
+        # get limited customer user list
+        my %ListShow = $CustomerUserObject->CustomerSearch(
             Search => $Param{Search},
+            Limit  => $Limit,
             Valid  => 0,
         );
 
-        if ( keys %AllUsers > $Limit ) {
-            my $ListAll        = keys %AllUsers;
-            my $SearchListSize = keys %List;
-
-            $LayoutObject->Block(
-                Name => 'OverviewHeader',
-                Data => {
-                    SearchListSize => $SearchListSize,
-                    ListAll        => $ListAll,
-                    Limit          => $Limit,
-                },
-            );
-        }
+        $LayoutObject->Block(
+            Name => 'OverviewHeader',
+            Data => {
+                CountAll  => keys( %ListAll ),
+                CountShow => keys( %ListShow ),
+            },
+        );
 
         $LayoutObject->Block(
             Name => 'OverviewResult',
@@ -776,11 +762,11 @@ sub _Overview {
         }
 
         # if there are results to show
-        if (%List) {
+        if (%ListShow) {
 
             # get valid list
             my %ValidList = $Kernel::OM->Get('Kernel::System::Valid')->ValidList();
-            for my $ListKey ( sort { lc($a) cmp lc($b) } keys %List ) {
+            for my $ListKey ( sort { lc($a) cmp lc($b) } keys %ListShow ) {
 
                 my %UserData = $CustomerUserObject->CustomerUserDataGet( User => $ListKey );
                 $UserData{UserFullname} = $CustomerUserObject->CustomerName(

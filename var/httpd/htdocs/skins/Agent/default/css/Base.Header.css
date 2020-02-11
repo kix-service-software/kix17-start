@@ -370,6 +370,7 @@
     #Navigation > li > ul {
         top: 37px;
         display: none;
+        z-index: 2;
     }
     #Navigation > .Active > ul {
         position: absolute;

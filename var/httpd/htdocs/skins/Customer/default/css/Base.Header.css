@@ -22,7 +22,6 @@
         padding: 0px;
         margin-bottom: 20px;
     }
-
     #ResponsiveLogo {
         display: none;
     }
@@ -45,13 +44,13 @@
         width: 100%;
     }
 
+
     /**
     *   @subsection popup
     */
     .LayoutPopup > .Header {
         padding: 7px 20px;
     }
-
     .LayoutPopup > .Header h1 {
         font-size: 14px;
         font-weight: bold;
@@ -77,7 +76,6 @@
         font-size: 13px;
         font-weight: bold;
     }
-
     .TicketLockMessage {
         display: inline-block;
         font-size: inherit;
@@ -101,6 +99,7 @@
         margin: 10px 0px 5px 0px;
         min-width: 150px;
     }
+
 
     /**
     * @subsection UserInfo
@@ -130,6 +129,7 @@
     #UserInfo .fa {
         font-size: 18px;
     }
+
 
     /**
     * @subsection Navigation
@@ -175,6 +175,7 @@
     #Navigation > li > ul {
         top: 37px;
         display: none;
+        z-index: 2;
     }
     #Navigation > .Active > ul {
         position: absolute;
@@ -211,7 +212,6 @@
     #Navigation .Search {
         width: 16px;
     }
-
     #Navigation > .Selected {
         z-index: 90;
     }

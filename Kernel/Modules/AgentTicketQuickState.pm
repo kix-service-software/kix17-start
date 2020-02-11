@@ -162,10 +162,7 @@ sub Run {
         $QuickStateData{Config} = {};
     }
 
-    if (
-        $QuickStateData{StateID} ne $Ticket{StateID}
-        && $StateList{$QuickStateData{StateID}}
-    ) {
+    if ( $StateList{$QuickStateData{StateID}} ) {
         if ( $QuickStateData{Config}->{UsedArticle} ) {
             # get all attachments of the quick state
             my @Attachments = $QuickStateObject->QuickStateAttachmentList(

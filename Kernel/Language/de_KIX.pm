@@ -3108,8 +3108,9 @@ sub Data {
     $Lang->{'FAQ Article Change Time (between)'}
         = 'Letzte Änderung des FAQ-Artikel (zwischen)';
 
-    # Template: AgentFAQSearchOpenSearchDescriptionFulltext
+    # Template: OpenSearch
     $Lang->{'FAQFulltext'} = 'FAQ-Volltext';
+    $Lang->{'Public'}      = 'Öffentlich';
 
     # Template: AgentFAQSearchSmall
     $Lang->{'FAQ Search'}                          = 'FAQ Suche';
@@ -3176,9 +3177,6 @@ sub Data {
     $Lang->{'Article Number'} = 'Artikelnummer';
     $Lang->{'Search for articles with keyword'}
         = 'Suche nach Artikeln mit Schlüsselwörtern';
-
-    # Template: PublicFAQSearchOpenSearchDescriptionFAQNumber
-    $Lang->{'Public'} = 'Öffentlich';
 
     # Template: PublicFAQSearchResultShort
     $Lang->{'Back to FAQ Explorer'} = 'Zurück zum FAQ-Explorer';
@@ -3535,18 +3533,6 @@ sub Data {
         }
         =
         'Maximale Größe von Titeln in Häufig-gestellten-Fragen-Beiträgen welche in FAQ-Berichten in der Agentenübersicht angezeigt werden.';
-    $Lang->{
-        'Module to generate HTML OpenSearch profile for short FAQ search in the public interface.'
-        }
-        =
-        'Modul zum Generieren des HTML "OpenSearch" Profils zur FAQ-Suche in der öffentlichen Oberfläche.';
-    $Lang->{
-        'Module to generate HTML OpenSearch profile for short faq search in the customer interface.'
-        }
-        =
-        'Modul zum Generieren des HTML "OpenSearch" Profils zur FAQ-Suche in der Kundenoberfläche.';
-    $Lang->{'Module to generate html OpenSearch profile for short faq search.'} =
-        'Modul zum Generieren des HTML "OpenSearch" Profils zur FAQ-Suche über das Browser-Suchfeld.';
     $Lang->{'New FAQ Article'} = 'Neuer FAQ-Artikel';
     $Lang->{'New FAQ articles need approval before they get published.'}
         = 'Neue FAQ-Artikel benötigen eine Freigabe vor der Veröffentlichung.';
@@ -4508,6 +4494,16 @@ sub Data {
          'Standard-Skin für die Agentenoberfläche (Blau)';
     $Lang->{'Default skin for the customer interface (blue version).'} =
          'Standard-Skin für die Kundenoberfläche (Blau)';
+
+    # OpenSearch
+    $Lang->{'"OpenSearch" profiles.'} =
+        '"OpenSearch" Profile.';
+    $Lang->{'Module to provide html "OpenSearch" profiles for agent frontend.'} =
+        'Modul zur Bereitstellung des HTML "OpenSearch" Profils in der Agentenoberfläche.';
+    $Lang->{'Module to generate html OpenSearch profiles for customer frontend.'} =
+        'Modul zur Bereitstellung des HTML "OpenSearch" Profils in der Kundenoberfläche.';
+    $Lang->{'Module to generate html OpenSearch profiles for public frontend.'} =
+        'Modul zur Bereitstellung des HTML "OpenSearch" Profils in der öffentlichen Oberfläche.';
 
     # $$STOP$$
 

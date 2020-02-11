@@ -6206,17 +6206,6 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Frontend::HeaderMetaModule###2-TicketSearch" Required="0" Valid="1">
-        <Description Translatable="1">Module to generate html OpenSearch profile for short ticket search in the agent interface.</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Frontend::Agent::ModuleMetaHead</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Module">Kernel::Output::HTML::HeaderMeta::AgentTicketSearch</Item>
-                <Item Key="Action">AgentTicketSearch</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Frontend::NotifyModule###5-Ticket::TicketEscalation" Required="0" Valid="0">
         <Description Translatable="1">Module to show notifications and escalations (ShownMax: max. shown escalations, EscalationInMinutes: Show ticket which will escalation in, CacheTime: Cache of calculated escalations in seconds).</Description>
         <Group>Ticket</Group>
@@ -8924,17 +8913,6 @@
         <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
             <String Regex=""></String>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="CustomerFrontend::HeaderMetaModule###2-TicketSearch" Required="0" Valid="1">
-        <Description Translatable="1">Module to generate html OpenSearch profile for short ticket search in the customer interface.</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Frontend::Customer::ModuleMetaHead</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Module">Kernel::Output::HTML::HeaderMeta::CustomerTicketSearch</Item>
-                <Item Key="Action">CustomerTicketSearch</Item>
-            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Frontend::Module###AgentTicketQueue" Required="0" Valid="1">

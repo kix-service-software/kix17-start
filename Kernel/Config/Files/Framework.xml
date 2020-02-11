@@ -5003,7 +5003,6 @@
             <Hash>
                 <Item Key="URL">skins/Customer/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
-                <Item Key="StyleRight">0px</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">70px</Item>
             </Hash>
@@ -5017,7 +5016,6 @@
             <Hash>
                 <Item Key="URL">skins/Customer/default/img/KIX17_Responsive_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
-                <Item Key="StyleRight">0px</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">60px</Item>
             </Hash>
@@ -5042,7 +5040,6 @@
             <Hash>
                 <Item Key="URL">skins/Agent/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
-                <Item Key="StyleRight">0px</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">70px</Item>
             </Hash>
@@ -5056,7 +5053,6 @@
             <Hash>
                 <Item Key="URL">skins/Agent/default/img/KIX17_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
-                <Item Key="StyleRight">0px</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">70px</Item>
             </Hash>
@@ -5084,7 +5080,6 @@
             <Hash>
                 <Item Key="URL">skins/Agent/default/img/KIX17_Responsive_Logo.png</Item>
                 <Item Key="StyleTop">10px</Item>
-                <Item Key="StyleRight">0px</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">60px</Item>
             </Hash>
@@ -5116,6 +5111,8 @@
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">60px</Item>
                 <Item Key="margin">15px auto auto;</Item>
+                <Item Key="background-size">contain</Item>
+                <Item Key="background-repeat">no-repeat</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -5138,13 +5135,15 @@
     <ConfigItem Name="CustomerResponsiveLoginLogo" Required="1" Valid="1">
         <Description Translatable="1">The logo shown on top of the login box of the customer interface. The URL to the image must be relative URL to the skin image directory.</Description>
         <Group>Framework</Group>
-        <SubGroup>Frontend::Agent</SubGroup>
+        <SubGroup>Frontend::Customer</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="URL">skins/Customer/default/img/KIX17_Responsive_Logo.png</Item>
                 <Item Key="StyleHeight">60px</Item>
                 <Item Key="StyleWidth">60px</Item>
                 <Item Key="margin">15px auto auto;</Item>
+                <Item Key="background-size">contain</Item>
+                <Item Key="background-repeat">no-repeat</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -13632,4 +13631,155 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <!-- EO CustomFooter -->
+
+    <!-- OpenSearch -->
+    <ConfigItem Name="OpenSearch" Required="0" Valid="1">
+        <Description Translatable="1">"OpenSearch" profiles.</Description>
+        <Group>Framework</Group>
+        <SubGroup>OpenSearch</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Identifier">
+                    <Array>
+                        <Item>AgentTicketFulltext</Item>
+                        <Item>AgentTicketNumber</Item>
+                        <Item>AgentFAQFulltext</Item>
+                        <Item>AgentFAQNumber</Item>
+                        <Item>CustomerTicketNumber</Item>
+                        <Item>CustomerFAQFulltext</Item>
+                        <Item>CustomerFAQNumber</Item>
+                        <Item>PublicFAQFulltext</Item>
+                        <Item>PublicFAQNumber</Item>
+                    </Array>
+                </Item>
+                <Item Key="Frontend">
+                    <Hash>
+                        <Item Key="AgentTicketFulltext">Agent</Item>
+                        <Item Key="AgentTicketNumber">Agent</Item>
+                        <Item Key="AgentFAQFulltext">Agent</Item>
+                        <Item Key="AgentFAQNumber">Agent</Item>
+                        <Item Key="CustomerTicketNumber">Customer</Item>
+                        <Item Key="CustomerFAQFulltext">Customer</Item>
+                        <Item Key="CustomerFAQNumber">Customer</Item>
+                        <Item Key="PublicFAQFulltext">Public</Item>
+                        <Item Key="PublicFAQNumber">Public</Item>
+                    </Hash>
+                </Item>
+                <Item Key="ShortName">
+                    <Hash>
+                        <Item Key="AgentTicketFulltext">[% Translate("Ticket") %] [% Translate("Fulltext") %]</Item>
+                        <Item Key="AgentTicketNumber">[% Translate("TicketNumber") %]</Item>
+                        <Item Key="AgentFAQFulltext">[% Translate("FAQFulltext") | html %]</Item>
+                        <Item Key="AgentFAQNumber">[% Translate("FAQ Number") | html %]</Item>
+                        <Item Key="CustomerTicketNumber">[% Translate("TicketNumber") %]</Item>
+                        <Item Key="CustomerFAQFulltext">[% Translate("FAQFulltext") | html %]</Item>
+                        <Item Key="CustomerFAQNumber">[% Translate("FAQ Number") | html %]</Item>
+                        <Item Key="PublicFAQFulltext">[% Translate("FAQFulltext") | html %]</Item>
+                        <Item Key="PublicFAQNumber">[% Translate("FAQ Number") | html %]</Item>
+                    </Hash>
+                </Item>
+                <Item Key="LongName">
+                    <Hash>
+                        <Item Key="AgentTicketFulltext">[% Config("ProductName") | html %] [% Translate("Ticket") %] ([% Translate("Fulltext search") | html %])</Item>
+                        <Item Key="AgentTicketNumber">[% Config("ProductName") | html %] [% Translate("Ticket") %] ([% Config("Ticket::Hook") | html %])</Item>
+                        <Item Key="AgentFAQFulltext">[% Config("ProductName") | html %] [% Translate("FAQ") %] ([% Translate("Fulltext search") | html %])</Item>
+                        <Item Key="AgentFAQNumber">[% Config("ProductName") | html %] [% Translate("FAQ") %] ([% Config("FAQ::FAQHook") | html %])</Item>
+                        <Item Key="CustomerTicketNumber">[% Config("ProductName") | html %] [% Translate("Ticket") %] ([% Config("Ticket::Hook") | html %])</Item>
+                        <Item Key="CustomerFAQFulltext">[% Config("ProductName") | html %] [% Translate("FAQ") %] ([% Translate("Fulltext search") | html %])</Item>
+                        <Item Key="CustomerFAQNumber">[% Config("ProductName") | html %] [% Translate("FAQ") %] ([% Config("FAQ::FAQHook") | html %])</Item>
+                        <Item Key="PublicFAQFulltext">[% Config("ProductName") | html %] [% Translate("FAQ") %] ([% Translate("Fulltext search") | html %])</Item>
+                        <Item Key="PublicFAQNumber">[% Config("ProductName") | html %] [% Translate("FAQ") %] ([% Config("FAQ::FAQHook") | html %])</Item>
+                    </Hash>
+                </Item>
+                <Item Key="Description">
+                    <Hash>
+                        <Item Key="AgentTicketFulltext">[% Translate("Fulltext search in tickets (e. g. \"John*n\" or \"Will*\")") %]</Item>
+                        <Item Key="AgentTicketNumber">[% Config("ProductName") | html %] [% Translate("Ticket") %] ([% Config("Ticket::Hook") | html %])</Item>
+                        <Item Key="AgentFAQFulltext">[% Translate("Fulltext search in FAQ articles (e. g. \"John*n\" or \"Will*\")") %]</Item>
+                        <Item Key="AgentFAQNumber">[% Config("ProductName") | html %] [% Translate("FAQ") %] ([% Config("FAQ::FAQHook") | html %])</Item>
+                        <Item Key="CustomerTicketNumber">[% Config("ProductName") | html %] [% Translate("Ticket") %] ([% Config("Ticket::Hook") | html %])</Item>
+                        <Item Key="CustomerFAQFulltext">[% Translate("Fulltext search in FAQ articles (e. g. \"John*n\" or \"Will*\")") %]</Item>
+                        <Item Key="CustomerFAQNumber">[% Config("ProductName") | html %] [% Translate("FAQ") %] ([% Config("FAQ::FAQHook") | html %])</Item>
+                        <Item Key="PublicFAQFulltext">[% Translate("Fulltext search in FAQ articles (e. g. \"John*n\" or \"Will*\")") %]</Item>
+                        <Item Key="PublicFAQNumber">[% Config("ProductName") | html %] [% Translate("FAQ") %] ([% Config("FAQ::FAQHook") | html %])</Item>
+                    </Hash>
+                </Item>
+                <Item Key="SearchUrl">
+                    <Hash>
+                        <Item Key="AgentTicketFulltext">[% Config("HttpType") %]://[% Config("FQDN") %]/[% Config("ScriptAlias") %]index.pl?Action=AgentTicketSearch;Subaction=Search;Fulltext={searchTerms};CheckTicketNumberAndRedirect=1</Item>
+                        <Item Key="AgentTicketNumber">[% Config("HttpType") %]://[% Config("FQDN") %]/[% Config("ScriptAlias") %]index.pl?Action=AgentTicketSearch;Subaction=Search;TicketNumber={searchTerms}</Item>
+                        <Item Key="AgentFAQFulltext">[% Config("HttpType") %]://[% Config("FQDN") %]/[% Config("ScriptAlias") %]index.pl?Action=AgentFAQSearch;Subaction=Search;Fulltext={searchTerms}</Item>
+                        <Item Key="AgentFAQNumber">[% Config("HttpType") %]://[% Config("FQDN") %]/[% Config("ScriptAlias") %]index.pl?Action=AgentFAQSearch;Subaction=Search;Number={searchTerms}</Item>
+                        <Item Key="CustomerTicketNumber">[% Config("HttpType") %]://[% Config("FQDN") %]/[% Config("ScriptAlias") %]customer.pl?Action=CustomerTicketSearch;Subaction=Search;TicketNumber={searchTerms}</Item>
+                        <Item Key="CustomerFAQFulltext">[% Config("HttpType") %]://[% Config("FQDN") %]/[% Config("ScriptAlias") %]customer.pl?Action=CustomerFAQSearch;Subaction=Search;Fulltext={searchTerms}</Item>
+                        <Item Key="CustomerFAQNumber">[% Config("HttpType") %]://[% Config("FQDN") %]/[% Config("ScriptAlias") %]customer.pl?Action=CustomerFAQSearch;Subaction=Search;Number={searchTerms}</Item>
+                        <Item Key="PublicFAQFulltext">[% Config("HttpType") %]://[% Config("FQDN") %]/[% Config("ScriptAlias") %]public.pl?Action=PublicFAQSearch;Subaction=Search;Fulltext={searchTerms}</Item>
+                        <Item Key="PublicFAQNumber">[% Config("HttpType") %]://[% Config("FQDN") %]/[% Config("ScriptAlias") %]public.pl?Action=PublicFAQSearch;Subaction=Search;Fulltext={searchTerms}</Item>
+                    </Hash>
+                </Item>
+                <Item Key="Tags">
+                    <Hash>
+                        <Item Key="AgentTicketFulltext">KIX Agent Ticket Fulltext</Item>
+                        <Item Key="AgentTicketNumber">KIX Agent Ticket Number</Item>
+                        <Item Key="AgentFAQFulltext">KIX Agent FAQ Fulltext</Item>
+                        <Item Key="AgentFAQNumber">KIX Agent FAQ Number</Item>
+                        <Item Key="CustomerTicketNumber">KIX Customer Ticket Number</Item>
+                        <Item Key="CustomerFAQFulltext">KIX Customer FAQ Fulltext</Item>
+                        <Item Key="CustomerFAQNumber">KIX Customer FAQ Number</Item>
+                        <Item Key="PublicFAQFulltext">KIX Public FAQ Fulltext</Item>
+                        <Item Key="PublicFAQNumber">KIX Public FAQ Number</Item>
+                    </Hash>
+                </Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::HeaderMetaModule###1-OpenSearch" Required="0" Valid="1">
+        <Description Translatable="1">Module to generate html "OpenSearch" profiles for agent frontend.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Agent::ModuleMetaHead</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::HeaderMeta::OpenSearch</Item>
+                <Item Key="Action">AgentFAQSearch</Item>
+                <Item Key="Frontend">Agent</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerFrontend::HeaderMetaModule###1-OpenSearch" Required="0" Valid="1">
+        <Description Translatable="1">Module to generate html "OpenSearch" profiles for customer frontend.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Customer::ModuleMetaHead</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::HeaderMeta::OpenSearch</Item>
+                <Item Key="Frontend">Customer</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="PublicFrontend::HeaderMetaModule###1-OpenSearch" Required="0" Valid="1">
+        <Description Translatable="1">Module to generate html "OpenSearch" profiles for public frontend</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Public::ModuleMetaHead</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::HeaderMeta::OpenSearch</Item>
+                <Item Key="Frontend">Public</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="PublicFrontend::Module###PublicOpenSearch" Required="1" Valid="1">
+        <Description Translatable="1">Frontend module registration for the public interface.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Frontend::Public::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description Translatable="1">Public OpenSearch.</Description>
+                <NavBarName>OpenSearch</NavBarName>
+                <Title Translatable="1">OpenSearch</Title>
+                <Loader>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <!-- EO OpenSearch -->
 </otrs_config>
