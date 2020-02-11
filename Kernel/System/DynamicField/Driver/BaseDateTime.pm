@@ -1179,6 +1179,17 @@ sub ValueLookup {
 
     my $Value = defined $Param{Key} ? $Param{Key} : '';
 
+    # check if a translation is possible
+    if ( defined $Param{LanguageObject} ) {
+
+        # translate value
+        $Value = $Param{LanguageObject}->FormatTimeString(
+            $Value,
+            'DateFormat',
+            'NoSeconds',
+        );
+    }
+
     return $Value;
 }
 
