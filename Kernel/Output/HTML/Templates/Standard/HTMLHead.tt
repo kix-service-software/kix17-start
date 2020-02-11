@@ -45,43 +45,37 @@
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Agent/[% Data.Skin | uri %]/[% Data.CSSDirectory %]/[% Data.Filename %]" />
 [% RenderBlockEnd("ModuleCSS") %]
 
-[% RenderBlockStart("HeaderLogoCSS") %]
     <style type="text/css">
+[% RenderBlockStart("LogoCSS") %]
         #Header #Logo {
-            background-image: [% Data.URL | html %];
-            top: [% Data.StyleTop | html %];
-            right: [% Data.StyleRight | html %];
-            width: [% Data.StyleWidth | html %];
-            height: [% Data.StyleHeight | html %];
-        }
-    </style>
-[% RenderBlockEnd("HeaderLogoCSS") %]
-[% RenderBlockStart("HeaderResponsiveLogoCSS") %]
-    <style type="text/css">
-        #Header #ResponsiveLogo {
-            background-image: [% Data.URL | html %];
-            top: [% Data.StyleTop | html %];
-            right: [% Data.StyleRight | html %];
-            width: [% Data.StyleWidth | html %];
-            height: [% Data.StyleHeight | html %];
-        }
-    </style>
-[% RenderBlockEnd("HeaderResponsiveLogoCSS") %]
-
-[% RenderBlockStart("LoginLogoCSS") %]
-    <style type="text/css">
-        #LoginLogo {
             [% Data.CSSAttr | html %]
         }
-    </style>
+[% RenderBlockEnd("LogoCSS") %]
+[% RenderBlockStart("ResponsiveLogoCSS") %]
+        #Header #ResponsiveLogo {
+            [% Data.CSSAttr | html %]
+        }
+[% RenderBlockEnd("ResponsiveLogoCSS") %]
+
+[% RenderBlockStart("LoginLogoCSS") %]
+        .LoginLogo {
+            [% Data.CSSAttr | html %]
+        }
 [% RenderBlockEnd("LoginLogoCSS") %]
-[% RenderBlockStart("LoginResponsiveLogoCSS") %]
-    <style type="text/css">
+[% RenderBlockStart("ResponsiveLoginLogoCSS") %]
         #LoginResponsiveLogo {
             [% Data.CSSAttr | html %]
         }
+[% RenderBlockEnd("ResponsiveLoginLogoCSS") %]
+[% RenderBlockStart("CustomCSSTop")%]
+            .ToolbarTop > #ToolBarToggle {
+                [% Data.CSSToggle | html %]
+            }
+            .ToolbarTop > #ToolBar {
+                [% Data.CSSToolbar | html %]
+            }
+[% RenderBlockEnd("CustomCSSTop")%]
     </style>
-[% RenderBlockEnd("LoginResponsiveLogoCSS") %]
 
     <style type="text/css">
         @font-face {

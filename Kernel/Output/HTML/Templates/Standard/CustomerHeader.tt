@@ -16,12 +16,8 @@
 <body class="NoJavaScript [% Data.BodyClass | html %]">
 <!-- start CI layout -->
     <div id="Header">
-[% RenderBlockStart("HeaderLogo") %]
         <div id="Logo"></div>
-[% RenderBlockEnd("HeaderLogo") %]
-[% RenderBlockStart("HeaderResponsiveLogo") %]
         <div id="ResponsiveLogo"></div>
-[% RenderBlockEnd("HeaderResponsiveLogo") %]
         <h1 class="CompanyName">
             <a href="#">[% Config("CustomerHeadline") %]</a>
         </h1>

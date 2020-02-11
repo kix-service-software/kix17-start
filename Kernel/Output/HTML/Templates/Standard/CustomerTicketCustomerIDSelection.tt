@@ -35,17 +35,20 @@
 [% RenderBlockEnd("Radiobutton") %]
 
 [% RenderBlockStart("CustomerIDSelection") %]
-<div id="MainBox" class="TicketCompose ARIARoleMain">
-    <div class="Content">
-        <form action="[% Env("CGIHandle") %]" method="post" id="CustomerIDSelection" name="compose" enctype="multipart/form-data" class="Validate PreventMultipleSubmits" >
-            <input type="hidden" name="Action" value="[% Env("Action") %]" />
-            <input type="hidden" name="Subaction" value="NewTicket" />
-            <input type="hidden" name="SelectedCustomerID" id="SelectedCustomerID" value="" />
-            <input type="hidden" name="DefaultSet" id="DefaultSet" value="[% Data.DefaultSet | html %]" />
-            <input type="hidden" name="FormID" value="[% Data.FormID | html %]" />
-            <fieldset>
-                <div>
-                    <div class="Content">
+<div id="MainBox" class="MainBox ARIARoleMain">
+    <div class="WidgetSimple">
+        <div class="Header">
+            <h2>[% Translate("Company") %]</h2>
+        </div>
+        <div class="Content">
+            <form action="[% Env("CGIHandle") %]" method="post" id="CustomerIDSelection" name="compose" enctype="multipart/form-data" class="Validate PreventMultipleSubmits" >
+                <input type="hidden" name="Action" value="[% Env("Action") %]" />
+                <input type="hidden" name="Subaction" value="NewTicket" />
+                <input type="hidden" name="SelectedCustomerID" id="SelectedCustomerID" value="" />
+                <input type="hidden" name="DefaultSet" id="DefaultSet" value="[% Data.DefaultSet | html %]" />
+                <input type="hidden" name="FormID" value="[% Data.FormID | html %]" />
+                <fieldset>
+                    <div class="ActionRow">
                         [% Translate("Please select the customer ID to which your request is related") | html %]:
                     </div>
                     <table class="DataTable">
@@ -68,12 +71,12 @@
 [% RenderBlockEnd("TableBlockRow") %]
                         </tbody>
                     </table>
+                </fieldset>
+                <div id="BottomActionRow" class="ActionRow">
+                    <button id="submitCustomerUserID" accesskey="g" title="[% Translate("Proceed") | html %] (g)" type="submit" value="[% Translate("Proceed") | html %]" title="[% Translate("Proceed with ticket creation for the selected customer ID") | html %]"><span>[% Translate("Proceed") | html %]</span></button>
                 </div>
-            </fieldset>
-            <div id="BottomActionRow" class="ActionRow">
-                <button id="submitCustomerUserID" accesskey="g" title="[% Translate("Proceed") | html %] (g)" type="submit" value="[% Translate("Proceed") | html %]" title="[% Translate("Proceed with ticket creation for the selected customer ID") | html %]"><span>[% Translate("Proceed") | html %]</span></button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 [% RenderBlockEnd("CustomerIDSelection") %]
