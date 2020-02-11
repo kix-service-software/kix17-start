@@ -1,6 +1,17 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.10.0-RC7 (2020/02/11)
+ * (2020/02/11) - Bugfix: KIX17-345 (fixed mandatory session information for OpenSearch definition) (millinger)
+ * (2020/02/10) - Bugfix: KIX17-514 (changed check for set ticket status and status of QuickState) (fjacquemin)
+ * (2020/02/07) - Bugfix: KIX17-603 (fixed sorting by name for available dialogues and transition actions) (fjacquemin)
+ * (2020/02/06) - Bugfix: KIX17-604 (fixed checking the preferences with the wrong UserID) (fjacquemin)
+ * (2020/02/06) - Bugfix: KIX17-586 (fixed transfer of the dynamic fields from the templates to the wrong hash position) (fjacquemin)
+ * (2020/02/04) - Bugfix: KIX17-361 (date based dynamic fields provide formated string on value lookup) (millinger)
+ * (2020/01/29) - Bugfix: KIX17-562 (action parameter not provided for activity dialog acl) (millinger)
+ * (2020/01/27) - Bugfix: KIX17-550 (fixed several issues of the new design) (ddoerffel)
+ * (2020/01/13) - Bugfix: T2019092390005438 (fixed customer user count for administration) (millinger)
+
 # 17.10.0-RC6 (2020/02/05)
  * (2020/02/03) - Bugfix: KIX17-597 (hide/disable dynamic field at agent ticket creation by selected customer user data) (millinger)
  * (2020/02/03) - Bugfix: KIX17-586 (fixed missing initial loading of dynamic field when ticket template used) (fjacquemin)
