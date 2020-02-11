@@ -80,7 +80,7 @@
 
         <div class="WidgetSimple">
             <div class="Header">
-                 <h2><span>[% Translate("Hint") | html %]</span></h2>
+                <h2><span>[% Translate("Hint") | html %]</span></h2>
             </div>
             <div class="Content">
                 <p>
@@ -94,10 +94,10 @@
 [% RenderBlockStart("OverviewHeader") %]
             <div class="Header">
                 <h2><span>
-                    [% IF Data.ListAll && Data.Limit && Data.ListAll > Data.Limit %]
-                        [% Translate("List (only %s shown - more available)", Data.SearchListSize) | html %]
+                    [% IF Data.CountAll > Data.CountShow %]
+                        [% Translate("List (only %s shown - more available)", Data.CountShow) | html %]
                     [% ELSE %]
-                        [% Translate("List (%s total)", Data.ListAll) | html %]
+                        [% Translate("List (%s total)", Data.CountShow) | html %]
                     [% END %]
                 </span></h2>
             </div>
