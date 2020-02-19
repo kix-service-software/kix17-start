@@ -247,6 +247,14 @@ to search users
         Valid            => 1,                # (optional) default 1
     );
 
+    # search by search fields
+    my %List = $CustomerUserObject->CustomerSearch(
+        SearchFields     => {
+            UserPhone => '+49123/456789'
+        },
+        Valid            => 1,                # (optional) default 1
+    );
+
 =cut
 
 sub CustomerSearch {

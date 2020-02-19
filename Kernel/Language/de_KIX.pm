@@ -1124,7 +1124,8 @@ sub Data {
         = 'Definiert einen Outputfilter, welcher die Möglichkeit bereitstellt, das Ergebnis der Ticketsuche im Kundenfrontend bei Suchergebnisformat "Drucken" in einem neuen Tab zu öffnen.';
     $Lang->{'Customer ticket search result for "Print" opens in new tab.'}
         = 'Suchergebnis der Ticketsuche im Kundenfrontend für "Drucken" öffnet in einem neuen Tab.';
-
+    $Lang->{'Defines additional search fields to searching for customers in the customer backends. (Key: Identifier, Value: database column)'}
+        = 'Definiert weitere Suchfelder für die Suche nach Kunden in den Kunden-Backends. (Schlüssel: Kennung, Wert: Datenbankspalte)';
     # EO CustomerSearch
 
     # admin frontend
