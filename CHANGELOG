@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.10.0-RC8 (2020/02/19)
+ * (2020/02/17) - Bugfix: KIX17-656 (standardization of translations) (millinger)
+ * (2020/02/13) - Bugfix: KIX17-557 (fixed display problem of the email notification when it is opened in Outlook) (fjacquemin)
+ * (2020/02/12) - Bugfix: KIX17-646 (fix customer user search with parameter 'SearchFields' and missing fallback configuration) (fjacquemin)
+ * (2020/02/11) - Bugfix: KIX17-615 (fixed GroupDN is not checked for AuthSync) (millinger)
+ * (2020/02/11) - Bugfix: KIX17-504 (fixed 'Subroutine redefined' in daemon log) (millinger)
+
 # 17.10.0-RC7 (2020/02/11)
  * (2020/02/11) - Bugfix: KIX17-345 (fixed mandatory session information for OpenSearch definition) (millinger)
  * (2020/02/10) - Bugfix: KIX17-514 (changed check for set ticket status and status of QuickState) (fjacquemin)
