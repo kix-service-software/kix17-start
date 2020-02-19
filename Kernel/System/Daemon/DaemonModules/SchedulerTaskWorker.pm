@@ -172,9 +172,11 @@ sub Run {
                 }
             }
 
-            # Destroy objects.
-            $Kernel::OM->ObjectsDiscard(
-                ForcePackageReload => 1,
+            # make sure every child uses its own clean environment.
+            local $Kernel::OM = Kernel::System::ObjectManager->new(
+                'Kernel::System::Log' => {
+                    LogPrefix => 'KIX-SchedulerTaskWorker-' . $$,
+                },
             );
 
             # Disable in memory cache because many processes runs at the same time.

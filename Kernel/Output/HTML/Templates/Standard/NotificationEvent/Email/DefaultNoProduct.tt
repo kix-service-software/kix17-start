@@ -20,7 +20,6 @@
                 -webkit-text-size-adjust: none;
                 padding: 1.5em;
                 margin: 0;
-                text-align: center;
                 background-color: #FAFAFA;
                 color: #434242;
             }
@@ -33,7 +32,8 @@
                 height: 100%;
                 margin: auto;
                 padding: 0;
-                width: 100%;
+                min-width: 100px;
+                max-width: 100%;
                 display: inline;
             }
 

@@ -1489,12 +1489,12 @@ sub Data {
         'Edit Mail Account' => 'E-Mailkonto bearbeiten',
 
         # Template: AdminNavigationBar
-        'Admin' => 'Admin',
-        'Agent Management' => 'Agenten-Verwaltung',
-        'Queue Settings' => 'Queue-Einstellungen',
-        'Ticket Settings' => 'Ticket-Einstellungen',
+        'Admin'                 => 'Admin',
+        'Agent Management'      => 'Agentenverwaltung',
+        'Queue Settings'        => 'Queue-Einstellungen',
+        'Ticket Settings'       => 'Ticket-Einstellungen',
         'System Administration' => 'Systemverwaltung',
-        'Online Admin Manual' => 'Online-Administrationshandbuch',
+        'Online Admin Manual'   => 'Online-Administrationshandbuch',
 
         # Template: AdminNotificationEvent
         'Ticket Notification Management' => 'Verwaltung von Ticket-Benachrichtigungen',
@@ -1510,7 +1510,7 @@ sub Data {
         'Do you really want to delete this notification?' => 'Möchten Sie diese Benachrichtigung wirklich löschen?',
         'Add Notification' => 'Benachrichtigung hinzufügen',
         'Edit Notification' => 'Benachrichtigung bearbeiten',
-        'Show in agent preferences' => 'In Agenteinstellungen anzeigen',
+        'Show in agent preferences' => 'In Agenten-Einstellungen anzeigen',
         'Agent preferences tooltip' => 'Kurzinfo für die persönlichen Agenten-Einstellungen',
         'This message will be shown on the agent preferences screen as a tooltip for this notification.' =>
             'Diese Nachricht wird als Kurzinfo für diese Benachrichtigung im Einstellungsbildschirm der Agenten-Einstellungen angezeigt.',
