@@ -341,7 +341,8 @@ sub Run {
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar();
         $Output .= $Self->_Mask(
-            %Param
+            %Param,
+            Subaction => 'Add'
         );
         $Output .= $LayoutObject->Footer();
         return $Output;
@@ -519,7 +520,8 @@ sub Run {
         $Output .= $Self->_Mask(
             %Param,
             %GetParam,
-            %Errors
+            %Errors,
+            Subaction => 'Add'
         );
         $Output .= $LayoutObject->Footer();
         return $Output;
@@ -567,7 +569,8 @@ sub Run {
         $Output .= $LayoutObject->NavigationBar();
         $Output .= $Self->_Mask(
             %Param,
-            %Data
+            %Data,
+            Subaction => 'Change'
         );
         $Output .= $LayoutObject->Footer();
         return $Output;
@@ -769,7 +772,8 @@ sub Run {
         $Output .= $Self->_Mask(
             %Param,
             %GetParam,
-            %Errors
+            %Errors,
+            Subaction => 'Change'
         );
         $Output .= $LayoutObject->Footer();
         return $Output;
