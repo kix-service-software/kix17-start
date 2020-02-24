@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.10.0-RC9 (2020/02/24)
+ * (2020/02/14) - Bugfix: KIX17-628 (fixed incorrect subaction after form error in AdminQuickState) (fjacquemin)
+ * (2019/12/02) - CR: KIX17-435 (added beta version of custom skin "Dark Mode") (fjacquemin)
+
 # 17.10.0-RC8 (2020/02/19)
  * (2020/02/17) - Bugfix: KIX17-656 (standardization of translations) (millinger)
  * (2020/02/13) - Bugfix: KIX17-557 (fixed display problem of the email notification when it is opened in Outlook) (fjacquemin)
