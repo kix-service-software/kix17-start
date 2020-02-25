@@ -940,8 +940,8 @@ sub _Mask {
 
     # show appropriate messages for ServerError
     if (
-        defined $Param{Errors}->{NameExists}
-        && $Param{Errors}->{NameExists}
+        defined $Param{NameExists}
+        && $Param{NameExists}
     ) {
         $LayoutObject->Block( Name => 'ExistNameServerError' );
     }

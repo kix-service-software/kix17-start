@@ -4420,6 +4420,8 @@ sub Data {
         = 'Der Status konnte mit dem gewähltem Statuswechsel \'%s\' nicht geändert werden!';
     $Lang->{'It could not be created the corresponding article to the quick state \'%s\'!'}
         = 'Es konnte nicht der entsprechende Artikel zum Statuswechsel \'%s\' erstellt werden!';
+    $Lang->{'A quick state with this name already exists!'}
+        = 'Ein Statuswechsel mit diesem Namen existiert bereits!';
 
     # System Message
     $Lang->{'Defined modules in the blacklist are not displayed in the selection.'}
