@@ -744,8 +744,8 @@ sub _Overview {
         $LayoutObject->Block(
             Name => 'OverviewHeader',
             Data => {
-                CountAll  => keys( %ListAll ),
-                CountShow => keys( %ListShow ),
+                CountAll  => scalar( keys( %ListAll ) ),
+                CountShow => scalar( keys( %ListShow ) ),
             },
         );
 
