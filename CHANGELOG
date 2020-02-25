@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.10.0-RC10 (2020/02/25)
+ * (2020/02/25) - Bugfix: KIX17-317 (fixed invalid condition) (millinger)
+ * (2020/02/25) - Bugfix: KIX17-550 (removed unnecessary hover effects in the jstree) (fjacquemin)
+ * (2020/02/25) - Bugfix: KIX17-628 (fixed incorreted error message when quick state name already exists) (fjacquemin)
+
 # 17.10.0-RC9 (2020/02/24)
  * (2020/02/14) - Bugfix: KIX17-628 (fixed incorrect subaction after form error in AdminQuickState) (fjacquemin)
  * (2019/12/02) - CR: KIX17-435 (added beta version of custom skin "Dark Mode") (fjacquemin)
