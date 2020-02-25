@@ -592,8 +592,8 @@
         border: 1px solid #CCCCCC;
     }
     .ServiceTreeContent .jstree-anchor.jstree-hovered,
+    .jstree-node:hover > .jstree-anchor.jstree-hovered,
     .jstree-node.Active > .jstree-anchor,
-    .jstree-node:hover > .jstree-anchor,
     .jstree-anchor.jstree-clicked,
     .jstree-anchor.jstree-clicked:focus,
     .jstree-wholerow-clicked,
@@ -610,6 +610,7 @@
     .jstree-node.Disabled:hover > .jstree-anchor.jstree-hovered,
     .jstree-node.Disabled:hover > .jstree-wholerow.jstree-wholerow-hovered {
         background-color: #F2F2F2;
+        color: #AAAAAA;
     }
     #TreeContainer #TreeSearch span {
         color: #777777;
@@ -1131,6 +1132,7 @@
     .Flag span.redled {
         background-color: #FF505E;
     }
+
 
     /**
     *   @subsection unread article
