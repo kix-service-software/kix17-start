@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.10.0 (2020/02/27)
+ * (2020/02/27) - productive release
+
 # 17.10.0-RC10 (2020/02/25)
  * (2020/02/25) - Bugfix: KIX17-317 (fixed invalid condition) (millinger)
  * (2020/02/25) - Bugfix: KIX17-550 (removed unnecessary hover effects in the jstree) (fjacquemin)
