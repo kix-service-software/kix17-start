@@ -1,5 +1,90 @@
 # Change log of KIX
-* Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de/
+* Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
+
+# 17.10.0 (2020/02/27)
+ * (2020/02/27) - productive release
+
+# 17.10.0-RC10 (2020/02/25)
+ * (2020/02/25) - Bugfix: KIX17-317 (fixed invalid condition) (millinger)
+ * (2020/02/25) - Bugfix: KIX17-550 (removed unnecessary hover effects in the jstree) (fjacquemin)
+ * (2020/02/25) - Bugfix: KIX17-628 (fixed incorreted error message when quick state name already exists) (fjacquemin)
+
+# 17.10.0-RC9 (2020/02/24)
+ * (2020/02/14) - Bugfix: KIX17-628 (fixed incorrect subaction after form error in AdminQuickState) (fjacquemin)
+ * (2019/12/02) - CR: KIX17-435 (added beta version of custom skin "Dark Mode") (fjacquemin)
+
+# 17.10.0-RC8 (2020/02/19)
+ * (2020/02/17) - Bugfix: KIX17-656 (standardization of translations) (millinger)
+ * (2020/02/13) - Bugfix: KIX17-557 (fixed display problem of the email notification when it is opened in Outlook) (fjacquemin)
+ * (2020/02/12) - Bugfix: KIX17-646 (fix customer user search with parameter 'SearchFields' and missing fallback configuration) (fjacquemin)
+ * (2020/02/11) - Bugfix: KIX17-615 (fixed GroupDN is not checked for AuthSync) (millinger)
+ * (2020/02/11) - Bugfix: KIX17-504 (fixed 'Subroutine redefined' in daemon log) (millinger)
+
+# 17.10.0-RC7 (2020/02/11)
+ * (2020/02/11) - Bugfix: KIX17-345 (fixed mandatory session information for OpenSearch definition) (millinger)
+ * (2020/02/10) - Bugfix: KIX17-514 (changed check for set ticket status and status of QuickState) (fjacquemin)
+ * (2020/02/07) - Bugfix: KIX17-603 (fixed sorting by name for available dialogues and transition actions) (fjacquemin)
+ * (2020/02/06) - Bugfix: KIX17-604 (fixed checking the preferences with the wrong UserID) (fjacquemin)
+ * (2020/02/06) - Bugfix: KIX17-586 (fixed transfer of the dynamic fields from the templates to the wrong hash position) (fjacquemin)
+ * (2020/02/04) - Bugfix: KIX17-361 (date based dynamic fields provide formated string on value lookup) (millinger)
+ * (2020/01/29) - Bugfix: KIX17-562 (action parameter not provided for activity dialog acl) (millinger)
+ * (2020/01/27) - Bugfix: KIX17-550 (fixed several issues of the new design) (ddoerffel)
+ * (2020/01/13) - Bugfix: T2019092390005438 (fixed customer user count for administration) (millinger)
+
+# 17.10.0-RC6 (2020/02/05)
+ * (2020/02/03) - Bugfix: KIX17-597 (hide/disable dynamic field at agent ticket creation by selected customer user data) (millinger)
+ * (2020/02/03) - Bugfix: KIX17-586 (fixed missing initial loading of dynamic field when ticket template used) (fjacquemin)
+ * (2020/02/03) - Bugfix: KIX17-599 (fixed initial field order for new DynamicFields) (millinger)
+ * (2020/02/03) - Bugfix: KIX17-602 (fixed missing delivery of the article ID to the NotificationEvent) (millinger)
+ * (2020/01/23) - Bugfix: KIX17-603 (fixed sorting by name for available dialogues and transition actions) (millinger)
+ * (2020/01/20) - Bugfix: KIX17-601 (fixed incorrect description texts of the console commands import/export) (millinger)
+ * (2020/01/14) - Bugfix: KIX17-600 (fixed incomplete front-end module registration with several NavBar entries) (millinger)
+ * (2020/01/07) - Bugfix: T2020010690000496 (dynamic field ITSMConfigItemReference does not check result permission) (millinger)
+
+# 17.10.0-RC5 (2020/01/31)
+ * (2020/01/28) - Bugfix: KIX17-543 (save current SystemID before update) (millinger)
+ * (2020/01/27) - Bugfix: KIX17-574 (remove sysconfig 'Ticket::ACL-PossibleActionSubsumption') (dbormann)
+ * (2020/01/27) - Bugfix: T2019121690001967 (fixed double encoding of attachments of configuration elements) (fjacquemin)
+ * (2020/01/27) - CR: KIX17-435 (changed default configuration of the skin "Dark Mode (Beta)") (fjacquemin)
+ * (2020/01/24) - Bugfix: T2019120390000492 (fixed acl issue with duplicate custom queue names) (millinger)
+ * (2020/01/24) - Bugfix: T2019102390000618 (changed non-default permissions to rw) (millinger)
+ * (2020/01/23) - Bugfix: KIX17-569 (implemented ticket type exclusion for acl module 'CloseParentAfterClosedChilds') (fober)
+ * (2020/01/22) - Bugfix: KIX17-568 (Import always keeps current value for empty import value) (smehlig)
+ * (2020/01/13) - Bugfix: T2019121290000939 (nagios followup issue with strict followup) (millinger)
+ * (2020/01/13) - Bugfix: T2019021290001073 (fix log error for link together ticket bulk action) (millinger)
+
+# 17.10.0-RC4 (2020/01/21)
+ * (2020/01/20) - CR: KIX17-563 (added target-attribute configuration for CustomFooter) (dbormann)
+ * (2020/01/16) - CR: KIX17-564 (implemented acl checks for quick state action) (fjacquemin)
+ * (2020/01/13) - Bugfix: T2020010990000285 (implemented configuration to open menu on hover for customer frontend) (millinger)
+
+# 17.10.0-RC3 (2020/01/13)
+ * (2020/01/13) - Bugfix: T2020011090000282 (user gets permissions from invalid roles) (millinger)
+ * (2020/01/13) - Bugfix: T2019102390000618 (changed needed permission for AgentTicketMove to rw) (millinger)
+ * (2020/01/13) - Bugfix: T2019080590000595 (clarified load draft button) (millinger)
+ * (2020/01/07) - Bugfix: T2019111390000886 (fixed column sorting of virtual queues) (millinger)
+ * (2019/12/10) - Bugfix: T2019120490000605 (agent ticket search does not select all pages for bulk action) (millinger)
+
+# 17.10.0-RC2 (2020/01/06)
+ * (2020/01/02) - CR: KIX17-515 (Updated copyright) (millinger)
+ * (2020/01/02) - CR: KIX17-474 (fixed missing html quotations) (millinger)
+ * (2019/12/30) - Bugfix: T2018011790000747 (missing check for existing dynamic field at dashboard TicketGeneric) (millinger)
+ * (2019/12/30) - Bugfix: T2019092690000875 (update script did not check existence of config item class) (millinger)
+ * (2019/12/30) - Bugfix: T2019101790000719 (updating signature for empty queue fails for new email ticket) (millinger)
+ * (2019/12/27) - CR: KIX17-346 (removed dashboard module KIXNotify) (millinger)
+ * (2019/12/16) - Bugfix: KIX17-519 (fixed using case insensitive with postgres and dynamic field RemoteDB query conditions) (fjacquemin)
+ * (2019/12/11) - Bugfix: KIX17-523 (fixed performance issue for ticket and config item overviews) (millinger)
+ * (2019/12/10) - Bugfix: T2019120690004054 (customer faq search shows faq entries from categories without permission) (millinger)
+ * (2019/12/10) - Bugfix: T2019120290000716 (linked config item widget could not show items for classes with umlaut) (millinger)
+ * (2019/12/10) - Bugfix: T2019120390000492 (CustomerPanelOwnSelection disables queue based acl) (millinger)
+
+# 17.10.0-RC1 (2019/12/11)
+ * (2019/12/09) - Bugfix: T2019112890001161 (fixed unread articles no longer shown bold in article list) (fjacquemin)
+ * (2019/12/06) - Bugfix: KIX17-516 (removed obsolete documentation) (ddoerffel)
+ * (2019/12/06) - Bugfix: T2018042790000821 (some otrs stuff removed) (ddoerffel)
+ * (2019/12/03) - Bugfix: T2019120390000689 (hiding dynamic field tab not working) (ddoerffel)
+ * (2019/12/03) - Bugfix: KIX17-443 (removed permission breaking filters from locked and responsible view) (millinger)
+ * (2019/12/02) - Bugfix: T2019081490001077 (fixed missing default images when using a custom skin) (fjacquemin)
 
 # 17.9.1 (2019/12/11)
  * (2019/12/11) - productive release
