@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -32,6 +32,7 @@ sub Run {
     # create needed objects
     my $ConfigObject      = $Kernel::OM->Get('Kernel::Config');
     my $LayoutObject      = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    my $HTMLUtilsObject   = $Kernel::OM->Get('Kernel::System::HTMLUtils');
     my $QueueObject       = $Kernel::OM->Get('Kernel::System::Queue');
     my $StateObject       = $Kernel::OM->Get('Kernel::System::State');
     my $TextModuleObject  = $Kernel::OM->Get('Kernel::System::TextModule');
@@ -120,12 +121,14 @@ sub Run {
     $Param{AllQueuesArray} = 'var arrQueues = new Array();';
     my $Index = 0;
     for my $QueueID ( keys %QueueData ) {
+        my $QueueName = $QueueData{$QueueID};
+        $QueueName    =~ s/\//\\\//g;
         $Param{AllQueuesArray} .= 'arrQueues['
             . $Index
             . '] = "'
             . $QueueID
-            . ":::::"
-            . $QueueData{$QueueID}
+            . ':::::'
+            . $QueueName
             . '";';
         $Index++;
     }

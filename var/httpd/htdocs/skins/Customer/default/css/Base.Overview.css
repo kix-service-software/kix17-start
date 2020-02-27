@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -55,14 +55,12 @@
         margin-left: 16px;
         margin-right: 0;
     }
-
     .LayoutFixedSidebar.SidebarLast > .SidebarColumn.Large {
         width: 350px;
         float: right;
         margin-left: 16px;
         margin-right: 0;
     }
-
     .Headline {
         height: 24px;
         margin: 15px 0 5px 0;
@@ -76,6 +74,25 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+
+    /**
+    *   @subsection CustomerTicketOverview
+    */
+    .Placeholder > .Button {
+        border-width: 1px;
+        border-style: solid;
+        min-height: 12px;
+        padding: 4px 7px 3px;
+        line-height: 14px;
+        vertical-align: middle;
+        font-size: 11px;
+        margin-top: 5px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+
     /**
     * @subsection overview
     */
@@ -119,7 +136,6 @@
     .ControlRow li.Active:active {
         padding-left: 2px;
     }
-
     .ControlRow li.Active,
     .ControlRow li.Active:hover,
     .ControlRow li.Active:active,
@@ -132,7 +148,6 @@
     .ControlRow li > a > span {
         padding-left: 4px;
     }
-
     ul.ContextFunctions {
         position: absolute;
         right: 0;
@@ -141,13 +156,11 @@
     ul.ContextFunctions li {
         padding-left: 3px;
     }
-
     ul.ContextFunctions li span {
         position: absolute;
         left: -9999px;
         top: -9999px;
     }
-
     ul.ContextFunctions li.ContextHelp a,
     ul.ContextFunctions li.ContextSettings a {
         display: block;
@@ -167,6 +180,7 @@
         width: 19px;
         height: 24px;
     }
+
 
     /**
     * @subsection action
@@ -211,11 +225,9 @@
         display: inline-block;
         border-bottom: 0;
     }
-
     .Actions li.Inactive a {
         cursor: default;
     }
-
     .ActionRow .Actions li a,
     .LightRow .Actions li a,
     .Actions li.Inactive a:hover,
@@ -233,7 +245,6 @@
     .Actions li span.ClusterLink {
         padding: 2px 5px;
     }
-
     .Cluster {
         overflow: visible;
     }
@@ -250,6 +261,7 @@
     }
     .Cluster > ul > li {
         position: relative;
+        z-index: 1;
     }
     .Cluster ul ul li::after {
         display: none;
@@ -261,7 +273,6 @@
         width: 10px;
         text-align: center;
     }
-
     .Cluster ul ul li {
         display: block;
         float: none;
@@ -287,7 +298,6 @@
     .ActionRow.Cluster > ul > li > ul > li > a {
         margin: 0;
     }
-
     .Tabs {
         padding: 5px 9px;
         float: left;
@@ -314,6 +324,8 @@
     .Filter.Tabs a.Selected {
         font-weight: bold;
     }
+
+
     /**
     * @subsection pagination
     */
@@ -349,7 +361,6 @@
         position: relative;
         float: left;
     }
-
     .Flag {
         border: 1px solid #82c826;
         top: 13px;
@@ -372,7 +383,6 @@
         margin-right: 8px;
         margin-left: 5px;
     }
-
     .MessageContent {
         min-height: 350px;
         overflow: auto;
@@ -406,7 +416,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
     #Messages .Visible .MessageBody {
         padding: 10px;
     }
@@ -458,7 +467,6 @@
         width: 100%;
         border: none;
     }
-
     #FollowUp {
         top: -1px;
         position: relative;
@@ -528,6 +536,8 @@
     #BottomActionRow > span {
         margin-right: 5px;
     }
+
+
     /**
     *   @subsection Search overview
     */
@@ -547,6 +557,7 @@
         border-style: solid;
         border-radius: 5px;
     }
+
 
     /**
     *   @subsection FAQ
@@ -630,6 +641,7 @@
         margin: 7px;
     }
 
+
     /**
     *   @subsection ticket zoom
     */
@@ -701,7 +713,6 @@
         text-align: center;
         width: 100%;
     }
-
     .TemplateSelectionArea > div {
         margin: 0 0 80px 0;
         width: 900px;

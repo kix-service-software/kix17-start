@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -188,7 +188,6 @@
         -ms-user-select: none;
         user-select: none;
     }
-
     .jstree-InputField .jstree-wholerow-ul .jstree-anchor,
     .jstree-InputField .jstree-wholerow-ul .jstree-icon {
         position: relative;
@@ -206,6 +205,9 @@
         margin: 0;
         vertical-align: top;
     }
+    .jstree-InputField .Disabled > .jstree-anchor {
+        font-style: italic;
+    }
     .jstree-InputField-Tree .jstree-themeicon {
         background-position: -263px -7px;
     }
@@ -216,7 +218,6 @@
     .jstree-InputField .jstree-anchor > .jstree-themeicon-hidden {
         display: none;
     }
-
     .jstree-InputField .jstree-anchor,
     .jstree-InputField .jstree-anchor:link,
     .jstree-InputField .jstree-anchor:visited,
@@ -224,7 +225,6 @@
     .jstree-InputField .jstree-anchor:active {
         text-decoration: none;
     }
-
     .jstree-InputField-Tree .jstree-node,
     .jstree-InputField-Tree .jstree-icon {
         background-image: url('../img/inputfield_tree.png');
@@ -271,6 +271,7 @@
     .jstree-InputField-Tree .jstree-leaf > .jstree-ocl {
         background-position: -71px -7px;
     }
+
 
     /**
     * @subsection NoTree

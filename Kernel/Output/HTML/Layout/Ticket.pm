@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -313,7 +313,6 @@ sub AgentQueueListOption {
     ) {
         # transform data from Hash in Array because of ordering in frontend by Queue name
         # it was a problem wit name like '(some_queue)'
-        # see bug#10621 http://bugs.otrs.org/show_bug.cgi?id=10621
         my %QueueDataHash = %{ $Param{Data} || {} };
 
         # get StandardResponsesStrg
@@ -963,19 +962,17 @@ sub TicketListShow {
     my $ParamObject         = $Kernel::OM->Get('Kernel::System::Web::Request');
     my $UploadCacheObject   = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
 
-    my $SelectedItemStrg    = $ParamObject->GetParam( Param => 'SelectedItems' )   || '';
-    my $UnselectedItemStrg  = $ParamObject->GetParam( Param => 'UnselectedItems' ) || '';
-    my @SelectedItems       = split(',', $SelectedItemStrg);
-    my @UnselectedItems     = split(',', $UnselectedItemStrg);
+    my $SelectedItemStrg  = $ParamObject->GetParam( Param => 'SelectedItems' ) || '';
+    my @SelectedItems     = split(',', $SelectedItemStrg);
+    my %SelectedItemsHash = map( { $_ => 1 } @SelectedItems );
+    my @UnselectedItems   = ();
 
     for my $TicketID ( @{$Param{OriginalTicketIDs}} ) {
-        if (
-            !grep({/^$TicketID$/} @UnselectedItems)
-            && !grep({/^$TicketID$/} @SelectedItems)
-        ) {
+        if ( !$SelectedItemsHash{ $TicketID } ) {
             push(@UnselectedItems, $TicketID);
         }
     }
+    my $UnselectedItemStrg = join(',', @UnselectedItems) || '';
 
     if ( !$Self->{FormID} ) {
         $Self->{FormID} = $UploadCacheObject->FormIDCreate();
@@ -991,8 +988,8 @@ sub TicketListShow {
         Action              => 'Action=' . $Self->{Action},
         Link                => $Param{LinkPage},
         IDPrefix            => $Self->{Action},
-        SelectedItems       => join(',', @SelectedItems)   || '',
-        UnselectedItems     => join(',', @UnselectedItems) || '',
+        SelectedItems       => $SelectedItemStrg,
+        UnselectedItems     => $UnselectedItemStrg,
         FormID              => $Self->{FormID}
     );
 
@@ -1216,8 +1213,8 @@ sub TicketListShow {
         PageShown       => $PageShown,
         AllHits         => $Param{Total} || 0,
         Output          => $Param{Output} || '',
-        SelectedItems   => $SelectedItemStrg,
-        UnselectedItems => $UnselectedItemStrg,
+        SelectedItems   => \@SelectedItems,
+        UnselectedItems => \@UnselectedItems,
     );
     if ( !$Param{Output} ) {
         $Self->Print( Output => \$Output );

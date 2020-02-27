@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -183,8 +183,8 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
         // get TextModule for preview
         var TextModule = TargetNS.GetTextmodule(ID);
 
-        $Title.html(TextModule.Name);
-        $Subject.html(TextModule.Subject);
+        $Title.text(TextModule.Name);
+        $Subject.text(TextModule.Subject);
         $Body.html(TextModule.TextModule);
 
         return;

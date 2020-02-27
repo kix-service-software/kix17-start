@@ -6206,17 +6206,6 @@
             </Hash>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="Frontend::HeaderMetaModule###2-TicketSearch" Required="0" Valid="1">
-        <Description Translatable="1">Module to generate html OpenSearch profile for short ticket search in the agent interface.</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Frontend::Agent::ModuleMetaHead</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Module">Kernel::Output::HTML::HeaderMeta::AgentTicketSearch</Item>
-                <Item Key="Action">AgentTicketSearch</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Frontend::NotifyModule###5-Ticket::TicketEscalation" Required="0" Valid="0">
         <Description Translatable="1">Module to show notifications and escalations (ShownMax: max. shown escalations, EscalationInMinutes: Show ticket which will escalation in, CacheTime: Cache of calculated escalations in seconds).</Description>
         <Group>Ticket</Group>
@@ -8926,17 +8915,6 @@
             <String Regex=""></String>
         </Setting>
     </ConfigItem>
-    <ConfigItem Name="CustomerFrontend::HeaderMetaModule###2-TicketSearch" Required="0" Valid="1">
-        <Description Translatable="1">Module to generate html OpenSearch profile for short ticket search in the customer interface.</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Frontend::Customer::ModuleMetaHead</SubGroup>
-        <Setting>
-            <Hash>
-                <Item Key="Module">Kernel::Output::HTML::HeaderMeta::CustomerTicketSearch</Item>
-                <Item Key="Action">CustomerTicketSearch</Item>
-            </Hash>
-        </Setting>
-    </ConfigItem>
     <ConfigItem Name="Frontend::Module###AgentTicketQueue" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>Ticket</Group>
@@ -10340,7 +10318,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::Acl::Module###1-Ticket::Acl::Module" Required="0" Valid="0">
-        <Description Translatable="1">ACL module that allows closing parent tickets only if all its children are already closed ("State" shows which states are not available for the parent ticket until all child tickets are closed).</Description>
+        <Description Translatable="1">ACL module that allows closing parent tickets only if all its children are already closed. "State" lists ticket states which are not available for the parent ticket until all child tickets are closed. "ExcludeTypes" lists ticket types that should be ignored by the module: 0 = Do not ignore, 1 = Ignore.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::TicketACL</SubGroup>
         <Setting>
@@ -10351,6 +10329,11 @@
                         <Item Translatable="1">closed successful</Item>
                         <Item Translatable="1">closed unsuccessful</Item>
                     </Array>
+                </Item>
+                <Item Key="ExcludeTypes">
+                    <Hash>
+                        <Item Key=""></Item>
+                    </Hash>
                 </Item>
             </Hash>
         </Setting>
@@ -10735,6 +10718,7 @@
                 <Item>X-KIX-Queue</Item>
                 <Item>X-KIX-Lock</Item>
                 <Item>X-KIX-Ignore</Item>
+                <Item>X-KIX-StrictFollowUpIgnore</Item>
                 <Item>X-KIX-State</Item>
                 <Item>X-KIX-State-PendingTime</Item>
                 <Item>X-KIX-Type</Item>
@@ -10761,7 +10745,7 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PostMaster::StrictFollowUp" Required="1" Valid="1">
-        <Description Translatable="1">Postmaster handles followups and new tickets based on the system address assigned queues.</Description>
+        <Description Translatable="1">Postmaster handles followups and new tickets based on the system address assigned queues. The queue, the system address has assigned for new tickets, is also considered.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::PostMaster</SubGroup>
         <Setting>
@@ -12538,7 +12522,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::EscalationDelayed::FreeTimeField" Required="0" Valid="0">
-        <Description Translatable="1">Defines a dynamic field of type date/time which is used as start time for solution SLA-computation rather than ticket creation time, thus allowing to start SLA-countdown with begin of customer desired times. "Index" is only fallback for old configuration upgraded from OTRS 3.1 or previous to be workable. In this case dynamic field named TicketFreeTime"Index" is used.</Description>
+        <Description Translatable="1">Defines a dynamic field of type date/time which is used as start time for solution SLA-computation rather than ticket creation time, thus allowing to start SLA-countdown with begin of customer desired times. "Index" is only fallback for old configuration upgraded from KIX 4.0 or previous to be workable. In this case dynamic field named TicketFreeTime"Index" is used.</Description>
         <Group>Ticket</Group>
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
@@ -17201,17 +17185,6 @@ Here you may define a default text for the forward function. You find this confi
         <SubGroup>Core::Ticket</SubGroup>
         <Setting>
             <String Regex="">Kernel::System::Ticket::TicketExtensionsKIX4OTRS</String>
-        </Setting>
-    </ConfigItem>
-    <ConfigItem Name="Ticket::ACL-PossibleActionSubsumption" Required="1" Valid="1">
-        <Description Translatable="1">Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).</Description>
-        <Group>Ticket</Group>
-        <SubGroup>Core::Ticket</SubGroup>
-        <Setting>
-            <Option SelectedID="1">
-                <Item Key="0">No</Item>
-                <Item Key="1">Yes</Item>
-            </Option>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="Ticket::ACL-PossiblePropertiesSubsumption" Required="1" Valid="1">

@@ -1,6 +1,6 @@
 /**
  * This software is part of the KIX project, https://www.kixdesk.com/
- * Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
  * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
  * @copyright c.a.p.e. IT GmbH
@@ -56,7 +56,6 @@
         text-indent: 8px;
         margin-bottom: 5px;
     }
-
     fieldset.TableLike > label,
     fieldset.TableLike > .Row > label {
         display: block;
@@ -83,7 +82,6 @@
         padding: 5px 0 3px 8px;
         line-height: 1.0em;
     }
-
     fieldset.TableLike > .Field,
     fieldset.TableLike > .Row > .Field {
         line-height: 1.0em;
@@ -118,7 +116,6 @@
     fieldset.TableLike > .Row > .Field > input[id$='Date'] {
         width: 80px;
     }
-
     fieldset.TableLike > .Field > select,
     fieldset.TableLike > .Row > .Field > select,
     fieldset.TableLike > .Field > input,
@@ -173,7 +170,6 @@
         padding-left: 17px;
         float: left;
     }
-
     .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > label,
     .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > .Row > label {
         width: 50%;
@@ -184,7 +180,6 @@
     .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > .Row > .Value {
         margin-left: 50%;
     }
-
     fieldset.TableLike.FixedLabelSmall > label,
     fieldset.TableLike.FixedLabelSmall > .Row > label {
         width: 100px;
@@ -365,7 +360,6 @@
     #SearchForm legend > span {
         padding: 5px;
     }
-
     .AddButton,
     .RemoveButton {
         font-size: 14px;
@@ -382,7 +376,6 @@
     .MainBox > h1.InvisibleText {
         position: absolute;
     }
-
     .MainBox > .AsteriskExplanation {
         padding-left: 8px;
         margin-bottom: 10px;
@@ -421,6 +414,7 @@
         padding: 0;
     }
 
+
     /**
     *   @subsection Datepicker
     */
@@ -433,6 +427,7 @@
         display: inline-block;
         vertical-align: top;
     }
+
 
     /**
     *   @subsection Richtext cke
@@ -456,7 +451,6 @@
     textarea.cke_dialog_ui_input_textarea {
         border-radius: 5px;
     }
-
     a.CertificateRelationAdd,
     button.CertificateRelationAdd,
     a.CertificateRead,
@@ -478,7 +472,6 @@
         cursor: pointer;
         position: relative;
     }
-
     button.CertificateRelationAdd,
     button.Add,
     button.Remove,
@@ -524,10 +517,10 @@
         width: 86%;
         margin-left: 7px;
     }
-
    .DynamicFieldAvailableInFrontend {
         width: 500px;
     }
+
 
     /**
     *   @subsection geo coordinate
@@ -565,6 +558,7 @@
         padding-bottom: 15px;
     }
 
+
     /**
     *   @subsection process mask
     */
@@ -574,6 +568,7 @@
         font-weight: bold;
         padding: 5px 8px 4px;
     }
+
 
     /**
     *   @subsection generic agent
@@ -588,5 +583,4 @@
         left: -9999px;
         top: -9999px;
     }
-
 }

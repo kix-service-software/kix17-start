@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -261,7 +261,7 @@ sub Run {
         }
         my @DatabaseBuffer;
 
-        # correct any 'dos-style' line endings - http://bugs.otrs.org/show_bug.cgi?id=9838
+        # correct any 'dos-style' line endings
         ${$Package} =~ s{\r\n}{\n}xmsg;
 
         # create MD5 sum and add it into existing package structure
@@ -1732,7 +1732,7 @@ sub _InstallHandling {
                 Name => 'Intro',
                 Data => {
                     %Param,
-                    %Data,
+                    %MessageData,
                     Subaction => 'Install',
                     Type      => 'IntroInstallPost',
                     Name      => $Structure{Name}->{Content},
@@ -1832,7 +1832,7 @@ sub _UpgradeHandling {
                 Name => 'Intro',
                 Data => {
                     %Param,
-                    %Data,
+                    %MessageData,
                     Subaction => '',
                     Type      => 'IntroUpgradePost',
                     Name      => $Structure{Name}->{Content},

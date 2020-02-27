@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -263,8 +263,9 @@ sub QuickStateList {
     my ( $Self, %Param ) = @_;
 
     # get needed object
-    my $ValidObject = $Kernel::OM->Get('Kernel::System::Valid');
-    my $DBObject    = $Kernel::OM->Get('Kernel::System::DB');
+    my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
+    my $DBObject     = $Kernel::OM->Get('Kernel::System::DB');
+    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
 
     my $Valid = 1;
     if ( defined $Param{Valid}
@@ -273,17 +274,42 @@ sub QuickStateList {
         $Valid = 0;
     }
 
-    my $SQL = 'SELECT id, name FROM kix_quick_state';
+    my $SQL   = 'SELECT id, name FROM kix_quick_state';
+    my $Where = '';
 
     if ($Valid) {
-        $SQL .= ' WHERE valid_id IN ('
+        $Where .= ' WHERE valid_id IN ('
               . join( ', ', $ValidObject->ValidIDsGet())
               . ')';
     }
 
+    if (
+        $Param{TicketID}
+        && $Param{UserID}
+    ) {
+        $Where .= ' AND ' if $Where;
+        $Where .= ' WHERE ' if !$Where;
+
+        # valid state list
+        my %StateList = $TicketObject->TicketStateList(
+            UserID   => $Param{UserID},
+            TicketID => $Param{TicketID},
+        );
+
+        if ( %StateList ) {
+            $Where .= ' state_id IN ('
+                . join( ', ', keys %StateList)
+                . ')';
+        }
+        else {
+            return;
+        }
+
+    }
+
     my @Bind;
     return if !$DBObject->Prepare(
-        SQL  => $SQL,
+        SQL  => $SQL . $Where,
         Bind => \@Bind,
     );
 

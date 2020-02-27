@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -63,34 +63,6 @@ sub Run {
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
-    # build output for open search description by FAQ number
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionFAQNumber' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'AgentFAQSearchOpenSearchDescriptionFAQNumber',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionFAQNumber.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
-
-    # build output for open search description by full-text
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionFulltext' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'AgentFAQSearchOpenSearchDescriptionFulltext',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionFulltext.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
 
     # search with a saved template
     if ( $ParamObject->GetParam( Param => 'SearchTemplate' ) && $Profile ) {

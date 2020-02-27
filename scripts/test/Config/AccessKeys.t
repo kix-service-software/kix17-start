@@ -1,7 +1,5 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
-# based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -12,90 +10,165 @@ use strict;
 use warnings;
 use utf8;
 
-use Time::HiRes;
 use vars (qw($Self));
 
-# get config object
-my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+# get needed objects
+my $ConfigObject = $Kernel::OM->GetNew('Kernel::Config');
 
-# check used accesskeys in agent frontend
-my %UsedAccessKeysAgent;
-
-# frontend and toolbar modules
+# define needed variables
 my %AgentModules = (
     %{ $ConfigObject->Get('Frontend::Module') },
     %{ $ConfigObject->Get('Frontend::ToolBarModule') }
 );
-
-# define needed variables
+my %CustomerModules = (
+    %{ $ConfigObject->Get('CustomerFrontend::Module') }
+);
+my %PublicModules = (
+    %{ $ConfigObject->Get('PublicFrontend::Module') }
+);
+my %UsedAccessKeysAgent;
+my %UsedAccessKeysCustomer;
+my %UsedAccessKeysPublic;
 my $StartTime;
 
+# init test case for agent modules
+$Self->TestCaseStart(
+    TestCase    => 'Agent frontend',
+    Feature     => 'Configuration',
+    Story       => 'AccessKeys',
+    Description => <<'END',
+Check access keys of agent frontend modules
+* Each access key can only be used onces for NavBar
+END
+);
+
+# process agent modules
 ACCESSKEYSAGENT:
-for my $AgentModule ( sort keys %AgentModules ) {
-
+for my $AgentModule ( sort( keys( %AgentModules ) ) ) {
     # check navbar items
-    if ( $AgentModules{$AgentModule}->{NavBar} && @{ $AgentModules{$AgentModule}->{NavBar} } ) {
-
-        NAVBARITEMS:
-        for my $NavBar ( sort @{ $AgentModules{$AgentModule}->{NavBar} } ) {
-
-            my $NavBarKey  = $NavBar->{AccessKey} || '';
-            my $NavBarName = $NavBar->{Name}      || '';
-            next NAVBARITEMS if !$NavBarKey;
-
-            $StartTime = Time::HiRes::time();
-            $Self->False(
-                defined $UsedAccessKeysAgent{$NavBarKey},
-                "[AGENT FRONTEND] Check if access key already exists for access key '$NavBarKey' ($NavBarName)",
-                $StartTime,
-            );
-
-            $UsedAccessKeysAgent{$NavBarKey} = 1;
-        }
+    if (
+        !$AgentModules{$AgentModule}->{NavBar}
+        || !@{ $AgentModules{$AgentModule}->{NavBar} }
+    ) {
+        next ACCESSKEYSAGENT;
     }
 
-    my $AccessKey = $AgentModules{$AgentModule}->{AccessKey} || '';
-    my $Name      = $AgentModules{$AgentModule}->{Name}      || '';
+    # process navbar items
+    NAVBARITEMSAGENT:
+    for my $NavBar ( sort( @{ $AgentModules{$AgentModule}->{NavBar} } ) ) {
+        # check if navbar entry has access key
+        my $NavBarKey  = $NavBar->{AccessKey} || '';
+        next NAVBARITEMSAGENT if !$NavBarKey;
 
-    next ACCESSKEYSAGENT if !$AccessKey;
+        # get navbar name
+        my $NavBarName = $NavBar->{Name} || '';
 
-    $StartTime = Time::HiRes::time();
-    $Self->False(
-        defined $UsedAccessKeysAgent{$AccessKey},
-        "[AGENT FRONTEND] Check if access key already exists for access key '$AccessKey' ($Name)",
-        $StartTime,
-    );
+        ## TEST STEP
+        # check that access key is not already in use
+        $StartTime = $Self->GetMilliTimeStamp();
+        $Self->False(
+            TestName  => $NavBarName . ': Check if access key "' . $NavBarKey . '" is already in use',
+            TestValue => defined( $UsedAccessKeysAgent{$NavBarKey} ),
+            StartTime => $StartTime,
+        );
+        ## EO TEST STEP
 
-    $UsedAccessKeysAgent{$AccessKey} = 1;
+        # remember used access key
+        $UsedAccessKeysAgent{$NavBarKey} = 1;
+    }
 }
 
-# check used accesskeys in customer frontend
-my %UsedAccessKeysCustomer;
+# init test case for customer modules
+$Self->TestCaseStart(
+    TestCase    => 'Customer frontend',
+    Feature     => 'Configuration',
+    Story       => 'AccessKeys',
+    Description => <<'END',
+Check access keys of customer frontend modules
+* Each access key can only be used onces for NavBar
+END
+);
 
-# frontend and toolbar modules
-my %CustomerModules = %{ $ConfigObject->Get('CustomerFrontend::Module') };
-
+# process customer modules
 ACCESSKEYSCUSTOMER:
-for my $CustomerModule ( sort keys %CustomerModules ) {
+for my $CustomerModule ( sort( keys( %CustomerModules ) ) ) {
+    # check navbar items
+    if (
+        !$CustomerModules{$CustomerModule}->{NavBar}
+        || !@{ $CustomerModules{$CustomerModule}->{NavBar} }
+    ) {
+        next ACCESSKEYSCUSTOMER;
+    }
 
-    next ACCESSKEYSCUSTOMER if !$CustomerModules{$CustomerModule}->{NavBar};
-    next ACCESSKEYSCUSTOMER if !@{ $CustomerModules{$CustomerModule}->{NavBar} };
-
-    NAVBARITEMS:
+    # process navbar items
+    NAVBARITEMSCUSTOMER:
     for my $NavBar ( sort @{ $CustomerModules{$CustomerModule}->{NavBar} } ) {
-
+        # check if navbar entry has access key
         my $NavBarKey = $NavBar->{AccessKey} || '';
+        next NAVBARITEMSCUSTOMER if !$NavBarKey;
 
-        next NAVBARITEMS if !$NavBarKey;
+        # get navbar name
+        my $NavBarName = $NavBar->{Name} || '';
 
-        $StartTime = Time::HiRes::time();
+        ## TEST STEP
+        # check that access key is not already in use
+        $StartTime = $Self->GetMilliTimeStamp();
         $Self->False(
-            defined $UsedAccessKeysCustomer{$NavBarKey},
-            "[CUSTOMER FRONTEND] Check if access key already exists for access key '$NavBarKey'",
-            $StartTime,
+            TestName  => $NavBarName . ': Check if access key "' . $NavBarKey . '" is already in use',
+            TestValue => defined( $UsedAccessKeysCustomer{$NavBarKey} ),
+            StartTime => $StartTime,
         );
+        ## EO TEST STEP
 
+        # remember used access key
         $UsedAccessKeysCustomer{$NavBarKey} = 1;
+    }
+}
+
+# init test case for public modules
+$Self->TestCaseStart(
+    TestCase    => 'Public frontend',
+    Feature     => 'Configuration',
+    Story       => 'AccessKeys',
+    Description => <<'END',
+Check access keys of public frontend modules
+* Each access key can only be used onces for NavBar
+END
+);
+
+# process public modules
+ACCESSKEYSPUBLIC:
+for my $PublicModule ( sort( keys( %PublicModules ) ) ) {
+    # check navbar items
+    if (
+        !$PublicModules{$PublicModule}->{NavBar}
+        || !@{ $PublicModules{$PublicModule}->{NavBar} }
+    ) {
+        next ACCESSKEYSPUBLIC;
+    }
+
+    # process navbar items
+    NAVBARITEMSPUBLIC:
+    for my $NavBar ( sort @{ $PublicModules{$PublicModule}->{NavBar} } ) {
+        # check if navbar entry has access key
+        my $NavBarKey = $NavBar->{AccessKey} || '';
+        next NAVBARITEMSPUBLIC if !$NavBarKey;
+
+        # get navbar name
+        my $NavBarName = $NavBar->{Name} || '';
+
+        ## TEST STEP
+        # check that access key is not already in use
+        $StartTime = $Self->GetMilliTimeStamp();
+        $Self->False(
+            TestName  => $NavBarName . ': Check if access key "' . $NavBarKey . '" is already in use',
+            TestValue => defined( $UsedAccessKeysPublic{$NavBarKey} ),
+            StartTime => $StartTime,
+        );
+        ## EO TEST STEP
+
+        # remember used access key
+        $UsedAccessKeysPublic{$NavBarKey} = 1;
     }
 }
 

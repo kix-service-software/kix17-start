@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -659,11 +659,8 @@ sub Run {
 
         @OriginalViewableTickets = $TicketObject->TicketSearch(
             %{ $Filters{ $Filter }->{Search} },
-            %ColumnFilter,
-            SortBy  => $Self->{SortBy},
-            OrderBy => $Self->{OrderBy},
-            Limit   => $Limit,
-            Result  => 'ARRAY',
+            Limit  => $Limit,
+            Result => 'ARRAY',
         );
 
         if ( $Filters{ $Filter }->{Search}->{Fulltext} ) {
@@ -682,10 +679,8 @@ sub Run {
             my @OriginalViewableTicketIDsTN = $TicketObject->TicketSearch(
                 %{ $Filters{ $Filter }->{Search} },
                 %ColumnFilter,
-                SortBy  => $Self->{SortBy},
-                OrderBy => $Self->{OrderBy},
-                Limit   => $Limit,
-                Result  => 'ARRAY',
+                Limit  => $Limit,
+                Result => 'ARRAY',
             );
 
             delete $Filters{ $Filter }->{Search}->{TicketNumber};
@@ -696,10 +691,8 @@ sub Run {
             my @OriginalViewableTicketIDsTitle = $TicketObject->TicketSearch(
                 %{ $Filters{ $Filter }->{Search} },
                 %ColumnFilter,
-                SortBy  => $Self->{SortBy},
-                OrderBy => $Self->{OrderBy},
-                Limit   => $Limit,
-                Result  => 'ARRAY',
+                Limit  => $Limit,
+                Result => 'ARRAY',
             );
 
             delete $Filters{ $Filter }->{Search}->{Title};
@@ -710,10 +703,8 @@ sub Run {
             my @OriginalViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
                 %{ $Filters{ $Filter }->{Search} },
                 %ColumnFilter,
-                SortBy  => $Self->{SortBy},
-                OrderBy => $Self->{OrderBy},
-                Limit   => $Limit,
-                Result  => 'ARRAY',
+                Limit  => $Limit,
+                Result => 'ARRAY',
             );
 
             delete $Filters{ $Filter }->{Search}->{TicketNotes};
@@ -762,9 +753,8 @@ sub Run {
 
                     # search all tickets
                     my @OriginalViewableTicketIDsThisDF = $TicketObject->TicketSearch(
+                        %Sort,
                         Result          => 'ARRAY',
-                        SortBy          => $Self->{SortBy},
-                        OrderBy         => $Self->{OrderBy},
                         Limit           => $Limit,
                         UserID          => $Self->{UserID},
                         ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
@@ -797,9 +787,8 @@ sub Run {
             if ( scalar(@OriginalMergeArray) > 1 ) {
                 # sort original merged tickets
                 @OriginalViewableTickets = $TicketObject->TicketSearch(
+                    %Sort,
                     Result       => 'ARRAY',
-                    SortBy       => $Self->{SortBy},
-                    OrderBy      => $Self->{OrderBy},
                     UserID       => $Self->{UserID},
                     TicketID     => \@OriginalMergeArray,
                     ArchiveFlags => $Filters{ $Filter }->{Search}->{ArchiveFlags},
@@ -816,9 +805,8 @@ sub Run {
 
             # get page tickets
             @ViewableTickets = $TicketObject->TicketSearch(
+                %Sort,
                 Result       => 'ARRAY',
-                SortBy       => $Self->{SortBy},
-                OrderBy      => $Self->{OrderBy},
                 UserID       => $Self->{UserID},
                 TicketID     => \@OriginalViewableTickets,
                 ArchiveFlags => $Filters{ $Filter }->{Search}->{ArchiveFlags},
@@ -1153,9 +1141,8 @@ sub Run {
 
                             # search tickets
                             my @CountTicketIDsThisDF = $TicketObject->TicketSearch(
+                                %Sort,
                                 Result          => 'ARRAY',
-                                SortBy          => $Self->{SortBy},
-                                OrderBy         => $Self->{OrderBy},
                                 UserID          => $Self->{UserID},
                                 ConditionInline => $AgentTicketSearchConfig->{ExtendedSearchCondition},
                                 ArchiveFlags    => $Filters{ $FilterColumn }->{Search}->{ArchiveFlags},
@@ -1187,9 +1174,8 @@ sub Run {
                     if ( scalar(@MergeArray) > 1 ) {
                         # sort merged tickets
                         @CountTickets = $TicketObject->TicketSearch(
+                            %Sort,
                             Result       => 'ARRAY',
-                            SortBy       => $Self->{SortBy},
-                            OrderBy      => $Self->{OrderBy},
                             UserID       => $Self->{UserID},
                             TicketID     => \@MergeArray,
                             ArchiveFlags => $Filters{ $FilterColumn }->{Search}->{ArchiveFlags},

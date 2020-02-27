@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -73,18 +73,18 @@ sub Run {
                           . '</span></button>';
 
     # get config values
-    my $YesMessage    = $LayoutObject->{LanguageObject}->Translate('Yes');
+    my $LoadMessage   = $LayoutObject->{LanguageObject}->Translate('Load');
     my $DeleteMessage = $LayoutObject->{LanguageObject}->Translate('Delete');
     my $Question      = $LayoutObject->{LanguageObject}->Translate('Question');
     my $Attributes    = join( ',', @{ $Self->{Config}->{Attributes} } );
 
     $LayoutObject->AddJSOnDocumentComplete( Code => <<"EOF");
         Core.Config.AddConfig({
-            Yes: '$YesMessage',
-            Delete: '$DeleteMessage',
-            Question: '$Question',
+            Load:         '$LoadMessage',
+            Delete:       '$DeleteMessage',
+            Question:     '$Question',
             LoadDraftMsg: '$TranslatedLoadMsg',
-            Attributes: '$Attributes'
+            Attributes:   '$Attributes'
         });
         Core.KIX4OTRS.InitSaveAsDraft('$Action','$TranslatedLoadMsg','$Interval', '$InitialLoadDraft');
 EOF

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -439,7 +439,10 @@ sub Preferences {
             my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet( Name => $1 );
 
             # remove field if not valid
-            if ( $DynamicField->{ValidID} != 1 ) {
+            if (
+                ref($DynamicField) ne 'HASH'
+                || $DynamicField->{ValidID} != 1
+            ) {
                 if ( grep { $_ eq $Column } @ColumnsAvailableNotEnabled ) {
                     my @ColumnArray = @ColumnsAvailableNotEnabled;
                     my @TempArray   = ();
@@ -468,11 +471,13 @@ sub Preferences {
         if ( $Column =~ m/^DynamicField_(.*?)$/ ) {
 
             # get dynamic field config
-            my $DynamicField
-                = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet( Name => $1 );
+            my $DynamicField = $Kernel::OM->Get('Kernel::System::DynamicField')->DynamicFieldGet( Name => $1 );
 
             # remove field if not valid
-            if ( $DynamicField->{ValidID} != 1 ) {
+            if (
+                ref($DynamicField) ne 'HASH'
+                || $DynamicField->{ValidID} != 1
+            ) {
                 if ( grep { $_ eq $Column } @ColumnsEnabled ) {
                     my @ColumnArray = @ColumnsEnabled;
                     my @TempArray   = ();

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -45,6 +45,25 @@ sub Run {
 
     # check if ticket id is given
     return 1 if !$Param{TicketID};
+
+    # check config for ticket types to exclude
+    if ( ref( $Param{Config}->{ExcludeTypes} ) eq 'HASH' ) {
+        # get ticket data
+        my %Ticket = $Kernel::OM->Get('Kernel::System::Ticket')->TicketGet(
+            TicketID      => $Param{TicketID},
+            DynamicFields => 0,
+            Silent        => 1,
+        );
+
+        # check for excluded ticket type
+        if (
+            %Ticket
+            && $Ticket{Type}
+            && $Param{Config}->{ExcludeTypes}->{ $Ticket{Type} }
+        ) {
+            return 1;
+        }
+    }
 
     # get linked tickets for ticket
     my $Links = $Kernel::OM->Get('Kernel::System::LinkObject')->LinkList(

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -493,67 +493,101 @@ sub CustomerDashboardAssignedConfigItemsTable {
     }
 
     # check searchpattern
-    my $KIXSidebarLinkedCIsParams =
-        $ConfigObject->Get('KIXSidebarConfigItemLink::KIXSidebarLinkedCIsParams');
+    my $KIXSidebarLinkedCIsParams = $ConfigObject->Get('KIXSidebarConfigItemLink::KIXSidebarLinkedCIsParams');
 
-    my @AssignedCIIDs = ();
-    my %Assigned;
+    # prepare deployment state filter
+    my $CIExcludeDeploymentStates = $ConfigObject->Get('CustomerDashboardConfigItemLink::CIExcludeDeploymentStates');
+    my @SearchDeplStateIDs        = ();
+    my $DeplStateRef              = $GeneralCatalogObject->ItemList(
+        Class => 'ITSM::ConfigItem::DeploymentState',
+        Valid => 1,
+    );
+    for my $DeplStateID ( keys( %{ $DeplStateRef } ) ) {
+        if ( ref( $CIExcludeDeploymentStates ) eq 'ARRAY' ) {
+            next if ( grep { $_ eq $DeplStateRef->{$DeplStateID} } @{ $CIExcludeDeploymentStates } );
+        }
+        push(@SearchDeplStateIDs, $DeplStateID);
+    }
+
+    # prepare incident state filter
+    my $CIExcludeIncidentStates = $ConfigObject->Get('CustomerDashboardConfigItemLink::CIExcludeIncidentStates');
+    my @SearchInciStateIDs      = ();
+    my $InciStateRef            = $GeneralCatalogObject->ItemList(
+        Class => 'ITSM::Core::IncidentState',
+        Valid => 1,
+    );
+    for my $InciStateID ( keys( %{ $InciStateRef } ) ) {
+        if ( ref( $CIExcludeIncidentStates ) eq 'ARRAY' ) {
+            next if ( grep { $_ eq $InciStateRef->{$InciStateID} } @{ $CIExcludeIncidentStates } );
+        }
+        push(@SearchInciStateIDs, $InciStateID);
+    }
+
+    my %AssignedCIIDs = ();
+    my %Assigned      = ();
+    my %ClassList     = ();
     CUSTOMER:
     for my $Customer ( keys %Customers ) {
 
-        my $SearchInClassesRef
-            = $ConfigObject->Get('CustomerDashboardConfigItemLink::CISearchInClasses');
+        my $SearchInClassesRef = $ConfigObject->Get('CustomerDashboardConfigItemLink::CISearchInClasses');
 
         # perform CMDB search and link results...
         CICLASS:
-        for my $CIClass ( keys %{$SearchInClassesRef} ) {
+        for my $Class ( keys( %{$SearchInClassesRef} ) ) {
 
-            next CICLASS if !$SearchInClassesRef->{$CIClass};
+            next CICLASS if ( !$SearchInClassesRef->{$Class} );
 
             for my $SearchAttribute (
                 split(
                     /\s*,\s*/,
                     (
-                        $KIXSidebarLinkedCIsParams->{ 'SearchAttribute:::' . $CIClass }
-                            || $KIXSidebarLinkedCIsParams->{SearchAttribute}
-                        )
+                        $KIXSidebarLinkedCIsParams->{ 'SearchAttribute:::' . $Class }
+                        || $KIXSidebarLinkedCIsParams->{SearchAttribute}
+                    )
                 )
             ) {
-                $Param{SearchPattern}
-                    = $Customers{$Customer}->{$SearchAttribute} || '';
+                $Param{SearchPattern} = $Customers{$Customer}->{$SearchAttribute} || '';
                 next CUSTOMER if !$Param{SearchPattern};
 
                 my @SearchStrings = $Param{SearchPattern};
 
-                my $SearchAttributeKeyList = $SearchInClassesRef->{$CIClass} || '';
+                my $SearchAttributeKeyList = $SearchInClassesRef->{$Class} || '';
 
                 my $ClassItemRef = $GeneralCatalogObject->ItemGet(
                     Class => 'ITSM::ConfigItem::Class',
-                    Name  => $CIClass,
+                    Name  => $Class,
                 ) || 0;
-                next CICLASS if ( ref($ClassItemRef) ne 'HASH' || !$ClassItemRef->{ItemID} );
-                next CICLASS
-                    if defined $Param{Class}
-                        && $Param{Class} ne ''
-                        && $Param{Class} ne $ClassItemRef->{ItemID};
+                next CICLASS if (
+                    ref($ClassItemRef) ne 'HASH'
+                    || !$ClassItemRef->{ItemID}
+                );
+                next CICLASS if (
+                    defined $Param{Class}
+                    && $Param{Class} ne ''
+                    && $Param{Class} ne $ClassItemRef->{ItemID}
+                );
 
                 # get CI-class definition...
+                my $ClassID = $ClassItemRef->{ItemID};
                 my $XMLDefinition = $ConfigItemObject->DefinitionGet(
-                    ClassID => $ClassItemRef->{ItemID},
+                    ClassID => $ClassID,
                 );
                 if ( !$XMLDefinition->{DefinitionID} ) {
                     $LogObject->Log(
                         Priority => 'error',
-                        Message  => "No Definition definied for class $CIClass!",
+                        Message  => "No Definition definied for class $Class!",
                     );
                     next CICLASS;
                 }
+
+                # add class to list
+                $ClassList{$ClassID} = $Class;
 
                 SEARCHATTR:
                 for my $SearchAttributeKey ( split( ',', $SearchAttributeKeyList ) ) {
                     $SearchAttributeKey =~ s/^\s+//g;
                     $SearchAttributeKey =~ s/\s+$//g;
-                    next SEARCHATTR if !$SearchAttributeKey;
+                    next SEARCHATTR if ( !$SearchAttributeKey );
 
                     for my $CurrSearchString (@SearchStrings) {
                         my %SearchParams = ();
@@ -569,25 +603,38 @@ sub CustomerDashboardAssignedConfigItemsTable {
                         );
 
                         # build search hash...
-                        next CICLASS if scalar(@SearchParamsWhat) < scalar( keys %SearchData );
+                        next CICLASS if ( scalar( @SearchParamsWhat ) < keys ( %SearchData ) );
 
                         # build search hash...
-                        if (@SearchParamsWhat) {
+                        if ( @SearchParamsWhat ) {
                             $SearchParams{What} = \@SearchParamsWhat;
 
-                            my $ConfigItemList
-                                = $ConfigItemObject->ConfigItemSearchExtended(
+                            my $ConfigItemList = $ConfigItemObject->ConfigItemSearchExtended(
                                 %SearchParams,
-                                ClassIDs => [ $ClassItemRef->{ItemID} ],
-                                UserID   => $Param{UserID},
-                                );
-                            if ( $ConfigItemList && ref($ConfigItemList) eq 'ARRAY' ) {
-
+                                ClassIDs     => [ $ClassID ],
+                                DeplStateIDs => \@SearchDeplStateIDs,
+                                InciStateIDs => \@SearchInciStateIDs,
+                                UserID       => $Param{UserID},
+                            );
+                            if (
+                                $ConfigItemList
+                                && ref($ConfigItemList) eq 'ARRAY'
+                            ) {
                                 # add only not existing items
-                                for my $ListItem ( @{$ConfigItemList} ) {
-                                    next if grep { $_ == $ListItem } @AssignedCIIDs;
-                                    push @AssignedCIIDs, $ListItem;
-                                    push @{ $Assigned{$CIClass} }, $ListItem;
+                                for my $ConfigItemID ( @{$ConfigItemList} ) {
+                                    next if ( $AssignedCIIDs{ $ConfigItemID } );
+                                    $AssignedCIIDs{ $ConfigItemID } = 1;
+
+                                    # check access for config item
+                                    my $HasAccess = $ConfigItemObject->Permission(
+                                        Scope  => 'Item',
+                                        ItemID => $ConfigItemID,
+                                        UserID => $Self->{UserID},
+                                        Type   => 'ro',
+                                    ) || 0;
+                                    next if( !$HasAccess );
+
+                                    push( @{ $Assigned{$ClassID} }, $ConfigItemID );
                                 }
                             }
                         }
@@ -597,38 +644,7 @@ sub CustomerDashboardAssignedConfigItemsTable {
             }
         }
     }
-    return '' if !scalar(@AssignedCIIDs);
-
-    my $CIExcludeDeploymentStates = $ConfigObject->Get('CustomerDashboardConfigItemLink::CIExcludeDeploymentStates');
-    my $CIExcludeIncidentStates   = $ConfigObject->Get('CustomerDashboardConfigItemLink::CIExcludeIncidentStates');
-
-    my %AssignedCheck = %Assigned;
-    %Assigned = ();
-
-    for my $CIClass ( keys %AssignedCheck ) {
-        CONFIGITEM:
-        for my $ConfigItemID ( @{ $AssignedCheck{$CIClass} } ) {
-            my $ConfigItem = $ConfigItemObject->ConfigItemGet(
-                ConfigItemID => $ConfigItemID,
-            );
-
-            for my $State ( @{$CIExcludeDeploymentStates} ) {
-                next CONFIGITEM if $ConfigItem->{CurDeplState} eq $State;
-            }
-
-            for my $State ( @{$CIExcludeIncidentStates} ) {
-                next CONFIGITEM if $ConfigItem->{CurInciState} eq $State;
-            }
-
-            if ( !defined $Assigned{$CIClass} ) {
-                my @TempArray = ();
-                $Assigned{$CIClass} = \@TempArray;
-            }
-
-            push( @{ $Assigned{$CIClass} }, $ConfigItemID );
-        }
-    }
-    return '' if !scalar(@AssignedCIIDs);
+    return '' if ( !keys( %AssignedCIIDs ) );
 
     $Self->Block(
         Name => 'LinkConfigItemTable',
@@ -640,40 +656,27 @@ sub CustomerDashboardAssignedConfigItemsTable {
     # fixed number of shown CIs (for now)
     my $ShownCILinks = 10;
 
-    for my $Class ( sort keys %Assigned ) {
-        my $TabID = $Class;
-        $TabID =~ s/\s*//g;
-
+    for my $ClassID ( sort{$ClassList{$a} cmp $ClassList{$b}}( keys( %Assigned ) ) ) {
         $Self->Block(
             Name => 'LinkConfigItemTabLink',
             Data => {
-                ClassName => $Class,
-                TabID     => $TabID,
-                Count     => scalar @{ $Assigned{$Class} }
+                ClassName => $ClassList{$ClassID},
+                TabID     => $ClassID,
+                Count     => scalar @{ $Assigned{$ClassID} }
             },
         );
         $Self->Block(
             Name => 'LinkConfigItemTabContent',
             Data => {
-                ClassName => $Class,
-                TabID     => $TabID,
+                ClassName => $ClassList{$ClassID},
+                TabID     => $ClassID,
             },
         );
 
         my $Count    = 0;
         my $DivCount = 1;
 
-        for my $ConfigItemID ( @{ $Assigned{$Class} } ) {
-
-            # check access for config item
-            my $HasAccess = $ConfigItemObject->Permission(
-                Scope  => 'Item',
-                ItemID => $ConfigItemID,
-                UserID => $Self->{UserID},
-                Type   => 'ro',
-            ) || 0;
-
-            next if !$HasAccess;
+        for my $ConfigItemID ( @{ $Assigned{$ClassID} } ) {
 
             # get config item data
             my $ConfigItem = $ConfigItemObject->ConfigItemGet(
@@ -697,7 +700,7 @@ sub CustomerDashboardAssignedConfigItemsTable {
                     Data => {
                         DivCount => $DivCount,
                         Style    => 'display:none',
-                        TabID    => $TabID,
+                        TabID    => $ClassID,
                     },
                 );
 

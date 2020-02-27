@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -451,6 +451,14 @@ sub _HandleCSSList {
                         . $Skin . "/"
                         . $Type . "/";
 
+                    # default source directory
+                    my $DefaultDirectory =
+                        $Path
+                        . $SkinHomeShort . "/"
+                        . $Param{SkinType} . "/"
+                        . "default/"
+                        . $Type . "/";
+
                     # target directory
                     my $SkinDirectory =
                         $Param{SkinHome} . "/"
@@ -459,45 +467,20 @@ sub _HandleCSSList {
                         . "/css-cache/"
                         . $Type . "/";
 
-                    # if source directory exists, copy files
-                    if ( -e $Directory ) {
-
-                        # get all source files
-                        opendir( DIR, $Directory );
-                        my @Files = grep( { !/^(?:.|..|icons|thirdparty)$/g } readdir(DIR) );
-                        closedir(DIR);
-
-                        # check filelist for changes
-                        for my $File (@Files) {
-
-                            # check if new directory exists
-                            if ( !( -e $SkinDirectory ) ) {
-                                if ( !mkpath( $SkinDirectory, 0, oct(755) ) ) {
-                                    $Kernel::OM->Get('Kernel::System::Log')->Log(
-                                        Priority => 'error',
-                                        Message  => "Can't create directory '$SkinDirectory': $!",
-                                    );
-                                    return;
-                                }
-                            }
-
-                            # check if file does not exist
-                            if ( !-e ($SkinDirectory . $File) ) {
-                                copy( $Directory . $File, $SkinDirectory . $File );
-                            }
-
-                            # check if file has changed
-                            else {
-                                my $TargetFileSize = -s ($SkinDirectory . $File);
-                                my $SourceFileSize = -s ($Directory . $File);
-
-                                # copy file if changed
-                                if ( $SourceFileSize && $TargetFileSize != $SourceFileSize ) {
-                                    my $ok = copy( $Directory . $File, $SkinDirectory . $File );
-                                }
-                            }
-                        }
+                    if (
+                        $Directory ne $DefaultDirectory
+                        && $Type ne 'css'
+                    ) {
+                        $Self->_HandleImageFiles(
+                            Directory     => $DefaultDirectory,
+                            SkinDirectory => $SkinDirectory
+                        );
                     }
+
+                    $Self->_HandleImageFiles(
+                        Directory     => $Directory,
+                        SkinDirectory => $SkinDirectory
+                    );
                 }
 
                 my $DirectoryTP =
@@ -594,6 +577,55 @@ sub _HandleCSSList {
                         Filename     => $MinifiedFile,
                     },
                 );
+            }
+        }
+    }
+
+    return 1;
+}
+
+sub _HandleImageFiles {
+    my ( $Self, %Param ) = @_;
+
+    my $Directory     = $Param{Directory};
+    my $SkinDirectory = $Param{SkinDirectory};
+
+    # if source directory exists, copy files
+    if ( -e $Directory ) {
+
+        # get all source files
+        opendir( DIR, $Directory );
+        my @Files = grep( { !/^(?:.|..|icons|thirdparty)$/g } readdir(DIR) );
+        closedir(DIR);
+
+        # check filelist for changes
+        for my $File (@Files) {
+
+            # check if new directory exists
+            if ( !( -e $SkinDirectory ) ) {
+                if ( !mkpath( $SkinDirectory, 0, oct(755) ) ) {
+                    $Kernel::OM->Get('Kernel::System::Log')->Log(
+                        Priority => 'error',
+                        Message  => "Can't create directory '$SkinDirectory': $!",
+                    );
+                    return;
+                }
+            }
+
+            # check if file does not exist
+            if ( !-e ($SkinDirectory . $File) ) {
+                copy( $Directory . $File, $SkinDirectory . $File );
+            }
+
+            # check if file has changed
+            else {
+                my $TargetFileSize = -s ($SkinDirectory . $File);
+                my $SourceFileSize = -s ($Directory . $File);
+
+                # copy file if changed
+                if ( $SourceFileSize && $TargetFileSize != $SourceFileSize ) {
+                    my $ok = copy( $Directory . $File, $SkinDirectory . $File );
+                }
             }
         }
     }

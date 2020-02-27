@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -22,19 +22,19 @@ BEGIN {
     $ModPerl::Util::DEFAULT_UNLOAD_METHOD = 'unload_package_xs';    ## no critic
 
     # set $0 to index.pl if it is not an existing file:
-    # on Fedora, $0 is not a path which would break OTRS.
+    # on Fedora, $0 is not a path which would break KIX.
     # see bug # 8533
     if ( !-e $0 ) {
-        $0 = '/opt/otrs/bin/cgi-bin/index.pl';
+        $0 = '/opt/kix/bin/cgi-bin/index.pl';
     }
 }
 
 use Apache2::RequestRec;
 use ModPerl::Util;
 
-use lib "/opt/otrs/";
-use lib "/opt/otrs/Kernel/cpan-lib";
-use lib "/opt/otrs/Custom";
+use lib "/opt/kix/";
+use lib "/opt/kix/Kernel/cpan-lib";
+use lib "/opt/kix/Custom";
 
 # Preload frequently used modules to speed up client spawning.
 use CGI ();

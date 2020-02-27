@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -2063,7 +2063,7 @@ sub CheckCertPath {
 
     # normalize private secret file names
     #
-    # in kix 17 private secret files are stored in format like 12345678.p, from otrs 3.1 this
+    # in kix 17 private secret files are stored in format like 12345678.p, from kix 4.0 this
     # files must be in a format like 12345678.0.p where .0 could be from 0 to 9 depending on the
     # private key file name.
 

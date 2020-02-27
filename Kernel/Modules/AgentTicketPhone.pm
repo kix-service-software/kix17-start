@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -384,6 +384,15 @@ sub Run {
                 my $Attribute = $Key;
                 $Attribute =~ s/^QuickTicket(.*)$/$1/gm;
                 $ACLCompatGetParam{$Attribute} = $TemplateData{$Key};
+            }
+
+            elsif (
+                $Key eq 'QuickTicketDynamicFieldHash'
+                && IsHashRefWithData( $TemplateData{$Key} )
+            ) {
+                for my $DynamicField ( keys %{ $TemplateData{$Key} } ) {
+                    $GetParam{$DynamicField} = $TemplateData{$Key}->{$DynamicField};
+                }
             }
         }
         @MultipleCustomer = @{ $TemplateData{MultipleCustomer} }
@@ -1066,6 +1075,7 @@ sub Run {
             TypeID         => $GetParam{TypeID}        || $GetParam{DefaultTypeID},
         );
         $Output .= $Self->_MaskPhoneNew(
+            %GetParam,
             QueueID    => $Self->{QueueID},
             NextStates => $Self->_GetNextStates(
                 %GetParam,
@@ -1325,8 +1335,9 @@ sub Run {
                     # set possible values filter from ACLs
                     my $ACL = $TicketObject->TicketAcl(
                         %GetParam,
+                        %ACLCompatGetParam,
                         CustomerUserID => $CustomerUser || '',
-                        QueueID => $QueueID,
+                        QueueID        => $NewQueueID || 0,
                         Action         => $Self->{Action},
                         ReturnType     => 'Ticket',
                         ReturnSubType  => 'DynamicField_' . $DynamicFieldConfig->{Name},
@@ -1348,12 +1359,13 @@ sub Run {
         my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
             %GetParam,
             %ACLCompatGetParam,
-            QueueID       => $NewQueueID || 0,
-            Action        => $Self->{Action},
-            ReturnType    => 'Ticket',
-            ReturnSubType => '-',
-            Data          => {},
-            UserID        => $Self->{UserID},
+            CustomerUserID => $CustomerUser || '',
+            QueueID        => $NewQueueID || 0,
+            Action         => $Self->{Action},
+            ReturnType     => 'Ticket',
+            ReturnSubType  => '-',
+            Data           => {},
+            UserID         => $Self->{UserID},
         );
 
         # update 'Shown' for $Self->{DynamicField}
@@ -2391,12 +2403,13 @@ sub Run {
         my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
             %GetParam,
             %ACLCompatGetParam,
-            QueueID       => $QueueID || 0,
-            Action        => $Self->{Action},
-            ReturnType    => 'Ticket',
-            ReturnSubType => '-',
-            Data          => {},
-            UserID        => $Self->{UserID},
+            CustomerUserID => $CustomerUser || '',
+            QueueID        => $QueueID || 0,
+            Action         => $Self->{Action},
+            ReturnType     => 'Ticket',
+            ReturnSubType  => '-',
+            Data           => {},
+            UserID         => $Self->{UserID},
         );
 
         # update 'Shown' for $Self->{DynamicField}
@@ -2713,7 +2726,6 @@ sub _GetUsers {
     # workflow
     my $ACL = $TicketObject->TicketAcl(
         %Param,
-        Action => $Self->{Action},
         Action        => $Self->{Action},
         ReturnType    => 'Ticket',
         ReturnSubType => 'Owner',
@@ -2765,7 +2777,7 @@ sub _GetResponsibles {
         my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{QueueID} );
         my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
             GroupID => $GID,
-            Type    => 'responsible',
+            Type    => 'rw',
         );
         for my $KeyMember ( sort keys %MemberList ) {
             if ( $AllGroupsMembers{$KeyMember} ) {
@@ -3349,12 +3361,13 @@ sub _MaskPhoneNew {
     # run acl to prepare TicketAclFormData
     my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %Param,
-        TypeID        => $Param{TypeID} || $Param{DefaultTypeID} || '',
-        Action        => $Self->{Action},
-        ReturnType    => 'Ticket',
-        ReturnSubType => '-',
-        Data          => {},
-        UserID        => $Self->{UserID},
+        CustomerUserID => $Param{CustomerUser},
+        TypeID         => $Param{TypeID} || $Param{DefaultTypeID} || '',
+        Action         => $Self->{Action},
+        ReturnType     => 'Ticket',
+        ReturnSubType  => '-',
+        Data           => {},
+        UserID         => $Self->{UserID},
     );
 
     # update 'Shown' for $Self->{DynamicField}

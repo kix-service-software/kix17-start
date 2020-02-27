@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -341,7 +341,8 @@ sub Run {
         my $Output = $LayoutObject->Header();
         $Output .= $LayoutObject->NavigationBar();
         $Output .= $Self->_Mask(
-            %Param
+            %Param,
+            Subaction => 'Add'
         );
         $Output .= $LayoutObject->Footer();
         return $Output;
@@ -519,7 +520,8 @@ sub Run {
         $Output .= $Self->_Mask(
             %Param,
             %GetParam,
-            %Errors
+            %Errors,
+            Subaction => 'Add'
         );
         $Output .= $LayoutObject->Footer();
         return $Output;
@@ -567,7 +569,8 @@ sub Run {
         $Output .= $LayoutObject->NavigationBar();
         $Output .= $Self->_Mask(
             %Param,
-            %Data
+            %Data,
+            Subaction => 'Change'
         );
         $Output .= $LayoutObject->Footer();
         return $Output;
@@ -769,7 +772,8 @@ sub Run {
         $Output .= $Self->_Mask(
             %Param,
             %GetParam,
-            %Errors
+            %Errors,
+            Subaction => 'Change'
         );
         $Output .= $LayoutObject->Footer();
         return $Output;
@@ -936,8 +940,8 @@ sub _Mask {
 
     # show appropriate messages for ServerError
     if (
-        defined $Param{Errors}->{NameExists}
-        && $Param{Errors}->{NameExists}
+        defined $Param{NameExists}
+        && $Param{NameExists}
     ) {
         $LayoutObject->Block( Name => 'ExistNameServerError' );
     }

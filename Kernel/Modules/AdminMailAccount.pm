@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -208,7 +208,7 @@ sub Run {
         # if no errors occurred
         if ( !%Errors ) {
 
-            if ( $GetParam{Password} eq 'otrs-dummy-password-placeholder' ) {
+            if ( $GetParam{Password} eq 'kix-dummy-password-placeholder' ) {
                 my %OriginalData = $MailAccount->MailAccountGet(%GetParam);
                 $GetParam{Password} = $OriginalData{Password};
             }

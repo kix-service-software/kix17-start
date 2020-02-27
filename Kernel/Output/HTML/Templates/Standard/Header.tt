@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -19,8 +19,8 @@
     <div id="Header" class="ARIARoleBanner [% Data.UserToolbarPosition | html %]">
         <div id="Logo"></div>
         <div id="ResponsiveLogo"></div>
-        <div id="ToolBarToggle" style="[% Data.CustomCSSTopToggle %]"></div>
-        <ul id="ToolBar" style="[% Data.CustomCSSTopToolbar %]">
+        <div id="ToolBarToggle"></div>
+        <ul id="ToolBar">
 [% RenderBlockStart("ToolBar") %]
 [% RenderBlockStart("ToolBarItem") %]
             <li class="[% Data.Class | html %]">

@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -99,6 +99,13 @@ sub new {
                 %{ $Extension->{Behaviors} }
             );
         }
+    }
+
+    if ( !$Self->{UserType} ) {
+        $Self->{UserType} = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserType};
+    }
+    if ( !$Self->{UserID} ) {
+        $Self->{UserID} = $Kernel::OM->Get('Kernel::Output::HTML::Layout')->{UserID};
     }
 
     return $Self;
@@ -270,8 +277,20 @@ sub PossibleValuesGet {
 
     my %PossibleValues;
 
+    # prepare frontend
+    my $Frontend = 'Public';
+    if ( $Self->{UserType} eq 'User' ) {
+        $Frontend = 'Agent';
+    }
+    elsif ( $Self->{UserType} eq 'Customer' ) {
+        $Frontend = 'Customer';
+    }
+
     # get used Constrictions
     my $Constrictions = $Param{DynamicFieldConfig}->{Config}->{Constrictions};
+
+    # get used permission check
+    my $PermissionCheck = $Param{DynamicFieldConfig}->{Config}->{PermissionCheck};
 
     # build search params from constrictions...
     my @SearchParamsWhat;
@@ -306,53 +325,101 @@ sub PossibleValuesGet {
         defined( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
         && IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
     ) {
-        @ITSMConfigItemClasses = @{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}};
+        CLASSID:
+        for my $ClassID ( @{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}} ) {
+            # check read permission for config item class
+            if (
+                IsArrayRefWithData($PermissionCheck)
+                && grep( { $_ eq $Frontend } @{ $PermissionCheck } )
+            ) {
+                my $HasAccess = $Self->_PermissionCheck(
+                    Frontend => $Frontend,
+                    Scope    => 'Class',
+                    ClassID  => $ClassID,
+                );
+                next CLASSID if (!$HasAccess );
+            }
+
+            # add config item class
+            push ( @ITSMConfigItemClasses, $ClassID );
+        }
     }
     else {
         my $ClassRef = $Self->{GeneralCatalogObject}->ItemList(
             Class => 'ITSM::ConfigItem::Class',
         );
+        CLASSID:
         for my $ClassID ( keys ( %{$ClassRef} ) ) {
+            # check read permission for config item class
+            if (
+                IsArrayRefWithData($PermissionCheck)
+                && grep( { $_ eq $Frontend } @{ $PermissionCheck } )
+            ) {
+                my $HasAccess = $Self->_PermissionCheck(
+                    Frontend => $Frontend,
+                    Scope    => 'Class',
+                    ClassID  => $ClassID,
+                );
+                next CLASSID if ( !$HasAccess );
+            }
+
+            # add config item class
             push ( @ITSMConfigItemClasses, $ClassID );
         }
     }
 
-    for my $ClassID ( @ITSMConfigItemClasses ) {
-        # get current definition
-        my $XMLDefinition = $Self->{ITSMConfigItemObject}->DefinitionGet(
-            ClassID => $ClassID,
-        );
+    if ( @ITSMConfigItemClasses ) {
+        for my $ClassID ( @ITSMConfigItemClasses ) {
+            # get current definition
+            my $XMLDefinition = $Self->{ITSMConfigItemObject}->DefinitionGet(
+                ClassID => $ClassID,
+            );
 
-        # prepare seach
-        $Self->_ExportXMLSearchDataPrepare(
-            XMLDefinition => $XMLDefinition->{DefinitionRef},
-            What          => \@SearchParamsWhat,
-            SearchData    => {
-                %Constrictions,
-            },
-        );
-    }
-
-    my $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
-        Name         => '*',
-        ClassIDs     => \@ITSMConfigItemClasses,
-        DeplStateIDs => $Param{DynamicFieldConfig}->{Config}->{DeploymentStates},
-        What         => \@SearchParamsWhat,
-    );
-
-    for my $CIID ( @{$ConfigItemIDs} ) {
-        my $ConfigItem = $Self->{ITSMConfigItemObject}->VersionGet(
-            ConfigItemID => $CIID,
-            XMLDataGet   => 0,
-        );
-
-        my $Label = $Param{DynamicFieldConfig}->{Config}->{DisplayPattern} || '<CI_Name>';
-        while ($Label =~ m/<CI_([^>]+)>/) {
-            my $Replace = $ConfigItem->{$1} || '';
-            $Label =~ s/<CI_$1>/$Replace/g;
+            # prepare seach
+            $Self->_ExportXMLSearchDataPrepare(
+                XMLDefinition => $XMLDefinition->{DefinitionRef},
+                What          => \@SearchParamsWhat,
+                SearchData    => {
+                    %Constrictions,
+                },
+            );
         }
 
-        $PossibleValues{$CIID} = $Label;
+        my $ConfigItemIDs = $Self->{ITSMConfigItemObject}->ConfigItemSearchExtended(
+            Name         => '*',
+            ClassIDs     => \@ITSMConfigItemClasses,
+            DeplStateIDs => $Param{DynamicFieldConfig}->{Config}->{DeploymentStates},
+            What         => \@SearchParamsWhat,
+        );
+
+        ITEMID:
+        for my $CIID ( @{$ConfigItemIDs} ) {
+            # check read permission for config item
+            if (
+                IsArrayRefWithData($PermissionCheck)
+                && grep( { $_ eq $Frontend } @{ $PermissionCheck } )
+            ) {
+                my $HasAccess = $Self->_PermissionCheck(
+                    Frontend => $Frontend,
+                    Scope    => 'Item',
+                    ItemID   => $CIID,
+                );
+                next ITEMID if ( !$HasAccess );
+            }
+
+            my $ConfigItem = $Self->{ITSMConfigItemObject}->VersionGet(
+                ConfigItemID => $CIID,
+                XMLDataGet   => 0,
+            );
+
+            my $Label = $Param{DynamicFieldConfig}->{Config}->{DisplayPattern} || '<CI_Name>';
+            while ($Label =~ m/<CI_([^>]+)>/) {
+                my $Replace = $ConfigItem->{$1} || '';
+                $Label =~ s/<CI_$1>/$Replace/g;
+            }
+
+            $PossibleValues{$CIID} = $Label;
+        }
     }
 
     # return the possible values hash as a reference
@@ -395,6 +462,15 @@ sub EditFieldRender {
     my $FieldID     = $Param{DynamicFieldConfig}->{ID};
     my $FieldName   = 'DynamicField_' . $Param{DynamicFieldConfig}->{Name};
     my $FieldLabel  = $Param{DynamicFieldConfig}->{Label};
+
+    # prepare frontend
+    my $Frontend = 'Public';
+    if ( $Self->{UserType} eq 'User' ) {
+        $Frontend = 'Agent';
+    }
+    elsif ( $Self->{UserType} eq 'Customer' ) {
+        $Frontend = 'Customer';
+    }
 
     my $Value;
 
@@ -502,9 +578,26 @@ sub EditFieldRender {
         <div id="$ContainerFieldName" class="InputField_InputContainer" style="display:block;">
 END
 
+    my $PermissionCheck = $Param{DynamicFieldConfig}->{Config}->{PermissionCheck};
+
     my $ValueCounter = 0;
+    ITEMID:
     for my $Key ( @{ $SelectedValuesArrayRef } ) {
-        next if (!$Key);
+        next ITEMID if (!$Key);
+
+        # check read permission for config item
+        if (
+            IsArrayRefWithData($PermissionCheck)
+            && grep( { $_ eq $Frontend } @{ $PermissionCheck } )
+        ) {
+            my $HasAccess = $Self->_PermissionCheck(
+                Frontend => $Frontend,
+                Scope    => 'Item',
+                ItemID   => $Key,
+            );
+            next ITEMID if ( !$HasAccess );
+        }
+
         $ValueCounter++;
 
         my $ConfigItem = $Self->{ITSMConfigItemObject}->VersionGet(
@@ -714,10 +807,20 @@ sub SearchFieldRender {
     my ( $Self, %Param ) = @_;
 
     # take config from field config
-    my $FieldConfig = $Param{DynamicFieldConfig}->{Config};
-    my $FieldID     = $Param{DynamicFieldConfig}->{ID};
-    my $FieldName   = 'Search_DynamicField_' . $Param{DynamicFieldConfig}->{Name};
-    my $FieldLabel  = $Param{DynamicFieldConfig}->{Label};
+    my $FieldConfig     = $Param{DynamicFieldConfig}->{Config};
+    my $FieldID         = $Param{DynamicFieldConfig}->{ID};
+    my $FieldName       = 'Search_DynamicField_' . $Param{DynamicFieldConfig}->{Name};
+    my $FieldLabel      = $Param{DynamicFieldConfig}->{Label};
+    my $PermissionCheck = $Param{DynamicFieldConfig}->{Config}->{PermissionCheck};
+
+    # prepare frontend
+    my $Frontend = 'Public';
+    if ( $Self->{UserType} eq 'User' ) {
+        $Frontend = 'Agent';
+    }
+    elsif ( $Self->{UserType} eq 'Customer' ) {
+        $Frontend = 'Customer';
+    }
 
     my $Value;
     my @DefaultValue;
@@ -760,8 +863,23 @@ sub SearchFieldRender {
 END
 
     my $ValueCounter = 0;
+    ITEMID:
     for my $Key ( @{ $Value } ) {
-        next if (!$Key);
+        next ITEMID if (!$Key);
+
+        # check read permission for config item
+        if (
+            IsArrayRefWithData($PermissionCheck)
+            && grep( { $_ eq $Frontend } @{ $PermissionCheck } )
+        ) {
+            my $HasAccess = $Self->_PermissionCheck(
+                Frontend => $Frontend,
+                Scope    => 'Item',
+                ItemID   => $Key,
+            );
+            next ITEMID if ( !$HasAccess );
+        }
+
         $ValueCounter++;
 
         my $ConfigItem = $Self->{ITSMConfigItemObject}->VersionGet(
@@ -1137,6 +1255,15 @@ sub ReadableValueRender {
 sub DisplayValueRender {
     my ( $Self, %Param ) = @_;
 
+    # prepare frontend
+    my $Frontend = 'Public';
+    if ( $Self->{UserType} eq 'User' ) {
+        $Frontend = 'Agent';
+    }
+    elsif ( $Self->{UserType} eq 'Customer' ) {
+        $Frontend = 'Customer';
+    }
+
     # set HTMLOuput as default if not specified
     if ( !defined $Param{HTMLOutput} ) {
         $Param{HTMLOutput} = 1;
@@ -1154,8 +1281,24 @@ sub DisplayValueRender {
     my @Values;
     my @Titles;
 
+    my $PermissionCheck = $Param{DynamicFieldConfig}->{Config}->{PermissionCheck};
+
+    ITEMID:
     for my $Key (@Keys) {
-        next if ( !$Key );
+        next ITEMID if ( !$Key );
+
+        # check read permission for config item
+        if (
+            IsArrayRefWithData($PermissionCheck)
+            && grep( { $_ eq $Frontend } @{ $PermissionCheck } )
+        ) {
+            my $HasAccess = $Self->_PermissionCheck(
+                Frontend => $Frontend,
+                Scope    => 'Item',
+                ItemID   => $Key,
+            );
+            next ITEMID if ( !$HasAccess );
+        }
 
         my $ConfigItem = $Self->{ITSMConfigItemObject}->VersionGet(
             ConfigItemID => $Key,
@@ -1259,18 +1402,60 @@ sub DisplayValueRender {
 sub StatsFieldParameterBuild {
     my ( $Self, %Param ) = @_;
 
+    # prepare frontend
+    my $Frontend = 'Public';
+    if ( $Self->{UserType} eq 'User' ) {
+        $Frontend = 'Agent';
+    }
+    elsif ( $Self->{UserType} eq 'Customer' ) {
+        $Frontend = 'Customer';
+    }
+
+    my $PermissionCheck = $Param{DynamicFieldConfig}->{Config}->{PermissionCheck};
+
     my @ITSMConfigItemClasses = ();
     if(
         defined( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
         && IsArrayRefWithData( $Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses} )
     ) {
-        @ITSMConfigItemClasses = @{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}};
+        CLASSID:
+        for my $ClassID ( @{$Param{DynamicFieldConfig}->{Config}->{ITSMConfigItemClasses}} ) {
+            # check read permission for config item class
+            if (
+                IsArrayRefWithData($PermissionCheck)
+                && grep( { $_ eq $Frontend } @{ $PermissionCheck } )
+            ) {
+                my $HasAccess = $Self->_PermissionCheck(
+                    Frontend => $Frontend,
+                    Scope    => 'Class',
+                    ClassID  => $ClassID,
+                );
+                next CLASSID if (!$HasAccess );
+            }
+
+            # add config item class
+            push ( @ITSMConfigItemClasses, $ClassID );
+        }
     }
     else {
         my $ClassRef = $Self->{GeneralCatalogObject}->ItemList(
             Class => 'ITSM::ConfigItem::Class',
         );
+        CLASSID:
         for my $ClassID ( keys ( %{$ClassRef} ) ) {
+            # check read permission for config item class
+            if (
+                IsArrayRefWithData($PermissionCheck)
+                && grep( { $_ eq $Frontend } @{ $PermissionCheck } )
+            ) {
+                my $HasAccess = $Self->_PermissionCheck(
+                    Frontend => $Frontend,
+                    Scope    => 'Class',
+                    ClassID  => $ClassID,
+                );
+                next CLASSID if ( !$HasAccess );
+            }
+            # add config item class
             push ( @ITSMConfigItemClasses, $ClassID );
         }
     }
@@ -1290,7 +1475,21 @@ sub StatsFieldParameterBuild {
         UserID       => $Param{UserID},
     );
 
+    ITEMID:
     for my $CIID ( @{$ConfigItemIDs} ) {
+        # check read permission for config item
+        if (
+            IsArrayRefWithData($PermissionCheck)
+            && grep( { $_ eq $Frontend } @{ $PermissionCheck } )
+        ) {
+            my $HasAccess = $Self->_PermissionCheck(
+                Frontend => $Frontend,
+                Scope    => 'Item',
+                ItemID   => $CIID,
+            );
+            next ITEMID if ( !$HasAccess );
+        }
+
         my $ConfigItem = $Self->{ITSMConfigItemObject}->VersionGet(
             ConfigItemID => $CIID,
         );
@@ -1313,7 +1512,15 @@ sub StatsFieldParameterBuild {
     # add historic values to current values (if they don't exist anymore)
     for my $Key ( keys ( %{$HistoricalValues} ) ) {
         if ( !$Values->{$Key} ) {
-            $Values->{$Key} = $HistoricalValues->{$Key}
+            # check if config item exists
+            my $ConfigItemNumber = $Self->{ITSMConfigItemObject}->ConfigItemLookup(
+                ConfigItemID => $Key,
+            );
+
+            # if config item number was found, user has no permission for item. skip
+            if ( !$ConfigItemNumber ) {
+                $Values->{$Key} = $HistoricalValues->{$Key};
+            }
         }
     }
 
@@ -1439,6 +1646,49 @@ sub _ExportXMLSearchDataPrepare {
     }
 
     return 1;
+}
+
+sub _PermissionCheck {
+    my ( $Self, %Param ) = @_;
+
+    return if ( !$Param{Frontend} );
+    return if ( !$Param{Scope} );
+    return if (
+        (
+            $Param{Scope} eq 'Class'
+            && !$Param{ClassID}
+        )
+        || (
+            $Param{Scope} eq 'Item'
+            && !$Param{ItemID}
+        )
+    );
+
+    my $HasAccess = 0;
+    if ( $Param{Frontend} eq 'Agent' ) {
+        $HasAccess = $Self->{ITSMConfigItemObject}->Permission(
+            %Param,
+            UserID => $Self->{UserID},
+            Type   => 'ro',
+            LogNo  => 1,
+        );
+    }
+    elsif(
+        $Param{Frontend} eq 'Customer'
+        && $Self->{ITSMConfigItemObject}->can('CustomerPermission')
+    ) {
+        $HasAccess = $Self->{ITSMConfigItemObject}->CustomerPermission(
+            %Param,
+            UserID => $Self->{UserID},
+            Type   => 'ro',
+            LogNo  => 1,
+        );
+    }
+    else {
+        $HasAccess = 1;
+    }
+
+    return $HasAccess;
 }
 
 1;

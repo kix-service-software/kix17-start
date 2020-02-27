@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -33,7 +33,8 @@ sub Run {
     if (
         defined $Param{Action}
         && $Param{Action} eq 'AgentTicketZoom'
-    ) {
+        )
+    {
         # check needed stuff
         for (qw(Data)) {
             if ( !$Param{$_} ) {
@@ -56,6 +57,7 @@ sub Run {
             my @Blacklist;
             ACTION:
             for my $Key ( keys( %{ $Param{'Data'} } ) ) {
+
                 # skip if it is not a tab
                 next ACTION if ( $Param{'Data'}->{$Key} !~ m/^AgentTicketZoom###(.+)$/ );
 
@@ -74,32 +76,39 @@ sub Run {
                 my $PretendAction = $1;
 
                 # get config for pretend action
-                my $PretendConfig = $ConfigObject->Get('Ticket::Frontend::' . $PretendAction);
+                my $PretendConfig = $ConfigObject->Get( 'Ticket::Frontend::' . $PretendAction );
 
                 # process pretend action config
-                next if( ref( $PretendConfig ) ne 'HASH' );
+                next if ( ref($PretendConfig) ne 'HASH' );
+
                 # check scalar config
-                for my $Attribute ( qw(
+                for my $Attribute (
+                    qw(
                     Queue TicketType Service Owner Responsible State Note Priority Title
-                ) ) {
+                    )
+                    )
+                {
                     next ACTION if ( $PretendConfig->{$Attribute} );
                 }
+
                 # check hash config
-                for my $Attribute ( qw(DynamicField) ) {
-                    next ACTION if (
-                        ref( $PretendConfig->{$Attribute} ) ne 'HASH'
-                        || !%{ $PretendConfig->{$Attribute} }
-                    );
+                for my $Attribute (qw(DynamicField)) {
+                    next ACTION
+                        if (
+                        defined $PretendConfig->{$Attribute}
+                        && ref( $PretendConfig->{$Attribute} ) ne 'HASH'
+                        );
                 }
 
                 my $DynamicFieldObject = $Kernel::OM->Get('Kernel::System::DynamicField');
-                
+
                 # check dynamic field config
                 for my $DynamicField ( keys( %{ $PretendConfig->{'DynamicField'} } ) ) {
 
                     # check if dynamic field is valid
                     my $Valid = 1;
                     if ( $PretendConfig->{'DynamicField'}->{$DynamicField} ) {
+
                         # get data of dynamic field
                         my $DynamicFieldObject = $DynamicFieldObject->DynamicFieldGet(
                             Name => $DynamicField,
@@ -107,9 +116,10 @@ sub Run {
 
                         # check if its a hash with data
                         if (
-                            ref( $DynamicFieldObject ) ne 'HASH'
+                            ref($DynamicFieldObject) ne 'HASH'
                             || !keys( %{$DynamicFieldObject} )
-                        ) {
+                            )
+                        {
                             $Valid = 0;
                         }
 
@@ -118,8 +128,8 @@ sub Run {
                             $Valid = 0;
                         }
                     }
-                    
-                    next ACTION if ( $PretendConfig->{'DynamicField'}->{$DynamicField} && $Valid);
+
+                    next ACTION if ( $PretendConfig->{'DynamicField'}->{$DynamicField} && $Valid );
                 }
 
                 # add action to blacklist

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1148,7 +1148,6 @@ sub _ReportingValues {
         # for oracle we make sure, that we don 't get more than 1000 ticket ids in a list
         # so instead of "ticket_id IN ( 1, 2, 3, ... 2001 )", we are splitting this up to
         # "ticket_id IN ( 1, 2, 3, ... 1000 ) OR ticket_id IN ( 1001, 1002, ... 2000)"
-        # see bugzilla #9723: http://bugs.otrs.org/show_bug.cgi?id=9723
         if ( $DBType eq 'oracle' ) {
 
             # save number of TicketIDs

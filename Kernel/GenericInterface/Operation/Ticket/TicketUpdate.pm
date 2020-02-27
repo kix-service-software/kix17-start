@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1241,7 +1241,7 @@ sub _CheckUpdatePermissions {
     # check queue permissions
     if ( $Ticket->{Queue} || $Ticket->{QueueID} ) {
         my $Access = $TicketObject->TicketPermission(
-            Type     => 'move',
+            Type     => 'rw',
             TicketID => $TicketID,
             UserID   => $Param{UserID},
         );
@@ -1271,7 +1271,7 @@ sub _CheckUpdatePermissions {
     # check responsible permissions
     if ( $Ticket->{Responsible} || $Ticket->{ResponsibleID} ) {
         my $Access = $TicketObject->TicketPermission(
-            Type     => 'responsible',
+            Type     => 'rw',
             TicketID => $TicketID,
             UserID   => $Param{UserID},
         );
@@ -1325,7 +1325,7 @@ sub _CheckUpdatePermissions {
 
         if ( $StateData{TypeName} =~ /^close/i ) {
             $Access = $TicketObject->TicketPermission(
-                Type     => 'close',
+                Type     => 'rw',
                 TicketID => $TicketID,
                 UserID   => $Param{UserID},
             );
@@ -1334,7 +1334,7 @@ sub _CheckUpdatePermissions {
         # set pending time
         elsif ( $StateData{TypeName} =~ /^pending/i ) {
             $Access = $TicketObject->TicketPermission(
-                Type     => 'close',
+                Type     => 'rw',
                 TicketID => $TicketID,
                 UserID   => $Param{UserID},
             );

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -162,10 +162,8 @@ sub Run {
     # handle for quick ticket templates
     if (
         $Self->{DefaultSet}
-        && $Self->{Subaction} ne 'StoreNew'
-        && ( !$Self->{Subaction} || $Self->{Subaction} ne 'AJAXUpdate' )
+        && !$Self->{Subaction}
     ) {
-
         my %TemplateData = $Self->TicketTemplateReplace(
             IsUpload   => 0,
             Data       => \%GetParam,
@@ -173,16 +171,22 @@ sub Run {
         );
         for my $Key ( keys %TemplateData ) {
             $GetParam{$Key} = $TemplateData{$Key};
-            if ( $Key =~ /^QuickTicket(.*)/ ) {
+            if (
+                $Key =~ /^QuickTicket(.*)/
+                && $Key ne 'QuickTicketDynamicFieldHash'
+            ) {
                 $GetParam{$1}     = $TemplateData{$Key};
                 $TemplateData{$1} = $TemplateData{$Key};
                 delete $GetParam{$Key};
             }
-        }
-
-        my %Ticket;
-        if ( $Self->{TicketID} ) {
-            %Ticket = $TicketObject->TicketGet( TicketID => $Self->{TicketID} );
+            elsif (
+                $Key eq 'QuickTicketDynamicFieldHash'
+                && IsHashRefWithData( $TemplateData{$Key} )
+            ) {
+                for my $DynamicField ( keys %{ $TemplateData{$Key} } ) {
+                    $GetParam{DynamicField}->{$DynamicField} = $TemplateData{$Key}->{$DynamicField};
+                }
+            }
         }
     }
 
@@ -199,9 +203,44 @@ sub Run {
             $GetParam{Dest} = $GetParam{DefaultQueueSelected};
         }
         my ( $QueueIDParam, $QueueParam ) = split( /\|\|/, $GetParam{Dest} );
-        my $QueueIDLookup = $QueueObject->QueueLookup( Queue => $QueueParam );
-        if ( $QueueIDLookup && $QueueIDLookup eq $QueueIDParam ) {
-            $ACLCompatGetParam{QueueID} = $QueueIDLookup;
+        my $CustomerPanelOwnSelection     = $ConfigObject->Get('CustomerPanelOwnSelection');
+        # default queue is selected by default set, or CustomerPanelOwnSelection is nor used
+        if (
+            $GetParam{DefaultQueueSelected}
+            || ref( $CustomerPanelOwnSelection ) ne 'HASH'
+        ) {
+            # get queue id
+            my $QueueIDLookup = $QueueObject->QueueLookup( Queue => $QueueParam );
+
+            # check if queue id match
+            if (
+                $QueueIDLookup
+                && $QueueIDLookup eq $QueueIDParam
+            ) {
+                $ACLCompatGetParam{QueueID} = $QueueIDLookup;
+            }
+        }
+        # CustomerPanelOwnSelection is used
+        elsif ( ref( $CustomerPanelOwnSelection ) eq 'HASH' ) {
+            CUSTOMQUEUE:
+            for my $QueueName ( keys( %{ $CustomerPanelOwnSelection } ) ) {
+                # check for relevant entry
+                next CUSTOMQUEUE if (
+                    !$CustomerPanelOwnSelection->{$QueueName}
+                    || $CustomerPanelOwnSelection->{$QueueName} ne $QueueParam
+                );
+                # get queue id
+                my $QueueIDLookup = $QueueObject->QueueLookup( Queue => $QueueName );
+
+                # check if queue id match
+                if (
+                    $QueueIDLookup
+                    && $QueueIDLookup eq $QueueIDParam
+                ) {
+                    $ACLCompatGetParam{QueueID} = $QueueIDLookup;
+                    last CUSTOMQUEUE;
+                }
+            }
         }
     }
 

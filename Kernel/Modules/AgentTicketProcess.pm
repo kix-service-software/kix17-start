@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -3067,7 +3067,6 @@ sub _RenderCustomer {
     }
 
     # When there is no Customer in the DB, it could be unknown Customer, set it from the ticket.
-    # See bug#12797 ( https://bugs.otrs.org/show_bug.cgi?id=12797 ).
     else {
         $Data{CustomerUserID} = $Param{Ticket}{CustomerUserID} || '';
         $Data{CustomerID}     = $Param{Ticket}{CustomerID}     || '';
@@ -5915,17 +5914,13 @@ sub _GetResponsibles {
     my $GroupObject  = $Kernel::OM->Get('Kernel::System::Group');
     my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
-    # Get available permissions and set permission group type accordingly.
-    my $ConfigPermissions = $ConfigObject->Get('System::Permission');
-    my $PermissionGroupType = ( grep { $_ eq 'responsible' } @{$ConfigPermissions} ) ? 'responsible' : 'rw';
-
     # if we are updating a ticket show the full list of possible responsibles
     if ( $Param{TicketID} ) {
         if ( $Param{QueueID} && !$Param{AllUsers} ) {
             my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
-                Type    => $PermissionGroupType,
+                Type    => 'rw',
             );
             for my $UserID ( sort keys %MemberList ) {
                 $ShownUsers{$UserID} = $AllGroupsMembers{$UserID};
@@ -5970,7 +5965,7 @@ sub _GetResponsibles {
             my $GID = $QueueObject->GetQueueGroupID( QueueID => $Param{QueueID} );
             my %MemberList = $GroupObject->PermissionGroupGet(
                 GroupID => $GID,
-                Type    => $PermissionGroupType,
+                Type    => 'rw',
             );
             for my $KeyMember ( sort keys %MemberList ) {
                 if ( $AllGroupsMembers{$KeyMember} ) {

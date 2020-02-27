@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -666,8 +666,6 @@ sub Redirect {
 
     # check if IIS is used, add absolute url for IIS workaround
     # see also:
-    #  o http://bugs.otrs.org/show_bug.cgi?id=2230
-    #  o http://bugs.otrs.org/show_bug.cgi?id=9835
     #  o http://support.microsoft.com/default.aspx?scid=kb;en-us;221154
     if ( $ENV{SERVER_SOFTWARE} =~ /^microsoft\-iis\/\d+/i ) {
         my $Host = $ENV{HTTP_HOST} || $ConfigObject->Get('FQDN');
@@ -767,106 +765,31 @@ sub Login {
     $Self->LoaderCreateAgentCSSCalls();
     $Self->LoaderCreateAgentJSCalls();
 
-    # Add header logo, if configured
-    if ( defined $ConfigObject->Get('AgentLogo') ) {
-        my %AgentLogo = %{ $ConfigObject->Get('AgentLogo') };
-        my %Data;
+    # Add logos, if configured
+    for my $Key ( qw(LoginLogo ResponsiveLoginLogo) ) {
+        next if !defined $ConfigObject->Get('Agent' . $Key );
 
-        for my $CSSStatement ( sort keys %AgentLogo ) {
-            if ( $CSSStatement eq 'URL' ) {
-                my $WebPath = '';
-                if ( $AgentLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
-                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                }
-                $Data{'URL'} = 'url(' . $WebPath . $AgentLogo{$CSSStatement} . ')';
-            }
-            else {
-                $Data{$CSSStatement} = $AgentLogo{$CSSStatement};
-            }
-        }
+        my %Logo = %{ $ConfigObject->Get('Agent' .  $Key) };
+        my $CSS  = '';
 
-        $Self->Block(
-            Name => 'HeaderLogoCSS',
-            Data => \%Data,
-        );
-    }
-
-    # Add header responsive logo, if configured
-    if ( defined $ConfigObject->Get('AgentResponsiveLogo') ) {
-        my %AgentResponsiveLogo = %{ $ConfigObject->Get('AgentResponsiveLogo') };
-        my %Data;
-
-        for my $CSSStatement ( sort keys %AgentResponsiveLogo ) {
-            if ( $CSSStatement eq 'URL' ) {
-                my $WebPath = '';
-                if ( $AgentResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
-                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                }
-                $Data{'URL'} = 'url(' . $WebPath . $AgentResponsiveLogo{$CSSStatement} . ')';
-            }
-            else {
-                $Data{$CSSStatement} = $AgentResponsiveLogo{$CSSStatement};
-            }
-        }
-
-        $Self->Block(
-            Name => 'HeaderResponsiveLogoCSS',
-            Data => \%Data,
-        );
-    }
-
-    # add login logo, if configured
-    if ( defined $ConfigObject->Get('AgentLoginLogo') ) {
-        my %AgentLoginLogo = %{ $ConfigObject->Get('AgentLoginLogo') };
-        my $CSS            = '';
-
-        for my $CSSStatement ( sort keys %AgentLoginLogo ) {
+        for my $CSSStatement ( sort keys %Logo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                $CSS .= 'background-image: url(' . $WebPath . $AgentLoginLogo{$CSSStatement} . '); ';
+                $CSS .= 'background-image: url(' . $WebPath . $Logo{$CSSStatement} . '); ';
             }
             else {
                 my $Attr = $CSSStatement;
                 $Attr =~ s/^Style//;
-                $CSS .= lc($Attr) . ': ' . $AgentLoginLogo{$CSSStatement} . '; ';
+                $CSS .= lc($Attr) . ': ' . $Logo{$CSSStatement} . '; ';
             }
         }
 
-        if ( $CSS ) {
-            $Self->Block(
-                Name => 'LoginLogoCSS',
-                Data => {
-                    CSSAttr => $CSS
-                }
-            );
-        }
-    }
-
-    # add responsive login logo, if configured
-    if ( defined $ConfigObject->Get('AgentResponsiveLoginLogo') ) {
-        my %AgentRLLogo = %{ $ConfigObject->Get('AgentResponsiveLoginLogo') };
-        my $CSS         = '';
-
-        for my $CSSStatement ( sort keys %AgentRLLogo ) {
-            if ( $CSSStatement eq 'URL' ) {
-                my $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                $CSS .= 'background-image: url(' . $WebPath . $AgentRLLogo{$CSSStatement} . '); ';
+        $Self->Block(
+            Name => $Key . 'CSS',
+            Data => {
+                CSSAttr => $CSS
             }
-            else {
-                my $Attr = $CSSStatement;
-                $Attr =~ s/^Style//;
-                $CSS .= lc($Attr) . ': ' . $AgentRLLogo{$CSSStatement} . '; ';
-            }
-        }
-
-        if ( $CSS ) {
-            $Self->Block(
-                Name => 'LoginResponsiveLogoCSS',
-                Data => {
-                    CSSAttr => $CSS
-                }
-            );
-        }
+        );
     }
 
     # get system maintenance object
@@ -1346,48 +1269,38 @@ sub Header {
         %AgentLogo = %{ $ConfigObject->Get('AgentLogo') };
     }
 
-    if ( %AgentLogo && keys %AgentLogo ) {
+    # Add logos, if configured
+    for my $Key ( qw(Logo ResponsiveLogo) ) {
+        next if !defined $ConfigObject->Get('Agent' . $Key );
 
-        my %Data;
-        for my $CSSStatement ( sort keys %AgentLogo ) {
+        my %Logo = %{ $ConfigObject->Get('Agent' .  $Key) };
+        my $CSS  = '';
+
+        if (
+            $Key eq 'Logo'
+            && %AgentLogo
+            && keys %AgentLogo
+        ) {
+            %Logo = %AgentLogo;
+        }
+
+        for my $CSSStatement ( sort keys %Logo ) {
             if ( $CSSStatement eq 'URL' ) {
-                my $WebPath = '';
-                if ( $AgentLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
-                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                }
-                $Data{'URL'} = 'url(' . $WebPath . $AgentLogo{$CSSStatement} . ')';
+                my $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                $CSS .= 'background-image: url(' . $WebPath . $Logo{$CSSStatement} . '); ';
             }
             else {
-                $Data{$CSSStatement} = $AgentLogo{$CSSStatement};
+                my $Attr = $CSSStatement;
+                $Attr =~ s/^Style//;
+                $CSS .= lc($Attr) . ': ' . $Logo{$CSSStatement} . '; ';
             }
         }
 
         $Self->Block(
-            Name => 'HeaderLogoCSS',
-            Data => \%Data,
-        );
-    }
-
-    if ( defined $ConfigObject->Get('AgentResponsiveLogo') ) {
-        my %AgentResponsiveLogo = %{ $ConfigObject->Get('AgentResponsiveLogo') };
-
-        my %Data;
-        for my $CSSStatement ( sort keys %AgentResponsiveLogo ) {
-            if ( $CSSStatement eq 'URL' ) {
-                my $WebPath = '';
-                if ( $AgentResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
-                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                }
-                $Data{'URL'} = 'url(' . $WebPath . $AgentResponsiveLogo{$CSSStatement} . ')';
+            Name => $Key .'CSS',
+            Data => {
+                CSSAttr => $CSS
             }
-            else {
-                $Data{$CSSStatement} = $AgentResponsiveLogo{$CSSStatement};
-            }
-        }
-
-        $Self->Block(
-            Name => 'HeaderResponsiveLogoCSS',
-            Data => \%Data,
         );
     }
 
@@ -1574,6 +1487,7 @@ sub Header {
                 && ref $CustomCSSTop eq 'HASH'
                 && $Param{UserToolbarPosition} eq 'ToolbarTop'
             ) {
+                my %CSS;
                 for my $Elem ( qw(Toolbar Toggle) ) {
                     for my $Key ( qw(Top Left) ) {
                         my $Value = $CustomCSSTop->{$Elem . '::' . $Key};
@@ -1581,10 +1495,17 @@ sub Header {
                             defined $Value
                             && $Value ne ''
                         ) {
-                            $Param{'CustomCSSTop' . $Elem} .= lc($Key) . ': ' . $Value . '; '
+                            $CSS{'CSS' . $Elem} .= lc($Key) . ': ' . $Value . '; '
                         }
                     }
                 }
+
+                $Self->Block(
+                    Name => 'CustomCSSTop',
+                    Data =>{
+                        %CSS
+                    },
+                );
             }
         }
 
@@ -1787,8 +1708,6 @@ sub Print {
 
     # There seems to be a bug in FastCGI that it cannot handle unicode output properly.
     #   Work around this by converting to an utf8 byte stream instead.
-    #   See also http://bugs.otrs.org/show_bug.cgi?id=6284 and
-    #   http://bugs.otrs.org/show_bug.cgi?id=9802.
     if ( $INC{'CGI/Fast.pm'} || $ENV{FCGI_ROLE} || $ENV{FCGI_SOCKET_PATH} ) {    # are we on FCGI?
         $Kernel::OM->Get('Kernel::System::Encode')->EncodeOutput( $Param{Output} );
         binmode STDOUT, ':bytes';
@@ -2434,46 +2353,46 @@ sub BuildSelection {
         && $Self->{Action} !~ /^Customer/
     ) {
         my $AutoCompleteConfig = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::Frontend::GenericAutoCompleteSearch');
-        my %UserPreferences    = $Kernel::OM->Get('Kernel::System::User')->GetPreferences( UserID => $Self->{UserID} );
 
         my $SearchTypeMappingKey;
         if ( $Self->{Action} && $Param{Name} ) {
             $SearchTypeMappingKey = $Self->{Action} . ":::" . $Param{Name};
         }
 
-        my $SearchType;
+        # create string for autocomplete
         if (
             $SearchTypeMappingKey
             && defined $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey}
         ) {
-            $SearchType = $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey};
-        }
+            my $SearchType      = $AutoCompleteConfig->{SearchTypeMapping}->{$SearchTypeMappingKey};
+            my %UserPreferences = $Kernel::OM->Get('Kernel::System::User')->GetPreferences(
+                UserID => $Self->{UserID}
+            );
 
-        # create string for autocomplete
-        if (
-            $SearchType
-            && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
-            && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
-        ) {
-            my $AutoCompleteString
-                = '<input id="'
-                . $Param{Name}
-                . '" type="hidden" name="'
-                . $Param{Name}
-                . '" value=""/>'
-                . '<input id="'
-                . $Param{Name}
-                . 'autocomplete" type="text" name="'
-                . $Param{Name}
-                . 'autocomplete" value="" class=" W75pc AutocompleteOff Validate_Required"/>';
+            if (
+                $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' }
+                && $UserPreferences{ 'User' . $SearchType . 'SelectionStyle' } eq 'AutoComplete'
+            ) {
+                my $AutoCompleteString
+                    = '<input id="'
+                    . $Param{Name}
+                    . '" type="hidden" name="'
+                    . $Param{Name}
+                    . '" value=""/>'
+                    . '<input id="'
+                    . $Param{Name}
+                    . 'autocomplete" type="text" name="'
+                    . $Param{Name}
+                    . 'autocomplete" value="" class=" W75pc AutocompleteOff Validate_Required"/>';
 
-            $Self->AddJSOnDocumentComplete( Code => <<"EOF");
+                $Self->AddJSOnDocumentComplete( Code => <<"EOF");
     Core.Config.Set("GenericAutoCompleteSearch.MinQueryLength",$AutoCompleteConfig->{MinQueryLength});
     Core.Config.Set("GenericAutoCompleteSearch.QueryDelay",$AutoCompleteConfig->{QueryDelay});
     Core.Config.Set("GenericAutoCompleteSearch.MaxResultsDisplayed",$AutoCompleteConfig->{MaxResultsDisplayed});
     Core.KIX4OTRS.GenericAutoCompleteSearch.Init(\$("#$Param{Name}autocomplete"),\$("#$Param{Name}"));
 EOF
-            return $AutoCompleteString;
+                return $AutoCompleteString;
+            }
         }
     }
 
@@ -3144,23 +3063,36 @@ sub NavigationBar {
             }
             next ITEM if !$Shown;
 
+            # init priority with 500 if not given
+            if ( !$Item->{Prio} ) {
+                $Item->{Prio} = 500;
+            }
+
             # set prio of item
             my $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
-            COUNT:
-            for ( 1 .. 51 ) {
-                last COUNT if !$NavBar{$Key};
-
-                $Item->{Prio}++;
-                $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
-            }
 
             # show as main menu
             if ( $Item->{Type} eq 'Menu' ) {
+                # check if priority is already in use
+                while ( $NavBar{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+
+                    # set new priority
+                    $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
+                }
                 $NavBar{$Key} = $Item;
             }
-
             # show as sub of main menu
             else {
+                # check if priority is already in use
+                while (  $NavBar{Sub}->{ $Item->{NavBar} }->{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+
+                    # set new priority
+                    $Key = ( $Item->{Block} || '' ) . sprintf( "%07d", $Item->{Prio} );
+                }
                 $NavBar{Sub}->{ $Item->{NavBar} }->{$Key} = $Item;
             }
         }
@@ -3858,7 +3790,7 @@ sub BuildDateSelection {
             . "/>&nbsp;";
     }
 
-    # remove 'Second' because it is never used and otrs bug #9441
+    # remove 'Second' because it is never used
     delete $Param{ $Prefix . 'Second' };
 
     # date format
@@ -3993,115 +3925,31 @@ sub CustomerLogin {
     $Self->LoaderCreateCustomerCSSCalls();
     $Self->LoaderCreateCustomerJSCalls();
 
+    # Add logos, if configured
+    for my $Key ( qw(LoginLogo ResponsiveLoginLogo) ) {
+        next if !defined $ConfigObject->Get('Customer' . $Key );
 
-    # Add header logo, if configured
-    if ( defined $ConfigObject->Get('CustomerLogo') ) {
-        my %CustomerLogo = %{ $ConfigObject->Get('CustomerLogo') };
-        my %Data;
+        my %Logo = %{ $ConfigObject->Get('Customer' .  $Key) };
+        my $CSS  = '';
 
-        for my $CSSStatement ( sort keys %CustomerLogo ) {
-            if ( $CSSStatement eq 'URL' ) {
-                my $WebPath = '';
-                if ( $CustomerLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
-                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                }
-                $Data{'URL'} = 'url(' . $WebPath . $CustomerLogo{$CSSStatement} . ')';
-            }
-            else {
-                $Data{$CSSStatement} = $CustomerLogo{$CSSStatement};
-            }
-        }
-
-        $Self->Block(
-            Name => 'HeaderLogoCSS',
-            Data => \%Data,
-        );
-
-        $Self->Block(
-            Name => 'HeaderLogo',
-        );
-    }
-
-    # Add header responsive logo, if configured
-    if ( defined $ConfigObject->Get('CustomerResponsiveLogo') ) {
-        my %CustomerResponsiveLogo = %{ $ConfigObject->Get('CustomerResponsiveLogo') };
-        my %Data;
-
-        for my $CSSStatement ( sort keys %CustomerResponsiveLogo ) {
-            if ( $CSSStatement eq 'URL' ) {
-                my $WebPath = '';
-                if ( $CustomerResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
-                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                }
-                $Data{'URL'} = 'url(' . $WebPath . $CustomerResponsiveLogo{$CSSStatement} . ')';
-            }
-            else {
-                $Data{$CSSStatement} = $CustomerResponsiveLogo{$CSSStatement};
-            }
-        }
-
-        $Self->Block(
-            Name => 'HeaderResponsiveLogoCSS',
-            Data => \%Data,
-        );
-
-        $Self->Block(
-            Name => 'HeaderResponsiveLogo',
-        );
-    }
-
-    # add login logo, if configured
-    if ( defined $ConfigObject->Get('CustomerLoginLogo') ) {
-        my %CustomerLoginLogo = %{ $ConfigObject->Get('CustomerLoginLogo') };
-        my $CSS               = '';
-
-        for my $CSSStatement ( sort keys %CustomerLoginLogo ) {
+        for my $CSSStatement ( sort keys %Logo ) {
             if ( $CSSStatement eq 'URL' ) {
                 my $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                $CSS .= 'background-image: url(' . $WebPath . $CustomerLoginLogo{$CSSStatement} . '); ';
+                $CSS .= 'background-image: url(' . $WebPath . $Logo{$CSSStatement} . '); ';
             }
             else {
                 my $Attr = $CSSStatement;
                 $Attr =~ s/^Style//;
-                $CSS .= lc($Attr) . ': ' . $CustomerLoginLogo{$CSSStatement} . '; ';
+                $CSS .= lc($Attr) . ': ' . $Logo{$CSSStatement} . '; ';
             }
         }
 
-        if ( $CSS ) {
-            $Self->Block(
-                Name => 'LoginLogoCSS',
-                Data => {
-                    CSSAttr => $CSS
-                }
-            );
-        }
-    }
-
-    # add responsive login logo, if configured
-    if ( defined $ConfigObject->Get('CustomerResponsiveLoginLogo') ) {
-        my %CustomerRLLogo = %{ $ConfigObject->Get('CustomerResponsiveLoginLogo') };
-        my $CSS            = '';
-
-        for my $CSSStatement ( sort keys %CustomerRLLogo ) {
-            if ( $CSSStatement eq 'URL' ) {
-                my $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                $CSS .= 'background-image: url(' . $WebPath . $CustomerRLLogo{$CSSStatement} . '); ';
+        $Self->Block(
+            Name => $Key .'CSS',
+            Data => {
+                CSSAttr => $CSS
             }
-            else {
-                my $Attr = $CSSStatement;
-                $Attr =~ s/^Style//;
-                $CSS .= lc($Attr) . ': ' . $CustomerRLLogo{$CSSStatement} . '; ';
-            }
-        }
-
-        if ( $CSS ) {
-            $Self->Block(
-                Name => 'LoginResponsiveLogoCSS',
-                Data => {
-                    CSSAttr => $CSS
-                }
-            );
-        }
+        );
     }
 
     # get system maintenance object
@@ -4355,58 +4203,30 @@ sub CustomerHeader {
         );
     }
 
-    # Add header logo, if configured
-    if ( defined $ConfigObject->Get('CustomerLogo') ) {
-        my %CustomerLogo = %{ $ConfigObject->Get('CustomerLogo') };
-        my %Data;
+        # Add logos, if configured
+    for my $Key ( qw(Logo ResponsiveLogo) ) {
+        next if !defined $ConfigObject->Get('Customer' . $Key );
 
-        for my $CSSStatement ( sort keys %CustomerLogo ) {
+        my %Logo = %{ $ConfigObject->Get('Customer' .  $Key) };
+        my $CSS  = '';
+
+        for my $CSSStatement ( sort keys %Logo ) {
             if ( $CSSStatement eq 'URL' ) {
-                my $WebPath = '';
-                if ( $CustomerLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
-                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                }
-                $Data{'URL'} = 'url(' . $WebPath . $CustomerLogo{$CSSStatement} . ')';
+                my $WebPath = $ConfigObject->Get('Frontend::WebPath');
+                $CSS .= 'background-image: url(' . $WebPath . $Logo{$CSSStatement} . '); ';
             }
             else {
-                $Data{$CSSStatement} = $CustomerLogo{$CSSStatement};
+                my $Attr = $CSSStatement;
+                $Attr =~ s/^Style//;
+                $CSS .= lc($Attr) . ': ' . $Logo{$CSSStatement} . '; ';
             }
         }
 
         $Self->Block(
-            Name => 'HeaderLogoCSS',
-            Data => \%Data,
-        );
-
-        $Self->Block(
-            Name => 'HeaderLogo',
-        );
-    }
-
-    if ( defined $ConfigObject->Get('CustomerResponsiveLogo') ) {
-        my %CustomerResponsiveLogo = %{ $ConfigObject->Get('CustomerResponsiveLogo') };
-
-        my %Data;
-        for my $CSSStatement ( sort keys %CustomerResponsiveLogo ) {
-            if ( $CSSStatement eq 'URL' ) {
-                my $WebPath = '';
-                if ( $CustomerResponsiveLogo{$CSSStatement} !~ /(?:http|ftp|https):\//i ) {
-                    $WebPath = $ConfigObject->Get('Frontend::WebPath');
-                }
-                $Data{'URL'} = 'url(' . $WebPath . $CustomerResponsiveLogo{$CSSStatement} . ')';
+            Name => $Key .'CSS',
+            Data => {
+                CSSAttr => $CSS
             }
-            else {
-                $Data{$CSSStatement} = $CustomerResponsiveLogo{$CSSStatement};
-            }
-        }
-
-        $Self->Block(
-            Name => 'HeaderResponsiveLogoCSS',
-            Data => \%Data,
-        );
-
-        $Self->Block(
-            Name => 'HeaderResponsiveLogo',
         );
     }
 
@@ -4584,25 +4404,50 @@ sub CustomerNavigationBar {
             }
             next ITEM if !$Shown;
 
-            # set prio of item
-            my $Key = sprintf( "%07d", $Item->{Prio} );
-            COUNT:
-            for ( 1 .. 51 ) {
-                last COUNT if !$NavBarModule{$Key};
-
-                $Item->{Prio}++;
+            # init priority with 500 if not given
+            if ( !$Item->{Prio} ) {
+                $Item->{Prio} = 500;
             }
 
+            # set prio of item
+            my $Key = sprintf( "%07d", $Item->{Prio} );
+
+            # show as main menu
             if ( $Item->{Type} eq 'Menu' ) {
-                $NavBarModule{ sprintf( "%07d", $Item->{Prio} ) } = $Item;
+                # check if priority is already in use
+                while ( $NavBarModule{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+
+                    # set new priority
+                    $Key = sprintf( "%07d", $Item->{Prio} );
+                }
+                $NavBarModule{ $Key } = $Item;
             }
 
             # show as sub of main menu
             elsif ( $Item->{Type} eq 'Submenu' ) {
-                $NavBarModule{Sub}->{ $Item->{NavBar} }->{ sprintf( "%07d", $Item->{Prio} ) } = $Item;
+                # check if priority is already in use
+                while ( $NavBarModule{Sub}->{ $Item->{NavBar} }->{ $Key } ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+
+                    # set new priority
+                    $Key = sprintf( "%07d", $Item->{Prio} );
+                }
+                $NavBarModule{Sub}->{ $Item->{NavBar} }->{ $Key } = $Item;
             }
+            # fallback: show as main menu
             else {
-                $NavBarModule{ sprintf( "%07d", $Item->{Prio} ) } = $Item;
+                # check if priority is already in use
+                while ( $NavBarModule{$Key} ) {
+                    # increment item priority
+                    $Item->{Prio} += 1;
+
+                    # set new priority
+                    $Key = sprintf( "%07d", $Item->{Prio} );
+                }
+                $NavBarModule{ $Key } = $Item;
             }
         }
     }
@@ -6320,6 +6165,15 @@ sub _BuildCustomFooter{
 
             my ($Prio, $Title) = split('::', $Entry);
 
+            # get target
+            my $Target;
+            if (
+                ref( $CustomFooter->{Target} ) eq 'HASH'
+                && $CustomFooter->{Target}->{$Title}
+            ) {
+                $Target = $CustomFooter->{Target}->{$Title};
+            }
+
             if ( $CustomFooter->{URL}->{$Title} ) {
                 my $URL = $TemplateGeneratorObject->ReplacePlaceHolder(
                     Text     => $CustomFooter->{URL}->{$Title},
@@ -6338,8 +6192,9 @@ sub _BuildCustomFooter{
                 $Self->Block(
                     Name => 'CustomFooterEntry',
                     Data => {
-                        Title => $Title,
-                        URL   => $URL
+                        Title  => $Title,
+                        URL    => $URL,
+                        Target => $Target,
                     }
                 );
             }

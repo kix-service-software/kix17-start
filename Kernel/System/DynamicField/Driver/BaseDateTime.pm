@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1178,6 +1178,17 @@ sub ValueLookup {
     my ( $Self, %Param ) = @_;
 
     my $Value = defined $Param{Key} ? $Param{Key} : '';
+
+    # check if a translation is possible
+    if ( defined $Param{LanguageObject} ) {
+
+        # translate value
+        $Value = $Param{LanguageObject}->FormatTimeString(
+            $Value,
+            'DateFormat',
+            'NoSeconds',
+        );
+    }
 
     return $Value;
 }

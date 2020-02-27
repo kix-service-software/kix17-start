@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -193,7 +193,7 @@ sub CustomerSearch {
     ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => 'Need Search, UserLogin, PostMasterSearch, CustomerIDRaw or CustomerID!',
+            Message  => 'Need Search, UserLogin, PostMasterSearch, CustomerIDRaw, CustomerID or SearchFields!',
         );
         return;
     }
@@ -351,6 +351,15 @@ sub CustomerSearch {
 
     # add fields based search input
     if ( $Param{SearchFields} ) {
+        # check param
+        if ( ref( $Param{SearchFields} ) ne 'HASH' ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => 'Parameter SearchFields needs to be a HASH ref!',
+            );
+            return;
+        }
+
         my $SearchFurtherFields;
 
         # backend mapping
@@ -363,29 +372,34 @@ sub CustomerSearch {
             $SearchFurtherFields = $Self->{ConfigObject}->Get("FurtherSearchFields::Mapping");
         }
 
+        return if ref $SearchFurtherFields ne 'HASH';
+
         my $SQLExt = '';
         for my $Field ( keys %{ $Param{SearchFields} } ) {
-            next if !$SearchFurtherFields || !$SearchFurtherFields->{$Field};
+            return if !$SearchFurtherFields->{$Field};
 
             $SQLExt .= ' AND ' if $SQLExt;
 
-            my $Value =
-                $Self->{SearchPrefix} . $Param{SearchFields}->{$Field} . $Self->{SearchSuffix};
+            my $Value = $Param{SearchFields}->{$Field};
             $Value =~ s/\*/%/g;
 
             if ( $SearchFurtherFields->{$Field} =~ /,/ ) {
                 my @SearchFields = split( /,/, $SearchFurtherFields->{$Field} );
                 my $SQLExt2 = '';
                 for my $CurrentSearchField (@SearchFields) {
+                    push( @Bind, \$Value );
                     $SQLExt2 .= ' OR ' if $SQLExt2;
-                    $SQLExt2 .= "( LOWER("
+                    $SQLExt2 .= " LOWER("
                         . $CurrentSearchField
                         . ") LIKE LOWER(?) $LikeEscapeString ";
                 }
-                $SQLExt .= $SQLExt2;
+                $SQLExt .= '('
+                    . $SQLExt2
+                    . ' )';
             }
             else {
-                $SQLExt .= "( LOWER("
+                push( @Bind, \$Value );
+                $SQLExt .= " LOWER("
                     . $SearchFurtherFields->{$Field}
                     . ") LIKE LOWER(?) $LikeEscapeString ";
             }

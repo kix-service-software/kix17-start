@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -69,32 +69,6 @@ sub Run {
     if ( $Self->{Profile} =~ m/(.*)::(.*?)$/ ) {
         $Self->{Profile} = $1;
         $SearchProfileUser = $2;
-    }
-
-    # check request
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionTicketNumber' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'AgentTicketSearchOpenSearchDescriptionTicketNumber',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionTicketNumber.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionFulltext' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'AgentTicketSearchOpenSearchDescriptionFulltext',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionFulltext.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
     }
 
     # check request
@@ -579,7 +553,6 @@ sub Run {
         # Special behavior for the fulltext search toolbar module:
         # - Check full text string to see if contents is a ticket number.
         # - If exists and not in print or CSV mode, redirect to the ticket.
-        # See http://bugs.otrs.org/show_bug.cgi?id=4238 for details.
         #   The original problem was that tickets with customer reply will be
         #   found by a fulltext search (ticket number is in the subjects), but
         #   'new' tickets will not be found.
@@ -998,7 +971,6 @@ sub Run {
                 );
 
                 # Transform EscalationTime and EscalationTimeWorkingTime to a human readable format.
-                # See bug#13088 (https://bugs.otrs.org/show_bug.cgi?id=13088).
                 $Info{EscalationTime} = $LayoutObject->CustomerAgeInHours(
                     Age   => $Info{EscalationTime},
                     Space => ' ',
@@ -1406,30 +1378,31 @@ sub Run {
                 . ';TakeLastSearch=1;Subaction=Search'
                 . ';';
             $Output .= $LayoutObject->TicketListShow(
-                TicketIDs => \@ViewableTicketIDs,
-                Total     => scalar @ViewableTicketIDs,
+                TicketIDs         => \@ViewableTicketIDs,
+                OriginalTicketIDs => \@ViewableTicketIDs,
+                Total             => scalar @ViewableTicketIDs,
 
-                View => $Self->{View},
+                View              => $Self->{View},
 
-                Env        => $Self,
-                LinkPage   => $LinkPage,
-                LinkSort   => $LinkSort,
-                LinkFilter => $LinkFilter,
-                LinkBack   => $LinkBack,
-                Profile    => $Self->{Profile},
+                Env               => $Self,
+                LinkPage          => $LinkPage,
+                LinkSort          => $LinkSort,
+                LinkFilter        => $LinkFilter,
+                LinkBack          => $LinkBack,
+                Profile           => $Self->{Profile},
 
-                TitleName => Translatable('Search Results'),
-                Bulk      => 1,
-                Limit     => $Self->{SearchLimit},
+                TitleName         => Translatable('Search Results'),
+                Bulk              => 1,
+                Limit             => $Self->{SearchLimit},
 
-                Filter => $Self->{Filter},
+                Filter            => $Self->{Filter},
 
-                OrderBy      => $Self->{OrderBy},
-                SortBy       => $Self->{SortBy},
-                RequestedURL => 'Action=' . $Self->{Action} . ';' . $LinkPage,
+                OrderBy           => $Self->{OrderBy},
+                SortBy            => $Self->{SortBy},
+                RequestedURL      => 'Action=' . $Self->{Action} . ';' . $LinkPage,
 
                 # do not print the result earlier, but return complete content
-                Output => 1,
+                Output            => 1,
             );
 
             # build footer

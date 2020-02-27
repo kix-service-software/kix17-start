@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -172,9 +172,11 @@ sub Run {
                 }
             }
 
-            # Destroy objects.
-            $Kernel::OM->ObjectsDiscard(
-                ForcePackageReload => 1,
+            # make sure every child uses its own clean environment.
+            local $Kernel::OM = Kernel::System::ObjectManager->new(
+                'Kernel::System::Log' => {
+                    LogPrefix => 'KIX-SchedulerTaskWorker-' . $$,
+                },
             );
 
             # Disable in memory cache because many processes runs at the same time.

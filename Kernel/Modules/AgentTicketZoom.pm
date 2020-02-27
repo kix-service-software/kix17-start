@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -678,13 +678,24 @@ sub MaskAgentZoom {
         && ( $AclActionLookup{AgentTicketMove} )
     ) {
         my $Access = $TicketObject->TicketPermission(
-            Type     => 'move',
+            Type     => 'rw',
             TicketID => $Ticket{TicketID},
             UserID   => $Self->{UserID},
             LogNo    => 1,
         );
-        $Param{TicketID} = $Ticket{TicketID};
-        if ($Access) {
+        my $MoveConfig = $ConfigObject->Get("Ticket::Frontend::AgentTicketMove");
+        if (
+            $Access
+            && (
+                !$MoveConfig->{RequiredLock}
+                || !$TicketObject->TicketLockGet( TicketID => $Ticket{TicketID} )
+                || $TicketObject->OwnerCheck(
+                    TicketID => $Ticket{TicketID},
+                    OwnerID  => $Self->{UserID},
+                )
+            )
+        ) {
+            $Param{TicketID} = $Ticket{TicketID};
             if ( $ConfigObject->Get('Ticket::Frontend::MoveType') =~ /^form$/i ) {
                 $LayoutObject->Block(
                     Name => 'MoveLink',
@@ -700,7 +711,10 @@ sub MaskAgentZoom {
         }
     }
 
-    if ( $ConfigObject->Get('Frontend::Module')->{AgentTicketQuickState} ) {
+    if (
+        $ConfigObject->Get('Frontend::Module')->{AgentTicketQuickState}
+        && ( $AclActionLookup{AgentTicketQuickState} )
+    ) {
         my $QuickStateConfig = $ConfigObject->Get('Ticket::Frontend::AdminQuickState');
         my $Access           = $TicketObject->TicketPermission(
             Type     => $QuickStateConfig->{Permissions} || 'rw',
@@ -712,7 +726,9 @@ sub MaskAgentZoom {
         if ( $Access ) {
             my $QuickStateObject = $Kernel::OM->Get('Kernel::System::QuickState');
             my %QuickStates      = $QuickStateObject->QuickStateList(
-                Valid => 1,
+                TicketID => $Ticket{TicketID},
+                UserID   => $Self->{UserID},
+                Valid    => 1,
             );
 
             if ( %QuickStates ) {

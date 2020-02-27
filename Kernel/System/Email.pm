@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -331,7 +331,6 @@ sub Send {
     my $EncodeObject = $Kernel::OM->Get('Kernel::System::Encode');
 
     # build MIME::Entity, Data should be bytes, not utf-8
-    # see http://bugs.otrs.org/show_bug.cgi?id=9832
     $EncodeObject->EncodeOutput( \$Param{Body} );
     my $Entity = MIME::Entity->build( %Header, Data => $Param{Body} );
 

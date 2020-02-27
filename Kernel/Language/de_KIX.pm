@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -30,8 +30,8 @@ sub Data {
     $Lang->{'Enables creation of a FAQ entry from currently created article.'}
         = 'Aktiviert die Erstellung eines FAQ-Eintrags aus dem akt. erzeugtem Artikel.'
         ;
-    $Lang->{'KIX4OTRS: Define the free key field 3 for articles. Its a new article property.'}
-        = 'KIX4OTRS: Definition des FreiSchlüsselFeldes 3 für Artikel. Hierüber kann einen zusätzliches Artikel-Attribut definiert werden.';
+    $Lang->{'KIX: Define the free key field 3 for articles. Its a new article property.'}
+        = 'KIX: Definition des FreiSchlüsselFeldes 3 für Artikel. Hierüber kann einen zusätzliches Artikel-Attribut definiert werden.';
 
     # custom article types...
     $Lang->{'note-workaround-external'} = 'Workaroundbeschreibung (sichtbar für Kunde)';
@@ -331,7 +331,7 @@ sub Data {
     $Lang->{'Time of ticket escalation'} = 'Zeitpunkt der Ticket-Eskalation';
     $Lang->{'no information for this ticket type available'}
         = 'keine Zusatzinformation für diesen Ticket-Typ verfügbar';
-    $Lang->{'News about KIX4OTRS releases!'} = 'Neuigkeiten zu KIX4OTRS!';
+    $Lang->{'News about KIX releases!'} = 'Neuigkeiten zu KIX!';
     $Lang->{'Ticket Count Overview'}         = 'Ticketanzahlen';
     $Lang->{'Statetype'}                     = 'Statustyp';
     $Lang->{'Show Column Total'}             = 'Spaltensumme';
@@ -418,7 +418,7 @@ sub Data {
     $Lang->{'Substitute'}      = 'Vertreter';
     $Lang->{'Substitute note'} = 'Vertreterhinweis';
 
-    # KIX4OTRS_PreferencesExtensions.xml
+    # PreferencesExtensions.xml
     $Lang->{'My Removable Article Flags'} = 'Meine entfernbaren Artikelmarkierungen';
     $Lang->{'Select article flags which should be removed after ticket close.'}
         = 'Wählen Sie Artikelmarkierungen aus, die beim Schließen des Tickets entfernt werden sollen';
@@ -451,13 +451,13 @@ sub Data {
     $Lang->{'Auto-subscribe search profiles from other agents depending on selected categories.'}
         = 'Automatisches Abonnieren von Suchprofilen anderer Agenten auf der Grundlage von gewählten Kategorien.';
 
-    # OTRS - changed translations
+    # changed translations
     $Lang->{'Article(s)'}    = 'Artikel';
     $Lang->{'Your language'} = 'Ihre bevorzugte Sprache';
     $Lang->{'Search Result'} = 'Suchergebnisse';
     $Lang->{'Linked as'}     = 'Verknüpft als';
 
-    # KIX4OTRS_ServiceQueueAssignment.xml
+    # ServiceQueueAssignment
     $Lang->{
         'Registration of service attribute AssignedQueueID which is used for automatic queue updates upon service updates.'
         } =
@@ -465,7 +465,7 @@ sub Data {
     $Lang->{'Assign a preferred queue to this service'} =
         'Diesem Service eine bevorzugte Queue zuweisen.';
 
-    # KIX4OTRS_Ticket.xml
+    # Ticket.xml
     $Lang->{'Shows all owners and responsibles in selecetions.'} =
         'Legt die Anzeige aller Bearbeiter und Verantwortlichen als Standard fest.';
     $Lang->{'Default body for a forwarded email.'} =
@@ -476,10 +476,6 @@ sub Data {
         'Overloads (redefines) existing functions in Kernel::System::Ticket. Used to easily add customizations.'
         }
         = 'Überschreibt (redefiniert) bestehende Funktionen in Kernel::System::Ticket. Dies vereinfacht das Hinzufügen von Anpassungen.';
-    $Lang->{
-        'Defines whether results of possible actions of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).'
-        }
-        = 'Definiert ob die "Possible"-Ergebnisse für Aktionen mehrerer ACLs subsummiert werden. Dadurch wird ein modularer Ansatz für ACLs ermoeglicht (KIX-Standardverhalten ist deakviert).';
     $Lang->{
         'Defines whether results of PossibleNot for tickets of multiple ACLs are subsumed, thus allowing a more modular approach to ACLS (KIX-default behavior is disabled).'
         }
@@ -531,7 +527,7 @@ sub Data {
         }
         = 'Legt fest, wie viele Zeichen für den Wert eines Dynamischen Feldes in der TicketInfo Sidebar angezeigt werden sollen. Um keine Einschränkungen vorzunehmen, kann der SysConfig-Schlüssel deaktiviert werden.';
 
-    # KIX4OTRS_QuickTicket.xml
+    # QuickTicket
     $Lang->{
         'Frontend module registration for the Quickticket via AgentTicketPhone object in the agent interface.'
         }
@@ -611,7 +607,7 @@ sub Data {
     $Lang->{'Defines whether the ticket type should be translated in the selection box.'}
         = 'Definiert, ob der Tickettyp in der Auswahlbox übersetzt wird.';
 
-    # KIX4OTRS_PersonTicket.xml
+    # PersonTicket
     $Lang->{'This setting defines the link type \'Person\'.'} = 'Definiert den Linktyp \'Person\'.';
     $Lang->{
         'This setting defines that a \'Ticket\' object can be linked with persons using the \'Person\' link type.'
@@ -621,8 +617,7 @@ sub Data {
     $Lang->{'Escalation suspended due to ticket state'}
         = 'Die Lösungszeit wurde abhängig vom Ticketstatus ausgesetzt.';
 
-    # EO KIX4OTRS_PersonTicket.xml
-    # KIX4OTRS_SLADisabled.xml
+    # SLADisabled
     $Lang->{'Defines MethodName.'} = 'Defines Methodenname.';
     $Lang->{
         'Defines state names for which the SLA time is disabled. Is a ticket set to on of these states, the SLA-destination times are set to hold. The time a ticket stays in this state is not SLA-relevant.'
@@ -635,8 +630,7 @@ sub Data {
         }
         = 'Zusaetzliche und erweiterte Ticket-Methoden die Original-methoden ueberschreiben koennen (ausser Methoden in Kernel::System::Ticket).';
 
-    # EO KIX4OTRS_SLADisabled.xml
-    # KIX4OTRS_Defaults.xml
+    # Defaults
     $Lang->{'The identifier for a ticket, e.g. Ticket#, Call#, MyTicket#. The default is Ticket#.'}
         = 'Ticket-Identifikator, z. B. Ticket#,Call#, MyTicket#. Als Standard wird Ticket# verwendet.';
     $Lang->{'Parameters for the FollowUpNotify object in the preference view.'}
@@ -664,7 +658,7 @@ sub Data {
     $Lang->{'A filter with this name already exists!'}
         = 'Ein Filter mit diesem Namen existiert bereits!';
 
-    # KIX4OTRS_Escalation.xml
+    # Escalation
     $Lang->{'Disables response time SLA, if the newly created ticket is a phone ticket.'}
         = 'Deaktiviert Antwortzeit-SLA wenn Ticket ein Telefonticket ist.';
     $Lang->{'Restricts the ResponsetimeSetByPhoneTicket to these ticket types.'}
@@ -676,16 +670,14 @@ sub Data {
     $Lang->{'List of JS files to always be loaded for the agent interface.'}
         = 'Liste von JS-Dateien, die immer im Agenten-Interface geladen werden.';
     $Lang->{
-        'Defines a dynamic field of type date/time which is used as start time for solution SLA-computation rather than ticket creation time, thus allowing to start SLA-countdown with begin of customer desired times. "Index" is only fallback for old configuration upgraded from OTRS 3.1 or previous to be workable. In this case dynamic field named TicketFreeTime"Index" is used.'
+        'Defines a dynamic field of type date/time which is used as start time for solution SLA-computation rather than ticket creation time, thus allowing to start SLA-countdown with begin of customer desired times. "Index" is only fallback for old configuration upgraded from KIX 4.0 or previous to be workable. In this case dynamic field named TicketFreeTime"Index" is used.'
         }
-        = 'Definiert ein Dynamisches Feld vom Typ Datum/Zeit welches anstelle des Ticketerstellzeitpunktes als SLA-Startzeitpunkt für die Lösungszielzeit genutzt wird. Somit kann die SLA-Zeit erst ab dem Kundenwunschtermin starten. "Index" ist nur ein Fallback, um ältere Konfigurationen, welche von OTRS 3.1 oder älter angehoben wurden, funktionstüchtig zu halten. In diesem Falle wird ein Dynamisches Feld mit dem Namen TicketFreeTime"Index" genutzt.';
+        = 'Definiert ein Dynamisches Feld vom Typ Datum/Zeit welches anstelle des Ticketerstellzeitpunktes als SLA-Startzeitpunkt für die Lösungszielzeit genutzt wird. Somit kann die SLA-Zeit erst ab dem Kundenwunschtermin starten. "Index" ist nur ein Fallback, um ältere Konfigurationen, welche von KIX 4.0 oder älter angehoben wurden, funktionstüchtig zu halten. In diesem Falle wird ein Dynamisches Feld mit dem Namen TicketFreeTime"Index" genutzt.';
     $Lang->{'Disables response time SLA, if an auto reply was sent for this ticket.'} = '';
     $Lang->{'Restricts the ResponsetimeSetByAutoReply to these ticket types.'}        = '';
     $Lang->{'Defines queue names for which the SLA calulation time is disabled.'}     = '';
 
-    # EO KIX4OTRS_Escalation.xml
-
-    # KIX4OTRS_FrontendTicketRestrictions.xml
+    # FrontendTicketRestrictions
     $Lang->{'Ticket-ACL to restrict some ticket data selections based on current ticket data.'}
         = 'Ticket-ACL, um bestimmte Auswahlmöglichkeiten basierend auf den aktuellen Ticketdaten zu verbieten.';
     $Lang->{
@@ -713,13 +705,11 @@ sub Data {
     $Lang->{'Replaces the default Data character limits.'}
         = 'Überschreibt die Standard-Data-Zeichenlimits.';
 
-    # KIX4OTRS_CustomerDashboard.xml
+    # CustomerDashboard
     $Lang->{'Pending Tickets'}      = 'Wartende Tickets';
     $Lang->{'All pending tickets.'} = 'Alle wartenden Tickets.';
 
-    # EO KIX4OTRS_CustomerDashboard.xml
-
-    # KIX4OTRS_TicketStateWorkflow.xml
+    # TicketStateWorkflow
     $Lang->{'no state update possible - no common next states'} =
         'kein Statuswechsel möglich - keine gemeinsamen Folgestatus';
     $Lang->{'Ticket-ACLs to define the following possible state.'}
@@ -819,8 +809,6 @@ sub Data {
         }
         = 'Statusupdate für geschlossene Tickets wenn ein neuer Artikel vom Typ Webrequest in der Kundenoberfläche erstellt wird.';
 
-    # EO KIX4OTRS_TicketStateWorkflow.xml
-
     # AgentArticleEdit
     $Lang->{'Edit Article'}                 = 'Artikel ändern';
     $Lang->{'Copy Article'}                 = 'Artikel kopieren';
@@ -891,9 +879,7 @@ sub Data {
         'Personen vom Typ "Kunde" und "Dritte" werden nicht benachrichtigt wenn ein interner Artikel erstellt wird.';
     $Lang->{'Person Information'} = 'Informationen zur Person';
 
-    # EO Link person
-
-    # KIX4OTRS_TicketZoom.xml
+    # TicketZoom
     $Lang->{'Module to show empty mail link in menu.'} =
         'Link zu der Erstellung einer leeren Email im Menue der Ticketansicht.';
     $Lang->{'Screen after ticket closure'} = 'Ansicht nach Ticket-Abschluss';
@@ -915,8 +901,7 @@ sub Data {
     $Lang->{'Defines email-actions allowed for article types.'} =
         'Definiert E-Mail-Aktionen für Artikeltypen.';
 
-    # EO KIX4OTRS_TicketZoom.xml
-    # KIX4OTRS_LinkObject.xml
+    # LinkObject
     $Lang->{'Allows a search with empty search parameters in link object mask.'} =
         'Erlaubt Suche mit leeren Suchparametern in LinkObject-Maske.';
     $Lang->{
@@ -924,11 +909,7 @@ sub Data {
         }
         = 'Frontendmodul-Registration des Moduls AgentLinkObjectUtils.';
 
-#$Lang->{'Defines possible search criteria in the agents link interface for target object "Ticket". Order is important. Value is used as internal name.'} = '';
-#$Lang->{'Defines displayed name for configured search criteria. Key has to be one of the internal names (see above); Value is used as name in the interface.'} = '';
-#$Lang->{'Defines data source for configured search criteria. Key has to be one of the internal names (see above); Value is used as name in the interface.'} = '';
-# EO KIX4OTRS_LinkObject.xml
-# KIX4OTRS_ResponsibleAutoSetPerTicketType.xml
+    # ResponsibleAutoSetPerTicketType
     $Lang->{'Workflowmodule which sets the ticket responsible based on ticket type if not given.'} =
         'Workflowmodule welches auf den Ticketverantwortlichen auf Basis des Tickettyps setzt, sofern dieser noch nicht vorgegeben wurde.';
     $Lang->{
@@ -936,18 +917,17 @@ sub Data {
         } =
         'Wenn das Ticket-Verantwortlichkeits-Featues aktiviert ist, wird beim nicht gesetzten Verantwortlichen der Bearbeiter auch automatisch als Verantwortlich gesetzt.';
 
-    #EO KIX4OTRS_ResponsibleAutoSetPerTicketType.xml
     $Lang->{'Preselect old ticket data in chosen ticket note functions'} =
         'Vorauswahl der vorherigen Ticket-Daten in den ausgewählten Ticket-Notiz-Funktionen';
     $Lang->{'Defines where it is possible to move a ticket into an other queue.'} =
         'Legt fest wo es möglich ist, ein Ticket in eine andere Queue zu verschieben.';
 
-    # KIX4OTRS_FrontendMenuChanges.xml
+    # FrontendMenuChanges
     $Lang->{'Reporting'}            = 'Berichtswesen';
     $Lang->{'Default user support'} = 'Standard Anwenderunterstützung';
     $Lang->{''}                     = '';
 
-    # KIX4OTRS_SysConfigChangeLog.xml
+    # SysConfigChangeLog
     $Lang->{
         'Logs the configuration changes of SysConfig options.'
         }
@@ -960,8 +940,6 @@ sub Data {
         'Set this config parameter to "Yes", if you want to add a suffix with the actual year and month to the SysConfig logfile. A logfile for every month will be created.'
         }
         = 'Wird dieser Konfigurationsparameter aktiviert, wird an das SysConfig Logfile eine Endung mit dem aktuellen Monat und Jahr angehängt und monatlich ein neues Logfile geschrieben.';
-
-    # EO KIX4OTRS_SysConfigChangeLog.xml
 
     # KIXSidebar
     $Lang->{'Sidebar module registration for the agent interface.'} =
@@ -1036,17 +1014,13 @@ sub Data {
     $Lang->{'Assign a prefered queue to this service'} =
         'Diesem Service eine bevorzugte Queue zuordnen';
 
-    # EO Service2QueueAssignment...
-
-    # KIX4OTRS_CustomerPreferences
+    # CustomerPreferences
     $Lang->{'Default ticket type'}       = 'Standard-Tickettyp für Ticketerstellung';
     $Lang->{'Your default ticket type'}  = 'Ihr Standard-Tickettyp';
     $Lang->{'Default ticket queue'}      = 'Standard-Queue für Ticketerstellung';
     $Lang->{'Your default ticket queue'} = 'Ihre Standard-Queue';
     $Lang->{'Default service'}           = 'Standard-Service für Ticketerstellung';
     $Lang->{'Your default service'}      = 'Ihr Standard-Service';
-
-    # EO KIX4OTRS_CustomerPreferences
 
     # UserQueueSelectionStyle...
     $Lang->{'Queue selection style'}       = 'Queueauswahl - Methode';
@@ -1055,8 +1029,6 @@ sub Data {
     $Lang->{'Selection Style'}             = 'Auswahlmethode';
     $Lang->{'Configuration of the mapping for the search type. example: Module:::Element => Typ'} =
         'Konfiguration des Mappings für die Suche eingeben. Beispiel: Module::: Element => Typ';
-
-    # EO UserQueueSelectionStyle...
 
     $Lang->{'LastSubject'}             = 'Letzter Betreff';
     $Lang->{'LastCustomerSubject'}     = 'Letzter Kundenbetreff';
@@ -1087,7 +1059,6 @@ sub Data {
     $Lang->{
         'Defines the default ticket order in the ticket article flag view of the agent interface. Up: oldest on top. Down: latest on top.'
         } = '';    # explicitely without translation
-                   # EO Article Flags...
 
     $Lang->{'Edit article'}      = 'Artikel bearbeiten';
     $Lang->{'Article edit'}      = 'Artikel bearbeiten';
@@ -1105,7 +1076,7 @@ sub Data {
     $Lang->{'Determines whether the selection fields in the action bar should be displayed as "Modernize".'}
         = 'Legt fest, ob die Auswahlfelder in der Aktionsleiste als "Modernize" dargestellt werden sollen.';
 
-    # KIX4OTRS_AgentArticleEdit.xml
+    # AgentArticleEdit
     $Lang->{'History type for this action.'} = 'Historientyp für diese Aktion.';
     $Lang->{'Frontend module registration for the AgentArticleEdit.'}
         = 'Frontendmodul-Registrierung von AgentArticleEdit.';
@@ -1127,7 +1098,7 @@ sub Data {
     $Lang->{'Merge customer tickets'}           = 'Kundentickets zusammenfassen';
     $Lang->{'Merge all tickets from this customer'} = 'Tickets des aktuellen Kunden zusammenfassen';
 
-    # KIX4OTRS_AgentTicketMergeToCustomer.xml
+    # AgentTicketMergeToCustomer
     $Lang->{
         'Frontend module registration for the AgentTicketMergeToCustomer object in the agent interface.'
         }
@@ -1153,7 +1124,8 @@ sub Data {
         = 'Definiert einen Outputfilter, welcher die Möglichkeit bereitstellt, das Ergebnis der Ticketsuche im Kundenfrontend bei Suchergebnisformat "Drucken" in einem neuen Tab zu öffnen.';
     $Lang->{'Customer ticket search result for "Print" opens in new tab.'}
         = 'Suchergebnis der Ticketsuche im Kundenfrontend für "Drucken" öffnet in einem neuen Tab.';
-
+    $Lang->{'Defines additional search fields to searching for customers in the customer backends. (Key: Identifier, Value: database column)'}
+        = 'Definiert weitere Suchfelder für die Suche nach Kunden in den Kunden-Backends. (Schlüssel: Kennung, Wert: Datenbankspalte)';
     # EO CustomerSearch
 
     # admin frontend
@@ -1315,7 +1287,7 @@ sub Data {
 
     $Lang->{''} = '';
 
-    # KIX4OTRS_ITSMConfigItemEvents.xml
+    # ITSMConfigItemEvents
     $Lang->{
         'Config item event module that shows passed parameters BEFORE action is perdormed. May be used as template for own CI-events.'
         }
@@ -1331,7 +1303,7 @@ sub Data {
 
     $Lang->{''} = '';
 
-    # KIX4OTRS_ITSMConfigItemCompare
+    # ITSMConfigItemCompare
     $Lang->{'Compare'}                       = 'Vergleichen';
     $Lang->{'Compare Versions'}              = 'Versionen vergleichen';
     $Lang->{'Compare different versions of'} = 'Vergleich verschiedener Versionen von';
@@ -1400,7 +1372,7 @@ sub Data {
 
     $Lang->{'Assigned owner'} = 'Zugewiesener Besitzer';
 
-    # KIX4OTRS_AgentLinkGraph.xml
+    # AgentLinkGraph
     $Lang->{'Link Graph'} = 'Verknüpfungsgraph';
     $Lang->{'Shows this object in its relation to other linked objects'}
         = 'Zeigt dieses Objekt in seinen Beziehungen zu anderen verknüpften Objekten';
@@ -1999,14 +1971,11 @@ sub Data {
     $Lang->{'Object backend module registration for the import/export moduls.'} =
         'Objekt-Backend Modul Registration des Import/Export Moduls.';
 
-    # KIX4OTRS_SwitchButton.xml
+    # SwitchButton
     $Lang->{'Frontend module registration for the SwitchButton object in the Customer interface.'} =
         'Frontendmodul-Registration des SwitchButton-Objekts im Customer-Interface.';
     $Lang->{'Frontend module registration for the SwitchButton object in the Agents interface.'} =
         'Frontendmodul-Registration des SwitchButton-Objekts im Agenten Interface.';
-
-    # EO KIX4OTRS_SwitchButton.xml
-
     $Lang->{'Switch Button'} = 'Wechsel-Button';
     $Lang->{'switch button'} = 'Wechsel-Button';
     $Lang->{'Switch-Button'} = 'Wechsel-Button';
@@ -2106,7 +2075,7 @@ sub Data {
     $Lang->{'Import failed - No file uploaded/received.'}
         = 'Import fehlgeschlagen - Keine Datei hochgeladen/erhalten.';
 
-    # KIX4OTRS_TextModules.xml
+    # TextModules
     $Lang->{'Frontend module registration for the AdmintTextModules object in the admin interface.'}
         =
         'Frontendmodul-Registration des AdminTextModules-Objekts im Admin-Interface.';
@@ -3140,8 +3109,9 @@ sub Data {
     $Lang->{'FAQ Article Change Time (between)'}
         = 'Letzte Änderung des FAQ-Artikel (zwischen)';
 
-    # Template: AgentFAQSearchOpenSearchDescriptionFulltext
+    # Template: OpenSearch
     $Lang->{'FAQFulltext'} = 'FAQ-Volltext';
+    $Lang->{'Public'}      = 'Öffentlich';
 
     # Template: AgentFAQSearchSmall
     $Lang->{'FAQ Search'}                          = 'FAQ Suche';
@@ -3208,9 +3178,6 @@ sub Data {
     $Lang->{'Article Number'} = 'Artikelnummer';
     $Lang->{'Search for articles with keyword'}
         = 'Suche nach Artikeln mit Schlüsselwörtern';
-
-    # Template: PublicFAQSearchOpenSearchDescriptionFAQNumber
-    $Lang->{'Public'} = 'Öffentlich';
 
     # Template: PublicFAQSearchResultShort
     $Lang->{'Back to FAQ Explorer'} = 'Zurück zum FAQ-Explorer';
@@ -3567,18 +3534,6 @@ sub Data {
         }
         =
         'Maximale Größe von Titeln in Häufig-gestellten-Fragen-Beiträgen welche in FAQ-Berichten in der Agentenübersicht angezeigt werden.';
-    $Lang->{
-        'Module to generate HTML OpenSearch profile for short FAQ search in the public interface.'
-        }
-        =
-        'Modul zum Generieren des HTML "OpenSearch" Profils zur FAQ-Suche in der öffentlichen Oberfläche.';
-    $Lang->{
-        'Module to generate HTML OpenSearch profile for short faq search in the customer interface.'
-        }
-        =
-        'Modul zum Generieren des HTML "OpenSearch" Profils zur FAQ-Suche in der Kundenoberfläche.';
-    $Lang->{'Module to generate html OpenSearch profile for short faq search.'} =
-        'Modul zum Generieren des HTML "OpenSearch" Profils zur FAQ-Suche über das Browser-Suchfeld.';
     $Lang->{'New FAQ Article'} = 'Neuer FAQ-Artikel';
     $Lang->{'New FAQ articles need approval before they get published.'}
         = 'Neue FAQ-Artikel benötigen eine Freigabe vor der Veröffentlichung.';
@@ -3913,6 +3868,9 @@ sub Data {
         = 'Relevante Config Item Klassen auswählen.';
     $Lang->{'Select relevant deployment states.'}
         = 'Relevante Verwendungsstatus auswählen.';
+    $Lang->{'Permission Check'} = 'Berechtigungsprüfung';
+    $Lang->{'Activates the permission check of the classes for the relevant interface.'}
+        = 'Aktiviert die Berechtigungsprüfung der Klassen für das relevante Interface.';
     $Lang->{
         'Specify Constrictions for CI-search. [CI-Attribute]::[Object]::[Attribute/Value]::[Mandatory]'
         }
@@ -3964,7 +3922,7 @@ sub Data {
     $Lang->{'no access'}      = 'Kein Zugriff';
     $Lang->{'link not found'} = 'Keine Verknüpfung gefunden';
 
-    # KIX4OTRS_Document.xml
+    # Document
     $Lang->{'This setting defines the link type \'DocumentLink\'.'} =
         'Definiert den Linktyp \'DocumentLink\'.';
     $Lang->{
@@ -4015,8 +3973,6 @@ sub Data {
         'Columns that can be filtered in the linked object view of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.'
         }
         = 'Spalten, die in der Anzeige der verlinkten Objekte in der Agentenoberfläche gefiltert werden. Mögliche Einstellungen, 1 = Verfügbar, 2 = Aktiv als Standard.';
-
-    # EO KIX4OTRS_Document.xml
 
     # translations missing in ImportExport...
     $Lang->{'Column Seperator'}           = 'Spaltentrenner';
@@ -4464,6 +4420,8 @@ sub Data {
         = 'Der Status konnte mit dem gewähltem Statuswechsel \'%s\' nicht geändert werden!';
     $Lang->{'It could not be created the corresponding article to the quick state \'%s\'!'}
         = 'Es konnte nicht der entsprechende Artikel zum Statuswechsel \'%s\' erstellt werden!';
+    $Lang->{'A quick state with this name already exists!'}
+        = 'Ein Statuswechsel mit diesem Namen existiert bereits!';
 
     # System Message
     $Lang->{'Defined modules in the blacklist are not displayed in the selection.'}
@@ -4511,6 +4469,8 @@ sub Data {
         = 'Definiert eine Liste von Links, welche im Footer zusätzlich hinzugefügt werden können. Die Links können den Frontends separat zugewiesen werden. (Schlüssel: <Priorität>::<Linktitel>; Wert: 0 => deaktiviert, 1 => Überall anzeigen, 2 => nur Agentenfrontend, 3 => nur Kundenfrontend)';
     $Lang->{'Defines the associated URL for each link title. It is possible to use KIX placeholder.'}
         = 'Definiert zu den jeweiligen Linktitel die dazugehörige URL. Es ist möglich KIX-Platzhalter zu verwenden.';
+    $Lang->{'Defines the target-attribute for each link title.'}
+        = 'Definiert zu den jeweiligen Linktitel das zu verwendende target-Attribut.';
 
     # GEOCOORDINATES
     $Lang->{'Decimal Degree'} = 'Dezimalgrad';
@@ -4527,12 +4487,26 @@ sub Data {
     # NEW SKINS
     $Lang->{'Default (green)'} = 'Standard (Grün)';
     $Lang->{'Default (blue)'}  = 'Standard (Blau)';
-    $Lang->{'"Blue" skin which tries to save screen space for power users.'} =
-        '"Standard-Blau"-Skin, der weniger Bildschirmfläche zum Darstellen von Informationen benötigt.';
+    $Lang->{'This skin changes the color of the standard skin to "Blue" for the customer interface.'} =
+        'Dieser Skin ändert die Farbe des Standard Skin in "Blau" für das Kundeninterface.';
+    $Lang->{'This skin changes the color of the standard skin to "Blue" for the agent interface.'} =
+        'Dieser Skin ändert die Farbe des Standard Skin in "Blau" für das Agenteninterface.';
+    $Lang->{'This skin changes the color of the standard skin to "Dark" for the agent interface.'} =
+        'Dieser Skin ändert die Farbe des Standard Skin in "Dark" für das Agenteninterface.';
     $Lang->{'Default skin for the agent interface (blue version).'} =
          'Standard-Skin für die Agentenoberfläche (Blau)';
     $Lang->{'Default skin for the customer interface (blue version).'} =
          'Standard-Skin für die Kundenoberfläche (Blau)';
+
+    # OpenSearch
+    $Lang->{'"OpenSearch" profiles.'} =
+        '"OpenSearch" Profile.';
+    $Lang->{'Module to provide html "OpenSearch" profiles for agent frontend.'} =
+        'Modul zur Bereitstellung des HTML "OpenSearch" Profils in der Agentenoberfläche.';
+    $Lang->{'Module to generate html OpenSearch profiles for customer frontend.'} =
+        'Modul zur Bereitstellung des HTML "OpenSearch" Profils in der Kundenoberfläche.';
+    $Lang->{'Module to generate html OpenSearch profiles for public frontend.'} =
+        'Modul zur Bereitstellung des HTML "OpenSearch" Profils in der öffentlichen Oberfläche.';
 
     # $$STOP$$
 

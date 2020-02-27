@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -535,6 +535,15 @@ sub Run {
                 $Attribute =~ s/^QuickTicket(.*)$/$1/gm;
                 $ACLCompatGetParam{$Attribute} = $TemplateData{$Key};
             }
+
+            elsif (
+                $Key eq 'QuickTicketDynamicFieldHash'
+                && IsHashRefWithData( $TemplateData{$Key} )
+            ) {
+                for my $DynamicField ( keys %{ $TemplateData{$Key} } ) {
+                    $GetParam{$DynamicField} = $TemplateData{$Key}->{$DynamicField};
+                }
+            }
         }
         @MultipleCustomer       = @{ $TemplateData{MultipleCustomer} } if defined $TemplateData{MultipleCustomer} && ref $TemplateData{MultipleCustomer}  eq 'ARRAY';
         @MultipleCustomerCc     = @{ $TemplateData{MultipleCustomerCc} } if defined $TemplateData{MultipleCustomerCc} && ref $TemplateData{MultipleCustomerCc}  eq 'ARRAY';
@@ -966,6 +975,7 @@ sub Run {
             }
 
             $Output .= $Self->_MaskEmailNew(
+                %GetParam,
                 QueueID    => $Self->{QueueID},
                 NextStates => $Self->_GetNextStates(
                     %GetParam,
@@ -1052,7 +1062,8 @@ sub Run {
 
     # deliver signature
     elsif ( $Self->{Subaction} eq 'Signature' ) {
-        my $QueueID = $ParamObject->GetParam( Param => 'QueueID' );
+        my $CustomerUser = $ParamObject->GetParam( Param => 'SelectedCustomerUser' ) || '';
+        my $QueueID      = $ParamObject->GetParam( Param => 'QueueID' );
         if ( !$QueueID ) {
             my $Dest = $ParamObject->GetParam( Param => 'Dest' ) || '';
             ($QueueID) = split( /\|\|/, $Dest );
@@ -1061,7 +1072,10 @@ sub Run {
         # start with empty signature (no queue selected) - if we have a queue, get the sig.
         my $Signature = '';
         if ($QueueID) {
-            $Signature = $Self->_GetSignature( QueueID => $QueueID );
+            $Signature = $Self->_GetSignature(
+                CustomerUserID => $CustomerUser,
+                QueueID        => $QueueID,
+            );
         }
         my $MimeType = 'text/plain';
         if ( $LayoutObject->{BrowserRichText} ) {
@@ -1231,6 +1245,7 @@ sub Run {
                         %GetParam,
                         %ACLCompatGetParam,
                         CustomerUserID => $CustomerUser || '',
+                        QueueID        => $NewQueueID || 0,
                         Action         => $Self->{Action},
                         ReturnType     => 'Ticket',
                         ReturnSubType  => 'DynamicField_' . $DynamicFieldConfig->{Name},
@@ -1252,12 +1267,13 @@ sub Run {
         my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
             %GetParam,
             %ACLCompatGetParam,
-            QueueID       => $NewQueueID || 0,
-            Action        => $Self->{Action},
-            ReturnType    => 'Ticket',
-            ReturnSubType => '-',
-            Data          => {},
-            UserID        => $Self->{UserID},
+            CustomerUserID => $CustomerUser || '',
+            QueueID        => $NewQueueID || 0,
+            Action         => $Self->{Action},
+            ReturnType     => 'Ticket',
+            ReturnSubType  => '-',
+            Data           => {},
+            UserID         => $Self->{UserID},
         );
 
         # update 'Shown' for $Self->{DynamicField}
@@ -2398,12 +2414,13 @@ sub Run {
         my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
             %GetParam,
             %ACLCompatGetParam,
-            QueueID       => $QueueID || 0,
-            Action        => $Self->{Action},
-            ReturnType    => 'Ticket',
-            ReturnSubType => '-',
-            Data          => {},
-            UserID        => $Self->{UserID},
+            CustomerUserID => $CustomerUser || '',
+            QueueID        => $QueueID || 0,
+            Action         => $Self->{Action},
+            ReturnType     => 'Ticket',
+            ReturnSubType  => '-',
+            Data           => {},
+            UserID         => $Self->{UserID},
         );
 
         # update 'Shown' for $Self->{DynamicField}
@@ -2833,7 +2850,7 @@ sub _GetResponsibles {
         my $GID = $Kernel::OM->Get('Kernel::System::Queue')->GetQueueGroupID( QueueID => $Param{QueueID} );
         my %MemberList = $Kernel::OM->Get('Kernel::System::Group')->PermissionGroupGet(
             GroupID => $GID,
-            Type    => 'responsible',
+            Type    => 'rw',
         );
         for my $MemberKey ( sort keys %MemberList ) {
             if ( $AllGroupsMembers{$MemberKey} ) {
@@ -3534,12 +3551,13 @@ sub _MaskEmailNew {
     # run acl to prepare TicketAclFormData
     my $ShownDFACL = $Kernel::OM->Get('Kernel::System::Ticket')->TicketAcl(
         %Param,
-        TypeID        => $Param{TypeID} || $Param{DefaultTypeID} || '',
-        Action        => $Self->{Action},
-        ReturnType    => 'Ticket',
-        ReturnSubType => '-',
-        Data          => {},
-        UserID        => $Self->{UserID},
+        CustomerUserID => $Param{CustomerUser},
+        TypeID         => $Param{TypeID} || $Param{DefaultTypeID} || '',
+        Action         => $Self->{Action},
+        ReturnType     => 'Ticket',
+        ReturnSubType  => '-',
+        Data           => {},
+        UserID         => $Self->{UserID},
     );
 
     # update 'Shown' for $Self->{DynamicField}

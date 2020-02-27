@@ -1,5 +1,5 @@
 // --
-// Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+// Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 // --
 // This software comes with ABSOLUTELY NO WARRANTY. For details, see
 // the enclosed file LICENSE for license information (AGPL). If you
@@ -225,7 +225,7 @@ Core.KIX4OTRS = (function(TargetNS) {
                 if (!Question)
                     Question = Core.Config.Get('LoadDraftMsg');
 
-                Core.KIX4OTRS.Dialog.ShowQuestion(Core.Config.Get('Question'), Question, Core.Config.Get('Yes'), function() {
+                Core.KIX4OTRS.Dialog.ShowQuestion(Core.Config.Get('Question'), Question, Core.Config.Get('Load'), function() {
                     // Yes - load form content from WebUpload Cache
                     Core.UI.Dialog.CloseDialog($('.Dialog:visible'));
                     $.each(Content, function() {
@@ -395,7 +395,7 @@ Core.KIX4OTRS = (function(TargetNS) {
                                 $("#Dest").attr($(this).val());
 
                                 // prepare to set new signature
-                                var Dest = $("#Dest").val(),
+                                var Dest = $("#Dest").val() || '',
                                     Signature,
                                     OldSignature = $("#Signature").length > 0 ? $("#Signature").attr('src') : '',
                                     OldSignatureArray = OldSignature.split(";"),

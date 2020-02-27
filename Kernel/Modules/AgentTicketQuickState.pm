@@ -1,5 +1,5 @@
 # --
-# Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -44,7 +44,6 @@ sub Run {
     my $UploadCacheObject       = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
     my $LayoutObject            = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
     my $TicketObject            = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $StateObject             = $Kernel::OM->Get('Kernel::System::State');
     my $QuickStateObject        = $Kernel::OM->Get('Kernel::System::QuickState');
     my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
 
@@ -75,6 +74,30 @@ sub Run {
         );
     }
 
+    # get ACL restrictions
+    my %PossibleActions = ( 1 => $Self->{Action} );
+
+    my $ACL = $TicketObject->TicketAcl(
+        Data          => \%PossibleActions,
+        Action        => $Self->{Action},
+        TicketID      => $Self->{TicketID},
+        ReturnType    => 'Action',
+        ReturnSubType => '-',
+        UserID        => $Self->{UserID},
+    );
+    my %AclAction = $TicketObject->TicketAclActionData();
+
+    # check if ACL restrictions exist
+    if ( $ACL || IsHashRefWithData( \%AclAction ) ) {
+
+        my %AclActionLookup = reverse %AclAction;
+
+        # show error screen if ACL prohibits this action
+        if ( !$AclActionLookup{ $Self->{Action} } ) {
+            return $LayoutObject->NoPermission( WithHeader => 'yes' );
+        }
+    }
+
     # check if ticket is locked
     if (
         $TicketObject->TicketLockGet(
@@ -100,9 +123,9 @@ sub Run {
     );
 
     # valid state list
-    my %StateList = $StateObject->StateList(
-        UserID => $Self->{UserID},
-        Valid  => 1,
+    my %StateList = $TicketObject->TicketStateList(
+        UserID   => $Self->{UserID},
+        TicketID => $Self->{TicketID},
     );
 
     # get params
@@ -139,10 +162,7 @@ sub Run {
         $QuickStateData{Config} = {};
     }
 
-    if (
-        $QuickStateData{StateID} ne $Ticket{StateID}
-        && $StateList{$QuickStateData{StateID}}
-    ) {
+    if ( $StateList{$QuickStateData{StateID}} ) {
         if ( $QuickStateData{Config}->{UsedArticle} ) {
             # get all attachments of the quick state
             my @Attachments = $QuickStateObject->QuickStateAttachmentList(

@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -13,7 +13,7 @@
     <h1>Forms Handling</h1>
 
     <p class="Documentation">
-        In OTRS 2.4, form layout was created with many nested tables. Since OTRS 3.0, the two-column form layout
+        Since KIX 4.0, the two-column form layout
         (which is the most common use case) is handled with <code>&lt;fieldset class="TableLike"&gt;</code> instead.
         The form will then consist of a first column for the labels, and a second column for the actual fields.
         In the default skin, these two have a relative width and will resize when the window resizes. Example:

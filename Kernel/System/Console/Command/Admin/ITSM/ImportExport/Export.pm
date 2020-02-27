@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -23,7 +23,7 @@ our @ObjectDependencies = (
 sub Configure {
     my ( $Self, %Param ) = @_;
 
-    $Self->Description('The tool for exporting config items');
+    $Self->Description('The tool for exporting object data');
     $Self->AddOption(
         Name        => 'template-number',
         Description => "Specify a template number to be exported.",
@@ -33,7 +33,7 @@ sub Configure {
     );
     $Self->AddArgument(
         Name        => 'destination',
-        Description => "Specify the path to a file where config item data should be exported.",
+        Description => "Specify the path to a file where object data should be exported.",
         Required    => 1,
         ValueRegex  => qr/.*/smx,
     );

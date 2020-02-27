@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -45,43 +45,29 @@
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Customer/default/css/thirdparty/ui-theme/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="[% Config("Frontend::WebPath") %]skins/Customer/default/css/thirdparty/jstree-theme/default/style.css" />
 
-[% RenderBlockStart("HeaderLogoCSS") %]
     <style type="text/css">
+[% RenderBlockStart("LogoCSS") %]
         #Header #Logo {
-            background-image: [% Data.URL | html %];
-            top: [% Data.StyleTop | html %];
-            right: [% Data.StyleRight | html %];
-            width: [% Data.StyleWidth | html %];
-            height: [% Data.StyleHeight | html %];
+            [% Data.CSSAttr | html %]
         }
-    </style>
-[% RenderBlockEnd("HeaderLogoCSS") %]
-[% RenderBlockStart("HeaderResponsiveLogoCSS") %]
-    <style type="text/css">
+[% RenderBlockEnd("LogoCSS") %]
+[% RenderBlockStart("ResponsiveLogoCSS") %]
         #Header #ResponsiveLogo {
-            background-image: [% Data.URL | html %];
-            top: [% Data.StyleTop | html %];
-            right: [% Data.StyleRight | html %];
-            width: [% Data.StyleWidth | html %];
-            height: [% Data.StyleHeight | html %];
+            [% Data.CSSAttr | html %]
         }
-    </style>
-[% RenderBlockEnd("HeaderResponsiveLogoCSS") %]
+[% RenderBlockEnd("ResponsiveLogoCSS") %]
 
 [% RenderBlockStart("LoginLogoCSS") %]
-    <style type="text/css">
         .LoginLogo {
             [% Data.CSSAttr | html %]
         }
-    </style>
 [% RenderBlockEnd("LoginLogoCSS") %]
-[% RenderBlockStart("LoginResponsiveLogoCSS") %]
-    <style type="text/css">
+[% RenderBlockStart("ResponsiveLoginLogoCSS") %]
         #LoginResponsiveLogo {
             [% Data.CSSAttr | html %]
         }
+[% RenderBlockEnd("ResponsiveLoginLogoCSS") %]
     </style>
-[% RenderBlockEnd("LoginResponsiveLogoCSS") %]
 
     <style type="text/css">
         @font-face {
@@ -113,13 +99,13 @@
       (function(doc, win) {
           try {
               var ResponsiveCSS;
-  [% RenderBlockStart("ResponsiveCSS") %]
+[% RenderBlockStart("ResponsiveCSS") %]
               ResponsiveCSS = doc.createElement("link");
               ResponsiveCSS.setAttribute("rel", "stylesheet");
               ResponsiveCSS.setAttribute("type", "text/css");
               ResponsiveCSS.setAttribute("href", "[% Config("Frontend::WebPath") %]skins/Customer/[% Data.Skin | uri %]/[% Data.CSSDirectory %]/[% Data.Filename %]");
               doc.getElementsByTagName("head")[0].appendChild(ResponsiveCSS);
-  [% RenderBlockEnd("ResponsiveCSS") %]
+[% RenderBlockEnd("ResponsiveCSS") %]
           }
           catch (Exception) {}
       }(document, window));

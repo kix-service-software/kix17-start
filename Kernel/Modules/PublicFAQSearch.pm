@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -84,34 +84,6 @@ sub Run {
 
     # get layout object
     my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-
-    # build output for open search description by FAQ number
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionFAQNumber' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'PublicFAQSearchOpenSearchDescriptionFAQNumber',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionFAQNumber.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
-
-    # build output for open search description by full-text
-    if ( $Self->{Subaction} eq 'OpenSearchDescriptionFulltext' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'PublicFAQSearchOpenSearchDescriptionFullText',
-            Data         => \%Param,
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescriptionFulltext.xml',
-            ContentType => 'application/opensearchdescription+xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
-    }
 
     # remember exclude attributes
     my @Excludes = $ParamObject->GetArray( Param => 'Exclude' );
@@ -274,20 +246,6 @@ sub Run {
     }
     if ( $GetParam{ResultForm} eq 'Print' ) {
         $SearchPageShown = $SearchLimit;
-    }
-
-    # check request
-    if ( $Self->{Subaction} eq 'OpenSearchDescription' ) {
-        $Output = $LayoutObject->Output(
-            TemplateFile => 'PublicFAQSearchOpenSearchDescription',
-            Data         => {%Param},
-        );
-        return $LayoutObject->Attachment(
-            Filename    => 'OpenSearchDescription.xml',
-            ContentType => 'text/xml',
-            Content     => $Output,
-            Type        => 'inline',
-        );
     }
 
     # show result page

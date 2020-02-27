@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -186,6 +186,66 @@ sub Sync {
         # take down session
         $LDAP->unbind();
         return;
+    }
+
+    # check if user need to be in a group!
+    if ( $Self->{AccessAttr} && $Self->{GroupDN} ) {
+
+        # just in case for debug
+        if ( $Self->{Debug} > 0 ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => 'check for groupdn!',
+            );
+        }
+
+        # search if we're allowed to
+        my $Filter2 = '';
+        if ( $Self->{UserAttr} eq 'DN' ) {
+            $Filter2 = "($Self->{AccessAttr}=" . escape_filter_value($UserDN) . ')';
+        }
+        else {
+            $Filter2 = "($Self->{AccessAttr}=" . escape_filter_value( $Param{User} ) . ')';
+        }
+        my $Result2 = $LDAP->search(
+            base   => $Self->{GroupDN},
+            filter => $Filter2,
+            attrs  => ['1.1'],
+        );
+        if ( $Result2->code() ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Search failed! base='$Self->{GroupDN}', filter='$Filter2', "
+                    . $Result2->error(),
+            );
+
+            # take down session
+            $LDAP->unbind();
+            $LDAP->disconnect();
+            return;
+        }
+
+        # extract it
+        my $GroupDN = '';
+        for my $Entry ( $Result2->all_entries() ) {
+            $GroupDN = $Entry->dn();
+        }
+
+        # log if there is no LDAP entry
+        if ( !$GroupDN ) {
+
+            # failed login note
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'notice',
+                Message  => "User: $Param{User} authentication failed, no LDAP group entry found"
+                    . "GroupDN='$Self->{GroupDN}', Filter='$Filter2'! (REMOTE_ADDR: $RemoteAddr).",
+            );
+
+            # take down session
+            $LDAP->unbind();
+            $LDAP->disconnect();
+            return;
+        }
     }
 
     # get needed objects

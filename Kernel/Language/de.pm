@@ -1,7 +1,7 @@
 # --
-# Modified version of the work: Copyright (C) 2006-2019 c.a.p.e. IT GmbH, https://www.cape-it.de
+# Modified version of the work: Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
 # based on the original work of:
-# Copyright (C) 2001-2019 OTRS AG, https://otrs.com/
+# Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file LICENSE for license information (AGPL). If you
@@ -1489,12 +1489,12 @@ sub Data {
         'Edit Mail Account' => 'E-Mailkonto bearbeiten',
 
         # Template: AdminNavigationBar
-        'Admin' => 'Admin',
-        'Agent Management' => 'Agenten-Verwaltung',
-        'Queue Settings' => 'Queue-Einstellungen',
-        'Ticket Settings' => 'Ticket-Einstellungen',
+        'Admin'                 => 'Admin',
+        'Agent Management'      => 'Agentenverwaltung',
+        'Queue Settings'        => 'Queue-Einstellungen',
+        'Ticket Settings'       => 'Ticket-Einstellungen',
         'System Administration' => 'Systemverwaltung',
-        'Online Admin Manual' => 'Online-Administrationshandbuch',
+        'Online Admin Manual'   => 'Online-Administrationshandbuch',
 
         # Template: AdminNotificationEvent
         'Ticket Notification Management' => 'Verwaltung von Ticket-Benachrichtigungen',
@@ -1510,7 +1510,7 @@ sub Data {
         'Do you really want to delete this notification?' => 'Möchten Sie diese Benachrichtigung wirklich löschen?',
         'Add Notification' => 'Benachrichtigung hinzufügen',
         'Edit Notification' => 'Benachrichtigung bearbeiten',
-        'Show in agent preferences' => 'In Agenteinstellungen anzeigen',
+        'Show in agent preferences' => 'In Agenten-Einstellungen anzeigen',
         'Agent preferences tooltip' => 'Kurzinfo für die persönlichen Agenten-Einstellungen',
         'This message will be shown on the agent preferences screen as a tooltip for this notification.' =>
             'Diese Nachricht wird als Kurzinfo für diese Benachrichtigung im Einstellungsbildschirm der Agenten-Einstellungen angezeigt.',
@@ -4268,8 +4268,8 @@ Ihr Helpdesk-Team
         'A list of dynamic fields that are merged into the main ticket during a merge operation. Only dynamic fields that are empty in the main ticket will be set.' =>
             'Eine Liste der dynamischen Felder, die während einer Zusammenführung in das Haupt-Ticket ebenfalls zusammengeführt werden. Es werden nur leere dynamische Felder im Haupt-Ticket geändert.',
         'A picture' => 'Ein Bild',
-        'ACL module that allows closing parent tickets only if all its children are already closed ("State" shows which states are not available for the parent ticket until all child tickets are closed).' =>
-            'ACL Modul das erlaubt Eltern-Tickets nur dann zu schließen, wenn alle seine Kinder-Tickets geschlossen wurden. ("Status" zeigt welche Status für das Eltern-Ticket nicht verfügbar sind, bis alle Kinder-Tickets geschlossen sind).',
+        'ACL module that allows closing parent tickets only if all its children are already closed. "State" lists ticket states which are not available for the parent ticket until all child tickets are closed. "ExcludeTypes" lists ticket types that should be ignored by the module: 0 = Do not ignore, 1 = Ignore.' =>
+            'ACL Modul das erlaubt Eltern-Tickets nur dann zu schließen, wenn alle seine Kinder-Tickets geschlossen wurden. "Status" listet Ticketstatus welche für das Eltern-Ticket nicht verfügbar sind, bis alle Kinder-Tickets geschlossen sind. "ExcludeTypes" listet Tickettypen, welche vom Modul ignoriert werden sollen: 0 = Nicht ignorieren, 1 = Ignorieren.',
         'Access Control Lists (ACL)' => 'Access Control Lists (ACL)',
         'AccountedTime' => 'Erfasste Zeit',
         'Activates a blinking mechanism of the queue that contains the oldest ticket.' =>
@@ -5802,10 +5802,6 @@ Ihr Helpdesk-Team
             '',
         'Module to filter encrypted bodies of incoming messages.' => 'Modul zum Filtern von verschlüsselten Texten bei eingehenden Nachrichten.',
         'Module to generate accounted time ticket statistics.' => 'Modul zur Generierung von Statistiken  für die benötigte Bearbeitungszeit.',
-        'Module to generate html OpenSearch profile for short ticket search in the agent interface.' =>
-            'Modul zum Generieren eines HTML-OpenSearch-Profils für die Ticket-Schnellsuche im Agentenbereich.',
-        'Module to generate html OpenSearch profile for short ticket search in the customer interface.' =>
-            'Modul zum Generieren eines HTML-OpenSearch-Profils für die Ticket-Schnellsuche im Kundenbereich.',
         'Module to generate ticket solution and response time statistics.' =>
             'Modul zur Generierung von Lösungs- und Antwortzeitstatistiken.',
         'Module to generate ticket statistics.' => 'Modul zur Generierung von Ticket-Statistiken',
