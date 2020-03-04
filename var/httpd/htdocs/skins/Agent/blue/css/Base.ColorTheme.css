@@ -606,7 +606,6 @@
     .jstree-InputField .Disabled > .jstree-anchor {
         color: #AAAAAA;
     }
-    .jstree-node.Disabled:hover > .jstree-anchor,
     .jstree-node.Disabled:hover > .jstree-anchor.jstree-hovered,
     .jstree-node.Disabled:hover > .jstree-wholerow.jstree-wholerow-hovered {
         background-color: #F2F2F2;
