@@ -13,8 +13,8 @@ use utf8;
 use vars (qw($Self));
 
 # get needed objects
-my $ConfigObject = $Kernel::OM->GetNew('Kernel::Config');
-my $MainObject   = $Kernel::OM->GetNew('Kernel::System::Main');
+my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+my $MainObject   = $Kernel::OM->Get('Kernel::System::Main');
 
 # define needed variables
 my $CacheType = "UnitTest_Cache_Configure";
