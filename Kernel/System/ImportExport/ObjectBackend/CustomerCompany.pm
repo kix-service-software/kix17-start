@@ -560,7 +560,10 @@ sub ImportDataSave {
         }
     }
 
-    if ( $NewCustomerCompanyData{$CustomerCompanyKey} ) {
+    if (
+        defined $CustomerCompanyKey
+        && $NewCustomerCompanyData{$CustomerCompanyKey}
+    ) {
         %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
             CustomerID => $NewCustomerCompanyData{$CustomerCompanyKey}
         );
