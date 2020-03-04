@@ -38,7 +38,7 @@ my $Success;
 
 # init test case
 $Self->TestCaseStart(
-    TestCase    => 'Ticket Create',
+    TestCase    => 'Ticket Create Simple',
     Feature     => 'Ticket',
     Story       => 'Create Ticket',
     Description => <<"END",
