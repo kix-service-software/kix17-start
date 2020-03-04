@@ -365,6 +365,8 @@ sub Data {
     $Lang->{'Link customers to services.'}     = 'Kunden zu Services zuordnen.';
     $Lang->{'Customer Company Information'}    = 'Kundenfirmeninformation';
     $Lang->{'Further Information'}             = 'Weitere Informationen';
+    $Lang->{'Please include at least one customer company.'}
+        = 'Bitte geben Sie mindestens eine Kundenfirma an.';
 
     # CustomerTicketCustomerIDSelection
     $Lang->{'New Customer Ticket'}        = 'Neues Kundenticket';

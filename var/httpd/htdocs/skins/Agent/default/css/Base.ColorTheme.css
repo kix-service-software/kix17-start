@@ -570,6 +570,15 @@
 
 
     /**
+    *   @subsection form fields customer company
+    */
+    .CustomerIDContainer{
+        background-color: #F2F2F2;
+        border-color: #9E9E9E;
+    }
+
+
+    /**
     *   @subsection ul table like
     */
     ul.Tablelike {
