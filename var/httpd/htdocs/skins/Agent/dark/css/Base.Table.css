@@ -409,7 +409,8 @@
     */
     .ArticleView,
     .ArticlePage,
-    .ArticleFilter {
+    .ArticleFilter,
+    .ArticleTicketMarkAsRead {
         float: left;
     }
     #ArticleTableBody {

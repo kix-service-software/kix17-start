@@ -247,6 +247,10 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
         [% END; %]
             </div>
 [% RenderBlockEnd("ArticlePages") %]
+            <div class="ArticleTicketMarkAsRead Icons">
+                <span class="InvisibleText">[% Translate("Mark") | html %]:</span>
+                <a id="TicketMarkAsRead" href="#" title="[% Translate("Mark this ticket as read") | html %]"><i class="fa fa-eye"></i><span>[% Translate("Mark this ticket as read") | html %]</span></a>
+            </div>
 [% RenderBlockStart("ArticleFilterDialogLink") %]
             <div class="ArticleFilter Icons">
                 <span class="InvisibleText">[% Translate("Article Filter") | html %]:</span>
@@ -628,7 +632,6 @@ function CheckIFrameHeight(IFrameID) {
 //]]></script>
 [% END %]
 [% RenderBlockEnd("TicketItemMarkAsSeen") %]
-
 [% RenderBlockStart("TicketZoomInit") %]
 
 [% WRAPPER JSOnDocumentComplete %]
@@ -646,6 +649,10 @@ function CheckIFrameHeight(IFrameID) {
         Core.UI.Floater.Init();
     }
 
+    $('#TicketMarkAsRead').bind('click', function(Event) {
+        Core.KIX4OTRS.TicketZoomTabs.MarkTicketAsSeen([% Data.TicketID | html %],0);
+        return false;
+    });
 //]]></script>
 [% END %]
 [% RenderBlockEnd("TicketZoomInit") %]
