@@ -629,36 +629,32 @@ sub Run {
             UserID => $Self->{UserID},
         );
 
-        # store the dynamic fields default values or used specific default values to be used as
-        # ACLs info for all fields
-        my %DynamicFieldDefaults;
+        if ( !defined $GetParam{DynamicField} ) {
+            # store the dynamic fields default values or used specific default values to be used as
+            # ACLs info for all fields
+            my %DynamicFieldDefaults;
 
-        # cycle trough the activated Dynamic Fields for this screen
-        DYNAMICFIELD:
-        for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
-            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
-            next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
-            next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
+            # cycle trough the activated Dynamic Fields for this screen
+            DYNAMICFIELD:
+            for my $DynamicFieldConfig ( @{ $Self->{DynamicField} } ) {
+                next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+                next DYNAMICFIELD if !IsHashRefWithData( $DynamicFieldConfig->{Config} );
+                next DYNAMICFIELD if !$DynamicFieldConfig->{Name};
 
-            # get default value from dynamic field config (if any)
-            my $DefaultValue = $DynamicFieldConfig->{Config}->{DefaultValue} || '';
+                # get default value from dynamic field config (if any)
+                my $DefaultValue = $DynamicFieldConfig->{Config}->{DefaultValue} || '';
 
-            # override the value from user preferences if is set
-            if ( $UserPreferences{ 'UserDynamicField_' . $DynamicFieldConfig->{Name} } ) {
-                $DefaultValue = $UserPreferences{ 'UserDynamicField_' . $DynamicFieldConfig->{Name} };
+                # override the value from user preferences if is set
+                if ( $UserPreferences{ 'UserDynamicField_' . $DynamicFieldConfig->{Name} } ) {
+                    $DefaultValue = $UserPreferences{ 'UserDynamicField_' . $DynamicFieldConfig->{Name} };
+                }
+
+                next DYNAMICFIELD if $DefaultValue eq '';
+                next DYNAMICFIELD if ref $DefaultValue eq 'ARRAY' && !IsArrayRefWithData($DefaultValue);
+
+                $DynamicFieldDefaults{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $DefaultValue;
             }
-
-            next DYNAMICFIELD if $DefaultValue eq '';
-            next DYNAMICFIELD if ref $DefaultValue eq 'ARRAY' && !IsArrayRefWithData($DefaultValue);
-
-            $DynamicFieldDefaults{ 'DynamicField_' . $DynamicFieldConfig->{Name} } = $DefaultValue;
-        }
-        $GetParam{DynamicField} = \%DynamicFieldDefaults;
-
-        # get defaults from ticket template
-        for my $DefaultDynamicField ( keys %{ $GetParam{QuickTicketDynamicFieldHash} } ) {
-            $GetParam{DynamicField}->{$DefaultDynamicField}
-                = $GetParam{QuickTicketDynamicFieldHash}->{$DefaultDynamicField};
+            $GetParam{DynamicField} = \%DynamicFieldDefaults;
         }
 
         # create html strings for all dynamic fields
