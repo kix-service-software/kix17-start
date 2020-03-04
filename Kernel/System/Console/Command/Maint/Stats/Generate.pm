@@ -391,8 +391,6 @@ sub Run {
 
         if ($Success) {
             $Self->Print("  Writing file <yellow>$Self->{TargetDirectory}/$Attachment{Filename}</yellow>.\n");
-            $Self->Print("<green>Done.</green>\n");
-            return $Self->ExitCodeOk();
         }
         else {
             $Self->PrintError("Can't write $Self->{TargetDirectory}/$Attachment{Filename}!");
