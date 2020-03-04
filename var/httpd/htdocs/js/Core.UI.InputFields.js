@@ -1567,8 +1567,8 @@ Core.UI.InputFields = (function (TargetNS) {
                         // Get selected nodes
                         SelectedNodesIDs = $TreeObj.jstree('get_selected');
                         $.each(SelectedNodesIDs, function () {
-                            var $Node = $('#' + this);
-                            SelectedNodes.push($Node.data('id'));
+                            var $Node = $TreeObj.jstree('get_node', this);
+                            SelectedNodes.push($Node['original']['ID']);
                         });
 
                         // Set selected nodes as selected in initial select box
