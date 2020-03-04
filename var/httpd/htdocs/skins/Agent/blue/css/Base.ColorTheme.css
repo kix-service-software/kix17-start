@@ -188,12 +188,17 @@
     .ControlRow h2 {
         background-color: #F0F0F0;
     }
+    .ControlRow .Icons a {
+        color: #5B5B5B;
+    }
     .ControlRow li.Active,
     .ControlRow li.Active:hover,
     .ControlRow li.Active:active,
     .ControlRow li.Active a,
     .ControlRow li.Active:hover a,
-    .ControlRow li.Active:active a {
+    .ControlRow li.Active:active a,
+    .ControlRow .Icons a.Active,
+    .ControlRow .Icons a:hover {
         color: #0A7CB3;
     }
 
