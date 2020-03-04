@@ -25,10 +25,15 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
      * @function
      * @param {String}
      *            TicketID of ticket which get's shown
+     * @param {String}
+     *            Timeout in miliseconds to wait before function call
      * @return nothing Mark all articles as seen in frontend and backend.
      *         Article Filters will not be considered
      */
-    TargetNS.MarkTicketAsSeen = function (TicketID) {
+    TargetNS.MarkTicketAsSeen = function (TicketID, Timeout) {
+        if (isNaN(Timeout)) {
+            Timeout = 3000;
+        }
         TargetNS.TicketMarkAsSeenTimeout = window.setTimeout(function () {
             // Mark old row as readed
             $('#ArticleTable .ArticleID').closest('tr').removeClass('UnreadArticles').find('span.UnreadArticles').remove();
@@ -45,7 +50,7 @@ Core.KIX4OTRS.TicketZoomTabs = (function(TargetNS) {
                 Data,
                 function () {}
             );
-        }, 3000);
+        }, Timeout);
     };
 
     /**

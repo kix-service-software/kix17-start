@@ -2695,6 +2695,7 @@ sub Data {
         'Outgoing message' => 'Ausgehende Nachricht',
         'Internal message' => 'Interne Nachricht',
         'Resize' => 'Größe anpassen',
+        'Mark this ticket as read' => 'Dieses Ticket als gelesen markieren',
         'Mark this article as read' => 'Diesen Artikel als gelesen markieren',
         'Show Full Text' => 'Vollständigen Text anzeigen',
         'Full Article Text' => 'Vollständiger Artikeltext',
