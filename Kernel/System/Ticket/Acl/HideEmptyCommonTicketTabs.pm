@@ -33,8 +33,7 @@ sub Run {
     if (
         defined $Param{Action}
         && $Param{Action} eq 'AgentTicketZoom'
-        )
-    {
+    ) {
         # check needed stuff
         for (qw(Data)) {
             if ( !$Param{$_} ) {
@@ -86,8 +85,7 @@ sub Run {
                     qw(
                     Queue TicketType Service Owner Responsible State Note Priority Title
                     )
-                    )
-                {
+                ) {
                     next ACTION if ( $PretendConfig->{$Attribute} );
                 }
 
@@ -110,21 +108,16 @@ sub Run {
                     if ( $PretendConfig->{'DynamicField'}->{$DynamicField} ) {
 
                         # get data of dynamic field
-                        my $DynamicFieldObject = $DynamicFieldObject->DynamicFieldGet(
+                        my $DynamicFieldConfig = $DynamicFieldObject->DynamicFieldGet(
                             Name => $DynamicField,
                         );
 
                         # check if its a hash with data
                         if (
-                            ref($DynamicFieldObject) ne 'HASH'
-                            || !keys( %{$DynamicFieldObject} )
-                            )
-                        {
-                            $Valid = 0;
-                        }
-
-                        # check if the field is valid
-                        if ( $DynamicFieldObject->{ValidID} != 1 ) {
+                            ref($DynamicFieldConfig) ne 'HASH'
+                            || !defined $DynamicFieldConfig->{ValidID}
+                            || $DynamicFieldConfig->{ValidID} != 1
+                        ) {
                             $Valid = 0;
                         }
                     }

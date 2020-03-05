@@ -2384,11 +2384,7 @@ sub _Mask {
         );
 
         # set selected state
-        if ( $Self->{Action} eq 'AgentTicketZoomTabEditCoreData' ) {
-            $State{SelectedValue} = '';
-        }
-
-        elsif ( !$Param{NewStateID} ) {
+        if ( !$Param{NewStateID} ) {
             $State{SelectedValue} = $Config->{StateDefault}
                 || $InitialSelected{State}
                 || '';

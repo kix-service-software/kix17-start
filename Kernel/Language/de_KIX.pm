@@ -365,6 +365,8 @@ sub Data {
     $Lang->{'Link customers to services.'}     = 'Kunden zu Services zuordnen.';
     $Lang->{'Customer Company Information'}    = 'Kundenfirmeninformation';
     $Lang->{'Further Information'}             = 'Weitere Informationen';
+    $Lang->{'Please include at least one customer company.'}
+        = 'Bitte geben Sie mindestens eine Kundenfirma an.';
 
     # CustomerTicketCustomerIDSelection
     $Lang->{'New Customer Ticket'}        = 'Neues Kundenticket';
@@ -4507,6 +4509,22 @@ sub Data {
         'Modul zur Bereitstellung des HTML "OpenSearch" Profils in der Kundenoberfläche.';
     $Lang->{'Module to generate html OpenSearch profiles for public frontend.'} =
         'Modul zur Bereitstellung des HTML "OpenSearch" Profils in der öffentlichen Oberfläche.';
+
+    # OwnerView
+    $Lang->{'Agent interface notification module to see the number of tickets an agent is owner for.'}
+        = 'Benachrichtigungsmodul im Agenten-Interface um die Zahl der Tickets anzuzeigen, für die ein Agent Besitzer ist.';
+    $Lang->{'My Owner Tickets'}               = 'Meine eigenen Tickets';
+    $Lang->{'Owner Tickets'}                  = 'Eigene Tickets';
+    $Lang->{'Owner Tickets New'}              = 'Neue eigene Tickets';
+    $Lang->{'Owner Tickets Reminder Reached'} = 'Eigene Tickets, Erinnerungszeit erreicht';
+    $Lang->{'Owner Tickets Total'}            = 'Eigene Tickets insgesamt';
+
+    $Lang->{'Defines the default ticket attribute for ticket sorting in the owner view of the agent interface.'}
+        = 'Bestimmt das Standard-Ticket-Attribut für das Sortieren der Tickets in der Besitzer-Anzeige im Agent-Interface.';
+    $Lang->{'Defines the default ticket order in the owner view of the agent interface. Up: oldest on top. Down: latest on top.'}
+        = 'Bestimmt die Standard-Ticket-Sortierung in der Besitzer-Anzeige im Agent-Interface. Hoch: Ältestes oben. Runter: Letztes/Neustes oben.';
+    $Lang->{'Columns that can be filtered in the owner view of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed.'}
+        = 'Spalten, die in der Besitzer-Ansicht im Agenten-Interface gefiltert werden können. Mögliche Einstellungen: 0 = Deaktiviert, 1 = vorhanden, 2 = standardmäßig aktiviert. Hinweis: Nur Ticket-Attribute und Dynamic Fields (DynamicField_NameX) sind erlaubt.';
 
     # $$STOP$$
 

@@ -503,19 +503,13 @@ sub TicketSearch {
     # sql, use also article table if needed
     $SQLFrom .= $ArticleJoinSQL;
 
-    # only search for attachment name if Article Storage is set to DB
-    if (
-        $Param{AttachmentName}
-        && (
-            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::StorageModule') eq
-            'Kernel::System::Ticket::ArticleStorageDB'
-        )
-    ) {
+    # attachment name search
+    if ( $Param{AttachmentName} ) {
 
         # joins to article and article_attachments are needed, it can not use existing article joins
         # otherwise the search will be limited to already matching articles
         my $AttachmentJoinSQL = ' INNER JOIN article art_for_att ON st.id = art_for_att.ticket_id'
-                              . ' INNER JOIN article_attachment att ON att.article_id = art_for_att.id ';
+                              . ' INNER JOIN article_attachment_search att ON att.article_id = art_for_att.id ';
 
         # SQL, use also article_attachment table if needed
         $SQLFrom .= $AttachmentJoinSQL;
@@ -1298,27 +1292,22 @@ sub TicketSearch {
         );
     }
 
-    # only search for attachment name if Article Storage is set to DB
-    if (
-        $Param{AttachmentName}
-        && (
-            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::StorageModule') eq
-            'Kernel::System::Ticket::ArticleStorageDB'
-        )
-    ) {
+    # attachment name search
+    if ( $Param{AttachmentName} ) {
         $SQLExt .= ' AND ';
 
         # replace wild card search
         my $Key   = 'att.filename';
-        my $Value = $Param{AttachmentName};
+        my $Value = lc $Param{AttachmentName};
         $Value =~ s/\*/%/gi;
 
         # use search condition extension
         $SQLExt .= $DBObject->QueryCondition(
-            Key          => $Key,
-            Value        => $Value,
-            SearchPrefix => $Param{ContentSearchPrefix},
-            SearchSuffix => $Param{ContentSearchSuffix},
+            Key           => $Key,
+            Value         => $Value,
+            SearchPrefix  => $Param{ContentSearchPrefix},
+            SearchSuffix  => $Param{ContentSearchSuffix},
+            CaseSensitive => 1,
         );
 
         # restrict search from customers to only customer articles
@@ -2663,19 +2652,13 @@ sub TicketSearchOR {
     # sql, use also article table if needed
     $SQLFrom .= $ArticleJoinSQL;
 
-    # only search for attachment name if Article Storage is set to DB
-    if (
-        $Param{AttachmentName}
-        && (
-            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::StorageModule') eq
-            'Kernel::System::Ticket::ArticleStorageDB'
-        )
-    ) {
+    # attachment name search
+    if ( $Param{AttachmentName} ) {
 
         # joins to article and article_attachments are needed, it can not use existing article joins
         # otherwise the search will be limited to already matching articles
         my $AttachmentJoinSQL = ' INNER JOIN article art_for_att ON st.id = art_for_att.ticket_id'
-                              . ' INNER JOIN article_attachment att ON att.article_id = art_for_att.id ';
+                              . ' INNER JOIN article_attachment_search att ON att.article_id = art_for_att.id ';
 
         # SQL, use also article_attachment table if needed
         $SQLFrom .= $AttachmentJoinSQL;
@@ -3377,27 +3360,22 @@ sub TicketSearchOR {
         );
     }
 
-    # only search for attachment name if Article Storage is set to DB
-    if (
-        $Param{AttachmentName}
-        && (
-            $Kernel::OM->Get('Kernel::Config')->Get('Ticket::StorageModule') eq
-            'Kernel::System::Ticket::ArticleStorageDB'
-        )
-    ) {
+    # attachment name search
+    if ( $Param{AttachmentName} ) {
         $SQLExt .= ' AND ';
 
         # replace wild card search
         my $Key   = 'att.filename';
-        my $Value = $Param{AttachmentName};
+        my $Value = lc $Param{AttachmentName};
         $Value =~ s/\*/%/gi;
 
         # use search condition extension
         $SQLExt .= $DBObject->QueryCondition(
-            Key          => $Key,
-            Value        => $Value,
-            SearchPrefix => $Param{ContentSearchPrefix},
-            SearchSuffix => $Param{ContentSearchSuffix},
+            Key           => $Key,
+            Value         => $Value,
+            SearchPrefix  => $Param{ContentSearchPrefix},
+            SearchSuffix  => $Param{ContentSearchSuffix},
+            CaseSensitive => 1,
         );
 
         # restrict search from customers to only customer articles

@@ -229,6 +229,53 @@
                         </div>
                         <div class="Clear"></div>
 [% RenderBlockEnd("PreferencesGenericOption") %]
+[% RenderBlockStart("PreferencesGenericAutoComplete") %]
+                        <label class="[% Data.RequiredLabelClass | html %]" for="UserCustomerIDs"><span class="Marker">[% Data.RequiredLabelCharacter | html %]</span> [% Translate(Data.Item) | html %]:</label>
+                        <div class="Field">
+                            <input id="UserCustomerIDs" type="text" name="UserCustomerIDs" value="" class="CustomerCompanyAutoComplete W50pc [% Data.RequiredClass | html %] [% Data.InvalidField | html %]" autocomplete="off" />
+                            <div id="UserCustomerIDsError" class="TooltipErrorMessage"><p>[% Translate("This field is required.") | html %]</p></div>
+                            <div id="UserCustomerIDsServerError" class="TooltipErrorMessage"><p>[% Translate("Please include at least one customer company.") | html %]</p></div>
+                        </div>
+                        <div class="Clear"></div>
+
+                        <div class="Field [% Data.HiddenClassContainer %]">
+                            <div class="CustomerIDTemplate Hidden">
+                                <input name="CustomerCompanyKey" id="CustomerCompanyKey" class="CustomerCompanyKey" type="hidden" value=""/>
+                                <input class="CustomerIDText" title="[% Translate("CustomerID") | html %]" name="CustomerIDText" id="CustomerIDText" type="text" value="" readonly="readonly" />
+                                <a href="#" id="RemoveCustomerID" class="RemoveButton CustomerIDRemove">
+                                    <i class="fa fa-minus-square-o"></i>
+                                    <span class="InvisibleText">[% Translate("Remove CustomerID") | html %]</span>
+                                </a>
+                            </div>
+
+                            <div id="CustomerIDContent" class="CustomerIDContainer">
+
+[% RenderBlockStart("MultipleCustomerID") %]
+                                <div>
+                                    <input name="CustomerCompanyKey_[% Data.Count | html %]" id="CustomerCompanyKey_[% Data.Count | html %]" class="CustomerCompanyKey" type="hidden" value="[% Data.CustomerCompanyKey | html %]"/>
+                                    <input class="CustomerIDText Radio [% Data.CustomerError | html %]" title="[% Translate("Contact") | html %]" name="CustomerIDText_[% Data.Count %]" id="CustomerIDText_[% Data.Count %]" type="text" value="[% Data.CustomerElement | html %]" readonly="readonly" />
+                                    <a href="#" id="RemoveCustomerTicket_[% Data.Count %]" class="RemoveButton CustomerTicketRemove">
+                                        <i class="fa fa-minus-square-o"></i>
+                                        <span class="InvisibleText">[% Translate("Remove CustomerID") | html %]</span>
+                                    </a>
+                                </div>
+[% RenderBlockEnd("MultipleCustomerID") %]
+                            </div>
+                            <input name="CustomerIDCounter" id="CustomerIDCounter" type="hidden" value="[% Data.CustomerIDCounter | html %]"/>
+                        </div>
+                        <div class="Clear"></div>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    Core.Agent.CustomerCompanySearch.AdminInit($(".CustomerCompanyAutoComplete"));
+
+    $('.CustomerTicketRemove').bind('click', function () {
+        Core.Agent.CustomerCompanySearch.RemoveCustomerID( $(this) );
+        return false;
+    });
+//]]></script>
+[% END %]
+
+[% RenderBlockEnd("PreferencesGenericAutoComplete") %]
 [% RenderBlockEnd("PreferencesGeneric") %]
 [% RenderBlockStart("Item") %]
 [% RenderBlockStart("InputKey") %]

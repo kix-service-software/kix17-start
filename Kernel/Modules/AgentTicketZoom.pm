@@ -226,23 +226,6 @@ sub Run {
         return $LayoutObject->NoPermission( WithHeader => 'yes' );
     }
 
-    # mark shown ticket as seen
-    if ( $Self->{Subaction} eq 'TicketMarkAsSeen' ) {
-        my $Success = 1;
-
-        # always show archived tickets as seen
-        if ( $Ticket{ArchiveFlag} ne 'y' ) {
-            $Success = $Self->_TicketItemSeen( TicketID => $Self->{TicketID} );
-        }
-
-        return $LayoutObject->Attachment(
-            ContentType => 'text/html',
-            Content     => $Success,
-            Type        => 'inline',
-            NoCache     => 1,
-        );
-    }
-
     if ( $Self->{Subaction} eq 'MarkAsImportant' ) {
 
         # Owner and Responsible can mark articles as important or remove mark
@@ -284,23 +267,6 @@ sub Run {
 
         return $LayoutObject->Redirect(
             OP => "Action=AgentTicketZoom;TicketID=$Self->{TicketID};ArticleID=$Self->{ArticleID}",
-        );
-    }
-
-    # mark shown article as seen
-    if ( $Self->{Subaction} eq 'MarkAsSeen' ) {
-        my $Success = 1;
-
-        # always show archived tickets as seen
-        if ( $Ticket{ArchiveFlag} ne 'y' ) {
-            $Success = $Self->_ArticleItemSeen( ArticleID => $Self->{ArticleID} );
-        }
-
-        return $LayoutObject->Attachment(
-            ContentType => 'text/html',
-            Content     => $Success,
-            Type        => 'inline',
-            NoCache     => 1,
         );
     }
 

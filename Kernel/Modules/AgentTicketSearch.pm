@@ -1575,19 +1575,11 @@ sub Run {
                 Key   => 'Body',
                 Value => Translatable('Body'),
             },
+            {
+                Key   => 'AttachmentName',
+                Value => Translatable('Attachment Name'),
+            },
         );
-
-        if (
-            $ConfigObject->Get('Ticket::StorageModule') eq
-            'Kernel::System::Ticket::ArticleStorageDB'
-        ) {
-            push @Attributes, (
-                {
-                    Key   => 'AttachmentName',
-                    Value => Translatable('Attachment Name'),
-                },
-            );
-        }
 
         # Ticket fields
         push @Attributes, (

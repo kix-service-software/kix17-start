@@ -51,9 +51,8 @@ sub Run {
 
     # build data
     my @Data;
-    my $CustCompanyMapRef =
-        $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::CompanyBackendMapping');
-    for my $CurrKey ( keys %CustomerCompanyList ) {
+    my $CustCompanyMapRef = $Self->{ConfigObject}->Get('ITSMCIAttributeCollection::CompanyBackendMapping');
+    for my $CurrKey ( sort keys %CustomerCompanyList ) {
         my %CustomerCompanySearchList = $Self->{CustomerCompanyObject}->CustomerCompanyGet(
             CustomerID => $CurrKey,
         );
@@ -74,7 +73,7 @@ sub Run {
         $CustomerCompanyStr =~ s/^\s+//g;
 
         if ( $CustomerCompanyStr ne '' ) {
-            $Search = $CustomerCompanyStr;
+            $NewSearch = $CustomerCompanyStr;
         }
 
         push @Data, {

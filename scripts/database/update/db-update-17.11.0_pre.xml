@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<database Name="kix">
+    <TableCreate Name="article_attachment_search">
+        <Column Name="article_id" Required="true" Type="BIGINT"/>
+        <Column Name="filename"   Required="true" Type="VARCHAR" Size="250"/>
+        <Index Name="article_search_article_id">
+            <IndexColumn Name="article_id"/>
+        </Index>
+        <ForeignKey ForeignTable="article">
+            <Reference Local="article_id" Foreign="id"/>
+        </ForeignKey>
+    </TableCreate>
+</database>

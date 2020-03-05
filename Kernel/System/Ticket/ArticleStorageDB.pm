@@ -192,6 +192,12 @@ sub ArticleDeleteAttachment {
         Bind => [ \$Param{ArticleID} ],
     );
 
+    # delete attachments from search index
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+        SQL  => 'DELETE FROM article_attachment_search WHERE article_id = ?',
+        Bind => [ \$Param{ArticleID} ],
+    );
+
     # return if we only need to check one backend
     return 1 if !$Self->{CheckAllBackends};
 
@@ -345,6 +351,21 @@ sub ArticleWriteAttachment {
             \$Disposition, \$Param{UserID}, \$Param{UserID},
         ],
     );
+
+    # write attachment to search index
+    if (
+        $Param{Filename}
+        && $Param{Filename} ne 'file-1'
+        && $Param{Filename} ne 'file-2'
+    ) {
+        # convert to lowercase to avoid LOWER()/LCASE() in the DB query
+        my $LowerFilename = lc $Param{Filename};
+        return if !$DBObject->Do(
+            SQL  => 'INSERT INTO article_attachment_search (article_id, filename)'
+                  . ' VALUES (?, ?)',
+            Bind => [ \$Param{ArticleID}, \$LowerFilename ],
+        );
+    }
     return 1;
 }
 
