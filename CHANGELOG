@@ -1,6 +1,22 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.11.0-RC1 (2020/03/05)
+ * (2020/02/27) - CR: KIX17-659 (added toolbar for own tickets) (fjacquemin)
+ * (2020/02/26) - Bugfix: KIX17-550 (fixed unnecessary hover effect of the disabled jsTree element) (fjacquemin)
+ * (2020/02/25) - Bugfix: KIX17-692 (remove differences between RenderBlockStart and RenderBlockEnd) (millinger)
+ * (2020/02/25) - Bugfix: KIX17-691 (remove log errors for empty common ticket tabs) (fjacquemin)
+ * (2020/02/24) - Bugfix: KIX17-411 (Changed selection of multiple customer IDs in AdminCustomerUser to an AutoComplete field) (fjacquemin)
+ * (2020/02/24) - CR: KIX17-441 (search in attachment storage for FS) (millinger)
+ * (2020/02/21) - Bugfix: KIX17-408 (fixed incorrect handling of sending Email when using console command Maint::Stats::Generate) (fjacquemin)
+ * (2020/02/20) - Bugfix: KIX17-675 (check for undefined customer company key on data import) (fjacquemin)
+ * (2020/02/20) - Bugfix: KIX17-370 (fixed default state in AgentTicketZoom TabEditCoreData does not apply) (fjacquemin)
+ * (2020/02/20) - Bugfix: KIX17-674 (added missing hover effects for article table head actions) (fjacquemin)
+ * (2020/02/20) - CR: KIX17-669 (mark all articles as seen by one click) (millinger)
+ * (2020/02/20) - Bugfix: KIX17-668 (remove obsolete subaction from AgentTicketZoom) (millinger)
+ * (2020/02/18) - Bugfix: KIX17-413 (fixed missing selection of selected sub-level tree entry) (fjacquemin)
+ * (2020/02/18) - Bugfix: KIX17-629 (fixed incorrect display of the dependent dynamic fields from ticket templates) (fjacquemin)
+
 # 17.10.0 (2020/02/27)
  * (2020/02/27) - productive release
 
