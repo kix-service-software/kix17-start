@@ -288,6 +288,13 @@ sub _ArticleDeleteChangedAttachment {
             Bind => [ \$ArticleID, \$Filename ],
         );
 
+        # delete attachments from search index
+        my $LowerFilename = lc $Filename;
+        return if !$DBObject->Do(
+            SQL  => 'DELETE FROM article_attachment_search WHERE article_id = ? AND filename = ?',
+            Bind => [ \$ArticleID, \$LowerFilename ],
+        );
+
         # ArticleDataDir
         $Self->{ArticleDataDir} = $ConfigObject->Get('ArticleDir')
             || die 'Got no ArticleDir!';

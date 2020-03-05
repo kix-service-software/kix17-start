@@ -3,7 +3,7 @@
 
 <!-- acl - all acls from the editor -->
 <Table Name="acl">
-    <Column Name="id" Required="true" PrimaryKey="true" AutoIncrement="true" Type="INTEGER"/>
+    <Column Name="id" Required="true" PrimaryKey="true"_sea Type="INTEGER"/>
     <Column Name="name" Required="true" Type="VARCHAR" Size="200"/>
     <Column Name="comments" Required="false" Size="250" Type="VARCHAR"/>
     <Column Name="description" Required="false" Size="250" Type="VARCHAR"/>
@@ -1159,6 +1159,18 @@
     <ForeignKey ForeignTable="users">
         <Reference Local="create_by" Foreign="id"/>
         <Reference Local="change_by" Foreign="id"/>
+    </ForeignKey>
+</Table>
+
+<!-- article_search - article search index -->
+<Table Name="article_attachment_search">
+    <Column Name="article_id" Required="true" Type="BIGINT"/>
+    <Column Name="filename"   Required="true" Type="VARCHAR" Size="250"/>
+    <Index Name="article_search_article_id">
+        <IndexColumn Name="article_id"/>
+    </Index>
+    <ForeignKey ForeignTable="article">
+        <Reference Local="article_id" Foreign="id"/>
     </ForeignKey>
 </Table>
 
