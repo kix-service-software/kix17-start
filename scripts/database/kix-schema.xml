@@ -3,7 +3,7 @@
 
 <!-- acl - all acls from the editor -->
 <Table Name="acl">
-    <Column Name="id" Required="true" PrimaryKey="true"_sea Type="INTEGER"/>
+    <Column Name="id" Required="true" PrimaryKey="true" Type="INTEGER"/>
     <Column Name="name" Required="true" Type="VARCHAR" Size="200"/>
     <Column Name="comments" Required="false" Size="250" Type="VARCHAR"/>
     <Column Name="description" Required="false" Size="250" Type="VARCHAR"/>
