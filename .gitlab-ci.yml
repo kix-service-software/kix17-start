@@ -18,26 +18,8 @@ prepare:Archive:
   tags:
   - Shell
 
-pretest:PerlCritic:
-  allow_failure: false
-  dependencies:
-  - prepare:Archive
-  except:
-    changes:
-    - CHANGELOG
-  only:
-  - /^rel-[0-9]+_TEST$/
-  script:
-  - perlcriticcheck $CI_PROJECT_DIR
-  stage: pretest
-  tags:
-  - Shell
-  when: on_success
-
 pretest:XMLLint:
   allow_failure: false
-  dependencies:
-  - prepare:Archive
   script:
   - xmllintcheck $CI_PROJECT_DIR
   stage: pretest
