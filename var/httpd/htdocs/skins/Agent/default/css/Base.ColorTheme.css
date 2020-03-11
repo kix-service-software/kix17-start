@@ -390,6 +390,9 @@
     .Handle a {
         background: transparent url(../img/handle.png) no-repeat;
     }
+    .DataTable tbody tr.Invalid {
+       color: #CCCCCC;
+    }
 
 
     /*
