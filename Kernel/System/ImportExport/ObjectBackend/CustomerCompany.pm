@@ -548,7 +548,11 @@ sub ImportDataSave {
 
     my $CustomerCompanyKey;
     my $CustomerCompanyBackend = $Kernel::OM->Get('Kernel::Config')->Get($ObjectData->{CustomerCompanyBackend});
-    if ( $CustomerCompanyBackend && $CustomerCompanyBackend->{CustomerCompanyKey} && $CustomerCompanyBackend->{Map} ) {
+    if (
+        ref $CustomerCompanyBackend eq 'HASH'
+        && $CustomerCompanyBackend->{CustomerCompanyKey}
+        && $CustomerCompanyBackend->{Map}
+    ) {
         for my $Entry ( @{ $CustomerCompanyBackend->{Map} } ) {
             next if ( $Entry->[1] ne $CustomerCompanyBackend->{CustomerCompanyKey} );
 
@@ -558,6 +562,14 @@ sub ImportDataSave {
         if ( !$CustomerCompanyKey ) {
             $CustomerCompanyKey = "CustomerID";
         }
+    }
+
+    else {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "ImportDataSave: Invalid CustomerCompany backend ($ObjectData->{CustomerCompanyBackend})!",
+        );
+        return ( undef, 'Failed' );
     }
 
     if (
