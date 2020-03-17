@@ -626,47 +626,49 @@ sub Run {
         }
 
         # handle subaction AddValue
-        elsif($Subaction eq 'AddValue') {
+        elsif( $Subaction eq 'AddValue' ) {
             my %Data;
             my $Key = $Self->{ParamObject}->GetParam( Param => 'Key' )  || '';
             if ( !grep { /^$Key$/ } @Entries ) {
+
+                my $HasAccess = 1;
                 # check read permission for config item
                 if (
                     IsArrayRefWithData($PermissionCheck)
                     && grep( { $_ eq $Frontend } @{$PermissionCheck} )
                 ) {
-                    my $HasAccess = $Self->_PermissionCheck(
+                    $HasAccess = $Self->_PermissionCheck(
                         Frontend => $Frontend,
                         Scope    => 'Item',
                         ItemID   => $Key,
                     );
-                    if ( $HasAccess ) {
-                        my $ConfigItem = $Self->{ITSMConfigItemObject}->VersionGet(
-                            ConfigItemID => $Key,
-                            XMLDataGet   => 0,
-                        );
+                }
 
-                        my $Value = $DynamicFieldConfig->{Config}->{DisplayPattern} || '<CI_Name>';
-                        while ($Value =~ m/<CI_([^>]+)>/) {
-                            my $Replace = $ConfigItem->{$1} || '';
-                            $Value =~ s/<CI_$1>/$Replace/g;
-                        }
+                if ( $HasAccess ) {
+                    my $ConfigItem = $Self->{ITSMConfigItemObject}->VersionGet(
+                        ConfigItemID => $Key,
+                        XMLDataGet   => 0,
+                    );
 
-                        my $Title = $ConfigItem->{Name};
-
-                        $Data{Key}   = $Key;
-                        $Data{Value} = $Value;
-                        $Data{Title} = $Title;
-
-                        # build JSON output
-                        $JSON = $Self->{LayoutObject}->JSONEncode(
-                            Data => \%Data,
-                        );
+                    my $Value = $DynamicFieldConfig->{Config}->{DisplayPattern} || '<CI_Name>';
+                    while ($Value =~ m/<CI_([^>]+)>/) {
+                        my $Replace = $ConfigItem->{$1} || '';
+                        $Value =~ s/<CI_$1>/$Replace/g;
                     }
+
+                    my $Title = $ConfigItem->{Name};
+
+                    $Data{Key}   = $Key;
+                    $Data{Value} = $Value;
+                    $Data{Title} = $Title;
+
+                    # build JSON output
+                    $JSON = $Self->{LayoutObject}->JSONEncode(
+                        Data => \%Data,
+                    );
                 }
             }
         }
-
     }
 
     # send JSON response
