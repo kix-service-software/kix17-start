@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.11.0-RC2 (2020/03/19)
+ * (2020/03/16) - Bugfix: KIX17-696 (fixed response of customer user source list when access group is defined) (fjacquemin)
+ * (2020/03/16) - Bugfix: KIX17-675 (fixed missing fallback if CustomerUser or CustomerCompany Backend not defined) (fjacquemin)
+ * (2020/03/16) - Bugfix: KIX17-720 (fixed incorrect permission check at AddValue of the ITSMReference fields) (fjacquemin)
+ * (2020/03/12) - Bugfix: KIX17-749 (added missing use statement) (ddoerffel)
+ * (2020/03/06) - Bugfix: KIX17-721 (added css for class "Invalid") (ddoerffel)
+
 # 17.11.0-RC1 (2020/03/05)
  * (2020/02/27) - CR: KIX17-659 (added toolbar for own tickets) (fjacquemin)
  * (2020/02/26) - Bugfix: KIX17-550 (fixed unnecessary hover effect of the disabled jsTree element) (fjacquemin)
