@@ -702,14 +702,10 @@ sub Run {
             );
             return;
         }
-        my $Message = $LayoutObject->{LanguageObject}->Translate(
-            'Sent new password to %s. Please check your email.',
-            $UserData{UserEmail},
-        );
         $LayoutObject->Print(
             Output => \$LayoutObject->CustomerLogin(
                 Title       => 'Login',
-                Message     => $Message,
+                Message     => $LayoutObject->{LanguageObject}->Translate('Sent new password. Please check your email.'),
                 User        => $User,
                 MessageType => 'Success',
             ),

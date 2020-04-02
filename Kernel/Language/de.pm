@@ -365,7 +365,7 @@ sub Data {
             'Neues Benutzerkonto angelegt. Anmeldedaten wurden an %s gesendet. Bitte prüfen Sie Ihre E-Mail.',
         'Please press Back and try again.' => 'Bitte auf Zurück klicken und erneut versuchen.',
         'Sent password reset instructions. Please check your email.' => 'Anweisungen zum Zurücksetzen des Passworts wurden gesendet. Bitte prüfen Sie ihre E-Mail.',
-        'Sent new password to %s. Please check your email.' => 'Neues Passwort an %s gesendet. Bitte prüfen Sie Ihre E-Mail.',
+        'Sent new password. Please check your email.' => 'Neues Passwort gesendet. Bitte prüfen Sie Ihre E-Mail.',
         'Upcoming Events' => 'Anstehende Ereignisse',
         'Event' => 'Ereignis',
         'Events' => 'Ereignisse',
