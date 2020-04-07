@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.11.0-RC4 (2020/04/07)
+ * (2020/04/07) - Bugfix: KIX17-798 (fixed vulnerability of htmlutils safety method) (millinger)
+ * (2020/04/03) - Bugfix: KIX17-796 (use cryptographically-secure random bytes for string generation) (millinger)
+
 # 17.11.0-RC3 (2020/04/03)
  * (2020/04/02) - Bugfix: KIX17-756 (fixed handling of 'LostPassword'-requests) (millinger)
  * (2020/04/02) - Bugfix: KIX17-755 (removed recipient from 'Sent new password'-message) (millinger)
