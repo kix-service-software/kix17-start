@@ -30,6 +30,16 @@ o Name:    CPAN Algorithm::Diff
   Note:    # Parts Copyright (c) 2000-2004 Ned Konz. All rights reserved. Parts
            # by Tye McQueen.
 
+o Name:    CPAN Bytes::Random::Secure::Tiny
+  Web:     https://metacpan.org/pod/Bytes::Random::Secure::Tiny
+  License: Copyright 2015 David Oswald.
+           # This program is free software; you can redistribute it and/or
+           # modify it under the terms of either: the GNU General Public License
+           # as published by the Free Software Foundation; or the Artistic License.
+           # See http://dev.perl.org/licenses/ for more information.
+  Note:    # Acknowledgements: Dana Jacobsen ( <dana@acm.org> ) for his work that
+           # led to Crypt::Random::Seed, and for ideas and code reviews.
+
 o Name:    CPAN CGI::Emulate::PSGI
   Web:     n/a
   License: GNU v2 - http://www.gnu.org/licenses/gpl.html
