@@ -333,8 +333,8 @@ Returns 1 if the data structures are the same, or 0 otherwise.
 
     my $IsDeeplyResult = $UnitTestObject->IsDeeply(
         TestName  => 'Name of test',
-        CheckData => \%ExpectedHash,
-        TestData  => \%ResultHash,
+        CheckValue => \%ExpectedHash,
+        TestValue  => \%ResultHash,
         StartTime => 1534125612531,
     );
 
@@ -361,10 +361,10 @@ sub IsDeeply {
         return;
     }
 
-    # CheckData and TestData are undef
+    # CheckValue and TestValue are undef
     if (
-        !defined( $Param{'CheckData'} )
-        && !defined( $Param{'TestData'} )
+        !defined( $Param{'CheckValue'} )
+        && !defined( $Param{'TestValue'} )
     ) {
         $Self->_AddTestStep(
             TestName   => $Param{'TestName'},
@@ -375,12 +375,12 @@ sub IsDeeply {
         );
         return 1;
     }
-    # CheckData is undef and TestData is defined
+    # CheckValue is undef and TestValue is defined
     elsif (
-        !defined( $Param{'CheckData'} )
-        && defined( $Param{'TestData'} )
+        !defined( $Param{'CheckValue'} )
+        && defined( $Param{'TestValue'} )
     ) {
-        my $TestDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'TestData'});
+        my $TestDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'TestValue'});
         $Self->_AddTestStep(
             TestName   => $Param{'TestName'},
             Success    => 0,
@@ -395,7 +395,7 @@ sub IsDeeply {
         defined( $Param{'CheckValue'} )
         && !defined( $Param{'TestValue'} )
     ) {
-        my $CheckDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'CheckData'});
+        my $CheckDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'CheckValue'});
         $Self->_AddTestStep(
             TestName   => $Param{'TestName'},
             Success    => 0,
@@ -408,13 +408,13 @@ sub IsDeeply {
 
     # process data
     my $Diff = $Self->_DataDiff(
-        CheckData => $Param{CheckData},
-        TestData  => $Param{TestData},
+        CheckValue => $Param{CheckValue},
+        TestValue  => $Param{TestValue},
     );
 
     # data is not different
     if ( !$Diff ) {
-        my $CheckDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'CheckData'});
+        my $CheckDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'CheckValue'});
         $Self->_AddTestStep(
             TestName   => $Param{'TestName'},
             Success    => 1,
@@ -426,8 +426,8 @@ sub IsDeeply {
     }
     # data is different
     else {
-        my $CheckDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'CheckData'});
-        my $TestDump  = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'TestData'});
+        my $CheckDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'CheckValue'});
+        my $TestDump  = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'TestValue'});
         $Self->_AddTestStep(
             TestName   => $Param{'TestName'},
             Success    => 0,
@@ -469,10 +469,10 @@ sub IsNotDeeply {
         return;
     }
 
-    # CheckData and TestData are undef
+    # CheckValue and TestValue are undef
     if (
-        !defined( $Param{'CheckData'} )
-        && !defined( $Param{'TestData'} )
+        !defined( $Param{'CheckValue'} )
+        && !defined( $Param{'TestValue'} )
     ) {
         $Self->_AddTestStep(
             TestName   => $Param{'TestName'},
@@ -483,12 +483,12 @@ sub IsNotDeeply {
         );
         return 0;
     }
-    # CheckData is undef and TestData is defined
+    # CheckValue is undef and TestValue is defined
     elsif (
-        !defined( $Param{'CheckData'} )
-        && defined( $Param{'TestData'} )
+        !defined( $Param{'CheckValue'} )
+        && defined( $Param{'TestValue'} )
     ) {
-        my $TestDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'TestData'});
+        my $TestDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'TestValue'});
         $Self->_AddTestStep(
             TestName   => $Param{'TestName'},
             Success    => 1,
@@ -498,12 +498,12 @@ sub IsNotDeeply {
         );
         return 1;
     }
-    # CheckData is defined and TestData is undef
+    # CheckValue is defined and TestValue is undef
     elsif (
-        defined( $Param{'CheckData'} )
-        && !defined( $Param{'TestData'} )
+        defined( $Param{'CheckValue'} )
+        && !defined( $Param{'TestValue'} )
     ) {
-        my $CheckDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'CheckData'});
+        my $CheckDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'CheckValue'});
         $Self->_AddTestStep(
             TestName   => $Param{'TestName'},
             Success    => 1,
@@ -516,14 +516,14 @@ sub IsNotDeeply {
 
     # process data
     my $Diff = $Self->_DataDiff(
-        CheckData => $Param{CheckData},
-        TestData  => $Param{TestData},
+        CheckValue => $Param{CheckValue},
+        TestValue  => $Param{TestValue},
     );
 
     # data is different
     if ( $Diff ) {
-        my $CheckDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'CheckData'});
-        my $TestDump  = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'TestData'});
+        my $CheckDump = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'CheckValue'});
+        my $TestDump  = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'TestValue'});
         $Self->_AddTestStep(
             TestName   => $Param{'TestName'},
             Success    => 1,
@@ -535,7 +535,7 @@ sub IsNotDeeply {
     }
     # data is not different
     else {
-        my $TestDump  = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'TestData'});
+        my $TestDump  = $Kernel::OM->Get('Kernel::System::Main')->Dump($Param{'TestValue'});
         $Self->_AddTestStep(
             TestName   => $Param{'TestName'},
             Success    => 0,
@@ -560,8 +560,8 @@ Data parameters need to be passed by reference and can be SCALAR,
 ARRAY or HASH.
 
     my $DataIsDifferent = $UnitTestObject->_DataDiff(
-        CheckData => \$CheckData,
-        TestData  => \$TestData,
+        CheckValue => \$CheckValue,
+        TestValue  => \$TestValue,
     );
 
 =cut
@@ -569,7 +569,7 @@ sub _DataDiff {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    for (qw(CheckData TestData)) {
+    for (qw(CheckValue TestValue)) {
         if ( !defined $Param{$_} ) {
             $Kernel::OM->Get('Kernel::System::Log')->Log(
                 Priority => 'error',
@@ -579,74 +579,74 @@ sub _DataDiff {
         }
     }
 
-    # CheckData and TestData are not references
+    # CheckValue and TestValue are not references
     if (
-        ref( $Param{CheckData} ) eq ''
-        && ref( $Param{TestData} ) eq ''
+        ref( $Param{CheckValue} ) eq ''
+        && ref( $Param{TestValue} ) eq ''
     ) {
-        # CheckData and TestData are undef
+        # CheckValue and TestValue are undef
         if (
-            !defined( $Param{CheckData} )
-            && !defined( $Param{TestData} )
+            !defined( $Param{CheckValue} )
+            && !defined( $Param{TestValue} )
         ) {
             return;
         }
 
-        # CheckData or TestData are undef
+        # CheckValue or TestValue are undef
         if (
-            !defined( $Param{CheckData} )
-            || !defined( $Param{TestData} )
+            !defined( $Param{CheckValue} )
+            || !defined( $Param{TestValue} )
         ) {
             return 1;
         }
 
-        # CheckData not equals TestData
-        if ( $Param{CheckData} ne $Param{TestData} ) {
+        # CheckValue not equals TestValue
+        if ( $Param{CheckValue} ne $Param{TestValue} ) {
             return 1;
         }
 
-        # CheckData equals TestData
+        # CheckValue equals TestValue
         return;
     }
 
-    # CheckData and TestData are SCALAR references
+    # CheckValue and TestValue are SCALAR references
     if (
-        ref( $Param{CheckData} ) eq 'SCALAR'
-        && ref( $Param{TestData} ) eq 'SCALAR'
+        ref( $Param{CheckValue} ) eq 'SCALAR'
+        && ref( $Param{TestValue} ) eq 'SCALAR'
     ) {
-        # CheckData and TestData are undef
+        # CheckValue and TestValue are undef
         if (
-            !defined( ${ $Param{CheckData} } )
-            && !defined( ${ $Param{TestData} } )
+            !defined( ${ $Param{CheckValue} } )
+            && !defined( ${ $Param{TestValue} } )
         ) {
             return;
         }
 
-        # CheckData or TestData are undef
+        # CheckValue or TestValue are undef
         if (
-            !defined( ${ $Param{CheckData} } )
-            || !defined( ${ $Param{TestData} } )
+            !defined( ${ $Param{CheckValue} } )
+            || !defined( ${ $Param{TestValue} } )
         ) {
             return 1;
         }
 
-        # CheckData not equals TestData
-        if ( ${ $Param{CheckData} } ne ${ $Param{TestData} } ) {
+        # CheckValue not equals TestValue
+        if ( ${ $Param{CheckValue} } ne ${ $Param{TestValue} } ) {
             return 1;
         }
 
-        # CheckData equals TestData
+        # CheckValue equals TestValue
         return;
     }
 
-    # CheckData and TestData are ARRAY references
+    # CheckValue and TestValue are ARRAY references
     if (
-        ref( $Param{CheckData} ) eq 'ARRAY'
-        && ref( $Param{TestData} ) eq 'ARRAY'
+        ref( $Param{CheckValue} ) eq 'ARRAY'
+        && ref( $Param{TestValue} ) eq 'ARRAY'
     ) {
         # get arrays from ref
-        my @A = @{ $Param{CheckData} };
-        my @B = @{ $Param{TestData} };
+        my @A = @{ $Param{CheckValue} };
+        my @B = @{ $Param{TestValue} };
 
         # scalar count is different
         if ( scalar(@A) != scalar(@B) ) {
@@ -678,15 +678,15 @@ sub _DataDiff {
 
             # entries are not equal
             if ( $CheckValue ne $TestValue ) {
-                # entry of CheckData is ARRAY or HASH reference
+                # entry of CheckValue is ARRAY or HASH reference
                 if (
                     ref( $CheckValue ) eq 'ARRAY'
                     || ref( $CheckValue ) eq 'HASH'
                 ) {
                     # check sub reference
                     my $SubDiff = $Self->_DataDiff(
-                        CheckData => $CheckValue,
-                        TestData  => $TestValue
+                        CheckValue => $CheckValue,
+                        TestValue  => $TestValue
                     );
 
                     # sub data is different
@@ -703,18 +703,18 @@ sub _DataDiff {
             }
         }
 
-        # CheckData equals TestData
+        # CheckValue equals TestValue
         return;
     }
 
-    # CheckData and TestData are HASH references
+    # CheckValue and TestValue are HASH references
     if (
-        ref( $Param{CheckData} ) eq 'HASH'
-        && ref( $Param{TestData} ) eq 'HASH'
+        ref( $Param{CheckValue} ) eq 'HASH'
+        && ref( $Param{TestValue} ) eq 'HASH'
     ) {
         # get hashes from ref
-        my %A = %{ $Param{CheckData} };
-        my %B = %{ $Param{TestData} };
+        my %A = %{ $Param{CheckValue} };
+        my %B = %{ $Param{TestValue} };
 
         # key count is different
         if ( keys(%A) != keys(%B) ) {
@@ -745,15 +745,15 @@ sub _DataDiff {
                 next KEY;
             }
 
-            # entry of CheckData is ARRAY or HASH reference
+            # entry of CheckValue is ARRAY or HASH reference
             if (
                 ref( $A{$Key} ) eq 'ARRAY'
                 || ref( $A{$Key} ) eq 'HASH'
             ) {
                 # check sub reference
                 my $SubDiff = $Self->_DataDiff(
-                    CheckData => $A{$Key},
-                    TestData  => $B{$Key}
+                    CheckValue => $A{$Key},
+                    TestValue  => $B{$Key}
                 );
 
                 # sub data is different
@@ -769,19 +769,19 @@ sub _DataDiff {
             return 1;
         }
 
-        # CheckData equals TestData
+        # CheckValue equals TestValue
         return;
     }
 
-    # CheckData and TestData are REF references
+    # CheckValue and TestValue are REF references
     if (
-        ref( $Param{CheckData} ) eq 'REF'
-        && ref( $Param{TestData} ) eq 'REF'
+        ref( $Param{CheckValue} ) eq 'REF'
+        && ref( $Param{TestValue} ) eq 'REF'
     ) {
         # check sub reference
         my $SubDiff = $Self->_DataDiff(
-            CheckData => ${ $Param{CheckData} },
-            TestData  => ${ $Param{TestData} }
+            CheckValue => ${ $Param{CheckValue} },
+            TestValue  => ${ $Param{TestValue} }
         );
 
         # sub data is different
@@ -789,11 +789,11 @@ sub _DataDiff {
             return 1;
         }
 
-        # CheckData equals TestData
+        # CheckValue equals TestValue
         return;
     }
 
-    # CheckData not equals TestData
+    # CheckValue not equals TestValue
     return 1;
 }
 
