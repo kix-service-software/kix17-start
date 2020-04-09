@@ -68,6 +68,15 @@
 [% END %]
 [% RenderBlockEnd("SidebarFrame") %]
 
+[% RenderBlockStart("InitialJS") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    [% Data.InitialJS %]
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("InitialJS") %]
+
 [% RenderBlockStart("KIXSidebarTicketLinkCISearchResult") %]
 <div style="[% Data.Style | html %]" >
     <table id="Result[% Data.Identifier %]" class="DataTable">
