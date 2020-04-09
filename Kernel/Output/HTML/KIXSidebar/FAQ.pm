@@ -82,7 +82,10 @@ sub Run {
             },
         );
     }
-    elsif ( !$TIDSearchMaskRegexp || $Self->{LayoutObject}->{Action} !~ /$TIDSearchMaskRegexp/ ) {
+    elsif (
+        !$TIDSearchMaskRegexp
+        || $Self->{LayoutObject}->{Action} !~ /$TIDSearchMaskRegexp/
+    ) {
         $Self->{LayoutObject}->Block(
             Name => 'SearchBox',
             Data => {
@@ -95,6 +98,14 @@ sub Run {
             Data => {
                 %{$Param{Ticket} || {}},
                 %{$Param{Config}},
+            },
+        );
+    }
+    if ( $Param{Config}->{'InitialJS'} ) {
+        $Self->{LayoutObject}->Block(
+            Name => 'InitialJS',
+            Data => {
+                InitialJS => $Param{Config}->{'InitialJS'},
             },
         );
     }

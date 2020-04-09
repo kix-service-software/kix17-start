@@ -12644,6 +12644,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBCustomer</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch"></Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="CustomerBackends">CustomerUser</Item>
@@ -12673,6 +12674,7 @@ Thanks for your help!
                 <Item Key="InitialCollapsed"></Item>
                 <Item Key="Identifier">KIXSBCustomer</Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch"></Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="CustomerBackends">CustomerUser1</Item>
@@ -13558,6 +13560,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBCISearch001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne">AgentTicket(Phone|Email)</Item>
                 <Item Key="CustomerDependend">AgentTicket(Phone|Email)</Item>
@@ -13594,6 +13597,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBCISearch002</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne">AgentTicket(Phone|Email)</Item>
                 <Item Key="CustomerDependend">AgentTicket(Phone|Email)</Item>
@@ -13630,6 +13634,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBCISearch003</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne">AgentTicket(Phone|Email)</Item>
                 <Item Key="CustomerDependend">AgentTicket(Phone|Email)</Item>
@@ -14789,6 +14794,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimiliarFAQ</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="FAQLink">1</Item>
                 <Item Key="LinkType"></Item>
                 <Item Key="MatchAll">1</Item>
@@ -14820,6 +14826,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimiliarFAQ</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="FAQLink">0</Item>
                 <Item Key="LinkType"></Item>
                 <Item Key="MatchAll">1</Item>
@@ -14916,6 +14923,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTicketLinkedCIs</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType"></Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16002,6 +16010,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16039,6 +16048,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets002</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16076,6 +16086,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets003</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16113,6 +16124,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets004</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16150,6 +16162,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets005</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16187,6 +16200,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16248,6 +16262,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBConfigItemView001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="ConfigItemAttribute::Name">1</Item>
                 <Item Key="ConfigItemAttribute::DeplState">1</Item>
                 <Item Key="ConfigItemAttribute::Vendor">1</Item>
@@ -16276,6 +16291,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBConfigItemView001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="ConfigItemAttribute::Name">1</Item>
                 <Item Key="ConfigItemAttribute::DeplState">1</Item>
                 <Item Key="ConfigItemAttribute::Vendor">1</Item>
@@ -16715,6 +16731,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBList001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="CustomerDependend">AgentTicket(Phone|Email)</Item>
@@ -16765,6 +16782,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBList001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="ArrayHandling">or</Item>
                 <Item Key="AutoSearch">CustomerTicket(Message|Zoom)</Item>
                 <Item Key="AutoSelectOne"></Item>
@@ -16815,6 +16833,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBList002</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
@@ -16864,6 +16883,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBList003</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicket(Phone|Email|Zoom)</Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
@@ -17027,6 +17047,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBItem001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="DatabaseCacheTTL">3600</Item>
                 <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
                 <Item Key="DatabaseField::00::first_name::Firstname"></Item>
@@ -17067,6 +17088,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBItem001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="DatabaseCacheTTL">3600</Item>
                 <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
                 <Item Key="DatabaseField::00::first_name::Firstname"></Item>
@@ -17105,6 +17127,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBItem002</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="DatabaseCacheTTL">3600</Item>
                 <Item Key="DatabaseDSN">DBI:Pg:dbname=example;host=exampleserver</Item>
                 <Item Key="DatabaseField::00::name">http://exampleserver/$LQData{"Key"}/</Item>
@@ -17138,6 +17161,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBItem003</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="DatabaseCacheTTL">3600</Item>
                 <Item Key="DatabaseDSN">DBI:Pg:dbname=example;host=exampleserver</Item>
                 <Item Key="DatabaseField::00::name">http://exampleserver/$LQData{"Key"}/</Item>

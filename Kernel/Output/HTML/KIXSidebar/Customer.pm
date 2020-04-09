@@ -36,10 +36,16 @@ sub Run {
     $Param{Config}->{QueryDelay}     = $Param{Config}->{QueryDelay}     || 300;
 
     my $AdditionalClasses = '';
-    if ( $Param{Config}->{'NoActionWithoutSelection'} && $Param{Action} =~ /$Param{Config}->{'NoActionWithoutSelection'}/ ) {
+    if (
+        $Param{Config}->{'NoActionWithoutSelection'}
+        && $Param{Action} =~ /$Param{Config}->{'NoActionWithoutSelection'}/
+    ) {
         $AdditionalClasses .= 'NoActionWithoutSelection';
     }
-    if ( $Param{Config}->{'InitialCollapsed'} && $Param{Action} =~ /$Param{Config}->{'InitialCollapsed'}/ ) {
+    if (
+        $Param{Config}->{'InitialCollapsed'}
+        && $Param{Action} =~ /$Param{Config}->{'InitialCollapsed'}/
+    ) {
         if ( $AdditionalClasses.length > 0 ) {
             $AdditionalClasses .= ' ';
         }
@@ -70,7 +76,10 @@ sub Run {
         },
     );
 
-    if ( $Param{Config}->{'AutoSearch'} && $Param{Action} =~ /$Param{Config}->{'AutoSearch'}/ ) {
+    if (
+        $Param{Config}->{'AutoSearch'}
+        && $Param{Action} =~ /$Param{Config}->{'AutoSearch'}/
+    ) {
         $Self->{LayoutObject}->Block(
             Name => 'AutoSearch',
             Data => {
@@ -79,12 +88,23 @@ sub Run {
             },
         );
     }
-    if ( $Param{Config}->{'AutoSelectOne'} && $Param{Action} =~ /$Param{Config}->{'AutoSelectOne'}/ ) {
+    if (
+        $Param{Config}->{'AutoSelectOne'}
+        && $Param{Action} =~ /$Param{Config}->{'AutoSelectOne'}/
+    ) {
         $Self->{LayoutObject}->Block(
             Name => 'AutoSelectOne',
             Data => {
                 %{$Param{Ticket} || {}},
                 %{$Param{Config}},
+            },
+        );
+    }
+    if ( $Param{Config}->{'InitialJS'} ) {
+        $Self->{LayoutObject}->Block(
+            Name => 'InitialJS',
+            Data => {
+                InitialJS => $Param{Config}->{'InitialJS'},
             },
         );
     }

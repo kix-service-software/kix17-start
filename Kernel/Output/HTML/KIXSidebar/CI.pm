@@ -36,12 +36,14 @@ sub Run {
     $Param{Config}->{QueryDelay}     = $Param{Config}->{QueryDelay}     || 300;
 
     my $AdditionalClasses = '';
-    if (   $Param{Config}->{'NoActionWithoutSelection'}
+    if (
+        $Param{Config}->{'NoActionWithoutSelection'}
         && $Param{Action} =~ /$Param{Config}->{'NoActionWithoutSelection'}/
     ) {
         $AdditionalClasses .= 'NoActionWithoutSelection';
     }
-    if (   $Param{Config}->{'InitialCollapsed'}
+    if (
+        $Param{Config}->{'InitialCollapsed'}
         && $Param{Action} =~ /$Param{Config}->{'InitialCollapsed'}/
     ) {
         if ( $AdditionalClasses ne '' ) {
@@ -75,7 +77,10 @@ sub Run {
             },
         );
     }
-    if ( $Param{Config}->{'AutoSearch'} && $Param{Action} =~ /$Param{Config}->{'AutoSearch'}/ ) {
+    if (
+        $Param{Config}->{'AutoSearch'}
+        && $Param{Action} =~ /$Param{Config}->{'AutoSearch'}/
+    ) {
         my $LinkType = $Self->{Config}->{'LinkType'} || 'RelevantTo';
         $Self->{LayoutObject}->Block(
             Name => 'AutoSearch',
@@ -86,7 +91,8 @@ sub Run {
             },
         );
     }
-    if (   $Param{Config}->{'AutoSelectOne'}
+    if (
+        $Param{Config}->{'AutoSelectOne'}
         && $Param{Action} =~ /$Param{Config}->{'AutoSelectOne'}/
     ) {
         $Self->{LayoutObject}->Block(
@@ -97,7 +103,8 @@ sub Run {
             },
         );
     }
-    if (   $Param{Config}->{'CustomerDependend'}
+    if (
+        $Param{Config}->{'CustomerDependend'}
         && $Param{Action} =~ /$Param{Config}->{'CustomerDependend'}/
     ) {
         $Self->{LayoutObject}->Block(
@@ -105,6 +112,14 @@ sub Run {
             Data => {
                 %{$Param{Ticket} || {}},
                 %{$Param{Config}},
+            },
+        );
+    }
+    if ( $Param{Config}->{'InitialJS'} ) {
+        $Self->{LayoutObject}->Block(
+            Name => 'InitialJS',
+            Data => {
+                InitialJS => $Param{Config}->{'InitialJS'},
             },
         );
     }
