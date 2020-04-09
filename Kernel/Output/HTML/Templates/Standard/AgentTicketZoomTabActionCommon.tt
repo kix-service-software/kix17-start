@@ -420,7 +420,7 @@ $('#StandardTemplateID').bind('change', function (Event) {
                                 <div class="Field FileUpload">
                                     <ul>
                                         <li>
-                                            <input name="FileUpload" id="FileUpload" type="file" size="30" />
+                                            <input name="FileUpload" id="FileUpload" type="file" multiple="multiple" size="30" />
                                             <input type="hidden" id="AttachmentUpload" name="AttachmentUpload" value="0" />
                                             <input type="hidden" id="UploadFinish" name="UploadFinish" value="0" />
                                         </li>
