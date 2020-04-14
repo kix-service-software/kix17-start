@@ -74,7 +74,7 @@ for my $File ( @FilesInDirectory ) {
     # init test steps
     $Self->{'TestCase'}->{'PlanSteps'} = {};
     for my $StepKey ( keys( %{ $TestCaseData } ) ) {
-        $Self->{'TestCase'}->{'PlanSteps'}->{ $StepKey } = $TestCaseData->{ $StepKey }->{'StepName'};
+        $Self->{'TestCase'}->{'PlanSteps'}->{ $StepKey } = $StepKey . ': ' . $TestCaseData->{ $StepKey }->{'StepName'};
     }
 
     # process test steps
