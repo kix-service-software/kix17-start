@@ -47,6 +47,14 @@ sub Run {
             AdditionalClasses => $AdditionalClasses,
         },
     );
+    if ( $Param{Config}->{'InitialJS'} ) {
+        $Self->{LayoutObject}->Block(
+            Name => 'InitialJS',
+            Data => {
+                InitialJS => $Param{Config}->{'InitialJS'},
+            },
+        );
+    }
 
     # output result
     my $Content = $Self->{LayoutObject}->Output(

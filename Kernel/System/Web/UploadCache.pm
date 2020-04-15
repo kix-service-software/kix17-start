@@ -114,7 +114,24 @@ ContentID is optional (automatically generated if not given on disposition = inl
 sub FormIDAddFile {
     my ( $Self, %Param ) = @_;
 
-    return $Self->{Backend}->FormIDAddFile(%Param);
+    if ( !defined($Param{Uploaded})
+         && $Param{Filename}
+    ) {
+        return $Self->{Backend}->FormIDAddFile(%Param);
+    }
+    elsif (
+        defined($Param{Uploaded})
+        && scalar(@{$Param{Uploaded}})
+    ) {
+        for my $Attachment ( @{$Param{Uploaded}} ) {
+            $Self->{Backend}->FormIDAddFile(
+                FormID => $Param{FormID},
+                %{$Attachment}
+            );
+        }
+    }
+
+    return 1;
 }
 
 =item FormIDRemoveFile()

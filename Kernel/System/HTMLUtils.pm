@@ -988,7 +988,7 @@ sub Safety {
         declaration_h      => [ \&_DeclarationHandler, 'self, text' ],
         start_h            => [ \&_TagStartHandler, 'self, tagname, attr, attrseq' ],
         end_h              => [ \&_TagEndHandler, 'self, tagname' ],
-        text_h             => [ \&_TextHandler, 'self, text' ],
+        text_h             => [ \&_TextHandler, 'self, text, is_cdata' ],
         empty_element_tags => 1,
         unbroken_text      => 1
     );
@@ -1037,6 +1037,13 @@ sub Safety {
         'wbr'     => 1
     };
 
+    # handle UTF7
+    $String =~ s/[+]ADw-/</igsm;
+    $String =~ s/[+]AD4-/>/igsm;
+
+    # replace slash after tag with whitespace
+    $String =~ s/(<[a-z]+)\/([a-z]+)/$1 $2/igsm;
+
     # parse string
     $Parser->parse( $String );
     $Parser->eof();
@@ -1083,14 +1090,17 @@ sub _TagStartHandler {
     for my $Config ( keys( %{ $Self->{TagMap} } ) ) {
         if (
             $Self->{Config}->{ 'No' . $Config }
-            && lc($TagName) eq $Self->{TagMap}->{ $Config }
+            && lc( $TagName ) eq $Self->{TagMap}->{ $Config }
         ) {
             # remember replacement
             $Self->{Safety}->{Replace} = 1;
 
-            # flag tag
-            $Self->{Flag}->{TagName}  = lc($TagName);
-            $Self->{Flag}->{TagCount} = 1;
+            # check for non-void elements
+            if ( !$Self->{VoidElements}->{ lc($TagName) } ) {
+                # flag tag
+                $Self->{Flag}->{TagName}  = lc($TagName);
+                $Self->{Flag}->{TagCount} = 1;
+            }
 
             # add replacement string
             $Self->{Safety}->{String} .= $Self->{Config}->{ReplacementStr};
@@ -1305,6 +1315,19 @@ sub _TagEndHandler {
         return;
     }
 
+    # check for mapped tags
+    for my $Config ( keys( %{ $Self->{TagMap} } ) ) {
+        if (
+            $Self->{Config}->{ 'No' . $Config }
+            && lc( $TagName ) eq $Self->{TagMap}->{ $Config }
+        ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+
+            return;
+        }
+    }
+
     # append to safety string
     $Self->{Safety}->{String} .= '</' . $TagName . '>';
 
@@ -1312,11 +1335,14 @@ sub _TagEndHandler {
 }
 
 sub _TextHandler {
-    my ( $Self, $Text ) = @_;
+    my ( $Self, $Text, $IsCDATA ) = @_;
 
     # check style tag for expression function
     if ( $Self->{Flag}->{StyleExpression} ) {
         if ( $Text =~ m/expression\(/i ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+
             return;
         }
     }
@@ -1327,7 +1353,13 @@ sub _TextHandler {
     }
 
     # append to safety string
-    $Self->{Safety}->{String} .= encode_entities( $Text );
+    if ( $IsCDATA ) {
+        $Self->{Safety}->{String} .= $Text;
+    }
+    # encode text before appending
+    else {
+        $Self->{Safety}->{String} .= encode_entities( $Text );
+    }
 
     return;
 }

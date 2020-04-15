@@ -1,0 +1,1147 @@
+---
+0001:
+  StepName: 'Leave plain text unchanged'
+  InputData:
+    String: |-
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr
+    Replace: 0
+0002:
+  StepName: 'Leave safe tags unchanged'
+  InputData:
+    String: |-
+      <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr</p>
+    Replace: 0
+0003:
+  StepName: 'Remove javascript code from href'
+  InputData:
+    String: |-
+      <a href="javascript:alert('XSS')">XSS</a>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <a>XSS</a>
+    Replace: 1
+0004:
+  StepName: 'Leave normal href unchanged'
+  InputData:
+    String: |-
+      <a href='https://kixdesk.com/dokumentation.html?file=files/downloads/handbuecher/Anwender_KIXStart_20200331_bearb.pdf' target='_blank'>https://kixdesk.com/dokumentation.html?file=files/downloads/handbuecher/Anwender_KIXStart_20200331_bearb.pdf</a>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <a href="https://kixdesk.com/dokumentation.html?file=files/downloads/handbuecher/Anwender_KIXStart_20200331_bearb.pdf" target="_blank">https://kixdesk.com/dokumentation.html?file=files/downloads/handbuecher/Anwender_KIXStart_20200331_bearb.pdf</a>
+    Replace: 0
+0005:
+  StepName: 'Remove on-Event'
+  InputData:
+    String: |-
+      <a href="https://kixdesk.com/" onclick="alert('XSS')">XSS</a>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <a href="https://kixdesk.com/">XSS</a>
+    Replace: 1
+0006:
+  StepName: 'Remove on-Event and image'
+  InputData:
+    String: |-
+      <a href="https://kixdesk.com/" onclick="alert('XSS')">XSS <img src="https://kixdesk.com/assets/images/6/kix_start-c6d361f5.svg" /></a>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <a href="https://kixdesk.com/">XSS </a>
+    Replace: 1
+0007:
+  StepName: 'Remove script tag'
+  InputData:
+    String: |-
+      <div>
+      <script type="text/javascript">
+      alert('XSS');
+      </script><script type="text/javascript" src="https://kixdesk.com/assets/jquery-ui/js/jquery-ui.min.js">
+      <script type="text/javascript" src="/xss.js">
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+      
+      
+      </div>
+    Replace: 1
+0008:
+  StepName: 'Remove applet tag'
+  InputData:
+    String: |-
+      <div>
+      <applet code="XSS.class" width="300" height="150">
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+      sed diam nonumy eirmod tempor invidunt ut labore et dolore
+      magna aliquyam erat, sed diam voluptua.
+      </applet>
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+      
+      </div>
+    Replace: 1
+0009:
+  StepName: 'Remove object tag'
+  InputData:
+    String: |-
+      <div>
+        <object width="384" height="236" align="right" vspace="5" hspace="5">
+          <param name="movie" value="https://www.youtube.com/watch?v=C0DPdy98e4c"></param>
+          <param name="allowFullScreen" value="true"></param>
+          <param name="allowScriptAccess" value="always"></param>
+          <embed src="https://www.youtube.com/watch?v=C0DPdy98e4c" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="384" height="236"></embed>
+        </object>
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+        
+      </div>
+    Replace: 1
+0010:
+  StepName: 'Encode special characters in text'
+  InputData:
+    String: |-
+      <div>
+        "=&{()}'';<XSS>!--
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+        &quot;=&amp;{()}&#39;&#39;;<xss>!--
+      </div>
+    Replace: 0
+0011:
+  StepName: 'Remove uppercase script tag'
+  InputData:
+    String: |-
+      <div>
+        <SCRIPT TYPE="text/javascript" SRC="xss.js"></SCRIPT>
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+        
+      </div>
+    Replace: 1
+0011:
+  StepName: 'Remove script tag including comment'
+  InputData:
+    String: |-
+      <div>
+        <script type="text/javascript" src="xss.js"><!-- Lorem ipsum dolor sit amet --></SCRIPT>
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+        
+      </div>
+    Replace: 1
+0012:
+  StepName: 'Remove javascript code from src'
+  InputData:
+    String: |-
+      <div>
+        <IMG src="javascript:alert('XSS');">
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+        <img />
+      </div>
+    Replace: 1
+0013:
+  StepName: 'Remove javascript code from src - camelcase'
+  InputData:
+    String: |-
+      <div>
+        <IMG src="jAvAsCrIpT:alert('XSS');">
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+        <img />
+      </div>
+    Replace: 1
+0014:
+  StepName: 'Remove javascript code from src - quotations'
+  InputData:
+    String: |-
+      <div>
+        <img """><script>alert('XSS')</script>" />
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+        <img """="&quot;&quot;&quot;" />&quot; /&gt;
+      </div>
+    Replace: 1
+0015:
+  StepName: 'Remove script tag - masked tag'
+  InputData:
+    String: |-
+      <script/xss type="text/javascript">alert('XSS');</script>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0016:
+  StepName: 'Remove script tag - masked tag'
+  InputData:
+    String: |-
+      <script/type="text/javascript">alert('XSS');</script>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0017:
+  StepName: 'Remove script tag - js comment'
+  InputData:
+    String: |-
+      <script type="text/javascript">alert('XSS');//<</script>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0018:
+  StepName: 'Remove script tag - src without quotation and unclosed tag'
+  InputData:
+    String: |-
+      <script type="text/javascript" src=xss.js?<B>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0019:
+  StepName: 'Remove external src without quotation'
+  InputData:
+    String: |-
+      <div>
+        <iframe src=https://kixdesk.com/dokumentation.html?file=files/downloads/handbuecher/Anwender_KIXStart_20200331_bearb.pdf />
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+        <iframe></iframe>
+      </div>
+    Replace: 1
+0020:
+  StepName: 'Remove on-Event - uppercase'
+  InputData:
+    String: |-
+      <BODY ONLOAD=alert('XSS');>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <body>
+    Replace: 1
+0021:
+  StepName: 'Remove javascript code from background'
+  InputData:
+    String: |-
+      <div>
+        <TABLE BACKGROUND="javascript:alert('XSS');">
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+        <table>
+      </div>
+    Replace: 1
+0022:
+  StepName: 'Remove script tag with > in attribute'
+  InputData:
+    String: |-
+      <script a=">" type="text/javascript">alert('XSS');</script>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0023:
+  StepName: 'Remove script tag with > in empty attribute'
+  InputData:
+    String: |-
+      <script =">" type="text/javascript">alert('XSS');</script>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0024:
+  StepName: 'Remove script tag with > in quoted attribute'
+  InputData:
+    String: |-
+      <script "a='>'" type="text/javascript">alert('XSS');</script>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0025:
+  StepName: 'Remove javascript code in tag witg newline'
+  InputData:
+    String: |-
+      <A
+      href="javascript:alert('XSS');">XSS</A>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <a>XSS</a>
+    Replace: 1
+0026:
+  StepName: 'Remove on-Event - whitespaces after attribute name'
+  InputData:
+    String: |-
+      <body style="background: #fff; color: #000;" onmouseover     ="alert('XSS');">
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <body style="background: #fff; color: #000;">
+    Replace: 1
+0027:
+  StepName: 'Leave safe html unchanged'
+  InputData:
+    String: |-
+      <html><head><style type="text/css"> #Lorem {color: #FF0000} </style><body>Lorem ipsum dolor sit amet "javascript"!<style type="text/css"> #XSS{ color: #00FF00 } </style> consetetur sadipscing elitr.</body></html>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <html><head><style type="text/css"> #Lorem {color: #FF0000} </style><body>Lorem ipsum dolor sit amet &quot;javascript&quot;!<style type="text/css"> #XSS{ color: #00FF00 } </style> consetetur sadipscing elitr.</body></html>
+    Replace: 0
+0028:
+  StepName: 'Remove style tag of type text/javascript'
+  InputData:
+    String: |-
+      <html><head><style type="text/javascript"> alert("XSS");</style><body>Lorem ipsum dolor sit amet "javascript"!<style type="text/css"> #XSS{ color: #00FF00 } </style> consetetur sadipscing elitr.</body></html>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <html><head><body>Lorem ipsum dolor sit amet &quot;javascript&quot;!<style type="text/css"> #XSS{ color: #00FF00 } </style> consetetur sadipscing elitr.</body></html>
+    Replace: 1
+0029:
+  StepName: 'Remove UTF7 tags'
+  InputData:
+    String: |-
+      applet:+ADw-applet+AD4-alert('XSS');+ADw-/applet+AD4-
+      object:+ADw-object+AD4-alert('XSS');+ADw-/object+AD4-
+      embed:+ADw-embed src="javascript:alert('XSS');"+AD4-
+      svg:+ADw-svg+AD4-alert('XSS');+ADw-/svg+AD4-
+      img:+ADw-img src="javascript:alert('XSS');"+AD4-
+      script:+ADw-script+AD4-alert('XSS');+ADw-/script+AD4-
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      applet:
+      object:
+      embed:
+      svg:
+      img:
+      script:
+    Replace: 1
+0030:
+  StepName: 'Remove expression function'
+  InputData:
+    String: |-
+      <div style="width: expression(alert(\'XSS\');); height: 123px;" style="width: 456px">
+      <div style='width: expression(alert("XSS");); height: 123px;' style='width: 456px'>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+      <div>
+    Replace: 1
+0031:
+  StepName: 'Remove expression function'
+  InputData:
+    String: |-
+      <div><xss style="xss:expression(alert('XSS'))"></div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div><xss></div>
+    Replace: 1
+0032:
+  StepName: 'Remove svg tag'
+  InputData:
+    String: |-
+      <div class="svg"><svg xss="true"><xss></svg></div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div class="svg"></div>
+    Replace: 1
+0033:
+  StepName: 'Remove closing tag with spaces'
+  InputData:
+    String: |-
+      <div><script ></script ><applet ></applet ></div >
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div></div>
+    Replace: 1
+0034:
+  StepName: 'Remove style tag with expression function'
+  InputData:
+    String: |-
+      <style type="text/css">
+      div > span {
+          width: 200px;
+      }
+      </style>
+      <style type="text/css">
+      div > span {
+          width: expression(evilJS());
+      }
+      </style>
+      <style type="text/css">
+      div > span > div {
+          width: 200px;
+      }
+      </style>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <style type="text/css">
+      div > span {
+          width: 200px;
+      }
+      </style>
+      <style type="text/css"></style>
+      <style type="text/css">
+      div > span > div {
+          width: 200px;
+      }
+      </style>
+    Replace: 1
+0035:
+  StepName: 'Remove nested script tags'
+  InputData:
+    String: |-
+      <div>
+      <script type="text/javascript">
+        <script>alert('XSS');</script>
+        <script>document.write("XSS");</script>
+      </script>
+      </div>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <div>
+      
+        
+      
+      </div>
+    Replace: 1
+0036:
+  StepName: 'Remove javascript code with leading withspaces'
+  InputData:
+    String: |-
+      <img src="/unittest1.png"/>
+      <iframe src="  javascript:alert('XSS');"></iframe>
+      <img src="/unittest2.png"/>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img src="/unittest1.png" />
+      <iframe></iframe>
+      <img src="/unittest2.png" />
+    Replace: 1
+0037:
+  StepName: 'Remove javascript code with leading withspaces'
+  InputData:
+    String: |-
+      <img src="/unittest1.png"/>
+      <iframe src='  javascript:alert("XSS");'></iframe>
+      <img src="/unittest2.png"/>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img src="/unittest1.png" />
+      <iframe></iframe>
+      <img src="/unittest2.png" />
+    Replace: 1
+0038:
+  StepName: 'Remove javascript code without delimiters'
+  InputData:
+    String: |-
+      <img src="/unittest1.png"/>
+      <iframe src=javascript:alert("XSS");></iframe>
+      <img src="/unittest2.png"/>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img src="/unittest1.png" />
+      <iframe></iframe>
+      <img src="/unittest2.png" />
+    Replace: 1
+0039:
+  StepName: 'Leave javascript code in data-src'
+  InputData:
+    String: |-
+      <img src="/unittest1.png"/>
+      <iframe src="" data-src="javascript:alert('XSS');"></iframe>
+      <img src="/unittest2.png"/>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img src="/unittest1.png" />
+      <iframe src="" data-src="javascript:alert(&#39;XSS&#39;);"></iframe>
+      <img src="/unittest2.png" />
+    Replace: 0
+0040:
+  StepName: 'Remove redirect'
+  InputData:
+    String: |-
+      Lorem ipsum dolor sit amet
+      <META HTTP-EQUIV="Refresh" CONTENT="2;
+      URL=http://www.kixdesk.com/">
+      consetetur sadipscing elitr
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      Lorem ipsum dolor sit amet
+      
+      consetetur sadipscing elitr
+    Replace: 1
+0041:
+  StepName: 'Remove on-Event - masked tag'
+  InputData:
+    String: |-
+      <img/onerror="alert(\'XSS1\')"src=a>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img src="a" />
+    Replace: 1
+0042:
+  StepName: 'Remove encoded javascript code'
+  InputData:
+    String: |-
+      <iframe src=j&#x61;vascript:alert(\'XSS\') >
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <iframe>
+    Replace: 1
+0043:
+  StepName: 'Remove encoded javascript code - masked tag'
+  InputData:
+    String: |-
+      <iframe/src=j&#x61vascript:alert(\'XSS\') >
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <iframe>
+    Replace: 1
+0044:
+  StepName: 'Remove image with external source'
+  InputData:
+    String: |-
+      <img src="https://kixdesk.com/assets/images/6/kix_start-c6d361f5.svg" />
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0045:
+  StepName: 'Remove image with external source - masked tag'
+  InputData:
+    String: |-
+      <img/src="https://kixdesk.com/assets/images/6/kix_start-c6d361f5.svg" />
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <img />
+    Replace: 1
+0046:
+  StepName: 'Replace image tag'
+  InputData:
+    String: |-
+      <img src="https://kixdesk.com/assets/images/6/kix_start-c6d361f5.svg" />
+    NoApplet: 0
+    NoObject: 0
+    NoEmbed: 0
+    NoSVG: 0
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 0
+    NoJavaScript: 0
+    ReplacementStr: '...'
+  CheckValue:
+    String: |-
+      ...
+    Replace: 1
+0047:
+  StepName: 'Replace svg tag'
+  InputData:
+    String: |-
+      <div class="svg"><svg xss="true"><xss></svg></div>
+    NoApplet: 0
+    NoObject: 0
+    NoEmbed: 0
+    NoSVG: 1
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 0
+    NoJavaScript: 0
+    ReplacementStr: '...'
+  CheckValue:
+    String: |-
+      <div class="svg">...</div>
+    Replace: 1
+0048:
+  StepName: 'Replace object tag'
+  InputData:
+    String: |-
+      <div>
+        <object width="384" height="236" align="right" vspace="5" hspace="5">
+          <param name="movie" value="https://www.youtube.com/watch?v=C0DPdy98e4c"></param>
+          <param name="allowFullScreen" value="true"></param>
+          <param name="allowScriptAccess" value="always"></param>
+          <embed src="https://www.youtube.com/watch?v=C0DPdy98e4c" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="384" height="236"></embed>
+        </object>
+      </div>
+    NoApplet: 0
+    NoObject: 1
+    NoEmbed: 0
+    NoSVG: 0
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 0
+    NoJavaScript: 0
+    ReplacementStr: '...'
+  CheckValue:
+    String: |-
+      <div>
+        ...
+      </div>
+    Replace: 1
+0049:
+  StepName: 'Replace embed tag'
+  InputData:
+    String: |-
+      <div>
+        <object width="384" height="236" align="right" vspace="5" hspace="5">
+          <param name="movie" value="https://www.youtube.com/watch?v=C0DPdy98e4c" />
+          <param name="allowFullScreen" value="true" />
+          <param name="allowScriptAccess" value="always" />
+          <embed src="https://www.youtube.com/watch?v=C0DPdy98e4c" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="384" height="236"></embed>
+        </object>
+      </div>
+    NoApplet: 0
+    NoObject: 0
+    NoEmbed: 1
+    NoSVG: 0
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 0
+    NoJavaScript: 0
+    ReplacementStr: '...'
+  CheckValue:
+    String: |-
+      <div>
+        <object width="384" height="236" align="right" vspace="5" hspace="5">
+          <param name="movie" value="https://www.youtube.com/watch?v=C0DPdy98e4c" />
+          <param name="allowFullScreen" value="true" />
+          <param name="allowScriptAccess" value="always" />
+          ...
+        </object>
+      </div>
+    Replace: 1
+0050:
+  StepName: 'Replace applet tag'
+  InputData:
+    String: |-
+      <div>
+      <applet code="XSS.class" width="300" height="150">
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+      sed diam nonumy eirmod tempor invidunt ut labore et dolore
+      magna aliquyam erat, sed diam voluptua.
+      </applet>
+      </div>
+    NoApplet: 1
+    NoObject: 0
+    NoEmbed: 0
+    NoSVG: 0
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 0
+    NoJavaScript: 0
+    ReplacementStr: '...'
+  CheckValue:
+    String: |-
+      <div>
+      ...
+      </div>
+    Replace: 1
+0051:
+  StepName: 'Leave URL looking like on-Event'
+  InputData:
+    String: |-
+      <a href="https://kixdesk.com/onclick/unittest.html">Test</a>
+    NoApplet: 0
+    NoObject: 0
+    NoEmbed: 0
+    NoSVG: 0
+    NoImg: 0
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 0
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <a href="https://kixdesk.com/onclick/unittest.html">Test</a>
+    Replace: 0
+0052:
+  StepName: 'Handle empty string'
+  InputData:
+    String: |-
+      
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 0
+0053:
+  StepName: 'Remove external poster attribute'
+  InputData:
+    String: |-
+      <video controls poster="https://kixdesk.com/assets/images/6/kix_start-c6d361f5.svg"/>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <video controls="controls"></video>
+    Replace: 1
+0054:
+  StepName: 'Remove external background image'
+  InputData:
+    String: |-
+      <a href="127.0.0.1" style="background-image:url(https://kixdesk.com/assets/images/6/kix_start-c6d361f5.svg)">localhost</a>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <a href="127.0.0.1">localhost</a>
+    Replace: 1
+0055:
+  StepName: 'Remove internal background image'
+  InputData:
+    String: |-
+      <a href="127.0.0.1" style="background-image:url(/assets/images/6/kix_start-c6d361f5.svg)">localhost</a>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <a href="127.0.0.1">localhost</a>
+    Replace: 1
+0056:
+  StepName: 'Remove external css source'
+  InputData:
+    String: |-
+      <p style="content:url('https://kixdesk.com/assets/css-content');"></p>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 0
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <p></p>
+    Replace: 1
+0057:
+  StepName: 'Remove internal css source'
+  InputData:
+    String: |-
+      <p style="content:url('/assets/css-content');"></p>
+    NoApplet: 1
+    NoObject: 1
+    NoEmbed: 1
+    NoSVG: 1
+    NoImg: 1
+    NoIntSrcLoad: 1
+    NoExtSrcLoad: 1
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <p></p>
+    Replace: 1

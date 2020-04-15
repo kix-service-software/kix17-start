@@ -105,6 +105,15 @@
 [% END %]
 [% RenderBlockEnd("SidebarFrame") %]
 
+[% RenderBlockStart("InitialJS") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    [% Data.InitialJS %]
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("InitialJS") %]
+
 [% RenderBlockStart("AutoSearch") %]
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[

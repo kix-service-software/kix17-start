@@ -69,6 +69,15 @@
 [% END %]
 [% RenderBlockEnd("SidebarFrame") %]
 
+[% RenderBlockStart("InitialJS") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    [% Data.InitialJS %]
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("InitialJS") %]
+
 [% RenderBlockStart("KIXSidebarConfigItemViewResult") %]
 <div><span id="[% Data.Identifier | html %]Pagination" class="Pagination"></span></div>
 <div class="Clear">
