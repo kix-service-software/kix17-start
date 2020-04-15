@@ -690,11 +690,12 @@ sub Run {
             my $TicketHook          = $ConfigObject->Get('Ticket::Hook');
             my $FulltextSearchParam = $GetParam{Fulltext};
             $FulltextSearchParam =~ s/$TicketHook//g;
-            $GetParam{TicketNumber} = '*' . $FulltextSearchParam . '*';
 
             local $Kernel::System::DB::UseSlaveDB = 1;
 
             my @ViewableTicketIDsTN = $TicketObject->TicketSearch(
+                %GetParam,
+                %DynamicFieldSearchParameters,
                 Result              => 'ARRAY',
                 SortBy              => $Self->{SortBy},
                 OrderBy             => $Self->{OrderBy},
@@ -704,14 +705,13 @@ sub Run {
                 ContentSearchPrefix => '*',
                 ContentSearchSuffix => '*',
                 FullTextIndex       => 1,
-                %GetParam,
-                %DynamicFieldSearchParameters,
+                TicketNumber        => '*' . $FulltextSearchParam . '*'
             );
 
             # search tickets with Title
-            delete $GetParam{TicketNumber};
-            $GetParam{Title} = $GetParam{Fulltext};
             my @ViewableTicketIDsTitle = $TicketObject->TicketSearch(
+                %GetParam,
+                %DynamicFieldSearchParameters,
                 Result              => 'ARRAY',
                 SortBy              => $Self->{SortBy},
                 OrderBy             => $Self->{OrderBy},
@@ -721,13 +721,13 @@ sub Run {
                 ContentSearchPrefix => '*',
                 ContentSearchSuffix => '*',
                 FullTextIndex       => 1,
-                %GetParam,
+                Title               => $GetParam{Fulltext},
             );
 
             # search tickets with remarks (TicketNotes)
-            delete $GetParam{Title};
-            $GetParam{TicketNotes} = $GetParam{Fulltext};
             my @ViewableTicketIDsTicketNotes = $TicketObject->TicketSearch(
+                %GetParam,
+                %DynamicFieldSearchParameters,
                 Result              => 'ARRAY',
                 SortBy              => $Self->{SortBy},
                 OrderBy             => $Self->{OrderBy},
@@ -737,21 +737,27 @@ sub Run {
                 ContentSearchPrefix => '*',
                 ContentSearchSuffix => '*',
                 FullTextIndex       => 1,
-                %GetParam,
+                TicketNotes         => $GetParam{Fulltext},
             );
 
             # search ticket with DF if configured
             if ( $Config->{FulltextSearchInDynamicFields} ) {
 
-                # prepare fulltext serach in DFs
+                # get dynamic field config for fulltext search
+                my $FulltextDynamicFieldFilter = $Config->{FulltextSearchInDynamicFields};
+
+                # get the dynamic fields for fulltext search
+                my $FulltextDynamicField = $DynamicFieldObject->DynamicFieldListGet(
+                    Valid       => 1,
+                    ObjectType  => [ 'Ticket', 'Article' ],
+                    FieldFilter => $FulltextDynamicFieldFilter || {},
+                );
+
+                # prepare fulltext search in DFs
                 DYNAMICFIELDFULLTEXT:
-                for my $DynamicFieldConfig ( @{$DynamicField} ) {
-                    next DYNAMICFIELDFULLTEXT
-                        if !(
-                                $Config->{FulltextSearchInDynamicFields}
-                                ->{ $DynamicFieldConfig->{Name} }
-                        );
-                    next DYNAMICFIELDFULLTEXT if !IsHashRefWithData($DynamicFieldConfig);
+                for my $DynamicFieldConfig ( @{$FulltextDynamicField} ) {
+                    next DYNAMICFIELDFULLTEXT if ( !$Config->{FulltextSearchInDynamicFields}->{ $DynamicFieldConfig->{Name} } );
+                    next DYNAMICFIELDFULLTEXT if ( !IsHashRefWithData($DynamicFieldConfig) );
 
                     my %DFSearchParameters;
 
@@ -784,6 +790,9 @@ sub Run {
 
                     # search tickets
                     my @ViewableTicketIDsThisDF = $TicketObject->TicketSearch(
+                        %GetParam,
+                        %DynamicFieldSearchParameters,
+                        %DFSearchParameters,
                         Result          => 'ARRAY',
                         SortBy          => $Self->{SortBy},
                         OrderBy         => $Self->{OrderBy},
@@ -791,7 +800,6 @@ sub Run {
                         UserID          => $Self->{UserID},
                         ConditionInline => $Config->{ExtendedSearchCondition},
                         ArchiveFlags    => $GetParam{ArchiveFlags},
-                        %DFSearchParameters,
                     );
 
                     if (@ViewableTicketIDsThisDF) {
