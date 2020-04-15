@@ -181,6 +181,15 @@ sub MappingObjectAttributesGet {
         UserID     => $Param{UserID},
     );
 
+    # check backend
+    if ( ref( $Kernel::OM->Get('Kernel::Config')->{ $ObjectData->{CustomerCompanyBackend} }->{'Map'} ) ne 'ARRAY' ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "No valid customer company backend mapping found for the template id $Param{TemplateID}",
+        );
+        return;
+    }
+
     my @ElementList = qw{};
     my @Map = @{ $Kernel::OM->Get('Kernel::Config')->{ $ObjectData->{CustomerCompanyBackend} }->{'Map'} };
 
