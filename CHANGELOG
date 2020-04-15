@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.11.0-RC5 (2020/04/15)
+ * (2020/04/14) - Bugfix: KIX17-753 (fixed dynamic field based fulltext search) (millinger)
+ * (2020/04/14) - Bugfix: KIX17-697 (fixed fallback to config for geo coordinate input format) (millinger)
+ * (2020/04/14) - Bugfix: KIX17-675 (added check for valid company backend mapping) (millinger)
+ * (2020/04/08) - CR: KIX17-819 (implemented Unittest for HTMLUtils->Safety) (millinger)
+ * (2020/03/17) - CR: KIX17-779 (enable multiple attachment upload for articles) (fjacquemin)
+
 # 17.11.0-RC4 (2020/04/07)
  * (2020/04/07) - Bugfix: KIX17-798 (fixed vulnerability of htmlutils safety method) (millinger)
  * (2020/04/03) - Bugfix: KIX17-796 (use cryptographically-secure random bytes for string generation) (millinger)
