@@ -137,7 +137,9 @@ sub FormDataGet {
 
     my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
-    my $Format = $Param{Item}->{Input}->{InputFormat} || 'DecimalDegree';
+    my $Config = $ConfigObject->Get('ITSMConfigItem::GeoCoordinate');
+
+    my $Format = $Param{Item}->{Input}->{InputFormat} || $Config->{InputFormat} || 'DecimalDegree';
     my %FormData;
     my %Values;
 
