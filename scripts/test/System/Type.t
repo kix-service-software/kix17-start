@@ -321,9 +321,6 @@ return 1 if ( !$Success );
 # TEST STEP - Check type list without parameter not equals list with parameter value "0"
 delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0017'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my %List0016 = $TypeObject->TypeList(
-    Valid => 1,
-);
 $Success = $Self->IsNotDeeply(
     TestName   => 'Check type list without parameter not equals list with parameter value "0"',
     CheckValue => \%List0014,
@@ -336,9 +333,6 @@ return 1 if ( !$Success );
 # TEST STEP - Check type list without parameter equals list with parameter value "1"
 delete( $Self->{'TestCase'}->{'PlanSteps'}->{'0018'} );
 $StartTime = $Self->GetMilliTimeStamp();
-my %List0016 = $TypeObject->TypeList(
-    Valid => 1,
-);
 $Success = $Self->IsDeeply(
     TestName   => 'Check type list without parameter equals list with parameter value "1"',
     CheckValue => \%List0014,
