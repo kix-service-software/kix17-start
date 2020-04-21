@@ -85,6 +85,10 @@
         overflow: hidden;
         position: fixed;
     }
+    
+    html.NoScroll .Popup #AppWrapper {
+        position: relative;
+    }
 
     .MessageBox {
         margin: 0;
