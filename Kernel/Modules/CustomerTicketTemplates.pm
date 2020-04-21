@@ -84,7 +84,7 @@ sub Run {
 
                 for my $UserAttributeKey ( keys %{ $Self->{Config}->{UserAttributeRestriction} } ) {
 
-                    if ( $UserAttributeKey =~ /^(?:$TemplateList{$PortalGroupID}->{$TemplateKey}->{Name})\:\:(.*)/ ) {
+                    if ( $UserAttributeKey =~ /^(?:\Q$TemplateList{$PortalGroupID}->{$TemplateKey}->{Name}\E)\:\:(.*)/ ) {
                         my $UserAttribute  = $1;
                         my $RestrictionKey = $UserAttributeKey;
 
