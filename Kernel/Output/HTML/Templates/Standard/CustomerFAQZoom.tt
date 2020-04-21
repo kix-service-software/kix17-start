@@ -21,55 +21,64 @@
 [% RenderBlockEnd("Back") %]
     <div class="LayoutFixedSidebar SidebarLast">
         <div class="SidebarColumn">
-            <div id="ZoomSidebar">
-                <ul id="Metadata">
-                    <li class="Header">
-                        <div class="MessageHeader">
-                            <h3>[% Translate("FAQ Information") | html %]</h3>
-                            <div class="Clear"></div>
-                        </div>
-                    </li>
-                    <li><span class="Key">[% Translate("Article Number") | html %]:</span> <span>[% Data.Number | html %]</span></li>
-                    <li><span class="Key">[% Translate("Category") | html %]:</span> <span title="[% Translate(Data.CategoryName) | html %]">[% Translate(Data.CategoryName) | html %]</span></li>
-
-                    <li class="KeywordsContainer">
-                        <span class="Key">[% Translate("Keywords") | html %]:</span>
+            <div class="WidgetSimple">
+                <div class="Header">
+                    <h2><span>[% Translate("FAQ Information") | html %]</span></h2>
+                </div>
+                <div class="Content">
+                    <fieldset class="TableLike FixedLabelSmall">
+                    <label>[% Translate("Article Number") | html %]:</label>
+                    <p class="Value">[% Data.Number | html %]</p>
+                    <div class="Clear"></div>
+                    <label>[% Translate("Category") | html %]:</label>
+                    <p class="Value" title="[% Translate(Data.CategoryName) | html %]">[% Translate(Data.CategoryName) | html %]</p>
+                    <div class="Clear"></div>
+                    <label>[% Translate("Keywords") | html %]:</label>
 [% RenderBlockStart("Keywords") %]
-                        <span class="Keyword" title="[% Translate("Search for articles with keyword") | html %]: [% Data.Keyword | html %]">
+                    <p class="Value" title="[% Translate("Search for articles with keyword") | html %]: [% Data.Keyword | html %]">
+                        <span>
                             <a href="[% Env("Baselink") %]Action=CustomerFAQSearch;Subaction=Search;Keyword=[% Data.Keyword | uri %]">[% Data.Keyword | html %]</a>
                         </span>
+                    </p>
 [% RenderBlockEnd("Keywords") %]
-                    </li>
-                    <li><span class="Key">[% Translate("State") | html %]:</span> <span title="[% Translate(Data.State) | html %]">[% Translate(Data.State) | html %]</span></li>
+                    <div class="Clear"></div>
+                    <label>[% Translate("State") | html %]:</label>
+                    <p class="Value" title="[% Translate(Data.State) | html %]">[% Translate(Data.State) | html %]</p>
+                    <div class="Clear"></div>
 [% RenderBlockStart("Language") %]
-                    <li><span class="Key">[% Translate("Language") | html %]:</span> <span title="[% Translate(Data.Language) | html %]">[% Translate(Data.Language) | html %]</span></li>
+                    <label>[% Translate("Language") | html %]:</label>
+                    <p class="Value" title="[% Translate(Data.Language) | html %]">[% Translate(Data.Language) | html %]</p>
+                    <div class="Clear"></div>
 [% RenderBlockEnd("Language") %]
 
 # show faq dynamic fields
 [% RenderBlockStart("FAQDynamicField") %]
-                    <li>
-                        <span class="Key">[% Translate(Data.Label) | html %]:</span>
-                        <span title="[% Data.Title | html %]">[% Data.Value %]</span>
-                    </li>
+                    <label>[% Translate(Data.Label) | html %]:</label>
+                    <p class="Value" title="[% Data.Title | html %]">[% Data.Value %]</p>
+                    <div class="Clear"></div>
 [% RenderBlockEnd("FAQDynamicField") %]
 [% RenderBlockStart("ViewRating") %]
-                    <li>
-                        <span class="Key RatingLabel">[% Translate("Rating") | html %]:</span>
+                    <label>[% Translate("Rating") | html %]:</label>
+                    <p class="Value">
+                        <span>
 [% RenderBlockStart("RateStars") %]
-                        <span class="RateStar"><i class="fa fa-star"></i></span>
+                            <i class="fa fa-star"></i>
 [% RenderBlockEnd("RateStars") %]
 [% RenderBlockStart("RateStarsCount") %]
-                        <span class="RateStarText" title="[% Data.Stars | html %] [% Translate("out of 5") | html %]">
                             [% Data.Stars | html %] [% Translate("out of 5") | html %]
-                        </span>
 [% RenderBlockEnd("RateStarsCount") %]
-                    </li>
+                        </span>
+                    </p>
+                    <div class="Clear"></div>
 [% RenderBlockEnd("ViewRating") %]
 
 [% RenderBlockStart("ViewVotes") %]
-                    <li><span class="Key">[% Translate("Votes") | html %]:</span> <span title="[% Data.Votes | html %]">[% Data.Votes | html %]</span></li>
+                    <label>[% Translate("Votes") | html %]:</label>
+                    <p class="Value" title="[% Data.Votes | html %]">[% Data.Votes | html %]</p>
+                    <div class="Clear"></div>
 [% RenderBlockEnd("ViewVotes") %]
-                </ul>
+                    </fieldset>
+                </div>
             </div>
         </div>
         <div class="ContentColumn">

@@ -272,37 +272,16 @@
     .WidgetSimple .WidgetSettingsForm fieldset {
         margin-bottom: 0px;
     }
-    .ZoomSidebarKIX,
-    .ZoomSidebar {
-        min-width: 200px;
-        box-sizing: border-box;
-        margin-bottom: 20px;
-    }
-    .ZoomSidebarKIX {
-        margin: 0;
-        border-radius: 5px 5px 0 0;
-        border-width: 1px 1px 0 1px;
-    }
-    .ZoomSidebar {
-        border-radius:  0 0 5px 5px;
-        border-width: 0 1px 1px 1px;
-    }
-    .ZoomSidebarKIX:first-child {
-        margin-top: 20px;
-    }
-    .ZoomSidebar > .Content > .TableLike.FixedLabelSmall p.Value span {
+    .WidgetSimple > .Content > .TableLike.FixedLabelSmall p.Value span {
         display: inline-block;
     }
-    .ZoomSidebar > .Content > .TableLike.FixedLabelSmall a {
+    .WidgetSimple > .Content > .TableLike.FixedLabelSmall a {
         cursor: pointer;
         padding: 5px 11px;
         display: inline-block;
         min-width: 60px;
         text-align: center;
         box-sizing: border-box;
-    }
-    .ZoomSidebar > .Content {
-        padding: 8px 15px;
     }
 
 

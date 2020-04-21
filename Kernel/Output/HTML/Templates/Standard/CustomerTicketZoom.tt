@@ -20,72 +20,91 @@
 [% RenderBlockEnd("Back") %]
     <div class="LayoutFixedSidebar SidebarLast">
         <div class="SidebarColumn">
-            <div id="ZoomSidebar">
-                <ul id="Metadata">
-                    <li class="Header">
-                        <div class="MessageHeader">
-                            <h3>[% Translate("Information") | html %]</h3>
-                            <div class="Clear"></div>
-                        </div>
-                    </li>
-                    <li><span class="Key">[% Data.Hook | html %]:</span> <span>[% Data.TicketNumber | html %]</span></li>
-
+            <div class="WidgetSimple">
+                <div class="Header">
+                    <h2><span>[% Translate("Information") | html %]</span></h2>
+                </div>
+                <div class="Content">
+                    <fieldset class="TableLike FixedLabelSmall">
+                        <label>[% Data.Hook | html %]:</label>
+                        <p class="Value">[% Data.TicketNumber | html %]</p>
+                        <div class="Clear"></div>
 [% RenderBlockStart("Type") %]
-                    <li><span class="Key">[% Translate("Type") | html %]:</span> <span title="[% Data.Type | html %]">[% Data.Type | html %]</span></li>
+                        <label>[% Translate("Type") | html %]:</label>
+                        <p class="Value"  title="[% Data.Type | html %]">[% Data.Type | html %]</p>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("Type") %]
 [% RenderBlockStart("Service") %]
-                    <li><span class="Key">[% Translate("Service") | html %]:</span> <span title="[% Translate(Data.Service) | html %]">[% Translate(Data.Service) | html %]</span></li>
+                        <label>[% Translate("Service") | html %]:</label>
+                        <p class="Value" title="[% Translate(Data.Service) | html %]">[% Translate(Data.Service) | html %]</p>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("Service") %]
 [% RenderBlockStart("SLA") %]
-                    <li><span class="Key">[% Translate("SLA") | html %]:</span> <span title="[% Translate(Data.SLA) | html %]">[% Translate(Data.SLA) | html %]</span></li>
+                        <label>[% Translate("SLA") | html %]:</label>
+                        <p class="Value"  title="[% Translate(Data.SLA) | html %]">[% Translate(Data.SLA) | html %]</p>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("SLA") %]
 [% RenderBlockStart("State") %]
-                    <li><span class="Key">[% Translate("State") | html %]:</span> <span title="[% Translate(Data.State) | html %]">[% Translate(Data.State) | html %]</span></li>
+                        <label>[% Translate("State") | html %]:</label>
+                        <p class="Value"  title="[% Translate(Data.State) | html %]">[% Translate(Data.State) | html %]</p>
+                        <div class="Clear"></div>
+# EO Robotron-capeIT
 [% RenderBlockEnd("State") %]
 # ---
 # ITSMIncidentProblemManagement
 # ---
 [% RenderBlockStart("TicketDynamicField") %]
-                    <li>
-                        <span class="Key">[% Translate(Data.Label) | html %]:</span>
-                        <span title="[% Data.Title | html %]">[% Data.Value %]</span>
-                    </li>
+                        <label>[% Translate(Data.Label) | html %]:</label>
+                        <p class="Value" title="[% Data.Title | html %]">[% Data.Value %]</p>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("TicketDynamicField") %]
 # ---
 [% RenderBlockStart("Priority") %]
-                    <li><span class="Key">[% Translate("Priority") | html %]:</span> <span title="[% Translate(Data.Priority) | html %]">[% Translate(Data.Priority) | html %]</span></li>
+                        <label>[% Translate("Priority") | html %]:</label>
+                        <p class="Value" title="[% Translate(Data.Priority) | html %]">[% Translate(Data.Priority) | html %]</p>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("Priority") %]
 [% RenderBlockStart("Queue") %]
-                    <li><span class="Key">[% Translate("Queue") | html %]:</span> <span title="[% Data.Queue | html %]">[% Data.Queue | html | replace('::', '<wbr>::<wbr>') %]</span></li>
+                        <label>[% Translate("Queue") | html %]:</label>
+                        <p class="Value"  title="[% Data.Queue | html %]">[% Data.Queue | html | replace('::', '<wbr>::<wbr>') %]</p>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("Queue") %]
 [% RenderBlockStart("Owner") %]
-                    <li><span class="Key">[% Translate("Owner") | html %]:</span> <span title="[% Data.OwnerName | html %]">[% Data.OwnerName | html %]</span></li>
+                        <label>[% Translate("Owner") | html %]:</label>
+                        <p class="Value"  title="[% Data.OwnerName | html %]">[% Data.OwnerName | html %]</p>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("Owner") %]
 [% RenderBlockStart("Responsible") %]
-                    <li><span class="Key">[% Translate("Responsible") | html %]:</span>  <span title="[% Data.ResponsibleName | html %]">[% Data.ResponsibleName | html %]</span></li>
+                        <label>[% Translate("Responsible") | html %]:</label>
+                        <p class="Value"  title="[% Data.ResponsibleName | html %]">[% Data.ResponsibleName | html %]</p>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("Responsible") %]
 [% RenderBlockStart("ProcessData") %]
-                    <li><span class="Key">[% Translate("Process") | html %]:</span> <span title="[% Translate(Data.Process) | html %]">[% Translate(Data.Process) | html %]</span></li>
-                    <li><span class="Key">[% Translate("Activity") | html %]:</span> <span title="[% Translate(Data.Activity) | html %]">[% Translate(Data.Activity) | html %]</span></li>
+                        <label>[% Translate("Process") | html %]:</label>
+                        <p class="Value"  title="[% Translate(Data.Process) | html %]">[% Translate(Data.Process) | html %]</p>
+                        <div class="Clear"></div>
+                        <label>[% Translate("Activity") | html %]:</label>
+                        <p class="Value"  title="[% Translate(Data.Activity) | html %]">[% Translate(Data.Activity) | html %]</p>
+                        <div class="Clear"></div>
 [% RenderBlockEnd("ProcessData") %]
-                </ul>
+                    </fieldset>
+                </div>
+            </div>
 [% RenderBlockStart("NextActivities") %]
-                <ul id="Activities">
-                    <li class="Header">
-                        <div class="MessageHeader">
-                            <h3>[% Translate("Next Steps") | html %]</h3>
-                            <div class="Clear"></div>
-                        </div>
-                    </li>
+            <div class="WidgetSimple">
+                <div class="Header">
+                    <h2><span>[% Translate("Next Steps") | html %]</span></h2>
+                </div>
+                <div class="Content">
 [% RenderBlockStart("ActivityDialog") %]
-                    <li><a title="[% Translate(Data.Name) | html %]" class="AsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=CustomerTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | uri %];ProcessEntityID=[% Data.ProcessEntityID | uri %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | uri %]">[% Translate(Data.Name) | html %]</a></li>
+                    <p><a title="[% Translate(Data.Name) | html %]" class="AsPopup PopupType_TicketAction" href="[% Env("Baselink") %]Action=CustomerTicketProcess;Subaction=DisplayActivityDialog;TicketID=[% Data.TicketID | uri %];ProcessEntityID=[% Data.ProcessEntityID | uri %];ActivityDialogEntityID=[% Data.ActivityDialogEntityID | uri %]">[% Translate(Data.Name) | html %]</a></p>
 [% RenderBlockEnd("ActivityDialog") %]
 [% RenderBlockStart("NoActivityDialog") %]
-                    <li>[% Translate("There are no dialogs available at this point in the process.") | html %]</li>
+                    <p>[% Translate("There are no dialogs available at this point in the process.") | html %]</p>
 [% RenderBlockEnd("NoActivityDialog") %]
-                </ul>
-[% RenderBlockEnd("NextActivities") %]
+                </div>
             </div>
+[% RenderBlockEnd("NextActivities") %]
         </div>
         <div class="ContentColumn">
             <div class="TicketHeader">
