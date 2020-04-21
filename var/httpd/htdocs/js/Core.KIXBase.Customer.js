@@ -56,14 +56,6 @@ Core.KIXBase.Customer = (function(TargetNS) {
             }
         });
 
-        // add span to ZoomSidebar header
-        $('#ZoomSidebar > #Metadata > .Header > div > h3').each(function () {
-
-            // enclose text into span element for positioning (we have to check html() here, because otherwise it won't work in FAQ)
-            if ($(this).html().length > 0 && !$(this).html().indexOf('<span') == 0) {
-                $(this).html('<span>' + $(this).html() + '</span>');
-            }
-        });
         $('#Messages > li > .MessageHeader > h3').each(function () {
 
             // enclose text into span element for positioning (we have to check html() here, because otherwise it won't work in FAQ)
@@ -72,63 +64,6 @@ Core.KIXBase.Customer = (function(TargetNS) {
             }
         });
 
-        // move sidebar header to div
-        var Counter = 0;
-
-        $('#ZoomSidebar').find('ul').each(function(){
-            // get header
-            var HeaderContent = $(this).find('li.Header > .MessageHeader > h3').html();
-
-            // insert div to contain header
-            if ( Counter == 0 )
-                $('#ZoomSidebar').before('<div class="WidgetSimple ZoomSidebarKIX" id="ZoomSidebarKIX_'+Counter+'"><div class="Header"><h2>'+HeaderContent+'</h2></div>');
-            else
-                $('#ZoomSidebar').before('<div class="WidgetSimple ZoomSidebarKIX" id="ZoomSidebarKIX_'+Counter+'"><div class="Header"><h2><span>'+HeaderContent+'</span></h2></div>');
-
-            // insert div to contain fieldset
-            $("#ZoomSidebarKIX_"+Counter).after('<div id="ZoomSidebar_'+Counter+'" class="ZoomSidebar"><div class="Content"><fieldset class="TableLike FixedLabelSmall" id="MetadataFieldset_'+Counter+'"></fieldset></div>');
-
-            // remove old header content
-            $(this).find('li.Header').remove();
-
-            if ( Counter == 0 ) {
-                $(this).find('li').each(function(){
-                    if ($(this).hasClass('KeywordsContainer')) {
-                        $('#MetadataFieldset_'+Counter).append('<label>'+$(this).find('span.Key').html()+'</label>');
-                        $(this).find('span.Keyword').each(function(){
-                           $('#MetadataFieldset_'+Counter).append('<p class="Value" title="'+$(this).text().trim()+'"><span>'+$(this).html()+'</span></p>');
-                        });
-                        $('#MetadataFieldset_'+Counter).append('<div class="Clear"></div>');
-                    } else {
-                        var Key             = $(this).find('span.Key').html(),
-                            IsRatingLabel   = $(this).find('span.Key').hasClass('RatingLabel'),
-                            NextValue       = $(this).find('span.Key').next(),
-                            Value           = NextValue.html(),
-                            Title           = Value;
-
-                        if ( IsRatingLabel ) {
-                            while ( NextValue.hasClass('RateStar') ) {
-                                NextValue = NextValue.next();
-                                Value = Value + NextValue.html();
-                                Title = NextValue.html().trim();
-                            }
-                        }
-                        $('#MetadataFieldset_'+Counter).append('<label>'+Key+'</label><p class="Value" title="'+Title+'"><span>'+Value+'</span></p><div class="Clear"></div>');
-                    }
-                    $(this).remove();
-                });
-            }
-            else {
-                $(this).find('li').each(function(){
-                    var Value = $(this).html();
-                    $('#MetadataFieldset_'+Counter).append(Value+'<div class="Clear"></div>');
-                    $(this).remove();
-                });
-            }
-            Counter++;
-        });
-
-        $('#ZoomSidebar').remove();
         $('.ErrorScreen .MessageBox').remove();
     }
 

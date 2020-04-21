@@ -243,14 +243,6 @@
         border: 1px solid #D5D5D5;
         background-color: #D5D5D5;
     }
-    .SidebarColumn .ZoomSidebarKIX {
-        border: 1px solid #D5D5D5;
-        background-color: #D5D5D5;
-    }
-    .SidebarColumn .ZoomSidebar {
-        border: 1px solid #D5D5D5;
-        background-color: #F5F5F5;
-    }
     .SidebarColumn .WidgetSimple > .Header,
     .SidebarColumn .WidgetSimple.SettingsWidget > .Header,
     .SidebarColumn .WidgetSimple.SettingsWidget.CanDrag > .Header {
@@ -258,6 +250,14 @@
     }
     .SidebarColumn .WidgetSimple .Buttons {
         border-top: 1px solid #D5D5D5
+    }
+    .SidebarColumn .WidgetSimple > .Content > .TableLike.FixedLabelSmall a {
+        border: 1px solid #9E9E9E;
+    }
+    .SidebarColumn .WidgetSimple > .Content > .TableLike.FixedLabelSmall a:hover {
+        background-color: #78BE5A;
+        border: 1px solid #78BE5A;
+        color: #FFFFFF;
     }
 
 
@@ -1190,14 +1190,6 @@
     }
     .ActionList p {
         color: #888888;
-    }
-    .ZoomSidebar > .Content > .TableLike.FixedLabelSmall a {
-        border: 1px solid #9E9E9E;
-    }
-    .ZoomSidebar > .Content > .TableLike.FixedLabelSmall a:hover {
-        background-color: #78BE5A;
-        border: 1px solid #78BE5A;
-        color: #FFFFFF;
     }
 
 
