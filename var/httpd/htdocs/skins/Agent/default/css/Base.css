@@ -488,7 +488,9 @@
         font-size: 3em;
         line-height: 2em;
     }
-
+    .TextModule.Loader::after {
+        margin-left: 5px;
+    }
 
     /**
      * @subsection  Handle for resizing tables

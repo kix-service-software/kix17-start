@@ -628,7 +628,10 @@ sub _AddTestStep {
 
     # set message
     if ( $Param{'Message'} ) {
-        push( @{ $StepEntry{'parameters'} }, { 'Message' => $Param{'Message'} } );
+        push( @{ $StepEntry{'parameters'} }, {
+            name  => 'Message',
+            value => $Param{'Message'}
+        } );
     }
 
     # increment test count
@@ -670,7 +673,10 @@ sub _AddTestStep {
             my ( $TracePackage, $TraceFilename, $TraceLine ) = caller( $Caller );
             $Trace = sprintf("%s:%d", $TraceFilename, $TraceLine);
         }
-        push( @{ $StepEntry{'parameters'} }, { 'Trace' => $Trace } );
+        push( @{ $StepEntry{'parameters'} }, {
+            name  => 'Trace',
+            value => $Trace
+        } );
 
         # set fail data for testcase
         $Self->{'TestCase'}->{'Data'}->{'statusDetails'}->{'message'} = $Param{'Message'} || '->>No Message!<<-';

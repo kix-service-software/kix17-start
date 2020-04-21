@@ -1066,21 +1066,17 @@ sub SetPassword {
 sub GenerateRandomPassword {
     my ( $Self, %Param ) = @_;
 
-    # generated passwords are eight characters long by default.
+    # generated passwords are eight characters long by default
     my $Size = $Param{Size} || 8;
 
     # The list of characters that can appear in a randomly generated password.
-    # Note that users can put any character into a password they choose themselves.
     my @PwChars = ( 0 .. 9, 'A' .. 'Z', 'a' .. 'z', '-', '_', '!', '@', '#', '$', '%', '^', '&', '*' );
 
-    # number of characters in the list.
-    my $PwCharsLen = scalar(@PwChars);
-
-    # generate the password.
-    my $Password = '';
-    for ( my $i = 0; $i < $Size; $i++ ) {
-        $Password .= $PwChars[ rand $PwCharsLen ];
-    }
+    # generate random password string
+    my $Password = $Kernel::OM->Get('Kernel::System::Main')->GenerateRandomString(
+        Dictionary => \@PwChars,
+        Length     => $Size,
+    );
 
     return $Password;
 }

@@ -97,10 +97,10 @@ for my $Key ( qw(TicketID TicketNumber Age Created CreateTimeUnix Changed Escala
     delete( $Ticket{$Key} );
 }
 $Success = $Self->IsDeeply(
-    TestName  => 'Ticket Check',
-    CheckData => \%TestTicketCheckData,
-    TestData  => \%Ticket,
-    StartTime => $StartTime,
+    TestName   => 'Ticket Check',
+    CheckValue => \%TestTicketCheckData,
+    TestValue  => \%Ticket,
+    StartTime  => $StartTime,
 );
 return 1 if ( !$Success );
 # EO TEST STEP
