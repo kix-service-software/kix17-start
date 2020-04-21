@@ -4904,9 +4904,11 @@ sub RichTextDocumentServe {
 
     # get charset and convert content to internal charset
     my $Charset;
-    if ( $Param{Data}->{ContentType} =~ m/.+?charset=("|'|)(.+)/ig ) {
-        $Charset = $2;
+    if ( $Param{Data}->{ContentType} =~ /charset\s*=.+?/i ) {
+        $Charset = $Param{Data}->{ContentType};
+        $Charset =~ s/.*?charset\s*=\s*(.*?)/$1/i;
         $Charset =~ s/"|'//g;
+        $Charset =~ s/(.+?)(;|\s).*/$1/g;
     }
     if ( !$Charset ) {
         $Charset = 'us-ascii';
