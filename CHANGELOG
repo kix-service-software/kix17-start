@@ -1,6 +1,20 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.11.0-RC6 (2020/04/21)
+ * (2020/04/21) - Bugfix: KIX17-831 (fixed handling of custom queues in user import) (millinger)
+ * (2020/04/21) - Bugfix: KIX17-857 (fixed sidebar icon position in responsive mode popup) (pboettrich)
+ * (2020/04/17) - Bugfix: KIX17-803 (fixed returned id for new faq category) (millinger)
+ * (2020/04/17) - Bugfix: KIX17-839 (fixed charset recognition for article html view) (millinger)
+ * (2020/04/17) - Bugfix: KIX17-833 (fixed customer restriction check for ticket templates) (millinger)
+ * (2020/04/16) - Bugfix: KIX17-841 (safety cleanup of javascript code in set and animate tags) (millinger)
+ * (2020/04/16) - Bugfix: KIX17-851 (unified password generation for user backends) (millinger)
+ * (2020/03/20) - CR: KIX17-318 (added hints for special migration cases) (millinger)
+ * (2020/03/16) - CR: KIX17-795 (InitialJS für KIXSidebar) (millinger)
+ * (2020/03/12) - Bugfix: KIX17-777 (fixed position of filter clearing icon for modernized dropdowns) (fjacquemin)
+ * (2020/03/12) - CR: KIX17-782 (migrate sidebar template of customer frontend) (fjacquemin)
+ * (2020/02/27) - Bugfix: KIX17-776 (fixed layout when loading text modules for the first time) (fjacquemin)
+
 # 17.11.0-RC5 (2020/04/15)
  * (2020/04/14) - Bugfix: KIX17-753 (fixed dynamic field based fulltext search) (millinger)
  * (2020/04/14) - Bugfix: KIX17-697 (fixed fallback to config for geo coordinate input format) (millinger)
