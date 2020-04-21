@@ -277,7 +277,7 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
             CustomerUserID,
             URL;
 
-        $('#' + ID).prepend('<div class="Loading">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>');
+        $('#' + ID).addClass('Loader');
 
         // determine QueueID
         if ($('#NewQueueID').length) {
@@ -322,7 +322,7 @@ Core.KIX4OTRS.TextModules = (function(TargetNS) {
             }, 'json', false);
         }
 
-        $('#' + ID).children('.Loading').remove();
+        $('#' + ID).removeClass('Loader');
 
         return TextModules[ID];
     }
