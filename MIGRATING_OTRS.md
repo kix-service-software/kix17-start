@@ -16,6 +16,38 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
  * ITSMConfigurationManagement
  * ITSMIncidentProblemManagement
 
+## Hints for special cases
+
+### Previous OTRS 4 with NotificationEventX
+* Check for database table ```overlay_agent```
+* If does not exist:
+    * Create file ```/tmp/FIX_NotificationEventX.xml``` (Look at plain text if content is not shown)
+```
+<?xml version="1.0" encoding="utf-8" ?>
+<database Name="kix">
+    <Table Name="overlay_agent">
+        <Column Name="id"      Required="true" Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
+        <Column Name="subject" Required="true" Type="VARCHAR" Size="250"/>
+        <Column Name="message" Required="true" Type="VARCHAR" Size="65535"/>
+        <Column Name="decay"   Required="true" Type="INTEGER"/>
+        <Column Name="user_id" Required="true" Type="INTEGER"/>
+        <Column Name="popup"   Required="true" Type="INTEGER"/>
+    </Table>
+</database>
+```
+    * Execute file to database
+    * ```sudo -u www-data <OTRS-Home>/bin/otrs.Console.pl Dev::Tools::Database::XMLExecute /tmp/FIX_NotificationEventX.xml```
+
+### OTRS 5 with KIXTemplateWorkflows (NOT KIX16)
+* Dump database for tables
+    * `kix_template_workflows`
+    * `kix_template_workflows_ap`
+    * `kix_template_workflows_ap_pref`
+    * `kix_template_workflows_ap_link`
+* Deinstall package KIXTemplateWorkflows
+* Run migration
+* Restore database dump
+
 ## Steps
 
 * stop the daemon in the OTRS system
@@ -71,6 +103,38 @@ Im Folgenden wird das Vorgehen für die Migration einer OTRS-Instanz auf KIX bes
  * ITSMCore
  * ITSMConfigurationManagement
  * ITSMIncidentProblemManagement
+
+## Hinweise zu Sonderfällen
+
+### Ursprüngliches OTRS 4 mit NotificationEventX
+* Prüfen ob Tabelle ```overlay_agent``` vorhanden ist
+* Wenn nicht:
+    * Datei ```/tmp/FIX_NotificationEventX.xml``` anlegen (In Klartext schauen, wenn Inhalt nicht angezeigt wird)
+```
+<?xml version="1.0" encoding="utf-8" ?>
+<database Name="kix">
+    <Table Name="overlay_agent">
+        <Column Name="id"      Required="true" Type="INTEGER"  PrimaryKey="true" AutoIncrement="true"/>
+        <Column Name="subject" Required="true" Type="VARCHAR" Size="250"/>
+        <Column Name="message" Required="true" Type="VARCHAR" Size="65535"/>
+        <Column Name="decay"   Required="true" Type="INTEGER"/>
+        <Column Name="user_id" Required="true" Type="INTEGER"/>
+        <Column Name="popup"   Required="true" Type="INTEGER"/>
+    </Table>
+</database>
+```
+    * Datei in Datenbank einlesen
+    * ```sudo -u www-data <OTRS-Home>/bin/otrs.Console.pl Dev::Tools::Database::XMLExecute /tmp/FIX_NotificationEventX.xml```
+
+### OTRS 5 mit KIXTemplateWorkflows (Kein KIX16)
+* Datenbank-Dump von Tabellen erstellen
+    * `kix_template_workflows`
+    * `kix_template_workflows_ap`
+    * `kix_template_workflows_ap_pref`
+    * `kix_template_workflows_ap_link`
+* Paket KIXTemplateWorkflows deinstallieren
+* Migration durchführen
+* Datenbank-Dump einspielen
 
 ## Vorgehen
 
