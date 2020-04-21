@@ -33,11 +33,7 @@ Core.UI.InputFields = (function (TargetNS) {
     var Config = {
         InputFieldPadding: 3,
         SelectionBoxOffsetLeft: 5,
-        // KIX4OTRS-capeIT
-        // changed to use caret-down or bar icon in KIX4OTRS layout
-        // SelectionBoxOffsetRight: 5,
-        SelectionBoxOffsetRight: 15,
-        // EO KIX4OTRS-capeIT
+        SelectionBoxOffsetRight: 20,
         ErrorClass: 'Error',
         ServerErrorClass: 'ServerError',
         FadeDuration: 150,
@@ -246,7 +242,6 @@ Core.UI.InputFields = (function (TargetNS) {
     };
 
 
-    // KIX4OTRS-capeIT
     /**
      * @name CloseAllOpenFieldsInTabs
      * @memberof Core.UI.InputFields
@@ -259,7 +254,6 @@ Core.UI.InputFields = (function (TargetNS) {
             $(this).remove();
         });
     };
-    // EO KIX4OTRS-capeIT
 
     /**
      * @private
@@ -1023,9 +1017,7 @@ Core.UI.InputFields = (function (TargetNS) {
                 $FiltersListObj,
                 WholeRowClicked,
                 ScrollEventListener,
-                // KIX4OTRS-capeIT
                 $IconObject;
-                // EO KIX4OTRS-capeIT
 
             // For performance reasons:
             // Do not initialize modern inputfields on selects with many entries
@@ -1101,7 +1093,6 @@ Core.UI.InputFields = (function (TargetNS) {
                 // Set width of search field to that of the select field
                 $SearchObj.width(SelectWidth);
 
-                // KIX4OTRS-capeIT
                 // Create new icon for form fields
                 if ( Multiple ) {
                     $IconObject = $('<i class="fa fa-bars ModernizeFieldIcon"></i>').prependTo($InputContainerObj)
@@ -1118,7 +1109,6 @@ Core.UI.InputFields = (function (TargetNS) {
                         $SearchObj.trigger('blur');
                     }
                 });
-                // EO KIX4OTRS-capeIT
 
                 // Subscribe on window resize event
                 Core.App.Subscribe('Event.UI.InputFields.Resize', function() {
