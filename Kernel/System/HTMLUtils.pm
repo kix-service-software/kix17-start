@@ -1153,6 +1153,21 @@ sub _TagStartHandler {
                 }
             }
 
+            # check for animate and set tag
+            if (
+                lc($TagName) eq 'animate'
+                || lc($TagName) eq 'set'
+            ) {
+                my $CheckValue = lc( $Attributes->{ $Attribute } );
+                $CheckValue =~ s/[^a-z1-9:;=()]+//g;
+                if ( $CheckValue =~ m/^javascript.+/ ) {
+                    # remember replacement
+                    $Self->{Safety}->{Replace} = 1;
+
+                    next ATTRIBUTE;
+                }
+            }
+
             # check for 'on'-attributes
             if ( $Attribute =~ m/^on[a-z]+$/i ) {
                 # remember replacement

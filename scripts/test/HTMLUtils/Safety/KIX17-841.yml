@@ -1,0 +1,58 @@
+---
+0001:
+  StepName: 'Remove javascript code inside of svg tag - set tag with href'
+  InputData:
+    String: |-
+      <svg width=12cm height=9cm>
+        <a>
+          <image href="https://google.com/favicon.ico"></image>
+          <set attributeName=href to="javascript:alert('XSS')"> </set>
+        </a>
+      </svg>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <svg width=12cm height=9cm>
+        <a>
+          <image href="https://google.com/favicon.ico"></image>
+        </a>
+      </svg>
+    Replace: 1
+0002:
+  StepName: 'Remove javascript code inside of svg tag - animate tag with href'
+  InputData:
+    String: |-
+      <svg width="12cm" height="9cm">
+        <a>
+          <image href="https://google.com/favicon.ico"></image>
+          <animate attributeName=href values="javascript:alert('XSS')"></animate>
+        </a>
+      </svg>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <svg width="12cm" height="9cm">
+        <a>
+          <image href="https://google.com/favicon.ico"></image>
+        </a>
+      </svg>
+    Replace: 1
+0003:
+  StepName: 'Remove javascript code inside of svg tag - animate tag with xlink:href'
+  InputData:
+    String: |-
+      <svg width=12cm height=9cm>
+        <a>
+          <image href="https://google.com/favicon.ico"></image>
+          <animate attributeName=xlink:href begin=0 from="javascript:alert('XSS')" to=&></animate>
+        </a>
+      </svg>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <svg width="12cm" height="9cm">
+        <a>
+          <image href="https://google.com/favicon.ico"></image>
+        </a>
+      </svg>
+    Replace: 1
