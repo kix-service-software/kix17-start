@@ -906,7 +906,7 @@ sub TokenGenerate {
     }
 
     my $Token = $Kernel::OM->Get('Kernel::System::Main')->GenerateRandomString(
-        Length => 14,
+        Length => 16,
     );
 
     # save token in preferences
