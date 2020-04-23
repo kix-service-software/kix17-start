@@ -30,12 +30,10 @@
         top: 10px;
         width: 64px;
         height: 100%;
-        position: relative;
         background-size: contain;
         position: absolute;
         background-repeat: no-repeat;
     }
-
     .CompanyName {
         text-align: center;
         position: absolute;
@@ -141,12 +139,10 @@
         z-index: 20;
         width: 90%;
     }
-
     #NavigationContainer #Navigation {
         left: 0px;
         position: absolute;
     }
-
     #Navigation > li {
         font-weight: bold;
         float: left;
@@ -175,7 +171,7 @@
     #Navigation > li > ul {
         top: 37px;
         display: none;
-        z-index: 2;
+        position: absolute;
     }
     #Navigation > .Active > ul {
         position: absolute;
@@ -183,7 +179,6 @@
         left: 0px;
         display: block;
         min-width: 240px;
-        z-index: 99;
         border-width: 0 1px 1px 1px;
     }
     #Navigation > .Active > ul > li {
