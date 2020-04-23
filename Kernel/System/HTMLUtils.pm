@@ -1164,7 +1164,11 @@ sub _TagStartHandler {
                     # remember replacement
                     $Self->{Safety}->{Replace} = 1;
 
-                    next ATTRIBUTE;
+                    # flag tag
+                    $Self->{Flag}->{TagName}  = lc($TagName);
+                    $Self->{Flag}->{TagCount} = 1;
+
+                    return;
                 }
             }
 
