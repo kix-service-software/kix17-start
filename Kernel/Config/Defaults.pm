@@ -879,6 +879,7 @@ sub LoadDefaults {
         'Core.UI.Dialog.js',
         'Core.UI.RichTextEditor.js',
         'Core.UI.Datepicker.js',
+        'Core.UI.Pagination.js',
         'Core.UI.Popup.js',
         'Core.UI.TreeSelection.js',
         'Core.UI.Autocomplete.js',
