@@ -1,6 +1,12 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.11.0-RC7 (2020/04/23)
+ * (2020/04/23) - CR: KIX17-828 (disable lost password and registration for new installations) (millinger)
+ * (2020/04/23) - Bugfix: KIX17-825 (redirect when ticket closed not supported by quick state) (millinger)
+ * (2020/04/22) - Bugfix: KIX17-878 (check for valid password token before processing) (millinger)
+ * (2020/04/14) - Bugfix: KIX17-813 (The ticket menus overlap when the KIX window is reduced in size until the menu item "Status Change" slides to the second line.) (pboettrich)
+
 # 17.11.0-RC6 (2020/04/21)
  * (2020/04/21) - Bugfix: KIX17-831 (fixed handling of custom queues in user import) (millinger)
  * (2020/04/21) - Bugfix: KIX17-857 (fixed sidebar icon position in responsive mode popup) (pboettrich)
