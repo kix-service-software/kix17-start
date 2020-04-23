@@ -41,12 +41,13 @@ sub Run {
 
     # get needed objects
     my $ConfigObject            = $Kernel::OM->Get('Kernel::Config');
-    my $ParamObject             = $Kernel::OM->Get('Kernel::System::Web::Request');
-    my $UploadCacheObject       = $Kernel::OM->Get('Kernel::System::Web::UploadCache');
     my $LayoutObject            = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
-    my $TicketObject            = $Kernel::OM->Get('Kernel::System::Ticket');
     my $QuickStateObject        = $Kernel::OM->Get('Kernel::System::QuickState');
+    my $StateObject             = $Kernel::OM->Get('Kernel::System::State');
     my $TemplateGeneratorObject = $Kernel::OM->Get('Kernel::System::TemplateGenerator');
+    my $TicketObject            = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $UserObject              = $Kernel::OM->Get('Kernel::System::User');
+    my $ParamObject             = $Kernel::OM->Get('Kernel::System::Web::Request');
 
     my $LanguageObject = $LayoutObject->{LanguageObject};
     my $Config         = $ConfigObject->Get('Ticket::Frontend::AdminQuickState');
@@ -77,7 +78,6 @@ sub Run {
 
     # get ACL restrictions
     my %PossibleActions = ( 1 => $Self->{Action} );
-
     my $ACL = $TicketObject->TicketAcl(
         Data          => \%PossibleActions,
         Action        => $Self->{Action},
@@ -164,12 +164,17 @@ sub Run {
     }
 
     if ( $StateList{$QuickStateData{StateID}} ) {
+        # prepare return url
+        my $ReturnURL = 'Action=AgentTicketZoom;TicketID=' . $Self->{TicketID};
+
+        # check if article should be created
         if ( $QuickStateData{Config}->{UsedArticle} ) {
             # get all attachments of the quick state
             my @Attachments = $QuickStateObject->QuickStateAttachmentList(
                 QuickStateID => $GetParam{QuickStateID},
             );
 
+            # replace placeholder in body
             $QuickStateData{Config}->{Body} = $TemplateGeneratorObject->ReplacePlaceHolder(
                 Text     => $QuickStateData{Config}->{Body},
                 Data     => {},
@@ -178,6 +183,7 @@ sub Run {
                 UserID   => $Self->{UserID},
             );
 
+            # replace placeholder in subject
             $QuickStateData{Config}->{Subject} = $TemplateGeneratorObject->ReplacePlaceHolder(
                 Text     => $QuickStateData{Config}->{Subject},
                 Data     => {},
@@ -186,7 +192,10 @@ sub Run {
                 UserID   => $Self->{UserID},
             );
 
-            my $From      = "\"$Self->{UserFirstname} $Self->{UserLastname}\" <$Self->{UserEmail}>";
+            # prepare from
+            my $From = "\"$Self->{UserFirstname} $Self->{UserLastname}\" <$Self->{UserEmail}>";
+
+            # create article
             my $ArticleID = $TicketObject->ArticleCreate(
                 %{$QuickStateData{Config}},
                 TicketID         => $Self->{TicketID},
@@ -199,91 +208,79 @@ sub Run {
                 UserID           => $Self->{UserID},
                 Attachment       => \@Attachments,
             );
-
             if( $ArticleID ) {
-                my $Success = $TicketObject->TicketStateSet(
-                    StateID   => $QuickStateData{StateID},
-                    TicketID  => $Self->{TicketID},
-                    ArticleID => $ArticleID,
-                    UserID    => $Self->{UserID},
-                );
-
-                if ( $Success ) {
-                    if ( $QuickStateData{Config}->{UsedPending} ) {
-                        my $Diff = 0;
-                        if ( $QuickStateData{Config}->{PendingFormatID} eq 'Days' ) {
-                            $Diff = $QuickStateData{Config}->{PendingTime} * 24 * 60;
-                        }
-                        elsif ( $QuickStateData{Config}->{PendingFormatID} eq 'Hours' ) {
-                            $Diff = $QuickStateData{Config}->{PendingTime} * 60;
-                        }
-                        else {
-                            $Diff = $QuickStateData{Config}->{PendingTime};
-                        }
-
-                        # set pending time
-                        $TicketObject->TicketPendingTimeSet(
-                            UserID   => $Self->{UserID},
-                            TicketID => $Self->{TicketID},
-                            Diff     => $Diff,
-                        );
-                    }
-
-                    return $LayoutObject->Redirect(
-                        OP => "Action=AgentTicketZoom;TicketID=$Self->{TicketID}"
-                            . ( $ArticleID ? ";ArticleID=$ArticleID" : '' ),
-                    );
-                }
-                else {
-                    return $LayoutObject->ErrorScreen(
-                        Message => $LanguageObject->Translate("The status couldn't be changed with the quick state '%s'!", $QuickStateData{StateID}),
-                        Comment => $LanguageObject->Translate('Please contact the administrator.'),
-                    );
-                }
-            } else {
+                # add article id to return url
+                $ReturnURL .= ';ArticleID=' . $ArticleID;
+            }
+            else {
                 return $LayoutObject->ErrorScreen(
                     Message => $LanguageObject->Translate("It could not be created the corresponding article to the quick state '%s'!", $QuickStateData{StateID}),
                     Comment => $LanguageObject->Translate('Please contact the administrator.'),
                 );
             }
-        } else {
-            my $Success = $TicketObject->TicketStateSet(
-                StateID   => $QuickStateData{StateID},
-                TicketID  => $Self->{TicketID},
-                UserID    => $Self->{UserID},
+        }
+
+        # set state
+        my $Success = $TicketObject->TicketStateSet(
+            StateID   => $QuickStateData{StateID},
+            TicketID  => $Self->{TicketID},
+            UserID    => $Self->{UserID},
+        );
+        if ( !$Success ) {
+            return $LayoutObject->ErrorScreen(
+                Message => $LanguageObject->Translate("The status couldn't be changed with the quick state '%s'!", $QuickStateData{StateID}),
+                Comment => $LanguageObject->Translate('Please contact the administrator.'),
             );
+        }
 
-            if ( $Success ) {
-                if ( $QuickStateData{Config}->{UsedPending} ) {
-                    my $Diff = 0;
-                    if ( $QuickStateData{Config}->{PendingFormatID} eq 'Days' ) {
-                        $Diff = $QuickStateData{Config}->{PendingTime} * 24 * 60;
-                    }
-                    elsif ( $QuickStateData{Config}->{PendingFormatID} eq 'Hours' ) {
-                        $Diff = $QuickStateData{Config}->{PendingTime} * 60;
-                    }
-                    else {
-                        $Diff = $QuickStateData{Config}->{PendingTime};
-                    }
+        # get state data for checks
+        my %StateData = $StateObject->StateGet(
+            ID => $QuickStateData{StateID},
+        );
 
-                    # set pending time
-                    $TicketObject->TicketPendingTimeSet(
-                        UserID   => $Self->{UserID},
-                        TicketID => $Self->{TicketID},
-                        Diff     => $Diff,
-                    );
-                }
+        # check if pending time should be set
+        if (
+            $StateData{TypeName}
+            && $StateData{TypeName} =~ /^pending/i
+            && $QuickStateData{Config}->{UsedPending}
+        ) {
+            my $Diff = 0;
+            if ( $QuickStateData{Config}->{PendingFormatID} eq 'Days' ) {
+                $Diff = $QuickStateData{Config}->{PendingTime} * 24 * 60;
+            }
+            elsif ( $QuickStateData{Config}->{PendingFormatID} eq 'Hours' ) {
+                $Diff = $QuickStateData{Config}->{PendingTime} * 60;
+            }
+            else {
+                $Diff = $QuickStateData{Config}->{PendingTime};
+            }
 
-                return $LayoutObject->Redirect(
-                    OP => "Action=AgentTicketZoom;TicketID=$Self->{TicketID}"
-                );
-            } else {
-                return $LayoutObject->ErrorScreen(
-                    Message => $LanguageObject->Translate("The status couldn't be changed with the quick state '%s'!", $QuickStateData{StateID}),
-                    Comment => $LanguageObject->Translate('Please contact the administrator.'),
-                );
+            # set pending time
+            $TicketObject->TicketPendingTimeSet(
+                UserID   => $Self->{UserID},
+                TicketID => $Self->{TicketID},
+                Diff     => $Diff,
+            );
+        }
+
+        # check if ticket was closed
+        if (
+            $StateData{TypeName}
+            && $StateData{TypeName} =~ /^close/i
+        ) {
+            # get agent preferences
+            my %Preferences         = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+            my $RedirectDestination = $Preferences{RedirectAfterTicketClose} || '0';
+
+            # check redirect destination
+            if ( !$RedirectDestination ) {
+                $ReturnURL = $Self->{LastScreenOverview} || 'Action=AgentDashboard';
             }
         }
+
+        return $LayoutObject->Redirect(
+            OP => $ReturnURL
+        );
     }
     return $LayoutObject->ErrorScreen(
         Message => $LanguageObject->Translate(
