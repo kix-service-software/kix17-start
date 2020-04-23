@@ -12,9 +12,10 @@
     NoJavaScript: 1
   CheckValue:
     String: |-
-      <svg width=12cm height=9cm>
+      <svg width="12cm" height="9cm">
         <a>
           <image href="https://google.com/favicon.ico"></image>
+          
         </a>
       </svg>
     Replace: 1
@@ -34,6 +35,7 @@
       <svg width="12cm" height="9cm">
         <a>
           <image href="https://google.com/favicon.ico"></image>
+          
         </a>
       </svg>
     Replace: 1
@@ -53,6 +55,7 @@
       <svg width="12cm" height="9cm">
         <a>
           <image href="https://google.com/favicon.ico"></image>
+          
         </a>
       </svg>
     Replace: 1
