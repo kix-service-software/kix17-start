@@ -568,6 +568,19 @@ sub Run {
 
         # process given token param
         if ( $Token ) {
+            # check that token contains only valid characters
+            if ( $Token !~ m/^[A-Za-z0-9]+$/ ) {
+                $LayoutObject->Print(
+                    Output => \$LayoutObject->CustomerLogin(
+                        Title       => 'Login',
+                        Message     => $LayoutObject->{LanguageObject}->Translate('Invalid Token!'),
+                        MessageType => 'Error',
+                        %Param,
+                    ),
+                );
+                return;
+            }
+
             # lookup users for provided token
             my %UserList = $UserObject->SearchPreferences(
                 Key   => 'UserToken',
