@@ -766,8 +766,7 @@ sub LoadDefaults {
     # Agent Web Interface
     # --------------------------------------------------- #
     # LostPassword
-    # (use lost password feature)
-    $Self->{LostPassword} = 1;
+    $Self->{LostPassword} = 0;
 
     # ShowMotd
     # (show message of the day in login screen)
@@ -1168,12 +1167,10 @@ You can log in via the following URL:
 #    $Self->{'CustomerPanel::InfoFile'} = 'CustomerAccept';
 
     # CustomerPanelLostPassword
-    # (use lost passowrd feature)
-    $Self->{CustomerPanelLostPassword} = 1;
+    $Self->{CustomerPanelLostPassword} = 0;
 
     # CustomerPanelCreateAccount
-    # (use create cutomer account self feature)
-    $Self->{CustomerPanelCreateAccount} = 1;
+    $Self->{CustomerPanelCreateAccount} = 0;
 
     # --------------------------------------------------- #
     # notification email about new password               #
