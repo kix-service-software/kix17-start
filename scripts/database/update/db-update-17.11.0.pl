@@ -34,9 +34,6 @@ use vars qw(%INC);
 # save configuration
 _SaveConfig();
 
-# remove KIXNotify from sysconfig
-_RemoveKIXNotify();
-
 exit 0;
 
 sub _SaveConfig {
@@ -49,35 +46,14 @@ sub _SaveConfig {
     }
 
     # update SysConfig
+    my $Result;
     for my $Key ( keys( %ConfigBackup ) ) {
-        my $Result = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
+        $Result = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
             Key   => $Key,
             Value => $ConfigBackup{ $Key },
             Valid => 1,
         );
     }
-
-    return $Result;
-}
-
-sub _RemoveKIXNotify {
-    my ( $Self, %Param ) = @_;
-
-    # create needed objects
-    my $ConfigObject    = $Kernel::OM->Get('Kernel::Config');
-    my $SysConfigObject = $Kernel::OM->Get('Kernel::System::SysConfig');
-
-    # check if config is active
-    my $SysConfigVal = $ConfigObject->Get('DashboardBackend###0000-KIXNotify');
-    return if (!$SysConfigVal);
-
-    # reset SysConfig
-    my $Result = $SysConfigObject->ConfigItemUpdate(
-        Key          => 'DashboardBackend###0000-KIXNotify',
-        Value        => '',
-        Valid        => 0,
-        NoValidation => 1,
-    );
 
     return $Result;
 }
