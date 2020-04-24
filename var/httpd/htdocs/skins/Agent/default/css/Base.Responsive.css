@@ -85,7 +85,7 @@
         overflow: hidden;
         position: fixed;
     }
-    
+
     html.NoScroll .Popup #AppWrapper {
         position: relative;
     }
@@ -1052,7 +1052,7 @@
     .CompareTable .CellOutside .DataTable tr td {
         white-space: unset;
     }
-    
+
     /* Admin Screen */
 
     .Admin > h1 {
@@ -1491,6 +1491,27 @@
         display: none;
     }
 }
+
+
+@media only screen and (min-width: 1025px) and (max-width: 1100px) {
+    .PreviewContainer .CallForAction.Left {
+        left: 1%;
+    }
+    .PreviewContainer .CallForAction.Right {
+        right: 1%;
+    }
+}
+
+
+@media only screen and (min-width: 1100px) and (max-width: 1300px) {
+    .PreviewContainer .CallForAction.Left {
+        left: 2%;
+    }
+    .PreviewContainer .CallForAction.Right {
+        right: 2%;
+    }
+}
+
 
 /*
 * Tablet landscape
