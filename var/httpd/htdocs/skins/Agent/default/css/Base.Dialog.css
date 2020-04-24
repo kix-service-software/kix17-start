@@ -428,4 +428,39 @@
     .FieldHelpContainer:hover > span {
         display: block;
     }
+
+
+    /**
+    *   @subsection events ticket calendar
+    */
+    div.EventDetails {
+        z-index: 5;
+        width: 400px;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        border-width: 1px;
+        border-style: solid;
+        position: relative;
+    }
+    .EventDetails .EventDetailsLink {
+        font-size: 14px;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+    }
+    .EventDetails h3 {
+        padding: 6px;
+        display: block;
+        margin: 0;
+        border-width: 0 0 1px 0;
+        border-style: solid;
+    }
+    .EventDetails .TableLike {
+        padding: 0 6px 6px;
+    }
+    .EventDetails > fieldset.TableLike > label,
+    .EventDetails > fieldset.TableLike > .Value {
+        line-height: 1em;
+    }
 }
