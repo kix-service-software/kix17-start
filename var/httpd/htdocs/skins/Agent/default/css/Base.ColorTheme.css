@@ -67,6 +67,25 @@
 
 
     /**
+    *   @subsection events ticket calendar
+    */
+    div.EventDetails {
+        border-color: #9E9E9E;
+        background-color: #F0F0F0;
+    }
+    .EventDetails h3 {
+        border-color: #9E9E9E;
+        background-color: #F0F0F0;
+    }
+    .EventDetails .TableLike {
+        background-color: #FFFFFF;
+    }
+    .EventDetails .EventDetailsLink a {
+        color: #BBBBBB;
+    }
+
+
+    /**
     *   @subsection overlay
     */
     #Overlay {
