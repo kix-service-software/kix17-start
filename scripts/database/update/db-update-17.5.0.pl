@@ -51,8 +51,9 @@ sub _SaveConfig {
     }
 
     # update SysConfig
+    my $Result;
     for my $Key ( keys( %ConfigBackup ) ) {
-        my $Result = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
+        $Result = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
             Key   => $Key,
             Value => $ConfigBackup{ $Key },
             Valid => 1,
