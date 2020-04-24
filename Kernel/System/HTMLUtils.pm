@@ -16,7 +16,7 @@ use warnings;
 use utf8;
 
 use MIME::Base64;
-use HTML::Entities qw(encode_entities);
+use HTML::Entities qw(decode_entities encode_entities);
 use HTML::Parser;
 use HTML::Truncate;
 
@@ -1377,7 +1377,7 @@ sub _TextHandler {
     }
     # encode text before appending
     else {
-        $Self->{Safety}->{String} .= encode_entities( $Text );
+        $Self->{Safety}->{String} .= encode_entities( decode_entities( $Text ) );
     }
 
     return;

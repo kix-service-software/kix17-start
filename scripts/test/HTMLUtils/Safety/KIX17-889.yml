@@ -1,0 +1,19 @@
+---
+0001:
+  StepName: 'Encode html correctly'
+  InputData:
+    String: |-
+      Fix Schwyz! quäkt Jürgen blöd vom Paß 
+  CheckValue:
+    String: |-
+      Fix Schwyz! qu&auml;kt J&uuml;rgen bl&ouml;d vom Pa&szlig; 
+    Replace: 0
+0002:
+  StepName: 'Encode html correctly - leave already encoded html'
+  InputData:
+    String: |-
+      Fix&nbsp;Schwyz!&nbsp;qu&auml;kt&nbsp;J&uuml;rgen&nbsp;bl&ouml;d&nbsp;vom&nbsp;Pa&szlig;&nbsp;
+  CheckValue:
+    String: |-
+      Fix&nbsp;Schwyz!&nbsp;qu&auml;kt&nbsp;J&uuml;rgen&nbsp;bl&ouml;d&nbsp;vom&nbsp;Pa&szlig;&nbsp;
+    Replace: 0
