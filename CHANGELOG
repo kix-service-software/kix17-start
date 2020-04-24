@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.11.0-RC9 (2020/04/24)
+ * (2020/04/24) - Bugfix: KIX17-889 (fixed duplicated html encoding in safety output) (millinger)
+
 # 17.11.0-RC8 (2020/04/24)
  * (2020/04/23) - Bugfix: KIX17-705 (fixed missing css of the EventDetail of the dashboard EventsTicketCalendar) (fjacquemin)
  * (2020/04/23) - Bugfix: KIX17-840 (fixed display error of static dialog and view) (fjacquemin)
