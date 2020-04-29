@@ -1025,531 +1025,613 @@ Core.UI.InputFields = (function (TargetNS) {
                 return;
             }
 
-            // Only initialize new elements if original field is valid and visible
-            if ($(SelectObj).is(':visible')) {
+            // Initialize variables
+            $SelectObj = $(SelectObj);
+            Multiple   = ($SelectObj.attr('multiple') !== '' && $SelectObj.attr('multiple') !== undefined) ? true : false;
+            Filterable = ($SelectObj.data('filters') !== '' && $SelectObj.data('filters') !== undefined) ? true : false;
+            TreeView   = false;
+            SkipFocus  = false;
+            TabFocus   = false;
+            Searching  = false;
+            Focused    = null;
 
-                // Initialize variables
-                $SelectObj = $(SelectObj);
-                Multiple = ($SelectObj.attr('multiple') !== '' && $SelectObj.attr('multiple') !== undefined) ? true : false;
-                Filterable = ($SelectObj.data('filters') !== '' && $SelectObj.data('filters') !== undefined) ? true : false;
-                TreeView = false;
-                SkipFocus = false;
-                TabFocus = false;
-                Searching = false;
-                Focused = null;
+            // Removed exists modernize element to rebuild with all events and datas
+            if (!$SelectObj.is(':visible')) {
+                $SelectObj.prev().remove();
+                $SelectObj.show();
+            }
 
-                // Get width now, since we will hide the element
-                SelectWidth = $SelectObj.outerWidth();
+            // Get width now, since we will hide the element
+            SelectWidth = $SelectObj.outerWidth();
 
-                // Hide original field
+            // Hide original field
+            $SelectObj.hide();
+
+            // Check to see if we are dealing with tree view
+            $ShowTreeObj = $SelectObj.next('.ShowTreeSelection');
+            if ($SelectObj.data('tree') || $ShowTreeObj.length) {
+                if ($ShowTreeObj.length) {
+                    $ShowTreeObj.hide();
+                }
+                $SelectObj.data('tree', true);
+                TreeView = true;
+            }
+
+            // Create main container
+            $ContainerObj = $('<div />').insertBefore($SelectObj);
+            $ContainerObj.addClass('InputField_Container')
+                .attr('tabindex', '-1');
+
+            // Container for input field
+            $InputContainerObj = $('<div />').appendTo($ContainerObj);
+            $InputContainerObj.addClass('InputField_InputContainer');
+
+            // Deduce ID of original field
+            SearchID = $SelectObj.attr('id');
+
+            // If invalid, create generic one
+            if (!SearchID) {
+                SearchID = Core.UI.GetID($SelectObj);
+            }
+
+            // Make ID unique
+            SearchID += '_Search';
+
+            // Flag the element as modernized
+            $SelectObj.data('modernized', SearchID);
+
+            // Create new input field to substitute original one
+            $SearchObj = $('<input />').appendTo($InputContainerObj);
+            $SearchObj.attr('id', SearchID)
+                .addClass('InputField_Search')
+                .attr('type', 'text')
+                .attr('role', 'search')
+                .attr('autocomplete', 'off');
+
+            // If original field has class small, add it to the input field, too
+            if ($SelectObj.hasClass('Small')) {
+                $SearchObj.addClass('Small');
+            }
+
+            // Set width of search field to that of the select field
+            $SearchObj.width(SelectWidth);
+
+            // Create new icon for form fields
+            if ( Multiple ) {
+                $IconObject = $('<i class="fa fa-bars ModernizeFieldIcon"></i>').prependTo($InputContainerObj)
+            }
+            else {
+                $IconObject = $('<i class="fa fa-caret-down ModernizeFieldIcon"></i>').prependTo($InputContainerObj)
+            }
+
+            // Handle clicks on related icon
+            $IconObject.off('click.InputField').on('click.InputField', function () {
+                if ( $(this).next().attr('aria-expanded') === undefined ) {
+                    $SearchObj.focus();
+                }
+                else {
+                    $SearchObj.trigger('blur');
+                }
+            });
+
+            // Subscribe on window resize event
+            Core.App.Subscribe('Event.UI.InputFields.Resize', function() {
+
+                // Set width of search field to that of the select field
+                $SearchObj.blur().hide();
+                SelectWidth = $SelectObj.show().outerWidth();
                 $SelectObj.hide();
+                $SearchObj.width(SelectWidth).show();
+            });
 
-                // Check to see if we are dealing with tree view
-                $ShowTreeObj = $SelectObj.next('.ShowTreeSelection');
-                if ($SelectObj.data('tree') || $ShowTreeObj.length) {
-                    if ($ShowTreeObj.length) {
-                        $ShowTreeObj.hide();
+            // Handle clicks on related label
+            if ($SelectObj.attr('id')) {
+                $LabelObj = $('label[for="' + Core.App.EscapeSelector($SelectObj.attr('id')) + '"]');
+                if ($LabelObj.length > 0) {
+                    $LabelObj.off('click.InputField').on('click.InputField', function () {
+                        $SearchObj.focus();
+                    });
+                    $SearchObj.attr('aria-label', $LabelObj.text());
+                }
+            }
+
+            // Set the earch field label attribute if there was no label element.
+            if (!$LabelObj || $LabelObj.length === 0) {
+                if ($SelectObj.attr('aria-label')) {
+                    SearchLabel = $SelectObj.attr('aria-label');
+                }
+                else if ($SelectObj.attr('title')) {
+                    SearchLabel = $SelectObj.attr('title');
+                }
+                else {
+                    // Fallback: use sanitized ID to provide at least some information.
+                    SearchLabel = SearchID.replace(/_/g, ' ');
+                }
+                $SearchObj.attr('aria-label', SearchLabel);
+            }
+
+            // Check error classes
+            if ($SelectObj.hasClass(Config.ErrorClass)) {
+                $SearchObj.addClass(Config.ErrorClass);
+            }
+            if ($SelectObj.hasClass(Config.ServerErrorClass)) {
+                $SearchObj.addClass(Config.ServerErrorClass);
+            }
+
+            if (Filterable) {
+
+                // Preserve original data
+                $SelectObj.data('original', $SelectObj.children());
+
+                // Apply active filter
+                if (
+                    $SelectObj.data('filtered')
+                    && $SelectObj.data('filtered') !== '0'
+                    )
+                {
+                    ApplyFilter($SelectObj, $ToolbarContainerObj);
+                }
+            }
+
+            // Show selection boxes
+            ShowSelectionBoxes($SelectObj, $InputContainerObj);
+
+            // Disable field if no selection available
+            CheckAvailability($SelectObj, $SearchObj, $InputContainerObj);
+
+            // Handle form disabling
+            Core.App.Subscribe('Event.Form.DisableForm', function ($Form) {
+                if ($Form.find($SearchObj).attr('readonly')) {
+                    $SearchObj.data('form-disabled', true);
+                    CheckAvailability($SelectObj, $SearchObj, $InputContainerObj);
+                }
+            });
+
+            // Handle form enabling
+            Core.App.Subscribe('Event.Form.EnableForm', function ($Form) {
+                if (!$Form.find($SearchObj).attr('readonly')) {
+                    $SearchObj.removeData('form-disabled');
+                    CheckAvailability($SelectObj, $SearchObj, $InputContainerObj);
+                }
+            });
+
+            // Handle dialog dragging
+            Core.App.Subscribe('Event.UI.Dialog.ShowDialog.DragStart', function() {
+                CloseOpenSelections();
+            });
+
+            // Handle dialog opening
+            Core.App.Subscribe('Event.UI.Dialog.ShowDialog.BeforeOpen', function() {
+                CloseOpenSelections();
+            });
+
+            // Handle dialog closing
+            Core.App.Subscribe('Event.UI.Dialog.CloseDialog.Close', function() {
+                CloseOpenSelections();
+            });
+
+            // Handle RTE focus
+            Core.App.Subscribe('Event.UI.RichTextEditor.Focus', function() {
+                CloseOpenSelections();
+            });
+
+            // Handle article navigation in TicketZoom
+            Core.App.Subscribe('Event.Agent.TicketZoom.ArticleClick', function() {
+                CloseOpenSelections();
+            });
+
+            // Register handler for on focus event
+            $SearchObj.off('focus.InputField')
+                .on('focus.InputField', function () {
+
+                var TreeID,
+                    $TreeObj,
+                    SelectedID,
+                    OldSelectedID,
+                    Elements,
+                    SelectedNodes,
+                    AvailableHeightBottom,
+                    AvailableHeightTop,
+                    AvailableMaxHeight,
+                    PossibleNone,
+                    $ClearAllObj,
+                    $SelectAllObj,
+                    $ConfirmObj,
+                    ErrorTooltipPosition = 'TongueTop';
+
+                function CalculateListPosition() {
+
+                    // calculate available height to bottom of page
+                    AvailableHeightBottom = parseInt(
+                        $(window).scrollTop() + $(window).height()
+                        - (
+                            $InputContainerObj.offset().top
+                            + $InputContainerObj.outerHeight()
+                            + Config.SafeMargin
+                        ),
+                        10
+                    );
+
+                    // calculate available height to top of page
+                    AvailableHeightTop = parseInt($InputContainerObj.offset().top - $(window).scrollTop() - Config.SafeMargin, 10);
+
+                    // set left position
+                    $ListContainerObj
+                        .css({
+                            left: $InputContainerObj.offset().left
+                        });
+
+                    var HeaderHeight = $('#Header').height();
+
+                    // decide wether list should be positioned on top or at the bottom of the input field
+                    if (AvailableHeightTop > AvailableHeightBottom) {
+                        AvailableMaxHeight = AvailableHeightTop;
+
+                        // add a class to the searchobj itself to be able to react on it properly
+                        // e.g. to show the error tooltip
+                        $SearchObj.removeClass('ExpandToBottom')
+                            .addClass('ExpandToTop');
+
+                        var bottomPos = parseInt($('body').height() - $InputContainerObj.offset().top, 10);
+                        if (!$('body').hasClass('Visible-ScreenXL') && HeaderHeight) {
+                            bottomPos += HeaderHeight;
+                        }
+
+                        $ListContainerObj
+                            .removeClass('ExpandToBottom')
+                            .addClass('ExpandToTop')
+                            .css({
+                                top: 'auto',
+                                bottom: bottomPos
+                            });
                     }
-                    $SelectObj.data('tree', true);
-                    TreeView = true;
+                    else {
+                        AvailableMaxHeight = AvailableHeightBottom;
+
+                        $SearchObj.removeClass('ExpandToTop')
+                            .addClass('ExpandToBottom');
+
+                        var topPos = parseInt($InputContainerObj.offset().top + $InputContainerObj.outerHeight(), 10);
+                        if (!$('body').hasClass('Visible-ScreenXL') && HeaderHeight) {
+                            topPos -= HeaderHeight;
+                        }
+
+                        $ListContainerObj
+                            .removeClass('ExpandToTop')
+                            .addClass('ExpandToBottom')
+                            .css({
+                                top: topPos,
+                                bottom: 'auto'
+                            });
+                    }
                 }
 
-                // Create main container
-                $ContainerObj = $('<div />').insertBefore($SelectObj);
-                $ContainerObj.addClass('InputField_Container')
+                $SelectObj.find('option').each(function (Index, Option) {
+                    if ($(Option).attr('value') === '' || $(Option).attr('value') === '||-') {
+                        PossibleNone = true;
+                        return true;
+                    }
+                });
+
+                function ShowErrorToolTip() {
+
+                    // Show error tooltip if needed
+                    if ($SelectObj.attr('id')) {
+
+                        if ($SearchObj.hasClass('ExpandToTop')) {
+                            ErrorTooltipPosition = 'TongueBottom';
+                        }
+                        else {
+                            ErrorTooltipPosition = 'TongueTop';
+                        }
+
+                        if ($SelectObj.hasClass(Config.ErrorClass)) {
+                            Core.Form.ErrorTooltips.ShowTooltip(
+                                $SearchObj, $('#' + Core.App.EscapeSelector($SelectObj.attr('id')) + Config.ErrorClass).html(), ErrorTooltipPosition
+                            );
+                        }
+                        if ($SelectObj.hasClass(Config.ServerErrorClass)) {
+                            Core.Form.ErrorTooltips.ShowTooltip(
+                                $SearchObj, $('#' + Core.App.EscapeSelector($SelectObj.attr('id')) + Config.ServerErrorClass).html(), ErrorTooltipPosition
+                            );
+                        }
+                    }
+                }
+
+                ShowErrorToolTip();
+
+                // Focus tracking
+                Focused = this;
+                SkipFocus = false;
+
+                // Do nothing if already expanded
+                if ($SearchObj.attr('aria-expanded')) {
+                    return false;
+                }
+
+                // Do nothing if disabled
+                if ($SearchObj.attr('readonly')) {
+                    return false;
+                }
+
+                // close all other selections
+                CloseOpenSelections();
+
+                // Set ARIA flag if expanded
+                $SearchObj.attr('aria-expanded', true);
+
+                // Remove any existing selection boxes in container
+                $InputContainerObj.find('.InputField_Selection').remove();
+                $InputContainerObj.find('.InputField_More').remove();
+
+                // Create list container
+                $ListContainerObj = $('<div />')
+                    .addClass('InputField_ListContainer')
+                    .attr('tabindex', '-1')
+                    .appendTo('body');
+
+                // Calculate available height for the list
+                CalculateListPosition();
+
+                // define a named function here to use the variables of upper scope
+                // (as it was before with anonymous function)
+                // needed, to remove the event listener again later in the blur event
+                // we cannot use jquery events, because scroll event on document does not bubble up
+                ScrollEventListener = function(Event) {
+                    if (!$ListContainerObj) {
+                        return;
+                    }
+
+                    CalculateListPosition();
+                    ShowErrorToolTip();
+
+                    // This checks, if an inner element is scrolled (e.g. dialog)
+                    // we only need to hide the list in this case, because scrolling the main window
+                    // will hide the dropdown list anyway from viewport
+                    if (Event.target !== document && !$(Event.target).hasClass('InputField_TreeContainer')) {
+                        if (
+                            $InputContainerObj.position().top + $InputContainerObj.outerHeight() - $(Event.target).outerHeight()
+                            >= 0
+                        )
+                        {
+                            $ListContainerObj.hide();
+                        } else {
+                            $ListContainerObj.show();
+                        }
+                    }
+                };
+
+                // Listen for scroll event in order to move the list
+                // Scroll event does not bubble, hence the need for listener
+                document.addEventListener('scroll', ScrollEventListener, true);
+
+                // Create container for jsTree code
+                $TreeContainerObj = $('<div />').appendTo($ListContainerObj);
+                $TreeContainerObj.addClass('InputField_TreeContainer')
                     .attr('tabindex', '-1');
 
-                // Container for input field
-                $InputContainerObj = $('<div />').appendTo($ContainerObj);
-                $InputContainerObj.addClass('InputField_InputContainer');
+                // Subtract approx. filters list height if applicable
+                if (Filterable) {
+                    AvailableMaxHeight -= $SelectObj.data('filters').Filters.length
+                        * Config.SafeMargin;
+                }
+
+                // Ensure the minimum height of the list
+                if (AvailableMaxHeight < 90) {
+                    AvailableMaxHeight = 90;
+                }
+
+                // Set maximum height of the list to available space
+                $TreeContainerObj.css('max-height', AvailableMaxHeight + 'px');
+
+                // Calculate width for tree container
+                $TreeContainerObj.width($SearchObj.width()
+                    + Config.InputFieldPadding * 2
+                );
 
                 // Deduce ID of original field
-                SearchID = $SelectObj.attr('id');
+                TreeID = $SelectObj.attr('id');
 
                 // If invalid, create generic one
-                if (!SearchID) {
-                    SearchID = Core.UI.GetID($SelectObj);
+                if (!TreeID) {
+                    TreeID = Core.UI.GetID($SelectObj);
                 }
 
                 // Make ID unique
-                SearchID += '_Search';
+                TreeID += '_Select';
 
-                // Flag the element as modernized
-                $SelectObj.data('modernized', SearchID);
+                // jsTree init
+                $TreeObj = $('<div id="' + Core.App.EscapeSelector(TreeID) + '"><ul></ul></div>');
+                SelectedID = $SelectObj.val();
+                Elements = {};
+                SelectedNodes = [];
 
-                // Create new input field to substitute original one
-                $SearchObj = $('<input />').appendTo($InputContainerObj);
-                $SearchObj.attr('id', SearchID)
-                    .addClass('InputField_Search')
-                    .attr('type', 'text')
-                    .attr('role', 'search')
-                    .attr('autocomplete', 'off');
+                // Generate JSON structure based on select field options
+                // Sort the list by default if tree view is active
+                Elements = Core.UI.TreeSelection.BuildElementsArray($SelectObj, TreeView);
 
-                // If original field has class small, add it to the input field, too
-                if ($SelectObj.hasClass('Small')) {
-                    $SearchObj.addClass('Small');
+                // Force no tree view if structure has only root level
+                // but only if field should not contain tree structure (see bug#12017)
+                if (Elements.HighestLevel === 0 && !$SelectObj.data('tree')) {
+                    TreeView = false;
                 }
 
-                // Set width of search field to that of the select field
-                $SearchObj.width(SelectWidth);
-
-                // Create new icon for form fields
-                if ( Multiple ) {
-                    $IconObject = $('<i class="fa fa-bars ModernizeFieldIcon"></i>').prependTo($InputContainerObj)
-                }
-                else {
-                    $IconObject = $('<i class="fa fa-caret-down ModernizeFieldIcon"></i>').prependTo($InputContainerObj)
-                }
-                // Handle clicks on related icon
-                $IconObject.on('click.InputField', function () {
-                    if ( $(this).next().attr('aria-expanded') === undefined ) {
-                        $SearchObj.focus();
-                    }
-                    else {
-                        $SearchObj.trigger('blur');
-                    }
-                });
-
-                // Subscribe on window resize event
-                Core.App.Subscribe('Event.UI.InputFields.Resize', function() {
-
-                    // Set width of search field to that of the select field
-                    $SearchObj.blur().hide();
-                    SelectWidth = $SelectObj.show().outerWidth();
-                    $SelectObj.hide();
-                    $SearchObj.width(SelectWidth).show();
-                });
-
-                // Handle clicks on related label
-                if ($SelectObj.attr('id')) {
-                    $LabelObj = $('label[for="' + Core.App.EscapeSelector($SelectObj.attr('id')) + '"]');
-                    if ($LabelObj.length > 0) {
-                        $LabelObj.on('click.InputField', function () {
-                            $SearchObj.focus();
-                        });
-                        $SearchObj.attr('aria-label', $LabelObj.text());
-                    }
-                }
-
-                // Set the earch field label attribute if there was no label element.
-                if (!$LabelObj || $LabelObj.length === 0) {
-                    if ($SelectObj.attr('aria-label')) {
-                        SearchLabel = $SelectObj.attr('aria-label');
-                    }
-                    else if ($SelectObj.attr('title')) {
-                        SearchLabel = $SelectObj.attr('title');
-                    }
-                    else {
-                        // Fallback: use sanitized ID to provide at least some information.
-                        SearchLabel = SearchID.replace(/_/g, ' ');
-                    }
-                    $SearchObj.attr('aria-label', SearchLabel);
-                }
-
-                // Check error classes
-                if ($SelectObj.hasClass(Config.ErrorClass)) {
-                    $SearchObj.addClass(Config.ErrorClass);
-                }
-                if ($SelectObj.hasClass(Config.ServerErrorClass)) {
-                    $SearchObj.addClass(Config.ServerErrorClass);
-                }
-
-                if (Filterable) {
-
-                    // Preserve original data
-                    $SelectObj.data('original', $SelectObj.children());
-
-                    // Apply active filter
-                    if (
-                        $SelectObj.data('filtered')
-                        && $SelectObj.data('filtered') !== '0'
-                        )
-                    {
-                        ApplyFilter($SelectObj, $ToolbarContainerObj);
-                    }
-                }
-
-                // Show selection boxes
-                ShowSelectionBoxes($SelectObj, $InputContainerObj);
-
-                // Disable field if no selection available
-                CheckAvailability($SelectObj, $SearchObj, $InputContainerObj);
-
-                // Handle form disabling
-                Core.App.Subscribe('Event.Form.DisableForm', function ($Form) {
-                    if ($Form.find($SearchObj).attr('readonly')) {
-                        $SearchObj.data('form-disabled', true);
-                        CheckAvailability($SelectObj, $SearchObj, $InputContainerObj);
-                    }
-                });
-
-                // Handle form enabling
-                Core.App.Subscribe('Event.Form.EnableForm', function ($Form) {
-                    if (!$Form.find($SearchObj).attr('readonly')) {
-                        $SearchObj.removeData('form-disabled');
-                        CheckAvailability($SelectObj, $SearchObj, $InputContainerObj);
-                    }
-                });
-
-                // Handle dialog dragging
-                Core.App.Subscribe('Event.UI.Dialog.ShowDialog.DragStart', function() {
-                    CloseOpenSelections();
-                });
-
-                // Handle dialog opening
-                Core.App.Subscribe('Event.UI.Dialog.ShowDialog.BeforeOpen', function() {
-                    CloseOpenSelections();
-                });
-
-                // Handle dialog closing
-                Core.App.Subscribe('Event.UI.Dialog.CloseDialog.Close', function() {
-                    CloseOpenSelections();
-                });
-
-                // Handle RTE focus
-                Core.App.Subscribe('Event.UI.RichTextEditor.Focus', function() {
-                    CloseOpenSelections();
-                });
-
-                // Handle article navigation in TicketZoom
-                Core.App.Subscribe('Event.Agent.TicketZoom.ArticleClick', function() {
-                    CloseOpenSelections();
-                });
-
-                // Register handler for on focus event
-                $SearchObj.off('focus.InputField')
-                    .on('focus.InputField', function () {
-
-                    var TreeID,
-                        $TreeObj,
-                        SelectedID,
-                        OldSelectedID,
-                        Elements,
-                        SelectedNodes,
-                        AvailableHeightBottom,
-                        AvailableHeightTop,
-                        AvailableMaxHeight,
-                        PossibleNone,
-                        $ClearAllObj,
-                        $SelectAllObj,
-                        $ConfirmObj,
-                        ErrorTooltipPosition = 'TongueTop';
-
-                    function CalculateListPosition() {
-
-                        // calculate available height to bottom of page
-                        AvailableHeightBottom = parseInt(
-                            $(window).scrollTop() + $(window).height()
-                            - (
-                                $InputContainerObj.offset().top
-                                + $InputContainerObj.outerHeight()
-                                + Config.SafeMargin
-                            ),
-                            10
-                        );
-
-                        // calculate available height to top of page
-                        AvailableHeightTop = parseInt($InputContainerObj.offset().top - $(window).scrollTop() - Config.SafeMargin, 10);
-
-                        // set left position
-                        $ListContainerObj
-                            .css({
-                                left: $InputContainerObj.offset().left
-                            });
-
-                        var HeaderHeight = $('#Header').height();
-
-                        // decide wether list should be positioned on top or at the bottom of the input field
-                        if (AvailableHeightTop > AvailableHeightBottom) {
-                            AvailableMaxHeight = AvailableHeightTop;
-
-                            // add a class to the searchobj itself to be able to react on it properly
-                            // e.g. to show the error tooltip
-                            $SearchObj.removeClass('ExpandToBottom')
-                                .addClass('ExpandToTop');
-
-                            var bottomPos = parseInt($('body').height() - $InputContainerObj.offset().top, 10);
-                            if (!$('body').hasClass('Visible-ScreenXL') && HeaderHeight) {
-                                bottomPos += HeaderHeight;
-                            }
-
-                            $ListContainerObj
-                                .removeClass('ExpandToBottom')
-                                .addClass('ExpandToTop')
-                                .css({
-                                    top: 'auto',
-                                    bottom: bottomPos
-                                });
+                // Initialize jsTree
+                /* eslint-disable camelcase */
+                $TreeObj.jstree({
+                    core: {
+                        animation: 70,
+                        data: Elements,
+                        multiple: Multiple,
+                        expand_selected_onload: true,
+                        check_callback: true,
+                        themes: {
+                            name: 'InputField',
+                            variant: (TreeView) ? 'Tree' : 'NoTree',
+                            icons: false,
+                            dots: false,
+                            url: false
                         }
-                        else {
-                            AvailableMaxHeight = AvailableHeightBottom;
-
-                            $SearchObj.removeClass('ExpandToTop')
-                                .addClass('ExpandToBottom');
-
-                            var topPos = parseInt($InputContainerObj.offset().top + $InputContainerObj.outerHeight(), 10);
-                            if (!$('body').hasClass('Visible-ScreenXL') && HeaderHeight) {
-                                topPos -= HeaderHeight;
-                            }
-
-                            $ListContainerObj
-                                .removeClass('ExpandToTop')
-                                .addClass('ExpandToBottom')
-                                .css({
-                                    top: topPos,
-                                    bottom: 'auto'
-                                });
+                    },
+                    search: {
+                        show_only_matches: true,
+                        show_only_matches_children: true,
+                        search_callback: function (Search, Node) {
+                            var SearchString = TargetNS.RemoveDiacritics(Search),
+                                NodeString = TargetNS.RemoveDiacritics(Node.text);
+                            return (
+                                // we're doing toLowerCase() AND toUpperCase() because of bug#11548
+                                (NodeString.toLowerCase().indexOf(SearchString.toLowerCase()) !== -1 || NodeString.toUpperCase().indexOf(SearchString.toUpperCase()) !== -1)
+                            );
                         }
+                    },
+                    plugins: [ 'multiselect', 'search', 'wholerow' ]
+                })
+
+                // Handle focus event for tree item
+                .on('focus.jstree', '.jstree-anchor', function () {
+                    if (!SkipFocus) {
+                        Focused = this;
+                    } else {
+                        SkipFocus = false;
+                    }
+                })
+
+                // Handle focus event for tree list
+                .on('focus.jstree', function () {
+                    if (!SkipFocus) {
+                        Focused = this;
+                    } else {
+                        SkipFocus = false;
                     }
 
-                    $SelectObj.find('option').each(function (Index, Option) {
-                        if ($(Option).attr('value') === '' || $(Option).attr('value') === '||-') {
-                            PossibleNone = true;
-                            return true;
+                    // Focus first available tree item
+                    if (TabFocus) {
+                        $($TreeObj.find('a.jstree-anchor:visible')
+                            .not('.jstree-disabled')
+                            .get(0)
+                        ).trigger('focus.jstree');
+                        TabFocus = false;
+                    }
+                })
+
+                .on('mousedown.jstree', function (Event) {
+                    var $Target = $(Event.target);
+
+                    if ($Target.hasClass('jstree-wholerow')) {
+                        WholeRowClicked = $Target;
+                    }
+                })
+
+                // Handle blur event for tree item
+                .on('blur.jstree', '.jstree-anchor', function () {
+                    setTimeout(function () {
+                        if (!Focused) {
+                            HideSelectList($SelectObj, $InputContainerObj, $SearchObj, $ListContainerObj, $TreeContainerObj);
                         }
-                    });
+                        Focused = null;
+                    }, 0);
+                })
 
-                    function ShowErrorToolTip() {
-
-                        // Show error tooltip if needed
-                        if ($SelectObj.attr('id')) {
-
-                            if ($SearchObj.hasClass('ExpandToTop')) {
-                                ErrorTooltipPosition = 'TongueBottom';
-                            }
-                            else {
-                                ErrorTooltipPosition = 'TongueTop';
-                            }
-
-                            if ($SelectObj.hasClass(Config.ErrorClass)) {
-                                Core.Form.ErrorTooltips.ShowTooltip(
-                                    $SearchObj, $('#' + Core.App.EscapeSelector($SelectObj.attr('id')) + Config.ErrorClass).html(), ErrorTooltipPosition
-                                );
-                            }
-                            if ($SelectObj.hasClass(Config.ServerErrorClass)) {
-                                Core.Form.ErrorTooltips.ShowTooltip(
-                                    $SearchObj, $('#' + Core.App.EscapeSelector($SelectObj.attr('id')) + Config.ServerErrorClass).html(), ErrorTooltipPosition
-                                );
-                            }
+                // Handle blur event for tree list
+                .on('blur.jstree', function () {
+                    setTimeout(function () {
+                        if (!Focused && !WholeRowClicked) {
+                            HideSelectList($SelectObj, $InputContainerObj, $SearchObj, $ListContainerObj, $TreeContainerObj);
                         }
+                        Focused = null;
+                        WholeRowClicked = null;
+                    }, 0);
+                })
+
+                // Handle node selection in tree list
+                // Skip eslint check on next line for unused vars (it's actually event)
+                .on('select_node.jstree', function (Node, Selected, Event) {  //eslint-disable-line no-unused-vars
+                    var $SelectedNode = $('#' + Selected.node.id),
+                        SelectedNodesIDs;
+
+                    // Do not select disabled nodes
+                    if ($SelectedNode.hasClass('Disabled') || !$SelectedNode.is(':visible')) {
+                        $TreeObj.jstree('deselect_node', Selected.node);
                     }
 
-                    ShowErrorToolTip();
-
-                    // Focus tracking
-                    Focused = this;
-                    SkipFocus = false;
-
-                    // Do nothing if already expanded
-                    if ($SearchObj.attr('aria-expanded')) {
-                        return false;
-                    }
-
-                    // Do nothing if disabled
-                    if ($SearchObj.attr('readonly')) {
-                        return false;
-                    }
-
-                    // close all other selections
-                    CloseOpenSelections();
-
-                    // Set ARIA flag if expanded
-                    $SearchObj.attr('aria-expanded', true);
-
-                    // Remove any existing selection boxes in container
-                    $InputContainerObj.find('.InputField_Selection').remove();
-                    $InputContainerObj.find('.InputField_More').remove();
-
-                    // Create list container
-                    $ListContainerObj = $('<div />')
-                        .addClass('InputField_ListContainer')
-                        .attr('tabindex', '-1')
-                        .appendTo('body');
-
-                    // Calculate available height for the list
-                    CalculateListPosition();
-
-                    // define a named function here to use the variables of upper scope
-                    // (as it was before with anonymous function)
-                    // needed, to remove the event listener again later in the blur event
-                    // we cannot use jquery events, because scroll event on document does not bubble up
-                    ScrollEventListener = function(Event) {
-                        if (!$ListContainerObj) {
-                            return;
-                        }
-
-                        CalculateListPosition();
-                        ShowErrorToolTip();
-
-                        // This checks, if an inner element is scrolled (e.g. dialog)
-                        // we only need to hide the list in this case, because scrolling the main window
-                        // will hide the dropdown list anyway from viewport
-                        if (Event.target !== document && !$(Event.target).hasClass('InputField_TreeContainer')) {
-                            if (
-                                $InputContainerObj.position().top + $InputContainerObj.outerHeight() - $(Event.target).outerHeight()
-                                >= 0
-                            )
-                            {
-                                $ListContainerObj.hide();
-                            } else {
-                                $ListContainerObj.show();
-                            }
-                        }
-                    };
-
-                    // Listen for scroll event in order to move the list
-                    // Scroll event does not bubble, hence the need for listener
-                    document.addEventListener('scroll', ScrollEventListener, true);
-
-                    // Create container for jsTree code
-                    $TreeContainerObj = $('<div />').appendTo($ListContainerObj);
-                    $TreeContainerObj.addClass('InputField_TreeContainer')
-                        .attr('tabindex', '-1');
-
-                    // Subtract approx. filters list height if applicable
-                    if (Filterable) {
-                        AvailableMaxHeight -= $SelectObj.data('filters').Filters.length
-                            * Config.SafeMargin;
-                    }
-
-                    // Ensure the minimum height of the list
-                    if (AvailableMaxHeight < 90) {
-                        AvailableMaxHeight = 90;
-                    }
-
-                    // Set maximum height of the list to available space
-                    $TreeContainerObj.css('max-height', AvailableMaxHeight + 'px');
-
-                    // Calculate width for tree container
-                    $TreeContainerObj.width($SearchObj.width()
-                        + Config.InputFieldPadding * 2
-                    );
-
-                    // Deduce ID of original field
-                    TreeID = $SelectObj.attr('id');
-
-                    // If invalid, create generic one
-                    if (!TreeID) {
-                        TreeID = Core.UI.GetID($SelectObj);
-                    }
-
-                    // Make ID unique
-                    TreeID += '_Select';
-
-                    // jsTree init
-                    $TreeObj = $('<div id="' + Core.App.EscapeSelector(TreeID) + '"><ul></ul></div>');
-                    SelectedID = $SelectObj.val();
-                    Elements = {};
+                    // Reset selected nodes list
                     SelectedNodes = [];
 
-                    // Generate JSON structure based on select field options
-                    // Sort the list by default if tree view is active
-                    Elements = Core.UI.TreeSelection.BuildElementsArray($SelectObj, TreeView);
+                    // Get selected nodes
+                    SelectedNodesIDs = $TreeObj.jstree('get_selected');
+                    $.each(SelectedNodesIDs, function () {
+                        var $Node = $TreeObj.jstree('get_node', this);
+                        SelectedNodes.push($Node['original']['ID']);
+                    });
 
-                    // Force no tree view if structure has only root level
-                    // but only if field should not contain tree structure (see bug#12017)
-                    if (Elements.HighestLevel === 0 && !$SelectObj.data('tree')) {
-                        TreeView = false;
+                    // Set selected nodes as selected in initial select box
+                    // (which is hidden but is still used for the action)
+                    $SelectObj.val(SelectedNodes);
+                    OldSelectedID = SelectedID;
+                    SelectedID = $SelectObj.val();
+
+                    // If single select, lose the focus and hide the list
+                    if (!Multiple) {
+                        SkipFocus = true;
+                        $TreeObj.blur();
                     }
 
-                    // Initialize jsTree
-                    /* eslint-disable camelcase */
-                    $TreeObj.jstree({
-                        core: {
-                            animation: 70,
-                            data: Elements,
-                            multiple: Multiple,
-                            expand_selected_onload: true,
-                            check_callback: true,
-                            themes: {
-                                name: 'InputField',
-                                variant: (TreeView) ? 'Tree' : 'NoTree',
-                                icons: false,
-                                dots: false,
-                                url: false
+                    // Delay triggering change event on original field (see bug#11419)
+                    $SelectObj.data('changed', true);
+
+                    return false;
+                })
+
+                // click is also triggered (besides select_node), which
+                // could result in a bubbled-up event
+                // prevents dialogs from accidently closing
+                // jstree triggers a click event for pressing the enter key
+                // so we try to handle this here
+                .on('click.jstree', function (Event) {
+
+                    var $HoveredNode, HoveredValue;
+
+                    Event.preventDefault();
+
+                    // check for keydown event for enter key
+                    if (
+                        typeof Event.originalEvent !== 'undefined'
+                        && Event.originalEvent.type === 'keydown'
+                        && Event.originalEvent.which === $.ui.keyCode.ENTER) {
+
+                        $HoveredNode = $TreeObj.find('.jstree-hovered');
+                        HoveredValue = $HoveredNode.closest('li').data('id');
+
+                        // at this point, the jstree events have already selected the new value and processed the event
+                        // but we need to know, if the hovered element was selected before or not to decide wether to
+                        // select or deselect it now. therefor we check for OldSelectedID
+                        if (!Multiple) {
+                            if (HoveredValue !== OldSelectedID) {
+                                $TreeObj.jstree('deselect_all');
+                                $TreeObj.jstree('select_node', $HoveredNode.get(0));
                             }
-                        },
-                        search: {
-                            show_only_matches: true,
-                            show_only_matches_children: true,
-                            search_callback: function (Search, Node) {
-                                var SearchString = TargetNS.RemoveDiacritics(Search),
-                                    NodeString = TargetNS.RemoveDiacritics(Node.text);
-                                return (
-                                    // we're doing toLowerCase() AND toUpperCase() because of bug#11548
-                                    (NodeString.toLowerCase().indexOf(SearchString.toLowerCase()) !== -1 || NodeString.toUpperCase().indexOf(SearchString.toUpperCase()) !== -1)
-                                );
+                            else {
+                                if (PossibleNone) {
+                                    $TreeObj.jstree('deselect_all');
+                                    $SelectObj.val('');
+                                }
                             }
-                        },
-                        plugins: [ 'multiselect', 'search', 'wholerow' ]
-                    })
-
-                    // Handle focus event for tree item
-                    .on('focus.jstree', '.jstree-anchor', function () {
-                        if (!SkipFocus) {
-                            Focused = this;
-                        } else {
-                            SkipFocus = false;
+                            FocusNextElement($SearchObj);
                         }
-                    })
+                    }
 
-                    // Handle focus event for tree list
-                    .on('focus.jstree', function () {
-                        if (!SkipFocus) {
-                            Focused = this;
-                        } else {
-                            SkipFocus = false;
-                        }
+                    Event.stopPropagation();
+                    return false;
+                })
 
-                        // Focus first available tree item
-                        if (TabFocus) {
-                            $($TreeObj.find('a.jstree-anchor:visible')
-                                .not('.jstree-disabled')
-                                .get(0)
-                            ).trigger('focus.jstree');
-                            TabFocus = false;
-                        }
-                    })
+                // Handle node deselection in tree list
+                .on('deselect_node.jstree', function () {
 
-                    .on('mousedown.jstree', function (Event) {
-                        var $Target = $(Event.target);
+                    var SelectedNodesIDs,
+                        HasEmptyElement = $SelectObj.find('option[value=""]').length === 0 ? false : true;
 
-                        if ($Target.hasClass('jstree-wholerow')) {
-                            WholeRowClicked = $Target;
-                        }
-                    })
-
-                    // Handle blur event for tree item
-                    .on('blur.jstree', '.jstree-anchor', function () {
-                        setTimeout(function () {
-                            if (!Focused) {
-                                HideSelectList($SelectObj, $InputContainerObj, $SearchObj, $ListContainerObj, $TreeContainerObj);
-                            }
-                            Focused = null;
-                        }, 0);
-                    })
-
-                    // Handle blur event for tree list
-                    .on('blur.jstree', function () {
-                        setTimeout(function () {
-                            if (!Focused && !WholeRowClicked) {
-                                HideSelectList($SelectObj, $InputContainerObj, $SearchObj, $ListContainerObj, $TreeContainerObj);
-                            }
-                            Focused = null;
-                            WholeRowClicked = null;
-                        }, 0);
-                    })
-
-                    // Handle node selection in tree list
-                    // Skip eslint check on next line for unused vars (it's actually event)
-                    .on('select_node.jstree', function (Node, Selected, Event) {  //eslint-disable-line no-unused-vars
-                        var $SelectedNode = $('#' + Selected.node.id),
-                            SelectedNodesIDs;
-
-                        // Do not select disabled nodes
-                        if ($SelectedNode.hasClass('Disabled') || !$SelectedNode.is(':visible')) {
-                            $TreeObj.jstree('deselect_node', Selected.node);
-                        }
+                    if (Multiple) {
 
                         // Reset selected nodes list
                         SelectedNodes = [];
@@ -1557,53 +1639,77 @@ Core.UI.InputFields = (function (TargetNS) {
                         // Get selected nodes
                         SelectedNodesIDs = $TreeObj.jstree('get_selected');
                         $.each(SelectedNodesIDs, function () {
-                            var $Node = $TreeObj.jstree('get_node', this);
-                            SelectedNodes.push($Node['original']['ID']);
+                            var $Node = $('#' + this);
+                            SelectedNodes.push($Node.data('id'));
                         });
 
                         // Set selected nodes as selected in initial select box
                         // (which is hidden but is still used for the action)
-                        $SelectObj.val(SelectedNodes);
+                        if (HasEmptyElement && SelectedNodes.length === 0) {
+                            $SelectObj.val('');
+                        }
+                        else {
+                            $SelectObj.val(SelectedNodes);
+                        }
+
                         OldSelectedID = SelectedID;
                         SelectedID = $SelectObj.val();
 
-                        // If single select, lose the focus and hide the list
-                        if (!Multiple) {
-                            SkipFocus = true;
-                            $TreeObj.blur();
-                        }
-
                         // Delay triggering change event on original field (see bug#11419)
                         $SelectObj.data('changed', true);
+                    }
+                })
 
-                        return false;
-                    })
+                // Handle double clicks on node rows in tree list
+                .on('dblclick.jstree', '.jstree-wholerow', function (Event) {
 
-                    // click is also triggered (besides select_node), which
-                    // could result in a bubbled-up event
-                    // prevents dialogs from accidently closing
-                    // jstree triggers a click event for pressing the enter key
-                    // so we try to handle this here
-                    .on('click.jstree', function (Event) {
+                    var Node;
 
-                        var $HoveredNode, HoveredValue;
+                    // Expand node if we are in tree view
+                    if (TreeView) {
+                        Node = $(Event.target).closest('li');
+                        $TreeObj.jstree('toggle_node', Node);
+                    }
+                })
 
-                        Event.preventDefault();
+                // Keydown handler for tree list
+                .keydown(function (Event) {
 
-                        // check for keydown event for enter key
-                        if (
-                            typeof Event.originalEvent !== 'undefined'
-                            && Event.originalEvent.type === 'keydown'
-                            && Event.originalEvent.which === $.ui.keyCode.ENTER) {
+                    var $HoveredNode;
 
+                    switch (Event.which) {
+
+                        // Tab
+                        // Find correct input, if element is selected in dropdown and tab key is used
+                        case $.ui.keyCode.TAB:
+                            // On pressing tab the active element will be selected and the field will be left
                             $HoveredNode = $TreeObj.find('.jstree-hovered');
-                            HoveredValue = $HoveredNode.closest('li').data('id');
-
-                            // at this point, the jstree events have already selected the new value and processed the event
-                            // but we need to know, if the hovered element was selected before or not to decide wether to
-                            // select or deselect it now. therefor we check for OldSelectedID
                             if (!Multiple) {
-                                if (HoveredValue !== OldSelectedID) {
+                                $TreeObj.jstree('deselect_all');
+                            }
+                            $TreeObj.jstree('select_node', $HoveredNode.get(0));
+
+                            if (Event.shiftKey) {
+                                FocusPreviousElement($SearchObj);
+                            }
+                            else {
+                                FocusNextElement($SearchObj);
+                            }
+                            break;
+
+                        // Escape
+                        case $.ui.keyCode.ESCAPE:
+                            Event.preventDefault();
+                            $TreeObj.blur();
+                            break;
+
+                        // Space
+                        case $.ui.keyCode.SPACE:
+                            Event.preventDefault();
+                            $HoveredNode = $TreeObj.find('.jstree-hovered');
+
+                            if (!Multiple) {
+                                if (!$HoveredNode.hasClass('jstree-clicked')) {
                                     $TreeObj.jstree('deselect_all');
                                     $TreeObj.jstree('select_node', $HoveredNode.get(0));
                                 }
@@ -1611,597 +1717,30 @@ Core.UI.InputFields = (function (TargetNS) {
                                     if (PossibleNone) {
                                         $TreeObj.jstree('deselect_all');
                                         $SelectObj.val('');
+                                        setTimeout(function () {
+                                            $SelectObj.trigger('change');
+                                            ValidateFormElement($SelectObj);
+                                        }, 0);
                                     }
                                 }
                                 FocusNextElement($SearchObj);
                             }
-                        }
-
-                        Event.stopPropagation();
-                        return false;
-                    })
-
-                    // Handle node deselection in tree list
-                    .on('deselect_node.jstree', function () {
-
-                        var SelectedNodesIDs,
-                            HasEmptyElement = $SelectObj.find('option[value=""]').length === 0 ? false : true;
-
-                        if (Multiple) {
-
-                            // Reset selected nodes list
-                            SelectedNodes = [];
-
-                            // Get selected nodes
-                            SelectedNodesIDs = $TreeObj.jstree('get_selected');
-                            $.each(SelectedNodesIDs, function () {
-                                var $Node = $('#' + this);
-                                SelectedNodes.push($Node.data('id'));
-                            });
-
-                            // Set selected nodes as selected in initial select box
-                            // (which is hidden but is still used for the action)
-                            if (HasEmptyElement && SelectedNodes.length === 0) {
-                                $SelectObj.val('');
-                            }
                             else {
-                                $SelectObj.val(SelectedNodes);
-                            }
-
-                            OldSelectedID = SelectedID;
-                            SelectedID = $SelectObj.val();
-
-                            // Delay triggering change event on original field (see bug#11419)
-                            $SelectObj.data('changed', true);
-                        }
-                    })
-
-                    // Handle double clicks on node rows in tree list
-                    .on('dblclick.jstree', '.jstree-wholerow', function (Event) {
-
-                        var Node;
-
-                        // Expand node if we are in tree view
-                        if (TreeView) {
-                            Node = $(Event.target).closest('li');
-                            $TreeObj.jstree('toggle_node', Node);
-                        }
-                    })
-
-                    // Keydown handler for tree list
-                    .keydown(function (Event) {
-
-                        var $HoveredNode;
-
-                        switch (Event.which) {
-
-                            // Tab
-                            // Find correct input, if element is selected in dropdown and tab key is used
-                            case $.ui.keyCode.TAB:
-                                // On pressing tab the active element will be selected and the field will be left
-                                $HoveredNode = $TreeObj.find('.jstree-hovered');
-                                if (!Multiple) {
-                                    $TreeObj.jstree('deselect_all');
-                                }
-                                $TreeObj.jstree('select_node', $HoveredNode.get(0));
-
-                                if (Event.shiftKey) {
-                                    FocusPreviousElement($SearchObj);
+                                if ($HoveredNode.hasClass('jstree-clicked')) {
+                                    $TreeObj.jstree('deselect_node', $HoveredNode.get(0));
                                 }
                                 else {
-                                    FocusNextElement($SearchObj);
+                                    $TreeObj.jstree('select_node', $HoveredNode.get(0));
                                 }
-                                break;
-
-                            // Escape
-                            case $.ui.keyCode.ESCAPE:
-                                Event.preventDefault();
-                                $TreeObj.blur();
-                                break;
-
-                            // Space
-                            case $.ui.keyCode.SPACE:
-                                Event.preventDefault();
-                                $HoveredNode = $TreeObj.find('.jstree-hovered');
-
-                                if (!Multiple) {
-                                    if (!$HoveredNode.hasClass('jstree-clicked')) {
-                                        $TreeObj.jstree('deselect_all');
-                                        $TreeObj.jstree('select_node', $HoveredNode.get(0));
-                                    }
-                                    else {
-                                        if (PossibleNone) {
-                                            $TreeObj.jstree('deselect_all');
-                                            $SelectObj.val('');
-                                            setTimeout(function () {
-                                                $SelectObj.trigger('change');
-                                                ValidateFormElement($SelectObj);
-                                            }, 0);
-                                        }
-                                    }
-                                    FocusNextElement($SearchObj);
-                                }
-                                else {
-                                    if ($HoveredNode.hasClass('jstree-clicked')) {
-                                        $TreeObj.jstree('deselect_node', $HoveredNode.get(0));
-                                    }
-                                    else {
-                                        $TreeObj.jstree('select_node', $HoveredNode.get(0));
-                                    }
-                                }
-                                break;
-
-                            // Ctrl (Cmd) + A
-                            case 65:
-                                if (Event.ctrlKey || Event.metaKey) {
-                                    Event.preventDefault();
-                                    $ListContainerObj.find('.InputField_SelectAll')
-                                        .click();
-                                }
-                                break;
-
-                            // Ctrl (Cmd) + D
-                            case 68:
-                                if (Event.ctrlKey || Event.metaKey) {
-                                    Event.preventDefault();
-                                    $ListContainerObj.find('.InputField_ClearAll')
-                                        .click();
-                                }
-                                break;
-
-                            // Ctrl (Cmd) + F
-                            case 70:
-                                if (Event.ctrlKey || Event.metaKey) {
-                                    Event.preventDefault();
-                                    $ListContainerObj.find('.InputField_Filters')
-                                        .click();
-
-                                    $ListContainerObj.find('.InputField_FiltersList').children('input').first().focus();
-                                }
-                                break;
-                        }
-
-                    })
-
-                    // Initialize existing selection
-                    .on('loaded.jstree', function () {
-                        if (SelectedID) {
-                            if (typeof SelectedID === 'object') {
-                                $.each(SelectedID, function (NodeIndex, Data) {
-                                    $TreeObj.jstree('select_node', $TreeObj.find('li[data-id="' + Core.App.EscapeSelector(Data) + '"]'));
-                                });
                             }
-                            else {
-                                $TreeObj.jstree('select_node', $TreeObj.find('li[data-id="' + Core.App.EscapeSelector(SelectedID) + '"]'));
-                            }
-                        }
-                        Core.App.Publish('Event.UI.InputFields.Expanded', $SearchObj);
-                    });
-
-                    // Prevent loss of focus when using scrollbar
-                    $TreeContainerObj.on('focus.InputField', function () {
-                        if (!SkipFocus) {
-                            Focused = this;
-                        } else {
-                            SkipFocus = false;
-                        }
-                    }).on('blur.jstree', function () {
-                        setTimeout(function () {
-                            if (!Focused) {
-                                HideSelectList($SelectObj, $InputContainerObj, $SearchObj, $ListContainerObj, $TreeContainerObj);
-                            }
-                            Focused = null;
-                        }, 0);
-                    });
-
-                    // Append tree code to the container and show it
-                    $TreeObj
-                        .appendTo($TreeContainerObj)
-                        .show();
-
-                    $ToolbarContainerObj = $('<div />').appendTo($ListContainerObj);
-                    $ToolbarContainerObj.addClass('InputField_ToolbarContainer')
-                        .attr('tabindex', '-1')
-                        .width($TreeContainerObj.width());
-
-                    $ToolbarObj = $('<ul />').appendTo($ToolbarContainerObj)
-                        .attr('tabindex', '-1')
-                        .on('focus.InputField', function () {
-                            if (!SkipFocus) {
-                                Focused = this;
-                            } else {
-                                SkipFocus = false;
-                            }
-                        }).on('blur.InputField', function () {
-                            setTimeout(function () {
-                                if (!Focused) {
-                                    HideSelectList($SelectObj, $InputContainerObj, $SearchObj, $ListContainerObj, $TreeContainerObj);
-                                }
-                                Focused = null;
-                            }, 0);
-                        });
-
-                    if (Multiple) {
-
-                        // Select all action selects all values in tree
-                        $SelectAllObj = $('<a />').addClass('InputField_SelectAll')
-                            .attr('href', '#')
-                            .attr('role', 'button')
-                            .attr('tabindex', '-1')
-                            .text(Core.Config.Get('InputFieldsSelectAll'))
-                            .attr('aria-label', Core.Config.Get('InputFieldsSelectAll'))
-                            .appendTo($ToolbarObj)
-                            .wrap('<li />');
-                        RegisterActionEvent($TreeObj, $SelectAllObj, 'SelectAll');
-
-                        // Clear all action deselects all selected values in tree
-                        $ClearAllObj = $('<a />').addClass('InputField_ClearAll')
-                            .attr('href', '#')
-                            .attr('role', 'button')
-                            .attr('tabindex', '-1')
-                            .text(Core.Config.Get('InputFieldsClearAll'))
-                            .attr('aria-label', Core.Config.Get('InputFieldsClearAll'))
-                            .appendTo($ToolbarObj)
-                            .wrap('<li />');
-                        RegisterActionEvent($TreeObj, $ClearAllObj, 'ClearAll');
-                    }
-
-                    if (Filterable) {
-
-                        // Filters action button
-                        $FiltersObj = $('<a />').addClass('InputField_Filters')
-                            .attr('href', '#')
-                            .attr('role', 'button')
-                            .attr('tabindex', '-1')
-                            .text(Core.Config.Get('InputFieldsFilters'))
-                            .attr('aria-label', Core.Config.Get('InputFieldsFilters'))
-                            .appendTo($ToolbarObj)
-                            .wrap('<li />');
-                        RegisterFilterEvent($SelectObj, $InputContainerObj, $ToolbarContainerObj, $FiltersObj, 'ShowFilters');
-
-                        if (!$SelectObj.data('filtered')) {
-                            $SelectObj.data('filtered', '0');
-                        } else if ($SelectObj.data('filtered') !== '0') {
-                            $FiltersObj.addClass('Active')
-                                .prepend('<i class="fa fa-filter" /> ');
-                        }
-
-                        // Filters list
-                        $FiltersListObj = $('<div />').appendTo($ToolbarContainerObj);
-                        $FiltersListObj.addClass('InputField_FiltersList')
-                            .attr('tabindex', '-1');
-
-                        // Hide the filters list if no parameter is supplied
-                        if (
-                            !$SelectObj.data('expand-filters')
-                            && $SelectObj.data('expand-filters') !== '0'
-                            )
-                        {
-                            $FiltersListObj.hide();
-                        }
-
-                        // Filters checkboxes
-                        $.each($SelectObj.data('filters').Filters, function (FilterIndex, Filter) {
-                            var $FilterObj = $('<input />').appendTo($FiltersListObj),
-                                $SpanObj = $('<span />').appendTo($FiltersListObj);
-                            $FilterObj.attr('type', 'checkbox')
-                                .attr('tabindex', '-1')
-                                .data('index', FilterIndex + 1);
-                            if (
-                                $SelectObj.data('filtered')
-                                && parseInt($SelectObj.data('filtered'), 10) === FilterIndex + 1
-                                )
-                            {
-                                $FilterObj.attr('checked', true);
-                            }
-                            if (
-                                Filter.Data.length === 1
-                                && (Filter.Data[0].Key === '' || Filter.Data[0].Key === '||-')
-                                )
-                            {
-                                $FilterObj.attr('disabled', true);
-                            }
-                            Core.UI.GetID($FilterObj);
-                            $SpanObj.text(Filter.Name);
-                            $SpanObj.on('click', function (Event) {
-                                $FilterObj.click();
-                                Event.stopPropagation();
-                            });
-                            $('<br />').appendTo($FiltersListObj);
-                            RegisterFilterEvent($SelectObj, $InputContainerObj, $ToolbarContainerObj, $FilterObj, 'Filter');
-                        });
-
-                        $FiltersListObj
-                        .on('focus', 'input', function () {
-                            Focused = this;
-                        })
-                        .on('keydown', 'input', function (Event) {
-                            var $FilterElements,
-                                FilterElementIndex;
-
-                            switch (Event.which) {
-
-                                // Tab
-                                case $.ui.keyCode.TAB:
-                                    $FilterElements = $FiltersListObj.find('input');
-                                    FilterElementIndex = $FilterElements.index(Event.target);
-
-                                    // if not shift key and on the last element of the list, jump to top again
-                                    if (!Event.shiftKey) {
-                                        Event.preventDefault();
-                                        Event.stopPropagation();
-
-                                        if (FilterElementIndex + 1 === $FilterElements.length) {
-                                            $FilterElements.first().focus();
-                                        }
-                                        else {
-                                            $FilterElements.eq(FilterElementIndex + 1).focus();
-                                        }
-                                    }
-                                    // first element and Shift+Tab, jump to last element in list
-                                    else {
-                                        Event.preventDefault();
-                                        Event.stopPropagation();
-
-                                        if (FilterElementIndex === 0) {
-                                            $FilterElements.last().focus();
-                                        }
-                                        else {
-                                            $FilterElements.eq(FilterElementIndex - 1).focus();
-                                        }
-                                    }
-                                    break;
-
-                                // Escape
-                                case $.ui.keyCode.ESCAPE:
-                                    $ListContainerObj.find('.InputField_Filters')
-
-                                        .click();
-                                    $SearchObj.focus();
-                                    break;
-
-                                // Ctrl (Cmd) + F (closing filters, if this event triggers, the filters are always expanded)
-                                case 70:
-                                    if (Event.ctrlKey || Event.metaKey) {
-                                        Event.preventDefault();
-                                        $ListContainerObj.find('.InputField_Filters')
-                                            .click();
-                                        $SearchObj.focus();
-                                    }
-                                    break;
-                            }
-                        });
-
-                    }
-
-                    if (Multiple) {
-
-                        // Confirm action exits the field
-                        $ConfirmObj = $('<a />').addClass('InputField_Confirm')
-                            .attr('href', '#')
-                            .attr('role', 'button')
-                            .attr('tabindex', '-1')
-                            .text(Core.Config.Get('InputFieldsConfirm'))
-                            .attr('aria-label', Core.Config.Get('InputFieldsConfirm'))
-                            .appendTo($ToolbarObj)
-                            .prepend('<i class="fa fa-check-square-o" /> ')
-                            .wrap('<li />');
-                        RegisterActionEvent($TreeObj, $ConfirmObj, 'Confirm');
-                    }
-
-                    if ($ToolbarObj.children().length === 0) {
-                        $ToolbarContainerObj.hide();
-                    }
-
-                    // Set up jsTree search function for input search field
-                    $SearchObj.off('keyup.InputField').on('keyup.InputField', function () {
-
-                        var SearchValue = $SearchObj.val().trim(),
-                            NoMatchNodeJSON,
-                            $ClearSearchObj,
-                            SearchTimeout;
-
-                        // Clear search timeout
-                        window.clearTimeout(SearchTimeout);
-
-                        SearchTimeout = window.setTimeout(function () {
-                            // Abandon search if empty string
-                            if (SearchValue === '') {
-                                $TreeObj.jstree('delete_node', $TreeObj.find('.jstree-no-match'));
-                                $TreeObj.jstree('clear_search');
-                                Searching = false;
-                                $SearchObj.siblings('.InputField_ClearSearch')
-                                    .remove();
-
-                                if (Multiple) {
-
-                                    // Reset select all and clear all functions to original behavior
-                                    $SelectAllObj.off('click.InputField').on('click.InputField', function () {
-
-                                        // Make sure subtrees of all nodes are expanded
-                                        $TreeObj.jstree('open_all');
-
-                                        // Select all nodes
-                                        $TreeObj.find('li')
-                                            .not('.jstree-clicked,.Disabled')
-                                            .each(function () {
-                                                $TreeObj.jstree('select_node', this);
-                                            });
-
-                                        return false;
-                                    });
-                                    $ClearAllObj.off('click.InputField').on('click.InputField', function () {
-
-                                        // Clear selection
-                                        $TreeObj.jstree('deselect_node', $TreeObj.jstree('get_selected'));
-
-                                        return false;
-                                    });
-
-                                }
-                                return false;
-                            }
-
-                            // Remove no match entry if existing from previous search
-                            $TreeObj.jstree('delete_node', $TreeObj.find('.jstree-no-match'));
-
-                            // Start jsTree search
-                            $TreeObj.jstree('search', Core.App.EscapeHTML(SearchValue));
-                            Searching = true;
-
-                            if (Multiple) {
-
-                                // Change select all action to select only matched values
-                                RegisterActionEvent($TreeObj, $SelectAllObj, 'SelectAll_Search');
-
-                                // Change clear all action to deselect only matched values
-                                RegisterActionEvent($TreeObj, $ClearAllObj, 'ClearAll_Search');
-
-                            }
-
-                            // No match
-                            if ($TreeObj.find('.jstree-search').length === 0) {
-
-                                // Add no match node
-                                NoMatchNodeJSON = {
-                                    text: Core.Config.Get('InputFieldsNoMatchMsg'),
-                                    state: {
-                                        disabled: true
-                                    },
-                                    'li_attr': {
-                                        class: 'Disabled jstree-no-match'
-                                    }
-                                };
-                                $TreeObj.jstree('create_node', $TreeObj, NoMatchNodeJSON);
-
-                                // Hide all other nodes
-                                $TreeObj.find('li:visible')
-                                    .not('.jstree-no-match')
-                                    .hide();
-                            }
-
-                            // Check if we are searching for something
-                            if ($SearchObj.siblings('.InputField_ClearSearch').length === 0) {
-
-                                // Clear search action stops search
-                                $ClearSearchObj = $('<a />').insertAfter($SearchObj);
-                                $ClearSearchObj.addClass('InputField_Action InputField_ClearSearch')
-                                    .attr('href', '#')
-                                    .attr('title', Core.Config.Get('InputFieldsClearSearch'))
-                                    .css(($('body').hasClass('RTL') ? 'left' : 'right'), Config.SelectionBoxOffsetRight + 'px')
-                                    .append($('<i />').addClass('fa fa-times-circle'))
-                                    .attr('role', 'button')
-                                    .attr('tabindex', '-1')
-                                    .attr('aria-label', Core.Config.Get('InputFieldsClearSearch'))
-                                    .off('click.InputField').on('click.InputField', function () {
-
-                                        // Reset the search field
-                                        $SearchObj.val('');
-
-                                        // Clear search from jsTree and remove no match node
-                                        $TreeObj.jstree('delete_node', $TreeObj.find('.jstree-no-match'));
-                                        $TreeObj.jstree('clear_search');
-                                        Searching = false;
-
-                                        if (Multiple) {
-
-                                            // Reset select all and clear all functions to original behavior
-                                            RegisterActionEvent($TreeObj, $SelectAllObj, 'SelectAll');
-                                            RegisterActionEvent($TreeObj, $ClearAllObj, 'ClearAll');
-
-                                        }
-
-                                        // Remove the action icon
-                                        $(this).remove();
-
-                                        return false;
-
-                                    // Prevent clicks on action to steal focus from search field
-                                    }).on('mousedown.InputField', function () {
-                                        return false;
-                                });
-                            }
-                        }, 250);
-                    });
-
-
-                    // Show list container
-                    // (if field is completely visible)
-                    if (
-                        !$SearchObj.parents('.Dialog').length ||
-                        $SearchObj.parents('.Dialog').length &&
-                        ($InputContainerObj.position().top + $InputContainerObj.outerHeight() - $SearchObj.parents('.Dialog').find('.InnerContent').position().top - $SearchObj.parents('.Dialog').find('.InnerContent').outerHeight() < 0)
-                        ) {
-                        $ListContainerObj.fadeIn(Config.FadeDuration);
-                    }
-                })
-
-                // Out of focus handler removes complete jsTree and action buttons
-                .off('blur.InputField').on('blur.InputField', function () {
-                    document.removeEventListener('scroll', ScrollEventListener, true);
-
-                    setTimeout(function () {
-                        if (!Focused) {
-                            HideSelectList($SelectObj, $InputContainerObj, $SearchObj, $ListContainerObj, $TreeContainerObj);
-                        }
-                        Focused = null;
-                    }, 0);
-                    Core.Form.ErrorTooltips.HideTooltip();
-                })
-
-                // Keydown handler provides keyboard shortcuts for navigating the tree
-                .keydown(function (Event) {
-
-                    var $TreeObj = $TreeContainerObj.find('.jstree');
-
-                    switch (Event.which) {
-
-                        // Return (do not submit form on pressing enter key in search field)
-                        case $.ui.keyCode.ENTER:
-                            Event.preventDefault();
-                            Event.stopPropagation();
-                            break;
-
-                        // Tab
-                        case $.ui.keyCode.TAB:
-                            if (!Event.shiftKey) {
-                                TabFocus = true;
-                            }
-                            Focused = null;
-                            break;
-
-                        // Escape
-                        case $.ui.keyCode.ESCAPE:
-                            Event.preventDefault();
-                            $TreeObj.blur();
-                            $SearchObj.blur();
-                            break;
-
-                        // ArrowUp
-                        case $.ui.keyCode.UP:
-                            Event.preventDefault();
-                            $($TreeObj.find('a.jstree-anchor:visible')
-                                .not('.jstree-disabled')
-                                .last()
-                                .get(0)).trigger('focus.jstree');
-                            break;
-
-                        // ArrowDown
-                        case $.ui.keyCode.DOWN:
-                            Event.preventDefault();
-                            $($TreeObj.find('a.jstree-anchor:visible')
-                                .not('.jstree-disabled')
-                                .get(0)).trigger('focus.jstree');
                             break;
 
                         // Ctrl (Cmd) + A
                         case 65:
                             if (Event.ctrlKey || Event.metaKey) {
-                                if (!Searching) {
-                                    Event.preventDefault();
-                                    $ListContainerObj.find('.InputField_SelectAll')
-                                        .click();
-                                }
+                                Event.preventDefault();
+                                $ListContainerObj.find('.InputField_SelectAll')
+                                    .click();
                             }
                             break;
 
@@ -2228,69 +1767,573 @@ Core.UI.InputFields = (function (TargetNS) {
 
                 })
 
-                // Close dropdown if search field has been removed from DOM (bug#12243)
-                .off('remove.InputField').on('remove.InputField', function () {
-                    CloseOpenSelections();
-                });
-
-                // Handle custom redraw event on original select field
-                // to update values when changed via AJAX calls
-                $SelectObj.off('redraw.InputField').on('redraw.InputField', function () {
-
-                    // redraw event is critical on hidden elements because
-                    // e.g. chrome can't calculate the width of hidden elements correctly
-                    // so we skip it for hidden elements
-                    if (!$SearchObj.is(':visible')) return;
-
-                    CloseOpenSelections();
-                    if (Filterable) {
-                        $SelectObj.data('original', $SelectObj.children());
-                        if (
-                            $SelectObj.data('filtered')
-                            && $SelectObj.data('filtered') !== '0'
-                            )
-                        {
-                            ApplyFilter($SelectObj, $ToolbarContainerObj);
+                // Initialize existing selection
+                .on('loaded.jstree', function () {
+                    if (SelectedID) {
+                        if (typeof SelectedID === 'object') {
+                            $.each(SelectedID, function (NodeIndex, Data) {
+                                $TreeObj.jstree('select_node', $TreeObj.find('li[data-id="' + Core.App.EscapeSelector(Data) + '"]'));
+                            });
+                        }
+                        else {
+                            $TreeObj.jstree('select_node', $TreeObj.find('li[data-id="' + Core.App.EscapeSelector(SelectedID) + '"]'));
                         }
                     }
-                    CheckAvailability($SelectObj, $SearchObj, $InputContainerObj);
-                    $SearchObj.width($SelectObj.outerWidth());
-                    ShowSelectionBoxes($SelectObj, $InputContainerObj);
-                })
-
-                // Handle custom error event on original select field
-                // to add error classes to search field if needed
-                .off('error.InputField').on('error.InputField', function () {
-                    if ($SelectObj.hasClass(Config.ErrorClass)) {
-                        $SearchObj.addClass(Config.ErrorClass);
-                    }
-                    else {
-                        $SearchObj.removeClass(Config.ErrorClass);
-                    }
-                    if ($SelectObj.hasClass(Config.ServerErrorClass)) {
-                        $SearchObj.addClass(Config.ServerErrorClass);
-                    }
-                    else {
-                        $SearchObj.removeClass(Config.ServerErrorClass);
-                    }
+                    Core.App.Publish('Event.UI.InputFields.Expanded', $SearchObj);
                 });
 
-            }
+                // Prevent loss of focus when using scrollbar
+                $TreeContainerObj.on('focus.InputField', function () {
+                    if (!SkipFocus) {
+                        Focused = this;
+                    } else {
+                        SkipFocus = false;
+                    }
+                }).on('blur.jstree', function () {
+                    setTimeout(function () {
+                        if (!Focused) {
+                            HideSelectList($SelectObj, $InputContainerObj, $SearchObj, $ListContainerObj, $TreeContainerObj);
+                        }
+                        Focused = null;
+                    }, 0);
+                });
+
+                // Append tree code to the container and show it
+                $TreeObj
+                    .appendTo($TreeContainerObj)
+                    .show();
+
+                $ToolbarContainerObj = $('<div />').appendTo($ListContainerObj);
+                $ToolbarContainerObj.addClass('InputField_ToolbarContainer')
+                    .attr('tabindex', '-1')
+                    .width($TreeContainerObj.width());
+
+                $ToolbarObj = $('<ul />').appendTo($ToolbarContainerObj)
+                    .attr('tabindex', '-1')
+                    .on('focus.InputField', function () {
+                        if (!SkipFocus) {
+                            Focused = this;
+                        } else {
+                            SkipFocus = false;
+                        }
+                    }).on('blur.InputField', function () {
+                        setTimeout(function () {
+                            if (!Focused) {
+                                HideSelectList($SelectObj, $InputContainerObj, $SearchObj, $ListContainerObj, $TreeContainerObj);
+                            }
+                            Focused = null;
+                        }, 0);
+                    });
+
+                if (Multiple) {
+
+                    // Select all action selects all values in tree
+                    $SelectAllObj = $('<a />').addClass('InputField_SelectAll')
+                        .attr('href', '#')
+                        .attr('role', 'button')
+                        .attr('tabindex', '-1')
+                        .text(Core.Config.Get('InputFieldsSelectAll'))
+                        .attr('aria-label', Core.Config.Get('InputFieldsSelectAll'))
+                        .appendTo($ToolbarObj)
+                        .wrap('<li />');
+                    RegisterActionEvent($TreeObj, $SelectAllObj, 'SelectAll');
+
+                    // Clear all action deselects all selected values in tree
+                    $ClearAllObj = $('<a />').addClass('InputField_ClearAll')
+                        .attr('href', '#')
+                        .attr('role', 'button')
+                        .attr('tabindex', '-1')
+                        .text(Core.Config.Get('InputFieldsClearAll'))
+                        .attr('aria-label', Core.Config.Get('InputFieldsClearAll'))
+                        .appendTo($ToolbarObj)
+                        .wrap('<li />');
+                    RegisterActionEvent($TreeObj, $ClearAllObj, 'ClearAll');
+                }
+
+                if (Filterable) {
+
+                    // Filters action button
+                    $FiltersObj = $('<a />').addClass('InputField_Filters')
+                        .attr('href', '#')
+                        .attr('role', 'button')
+                        .attr('tabindex', '-1')
+                        .text(Core.Config.Get('InputFieldsFilters'))
+                        .attr('aria-label', Core.Config.Get('InputFieldsFilters'))
+                        .appendTo($ToolbarObj)
+                        .wrap('<li />');
+                    RegisterFilterEvent($SelectObj, $InputContainerObj, $ToolbarContainerObj, $FiltersObj, 'ShowFilters');
+
+                    if (!$SelectObj.data('filtered')) {
+                        $SelectObj.data('filtered', '0');
+                    } else if ($SelectObj.data('filtered') !== '0') {
+                        $FiltersObj.addClass('Active')
+                            .prepend('<i class="fa fa-filter" /> ');
+                    }
+
+                    // Filters list
+                    $FiltersListObj = $('<div />').appendTo($ToolbarContainerObj);
+                    $FiltersListObj.addClass('InputField_FiltersList')
+                        .attr('tabindex', '-1');
+
+                    // Hide the filters list if no parameter is supplied
+                    if (
+                        !$SelectObj.data('expand-filters')
+                        && $SelectObj.data('expand-filters') !== '0'
+                        )
+                    {
+                        $FiltersListObj.hide();
+                    }
+
+                    // Filters checkboxes
+                    $.each($SelectObj.data('filters').Filters, function (FilterIndex, Filter) {
+                        var $FilterObj = $('<input />').appendTo($FiltersListObj),
+                            $SpanObj = $('<span />').appendTo($FiltersListObj);
+                        $FilterObj.attr('type', 'checkbox')
+                            .attr('tabindex', '-1')
+                            .data('index', FilterIndex + 1);
+                        if (
+                            $SelectObj.data('filtered')
+                            && parseInt($SelectObj.data('filtered'), 10) === FilterIndex + 1
+                            )
+                        {
+                            $FilterObj.attr('checked', true);
+                        }
+                        if (
+                            Filter.Data.length === 1
+                            && (Filter.Data[0].Key === '' || Filter.Data[0].Key === '||-')
+                            )
+                        {
+                            $FilterObj.attr('disabled', true);
+                        }
+                        Core.UI.GetID($FilterObj);
+                        $SpanObj.text(Filter.Name);
+                        $SpanObj.on('click', function (Event) {
+                            $FilterObj.click();
+                            Event.stopPropagation();
+                        });
+                        $('<br />').appendTo($FiltersListObj);
+                        RegisterFilterEvent($SelectObj, $InputContainerObj, $ToolbarContainerObj, $FilterObj, 'Filter');
+                    });
+
+                    $FiltersListObj
+                    .on('focus', 'input', function () {
+                        Focused = this;
+                    })
+                    .on('keydown', 'input', function (Event) {
+                        var $FilterElements,
+                            FilterElementIndex;
+
+                        switch (Event.which) {
+
+                            // Tab
+                            case $.ui.keyCode.TAB:
+                                $FilterElements = $FiltersListObj.find('input');
+                                FilterElementIndex = $FilterElements.index(Event.target);
+
+                                // if not shift key and on the last element of the list, jump to top again
+                                if (!Event.shiftKey) {
+                                    Event.preventDefault();
+                                    Event.stopPropagation();
+
+                                    if (FilterElementIndex + 1 === $FilterElements.length) {
+                                        $FilterElements.first().focus();
+                                    }
+                                    else {
+                                        $FilterElements.eq(FilterElementIndex + 1).focus();
+                                    }
+                                }
+                                // first element and Shift+Tab, jump to last element in list
+                                else {
+                                    Event.preventDefault();
+                                    Event.stopPropagation();
+
+                                    if (FilterElementIndex === 0) {
+                                        $FilterElements.last().focus();
+                                    }
+                                    else {
+                                        $FilterElements.eq(FilterElementIndex - 1).focus();
+                                    }
+                                }
+                                break;
+
+                            // Escape
+                            case $.ui.keyCode.ESCAPE:
+                                $ListContainerObj.find('.InputField_Filters')
+
+                                    .click();
+                                $SearchObj.focus();
+                                break;
+
+                            // Ctrl (Cmd) + F (closing filters, if this event triggers, the filters are always expanded)
+                            case 70:
+                                if (Event.ctrlKey || Event.metaKey) {
+                                    Event.preventDefault();
+                                    $ListContainerObj.find('.InputField_Filters')
+                                        .click();
+                                    $SearchObj.focus();
+                                }
+                                break;
+                        }
+                    });
+
+                }
+
+                if (Multiple) {
+
+                    // Confirm action exits the field
+                    $ConfirmObj = $('<a />').addClass('InputField_Confirm')
+                        .attr('href', '#')
+                        .attr('role', 'button')
+                        .attr('tabindex', '-1')
+                        .text(Core.Config.Get('InputFieldsConfirm'))
+                        .attr('aria-label', Core.Config.Get('InputFieldsConfirm'))
+                        .appendTo($ToolbarObj)
+                        .prepend('<i class="fa fa-check-square-o" /> ')
+                        .wrap('<li />');
+                    RegisterActionEvent($TreeObj, $ConfirmObj, 'Confirm');
+                }
+
+                if ($ToolbarObj.children().length === 0) {
+                    $ToolbarContainerObj.hide();
+                }
+
+                // Set up jsTree search function for input search field
+                $SearchObj.off('keyup.InputField').on('keyup.InputField', function () {
+
+                    var SearchValue = $SearchObj.val().trim(),
+                        NoMatchNodeJSON,
+                        $ClearSearchObj,
+                        SearchTimeout;
+
+                    // Clear search timeout
+                    window.clearTimeout(SearchTimeout);
+
+                    SearchTimeout = window.setTimeout(function () {
+                        // Abandon search if empty string
+                        if (SearchValue === '') {
+                            $TreeObj.jstree('delete_node', $TreeObj.find('.jstree-no-match'));
+                            $TreeObj.jstree('clear_search');
+                            Searching = false;
+                            $SearchObj.siblings('.InputField_ClearSearch')
+                                .remove();
+
+                            if (Multiple) {
+
+                                // Reset select all and clear all functions to original behavior
+                                $SelectAllObj.off('click.InputField').on('click.InputField', function () {
+
+                                    // Make sure subtrees of all nodes are expanded
+                                    $TreeObj.jstree('open_all');
+
+                                    // Select all nodes
+                                    $TreeObj.find('li')
+                                        .not('.jstree-clicked,.Disabled')
+                                        .each(function () {
+                                            $TreeObj.jstree('select_node', this);
+                                        });
+
+                                    return false;
+                                });
+                                $ClearAllObj.off('click.InputField').on('click.InputField', function () {
+
+                                    // Clear selection
+                                    $TreeObj.jstree('deselect_node', $TreeObj.jstree('get_selected'));
+
+                                    return false;
+                                });
+
+                            }
+                            return false;
+                        }
+
+                        // Remove no match entry if existing from previous search
+                        $TreeObj.jstree('delete_node', $TreeObj.find('.jstree-no-match'));
+
+                        // Start jsTree search
+                        $TreeObj.jstree('search', Core.App.EscapeHTML(SearchValue));
+                        Searching = true;
+
+                        if (Multiple) {
+
+                            // Change select all action to select only matched values
+                            RegisterActionEvent($TreeObj, $SelectAllObj, 'SelectAll_Search');
+
+                            // Change clear all action to deselect only matched values
+                            RegisterActionEvent($TreeObj, $ClearAllObj, 'ClearAll_Search');
+
+                        }
+
+                        // No match
+                        if ($TreeObj.find('.jstree-search').length === 0) {
+
+                            // Add no match node
+                            NoMatchNodeJSON = {
+                                text: Core.Config.Get('InputFieldsNoMatchMsg'),
+                                state: {
+                                    disabled: true
+                                },
+                                'li_attr': {
+                                    class: 'Disabled jstree-no-match'
+                                }
+                            };
+                            $TreeObj.jstree('create_node', $TreeObj, NoMatchNodeJSON);
+
+                            // Hide all other nodes
+                            $TreeObj.find('li:visible')
+                                .not('.jstree-no-match')
+                                .hide();
+                        }
+
+                        // Check if we are searching for something
+                        if ($SearchObj.siblings('.InputField_ClearSearch').length === 0) {
+
+                            // Clear search action stops search
+                            $ClearSearchObj = $('<a />').insertAfter($SearchObj);
+                            $ClearSearchObj.addClass('InputField_Action InputField_ClearSearch')
+                                .attr('href', '#')
+                                .attr('title', Core.Config.Get('InputFieldsClearSearch'))
+                                .css(($('body').hasClass('RTL') ? 'left' : 'right'), Config.SelectionBoxOffsetRight + 'px')
+                                .append($('<i />').addClass('fa fa-times-circle'))
+                                .attr('role', 'button')
+                                .attr('tabindex', '-1')
+                                .attr('aria-label', Core.Config.Get('InputFieldsClearSearch'))
+                                .off('click.InputField').on('click.InputField', function () {
+
+                                    // Reset the search field
+                                    $SearchObj.val('');
+
+                                    // Clear search from jsTree and remove no match node
+                                    $TreeObj.jstree('delete_node', $TreeObj.find('.jstree-no-match'));
+                                    $TreeObj.jstree('clear_search');
+                                    Searching = false;
+
+                                    if (Multiple) {
+
+                                        // Reset select all and clear all functions to original behavior
+                                        RegisterActionEvent($TreeObj, $SelectAllObj, 'SelectAll');
+                                        RegisterActionEvent($TreeObj, $ClearAllObj, 'ClearAll');
+
+                                    }
+
+                                    // Remove the action icon
+                                    $(this).remove();
+
+                                    return false;
+
+                                // Prevent clicks on action to steal focus from search field
+                                }).on('mousedown.InputField', function () {
+                                    return false;
+                            });
+                        }
+                    }, 250);
+                });
+
+
+                // Show list container
+                // (if field is completely visible)
+                if (
+                    !$SearchObj.parents('.Dialog').length ||
+                    $SearchObj.parents('.Dialog').length &&
+                    ($InputContainerObj.position().top + $InputContainerObj.outerHeight() - $SearchObj.parents('.Dialog').find('.InnerContent').position().top - $SearchObj.parents('.Dialog').find('.InnerContent').outerHeight() < 0)
+                    ) {
+                    $ListContainerObj.fadeIn(Config.FadeDuration);
+                }
+            })
+
+            // Out of focus handler removes complete jsTree and action buttons
+            .off('blur.InputField').on('blur.InputField', function () {
+                document.removeEventListener('scroll', ScrollEventListener, true);
+
+                setTimeout(function () {
+                    if (!Focused) {
+                        HideSelectList($SelectObj, $InputContainerObj, $SearchObj, $ListContainerObj, $TreeContainerObj);
+                    }
+                    Focused = null;
+                }, 0);
+                Core.Form.ErrorTooltips.HideTooltip();
+            })
+
+            // Keydown handler provides keyboard shortcuts for navigating the tree
+            .keydown(function (Event) {
+
+                var $TreeObj = $TreeContainerObj.find('.jstree');
+
+                switch (Event.which) {
+
+                    // Return (do not submit form on pressing enter key in search field)
+                    case $.ui.keyCode.ENTER:
+                        Event.preventDefault();
+                        Event.stopPropagation();
+                        break;
+
+                    // Tab
+                    case $.ui.keyCode.TAB:
+                        if (!Event.shiftKey) {
+                            TabFocus = true;
+                        }
+                        Focused = null;
+                        break;
+
+                    // Escape
+                    case $.ui.keyCode.ESCAPE:
+                        Event.preventDefault();
+                        $TreeObj.blur();
+                        $SearchObj.blur();
+                        break;
+
+                    // ArrowUp
+                    case $.ui.keyCode.UP:
+                        Event.preventDefault();
+                        $($TreeObj.find('a.jstree-anchor:visible')
+                            .not('.jstree-disabled')
+                            .last()
+                            .get(0)).trigger('focus.jstree');
+                        break;
+
+                    // ArrowDown
+                    case $.ui.keyCode.DOWN:
+                        Event.preventDefault();
+                        $($TreeObj.find('a.jstree-anchor:visible')
+                            .not('.jstree-disabled')
+                            .get(0)).trigger('focus.jstree');
+                        break;
+
+                    // Ctrl (Cmd) + A
+                    case 65:
+                        if (Event.ctrlKey || Event.metaKey) {
+                            if (!Searching) {
+                                Event.preventDefault();
+                                $ListContainerObj.find('.InputField_SelectAll')
+                                    .click();
+                            }
+                        }
+                        break;
+
+                    // Ctrl (Cmd) + D
+                    case 68:
+                        if (Event.ctrlKey || Event.metaKey) {
+                            Event.preventDefault();
+                            $ListContainerObj.find('.InputField_ClearAll')
+                                .click();
+                        }
+                        break;
+
+                    // Ctrl (Cmd) + F
+                    case 70:
+                        if (Event.ctrlKey || Event.metaKey) {
+                            Event.preventDefault();
+                            $ListContainerObj.find('.InputField_Filters')
+                                .click();
+
+                            $ListContainerObj.find('.InputField_FiltersList').children('input').first().focus();
+                        }
+                        break;
+                }
+
+            })
+
+            // Close dropdown if search field has been removed from DOM (bug#12243)
+            .off('remove.InputField').on('remove.InputField', function () {
+                CloseOpenSelections();
+            });
+
+            // Handle custom redraw event on original select field
+            // to update values when changed via AJAX calls
+            $SelectObj.off('redraw.InputField').on('redraw.InputField', function () {
+
+                // redraw event is critical on hidden elements because
+                // e.g. chrome can't calculate the width of hidden elements correctly
+                // so we skip it for hidden elements
+                if (!$SearchObj.is(':visible')) return;
+
+                CloseOpenSelections();
+                if (Filterable) {
+                    $SelectObj.data('original', $SelectObj.children());
+                    if (
+                        $SelectObj.data('filtered')
+                        && $SelectObj.data('filtered') !== '0'
+                        )
+                    {
+                        ApplyFilter($SelectObj, $ToolbarContainerObj);
+                    }
+                }
+                CheckAvailability($SelectObj, $SearchObj, $InputContainerObj);
+                $SearchObj.width($SelectObj.outerWidth());
+                ShowSelectionBoxes($SelectObj, $InputContainerObj);
+            })
+
+            // Handle custom error event on original select field
+            // to add error classes to search field if needed
+            .off('error.InputField').on('error.InputField', function () {
+                if ($SelectObj.hasClass(Config.ErrorClass)) {
+                    $SearchObj.addClass(Config.ErrorClass);
+                }
+                else {
+                    $SearchObj.removeClass(Config.ErrorClass);
+                }
+                if ($SelectObj.hasClass(Config.ServerErrorClass)) {
+                    $SearchObj.addClass(Config.ServerErrorClass);
+                }
+                else {
+                    $SearchObj.removeClass(Config.ServerErrorClass);
+                }
+            });
         });
 
         // Workaround to close dropdown after blur event by clicking the mouse out of the search field
         $('body').off('click.InputField').on('click.InputField', function () {
             if (
                 $('.InputField_ListContainer').length
-                &&
-                    (
+                && (
                     !$(document.activeElement).parents('.InputField_Container').length
                     || document.activeElement.tagName.toUpperCase() !== 'INPUT'
-                    )
-                ) {
+                )
+            ) {
                 CloseOpenSelections();
             }
         });
+        // Workaround to close dropdown after blur event by mouseover the mouse over of the cluster elements
+        $('.Cluster ul li').off('mouseover').on('mouseover', function () {
+            if (
+                $('.InputField_ListContainer').length
+                && !$(this).find('.InputField_Container').length
+            ) {
+                CloseOpenSelections();
+            }
+        });
+        // Workaround to close dropdown after blur event by mouseover or click the mouse over of the main menu
+        if (
+            $('body').hasClass('Visible-ScreenXL')
+            && !Core.App.Responsive.IsTouchDevice()
+            && (
+                (
+                    $(location).attr('href').search(/index\.pl/) > 0
+                    && Core.Config.Get('OpenMainMenuOnHover')
+                ) || (
+                    $(location).attr('href').search(/customer\.pl/) > 0
+                    && Core.Config.Get('CustomerOpenMainMenuOnHover')
+                )
+            )
+        ) {
+            $('#Navigation > li').off('mouseover.MainNav').on('mouseover.MainNav', function () {
+                if (
+                    $('.InputField_ListContainer').length
+                    && !$(this).find('.InputField_Container').length
+                ) {
+                    CloseOpenSelections();
+                }
+            });
+        }
+        else {
+            $('#Navigation > li').off('click.MainNav').on('click.MainNav', function () {
+                if (
+                    $('.InputField_ListContainer').length
+                    && !$(this).find('.InputField_Container').length
+                ) {
+                    CloseOpenSelections();
+                }
+            });
+        }
 
         return true;
 
