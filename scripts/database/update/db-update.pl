@@ -10,6 +10,7 @@
 use strict;
 use warnings;
 
+use version;
 use File::Basename;
 use FindBin qw($RealBin);
 use lib dirname($RealBin).'/../../';
@@ -40,7 +41,7 @@ if (!%Opts) {
 
 my $StartVersion;
 if ($Opts{s} =~ /^(\d+).(\d+).(\d+)$/g) {
-    $StartVersion = 0 + "$1$2$3";
+    $StartVersion = 'v' . $Opts{s};
 }
 
 if (!$StartVersion) {
@@ -50,7 +51,7 @@ if (!$StartVersion) {
 
 my $TargetVersion;
 if ($Opts{t} =~ /^(\d+).(\d+).(\d+)$/g) {
-    $TargetVersion = 0 + "$1$2$3";
+    $TargetVersion = 'v' . $Opts{t};
 }
 
 if (!$TargetVersion) {
@@ -64,20 +65,19 @@ my @FileList = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
     Filter    => 'db-update-*',
 );
 
-my %VersionList;
-foreach my $File (sort @FileList) {
+my %VersionList = ();
+for my $File (sort @FileList) {
     my ($Filename, $Dirs, $Suffix) = fileparse($File, qr/\.[^.]*/);
-    if ($Filename =~ /^db-update-(\d+).(\d+).(\d+).*?$/g) {
-        my $NummericVersion = 0 + "$1$2$3";
-        $VersionList{$NummericVersion} = "$1.$2.$3";
+    if ($Filename =~ /^db-update-(\d+.\d+.\d+).*?$/g) {
+        $VersionList{ 'v' . $1 } = $1;
     }
 }
 
-foreach my $NummericVersion (sort keys %VersionList) {
-    next if $NummericVersion <= $StartVersion;
-    last if $NummericVersion > $TargetVersion;
+for my $VersionString ( sort{ version->parse($a) <=> version->parse($b) } ( keys( %VersionList) ) ) {
+    next if ( version->parse($VersionString) <= version->parse($StartVersion) );
+    last if ( version->parse($VersionString) > version->parse($TargetVersion) );
 
-    if (!DoVersionUpdate($VersionList{$NummericVersion})) {
+    if ( !DoVersionUpdate( $VersionList{ $VersionString } ) ) {
         exit 1;
     }
 }
