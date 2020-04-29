@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.11.0-RC10 (2020/04/29)
+ * (2020/04/28) - Bugfix: KIX17-906 (fixed version order in update script) (millinger)
+ * (2020/04/27) - Bugfix: KIX17-813 (fixed building InputFields in modernize mode) (fjacquemin)
+
 # 17.11.0-RC9 (2020/04/24)
  * (2020/04/24) - Bugfix: KIX17-889 (fixed duplicated html encoding in safety output) (millinger)
 
