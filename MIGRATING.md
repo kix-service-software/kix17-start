@@ -5,6 +5,7 @@ The following describes the migration from KIX 2016 to KIX 2017. It's absolutely
 ## Requirements
 
 * the KIX 2016 system uses the same DBMS like KIX 2017 (PostgreSQL, MariaDB or MySQL)
+* the KIX 2016 is updated to the newest version (16.1.0)
 * the KIX database must be local
 
 # Steps
@@ -50,6 +51,7 @@ Im Folgenden wird das Vorgehen für die Migration von KIX 2016 auf KIX 2017 besc
 
 ## Voraussetzungen
 * das KIX 2016 System verwendet das gleiche DBMS wie KIX 2017 (PostgreSQL, MariaDB oder MySQL) 
+* das KIX 2016 ist auf der aktuellsten Version (16.1.0)
 * die KIX-Datenbank muss lokal installiert sein
 
 ## Vorgehen
