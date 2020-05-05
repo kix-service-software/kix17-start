@@ -6166,9 +6166,9 @@
                 <Item Key="CssClass">Owner</Item>
                 <Item Key="CssClassNew">Owner New</Item>
                 <Item Key="CssClassReached">Owner Reached</Item>
-                <Item Key="Icon">fa fa-group</Item>
-                <Item Key="IconNew">fa fa-group</Item>
-                <Item Key="IconReached">fa fa-group</Item>
+                <Item Key="Icon">fa fa-user-o</Item>
+                <Item Key="IconNew">fa fa-user-o</Item>
+                <Item Key="IconReached">fa fa-user-o</Item>
                 <Item Key="AccessKey">r</Item>
                 <Item Key="AccessKeyNew"></Item>
                 <Item Key="AccessKeyReached"></Item>
