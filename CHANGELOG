@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.11.0-RC11 (2020/05/05)
+ * (2020/05/05) - Bugfix: KIX17-813 (workaround for queue move and quick state) (millinger)
+ * (2020/05/05) - CR: KIX17-934 (changed font awesome version) (ddoerffel)
+ * (2020/05/04) - Bugfix: KIX17-897 (added information to migrate from latest KIX16 to KIX17) (millinger)
+
 # 17.11.0-RC10 (2020/04/29)
  * (2020/04/28) - Bugfix: KIX17-906 (fixed version order in update script) (millinger)
  * (2020/04/27) - Bugfix: KIX17-813 (fixed building InputFields in modernize mode) (fjacquemin)
