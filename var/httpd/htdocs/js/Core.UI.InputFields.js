@@ -1037,8 +1037,9 @@ Core.UI.InputFields = (function (TargetNS) {
 
             // Removed exists modernize element to rebuild with all events and datas
             if (!$SelectObj.is(':visible')) {
-                $SelectObj.prev().remove();
-                $SelectObj.show();
+                //$SelectObj.prev().remove();
+                //$SelectObj.show();
+                return;
             }
 
             // Get width now, since we will hide the element
