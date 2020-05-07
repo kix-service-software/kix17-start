@@ -540,8 +540,10 @@ sub Run {
     # CustomerLostPassword
     elsif ( $Param{Action} eq 'CustomerLostPassword' ) {
 
-        # new layout object
+        # get needed objects
         my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+        my $EmailObject  = $Kernel::OM->Get('Kernel::System::Email');
+        my $ValidObject  = $Kernel::OM->Get('Kernel::System::Valid');
 
         # check feature
         if ( !$ConfigObject->Get('CustomerPanelLostPassword') ) {
@@ -549,76 +551,133 @@ sub Run {
             # show normal login
             $LayoutObject->Print(
                 Output => \$LayoutObject->CustomerLogin(
-                    Title   => 'Login',
-                    Message => Translatable('Feature not active!'),
+                    Title       => 'Login',
+                    Message     => $LayoutObject->{LanguageObject}->Translate('Feature not active!'),
+                    MessageType => 'Error',
                 ),
             );
             return;
         }
+
+        # get valid ids
+        my @ValidIDs = $ValidObject->ValidIDsGet();
 
         # get params
         my $User  = $ParamObject->GetParam( Param => 'User' )  || '';
         my $Token = $ParamObject->GetParam( Param => 'Token' ) || '';
 
-        # get user login by token
-        if ( !$User && $Token ) {
+        # process given token param
+        if ( $Token ) {
+            # check that token contains only valid characters
+            if ( $Token !~ m/^[A-Za-z0-9]+$/ ) {
+                $LayoutObject->Print(
+                    Output => \$LayoutObject->CustomerLogin(
+                        Title       => 'Login',
+                        Message     => $LayoutObject->{LanguageObject}->Translate('Invalid Token!'),
+                        MessageType => 'Error',
+                        %Param,
+                    ),
+                );
+                return;
+            }
+
+            # lookup users for provided token
             my %UserList = $UserObject->SearchPreferences(
                 Key   => 'UserToken',
                 Value => $Token,
             );
-            USER_ID:
-            for my $UserID ( sort keys %UserList ) {
-                my %UserData = $UserObject->CustomerUserDataGet(
-                    User  => $UserID,
-                    Valid => 1,
+
+            # check that there is only one user for given token
+            if ( keys( %UserList ) != 1 ) {
+                $LayoutObject->Print(
+                    Output => \$LayoutObject->CustomerLogin(
+                        Title       => 'Login',
+                        Message     => $LayoutObject->{LanguageObject}->Translate('Invalid Token!'),
+                        MessageType => 'Error',
+                        %Param,
+                    ),
                 );
-                if (%UserData) {
-                    $User = $UserData{UserLogin};
-                    last USER_ID;
-                }
+                return;
             }
-        }
 
-        # get user data
-        my %UserData = $UserObject->CustomerUserDataGet( User => $User );
+            # get user from list
+            my $TokenUserID;
+            for my $UserID ( keys( %UserList ) ) {
+                $TokenUserID = $UserID;
+            }
 
-        # verify customer user is valid when requesting password reset
-        my @ValidIDs = $Kernel::OM->Get('Kernel::System::Valid')->ValidIDsGet();
-        my $UserIsValid = grep { $UserData{ValidID} && $UserData{ValidID} == $_ } @ValidIDs;
-        if ( !$UserData{UserID} || !$UserIsValid ) {
-
-            # Security: pretend that password reset instructions were actually sent to
-            #   make sure that users cannot find out valid usernames by
-            #   just trying and checking the result message.
-            $LayoutObject->Print(
-                Output => \$LayoutObject->CustomerLogin(
-                    Title       => 'Login',
-                    Message     => Translatable('Sent password reset instructions. Please check your email.'),
-                    MessageType => 'Success',
-                ),
+            # get user data
+            my %UserData = $UserObject->CustomerUserDataGet(
+                User => $TokenUserID,
+                Valid => 1,
             );
-            return;
-        }
 
-        # create email object
-        my $EmailObject = Kernel::System::Email->new( %{$Self} );
+            # verify user is valid
+            my $UserIsValid;
+            if ( $UserData{ValidID} ) {
+                $UserIsValid = grep { $UserData{ValidID} == $_ } @ValidIDs;
+            }
+            if (
+                !$UserData{UserID}
+                || !$UserIsValid
+            ) {
+                $LayoutObject->Print(
+                    Output => \$LayoutObject->CustomerLogin(
+                        Title       => 'Login',
+                        Message     => $LayoutObject->{LanguageObject}->Translate('Invalid Token!'),
+                        MessageType => 'Error',
+                        %Param,
+                    ),
+                );
+                return;
+            }
 
-        # send password reset token
-        if ( !$Token ) {
-
-            # generate token
-            $UserData{Token} = $UserObject->TokenGenerate(
+            # verify token is valid
+            my $TokenValid = $UserObject->TokenCheck(
+                Token  => $Token,
                 UserID => $UserData{UserID},
             );
+            if ( !$TokenValid ) {
+                $LayoutObject->Print(
+                    Output => \$LayoutObject->CustomerLogin(
+                        Title       => 'Login',
+                        Message     => $LayoutObject->{LanguageObject}->Translate('Invalid Token!'),
+                        MessageType => 'Error',
+                        %Param,
+                    ),
+                );
+                return;
+            }
 
-            # send token notify email with link
-            my $Body = $ConfigObject->Get('CustomerPanelBodyLostPasswordToken')
-                || 'ERROR: CustomerPanelBodyLostPasswordToken is missing!';
-            my $Subject = $ConfigObject->Get('CustomerPanelSubjectLostPasswordToken')
-                || 'ERROR: CustomerPanelSubjectLostPasswordToken is missing!';
+            # get new password
+            $UserData{NewPW} = $UserObject->GenerateRandomPassword();
+
+            # update new password
+            my $Success = $UserObject->SetPassword(
+                UserLogin => $UserData{UserLogin},
+                PW        => $UserData{NewPW}
+            );
+            if ( !$Success ) {
+                $LayoutObject->Print(
+                    Output => \$LayoutObject->CustomerLogin(
+                        Title       => 'Login',
+                        Message     => $LayoutObject->{LanguageObject}->Translate('Reset password unsuccessful. Please contact the administrator.'),
+                        MessageType => 'Error',
+                    ),
+                );
+                return;
+            }
+
+            # send notify email with new password
+            my $Body    = $ConfigObject->Get('CustomerPanelBodyLostPassword')
+                || 'New Password is: <KIX_NEWPW>';
+            my $Subject = $ConfigObject->Get('CustomerPanelSubjectLostPassword')
+                || 'New Password!';
             for ( sort keys %UserData ) {
                 $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
             }
+
+            # send notify email
             my $Sent = $EmailObject->Send(
                 To       => $UserData{UserEmail},
                 Subject  => $Subject,
@@ -627,94 +686,101 @@ sub Run {
                 Body     => $Body
             );
             if ( !$Sent ) {
-                $LayoutObject->FatalError(
+                $LayoutObject->CustomerFatalError(
                     Comment => Translatable('Please contact the administrator.'),
                 );
                 return;
             }
+
+            # return that new password was sent
             $LayoutObject->Print(
                 Output => \$LayoutObject->CustomerLogin(
-                    Title   => 'Login',
-                    Message => Translatable('Sent password reset instructions. Please check your email.'),
-                    %Param,
+                    Title       => 'Login',
+                    Message     => $LayoutObject->{LanguageObject}->Translate('Sent new password. Please check your email.'),
                     MessageType => 'Success',
+                    %Param,
                 ),
             );
             return 1;
-
         }
+        # process given user param
+        elsif ( $User ) {
+            # get user data
+            my %UserData = $UserObject->CustomerUserDataGet(
+                User  => $User,
+                Valid => 1
+            );
 
-        # reset password
-        # check if token is valid
-        my $TokenValid = $UserObject->TokenCheck(
-            Token  => $Token,
-            UserID => $UserData{UserID},
-        );
-        if ( !$TokenValid ) {
+            # verify user is valid
+            my $UserIsValid;
+            if ( $UserData{ValidID} ) {
+                $UserIsValid = grep { $UserData{ValidID} == $_ } @ValidIDs;
+            }
+            if (
+                $UserData{UserID}
+                && $UserIsValid
+            ) {
+                # generate token
+                $UserData{Token} = $UserObject->TokenGenerate(
+                    UserID => $UserData{UserID},
+                );
+
+                # prepare notify email with link
+                my $Body = $ConfigObject->Get('CustomerPanelBodyLostPasswordToken');
+                if ( !$Body ) {
+                    $LayoutObject->CustomerFatalError(
+                        Message => 'ERROR: CustomerPanelBodyLostPasswordToken is missing!',
+                        Comment => Translatable('Please contact the administrator.'),
+                    );
+                    return;
+                }
+                my $Subject = $ConfigObject->Get('CustomerPanelSubjectLostPasswordToken');
+                if ( !$Subject ) {
+                    $LayoutObject->CustomerFatalError(
+                        Message => 'ERROR: CustomerPanelSubjectLostPasswordToken is missing!',
+                        Comment => Translatable('Please contact the administrator.'),
+                    );
+                    return;
+                }
+                for ( sort keys %UserData ) {
+                    $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
+                }
+
+                # send notify email
+                my $Sent = $EmailObject->Send(
+                    To       => $UserData{UserEmail},
+                    Subject  => $Subject,
+                    Charset  => $LayoutObject->{UserCharset},
+                    MimeType => 'text/plain',
+                    Body     => $Body
+                );
+                if ( !$Sent ) {
+                    $LayoutObject->CustomerFatalError(
+                        Comment => Translatable('Please contact the administrator.'),
+                    );
+                    return;
+                }
+            }
+    
+            # Security: Always pretend that password reset instructions were sent to
+            # make sure that requester cannot find out valid usernames by checking the result message
             $LayoutObject->Print(
                 Output => \$LayoutObject->CustomerLogin(
-                    Title   => 'Login',
-                    Message => Translatable('Invalid Token!'),
+                    Title       => 'Login',
+                    Message     => $LayoutObject->{LanguageObject}->Translate('Sent password reset instructions. Please check your email.'),
+                    MessageType => 'Success',
                     %Param,
                 ),
             );
-            return;
+            return 1;
         }
 
-        # get new password
-        $UserData{NewPW} = $UserObject->GenerateRandomPassword();
-
-        # update new password
-        my $Success = $UserObject->SetPassword(
-            UserLogin => $User,
-            PW        => $UserData{NewPW}
+        # no user and token given
+        $LayoutObject->CustomerFatalError(
+            Message => 'Need User or Token!',
+            Comment => Translatable('Please contact the administrator.'),
         );
-
-        if ( !$Success ) {
-            $LayoutObject->Print(
-                Output => \$LayoutObject->CustomerLogin(
-                    Title   => 'Login',
-                    Message => Translatable('Reset password unsuccessful. Please contact the administrator.'),
-                    User    => $User,
-                ),
-            );
-            return;
-        }
-
-        # send notify email
-        my $Body = $ConfigObject->Get('CustomerPanelBodyLostPassword')
-            || 'New Password is: <KIX_NEWPW>';
-        my $Subject = $ConfigObject->Get('CustomerPanelSubjectLostPassword')
-            || 'New Password!';
-        for ( sort keys %UserData ) {
-            $Body =~ s/<(KIX|OTRS)_$_>/$UserData{$_}/gi;
-        }
-        my $Sent = $EmailObject->Send(
-            To       => $UserData{UserEmail},
-            Subject  => $Subject,
-            Charset  => $LayoutObject->{UserCharset},
-            MimeType => 'text/plain',
-            Body     => $Body
-        );
-        if ( !$Sent ) {
-            $LayoutObject->CustomerFatalError(
-                Comment => Translatable('Please contact the administrator.')
-            );
-            return;
-        }
-        my $Message = $LayoutObject->{LanguageObject}->Translate(
-            'Sent new password to %s. Please check your email.',
-            $UserData{UserEmail},
-        );
-        $LayoutObject->Print(
-            Output => \$LayoutObject->CustomerLogin(
-                Title       => 'Login',
-                Message     => $Message,
-                User        => $User,
-                MessageType => 'Success',
-            ),
-        );
-        return 1;
+        return;
     }
 
     # create new customer account

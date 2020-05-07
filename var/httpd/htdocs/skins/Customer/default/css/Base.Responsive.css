@@ -65,29 +65,26 @@
     #AppWrapper.NonMarginTop {
         margin-top: 0;
     }
-
     .ArticleBody {
         font-size: 12px;
     }
-
     .WidgetSimple.MobileNotAvailableWidget {
         display: block;
     }
-
     html.NoScroll,
     html.NoScroll body {
         overflow: hidden;
     }
-
     html.NoScroll body {
         position: static;
     }
-
     html.NoScroll #AppWrapper {
         overflow: hidden;
         position: fixed;
     }
-
+    html.NoScroll .Popup #AppWrapper {
+        position: relative;
+    }
     .MessageBox {
         margin: 0;
     }

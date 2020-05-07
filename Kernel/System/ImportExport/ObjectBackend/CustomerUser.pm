@@ -581,9 +581,9 @@ sub ImportDataSave {
         #        }
 
         if ( $MappingObjectData->{Key} ne "UserCountry" ) {
-            $NewCustomerUserData{ $MappingObjectData->{Key} } = 
+            $NewCustomerUserData{ $MappingObjectData->{Key} } =
             $Param{ImportDataRow}->[$Counter];
-        } 
+        }
         else {
             # Sanitize country if it isn't found in KIX to increase the chance it will
             # Note that standardizing against the ISO 3166-1 list might be a better approach...
@@ -620,8 +620,12 @@ sub ImportDataSave {
     my %CustomerUserData = ();
 
     my $CustomerUserKey;
-    my $CustomerBackend = $Kernel::OM->Get('Kernel::Config')->Get($ObjectData->{CustomerBackend} || $ObjectData->{CustomerUserBackend});
-    if ( $CustomerBackend && $CustomerBackend->{CustomerKey} && $CustomerBackend->{Map} ) {
+    my $CustomerBackend = $Kernel::OM->Get('Kernel::Config')->Get($ObjectData->{CustomerBackend});
+    if (
+        ref $CustomerBackend eq 'HASH'
+        && $CustomerBackend->{CustomerKey}
+        && $CustomerBackend->{Map}
+    ) {
         for my $Entry ( @{ $CustomerBackend->{Map} } ) {
             next if ( $Entry->[1] ne $CustomerBackend->{CustomerKey} );
 
@@ -631,6 +635,14 @@ sub ImportDataSave {
         if ( !$CustomerUserKey ) {
             $CustomerUserKey = "UserLogin";
         }
+    }
+
+    else {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "ImportDataSave: Invalid CustomerUser backend ($ObjectData->{CustomerBackend})!",
+        );
+        return ( undef, 'Failed' );
     }
 
     if ( $NewCustomerUserData{$CustomerUserKey} ) {
@@ -740,7 +752,7 @@ sub ImportDataSave {
         delete $CustomerUserData{ID};
         $Result = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserAdd(
             %CustomerUserData,
-            Source => $ObjectData->{CustomerBackend} || $ObjectData->{CustomerUserBackend},
+            Source => $ObjectData->{CustomerBackend},
             UserID => $Param{UserID},
         );
 

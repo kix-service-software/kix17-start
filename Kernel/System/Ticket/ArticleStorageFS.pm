@@ -259,6 +259,12 @@ sub ArticleDeleteAttachment {
         }
     }
 
+    # delete attachments from search index
+    return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+        SQL  => 'DELETE FROM article_attachment_search WHERE article_id = ?',
+        Bind => [ \$Param{ArticleID} ],
+    );
+
     # delete cache
     if ( $Self->{ArticleStorageCache} ) {
 
@@ -476,6 +482,21 @@ sub ArticleWriteAttachment {
 
         $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
             Type => 'ArticleStorageFS_' . $Param{ArticleID},
+        );
+    }
+
+    # write attachment to search index
+    if (
+        $Param{Filename}
+        && $Param{Filename} ne 'file-1'
+        && $Param{Filename} ne 'file-2'
+    ) {
+        # convert to lowercase to avoid LOWER()/LCASE() in the DB query
+        my $LowerFilename = lc $Param{Filename};
+        return if !$Kernel::OM->Get('Kernel::System::DB')->Do(
+            SQL  => 'INSERT INTO article_attachment_search (article_id, filename)'
+                  . ' VALUES (?, ?)',
+            Bind => [ \$Param{ArticleID}, \$LowerFilename ],
         );
     }
 

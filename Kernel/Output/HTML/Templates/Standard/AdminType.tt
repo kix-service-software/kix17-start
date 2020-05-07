@@ -107,7 +107,7 @@
 [% RenderBlockEnd("NameServerError") %]
 [% RenderBlockStart("ExistNameServerError") %]
                                 <p>[% Translate("A type with this name already exists!") | html %]</p>
-[% RenderBlockEnd("NameServerError") %]
+[% RenderBlockEnd("ExistNameServerError") %]
                             </div>
                         </div>
                         <div class="Clear"></div>

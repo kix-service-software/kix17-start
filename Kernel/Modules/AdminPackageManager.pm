@@ -1196,6 +1196,13 @@ sub Run {
             if ( !$Added ) {
                 $LayoutObject->FatalError();
             }
+
+            elsif (
+                ref $UploadStuff{Uploaded} eq 'ARRAY'
+                && $UploadStuff{Uploaded}->[0]
+            ) {
+                %UploadStuff = %{ $UploadStuff{Uploaded}->[0] };
+            }
         }
 
         # get package from upload cache

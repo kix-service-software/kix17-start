@@ -67,6 +67,25 @@
 
 
     /**
+    *   @subsection events ticket calendar
+    */
+    div.EventDetails {
+        border-color: #9E9E9E;
+        background-color: #F0F0F0;
+    }
+    .EventDetails h3 {
+        border-color: #9E9E9E;
+        background-color: #F0F0F0;
+    }
+    .EventDetails .TableLike {
+        background-color: #FFFFFF;
+    }
+    .EventDetails .EventDetailsLink a {
+        color: #BBBBBB;
+    }
+
+
+    /**
     *   @subsection overlay
     */
     #Overlay {
@@ -188,12 +207,17 @@
     .ControlRow h2 {
         background-color: #F0F0F0;
     }
+    .ControlRow .Icons a {
+        color: #5B5B5B;
+    }
     .ControlRow li.Active,
     .ControlRow li.Active:hover,
     .ControlRow li.Active:active,
     .ControlRow li.Active a,
     .ControlRow li.Active:hover a,
-    .ControlRow li.Active:active a {
+    .ControlRow li.Active:active a,
+    .ControlRow .Icons a.Active,
+    .ControlRow .Icons a:hover {
         color: #0A7CB3;
     }
 
@@ -385,6 +409,9 @@
     .Handle a {
         background: transparent url(../img/handle.png) no-repeat;
     }
+    .DataTable tbody tr.Invalid {
+       color: #CCCCCC;
+    }
 
 
     /*
@@ -565,6 +592,15 @@
 
 
     /**
+    *   @subsection form fields customer company
+    */
+    .CustomerIDContainer{
+        background-color: #F2F2F2;
+        border-color: #9E9E9E;
+    }
+
+
+    /**
     *   @subsection ul table like
     */
     ul.Tablelike {
@@ -606,7 +642,6 @@
     .jstree-InputField .Disabled > .jstree-anchor {
         color: #AAAAAA;
     }
-    .jstree-node.Disabled:hover > .jstree-anchor,
     .jstree-node.Disabled:hover > .jstree-anchor.jstree-hovered,
     .jstree-node.Disabled:hover > .jstree-wholerow.jstree-wholerow-hovered {
         background-color: #F2F2F2;

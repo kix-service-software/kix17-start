@@ -1826,16 +1826,6 @@ sub MaskForm {
         }
     }
 
-    if (
-        $ConfigObject->Get('Ticket::StorageModule') eq
-        'Kernel::System::Ticket::ArticleStorageDB'
-    ) {
-        $LayoutObject->Block(
-            Name => 'Attachment',
-            Data => \%Param
-        );
-    }
-
     # html search mask output
     return $LayoutObject->Output(
         TemplateFile => 'CustomerTicketSearch',

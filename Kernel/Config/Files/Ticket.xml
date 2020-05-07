@@ -2838,6 +2838,32 @@
             </Option>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketOwnerView###SortBy::Default" Required="1" Valid="1">
+        <Description Translatable="1">Defines the default ticket attribute for ticket sorting in the owner view of the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewOwner</SubGroup>
+        <Setting>
+            <Option SelectedID="Age">
+                <Item Key="Age" Translatable="1">Age</Item>
+                <Item Key="TicketNumber" Translatable="1">TicketNumber</Item>
+                <Item Key="Title" Translatable="1">Title</Item>
+                <Item Key="Queue" Translatable="1">Queue</Item>
+                <Item Key="Priority" Translatable="1">Priority</Item>
+                <Item Key="EscalationTime" Translatable="1">EscalationTime</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketOwnerView###Order::Default" Required="1" Valid="1">
+        <Description Translatable="1">Defines the default ticket order in the owner view of the agent interface. Up: oldest on top. Down: latest on top.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewOwner</SubGroup>
+        <Setting>
+            <Option SelectedID="Up">
+                <Item Key="Down" Translatable="1">Down</Item>
+                <Item Key="Up" Translatable="1">Up</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketResponsibleView###SortBy::Default" Required="1" Valid="1">
         <Description Translatable="1">Defines the default ticket attribute for ticket sorting in the responsible view of the agent interface.</Description>
         <Group>Ticket</Group>
@@ -5399,7 +5425,7 @@
             </Option>
         </Setting>
     </ConfigItem>
-    
+
     <ConfigItem Name="Ticket::Frontend::MoveType" Required="1" Valid="1">
         <Description Translatable="1">Determines if the list of possible queues to move to ticket into should be displayed in a dropdown list or in a new window in the agent interface. If "New Window" is set you can add a move note to the ticket.</Description>
         <Group>Ticket</Group>
@@ -6127,6 +6153,26 @@
                 <Item Key="AccessKeyNew"></Item>
                 <Item Key="AccessKeyReached"></Item>
                 <Item Key="Priority">1030030</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::ToolBarModule###20-Ticket::TicketOwner" Required="0" Valid="1">
+        <Description Translatable="1">Agent interface notification module to see the number of tickets an agent is owner for.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::ToolBarModule</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::Output::HTML::ToolBar::TicketOwner</Item>
+                <Item Key="CssClass">Owner</Item>
+                <Item Key="CssClassNew">Owner New</Item>
+                <Item Key="CssClassReached">Owner Reached</Item>
+                <Item Key="Icon">fa fa-user-o</Item>
+                <Item Key="IconNew">fa fa-user-o</Item>
+                <Item Key="IconReached">fa fa-user-o</Item>
+                <Item Key="AccessKey">r</Item>
+                <Item Key="AccessKeyNew"></Item>
+                <Item Key="AccessKeyReached"></Item>
+                <Item Key="Priority">1030040</Item>
             </Hash>
         </Setting>
     </ConfigItem>
@@ -9102,6 +9148,22 @@
             <FrontendModuleReg>
                 <Description Translatable="1">Locked Tickets.</Description>
                 <Title Translatable="1">Locked Tickets</Title>
+                <NavBarName>Ticket</NavBarName>
+                <Loader>
+                    <JavaScript>Core.UI.AllocationList.js</JavaScript>
+                    <JavaScript>Core.Agent.TableFilters.js</JavaScript>
+                </Loader>
+            </FrontendModuleReg>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="Frontend::Module###AgentTicketOwnerView" Required="0" Valid="1">
+        <Description Translatable="1">Frontend module registration for the agent interface.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::ModuleRegistration</SubGroup>
+        <Setting>
+            <FrontendModuleReg>
+                <Description>Owner Tickets</Description>
+                <Title>Owner Tickets</Title>
                 <NavBarName>Ticket</NavBarName>
                 <Loader>
                     <JavaScript>Core.UI.AllocationList.js</JavaScript>
@@ -12168,6 +12230,41 @@ Thanks for your help!
             </Hash>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="Ticket::Frontend::AgentTicketOwnerView###DefaultColumns" Required="0" Valid="1">
+        <Description Translatable="1">Columns that can be filtered in the owner view of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. Note: no more columns are allowed and will be discarded.</Description>
+        <Group>Ticket</Group>
+        <SubGroup>Frontend::Agent::Ticket::ViewOwner</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Age">2</Item>
+                <Item Key="Changed">1</Item>
+                <Item Key="Created">1</Item>
+                <Item Key="CustomerCompanyName">1</Item>
+                <Item Key="CustomerID">2</Item>
+                <Item Key="CustomerName">1</Item>
+                <Item Key="CustomerUserID">1</Item>
+                <Item Key="EscalationResponseTime">1</Item>
+                <Item Key="EscalationSolutionTime">1</Item>
+                <Item Key="EscalationTime">1</Item>
+                <Item Key="EscalationUpdateTime">1</Item>
+                <Item Key="From">1</Item>
+                <Item Key="FromTitle">2</Item>
+                <Item Key="TicketNumber">2</Item>
+                <Item Key="LastCustomerSubject">1</Item>
+                <Item Key="Lock">2</Item>
+                <Item Key="Owner">2</Item>
+                <Item Key="PendingTime">1</Item>
+                <Item Key="Queue">2</Item>
+                <Item Key="Responsible">1</Item>
+                <Item Key="Priority">1</Item>
+                <Item Key="Service">1</Item>
+                <Item Key="State">2</Item>
+                <Item Key="SLA">1</Item>
+                <Item Key="Title">2</Item>
+                <Item Key="Type">1</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Ticket::Frontend::AgentTicketEscalationView###DefaultColumns" Required="0" Valid="1">
         <Description Translatable="1">Columns that can be filtered in the escalation view of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. Note: Only Ticket attributes, Dynamic Fields (DynamicField_NameX) and Customer attributes (e.g. CustomerUserPhone, CustomerCompanyName, ...) are allowed.</Description>
         <Group>Ticket</Group>
@@ -12547,6 +12644,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBCustomer</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch"></Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="CustomerBackends">CustomerUser</Item>
@@ -12576,6 +12674,7 @@ Thanks for your help!
                 <Item Key="InitialCollapsed"></Item>
                 <Item Key="Identifier">KIXSBCustomer</Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch"></Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="CustomerBackends">CustomerUser1</Item>
@@ -13461,6 +13560,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBCISearch001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne">AgentTicket(Phone|Email)</Item>
                 <Item Key="CustomerDependend">AgentTicket(Phone|Email)</Item>
@@ -13497,6 +13597,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBCISearch002</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne">AgentTicket(Phone|Email)</Item>
                 <Item Key="CustomerDependend">AgentTicket(Phone|Email)</Item>
@@ -13533,6 +13634,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBCISearch003</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne">AgentTicket(Phone|Email)</Item>
                 <Item Key="CustomerDependend">AgentTicket(Phone|Email)</Item>
@@ -14692,6 +14794,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimiliarFAQ</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="FAQLink">1</Item>
                 <Item Key="LinkType"></Item>
                 <Item Key="MatchAll">1</Item>
@@ -14723,6 +14826,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimiliarFAQ</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="FAQLink">0</Item>
                 <Item Key="LinkType"></Item>
                 <Item Key="MatchAll">1</Item>
@@ -14819,6 +14923,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTicketLinkedCIs</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType"></Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -15905,6 +16010,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -15942,6 +16048,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets002</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -15979,6 +16086,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets003</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16016,6 +16124,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets004</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16053,6 +16162,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets005</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16090,6 +16200,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBSimilarTickets001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="LinkType">ParentChild</Item>
                 <Item Key="MaxResultCount">20</Item>
                 <Item Key="MaxResultDisplay">5</Item>
@@ -16151,6 +16262,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBConfigItemView001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="ConfigItemAttribute::Name">1</Item>
                 <Item Key="ConfigItemAttribute::DeplState">1</Item>
                 <Item Key="ConfigItemAttribute::Vendor">1</Item>
@@ -16179,6 +16291,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBConfigItemView001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="ConfigItemAttribute::Name">1</Item>
                 <Item Key="ConfigItemAttribute::DeplState">1</Item>
                 <Item Key="ConfigItemAttribute::Vendor">1</Item>
@@ -16618,6 +16731,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBList001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="CustomerDependend">AgentTicket(Phone|Email)</Item>
@@ -16668,6 +16782,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBList001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="ArrayHandling">or</Item>
                 <Item Key="AutoSearch">CustomerTicket(Message|Zoom)</Item>
                 <Item Key="AutoSelectOne"></Item>
@@ -16718,6 +16833,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBList002</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicketZoom</Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
@@ -16767,6 +16883,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBList003</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="AutoSearch">AgentTicket(Phone|Email|Zoom)</Item>
                 <Item Key="AutoSelectOne"></Item>
                 <Item Key="DatabaseCacheTTL"></Item>
@@ -16930,6 +17047,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBItem001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="DatabaseCacheTTL">3600</Item>
                 <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
                 <Item Key="DatabaseField::00::first_name::Firstname"></Item>
@@ -16970,6 +17088,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBItem001</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="DatabaseCacheTTL">3600</Item>
                 <Item Key="DatabaseDSN">DBI:Pg:dbname=kix17;host=localhost</Item>
                 <Item Key="DatabaseField::00::first_name::Firstname"></Item>
@@ -17008,6 +17127,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBItem002</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="DatabaseCacheTTL">3600</Item>
                 <Item Key="DatabaseDSN">DBI:Pg:dbname=example;host=exampleserver</Item>
                 <Item Key="DatabaseField::00::name">http://exampleserver/$LQData{"Key"}/</Item>
@@ -17041,6 +17161,7 @@ Thanks for your help!
                 <Item Key="Identifier">KIXSBRemoteDBItem003</Item>
                 <Item Key="Group"></Item>
                 <Item Key="Callback"></Item>
+                <Item Key="InitialJS"></Item>
                 <Item Key="DatabaseCacheTTL">3600</Item>
                 <Item Key="DatabaseDSN">DBI:Pg:dbname=example;host=exampleserver</Item>
                 <Item Key="DatabaseField::00::name">http://exampleserver/$LQData{"Key"}/</Item>

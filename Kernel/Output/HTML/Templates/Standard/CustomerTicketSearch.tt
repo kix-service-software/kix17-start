@@ -94,7 +94,6 @@
 [% RenderBlockEnd("DynamicField") %]
             </fieldset>
 
-[% RenderBlockStart("Attachment") %]
             <fieldset class="TableLike">
                 <legend><span>[% Translate("Attachments") | html %]</span></legend>
                 <label for="AttachmentName">[% Translate("Attachment Name") | html %]:</label>
@@ -103,7 +102,6 @@
                     <p class="FieldExplanation">[% Translate("e. g. m*file or myfi*") | html %]</p>
                 </div>
             </fieldset>
-[% RenderBlockEnd("Attachment") %]
 
             <fieldset class="TableLike">
                 <legend><span>[% Translate("Ticket Attributes") | html %]</span></legend>

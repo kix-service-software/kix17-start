@@ -181,6 +181,15 @@ sub MappingObjectAttributesGet {
         UserID     => $Param{UserID},
     );
 
+    # check backend
+    if ( ref( $Kernel::OM->Get('Kernel::Config')->{ $ObjectData->{CustomerCompanyBackend} }->{'Map'} ) ne 'ARRAY' ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "No valid customer company backend mapping found for the template id $Param{TemplateID}",
+        );
+        return;
+    }
+
     my @ElementList = qw{};
     my @Map = @{ $Kernel::OM->Get('Kernel::Config')->{ $ObjectData->{CustomerCompanyBackend} }->{'Map'} };
 
@@ -548,7 +557,11 @@ sub ImportDataSave {
 
     my $CustomerCompanyKey;
     my $CustomerCompanyBackend = $Kernel::OM->Get('Kernel::Config')->Get($ObjectData->{CustomerCompanyBackend});
-    if ( $CustomerCompanyBackend && $CustomerCompanyBackend->{CustomerCompanyKey} && $CustomerCompanyBackend->{Map} ) {
+    if (
+        ref $CustomerCompanyBackend eq 'HASH'
+        && $CustomerCompanyBackend->{CustomerCompanyKey}
+        && $CustomerCompanyBackend->{Map}
+    ) {
         for my $Entry ( @{ $CustomerCompanyBackend->{Map} } ) {
             next if ( $Entry->[1] ne $CustomerCompanyBackend->{CustomerCompanyKey} );
 
@@ -560,7 +573,18 @@ sub ImportDataSave {
         }
     }
 
-    if ( $NewCustomerCompanyData{$CustomerCompanyKey} ) {
+    else {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "ImportDataSave: Invalid CustomerCompany backend ($ObjectData->{CustomerCompanyBackend})!",
+        );
+        return ( undef, 'Failed' );
+    }
+
+    if (
+        defined $CustomerCompanyKey
+        && $NewCustomerCompanyData{$CustomerCompanyKey}
+    ) {
         %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
             CustomerID => $NewCustomerCompanyData{$CustomerCompanyKey}
         );

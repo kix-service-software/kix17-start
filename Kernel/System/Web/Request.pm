@@ -254,39 +254,62 @@ gets file upload data.
 sub GetUploadAll {
     my ( $Self, %Param ) = @_;
 
-    # get upload
-    my $Upload = $Self->{Query}->upload( $Param{Param} );
-    return if !$Upload;
+    my @Upload = $Self->{Query}->upload( $Param{Param} );
+    return if !scalar(@Upload);
 
-    # get real file name
-    my $UploadFilenameOrig = $Self->GetParam( Param => $Param{Param} ) || 'unknown';
-
-    my $NewFileName = "$UploadFilenameOrig";    # use "" to get filename of anony. object
-    $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$NewFileName );
-
-    # replace all devices like c: or d: and dirs for IE!
-    $NewFileName =~ s/.:\\(.*)/$1/g;
-    $NewFileName =~ s/.*\\(.+?)/$1/g;
-
-    # return a string
-    my $Content;
-    while (<$Upload>) {
-        $Content .= $_;
-    }
-    close $Upload;
-
-    # Check if content is there, IE is always sending file uploads without content.
-    return if !$Content;
-
-    my $ContentType = $Self->_GetUploadInfo(
-        Filename => $UploadFilenameOrig,
-        Header   => 'Content-Type',
+    my @Attachments = $Self->GetArray(
+        Param => $Param{Param},
+        Raw   => 1
     );
 
+    if ( !scalar @Attachments ) {
+        @Attachments = ('unknown');
+    }
+
+    my @Return;
+    ATTACHMENT:
+    for my $Attachment (@Attachments) {
+
+        # use "" to get filename of anony. object
+        my $FileName = "$Attachment";
+
+        $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$FileName );
+
+        # replace all devices like c: or d: and dirs for IE!
+        $FileName =~ s/.:\\(.*)/$1/g;
+        $FileName =~ s/.*\\(.+?)/$1/g;
+
+        # return a string
+        my $Content;
+        while (<$Attachment>) {
+            $Content .= $_;
+        }
+        close $Attachment;
+
+        # Check if content is there, IE is always sending file uploads without content.
+        next ATTACHMENT if !$Content;
+
+        my $ContentType = $Self->_GetUploadInfo(
+            Filename => $Attachment,
+            Header   => 'Content-Type',
+        );
+
+        push(
+            @Return,
+            {
+                Filename    => $FileName,
+                Content     => $Content,
+                ContentType => $ContentType,
+            }
+        );
+    }
+
+    if ( scalar(@Return) == 1 ) {
+        return %{$Return[0]};
+    }
+
     return (
-        Filename    => $NewFileName,
-        Content     => $Content,
-        ContentType => $ContentType,
+        Uploaded => \@Return
     );
 }
 

@@ -54,6 +54,15 @@
 </script>
 [% RenderBlockEnd("SidebarFrame") %]
 
+[% RenderBlockStart("InitialJS") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    [% Data.InitialJS %]
+//]]>
+</script>
+[% END %]
+[% RenderBlockEnd("InitialJS") %]
+
 [% RenderBlockStart("KIXSidebarMessageResult") %]
 <div style="[% Data.Style | html %]" >
     <table id="Result[% Data.Identifier | html %]" class="DataTable">

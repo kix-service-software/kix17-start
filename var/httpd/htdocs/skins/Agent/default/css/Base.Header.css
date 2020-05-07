@@ -22,7 +22,6 @@
         padding: 0px;
         margin-bottom: 40px;
     }
-
     #ResponsiveLogo {
         display: none;
     }
@@ -37,13 +36,13 @@
         background-repeat: no-repeat;
     }
 
+
     /**
     *   @subsection popup
     */
     .LayoutPopup > .Header {
         padding: 7px 20px;
     }
-
     .LayoutPopup > .Header h1 {
         font-size: 14px;
         font-weight: bold;
@@ -69,7 +68,6 @@
         font-size: 13px;
         font-weight: bold;
     }
-
     .TicketLockMessage {
         display: inline-block;
         font-size: inherit;
@@ -93,6 +91,8 @@
         margin: 10px 0px 5px 0px;
         min-width: 150px;
     }
+
+
     /**
     * @subsection Toolbar
     */
@@ -265,11 +265,14 @@
         text-indent: 0;
         width: 24px;
     }
-
     #ToolBar li.SearchFulltext Input {
         height: 14px;
         vertical-align: bottom;
     }
+    #ToolBar li > a > i.fa-user-o {
+        font-size: 16px;
+    }
+
 
     /**
     * @subsection UserInfo
@@ -306,6 +309,7 @@
         font-size: 18px;
     }
 
+
     /**
     * @subsection Navigation
     */
@@ -319,7 +323,6 @@
         overflow: hidden;
         box-sizing: border-box;
     }
-
     #NavigationContainer > a {
         font-weight: bold;
         font-size: 13px;
@@ -341,7 +344,6 @@
         left: 0px;
         position: absolute;
     }
-
     #Navigation > li {
         font-weight: bold;
         float: left;
@@ -370,14 +372,13 @@
     #Navigation > li > ul {
         top: 37px;
         display: none;
-        z-index: 2;
+        position: absolute;
     }
     #Navigation > .Active > ul {
         position: absolute;
         left: 0px;
         display: block;
         min-width: 240px;
-        z-index: 99;
         border-width: 0 1px 1px 1px;
     }
     #Navigation > .Active > ul > li {
@@ -394,7 +395,6 @@
     #Navigation .Search {
         width: 16px;
     }
-
     #Navigation > .Selected {
         z-index: 90;
     }

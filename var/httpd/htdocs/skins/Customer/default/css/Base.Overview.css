@@ -173,7 +173,6 @@
         font-size: 14px;
         padding: 5px 0 5px 3px;
     }
-
     ul.ContextFunctions li.ContextHelp a span,
     ul.ContextFunctions li.ContextSettings a span {
         display: block;
@@ -252,7 +251,7 @@
         position: absolute;
         top: 23px;
         left: 0;
-        z-index: 999;
+        z-index: 10;
         min-width: 110%;
         height: 0;
         opacity: 0;
@@ -261,7 +260,6 @@
     }
     .Cluster > ul > li {
         position: relative;
-        z-index: 1;
     }
     .Cluster ul ul li::after {
         display: none;

@@ -104,8 +104,8 @@ sub CategoryAdd {
 
     # get new category id
     return if !$DBObject->Prepare(
-        SQL   => 'SELECT id FROM faq_category WHERE name = ?',
-        Bind  => [ \$Param{Name} ],
+        SQL   => 'SELECT id FROM faq_category WHERE name = ? AND parent_id = ?',
+        Bind  => [ \$Param{Name}, \$Param{ParentID} ],
         Limit => 1,
     );
 

@@ -13,6 +13,7 @@ package Kernel::System::Main;
 use strict;
 use warnings;
 
+use Bytes::Random::Secure::Tiny;
 use Digest::MD5 qw(md5_hex);
 use Data::Dumper qw(Dumper);
 use File::stat;
@@ -1011,27 +1012,31 @@ defaults to a length of 16 and alphanumerics ( 0..9, A-Z and a-z).
 sub GenerateRandomString {
     my ( $Self, %Param ) = @_;
 
+    # get CSPRNG
+    my $CSPRNGObject = Bytes::Random::Secure::Tiny->new(
+        bits        => 256,
+        nonblocking => 1,
+    );
+
+    # init length for string
     my $Length = $Param{Length} || 16;
 
-    # The standard list of characters in the dictionary. Don't use special chars here.
+    # prepare default dictionary
     my @DictionaryChars = ( 0 .. 9, 'A' .. 'Z', 'a' .. 'z' );
 
     # override dictionary with custom list if given
-    if ( $Param{Dictionary} && ref $Param{Dictionary} eq 'ARRAY' ) {
+    if (
+        $Param{Dictionary}
+        && ref $Param{Dictionary} eq 'ARRAY'
+    ) {
         @DictionaryChars = @{ $Param{Dictionary} };
     }
 
-    my $DictionaryLength = scalar @DictionaryChars;
+    # init dictionary string
+    my $DictionaryString = join('', @DictionaryChars);
 
     # generate the string
-    my $String;
-
-    for ( 1 .. $Length ) {
-
-        my $Key = int rand $DictionaryLength;
-
-        $String .= $DictionaryChars[$Key];
-    }
+    my $String = $CSPRNGObject->string_from($DictionaryString, $Length);
 
     return $String;
 }

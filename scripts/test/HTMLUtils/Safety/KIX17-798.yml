@@ -1,0 +1,94 @@
+---
+0001:
+  StepName: 'Remove redirect with > in meta-attribute'
+  InputData:
+    String: |-
+      <meta foo=">" http-equiv=refresh content="10;URL='http://example.com'" />
+  CheckValue:
+    String: |-
+      
+    Replace: 1
+0002:
+  StepName: 'Remove javascript code in href with leading zero in unicode'
+  InputData:
+    String: |-
+      <a href='javascrip&#0116;:alert(document.location.origin)'>XSS</a>
+      <a href='javascrip&#x074;:alert(document.location.origin)'>XSS</a>
+      <a href='java&#x0A;script:alert(document.location.origin)'>XSS</a>
+      <a href='javascrip&#00116;:alert(document.location.origin)'>XSS</a>
+      <a href='javascrip&#x0074;:alert(document.location.origin)'>XSS</a>
+      <a href='java&#x00A;script:alert(document.location.origin)'>XSS</a>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <a>XSS</a>
+      <a>XSS</a>
+      <a>XSS</a>
+      <a>XSS</a>
+      <a>XSS</a>
+      <a>XSS</a>
+    Replace: 1
+0003:
+  StepName: 'Remove javascript code in href with control characters'
+  InputData:
+    String: |-
+      <a href=' &#15; javascript:alert(document.location.origin)'>XSS</a>
+      <a href="javas cript:alert(document.location.origin)">XSS</a>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <a>XSS</a>
+      <a>XSS</a>
+    Replace: 1
+0004:
+  StepName: 'Remove javascript code in form action'
+  InputData:
+    String: |-
+      <form><button
+      formaction=javascript:alert(document.location.origin)>XSS</button></form>
+      <form action=javascript:alert(document.location.origin)><input
+      type=submit value=XSS>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <form><button>XSS</button></form>
+      <form><input type="submit" value="XSS" />
+    Replace: 1
+0005:
+  StepName: 'Remove javascript from srcdoc of iframes'
+  InputData:
+    String: |-
+      <iframe srcdoc="&lt;img &#115;rc=x
+      &#111;nerror='fetch(&quot;/otrs/index.pl&quot;,{credentials:&quot;include
+      &quot;}).then(r=>r.text()).then(s=>alert(s.match(/SessionID:\s*&quot;([a-z
+      A-Z0-9]*)&quot;/)[1]))' />" sandbox="allow-same-origin allow-scripts
+      allow-modals"></iframe>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <iframe srcdoc="&lt;img src=&quot;x&quot; /&gt;" sandbox="allow-same-origin allow-scripts
+      allow-modals"></iframe>
+    Replace: 1
+0006:
+  StepName: 'Remove javascript from xlink:href'
+  InputData:
+    String: |-
+      <math><xss
+      xlink:href="javascript:alert(document.location.origin)">XSS</xss></math>
+    NoJavaScript: 1
+  CheckValue:
+    String: |-
+      <math><xss>XSS</xss></math>
+    Replace: 1
+0007:
+  StepName: 'Remove unclosed svg tags'
+  InputData:
+    String: |-
+      <svg width=12cm height=9cm><a><image
+      href="https://google.com/favicon.ico"></image><set attributeName=href
+      to="javascript:alert(document.location.origin)"> </set>
+    NoSVG: 1
+  CheckValue:
+    String: |-
+      
+    Replace: 1

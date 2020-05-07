@@ -628,7 +628,10 @@ sub _AddTestStep {
 
     # set message
     if ( $Param{'Message'} ) {
-        $StepEntry{'statusDetails'}->{'message'} = $Param{'Message'};
+        push( @{ $StepEntry{'parameters'} }, {
+            name  => 'Message',
+            value => $Param{'Message'}
+        } );
     }
 
     # increment test count
@@ -640,6 +643,7 @@ sub _AddTestStep {
     if ( $Param{'Success'} ) {
         # set status
         $StepEntry{'status'} = 'passed';
+
         # increment success count
         $Self->{'Count'}->{'Success'}               += 1;
         $Self->{'TestFile'}->{'Count'}->{'Success'} += 1;
@@ -651,22 +655,33 @@ sub _AddTestStep {
         if ( $Param{'Broken'} ) {
             $StepEntry{'status'} = 'broken';
         }
+
         # set status failed (Product defect)
         else {
             $StepEntry{'status'} = 'failed';
         }
+
         # increment fail count
         $Self->{'Count'}->{'Fail'}               += 1;
         $Self->{'TestFile'}->{'Count'}->{'Fail'} += 1;
         $Self->{'TestCase'}->{'Count'}->{'Fail'} += 1;
+
         # process trace
-        my $Caller = $Param{'Caller'} || 0;
-        my ( $TracePackage, $TraceFilename, $TraceLine ) = caller( $Caller );
-        $StepEntry{'statusDetails'}->{'trace'} = $Param{'Trace'} || sprintf("%s:%d", $TraceFilename, $TraceLine);
+        my $Trace = $Param{'Trace'};
+        if ( !$Trace ) {
+            my $Caller = $Param{'Caller'} || 0;
+            my ( $TracePackage, $TraceFilename, $TraceLine ) = caller( $Caller );
+            $Trace = sprintf("%s:%d", $TraceFilename, $TraceLine);
+        }
+        push( @{ $StepEntry{'parameters'} }, {
+            name  => 'Trace',
+            value => $Trace
+        } );
+
         # set fail data for testcase
-        
-        $Self->{'TestCase'}->{'Data'}->{'statusDetails'}->{'message'} = $Param{'Message'};
-        $Self->{'TestCase'}->{'Data'}->{'statusDetails'}->{'trace'}   = $Param{'Trace'} || sprintf("%s:%d", $TraceFilename, $TraceLine);
+        $Self->{'TestCase'}->{'Data'}->{'statusDetails'}->{'message'} = $Param{'Message'} || '->>No Message!<<-';
+        $Self->{'TestCase'}->{'Data'}->{'statusDetails'}->{'trace'}   = $Trace;
+
         # set fail status for testcase
         if (
             $Param{'Broken'}
@@ -678,6 +693,7 @@ sub _AddTestStep {
         else {
             $Self->{'TestCase'}->{'Data'}->{'status'} = 'failed';
         }
+
         # set fail return code
         $Self->{'ReturnCode'} = 0;
     }

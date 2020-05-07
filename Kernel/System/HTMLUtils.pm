@@ -3,12 +3,9 @@
 # based on the original work of:
 # Copyright (C) 2001-2020 OTRS AG, https://otrs.com/
 # --
-# This software comes with ABSOLUTELY NO WARRANTY. This program is
-# licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
-# For details, see the enclosed files LICENSE (AGPL) and
-# LICENSE-GPL3 (GPL3) for license information. If you did not receive
-# this files, see https://www.gnu.org/licenses/agpl.txt (APGL) and
-# https://www.gnu.org/licenses/gpl-3.0.txt (GPL3).
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file LICENSE for license information (AGPL). If you
+# did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
 # --
 
 package Kernel::System::HTMLUtils;
@@ -19,6 +16,8 @@ use warnings;
 use utf8;
 
 use MIME::Base64;
+use HTML::Entities qw(decode_entities encode_entities);
+use HTML::Parser;
 use HTML::Truncate;
 
 our @ObjectDependencies = (
@@ -977,229 +976,411 @@ sub Safety {
 
     # check ref
     my $StringScalar;
-    my $StringIsRef = 1;
-    if ( !ref $String ) {
-        $StringScalar = $String;
-        $String       = \$StringScalar;
-        $StringIsRef  = 0;
+    my $StringIsRef = 0;
+    if ( ref $String ) {
+        $String = $$String;
+        $StringIsRef  = 1;
     }
 
-    my %Safety;
+    # get parser object
+    my $Parser = HTML::Parser->new(
+        api_version        => 3,
+        declaration_h      => [ \&_DeclarationHandler, 'self, text' ],
+        start_h            => [ \&_TagStartHandler, 'self, tagname, attr, attrseq' ],
+        end_h              => [ \&_TagEndHandler, 'self, tagname' ],
+        text_h             => [ \&_TextHandler, 'self, text, is_cdata' ],
+        empty_element_tags => 1,
+        unbroken_text      => 1
+    );
 
-    my $Replaced;
+    # init variables for parser
+    $Parser->{Safety} = {
+        'String'  => '',
+        'Replace' => 0,
+    };
+    $Parser->{Config} = {
+        NoApplet       => $Param{NoApplet},
+        NoObject       => $Param{NoObject},
+        NoEmbed        => $Param{NoEmbed},
+        NoSVG          => $Param{NoSVG},
+        NoImg          => $Param{NoImg},
+        NoIntSrcLoad   => $Param{NoIntSrcLoad},
+        NoExtSrcLoad   => $Param{NoExtSrcLoad},
+        NoJavaScript   => $Param{NoJavaScript},
+        ReplacementStr => $Param{ReplacementStr} // '',
+    };
+    $Parser->{Flag}         = {};
+    $Parser->{TagMap}       = {
+        'JavaScript' => 'script',
+        'Applet'     => 'applet',
+        'Object'     => 'object',
+        'SVG'        => 'svg',
+        'Img'        => 'img',
+        'Embed'      => 'embed'
+    };
+    $Parser->{VoidElements} = {
+        'area'    => 1,
+        'base'    => 1,
+        'br'      => 1,
+        'col'     => 1,
+        'command' => 1,
+        'embed'   => 1,
+        'hr'      => 1,
+        'img'     => 1,
+        'input'   => 1,
+        'keygen'  => 1,
+        'link'    => 1,
+        'meta'    => 1,
+        'param'   => 1,
+        'source'  => 1,
+        'track'   => 1,
+        'wbr'     => 1
+    };
 
-    # In UTF-7, < and > can be encoded to mask them from security filters like this one.
-    my $TagStart = '(?:<|[+]ADw-)';
-    my $TagEnd   = '(?:>|[+]AD4-)';
+    # handle UTF7
+    $String =~ s/[+]ADw-/</igsm;
+    $String =~ s/[+]AD4-/>/igsm;
 
-    # This can also be entity-encoded to hide it from the parser.
-    #   Browsers seem to tolerate an omitted ";".
-    my $JavaScriptPrefixRegex = <<'END';
-        (?: j | &\#106[;]? | &\#x6a[;]? )
-        (?: a | &\#97[;]?  | &\#x61[;]? )
-        (?: v | &\#118[;]? | &\#x76[;]? )
-        (?: a | &\#97[;]?  | &\#x61[;]? )
-        (?: s | &\#115[;]? | &\#x73[;]? )
-        (?: c | &\#99[;]?  | &\#x63[;]? )
-        (?: r | &\#114[;]? | &\#x72[;]? )
-        (?: i | &\#105[;]? | &\#x69[;]? )
-        (?: p | &\#112[;]? | &\#x70[;]? )
-        (?: t | &\#116[;]? | &\#x74[;]? )
-END
+    # replace slash after tag with whitespace
+    $String =~ s/(<[a-z]+)\/([a-z]+)/$1 $2/igsm;
 
-    my $ExpressionPrefixRegex = <<'END';
-        (?: e | &\#101[;]? | &\#x65[;]? )
-        (?: x | &\#120[;]? | &\#x78[;]? )
-        (?: p | &\#112[;]? | &\#x70[;]? )
-        (?: r | &\#114[;]? | &\#x72[;]? )
-        (?: e | &\#101[;]? | &\#x65[;]? )
-        (?: s | &\#115[;]? | &\#x73[;]? )
-        (?: s | &\#115[;]? | &\#x73[;]? )
-        (?: i | &\#105[;]? | &\#x69[;]? )
-        (?: o | &\#111[;]? | &\#x6f[;]? )
-        (?: n | &\#110[;]? | &\#x6e[;]? )
-END
-
-    # Replace as many times as it is needed to avoid nesting tag attacks.
-    do {
-        $Replaced = undef;
-
-        # remove script tags
-        if ( $Param{NoJavaScript} ) {
-            $Replaced += ${$String} =~ s{
-                $TagStart script.*? $TagEnd .*?  $TagStart /script \s* $TagEnd
-            }
-            {}sgxim;
-            $Replaced += ${$String} =~ s{
-                $TagStart script.*? $TagEnd .+? ($TagStart|$TagEnd)
-            }
-            {}sgxim;
-
-            # remove style/javascript parts
-            $Replaced += ${$String} =~ s{
-                $TagStart style[^>]+? $JavaScriptPrefixRegex (.+?|) $TagEnd (.*?) $TagStart /style \s* $TagEnd
-            }
-            {}sgxim;
-
-            # remove MS CSS expressions (JavaScript embedded in CSS)
-            ${$String} =~ s{
-                ($TagStart style[^>]+? $TagEnd .*? $TagStart /style \s* $TagEnd)
-            }
-            {
-                if ( index($1, 'expression(' ) > -1 ) {
-                    $Replaced = 1;
-                    '';
-                }
-                else {
-                    $1;
-                }
-            }egsxim;
-        }
-
-        # remove HTTP redirects
-        $Replaced += ${$String} =~ s{
-            $TagStart meta [^>]+? http-equiv=('|"|)refresh [^>]+? $TagEnd
-        }
-        {}sgxim;
-
-        my $ReplacementStr = $Param{ReplacementStr} // '';
-
-        # remove <applet> tags
-        if ( $Param{NoApplet} ) {
-            $Replaced += ${$String} =~ s{
-                $TagStart applet.*? $TagEnd (.*?) $TagStart /applet \s* $TagEnd
-            }
-            {$ReplacementStr}sgxim;
-        }
-
-        # remove <Object> tags
-        if ( $Param{NoObject} ) {
-            $Replaced += ${$String} =~ s{
-                $TagStart object.*? $TagEnd (.*?) $TagStart /object \s* $TagEnd
-            }
-            {$ReplacementStr}sgxim;
-        }
-
-        # remove <svg> tags
-        if ( $Param{NoSVG} ) {
-            $Replaced += ${$String} =~ s{
-                $TagStart svg.*? $TagEnd (.*?) $TagStart /svg \s* $TagEnd
-            }
-            {$ReplacementStr}sgxim;
-        }
-
-        # remove <img> tags
-        if ( $Param{NoImg} ) {
-            $Replaced += ${$String} =~ s{
-                $TagStart img.*? (.*?) \s* $TagEnd
-            }
-            {$ReplacementStr}sgxim;
-        }
-
-        # remove <embed> tags
-        if ( $Param{NoEmbed} ) {
-            $Replaced += ${$String} =~ s{
-                $TagStart embed.*? $TagEnd
-            }
-            {$ReplacementStr}sgxim;
-        }
-
-        # check each html tag
-        ${$String} =~ s{
-            ($TagStart.+?$TagEnd)
-        }
-        {
-            my $Tag = $1;
-            if ($Param{NoJavaScript}) {
-
-                # remove on action attributes
-                $Replaced += $Tag =~ s{
-                    (?:\s|/) on[a-z]+\s*=("[^"]+"|'[^']+'|.+?)($TagEnd|\s)
-                }
-                {$2}sgxim;
-
-                # remove javascript in a href links or src links
-                $Replaced += $Tag =~ s{
-                    ((?:\s|;|/)(?:background|url|src|href)=)
-                    ('|"|)                                  # delimiter, can be empty
-                    (?:\s* $JavaScriptPrefixRegex .*?)      # javascript, followed by anything but the delimiter
-                    \2                                      # delimiter again
-                    (\s|$TagEnd)
-                }
-                {
-                    "$1\"\"$3";
-                }sgxime;
-
-                # remove link javascript tags
-                $Replaced += $Tag =~ s{
-                    ($TagStart link .+? $JavaScriptPrefixRegex (.+?|) $TagEnd)
-                }
-                {}sgxim;
-
-                # remove MS CSS expressions (JavaScript embedded in CSS)
-                $Replaced += $Tag =~ s{
-                    \sstyle=("|')[^\1]*? $ExpressionPrefixRegex [(].*?\1($TagEnd|\s)
-                }
-                {
-                    $2;
-                }egsxim;
-            }
-
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
-            # Remove malicious CSS content
-            $Tag =~ s{
-                (\s)style=("|') (.*?) \2
-            }
-            {
-                my ($Space, $Delimiter, $Content) = ($1, $2, $3);
-
-                if (
-                    ($Param{NoIntSrcLoad} && $Content =~ m{url\(})
-                    || ($Param{NoExtSrcLoad} && $Content =~ m/(http|ftp|https):\//i)) {
-                    $Replaced = 1;
-                    '';
-                }
-                else {
-                    "${Space}style=${Delimiter}${Content}${Delimiter}";
-                }
-            }egsxim;
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
-
-            # remove load tags
-            if ($Param{NoIntSrcLoad} || $Param{NoExtSrcLoad}) {
-                $Tag =~ s{
-### Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
-                    ($TagStart (.+?) (?: \s | /) (?:src|poster)=(.+?) (\s.+?|) $TagEnd)
-### EO Patch licensed under the GPL-3.0, Copyright (C) 2001-2018 OTRS AG, https://otrs.com/ ###
-                }
-                {
-                    my $URL = $3;
-                    if ($Param{NoIntSrcLoad} || ($Param{NoExtSrcLoad} && $URL =~ /(http|ftp|https):\//i)) {
-                        $Replaced = 1;
-                        '';
-                    }
-                    else {
-                        $1;
-                    }
-                }segxim;
-            }
-
-            # replace original tag with clean tag
-            $Tag;
-        }segxim;
-
-        $Safety{Replace} += $Replaced;
-
-    } while ($Replaced);
+    # parse string
+    $Parser->parse( $String );
+    $Parser->eof();
 
     # check ref && return result like called
-    if ( !$StringIsRef ) {
-        $Safety{String} = ${$String};
+    if ( $StringIsRef ) {
+        $Parser->{Safety}->{String} = \$Parser->{Safety}->{String};
     }
+    return %{$Parser->{Safety}};
+}
+
+sub _DeclarationHandler {
+    my ( $Self, $Text ) = @_;
+
+    # append to safety string
+    $Self->{Safety}->{String} .= $Text;
+
+    return;
+}
+
+sub _TagStartHandler {
+    my ( $Self, $TagName, $Attributes, $AttributeSequence ) = @_;
+
+    # check for further opening of style tag for expression check
+    if (
+        $Self->{Flag}->{StyleExpression}
+        && lc($TagName) eq 'style'
+    ) {
+        $Self->{Flag}->{StyleExpression} += 1;
+        return;
+    }
+
+    # check for open flagged tag
+    if ( $Self->{Flag}->{TagName} ) {
+        # check for further opening of flagged tag
+        if ( lc($TagName) eq $Self->{Flag}->{TagName} ) {
+            $Self->{Flag}->{TagCount} += 1;
+        }
+
+        return;
+    }
+
+    # check for mapped tags
+    for my $Config ( keys( %{ $Self->{TagMap} } ) ) {
+        if (
+            $Self->{Config}->{ 'No' . $Config }
+            && lc( $TagName ) eq $Self->{TagMap}->{ $Config }
+        ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+
+            # check for non-void elements
+            if ( !$Self->{VoidElements}->{ lc($TagName) } ) {
+                # flag tag
+                $Self->{Flag}->{TagName}  = lc($TagName);
+                $Self->{Flag}->{TagCount} = 1;
+            }
+
+            # add replacement string
+            $Self->{Safety}->{String} .= $Self->{Config}->{ReplacementStr};
+
+            return;
+        }
+    }
+
+    # open tag
+    my $String = '<' . $TagName;
+
+    # process attributes
+    ATTRIBUTE:
+    for my $Attribute ( @{ $AttributeSequence } ) {
+        # check for HTTP redirects
+        if (
+            lc($TagName) eq 'meta'
+            && lc( $Attribute ) eq 'http-equiv'
+            && lc( $Attributes->{ $Attribute } )  eq 'refresh'
+        ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+            return;
+        }
+
+        # cleanup javascript code
+        if ( $Self->{Config}->{NoJavaScript} ) {
+            # check for link and style tag
+            if (
+                lc($TagName) eq 'link'
+                || lc($TagName) eq 'style'
+            ) {
+                # check for type 'text/javascript'
+                if (
+                    lc( $Attribute ) eq 'type'
+                    && lc( $Attributes->{ $Attribute } ) eq 'text/javascript'
+                ) {
+                    # remember replacement
+                    $Self->{Safety}->{Replace} = 1;
+
+                    # flag tag
+                    $Self->{Flag}->{TagName}  = lc($TagName);
+                    $Self->{Flag}->{TagCount} = 1;
+
+                    return;
+                }
+                else {
+                    # flag check for style expression
+                    $Self->{Flag}->{StyleExpression} = 1;
+                }
+            }
+
+            # check for animate and set tag
+            if (
+                lc($TagName) eq 'animate'
+                || lc($TagName) eq 'set'
+            ) {
+                my $CheckValue = lc( $Attributes->{ $Attribute } );
+                $CheckValue =~ s/[^a-z1-9:;=()]+//g;
+                if ( $CheckValue =~ m/^javascript.+/ ) {
+                    # remember replacement
+                    $Self->{Safety}->{Replace} = 1;
+
+                    # flag tag
+                    $Self->{Flag}->{TagName}  = lc($TagName);
+                    $Self->{Flag}->{TagCount} = 1;
+
+                    return;
+                }
+            }
+
+            # check for 'on'-attributes
+            if ( $Attribute =~ m/^on[a-z]+$/i ) {
+                # remember replacement
+                $Self->{Safety}->{Replace} = 1;
+
+                next ATTRIBUTE;
+            }
+
+            # check several attributes for javascript code
+            if (
+                lc( $Attribute ) eq 'background'
+                || lc( $Attribute ) eq 'url'
+                || lc( $Attribute ) eq 'src'
+                || lc( $Attribute ) eq 'href'
+                || lc( $Attribute ) eq 'xlink:href'
+                || lc( $Attribute ) eq 'action'
+                || lc( $Attribute ) eq 'formaction'
+            ) {
+                my $CheckValue = lc( $Attributes->{ $Attribute } );
+                $CheckValue =~ s/[^a-z1-9:;=()]+//g;
+                if ( $CheckValue =~ m/^javascript.+/ ) {
+                    # remember replacement
+                    $Self->{Safety}->{Replace} = 1;
+
+                    next ATTRIBUTE;
+                }
+            }
+
+            # check for expression function in style attribute
+            if (
+                lc( $Attribute ) eq 'style'
+                && $Attributes->{ $Attribute } =~ m/expression\(/i
+            ) {
+                # remember replacement
+                $Self->{Safety}->{Replace} = 1;
+
+                next ATTRIBUTE;
+            }
+        }
+
+        # cleanup internal load statements
+        if ( $Self->{Config}->{NoIntSrcLoad} ) {
+            # check for url function in style attribute
+            if (
+                lc( $Attribute ) eq 'style'
+                && $Attributes->{ $Attribute } =~ m/url\(/i
+            ) {
+                # remember replacement
+                $Self->{Safety}->{Replace} = 1;
+
+                next ATTRIBUTE;
+            }
+
+            # check for src and poster attribute
+            if (
+                lc( $Attribute ) eq 'poster'
+                || lc( $Attribute ) eq 'src'
+            ) {
+                # remember replacement
+                $Self->{Safety}->{Replace} = 1;
+
+                next ATTRIBUTE;
+            }
+        }
+
+        # cleanup external load statements
+        if ( $Self->{Config}->{NoExtSrcLoad} ) {
+            # check for url in style attribute
+            if (
+                lc( $Attribute ) eq 'style'
+                && $Attributes->{ $Attribute } =~ m/(?:http|ftp|https):\/\//i
+            ) {
+                # remember replacement
+                $Self->{Safety}->{Replace} = 1;
+
+                next ATTRIBUTE;
+            }
+
+            # check for url in src and poster attribute
+            if (
+                (
+                    lc( $Attribute ) eq 'poster'
+                    || lc( $Attribute ) eq 'src'
+                )
+                && $Attributes->{ $Attribute } =~ m/(?:http|ftp|https):\/\//i
+            ) {
+                # remember replacement
+                $Self->{Safety}->{Replace} = 1;
+
+                next ATTRIBUTE;
+            }
+        }
+
+        # check for iframe with srcdoc attribute
+        if (
+            lc($TagName) eq 'iframe'
+            && lc( $Attribute ) eq 'srcdoc'
+        ) {
+            # call safety function for srcdoc
+            my %Safety = $Kernel::OM->Get('Kernel::System::HTMLUtils')->Safety(
+                %{ $Self->{Config} },
+                String => $Attributes->{ $Attribute },
+            );
+            if ( $Safety{Replace} ) {
+                # remember replacement
+                $Self->{Safety}->{Replace} = 1;
+
+                # replace attribute value
+                $Attributes->{ $Attribute } = $Safety{String};
+            }
+        }
+
+        # add attribute with value
+        $String .= ' ' . $Attribute . '="' . encode_entities( $Attributes->{ $Attribute } ) . '"';
+    }
+
+    # special handling for void elements
+    if ( $Self->{VoidElements}->{ lc($TagName) } ) {
+        $String .= ' /';
+    }
+
+    # close tag
+    $String .= '>';
+
+    # append to safety string
+    $Self->{Safety}->{String} .= $String;
+
+    return;
+}
+
+sub _TagEndHandler {
+    my ( $Self, $TagName ) = @_;
+
+    # ignore void elements
+    if ( $Self->{VoidElements}->{ lc($TagName) } ) {
+        return;
+    }
+
+    # check style tag for expression function
+    if ( $Self->{Flag}->{StyleExpression} ) {
+        # check for closing of style tag for expression check
+        if ( lc($TagName) eq 'style' ) {
+            $Self->{Flag}->{StyleExpression} -= 1;
+            if ( $Self->{Flag}->{StyleExpression} == 0 ) {
+                delete( $Self->{Flag}->{StyleExpression} );
+            }
+        }
+    }
+
+    # check for open flagged tag
+    if ( $Self->{Flag}->{TagName} ) {
+        # check for closing of flagged tag
+        if ( lc($TagName) eq $Self->{Flag}->{TagName} ) {
+            $Self->{Flag}->{TagCount} -= 1;
+            if ( $Self->{Flag}->{TagCount} == 0 ) {
+                delete( $Self->{Flag}->{TagName} );
+                delete( $Self->{Flag}->{TagCount} );
+            }
+        }
+        return;
+    }
+
+    # check for mapped tags
+    for my $Config ( keys( %{ $Self->{TagMap} } ) ) {
+        if (
+            $Self->{Config}->{ 'No' . $Config }
+            && lc( $TagName ) eq $Self->{TagMap}->{ $Config }
+        ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+
+            return;
+        }
+    }
+
+    # append to safety string
+    $Self->{Safety}->{String} .= '</' . $TagName . '>';
+
+    return;
+}
+
+sub _TextHandler {
+    my ( $Self, $Text, $IsCDATA ) = @_;
+
+    # check style tag for expression function
+    if ( $Self->{Flag}->{StyleExpression} ) {
+        if ( $Text =~ m/expression\(/i ) {
+            # remember replacement
+            $Self->{Safety}->{Replace} = 1;
+
+            return;
+        }
+    }
+
+    # check for open flagged tag
+    if ( $Self->{Flag}->{TagName} ) {
+        return;
+    }
+
+    # append to safety string
+    if ( $IsCDATA ) {
+        $Self->{Safety}->{String} .= $Text;
+    }
+    # encode text before appending
     else {
-        $Safety{String} = $String;
+        $Self->{Safety}->{String} .= encode_entities( decode_entities( $Text ) );
     }
-    return %Safety;
+
+    return;
 }
 
 =item EmbeddedImagesExtract()
@@ -1365,11 +1546,9 @@ sub HTMLTruncate {
 This software is part of the KIX project
 (L<https://www.kixdesk.com/>).
 
-This software comes with ABSOLUTELY NO WARRANTY. This program is
-licensed under the AGPL-3.0 with patches licensed under the GPL-3.0.
-For details, see the enclosed files LICENSE (AGPL) and
-LICENSE-GPL3 (GPL3) for license information. If you did not receive
-this files, see <https://www.gnu.org/licenses/agpl.txt> (APGL) and
-<https://www.gnu.org/licenses/gpl-3.0.txt> (GPL3).
+This software comes with ABSOLUTELY NO WARRANTY. For details, see the enclosed file
+LICENSE for license information (AGPL). If you did not receive this file, see
+
+<https://www.gnu.org/licenses/agpl.txt>.
 
 =cut

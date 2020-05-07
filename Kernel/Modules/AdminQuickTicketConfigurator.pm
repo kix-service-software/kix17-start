@@ -162,7 +162,13 @@ sub Run {
                 ID => $GetParam{ID}
             );
             for my $DataKey ( keys %TicketTemplateData ) {
-                $GetParam{$DataKey} = $TicketTemplateData{$DataKey};
+                if ( $DataKey =~ /^DynamicField_/ ) {
+                    $GetParam{DynamicField}->{$DataKey} = $TicketTemplateData{$DataKey};
+                }
+
+                else {
+                    $GetParam{$DataKey} = $TicketTemplateData{$DataKey};
+                }
             }
         }
 
@@ -1524,7 +1530,10 @@ sub _MaskNew {
         # set pin only on selections
         if (
             $DynamicFieldConfig->{FieldType} =~ /Multiselect|Dropdown/
-            || $DynamicFieldConfig->{Config}->{DisplayFieldType} =~ /Multiselect|Dropdown/
+            || (
+                defined $DynamicFieldConfig->{Config}->{DisplayFieldType}
+                && $DynamicFieldConfig->{Config}->{DisplayFieldType} =~ /Multiselect|Dropdown/
+            )
         ) {
             $DynamicFieldHTML->{Label} =~ s/(<label(.*?)>)/$1$Pin/gi;
         }

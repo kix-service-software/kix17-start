@@ -30,8 +30,8 @@ local $Kernel::OM = Kernel::System::ObjectManager->new(
 
 use vars qw(%INC);
 
-# save current SystemID
-_SaveSystemID();
+# save configuration
+_SaveConfig();
 
 # migrate configuration for shown deployment states for config item link graph
 _MigrateDeploymentStateConfiguration();
@@ -41,18 +41,24 @@ _AddDefaultQuickState();
 
 exit 0;
 
-sub _SaveSystemID {
+sub _SaveConfig {
     my ( $Self, %Param ) = @_;
 
-    # get SystemID from config object
-    my $SystemID = $Kernel::OM->Get('Kernel::Config')->Get('SystemID');
+    # get config values to save from config object
+    my %ConfigBackup = ();
+    for my $Key ( qw( SystemID LostPassword CustomerPanelLostPassword CustomerPanelCreateAccount ) ) {
+        $ConfigBackup{ $Key } = $Kernel::OM->Get('Kernel::Config')->Get( $Key );
+    }
 
     # update SysConfig
-    my $Result = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
-        Key   => 'SystemID',
-        Value => $SystemID,
-        Valid => 1,
-    );
+    my $Result;
+    for my $Key ( keys( %ConfigBackup ) ) {
+        $Result = $Kernel::OM->Get('Kernel::System::SysConfig')->ConfigItemUpdate(
+            Key   => $Key,
+            Value => $ConfigBackup{ $Key },
+            Valid => 1,
+        );
+    }
 
     return $Result;
 }

@@ -1188,11 +1188,16 @@ generate a random password
 sub GenerateRandomPassword {
     my ( $Self, %Param ) = @_;
 
-    # generated passwords are eight characters long by default.
+    # generated passwords are eight characters long by default
     my $Size = $Param{Size} || 8;
 
+    # The list of characters that can appear in a randomly generated password.
+    my @PwChars = ( 0 .. 9, 'A' .. 'Z', 'a' .. 'z', '-', '_', '!', '@', '#', '$', '%', '^', '&', '*' );
+
+    # generate random password string
     my $Password = $Kernel::OM->Get('Kernel::System::Main')->GenerateRandomString(
-        Length => $Size,
+        Dictionary => \@PwChars,
+        Length     => $Size,
     );
 
     return $Password;
@@ -1406,7 +1411,7 @@ sub TokenGenerate {
         return;
     }
     my $Token = $Kernel::OM->Get('Kernel::System::Main')->GenerateRandomString(
-        Length => 15,
+        Length => 16,
     );
 
     # save token in preferences

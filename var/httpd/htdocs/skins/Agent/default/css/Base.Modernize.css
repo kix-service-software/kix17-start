@@ -108,6 +108,11 @@
         white-space: nowrap;
         top: 6px;
     }
+    a.InputField_Action {
+        position: absolute;
+        display: block;
+        top: 5px;
+    }
 
     .FilterInputContainer {
         width: 98%;

@@ -652,7 +652,7 @@ sub ImportDataSave {
 
     # no update of root@localhost
     if ( $UserData{UserID} && $UserData{UserID} == 1 ) {
-        next;
+        return ( 1, 'Skipped' );
     }
 
     my $NewUser = 1;
@@ -786,6 +786,12 @@ sub ImportDataSave {
             $CurrIndex++;
         }
 
+        # clear cache for custom queues of user
+        $Kernel::OM->Get('Kernel::System::Cache')->Delete(
+            Type => 'Queue',
+            Key  => 'GetAllCustomQueues::' . $UserID,
+        );
+
         # set Preferences
         # check OutOfOffice-Date
         if ( $UserData{OutOfOffice} ) {
@@ -860,6 +866,17 @@ UserConfigItemOverviewSmallPageShown UserChangeOverviewSmallPageShown UserRefres
         $Kernel::OM->Get('Kernel::System::DB')->Do(
             SQL  => 'DELETE FROM role_user WHERE user_id = ?',
             Bind => [ \$UserID ],
+        );
+
+        # reset cache for user roles
+        $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+            Type => 'DBRoleUserGet',
+        );
+        $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+            Type => 'GroupPermissionUserGet',
+        );
+        $Kernel::OM->Get('Kernel::System::Cache')->CleanUp(
+            Type => 'GroupPermissionGroupGet',
         );
 
         $CurrIndex = 0;

@@ -53,7 +53,6 @@
         margin-left: 16px;
         margin-right: 0;
     }
-
     .LayoutFixedSidebar.SidebarLast > .SidebarColumn.Large {
         width: 350px;
         float: right;
@@ -118,7 +117,6 @@
     .ControlRow li.Active:active {
         padding-left: 2px;
     }
-
     .ControlRow li.Active,
     .ControlRow li.Active:hover,
     .ControlRow li.Active:active,
@@ -140,13 +138,11 @@
     ul.ContextFunctions li {
         padding-left: 3px;
     }
-
     ul.ContextFunctions li span {
         position: absolute;
         left: -9999px;
         top: -9999px;
     }
-
     ul.ContextFunctions li.ContextHelp a,
     ul.ContextFunctions li.ContextSettings a {
         display: block;
@@ -159,7 +155,6 @@
         font-size: 14px;
         padding: 5px 0px 5px 3px;
     }
-
     ul.ContextFunctions li.ContextHelp a span,
     ul.ContextFunctions li.ContextSettings a span {
         display: block;
@@ -225,7 +220,6 @@
     .Actions li.Inactive a {
         cursor: default;
     }
-
     .ActionRow .Actions li a,
     .LightRow .Actions li a,
     .Actions li.Inactive a:hover,
@@ -250,7 +244,7 @@
         position: absolute;
         top: 21px;
         left: 0;
-        z-index: 999;
+        z-index: 10;
         min-width: 110%;
         height: 0px;
         opacity: 0;
@@ -259,7 +253,6 @@
     }
     .Cluster > ul > li {
         position: relative;
-        z-index: 1;
     }
     .Cluster ul ul li::after {
         display: none;

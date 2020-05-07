@@ -299,16 +299,31 @@ sub Run {
         for my $Entry ( @{ $ConfigObject->Get($Source)->{Map} } ) {
             $GetParam{ $Entry->[0] } = $ParamObject->GetParam( Param => $Entry->[0] ) || '';
 
-            # check mandatory fields
-            if ( !$GetParam{ $Entry->[0] } && $Entry->[4] ) {
-                $Errors{ $Entry->[0] . 'Invalid' } = 'ServerError';
+            if (
+                $Entry->[5] eq 'array'
+                && $Entry->[0] !~ /^UserCustomerIDs$/i
+            ) {
+                $GetParam{ $Entry->[0] } = join( ', ', $ParamObject->GetArray( Param => 'CustomerCompanyKey' ) );
+            }
+            elsif ( $Entry->[5] eq 'array' ) {
+                $GetParam{ $Entry->[0] } = join( ', ', $ParamObject->GetArray( Param => $Entry->[0] ) );
             }
 
-            if ( $Entry->[5] eq 'array' ) {
-                $GetParam{ $Entry->[0] }
-                    = join( ', ', $ParamObject->GetArray( Param => $Entry->[0] ) );
+            # check mandatory fields
+            if (
+                $Entry->[4]
+                && (
+                    !$GetParam{ $Entry->[0] }
+                    || (
+                        ref $GetParam{ $Entry->[0] } eq 'ARRAY'
+                        && !scalar( @{$GetParam{ $Entry->[0] }} )
+                    )
+                )
+            ) {
+                $Errors{ $Entry->[0] . 'Invalid' } = 'ServerError';
             }
         }
+
         $GetParam{ID} = $ParamObject->GetParam( Param => 'ID' ) || '';
 
         # check email address
@@ -850,7 +865,10 @@ sub _Overview {
 sub _Edit {
     my ( $Self, %Param ) = @_;
 
-    my $LayoutObject = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
+    # get needed objects
+    my $ConfigObject          = $Kernel::OM->Get('Kernel::Config');
+    my $CustomerCompanyObject = $Kernel::OM->Get('Kernel::System::CustomerCompany');
+    my $LayoutObject          = $Kernel::OM->Get('Kernel::Output::HTML::Layout');
 
     if ( $Param{Action} eq 'Clone' ) {
         $Param{UserLogin}    = '';
@@ -898,8 +916,6 @@ sub _Edit {
     else {
         $LayoutObject->Block( Name => 'HeaderAdd' );
     }
-
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     ENTRY:
     for my $Entry ( @{ $ConfigObject->Get( $Param{Source} )->{Map} } ) {
@@ -1033,8 +1049,7 @@ sub _Edit {
             && $ConfigObject->Get( $Param{Source} )->{CustomerCompanySupport}
             && $ConfigObject->Get( $Param{Source} )->{CustomerCompanySupportPersonalCustomerID}
         ) {
-            my $CustomerCompanyObject = $Kernel::OM->Get('Kernel::System::CustomerCompany');
-            my %CompanyList           = (
+            my %CompanyList = (
                 $CustomerCompanyObject->CustomerCompanyList( Limit => 0 ),
                 '' => '-',
             );
@@ -1072,33 +1087,22 @@ sub _Edit {
             && $Entry->[5] eq 'array'
             && $ConfigObject->Get( $Param{Source} )->{CustomerCompanySupport}
         ) {
-            my @CustomerIDsArray;
-            if ( $Param{ID} ) {
-                @CustomerIDsArray = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerIDs(
+            $Block                       = 'AutoComplete';
+            $Param{RequiredClass}        = '';
+            $Param{CustomerIDCounter}    = 0;
+            $Param{HiddenClassContainer} = 'Hidden';
+            if (
+                $Param{ID}
+                && !$Param{Errors}->{ $Entry->[0] . 'Invalid' }
+            ) {
+                @{$Param{CustomerIDsArray}} = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerIDs(
                     User => $Param{ID},
                 );
-            }
-            my %Company;
-            my %CompanyList = (
-                $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyList(),
-            );
-            $Block = 'Option';
-
-            # Change the validation class
-            if ( $Param{RequiredClass} ) {
-                $Param{RequiredClass} = 'Validate_Required';
+                $Param{CustomerIDCounter}    = scalar(@{$Param{CustomerIDsArray}});
+                $Param{HiddenClassContainer} = '';
             }
 
-            $Param{Option} = $LayoutObject->BuildSelection(
-                Data       => \%CompanyList,
-                Name       => $Entry->[0],
-                Max        => 80,
-                SelectedID => \@CustomerIDsArray,
-                Multiple   => 1,
-                Class => 'Modernize ' .$Param{RequiredClass} . ' ' . $Param{Errors}->{ $Entry->[0] . 'Invalid' },
-            );
         }
-
         else {
             $Param{Value} = $Param{ $Entry->[0] } || '';
         }
@@ -1115,6 +1119,7 @@ sub _Edit {
                     %Param
                 },
             );
+
             $LayoutObject->Block(
                 Name => "PreferencesGeneric$Block",
                 Data => {
@@ -1153,6 +1158,25 @@ sub _Edit {
                     Name => "PreferencesGenericServerErrorMsg",
                     Data => { Name => $Entry->[0] },
                 );
+            }
+
+            if (
+                $Block eq 'AutoComplete'
+                && $Entry->[0] eq 'UserCustomerIDs'
+                && $Param{CustomerIDsArray}
+            ) {
+                my $Count = 0;
+                for my $CustomerID ( @{$Param{CustomerIDsArray}}) {
+                    $Count++;
+                    $LayoutObject->Block(
+                        Name => "MultipleCustomerID",
+                        Data => {
+                            CustomerCompanyKey => $CustomerID,
+                            Count              => $Count,
+                            CustomerElement    => $CustomerID,
+                        },
+                    );
+                }
             }
         }
     }
