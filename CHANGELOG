@@ -1,6 +1,83 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.11.0 (2020/05/07)
+ * (2020/05/07) - productive release
+
+# 17.11.0-RC11 (2020/05/05)
+ * (2020/05/05) - Bugfix: KIX17-813 (workaround for queue move and quick state) (millinger)
+ * (2020/05/05) - CR: KIX17-934 (changed font awesome version) (ddoerffel)
+ * (2020/05/04) - Bugfix: KIX17-897 (added information to migrate from latest KIX16 to KIX17) (millinger)
+
+# 17.11.0-RC10 (2020/04/29)
+ * (2020/04/28) - Bugfix: KIX17-906 (fixed version order in update script) (millinger)
+ * (2020/04/27) - Bugfix: KIX17-813 (fixed building InputFields in modernize mode) (fjacquemin)
+
+# 17.11.0-RC9 (2020/04/24)
+ * (2020/04/24) - Bugfix: KIX17-889 (fixed duplicated html encoding in safety output) (millinger)
+
+# 17.11.0-RC8 (2020/04/24)
+ * (2020/04/23) - Bugfix: KIX17-705 (fixed missing css of the EventDetail of the dashboard EventsTicketCalendar) (fjacquemin)
+ * (2020/04/23) - Bugfix: KIX17-840 (fixed display error of static dialog and view) (fjacquemin)
+
+# 17.11.0-RC7 (2020/04/23)
+ * (2020/04/23) - CR: KIX17-828 (disable lost password and registration for new installations) (millinger)
+ * (2020/04/23) - Bugfix: KIX17-825 (redirect when ticket closed not supported by quick state) (millinger)
+ * (2020/04/22) - Bugfix: KIX17-878 (check for valid password token before processing) (millinger)
+ * (2020/04/14) - Bugfix: KIX17-813 (The ticket menus overlap when the KIX window is reduced in size until the menu item "Status Change" slides to the second line.) (pboettrich)
+
+# 17.11.0-RC6 (2020/04/21)
+ * (2020/04/21) - Bugfix: KIX17-831 (fixed handling of custom queues in user import) (millinger)
+ * (2020/04/21) - Bugfix: KIX17-857 (fixed sidebar icon position in responsive mode popup) (pboettrich)
+ * (2020/04/17) - Bugfix: KIX17-803 (fixed returned id for new faq category) (millinger)
+ * (2020/04/17) - Bugfix: KIX17-839 (fixed charset recognition for article html view) (millinger)
+ * (2020/04/17) - Bugfix: KIX17-833 (fixed customer restriction check for ticket templates) (millinger)
+ * (2020/04/16) - Bugfix: KIX17-841 (safety cleanup of javascript code in set and animate tags) (millinger)
+ * (2020/04/16) - Bugfix: KIX17-851 (unified password generation for user backends) (millinger)
+ * (2020/03/20) - CR: KIX17-318 (added hints for special migration cases) (millinger)
+ * (2020/03/16) - CR: KIX17-795 (InitialJS für KIXSidebar) (millinger)
+ * (2020/03/12) - Bugfix: KIX17-777 (fixed position of filter clearing icon for modernized dropdowns) (fjacquemin)
+ * (2020/03/12) - CR: KIX17-782 (migrate sidebar template of customer frontend) (fjacquemin)
+ * (2020/02/27) - Bugfix: KIX17-776 (fixed layout when loading text modules for the first time) (fjacquemin)
+
+# 17.11.0-RC5 (2020/04/15)
+ * (2020/04/14) - Bugfix: KIX17-753 (fixed dynamic field based fulltext search) (millinger)
+ * (2020/04/14) - Bugfix: KIX17-697 (fixed fallback to config for geo coordinate input format) (millinger)
+ * (2020/04/14) - Bugfix: KIX17-675 (added check for valid company backend mapping) (millinger)
+ * (2020/04/08) - CR: KIX17-819 (implemented Unittest for HTMLUtils->Safety) (millinger)
+ * (2020/03/17) - CR: KIX17-779 (enable multiple attachment upload for articles) (fjacquemin)
+
+# 17.11.0-RC4 (2020/04/07)
+ * (2020/04/07) - Bugfix: KIX17-798 (fixed vulnerability of htmlutils safety method) (millinger)
+ * (2020/04/03) - Bugfix: KIX17-796 (use cryptographically-secure random bytes for string generation) (millinger)
+
+# 17.11.0-RC3 (2020/04/03)
+ * (2020/04/02) - Bugfix: KIX17-756 (fixed handling of 'LostPassword'-requests) (millinger)
+ * (2020/04/02) - Bugfix: KIX17-755 (removed recipient from 'Sent new password'-message) (millinger)
+
+# 17.11.0-RC2 (2020/03/19)
+ * (2020/03/16) - Bugfix: KIX17-696 (fixed response of customer user source list when access group is defined) (fjacquemin)
+ * (2020/03/16) - Bugfix: KIX17-675 (fixed missing fallback if CustomerUser or CustomerCompany Backend not defined) (fjacquemin)
+ * (2020/03/16) - Bugfix: KIX17-720 (fixed incorrect permission check at AddValue of the ITSMReference fields) (fjacquemin)
+ * (2020/03/12) - Bugfix: KIX17-749 (added missing use statement) (ddoerffel)
+ * (2020/03/06) - Bugfix: KIX17-721 (added css for class "Invalid") (ddoerffel)
+
+# 17.11.0-RC1 (2020/03/05)
+ * (2020/02/27) - CR: KIX17-659 (added toolbar for own tickets) (fjacquemin)
+ * (2020/02/26) - Bugfix: KIX17-550 (fixed unnecessary hover effect of the disabled jsTree element) (fjacquemin)
+ * (2020/02/25) - Bugfix: KIX17-692 (remove differences between RenderBlockStart and RenderBlockEnd) (millinger)
+ * (2020/02/25) - Bugfix: KIX17-691 (remove log errors for empty common ticket tabs) (fjacquemin)
+ * (2020/02/24) - Bugfix: KIX17-411 (Changed selection of multiple customer IDs in AdminCustomerUser to an AutoComplete field) (fjacquemin)
+ * (2020/02/24) - CR: KIX17-441 (search in attachment storage for FS) (millinger)
+ * (2020/02/21) - Bugfix: KIX17-408 (fixed incorrect handling of sending Email when using console command Maint::Stats::Generate) (fjacquemin)
+ * (2020/02/20) - Bugfix: KIX17-675 (check for undefined customer company key on data import) (fjacquemin)
+ * (2020/02/20) - Bugfix: KIX17-370 (fixed default state in AgentTicketZoom TabEditCoreData does not apply) (fjacquemin)
+ * (2020/02/20) - Bugfix: KIX17-674 (added missing hover effects for article table head actions) (fjacquemin)
+ * (2020/02/20) - CR: KIX17-669 (mark all articles as seen by one click) (millinger)
+ * (2020/02/20) - Bugfix: KIX17-668 (remove obsolete subaction from AgentTicketZoom) (millinger)
+ * (2020/02/18) - Bugfix: KIX17-413 (fixed missing selection of selected sub-level tree entry) (fjacquemin)
+ * (2020/02/18) - Bugfix: KIX17-629 (fixed incorrect display of the dependent dynamic fields from ticket templates) (fjacquemin)
+
 # 17.10.0 (2020/02/27)
  * (2020/02/27) - productive release
 

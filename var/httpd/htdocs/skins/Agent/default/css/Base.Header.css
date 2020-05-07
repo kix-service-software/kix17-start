@@ -269,6 +269,9 @@
         height: 14px;
         vertical-align: bottom;
     }
+    #ToolBar li > a > i.fa-user-o {
+        font-size: 16px;
+    }
 
 
     /**
