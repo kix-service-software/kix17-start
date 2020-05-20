@@ -1166,25 +1166,24 @@ sub _Show {
     if (@ArticleBody) {
 
         # check if a certain article type should be displayed as expanded
-        my $PreviewArticleTypeExpanded = $ConfigObject->Get('Ticket::Frontend::Overview::PreviewArticleTypeExpanded')
-            || '';
+        my $PreviewArticleTypeExpanded = $ConfigObject->Get('Ticket::Frontend::Overview::PreviewArticleTypeExpanded');
 
-        # if a certain article type should be shown as expanded, set the
-        # last article of this type as active
-        if ($PreviewArticleTypeExpanded) {
+        # config is active
+        if ( defined( $PreviewArticleTypeExpanded ) ) {
 
             my $ClassCount = 0;
             ARTICLE_ITEM:
             for my $ArticleItem (@ArticleBody) {
                 next ARTICLE_ITEM if !$ArticleItem;
 
-                # check if current article type should be shown as expanded
+                # if a certain article type should be shown as expanded, set the
+                # last article of this type as active
                 if ( $ArticleItem->{ArticleType} eq $PreviewArticleTypeExpanded ) {
                     $ArticleItem->{Class} = 'Active';
                     last ARTICLE_ITEM;
                 }
 
-                # otherwise display the last article in the list as expanded (default)
+                # otherwise display the last article in the list as expanded (also if config is active and not set)
                 elsif ( $ClassCount == $#ArticleBody ) {
                     $ArticleBody[0]->{Class} = 'Active';
                 }
@@ -1192,24 +1191,24 @@ sub _Show {
             }
         }
 
-        # otherwise display the last article in the list as expanded (default)
+        # config is inactive
         else {
-            # find latest not seen article
+            # find last not seen article
             my $ArticleSelected;
             my $IgnoreSystemSender = $ConfigObject->Get('Ticket::NewArticleIgnoreSystemSender');
 
             ARTICLE:
             for my $ArticleItem (@ArticleBody) {
 
-                my %ArticleFlags = $TicketObject->ArticleFlagGet(
-                    ArticleID => $ArticleItem->{ArticleID},
-                    UserID    => $Self->{UserID},
-                );
-
                 # ignore system sender type
                 next ARTICLE
                     if $IgnoreSystemSender
                     && $ArticleItem->{SenderType} eq 'system';
+
+                my %ArticleFlags = $TicketObject->ArticleFlagGet(
+                    ArticleID => $ArticleItem->{ArticleID},
+                    UserID    => $Self->{UserID},
+                );
 
                 # ignore already seen articles
                 next ARTICLE if $ArticleFlags{Seen};
@@ -1219,7 +1218,7 @@ sub _Show {
                 last ARTICLE;
             }
 
-            # set selected article
+            # check selected article
             if ( !$ArticleSelected ) {
 
                 # set last customer article as selected article
@@ -1231,6 +1230,7 @@ sub _Show {
                         last ARTICLETMP;
                     }
                 }
+                # otherwise display the last article in the list as expanded
                 if ( !$ArticleSelected ) {
                     $ArticleBody[0]->{Class} = 'Active';
                 }
