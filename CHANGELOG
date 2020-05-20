@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.12.0-RC1 (2020/05/20)
+ * (2020/04/28) - Bugfix: KIX17-802 (fixed changing file ids for unchanged faq attachments) (millinger)
+ * (2020/04/17) - Bugfix: KIX17-783 (fixed behaviour of article preview in ticket overview) (millinger)
+
 # 17.11.0 (2020/05/07)
  * (2020/05/07) - productive release
 
