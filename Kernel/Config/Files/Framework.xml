@@ -13792,4 +13792,19 @@ via the Preferences button after logging in.
         </Setting>
     </ConfigItem>
     <!-- EO OpenSearch -->
+
+    <!-- SupportBundle Obfuscation -->
+    <ConfigItem Name="SupportBundle::Obfuscation" Required="1" Valid="1">
+        <Description Translatable="1">Defines a filter to process the text in the articles, in order to highlight predefined keywords.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="(?m)(\$Self->\{(?:\'|\&quot;|)[^}]*(?:Password|Pw)\d*(?:\'|\&quot;|)}\s*=\s*)(?:\'|\&quot;).*?(?:\'|\&quot;)"><![CDATA[$1\'[password]\']]></Item>
+                <Item Key="(?m)((?:Password|Pw)\d*(?:\'|\&quot;|)\s*=>\s*)(?:\'|\&quot;).*?(?:\'|\&quot;)"><![CDATA[$1\'[password]\']]></Item>
+                <Item Key="(?smx)://\w+:\w+@"><![CDATA[://[user]:[password]@]]></Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <!-- EO SupportBundle Obfuscation -->
 </otrs_config>
