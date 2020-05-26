@@ -13795,7 +13795,7 @@ via the Preferences button after logging in.
 
     <!-- SupportBundle Obfuscation -->
     <ConfigItem Name="SupportBundle::Obfuscation" Required="1" Valid="1">
-        <Description Translatable="1">Defines a filter to process the text in the articles, in order to highlight predefined keywords.</Description>
+        <Description Translatable="1">Defines obfuscation pattern for support bundle generation. Keys are search pattern. Values are replacement pattern. The global modification is always set.</Description>
         <Group>Framework</Group>
         <SubGroup>Core</SubGroup>
         <Setting>
