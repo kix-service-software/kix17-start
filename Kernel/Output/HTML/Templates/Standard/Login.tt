@@ -231,7 +231,7 @@ X-KIX-Login: [% Env("Baselink") %]
                                     [% Translate("Username") | html %]
                                 </label>
                                 <div class="Field">
-                                    <input autocorrect="off" autocapitalize="off" type="text" id="User" name="User" value="[% Data.User | html %]" class="W75pc Validate_Required" />
+                                    <input type="text" autocorrect="off" autocapitalize="off" autocomplete=[% IF Config("Secure::DisableLoginAutocomplete::Agent") %]"off"[% ELSE %]"username"[% END %] title="[% Translate("Your user name") | html %]" id="User" name="User" value="[% Data.User | html %]" class="W75pc Validate_Required" />
                                     <div id="UserError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
                                 </div>
                                 <div class="Clear"></div>
@@ -240,7 +240,7 @@ X-KIX-Login: [% Env("Baselink") %]
                                     [% Translate("Password") | html %]
                                 </label>
                                 <div class="Field">
-                                    <input type="password" id="Password" name="Password" class="W75pc Validate_Required" />
+                                    <input type="password" autocomplete=[% IF Config("Secure::DisableLoginAutocomplete::Agent") %]"off"[% ELSE %]"current-password"[% END %] title="[% Translate("Your password") | html %]" id="Password" name="Password" class="W75pc Validate_Required" />
                                     <div id="PasswordError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
 [% RenderBlockStart("LostPasswordLink") %]
                                     <p id="LostPasswordLink" class="Left">
@@ -258,7 +258,7 @@ X-KIX-Login: [% Env("Baselink") %]
                                         [% Translate("2 Factor Token") | html %]
                                 </label>
                                 <div class="Field">
-                                    <input type="password" id="TwoFactorToken" name="TwoFactorToken" class="W75pc [% Data.ValidateRequired | html %]" />
+                                    <input type="password" autocomplete="off" title="[% Translate("Your 2 Factor Token") | html %]" id="TwoFactorToken" name="TwoFactorToken" class="W75pc [% Data.ValidateRequired | html %]" />
                                     <div id="TwoFactorTokenError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
                                 </div>
                                 <div class="Clear"></div>
@@ -297,7 +297,7 @@ X-KIX-Login: [% Env("Baselink") %]
                                     [% Translate("Username") | html %]
                                 </label>
                                 <div class="Field">
-                                    <input type="text" id="PasswordUser" name="User" value="" class="W75pc Validate_Required" readonly="readonly"/>
+                                    <input type="text" autocorrect="off" autocapitalize="off" autocomplete="off" title="[% Translate("Your User Name") | html %]" id="PasswordUser" name="User" value="" class="W75pc Validate_Required" readonly="readonly"/>
                                     <div id="PasswordUserError" class="TooltipErrorMessage" ><p>[% Translate("This field is required.") | html %]</p></div>
                                 </div>
                                 <div class="Clear"></div>

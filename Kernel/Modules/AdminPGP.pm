@@ -284,16 +284,19 @@ sub Run {
             );
         }
         my $KeyString = '';
+        my $Prefix    = '';
         if ( $Type eq 'sec' ) {
             $KeyString = $PGPObject->SecretKeyGet( Key => $Key );
+            $Prefix    = 'Secret';
         }
         else {
             $KeyString = $PGPObject->PublicKeyGet( Key => $Key );
+            $Prefix    = 'Public';
         }
         return $LayoutObject->Attachment(
             ContentType => 'text/plain',
             Content     => $KeyString,
-            Filename    => "$Key.asc",
+            Filename    => $Prefix . '-' . $Key . '.asc',
             Type        => 'attachment',
         );
     }
@@ -314,22 +317,25 @@ sub Run {
             );
         }
         my $Download = '';
+        my $Prefix   = '';
         if ( $Type eq 'sec' ) {
             my @Result = $PGPObject->PrivateKeySearch( Search => $Key );
             if ( $Result[0] ) {
                 $Download = $Result[0]->{Fingerprint};
+                $Prefix   = 'Private';
             }
         }
         else {
             my @Result = $PGPObject->PublicKeySearch( Search => $Key );
             if ( $Result[0] ) {
                 $Download = $Result[0]->{Fingerprint};
+                $Prefix   = 'Public';
             }
         }
         return $LayoutObject->Attachment(
             ContentType => 'text/plain',
             Content     => $Download,
-            Filename    => "$Key.txt",
+            Filename    => $Prefix . '-' . $Key . '.txt',
             Type        => 'attachment',
         );
     }
