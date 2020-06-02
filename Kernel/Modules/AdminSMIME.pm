@@ -342,13 +342,14 @@ sub Run {
 
         my $Hash = $Filename;
         $Hash =~ s{(.+)\.\d}{$1}xms;
+        my $Prefix = 'Certificate';
 
         my $Certificate = $SMIMEObject->CertificateGet( Filename => $Filename );
-        my %Attributes = $SMIMEObject->CertificateAttributes( Certificate => $Certificate );
+        my %Attributes  = $SMIMEObject->CertificateAttributes( Certificate => $Certificate );
         return $LayoutObject->Attachment(
             ContentType => 'text/plain',
             Content     => $Attributes{Fingerprint},
-            Filename    => "$Hash.txt",
+            Filename    => $Prefix . '-' . $Hash . '.txt',
             Type        => 'inline',
         );
     }
@@ -370,21 +371,24 @@ sub Run {
         $Hash =~ s{(.+)\.\d}{$1}xms;
 
         my $Download;
+        my $Prefix = '';
 
         # download key
         if ( $Type eq 'key' ) {
             my $Secret;
             ( $Download, $Secret ) = $SMIMEObject->PrivateGet( Filename => $Filename );
+            $Prefix                = 'Private';
         }
 
         # download certificate
         else {
             $Download = $SMIMEObject->CertificateGet( Filename => $Filename );
+            $Prefix   = 'Certificate';
         }
         return $LayoutObject->Attachment(
             ContentType => 'text/plain',
             Content     => $Download,
-            Filename    => "$Hash.pem",
+            Filename    => $Prefix . '-' . $Hash . ".pem",
             Type        => 'attachment',
         );
     }
