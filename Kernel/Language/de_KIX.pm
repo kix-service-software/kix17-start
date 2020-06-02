@@ -4532,6 +4532,9 @@ sub Data {
     $Lang->{'If enabled, autocomplete will be disabled for customer frontend login.'}
         = 'Wenn aktiviert, wird Autovervollständigung für das Kundenlogin deaktivert.';
 
+    # SupportBundle Obfuscation
+    $Lang->{'Defines obfuscation pattern for support bundle generation. Keys are search pattern. Values are replacement pattern. The global modification is always set.'}
+        = 'Definiert die Verschleierung für die Support-Bundle -Erzeugung. Schlüssel sind Suchpattern. Werte sind Ersetzungspattern. Der Global-Modifizierer ist immer gesetzt.';
     # $$STOP$$
 
     return 0;

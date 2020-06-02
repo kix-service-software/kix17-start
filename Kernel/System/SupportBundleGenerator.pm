@@ -329,15 +329,23 @@ sub GenerateCustomFilesArchive {
         return;
     }
 
-    # Trim any passswords from Config.pm.
-    # Simple settings like $Self->{'DatabasePw'} or $Self->{'AuthModule::LDAP::SearchUserPw1'}
-    $Config =~ s/(\$Self->\{'[^']+(?:Password|Pw)\d*'\}\s*=\s*)\'.*?\'/$1\'xxx\'/mg;
+    # get config for obfuscation
+    my $Obfuscation = $ConfigObject->Get('SupportBundle::Obfuscation');
 
-    # Complex settings like:
-    #     $Self->{CustomerUser1} = {
-    #         Params => {
-    #             UserPw => 'xxx',
-    $Config =~ s/((?:Password|Pw)\d*\s*=>\s*)\'.*?\'/$1\'xxx\'/mg;
+    # check obfuscation config
+    if ( ref( $Obfuscation ) eq 'HASH' ) {
+        # process obfuscation pattern
+        PATTERN:
+        for my $Pattern ( keys( %{ $Obfuscation } ) ) {
+            next PATTERN if ( !$Pattern );
+            # prepare replace pattern
+            my $Replace = $Obfuscation->{ $Pattern };
+            $Replace    =~ s/"/\\"/g;
+            $Replace    = '"' . $Replace . '"';
+
+            $Config =~ s/$Pattern/$Replace/eeg;
+        }
+    }
 
     $TarObject->replace_content( $HomeWithoutSlash . '/Kernel/Config.pm', $Config );
 
