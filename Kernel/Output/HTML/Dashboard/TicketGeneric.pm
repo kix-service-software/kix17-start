@@ -2126,6 +2126,7 @@ sub Run {
     }
 
     my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+    my $DynamicFieldDisplayLimit = $ConfigObject->Get('Frontend::OverrideDynamicFieldDisplayLimits') || 20;
 
     # show tickets
     my $Count = 0;
@@ -2516,7 +2517,7 @@ sub Run {
                 my $ValueStrg = $BackendObject->DisplayValueRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Value              => $Value,
-                    ValueMaxChars      => 20,
+                    ValueMaxChars      => $DynamicFieldDisplayLimit,
                     LayoutObject       => $LayoutObject,
                 );
 
