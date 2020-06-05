@@ -11793,6 +11793,14 @@ via the Preferences button after logging in.
             </Hash>
         </Setting>
     </ConfigItem>
+        <ConfigItem Name="Frontend::OverrideDynamicFieldDisplayLimits" Required="0" Valid="1">
+        <Description Translatable="1">Allows overriding of dynamic field character limits.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Web</SubGroup>
+        <Setting>
+            <String Regex="">20</String>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="Frontend::Module###DynamicFieldAJAXHandler" Required="0" Valid="1">
         <Description Translatable="1">Frontend module registration for the agent interface.</Description>
         <Group>Framework</Group>
