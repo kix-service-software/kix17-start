@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.12.0-RC3 (2020/06/10)
+ * (2020/06/05) - Bugfix: KIX17-1047 (fixed database schema for table acl) (millinger)
+ * (2020/06/05) - CR: KIX17-1037 (overriding of dynamic field character limits) (ddoerffel)
+
 # 17.12.0-RC2 (2020/06/02)
  * (2020/05/26) - Bugfix: KIX17-937 (added configuration to disable autocomplete for login) (millinger)
  * (2020/05/26) - Bugfix: KIX17-940 (prefix downloaded certificates and public keys) (millinger)
