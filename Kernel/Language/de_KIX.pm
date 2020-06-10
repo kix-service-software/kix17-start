@@ -706,6 +706,8 @@ sub Data {
         = 'Ermöglicht das Überschreiben von Data-Zeichenlimits, die in TTs fest eingetragen sind. Der Schlüssel hat das folgende Format: <TemplateFilePattern>::<VariableNamePattern>, der Wert ist das zu verwendende nummerische Zeichenlimit. RegEx kann genutzt werden.';
     $Lang->{'Replaces the default Data character limits.'}
         = 'Überschreibt die Standard-Data-Zeichenlimits.';
+    $Lang->{'Allows overriding of dynamic field character limits.'}
+        = 'Überschreibt die Standard-Zeichenlimits für Dynamische Felder.';
 
     # CustomerDashboard
     $Lang->{'Pending Tickets'}      = 'Wartende Tickets';
