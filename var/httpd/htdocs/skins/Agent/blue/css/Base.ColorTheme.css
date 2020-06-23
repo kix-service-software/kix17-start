@@ -409,8 +409,9 @@
     .Handle a {
         background: transparent url(../img/handle.png) no-repeat;
     }
+    .TableSmall tbody tr.Invalid,
     .DataTable tbody tr.Invalid {
-       color: #CCCCCC;
+       color: #AAAAAA;
     }
 
 
@@ -509,6 +510,7 @@
         border-bottom: 1px solid #0A7CB3;
         border-top: 1px solid #0A7CB3;
     }
+
 
     /**
     *   @subsection input fields
@@ -942,6 +944,7 @@
         color: #FFFFFF;
     }
 
+
     /**
     *   @subsection faq
     */
@@ -959,6 +962,9 @@
     ul.FAQMiniList li:hover a {
         color: #0A7CB3;
         background-color: inherit;
+    }
+    #FAQOptions .Print {
+        color: #777777;
     }
 
 
@@ -1454,6 +1460,7 @@
         border: 1px solid #CCCCCC;
     }
 
+
     /**
     *   @subsection ITSM tab graph
     */
@@ -1580,7 +1587,6 @@
         border-color: #0A7CB3;
         color: #FFFFFF;
     }
-
 
 
     /**
