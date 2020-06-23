@@ -68,6 +68,8 @@
         padding-bottom: 1px;
         font-weight: bold;
         position: relative;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     fieldset.TableLike > .Row > label {
         padding-top: 3px;
@@ -88,6 +90,10 @@
         margin: 5px 0 0 30%;
         padding: 3px 0 3px 5px;
         min-height: 20px;
+    }
+    fieldset.TableLike > .EndOfForm,
+    fieldset.TableLike > .Row > .EndOfForm {
+        margin-top: 20px;
     }
     fieldset.TableLike > .Field > :first-child,
     fieldset.TableLike > .Row > .Field > :first-child {
