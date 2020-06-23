@@ -45,8 +45,9 @@
         </div>
 
 [% RenderBlockStart("SystemMaintenance") %]
-        <div class="WarningBox WithIcon">
-            <i class="fa fa-exclamation-circle"></i> [% Translate(Data.LoginMessage) | html %]
+        <div class="MessageBox WithIcon">
+            <i class="fa fa-exclamation-circle"></i>
+            <p>[% Translate(Data.LoginMessage) | html %]</p>
         </div>
 [% RenderBlockEnd("SystemMaintenance") %]
 
