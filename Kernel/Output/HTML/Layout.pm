@@ -785,7 +785,7 @@ sub Login {
         }
 
         $Self->Block(
-            Name => $Key . 'CSS',
+            Name => $Key .'CSS',
             Data => {
                 CSSAttr => $CSS
             }
