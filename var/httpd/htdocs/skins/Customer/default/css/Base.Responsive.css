@@ -4,6 +4,7 @@
     }
 }
 
+
 /*
  * @subsection Media Query Reset-CSS (for desktop screen resolutions)
  */
@@ -15,11 +16,9 @@
     .ScreenXL {
         display: block;
     }
-
     .SmallerOrEqualScreenXL {
         display: block;
     }
-
     .ScreenL,
     .ScreenM,
     .ScreenS,
@@ -31,6 +30,7 @@
         display: none;
     }
 
+
     /*
      * @subsection Responsive footer classes
      * @description Used to determinethe active screen size in JavaScript
@@ -38,14 +38,12 @@
     #ResponsiveFooter .Visible-ScreenXL {
         display: block;
     }
-
     #ResponsiveFooter .Visible-ScreenL,
     #ResponsiveFooter .Visible-ScreenM,
     #ResponsiveFooter .Visible-ScreenS,
     #ResponsiveFooter .Visible-ScreenXS {
         display: none;
     }
-
     .ResponsiveHandle {
         display: none;
     }
@@ -88,7 +86,6 @@
     .MessageBox {
         margin: 0;
     }
-
     #Header {
         height: 60px;
         overflow: hidden;
@@ -97,9 +94,7 @@
         position: fixed;
         width: 100%;
         top: 0;
-        z-index: 11;
     }
-
     .ModernizeFieldIcon {
         right: -7px;
         height: 0.9em;
@@ -117,11 +112,9 @@
     #Header #Logo {
         display: none;
     }
-
     .CompanyName {
         display:none;
     }
-
     .CustomerTicketTemplates,
     .MainBox,
     .TicketZoom,
@@ -130,16 +123,12 @@
         padding: 110px 15px 5px;
         display: block;
     }
-
     #UserInfo {
         top: 60px;
         right: 10px;
         z-index: 9;
-        position: fixed;
         text-align: right;
-        width: 100%;
     }
-
     .ResponsiveSidebarContainer {
         height: 100%;
         position: fixed;
@@ -149,7 +138,6 @@
         display: none;
         z-index: 998;
     }
-
     .ResponsiveHandle {
         font-size: 30px;
         cursor: pointer;
@@ -176,22 +164,18 @@
         padding: 3px 10px;
         z-index: 1;
     }
-
     #ResponsiveNavigationHandle {
         left: 15px;
     }
-
     #ResponsiveSidebarHandle {
         right: 15px;
     }
-
     #ResponsiveSidebarNotification {
         top: 60px;
         left: -45px;
         display: none;
         cursor: default;
     }
-
     #NavigationContainer {
         left: -280px;
         right: auto;
@@ -201,14 +185,12 @@
         width: 280px;
         overflow: auto;
     }
-
     #NavigationContainer #Navigation,
     .ResponsiveSidebarContainer .Actions {
         position: static;
         width: auto;
         margin-top: 80px;
     }
-
     #NavigationContainer > a,
     #NavigationContainer > a.NavigationBarNavigateRight,
     #NavigationContainer > a.NavigationBarNavigateLeft {
@@ -225,7 +207,6 @@
     .ResponsiveSidebarContainer .Actions > li {
         display: block;
     }
-
     #Navigation > li > a,
     .ResponsiveSidebarContainer .Actions > li > a {
         font-size: 14px;
@@ -263,12 +244,10 @@
     .ResponsiveSidebarContainer .Actions > li.Selected > a {
         border-radius: 0;
     }
-
     #Navigation > li:first-child,
     .ResponsiveSidebarContainer .Actions > li:first-child {
         border-top: 0;
     }
-
     #Navigation > .Active > ul,
     .ResponsiveSidebarContainer .Actions > .Active > ul {
         position: static;
@@ -276,7 +255,6 @@
         background: none;
         border: none;
     }
-
     #Navigation > .Active > ul li a,
     .ResponsiveSidebarContainer .Actions > .Active > ul li a {
         padding: 7px 10px;
@@ -296,29 +274,24 @@
     #Navigation .Search {
         width: auto;
     }
-
     .WidgetSimple span.Pagination,
     .OverviewActions span.Pagination {
         text-align: center;
         float: none;
         display: block;
     }
-
     .WidgetSimple .AllocationListContainer,
     .WidgetSimple .AllocationListContainer ul,
     .WidgetSimple .AllocationListContainer .FilterInputContainer {
         margin: 0 auto;
     }
-
     .WidgetSimple span.Pagination {
         display: none;
     }
-
     .WidgetSimple span.Pagination.AsBlock {
         display: block;
         margin: 10px 0;
     }
-
     .WidgetSimple span.Pagination a,
     .OverviewActions span.Pagination a {
         display: inline-block;
@@ -326,12 +299,10 @@
         padding: 5px 7px;
         float: none;
     }
-
     .WidgetSimple span.Pagination a.Selected,
     .OverviewActions span.Pagination a.Selected {
         font-weight: normal;
     }
-
     .WidgetSimple > .Header  {
         z-index: 1;
     }
@@ -339,68 +310,58 @@
     .WidgetSimple > .Header h3 {
         font-size: 14px;
     }
-
     .WidgetSimple .Buttons {
         margin: 0;
     }
-
     .WidgetSimple .Buttons span {
         font-size: 14px;
     }
-
     .WidgetSimple .Content form {
         display: block;
         width: 100%;
         overflow-y: hidden;
         overflow-x: auto;
     }
-
     .WidgetSimple .Content form table.DataTable {
         min-width: 500px;
     }
-
     .WidgetSimple .ActionMenu {
         display: block
     }
-
     .WidgetSimple .WidgetAction a {
         font-size: 16px;
     }
+
 
     /* Search screens*/
     #MainBox.Search > .Content {
         margin: 0;
         width: auto;
     }
-
     #MainBox.Search > .Content .TableLike > .Field input[id$=Date] {
         width: auto;
     }
+
 
     /* Ticket creation screens */
 
     .ShowTreeSelection {
         display: none;
     }
-
     .MainBox.FormScreen > h1,
     .MainBox.FormScreen > .AsteriskExplanation {
         margin-left: 0;
         text-align: center;
     }
-
     .GetAllAJAX span {
         display: none;
     }
-
     .MainBox.FormScreen > .AsteriskExplanation {
         margin: -10px 0 10px 0;
     }
-
     fieldset.TableLike.Hidden {
         display: none;
     }
-
     fieldset.TableLike > label,
     fieldset.TableLike > .Row > label {
         text-align: left;
@@ -416,12 +377,10 @@
         margin-bottom: 10px;
         position: relative;
     }
-
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field > input.DateSelection,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field > select.DateSelection {
         width: auto;
     }
-
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > label,
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > label {
         float: none;
@@ -429,14 +388,12 @@
         text-align: left;
         font-size: 0.9em;
     }
-
     fieldset.TableLike > .Field input[type=file],
     fieldset.TableLike > .Row > .Field input[type=file],
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Field input[type=file],
     .WidgetSettingsForm > fieldset.TableLike.FixedLabelSmall > .Row > .Field input[type=file] {
         width: 95%;
     }
-
     fieldset.TableLike > .RichTextField,
     fieldset.TableLike > .Row > .RichTextField,
     fieldset.TableLike > .FloatingField,
@@ -453,7 +410,6 @@
         float: none;
         margin: 0;
     }
-
     fieldset.TableLike > .Field > select,
     fieldset.TableLike > .Row > .Field > select,
     fieldset.TableLike > .Field > input,
@@ -478,7 +434,7 @@
     }
     fieldset.TableLike > .Field input[id$=Date],
     fieldset.TableLike > .Row > .Field input[id$=Date] {
-        witdh: auto;
+        width: auto;
     }
     fieldset.TableLike > .Field > input[type=radio],
     fieldset.TableLike > .Field > input[type=checkbox],
@@ -486,23 +442,19 @@
     fieldset.TableLike > .Row > .Field > input[type=checkbox] {
         width: auto;
     }
-
     form label.Mandatory span.Marker {
         display: inline-block;
         margin-right: 3px;
         position: static;
     }
-
     form .FieldExplanation {
         font-size: 0.8em;
     }
-
     .AJAXLoader {
         position: absolute;
         top: -26px;
         right: 25px;
     }
-
     iframe.Signature {
         width: 98%;
     }
@@ -518,7 +470,6 @@
         width: auto;
         margin-top: 15px;
     }
-
     .Popup > #AppWrapper {
         margin: 0;
     }
@@ -530,79 +481,68 @@
     .LayoutPopup #ResponsiveSidebarHandle {
         position: absolute;
     }
-
     .ui-overlay-autocomplete li.ui-menu-item {
         font-size: 1em;
         line-height: 150%;
     }
-
     fieldset.TableLike > .Field > select ~ a i,
     fieldset.TableLike > .Row > .Field > select ~ a i {
         font-size: 1.3em;
     }
-
     .DatepickerIcon {
         font-size: 1.2em;
         width: auto;
     }
-
     .ArticleMailHeader fieldset.TableLike > label,
     .ArticleMailHeader fieldset.TableLike > .Row > label {
         float: left;
         text-align: right;
         font-size: inherit;
     }
-
     .RichTextField > .cke {
         width: auto;
         max-width: 100%;
     }
-
     #submitRichText span {
         font-size: 15px;
     }
-
     .cke_dialog_footer_buttons a.cke_dialog_ui_button {
         margin: 0 auto;
     }
-
     .CallForAction span,
     .cke_dialog_footer_buttons td a.cke_dialog_ui_button span {
         height: auto;
     }
-
     #submitRichText span i {
         font-size: 1em;
         width: 20px;
     }
+
 
     /* Widget Actions */
 
     .OverviewActions, .DashboardActions {
         position: relative;
     }
-
     .Actions {
         white-space: nowrap;
         overflow-x: auto;
         float: none;
     }
-
     .Actions li {
         display: inline-block;
         font-size: 14px;
         float: none;
     }
-
     .DashboardActions .Actions li:after,
     .Actions li:after {
         display: inline-block;
         float: none;
     }
-
     .DashboardActions .Actions:after {
         bottom: -15px;
     }
+
 
     /* Ticket Template */
     .TemplateSelectionArea > div {
@@ -610,13 +550,13 @@
         width: auto;
     }
 
+
     /* Tables */
 
     .DataTable tr td,
     .TableSmall tr td {
         font-size: 14px;
     }
-
     .DataTable tr td,
     .TableSmall tr td,
     .DataTable tr td div,
@@ -630,21 +570,19 @@
         max-width: 200px;
         text-overflow: ellipsis;
     }
-
     .DataTable .ColumnSettingsTrigger,
     .TableSmall .ColumnSettingsTrigger {
         display: none;
     }
 
+
     /* SidebarColumn */
     .ContentColumn {
         position: relative;
     }
-
     .ResponsiveSidebarContainer .SettingsWidget label {
         font-size: 14px;
     }
-
     .LayoutFixedSidebar.SidebarLast .ResponsiveSidebarContainer > .SidebarColumn,
     .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn,
     .LayoutFixedSidebar .ContentColumn .ResponsiveSidebarContainer > .ActionRow,
@@ -669,13 +607,11 @@
     .LayoutFixedSidebar.SidebarFirst .ResponsiveSidebarContainer > .SidebarColumn > :first-child {
         margin-top: 60px;
     }
-
     #ContextSettingsDialog,
     #ContextSettingsDialogOverviewSmall {
         width: auto;
         max-height: 100%;
     }
-
     .OverviewActions > ul.Actions {
         float: none;
         display: block;
@@ -683,21 +619,19 @@
         overflow: hidden;
         text-align: center;
     }
-
     .OverviewActions > span.Pagination {
         height: 22px;
     }
-
     .OverviewZoom a {
         padding: 5px 7px;
         font-size: 12px;
         line-height: 12px;
         width: auto;
     }
-
     .OverviewZoom a:hover {
         padding-bottom: 5px;
     }
+
 
     /* Login */
     .LoginScreen fieldset.TableLike > label,
@@ -727,16 +661,13 @@
     .Dialog > .Content > .ContentFooter button {
         font-size: 16px;
     }
-
     #SearchForm, #AgentCustomerInformationCenterSearchForm {
         width: auto;
     }
-
     #AgentCustomerInformationCenterSearchForm fieldset.TableLike > .Field > input,
     #AgentCustomerInformationCenterSearchForm fieldset.TableLike > .Row > .Field > input {
         width: 100%;
     }
-
     .ContentColumn .ControlRow .AdditionalInformation {
         right: 30px;
     }
@@ -774,82 +705,72 @@
     fieldset.TableLike > p.AdditionalInformationResponsive {
         display: block;
     }
-
+    .Scroller {
+        overflow-y:auto;
+    }
     #ArticleTableBody .Scroller {
         overflow: auto;
     }
-
     .Scroller + .Handle {
         display: none;
     }
-
     .ArticleMailHeader label,
     .ArticleMailHeader .Value {
         padding: 0;
     }
-
     .TicketZoom .ResponsiveSidebarContainer .ItemRow {
         margin: 10px 0 0 0;
     }
-
     .ResponsiveSidebarContainer fieldset.Narrow {
         padding: 0 10px;
     }
-
     .ResponsiveSidebarContainer div.Content {
         font-size: 0.9em;
     }
-
     .ResponsiveSidebarContainer fieldset.TableLike > label,
     .ResponsiveSidebarContainer fieldset.TableLike > .Row > label {
         float: left;
         text-align: right;
     }
-
     .ResponsiveSidebarContainer fieldset.TableLike {
         line-height: 1.7em;
     }
-
     .ResponsiveSidebarContainer fieldset.TableLike:empty {
         display: none;
     }
-
     .TicketZoom .Actions form {
         padding: 0;
         display: inline-block;
         margin-bottom: -4px;
     }
-
     .TicketZoom .Actions form select {
         max-width: 200px;
     }
-
     .TicketZoom .Actions li:after {
         display: inline-block;
         float: none;
     }
-
     .ArticleMailContent.WithMeta .ArticleBody,
     .ArticleMailContent.WithMeta .ArticleMailContentHTMLWrapper {
         width: auto;
         float: none;
     }
-
     .ArticleMailContent.WithMeta .ArticleMeta {
         width: auto;
         float: none;
     }
+
 
     /* Errors */
 
     .MainBox.ErrorScreen {
         margin-top: 15px;
     }
-
     .MainBox.ErrorScreen .CenterBox {
         width: auto;
         margin-bottom: 15px;
     }
+
 
     /* Preferences */
     .WidgetSimple.Size1of2 {
@@ -858,17 +779,16 @@
         margin: 0 2% 30px;
     }
 
+
     /* Popups */
 
     .LayoutPopup fieldset.TableLike.FixedLabel > label,
     .LayoutPopup fieldset.TableLike.FixedLabel > .Row > label {
         width: auto;
     }
-
     .LayoutPopup > .Header h1 {
         white-space: normal;
     }
-
     .LayoutPopup fieldset.TableLike.FixedLabel > .Field,
     .LayoutPopup fieldset.TableLike.FixedLabel > .Row > .Field,
     .LayoutPopup fieldset.TableLike.FixedLabel > .Value,
@@ -876,11 +796,11 @@
         margin-left: 0;
         padding-left: 0;
     }
-
     .LayoutPopup fieldset.TableLike > .Field > select,
     .LayoutPopup fieldset.TableLike > .Row > .Field > select {
         width: auto;
     }
+
 
     /* Process dialogs */
 
@@ -888,6 +808,7 @@
         padding: 0;
         border-top: 1px solid #ccc;
     }
+
 
     /* Cluster */
     #ResponsiveTicketMenuHandle,
@@ -954,6 +875,7 @@
         width: auto;
     }
 
+
     /* Input Fields */
     input[type="text"],
     input[type="password"],
@@ -1012,13 +934,13 @@
         width: auto;
     }
 
+
     /* Breadcrumb */
 
     .BreadCrumb {
         overflow-x: scroll;
         padding: 7px 0;
     }
-
     .BreadCrumb li,
     .BreadCrumb a {
         font-size: 12px;
@@ -1026,14 +948,12 @@
         max-width: none;
         white-space: nowrap;
     }
-
     .BreadCrumb li:before,
     .BreadCrumb li:after {
         top: 50%;
         border-width: 22px;
         margin-top: -22px;
     }
-
     iframe.PopupIframe {
         position: absolute;
         top: 0;
@@ -1054,14 +974,12 @@
     .ScreenL {
         display: block;
     }
-
     .SmallerOrEqualScreenL,
     .SmallerOrEqualScreenM,
     .SmallerOrEqualScreenS,
     .SmallerOrEqualScreenXS {
         display: block;
     }
-
     .ScreenXL,
     #Navigation > li > a.ScreenXL,
     .ScreenM,
@@ -1071,6 +989,7 @@
         display: none ;
     }
 
+
     /*
      * @subsection Responsive classes
      * @description Special treatment of screen sizes in real popup
@@ -1078,7 +997,6 @@
     .RealPopup .ScreenXL {
         display: block;
     }
-
     .RealPopup .ScreenL,
     .RealPopup .SmallerOrEqualScreenL,
     .RealPopup .SmallerOrEqualScreenM,
@@ -1087,6 +1005,7 @@
         display: none;
     }
 
+
     /*
      * @subsection Responsive footer classes
      * @description Used to determinethe active screen size in JavaScript
@@ -1094,7 +1013,6 @@
     #ResponsiveFooter .Visible-ScreenL {
         display: block;
     }
-
     #ResponsiveFooter .Visible-ScreenXL,
     #ResponsiveFooter .Visible-ScreenM,
     #ResponsiveFooter .Visible-ScreenS,
@@ -1102,6 +1020,7 @@
         display: none;
     }
 }
+
 
 /*
 * Tablet landscape
@@ -1112,7 +1031,6 @@
     #ContentItemTabs .SidebarColumn {
         display: none;
     }
-
     .MainBox > h1,
     .OverviewBox > h1 {
         font-size: 20px;
@@ -1130,19 +1048,15 @@
         width: 100%;
         margin-bottom: 15px;
     }
-
     .OverviewLarge div.Infos table td {
         display: block;
     }
-
     .OverviewLarge > li ul.InlineActions {
         display: none;
     }
-
     .OverviewMedium > li ul.InlineActions {
         display: none;
     }
-
     .OverviewMedium table.Infos td {
         display: block;
         width: 100%;
@@ -1166,14 +1080,11 @@
         margin: 0;
         width: 100%;
     }
-
     .LoginScreen .LoginBox,
     .SystemMessageLoginBox {
         background: none;
         border-width: 1px 0;
-
     }
-
     .SystemMessageLoginBox {
         width: 100%;
         border-bottom: 0;
@@ -1184,7 +1095,6 @@
         padding-left: 0;
         padding-right: 0;
     }
-
     .ErrorBox,
     .SuccessBox,
     .WarningBox {
@@ -1201,7 +1111,6 @@
         width: 98%;
         margin-top: 5px;
     }
-
     #RateSubmitButton {
         width: 95%;
     }
@@ -1224,6 +1133,7 @@
     }
 }
 
+
 /*
 * Tablet portrait
 */
@@ -1236,6 +1146,7 @@
     }
 }
 
+
 /*
 * Tablet portrait
 */
@@ -1246,13 +1157,11 @@
     .ScreenM {
         display: block;
     }
-
     .SmallerOrEqualScreenM,
     .SmallerOrEqualScreenS,
     .SmallerOrEqualScreenXS {
         display: block;
     }
-
     .ScreenXL,
     #Navigation > li > a.ScreenXL,
     .ScreenL,
@@ -1263,6 +1172,7 @@
         display: none;
     }
 
+
     /*
      * @subsection Responsive classes
      * @description Special treatment of screen sizes in real popup
@@ -1270,7 +1180,6 @@
     .RealPopup .ScreenXL {
         display: block;
     }
-
     .RealPopup .ScreenM,
     .RealPopup .SmallerOrEqualScreenXL,
     .RealPopup .SmallerOrEqualScreenL,
@@ -1279,6 +1188,7 @@
     .RealPopup .SmallerOrEqualScreenXS {
         display: none;
     }
+
 
     /*
      * @subsection Responsive footer classes
@@ -1319,12 +1229,10 @@
     .ScreenS {
         display: block;
     }
-
     .SmallerOrEqualScreenS,
     .SmallerOrEqualScreenXS {
         display: block;
     }
-
     .ScreenXL,
     .ScreenL,
     .ScreenM,
@@ -1333,6 +1241,7 @@
     .SmallerOrEqualScreenXS {
         display: none;
     }
+
 
     /*
      * @subsection Responsive classes
@@ -1350,6 +1259,7 @@
     .RealPopup .SmallerOrEqualScreenXS {
         display: none;
     }
+
 
     /*
      * @subsection Responsive footer classes
@@ -1379,17 +1289,17 @@
     .ScreenXS {
         display: block;
     }
-
     .SmallerOrEqualScreenXS {
         display: block;
     }
-
     .ScreenXL,
     .ScreenL,
     .ScreenM,
     .ScreenS {
         display: none;
     }
+
+
     /*
      * @subsection Responsive classes
      * @description Special treatment of screen sizes in real popup
@@ -1397,7 +1307,6 @@
     .RealPopup .ScreenXL {
         display: block;
     }
-
     .RealPopup .ScreenXS,
     .RealPopup .SmallerOrEqualScreenXL,
     .RealPopup .SmallerOrEqualScreenL,
@@ -1406,6 +1315,7 @@
     .RealPopup .SmallerOrEqualScreenXS {
         display: none;
     }
+
 
     /*
      * @subsection Responsive footer classes

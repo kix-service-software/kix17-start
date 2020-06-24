@@ -730,7 +730,6 @@
     }
 
 
-
     /* Login */
     .LoginScreen fieldset.TableLike > label,
     .LoginScreen fieldset.TableLike > .Row > label {
@@ -802,6 +801,9 @@
     fieldset.TableLike > label.AdditionalInformationResponsive,
     fieldset.TableLike > p.AdditionalInformationResponsive {
         display: block;
+    }
+    .Scroller {
+        overflow-y:auto;
     }
     #ArticleTableBody .Scroller {
         overflow: auto;
