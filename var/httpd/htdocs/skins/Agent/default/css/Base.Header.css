@@ -109,20 +109,20 @@
     #ToolBar .InputField_Autocomplete {
         min-width: 65px;
     }
-    #ToolBar li {
+    #ToolBar > li {
         width: 24px;
         height: 34px;
         margin: 0 5px;
         float: left;
         position: relative;
     }
-    #ToolBar li.Extended {
+    #ToolBar > li.Extended {
         width: auto;
     }
-    #ToolBar li.Extended form * {
+    #ToolBar > li.Extended form * {
         float: left;
     }
-    #ToolBar li a {
+    #ToolBar > li > a {
         height: 20px;
         width: 24px;
         text-indent: -9999px;
@@ -152,7 +152,7 @@
         width: 24px;
         position: relative;
     }
-    #ToolBar li a i.icon-small {
+    #ToolBar > li > a > i.icon-small {
         font-size: 12px;
         position: absolute;
         right: -7px;
@@ -225,7 +225,6 @@
         text-align: left;
         padding-left: 15px;
     }
-
     .ToolbarLeft > #ToolBarToggle.Hide::after,
     .ToolbarTop > #ToolBarToggle.Hide::after {
         left: 0;
@@ -246,7 +245,6 @@
     .ToolbarRight > #ToolBarToggle.Show {
         padding-right: 15px;
     }
-
     .ToolbarLeft > #ToolBarToggle.Hide,
     .ToolbarTop > #ToolBarToggle.Hide {
         padding-left: 20px;
