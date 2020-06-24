@@ -515,13 +515,37 @@ sub TicketSearch {
         $SQLFrom .= $AttachmentJoinSQL;
     }
 
-    # use also history table if required
-    my $PatternArg = '^(Ticket(Close|Change)Time(Newer|Older)(Date|Minutes)|Created.+?)';
+    # use also history tables if required
+    my $PatternArg0 = '^Created.+?';
+    my $PatternArg1 = '^TicketChangeTime(Newer|Older)(Date|Minutes)';
+    my $PatternArg2 = '^TicketCloseTime(Newer|Older)(Date|Minutes)';
+    my $TableAdded0 = 0;
+    my $TableAdded1 = 0;
+    my $TableAdded2 = 0;
     ARGUMENT:
     for my $Key ( sort keys %Param ) {
-        if ( $Param{$Key} && $Key =~ /$PatternArg/ ) {
-            $SQLFrom .= 'INNER JOIN ticket_history th ON st.id = th.ticket_id ';
-            last ARGUMENT;
+        if ( $Param{ $Key } ) {
+            if (
+                !$TableAdded0
+                && $Key =~ /$PatternArg0/
+            ) {
+                $SQLFrom .= 'INNER JOIN ticket_history th ON st.id = th.ticket_id ';
+                $TableAdded0 = 1;
+            }
+            elsif (
+                !$TableAdded1
+                && $Key =~ /$PatternArg1/
+            ) {
+                $SQLFrom .= 'INNER JOIN ticket_history th1 ON st.id = th1.ticket_id ';
+                $TableAdded1 = 1;
+            }
+            elsif (
+                !$TableAdded2
+                && $Key =~ /$PatternArg2/
+            ) {
+                $SQLFrom .= 'INNER JOIN ticket_history th2 ON st.id = th2.ticket_id ';
+                $TableAdded2 = 1;
+            }
         }
     }
 
@@ -1709,7 +1733,7 @@ sub TicketSearch {
         }
         $CompareChangeTimeOlderNewerDate = $Time;
 
-        $SQLExt .= " AND th.create_time <= '"
+        $SQLExt .= " AND th1.create_time <= '"
             . $DBObject->Quote( $Param{TicketChangeTimeOlderDate} ) . "'";
     }
 
@@ -1743,7 +1767,7 @@ sub TicketSearch {
         # don't execute queries if older/newer date restriction show now valid timeframe
         return if $CompareChangeTimeOlderNewerDate && $Time > $CompareChangeTimeOlderNewerDate;
 
-        $SQLExt .= " AND th.create_time >= '"
+        $SQLExt .= " AND th1.create_time >= '"
             . $DBObject->Quote( $Param{TicketChangeTimeNewerDate} ) . "'";
     }
 
@@ -1902,9 +1926,9 @@ sub TicketSearch {
         my @StateID = ( $Self->HistoryTypeLookup( Type => 'NewTicket' ) );
         push( @StateID, $Self->HistoryTypeLookup( Type => 'StateUpdate' ) );
         if (@StateID) {
-            $SQLExt .= " AND th.history_type_id IN  (${\(join ', ', sort @StateID)}) AND "
-                . " th.state_id IN (${\(join ', ', sort @List)}) AND "
-                . "th.create_time <= '"
+            $SQLExt .= " AND th2.history_type_id IN  (${\(join ', ', sort @StateID)}) AND "
+                . " th2.state_id IN (${\(join ', ', sort @List)}) AND "
+                . "th2.create_time <= '"
                 . $DBObject->Quote( $Param{TicketCloseTimeOlderDate} ) . "'";
         }
     }
@@ -1947,9 +1971,9 @@ sub TicketSearch {
         my @StateID = ( $Self->HistoryTypeLookup( Type => 'NewTicket' ) );
         push( @StateID, $Self->HistoryTypeLookup( Type => 'StateUpdate' ) );
         if (@StateID) {
-            $SQLExt .= " AND th.history_type_id IN  (${\(join ', ', sort @StateID)}) AND "
-                . " th.state_id IN (${\(join ', ', sort @List)}) AND "
-                . " th.create_time >= '"
+            $SQLExt .= " AND th2.history_type_id IN  (${\(join ', ', sort @StateID)}) AND "
+                . " th2.state_id IN (${\(join ', ', sort @List)}) AND "
+                . " th2.create_time >= '"
                 . $DBObject->Quote( $Param{TicketCloseTimeNewerDate} ) . "'";
         }
     }
@@ -2665,12 +2689,36 @@ sub TicketSearchOR {
     }
 
     # use also history table if required
-    my $PatternArg = '^(Ticket(Close|Change)Time(Newer|Older)(Date|Minutes)|Created.+?)';
+    my $PatternArg0 = '^Created.+?';
+    my $PatternArg1 = '^TicketChangeTime(Newer|Older)(Date|Minutes)';
+    my $PatternArg2 = '^TicketCloseTime(Newer|Older)(Date|Minutes)';
+    my $TableAdded0 = 0;
+    my $TableAdded1 = 0;
+    my $TableAdded2 = 0;
     ARGUMENT:
     for my $Key ( sort keys %Param ) {
-        if ( $Key =~ /$PatternArg/ ) {
-            $SQLFrom .= 'INNER JOIN ticket_history th ON st.id = th.ticket_id ';
-            last ARGUMENT;
+        if ( $Param{ $Key } ) {
+            if (
+                !$TableAdded0
+                && $Key =~ /$PatternArg0/
+            ) {
+                $SQLFrom .= 'INNER JOIN ticket_history th ON st.id = th.ticket_id ';
+                $TableAdded0 = 1;
+            }
+            elsif (
+                !$TableAdded1
+                && $Key =~ /$PatternArg1/
+            ) {
+                $SQLFrom .= 'INNER JOIN ticket_history th1 ON st.id = th1.ticket_id ';
+                $TableAdded1 = 1;
+            }
+            elsif (
+                !$TableAdded2
+                && $Key =~ /$PatternArg2/
+            ) {
+                $SQLFrom .= 'INNER JOIN ticket_history th2 ON st.id = th2.ticket_id ';
+                $TableAdded2 = 1;
+            }
         }
     }
 
@@ -3778,7 +3826,7 @@ sub TicketSearchOR {
         }
         $CompareChangeTimeOlderNewerDate = $Time;
 
-        $SQLExtOR .= " OR th.create_time <= '"
+        $SQLExtOR .= " OR th1.create_time <= '"
             . $DBObject->Quote( $Param{TicketChangeTimeOlderDate} ) . "'";
     }
 
@@ -3812,7 +3860,7 @@ sub TicketSearchOR {
         # don't execute queries if older/newer date restriction show now valid timeframe
         return if $CompareChangeTimeOlderNewerDate && $Time > $CompareChangeTimeOlderNewerDate;
 
-        $SQLExtOR .= " OR th.create_time >= '"
+        $SQLExtOR .= " OR th1.create_time >= '"
             . $DBObject->Quote( $Param{TicketChangeTimeNewerDate} ) . "'";
     }
 
@@ -3971,9 +4019,9 @@ sub TicketSearchOR {
         my @StateID = ( $Self->HistoryTypeLookup( Type => 'NewTicket' ) );
         push( @StateID, $Self->HistoryTypeLookup( Type => 'StateUpdate' ) );
         if (@StateID) {
-            $SQLExt .= " AND th.history_type_id IN  (${\(join ', ', sort @StateID)}) AND "
-                . " th.state_id IN (${\(join ', ', sort @List)}) AND "
-                . "th.create_time <= '"
+            $SQLExt .= " AND th2.history_type_id IN  (${\(join ', ', sort @StateID)}) AND "
+                . " th2.state_id IN (${\(join ', ', sort @List)}) AND "
+                . "th2.create_time <= '"
                 . $DBObject->Quote( $Param{TicketCloseTimeOlderDate} ) . "'";
         }
     }
@@ -4016,9 +4064,9 @@ sub TicketSearchOR {
         my @StateID = ( $Self->HistoryTypeLookup( Type => 'NewTicket' ) );
         push( @StateID, $Self->HistoryTypeLookup( Type => 'StateUpdate' ) );
         if (@StateID) {
-            $SQLExt .= " AND th.history_type_id IN  (${\(join ', ', sort @StateID)}) AND "
-                . " th.state_id IN (${\(join ', ', sort @List)}) AND "
-                . " th.create_time >= '"
+            $SQLExt .= " AND th2.history_type_id IN  (${\(join ', ', sort @StateID)}) AND "
+                . " th2.state_id IN (${\(join ', ', sort @List)}) AND "
+                . " th2.create_time >= '"
                 . $DBObject->Quote( $Param{TicketCloseTimeNewerDate} ) . "'";
         }
     }
