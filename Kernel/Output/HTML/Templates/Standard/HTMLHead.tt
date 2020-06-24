@@ -56,24 +56,13 @@
             [% Data.CSSAttr | html %]
         }
 [% RenderBlockEnd("ResponsiveLogoCSS") %]
-
-[% RenderBlockStart("LoginLogoCSS") %]
-        .LoginLogo {
-            [% Data.CSSAttr | html %]
-        }
-[% RenderBlockEnd("LoginLogoCSS") %]
-[% RenderBlockStart("ResponsiveLoginLogoCSS") %]
-        #LoginResponsiveLogo {
-            [% Data.CSSAttr | html %]
-        }
-[% RenderBlockEnd("ResponsiveLoginLogoCSS") %]
 [% RenderBlockStart("CustomCSSTop")%]
-            .ToolbarTop > #ToolBarToggle {
-                [% Data.CSSToggle | html %]
-            }
-            .ToolbarTop > #ToolBar {
-                [% Data.CSSToolbar | html %]
-            }
+        .ToolbarTop > #ToolBarToggle {
+            [% Data.CSSToggle | html %]
+        }
+        .ToolbarTop > #ToolBar {
+            [% Data.CSSToolbar | html %]
+        }
 [% RenderBlockEnd("CustomCSSTop")%]
     </style>
 
