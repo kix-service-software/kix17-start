@@ -200,7 +200,6 @@ Core.UI.Datepicker = (function (TargetNS) {
             dayNames: LocalizationData.DayNames,
             dayNamesShort: LocalizationData.DayNamesShort,
             dayNamesMin: LocalizationData.DayNamesMin,
-            isRTL: LocalizationData.IsRTL
         };
 
         Options.onSelect = function (DateText, Instance) {
