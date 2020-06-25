@@ -187,13 +187,13 @@
                             <td>
 
 [% RenderBlockStart("CertificateRelationAdd") %]
-                                <a class="CertificateRelationAdd" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=SignerRelations;Fingerprint=[% Data.Fingerprint %]" title="[% Translate("Handle related certificates") | html %]">
-                                    [% Translate("Handle related certificates") | html %]
+                                <a class="CertificateRelationAdd" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=SignerRelations;Fingerprint=[% Data.Fingerprint %]" title="[% Translate("Handle related certificates") | html %]" alt="[% Translate("Handle related certificates") | html %]">
+                                    <i class="fa fa-key"></i>
                                 </a>
 [% RenderBlockEnd("CertificateRelationAdd") %]
 [% RenderBlockStart("CertificateRead") %]
-                                <a class="CertificateRead" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Read;Type=[% Data.Type | uri %];Filename=[% Data.Filename | uri %]" title="[% Translate("Read certificate") | html %]">
-                                    [% Translate("Read certificate") | html %]
+                                <a class="CertificateRead" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Read;Type=[% Data.Type | uri %];Filename=[% Data.Filename | uri %]" title="[% Translate("Read certificate") | html %]" alt="[% Translate("Read certificate") | html %]">
+                                    <i class="fa fa-certificate"></i>
                                 </a>
 [% WRAPPER JSOnDocumentComplete %]
 <script type="text/javascript">//<![CDATA[

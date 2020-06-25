@@ -1705,11 +1705,11 @@
     .LayoutPopup > .Footer {
         border-top: 1px solid #EEEEEE;
     }
-    .CancelClosePopup {
+    a.CancelClosePopup {
             color: #0A7CB3;
     }
-    .CancelClosePopup:hover {
-            color: #5FA441;
+    a.CancelClosePopup:hover {
+            color: #086391;
     }
 
 
