@@ -1705,11 +1705,13 @@
     .LayoutPopup > .Footer {
         border-top: 1px solid #EEEEEE;
     }
+    a.ProcessPrint,
     a.CancelClosePopup {
-            color: #0A7CB3;
+        color: #0A7CB3;
     }
+    a.ProcessPrint:hover,
     a.CancelClosePopup:hover {
-            color: #086391;
+        color: #086391;
     }
 
 
