@@ -556,6 +556,16 @@
     .RateButton.RateChecked i.fa-star {
         display: block;
     }
+    .RateStar {
+        display: block;
+        height: 16px;
+        float: left;
+        padding-left: 1px;
+        font-size: 10px;
+    }
+    .RateStarText {
+        text-indent: 5px;
+    }
 
 
     /**
