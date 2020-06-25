@@ -1168,6 +1168,9 @@
     .RateButton i {
         color: #5B5B5B;
     }
+    .RateButton:hover i.fa-star-o {
+        color: #78BE5A;
+    }
     .RateButton.RateChecked i.fa-star {
         color: #E97D34;
     }
