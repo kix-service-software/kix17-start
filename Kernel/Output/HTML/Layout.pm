@@ -1238,16 +1238,6 @@ sub Header {
         $Param{ShowLogoutButton} = 1;
     }
 
-    # set rtl if needed
-    if ( $Self->{TextDirection} && $Self->{TextDirection} eq 'rtl' ) {
-        $Param{BodyClass} = 'RTL';
-    }
-    elsif ( $ConfigObject->Get('Frontend::DebugMode') ) {
-        $Self->Block(
-            Name => 'DebugRTLButton',
-        );
-    }
-
     # Generate the minified CSS and JavaScript files and the tags referencing them (see LayoutLoader)
     $Self->LoaderCreateAgentCSSCalls();
 
@@ -1569,7 +1559,6 @@ sub Footer {
             Name => 'DatepickerData',
             Data => {
                 VacationDays  => $VacationDaysJSON,
-                IsRTLLanguage => ( $TextDirection eq 'rtl' ) ? 1 : 0,
             },
         );
     }
@@ -4193,17 +4182,7 @@ sub CustomerHeader {
         }
     }
 
-    # set rtl if needed
-    if ( $Self->{TextDirection} && $Self->{TextDirection} eq 'rtl' ) {
-        $Param{BodyClass} = 'RTL';
-    }
-    elsif ( $ConfigObject->Get('Frontend::DebugMode') ) {
-        $Self->Block(
-            Name => 'DebugRTLButton',
-        );
-    }
-
-        # Add logos, if configured
+    # Add logos, if configured
     for my $Key ( qw(Logo ResponsiveLogo) ) {
         next if !defined $ConfigObject->Get('Customer' . $Key );
 
@@ -4269,7 +4248,6 @@ sub CustomerFooter {
             Name => 'DatepickerData',
             Data => {
                 VacationDays  => $VacationDaysJSON,
-                IsRTLLanguage => ( $TextDirection eq 'rtl' ) ? 1 : 0,
             },
         );
     }

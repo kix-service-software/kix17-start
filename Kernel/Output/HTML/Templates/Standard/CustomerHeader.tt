@@ -21,9 +21,6 @@
         <h1 class="CompanyName">
             <a href="#">[% Config("CustomerHeadline") %]</a>
         </h1>
-[% RenderBlockStart("DebugRTLButton") %]
-        <button onclick="Core.Debug.SimulateRTLPage();" type="button">Simulate RTL</button>
-[% RenderBlockEnd("DebugRTLButton") %]
     </div>
 
 [% WRAPPER JSOnDocumentComplete %]
