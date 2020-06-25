@@ -64,7 +64,8 @@
         text-align: center;
         min-height: 28px;
     }
-    .CancelClosePopup {
+    a.ProcessPrint,
+    a.CancelClosePopup {
         font-size: 13px;
         font-weight: bold;
     }
