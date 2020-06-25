@@ -251,6 +251,7 @@
         border-bottom: 1px solid #9E9E9E;
     }
 
+
     /*
     *   @subsection sidebar column widget
     */
@@ -1438,6 +1439,18 @@
     #DiagramTooltip li .AvailableIn {
         color: #FFFFFF;
         background-color: #999999;
+    }
+
+
+    /**
+    *   @subsection generic interface
+    */
+    #WebserviceHistoryDetails.WidgetSimple > .LightRow.Bottom {
+        border-color: #9E9E9E;
+    }
+    #WebserviceHistoryDetails.WidgetSimple > .Content > pre {
+        background-color: #FFFFFF;
+        border-color: #E0E0E0;
     }
 
 
