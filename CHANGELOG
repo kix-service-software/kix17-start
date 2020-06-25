@@ -1,6 +1,24 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.12.0-RC4 (2020/06/25)
+ * (2020/06/25) - Bugfix: KIX17-871 (fixed incorrect display of print link in the process popup) (fjacquemin)
+ * (2020/06/25) - Bugfix: KIX17-871 (fixed missing certificate and private key icons in AdminSMIME) (fjacquemin)
+ * (2020/06/25) - Bugfix: KIX17-871 (fixed incorrect display of version widget in generic interface history) (fjacquemin)
+ * (2020/06/24) - Bugfix: KIX17-1075 (fixed inccorect display of the rating star in the Sidebar) (fjacquemin)
+ * (2020/06/24) - Bugfix: KIX17-1060 (fixed missing submit and cancle buttons of edit ACL in responsive mode) (fjacquemin)
+ * (2020/06/24) - Bugfix: KIX17-1005 (removed RTL direction) (fjacquemin)
+ * (2020/06/24) - Bugfix: KIX17-871 (fixed missing pagination in responsive mode) (fjacquemin)
+ * (2020/06/24) - Bugfix: KIX17-871 (fixed incorrect table size in responsive mode) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed missing login logo in responsive mode) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-1058 (incorrect ticket search for historic values combined with closing time) (millinger)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed position of the modernize selection list in responsive mode) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed incorrect display of the search profile selection in the toolbar) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed incorrect display of actions in the article flag dialog) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed displaying long labels) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed system maintenance notification in login) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (changed color of invalid table entries) (fjacquemin)
+
 # 17.12.0-RC3 (2020/06/10)
  * (2020/06/05) - Bugfix: KIX17-1047 (fixed database schema for table acl) (millinger)
  * (2020/06/05) - CR: KIX17-1037 (overriding of dynamic field character limits) (ddoerffel)
