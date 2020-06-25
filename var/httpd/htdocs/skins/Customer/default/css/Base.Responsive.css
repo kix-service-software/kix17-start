@@ -285,6 +285,9 @@
     .WidgetSimple .AllocationListContainer .FilterInputContainer {
         margin: 0 auto;
     }
+    .WidgetSimple span.Pagination {
+        display: none;
+    }
     .WidgetSimple span.Pagination.AsBlock {
         display: block;
         margin: 10px 0;
@@ -701,6 +704,10 @@
     fieldset.TableLike > label.AdditionalInformationResponsive,
     fieldset.TableLike > p.AdditionalInformationResponsive {
         display: block;
+    }
+
+    .Scroller {
+        overflow-y:auto;
     }
     #ArticleTableBody .Scroller {
         overflow: auto;

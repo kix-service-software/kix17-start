@@ -799,6 +799,9 @@
     fieldset.TableLike > p.AdditionalInformationResponsive {
         display: block;
     }
+    .Scroller {
+        overflow-y:auto;
+    }
     #ArticleTableBody .Scroller {
         overflow: auto;
     }
