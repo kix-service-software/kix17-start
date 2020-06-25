@@ -399,9 +399,6 @@
     .WidgetSimple .AllocationListContainer .FilterInputContainer {
         margin: 0 auto;
     }
-    .WidgetSimple span.Pagination {
-        display: none;
-    }
     .WidgetSimple span.Pagination.AsBlock {
         display: block;
         margin: 10px 0;
@@ -728,7 +725,6 @@
     .OverviewZoom a:hover {
         padding-bottom: 5px;
     }
-
 
 
     /* Login */
