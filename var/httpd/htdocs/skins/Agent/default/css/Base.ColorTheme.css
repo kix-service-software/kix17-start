@@ -251,6 +251,7 @@
         border-bottom: 1px solid #9E9E9E;
     }
 
+
     /*
     *   @subsection sidebar column widget
     */
@@ -409,8 +410,9 @@
     .Handle a {
         background: transparent url(../img/handle.png) no-repeat;
     }
+    .TableSmall tbody tr.Invalid,
     .DataTable tbody tr.Invalid {
-       color: #CCCCCC;
+       color: #AAAAAA;
     }
 
 
@@ -509,6 +511,7 @@
         border-bottom: 1px solid #78BE5A;
         border-top: 1px solid #78BE5A;
     }
+
 
     /**
     *   @subsection input fields
@@ -942,6 +945,7 @@
         color: #FFFFFF;
     }
 
+
     /**
     *   @subsection faq
     */
@@ -959,6 +963,9 @@
     ul.FAQMiniList li:hover a {
         color: #78BE5A;
         background-color: inherit;
+    }
+    #FAQOptions .Print {
+        color: #777777;
     }
 
 
@@ -1436,6 +1443,18 @@
 
 
     /**
+    *   @subsection generic interface
+    */
+    #WebserviceHistoryDetails.WidgetSimple > .LightRow.Bottom {
+        border-color: #9E9E9E;
+    }
+    #WebserviceHistoryDetails.WidgetSimple > .Content > pre {
+        background-color: #FFFFFF;
+        border-color: #E0E0E0;
+    }
+
+
+    /**
     *   @subsection ITSM
     */
     #ITSMTable > .ControlRow {
@@ -1453,6 +1472,7 @@
     .CIImagePreview {
         border: 1px solid #CCCCCC;
     }
+
 
     /**
     *   @subsection ITSM tab graph
@@ -1534,6 +1554,9 @@
     .RateButton i {
         color: #5B5B5B;
     }
+    .RateButton:hover i.fa-star-o {
+        color: #78BE5A;
+    }
     .RateButton.RateChecked i.fa-star {
         color: #E97D34;
     }
@@ -1580,7 +1603,6 @@
         border-color: #78BE5A;
         color: #FFFFFF;
     }
-
 
 
     /**
@@ -1683,11 +1705,13 @@
     .LayoutPopup > .Footer {
         border-top: 1px solid #EEEEEE;
     }
-    .CancelClosePopup {
-            color: #78BE5A;
+    a.ProcessPrint,
+    a.CancelClosePopup {
+        color: #78BE5A;
     }
-    .CancelClosePopup:hover {
-            color: #5FA441;
+    a.ProcessPrint:hover,
+    a.CancelClosePopup:hover {
+        color: #5FA441;
     }
 
 

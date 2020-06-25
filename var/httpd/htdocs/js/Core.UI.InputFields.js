@@ -521,14 +521,7 @@ Core.UI.InputFields = (function (TargetNS) {
                 if (OffsetLeft + $SelectionObj.outerWidth() < MaxWidth) {
 
                     // Offset the box and show it
-                    if ($('body').hasClass('RTL')) {
-                        $SelectionObj.css('right', OffsetLeft + 'px')
-                            .show();
-                    }
-                    else {
-                        $SelectionObj.css('left', OffsetLeft + 'px')
-                            .show();
-                    }
+                    $SelectionObj.css('left', OffsetLeft + 'px').show();
 
                 } else {
 
@@ -542,14 +535,7 @@ Core.UI.InputFields = (function (TargetNS) {
                         }
 
                         // Offset the box and show it
-                        if ($('body').hasClass('RTL')) {
-                            $SelectionObj.css('right', OffsetLeft + 'px')
-                                .show();
-                        }
-                        else {
-                            $SelectionObj.css('left', OffsetLeft + 'px')
-                                .show();
-                        }
+                        $SelectionObj.css('left', OffsetLeft + 'px').show();
                     }
 
                     else {
@@ -559,7 +545,7 @@ Core.UI.InputFields = (function (TargetNS) {
                             $SelectionObj.after(
                                 $('<div />').addClass('InputField_More')
                                 .css(
-                                    ($('body').hasClass('RTL') ? 'right' : 'left'),
+                                    'left',
                                     OffsetLeft + 'px'
                                 )
                                 .text(
@@ -2093,7 +2079,7 @@ Core.UI.InputFields = (function (TargetNS) {
                             $ClearSearchObj.addClass('InputField_Action InputField_ClearSearch')
                                 .attr('href', '#')
                                 .attr('title', Core.Config.Get('InputFieldsClearSearch'))
-                                .css(($('body').hasClass('RTL') ? 'left' : 'right'), Config.SelectionBoxOffsetRight + 'px')
+                                .css('right', Config.SelectionBoxOffsetRight + 'px')
                                 .append($('<i />').addClass('fa fa-times-circle'))
                                 .attr('role', 'button')
                                 .attr('tabindex', '-1')

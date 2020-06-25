@@ -460,9 +460,7 @@
         border-radius: 5px;
     }
 
-    a.CertificateRelationAdd,
     button.CertificateRelationAdd,
-    a.CertificateRead,
     button.Add,
     a.Add,
     button.Remove,
