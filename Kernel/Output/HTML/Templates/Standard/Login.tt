@@ -28,7 +28,7 @@ X-KIX-Login: [% Env("Baselink") %]
 
     <style type="text/css">
 [% RenderBlockStart("LoginLogoCSS") %]
-        .LoginLogo {
+        #LoginLogo {
             [% Data.CSSAttr | html %]
         }
 [% RenderBlockEnd("LoginLogoCSS") %]

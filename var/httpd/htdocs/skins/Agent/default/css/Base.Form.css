@@ -457,9 +457,7 @@
     textarea.cke_dialog_ui_input_textarea {
         border-radius: 5px;
     }
-    a.CertificateRelationAdd,
     button.CertificateRelationAdd,
-    a.CertificateRead,
     button.Add,
     a.Add,
     button.Remove,
@@ -523,7 +521,7 @@
         width: 86%;
         margin-left: 7px;
     }
-   .DynamicFieldAvailableInFrontend {
+    .DynamicFieldAvailableInFrontend {
         width: 500px;
     }
 
