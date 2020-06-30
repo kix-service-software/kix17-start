@@ -50,6 +50,14 @@ o Name:    CPAN Crypt::PasswdMD5
   License: GNU v2 - http://www.gnu.org/licenses/gpl.html
   Note:    # Copyright Luis E. Mu�oz <luismunoz@cpan.org>
 
+o Name:    CPAN Crypt::SSLeay
+  Web:     https://metacpan.org/pod/Crypt::SSLeay
+  License: Artistic License 2.0 - http://www.perlfoundation.org/artistic_license_2_0
+  Note:    # Copyright (c) 2010-2014 A. Sinan Unur
+           # Copyright (c) 2006-2007 David Landgren
+           # Copyright (c) 1999-2003 Joshua Chamas
+           # Copyright (c) 1998 Gisle Aas
+
 o Name:    CPAN Date::Pcalc
   Web:     n/a
   License: GNU v2 - http://www.gnu.org/licenses/gpl.html
