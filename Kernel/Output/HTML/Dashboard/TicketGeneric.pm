@@ -441,7 +441,10 @@ sub Preferences {
             # remove field if not valid
             if (
                 ref($DynamicField) ne 'HASH'
-                || $DynamicField->{ValidID} != 1
+                || (
+                    defined $DynamicField->{ValidID}
+                    && $DynamicField->{ValidID} != 1
+                )
             ) {
                 if ( grep { $_ eq $Column } @ColumnsAvailableNotEnabled ) {
                     my @ColumnArray = @ColumnsAvailableNotEnabled;
@@ -476,7 +479,10 @@ sub Preferences {
             # remove field if not valid
             if (
                 ref($DynamicField) ne 'HASH'
-                || $DynamicField->{ValidID} != 1
+                || (
+                    defined $DynamicField->{ValidID}
+                    && $DynamicField->{ValidID} != 1
+                )
             ) {
                 if ( grep { $_ eq $Column } @ColumnsEnabled ) {
                     my @ColumnArray = @ColumnsEnabled;
