@@ -17333,7 +17333,7 @@ Here you may define a default text for the forward function. You find this confi
                 <Item Key="AgentTicketPriority">1</Item>
                 <Item Key="AgentTicketResponsible">1</Item>
                 <Item Key="AgentTicketZoomTabActionCommon">1</Item>
-                <Item Key="AgentTicketZoomTabEditCoreData">1</Item>
+                <Item Key="AgentTicketZoomTabEditCoreData">0</Item>
                 <Item Key="CustomerTicketZoom">1</Item>
             </Hash>
         </Setting>
