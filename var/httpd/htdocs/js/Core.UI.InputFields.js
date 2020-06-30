@@ -1260,7 +1260,11 @@ Core.UI.InputFields = (function (TargetNS) {
                             .addClass('ExpandToTop');
 
                         var bottomPos = parseInt($('body').height() - $InputContainerObj.offset().top, 10);
-                        if (!$('body').hasClass('Visible-ScreenXL') && HeaderHeight) {
+                        if (
+                            !$('body').hasClass('Visible-ScreenXL')
+                            && !$('.Dialog.Fullsize').length()
+                            && HeaderHeight
+                        ) {
                             bottomPos += HeaderHeight;
                         }
 
@@ -1279,7 +1283,11 @@ Core.UI.InputFields = (function (TargetNS) {
                             .addClass('ExpandToBottom');
 
                         var topPos = parseInt($InputContainerObj.offset().top + $InputContainerObj.outerHeight(), 10);
-                        if (!$('body').hasClass('Visible-ScreenXL') && HeaderHeight) {
+                        if (
+                            !$('body').hasClass('Visible-ScreenXL')
+                            && !$('.Dialog.Fullsize').length()
+                            && HeaderHeight
+                        ) {
                             topPos -= HeaderHeight;
                         }
 
