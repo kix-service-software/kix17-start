@@ -1,6 +1,13 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.12.0-RC5 (2020/07/01)
+ * (2020/06/29) - Bugfix: KIX17-1049 (changed InitialDataShown configuration of AgentTicketZoomTabEditCoreData) (fjacquemin)
+ * (2020/06/29) - Bugfix: KIX17-871 (fixed several layout issues) (fjacquemin)
+ * (2020/06/29) - Bugfix: KIX17-923 (fixed configuration description of LinkObject::ComplexTable###Ticket) (fjacquemin)
+ * (2020/06/29) - Bugfix: KIX17-890 (fixed log entry of non-existent dynamic field in the Dashboard TicketGeneric) (fjacquemin)
+ * (2020/06/26) - CR: KIX17-1094 (integrated Crypt::SSLeay to own cpan-lib) (millinger)
+
 # 17.12.0-RC4 (2020/06/25)
  * (2020/06/25) - Bugfix: KIX17-871 (fixed incorrect display of print link in the process popup) (fjacquemin)
  * (2020/06/25) - Bugfix: KIX17-871 (fixed missing certificate and private key icons in AdminSMIME) (fjacquemin)
