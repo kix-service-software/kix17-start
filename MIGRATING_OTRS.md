@@ -48,6 +48,10 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
 * Run migration
 * Restore database dump
 
+### Migrating to KIXPro with filled CMDB without OptimizedCMDB
+* AFTER MIGRATION run console command `Admin::ITSM::RebuildCMDBStructure`
+    * Error logs will occure that tables, indexes and views already exists. These can be ignored. It should be checked that there was no error regarding INSERT- or UPDATE-Statements
+
 ## Steps
 
 * stop the daemon in the OTRS system
@@ -135,6 +139,10 @@ Im Folgenden wird das Vorgehen für die Migration einer OTRS-Instanz auf KIX bes
 * Paket KIXTemplateWorkflows deinstallieren
 * Migration durchführen
 * Datenbank-Dump einspielen
+
+### Migration zu KIXPro mit gefüllter CMDB ohne OptimizedCMDB
+* NACH DER MIGRATION Konsolenbefehl `Admin::ITSM::RebuildCMDBStructure` ausführen
+    * Es wird Fehlermeldungen geben, dass Tabellen, Indizes und Views bereits existieren. Diese können ignoriert werden. Es sollte geprüft werden ob Fehler zu INSERT- oder UPDATE-Anweisungen aufgetreten sind
 
 ## Vorgehen
 
