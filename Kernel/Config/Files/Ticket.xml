@@ -12411,6 +12411,7 @@ Thanks for your help!
                         <Item Key="Age">1</Item>
                         <Item Key="Changed">1</Item>
                         <Item Key="Created">2</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
                         <Item Key="CustomerID">1</Item>
                         <Item Key="CustomerName">1</Item>
                         <Item Key="CustomerUserID">1</Item>
@@ -12437,6 +12438,7 @@ Thanks for your help!
                         <Item Key="Age">110</Item>
                         <Item Key="Changed">120</Item>
                         <Item Key="Created">310</Item>
+                        <Item Key="CustomerCompanyName">235</Item>
                         <Item Key="CustomerID">240</Item>
                         <Item Key="CustomerName">250</Item>
                         <Item Key="CustomerUserID">260</Item>
