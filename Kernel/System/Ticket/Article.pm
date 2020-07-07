@@ -2654,7 +2654,7 @@ sub SendAutoResponse {
         TicketID       => $Param{TicketID},
         HistoryType    => $HistoryType,
         HistoryComment => "\%\%$AutoReplyAddresses",
-        From           => "$AutoResponse{SenderRealname} <$AutoResponse{SenderAddress}>",
+        From           => "\"$AutoResponse{SenderRealname}\" <$AutoResponse{SenderAddress}>",
         To             => $AutoReplyAddresses,
         Cc             => $Cc,
         Charset        => 'utf-8',
