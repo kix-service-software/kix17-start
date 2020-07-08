@@ -1,6 +1,14 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.12.0-RC6 (2020/07/08)
+ * (2020/07/07) - Bugfix: KIX17-872 (customer name not shown for linked tickets) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-963 (generic interface can not update config items without xml data) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-1031 (Tickethook is not replaced in external supplier forwarding) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-1067 (EmailParser requires email param in entity mode) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-351 (autoresponse sender address differs from reply sender address) (millinger)
+ * (2020/07/06) - CR: KIX17-503 (added migration hint for KIXPro with filled CMDB) (millinger)
+
 # 17.12.0-RC5 (2020/07/01)
  * (2020/06/29) - Bugfix: KIX17-1049 (changed InitialDataShown configuration of AgentTicketZoomTabEditCoreData) (fjacquemin)
  * (2020/06/29) - Bugfix: KIX17-871 (fixed several layout issues) (fjacquemin)
