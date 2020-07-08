@@ -79,7 +79,7 @@
                 border-radius: 10px 10px 0 0;
                 padding: 20px;
             }
-            .headerContent > h1{
+            .headerContent h1 {
                 line-height: 120%;
                 margin: 0px;
                 font-size: 18px;
@@ -106,7 +106,7 @@
             .footerContent div a:link,
             .footerContent div a:visited {
                 font-weight: normal;
-                text-decoration: none
+                text-decoration: none;
             }
 
             #links {
