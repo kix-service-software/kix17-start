@@ -64,7 +64,7 @@ sub Init {
 
     if ( !IsHashRefWithData($Webservice) ) {
         return {
-            Success => 0,
+            Success      => 0,
             ErrorMessage =>
                 'Could not determine Web service configuration'
                 . ' in Kernel::GenericInterface::Operation::ConfigItem::Common::new()',
@@ -93,7 +93,7 @@ sub ValidateClass {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    return if !$Param{Class};
+    return if ( !$Param{Class} );
 
     # check for Class sent
     my $ItemDataRef = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemGet(
@@ -102,7 +102,7 @@ sub ValidateClass {
     );
 
     # return false if item data is empty
-    return if !IsHashRefWithData($ItemDataRef);
+    return if ( !IsHashRefWithData( $ItemDataRef ) );
 
     return 1;
 }
@@ -124,7 +124,7 @@ sub ValidateDeplState {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    return if !$Param{DeplState};
+    return if ( !$Param{DeplState} );
 
     # check for Class sent
     my $ItemDataRef = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemGet(
@@ -133,7 +133,7 @@ sub ValidateDeplState {
     );
 
     # return false if item data is empty
-    return if !IsHashRefWithData($ItemDataRef);
+    return if ( !IsHashRefWithData( $ItemDataRef ) );
 
     return 1;
 }
@@ -155,7 +155,7 @@ sub ValidateInciState {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    return if !$Param{InciState};
+    return if ( !$Param{InciState} );
 
     # check for Class sent
     my $ItemDataRef = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemGet(
@@ -164,7 +164,7 @@ sub ValidateInciState {
     );
 
     # return false if item data is empty
-    return if !IsHashRefWithData($ItemDataRef);
+    return if ( !IsHashRefWithData( $ItemDataRef ) );
 
     return 1;
 }
@@ -242,7 +242,7 @@ sub ValidateInputDate {
         SystemTime => $SystemTime,
     );
 
-    return if !$TimeStamp;
+    return if ( !$TimeStamp );
 
     return 1;
 }
@@ -294,7 +294,7 @@ sub ValidateInputDateTime {
         SystemTime => $SystemTime,
     );
 
-    return if !$TimeStamp;
+    return if ( !$TimeStamp );
 
     return 1;
 }
@@ -317,10 +317,16 @@ sub ValidateInputInteger {
 
     my $Value = $Param{Value};
 
-    return if !IsInteger($Value);
+    return if ( !IsInteger( $Value ) );
 
-    return if defined $Param{ValueMin} && $Value < $Param{ValueMin};
-    return if defined $Param{ValueMax} && $Value > $Param{ValueMax};
+    return if (
+        defined( $Param{ValueMin} )
+        && $Value < $Param{ValueMin}
+    );
+    return if (
+        defined( $Param{ValueMax} )
+        && $Value > $Param{ValueMax}
+    );
 
     return 1;
 }
@@ -352,7 +358,7 @@ sub ValidateInputGeneralCatalog {
     # create a lokup list
     my %ItemListLookup = reverse %{$ItemList};
 
-    return if !$ItemListLookup{$Value};
+    return if ( !$ItemListLookup{ $Value } );
 
     return 1;
 }
@@ -375,21 +381,22 @@ sub ValidateInputCustomer {
 
     my $Value = $Param{Value};
 
-    return if !$Value;
+    return if ( !$Value );
 
     my %CustomerData = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerUserDataGet(
         User => $Param{Value},
     );
 
     # if customer is not registered in the database
-    return if !IsHashRefWithData( \%CustomerData );
+    return if ( !IsHashRefWithData( \%CustomerData ) );
 
     # if ValidID is present, check if it is valid!
-    if ( defined $CustomerData{ValidID} ) {
+    if ( defined( $CustomerData{ValidID} ) ) {
 
         # return false if customer is not valid
-        return
-            if $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $CustomerData{ValidID} ) ne 'valid';
+        return if (
+            $Kernel::OM->Get('Kernel::System::Valid')->ValidLookup( ValidID => $CustomerData{ValidID} ) ne 'valid'
+        );
     }
 
     return 1;
@@ -413,11 +420,11 @@ sub ValidateInputCustomerCompany {
 
     my $Value = $Param{Value};
 
-    return if !$Value;
+    return if ( !$Value );
 
     my %CompanyList = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyList();
 
-    return if !$CompanyList{ $Param{Value} };
+    return if ( !$CompanyList{ $Param{Value} } );
 
     return 1;
 }
@@ -439,9 +446,9 @@ sub ValidateMimeType {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    return if !$Param{MimeType};
+    return if ( !$Param{MimeType} );
 
-    return if $Param{MimeType} !~ m{\A\w+\/\w+\z};
+    return if ( $Param{MimeType} !~ m{\A\w+\/\w+\z} );
 
     return 1;
 }
@@ -463,11 +470,11 @@ sub ValidateCharset {
     my ( $Self, %Param ) = @_;
 
     # check needed stuff
-    return if !$Param{Charset};
+    return if ( !$Param{Charset} );
 
     my $CharsetList = $Self->_CharsetList();
 
-    return if !$CharsetList->{ $Param{Charset} };
+    return if ( !$CharsetList->{ $Param{Charset} } );
 
     return 1;
 }
@@ -748,16 +755,16 @@ sub CheckXMLData {
             && ( !defined $XMLData->{$ItemKey} || !$XMLData->{$ItemKey} )
         ) {
             return {
-                ErrorCode => "$Self->{OperationName}.MissingParameter",
+                ErrorCode    => "$Self->{OperationName}.MissingParameter",
                 ErrorMessage =>
                     "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter"
                     . " is missing!",
             };
         }
 
-        if ( ref $XMLData->{$ItemKey} eq 'ARRAY' ) {
+        if ( ref( $XMLData->{$ItemKey} ) eq 'ARRAY' ) {
             for my $ArrayItem ( @{ $XMLData->{$ItemKey} } ) {
-                if ( ref $ArrayItem eq 'HASH' ) {
+                if ( ref( $ArrayItem ) eq 'HASH' ) {
                     $CheckValueResult = $Self->_CheckValue(
                         Value   => $ArrayItem->{$ItemKey},
                         Input   => $DefItem->{Input},
@@ -768,7 +775,7 @@ sub CheckXMLData {
                         return $CheckValueResult;
                     }
                 }
-                elsif ( ref $ArrayItem eq '' ) {
+                elsif ( ref( $ArrayItem ) eq '' ) {
                     $CheckValueResult = $Self->_CheckValue(
                         Value   => $ArrayItem,
                         Input   => $DefItem->{Input},
@@ -781,7 +788,7 @@ sub CheckXMLData {
                 }
                 else {
                     return {
-                        ErrorCode => "$Self->{OperationName}.InvalidParameter",
+                        ErrorCode    => "$Self->{OperationName}.InvalidParameter",
                         ErrorMessage =>
                             "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter"
                             . " is invalid!",
@@ -789,7 +796,7 @@ sub CheckXMLData {
                 }
             }
         }
-        elsif ( ref $XMLData->{$ItemKey} eq 'HASH' ) {
+        elsif ( ref( $XMLData->{$ItemKey} ) eq 'HASH' ) {
             $CheckValueResult = $Self->_CheckValue(
                 Value   => $XMLData->{$ItemKey}->{$ItemKey},
                 Input   => $DefItem->{Input},
@@ -820,11 +827,11 @@ sub CheckXMLData {
         # check if exists more elements than the ones they should
         if ( defined $DefItem->{CountMax} ) {
             if (
-                ref $XMLData->{$ItemKey} eq 'ARRAY'
+                ref( $XMLData->{$ItemKey} ) eq 'ARRAY'
                 && scalar @{ $XMLData->{$ItemKey} } > $DefItem->{CountMax}
             ) {
                 return {
-                    ErrorCode => "$Self->{OperationName}.InvalidParameter",
+                    ErrorCode    => "$Self->{OperationName}.InvalidParameter",
                     ErrorMessage =>
                         "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter"
                         . " repetitions is higher than the maxium value!",
@@ -835,7 +842,7 @@ sub CheckXMLData {
         # check if there is a sub and start recursion
         if ( defined $DefItem->{Sub} ) {
 
-            if ( ref $XMLData->{$ItemKey} eq 'ARRAY' ) {
+            if ( ref( $XMLData->{$ItemKey} ) eq 'ARRAY' ) {
                 my $Counter = 0;
                 for my $ArrayItem ( @{ $XMLData->{$ItemKey} } ) {
 
@@ -851,7 +858,7 @@ sub CheckXMLData {
                     $Counter++;
                 }
             }
-            elsif ( ref $XMLData->{$ItemKey} eq 'HASH' ) {
+            elsif ( ref( $XMLData->{$ItemKey} ) eq 'HASH' ) {
 
                 # start recursion
                 my $XMLDataCheck = $Self->CheckXMLData(
@@ -863,7 +870,7 @@ sub CheckXMLData {
                     return $XMLDataCheck;
                 }
             }
-            else {
+            elsif ( defined( $XMLData->{$ItemKey} ) ) {
 
                 # start recusrsion
                 my $XMLDataCheck = $Self->CheckXMLData(
@@ -880,7 +887,7 @@ sub CheckXMLData {
 
     return {
         Success => 1,
-        }
+    };
 }
 
 =item ReplaceXMLData()
@@ -914,9 +921,9 @@ sub ReplaceXMLData {
 
         my $NewValue;
 
-        if ( ref $XMLData->{$ItemKey} eq 'ARRAY' ) {
+        if ( ref( $XMLData->{$ItemKey} ) eq 'ARRAY' ) {
             for my $ArrayItem ( @{ $XMLData->{$ItemKey} } ) {
-                if ( ref $ArrayItem eq 'HASH' ) {
+                if ( ref( $ArrayItem ) eq 'HASH' ) {
 
                     # get the new value
                     $NewValue = $Self->_ReplaceValue(
@@ -930,7 +937,7 @@ sub ReplaceXMLData {
                     $ArrayItem->{$ItemKey} = $NewValue;
                 }
 
-                elsif ( ref $ArrayItem eq '' ) {
+                elsif ( ref( $ArrayItem ) eq '' ) {
                     $NewValue = $Self->_ReplaceValue(
                         Value   => $ArrayItem,
                         Input   => $DefItem->{Input},
@@ -943,7 +950,7 @@ sub ReplaceXMLData {
                 }
             }
         }
-        elsif ( ref $XMLData->{$ItemKey} eq 'HASH' ) {
+        elsif ( ref( $XMLData->{$ItemKey} ) eq 'HASH' ) {
             $NewValue = $Self->_ReplaceValue(
                 Value   => $XMLData->{$ItemKey}->{$ItemKey},
                 Input   => $DefItem->{Input},
@@ -976,9 +983,9 @@ sub ReplaceXMLData {
         }
 
         # check if there is a sub and start recursion
-        if ( defined $DefItem->{Sub} ) {
+        if ( defined( $DefItem->{Sub} ) ) {
 
-            if ( ref $XMLData->{$ItemKey} eq 'ARRAY' ) {
+            if ( ref( $XMLData->{$ItemKey} ) eq 'ARRAY' ) {
                 my $Counter = 0;
                 for my $ArrayItem ( @{ $XMLData->{$ItemKey} } ) {
 
@@ -992,7 +999,7 @@ sub ReplaceXMLData {
                     $Counter++;
                 }
             }
-            elsif ( ref $XMLData->{$ItemKey} eq 'HASH' ) {
+            elsif ( ref( $XMLData->{$ItemKey} ) eq 'HASH' ) {
 
                 # start recursion
                 my $NewXMLDataPart = $Self->ReplaceXMLData(
@@ -1042,13 +1049,13 @@ sub FormatXMLData {
 
     my $NewXMLData;
 
-    for my $RootKey ( sort keys %{$XMLData} ) {
-        if ( ref $XMLData->{$RootKey} eq 'ARRAY' ) {
+    for my $RootKey ( sort( keys( %{$XMLData} ) ) ) {
+        if ( ref( $XMLData->{$RootKey} ) eq 'ARRAY' ) {
             my @NewXMLParts;
             $NewXMLParts[0] = undef;
 
             for my $ArrayItem ( @{ $XMLData->{$RootKey} } ) {
-                if ( ref $ArrayItem eq 'HASH' ) {
+                if ( ref( $ArrayItem ) eq 'HASH' ) {
 
                     # extract the root key from the hash and assign it to content key
                     my $Content = delete $ArrayItem->{$RootKey};
@@ -1063,7 +1070,7 @@ sub FormatXMLData {
                         %{$NewXMLDataPart},
                     };
                 }
-                elsif ( ref $ArrayItem eq '' ) {
+                elsif ( ref( $ArrayItem ) eq '' ) {
                     push @NewXMLParts, {
                         Content => $ArrayItem,
                     };
@@ -1074,7 +1081,7 @@ sub FormatXMLData {
             $NewXMLData->{$RootKey} = \@NewXMLParts;
         }
 
-        if ( ref $XMLData->{$RootKey} eq 'HASH' ) {
+        if ( ref( $XMLData->{$RootKey} ) eq 'HASH' ) {
 
             my @NewXMLParts;
             $NewXMLParts[0] = undef;
@@ -1087,16 +1094,18 @@ sub FormatXMLData {
                 XMLData => $XMLData->{$RootKey},
                 Child   => 1,
             );
-            push @NewXMLParts, {
-                Content => $Content,
-                %{$NewXMLDataPart},
-            };
+            if ( ref( $NewXMLDataPart ) eq 'HASH' ) {
+                push @NewXMLParts, {
+                    Content => $Content,
+                    %{$NewXMLDataPart},
+                };
+            }
 
             # assamble the final value from the parts array
             $NewXMLData->{$RootKey} = \@NewXMLParts;
         }
 
-        elsif ( ref $XMLData->{$RootKey} eq '' ) {
+        elsif ( ref( $XMLData->{$RootKey} ) eq '' ) {
             $NewXMLData->{$RootKey} = [
                 undef,
                 {
@@ -1146,11 +1155,11 @@ sub InvertFormatXMLData {
     my $Content;
     ROOTHASH:
     for my $RootHash ( @{$XMLData} ) {
-        next ROOTHASH if !defined $RootHash;
+        next ROOTHASH if ( !defined $RootHash );
         delete $RootHash->{TagKey};
 
-        for my $RootHashKey ( sort keys %{$RootHash} ) {
-            if ( ref $RootHash->{$RootHashKey} eq 'ARRAY' ) {
+        for my $RootHashKey ( sort( keys( %{$RootHash} ) ) ) {
+            if ( ref( $RootHash->{$RootHashKey} ) eq 'ARRAY' ) {
                 if ( scalar @{ $RootHash->{$RootHashKey} } > 2 ) {
 
                     # we are on an array
@@ -1213,7 +1222,11 @@ sub InvertFormatXMLData {
             }
 
             # if we are on a final node
-            elsif ( !$Param{RootKey} && ref $RootHash->{$RootHashKey} eq '' && $RootHashKey eq 'Content' ) {
+            elsif (
+                !$Param{RootKey}
+                && ref( $RootHash->{$RootHashKey} ) eq ''
+                && $RootHashKey eq 'Content'
+            ) {
                 $NewXMLData = $RootHash->{$RootHashKey};
             }
         }
@@ -1256,12 +1269,12 @@ sub InvertReplaceXMLData {
         if (
             IsHashRefWithData($XMLData)
             && $XMLData->{$ItemKey}
-            && ref $XMLData->{$ItemKey} eq 'ARRAY'
+            && ref( $XMLData->{$ItemKey} ) eq 'ARRAY'
         ) {
 
             for my $ArrayItem ( @{ $XMLData->{$ItemKey} } ) {
 
-                if ( ref $ArrayItem eq 'HASH' ) {
+                if ( ref( $ArrayItem ) eq 'HASH' ) {
 
                     # get the new value
                     $NewValue = $Self->_InvertReplaceValue(
@@ -1275,7 +1288,7 @@ sub InvertReplaceXMLData {
                     $ArrayItem->{$ItemKey} = $NewValue;
                 }
 
-                elsif ( ref $ArrayItem eq '' ) {
+                elsif ( ref( $ArrayItem ) eq '' ) {
                     $NewValue = $Self->_InvertReplaceValue(
                         Value   => $ArrayItem,
                         Input   => $DefItem->{Input},
@@ -1291,7 +1304,7 @@ sub InvertReplaceXMLData {
         elsif (
             IsHashRefWithData($XMLData)
             && $XMLData->{$ItemKey}
-            && ref $XMLData->{$ItemKey} eq 'HASH'
+            && ref( $XMLData->{$ItemKey} ) eq 'HASH'
         ) {
             $NewValue = $Self->_InvertReplaceValue(
                 Value   => $XMLData->{$ItemKey}->{$ItemKey},
@@ -1325,9 +1338,9 @@ sub InvertReplaceXMLData {
         }
 
         # check if there is a sub and start recursion
-        if ( defined $DefItem->{Sub} ) {
+        if ( defined( $DefItem->{Sub} ) ) {
 
-            if ( ref $XMLData->{$ItemKey} eq 'ARRAY' ) {
+            if ( ref( $XMLData->{$ItemKey} ) eq 'ARRAY' ) {
                 my $Counter = 0;
                 for my $ArrayItem ( @{ $XMLData->{$ItemKey} } ) {
 
@@ -1341,7 +1354,7 @@ sub InvertReplaceXMLData {
                     $Counter++;
                 }
             }
-            elsif ( ref $XMLData->{$ItemKey} eq 'HASH' ) {
+            elsif ( ref( $XMLData->{$ItemKey} ) eq 'HASH' ) {
 
                 # start recursion
                 my $NewXMLDataPart = $Self->InvertReplaceXMLData(
@@ -1448,7 +1461,7 @@ sub _CheckValue {
         && !$Param{Value}
     ) {
         return {
-            ErrorCode => "$Self->{OperationName}.MissingParameter",
+            ErrorCode    => "$Self->{OperationName}.MissingParameter",
             ErrorMessage =>
                 "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter value"
                 . " is required and is missing!",
@@ -1460,7 +1473,7 @@ sub _CheckValue {
         # run Text validations
         if ( !$Self->ValidateInputText(%Param) ) {
             return {
-                ErrorCode => "$Self->{OperationName}.InvalidParameter",
+                ErrorCode    => "$Self->{OperationName}.InvalidParameter",
                 ErrorMessage =>
                     "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter value"
                     . " excedes the maxium length!",
@@ -1472,7 +1485,7 @@ sub _CheckValue {
         # run Date validations
         if ( !$Self->ValidateInputDate(%Param) ) {
             return {
-                ErrorCode => "$Self->{OperationName}.InvalidParameter",
+                ErrorCode    => "$Self->{OperationName}.InvalidParameter",
                 ErrorMessage =>
                     "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter value"
                     . " is not a valid Date format!",
@@ -1484,7 +1497,7 @@ sub _CheckValue {
         # run DateTime validations
         if ( !$Self->ValidateInputDateTime(%Param) ) {
             return {
-                ErrorCode => "$Self->{OperationName}.InvalidParameter",
+                ErrorCode    => "$Self->{OperationName}.InvalidParameter",
                 ErrorMessage =>
                     "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter value"
                     . " is not a valid DateTime format!",
@@ -1496,7 +1509,7 @@ sub _CheckValue {
         # run Customer validations
         if ( !$Self->ValidateInputCustomer(%Param) ) {
             return {
-                ErrorCode => "$Self->{OperationName}.InvalidParameter",
+                ErrorCode    => "$Self->{OperationName}.InvalidParameter",
                 ErrorMessage =>
                     "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter value"
                     . " is not a valid customer!",
@@ -1508,7 +1521,7 @@ sub _CheckValue {
         # run CustomerCompany validations
         if ( !$Self->ValidateInputCustomerCompany(%Param) ) {
             return {
-                ErrorCode => "$Self->{OperationName}.InvalidParameter",
+                ErrorCode    => "$Self->{OperationName}.InvalidParameter",
                 ErrorMessage =>
                     "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter value"
                     . " is not a valid customer company!",
@@ -1520,7 +1533,7 @@ sub _CheckValue {
         # run Integer validations
         if ( !$Self->ValidateInputInteger(%Param) ) {
             return {
-                ErrorCode => "$Self->{OperationName}.InvalidParameter",
+                ErrorCode    => "$Self->{OperationName}.InvalidParameter",
                 ErrorMessage =>
                     "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter value"
                     . " is not a valid Integer or out of range!",
@@ -1532,7 +1545,7 @@ sub _CheckValue {
         # run General Catalog validations
         if ( !$Self->ValidateInputGeneralCatalog(%Param) ) {
             return {
-                ErrorCode => "$Self->{OperationName}.InvalidParameter",
+                ErrorCode    => "$Self->{OperationName}.InvalidParameter",
                 ErrorMessage =>
                     "$Self->{OperationName}: ConfigItem->CIXMLData->$Parent$ItemKey parameter value"
                     . " is not a valid for General Catalog '$Param{Input}->{Class}'!",
