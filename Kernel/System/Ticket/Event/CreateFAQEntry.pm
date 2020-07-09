@@ -10,6 +10,7 @@ package Kernel::System::Ticket::Event::CreateFAQEntry;
 
 use strict;
 use warnings;
+use Encode;
 
 our @ObjectDependencies = (
     'Kernel::Config',
@@ -190,6 +191,18 @@ sub Run {
                         UserID    => 1,
                     );
                     $ThisArticle{Body} = $Attachment{Content};
+
+                    if ( !Encode::is_utf8($Attachment{Content}) ) {
+                        my $Charset = 'iso-8859-1';
+                        if ( $Attachment{ContentType} =~ /charset=.(.*).$/ ) {
+                            $Charset = $1;
+                        }
+                        $ThisArticle{Body} = $Self->{EncodeObject}->Convert(
+                            Text => $Attachment{Content},
+                            From => $Charset,
+                            To   => 'utf-8',
+                        );
+                    }
                     last;
                 }
             }
@@ -212,7 +225,7 @@ sub Run {
                     $FirstArticle{Body} = $Attachment{Content};
 
                     # convert content to utf-8 if needed
-                    if ( $Attachment{ContentType} !~ /utf-8/ ) {
+                    if ( !Encode::is_utf8($Attachment{Content}) ) {
                         my $Charset = 'iso-8859-1';
                         if ( $Attachment{ContentType} =~ /charset=.(.*).$/ ) {
                             $Charset = $1;
