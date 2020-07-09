@@ -1,6 +1,10 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.12.0-RC7 (2020/07/09)
+ * (2020/07/09) - Bugfix: KIX17-850 (fixed missing mail header in the quote by replying to the article) (fjacquemin)
+ * (2020/06/15) - Bugfix: KIX17-998 (fixed encoding of the faq article as utf8) (fjacquemin)
+
 # 17.12.0-RC6 (2020/07/08)
  * (2020/07/07) - Bugfix: KIX17-872 (customer name not shown for linked tickets) (millinger)
  * (2020/07/07) - Bugfix: KIX17-963 (generic interface can not update config items without xml data) (millinger)
