@@ -1525,9 +1525,26 @@ sub Run {
             # prepare body, subject, ReplyTo ...
             # rewrap body if exists
             if ( $Data{Body} ) {
-                $Data{Body} =~ s/\t/ /g;
+
+                $Data{Body} = '<br/>' . $Data{Body};
+                if ( $Data{Created} ) {
+                    $Data{Body} = $LayoutObject->{LanguageObject}->Translate('Date') .
+                        ": $Data{Created}<br/>" . $Data{Body};
+                }
+
+                for my $Key (qw( Subject ReplyTo Reply-To Cc To From )) {
+                    if ( $Data{$Key} ) {
+                        my $KeyText = $LayoutObject->{LanguageObject}->Translate($Key);
+
+                        my $Value = $LayoutObject->Ascii2RichText(
+                            String => $Data{$Key},
+                        );
+                        $Data{Body} = "$KeyText: $Value<br/>" . $Data{Body};
+                    }
+                }
+
                 my $Quote = $LayoutObject->Ascii2Html(
-                    Text => $ConfigObject->Get('Ticket::Frontend::Quote') || '',
+                    Text           => $ConfigObject->Get('Ticket::Frontend::Quote') || '',
                     HTMLResultMode => 1,
                 );
                 if ($Quote) {
@@ -1539,23 +1556,8 @@ sub Run {
                     $Data{Body} = $LayoutObject->RichTextDocumentCleanup(
                         String => $Data{Body},
                     );
-
                 }
                 else {
-                    $Data{Body} = "<br/>" . $Data{Body};
-
-                    if ( $Data{Created} ) {
-                        $Data{Body} = $LayoutObject->{LanguageObject}->Translate('Date') .
-                            ": $Data{Created}<br/>" . $Data{Body};
-                    }
-
-                    for (qw(Subject ReplyTo Reply-To Cc To From)) {
-                        if ( $Data{$_} ) {
-                            $Data{Body} = $LayoutObject->{LanguageObject}->Translate($_) .
-                                ": $Data{$_}<br/>" . $Data{Body};
-                        }
-                    }
-
                     my $From = $LayoutObject->Ascii2RichText(
                         String => $Data{From},
                     );
