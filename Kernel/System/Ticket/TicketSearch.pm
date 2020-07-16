@@ -4496,7 +4496,7 @@ sub FilterPrepare {
                     }
 
                     for my $Item ( @Force ) {
-                        if ( grep({$Item =~ /$_/ } @Curr) ) {
+                        if ( grep({ $Item eq $_ } @Curr) ) {
                             push(@NewArray, $Item);
                         }
                     }
