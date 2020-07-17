@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.12.0-RC9 (2020/07/17)
+ * (2020/07/09) - Bugfix: KIX17-1146 (fixed filled field accidentally deleted by using enter in config item edit) (fjacquemin)
+ * (2020/07/08) - Bugfix: KIX17-933 (column 'Created' is not available for linked ticket overview) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-1099 (wrong customer placeholder for email ticket creation) (millinger)
+
 # 17.12.0-RC8 (2020/07/16)
  * (2020/07/15) - Bugfix: KIX17-1178 (fixed ticket search filter preparation) (millinger)
  * (2020/07/15) - Bugfix: KIX17-1174 (placeholder CUSTOMER_REALNAME use reply-to instead of customer name) (millinger)
