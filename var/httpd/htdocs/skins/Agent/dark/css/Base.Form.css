@@ -282,50 +282,26 @@
         margin-bottom: 0px;
     }
     .ActionList li a.Fullsize,
-    .CallForAction.Fullsize,
-    .CallForAction.OverFullsize280,
-    .CallForAction.OverFullsize330 {
+    .CallForAction.Fullsize, {
         display: block;
     }
     .CallForAction.Fullsize {
         width: 248px;
         text-align: center;
     }
-    .CallForAction.OverFullsize280 {
-        width: 280px;
-        text-align: center;
-    }
-    .CallForAction.OverFullsize330 {
-        width: 330px;
-        text-align: center;
-    }
-    .CallForAction.OverFullsize280 span,
-    .CallForAction.OverFullsize330 span,
     .CallForAction.Fullsize span {
         padding: 3px 20px 5px 20px;
     }
 
-    .CallForAction.OverFullsize280.Center span i,
-    .CallForAction.OverFullsize330.Center span i,
     .CallForAction.Fullsize.Center span i {
         position: absolute;
         left: 4px;
         top: 4px;
     }
-    button.CallForAction.Fullsize,
-    button.CallForAction.OverFullsize280,
-    button.CallForAction.OverFullsize330 {
+    button.CallForAction.Fullsize {
         margin: 3px 0 0 0;
         width: 250px;
     }
-    button.CallForAction.OverFullsize280 {
-        width: 280px;
-    }
-    button.CallForAction.OverFullsize330 {
-        width: 330px;
-    }
-    button.CallForAction.OverFullsize330 span i,
-    button.CallForAction.OverFullsize280 span i,
     button.CallForAction.Fullsize span i {
         position: absolute;
         top: 4px;

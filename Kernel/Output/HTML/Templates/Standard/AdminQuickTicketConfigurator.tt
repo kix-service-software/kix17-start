@@ -21,7 +21,7 @@
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
     <h1>[% Translate("Ticket Template Configurator") | html %]</h1>
 
-    <div class="SidebarColumn" style="width:300px">
+    <div class="SidebarColumn">
 [% RenderBlockStart("ActionOverview") %]
         <div class="WidgetSimple">
             <div class="Header">
@@ -30,10 +30,9 @@
             <div class="Content">
                 <ul class="ActionList">
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction OverFullsize280 Center Back">
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center Back">
                             <span>
-                                <i class="fa fa-caret-left"></i>
-                                [% Translate("Go to overview") | html %]
+                                <i class="fa fa-caret-left"></i> [% Translate("Go to overview") | html %]
                             </span>
                         </a>
                     </li>
@@ -51,13 +50,9 @@
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="New" />
-                    <fieldset class="TableLike FixedLabelSmall">
-                        <label class="nowrap">
-                            <button type="submit" name="New" value="[% Translate("Click here to add a ticket template") | html %]" class="CallForAction OverFullsize280 Center Plus">
-                                <span>[% Translate("Add ticket template") | html %]</span>
-                            </button>
-                        </label>
-                    </fieldset>
+                    <button type="submit" name="New" value="[% Translate("Click here to add a ticket template") | html %]" class="CallForAction Fullsize Center">
+                        <span><i class="fa fa-plus-square"></i> [% Translate("Add ticket template") | html %]</span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -71,17 +66,11 @@
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="Download" />
-                    <fieldset class="TableLike FixedLabelSmall">
-                        <label>
-                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction OverFullsize280 Center">
-                                <span>
-                                    <i class="fa fa-download"></i>
-                                    [% Data.DownloadType %] [% Translate("Download") %]
-                                </span>
-                            </button>
-                        </label>
-
-                    </fieldset>
+                    <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction Fullsize Center">
+                        <span>
+                            <i class="fa fa-download"></i> [% Data.DownloadType %] [% Translate("Download") %]
+                        </span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -96,17 +85,12 @@
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="Upload" />
                     <input type="hidden" name="FormID" value="[% Data.FormID %]"/>
-                    <input name="file_upload" type="file" size="25" />
-                    <fieldset class="TableLike FixedLabelSmall">
-                        <label>
-                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction OverFullsize280 Center">
-                                <span>
-                                    <i class="fa fa-upload"></i>
-                                    [% Data.UploadType %] [% Translate("Upload") %]
-                                </span>
-                            </button>
-                        </label>
-                    </fieldset>
+                    <input name="file_upload" type="file" size="25" class="Fixed W100pc" />
+                    <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction Fullsize Center">
+                        <span>
+                            <i class="fa fa-upload"></i> [% Data.UploadType %] [% Translate("Upload") %]
+                        </span>
+                    </button>
                 </form>
 [% RenderBlockStart("UploadResult") %]
                 <br /><br />
