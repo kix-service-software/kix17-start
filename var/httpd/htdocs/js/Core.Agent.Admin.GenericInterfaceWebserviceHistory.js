@@ -130,8 +130,8 @@ Core.Agent.Admin.GenericInterfaceWebserviceHistory = (function (TargetNS) {
             $('.WebserviceListWidget').removeClass('Loading');
 
             if (!Response.LogData.Config) {
-                $('#WebserviceHistoryDetails .ControlRow').empty();
-                $('#WebserviceHistoryDetails .ControlRow').append(
+                $('#WebserviceHistoryDetails > .Header').empty();
+                $('#WebserviceHistoryDetails > .Header').append(
                     '<h2>History Details</h2>'
                 );
                 $('#WebserviceHistoryDetails .ConfigCode pre').empty();
@@ -144,8 +144,8 @@ Core.Agent.Admin.GenericInterfaceWebserviceHistory = (function (TargetNS) {
             else {
 
                 $('#WebserviceHistoryID').attr('value', WebserviceHistoryID);
-                $('#WebserviceHistoryDetails .ControlRow').empty();
-                $('#WebserviceHistoryDetails .ControlRow').append(
+                $('#WebserviceHistoryDetails > .Header').empty();
+                $('#WebserviceHistoryDetails > .Header').append(
                     '<h2>History Details: Version ' + WebserviceHistoryVersion + ', ' + Response.LogData.CreateTime + '</h2>'
                 );
 

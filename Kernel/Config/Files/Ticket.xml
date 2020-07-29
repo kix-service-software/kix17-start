@@ -12030,6 +12030,7 @@ Thanks for your help!
             <Hash>
                 <Item Key="Age">2</Item>
                 <Item Key="Changed">1</Item>
+                <Item Key="Created">1</Item>
                 <Item Key="CustomerID">2</Item>
                 <Item Key="CustomerName">1</Item>
                 <Item Key="CustomerUserID">1</Item>
@@ -12400,7 +12401,7 @@ Thanks for your help!
         </Setting>
     </ConfigItem>
     <ConfigItem Name="LinkObject::ComplexTable###Ticket" Required="0" Valid="1">
-        <Description Translatable="1">Define which columns are shown in the linked tickets widget (LinkObject::ViewMode = "complex"). Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
+        <Description Translatable="1">Define which columns are shown in the linked tickets widget (LinkObject::ViewMode = "complex"). Note: Only Ticket attributes are allowed for DefaultColumns. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default.</Description>
         <Group>Ticket</Group>
         <SubGroup>Frontend::Agent::LinkObject</SubGroup>
         <Setting>
@@ -12411,6 +12412,7 @@ Thanks for your help!
                         <Item Key="Age">1</Item>
                         <Item Key="Changed">1</Item>
                         <Item Key="Created">2</Item>
+                        <Item Key="CustomerCompanyName">1</Item>
                         <Item Key="CustomerID">1</Item>
                         <Item Key="CustomerName">1</Item>
                         <Item Key="CustomerUserID">1</Item>
@@ -12437,6 +12439,7 @@ Thanks for your help!
                         <Item Key="Age">110</Item>
                         <Item Key="Changed">120</Item>
                         <Item Key="Created">310</Item>
+                        <Item Key="CustomerCompanyName">235</Item>
                         <Item Key="CustomerID">240</Item>
                         <Item Key="CustomerName">250</Item>
                         <Item Key="CustomerUserID">260</Item>
@@ -17333,7 +17336,7 @@ Here you may define a default text for the forward function. You find this confi
                 <Item Key="AgentTicketPriority">1</Item>
                 <Item Key="AgentTicketResponsible">1</Item>
                 <Item Key="AgentTicketZoomTabActionCommon">1</Item>
-                <Item Key="AgentTicketZoomTabEditCoreData">1</Item>
+                <Item Key="AgentTicketZoomTabEditCoreData">0</Item>
                 <Item Key="CustomerTicketZoom">1</Item>
             </Hash>
         </Setting>

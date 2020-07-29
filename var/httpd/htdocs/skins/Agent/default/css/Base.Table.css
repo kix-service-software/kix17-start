@@ -137,10 +137,10 @@
     div.UnreadArticles em {
         display: none;
     }
-
     table tr.MasterAction {
         cursor: pointer;
     }
+
 
     /**
     * @subsection TableSmall
@@ -188,6 +188,7 @@
     .TableSmall td:first-child {
         padding-top: 1px;
     }
+
 
     /**
     * @subsection DataTable
@@ -343,7 +344,6 @@
     .TableSmall thead th.OverviewHeader .ColumnSettingsContainer {
         position: relative;
     }
-
     .DataTable thead th.DashboardHeader .ColumnSettingsBox,
     .TableSmall thead th.OverviewHeader .ColumnSettingsBox {
         -moz-border-radius: 3px;
@@ -397,7 +397,6 @@
         position: relative;
         z-index: 99;
     }
-
     .DataTableNoHighlight tbody tr td input,
     .DataTableNoHighlight tbody tr td select {
         width: 85%;
@@ -449,7 +448,6 @@
     .WidgetSimple .Field.LayoutGrid .Tablelike {
         width: 98%;
     }
-
     ul.Tablelike:first-child {
         margin-right: 8px;
     }
@@ -476,7 +474,6 @@
     .WidgetSimple .Field.LayoutGrid .Tablelike {
         width: 98%;
     }
-
     ul.AllocationList {
         min-height: 25px;
         max-height: 300px;
@@ -513,10 +510,10 @@
         max-height: 155px;
     }
 
+
     /**
     * @subsection ticket list
     */
-
     .TicketList table {
         border-collapse: separate;
         position: relative;
@@ -525,6 +522,7 @@
     .TicketList td {
         line-height: 18px;
     }
+
 
     /**
     *   @subsection data collector
@@ -580,14 +578,12 @@
         font: normal normal normal 14px/1 FontAwesome;
         display: inline-block;
     }
-
     .IconNotReadyGrey::before {
         content: "\f00d";
         line-height: 16px;
         font: normal normal normal 14px/1 FontAwesome;
         display: inline-block;
     }
-
     .IconReady::before {
         content: "\f00c";
         line-height: 16px;

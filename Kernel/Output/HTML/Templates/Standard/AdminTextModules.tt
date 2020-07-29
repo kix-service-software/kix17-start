@@ -10,7 +10,7 @@
 <div class="MainBox ARIARoleMain LayoutFixedSidebar SidebarFirst">
     <h1>[% Translate("Text Modules Management") | html %]</h1>
 
-    <div class="SidebarColumn" style="width:350px">
+    <div class="SidebarColumn">
 [% RenderBlockStart("ActionOverview") %]
         <div class="WidgetSimple">
             <div class="Header">
@@ -19,10 +19,9 @@
             <div class="Content">
                 <ul class="ActionList">
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction OverFullsize330 Back">
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Back">
                             <span>
-                                <i class="fa fa-caret-left"></i>
-                                [% Translate("Go to overview") | html %]
+                                <i class="fa fa-caret-left"></i>  [% Translate("Go to overview") | html %]
                             </span>
                         </a>
                     </li>
@@ -43,7 +42,7 @@
                     <fieldset class="TableLike FixedLabelSmall">
                         <label for="SearchName">[% Translate("Name") | html %]:</label>
                         <p class="Value">
-                            <input type="text" id="SearchName" name="Name" value="[% Data.Name %]"/>
+                            <input type="text" id="SearchName" name="Name" size="18" value="[% Data.Name %]"/>
                         </p>
                         <div class="Clear"></div>
                         <label for="Language">[% Translate("Language") | html %]:</label>
@@ -58,12 +57,10 @@
                         <div class="Clear"></div>
                         <label for="SearchLimit">[% Translate("Limit Results") | html %]:</label>
                         <p class="Value">
-                            <input type="text" id="SearchLimit" name="Limit" size="13" value="[% Data.Limit %]"/>
+                            <input type="text" id="SearchLimit" name="Limit" size="18" value="[% Data.Limit %]"/>
                         </p>
                         <div class="Clear"></div>
-                        <p class="Value">
-                            <button type="submit" id="ShowButton" name="Show" value="[% Translate("View") | html %]" class="CallForAction"><span>[% Translate("View") | html %]</span></button>
-                        </p>
+                        <button type="submit" id="ShowButton" name="Show" value="[% Translate("View") | html %]" class="CallForAction Fullsize Center"><span><i class="fa fa-search"></i> [% Translate("View") | html %]</span></button>
                     </fieldset>
                 </form>
             </div>
@@ -79,13 +76,9 @@
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="New"/>
-                    <fieldset class="TableLike FixedLabelSmall">
-                        <label class="nowrap">
-                            <button type="submit" name="New" value="[% Translate("Click here to add a text module") | html %]" class="CallForAction OverFullsize330 Plus">
-                                <span>[% Translate("Add text module") | html %]</span>
-                            </button>
-                        </label>
-                    </fieldset>
+                    <button type="submit" name="New" value="[% Translate("Click here to add a text module") | html %]" class="CallForAction Fullsize Center">
+                        <span><i class="fa fa-plus-square"></i> [% Translate("Add text module") | html %]</span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -113,16 +106,11 @@
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="DownloadType" value="[% Data.DownloadType %]"/>
                     <input type="hidden" name="Subaction" value="Download"/>
-                    <fieldset class="TableLike FixedLabelSmall">
-                        <label>
-                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction OverFullsize330">
-                                <span>
-                                    <i class="fa fa-download"></i>
-                                    [% Data.DownloadType %]-Download
-                                </span>
-                            </button>
-                        </label>
-                    </fieldset>
+                    <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction Fullsize Center">
+                        <span>
+                            <i class="fa fa-download"></i> [% Data.DownloadType %]-Download
+                        </span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -138,17 +126,12 @@
                     <input type="hidden" name="Subaction" value="Upload"/>
                     <input type="hidden" name="UploadType" value="[% Data.UploadType %]"/>
                     <input type="hidden" name="FormID" value="[% Data.FormID %]"/>
-                    <input name="file_upload" type="file" size="25"/>
-                    <fieldset class="TableLike FixedLabelSmall">
-                        <label>
-                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction OverFullsize330">
-                                <span>
-                                    <i class="fa fa-upload"></i>
-                                    [% Data.UploadType %]-Upload
-                                </span>
-                            </button>
-                        </label>
-                    </fieldset>
+                    <input name="file_upload" type="file" size="25" class="Fixed W100pc" />
+                    <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction Fullsize Center">
+                        <span>
+                            <i class="fa fa-upload"></i>  [% Data.UploadType %]-Upload
+                        </span>
+                    </button>
                 </form>
 [% RenderBlockStart("UploadResult") %]
                 <br /><br />

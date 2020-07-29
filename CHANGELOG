@@ -1,6 +1,73 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.12.0 (2020/07/29)
+ * (2020/07/29) - productive release
+
+# 17.12.0-RC10 (2020/07/21)
+ * (2020/07/20) - Bugfix: KIX17-1202 (action buttons of ticket template administration are cut off) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-1097 (fixed Outlook problem with greater than selector) (fjacquemin)
+
+# 17.12.0-RC9 (2020/07/17)
+ * (2020/07/09) - Bugfix: KIX17-1146 (fixed filled field accidentally deleted by using enter in config item edit) (fjacquemin)
+ * (2020/07/08) - Bugfix: KIX17-933 (column 'Created' is not available for linked ticket overview) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-1099 (wrong customer placeholder for email ticket creation) (millinger)
+
+# 17.12.0-RC8 (2020/07/16)
+ * (2020/07/15) - Bugfix: KIX17-1178 (fixed ticket search filter preparation) (millinger)
+ * (2020/07/15) - Bugfix: KIX17-1174 (placeholder CUSTOMER_REALNAME use reply-to instead of customer name) (millinger)
+
+# 17.12.0-RC7 (2020/07/09)
+ * (2020/07/09) - Bugfix: KIX17-850 (fixed missing mail header in the quote by replying to the article) (fjacquemin)
+ * (2020/06/15) - Bugfix: KIX17-998 (fixed encoding of the faq article as utf8) (fjacquemin)
+
+# 17.12.0-RC6 (2020/07/08)
+ * (2020/07/07) - Bugfix: KIX17-872 (customer name not shown for linked tickets) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-963 (generic interface can not update config items without xml data) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-1031 (Tickethook is not replaced in external supplier forwarding) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-1067 (EmailParser requires email param in entity mode) (millinger)
+ * (2020/07/07) - Bugfix: KIX17-351 (autoresponse sender address differs from reply sender address) (millinger)
+ * (2020/07/06) - CR: KIX17-503 (added migration hint for KIXPro with filled CMDB) (millinger)
+
+# 17.12.0-RC5 (2020/07/01)
+ * (2020/06/29) - Bugfix: KIX17-1049 (changed InitialDataShown configuration of AgentTicketZoomTabEditCoreData) (fjacquemin)
+ * (2020/06/29) - Bugfix: KIX17-871 (fixed several layout issues) (fjacquemin)
+ * (2020/06/29) - Bugfix: KIX17-923 (fixed configuration description of LinkObject::ComplexTable###Ticket) (fjacquemin)
+ * (2020/06/29) - Bugfix: KIX17-890 (fixed log entry of non-existent dynamic field in the Dashboard TicketGeneric) (fjacquemin)
+ * (2020/06/26) - CR: KIX17-1094 (integrated Crypt::SSLeay to own cpan-lib) (millinger)
+
+# 17.12.0-RC4 (2020/06/25)
+ * (2020/06/25) - Bugfix: KIX17-871 (fixed incorrect display of print link in the process popup) (fjacquemin)
+ * (2020/06/25) - Bugfix: KIX17-871 (fixed missing certificate and private key icons in AdminSMIME) (fjacquemin)
+ * (2020/06/25) - Bugfix: KIX17-871 (fixed incorrect display of version widget in generic interface history) (fjacquemin)
+ * (2020/06/24) - Bugfix: KIX17-1075 (fixed inccorect display of the rating star in the Sidebar) (fjacquemin)
+ * (2020/06/24) - Bugfix: KIX17-1060 (fixed missing submit and cancle buttons of edit ACL in responsive mode) (fjacquemin)
+ * (2020/06/24) - Bugfix: KIX17-1005 (removed RTL direction) (fjacquemin)
+ * (2020/06/24) - Bugfix: KIX17-871 (fixed missing pagination in responsive mode) (fjacquemin)
+ * (2020/06/24) - Bugfix: KIX17-871 (fixed incorrect table size in responsive mode) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed missing login logo in responsive mode) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-1058 (incorrect ticket search for historic values combined with closing time) (millinger)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed position of the modernize selection list in responsive mode) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed incorrect display of the search profile selection in the toolbar) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed incorrect display of actions in the article flag dialog) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed displaying long labels) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (fixed system maintenance notification in login) (fjacquemin)
+ * (2020/06/23) - Bugfix: KIX17-871 (changed color of invalid table entries) (fjacquemin)
+
+# 17.12.0-RC3 (2020/06/10)
+ * (2020/06/05) - Bugfix: KIX17-1047 (fixed database schema for table acl) (millinger)
+ * (2020/06/05) - CR: KIX17-1037 (overriding of dynamic field character limits) (ddoerffel)
+
+# 17.12.0-RC2 (2020/06/02)
+ * (2020/05/26) - Bugfix: KIX17-937 (added configuration to disable autocomplete for login) (millinger)
+ * (2020/05/26) - Bugfix: KIX17-940 (prefix downloaded certificates and public keys) (millinger)
+ * (2020/05/26) - Bugfix: KIX17-939 (obfuscate support bundle data) (millinger)
+ * (2020/05/26) - Bugfix: KIX17-962 (fixed missing parameter for multiple attachment upload by AgentArticleEdit) (fjacquemin)
+
+# 17.12.0-RC1 (2020/05/20)
+ * (2020/04/28) - Bugfix: KIX17-802 (fixed changing file ids for unchanged faq attachments) (millinger)
+ * (2020/04/17) - Bugfix: KIX17-783 (fixed behaviour of article preview in ticket overview) (millinger)
+
 # 17.11.0 (2020/05/07)
  * (2020/05/07) - productive release
 

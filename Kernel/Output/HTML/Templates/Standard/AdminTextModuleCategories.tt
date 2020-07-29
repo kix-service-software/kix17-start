@@ -19,7 +19,7 @@
             <div class="Content">
                 <ul class="ActionList">
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction OverFullsize330 Center Back">
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center Back">
 
                             <span>
                                 <i class="fa fa-caret-left"></i>
@@ -50,7 +50,7 @@
                         </li>
                         <li>
                             <button type="submit" name="Show" value="[% Translate("View") | html %]" class="CallForAction Fullsize">
-                                <span>[% Translate("View") | html %]</span>
+                                <span><i class="fa fa-search"></i> [% Translate("View") | html %]</span>
                             </button>
                         </li>
                     </ul>
@@ -67,13 +67,9 @@
                 <form name="form" action="[% Env("CGIHandle") %]" method="get">
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="Subaction" value="New" />
-                    <fieldset class="TableLike FixedLabelSmall">
-                        <label class="nowrap">
-                            <button type="submit" name="New" value="[% Translate("Click here to add a text module category") | html %]" class="CallForAction Fullsize">
-                                <span>[% Translate("Add category") | html %]</span>
-                            </button>
-                        </label>
-                    </fieldset>
+                    <button type="submit" name="New" value="[% Translate("Click here to add a text module category") | html %]" class="CallForAction Fullsize Center">
+                        <span><i class="fa fa-plus-square"></i> [% Translate("Add category") | html %]</span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -88,16 +84,11 @@
                     <input type="hidden" name="Action" value="[% Env("Action") %]"/>
                     <input type="hidden" name="DownloadType" value="[% Data.DownloadType %]"/>
                     <input type="hidden" name="Subaction" value="Download" />
-                    <fieldset class="TableLike FixedLabelSmall">
-                        <label>
-                            <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction Fullsize">
-                                <span>
-                                    <i class="fa fa-download"></i>
-                                    [% Data.DownloadType %]-Download
-                                </span>
-                            </button>
-                        </label>
-                    </fieldset>
+                    <button type="submit" name="Download" value="[% Translate("Download") | html %]" class="CallForAction Fullsize Center">
+                        <span>
+                            <i class="fa fa-download"></i> [% Data.DownloadType %]-Download
+                        </span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -113,17 +104,12 @@
                     <input type="hidden" name="Subaction" value="Upload" />
                     <input type="hidden" name="UploadType" value="[% Data.UploadType %]"/>
                     <input type="hidden" name="FormID" value="[% Data.FormID %]"/>
-                    <input name="file_upload" type="file" size="25" />
-                    <fieldset class="TableLike FixedLabelSmall">
-                        <label>
-                            <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction Fullsize">
-                                <span>
-                                    <i class="fa fa-upload"></i>
-                                    [% Data.UploadType %]-Upload
-                                </span>
-                            </button>
-                        </label>
-                    </fieldset>
+                    <input name="file_upload" type="file" size="25" class="Fixed W100pc" />
+                    <button type="submit" name="Upload" value="[% Translate("Upload") | html %]" class="CallForAction Fullsize Center">
+                        <span>
+                            <i class="fa fa-upload"></i> [% Data.UploadType %]-Upload
+                        </span>
+                    </button>
                 </form>
 [% RenderBlockStart("UploadResult") %]
                 <br /><br />
@@ -161,10 +147,9 @@
                     <div class="Clear">
                     </div>
                     <br />
-                    <a class="CallForAction OverFullsize330 Center" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DownloadResult;XMLResultFileID=[% Data.XMLResultFileID | html %];FormID=[% Data.FormID | html %]" title="[% Translate("Download complete result of your upload") | html %]">
+                    <a class="CallForAction Fullsize Center" href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=DownloadResult;XMLResultFileID=[% Data.XMLResultFileID | html %];FormID=[% Data.FormID | html %]" title="[% Translate("Download complete result of your upload") | html %]">
                         <span>
-                            <i class="fa fa-download"></i>
-                            [% Translate("Download result as XML") | html %]
+                            <i class="fa fa-download"></i> [% Translate("Download result as XML") | html %]
                         </span>
                     </a>
                 </fieldset>

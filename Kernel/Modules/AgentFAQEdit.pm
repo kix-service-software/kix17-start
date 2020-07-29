@@ -585,7 +585,7 @@ sub Run {
                         Content     => $File{Content},
                         ContentType => $File{ContentType},
                         Filename    => $File{Filename},
-                        Filesize    => $File{Filesize},
+                        FilesizeRaw => $File{Filesize},
                         Disposition => 'inline',
                         FileID      => $Attachment->{FileID},
                     };
@@ -602,7 +602,7 @@ sub Run {
 
             # the key is the filename + filesize + content type
             my $Key = $Attachment->{Filename}
-                . $Attachment->{Filesize}
+                . $Attachment->{FilesizeRaw}
                 . $Attachment->{ContentType};
 
             # append content id if available (for new inline images)

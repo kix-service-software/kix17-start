@@ -1576,6 +1576,7 @@ sub Run {
 
         # save column content
         my $DataValue;
+        my $DynamicFieldDisplayLimit = $ConfigObject->Get('Frontend::OverrideDynamicFieldDisplayLimits') || 20;
 
         # show all needed columns
         TICKETCOLUMN:
@@ -1857,7 +1858,7 @@ sub Run {
                 my $ValueStrg = $DynamicFieldBackendObject->DisplayValueRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Value              => $Value,
-                    ValueMaxChars      => 20,
+                    ValueMaxChars      => $DynamicFieldDisplayLimit,
                     LayoutObject       => $LayoutObject,
                 );
 

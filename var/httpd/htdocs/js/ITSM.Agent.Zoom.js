@@ -37,6 +37,10 @@ ITSM.Agent.Zoom = (function (TargetNS) {
                 Core.Agent.PreferencesUpdate('UserConfigItemZoomTableHeight', Height);
             }, 1000);
         });
+
+        $(window).resize(function() {
+            Core.UI.Resizable.Init($('#ITSMTableBody'), ITSMTableHeight);
+        });
     };
 
     return TargetNS;

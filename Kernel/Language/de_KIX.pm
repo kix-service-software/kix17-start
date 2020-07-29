@@ -706,6 +706,8 @@ sub Data {
         = 'Ermöglicht das Überschreiben von Data-Zeichenlimits, die in TTs fest eingetragen sind. Der Schlüssel hat das folgende Format: <TemplateFilePattern>::<VariableNamePattern>, der Wert ist das zu verwendende nummerische Zeichenlimit. RegEx kann genutzt werden.';
     $Lang->{'Replaces the default Data character limits.'}
         = 'Überschreibt die Standard-Data-Zeichenlimits.';
+    $Lang->{'Allows overriding of dynamic field character limits.'}
+        = 'Überschreibt die Standard-Zeichenlimits für Dynamische Felder.';
 
     # CustomerDashboard
     $Lang->{'Pending Tickets'}      = 'Wartende Tickets';
@@ -4526,6 +4528,15 @@ sub Data {
     $Lang->{'Columns that can be filtered in the owner view of the agent interface. Possible settings: 0 = Disabled, 1 = Available, 2 = Enabled by default. Note: Only Ticket attributes and Dynamic Fields (DynamicField_NameX) are allowed.'}
         = 'Spalten, die in der Besitzer-Ansicht im Agenten-Interface gefiltert werden können. Mögliche Einstellungen: 0 = Deaktiviert, 1 = vorhanden, 2 = standardmäßig aktiviert. Hinweis: Nur Ticket-Attribute und Dynamic Fields (DynamicField_NameX) sind erlaubt.';
 
+    # Secure login
+    $Lang->{'If enabled, autocomplete will be disabled for agent frontend login.'}
+        = 'Wenn aktiviert, wird Autovervollständigung für das Agentenlogin deaktivert. ';
+    $Lang->{'If enabled, autocomplete will be disabled for customer frontend login.'}
+        = 'Wenn aktiviert, wird Autovervollständigung für das Kundenlogin deaktivert.';
+
+    # SupportBundle Obfuscation
+    $Lang->{'Defines obfuscation pattern for support bundle generation. Keys are search pattern. Values are replacement pattern. The global modification is always set.'}
+        = 'Definiert die Verschleierung für die Support-Bundle -Erzeugung. Schlüssel sind Suchpattern. Werte sind Ersetzungspattern. Der Global-Modifizierer ist immer gesetzt.';
     # $$STOP$$
 
     return 0;
