@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.12.0 (2020/07/29)
+ * (2020/07/29) - productive release
+
 # 17.12.0-RC10 (2020/07/21)
  * (2020/07/20) - Bugfix: KIX17-1202 (action buttons of ticket template administration are cut off) (millinger)
  * (2020/07/07) - Bugfix: KIX17-1097 (fixed Outlook problem with greater than selector) (fjacquemin)
