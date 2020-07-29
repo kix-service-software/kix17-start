@@ -441,7 +441,10 @@ sub Preferences {
             # remove field if not valid
             if (
                 ref($DynamicField) ne 'HASH'
-                || $DynamicField->{ValidID} != 1
+                || (
+                    defined $DynamicField->{ValidID}
+                    && $DynamicField->{ValidID} != 1
+                )
             ) {
                 if ( grep { $_ eq $Column } @ColumnsAvailableNotEnabled ) {
                     my @ColumnArray = @ColumnsAvailableNotEnabled;
@@ -476,7 +479,10 @@ sub Preferences {
             # remove field if not valid
             if (
                 ref($DynamicField) ne 'HASH'
-                || $DynamicField->{ValidID} != 1
+                || (
+                    defined $DynamicField->{ValidID}
+                    && $DynamicField->{ValidID} != 1
+                )
             ) {
                 if ( grep { $_ eq $Column } @ColumnsEnabled ) {
                     my @ColumnArray = @ColumnsEnabled;
@@ -2126,6 +2132,7 @@ sub Run {
     }
 
     my %UserPreferences = $UserObject->GetPreferences( UserID => $Self->{UserID} );
+    my $DynamicFieldDisplayLimit = $ConfigObject->Get('Frontend::OverrideDynamicFieldDisplayLimits') || 20;
 
     # show tickets
     my $Count = 0;
@@ -2516,7 +2523,7 @@ sub Run {
                 my $ValueStrg = $BackendObject->DisplayValueRender(
                     DynamicFieldConfig => $DynamicFieldConfig,
                     Value              => $Value,
-                    ValueMaxChars      => 20,
+                    ValueMaxChars      => $DynamicFieldDisplayLimit,
                     LayoutObject       => $LayoutObject,
                 );
 

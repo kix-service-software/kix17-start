@@ -68,6 +68,8 @@
         padding-bottom: 1px;
         font-weight: bold;
         position: relative;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     fieldset.TableLike > .Row > label {
         padding-top: 3px;
@@ -88,6 +90,10 @@
         margin: 5px 0 0 30%;
         padding: 3px 0 3px 5px;
         min-height: 20px;
+    }
+    fieldset.TableLike > .EndOfForm,
+    fieldset.TableLike > .Row > .EndOfForm {
+        margin-top: 20px;
     }
     fieldset.TableLike > .Field > :first-child,
     fieldset.TableLike > .Row > .Field > :first-child {
@@ -274,50 +280,26 @@
         margin-bottom: 0px;
     }
     .ActionList li a.Fullsize,
-    .CallForAction.Fullsize,
-    .CallForAction.OverFullsize280,
-    .CallForAction.OverFullsize330 {
+    .CallForAction.Fullsize {
         display: block;
     }
     .CallForAction.Fullsize {
         width: 248px;
         text-align: center;
     }
-    .CallForAction.OverFullsize280 {
-        width: 280px;
-        text-align: center;
-    }
-    .CallForAction.OverFullsize330 {
-        width: 330px;
-        text-align: center;
-    }
-    .CallForAction.OverFullsize280 span,
-    .CallForAction.OverFullsize330 span,
     .CallForAction.Fullsize span {
         padding: 3px 20px 5px 20px;
     }
 
-    .CallForAction.OverFullsize280.Center span i,
-    .CallForAction.OverFullsize330.Center span i,
     .CallForAction.Fullsize.Center span i {
         position: absolute;
         left: 4px;
         top: 4px;
     }
-    button.CallForAction.Fullsize,
-    button.CallForAction.OverFullsize280,
-    button.CallForAction.OverFullsize330 {
+    button.CallForAction.Fullsize {
         margin: 3px 0 0 0;
         width: 250px;
     }
-    button.CallForAction.OverFullsize280 {
-        width: 280px;
-    }
-    button.CallForAction.OverFullsize330 {
-        width: 330px;
-    }
-    button.CallForAction.OverFullsize330 span i,
-    button.CallForAction.OverFullsize280 span i,
     button.CallForAction.Fullsize span i {
         position: absolute;
         top: 4px;
@@ -451,9 +433,7 @@
     textarea.cke_dialog_ui_input_textarea {
         border-radius: 5px;
     }
-    a.CertificateRelationAdd,
     button.CertificateRelationAdd,
-    a.CertificateRead,
     button.Add,
     a.Add,
     button.Remove,
@@ -517,7 +497,7 @@
         width: 86%;
         margin-left: 7px;
     }
-   .DynamicFieldAvailableInFrontend {
+    .DynamicFieldAvailableInFrontend {
         width: 500px;
     }
 

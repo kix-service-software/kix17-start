@@ -80,8 +80,7 @@ sub Run {
     if ( $MyJobDefinition{StateName} =~ /^Error.*/ ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message =>
-                "AsynchronousExecutor::ExternalSupplierForwarding: $MyJobDefinition{StateName} !",
+            Message  => "AsynchronousExecutor::ExternalSupplierForwarding: $MyJobDefinition{StateName} !",
         );
         return {
             Success    => 0,
@@ -91,18 +90,14 @@ sub Run {
 
     #-----------------------------------------------------------------------
     # get some config data...
-    my %FwdEmailPGPKeys =
-        %{
+    my %FwdEmailPGPKeys = %{
         $Self->{ConfigObject}->Get('ExternalSupplierForwarding::ForwardEmailPGPKeys')
-        };
-    my $BccReceipient =
-        $Self->{ConfigObject}->Get('ExternalSupplierForwarding::BCC') || '';
-    my $JobDoneType =
-        $Self->{ConfigObject}->Get('ExternalSupplierForwarding::DoneType') || 'Done-Delete';
+    };
+    my $BccReceipient = $Self->{ConfigObject}->Get('ExternalSupplierForwarding::BCC') || '';
+    my $JobDoneType   = $Self->{ConfigObject}->Get('ExternalSupplierForwarding::DoneType') || 'Done-Delete';
 
     # Remove blacklisted fields
-    my $CustomerUserAttrBlacklist =
-        $Self->{ConfigObject}->Get('ExternalSupplierForwarding::CustomerUserAttrBlacklist') || '';
+    my $CustomerUserAttrBlacklist = $Self->{ConfigObject}->Get('ExternalSupplierForwarding::CustomerUserAttrBlacklist') || '';
 
     my $Crypt = 0;
 
@@ -118,9 +113,9 @@ sub Run {
 
     my %ThisArticle;
     if ( $MyJobDefinition{Params}->{ArticleID} ) {
-        %ThisArticle =
-            $Self->{TicketObject}
-            ->ArticleGet( ArticleID => $MyJobDefinition{Params}->{ArticleID}, );
+        %ThisArticle = $Self->{TicketObject}->ArticleGet(
+            ArticleID => $MyJobDefinition{Params}->{ArticleID},
+        );
     }
 
     if ( !keys(%Ticket) ) {
@@ -133,8 +128,7 @@ sub Run {
     if ( $MyJobDefinition{StateName} =~ /^Error.*/ ) {
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message =>
-                "AsynchronousExecutor::ExternalSupplierForwarding: $MyJobDefinition{StateName} !",
+            Message  => "AsynchronousExecutor::ExternalSupplierForwarding: $MyJobDefinition{StateName} !",
         );
         return {
             Success    => 0,
@@ -146,59 +140,55 @@ sub Run {
     # build the fwd-mail...
     my $FwdBody        = "";
     my $DestMailAdress = $MyJobDefinition{Params}->{DestMailAddress};
-    my %FromAddress =
-        $Self->{QueueObject}
-        ->GetSystemAddress( QueueID => $Ticket{QueueID}, );
+    my %FromAddress    = $Self->{QueueObject}->GetSystemAddress(
+        QueueID => $Ticket{QueueID},
+    );
 
-    $FwdBody .=
-        $Self->{LanguageObject}->Translate(
-        'This issue/information update has automatically been forwarded to you as external supplier for'
-        )
-        . " "
-        . $Self->{ConfigObject}->{Organization}
-        . ".\n\n  "
-        . $Self->{LanguageObject}->Translate('Ticket Title') . ": "
-        . $Ticket{Title} . "\n  "
-        . $Self->{LanguageObject}->Translate('Ticket Number') . ": ["
-        . $Self->{LanguageObject}->Translate('Ticket::Hook')
-        . $Ticket{TicketNumber} . "]\n\n"
-        . $Self->{LanguageObject}->Translate(
-        'NOTE: Please do NOT remove the processing number from your response - Thank you.'
-        )
-        . "\n\n"
-        . "\n------------------------- "
-        . $Self->{LanguageObject}->Translate('PROBLEM DESCRIPTION')
-        . " -------------------------\n";
+    $FwdBody .= $Self->{LanguageObject}->Translate('This issue/information update has automatically been forwarded to you as external supplier for')
+              . " "
+              . $Self->{ConfigObject}->Get('Organization')
+              . ".\n\n  "
+              . $Self->{LanguageObject}->Translate('Ticket Title') . ": "
+              . $Ticket{Title} . "\n  "
+              . $Self->{LanguageObject}->Translate('Ticket Number') . ": ["
+              . $Self->{ConfigObject}->Get('Ticket::Hook')
+              . $Ticket{TicketNumber} . "]\n\n"
+              . $Self->{LanguageObject}->Translate('NOTE: Please do NOT remove the processing number from your response - Thank you.')
+              . "\n\n"
+              . "\n------------------------- "
+              . $Self->{LanguageObject}->Translate('PROBLEM DESCRIPTION')
+              . " -------------------------\n";
 
     #-------------------------------------------------------------------
     # add the attachments (except HTML-article body)...
-    my @Attachments = ();
-    my %ArticleIndex =
-        $Self->{TicketObject}
-        ->ArticleAttachmentIndex( %ThisArticle, UserID => 1, );
-    for my $Index ( keys %ArticleIndex ) {
+    my @Attachments  = ();
+    my %ArticleIndex = $Self->{TicketObject}->ArticleAttachmentIndex(
+        %ThisArticle,
+        UserID => 1,
+    );
+    for my $Index ( keys( %ArticleIndex ) ) {
         next if ( $ArticleIndex{$Index}->{'Filename'} =~ /^file/ );
         my %Attachment = $Self->{TicketObject}->ArticleAttachment(
             %ThisArticle,
             FileID => $Index,
             UserID => 1,
         );
-        push @Attachments, \%Attachment;
+        push( @Attachments, \%Attachment );
     }
 
     #-------------------------------------------------------------------
     # build bbody...
-    $FwdBody .= $ThisArticle{Body} . "\n";
-    $FwdBody .= "\n------------------------------ ";
-    $FwdBody .= $Self->{LanguageObject}->Translate('CUSTOMER DATA');
-    $FwdBody .= " ------------------------------\n";
+    $FwdBody .= $ThisArticle{Body} . "\n"
+              . "\n------------------------------ "
+              . $Self->{LanguageObject}->Translate('CUSTOMER DATA')
+              . " ------------------------------\n";
 
     #-------------------------------------------------------------------
     #get customer data...
     if ( $Ticket{CustomerUserID} ) {
-        my %CustomerUserData =
-            $Self->{CustomerUserObject}
-            ->CustomerUserDataGet( User => $Ticket{CustomerUserID}, );
+        my %CustomerUserData = $Self->{CustomerUserObject}->CustomerUserDataGet(
+            User => $Ticket{CustomerUserID},
+        );
 
         if (%CustomerUserData) {
             my @Map = @{ $CustomerUserData{Config}->{Map} };
@@ -213,28 +203,7 @@ sub Run {
 
             # get maximum length of label fields
             my $MaxLength = 0;
-            foreach my $Field (@Map) {
-
-                # Remove blacklisted fields
-                if (
-                    $CustomerUserAttrBlacklist
-                    && ref($CustomerUserAttrBlacklist) eq 'ARRAY'
-                ) {
-                    next
-                        if (
-                        grep { $_ eq ${$Field}[0]; }
-                        @{$CustomerUserAttrBlacklist}
-                        );
-                }
-
-                # EO Remove blacklisted fields
-                if ( ${$Field}[3] && $CustomerUserData{ ${$Field}[0] } ) {
-                    if ( length( ${$Field}[1] ) > $MaxLength ) {
-                        $MaxLength = length( ${$Field}[1] );
-                    }
-                }
-            }
-            foreach my $Field (@Map) {
+            for my $Field ( @Map ) {
 
                 # Remove blacklisted fields
                 if (
@@ -248,9 +217,33 @@ sub Run {
                 }
 
                 # EO Remove blacklisted fields
-                if ( ${$Field}[3] && $CustomerUserData{ ${$Field}[0] } ) {
-                    $FwdBody .= sprintf(
-                        "%" . $MaxLength . "s: %s\n",
+                if (
+                    ${$Field}[3]
+                    && $CustomerUserData{ ${$Field}[0] }
+                    && length( ${$Field}[1] ) > $MaxLength
+                ) {
+                    $MaxLength = length( ${$Field}[1] );
+                }
+            }
+            for my $Field ( @Map ) {
+
+                # Remove blacklisted fields
+                if (
+                    $CustomerUserAttrBlacklist
+                    && ref($CustomerUserAttrBlacklist) eq 'ARRAY'
+                ) {
+                    next if (
+                        grep { $_ eq ${$Field}[0]; }
+                        @{$CustomerUserAttrBlacklist}
+                    );
+                }
+
+                # EO Remove blacklisted fields
+                if (
+                    ${$Field}[3]
+                    && $CustomerUserData{ ${$Field}[0] }
+                ) {
+                    $FwdBody .= sprintf( "%" . $MaxLength . "s: %s\n",
                         $Self->{LanguageObject}->Translate( ${$Field}[1] ),
                         $CustomerUserData{ ${$Field}[0] }
                     );
@@ -270,19 +263,16 @@ sub Run {
     # retrieve related object data...
     my $RelatedObjectData = "";
 
-    $RelatedObjectData =
-        $Self->{FwdLinkedObjectData}
-        ->BuildFwdContent(
+    $RelatedObjectData = $Self->{FwdLinkedObjectData}->BuildFwdContent(
         TicketID => $MyJobDefinition{Params}->{TicketID},
-        );
+    );
 
-    if ($RelatedObjectData) {
-        $FwdBody .= "\n------------------------  ";
-        $FwdBody .= $Self->{LanguageObject}->Translate('RELATED OBJECT DATA');
-        $FwdBody .= " ------------------------\n";
-        $FwdBody .= $RelatedObjectData;
-        $FwdBody .=
-            "\n----------------------------------------------------------------------\n";
+    if ( $RelatedObjectData ) {
+        $FwdBody .= "\n------------------------  "
+                  . $Self->{LanguageObject}->Translate('RELATED OBJECT DATA')
+                  . " ------------------------\n"
+                  . $RelatedObjectData
+                  . "\n----------------------------------------------------------------------\n";
     }
 
     #-------------------------------------------------------------------
@@ -299,10 +289,9 @@ sub Run {
         );
     }
     else {
-        @KeyRef =
-            $Self->{CryptObject}->PublicKeySearch(
+        @KeyRef = $Self->{CryptObject}->PublicKeySearch(
             Search => $MyJobDefinition{Params}->{DestMailAddress},
-            );
+        );
     }
 
     #(1) HIGHER PRIO: use key in special PGP key configuration...
@@ -311,8 +300,7 @@ sub Run {
             Type    => 'PGP',
             SubType => 'Inline',
             Key     => $FwdEmailPGPKeys{
-                $MyJobDefinition{Params}
-                    ->{DestMailAddress}
+                $MyJobDefinition{Params}->{DestMailAddress}
             },
         };
         $AddToHistory = "The message was sent encrypted:";
@@ -362,8 +350,7 @@ sub Run {
         Attachment     => \@Attachments,
         Crypt          => $Crypt,
         HistoryType    => 'AddNote',
-        HistoryComment => $AddToHistory
-            . ' ticket information forwarded to external supplier.',
+        HistoryComment => $AddToHistory . ' ticket information forwarded to external supplier.',
         NoAgentNotify => 1,
         UserID        => 1,
     );

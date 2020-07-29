@@ -26,8 +26,7 @@
                     <li>
                         <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center Back">
                             <span>
-                                <i class="fa fa-caret-left"></i>
-                                [% Translate("Go to overview") | html %]
+                                <i class="fa fa-caret-left"></i>  [% Translate("Go to overview") | html %]
                             </span>
                         </a>
                     </li>
@@ -35,8 +34,8 @@
 
 [% RenderBlockStart("DependingFieldList") %]
                     <li>
-                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Add" class="CallForAction Fullsize Center Back">
-                            <span>[% Translate("Add Depending Field") | html %]</span>
+                        <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Add" class="CallForAction Fullsize Center">
+                            <span><i class="fa fa-plus-square"></i> [% Translate("Add Depending Field") | html %]</span>
                         </a>
                     </li>
 [% RenderBlockEnd("DependingFieldList") %]

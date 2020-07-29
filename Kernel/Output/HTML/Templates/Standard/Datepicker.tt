@@ -22,7 +22,6 @@ MonthNamesShort: [[% Translate("Jan") | JSON %], [% Translate("Feb") | JSON %], 
 DayNames: [[% Translate("Sunday") | JSON %], [% Translate("Monday") | JSON %], [% Translate("Tuesday") | JSON %], [% Translate("Wednesday") | JSON %], [% Translate("Thursday") | JSON %], [% Translate("Friday") | JSON %], [% Translate("Saturday") | JSON %]],
 DayNamesShort: [[% Translate("Sun") | JSON %], [% Translate("Mon") | JSON %], [% Translate("Tue") | JSON %], [% Translate("Wed") | JSON %], [% Translate("Thu") | JSON %], [% Translate("Fri") | JSON %], [% Translate("Sat") | JSON %]],
 DayNamesMin: [[% Translate("Su") | JSON %], [% Translate("Mo") | JSON %], [% Translate("Tu") | JSON %], [% Translate("We") | JSON %], [% Translate("Th") | JSON %], [% Translate("Fr") | JSON %], [% Translate("Sa") | JSON %]],
-IsRTL: [% Data.IsRTLLanguage %],
 FirstDay: 0,
 ShowMonthAfterYear: 0,
 IconText: [% Translate("Open date selection") | JSON %]

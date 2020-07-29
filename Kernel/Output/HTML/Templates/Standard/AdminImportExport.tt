@@ -26,8 +26,7 @@
                     <li>
                         <a href="[% Env("Baselink") %]Action=[% Env("Action") %]" class="CallForAction Fullsize Center">
                             <span>
-                                <i class="fa fa-caret-left"></i>
-                                [% Translate("Go to overview") | html %]
+                                <i class="fa fa-caret-left"></i>  [% Translate("Go to overview") | html %]
                             </span>
                         </a>
                     </li>
@@ -35,7 +34,7 @@
 [% RenderBlockStart("ActionAdd") %]
                     <li>
                         <a href="[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=TemplateEdit1" class="CallForAction Fullsize Center">
-                            <span>[% Translate("Add template") | html %]</span>
+                            <span><i class="fa fa-plus-square"></i> [% Translate("Add template") | html %]</span>
                         </a>
                     </li>
 [% RenderBlockEnd("ActionAdd") %]

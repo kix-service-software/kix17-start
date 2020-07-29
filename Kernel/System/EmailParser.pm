@@ -77,7 +77,7 @@ sub new {
         die "Need Email or Entity!";
     }
 
-    # if email is given
+    # if Email is given
     if ( $Param{Email} ) {
 
         # check if Email is an array ref
@@ -112,9 +112,16 @@ sub new {
         $Parser->extract_nested_messages(0);
         $Self->{ParserParts} = $Parser->parse_data( $Self->{Email}->as_string() );
     }
+    # if Entity is given
     else {
-        $Self->{ParserParts} = $Param{Entity};
-        $Self->{EntityMode}  = 1;
+        # keep entity as attachments
+        $Self->{ParserParts}  = $Param{Entity};
+
+        # get header object from entity
+        $Self->{HeaderObject} = $Param{Entity}->head();
+
+        # set entity mode
+        $Self->{EntityMode}   = 1;
     }
 
     # get NoHTMLChecks param
@@ -156,11 +163,11 @@ sub GetParam {
 
     my $What = $Param{WHAT} || return;
 
-    if ( !$Self->{Email} || !$Self->{HeaderObject} ) {
+    if ( !$Self->{HeaderObject} ) {
 
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => 'Email and HeaderObject is needed!',
+            Message  => 'HeaderObject is needed!',
         );
         return;
     }
@@ -325,11 +332,11 @@ sub GetCharset {
         return $Self->{Charset};
     }
 
-    if ( !$Self->{Email} || !$Self->{HeaderObject} ) {
+    if ( !$Self->{HeaderObject} ) {
 
         $Kernel::OM->Get('Kernel::System::Log')->Log(
             Priority => 'error',
-            Message  => 'Email and HeaderObject is needed!',
+            Message  => 'HeaderObject is needed!',
         );
         return;
     }

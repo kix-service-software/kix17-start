@@ -2,7 +2,7 @@
  * This software is part of the KIX project, https://www.kixdesk.com/
  * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
  * --
- * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Customer Frontend
  * @copyright c.a.p.e. IT GmbH
  * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
  * --
@@ -56,7 +56,6 @@
         text-indent: 8px;
         margin-bottom: 5px;
     }
-
     fieldset.TableLike > label,
     fieldset.TableLike > .Row > label {
         display: block;
@@ -69,6 +68,8 @@
         padding-bottom: 1px;
         font-weight: bold;
         position: relative;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     fieldset.TableLike > .Row > label {
         padding-top: 3px;
@@ -83,7 +84,6 @@
         padding: 5px 0 3px 8px;
         line-height: 1.0em;
     }
-
     fieldset.TableLike > .Field,
     fieldset.TableLike > .Row > .Field {
         line-height: 1.0em;
@@ -122,7 +122,6 @@
     fieldset.TableLike > .Row > .Field > input[id$='Date'] {
         width: 80px;
     }
-
     fieldset.TableLike > .Field > select,
     fieldset.TableLike > .Row > .Field > select,
     fieldset.TableLike > .Field > input,
@@ -175,7 +174,6 @@
     fieldset.TableLike.FixedLabel > .Row > .FloatingField {
         margin: 0 0 10px 17px;
     }
-
     .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > label,
     .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > .Row > label {
         width: 50%;
@@ -186,7 +184,6 @@
     .SidebarFirst .SidebarColumn fieldset.TableLike.FixedLabel > .Row > .Value {
         margin-left: 50%;
     }
-
     fieldset.TableLike.FixedLabelSmall > label,
     fieldset.TableLike.FixedLabelSmall > .Row > label {
         width: 100px;
@@ -287,50 +284,26 @@
         margin-bottom: 0px;
     }
     .ActionList li a.Fullsize,
-    .CallForAction.Fullsize,
-    .CallForAction.OverFullsize280,
-    .CallForAction.OverFullsize330 {
+    .CallForAction.Fullsize {
         display: block;
     }
     .CallForAction.Fullsize {
         width: 248px;
         text-align: center;
     }
-    .CallForAction.OverFullsize280 {
-        width: 280px;
-        text-align: center;
-    }
-    .CallForAction.OverFullsize330 {
-        width: 330px;
-        text-align: center;
-    }
-    .CallForAction.OverFullsize280 span,
-    .CallForAction.OverFullsize330 span,
     .CallForAction.Fullsize span {
         padding: 3px 20px 5px 20px;
     }
 
-    .CallForAction.OverFullsize280.Center span i,
-    .CallForAction.OverFullsize330.Center span i,
     .CallForAction.Fullsize.Center span i {
         position: absolute;
         left: 4px;
         top: 4px;
     }
-    button.CallForAction.Fullsize,
-    button.CallForAction.OverFullsize280,
-    button.CallForAction.OverFullsize330 {
+    button.CallForAction.Fullsize {
         margin: 3px 0 0 0;
         width: 250px;
     }
-    button.CallForAction.OverFullsize280 {
-        width: 280px;
-    }
-    button.CallForAction.OverFullsize330 {
-        width: 330px;
-    }
-    button.CallForAction.OverFullsize330 span i,
-    button.CallForAction.OverFullsize280 span i,
     button.CallForAction.Fullsize span i {
         position: absolute;
         top: 4px;
@@ -373,7 +346,6 @@
     #SearchForm legend > span {
         padding: 5px;
     }
-
     .AddButton,
     .RemoveButton {
         font-size: 14px;
@@ -390,7 +362,6 @@
     .MainBox > h1.InvisibleText {
         position: absolute;
     }
-
     .MainBox > .AsteriskExplanation {
         padding-left: 8px;
         margin-bottom: 10px;
@@ -461,6 +432,7 @@
         vertical-align: top;
     }
 
+
     /**
     *   @subsection Richtext cke
     */
@@ -483,7 +455,6 @@
     textarea.cke_dialog_ui_input_textarea {
         border-radius: 5px;
     }
-
     a.CertificateRelationAdd,
     button.CertificateRelationAdd,
     a.CertificateRead,
@@ -505,7 +476,6 @@
         cursor: pointer;
         position: relative;
     }
-
     button.CertificateRelationAdd,
     button.Add,
     button.Remove,
@@ -518,6 +488,7 @@
         font-size: 14px;
         vertical-align: middle;
     }
+
 
     /**
     *   @subsection process mask

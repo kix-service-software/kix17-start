@@ -835,7 +835,15 @@ sub _RecipientsGet {
                         );
                     }
                     if ( !$Recipient{Realname} ) {
-                        $Recipient{Realname} = $Article{From} || '';
+                        $Recipient{Realname} = '';
+                        if ( defined $Article{SenderType} ) {
+                            if ( $Article{SenderType} eq 'customer' ) {
+                                $Recipient{Realname} = $Article{From};
+                            }
+                            else {
+                                $Recipient{Realname} = $Article{To};
+                            }
+                        }
                         $Recipient{Realname} =~ s/<.*>|\(.*\)|\"|;|,//g;
                         $Recipient{Realname} =~ s/( $)|(  $)//g;
                     }

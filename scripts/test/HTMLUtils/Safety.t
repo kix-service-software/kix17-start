@@ -55,6 +55,7 @@ for my $File ( @FilesInDirectory ) {
             TestValue  => $$ContentRef,
             StartTime  => $StartTime,
         );
+        next FILE;
     }
 
     # load yaml
@@ -69,6 +70,7 @@ for my $File ( @FilesInDirectory ) {
             TestValue  => ref( $TestCaseData ),
             StartTime  => $StartTime,
         );
+        next FILE;
     }
 
     # init test steps

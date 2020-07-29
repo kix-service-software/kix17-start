@@ -349,6 +349,24 @@ sub TableCreateComplex {
                     $TmpHash{Translate} = $Kernel::OM->Get('Kernel::Config')->Get('Ticket::SLATranslation') || 0;
                 }
             }
+            elsif ( $Column eq 'CustomerName' ) {
+                if ( $Ticket->{CustomerUserID} ) {
+                    my $CustomerName = $Kernel::OM->Get('Kernel::System::CustomerUser')->CustomerName(
+                        UserLogin => $Ticket->{CustomerUserID},
+                    );
+                    $TmpHash{Content} = $CustomerName;
+                }
+            }
+            elsif ( $Column eq 'CustomerCompanyName' ) {
+                if ( $Ticket->{CustomerID} ) {
+                    my %CustomerCompanyData = $Kernel::OM->Get('Kernel::System::CustomerCompany')->CustomerCompanyGet(
+                        CustomerID => $Ticket->{CustomerID},
+                    );
+                    if ( %CustomerCompanyData ) {
+                        $TmpHash{Content} = $CustomerCompanyData{CustomerCompanyName};
+                    }
+                }
+            }
             push( @ItemColumns, \%TmpHash );
         }
 
