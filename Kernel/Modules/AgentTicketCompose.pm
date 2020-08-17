@@ -1254,8 +1254,9 @@ sub Run {
             );
         }
 
-        # set OrigFrom for correct email quoting (xxxx wrote)
+        # set OrigFrom and OrigTo for correct email quoting (xxxx wrote)
         $Data{OrigFrom} = $Data{From};
+        $Data{OrigTo}   = $Data{To};
 
         # check article type and replace To with From (in case)
         my $SystemAddress  = $Kernel::OM->Get('Kernel::System::SystemAddress');
@@ -1532,9 +1533,18 @@ sub Run {
                         ": $Data{Created}<br/>" . $Data{Body};
                 }
 
-                for my $Key (qw( Subject ReplyTo Reply-To Cc To From )) {
+                for my $Key (qw( Subject ReplyTo Reply-To Cc OrigTo OrigFrom )) {
                     if ( $Data{$Key} ) {
-                        my $KeyText = $LayoutObject->{LanguageObject}->Translate($Key);
+                        my $KeyText;
+                        if ($Key eq "OrigTo") { 
+                            $KeyText = $LayoutObject->{LanguageObject}->Translate("To");
+                        }
+                        elsif ($Key eq "OrigFrom") { 
+                            $KeyText = $LayoutObject->{LanguageObject}->Translate("From");
+                        }
+                        else {
+                            $KeyText = $LayoutObject->{LanguageObject}->Translate($Key);
+                        }
 
                         my $Value = $LayoutObject->Ascii2RichText(
                             String => $Data{$Key},
