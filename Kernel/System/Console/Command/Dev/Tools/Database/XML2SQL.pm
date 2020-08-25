@@ -22,6 +22,8 @@ our @ObjectDependencies = (
     'Kernel::System::XML',
 );
 
+## no critic qw(InputOutput::ProhibitExplicitStdin)
+
 sub Configure {
     my ( $Self, %Param ) = @_;
 
