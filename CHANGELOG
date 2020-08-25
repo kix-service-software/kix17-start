@@ -1,6 +1,20 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.13.0-RC1 (2020/08/25)
+ * (2020/08/24) - Bugfix: KIX17-1268 (restrict queue selection in common ticket actions) (millinger)
+ * (2020/08/24) - Bugfix: KIX17-1256 (added missing indexes for migration) (millinger)
+ * (2020/08/24) - Bugfix: KIX17-1246 (fixed linking of involved persons by customer user dynamic field) (millinger)
+ * (2020/08/24) - Bugfix: KIX17-1083 (removed static replacements) (millinger)
+ * (2020/08/24) - Bugfix: KIX17-222 (removed initial faq history entry) (millinger)
+ * (2020/08/24) - Bugfix: KIX17-1285 (keep existing config item data on webservice update) (millinger)
+ * (2020/08/17) - Bugfix: KIX17-1249 (selections not usable in responsive view) (ddoerffel)
+ * (2020/08/14) - Bugfix: KIX17-1273 (changed to and from in answer mode) (ddoerffel)
+ * (2020/08/14) - Bugfix: KIX17-1298 (check ticket permission only once in customer ticket overview) (millinger)
+ * (2020/08/14) - Bugfix: KIX17-1253 (changed link to online help) (ddoerffel)
+ * (2020/07/17) - Bugfix: KIX17-1177 (postmaster does not remember self created tickets to be skipped) (millinger)
+ * (2020/04/24) - Bugfix: database update (fixed update script) (millinger)
+
 # 17.12.0 (2020/07/29)
  * (2020/07/29) - productive release
 
