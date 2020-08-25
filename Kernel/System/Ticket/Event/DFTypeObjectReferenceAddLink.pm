@@ -77,27 +77,21 @@ sub Run {
     if ( $Param{Event} =~ /TicketDynamicFieldUpdate_(.*)/ ) {
 
         my $Field = "DynamicField_" . $1;
-        my $DynamicFieldData =
-            $Self->{DynamicFieldObject}->DynamicFieldGet( Name => $1 );
+        my $DynamicFieldData = $Self->{DynamicFieldObject}->DynamicFieldGet( Name => $1 );
 
-        # nothing to do if Danamic Field not of type CustomerUser or if customer was deleted
-        return if ( $DynamicFieldData->{FieldType} ne "CustomerUser" );
+        # nothing to do if Dynamic Field not of type CustomerUser or if customer was deleted
+        return if ( $DynamicFieldData->{FieldType} ne 'CustomerUser' );
         return if ( !$Ticket{$Field} );
-        return
-            if ( ref( $Ticket{$Field} ) eq 'ARRAY'
-            && scalar( @{ $Ticket{$Field} } )
-            && !$Ticket{$Field}->[0] );
+        return if ( ref( $Ticket{$Field} ) ne 'ARRAY' );
 
-        # check in customer backend for this login
-        my %UserListCustomer =
-            $Self->{CustomerUserObject}
-            ->CustomerSearch( UserLogin => $Ticket{$Field}->[0], );
+        # process values
+        CUSTOMERUSER:
+        for my $CustomerUserID ( @{ $Ticket{$Field} } ) {
+            next CUSTOMERUSER if ( !$CustomerUserID );
 
-        for my $CurrUserLogin ( keys(%UserListCustomer) ) {
-
-            my %CustomerUserData =
-                $Self->{CustomerUserObject}
-                ->CustomerUserDataGet( User => $CurrUserLogin, );
+            # get customer user entry
+            my %CustomerUserData = $Self->{CustomerUserObject}->CustomerUserDataGet( User => $CustomerUserID );
+            next CUSTOMERUSER if ( !%CustomerUserData );
 
             # add links to database
             my $Success = $Self->{LinkObject}->LinkAdd(
@@ -109,15 +103,13 @@ sub Run {
                 State        => 'Valid',
                 UserID       => $Param{UserID},
             );
-
             $Self->{TicketObject}->HistoryAdd(
-                Name         => 'added involved person ' . $CurrUserLogin,
+                Name         => 'added involved person ' . $CustomerUserData{UserLogin},
                 HistoryType  => 'TicketLinkAdd',
                 TicketID     => $Ticket{TicketID},
                 CreateUserID => 1,
             );
         }
-
     }
 
     return 1;
