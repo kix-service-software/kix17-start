@@ -3269,14 +3269,6 @@ TreeView: '0'
         <Data Key="changed_by">1</Data>
         <Data Key="parent_id">0</Data>
     </Insert>
-    <Insert Table="faq_history">
-        <Data Key="name" Type="Quote">Created</Data>
-        <Data Key="item_id">1</Data>
-        <Data Key="created">current_timestamp</Data>
-        <Data Key="created_by">1</Data>
-        <Data Key="changed">current_timestamp</Data>
-        <Data Key="changed_by">1</Data>
-    </Insert>
     <Insert Table="faq_category_group">
         <Data Key="category_id">1</Data>
         <Data Key="group_id">4</Data>
