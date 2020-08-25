@@ -1065,10 +1065,17 @@ sub FormatXMLData {
                         XMLData => $ArrayItem,
                         Child   => 1,
                     );
-                    push @NewXMLParts, {
-                        Content => $Content,
-                        %{$NewXMLDataPart},
-                    };
+                    if ( ref( $NewXMLDataPart ) eq 'HASH' ) {
+                        push @NewXMLParts, {
+                            Content => $Content,
+                            %{$NewXMLDataPart},
+                        };
+                    }
+                    elsif ( defined( $Content ) ) {
+                        push @NewXMLParts, {
+                            Content => $Content,
+                        };
+                    }
                 }
                 elsif ( ref( $ArrayItem ) eq '' ) {
                     push @NewXMLParts, {
@@ -1098,6 +1105,11 @@ sub FormatXMLData {
                 push @NewXMLParts, {
                     Content => $Content,
                     %{$NewXMLDataPart},
+                };
+            }
+            elsif ( defined( $Content ) ) {
+                push @NewXMLParts, {
+                    Content => $Content,
                 };
             }
 
