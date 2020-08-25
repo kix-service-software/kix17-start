@@ -109,13 +109,6 @@ Core.KIXBase.Agent = (function(TargetNS) {
         // add CSS class to SearchProfileSelectionSaved
         $('#SearchProfileSelectionSaved').parent().addClass('SearchProfileSelectionButtons');
 
-        // replace strings
-        $('.MessageBox > p, h3, h2 > span, .AdminSupportDataCollector .ItemLabel, .AdminSupportDataCollector .CheckResultProblem').each(function() {
-            $(this).html($(this).html().replace('OTRS', 'KIX'));
-            $(this).html($(this).html().replace('KIX4KIX', 'KIX4OTRS'));
-            $(this).html($(this).html().replace('KIXMasterSlave', 'OTRSMasterSlave'));
-        });
-
         // select first article in ticket when no article is selected
         if ($('#ArticleTree').length > 0 && $('#ArticleTree').children().length > 0 && $('#ArticleItems').length > 0 && $('#ArticleItems').children().length == 0) {
             Core.Agent.TicketZoom.LoadArticleFromExternal($('#ArticleTable tbody tr:first-child').addClass('Active').find('input.ArticleID').val());
