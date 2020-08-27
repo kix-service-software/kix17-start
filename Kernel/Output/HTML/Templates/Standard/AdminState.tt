@@ -46,7 +46,7 @@
                     [% Translate("Attention") | html %]: [% Translate("Please also update the states in SysConfig where needed.") | html %]
                 </p>
                 <p class="FieldExplanation">
-                    [% Translate("See also") | html %]: <a href="https://www.kixdesk.com/de/download/handbuecher.html" target="_blank">https://www.kixdesk.com/de/download/handbuecher.html</a>
+                    [% Translate("See also") | html %]: <a href="https://docs.kixdesk.com/" target="_blank">https://docs.kixdesk.com</a>
                 </p>
             </div>
         </div>

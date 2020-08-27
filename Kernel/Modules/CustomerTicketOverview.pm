@@ -186,6 +186,7 @@ sub Run {
     my %Results;
     my $AllTickets      = 0;
     my $AllTicketsTotal = 0;
+    my %TicketHash      = ();
 
     for my $Filter ( sort( keys( %{ $Filters{ $Self->{Subaction} } } ) ) ) {
 
@@ -197,12 +198,19 @@ sub Run {
 
         # check customer ticket permission
         for my $TicketID ( @TmpResult ) {
-            my $Access = $TicketObject->TicketCustomerPermission(
-                Type     => 'ro',
-                TicketID => $TicketID,
-                LogNo    => 1,
-                UserID   => $Self->{UserID},
-            );
+            my $Access;
+            if ( !defined( $TicketHash{ $TicketID } ) ) {
+                $Access = $TicketObject->TicketCustomerPermission(
+                    Type     => 'ro',
+                    TicketID => $TicketID,
+                    LogNo    => 1,
+                    UserID   => $Self->{UserID},
+                );
+                $TicketHash{ $TicketID } = $Access;
+            }
+            else {
+                $Access = $TicketHash{ $TicketID };
+            }
             if ( $Access ) {
                 push( @{$Results{$Filter}}, $TicketID );
             }
