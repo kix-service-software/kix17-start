@@ -1331,6 +1331,8 @@ sub Run {
         );
 
         my %MoveQueues = $TicketObject->TicketMoveList(
+            %GetParam,
+            %ACLCompatGetParam,
             TicketID => $Self->{TicketID},
             UserID   => $Self->{UserID},
             Action   => $Self->{Action},
@@ -2157,6 +2159,7 @@ sub _Mask {
 
         # fetch all queues
         my %MoveQueues = $TicketObject->TicketMoveList(
+            %Param,
             TicketID => $Self->{TicketID},
             UserID   => $Self->{UserID},
             Action   => $Self->{Action},

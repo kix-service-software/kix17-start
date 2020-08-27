@@ -564,4 +564,108 @@ Xp+39Q2/Pv8fMKT3adZ3BfMAAAAASUVORK5CYII=
         <Data Key="change_time">current_timestamp</Data>
         <Data Key="change_by">1</Data>
     </Insert>
+
+    <TableAlter Name="user_preferences">
+        <ColumnChange NameOld="preferences_value" NameNew="preferences_value" Type="varchar" Size="1000" Required="0"/>
+    </TableAlter>
+
+    <TableAlter Name="article_flag">
+        <IndexCreate Name="article_flag_create_by">
+            <IndexColumn Name="create_by"/>
+        </IndexCreate>
+        <IndexCreate Name="article_flag_artkey_crby_aid">
+            <IndexColumn Name="article_key"/>
+            <IndexColumn Name="create_by"/>
+            <IndexColumn Name="article_id"/>
+        </IndexCreate>
+    </TableAlter>
+    <TableAlter Name="article_search">
+        <IndexCreate Name="article_search_incoming_time">
+            <IndexColumn Name="incoming_time"/>
+        </IndexCreate>
+    </TableAlter>
+    <TableAlter Name="link_relation">
+        <IndexCreate Name="link_relation_src_key">
+            <IndexColumn Name="source_key"/>
+        </IndexCreate>
+        <IndexCreate Name="link_relation_target_key">
+            <IndexColumn Name="target_key"/>
+        </IndexCreate>
+        <IndexCreate Name="link_relation_src_obj_id">
+            <IndexColumn Name="source_object_id"/>
+        </IndexCreate>
+        <IndexCreate Name="link_relation_target_obj_id">
+            <IndexColumn Name="target_object_id"/>
+        </IndexCreate>
+        <IndexCreate Name="link_relation_src_key_trgt_key">
+            <IndexColumn Name="source_key"/>
+            <IndexColumn Name="target_key"/>
+        </IndexCreate>
+    </TableAlter>
+    <TableAlter Name="ticket_flag">
+        <IndexCreate Name="ticket_flag_ticket_key">
+            <IndexColumn Name="ticket_key"/>
+        </IndexCreate>
+        <IndexCreate Name="ticket_flag_tkey_tval_crby_tid">
+            <IndexColumn Name="ticket_key"/>
+            <IndexColumn Name="ticket_value"/>
+            <IndexColumn Name="create_by"/>
+            <IndexColumn Name="ticket_id"/>
+        </IndexCreate>
+    </TableAlter>
+    <TableAlter Name="ticket">
+        <IndexCreate Name="ticket_id_aflag">
+            <IndexColumn Name="id"/>
+            <IndexColumn Name="archive_flag"/>
+        </IndexCreate>
+        <IndexCreate Name="ticket_stid_qid_id">
+            <IndexColumn Name="ticket_state_id"/>
+            <IndexColumn Name="queue_id"/>
+            <IndexColumn Name="id"/>
+        </IndexCreate>
+        <IndexCreate Name="ticket_custid_aflag_id">
+            <IndexColumn Name="customer_id"/>
+            <IndexColumn Name="archive_flag"/>
+            <IndexColumn Name="id"/>
+        </IndexCreate>
+        <IndexCreate Name="ticket_qid_stid_aflag_id">
+            <IndexColumn Name="queue_id"/>
+            <IndexColumn Name="ticket_state_id"/>
+            <IndexColumn Name="archive_flag"/>
+            <IndexColumn Name="id"/>
+        </IndexCreate>
+        <IndexCreate Name="ticket_uid_stid_id">
+            <IndexColumn Name="user_id"/>
+            <IndexColumn Name="ticket_state_id"/>
+            <IndexColumn Name="id"/>
+        </IndexCreate>
+    </TableAlter>
+    <TableAlter Name="ticket_history">
+        <IndexCreate Name="ticket_history_tid_stid_htid">
+            <IndexColumn Name="ticket_id"/>
+            <IndexColumn Name="state_id"/>
+            <IndexColumn Name="history_type_id"/>
+        </IndexCreate>
+        <IndexCreate Name="ticket_hist_htid_tid_stid_ct">
+            <IndexColumn Name="history_type_id"/>
+            <IndexColumn Name="ticket_id"/>
+            <IndexColumn Name="state_id"/>
+            <IndexColumn Name="create_time"/>
+        </IndexCreate>
+    </TableAlter>
+    <TableAlter Name="ticket_type">
+        <IndexCreate Name="ticket_type_vid_id_name">
+            <IndexColumn Name="valid_id"/>
+            <IndexColumn Name="id"/>
+            <IndexColumn Name="name"/>
+        </IndexCreate>
+    </TableAlter>
+    <TableAlter Name="xml_storage">
+        <IndexCreate Name="xml_storage_type_ckey_cval">
+            <IndexColumn Name="xml_type"/>
+            <IndexColumn Name="xml_content_key"/>
+            <IndexColumn Name="xml_content_value" Size="200"/>
+        </IndexCreate>
+    </TableAlter>
+
 </database>

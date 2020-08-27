@@ -72,6 +72,11 @@ sub Run {
         );
     }
 
+    # Remove login from end of search profil name
+    if ( $Profile =~ m/(.*)::(.*?)$/ ) {
+        $Profile = $1;
+    }
+
     # get single params
     my %GetParam;
 

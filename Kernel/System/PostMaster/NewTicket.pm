@@ -766,6 +766,9 @@ sub Run {
         );
     }
 
+    # add created ticket to ticket hash to be skipped
+    $Param{SkipTicketIDs}->{ $TicketID } = 1;
+
     return ( 1, $TicketID );
 }
 
