@@ -405,6 +405,11 @@
         margin: 0;
         padding: 0;
     }
+    .FieldEmpty {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 5px;
+    }
 
 
     /**
