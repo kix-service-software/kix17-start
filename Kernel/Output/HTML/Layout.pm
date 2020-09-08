@@ -841,6 +841,40 @@ sub Login {
             Data => \%Param,
         );
 
+        my $LoginHeader = '';
+        if ( $ConfigObject->Get('AgentLoginHeader') ) {
+            $LoginHeader = $ConfigObject->Get('ProductName') || '';
+
+            if ( $ConfigObject->Get('AgentPrefixProductName') ) {
+                $LoginHeader = $Self->{LanguageObject}->Translate($ConfigObject->Get('AgentPrefixProductName'))
+                    . ' '
+                    . $LoginHeader;
+            }
+
+            if ( $ConfigObject->Get('AgentSuffixProductName') ) {
+                $LoginHeader .= ' '
+                    . $Self->{LanguageObject}->Translate($ConfigObject->Get('AgentSuffixProductName'));
+            }
+
+            $Self->Block(
+                Name => 'LoginHeader',
+                Data => {
+                    ProductName => $LoginHeader
+                },
+            );
+        }
+
+        if ( $ConfigObject->Get('AgentLoginSubHeader') ) {
+            my $LoginSubHeader = $Self->{LanguageObject}->Translate($ConfigObject->Get('AgentLoginSubHeader'));
+
+            $Self->Block(
+                Name => 'LoginSubHeader',
+                Data => {
+                    LoginSubHeader => $LoginSubHeader
+                },
+            );
+        }
+
         # show 2 factor password input if we have at least one backend enabled
         COUNT:
         for my $Count ( '', 1 .. 10 ) {
@@ -887,6 +921,15 @@ sub Login {
                 Name => 'LostPassword',
                 Data => \%Param,
             );
+
+            if ( $LoginHeader ) {
+                $Self->Block(
+                    Name => 'LostPasswordHeader',
+                    Data => {
+                        ProductName => $LoginHeader
+                    },
+                );
+            }
         }
     }
 
@@ -3988,6 +4031,40 @@ sub CustomerLogin {
             Data => \%Param,
         );
 
+        my $LoginHeader = '';
+        if ( $ConfigObject->Get('CustomerLoginHeader') ) {
+            $LoginHeader = $ConfigObject->Get('ProductName') || '';
+
+            if ( $ConfigObject->Get('CustomerPrefixProductName') ) {
+                $LoginHeader = $Self->{LanguageObject}->Translate($ConfigObject->Get('CustomerPrefixProductName'))
+                    . ' '
+                    . $LoginHeader;
+            }
+
+            if ( $ConfigObject->Get('CustomerSuffixProductName') ) {
+                $LoginHeader .= ' '
+                    . $Self->{LanguageObject}->Translate($ConfigObject->Get('CustomerSuffixProductName'));
+            }
+
+            $Self->Block(
+                Name => 'LoginHeader',
+                Data => {
+                    ProductName => $LoginHeader
+                },
+            );
+        }
+
+        if ( $ConfigObject->Get('CustomerLoginSubHeader') ) {
+            my $LoginSubHeader = $Self->{LanguageObject}->Translate($ConfigObject->Get('CustomerLoginSubHeader'));
+
+            $Self->Block(
+                Name => 'LoginSubHeader',
+                Data => {
+                    LoginSubHeader => $LoginSubHeader
+                },
+            );
+        }
+
         # show 2 factor password input if we have at least one backend enabled
         COUNT:
         for my $Count ( '', 1 .. 10 ) {
@@ -4014,6 +4091,15 @@ sub CustomerLogin {
                 Name => 'LostPassword',
                 Data => \%Param,
             );
+
+            if ( $LoginHeader ) {
+                $Self->Block(
+                    Name => 'LostPasswordHeader',
+                    Data => {
+                        ProductName => $LoginHeader
+                    }
+                );
+            }
         }
 
         # get create account output
@@ -4030,6 +4116,15 @@ sub CustomerLogin {
                 Name => 'CreateAccount',
                 Data => \%Param,
             );
+
+            if ( $LoginHeader ) {
+                $Self->Block(
+                    Name => 'CreateAccountHeader',
+                    Data => {
+                        ProductName => $LoginHeader
+                    }
+                );
+            }
         }
     }
 

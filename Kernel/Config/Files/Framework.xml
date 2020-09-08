@@ -4860,6 +4860,76 @@
             <String Regex="">KIX</String>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="AgentLoginHeader" Required="1" Valid="1" ConfigLevel="200">
+        <Description Translatable="1">Activates the greeting heading in the login.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Login</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AgentPrefixProductName" Required="0" Valid="1" ConfigLevel="200">
+        <Description Translatable="1">Defines the prefix that is placed before the name of the application. This only applies to the "Login" and "Forgot password" mask.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Login</SubGroup>
+        <Setting>
+            <String Regex="">Welcome to</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AgentSuffixProductName" Required="0" Valid="0" ConfigLevel="200">
+        <Description Translatable="1">Defines the suffix that is placed after the name of the application. This only applies to the "Login" and "Forgot password" mask.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Login</SubGroup>
+        <Setting>
+            <String Regex=""></String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="AgentLoginSubHeader" Required="0" Valid="0" ConfigLevel="200">
+        <Description Translatable="1">Defines a subheading which is placed under the main heading. Only applies to the login mask.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Login</SubGroup>
+        <Setting>
+            <String Regex=""></String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerLoginHeader" Required="1" Valid="1" ConfigLevel="200">
+        <Description Translatable="1">Activates the greeting heading in the login.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::CustomerLogin</SubGroup>
+        <Setting>
+            <Option SelectedID="1">
+                <Item Key="0" Translatable="1">No</Item>
+                <Item Key="1" Translatable="1">Yes</Item>
+            </Option>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerPrefixProductName" Required="0" Valid="1" ConfigLevel="200">
+        <Description Translatable="1">Defines the prefix that is placed before the name of the application. This only applies to the "login", "forgot password" and "register" mask.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::CustomerLogin</SubGroup>
+        <Setting>
+            <String Regex="">Welcome to</String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerSuffixProductName" Required="0" Valid="0" ConfigLevel="200">
+        <Description Translatable="1">Defines the suffix that is placed after the name of the application. This only applies to the "login", "forgot password" and "register" mask.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::CustomerLogin</SubGroup>
+        <Setting>
+            <String Regex=""></String>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="CustomerLoginSubHeader" Required="0" Valid="1" ConfigLevel="200">
+        <Description Translatable="1">Defines a subheading which is placed under the main heading. Only applies to the login mask.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::CustomerLogin</SubGroup>
+        <Setting>
+            <String Regex="">Self Service Portal</String>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="SystemID" Required="1" Valid="1" ConfigLevel="200">
         <Description Translatable="1">Defines the system identifier. Every ticket number and http session string contains this ID. This ensures that only tickets which belong to your system will be processed as follow-ups (useful when communicating between two instances of KIX).</Description>
         <Group>Framework</Group>
