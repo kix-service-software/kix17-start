@@ -8,14 +8,16 @@
 
 
 [% InsertTemplate("AdminDynamicFieldBaseHeader.tt") %]
-                        <div class="SpacingTop"></div>
                         <label for="ReferenceObject">[% Translate("Object Reference") | html %]:</label>
                         <div class="Field">
+[% IF (Data.Mode == 'Add') %]
                             [% Data.ObjectReferenceStrg %]
                             <p class="FieldExplanation">[% Translate("Select an object reference.") | html %]</p>
+[% ELSE %]
+                            <span>[% Data.ObjectReferenceStrg %]</span>
+[% END %]
                         </div>
                         <div class="Clear"></div>
-                        <div class="SpacingTop"></div>
                         <label for="FieldType">[% Translate("Field Type") | html %]:</label>
                         <div class="Field">
                             [% Data.FieldTypeStrg %]
@@ -28,8 +30,6 @@
                             <p class="FieldExplanation">[% Translate("This is the default value for this field.") | html %]</p>
                         </div>
                         <div class="Clear"></div>
-
-                        <div class="SpacingTop"></div>
                         <label for="DefaultValue">[% Translate("Add empty value") | html %]:</label>
                         <div class="Field">
                             [% Data.PossibleNoneStrg %]
