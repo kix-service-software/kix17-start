@@ -6020,6 +6020,50 @@
             </TimeVacationDaysOneTime>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules###000-GoodFriday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of good friday.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::GoodFriday</Item>
+                <Item Key="Name">Good Friday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules###001-EasterMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of easter monday.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::EasterMonday</Item>
+                <Item Key="Name">Easter Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules###002-AscensionDay" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of ascension day.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::AscensionDay</Item>
+                <Item Key="Name">Ascension Day</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules###003-WhitMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of whit monday.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::WhitMonday</Item>
+                <Item Key="Name">Whit Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="TimeWorkingHours" Required="1" Valid="1">
         <Description Translatable="1">Defines the hours and week days to count the working time.</Description>
         <Group>Framework</Group>
@@ -6189,6 +6233,50 @@
             <TimeVacationDaysOneTime>
                 <Item Year="2004" Month="1" Day="1">test</Item>
             </TimeVacationDaysOneTime>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar1###000-GoodFriday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of good friday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::GoodFriday</Item>
+                <Item Key="Name">Good Friday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar1###001-EasterMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of easter monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::EasterMonday</Item>
+                <Item Key="Name">Easter Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar1###002-AscensionDay" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of ascension day for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::AscensionDay</Item>
+                <Item Key="Name">Ascension Day</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar1###003-WhitMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of whit monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar1</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::WhitMonday</Item>
+                <Item Key="Name">Whit Monday</Item>
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="TimeWorkingHours::Calendar1" Required="1" Valid="1">
@@ -6362,6 +6450,50 @@
             </TimeVacationDaysOneTime>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar2###000-GoodFriday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of good friday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar2</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::GoodFriday</Item>
+                <Item Key="Name">Good Friday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar2###001-EasterMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of easter monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar2</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::EasterMonday</Item>
+                <Item Key="Name">Easter Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar2###002-AscensionDay" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of ascension day for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar2</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::AscensionDay</Item>
+                <Item Key="Name">Ascension Day</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar2###003-WhitMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of whit monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar2</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::WhitMonday</Item>
+                <Item Key="Name">Whit Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="TimeWorkingHours::Calendar2" Required="1" Valid="1">
         <Description Translatable="1">Defines the hours and week days of the indicated calendar, to count the working time.</Description>
         <Group>Framework</Group>
@@ -6531,6 +6663,50 @@
             <TimeVacationDaysOneTime>
                 <Item Year="2004" Month="1" Day="1">test</Item>
             </TimeVacationDaysOneTime>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar3###000-GoodFriday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of good friday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar3</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::GoodFriday</Item>
+                <Item Key="Name">Good Friday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar3###001-EasterMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of easter monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar3</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::EasterMonday</Item>
+                <Item Key="Name">Easter Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar3###002-AscensionDay" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of ascension day for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar3</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::AscensionDay</Item>
+                <Item Key="Name">Ascension Day</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar3###003-WhitMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of whit monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar3</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::WhitMonday</Item>
+                <Item Key="Name">Whit Monday</Item>
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="TimeWorkingHours::Calendar3" Required="1" Valid="1">
@@ -6704,6 +6880,50 @@
             </TimeVacationDaysOneTime>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar4###000-GoodFriday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of good friday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar4</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::GoodFriday</Item>
+                <Item Key="Name">Good Friday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar4###001-EasterMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of easter monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar4</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::EasterMonday</Item>
+                <Item Key="Name">Easter Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar4###002-AscensionDay" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of ascension day for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar4</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::AscensionDay</Item>
+                <Item Key="Name">Ascension Day</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar4###003-WhitMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of whit monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar4</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::WhitMonday</Item>
+                <Item Key="Name">Whit Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="TimeWorkingHours::Calendar4" Required="1" Valid="1">
         <Description Translatable="1">Defines the hours and week days of the indicated calendar, to count the working time.</Description>
         <Group>Framework</Group>
@@ -6873,6 +7093,50 @@
             <TimeVacationDaysOneTime>
                 <Item Year="2004" Month="1" Day="1">test</Item>
             </TimeVacationDaysOneTime>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar5###000-GoodFriday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of good friday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar5</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::GoodFriday</Item>
+                <Item Key="Name">Good Friday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar5###001-EasterMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of easter monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar5</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::EasterMonday</Item>
+                <Item Key="Name">Easter Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar5###002-AscensionDay" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of ascension day for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar5</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::AscensionDay</Item>
+                <Item Key="Name">Ascension Day</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar5###003-WhitMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of whit monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar5</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::WhitMonday</Item>
+                <Item Key="Name">Whit Monday</Item>
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="TimeWorkingHours::Calendar5" Required="1" Valid="1">
@@ -7046,6 +7310,50 @@
             </TimeVacationDaysOneTime>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar6###000-GoodFriday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of good friday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar6</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::GoodFriday</Item>
+                <Item Key="Name">Good Friday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar6###001-EasterMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of easter monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar6</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::EasterMonday</Item>
+                <Item Key="Name">Easter Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar6###002-AscensionDay" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of ascension day for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar6</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::AscensionDay</Item>
+                <Item Key="Name">Ascension Day</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar6###003-WhitMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of whit monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar6</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::WhitMonday</Item>
+                <Item Key="Name">Whit Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="TimeWorkingHours::Calendar6" Required="1" Valid="1">
         <Description Translatable="1">Defines the hours and week days of the indicated calendar, to count the working time.</Description>
         <Group>Framework</Group>
@@ -7215,6 +7523,50 @@
             <TimeVacationDaysOneTime>
                 <Item Year="2004" Month="1" Day="1">test</Item>
             </TimeVacationDaysOneTime>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar7###000-GoodFriday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of good friday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar7</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::GoodFriday</Item>
+                <Item Key="Name">Good Friday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar7###001-EasterMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of easter monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar7</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::EasterMonday</Item>
+                <Item Key="Name">Easter Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar7###002-AscensionDay" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of ascension day for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar7</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::AscensionDay</Item>
+                <Item Key="Name">Ascension Day</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar7###003-WhitMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of whit monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar7</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::WhitMonday</Item>
+                <Item Key="Name">Whit Monday</Item>
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="TimeWorkingHours::Calendar7" Required="1" Valid="1">
@@ -7388,6 +7740,50 @@
             </TimeVacationDaysOneTime>
         </Setting>
     </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar8###000-GoodFriday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of good friday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar8</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::GoodFriday</Item>
+                <Item Key="Name">Good Friday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar8###001-EasterMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of easter monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar8</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::EasterMonday</Item>
+                <Item Key="Name">Easter Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar8###002-AscensionDay" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of ascension day for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar8</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::AscensionDay</Item>
+                <Item Key="Name">Ascension Day</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar8###003-WhitMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of whit monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar8</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::WhitMonday</Item>
+                <Item Key="Name">Whit Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
     <ConfigItem Name="TimeWorkingHours::Calendar8" Required="1" Valid="1">
         <Description Translatable="1">Defines the hours and week days of the indicated calendar, to count the working time.</Description>
         <Group>Framework</Group>
@@ -7557,6 +7953,50 @@
             <TimeVacationDaysOneTime>
                 <Item Year="2004" Month="1" Day="1">test</Item>
             </TimeVacationDaysOneTime>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar9###000-GoodFriday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of good friday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar9</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::GoodFriday</Item>
+                <Item Key="Name">Good Friday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar9###001-EasterMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of easter monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar9</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::EasterMonday</Item>
+                <Item Key="Name">Easter Monday</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar9###002-AscensionDay" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of ascension day for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar9</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::AscensionDay</Item>
+                <Item Key="Name">Ascension Day</Item>
+            </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TimeVacationDaysModules::Calendar9###003-WhitMonday" Required="0" Valid="0">
+        <Description Translatable="1">Adds module to calculate date of whit monday for the indicated calendar.</Description>
+        <Group>Framework</Group>
+        <SubGroup>Core::Time::Calendar9</SubGroup>
+        <Setting>
+            <Hash>
+                <Item Key="Module">Kernel::System::Time::VacationDay::WhitMonday</Item>
+                <Item Key="Name">Whit Monday</Item>
+            </Hash>
         </Setting>
     </ConfigItem>
     <ConfigItem Name="TimeWorkingHours::Calendar9" Required="1" Valid="1">
