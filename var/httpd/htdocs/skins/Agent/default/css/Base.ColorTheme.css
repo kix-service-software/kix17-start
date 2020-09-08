@@ -1611,17 +1611,13 @@
     .MapHeaderRow label {
         color: #999999;
     }
-    button.ArrowUp[disabled="disabled"] {
-        background: url(../img/icons/importexport_arrow_up_disabled.png);
-    }
-    button.ArrowUp {
-        background: url(../img/icons/importexport_arrow_up.png);
-    }
-    button.ArrowDown[disabled="disabled"] {
-        background: url(../img/icons/importexport_arrow_down_disabled.png);
-    }
+    button.ArrowUp,
     button.ArrowDown {
-        background: url(../img/icons/importexport_arrow_down.png);
+        color: #78BE5A;
+    }
+    button.ArrowUp[disabled="disabled"],
+    button.ArrowDown[disabled="disabled"] {
+        color: #A1A1A1;
     }
 
 
