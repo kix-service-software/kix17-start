@@ -1,6 +1,19 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.13.0-RC3 (2020/09/09)
+ * (2020/09/09) - Bugfix: KIX17-1358 (fixed incorrect display of the FieldHelpContainer tooltip) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (changed link "Download this email" to an widget action icon) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (fixed overlap of selected object reference in dynamic field edit mode) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (changed color of disabled buttons) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (Replaced import export column move arrow images to icons) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (fixed label / value field position in the ticket search dialog) (fjacquemin)
+ * (2020/09/07) - Bugfix: KIX17-1092 (fixed label / value field position in the ticket template form (admin interface)) (fjacquemin)
+ * (2020/09/04) - CR: KIX17-1349 (Changed result return of the ticket template list from the cache) (fjacquemin)
+ * (2020/08/27) - Bugfix: KIX17-1285 (fix handling of sub-definitions without data) (millinger)
+ * (2020/07/10) - CR: KIX17-1180 (editable login labels) (fjacquemin)
+ * (2020/05/05) - CR: KIX17-943 (holiday calculation) (millinger)
+
 # 17.13.0-RC2 (2020/08/27)
  * (2020/08/24) - Bugfix: KIX17-1125 (remove '::undefined' suffix in faq search profile name) (millinger)
 
