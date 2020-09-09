@@ -97,12 +97,16 @@
         <div id="LoginBox" class="LoginBox">
             <div class="LoginLogo"></div>
             <div id="LoginResponsiveLogo"></div>
-            <div class="Welcome">
-                <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
-            </div>
+[% RenderBlockStart("LoginHeader") %]
+                <div class="Welcome">
+                    <h2 class="Center">[% Data.ProductName | html %]</h2>
+                </div>
+[% RenderBlockEnd("LoginHeader") %]
             <div class="WidgetSimple">
                 <div class="Header">
-                    <h2 class="Center">[% Translate("Self Service Portal") | html %]</h2>
+[% RenderBlockStart("LoginSubHeader") %]
+                    <h2 class="Center">[% Data.LoginSubHeader | html %]</h2>
+[% RenderBlockEnd("LoginSubHeader") %]
                 </div>
                 <div class="Content">
                     <p class="Error Center Spacing"></p>
@@ -164,9 +168,11 @@
         <div id="PasswordBox" class="LoginBox Hidden">
             <div class="LoginLogo"></div>
             <div id="LoginResponsiveLogo"></div>
-            <div class="Welcome">
-                <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
-            </div>
+[% RenderBlockStart("LostPasswordHeader") %]
+                <div class="Welcome">
+                    <h2 class="Center">[% Data.ProductName | html %]</h2>
+                </div>
+[% RenderBlockEnd("LostPasswordHeader") %]
             <div class="WidgetSimple">
                 <div class="Header">
                      <h2><span>[% Translate("Request New Password") | html %]</span></h2>
@@ -204,9 +210,11 @@
         <div id="SignUpBox" class="LoginBox Hidden">
             <div class="LoginLogo"></div>
             <div id="LoginResponsiveLogo"></div>
-            <div class="Welcome">
-                <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
-            </div>
+[% RenderBlockStart("CreateAccountHeader") %]
+                <div class="Welcome">
+                    <h2 class="Center">[% Data.ProductName | html %]</h2>
+                </div>
+[% RenderBlockEnd("CreateAccountHeader") %]
             <div class="WidgetSimple">
                 <div class="Header">
                      <h2><span>[% Translate("Create Account") | html %]</span></h2>

@@ -890,7 +890,7 @@
     .Actions li.Inactive:hover a,
     .Actions li.Inactive span:hover {
         background-color: #F5F5F5;
-        color: #9E9E9E;
+        color: #909090;
     }
     #ArticleItems .WidgetSimple .LightRow.Bottom {
         border-bottom: 1px solid #9E9E9E;
@@ -1333,7 +1333,7 @@
     .FieldHelpContainer .FieldHelpTrigger {
         color: #BBBBBB;
     }
-    .FieldHelpContainer > span {
+    .FieldHelpTooltip {
         background: #444444;
         color: #FFFFFF;
     }
@@ -1611,17 +1611,13 @@
     .MapHeaderRow label {
         color: #999999;
     }
-    button.ArrowUp[disabled="disabled"] {
-        background: url(../img/icons/importexport_arrow_up_disabled.png);
-    }
-    button.ArrowUp {
-        background: url(../img/icons/importexport_arrow_up.png);
-    }
-    button.ArrowDown[disabled="disabled"] {
-        background: url(../img/icons/importexport_arrow_down_disabled.png);
-    }
+    button.ArrowUp,
     button.ArrowDown {
-        background: url(../img/icons/importexport_arrow_down.png);
+        color: #78BE5A;
+    }
+    button.ArrowUp[disabled="disabled"],
+    button.ArrowDown[disabled="disabled"] {
+        color: #A1A1A1;
     }
 
 

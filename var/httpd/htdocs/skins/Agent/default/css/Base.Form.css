@@ -342,6 +342,16 @@
     #SearchForm legend > span {
         padding: 5px;
     }
+    #SearchProfileNew,
+    #SearchProfileDelete {
+        padding: 2px;
+        display: inline-block;
+        margin: -5px 0 5px 0;
+    }
+    #SearchForm > fieldset > .Field input[type=checkbox] {
+        display: inline-block;
+        vertical-align: middle;
+    }
     .AddButton,
     .RemoveButton {
         font-size: 14px;
@@ -394,6 +404,11 @@
         border: none;
         margin: 0;
         padding: 0;
+    }
+    .FieldEmpty {
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 5px;
     }
 
 

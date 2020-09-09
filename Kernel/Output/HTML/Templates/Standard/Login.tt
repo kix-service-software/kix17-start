@@ -188,11 +188,17 @@ X-KIX-Login: [% Env("Baselink") %]
             <div id="LoginBox" class="LoginBox">
                 <div id="LoginLogo"></div>
                 <div id="LoginResponsiveLogo"></div>
+[% RenderBlockStart("LoginHeader") %]
                 <div class="Welcome">
-                    <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
+                    <h2 class="Center">[% Data.ProductName | html %]</h2>
                 </div>
+[% RenderBlockEnd("LoginHeader") %]
                 <div class="WidgetSimple">
-                    <div class="Header"></div>
+                    <div class="Header">
+[% RenderBlockStart("LoginSubHeader") %]
+                        <h2 class="Center">[% Data.LoginSubHeader | html %]</h2>
+[% RenderBlockEnd("LoginSubHeader") %]
+                    </div>
                     <div class="Content">
                         <p class="Error Center Spacing"></p>
 
@@ -254,9 +260,11 @@ X-KIX-Login: [% Env("Baselink") %]
             <div id="PasswordBox" class="LoginBox Hidden">
                 <div id="LoginLogo"></div>
                 <div id="LoginResponsiveLogo"></div>
+[% RenderBlockStart("LostPasswordHeader") %]
                 <div class="Welcome">
-                    <h2 class="Center">[% Translate("Welcome to %s", Config("ProductName")) | html %]</h2>
+                    <h2 class="Center">[% Data.ProductName | html %]</h2>
                 </div>
+[% RenderBlockEnd("LostPasswordHeader") %]
                 <div class="WidgetSimple">
                     <div class="Header">
                         <h2 class="Center">[% Translate("Request New Password") | html %]</h2>
