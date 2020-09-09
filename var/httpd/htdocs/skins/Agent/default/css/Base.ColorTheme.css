@@ -1333,7 +1333,7 @@
     .FieldHelpContainer .FieldHelpTrigger {
         color: #BBBBBB;
     }
-    .FieldHelpContainer > span {
+    .FieldHelpTooltip {
         background: #444444;
         color: #FFFFFF;
     }
