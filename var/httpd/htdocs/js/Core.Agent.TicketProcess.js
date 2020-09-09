@@ -130,6 +130,24 @@ Core.Agent.TicketProcess = (function (TargetNS) {
                             }
                         });
 
+                        $('.FieldHelpContainer').hover(function() {
+                            if($('.FieldHelpTooltip').length > 0 ) {
+                                return false;
+                            }
+
+                            var span = $(this).children('span').clone(),
+                                posE = $(this).offset();
+
+                            span.addClass('FieldHelpTooltip');
+                            span.css({
+                                top: (posE.top - $(document).scrollTop() + 15) + 'px',
+                                left: (posE.left - $(document).scrollLeft()) + 'px'
+                            });
+                            span.appendTo('body');
+                        }, function(){
+                            $('.FieldHelpTooltip').remove();
+                        });
+
                         // Initially display dynamic fields with TreeMode = 1 correctly
                         Core.UI.TreeSelection.InitDynamicFieldTreeViewRestore();
 
@@ -140,7 +158,6 @@ Core.Agent.TicketProcess = (function (TargetNS) {
 
                         $('#AJAXLoader').addClass('Hidden');
                         $('#AJAXDialog').val('1');
-
                     }
                     else {
 
