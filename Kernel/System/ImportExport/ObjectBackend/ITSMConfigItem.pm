@@ -1661,7 +1661,8 @@ sub _ImportXMLDataMerge {
 
     ITEM:
     for my $Item ( @{ $Param{XMLDefinition} } ) {
-
+        # init offset
+        my $Offset = 0;
         COUNTER:
         for my $Counter ( 1 .. $Item->{CountMax} ) {
 
@@ -1670,12 +1671,12 @@ sub _ImportXMLDataMerge {
 
             # start recursion, if "Sub" was found
             if ( $Item->{Sub} ) {
-                $XMLData->{ $Item->{Key} }->[$Counter]
+                $XMLData->{ $Item->{Key} }->[ $Counter - $Offset ]
                     ||= {};    # empty container, in case there is no previous data
                 my $MergeOk = $Self->_ImportXMLDataMerge(
                     XMLDefinition                => $Item->{Sub},
                     XMLData2D                    => $Param{XMLData2D},
-                    XMLDataPrev                  => $XMLData->{ $Item->{Key} }->[$Counter],
+                    XMLDataPrev                  => $XMLData->{ $Item->{Key} }->[ $Counter - $Offset ],
                     Prefix                       => $Key . '::',
                     EmptyFieldsLeaveTheOldValues => $Param{EmptyFieldsLeaveTheOldValues},
                 );
@@ -1704,8 +1705,15 @@ sub _ImportXMLDataMerge {
             # let merge fail, when a value cannot be prepared
             return if !defined $Value;
 
+            # do not set value if empty but required in CI-class...
+            if ( !$Value && $Item->{Input}->{Required} ) {
+                splice(@{$XMLData->{ $Item->{Key} }}, ($Counter - $Offset), 1);
+                $Offset += 1;
+                next COUNTER;
+            }
+
             # save the prepared value
-            $XMLData->{ $Item->{Key} }->[$Counter]->{Content} = $Value;
+            $XMLData->{ $Item->{Key} }->[ $Counter - $Offset ]->{Content} = $Value;
         }
     }
 
