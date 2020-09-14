@@ -269,7 +269,7 @@ sub EditFieldRender {
     my $GeneralCatalogClass = $FieldConfig->{GeneralCatalogClass};
 
     # set PossibleValues
-    my $PossibleValues = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+    my $PossibleValues = $Param{PossibleValuesFilter} // $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
         Class => $GeneralCatalogClass,
     );
 

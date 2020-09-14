@@ -193,14 +193,9 @@ sub EditFieldRender {
     my $GeneralCatalogClass = $FieldConfig->{GeneralCatalogClass};
 
     # set PossibleValues
-    my $PossibleValues = $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
+    my $PossibleValues = $Param{PossibleValuesFilter} // $Kernel::OM->Get('Kernel::System::GeneralCatalog')->ItemList(
         Class => $GeneralCatalogClass,
     );
-
-    # set empty value
-    if ( defined $FieldConfig->{PossibleNone} && $FieldConfig->{PossibleNone} ) {
-        $PossibleValues->{'-'} = '-';
-    }
 
     my $Size = 1;
 
