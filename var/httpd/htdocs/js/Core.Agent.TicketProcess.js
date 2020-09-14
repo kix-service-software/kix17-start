@@ -136,14 +136,25 @@ Core.Agent.TicketProcess = (function (TargetNS) {
                             }
 
                             var span = $(this).children('span').clone(),
-                                posE = $(this).offset();
+                                posE = $(this).offset(),
+                                winH = window.innerHeight,
+                                docH = $(document).scrollTop();
 
                             span.addClass('FieldHelpTooltip');
-                            span.css({
-                                top: (posE.top - $(document).scrollTop() + 15) + 'px',
-                                left: (posE.left - $(document).scrollLeft()) + 'px'
-                            });
                             span.appendTo('body');
+
+                            if ( (posE.top + 15 + span.outerHeight() - docH) > winH ) {
+                                span.css({
+                                    top: (posE.top - span.outerHeight()) + 'px',
+                                    left: (posE.left) + 'px'
+                                });
+                            }
+                            else {
+                                span.css({
+                                   top: (posE.top + 15) + 'px',
+                                   left: (posE.left) + 'px'
+                                });
+                            }
                         }, function(){
                             $('.FieldHelpTooltip').remove();
                         });

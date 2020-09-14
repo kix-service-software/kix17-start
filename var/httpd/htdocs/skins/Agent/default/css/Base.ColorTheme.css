@@ -722,6 +722,17 @@
     #EmptyMessageMedium {
         border: 1px solid #9E9E9E;
     }
+    .OverviewMedium > li ul.InlineActions li a,
+    .OverviewMedium > li ul.InlineActions li.ResponsiveActionMenu a {
+        border: 1px solid #9E9E9E;
+        background-color: #F5F5F5;
+    }
+    .OverviewMedium > li ul.InlineActions li:not(.ResponsiveActionMenu) a:hover,
+    .OverviewMedium > li ul.InlineActions li.ResponsiveActionMenu.Opened a {
+        color: #FFFFFF;
+        border-color: #78BE5A;
+        background-color: #78BE5A;
+    }
 
 
     /**
@@ -787,6 +798,17 @@
     }
     #EmptyMessageLarge {
         border: 1px solid #9E9E9E;
+    }
+    .OverviewLarge > li ul.InlineActions li a,
+    .OverviewLarge > li ul.InlineActions li.ResponsiveActionMenu a {
+        border: 1px solid #9E9E9E;
+        background-color: #F5F5F5;
+    }
+    .OverviewLarge > li ul.InlineActions li:not(.ResponsiveActionMenu) a:hover,
+    .OverviewLarge > li ul.InlineActions li.ResponsiveActionMenu.Opened a{
+        color: #FFFFFF;
+        border-color: #78BE5A;
+        background-color: #78BE5A;
     }
 
 
