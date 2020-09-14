@@ -1,3 +1,17 @@
+/**
+ * This software is part of the KIX project, https://www.kixdesk.com/
+ * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de
+ * --
+ * @project KIX (https://www.kixdesk.com) <https://www.kixdesk.com> - Agent Frontend
+ * @copyright c.a.p.e. IT GmbH
+ * @license AGPL (https://www.gnu.org/licenses/agpl.txt) <https://www.gnu.org/licenses/agpl.txt>
+ * --
+ * This software comes with ABSOLUTELY NO WARRANTY. For details, see
+ * the enclosed file LICENSE for license information (AGPL). If you
+ * did not receive this file, see https://www.gnu.org/licenses/agpl.txt.
+ *
+ */
+
 @media only screen {
     #ResponsiveCssLoaded {
         display: none;
@@ -983,7 +997,6 @@
     /*
      * @subsection Ticket Overview Large
      */
-
     ul.OverviewZoom {
         text-align: center;
         float: none;
@@ -1052,6 +1065,14 @@
         min-height: 20px;
         line-height: 20px;
     }
+    .OverviewLarge > li ul.InlineActions {
+        top: 0px;
+        transition: none;
+    }
+    .OverviewLarge > li ul.InlineActions li.ResponsiveActionMenu {
+        display: inline-block;
+    }
+
 
 
     /*
@@ -1086,6 +1107,13 @@
     .OverviewMedium table.Infos {
         margin-top: 0px;
         margin-left: 5px;
+    }
+    .OverviewMedium > li ul.InlineActions {
+        top: 0px;
+        transition: none;
+    }
+    .OverviewMedium > li ul.InlineActions li.ResponsiveActionMenu {
+        display: inline-block;
     }
 
 

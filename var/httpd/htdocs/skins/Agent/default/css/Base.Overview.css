@@ -495,23 +495,29 @@
         cursor: auto;
         transition: all ease-in 0.2s;
     }
-    .OverviewLarge > li ul.InlineActions li.ResponsiveActionMenu::after {
-        content: "";
-        display: inline;
-        float: none;
-        margin: 0;
-        margin-left: 8px;
+    .OverviewLarge > li:hover ul.InlineActions {
+        top: 0px;
     }
-    .OverviewMedium > li ul.InlineActions.Actions li::after,
-    .OverviewLarge > li ul.InlineActions.Actions li::after {
-        margin: 0 3px;
+    .OverviewLarge > li ul.InlineActions li {
+        height: auto;
+        min-height: 0;
+        border: none;
+        background: none;
     }
-    .OverviewMedium > li ul.InlineActions li a,
     .OverviewLarge > li ul.InlineActions li a {
         padding: 1px 5px;
     }
+    .OverviewLarge > li ul.InlineActions li form {
+        padding-top: 7px;
+    }
+    .OverviewLarge > li ul.InlineActions li form select {
+        font-size: 11px;
+    }
     .OverviewLarge > li ul.InlineActions li:last-child a {
         margin-right: 0px;
+    }
+    .OverviewMedium li ul.InlineActions li.ResponsiveActionMenu {
+        display: none;
     }
     .OverviewLarge div.Checkbox {
         position: absolute;
@@ -652,6 +658,30 @@
         padding-left: 5px;
         cursor: auto;
         transition: all ease-in 0.2s;
+    }
+    .OverviewMedium > li:hover ul.InlineActions {
+        top: 0px;
+    }
+    .OverviewMedium > li ul.InlineActions li {
+        height: auto;
+        min-height: 0;
+        border: none;
+        background: none;
+    }
+    .OverviewMedium > li ul.InlineActions li a {
+        padding: 1px 5px;
+    }
+    .OverviewMedium > li ul.InlineActions li form {
+        padding-top: 7px;
+    }
+    .OverviewMedium > li ul.InlineActions li form select {
+        font-size: 11px;
+    }
+    .OverviewMedium > li ul.InlineActions li:last-child a {
+        margin-right: 0px;
+    }
+    .OverviewMedium li ul.InlineActions li.ResponsiveActionMenu {
+        display: none;
     }
     .OverviewMedium div.Checkbox {
         position: absolute;
