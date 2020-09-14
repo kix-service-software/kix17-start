@@ -1,6 +1,11 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.13.0-RC4 (2020/09/14)
+ * (2020/09/10) - Bugfix: KIX17-1358 (fixed incorrect display of the FieldHelpContainer tooltip in process dialog) (fjacquemin)
+ * (2020/07/16) - CR: KIX17-1221 (cleanup empty required data on config item import) (tto)
+ * (2020/04/21) - Bugfix: KIX17-868 (Missing CSS to display PreMenu in overviews) (fjacquemin)
+
 # 17.13.0-RC3 (2020/09/09)
  * (2020/09/09) - Bugfix: KIX17-1358 (fixed incorrect display of the FieldHelpContainer tooltip) (fjacquemin)
  * (2020/09/07) - Bugfix: KIX17-1092 (changed link "Download this email" to an widget action icon) (fjacquemin)
