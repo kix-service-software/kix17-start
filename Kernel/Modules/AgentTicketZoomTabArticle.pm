@@ -1596,6 +1596,20 @@ sub _ArticleTree {
         }
     }
 
+    # get needed objects
+    my $TicketObject  = $Kernel::OM->Get('Kernel::System::Ticket');
+    my $ConfigObject  = $Kernel::OM->Get('Kernel::Config');
+    my $BackendObject = $Kernel::OM->Get('Kernel::System::DynamicField::Backend');
+
+    # show article tree
+    $LayoutObject->Block(
+        Name => 'ArticleList',
+        Data => {
+            %Param,
+            TableClasses => $TableClasses,
+        },
+    );
+
     # cycle trough the activated Dynamic Fields for this screen
     DYNAMICFIELD:
     for my $DynamicFieldConfig ( @{ $Self->{DynamicFieldShow} } ) {
@@ -1609,19 +1623,6 @@ sub _ArticleTree {
             },
         );
     }
-
-    # get needed objects
-    my $TicketObject = $Kernel::OM->Get('Kernel::System::Ticket');
-    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
-
-    # show article tree
-    $LayoutObject->Block(
-        Name => 'ArticleList',
-        Data => {
-            %Param,
-            TableClasses => $TableClasses,
-        },
-    );
 
     ARTICLE:
     for my $ArticleTmp (@ArticleBox) {
@@ -1819,6 +1820,33 @@ sub _ArticleTree {
             $LayoutObject->Block(
                 Name => 'TreeItemNoNewArticle',
                 Data => {},
+            );
+        }
+
+        # show dynamic field values
+        DYNAMICFIELD:
+        for my $DynamicFieldConfig ( @{ $Self->{DynamicFieldShow} } ) {
+            next DYNAMICFIELD if !IsHashRefWithData($DynamicFieldConfig);
+
+            my $Value = $BackendObject->ValueGet(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                ObjectID           => $Article{ArticleID},
+            );
+
+            # get print string for this dynamic field
+            my $ValueStrg = $BackendObject->DisplayValueRender(
+                DynamicFieldConfig => $DynamicFieldConfig,
+                Value              => $Value,
+                LayoutObject       => $LayoutObject,
+            );
+
+            $LayoutObject->Block(
+                Name => 'TreeItemDynamicField',
+                Data => {
+                    Name  => $DynamicFieldConfig->{Name},
+                    Title => $DynamicFieldConfig->{Label},
+                    Value => $ValueStrg->{Value}
+                },
             );
         }
 
