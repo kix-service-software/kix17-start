@@ -535,7 +535,7 @@ sub WorkingTime {
 
         # check for defined vacation days
         if ( ref( $TimeVacationDaysOneTime->{ $Year } ) ne 'HASH' ) {
-            $TimeVacationDaysOneTime->{ $Year } = $Self->_PrepareVacationDaysOfYear(
+            $TimeVacationDaysOneTime->{ $Year } = $Self->PrepareVacationDaysOfYear(
                 Calendar => $Param{Calendar},
                 Year     => $Year,
             );
@@ -708,7 +708,7 @@ sub DestinationTime {
 
         # check for defined vacation days
         if ( ref( $TimeVacationDaysOneTime->{ $Year } ) ne 'HASH' ) {
-            $TimeVacationDaysOneTime->{ $Year } = $Self->_PrepareVacationDaysOfYear(
+            $TimeVacationDaysOneTime->{ $Year } = $Self->PrepareVacationDaysOfYear(
                 Calendar => $Param{Calendar},
                 Year     => $Year,
             );
@@ -837,7 +837,7 @@ sub VacationCheck {
             $TimeVacationDays = $ConfigObject->Get( 'TimeVacationDays::Calendar' . $Param{Calendar} );
         }
     }
-    my $TimeVacationDaysOneTime->{ $Year } = $Self->_PrepareVacationDaysOfYear(
+    my $TimeVacationDaysOneTime->{ $Year } = $Self->PrepareVacationDaysOfYear(
         Calendar => $Param{Calendar},
         Year     => $Year,
     );
@@ -863,7 +863,7 @@ sub VacationCheck {
     return;
 }
 
-sub _PrepareVacationDaysOfYear {
+sub PrepareVacationDaysOfYear {
     my ( $Self, %Param ) = @_;
 
     # init return value
