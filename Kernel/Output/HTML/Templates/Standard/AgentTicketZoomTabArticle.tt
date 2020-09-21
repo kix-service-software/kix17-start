@@ -299,7 +299,7 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                 <th class="Subject Sortable"><a href="#">[% Translate("Subject") | html %]</a></th>
                                 <th class="Created Sortable"><a href="#">[% Translate("Created") | html %]</a></th>
 [% RenderBlockStart("TreeHeadDynamicField") %]
-                        <th class="[% Data.Name | html %] Sortable"><a href="#">[% Translate(Data.Label) | html %]</a></th>
+                                <th class="[% Data.Name | html %] Sortable"><a href="#">[% Translate(Data.Label) | html %]</a></th>
 [% RenderBlockEnd("TreeHeadDynamicField") %]
                                 <th class="Attachments Last">
                                     <a href="#" title="[% Translate("Attachments") | html %]">
@@ -401,10 +401,10 @@ $(document.body).on('change', '.ArticleFlagSelection', function() {
                                     <input type="hidden" class="SortData" value="[% Data.Created | html %]" />
                                 </td>
 [% RenderBlockStart("TreeItemDynamicField") %]
-                        <td class="[% Data.Name %]">
-                            <div title="[% Data.Title | html %]"><a href="#">[% Data.Value | truncate(34) | html %]</a></div>
-                            <input type="hidden" class="SortData" value="[% Data.Title | html %]" />
-                        </td>
+                                <td class="[% Data.Name %]">
+                                    <div title="[% Data.Title | html %]"><a href="#">[% Data.Value | truncate(34) | html %]</a></div>
+                                    <input type="hidden" class="SortData" value="[% Data.Title | html %]" />
+                                </td>
 [% RenderBlockEnd("TreeItemDynamicField") %]
                                 <td class="Attachments Attachment Fixed NonTextContent">
 [% RenderBlockStart("TreeItemAttachment") %]
