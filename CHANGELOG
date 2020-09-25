@@ -1,6 +1,9 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.13.0-RC7 (2020/09/25)
+ * (2020/09/25) - Bugfix: KIX17-1451 (fixed global symbol error) (millinger)
+
 # 17.13.0-RC6 (2020/09/25)
  * (2020/09/24) - CR: KIX17-1444 (implemented agent preference for sysconfig 'Ticket::DefineEmailFrom') (millinger)
  * (2020/09/23) - Bugfix: KIX17-1413 (fixed handling of valid flag in customer company search) (millinger)
