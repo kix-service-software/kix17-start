@@ -286,14 +286,20 @@ sub ValueIsDifferent {
     if (
         !defined $Param{Value1}
         && ref $Param{Value2} eq 'ARRAY'
-        && !IsArrayRefWithData( $Param{Value2} )
+        && (
+            !IsArrayRefWithData( $Param{Value2} )
+            || !$Param{Value2}->[0]
+        )
     ) {
         return
     }
     if (
         !defined $Param{Value2}
         && ref $Param{Value1} eq 'ARRAY'
-        && !IsArrayRefWithData( $Param{Value1} )
+        && (
+            !IsArrayRefWithData( $Param{Value1} )
+            || !$Param{Value1}->[0]
+        )
     ) {
         return
     }
@@ -1278,7 +1284,7 @@ sub StatsFieldParameterBuild {
     $Values = $Param{PossibleValuesFilter} if ( defined($Param{PossibleValuesFilter}) );
 
     return {
-        Values             => $Values,
+        Values             => $Values || {},
         Name               => $Param{DynamicFieldConfig}->{Label},
         Element            => 'DynamicField_' . $Param{DynamicFieldConfig}->{Name},
         Block              => 'MultiSelectField',
@@ -1401,7 +1407,7 @@ sub _GetPossibleValues {
         . ' FROM '
         . $Param{DynamicFieldConfig}->{Config}->{DatabaseTable};
 
-    $DFRemoteDBObject->Prepare(
+    return if !$DFRemoteDBObject->Prepare(
         SQL   => $SQL,
     );
 

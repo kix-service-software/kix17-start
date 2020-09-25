@@ -19,7 +19,7 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
 ## Hints for special cases
 
 ### Previous OTRS 4 with NotificationEventX
-* Check for database table ```overlay_agent```
+* AFTER MIGRATION check for database table ```overlay_agent```
 * If does not exist:
     * Create file ```/tmp/FIX_NotificationEventX.xml``` (Look at plain text if content is not shown)
 ```
@@ -36,7 +36,7 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
 </database>
 ```
     * Execute file to database
-    * ```sudo -u www-data <OTRS-Home>/bin/otrs.Console.pl Dev::Tools::Database::XMLExecute /tmp/FIX_NotificationEventX.xml```
+    * ```sudo -u www-data <KIX-Home>/bin/kix.Console.pl Dev::Tools::Database::XMLExecute /tmp/FIX_NotificationEventX.xml```
 
 ### OTRS 5 with KIXTemplateWorkflows (NOT KIX16)
 * Dump database for tables
@@ -46,7 +46,20 @@ The following describes the migration from OTRS to KIX. It's absolutely necessar
     * `kix_template_workflows_ap_link`
 * Deinstall package KIXTemplateWorkflows
 * Run migration
-* Restore database dump
+* AFTER MIGRATION Restore database dump
+* Create file ```/tmp/FIX_KIXTemplateWorkflows.xml``` (Look at plain text if content is not shown)
+```
+<?xml version="1.0" encoding="utf-8" ?>
+<database Name="kix">
+    <TableAlter Name="kix_template_workflows" Version="17.0.0">
+        <ColumnAdd Name="f_agent"     Required="false" Type="INTEGER"/>
+        <ColumnAdd Name="f_customer"  Required="false" Type="INTEGER"/>
+        <ColumnAdd Name="customer_portal_group_id" Required="false" Type="INTEGER"/>
+    </TableAlter>
+</database>
+```
+    * Execute file to database
+    * ```sudo -u www-data <KIX-Home>/bin/kix.Console.pl Dev::Tools::Database::XMLExecute /tmp/FIX_KIXTemplateWorkflows.xml```
 
 ### Migrating to KIXPro with filled CMDB without OptimizedCMDB
 * AFTER MIGRATION run console command `Admin::ITSM::RebuildCMDBStructure`
@@ -111,7 +124,7 @@ Im Folgenden wird das Vorgehen für die Migration einer OTRS-Instanz auf KIX bes
 ## Hinweise zu Sonderfällen
 
 ### Ursprüngliches OTRS 4 mit NotificationEventX
-* Prüfen ob Tabelle ```overlay_agent``` vorhanden ist
+* NACH DER MIGRATION Prüfen ob Tabelle ```overlay_agent``` vorhanden ist
 * Wenn nicht:
     * Datei ```/tmp/FIX_NotificationEventX.xml``` anlegen (In Klartext schauen, wenn Inhalt nicht angezeigt wird)
 ```
@@ -131,14 +144,27 @@ Im Folgenden wird das Vorgehen für die Migration einer OTRS-Instanz auf KIX bes
     * ```sudo -u www-data <OTRS-Home>/bin/otrs.Console.pl Dev::Tools::Database::XMLExecute /tmp/FIX_NotificationEventX.xml```
 
 ### OTRS 5 mit KIXTemplateWorkflows (Kein KIX16)
-* Datenbank-Dump von Tabellen erstellen
+* VOR DER MIGRATION Datenbank-Dump von Tabellen erstellen
     * `kix_template_workflows`
     * `kix_template_workflows_ap`
     * `kix_template_workflows_ap_pref`
     * `kix_template_workflows_ap_link`
 * Paket KIXTemplateWorkflows deinstallieren
 * Migration durchführen
-* Datenbank-Dump einspielen
+* NACH DER MIGRATION Datenbank-Dump einspielen
+* Datei ```/tmp/FIX_KIXTemplateWorkflows.xml``` anlegen (In Klartext schauen, wenn Inhalt nicht angezeigt wir)
+```
+<?xml version="1.0" encoding="utf-8" ?>
+<database Name="kix">
+    <TableAlter Name="kix_template_workflows" Version="17.0.0">
+        <ColumnAdd Name="f_agent"     Required="false" Type="INTEGER"/>
+        <ColumnAdd Name="f_customer"  Required="false" Type="INTEGER"/>
+        <ColumnAdd Name="customer_portal_group_id" Required="false" Type="INTEGER"/>
+    </TableAlter>
+</database>
+```
+    * Datei in Datenbank einlesen
+    * ```sudo -u www-data <KIX-Home>/bin/kix.Console.pl Dev::Tools::Database::XMLExecute /tmp/FIX_KIXTemplateWorkflows.xml```
 
 ### Migration zu KIXPro mit gefüllter CMDB ohne OptimizedCMDB
 * NACH DER MIGRATION Konsolenbefehl `Admin::ITSM::RebuildCMDBStructure` ausführen
