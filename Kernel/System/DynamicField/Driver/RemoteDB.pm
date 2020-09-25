@@ -1284,7 +1284,7 @@ sub StatsFieldParameterBuild {
     $Values = $Param{PossibleValuesFilter} if ( defined($Param{PossibleValuesFilter}) );
 
     return {
-        Values             => $Values,
+        Values             => $Values || {},
         Name               => $Param{DynamicFieldConfig}->{Label},
         Element            => 'DynamicField_' . $Param{DynamicFieldConfig}->{Name},
         Block              => 'MultiSelectField',
@@ -1407,7 +1407,7 @@ sub _GetPossibleValues {
         . ' FROM '
         . $Param{DynamicFieldConfig}->{Config}->{DatabaseTable};
 
-    $DFRemoteDBObject->Prepare(
+    return if !$DFRemoteDBObject->Prepare(
         SQL   => $SQL,
     );
 
