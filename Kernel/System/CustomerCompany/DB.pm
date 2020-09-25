@@ -131,19 +131,26 @@ sub CustomerCompanyList {
     # where
     if ( $Param{Search} ) {
 
-        my @Parts = split /\+/, $Param{Search}, 6;
-        for my $Part (@Parts) {
-            $Part = $Self->{SearchPrefix} . $Part . $Self->{SearchSuffix};
-            $Part =~ s/\*/%/g;
-            $Part =~ s/%%/%/g;
+        my $CustomerCompanySearchFields = $Self->{CustomerCompanyMap}->{CustomerCompanySearchFields};
 
-            if ( defined $SQL ) {
-                $SQL .= " AND ";
-            }
+        if (
+            $CustomerCompanySearchFields
+            && ref $CustomerCompanySearchFields eq 'ARRAY'
+        ) {
 
-            my $CustomerCompanySearchFields = $Self->{CustomerCompanyMap}->{CustomerCompanySearchFields};
+            my @Parts = split /\+/, $Param{Search}, 6;
+            for my $Part (@Parts) {
+                $Part = $Self->{SearchPrefix} . $Part . $Self->{SearchSuffix};
+                $Part =~ s/\*/%/g;
+                $Part =~ s/%%/%/g;
 
-            if ( $CustomerCompanySearchFields && ref $CustomerCompanySearchFields eq 'ARRAY' ) {
+                if ( defined $SQL ) {
+                    $SQL .= " AND ";
+                }
+
+                if ($Valid) {
+                    $SQL .= " ( ";
+                }
 
                 my @SQLParts;
                 for my $Field ( @{$CustomerCompanySearchFields} ) {
@@ -157,7 +164,12 @@ sub CustomerCompanyList {
                     }
                 }
                 if (@SQLParts) {
+                    
                     $SQL .= join( ' OR ', @SQLParts );
+                }
+
+                if ($Valid) {
+                    $SQL .= " ) ";
                 }
             }
         }
