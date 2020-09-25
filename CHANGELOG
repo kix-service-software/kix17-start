@@ -1,6 +1,16 @@
 # Change log of KIX
 * Copyright (C) 2006-2020 c.a.p.e. IT GmbH, https://www.cape-it.de/
 
+# 17.13.0-RC6 (2020/09/25)
+ * (2020/09/24) - CR: KIX17-1444 (implemented agent preference for sysconfig 'Ticket::DefineEmailFrom') (millinger)
+ * (2020/09/23) - Bugfix: KIX17-1413 (fixed handling of valid flag in customer company search) (millinger)
+ * (2020/09/23) - Bugfix: KIX17-1410 (fixed handling of empty values for DF RemoteDB and CIReference) (millinger)
+ * (2020/09/23) - Bugfix: KIX17-1364 (fixed handling of disabled dynamic fields for ticket forwarding) (millinger)
+ * (2020/09/23) - CR: KIX17-1360 (enabled dynamic field type 'Checkbox' to trigger form update) (millinger)
+ * (2020/09/23) - CR: KIX17-1331 (added hints for migration) (millinger)
+ * (2020/09/23) - Bugfix: KIX17-1126 (Fixed internal server error when the connection of the RemoteDB failed) (fjacquemin)
+ * (2020/09/17) - Bugfix: KIX17-1363 (can not set every valid customer company in dynamic field) (millinger)
+
 # 17.13.0-RC5 (2020/09/21)
  * (2020/09/21) - Bugfix: KIX17-1427 (fixed missing display of dynamic fields in the article list) (fjacquemin)
  * (2020/09/17) - CR: KIX17-943 (added vacation day calculation for datepicker) (millinger)
